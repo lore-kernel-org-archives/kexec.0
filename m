@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TOnlO-0004Yk-C4
- for kexec@lists.infradead.org; Thu, 18 Oct 2012 10:55:43 +0000
-Message-ID: <507FE020.7040805@redhat.com>
-Date: Thu, 18 Oct 2012 12:55:28 +0200
-From: Avi Kivity <avi@redhat.com>
+ id 1TOqsY-0007gI-LJ
+ for kexec@lists.infradead.org; Thu, 18 Oct 2012 14:15:20 +0000
+Date: Thu, 18 Oct 2012 10:14:49 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
+Message-ID: <20121018141449.GB18147@redhat.com>
+References: <20121016043357.20003.5885.stgit@localhost6.localdomain6>
+ <20121017141234.GD31663@redhat.com>
+ <20121018.120805.464238435.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] x86: clear vmcss on all cpus when doing kdump if
- necessary
-References: <5077BB7B.4030203@cn.fujitsu.com> <507C2F18.8080904@redhat.com>
- <507E17C0.9070305@cn.fujitsu.com> <507E8575.4040908@redhat.com>
- <507F5762.3060208@cn.fujitsu.com>
-In-Reply-To: <507F5762.3060208@cn.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20121018.120805.464238435.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,65 +21,161 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: x86@kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-doc@vger.kernel.org, "Hao, Xudong" <xudong.hao@intel.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Nakajima, Jun" <jun.nakajima@intel.com>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, tglx@linutronix.de
 
-T24gMTAvMTgvMjAxMiAwMzoxMiBBTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+IOS6jiAyMDEy5bm0
-MTDmnIgxN+aXpSAxODoxNiwgQXZpIEtpdml0eSDlhpnpgZM6Cj4+IE9uIDEwLzE3LzIwMTIgMDQ6
-MjggQU0sIFpoYW5nIFlhbmZlaSB3cm90ZToKPj4+IOS6jiAyMDEy5bm0MTDmnIgxNeaXpSAyMzo0
-MywgQXZpIEtpdml0eSDlhpnpgZM6Cj4+Pj4gT24gMTAvMTIvMjAxMiAwODo0MCBBTSwgWmhhbmcg
-WWFuZmVpIHdyb3RlOgo+Pj4+PiBDdXJyZW50bHksIGtkdW1wIGp1c3QgbWFrZXMgYWxsIHRoZSBs
-b2dpY2FsIHByb2Nlc3NvcnMgbGVhdmUgVk1YIG9wZXJhdGlvbiBieQo+Pj4+PiBleGVjdXRpbmcg
-Vk1YT0ZGIGluc3RydWN0aW9uLCBzbyBhbnkgVk1DU3MgYWN0aXZlIG9uIHRoZSBsb2dpY2FsIHBy
-b2Nlc3NvcnMgbWF5Cj4+Pj4+IGJlIGNvcnJ1cHRlZC4gQnV0LCBzb21ldGltZXMsIHdlIG5lZWQg
-dGhlIFZNQ1NzIHRvIGRlYnVnIGd1ZXN0IGltYWdlcyBjb250YWluZWQKPj4+Pj4gaW4gdGhlIGhv
-c3Qgdm1jb3JlLiBUbyBwcmV2ZW50IHRoZSBjb3JydXB0aW9uLCB3ZSBzaG91bGQgVk1DTEVBUiB0
-aGUgVk1DU3MgYmVmb3JlCj4+Pj4+IGV4ZWN1dGluZyB0aGUgVk1YT0ZGIGluc3RydWN0aW9uLgo+
-Pj4+Cj4+Pj4gSG93IGhhdmUgeW91IHZlcmlmaWVkIHRoYXQgVk1YT0ZGIGRvZXNuJ3QgZmx1c2gg
-Y2FjaGVkIFZNQ1NzIGFscmVhZHk/Cj4+Pj4KPj4+Cj4+PiBJIHRyaWVkIHNvbWUgdGVzdHMsIGZv
-ciBleGFtcGxlLCBJIG1hZGUgY29waWVzIGZvciBldmVyeSB2bWNzLCBhbmQgaW4gdGhlIGtkdW1w
-Cj4+PiBwYXRoLCBJIGJhY2tlZCB1cCBhbGwgdGhlIGxvYWRlZCB2bWNzIGludG8gdGhlIGNvcGll
-cyBiZWZvcmUgdm14b2ZmLgo+Pj4gQWZ0ZXIgZ2VuZXJhdGluZyB0aGUgdm1jb3JlLCBJIHJldHJp
-ZXZlIHRoZSB2bWNzcyBhbmQgdGhlaXIgY29waWVzLCBhbmQgY29tcGFyZSB0aGVtLAo+Pj4gbm8g
-ZGlmZmVyZW5jZXMuCj4+Pgo+Pj4gQW5vdGhlciB0ZXN0IGlzIHVzaW5nIFZNQ0xFQVIgdG8gY2xl
-YXIgYWxsIHRoZSBsb2FkZWQgdm1jcyBiZWZvcmUgVk1YT0ZGLAo+Pj4gYW5kIGNvbXBhcmUgdGhl
-IHZtY3NzIGFuZCB0aGVpciBjb3BpZXMsIHRoZXJlIGFyZSBpbmRlZWQgZGlmZmVyZW5jZXMgYmV0
-d2VlbiB0aGUKPj4+IHZtY3MgYW5kIGl0cyBjb3B5Lgo+Pj4KPj4+IEkga25vdyB0aGUgdGVzdHMg
-bWF5IGJlIG5vdCBzbyBjb252aW5jaW5nLCBmb3IgZXhhbXBsZSwgSSB1c2VkIG1lbWNweSB0byBi
-YWNrIHVwCj4+PiB0aGUgdm1jc3MgYW5kIGl0IGlzIGFuIG9yZGluYXJ5IG1lbW9yeSBvcGVyYXRp
-b24uIEJ1dCB0byBlbnN1cmUgdGhlIG5vbi1jb3JydXB0aW9uCj4+PiBvZiB0aGUgdm1jc3MgaW4g
-dGhlIHZtY29yZSwgSSB0aGluayB3ZSBzaG91bGQgVk1DTEVBUiB0aGUgdm1jc3MgYmVmb3JlIFZN
-WE9GRiBqdXN0Cj4+PiBhcyB0aGUgSW50ZWwgc3BlYyBzYXlzLgo+PiAKPj4gU29ycnksIEkgd2Fz
-IHVuY2xlYXIgLS0gSSB3YXMgcmVmZXJyaW5nIHRvIHRoZSBzcGVjLCBJIHdhc24ndCBzdXJlCj4+
-IHdoZXRoZXIgVk1YT0ZGIGlzIGRlZmluZWQgdG8gZmx1c2ggVk1DU2VzIG9yIHdoZXRoZXIgaXQg
-anVzdCBpbnZhbGlkYXRlcwo+PiBvbi1jaGlwIGNhY2hlcyBzbyB0aGF0IGl0IHdvbid0IGZsdXNo
-IHRoZW0gb3V0IGluIHRoZSBmdXR1cmUsIGNvcnJ1cHRpbmcKPj4gbWVtb3J5LiAgV2UgZG9uJ3Qg
-d2FudCB0byBkZXBlbmQgb24gYWN0dWFsIGJlaGF2aW91ciBhcyBpdCBtYXkgY2hhbmdlCj4+IHdp
-dGggZnV0dXJlIHZlcnNpb24uCj4+IAo+PiBDb3B5aW5nIHNvbWUgSW50ZWwgZm9saywgbWF5YmUg
-dGhleSBjYW4gY2xhcmlmeSBpdC4KPj4gCj4gCj4gWWVzLCB0aGUgSW50ZWwgc3BlYyBzYXlzICJt
-YXkgYmUiIGFib3V0IHRoZSBWTUNTLWNvcnJ1cHRpb24gdGhpbmcuIEZyb20KPiBjaGFwdGVyIDI0
-LjEwLjEgaW4gSW50ZWzCriA2NCBhbmQgSUEtMzIgQXJjaGl0ZWN0dXJlcyBTb2Z0d2FyZSBEZXZl
-bG9wZXLigJlzCj4gTWFudWFsIFZvbHVtZSAzQzpTeXN0ZW0gUHJvZ3JhbW1pbmcgR3VpZGUsIFBh
-cnQgMywgdGhlcmUgaXMgdGhlIGRlc2NyaXB0aW9uOgo+IAo+ICJJZiBhIGxvZ2ljYWwgcHJvY2Vz
-c29yIGxlYXZlcyBWTVggb3BlcmF0aW9uLCBhbnkgVk1DU3MgYWN0aXZlIG9uIHRoYXQgbG9naWNh
-bAo+IHByb2Nlc3NvciBtYXkgYmUgY29ycnVwdGVkIChzZWUgYmVsb3cpLiBUbyBwcmV2ZW50IHN1
-Y2ggY29ycnVwdGlvbiBvZiBhIFZNQ1MgdGhhdAo+IG1heSBiZSB1c2VkIGVpdGhlciBhZnRlciBh
-IHJldHVybiB0byBWTVggb3BlcmF0aW9uIG9yIG9uIGFub3RoZXIgbG9naWNhbCBwcm9jZXNzb3Is
-Cj4gc29mdHdhcmUgc2hvdWxkIFZNQ0xFQVIgdGhhdCBWTUNTIGJlZm9yZSBleGVjdXRpbmcgdGhl
-IFZNWE9GRiBpbnN0cnVjdGlvbiBvcgo+IHJlbW92aW5nIHBvd2VyIGZyb20gdGhlIHByb2Nlc3Nv
-ciAoZS5nLiwgYXMgcGFydCBvZiBhIHRyYW5zaXRpb24gdG8gdGhlIFMzIGFuZCBTNAo+IHBvd2Vy
-IHN0YXRlcykuIgo+IAo+IE91ciBwdXJwb3NlIGlzIHRvIG1ha2Ugc3VyZSB0aGUgVk1DU3MgaW4g
-dGhlIHZtY29yZSBhcmUgdXBkYXRlZCBhbmQgbm9uLWNvcnJ1cHRlZC4gU28KPiBhY2NvcmRpbmcg
-dG8gdGhlIGRlc2NyaXB0aW9uIGFib3ZlLCBubyBtYXR0ZXIgd2hldGhlciBWTVhPRkYgaXMgZGVm
-aW5lZCB0byBmbHVzaAo+IFZNQ1NzIG9yIHdoZXRoZXIgaXQganVzdCBpbnZhbGlkYXRlcyBvbi1j
-aGlwIGNhY2hlcywgd2UnZCBiZXR0ZXIgVk1DTEVBUiB0aGUKPiBWTUNTcyBiZWZvcmUgZXhlY3V0
-aW5nIHRoZSBWTVhPRkYuCgpPaywgdGhhdCdzIGNsZWFyIHRoZW4uICBTbyBhbGwgd2UgbmVlZCBp
-cyB0byByZW1vdmUgdGhlIHN5c2N0bCBhbmQgY2xlYXIKVk1DU3MgdW5jb25kaXRpb25hbGx5LgoK
-CgotLSAKZXJyb3IgY29tcGlsaW5nIGNvbW1pdHRlZS5jOiB0b28gbWFueSBhcmd1bWVudHMgdG8g
-ZnVuY3Rpb24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Oct 18, 2012 at 12:08:05PM +0900, HATAYAMA Daisuke wrote:
+
+[..]
+> > Do you have any rough numbers on what kind of speed up we are looking
+> > at. IOW, what % of time is gone compressing a filetered dump. On large
+> > memory machines, saving huge dump files is anyway not an option due to
+> > time it takes. So we need to filter it to bare minimum and after that
+> > vmcore size should be reasonable and compression time might not be a
+> > big factor. Hence I am curious what kind of gains we are looking at.
+> > 
+> 
+> I did two kinds of benchmark 1) to evaluate how well compression and
+> writing dump into multiple disks performs on crash dump and 2) to
+> compare three kinds of compression algorhythm --- zlib, lzo and snappy
+> --- for use of crash dump.
+> 
+> >From 1), 4 disks with 4 cpus performs 300 MB/s on compression with
+> snappy. 1 hour for 1 TB. But on this benchmark, sample data is
+> intentionally randomized enough so data size is not reduced during
+> compression, it must be quicker on most of actual dumps. See also
+> bench_comp_multi_IO.tar.xz for image of graph.
+
+Ok, I looked at the graphs. So somehow you seem to be dumping to multiple
+disks. How do you do that? Are these disks in some stripe configuration
+or they are JBOD and you have written special programs to dump a
+particular section of memory to a specific disk to achieve parallelism?
+
+Looking at your graphs, 1 cpu can keep up with 4 disks and achieve
+300MB/s and after that it looks like cpu saturates. Adding more disks
+with 1 cpu does not help. But increasing number of cpus can keep up
+with increasing number of disks and you achieve 800MB/s. Sounds good.
+
+> 
+> In the future, I'm going to do this benchmark again using quicker SSD
+> disks if I get them.
+> 
+> >From 2), zlib, used when doing makedumpfile -c, turns out to be too
+> slow to use it for crash dump. lzo and snappy is quick and relatively
+> as good compression ratio as zlib. In particular, snappy speed is
+> stable on any ratio of randomized part. See also
+> bench_compare_zlib_lzo_snappy.tar.xz for image of graph.
+> 
+> BTW, makedumpfile has already supported lzo since v1.4.4 and is going
+> to support snappy on v1.5.1.
+> 
+> OTOH, we have some requirements where we cannot use filtering.
+> Examples are:
+> 
+> - high-availability cluster system where application triggers crash
+>   dump to switch the active node to inactive node quickly. We retrieve
+>   the application image as process core dump later and analize it. We
+>   cannot filter user-space memory.
+
+Do you have to really crash the node to take it offline? There should
+be other ways to do this? If you are analyzing application performance
+issues, why should you crash kernel and capture the whole crash dump.
+There should be other ways to debug applications?
+ 
+> 
+> - On qemu/kvm environment, we sometimes face a complicated bug caused
+>   by interaction between guest and host.
+> 
+>   For example, previously, there was a bug causing guest machine to
+>   hang, where IO scheduler handled guest's request as wrongly lower
+>   request than the actual one and guest was waiting for IO completion
+>   endlessly, repeating VMenter-VMexit forever.
+> 
+>   To address such kind of bug, we first reproduce the bug, get host's
+>   crash dump to capture the situation, and then analyze the bug by
+>   investigating the situation from both host's and guest's views. On
+>   the bug above, we saw guest machine was waiting for IO, and we could
+>   resolve the issue relatively quickly. For this kind of complicated
+>   bug relevant to qemu/kvm, both host and guest views are very
+>   helpful.
+> 
+>   guest image is in user-space memory, qemu process, and again we
+>   cannot filter user-space memory.
+
+Instead of capturing the dump of whole memory, isn't it more efficient
+to capture the crash dump of VM in question and then if need be just
+take filtered crash dump of host kernel. 
+
+I think that trying to take unfiltered crash dumps of tera bytes of memory
+is not practical or woth it for most of the use cases.
+
+> 
+> - Filesystem people say page cache is often necessary for analysis of
+>   crash dump.
+> 
+
+Do you have some examples of how does it help?
+
+> Of course, we use filtering positively on the system where no such
+> requreirement is given.
+> 
+> >> 
+> >> To wake up AP, we use the method called INIT-INIT-SIPI. INIT causes
+> >> BSP to jump into BIOS init code. A typical visible behaviour is hang
+> >> or immediate reset, depending on the BIOS init code.
+> >> 
+> >> AP can be initiated by INIT even in a fatal state: MP spec explains
+> >> that processor-specific INIT can be used to recover AP from a fatal
+> >> system error. On the other hand, there's no method for BSP to recover;
+> >> it might be possible to do so by NMI plus any hand-coded reset code
+> >> that is carefully designed, but at least I have no idea in this
+> >> direction now.
+> >> 
+> >> Therefore, the idea I do in this patch set is simply to disable BSP if
+> >> vboot cpu is AP.
+> > 
+> > So in regular boot BSP still works as we boot on BSP. So this will take
+> > effect only in kdump kernel?
+> > 
+> 
+> Yes, this patch is effective only for the case where boot cpu is not
+> BSP, AP, and this happens in kexec case only.
+> 
+> > How well does it work with nr_cpus kernel parameter. Currently we boot
+> > with nr_cpus=1 to save upon amount of memory to be reserved. I guess
+> > you might want to boot with nr_cpus=2 or nr_cpus=4 in your case to
+> > speed up compression?
+> 
+> Exactly, it seems reasonable to specify at most nr_cpus=4 on usual
+> machines becaue reserved memory is severely limited, and many disks
+> are difficult to connect only for crash dump use without special
+> requrement.
+> 
+> But there might be the system where crash dump is definitely done
+> quickly and for it, more reserved memory and more disks are no
+> problem. On such system, I think it's necessary to be able to set up
+> more reserved memory and more cpus.
+
+We have this limitation of on x86 that we can't reserve more memory. I
+think for x86_64, we could not load kernel above 896MB, due to 
+various limitations. So you will have to cross those barriers too if
+you want to reserve more memory to capture full dumps.
+
+So I am fine with trying to bring up more cpus in second kernel in an
+effort to improve scalability but I remain skeptical about the
+practicality of dumping TBs of unfiltered data after crash. Filtering
+capability was the primary reason that s390 also wants to support
+kdump otherwise there firmware dumping mechanism was working just
+fine.
+
+Thanks
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
