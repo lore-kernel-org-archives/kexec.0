@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cavan.codon.org.uk ([2a00:1098:0:80:1000:c:0:1])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TOwCG-0000QC-2e
- for kexec@lists.infradead.org; Thu, 18 Oct 2012 19:56:01 +0000
-Date: Thu, 18 Oct 2012 20:55:30 +0100
-From: Matthew Garrett <mjg@redhat.com>
-Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
- acpi_rsdp= to 2nd kernel for efi booting)
-Message-ID: <20121018195530.GA32428@srcf.ucam.org>
-References: <20121018031028.GA3850@localhost.localdomain>
- <1350572194.3894.14.camel@rhapsody>
- <20121018191107.GC18147@redhat.com>
- <1350588121.30243.7.camel@rhapsody>
- <20121018193831.GD18147@redhat.com>
+Received: from out02.mta.xmission.com ([166.70.13.232])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TOxXP-0003EY-OH
+ for kexec@lists.infradead.org; Thu, 18 Oct 2012 21:21:56 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20121018031608.GA3925@localhost.localdomain>
+Date: Thu, 18 Oct 2012 14:20:46 -0700
+In-Reply-To: <20121018031608.GA3925@localhost.localdomain> (Dave Young's
+ message of "Thu, 18 Oct 2012 11:16:08 +0800")
+Message-ID: <878vb332a9.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20121018193831.GD18147@redhat.com>
+Subject: Re: [PATCH v2] kdump: pass acpi_rsdp= to 2nd kernel for efi booting
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,35 +23,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com, khalid@gonehiking.org
 
-On Thu, Oct 18, 2012 at 03:38:31PM -0400, Vivek Goyal wrote:
+Dave Young <dyoung@redhat.com> writes:
 
-> I was thinking that how about supporting in kernel bootloader. That is,
-> kernel acts as a boot loader. User passes the kernel, initrd and
-> commandline from user space using kexec system call and kernel parses
-> it and prepares appropriate memory areas ( ex. boot_params, kernel, initramfs,
-> backup region, elf header region etc). At the time of kexec -e, we just
-> follow th regular path and jump to second kernel.
-> 
-> At the time of loading, kernel can verify the signature of incoming
-> bzImage and reject it if signatures don't match. Matthew mentioned that
-> kernel signing certificate will be available inside the running kernel,
-> so verifying PE/COFF bzImage should be easy.
+> In case efi booting, kdump need kernel parameter acpi_rsdp= to retrieve
+> the acpi root table physical address.
+>
+> Add a function cmdline_add_efi to get the address from /sys/firmware/efi/systab
+> If there's no such file or read fail the function will just do nothing.
+>
+> Tested efi boot Fedora 17 on thinkpad T420.
+>
+> Some background info for this issue:
+> http://lists.infradead.org/pipermail/kexec/2010-March/003889.html
+>
+> [v1 -> v2]:
+> Address comments from Khalid and Simon
+> use fgets instead of read(2) to iterate the file
+> do not add 'noefi' because kexec does not construct EFI signature
+> in bootloader signature in boot_params, so kexec'd kernel will
+> disable EFI automatically even without noefi.
 
-That all sounds fine to me.
+I don't have any problems with this patch.
 
-> There is one side issue of acpi_rsdp. Because second kernel executes
-> the code specified by acpi_rsdp, it is unsafe to let user specify
-> that location. Matthew metioned that figure a way out to pass acpi_rsdp
-> using boot params and drop it from command line.
+I have a question.  In the case where this fails are we successfully
+passing the ACPI sections in the e820 map?
 
-That would just be a matter of adding it to the structure and modifying 
-drivers/acpi/osl.c.
+If we are passing the acpi sections is that not enough for the kernel
+to find the rdsp area?  I'm just a bit surprised we need this patch
+is all.
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Somehow it seems a bit ugly to pass information that could be conveyed
+in the memory map on the command line.
+
+But I am all in favor of doing what works.
+
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  kexec/arch/i386/crashdump-x86.c |   35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> --- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
+> +++ kexec-tools/kexec/arch/i386/crashdump-x86.c
+> @@ -835,6 +835,40 @@ static int cmdline_add_memmap_acpi(char 
+>  	return 0;
+>  }
+>  
+> +/* Appends 'acpi_rsdp=' commandline for efi boot crash dump */
+> +static void cmdline_add_efi(char *cmdline)
+> +{
+> +	FILE *fp;
+> +	int cmdlen, len;
+> +	char line[MAX_LINE], *s;
+> +	const char *acpis = " acpi_rsdp=";
+> +
+> +	fp = fopen("/sys/firmware/efi/systab", "r");
+> +	if (!fp)
+> +		return;
+> +
+> +	while(fgets(line, sizeof(line), fp) != 0) {
+> +		/* ACPI20= always goes before ACPI= */
+> +		if ((strstr(line, "ACPI20=")) || (strstr(line, "ACPI="))) {
+> +		        line[strlen(line) - 1] = '\0';
+> +			s = strchr(line, '=');
+> +			s += 1;
+> +			len = strlen(s) + strlen(acpis);
+> +			cmdlen = strlen(cmdline) + len;
+> +			if (cmdlen > (COMMAND_LINE_SIZE - 1))
+> +				die("Command line overflow\n");
+> +			strcat(cmdline, acpis);
+> +			strcat(cmdline, s);
+> +			dbgprintf("Command line after adding efi\n");
+> +			dbgprintf("%s\n", cmdline);
+> +
+> +			break;
+> +		}
+> +	}
+> +
+> +	fclose(fp);
+> +}
+> +
+>  static void get_backup_area(struct kexec_info *info,
+>  				struct memory_range *range, int ranges)
+>  {
+> @@ -998,6 +1032,7 @@ int load_crashdump_segments(struct kexec
+>  	if (delete_memmap(memmap_p, elfcorehdr, memsz) < 0)
+>  		return -1;
+>  	cmdline_add_memmap(mod_cmdline, memmap_p);
+> +	cmdline_add_efi(mod_cmdline);
+>  	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+>  
+>  	/* Inform second kernel about the presence of ACPI tables. */
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
