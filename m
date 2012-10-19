@@ -1,28 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TPFSS-0003Jx-6u
- for kexec@lists.infradead.org; Fri, 19 Oct 2012 16:30:01 +0000
-Received: from /spool/local
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 19 Oct 2012 17:29:17 +0100
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
- [9.149.37.247])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q9JGT7M157999398
- for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 16:29:07 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (loopback [127.0.0.1])
- by d06av12.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q9JGTDRt019604
- for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 10:29:13 -0600
-Date: Fri, 19 Oct 2012 18:29:12 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH] makedumpfile: s390x: Add 2GB frame support for page table
- walker
-Message-ID: <20121019182912.135cac32@holzheu>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TPGks-0008Mm-BQ
+ for kexec@lists.infradead.org; Fri, 19 Oct 2012 17:53:07 +0000
+Date: Fri, 19 Oct 2012 13:53:01 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
+ acpi_rsdp= to 2nd kernel for efi booting)
+Message-ID: <20121019175301.GG27052@redhat.com>
+References: <20121018031028.GA3850@localhost.localdomain>
+ <1350572194.3894.14.camel@rhapsody>
+ <20121018191107.GC18147@redhat.com>
+ <1350588121.30243.7.camel@rhapsody>
+ <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
+ <20121019020630.GA27052@redhat.com> <877gqnnnf0.fsf@xmission.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <877gqnnnf0.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,53 +29,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
 
-On s390 the zEC12 machines support 2GB frames. In order to walk page
-tables correctly add support to the page table walker function so it
-detects 2GB frames.
+On Thu, Oct 18, 2012 at 08:36:19PM -0700, Eric W. Biederman wrote:
 
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- arch/s390x.c   |    6 ++++++
- makedumpfile.h |    1 +
- 2 files changed, 7 insertions(+)
+[..]
+> > If we are ok with the idea of passing executables and initramfs to
+> > kernel, then kernel can do the placement. That means fields "mem and
+> > memsz fields of kexec_segment will be free. We can possibly overload
+> > memsz field and pass flags to represent segment type. This will happen
+> > only if user chooses kernel as bootloader functionality.
+> 
+> Which sounds nice initially but I don't think the notion of the kernel
+> being a general purpose bootloader holds up to well.  It doesn't provide
+> an easy place to put all of the weird cases.
+> 
+> If we are going to pass in a file it probably makes sense to do a
+> variation of kexec_load that passes in a file descriptor, a filename
+> could work but I don't think we want those races.
 
---- a/arch/s390x.c
-+++ b/arch/s390x.c
-@@ -247,6 +247,11 @@ vtop_s390x(unsigned long vaddr)
- 			return NOT_PADDR;
- 		}
- 		table = entry & _REGION_ENTRY_ORIGIN;
-+		if ((entry & _REGION_ENTRY_LARGE) && (level == 1)) {
-+			table &= ~0x7fffffffUL;
-+			paddr = table + (vaddr & 0x7ffffffUL);
-+			return paddr;
-+		}
- 		len = RSG_TABLE_LENGTH(entry);
- 		level--;
- 	}
-@@ -257,6 +262,7 @@ vtop_s390x(unsigned long vaddr)
- 	 * if no, then get the page table entry using PX index.
- 	 */
- 	if (entry & _SEGMENT_ENTRY_LARGE) {
-+		table &= ~_PAGE_BYTE_INDEX_MASK;
- 		paddr = table + (vaddr &  _PAGE_BYTE_INDEX_MASK);
- 	} else {
- 		entry = _kl_pg_table_deref_s390x(vaddr,
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -563,6 +563,7 @@ do { \
- #define _REGION_ENTRY_TYPE_MASK	0x0c	/* region table type mask */
- #define _REGION_ENTRY_INVALID	0x20	/* invalid region table entry */
- #define _REGION_ENTRY_LENGTH	0x03	/* region table length */
-+#define _REGION_ENTRY_LARGE	0x400
- #define _REGION_OFFSET_MASK	0x7ffUL	/* region/segment table offset mask */
- 
- #define RSG_TABLE_LEVEL(x)	(((x) & _REGION_ENTRY_TYPE_MASK) >> 2)
+Can we use execve() style filenames. I am not sure what races are you
+referring to.
 
+> 
+> But then we get how do we pass in a different kernel command line and
+> an initrd.  Things that were simple start quickly becoming complex.
+
+Can we take more than one filename arguments. Maybe an array of filename
+arguements. And another array of arguments.
+
+SYSCALL_DEFINE2(kexec2,
+		const char __user *const __user *, filenamev
+		const char __user *const __user *, argv)
+
+This will allow passing filenames of both kernel and initrd and also
+allow passing arguments. Arguments will also include command line.
+
+Not asking user space to read in the file will help avoid loading
+one extra copy of kernel in memory.
+
+One difference here is though that we will have to allocate kernel memory
+for full kernel image and full initd and if images are big, it can lock
+down lot of kernel memory and in fact can trigger OOM on many processes.
+I guess that's an issue with existing kexec() interface too, so nothing
+new here.
+
+This is like re-designing the kexec/kdump and I really wish there is
+an easier way to handle the case signed kernels.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
