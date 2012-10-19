@@ -1,19 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TPEL9-0004iP-9b
- for kexec@lists.infradead.org; Fri, 19 Oct 2012 15:18:24 +0000
-Date: Fri, 19 Oct 2012 11:17:53 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
-Message-ID: <20121019151753.GF27052@redhat.com>
-References: <20121017141234.GD31663@redhat.com>
- <20121018.120805.464238435.d.hatayama@jp.fujitsu.com>
- <20121018141449.GB18147@redhat.com>
- <20121019.122054.476812873.d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20121019.122054.476812873.d.hatayama@jp.fujitsu.com>
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TPFSS-0003Jx-6u
+ for kexec@lists.infradead.org; Fri, 19 Oct 2012 16:30:01 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Fri, 19 Oct 2012 17:29:17 +0100
+Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
+ [9.149.37.247])
+ by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q9JGT7M157999398
+ for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 16:29:07 GMT
+Received: from d06av12.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+ by d06av12.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q9JGTDRt019604
+ for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 10:29:13 -0600
+Date: Fri, 19 Oct 2012 18:29:12 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: [PATCH] makedumpfile: s390x: Add 2GB frame support for page table
+ walker
+Message-ID: <20121019182912.135cac32@holzheu>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,61 +35,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, Michael Holzheu <holzheu@linux.vnet.ibm.com>, tglx@linutronix.de
+To: kexec@lists.infradead.org
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-On Fri, Oct 19, 2012 at 12:20:54PM +0900, HATAYAMA Daisuke wrote:
+On s390 the zEC12 machines support 2GB frames. In order to walk page
+tables correctly add support to the page table walker function so it
+detects 2GB frames.
 
-[..]
-> > Instead of capturing the dump of whole memory, isn't it more efficient
-> > to capture the crash dump of VM in question and then if need be just
-> > take filtered crash dump of host kernel. 
-> > 
-> > I think that trying to take unfiltered crash dumps of tera bytes of memory
-> > is not practical or woth it for most of the use cases.
-> > 
-> 
-> If there's a lag between VM dump and host dump, situation on the host
-> can change, and VM dump itself changes the situation. Then, we cannot
-> know what kind of bug resides in now, so we want to do as few things
-> as possible between detecting the bug reproduced and taking host
-> dump. So I expressed ``capturing the situation''.
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ arch/s390x.c   |    6 ++++++
+ makedumpfile.h |    1 +
+ 2 files changed, 7 insertions(+)
 
-I would rather first detect the problem on guest and figure out what's
-happening. Once it has been determined that something is wrong from
-host side then debug what's wrong with host by using regular kernel
-debugging techiniques. 
+--- a/arch/s390x.c
++++ b/arch/s390x.c
+@@ -247,6 +247,11 @@ vtop_s390x(unsigned long vaddr)
+ 			return NOT_PADDR;
+ 		}
+ 		table = entry & _REGION_ENTRY_ORIGIN;
++		if ((entry & _REGION_ENTRY_LARGE) && (level == 1)) {
++			table &= ~0x7fffffffUL;
++			paddr = table + (vaddr & 0x7ffffffUL);
++			return paddr;
++		}
+ 		len = RSG_TABLE_LENGTH(entry);
+ 		level--;
+ 	}
+@@ -257,6 +262,7 @@ vtop_s390x(unsigned long vaddr)
+ 	 * if no, then get the page table entry using PX index.
+ 	 */
+ 	if (entry & _SEGMENT_ENTRY_LARGE) {
++		table &= ~_PAGE_BYTE_INDEX_MASK;
+ 		paddr = table + (vaddr &  _PAGE_BYTE_INDEX_MASK);
+ 	} else {
+ 		entry = _kl_pg_table_deref_s390x(vaddr,
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -563,6 +563,7 @@ do { \
+ #define _REGION_ENTRY_TYPE_MASK	0x0c	/* region table type mask */
+ #define _REGION_ENTRY_INVALID	0x20	/* invalid region table entry */
+ #define _REGION_ENTRY_LENGTH	0x03	/* region table length */
++#define _REGION_ENTRY_LARGE	0x400
+ #define _REGION_OFFSET_MASK	0x7ffUL	/* region/segment table offset mask */
+ 
+ #define RSG_TABLE_LEVEL(x)	(((x) & _REGION_ENTRY_TYPE_MASK) >> 2)
 
-Even if you are interested in capturing crash dump, after you have
-decided that it is a host problem, then you can write some scripts which
-trigger host crash dump when relevant event happens.
-
-Seriously, this argument could be extended to regular processes also.
-Something is wrong with my application, so lets dump the whole system,
-provide a facility to extract each process's code dump from that huge
-dump and then examine if it was an application issue or kernel issue.
-
-I am skeptical that this approach is going to fly in practice. Dumping
-huge images, processing and transferring these is not very practical.
-So I would rather narrow down the problem on a running system and take
-filtered dump of appropriate component where I suspect the problem is.
-
-[..]
-> > capability was the primary reason that s390 also wants to support
-> > kdump otherwise there firmware dumping mechanism was working just
-> > fine.
-> > 
-> 
-> I don't know s390 firmware dumping mechanism at all, but is it possble
-> for s390 to filter crash dump even on firmware dumping mechanism?
-
-AFAIK, s390 dump mechanism could not filter dump and tha's the reason
-they wanted to support kdump and /proc/vmcore so that makedumpfile 
-could filter it. I am CCing Michael Holzheu, who did the s390 kdump work.
-He can tell it better.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
