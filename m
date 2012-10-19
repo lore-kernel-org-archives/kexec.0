@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TP4a2-0006hc-B9
- for kexec@lists.infradead.org; Fri, 19 Oct 2012 04:53:15 +0000
-Message-ID: <5080DC34.1080503@cn.fujitsu.com>
-Date: Fri, 19 Oct 2012 12:51:00 +0800
+ id 1TP5Mu-0007ve-SJ
+ for kexec@lists.infradead.org; Fri, 19 Oct 2012 05:43:37 +0000
+Message-ID: <5080E813.7030302@cn.fujitsu.com>
+Date: Fri, 19 Oct 2012 13:41:39 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] x86: clear vmcss on all cpus when doing kdump if
+Subject: [PATCH v2 0/2] x86: clear vmcss on all cpus when doing kdump if
  necessary
-References: <5077BB7B.4030203@cn.fujitsu.com> <507C2F18.8080904@redhat.com>
- <507E17C0.9070305@cn.fujitsu.com> <507E8575.4040908@redhat.com>
- <507F5762.3060208@cn.fujitsu.com> <507FE020.7040805@redhat.com>
-In-Reply-To: <507FE020.7040805@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,67 +17,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
-Cc: x86@kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-doc@vger.kernel.org, "Hao, Xudong" <xudong.hao@intel.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Nakajima, Jun" <jun.nakajima@intel.com>
+To: x86@kernel.org, kexec@lists.infradead.org, Avi Kivity <avi@redhat.com>, mtosatti@redhat.com
+Cc: linux-kernel@vger.kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-5LqOIDIwMTLlubQxMOaciDE45pelIDE4OjU1LCBBdmkgS2l2aXR5IOWGmemBkzoKPiBPbiAxMC8x
-OC8yMDEyIDAzOjEyIEFNLCBaaGFuZyBZYW5mZWkgd3JvdGU6Cj4+IOS6jiAyMDEy5bm0MTDmnIgx
-N+aXpSAxODoxNiwgQXZpIEtpdml0eSDlhpnpgZM6Cj4+PiBPbiAxMC8xNy8yMDEyIDA0OjI4IEFN
-LCBaaGFuZyBZYW5mZWkgd3JvdGU6Cj4+Pj4g5LqOIDIwMTLlubQxMOaciDE15pelIDIzOjQzLCBB
-dmkgS2l2aXR5IOWGmemBkzoKPj4+Pj4gT24gMTAvMTIvMjAxMiAwODo0MCBBTSwgWmhhbmcgWWFu
-ZmVpIHdyb3RlOgo+Pj4+Pj4gQ3VycmVudGx5LCBrZHVtcCBqdXN0IG1ha2VzIGFsbCB0aGUgbG9n
-aWNhbCBwcm9jZXNzb3JzIGxlYXZlIFZNWCBvcGVyYXRpb24gYnkKPj4+Pj4+IGV4ZWN1dGluZyBW
-TVhPRkYgaW5zdHJ1Y3Rpb24sIHNvIGFueSBWTUNTcyBhY3RpdmUgb24gdGhlIGxvZ2ljYWwgcHJv
-Y2Vzc29ycyBtYXkKPj4+Pj4+IGJlIGNvcnJ1cHRlZC4gQnV0LCBzb21ldGltZXMsIHdlIG5lZWQg
-dGhlIFZNQ1NzIHRvIGRlYnVnIGd1ZXN0IGltYWdlcyBjb250YWluZWQKPj4+Pj4+IGluIHRoZSBo
-b3N0IHZtY29yZS4gVG8gcHJldmVudCB0aGUgY29ycnVwdGlvbiwgd2Ugc2hvdWxkIFZNQ0xFQVIg
-dGhlIFZNQ1NzIGJlZm9yZQo+Pj4+Pj4gZXhlY3V0aW5nIHRoZSBWTVhPRkYgaW5zdHJ1Y3Rpb24u
-Cj4+Pj4+Cj4+Pj4+IEhvdyBoYXZlIHlvdSB2ZXJpZmllZCB0aGF0IFZNWE9GRiBkb2Vzbid0IGZs
-dXNoIGNhY2hlZCBWTUNTcyBhbHJlYWR5Pwo+Pj4+Pgo+Pj4+Cj4+Pj4gSSB0cmllZCBzb21lIHRl
-c3RzLCBmb3IgZXhhbXBsZSwgSSBtYWRlIGNvcGllcyBmb3IgZXZlcnkgdm1jcywgYW5kIGluIHRo
-ZSBrZHVtcAo+Pj4+IHBhdGgsIEkgYmFja2VkIHVwIGFsbCB0aGUgbG9hZGVkIHZtY3MgaW50byB0
-aGUgY29waWVzIGJlZm9yZSB2bXhvZmYuCj4+Pj4gQWZ0ZXIgZ2VuZXJhdGluZyB0aGUgdm1jb3Jl
-LCBJIHJldHJpZXZlIHRoZSB2bWNzcyBhbmQgdGhlaXIgY29waWVzLCBhbmQgY29tcGFyZSB0aGVt
-LAo+Pj4+IG5vIGRpZmZlcmVuY2VzLgo+Pj4+Cj4+Pj4gQW5vdGhlciB0ZXN0IGlzIHVzaW5nIFZN
-Q0xFQVIgdG8gY2xlYXIgYWxsIHRoZSBsb2FkZWQgdm1jcyBiZWZvcmUgVk1YT0ZGLAo+Pj4+IGFu
-ZCBjb21wYXJlIHRoZSB2bWNzcyBhbmQgdGhlaXIgY29waWVzLCB0aGVyZSBhcmUgaW5kZWVkIGRp
-ZmZlcmVuY2VzIGJldHdlZW4gdGhlCj4+Pj4gdm1jcyBhbmQgaXRzIGNvcHkuCj4+Pj4KPj4+PiBJ
-IGtub3cgdGhlIHRlc3RzIG1heSBiZSBub3Qgc28gY29udmluY2luZywgZm9yIGV4YW1wbGUsIEkg
-dXNlZCBtZW1jcHkgdG8gYmFjayB1cAo+Pj4+IHRoZSB2bWNzcyBhbmQgaXQgaXMgYW4gb3JkaW5h
-cnkgbWVtb3J5IG9wZXJhdGlvbi4gQnV0IHRvIGVuc3VyZSB0aGUgbm9uLWNvcnJ1cHRpb24KPj4+
-PiBvZiB0aGUgdm1jc3MgaW4gdGhlIHZtY29yZSwgSSB0aGluayB3ZSBzaG91bGQgVk1DTEVBUiB0
-aGUgdm1jc3MgYmVmb3JlIFZNWE9GRiBqdXN0Cj4+Pj4gYXMgdGhlIEludGVsIHNwZWMgc2F5cy4K
-Pj4+Cj4+PiBTb3JyeSwgSSB3YXMgdW5jbGVhciAtLSBJIHdhcyByZWZlcnJpbmcgdG8gdGhlIHNw
-ZWMsIEkgd2Fzbid0IHN1cmUKPj4+IHdoZXRoZXIgVk1YT0ZGIGlzIGRlZmluZWQgdG8gZmx1c2gg
-Vk1DU2VzIG9yIHdoZXRoZXIgaXQganVzdCBpbnZhbGlkYXRlcwo+Pj4gb24tY2hpcCBjYWNoZXMg
-c28gdGhhdCBpdCB3b24ndCBmbHVzaCB0aGVtIG91dCBpbiB0aGUgZnV0dXJlLCBjb3JydXB0aW5n
-Cj4+PiBtZW1vcnkuICBXZSBkb24ndCB3YW50IHRvIGRlcGVuZCBvbiBhY3R1YWwgYmVoYXZpb3Vy
-IGFzIGl0IG1heSBjaGFuZ2UKPj4+IHdpdGggZnV0dXJlIHZlcnNpb24uCj4+Pgo+Pj4gQ29weWlu
-ZyBzb21lIEludGVsIGZvbGssIG1heWJlIHRoZXkgY2FuIGNsYXJpZnkgaXQuCj4+Pgo+Pgo+PiBZ
-ZXMsIHRoZSBJbnRlbCBzcGVjIHNheXMgIm1heSBiZSIgYWJvdXQgdGhlIFZNQ1MtY29ycnVwdGlv
-biB0aGluZy4gRnJvbQo+PiBjaGFwdGVyIDI0LjEwLjEgaW4gSW50ZWzCriA2NCBhbmQgSUEtMzIg
-QXJjaGl0ZWN0dXJlcyBTb2Z0d2FyZSBEZXZlbG9wZXLigJlzCj4+IE1hbnVhbCBWb2x1bWUgM0M6
-U3lzdGVtIFByb2dyYW1taW5nIEd1aWRlLCBQYXJ0IDMsIHRoZXJlIGlzIHRoZSBkZXNjcmlwdGlv
-bjoKPj4KPj4gIklmIGEgbG9naWNhbCBwcm9jZXNzb3IgbGVhdmVzIFZNWCBvcGVyYXRpb24sIGFu
-eSBWTUNTcyBhY3RpdmUgb24gdGhhdCBsb2dpY2FsCj4+IHByb2Nlc3NvciBtYXkgYmUgY29ycnVw
-dGVkIChzZWUgYmVsb3cpLiBUbyBwcmV2ZW50IHN1Y2ggY29ycnVwdGlvbiBvZiBhIFZNQ1MgdGhh
-dAo+PiBtYXkgYmUgdXNlZCBlaXRoZXIgYWZ0ZXIgYSByZXR1cm4gdG8gVk1YIG9wZXJhdGlvbiBv
-ciBvbiBhbm90aGVyIGxvZ2ljYWwgcHJvY2Vzc29yLAo+PiBzb2Z0d2FyZSBzaG91bGQgVk1DTEVB
-UiB0aGF0IFZNQ1MgYmVmb3JlIGV4ZWN1dGluZyB0aGUgVk1YT0ZGIGluc3RydWN0aW9uIG9yCj4+
-IHJlbW92aW5nIHBvd2VyIGZyb20gdGhlIHByb2Nlc3NvciAoZS5nLiwgYXMgcGFydCBvZiBhIHRy
-YW5zaXRpb24gdG8gdGhlIFMzIGFuZCBTNAo+PiBwb3dlciBzdGF0ZXMpLiIKPj4KPj4gT3VyIHB1
-cnBvc2UgaXMgdG8gbWFrZSBzdXJlIHRoZSBWTUNTcyBpbiB0aGUgdm1jb3JlIGFyZSB1cGRhdGVk
-IGFuZCBub24tY29ycnVwdGVkLiBTbwo+PiBhY2NvcmRpbmcgdG8gdGhlIGRlc2NyaXB0aW9uIGFi
-b3ZlLCBubyBtYXR0ZXIgd2hldGhlciBWTVhPRkYgaXMgZGVmaW5lZCB0byBmbHVzaAo+PiBWTUNT
-cyBvciB3aGV0aGVyIGl0IGp1c3QgaW52YWxpZGF0ZXMgb24tY2hpcCBjYWNoZXMsIHdlJ2QgYmV0
-dGVyIFZNQ0xFQVIgdGhlCj4+IFZNQ1NzIGJlZm9yZSBleGVjdXRpbmcgdGhlIFZNWE9GRi4KPiAK
-PiBPaywgdGhhdCdzIGNsZWFyIHRoZW4uICBTbyBhbGwgd2UgbmVlZCBpcyB0byByZW1vdmUgdGhl
-IHN5c2N0bCBhbmQgY2xlYXIKPiBWTUNTcyB1bmNvbmRpdGlvbmFsbHkuCj4gCgpPSywgSSdsbCBt
-YWtlIHRoZSBuZXcgcGF0Y2ggYW5kIHJlc2VuZCBpdCBhZ2Fpbi4KClRoYW5rcwpaaGFuZyBZYW5m
-ZWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Currently, kdump just makes all the logical processors leave VMX operation by
+executing VMXOFF instruction, so any VMCSs active on the logical processors may
+be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
+in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
+executing the VMXOFF instruction.
+
+The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
+executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
+vmcore updated and non-corrupted.
+
+Changelog from v1 to v2:
+1. remove the sysctl and clear VMCSs unconditionally.
+
+zhangyanfei (2):
+  x86/kexec: VMCLEAR vmcss on all cpus if necessary
+  KVM: make crash_clear_loaded_vmcss valid when loading kvm_intel
+    module
+
+ arch/x86/include/asm/kexec.h |    2 ++
+ arch/x86/kernel/crash.c      |   27 +++++++++++++++++++++++++++
+ arch/x86/kvm/vmx.c           |    9 +++++++++
+ 3 files changed, 38 insertions(+), 0 deletions(-)
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
