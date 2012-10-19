@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TPDwd-0006u3-Pw
- for kexec@lists.infradead.org; Fri, 19 Oct 2012 14:53:05 +0000
-Date: Fri, 19 Oct 2012 10:53:00 -0400
+ id 1TPEL9-0004iP-9b
+ for kexec@lists.infradead.org; Fri, 19 Oct 2012 15:18:24 +0000
+Date: Fri, 19 Oct 2012 11:17:53 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] kdump: pass acpi_rsdp= to 2nd kernel for efi booting
-Message-ID: <20121019145300.GC27052@redhat.com>
-References: <20121018031608.GA3925@localhost.localdomain>
- <878vb332a9.fsf@xmission.com>
+Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
+Message-ID: <20121019151753.GF27052@redhat.com>
+References: <20121017141234.GD31663@redhat.com>
+ <20121018.120805.464238435.d.hatayama@jp.fujitsu.com>
+ <20121018141449.GB18147@redhat.com>
+ <20121019.122054.476812873.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <878vb332a9.fsf@xmission.com>
+In-Reply-To: <20121019.122054.476812873.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +26,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, Dave Young <dyoung@redhat.com>, khalid@gonehiking.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, Michael Holzheu <holzheu@linux.vnet.ibm.com>, tglx@linutronix.de
 
-On Thu, Oct 18, 2012 at 02:20:46PM -0700, Eric W. Biederman wrote:
-> Dave Young <dyoung@redhat.com> writes:
+On Fri, Oct 19, 2012 at 12:20:54PM +0900, HATAYAMA Daisuke wrote:
+
+[..]
+> > Instead of capturing the dump of whole memory, isn't it more efficient
+> > to capture the crash dump of VM in question and then if need be just
+> > take filtered crash dump of host kernel. 
+> > 
+> > I think that trying to take unfiltered crash dumps of tera bytes of memory
+> > is not practical or woth it for most of the use cases.
+> > 
 > 
-> > In case efi booting, kdump need kernel parameter acpi_rsdp= to retrieve
-> > the acpi root table physical address.
-> >
-> > Add a function cmdline_add_efi to get the address from /sys/firmware/efi/systab
-> > If there's no such file or read fail the function will just do nothing.
-> >
-> > Tested efi boot Fedora 17 on thinkpad T420.
-> >
-> > Some background info for this issue:
-> > http://lists.infradead.org/pipermail/kexec/2010-March/003889.html
-> >
-> > [v1 -> v2]:
-> > Address comments from Khalid and Simon
-> > use fgets instead of read(2) to iterate the file
-> > do not add 'noefi' because kexec does not construct EFI signature
-> > in bootloader signature in boot_params, so kexec'd kernel will
-> > disable EFI automatically even without noefi.
+> If there's a lag between VM dump and host dump, situation on the host
+> can change, and VM dump itself changes the situation. Then, we cannot
+> know what kind of bug resides in now, so we want to do as few things
+> as possible between detecting the bug reproduced and taking host
+> dump. So I expressed ``capturing the situation''.
+
+I would rather first detect the problem on guest and figure out what's
+happening. Once it has been determined that something is wrong from
+host side then debug what's wrong with host by using regular kernel
+debugging techiniques. 
+
+Even if you are interested in capturing crash dump, after you have
+decided that it is a host problem, then you can write some scripts which
+trigger host crash dump when relevant event happens.
+
+Seriously, this argument could be extended to regular processes also.
+Something is wrong with my application, so lets dump the whole system,
+provide a facility to extract each process's code dump from that huge
+dump and then examine if it was an application issue or kernel issue.
+
+I am skeptical that this approach is going to fly in practice. Dumping
+huge images, processing and transferring these is not very practical.
+So I would rather narrow down the problem on a running system and take
+filtered dump of appropriate component where I suspect the problem is.
+
+[..]
+> > capability was the primary reason that s390 also wants to support
+> > kdump otherwise there firmware dumping mechanism was working just
+> > fine.
+> > 
 > 
-> I don't have any problems with this patch.
-> 
-> I have a question.  In the case where this fails are we successfully
-> passing the ACPI sections in the e820 map?
+> I don't know s390 firmware dumping mechanism at all, but is it possble
+> for s390 to filter crash dump even on firmware dumping mechanism?
 
-For kdump we pass everything on commandline using memmap=. This also
-includes passing ACPI regions. I don't think we exclude those memmap=
-options for EFI.
-
-Also I am wondering that for kdump case why are we passing new memory
-map using command line which ultimately overides the e820 map we put
-into bootparams.
-
-It should make sense to just put modified map in e820 map in bootparam
-and not append all these options on command line. Also simplifiying
-the command line. 
-
-This is orthogonal to question you asked but I think this is one
-improvement we should do for kexec on panic code.
-
-> 
-> If we are passing the acpi sections is that not enough for the kernel
-> to find the rdsp area?  I'm just a bit surprised we need this patch
-> is all.
-> 
-> Somehow it seems a bit ugly to pass information that could be conveyed
-> in the memory map on the command line.
-
-I have no idea how UEFI case is working. Dave/Khalid might have more
-details on this.
+AFAIK, s390 dump mechanism could not filter dump and tha's the reason
+they wanted to support kdump and /proc/vmcore so that makedumpfile 
+could filter it. I am CCing Michael Holzheu, who did the s390 kdump work.
+He can tell it better.
 
 Thanks
 Vivek
