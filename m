@@ -1,32 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TP39j-0004qq-4N
- for kexec@lists.infradead.org; Fri, 19 Oct 2012 03:21:53 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id AED263EE0BB
- for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 12:21:41 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9762245DEBC
- for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 12:21:41 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 81A8745DEB7
- for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 12:21:41 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 73C7A1DB803F
- for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 12:21:41 +0900 (JST)
-Received: from m023.s.css.fujitsu.com (m023.s.css.fujitsu.com [10.0.81.63])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 24088E08001
- for <kexec@lists.infradead.org>; Fri, 19 Oct 2012 12:21:41 +0900 (JST)
-Date: Fri, 19 Oct 2012 12:20:54 +0900 (JST)
-Message-Id: <20121019.122054.476812873.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20121018141449.GB18147@redhat.com>
-References: <20121017141234.GD31663@redhat.com>
- <20121018.120805.464238435.d.hatayama@jp.fujitsu.com>
- <20121018141449.GB18147@redhat.com>
-Mime-Version: 1.0
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TP3Nz-00051W-6P
+ for kexec@lists.infradead.org; Fri, 19 Oct 2012 03:36:36 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20121018031028.GA3850@localhost.localdomain>
+ <1350572194.3894.14.camel@rhapsody>
+ <20121018191107.GC18147@redhat.com>
+ <1350588121.30243.7.camel@rhapsody>
+ <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
+ <20121019020630.GA27052@redhat.com>
+Date: Thu, 18 Oct 2012 20:36:19 -0700
+In-Reply-To: <20121019020630.GA27052@redhat.com> (Vivek Goyal's message of
+ "Thu, 18 Oct 2012 22:06:31 -0400")
+Message-ID: <877gqnnnf0.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
+ acpi_rsdp= to 2nd kernel for efi booting)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,185 +29,183 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, tglx@linutronix.de
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
 
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
-Date: Thu, 18 Oct 2012 10:14:49 -0400
-
-> On Thu, Oct 18, 2012 at 12:08:05PM +0900, HATAYAMA Daisuke wrote:
-> 
-> [..]
->> > Do you have any rough numbers on what kind of speed up we are looking
->> > at. IOW, what % of time is gone compressing a filetered dump. On large
->> > memory machines, saving huge dump files is anyway not an option due to
->> > time it takes. So we need to filter it to bare minimum and after that
->> > vmcore size should be reasonable and compression time might not be a
->> > big factor. Hence I am curious what kind of gains we are looking at.
->> > 
->> 
->> I did two kinds of benchmark 1) to evaluate how well compression and
->> writing dump into multiple disks performs on crash dump and 2) to
->> compare three kinds of compression algorhythm --- zlib, lzo and snappy
->> --- for use of crash dump.
->> 
->> >From 1), 4 disks with 4 cpus performs 300 MB/s on compression with
->> snappy. 1 hour for 1 TB. But on this benchmark, sample data is
->> intentionally randomized enough so data size is not reduced during
->> compression, it must be quicker on most of actual dumps. See also
->> bench_comp_multi_IO.tar.xz for image of graph.
-> 
-> Ok, I looked at the graphs. So somehow you seem to be dumping to multiple
-> disks. How do you do that? Are these disks in some stripe configuration
-> or they are JBOD and you have written special programs to dump a
-> particular section of memory to a specific disk to achieve parallelism?
-> 
-
-This was neither stripe like RAID0 nor JBOD, but the purpose was
-stripe and what I did is simpler than such disk management features,
-splitting crash dump into a given number of sections and writing them
-into the same number of disks seprately. makedumpfiles already
-supports this; see makedumpfile --split.
-
-However, I didn't use makedumpfile --split. I wrote a benchmark script
-that does this in Python and I used it. The reason is that
-makedumpfile can input only crash dump format, and if I used
-makedumpfile, I had to modify sample data in some crash dump formats,
-which was not flexble.
-
-> Looking at your graphs, 1 cpu can keep up with 4 disks and achieve
-> 300MB/s and after that it looks like cpu saturates. Adding more disks
-> with 1 cpu does not help. But increasing number of cpus can keep up
-> with increasing number of disks and you achieve 800MB/s. Sounds good.
-> 
-
-BTW, recent SDD shows over 1000MB/s maximally. lzo and snappy shows
-200MB/s on worst case of my benchmark for compression
-performance. This is too slow to use. I guess compression block size
-needs to be increased. Then, compression needs more cpu power, and
-difference on 4 disks case between cpu=1 to cpu=4 gets more clear.
+Vivek Goyal <vgoyal@redhat.com> writes:
 
 >> 
->> In the future, I'm going to do this benchmark again using quicker SSD
->> disks if I get them.
+>> > I was thinking that how about supporting in kernel bootloader. That is,
+>> > kernel acts as a boot loader. User passes the kernel, initrd and
+>> > commandline from user space using kexec system call and kernel parses
+>> > it and prepares appropriate memory areas ( ex. boot_params, kernel, initramfs,
+>> > backup region, elf header region etc). At the time of kexec -e, we just
+>> > follow th regular path and jump to second kernel.
+>> >
+>> > At the time of loading, kernel can verify the signature of incoming
+>> > bzImage and reject it if signatures don't match. Matthew mentioned that
+>> > kernel signing certificate will be available inside the running kernel,
+>> > so verifying PE/COFF bzImage should be easy.
 >> 
->> >From 2), zlib, used when doing makedumpfile -c, turns out to be too
->> slow to use it for crash dump. lzo and snappy is quick and relatively
->> as good compression ratio as zlib. In particular, snappy speed is
->> stable on any ratio of randomized part. See also
->> bench_compare_zlib_lzo_snappy.tar.xz for image of graph.
->> 
->> BTW, makedumpfile has already supported lzo since v1.4.4 and is going
->> to support snappy on v1.5.1.
->> 
->> OTOH, we have some requirements where we cannot use filtering.
->> Examples are:
->> 
->> - high-availability cluster system where application triggers crash
->>   dump to switch the active node to inactive node quickly. We retrieve
->>   the application image as process core dump later and analize it. We
->>   cannot filter user-space memory.
-> 
-> Do you have to really crash the node to take it offline? There should
-> be other ways to do this? If you are analyzing application performance
-> issues, why should you crash kernel and capture the whole crash dump.
-> There should be other ways to debug applications?
->  
+>> Except that we don't pass the executable file to the kernel.  That
+>> approach was nixed in the early review of kexec.
+>
+> Ok, this is the crux of this discussion. Why was passing executable image
+> to kernel was rejected. What's wrong with it? We can pass the executable
+> segments but not the executable image? Is it about keeping the file type
+> handling code in user space? 
 
-Certainly, this might be weak to the current situation where memory is
-huge. I only wanted to say here that we sometimes need user-space
-memory too.
+Handling the file formats etc in kernel space in inflexible.
 
+Given that what we load current at no time is exactly what is in the
+executable but is the executable plus it's ``arguments'' I have to agree
+with that assesment.
+
+In practice we have all kinds of argument passing conventions and those
+conventions prevent the kernel from executing another linux kernel
+directly, even if we had the other pieces in place.
+
+Not to mention things like the SHA512 checksum that we do to verify the
+kdump kernel has not been corrupted.
+
+>>  So we either need to
+>> find a way to trust the /sbin/kexec binary
+>
+> This would be the key. How do we trust /sbin/kexec. We don't have any
+> infrastrucutre to sign user space executables. Code for signing modules
+> got just in after a long battle. 
+
+There are 3 options for trusting /sbin/kexec.  There are IMA and EMA,
+and it is conceivable to have ELF note sections with signatures for
+executables.
+
+
+>> and do the signature
+>> verification there on a per file type basis,
+>
+> This will be possible only if we figure a way out to trust /sbin/kexec
+> otherwise trust chain is broken.
+
+Not so.  When loading an executable in general we don't process
+relocation entries.  Which means the bits in the file and the bits
+actually loaded in memory match.  Since we are passing the bits through
+/sbin/kexec if we also pass through the signature bits all should be
+well.
+
+Modulo argument passing.
+
+If we can pass in two signed executable blobs we can also perform
+trusted argument conversions.
+
+>> or we need to pass an
+>> additional signature along with the code (the signature would be encoded
+>> with an extra kexec flag and a special purpose segment I expect).
+>
+> We can possibly pass the signature in separate segment but part of the
+> verification process also involves calculating the digest of executable.
+> And how digest is calculated depends on file type. For PE/Coff there is
+> specific method regarding how to go about digest calculation and what
+> area to include and what fields to exclude.
+>
+> That means for kernel to do signature verification, we shall have to
+> pass the full executable to kenrel as it is with PE/COFF headers and
+> we are back to original idea of passing executables to kernel.
+
+See above.
+
+>> If we pass the signature to the kernel for verification there are rough
+>> bits like how do file formats with relocation entries, the purgatory
+>> code, ramdisks, and kernel parameters.
 >> 
->> - On qemu/kvm environment, we sometimes face a complicated bug caused
->>   by interaction between guest and host.
+>> > We don't have to worry about initramfs verification as it runs in 
+>> > user space.
 >> 
->>   For example, previously, there was a bug causing guest machine to
->>   hang, where IO scheduler handled guest's request as wrongly lower
->>   request than the actual one and guest was waiting for IO completion
->>   endlessly, repeating VMenter-VMexit forever.
+>> Except that we need a way to distinguish the initramfs and other data
+>> the part that is signed.
+>
+> If we are ok with the idea of passing executables and initramfs to
+> kernel, then kernel can do the placement. That means fields "mem and
+> memsz fields of kexec_segment will be free. We can possibly overload
+> memsz field and pass flags to represent segment type. This will happen
+> only if user chooses kernel as bootloader functionality.
+
+Which sounds nice initially but I don't think the notion of the kernel
+being a general purpose bootloader holds up to well.  It doesn't provide
+an easy place to put all of the weird cases.
+
+If we are going to pass in a file it probably makes sense to do a
+variation of kexec_load that passes in a file descriptor, a filename
+could work but I don't think we want those races.
+
+But then we get how do we pass in a different kernel command line and
+an initrd.  Things that were simple start quickly becoming complex.
+
+>> This leaves us with a couple of important questions to answer.
+>> - How do we trust /sbin/kexec or how do we avoid the need to trust
+>>   /sbin/kexec.
+>> - Where is the root of trust located?
+>
+> I think it is either in UEFI or in kernel.
+
+So for our purposes then it must be in the kernel, because the
+implementation must work on all 25+ architectures that linux supports.
+
+>> - How do we verify /sbin/kexec or do we verify /sbin/kexec.
+>> - How do we verify the images we load?
+>> - How do we separate code/data that needs trust from code/data that
+>>   doesn't need trust?
+>
+> If we agree on passing executable to kernel, then we just need to
+> verify only kernel. And we could overload kexec_segment->mem for
+> this.
+
+If we are passing in a file I think it calls for a new variant of the
+kexec_load system call.
+
+>> - How does the design we pick reduce the amount of code we need to trust?
 >> 
->>   To address such kind of bug, we first reproduce the bug, get host's
->>   crash dump to capture the situation, and then analyze the bug by
->>   investigating the situation from both host's and guest's views. On
->>   the bug above, we saw guest machine was waiting for IO, and we could
->>   resolve the issue relatively quickly. For this kind of complicated
->>   bug relevant to qemu/kvm, both host and guest views are very
->>   helpful.
->> 
->>   guest image is in user-space memory, qemu process, and again we
->>   cannot filter user-space memory.
-> 
-> Instead of capturing the dump of whole memory, isn't it more efficient
-> to capture the crash dump of VM in question and then if need be just
-> take filtered crash dump of host kernel. 
-> 
-> I think that trying to take unfiltered crash dumps of tera bytes of memory
-> is not practical or woth it for most of the use cases.
-> 
+>
+> I think if we loading in kernel, then we don't have to trust /sbin/kexec
+> and problem gets simplified a lot.
 
-If there's a lag between VM dump and host dump, situation on the host
-can change, and VM dump itself changes the situation. Then, we cannot
-know what kind of bug resides in now, so we want to do as few things
-as possible between detecting the bug reproduced and taking host
-dump. So I expressed ``capturing the situation''.
+I don't see loading in the kernel being a requirement needed for
+simplification.
 
->> 
->> - Filesystem people say page cache is often necessary for analysis of
->>   crash dump.
->> 
-> 
-> Do you have some examples of how does it help?
-> 
+If we are going to have a thing about first class and second class
+arguments we are likely going to need to do something to allow the
+arguments memorized at boot time to be passed through the kernel
+and not read into userspace.  Another kexec flag?
 
-Sorry, I heard this only and don't know in more detail now on the
-usecase.
+Grumble.  If we didn't support ACPI or firmware callbacks it would be
+simpler...
 
-<cut>
->> > How well does it work with nr_cpus kernel parameter. Currently we boot
->> > with nr_cpus=1 to save upon amount of memory to be reserved. I guess
->> > you might want to boot with nr_cpus=2 or nr_cpus=4 in your case to
->> > speed up compression?
->> 
->> Exactly, it seems reasonable to specify at most nr_cpus=4 on usual
->> machines becaue reserved memory is severely limited, and many disks
->> are difficult to connect only for crash dump use without special
->> requrement.
->> 
->> But there might be the system where crash dump is definitely done
->> quickly and for it, more reserved memory and more disks are no
->> problem. On such system, I think it's necessary to be able to set up
->> more reserved memory and more cpus.
-> 
-> We have this limitation of on x86 that we can't reserve more memory. I
-> think for x86_64, we could not load kernel above 896MB, due to 
-> various limitations. So you will have to cross those barriers too if
-> you want to reserve more memory to capture full dumps.
-> 
-> So I am fine with trying to bring up more cpus in second kernel in an
-> effort to improve scalability but I remain skeptical about the
-> practicality of dumping TBs of unfiltered data after crash. Filtering
+>> None of this is particularly hard but it all needs going through
+>> carefully by someone who cares.
+>
+> I think here crux of the matter is what's wrong with passing kernel
+> executable to kernel for loading and verification.
 
-I also think I don't want to take unnecessary parts because it makes
-dump slow only. Taking a whole memory would be non-sense. So, I think
-another featuer might also be needed here. For example, it might be
-useful if we can specify filtering user-space per process.
+Lack of flexibility, and lack of backward compatibility.  And at this
+point complete rearchitecture of kexec.
 
-But even so, I suspect crash dump with user-space necessary for us
-only can sometimes reach at most 500GB ~ 1TB. Then, it takes 2 ~ 4
-hours to take dump on one cpu and one disk.
+....
 
-> capability was the primary reason that s390 also wants to support
-> kdump otherwise there firmware dumping mechanism was working just
-> fine.
-> 
+So at this point my recommendation would be:
 
-I don't know s390 firmware dumping mechanism at all, but is it possble
-for s390 to filter crash dump even on firmware dumping mechanism?
+- Target images where the bits are passed straight through.
 
-Thanks.
-HATAYAMA, Daisuke
+- Add support for passing the initial kernels parameters through to the
+  kexec'd image.
+
+- Add support for passing the executable image signed signature through
+  to the kernel, and the conversion code signed signature through to the
+  kernel.
+
+modulo a few implementation details that should allow for preservation
+of most of the existing design and flexibility while allowing for signed
+images without too much work.
+
+Eric
 
 
 _______________________________________________
