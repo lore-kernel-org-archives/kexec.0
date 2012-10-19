@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TP3Nz-00051W-6P
- for kexec@lists.infradead.org; Fri, 19 Oct 2012 03:36:36 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121018031028.GA3850@localhost.localdomain>
- <1350572194.3894.14.camel@rhapsody>
- <20121018191107.GC18147@redhat.com>
- <1350588121.30243.7.camel@rhapsody>
- <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
- <20121019020630.GA27052@redhat.com>
-Date: Thu, 18 Oct 2012 20:36:19 -0700
-In-Reply-To: <20121019020630.GA27052@redhat.com> (Vivek Goyal's message of
- "Thu, 18 Oct 2012 22:06:31 -0400")
-Message-ID: <877gqnnnf0.fsf@xmission.com>
+ id 1TP4a2-0006hc-B9
+ for kexec@lists.infradead.org; Fri, 19 Oct 2012 04:53:15 +0000
+Message-ID: <5080DC34.1080503@cn.fujitsu.com>
+Date: Fri, 19 Oct 2012 12:51:00 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
- acpi_rsdp= to 2nd kernel for efi booting)
+Subject: Re: [PATCH 0/3] x86: clear vmcss on all cpus when doing kdump if
+ necessary
+References: <5077BB7B.4030203@cn.fujitsu.com> <507C2F18.8080904@redhat.com>
+ <507E17C0.9070305@cn.fujitsu.com> <507E8575.4040908@redhat.com>
+ <507F5762.3060208@cn.fujitsu.com> <507FE020.7040805@redhat.com>
+In-Reply-To: <507FE020.7040805@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,190 +21,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
+To: Avi Kivity <avi@redhat.com>
+Cc: x86@kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-doc@vger.kernel.org, "Hao, Xudong" <xudong.hao@intel.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Nakajima, Jun" <jun.nakajima@intel.com>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
-
->> 
->> > I was thinking that how about supporting in kernel bootloader. That is,
->> > kernel acts as a boot loader. User passes the kernel, initrd and
->> > commandline from user space using kexec system call and kernel parses
->> > it and prepares appropriate memory areas ( ex. boot_params, kernel, initramfs,
->> > backup region, elf header region etc). At the time of kexec -e, we just
->> > follow th regular path and jump to second kernel.
->> >
->> > At the time of loading, kernel can verify the signature of incoming
->> > bzImage and reject it if signatures don't match. Matthew mentioned that
->> > kernel signing certificate will be available inside the running kernel,
->> > so verifying PE/COFF bzImage should be easy.
->> 
->> Except that we don't pass the executable file to the kernel.  That
->> approach was nixed in the early review of kexec.
->
-> Ok, this is the crux of this discussion. Why was passing executable image
-> to kernel was rejected. What's wrong with it? We can pass the executable
-> segments but not the executable image? Is it about keeping the file type
-> handling code in user space? 
-
-Handling the file formats etc in kernel space in inflexible.
-
-Given that what we load current at no time is exactly what is in the
-executable but is the executable plus it's ``arguments'' I have to agree
-with that assesment.
-
-In practice we have all kinds of argument passing conventions and those
-conventions prevent the kernel from executing another linux kernel
-directly, even if we had the other pieces in place.
-
-Not to mention things like the SHA512 checksum that we do to verify the
-kdump kernel has not been corrupted.
-
->>  So we either need to
->> find a way to trust the /sbin/kexec binary
->
-> This would be the key. How do we trust /sbin/kexec. We don't have any
-> infrastrucutre to sign user space executables. Code for signing modules
-> got just in after a long battle. 
-
-There are 3 options for trusting /sbin/kexec.  There are IMA and EMA,
-and it is conceivable to have ELF note sections with signatures for
-executables.
-
-
->> and do the signature
->> verification there on a per file type basis,
->
-> This will be possible only if we figure a way out to trust /sbin/kexec
-> otherwise trust chain is broken.
-
-Not so.  When loading an executable in general we don't process
-relocation entries.  Which means the bits in the file and the bits
-actually loaded in memory match.  Since we are passing the bits through
-/sbin/kexec if we also pass through the signature bits all should be
-well.
-
-Modulo argument passing.
-
-If we can pass in two signed executable blobs we can also perform
-trusted argument conversions.
-
->> or we need to pass an
->> additional signature along with the code (the signature would be encoded
->> with an extra kexec flag and a special purpose segment I expect).
->
-> We can possibly pass the signature in separate segment but part of the
-> verification process also involves calculating the digest of executable.
-> And how digest is calculated depends on file type. For PE/Coff there is
-> specific method regarding how to go about digest calculation and what
-> area to include and what fields to exclude.
->
-> That means for kernel to do signature verification, we shall have to
-> pass the full executable to kenrel as it is with PE/COFF headers and
-> we are back to original idea of passing executables to kernel.
-
-See above.
-
->> If we pass the signature to the kernel for verification there are rough
->> bits like how do file formats with relocation entries, the purgatory
->> code, ramdisks, and kernel parameters.
->> 
->> > We don't have to worry about initramfs verification as it runs in 
->> > user space.
->> 
->> Except that we need a way to distinguish the initramfs and other data
->> the part that is signed.
->
-> If we are ok with the idea of passing executables and initramfs to
-> kernel, then kernel can do the placement. That means fields "mem and
-> memsz fields of kexec_segment will be free. We can possibly overload
-> memsz field and pass flags to represent segment type. This will happen
-> only if user chooses kernel as bootloader functionality.
-
-Which sounds nice initially but I don't think the notion of the kernel
-being a general purpose bootloader holds up to well.  It doesn't provide
-an easy place to put all of the weird cases.
-
-If we are going to pass in a file it probably makes sense to do a
-variation of kexec_load that passes in a file descriptor, a filename
-could work but I don't think we want those races.
-
-But then we get how do we pass in a different kernel command line and
-an initrd.  Things that were simple start quickly becoming complex.
-
->> This leaves us with a couple of important questions to answer.
->> - How do we trust /sbin/kexec or how do we avoid the need to trust
->>   /sbin/kexec.
->> - Where is the root of trust located?
->
-> I think it is either in UEFI or in kernel.
-
-So for our purposes then it must be in the kernel, because the
-implementation must work on all 25+ architectures that linux supports.
-
->> - How do we verify /sbin/kexec or do we verify /sbin/kexec.
->> - How do we verify the images we load?
->> - How do we separate code/data that needs trust from code/data that
->>   doesn't need trust?
->
-> If we agree on passing executable to kernel, then we just need to
-> verify only kernel. And we could overload kexec_segment->mem for
-> this.
-
-If we are passing in a file I think it calls for a new variant of the
-kexec_load system call.
-
->> - How does the design we pick reduce the amount of code we need to trust?
->> 
->
-> I think if we loading in kernel, then we don't have to trust /sbin/kexec
-> and problem gets simplified a lot.
-
-I don't see loading in the kernel being a requirement needed for
-simplification.
-
-If we are going to have a thing about first class and second class
-arguments we are likely going to need to do something to allow the
-arguments memorized at boot time to be passed through the kernel
-and not read into userspace.  Another kexec flag?
-
-Grumble.  If we didn't support ACPI or firmware callbacks it would be
-simpler...
-
->> None of this is particularly hard but it all needs going through
->> carefully by someone who cares.
->
-> I think here crux of the matter is what's wrong with passing kernel
-> executable to kernel for loading and verification.
-
-Lack of flexibility, and lack of backward compatibility.  And at this
-point complete rearchitecture of kexec.
-
-....
-
-So at this point my recommendation would be:
-
-- Target images where the bits are passed straight through.
-
-- Add support for passing the initial kernels parameters through to the
-  kexec'd image.
-
-- Add support for passing the executable image signed signature through
-  to the kernel, and the conversion code signed signature through to the
-  kernel.
-
-modulo a few implementation details that should allow for preservation
-of most of the existing design and flexibility while allowing for signed
-images without too much work.
-
-Eric
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQxMOaciDE45pelIDE4OjU1LCBBdmkgS2l2aXR5IOWGmemBkzoKPiBPbiAxMC8x
+OC8yMDEyIDAzOjEyIEFNLCBaaGFuZyBZYW5mZWkgd3JvdGU6Cj4+IOS6jiAyMDEy5bm0MTDmnIgx
+N+aXpSAxODoxNiwgQXZpIEtpdml0eSDlhpnpgZM6Cj4+PiBPbiAxMC8xNy8yMDEyIDA0OjI4IEFN
+LCBaaGFuZyBZYW5mZWkgd3JvdGU6Cj4+Pj4g5LqOIDIwMTLlubQxMOaciDE15pelIDIzOjQzLCBB
+dmkgS2l2aXR5IOWGmemBkzoKPj4+Pj4gT24gMTAvMTIvMjAxMiAwODo0MCBBTSwgWmhhbmcgWWFu
+ZmVpIHdyb3RlOgo+Pj4+Pj4gQ3VycmVudGx5LCBrZHVtcCBqdXN0IG1ha2VzIGFsbCB0aGUgbG9n
+aWNhbCBwcm9jZXNzb3JzIGxlYXZlIFZNWCBvcGVyYXRpb24gYnkKPj4+Pj4+IGV4ZWN1dGluZyBW
+TVhPRkYgaW5zdHJ1Y3Rpb24sIHNvIGFueSBWTUNTcyBhY3RpdmUgb24gdGhlIGxvZ2ljYWwgcHJv
+Y2Vzc29ycyBtYXkKPj4+Pj4+IGJlIGNvcnJ1cHRlZC4gQnV0LCBzb21ldGltZXMsIHdlIG5lZWQg
+dGhlIFZNQ1NzIHRvIGRlYnVnIGd1ZXN0IGltYWdlcyBjb250YWluZWQKPj4+Pj4+IGluIHRoZSBo
+b3N0IHZtY29yZS4gVG8gcHJldmVudCB0aGUgY29ycnVwdGlvbiwgd2Ugc2hvdWxkIFZNQ0xFQVIg
+dGhlIFZNQ1NzIGJlZm9yZQo+Pj4+Pj4gZXhlY3V0aW5nIHRoZSBWTVhPRkYgaW5zdHJ1Y3Rpb24u
+Cj4+Pj4+Cj4+Pj4+IEhvdyBoYXZlIHlvdSB2ZXJpZmllZCB0aGF0IFZNWE9GRiBkb2Vzbid0IGZs
+dXNoIGNhY2hlZCBWTUNTcyBhbHJlYWR5Pwo+Pj4+Pgo+Pj4+Cj4+Pj4gSSB0cmllZCBzb21lIHRl
+c3RzLCBmb3IgZXhhbXBsZSwgSSBtYWRlIGNvcGllcyBmb3IgZXZlcnkgdm1jcywgYW5kIGluIHRo
+ZSBrZHVtcAo+Pj4+IHBhdGgsIEkgYmFja2VkIHVwIGFsbCB0aGUgbG9hZGVkIHZtY3MgaW50byB0
+aGUgY29waWVzIGJlZm9yZSB2bXhvZmYuCj4+Pj4gQWZ0ZXIgZ2VuZXJhdGluZyB0aGUgdm1jb3Jl
+LCBJIHJldHJpZXZlIHRoZSB2bWNzcyBhbmQgdGhlaXIgY29waWVzLCBhbmQgY29tcGFyZSB0aGVt
+LAo+Pj4+IG5vIGRpZmZlcmVuY2VzLgo+Pj4+Cj4+Pj4gQW5vdGhlciB0ZXN0IGlzIHVzaW5nIFZN
+Q0xFQVIgdG8gY2xlYXIgYWxsIHRoZSBsb2FkZWQgdm1jcyBiZWZvcmUgVk1YT0ZGLAo+Pj4+IGFu
+ZCBjb21wYXJlIHRoZSB2bWNzcyBhbmQgdGhlaXIgY29waWVzLCB0aGVyZSBhcmUgaW5kZWVkIGRp
+ZmZlcmVuY2VzIGJldHdlZW4gdGhlCj4+Pj4gdm1jcyBhbmQgaXRzIGNvcHkuCj4+Pj4KPj4+PiBJ
+IGtub3cgdGhlIHRlc3RzIG1heSBiZSBub3Qgc28gY29udmluY2luZywgZm9yIGV4YW1wbGUsIEkg
+dXNlZCBtZW1jcHkgdG8gYmFjayB1cAo+Pj4+IHRoZSB2bWNzcyBhbmQgaXQgaXMgYW4gb3JkaW5h
+cnkgbWVtb3J5IG9wZXJhdGlvbi4gQnV0IHRvIGVuc3VyZSB0aGUgbm9uLWNvcnJ1cHRpb24KPj4+
+PiBvZiB0aGUgdm1jc3MgaW4gdGhlIHZtY29yZSwgSSB0aGluayB3ZSBzaG91bGQgVk1DTEVBUiB0
+aGUgdm1jc3MgYmVmb3JlIFZNWE9GRiBqdXN0Cj4+Pj4gYXMgdGhlIEludGVsIHNwZWMgc2F5cy4K
+Pj4+Cj4+PiBTb3JyeSwgSSB3YXMgdW5jbGVhciAtLSBJIHdhcyByZWZlcnJpbmcgdG8gdGhlIHNw
+ZWMsIEkgd2Fzbid0IHN1cmUKPj4+IHdoZXRoZXIgVk1YT0ZGIGlzIGRlZmluZWQgdG8gZmx1c2gg
+Vk1DU2VzIG9yIHdoZXRoZXIgaXQganVzdCBpbnZhbGlkYXRlcwo+Pj4gb24tY2hpcCBjYWNoZXMg
+c28gdGhhdCBpdCB3b24ndCBmbHVzaCB0aGVtIG91dCBpbiB0aGUgZnV0dXJlLCBjb3JydXB0aW5n
+Cj4+PiBtZW1vcnkuICBXZSBkb24ndCB3YW50IHRvIGRlcGVuZCBvbiBhY3R1YWwgYmVoYXZpb3Vy
+IGFzIGl0IG1heSBjaGFuZ2UKPj4+IHdpdGggZnV0dXJlIHZlcnNpb24uCj4+Pgo+Pj4gQ29weWlu
+ZyBzb21lIEludGVsIGZvbGssIG1heWJlIHRoZXkgY2FuIGNsYXJpZnkgaXQuCj4+Pgo+Pgo+PiBZ
+ZXMsIHRoZSBJbnRlbCBzcGVjIHNheXMgIm1heSBiZSIgYWJvdXQgdGhlIFZNQ1MtY29ycnVwdGlv
+biB0aGluZy4gRnJvbQo+PiBjaGFwdGVyIDI0LjEwLjEgaW4gSW50ZWzCriA2NCBhbmQgSUEtMzIg
+QXJjaGl0ZWN0dXJlcyBTb2Z0d2FyZSBEZXZlbG9wZXLigJlzCj4+IE1hbnVhbCBWb2x1bWUgM0M6
+U3lzdGVtIFByb2dyYW1taW5nIEd1aWRlLCBQYXJ0IDMsIHRoZXJlIGlzIHRoZSBkZXNjcmlwdGlv
+bjoKPj4KPj4gIklmIGEgbG9naWNhbCBwcm9jZXNzb3IgbGVhdmVzIFZNWCBvcGVyYXRpb24sIGFu
+eSBWTUNTcyBhY3RpdmUgb24gdGhhdCBsb2dpY2FsCj4+IHByb2Nlc3NvciBtYXkgYmUgY29ycnVw
+dGVkIChzZWUgYmVsb3cpLiBUbyBwcmV2ZW50IHN1Y2ggY29ycnVwdGlvbiBvZiBhIFZNQ1MgdGhh
+dAo+PiBtYXkgYmUgdXNlZCBlaXRoZXIgYWZ0ZXIgYSByZXR1cm4gdG8gVk1YIG9wZXJhdGlvbiBv
+ciBvbiBhbm90aGVyIGxvZ2ljYWwgcHJvY2Vzc29yLAo+PiBzb2Z0d2FyZSBzaG91bGQgVk1DTEVB
+UiB0aGF0IFZNQ1MgYmVmb3JlIGV4ZWN1dGluZyB0aGUgVk1YT0ZGIGluc3RydWN0aW9uIG9yCj4+
+IHJlbW92aW5nIHBvd2VyIGZyb20gdGhlIHByb2Nlc3NvciAoZS5nLiwgYXMgcGFydCBvZiBhIHRy
+YW5zaXRpb24gdG8gdGhlIFMzIGFuZCBTNAo+PiBwb3dlciBzdGF0ZXMpLiIKPj4KPj4gT3VyIHB1
+cnBvc2UgaXMgdG8gbWFrZSBzdXJlIHRoZSBWTUNTcyBpbiB0aGUgdm1jb3JlIGFyZSB1cGRhdGVk
+IGFuZCBub24tY29ycnVwdGVkLiBTbwo+PiBhY2NvcmRpbmcgdG8gdGhlIGRlc2NyaXB0aW9uIGFi
+b3ZlLCBubyBtYXR0ZXIgd2hldGhlciBWTVhPRkYgaXMgZGVmaW5lZCB0byBmbHVzaAo+PiBWTUNT
+cyBvciB3aGV0aGVyIGl0IGp1c3QgaW52YWxpZGF0ZXMgb24tY2hpcCBjYWNoZXMsIHdlJ2QgYmV0
+dGVyIFZNQ0xFQVIgdGhlCj4+IFZNQ1NzIGJlZm9yZSBleGVjdXRpbmcgdGhlIFZNWE9GRi4KPiAK
+PiBPaywgdGhhdCdzIGNsZWFyIHRoZW4uICBTbyBhbGwgd2UgbmVlZCBpcyB0byByZW1vdmUgdGhl
+IHN5c2N0bCBhbmQgY2xlYXIKPiBWTUNTcyB1bmNvbmRpdGlvbmFsbHkuCj4gCgpPSywgSSdsbCBt
+YWtlIHRoZSBuZXcgcGF0Y2ggYW5kIHJlc2VuZCBpdCBhZ2Fpbi4KClRoYW5rcwpaaGFuZyBZYW5m
+ZWkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
+YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
