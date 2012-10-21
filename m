@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from qmta12.emeryville.ca.mail.comcast.net
- ([2001:558:fe2d:44:76:96:27:227])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TPIt7-0005nH-U2
- for kexec@lists.infradead.org; Fri, 19 Oct 2012 20:09:46 +0000
-Message-ID: <1350677378.30243.19.camel@rhapsody>
-Subject: Re: [PATCH v2] kdump: pass acpi_rsdp= to 2nd kernel for efi booting
-From: Khalid Aziz <khalid@gonehiking.org>
-Date: Fri, 19 Oct 2012 14:09:38 -0600
-In-Reply-To: <20121019145300.GC27052@redhat.com>
+ id 1TPlsI-00007R-TM
+ for kexec@lists.infradead.org; Sun, 21 Oct 2012 03:06:51 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20121018031608.GA3925@localhost.localdomain>
  <878vb332a9.fsf@xmission.com> <20121019145300.GC27052@redhat.com>
-Mime-Version: 1.0
+Date: Sat, 20 Oct 2012 20:06:23 -0700
+In-Reply-To: <20121019145300.GC27052@redhat.com> (Vivek Goyal's message of
+ "Fri, 19 Oct 2012 10:53:00 -0400")
+Message-ID: <874nlole1c.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2] kdump: pass acpi_rsdp= to 2nd kernel for efi booting
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +25,57 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, horms@verge.net.au, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, Dave Young <dyoung@redhat.com>, khalid@gonehiking.org
 
-On Fri, 2012-10-19 at 10:53 -0400, Vivek Goyal wrote:
+Vivek Goyal <vgoyal@redhat.com> writes:
+
 > On Thu, Oct 18, 2012 at 02:20:46PM -0700, Eric W. Biederman wrote:
-> > 
-> > If we are passing the acpi sections is that not enough for the kernel
-> > to find the rdsp area?  I'm just a bit surprised we need this patch
-> > is all.
-> > 
-> > Somehow it seems a bit ugly to pass information that could be conveyed
-> > in the memory map on the command line.
-> 
+>> 
+>> I have a question.  In the case where this fails are we successfully
+>> passing the ACPI sections in the e820 map?
+>
+> For kdump we pass everything on commandline using memmap=. This also
+> includes passing ACPI regions. I don't think we exclude those memmap=
+> options for EFI.
+>
+> Also I am wondering that for kdump case why are we passing new memory
+> map using command line which ultimately overides the e820 map we put
+> into bootparams.
+>
+> It should make sense to just put modified map in e820 map in bootparam
+> and not append all these options on command line. Also simplifiying
+> the command line. 
+
+As I recall we pass in the real memory map in e820 which allows for
+/proc/oldmem and friends to work, and use the memory map to pass in
+which information we really want to use.
+
+Given that what we use for the old memory map is the ELF headers
+passed from the crashed kernel there does seem to be room for cleanup
+in that area.
+
+> This is orthogonal to question you asked but I think this is one
+> improvement we should do for kexec on panic code.
+
+Certainly it is worth working on.
+
+>> If we are passing the acpi sections is that not enough for the kernel
+>> to find the rdsp area?  I'm just a bit surprised we need this patch
+>> is all.
+>> 
+>> Somehow it seems a bit ugly to pass information that could be conveyed
+>> in the memory map on the command line.
+>
 > I have no idea how UEFI case is working. Dave/Khalid might have more
 > details on this.
 
-On a UEFI machine with CSM, kernel finds RSDP in EBDA. On a UEFI machine
-with no CSM, kernel fails to find RSDP and here is the message I see:
+It is the non-pure UEFI case where non-UEFI table scans work.
 
-ACPI BIOS Bug: Error: A valid RSDP was not found (20120913/tbxfroot-219)
+Of course it puzzles me why we can't find the table via scanning memory
+when running in a pure UEFI environment.  Ah well that is a problem for
+another day.
 
-
---
-Khalid
-
+Eric
 
 
 _______________________________________________
