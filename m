@@ -1,19 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TQOqT-0008Aa-Kr
- for kexec@lists.infradead.org; Mon, 22 Oct 2012 20:43:34 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121016043357.20003.5885.stgit@localhost6.localdomain6>
- <20121016043528.20003.601.stgit@localhost6.localdomain6>
- <873916i88t.fsf@xmission.com> <5085A9A8.5020004@zytor.com>
- <87fw56fduo.fsf@xmission.com> <5085AD7D.106@zytor.com>
-Date: Mon, 22 Oct 2012 13:43:21 -0700
-In-Reply-To: <5085AD7D.106@zytor.com> (H. Peter Anvin's message of "Mon, 22
- Oct 2012 13:33:01 -0700")
-Message-ID: <87a9vedyqe.fsf@xmission.com>
+ id 1TQOqe-0008Cr-51
+ for kexec@lists.infradead.org; Mon, 22 Oct 2012 20:43:45 +0000
+Date: Mon, 22 Oct 2012 16:43:39 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
+ acpi_rsdp= to 2nd kernel for efi booting)
+Message-ID: <20121022204339.GG3401@redhat.com>
+References: <20121018031028.GA3850@localhost.localdomain>
+ <1350572194.3894.14.camel@rhapsody>
+ <20121018191107.GC18147@redhat.com>
+ <1350588121.30243.7.camel@rhapsody>
+ <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
+ <20121019020630.GA27052@redhat.com> <877gqnnnf0.fsf@xmission.com>
+ <20121019143112.GB27052@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
+Content-Disposition: inline
+In-Reply-To: <20121019143112.GB27052@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,52 +30,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, tglx@linutronix.de, mingo@elte.hu, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
 
-"H. Peter Anvin" <hpa@zytor.com> writes:
+On Fri, Oct 19, 2012 at 10:31:12AM -0400, Vivek Goyal wrote:
 
-> On 10/22/2012 01:31 PM, Eric W. Biederman wrote:
->>>
->>> IIRC Fenghua experimented with that and it didn't work.  Not all BIOSes
->>> use that bit to determine BSP-ness.
->> 
->> What does a BIOS have to do with anything?
->> 
->> The practical issue here is does an INIT IPI cause the cpu to go into
->> startup-ipi-wait or to start booting at 4G-16 bytes.
->> 
->> For dealing with BIOSen we may still need to use the bootstrap processor
->> for firmware calls, cpu suspend, and other firmware weirdness, but that
->> should all be completely orthogonal to the behavior to what happens
->> when an INIT IPI is sent to the cpu.
->> 
->> The only firmware problem I can imagine having is cpu virtualization
->> bug.
->> 
->
-> The whole problem is that some BIOSes go wonky after receiving an INIT
-> (as in INIT-SIPI-SIPI) to the BSP.
+[..]
+> - What happens to purgatory code. It is unsigned piece of code which
+>   runs in kernel?
 
-The reason the BIOSen go wonky is the INIT cause the cpu to go to the
-reset vector at 4G-16 bytes.  So it is very much expected that the
-BIOSen start acting like you just came out of reset.
+Thinking more about it, another not so clean proposal. 
 
-If you can clear bit 8 of IA32_APIC_BASE_MSR and inform the cpu to not
-send the cpu to 4G-16 bytes and instead send the cpu into it's magic
-startup-ipi-wait mode then the BIOSen will not be involved on that path.
+- So only non-signed executable code user space loads is purgatory. What
+  if we get rid of purgatory and let kernel do the pugatory's job.
 
-It is a simple question of does the cpu support clearing bit 8
-meaningfully.
+- purgatory seems to be doing few things. (atleast on x86_64).
+	1. Verifies the checksums of loaded segments.
+	2. Copies the backup region.
+	3. Prepares the environment for jumping into target executable.
+	    (32bit entry or real mode entry etc).
 
-If the cpu allows bit 8 to be cleared and sends the cpu to the reset
-vector on receipt of the INIT IPI I would call that a deviation from the
-x86 cpu specification.
+   First should be easily doable in kernel. At load time kernel can calculate
+   the checksum of loaded segments and can verify the chesum again before
+   during execute time.
 
-So clearing bit 8 is not a question about BIOSen it is a question of can
-we avoid the BIOSen, by using an obscure under-documented cpu feature.
+   Second one should be doable too in kernel as kernel can copy the
+   contents to backup region. Just that we shall have to introduce per
+   segment flags so that user space can tell kernel that a particular
+   segment is backup segment. (say KEXEC_BACKUP_SEGMENT).
 
-Eric
+   Third one is most tricky as it requires passing extra information to
+   kernel about what kind of setup to do before jumping to entry point. If
+   we can define some generic per arch kexec flags to represent those 
+   states, then kernel can do the job. 
+
+Doing lots of things based on flags does not sound very clean to me. Over
+a period of time we will end up defining more flags as people come up
+with new situations. But at the same time it can simplify the problem 
+a bit and one does not have to introduce an new system call.
+
+Just a thought..., Still scratching my head on how to go about this signed
+image thing without too much of work.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
