@@ -1,31 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TQBZT-0006uq-Pz
- for kexec@lists.infradead.org; Mon, 22 Oct 2012 06:33:09 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 9F54E3EE0BD
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 82AB445DEBB
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 69F1345DEB6
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5AC7D1DB803E
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
-Received: from m022.s.css.fujitsu.com (m022.s.css.fujitsu.com [10.0.81.62])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 04F71E08001
- for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
-Date: Mon, 22 Oct 2012 15:32:19 +0900 (JST)
-Message-Id: <20121022.153219.30891002.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20121019151753.GF27052@redhat.com>
-References: <20121018141449.GB18147@redhat.com>
- <20121019.122054.476812873.d.hatayama@jp.fujitsu.com>
- <20121019151753.GF27052@redhat.com>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TQCL6-0006pK-JH
+ for kexec@lists.infradead.org; Mon, 22 Oct 2012 07:22:23 +0000
+Date: Mon, 22 Oct 2012 16:20:56 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: s390x: Add 2GB frame support for page
+ table walker
+Message-Id: <20121022162056.2acd77ed84fcac9e95f4f51d@mxc.nes.nec.co.jp>
+In-Reply-To: <20121019182912.135cac32@holzheu>
+References: <20121019182912.135cac32@holzheu>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,92 +23,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, holzheu@linux.vnet.ibm.com, tglx@linutronix.de
+To: holzheu@linux.vnet.ibm.com
+Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org
 
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
-Date: Fri, 19 Oct 2012 11:17:53 -0400
+Hello Michael,
 
-> On Fri, Oct 19, 2012 at 12:20:54PM +0900, HATAYAMA Daisuke wrote:
+On Fri, 19 Oct 2012 18:29:12 +0200
+Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
+
+> On s390 the zEC12 machines support 2GB frames. In order to walk page
+> tables correctly add support to the page table walker function so it
+> detects 2GB frames.
 > 
-> [..]
->> > Instead of capturing the dump of whole memory, isn't it more efficient
->> > to capture the crash dump of VM in question and then if need be just
->> > take filtered crash dump of host kernel. 
->> > 
->> > I think that trying to take unfiltered crash dumps of tera bytes of memory
->> > is not practical or woth it for most of the use cases.
->> > 
->> 
->> If there's a lag between VM dump and host dump, situation on the host
->> can change, and VM dump itself changes the situation. Then, we cannot
->> know what kind of bug resides in now, so we want to do as few things
->> as possible between detecting the bug reproduced and taking host
->> dump. So I expressed ``capturing the situation''.
-> 
-> I would rather first detect the problem on guest and figure out what's
-> happening. Once it has been determined that something is wrong from
-> host side then debug what's wrong with host by using regular kernel
-> debugging techiniques. 
-> 
-> Even if you are interested in capturing crash dump, after you have
-> decided that it is a host problem, then you can write some scripts which
-> trigger host crash dump when relevant event happens.
-> 
-> Seriously, this argument could be extended to regular processes also.
-> Something is wrong with my application, so lets dump the whole system,
-> provide a facility to extract each process's code dump from that huge
-> dump and then examine if it was an application issue or kernel issue.
-> 
-> I am skeptical that this approach is going to fly in practice. Dumping
-> huge images, processing and transferring these is not very practical.
-> So I would rather narrow down the problem on a running system and take
-> filtered dump of appropriate component where I suspect the problem is.
-> 
-> [..]
+> Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-Such bug is often complicated and it often takes some time to
-reproduce it. Once it is reproduced, we cannot use system where the
-bug has been reproduced, long time since it's mainly managed by
-another teams under some project and there are many tasks that must be
-done on the system. It would be best to proceed the debug little by
-little as you suggest, but it's difficult to do that from practiacl
-reason.
+Thank you for your work. I have a question.
 
-Crash dump of tera bytes cannot support our method perfectly, I can
-understand this. The reason why we have done these ways with no
-problem is that memory size was not so large that it never made crash
-dump long to complete. But doing filtering means that the data
-necessary for debug might be excluded. This is the worst case we must
-avoid. Consdering trade-off between recent large memory size and
-filtering, I think filtering with more granurality is needed. I want
-to consider this in the future work.
-
-BTW, I feel you basically shows positive attitude to this patch set
-itself. I believe that kdump has merits only. Could you tell me what
-is needed for this patch set to be acked by you?
-
->> > capability was the primary reason that s390 also wants to support
->> > kdump otherwise there firmware dumping mechanism was working just
->> > fine.
->> > 
->> 
->> I don't know s390 firmware dumping mechanism at all, but is it possble
->> for s390 to filter crash dump even on firmware dumping mechanism?
+> ---
+>  arch/s390x.c   |    6 ++++++
+>  makedumpfile.h |    1 +
+>  2 files changed, 7 insertions(+)
 > 
-> AFAIK, s390 dump mechanism could not filter dump and tha's the reason
-> they wanted to support kdump and /proc/vmcore so that makedumpfile 
-> could filter it. I am CCing Michael Holzheu, who did the s390 kdump work.
-> He can tell it better.
+> --- a/arch/s390x.c
+> +++ b/arch/s390x.c
+> @@ -247,6 +247,11 @@ vtop_s390x(unsigned long vaddr)
+>  			return NOT_PADDR;
+>  		}
+>  		table = entry & _REGION_ENTRY_ORIGIN;
+> +		if ((entry & _REGION_ENTRY_LARGE) && (level == 1)) {
+> +			table &= ~0x7fffffffUL;
+> +			paddr = table + (vaddr & 0x7ffffffUL);
+                                                 ^^^^^^^^^^^
+There is 0x7ffffff(27bit) but the patch for crash uses 0x7fffffff(31bit).
+Which is correct ?
+
+
+Thanks
+Atsushi Kumagai
+
+> +			return paddr;
+> +		}
+>  		len = RSG_TABLE_LENGTH(entry);
+>  		level--;
+>  	}
+> @@ -257,6 +262,7 @@ vtop_s390x(unsigned long vaddr)
+>  	 * if no, then get the page table entry using PX index.
+>  	 */
+>  	if (entry & _SEGMENT_ENTRY_LARGE) {
+> +		table &= ~_PAGE_BYTE_INDEX_MASK;
+>  		paddr = table + (vaddr &  _PAGE_BYTE_INDEX_MASK);
+>  	} else {
+>  		entry = _kl_pg_table_deref_s390x(vaddr,
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -563,6 +563,7 @@ do { \
+>  #define _REGION_ENTRY_TYPE_MASK	0x0c	/* region table type mask */
+>  #define _REGION_ENTRY_INVALID	0x20	/* invalid region table entry */
+>  #define _REGION_ENTRY_LENGTH	0x03	/* region table length */
+> +#define _REGION_ENTRY_LARGE	0x400
+>  #define _REGION_OFFSET_MASK	0x7ffUL	/* region/segment table offset mask */
+>  
+>  #define RSG_TABLE_LEVEL(x)	(((x) & _REGION_ENTRY_TYPE_MASK) >> 2)
 > 
-
-Hmm, we Fujitsu also have firmware dump mechanism and it cannot filter
-memory too. I think it would be a similar situation.
-
-Thanks.
-HATAYAMA, Daisuke
-
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
