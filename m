@@ -1,19 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TQ7SJ-0007Jr-M3
- for kexec@lists.infradead.org; Mon, 22 Oct 2012 02:09:29 +0000
-Message-ID: <5084A9FA.1090403@redhat.com>
-Date: Mon, 22 Oct 2012 10:05:46 +0800
-From: Dave Young <dyoung@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
-References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
- <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
- <5048E40E.7040003@hp.com> <5049B6AD.9000304@redhat.com>
- <504FF4DB.6030601@redhat.com> <507F7394.5020501@redhat.com>
- <1350572394.3894.18.camel@rhapsody>
-In-Reply-To: <1350572394.3894.18.camel@rhapsody>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TQBZT-0006uq-Pz
+ for kexec@lists.infradead.org; Mon, 22 Oct 2012 06:33:09 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 9F54E3EE0BD
+ for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 82AB445DEBB
+ for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 69F1345DEB6
+ for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5AC7D1DB803E
+ for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
+Received: from m022.s.css.fujitsu.com (m022.s.css.fujitsu.com [10.0.81.62])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 04F71E08001
+ for <kexec@lists.infradead.org>; Mon, 22 Oct 2012 15:33:00 +0900 (JST)
+Date: Mon, 22 Oct 2012 15:32:19 +0900 (JST)
+Message-Id: <20121022.153219.30891002.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20121019151753.GF27052@redhat.com>
+References: <20121018141449.GB18147@redhat.com>
+ <20121019.122054.476812873.d.hatayama@jp.fujitsu.com>
+ <20121019151753.GF27052@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,74 +39,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Khalid Aziz <khalid@gonehiking.org>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com
+To: vgoyal@redhat.com
+Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, holzheu@linux.vnet.ibm.com, tglx@linutronix.de
 
-On 10/18/2012 10:59 PM, Khalid Aziz wrote:
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
+Date: Fri, 19 Oct 2012 11:17:53 -0400
 
-> On Thu, 2012-10-18 at 11:12 +0800, Dave Young wrote:
->> On 09/12/2012 10:35 AM, Dave Young wrote:
->>
->>> On 09/07/2012 04:56 PM, Dave Young wrote:
->>>>
->>>> I did some digging about the efi boot kdump in slackware with kernel
->>>> from latest linus tree. I'm surprise that kdump works even without these
->>>> "noefi" and "acpi_rsdp="
->>>>
->>>> With fedora 17 3.4.3 kernel passing "acpi_rsdp=" is enough for kdump
->>>> kernel booting.
->>>>
->>>> Actually in x86 setup code if bootloader do not pass correct efi_info in
->>>> boot_params efi_enabled will be set to 0 automaticlly.
->>>>
->>>> So as for this patch 'noefi' is not needed.
->>>>
->>>> I will do more testing to see why linus tree works without "acpi_rsdp="
->>>>
->>>
->>> There's probably some efi changes between 3.4.3 - 3.6.0-rc4 cause this
->>> works. I have not got time to bisect it.
->>
->>
->> During recent test, I found I mistakenly used wrong kernel config
->> without CONFIG_EFI in 1st kernel for testing. acpi_rsdp= is still needed.
->>
->> Just resent the v2 patch, please help to review.
->>
+> On Fri, Oct 19, 2012 at 12:20:54PM +0900, HATAYAMA Daisuke wrote:
 > 
-> Hi Dave,
+> [..]
+>> > Instead of capturing the dump of whole memory, isn't it more efficient
+>> > to capture the crash dump of VM in question and then if need be just
+>> > take filtered crash dump of host kernel. 
+>> > 
+>> > I think that trying to take unfiltered crash dumps of tera bytes of memory
+>> > is not practical or woth it for most of the use cases.
+>> > 
+>> 
+>> If there's a lag between VM dump and host dump, situation on the host
+>> can change, and VM dump itself changes the situation. Then, we cannot
+>> know what kind of bug resides in now, so we want to do as few things
+>> as possible between detecting the bug reproduced and taking host
+>> dump. So I expressed ``capturing the situation''.
 > 
-> I suspect EFI based systems with Compatibility Support Module (CSM) are
-> still not going to need this, but I can see native EFI systems with no
-> CSM needing this. I have reviewed your patch.
-
-
-Good to know, I have no CSM machine to test. Since Simon has applied the
-patch, I think I can improve this issue later If I can find a machine
-with CSM.
-
+> I would rather first detect the problem on guest and figure out what's
+> happening. Once it has been determined that something is wrong from
+> host side then debug what's wrong with host by using regular kernel
+> debugging techiniques. 
 > 
-> BTW, I am no longer at HP, so <khalid.aziz@hp.com> is no longer valid.
-> <khalid@gonehiking.org> is my permanent personal email address.
-
-
-Thanks for reminding.
-
+> Even if you are interested in capturing crash dump, after you have
+> decided that it is a host problem, then you can write some scripts which
+> trigger host crash dump when relevant event happens.
 > 
-> --
-> Khalid
+> Seriously, this argument could be extended to regular processes also.
+> Something is wrong with my application, so lets dump the whole system,
+> provide a facility to extract each process's code dump from that huge
+> dump and then examine if it was an application issue or kernel issue.
 > 
+> I am skeptical that this approach is going to fly in practice. Dumping
+> huge images, processing and transferring these is not very practical.
+> So I would rather narrow down the problem on a running system and take
+> filtered dump of appropriate component where I suspect the problem is.
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> [..]
 
+Such bug is often complicated and it often takes some time to
+reproduce it. Once it is reproduced, we cannot use system where the
+bug has been reproduced, long time since it's mainly managed by
+another teams under some project and there are many tasks that must be
+done on the system. It would be best to proceed the debug little by
+little as you suggest, but it's difficult to do that from practiacl
+reason.
 
+Crash dump of tera bytes cannot support our method perfectly, I can
+understand this. The reason why we have done these ways with no
+problem is that memory size was not so large that it never made crash
+dump long to complete. But doing filtering means that the data
+necessary for debug might be excluded. This is the worst case we must
+avoid. Consdering trade-off between recent large memory size and
+filtering, I think filtering with more granurality is needed. I want
+to consider this in the future work.
 
--- 
-Thanks
-Dave
+BTW, I feel you basically shows positive attitude to this patch set
+itself. I believe that kdump has merits only. Could you tell me what
+is needed for this patch set to be acked by you?
+
+>> > capability was the primary reason that s390 also wants to support
+>> > kdump otherwise there firmware dumping mechanism was working just
+>> > fine.
+>> > 
+>> 
+>> I don't know s390 firmware dumping mechanism at all, but is it possble
+>> for s390 to filter crash dump even on firmware dumping mechanism?
+> 
+> AFAIK, s390 dump mechanism could not filter dump and tha's the reason
+> they wanted to support kdump and /proc/vmcore so that makedumpfile 
+> could filter it. I am CCing Michael Holzheu, who did the s390 kdump work.
+> He can tell it better.
+> 
+
+Hmm, we Fujitsu also have firmware dump mechanism and it cannot filter
+memory too. I think it would be a similar situation.
+
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
