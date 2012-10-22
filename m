@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TQPLf-0003SB-Qj
- for kexec@lists.infradead.org; Mon, 22 Oct 2012 21:15:49 +0000
+ id 1TQPZ5-0005w4-Mu
+ for kexec@lists.infradead.org; Mon, 22 Oct 2012 21:29:40 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121018031028.GA3850@localhost.localdomain>
- <1350572194.3894.14.camel@rhapsody>
- <20121018191107.GC18147@redhat.com>
- <1350588121.30243.7.camel@rhapsody>
- <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
- <20121019020630.GA27052@redhat.com> <877gqnnnf0.fsf@xmission.com>
- <20121019175301.GG27052@redhat.com>
-Date: Mon, 22 Oct 2012 14:15:38 -0700
-In-Reply-To: <20121019175301.GG27052@redhat.com> (Vivek Goyal's message of
- "Fri, 19 Oct 2012 13:53:01 -0400")
-Message-ID: <87bofu9pj9.fsf@xmission.com>
+References: <20121016043357.20003.5885.stgit@localhost6.localdomain6>
+ <20121016043528.20003.601.stgit@localhost6.localdomain6>
+ <873916i88t.fsf@xmission.com> <5085A9A8.5020004@zytor.com>
+ <87fw56fduo.fsf@xmission.com> <5085AD7D.106@zytor.com>
+ <87a9vedyqe.fsf@xmission.com> <5085B0D0.9020508@zytor.com>
+Date: Mon, 22 Oct 2012 14:29:25 -0700
+In-Reply-To: <5085B0D0.9020508@zytor.com> (H. Peter Anvin's message of "Mon,
+ 22 Oct 2012 13:47:12 -0700")
+Message-ID: <87mwze8abu.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
- acpi_rsdp= to 2nd kernel for efi booting)
+Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,69 +27,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, tglx@linutronix.de, mingo@elte.hu, vgoyal@redhat.com
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+"H. Peter Anvin" <hpa@zytor.com> writes:
 
-> On Thu, Oct 18, 2012 at 08:36:19PM -0700, Eric W. Biederman wrote:
->
-> [..]
->> > If we are ok with the idea of passing executables and initramfs to
->> > kernel, then kernel can do the placement. That means fields "mem and
->> > memsz fields of kexec_segment will be free. We can possibly overload
->> > memsz field and pass flags to represent segment type. This will happen
->> > only if user chooses kernel as bootloader functionality.
+> On 10/22/2012 01:43 PM, Eric W. Biederman wrote:
 >> 
->> Which sounds nice initially but I don't think the notion of the kernel
->> being a general purpose bootloader holds up to well.  It doesn't provide
->> an easy place to put all of the weird cases.
+>> The reason the BIOSen go wonky is the INIT cause the cpu to go to the
+>> reset vector at 4G-16 bytes.  So it is very much expected that the
+>> BIOSen start acting like you just came out of reset.
 >> 
->> If we are going to pass in a file it probably makes sense to do a
->> variation of kexec_load that passes in a file descriptor, a filename
->> could work but I don't think we want those races.
+>> If you can clear bit 8 of IA32_APIC_BASE_MSR and inform the cpu to not
+>> send the cpu to 4G-16 bytes and instead send the cpu into it's magic
+>> startup-ipi-wait mode then the BIOSen will not be involved on that path.
+>> 
+>> It is a simple question of does the cpu support clearing bit 8
+>> meaningfully.
+>> 
+>> If the cpu allows bit 8 to be cleared and sends the cpu to the reset
+>> vector on receipt of the INIT IPI I would call that a deviation from the
+>> x86 cpu specification.
+>> 
+>> So clearing bit 8 is not a question about BIOSen it is a question of can
+>> we avoid the BIOSen, by using an obscure under-documented cpu feature.
+>> 
 >
-> Can we use execve() style filenames. I am not sure what races are you
-> referring to.
+> As I said, I thought Fenghua tried that but it didn't work, experimentally.
 
-Files being renamed between the time we pick them and the time we use
-them.  Classic programming practice uses file descriptors to allow
-verifying the file you thought you had was the file you actually have.
+Fair enough.  You described the problem with clearing bit 8 in a weird
+way.
 
->> But then we get how do we pass in a different kernel command line and
->> an initrd.  Things that were simple start quickly becoming complex.
->
-> Can we take more than one filename arguments. Maybe an array of filename
-> arguements. And another array of arguments.
->
-> SYSCALL_DEFINE2(kexec2,
-> 		const char __user *const __user *, filenamev
-> 		const char __user *const __user *, argv)
-
-The name would have to be kexec_load2 or perhaps kexec_load_file.
-
-> This will allow passing filenames of both kernel and initrd and also
-> allow passing arguments. Arguments will also include command line.
->
-> Not asking user space to read in the file will help avoid loading
-> one extra copy of kernel in memory.
-
-There is that.  Although the difference between the page cache and in
-an executables memory isn't particularly signficant.
-
-> One difference here is though that we will have to allocate kernel memory
-> for full kernel image and full initd and if images are big, it can lock
-> down lot of kernel memory and in fact can trigger OOM on many processes.
-> I guess that's an issue with existing kexec() interface too, so nothing
-> new here.
->
-> This is like re-designing the kexec/kdump and I really wish there is
-> an easier way to handle the case signed kernels.
-
-Yes.  Which is why either a signed puragtory or a signed /sbin/kexec
-look very attractive.
+If the best we can muster are fuzzy memories it may be worth revisiting.
+Perhaps it works on enough cpu models to be interesting.
 
 Eric
+
 
 _______________________________________________
 kexec mailing list
