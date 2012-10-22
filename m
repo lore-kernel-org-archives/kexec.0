@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TPlsI-00007R-TM
- for kexec@lists.infradead.org; Sun, 21 Oct 2012 03:06:51 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121018031608.GA3925@localhost.localdomain>
- <878vb332a9.fsf@xmission.com> <20121019145300.GC27052@redhat.com>
-Date: Sat, 20 Oct 2012 20:06:23 -0700
-In-Reply-To: <20121019145300.GC27052@redhat.com> (Vivek Goyal's message of
- "Fri, 19 Oct 2012 10:53:00 -0400")
-Message-ID: <874nlole1c.fsf@xmission.com>
+ id 1TQ7SJ-0007Jr-M3
+ for kexec@lists.infradead.org; Mon, 22 Oct 2012 02:09:29 +0000
+Message-ID: <5084A9FA.1090403@redhat.com>
+Date: Mon, 22 Oct 2012 10:05:46 +0800
+From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] kdump: pass acpi_rsdp= to 2nd kernel for efi booting
+Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
+References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
+ <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
+ <5048E40E.7040003@hp.com> <5049B6AD.9000304@redhat.com>
+ <504FF4DB.6030601@redhat.com> <507F7394.5020501@redhat.com>
+ <1350572394.3894.18.camel@rhapsody>
+In-Reply-To: <1350572394.3894.18.camel@rhapsody>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,59 +26,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, Dave Young <dyoung@redhat.com>, khalid@gonehiking.org
+To: Khalid Aziz <khalid@gonehiking.org>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+On 10/18/2012 10:59 PM, Khalid Aziz wrote:
 
-> On Thu, Oct 18, 2012 at 02:20:46PM -0700, Eric W. Biederman wrote:
->> 
->> I have a question.  In the case where this fails are we successfully
->> passing the ACPI sections in the e820 map?
->
-> For kdump we pass everything on commandline using memmap=. This also
-> includes passing ACPI regions. I don't think we exclude those memmap=
-> options for EFI.
->
-> Also I am wondering that for kdump case why are we passing new memory
-> map using command line which ultimately overides the e820 map we put
-> into bootparams.
->
-> It should make sense to just put modified map in e820 map in bootparam
-> and not append all these options on command line. Also simplifiying
-> the command line. 
+> On Thu, 2012-10-18 at 11:12 +0800, Dave Young wrote:
+>> On 09/12/2012 10:35 AM, Dave Young wrote:
+>>
+>>> On 09/07/2012 04:56 PM, Dave Young wrote:
+>>>>
+>>>> I did some digging about the efi boot kdump in slackware with kernel
+>>>> from latest linus tree. I'm surprise that kdump works even without these
+>>>> "noefi" and "acpi_rsdp="
+>>>>
+>>>> With fedora 17 3.4.3 kernel passing "acpi_rsdp=" is enough for kdump
+>>>> kernel booting.
+>>>>
+>>>> Actually in x86 setup code if bootloader do not pass correct efi_info in
+>>>> boot_params efi_enabled will be set to 0 automaticlly.
+>>>>
+>>>> So as for this patch 'noefi' is not needed.
+>>>>
+>>>> I will do more testing to see why linus tree works without "acpi_rsdp="
+>>>>
+>>>
+>>> There's probably some efi changes between 3.4.3 - 3.6.0-rc4 cause this
+>>> works. I have not got time to bisect it.
+>>
+>>
+>> During recent test, I found I mistakenly used wrong kernel config
+>> without CONFIG_EFI in 1st kernel for testing. acpi_rsdp= is still needed.
+>>
+>> Just resent the v2 patch, please help to review.
+>>
+> 
+> Hi Dave,
+> 
+> I suspect EFI based systems with Compatibility Support Module (CSM) are
+> still not going to need this, but I can see native EFI systems with no
+> CSM needing this. I have reviewed your patch.
 
-As I recall we pass in the real memory map in e820 which allows for
-/proc/oldmem and friends to work, and use the memory map to pass in
-which information we really want to use.
 
-Given that what we use for the old memory map is the ELF headers
-passed from the crashed kernel there does seem to be room for cleanup
-in that area.
+Good to know, I have no CSM machine to test. Since Simon has applied the
+patch, I think I can improve this issue later If I can find a machine
+with CSM.
 
-> This is orthogonal to question you asked but I think this is one
-> improvement we should do for kexec on panic code.
+> 
+> BTW, I am no longer at HP, so <khalid.aziz@hp.com> is no longer valid.
+> <khalid@gonehiking.org> is my permanent personal email address.
 
-Certainly it is worth working on.
 
->> If we are passing the acpi sections is that not enough for the kernel
->> to find the rdsp area?  I'm just a bit surprised we need this patch
->> is all.
->> 
->> Somehow it seems a bit ugly to pass information that could be conveyed
->> in the memory map on the command line.
->
-> I have no idea how UEFI case is working. Dave/Khalid might have more
-> details on this.
+Thanks for reminding.
 
-It is the non-pure UEFI case where non-UEFI table scans work.
+> 
+> --
+> Khalid
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-Of course it puzzles me why we can't find the table via scanning memory
-when running in a pure UEFI environment.  Ah well that is a problem for
-another day.
 
-Eric
 
+-- 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
