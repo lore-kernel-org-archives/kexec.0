@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TQPHu-0002D2-Nl
- for kexec@lists.infradead.org; Mon, 22 Oct 2012 21:11:55 +0000
+ id 1TQPLf-0003SB-Qj
+ for kexec@lists.infradead.org; Mon, 22 Oct 2012 21:15:49 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20121018031028.GA3850@localhost.localdomain>
  <1350572194.3894.14.camel@rhapsody>
@@ -10,11 +10,11 @@ References: <20121018031028.GA3850@localhost.localdomain>
  <1350588121.30243.7.camel@rhapsody>
  <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
  <20121019020630.GA27052@redhat.com> <877gqnnnf0.fsf@xmission.com>
- <20121019143112.GB27052@redhat.com> <20121022204339.GG3401@redhat.com>
-Date: Mon, 22 Oct 2012 14:11:38 -0700
-In-Reply-To: <20121022204339.GG3401@redhat.com> (Vivek Goyal's message of
- "Mon, 22 Oct 2012 16:43:39 -0400")
-Message-ID: <87pq4a9ppx.fsf@xmission.com>
+ <20121019175301.GG27052@redhat.com>
+Date: Mon, 22 Oct 2012 14:15:38 -0700
+In-Reply-To: <20121019175301.GG27052@redhat.com> (Vivek Goyal's message of
+ "Fri, 19 Oct 2012 13:53:01 -0400")
+Message-ID: <87bofu9pj9.fsf@xmission.com>
 MIME-Version: 1.0
 Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
  acpi_rsdp= to 2nd kernel for efi booting)
@@ -35,52 +35,62 @@ Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.c
 
 Vivek Goyal <vgoyal@redhat.com> writes:
 
-> On Fri, Oct 19, 2012 at 10:31:12AM -0400, Vivek Goyal wrote:
+> On Thu, Oct 18, 2012 at 08:36:19PM -0700, Eric W. Biederman wrote:
 >
 > [..]
->> - What happens to purgatory code. It is unsigned piece of code which
->>   runs in kernel?
+>> > If we are ok with the idea of passing executables and initramfs to
+>> > kernel, then kernel can do the placement. That means fields "mem and
+>> > memsz fields of kexec_segment will be free. We can possibly overload
+>> > memsz field and pass flags to represent segment type. This will happen
+>> > only if user chooses kernel as bootloader functionality.
+>> 
+>> Which sounds nice initially but I don't think the notion of the kernel
+>> being a general purpose bootloader holds up to well.  It doesn't provide
+>> an easy place to put all of the weird cases.
+>> 
+>> If we are going to pass in a file it probably makes sense to do a
+>> variation of kexec_load that passes in a file descriptor, a filename
+>> could work but I don't think we want those races.
 >
-> Thinking more about it, another not so clean proposal. 
->
-> - So only non-signed executable code user space loads is purgatory. What
->   if we get rid of purgatory and let kernel do the pugatory's job.
+> Can we use execve() style filenames. I am not sure what races are you
+> referring to.
 
-I would still say what if we sign purgatory.
+Files being renamed between the time we pick them and the time we use
+them.  Classic programming practice uses file descriptors to allow
+verifying the file you thought you had was the file you actually have.
 
-> - purgatory seems to be doing few things. (atleast on x86_64).
-> 	1. Verifies the checksums of loaded segments.
-> 	2. Copies the backup region.
-> 	3. Prepares the environment for jumping into target executable.
-> 	    (32bit entry or real mode entry etc).
+>> But then we get how do we pass in a different kernel command line and
+>> an initrd.  Things that were simple start quickly becoming complex.
 >
->    First should be easily doable in kernel. At load time kernel can calculate
->    the checksum of loaded segments and can verify the chesum again before
->    during execute time.
+> Can we take more than one filename arguments. Maybe an array of filename
+> arguements. And another array of arguments.
 >
->    Second one should be doable too in kernel as kernel can copy the
->    contents to backup region. Just that we shall have to introduce per
->    segment flags so that user space can tell kernel that a particular
->    segment is backup segment. (say KEXEC_BACKUP_SEGMENT).
->
->    Third one is most tricky as it requires passing extra information to
->    kernel about what kind of setup to do before jumping to entry point. If
->    we can define some generic per arch kexec flags to represent those 
->    states, then kernel can do the job. 
->
-> Doing lots of things based on flags does not sound very clean to me. Over
-> a period of time we will end up defining more flags as people come up
-> with new situations. But at the same time it can simplify the problem 
-> a bit and one does not have to introduce an new system call.
+> SYSCALL_DEFINE2(kexec2,
+> 		const char __user *const __user *, filenamev
+> 		const char __user *const __user *, argv)
 
-The short version is over time the system call begins to look more and
-more like posix spawn, and we start accumulating all kinds of weird
-things in the kernel that no one needs anymore.
+The name would have to be kexec_load2 or perhaps kexec_load_file.
 
-> Just a thought..., Still scratching my head on how to go about this signed
-> image thing without too much of work.
+> This will allow passing filenames of both kernel and initrd and also
+> allow passing arguments. Arguments will also include command line.
+>
+> Not asking user space to read in the file will help avoid loading
+> one extra copy of kernel in memory.
 
-Yeah that is the trick.
+There is that.  Although the difference between the page cache and in
+an executables memory isn't particularly signficant.
+
+> One difference here is though that we will have to allocate kernel memory
+> for full kernel image and full initd and if images are big, it can lock
+> down lot of kernel memory and in fact can trigger OOM on many processes.
+> I guess that's an issue with existing kexec() interface too, so nothing
+> new here.
+>
+> This is like re-designing the kexec/kdump and I really wish there is
+> an easier way to handle the case signed kernels.
+
+Yes.  Which is why either a signed puragtory or a signed /sbin/kexec
+look very attractive.
 
 Eric
 
