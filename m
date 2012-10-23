@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TQhCi-0001SM-DK
- for kexec@lists.infradead.org; Tue, 23 Oct 2012 16:19:45 +0000
+ id 1TQhJT-0001sO-PJ
+ for kexec@lists.infradead.org; Tue, 23 Oct 2012 16:26:45 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1350572194.3894.14.camel@rhapsody>
  <20121018191107.GC18147@redhat.com>
  <1350588121.30243.7.camel@rhapsody>
  <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
  <20121019020630.GA27052@redhat.com> <877gqnnnf0.fsf@xmission.com>
- <20121019143112.GB27052@redhat.com> <871ugqb4gj.fsf@xmission.com>
- <20121023131854.GA16496@redhat.com>
- <20121023145920.GD16496@redhat.com>
-Date: Tue, 23 Oct 2012 09:19:27 -0700
-In-Reply-To: <20121023145920.GD16496@redhat.com> (Vivek Goyal's message of
- "Tue, 23 Oct 2012 10:59:20 -0400")
-Message-ID: <87fw552mb4.fsf_-_@xmission.com>
+ <20121019143112.GB27052@redhat.com> <20121022204339.GG3401@redhat.com>
+ <20121023020429.GA20493@verge.net.au>
+ <20121023132413.GB16496@redhat.com>
+Date: Tue, 23 Oct 2012 09:26:32 -0700
+In-Reply-To: <20121023132413.GB16496@redhat.com> (Vivek Goyal's message of
+ "Tue, 23 Oct 2012 09:24:13 -0400")
+Message-ID: <87391517ev.fsf_-_@xmission.com>
 MIME-Version: 1.0
-Subject: Kdump with signed images
+Subject: Re: [RFC] Kdump with signed images.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,77 +31,38 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
+Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
 
 Vivek Goyal <vgoyal@redhat.com> writes:
 
-> On Tue, Oct 23, 2012 at 09:18:54AM -0400, Vivek Goyal wrote:
->
-> [..]
->> > >> There are 3 options for trusting /sbin/kexec.  There are IMA and EMA,
->> > >> and it is conceivable to have ELF note sections with signatures for
->> > >> executables.
->> > >
->> > > Can you please tell more about what is EMA and IMA. I did quick google
->> > > and could not find much.
+> On Tue, Oct 23, 2012 at 11:04:29AM +0900, Simon Horman wrote:
+>> On Mon, Oct 22, 2012 at 04:43:39PM -0400, Vivek Goyal wrote:
+>> > On Fri, Oct 19, 2012 at 10:31:12AM -0400, Vivek Goyal wrote:
 >> > 
->> > That should have been EVM and IMA.  Look under security/integrity/.  I
->> > don't know much about them but they appear to be security modules with a
->> > focus on verifying checksum or perhaps encrypted hashes of executables
->> > are consistent.
+>> > [..]
+>> > > - What happens to purgatory code. It is unsigned piece of code which
+>> > >   runs in kernel?
+>> > 
+>> > Thinking more about it, another not so clean proposal.
 >> 
->> I will do some quick search there and I see if I can understand something.
->> 
+>> I have always assumed that purgatory can't be removed
+>> as doing so would break backwards compatibility.
 >
-> Ok, I quickly went through following paper.
+> Hi Simon,
 >
-> http://mirror.transact.net.au/sourceforge/l/project/li/linux-ima/linux-ima/Integrity_overview.pdf
->
-> So it looks like that IMA can store the hashes of files and at execute
-> time ensure those hashes are unchanged to protect against the possibility
-> of modification of files.
->
-> But what about creation of a new program which can call kexec_load()
-> and execute an unsigned kernel. Doesn't look like that will be
-> prevented using IMA.
->
-> Whole idea behind UEFI secure boot seems to be that all signing happens
-> outside the running system and now only signed code can run with higher
-> priviliges.
+> I think this will be a new parallel path and this new path should be taken
+> only on kernel booted with secure boot enabled. (Either automatically or
+> by using some kexec command line option). So nothing should be broken
+> because we never supported anything on secure boot enabled system.
 
-No.  UEFI secure boot has absolutely nothing todo with this.
+Rubbish.  Kexec works just fine today on a secure boot enabled system.
+Ignoring the nonsense that there is no such thing as a secure boot
+enabled linux system.
 
-UEFI secure boot is about not being able to hijack the code EFI runs
-directly.  Full stop.
+Whatever we implement must work on all linux systems.
 
-Some people would like to implment a security policy that says
-you can't boot an untrusted version of windows from linux if you have
-booted with UEFI secure boot, so they don't get their bootloader
-signatures revoked by microsoft.
-
-A security model relying on Microsoft's key is totally uniteresting to
-me.  Either signing at the UEFI level is of no use or Microsofts key
-will fall again to the combined assult of every cracker and every
-governmental dirty cyber ops division attacking it.  Not to mention that
-Microsoft has little incentive to keep linux booting.
-
-I think it is reasonable to be able to support a policy where we can't
-boot unsigned versions of Microsoft windows.  However beyond being able
-to exclude booting windows being one criteria for our policy mechanism
-please don't even start to justify things with that ridiculous security
-policy even indirectly.
-
-> IMA seems to be only protecting against only making sure
-> existing binaries are not modifed but it does not seem to prevent against
-> installation of new binaries and these binaries take advantage of kexec
-> system call to load an unsigned kernel. 
-
-I believe you can combine IMA with EVM signed security attributes where
-the EVM signing key is offline, and the verification key is in the
-kernel.
-
-The combination of IMA and EVM gets very close to being able to sign
-executables offline and be able to update them.
+If we implement an extension we also must write the code in /sbin/kexec
+so that it works on older systems that do not implement that extension.
 
 Eric
 
