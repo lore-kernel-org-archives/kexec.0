@@ -1,22 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TRSaV-0004Xe-EQ
- for kexec@lists.infradead.org; Thu, 25 Oct 2012 18:55:28 +0000
-Date: Thu, 25 Oct 2012 14:55:20 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Kdump with signed images
-Message-ID: <20121025185520.GA17995@redhat.com>
-References: <877gqnnnf0.fsf@xmission.com> <20121019143112.GB27052@redhat.com>
+Received: from e9.ny.us.ibm.com ([32.97.182.139])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TRSnY-0005a9-B1
+ for kexec@lists.infradead.org; Thu, 25 Oct 2012 19:08:57 +0000
+Received: from /spool/local
+ by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Thu, 25 Oct 2012 15:08:52 -0400
+Received: from d01relay07.pok.ibm.com (d01relay07.pok.ibm.com [9.56.227.147])
+ by d01dlp03.pok.ibm.com (Postfix) with ESMTP id 3853CC900C2
+ for <kexec@lists.infradead.org>; Thu, 25 Oct 2012 15:08:32 -0400 (EDT)
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+ by d01relay07.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q9PJ8Vqw29950062
+ for <kexec@lists.infradead.org>; Thu, 25 Oct 2012 15:08:31 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+ by d01av04.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q9PJ8Uw4020386
+ for <kexec@lists.infradead.org>; Thu, 25 Oct 2012 15:08:31 -0400
+Message-ID: <1351191980.18115.116.camel@falcor>
+Subject: Re: [RFC] Kdump with signed images
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Thu, 25 Oct 2012 15:06:20 -0400
+In-Reply-To: <20121025135437.GC9377@redhat.com>
+References: <20121019020630.GA27052@redhat.com>
+ <877gqnnnf0.fsf@xmission.com> <20121019143112.GB27052@redhat.com>
  <871ugqb4gj.fsf@xmission.com> <20121023131854.GA16496@redhat.com>
- <20121023145920.GD16496@redhat.com>
- <87fw552mb4.fsf_-_@xmission.com> <20121024173651.GE1821@redhat.com>
- <1351145401.18115.78.camel@falcor>
- <20121025141048.GD9377@redhat.com>
- <1351190421.18115.92.camel@falcor>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1351190421.18115.92.camel@falcor>
+ <20121023145920.GD16496@redhat.com> <20121023154123.GA30730@srcf.ucam.org>
+ <87d309xhmc.fsf_-_@xmission.com> <20121024171926.GD1821@redhat.com>
+ <1351143839.18115.57.camel@falcor> <20121025135437.GC9377@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,52 +43,146 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Roberto Sassu <roberto.sassu@polito.it>, Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Kasatkin, Dmitry" <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
 
-On Thu, Oct 25, 2012 at 02:40:21PM -0400, Mimi Zohar wrote:
-> On Thu, 2012-10-25 at 10:10 -0400, Vivek Goyal wrote:
-> > On Thu, Oct 25, 2012 at 02:10:01AM -0400, Mimi Zohar wrote:
+On Thu, 2012-10-25 at 09:54 -0400, Vivek Goyal wrote:
+> On Thu, Oct 25, 2012 at 01:43:59AM -0400, Mimi Zohar wrote:
+> > On Wed, 2012-10-24 at 13:19 -0400, Vivek Goyal wrote:
+> > > On Tue, Oct 23, 2012 at 09:44:59AM -0700, Eric W. Biederman wrote:
+> > > > Matthew Garrett <mjg@redhat.com> writes:
+> > > > 
+> > > > > On Tue, Oct 23, 2012 at 10:59:20AM -0400, Vivek Goyal wrote:
+> > > > >
+> > > > >> But what about creation of a new program which can call kexec_load()
+> > > > >> and execute an unsigned kernel. Doesn't look like that will be
+> > > > >> prevented using IMA.
 > > 
-> > [..]
-> > > IMA-appraisal verifies the integrity of file data, while EVM verifies
-> > > the integrity of the file metadata, such as LSM and IMA-appraisal
-> > > labels.  Both 'security.ima' and 'security.evm' can contain digital
-> > > signatures.
+> > Like the existing kernel modules, kexec_load() is not file descriptor
+> > based.  There isn't an LSM or IMA-appraisal hook here.
 > > 
-> > But the private key for creating these digital signature needs to be
-> > on the target system?
+> > > > > Right. Trusting userspace would require a new system call that passes in 
+> > > > > a signature of the userspace binary, and the kernel would then have to 
+> > > > > verify the ELF object in memory in order to ensure that it 
+> > > > > matches the signature. Verifying that the copy on the filesystem is 
+> > > > > unmodified isn't adequate - an attacker could simply have paused the 
+> > > > > process and injected code. 
 > > 
-> > Thanks
-> > Vivek
+> > I haven't looked at kexec_load() in detail, but like kernel modules, I
+> > think the better solution would be to pass a file descriptor, especially
+> > if you're discussing a new system call.  (cc'ing Kees.)
 > 
-> Absolutely not.  The public key needs to be added to the _ima or _evm
-> keyrings.  Roberto Sassu modified dracut and later made equivalent
-> changes to systemd.  Both have been upstreamed.
-
-Putting public key in _ima or _evm keyring is not the problem. This is
-just the verification part.
-
-> Dmitry has a package
-> that labels the filesystem called ima-evm-utils, which supports hash
-> (IMA), hmac(EVM) and digital signatures(both).
+> If we decide to go for a new system call, then yes it looks like passing
+> fd will make sense.
 > 
-> We're hoping that distro's would label all immutable files, not only elf
-> executables, with digital signatures and mutable files with a hash.
+> > 
+> > > > Verifying the copy on the filesystem at exec time is perfectly adequate
+> > > > for gating extra permissions.  Certainly that is the model everywhere
+> > > > else in the signed key chain.
+> > > > 
+> > > > Where IMA falls short is there is no offline signing capability in IMA
+> > > > itself.  I think EVM may fix that.
+> > 
+> > I'm not sure what you mean by offline signing capability.  IMA-appraisal
+> > verifies a file's 'security.ima' xattr, which may contain a hash or a
+> > digital signature.  EVM protects a file's metadata, including
+> > 'security.ima'.  'security.evm' can be either an hmac or a digital
+> > signature.
+> 
+> By offline we mean that signature generation/signing does not happen on
+> system in question. It happens say on build time. IIUC, in case of IMA,
+> security.ima is generated and signed on the system and that means private
+> key needs to be present on the system? 
 
-So this labeling (digital signing) can happen at build time?
+The signature for 'security.ima' can definitely be created offline.
+'security.evm' can also be created offline, as long as the target's
+inode and other metadata doesn't change.
 
-I suspect you need labeling to happen at system install time? If yes,
-installer does not have the private key to sign anything.
+> We wanted something like module signing where modules are signed at
+> build time and verification happens at load time but no private key
+> needs to be present on the system.
 
-IOW, if distro sign a file, they will most likely put signatures in
-ELF header (something along the lines of signing PE/COFF binaries). But
-I think you need digital signatures to be put in security.ima which are
-stored in xattrs and xattrs are not generated till you put file in
-question on target file system.
+Modules are identifiable.  As long as you have some mechanism to
+identify mutable vs immutable files during build, there shouldn't be a
+problem.  I'd use the same private key for signing modules and all
+others.
 
-Thanks
-Vivek
+> > 
+> > > [ CCing lkml. I think it is a good idea to open discussion to wider
+> > > audience. Also CCing IMA/EVM folks ]
+> > 
+> > thanks!
+> > 
+> > > Based on reading following wiki page, looks like EVM also does not allow
+> > > offline signing capability. And EVM is protecting IMA data to protect
+> > > against offline attack. If we can assume that unisgned kernels can't be
+> > > booted on the platform, then EVM might not be a strict requirement in
+> > > this case.
+> > 
+> > > So as you said, one of the main problem with IMA use to verify /sbin/kexec
+> > > is that IMA does not provide offline signing capability.
+> > 
+> > ?
+> 
+> See above.
+> 
+> >  
+> > > > 
+> > > > > Realistically, the only solution here is for 
+> > > > > the kernel to verify that the kernel it's about to boot is signed and 
+> > > > > for it not to take any untrusted executable code from userspace.
+> > 
+> > >From an IMA, as opposed to an IMA-appraisal, perspective, kexec is
+> > problematic.  IMA maintains a measurement list and extends a PCR with
+> > the file hash.  The measurement list and PCR value are used to attest to
+> > the integrity of the running system.  As the original measurement list
+> > is lost after kexec, but the PCR value hasn't been reset, the
+> > measuremnet list and PCR value won't agree.
+> > 
+> > > > Hogwash.  The kernel verifing a signature of /sbin/kexec at exec time is
+> > > > perfectly reasonable, and realistic.  In fact finding a way to trust
+> > > > small bits of userspace even if root is compromised seems a far superior
+> > > > model to simply solving the signing problem for /sbin/kexec.
+> > 
+> > Huh?  I don't understand what you're suggesting.  Once root has been
+> > compromised, that's it.
+> > 
+> > > > Although I do admit some part of the kexec process will need to verify
+> > > > keys on the images we decide to boot.
+> > 
+> > Which keys?  Isn't the kernel module key builtin to the kernel and
+> > included in the kernel image signature?
+> 
+> I think Eric is referring to verifying bzImage signature. One can sign
+> PE/COFF bzImage so IIUC, Eric seems to be suggesting that let /sbin/kexec
+> verify the integrity/authenticity of bzImage and figure a way out to
+> verify integrity/authenticity of /sbin/kexec.
+
+Yes that would work.  IMA-appraisal/EVM would verify and enforce the
+integrity of /sbin/kexec, like any other file.  Verifying the signature
+of the kernel image itself could be left up to kexec.
+
+> That way one does not have to change current logic and most of the logic
+> of kexec/kdump can still be in user space. Otherwise we shall probably
+> have to implement a new system call which takes kernel and initrd as
+> input parameters and kernel does signature verification and prepares
+> bzImage for loading. This is like re-writing kexec/kdump again with
+> restricted functionality.
+> 
+> Thanks
+> Vivek
+> 
+
+From an attestation perspective, it would be better to add a new hook to
+measure the kernel image and append the measurement to the IMA
+measurement list.  With the new hook, the integrity of the kernel image
+could be enforced.   I assume you realize that calculating a hash
+requires reading the entire file.
+
+thanks,
+
+Mimi
+
 
 _______________________________________________
 kexec mailing list
