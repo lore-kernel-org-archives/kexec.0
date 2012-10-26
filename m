@@ -1,16 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TRaON-0003KK-83
- for kexec@lists.infradead.org; Fri, 26 Oct 2012 03:15:28 +0000
+ id 1TRadI-0004qa-TL
+ for kexec@lists.infradead.org; Fri, 26 Oct 2012 03:30:54 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121025205408.GB17995@redhat.com>
-Date: Thu, 25 Oct 2012 20:14:58 -0700
-In-Reply-To: <20121025205408.GB17995@redhat.com> (Vivek Goyal's message of
- "Thu, 25 Oct 2012 16:54:08 -0400")
-Message-ID: <87lietq5zh.fsf@xmission.com>
+References: <871ugqb4gj.fsf@xmission.com> <20121023131854.GA16496@redhat.com>
+ <20121023145920.GD16496@redhat.com>
+ <87fw552mb4.fsf_-_@xmission.com>
+ <20121024173651.GE1821@redhat.com> <1351145401.18115.78.camel@falcor>
+ <20121025141048.GD9377@redhat.com> <1351190421.18115.92.camel@falcor>
+ <20121025185520.GA17995@redhat.com>
+ <1351214158.18115.186.camel@falcor>
+ <20121026023916.GA16762@srcf.ucam.org>
+Date: Thu, 25 Oct 2012 20:30:37 -0700
+In-Reply-To: <20121026023916.GA16762@srcf.ucam.org> (Matthew Garrett's message
+ of "Fri, 26 Oct 2012 03:39:16 +0100")
+Message-ID: <87625xq59e.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: Query regarding x86_64 purgatory and IA32-e compatibility mode
+Subject: Re: Kdump with signed images
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,92 +30,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Roberto Sassu <roberto.sassu@polito.it>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+Matthew Garrett <mjg@redhat.com> writes:
 
-> Hi Eric,
+> On Thu, Oct 25, 2012 at 09:15:58PM -0400, Mimi Zohar wrote:
 >
-> I am reading up x86_64 purgatory code to understand how transition to
-> 32bit protected mode happens.
+>> On a running system, the package installer, after verifying the package
+>> integrity, would install each file with the associated 'security.ima'
+>> extended attribute.  The 'security.evm' digital signature would be
+>> installed with an HMAC, calculated using a system unique key. 
 >
-> My understanding is that we enter in purgatory_start (setup-x86_64.S).
-> Then we jump to entry64 in entry64.S.
->
-> We run following code in arch/x86_64/entry64.S
->
->         movq    $stack_init, %rsp
->         pushq   $0x10 /* CS */
->         pushq   $new_cs_exit
->         lretq
-> new_cs_exit:
->
->         /* Load the registers */
->         movq    rax(%rip), %rax
->         movq    rbx(%rip), %rbx
->         movq    rcx(%rip), %rcx
->         movq    rdx(%rip), %rdx
->         movq    rsi(%rip), %rsi
->         movq    rdi(%rip), %rdi
->         movq    rsp(%rip), %rsp
->         movq    rbp(%rip), %rbp
->         movq    r8(%rip), %r8
->         movq    r9(%rip), %r9
->         movq    r10(%rip), %r10
->         movq    r11(%rip), %r11
->         movq    r12(%rip), %r12
->         movq    r13(%rip), %r13
->         movq    r14(%rip), %r14
->         movq    r15(%rip), %r15
->
-> Will above lretq call not switch us in compatibility mode (from 64bit
-> mode)? We have taken a long jump and our new CS seems to have L bit 
-> 0.
+> The idea isn't to prevent /sbin/kexec from being modified after 
+> installation - it's to prevent it from being possible to install a 
+> system that has a modified /sbin/kexec. Leaving any part of this up to 
+> the package installer means that it doesn't solve the problem we're 
+> trying to solve here. It must be impossible for the kernel to launch any 
+> /sbin/kexec that hasn't been signed by a trusted key that's been built 
+> into the kernel, and it must be impossible for anything other than 
+> /sbin/kexec to make the kexec system call.
 
+The 'security.capability' attribute modulo weirdness with the security
+bounding set gives us the necessary tools to allow /sbin/kexec to make
+the system call.
 
-> Following is our gdt.
->
-> gdt:    /* 0x00 unusable segment 
->          * 0x08 unused
->          * so use them as the gdt ptr
->          */
->         .word   gdt_end - gdt - 1
->         .quad   gdt
->         .word   0, 0, 0
->
->         /* 0x10 4GB flat code segment */
->         .word   0xFFFF, 0x0000, 0x9A00, 0x00AF
->
->         /* 0x18 4GB flat data segment */
->         .word   0xFFFF, 0x0000, 0x9200, 0x00CF
-> gdt_end:
->
-> I see that bit 21  in second doubleword is 0. IIUC, that means that we
-> will switch to compatibility mode. If yes, we are still continuing to
-> use 64bit instructions and continue to access registers (rip, r8-15)
-> which are available in 64bit mode only. Is this correct? How does this
-> work?
+The primary trick with this is to limit the installer in such as way
+that we can trust the installer even on a system on which root has been
+compromised.
 
-         /* 0x10 4GB flat code segment */
-        .word   0xFFFF, 0x0000, 0x9A00, 0x00AF
+Trusting the installer is the same class of problem as trusting
+/sbin/kexec, and to me a much more interesting problem as it keeps
+critical system files from being tampered with.
 
-The high 16bits of that are:
-31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16
- 0  0  0  0  0  0  0  0  1  0  1  0  1  1  1  1
-
-Since L is bit 21 I read that as L=1.
-
-I don't know how you see L=1 there.
-
-The transition happens in entry64-32.S
-We get there via:
-	jmp	*rip(%rip)
-
-The default value of rip is entry32.
-
-That is where we clear bit 21 in 
-	ljmp	*lm_exit_addr(%rip)
+It sounds like there are some tricky details to work through but this
+direction of system integrity looks like it is worth pursuing,
+regardless of how we handle a signed /sbin/kexec.
 
 Eric
 
