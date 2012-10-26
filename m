@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TRjp4-00065p-Jn
- for kexec@lists.infradead.org; Fri, 26 Oct 2012 13:19:40 +0000
-Date: Fri, 26 Oct 2012 09:19:34 -0400
+ id 1TRnMZ-0004EA-0i
+ for kexec@lists.infradead.org; Fri, 26 Oct 2012 17:06:27 +0000
+Date: Fri, 26 Oct 2012 13:06:09 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Query regarding x86_64 purgatory and IA32-e compatibility mode
-Message-ID: <20121026131934.GA24687@redhat.com>
-References: <20121025205408.GB17995@redhat.com> <87lietq5zh.fsf@xmission.com>
+Subject: Re: Kdump with signed images
+Message-ID: <20121026170609.GB24687@redhat.com>
+References: <20121023131854.GA16496@redhat.com>
+ <20121023145920.GD16496@redhat.com>
+ <87fw552mb4.fsf_-_@xmission.com> <20121024173651.GE1821@redhat.com>
+ <1351145401.18115.78.camel@falcor>
+ <20121025141048.GD9377@redhat.com>
+ <1351190421.18115.92.camel@falcor>
+ <20121025185520.GA17995@redhat.com>
+ <1351214158.18115.186.camel@falcor>
+ <20121026023916.GA16762@srcf.ucam.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87lietq5zh.fsf@xmission.com>
+In-Reply-To: <20121026023916.GA16762@srcf.ucam.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,59 +31,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Roberto Sassu <roberto.sassu@polito.it>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
 
-On Thu, Oct 25, 2012 at 08:14:58PM -0700, Eric W. Biederman wrote:
-
-[..]
-> > I see that bit 21  in second doubleword is 0. IIUC, that means that we
-> > will switch to compatibility mode. If yes, we are still continuing to
-> > use 64bit instructions and continue to access registers (rip, r8-15)
-> > which are available in 64bit mode only. Is this correct? How does this
-> > work?
+On Fri, Oct 26, 2012 at 03:39:16AM +0100, Matthew Garrett wrote:
+> On Thu, Oct 25, 2012 at 09:15:58PM -0400, Mimi Zohar wrote:
 > 
->          /* 0x10 4GB flat code segment */
->         .word   0xFFFF, 0x0000, 0x9A00, 0x00AF
+> > On a running system, the package installer, after verifying the package
+> > integrity, would install each file with the associated 'security.ima'
+> > extended attribute.  The 'security.evm' digital signature would be
+> > installed with an HMAC, calculated using a system unique key. 
 > 
-> The high 16bits of that are:
-> 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16
->  0  0  0  0  0  0  0  0  1  0  1  0  1  1  1  1
-> 
-> Since L is bit 21 I read that as L=1.
-> 
-> I don't know how you see L=1 there.
+> The idea isn't to prevent /sbin/kexec from being modified after 
+> installation - it's to prevent it from being possible to install a 
+> system that has a modified /sbin/kexec. Leaving any part of this up to 
+> the package installer means that it doesn't solve the problem we're 
+> trying to solve here. It must be impossible for the kernel to launch any 
+> /sbin/kexec that hasn't been signed by a trusted key that's been built 
+> into the kernel, and it must be impossible for anything other than 
+> /sbin/kexec to make the kexec system call.
 
-My bad. I did not take care of little endianness and read the bits in 
-reverse order.
-0x00AF
+I am kind of lost now so just trying to summarize whatever I have
+learned so far from this thread.
 
-16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
- 0  0  0  0  0  0  0  0  1  0  1  0  1  1  1  1
+- So say we can sign /sbin/kexec at build time and distros can do that.
+- Verify the signature at exec time using kernel keyring and if
+  verification happens successfully, say process gains extra capability.
+- Use this new capability to determine whether kexec_load() will be
+  successful or not.
 
-And concluded that bit 21 is 0.
+Even if we can do all this, it still has the issue of being able to
+stop the process in user space and replace the code at run time
+and be able to launch unsigned kernel.
 
-> 
-> The transition happens in entry64-32.S
-> We get there via:
-> 	jmp	*rip(%rip)
-> 
-> The default value of rip is entry32.
-> 
-> That is where we clear bit 21 in 
-> 	ljmp	*lm_exit_addr(%rip)
-
-Ok, now I understand. In entry64-32.S we load a different GDT 
-where bit 21, L = 0. Hence long jump will put it in compatibility
-mode.
-
-0x00CF
-
-31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16
- 0  0  0  0  0  0  0  0  1  1  0  0  1  1  1  1
-
-Thanks for explaining this.
-
+So until and unless we have a good solution to verify application's
+integrity/authneticity at the time of kexec_load() system call we
+still have the problem. And I don't think we have come up with a
+solution for that yet (until and unless I missed something).
+  
 Thanks
 Vivek
 
