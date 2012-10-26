@@ -1,23 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TRadI-0004qa-TL
- for kexec@lists.infradead.org; Fri, 26 Oct 2012 03:30:54 +0000
+ id 1TRbIo-0006a0-8C
+ for kexec@lists.infradead.org; Fri, 26 Oct 2012 04:13:46 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <871ugqb4gj.fsf@xmission.com> <20121023131854.GA16496@redhat.com>
- <20121023145920.GD16496@redhat.com>
- <87fw552mb4.fsf_-_@xmission.com>
- <20121024173651.GE1821@redhat.com> <1351145401.18115.78.camel@falcor>
- <20121025141048.GD9377@redhat.com> <1351190421.18115.92.camel@falcor>
- <20121025185520.GA17995@redhat.com>
- <1351214158.18115.186.camel@falcor>
- <20121026023916.GA16762@srcf.ucam.org>
-Date: Thu, 25 Oct 2012 20:30:37 -0700
-In-Reply-To: <20121026023916.GA16762@srcf.ucam.org> (Matthew Garrett's message
- of "Fri, 26 Oct 2012 03:39:16 +0100")
-Message-ID: <87625xq59e.fsf@xmission.com>
+References: <5085B0D0.9020508@zytor.com> <87mwze8abu.fsf@xmission.com>
+ <5085E663.6040307@zytor.com>
+ <20121026.122406.13396329.d.hatayama@jp.fujitsu.com>
+Date: Thu, 25 Oct 2012 21:13:25 -0700
+In-Reply-To: <20121026.122406.13396329.d.hatayama@jp.fujitsu.com> (HATAYAMA
+ Daisuke's message of "Fri, 26 Oct 2012 12:24:06 +0900 (JST)")
+Message-ID: <87r4oloopm.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: Kdump with signed images
+Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,42 +25,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Roberto Sassu <roberto.sassu@polito.it>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, hpa@zytor.com, tglx@linutronix.de, mingo@elte.hu, vgoyal@redhat.com
 
-Matthew Garrett <mjg@redhat.com> writes:
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> On Thu, Oct 25, 2012 at 09:15:58PM -0400, Mimi Zohar wrote:
+> From: "H. Peter Anvin" <hpa@zytor.com>
+> Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
+> Date: Mon, 22 Oct 2012 17:35:47 -0700
 >
->> On a running system, the package installer, after verifying the package
->> integrity, would install each file with the associated 'security.ima'
->> extended attribute.  The 'security.evm' digital signature would be
->> installed with an HMAC, calculated using a system unique key. 
+>> On 10/22/2012 02:29 PM, Eric W. Biederman wrote:
+>>>>
+>>>> As I said, I thought Fenghua tried that but it didn't work,
+>>>> experimentally.
+>>>
+>>> Fair enough.  You described the problem with clearing bit 8 in a weird
+>>> way.
+>>>
+>>> If the best we can muster are fuzzy memories it may be worth
+>>> revisiting.
+>>> Perhaps it works on enough cpu models to be interesting.
+>>>
+>> 
+>> It isn't fuzzy memories... this was done as late as 1-2 months ago.  I
+>> just don't know the details.
+>> 
+>> Fenghua, could you help fill us in?
+>> 
 >
-> The idea isn't to prevent /sbin/kexec from being modified after 
-> installation - it's to prevent it from being possible to install a 
-> system that has a modified /sbin/kexec. Leaving any part of this up to 
-> the package installer means that it doesn't solve the problem we're 
-> trying to solve here. It must be impossible for the kernel to launch any 
-> /sbin/kexec that hasn't been signed by a trusted key that's been built 
-> into the kernel, and it must be impossible for anything other than 
-> /sbin/kexec to make the kexec system call.
+> I overlooked completely the fact that BSP flag is rewritable.
+>
+> I tried Eric's suggestion using attached test programs and saw it
+> worked fine at least on the three cpus around me below:
+>
+> - Intel(R) Xeon(R) CPU E7- 4820  @ 2.00GHz
+> - Intel(R) Xeon(R) CPU E7- 8870  @ 2.40GHz
+> - Intel(R) Xeon(TM) CPU 1.80GHz
+>   - 32 bits CPU
+>
+> Next I found the description about this in 8.4.2, IASDM Vol.3:
+>
+>   The MP initialization protocol imposes the following requirements
+>   and restrictions on the system:
+>
+>   * The MP protocol is executed only after a power-up or RESET. If the
+>     MP protocol has completed and a BSP is chosen, subsequent INITs
+>     (either to a specific processor or system wide) do not cause the
+>     MP protocol to be repeated. Instead, each logical processor
+>     examines its BSP flag (in the IA32_APIC_BASE MSR) to determine
+>     whether it should execute the BIOS boot-strap code (if it is the
+>     BSP) or enter a wait-for-SIPI state (if it is an AP).
+>
+> So this is no longer undocumented behaviour for recent cpus, I think.
 
-The 'security.capability' attribute modulo weirdness with the security
-bounding set gives us the necessary tools to allow /sbin/kexec to make
-the system call.
+The underdocumented bit is the ability to clear the flag.
+And of course these are processor specific registers.
 
-The primary trick with this is to limit the installer in such as way
-that we can trust the installer even on a system on which root has been
-compromised.
+> Considering these, I'll make a patch to clear BSP flag at appropreate
+> position in kernel boot-up code. OTOH, according to the discussion, it
+> was reported that clearing BSP flag affected some BIOSes. To deal with
+> this, I'll prepare a kernel option to decide whether to clear BSP flag
+> or not.
+>
+> Does anyone have any comments now? Or please comment after I submit a
+> new patch.
 
-Trusting the installer is the same class of problem as trusting
-/sbin/kexec, and to me a much more interesting problem as it keeps
-critical system files from being tampered with.
+I think you are on right track with preparing some patches, and this
+certainly looks like worth experimenting with.
 
-It sounds like there are some tricky details to work through but this
-direction of system integrity looks like it is worth pursuing,
-regardless of how we handle a signed /sbin/kexec.
+At least for i386 the code need to verify you have a cpu new enough to
+have an APIC_BASE_MSR, but I don't think that is going to be hard.
 
 Eric
 
