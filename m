@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from plane.gmane.org ([80.91.229.3])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TT06k-0003Dx-NC
- for kexec@lists.infradead.org; Tue, 30 Oct 2012 00:55:07 +0000
-Received: from list by plane.gmane.org with local (Exim 4.69)
- (envelope-from <glkk-kexec@m.gmane.org>) id 1TT06h-00053X-Va
- for kexec@lists.infradead.org; Tue, 30 Oct 2012 01:55:04 +0100
-Received: from rtp5-dmz-wsa-2.cisco.com ([64.102.249.7])
- by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
- id 1AlnuQ-0007hv-00
- for <kexec@lists.infradead.org>; Tue, 30 Oct 2012 01:55:03 +0100
-Received: from joshua by rtp5-dmz-wsa-2.cisco.com with local (Gmexim 0.1
- (Debian)) id 1AlnuQ-0007hv-00
- for <kexec@lists.infradead.org>; Tue, 30 Oct 2012 01:55:03 +0100
-From: Joshua Jensen <joshua@joshuajensen.org>
-Subject: kexec-tools not loading iPXE zImage
-Date: Tue, 30 Oct 2012 00:49:39 +0000 (UTC)
-Message-ID: <loom.20121030T014113-581@post.gmane.org>
-Mime-Version: 1.0
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TT3E8-0005ra-3Y
+ for kexec@lists.infradead.org; Tue, 30 Oct 2012 04:14:57 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <loom.20121030T014113-581@post.gmane.org>
+Date: Mon, 29 Oct 2012 21:14:33 -0700
+In-Reply-To: <loom.20121030T014113-581@post.gmane.org> (Joshua Jensen's
+ message of "Tue, 30 Oct 2012 00:49:39 +0000 (UTC)")
+Message-ID: <87390wfvfa.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: kexec-tools not loading iPXE zImage
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,27 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Joshua Jensen <joshua@joshuajensen.org>
+Cc: kexec@lists.infradead.org
 
-I'm having an issue with kexec not being able to load a freshly compiled 
-ipxe.lkrn file, even though it is a zImage:
+Joshua Jensen <joshua@joshuajensen.org> writes:
 
+> I'm having an issue with kexec not being able to load a freshly compiled 
+> ipxe.lkrn file, even though it is a zImage:
+>
+>
+> # file ipxe.lkrn
+> ipxe.lkrn: Linux kernel x86 boot executable zImage, version \353FHdrS\007\002,RW-
+> rootFS,
+>
+> # kexec -l ipxe.lkrn
+> Cannot determine the file type of ipxe.lkrn
+>
+>
+> Any ideas?  Is there any way to determine where the error is, with the ipxe.lkrn 
+> file or kexec ?
 
-# file ipxe.lkrn
-ipxe.lkrn: Linux kernel x86 boot executable zImage, version \353FHdrS\007\002,RW-
-rootFS,
+Use the source?
 
-# kexec -l ipxe.lkrn
-Cannot determine the file type of ipxe.lkrn
+My guess is that ipxe.lkrn uses a very old version of the x86 boot
+protocol.
 
+Doing what you are doing is a bit iffy if the version of ipxe you are
+building depends upon BIOS calls.
 
-Any ideas?  Is there any way to determine where the error is, with the ipxe.lkrn 
-file or kexec ?
+It used to be possible to build a .elf version of etherboot that was
+bootable via linuxbios and depended on no BIOS calls, and that should
+work if the code survived the great gutting of etherboot.
 
-Thank you,
+Although this does seem a bit of a round about way to get something
+done, loading a more limited bootloader from what is essentially a more
+featureful bootloader.
 
-Joshua
-
+Eric
 
 _______________________________________________
 kexec mailing list
