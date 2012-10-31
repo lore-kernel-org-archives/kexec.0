@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TTCx2-0008UM-C5
- for kexec@lists.infradead.org; Tue, 30 Oct 2012 14:37:57 +0000
-Date: Tue, 30 Oct 2012 10:37:50 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Patch 0/2] Exclude hwpoison page from vmcore dump
-Message-ID: <20121030143750.GF2290@redhat.com>
-References: <508FDEF3.8030601@hitachi.com>
+ id 1TTNAz-0006oz-Pn
+ for kexec@lists.infradead.org; Wed, 31 Oct 2012 01:33:05 +0000
+Date: Tue, 30 Oct 2012 22:18:22 -0200
+From: Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
+Message-ID: <20121031001822.GA21986@amt.cnet>
+References: <5080E813.7030302@cn.fujitsu.com> <5080E8BF.3020506@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <508FDEF3.8030601@hitachi.com>
+In-Reply-To: <5080E8BF.3020506@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,21 +23,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, Avi Kivity <avi@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-On Tue, Oct 30, 2012 at 11:06:43PM +0900, Mitsuhiro Tanino wrote:
+On Fri, Oct 19, 2012 at 01:44:31PM +0800, Zhang Yanfei wrote:
+> This patch provides a way to VMCLEAR vmcss related to guests
+> on all cpus before executing the VMXOFF when doing kdump. This
+> is used to ensure the VMCSs in the vmcore updated and
+> non-corrupted.
+> 
+> Signed-off-by: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  arch/x86/include/asm/kexec.h |    2 ++
+>  arch/x86/kernel/crash.c      |   27 +++++++++++++++++++++++++++
+>  2 files changed, 29 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 317ff17..fc05440 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -163,6 +163,8 @@ struct kimage_arch {
+>  };
+>  #endif
+>  
+> +extern void (*crash_clear_loaded_vmcss)(void);
+> +
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif /* _ASM_X86_KEXEC_H */
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 13ad899..7289976 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/elf.h>
+>  #include <linux/elfcore.h>
+> +#include <linux/module.h>
+>  
+>  #include <asm/processor.h>
+>  #include <asm/hardirq.h>
+> @@ -30,6 +31,22 @@
+>  
+>  int in_crash_kexec;
+>  
+> +/*
+> + * This is used to VMCLEAR vmcss loaded on all
+> + * cpus. And when loading kvm_intel module, the
+> + * function pointer will be made valid.
+> + */
+> +void (*crash_clear_loaded_vmcss)(void) = NULL;
+> +EXPORT_SYMBOL_GPL(crash_clear_loaded_vmcss);
+> +
+> +static void cpu_emergency_clear_loaded_vmcss(void)
+> +{
+> +	if (crash_clear_loaded_vmcss &&
+> +	    cpu_has_vmx() && cpu_vmx_enabled()) {
+> +		crash_clear_loaded_vmcss();
+> +	}
+> +}
+> +
 
-[..]
-> These patches introduce a new "-p" option into "makedumpfile" to
-> exclude hwpoison page from vmcore.
+Are all this checks necessary? 
 
-Why to introduce this option "-p"? Until and unless there are serious
-side effects, this should be default functionality. Isn't it? Who would
-like to touch/save poisoned pages and run into MCE?
+if (crash_clear_loaded_vmcss)
+	crash_clear_loaded_vmcss();
 
-Thanks
-Vivek
+Should be enough ? (callback only set if kvm-vmx module loaded).
+
+>  #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+>  
+>  static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+> @@ -46,6 +63,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+>  #endif
+>  	crash_save_cpu(regs, cpu);
+>  
+> +	/*
+> +	 * VMCLEAR vmcss loaded on all cpus if needed.
+> +	 */
+> +	cpu_emergency_clear_loaded_vmcss();
+> +
+>  	/* Disable VMX or SVM if needed.
+>  	 *
+>  	 * We need to disable virtualization on all CPUs.
+> @@ -88,6 +110,11 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>  
+>  	kdump_nmi_shootdown_cpus();
+>  
+> +	/*
+> +	 * VMCLEAR vmcss loaded on this cpu if needed.
+> +	 */
+> +	cpu_emergency_clear_loaded_vmcss();
+> +
+>  	/* Booting kdump kernel with VMX or SVM enabled won't work,
+>  	 * because (among other limitations) we can't disable paging
+>  	 * with the virt flags.
+> -- 
+> 1.7.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe kvm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 _______________________________________________
 kexec mailing list
