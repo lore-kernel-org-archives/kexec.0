@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TTP4E-0008Q2-Lw
- for kexec@lists.infradead.org; Wed, 31 Oct 2012 03:34:12 +0000
-Message-ID: <50909BDF.1020503@cn.fujitsu.com>
-Date: Wed, 31 Oct 2012 11:32:47 +0800
+ id 1TTP5c-0008Tx-WB
+ for kexec@lists.infradead.org; Wed, 31 Oct 2012 03:35:37 +0000
+Message-ID: <50909C35.9080702@cn.fujitsu.com>
+Date: Wed, 31 Oct 2012 11:34:13 +0800
 From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v3 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
+Subject: [PATCH v3 2/2] KVM: make crash_clear_loaded_vmcss valid when loading
+ kvm_intel module
 References: <50909B55.2070901@cn.fujitsu.com>
 In-Reply-To: <50909B55.2070901@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,87 +26,45 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: x86@kernel.org, kexec@lists.infradead.org, Avi Kivity <avi@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>
 Cc: linux-kernel@vger.kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-This patch provides a way to VMCLEAR vmcss related to guests
-on all cpus before executing the VMXOFF when doing kdump. This
-is used to ensure the VMCSs in the vmcore updated and
-non-corrupted.
-
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- arch/x86/include/asm/kexec.h |    2 ++
- arch/x86/kernel/crash.c      |   25 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+), 0 deletions(-)
+ arch/x86/kvm/vmx.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 317ff17..fc05440 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -163,6 +163,8 @@ struct kimage_arch {
- };
- #endif
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 4ff0ab9..f6a16b2 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -41,6 +41,7 @@
+ #include <asm/i387.h>
+ #include <asm/xcr.h>
+ #include <asm/perf_event.h>
++#include <asm/kexec.h>
  
-+extern void (*crash_clear_loaded_vmcss)(void);
+ #include "trace.h"
+ 
+@@ -7230,6 +7231,10 @@ static int __init vmx_init(void)
+ 	if (r)
+ 		goto out3;
+ 
++#ifdef CONFIG_KEXEC
++	crash_clear_loaded_vmcss = vmclear_local_loaded_vmcss;
++#endif
 +
- #endif /* __ASSEMBLY__ */
+ 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
+ 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
+ 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
+@@ -7265,6 +7270,10 @@ static void __exit vmx_exit(void)
+ 	free_page((unsigned long)vmx_io_bitmap_b);
+ 	free_page((unsigned long)vmx_io_bitmap_a);
  
- #endif /* _ASM_X86_KEXEC_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 13ad899..9ed65c1 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -16,6 +16,7 @@
- #include <linux/delay.h>
- #include <linux/elf.h>
- #include <linux/elfcore.h>
-+#include <linux/module.h>
- 
- #include <asm/processor.h>
- #include <asm/hardirq.h>
-@@ -30,6 +31,20 @@
- 
- int in_crash_kexec;
- 
-+/*
-+ * This is used to VMCLEAR vmcss loaded on all
-+ * cpus. And when loading kvm_intel module, the
-+ * function pointer will be made valid.
-+ */
-+void (*crash_clear_loaded_vmcss)(void) = NULL;
-+EXPORT_SYMBOL_GPL(crash_clear_loaded_vmcss);
++#ifdef CONFIG_KEXEC
++	crash_clear_loaded_vmcss = NULL;
++#endif
 +
-+static void cpu_emergency_clear_loaded_vmcss(void)
-+{
-+	if (crash_clear_loaded_vmcss)
-+		crash_clear_loaded_vmcss();
-+}
-+
- #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+ 	kvm_exit();
+ }
  
- static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
-@@ -46,6 +61,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
- #endif
- 	crash_save_cpu(regs, cpu);
- 
-+	/*
-+	 * VMCLEAR vmcss loaded on all cpus if needed.
-+	 */
-+	cpu_emergency_clear_loaded_vmcss();
-+
- 	/* Disable VMX or SVM if needed.
- 	 *
- 	 * We need to disable virtualization on all CPUs.
-@@ -88,6 +108,11 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 
- 	kdump_nmi_shootdown_cpus();
- 
-+	/*
-+	 * VMCLEAR vmcss loaded on this cpu if needed.
-+	 */
-+	cpu_emergency_clear_loaded_vmcss();
-+
- 	/* Booting kdump kernel with VMX or SVM enabled won't work,
- 	 * because (among other limitations) we can't disable paging
- 	 * with the virt flags.
 -- 
 1.7.1
 
