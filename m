@@ -1,17 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TTPsN-0001G2-2b
- for kexec@lists.infradead.org; Wed, 31 Oct 2012 04:26:01 +0000
-Date: Wed, 31 Oct 2012 13:21:07 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 0/7] makedumpfile security key filtering with eppic
-Message-Id: <20121031132107.efaa63ab20b1060fbaf740c5@mxc.nes.nec.co.jp>
-In-Reply-To: <508E5749.7050408@linux.vnet.ibm.com>
-References: <20120606095709.12534.63967.stgit@aravinda>
- <20121029170641.40b19d2ba2635804dbf8eb31@mxc.nes.nec.co.jp>
- <508E5749.7050408@linux.vnet.ibm.com>
-Mime-Version: 1.0
+ id 1TTUAf-0003te-8Q
+ for kexec@lists.infradead.org; Wed, 31 Oct 2012 09:01:11 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id C2BAD3EE0BC
+ for <kexec@lists.infradead.org>; Wed, 31 Oct 2012 18:01:03 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A6FC345DE59
+ for <kexec@lists.infradead.org>; Wed, 31 Oct 2012 18:01:03 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9109445DE58
+ for <kexec@lists.infradead.org>; Wed, 31 Oct 2012 18:01:03 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 83A1E1DB8050
+ for <kexec@lists.infradead.org>; Wed, 31 Oct 2012 18:01:03 +0900 (JST)
+Received: from g01jpexchyt11.g01.fujitsu.local
+ (g01jpexchyt11.g01.fujitsu.local [10.128.194.50])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 3598E1DB804B
+ for <kexec@lists.infradead.org>; Wed, 31 Oct 2012 18:01:03 +0900 (JST)
+From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
+Subject: RE: [PATCH v3 2/2] KVM: make crash_clear_loaded_vmcss valid when
+ loading kvm_intel module
+Date: Wed, 31 Oct 2012 09:01:01 +0000
+Message-ID: <33710E6CAA200E4583255F4FB666C4E20AACCA2F@G01JPEXMBYT03>
+References: <50909B55.2070901@cn.fujitsu.com> <50909C35.9080702@cn.fujitsu.com>
+In-Reply-To: <50909C35.9080702@cn.fujitsu.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,50 +40,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: aravinda@linux.vnet.ibm.com
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, buendgen@de.ibm.com
+To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Avi Kivity <avi@redhat.com>
 
-Hello Aravinda,
 
-On Mon, 29 Oct 2012 15:45:37 +0530
-Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
 
-> Hi Atsushi,
+> -----Original Message-----
+> From: kexec-bounces@lists.infradead.org
+> [mailto:kexec-bounces@lists.infradead.org] On Behalf Of zhangyanfei
+> Sent: Wednesday, October 31, 2012 12:34 PM
+> To: x86@kernel.org; kexec@lists.infradead.org; Avi Kivity; Marcelo
+> Tosatti
+> Cc: linux-kernel@vger.kernel.org; kvm@vger.kernel.org
+> Subject: [PATCH v3 2/2] KVM: make crash_clear_loaded_vmcss valid when
+> loading kvm_intel module
 > 
-> Thanks for reviewing. I will work on your comments.
-> 
-> On 2012-10-29 13:36, Atsushi Kumagai wrote:
-> 
-> > Hello Aravinda,
-> > 
-> > Now, I have reviewed your patches to [PATCH 4/7], 
-> > so please give me a little more time.
-> >
-> 
-> 
-> sure...
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-I've finished reviewing your patches completely. 
-Some errors are found by checkpatch.pl, so please check and fix each patches.
+[...]
 
-  $ <linux kernel source>/scripts/checkpatch.pl <your patch>
-
-So, could you post the v2 patches which include my comments above and
-in other threads ?
-
-> > BTW, do you have any test case for this feature ?
-> > If you can give it to me, it's very helpful.
-> >
+> @@ -7230,6 +7231,10 @@ static int __init vmx_init(void)
+>  	if (r)
+>  		goto out3;
 > 
+> +#ifdef CONFIG_KEXEC
+> +	crash_clear_loaded_vmcss = vmclear_local_loaded_vmcss;
+> +#endif
+> +
+
+Assignment here cannot cover the case where NMI is initiated after VMX is on in kvm_init and before vmclear_local_loaded_vmcss is assigned, though rare but can happen.
+
+What does happen if calling vmclear_local_loaded_vmcss before kvm_init? I think it no problem since the list is initially empty.
+
+>  	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
+>  	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
+>  	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
+> @@ -7265,6 +7270,10 @@ static void __exit vmx_exit(void)
+>  	free_page((unsigned long)vmx_io_bitmap_b);
+>  	free_page((unsigned long)vmx_io_bitmap_a);
 > 
-> I have developed few semi-automated tests. I will automate it completely
-> and mail it to you in 2-3 days.
-> 
+> +#ifdef CONFIG_KEXEC
+> +	crash_clear_loaded_vmcss = NULL;
+> +#endif
+> +
+>  	kvm_exit();
+>  }
 
-Thanks, I'm waiting for it.
+Also, this is converse to the above.
 
+Thanks.
+HATAYAMA, Daisuke
 
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
