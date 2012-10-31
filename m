@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TTP5c-0008Tx-WB
- for kexec@lists.infradead.org; Wed, 31 Oct 2012 03:35:37 +0000
-Message-ID: <50909C35.9080702@cn.fujitsu.com>
-Date: Wed, 31 Oct 2012 11:34:13 +0800
-From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH v3 2/2] KVM: make crash_clear_loaded_vmcss valid when loading
- kvm_intel module
-References: <50909B55.2070901@cn.fujitsu.com>
-In-Reply-To: <50909B55.2070901@cn.fujitsu.com>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TTPsN-0001G2-2b
+ for kexec@lists.infradead.org; Wed, 31 Oct 2012 04:26:01 +0000
+Date: Wed, 31 Oct 2012 13:21:07 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 0/7] makedumpfile security key filtering with eppic
+Message-Id: <20121031132107.efaa63ab20b1060fbaf740c5@mxc.nes.nec.co.jp>
+In-Reply-To: <508E5749.7050408@linux.vnet.ibm.com>
+References: <20120606095709.12534.63967.stgit@aravinda>
+ <20121029170641.40b19d2ba2635804dbf8eb31@mxc.nes.nec.co.jp>
+ <508E5749.7050408@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,51 +24,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org, kexec@lists.infradead.org, Avi Kivity <avi@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>
-Cc: linux-kernel@vger.kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: aravinda@linux.vnet.ibm.com
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, buendgen@de.ibm.com
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/kvm/vmx.c |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+Hello Aravinda,
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 4ff0ab9..f6a16b2 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -41,6 +41,7 @@
- #include <asm/i387.h>
- #include <asm/xcr.h>
- #include <asm/perf_event.h>
-+#include <asm/kexec.h>
- 
- #include "trace.h"
- 
-@@ -7230,6 +7231,10 @@ static int __init vmx_init(void)
- 	if (r)
- 		goto out3;
- 
-+#ifdef CONFIG_KEXEC
-+	crash_clear_loaded_vmcss = vmclear_local_loaded_vmcss;
-+#endif
-+
- 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
-@@ -7265,6 +7270,10 @@ static void __exit vmx_exit(void)
- 	free_page((unsigned long)vmx_io_bitmap_b);
- 	free_page((unsigned long)vmx_io_bitmap_a);
- 
-+#ifdef CONFIG_KEXEC
-+	crash_clear_loaded_vmcss = NULL;
-+#endif
-+
- 	kvm_exit();
- }
- 
--- 
-1.7.1
+On Mon, 29 Oct 2012 15:45:37 +0530
+Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
 
+> Hi Atsushi,
+> 
+> Thanks for reviewing. I will work on your comments.
+> 
+> On 2012-10-29 13:36, Atsushi Kumagai wrote:
+> 
+> > Hello Aravinda,
+> > 
+> > Now, I have reviewed your patches to [PATCH 4/7], 
+> > so please give me a little more time.
+> >
+> 
+> 
+> sure...
+
+I've finished reviewing your patches completely. 
+Some errors are found by checkpatch.pl, so please check and fix each patches.
+
+  $ <linux kernel source>/scripts/checkpatch.pl <your patch>
+
+So, could you post the v2 patches which include my comments above and
+in other threads ?
+
+> > BTW, do you have any test case for this feature ?
+> > If you can give it to me, it's very helpful.
+> >
+> 
+> 
+> I have developed few semi-automated tests. I will automate it completely
+> and mail it to you in 2-3 days.
+> 
+
+Thanks, I'm waiting for it.
+
+
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
