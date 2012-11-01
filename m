@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TTvzx-0004Pb-Ip
- for kexec@lists.infradead.org; Thu, 01 Nov 2012 14:43:59 +0000
-Date: Thu, 1 Nov 2012 10:43:04 -0400
+ id 1TTw86-0005bz-1r
+ for kexec@lists.infradead.org; Thu, 01 Nov 2012 14:52:22 +0000
+Date: Thu, 1 Nov 2012 10:51:49 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: Kdump with signed images
-Message-ID: <20121101144304.GA15821@redhat.com>
+Message-ID: <20121101145149.GB15821@redhat.com>
 References: <20121025141048.GD9377@redhat.com>
  <1351190421.18115.92.camel@falcor>
  <20121025185520.GA17995@redhat.com>
@@ -90,17 +90,13 @@ On Thu, Nov 01, 2012 at 10:29:19AM -0400, Mimi Zohar wrote:
 > be impossible for anything other than /sbin/kexec to make the kexec
 > system call."
 
-Only those executables which have extended capability
-(say CAP_SIGNATURES_VERIFIED) will be able to call kexec_load() syscall.
-Only signed executables will get this capability upon signature verification
-(using keys in kernel keyring only).
+I think what matthew might have meant that anything other than signed
+trusted executable should not be able to call kexec_load(). Matthew?
 
-so any xyz executable will not be able to call kexec_load() until and
-unless it is signed with keys kernel trusts. This is similar to signed
-module verification.
-
-So I think this does satisfy the requirement matthew specified. Isn't it?
-Matthew, what do you think?
+And if one wants only /sbin/kexec to call it, then just sign that
+one so no other executable will be able to call kexec_load(). Though
+I don't think that's the requirement here. Requirement is that only
+trusted executables should be able to call kexec_load().
 
 Thanks
 Vivek
