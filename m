@@ -1,21 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mail-vc0-f177.google.com ([209.85.220.177])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TUOuZ-0000HM-08
- for kexec@lists.infradead.org; Fri, 02 Nov 2012 21:36:19 +0000
-Message-ID: <50943CCB.5080504@zytor.com>
-Date: Fri, 02 Nov 2012 14:36:11 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1TUU0T-00044L-Ti
+ for kexec@lists.infradead.org; Sat, 03 Nov 2012 03:02:46 +0000
+Received: by mail-vc0-f177.google.com with SMTP id p16so4380433vcq.36
+ for <kexec@lists.infradead.org>; Fri, 02 Nov 2012 20:02:44 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
- acpi_rsdp= to 2nd kernel for efi booting)
-References: <20121018031028.GA3850@localhost.localdomain>
- <1350572194.3894.14.camel@rhapsody> <20121018191107.GC18147@redhat.com>
- <1350588121.30243.7.camel@rhapsody> <20121018193831.GD18147@redhat.com>
- <874nlrv2ni.fsf@xmission.com> <20121019020630.GA27052@redhat.com>
- <877gqnnnf0.fsf@xmission.com> <20121019175301.GG27052@redhat.com>
- <87bofu9pj9.fsf@xmission.com>
-In-Reply-To: <87bofu9pj9.fsf@xmission.com>
+In-Reply-To: <20121102143603.GD3300@redhat.com>
+References: <20121026023916.GA16762@srcf.ucam.org>
+ <20121026170609.GB24687@redhat.com>
+ <1351276649.18115.217.camel@falcor>
+ <20121101131003.GA14573@redhat.com>
+ <20121101135356.GA15659@redhat.com>
+ <1351780159.15708.17.camel@falcor>
+ <20121101144304.GA15821@redhat.com>
+ <20121101145225.GB10269@srcf.ucam.org>
+ <20121102132318.GA3300@redhat.com>
+ <CAKTCnzkQwhWGJRTiuxv8wp7uPDFoT6eGsN0k51Bvw8=EqQFW=w@mail.gmail.com>
+ <20121102143603.GD3300@redhat.com>
+Date: Sat, 3 Nov 2012 08:32:42 +0530
+Message-ID: <CAKTCnzn9RpN9Sg36iJSCRdn1fqUmdxgs-gF6oAdxohPA7Vs1iw@mail.gmail.com>
+Subject: Re: Kdump with signed images
+From: Balbir Singh <bsingharora@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,25 +34,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Matthew Garrett <mjg@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Roberto Sassu <roberto.sassu@polito.it>, Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Peter Jones <pjones@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Khalid Aziz <khalid@gonehiking.org>
 
-On 10/22/2012 02:15 PM, Eric W. Biederman wrote:
+On Fri, Nov 2, 2012 at 8:06 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> On Fri, Nov 02, 2012 at 07:59:15PM +0530, Balbir Singh wrote:
+>> On Fri, Nov 2, 2012 at 6:53 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+>> > On Thu, Nov 01, 2012 at 02:52:25PM +0000, Matthew Garrett wrote:
+>> >> On Thu, Nov 01, 2012 at 10:43:04AM -0400, Vivek Goyal wrote:
+>> >>
+>> >> > So I think this does satisfy the requirement matthew specified. Isn't it?
+>> >> > Matthew, what do you think?
+>> >>
+>> >> Sure, if you can ensure that. You'll need to figure out how to get the
+>> >> build system to sign the userspace binaries and you'll need to ensure
+>> >> that they're statically linked and don't dlopen anything (including the
+>> >> nsswitch modules), but otherwise that should work.
+>> >>
+>> >
+>> > [ CC peter jones ]
+>> >
+>> > Ok, so even if we build kexec-tools statically with glibc, we have the
+>> > issue of name service switch modules. glibc will still do dlopen on
+>> > these modules. So what are options now.
+>> >
+>> > - Sign glibc and associated shared libraries. Do not allow unsigned
+>> >   shared library to dynamically link with signed executable.
+>> >
+>> > - Peter mentioned that work with uClibc for kexec-tools.
+>> >
+>> > I personally think that however hard it is but first option sounds like
+>> > a long term solution. We might have more user space processes which
+>> > we might have to trust a generic solution will help with that. For example,
+>> > we might have to sign and trust qemu at some point of time.
+>> >
+>> > Are there other ways of handing glibc issue?
+>> >
 >>
->> This is like re-designing the kexec/kdump and I really wish there is
->> an easier way to handle the case signed kernels.
-> 
-> Yes.  Which is why either a signed puragtory or a signed /sbin/kexec
-> look very attractive.
-> 
+>> Have you seen http://sourceware.org/glibc/wiki/FAQ - "Even statically
+>> linked programs need some shared libraries which is not acceptable for
+>> me. What can I do?" Probably, worth trying.
+>
+> Yes I have seen this. IIUC, it says that build libc with -enable-static-nss
+> and then individual programs need to statically build against the nss
+> modules program will use.
+>
+> I think building libc with -enable-static-nss part will be unacceptable
+> for general server as other programs would like to make use of the
+> existing nss functionality.
 
-Signed purgatory sounds like The Right Thing.  Doing relocation in
-purgatory should be quite trivial; I'd be happy to work with people if
-they need pointers how to do it.
+No, use that library for static linking only for programs that need to
+be signed (kexec-tools), until the base OS gets signature support. Why
+does the same library need to be used for general sever programs? The
+built library would be used only on the build system.
 
-	-hpa
+I also like HPA's suggestion on using klibc, but I am not sure what it
+would take to port the tools to use klibc
 
-
+Balbir
 
 _______________________________________________
 kexec mailing list
