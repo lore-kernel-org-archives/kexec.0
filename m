@@ -1,27 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vc0-f177.google.com ([209.85.220.177])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TUU0T-00044L-Ti
- for kexec@lists.infradead.org; Sat, 03 Nov 2012 03:02:46 +0000
-Received: by mail-vc0-f177.google.com with SMTP id p16so4380433vcq.36
- for <kexec@lists.infradead.org>; Fri, 02 Nov 2012 20:02:44 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20121102143603.GD3300@redhat.com>
-References: <20121026023916.GA16762@srcf.ucam.org>
- <20121026170609.GB24687@redhat.com>
- <1351276649.18115.217.camel@falcor>
- <20121101131003.GA14573@redhat.com>
- <20121101135356.GA15659@redhat.com>
- <1351780159.15708.17.camel@falcor>
- <20121101144304.GA15821@redhat.com>
- <20121101145225.GB10269@srcf.ucam.org>
- <20121102132318.GA3300@redhat.com>
- <CAKTCnzkQwhWGJRTiuxv8wp7uPDFoT6eGsN0k51Bvw8=EqQFW=w@mail.gmail.com>
- <20121102143603.GD3300@redhat.com>
-Date: Sat, 3 Nov 2012 08:32:42 +0530
-Message-ID: <CAKTCnzn9RpN9Sg36iJSCRdn1fqUmdxgs-gF6oAdxohPA7Vs1iw@mail.gmail.com>
-Subject: Re: Kdump with signed images
-From: Balbir Singh <bsingharora@gmail.com>
+ id 1TVFwv-0003F9-01
+ for kexec@lists.infradead.org; Mon, 05 Nov 2012 06:14:19 +0000
+Date: Mon, 5 Nov 2012 15:04:27 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCHv3 8/9] Add support for filtering out user pages under Xen4
+Message-Id: <20121105150427.3503c58ffc8e323b19a6ba14@mxc.nes.nec.co.jp>
+In-Reply-To: <201208241743.23829.ptesarik@suse.cz>
+References: <201208241743.23829.ptesarik@suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,64 +22,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Roberto Sassu <roberto.sassu@polito.it>, Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Peter Jones <pjones@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Khalid Aziz <khalid@gonehiking.org>
+To: ptesarik@suse.cz
+Cc: kexec@lists.infradead.org, Norbert.Trapp@ts.fujitsu.com
 
-On Fri, Nov 2, 2012 at 8:06 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
-> On Fri, Nov 02, 2012 at 07:59:15PM +0530, Balbir Singh wrote:
->> On Fri, Nov 2, 2012 at 6:53 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
->> > On Thu, Nov 01, 2012 at 02:52:25PM +0000, Matthew Garrett wrote:
->> >> On Thu, Nov 01, 2012 at 10:43:04AM -0400, Vivek Goyal wrote:
->> >>
->> >> > So I think this does satisfy the requirement matthew specified. Isn't it?
->> >> > Matthew, what do you think?
->> >>
->> >> Sure, if you can ensure that. You'll need to figure out how to get the
->> >> build system to sign the userspace binaries and you'll need to ensure
->> >> that they're statically linked and don't dlopen anything (including the
->> >> nsswitch modules), but otherwise that should work.
->> >>
->> >
->> > [ CC peter jones ]
->> >
->> > Ok, so even if we build kexec-tools statically with glibc, we have the
->> > issue of name service switch modules. glibc will still do dlopen on
->> > these modules. So what are options now.
->> >
->> > - Sign glibc and associated shared libraries. Do not allow unsigned
->> >   shared library to dynamically link with signed executable.
->> >
->> > - Peter mentioned that work with uClibc for kexec-tools.
->> >
->> > I personally think that however hard it is but first option sounds like
->> > a long term solution. We might have more user space processes which
->> > we might have to trust a generic solution will help with that. For example,
->> > we might have to sign and trust qemu at some point of time.
->> >
->> > Are there other ways of handing glibc issue?
->> >
->>
->> Have you seen http://sourceware.org/glibc/wiki/FAQ - "Even statically
->> linked programs need some shared libraries which is not acceptable for
->> me. What can I do?" Probably, worth trying.
->
-> Yes I have seen this. IIUC, it says that build libc with -enable-static-nss
-> and then individual programs need to statically build against the nss
-> modules program will use.
->
-> I think building libc with -enable-static-nss part will be unacceptable
-> for general server as other programs would like to make use of the
-> existing nss functionality.
+Hello Petr,
 
-No, use that library for static linking only for programs that need to
-be signed (kexec-tools), until the base OS gets signature support. Why
-does the same library need to be used for general sever programs? The
-built library would be used only on the build system.
+I'm sorry for having kept you waiting.
+I have a small comment for this patch.
 
-I also like HPA's suggestion on using klibc, but I am not sure what it
-would take to port the tools to use klibc
+On Fri, 24 Aug 2012 17:43:23 +0200
+Petr Tesarik <ptesarik@suse.cz> wrote:
 
-Balbir
+> In Xen-4.0+, usage of a page must be determined from its PGC_xxx
+> flags, which are stored in the highest bits of the _count field
+> of struct page_info.
+> 
+> Let's keep the original function for Xen3 only and add a new
+> function for walking the pages under Xen4. This avoids adding many
+> new conditionals to the inner loop and also makes the logic easier
+> to follow for all Xen versions.
+> 
+> Signed-off-by: Norbert Trapp <norbert.trapp@ts.fujitsu.com>
+> Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+> 
+> ---
+>  makedumpfile.c |  102 
+> +++++++++++++++++++++++++++++++++++++++++++++++++++++----
+>  makedumpfile.h |   25 +++++++++++++
+>  2 files changed, 121 insertions(+), 6 deletions(-)
+> 
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -78,6 +78,31 @@ int get_mem_type(void);
+>  #define LSEEKED_PDATA	(3)
+>  
+>  /*
+> + * Xen page flags
+> + */
+> +#define BITS_PER_BYTE (8)
+> +#define BITS_PER_LONG (BITS_PER_BYTE * sizeof(long))
+
+BITPERBYTE is already defined as meaning the same as BITS_PER_BYTE,
+so I will change this patch to use BITPERBYTE instead of BITS_PER_BYTE
+when merging.
+
+  makedumpfile.h:
+    164
+    165 #define BITPERBYTE              (8)
+    166 #define PGMM_CACHED             (512)
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
