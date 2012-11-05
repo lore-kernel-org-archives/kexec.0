@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TVSkQ-0004Gy-HQ
- for kexec@lists.infradead.org; Mon, 05 Nov 2012 19:54:15 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1350572194.3894.14.camel@rhapsody>
- <20121018191107.GC18147@redhat.com>
- <1350588121.30243.7.camel@rhapsody>
- <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
- <20121019020630.GA27052@redhat.com> <877gqnnnf0.fsf@xmission.com>
- <20121019175301.GG27052@redhat.com> <87bofu9pj9.fsf@xmission.com>
- <50943CCB.5080504@zytor.com> <20121105181141.GD28720@redhat.com>
-Date: Mon, 05 Nov 2012 11:54:07 -0800
-In-Reply-To: <20121105181141.GD28720@redhat.com> (Vivek Goyal's message of
- "Mon, 5 Nov 2012 13:11:41 -0500")
-Message-ID: <87a9uv9674.fsf@xmission.com>
+ id 1TVTVc-0005Ja-T5
+ for kexec@lists.infradead.org; Mon, 05 Nov 2012 20:43:02 +0000
+Date: Mon, 5 Nov 2012 15:42:49 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Kdump with signed images
+Message-ID: <20121105204249.GG28720@redhat.com>
+References: <1351276649.18115.217.camel@falcor>
+ <20121101131003.GA14573@redhat.com>
+ <20121101135356.GA15659@redhat.com>
+ <1351780159.15708.17.camel@falcor>
+ <20121101144304.GA15821@redhat.com>
+ <20121101145225.GB10269@srcf.ucam.org>
+ <20121102132318.GA3300@redhat.com> <87boffd727.fsf@xmission.com>
+ <20121105180353.GC28720@redhat.com> <87mwyv96mn.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
- acpi_rsdp= to 2nd kernel for efi booting)
+Content-Disposition: inline
+In-Reply-To: <87mwyv96mn.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,54 +30,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Roberto Sassu <roberto.sassu@polito.it>, Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Peter Jones <pjones@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+On Mon, Nov 05, 2012 at 11:44:48AM -0800, Eric W. Biederman wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
+> 
+> > On Fri, Nov 02, 2012 at 02:32:48PM -0700, Eric W. Biederman wrote:
+> >> 
+> >> It needs to be checked but /sbin/kexec should not use any functions that
+> >> trigger nss switch.  No user or password or host name lookup should be
+> >> happening.
+> >
+> > I also think that we don't call routines which trigger nss switch but
+> > be probably can't rely on that as somebody might introduce it in
+> > future. So we need more robust mechanism to prevent it than just code
+> > inspection.
+> 
+> The fact that we shouldn't use those routines is enough to let us
+> walk down a path where they are not used.  Either with a static glibc
+> linked told to use no nss modules (--enable-static-nss ?), or with
+> another more restricted libc.
 
-> On Fri, Nov 02, 2012 at 02:36:11PM -0700, H. Peter Anvin wrote:
->> On 10/22/2012 02:15 PM, Eric W. Biederman wrote:
->> >>
->> >> This is like re-designing the kexec/kdump and I really wish there is
->> >> an easier way to handle the case signed kernels.
->> > 
->> > Yes.  Which is why either a signed puragtory or a signed /sbin/kexec
->> > look very attractive.
->> > 
->> 
->> Signed purgatory sounds like The Right Thing.  Doing relocation in
->> purgatory should be quite trivial; I'd be happy to work with people if
->> they need pointers how to do it.
->
-> So we sign purgatory and do the relocations in kernel later after
-> signature verification?
->
-> I have few questions though.
->
-> - We modify purgatory (update symbol values) in user space. That allows
->   us to build single purgatory and chagne its behavior based on user
->   options to kexec-tools (like 16bit vs 32bit entry, updating location
->   of backup region etc). In fact purgatory to kernel jump location is
->   decided at run time and purgatory is updated accordingly. That means
->   we can't sign the purgatory.
->
->   So apart from relocation, user space modification of purgatory code
->   is also an issue. 
->
-> - Even if we come up with a way to avoid that, so will we not sign
->   /sbin/kexec in that case? What happens to other unsigned segments
->   loaded by /sbin/kexec. (boot_params, command line, elf headers etc).
->   Can these be trusted without any signature.
->
-> So I am not sure that just signing the purgatory will solve the issue.
+Is there anything wrong with using uClibc? Trying to link again
+customized glibc (with --enable-static-nss) sounds just extra work for
+build environments. Are there know restricted libc or we need to create
+one with passing more compile time options to libc.
 
-The oddball part to add to this theory is that to sign purgatory may
-imply moving more functionality into purgatory.  To the possible silly
-point where we move most of kexec-tools into purgatory and do the work
-in-between kernels (ick).
+Instead of doing more work in an attempt to create restricted libc,
+it might be easier to just link against any already available
+restricted library.
 
-Eric
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
