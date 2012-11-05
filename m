@@ -1,17 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TVFzV-0003IA-UV
- for kexec@lists.infradead.org; Mon, 05 Nov 2012 06:16:59 +0000
-Date: Mon, 5 Nov 2012 15:04:30 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 1/2 v2] makedumpfile: Add a default action to exclude
- hwpoison page from vmcore
-Message-Id: <20121105150430.11a524bcfdcf17668e2bec20@mxc.nes.nec.co.jp>
-In-Reply-To: <5091300D.5030106@hitachi.com>
-References: <508FDEF3.8030601@hitachi.com> <20121030143750.GF2290@redhat.com>
- <5091300D.5030106@hitachi.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TVR27-0002uK-AR
+ for kexec@lists.infradead.org; Mon, 05 Nov 2012 18:04:25 +0000
+Date: Mon, 5 Nov 2012 13:03:53 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Kdump with signed images
+Message-ID: <20121105180353.GC28720@redhat.com>
+References: <20121026023916.GA16762@srcf.ucam.org>
+ <20121026170609.GB24687@redhat.com>
+ <1351276649.18115.217.camel@falcor>
+ <20121101131003.GA14573@redhat.com>
+ <20121101135356.GA15659@redhat.com>
+ <1351780159.15708.17.camel@falcor>
+ <20121101144304.GA15821@redhat.com>
+ <20121101145225.GB10269@srcf.ucam.org>
+ <20121102132318.GA3300@redhat.com> <87boffd727.fsf@xmission.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87boffd727.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,190 +31,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: mitsuhiro.tanino.gm@hitachi.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ebiederm@xmission.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Roberto Sassu <roberto.sassu@polito.it>, Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Peter Jones <pjones@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
 
-Hello Tanino-san,
-
-On Wed, 31 Oct 2012 23:05:01 +0900
-Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> wrote:
-
-> This patch introduces a function which excludes hwpoison pages
-> from vmcore as a default action for makedumpfile.
+On Fri, Nov 02, 2012 at 02:32:48PM -0700, Eric W. Biederman wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
 > 
-> Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+> > On Thu, Nov 01, 2012 at 02:52:25PM +0000, Matthew Garrett wrote:
+> >> On Thu, Nov 01, 2012 at 10:43:04AM -0400, Vivek Goyal wrote:
+> >> 
+> >> > So I think this does satisfy the requirement matthew specified. Isn't it?
+> >> > Matthew, what do you think?
+> >> 
+> >> Sure, if you can ensure that. You'll need to figure out how to get the 
+> >> build system to sign the userspace binaries and you'll need to ensure 
+> >> that they're statically linked and don't dlopen anything (including the 
+> >> nsswitch modules), but otherwise that should work.
+> >> 
+> >
+> > [ CC peter jones ]
+> >
+> > Ok, so even if we build kexec-tools statically with glibc, we have the
+> > issue of name service switch modules. glibc will still do dlopen on
+> > these modules. So what are options now.
+> >
+> > - Sign glibc and associated shared libraries. Do not allow unsigned
+> >   shared library to dynamically link with signed executable.
+> >
+> > - Peter mentioned that work with uClibc for kexec-tools.
+> >
+> > I personally think that however hard it is but first option sounds like
+> > a long term solution. We might have more user space processes which
+> > we might have to trust a generic solution will help with that. For example,
+> > we might have to sign and trust qemu at some point of time.
+> >
+> > Are there other ways of handing glibc issue?
+> 
+> It needs to be checked but /sbin/kexec should not use any functions that
+> trigger nss switch.  No user or password or host name lookup should be
+> happening.
 
-Thank you for your work. I think it's good feature.
+I also think that we don't call routines which trigger nss switch but
+be probably can't rely on that as somebody might introduce it in
+future. So we need more robust mechanism to prevent it than just code
+inspection.
 
-I will merge this patch into makedumpfile-1.5.2 with the small change below.
-Of course, I will accept --no-hwposion-filtering option when it's needed.
+> 
+> This is one part in hardening /sbin/kexec to deal with hostile root
+> users.  We need to check crazy things like do the files we open on /proc
+> actually point to /proc after we have opened them.
 
+Can you please explain it more. How can one fiddle with /proc. Also
+what's the solution then.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 30cf130..fcf42f6 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3864,8 +3864,8 @@ __exclude_unnecessary_pages(unsigned long mem_map,
-                 * Exclude the hwpoison page.
-                 */
-                else if (isHWPOISON(flags)) {
--                       clear_bit_on_2nd_bitmap_for_kernel(pfn);
--                       pfn_hwpoison++;
-+                       if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+                               pfn_hwpoison++;
-                }
-        }
-        return TRUE;
+> 
+> I believe glibc has some code which triggers for suid root applications
+> that we should ensure gets triggered that avoid trusting things like
+> LD_LIBRARY_PATH and company.
 
+I guess linking statically with uClibc or klibc (as hpa said), might turn
+out to be better option to avoid all the issues w.r.t shared objects
+and all the tricky environment variables.
 
 Thanks
-Atsushi Kumagai
-
-
-> diff -uprN a/makedumpfile.c b/makedumpfile.c
-> --- a/makedumpfile.c	2012-10-01 15:26:54.510354074 +0900
-> +++ b/makedumpfile.c	2012-10-29 22:32:24.913057535 +0900
-> @@ -43,6 +43,7 @@ unsigned long long pfn_cache;
->  unsigned long long pfn_cache_private;
->  unsigned long long pfn_user;
->  unsigned long long pfn_free;
-> +unsigned long long pfn_hwpoison;
->  
->  unsigned long long num_dumped;
->  
-> @@ -969,6 +970,7 @@ get_structure_info(void)
->  	ENUM_NUMBER_INIT(PG_lru, "PG_lru");
->  	ENUM_NUMBER_INIT(PG_private, "PG_private");
->  	ENUM_NUMBER_INIT(PG_swapcache, "PG_swapcache");
-> +	ENUM_NUMBER_INIT(PG_hwpoison, "PG_hwpoison");
->  
->  	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
->  
-> @@ -1371,6 +1373,7 @@ write_vmcoreinfo_data(void)
->  	WRITE_NUMBER("PG_lru", PG_lru);
->  	WRITE_NUMBER("PG_private", PG_private);
->  	WRITE_NUMBER("PG_swapcache", PG_swapcache);
-> +	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
->  
->  	/*
->  	 * write the source file of 1st kernel
-> @@ -1659,6 +1662,7 @@ read_vmcoreinfo(void)
->  	READ_NUMBER("PG_lru", PG_lru);
->  	READ_NUMBER("PG_private", PG_private);
->  	READ_NUMBER("PG_swapcache", PG_swapcache);
-> +	READ_NUMBER("PG_hwpoison", PG_hwpoison);
->  
->  	READ_SRCFILE("pud_t", pud_t);
->  
-> @@ -3856,6 +3860,13 @@ __exclude_unnecessary_pages(unsigned lon
->  			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
->  				pfn_user++;
->  		}
-> +		/*
-> +		 * Exclude the hwpoison page.
-> +		 */
-> +		else if (isHWPOISON(flags)) {
-> +			clear_bit_on_2nd_bitmap_for_kernel(pfn);
-> +			pfn_hwpoison++;
-> +		}
->  	}
->  	return TRUE;
->  }
-> @@ -3914,11 +3925,13 @@ exclude_unnecessary_pages_cyclic(void)
->  			return FALSE;
->  
->  	/*
-> -	 * Exclude cache pages, cache private pages, user data pages, and free pages.
-> +	 * Exclude cache pages, cache private pages, user data pages,
-> +	   free pages and hwpoison pages.
->  	 */
->  	if (info->dump_level & DL_EXCLUDE_CACHE ||
->  	    info->dump_level & DL_EXCLUDE_CACHE_PRI ||
-> -	    info->dump_level & DL_EXCLUDE_USER_DATA) {
-> +	    info->dump_level & DL_EXCLUDE_USER_DATA ||
-> +	    (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER)) {
->  
->  		gettimeofday(&tv_start, NULL);
->  
-> @@ -4018,11 +4031,13 @@ create_2nd_bitmap(void)
->  	}
->  
->  	/*
-> -	 * Exclude cache pages, cache private pages, user data pages.
-> +	 * Exclude cache pages, cache private pages, user data pages,
-> +	 * and hwpoison pages.
->  	 */
->  	if (info->dump_level & DL_EXCLUDE_CACHE ||
->  	    info->dump_level & DL_EXCLUDE_CACHE_PRI ||
-> -	    info->dump_level & DL_EXCLUDE_USER_DATA) {
-> +	    info->dump_level & DL_EXCLUDE_USER_DATA ||
-> +	    (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER)) {
->  		if (!exclude_unnecessary_pages()) {
->  			ERRMSG("Can't exclude unnecessary pages.\n");
->  			return FALSE;
-> @@ -5062,7 +5077,8 @@ write_elf_pages_cyclic(struct cache_data
->  	/*
->  	 * Reset counter for debug message.
->  	 */
-> -	pfn_zero =  pfn_cache = pfn_cache_private = pfn_user = pfn_free = 0;
-> +	pfn_zero = pfn_cache = pfn_cache_private = 0;
-> +	pfn_user = pfn_free = pfn_hwpoison = 0;
->  	pfn_memhole = info->max_mapnr;
->  
->  	info->cyclic_start_pfn = 0;
-> @@ -5902,7 +5918,8 @@ write_kdump_pages_and_bitmap_cyclic(stru
->  	/*
->  	 * Reset counter for debug message.
->  	 */
-> -	pfn_zero =  pfn_cache = pfn_cache_private = pfn_user = pfn_free = 0;
-> +	pfn_zero = pfn_cache = pfn_cache_private = 0;
-> +	pfn_user = pfn_free = pfn_hwpoison = 0;
->  	pfn_memhole = info->max_mapnr;
->  
->  	cd_header->offset
-> @@ -6687,7 +6704,7 @@ print_report(void)
->  	pfn_original = info->max_mapnr - pfn_memhole;
->  
->  	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
-> -	    + pfn_user + pfn_free;
-> +	    + pfn_user + pfn_free + pfn_hwpoison;
->  	shrinking = (pfn_original - pfn_excluded) * 100;
->  	shrinking = shrinking / pfn_original;
->  
-> @@ -6700,6 +6717,7 @@ print_report(void)
->  	    pfn_cache_private);
->  	REPORT_MSG("    User process data pages : 0x%016llx\n", pfn_user);
->  	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
-> +	REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoison);
->  	REPORT_MSG("  Remaining pages  : 0x%016llx\n",
->  	    pfn_original - pfn_excluded);
->  	REPORT_MSG("  (The number of pages is reduced to %lld%%.)\n",
-> diff -uprN a/makedumpfile.h b/makedumpfile.h
-> --- a/makedumpfile.h	2012-10-01 15:26:54.512354076 +0900
-> +++ b/makedumpfile.h	2012-10-29 20:59:19.723015190 +0900
-> @@ -107,6 +107,8 @@ test_bit(int nr, unsigned long addr)
->  #define isLRU(flags)		test_bit(NUMBER(PG_lru), flags)
->  #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
->  #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
-> +#define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
-> +				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
->  
->  static inline int
->  isAnon(unsigned long mapping)
-> @@ -1244,6 +1246,7 @@ struct number_table {
->  	long	PG_lru;
->  	long	PG_private;
->  	long	PG_swapcache;
-> +	long    PG_hwpoison;
->  };
->  
->  struct srcfile_table {
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Vivek
 
 _______________________________________________
 kexec mailing list
