@@ -1,24 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TVR27-0002uK-AR
- for kexec@lists.infradead.org; Mon, 05 Nov 2012 18:04:25 +0000
-Date: Mon, 5 Nov 2012 13:03:53 -0500
+ id 1TVR9E-0004CP-7h
+ for kexec@lists.infradead.org; Mon, 05 Nov 2012 18:11:44 +0000
+Date: Mon, 5 Nov 2012 13:11:41 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Kdump with signed images
-Message-ID: <20121105180353.GC28720@redhat.com>
-References: <20121026023916.GA16762@srcf.ucam.org>
- <20121026170609.GB24687@redhat.com>
- <1351276649.18115.217.camel@falcor>
- <20121101131003.GA14573@redhat.com>
- <20121101135356.GA15659@redhat.com>
- <1351780159.15708.17.camel@falcor>
- <20121101144304.GA15821@redhat.com>
- <20121101145225.GB10269@srcf.ucam.org>
- <20121102132318.GA3300@redhat.com> <87boffd727.fsf@xmission.com>
+Subject: Re: [RFC] Kdump with UEFI secure boot (Re: [PATCH v2] kdump: pass
+ acpi_rsdp= to 2nd kernel for efi booting)
+Message-ID: <20121105181141.GD28720@redhat.com>
+References: <1350572194.3894.14.camel@rhapsody>
+ <20121018191107.GC18147@redhat.com>
+ <1350588121.30243.7.camel@rhapsody>
+ <20121018193831.GD18147@redhat.com> <874nlrv2ni.fsf@xmission.com>
+ <20121019020630.GA27052@redhat.com> <877gqnnnf0.fsf@xmission.com>
+ <20121019175301.GG27052@redhat.com> <87bofu9pj9.fsf@xmission.com>
+ <50943CCB.5080504@zytor.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87boffd727.fsf@xmission.com>
+In-Reply-To: <50943CCB.5080504@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,67 +30,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Roberto Sassu <roberto.sassu@polito.it>, Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Peter Jones <pjones@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, Khalid Aziz <khalid@gonehiking.org>, Dave Young <dyoung@redhat.com>, Matthew Garrett <mjg@redhat.com>
 
-On Fri, Nov 02, 2012 at 02:32:48PM -0700, Eric W. Biederman wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
+On Fri, Nov 02, 2012 at 02:36:11PM -0700, H. Peter Anvin wrote:
+> On 10/22/2012 02:15 PM, Eric W. Biederman wrote:
+> >>
+> >> This is like re-designing the kexec/kdump and I really wish there is
+> >> an easier way to handle the case signed kernels.
+> > 
+> > Yes.  Which is why either a signed puragtory or a signed /sbin/kexec
+> > look very attractive.
+> > 
 > 
-> > On Thu, Nov 01, 2012 at 02:52:25PM +0000, Matthew Garrett wrote:
-> >> On Thu, Nov 01, 2012 at 10:43:04AM -0400, Vivek Goyal wrote:
-> >> 
-> >> > So I think this does satisfy the requirement matthew specified. Isn't it?
-> >> > Matthew, what do you think?
-> >> 
-> >> Sure, if you can ensure that. You'll need to figure out how to get the 
-> >> build system to sign the userspace binaries and you'll need to ensure 
-> >> that they're statically linked and don't dlopen anything (including the 
-> >> nsswitch modules), but otherwise that should work.
-> >> 
-> >
-> > [ CC peter jones ]
-> >
-> > Ok, so even if we build kexec-tools statically with glibc, we have the
-> > issue of name service switch modules. glibc will still do dlopen on
-> > these modules. So what are options now.
-> >
-> > - Sign glibc and associated shared libraries. Do not allow unsigned
-> >   shared library to dynamically link with signed executable.
-> >
-> > - Peter mentioned that work with uClibc for kexec-tools.
-> >
-> > I personally think that however hard it is but first option sounds like
-> > a long term solution. We might have more user space processes which
-> > we might have to trust a generic solution will help with that. For example,
-> > we might have to sign and trust qemu at some point of time.
-> >
-> > Are there other ways of handing glibc issue?
-> 
-> It needs to be checked but /sbin/kexec should not use any functions that
-> trigger nss switch.  No user or password or host name lookup should be
-> happening.
+> Signed purgatory sounds like The Right Thing.  Doing relocation in
+> purgatory should be quite trivial; I'd be happy to work with people if
+> they need pointers how to do it.
 
-I also think that we don't call routines which trigger nss switch but
-be probably can't rely on that as somebody might introduce it in
-future. So we need more robust mechanism to prevent it than just code
-inspection.
+So we sign purgatory and do the relocations in kernel later after
+signature verification?
 
-> 
-> This is one part in hardening /sbin/kexec to deal with hostile root
-> users.  We need to check crazy things like do the files we open on /proc
-> actually point to /proc after we have opened them.
+I have few questions though.
 
-Can you please explain it more. How can one fiddle with /proc. Also
-what's the solution then.
+- We modify purgatory (update symbol values) in user space. That allows
+  us to build single purgatory and chagne its behavior based on user
+  options to kexec-tools (like 16bit vs 32bit entry, updating location
+  of backup region etc). In fact purgatory to kernel jump location is
+  decided at run time and purgatory is updated accordingly. That means
+  we can't sign the purgatory.
 
-> 
-> I believe glibc has some code which triggers for suid root applications
-> that we should ensure gets triggered that avoid trusting things like
-> LD_LIBRARY_PATH and company.
+  So apart from relocation, user space modification of purgatory code
+  is also an issue. 
 
-I guess linking statically with uClibc or klibc (as hpa said), might turn
-out to be better option to avoid all the issues w.r.t shared objects
-and all the tricky environment variables.
+- Even if we come up with a way to avoid that, so will we not sign
+  /sbin/kexec in that case? What happens to other unsigned segments
+  loaded by /sbin/kexec. (boot_params, command line, elf headers etc).
+  Can these be trusted without any signature.
+
+So I am not sure that just signing the purgatory will solve the issue.
 
 Thanks
 Vivek
