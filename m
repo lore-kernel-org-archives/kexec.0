@@ -1,33 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TVzWh-0006Pe-2B
- for kexec@lists.infradead.org; Wed, 07 Nov 2012 06:54:17 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id E43673EE0C1
- for <kexec@lists.infradead.org>; Wed,  7 Nov 2012 15:54:06 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id C4A5745DE51
- for <kexec@lists.infradead.org>; Wed,  7 Nov 2012 15:54:06 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id A65B545DE4D
- for <kexec@lists.infradead.org>; Wed,  7 Nov 2012 15:54:06 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 993B81DB8037
- for <kexec@lists.infradead.org>; Wed,  7 Nov 2012 15:54:06 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3C3EC1DB803E
- for <kexec@lists.infradead.org>; Wed,  7 Nov 2012 15:54:06 +0900 (JST)
-Message-ID: <509A044D.30100@jp.fujitsu.com>
-Date: Wed, 07 Nov 2012 15:48:45 +0900
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
+ id 1TW5oJ-0002Z1-MK
+ for kexec@lists.infradead.org; Wed, 07 Nov 2012 13:36:53 +0000
+Received: from /spool/local
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Wed, 7 Nov 2012 23:32:59 +1000
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+ by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ qA7DQNZp45154306
+ for <kexec@lists.infradead.org>; Thu, 8 Nov 2012 00:26:23 +1100
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+ by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ qA7DacOh028373
+ for <kexec@lists.infradead.org>; Thu, 8 Nov 2012 00:36:38 +1100
+Subject: [PATCH] ppc/uImage: Find new kernel load_addr if the default addr
+ is not available
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Date: Wed, 07 Nov 2012 19:06:35 +0530
+Message-ID: <20121107133242.3676.23885.stgit@suzukikp.in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 1/2] x86, pci: Reset PCIe devices at boot time
-References: <20121015065516.2832.42378.sendpatchset@indoh>
- <20121015065526.2832.90867.sendpatchset@indoh>
- <CAE9FiQXKjNU4Sasj4LmiFiNNu9quGgKAdW3ciVnXggoWZiYXJA@mail.gmail.com>
- <507CE14A.2020605@jp.fujitsu.com>
-In-Reply-To: <507CE14A.2020605@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,316 +30,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: yinghai@kernel.org
-Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
+To: kexec@lists.infradead.org
+Cc: Matthew McClintock <msm@freescale.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-(2012/10/16 13:23), Takao Indoh wrote:
-> (2012/10/16 3:36), Yinghai Lu wrote:
->> On Mon, Oct 15, 2012 at 12:00 AM, Takao Indoh
->> <indou.takao@jp.fujitsu.com> wrote:
->>> This patch resets PCIe devices at boot time by hot reset when
->>> "reset_devices" is specified.
->>
->> how about pci devices that domain_nr is not zero ?
->
-> This patch does not support multiple domains yet.
->
->>>
->>> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
->>> ---
->>>   arch/x86/include/asm/pci-direct.h |    1
->>>   arch/x86/kernel/setup.c           |    3
->>>   arch/x86/pci/early.c              |  344 ++++++++++++++++++++++++++++
->>>   include/linux/pci.h               |    2
->>>   init/main.c                       |    4
->>>   5 files changed, 352 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/x86/include/asm/pci-direct.h b/arch/x86/include/asm/pci-direct.h
->>> index b1e7a45..de30db2 100644
->>> --- a/arch/x86/include/asm/pci-direct.h
->>> +++ b/arch/x86/include/asm/pci-direct.h
->>> @@ -18,4 +18,5 @@ extern int early_pci_allowed(void);
->>>   extern unsigned int pci_early_dump_regs;
->>>   extern void early_dump_pci_device(u8 bus, u8 slot, u8 func);
->>>   extern void early_dump_pci_devices(void);
->>> +extern void early_reset_pcie_devices(void);
->>>   #endif /* _ASM_X86_PCI_DIRECT_H */
->>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->>> index a2bb18e..73d3425 100644
->>> --- a/arch/x86/kernel/setup.c
->>> +++ b/arch/x86/kernel/setup.c
->>> @@ -987,6 +987,9 @@ void __init setup_arch(char **cmdline_p)
->>>          generic_apic_probe();
->>>
->>>          early_quirks();
->>> +#ifdef CONFIG_PCI
->>> +       early_reset_pcie_devices();
->>> +#endif
->>>
->>>          /*
->>>           * Read APIC and some other early information from ACPI tables.
->>> diff --git a/arch/x86/pci/early.c b/arch/x86/pci/early.c
->>> index d1067d5..683b30f 100644
->>> --- a/arch/x86/pci/early.c
->>> +++ b/arch/x86/pci/early.c
->>> @@ -1,5 +1,6 @@
->>>   #include <linux/kernel.h>
->>>   #include <linux/pci.h>
->>> +#include <linux/bootmem.h>
->>>   #include <asm/pci-direct.h>
->>>   #include <asm/io.h>
->>>   #include <asm/pci_x86.h>
->>> @@ -109,3 +110,346 @@ void early_dump_pci_devices(void)
->>>                  }
->>>          }
->>>   }
->>> +
->>> +#define PCI_EXP_SAVE_REGS      7
->>> +#define pcie_cap_has_devctl(type, flags)       1
->>> +#define pcie_cap_has_lnkctl(type, flags)               \
->>> +               ((flags & PCI_EXP_FLAGS_VERS) > 1 ||    \
->>> +                (type == PCI_EXP_TYPE_ROOT_PORT ||     \
->>> +                 type == PCI_EXP_TYPE_ENDPOINT ||      \
->>> +                 type == PCI_EXP_TYPE_LEG_END))
->>> +#define pcie_cap_has_sltctl(type, flags)               \
->>> +               ((flags & PCI_EXP_FLAGS_VERS) > 1 ||    \
->>> +                ((type == PCI_EXP_TYPE_ROOT_PORT) ||   \
->>> +                 (type == PCI_EXP_TYPE_DOWNSTREAM &&   \
->>> +                  (flags & PCI_EXP_FLAGS_SLOT))))
->>> +#define pcie_cap_has_rtctl(type, flags)                        \
->>> +               ((flags & PCI_EXP_FLAGS_VERS) > 1 ||    \
->>> +                (type == PCI_EXP_TYPE_ROOT_PORT ||     \
->>> +                 type == PCI_EXP_TYPE_RC_EC))
->>> +
->>> +struct save_config {
->>> +       u32 pci[16];
->>> +       u16 pcie[PCI_EXP_SAVE_REGS];
->>> +};
->>> +
->>> +struct pcie_dev {
->>> +       int cap;   /* position of PCI Express capability */
->>> +       int flags; /* PCI_EXP_FLAGS */
->>> +       struct save_config save; /* saved configration register */
->>> +};
->>> +
->>> +struct pcie_port {
->>> +       struct list_head dev;
->>> +       u8 secondary;
->>> +       struct pcie_dev child[PCI_MAX_FUNCTIONS];
->>> +};
->>> +
->>> +static LIST_HEAD(device_list);
->>> +static void __init pci_udelay(int loops)
->>> +{
->>> +       while (loops--) {
->>> +               /* Approximately 1 us */
->>> +               native_io_delay();
->>> +       }
->>> +}
->>> +
->>> +/* Derived from drivers/pci/pci.c */
->>> +#define PCI_FIND_CAP_TTL       48
->>> +static int __init __pci_find_next_cap_ttl(u8 bus, u8 slot, u8 func,
->>> +                                         u8 pos, int cap, int *ttl)
->>> +{
->>> +       u8 id;
->>> +
->>> +       while ((*ttl)--) {
->>> +               pos = read_pci_config_byte(bus, slot, func, pos);
->>> +               if (pos < 0x40)
->>> +                       break;
->>> +               pos &= ~3;
->>> +               id = read_pci_config_byte(bus, slot, func,
->>> +                                       pos + PCI_CAP_LIST_ID);
->>> +               if (id == 0xff)
->>> +                       break;
->>> +               if (id == cap)
->>> +                       return pos;
->>> +               pos += PCI_CAP_LIST_NEXT;
->>> +       }
->>> +       return 0;
->>> +}
->>> +
->>> +static int __init __pci_find_next_cap(u8 bus, u8 slot, u8 func, u8 pos, int cap)
->>> +{
->>> +       int ttl = PCI_FIND_CAP_TTL;
->>> +
->>> +       return __pci_find_next_cap_ttl(bus, slot, func, pos, cap, &ttl);
->>> +}
->>> +
->>> +static int __init __pci_bus_find_cap_start(u8 bus, u8 slot, u8 func,
->>> +                                          u8 hdr_type)
->>> +{
->>> +       u16 status;
->>> +
->>> +       status = read_pci_config_16(bus, slot, func, PCI_STATUS);
->>> +       if (!(status & PCI_STATUS_CAP_LIST))
->>> +               return 0;
->>> +
->>> +       switch (hdr_type) {
->>> +       case PCI_HEADER_TYPE_NORMAL:
->>> +       case PCI_HEADER_TYPE_BRIDGE:
->>> +               return PCI_CAPABILITY_LIST;
->>> +       case PCI_HEADER_TYPE_CARDBUS:
->>> +               return PCI_CB_CAPABILITY_LIST;
->>> +       default:
->>> +               return 0;
->>> +       }
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static int __init early_pci_find_capability(u8 bus, u8 slot, u8 func, int cap)
->>> +{
->>> +       int pos;
->>> +       u8 type = read_pci_config_byte(bus, slot, func, PCI_HEADER_TYPE);
->>> +
->>> +       pos = __pci_bus_find_cap_start(bus, slot, func, type & 0x7f);
->>> +       if (pos)
->>> +               pos = __pci_find_next_cap(bus, slot, func, pos, cap);
->>> +
->>> +       return pos;
->>> +}
->>> +
->>> +static void __init do_reset(u8 bus, u8 slot, u8 func)
->>> +{
->>> +       u16 ctrl;
->>> +
->>> +       printk(KERN_INFO "pci 0000:%02x:%02x.%d reset\n", bus, slot, func);
->>> +
->>> +       /* Assert Secondary Bus Reset */
->>> +       ctrl = read_pci_config_16(bus, slot, func, PCI_BRIDGE_CONTROL);
->>> +       ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
->>> +       write_pci_config_16(bus, slot, func, PCI_BRIDGE_CONTROL, ctrl);
->>> +
->>> +       /*
->>> +        * PCIe spec requires software to ensure a minimum reset duration
->>> +        * (Trst == 1ms). We have here 5ms safety margin because pci_udelay is
->>> +        * not precise.
->>> +        */
->>> +       pci_udelay(5000);
->>> +
->>> +       /* De-assert Secondary Bus Reset */
->>> +       ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
->>> +       write_pci_config_16(bus, slot, func, PCI_BRIDGE_CONTROL, ctrl);
->>> +}
->>> +
->>> +static void __init save_state(unsigned bus, unsigned slot, unsigned func,
->>> +               struct pcie_dev *dev)
->>> +{
->>> +       int i;
->>> +       int pcie, flags, pcie_type;
->>> +       struct save_config *save;
->>> +
->>> +       pcie = dev->cap;
->>> +       flags = dev->flags;
->>> +       pcie_type = (flags & PCI_EXP_FLAGS_TYPE) >> 4;
->>> +       save = &dev->save;
->>> +
->>> +       printk(KERN_INFO "pci 0000:%02x:%02x.%d save state\n", bus, slot, func);
->>> +
->>> +       for (i = 0; i < 16; i++)
->>> +               save->pci[i] = read_pci_config(bus, slot, func, i * 4);
->>> +       i = 0;
->>> +       if (pcie_cap_has_devctl(pcie_type, flags))
->>> +               save->pcie[i++] = read_pci_config_16(bus, slot, func,
->>> +                                                     pcie + PCI_EXP_DEVCTL);
->>> +       if (pcie_cap_has_lnkctl(pcie_type, flags))
->>> +               save->pcie[i++] = read_pci_config_16(bus, slot, func,
->>> +                                                     pcie + PCI_EXP_LNKCTL);
->>> +       if (pcie_cap_has_sltctl(pcie_type, flags))
->>> +               save->pcie[i++] = read_pci_config_16(bus, slot, func,
->>> +                                                     pcie + PCI_EXP_SLTCTL);
->>> +       if (pcie_cap_has_rtctl(pcie_type, flags))
->>> +               save->pcie[i++] = read_pci_config_16(bus, slot, func,
->>> +                                                     pcie + PCI_EXP_RTCTL);
->>> +
->>> +       if ((flags & PCI_EXP_FLAGS_VERS) >= 2) {
->>> +               save->pcie[i++] = read_pci_config_16(bus, slot, func,
->>> +                                                     pcie + PCI_EXP_DEVCTL2);
->>> +               save->pcie[i++] = read_pci_config_16(bus, slot, func,
->>> +                                                     pcie + PCI_EXP_LNKCTL2);
->>> +               save->pcie[i++] = read_pci_config_16(bus, slot, func,
->>> +                                                     pcie + PCI_EXP_SLTCTL2);
->>> +       }
->>> +}
->>> +
->>> +static void __init restore_state(unsigned bus, unsigned slot, unsigned func,
->>> +               struct pcie_dev *dev)
->>> +{
->>> +       int i = 0;
->>> +       int pcie, flags, pcie_type;
->>> +       struct save_config *save;
->>> +
->>> +       pcie = dev->cap;
->>> +       flags = dev->flags;
->>> +       pcie_type = (flags & PCI_EXP_FLAGS_TYPE) >> 4;
->>> +       save = &dev->save;
->>> +
->>> +       printk(KERN_INFO "pci 0000:%02x:%02x.%d restore state\n",
->>> +              bus, slot, func);
->>> +
->>> +       if (pcie_cap_has_devctl(pcie_type, flags))
->>> +               write_pci_config_16(bus, slot, func,
->>> +                                   pcie + PCI_EXP_DEVCTL, save->pcie[i++]);
->>> +       if (pcie_cap_has_lnkctl(pcie_type, flags))
->>> +               write_pci_config_16(bus, slot, func,
->>> +                                   pcie + PCI_EXP_LNKCTL, save->pcie[i++]);
->>> +       if (pcie_cap_has_sltctl(pcie_type, flags))
->>> +               write_pci_config_16(bus, slot, func,
->>> +                                   pcie + PCI_EXP_SLTCTL, save->pcie[i++]);
->>> +       if (pcie_cap_has_rtctl(pcie_type, flags))
->>> +               write_pci_config_16(bus, slot, func,
->>> +                                   pcie + PCI_EXP_RTCTL, save->pcie[i++]);
->>> +
->>> +       if ((flags & PCI_EXP_FLAGS_VERS) >= 2) {
->>> +               write_pci_config_16(bus, slot, func,
->>> +                                   pcie + PCI_EXP_DEVCTL2, save->pcie[i++]);
->>> +               write_pci_config_16(bus, slot, func,
->>> +                                   pcie + PCI_EXP_LNKCTL2, save->pcie[i++]);
->>> +               write_pci_config_16(bus, slot, func,
->>> +                                   pcie + PCI_EXP_SLTCTL2, save->pcie[i++]);
->>> +       }
->>> +
->>> +       for (i = 15; i >= 0; i--)
->>> +               write_pci_config(bus, slot, func, i * 4, save->pci[i]);
->>> +}
->>
->> do you have to pass bus/slot/func and use read/pci_config directly ?
->>
->> I had one patchset that use dummy pci device and reuse existing late quirk code
->> in early_quirk to do usb handoff early.
->>
->> please check
->>
->> git://git.kernel.org/pub/scm/linux/kernel/git/yinghai/linux-yinghai.git
->> for-x86-early-quirk-usb
->>
->> 678a023: x86: usb handoff in early_quirk
->> 2d418d8: pci, usb: Make usb handoff func all take base remapping
->> d9bd1ad: x86, pci: add dummy pci device for early stage
->> de38757: x86: early_quirk check all bus/dev/func in domain 0
->> 325cc7a: make msleep to do mdelay before scheduler is running
->> eec78a4: x86: set percpu cpu_info lpj to default
->> 52ebec4: x86, pci: early dump skip device the same way as later probe code
->>
->> if that could help.
->> you may reuse some later functions that take pci_dev as parameters.
-> d9bd1ad looks very useful for my patch. Thanks for the information.
-> What is the status of this patch? Already got in tip tree or
-> somewhere?
+From: Suzuki K. Poulose <suzuki@in.ibm.com>
 
-Hi Yinghai,
+If the kernel cannot be loaded at the default load_addr, provided
+by the image, we should try finding a free area using locate_hole().
+This is usually applicable for the CRASH case, where the memory should
+be located in the reserved region.
 
-I'm rewriting my reset code using your dummy pci_dev patch. Do you have
-a plan to post it or can I post it with my patches?
+Without this patch, sometime the kernel fails to load for uImage formatted
+relocatable kernel images.
 
-Thanks,
-Takao Indoh
+
+Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Matthew McClintock <msm@freescale.com>
+---
+ kexec/arch/ppc/kexec-uImage-ppc.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+index b5579f0..e55bf94 100644
+--- a/kexec/arch/ppc/kexec-uImage-ppc.c
++++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+@@ -130,13 +130,22 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 	 * allocated from memtop down towards zero so we should never get too
+ 	 * close to the bss :)
+ 	 */
+-	ret = valid_memory_range(info, load_addr, load_addr + (len + (1 * 1024 * 1024)));
+-	if (!ret) {
+-		printf("Can't add kernel to addr 0x%08x len %ld\n",
+-				load_addr, len + (1 * 1024 * 1024));
+-		return -1;
++#define _1MiB	(1 * 1024 * 1024)
++
++	/*
++	 * If the provided load_addr cannot be allocated, find a new
++	 * area.
++	 */
++	if (!valid_memory_range(info, load_addr, load_addr + (len + _1MiB))) {
++		load_addr = locate_hole(info, len + _1MiB, 0, 0, max_addr, 1);
++		if (load_addr == ULONG_MAX) {
++			printf("Can't allocate memory for kernel of len %ld\n",
++					len + _1MiB);
++			return -1;
++		}
+ 	}
+-	add_segment(info, buf, len, load_addr, len + (1 * 1024 * 1024));
++
++	add_segment(info, buf, len, load_addr, len + _1MiB);
+ 
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+                 crash_cmdline = xmalloc(COMMAND_LINE_SIZE);
 
 
 _______________________________________________
