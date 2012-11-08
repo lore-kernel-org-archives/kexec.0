@@ -1,31 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from e1.ny.us.ibm.com ([32.97.182.141])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TWOjP-0006JE-9q
- for kexec@lists.infradead.org; Thu, 08 Nov 2012 09:49:05 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id D22313EE0BC
- for <kexec@lists.infradead.org>; Thu,  8 Nov 2012 18:49:01 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id B21D245DEB2
- for <kexec@lists.infradead.org>; Thu,  8 Nov 2012 18:49:01 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9171F45DEB5
- for <kexec@lists.infradead.org>; Thu,  8 Nov 2012 18:49:01 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7A8881DB803B
- for <kexec@lists.infradead.org>; Thu,  8 Nov 2012 18:49:01 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 2CC501DB8041
- for <kexec@lists.infradead.org>; Thu,  8 Nov 2012 18:49:01 +0900 (JST)
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 10/10] Print warning about cyclic buffer overrun if it can
- happen
-Date: Thu, 08 Nov 2012 18:49:00 +0900
-Message-ID: <20121108094900.30421.54675.stgit@localhost6.localdomain6>
-In-Reply-To: <20121108094609.30421.40556.stgit@localhost6.localdomain6>
-References: <20121108094609.30421.40556.stgit@localhost6.localdomain6>
+ id 1TWSJE-0005zr-F5
+ for kexec@lists.infradead.org; Thu, 08 Nov 2012 13:38:17 +0000
+Received: from /spool/local
+ by e1.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
+ Thu, 8 Nov 2012 08:38:14 -0500
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+ by d01dlp01.pok.ibm.com (Postfix) with ESMTP id 87A0638C804F
+ for <kexec@lists.infradead.org>; Thu,  8 Nov 2012 08:38:10 -0500 (EST)
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+ by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ qA8DcA0R217310
+ for <kexec@lists.infradead.org>; Thu, 8 Nov 2012 08:38:10 -0500
+Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
+ by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ qA8Dc9RP000966
+ for <kexec@lists.infradead.org>; Thu, 8 Nov 2012 11:38:09 -0200
+Subject: [PATCH v2 1/7] Initialize and setup eppic
+From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Date: Thu, 08 Nov 2012 19:08:04 +0530
+Message-ID: <20121108133804.28410.99166.stgit@aravinda>
+In-Reply-To: <20121108133554.28410.99763.stgit@aravinda>
+References: <20121108133554.28410.99763.stgit@aravinda>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,101 +38,171 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp
+To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+Cc: LChouinard@s2sys.com, mahesh@linux.vnet.ibm.com, tachibana@mxm.nes.nec.co.jp, ananth@in.ibm.com, buendgen@de.ibm.com
 
-Clearling bits on cyclic buffer can overrun the cyclic buffer
-according to some combination of MAX_ORDER and cyclic buffer size.
+This patch contains routines which initialize eppic and register call
+back function which will be called whenever a new eppic macro is loaded
+using eppic_load() API. The registered call back function executes the
+eppic macro as soon as it is loaded.
 
-This patch warns this possibility but continues processing.
+The -ltinfo is included in LIBS in the Makefile, because eppic
+currently calls few functions in libtinfo and the compiler complains
+about it, if not included. I think the paths where libeppic calls
+libtinfo functions are not exercised by makedumpfile.
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Including -ltinfo will increase the size of makedumpfile static
+version
+
+TODO:
+	- Check out a way to get rid of -ltinfo
+
+Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
+ Makefile          |    7 ++++
+ extension_eppic.c |   84 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ extension_eppic.h |   23 +++++++++++++++
+ 3 files changed, 114 insertions(+), 0 deletions(-)
+ create mode 100644 extension_eppic.c
+ create mode 100644 extension_eppic.h
 
- makedumpfile.c |   48 +++++++++++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 47 insertions(+), 1 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index d1efc09..98eb640 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -58,6 +58,7 @@ do { \
- 		*ptr_long_table = value; \
- } while (0)
+diff --git a/Makefile b/Makefile
+index d5fc09e..3ac8e63 100644
+--- a/Makefile
++++ b/Makefile
+@@ -55,6 +55,13 @@ LIBS := -llzo2 $(LIBS)
+ CFLAGS += -DUSELZO
+ endif
  
-+static void check_cyclic_buffer_overrun(void);
- static void setup_page_is_buddy(void);
- 
- void
-@@ -2806,6 +2807,9 @@ out:
- 		    !sadump_generate_elf_note_from_dumpfile())
- 			return FALSE;
- 
-+		if (info->flag_cyclic && info->dump_level & DL_EXCLUDE_FREE)
-+			check_cyclic_buffer_overrun();
++ifeq ($(EPPIC), on)
++LIBS := -leppic -ltinfo $(LIBS)
++CFLAGS += -DEPPIC
++SRC_PART += extension_eppic.c
++OBJ_PART += extension_eppic.o
++endif
 +
- 	} else {
- 		if (!get_mem_map_without_mm())
- 			return FALSE;
-@@ -3642,6 +3646,38 @@ exclude_free_page(void)
- 	return TRUE;
- }
+ all: makedumpfile
  
-+static void
-+check_cyclic_buffer_overrun(void)
+ $(OBJ_PART): $(SRC_PART)
+diff --git a/extension_eppic.c b/extension_eppic.c
+new file mode 100644
+index 0000000..fc47b1f
+--- /dev/null
++++ b/extension_eppic.c
+@@ -0,0 +1,84 @@
++/*
++ * extension_eppic.c
++ *
++ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
++ *
++ * Copyright (C) 2012  IBM Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <stdio.h>
++#include <string.h>
++#include <sys/types.h>
++#include <fcntl.h>
++
++#include "extension_eppic.h"
++
++/*
++ * Most of the functions included in this file performs similar
++ * functionality as in the applications/crash/eppic.c file part of
++ * eppic, but uses DWARF instead of gdb. Few of the functions are
++ * reused directly which are acknowledged in the comment before the
++ * function.
++ */
++
++/*
++ * This is the call back function called when a new eppic macro is
++ * loaded. This will execute the loaded eppic macro.
++ *
++ * "fname" is considered as the entry point of an eppic macro only if
++ * the following functions are defined:
++ *
++ *  fname_help()
++ *  fname_usage()
++ *
++ * These functions have no relevance in makedumpfile context as
++ * makedumpfile automatically executes the eppic macro by calling the
++ * entry point and user will not have any option to execute the usage
++ * or help functions. However they are required to identify the entry
++ * points in the eppic macro.
++ */
++void
++reg_callback(char *name, int load)
 +{
-+	int max_order = ARRAY_LENGTH(zone.free_area);
-+	int max_order_nr_pages = 1 << (max_order - 1);
++	char fname[MAX_SYMNAMELEN];
 +
-+	/*
-+	 * Let C be a cyclic buffer size and B a bitmap size used for
-+	 * representing maximum block size managed by buddy
-+	 * allocator. Then, if C mod B != 0, i.e., if there exists n >
-+	 * 0, B > b > 0 such that C = n x B + b, then clearing
-+	 * operation overruns cyclic buffer (B - b)-bytes.
-+	 *
-+	 * The bitmap size used for maximum block size B is calculated
-+	 * from MAX_ORDER as:
-+	 *
-+	 *   B := ROUND_UP((1 << (MAX_ORDER - 1)), / BITS_PER_BYTE)
-+	 *
-+	 * Normally, MAX_ORDER is 11 at default. This is configurable
-+	 * through CONFIG_FORCE_MAX_ZONEORDER.
-+	 *
-+	 * Note that If MAX_ORDER is default 11, this overrun issue
-+	 * never happens. First, if MAX_ORDER is 11, B is 128
-+	 * bytes. Cyclic buffer size is always specified in kilobytes,
-+	 * i.e. C = 1024 x c for some c > 0. Hence, C mod B = 0
-+	 * because 1024 mod 128 = 0.
-+	 */
-+	if (info->bufsize_cyclic %
-+	    roundup(max_order_nr_pages, BITPERBYTE))
-+		MSG("Some free pages are not filtered.\n");
++	/* Nothing to process for unload request */
++	if (!load)
++		return;
++
++	snprintf(fname, sizeof(fname), "%s_help", name);
++	if (eppic_chkfname(fname, 0)) {
++		snprintf(fname, sizeof(fname), "%s_usage", name);
++		if (eppic_chkfname(fname, 0))
++			eppic_cmd(name, NULL, 0);
++	}
++	return;
 +}
 +
- /*
-  * For the kernel versions from v2.6.15 to v2.6.17.
-  */
-@@ -3978,8 +4014,18 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
- 			int i;
- 
--			for (i = 0; i < (1 << private); ++i)
-+			for (i = 0; i < (1 << private); ++i) {
-+				/*
-+				 * According to combination of
-+				 * MAX_ORDER and size of cyclic
-+				 * buffer, this clearing bit operation
-+				 * can overrun the cyclic buffer.
-+				 *
-+				 * See check_cyclic_buffer_overrun()
-+				 * for the detail.
-+				 */
- 				clear_bit_on_2nd_bitmap_for_kernel(pfn + i);
-+			}
- 			pfn_free += i;
- 		}
- 		/*
++
++/* Initialize eppic */
++int
++eppic_init()
++{
++	if (eppic_open() >= 0) {
++
++		/* Register call back functions */
++		eppic_apiset(NULL, 3, sizeof(long), 0);
++
++		/* set the new function callback */
++		eppic_setcallback(reg_callback);
++
++		return 0;
++	}
++	return 1;
++}
++
+diff --git a/extension_eppic.h b/extension_eppic.h
+new file mode 100644
+index 0000000..ca74ce4
+--- /dev/null
++++ b/extension_eppic.h
+@@ -0,0 +1,23 @@
++/*
++ * extension_eppic.h
++ *
++ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
++ *
++ * Copyright (C) 2012  IBM Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#ifndef _EXTENSION_EPPIC_H
++#define _EXTENSION_EPPIC_H
++
++#include "eppic_api.h"
++
++#endif /* _EXTENSION_EPPIC_H */
 
 
 _______________________________________________
