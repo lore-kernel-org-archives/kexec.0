@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYJVN-00077X-FX
- for kexec@lists.infradead.org; Tue, 13 Nov 2012 16:38:29 +0000
-Date: Tue, 13 Nov 2012 11:38:27 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH][V2] vmcore-dmesg: Determine correct machine pointer size
-Message-ID: <20121113163827.GB12529@redhat.com>
+ id 1TYNw3-0005bI-Ji
+ for kexec@lists.infradead.org; Tue, 13 Nov 2012 21:22:21 +0000
+Date: Tue, 13 Nov 2012 19:22:03 -0200
+From: Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH v3 2/2] KVM: make crash_clear_loaded_vmcss valid when
+ loading kvm_intel module
+Message-ID: <20121113212203.GA26386@amt.cnet>
+References: <50909B55.2070901@cn.fujitsu.com> <50909C35.9080702@cn.fujitsu.com>
+ <33710E6CAA200E4583255F4FB666C4E20AACCA2F@G01JPEXMBYT03>
+ <50920EB8.3020400@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <50920EB8.3020400@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,79 +22,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kexec Mailing List <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hatayama,
+ Daisuke" <d.hatayama@jp.fujitsu.com>, Avi Kivity <avi@redhat.com>
 
-A 32bit arch can prepare ELF64 headers. For example for PAE case to
-preresent file offsets 64bit but data size at the offset still remains
-32bit. If we just base our decision based on EI_CLASS, then we will try
-to read 64bit data from file and can run into various issues.
-
-We ran into following issue when we tried to run vmcore-dmesg on a 32bit
-PAE system vmcore which had 64bit elf headers.
-
-No program header covering vaddr 0xc0a6a688c0b89100found kexec bug?
-
-Basically we try to read value of log_buf variable from address
-log_buf_vaddr. We read in 64bit value and then pass that value again
-to vaddr_to_offset() in an attempt to get to actual log_buf start
-and get error message.
-
-So determine the machine pointer size based on ELF class and arch and read
-the bytes from file accordingly.
-
-v2: Fixed the code as per suggestion from Eric.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- vmcore-dmesg/vmcore-dmesg.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
-
-Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
-===================================================================
---- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-08-01 13:27:09.304878654 -0400
-+++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-11-13 11:32:33.184358230 -0500
-@@ -89,6 +89,24 @@ static uint64_t vaddr_to_offset(uint64_t
- 	exit(30);
- }
- 
-+static unsigned machine_pointer_bits(void)
-+{
-+	uint8_t bits = 0;
-+
-+	/* Default to the size of the elf class */
-+	switch(ehdr.e_ident[EI_CLASS]) {
-+	case ELFCLASS32:        bits = 32; break;
-+	case ELFCLASS64:        bits = 64; break;
-+	}
-+
-+	/* Report the architectures pointer size */
-+	switch(ehdr.e_machine) {
-+	case EM_386:            bits = 32; break;
-+	}
-+
-+        return bits;
-+}
-+
- static void read_elf32(int fd)
- {
- 	Elf32_Ehdr ehdr32;
-@@ -389,7 +407,8 @@ static uint64_t read_file_pointer(int fd
- {
- 	uint64_t result;
- 	ssize_t ret;
--	if (ehdr.e_ident[EI_CLASS] == ELFCLASS64) {
-+
-+	if (machine_pointer_bits() == 64) {
- 		uint64_t scratch;
- 		ret = pread(fd, &scratch, sizeof(scratch), addr);
- 		if (ret != sizeof(scratch)) {
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBOb3YgMDEsIDIwMTIgYXQgMDE6NTU6MDRQTSArMDgwMCwgemhhbmd5YW5mZWkgd3Jv
+dGU6Cj4g5LqOIDIwMTLlubQxMOaciDMx5pelIDE3OjAxLCBIYXRheWFtYSwgRGFpc3VrZSDlhpnp
+gZM6Cj4gPiAKPiA+IAo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPj4gRnJvbTog
+a2V4ZWMtYm91bmNlc0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gPj4gW21haWx0bzprZXhlYy1ib3Vu
+Y2VzQGxpc3RzLmluZnJhZGVhZC5vcmddIE9uIEJlaGFsZiBPZiB6aGFuZ3lhbmZlaQo+ID4+IFNl
+bnQ6IFdlZG5lc2RheSwgT2N0b2JlciAzMSwgMjAxMiAxMjozNCBQTQo+ID4+IFRvOiB4ODZAa2Vy
+bmVsLm9yZzsga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZzsgQXZpIEtpdml0eTsgTWFyY2Vsbwo+
+ID4+IFRvc2F0dGkKPiA+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsga3ZtQHZn
+ZXIua2VybmVsLm9yZwo+ID4+IFN1YmplY3Q6IFtQQVRDSCB2MyAyLzJdIEtWTTogbWFrZSBjcmFz
+aF9jbGVhcl9sb2FkZWRfdm1jc3MgdmFsaWQgd2hlbgo+ID4+IGxvYWRpbmcga3ZtX2ludGVsIG1v
+ZHVsZQo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBj
+bi5mdWppdHN1LmNvbT4KPiA+IAo+ID4gWy4uLl0KPiA+IAo+ID4+IEBAIC03MjMwLDYgKzcyMzEs
+MTAgQEAgc3RhdGljIGludCBfX2luaXQgdm14X2luaXQodm9pZCkKPiA+PiAgCWlmIChyKQo+ID4+
+ICAJCWdvdG8gb3V0MzsKPiA+Pgo+ID4+ICsjaWZkZWYgQ09ORklHX0tFWEVDCj4gPj4gKwljcmFz
+aF9jbGVhcl9sb2FkZWRfdm1jc3MgPSB2bWNsZWFyX2xvY2FsX2xvYWRlZF92bWNzczsKPiA+PiAr
+I2VuZGlmCj4gPj4gKwo+ID4gCj4gPiBBc3NpZ25tZW50IGhlcmUgY2Fubm90IGNvdmVyIHRoZSBj
+YXNlIHdoZXJlIE5NSSBpcyBpbml0aWF0ZWQgYWZ0ZXIgVk1YIGlzIG9uIGluIGt2bV9pbml0IGFu
+ZCBiZWZvcmUgdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MgaXMgYXNzaWduZWQsIHRob3VnaCBy
+YXJlIGJ1dCBjYW4gaGFwcGVuLgo+ID4gCj4gCj4gQnkgc2F5aW5nICJWTVggaXMgb24gaW4ga3Zt
+IGluaXQiLCB5b3UgbWVhbiBrdm1faW5pdCBlbmFibGVzIHRoZSBWTVggZmVhdHVyZSBpbiB0aGUg
+bG9naWNhbCBwcm9jZXNzb3I/Cj4gTm8sIG9ubHkgdGhlcmUgaXMgYSB2Y3B1IHRvIGJlIGNyZWF0
+ZWQsIGt2bSB3aWxsIGVuYWJsZSB0aGUgVk1YIGZlYXR1cmUuCj4gCj4gSSB0aGluayB0aGVyZSBp
+cyBubyBkaWZmZXJlbmNlIHdpdGggdGhpcyBhc3NpZ25tZW50IGJlZm9yZSBvciBhZnRlciBrdm1f
+aW5pdCBiZWNhdXNlIHRoZSB2bWNzIGxpbmtlZAo+IGxpc3QgbXVzdCBiZSBlbXB0eSBiZWZvcmUg
+dm14X2luaXQgaXMgZmluaXNoZWQuCgpUaGUgbGlzdCBpcyBub3QgaW5pdGlhbGl6ZWQgYmVmb3Jl
+IGhhcmR3YXJlX2VuYWJsZSgpLCB0aG91Z2guIFNob3VsZAptb3ZlIHRoZSBhc3NpZ25tZW50IGFm
+dGVyIHRoYXQuCgpBbHNvLCBpdCBpcyBwb3NzaWJsZSB0aGF0IHRoZSBsb2FkZWRfdm1jc3Nfb25f
+Y3B1IGxpc3QgaXMgYmVpbmcgbW9kaWZpZWQKX3doaWxlXyBjcmFzaCBleGVjdXRlcyBzYXkgdmlh
+IE5NSSwgY29ycmVjdD8gSWYgdGhhdCBpcyB0aGUgY2FzZSwgYmV0dGVyCmZsYWcgdGhhdCB0aGUg
+bGlzdCBpcyB1bmRlciBtYW5pcHVsYXRpb24gc28gdGhlIHZtY2xlYXIgY2FuIGJlIHNraXBwZWQu
+Cgo+IFRoYW5rcwo+IFpoYW5nIFlhbmZlaQo+IAo+ID4gV2hhdCBkb2VzIGhhcHBlbiBpZiBjYWxs
+aW5nIHZtY2xlYXJfbG9jYWxfbG9hZGVkX3ZtY3NzIGJlZm9yZSBrdm1faW5pdD8gSSB0aGluayBp
+dCBubyBwcm9ibGVtIHNpbmNlIHRoZSBsaXN0IGlzIGluaXRpYWxseSBlbXB0eS4KPiA+IAo+ID4+
+ICAJdm14X2Rpc2FibGVfaW50ZXJjZXB0X2Zvcl9tc3IoTVNSX0ZTX0JBU0UsIGZhbHNlKTsKPiA+
+PiAgCXZteF9kaXNhYmxlX2ludGVyY2VwdF9mb3JfbXNyKE1TUl9HU19CQVNFLCBmYWxzZSk7Cj4g
+Pj4gIAl2bXhfZGlzYWJsZV9pbnRlcmNlcHRfZm9yX21zcihNU1JfS0VSTkVMX0dTX0JBU0UsIHRy
+dWUpOwo+ID4+IEBAIC03MjY1LDYgKzcyNzAsMTAgQEAgc3RhdGljIHZvaWQgX19leGl0IHZteF9l
+eGl0KHZvaWQpCj4gPj4gIAlmcmVlX3BhZ2UoKHVuc2lnbmVkIGxvbmcpdm14X2lvX2JpdG1hcF9i
+KTsKPiA+PiAgCWZyZWVfcGFnZSgodW5zaWduZWQgbG9uZyl2bXhfaW9fYml0bWFwX2EpOwo+ID4+
+Cj4gPj4gKyNpZmRlZiBDT05GSUdfS0VYRUMKPiA+PiArCWNyYXNoX2NsZWFyX2xvYWRlZF92bWNz
+cyA9IE5VTEw7Cj4gPj4gKyNlbmRpZgo+ID4+ICsKPiA+PiAgCWt2bV9leGl0KCk7Cj4gPj4gIH0K
+PiA+IAo+ID4gQWxzbywgdGhpcyBpcyBjb252ZXJzZSB0byB0aGUgYWJvdmUuCj4gPiAKPiA+IFRo
+YW5rcy4KPiA+IEhBVEFZQU1BLCBEYWlzdWtlCj4gPiAKPiA+IAo+IAo+IC0tCj4gVG8gdW5zdWJz
+Y3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGt2bSIgaW4K
+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+IE1v
+cmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWlu
+Zm8uaHRtbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
