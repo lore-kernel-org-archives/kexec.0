@@ -1,33 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TYCIW-0007Sg-1C
- for kexec@lists.infradead.org; Tue, 13 Nov 2012 08:56:45 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 8D6363EE0B6
- for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 17:56:39 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 75A3E45DE4D
- for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 17:56:39 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 5D5BF45DD74
- for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 17:56:39 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4EAFE1DB803A
- for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 17:56:39 +0900 (JST)
-Received: from g01jpexchyt02.g01.fujitsu.local
- (g01jpexchyt02.g01.fujitsu.local [10.128.194.41])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id D42B61DB8038
- for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 17:56:38 +0900 (JST)
-From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: RE: [PATCH 00/10] Support free page filtering looking up mem_map array
-Date: Tue, 13 Nov 2012 08:56:37 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E20AB008A2@G01JPEXMBYT03>
-References: <20121108094609.30421.40556.stgit@localhost6.localdomain6>
- <20121113165608.b561e597fefb6bc3f2bbd5de@mxc.nes.nec.co.jp>
-In-Reply-To: <20121113165608.b561e597fefb6bc3f2bbd5de@mxc.nes.nec.co.jp>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1TYCT3-0007pT-6V
+ for kexec@lists.infradead.org; Tue, 13 Nov 2012 09:07:41 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id C67753EE0C1
+ for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 18:07:34 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id AB66A45DE55
+ for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 18:07:34 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 886DE45DE53
+ for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 18:07:34 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 62EF51DB802F
+ for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 18:07:34 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 185801DB803F
+ for <kexec@lists.infradead.org>; Tue, 13 Nov 2012 18:07:34 +0900 (JST)
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Message-Id: <20121113090222.1180.36111.sendpatchset@indoh>
+In-Reply-To: <20121113090212.1180.12233.sendpatchset@indoh>
+References: <20121113090212.1180.12233.sendpatchset@indoh>
+Subject: [PATCH v6 1/5] x86, pci: add dummy pci device for early stage
+Date: Tue, 13 Nov 2012 18:07:33 +0900 (JST)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,52 +33,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: linux-pci@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, kexec@lists.infradead.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-> -----Original Message-----
-> From: Atsushi Kumagai [mailto:kumagai-atsushi@mxc.nes.nec.co.jp]
-> Sent: Tuesday, November 13, 2012 4:56 PM
-[...]
-> >   - OFFSET(page._mapcount)
-> >   - OFFSET(page.private)
-> >   - SIZE(pageflags)
-> >   - NUMBER(PG_buddy)
-> >   - NUMBER(PG_slab)
-> >   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
-> 
-> And I will post the patch to add the values above to the upstream kernel,
-> so there is no problem on the future kernel.
-> 
-> However, according to my tests, current makedumpfile can't get some of the
-> values above from VMLINUX and can't exclude free pages with the mem_map
-> array logic.
-> For example, page_is_buddy_v1() will be selected for kernel-3.4 with
-> setup_page_is_buddy() due to not founding NUMBER(PG_buddy) and
-> SIZE(pageflags),
-> it's miss selection.
-> 
-> Therefore, I propose to change the policy for excluding free page as below
-> in order to take care of current kernels:
-> 
->   1. If VMCORE (or specified VMCOREINFO) includes the values above,
->      using the mem_map array logic.
-> 
->   2. In other cases, using the current logic which uses free_list even if
->      running on cyclic mode.
-> 
-> Of course, page_is_buddy_v1() and page_is_buddy_v2() should be retain
-> because there is valuable for the user who can prepare VMCOREINFO.
-> 
+From: Yinghai Lu <yinghai@kernel.org>
 
-You are corrent. I'll repost the patch set soon. Rc1 or beta, which is better?
+So we can pass pci_dev *dev to reuse some generic pci functions.
 
-Thanks.
-HATAYAMA, Daisuke
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+---
+ arch/x86/include/asm/pci-direct.h |    2 +
+ arch/x86/pci/early.c              |   75 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+), 0 deletions(-)
+
+diff --git a/arch/x86/include/asm/pci-direct.h b/arch/x86/include/asm/pci-direct.h
+index b1e7a45..b6360d3 100644
+--- a/arch/x86/include/asm/pci-direct.h
++++ b/arch/x86/include/asm/pci-direct.h
+@@ -18,4 +18,6 @@ extern int early_pci_allowed(void);
+ extern unsigned int pci_early_dump_regs;
+ extern void early_dump_pci_device(u8 bus, u8 slot, u8 func);
+ extern void early_dump_pci_devices(void);
++
++struct pci_dev *get_early_pci_dev(int num, int slot, int func);
+ #endif /* _ASM_X86_PCI_DIRECT_H */
+diff --git a/arch/x86/pci/early.c b/arch/x86/pci/early.c
+index d1067d5..aea6b2b 100644
+--- a/arch/x86/pci/early.c
++++ b/arch/x86/pci/early.c
+@@ -109,3 +109,78 @@ void early_dump_pci_devices(void)
+ 		}
+ 	}
+ }
++
++static __init int
++early_pci_read(struct pci_bus *bus, unsigned int devfn, int where,
++			int size, u32 *value)
++{
++	int num, slot, func;
++
++	num = bus->number;
++	slot = devfn >> 3;
++	func = devfn & 7;
++	switch (size) {
++	case 1:
++		*value = read_pci_config_byte(num, slot, func, where);
++		break;
++	case 2:
++		*value = read_pci_config_16(num, slot, func, where);
++		break;
++	case 4:
++		*value = read_pci_config(num, slot, func, where);
++		break;
++	}
++
++	return 0;
++}
++
++static __init int
++early_pci_write(struct pci_bus *bus, unsigned int devfn, int where,
++			int size, u32 value)
++{
++	int num, slot, func;
++
++	num = bus->number;
++	slot = devfn >> 3;
++	func = devfn & 7;
++	switch (size) {
++	case 1:
++		write_pci_config_byte(num, slot, func, where, (u8)value);
++		break;
++	case 2:
++		write_pci_config_16(num, slot, func, where, (u16)value);
++		break;
++	case 4:
++		write_pci_config(num, slot, func, where, (u32)value);
++		break;
++	}
++
++	return 0;
++}
++
++static __initdata struct pci_ops pci_early_ops = {
++	.read  = early_pci_read,
++	.write = early_pci_write,
++};
++static __initdata struct pci_bus pci_early_bus = {
++	.ops = &pci_early_ops,
++};
++static __initdata char pci_early_init_name[8];
++static __initdata struct pci_dev pci_early_dev = {
++	.bus = &pci_early_bus,
++	.dev = {
++		.init_name = pci_early_init_name,
++	},
++};
++
++__init struct pci_dev *get_early_pci_dev(int num, int slot, int func)
++{
++	struct pci_dev *pdev;
++
++	pdev = &pci_early_dev;
++	pdev->devfn = (slot<<3) | (func & 7);
++	pdev->bus->number = num;
++	sprintf((char *)pdev->dev.init_name, "%02x:%02x.%01x", num, slot, func);
++
++	return pdev;
++}
+-- 
+1.7.1
+
 
 
 _______________________________________________
