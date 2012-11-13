@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TYJ7u-0006DE-Hv
- for kexec@lists.infradead.org; Tue, 13 Nov 2012 16:14:15 +0000
-Date: Tue, 13 Nov 2012 17:13:54 +0100
+ id 1TYJ8r-0006Qs-SQ
+ for kexec@lists.infradead.org; Tue, 13 Nov 2012 16:15:14 +0000
+Date: Tue, 13 Nov 2012 17:14:54 +0100
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 3/5] xen: Use per_cpu__crash_notes or crash_notes array
-Message-ID: <20121113161354.GD2942@host-192-168-1-59.local.net-space.pl>
+Subject: [PATCH 4/5] xen: Try hard to get max_cpus value
+Message-ID: <20121113161454.GE2942@host-192-168-1-59.local.net-space.pl>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -23,50 +23,48 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: anderson@redhat.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, olaf@aepfle.de, jbeulich@suse.com, ptesarik@suse.cz, crash-utility@redhat.com, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 
-Newer Xen versions (at least 4.2) use crash_notes array
-instead of per_cpu__crash_notes. Take into account that.
+This patch improves max_cpus value calculation. First
+xen_hyper_get_cpu_info() tries to get it from nr_cpu_ids
+variable. If nr_cpu_ids does not exist then it attempts
+to read max_cpus variable. If it is not available estimate
+max_cpus value on the base of cpumask_t size.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
 diff -Npru crash-6.1.0.orig/xen_hyper.c crash-6.1.0/xen_hyper.c
---- crash-6.1.0.orig/xen_hyper.c	2012-09-27 21:19:15.000000000 +0200
-+++ crash-6.1.0/xen_hyper.c	2012-11-12 15:56:17.000000000 +0100
-@@ -645,15 +645,22 @@ xen_hyper_dumpinfo_init(void)
- 		error(FATAL, "cannot malloc dumpinfo table context_xen_core_array space.\n");
- 	}
- 	BZERO(xhdit->context_xen_core_array, size);
--	addr = symbol_value("per_cpu__crash_notes");
-+	if (symbol_exists("per_cpu__crash_notes"))
-+		addr = symbol_value("per_cpu__crash_notes");
-+	else
-+		get_symbol_data("crash_notes", sizeof(ulong), &addr);
- 	for (i = 0; i < machdep->get_smp_cpus(); i++) {
- 		ulong addr_notes;
+--- crash-6.1.0.orig/xen_hyper.c	2012-11-13 15:02:34.000000000 +0100
++++ crash-6.1.0/xen_hyper.c	2012-11-13 15:07:40.000000000 +0100
+@@ -1883,13 +1883,28 @@ xen_hyper_get_uptime_hyper(void)
+ void
+ xen_hyper_get_cpu_info(void)
+ {
+-	ulong addr;
++	ulong addr, init_begin, init_end;
+ 	ulong *cpumask;
+ 	uint *cpu_idx;
+ 	int i, j, cpus;
  
--		addr_notes = xen_hyper_per_cpu(addr, i);
-+		if (symbol_exists("per_cpu__crash_notes"))
-+			addr_notes = xen_hyper_per_cpu(addr, i);
-+		else
-+			addr_notes = addr + i * STRUCT_SIZE("crash_note_range_t") +
-+					MEMBER_OFFSET("crash_note_range_t", "start");
- 		if (xhdit->note_ver == XEN_HYPER_ELF_NOTE_V4) {
- 			if (!readmem(addr_notes, KVADDR, &(xhdit->context_array[i].note),
--			sizeof(ulong), "per_cpu__crash_notes", RETURN_ON_ERROR)) {
--				error(WARNING, "cannot read per_cpu__crash_notes.\n");
-+			sizeof(ulong), "crash_notes", RETURN_ON_ERROR)) {
-+				error(WARNING, "cannot read crash_notes.\n");
- 				return;
- 			}
- 		} else {
-@@ -678,7 +685,7 @@ xen_hyper_dumpinfo_init(void)
- 	xhdit->xen_info_cpu = samp_cpuid;
- 	if (!xen_hyper_fill_elf_notes(xhdit->context_array[samp_cpuid].note,
- 	buf, XEN_HYPER_ELF_NOTE_FILL_T_NOTE)) {
--		error(FATAL, "cannot read per_cpu__crash_notes.\n");
-+		error(FATAL, "cannot read crash_notes.\n");
- 	}
- 	bp = buf;
+ 	XEN_HYPER_STRUCT_SIZE_INIT(cpumask_t, "cpumask_t");
+-	xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
++
++	if (symbol_exists("nr_cpu_ids"))
++		get_symbol_data("nr_cpu_ids", sizeof(uint), &xht->max_cpus);
++	else {
++		init_begin = symbol_value("__init_begin");
++		init_end = symbol_value("__init_end");
++		addr = symbol_value("max_cpus");
++
++		if (addr >= init_begin && addr < init_end)
++			xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
++		else {
++			get_symbol_data("max_cpus", sizeof(xht->max_cpus), &xht->max_cpus);
++			if (XEN_HYPER_SIZE(cpumask_t) * 8 > xht->max_cpus)
++				xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
++		}
++	}
  
+ 	if (xht->cpumask) {
+ 		free(xht->cpumask);
 
 _______________________________________________
 kexec mailing list
