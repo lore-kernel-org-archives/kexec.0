@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TY5vD-0007mr-H7
- for kexec@lists.infradead.org; Tue, 13 Nov 2012 02:08:16 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121112203800.GE24254@redhat.com>
-Date: Mon, 12 Nov 2012 18:07:43 -0800
-In-Reply-To: <20121112203800.GE24254@redhat.com> (Vivek Goyal's message of
- "Mon, 12 Nov 2012 15:38:00 -0500")
-Message-ID: <87d2zijlw0.fsf@xmission.com>
+ id 1TY7KO-0005UU-4w
+ for kexec@lists.infradead.org; Tue, 13 Nov 2012 03:38:22 +0000
+Message-ID: <50A1C04F.3030704@redhat.com>
+Date: Tue, 13 Nov 2012 11:36:47 +0800
+From: Baoquan <bhe@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] vmcore-dmesg: Determine file data size based on e_machine
+Subject: Re: [PATCH 0/2] kexec: Limit the crash memory ranges according to
+ first kernel's memory limit.
+References: <20120829082201.19391.15191.stgit@mars.in.ibm.com>
+ <50875E18.8010808@linux.vnet.ibm.com>
+In-Reply-To: <50875E18.8010808@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,101 +20,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
+To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>, Suzuki Poulose <suzuki@in.ibm.com>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+Hi,
 
-> A 32bit arch can prepare ELF64 headers. For example for PAE case to
-> preresent file offsets 64bit but data size at the offset still remains
-> 32bit. If we just base our decision based on EI_CLASS, then we will try
-> to read 64bit data from file and can run into various issues.
+I have tested ppc64 part of this patchset, and it works.
+Do you plan to merge this patchset?
+
+On 10/24/2012 11:18 AM, Mahesh Jagannath Salgaonkar wrote:
+> On 08/29/2012 01:54 PM, Mahesh J Salgaonkar wrote:
+>> So far powerpc kernel never exported memory limit information which is
+>> reflected by mem= kernel cmdline option. Hence, kexec-tools always use
+>> to build ELF header for entire system RAM generating a dump bigger than
+>> the actual memory used by the first kernel.
+>>
+>> The proposed upstream kernel patch at
+>> https://lists.ozlabs.org/pipermail/linuxppc-dev/2012-August/100500.html
+>> now exports memory limit information through /proc/device-tree file.
+>> The above patch is still in discussion.
+> The above mentioned kernel patches are now upstream. Below are commit ids:
+> 4bc77a5e - powerpc: Export memory limit via device tree
+> a84fcd468 - powerpc: Change memory_limit from phys_addr_t to unsigned
+> long long
 >
-> We ran into following issue when we tried to run vmcore-dmesg on a 32bit
-> PAE system vmcore which had 64bit elf headers.
+>> This patch series now reads the memory limit information from
+>> device-tree file if present and limits the crash memory ranges accordingly.
+>>
+>> Tested these patches on ppc32(ppc440) and ppc64 with a kernel patch by Suzuki.
+>>
+>> Signed-off-by: Mahesh Salgaonkar<mahesh@linux.vnet.ibm.com>
+>> Tested-by: Suzuki K. Poulose<suzuki@in.ibm.com>
+>>
+>> ---
+>>
+>> Mahesh Salgaonkar (2):
+>>        kexec: Respect memory limit while building crash memory ranges on ppc32.
+>>        kexec: Respect memory limit while building crash memory ranges on ppc64
+>>
+>>
+>>   kexec/arch/ppc/crashdump-powerpc.c |   14 ++++++++---
+>>   kexec/arch/ppc/crashdump-powerpc.h |    1 +
+>>   kexec/arch/ppc/kexec-ppc.c         |   48 ++++++++++++++++++++++++++++++++++++
+>>   kexec/arch/ppc64/crashdump-ppc64.c |   11 ++++++++
+>>   kexec/arch/ppc64/crashdump-ppc64.h |    1 +
+>>   kexec/arch/ppc64/kexec-ppc64.c     |   28 +++++++++++++++++++++
+>>   6 files changed, 99 insertions(+), 4 deletions(-)
+>>
 >
-> No program header covering vaddr 0xc0a6a688c0b89100found kexec bug?
->
-> Basically we try to read value of log_buf variable from address
-> log_buf_vaddr. We read in 64bit value and then pass that value again
-> to vaddr_to_offset() in an attempt to get to actual log_buf start
-> and get error message.
->
-> So determine the data size based on arch and read the bytes from
-> file accordingly.
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-The basic code change is sound.  However the naming is problematic.
-
-Let me suggest:
-
-static unsigned machine_pointer_bits(void)
-{
-        uint8_t bits = 0;
-
-        /* Default to the size of the elf class */
-        switch(ehdr.e_ident[EI_CLASS]) {
-        case ELFCLASS32:	bits = 32; break;
-        case ELFCLASS64:	bits = 64; break;
-        }
-
-        /* Report the architectures pointer size */
-        switch(ehdr.e_machine) {
-        case EM_386:		bits = 32; break;
-        }
-
-        return bits;
-}
-
-
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  vmcore-dmesg/vmcore-dmesg.c |   20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
-> ===================================================================
-> --- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-08-03 15:46:54.000000000 -0400
-> +++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-11-08 05:30:17.918099858 -0500
-> @@ -89,6 +89,23 @@ static uint64_t vaddr_to_offset(uint64_t
->  	exit(30);
->  }
->  
-> +/*
-> + * For PAE arch, one can prepare 64bit ELF headers to make offsets 64bit in
-> + * file but data size still remains 32bit. Determine data size based on arch
-> + * (e_machine).
-> + *
-> + * returns 1 if arch passed in is 64bit
-> + */
-> +static bool file_data_size_64bit(unsigned int e_machine)
-> +{
-> +	switch(e_machine) {
-> +		/* TODO: keep on adding 32bit arch to get vmcore-dmesg right */
-> +		case EM_386:
-> +			return 0;
-> +	}
-> +	return 1;
-> +}
-> +
->  static void read_elf32(int fd)
->  {
->  	Elf32_Ehdr ehdr32;
-> @@ -389,7 +406,8 @@ static uint64_t read_file_pointer(int fd
->  {
->  	uint64_t result;
->  	ssize_t ret;
-> -	if (ehdr.e_ident[EI_CLASS] == ELFCLASS64) {
-> +	if (ehdr.e_ident[EI_CLASS] == ELFCLASS64 &&
-> +	    file_data_size_64bit(ehdr.e_machine)) {
-Then this test can become:
-	if (machine_pointer_bits() == 64) {
->  		uint64_t scratch;
->  		ret = pread(fd, &scratch, sizeof(scratch), addr);
->  		if (ret != sizeof(scratch)) {
 
 _______________________________________________
 kexec mailing list
