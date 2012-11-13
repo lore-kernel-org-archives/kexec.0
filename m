@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TYJ8r-0006Qs-SQ
- for kexec@lists.infradead.org; Tue, 13 Nov 2012 16:15:14 +0000
-Date: Tue, 13 Nov 2012 17:14:54 +0100
+ id 1TYJ9j-0006dn-1T
+ for kexec@lists.infradead.org; Tue, 13 Nov 2012 16:16:07 +0000
+Date: Tue, 13 Nov 2012 17:15:47 +0100
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 4/5] xen: Try hard to get max_cpus value
-Message-ID: <20121113161454.GE2942@host-192-168-1-59.local.net-space.pl>
+Subject: [PATCH 5/5] xen: Use cpu_present_map instead of cpu_online_map
+Message-ID: <20121113161547.GF2942@host-192-168-1-59.local.net-space.pl>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -23,48 +23,32 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: anderson@redhat.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, olaf@aepfle.de, jbeulich@suse.com, ptesarik@suse.cz, crash-utility@redhat.com, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 
-This patch improves max_cpus value calculation. First
-xen_hyper_get_cpu_info() tries to get it from nr_cpu_ids
-variable. If nr_cpu_ids does not exist then it attempts
-to read max_cpus variable. If it is not available estimate
-max_cpus value on the base of cpumask_t size.
+Newer Xen versions (at least 4.2) clear cpu_online_map during crash.
+In this case it is not possible to check which CPUs were available.
+cpu_present_map contains such information but it has different meaning.
+However, we do not have a choice and we must use cpu_present_map instead
+of cpu_online_map.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
 diff -Npru crash-6.1.0.orig/xen_hyper.c crash-6.1.0/xen_hyper.c
---- crash-6.1.0.orig/xen_hyper.c	2012-11-13 15:02:34.000000000 +0100
-+++ crash-6.1.0/xen_hyper.c	2012-11-13 15:07:40.000000000 +0100
-@@ -1883,13 +1883,28 @@ xen_hyper_get_uptime_hyper(void)
- void
- xen_hyper_get_cpu_info(void)
- {
--	ulong addr;
-+	ulong addr, init_begin, init_end;
- 	ulong *cpumask;
- 	uint *cpu_idx;
- 	int i, j, cpus;
- 
- 	XEN_HYPER_STRUCT_SIZE_INIT(cpumask_t, "cpumask_t");
--	xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
-+
-+	if (symbol_exists("nr_cpu_ids"))
-+		get_symbol_data("nr_cpu_ids", sizeof(uint), &xht->max_cpus);
-+	else {
-+		init_begin = symbol_value("__init_begin");
-+		init_end = symbol_value("__init_end");
-+		addr = symbol_value("max_cpus");
-+
-+		if (addr >= init_begin && addr < init_end)
-+			xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
-+		else {
-+			get_symbol_data("max_cpus", sizeof(xht->max_cpus), &xht->max_cpus);
-+			if (XEN_HYPER_SIZE(cpumask_t) * 8 > xht->max_cpus)
-+				xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
-+		}
-+	}
- 
- 	if (xht->cpumask) {
- 		free(xht->cpumask);
+--- crash-6.1.0.orig/xen_hyper.c	2012-11-13 15:08:41.000000000 +0100
++++ crash-6.1.0/xen_hyper.c	2012-11-13 15:09:03.000000000 +0100
+@@ -1912,11 +1912,10 @@ xen_hyper_get_cpu_info(void)
+ 	if((xht->cpumask = malloc(XEN_HYPER_SIZE(cpumask_t))) == NULL) {
+ 		error(FATAL, "cannot malloc cpumask space.\n");
+ 	}
+-	/* kakuma: It may be better to use cpu_present_map. */
+-	addr = symbol_value("cpu_online_map");
++	addr = symbol_value("cpu_present_map");
+ 	if (!readmem(addr, KVADDR, xht->cpumask,
+-		XEN_HYPER_SIZE(cpumask_t), "cpu_online_map", RETURN_ON_ERROR)) {
+-		error(FATAL, "cannot read cpu_online_map.\n");
++		XEN_HYPER_SIZE(cpumask_t), "cpu_present_map", RETURN_ON_ERROR)) {
++		error(FATAL, "cannot read cpu_present_map.\n");
+ 	}
+ 	if (xht->cpu_idxs) {
+ 		free(xht->cpu_idxs);
 
 _______________________________________________
 kexec mailing list
