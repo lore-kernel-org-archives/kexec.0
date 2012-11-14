@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYjT6-0008F3-4t
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 20:21:52 +0000
-Date: Wed, 14 Nov 2012 15:21:40 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <229199866.31780089.1352924500787.JavaMail.root@redhat.com>
-In-Reply-To: <50A3CFAD.6090008@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+ id 1TYmEr-0007Yr-6B
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 23:19:21 +0000
+Date: Thu, 15 Nov 2012 08:19:18 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH][V2] vmcore-dmesg: Determine correct machine pointer size
+Message-ID: <20121114231917.GI15960@verge.net.au>
+References: <20121113163827.GB12529@redhat.com> <50A34A83.1030901@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50A34A83.1030901@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,77 +23,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Vivek Goyal <vgoyal@redhat.com>, buendgen@de.ibm.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-
-
------ Original Message -----
-> Hi Vivek,
+On Wed, Nov 14, 2012 at 03:38:43PM +0800, Dave Young wrote:
+> On 11/14/2012 12:38 AM, Vivek Goyal wrote:
 > 
-> On 2012-11-14 20:24, Vivek Goyal wrote:
-> 
-> > On Thu, Nov 08, 2012 at 07:07:52PM +0530, Aravinda Prasad wrote:
-> >> makedumpfile security key filtering enhancement - Add Eppic language
-> >> support (formerly known as SIAL) to specify rules to scrub data in a
-> >> dumpfile. Eppic was previously part of crash source code repository.
-> >>
-> >> The following series of patches enhance the makedumpfile to provide
-> >> a more powerful way to specify rules and commands to traverse and
-> >> erase complex data structures in a dump file by integrating Embeddable
-> >> Pre-Processor and Interpreter for C (eppic).
+> > A 32bit arch can prepare ELF64 headers. For example for PAE case to
+> > preresent file offsets 64bit but data size at the offset still remains
+> > 32bit. If we just base our decision based on EI_CLASS, then we will try
+> > to read 64bit data from file and can run into various issues.
 > > 
-> > Hi Aravinda,
+> > We ran into following issue when we tried to run vmcore-dmesg on a 32bit
+> > PAE system vmcore which had 64bit elf headers.
 > > 
-> > Had few questions.
+> > No program header covering vaddr 0xc0a6a688c0b89100found kexec bug?
 > > 
-> > - Which file will contain all the rules?
-> 
-> 
-> As of now rule files will not be provided by makedumpfile. However,
-> writing a rule file is very easy - it is a C program.
-> 
+> > Basically we try to read value of log_buf variable from address
+> > log_buf_vaddr. We read in 64bit value and then pass that value again
+> > to vaddr_to_offset() in an attempt to get to actual log_buf start
+> > and get error message.
 > > 
-> > - What's the memory footprint of libeppic.a? Looks like this will be
-> >   linked statically with makedumpfile, and how much is the size bloat of
-> >   makedumpfile.
-> 
-> 
-> Memory footprint of libeppic.a is around 1MB. Yes, this will be
-> statically linked to makedumpfile. Users should specify EPPIC=on while
-> building the makedumpfile and hence linking libeppic.a is optional
-> 
+> > So determine the machine pointer size based on ELF class and arch and read
+> > the bytes from file accordingly.
 > > 
-> > - Is this supposed to work from kdump initramfs or it is supposed to be
-> >   used on already saved dump (later during post processing).
-> 
-> 
-> For the time being, it is only during post processing.
-
-By post-processing, I understand you to say that the system would be
-configured to do a full ELF vmcore dump, save it somewhere, and then
-somebody would do the post-processing at a later time?
-
-Or is it possible to run makedumpfile again on a compressed kdump that
-was previously created at dump-time?
- 
+> > v2: Fixed the code as per suggestion from Eric.
 > > 
-> >   Given the fact that it does not reduce the size of core file
-> >   significantly, I would think that it is better to post process vmcore
-> >   to wipe out some symbols.
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > 
 > 
-> The main intention is to remove confidential information from the dump
-> file, like ssh keys etc., which could be just few bytes, hence, may not
-> reduce the size of the dump significantly.
+> Ack
 
-So this would require you to first do a crash analysis on the unfiltered dumpfile,
-find out what you want to filter, write a script, and then run makedumpfile
-on the vmcore, correct?
-
-Dave
- 
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
