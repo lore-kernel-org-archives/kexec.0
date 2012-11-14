@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TYU02-0000zm-Uz
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 03:50:52 +0000
-Date: Wed, 14 Nov 2012 12:47:42 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 10/10] Print warning about cyclic buffer overrun if it
- can happen
-Message-Id: <20121114124742.9c695ad11fa29e56c57413e9@mxc.nes.nec.co.jp>
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20AB00854@G01JPEXMBYT03>
-References: <20121108094609.30421.40556.stgit@localhost6.localdomain6>
- <20121108094900.30421.54675.stgit@localhost6.localdomain6>
- <20121113165600.09afdc35534c6fbf3905b289@mxc.nes.nec.co.jp>
- <33710E6CAA200E4583255F4FB666C4E20AB00854@G01JPEXMBYT03>
-Mime-Version: 1.0
+Received: from out02.mta.xmission.com ([166.70.13.232])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TYUMY-0002Au-60
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 04:14:08 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20121113163827.GB12529@redhat.com>
+Date: Tue, 13 Nov 2012 20:13:42 -0800
+In-Reply-To: <20121113163827.GB12529@redhat.com> (Vivek Goyal's message of
+ "Tue, 13 Nov 2012 11:38:27 -0500")
+Message-ID: <87lie4hle1.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH][V2] vmcore-dmesg: Determine correct machine pointer size
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,57 +23,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: d.hatayama@jp.fujitsu.com
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
 
-Hello HATAYAMA-san,
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-On Tue, 13 Nov 2012 08:49:11 +0000
-"Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com> wrote:
+> A 32bit arch can prepare ELF64 headers. For example for PAE case to
+> preresent file offsets 64bit but data size at the offset still remains
+> 32bit. If we just base our decision based on EI_CLASS, then we will try
+> to read 64bit data from file and can run into various issues.
+>
+> We ran into following issue when we tried to run vmcore-dmesg on a 32bit
+> PAE system vmcore which had 64bit elf headers.
+>
+> No program header covering vaddr 0xc0a6a688c0b89100found kexec bug?
+>
+> Basically we try to read value of log_buf variable from address
+> log_buf_vaddr. We read in 64bit value and then pass that value again
+> to vaddr_to_offset() in an attempt to get to actual log_buf start
+> and get error message.
+>
+> So determine the machine pointer size based on ELF class and arch and read
+> the bytes from file accordingly.
+>
+> v2: Fixed the code as per suggestion from Eric.
 
-> > -----Original Message-----
-> > From: Atsushi Kumagai [mailto:kumagai-atsushi@mxc.nes.nec.co.jp]
-> > Sent: Tuesday, November 13, 2012 4:56 PM
-> > To: Hatayama, Daisuke
-> > Cc: kexec@lists.infradead.org
-> > Subject: Re: [PATCH 10/10] Print warning about cyclic buffer overrun if
-> > it can happen
-> > 
-> > Hello HATAYAMA-san,
-> > 
-> > On Thu, 08 Nov 2012 18:49:00 +0900
-> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> > 
-> > > Clearling bits on cyclic buffer can overrun the cyclic buffer
-> > > according to some combination of MAX_ORDER and cyclic buffer size.
-> > >
-> > > This patch warns this possibility but continues processing.
-> > >
-> > > Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> > > ---
-> > 
-> > Thank you for pointing it out.
-> > 
-> > v1.5.1-rc will calculate the cyclic buffer size automatically and this
-> > issue can happen even if MAX_ORDER is 11, so this patch is useful.
-> > 
-> > I'll try to resolve this issue essentially in v1.5.2.
-> > 
-> 
-> Instead of the check, how about the following?
-> 
->   info->bufsize_cyclic = round(info->bufsize_cyclic,
->                                roundup(max_order_nr_pages,
->                                        BITPERBYTE));
-> 
-> This chooses the largest buffer size from the sizes smaller than
-> info->bufsize_cyclic fitting into max_order size.
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-It looks good, please change this patch as the above in v2.
+Looks good to me.
+
+I suspect we will need to list 32bit arm and all of the other arches
+that implement PAE at some point.  But the code is clean and clear so
+that should be easy when the time comes.
+
+Eric
 
 
-Thanks
-Atsushi Kumagai
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  vmcore-dmesg/vmcore-dmesg.c |   21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+>
+> Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
+> ===================================================================
+> --- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-08-01 13:27:09.304878654 -0400
+> +++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-11-13 11:32:33.184358230 -0500
+> @@ -89,6 +89,24 @@ static uint64_t vaddr_to_offset(uint64_t
+>  	exit(30);
+>  }
+>  
+> +static unsigned machine_pointer_bits(void)
+> +{
+> +	uint8_t bits = 0;
+> +
+> +	/* Default to the size of the elf class */
+> +	switch(ehdr.e_ident[EI_CLASS]) {
+> +	case ELFCLASS32:        bits = 32; break;
+> +	case ELFCLASS64:        bits = 64; break;
+> +	}
+> +
+> +	/* Report the architectures pointer size */
+> +	switch(ehdr.e_machine) {
+> +	case EM_386:            bits = 32; break;
+> +	}
+> +
+> +        return bits;
+> +}
+> +
+>  static void read_elf32(int fd)
+>  {
+>  	Elf32_Ehdr ehdr32;
+> @@ -389,7 +407,8 @@ static uint64_t read_file_pointer(int fd
+>  {
+>  	uint64_t result;
+>  	ssize_t ret;
+> -	if (ehdr.e_ident[EI_CLASS] == ELFCLASS64) {
+> +
+> +	if (machine_pointer_bits() == 64) {
+>  		uint64_t scratch;
+>  		ret = pread(fd, &scratch, sizeof(scratch), addr);
+>  		if (ret != sizeof(scratch)) {
 
 _______________________________________________
 kexec mailing list
