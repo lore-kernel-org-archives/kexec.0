@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYj0J-00076v-1L
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 19:52:08 +0000
-Date: Wed, 14 Nov 2012 14:52:00 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <935158332.31770683.1352922720179.JavaMail.root@redhat.com>
-In-Reply-To: <20121113161000.GA2942@host-192-168-1-59.local.net-space.pl>
-Subject: Re: [PATCH 0/5] crash: Bundle of fixes for Xen
+ id 1TYjN5-0008A0-Oe
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 20:15:41 +0000
+Date: Wed, 14 Nov 2012 15:15:27 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Message-ID: <20121114201527.GM20215@redhat.com>
+References: <20121108133554.28410.99763.stgit@aravinda>
+ <20121114145445.GC20215@redhat.com>
+ <50A3CFAD.6090008@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50A3CFAD.6090008@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +25,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad wilk <konrad.wilk@oracle.com>, andrew cooper3 <andrew.cooper3@citrix.com>, ptesarik@suse.cz, duanshuidao@hotmail.com, jbeulich@suse.com, kexec@lists.infradead.org, crash-utility@redhat.com
+To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, buendgen@de.ibm.com
 
+On Wed, Nov 14, 2012 at 10:36:53PM +0530, Aravinda Prasad wrote:
 
+[..]
+> The main intention is to remove confidential information from the dump
+> file, like ssh keys etc., which could be just few bytes, hence, may not
+> reduce the size of the dump significantly.
 
------ Original Message -----
-> Hi,
-> 
-> Here is next bundle of fixes for crash Xen support:
->   - xen: Fix page tables caching issues,
->   - xen: Use init_tss array or per_cpu__init_tss,
->   - xen: Use per_cpu__crash_notes or crash_notes array,
->   - xen: Try hard to get max_cpus value,
->   - xen: Use cpu_present_map instead of cpu_online_map.
-> 
-> All patches were tested with Xen versions up to 4.2.
-> 
-> Daniel
-> 
+Where are these ssh keys? Are these in user space memory or kernel memory?
+How would one know the location of these keys?
 
-Hi Daniel,
-
-The patches look reasonable to me, and they test OK on older
-RHEL5 dom0 dumpfiles.  It would be interesting to see whether
-they work for Hu Jun's SUSE kernel dumpfile.  I've cc'd him
-directly.
-
-Thanks,
-  Dave
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
