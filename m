@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYZL7-0007RF-HV
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 09:32:58 +0000
-Message-ID: <50A364E3.2090608@cn.fujitsu.com>
-Date: Wed, 14 Nov 2012 17:31:15 +0800
-From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+ id 1TYZLM-0007SX-VS
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 09:33:21 +0000
+Message-ID: <50A36503.8070607@redhat.com>
+Date: Wed, 14 Nov 2012 17:31:47 +0800
+From: Baoquan <bhe@redhat.com>
 MIME-Version: 1.0
-Subject: [PATCH v4 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
-References: <50A3645F.60302@cn.fujitsu.com>
-In-Reply-To: <50A3645F.60302@cn.fujitsu.com>
+Subject: Re: [PATCH 0/2] kexec: Limit the crash memory ranges according to
+ first kernel's memory limit.
+References: <20120829082201.19391.15191.stgit@mars.in.ibm.com>
+ <50875E18.8010808@linux.vnet.ibm.com> <50A1C04F.3030704@redhat.com>
+In-Reply-To: <50A1C04F.3030704@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,106 +20,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Avi Kivity <avi@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>, Suzuki Poulose <suzuki@in.ibm.com>
 
-crash_clear_loaded_vmcss is added to VMCLEAR vmcss loaded on all
-cpus. And when loading kvm_intel module, the function pointer will be
-made valid.
-The percpu variable vmclear_skipped is added to flag the case that
-if loaded_vmcss_on_cpu list is being modified while the machine crashes
-and doing kdump, the vmclear here can be skipped.
-
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/include/asm/kexec.h |    3 +++
- arch/x86/kernel/crash.c      |   32 ++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 0 deletions(-)
-
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 317ff17..d892211 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -163,6 +163,9 @@ struct kimage_arch {
- };
- #endif
- 
-+extern void (*crash_clear_loaded_vmcss)(void);
-+DECLARE_PER_CPU(int, vmclear_skipped);
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_X86_KEXEC_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 13ad899..b9f264e 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -16,6 +16,7 @@
- #include <linux/delay.h>
- #include <linux/elf.h>
- #include <linux/elfcore.h>
-+#include <linux/module.h>
- 
- #include <asm/processor.h>
- #include <asm/hardirq.h>
-@@ -30,6 +31,27 @@
- 
- int in_crash_kexec;
- 
-+/*
-+ * This is used to VMCLEAR vmcss loaded on all
-+ * cpus. And when loading kvm_intel module, the
-+ * function pointer will be made valid.
-+ */
-+void (*crash_clear_loaded_vmcss)(void) = NULL;
-+EXPORT_SYMBOL_GPL(crash_clear_loaded_vmcss);
-+
-+DEFINE_PER_CPU(int, vmclear_skipped) = 1;
-+EXPORT_SYMBOL_GPL(vmclear_skipped);
-+
-+static void cpu_emergency_clear_loaded_vmcss(void)
-+{
-+	int cpu = raw_smp_processor_id();
-+	int skipped;
-+
-+	skipped = per_cpu(vmclear_skipped, cpu);
-+	if (!skipped && crash_clear_loaded_vmcss)
-+		crash_clear_loaded_vmcss();
-+}
-+
- #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
- 
- static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
-@@ -46,6 +68,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
- #endif
- 	crash_save_cpu(regs, cpu);
- 
-+	/*
-+	 * VMCLEAR vmcss loaded on all cpus if needed.
-+	 */
-+	cpu_emergency_clear_loaded_vmcss();
-+
- 	/* Disable VMX or SVM if needed.
- 	 *
- 	 * We need to disable virtualization on all CPUs.
-@@ -88,6 +115,11 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 
- 	kdump_nmi_shootdown_cpus();
- 
-+	/*
-+	 * VMCLEAR vmcss loaded on this cpu if needed.
-+	 */
-+	cpu_emergency_clear_loaded_vmcss();
-+
- 	/* Booting kdump kernel with VMX or SVM enabled won't work,
- 	 * because (among other limitations) we can't disable paging
- 	 * with the virt flags.
--- 
-1.7.1
+On 11/13/2012 11:36 AM, Baoquan wrote:
+> Hi,
+>
+> I have tested ppc64 part of this patchset, and it works.
+> Do you plan to merge this patchset?
+>
+Sorry, above question should go to Simon.
+> On 10/24/2012 11:18 AM, Mahesh Jagannath Salgaonkar wrote:
+>> On 08/29/2012 01:54 PM, Mahesh J Salgaonkar wrote:
+>>> So far powerpc kernel never exported memory limit information which is
+>>> reflected by mem= kernel cmdline option. Hence, kexec-tools always use
+>>> to build ELF header for entire system RAM generating a dump bigger than
+>>> the actual memory used by the first kernel.
+>>>
+>>> The proposed upstream kernel patch at
+>>> https://lists.ozlabs.org/pipermail/linuxppc-dev/2012-August/100500.html
+>>> now exports memory limit information through /proc/device-tree file.
+>>> The above patch is still in discussion.
+>> The above mentioned kernel patches are now upstream. Below are commit 
+>> ids:
+>> 4bc77a5e - powerpc: Export memory limit via device tree
+>> a84fcd468 - powerpc: Change memory_limit from phys_addr_t to unsigned
+>> long long
+>>
+>>> This patch series now reads the memory limit information from
+>>> device-tree file if present and limits the crash memory ranges 
+>>> accordingly.
+>>>
+>>> Tested these patches on ppc32(ppc440) and ppc64 with a kernel patch 
+>>> by Suzuki.
+>>>
+>>> Signed-off-by: Mahesh Salgaonkar<mahesh@linux.vnet.ibm.com>
+>>> Tested-by: Suzuki K. Poulose<suzuki@in.ibm.com>
+>>>
+>>> ---
+>>>
+>>> Mahesh Salgaonkar (2):
+>>>        kexec: Respect memory limit while building crash memory 
+>>> ranges on ppc32.
+>>>        kexec: Respect memory limit while building crash memory 
+>>> ranges on ppc64
+>>>
+>>>
+>>>   kexec/arch/ppc/crashdump-powerpc.c |   14 ++++++++---
+>>>   kexec/arch/ppc/crashdump-powerpc.h |    1 +
+>>>   kexec/arch/ppc/kexec-ppc.c         |   48 
+>>> ++++++++++++++++++++++++++++++++++++
+>>>   kexec/arch/ppc64/crashdump-ppc64.c |   11 ++++++++
+>>>   kexec/arch/ppc64/crashdump-ppc64.h |    1 +
+>>>   kexec/arch/ppc64/kexec-ppc64.c     |   28 +++++++++++++++++++++
+>>>   6 files changed, 99 insertions(+), 4 deletions(-)
+>>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 
 _______________________________________________
