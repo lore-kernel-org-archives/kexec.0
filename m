@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TYRbd-0002d0-2m
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 01:17:31 +0000
-Date: Wed, 14 Nov 2012 10:15:10 +0900
+ id 1TYTzS-0000yS-2A
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 03:50:16 +0000
+Date: Wed, 14 Nov 2012 12:47:24 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Message-Id: <20121114101510.fb18ea7444731379828a7efc@mxc.nes.nec.co.jp>
-In-Reply-To: <20121108133554.28410.99763.stgit@aravinda>
-References: <20121108133554.28410.99763.stgit@aravinda>
+Subject: Re: [PATCH] makedumpfile: keep dumpfile pages in a cache
+Message-Id: <20121114124724.749a64b12cca86223a92f1b1@mxc.nes.nec.co.jp>
+In-Reply-To: <201209061750.52702.ptesarik@suse.cz>
+References: <201208281949.50286.ptesarik@suse.cz>
+ <20120903124233.61eafa52ffaed6a38a23710d@mxc.nes.nec.co.jp>
+ <201209030904.03661.ptesarik@suse.cz>
+ <201209061750.52702.ptesarik@suse.cz>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,111 +21,127 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: aravinda@linux.vnet.ibm.com
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, buendgen@de.ibm.com
+To: ptesarik@suse.cz
+Cc: kexec@lists.infradead.org
 
-Hello Aravinda,
-
-On Thu, 08 Nov 2012 19:07:52 +0530
-Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
-
-> makedumpfile security key filtering enhancement - Add Eppic language
-> support (formerly known as SIAL) to specify rules to scrub data in a
-> dumpfile. Eppic was previously part of crash source code repository.
-> 
-> The following series of patches enhance the makedumpfile to provide
-> a more powerful way to specify rules and commands to traverse and
-> erase complex data structures in a dump file by integrating Embeddable
-> Pre-Processor and Interpreter for C (eppic).
-> 
-> Eppic is an interpreter that facilitates access to the symbol and type
-> information stored in an executable image or a dump file. Eppic defines
-> a language semantic which is similar to C. Eppic macros can be used to
-> specify rules/commands to erase data in an image file. makedumpfile
-> will interpret the rules/commands provided by eppic macros with the
-> help of eppic library and will suitably erase the required data in a
-> dump file. Eppic provides a lot of language constructs like conditional
-> statements, logical and arithmetic operators, nested loops, functions,
-> etc., to traverse nested lists and trees and conditionally erase data
-> in the dump file, enabling users to literally erase any data in the
-> dump file which is accessible through global symbols.
-> 
-> The series of patches integrates eppic with makdumpfile. These patches
-> require eppic library libeppic.a and eppic_api.h header file. The
-> libeppic.a library can be built from the eppic source code available
-> at the following URL:
-> 
-> http://code.google.com/p/eppic/
-
-Thank you for re-sending your patches, I'll merge them into v1.5.1-rc.
-And thanks for sending your test script, it's helpful for understanding
-how to use eppic macro.
-
-
-Atsushi Kumagai
-
-> 
-> TODO:
-> 
->   - Currently, works only for symbols in vmlinux, extend it to module
->     symbols
->   - Functionality support:
->     - Implement the following callback functions.
->       - apialignment
->       - apigetenum
->       - apigetdefs
->     - Other functionalities specified in the code with TODO tag
->   - Support specifying eppic macros in makedumpfile.conf file
->   - Update erase info
-> 
-> Changelog from v1 to v2:
-> 
->   - Re-based to v1.5.0
->   - Introduced EPPIC=on in makefile, and hence eppic is now optional
->   - Incorporated review comments from Atsushi
->   - Minor formatting changes
-> 
-> Regards,
-> Aravinda
-> ---
-> 
-> Aravinda Prasad (7):
->       Initialize and setup eppic
->       makedumpfile and eppic interface layer
->       Eppic call back functions to query a dump image
->       Implement apigetctype call back function
->       Implement apimember and apigetrtype call back functions
->       Extend eppic built-in functions to include memset function
->       Support fully typed symbol access mode
-> 
-> 
->  Makefile          |    7 +
->  dwarf_info.c      |  367 +++++++++++++++++++++++++++++++++++++++++++
->  dwarf_info.h      |   18 ++
->  erase_info.c      |   83 +++++++++-
->  erase_info.h      |    5 +
->  extension_eppic.c |  451 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  extension_eppic.h |   78 +++++++++
->  makedumpfile.c    |    7 +
->  makedumpfile.h    |    6 +
->  9 files changed, 1018 insertions(+), 4 deletions(-)
->  create mode 100644 extension_eppic.c
->  create mode 100644 extension_eppic.h
-> 
-> -- 
-> Aravinda Prasad
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gUGV0ciwKCk9uIFRodSwgNiBTZXAgMjAxMiAxNzo1MDo1MiArMDIwMApQZXRyIFRlc2Fy
+aWsgPHB0ZXNhcmlrQHN1c2UuY3o+IHdyb3RlOgoKPiBEbmUgUG8gMy4gesOhxZnDrSAyMDEyIDA5
+OjA0OjAzIFBldHIgVGVzYXJpayBuYXBzYWwoYSk6Cj4gPiBEbmUgUG8gMy4gesOhxZnDrSAyMDEy
+IDA1OjQyOjMzIEF0c3VzaGkgS3VtYWdhaSBuYXBzYWwoYSk6Cj4gPiA+IEhlbGxvIFBldHIsCj4g
+PiA+IAo+ID4gPiBPbiBUdWUsIDI4IEF1ZyAyMDEyIDE5OjQ5OjQ5ICswMjAwCj4gPiA+IAo+ID4g
+PiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+IHdyb3RlOgo+ID4gPiA+IEFkZCBhIHNp
+bXBsZSBjYWNoZSBmb3IgcGFnZXMgcmVhZCBmcm9tIHRoZSBkdW1wZmlsZS4KPiA+ID4gPiAKPiA+
+ID4gPiBUaGlzIGlzIGEgYmlnIHdpbiBpZiB3ZSByZWFkIGNvbnNlY3V0aXZlIGRhdGEgZnJvbSBv
+bmUgcGFnZSwgZS5nLgo+ID4gPiA+IHBhZ2UgZGVzY3JpcHRvcnMsIG9yIGV2ZW4gcGFnZSB0YWJs
+ZSBlbnRyaWVzLgo+ID4gPiA+IAo+ID4gPiA+IE5vdGUgdGhhdCBtYWtlZHVtcGZpbGUgbm93IGFs
+d2F5cyByZWFkcyBhIGNvbXBsZXRlIHBhZ2UuIFRoaXMgd2FzCj4gPiA+ID4gYWxyZWFkeSB0aGUg
+Y2FzZSB3aXRoIGtkdW1wLWNvbXByZXNzZWQgYW5kIHNhZHVtcCBmb3JtYXRzLCBidXQKPiA+ID4g
+PiBtYWtlZHVtcGZpbGUgd2FzIHRocm93aW5nIG1vc3Qgb2YgdGhlIGRhdGEgYXdheS4gRm9yIHRo
+ZQo+ID4gPiA+IGtkdW1wLWNvbXByZXNzZWQgY2FzZSwgd2UgbWF5IGFjdHVhbGx5IHNhdmUgYSBs
+b3Qgb2YgZGVjb21wcmVzc2lvbiwKPiA+ID4gPiB0b28uCj4gPiA+ID4gCj4gPiA+ID4gSSB0cmll
+ZCB0byBrZWVwIHRoZSBjYWNoZSBzbWFsbCB0byBtaW5pbWl6ZSBtZW1vcnkgZm9vdHByaW50LCBi
+dXQgaXQKPiA+ID4gPiBzaG91bGQgYmUgYmlnIGVub3VnaCB0byBob2xkIGFsbCBwYWdlcyB0byBk
+byA0LWxldmVsIHBhZ2luZyBwbHVzIHNvbWUKPiA+ID4gPiBkYXRhLiBUaGlzIGlzIG5lZWRlZCBl
+LmcuIGZvciB2bWFsbG9jIGFyZWFzIG9yIFhlbiBwYWdlIGZyYW1lIHRhYmxlCj4gPiA+ID4gZGF0
+YSwgd2hpY2ggYXJlIG5vdCBjb250aWd1b3VzIGluIHBoeXNpY2FsIG1lbW9yeS4KPiA+ID4gPiAK
+PiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+CgpT
+b3JyeSBmb3IgdGhlIGxhdGUgcmVwbHkuCkFjY29yZGluZyB0byB5b3VyIG1lYXN1cmVtZW50LCBp
+dCBsb29rcyBnb29kIG9uIHBlcmZvcm1hbmNlLgoKSG93ZXZlciwgSSBmb3VuZCB0aGUgaXNzdWUg
+YmVsb3cgaW4gdjEuNS4xLWJldGEgYW5kIG1hZGUgc3VyZSB0aGF0IHRoaXMgcGF0Y2gKY2F1c2Vz
+IGl0IGJ5IGdpdCBiaXNlY3QgKGJ1dCBJIGRvbid0IGZpbmQgdGhlIHRydWUgY2F1c2UgeWV0KS4K
+CiAgcmVzdWx0IG9uIGtlcm5lbCAzLjQ6CiAgICAkIG1ha2VkdW1wZmlsZSAtLW5vbi1jeWNsaWMg
+dm1jb3JlIGR1bXBmaWxlCiAgICBDb3B5aW5nIGRhdGEgICAgICAgICAgICAgICAgICAgICAgIDog
+WyA2MiAlXSAKICAgIHJlYWRwYWdlX2VsZjogQ2FuJ3QgY29udmVydCBhIHBoeXNpY2FsIGFkZHJl
+c3MoYTAwMDApIHRvIG9mZnNldC4KICAgIHJlYWRtZW06IHR5cGVfYWRkcjogMSwgYWRkcjoxMDAw
+YTAwMDAsIHNpemU6NDA5NgogICAgcmVhZF9wZm46IENhbid0IGdldCB0aGUgcGFnZSBkYXRhLgoK
+ICAgIG1ha2VkdW1wZmlsZSBGYWlsZWQuCiAgICAkCgpJdCBzZWVtcyBjcml0aWNhbCBpc3N1ZSBm
+b3IgYWxsIHVzZXJzLCBzbyBJIHdpbGwgcG9zdHBvbmUgbWVyZ2luZyB0aGlzIHBhdGNoCnVudGls
+IHRoaXMgaXNzdWUgaXMgc29sdmVkLgoKClRoYW5rcwpBdHN1c2hpIEt1bWFnYWkKCj4gPiA+IAo+
+ID4gPiBJdCdzIGludGVyZXN0aW5nIHRvIG1lLiBJIHdhbnQgdG8ga25vdyBob3cgcGVyZm9ybWFu
+Y2Ugd2lsbCBiZSBpbXByb3ZlZAo+ID4gPiB3aXRoIHRoaXMgcGF0Y2gsIHNvIGRvIHlvdSBoYXZl
+IHNwZWVkIG1lYXN1cmVtZW50cyA/Cj4gPiAKPiA+IE5vdCByZWFsbHkuIEkgb25seSBtZWFzdXJl
+ZCB0aGUgaGl0L21pc3MgcmF0aW8sIGFuZCB3aXRoIGZpbHRlcmluZyBYZW4gZG9tVQo+ID4gYW5k
+IGR1bXAgbGV2ZWwgMCwgSSBnb3QgdGhlIGZvbGxvd2luZyBvbiBhIHNtYWxsIHN5c3RlbSAoMkcg
+UkFNKToKPiA+IAo+ID4gY2FjaGUgaGl0OiAxODE4ODgwICBjYWNoZSBtaXNzOiAxODczCj4gPiAK
+PiA+IFRoZSBpbXByb3ZlbWVudCBpc24ndCBtdWNoIGZvciBub24tWGVuIGNhc2UsIGJlY2F1c2Ug
+dGhlIGhpdHMgYXJlIG1vc3RseQo+ID4gZHVlIHRvIHZpcnR1YWwtdG8tcGh5c2ljYWwgdHJhbnNs
+YXRpb25zLCBhbmQgbW9zdCBvZiBMaW51eCBkYXRhIGlzIHN0b3JlZAo+ID4gYXQgdmlydHVhbCBh
+ZGRyZXNzZXMgdGhhdCBjYW4gYmUgcmVzb2x2ZWQgYnkgYWRkaW5nL3N1YnRyYWN0aW5nIGEgZml4
+ZWQKPiA+IG9mZnNldC4KPiA+IAo+ID4gT2YgY291cnNlLCB5b3Ugd2lsbCBhbHNvIHdpbiBvbmx5
+IHRoZSBzeXNjYWxsIG92ZXJoZWFkLCBiZWNhdXNlIExpbnV4IGtlZXBzCj4gPiB0aGUgZGF0YSBp
+biB0aGUga2VybmVsIHBhZ2VjYWNoZSBhbnl3YXkuIEknbGwgbWVhc3VyZSB0aGUgdGltZXMgZm9y
+IHlvdSBvbgo+ID4gYSByZWFzb25hYmx5IGxhcmdlIHN5c3RlbSAofjI1NkcpIGFuZCBzZW5kIHRo
+ZSByZXN1bHRzIGhlcmUuCj4gCj4gSSBjb3VsZG4ndCBnZXQgYSBtZWRpdW0tc2l6ZWQgc3lzdGVt
+IGZvciB0ZXN0aW5nLCBzbyBJIHBlcmZvcm1lZCBzb21lIAo+IG1lYXN1cmVtZW50cyBvbiBhIDY0
+RyBzeXN0ZW0uIEkgcmFuIG1ha2VkdW1wZmlsZSByZXBlYXRlZGx5IGZyb20gdGhlIGtkdW1wIAo+
+IGVudmlyb25tZW50LiBGaXJzdCBydW4gd2FzIHVzZWQgdG8gY2FjaGUgdGFyZ2V0IGZpbGVzeXN0
+ZW0gbWV0YWRhdGEsIGFuZCB0aGUgCj4gY2FjaGUgd2FzIG5vdCBkcm9wcGVkIGJldHdlZW4gcnVu
+cyB0byBtaW5pbWl6ZSBlZmZlY3RzIG9mIHRoZSB0YXJnZXQgCj4gZmlsZXN5c3RlbS4gSSByYW4g
+aXQgYWdhaW5zdCAvcHJvYy92bWNvcmUsIGkuZS4gdGhlIGlucHV0IGZpbGUgd2FzIGFsd2F5cyAK
+PiByZXNpZGVudCwgbm90aGluZyB0byBza2V3IHRoZSByZXN1bHRzLgo+IAo+IEkgdHJpZWQgd2l0
+aCBhIGtkdW1wIGZpbGUgd2l0aCBubyBjb21wcmVzc2lvbiAodG8gZ2V0IGd6aXAvTFpPIG91dCBv
+ZiB0aGUgCj4gcGljdHVyZSkgYW5kIGFuIEVMRiBmaWxlLiBGb3IgdGhlIFhlbiBjYXNlIEkgb25s
+eSBkaWQgdGhlIEVMRiBmaWxlLCBiZWNhdXNlIAo+IGtkdW1wIGlzIG5vdCBhdmFpbGFibGUuCj4g
+Cj4gRmlyc3QgSSByYW4gaXQgb24gYmFyZSBtZXRhbC4gVGhlcmUgd2FzIGEgc2xpZ2h0IGltcHJv
+dmVtZW50IGZvciAtZDMxOgo+IAo+IGtkdW1wIG5vIGNhY2hlOgo+IDYuMzJ1c2VyIDU1LjIwc3lz
+dGVtIDE6MTUuNjBlbGFwc2VkIDgxJUNQVSAoMGF2Z3RleHQrMGF2Z2RhdGEgCj4gNDgwMG1heHJl
+c2lkZW50KWsKPiAyMDgwaW5wdXRzKzU3MTQyOTZvdXRwdXRzICgybWFqb3IrMzQybWlub3IpcGFn
+ZWZhdWx0cyAwc3dhcHMKPiAKPiBrZHVtcCB3aXRoIGNhY2hlOgo+IDYuMDJ1c2VyIDI0LjU4c3lz
+dGVtIDA6NDYuNTFlbGFwc2VkIDY1JUNQVSAoMGF2Z3RleHQrMGF2Z2RhdGEgCj4gNDkxMm1heHJl
+c2lkZW50KWsKPiAxODY0aW5wdXRzKzU3MTQyODhvdXRwdXRzICgybWFqb3IrMzUwbWlub3IpcGFn
+ZWZhdWx0cyAwc3dhcHMKPiAKPiBFTEYgbm8gY2FjaGU6Cj4gNy41OHVzZXIgNzQuMjVzeXN0ZW0g
+MTo1OS41MmVsYXBzZWQgNjglQ1BVICgwYXZndGV4dCswYXZnZGF0YSAKPiA0ODAwbWF4cmVzaWRl
+bnQpawo+IDcyOGlucHV0cys5Mjg4ODI0b3V0cHV0cyAoMW1ham9yKzM0Mm1pbm9yKXBhZ2VmYXVs
+dHMgMHN3YXBzCj4gCj4gRUxGIHdpdGggY2FjaGU6Cj4gNy40M3VzZXIgNDQuMjFzeXN0ZW0gMTox
+Ny40MWVsYXBzZWQgNjYlQ1BVICgwYXZndGV4dCswYXZnZGF0YSAKPiA0ODk2bWF4cmVzaWRlbnQp
+awo+IDcyOGlucHV0cys5Mjg4Nzkyb3V0cHV0cyAoMW1ham9yKzM0OW1pbm9yKXBhZ2VmYXVsdHMg
+MHN3YXBzCj4gCj4gVG8gc3VtIGl0IHVwLCBJIGNhbiBzZWUgYW4gaW1wcm92ZW1lbnQgb2YgYXBw
+cm94LiA1MCUgaW4gc3lzdGVtIHRpbWUuIFRoZSAKPiBpbmNyZWFzZSBpbiBtZW1vcnkgY29uc3Vt
+cHRpb24gaXMgYSBiaXQgbW9yZSB0aGFuIEkgd291bGQgZXhwZWN0ICh3aHkgZG8gSSBzZWUgCj4g
+fjEwMGsgZm9yIGEgY2FjaGUgb2YgMTJrPyksIGJ1dCBhY2NlcHRhYmxlIG5ldmVydGhlbGVzcy4g
+SSBjYW4gc2VlIGEgc2xpZ2h0IAo+IGluY3JlYXNlIGluIHVzZXIgdGltZSAoYXBwcm94LiAyNSUp
+IGZvciB0aGUga2R1bXAgY2FzZSwgd2hpY2ggY291bGQgYmUgCj4gYXR0cmlidXRlZCB0byB0aGUg
+Y2FjaGUgb3ZlcmhlYWQuIEkgZG9uJ3QgaGF2ZSBhbnkgZXhwbGFuYXRpb24gZm9yIHRoZSAKPiBk
+ZWNyZWFzZWQgdXNlciB0aW1lIGZvciB0aGUgRUxGIGNhc2UsIGJ1dCBpdCdzIGNvbnNpc3RlbnQu
+Cj4gCj4gSSBhbHNvIHRyaWVkIHJ1bm5pbmcgbWFrZWR1bXBmaWxlIHdpdGggLWQxLiBUaGlzIHJl
+c3VsdHMgaW4gbG9uZyBzZXF1ZW50aWFsIAo+IHJlYWRzLCBzbyBpdCdzIHRoZSB3b3JzdCBjYXNl
+IGZvciBhIHNpbXBsZSBMUlUtcG9saWN5IGNhY2hlLiBUaGUgcmVzdWx0cyBhcmUgCj4gdG9vIHVu
+c3RhYmxlIHRvIG1ha2UgYSByZWxpYWJsZSBtZWFzdXJlbWVudCwgYnV0IHRoZXJlIHNlZW1zIHRv
+IGJlIGEgc2xpZ2h0IAo+IHBlcmZvcm1hbmNlIGhpdC4gSXQgaXMgY2VydGFpbmx5IGxlc3MgdGhh
+biA1JSB0b3RhbCB0aW1lLgo+IAo+IEkgdGhpbmsgdGhlcmUgYXJlIHR3byByZWFzb25zIGZvciB0
+aGF0Ogo+IAo+IDEuIFdlJ3JlIGNvcHlpbmcgZmlsZSBkYXRhIHR3aWNlIGZvciBlYWNoIHBhZ2Ug
+KG9uY2UgZnJvbSB0aGUga2VybmVsIHBhZ2UgCj4gY2FjaGUgdG8gdGhlIHByb2Nlc3Mgc3BhY2Us
+IGFuZCBvbmNlIGZyb20gdGhlIGludGVybmFsIGNhY2hlIHRvIHRoZSAKPiBkZXN0aW5hdGlvbiku
+Cj4gMi4gSW5zdGVhZCBvZiByZXVzaW5nIHRoZSBzYW1lIGRhdGEgbG9jYXRpb24sIHdlJ3JlIHJv
+dGF0aW5nIDggZGlmZmVyZW50IHBhZ2VzIAo+IChvciBldmVuIHVwIHRvIHR3aWNlIGFzIG11Y2gg
+aWYgdGhlIGFsbG9jYXRlZCBzcGFjZSBpcyBuZWl0aGVyIGNvbnRpbnVvdXMgIG5vciAKPiBwYWdl
+LWFsaWduZWQpLiBUaGlzIHN0cmVzc2VzIGJvdGggZm9yIHRoZSBDUFUncyBMMSBkLWNhY2hlIGFu
+ZCB0aGUgVExCIGEgdGlueSAKPiBiaXQgbW9yZS4gTm90ZSB0aGF0IGluIHRoZSAvcHJvYy92bWNv
+cmUgY2FzZSwgdGhlIGtlcm5lbCBzZXF1ZW50aWFsbHkgbWFwcyBhbGwgCj4gcGh5c2ljYWwgbWVt
+b3J5IG9mIHRoZSBjcmFzaGVkIHN5c3RlbSwgc28gZXZlcnkgY2FjaGUgcGFnZSBtYXkgYmUgZXZp
+Y3RlZCAKPiBiZWZvcmUgd2UgZ2V0IHRvIHVzaW5nIGl0IGFnYWluLiBUaGlzIGNvdWxkIGV4cGxh
+aW4gd2h5IEkgb2JzZXJ2ZSBhbiBpbmNyZWFzZSAKPiBpbiBzeXN0ZW0gdGltZSBkZXNwaXRlIG1h
+a2luZyBsZXNzIHN5c3RlbSBjYWxscy4KPiAKPiBUaGVyZSdzIGEgbG90IG9mIHRoaW5ncyBJIGNv
+dWxkIGRvIHRvIHJlZ2FpbiB0aGUgb2xkIHBlcmZvcm1hbmNlLCBpZiBhbnlib2R5IAo+IGlzIGNv
+bmNlcm5lZCBhYm91dCB0aGUgc2xpZ2h0IHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24gZm9yIHRoaXMg
+d29yc3QgY2FzZS4gSnVzdCAKPiBsZXQgbWUga25vdy4KPiAKPiBTZWNvbmQsIEkgcmFuIHdpdGgg
+dGhlIFhlbiBoeXBlcnZpc29yLiBTaW5jZSBkdW1wIGxldmVscyBncmVhdGVyIHRoYW4gMSBkb24n
+dCAKPiB3b3JrLCBJIHJhbiB3aXRoICctRSAtWCAtZDEnLiBFdmVuIHRob3VnaCB0aGlzIGluY2x1
+ZGVzIHRoZSBpbmVmZmljaWVudCBwYWdlIAo+IHdhbGsgZGVzY3JpYmVkIGFib3ZlLCB0aGUgaW1w
+cm92ZW1lbnQgd2FzIGltbWVuc2UuCj4gCj4gbm8gY2FjaGU6Cj4gOTUuMzN1c2VyIDY1Ny4xOHN5
+c3RlbSAxMzowOC40MGVsYXBzZWQgOTUlQ1BVICgwYXZndGV4dCswYXZnZGF0YSAKPiA1NDQwbWF4
+cmVzaWRlbnQpawo+IDcwNGlucHV0cys2NTYzODU2b3V0cHV0cyAoMW1ham9yKzM4OG1pbm9yKXBh
+Z2VmYXVsdHMgMHN3YXBzCj4gCj4gd2l0aCBjYWNoZToKPiA2MS4xNHVzZXIgMTEwLjE1c3lzdGVt
+IDM6MjQuMjRlbGFwc2VkIDgzJUNQVSAoMGF2Z3RleHQrMGF2Z2RhdGEgCj4gNTU4NG1heHJlc2lk
+ZW50KWsKPiAyMzYwaW5wdXRzKzY1NjM4NzJvdXRwdXRzICgybWFqb3IrMzk2bWlub3IpcGFnZWZh
+dWx0cyAwc3dhcHMKPiAKPiBJbiBzaG9ydCwgYWxtb3N0IDgwJSBzaG9ydGVyIHRvdGFsIHRpbWUu
+Cj4gCj4gUGV0ciBUZXNhcmlrCj4gU1VTRSBMaW51eAo+IAo+IF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
