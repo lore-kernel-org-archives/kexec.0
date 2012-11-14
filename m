@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYjN5-0008A0-Oe
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 20:15:41 +0000
-Date: Wed, 14 Nov 2012 15:15:27 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Message-ID: <20121114201527.GM20215@redhat.com>
-References: <20121108133554.28410.99763.stgit@aravinda>
- <20121114145445.GC20215@redhat.com>
- <50A3CFAD.6090008@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
+ id 1TYjT6-0008F3-4t
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 20:21:52 +0000
+Date: Wed, 14 Nov 2012 15:21:40 -0500 (EST)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <229199866.31780089.1352924500787.JavaMail.root@redhat.com>
 In-Reply-To: <50A3CFAD.6090008@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,20 +22,76 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, buendgen@de.ibm.com
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Vivek Goyal <vgoyal@redhat.com>, buendgen@de.ibm.com
 
-On Wed, Nov 14, 2012 at 10:36:53PM +0530, Aravinda Prasad wrote:
 
-[..]
+
+----- Original Message -----
+> Hi Vivek,
+> 
+> On 2012-11-14 20:24, Vivek Goyal wrote:
+> 
+> > On Thu, Nov 08, 2012 at 07:07:52PM +0530, Aravinda Prasad wrote:
+> >> makedumpfile security key filtering enhancement - Add Eppic language
+> >> support (formerly known as SIAL) to specify rules to scrub data in a
+> >> dumpfile. Eppic was previously part of crash source code repository.
+> >>
+> >> The following series of patches enhance the makedumpfile to provide
+> >> a more powerful way to specify rules and commands to traverse and
+> >> erase complex data structures in a dump file by integrating Embeddable
+> >> Pre-Processor and Interpreter for C (eppic).
+> > 
+> > Hi Aravinda,
+> > 
+> > Had few questions.
+> > 
+> > - Which file will contain all the rules?
+> 
+> 
+> As of now rule files will not be provided by makedumpfile. However,
+> writing a rule file is very easy - it is a C program.
+> 
+> > 
+> > - What's the memory footprint of libeppic.a? Looks like this will be
+> >   linked statically with makedumpfile, and how much is the size bloat of
+> >   makedumpfile.
+> 
+> 
+> Memory footprint of libeppic.a is around 1MB. Yes, this will be
+> statically linked to makedumpfile. Users should specify EPPIC=on while
+> building the makedumpfile and hence linking libeppic.a is optional
+> 
+> > 
+> > - Is this supposed to work from kdump initramfs or it is supposed to be
+> >   used on already saved dump (later during post processing).
+> 
+> 
+> For the time being, it is only during post processing.
+
+By post-processing, I understand you to say that the system would be
+configured to do a full ELF vmcore dump, save it somewhere, and then
+somebody would do the post-processing at a later time?
+
+Or is it possible to run makedumpfile again on a compressed kdump that
+was previously created at dump-time?
+ 
+> > 
+> >   Given the fact that it does not reduce the size of core file
+> >   significantly, I would think that it is better to post process vmcore
+> >   to wipe out some symbols.
+> 
+> 
 > The main intention is to remove confidential information from the dump
 > file, like ssh keys etc., which could be just few bytes, hence, may not
 > reduce the size of the dump significantly.
 
-Where are these ssh keys? Are these in user space memory or kernel memory?
-How would one know the location of these keys?
+So this would require you to first do a crash analysis on the unfiltered dumpfile,
+find out what you want to filter, write a script, and then run makedumpfile
+on the vmcore, correct?
 
-Thanks
-Vivek
+Dave
+ 
+
 
 _______________________________________________
 kexec mailing list
