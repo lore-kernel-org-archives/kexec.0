@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYZM4-0007W8-M9
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 09:33:57 +0000
-Message-ID: <50A3651F.3020809@cn.fujitsu.com>
-Date: Wed, 14 Nov 2012 17:32:15 +0800
-From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+ id 1TYeMj-0000te-Ob
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 14:54:59 +0000
+Date: Wed, 14 Nov 2012 09:54:45 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Message-ID: <20121114145445.GC20215@redhat.com>
+References: <20121108133554.28410.99763.stgit@aravinda>
 MIME-Version: 1.0
-Subject: [PATCH v4 2/2] KVM: set/unset crash_clear_loaded_vmcss and
- vmclear_skipped in kvm_intel module
-References: <50A3645F.60302@cn.fujitsu.com>
-In-Reply-To: <50A3645F.60302@cn.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20121108133554.28410.99763.stgit@aravinda>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,112 +23,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Avi Kivity <avi@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, buendgen@de.ibm.com
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/kvm/vmx.c |   32 ++++++++++++++++++++++++++++++++
- 1 files changed, 32 insertions(+), 0 deletions(-)
+On Thu, Nov 08, 2012 at 07:07:52PM +0530, Aravinda Prasad wrote:
+> makedumpfile security key filtering enhancement - Add Eppic language
+> support (formerly known as SIAL) to specify rules to scrub data in a
+> dumpfile. Eppic was previously part of crash source code repository.
+> 
+> The following series of patches enhance the makedumpfile to provide
+> a more powerful way to specify rules and commands to traverse and
+> erase complex data structures in a dump file by integrating Embeddable
+> Pre-Processor and Interpreter for C (eppic).
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 4ff0ab9..029ec7b 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -41,6 +41,7 @@
- #include <asm/i387.h>
- #include <asm/xcr.h>
- #include <asm/perf_event.h>
-+#include <asm/kexec.h>
- 
- #include "trace.h"
- 
-@@ -963,6 +964,20 @@ static void vmcs_load(struct vmcs *vmcs)
- 		       vmcs, phys_addr);
- }
- 
-+static inline void enable_vmclear_in_kdump(int cpu)
-+{
-+#ifdef CONFIG_KEXEC
-+	per_cpu(vmclear_skipped, cpu) = 0;
-+#endif
-+}
-+
-+static inline void disable_vmclear_in_kdump(int cpu)
-+{
-+#ifdef CONFIG_KEXEC
-+	per_cpu(vmclear_skipped, cpu) = 1;
-+#endif
-+}
-+
- static void __loaded_vmcs_clear(void *arg)
- {
- 	struct loaded_vmcs *loaded_vmcs = arg;
-@@ -972,8 +987,10 @@ static void __loaded_vmcs_clear(void *arg)
- 		return; /* vcpu migration can race with cpu offline */
- 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
- 		per_cpu(current_vmcs, cpu) = NULL;
-+	disable_vmclear_in_kdump(cpu);
- 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
- 	loaded_vmcs_init(loaded_vmcs);
-+	enable_vmclear_in_kdump(cpu);
- }
- 
- static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
-@@ -1491,8 +1508,10 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
- 		local_irq_disable();
-+		disable_vmclear_in_kdump(cpu);
- 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
- 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
-+		enable_vmclear_in_kdump(cpu);
- 		local_irq_enable();
- 
- 		/*
-@@ -2302,6 +2321,9 @@ static int hardware_enable(void *garbage)
- 		return -EBUSY;
- 
- 	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-+
-+	enable_vmclear_in_kdump(cpu);
-+
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
- 
- 	test_bits = FEATURE_CONTROL_LOCKED;
-@@ -2333,6 +2355,8 @@ static void vmclear_local_loaded_vmcss(void)
- 	list_for_each_entry_safe(v, n, &per_cpu(loaded_vmcss_on_cpu, cpu),
- 				 loaded_vmcss_on_cpu_link)
- 		__loaded_vmcs_clear(v);
-+
-+	disable_vmclear_in_kdump(cpu);
- }
- 
- 
-@@ -7230,6 +7254,10 @@ static int __init vmx_init(void)
- 	if (r)
- 		goto out3;
- 
-+#ifdef CONFIG_KEXEC
-+	crash_clear_loaded_vmcss = vmclear_local_loaded_vmcss;
-+#endif
-+
- 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
-@@ -7265,6 +7293,10 @@ static void __exit vmx_exit(void)
- 	free_page((unsigned long)vmx_io_bitmap_b);
- 	free_page((unsigned long)vmx_io_bitmap_a);
- 
-+#ifdef CONFIG_KEXEC
-+	crash_clear_loaded_vmcss = NULL;
-+#endif
-+
- 	kvm_exit();
- }
- 
--- 
-1.7.1
+Hi Aravinda,
+
+Had few questions.
+
+- Which file will contain all the rules?
+
+- What's the memory footprint of libeppic.a? Looks like this will be
+  linked statically with makedumpfile, and how much is the size bloat of
+  makedumpfile.
+
+- Is this supposed to work from kdump initramfs or it is supposed to be
+  used on already saved dump (later during post processing).
+
+  Given the fact that it does not reduce the size of core file
+  significantly, I would think that it is better to post process vmcore
+  to wipe out some symbols.
+
+Thanks
+Vivek 
+
+> 
+> Eppic is an interpreter that facilitates access to the symbol and type
+> information stored in an executable image or a dump file. Eppic defines
+> a language semantic which is similar to C. Eppic macros can be used to
+> specify rules/commands to erase data in an image file. makedumpfile
+> will interpret the rules/commands provided by eppic macros with the
+> help of eppic library and will suitably erase the required data in a
+> dump file. Eppic provides a lot of language constructs like conditional
+> statements, logical and arithmetic operators, nested loops, functions,
+> etc., to traverse nested lists and trees and conditionally erase data
+> in the dump file, enabling users to literally erase any data in the
+> dump file which is accessible through global symbols.
+> 
+> The series of patches integrates eppic with makdumpfile. These patches
+> require eppic library libeppic.a and eppic_api.h header file. The
+> libeppic.a library can be built from the eppic source code available
+> at the following URL:
+> 
+> http://code.google.com/p/eppic/
+> 
+> TODO:
+> 
+>   - Currently, works only for symbols in vmlinux, extend it to module
+>     symbols
+>   - Functionality support:
+>     - Implement the following callback functions.
+>       - apialignment
+>       - apigetenum
+>       - apigetdefs
+>     - Other functionalities specified in the code with TODO tag
+>   - Support specifying eppic macros in makedumpfile.conf file
+>   - Update erase info
+> 
+> Changelog from v1 to v2:
+> 
+>   - Re-based to v1.5.0
+>   - Introduced EPPIC=on in makefile, and hence eppic is now optional
+>   - Incorporated review comments from Atsushi
+>   - Minor formatting changes
+> 
+> Regards,
+> Aravinda
+> ---
+> 
+> Aravinda Prasad (7):
+>       Initialize and setup eppic
+>       makedumpfile and eppic interface layer
+>       Eppic call back functions to query a dump image
+>       Implement apigetctype call back function
+>       Implement apimember and apigetrtype call back functions
+>       Extend eppic built-in functions to include memset function
+>       Support fully typed symbol access mode
+> 
+> 
+>  Makefile          |    7 +
+>  dwarf_info.c      |  367 +++++++++++++++++++++++++++++++++++++++++++
+>  dwarf_info.h      |   18 ++
+>  erase_info.c      |   83 +++++++++-
+>  erase_info.h      |    5 +
+>  extension_eppic.c |  451 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  extension_eppic.h |   78 +++++++++
+>  makedumpfile.c    |    7 +
+>  makedumpfile.h    |    6 +
+>  9 files changed, 1018 insertions(+), 4 deletions(-)
+>  create mode 100644 extension_eppic.c
+>  create mode 100644 extension_eppic.h
+> 
+> -- 
+> Aravinda Prasad
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
