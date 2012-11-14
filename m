@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYZ4D-0005xJ-Bf
- for kexec@lists.infradead.org; Wed, 14 Nov 2012 09:15:30 +0000
-Message-ID: <50A360C7.2070904@cn.fujitsu.com>
-Date: Wed, 14 Nov 2012 17:13:43 +0800
+ id 1TYZIz-0007LM-LE
+ for kexec@lists.infradead.org; Wed, 14 Nov 2012 09:30:47 +0000
+Message-ID: <50A3645F.60302@cn.fujitsu.com>
+Date: Wed, 14 Nov 2012 17:29:03 +0800
 From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/2] KVM: make crash_clear_loaded_vmcss valid when
- loading kvm_intel module
-References: <50909B55.2070901@cn.fujitsu.com> <50909C35.9080702@cn.fujitsu.com>
- <33710E6CAA200E4583255F4FB666C4E20AACCA2F@G01JPEXMBYT03>
- <50920EB8.3020400@cn.fujitsu.com> <20121113212203.GA26386@amt.cnet>
-In-Reply-To: <20121113212203.GA26386@amt.cnet>
+Subject: [PATCH v4 0/2] x86: clear vmcss on all cpus when doing kdump if
+ necessary
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +17,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hatayama,
- Daisuke" <d.hatayama@jp.fujitsu.com>, Avi Kivity <avi@redhat.com>
+To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Avi Kivity <avi@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-5LqOIDIwMTLlubQxMeaciDE05pelIDA1OjIyLCBNYXJjZWxvIFRvc2F0dGkg5YaZ6YGTOgo+IE9u
-IFRodSwgTm92IDAxLCAyMDEyIGF0IDAxOjU1OjA0UE0gKzA4MDAsIHpoYW5neWFuZmVpIHdyb3Rl
-Ogo+PiDkuo4gMjAxMuW5tDEw5pyIMzHml6UgMTc6MDEsIEhhdGF5YW1hLCBEYWlzdWtlIOWGmemB
-kzoKPj4+Cj4+Pgo+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+Pj4gRnJvbToga2V4
-ZWMtYm91bmNlc0BsaXN0cy5pbmZyYWRlYWQub3JnCj4+Pj4gW21haWx0bzprZXhlYy1ib3VuY2Vz
-QGxpc3RzLmluZnJhZGVhZC5vcmddIE9uIEJlaGFsZiBPZiB6aGFuZ3lhbmZlaQo+Pj4+IFNlbnQ6
-IFdlZG5lc2RheSwgT2N0b2JlciAzMSwgMjAxMiAxMjozNCBQTQo+Pj4+IFRvOiB4ODZAa2VybmVs
-Lm9yZzsga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZzsgQXZpIEtpdml0eTsgTWFyY2Vsbwo+Pj4+
-IFRvc2F0dGkKPj4+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsga3ZtQHZnZXIu
-a2VybmVsLm9yZwo+Pj4+IFN1YmplY3Q6IFtQQVRDSCB2MyAyLzJdIEtWTTogbWFrZSBjcmFzaF9j
-bGVhcl9sb2FkZWRfdm1jc3MgdmFsaWQgd2hlbgo+Pj4+IGxvYWRpbmcga3ZtX2ludGVsIG1vZHVs
-ZQo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5m
-dWppdHN1LmNvbT4KPj4+Cj4+PiBbLi4uXQo+Pj4KPj4+PiBAQCAtNzIzMCw2ICs3MjMxLDEwIEBA
-IHN0YXRpYyBpbnQgX19pbml0IHZteF9pbml0KHZvaWQpCj4+Pj4gIAlpZiAocikKPj4+PiAgCQln
-b3RvIG91dDM7Cj4+Pj4KPj4+PiArI2lmZGVmIENPTkZJR19LRVhFQwo+Pj4+ICsJY3Jhc2hfY2xl
-YXJfbG9hZGVkX3ZtY3NzID0gdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3M7Cj4+Pj4gKyNlbmRp
-Zgo+Pj4+ICsKPj4+Cj4+PiBBc3NpZ25tZW50IGhlcmUgY2Fubm90IGNvdmVyIHRoZSBjYXNlIHdo
-ZXJlIE5NSSBpcyBpbml0aWF0ZWQgYWZ0ZXIgVk1YIGlzIG9uIGluIGt2bV9pbml0IGFuZCBiZWZv
-cmUgdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MgaXMgYXNzaWduZWQsIHRob3VnaCByYXJlIGJ1
-dCBjYW4gaGFwcGVuLgo+Pj4KPj4KPj4gQnkgc2F5aW5nICJWTVggaXMgb24gaW4ga3ZtIGluaXQi
-LCB5b3UgbWVhbiBrdm1faW5pdCBlbmFibGVzIHRoZSBWTVggZmVhdHVyZSBpbiB0aGUgbG9naWNh
-bCBwcm9jZXNzb3I/Cj4+IE5vLCBvbmx5IHRoZXJlIGlzIGEgdmNwdSB0byBiZSBjcmVhdGVkLCBr
-dm0gd2lsbCBlbmFibGUgdGhlIFZNWCBmZWF0dXJlLgo+Pgo+PiBJIHRoaW5rIHRoZXJlIGlzIG5v
-IGRpZmZlcmVuY2Ugd2l0aCB0aGlzIGFzc2lnbm1lbnQgYmVmb3JlIG9yIGFmdGVyIGt2bV9pbml0
-IGJlY2F1c2UgdGhlIHZtY3MgbGlua2VkCj4+IGxpc3QgbXVzdCBiZSBlbXB0eSBiZWZvcmUgdm14
-X2luaXQgaXMgZmluaXNoZWQuCj4gCj4gVGhlIGxpc3QgaXMgbm90IGluaXRpYWxpemVkIGJlZm9y
-ZSBoYXJkd2FyZV9lbmFibGUoKSwgdGhvdWdoLiBTaG91bGQKPiBtb3ZlIHRoZSBhc3NpZ25tZW50
-IGFmdGVyIHRoYXQuCj4gCj4gQWxzbywgaXQgaXMgcG9zc2libGUgdGhhdCB0aGUgbG9hZGVkX3Zt
-Y3NzX29uX2NwdSBsaXN0IGlzIGJlaW5nIG1vZGlmaWVkCj4gX3doaWxlXyBjcmFzaCBleGVjdXRl
-cyBzYXkgdmlhIE5NSSwgY29ycmVjdD8gSWYgdGhhdCBpcyB0aGUgY2FzZSwgYmV0dGVyCj4gZmxh
-ZyB0aGF0IHRoZSBsaXN0IGlzIHVuZGVyIG1hbmlwdWxhdGlvbiBzbyB0aGUgdm1jbGVhciBjYW4g
-YmUgc2tpcHBlZC4KPiAKClRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4KSW4gdGhlIG5ldyBwYXRj
-aHNldCwgSSBkaWRuJ3QgbW92ZSB0aGUgY3Jhc2hfY2xlYXJfbG9hZGVkX3ZtY3NzIGFzc2lnbm1l
-bnQuCkkgYWRkZWQgYSBuZXcgcGVyY3B1IHZhcmlhYmxlIHZtY2xlYXJfc2tpcHBlZCB0byBpbmRp
-Y2F0ZSBldmVyeXRoaW5nOgoxLiBCZWZvcmUgdGhlIGxvYWRlZF92bWNzc19vbl9jcHUgbGlzdCBp
-cyBpbml0aWFsaXplZCwgdm1jbGVhcl9za2lwcGVkIGlzIDEgYW5kCiAgIHRoaXMgbWVhbnMgaWYg
-dGhlIG1hY2hpbmUgY3Jhc2hlcyBhbmQgZG9pbmcga2R1bXAsIGNyYXNoX2NsZWFyX2xvYWRlZF92
-bWNzcwogICBzdGlsbCB3aWxsIG5vdCBiZSBjYWxsZWQuCjIuIElmIHRoZSBsb2FkZWRfdm1jc3Nf
-b25fY3B1IGxpc3QgaXMgdW5kZXIgbWFuaXB1bGF0aW9uLCB2bWNsZWFyX3NraXBwZWQgaXMKICAg
-c2V0IHRvIDEgYW5kIGFmdGVyIHRoZSBtYW5pcHVsYXRpb24gaXMgZmluaXNoZWQsIHRoZSB2YXJp
-YWJsZSBpcyBzZXQgdG8gMC4KMy4gQWZ0ZXIgYWxsIGxvYWRlZCB2bWNzcyBhcmUgdm1jbGVhcmVk
-LCB2bWNsZWFyX3NraXBwZWQgaXMgc2V0IHRvIDEuIFNvIHdlCiAgIG5lZWRuJ3QgcmVwZWF0IHRv
-IHZtY2xlYXIgbG9hZGVkIHZtY3NzIGluIGtkdW1wIHBhdGguCgpQbGVhc2UgcmVmZXIgdG8gdGhl
-IG5ldyB2ZXJzaW9uIG9mIHRoZSBwYXRjaHNldCBJIHNlbnQuIElmIHlvdSBoYXZlIGFueSBzdWdn
-ZXN0aW9ucywgdGhhdCdsbCBiZSBoZWxwZnVsLgoKVGhhbmtzClpoYW5nCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
-eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9rZXhlYwo=
+Currently, kdump just makes all the logical processors leave VMX operation by
+executing VMXOFF instruction, so any VMCSs active on the logical processors may
+be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
+in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
+executing the VMXOFF instruction.
+
+The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
+executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
+vmcore updated and non-corrupted.
+
+Changelog from v3 to v4:
+1. add a new percpu variable vmclear_skipped to skip
+   vmclear in kdump in some conditions.
+
+Changelog from v2 to v3:
+1. remove unnecessary conditions in function
+   cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
+
+Changelog from v1 to v2:
+1. remove the sysctl and clear VMCSs unconditionally.
+
+Zhang Yanfei (2):
+  x86/kexec: VMCLEAR vmcss on all cpus if necessary
+  KVM: set/unset crash_clear_loaded_vmcss and vmclear_skipped in
+    kvm_intel module
+
+ arch/x86/include/asm/kexec.h |    3 +++ 
+ arch/x86/kernel/crash.c      |   32 ++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx.c           |   32 ++++++++++++++++++++++++++++++++
+ 3 files changed, 67 insertions(+), 0 deletions(-)
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
