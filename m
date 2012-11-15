@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TZ1nT-0000pT-53
- for kexec@lists.infradead.org; Thu, 15 Nov 2012 15:56:09 +0000
-Date: Thu, 15 Nov 2012 10:55:57 -0500
+ id 1TZ1wH-00027n-0e
+ for kexec@lists.infradead.org; Thu, 15 Nov 2012 16:05:14 +0000
+Date: Thu, 15 Nov 2012 11:04:56 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Message-ID: <20121115155557.GF2529@redhat.com>
-References: <50A4E524.8020702@linux.vnet.ibm.com>
- <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
+Subject: Re: [PATCH v2 1/7] Initialize and setup eppic
+Message-ID: <20121115160456.GG2529@redhat.com>
+References: <20121108133554.28410.99763.stgit@aravinda>
+ <20121108133804.28410.99166.stgit@aravinda>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
+In-Reply-To: <20121108133804.28410.99166.stgit@aravinda>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +24,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Aravinda Prasad <aravinda@linux.vnet.ibm.com>, buendgen@de.ibm.com
+To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
 
-On Thu, Nov 15, 2012 at 09:27:45AM -0500, Dave Anderson wrote:
+On Thu, Nov 08, 2012 at 07:08:04PM +0530, Aravinda Prasad wrote:
 
 [..]
-> > Yes, makedumpfile needs to be linked against eppic library for filtering
-> > data and this will increase makedumpfile size and initramfs size too.
-> 
-> Just to clarify -- your example indicates that the vmlinux file is required
-> for this facility to work, correct?
+> diff --git a/Makefile b/Makefile
+> index d5fc09e..3ac8e63 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -55,6 +55,13 @@ LIBS := -llzo2 $(LIBS)
+>  CFLAGS += -DUSELZO
+>  endif
 >  
-> > makedumpfile -c -d 31 -x vmlinux --eppic key.c vmcore filtered_vmcore
-> 
-> Clearly distros won't be putting the vmlinux file in the initramfs -- that's
-> the whole reasoning behind vmcoreinfo.  So the 99% of users that aren't
-> interested in scrubbing will have to pay the penalty of the larger makedumpfile
-> binary.
+> +ifeq ($(EPPIC), on)
+> +LIBS := -leppic -ltinfo $(LIBS)
 
-That's a good point Dave. We will never put debug compiled vmlinux in 
-initramfs. Following two alternatives come to my mind.
-
-- Either makedumpfile provides some kind of library to parse/read/write
-  dump files and we can write another stand alone utility for scrubbing
-  dump files (say, scrub-vmcore),  and it can link against makedumpfile
-  libraries to take advantage of existing code.
-
-- Or, we just identify what we want to scrube and make that code part
-  of makedumpfile. Export relevant data structures from kernel using
-  vmcoreinfo.
-
-I prefer to keep things simple and like second option better.
+So you also pull in libarary "tinfo". Does that 1MB number include this
+too? What's the total size bloat for makedumpfile once we compile with
+EPPIC on.
 
 Thanks
 Vivek
