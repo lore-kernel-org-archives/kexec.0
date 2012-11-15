@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TYrib-0005jJ-L2
- for kexec@lists.infradead.org; Thu, 15 Nov 2012 05:10:26 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121101145225.GB10269@srcf.ucam.org>
- <20121102132318.GA3300@redhat.com> <87boffd727.fsf@xmission.com>
- <20121105180353.GC28720@redhat.com> <87mwyv96mn.fsf@xmission.com>
- <20121106193419.GH4548@redhat.com> <87k3tynvc0.fsf@xmission.com>
- <20121108194050.GB27586@redhat.com>
- <20121108194522.GC27586@redhat.com> <87vcdfn6y2.fsf@xmission.com>
- <20121109143938.GD4842@redhat.com>
-Date: Wed, 14 Nov 2012 21:09:51 -0800
-In-Reply-To: <20121109143938.GD4842@redhat.com> (Vivek Goyal's message of
- "Fri, 9 Nov 2012 09:39:38 -0500")
-Message-ID: <87ehjvfo4g.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: Kdump with signed images
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TYrsw-0005me-Ll
+ for kexec@lists.infradead.org; Thu, 15 Nov 2012 05:21:09 +0000
+Date: Thu, 15 Nov 2012 14:20:12 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 00/10] Support free page filtering looking up mem_map array
+Message-Id: <20121115142012.b8b58d509efbe7e2e7d995c3@mxc.nes.nec.co.jp>
+In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20AB0309E@G01JPEXMBYT03>
+References: <20121108094609.30421.40556.stgit@localhost6.localdomain6>
+ <20121113165608.b561e597fefb6bc3f2bbd5de@mxc.nes.nec.co.jp>
+ <33710E6CAA200E4583255F4FB666C4E20AB008A2@G01JPEXMBYT03>
+ <33710E6CAA200E4583255F4FB666C4E20AB00A09@G01JPEXMBYT03>
+ <20121114163106.3a5efd62d63535d078a2686d@mxc.nes.nec.co.jp>
+ <33710E6CAA200E4583255F4FB666C4E20AB0309E@G01JPEXMBYT03>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,89 +27,180 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Roberto Sassu <roberto.sassu@polito.it>, Dmitry Kasatkin <dmitry.kasatkin@intel.com>, Kees Cook <keescook@chromium.org>, Peter Jones <pjones@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, Matthew Garrett <mjg@redhat.com>, Dave Young <dyoung@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+Hello HATAYAMA-san,
 
-> On Thu, Nov 08, 2012 at 01:03:17PM -0800, Eric W. Biederman wrote:
->> Vivek Goyal <vgoyal@redhat.com> writes:
->> 
->> > On Thu, Nov 08, 2012 at 02:40:50PM -0500, Vivek Goyal wrote:
->> >> On Tue, Nov 06, 2012 at 03:51:59PM -0800, Eric W. Biederman wrote:
->> >> 
->> >> [..]
->> >> 
->> >> Thnking more about executable signature verification, I have another question.
->> >> 
->> >> While verifyign the signature, we will have to read the whole executable
->> >> in memory. That sounds bad as we are in kernel mode and will not be killed
->> >> and if sombody is trying to execute a malformed exceptionally large
->> >> executable, system will start killing other processess. We can potentially
->> >> lock all the memory in kernel just by trying to execute a signed huge
->> >> executable. Not good.
->> >> 
->> >
->> > Also, even if we try to read in whole executable, can't an hacker modify
->> > pages in swap disk and then they will be faulted back in and bingo hacker
->> > is running its unsigned code. (assuming root has been compromised otherwise
->> > why do we have to do all this exercise).
->> 
->> You make a decent case for an implicit mlockall(MCL_FUTURE) being
->> required of signed executables, that are going to be granted privileges
->> based on signature verification.
->
-> implicity lockall for signed executables sounds reasonable to avoid the
-> swap hack.
->
->> 
->> As for size if the executable won't fit in memory, there is no point in
->> checking the signature.
->
-> Well I am worried about malformed executables. One can sign a huge
-> executable (which is never meant to run successfully) and cause all
-> kind of memory issues. 
+On Thu, 15 Nov 2012 01:55:04 +0000
+"Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com> wrote:
 
-Good point what to do with executables with invalid sigantures.  From
-another reply it sounded like one of the bits of IMA/EVM had already
-addressed part of that.
+> > -----Original Message-----
+> > From: Atsushi Kumagai [mailto:kumagai-atsushi@mxc.nes.nec.co.jp]
+> > Sent: Wednesday, November 14, 2012 4:31 PM
+> [...]
+> > On Tue, 13 Nov 2012 10:03:37 +0000
+> > "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com> wrote:
+> > 
+> > > > -----Original Message-----
+> > > > From: kexec-bounces@lists.infradead.org
+> > > > [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Hatayama,
+> > Daisuke
+> > > [..]>
+> > > > > -----Original Message-----
+> > > > > From: Atsushi Kumagai [mailto:kumagai-atsushi@mxc.nes.nec.co.jp]
+> > > > > Sent: Tuesday, November 13, 2012 4:56 PM
+> [...]
+> > It's basically good, but more fix is needed for setup_page_is_buddy().
+> > 
+> >    3706 static void
+> >    3707 setup_page_is_buddy(void)
+> >    3708 {
+> >    3709         if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
+> >    3710                 if (SIZE(pageflags) == NOT_FOUND_STRUCTURE)
+> >    3711                         info->page_is_buddy = page_is_buddy_v1;
+> > 
+> > In case that none of the values needed for mem_map array logic is given,
+> > the condition on line 3710 will be met regardless of kernel version.
+> > As a result, invalid logic will be used and freelist logic isn't used
+> > because page_is_buddy isn't NULL.
+> > 
+> > Additionally, the case above will be happen when using makedumpfile-1.5.0
+> > for recent kernels, which doesn't export necessary symbols.
+> > 
+> > So, I think that we need to change the statement on line 3710, but I have
+> > no idea without to check kernel version. If you have better way, I will
+> > adopt it.
+> > 
+> 
+> I'll first hard code PAGE_BUDDY_MAPCOUNT_VALUE for v2.6.38 and later. This is
+> a workaround until it is exported from kernel's VMCOREINFO. At the same time
+> I'll check NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) first and then SIZE(pageflags) in
+> setup_page_is_buddy(). By this, we can avoid the issue that page_is_buddy_v1
+> is wrongly used on recent kernels.
+> 
+> The remaining problematic kernel versions are the ones where:
+> 
+> - PG_buddy is not present, and
+> - enum pageflags is present but
+> - enum pageflags is not exported from VMCOREINFO.
+> 
+> These are exactly from v2.6.27 to 2.6.37. I'll cover this range by hard coding
+> PG_buddy. One concern was the fact that value of PG_buddy in this range varies
+> depending on CONFIG_PAGEFLAGS_EXTENDED. But as below, this config is not relevant
+> to the architectures supported by makedumpfile. It's no problem.
+> 
+> BTW, PAGE_BUDDY_MAPCOUNT_VALUE is now defined as macro. This is not useful
+> since we cannot get its value from vmlinux. I'll make a patch to redefine it
+> as enumeration later. It's originally signed integer, -128, so I think it's no
+> problem.
+> 
+> $ git grep ".*CONFIG_PAGEFLAGS_EXTEND.*" ./arch/
+> arch/um/defconfig:CONFIG_PAGEFLAGS_EXTENDED=y
+> arch/xtensa/configs/iss_defconfig:CONFIG_PAGEFLAGS_EXTENDED=y
+> arch/xtensa/configs/s6105_defconfig:CONFIG_PAGEFLAGS_EXTENDED=y
+> 
+> Next diff shows the idea I explain above. I'll add the same explanation in codes as
+> comments. The assumption behind these seems complicated and maintainance would be
+> difficult without any comments explaining why these are being done this way.
 
-> Can we first look at the signature, decrypt it using certificates in
-> kernel ring, and if we find out that executable was signed by any
-> of the certificates, only then we go on to read in whole executable
-> and try to calculate the digest. May be at the time of signing we can put
->  a string, say "LINUX", along with digest and then sing/encrypt it. Upon
-> decryption we can check if LINUX is there and if yes, we know it was
-> signed by the certifcate loaded in kernel and then go on to load the
-> full executable and calculate digest.
+I think it's OK on the logic of selection for page_is_buddy_vX().
+But there remain some cases where page_is_buddy_vX() doesn't work correctly
+because OFFSET(page.private) and OFFSET(page._mapcount) do not exist.
+And it's difficult to hard code for them.
 
-> Not sure if above is doable or not but if it is, it might reduce the
-> risk significantly as we will not try to integrity verify executables
-> not signed by genuine certificates.
+So I think setup_page_is_buddy() should be changed like below:
 
-Known plaintext in the signed blob should allow that.  I would be very
-careful with that because it sounds like the kind of thing that opens
-you up to plain-text attacks, but that is mostly my parania and lack of
-experience speaking.
+  static void
+  setup_page_is_buddy(void)
+  {
+          if (OFFSET(page.private) == NOT_FOUND_STRUCTURE)
+                  info->page_is_buddy = NULL;
+          else if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
+                  if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER) {
+                          if (OFFSET(page._mapcout) != NOT_FOUND_STRUCTURE) {
+                                  info->page_is_buddy = page_is_buddy_v3;
+                                  return;
+                          }
+                  } else if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
+                          info->page_is_buddy = page_is_buddy_v1;
+                          return;
+                  }
+          } else {
+                  info->page_is_buddy = page_is_buddy_v2;
+                  return;
+          }
+          
+          DEBUG_MSG("Can't select page_is_buddy handler; "
+                    "follow freelist instead of mem_map.\n");
 
->> It should be fairly straight forward to make the signature checking
->> process preemptable and killable.
->
-> hmm..., not sure how to do this. Will have to read more code to understand
-> process killing and see what can I do this while I am in kernel mode
-> and I possibly might have done kernel memory allocations using
-> vmalloc()/kmalloc() etc.
+  }
 
-Well basically it is matter of using the killable version of waits
-returning an error code as you unwind, and eventually either
-force_sig(SIGKILL) or do_exit().
+Additionally, I found a small mistake, please see below:
 
-There are a lot of times where you can support SIGKILL and just cause
-the process to exit where you can't handle signals.
+> 
+> $ git diff
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 98eb640..a1a39d5 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -1215,10 +1215,24 @@ get_value_for_old_linux(void)
+>                 NUMBER(PG_swapcache) = PG_swapcache_ORIGINAL;
+>         if (NUMBER(PG_slab) == NOT_FOUND_NUMBER)
+>                 NUMBER(PG_slab) = PG_slab_ORIGINAL;
+> -       if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER
+> -           && info->kernel_version >= KERNEL_VERSION(2, 6, 17)
+> -           && info->kernel_version <= KERNEL_VERSION(2, 6, 26))
+> -               NUMBER(PG_buddy) = PG_buddy_v2_6_17_to_v2_6_26;
+> +       if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
+> +               if (info->kernel_version >= KERNEL_VERSION(2, 6, 17)
+> +                   && info->kernel_version <= KERNEL_VERSION(2, 6, 26))
+> +                       NUMBER(PG_buddy) = PG_buddy_v2_6_17_to_v2_6_26;
+> +               if (info->kernel_version >= KERNEL_VERSION(2, 6, 27)
+> +                   && info->kernel_version >= KERNEL_VERSION(2, 6, 37))
+                                             ^^^
+                                              should be '<='
 
+Thanks
+Atsushi Kumagai
 
-Eric
-
+> +                       NUMBER(PG_buddy) = 18;
+> +       }
+> +       if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) == NOT_FOUND_NUMBER) {
+> +               if (info->kernel_version == KERNEL_VERSION(2, 6, 38))
+> +                       NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) = -2;
+> +               if (info->kernel_version >= KERNEL_VERSION(2, 6, 39))
+> +                       NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) = -128;
+> +       }
+> +       if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
+> +               if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
+> +                       SIZE(pageflags) = 4;
+> +       }
+>         return TRUE;
+>  }
+> 
+> @@ -3725,13 +3739,13 @@ static void
+>  setup_page_is_buddy(void)
+>  {
+>         if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
+> -               if (SIZE(pageflags) == NOT_FOUND_STRUCTURE)
+> -                       info->page_is_buddy = page_is_buddy_v1;
+> -               else if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
+> +               if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
+>                         info->page_is_buddy = page_is_buddy_v3;
+> +               else if (SIZE(pageflags) == NOT_FOUND_STRUCTURE)
+> +                       info->page_is_buddy = page_is_buddy_v1;
+>                 else {
+> -                       MSG("Can't select page_is_buddy handler; "
+> -                           "filtering free pages is disabled.\n");
+> +                       DEBUG_MSG("Can't select page_is_buddy handler; "
+> +                                 "follow freelist instead of mem_map.\n");
+>                 }
+>         } else
+>                 info->page_is_buddy = page_is_buddy_v2;
+> 
+> Thanks.
+> HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
