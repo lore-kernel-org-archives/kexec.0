@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TZ0QR-0002HE-2A
- for kexec@lists.infradead.org; Thu, 15 Nov 2012 14:28:16 +0000
-Date: Thu, 15 Nov 2012 09:27:45 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
-In-Reply-To: <50A4E524.8020702@linux.vnet.ibm.com>
+ id 1TZ1h0-0000Iy-UV
+ for kexec@lists.infradead.org; Thu, 15 Nov 2012 15:49:28 +0000
+Date: Thu, 15 Nov 2012 10:49:14 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Message-ID: <20121115154914.GE2529@redhat.com>
+References: <20121108133554.28410.99763.stgit@aravinda>
+ <20121114145445.GC20215@redhat.com>
+ <50A3CFAD.6090008@linux.vnet.ibm.com>
+ <20121114175304.GK20215@redhat.com>
+ <50A4E524.8020702@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50A4E524.8020702@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,10 +28,14 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Vivek Goyal <vgoyal@redhat.com>, buendgen@de.ibm.com
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, buendgen@de.ibm.com
 
+On Thu, Nov 15, 2012 at 06:20:44PM +0530, Aravinda Prasad wrote:
 
------ Original Message -----
+[..]
+> > Can you give some details about how does it work and what's the
+> > correlation with makedumpfile.
+> 
 > 
 > struct key in include/linux/key.h holds "authentication token"/"access
 > credential"/"keyring". Suppose these entries should be scrubbed from the
@@ -69,54 +79,34 @@ Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LCh
 > 
 > The data can be cleared by specifying:
 > makedumpfile -c -d 31 -x vmlinux --eppic key.c vmcore filtered_vmcore
->
+> 
 > makedumpfile with the help of eppic will interpret the macro key.c,
 > traverses all the hash chains and erases paylod.value of struct key.
-> >>>
+
+Ok, are these the only places where key is. Can a copy of it exist in
+some other buffers? We don't clear these.
+
+Also, if key is the only issue, why not just write this logic in
+makedumpfile and provide another option, --clear-kernel-keys.
+
+Why to introduce such generic scheme.
+
+[..]
 > >>> - What's the memory footprint of libeppic.a? Looks like this will be
 > >>>   linked statically with makedumpfile, and how much is the size bloat of
 > >>>   makedumpfile.
 > >>
+> >>
 > >> Memory footprint of libeppic.a is around 1MB. Yes, this will be
 > >> statically linked to makedumpfile. Users should specify EPPIC=on while
 > >> building the makedumpfile and hence linking libeppic.a is optional
-> > 
-> > How would distributions handle it. Will we continue to build makedumpfile
-> > without EPPIC=on. Any increase in initramfs size increase is frowned upon
-> > in general.
-> 
-> We would like distributions to build makedumpfile with EPPIC=on.
-> 
-> I am not sure, but do you think ~1MB is too much increase to go with?
->
-> >>>
-> >>> - Is this supposed to work from kdump initramfs or it is supposed to be
-> >>>   used on already saved dump (later during post processing).
-> >>
-> >>
-> >> For the time being, it is only during post processing.
-> > 
-> > Again, how distributions will handle it. If it is being integrated
-> > makedumpfile, as opposed to an stand alone utility, that means it
-> > makedumpfile needs to link against this library so that somebody can
-> > later filter out the symbols. And that means initramfs size bloat
-> > too?
-> 
-> Yes, makedumpfile needs to be linked against eppic library for filtering
-> data and this will increase makedumpfile size and initramfs size too.
 
-Just to clarify -- your example indicates that the vmlinux file is required
-for this facility to work, correct?
- 
-> makedumpfile -c -d 31 -x vmlinux --eppic key.c vmcore filtered_vmcore
+1MB bloat is significant given the fact that we reserve only 128MB for
+kdump kernel. Hence we need to review the benefits of this bloat very
+carefully.
 
-Clearly distros won't be putting the vmlinux file in the initramfs -- that's
-the whole reasoning behind vmcoreinfo.  So the 99% of users that aren't
-interested in scrubbing will have to pay the penalty of the larger makedumpfile
-binary.
-
-Dave
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
