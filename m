@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TZN2T-0001mu-Is
- for kexec@lists.infradead.org; Fri, 16 Nov 2012 14:37:03 +0000
-Date: Fri, 16 Nov 2012 09:36:49 -0500
+ id 1TZNOi-000449-GQ
+ for kexec@lists.infradead.org; Fri, 16 Nov 2012 15:00:01 +0000
+Date: Fri, 16 Nov 2012 09:59:51 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Message-ID: <20121116143649.GA4515@redhat.com>
-References: <50A4E524.8020702@linux.vnet.ibm.com>
- <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
- <20121115155557.GF2529@redhat.com>
- <50A60CF2.6010309@linux.vnet.ibm.com>
+Message-ID: <20121116145951.GB4515@redhat.com>
+References: <20121108133554.28410.99763.stgit@aravinda>
+ <20121114145445.GC20215@redhat.com>
+ <50A3CFAD.6090008@linux.vnet.ibm.com>
+ <20121114175304.GK20215@redhat.com>
+ <50A4E524.8020702@linux.vnet.ibm.com>
+ <20121115154914.GE2529@redhat.com>
+ <50A61F37.7030205@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <50A60CF2.6010309@linux.vnet.ibm.com>
+In-Reply-To: <50A61F37.7030205@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,42 +30,44 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, buendgen@de.ibm.com
 
-On Fri, Nov 16, 2012 at 03:22:50PM +0530, Aravinda Prasad wrote:
+On Fri, Nov 16, 2012 at 04:40:47PM +0530, Aravinda Prasad wrote:
+
+[..]
+> > Ok, are these the only places where key is. Can a copy of it exist in
+> > some other buffers? We don't clear these.
 > 
 > 
-> On 2012-11-15 21:25, Vivek Goyal wrote:
+> I don't think a copy exist in other places
+
+I am wondering how does ssh work. User's private key is stored in .ssh/
+and when authentication with server is happening then we must be signing
+something with that private key and most likely it will be in some
+buffer somewhere (user space buffer).
+
 > 
-> > On Thu, Nov 15, 2012 at 09:27:45AM -0500, Dave Anderson wrote:
 > > 
-> > [..]
-> >>> Yes, makedumpfile needs to be linked against eppic library for filtering
-> >>> data and this will increase makedumpfile size and initramfs size too.
-> >>
-> >> Just to clarify -- your example indicates that the vmlinux file is required
-> >> for this facility to work, correct?
-> >>  
-> >>> makedumpfile -c -d 31 -x vmlinux --eppic key.c vmcore filtered_vmcore
-> >>
-> >> Clearly distros won't be putting the vmlinux file in the initramfs -- that's
-> >> the whole reasoning behind vmcoreinfo.  So the 99% of users that aren't
-> >> interested in scrubbing will have to pay the penalty of the larger makedumpfile
-> >> binary.
+> > Also, if key is the only issue, why not just write this logic in
+> > makedumpfile and provide another option, --clear-kernel-keys.
 > > 
-> > That's a good point Dave. We will never put debug compiled vmlinux in 
-> > initramfs. Following two alternatives come to my mind.
+> > Why to introduce such generic scheme.
 > 
 > 
-> As I mentioned, we don't need vmlinux in initramfs as filtering is done
-> during post processing only.
+> key is not the only issue, it was just an example. There could be other
+> things as well (data in socket buffers, device driver buffers, etc)
+> which customers may consider sensitive/private and are interested in
+> scrubbing.
+> 
+> Also this is an extension to the already existing generic solution
+> implemented in makedumpfile, where rules can be specified using --config
+> option. This extension is built on the existing infrastructure and
+> provides a more flexible and powerful way to specify the data to be
+> scrubbed. For eg, scrubbing the keyring data mentioned in one of my
+> previous mails would not be possible with --config option.
 
-You are missing the point. The point is that despite the fact that
-scrubbing will never be done from initramfs, all the users will pay
-penalty for increased makedumpfile size.
-
-So why not write a separate tool (scrub-vmcore) so that makedumpfile
-users don't pay the bloated size penatly.
+I am not against building infrastructure to scrub vmcore. I am only
+concerned about size bloat of makedumpfile.
 
 Thanks
 Vivek
