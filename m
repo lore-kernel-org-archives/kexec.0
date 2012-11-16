@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZUxm-0005n6-Cg
- for kexec@lists.infradead.org; Fri, 16 Nov 2012 23:04:45 +0000
+ id 1TZUxn-0005nU-2X
+ for kexec@lists.infradead.org; Fri, 16 Nov 2012 23:04:46 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH 7/8] x86: put ramdisk high for 64bit bzImage
-Date: Fri, 16 Nov 2012 15:04:26 -0800
-Message-Id: <1353107067-14564-8-git-send-email-yinghai@kernel.org>
+Subject: [PATCH 8/8] x86: put 64bit bzImage high
+Date: Fri, 16 Nov 2012 15:04:27 -0800
+Message-Id: <1353107067-14564-9-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
 References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,60 +25,134 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-only do that for 64bit bzImage, and will fall back to low if fail to get high.
+also need to make sure pass right 64bit start address to go there directly later.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/i386/x86-linux-setup.c |   30 ++++++++++++++++++++++--------
- 1 files changed, 22 insertions(+), 8 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c |   53 ++++++++++++++++++++++++++++++++++++--
+ 1 files changed, 50 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 53d9df9..b0e6119 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -69,20 +69,34 @@ void setup_linux_bootloader_parameters(
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 6998587..3e705ca 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -18,8 +18,10 @@
+  */
+ 
+ #define _GNU_SOURCE
++#include <stddef.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <limits.h>
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <sys/types.h>
+@@ -35,6 +37,7 @@
+ #include "../../kexec-elf.h"
+ #include "../../kexec-syscall.h"
+ #include "kexec-x86.h"
++#include "../x86_64/kexec-x86_64.h"
+ #include "x86-linux-setup.h"
+ #include "crashdump-x86.h"
+ #include <arch/options.h>
+@@ -111,12 +114,15 @@ int do_bzImage_load(struct kexec_info *info,
+ 	size_t size;
+ 	int kern16_size;
+ 	unsigned long setup_base, setup_size;
++	struct entry64_regs regs64;
+ 	struct entry32_regs regs32;
+ 	struct entry16_regs regs16;
+ 	unsigned int relocatable_kernel = 0;
+ 	unsigned long kernel32_load_addr;
+ 	char *modified_cmdline;
+ 	unsigned long cmdline_end;
++	unsigned long code64_start_offset = 0;
++	unsigned long kernel64_load_addr = 0;
+ 
+ 	/*
+ 	 * Find out about the file I am about to load.
+@@ -154,6 +160,13 @@ int do_bzImage_load(struct kexec_info *info,
+ 		dbgprintf("bzImage is relocatable\n");
  	}
  
- 	/* Load the initrd if we have one */
-+	initrd_base = 0;
- 	if (initrd_buf) {
--		initrd_base = add_buffer(info,
--			initrd_buf, initrd_size, initrd_size,
--			4096, INITRD_BASE, initrd_addr_max, -1);
-+		if (real_mode->protocol_version >= 0x020c &&
-+		    real_mode->code64_start_offset) {
-+			initrd_base = add_buffer(info,
-+				initrd_buf, initrd_size, initrd_size,
-+				4096, 1UL<<32, ULONG_MAX, -1);
-+			if (!initrd_base)
-+				initrd_base = add_buffer(info,
-+					initrd_buf, initrd_size, initrd_size,
-+					4096, 1UL<<30, 1UL<<32, -1);
-+		}
-+		if (!initrd_base)
-+			initrd_base = add_buffer(info,
-+				initrd_buf, initrd_size, initrd_size,
-+				4096, INITRD_BASE, initrd_addr_max, -1);
- 		dbgprintf("Loaded initrd at 0x%lx size 0x%lx\n", initrd_base,
- 			initrd_size);
--	} else {
--		initrd_base = 0;
-+	} else
- 		initrd_size = 0;
--	}
- 
- 	/* Ramdisk address and size */
--	real_mode->initrd_start = initrd_base;
--	real_mode->initrd_size  = initrd_size;
-+	real_mode->initrd_start = initrd_base & 0xffffffff;
-+	real_mode->initrd_size  = initrd_size & 0xffffffff;
-+	if ((initrd_base + initrd_size) > (1ULL<<32)) {
-+		real_mode->ext_ramdisk_image = initrd_base >> 32;
-+		real_mode->ext_ramdisk_size  = initrd_size >> 32;
++	if (setup_header.protocol_version >= 0x020C) {
++		code64_start_offset = setup_header.code64_start_offset;
++		if (code64_start_offset)
++			dbgprintf("code64_start_offset: 0x%lx\n",
++					 code64_start_offset);
 +	}
++
+ 	/* Can't use bzImage for crash dump purposes with real mode entry */
+ 	if((info->kexec_flags & KEXEC_ON_CRASH) && real_mode_entry) {
+ 		fprintf(stderr, "Can't use bzImage for crash dump purposes"
+@@ -250,7 +263,26 @@ int do_bzImage_load(struct kexec_info *info,
+ 				kernel32_max_addr = real_mode->initrd_addr_max;
+ 		}
  
- 	/* The location of the command line */
- 	/* if (real_mode_base == 0x90000) { */
+-		kernel32_load_addr = add_buffer(info, kernel + kern16_size,
++		if (!real_mode_entry && code64_start_offset) {
++			/* align to 1G to avoid cross the PUD_SIZE boundary */
++			kernel64_load_addr = add_buffer(
++						info, kernel + kern16_size,
++						size, size, 1UL<<30,
++						1UL<<32, ULONG_MAX,
++						-1);
++			if (!kernel64_load_addr)
++				kernel64_load_addr = add_buffer(
++						info, kernel + kern16_size,
++						size, size, 1UL<<30,
++						1UL<<30, 1UL<<32,
++						-1);
++			if (kernel64_load_addr)
++				kernel64_load_addr += code64_start_offset;
++		}
++
++		if (!kernel64_load_addr)
++			kernel32_load_addr = add_buffer(
++						info, kernel + kern16_size,
+ 						size, size, kern_align,
+ 						0x100000, kernel32_max_addr,
+ 						1);
+@@ -260,8 +292,11 @@ int do_bzImage_load(struct kexec_info *info,
+ 		add_segment(info, kernel + kern16_size, size,
+ 				kernel32_load_addr, size);
+ 	}
+-		
+-	dbgprintf("Loaded 32bit kernel at 0x%lx\n", kernel32_load_addr);
++
++	if (kernel64_load_addr)
++		dbgprintf("Loaded 64bit kernel at 0x%lx\n", kernel64_load_addr);
++	else
++		dbgprintf("Loaded 32bit kernel at 0x%lx\n", kernel32_load_addr);
+ 
+ 	/* Tell the kernel what is going on */
+ 	setup_linux_bootloader_parameters(info, real_mode, setup_base,
+@@ -271,6 +306,16 @@ int do_bzImage_load(struct kexec_info *info,
+ 	/* Get the initial register values */
+ 	elf_rel_get_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
+ 	elf_rel_get_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
++	if (kernel64_load_addr) {
++		elf_rel_get_symbol(&info->rhdr, "entry64_regs", &regs64, sizeof(regs64));
++		regs64.rbx = 0;           /* Bootstrap processor */
++		regs64.rsi = setup_base;  /* Pointer to the parameters */
++		regs64.rip = kernel64_load_addr; /* the entry point */
++		regs64.rsp = elf_rel_get_addr(&info->rhdr, "stack_end"); /* Stack, unused */
++		elf_rel_set_symbol(&info->rhdr, "entry64_regs", &regs64, sizeof(regs64));
++
++		goto cmd_line;
++	}
+ 	/*
+ 
+ 	 * Initialize the 32bit start information.
+@@ -320,6 +365,8 @@ int do_bzImage_load(struct kexec_info *info,
+ 	elf_rel_set_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
+ 	elf_rel_set_symbol(&info->rhdr, "entry16_debug_regs", &regs16, sizeof(regs16));
+ 	elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
++
++cmd_line:
+ 	cmdline_end = setup_base + kern16_size + command_line_len - 1;
+ 	elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
+ 			   sizeof(unsigned long));
 -- 
 1.7.7
 
