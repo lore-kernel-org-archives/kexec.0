@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZUxl-0005lu-Bx
+ id 1TZUxl-0005lt-Am
  for kexec@lists.infradead.org; Fri, 16 Nov 2012 23:04:42 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH 0/8] kexec: put bzImage and ramdisk above 4G for x86 64bit
-Date: Fri, 16 Nov 2012 15:04:19 -0800
-Message-Id: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
+Subject: [PATCH 1/8] Add min/max macro
+Date: Fri, 16 Nov 2012 15:04:20 -0800
+Message-Id: <1353107067-14564-2-git-send-email-yinghai@kernel.org>
+In-Reply-To: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
+References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,34 +25,56 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-Now we have limit kdump reseved under 896M, because kexec has the limitation.
-and also bzImage need to stay under 4g.
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+---
+ kexec/arch/ppc/include/types.h |   12 ------------
+ kexec/kexec.h                  |   12 ++++++++++++
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-kernel parts changes could be found at:
-        git://git.kernel.org/pub/scm/linux/kernel/git/yinghai/linux-yinghai.git for-x86-boot
-
-here patches are for kexec tools to load bzImage and ramdisk high acccording
-to new added boot header fields.
-
-Yinghai Lu (8):
-  Add min/max macro
-  x86: add boot header member for version 2.12
-  add mem64_min/max control
-  Move out mem_min/max checking in locate_hole
-  seperate checking 64bit mem range
-  debug print out for add_buf
-  x86: put ramdisk high for 64bit bzImage
-  x86: put 64bit bzImage high
-
- include/x86/x86-linux.h           |   20 ++++++++++-
- kexec/add_buffer.c                |    9 ++++-
- kexec/arch/i386/kexec-bzImage.c   |   53 ++++++++++++++++++++++++++--
- kexec/arch/i386/x86-linux-setup.c |   32 ++++++++++++-----
- kexec/arch/ppc/include/types.h    |   12 ------
- kexec/kexec.c                     |   69 +++++++++++++++++++++++++++++-------
- kexec/kexec.h                     |   21 +++++++++++-
- 7 files changed, 175 insertions(+), 41 deletions(-)
-
+diff --git a/kexec/arch/ppc/include/types.h b/kexec/arch/ppc/include/types.h
+index 31393d1..3773cda 100644
+--- a/kexec/arch/ppc/include/types.h
++++ b/kexec/arch/ppc/include/types.h
+@@ -12,16 +12,4 @@ typedef short			s16;
+ typedef int			s32;
+ typedef long long		s64;
+ 
+-#define min(x,y) ({ \
+-	typeof(x) _x = (x);	\
+-	typeof(y) _y = (y);	\
+-	(void) (&_x == &_y);	\
+-	_x < _y ? _x : _y; })
+-
+-#define max(x,y) ({ \
+-	typeof(x) _x = (x);	\
+-	typeof(y) _y = (y);	\
+-	(void) (&_x == &_y);	\
+-	_x > _y ? _x : _y; })
+-
+ #endif /* _TYPES_H_ */
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 1f46bcb..35b0b10 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -100,6 +100,18 @@ do { \
+ 	} \
+ } while(0)
+ 
++#define min(x,y) ({ \
++        typeof(x) _x = (x);     \
++        typeof(y) _y = (y);     \
++        (void) (&_x == &_y);    \
++        _x < _y ? _x : _y; })
++
++#define max(x,y) ({ \
++        typeof(x) _x = (x);     \
++        typeof(y) _y = (y);     \
++        (void) (&_x == &_y);    \
++        _x > _y ? _x : _y; })
++
+ extern unsigned long long mem_min, mem_max;
+ extern int kexec_debug;
+ 
 -- 
 1.7.7
 
