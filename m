@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZE3u-00067l-EP
- for kexec@lists.infradead.org; Fri, 16 Nov 2012 05:01:55 +0000
+ id 1TZE3p-00066r-3R
+ for kexec@lists.infradead.org; Fri, 16 Nov 2012 05:01:49 +0000
 Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id EE9F23EE081
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:52 +0900 (JST)
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A93743EE0AE
+ for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:47 +0900 (JST)
 Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id D692C45DEB7
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:52 +0900 (JST)
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 8D34845DEB7
+ for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:47 +0900 (JST)
 Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id B509E45DEB2
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:52 +0900 (JST)
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7262445DEB2
+ for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:47 +0900 (JST)
 Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id A902C1DB803B
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:52 +0900 (JST)
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C2EE1DB8038
+ for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:47 +0900 (JST)
 Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
  [10.240.81.139])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 540AA1DB8038
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:52 +0900 (JST)
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 126A81DB803B
+ for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:01:47 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 04/10] Add debuginfo-related processing for
- VMCOREINFO/VMLINUX
-Date: Fri, 16 Nov 2012 14:01:51 +0900
-Message-ID: <20121116050151.8280.31408.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 03/10] Add new parameters to various tables
+Date: Fri, 16 Nov 2012 14:01:46 +0900
+Message-ID: <20121116050146.8280.94288.stgit@localhost6.localdomain6>
 In-Reply-To: <20121116050108.8280.14861.stgit@localhost6.localdomain6>
 References: <20121116050108.8280.14861.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -42,93 +41,48 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
+Add new parameters required for mem_map-based freepages filtering, to
+various tables.
+
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- makedumpfile.c |   21 ++++++++++++++++++++-
- 1 files changed, 20 insertions(+), 1 deletions(-)
+ makedumpfile.h |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 6513059..0d03716 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -914,6 +914,8 @@ get_structure_info(void)
- 	OFFSET_INIT(page.flags, "page", "flags");
- 	OFFSET_INIT(page._count, "page", "_count");
- 	OFFSET_INIT(page.mapping, "page", "mapping");
-+	OFFSET_INIT(page._mapcount, "page", "_mapcount");
-+	OFFSET_INIT(page.private, "page", "private");
- 
- 	/*
- 	 * Some vmlinux(s) don't have debugging information about
-@@ -1005,6 +1007,10 @@ get_structure_info(void)
- 	ENUM_NUMBER_INIT(PG_lru, "PG_lru");
- 	ENUM_NUMBER_INIT(PG_private, "PG_private");
- 	ENUM_NUMBER_INIT(PG_swapcache, "PG_swapcache");
-+	ENUM_NUMBER_INIT(PG_buddy, "PG_buddy");
-+	ENUM_NUMBER_INIT(PG_slab, "PG_slab");
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 20f4d99..1304df0 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1163,6 +1163,8 @@ struct size_table {
+ 	long	cpumask_t;
+ 	long	kexec_segment;
+ 	long	elf64_hdr;
 +
-+	ENUM_TYPE_SIZE_INIT(pageflags, "pageflags");
++	long	pageflags;
+ };
  
- 	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
- 
-@@ -1355,6 +1361,7 @@ write_vmcoreinfo_data(void)
- 	WRITE_STRUCTURE_SIZE("list_head", list_head);
- 	WRITE_STRUCTURE_SIZE("node_memblk_s", node_memblk_s);
- 	WRITE_STRUCTURE_SIZE("nodemask_t", nodemask_t);
-+	WRITE_STRUCTURE_SIZE("pageflags", pageflags);
- 
- 	/*
- 	 * write the member offset of 1st kernel
-@@ -1363,6 +1370,8 @@ write_vmcoreinfo_data(void)
- 	WRITE_MEMBER_OFFSET("page._count", page._count);
- 	WRITE_MEMBER_OFFSET("page.mapping", page.mapping);
- 	WRITE_MEMBER_OFFSET("page.lru", page.lru);
-+	WRITE_MEMBER_OFFSET("page._mapcount", page._mapcount);
-+	WRITE_MEMBER_OFFSET("page.private", page.private);
- 	WRITE_MEMBER_OFFSET("mem_section.section_mem_map",
- 	    mem_section.section_mem_map);
- 	WRITE_MEMBER_OFFSET("pglist_data.node_zones", pglist_data.node_zones);
-@@ -1407,6 +1416,10 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("PG_lru", PG_lru);
- 	WRITE_NUMBER("PG_private", PG_private);
- 	WRITE_NUMBER("PG_swapcache", PG_swapcache);
-+	WRITE_NUMBER("PG_buddy", PG_buddy);
-+	WRITE_NUMBER("PG_slab", PG_slab);
+ struct offset_table {
+@@ -1171,6 +1173,8 @@ struct offset_table {
+ 		long	_count;
+ 		long	mapping;
+ 		long	lru;
++		long	_mapcount;
++		long	private;
+ 	} page;
+ 	struct mem_section {
+ 		long	section_mem_map;
+@@ -1332,6 +1336,10 @@ struct number_table {
+ 	long	PG_lru;
+ 	long	PG_private;
+ 	long	PG_swapcache;
++	long	PG_buddy;
++	long	PG_slab;
 +
-+	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
++	long	PAGE_BUDDY_MAPCOUNT_VALUE;
+ };
  
- 	/*
- 	 * write the source file of 1st kernel
-@@ -1654,11 +1667,14 @@ read_vmcoreinfo(void)
- 	READ_STRUCTURE_SIZE("list_head", list_head);
- 	READ_STRUCTURE_SIZE("node_memblk_s", node_memblk_s);
- 	READ_STRUCTURE_SIZE("nodemask_t", nodemask_t);
-+	READ_STRUCTURE_SIZE("pageflags", pageflags);
- 
- 	READ_MEMBER_OFFSET("page.flags", page.flags);
- 	READ_MEMBER_OFFSET("page._count", page._count);
- 	READ_MEMBER_OFFSET("page.mapping", page.mapping);
- 	READ_MEMBER_OFFSET("page.lru", page.lru);
-+	READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
-+	READ_MEMBER_OFFSET("page.private", page.private);
- 	READ_MEMBER_OFFSET("mem_section.section_mem_map",
- 	    mem_section.section_mem_map);
- 	READ_MEMBER_OFFSET("pglist_data.node_zones", pglist_data.node_zones);
-@@ -1695,9 +1711,12 @@ read_vmcoreinfo(void)
- 	READ_NUMBER("PG_lru", PG_lru);
- 	READ_NUMBER("PG_private", PG_private);
- 	READ_NUMBER("PG_swapcache", PG_swapcache);
--
-+	READ_NUMBER("PG_slab", PG_slab);
-+	READ_NUMBER("PG_buddy", PG_buddy);
- 	READ_SRCFILE("pud_t", pud_t);
- 
-+	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-+
- 	return TRUE;
- }
- 
+ struct srcfile_table {
 
 
 _______________________________________________
