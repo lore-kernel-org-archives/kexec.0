@@ -1,30 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZE4Q-0006KP-8V
- for kexec@lists.infradead.org; Fri, 16 Nov 2012 05:02:27 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D11E93EE0AE
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:02:24 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id B7B9F45DE56
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:02:24 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9783145DE54
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:02:24 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8859A1DB803C
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:02:24 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 352611DB803A
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 14:02:24 +0900 (JST)
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 10/10] Warn cyclic buffer overrun and correct it if possible
-Date: Fri, 16 Nov 2012 14:02:23 +0900
-Message-ID: <20121116050223.8280.12865.stgit@localhost6.localdomain6>
+ id 1TZG0L-0006b9-IP
+ for kexec@lists.infradead.org; Fri, 16 Nov 2012 07:06:24 +0000
+Date: Fri, 16 Nov 2012 16:05:04 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2 00/10] Support free page filtering looking up mem_map
+ array
+Message-Id: <20121116160504.f94131654e3764b86a8cb207@mxc.nes.nec.co.jp>
 In-Reply-To: <20121116050108.8280.14861.stgit@localhost6.localdomain6>
 References: <20121116050108.8280.14861.stgit@localhost6.localdomain6>
-MIME-Version: 1.0
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,125 +23,122 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
+To: d.hatayama@jp.fujitsu.com
 Cc: kexec@lists.infradead.org
 
-Clearling bits on cyclic buffer can overrun the cyclic buffer
-according to some combination of MAX_ORDER and cyclic buffer size.
+Hello HATAYAMA-san,
 
-The cyclic buffer size is corrected if possible.
+On Fri, 16 Nov 2012 14:01:30 +0900
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
+> This patch set implements filtering free pages looking up mem_map
+> array instead of free lists. This is compatible for cyclic mode
+> because looking up mem_map can be divided into cycles. On the other
+> hand, dividing free pages contaiend in free lists is difficult since
+> they are not sorted in physical-address order.
 
- makedumpfile.c |   71 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 70 insertions(+), 1 deletions(-)
+Thank you very much for your hard work.
+I will release v1.5.1-rc with this patch set soon.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 65b9fd7..18a1e0a 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -58,6 +58,7 @@ do { \
- 		*ptr_long_table = value; \
- } while (0)
- 
-+static void check_cyclic_buffer_overrun(void);
- static void setup_page_is_buddy(void);
- 
- void
-@@ -2832,6 +2833,9 @@ out:
- 		    !sadump_generate_elf_note_from_dumpfile())
- 			return FALSE;
- 
-+		if (info->flag_cyclic && info->dump_level & DL_EXCLUDE_FREE)
-+			check_cyclic_buffer_overrun();
-+
- 	} else {
- 		if (!get_mem_map_without_mm())
- 			return FALSE;
-@@ -3669,6 +3673,61 @@ exclude_free_page(void)
- }
- 
- /*
-+ * Let C be a cyclic buffer size and B a bitmap size used for
-+ * representing maximum block size managed by buddy allocator.
-+ *
-+ * For some combinations of C and B, clearing operation can overrun
-+ * the cyclic buffer. Let's consider three cases.
-+ *
-+ *   - If C == B, this is trivially safe.
-+ *
-+ *   - If B > C, overrun can easily happen.
-+ *
-+ *   - In case of C > B, if C mod B != 0, then there exist n > m > 0,
-+ *     B > b > 0 such that n x C = m x B + b. This means that clearing
-+ *     operation overruns cyclic buffer (B - b)-bytes in the
-+ *     combination of n-th cycle and m-th block.
-+ *
-+ *     Note that C mod B != 0 iff (m x C) mod B != 0 for some m.
-+ *
-+ * If C == B, C mod B == 0 always holds. Again, if B > C, C mod B != 0
-+ * always holds. Hence, it's always sufficient to check the condition
-+ * C mod B != 0 in order to determine whether overrun can happen or
-+ * not.
-+ *
-+ * The bitmap size used for maximum block size B is calculated from
-+ * MAX_ORDER as:
-+ *
-+ *   B := DIVIDE_UP((1 << (MAX_ORDER - 1)), BITS_PER_BYTE)
-+ *
-+ * Normally, MAX_ORDER is 11 at default. This is configurable through
-+ * CONFIG_FORCE_MAX_ZONEORDER.
-+ */
-+static void
-+check_cyclic_buffer_overrun(void)
-+{
-+	int max_order = ARRAY_LENGTH(zone.free_area);
-+	int max_order_nr_pages = 1 << (max_order - 1);
-+	unsigned long max_block_size = roundup(max_order_nr_pages, BITPERBYTE);
-+
-+	if (info->bufsize_cyclic %
-+	    roundup(max_order_nr_pages, BITPERBYTE)) {
-+		unsigned long bufsize;
-+
-+		if (max_block_size > info->bufsize_cyclic) {
-+			MSG("WARNING: some free pages are not filtered.\n");
-+			return;
-+		}
-+
-+		bufsize = info->bufsize_cyclic;
-+		info->bufsize_cyclic = round(bufsize, max_block_size);
-+
-+		MSG("cyclic buffer size has been changed: %lu => %lu\n",
-+		    bufsize, info->bufsize_cyclic);
-+	}
-+}
-+
-+/*
-  * For the kernel versions from v2.6.15 to v2.6.17.
-  */
- static int
-@@ -4013,8 +4072,18 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
- 			int i;
- 
--			for (i = 0; i < (1 << private); ++i)
-+			for (i = 0; i < (1 << private); ++i) {
-+				/*
-+				 * According to combination of
-+				 * MAX_ORDER and size of cyclic
-+				 * buffer, this clearing bit operation
-+				 * can overrun the cyclic buffer.
-+				 *
-+				 * See check_cyclic_buffer_overrun()
-+				 * for the detail.
-+				 */
- 				clear_bit_on_2nd_bitmap_for_kernel(pfn + i);
-+			}
- 			pfn_free += i;
- 		}
- 		/*
+Thanks
+Atsushi Kumagai
 
+> 
+> * Changes
+> 
+> v1 => v2:
+>   - If debuginfo is not available enough, switch logic to freelist
+>     one. On v1, free page filtering was disabled in this case.
+>   - Add hard-coded values in wider kernel versions.
+>   - If some free pages possibly fail to be filtered, try to correct
+>     cyclic buffer size appropreately.
+>   - Correct the comment explaining the cyclic buffer overrun, which
+>     was broken on v1.
+> 
+> RFC => v1:
+>   - Logic is automatically selected at runtime according to the
+>     current mode. In cyclic mode, mem_map array logic is used. In
+>     non-cyclic mode, free list logic is used.
+>   - The RFC version is:
+>     http://lists.infradead.org/pipermail/kexec/2012-June/006441.html
+> 
+> * TODO
+> 
+> Add the following values in VMCOREINFO on the upstream kernel. These
+> are used in the mem_map logic.
+> 
+>   - OFFSET(page._mapcount)
+>   - OFFSET(page.private)
+>   - SIZE(pageflags)
+>   - NUMBER(PG_buddy)
+>   - NUMBER(PG_slab)
+>   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> 
+> * Test
+> 
+> I tested this patch set on the following kernel versions.
+> 
+> - 3.4
+> - 3.1
+> - 2.6.38
+> - 2.6.32
+> - 2.6.18
+> 
+> On the test, I manually specified VMCOREINFO while extending it with
+> the following values according to the kernel versions.
+> 
+> - 3.1, 3.4
+> NUMBER(PG_slab)=7
+> SIZE(pageflags)=4
+> OFFSET(page._mapcount)=24
+> OFFSET(page.private)=48
+> NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-128
+> 
+> - 2.6.38
+> SIZE(pageflags)=4
+> OFFSET(page._mapcount)=12
+> OFFSET(page.private)=16
+> NUMBER(PG_slab)=7
+> NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-2
+> 
+> - 2.6.32
+> NUMBER(PG_slab)=7
+> NUMBER(PG_buddy)=19
+> OFFSET(page._mapcount)=12
+> OFFSET(page.private)=16
+> SIZE(pageflags)=4
+> 
+> - 2.6.18
+> NUMBER(PG_slab)=7
+> NUMBER(PG_buddy)=19
+> OFFSET(page._mapcount)=12
+> OFFSET(page.private)=16
+> 
+> ---
+> 
+> HATAYAMA Daisuke (10):
+>       Warn cyclic buffer overrun and correct it if possible
+>       Add page_is_buddy for old kernels
+>       Add page_is_buddy for PG_buddy
+>       Add page_is_buddy for recent kernels
+>       Exclude free pages by looking up mem_map array
+>       Add hardcoded page flag values
+>       Add debuginfo-related processing for VMCOREINFO/VMLINUX
+>       Add new parameters to various tables
+>       Add debuginfo interface for enum type size
+>       Move page flags setup for old kernels after debuginfo initialization
+> 
+> 
+>  dwarf_info.c   |   18 ++++
+>  dwarf_info.h   |    1 
+>  makedumpfile.c |  226 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+>  makedumpfile.h |   35 ++++++++-
+>  4 files changed, 269 insertions(+), 11 deletions(-)
+> 
+> -- 
+> 
+> Thanks.
+> HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
