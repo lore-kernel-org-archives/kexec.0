@@ -1,33 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZM4a-0000Xw-EZ
- for kexec@lists.infradead.org; Fri, 16 Nov 2012 13:35:10 +0000
-Received: from /spool/local
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 16 Nov 2012 13:35:02 -0000
-Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
- [9.149.37.212])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- qAGDYqVf57999402
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 13:34:52 GMT
-Received: from d06av01.portsmouth.uk.ibm.com (loopback [127.0.0.1])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- qAGDYxCK015717
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 06:34:59 -0700
-Received: from holzheu (dyn-9-152-212-147.boeblingen.de.ibm.com
- [9.152.212.147])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVin) with ESMTP id
- qAGDYxTr015712
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 06:34:59 -0700
-Date: Fri, 16 Nov 2012 14:34:58 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH] makedumpfile: s390x: Allow HW Change-bit override for page
- table entries
-Message-ID: <20121116143458.2d1a66e3@holzheu>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TZN2T-0001mu-Is
+ for kexec@lists.infradead.org; Fri, 16 Nov 2012 14:37:03 +0000
+Date: Fri, 16 Nov 2012 09:36:49 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Message-ID: <20121116143649.GA4515@redhat.com>
+References: <50A4E524.8020702@linux.vnet.ibm.com>
+ <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
+ <20121115155557.GF2529@redhat.com>
+ <50A60CF2.6010309@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50A60CF2.6010309@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,43 +26,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
 
-The HW Change-bit override (0x100) is used now for s390x. This patch allows
-page table entries that have set this bit.
+On Fri, Nov 16, 2012 at 03:22:50PM +0530, Aravinda Prasad wrote:
+> 
+> 
+> On 2012-11-15 21:25, Vivek Goyal wrote:
+> 
+> > On Thu, Nov 15, 2012 at 09:27:45AM -0500, Dave Anderson wrote:
+> > 
+> > [..]
+> >>> Yes, makedumpfile needs to be linked against eppic library for filtering
+> >>> data and this will increase makedumpfile size and initramfs size too.
+> >>
+> >> Just to clarify -- your example indicates that the vmlinux file is required
+> >> for this facility to work, correct?
+> >>  
+> >>> makedumpfile -c -d 31 -x vmlinux --eppic key.c vmcore filtered_vmcore
+> >>
+> >> Clearly distros won't be putting the vmlinux file in the initramfs -- that's
+> >> the whole reasoning behind vmcoreinfo.  So the 99% of users that aren't
+> >> interested in scrubbing will have to pay the penalty of the larger makedumpfile
+> >> binary.
+> > 
+> > That's a good point Dave. We will never put debug compiled vmlinux in 
+> > initramfs. Following two alternatives come to my mind.
+> 
+> 
+> As I mentioned, we don't need vmlinux in initramfs as filtering is done
+> during post processing only.
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- arch/s390x.c   |    4 ++--
- makedumpfile.h |    1 -
- 2 files changed, 2 insertions(+), 3 deletions(-)
+You are missing the point. The point is that despite the fact that
+scrubbing will never be done from initramfs, all the users will pay
+penalty for increased makedumpfile size.
 
---- a/arch/s390x.c
-+++ b/arch/s390x.c
-@@ -195,10 +195,10 @@ static ulong _kl_pg_table_deref_s390x(un
- 	readmem(VADDR, table + offset, &entry, sizeof(entry));
- 	/*
- 	 * Check if the page table entry could be read and doesn't have
--	 * any of the reserved bits set.
-+	 * the reserved bit set.
- 	 * Check if the page table entry has the invalid bit set.
- 	 */
--	if (entry &  (_PAGE_CO | _PAGE_ZERO | _PAGE_INVALID)) {
-+	if (entry &  (_PAGE_ZERO | _PAGE_INVALID)) {
- 		ERRMSG("Invalid page table entry.\n");
- 		return 0;
- 	}
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -575,7 +575,6 @@ do { \
- #define _SEGMENT_INDEX_SHIFT	20
- 
- /* Hardware bits in the page table entry */
--#define _PAGE_CO		0x100	/* HW Change-bit override */
- #define _PAGE_ZERO		0x800	/* Bit pos 52 must conatin zero */
- #define _PAGE_INVALID		0x400	/* HW invalid bit */
- #define _PAGE_INDEX_SHIFT	12
+So why not write a separate tool (scrub-vmcore) so that makedumpfile
+users don't pay the bloated size penatly.
 
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
