@@ -1,34 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e36.co.us.ibm.com ([32.97.110.154])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZIbf-0002q8-6t
- for kexec@lists.infradead.org; Fri, 16 Nov 2012 09:53:04 +0000
-Received: from /spool/local
- by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Fri, 16 Nov 2012 02:53:02 -0700
-Received: from d03relay05.boulder.ibm.com (d03relay05.boulder.ibm.com
- [9.17.195.107])
- by d03dlp02.boulder.ibm.com (Postfix) with ESMTP id AE0CF3E4003C
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 02:52:57 -0700 (MST)
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
- by d03relay05.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- qAG9qvjm250892
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 02:52:57 -0700
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
- by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- qAG9qtp0030343
- for <kexec@lists.infradead.org>; Fri, 16 Nov 2012 02:52:57 -0700
-Message-ID: <50A60CF2.6010309@linux.vnet.ibm.com>
-Date: Fri, 16 Nov 2012 15:22:50 +0530
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TZIwj-0005JM-2x
+ for kexec@lists.infradead.org; Fri, 16 Nov 2012 10:14:50 +0000
+Message-ID: <50A611AA.6030903@cn.fujitsu.com>
+Date: Fri, 16 Nov 2012 18:12:58 +0800
+From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-References: <50A4E524.8020702@linux.vnet.ibm.com>
- <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
- <20121115155557.GF2529@redhat.com>
-In-Reply-To: <20121115155557.GF2529@redhat.com>
+Subject: Re: [PATCH v4 0/2] x86: clear vmcss on all cpus when doing kdump
+ if necessary
+References: <50A3645F.60302@cn.fujitsu.com>
+In-Reply-To: <50A3645F.60302@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,63 +19,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
+To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Avi Kivity <avi@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-
-
-On 2012-11-15 21:25, Vivek Goyal wrote:
-
-> On Thu, Nov 15, 2012 at 09:27:45AM -0500, Dave Anderson wrote:
-> 
-> [..]
->>> Yes, makedumpfile needs to be linked against eppic library for filtering
->>> data and this will increase makedumpfile size and initramfs size too.
->>
->> Just to clarify -- your example indicates that the vmlinux file is required
->> for this facility to work, correct?
->>  
->>> makedumpfile -c -d 31 -x vmlinux --eppic key.c vmcore filtered_vmcore
->>
->> Clearly distros won't be putting the vmlinux file in the initramfs -- that's
->> the whole reasoning behind vmcoreinfo.  So the 99% of users that aren't
->> interested in scrubbing will have to pay the penalty of the larger makedumpfile
->> binary.
-> 
-> That's a good point Dave. We will never put debug compiled vmlinux in 
-> initramfs. Following two alternatives come to my mind.
-
-
-As I mentioned, we don't need vmlinux in initramfs as filtering is done
-during post processing only.
-
-> 
-> - Either makedumpfile provides some kind of library to parse/read/write
->   dump files and we can write another stand alone utility for scrubbing
->   dump files (say, scrub-vmcore),  and it can link against makedumpfile
->   libraries to take advantage of existing code.
-> 
-> - Or, we just identify what we want to scrube and make that code part
->   of makedumpfile. Export relevant data structures from kernel using
->   vmcoreinfo.
-> 
-> I prefer to keep things simple and like second option better.
-> 
-> Thanks
-> Vivek
-> 
-
-
--- 
-Regards,
-Aravinda
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gTWFyY2VsbywKCkFueSB0aG91Z2h0cz8KCgrkuo4gMjAxMuW5tDEx5pyIMTTml6UgMTc6
+MjksIHpoYW5neWFuZmVpIOWGmemBkzoKPiBDdXJyZW50bHksIGtkdW1wIGp1c3QgbWFrZXMgYWxs
+IHRoZSBsb2dpY2FsIHByb2Nlc3NvcnMgbGVhdmUgVk1YIG9wZXJhdGlvbiBieQo+IGV4ZWN1dGlu
+ZyBWTVhPRkYgaW5zdHJ1Y3Rpb24sIHNvIGFueSBWTUNTcyBhY3RpdmUgb24gdGhlIGxvZ2ljYWwg
+cHJvY2Vzc29ycyBtYXkKPiBiZSBjb3JydXB0ZWQuIEJ1dCwgc29tZXRpbWVzLCB3ZSBuZWVkIHRo
+ZSBWTUNTcyB0byBkZWJ1ZyBndWVzdCBpbWFnZXMgY29udGFpbmVkCj4gaW4gdGhlIGhvc3Qgdm1j
+b3JlLiBUbyBwcmV2ZW50IHRoZSBjb3JydXB0aW9uLCB3ZSBzaG91bGQgVk1DTEVBUiB0aGUgVk1D
+U3MgYmVmb3JlCj4gZXhlY3V0aW5nIHRoZSBWTVhPRkYgaW5zdHJ1Y3Rpb24uCj4gCj4gVGhlIHBh
+dGNoIHNldCBwcm92aWRlcyBhIHdheSB0byBWTUNMRUFSIHZtY3NzIHJlbGF0ZWQgdG8gZ3Vlc3Rz
+IG9uIGFsbCBjcHVzIGJlZm9yZQo+IGV4ZWN1dGluZyB0aGUgVk1YT0ZGIHdoZW4gZG9pbmcga2R1
+bXAuIFRoaXMgaXMgdXNlZCB0byBlbnN1cmUgdGhlIFZNQ1NzIGluIHRoZQo+IHZtY29yZSB1cGRh
+dGVkIGFuZCBub24tY29ycnVwdGVkLgo+IAo+IENoYW5nZWxvZyBmcm9tIHYzIHRvIHY0Ogo+IDEu
+IGFkZCBhIG5ldyBwZXJjcHUgdmFyaWFibGUgdm1jbGVhcl9za2lwcGVkIHRvIHNraXAKPiAgICB2
+bWNsZWFyIGluIGtkdW1wIGluIHNvbWUgY29uZGl0aW9ucy4KPiAKPiBDaGFuZ2Vsb2cgZnJvbSB2
+MiB0byB2MzoKPiAxLiByZW1vdmUgdW5uZWNlc3NhcnkgY29uZGl0aW9ucyBpbiBmdW5jdGlvbgo+
+ICAgIGNwdV9lbWVyZ2VuY3lfY2xlYXJfbG9hZGVkX3ZtY3NzIGFzIE1hcmNlbG8gc3VnZ2VzdGVk
+Lgo+IAo+IENoYW5nZWxvZyBmcm9tIHYxIHRvIHYyOgo+IDEuIHJlbW92ZSB0aGUgc3lzY3RsIGFu
+ZCBjbGVhciBWTUNTcyB1bmNvbmRpdGlvbmFsbHkuCj4gCj4gWmhhbmcgWWFuZmVpICgyKToKPiAg
+IHg4Ni9rZXhlYzogVk1DTEVBUiB2bWNzcyBvbiBhbGwgY3B1cyBpZiBuZWNlc3NhcnkKPiAgIEtW
+TTogc2V0L3Vuc2V0IGNyYXNoX2NsZWFyX2xvYWRlZF92bWNzcyBhbmQgdm1jbGVhcl9za2lwcGVk
+IGluCj4gICAgIGt2bV9pbnRlbCBtb2R1bGUKPiAKPiAgYXJjaC94ODYvaW5jbHVkZS9hc20va2V4
+ZWMuaCB8ICAgIDMgKysrIAo+ICBhcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYyAgICAgIHwgICAzMiAr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBhcmNoL3g4Ni9rdm0vdm14LmMgICAg
+ICAgICAgIHwgICAzMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAzIGZpbGVz
+IGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4gCj4gCj4gLS0KPiBU
+byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUg
+bGludXgta2VybmVsIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdl
+ci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVs
+Lm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4gUGxlYXNlIHJlYWQgdGhlIEZBUSBhdCAgaHR0cDov
+L3d3dy50dXgub3JnL2xrbWwvCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
