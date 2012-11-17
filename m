@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TZdil-0000O8-8X
- for kexec@lists.infradead.org; Sat, 17 Nov 2012 08:25:48 +0000
+ id 1TZe0S-0002M4-RI
+ for kexec@lists.infradead.org; Sat, 17 Nov 2012 08:44:05 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
- <1353107067-14564-4-git-send-email-yinghai@kernel.org>
- <87haoo21mw.fsf@xmission.com>
- <CAE9FiQU=tW51h_NL+_AGQMDhNRM1dBCTW1FJVe6vpQYVQEzY=Q@mail.gmail.com>
-Date: Sat, 17 Nov 2012 00:25:28 -0800
-In-Reply-To: <CAE9FiQU=tW51h_NL+_AGQMDhNRM1dBCTW1FJVe6vpQYVQEzY=Q@mail.gmail.com>
- (Yinghai Lu's message of "Fri, 16 Nov 2012 23:06:23 -0800")
-Message-ID: <87fw48zldz.fsf@xmission.com>
+ <1353107067-14564-9-git-send-email-yinghai@kernel.org>
+ <87625420y5.fsf@xmission.com>
+ <CAE9FiQWJaT9yfdV0rgV-5rM=BR4eX8sr+a99g8Ggf-+YkD8qgQ@mail.gmail.com>
+Date: Sat, 17 Nov 2012 00:43:51 -0800
+In-Reply-To: <CAE9FiQWJaT9yfdV0rgV-5rM=BR4eX8sr+a99g8Ggf-+YkD8qgQ@mail.gmail.com>
+ (Yinghai Lu's message of "Sat, 17 Nov 2012 00:24:03 -0800")
+Message-ID: <876254zkjc.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/8] add mem64_min/max control
+Subject: Re: [PATCH 8/8] x86: put 64bit bzImage high
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,46 +31,47 @@ Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@li
 
 Yinghai Lu <yinghai@kernel.org> writes:
 
-> On Fri, Nov 16, 2012 at 10:18 PM, Eric W. Biederman
+> On Fri, Nov 16, 2012 at 10:33 PM, Eric W. Biederman
 > <ebiederm@xmission.com> wrote:
 >> Yinghai Lu <yinghai@kernel.org> writes:
 >>
->>> So could limit range for 4g above buffers.
+>>> also need to make sure pass right 64bit start address to go there
+>>> directly later.
 >>
->> What is wrong with mem-min and mem-max?  At this point in the patchset
->> it looks like you are introducing mem64-min and mem64-max as a hack to
->> avoid fixing mem-min and mem-max properly.
+>> There are some silly things here but I think the clean way to handle
+>> this is to create a kexec/arch/i386/kexec-bzImage64.c that handles
+>> loading a bzImage with a 64bit entry point.
+>>
+>> That should keep the code simpler and easier to read.  Although it will
+>> probably introduce a bit more code.
 >
-> if we set mem-min high, some buffers for purgatory and real_mode can
-> not be allocated properly.
+> please check attached one with kexec-bzImage64.c
 
-Let's see.  For a 32bit kexec that is a fundamental limit, even if we
-are booting a 64bit kernel.
+Yes that looks better.
 
-For a 64bit kexec we have a 64bit purgatory so it should not be a
-problem to relocate it higher.
+So far I have just skimmed the code but this in particular is not
+needed.  We are going in via the 64bit entry point so there is no
+point in ever allocating the real mode buffer in the low 640k.
 
-Hmm.  I'm not certain about the real_mode bits.  Splitting out the 64bit
-bzImage loader from the 32bit bzImage loader should allow a lot of the
-legacy bits to be deleted.  Past that I think we simply down in the real
-of needing a command line pointer that is 64bit instead of the current
-32bit one.  That we should be able to fix by fixing the boot protocol.
++	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
++		/* If using bzImage for capture kernel, then we will not be
++		 * executing real mode code. setup segment can be loaded
++		 * anywhere as we will be just reading command line.
++		 */
++		setup_base = add_buffer(info, real_mode, setup_size, setup_size,
++			16, 0x3000, -1, -1);
++	} else {
++		/* Careful setup_base must be greater than 8K */
++		setup_base = add_buffer(info, real_mode, setup_size, setup_size,
++			16, 0x3000, 640*1024, 1);
++	}
 
-Since the real mode bits when loading a 64bit kernel are just a
-parameter area there should be no fundamental reason for them to be
-below 4G.
-
-The code needs to default to loading the kernel in the non kdump case
-at the address it was compiled to run at.  But for the rest I really
-don't see why we can't load the kernel very high.
-
-> mem64-min and mem64-max are used to limit range for buffer that could
-> stay above 4g.
-> like limit them one range belong to one node only.
-
-Having the limits makes sense.  Requring anything other than the low 1MB
-magic below 4G seems wrong if we are going to go all of the way and push
-the boot protocol as far as we can.
+That should be just;
++	/* No real mode code will be executing. setup segment can be loaded
++	 * anywhere as we will be just reading the command line.
++	 */
++	setup_base = add_buffer(info, real_mode, setup_size, setup_size,
++		16, 0x3000, -1, -1);
 
 Eric
 
