@@ -1,9 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Ta2H0-0002dq-KZ
- for kexec@lists.infradead.org; Sun, 18 Nov 2012 10:38:48 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+Received: from mail-bk0-f49.google.com ([209.85.214.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TZz9A-0001qm-0C
+ for kexec@lists.infradead.org; Sun, 18 Nov 2012 07:18:28 +0000
+Received: by mail-bk0-f49.google.com with SMTP id jm19so358879bkc.36
+ for <kexec@lists.infradead.org>; Sat, 17 Nov 2012 23:18:24 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <CAE9FiQWGmz0KBE6f2KSOesbvsRSZu--=K5=-uvfoUN_+NKphEA@mail.gmail.com>
 References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <1353107067-14564-4-git-send-email-yinghai@kernel.org>
  <87haoo21mw.fsf@xmission.com>
@@ -21,13 +24,11 @@ References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <CAE9FiQXGy_mxMWpf+7Jr-xVmxy6-_BGE2Ys9FbDk9U3A-kBfew@mail.gmail.com>
  <87ehjrpfpr.fsf@xmission.com>
  <CAE9FiQWGmz0KBE6f2KSOesbvsRSZu--=K5=-uvfoUN_+NKphEA@mail.gmail.com>
- <CAE9FiQWOb3TqVyFM4ZNCOcdByK6ttrKkiz0gbYSgzxBtf34AJQ@mail.gmail.com>
-Date: Sun, 18 Nov 2012 02:38:22 -0800
-In-Reply-To: <CAE9FiQWOb3TqVyFM4ZNCOcdByK6ttrKkiz0gbYSgzxBtf34AJQ@mail.gmail.com>
- (Yinghai Lu's message of "Sat, 17 Nov 2012 23:18:24 -0800")
-Message-ID: <878v9zp55t.fsf@xmission.com>
-MIME-Version: 1.0
+Date: Sat, 17 Nov 2012 23:18:24 -0800
+Message-ID: <CAE9FiQWOb3TqVyFM4ZNCOcdByK6ttrKkiz0gbYSgzxBtf34AJQ@mail.gmail.com>
 Subject: Re: [PATCH 3/8] add mem64_min/max control
+From: Yinghai Lu <yinghai@kernel.org>
+Content-Type: multipart/mixed; boundary=0015175cf84070ef4f04cebfced5
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,347 +37,203 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-Yinghai Lu <yinghai@kernel.org> writes:
+--0015175cf84070ef4f04cebfced5
+Content-Type: text/plain; charset=ISO-8859-1
 
-> On Sat, Nov 17, 2012 at 10:53 PM, Yinghai Lu <yinghai@kernel.org> wrote:
->> On Sat, Nov 17, 2012 at 10:50 PM, Eric W. Biederman
->> <ebiederm@xmission.com> wrote:
->>>>
->>>> so we should two purgatory for x86_64 ?
->>>> like one for 64bit and one for 32bit/16bit
+On Sat, Nov 17, 2012 at 10:53 PM, Yinghai Lu <yinghai@kernel.org> wrote:
+> On Sat, Nov 17, 2012 at 10:50 PM, Eric W. Biederman
+> <ebiederm@xmission.com> wrote:
 >>>
->>> The problem is that the current 32bit assembly code is not possition
->>> independent.  If we can rewrite that assembly code to be position
->>> independent no relocs will be generated and we should be good.
->>>
->>> The 16bit entry point code was already written as position independent
->>> code so it should not cause problems.
->>>
->>> Just having one piece of code to deal with (if we can figure it out)
->>> looks to be the simpler and more maintainable solution.
+>>> so we should two purgatory for x86_64 ?
+>>> like one for 64bit and one for 32bit/16bit
 >>
->> sure.
+>> The problem is that the current 32bit assembly code is not possition
+>> independent.  If we can rewrite that assembly code to be position
+>> independent no relocs will be generated and we should be good.
+>>
+>> The 16bit entry point code was already written as position independent
+>> code so it should not cause problems.
+>>
+>> Just having one piece of code to deal with (if we can figure it out)
+>> looks to be the simpler and more maintainable solution.
 >
-> just resent -v2 patches for kernel parts.
->
-> attached are changes for kexec-tools without put 64 bit purgartory above 4g...
->
-> hope you can work out 32bit position independent.
+> sure.
 
-It looks like this is enough to fix purgatory.
+just resent -v2 patches for kernel parts.
 
-I have tested this in so far as that it doesn't generate relocs, but I
-haven't had a test to see if the code actually works.
+attached are changes for kexec-tools without put 64 bit purgartory above 4g...
 
-YH can you verify this boots both 32bit and 64bit kernels for you?
+hope you can work out 32bit position independent.
 
-Thanks,
-Eric
+Thanks
 
-diff --git a/purgatory/Makefile b/purgatory/Makefile
-index ee1679c..e39adec 100644
---- a/purgatory/Makefile
-+++ b/purgatory/Makefile
-@@ -64,6 +64,7 @@ $(PURGATORY): $(PURGATORY_OBJS)
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
- 
- #	$(LD) $(LDFLAGS) $(EXTRA_LDFLAGS) --no-undefined -e purgatory_start -r -o $@ $(PURGATORY_OBJS) $(UTIL_LIB)
-+	$(STRIP) --strip-debug $@
- 
- echo::
- 	@echo "PURGATORY_SRCS $(PURGATORY_SRCS)"
-diff --git a/purgatory/arch/i386/entry32-16-debug.S b/purgatory/arch/i386/entry32-16-debug.S
-index 82b58ca..2f47607 100644
---- a/purgatory/arch/i386/entry32-16-debug.S
-+++ b/purgatory/arch/i386/entry32-16-debug.S
-@@ -29,15 +29,17 @@
- 	.balign 16
- entry16_debug:
- 	.code32
--	/* Compute where I am running at */
--	movl	$entry16_debug, %ebx	
-+	/* Compute where I am running at (assumes esp valid) */
-+	call	1f
-+1:	popl	%ebx
- 
- 	/* Fixup my real mode segment */
- 	movl	%ebx, %eax
- 	shrl	$4, %eax
--	movw	%ax, 2 + realptr
-+	movw	%ax, (2 + realptr - entry16_debug)(%ebx)
- 
- 	/* Fixup the gdt */
-+	movl	%ebx, (0x02 + gdt - entry16_debug)(%ebx)
- 	movl	%ebx, %eax
- 	shll	$16, %eax
- 	
-@@ -49,19 +51,19 @@ entry16_debug:
- 	andl	$0xff000000, %edx
- 	orl	%edx, %ecx
- 
--	orl	%eax, 0x08 + gdt
--	orl	%ecx, 0x0c + gdt
--	orl	%eax, 0x10 + gdt
--	orl	%ecx, 0x14 + gdt	
-+	orl	%eax, (0x08 + gdt - entry16_debug)(%ebx)
-+	orl	%ecx, (0x0c + gdt - entry16_debug)(%ebx)
-+	orl	%eax, (0x10 + gdt - entry16_debug)(%ebx)
-+	orl	%ecx, (0x14 + gdt - entry16_debug)(%ebx)
- 	
- 	
- DEBUG_CHAR('a')
- 	/* Setup the classic BIOS interrupt table at 0x0 */
--	lidt	idtptr
-+	lidt	(idtptr - entry16_debug)(%ebx)
- 
- DEBUG_CHAR('b')
- 	/* Provide us with 16bit segments that we can use */
--	lgdt	gdt
-+	lgdt	(gdt - entry16_debug)(%ebx)
- 
- DEBUG_CHAR('c')
- 	/* Note we don't disable the a20 line, (this shouldn't be required)
-@@ -160,7 +162,7 @@ idtptr:
- gdt:
- 	/* 0x00 unusable segment so used as the gdt ptr */
- 	.word gdt_end - gdt - 1
--	.long gdt
-+	.long 0 /* gdt */
- 	.word 0
- 
- 	/* 0x08 16 bit real mode code segment */
-diff --git a/purgatory/arch/i386/entry32-16.S b/purgatory/arch/i386/entry32-16.S
-index aaf1273..20a1ce6 100644
---- a/purgatory/arch/i386/entry32-16.S
-+++ b/purgatory/arch/i386/entry32-16.S
-@@ -24,15 +24,17 @@
- 	.balign 16
- entry16:
- 	.code32
--	/* Compute where I am running at */
--	movl	$entry16, %ebx
-+	/* Compute where I am running at (assumes esp valid) */
-+	call	1f
-+1:	popl	%ebx
- 
- 	/* Fixup my real mode segment */
- 	movl	%ebx, %eax
- 	shrl	$4, %eax
--	movw	%ax, 2 + realptr
-+	movw	%ax, (2 + realptr - entry16)(%ebx)
- 
- 	/* Fixup the gdt */
-+	movl	%ebx, (0x02 + gdt - entry16)(%ebx)
- 	movl	%ebx, %eax
- 	shll	$16, %eax
- 	
-@@ -44,17 +46,17 @@ entry16:
- 	andl	$0xff000000, %edx
- 	orl	%edx, %ecx
- 
--	orl	%eax, 0x08 + gdt
--	orl	%ecx, 0x0c + gdt
--	orl	%eax, 0x10 + gdt
--	orl	%ecx, 0x14 + gdt	
-+	orl	%eax, (0x08 + gdt - entry16)(%ebx)
-+	orl	%ecx, (0x0c + gdt - entry16)(%ebx)
-+	orl	%eax, (0x10 + gdt - entry16)(%ebx)
-+	orl	%ecx, (0x14 + gdt - entry16)(%ebx)
- 	
- 	
- 	/* Setup the classic BIOS interrupt table at 0x0 */
--	lidt	idtptr
-+	lidt	(idtptr - entry16)(%ebx)
- 	
- 	/* Provide us with 16bit segments that we can use */
--	lgdt	gdt
-+	lgdt	(gdt - entry16)(%ebx)
- 
- 	/* Note we don't disable the a20 line, (this shouldn't be required)
- 	 * The code to do it is in kexec_test and it is a real pain.
-@@ -147,7 +149,7 @@ idtptr:
- gdt:
- 	/* 0x00 unusable segment so used as the gdt ptr */
- 	.word gdt_end - gdt - 1
--	.long gdt
-+	.long 0 /* gdt */
- 	.word 0
- 
- 	/* 0x08 16 bit real mode code segment */
-diff --git a/purgatory/arch/x86_64/Makefile b/purgatory/arch/x86_64/Makefile
-index 22b4228..7300937 100644
---- a/purgatory/arch/x86_64/Makefile
-+++ b/purgatory/arch/x86_64/Makefile
-@@ -16,9 +16,11 @@ dist += purgatory/arch/x86_64/Makefile $(x86_64_PURGATORY_SRCS_native) 	\
- 	purgatory/arch/x86_64/purgatory-x86_64.h
- 
- # Don't add sources in i386/ to dist, as i386/Makefile adds them
--x86_64_PURGATORY_SRCS +=  purgatory/arch/i386/entry32-16.S
-+x86_64_PURGATORY_SRCS += purgatory/arch/i386/entry32-16.S
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/entry32-16-debug.S
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/crashdump_backup.c
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/console-x86.c
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/vga.c
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/pic.c
-+
-+x86_64_PURGATORY_EXTRA_CFLAGS = -mcmodel=large
-diff --git a/purgatory/arch/x86_64/entry64-32.S b/purgatory/arch/x86_64/entry64-32.S
-index 66f8a85..0d394ad 100644
---- a/purgatory/arch/x86_64/entry64-32.S
-+++ b/purgatory/arch/x86_64/entry64-32.S
-@@ -24,13 +24,34 @@
- 	.equ	CR0_PG,        0x80000000
- 
- 	.text
-+	.balign 16
- 	.globl entry32, entry32_regs
- entry32:
- 	.code64
- 
--	/* Setup a gdt that should that is generally usefully */
-+	/* Setup the 4G offset of entry32 lm_exit code segment */
-+	movq	$0x00CF9A000000ffff, %rax
-+
-+	leaq	entry32(%rip), %rbx	/* Low 24 bits */
-+	andq	$0xffffff, %rbx
-+	shlq	$16, %rbx
-+	orq	%rbx, %rax
-+
-+	leaq	entry32(%rip), %rbx	/* High 8 bits */
-+	movq	$0xff000000, %rdx
-+	andq	%rdx, %rbx
-+	shlq	$32, %rbx
-+	orq	%rbx, %rax
-+
-+	movq	%rax, (gdt + 0x20)(%rip)
-+
-+	/* Setup a gdt that is generally usefully */
- 	lgdt	gdt(%rip)
--		
-+
-+	/* Setup the far pointer to the entry point */
-+	movl	eip(%rip), %eax
-+	movl	%eax, entry32_addr(%rip)
-+
- 	/* Switch to 32bit compatiblity mode */
- 	ljmp	*lm_exit_addr(%rip)
- lm_exit:
-@@ -60,19 +81,19 @@ lm_exit:
- 	movl	%eax, %gs
- 
- 	/* Load the registers */
--	movl	eax, %eax
--	movl	ecx, %ecx
--	movl	edx, %edx
--	movl	esi, %esi
--	movl	edi, %edi
--	movl	esp, %esp
--	movl	ebp, %ebp
--	movl	ebx, %ebx
-+	movl	%cs:eax - entry32, %eax
-+	movl	%cs:ecx - entry32, %ecx
-+	movl	%cs:edx - entry32, %edx
-+	movl	%cs:esi - entry32, %esi
-+	movl	%cs:edi - entry32, %edi
-+	movl	%cs:esp - entry32, %esp
-+	movl	%cs:ebp - entry32, %ebp
-+	movl	%cs:ebx - entry32, %ebx
- 
- 	/* Jump to the loaded image */
--	jmpl	*(eip)
-+	jmpl	*%cs:entry32_addr - entry32
- 
--	.section ".rodata"
-+	.section ".data"
- 	.balign 16
- gdt:	/* 0x00 unusable segment 
- 	 * 0x08 unused
-@@ -88,8 +109,8 @@ gdt:	/* 0x00 unusable segment
- 	/* 0x18 4GB flat data segment */
- 	.word	0xFFFF, 0x0000, 0x9200, 0x00CF
- 
--	/* 0x20 dummy */
--	.word	0x0000, 0x0000, 0x0000, 0x000
-+	/* 0x20 4GB flat code segment base at entry32 */
-+	.word	0xFFFF, 0x0000, 0x9A00, 0x0CF
- 	/* 0x28 dummy */
- 	.word	0x0000, 0x0000, 0x0000, 0x000
- 	/* 0x30 dummy */
-@@ -115,9 +136,15 @@ gdt_end:
- 	.section ".rodata"
- 	.balign 4
- lm_exit_addr:
--	.long lm_exit
--	.long 0x10		
--	
-+	.long lm_exit - entry32
-+	.long 0x20
-+
-+	.section ".data"
-+	.balign 4
-+entry32_addr:
-+	.long 0x00000000
-+	.long 0x10
-+
- 	.section ".rodata"
- 	.balign 4
- entry32_regs:  
-@@ -129,6 +156,9 @@ esi:	.long 0x00000000
- edi:	.long 0x00000000
- esp:	.long 0x00000000
- ebp:	.long 0x00000000
--eip:	.long entry16
--	.size entry32_regs, . - entry32_regs
-+eip:	.quad entry16	/* low 32 bits address
-+			 * high 32bits zeros
-+			 * uses 64bit reloc
-+			 */
-+	.size entry32_regs, (. - 4) - entry32_regs
- 
-diff --git a/purgatory/arch/x86_64/entry64.S b/purgatory/arch/x86_64/entry64.S
-index 666023c..e3223b7 100644
---- a/purgatory/arch/x86_64/entry64.S
-+++ b/purgatory/arch/x86_64/entry64.S
-@@ -37,9 +37,10 @@ entry64:
- 	movl	%eax, %fs
- 	movl	%eax, %gs
- 
--	movq	$stack_init, %rsp
-+	leaq	stack_init(%rip), %rsp
- 	pushq	$0x10 /* CS */
--	pushq	$new_cs_exit
-+	leaq	new_cs_exit(%rip), %rax
-+	pushq	%rax
- 	lretq
- new_cs_exit:
- 
-diff --git a/purgatory/arch/x86_64/setup-x86_64.S b/purgatory/arch/x86_64/setup-x86_64.S
-index 74997fa..95572d8 100644
---- a/purgatory/arch/x86_64/setup-x86_64.S
-+++ b/purgatory/arch/x86_64/setup-x86_64.S
-@@ -42,10 +42,10 @@ purgatory_start:
- 	/* In 64bit mode the code segment is meaningless */
- 
- 	movq	0(%rsp), %rax
--	movq	%rax, jump_back_entry
-+	movq	%rax, jump_back_entry(%rip)
- 
- 	/* Setup a stack */
--	movq	$lstack_end, %rsp
-+	leaq	lstack_end(%rip), %rsp
- 
- 	/* Call the C code */
- 	call purgatory
+Yinghai
 
+--0015175cf84070ef4f04cebfced5
+Content-Type: application/x-bzip2; name="patches.kexec_2012_11_17.tar.bz2"
+Content-Disposition: attachment; filename="patches.kexec_2012_11_17.tar.bz2"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_h9nu31vs0
+
+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
+YHziToQVZIcIMWlBkIjzkJ/+LuSKcKEhMT8ypA==
+--0015175cf84070ef4f04cebfced5
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--0015175cf84070ef4f04cebfced5--
+
