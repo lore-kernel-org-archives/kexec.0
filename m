@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-bk0-f49.google.com ([209.85.214.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZxb2-0000ON-05
- for kexec@lists.infradead.org; Sun, 18 Nov 2012 05:39:08 +0000
-Received: by mail-bk0-f49.google.com with SMTP id jm19so352474bkc.36
- for <kexec@lists.infradead.org>; Sat, 17 Nov 2012 21:39:06 -0800 (PST)
+ id 1TZxu8-0000tM-Jz
+ for kexec@lists.infradead.org; Sun, 18 Nov 2012 05:58:54 +0000
+Received: by mail-bk0-f49.google.com with SMTP id jm19so353577bkc.36
+ for <kexec@lists.infradead.org>; Sat, 17 Nov 2012 21:58:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAE9FiQV=6qeBgzd3ekBRXh1jfv+_-s_UuQqRyMAYwK5E=S55fA@mail.gmail.com>
+In-Reply-To: <CAE9FiQX7MsAaD4TaDv5gisuA5PNa9AmhDk54AjpzEzp4D_+aDg@mail.gmail.com>
 References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <1353107067-14564-4-git-send-email-yinghai@kernel.org>
  <87haoo21mw.fsf@xmission.com>
@@ -18,8 +18,9 @@ References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <CAE9FiQVfRHpoBoUyZssfE32wv7j3fD2skRL4UFXP=FBq7rrE1w@mail.gmail.com>
  <878v9zqyfh.fsf@xmission.com>
  <CAE9FiQV=6qeBgzd3ekBRXh1jfv+_-s_UuQqRyMAYwK5E=S55fA@mail.gmail.com>
-Date: Sat, 17 Nov 2012 21:39:06 -0800
-Message-ID: <CAE9FiQX7MsAaD4TaDv5gisuA5PNa9AmhDk54AjpzEzp4D_+aDg@mail.gmail.com>
+ <CAE9FiQX7MsAaD4TaDv5gisuA5PNa9AmhDk54AjpzEzp4D_+aDg@mail.gmail.com>
+Date: Sat, 17 Nov 2012 21:58:48 -0800
+Message-ID: <CAE9FiQWm=6yas4dRfbc+qLC7yEhbdt+pnRMwAYSQ1jjk5qOvBw@mail.gmail.com>
 Subject: Re: [PATCH 3/8] add mem64_min/max control
 From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -37,34 +38,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-On Sat, Nov 17, 2012 at 9:35 PM, Yinghai Lu <yinghai@kernel.org> wrote:
-> On Sat, Nov 17, 2012 at 9:20 PM, Eric W. Biederman
-> <ebiederm@xmission.com> wrote:
->> Yinghai Lu <yinghai@kernel.org> writes:
+On Sat, Nov 17, 2012 at 9:39 PM, Yinghai Lu <yinghai@kernel.org> wrote:
+> On Sat, Nov 17, 2012 at 9:35 PM, Yinghai Lu <yinghai@kernel.org> wrote:
+>> On Sat, Nov 17, 2012 at 9:20 PM, Eric W. Biederman
+>> <ebiederm@xmission.com> wrote:
+>>> Yinghai Lu <yinghai@kernel.org> writes:
+>>>>
+>>>> there is lots of R_X86_64_32 and R_X86_64_32S for 64bit purgatory.
+>>>>
+>>>> those come from global variables...could kill some by converting them static...
+>>>>
+>>>> but still have some global string or ro data....
+>>>>
+>>>> build one big file include all .S ?
 >>>
->>> there is lots of R_X86_64_32 and R_X86_64_32S for 64bit purgatory.
+>>> For R_x86_64_32 and R_x86_64_32S the problem is that the instructions
+>>> are using absolute 32bit addresses.
 >>>
->>> those come from global variables...could kill some by converting them static...
->>>
->>> but still have some global string or ro data....
->>>
->>> build one big file include all .S ?
+>>> It is probably overkill but we should be able to solve this with
+>>> by adding "-mcmodel=large" to the build of purgatory.
 >>
->> For R_x86_64_32 and R_x86_64_32S the problem is that the instructions
->> are using absolute 32bit addresses.
+>> it kill some...
 >>
->> It is probably overkill but we should be able to solve this with
->> by adding "-mcmodel=large" to the build of purgatory.
+>> still have left.... looks they from .S
+>>
+>> yhlu@linux-siqj:~/xx/xx/utils/kexec-tools> readelf --relocs
+>> purgatory/purgatory.ro | grep R_X86_64_32
+>> 0000000005e9  00020000000b R_X86_64_32S      0000000000000000 .rodata + c0
 >
-> it kill some...
->
-> still have left.... looks they from .S
->
-> yhlu@linux-siqj:~/xx/xx/utils/kexec-tools> readelf --relocs
-> purgatory/purgatory.ro | grep R_X86_64_32
-> 0000000005e9  00020000000b R_X86_64_32S      0000000000000000 .rodata + c0
+> looks like .S did not get that -mcmodel=large applied..
 
-looks like .S did not get that -mcmodel=large applied..
+so -mcmodel=large only work with .c, but does not have effects on .S ?
 
 _______________________________________________
 kexec mailing list
