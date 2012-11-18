@@ -1,12 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bk0-f49.google.com ([209.85.214.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZwvw-0008Tw-6t
- for kexec@lists.infradead.org; Sun, 18 Nov 2012 04:56:41 +0000
-Received: by mail-bk0-f49.google.com with SMTP id jm19so349878bkc.36
- for <kexec@lists.infradead.org>; Sat, 17 Nov 2012 20:56:38 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <876253sej9.fsf@xmission.com>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TZx0B-0000AQ-Bi
+ for kexec@lists.infradead.org; Sun, 18 Nov 2012 05:01:03 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <1353107067-14564-4-git-send-email-yinghai@kernel.org>
  <87haoo21mw.fsf@xmission.com>
@@ -15,10 +12,13 @@ References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <CAE9FiQVX8xnAGGkPtR0BA1iYbQi5fXY2+P3pW=d-tX8fpWibnw@mail.gmail.com>
  <CAE9FiQXNDEPw6WhfgYspqZsy+VVrPoA7M4kKo+5N95=22WBpkQ@mail.gmail.com>
  <50A86563.30303@zytor.com> <876253sej9.fsf@xmission.com>
-Date: Sat, 17 Nov 2012 20:56:37 -0800
-Message-ID: <CAE9FiQVfRHpoBoUyZssfE32wv7j3fD2skRL4UFXP=FBq7rrE1w@mail.gmail.com>
+ <50A86A4D.8090503@zytor.com>
+Date: Sat, 17 Nov 2012 21:00:08 -0800
+In-Reply-To: <50A86A4D.8090503@zytor.com> (H. Peter Anvin's message of "Sat,
+ 17 Nov 2012 20:55:41 -0800")
+Message-ID: <87haonqzdz.fsf@xmission.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH 3/8] add mem64_min/max control
-From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,36 +31,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Sat, Nov 17, 2012 at 8:47 PM, Eric W. Biederman
-<ebiederm@xmission.com> wrote:
-> "H. Peter Anvin" <hpa@zytor.com> writes:
+"H. Peter Anvin" <hpa@zytor.com> writes:
+
+> On 11/17/2012 08:47 PM, Eric W. Biederman wrote:
+>>>
+>>> I don't think that is feasible; we need access to this structure
+>>> extremely early.  I think if you're using the 64-bit entry point it
+>>> has to be an entry condition that those structures are mapped.  It
+>>> simply becomes a precondition for using the 64-bit entry point.
+>>
+>> 64bit purgatory coming from kexec should be running with a page table
+>> that identity maps everything loaded by kexec and in practice all of
+>> memory.
+>>
+>> We should still be using that page table when we enter the new kernel.
+>>
+>> However then the 64bit kernel switches to it's own page tables.
+>>
+>> So after that point we potentially need early_ioremap, because the
+>> kernel's page tables may not have covered the boot_params.  Certainly we
+>> need to do something to ensure the kernels page table covers boot_params.
+>>
 >
->
-> 64bit purgatory coming from kexec should be running with a page table
-> that identity maps everything loaded by kexec and in practice all of
-> memory.
+> The easy way to fix that is to do what we do on 32 bits: we copy it
+> into the bss before we turn paging on (the 64-bit equivalent is before
+> we switch to the new page tables.)  That way we know where it is, at
+> least for the bounded-size data items.
 
-there is lots of R_X86_64_32 and R_X86_64_32S for 64bit purgatory.
+Whatever works.  It sounds like six of one half a dozen of the other to
+me.  Last I looked early_ioremap works as soon as paging is enabled on
+x86_64.
 
-those come from global variables...could kill some by converting them static...
-
-but still have some global string or ro data....
-
-build one big file include all .S ?
-
->
-> We should still be using that page table when we enter the new kernel.
->
-> However then the 64bit kernel switches to it's own page tables.
->
-> So after that point we potentially need early_ioremap, because the
-> kernel's page tables may not have covered the boot_params.  Certainly we
-> need to do something to ensure the kernels page table covers boot_params.
-
-yes, I tested that and it works.
+Eric
 
 _______________________________________________
 kexec mailing list
