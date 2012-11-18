@@ -1,13 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TZxDS-0000Ef-DR
- for kexec@lists.infradead.org; Sun, 18 Nov 2012 05:14:47 +0000
-Message-ID: <50A86EC0.2030304@zytor.com>
-Date: Sat, 17 Nov 2012 21:14:40 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 3/8] add mem64_min/max control
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TZxJY-0000IB-2p
+ for kexec@lists.infradead.org; Sun, 18 Nov 2012 05:21:04 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <1353107067-14564-4-git-send-email-yinghai@kernel.org>
  <87haoo21mw.fsf@xmission.com>
@@ -16,8 +12,13 @@ References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
  <CAE9FiQVX8xnAGGkPtR0BA1iYbQi5fXY2+P3pW=d-tX8fpWibnw@mail.gmail.com>
  <CAE9FiQXNDEPw6WhfgYspqZsy+VVrPoA7M4kKo+5N95=22WBpkQ@mail.gmail.com>
  <50A86563.30303@zytor.com> <876253sej9.fsf@xmission.com>
- <50A86A4D.8090503@zytor.com> <87haonqzdz.fsf@xmission.com>
-In-Reply-To: <87haonqzdz.fsf@xmission.com>
+ <CAE9FiQVfRHpoBoUyZssfE32wv7j3fD2skRL4UFXP=FBq7rrE1w@mail.gmail.com>
+Date: Sat, 17 Nov 2012 21:20:50 -0800
+In-Reply-To: <CAE9FiQVfRHpoBoUyZssfE32wv7j3fD2skRL4UFXP=FBq7rrE1w@mail.gmail.com>
+ (Yinghai Lu's message of "Sat, 17 Nov 2012 20:56:37 -0800")
+Message-ID: <878v9zqyfh.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 3/8] add mem64_min/max control
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,36 +27,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-On 11/17/2012 09:00 PM, Eric W. Biederman wrote:
+Yinghai Lu <yinghai@kernel.org> writes:
+
+> On Sat, Nov 17, 2012 at 8:47 PM, Eric W. Biederman
+> <ebiederm@xmission.com> wrote:
+>> "H. Peter Anvin" <hpa@zytor.com> writes:
 >>
->> The easy way to fix that is to do what we do on 32 bits: we copy it
->> into the bss before we turn paging on (the 64-bit equivalent is before
->> we switch to the new page tables.)  That way we know where it is, at
->> least for the bounded-size data items.
+>>
+>> 64bit purgatory coming from kexec should be running with a page table
+>> that identity maps everything loaded by kexec and in practice all of
+>> memory.
 >
-> Whatever works.  It sounds like six of one half a dozen of the other to
-> me.  Last I looked early_ioremap works as soon as paging is enabled on
-> x86_64.
+> there is lots of R_X86_64_32 and R_X86_64_32S for 64bit purgatory.
 >
+> those come from global variables...could kill some by converting them static...
+>
+> but still have some global string or ro data....
+>
+> build one big file include all .S ?
 
-Well, x86-64 means paging is enabled.  Presumably you mean "as son as we 
-are onl our own page tables".  I'm fine either way, *as long as* we 
-don't touch *any* memory outside text/data/bss/brk before we recover 
-this content.
+For R_x86_64_32 and R_x86_64_32S the problem is that the instructions
+are using absolute 32bit addresses.
 
-	-hpa
+It is probably overkill but we should be able to solve this with
+by adding "-mcmodel=large" to the build of purgatory.
 
--- 
-H. Peter Anvin, Intel Open Source Technology Center
-I work for Intel.  I don't speak on their behalf.
+Hopefully there are not 32bit or 16bit assembly routines getting linked
+in and using problemenatic instructions.
 
+Eric
 
 _______________________________________________
 kexec mailing list
