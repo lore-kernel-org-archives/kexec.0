@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TaV95-0003X8-Jb
- for kexec@lists.infradead.org; Mon, 19 Nov 2012 17:28:32 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <878v9zp55t.fsf@xmission.com>
- <1353294278-32230-1-git-send-email-yinghai@kernel.org>
- <1353294278-32230-7-git-send-email-yinghai@kernel.org>
-Date: Mon, 19 Nov 2012 09:28:14 -0800
-In-Reply-To: <1353294278-32230-7-git-send-email-yinghai@kernel.org> (Yinghai
- Lu's message of "Sun, 18 Nov 2012 19:04:38 -0800")
-Message-ID: <87a9ud33kh.fsf@xmission.com>
+ id 1TaVko-0000hI-0r
+ for kexec@lists.infradead.org; Mon, 19 Nov 2012 18:07:33 +0000
+Date: Mon, 19 Nov 2012 12:07:10 -0600
+From: Cliff Wickman <cpw@sgi.com>
+Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+Message-ID: <20121119180710.GA16448@sgi.com>
+References: <E1TZ8Ia-0000Gn-1v@eag09.americas.sgi.com>
+ <20121116203944.GO4515@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 6/6] kexec, x86_64: put 64bit bzImage high
+Content-Disposition: inline
+In-Reply-To: <20121116203944.GO4515@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,394 +24,835 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
 
-Yinghai Lu <yinghai@kernel.org> writes:
+On Fri, Nov 16, 2012 at 03:39:44PM -0500, Vivek Goyal wrote:
+> On Thu, Nov 15, 2012 at 04:52:40PM -0600, Cliff Wickman wrote:
+> > 
+> > Gentlemen,
+> > 
+> > I know this is rather late to the game, given all the recent work to speed
+> > up makedumpfile and reduce the memory that it consumes.
+> > But I've been experimenting with asking the kernel to scan the page tables
+> > instead of reading all those page structures through /proc/vmcore.
+> > 
+> > The results are rather dramatic -- if they weren't I would not presume to
+> > suggest such a radical path.
+> > On a small, idle UV system: about 4 sec. versus about 40 sec.
+> > On a 8TB UV the unnecessary page scan alone takes 4 minutes, vs. about 200 min
+> > through /proc/vmcore.
+> > 
+> > I have not compared it to your version 1.5.1, so I don't know if your recent
+> > work provides similar speedups.
+> 
+> I guess try 1.5.1-rc. IIUC, we had the logic of going through page tables
+> but that required one single bitmap to be present and in constrained
+> memory environment we will not have that.
+> 
+> That's when this idea came up that scan portion of struct page range,
+> filter it, dump it and then move on to next range.
+> 
+> Even after 1.5.1-rc if difference is this dramatic, that means we are
+> not doing something right in makedumpfile and it needs to be
+> fixed/optimized.
+> 
+> But moving the logic to kernel does not make much sense to me at this
+> point of time untile and unless there is a good explanation that why
+> user space can't do a good job of what kernel is doing.
 
-> need to make sure pass right 64bit start address to go there directly
-> later.
+I tested a patch in which makedumpfile does nothing but scan all the
+page structures using /proc/vmcore.  It is simply reading each consecutive
+range of page structures in readmem() chunks of 512 structures. And doing
+nothing more than accumulating a hash total of the 'flags' field in each
+page (for a sanity check). On my test machine there are 6 blocks of page
+structures, totaling 12 million structures. This takes 31.1 'units of time'
+(I won't say seconds, as the speed of the clock seems to be way too fast in
+the crash kernel). If I increase the buffer size to 5120 structures: 31.0 units.
+At 51200 structures: 30.9.  So buffer size has virtually no effect.
 
-Instead of playing games with the definition of add_buffer and calling
-add_buffer multiple times you can directly call locate_hole, to find
-the hole you want and then you can call add_buffer when you have
-found the hole you want to load the kernel in with very tight min
-and max values that you will know will work.
+I also request the kernel to do the same thing.  Each of the 6 requests
+asks the kernel to scan a range of page structures and accumulate a hash
+total of the 'flags' field.  (And also copy a 10000-element pfn list back
+to user space, to test that such copies don't add significant overhead.)
+And the 12 million pages are scanned in 1.6 'units of time'.
 
-Eric
+If I compare the time for actual page scanning (unnecessary pages and
+free pages) through /proc/vmcore vs.  requesting the kernel to do the
+scanning:  40 units vs. 3.8 units.
 
-> -v2: add kexec-bzImage64.c according to Eric.
-> -v3: don't need to purgatory under 2g after Eric's change to purgatory code.
->
-> Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-> ---
->  kexec/arch/x86_64/Makefile          |    1 +
->  kexec/arch/x86_64/kexec-bzImage64.c |  316 +++++++++++++++++++++++++++++++++++
->  kexec/arch/x86_64/kexec-x86_64.c    |    1 +
->  kexec/arch/x86_64/kexec-x86_64.h    |    5 +
->  4 files changed, 323 insertions(+), 0 deletions(-)
->  create mode 100644 kexec/arch/x86_64/kexec-bzImage64.c
->
-> diff --git a/kexec/arch/x86_64/Makefile b/kexec/arch/x86_64/Makefile
-> index 405bdf5..1cf10f9 100644
-> --- a/kexec/arch/x86_64/Makefile
-> +++ b/kexec/arch/x86_64/Makefile
-> @@ -13,6 +13,7 @@ x86_64_KEXEC_SRCS += kexec/arch/i386/crashdump-x86.c
->  x86_64_KEXEC_SRCS_native =  kexec/arch/x86_64/kexec-x86_64.c
->  x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-x86_64.c
->  x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-> +x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-bzImage64.c
->  
->  x86_64_KEXEC_SRCS += $(x86_64_KEXEC_SRCS_native)
->  
-> diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
-> new file mode 100644
-> index 0000000..6835ef6
-> --- /dev/null
-> +++ b/kexec/arch/x86_64/kexec-bzImage64.c
-> @@ -0,0 +1,316 @@
-> +/*
-> + * kexec: Linux boots Linux
-> + *
-> + * Copyright (C) 2003-2010  Eric Biederman (ebiederm@xmission.com)
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation (version 2 of the License).
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-> + */
-> +
-> +#define _GNU_SOURCE
-> +#include <stddef.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <limits.h>
-> +#include <stdlib.h>
-> +#include <errno.h>
-> +#include <sys/types.h>
-> +#include <sys/stat.h>
-> +#include <fcntl.h>
-> +#include <unistd.h>
-> +#include <getopt.h>
-> +#include <elf.h>
-> +#include <boot/elf_boot.h>
-> +#include <ip_checksum.h>
-> +#include <x86/x86-linux.h>
-> +#include "../../kexec.h"
-> +#include "../../kexec-elf.h"
-> +#include "../../kexec-syscall.h"
-> +#include "kexec-x86_64.h"
-> +#include "../i386/x86-linux-setup.h"
-> +#include "../i386/crashdump-x86.h"
-> +#include <arch/options.h>
-> +
-> +static const int probe_debug = 0;
-> +
-> +int bzImage64_probe(const char *buf, off_t len)
-> +{
-> +	const struct x86_linux_header *header;
-> +	if ((uintmax_t)len < (uintmax_t)(2 * 512)) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "File is too short to be a bzImage!\n");
-> +		}
-> +		return -1;
-> +	}
-> +	header = (const struct x86_linux_header *)buf;
-> +	if (memcmp(header->header_magic, "HdrS", 4) != 0) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "Not a bzImage\n");
-> +		}
-> +		return -1;
-> +	}
-> +	if (header->boot_sector_magic != 0xAA55) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "No x86 boot sector present\n");
-> +		}
-> +		/* No x86 boot sector present */
-> +		return -1;
-> +	}
-> +	if (header->protocol_version < 0x020C) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "Must be at least protocol version 2.12\n");
-> +		}
-> +		/* Must be at least protocol version 2.12 */
-> +		return -1;
-> +	}
-> +	if ((header->loadflags & 1) == 0) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "zImage not a bzImage\n");
-> +		}
-> +		/* Not a bzImage */
-> +		return -1;
-> +	}
-> +	if (!header->code64_start_offset) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "Not a bzImage64\n");
-> +		}
-> +		/* Must have non zero offset */
-> +		return -1;
-> +	}
-> +	if (!header->relocatable_kernel) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "Not a relocatable bzImage64\n");
-> +		}
-> +		/* Must be relocatable */
-> +		return -1;
-> +	}
-> +	/* I've got a bzImage64 */
-> +	if (probe_debug) {
-> +		fprintf(stderr, "It's a relocatable bzImage64\n");
-> +	}
-> +	return 0;
-> +}
-> +
-> +void bzImage64_usage(void)
-> +{
-> +	printf(	"    --command-line=STRING Set the kernel command line to STRING.\n"
-> +		"    --append=STRING       Set the kernel command line to STRING.\n"
-> +		"    --reuse-cmdline       Use kernel command line from running system.\n"
-> +		"    --initrd=FILE         Use FILE as the kernel's initial ramdisk.\n"
-> +		"    --ramdisk=FILE        Use FILE as the kernel's initial ramdisk.\n"
-> +		);
-> +}
-> +
-> +static int do_bzImage64_load(struct kexec_info *info,
-> +	const char *kernel, off_t kernel_len,
-> +	const char *command_line, off_t command_line_len,
-> +	const char *initrd, off_t initrd_len)
-> +{
-> +	struct x86_linux_header setup_header;
-> +	struct x86_linux_param_header *real_mode;
-> +	int setup_sects;
-> +	size_t size;
-> +	int kern16_size;
-> +	unsigned long setup_base, setup_size;
-> +	struct entry64_regs regs64;
-> +	char *modified_cmdline;
-> +	unsigned long cmdline_end;
-> +	unsigned long code64_start_offset = 0;
-> +	unsigned long kernel64_load_addr = 0;
-> +
-> +	/*
-> +	 * Find out about the file I am about to load.
-> +	 */
-> +	if ((uintmax_t)kernel_len < (uintmax_t)(2 * 512))
-> +		return -1;
-> +
-> +	memcpy(&setup_header, kernel, sizeof(setup_header));
-> +	setup_sects = setup_header.setup_sects;
-> +	if (setup_sects == 0)
-> +		setup_sects = 4;
-> +
-> +	kern16_size = (setup_sects +1) *512;
-> +	if (kernel_len < kern16_size) {
-> +		fprintf(stderr, "BzImage truncated?\n");
-> +		return -1;
-> +	}
-> +
-> +	if ((uintmax_t)command_line_len > (uintmax_t)setup_header.cmdline_size) {
-> +		dbgprintf("Kernel command line too long for kernel!\n");
-> +		return -1;
-> +	}
-> +
-> +	dbgprintf("bzImage is relocatable\n");
-> +
-> +	code64_start_offset = setup_header.code64_start_offset;
-> +	dbgprintf("code64_start_offset: 0x%lx\n", code64_start_offset);
-> +
-> +	/* Need to append some command line parameters internally in case of
-> +	 * taking crash dumps.
-> +	 */
-> +	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
-> +		modified_cmdline = xmalloc(COMMAND_LINE_SIZE);
-> +		memset((void *)modified_cmdline, 0, COMMAND_LINE_SIZE);
-> +		if (command_line) {
-> +			strncpy(modified_cmdline, command_line,
-> +					COMMAND_LINE_SIZE);
-> +			modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
-> +		}
-> +
-> +		/* If panic kernel is being loaded, additional segments need
-> +		 * to be created. load_crashdump_segments will take care of
-> +		 * loading the segments as high in memory as possible, hence
-> +		 * in turn as away as possible from kernel to avoid being
-> +		 * stomped by the kernel.
-> +		 */
-> +		if (load_crashdump_segments(info, modified_cmdline, -1, 0) < 0)
-> +			return -1;
-> +
-> +		/* Use new command line buffer */
-> +		command_line = modified_cmdline;
-> +		command_line_len = strlen(command_line) +1;
-> +	}
-> +
-> +	/* x86_64 purgatory could be anywhere */
-> +	elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
-> +					0x3000, -1, -1, 0);
-> +	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
-> +	/* The argument/parameter segment */
-> +	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
-> +	real_mode = xmalloc(setup_size);
-> +	memcpy(real_mode, kernel, kern16_size);
-> +
-> +	/* No real mode code will be executing. setup segment can be loaded
-> +	 * anywhere as we will be just reading command line.
-> +	 */
-> +	setup_base = add_buffer(info, real_mode, setup_size, setup_size,
-> +				16, 0x3000, -1, -1);
-> +
-> +	dbgprintf("Loaded setup data and command line at 0x%lx\n",
-> +			setup_base);
-> +
-> +	/* The main kernel segment */
-> +	size = kernel_len - kern16_size;
-> +
-> +	/* align to 1G to avoid cross the PUD_SIZE boundary */
-> +	/* try above 4G at first */
-> +	kernel64_load_addr = add_buffer(info, kernel + kern16_size,
-> +					size, size, 1UL<<30,
-> +					1UL<<32, ULONG_MAX,
-> +					-1);
-> +
-> +	/* 1G to 4G */
-> +	if (!kernel64_load_addr)
-> +		kernel64_load_addr = add_buffer(info, kernel + kern16_size,
-> +						size, size, 1UL<<30,
-> +						1UL<<30, 1UL<<32,
-> +						-1);
-> +
-> +	/* under 1g */
-> +	if (!kernel64_load_addr)
-> +		kernel64_load_addr = add_buffer(info, kernel + kern16_size,
-> +						size, size,
-> +						real_mode->kernel_alignment,
-> +						0x100000, 1UL<<30,
-> +						1);
-> +	if (kernel64_load_addr)
-> +		dbgprintf("Loaded 64bit kernel at 0x%lx\n", kernel64_load_addr);
-> +	else
-> +		die("can not load bzImage64");
-> +
-> +	/* Tell the kernel what is going on */
-> +	setup_linux_bootloader_parameters(info, real_mode, setup_base,
-> +			kern16_size, command_line, command_line_len,
-> +			initrd, initrd_len);
-> +
-> +	elf_rel_get_symbol(&info->rhdr, "entry64_regs", &regs64, sizeof(regs64));
-> +	regs64.rbx = 0;           /* Bootstrap processor */
-> +	regs64.rsi = setup_base;  /* Pointer to the parameters */
-> +	regs64.rip = kernel64_load_addr + code64_start_offset; /* the entry point */
-> +	regs64.rsp = elf_rel_get_addr(&info->rhdr, "stack_end"); /* Stack, unused */
-> +	elf_rel_set_symbol(&info->rhdr, "entry64_regs", &regs64, sizeof(regs64));
-> +
-> +	cmdline_end = setup_base + kern16_size + command_line_len - 1;
-> +	elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
-> +			   sizeof(unsigned long));
-> +
-> +	/* Fill in the information BIOS calls would normally provide. */
-> +	setup_linux_system_parameters(real_mode, info->kexec_flags);
-> +
-> +	return 0;
-> +}
-> +
-> +int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
-> +	struct kexec_info *info)
-> +{
-> +	char *command_line = NULL;
-> +	const char *ramdisk, *append = NULL;
-> +	char *ramdisk_buf;
-> +	off_t ramdisk_length;
-> +	int command_line_len;
-> +	int opt;
-> +	int result;
-> +
-> +	/* See options.h -- add any more there, too. */
-> +	static const struct option options[] = {
-> +		KEXEC_ARCH_OPTIONS
-> +		{ "command-line",	1, 0, OPT_APPEND },
-> +		{ "append",		1, 0, OPT_APPEND },
-> +		{ "reuse-cmdline",	0, 0, OPT_REUSE_CMDLINE },
-> +		{ "initrd",		1, 0, OPT_RAMDISK },
-> +		{ "ramdisk",		1, 0, OPT_RAMDISK },
-> +		{ 0,			0, 0, 0 },
-> +	};
-> +	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
-> +
-> +	ramdisk = 0;
-> +	ramdisk_length = 0;
-> +	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
-> +		switch(opt) {
-> +		default:
-> +			/* Ignore core options */
-> +			if (opt < OPT_ARCH_MAX) {
-> +				break;
-> +			}
-> +		case '?':
-> +			usage();
-> +			return -1;
-> +			break;
-> +		case OPT_APPEND:
-> +			append = optarg;
-> +			break;
-> +		case OPT_REUSE_CMDLINE:
-> +			command_line = get_command_line();
-> +			break;
-> +		case OPT_RAMDISK:
-> +			ramdisk = optarg;
-> +			break;
-> +		}
-> +	}
-> +	command_line = concat_cmdline(command_line, append);
-> +	command_line_len = 0;
-> +	if (command_line) {
-> +		command_line_len = strlen(command_line) +1;
-> +	}
-> +	ramdisk_buf = 0;
-> +	if (ramdisk) {
-> +		ramdisk_buf = slurp_file(ramdisk, &ramdisk_length);
-> +	}
-> +	result = do_bzImage64_load(info,
-> +		buf, len,
-> +		command_line, command_line_len,
-> +		ramdisk_buf, ramdisk_length);
-> +
-> +	free(command_line);
-> +	return result;
-> +}
-> diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-> index 6c42c32..5c23e01 100644
-> --- a/kexec/arch/x86_64/kexec-x86_64.c
-> +++ b/kexec/arch/x86_64/kexec-x86_64.c
-> @@ -37,6 +37,7 @@ struct file_type file_type[] = {
->  	{ "multiboot-x86", multiboot_x86_probe, multiboot_x86_load,
->  	  multiboot_x86_usage },
->  	{ "elf-x86", elf_x86_probe, elf_x86_load, elf_x86_usage },
-> +	{ "bzImage64", bzImage64_probe, bzImage64_load, bzImage64_usage },
->  	{ "bzImage", bzImage_probe, bzImage_load, bzImage_usage },
->  	{ "beoboot-x86", beoboot_probe, beoboot_load, beoboot_usage },
->  	{ "nbi-x86", nbi_probe, nbi_load, nbi_usage },
-> diff --git a/kexec/arch/x86_64/kexec-x86_64.h b/kexec/arch/x86_64/kexec-x86_64.h
-> index a97cd71..b820ae8 100644
-> --- a/kexec/arch/x86_64/kexec-x86_64.h
-> +++ b/kexec/arch/x86_64/kexec-x86_64.h
-> @@ -28,4 +28,9 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
->  	struct kexec_info *info);
->  void elf_x86_64_usage(void);
->  
-> +int bzImage64_probe(const char *buf, off_t len);
-> +int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
-> +        struct kexec_info *info);
-> +void bzImage64_usage(void);
-> +
->  #endif /* KEXEC_X86_64_H */
+My conclusion is that makedumpfile's page scanning procedure is extremely
+dominated by the overhead of copying page structures through /proc/vmcore.
+And that is about 20x slower than using the kernel to access pages.
+
+-Cliff
+> 
+> Thanks
+> Vivek
+> 
+> > 
+> > This patch:
+> >   - writes requests to new kernel file /proc/vmcore_pfn_lists
+> >   - makes request PL_REQUEST_MEMMAP to pass the crash kernel information about
+> >     the boot kernel
+> >   - makes requests PL_REQUEST_FREE and PL_REQUEST_EXCLUDE, asking the kernel
+> >     to return lists of PFNs
+> >   - adds page scan timing options -n -o and -t
+> > 
+> > It depends on a kernel patch of course, so I'm also sending one that applies
+> > to a linux-next kernel.   See [PATCH] scan page tables for makedumpfile
+> > 
+> > Diffed against makedumpfile-1.5.0
+> > 
+> > Signed-off-by: Cliff Wickman <cpw@sgi.com>
+> > ---
+> >  dwarf_info.c   |    2 
+> >  makedumpfile.c |  395 +++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+> >  makedumpfile.h |   88 ++++++++++++
+> >  print_info.c   |    5 
+> >  print_info.h   |    3 
+> >  5 files changed, 478 insertions(+), 15 deletions(-)
+> > 
+> > 
+> > Index: makedumpfile-1.5.0/makedumpfile.h
+> > ===================================================================
+> > --- makedumpfile-1.5.0.orig/makedumpfile.h
+> > +++ makedumpfile-1.5.0/makedumpfile.h
+> > @@ -719,9 +719,20 @@ unsigned long long vaddr_to_paddr_ia64(u
+> >  	(((unsigned long long)(X) + ARCH_PFN_OFFSET) << PAGESHIFT())
+> >  
+> >  struct mem_map_data {
+> > +	/*
+> > +	 * pfn_start/pfn_end are the pfn's represented by this mem_map entry.
+> > +	 * mem_map is the virtual address of the array of page structures
+> > +	 * that represent this pages.
+> > +	 * paddr is the physical address of that array of structures.
+> > +	 * ending_paddr would be (pfn_end - pfn_start) * sizeof(struct page).
+> > +	 * section_vaddr is the address we get from ioremap_cache().
+> > +	 */
+> >  	unsigned long long	pfn_start;
+> >  	unsigned long long	pfn_end;
+> > -	unsigned long	mem_map;
+> > +	unsigned long		mem_map;
+> > +	unsigned long long	paddr;		/* filled in by makedumpfile */
+> > +	unsigned long long	ending_paddr;	/* filled in by kernel */
+> > +	void 			*section_vaddr;	/* filled in by kernel */
+> >  };
+> >  
+> >  struct dump_bitmap {
+> > @@ -800,6 +811,7 @@ struct DumpInfo {
+> >  	int		flag_rearrange;      /* flag of creating dumpfile from
+> >  						flattened format */
+> >  	int		flag_split;	     /* splitting vmcore */
+> > +	int		flag_use_kernel_lists;
+> >    	int		flag_cyclic;	     /* cyclic processing to keep memory consumption */
+> >  	int		flag_reassemble;     /* reassemble multiple dumpfiles into one */
+> >  	int		flag_refiltering;    /* refilter from kdump-compressed file */
+> > @@ -1282,6 +1294,80 @@ struct domain_list {
+> >  	unsigned int  pickled_id;
+> >  };
+> >  
+> > +#define PL_REQUEST_FREE		1	/* request for a list of free pages */
+> > +#define PL_REQUEST_EXCLUDE	2	/* request for a list of excludable
+> > +					   pages */
+> > +#define PL_REQUEST_MEMMAP	3	/* request to pass in the makedumpfile
+> > +					   mem_map_data table */
+> > +/*
+> > + * limit the size of the pfn list to this many pfn_element structures
+> > + */
+> > +#define MAX_PFN_LIST 10000
+> > +
+> > +/*
+> > + * one element in the pfn_list
+> > + */
+> > +struct pfn_element {
+> > +	unsigned long pfn;
+> > +	unsigned long order;
+> > +};
+> > +
+> > +/*
+> > + * a request for finding pfn's that can be excluded from the dump
+> > + * they may be pages of particular types or free pages
+> > + */
+> > +struct pfn_list_request {
+> > +	int request;		/* PL_REQUEST_FREE PL_REQUEST_EXCLUDE or */
+> > +				/* PL_REQUEST_MEMMAP */
+> > +	int debug;
+> > +	unsigned long paddr;	/* mem_map address for PL_REQUEST_EXCLUDE */
+> > +	unsigned long pfn_start;/* pfn represented by paddr */
+> > +	unsigned long pgdat_paddr; /* for PL_REQUEST_FREE */
+> > +	unsigned long pgdat_vaddr; /* for PL_REQUEST_FREE */
+> > +	int node;		/* for PL_REQUEST_FREE */
+> > +	int exclude_bits;	/* for PL_REQUEST_EXCLUDE */
+> > +	int count;		/* for PL_REQUEST_EXCLUDE */
+> > +	void *reply_ptr;	/* address of user's pfn_reply, for reply */
+> > +	void *pfn_list_ptr;	/* address of user's pfn array (*pfn_list) */
+> > +	int map_count;		/* for PL_REQUEST_MEMMAP; elements */
+> > +	int map_size;		/* for PL_REQUEST_MEMMAP; bytes in table */
+> > +	void *map_ptr;		/* for PL_REQUEST_MEMMAP; address of table */
+> > +	long list_size;		/* for PL_REQUEST_MEMMAP negotiation */
+> > +	/* resume info: */
+> > +	int more;		/* 0 for done, 1 for "there's more" */
+> > +				/* PL_REQUEST_EXCLUDE: */
+> > +	int map_index;		/* slot in the mem_map array of page structs */
+> > +				/* PL_REQUEST_FREE: */
+> > +	int zone_index;		/* zone within the node's pgdat_list */
+> > +	int freearea_index;	/* free_area within the zone */
+> > +	int type_index;		/* free_list within the free_area */
+> > +	int list_ct;		/* page within the list */
+> > +};
+> > +
+> > +/*
+> > + * the reply from a pfn_list_request
+> > + * the list of pfn's itself is pointed to by pfn_list
+> > + */
+> > +struct pfn_reply {
+> > +	long pfn_list_elements;	/* negoiated on PL_REQUEST_MEMMAP */
+> > +	long in_pfn_list;	/* returned by PL_REQUEST_EXCLUDE and
+> > +				   PL_REQUEST_FREE */
+> > +	/* resume info */
+> > +	int more;		/* 0 == done, 1 == there is more */
+> > +				/* PL_REQUEST_MEMMAP: */
+> > +	int map_index;		/* slot in the mem_map array of page structs */
+> > +				/* PL_REQUEST_FREE: */
+> > +	int zone_index;		/* zone within the node's pgdat_list */
+> > +	int freearea_index;	/* free_area within the zone */
+> > +	int type_index;		/* free_list within the free_area */
+> > +	int list_ct;		/* page within the list */
+> > +	/* statistic counters: */
+> > +	unsigned long long pfn_cache;		/* PL_REQUEST_EXCLUDE */
+> > +	unsigned long long pfn_cache_private;	/* PL_REQUEST_EXCLUDE */
+> > +	unsigned long long pfn_user;		/* PL_REQUEST_EXCLUDE */
+> > +	unsigned long long pfn_free;		/* PL_REQUEST_FREE */
+> > +};
+> > +
+> >  #define PAGES_PER_MAPWORD 	(sizeof(unsigned long) * 8)
+> >  #define MFNS_PER_FRAME		(info->page_size / sizeof(unsigned long))
+> >  
+> > Index: makedumpfile-1.5.0/dwarf_info.c
+> > ===================================================================
+> > --- makedumpfile-1.5.0.orig/dwarf_info.c
+> > +++ makedumpfile-1.5.0/dwarf_info.c
+> > @@ -324,6 +324,8 @@ get_data_member_location(Dwarf_Die *die,
+> >  	return TRUE;
+> >  }
+> >  
+> > +int dwarf_formref(Dwarf_Attribute *, Dwarf_Off *);
+> > +
+> >  static int
+> >  get_die_type(Dwarf_Die *die, Dwarf_Die *die_type)
+> >  {
+> > Index: makedumpfile-1.5.0/makedumpfile.c
+> > ===================================================================
+> > --- makedumpfile-1.5.0.orig/makedumpfile.c
+> > +++ makedumpfile-1.5.0/makedumpfile.c
+> > @@ -13,6 +13,8 @@
+> >   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >   * GNU General Public License for more details.
+> >   */
+> > +#define _GNU_SOURCE
+> > +#include <stdio.h>
+> >  #include "makedumpfile.h"
+> >  #include "print_info.h"
+> >  #include "dwarf_info.h"
+> > @@ -31,6 +33,13 @@ struct srcfile_table	srcfile_table;
+> >  
+> >  struct vm_table		vt = { 0 };
+> >  struct DumpInfo		*info = NULL;
+> > +int pfn_list_fd;
+> > +struct pfn_element *pfn_list;
+> > +int nflag = 0;
+> > +int oflag = 0;
+> > +int tflag = 1;  // cpw: default for testing performance
+> > +struct timeval scan_start;
+> > +int max_pfn_list;
+> >  
+> >  char filename_stdout[] = FILENAME_STDOUT;
+> >  
+> > @@ -2351,6 +2360,9 @@ get_mm_sparsemem(void)
+> >  	unsigned long long pfn_start, pfn_end;
+> >  	unsigned long section, mem_map;
+> >  	unsigned long *mem_sec = NULL;
+> > +	int i;
+> > +	int num_mem_map;
+> > +	struct mem_map_data *mmd;
+> >  
+> >  	int ret = FALSE;
+> >  
+> > @@ -2395,6 +2407,21 @@ get_mm_sparsemem(void)
+> >  		dump_mem_map(pfn_start, pfn_end, mem_map, section_nr);
+> >  	}
+> >  	ret = TRUE;
+> > +
+> > +	/* add paddr to the table */
+> > +	mmd = &info->mem_map_data[0];
+> > +	num_mem_map = info->num_mem_map;
+> > +	for (i = 0; i < num_mem_map; i++) {
+> > +		if (mmd[i].mem_map == 0) {
+> > +			mmd[i].paddr = 0;
+> > +		} else {
+> > +			mmd[i].paddr = vaddr_to_paddr(mmd[i].mem_map);
+> > +			if (mmd[i].paddr == 0)
+> > +				printf("! can't translate %#lx to paddr\n",
+> > +					mmd[i].mem_map);
+> > +		}
+> > +	}
+> > +
+> >  out:
+> >  	if (mem_sec != NULL)
+> >  		free(mem_sec);
+> > @@ -3459,6 +3486,65 @@ out:
+> >  	return ret;
+> >  }
+> >  
+> > +/*
+> > + * let the kernel find excludable pages from one node
+> > + */
+> > +void
+> > +__exclude_free_pages_kernel(unsigned long pgdat, int node)
+> > +{
+> > +	int i, j, ret, pages;
+> > +	unsigned long pgdat_paddr;
+> > +	struct pfn_list_request request;
+> > +	struct pfn_reply reply;
+> > +	struct pfn_element *pe;
+> > +
+> > +	if ((pgdat_paddr = vaddr_to_paddr(pgdat)) == NOT_PADDR) {
+> > +		ERRMSG("Can't convert virtual address(%#lx) to physical.\n",
+> > +			pgdat);
+> > +		return;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Get the list of free pages.
+> > +	 * This may be broken up into MAX_PFN_list arrays of PFNs.
+> > +	 */
+> > +	memset(&request, 0, sizeof(request));
+> > +	request.request = PL_REQUEST_FREE;
+> > +	request.node = node;
+> > +	request.pgdat_paddr = pgdat_paddr;
+> > +	request.pgdat_vaddr = pgdat;
+> > +	request.reply_ptr = (void *)&reply;
+> > +	request.pfn_list_ptr = (void *)pfn_list;
+> > +	memset(&reply, 0, sizeof(reply));
+> > +
+> > +	do {
+> > +		request.more = 0;
+> > +		if (reply.more) {
+> > +			/* this is to be a continuation of the last request */
+> > +			request.more = 1;
+> > +			request.zone_index = reply.zone_index;
+> > +			request.freearea_index = reply.freearea_index;
+> > +			request.type_index = reply.type_index;
+> > +			request.list_ct = reply.list_ct;
+> > +		}
+> > +		ret = write(pfn_list_fd, &request, sizeof(request));
+> > +		if (ret != sizeof(request)) {
+> > +			printf("PL_REQUEST_FREE failed\n");
+> > +			return;
+> > +		}
+> > +		pfn_free += reply.pfn_free;
+> > +
+> > +		for (i = 0; i < reply.in_pfn_list; i++) {
+> > +			pe = &pfn_list[i];
+> > +			pages = (1 << pe->order);
+> > +                        for (j = 0; j < pages; j++) {
+> > +				clear_bit_on_2nd_bitmap_for_kernel(pe->pfn + j);
+> > +			}
+> > +		}
+> > +	} while (reply.more);
+> > +
+> > +	return;
+> > +}
+> >  
+> >  int
+> >  _exclude_free_page(void)
+> > @@ -3478,7 +3564,24 @@ _exclude_free_page(void)
+> >  	gettimeofday(&tv_start, NULL);
+> >  
+> >  	for (num_nodes = 1; num_nodes <= vt.numnodes; num_nodes++) {
+> > -
+> > +		if (info->flag_use_kernel_lists) {
+> > +			node_zones = pgdat + OFFSET(pglist_data.node_zones);
+> > +			if (!readmem(VADDR,
+> > +				pgdat + OFFSET(pglist_data.nr_zones),
+> > +				&nr_zones, sizeof(nr_zones))) {
+> > +					ERRMSG("Can't get nr_zones.\n");
+> > +				return FALSE;
+> > +			}
+> > +			print_progress(PROGRESS_FREE_PAGES, num_nodes - 1,
+> > +								vt.numnodes);
+> > +			/* ask the kernel to do one node */
+> > +			__exclude_free_pages_kernel(pgdat, node);
+> > +			goto next_pgdat;
+> > +		}
+> > +		/*
+> > +		 * kernel does not have the pfn_list capability
+> > +		 * use the old way
+> > +		 */
+> >  		print_progress(PROGRESS_FREE_PAGES, num_nodes - 1, vt.numnodes);
+> >  
+> >  		node_zones = pgdat + OFFSET(pglist_data.node_zones);
+> > @@ -3505,6 +3608,7 @@ _exclude_free_page(void)
+> >  			if (!reset_bitmap_of_free_pages(zone))
+> >  				return FALSE;
+> >  		}
+> > +	next_pgdat:
+> >  		if (num_nodes < vt.numnodes) {
+> >  			if ((node = next_online_node(node + 1)) < 0) {
+> >  				ERRMSG("Can't get next online node.\n");
+> > @@ -3522,6 +3626,8 @@ _exclude_free_page(void)
+> >  	 */
+> >  	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes);
+> >  	print_execution_time(PROGRESS_FREE_PAGES, &tv_start);
+> > +	if (tflag)
+> > +		print_execution_time("Total time", &scan_start);
+> >  
+> >  	return TRUE;
+> >  }
+> > @@ -3766,10 +3872,77 @@ exclude_zero_pages(void)
+> >  	return TRUE;
+> >  }
+> >  
+> > +/*
+> > + * let the kernel find excludable pages from one mem_section
+> > + */
+> > +int
+> > +__exclude_unnecessary_pages_kernel(int mm, struct mem_map_data *mmd)
+> > +{
+> > +	unsigned long long pfn_start = mmd->pfn_start;
+> > +	unsigned long long pfn_end = mmd->pfn_end;
+> > +	int i, j, ret, pages;
+> > +	struct pfn_list_request request;
+> > +	struct pfn_reply reply;
+> > +	struct pfn_element *pe;
+> > +
+> > +	/*
+> > +	 * Get the list of to-be-excluded pages in this section.
+> > +	 * It may be broken up by groups of max_pfn_list size.
+> > +	 */
+> > +	memset(&request, 0, sizeof(request));
+> > +	request.request = PL_REQUEST_EXCLUDE;
+> > +	request.paddr = mmd->paddr; /* phys addr of mem_map */
+> > +	request.reply_ptr = (void *)&reply;
+> > +	request.pfn_list_ptr = (void *)pfn_list;
+> > +	request.exclude_bits = 0;
+> > +	request.pfn_start = pfn_start;
+> > +	request.count = pfn_end - pfn_start;
+> > +	if (info->dump_level & DL_EXCLUDE_CACHE)
+> > +	 	request.exclude_bits |= DL_EXCLUDE_CACHE;
+> > +	if (info->dump_level & DL_EXCLUDE_CACHE_PRI)
+> > +	 	request.exclude_bits |= DL_EXCLUDE_CACHE_PRI;
+> > +	if (info->dump_level & DL_EXCLUDE_USER_DATA)
+> > +	 	request.exclude_bits |= DL_EXCLUDE_USER_DATA;
+> > +	memset(&reply, 0, sizeof(reply));
+> > +
+> > +	do {
+> > +		/* pfn represented by paddr */
+> > +		request.more = 0;
+> > +		if (reply.more) {
+> > +			/* this is to be a continuation of the last request */
+> > +			request.more = 1;
+> > +			request.map_index = reply.map_index;
+> > +		}
+> > +
+> > +		ret = write(pfn_list_fd, &request, sizeof(request));
+> > +		if (ret != sizeof(request))
+> > +			return FALSE;
+> > +
+> > +		pfn_cache += reply.pfn_cache;
+> > +		pfn_cache_private += reply.pfn_cache_private;
+> > +		pfn_user += reply.pfn_user;
+> > +
+> > +		for (i = 0; i < reply.in_pfn_list; i++) {
+> > +			pe = &pfn_list[i];
+> > +			pages = (1 << pe->order);
+> > +                        for (j = 0; j < pages; j++) {
+> > +				clear_bit_on_2nd_bitmap_for_kernel(pe->pfn + j);
+> > +			}
+> > +		}
+> > +	} while (reply.more);
+> > +
+> > +	return TRUE;
+> > +}
+> > +
+> > +/*
+> > + * find excludable pages from one mem_section
+> > + */
+> >  int
+> > -__exclude_unnecessary_pages(unsigned long mem_map,
+> > -    unsigned long long pfn_start, unsigned long long pfn_end)
+> > +__exclude_unnecessary_pages(int mm, struct mem_map_data *mmd)
+> >  {
+> > +	unsigned long long pfn_start = mmd->pfn_start;
+> > +	unsigned long long pfn_end = mmd->pfn_end;
+> > +	unsigned long mem_map = mmd->mem_map;
+> >  	unsigned long long pfn, pfn_mm, maddr;
+> >  	unsigned long long pfn_read_start, pfn_read_end, index_pg;
+> >  	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
+> > @@ -3777,6 +3950,12 @@ __exclude_unnecessary_pages(unsigned lon
+> >  	unsigned int _count;
+> >  	unsigned long flags, mapping;
+> >  
+> > +	if (info->flag_use_kernel_lists) {
+> > +		if (__exclude_unnecessary_pages_kernel(mm, mmd) == FALSE)
+> > +			return FALSE;
+> > +		return TRUE;
+> > +	}
+> > +
+> >  	/*
+> >  	 * Refresh the buffer of struct page, when changing mem_map.
+> >  	 */
+> > @@ -3860,13 +4039,164 @@ __exclude_unnecessary_pages(unsigned lon
+> >  	return TRUE;
+> >  }
+> >  
+> > +/*
+> > + * construct a version of the mem_map_data table to pass to the kernel
+> > + */
+> > +void *
+> > +make_kernel_mmap(int *kmap_elements, int *kmap_size)
+> > +{
+> > +	int i, j;
+> > +	int elements = 0;
+> > +	int page_structs;
+> > +	int elem;
+> > +	unsigned long base_end_pfn;
+> > +	unsigned long end_paddr;
+> > +	struct mem_map_data *mmdo, *mmdn;
+> > +	struct mem_map_data *mmdbase, *mmdnext, *mmdend, *mmdwork;
+> > +	struct mem_map_data temp_mmd;
+> > +	struct mem_map_data *mmap;
+> > +
+> > +	mmap = malloc(info->num_mem_map * sizeof(struct mem_map_data));
+> > +	if (mmap == NULL) {
+> > +		ERRMSG("Can't allocate memory kernel map\n");
+> > +		return NULL;
+> > +	}
+> > +	for (i = 0, mmdn = mmap, mmdo = &info->mem_map_data[0];
+> > +				i < info->num_mem_map; i++, mmdo++) {
+> > +		if (mmdo->mem_map && mmdo->paddr) {
+> > +			*mmdn = *mmdo;
+> > +			mmdn++;
+> > +			elements++;
+> > +		}
+> > +	}
+> > +
+> > +	/* make sure it is sorted by mem_map (it should be already) */
+> > +	mmdn = mmap;
+> > +	for (i = 0; i < elements - 1; i++) {
+> > +		for (j = i + 1; j < elements; j++) {
+> > +			if (mmdn[j].mem_map < mmdn[i].mem_map) {
+> > +				temp_mmd = mmdn[j];
+> > +				mmdn[j] = mmdn[i];
+> > +				mmdn[i] = temp_mmd;
+> > +			}
+> > +		}
+> > +	}
+> > +
+> > +	/*
+> > +	 * consolidate those mem_map's with occupying consecutive physical
+> > +	 * addresses
+> > +	 *  pages represented by these pages structs:       addr of page struct
+> > +	 * pfns 0x1000000-1008000 mem_map 0xffffea0038000000 paddr 0x11f7e00000
+> > +	 * pfns 0x1008000-1010000 mem_map 0xffffea00381c0000 paddr 0x11f7fc0000
+> > +	 * pfns 0x1010000-1018000 mem_map 0xffffea0038380000 paddr 0x11f8180000
+> > +	 *           8000 increments                             inc's:  1c0000
+> > +	 *        8000000 of memory (128M)                    8000 page structs
+> > +	 *
+> > +	 */
+> > +	mmdbase = mmap;
+> > +	mmdnext = mmap + 1;
+> > +	mmdend = mmap + elements;
+> > +	while (mmdnext < mmdend) {
+> > +		elem = mmdend - mmdnext;
+> > +		/*  test mmdbase vs. mmdwork and onward: */
+> > +		for (i = 0, mmdwork = mmdnext; i < elem; i++, mmdwork++) {
+> > +			base_end_pfn = mmdbase->pfn_end;
+> > +			if (base_end_pfn == mmdwork->pfn_start) {
+> > +				page_structs = (mmdbase->pfn_end -
+> > +							mmdbase->pfn_start);
+> > +				end_paddr = (page_structs * SIZE(page))
+> > +							+ mmdbase->paddr;
+> > +				if (mmdwork->paddr == end_paddr) {
+> > +					/* extend base by the work one */
+> > +					mmdbase->pfn_end = mmdwork->pfn_end;
+> > +					/* next is where to begin next time */
+> > +					mmdnext = mmdwork + 1;
+> > +				} else {
+> > +					/* gap in address of page
+> > +					   structs; end of section */
+> > +					mmdbase++;
+> > +					if (mmdwork - mmdbase > 0)
+> > +						*mmdbase = *mmdwork;
+> > +					mmdnext = mmdwork + 1;
+> > +					break;
+> > +				}
+> > +			} else {
+> > +				/* gap in pfns; end of section */
+> > +				mmdbase++;
+> > +				if (mmdwork - mmdbase > 0)
+> > +					*mmdbase = *mmdwork;
+> > +				mmdnext = mmdwork + 1;
+> > +				break;
+> > +			}
+> > +		}
+> > +	}
+> > +	elements = (mmdbase - mmap) + 1;
+> > +	*kmap_elements = elements;
+> > +	*kmap_size = elements * sizeof(struct mem_map_data);
+> > +	return mmap;
+> > +}
+> > +
+> >  int
+> >  exclude_unnecessary_pages(void)
+> >  {
+> > +	int ct=0;
+> > +	int ret;
+> > +	int kmap_elements, kmap_size;
+> > +	long malloc_size;
+> > +	void *kmap_addr;
+> >  	unsigned int mm;
+> >  	struct mem_map_data *mmd;
+> > +	struct pfn_list_request request;
+> > +	struct pfn_reply reply;
+> >  	struct timeval tv_start;
+> >  
+> > +	gettimeofday(&scan_start, NULL);
+> > +	if (info->flag_use_kernel_lists) {
+> > +		/*
+> > +		 * Pass in the mem_map_data table.
+> > +		 * Must do this once, and before doing PL_REQUEST_FREE or
+> > +		 * PL_REQUEST_EXCLUDE.
+> > +		 */
+> > +		kmap_addr = make_kernel_mmap(&kmap_elements, &kmap_size);
+> > +		if (kmap_addr == NULL)
+> > +			return FALSE;
+> > +		memset(&request, 0, sizeof(request));
+> > +		request.request = PL_REQUEST_MEMMAP;
+> > +		request.map_ptr = kmap_addr;
+> > +		request.reply_ptr = (void *)&reply;
+> > +		request.map_count = kmap_elements;
+> > +		request.map_size = kmap_size;
+> > +		request.list_size = MAX_PFN_LIST;
+> > +
+> > +		ret = write(pfn_list_fd, &request, sizeof(request));
+> > +		if (ret < 0) {
+> > +			fprintf(stderr, "PL_REQUEST_MEMMAP returned %d\n", ret);
+> > +			return FALSE;
+> > +		}
+> > +		/* the reply tells us how long the kernel's list actually is */
+> > +		max_pfn_list = reply.pfn_list_elements;
+> > +		if (max_pfn_list <= 0) {
+> > +			fprintf(stderr,
+> > +				"PL_REQUEST_MEMMAP returned max_pfn_list %d\n",
+> > +				max_pfn_list);
+> > +			return FALSE;
+> > +		}
+> > +		if (max_pfn_list < MAX_PFN_LIST) {
+> > +			printf("length of pfn list dropped from %d to %d\n",
+> > +				MAX_PFN_LIST, max_pfn_list);
+> > +		}
+> > +		free(kmap_addr);
+> > +		/*
+> > +		 * Allocate the buffer for the PFN list (just once).
+> > +		 */
+> > +		malloc_size = max_pfn_list * sizeof(struct pfn_element);
+> > +		if ((pfn_list = (struct pfn_element *)malloc(malloc_size)) ==
+> > +									NULL) {
+> > +			ERRMSG("Can't allocate pfn_list of %ld\n", malloc_size);
+> > +			return FALSE;
+> > +		}
+> > +	}
+> > +
+> >  	gettimeofday(&tv_start, NULL);
+> >  
+> >  	for (mm = 0; mm < info->num_mem_map; mm++) {
+> > @@ -3876,9 +4206,10 @@ exclude_unnecessary_pages(void)
+> >  
+> >  		if (mmd->mem_map == NOT_MEMMAP_ADDR)
+> >  			continue;
+> > -
+> > -		if (!__exclude_unnecessary_pages(mmd->mem_map,
+> > -						 mmd->pfn_start, mmd->pfn_end))
+> > +		if (mmd->paddr == 0)
+> > +			continue;
+> > +		ct++;
+> > +		if (!__exclude_unnecessary_pages(mm, mmd))
+> >  			return FALSE;
+> >  	}
+> >  
+> > @@ -3932,8 +4263,8 @@ exclude_unnecessary_pages_cyclic(void)
+> >  				continue;
+> >  
+> >  			if (mmd->pfn_end >= info->cyclic_start_pfn || mmd->pfn_start <= info->cyclic_end_pfn) {
+> > -				if (!__exclude_unnecessary_pages(mmd->mem_map,
+> > -								 mmd->pfn_start, mmd->pfn_end))
+> > +				if (__exclude_unnecessary_pages(mm, mmd)
+> > +								== FALSE)
+> >  					return FALSE;
+> >  			}
+> >  		}
+> > @@ -3963,7 +4294,7 @@ update_cyclic_region(unsigned long long 
+> >  	if (!create_1st_bitmap_cyclic())
+> >  		return FALSE;
+> >  
+> > -	if (!exclude_unnecessary_pages_cyclic())
+> > +	if (exclude_unnecessary_pages_cyclic() == FALSE)
+> >  		return FALSE;
+> >  
+> >  	return TRUE;
+> > @@ -4023,7 +4354,7 @@ create_2nd_bitmap(void)
+> >  	if (info->dump_level & DL_EXCLUDE_CACHE ||
+> >  	    info->dump_level & DL_EXCLUDE_CACHE_PRI ||
+> >  	    info->dump_level & DL_EXCLUDE_USER_DATA) {
+> > -		if (!exclude_unnecessary_pages()) {
+> > +		if (exclude_unnecessary_pages() == FALSE) {
+> >  			ERRMSG("Can't exclude unnecessary pages.\n");
+> >  			return FALSE;
+> >  		}
+> > @@ -4969,7 +5300,7 @@ get_loads_dumpfile_cyclic(void)
+> >  	info->cyclic_end_pfn = info->pfn_cyclic;
+> >  	if (!create_1st_bitmap_cyclic())
+> >  		return FALSE;
+> > -	if (!exclude_unnecessary_pages_cyclic())
+> > +	if (exclude_unnecessary_pages_cyclic() == FALSE)
+> >  		return FALSE;
+> >  
+> >  	if (!(phnum = get_phnum_memory()))
+> > @@ -6953,6 +7284,11 @@ retry:
+> >  		if ((status = writeout_multiple_dumpfiles()) == FALSE)
+> >  			return FALSE;
+> >  	} else {
+> > +		if (nflag) {
+> > +			printf("\n");
+> > +			print_report();
+> > +			return TRUE;
+> > +		}
+> >  		if ((status = writeout_dumpfile()) == FALSE)
+> >  			return FALSE;
+> >  	}
+> > @@ -7782,6 +8118,22 @@ static struct option longopts[] = {
+> >  	{0, 0, 0, 0}
+> >  };
+> >  
+> > +/*
+> > + * test for the presence of capability in the kernel to provide lists
+> > + * of pfn's:
+> > + *   /proc/vmcore_pfn_lists
+> > + * return 1 for present
+> > + * return 0 for not present
+> > + */
+> > +int
+> > +test_kernel_pfn_lists(void)
+> > +{
+> > +	if ((pfn_list_fd = open("/proc/vmcore_pfn_lists", O_WRONLY)) < 0) {
+> > +		return 0;
+> > +	}
+> > +	return 1;
+> > +}
+> > +
+> >  int
+> >  main(int argc, char *argv[])
+> >  {
+> > @@ -7803,11 +8155,12 @@ main(int argc, char *argv[])
+> >  	/*
+> >  	 * By default, makedumpfile works in constant memory space.
+> >  	 */
+> > -	info->flag_cyclic = TRUE;
+> > +	// cpw: turn off cyclic as the default, for testing
+> > +	info->flag_cyclic = FALSE;
+> >  	
+> >  	info->block_order = DEFAULT_ORDER;
+> >  	message_level = DEFAULT_MSG_LEVEL;
+> > -	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMRrsvXx:", longopts,
+> > +	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:MnoRrstVvXx:Y", longopts,
+> >  	    NULL)) != -1) {
+> >  		switch (opt) {
+> >  		case 'b':
+> > @@ -7865,6 +8218,13 @@ main(int argc, char *argv[])
+> >  		case 'M':
+> >  			info->flag_dmesg = 1;
+> >  			break;
+> > +		case 'n':
+> > +			/* -n undocumented, for testing page scanning time */
+> > +			nflag = 1;
+> > +			break;
+> > +		case 'o':
+> > +			oflag = 1;
+> > +			break;
+> >  		case 'P':
+> >  			info->xen_phys_start = strtoul(optarg, NULL, 0);
+> >  			break;
+> > @@ -7877,6 +8237,9 @@ main(int argc, char *argv[])
+> >  		case 'r':
+> >  			info->flag_reassemble = 1;
+> >  			break;
+> > +		case 't':
+> > +			tflag = 1;
+> > +			break;
+> >  		case 'V':
+> >  			info->vaddr_for_vtop = strtoul(optarg, NULL, 0);
+> >  			break;
+> > @@ -7908,6 +8271,12 @@ main(int argc, char *argv[])
+> >  			goto out;
+> >  		}
+> >  	}
+> > +
+> > +	if (oflag)
+> > +		info->flag_use_kernel_lists = 0;
+> > +	else
+> > +		info->flag_use_kernel_lists = test_kernel_pfn_lists();
+> > +
+> >  	if (flag_debug)
+> >  		message_level |= ML_PRINT_DEBUG_MSG;
+> >  
+> > Index: makedumpfile-1.5.0/print_info.c
+> > ===================================================================
+> > --- makedumpfile-1.5.0.orig/print_info.c
+> > +++ makedumpfile-1.5.0/print_info.c
+> > @@ -237,6 +237,11 @@ print_usage(void)
+> >  	MSG("  [-f]:\n");
+> >  	MSG("      Overwrite DUMPFILE even if it already exists.\n");
+> >  	MSG("\n");
+> > +	MSG("  [-o]:\n");
+> > +	MSG("      Read page structures from /proc/vmcore in the scan for\n");
+> > +	MSG("      free and excluded pages regardless of whether\n");
+> > +	MSG("      /proc/vmcore_pfn_lists is present.\n");
+> > +	MSG("\n");
+> >  	MSG("  [-h]:\n");
+> >  	MSG("      Show help message and LZO support status (enabled/disabled).\n");
+> >  	MSG("\n");
+> > Index: makedumpfile-1.5.0/print_info.h
+> > ===================================================================
+> > --- makedumpfile-1.5.0.orig/print_info.h
+> > +++ makedumpfile-1.5.0/print_info.h
+> > @@ -43,7 +43,8 @@ void print_execution_time(char *step_nam
+> >   */
+> >  #define MIN_MSG_LEVEL		(0)
+> >  #define MAX_MSG_LEVEL		(31)
+> > -#define DEFAULT_MSG_LEVEL	(7)	/* Print the progress indicator, the
+> > +// cpw: was 7  but add x10 for testing
+> > +#define DEFAULT_MSG_LEVEL	(23)	/* Print the progress indicator, the
+> >  					   common message, the error message */
+> >  #define ML_PRINT_PROGRESS	(0x001) /* Print the progress indicator */
+> >  #define ML_PRINT_COMMON_MSG	(0x002)	/* Print the common message */
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+-- 
+Cliff Wickman
+SGI
+cpw@sgi.com
+(651) 683-3824
 
 _______________________________________________
 kexec mailing list
