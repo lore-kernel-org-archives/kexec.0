@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TaHdB-0005qo-Aj
- for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:02:43 +0000
+ id 1TaHdB-0005qp-7T
+ for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:02:42 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH 4/6] kexec,
- x86: set ext_cmd_line_ptr when boot_param is put high
-Date: Sun, 18 Nov 2012 19:02:29 -0800
-Message-Id: <1353294151-32133-5-git-send-email-yinghai@kernel.org>
+Subject: [PATCH 1/6] kexec, x86: add boot header member for version 2.12
+Date: Sun, 18 Nov 2012 19:02:26 -0800
+Message-Id: <1353294151-32133-2-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1353294151-32133-1-git-send-email-yinghai@kernel.org>
 References: <878v9zp55t.fsf@xmission.com>
  <1353294151-32133-1-git-send-email-yinghai@kernel.org>
@@ -27,32 +26,67 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-only do that for bzImage64, and it could have command line above 4g.
+will use ext_ramdisk_image/size, and code64_start_offset
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/i386/x86-linux-setup.c |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
+ include/x86/x86-linux.h           |   22 +++++++++++++++++++++-
+ kexec/arch/i386/x86-linux-setup.c |    2 +-
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
+diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
+index 27af02b..71cd296 100644
+--- a/include/x86/x86-linux.h
++++ b/include/x86/x86-linux.h
+@@ -178,7 +178,17 @@ struct x86_linux_param_header {
+ 	uint32_t cmdline_size;			/* 0x238 */
+ 	uint32_t hardware_subarch;		/* 0x23C */
+ 	uint64_t hardware_subarch_data;		/* 0x240 */
+-	uint8_t  reserved16[0x290 - 0x248];	/* 0x248 */
++	uint32_t payload_offset;		/* 0x248 */
++	uint32_t payload_length;		/* 0x24C */
++	uint64_t setup_data;			/* 0x250 */
++	uint64_t pref_address;			/* 0x258 */
++	uint32_t init_size;			/* 0x260 */
++	uint32_t handover_offset;		/* 0x264 */
++	uint32_t ext_ramdisk_image;		/* 0x268 */
++	uint32_t ext_ramdisk_size;		/* 0x26C */
++	uint32_t code64_start_offset;		/* 0x270 */
++	uint32_t ext_cmd_line_ptr;		/* 0x274 */
++	uint8_t  reserved16[0x290 - 0x278];	/* 0x278 */
+ 	uint32_t edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];	/* 0x290 */
+ #endif
+ 	struct 	e820entry e820_map[E820MAX];	/* 0x2d0 */
+@@ -245,6 +255,16 @@ struct x86_linux_header {
+ 	uint32_t cmdline_size;                  /* 0x238 */
+ 	uint32_t hardware_subarch;              /* 0x23C */
+ 	uint64_t hardware_subarch_data;         /* 0x240 */
++	uint32_t payload_offset;		/* 0x248 */
++	uint32_t payload_length;		/* 0x24C */
++	uint64_t setup_data;			/* 0x250 */
++	uint64_t pref_address;			/* 0x258 */
++	uint32_t init_size;			/* 0x260 */
++	uint32_t handover_offset;		/* 0x264 */
++	uint32_t ext_ramdisk_image;		/* 0x268 */
++	uint32_t ext_ramdisk_size;		/* 0x26C */
++	uint32_t code64_start_offset;		/* 0x270 */
++	uint32_t ext_cmd_line_ptr;		/* 0x274 */
+ #endif
+ } PACKED;
+ 
 diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index b0e6119..c929166 100644
+index b7ab8ea..53d9df9 100644
 --- a/kexec/arch/i386/x86-linux-setup.c
 +++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -105,7 +105,13 @@ void setup_linux_bootloader_parameters(
- 		/* setup_move_size */
- 	/* } */
- 	if (real_mode->protocol_version >= 0x0202) {
--		real_mode->cmd_line_ptr = real_mode_base + cmdline_offset;
-+		unsigned long cmd_line_ptr = real_mode_base + cmdline_offset;
-+
-+		real_mode->cmd_line_ptr = cmd_line_ptr & 0xffffffff;
-+		if (real_mode->protocol_version >= 0x020c)
-+			real_mode->ext_cmd_line_ptr = cmd_line_ptr >> 32;
-+
-+		printf("cmd_line_ptr: %lx\n", cmd_line_ptr);
- 	}
+@@ -41,7 +41,7 @@ void init_linux_parameters(struct x86_linux_param_header *real_mode)
  
- 	/* Fill in the command line */
+ 	/* Boot block magic */
+ 	memcpy(real_mode->header_magic, "HdrS", 4);
+-	real_mode->protocol_version = 0x0206;
++	real_mode->protocol_version = 0x020C;
+ 	real_mode->initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
+ 	real_mode->cmdline_size = COMMAND_LINE_SIZE;
+ }
 -- 
 1.7.7
 
