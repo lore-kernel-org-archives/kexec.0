@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TaHf6-0006BB-R9
- for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:04:41 +0000
+ id 1TaHf8-0006BZ-Oi
+ for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:04:43 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v2 0/6] kexec: put bzImage and ramdisk above 4G for x86 64bit
-Date: Sun, 18 Nov 2012 19:04:32 -0800
-Message-Id: <1353294278-32230-1-git-send-email-yinghai@kernel.org>
-In-Reply-To: <878v9zp55t.fsf@xmission.com>
+Subject: [PATCH v2 2/6] kexec: don't die during buffer finding
+Date: Sun, 18 Nov 2012 19:04:34 -0800
+Message-Id: <1353294278-32230-3-git-send-email-yinghai@kernel.org>
+In-Reply-To: <1353294278-32230-1-git-send-email-yinghai@kernel.org>
 References: <878v9zp55t.fsf@xmission.com>
+ <1353294278-32230-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,45 +26,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-Now we have limit kdump reserved under 896M, because kexec has the limitation.
-and also bzImage need to stay under 4g.
+could return 0, and let the caller retry with new ranges.
 
-kernel parts changes could be found at:
-        git://git.kernel.org/pub/scm/linux/kernel/git/yinghai/linux-yinghai.git for-x86-boot
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+---
+ kexec/kexec.c |    7 +++----
+ 1 files changed, 3 insertions(+), 4 deletions(-)
 
-here patches are for kexec tools to load bzImage and ramdisk high acccording
-to new added boot header fields.
-
--v2: remove mem64-min/mem64-max
-     add purgartory changes from Eric, that make it relocatable
-     put command line above 4g.
-
-Eric W. Biederman (1):
-  kexec, x86: Make x64_64 purgatory relocatable above 4G
-
-Yinghai Lu (5):
-  kexec, x86: add boot header member for version 2.12
-  kexec: don't die during buffer finding
-  kexec, x86: put ramdisk high for 64bit bzImage
-  kexec, x86: set ext_cmd_line_ptr when boot_param is put high
-  kexec, x86_64: put 64bit bzImage high
-
- include/x86/x86-linux.h                |   22 ++-
- kexec/arch/i386/x86-linux-setup.c      |   40 +++-
- kexec/arch/x86_64/Makefile             |    1 +
- kexec/arch/x86_64/kexec-bzImage64.c    |  316 ++++++++++++++++++++++++++++++++
- kexec/arch/x86_64/kexec-x86_64.c       |    1 +
- kexec/arch/x86_64/kexec-x86_64.h       |    5 +
- kexec/kexec.c                          |    7 +-
- purgatory/arch/i386/entry32-16-debug.S |   22 ++-
- purgatory/arch/i386/entry32-16.S       |   22 ++-
- purgatory/arch/x86_64/Makefile         |    4 +-
- purgatory/arch/x86_64/entry64-32.S     |   68 +++++--
- purgatory/arch/x86_64/entry64.S        |    5 +-
- purgatory/arch/x86_64/setup-x86_64.S   |    4 +-
- 13 files changed, 458 insertions(+), 59 deletions(-)
- create mode 100644 kexec/arch/x86_64/kexec-bzImage64.c
-
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 8928be0..0f8aec8 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -366,10 +366,9 @@ unsigned long add_buffer_phys_virt(struct kexec_info *info,
+ 	memsz = (memsz + (pagesize - 1)) & ~(pagesize - 1);
+ 
+ 	base = locate_hole(info, memsz, buf_align, buf_min, buf_max, buf_end);
+-	if (base == ULONG_MAX) {
+-		die("locate_hole failed\n");
+-	}
+-	
++	if (base == ULONG_MAX)
++		return 0;
++
+ 	add_segment_phys_virt(info, buf, bufsz, base, memsz, phys);
+ 	return base;
+ }
 -- 
 1.7.7
 
