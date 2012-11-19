@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TaHf8-0006BU-Pq
+ id 1TaHf9-0006Bn-Dg
  for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:04:44 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v2 1/6] kexec, x86: add boot header member for version 2.12
-Date: Sun, 18 Nov 2012 19:04:33 -0800
-Message-Id: <1353294278-32230-2-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v2 3/6] kexec, x86: put ramdisk high for 64bit bzImage
+Date: Sun, 18 Nov 2012 19:04:35 -0800
+Message-Id: <1353294278-32230-4-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1353294278-32230-1-git-send-email-yinghai@kernel.org>
 References: <878v9zp55t.fsf@xmission.com>
  <1353294278-32230-1-git-send-email-yinghai@kernel.org>
@@ -26,67 +26,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-will use ext_ramdisk_image/size, and code64_start_offset
+only do that for 64bit bzImage, and will fall back to low if fail to get high.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- include/x86/x86-linux.h           |   22 +++++++++++++++++++++-
- kexec/arch/i386/x86-linux-setup.c |    2 +-
- 2 files changed, 22 insertions(+), 2 deletions(-)
+ kexec/arch/i386/x86-linux-setup.c |   30 ++++++++++++++++++++++--------
+ 1 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index 27af02b..71cd296 100644
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -178,7 +178,17 @@ struct x86_linux_param_header {
- 	uint32_t cmdline_size;			/* 0x238 */
- 	uint32_t hardware_subarch;		/* 0x23C */
- 	uint64_t hardware_subarch_data;		/* 0x240 */
--	uint8_t  reserved16[0x290 - 0x248];	/* 0x248 */
-+	uint32_t payload_offset;		/* 0x248 */
-+	uint32_t payload_length;		/* 0x24C */
-+	uint64_t setup_data;			/* 0x250 */
-+	uint64_t pref_address;			/* 0x258 */
-+	uint32_t init_size;			/* 0x260 */
-+	uint32_t handover_offset;		/* 0x264 */
-+	uint32_t ext_ramdisk_image;		/* 0x268 */
-+	uint32_t ext_ramdisk_size;		/* 0x26C */
-+	uint32_t code64_start_offset;		/* 0x270 */
-+	uint32_t ext_cmd_line_ptr;		/* 0x274 */
-+	uint8_t  reserved16[0x290 - 0x278];	/* 0x278 */
- 	uint32_t edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];	/* 0x290 */
- #endif
- 	struct 	e820entry e820_map[E820MAX];	/* 0x2d0 */
-@@ -245,6 +255,16 @@ struct x86_linux_header {
- 	uint32_t cmdline_size;                  /* 0x238 */
- 	uint32_t hardware_subarch;              /* 0x23C */
- 	uint64_t hardware_subarch_data;         /* 0x240 */
-+	uint32_t payload_offset;		/* 0x248 */
-+	uint32_t payload_length;		/* 0x24C */
-+	uint64_t setup_data;			/* 0x250 */
-+	uint64_t pref_address;			/* 0x258 */
-+	uint32_t init_size;			/* 0x260 */
-+	uint32_t handover_offset;		/* 0x264 */
-+	uint32_t ext_ramdisk_image;		/* 0x268 */
-+	uint32_t ext_ramdisk_size;		/* 0x26C */
-+	uint32_t code64_start_offset;		/* 0x270 */
-+	uint32_t ext_cmd_line_ptr;		/* 0x274 */
- #endif
- } PACKED;
- 
 diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index b7ab8ea..53d9df9 100644
+index 53d9df9..b0e6119 100644
 --- a/kexec/arch/i386/x86-linux-setup.c
 +++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -41,7 +41,7 @@ void init_linux_parameters(struct x86_linux_param_header *real_mode)
+@@ -69,20 +69,34 @@ void setup_linux_bootloader_parameters(
+ 	}
  
- 	/* Boot block magic */
- 	memcpy(real_mode->header_magic, "HdrS", 4);
--	real_mode->protocol_version = 0x0206;
-+	real_mode->protocol_version = 0x020C;
- 	real_mode->initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
- 	real_mode->cmdline_size = COMMAND_LINE_SIZE;
- }
+ 	/* Load the initrd if we have one */
++	initrd_base = 0;
+ 	if (initrd_buf) {
+-		initrd_base = add_buffer(info,
+-			initrd_buf, initrd_size, initrd_size,
+-			4096, INITRD_BASE, initrd_addr_max, -1);
++		if (real_mode->protocol_version >= 0x020c &&
++		    real_mode->code64_start_offset) {
++			initrd_base = add_buffer(info,
++				initrd_buf, initrd_size, initrd_size,
++				4096, 1UL<<32, ULONG_MAX, -1);
++			if (!initrd_base)
++				initrd_base = add_buffer(info,
++					initrd_buf, initrd_size, initrd_size,
++					4096, 1UL<<30, 1UL<<32, -1);
++		}
++		if (!initrd_base)
++			initrd_base = add_buffer(info,
++				initrd_buf, initrd_size, initrd_size,
++				4096, INITRD_BASE, initrd_addr_max, -1);
+ 		dbgprintf("Loaded initrd at 0x%lx size 0x%lx\n", initrd_base,
+ 			initrd_size);
+-	} else {
+-		initrd_base = 0;
++	} else
+ 		initrd_size = 0;
+-	}
+ 
+ 	/* Ramdisk address and size */
+-	real_mode->initrd_start = initrd_base;
+-	real_mode->initrd_size  = initrd_size;
++	real_mode->initrd_start = initrd_base & 0xffffffff;
++	real_mode->initrd_size  = initrd_size & 0xffffffff;
++	if ((initrd_base + initrd_size) > (1ULL<<32)) {
++		real_mode->ext_ramdisk_image = initrd_base >> 32;
++		real_mode->ext_ramdisk_size  = initrd_size >> 32;
++	}
+ 
+ 	/* The location of the command line */
+ 	/* if (real_mode_base == 0x90000) { */
 -- 
 1.7.7
 
