@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TaHdB-0005qn-D3
- for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:02:43 +0000
+ id 1TaHdB-0005qq-97
+ for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:02:44 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH 2/6] kexec: don't die during buffer finding
-Date: Sun, 18 Nov 2012 19:02:27 -0800
-Message-Id: <1353294151-32133-3-git-send-email-yinghai@kernel.org>
+Subject: [PATCH 3/6] kexec, x86: put ramdisk high for 64bit bzImage
+Date: Sun, 18 Nov 2012 19:02:28 -0800
+Message-Id: <1353294151-32133-4-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1353294151-32133-1-git-send-email-yinghai@kernel.org>
 References: <878v9zp55t.fsf@xmission.com>
  <1353294151-32133-1-git-send-email-yinghai@kernel.org>
@@ -26,31 +26,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-could return 0, and let the caller retry with new ranges.
+only do that for 64bit bzImage, and will fall back to low if fail to get high.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/kexec.c |    7 +++----
- 1 files changed, 3 insertions(+), 4 deletions(-)
+ kexec/arch/i386/x86-linux-setup.c |   30 ++++++++++++++++++++++--------
+ 1 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 8928be0..0f8aec8 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -366,10 +366,9 @@ unsigned long add_buffer_phys_virt(struct kexec_info *info,
- 	memsz = (memsz + (pagesize - 1)) & ~(pagesize - 1);
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 53d9df9..b0e6119 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -69,20 +69,34 @@ void setup_linux_bootloader_parameters(
+ 	}
  
- 	base = locate_hole(info, memsz, buf_align, buf_min, buf_max, buf_end);
--	if (base == ULONG_MAX) {
--		die("locate_hole failed\n");
+ 	/* Load the initrd if we have one */
++	initrd_base = 0;
+ 	if (initrd_buf) {
+-		initrd_base = add_buffer(info,
+-			initrd_buf, initrd_size, initrd_size,
+-			4096, INITRD_BASE, initrd_addr_max, -1);
++		if (real_mode->protocol_version >= 0x020c &&
++		    real_mode->code64_start_offset) {
++			initrd_base = add_buffer(info,
++				initrd_buf, initrd_size, initrd_size,
++				4096, 1UL<<32, ULONG_MAX, -1);
++			if (!initrd_base)
++				initrd_base = add_buffer(info,
++					initrd_buf, initrd_size, initrd_size,
++					4096, 1UL<<30, 1UL<<32, -1);
++		}
++		if (!initrd_base)
++			initrd_base = add_buffer(info,
++				initrd_buf, initrd_size, initrd_size,
++				4096, INITRD_BASE, initrd_addr_max, -1);
+ 		dbgprintf("Loaded initrd at 0x%lx size 0x%lx\n", initrd_base,
+ 			initrd_size);
+-	} else {
+-		initrd_base = 0;
++	} else
+ 		initrd_size = 0;
 -	}
--	
-+	if (base == ULONG_MAX)
-+		return 0;
-+
- 	add_segment_phys_virt(info, buf, bufsz, base, memsz, phys);
- 	return base;
- }
+ 
+ 	/* Ramdisk address and size */
+-	real_mode->initrd_start = initrd_base;
+-	real_mode->initrd_size  = initrd_size;
++	real_mode->initrd_start = initrd_base & 0xffffffff;
++	real_mode->initrd_size  = initrd_size & 0xffffffff;
++	if ((initrd_base + initrd_size) > (1ULL<<32)) {
++		real_mode->ext_ramdisk_image = initrd_base >> 32;
++		real_mode->ext_ramdisk_size  = initrd_size >> 32;
++	}
+ 
+ 	/* The location of the command line */
+ 	/* if (real_mode_base == 0x90000) { */
 -- 
 1.7.7
 
