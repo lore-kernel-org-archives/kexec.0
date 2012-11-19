@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TaHfD-0006DG-Tk
- for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:04:50 +0000
+ id 1TaHfG-0006Dw-5s
+ for kexec@lists.infradead.org; Mon, 19 Nov 2012 03:04:53 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v2 5/6] kexec, x86: Make x64_64 purgatory relocatable above 4G
-Date: Sun, 18 Nov 2012 19:04:37 -0800
-Message-Id: <1353294278-32230-6-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v2 6/6] kexec, x86_64: put 64bit bzImage high
+Date: Sun, 18 Nov 2012 19:04:38 -0800
+Message-Id: <1353294278-32230-7-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1353294278-32230-1-git-send-email-yinghai@kernel.org>
 References: <878v9zp55t.fsf@xmission.com>
  <1353294278-32230-1-git-send-email-yinghai@kernel.org>
@@ -26,300 +26,380 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+need to make sure pass right 64bit start address to go there directly later.
+
+-v2: add kexec-bzImage64.c according to Eric.
+-v3: don't need to purgatory under 2g after Eric's change to purgatory code.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- purgatory/arch/i386/entry32-16-debug.S |   22 ++++++-----
- purgatory/arch/i386/entry32-16.S       |   22 ++++++-----
- purgatory/arch/x86_64/Makefile         |    4 +-
- purgatory/arch/x86_64/entry64-32.S     |   68 +++++++++++++++++++++++---------
- purgatory/arch/x86_64/entry64.S        |    5 +-
- purgatory/arch/x86_64/setup-x86_64.S   |    4 +-
- 6 files changed, 81 insertions(+), 44 deletions(-)
+ kexec/arch/x86_64/Makefile          |    1 +
+ kexec/arch/x86_64/kexec-bzImage64.c |  316 +++++++++++++++++++++++++++++++++++
+ kexec/arch/x86_64/kexec-x86_64.c    |    1 +
+ kexec/arch/x86_64/kexec-x86_64.h    |    5 +
+ 4 files changed, 323 insertions(+), 0 deletions(-)
+ create mode 100644 kexec/arch/x86_64/kexec-bzImage64.c
 
-diff --git a/purgatory/arch/i386/entry32-16-debug.S b/purgatory/arch/i386/entry32-16-debug.S
-index 82b58ca..2f47607 100644
---- a/purgatory/arch/i386/entry32-16-debug.S
-+++ b/purgatory/arch/i386/entry32-16-debug.S
-@@ -29,15 +29,17 @@
- 	.balign 16
- entry16_debug:
- 	.code32
--	/* Compute where I am running at */
--	movl	$entry16_debug, %ebx	
-+	/* Compute where I am running at (assumes esp valid) */
-+	call	1f
-+1:	popl	%ebx
+diff --git a/kexec/arch/x86_64/Makefile b/kexec/arch/x86_64/Makefile
+index 405bdf5..1cf10f9 100644
+--- a/kexec/arch/x86_64/Makefile
++++ b/kexec/arch/x86_64/Makefile
+@@ -13,6 +13,7 @@ x86_64_KEXEC_SRCS += kexec/arch/i386/crashdump-x86.c
+ x86_64_KEXEC_SRCS_native =  kexec/arch/x86_64/kexec-x86_64.c
+ x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-x86_64.c
+ x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
++x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-bzImage64.c
  
- 	/* Fixup my real mode segment */
- 	movl	%ebx, %eax
- 	shrl	$4, %eax
--	movw	%ax, 2 + realptr
-+	movw	%ax, (2 + realptr - entry16_debug)(%ebx)
+ x86_64_KEXEC_SRCS += $(x86_64_KEXEC_SRCS_native)
  
- 	/* Fixup the gdt */
-+	movl	%ebx, (0x02 + gdt - entry16_debug)(%ebx)
- 	movl	%ebx, %eax
- 	shll	$16, %eax
- 	
-@@ -49,19 +51,19 @@ entry16_debug:
- 	andl	$0xff000000, %edx
- 	orl	%edx, %ecx
- 
--	orl	%eax, 0x08 + gdt
--	orl	%ecx, 0x0c + gdt
--	orl	%eax, 0x10 + gdt
--	orl	%ecx, 0x14 + gdt	
-+	orl	%eax, (0x08 + gdt - entry16_debug)(%ebx)
-+	orl	%ecx, (0x0c + gdt - entry16_debug)(%ebx)
-+	orl	%eax, (0x10 + gdt - entry16_debug)(%ebx)
-+	orl	%ecx, (0x14 + gdt - entry16_debug)(%ebx)
- 	
- 	
- DEBUG_CHAR('a')
- 	/* Setup the classic BIOS interrupt table at 0x0 */
--	lidt	idtptr
-+	lidt	(idtptr - entry16_debug)(%ebx)
- 
- DEBUG_CHAR('b')
- 	/* Provide us with 16bit segments that we can use */
--	lgdt	gdt
-+	lgdt	(gdt - entry16_debug)(%ebx)
- 
- DEBUG_CHAR('c')
- 	/* Note we don't disable the a20 line, (this shouldn't be required)
-@@ -160,7 +162,7 @@ idtptr:
- gdt:
- 	/* 0x00 unusable segment so used as the gdt ptr */
- 	.word gdt_end - gdt - 1
--	.long gdt
-+	.long 0 /* gdt */
- 	.word 0
- 
- 	/* 0x08 16 bit real mode code segment */
-diff --git a/purgatory/arch/i386/entry32-16.S b/purgatory/arch/i386/entry32-16.S
-index aaf1273..20a1ce6 100644
---- a/purgatory/arch/i386/entry32-16.S
-+++ b/purgatory/arch/i386/entry32-16.S
-@@ -24,15 +24,17 @@
- 	.balign 16
- entry16:
- 	.code32
--	/* Compute where I am running at */
--	movl	$entry16, %ebx
-+	/* Compute where I am running at (assumes esp valid) */
-+	call	1f
-+1:	popl	%ebx
- 
- 	/* Fixup my real mode segment */
- 	movl	%ebx, %eax
- 	shrl	$4, %eax
--	movw	%ax, 2 + realptr
-+	movw	%ax, (2 + realptr - entry16)(%ebx)
- 
- 	/* Fixup the gdt */
-+	movl	%ebx, (0x02 + gdt - entry16)(%ebx)
- 	movl	%ebx, %eax
- 	shll	$16, %eax
- 	
-@@ -44,17 +46,17 @@ entry16:
- 	andl	$0xff000000, %edx
- 	orl	%edx, %ecx
- 
--	orl	%eax, 0x08 + gdt
--	orl	%ecx, 0x0c + gdt
--	orl	%eax, 0x10 + gdt
--	orl	%ecx, 0x14 + gdt	
-+	orl	%eax, (0x08 + gdt - entry16)(%ebx)
-+	orl	%ecx, (0x0c + gdt - entry16)(%ebx)
-+	orl	%eax, (0x10 + gdt - entry16)(%ebx)
-+	orl	%ecx, (0x14 + gdt - entry16)(%ebx)
- 	
- 	
- 	/* Setup the classic BIOS interrupt table at 0x0 */
--	lidt	idtptr
-+	lidt	(idtptr - entry16)(%ebx)
- 	
- 	/* Provide us with 16bit segments that we can use */
--	lgdt	gdt
-+	lgdt	(gdt - entry16)(%ebx)
- 
- 	/* Note we don't disable the a20 line, (this shouldn't be required)
- 	 * The code to do it is in kexec_test and it is a real pain.
-@@ -147,7 +149,7 @@ idtptr:
- gdt:
- 	/* 0x00 unusable segment so used as the gdt ptr */
- 	.word gdt_end - gdt - 1
--	.long gdt
-+	.long 0 /* gdt */
- 	.word 0
- 
- 	/* 0x08 16 bit real mode code segment */
-diff --git a/purgatory/arch/x86_64/Makefile b/purgatory/arch/x86_64/Makefile
-index 22b4228..7300937 100644
---- a/purgatory/arch/x86_64/Makefile
-+++ b/purgatory/arch/x86_64/Makefile
-@@ -16,9 +16,11 @@ dist += purgatory/arch/x86_64/Makefile $(x86_64_PURGATORY_SRCS_native) 	\
- 	purgatory/arch/x86_64/purgatory-x86_64.h
- 
- # Don't add sources in i386/ to dist, as i386/Makefile adds them
--x86_64_PURGATORY_SRCS +=  purgatory/arch/i386/entry32-16.S
-+x86_64_PURGATORY_SRCS += purgatory/arch/i386/entry32-16.S
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/entry32-16-debug.S
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/crashdump_backup.c
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/console-x86.c
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/vga.c
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/pic.c
+diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
+new file mode 100644
+index 0000000..6835ef6
+--- /dev/null
++++ b/kexec/arch/x86_64/kexec-bzImage64.c
+@@ -0,0 +1,316 @@
++/*
++ * kexec: Linux boots Linux
++ *
++ * Copyright (C) 2003-2010  Eric Biederman (ebiederm@xmission.com)
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation (version 2 of the License).
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
 +
-+x86_64_PURGATORY_EXTRA_CFLAGS = -mcmodel=large
-diff --git a/purgatory/arch/x86_64/entry64-32.S b/purgatory/arch/x86_64/entry64-32.S
-index 66f8a85..f2b6377 100644
---- a/purgatory/arch/x86_64/entry64-32.S
-+++ b/purgatory/arch/x86_64/entry64-32.S
-@@ -24,13 +24,34 @@
- 	.equ	CR0_PG,        0x80000000
- 
- 	.text
-+	.balign 16
- 	.globl entry32, entry32_regs
- entry32:
- 	.code64
- 
--	/* Setup a gdt that should that is generally usefully */
-+	/* Setup the 4G offset of entry32 lm_exit code segment */
-+	movq	$0x00CF9A000000ffff, %rax
++#define _GNU_SOURCE
++#include <stddef.h>
++#include <stdio.h>
++#include <string.h>
++#include <limits.h>
++#include <stdlib.h>
++#include <errno.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <getopt.h>
++#include <elf.h>
++#include <boot/elf_boot.h>
++#include <ip_checksum.h>
++#include <x86/x86-linux.h>
++#include "../../kexec.h"
++#include "../../kexec-elf.h"
++#include "../../kexec-syscall.h"
++#include "kexec-x86_64.h"
++#include "../i386/x86-linux-setup.h"
++#include "../i386/crashdump-x86.h"
++#include <arch/options.h>
 +
-+	leaq	entry32(%rip), %rbx	/* Low 24 bits */
-+	andq	$0xffffff, %rbx
-+	shlq	$16, %rbx
-+	orq	%rbx, %rax
++static const int probe_debug = 0;
 +
-+	leaq	entry32(%rip), %rbx	/* High 8 bits */
-+	movq	$0xff000000, %rdx
-+	andq	%rdx, %rbx
-+	shlq	$32, %rbx
-+	orq	%rbx, %rax
++int bzImage64_probe(const char *buf, off_t len)
++{
++	const struct x86_linux_header *header;
++	if ((uintmax_t)len < (uintmax_t)(2 * 512)) {
++		if (probe_debug) {
++			fprintf(stderr, "File is too short to be a bzImage!\n");
++		}
++		return -1;
++	}
++	header = (const struct x86_linux_header *)buf;
++	if (memcmp(header->header_magic, "HdrS", 4) != 0) {
++		if (probe_debug) {
++			fprintf(stderr, "Not a bzImage\n");
++		}
++		return -1;
++	}
++	if (header->boot_sector_magic != 0xAA55) {
++		if (probe_debug) {
++			fprintf(stderr, "No x86 boot sector present\n");
++		}
++		/* No x86 boot sector present */
++		return -1;
++	}
++	if (header->protocol_version < 0x020C) {
++		if (probe_debug) {
++			fprintf(stderr, "Must be at least protocol version 2.12\n");
++		}
++		/* Must be at least protocol version 2.12 */
++		return -1;
++	}
++	if ((header->loadflags & 1) == 0) {
++		if (probe_debug) {
++			fprintf(stderr, "zImage not a bzImage\n");
++		}
++		/* Not a bzImage */
++		return -1;
++	}
++	if (!header->code64_start_offset) {
++		if (probe_debug) {
++			fprintf(stderr, "Not a bzImage64\n");
++		}
++		/* Must have non zero offset */
++		return -1;
++	}
++	if (!header->relocatable_kernel) {
++		if (probe_debug) {
++			fprintf(stderr, "Not a relocatable bzImage64\n");
++		}
++		/* Must be relocatable */
++		return -1;
++	}
++	/* I've got a bzImage64 */
++	if (probe_debug) {
++		fprintf(stderr, "It's a relocatable bzImage64\n");
++	}
++	return 0;
++}
 +
-+	movq	%rax, (gdt + 0x20)(%rip)
++void bzImage64_usage(void)
++{
++	printf(	"    --command-line=STRING Set the kernel command line to STRING.\n"
++		"    --append=STRING       Set the kernel command line to STRING.\n"
++		"    --reuse-cmdline       Use kernel command line from running system.\n"
++		"    --initrd=FILE         Use FILE as the kernel's initial ramdisk.\n"
++		"    --ramdisk=FILE        Use FILE as the kernel's initial ramdisk.\n"
++		);
++}
 +
-+	/* Setup a gdt that is generally usefully */
- 	lgdt	gdt(%rip)
--		
++static int do_bzImage64_load(struct kexec_info *info,
++	const char *kernel, off_t kernel_len,
++	const char *command_line, off_t command_line_len,
++	const char *initrd, off_t initrd_len)
++{
++	struct x86_linux_header setup_header;
++	struct x86_linux_param_header *real_mode;
++	int setup_sects;
++	size_t size;
++	int kern16_size;
++	unsigned long setup_base, setup_size;
++	struct entry64_regs regs64;
++	char *modified_cmdline;
++	unsigned long cmdline_end;
++	unsigned long code64_start_offset = 0;
++	unsigned long kernel64_load_addr = 0;
 +
-+	/* Setup the far pointer to the entry point */
-+	movl	eip(%rip), %eax
-+	movl	%eax, entry32_addr(%rip)
++	/*
++	 * Find out about the file I am about to load.
++	 */
++	if ((uintmax_t)kernel_len < (uintmax_t)(2 * 512))
++		return -1;
 +
- 	/* Switch to 32bit compatiblity mode */
- 	ljmp	*lm_exit_addr(%rip)
- lm_exit:
-@@ -60,19 +81,19 @@ lm_exit:
- 	movl	%eax, %gs
- 
- 	/* Load the registers */
--	movl	eax, %eax
--	movl	ecx, %ecx
--	movl	edx, %edx
--	movl	esi, %esi
--	movl	edi, %edi
--	movl	esp, %esp
--	movl	ebp, %ebp
--	movl	ebx, %ebx
-+	movl	%cs:eax - entry32, %eax
-+	movl	%cs:ecx - entry32, %ecx
-+	movl	%cs:edx - entry32, %edx
-+	movl	%cs:esi - entry32, %esi
-+	movl	%cs:edi - entry32, %edi
-+	movl	%cs:esp - entry32, %esp
-+	movl	%cs:ebp - entry32, %ebp
-+	movl	%cs:ebx - entry32, %ebx
- 
- 	/* Jump to the loaded image */
--	jmpl	*(eip)
-+	ljmp	*%cs:entry32_addr - entry32
- 
--	.section ".rodata"
-+	.section ".data"
- 	.balign 16
- gdt:	/* 0x00 unusable segment 
- 	 * 0x08 unused
-@@ -88,8 +109,8 @@ gdt:	/* 0x00 unusable segment
- 	/* 0x18 4GB flat data segment */
- 	.word	0xFFFF, 0x0000, 0x9200, 0x00CF
- 
--	/* 0x20 dummy */
--	.word	0x0000, 0x0000, 0x0000, 0x000
-+	/* 0x20 4GB flat code segment base at entry32 */
-+	.word	0xFFFF, 0x0000, 0x9A00, 0x0CF
- 	/* 0x28 dummy */
- 	.word	0x0000, 0x0000, 0x0000, 0x000
- 	/* 0x30 dummy */
-@@ -115,9 +136,15 @@ gdt_end:
- 	.section ".rodata"
- 	.balign 4
- lm_exit_addr:
--	.long lm_exit
--	.long 0x10		
--	
-+	.long lm_exit - entry32
-+	.long 0x20
++	memcpy(&setup_header, kernel, sizeof(setup_header));
++	setup_sects = setup_header.setup_sects;
++	if (setup_sects == 0)
++		setup_sects = 4;
 +
-+	.section ".data"
-+	.balign 4
-+entry32_addr:
-+	.long 0x00000000
-+	.long 0x10
++	kern16_size = (setup_sects +1) *512;
++	if (kernel_len < kern16_size) {
++		fprintf(stderr, "BzImage truncated?\n");
++		return -1;
++	}
 +
- 	.section ".rodata"
- 	.balign 4
- entry32_regs:  
-@@ -129,6 +156,9 @@ esi:	.long 0x00000000
- edi:	.long 0x00000000
- esp:	.long 0x00000000
- ebp:	.long 0x00000000
--eip:	.long entry16
--	.size entry32_regs, . - entry32_regs
-+eip:	.quad entry16	/* low 32 bits address
-+			 * high 32bits zeros
-+			 * uses 64bit reloc
-+			 */
-+	.size entry32_regs, (. - 4) - entry32_regs
++	if ((uintmax_t)command_line_len > (uintmax_t)setup_header.cmdline_size) {
++		dbgprintf("Kernel command line too long for kernel!\n");
++		return -1;
++	}
++
++	dbgprintf("bzImage is relocatable\n");
++
++	code64_start_offset = setup_header.code64_start_offset;
++	dbgprintf("code64_start_offset: 0x%lx\n", code64_start_offset);
++
++	/* Need to append some command line parameters internally in case of
++	 * taking crash dumps.
++	 */
++	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
++		modified_cmdline = xmalloc(COMMAND_LINE_SIZE);
++		memset((void *)modified_cmdline, 0, COMMAND_LINE_SIZE);
++		if (command_line) {
++			strncpy(modified_cmdline, command_line,
++					COMMAND_LINE_SIZE);
++			modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
++		}
++
++		/* If panic kernel is being loaded, additional segments need
++		 * to be created. load_crashdump_segments will take care of
++		 * loading the segments as high in memory as possible, hence
++		 * in turn as away as possible from kernel to avoid being
++		 * stomped by the kernel.
++		 */
++		if (load_crashdump_segments(info, modified_cmdline, -1, 0) < 0)
++			return -1;
++
++		/* Use new command line buffer */
++		command_line = modified_cmdline;
++		command_line_len = strlen(command_line) +1;
++	}
++
++	/* x86_64 purgatory could be anywhere */
++	elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
++					0x3000, -1, -1, 0);
++	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
++	/* The argument/parameter segment */
++	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
++	real_mode = xmalloc(setup_size);
++	memcpy(real_mode, kernel, kern16_size);
++
++	/* No real mode code will be executing. setup segment can be loaded
++	 * anywhere as we will be just reading command line.
++	 */
++	setup_base = add_buffer(info, real_mode, setup_size, setup_size,
++				16, 0x3000, -1, -1);
++
++	dbgprintf("Loaded setup data and command line at 0x%lx\n",
++			setup_base);
++
++	/* The main kernel segment */
++	size = kernel_len - kern16_size;
++
++	/* align to 1G to avoid cross the PUD_SIZE boundary */
++	/* try above 4G at first */
++	kernel64_load_addr = add_buffer(info, kernel + kern16_size,
++					size, size, 1UL<<30,
++					1UL<<32, ULONG_MAX,
++					-1);
++
++	/* 1G to 4G */
++	if (!kernel64_load_addr)
++		kernel64_load_addr = add_buffer(info, kernel + kern16_size,
++						size, size, 1UL<<30,
++						1UL<<30, 1UL<<32,
++						-1);
++
++	/* under 1g */
++	if (!kernel64_load_addr)
++		kernel64_load_addr = add_buffer(info, kernel + kern16_size,
++						size, size,
++						real_mode->kernel_alignment,
++						0x100000, 1UL<<30,
++						1);
++	if (kernel64_load_addr)
++		dbgprintf("Loaded 64bit kernel at 0x%lx\n", kernel64_load_addr);
++	else
++		die("can not load bzImage64");
++
++	/* Tell the kernel what is going on */
++	setup_linux_bootloader_parameters(info, real_mode, setup_base,
++			kern16_size, command_line, command_line_len,
++			initrd, initrd_len);
++
++	elf_rel_get_symbol(&info->rhdr, "entry64_regs", &regs64, sizeof(regs64));
++	regs64.rbx = 0;           /* Bootstrap processor */
++	regs64.rsi = setup_base;  /* Pointer to the parameters */
++	regs64.rip = kernel64_load_addr + code64_start_offset; /* the entry point */
++	regs64.rsp = elf_rel_get_addr(&info->rhdr, "stack_end"); /* Stack, unused */
++	elf_rel_set_symbol(&info->rhdr, "entry64_regs", &regs64, sizeof(regs64));
++
++	cmdline_end = setup_base + kern16_size + command_line_len - 1;
++	elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
++			   sizeof(unsigned long));
++
++	/* Fill in the information BIOS calls would normally provide. */
++	setup_linux_system_parameters(real_mode, info->kexec_flags);
++
++	return 0;
++}
++
++int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
++	struct kexec_info *info)
++{
++	char *command_line = NULL;
++	const char *ramdisk, *append = NULL;
++	char *ramdisk_buf;
++	off_t ramdisk_length;
++	int command_line_len;
++	int opt;
++	int result;
++
++	/* See options.h -- add any more there, too. */
++	static const struct option options[] = {
++		KEXEC_ARCH_OPTIONS
++		{ "command-line",	1, 0, OPT_APPEND },
++		{ "append",		1, 0, OPT_APPEND },
++		{ "reuse-cmdline",	0, 0, OPT_REUSE_CMDLINE },
++		{ "initrd",		1, 0, OPT_RAMDISK },
++		{ "ramdisk",		1, 0, OPT_RAMDISK },
++		{ 0,			0, 0, 0 },
++	};
++	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
++
++	ramdisk = 0;
++	ramdisk_length = 0;
++	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
++		switch(opt) {
++		default:
++			/* Ignore core options */
++			if (opt < OPT_ARCH_MAX) {
++				break;
++			}
++		case '?':
++			usage();
++			return -1;
++			break;
++		case OPT_APPEND:
++			append = optarg;
++			break;
++		case OPT_REUSE_CMDLINE:
++			command_line = get_command_line();
++			break;
++		case OPT_RAMDISK:
++			ramdisk = optarg;
++			break;
++		}
++	}
++	command_line = concat_cmdline(command_line, append);
++	command_line_len = 0;
++	if (command_line) {
++		command_line_len = strlen(command_line) +1;
++	}
++	ramdisk_buf = 0;
++	if (ramdisk) {
++		ramdisk_buf = slurp_file(ramdisk, &ramdisk_length);
++	}
++	result = do_bzImage64_load(info,
++		buf, len,
++		command_line, command_line_len,
++		ramdisk_buf, ramdisk_length);
++
++	free(command_line);
++	return result;
++}
+diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+index 6c42c32..5c23e01 100644
+--- a/kexec/arch/x86_64/kexec-x86_64.c
++++ b/kexec/arch/x86_64/kexec-x86_64.c
+@@ -37,6 +37,7 @@ struct file_type file_type[] = {
+ 	{ "multiboot-x86", multiboot_x86_probe, multiboot_x86_load,
+ 	  multiboot_x86_usage },
+ 	{ "elf-x86", elf_x86_probe, elf_x86_load, elf_x86_usage },
++	{ "bzImage64", bzImage64_probe, bzImage64_load, bzImage64_usage },
+ 	{ "bzImage", bzImage_probe, bzImage_load, bzImage_usage },
+ 	{ "beoboot-x86", beoboot_probe, beoboot_load, beoboot_usage },
+ 	{ "nbi-x86", nbi_probe, nbi_load, nbi_usage },
+diff --git a/kexec/arch/x86_64/kexec-x86_64.h b/kexec/arch/x86_64/kexec-x86_64.h
+index a97cd71..b820ae8 100644
+--- a/kexec/arch/x86_64/kexec-x86_64.h
++++ b/kexec/arch/x86_64/kexec-x86_64.h
+@@ -28,4 +28,9 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info);
+ void elf_x86_64_usage(void);
  
-diff --git a/purgatory/arch/x86_64/entry64.S b/purgatory/arch/x86_64/entry64.S
-index 666023c..e3223b7 100644
---- a/purgatory/arch/x86_64/entry64.S
-+++ b/purgatory/arch/x86_64/entry64.S
-@@ -37,9 +37,10 @@ entry64:
- 	movl	%eax, %fs
- 	movl	%eax, %gs
- 
--	movq	$stack_init, %rsp
-+	leaq	stack_init(%rip), %rsp
- 	pushq	$0x10 /* CS */
--	pushq	$new_cs_exit
-+	leaq	new_cs_exit(%rip), %rax
-+	pushq	%rax
- 	lretq
- new_cs_exit:
- 
-diff --git a/purgatory/arch/x86_64/setup-x86_64.S b/purgatory/arch/x86_64/setup-x86_64.S
-index 74997fa..95572d8 100644
---- a/purgatory/arch/x86_64/setup-x86_64.S
-+++ b/purgatory/arch/x86_64/setup-x86_64.S
-@@ -42,10 +42,10 @@ purgatory_start:
- 	/* In 64bit mode the code segment is meaningless */
- 
- 	movq	0(%rsp), %rax
--	movq	%rax, jump_back_entry
-+	movq	%rax, jump_back_entry(%rip)
- 
- 	/* Setup a stack */
--	movq	$lstack_end, %rsp
-+	leaq	lstack_end(%rip), %rsp
- 
- 	/* Call the C code */
- 	call purgatory
++int bzImage64_probe(const char *buf, off_t len);
++int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
++        struct kexec_info *info);
++void bzImage64_usage(void);
++
+ #endif /* KEXEC_X86_64_H */
 -- 
 1.7.7
 
