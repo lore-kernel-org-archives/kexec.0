@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Taqt8-0008Df-Sj
- for kexec@lists.infradead.org; Tue, 20 Nov 2012 16:41:34 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1353423893-23125-1-git-send-email-daniel.kiper@oracle.com>
- <1353423893-23125-2-git-send-email-daniel.kiper@oracle.com>
-Date: Tue, 20 Nov 2012 08:40:39 -0800
-In-Reply-To: <1353423893-23125-2-git-send-email-daniel.kiper@oracle.com>
- (Daniel Kiper's message of "Tue, 20 Nov 2012 16:04:43 +0100")
-Message-ID: <87lidwtego.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 01/11] kexec: introduce kexec_ops struct
+Received: from g6t0185.atlanta.hp.com ([15.193.32.62])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TarHH-0000yT-1n
+ for kexec@lists.infradead.org; Tue, 20 Nov 2012 17:06:29 +0000
+Subject: Re: [RFC] makedumpfile-1.5.1 RC
+From: Lisa Mitchell <lisa.mitchell@hp.com>
+In-Reply-To: <20121120163545.GC30248@redhat.com>
+References: <20121116171539.152467f3611c12fbd6b6be0d@mxc.nes.nec.co.jp>
+ <1353413695.13097.131.camel@lisamlinux.fc.hp.com>
+ <20121120163545.GC30248@redhat.com>
+Date: Tue, 20 Nov 2012 06:03:20 -0700
+Message-ID: <1353416600.13097.152.camel@lisamlinux.fc.hp.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,90 +24,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: xen-devel@lists.xensource.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, mingo@redhat.com, jbeulich@suse.com, hpa@zytor.com, tglx@linutronix.de
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "Hoemann,
+ Jerry" <jerry.hoemann@hp.com>, Cliff Wickman <cpw@sgi.com>
 
-Daniel Kiper <daniel.kiper@oracle.com> writes:
+On Tue, 2012-11-20 at 16:35 +0000, Vivek Goyal wrote:
+> On Tue, Nov 20, 2012 at 05:14:55AM -0700, Lisa Mitchell wrote:
+> 
+> [..]
+> > I tested this makedumpfile v1.5.1-rc on a 4 TB DL980, on 2.6.32 based
+> > kernel, and got good results. With crashkernel=256M, and default
+> > settings (i.e. no cyclic buffer option selected), the dump successfully
+> > completed in about 2 hours, 40 minutes, and then I specified a cyclic
+> > buffer size of 48 M, and the dump completed in the same time, no
+> > measurable differences within the accuracy of our measurements. 
+> 
+> This sounds little odd to me.
+> 
+> - With smaller buffer size of 48M, it should have taken much more time
+>   to finish the dump as compared to when no restriction was put on
+>   buffer size. I am assuming that out of 256M reserved, say around 128MB
+>   was available for makedumpfile to use.
+> 
+> - Also 2 hours 40 minutes sounds a lot. Is it practical to wait that
+>   long for a machine to dump before it can be brought into service
+>   again? Do you have any data w.r.t older makedumpfile (which did not
+>   have cyclic buffer logic).
+> 
+> I have some data which I collected in 2008. 128GB system took roughly
+> 4 minutes to filter and save dumpfile. So if we scale it linearly
+> then it should take around 32minutes per TB. Hence around 2 hours
+> 8 minutes for a 4TB systems. Your numbers do seems to be in roughly
+> inline.
+> 
+> Still 2-2.5 hours seems too long to be able to filter and save core of a
+> 4TB system. We will probably need to figure out what's taking so much of
+> time. May be we need to look into cliff wickman's idea of kernel returning
+> list of pfns to dump and make dump 20 time faster. I will love to have 4TB
+> system dumped in 6 minutes as opposed to 2 hrs. :-)
+> 
+> Thanks
+> Vivek
 
-> Some kexec/kdump implementations (e.g. Xen PVOPS) could not use default
-> functions or require some changes in behavior of kexec/kdump generic code.
-> To cope with that problem kexec_ops struct was introduced. It allows
-> a developer to replace all or some functions and control some
-> functionality of kexec/kdump generic code.
->
-> Default behavior of kexec/kdump generic code is not changed.
+As I stated, I don't really have precise performance data here, but the
+time I got was comparable to the rough 3-4 hours with a larger
+crashkernel size that I got a successful dump on this same system with a
+makedumpfile v1.4.  We haven't made a good apples-apples comparison
+between the two at this point, but this is how long this 4 TB system has
+been taking to dump, dump level =31, so we feel we are in the same
+ballpark with makedumpfile v1.5.1.  
 
-Ick.
+It does seem that the "Excluding pages" parts take up a lot of the time
+in the dump, as opposed to the copying, but I don't have a good
+breakdown.  
 
-> v2 - suggestions/fixes:
->    - add comment for kexec_ops.crash_alloc_temp_store member
->      (suggested by Konrad Rzeszutek Wilk),
->    - simplify kexec_ops usage
->      (suggested by Konrad Rzeszutek Wilk).
->
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> ---
->  include/linux/kexec.h |   26 ++++++++++
->  kernel/kexec.c        |  131 +++++++++++++++++++++++++++++++++++++------------
->  2 files changed, 125 insertions(+), 32 deletions(-)
->
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index d0b8458..c8d0b35 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -116,7 +116,33 @@ struct kimage {
->  #endif
->  };
->  
-> +struct kexec_ops {
-> +	/*
-> +	 * Some kdump implementations (e.g. Xen PVOPS dom0) could not access
-> +	 * directly crash kernel memory area. In this situation they must
-> +	 * allocate memory outside of it and later move contents from temporary
-> +	 * storage to final resting places (usualy done by relocate_kernel()).
-> +	 * Such behavior could be enforced by setting
-> +	 * crash_alloc_temp_store member to true.
-> +	 */
+I have added the debug mem_level 3 to kdump.conf file, and have seen
+used memory on this machine  recorded right before makedumpfile creates
+the bitmap and starts filtering be around 140 MB, and have seen
+makedumpfile fail, with OOM killer active after this point with a
+crashkernel size of 256 MB or 384 MB using makedumpfile v1.4.  
 
-Why in the world would Xen not be able to access crash kernel memory?
-As currently defined it is normal memory that the kernel chooses not to
-use.
+So makedumpfile v1.5.1 solves the above problem, and allows us to
+successfully dump a 4 TB system with these smaller crashkernel sizes.
 
-If relocate kernel can access that memory you definitely can access the
-memory so the comment does not make any sense.
-
-> +	bool crash_alloc_temp_store;
-> +	struct page *(*kimage_alloc_pages)(gfp_t gfp_mask,
-> +						unsigned int order,
-> +						unsigned long limit);
-> +	void (*kimage_free_pages)(struct page *page);
-> +	unsigned long (*page_to_pfn)(struct page *page);
-> +	struct page *(*pfn_to_page)(unsigned long pfn);
-> +	unsigned long (*virt_to_phys)(volatile void *address);
-> +	void *(*phys_to_virt)(unsigned long address);
-> +	int (*machine_kexec_prepare)(struct kimage *image);
-> +	int (*machine_kexec_load)(struct kimage *image);
-> +	void (*machine_kexec_cleanup)(struct kimage *image);
-> +	void (*machine_kexec_unload)(struct kimage *image);
-> +	void (*machine_kexec_shutdown)(void);
-> +	void (*machine_kexec)(struct kimage *image);
-> +};
-
-Ugh.  This is a nasty abstraction.
-
-You are mixing and matching a bunch of things together here.
-
-If you need to override machine_kexec_xxx please do that on a per
-architecture basis.
-
-Special case overrides of page_to_pfn, pfn_to_page, virt_to_phys,
-phys_to_virt, and friends seem completely inappropriate.
-
-There may be a point to all of these but you are mixing and matching
-things badly.
+We do need much better performance numbers  to insure no regression from
+makedumpfile v1.4, but I wanted you to get the feedback at least of what
+testing we had done, and that it appears it is solving the primary
+problem we were interested in, that we could dump many terabytes of
+memory with crashkernel sizes fixed at 384 MB or below. 
 
 
-Eric
 
 _______________________________________________
 kexec mailing list
