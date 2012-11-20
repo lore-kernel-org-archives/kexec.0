@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TakUj-00058R-3u
- for kexec@lists.infradead.org; Tue, 20 Nov 2012 09:51:55 +0000
-Date: Tue, 20 Nov 2012 18:47:55 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Message-Id: <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
-In-Reply-To: <20121116143649.GA4515@redhat.com>
-References: <50A4E524.8020702@linux.vnet.ibm.com>
- <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
- <20121115155557.GF2529@redhat.com>
- <50A60CF2.6010309@linux.vnet.ibm.com>
- <20121116143649.GA4515@redhat.com>
-Mime-Version: 1.0
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Takai-0008VQ-ID
+ for kexec@lists.infradead.org; Tue, 20 Nov 2012 09:58:06 +0000
+Message-ID: <50AB53B8.1030309@cn.fujitsu.com>
+Date: Tue, 20 Nov 2012 17:56:08 +0800
+From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v4 0/2] x86: clear vmcss on all cpus when doing kdump
+ if necessary
+References: <50A3645F.60302@cn.fujitsu.com> <50A611AA.6030903@cn.fujitsu.com>
+ <20121120003258.GA1292@amt.cnet>
+In-Reply-To: <20121120003258.GA1292@amt.cnet>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,67 +20,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com, aravinda@linux.vnet.ibm.com
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, buendgen@de.ibm.com
+To: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Avi Kivity <avi@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hello,
-
-On Fri, 16 Nov 2012 09:36:49 -0500
-Vivek Goyal <vgoyal@redhat.com> wrote:
-
-> On Fri, Nov 16, 2012 at 03:22:50PM +0530, Aravinda Prasad wrote:
-> > 
-> > 
-> > On 2012-11-15 21:25, Vivek Goyal wrote:
-> > 
-> > > On Thu, Nov 15, 2012 at 09:27:45AM -0500, Dave Anderson wrote:
-> > > 
-> > > [..]
-> > >>> Yes, makedumpfile needs to be linked against eppic library for filtering
-> > >>> data and this will increase makedumpfile size and initramfs size too.
-> > >>
-> > >> Just to clarify -- your example indicates that the vmlinux file is required
-> > >> for this facility to work, correct?
-> > >>  
-> > >>> makedumpfile -c -d 31 -x vmlinux --eppic key.c vmcore filtered_vmcore
-> > >>
-> > >> Clearly distros won't be putting the vmlinux file in the initramfs -- that's
-> > >> the whole reasoning behind vmcoreinfo.  So the 99% of users that aren't
-> > >> interested in scrubbing will have to pay the penalty of the larger makedumpfile
-> > >> binary.
-> > > 
-> > > That's a good point Dave. We will never put debug compiled vmlinux in 
-> > > initramfs. Following two alternatives come to my mind.
-> > 
-> > 
-> > As I mentioned, we don't need vmlinux in initramfs as filtering is done
-> > during post processing only.
-> 
-> You are missing the point. The point is that despite the fact that
-> scrubbing will never be done from initramfs, all the users will pay
-> penalty for increased makedumpfile size.
-> 
-> So why not write a separate tool (scrub-vmcore) so that makedumpfile
-> users don't pay the bloated size penatly.
-
-As Vivek said, I think it's difficult to persuade almost all distributor
-to specify EPPIC=on.
-
-So, it seems that separate tool is better way for both user and distributor.
-If you will make it, I will drop eppic support from v1.5.1 and export core
-functions from makedumpfile as library for such tools in the future.
-
-Does this meet your purpose, Aravinda ?
-
-
-Thanks
-Atsushi Kumagai
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQxMeaciDIw5pelIDA4OjMyLCBNYXJjZWxvIFRvc2F0dGkg5YaZ6YGTOgo+IE9u
+IEZyaSwgTm92IDE2LCAyMDEyIGF0IDA2OjEyOjU4UE0gKzA4MDAsIHpoYW5neWFuZmVpIHdyb3Rl
+Ogo+PiBIZWxsbyBNYXJjZWxvLAo+Pgo+PiBBbnkgdGhvdWdodHM/Cj4gCj4gSSB0aG91Z2h0IGEg
+ZnVuY3Rpb24gY2FsbCB3YXMgT0ssIGJ1dCBpdHMgYmV0dGVyIHRvIGhhdmUgYWxsIGNvZGUgaW4K
+PiB2bXguYy4gUGxlYXNlIGhhdmUgYW4gYXRvbWljIG5vdGlmaWVyIGluIGtleGVjLmMgKHJlZ2lz
+dGVyZWQgYnkgS1ZNCj4gbW9kdWxlIHZpYSBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIg
+ZXRjKS4KPiAKPiBPdGhlciB0aGFuIHRoYXQsIHdoaWNoIGlzIGxhcmdlbHkgY29zbWV0aWMsIGl0
+IGxvb2tzIGZpbmUuCj4gU29ycnkgZm9yIG5vdCBleHByZXNzaW5nIHRoaXMgZWFybGllci4KPiAK
+PiAKCkhtbSwgVGhhbmtzLiBJIHdpbGwgcmVzZW5kIGEgbmV3IHBhdGNoIHNldC4KClRoYW5rcwpa
+aGFuZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
