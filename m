@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bk0-f49.google.com ([209.85.214.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TaZul-0006N8-S5
- for kexec@lists.infradead.org; Mon, 19 Nov 2012 22:34:04 +0000
-Received: by mail-bk0-f49.google.com with SMTP id jm19so926978bkc.36
- for <kexec@lists.infradead.org>; Mon, 19 Nov 2012 14:34:00 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Tabm9-0003vs-I3
+ for kexec@lists.infradead.org; Tue, 20 Nov 2012 00:33:18 +0000
+Date: Mon, 19 Nov 2012 22:32:58 -0200
+From: Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH v4 0/2] x86: clear vmcss on all cpus when doing kdump if
+ necessary
+Message-ID: <20121120003258.GA1292@amt.cnet>
+References: <50A3645F.60302@cn.fujitsu.com> <50A611AA.6030903@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <20121119210001.GI10035@redhat.com>
-References: <1353107067-14564-1-git-send-email-yinghai@kernel.org>
- <20121119210001.GI10035@redhat.com>
-Date: Mon, 19 Nov 2012 14:34:00 -0800
-Message-ID: <CAE9FiQX3cohb5VqTZ4Hb2Hf+nK89s5BfyVyGHnV_78105r9g4w@mail.gmail.com>
-Subject: Re: [PATCH 0/8] kexec: put bzImage and ramdisk above 4G for x86 64bit
-From: Yinghai Lu <yinghai@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50A611AA.6030903@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,26 +20,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Avi Kivity <avi@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, Nov 19, 2012 at 1:00 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
->> here patches are for kexec tools to load bzImage and ramdisk high acccording
->> to new added boot header fields.
->
-> So does this allow me to load other segments also above 4G? (purgatory,
-> setup/bootparams, command line etc). I remember that purgaotry has
-> some 32bit relocations so had to be loaded below 2G.
-
-for 64bit bzImage, yes.
-
-Eric update purgartory code to support that can not be loaded above 4G ...
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBOb3YgMTYsIDIwMTIgYXQgMDY6MTI6NThQTSArMDgwMCwgemhhbmd5YW5mZWkgd3Jv
+dGU6Cj4gSGVsbG8gTWFyY2VsbywKPiAKPiBBbnkgdGhvdWdodHM/CgpJIHRob3VnaHQgYSBmdW5j
+dGlvbiBjYWxsIHdhcyBPSywgYnV0IGl0cyBiZXR0ZXIgdG8gaGF2ZSBhbGwgY29kZSBpbgp2bXgu
+Yy4gUGxlYXNlIGhhdmUgYW4gYXRvbWljIG5vdGlmaWVyIGluIGtleGVjLmMgKHJlZ2lzdGVyZWQg
+YnkgS1ZNCm1vZHVsZSB2aWEgYXRvbWljX25vdGlmaWVyX2NoYWluX3JlZ2lzdGVyIGV0YykuCgpP
+dGhlciB0aGFuIHRoYXQsIHdoaWNoIGlzIGxhcmdlbHkgY29zbWV0aWMsIGl0IGxvb2tzIGZpbmUu
+ClNvcnJ5IGZvciBub3QgZXhwcmVzc2luZyB0aGlzIGVhcmxpZXIuCgoKPiDkuo4gMjAxMuW5tDEx
+5pyIMTTml6UgMTc6MjksIHpoYW5neWFuZmVpIOWGmemBkzoKPiA+IEN1cnJlbnRseSwga2R1bXAg
+anVzdCBtYWtlcyBhbGwgdGhlIGxvZ2ljYWwgcHJvY2Vzc29ycyBsZWF2ZSBWTVggb3BlcmF0aW9u
+IGJ5Cj4gPiBleGVjdXRpbmcgVk1YT0ZGIGluc3RydWN0aW9uLCBzbyBhbnkgVk1DU3MgYWN0aXZl
+IG9uIHRoZSBsb2dpY2FsIHByb2Nlc3NvcnMgbWF5Cj4gPiBiZSBjb3JydXB0ZWQuIEJ1dCwgc29t
+ZXRpbWVzLCB3ZSBuZWVkIHRoZSBWTUNTcyB0byBkZWJ1ZyBndWVzdCBpbWFnZXMgY29udGFpbmVk
+Cj4gPiBpbiB0aGUgaG9zdCB2bWNvcmUuIFRvIHByZXZlbnQgdGhlIGNvcnJ1cHRpb24sIHdlIHNo
+b3VsZCBWTUNMRUFSIHRoZSBWTUNTcyBiZWZvcmUKPiA+IGV4ZWN1dGluZyB0aGUgVk1YT0ZGIGlu
+c3RydWN0aW9uLgo+ID4gCj4gPiBUaGUgcGF0Y2ggc2V0IHByb3ZpZGVzIGEgd2F5IHRvIFZNQ0xF
+QVIgdm1jc3MgcmVsYXRlZCB0byBndWVzdHMgb24gYWxsIGNwdXMgYmVmb3JlCj4gPiBleGVjdXRp
+bmcgdGhlIFZNWE9GRiB3aGVuIGRvaW5nIGtkdW1wLiBUaGlzIGlzIHVzZWQgdG8gZW5zdXJlIHRo
+ZSBWTUNTcyBpbiB0aGUKPiA+IHZtY29yZSB1cGRhdGVkIGFuZCBub24tY29ycnVwdGVkLgo+ID4g
+Cj4gPiBDaGFuZ2Vsb2cgZnJvbSB2MyB0byB2NDoKPiA+IDEuIGFkZCBhIG5ldyBwZXJjcHUgdmFy
+aWFibGUgdm1jbGVhcl9za2lwcGVkIHRvIHNraXAKPiA+ICAgIHZtY2xlYXIgaW4ga2R1bXAgaW4g
+c29tZSBjb25kaXRpb25zLgo+ID4gCj4gPiBDaGFuZ2Vsb2cgZnJvbSB2MiB0byB2MzoKPiA+IDEu
+IHJlbW92ZSB1bm5lY2Vzc2FyeSBjb25kaXRpb25zIGluIGZ1bmN0aW9uCj4gPiAgICBjcHVfZW1l
+cmdlbmN5X2NsZWFyX2xvYWRlZF92bWNzcyBhcyBNYXJjZWxvIHN1Z2dlc3RlZC4KPiA+IAo+ID4g
+Q2hhbmdlbG9nIGZyb20gdjEgdG8gdjI6Cj4gPiAxLiByZW1vdmUgdGhlIHN5c2N0bCBhbmQgY2xl
+YXIgVk1DU3MgdW5jb25kaXRpb25hbGx5Lgo+ID4gCj4gPiBaaGFuZyBZYW5mZWkgKDIpOgo+ID4g
+ICB4ODYva2V4ZWM6IFZNQ0xFQVIgdm1jc3Mgb24gYWxsIGNwdXMgaWYgbmVjZXNzYXJ5Cj4gPiAg
+IEtWTTogc2V0L3Vuc2V0IGNyYXNoX2NsZWFyX2xvYWRlZF92bWNzcyBhbmQgdm1jbGVhcl9za2lw
+cGVkIGluCj4gPiAgICAga3ZtX2ludGVsIG1vZHVsZQo+ID4gCj4gPiAgYXJjaC94ODYvaW5jbHVk
+ZS9hc20va2V4ZWMuaCB8ICAgIDMgKysrIAo+ID4gIGFyY2gveDg2L2tlcm5lbC9jcmFzaC5jICAg
+ICAgfCAgIDMyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gPiAgYXJjaC94ODYv
+a3ZtL3ZteC5jICAgICAgICAgICB8ICAgMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0p
+Cj4gPiAKPiA+IAo+ID4gLS0KPiA+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5k
+IHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1rZXJuZWwiIGluCj4gPiB0aGUgYm9keSBvZiBh
+IG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+ID4gTW9yZSBtYWpvcmRvbW8g
+aW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4gPiBQ
+bGVhc2UgcmVhZCB0aGUgRkFRIGF0ICBodHRwOi8vd3d3LnR1eC5vcmcvbGttbC8KPiA+IAo+IAo+
+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vi
+c2NyaWJlIGt2bSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIu
+a2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5v
+cmcvbWFqb3Jkb21vLWluZm8uaHRtbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
