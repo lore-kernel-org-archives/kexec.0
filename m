@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Takai-0008VQ-ID
- for kexec@lists.infradead.org; Tue, 20 Nov 2012 09:58:06 +0000
-Message-ID: <50AB53B8.1030309@cn.fujitsu.com>
-Date: Tue, 20 Nov 2012 17:56:08 +0800
-From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/2] x86: clear vmcss on all cpus when doing kdump
- if necessary
-References: <50A3645F.60302@cn.fujitsu.com> <50A611AA.6030903@cn.fujitsu.com>
- <20121120003258.GA1292@amt.cnet>
-In-Reply-To: <20121120003258.GA1292@amt.cnet>
+Received: from router-fw.net-space.pl ([89.174.63.77])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TapOw-0007Uh-SH
+ for kexec@lists.infradead.org; Tue, 20 Nov 2012 15:06:16 +0000
+Received: from dev-00.local.net-space.pl ([192.168.1.5]:35419 "EHLO
+ localhost.localdomain" TLS-CIPHER: <none>)
+ by router-fw-old.local.net-space.pl with ESMTP id S1623774Ab2KTPEx
+ (ORCPT <rfc822;kexec@lists.infradead.org>);
+ Tue, 20 Nov 2012 16:04:53 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH v2 00/11] xen: Initial kexec/kdump implementation
+Date: Tue, 20 Nov 2012 16:04:42 +0100
+Message-Id: <1353423893-23125-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,22 +20,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Avi Kivity <avi@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: andrew.cooper3@citrix.com, ebiederm@xmission.com, hpa@zytor.com, jbeulich@suse.com, konrad.wilk@oracle.com, mingo@redhat.com, tglx@linutronix.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, xen-devel@lists.xensource.com
 
-5LqOIDIwMTLlubQxMeaciDIw5pelIDA4OjMyLCBNYXJjZWxvIFRvc2F0dGkg5YaZ6YGTOgo+IE9u
-IEZyaSwgTm92IDE2LCAyMDEyIGF0IDA2OjEyOjU4UE0gKzA4MDAsIHpoYW5neWFuZmVpIHdyb3Rl
-Ogo+PiBIZWxsbyBNYXJjZWxvLAo+Pgo+PiBBbnkgdGhvdWdodHM/Cj4gCj4gSSB0aG91Z2h0IGEg
-ZnVuY3Rpb24gY2FsbCB3YXMgT0ssIGJ1dCBpdHMgYmV0dGVyIHRvIGhhdmUgYWxsIGNvZGUgaW4K
-PiB2bXguYy4gUGxlYXNlIGhhdmUgYW4gYXRvbWljIG5vdGlmaWVyIGluIGtleGVjLmMgKHJlZ2lz
-dGVyZWQgYnkgS1ZNCj4gbW9kdWxlIHZpYSBhdG9taWNfbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIg
-ZXRjKS4KPiAKPiBPdGhlciB0aGFuIHRoYXQsIHdoaWNoIGlzIGxhcmdlbHkgY29zbWV0aWMsIGl0
-IGxvb2tzIGZpbmUuCj4gU29ycnkgZm9yIG5vdCBleHByZXNzaW5nIHRoaXMgZWFybGllci4KPiAK
-PiAKCkhtbSwgVGhhbmtzLiBJIHdpbGwgcmVzZW5kIGEgbmV3IHBhdGNoIHNldC4KClRoYW5rcwpa
-aGFuZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+Hi,
+
+This set of patches contains initial kexec/kdump implementation for Xen v2
+(previous version were posted to few people by mistake; sorry for that).
+Currently only dom0 is supported, however, almost all infrustructure
+required for domU support is ready.
+
+Jan Beulich suggested to merge Xen x86 assembler code with baremetal x86 code.
+This could simplify and reduce a bit size of kernel code. However, this solution
+requires some changes in baremetal x86 code. The most important thing which should
+be changed in that case is format of page_list array. Xen kexec hypercall requires
+to alternate physical addresses with virtual ones. This and other required things
+have not done in that version because I am not sure that solution will be accepted
+by kexec/kdump maintainers. I hope that this email spark discussion about that topic.
+
+Daniel
+
+ arch/x86/include/asm/kexec.h         |   10 +-
+ arch/x86/include/asm/xen/hypercall.h |    6 +
+ arch/x86/include/asm/xen/kexec.h     |   83 +++++++++
+ arch/x86/kernel/machine_kexec_64.c   |   12 +-
+ arch/x86/kernel/vmlinux.lds.S        |    7 +-
+ arch/x86/xen/Makefile                |    3 +
+ arch/x86/xen/enlighten.c             |   12 ++
+ arch/x86/xen/kexec.c                 |  150 ++++++++++++++++
+ arch/x86/xen/machine_kexec_32.c      |  245 ++++++++++++++++++++++++++
+ arch/x86/xen/machine_kexec_64.c      |  301 +++++++++++++++++++++++++++++++
+ arch/x86/xen/relocate_kernel_32.S    |  323 ++++++++++++++++++++++++++++++++++
+ arch/x86/xen/relocate_kernel_64.S    |  309 ++++++++++++++++++++++++++++++++
+ drivers/xen/sys-hypervisor.c         |   42 +++++-
+ include/linux/kexec.h                |   18 ++
+ include/xen/interface/xen.h          |   33 ++++
+ kernel/kexec.c                       |  125 ++++++++++----
+ 16 files changed, 1636 insertions(+), 43 deletions(-)
+
+Daniel Kiper (11):
+      kexec: introduce kexec_ops struct
+      x86/kexec: Add extra pointers to transition page table PGD, PUD, PMD and PTE
+      xen: Introduce architecture independent data for kexec/kdump
+      x86/xen: Introduce architecture dependent data for kexec/kdump
+      x86/xen: Register resources required by kexec-tools
+      x86/xen: Add i386 kexec/kdump implementation
+      x86/xen: Add x86_64 kexec/kdump implementation
+      x86/xen: Add kexec/kdump makefile rules
+      x86/xen/enlighten: Add init and crash kexec/kdump hooks
+      drivers/xen: Export vmcoreinfo through sysfs
+      x86: Add Xen kexec control code size check to linker script
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
