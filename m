@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Taq6W-0008Lo-JJ
- for kexec@lists.infradead.org; Tue, 20 Nov 2012 15:51:17 +0000
-Message-Id: <50ABB53702000078000AA11D@nat28.tlf.novell.com>
-Date: Tue, 20 Nov 2012 15:52:07 +0000
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [PATCH v2 02/11] x86/kexec: Add extra pointers to
- transition page table PGD, PUD, PMD and PTE
-References: <1353423893-23125-1-git-send-email-daniel.kiper@oracle.com>
- <1353423893-23125-2-git-send-email-daniel.kiper@oracle.com>
- <1353423893-23125-3-git-send-email-daniel.kiper@oracle.com>
-In-Reply-To: <1353423893-23125-3-git-send-email-daniel.kiper@oracle.com>
+Received: from g6t0186.atlanta.hp.com ([15.193.32.63])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TaqWS-000372-41
+ for kexec@lists.infradead.org; Tue, 20 Nov 2012 16:18:05 +0000
+Subject: Re: [RFC] makedumpfile-1.5.1 RC
+From: Lisa Mitchell <lisa.mitchell@hp.com>
+In-Reply-To: <20121116171539.152467f3611c12fbd6b6be0d@mxc.nes.nec.co.jp>
+References: <20121116171539.152467f3611c12fbd6b6be0d@mxc.nes.nec.co.jp>
+Date: Tue, 20 Nov 2012 05:14:55 -0700
+Message-ID: <1353413695.13097.131.camel@lisamlinux.fc.hp.com>
 Mime-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,104 +22,134 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: xen-devel@lists.xensource.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, jerry.hoemann@hp.com
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->>> On 20.11.12 at 16:04, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> Some implementations (e.g. Xen PVOPS) could not use part of identity page 
-> table
-> to construct transition page table. It means that they require separate 
-> PUDs,
-> PMDs and PTEs for virtual and physical (identity) mapping. To satisfy that
-> requirement add extra pointer to PGD, PUD, PMD and PTE and align existing 
-> code.
-
-As said for v1 already - this is not really a requirement of the
-interface, or else none of our Xen kernels since 2.6.30 would
-have worked. I don't think it is desirable to introduce overhead
-for everyone if it's not even needed for Xen.
-
-Jan
-
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> ---
->  arch/x86/include/asm/kexec.h       |   10 +++++++---
->  arch/x86/kernel/machine_kexec_64.c |   12 ++++++------
->  2 files changed, 13 insertions(+), 9 deletions(-)
+On Fri, 2012-11-16 at 08:15 +0000, Atsushi Kumagai wrote:
+> Hello,
 > 
-> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> index 317ff17..3cf5600 100644
-> --- a/arch/x86/include/asm/kexec.h
-> +++ b/arch/x86/include/asm/kexec.h
-> @@ -157,9 +157,13 @@ struct kimage_arch {
->  };
->  #else
->  struct kimage_arch {
-> -	pud_t *pud;
-> -	pmd_t *pmd;
-> -	pte_t *pte;
-> +	pgd_t *pgd;
-> +	pud_t *pud0;
-> +	pud_t *pud1;
-> +	pmd_t *pmd0;
-> +	pmd_t *pmd1;
-> +	pte_t *pte0;
-> +	pte_t *pte1;
->  };
->  #endif
->  
-> diff --git a/arch/x86/kernel/machine_kexec_64.c 
-> b/arch/x86/kernel/machine_kexec_64.c
-> index b3ea9db..976e54b 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -137,9 +137,9 @@ out:
->  
->  static void free_transition_pgtable(struct kimage *image)
->  {
-> -	free_page((unsigned long)image->arch.pud);
-> -	free_page((unsigned long)image->arch.pmd);
-> -	free_page((unsigned long)image->arch.pte);
-> +	free_page((unsigned long)image->arch.pud0);
-> +	free_page((unsigned long)image->arch.pmd0);
-> +	free_page((unsigned long)image->arch.pte0);
->  }
->  
->  static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
-> @@ -157,7 +157,7 @@ static int init_transition_pgtable(struct kimage *image, 
-> pgd_t *pgd)
->  		pud = (pud_t *)get_zeroed_page(GFP_KERNEL);
->  		if (!pud)
->  			goto err;
-> -		image->arch.pud = pud;
-> +		image->arch.pud0 = pud;
->  		set_pgd(pgd, __pgd(__pa(pud) | _KERNPG_TABLE));
->  	}
->  	pud = pud_offset(pgd, vaddr);
-> @@ -165,7 +165,7 @@ static int init_transition_pgtable(struct kimage *image, 
-> pgd_t *pgd)
->  		pmd = (pmd_t *)get_zeroed_page(GFP_KERNEL);
->  		if (!pmd)
->  			goto err;
-> -		image->arch.pmd = pmd;
-> +		image->arch.pmd0 = pmd;
->  		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
->  	}
->  	pmd = pmd_offset(pud, vaddr);
-> @@ -173,7 +173,7 @@ static int init_transition_pgtable(struct kimage *image, 
-> pgd_t *pgd)
->  		pte = (pte_t *)get_zeroed_page(GFP_KERNEL);
->  		if (!pte)
->  			goto err;
-> -		image->arch.pte = pte;
-> +		image->arch.pte0 = pte;
->  		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
->  	}
->  	pte = pte_offset_kernel(pmd, vaddr);
-> -- 
-> 1.5.6.5
+> This is the makedumpfile version 1.5.1-rc.
+> Your comments/patches are welcome.
+> 
+>   http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/v1.5.1-rc
+> 
+> If there is no problem, I will release v1.5.1 GA on Nov 28.
+> 
+> 
+> Main new feature:
+> o Support for snappy compression
+>   This feature allows you to compress dump data by each page using snappy.
+>   This feature is optional, the user has to prepare snappy library and
+>   build binary with USESNAPPY=on to use it. 
+> 
+> o Support for eppic language
+>   This feature allows you to scrub data in a dumpfile with eppic macro.
+>   Eppic macro can specify more flexible rules for scrubbing than the original
+>   rules specified with --config option.
+>   This feature is optional, the user has to prepare eppic (and tinfo) library 
+>   and build binary with EPPIC=on to use it. 
+> 
+> o Introduce mem_map array logic
+>   This is the new logic of excluding free pages. This logic excludes free 
+>   pages by looking up mem_map array instead of free lists, be expected
+>   good performance for cyclic mode.
+>   This feature requires the values below but vmcore doesn't include them,
+>   so the user has to prepare vmlinux or vmcoreinfo which includes them. 
+>   When running on cyclic mode and the required values exist, mem_map array
+>   logic is used. Otherwise, free list logic is used.
+>   
+>     - OFFSET(page._mapcount)
+>     - OFFSET(page.private)
+>     - SIZE(pageflags)
+>     - NUMBER(PG_buddy)
+>     - NUMBER(PG_slab)
+>     - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> 
+>   Additionally, I will post the patch to add the values above to the upstream
+>   kernel, so vmlinux and vmcoreinfo will be unnecessary for this feature soon.
+> 
+> 
+> Changelog:
+> o New feature
+>    Commits related to "Support for Xen4"
+>     - [PATCH v3 1/9] Make max_pfn symbol optional for Xen dumps. (by Petr Tesarik) 3823577
+>     - [PATCH v3 2/9] Xen: Fix the offset of the _domain field in struct page_info. 
+>       (by Petr Tesarik) 6f0e831
+>     - [PATCH v3 3/9] Read the Xen crash ELF note into memory at startup. (by Petr Tesarik) 4e11405
+>     - [PATCH v3 4/9] Split Xen setup into early and late. (by Petr Tesarik) e8295d2
+>     - [PATCH v3 5/9] Initialize phys_start during early Xen setup. (by Petr Tesarik) 064fbc1
+>     - [PATCH v3 6/9] Fix domain pickled_id computation for xen-3.4+. (by Petr Tesarik) 3ae13b4
+>     - [PATCH v3 7/9] Support Xen4 virtuall address space layout. (by Petr Tesarik) 51ea90a
+>     - [PATCH v3 8/9] Add support for filtering out user pages under Xen4. (by Petr Tesarik) fccad16
+>     - [PATCH v3 9/9] Do not fail for symbols removed in Xen4. (by Petr Tesarik) 9151172
+>     - [PATCH] Initialize Xen structures from initial(). (by Petr Tesarik) 56a388e
+> 
+>    Commits related to "Support for snappy compression"
+>     - [PATCH 1/9] Add dump header for snappy. (by HATAYAMA Daisuke) 5634487
+>     - [PATCH 2/9] Add command-line processing for snappy. (by HATAYAMA Daisuke) 8c69b49
+>     - [PATCH 3/9] Add snappy build support. (by HATAYAMA Daisuke) c9a24d0
+>     - [PATCH 4/9] Notify snappy unsupporting when disabled. (by HATAYAMA Daisuke) d075b7f
+>     - [PATCH 5/9] Add compression processing. (by HATAYAMA Daisuke) 604aacc
+>     - [PATCH 6/9] Add uncompression processing. (by HATAYAMA Daisuke) 746d5f2
+>     - [PATCH 7/9] Add help message. (by HATAYAMA Daisuke) 550c19c
+>     - [PATCH 8/9] Add manual description. (by HATAYAMA Daisuke) ba3ee46
+>     - [PATCH 9/9] Add README description. (by Atsushi Kumagai) 0626577
+> 
+>    Commits related to "Support for eppic language"
+>     - [PATCH v2 1/7] Initialize and setup eppic. (by Aravinda Prasad) 5a9be3f
+>     - [PATCH v2 2/7] makedumpfile and eppic interface layer. (by Aravinda Prasad) da46854
+>     - [PATCH v2 3/7] Eppic call back functions to query a dump image. (by Aravinda Prasad) 3808381
+>     - [PATCH v2 4/7] Implement apigetctype call back function. (by Aravinda Prasad) 213cc99
+>     - [PATCH v2 5/7] Implement apimember and apigetrtype call back functions. 
+>       (by Aravinda Prasad) 424a241
+>     - [PATCH v2 6/7] Extend eppic built-in functions to include memset function. 
+>       (by Aravinda Prasad) 587d8a3
+>     - [PATCH v2 7/7] Support fully typed symbol access mode. (by Aravinda Prasad) 4f3e0da
+> 
+>    Commits related to "mem_map array logic"
+>     - [PATCH v2 01/10] Move page flags setup for old kernels after debuginfo initialization. 
+>       (by HATAYAMA Daisuke) ed3fe07
+>     - [PATCH v2 02/10] Add debuginfo interface for enum type size. (by HATAYAMA Daisuke) e308a72
+>     - [PATCH v2 03/10] Add new parameters to various tables. (by HATAYAMA Daisuke) 0ba57be
+>     - [PATCH v2 04/10] Add debuginfo-related processing for VMCOREINFO/VMLINUX.
+>       (by HATAYAMA Daisuke) b1f49d6
+>     - [PATCH v2 05/10] Add hardcoded page flag values. (by HATAYAMA Daisuke) d2f87bc
+>     - [PATCH v2 06/10] Exclude free pages by looking up mem_map array. (by HATAYAMA Daisuke) 8f74a27
+>     - [PATCH v2 07/10] Add page_is_buddy for recent kernels. (by HATAYAMA Daisuke) a0a9fa7
+>     - [PATCH v2 08/10] Add page_is_buddy for PG_buddy. (by HATAYAMA Daisuke) a2f411c
+>     - [PATCH v2 09/10] Add page_is_buddy for old kernels. (by HATAYAMA Daisuke) db3553a
+>     - [PATCH v2 10/10] Warn cyclic buffer overrun and correct it if possible.
+>       (by HATAYAMA Daisuke) a0b9d84
+> 
+>    Other commit
+>     - [PATCH] Support for x86_64 1G pages. (by Petr Tesarik) 7b10a11
+>     - [PATCH] Change dwarf analyzer to search also into named containers. (by Atsushi Kumagai) 1f31b6a
+>     - [PATCH] s390x: Add 2GB frame support for page table walker. (by Michael Holzheu) f6ab608
+>     - [PATCH v2 1/2] Add get_free_memory_size() to get the amount of free memory.
+>       (by Atsushi Kumagai) 8dd4a17
+>     - [PATCH v2 2/2] Calculate the size of cyclic buffer automatically. (by Atsushi Kumagai) 01db605
+> 
+> o Bugfix
+>     - [PATCH] add a missing return statement. (by Petr Tesarik) f6134c7
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
 
 
+I tested this makedumpfile v1.5.1-rc on a 4 TB DL980, on 2.6.32 based
+kernel, and got good results. With crashkernel=256M, and default
+settings (i.e. no cyclic buffer option selected), the dump successfully
+completed in about 2 hours, 40 minutes, and then I specified a cyclic
+buffer size of 48 M, and the dump completed in the same time, no
+measurable differences within the accuracy of our measurements. 
+
+We are still evaluating perfomance data, and don't have very precise
+measurements here for comparisons, but the results look promising so
+far.   
+
+Lisa Mitchell
 
 
 _______________________________________________
