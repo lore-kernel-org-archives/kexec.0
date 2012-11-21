@@ -1,35 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e2.ny.us.ibm.com ([32.97.182.142])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tb4bT-000467-7U
- for kexec@lists.infradead.org; Wed, 21 Nov 2012 07:20:12 +0000
-Received: from /spool/local
- by e2.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Wed, 21 Nov 2012 02:20:08 -0500
-Received: from d01relay07.pok.ibm.com (d01relay07.pok.ibm.com [9.56.227.147])
- by d01dlp03.pok.ibm.com (Postfix) with ESMTP id 03451C90042
- for <kexec@lists.infradead.org>; Wed, 21 Nov 2012 02:20:06 -0500 (EST)
-Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
- by d01relay07.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- qAL7K5Z555902284
- for <kexec@lists.infradead.org>; Wed, 21 Nov 2012 02:20:05 -0500
-Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
- by d01av01.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- qAL7K4hw007964
- for <kexec@lists.infradead.org>; Wed, 21 Nov 2012 02:20:05 -0500
-Message-ID: <50AC809E.9060907@linux.vnet.ibm.com>
-Date: Wed, 21 Nov 2012 12:49:58 +0530
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-References: <50A4E524.8020702@linux.vnet.ibm.com>
- <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
- <20121115155557.GF2529@redhat.com> <50A60CF2.6010309@linux.vnet.ibm.com>
- <20121116143649.GA4515@redhat.com>
- <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
-In-Reply-To: <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
+ id 1Tb4mg-000681-DP
+ for kexec@lists.infradead.org; Wed, 21 Nov 2012 07:31:48 +0000
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: [PATCH v3 1/4] kexec, x86: add boot header member for version 2.12
+Date: Tue, 20 Nov 2012 23:31:35 -0800
+Message-Id: <1353483098-14883-2-git-send-email-yinghai@kernel.org>
+In-Reply-To: <1353483098-14883-1-git-send-email-yinghai@kernel.org>
+References: <1353483098-14883-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,67 +17,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, vgoyal@redhat.com
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, buendgen@de.ibm.com
+To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
+will use ext_ramdisk_image/size, and xloadflags to put
+ramdisk and bzImage high for 64bit.
 
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+---
+ include/x86/x86-linux.h |   26 +++++++++++++++++++++++---
+ 1 files changed, 23 insertions(+), 3 deletions(-)
 
-On 2012-11-20 15:17, Atsushi Kumagai wrote:
-
-...
-
-
->>>
->>>
->>> As I mentioned, we don't need vmlinux in initramfs as filtering is done
->>> during post processing only.
->>
->> You are missing the point. The point is that despite the fact that
->> scrubbing will never be done from initramfs, all the users will pay
->> penalty for increased makedumpfile size.
->>
->> So why not write a separate tool (scrub-vmcore) so that makedumpfile
->> users don't pay the bloated size penatly.
-> 
-> As Vivek said, I think it's difficult to persuade almost all distributor
-> to specify EPPIC=on.
-> 
-> So, it seems that separate tool is better way for both user and distributor.
-> If you will make it, I will drop eppic support from v1.5.1 and export core
-> functions from makedumpfile as library for such tools in the future.
-> 
-> Does this meet your purpose, Aravinda ?
-
-
-Vivek, Atsushi,
-
-How about distributions building two targets one with default
-makedumpfile and other with EPPIC=on, which can be done by a simple
-modification to Makefile. Default makedumpfile will go into initramfs
-and the one with EPPIC=on can be used for filtering. This will avoid
-initramfs bloat and will also save effort in developing a new tool and
-exporting makedumpfile functions to a library. Also if we build a new
-tool, eventually, we will end up sharing the existing makdumpfile code.
-
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
-
+diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
+index 27af02b..6d6c5e0 100644
+--- a/include/x86/x86-linux.h
++++ b/include/x86/x86-linux.h
+@@ -174,11 +174,21 @@ struct x86_linux_param_header {
+ 	/* 2.04+ */
+ 	uint32_t kernel_alignment;		/* 0x230 */
+ 	uint8_t  relocatable_kernel;		/* 0x234 */
+-	uint8_t  reserved15[3];			/* 0x235 */
++	uint8_t  min_alignment;			/* 0x235 */
++	uint16_t xloadflags;			/* 0x236 */
+ 	uint32_t cmdline_size;			/* 0x238 */
+ 	uint32_t hardware_subarch;		/* 0x23C */
+ 	uint64_t hardware_subarch_data;		/* 0x240 */
+-	uint8_t  reserved16[0x290 - 0x248];	/* 0x248 */
++	uint32_t payload_offset;		/* 0x248 */
++	uint32_t payload_length;		/* 0x24C */
++	uint64_t setup_data;			/* 0x250 */
++	uint64_t pref_address;			/* 0x258 */
++	uint32_t init_size;			/* 0x260 */
++	uint32_t handover_offset;		/* 0x264 */
++	uint32_t ext_ramdisk_image;		/* 0x268 */
++	uint32_t ext_ramdisk_size;		/* 0x26C */
++	uint32_t ext_cmd_line_ptr;		/* 0x270 */
++	uint8_t  reserved16[0x290 - 0x274];	/* 0x274 */
+ 	uint32_t edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];	/* 0x290 */
+ #endif
+ 	struct 	e820entry e820_map[E820MAX];	/* 0x2d0 */
+@@ -241,10 +251,20 @@ struct x86_linux_header {
+ #else
+ 	uint32_t kernel_alignment;		/* 0x230 */
+ 	uint8_t  relocatable_kernel;		/* 0x234 */
+-	uint8_t  reserved6[3];			/* 0x235 */
++	uint8_t  min_alignment;			/* 0x235 */
++	uint16_t xloadflags;			/* 0x236 */
+ 	uint32_t cmdline_size;                  /* 0x238 */
+ 	uint32_t hardware_subarch;              /* 0x23C */
+ 	uint64_t hardware_subarch_data;         /* 0x240 */
++	uint32_t payload_offset;		/* 0x248 */
++	uint32_t payload_length;		/* 0x24C */
++	uint64_t setup_data;			/* 0x250 */
++	uint64_t pref_address;			/* 0x258 */
++	uint32_t init_size;			/* 0x260 */
++	uint32_t handover_offset;		/* 0x264 */
++	uint32_t ext_ramdisk_image;		/* 0x268 */
++	uint32_t ext_ramdisk_size;		/* 0x26C */
++	uint32_t ext_cmd_line_ptr;		/* 0x270 */
+ #endif
+ } PACKED;
+ 
 -- 
-Regards,
-Aravinda
+1.7.7
 
 
 _______________________________________________
