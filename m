@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Tb7fq-0003EW-KQ
- for kexec@lists.infradead.org; Wed, 21 Nov 2012 10:36:55 +0000
-Date: Wed, 21 Nov 2012 12:36:47 +0200
-From: Gleb Natapov <gleb@redhat.com>
-Subject: Re: [PATCH v5 2/2] KVM-INTEL: add a notifier and a bitmap to support
- VMCLEAR in kdump
-Message-ID: <20121121103647.GQ21208@redhat.com>
-References: <50AC3AA9.7080004@cn.fujitsu.com> <50AC3BDB.5070007@cn.fujitsu.com>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Tb7vV-0007e1-5T
+ for kexec@lists.infradead.org; Wed, 21 Nov 2012 10:53:06 +0000
+Date: Wed, 21 Nov 2012 11:52:21 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v2 01/11] kexec: introduce kexec_ops struct
+Message-ID: <20121121105221.GA2925@host-192-168-1-59.local.net-space.pl>
+References: <1353423893-23125-1-git-send-email-daniel.kiper@oracle.com>
+ <1353423893-23125-2-git-send-email-daniel.kiper@oracle.com>
+ <87lidwtego.fsf@xmission.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <50AC3BDB.5070007@cn.fujitsu.com>
+In-Reply-To: <87lidwtego.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,186 +25,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>
+To: ebiederm@xmission.com
+Cc: xen-devel@lists.xensource.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, mingo@redhat.com, jbeulich@suse.com, hpa@zytor.com, tglx@linutronix.de
 
-On Wed, Nov 21, 2012 at 10:26:35AM +0800, Zhang Yanfei wrote:
-> The notifier will be registered in crash_notifier_list when loading
-> kvm-intel module. And the bitmap indicates whether we should do
-> VMCLEAR operation in kdump. The bits in the bitmap are set/unset
-> according to different conditions.
-> 
-> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> ---
->  arch/x86/kvm/vmx.c |   85 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 85 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> index 4ff0ab9..3bbdd75 100644
-> --- a/arch/x86/kvm/vmx.c
-> +++ b/arch/x86/kvm/vmx.c
-> @@ -41,6 +41,7 @@
->  #include <asm/i387.h>
->  #include <asm/xcr.h>
->  #include <asm/perf_event.h>
-> +#include <asm/kexec.h>
->  
->  #include "trace.h"
->  
-> @@ -963,6 +964,30 @@ static void vmcs_load(struct vmcs *vmcs)
->  		       vmcs, phys_addr);
->  }
->  
-> +#ifdef CONFIG_KEXEC
-> +/*
-> + * This bitmap is used to indicate whether the vmclear
-> + * operation is enabled on all cpus. All disabled by
-> + * default.
-> + */
-> +static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
-> +
-> +static inline void crash_enable_local_vmclear(int cpu)
-> +{
-> +	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
-> +}
-> +
-> +static inline void crash_disable_local_vmclear(int cpu)
-> +{
-> +	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
-> +}
-> +
-> +static inline int crash_local_vmclear_enabled(int cpu)
-> +{
-> +	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
-> +}
-> +#endif
-> +
->  static void __loaded_vmcs_clear(void *arg)
->  {
->  	struct loaded_vmcs *loaded_vmcs = arg;
-> @@ -972,8 +997,14 @@ static void __loaded_vmcs_clear(void *arg)
->  		return; /* vcpu migration can race with cpu offline */
->  	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
->  		per_cpu(current_vmcs, cpu) = NULL;
-> +#ifdef CONFIG_KEXEC
-> +	crash_disable_local_vmclear(cpu);
-> +#endif
-No need for this #ifdef's. Provide empty function if CONFIG_KEXEC is not
-defined.
+On Tue, Nov 20, 2012 at 08:40:39AM -0800, ebiederm@xmission.com wrote:
+> Daniel Kiper <daniel.kiper@oracle.com> writes:
+>
+> > Some kexec/kdump implementations (e.g. Xen PVOPS) could not use default
+> > functions or require some changes in behavior of kexec/kdump generic code.
+> > To cope with that problem kexec_ops struct was introduced. It allows
+> > a developer to replace all or some functions and control some
+> > functionality of kexec/kdump generic code.
+> >
+> > Default behavior of kexec/kdump generic code is not changed.
+>
+> Ick.
+>
+> > v2 - suggestions/fixes:
+> >    - add comment for kexec_ops.crash_alloc_temp_store member
+> >      (suggested by Konrad Rzeszutek Wilk),
+> >    - simplify kexec_ops usage
+> >      (suggested by Konrad Rzeszutek Wilk).
+> >
+> > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> > ---
+> >  include/linux/kexec.h |   26 ++++++++++
+> >  kernel/kexec.c        |  131 +++++++++++++++++++++++++++++++++++++------------
+> >  2 files changed, 125 insertions(+), 32 deletions(-)
+> >
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index d0b8458..c8d0b35 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -116,7 +116,33 @@ struct kimage {
+> >  #endif
+> >  };
+> >
+> > +struct kexec_ops {
+> > +	/*
+> > +	 * Some kdump implementations (e.g. Xen PVOPS dom0) could not access
+> > +	 * directly crash kernel memory area. In this situation they must
+> > +	 * allocate memory outside of it and later move contents from temporary
+> > +	 * storage to final resting places (usualy done by relocate_kernel()).
+> > +	 * Such behavior could be enforced by setting
+> > +	 * crash_alloc_temp_store member to true.
+> > +	 */
+>
+> Why in the world would Xen not be able to access crash kernel memory?
+> As currently defined it is normal memory that the kernel chooses not to
+> use.
+>
+> If relocate kernel can access that memory you definitely can access the
+> memory so the comment does not make any sense.
 
->  	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
->  	loaded_vmcs_init(loaded_vmcs);
-> +#ifdef CONFIG_KEXEC
-> +	crash_enable_local_vmclear(cpu);
-> +#endif
->  }
->  
->  static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
-> @@ -1491,8 +1522,14 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->  
->  		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
->  		local_irq_disable();
-> +#ifdef CONFIG_KEXEC
-> +		crash_disable_local_vmclear(cpu);
-> +#endif
->  		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
->  			 &per_cpu(loaded_vmcss_on_cpu, cpu));
-> +#ifdef CONFIG_KEXEC
-> +		crash_enable_local_vmclear(cpu);
-> +#endif
->  		local_irq_enable();
->  
->  		/*
-> @@ -2302,6 +2339,20 @@ static int hardware_enable(void *garbage)
->  		return -EBUSY;
->  
->  	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-> +
-> +#ifdef CONFIG_KEXEC
-> +	/*
-> +	 * Now we can enable the vmclear operation in kdump
-> +	 * since the loaded_vmcss_on_cpu list on this cpu
-> +	 * has been initialized.
-> +	 *
-> +	 * Though the cpu is not in VMX operation now, there
-> +	 * is no problem to enable the vmclear operation
-> +	 * for the loaded_vmcss_on_cpu list is empty!
-> +	 */
-> +	crash_enable_local_vmclear(cpu);
-> +#endif
-> +
->  	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
->  
->  	test_bits = FEATURE_CONTROL_LOCKED;
-> @@ -2335,6 +2386,22 @@ static void vmclear_local_loaded_vmcss(void)
->  		__loaded_vmcs_clear(v);
->  }
->  
-> +#ifdef CONFIG_KEXEC
-> +static int crash_vmclear_local_loaded_vmcss(struct notifier_block *this,
-> +					    unsigned long val, void *ptr)
-> +{
-> +	int cpu = raw_smp_processor_id();
-> +
-> +	if (crash_local_vmclear_enabled(cpu))
-> +		vmclear_local_loaded_vmcss();
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block crash_vmclear_notifier = {
-> +	.notifier_call = crash_vmclear_local_loaded_vmcss,
-> +};
-> +#endif
-Move the function under #ifdef CONFIG_KEXEC above.
+Crash kernel memory is reserved by Xen hypervisor and Xen hypervisor
+only has access to it. dom0 does not have any mapping of this area.
+However, relocate_kernel() has access to crash kernel memory
+because it is executed by Xen hypervisor and whole machine
+memory is identity mapped.
 
->  
->  /* Just like cpu_vmxoff(), but with the __kvm_handle_fault_on_reboot()
->   * tricks.
-> @@ -2348,6 +2415,14 @@ static void hardware_disable(void *garbage)
->  {
->  	if (vmm_exclusive) {
->  		vmclear_local_loaded_vmcss();
-> +#ifdef CONFIG_KEXEC
-> +		/*
-> +		 * vmclear operation in kdump should be disabled here
-> +		 * because the cpu is going to exit VMX operation
-> +		 * and the loaded_vmcss_on_cpu list may not be empty!
-> +		 */
-> +		crash_disable_local_vmclear(raw_smp_processor_id());
-> +#endif
->  		kvm_cpu_vmxoff();
->  	}
->  	write_cr4(read_cr4() & ~X86_CR4_VMXE);
-> @@ -7230,6 +7305,11 @@ static int __init vmx_init(void)
->  	if (r)
->  		goto out3;
->  
-> +#ifdef CONFIG_KEXEC
-> +	atomic_notifier_chain_register(&crash_notifier_list,
-> +				       &crash_vmclear_notifier);
-> +#endif
-> +
->  	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
->  	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
->  	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
-> @@ -7265,6 +7345,11 @@ static void __exit vmx_exit(void)
->  	free_page((unsigned long)vmx_io_bitmap_b);
->  	free_page((unsigned long)vmx_io_bitmap_a);
->  
-> +#ifdef CONFIG_KEXEC
-> +	atomic_notifier_chain_unregister(&crash_notifier_list,
-> +					 &crash_vmclear_notifier);
-> +#endif
-> +
->  	kvm_exit();
->  }
->  
-> -- 
-> 1.7.1
+> > +	bool crash_alloc_temp_store;
+> > +	struct page *(*kimage_alloc_pages)(gfp_t gfp_mask,
+> > +						unsigned int order,
+> > +						unsigned long limit);
+> > +	void (*kimage_free_pages)(struct page *page);
+> > +	unsigned long (*page_to_pfn)(struct page *page);
+> > +	struct page *(*pfn_to_page)(unsigned long pfn);
+> > +	unsigned long (*virt_to_phys)(volatile void *address);
+> > +	void *(*phys_to_virt)(unsigned long address);
+> > +	int (*machine_kexec_prepare)(struct kimage *image);
+> > +	int (*machine_kexec_load)(struct kimage *image);
+> > +	void (*machine_kexec_cleanup)(struct kimage *image);
+> > +	void (*machine_kexec_unload)(struct kimage *image);
+> > +	void (*machine_kexec_shutdown)(void);
+> > +	void (*machine_kexec)(struct kimage *image);
+> > +};
+>
+> Ugh.  This is a nasty abstraction.
+>
+> You are mixing and matching a bunch of things together here.
+>
+> If you need to override machine_kexec_xxx please do that on a per
+> architecture basis.
 
---
-			Gleb.
+Yes, it is possible but I think that it is worth to do it at that
+level because it could be useful for other archs too (e.g. Xen ARM port
+is under development). Then we do not need to duplicate that functionality
+in arch code. Additionally, Xen requires machine_kexec_load and
+machine_kexec_unload hooks which are not available in current generic
+kexec/kdump code.
+
+> Special case overrides of page_to_pfn, pfn_to_page, virt_to_phys,
+> phys_to_virt, and friends seem completely inappropriate.
+
+They are required in Xen PVOPS case. If we do not do that in that way
+then we at least need to duplicate almost all generic kexec/kdump existing
+code in arch depended files. I do not mention that we need to capture
+relevant syscall and other things. I think that this is wrong way.
+
+> There may be a point to all of these but you are mixing and matching
+> things badly.
+
+Do you whish to split this kexec_ops struct to something which
+works with addresses and something which is reponsible for
+loading, unloading and executing kexec/kdump? I am able to change
+that but I would like to know a bit about your vision first.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
