@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TbCBo-0003Xe-1v
- for kexec@lists.infradead.org; Wed, 21 Nov 2012 15:26:13 +0000
-Date: Wed, 21 Nov 2012 09:50:23 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 4/4] kexec, x86_64: Load bzImage64 above 4G
-Message-ID: <20121121145023.GD13114@redhat.com>
-References: <1353483098-14883-1-git-send-email-yinghai@kernel.org>
- <1353483098-14883-5-git-send-email-yinghai@kernel.org>
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TbCD5-0003jl-66
+ for kexec@lists.infradead.org; Wed, 21 Nov 2012 15:27:31 +0000
+Received: by mail-pb0-f49.google.com with SMTP id un15so4768182pbc.36
+ for <kexec@lists.infradead.org>; Wed, 21 Nov 2012 07:27:30 -0800 (PST)
+Message-ID: <50ACF2D7.7060607@gmail.com>
+Date: Wed, 21 Nov 2012 23:27:19 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1353483098-14883-5-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v6 2/2] KVM-INTEL: add a notifier and a bitmap to support
+ VMCLEAR in kdump
+References: <50ACF210.5020802@gmail.com>
+In-Reply-To: <50ACF210.5020802@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +25,170 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: x86@kernel.org, kexec@lists.infradead.org, mtosatti@redhat.com, Gleb Natapov <gleb@redhat.com>
+Cc: zhangyanfei@cn.fujitsu.com, linux-kernel@vger.kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-On Tue, Nov 20, 2012 at 11:31:38PM -0800, Yinghai Lu wrote:
+The notifier will be registered in vmclear_notifier_list when loading
+kvm-intel module. And the bitmap indicates whether we should do
+VMCLEAR operation in kdump. The bits in the bitmap are set/unset
+according to different conditions.
 
-[..]
-> +int bzImage64_probe(const char *buf, off_t len)
-> +{
-> +	const struct x86_linux_header *header;
-> +	if ((uintmax_t)len < (uintmax_t)(2 * 512)) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "File is too short to be a bzImage!\n");
-> +		}
-> +		return -1;
-> +	}
-> +	header = (const struct x86_linux_header *)buf;
-> +	if (memcmp(header->header_magic, "HdrS", 4) != 0) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "Not a bzImage\n");
-> +		}
-> +		return -1;
-> +	}
-> +	if (header->boot_sector_magic != 0xAA55) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "No x86 boot sector present\n");
-> +		}
-> +		/* No x86 boot sector present */
-> +		return -1;
-> +	}
-> +	if (header->protocol_version < 0x020C) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "Must be at least protocol version 2.12\n");
-> +		}
-> +		/* Must be at least protocol version 2.12 */
-> +		return -1;
-> +	}
-> +	if ((header->loadflags & 1) == 0) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "zImage not a bzImage\n");
-> +		}
-> +		/* Not a bzImage */
-> +		return -1;
-> +	}
-> +	if (!(header->xloadflags & 1)) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "Not a bzImage64\n");
-> +		}
-> +		/* Must be LOADED_ABOVE_4G */
-> +		return -1;
-> +	}
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ arch/x86/kvm/vmx.c |   77 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 76 insertions(+), 1 deletions(-)
 
-So how do I force a 16bit or 32bit entry using a bzImage64?
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 4ff0ab9..eea55b3 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -41,6 +41,7 @@
+ #include <asm/i387.h>
+ #include <asm/xcr.h>
+ #include <asm/perf_event.h>
++#include <asm/kexec.h>
+ 
+ #include "trace.h"
+ 
+@@ -963,6 +964,49 @@ static void vmcs_load(struct vmcs *vmcs)
+ 		       vmcs, phys_addr);
+ }
+ 
++#ifdef CONFIG_KEXEC
++/*
++ * This bitmap is used to indicate whether the vmclear
++ * operation is enabled on all cpus. All disabled by
++ * default.
++ */
++static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
++
++static inline void crash_enable_local_vmclear(int cpu)
++{
++	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
++}
++
++static inline void crash_disable_local_vmclear(int cpu)
++{
++	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
++}
++
++static inline int crash_local_vmclear_enabled(int cpu)
++{
++	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
++}
++
++static void vmclear_local_loaded_vmcss(void);
++static int crash_vmclear_local_loaded_vmcss(struct notifier_block *this,
++					    unsigned long val, void *ptr)
++{
++	int cpu = raw_smp_processor_id();
++
++	if (crash_local_vmclear_enabled(cpu))
++		vmclear_local_loaded_vmcss();
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block crash_vmclear_notifier = {
++	.notifier_call = crash_vmclear_local_loaded_vmcss,
++};
++#else
++static inline void crash_enable_local_vmclear(int cpu) { }
++static inline void crash_disable_local_vmclear(int cpu) { }
++#endif /* CONFIG_KEXEC */
++
+ static void __loaded_vmcs_clear(void *arg)
+ {
+ 	struct loaded_vmcs *loaded_vmcs = arg;
+@@ -972,8 +1016,10 @@ static void __loaded_vmcs_clear(void *arg)
+ 		return; /* vcpu migration can race with cpu offline */
+ 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
+ 		per_cpu(current_vmcs, cpu) = NULL;
++	crash_disable_local_vmclear(cpu);
+ 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+ 	loaded_vmcs_init(loaded_vmcs);
++	crash_enable_local_vmclear(cpu);
+ }
+ 
+ static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
+@@ -1491,8 +1537,10 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+ 		local_irq_disable();
++		crash_disable_local_vmclear(cpu);
+ 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
+ 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
++		crash_enable_local_vmclear(cpu);
+ 		local_irq_enable();
+ 
+ 		/*
+@@ -2302,6 +2350,18 @@ static int hardware_enable(void *garbage)
+ 		return -EBUSY;
+ 
+ 	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
++
++	/*
++	 * Now we can enable the vmclear operation in kdump
++	 * since the loaded_vmcss_on_cpu list on this cpu
++	 * has been initialized.
++	 *
++	 * Though the cpu is not in VMX operation now, there
++	 * is no problem to enable the vmclear operation
++	 * for the loaded_vmcss_on_cpu list is empty!
++	 */
++	crash_enable_local_vmclear(cpu);
++
+ 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
+ 
+ 	test_bits = FEATURE_CONTROL_LOCKED;
+@@ -2335,7 +2395,6 @@ static void vmclear_local_loaded_vmcss(void)
+ 		__loaded_vmcs_clear(v);
+ }
+ 
+-
+ /* Just like cpu_vmxoff(), but with the __kvm_handle_fault_on_reboot()
+  * tricks.
+  */
+@@ -2348,6 +2407,12 @@ static void hardware_disable(void *garbage)
+ {
+ 	if (vmm_exclusive) {
+ 		vmclear_local_loaded_vmcss();
++		/*
++		 * vmclear operation in kdump should be disabled here
++		 * because the cpu is going to exit VMX operation
++		 * and the loaded_vmcss_on_cpu list may not be empty!
++		 */
++		crash_disable_local_vmclear(raw_smp_processor_id());
+ 		kvm_cpu_vmxoff();
+ 	}
+ 	write_cr4(read_cr4() & ~X86_CR4_VMXE);
+@@ -7230,6 +7295,11 @@ static int __init vmx_init(void)
+ 	if (r)
+ 		goto out3;
+ 
++#ifdef CONFIG_KEXEC
++	atomic_notifier_chain_register(&vmclear_notifier_list,
++				       &crash_vmclear_notifier);
++#endif
++
+ 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
+ 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
+ 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
+@@ -7265,6 +7335,11 @@ static void __exit vmx_exit(void)
+ 	free_page((unsigned long)vmx_io_bitmap_b);
+ 	free_page((unsigned long)vmx_io_bitmap_a);
+ 
++#ifdef CONFIG_KEXEC
++	atomic_notifier_chain_unregister(&vmclear_notifier_list,
++					 &crash_vmclear_notifier);
++#endif
++
+ 	kvm_exit();
+ }
+ 
+-- 
+1.7.1
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
