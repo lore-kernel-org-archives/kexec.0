@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tb5Na-0004gM-5q
- for kexec@lists.infradead.org; Wed, 21 Nov 2012 08:09:57 +0000
-Date: Wed, 21 Nov 2012 17:02:47 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH] Add the values related to buddy system for filtering free
- pages
-Message-Id: <20121121170247.6b57465f2fc1d7f91cd1cddf@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Tb7cV-0001ze-0Z
+ for kexec@lists.infradead.org; Wed, 21 Nov 2012 10:33:31 +0000
+Date: Wed, 21 Nov 2012 12:33:16 +0200
+From: Gleb Natapov <gleb@redhat.com>
+Subject: Re: [PATCH v5 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
+Message-ID: <20121121103316.GP21208@redhat.com>
+References: <50AC3AA9.7080004@cn.fujitsu.com> <50AC3B10.3090005@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50AC3B10.3090005@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,84 +23,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>
 
-This patch adds the values related to buddy system to vmcoreinfo data
-so that makedumpfile (dump filtering command) can filter out all free
-pages with the new logic.
-It's faster than the current logic because it can distinguish free page
-by analyzing page structure at the same time as filtering for other
-unnecessary pages (e.g. anonymous page).
-OTOH, the current logic has to trace free_list to distinguish free 
-pages while analyzing page structure to filter out other unnecessary
-pages.
+On Wed, Nov 21, 2012 at 10:23:12AM +0800, Zhang Yanfei wrote:
+> This patch adds an atomic notifier list named crash_notifier_list.
+> When loading kvm-intel module, a notifier will be registered in
+> the list to enable vmcss loaded on all cpus to be VMCLEAR'd if
+> needed.
+> 
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  arch/x86/include/asm/kexec.h |    2 ++
+>  arch/x86/kernel/crash.c      |   25 +++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 317ff17..5e22b00 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -163,6 +163,8 @@ struct kimage_arch {
+>  };
+>  #endif
+>  
+> +extern struct atomic_notifier_head crash_notifier_list;
+> +
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif /* _ASM_X86_KEXEC_H */
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 13ad899..0f3d5b4 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -16,6 +16,8 @@
+>  #include <linux/delay.h>
+>  #include <linux/elf.h>
+>  #include <linux/elfcore.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+>  
+>  #include <asm/processor.h>
+>  #include <asm/hardirq.h>
+> @@ -30,6 +32,19 @@
+>  
+>  int in_crash_kexec;
+>  
+> +/*
+> + * The list is used to VMCLEAR vmcss loaded on all
+> + * cpus. And when loading kvm_intel module, the
+> + * vmclear function will be registered in the list.
+> + */
+> +ATOMIC_NOTIFIER_HEAD(crash_notifier_list);
+> +EXPORT_SYMBOL_GPL(crash_notifier_list);
+> +
+> +static inline void cpu_emergency_vmclear_loaded_vmcss(void)
+> +{
+> +	atomic_notifier_call_chain(&crash_notifier_list, 0, NULL);
+> +}
+> +
+The notifier list is not VMX specific. It may be used for other
+purposes, so please use better name or just open code it.
 
-The new logic uses the fact that buddy page is marked by _mapcount == 
-PAGE_BUDDY_MAPCOUNT_VALUE. The values below are required to distinguish
-it.
+ACKs from kexec side are needed.
 
-Required values:
-  - OFFSET(page._mapcount)
-  - OFFSET(page.private)
-  - SIZE(pageflags)
-  - NUMBER(PG_slab)
-  - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
-  
-What's makedumpfile:
-  makedumpfile creates a small dumpfile by excluding unnecessary pages
-  for the analysis. To distinguish unnecessary pages, makedumpfile gets
-  the vmcoreinfo data which has the minimum debugging information only
-  for dump filtering.
+>  #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+>  
+>  static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+> @@ -46,6 +61,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+>  #endif
+>  	crash_save_cpu(regs, cpu);
+>  
+> +	/*
+> +	 * VMCLEAR vmcss loaded on all cpus if needed.
+> +	 */
+> +	cpu_emergency_vmclear_loaded_vmcss();
+> +
+>  	/* Disable VMX or SVM if needed.
+>  	 *
+>  	 * We need to disable virtualization on all CPUs.
+> @@ -88,6 +108,11 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>  
+>  	kdump_nmi_shootdown_cpus();
+>  
+> +	/*
+> +	 * VMCLEAR vmcss loaded on this cpu if needed.
+> +	 */
+> +	cpu_emergency_vmclear_loaded_vmcss();
+> +
+>  	/* Booting kdump kernel with VMX or SVM enabled won't work,
+>  	 * because (among other limitations) we can't disable paging
+>  	 * with the virt flags.
+> -- 
+> 1.7.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
----
- include/linux/kexec.h | 3 +++
- kernel/kexec.c        | 5 +++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index d0b8458..a90b148 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -158,6 +158,9 @@ unsigned long paddr_vmcoreinfo_note(void);
- #define VMCOREINFO_STRUCT_SIZE(name) \
-        vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
-                              (unsigned long)sizeof(struct name))
-+#define VMCOREINFO_ENUM_SIZE(name) \
-+       vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
-+                             (unsigned long)sizeof(enum name))
- #define VMCOREINFO_OFFSET(name, field) \
-        vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
-                              (unsigned long)offsetof(struct name, field))
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 5e4bd78..511151b 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1485,10 +1485,13 @@ static int __init crash_save_vmcoreinfo_init(void)
-        VMCOREINFO_STRUCT_SIZE(zone);
-        VMCOREINFO_STRUCT_SIZE(free_area);
-        VMCOREINFO_STRUCT_SIZE(list_head);
-+       VMCOREINFO_ENUM_SIZE(pageflags);
-        VMCOREINFO_SIZE(nodemask_t);
-        VMCOREINFO_OFFSET(page, flags);
-        VMCOREINFO_OFFSET(page, _count);
-        VMCOREINFO_OFFSET(page, mapping);
-+       VMCOREINFO_OFFSET(page, _mapcount);
-+       VMCOREINFO_OFFSET(page, private);
-        VMCOREINFO_OFFSET(page, lru);
-        VMCOREINFO_OFFSET(pglist_data, node_zones);
-        VMCOREINFO_OFFSET(pglist_data, nr_zones);
-@@ -1512,6 +1515,8 @@ static int __init crash_save_vmcoreinfo_init(void)
-        VMCOREINFO_NUMBER(PG_lru);
-        VMCOREINFO_NUMBER(PG_private);
-        VMCOREINFO_NUMBER(PG_swapcache);
-+       VMCOREINFO_NUMBER(PG_slab);
-+       VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-
-        arch_crash_save_vmcoreinfo();
-        update_vmcoreinfo_note();
 --
-1.7.11
+			Gleb.
 
 _______________________________________________
 kexec mailing list
