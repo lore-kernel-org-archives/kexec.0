@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TbS7d-0004JQ-FC
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 08:26:59 +0000
-Message-ID: <50ADE161.8090209@cn.fujitsu.com>
-Date: Thu, 22 Nov 2012 16:25:05 +0800
+ id 1TbSU4-0006a9-95
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 08:50:09 +0000
+Message-ID: <50ADDC8F.5030502@cn.fujitsu.com>
+Date: Thu, 22 Nov 2012 16:04:31 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v8 2/2] KVM-INTEL: add a notifier and a bitmap to support
- VMCLEAR in kdump
-References: <50ADE0C2.1000106@cn.fujitsu.com>
-In-Reply-To: <50ADE0C2.1000106@cn.fujitsu.com>
+Subject: Re: [PATCH v5 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
+References: <50AC3AA9.7080004@cn.fujitsu.com>
+ <50AC3B10.3090005@cn.fujitsu.com> <20121121103316.GP21208@redhat.com>
+ <50AD78E3.7080901@cn.fujitsu.com> <20121122063435.GA21208@redhat.com>
+In-Reply-To: <20121122063435.GA21208@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,155 +20,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: Gleb Natapov <gleb@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>
 
-The notifier will be registered in crash_notifier_list when loading
-kvm-intel module. And the bitmap indicates whether we should do
-VMCLEAR operation in kdump. The bits in the bitmap are set/unset
-according to different conditions.
-
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/kvm/vmx.c |   70 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 70 insertions(+), 0 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 4ff0ab9..d890372 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -41,6 +41,7 @@
- #include <asm/i387.h>
- #include <asm/xcr.h>
- #include <asm/perf_event.h>
-+#include <asm/kexec.h>
- 
- #include "trace.h"
- 
-@@ -963,6 +964,49 @@ static void vmcs_load(struct vmcs *vmcs)
- 		       vmcs, phys_addr);
- }
- 
-+#ifdef CONFIG_KEXEC
-+/*
-+ * This bitmap is used to indicate whether the vmclear
-+ * operation is enabled on all cpus. All disabled by
-+ * default.
-+ */
-+static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
-+
-+static inline void crash_enable_local_vmclear(int cpu)
-+{
-+	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static inline void crash_disable_local_vmclear(int cpu)
-+{
-+	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static inline int crash_local_vmclear_enabled(int cpu)
-+{
-+	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static void vmclear_local_loaded_vmcss(void);
-+static int crash_vmclear_local_loaded_vmcss(struct notifier_block *this,
-+					    unsigned long val, void *ptr)
-+{
-+	int cpu = raw_smp_processor_id();
-+
-+	if (crash_local_vmclear_enabled(cpu))
-+		vmclear_local_loaded_vmcss();
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block crash_vmclear_notifier = {
-+	.notifier_call = crash_vmclear_local_loaded_vmcss,
-+};
-+#else
-+static inline void crash_enable_local_vmclear(int cpu) { }
-+static inline void crash_disable_local_vmclear(int cpu) { }
-+#endif /* CONFIG_KEXEC */
-+
- static void __loaded_vmcs_clear(void *arg)
- {
- 	struct loaded_vmcs *loaded_vmcs = arg;
-@@ -972,8 +1016,10 @@ static void __loaded_vmcs_clear(void *arg)
- 		return; /* vcpu migration can race with cpu offline */
- 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
- 		per_cpu(current_vmcs, cpu) = NULL;
-+	crash_disable_local_vmclear(cpu);
- 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
- 	loaded_vmcs_init(loaded_vmcs);
-+	crash_enable_local_vmclear(cpu);
- }
- 
- static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
-@@ -1491,8 +1537,10 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
- 		local_irq_disable();
-+		crash_disable_local_vmclear(cpu);
- 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
- 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
-+		crash_enable_local_vmclear(cpu);
- 		local_irq_enable();
- 
- 		/*
-@@ -2302,6 +2350,18 @@ static int hardware_enable(void *garbage)
- 		return -EBUSY;
- 
- 	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-+
-+	/*
-+	 * Now we can enable the vmclear operation in kdump
-+	 * since the loaded_vmcss_on_cpu list on this cpu
-+	 * has been initialized.
-+	 *
-+	 * Though the cpu is not in VMX operation now, there
-+	 * is no problem to enable the vmclear operation
-+	 * for the loaded_vmcss_on_cpu list is empty!
-+	 */
-+	crash_enable_local_vmclear(cpu);
-+
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
- 
- 	test_bits = FEATURE_CONTROL_LOCKED;
-@@ -7230,6 +7290,11 @@ static int __init vmx_init(void)
- 	if (r)
- 		goto out3;
- 
-+#ifdef CONFIG_KEXEC
-+	atomic_notifier_chain_register(&crash_notifier_list,
-+				       &crash_vmclear_notifier);
-+#endif
-+
- 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
-@@ -7265,6 +7330,11 @@ static void __exit vmx_exit(void)
- 	free_page((unsigned long)vmx_io_bitmap_b);
- 	free_page((unsigned long)vmx_io_bitmap_a);
- 
-+#ifdef CONFIG_KEXEC
-+	atomic_notifier_chain_unregister(&crash_notifier_list,
-+					 &crash_vmclear_notifier);
-+#endif
-+
- 	kvm_exit();
- }
- 
--- 
-1.7.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQxMeaciDIy5pelIDE0OjM0LCBHbGViIE5hdGFwb3Yg5YaZ6YGTOgo+IE9uIFRo
+dSwgTm92IDIyLCAyMDEyIGF0IDA4OjU5OjE1QU0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
+Pj4g5LqOIDIwMTLlubQxMeaciDIx5pelIDE4OjMzLCBHbGViIE5hdGFwb3Yg5YaZ6YGTOgo+Pj4g
+T24gV2VkLCBOb3YgMjEsIDIwMTIgYXQgMTA6MjM6MTJBTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
+b3RlOgo+Pj4+IFRoaXMgcGF0Y2ggYWRkcyBhbiBhdG9taWMgbm90aWZpZXIgbGlzdCBuYW1lZCBj
+cmFzaF9ub3RpZmllcl9saXN0Lgo+Pj4+IFdoZW4gbG9hZGluZyBrdm0taW50ZWwgbW9kdWxlLCBh
+IG5vdGlmaWVyIHdpbGwgYmUgcmVnaXN0ZXJlZCBpbgo+Pj4+IHRoZSBsaXN0IHRvIGVuYWJsZSB2
+bWNzcyBsb2FkZWQgb24gYWxsIGNwdXMgdG8gYmUgVk1DTEVBUidkIGlmCj4+Pj4gbmVlZGVkLgo+
+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWpp
+dHN1LmNvbT4KPj4+PiAtLS0KPj4+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaCB8ICAg
+IDIgKysKPj4+PiAgYXJjaC94ODYva2VybmVsL2NyYXNoLmMgICAgICB8ICAgMjUgKysrKysrKysr
+KysrKysrKysrKysrKysrKwo+Pj4+ICAyIGZpbGVzIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyks
+IDAgZGVsZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9h
+c20va2V4ZWMuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmgKPj4+PiBpbmRleCAzMTdm
+ZjE3Li41ZTIyYjAwIDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVj
+LmgKPj4+PiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oCj4+Pj4gQEAgLTE2Myw2
+ICsxNjMsOCBAQCBzdHJ1Y3Qga2ltYWdlX2FyY2ggewo+Pj4+ICB9Owo+Pj4+ICAjZW5kaWYKPj4+
+PiAgCj4+Pj4gK2V4dGVybiBzdHJ1Y3QgYXRvbWljX25vdGlmaWVyX2hlYWQgY3Jhc2hfbm90aWZp
+ZXJfbGlzdDsKPj4+PiArCj4+Pj4gICNlbmRpZiAvKiBfX0FTU0VNQkxZX18gKi8KPj4+PiAgCj4+
+Pj4gICNlbmRpZiAvKiBfQVNNX1g4Nl9LRVhFQ19IICovCj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gv
+eDg2L2tlcm5lbC9jcmFzaC5jIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4+PiBpbmRleCAx
+M2FkODk5Li4wZjNkNWI0IDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5j
+Cj4+Pj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4+PiBAQCAtMTYsNiArMTYsOCBA
+QAo+Pj4+ICAjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4KPj4+PiAgI2luY2x1ZGUgPGxpbnV4L2Vs
+Zi5oPgo+Pj4+ICAjaW5jbHVkZSA8bGludXgvZWxmY29yZS5oPgo+Pj4+ICsjaW5jbHVkZSA8bGlu
+dXgvbW9kdWxlLmg+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9ub3RpZmllci5oPgo+Pj4+ICAKPj4+
+PiAgI2luY2x1ZGUgPGFzbS9wcm9jZXNzb3IuaD4KPj4+PiAgI2luY2x1ZGUgPGFzbS9oYXJkaXJx
+Lmg+Cj4+Pj4gQEAgLTMwLDYgKzMyLDE5IEBACj4+Pj4gIAo+Pj4+ICBpbnQgaW5fY3Jhc2hfa2V4
+ZWM7Cj4+Pj4gIAo+Pj4+ICsvKgo+Pj4+ICsgKiBUaGUgbGlzdCBpcyB1c2VkIHRvIFZNQ0xFQVIg
+dm1jc3MgbG9hZGVkIG9uIGFsbAo+Pj4+ICsgKiBjcHVzLiBBbmQgd2hlbiBsb2FkaW5nIGt2bV9p
+bnRlbCBtb2R1bGUsIHRoZQo+Pj4+ICsgKiB2bWNsZWFyIGZ1bmN0aW9uIHdpbGwgYmUgcmVnaXN0
+ZXJlZCBpbiB0aGUgbGlzdC4KPj4+PiArICovCj4+Pj4gK0FUT01JQ19OT1RJRklFUl9IRUFEKGNy
+YXNoX25vdGlmaWVyX2xpc3QpOwo+Pj4+ICtFWFBPUlRfU1lNQk9MX0dQTChjcmFzaF9ub3RpZmll
+cl9saXN0KTsKPj4+PiArCj4+Pj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBjcHVfZW1lcmdlbmN5X3Zt
+Y2xlYXJfbG9hZGVkX3ZtY3NzKHZvaWQpCj4+Pj4gK3sKPj4+PiArCWF0b21pY19ub3RpZmllcl9j
+YWxsX2NoYWluKCZjcmFzaF9ub3RpZmllcl9saXN0LCAwLCBOVUxMKTsKPj4+PiArfQo+Pj4+ICsK
+Pj4+IFRoZSBub3RpZmllciBsaXN0IGlzIG5vdCBWTVggc3BlY2lmaWMuIEl0IG1heSBiZSB1c2Vk
+IGZvciBvdGhlcgo+Pj4gcHVycG9zZXMsIHNvIHBsZWFzZSB1c2UgYmV0dGVyIG5hbWUgb3IganVz
+dCBvcGVuIGNvZGUgaXQuCj4+Cj4+IE9LLCB0aGFua3MuIGNyYXNoX25vdGlmaWVyX2xpc3QgLS0+
+IHZtY2xlYXJfbm90aWZpZXJfbGlzdD8KPiBJdCBpcyBldmVuIHdvcnNlLiBZb3UgYXJlIGFkZGlu
+ZyBnZW5lcmFsIGluZnJhc3RydWN0dXJlIGhlcmUsIG5vdAo+IHJlbGF0ZWQgdG8gS1ZNIGF0IGFs
+bC4gQ2hvb3NlIG5ldXRyYWwgbmFtZXMsIGRyb3AgYWxsIGNvbW1lbnRzIGFib3V0Cj4gVk1DTEVB
+Ui4KCkFoLCBJIHRoaW5rIEkgbWlzdW5kZXJzdG9vZCB3aGF0IHlvdSBtZWFuIGJlZm9yZS4KT0ss
+IEkga25vdyB3aGF0IHlvdSBtZWFuIG5vdzogbWFrZSBjcmFzaF9ub3RpZmllcl9saXN0IHVuY2hh
+bmdlZAphbmQgcmVtb3ZlIHRoZSBjb21tZW50cyByZWxhdGVkIHRvIFZNWAphbmQgb3BlbiBjb2Rl
+IHRoZSBhdG9taWNfbm90aWZpZXJfY2FsbF9jaGFpbiBmdW5jdGlvbi4KClRoYW5rcwoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
