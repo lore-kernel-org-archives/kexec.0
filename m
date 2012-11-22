@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TbM5D-0007cS-IZ
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 02:00:06 +0000
-Message-ID: <50AD7915.5060701@cn.fujitsu.com>
-Date: Thu, 22 Nov 2012 09:00:05 +0800
+ id 1TbMcL-0000Jp-AS
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 02:34:18 +0000
+Message-ID: <50AD8EB6.8080808@cn.fujitsu.com>
+Date: Thu, 22 Nov 2012 10:32:22 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 2/2] KVM-INTEL: add a notifier and a bitmap to support
- VMCLEAR in kdump
-References: <50AC3AA9.7080004@cn.fujitsu.com>
- <50AC3BDB.5070007@cn.fujitsu.com> <20121121103647.GQ21208@redhat.com>
-In-Reply-To: <20121121103647.GQ21208@redhat.com>
+Subject: [PATCH v7 0/2] x86: vmclear vmcss on all cpus when doing kdump if
+ necessary
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,115 +17,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Gleb Natapov <gleb@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>
+To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-5LqOIDIwMTLlubQxMeaciDIx5pelIDE4OjM2LCBHbGViIE5hdGFwb3Yg5YaZ6YGTOgo+IE9uIFdl
-ZCwgTm92IDIxLCAyMDEyIGF0IDEwOjI2OjM1QU0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
-Pj4gVGhlIG5vdGlmaWVyIHdpbGwgYmUgcmVnaXN0ZXJlZCBpbiBjcmFzaF9ub3RpZmllcl9saXN0
-IHdoZW4gbG9hZGluZwo+PiBrdm0taW50ZWwgbW9kdWxlLiBBbmQgdGhlIGJpdG1hcCBpbmRpY2F0
-ZXMgd2hldGhlciB3ZSBzaG91bGQgZG8KPj4gVk1DTEVBUiBvcGVyYXRpb24gaW4ga2R1bXAuIFRo
-ZSBiaXRzIGluIHRoZSBiaXRtYXAgYXJlIHNldC91bnNldAo+PiBhY2NvcmRpbmcgdG8gZGlmZmVy
-ZW50IGNvbmRpdGlvbnMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFpoYW5nIFlhbmZlaSA8emhhbmd5
-YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4+IC0tLQo+PiAgYXJjaC94ODYva3ZtL3ZteC5jIHwgICA4
-NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+
-ICAxIGZpbGVzIGNoYW5nZWQsIDg1IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4+Cj4+
-IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vdm14LmMgYi9hcmNoL3g4Ni9rdm0vdm14LmMKPj4g
-aW5kZXggNGZmMGFiOS4uM2JiZGQ3NSAxMDA2NDQKPj4gLS0tIGEvYXJjaC94ODYva3ZtL3ZteC5j
-Cj4+ICsrKyBiL2FyY2gveDg2L2t2bS92bXguYwo+PiBAQCAtNDEsNiArNDEsNyBAQAo+PiAgI2lu
-Y2x1ZGUgPGFzbS9pMzg3Lmg+Cj4+ICAjaW5jbHVkZSA8YXNtL3hjci5oPgo+PiAgI2luY2x1ZGUg
-PGFzbS9wZXJmX2V2ZW50Lmg+Cj4+ICsjaW5jbHVkZSA8YXNtL2tleGVjLmg+Cj4+ICAKPj4gICNp
-bmNsdWRlICJ0cmFjZS5oIgo+PiAgCj4+IEBAIC05NjMsNiArOTY0LDMwIEBAIHN0YXRpYyB2b2lk
-IHZtY3NfbG9hZChzdHJ1Y3Qgdm1jcyAqdm1jcykKPj4gIAkJICAgICAgIHZtY3MsIHBoeXNfYWRk
-cik7Cj4+ICB9Cj4+ICAKPj4gKyNpZmRlZiBDT05GSUdfS0VYRUMKPj4gKy8qCj4+ICsgKiBUaGlz
-IGJpdG1hcCBpcyB1c2VkIHRvIGluZGljYXRlIHdoZXRoZXIgdGhlIHZtY2xlYXIKPj4gKyAqIG9w
-ZXJhdGlvbiBpcyBlbmFibGVkIG9uIGFsbCBjcHVzLiBBbGwgZGlzYWJsZWQgYnkKPj4gKyAqIGRl
-ZmF1bHQuCj4+ICsgKi8KPj4gK3N0YXRpYyBjcHVtYXNrX3QgY3Jhc2hfdm1jbGVhcl9lbmFibGVk
-X2JpdG1hcCA9IENQVV9NQVNLX05PTkU7Cj4+ICsKPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBjcmFz
-aF9lbmFibGVfbG9jYWxfdm1jbGVhcihpbnQgY3B1KQo+PiArewo+PiArCWNwdW1hc2tfc2V0X2Nw
-dShjcHUsICZjcmFzaF92bWNsZWFyX2VuYWJsZWRfYml0bWFwKTsKPj4gK30KPj4gKwo+PiArc3Rh
-dGljIGlubGluZSB2b2lkIGNyYXNoX2Rpc2FibGVfbG9jYWxfdm1jbGVhcihpbnQgY3B1KQo+PiAr
-ewo+PiArCWNwdW1hc2tfY2xlYXJfY3B1KGNwdSwgJmNyYXNoX3ZtY2xlYXJfZW5hYmxlZF9iaXRt
-YXApOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgaW5saW5lIGludCBjcmFzaF9sb2NhbF92bWNsZWFy
-X2VuYWJsZWQoaW50IGNwdSkKPj4gK3sKPj4gKwlyZXR1cm4gY3B1bWFza190ZXN0X2NwdShjcHUs
-ICZjcmFzaF92bWNsZWFyX2VuYWJsZWRfYml0bWFwKTsKPj4gK30KPj4gKyNlbmRpZgo+PiArCj4+
-ICBzdGF0aWMgdm9pZCBfX2xvYWRlZF92bWNzX2NsZWFyKHZvaWQgKmFyZykKPj4gIHsKPj4gIAlz
-dHJ1Y3QgbG9hZGVkX3ZtY3MgKmxvYWRlZF92bWNzID0gYXJnOwo+PiBAQCAtOTcyLDggKzk5Nywx
-NCBAQCBzdGF0aWMgdm9pZCBfX2xvYWRlZF92bWNzX2NsZWFyKHZvaWQgKmFyZykKPj4gIAkJcmV0
-dXJuOyAvKiB2Y3B1IG1pZ3JhdGlvbiBjYW4gcmFjZSB3aXRoIGNwdSBvZmZsaW5lICovCj4+ICAJ
-aWYgKHBlcl9jcHUoY3VycmVudF92bWNzLCBjcHUpID09IGxvYWRlZF92bWNzLT52bWNzKQo+PiAg
-CQlwZXJfY3B1KGN1cnJlbnRfdm1jcywgY3B1KSA9IE5VTEw7Cj4+ICsjaWZkZWYgQ09ORklHX0tF
-WEVDCj4+ICsJY3Jhc2hfZGlzYWJsZV9sb2NhbF92bWNsZWFyKGNwdSk7Cj4+ICsjZW5kaWYKPiBO
-byBuZWVkIGZvciB0aGlzICNpZmRlZidzLiBQcm92aWRlIGVtcHR5IGZ1bmN0aW9uIGlmIENPTkZJ
-R19LRVhFQyBpcyBub3QKPiBkZWZpbmVkLgoKT0suCnRoZSBuZXcgdjYgdmVyc2lvbiBoYXMgYmVl
-biBzZW50LCBhbnkgY29tbWVudHMgYXJlIHdlbGNvbWUuCgo+IAo+PiAgCWxpc3RfZGVsKCZsb2Fk
-ZWRfdm1jcy0+bG9hZGVkX3ZtY3NzX29uX2NwdV9saW5rKTsKPj4gIAlsb2FkZWRfdm1jc19pbml0
-KGxvYWRlZF92bWNzKTsKPj4gKyNpZmRlZiBDT05GSUdfS0VYRUMKPj4gKwljcmFzaF9lbmFibGVf
-bG9jYWxfdm1jbGVhcihjcHUpOwo+PiArI2VuZGlmCj4+ICB9Cj4+ICAKPj4gIHN0YXRpYyB2b2lk
-IGxvYWRlZF92bWNzX2NsZWFyKHN0cnVjdCBsb2FkZWRfdm1jcyAqbG9hZGVkX3ZtY3MpCj4+IEBA
-IC0xNDkxLDggKzE1MjIsMTQgQEAgc3RhdGljIHZvaWQgdm14X3ZjcHVfbG9hZChzdHJ1Y3Qga3Zt
-X3ZjcHUgKnZjcHUsIGludCBjcHUpCj4+ICAKPj4gIAkJa3ZtX21ha2VfcmVxdWVzdChLVk1fUkVR
-X1RMQl9GTFVTSCwgdmNwdSk7Cj4+ICAJCWxvY2FsX2lycV9kaXNhYmxlKCk7Cj4+ICsjaWZkZWYg
-Q09ORklHX0tFWEVDCj4+ICsJCWNyYXNoX2Rpc2FibGVfbG9jYWxfdm1jbGVhcihjcHUpOwo+PiAr
-I2VuZGlmCj4+ICAJCWxpc3RfYWRkKCZ2bXgtPmxvYWRlZF92bWNzLT5sb2FkZWRfdm1jc3Nfb25f
-Y3B1X2xpbmssCj4+ICAJCQkgJnBlcl9jcHUobG9hZGVkX3ZtY3NzX29uX2NwdSwgY3B1KSk7Cj4+
-ICsjaWZkZWYgQ09ORklHX0tFWEVDCj4+ICsJCWNyYXNoX2VuYWJsZV9sb2NhbF92bWNsZWFyKGNw
-dSk7Cj4+ICsjZW5kaWYKPj4gIAkJbG9jYWxfaXJxX2VuYWJsZSgpOwo+PiAgCj4+ICAJCS8qCj4+
-IEBAIC0yMzAyLDYgKzIzMzksMjAgQEAgc3RhdGljIGludCBoYXJkd2FyZV9lbmFibGUodm9pZCAq
-Z2FyYmFnZSkKPj4gIAkJcmV0dXJuIC1FQlVTWTsKPj4gIAo+PiAgCUlOSVRfTElTVF9IRUFEKCZw
-ZXJfY3B1KGxvYWRlZF92bWNzc19vbl9jcHUsIGNwdSkpOwo+PiArCj4+ICsjaWZkZWYgQ09ORklH
-X0tFWEVDCj4+ICsJLyoKPj4gKwkgKiBOb3cgd2UgY2FuIGVuYWJsZSB0aGUgdm1jbGVhciBvcGVy
-YXRpb24gaW4ga2R1bXAKPj4gKwkgKiBzaW5jZSB0aGUgbG9hZGVkX3ZtY3NzX29uX2NwdSBsaXN0
-IG9uIHRoaXMgY3B1Cj4+ICsJICogaGFzIGJlZW4gaW5pdGlhbGl6ZWQuCj4+ICsJICoKPj4gKwkg
-KiBUaG91Z2ggdGhlIGNwdSBpcyBub3QgaW4gVk1YIG9wZXJhdGlvbiBub3csIHRoZXJlCj4+ICsJ
-ICogaXMgbm8gcHJvYmxlbSB0byBlbmFibGUgdGhlIHZtY2xlYXIgb3BlcmF0aW9uCj4+ICsJICog
-Zm9yIHRoZSBsb2FkZWRfdm1jc3Nfb25fY3B1IGxpc3QgaXMgZW1wdHkhCj4+ICsJICovCj4+ICsJ
-Y3Jhc2hfZW5hYmxlX2xvY2FsX3ZtY2xlYXIoY3B1KTsKPj4gKyNlbmRpZgo+PiArCj4+ICAJcmRt
-c3JsKE1TUl9JQTMyX0ZFQVRVUkVfQ09OVFJPTCwgb2xkKTsKPj4gIAo+PiAgCXRlc3RfYml0cyA9
-IEZFQVRVUkVfQ09OVFJPTF9MT0NLRUQ7Cj4+IEBAIC0yMzM1LDYgKzIzODYsMjIgQEAgc3RhdGlj
-IHZvaWQgdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3Modm9pZCkKPj4gIAkJX19sb2FkZWRfdm1j
-c19jbGVhcih2KTsKPj4gIH0KPj4gIAo+PiArI2lmZGVmIENPTkZJR19LRVhFQwo+PiArc3RhdGlj
-IGludCBjcmFzaF92bWNsZWFyX2xvY2FsX2xvYWRlZF92bWNzcyhzdHJ1Y3Qgbm90aWZpZXJfYmxv
-Y2sgKnRoaXMsCj4+ICsJCQkJCSAgICB1bnNpZ25lZCBsb25nIHZhbCwgdm9pZCAqcHRyKQo+PiAr
-ewo+PiArCWludCBjcHUgPSByYXdfc21wX3Byb2Nlc3Nvcl9pZCgpOwo+PiArCj4+ICsJaWYgKGNy
-YXNoX2xvY2FsX3ZtY2xlYXJfZW5hYmxlZChjcHUpKQo+PiArCQl2bWNsZWFyX2xvY2FsX2xvYWRl
-ZF92bWNzcygpOwo+PiArCj4+ICsJcmV0dXJuIE5PVElGWV9ET05FOwo+PiArfQo+PiArCj4+ICtz
-dGF0aWMgc3RydWN0IG5vdGlmaWVyX2Jsb2NrIGNyYXNoX3ZtY2xlYXJfbm90aWZpZXIgPSB7Cj4+
-ICsJLm5vdGlmaWVyX2NhbGwgPSBjcmFzaF92bWNsZWFyX2xvY2FsX2xvYWRlZF92bWNzcywKPj4g
-K307Cj4+ICsjZW5kaWYKPiBNb3ZlIHRoZSBmdW5jdGlvbiB1bmRlciAjaWZkZWYgQ09ORklHX0tF
-WEVDIGFib3ZlLgoKb2suCgo+IAo+PiAgCj4+ICAvKiBKdXN0IGxpa2UgY3B1X3ZteG9mZigpLCBi
-dXQgd2l0aCB0aGUgX19rdm1faGFuZGxlX2ZhdWx0X29uX3JlYm9vdCgpCj4+ICAgKiB0cmlja3Mu
-Cj4+IEBAIC0yMzQ4LDYgKzI0MTUsMTQgQEAgc3RhdGljIHZvaWQgaGFyZHdhcmVfZGlzYWJsZSh2
-b2lkICpnYXJiYWdlKQo+PiAgewo+PiAgCWlmICh2bW1fZXhjbHVzaXZlKSB7Cj4+ICAJCXZtY2xl
-YXJfbG9jYWxfbG9hZGVkX3ZtY3NzKCk7Cj4+ICsjaWZkZWYgQ09ORklHX0tFWEVDCj4+ICsJCS8q
-Cj4+ICsJCSAqIHZtY2xlYXIgb3BlcmF0aW9uIGluIGtkdW1wIHNob3VsZCBiZSBkaXNhYmxlZCBo
-ZXJlCj4+ICsJCSAqIGJlY2F1c2UgdGhlIGNwdSBpcyBnb2luZyB0byBleGl0IFZNWCBvcGVyYXRp
-b24KPj4gKwkJICogYW5kIHRoZSBsb2FkZWRfdm1jc3Nfb25fY3B1IGxpc3QgbWF5IG5vdCBiZSBl
-bXB0eSEKPj4gKwkJICovCj4+ICsJCWNyYXNoX2Rpc2FibGVfbG9jYWxfdm1jbGVhcihyYXdfc21w
-X3Byb2Nlc3Nvcl9pZCgpKTsKPj4gKyNlbmRpZgo+PiAgCQlrdm1fY3B1X3ZteG9mZigpOwo+PiAg
-CX0KPj4gIAl3cml0ZV9jcjQocmVhZF9jcjQoKSAmIH5YODZfQ1I0X1ZNWEUpOwo+PiBAQCAtNzIz
-MCw2ICs3MzA1LDExIEBAIHN0YXRpYyBpbnQgX19pbml0IHZteF9pbml0KHZvaWQpCj4+ICAJaWYg
-KHIpCj4+ICAJCWdvdG8gb3V0MzsKPj4gIAo+PiArI2lmZGVmIENPTkZJR19LRVhFQwo+PiArCWF0
-b21pY19ub3RpZmllcl9jaGFpbl9yZWdpc3RlcigmY3Jhc2hfbm90aWZpZXJfbGlzdCwKPj4gKwkJ
-CQkgICAgICAgJmNyYXNoX3ZtY2xlYXJfbm90aWZpZXIpOwo+PiArI2VuZGlmCj4+ICsKPj4gIAl2
-bXhfZGlzYWJsZV9pbnRlcmNlcHRfZm9yX21zcihNU1JfRlNfQkFTRSwgZmFsc2UpOwo+PiAgCXZt
-eF9kaXNhYmxlX2ludGVyY2VwdF9mb3JfbXNyKE1TUl9HU19CQVNFLCBmYWxzZSk7Cj4+ICAJdm14
-X2Rpc2FibGVfaW50ZXJjZXB0X2Zvcl9tc3IoTVNSX0tFUk5FTF9HU19CQVNFLCB0cnVlKTsKPj4g
-QEAgLTcyNjUsNiArNzM0NSwxMSBAQCBzdGF0aWMgdm9pZCBfX2V4aXQgdm14X2V4aXQodm9pZCkK
-Pj4gIAlmcmVlX3BhZ2UoKHVuc2lnbmVkIGxvbmcpdm14X2lvX2JpdG1hcF9iKTsKPj4gIAlmcmVl
-X3BhZ2UoKHVuc2lnbmVkIGxvbmcpdm14X2lvX2JpdG1hcF9hKTsKPj4gIAo+PiArI2lmZGVmIENP
-TkZJR19LRVhFQwo+PiArCWF0b21pY19ub3RpZmllcl9jaGFpbl91bnJlZ2lzdGVyKCZjcmFzaF9u
-b3RpZmllcl9saXN0LAo+PiArCQkJCQkgJmNyYXNoX3ZtY2xlYXJfbm90aWZpZXIpOwo+PiArI2Vu
-ZGlmCj4+ICsKPj4gIAlrdm1fZXhpdCgpOwo+PiAgfQo+PiAgCj4+IC0tIAo+PiAxLjcuMQo+IAo+
-IC0tCj4gCQkJR2xlYi4KPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5k
-IHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1rZXJuZWwiIGluCj4gdGhlIGJvZHkgb2YgYSBt
-ZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZv
-IGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPiBQbGVhc2Ug
-cmVhZCB0aGUgRkFRIGF0ICBodHRwOi8vd3d3LnR1eC5vcmcvbGttbC8KPiAKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+Currently, kdump just makes all the logical processors leave VMX operation by
+executing VMXOFF instruction, so any VMCSs active on the logical processors may
+be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
+in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
+executing the VMXOFF instruction.
+
+The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
+executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
+vmcore updated and non-corrupted.
+
+Changelog from v6 to v7:
+1. KVM-INTEL: in hardware_disable, we needn't disable the
+   vmclear, so remove it.
+
+Changelog from v5 to v6:
+1. KEXEC: the atomic notifier list renamed:
+   crash_notifier_list --> vmclear_notifier_list
+2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
+   not defined and remove unnecessary #ifdef's.
+
+Changelog from v4 to v5:
+1. use an atomic notifier instead of function call, so
+   have all the vmclear codes in vmx.c.
+
+Changelog from v3 to v4:
+1. add a new percpu variable vmclear_skipped to skip
+   vmclear in kdump in some conditions.
+
+Changelog from v2 to v3:
+1. remove unnecessary conditions in function
+   cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
+
+Changelog from v1 to v2:
+1. remove the sysctl and clear VMCSs unconditionally.
+
+Zhang Yanfei (2):
+  x86/kexec: VMCLEAR vmcss on all cpus if necessary
+  KVM-INTEL: add a notifier and a bitmap to support VMCLEAR in kdump
+
+ arch/x86/include/asm/kexec.h |    2 +
+ arch/x86/kernel/crash.c      |   25 +++++++++++++++
+ arch/x86/kvm/vmx.c           |   70 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 97 insertions(+), 0 deletions(-)
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
