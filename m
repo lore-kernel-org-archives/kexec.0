@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TbMdo-0000QW-WB
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 02:35:50 +0000
-Message-ID: <50AD8F16.3030108@cn.fujitsu.com>
-Date: Thu, 22 Nov 2012 10:33:58 +0800
+ id 1TbMei-0000gc-OM
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 02:36:46 +0000
+Message-ID: <50AD8F4D.10902@cn.fujitsu.com>
+Date: Thu, 22 Nov 2012 10:34:53 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v7 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
+Subject: [PATCH v7 2/2] KVM-INTEL: add a notifier and a bitmap to support
+ VMCLEAR in kdump
 References: <50AD8EB6.8080808@cn.fujitsu.com>
 In-Reply-To: <50AD8EB6.8080808@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,87 +26,143 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-This patch adds an atomic notifier list named vmclear_notifier_list.
-When loading kvm-intel module, a notifier will be registered in
-the list to enable vmcss loaded on all cpus to be VMCLEAR'd if
-needed.
+The notifier will be registered in vmclear_notifier_list when loading
+kvm-intel module. And the bitmap indicates whether we should do
+VMCLEAR operation in kdump. The bits in the bitmap are set/unset
+according to different conditions.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- arch/x86/include/asm/kexec.h |    2 ++
- arch/x86/kernel/crash.c      |   25 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+), 0 deletions(-)
+ arch/x86/kvm/vmx.c |   70 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 70 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 317ff17..43e0db3 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -163,6 +163,8 @@ struct kimage_arch {
- };
- #endif
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 4ff0ab9..2fbb128 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -41,6 +41,7 @@
+ #include <asm/i387.h>
+ #include <asm/xcr.h>
+ #include <asm/perf_event.h>
++#include <asm/kexec.h>
  
-+extern struct atomic_notifier_head vmclear_notifier_list;
-+
- #endif /* __ASSEMBLY__ */
+ #include "trace.h"
  
- #endif /* _ASM_X86_KEXEC_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 13ad899..c953d50 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -16,6 +16,8 @@
- #include <linux/delay.h>
- #include <linux/elf.h>
- #include <linux/elfcore.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
+@@ -963,6 +964,49 @@ static void vmcs_load(struct vmcs *vmcs)
+ 		       vmcs, phys_addr);
+ }
  
- #include <asm/processor.h>
- #include <asm/hardirq.h>
-@@ -30,6 +32,19 @@
- 
- int in_crash_kexec;
- 
++#ifdef CONFIG_KEXEC
 +/*
-+ * The list is used to VMCLEAR vmcss loaded on all
-+ * cpus. And when loading kvm_intel module, the
-+ * vmclear function will be registered in the list.
++ * This bitmap is used to indicate whether the vmclear
++ * operation is enabled on all cpus. All disabled by
++ * default.
 + */
-+ATOMIC_NOTIFIER_HEAD(vmclear_notifier_list);
-+EXPORT_SYMBOL_GPL(vmclear_notifier_list);
++static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
 +
-+static inline void cpu_emergency_vmclear_loaded_vmcss(void)
++static inline void crash_enable_local_vmclear(int cpu)
 +{
-+	atomic_notifier_call_chain(&vmclear_notifier_list, 0, NULL);
++	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
 +}
 +
- #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
- 
- static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
-@@ -46,6 +61,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
- #endif
- 	crash_save_cpu(regs, cpu);
- 
-+	/*
-+	 * VMCLEAR vmcss loaded on all cpus if needed.
-+	 */
-+	cpu_emergency_vmclear_loaded_vmcss();
++static inline void crash_disable_local_vmclear(int cpu)
++{
++	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
++}
 +
- 	/* Disable VMX or SVM if needed.
- 	 *
- 	 * We need to disable virtualization on all CPUs.
-@@ -88,6 +108,11 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 
- 	kdump_nmi_shootdown_cpus();
- 
-+	/*
-+	 * VMCLEAR vmcss loaded on this cpu if needed.
-+	 */
-+	cpu_emergency_vmclear_loaded_vmcss();
++static inline int crash_local_vmclear_enabled(int cpu)
++{
++	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
++}
 +
- 	/* Booting kdump kernel with VMX or SVM enabled won't work,
- 	 * because (among other limitations) we can't disable paging
- 	 * with the virt flags.
++static void vmclear_local_loaded_vmcss(void);
++static int crash_vmclear_local_loaded_vmcss(struct notifier_block *this,
++					    unsigned long val, void *ptr)
++{
++	int cpu = raw_smp_processor_id();
++
++	if (crash_local_vmclear_enabled(cpu))
++		vmclear_local_loaded_vmcss();
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block crash_vmclear_notifier = {
++	.notifier_call = crash_vmclear_local_loaded_vmcss,
++};
++#else
++static inline void crash_enable_local_vmclear(int cpu) { }
++static inline void crash_disable_local_vmclear(int cpu) { }
++#endif /* CONFIG_KEXEC */
++
+ static void __loaded_vmcs_clear(void *arg)
+ {
+ 	struct loaded_vmcs *loaded_vmcs = arg;
+@@ -972,8 +1016,10 @@ static void __loaded_vmcs_clear(void *arg)
+ 		return; /* vcpu migration can race with cpu offline */
+ 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
+ 		per_cpu(current_vmcs, cpu) = NULL;
++	crash_disable_local_vmclear(cpu);
+ 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+ 	loaded_vmcs_init(loaded_vmcs);
++	crash_enable_local_vmclear(cpu);
+ }
+ 
+ static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
+@@ -1491,8 +1537,10 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+ 		local_irq_disable();
++		crash_disable_local_vmclear(cpu);
+ 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
+ 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
++		crash_enable_local_vmclear(cpu);
+ 		local_irq_enable();
+ 
+ 		/*
+@@ -2302,6 +2350,18 @@ static int hardware_enable(void *garbage)
+ 		return -EBUSY;
+ 
+ 	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
++
++	/*
++	 * Now we can enable the vmclear operation in kdump
++	 * since the loaded_vmcss_on_cpu list on this cpu
++	 * has been initialized.
++	 *
++	 * Though the cpu is not in VMX operation now, there
++	 * is no problem to enable the vmclear operation
++	 * for the loaded_vmcss_on_cpu list is empty!
++	 */
++	crash_enable_local_vmclear(cpu);
++
+ 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
+ 
+ 	test_bits = FEATURE_CONTROL_LOCKED;
+@@ -7230,6 +7290,11 @@ static int __init vmx_init(void)
+ 	if (r)
+ 		goto out3;
+ 
++#ifdef CONFIG_KEXEC
++	atomic_notifier_chain_register(&vmclear_notifier_list,
++				       &crash_vmclear_notifier);
++#endif
++
+ 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
+ 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
+ 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
+@@ -7265,6 +7330,11 @@ static void __exit vmx_exit(void)
+ 	free_page((unsigned long)vmx_io_bitmap_b);
+ 	free_page((unsigned long)vmx_io_bitmap_a);
+ 
++#ifdef CONFIG_KEXEC
++	atomic_notifier_chain_unregister(&vmclear_notifier_list,
++					 &crash_vmclear_notifier);
++#endif
++
+ 	kvm_exit();
+ }
+ 
 -- 
 1.7.1
 
