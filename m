@@ -1,38 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TbKzC-0006gS-CB
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 00:49:49 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 1E9AF3EE0BB
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 09:49:38 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id EA4CF45DE55
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 09:49:37 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id C44CB45DE50
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 09:49:37 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id B7F271DB802C
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 09:49:37 +0900 (JST)
-Received: from g01jpexchyt10.g01.fujitsu.local
- (g01jpexchyt10.g01.fujitsu.local [10.128.194.49])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 42A381DB8040
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 09:49:37 +0900 (JST)
-From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: RE: [RFC] makedumpfile-1.5.1 RC
-Date: Thu, 22 Nov 2012 00:49:35 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E20AB0B3EE@G01JPEXMBYT03>
-References: <20121116171539.152467f3611c12fbd6b6be0d@mxc.nes.nec.co.jp>
- <1353413695.13097.131.camel@lisamlinux.fc.hp.com>
- <20121120163545.GC30248@redhat.com>
- <1353416600.13097.152.camel@lisamlinux.fc.hp.com>
- <20121120214606.GB3823@redhat.com>
- <1353438341.13097.187.camel@lisamlinux.fc.hp.com>
- <20121121135421.GA13114@redhat.com>
-In-Reply-To: <20121121135421.GA13114@redhat.com>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TbLMf-0007Bs-Bh
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 01:14:02 +0000
+Date: Wed, 21 Nov 2012 23:13:43 -0200
+From: Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH v6 2/2] KVM-INTEL: add a notifier and a bitmap to support
+ VMCLEAR in kdump
+Message-ID: <20121122011342.GA9838@amt.cnet>
+References: <50ACF210.5020802@gmail.com>
+ <50ACF2D7.7060607@gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50ACF2D7.7060607@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,67 +25,144 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Hoemann,
- Jerry" <jerry.hoemann@hp.com>, Lisa Mitchell <lisa.mitchell@hp.com>, Cliff Wickman <cpw@sgi.com>
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Gleb Natapov <gleb@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, zhangyanfei@cn.fujitsu.com
 
-> -----Original Message-----
-> From: kexec-bounces@lists.infradead.org
-> [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Vivek Goyal
-> Sent: Wednesday, November 21, 2012 10:54 PM
-> To: Lisa Mitchell
-> Cc: kexec@lists.infradead.org; Atsushi Kumagai; Hoemann, Jerry; Cliff
-> Wickman
-> Subject: Re: [RFC] makedumpfile-1.5.1 RC
-[...]
-> > The changes proposed by Ciff Wickman in
-> > http://lists.infradead.org/pipermail/kexec/2012-November/007178.html
-> > sound like they could bring big improvements in performance, so these
-> > should be investigated.  I would like to try a version of them built on
-> > top of makedumpfile v1.5.1-rc, to try on our 4 TB system, to see what
-> > performance gains we can get, as an experiment.
+On Wed, Nov 21, 2012 at 11:27:19PM +0800, Zhang Yanfei wrote:
+> The notifier will be registered in vmclear_notifier_list when loading
+> kvm-intel module. And the bitmap indicates whether we should do
+> VMCLEAR operation in kdump. The bits in the bitmap are set/unset
+> according to different conditions.
 > 
-> I am wondering if it is time to look into parallel processing. Somebody
-> was working on bringing up more cpus in kdump kernel. If that works, the
-> probably multiple makedumpfile threads can try to filter out different
-> sections of physical memory.
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  arch/x86/kvm/vmx.c |   77 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 files changed, 76 insertions(+), 1 deletions(-)
 > 
+> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> index 4ff0ab9..eea55b3 100644
+> --- a/arch/x86/kvm/vmx.c
+> +++ b/arch/x86/kvm/vmx.c
+> @@ -41,6 +41,7 @@
+>  #include <asm/i387.h>
+>  #include <asm/xcr.h>
+>  #include <asm/perf_event.h>
+> +#include <asm/kexec.h>
+>  
+>  #include "trace.h"
+>  
+> @@ -963,6 +964,49 @@ static void vmcs_load(struct vmcs *vmcs)
+>  		       vmcs, phys_addr);
+>  }
+>  
+> +#ifdef CONFIG_KEXEC
+> +/*
+> + * This bitmap is used to indicate whether the vmclear
+> + * operation is enabled on all cpus. All disabled by
+> + * default.
+> + */
+> +static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
+> +
+> +static inline void crash_enable_local_vmclear(int cpu)
+> +{
+> +	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
+> +}
+> +
+> +static inline void crash_disable_local_vmclear(int cpu)
+> +{
+> +	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
+> +}
+> +
+> +static inline int crash_local_vmclear_enabled(int cpu)
+> +{
+> +	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
+> +}
+> +
+> +static void vmclear_local_loaded_vmcss(void);
+> +static int crash_vmclear_local_loaded_vmcss(struct notifier_block *this,
+> +					    unsigned long val, void *ptr)
+> +{
+> +	int cpu = raw_smp_processor_id();
+> +
+> +	if (crash_local_vmclear_enabled(cpu))
+> +		vmclear_local_loaded_vmcss();
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block crash_vmclear_notifier = {
+> +	.notifier_call = crash_vmclear_local_loaded_vmcss,
+> +};
+> +#else
+> +static inline void crash_enable_local_vmclear(int cpu) { }
+> +static inline void crash_disable_local_vmclear(int cpu) { }
+> +#endif /* CONFIG_KEXEC */
+> +
+>  static void __loaded_vmcs_clear(void *arg)
+>  {
+>  	struct loaded_vmcs *loaded_vmcs = arg;
+> @@ -972,8 +1016,10 @@ static void __loaded_vmcs_clear(void *arg)
+>  		return; /* vcpu migration can race with cpu offline */
+>  	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
+>  		per_cpu(current_vmcs, cpu) = NULL;
+> +	crash_disable_local_vmclear(cpu);
+>  	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
+>  	loaded_vmcs_init(loaded_vmcs);
+> +	crash_enable_local_vmclear(cpu);
+>  }
+>  
+>  static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
+> @@ -1491,8 +1537,10 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>  
+>  		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+>  		local_irq_disable();
+> +		crash_disable_local_vmclear(cpu);
+>  		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
+>  			 &per_cpu(loaded_vmcss_on_cpu, cpu));
+> +		crash_enable_local_vmclear(cpu);
+>  		local_irq_enable();
+>  
+>  		/*
+> @@ -2302,6 +2350,18 @@ static int hardware_enable(void *garbage)
+>  		return -EBUSY;
+>  
+>  	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+> +
+> +	/*
+> +	 * Now we can enable the vmclear operation in kdump
+> +	 * since the loaded_vmcss_on_cpu list on this cpu
+> +	 * has been initialized.
+> +	 *
+> +	 * Though the cpu is not in VMX operation now, there
+> +	 * is no problem to enable the vmclear operation
+> +	 * for the loaded_vmcss_on_cpu list is empty!
+> +	 */
+> +	crash_enable_local_vmclear(cpu);
+> +
+>  	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
+>  
+>  	test_bits = FEATURE_CONTROL_LOCKED;
+> @@ -2335,7 +2395,6 @@ static void vmclear_local_loaded_vmcss(void)
+>  		__loaded_vmcs_clear(v);
+>  }
+>  
+> -
+>  /* Just like cpu_vmxoff(), but with the __kvm_handle_fault_on_reboot()
+>   * tricks.
+>   */
+> @@ -2348,6 +2407,12 @@ static void hardware_disable(void *garbage)
+>  {
+>  	if (vmm_exclusive) {
+>  		vmclear_local_loaded_vmcss();
+> +		/*
+> +		 * vmclear operation in kdump should be disabled here
+> +		 * because the cpu is going to exit VMX operation
+> +		 * and the loaded_vmcss_on_cpu list may not be empty!
+> +		 */
+> +		crash_disable_local_vmclear(raw_smp_processor_id());
+>  		kvm_cpu_vmxoff();
 
-Makedumpfile has already had such parallel processing feature:
-
-$ ./makedumpfile --help
-...
-  [--split]:
-      Split the dump data to multiple DUMPFILEs in parallel. If specifying
-      DUMPFILEs on different storage devices, a device can share I/O load with
-      other devices and it reduces time for saving the dump data. The file size
-      of each DUMPFILE is smaller than the system memory size which is divided
-      by the number of DUMPFILEs.
-      This feature supports only the kdump-compressed format.
-
-Doing makedumpfile like:
-
-  $ makedumpfile --split dumpfile vmcore1 vmcore2 [vmcore3 ... vmcore_n]
-
-original dumpfile are splitted into n vmcores of kdump-compressed formats, each of
-which has the same size basically and where n processes are used, not threads.
-(The author told me the reason why process was chosen that he didn't want to put
-relatively large libc library in the 2nd kernel at that time. But recently, libc library is
-present on the 2nd kernel as scp needs to use it. This might no longer pointless.)
-
-I think Cliff's idea works orthogonally to parallel processing. I'll also test it on our
-machine.
-
-Also, sorry for delaying the work on multiple cpus in the 2nd kernel. Posting new
-version of the patch set is delayed a few weeks more. But it's possible to wake up
-AP cpus in the 2nd kernel safely if BIOS always assigns 0 lapicid to BSP since
-then if kexec enteres 2nd kernel with some AP lcpu, kernel always assigns 1 lcpu
-number to BSP lcpu. So, maxcpus=1 and waking up cpus except for 1 lcpu works
-as a workaround. If anyone wants to bench with parallel processing, please do it
-like this.
-
-Thanks.
-HATAYAMA, Daisuke
+How come its not empty? vmclear_local_loaded_vmcss cleared it, didnt it?
 
 
 _______________________________________________
