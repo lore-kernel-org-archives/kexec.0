@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TbSU4-0006a9-95
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 08:50:09 +0000
-Message-ID: <50ADDC8F.5030502@cn.fujitsu.com>
-Date: Thu, 22 Nov 2012 16:04:31 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+ id 1TbV89-0001Pe-1b
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 11:39:43 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1353483098-14883-1-git-send-email-yinghai@kernel.org>
+ <1353483098-14883-5-git-send-email-yinghai@kernel.org>
+ <20121121145023.GD13114@redhat.com>
+ <CAE9FiQUHapB8_uGwMtM84xOHpMvWmVbn2Z8h0C=n_rfHPCbY_g@mail.gmail.com>
+ <20121121200721.GI13114@redhat.com>
+Date: Thu, 22 Nov 2012 03:39:12 -0800
+In-Reply-To: <20121121200721.GI13114@redhat.com> (Vivek Goyal's message of
+ "Wed, 21 Nov 2012 15:07:22 -0500")
+Message-ID: <87624x27fj.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
-References: <50AC3AA9.7080004@cn.fujitsu.com>
- <50AC3B10.3090005@cn.fujitsu.com> <20121121103316.GP21208@redhat.com>
- <50AD78E3.7080901@cn.fujitsu.com> <20121122063435.GA21208@redhat.com>
-In-Reply-To: <20121122063435.GA21208@redhat.com>
+Subject: Re: [PATCH v3 4/4] kexec, x86_64: Load bzImage64 above 4G
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,59 +23,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Gleb Natapov <gleb@redhat.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org, "H. Peter Anvin" <hpa@zytor.com>
 
-5LqOIDIwMTLlubQxMeaciDIy5pelIDE0OjM0LCBHbGViIE5hdGFwb3Yg5YaZ6YGTOgo+IE9uIFRo
-dSwgTm92IDIyLCAyMDEyIGF0IDA4OjU5OjE1QU0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
-Pj4g5LqOIDIwMTLlubQxMeaciDIx5pelIDE4OjMzLCBHbGViIE5hdGFwb3Yg5YaZ6YGTOgo+Pj4g
-T24gV2VkLCBOb3YgMjEsIDIwMTIgYXQgMTA6MjM6MTJBTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
-b3RlOgo+Pj4+IFRoaXMgcGF0Y2ggYWRkcyBhbiBhdG9taWMgbm90aWZpZXIgbGlzdCBuYW1lZCBj
-cmFzaF9ub3RpZmllcl9saXN0Lgo+Pj4+IFdoZW4gbG9hZGluZyBrdm0taW50ZWwgbW9kdWxlLCBh
-IG5vdGlmaWVyIHdpbGwgYmUgcmVnaXN0ZXJlZCBpbgo+Pj4+IHRoZSBsaXN0IHRvIGVuYWJsZSB2
-bWNzcyBsb2FkZWQgb24gYWxsIGNwdXMgdG8gYmUgVk1DTEVBUidkIGlmCj4+Pj4gbmVlZGVkLgo+
-Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWpp
-dHN1LmNvbT4KPj4+PiAtLS0KPj4+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaCB8ICAg
-IDIgKysKPj4+PiAgYXJjaC94ODYva2VybmVsL2NyYXNoLmMgICAgICB8ICAgMjUgKysrKysrKysr
-KysrKysrKysrKysrKysrKwo+Pj4+ICAyIGZpbGVzIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyks
-IDAgZGVsZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9h
-c20va2V4ZWMuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmgKPj4+PiBpbmRleCAzMTdm
-ZjE3Li41ZTIyYjAwIDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVj
-LmgKPj4+PiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oCj4+Pj4gQEAgLTE2Myw2
-ICsxNjMsOCBAQCBzdHJ1Y3Qga2ltYWdlX2FyY2ggewo+Pj4+ICB9Owo+Pj4+ICAjZW5kaWYKPj4+
-PiAgCj4+Pj4gK2V4dGVybiBzdHJ1Y3QgYXRvbWljX25vdGlmaWVyX2hlYWQgY3Jhc2hfbm90aWZp
-ZXJfbGlzdDsKPj4+PiArCj4+Pj4gICNlbmRpZiAvKiBfX0FTU0VNQkxZX18gKi8KPj4+PiAgCj4+
-Pj4gICNlbmRpZiAvKiBfQVNNX1g4Nl9LRVhFQ19IICovCj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gv
-eDg2L2tlcm5lbC9jcmFzaC5jIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4+PiBpbmRleCAx
-M2FkODk5Li4wZjNkNWI0IDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5j
-Cj4+Pj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4+PiBAQCAtMTYsNiArMTYsOCBA
-QAo+Pj4+ICAjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4KPj4+PiAgI2luY2x1ZGUgPGxpbnV4L2Vs
-Zi5oPgo+Pj4+ICAjaW5jbHVkZSA8bGludXgvZWxmY29yZS5oPgo+Pj4+ICsjaW5jbHVkZSA8bGlu
-dXgvbW9kdWxlLmg+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9ub3RpZmllci5oPgo+Pj4+ICAKPj4+
-PiAgI2luY2x1ZGUgPGFzbS9wcm9jZXNzb3IuaD4KPj4+PiAgI2luY2x1ZGUgPGFzbS9oYXJkaXJx
-Lmg+Cj4+Pj4gQEAgLTMwLDYgKzMyLDE5IEBACj4+Pj4gIAo+Pj4+ICBpbnQgaW5fY3Jhc2hfa2V4
-ZWM7Cj4+Pj4gIAo+Pj4+ICsvKgo+Pj4+ICsgKiBUaGUgbGlzdCBpcyB1c2VkIHRvIFZNQ0xFQVIg
-dm1jc3MgbG9hZGVkIG9uIGFsbAo+Pj4+ICsgKiBjcHVzLiBBbmQgd2hlbiBsb2FkaW5nIGt2bV9p
-bnRlbCBtb2R1bGUsIHRoZQo+Pj4+ICsgKiB2bWNsZWFyIGZ1bmN0aW9uIHdpbGwgYmUgcmVnaXN0
-ZXJlZCBpbiB0aGUgbGlzdC4KPj4+PiArICovCj4+Pj4gK0FUT01JQ19OT1RJRklFUl9IRUFEKGNy
-YXNoX25vdGlmaWVyX2xpc3QpOwo+Pj4+ICtFWFBPUlRfU1lNQk9MX0dQTChjcmFzaF9ub3RpZmll
-cl9saXN0KTsKPj4+PiArCj4+Pj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBjcHVfZW1lcmdlbmN5X3Zt
-Y2xlYXJfbG9hZGVkX3ZtY3NzKHZvaWQpCj4+Pj4gK3sKPj4+PiArCWF0b21pY19ub3RpZmllcl9j
-YWxsX2NoYWluKCZjcmFzaF9ub3RpZmllcl9saXN0LCAwLCBOVUxMKTsKPj4+PiArfQo+Pj4+ICsK
-Pj4+IFRoZSBub3RpZmllciBsaXN0IGlzIG5vdCBWTVggc3BlY2lmaWMuIEl0IG1heSBiZSB1c2Vk
-IGZvciBvdGhlcgo+Pj4gcHVycG9zZXMsIHNvIHBsZWFzZSB1c2UgYmV0dGVyIG5hbWUgb3IganVz
-dCBvcGVuIGNvZGUgaXQuCj4+Cj4+IE9LLCB0aGFua3MuIGNyYXNoX25vdGlmaWVyX2xpc3QgLS0+
-IHZtY2xlYXJfbm90aWZpZXJfbGlzdD8KPiBJdCBpcyBldmVuIHdvcnNlLiBZb3UgYXJlIGFkZGlu
-ZyBnZW5lcmFsIGluZnJhc3RydWN0dXJlIGhlcmUsIG5vdAo+IHJlbGF0ZWQgdG8gS1ZNIGF0IGFs
-bC4gQ2hvb3NlIG5ldXRyYWwgbmFtZXMsIGRyb3AgYWxsIGNvbW1lbnRzIGFib3V0Cj4gVk1DTEVB
-Ui4KCkFoLCBJIHRoaW5rIEkgbWlzdW5kZXJzdG9vZCB3aGF0IHlvdSBtZWFuIGJlZm9yZS4KT0ss
-IEkga25vdyB3aGF0IHlvdSBtZWFuIG5vdzogbWFrZSBjcmFzaF9ub3RpZmllcl9saXN0IHVuY2hh
-bmdlZAphbmQgcmVtb3ZlIHRoZSBjb21tZW50cyByZWxhdGVkIHRvIFZNWAphbmQgb3BlbiBjb2Rl
-IHRoZSBhdG9taWNfbm90aWZpZXJfY2FsbF9jaGFpbiBmdW5jdGlvbi4KClRoYW5rcwoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Vivek Goyal <vgoyal@redhat.com> writes:
+
+> On Wed, Nov 21, 2012 at 11:50:56AM -0800, Yinghai Lu wrote:
+>> On Wed, Nov 21, 2012 at 6:50 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
+>> >
+>> > So how do I force a 16bit or 32bit entry using a bzImage64?
+>> 
+>> kexec -t bzImage -l ....
+>> will load low and use 32bit entry.
+>> 
+>> kexec -t bzImage64 -l ...
+>> kexec -l ...
+>> will try to load high and use 64bit entry.
+>
+> Also bzImage64 is not really a new image format. It is just enhancement
+> of bzImage format. We keep on doing extention of bzImage and don't call it
+> a new image format. I am not sure how good an idea it is to export the
+> notion of new image type bzImage64 to user.
+
+For what the loader has to do bzImage64 is effectively a new format,
+and one way or another needs to be handled by separate functions so that
+the code remains readable.
+
+I asked YH to add the code that way because it means only a 64bit kexec
+has to carry that code and we don't have 64bit dependencies in in the
+32bit build that will break.  The code to prepare boot_params is still
+shared.
+
+Chaining to the 32bit loader if someone asks for --real-mode or
+perhaps --entry32 seems quite reasonable and only a couple of lines
+of code so I have not objections to that.
+
+While development is on-going forcing the image type seems very
+reasonable, but when the smoke clears I would like to see
+the bzImage64 format chaining to bzImage for the cases it does not
+handle.
+
+But with respect to autodetection only having bzImage64 kick in when
+loading a 64bit kernel is possible looks like the right way to go.
+
+Eric
+
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
