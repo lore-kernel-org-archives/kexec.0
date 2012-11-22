@@ -1,32 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TbLpT-0007Rx-E0
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 01:43:48 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D89053EE0C0
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id BF26645DD78
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 9EEAA45DD74
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8FA591DB803A
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
-Received: from g01jpexchyt01.g01.fujitsu.local
- (g01jpexchyt01.g01.fujitsu.local [10.128.194.40])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 3FFA21DB802C
- for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
-From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: RE: [PATCH v2] makedumpfile: request the kernel do page scans
-Date: Thu, 22 Nov 2012 01:43:39 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E20AB0B43E@G01JPEXMBYT03>
-References: <E1TbGZV-0008DR-Tb@eag09.americas.sgi.com>
-In-Reply-To: <E1TbGZV-0008DR-Tb@eag09.americas.sgi.com>
-Content-Language: ja-JP
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TbLv7-0007VJ-RN
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 01:49:38 +0000
+Message-ID: <50AD78E3.7080901@cn.fujitsu.com>
+Date: Thu, 22 Nov 2012 08:59:15 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v5 1/2] x86/kexec: VMCLEAR vmcss on all cpus if necessary
+References: <50AC3AA9.7080004@cn.fujitsu.com>
+ <50AC3B10.3090005@cn.fujitsu.com> <20121121103316.GP21208@redhat.com>
+In-Reply-To: <20121121103316.GP21208@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,88 +19,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Gleb Natapov <gleb@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>
 
-Hello Cliff,
-
-I'm interested in this and I'll test this patch on our machine with 2TB
-machines, though I need to start reservating environment, report would
-be posted one or two weeks later.
-
-On my requirement there is the case where dump filtering cannot be used.
-Then dumpfile size becomes large and copying performance becomes crutial
-not only for page scans but also writing processing, i.e. copies,
-compresses and writs pages. I thought such work should probably be done
-on kernel much more than now, but I didn't start this investigation now.
-
-> -----Original Message-----
-> From: Cliff Wickman [mailto:cpw@sgi.com]
-> Sent: Thursday, November 22, 2012 5:07 AM
-> To: Hatayama, Daisuke/畑山 大輔; kumagai-atsushi@mxc.nes.nec.co.jp
-> Cc: kexec@lists.infradead.org
-> Subject: [PATCH v2] makedumpfile: request the kernel do page scans
-> 
-> From: Cliff Wickman <cpw@sgi.com>
-> 
-> I've been experimenting with asking the kernel to scan the page tables
-> instead of reading all those page structures through /proc/vmcore.
-> The results are rather dramatic.
-> On a small, idle UV: about 4 sec. versus about 40 sec.
-> On a 8TB UV the unnecessary page scan takes 4 minutes, vs. about 200 min
-> through /proc/vmcore.
-> 
-
-In the other mail, you explained the reason why this performance difference
-occurs. But I don't understand the term ``units'' you used. Or it might be
-better for me some kind of benchmark results, e.g with perf stat, showing
-the difference in seconds even if the unit is really not essential.
-
-> +/*
-> + * limit the size of the pfn list to this many pfn_element structures
-> + */
-> +#define MAX_PFN_LIST 10000
-> +
-> +/*
-> + * one element in the pfn_list
-> + */
-> +struct pfn_element {
-> +	unsigned long pfn;
-> +	unsigned long order;
-> +};
-> +
-> +/*
-> + * a request for finding pfn's that can be excluded from the dump
-> + * they may be pages of particular types or free pages
-> + */
-> +struct pfn_list_request {
-> +	int request;		/* PL_REQUEST_FREE PL_REQUEST_EXCLUDE or
-> */
-> +				/* PL_REQUEST_MEMMAP */
-> +	int debug;
-> +	unsigned long paddr;	/* mem_map address for
-> PL_REQUEST_EXCLUDE */
-> +	unsigned long pfn_start;/* pfn represented by paddr */
-> +	unsigned long pgdat_paddr; /* for PL_REQUEST_FREE */
-> +	unsigned long pgdat_vaddr; /* for PL_REQUEST_FREE */
-> +	int node;		/* for PL_REQUEST_FREE */
-> +	int exclude_bits;	/* for PL_REQUEST_EXCLUDE */
-> +	int count;		/* for PL_REQUEST_EXCLUDE */
-> +	void *reply_ptr;	/* address of user's pfn_reply, for reply
-> */
-
-How about passing bitmap instead of lists and making kernel side unset bits
-corresponding to unnecessary pages? It's less coping and constant.
-
-Thanks.
-HATAYAMA, Daisuke
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQxMeaciDIx5pelIDE4OjMzLCBHbGViIE5hdGFwb3Yg5YaZ6YGTOgo+IE9uIFdl
+ZCwgTm92IDIxLCAyMDEyIGF0IDEwOjIzOjEyQU0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
+Pj4gVGhpcyBwYXRjaCBhZGRzIGFuIGF0b21pYyBub3RpZmllciBsaXN0IG5hbWVkIGNyYXNoX25v
+dGlmaWVyX2xpc3QuCj4+IFdoZW4gbG9hZGluZyBrdm0taW50ZWwgbW9kdWxlLCBhIG5vdGlmaWVy
+IHdpbGwgYmUgcmVnaXN0ZXJlZCBpbgo+PiB0aGUgbGlzdCB0byBlbmFibGUgdm1jc3MgbG9hZGVk
+IG9uIGFsbCBjcHVzIHRvIGJlIFZNQ0xFQVInZCBpZgo+PiBuZWVkZWQuCj4+Cj4+IFNpZ25lZC1v
+ZmYtYnk6IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4+IC0tLQo+
+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaCB8ICAgIDIgKysKPj4gIGFyY2gveDg2L2tl
+cm5lbC9jcmFzaC5jICAgICAgfCAgIDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysKPj4gIDIg
+ZmlsZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPj4KPj4gZGlm
+ZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmggYi9hcmNoL3g4Ni9pbmNsdWRl
+L2FzbS9rZXhlYy5oCj4+IGluZGV4IDMxN2ZmMTcuLjVlMjJiMDAgMTAwNjQ0Cj4+IC0tLSBhL2Fy
+Y2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmgKPj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20v
+a2V4ZWMuaAo+PiBAQCAtMTYzLDYgKzE2Myw4IEBAIHN0cnVjdCBraW1hZ2VfYXJjaCB7Cj4+ICB9
+Owo+PiAgI2VuZGlmCj4+ICAKPj4gK2V4dGVybiBzdHJ1Y3QgYXRvbWljX25vdGlmaWVyX2hlYWQg
+Y3Jhc2hfbm90aWZpZXJfbGlzdDsKPj4gKwo+PiAgI2VuZGlmIC8qIF9fQVNTRU1CTFlfXyAqLwo+
+PiAgCj4+ICAjZW5kaWYgLyogX0FTTV9YODZfS0VYRUNfSCAqLwo+PiBkaWZmIC0tZ2l0IGEvYXJj
+aC94ODYva2VybmVsL2NyYXNoLmMgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+PiBpbmRleCAx
+M2FkODk5Li4wZjNkNWI0IDEwMDY0NAo+PiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+
+PiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+PiBAQCAtMTYsNiArMTYsOCBAQAo+PiAg
+I2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvZWxmLmg+Cj4+ICAj
+aW5jbHVkZSA8bGludXgvZWxmY29yZS5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+
+PiArI2luY2x1ZGUgPGxpbnV4L25vdGlmaWVyLmg+Cj4+ICAKPj4gICNpbmNsdWRlIDxhc20vcHJv
+Y2Vzc29yLmg+Cj4+ICAjaW5jbHVkZSA8YXNtL2hhcmRpcnEuaD4KPj4gQEAgLTMwLDYgKzMyLDE5
+IEBACj4+ICAKPj4gIGludCBpbl9jcmFzaF9rZXhlYzsKPj4gIAo+PiArLyoKPj4gKyAqIFRoZSBs
+aXN0IGlzIHVzZWQgdG8gVk1DTEVBUiB2bWNzcyBsb2FkZWQgb24gYWxsCj4+ICsgKiBjcHVzLiBB
+bmQgd2hlbiBsb2FkaW5nIGt2bV9pbnRlbCBtb2R1bGUsIHRoZQo+PiArICogdm1jbGVhciBmdW5j
+dGlvbiB3aWxsIGJlIHJlZ2lzdGVyZWQgaW4gdGhlIGxpc3QuCj4+ICsgKi8KPj4gK0FUT01JQ19O
+T1RJRklFUl9IRUFEKGNyYXNoX25vdGlmaWVyX2xpc3QpOwo+PiArRVhQT1JUX1NZTUJPTF9HUEwo
+Y3Jhc2hfbm90aWZpZXJfbGlzdCk7Cj4+ICsKPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBjcHVfZW1l
+cmdlbmN5X3ZtY2xlYXJfbG9hZGVkX3ZtY3NzKHZvaWQpCj4+ICt7Cj4+ICsJYXRvbWljX25vdGlm
+aWVyX2NhbGxfY2hhaW4oJmNyYXNoX25vdGlmaWVyX2xpc3QsIDAsIE5VTEwpOwo+PiArfQo+PiAr
+Cj4gVGhlIG5vdGlmaWVyIGxpc3QgaXMgbm90IFZNWCBzcGVjaWZpYy4gSXQgbWF5IGJlIHVzZWQg
+Zm9yIG90aGVyCj4gcHVycG9zZXMsIHNvIHBsZWFzZSB1c2UgYmV0dGVyIG5hbWUgb3IganVzdCBv
+cGVuIGNvZGUgaXQuCgpPSywgdGhhbmtzLiBjcmFzaF9ub3RpZmllcl9saXN0IC0tPiB2bWNsZWFy
+X25vdGlmaWVyX2xpc3Q/CnRoZSBuZXcgdjYgdmVyc2lvbiBoYXMgYmVlbiBzZW50LCBhbnkgY29t
+bWVudHMgYXJlIHdlbGNvbWUuCgo+IAo+IEFDS3MgZnJvbSBrZXhlYyBzaWRlIGFyZSBuZWVkZWQu
+Cj4gCj4+ICAjaWYgZGVmaW5lZChDT05GSUdfU01QKSAmJiBkZWZpbmVkKENPTkZJR19YODZfTE9D
+QUxfQVBJQykKPj4gIAo+PiAgc3RhdGljIHZvaWQga2R1bXBfbm1pX2NhbGxiYWNrKGludCBjcHUs
+IHN0cnVjdCBwdF9yZWdzICpyZWdzKQo+PiBAQCAtNDYsNiArNjEsMTEgQEAgc3RhdGljIHZvaWQg
+a2R1bXBfbm1pX2NhbGxiYWNrKGludCBjcHUsIHN0cnVjdCBwdF9yZWdzICpyZWdzKQo+PiAgI2Vu
+ZGlmCj4+ICAJY3Jhc2hfc2F2ZV9jcHUocmVncywgY3B1KTsKPj4gIAo+PiArCS8qCj4+ICsJICog
+Vk1DTEVBUiB2bWNzcyBsb2FkZWQgb24gYWxsIGNwdXMgaWYgbmVlZGVkLgo+PiArCSAqLwo+PiAr
+CWNwdV9lbWVyZ2VuY3lfdm1jbGVhcl9sb2FkZWRfdm1jc3MoKTsKPj4gKwo+PiAgCS8qIERpc2Fi
+bGUgVk1YIG9yIFNWTSBpZiBuZWVkZWQuCj4+ICAJICoKPj4gIAkgKiBXZSBuZWVkIHRvIGRpc2Fi
+bGUgdmlydHVhbGl6YXRpb24gb24gYWxsIENQVXMuCj4+IEBAIC04OCw2ICsxMDgsMTEgQEAgdm9p
+ZCBuYXRpdmVfbWFjaGluZV9jcmFzaF9zaHV0ZG93bihzdHJ1Y3QgcHRfcmVncyAqcmVncykKPj4g
+IAo+PiAgCWtkdW1wX25taV9zaG9vdGRvd25fY3B1cygpOwo+PiAgCj4+ICsJLyoKPj4gKwkgKiBW
+TUNMRUFSIHZtY3NzIGxvYWRlZCBvbiB0aGlzIGNwdSBpZiBuZWVkZWQuCj4+ICsJICovCj4+ICsJ
+Y3B1X2VtZXJnZW5jeV92bWNsZWFyX2xvYWRlZF92bWNzcygpOwo+PiArCj4+ICAJLyogQm9vdGlu
+ZyBrZHVtcCBrZXJuZWwgd2l0aCBWTVggb3IgU1ZNIGVuYWJsZWQgd29uJ3Qgd29yaywKPj4gIAkg
+KiBiZWNhdXNlIChhbW9uZyBvdGhlciBsaW1pdGF0aW9ucykgd2UgY2FuJ3QgZGlzYWJsZSBwYWdp
+bmcKPj4gIAkgKiB3aXRoIHRoZSB2aXJ0IGZsYWdzLgo+PiAtLSAKPj4gMS43LjEKPj4KPj4gLS0K
+Pj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2Ny
+aWJlIGxpbnV4LWtlcm5lbCIgaW4KPj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9t
+b0B2Z2VyLmtlcm5lbC5vcmcKPj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIu
+a2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4+IFBsZWFzZSByZWFkIHRoZSBGQVEgYXQg
+IGh0dHA6Ly93d3cudHV4Lm9yZy9sa21sLwo+IAo+IC0tCj4gCQkJR2xlYi4KPiAKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
+c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
