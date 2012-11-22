@@ -1,17 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TbLTJ-0007Gy-It
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 01:20:55 +0000
-Message-ID: <50AD7D82.3070308@cn.fujitsu.com>
-Date: Thu, 22 Nov 2012 09:18:58 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TbLpT-0007Rx-E0
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 01:43:48 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D89053EE0C0
+ for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id BF26645DD78
+ for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 9EEAA45DD74
+ for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8FA591DB803A
+ for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
+Received: from g01jpexchyt01.g01.fujitsu.local
+ (g01jpexchyt01.g01.fujitsu.local [10.128.194.40])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 3FFA21DB802C
+ for <kexec@lists.infradead.org>; Thu, 22 Nov 2012 10:43:41 +0900 (JST)
+From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
+Subject: RE: [PATCH v2] makedumpfile: request the kernel do page scans
+Date: Thu, 22 Nov 2012 01:43:39 +0000
+Message-ID: <33710E6CAA200E4583255F4FB666C4E20AB0B43E@G01JPEXMBYT03>
+References: <E1TbGZV-0008DR-Tb@eag09.americas.sgi.com>
+In-Reply-To: <E1TbGZV-0008DR-Tb@eag09.americas.sgi.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 2/2] KVM-INTEL: add a notifier and a bitmap to support
- VMCLEAR in kdump
-References: <50ACF210.5020802@gmail.com> <50ACF2D7.7060607@gmail.com>
- <20121122011342.GA9838@amt.cnet>
-In-Reply-To: <20121122011342.GA9838@amt.cnet>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,96 +35,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Gleb Natapov <gleb@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Cliff Wickman <cpw@sgi.com>
+Cc: "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-5LqOIDIwMTLlubQxMeaciDIy5pelIDA5OjEzLCBNYXJjZWxvIFRvc2F0dGkg5YaZ6YGTOgo+IE9u
-IFdlZCwgTm92IDIxLCAyMDEyIGF0IDExOjI3OjE5UE0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90
-ZToKPj4gVGhlIG5vdGlmaWVyIHdpbGwgYmUgcmVnaXN0ZXJlZCBpbiB2bWNsZWFyX25vdGlmaWVy
-X2xpc3Qgd2hlbiBsb2FkaW5nCj4+IGt2bS1pbnRlbCBtb2R1bGUuIEFuZCB0aGUgYml0bWFwIGlu
-ZGljYXRlcyB3aGV0aGVyIHdlIHNob3VsZCBkbwo+PiBWTUNMRUFSIG9wZXJhdGlvbiBpbiBrZHVt
-cC4gVGhlIGJpdHMgaW4gdGhlIGJpdG1hcCBhcmUgc2V0L3Vuc2V0Cj4+IGFjY29yZGluZyB0byBk
-aWZmZXJlbnQgY29uZGl0aW9ucy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWFuZmVpIDx6
-aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPj4gLS0tCj4+ICBhcmNoL3g4Ni9rdm0vdm14LmMg
-fCAgIDc3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0KPj4gIDEgZmlsZXMgY2hhbmdlZCwgNzYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkK
-Pj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS92bXguYyBiL2FyY2gveDg2L2t2bS92bXgu
-Ywo+PiBpbmRleCA0ZmYwYWI5Li5lZWE1NWIzIDEwMDY0NAo+PiAtLS0gYS9hcmNoL3g4Ni9rdm0v
-dm14LmMKPj4gKysrIGIvYXJjaC94ODYva3ZtL3ZteC5jCj4+IEBAIC00MSw2ICs0MSw3IEBACj4+
-ICAjaW5jbHVkZSA8YXNtL2kzODcuaD4KPj4gICNpbmNsdWRlIDxhc20veGNyLmg+Cj4+ICAjaW5j
-bHVkZSA8YXNtL3BlcmZfZXZlbnQuaD4KPj4gKyNpbmNsdWRlIDxhc20va2V4ZWMuaD4KPj4gIAo+
-PiAgI2luY2x1ZGUgInRyYWNlLmgiCj4+ICAKPj4gQEAgLTk2Myw2ICs5NjQsNDkgQEAgc3RhdGlj
-IHZvaWQgdm1jc19sb2FkKHN0cnVjdCB2bWNzICp2bWNzKQo+PiAgCQkgICAgICAgdm1jcywgcGh5
-c19hZGRyKTsKPj4gIH0KPj4gIAo+PiArI2lmZGVmIENPTkZJR19LRVhFQwo+PiArLyoKPj4gKyAq
-IFRoaXMgYml0bWFwIGlzIHVzZWQgdG8gaW5kaWNhdGUgd2hldGhlciB0aGUgdm1jbGVhcgo+PiAr
-ICogb3BlcmF0aW9uIGlzIGVuYWJsZWQgb24gYWxsIGNwdXMuIEFsbCBkaXNhYmxlZCBieQo+PiAr
-ICogZGVmYXVsdC4KPj4gKyAqLwo+PiArc3RhdGljIGNwdW1hc2tfdCBjcmFzaF92bWNsZWFyX2Vu
-YWJsZWRfYml0bWFwID0gQ1BVX01BU0tfTk9ORTsKPj4gKwo+PiArc3RhdGljIGlubGluZSB2b2lk
-IGNyYXNoX2VuYWJsZV9sb2NhbF92bWNsZWFyKGludCBjcHUpCj4+ICt7Cj4+ICsJY3B1bWFza19z
-ZXRfY3B1KGNwdSwgJmNyYXNoX3ZtY2xlYXJfZW5hYmxlZF9iaXRtYXApOwo+PiArfQo+PiArCj4+
-ICtzdGF0aWMgaW5saW5lIHZvaWQgY3Jhc2hfZGlzYWJsZV9sb2NhbF92bWNsZWFyKGludCBjcHUp
-Cj4+ICt7Cj4+ICsJY3B1bWFza19jbGVhcl9jcHUoY3B1LCAmY3Jhc2hfdm1jbGVhcl9lbmFibGVk
-X2JpdG1hcCk7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbmxpbmUgaW50IGNyYXNoX2xvY2FsX3Zt
-Y2xlYXJfZW5hYmxlZChpbnQgY3B1KQo+PiArewo+PiArCXJldHVybiBjcHVtYXNrX3Rlc3RfY3B1
-KGNwdSwgJmNyYXNoX3ZtY2xlYXJfZW5hYmxlZF9iaXRtYXApOwo+PiArfQo+PiArCj4+ICtzdGF0
-aWMgdm9pZCB2bWNsZWFyX2xvY2FsX2xvYWRlZF92bWNzcyh2b2lkKTsKPj4gK3N0YXRpYyBpbnQg
-Y3Jhc2hfdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3Moc3RydWN0IG5vdGlmaWVyX2Jsb2NrICp0
-aGlzLAo+PiArCQkJCQkgICAgdW5zaWduZWQgbG9uZyB2YWwsIHZvaWQgKnB0cikKPj4gK3sKPj4g
-KwlpbnQgY3B1ID0gcmF3X3NtcF9wcm9jZXNzb3JfaWQoKTsKPj4gKwo+PiArCWlmIChjcmFzaF9s
-b2NhbF92bWNsZWFyX2VuYWJsZWQoY3B1KSkKPj4gKwkJdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1j
-c3MoKTsKPj4gKwo+PiArCXJldHVybiBOT1RJRllfRE9ORTsKPj4gK30KPj4gKwo+PiArc3RhdGlj
-IHN0cnVjdCBub3RpZmllcl9ibG9jayBjcmFzaF92bWNsZWFyX25vdGlmaWVyID0gewo+PiArCS5u
-b3RpZmllcl9jYWxsID0gY3Jhc2hfdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MsCj4+ICt9Owo+
-PiArI2Vsc2UKPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBjcmFzaF9lbmFibGVfbG9jYWxfdm1jbGVh
-cihpbnQgY3B1KSB7IH0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBjcmFzaF9kaXNhYmxlX2xvY2Fs
-X3ZtY2xlYXIoaW50IGNwdSkgeyB9Cj4+ICsjZW5kaWYgLyogQ09ORklHX0tFWEVDICovCj4+ICsK
-Pj4gIHN0YXRpYyB2b2lkIF9fbG9hZGVkX3ZtY3NfY2xlYXIodm9pZCAqYXJnKQo+PiAgewo+PiAg
-CXN0cnVjdCBsb2FkZWRfdm1jcyAqbG9hZGVkX3ZtY3MgPSBhcmc7Cj4+IEBAIC05NzIsOCArMTAx
-NiwxMCBAQCBzdGF0aWMgdm9pZCBfX2xvYWRlZF92bWNzX2NsZWFyKHZvaWQgKmFyZykKPj4gIAkJ
-cmV0dXJuOyAvKiB2Y3B1IG1pZ3JhdGlvbiBjYW4gcmFjZSB3aXRoIGNwdSBvZmZsaW5lICovCj4+
-ICAJaWYgKHBlcl9jcHUoY3VycmVudF92bWNzLCBjcHUpID09IGxvYWRlZF92bWNzLT52bWNzKQo+
-PiAgCQlwZXJfY3B1KGN1cnJlbnRfdm1jcywgY3B1KSA9IE5VTEw7Cj4+ICsJY3Jhc2hfZGlzYWJs
-ZV9sb2NhbF92bWNsZWFyKGNwdSk7Cj4+ICAJbGlzdF9kZWwoJmxvYWRlZF92bWNzLT5sb2FkZWRf
-dm1jc3Nfb25fY3B1X2xpbmspOwo+PiAgCWxvYWRlZF92bWNzX2luaXQobG9hZGVkX3ZtY3MpOwo+
-PiArCWNyYXNoX2VuYWJsZV9sb2NhbF92bWNsZWFyKGNwdSk7Cj4+ICB9Cj4+ICAKPj4gIHN0YXRp
-YyB2b2lkIGxvYWRlZF92bWNzX2NsZWFyKHN0cnVjdCBsb2FkZWRfdm1jcyAqbG9hZGVkX3ZtY3Mp
-Cj4+IEBAIC0xNDkxLDggKzE1MzcsMTAgQEAgc3RhdGljIHZvaWQgdm14X3ZjcHVfbG9hZChzdHJ1
-Y3Qga3ZtX3ZjcHUgKnZjcHUsIGludCBjcHUpCj4+ICAKPj4gIAkJa3ZtX21ha2VfcmVxdWVzdChL
-Vk1fUkVRX1RMQl9GTFVTSCwgdmNwdSk7Cj4+ICAJCWxvY2FsX2lycV9kaXNhYmxlKCk7Cj4+ICsJ
-CWNyYXNoX2Rpc2FibGVfbG9jYWxfdm1jbGVhcihjcHUpOwo+PiAgCQlsaXN0X2FkZCgmdm14LT5s
-b2FkZWRfdm1jcy0+bG9hZGVkX3ZtY3NzX29uX2NwdV9saW5rLAo+PiAgCQkJICZwZXJfY3B1KGxv
-YWRlZF92bWNzc19vbl9jcHUsIGNwdSkpOwo+PiArCQljcmFzaF9lbmFibGVfbG9jYWxfdm1jbGVh
-cihjcHUpOwo+PiAgCQlsb2NhbF9pcnFfZW5hYmxlKCk7Cj4+ICAKPj4gIAkJLyoKPj4gQEAgLTIz
-MDIsNiArMjM1MCwxOCBAQCBzdGF0aWMgaW50IGhhcmR3YXJlX2VuYWJsZSh2b2lkICpnYXJiYWdl
-KQo+PiAgCQlyZXR1cm4gLUVCVVNZOwo+PiAgCj4+ICAJSU5JVF9MSVNUX0hFQUQoJnBlcl9jcHUo
-bG9hZGVkX3ZtY3NzX29uX2NwdSwgY3B1KSk7Cj4+ICsKPj4gKwkvKgo+PiArCSAqIE5vdyB3ZSBj
-YW4gZW5hYmxlIHRoZSB2bWNsZWFyIG9wZXJhdGlvbiBpbiBrZHVtcAo+PiArCSAqIHNpbmNlIHRo
-ZSBsb2FkZWRfdm1jc3Nfb25fY3B1IGxpc3Qgb24gdGhpcyBjcHUKPj4gKwkgKiBoYXMgYmVlbiBp
-bml0aWFsaXplZC4KPj4gKwkgKgo+PiArCSAqIFRob3VnaCB0aGUgY3B1IGlzIG5vdCBpbiBWTVgg
-b3BlcmF0aW9uIG5vdywgdGhlcmUKPj4gKwkgKiBpcyBubyBwcm9ibGVtIHRvIGVuYWJsZSB0aGUg
-dm1jbGVhciBvcGVyYXRpb24KPj4gKwkgKiBmb3IgdGhlIGxvYWRlZF92bWNzc19vbl9jcHUgbGlz
-dCBpcyBlbXB0eSEKPj4gKwkgKi8KPj4gKwljcmFzaF9lbmFibGVfbG9jYWxfdm1jbGVhcihjcHUp
-Owo+PiArCj4+ICAJcmRtc3JsKE1TUl9JQTMyX0ZFQVRVUkVfQ09OVFJPTCwgb2xkKTsKPj4gIAo+
-PiAgCXRlc3RfYml0cyA9IEZFQVRVUkVfQ09OVFJPTF9MT0NLRUQ7Cj4+IEBAIC0yMzM1LDcgKzIz
-OTUsNiBAQCBzdGF0aWMgdm9pZCB2bWNsZWFyX2xvY2FsX2xvYWRlZF92bWNzcyh2b2lkKQo+PiAg
-CQlfX2xvYWRlZF92bWNzX2NsZWFyKHYpOwo+PiAgfQo+PiAgCj4+IC0KPj4gIC8qIEp1c3QgbGlr
-ZSBjcHVfdm14b2ZmKCksIGJ1dCB3aXRoIHRoZSBfX2t2bV9oYW5kbGVfZmF1bHRfb25fcmVib290
-KCkKPj4gICAqIHRyaWNrcy4KPj4gICAqLwo+PiBAQCAtMjM0OCw2ICsyNDA3LDEyIEBAIHN0YXRp
-YyB2b2lkIGhhcmR3YXJlX2Rpc2FibGUodm9pZCAqZ2FyYmFnZSkKPj4gIHsKPj4gIAlpZiAodm1t
-X2V4Y2x1c2l2ZSkgewo+PiAgCQl2bWNsZWFyX2xvY2FsX2xvYWRlZF92bWNzcygpOwo+PiArCQkv
-Kgo+PiArCQkgKiB2bWNsZWFyIG9wZXJhdGlvbiBpbiBrZHVtcCBzaG91bGQgYmUgZGlzYWJsZWQg
-aGVyZQo+PiArCQkgKiBiZWNhdXNlIHRoZSBjcHUgaXMgZ29pbmcgdG8gZXhpdCBWTVggb3BlcmF0
-aW9uCj4+ICsJCSAqIGFuZCB0aGUgbG9hZGVkX3ZtY3NzX29uX2NwdSBsaXN0IG1heSBub3QgYmUg
-ZW1wdHkhCj4+ICsJCSAqLwo+PiArCQljcmFzaF9kaXNhYmxlX2xvY2FsX3ZtY2xlYXIocmF3X3Nt
-cF9wcm9jZXNzb3JfaWQoKSk7Cj4+ICAJCWt2bV9jcHVfdm14b2ZmKCk7Cj4gCj4gSG93IGNvbWUg
-aXRzIG5vdCBlbXB0eT8gdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MgY2xlYXJlZCBpdCwgZGlk
-bnQgaXQ/CgpZb3UgYXJlIHJpZ2h0LiBJIGZvcmdldCB0aGF0IHZtY2xlYXJfbG9jYWxfbG9hZGVk
-X3ZtY3NzIHdpbGwgZGVsZXRlIHRoZSB2bWNzCndoZW4gaXQgY2xlYXJzIG9uZS4gCgpUaGFua3Ms
-IEkgd2lsbCBmaXggdGhpcyBhbmQgcmVzZW5kIHRoZSBwYXRjaC4KClpoYW5nCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
-CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYwo=
+Hello Cliff,
+
+I'm interested in this and I'll test this patch on our machine with 2TB
+machines, though I need to start reservating environment, report would
+be posted one or two weeks later.
+
+On my requirement there is the case where dump filtering cannot be used.
+Then dumpfile size becomes large and copying performance becomes crutial
+not only for page scans but also writing processing, i.e. copies,
+compresses and writs pages. I thought such work should probably be done
+on kernel much more than now, but I didn't start this investigation now.
+
+> -----Original Message-----
+> From: Cliff Wickman [mailto:cpw@sgi.com]
+> Sent: Thursday, November 22, 2012 5:07 AM
+> To: Hatayama, Daisuke/畑山 大輔; kumagai-atsushi@mxc.nes.nec.co.jp
+> Cc: kexec@lists.infradead.org
+> Subject: [PATCH v2] makedumpfile: request the kernel do page scans
+> 
+> From: Cliff Wickman <cpw@sgi.com>
+> 
+> I've been experimenting with asking the kernel to scan the page tables
+> instead of reading all those page structures through /proc/vmcore.
+> The results are rather dramatic.
+> On a small, idle UV: about 4 sec. versus about 40 sec.
+> On a 8TB UV the unnecessary page scan takes 4 minutes, vs. about 200 min
+> through /proc/vmcore.
+> 
+
+In the other mail, you explained the reason why this performance difference
+occurs. But I don't understand the term ``units'' you used. Or it might be
+better for me some kind of benchmark results, e.g with perf stat, showing
+the difference in seconds even if the unit is really not essential.
+
+> +/*
+> + * limit the size of the pfn list to this many pfn_element structures
+> + */
+> +#define MAX_PFN_LIST 10000
+> +
+> +/*
+> + * one element in the pfn_list
+> + */
+> +struct pfn_element {
+> +	unsigned long pfn;
+> +	unsigned long order;
+> +};
+> +
+> +/*
+> + * a request for finding pfn's that can be excluded from the dump
+> + * they may be pages of particular types or free pages
+> + */
+> +struct pfn_list_request {
+> +	int request;		/* PL_REQUEST_FREE PL_REQUEST_EXCLUDE or
+> */
+> +				/* PL_REQUEST_MEMMAP */
+> +	int debug;
+> +	unsigned long paddr;	/* mem_map address for
+> PL_REQUEST_EXCLUDE */
+> +	unsigned long pfn_start;/* pfn represented by paddr */
+> +	unsigned long pgdat_paddr; /* for PL_REQUEST_FREE */
+> +	unsigned long pgdat_vaddr; /* for PL_REQUEST_FREE */
+> +	int node;		/* for PL_REQUEST_FREE */
+> +	int exclude_bits;	/* for PL_REQUEST_EXCLUDE */
+> +	int count;		/* for PL_REQUEST_EXCLUDE */
+> +	void *reply_ptr;	/* address of user's pfn_reply, for reply
+> */
+
+How about passing bitmap instead of lists and making kernel side unset bits
+corresponding to unnecessary pages? It's less coping and constant.
+
+Thanks.
+HATAYAMA, Daisuke
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
