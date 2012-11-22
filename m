@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TbRQJ-0000Li-LU
- for kexec@lists.infradead.org; Thu, 22 Nov 2012 07:42:13 +0000
-Date: Thu, 22 Nov 2012 16:30:54 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: fix to exclude_unnecessary_pages_cyclic
-Message-Id: <20121122163054.ebd90a1caa5924f135ac0a02@mxc.nes.nec.co.jp>
-In-Reply-To: <E1TbGF5-00087E-Sy@eag09.americas.sgi.com>
-References: <E1TbGF5-00087E-Sy@eag09.americas.sgi.com>
-Mime-Version: 1.0
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TbS56-0003Js-S5
+ for kexec@lists.infradead.org; Thu, 22 Nov 2012 08:24:22 +0000
+Message-ID: <50ADE0C2.1000106@cn.fujitsu.com>
+Date: Thu, 22 Nov 2012 16:22:26 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: [PATCH v8 0/2] x86: vmclear vmcss on all cpus when doing kdump if
+ necessary
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,43 +21,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cpw@sgi.com
-Cc: kexec@lists.infradead.org
+To: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-Hello Cliff,
+Currently, kdump just makes all the logical processors leave VMX operation by
+executing VMXOFF instruction, so any VMCSs active on the logical processors may
+be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
+in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
+executing the VMXOFF instruction.
 
-On Wed, 21 Nov 2012 13:45:51 -0600
-Cliff Wickman <cpw@sgi.com> wrote:
+The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
+executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
+vmcore updated and non-corrupted.
 
-> 
-> The || in exclude_unnecessary_pages_cyclic() makes makedumpfile
-> scan all the memmap sections, not just the ones containing the current
-> cyclic range.
-> 
-> Diffed against makedumpfile-1.5.1
+Changelog from v7 to v8:
+1. KEXEC: regression for using name crash_notifier_list
+   and remove comments related to KVM
+   and just call function atomic_notifier_call_chain directly.
 
-Thanks, I'll merge this patch into v1.5.1.
+Changelog from v6 to v7:
+1. KVM-INTEL: in hardware_disable, we needn't disable the
+   vmclear, so remove it.
 
+Changelog from v5 to v6:
+1. KEXEC: the atomic notifier list renamed:
+   crash_notifier_list --> vmclear_notifier_list
+2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
+   not defined and remove unnecessary #ifdef's.
 
-Atsushi Kumagai
+Changelog from v4 to v5:
+1. use an atomic notifier instead of function call, so
+   have all the vmclear codes in vmx.c.
 
-> ---
->  makedumpfile.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Index: makedumpfile-1.5.1/makedumpfile.c
-> ===================================================================
-> --- makedumpfile-1.5.1.orig/makedumpfile.c
-> +++ makedumpfile-1.5.1/makedumpfile.c
-> @@ -4187,7 +4187,7 @@ exclude_unnecessary_pages_cyclic(void)
->  			if (mmd->mem_map == NOT_MEMMAP_ADDR)
->  				continue;
->  
-> -			if (mmd->pfn_end >= info->cyclic_start_pfn || mmd->pfn_start <= info->cyclic_end_pfn) {
-> +			if (mmd->pfn_end >= info->cyclic_start_pfn && mmd->pfn_start <= info->cyclic_end_pfn) {
->  				if (!__exclude_unnecessary_pages(mmd->mem_map,
->  								 mmd->pfn_start, mmd->pfn_end))
->  					return FALSE;
+Changelog from v3 to v4:
+1. add a new percpu variable vmclear_skipped to skip
+   vmclear in kdump in some conditions.
+
+Changelog from v2 to v3:
+1. remove unnecessary conditions in function
+   cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
+
+Changelog from v1 to v2:
+1. remove the sysctl and clear VMCSs unconditionally.
+
+Zhang Yanfei (2):
+  x86/kexec: add a new atomic notifier list for kdump
+  KVM-INTEL: add a notifier and a bitmap to support VMCLEAR in kdump
+
+ arch/x86/include/asm/kexec.h |    2 +
+ arch/x86/kernel/crash.c      |    9 +++++
+ arch/x86/kvm/vmx.c           |   70 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 81 insertions(+), 0 deletions(-)
 
 _______________________________________________
 kexec mailing list
