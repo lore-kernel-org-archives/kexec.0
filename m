@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TbiAw-0003Di-1m
- for kexec@lists.infradead.org; Fri, 23 Nov 2012 01:35:27 +0000
+ id 1TbiEl-000466-BR
+ for kexec@lists.infradead.org; Fri, 23 Nov 2012 01:39:24 +0000
 In-Reply-To: <50AEBF86.50501@citrix.com>
 References: <1353423893-23125-1-git-send-email-daniel.kiper@oracle.com>
  <1353423893-23125-2-git-send-email-daniel.kiper@oracle.com>
@@ -13,8 +13,8 @@ References: <1353423893-23125-1-git-send-email-daniel.kiper@oracle.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH v2 01/11] kexec: introduce kexec_ops struct
 From: "H. Peter Anvin" <hpa@zytor.com>
-Date: Thu, 22 Nov 2012 17:34:56 -0800
-Message-ID: <a1f75604-1f52-4af1-9dd7-b469ed4ea7b6@email.android.com>
+Date: Thu, 22 Nov 2012 17:38:33 -0800
+Message-ID: <18e831d4-910d-4f58-8911-1398b96e3a47@email.android.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,7 +30,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Cooper <andrew.cooper3@citrix.com>
 Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, Daniel Kiper <daniel.kiper@oracle.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "jbeulich@suse.com" <jbeulich@suse.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-Ok... that *sort of* makes sense, but also underscores how utterly different this is from a normal kexec.
+I still don't really get why it can't be isolated from dom0, which would make more sense to me, even for a Xen crash.
 
 Andrew Cooper <andrew.cooper3@citrix.com> wrote:
 
