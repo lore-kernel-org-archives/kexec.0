@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TcMdk-0000BG-Gv
- for kexec@lists.infradead.org; Sat, 24 Nov 2012 20:47:54 +0000
+ id 1TcMdk-00009R-As
+ for kexec@lists.infradead.org; Sat, 24 Nov 2012 20:47:53 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v4 5/6] kexec,
- x86: set ext_cmd_line_ptr when boot_param is above 4g
-Date: Sat, 24 Nov 2012 12:47:45 -0800
-Message-Id: <1353790066-20352-6-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v4 1/6] kexec, x86: clean boot_params area for entry-32bit path
+Date: Sat, 24 Nov 2012 12:47:41 -0800
+Message-Id: <1353790066-20352-2-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1353790066-20352-1-git-send-email-yinghai@kernel.org>
 References: <1353790066-20352-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -26,34 +25,53 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-update ext_cmd_line_ptr for bzImage from protocal 2.12
-that could have command line above 4g.
+kexec bzImage path setup data is shared with real-mode path, and
+setup_header is copied together with setup_code.
+Later 32bit just use whole area as boot_params for real_mode_data.
+but those area for boot_params around setup_header is
+not cleaned that will leave some field in boot_param as
+non-zero value.
 
--v2: update ext_... handling to the way that Eric likes.
+So clean around setup_header area for non real-mode entry path.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/i386/x86-linux-setup.c |    7 ++++++-
- 1 files changed, 6 insertions(+), 1 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 3c31f64..d12dab1 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -103,7 +103,12 @@ void setup_linux_bootloader_parameters(
- 		/* setup_move_size */
- 	/* } */
- 	if (real_mode->protocol_version >= 0x0202) {
--		real_mode->cmd_line_ptr = real_mode_base + cmdline_offset;
-+		unsigned long cmd_line_ptr = real_mode_base + cmdline_offset;
-+
-+		real_mode->cmd_line_ptr = cmd_line_ptr & 0xffffffffUL;
-+		if ((real_mode->protocol_version >= 0x020c) &&
-+		    ((cmd_line_ptr & 0xffffffffUL) != cmd_line_ptr))
-+			real_mode->ext_cmd_line_ptr = cmd_line_ptr >> 32;
- 	}
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 6998587..80d09e7 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -98,6 +98,19 @@ void bzImage_usage(void)
+        
+ }
  
- 	/* Fill in the command line */
++static void clean_boot_params(unsigned char *real_mode, unsigned long size)
++{
++	unsigned long end;
++
++	/* clear value before header */
++	memset(real_mode, 0, 0x1f1);
++	/* clear value after setup_header  */
++	end = *(real_mode + 0x201);
++	end += 0x202;
++	if (end < size)
++		memset(real_mode + end, 0, size - end);
++}
++
+ int do_bzImage_load(struct kexec_info *info,
+ 	const char *kernel, off_t kernel_len,
+ 	const char *command_line, off_t command_line_len,
+@@ -212,6 +225,8 @@ int do_bzImage_load(struct kexec_info *info,
+ 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
+ 	real_mode = xmalloc(setup_size);
+ 	memcpy(real_mode, kernel, kern16_size);
++	if (!real_mode_entry)
++		clean_boot_params((unsigned char *)real_mode, kern16_size);
+ 
+ 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
+ 		/* If using bzImage for capture kernel, then we will not be
 -- 
 1.7.7
 
