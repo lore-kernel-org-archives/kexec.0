@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TcMdk-00009R-As
- for kexec@lists.infradead.org; Sat, 24 Nov 2012 20:47:53 +0000
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v4 1/6] kexec, x86: clean boot_params area for entry-32bit path
-Date: Sat, 24 Nov 2012 12:47:41 -0800
-Message-Id: <1353790066-20352-2-git-send-email-yinghai@kernel.org>
-In-Reply-To: <1353790066-20352-1-git-send-email-yinghai@kernel.org>
+ id 1TcQIz-0001GY-QI
+ for kexec@lists.infradead.org; Sun, 25 Nov 2012 00:42:42 +0000
+Message-ID: <50B16975.7010402@zytor.com>
+Date: Sat, 24 Nov 2012 16:42:29 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v4 6/6] kexec, x86_64: Load bzImage64 above 4G
 References: <1353790066-20352-1-git-send-email-yinghai@kernel.org>
+ <1353790066-20352-7-git-send-email-yinghai@kernel.org>
+ <CAE9FiQXhz8cA7d0a8UA4YWBScrZnVnVAQTHqN3F0_f5omi1o1A@mail.gmail.com>
+In-Reply-To: <CAE9FiQXhz8cA7d0a8UA4YWBScrZnVnVAQTHqN3F0_f5omi1o1A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,63 +20,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-kexec bzImage path setup data is shared with real-mode path, and
-setup_header is copied together with setup_code.
-Later 32bit just use whole area as boot_params for real_mode_data.
-but those area for boot_params around setup_header is
-not cleaned that will leave some field in boot_param as
-non-zero value.
+On 11/24/2012 04:38 PM, Yinghai Lu wrote:
+> On Sat, Nov 24, 2012 at 12:47 PM, Yinghai Lu <yinghai@kernel.org> wrote:
+>> need to check xloadflags to see the bzImage is for 64bit relocatable.
+>>
+>> -v2: add kexec-bzImage64.c according to Eric.
+>> -v3: don't need to purgatory under 2g after Eric's change to purgatory code.
+>> -v4: use locate_hole find position first then add_buffer... suggested by Eric
+>>       add buffer for kernel image at last to make kexec-load faster.
+>>       use xloadflags in setup_header to tell if is bzImage64.
+>>       remove not cross GB boundary searching.
+>>       add --entry-32bit and --real-mode for skipping bzImage64.
+>
+> -v5: attached. that is using USE_EXT_BOOT_PARAMS bit in xloadflags
+>
 
-So clean around setup_header area for non real-mode entry path.
+Yinghai, revving the patch is pointless until we agree on the proper 
+architectural direction.
 
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
----
- kexec/arch/i386/kexec-bzImage.c |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
+	-hpa
 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 6998587..80d09e7 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -98,6 +98,19 @@ void bzImage_usage(void)
-        
- }
- 
-+static void clean_boot_params(unsigned char *real_mode, unsigned long size)
-+{
-+	unsigned long end;
-+
-+	/* clear value before header */
-+	memset(real_mode, 0, 0x1f1);
-+	/* clear value after setup_header  */
-+	end = *(real_mode + 0x201);
-+	end += 0x202;
-+	if (end < size)
-+		memset(real_mode + end, 0, size - end);
-+}
-+
- int do_bzImage_load(struct kexec_info *info,
- 	const char *kernel, off_t kernel_len,
- 	const char *command_line, off_t command_line_len,
-@@ -212,6 +225,8 @@ int do_bzImage_load(struct kexec_info *info,
- 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
- 	real_mode = xmalloc(setup_size);
- 	memcpy(real_mode, kernel, kern16_size);
-+	if (!real_mode_entry)
-+		clean_boot_params((unsigned char *)real_mode, kern16_size);
- 
- 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
- 		/* If using bzImage for capture kernel, then we will not be
 -- 
-1.7.7
+H. Peter Anvin, Intel Open Source Technology Center
+I work for Intel.  I don't speak on their behalf.
 
 
 _______________________________________________
