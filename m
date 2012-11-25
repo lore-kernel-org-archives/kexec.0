@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TcdAb-0007xp-ES
- for kexec@lists.infradead.org; Sun, 25 Nov 2012 14:26:54 +0000
-Date: Sun, 25 Nov 2012 16:26:42 +0200
-From: Gleb Natapov <gleb@redhat.com>
-Subject: Re: [PATCH v8 0/2] x86: vmclear vmcss on all cpus when doing kdump
- if necessary
-Message-ID: <20121125142642.GC25516@redhat.com>
-References: <50ADE0C2.1000106@cn.fujitsu.com>
+Received: from mail-bk0-f49.google.com ([209.85.214.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TcQDt-0001FA-4y
+ for kexec@lists.infradead.org; Sun, 25 Nov 2012 00:37:28 +0000
+Received: by mail-bk0-f49.google.com with SMTP id jm19so2940323bkc.36
+ for <kexec@lists.infradead.org>; Sat, 24 Nov 2012 16:37:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <50ADE0C2.1000106@cn.fujitsu.com>
+In-Reply-To: <1353790066-20352-5-git-send-email-yinghai@kernel.org>
+References: <1353790066-20352-1-git-send-email-yinghai@kernel.org>
+ <1353790066-20352-5-git-send-email-yinghai@kernel.org>
+Date: Sat, 24 Nov 2012 16:37:19 -0800
+Message-ID: <CAE9FiQWZ-uZZiQnRWcEu54+q7JXoQE5Tx+zPZEm0Phx2ZyDX=A@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] kexec, x86: put ramdisk high for 64bit bzImage
+From: Yinghai Lu <yinghai@kernel.org>
+Content-Type: multipart/mixed; boundary=0015174c33d6fef84504cf4704c8
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,69 +22,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>
+To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-On Thu, Nov 22, 2012 at 04:22:26PM +0800, Zhang Yanfei wrote:
-> Currently, kdump just makes all the logical processors leave VMX operation by
-> executing VMXOFF instruction, so any VMCSs active on the logical processors may
-> be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
-> in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
-> executing the VMXOFF instruction.
-> 
-> The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
-> executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
-> vmcore updated and non-corrupted.
-> 
-Looks fine to me, but kexec part should get acks from exec maintainers.
+--0015174c33d6fef84504cf4704c8
+Content-Type: text/plain; charset=ISO-8859-1
 
-> Changelog from v7 to v8:
-> 1. KEXEC: regression for using name crash_notifier_list
->    and remove comments related to KVM
->    and just call function atomic_notifier_call_chain directly.
-> 
-> Changelog from v6 to v7:
-> 1. KVM-INTEL: in hardware_disable, we needn't disable the
->    vmclear, so remove it.
-> 
-> Changelog from v5 to v6:
-> 1. KEXEC: the atomic notifier list renamed:
->    crash_notifier_list --> vmclear_notifier_list
-> 2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
->    not defined and remove unnecessary #ifdef's.
-> 
-> Changelog from v4 to v5:
-> 1. use an atomic notifier instead of function call, so
->    have all the vmclear codes in vmx.c.
-> 
-> Changelog from v3 to v4:
-> 1. add a new percpu variable vmclear_skipped to skip
->    vmclear in kdump in some conditions.
-> 
-> Changelog from v2 to v3:
-> 1. remove unnecessary conditions in function
->    cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
-> 
-> Changelog from v1 to v2:
-> 1. remove the sysctl and clear VMCSs unconditionally.
-> 
-> Zhang Yanfei (2):
->   x86/kexec: add a new atomic notifier list for kdump
->   KVM-INTEL: add a notifier and a bitmap to support VMCLEAR in kdump
-> 
->  arch/x86/include/asm/kexec.h |    2 +
->  arch/x86/kernel/crash.c      |    9 +++++
->  arch/x86/kvm/vmx.c           |   70 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 81 insertions(+), 0 deletions(-)
+On Sat, Nov 24, 2012 at 12:47 PM, Yinghai Lu <yinghai@kernel.org> wrote:
+> We could put ramdisk high for bzImage on 64bit for protocol 2.12.
+>
+> -v2: change ext_... handling to way that eric like.
 
---
-			Gleb.
+-v5 attached
+
+--0015174c33d6fef84504cf4704c8
+Content-Type: application/octet-stream; 
+	name="ramdisk_high_mem_64_x_6_v5.patch"
+Content-Disposition: attachment; filename="ramdisk_high_mem_64_x_6_v5.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_h9xfumot0
+
+U3ViamVjdDogW1BBVENIIHY1IDQvNl0ga2V4ZWMsIHg4NjogcHV0IHJhbWRpc2sgaGlnaCBmb3Ig
+NjRiaXQgYnpJbWFnZQoKV2UgY291bGQgcHV0IHJhbWRpc2sgaGlnaCBmb3IgYnpJbWFnZSBvbiA2
+NGJpdCBmb3IgcHJvdG9jb2wgMi4xMi4KCi12MjogY2hhbmdlIGV4dF8uLi4gaGFuZGxpbmcgdG8g
+d2F5IHRoYXQgZXJpYyBsaWtlLgoKU2lnbmVkLW9mZi1ieTogWWluZ2hhaSBMdSA8eWluZ2hhaUBr
+ZXJuZWwub3JnPgoKLS0tCiBrZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMgfCAgIDE4
+ICsrKysrKysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDMg
+ZGVsZXRpb25zKC0pCgpJbmRleDoga2V4ZWMtdG9vbHMva2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51
+eC1zZXR1cC5jCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0KLS0tIGtleGVjLXRvb2xzLm9yaWcva2V4ZWMvYXJjaC9pMzg2
+L3g4Ni1saW51eC1zZXR1cC5jCisrKyBrZXhlYy10b29scy9rZXhlYy9hcmNoL2kzODYveDg2LWxp
+bnV4LXNldHVwLmMKQEAgLTY0LDcgKzY0LDExIEBAIHZvaWQgc2V0dXBfbGludXhfYm9vdGxvYWRl
+cl9wYXJhbWV0ZXJzKAogCS8qIEZpbmQgdGhlIG1heGltdW0gaW5pdGlhbCByYW1kaXNrIGFkZHJl
+c3MgKi8KIAlpbml0cmRfYWRkcl9tYXggPSBERUZBVUxUX0lOSVRSRF9BRERSX01BWDsKIAlpZiAo
+cmVhbF9tb2RlLT5wcm90b2NvbF92ZXJzaW9uID49IDB4MDIwMykgewotCQlpbml0cmRfYWRkcl9t
+YXggPSByZWFsX21vZGUtPmluaXRyZF9hZGRyX21heDsKKwkJaWYgKHJlYWxfbW9kZS0+cHJvdG9j
+b2xfdmVyc2lvbiA+PSAweDAyMGMgJiYKKwkJICAgIHJlYWxfbW9kZS0+eGxvYWRmbGFncyAmICgx
+PDwxNSkpIC8qIFVTRV9FWFRfQk9PVF9QQVJBTVMgKi8KKwkJCWluaXRyZF9hZGRyX21heCA9IFVM
+T05HX01BWDsKKwkJZWxzZQorCQkJaW5pdHJkX2FkZHJfbWF4ID0gcmVhbF9tb2RlLT5pbml0cmRf
+YWRkcl9tYXg7CiAJCWRiZ3ByaW50ZigiaW5pdHJkX2FkZHJfbWF4IGlzIDB4JWx4XG4iLCBpbml0
+cmRfYWRkcl9tYXgpOwogCX0KIApAQCAtODEsOCArODUsMTYgQEAgdm9pZCBzZXR1cF9saW51eF9i
+b290bG9hZGVyX3BhcmFtZXRlcnMoCiAJfQogCiAJLyogUmFtZGlzayBhZGRyZXNzIGFuZCBzaXpl
+ICovCi0JcmVhbF9tb2RlLT5pbml0cmRfc3RhcnQgPSBpbml0cmRfYmFzZTsKLQlyZWFsX21vZGUt
+PmluaXRyZF9zaXplICA9IGluaXRyZF9zaXplOworCXJlYWxfbW9kZS0+aW5pdHJkX3N0YXJ0ID0g
+aW5pdHJkX2Jhc2UgJiAweGZmZmZmZmZmVUw7CisJcmVhbF9tb2RlLT5pbml0cmRfc2l6ZSAgPSBp
+bml0cmRfc2l6ZSAmIDB4ZmZmZmZmZmZVTDsKKworCWlmIChyZWFsX21vZGUtPnByb3RvY29sX3Zl
+cnNpb24gPj0gMHgwMjBjICYmCisJICAgIChpbml0cmRfYmFzZSAmIDB4ZmZmZmZmZmZVTCkgIT0g
+aW5pdHJkX2Jhc2UpCisJCXJlYWxfbW9kZS0+ZXh0X3JhbWRpc2tfaW1hZ2UgPSBpbml0cmRfYmFz
+ZSA+PiAzMjsKKworCWlmIChyZWFsX21vZGUtPnByb3RvY29sX3ZlcnNpb24gPj0gMHgwMjBjICYm
+CisJICAgIChpbml0cmRfc2l6ZSAmIDB4ZmZmZmZmZmZVTCkgIT0gaW5pdHJkX3NpemUpCisJCXJl
+YWxfbW9kZS0+ZXh0X3JhbWRpc2tfc2l6ZSA9IGluaXRyZF9zaXplID4+IDMyOwogCiAJLyogVGhl
+IGxvY2F0aW9uIG9mIHRoZSBjb21tYW5kIGxpbmUgKi8KIAkvKiBpZiAocmVhbF9tb2RlX2Jhc2Ug
+PT0gMHg5MDAwMCkgeyAqLwo=
+--0015174c33d6fef84504cf4704c8
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--0015174c33d6fef84504cf4704c8--
+
