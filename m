@@ -1,12 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from svenfoo.org ([82.94.215.22] helo=mail.zonque.de)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TcxaZ-0001RB-M7
- for kexec@lists.infradead.org; Mon, 26 Nov 2012 12:15:05 +0000
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH 1/2] fs2dt: fix basename string compares
-Date: Mon, 26 Nov 2012 13:14:42 +0100
-Message-Id: <1353932083-8710-1-git-send-email-zonque@gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TczIy-0000Wj-Cd
+ for kexec@lists.infradead.org; Mon, 26 Nov 2012 14:05:01 +0000
+Date: Mon, 26 Nov 2012 09:04:48 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Message-ID: <20121126140448.GA28057@redhat.com>
+References: <50A4E524.8020702@linux.vnet.ibm.com>
+ <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
+ <20121115155557.GF2529@redhat.com>
+ <50A60CF2.6010309@linux.vnet.ibm.com>
+ <20121116143649.GA4515@redhat.com>
+ <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
+ <50AC809E.9060907@linux.vnet.ibm.com>
+ <20121121135721.GB13114@redhat.com>
+ <50AE5D89.2090101@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50AE5D89.2090101@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,50 +27,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, s.neumann@raumfeld.com, Daniel Mack <zonque@gmail.com>
+To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, anderson@redhat.com, buendgen@de.ibm.com
 
-basename is initialized as
+On Thu, Nov 22, 2012 at 10:44:49PM +0530, Aravinda Prasad wrote:
 
-  basename = strrchr(pathname,'/') + 1;
+[..]
+> Customers who want to filter their dump would certainly prefer a single
+> tool and a single shot to throw away pages, scrub data and then
+> compress, split or send the resulting dump to some target using ssh.
+> This important functionality is lost if scrubbing is not part of
+> makedumpfile and a separate tool is developed which just does scrubbing.
 
-and does hence not contain the leading slash character.
+Customers do filtering from initramfs context. It is not practical to
+save TB of memory and filter it later. And we just concluded that is
+it not practical to do scrubbing from initramfs due to need of vmlinux.
 
-Signed-off-by: Daniel Mack <zonque@gmail.com>
----
- kexec/fs2dt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+So doing filtering and doing scrubbing will not happen at the same
+time practically. So bloating size of makedumpfile does not make
+sense to me.
 
-diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-index b7eda8f..79258a1 100644
---- a/kexec/fs2dt.c
-+++ b/kexec/fs2dt.c
-@@ -525,7 +525,7 @@ static void putnode(void)
- 	putprops(dn, namelist, numlist);
- 
- 	/* Add initrd entries to the second kernel */
--	if (initrd_base && !strcmp(basename,"/chosen/")) {
-+	if (initrd_base && !strcmp(basename,"chosen/")) {
- 		int len = 8;
- 		unsigned long long initrd_end;
- 
-@@ -554,7 +554,7 @@ static void putnode(void)
- 
- 	/* Add cmdline to the second kernel.  Check to see if the new
- 	 * cmdline has a root=.  If not, use the old root= cmdline.  */
--	if (!strcmp(basename,"/chosen/")) {
-+	if (!strcmp(basename,"chosen/")) {
- 		size_t cmd_len = 0;
- 		char *param = NULL;
- 		char filename[MAXPATH];
--- 
-1.7.11.7
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
