@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Tcnx2-0003fH-3F
- for kexec@lists.infradead.org; Mon, 26 Nov 2012 01:57:36 +0000
-Message-ID: <50B2CC1D.6060708@cn.fujitsu.com>
-Date: Mon, 26 Nov 2012 09:55:41 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v8 0/2] x86: vmclear vmcss on all cpus when doing kdump
- if necessary
-References: <50ADE0C2.1000106@cn.fujitsu.com>
-In-Reply-To: <50ADE0C2.1000106@cn.fujitsu.com>
+Received: from svenfoo.org ([82.94.215.22] helo=mail.zonque.de)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TcxaZ-0001RJ-Me
+ for kexec@lists.infradead.org; Mon, 26 Nov 2012 12:15:05 +0000
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH 2/2] fs2dt: check for initrd_size != 0 when adding initrd
+ entries
+Date: Mon, 26 Nov 2012 13:14:43 +0100
+Message-Id: <1353932083-8710-2-git-send-email-zonque@gmail.com>
+In-Reply-To: <1353932083-8710-1-git-send-email-zonque@gmail.com>
+References: <1353932083-8710-1-git-send-email-zonque@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,50 +18,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, s.neumann@raumfeld.com, Daniel Mack <zonque@gmail.com>
 
-SGVsbG8gRXJpYwoKV291bGQgeW91IGhlbHAgcmV2aWV3IHRoZSBwYXRjaCwgYW5kIGdpdmUgc29t
-ZSBjb21tZW50cywgcGxlYXNlID8gCgpUaGFua3MKWmhhbmcKCuS6jiAyMDEy5bm0MTHmnIgyMuaX
-pSAxNjoyMiwgWmhhbmcgWWFuZmVpIOWGmemBkzoKPiBDdXJyZW50bHksIGtkdW1wIGp1c3QgbWFr
-ZXMgYWxsIHRoZSBsb2dpY2FsIHByb2Nlc3NvcnMgbGVhdmUgVk1YIG9wZXJhdGlvbiBieQo+IGV4
-ZWN1dGluZyBWTVhPRkYgaW5zdHJ1Y3Rpb24sIHNvIGFueSBWTUNTcyBhY3RpdmUgb24gdGhlIGxv
-Z2ljYWwgcHJvY2Vzc29ycyBtYXkKPiBiZSBjb3JydXB0ZWQuIEJ1dCwgc29tZXRpbWVzLCB3ZSBu
-ZWVkIHRoZSBWTUNTcyB0byBkZWJ1ZyBndWVzdCBpbWFnZXMgY29udGFpbmVkCj4gaW4gdGhlIGhv
-c3Qgdm1jb3JlLiBUbyBwcmV2ZW50IHRoZSBjb3JydXB0aW9uLCB3ZSBzaG91bGQgVk1DTEVBUiB0
-aGUgVk1DU3MgYmVmb3JlCj4gZXhlY3V0aW5nIHRoZSBWTVhPRkYgaW5zdHJ1Y3Rpb24uCj4gCj4g
-VGhlIHBhdGNoIHNldCBwcm92aWRlcyBhIHdheSB0byBWTUNMRUFSIHZtY3NzIHJlbGF0ZWQgdG8g
-Z3Vlc3RzIG9uIGFsbCBjcHVzIGJlZm9yZQo+IGV4ZWN1dGluZyB0aGUgVk1YT0ZGIHdoZW4gZG9p
-bmcga2R1bXAuIFRoaXMgaXMgdXNlZCB0byBlbnN1cmUgdGhlIFZNQ1NzIGluIHRoZQo+IHZtY29y
-ZSB1cGRhdGVkIGFuZCBub24tY29ycnVwdGVkLgo+IAo+IENoYW5nZWxvZyBmcm9tIHY3IHRvIHY4
-Ogo+IDEuIEtFWEVDOiByZWdyZXNzaW9uIGZvciB1c2luZyBuYW1lIGNyYXNoX25vdGlmaWVyX2xp
-c3QKPiAgICBhbmQgcmVtb3ZlIGNvbW1lbnRzIHJlbGF0ZWQgdG8gS1ZNCj4gICAgYW5kIGp1c3Qg
-Y2FsbCBmdW5jdGlvbiBhdG9taWNfbm90aWZpZXJfY2FsbF9jaGFpbiBkaXJlY3RseS4KPiAKPiBD
-aGFuZ2Vsb2cgZnJvbSB2NiB0byB2NzoKPiAxLiBLVk0tSU5URUw6IGluIGhhcmR3YXJlX2Rpc2Fi
-bGUsIHdlIG5lZWRuJ3QgZGlzYWJsZSB0aGUKPiAgICB2bWNsZWFyLCBzbyByZW1vdmUgaXQuCj4g
-Cj4gQ2hhbmdlbG9nIGZyb20gdjUgdG8gdjY6Cj4gMS4gS0VYRUM6IHRoZSBhdG9taWMgbm90aWZp
-ZXIgbGlzdCByZW5hbWVkOgo+ICAgIGNyYXNoX25vdGlmaWVyX2xpc3QgLS0+IHZtY2xlYXJfbm90
-aWZpZXJfbGlzdAo+IDIuIEtWTS1JTlRFTDogcHJvdmlkZSBlbXB0eSBmdW5jdGlvbnMgaWYgQ09O
-RklHX0tFWEVDIGlzCj4gICAgbm90IGRlZmluZWQgYW5kIHJlbW92ZSB1bm5lY2Vzc2FyeSAjaWZk
-ZWYncy4KPiAKPiBDaGFuZ2Vsb2cgZnJvbSB2NCB0byB2NToKPiAxLiB1c2UgYW4gYXRvbWljIG5v
-dGlmaWVyIGluc3RlYWQgb2YgZnVuY3Rpb24gY2FsbCwgc28KPiAgICBoYXZlIGFsbCB0aGUgdm1j
-bGVhciBjb2RlcyBpbiB2bXguYy4KPiAKPiBDaGFuZ2Vsb2cgZnJvbSB2MyB0byB2NDoKPiAxLiBh
-ZGQgYSBuZXcgcGVyY3B1IHZhcmlhYmxlIHZtY2xlYXJfc2tpcHBlZCB0byBza2lwCj4gICAgdm1j
-bGVhciBpbiBrZHVtcCBpbiBzb21lIGNvbmRpdGlvbnMuCj4gCj4gQ2hhbmdlbG9nIGZyb20gdjIg
-dG8gdjM6Cj4gMS4gcmVtb3ZlIHVubmVjZXNzYXJ5IGNvbmRpdGlvbnMgaW4gZnVuY3Rpb24KPiAg
-ICBjcHVfZW1lcmdlbmN5X2NsZWFyX2xvYWRlZF92bWNzcyBhcyBNYXJjZWxvIHN1Z2dlc3RlZC4K
-PiAKPiBDaGFuZ2Vsb2cgZnJvbSB2MSB0byB2MjoKPiAxLiByZW1vdmUgdGhlIHN5c2N0bCBhbmQg
-Y2xlYXIgVk1DU3MgdW5jb25kaXRpb25hbGx5Lgo+IAo+IFpoYW5nIFlhbmZlaSAoMik6Cj4gICB4
-ODYva2V4ZWM6IGFkZCBhIG5ldyBhdG9taWMgbm90aWZpZXIgbGlzdCBmb3Iga2R1bXAKPiAgIEtW
-TS1JTlRFTDogYWRkIGEgbm90aWZpZXIgYW5kIGEgYml0bWFwIHRvIHN1cHBvcnQgVk1DTEVBUiBp
-biBrZHVtcAo+IAo+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oIHwgICAgMiArCj4gIGFy
-Y2gveDg2L2tlcm5lbC9jcmFzaC5jICAgICAgfCAgICA5ICsrKysrCj4gIGFyY2gveDg2L2t2bS92
-bXguYyAgICAgICAgICAgfCAgIDcwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDgxIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25z
-KC0pCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+This prevents the creation of chosen/linux,initrd-{start,stop} entries
+with zero length.
+
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+---
+ kexec/fs2dt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 79258a1..5d933c8 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -525,7 +525,7 @@ static void putnode(void)
+ 	putprops(dn, namelist, numlist);
+ 
+ 	/* Add initrd entries to the second kernel */
+-	if (initrd_base && !strcmp(basename,"chosen/")) {
++	if (initrd_base && initrd_size && !strcmp(basename,"chosen/")) {
+ 		int len = 8;
+ 		unsigned long long initrd_end;
+ 
+-- 
+1.7.11.7
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
