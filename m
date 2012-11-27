@@ -1,29 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Td9Gv-0004aw-Al
- for kexec@lists.infradead.org; Tue, 27 Nov 2012 00:43:33 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id DC0443EE0C1
- for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:43:31 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id C39C145DEBE
- for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:43:31 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id A97C945DEB6
- for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:43:31 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 988EB1DB8044
- for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:43:31 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4F1551DB803E
- for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:43:31 +0900 (JST)
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Message-Id: <20121127004233.3604.33429.sendpatchset@tindoh.g01.fujitsu.local>
-In-Reply-To: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
-References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
-Subject: [PATCH v7 5/5] x86, pci: Enable PCI INTx when MSI is disabled
-Date: Tue, 27 Nov 2012 09:43:21 +0900 (JST)
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TdA4f-0003a4-1o
+ for kexec@lists.infradead.org; Tue, 27 Nov 2012 01:34:58 +0000
+Message-ID: <50B41849.9040103@cn.fujitsu.com>
+Date: Tue, 27 Nov 2012 09:32:57 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v8 1/2] x86/kexec: add a new atomic notifier list for kdump
+References: <50ADE0C2.1000106@cn.fujitsu.com> <50ADE11A.401@cn.fujitsu.com>
+ <87ip8sxuyh.fsf@xmission.com> <20121126172054.GF12969@redhat.com>
+ <87fw3wuuoh.fsf@xmission.com> <20121126175327.GG12969@redhat.com>
+ <87mwy4teh8.fsf@xmission.com>
+In-Reply-To: <87mwy4teh8.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,47 +21,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-pci@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, kexec@lists.infradead.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-This patch enables INTx if MSI is disabled in pcibios_enable_device().
-In normal case interrupt disable bit in command register is 0b on boot
-time, but in case of kdump, this bit may be 1b. It causes problems of
-some drivers. At leaset I confirmed mptsas driver does not work in such
-a case. This patch fix this problem.
-
-Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
----
- arch/x86/pci/common.c |    4 +++-
- 1 files changed, 3 insertions(+), 1 deletions(-)
-
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 720e973..2bb7ecc 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -615,8 +615,10 @@ int pcibios_enable_device(struct pci_dev *dev, int mask)
- 	if ((err = pci_enable_resources(dev, mask)) < 0)
- 		return err;
- 
--	if (!pci_dev_msi_enabled(dev))
-+	if (!pci_dev_msi_enabled(dev)) {
-+		pci_intx(dev, true);
- 		return pcibios_enable_irq(dev);
-+	}
- 	return 0;
- }
- 
--- 
-1.7.1
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+09ogMjAxMsTqMTHUwjI3yNUgMDI6MTgsIEVyaWMgVy4gQmllZGVybWFuINC0tcA6Cj4gR2xlYiBO
+YXRhcG92IDxnbGViQHJlZGhhdC5jb20+IHdyaXRlczoKPiAKPj4gT24gTW9uLCBOb3YgMjYsIDIw
+MTIgYXQgMTE6NDM6MTBBTSAtMDYwMCwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4+PiBHbGVi
+IE5hdGFwb3YgPGdsZWJAcmVkaGF0LmNvbT4gd3JpdGVzOgo+Pj4KPj4+PiBPbiBNb24sIE5vdiAy
+NiwgMjAxMiBhdCAwOTowODo1NEFNIC0wNjAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90ZToKPj4+
+Pj4gWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4gd3JpdGVzOgo+Pj4+
+Pgo+Pj4+Pj4gVGhpcyBwYXRjaCBhZGRzIGFuIGF0b21pYyBub3RpZmllciBsaXN0IG5hbWVkIGNy
+YXNoX25vdGlmaWVyX2xpc3QuCj4+Pj4+PiBDdXJyZW50bHksIHdoZW4gbG9hZGluZyBrdm0taW50
+ZWwgbW9kdWxlLCBhIG5vdGlmaWVyIHdpbGwgYmUgcmVnaXN0ZXJlZAo+Pj4+Pj4gaW4gdGhlIGxp
+c3QgdG8gZW5hYmxlIHZtY3NzIGxvYWRlZCBvbiBhbGwgY3B1cyB0byBiZSBWTUNMRUFSJ2QgaWYK
+Pj4+Pj4+IG5lZWRlZC4KPj4+Pj4KPj4+Pj4gY3Jhc2hfbm90aWZpZXJfbGlzdCBpY2sgZ2FnIHBs
+ZWFzZSBuby4gIEVmZmVjdGl2ZWx5IHRoaXMgbWFrZXMgdGhlIGtleGVjCj4+Pj4+IG9uIHBhbmlj
+IGNvZGUgcGF0aCB1bmRlYnVnZ2FibGUuCj4+Pj4+Cj4+Pj4+IEluc3RlYWQgd2UgbmVlZCB0byB1
+c2UgZGlyZWN0IGZ1bmN0aW9uIGNhbGxzIHRvIHdoYXRldmVyIHlvdSBhcmUgZG9pbmcuCj4+Pj4+
+Cj4+Pj4gVGhlIGNvZGUgd2Fsa3MgbGlua2VkIGxpc3QgaW4ga3ZtLWludGVsIG1vZHVsZSBhbmQg
+Y2FsbHMgdm1jbGVhciBvbgo+Pj4+IHdoYXRldmVyIGl0IGZpbmRzIHRoZXJlLiBTaW5jZSB0aGUg
+ZnVuY3Rpb24gaGF2ZSB0byByZXNpZGVzIGluIGt2bS1pbnRlbAo+Pj4+IG1vZHVsZSBpdCBjYW5u
+b3QgYmUgY2FsbGVkIGRpcmVjdGx5LiBJcyBjYWxsYmFjayBwb2ludGVyIHRoYXQgaXMgc2V0Cj4+
+Pj4gYnkga3ZtLWludGVsIG1vcmUgYWNjZXB0YWJsZT8KPj4+Cj4+PiBZZXMgYSBzcGVjaWZpYyBj
+YWxsYmFjayBmdW5jdGlvbiBpcyBtb3JlIGFjY2VwdGFibGUuICBMb29raW5nIGEgbGl0dGxlCj4+
+PiBkZWVwZXIgdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MgaXMgbm90IHBhcnRpY3VsYXJseSBh
+Y2NlcHRhYmxlLiBJdCBpcwo+Pj4gZG9pbmcgYSBsb3Qgb2Ygd29yayB0aGF0IGlzIHVubmVjZXNz
+YXJ5IHRvIHNhdmUgdGhlIHZpcnR1YWwgcmVnaXN0ZXJzCj4+PiBvbiB0aGUga2V4ZWMgb24gcGFu
+aWMgcGF0aC4KPj4+Cj4+IFdoYXQgd29yayBhcmUgeW91IHJlZmVycmluZyB0byBpbiBwYXJ0aWN1
+bGFyIHRoYXQgbWF5IG5vdCBiZQo+PiBhY2NlcHRhYmxlPwo+IAo+IFRoZSB1bm5lY2Vzc2FyeSB3
+b3JrIHRoYXQgSSB3YXMgc2VlIGlzIGFsbCBvZiB0aGUgc29mdHdhcmUgc3RhdGUKPiBjaGFuZ2lu
+Zy4gIFVubGlua2luZyB0aGluZ3MgZnJvbSBsaW5rZWQgbGlzdHMgZmxpcHBpbmcgdmFyaWFibGVz
+Lgo+IE5vbmUgb2YgdGhhdCBhcHBlYXJzIHJlbGF0ZWQgdG8gdGhlIGZ1bmRhbWVudGFsIGlzc3Vl
+IHNhdmluZyBjcHUKPiBzdGF0ZS4KPiAKPiBTaW1wbHkgcmV1c2luZyBhIGZ1bmN0aW9uIHRoYXQg
+ZG9lcyBtb3JlIHRoYW4gd2hhdCBpcyBzdHJpY3RseSByZXF1aXJlZAo+IG1ha2VzIG1lIG5lcnZv
+dXMuICBXaGF0IGlzIHRoZSBjaGFuY2UgdGhhdCB0aGUgZnVuY3Rpb24gd2lsbCBncm93Cj4gd2l0
+aCBtYWludGVuYW5jZSBhbmQgYWRkIGNvbnN0cnVjdHMgdGhhdCBhcmUgbm90IHNhZmUgaW4gYSBr
+ZXhlYyBvbgo+IHBhbmljIHNpdHV0YXRpb24uCgpTbyBpbiBzdW1tYXJ5LAoKMS4gYSBzcGVjaWZp
+YyBjYWxsYmFjayBmdW5jdGlvbiBpbnN0ZWFkIG9mIGEgbm90aWZpZXI/CgoyLiBJbnN0ZWFkIG9m
+IGNhbGxpbmcgdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MsIHRoZSB2bWNsZWFyIG9wZXJhdGlv
+bgogICB3aWxsIGp1c3QgY2FsbCB0aGUgdm1jbGVhciBvbiBldmVyeSB2bWNzcyBsb2FkZWQgb24g
+dGhlIGNwdT8KCiAgIGxpa2UgYmVsb3c6CgogICBzdGF0aWMgdm9pZCBjcmFzaF92bWNsZWFyX2xv
+Y2FsX2xvYWRlZF92bWNzcyh2b2lkKQogICB7CiAgICAgICAgaW50IGNwdSA9IHJhd19zbXBfcHJv
+Y2Vzc29yX2lkKCk7CiAgICAgICAgc3RydWN0IGxvYWRlZF92bWNzICp2LCAqbjsKCiAgICAgICAg
+aWYgKCFjcmFzaF9sb2NhbF92bWNsZWFyX2VuYWJsZWQoY3B1KSkKICAgICAgICAgICAgICAgIHJl
+dHVybjsKCiAgICAgICAgbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKHYsIG4sICZwZXJfY3B1KGxv
+YWRlZF92bWNzc19vbl9jcHUsIGNwdSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGxvYWRlZF92bWNzc19vbl9jcHVfbGluaykKICAgICAgICAgICAgICAgIHZtY3NfY2xlYXIodi0+
+dm1jcyk7CiAgIH0KCiAgIHJpZ2h0PwoKVGhhbmtzClpoYW5nCgo+IAo+Pj4gSW4gZmFjdCBJIHdv
+bmRlciBpZiBpdCBtaWdodCBub3QganVzdCBiZSBlYXNpZXIgdG8gY2FsbCB2bWNzX2NsZWFyIHRv
+IGEKPj4+IGZpeGVkIHBlciBjcHUgYnVmZmVyLgo+Pj4KPj4gVGhlcmUgbWF5IGJlIG1vcmUgdGhh
+biBvbmUgdm1jcyBsb2FkZWQgb24gYSBjcHUsIGhlbmNlIHRoZSBsaXN0Lgo+Pgo+Pj4gUGVyZm9y
+bWluZyBsaXN0IHdhbGtpbmcgaW4gaW50ZXJydXB0IGNvbnRleHQgd2l0aG91dCBsb2NraW5nIGlu
+Cj4+PiB2bWNsZWFyX2xvY2FsX2xvYWRlZCB2bWNzcyBsb29rcyBhIGJpdCBzY2FyeS4gIE5vdCB0
+aGF0IGxvY2tpbmcgd291bGQKPj4+IG1ha2UgaXQgYW55IGJldHRlciwgYXMgbG9ja2luZyB3b3Vs
+ZCBzaW1wbHkgYWRkIG9uZSBtb3JlIHdheSB0byBkZWFkbG9jawo+Pj4gdGhlIHN5c3RlbS4gIE9u
+bHkgYW4gcmN1IGxpc3Qgd2FsayBpcyBhdCBhbGwgc2FmZS4gIEEgbGlzdCB3YWxrIHRoYXQKPj4+
+IG1vZGlmaWVzIHRoZSBsaXN0IGFzIHZtY2xlYXJfbG9jYWxfbG9hZGVkX3ZtY3NzIGRvZXMgaXMg
+ZGVmaW5pdGVseSBub3Qgc2FmZS4KPj4+Cj4+IFRoZSBsaXN0IHZtY2xlYXJfbG9jYWxfbG9hZGVk
+IHdhbGtzIGlzIHBlciBjcHUuIFpoYW5nJ3Mga3ZtIHBhdGNoCj4+IGRpc2FibGVzIGtleGVjIGNh
+bGxiYWNrIHdoaWxlIGxpc3QgaXMgbW9kaWZpZWQuCj4gCj4gSWYgdGhlIGxpc3QgaXMgb25seSBt
+b2RpZmllZCBvbiBpdCdzIGNwdSBhbmQgd2UgYXJlIHJ1bm5pbmcgb24gdGhhdCBjcHUKPiB0aGF0
+IGRvZXMgbG9vayBsaWtlIGl0IHdpbGwgZ2l2ZSB0aGUgbmVjZXNzYXJ5IHByb3RlY3Rpb25zLiAg
+SXQgaXNuJ3QKPiBwYXJ0aWN1bGFybHkgY2xlYXIgYXQgZmlyc3QgZ2xhbmNlIHRoYXQgaXMgdGhl
+IGNhc2UgdW5mb3J0dW5hdGVseS4KPiAKPiBFcmljCj4gCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9rZXhlYwo=
