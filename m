@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TdBpP-0008Om-2T
- for kexec@lists.infradead.org; Tue, 27 Nov 2012 03:27:20 +0000
-Message-ID: <50B43299.9030409@cn.fujitsu.com>
-Date: Tue, 27 Nov 2012 11:25:13 +0800
+ id 1TdBq1-0008Ta-QC
+ for kexec@lists.infradead.org; Tue, 27 Nov 2012 03:27:59 +0000
+Message-ID: <50B432CA.70804@cn.fujitsu.com>
+Date: Tue, 27 Nov 2012 11:26:02 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v9 0/2] x86: vmclear vmcss on all cpus when doing kdump if
+Subject: [PATCH v9 1/2] x86/kexec: VMCLEAR VMCSs loaded on all cpus if
  necessary
+References: <50B43299.9030409@cn.fujitsu.com>
+In-Reply-To: <50B43299.9030409@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +26,90 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "x86@kernel.org" <x86@kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-Currently, kdump just makes all the logical processors leave VMX operation by
-executing VMXOFF instruction, so any VMCSs active on the logical processors may
-be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
-in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
-executing the VMXOFF instruction.
+This patch provides a way to VMCLEAR VMCSs related to guests
+on all cpus before executing the VMXOFF when doing kdump. This
+is used to ensure the VMCSs in the vmcore updated and
+non-corrupted.
 
-The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
-executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
-vmcore updated and non-corrupted.
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ arch/x86/include/asm/kexec.h |    2 ++
+ arch/x86/kernel/crash.c      |   25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 0 deletions(-)
 
-Changelog from v8 to v9:
-1. KEXEC: use a callback function instead of a notifier.
-2. KVM-INTEL: use a new vmclear function instead of just calling 
-   vmclear_local_loaded_vmcss to make sure we just do the core vmclear
-   operation in kdump.
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 317ff17..28feeba 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -163,6 +163,8 @@ struct kimage_arch {
+ };
+ #endif
+ 
++extern void (*crash_vmclear_loaded_vmcss)(void);
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_X86_KEXEC_H */
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 13ad899..4a2a12f 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -16,6 +16,7 @@
+ #include <linux/delay.h>
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
++#include <linux/module.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/hardirq.h>
+@@ -29,6 +30,20 @@
+ #include <asm/virtext.h>
+ 
+ int in_crash_kexec;
++ 
++/*
++ * This is used to VMCLEAR all VMCSs loaded on the
++ * processor. And when loading kvm_intel module, the
++ * callback function pointer will be assigned.
++ */
++void (*crash_vmclear_loaded_vmcss)(void) = NULL;
++EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
++
++static inline void cpu_emergency_vmclear_loaded_vmcss(void)
++{
++	if (crash_vmclear_loaded_vmcss)
++		crash_vmclear_loaded_vmcss();
++}
+ 
+ #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+ 
+@@ -46,6 +61,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+ #endif
+ 	crash_save_cpu(regs, cpu);
+ 
++	/*
++	 * VMCLEAR VMCSs loaded on all cpus if needed.
++	 */
++	cpu_emergency_vmclear_loaded_vmcss();
++
+ 	/* Disable VMX or SVM if needed.
+ 	 *
+ 	 * We need to disable virtualization on all CPUs.
+@@ -88,6 +108,11 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+ 
+ 	kdump_nmi_shootdown_cpus();
+ 
++	/*
++	 * VMCLEAR VMCSs loaded on this cpu if needed.
++	 */
++	cpu_emergency_vmclear_loaded_vmcss();
++
+ 	/* Booting kdump kernel with VMX or SVM enabled won't work,
+ 	 * because (among other limitations) we can't disable paging
+ 	 * with the virt flags.
+-- 
+1.7.1
 
-Changelog from v7 to v8:
-1. KEXEC: regression for using name crash_notifier_list
-   and remove comments related to KVM
-   and just call function atomic_notifier_call_chain directly.
-
-Changelog from v6 to v7:
-1. KVM-INTEL: in hardware_disable, we needn't disable the
-   vmclear, so remove it.
-
-Changelog from v5 to v6:
-1. KEXEC: the atomic notifier list renamed:
-   crash_notifier_list --> vmclear_notifier_list
-2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
-   not defined and remove unnecessary #ifdef's.
-
-Changelog from v4 to v5:
-1. use an atomic notifier instead of function call, so
-   have all the vmclear codes in vmx.c.
-
-Changelog from v3 to v4:
-1. add a new percpu variable vmclear_skipped to skip
-   vmclear in kdump in some conditions.
-
-Changelog from v2 to v3:
-1. remove unnecessary conditions in function
-   cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
-
-Changelog from v1 to v2:
-1. remove the sysctl and clear VMCSs unconditionally.
-
-Zhang Yanfei (2):
-  x86/kexec: VMCLEAR VMCSs loaded on all cpus if necessary
-  KVM-INTEL: provide the vmclear function and a bitmap to support
-    VMCLEAR in kdump
-
- arch/x86/include/asm/kexec.h |    2 +
- arch/x86/kernel/crash.c      |   25 ++++++++++++++++
- arch/x86/kvm/vmx.c           |   65 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 92 insertions(+), 0 deletions(-)
 
 _______________________________________________
 kexec mailing list
