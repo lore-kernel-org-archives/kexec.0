@@ -1,18 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Td3GO-0003jL-Lh
- for kexec@lists.infradead.org; Mon, 26 Nov 2012 18:18:37 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <50ADE0C2.1000106@cn.fujitsu.com> <50ADE11A.401@cn.fujitsu.com>
- <87ip8sxuyh.fsf@xmission.com> <20121126172054.GF12969@redhat.com>
- <87fw3wuuoh.fsf@xmission.com> <20121126175327.GG12969@redhat.com>
-Date: Mon, 26 Nov 2012 12:18:27 -0600
-In-Reply-To: <20121126175327.GG12969@redhat.com> (Gleb Natapov's message of
- "Mon, 26 Nov 2012 19:53:27 +0200")
-Message-ID: <87mwy4teh8.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v8 1/2] x86/kexec: add a new atomic notifier list for kdump
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Td9Fs-0004JV-63
+ for kexec@lists.infradead.org; Tue, 27 Nov 2012 00:42:30 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id EFA643EE0B6
+ for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:42:21 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id D785A45DEB7
+ for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:42:21 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id B806045DEB5
+ for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:42:21 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id AA7411DB803C
+ for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:42:21 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 562721DB8038
+ for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 09:42:21 +0900 (JST)
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Message-Id: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
+Subject: [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+Date: Tue, 27 Nov 2012 09:42:20 +0900 (JST)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,73 +31,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Gleb Natapov <gleb@redhat.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+To: linux-pci@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, kexec@lists.infradead.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-Gleb Natapov <gleb@redhat.com> writes:
+These patches reset PCIe devices at boot time to address DMA problem on
+kdump with iommu. When "reset_devices" is specified, a hot reset is
+triggered on each PCIe root port and downstream port to reset its
+downstream endpoint.
 
-> On Mon, Nov 26, 2012 at 11:43:10AM -0600, Eric W. Biederman wrote:
->> Gleb Natapov <gleb@redhat.com> writes:
->> 
->> > On Mon, Nov 26, 2012 at 09:08:54AM -0600, Eric W. Biederman wrote:
->> >> Zhang Yanfei <zhangyanfei@cn.fujitsu.com> writes:
->> >> 
->> >> > This patch adds an atomic notifier list named crash_notifier_list.
->> >> > Currently, when loading kvm-intel module, a notifier will be registered
->> >> > in the list to enable vmcss loaded on all cpus to be VMCLEAR'd if
->> >> > needed.
->> >> 
->> >> crash_notifier_list ick gag please no.  Effectively this makes the kexec
->> >> on panic code path undebuggable.
->> >> 
->> >> Instead we need to use direct function calls to whatever you are doing.
->> >> 
->> > The code walks linked list in kvm-intel module and calls vmclear on
->> > whatever it finds there. Since the function have to resides in kvm-intel
->> > module it cannot be called directly. Is callback pointer that is set
->> > by kvm-intel more acceptable?
->> 
->> Yes a specific callback function is more acceptable.  Looking a little
->> deeper vmclear_local_loaded_vmcss is not particularly acceptable. It is
->> doing a lot of work that is unnecessary to save the virtual registers
->> on the kexec on panic path.
->> 
-> What work are you referring to in particular that may not be
-> acceptable?
+Background:
+A kdump problem about DMA has been discussed for a long time. That is,
+when a kernel is switched to the kdump kernel, DMA derived from first
+kernel affects second kernel. Especially this problem surfaces when
+iommu is used for PCI passthrough on KVM guest. In the case of the
+machine I use, when intel_iommu=on is specified, DMAR error is detected
+in kdump kernel and PCI SERR is also detected. Finally kdump fails
+because some devices does not work correctly.
 
-The unnecessary work that I was see is all of the software state
-changing.  Unlinking things from linked lists flipping variables.
-None of that appears related to the fundamental issue saving cpu
-state.
+The root cause is that ongoing DMA from first kernel causes DMAR fault
+because page table of DMAR is initialized while kdump kernel is booting
+up. Therefore to solve this problem DMA needs to be stopped before DMAR
+is initialized at kdump kernel boot time. By these patches, PCIe devices
+are reset by hot reset and its DMA is stopped when reset_devices is
+specified. One problem of this solution is that the monitor blacks out
+when VGA controller is reset. So this patch does not reset the port
+whose child endpoint is VGA device.
 
-Simply reusing a function that does more than what is strictly required
-makes me nervous.  What is the chance that the function will grow
-with maintenance and add constructs that are not safe in a kexec on
-panic situtation.
+What I tried:
+- Clearing bus master bit and INTx disable bit at boot time
+    This did not solve this problem. I still got DMAR error on devices.
+- Resetting devices in fixup_final(v1 patch)
+    DMAR error disappeared, but sometimes PCI SERR was detected. This
+    is well explained here.
+    https://lkml.org/lkml/2012/9/9/245
+    This PCI SERR seems to be related to interrupt remapping.
+- Clearing bus master in setup_arch() and resetting devices in
+  fixup_final
+    Neither DMAR error nor PCI SERR occurred. But on certain machine
+    kdump kernel hung up when resetting devices. It seems to be a
+    problem specific to the platform.
+- Resetting devices in setup_arch() (v2 and later patch)
+    This solution solves all problems I found so far.
 
->> In fact I wonder if it might not just be easier to call vmcs_clear to a
->> fixed per cpu buffer.
->> 
-> There may be more than one vmcs loaded on a cpu, hence the list.
->
->> Performing list walking in interrupt context without locking in
->> vmclear_local_loaded vmcss looks a bit scary.  Not that locking would
->> make it any better, as locking would simply add one more way to deadlock
->> the system.  Only an rcu list walk is at all safe.  A list walk that
->> modifies the list as vmclear_local_loaded_vmcss does is definitely not safe.
->> 
-> The list vmclear_local_loaded walks is per cpu. Zhang's kvm patch
-> disables kexec callback while list is modified.
+Changelog:
+v7:
+Update Yinghai's dummy-pci patch with macros in linux/pci.h, and fix
+some bugs
 
-If the list is only modified on it's cpu and we are running on that cpu
-that does look like it will give the necessary protections.  It isn't
-particularly clear at first glance that is the case unfortunately.
+v6:
+Rewrite using Yinghai's dummy-pci patch
+https://lkml.org/lkml/2012/11/13/118
 
-Eric
+v5:
+Do bus reset after all devices are scanned and its config registers are
+saved. This fixes a bug that config register is accessed without delay
+after reset.
+https://lkml.org/lkml/2012/10/17/47
+
+v4:
+Reduce waiting time after resetting devices. A previous patch does reset
+like this:
+  for (each device) {
+    save config registers
+    reset
+    wait for 500 ms
+    restore config registers
+  }
+
+If there are N devices to be reset, it takes N*500 ms. On the other
+hand, the v4 patch does:
+  for (each device) {
+    save config registers
+    reset
+  }
+  wait 500 ms
+  for (each device) {
+    restore config registers
+  }
+Though it needs more memory space to save config registers, the waiting
+time is always 500ms.
+https://lkml.org/lkml/2012/10/15/49
+
+v3:
+Move alloc_bootmem and free_bootmem to early_reset_pcie_devices so that
+they are called only once.
+https://lkml.org/lkml/2012/10/10/57
+
+v2:
+Reset devices in setup_arch() because reset need to be done before
+interrupt remapping is initialized.
+https://lkml.org/lkml/2012/10/2/54
+
+v1:
+Add fixup_final quirk to reset PCIe devices
+https://lkml.org/lkml/2012/8/3/160
+
+Takao Indoh (5):
+  x86, pci: add dummy pci device for early stage
+  PCI: Define the maximum number of PCI function
+  Make reset_devices available at early stage
+  x86, pci: Reset PCIe devices at boot time
+  x86, pci: Enable PCI INTx when MSI is disabled
+
+ arch/x86/include/asm/pci-direct.h |    3 +
+ arch/x86/kernel/setup.c           |    3 +
+ arch/x86/pci/common.c             |    4 +-
+ arch/x86/pci/early.c              |  315 +++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h               |    2 +
+ init/main.c                       |    4 +-
+ 6 files changed, 328 insertions(+), 3 deletions(-)
+
+
 
 _______________________________________________
 kexec mailing list
