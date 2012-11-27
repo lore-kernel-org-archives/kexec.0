@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TdBqx-00009O-CS
- for kexec@lists.infradead.org; Tue, 27 Nov 2012 03:28:56 +0000
-Message-ID: <50B43303.7070909@cn.fujitsu.com>
-Date: Tue, 27 Nov 2012 11:26:59 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH v9 2/2] KVM-INTEL: provide the vmclear function and a bitmap
- to support VMCLEAR in kdump
-References: <50B43299.9030409@cn.fujitsu.com>
-In-Reply-To: <50B43299.9030409@cn.fujitsu.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TdEYs-0001Yu-CI
+ for kexec@lists.infradead.org; Tue, 27 Nov 2012 06:22:29 +0000
+Date: Tue, 27 Nov 2012 15:00:48 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2 08/10] Add page_is_buddy for PG_buddy
+Message-Id: <20121127150048.f84d125d86e404c5b177cd58@mxc.nes.nec.co.jp>
+In-Reply-To: <20121116050213.8280.73020.stgit@localhost6.localdomain6>
+References: <20121116050108.8280.14861.stgit@localhost6.localdomain6>
+ <20121116050213.8280.73020.stgit@localhost6.localdomain6>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,143 +23,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "x86@kernel.org" <x86@kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-The vmclear function will be assigned to the callback function pointer
-when loading kvm-intel module. And the bitmap indicates whether we
-should do VMCLEAR operation in kdump. The bits in the bitmap are
-set/unset according to different conditions.
+Hello HATAYAMA-san,
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/kvm/vmx.c |   65 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 65 insertions(+), 0 deletions(-)
+On Fri, 16 Nov 2012 14:02:13 +0900
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 4ff0ab9..561d3b6 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -41,6 +41,7 @@
- #include <asm/i387.h>
- #include <asm/xcr.h>
- #include <asm/perf_event.h>
-+#include <asm/kexec.h>
+> On kernels from v2.6.18 to v2.6.37, buddy page is marked by the
+> PG_buddy flag.
+> 
+>   kernel version     | PG_buddy
+>   ------------------ +---------------------------------
+>   v2.6.17 to v2.6.26 | 19
+>   v2.6.27 to v2.6.37 | 19 if CONFIG_PAGEFLAGS_EXTEND=y
+>                      | 18 otherwise
+> 
+> We don't need to care about CONFIG_PAGEFLAGS_EXTEND because the
+> architectures specifying this as y are um and xtensa only. They are
+> not included in the supported architectures of makedumpfile.
+
+Sorry for too late point out.
+
+I did regression test for v1.5.1 on x86_64 machine in the last weekend
+and found the issue that page_is_buddy_v2() can't exclude free pages
+correctly for kernel 2.6.30 to 2.6.37. 
+I checked the configuration of these kernels, I made sure that
+CONFIG_PAGEFLAGS_EXTENDED was set as y, so PG_buddy=18 is invalid for them.
+
+According to this fact, PG_buddy is variable for the supported architectures
+of makedumpfile, too.
+So, how did you confirm that CONFIG_PAGEFLAGS_EXTENDED is only related with
+um and xtensa ?
+
+And why did you test with PG_buddy=19 for 2.6.32 when you posted this patch set?
+
+>  - 2.6.32
+>  NUMBER(PG_slab)=7
+>  NUMBER(PG_buddy)=19
+>  OFFSET(page._mapcount)=12
+>  OFFSET(page.private)=16
+>  SIZE(pageflags)=4
+
+
+Thanks
+Atsushi Kumagai
  
- #include "trace.h"
- 
-@@ -963,6 +964,46 @@ static void vmcs_load(struct vmcs *vmcs)
- 		       vmcs, phys_addr);
- }
- 
-+#ifdef CONFIG_KEXEC
-+/*
-+ * This bitmap is used to indicate whether the vmclear
-+ * operation is enabled on all cpus. All disabled by
-+ * default.
-+ */
-+static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
-+
-+static inline void crash_enable_local_vmclear(int cpu)
-+{
-+	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static inline void crash_disable_local_vmclear(int cpu)
-+{
-+	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static inline int crash_local_vmclear_enabled(int cpu)
-+{
-+	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static void crash_vmclear_local_loaded_vmcss(void)
-+{
-+	int cpu = raw_smp_processor_id();
-+	struct loaded_vmcs *v;
-+
-+	if (!crash_local_vmclear_enabled(cpu))
-+		return;
-+
-+	list_for_each_entry(v, &per_cpu(loaded_vmcss_on_cpu, cpu),
-+			    loaded_vmcss_on_cpu_link)
-+		vmcs_clear(v->vmcs);
-+}
-+#else
-+static inline void crash_enable_local_vmclear(int cpu) { }
-+static inline void crash_disable_local_vmclear(int cpu) { }
-+#endif /* CONFIG_KEXEC */
-+
- static void __loaded_vmcs_clear(void *arg)
- {
- 	struct loaded_vmcs *loaded_vmcs = arg;
-@@ -972,8 +1013,10 @@ static void __loaded_vmcs_clear(void *arg)
- 		return; /* vcpu migration can race with cpu offline */
- 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
- 		per_cpu(current_vmcs, cpu) = NULL;
-+	crash_disable_local_vmclear(cpu);
- 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
- 	loaded_vmcs_init(loaded_vmcs);
-+	crash_enable_local_vmclear(cpu);
- }
- 
- static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
-@@ -1491,8 +1534,10 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
- 		local_irq_disable();
-+		crash_disable_local_vmclear(cpu);
- 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
- 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
-+		crash_enable_local_vmclear(cpu);
- 		local_irq_enable();
- 
- 		/*
-@@ -2302,6 +2347,18 @@ static int hardware_enable(void *garbage)
- 		return -EBUSY;
- 
- 	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-+
-+	/*
-+	 * Now we can enable the vmclear operation in kdump
-+	 * since the loaded_vmcss_on_cpu list on this cpu
-+	 * has been initialized.
-+	 *
-+	 * Though the cpu is not in VMX operation now, there
-+	 * is no problem to enable the vmclear operation
-+	 * for the loaded_vmcss_on_cpu list is empty!
-+	 */
-+	crash_enable_local_vmclear(cpu);
-+
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
- 
- 	test_bits = FEATURE_CONTROL_LOCKED;
-@@ -7230,6 +7287,10 @@ static int __init vmx_init(void)
- 	if (r)
- 		goto out3;
- 
-+#ifdef CONFIG_KEXEC
-+	crash_vmclear_loaded_vmcss = crash_vmclear_local_loaded_vmcss;
-+#endif
-+
- 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
-@@ -7265,6 +7326,10 @@ static void __exit vmx_exit(void)
- 	free_page((unsigned long)vmx_io_bitmap_b);
- 	free_page((unsigned long)vmx_io_bitmap_a);
- 
-+#ifdef CONFIG_KEXEC
-+	crash_vmclear_loaded_vmcss = NULL;
-+#endif
-+
- 	kvm_exit();
- }
- 
--- 
-1.7.1
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+> 
+>  makedumpfile.c |   24 ++++++++++++++++++++----
+>  1 files changed, 20 insertions(+), 4 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 7b13dca..4e5d4d3 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -3669,6 +3669,19 @@ exclude_free_page(void)
+>  }
+>  
+>  /*
+> + * For the kernel versions from v2.6.17 to v2.6.37.
+> + */
+> +static int
+> +page_is_buddy_v2(unsigned long flags, unsigned int _mapcount,
+> +			unsigned long private, unsigned int _count)
+> +{
+> +	if (flags & (1UL << NUMBER(PG_buddy)))
+> +		return TRUE;
+> +
+> +	return FALSE;
+> +}
+> +
+> +/*
+>   * For v2.6.38 and later kernel versions.
+>   */
+>  static int
+> @@ -3690,10 +3703,13 @@ setup_page_is_buddy(void)
+>  	if (OFFSET(page.private) == NOT_FOUND_STRUCTURE)
+>  		goto out;
+>  
+> -	if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER) {
+> -		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
+> -			info->page_is_buddy = page_is_buddy_v3;
+> -	}
+> +	if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
+> +		if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER) {
+> +			if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
+> +				info->page_is_buddy = page_is_buddy_v3;
+> +		}
+> +	} else
+> +		info->page_is_buddy = page_is_buddy_v2;
+>  
+>  out:
+>  	if (!info->page_is_buddy)
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
