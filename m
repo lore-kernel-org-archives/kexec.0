@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TdA4f-0003a4-1o
- for kexec@lists.infradead.org; Tue, 27 Nov 2012 01:34:58 +0000
-Message-ID: <50B41849.9040103@cn.fujitsu.com>
-Date: Tue, 27 Nov 2012 09:32:57 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v8 1/2] x86/kexec: add a new atomic notifier list for kdump
+ id 1TdAJ6-0003iE-KO
+ for kexec@lists.infradead.org; Tue, 27 Nov 2012 01:49:53 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <50ADE0C2.1000106@cn.fujitsu.com> <50ADE11A.401@cn.fujitsu.com>
  <87ip8sxuyh.fsf@xmission.com> <20121126172054.GF12969@redhat.com>
  <87fw3wuuoh.fsf@xmission.com> <20121126175327.GG12969@redhat.com>
- <87mwy4teh8.fsf@xmission.com>
-In-Reply-To: <87mwy4teh8.fsf@xmission.com>
+ <87mwy4teh8.fsf@xmission.com> <50B41849.9040103@cn.fujitsu.com>
+Date: Mon, 26 Nov 2012 19:49:39 -0600
+In-Reply-To: <50B41849.9040103@cn.fujitsu.com> (Zhang Yanfei's message of
+ "Tue, 27 Nov 2012 09:32:57 +0800")
+Message-ID: <87haobolvw.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v8 1/2] x86/kexec: add a new atomic notifier list for kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,73 +22,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 Cc: Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-09ogMjAxMsTqMTHUwjI3yNUgMDI6MTgsIEVyaWMgVy4gQmllZGVybWFuINC0tcA6Cj4gR2xlYiBO
-YXRhcG92IDxnbGViQHJlZGhhdC5jb20+IHdyaXRlczoKPiAKPj4gT24gTW9uLCBOb3YgMjYsIDIw
-MTIgYXQgMTE6NDM6MTBBTSAtMDYwMCwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4+PiBHbGVi
-IE5hdGFwb3YgPGdsZWJAcmVkaGF0LmNvbT4gd3JpdGVzOgo+Pj4KPj4+PiBPbiBNb24sIE5vdiAy
-NiwgMjAxMiBhdCAwOTowODo1NEFNIC0wNjAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90ZToKPj4+
-Pj4gWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4gd3JpdGVzOgo+Pj4+
-Pgo+Pj4+Pj4gVGhpcyBwYXRjaCBhZGRzIGFuIGF0b21pYyBub3RpZmllciBsaXN0IG5hbWVkIGNy
-YXNoX25vdGlmaWVyX2xpc3QuCj4+Pj4+PiBDdXJyZW50bHksIHdoZW4gbG9hZGluZyBrdm0taW50
-ZWwgbW9kdWxlLCBhIG5vdGlmaWVyIHdpbGwgYmUgcmVnaXN0ZXJlZAo+Pj4+Pj4gaW4gdGhlIGxp
-c3QgdG8gZW5hYmxlIHZtY3NzIGxvYWRlZCBvbiBhbGwgY3B1cyB0byBiZSBWTUNMRUFSJ2QgaWYK
-Pj4+Pj4+IG5lZWRlZC4KPj4+Pj4KPj4+Pj4gY3Jhc2hfbm90aWZpZXJfbGlzdCBpY2sgZ2FnIHBs
-ZWFzZSBuby4gIEVmZmVjdGl2ZWx5IHRoaXMgbWFrZXMgdGhlIGtleGVjCj4+Pj4+IG9uIHBhbmlj
-IGNvZGUgcGF0aCB1bmRlYnVnZ2FibGUuCj4+Pj4+Cj4+Pj4+IEluc3RlYWQgd2UgbmVlZCB0byB1
-c2UgZGlyZWN0IGZ1bmN0aW9uIGNhbGxzIHRvIHdoYXRldmVyIHlvdSBhcmUgZG9pbmcuCj4+Pj4+
-Cj4+Pj4gVGhlIGNvZGUgd2Fsa3MgbGlua2VkIGxpc3QgaW4ga3ZtLWludGVsIG1vZHVsZSBhbmQg
-Y2FsbHMgdm1jbGVhciBvbgo+Pj4+IHdoYXRldmVyIGl0IGZpbmRzIHRoZXJlLiBTaW5jZSB0aGUg
-ZnVuY3Rpb24gaGF2ZSB0byByZXNpZGVzIGluIGt2bS1pbnRlbAo+Pj4+IG1vZHVsZSBpdCBjYW5u
-b3QgYmUgY2FsbGVkIGRpcmVjdGx5LiBJcyBjYWxsYmFjayBwb2ludGVyIHRoYXQgaXMgc2V0Cj4+
-Pj4gYnkga3ZtLWludGVsIG1vcmUgYWNjZXB0YWJsZT8KPj4+Cj4+PiBZZXMgYSBzcGVjaWZpYyBj
-YWxsYmFjayBmdW5jdGlvbiBpcyBtb3JlIGFjY2VwdGFibGUuICBMb29raW5nIGEgbGl0dGxlCj4+
-PiBkZWVwZXIgdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MgaXMgbm90IHBhcnRpY3VsYXJseSBh
-Y2NlcHRhYmxlLiBJdCBpcwo+Pj4gZG9pbmcgYSBsb3Qgb2Ygd29yayB0aGF0IGlzIHVubmVjZXNz
-YXJ5IHRvIHNhdmUgdGhlIHZpcnR1YWwgcmVnaXN0ZXJzCj4+PiBvbiB0aGUga2V4ZWMgb24gcGFu
-aWMgcGF0aC4KPj4+Cj4+IFdoYXQgd29yayBhcmUgeW91IHJlZmVycmluZyB0byBpbiBwYXJ0aWN1
-bGFyIHRoYXQgbWF5IG5vdCBiZQo+PiBhY2NlcHRhYmxlPwo+IAo+IFRoZSB1bm5lY2Vzc2FyeSB3
-b3JrIHRoYXQgSSB3YXMgc2VlIGlzIGFsbCBvZiB0aGUgc29mdHdhcmUgc3RhdGUKPiBjaGFuZ2lu
-Zy4gIFVubGlua2luZyB0aGluZ3MgZnJvbSBsaW5rZWQgbGlzdHMgZmxpcHBpbmcgdmFyaWFibGVz
-Lgo+IE5vbmUgb2YgdGhhdCBhcHBlYXJzIHJlbGF0ZWQgdG8gdGhlIGZ1bmRhbWVudGFsIGlzc3Vl
-IHNhdmluZyBjcHUKPiBzdGF0ZS4KPiAKPiBTaW1wbHkgcmV1c2luZyBhIGZ1bmN0aW9uIHRoYXQg
-ZG9lcyBtb3JlIHRoYW4gd2hhdCBpcyBzdHJpY3RseSByZXF1aXJlZAo+IG1ha2VzIG1lIG5lcnZv
-dXMuICBXaGF0IGlzIHRoZSBjaGFuY2UgdGhhdCB0aGUgZnVuY3Rpb24gd2lsbCBncm93Cj4gd2l0
-aCBtYWludGVuYW5jZSBhbmQgYWRkIGNvbnN0cnVjdHMgdGhhdCBhcmUgbm90IHNhZmUgaW4gYSBr
-ZXhlYyBvbgo+IHBhbmljIHNpdHV0YXRpb24uCgpTbyBpbiBzdW1tYXJ5LAoKMS4gYSBzcGVjaWZp
-YyBjYWxsYmFjayBmdW5jdGlvbiBpbnN0ZWFkIG9mIGEgbm90aWZpZXI/CgoyLiBJbnN0ZWFkIG9m
-IGNhbGxpbmcgdm1jbGVhcl9sb2NhbF9sb2FkZWRfdm1jc3MsIHRoZSB2bWNsZWFyIG9wZXJhdGlv
-bgogICB3aWxsIGp1c3QgY2FsbCB0aGUgdm1jbGVhciBvbiBldmVyeSB2bWNzcyBsb2FkZWQgb24g
-dGhlIGNwdT8KCiAgIGxpa2UgYmVsb3c6CgogICBzdGF0aWMgdm9pZCBjcmFzaF92bWNsZWFyX2xv
-Y2FsX2xvYWRlZF92bWNzcyh2b2lkKQogICB7CiAgICAgICAgaW50IGNwdSA9IHJhd19zbXBfcHJv
-Y2Vzc29yX2lkKCk7CiAgICAgICAgc3RydWN0IGxvYWRlZF92bWNzICp2LCAqbjsKCiAgICAgICAg
-aWYgKCFjcmFzaF9sb2NhbF92bWNsZWFyX2VuYWJsZWQoY3B1KSkKICAgICAgICAgICAgICAgIHJl
-dHVybjsKCiAgICAgICAgbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKHYsIG4sICZwZXJfY3B1KGxv
-YWRlZF92bWNzc19vbl9jcHUsIGNwdSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGxvYWRlZF92bWNzc19vbl9jcHVfbGluaykKICAgICAgICAgICAgICAgIHZtY3NfY2xlYXIodi0+
-dm1jcyk7CiAgIH0KCiAgIHJpZ2h0PwoKVGhhbmtzClpoYW5nCgo+IAo+Pj4gSW4gZmFjdCBJIHdv
-bmRlciBpZiBpdCBtaWdodCBub3QganVzdCBiZSBlYXNpZXIgdG8gY2FsbCB2bWNzX2NsZWFyIHRv
-IGEKPj4+IGZpeGVkIHBlciBjcHUgYnVmZmVyLgo+Pj4KPj4gVGhlcmUgbWF5IGJlIG1vcmUgdGhh
-biBvbmUgdm1jcyBsb2FkZWQgb24gYSBjcHUsIGhlbmNlIHRoZSBsaXN0Lgo+Pgo+Pj4gUGVyZm9y
-bWluZyBsaXN0IHdhbGtpbmcgaW4gaW50ZXJydXB0IGNvbnRleHQgd2l0aG91dCBsb2NraW5nIGlu
-Cj4+PiB2bWNsZWFyX2xvY2FsX2xvYWRlZCB2bWNzcyBsb29rcyBhIGJpdCBzY2FyeS4gIE5vdCB0
-aGF0IGxvY2tpbmcgd291bGQKPj4+IG1ha2UgaXQgYW55IGJldHRlciwgYXMgbG9ja2luZyB3b3Vs
-ZCBzaW1wbHkgYWRkIG9uZSBtb3JlIHdheSB0byBkZWFkbG9jawo+Pj4gdGhlIHN5c3RlbS4gIE9u
-bHkgYW4gcmN1IGxpc3Qgd2FsayBpcyBhdCBhbGwgc2FmZS4gIEEgbGlzdCB3YWxrIHRoYXQKPj4+
-IG1vZGlmaWVzIHRoZSBsaXN0IGFzIHZtY2xlYXJfbG9jYWxfbG9hZGVkX3ZtY3NzIGRvZXMgaXMg
-ZGVmaW5pdGVseSBub3Qgc2FmZS4KPj4+Cj4+IFRoZSBsaXN0IHZtY2xlYXJfbG9jYWxfbG9hZGVk
-IHdhbGtzIGlzIHBlciBjcHUuIFpoYW5nJ3Mga3ZtIHBhdGNoCj4+IGRpc2FibGVzIGtleGVjIGNh
-bGxiYWNrIHdoaWxlIGxpc3QgaXMgbW9kaWZpZWQuCj4gCj4gSWYgdGhlIGxpc3QgaXMgb25seSBt
-b2RpZmllZCBvbiBpdCdzIGNwdSBhbmQgd2UgYXJlIHJ1bm5pbmcgb24gdGhhdCBjcHUKPiB0aGF0
-IGRvZXMgbG9vayBsaWtlIGl0IHdpbGwgZ2l2ZSB0aGUgbmVjZXNzYXJ5IHByb3RlY3Rpb25zLiAg
-SXQgaXNuJ3QKPiBwYXJ0aWN1bGFybHkgY2xlYXIgYXQgZmlyc3QgZ2xhbmNlIHRoYXQgaXMgdGhl
-IGNhc2UgdW5mb3J0dW5hdGVseS4KPiAKPiBFcmljCj4gCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9rZXhlYwo=
+Zhang Yanfei <zhangyanfei@cn.fujitsu.com> writes:
+
+> So in summary,
+>
+> 1. a specific callback function instead of a notifier?
+
+Yes.
+
+> 2. Instead of calling vmclear_local_loaded_vmcss, the vmclear operation
+>    will just call the vmclear on every vmcss loaded on the cpu?
+>
+>    like below:
+>
+>    static void crash_vmclear_local_loaded_vmcss(void)
+>    {
+>         int cpu = raw_smp_processor_id();
+>         struct loaded_vmcs *v, *n;
+>
+>         if (!crash_local_vmclear_enabled(cpu))
+>                 return;
+>
+>         list_for_each_entry_safe(v, n, &per_cpu(loaded_vmcss_on_cpu, cpu),
+>                                  loaded_vmcss_on_cpu_link)
+>                 vmcs_clear(v->vmcs);
+>    }
+>
+>    right?
+
+Yeah that looks good.  I would do list_for_each_entry because the list
+isn't changing.
+
+Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
