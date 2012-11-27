@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TdIbj-0000S9-Hj
- for kexec@lists.infradead.org; Tue, 27 Nov 2012 10:41:41 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id qARAfZe8015472
- for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 19:41:35 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id qARAfZO29514 for kexec@lists.infradead.org;
- Tue, 27 Nov 2012 19:41:35 +0900 (JST)
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id qARAfUaF025700
- for <kexec@lists.infradead.org>; Tue, 27 Nov 2012 19:41:34 +0900 (JST)
-Date: Tue, 27 Nov 2012 19:37:27 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [ANNOUNCE] makedumpfile: Postpone the release of 1.5.1
-Message-Id: <20121127193727.fbb54d248b75b5106570bdef@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TdK7v-0008NT-5N
+ for kexec@lists.infradead.org; Tue, 27 Nov 2012 12:18:59 +0000
+Date: Tue, 27 Nov 2012 14:18:47 +0200
+From: Gleb Natapov <gleb@redhat.com>
+Subject: Re: [PATCH v9 1/2] x86/kexec: VMCLEAR VMCSs loaded on all cpus if
+ necessary
+Message-ID: <20121127121847.GU25516@redhat.com>
+References: <50B43299.9030409@cn.fujitsu.com> <50B432CA.70804@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50B432CA.70804@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,41 +24,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-Hello,
+Eric, can you ACK it?
 
-> If there is no problem, I will release v1.5.1 GA on Nov 28.
+On Tue, Nov 27, 2012 at 11:26:02AM +0800, Zhang Yanfei wrote:
+> This patch provides a way to VMCLEAR VMCSs related to guests
+> on all cpus before executing the VMXOFF when doing kdump. This
+> is used to ensure the VMCSs in the vmcore updated and
+> non-corrupted.
+> 
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  arch/x86/include/asm/kexec.h |    2 ++
+>  arch/x86/kernel/crash.c      |   25 +++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 317ff17..28feeba 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -163,6 +163,8 @@ struct kimage_arch {
+>  };
+>  #endif
+>  
+> +extern void (*crash_vmclear_loaded_vmcss)(void);
+> +
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif /* _ASM_X86_KEXEC_H */
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 13ad899..4a2a12f 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/elf.h>
+>  #include <linux/elfcore.h>
+> +#include <linux/module.h>
+>  
+>  #include <asm/processor.h>
+>  #include <asm/hardirq.h>
+> @@ -29,6 +30,20 @@
+>  #include <asm/virtext.h>
+>  
+>  int in_crash_kexec;
+> + 
+> +/*
+> + * This is used to VMCLEAR all VMCSs loaded on the
+> + * processor. And when loading kvm_intel module, the
+> + * callback function pointer will be assigned.
+> + */
+> +void (*crash_vmclear_loaded_vmcss)(void) = NULL;
+> +EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
+> +
+> +static inline void cpu_emergency_vmclear_loaded_vmcss(void)
+> +{
+> +	if (crash_vmclear_loaded_vmcss)
+> +		crash_vmclear_loaded_vmcss();
+> +}
+>  
+>  #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+>  
+> @@ -46,6 +61,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+>  #endif
+>  	crash_save_cpu(regs, cpu);
+>  
+> +	/*
+> +	 * VMCLEAR VMCSs loaded on all cpus if needed.
+> +	 */
+> +	cpu_emergency_vmclear_loaded_vmcss();
+> +
+>  	/* Disable VMX or SVM if needed.
+>  	 *
+>  	 * We need to disable virtualization on all CPUs.
+> @@ -88,6 +108,11 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>  
+>  	kdump_nmi_shootdown_cpus();
+>  
+> +	/*
+> +	 * VMCLEAR VMCSs loaded on this cpu if needed.
+> +	 */
+> +	cpu_emergency_vmclear_loaded_vmcss();
+> +
+>  	/* Booting kdump kernel with VMX or SVM enabled won't work,
+>  	 * because (among other limitations) we can't disable paging
+>  	 * with the virt flags.
+> -- 
+> 1.7.1
 
-I did regression test for v1.5.1 in the last weekend and found some bugs.
-So the release date will be delayed by few weeks, sorry.
-
-However, I don't think there are big issues for almost all users, because:
- 
-  - #1 doesn't happen unless users specify -x option, and it's unnecessary
-    for these kernels.
-  - As for #2, I think there are few users.
-
-So, I think v1.5.1-rc is enough for almost all users.
-
-
-BUGS:
-
-  #1. Fail to exclude free pages with page_is_buddy_v2() in some cases.
-      I mentioned this issue in the post below:
-
-        http://lists.infradead.org/pipermail/kexec/2012-November/007404.html
-
-      Related kernel: v2.6.27 to v2.6.37
-
-  #2. Fail to exclude free pages with page_is_buddy_v1() in some cases.
-      I'm investigating this issue now.
-
-      Related kernel: v2.6.15 to v2.6.17
-
-
-Thanks
-Atsushi Kumagai
+--
+			Gleb.
 
 _______________________________________________
 kexec mailing list
