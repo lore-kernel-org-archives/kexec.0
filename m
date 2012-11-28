@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tdafd-0001Qj-Pl
- for kexec@lists.infradead.org; Wed, 28 Nov 2012 05:58:55 +0000
-Date: Wed, 28 Nov 2012 14:56:58 +0900
+ id 1TdcKE-0007X1-OE
+ for kexec@lists.infradead.org; Wed, 28 Nov 2012 07:44:57 +0000
+Date: Wed, 28 Nov 2012 16:42:31 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCHv3 5/9] Initialize phys_start during early Xen setup
-Message-Id: <20121128145658.d1d4dd1f386462cba4417ae7@mxc.nes.nec.co.jp>
-In-Reply-To: <201208241742.24409.ptesarik@suse.cz>
-References: <201208241742.24409.ptesarik@suse.cz>
+Subject: Re: [PATCH v2 08/10] Add page_is_buddy for PG_buddy
+Message-Id: <20121128164231.0aa94c96245a9de386e13601@mxc.nes.nec.co.jp>
+In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20AB10B04@G01JPEXMBYT03>
+References: <20121116050108.8280.14861.stgit@localhost6.localdomain6>
+ <20121116050213.8280.73020.stgit@localhost6.localdomain6>
+ <20121127150048.f84d125d86e404c5b177cd58@mxc.nes.nec.co.jp>
+ <33710E6CAA200E4583255F4FB666C4E20AB10B04@G01JPEXMBYT03>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,133 +25,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ptesarik@suse.cz
-Cc: kexec@lists.infradead.org, Norbert.Trapp@ts.fujitsu.com
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-Hello Petr,
+Hello HATAYAMA-san,
 
-On Fri, 24 Aug 2012 17:42:24 +0200
-Petr Tesarik <ptesarik@suse.cz> wrote:
+On Tue, 27 Nov 2012 08:53:00 +0000
+"Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com> wrote:
 
-> With early Xen setup, we can move the initialization of xen_phys_start
-> to the setup routine. This is cleaner, as we can get rid of ifdef'ed
-> arch-specific code in makedumpfile.c (which should IMO stay generic).
+> > From: kexec-bounces@lists.infradead.org
+> > [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Atsushi Kumagai
+> > Sent: Tuesday, November 27, 2012 3:01 PM
+> > Subject: Re: [PATCH v2 08/10] Add page_is_buddy for PG_buddy
+> > 
+> > Hello HATAYAMA-san,
+> > 
+> > On Fri, 16 Nov 2012 14:02:13 +0900
+> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> > 
+> > > On kernels from v2.6.18 to v2.6.37, buddy page is marked by the
+> > > PG_buddy flag.
+> > >
+> > >   kernel version     | PG_buddy
+> > >   ------------------ +---------------------------------
+> > >   v2.6.17 to v2.6.26 | 19
+> > >   v2.6.27 to v2.6.37 | 19 if CONFIG_PAGEFLAGS_EXTEND=y
+> > >                      | 18 otherwise
+> > >
+> > > We don't need to care about CONFIG_PAGEFLAGS_EXTEND because the
+> > > architectures specifying this as y are um and xtensa only. They are
+> > > not included in the supported architectures of makedumpfile.
+> > 
+> > Sorry for too late point out.
+> > 
+> > I did regression test for v1.5.1 on x86_64 machine in the last weekend
+> > and found the issue that page_is_buddy_v2() can't exclude free pages
+> > correctly for kernel 2.6.30 to 2.6.37.
+> > I checked the configuration of these kernels, I made sure that
+> > CONFIG_PAGEFLAGS_EXTENDED was set as y, so PG_buddy=18 is invalid for them.
+> > 
+> > According to this fact, PG_buddy is variable for the supported architectures
+> > of makedumpfile, too.
+> > So, how did you confirm that CONFIG_PAGEFLAGS_EXTENDED is only related with
+> > um and xtensa ?
+> > 
 > 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+> I guess I used git grep on different kernel source tree.
 > 
-> ---
->  arch/x86.c     |    9 +++++++++
->  arch/x86_64.c  |    9 +++++++++
->  makedumpfile.c |   16 ----------------
->  3 files changed, 18 insertions(+), 16 deletions(-)
+> > And why did you test with PG_buddy=19 for 2.6.32 when you posted this patch
+> > set?
+> > 
+> > >  - 2.6.32
+> > >  NUMBER(PG_slab)=7
+> > >  NUMBER(PG_buddy)=19
+> > >  OFFSET(page._mapcount)=12
+> > >  OFFSET(page.private)=16
+> > >  SIZE(pageflags)=4
+> > 
 > 
-> --- a/arch/x86.c
-> +++ b/arch/x86.c
-> @@ -296,6 +296,15 @@ int get_xen_basic_info_x86(void)
->  	unsigned long frame_table_vaddr;
->  	unsigned long xen_end;
->  
-> +	if (!info->xen_phys_start) {
-> +		if (info->xen_crash_info_v < 2) {
-> +			ERRMSG("Can't get Xen physical start address.\n"
-> +			       "Please use the --xen_phys_start option.");
-> +			return FALSE;
-> +		}
-> +		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
-> +	}
-> +
+> Sorry, I was not aware of this.
 
-I tested for the vmcore which doesn't include xen_phys_start, then the 
-error message below showed:
+OK, I see.
+ 
+> Anyway, the current hard-coded values doesn't work at all since before talking
+> about PG_buddy, we cannot get values of page structure's members, such as offset
+> value of private member, so non-cyclic is always used instead.
+> 
+> How about dropping hard-coded values?
 
-  $ makedumpfile_v1.5.1 -E -X --xen-syms xen-syms-2.6.18-92.el5.debug vmcore dumpfile.EX
-  get_xen_basic_info_x86: Can't get Xen physical start address.
-  Please use the --xen_phys_start option.
-  makedumpfile Failed.
-  $
+It seems better to drop hard-coded values.
+vmlinux (or vmcoreinfo) is necessary to get values of page structure's
+members and we can get NUMBER(PG_buddy) from vmlinux as well.
+So, I think the hard-coding for PG_buddy brings few benefits.
 
-So, should I understand this result as reasonable error handling ?
+I misunderstood that enumeration values can't be gotten from vmlinux,
+so I thought the hard-coding is reasonable.
+(I seem to just faced the gcc bug below.)
 
-The reason why I have this question is because the same vmcore can be
-filtered out with makedumpfile-1.5.0 or before like below:
+  http://gcc.gnu.org/bugzilla/show_bug.cgi?id=41065
 
-  $ makedumpfile_v1.5.0 -E -X --xen-syms xen-syms-2.6.18-92.el5.debug vmcore dumpfile.EX
-  Switched running mode from cyclic to non-cyclic,
-  because the cyclic mode doesn't support Xen.
-  Copying data                       : [100 %]
 
-  The dumpfile is saved to dumpfile.EX.
+Anyway, to sum it up:
 
-  makedumpfile Completed.
-  $
+   1. If vmlinux or vmcoreinfo is prepared and running on cyclic mode,
+      page_is_buddy_v2() works correctly for v2.6.18 to v2.6.37.
 
-I have checked with grep, it seems that xen_phys_start is used for
-x86_64 only. So, is the valid check really necessary for x86 ?
+   2. Otherwise, free list logic is used.
+   
+I think it's good policy for current kernels.
 
 
 Thanks
 Atsushi Kumagai
-
->  	if (SYMBOL(pgd_l2) == NOT_FOUND_SYMBOL &&
->  	    SYMBOL(pgd_l3) == NOT_FOUND_SYMBOL) {
->  		ERRMSG("Can't get pgd.\n");
-> --- a/arch/x86_64.c
-> +++ b/arch/x86_64.c
-> @@ -361,6 +361,15 @@ int get_xen_basic_info_x86_64(void)
->  	unsigned long frame_table_vaddr;
->  	unsigned long xen_end;
->  
-> + 	if (!info->xen_phys_start) {
-> +		if (info->xen_crash_info_v < 2) {
-> +			ERRMSG("Can't get Xen physical start address.\n"
-> +			       "Please use the --xen_phys_start option.");
-> +			return FALSE;
-> +		}
-> +		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
-> +	}
-> +
->  	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
->  		ERRMSG("Can't get pml4.\n");
->  		return FALSE;
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -5365,20 +5365,6 @@ init_xen_crash_info(void)
->  }
->  
->  int
-> -get_xen_phys_start(void)
-> -{
-> -	if (info->xen_phys_start)
-> -		return TRUE;
-> -
-> -#if defined(__x86__) || defined(__x86_64__)
-> -	if (info->xen_crash_info_v >= 2)
-> -		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
-> -#endif
-> -
-> -	return TRUE;
-> -}
-> -
-> -int
->  get_xen_info(void)
->  {
->  	unsigned long domain;
-> @@ -5877,8 +5863,6 @@ initial_xen(void)
->  		if (!read_vmcoreinfo_from_vmcore(offset, size, TRUE))
->  			return FALSE;
->  	}
-> -	if (!get_xen_phys_start())
-> -		return FALSE;
->  	if (!get_xen_info())
->  		return FALSE;
->  
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
