@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TdSfS-0000Di-Fs
- for kexec@lists.infradead.org; Tue, 27 Nov 2012 21:26:11 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <3774326.lMtTTFYZT3@azariah.suse.cz>
-Date: Tue, 27 Nov 2012 15:25:35 -0600
-In-Reply-To: <3774326.lMtTTFYZT3@azariah.suse.cz> (Petr Tesarik's message of
- "Tue, 27 Nov 2012 15:13:32 +0100")
-Message-ID: <87ehjeivqo.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: Save PG_compound or PG_head value in VMCOREINFO
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Tdafd-0001Qj-Pl
+ for kexec@lists.infradead.org; Wed, 28 Nov 2012 05:58:55 +0000
+Date: Wed, 28 Nov 2012 14:56:58 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCHv3 5/9] Initialize phys_start during early Xen setup
+Message-Id: <20121128145658.d1d4dd1f386462cba4417ae7@mxc.nes.nec.co.jp>
+In-Reply-To: <201208241742.24409.ptesarik@suse.cz>
+References: <201208241742.24409.ptesarik@suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,48 +22,133 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: ptesarik@suse.cz
+Cc: kexec@lists.infradead.org, Norbert.Trapp@ts.fujitsu.com
 
-Petr Tesarik <ptesarik@suse.cz> writes:
+Hello Petr,
 
-> To allow filtering of huge pages, makedumpfile must be able to identify
-> them in the dump. This can be done by checking for the appropriate
-> page flag, so communicate its value to makedumpfile through the VMCOREINFO 
-> interface.
+On Fri, 24 Aug 2012 17:42:24 +0200
+Petr Tesarik <ptesarik@suse.cz> wrote:
 
-I don't have any siginificant problems with exporting this information.
-However that #ifddef looks nasty and confusing.
-
-Does that #ifdef exist in the huge page code as well?
-
-Can we always export both?  Can we only export one?
-
-What is the purpose of the #ifdef?
-
-As it stands that looks like code that will figure out how to bitrot
-if we just leave it sitting there.
-
+> With early Xen setup, we can move the initialization of xen_phys_start
+> to the setup routine. This is cleaner, as we can get rid of ifdef'ed
+> arch-specific code in makedumpfile.c (which should IMO stay generic).
+> 
 > Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
->
+> 
 > ---
->  kernel/kexec.c |    5 +++++
->  1 file changed, 5 insertions(+)
->
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1511,6 +1511,11 @@ static int __init crash_save_vmcoreinfo_
->  	VMCOREINFO_NUMBER(NR_FREE_PAGES);
->  	VMCOREINFO_NUMBER(PG_lru);
->  	VMCOREINFO_NUMBER(PG_private);
-> +#ifdef CONFIG_PAGEFLAGS_EXTENDED
-> +	VMCOREINFO_NUMBER(PG_head);
-> +#else
-> +	VMCOREINFO_NUMBER(PG_compound);
-> +#endif
->  	VMCOREINFO_NUMBER(PG_swapcache);
+>  arch/x86.c     |    9 +++++++++
+>  arch/x86_64.c  |    9 +++++++++
+>  makedumpfile.c |   16 ----------------
+>  3 files changed, 18 insertions(+), 16 deletions(-)
+> 
+> --- a/arch/x86.c
+> +++ b/arch/x86.c
+> @@ -296,6 +296,15 @@ int get_xen_basic_info_x86(void)
+>  	unsigned long frame_table_vaddr;
+>  	unsigned long xen_end;
 >  
->  	arch_crash_save_vmcoreinfo();
+> +	if (!info->xen_phys_start) {
+> +		if (info->xen_crash_info_v < 2) {
+> +			ERRMSG("Can't get Xen physical start address.\n"
+> +			       "Please use the --xen_phys_start option.");
+> +			return FALSE;
+> +		}
+> +		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+> +	}
+> +
+
+I tested for the vmcore which doesn't include xen_phys_start, then the 
+error message below showed:
+
+  $ makedumpfile_v1.5.1 -E -X --xen-syms xen-syms-2.6.18-92.el5.debug vmcore dumpfile.EX
+  get_xen_basic_info_x86: Can't get Xen physical start address.
+  Please use the --xen_phys_start option.
+  makedumpfile Failed.
+  $
+
+So, should I understand this result as reasonable error handling ?
+
+The reason why I have this question is because the same vmcore can be
+filtered out with makedumpfile-1.5.0 or before like below:
+
+  $ makedumpfile_v1.5.0 -E -X --xen-syms xen-syms-2.6.18-92.el5.debug vmcore dumpfile.EX
+  Switched running mode from cyclic to non-cyclic,
+  because the cyclic mode doesn't support Xen.
+  Copying data                       : [100 %]
+
+  The dumpfile is saved to dumpfile.EX.
+
+  makedumpfile Completed.
+  $
+
+I have checked with grep, it seems that xen_phys_start is used for
+x86_64 only. So, is the valid check really necessary for x86 ?
+
+
+Thanks
+Atsushi Kumagai
+
+>  	if (SYMBOL(pgd_l2) == NOT_FOUND_SYMBOL &&
+>  	    SYMBOL(pgd_l3) == NOT_FOUND_SYMBOL) {
+>  		ERRMSG("Can't get pgd.\n");
+> --- a/arch/x86_64.c
+> +++ b/arch/x86_64.c
+> @@ -361,6 +361,15 @@ int get_xen_basic_info_x86_64(void)
+>  	unsigned long frame_table_vaddr;
+>  	unsigned long xen_end;
+>  
+> + 	if (!info->xen_phys_start) {
+> +		if (info->xen_crash_info_v < 2) {
+> +			ERRMSG("Can't get Xen physical start address.\n"
+> +			       "Please use the --xen_phys_start option.");
+> +			return FALSE;
+> +		}
+> +		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+> +	}
+> +
+>  	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
+>  		ERRMSG("Can't get pml4.\n");
+>  		return FALSE;
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -5365,20 +5365,6 @@ init_xen_crash_info(void)
+>  }
+>  
+>  int
+> -get_xen_phys_start(void)
+> -{
+> -	if (info->xen_phys_start)
+> -		return TRUE;
+> -
+> -#if defined(__x86__) || defined(__x86_64__)
+> -	if (info->xen_crash_info_v >= 2)
+> -		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+> -#endif
+> -
+> -	return TRUE;
+> -}
+> -
+> -int
+>  get_xen_info(void)
+>  {
+>  	unsigned long domain;
+> @@ -5877,8 +5863,6 @@ initial_xen(void)
+>  		if (!read_vmcoreinfo_from_vmcore(offset, size, TRUE))
+>  			return FALSE;
+>  	}
+> -	if (!get_xen_phys_start())
+> -		return FALSE;
+>  	if (!get_xen_info())
+>  		return FALSE;
+>  
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
