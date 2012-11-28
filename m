@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TdppL-0004K3-2q
- for kexec@lists.infradead.org; Wed, 28 Nov 2012 22:09:57 +0000
+ id 1TdppL-0004Jn-3L
+ for kexec@lists.infradead.org; Wed, 28 Nov 2012 22:09:56 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v5 2/5] kexec, x86: clean boot_params area for entry-32bit path
-Date: Wed, 28 Nov 2012 14:09:51 -0800
-Message-Id: <1354140594-3686-3-git-send-email-yinghai@kernel.org>
-In-Reply-To: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
-References: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v5 0/5] kexec: put bzImage and ramdisk above 4G for x86 64bit
+Date: Wed, 28 Nov 2012 14:09:49 -0800
+Message-Id: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,55 +23,40 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-kexec bzImage path setup data is shared with real-mode path, and
-setup_header is copied together with setup_code.
-Later 32bit just use whole area as boot_params for real_mode_data.
-but those area for boot_params around setup_header is
-not cleaned that will leave some field in boot_param as
-non-zero value.
+Now we have limit kdump reserved under 896M, because kexec has the limitation.
+and also bzImage need to stay under 4g.
 
-So clean around setup_header area for non real-mode entry path.
+kernel parts changes could be found at:
+        git://git.kernel.org/pub/scm/linux/kernel/git/yinghai/linux-yinghai.git for-x86-boot
 
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
----
- kexec/arch/i386/kexec-bzImage.c |   17 +++++++++++++++++
- 1 files changed, 17 insertions(+), 0 deletions(-)
+here patches are for kexec tools to load bzImage and ramdisk above 4G
+acccording to new added boot header fields.
 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 6998587..fe51ab4 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -98,6 +98,19 @@ void bzImage_usage(void)
-        
- }
- 
-+static void clean_boot_params(unsigned char *real_mode, unsigned long size)
-+{
-+	unsigned long end;
-+
-+	/* clear value before header */
-+	memset(real_mode, 0, 0x1f1);
-+	/* clear value after setup_header  */
-+	end = *(real_mode + 0x201);
-+	end += 0x202;
-+	if (end < size)
-+		memset(real_mode + end, 0, size - end);
-+}
-+
- int do_bzImage_load(struct kexec_info *info,
- 	const char *kernel, off_t kernel_len,
- 	const char *command_line, off_t command_line_len,
-@@ -212,6 +225,10 @@ int do_bzImage_load(struct kexec_info *info,
- 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
- 	real_mode = xmalloc(setup_size);
- 	memcpy(real_mode, kernel, kern16_size);
-+	if (!real_mode_entry) {
-+		clean_boot_params((unsigned char *)real_mode, kern16_size);
-+		real_mode->xloadflags |= (1<<15); /* USE_EXT_BOOT_PARAMS */
-+	}
- 
- 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
- 		/* If using bzImage for capture kernel, then we will not be
+-v3: address review from Eric to use locate_hole at first.
+     use xloadflags instead.
+-v4: remove the restriction about bzImage not crossing GB boundary.
+     add real-mode fix for bzImage.
+     add --entry-32bit and --real-mode for skip bzImage64.
+-v5: use USE_EXT_BOOT_PARAMS bit in xloadflags.
+
+Yinghai Lu (5):
+  kexec, x86: add boot header member for version 2.12
+  kexec, x86: clean boot_params area for entry-32bit path
+  kexec, x86: Fix bzImage real-mode booting
+  kexec, x86: put ramdisk/cmd_line above 4G for 64bit bzImage
+  kexec, x86_64: Load bzImage64 above 4G
+
+ include/x86/x86-linux.h                |   32 +++-
+ kexec/arch/i386/include/arch/options.h |    4 +-
+ kexec/arch/i386/kexec-bzImage.c        |   80 +++++++--
+ kexec/arch/i386/x86-linux-setup.c      |   26 ++-
+ kexec/arch/x86_64/Makefile             |    1 +
+ kexec/arch/x86_64/kexec-bzImage64.c    |  335 ++++++++++++++++++++++++++++++++
+ kexec/arch/x86_64/kexec-x86_64.c       |    1 +
+ kexec/arch/x86_64/kexec-x86_64.h       |    5 +
+ 8 files changed, 462 insertions(+), 22 deletions(-)
+ create mode 100644 kexec/arch/x86_64/kexec-bzImage64.c
+
 -- 
 1.7.7
 
