@@ -1,14 +1,16 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TdppL-0004K2-1T
- for kexec@lists.infradead.org; Wed, 28 Nov 2012 22:09:56 +0000
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v5 1/5] kexec, x86: add boot header member for version 2.12
-Date: Wed, 28 Nov 2012 14:09:50 -0800
-Message-Id: <1354140594-3686-2-git-send-email-yinghai@kernel.org>
-In-Reply-To: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
-References: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
+ id 1TdzZC-0001zj-Rv
+ for kexec@lists.infradead.org; Thu, 29 Nov 2012 08:33:57 +0000
+Date: Thu, 29 Nov 2012 17:32:50 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [ANNOUNCE] makedumpfile: Postpone the release of 1.5.1
+Message-Id: <20121129173250.d30ea1c1e828a4d65479301b@mxc.nes.nec.co.jp>
+In-Reply-To: <20121127.213234.2280049296541396535.d.hatayama@gmail.com>
+References: <20121127193727.fbb54d248b75b5106570bdef@mxc.nes.nec.co.jp>
+ <20121127.213234.2280049296541396535.d.hatayama@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,102 +19,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: d.hatayama@gmail.com
+Cc: kexec@lists.infradead.org
 
-will use ext_ramdisk_image/size, and xloadflags to put
-ramdisk and bzImage high for 64bit.
+Hello,
 
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
----
- include/x86/x86-linux.h |   32 +++++++++++++++++++++++++++-----
- 1 files changed, 27 insertions(+), 5 deletions(-)
+On Tue, 27 Nov 2012 21:32:34 +0900 (JST)
+HATAYAMA Daisuke <d.hatayama@gmail.com> wrote:
 
-diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index 27af02b..a2452f2 100644
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -32,7 +32,7 @@ struct drive_info_struct {
- };
- struct sys_desc_table {
- 	uint16_t length;
--	uint8_t  table[318];
-+	uint8_t  table[30];
- };
- 
- struct apm_bios_info {
-@@ -112,6 +112,10 @@ struct x86_linux_param_header {
- 	struct apm_bios_info apm_bios_info;	/* 0x40 */
- 	struct drive_info_struct drive_info;	/* 0x80 */
- 	struct sys_desc_table sys_desc_table;	/* 0xa0 */
-+	uint32_t ext_ramdisk_image;		/* 0xc0 */
-+	uint32_t ext_ramdisk_size;		/* 0xc4 */
-+	uint32_t ext_cmd_line_ptr;		/* 0xc8 */
-+	uint8_t reserved4_1[0x1e0 - 0xcc];	/* 0xcc */
- 	uint32_t alt_mem_k;			/* 0x1e0 */
- 	uint8_t  reserved5[4];			/* 0x1e4 */
- 	uint8_t  e820_map_nr;			/* 0x1e8 */
-@@ -174,11 +178,18 @@ struct x86_linux_param_header {
- 	/* 2.04+ */
- 	uint32_t kernel_alignment;		/* 0x230 */
- 	uint8_t  relocatable_kernel;		/* 0x234 */
--	uint8_t  reserved15[3];			/* 0x235 */
-+	uint8_t  min_alignment;			/* 0x235 */
-+	uint16_t xloadflags;			/* 0x236 */
- 	uint32_t cmdline_size;			/* 0x238 */
- 	uint32_t hardware_subarch;		/* 0x23C */
- 	uint64_t hardware_subarch_data;		/* 0x240 */
--	uint8_t  reserved16[0x290 - 0x248];	/* 0x248 */
-+	uint32_t payload_offset;		/* 0x248 */
-+	uint32_t payload_length;		/* 0x24C */
-+	uint64_t setup_data;			/* 0x250 */
-+	uint64_t pref_address;			/* 0x258 */
-+	uint32_t init_size;			/* 0x260 */
-+	uint32_t handover_offset;		/* 0x264 */
-+	uint8_t  reserved16[0x290 - 0x268];	/* 0x268 */
- 	uint32_t edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];	/* 0x290 */
- #endif
- 	struct 	e820entry e820_map[E820MAX];	/* 0x2d0 */
-@@ -195,7 +206,11 @@ struct x86_linux_faked_param_header {
- };
- 
- struct x86_linux_header {
--	uint8_t  reserved1[0x1f1];		/* 0x000 */
-+	uint8_t  reserved1[0xc0];		/* 0x000 */
-+	uint32_t ext_ramdisk_image;		/* 0x0c0 */
-+	uint32_t ext_ramdisk_size;		/* 0x0c4 */
-+	uint32_t ext_cmd_line_ptr;		/* 0x0c8 */
-+	uint8_t  reserved1_1[0x1f1-0xcc];	/* 0x0cc */
- 	uint8_t  setup_sects;			/* 0x1f1 */
- 	uint16_t root_flags;			/* 0x1f2 */
- 	uint16_t syssize;			/* 0x1f4 */
-@@ -241,10 +256,17 @@ struct x86_linux_header {
- #else
- 	uint32_t kernel_alignment;		/* 0x230 */
- 	uint8_t  relocatable_kernel;		/* 0x234 */
--	uint8_t  reserved6[3];			/* 0x235 */
-+	uint8_t  min_alignment;			/* 0x235 */
-+	uint16_t xloadflags;			/* 0x236 */
- 	uint32_t cmdline_size;                  /* 0x238 */
- 	uint32_t hardware_subarch;              /* 0x23C */
- 	uint64_t hardware_subarch_data;         /* 0x240 */
-+	uint32_t payload_offset;		/* 0x248 */
-+	uint32_t payload_length;		/* 0x24C */
-+	uint64_t setup_data;			/* 0x250 */
-+	uint64_t pref_address;			/* 0x258 */
-+	uint32_t init_size;			/* 0x260 */
-+	uint32_t handover_offset;		/* 0x264 */
- #endif
- } PACKED;
- 
--- 
-1.7.7
+> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> Subject: [ANNOUNCE] makedumpfile: Postpone the release of 1.5.1
+> Date: Tue, 27 Nov 2012 19:37:27 +0900
+> 
+> > Hello,
+> > 
+> >> If there is no problem, I will release v1.5.1 GA on Nov 28.
+> > 
+> > I did regression test for v1.5.1 in the last weekend and found some bugs.
+> > So the release date will be delayed by few weeks, sorry.
+> > 
+> > However, I don't think there are big issues for almost all users, because:
+> >  
+> >   - #1 doesn't happen unless users specify -x option, and it's unnecessary
+> >     for these kernels.
+> 
+> I don't think so. pageflags was rewriten as enumeration on v2.6.26. So
+> debuginfo of the related kernels contains correct PG_buddy value. If
+> passing vmlinux with -x option, makedumpfile should work well. I think
+> problematic case happens only through vmcoreinfo with -i option.
 
+Sorry, it was my misunderstanding. You are right.
+
+> 
+> >   - As for #2, I think there are few users.
+> > 
+> > So, I think v1.5.1-rc is enough for almost all users.
+> > 
+> > 
+> > BUGS:
+> > 
+> >   #1. Fail to exclude free pages with page_is_buddy_v2() in some cases.
+> >       I mentioned this issue in the post below:
+> > 
+> >         http://lists.infradead.org/pipermail/kexec/2012-November/007404.html
+> > 
+> >       Related kernel: v2.6.27 to v2.6.37
+> 
+> This is a bit wrong. Correct one is: v2.6.30 to v2.6.37.
+
+I wrote there versions as the version which has the possibility of this
+issue happening. In other words, the version which uses CONFIG_PAGEFLAGS_EXTENDED.
+So, "v2.6.27 to v2.6.37" was my mistake after all.
+
+Anyway, correct one is: v2.6.26 to v2.6.37.
+
+I'll avoid this issue by remove hard-corded values for PG_buddy.
+
+> 
+> > 
+> >   #2. Fail to exclude free pages with page_is_buddy_v1() in some cases.
+> >       I'm investigating this issue now.
+> > 
+> >       Related kernel: v2.6.15 to v2.6.17
+> 
+> As I noted in its patch description, I have yet to test on these
+> kernel versions. Thanks for your testing.
+
+I think the release of v1.5.1 shouldn't be delayed with this issue because
+as you said below.
+So, I'll just revert "[PATCH v2 09/10] Add page_is_buddy for old kernels"
+to avoid this issue. This means that we always use free_list logic for
+v2.6.15 to v2.6.17.
+
+> But I don't have enough reason to support these kernels now. These
+> kernels themselves have bug on handling buddy pages, so PG_buddy was
+> introduced during v2.6.18-rc to fix the bug. Even if there is
+> distribution based on these kerenel versions, some kind of fixing
+> patch introducing PG_buddy would be backported and that must be. In
+> particular, I don't think machine with huge memory uses such buggy
+> kernels.
+> 
+> Thanks.
+> HATAYAMA, Daisuke
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
