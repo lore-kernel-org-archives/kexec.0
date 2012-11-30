@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-da0-f49.google.com ([209.85.210.49])
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TeEDj-0004P3-Bb
- for kexec@lists.infradead.org; Fri, 30 Nov 2012 00:12:44 +0000
-Received: by mail-da0-f49.google.com with SMTP id v40so5233083dad.36
- for <kexec@lists.infradead.org>; Thu, 29 Nov 2012 16:12:41 -0800 (PST)
-Message-ID: <50B7F9F6.1030806@gmail.com>
-Date: Thu, 29 Nov 2012 16:12:38 -0800
-From: David Daney <ddaney.cavm@gmail.com>
+ id 1TeGxt-00082O-EM
+ for kexec@lists.infradead.org; Fri, 30 Nov 2012 03:08:35 +0000
+Received: from /spool/local
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Fri, 30 Nov 2012 13:03:57 +1000
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ qAU2vTJ366846720
+ for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 13:57:30 +1100
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ qAU38J8Y005144
+ for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 14:08:19 +1100
+Message-ID: <50B82321.1070506@linux.vnet.ibm.com>
+Date: Fri, 30 Nov 2012 08:38:17 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: Fix compile errors in  crashdump-mips.c
-References: <1354219369-10520-1-git-send-email-ddaney.cavm@gmail.com>
- <20121130000243.GC21935@verge.net.au>
-In-Reply-To: <20121130000243.GC21935@verge.net.au>
+Subject: Re: [PATCH 0/2] kexec: Limit the crash memory ranges according to
+ first kernel's memory limit.
+References: <20120829082201.19391.15191.stgit@mars.in.ibm.com>
+ <50875E18.8010808@linux.vnet.ibm.com>
+In-Reply-To: <50875E18.8010808@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,58 +33,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, ralf@linux-mips.org, David Daney <ddaney.cavm@gmail.com>, David Daney <david.daney@cavium.com>
+To: Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Suzuki Poulose <suzuki@in.ibm.com>
 
-On 11/29/2012 04:02 PM, Simon Horman wrote:
-> On Thu, Nov 29, 2012 at 12:02:49PM -0800, David Daney wrote:
->> From: David Daney <david.daney@cavium.com>
+On 10/24/2012 08:48 AM, Mahesh Jagannath Salgaonkar wrote:
+> On 08/29/2012 01:54 PM, Mahesh J Salgaonkar wrote:
+>> So far powerpc kernel never exported memory limit information which is
+>> reflected by mem= kernel cmdline option. Hence, kexec-tools always use
+>> to build ELF header for entire system RAM generating a dump bigger than
+>> the actual memory used by the first kernel.
 >>
->> When building configured as '--host=mips64-octeon-linux-gnu' using
->> GCC-4.7.0 there are two compile errors, fix them.
+>> The proposed upstream kernel patch at
+>> https://lists.ozlabs.org/pipermail/linuxppc-dev/2012-August/100500.html
+>> now exports memory limit information through /proc/device-tree file.
+>> The above patch is still in discussion.
+> 
+> The above mentioned kernel patches are now upstream. Below are commit ids:
+> 4bc77a5e - powerpc: Export memory limit via device tree
+> a84fcd468 - powerpc: Change memory_limit from phys_addr_t to unsigned
+> long long
+
+Hi Simon,
+
+Did you get chance to review these patchset? The kernel patches are
+already in upstream.
+
+Thanks,
+-Mahesh.
+
+> 
 >>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->
-> Thanks, is the first hunk also ok on 32bit?
-
-Yes,  in crashdump.h kern_size is declared as type unsigned long, so the 
-proper printf format is ABI independent and should be "%lx"
-
->
+>> This patch series now reads the memory limit information from
+>> device-tree file if present and limits the crash memory ranges accordingly.
+>>
+>> Tested these patches on ppc32(ppc440) and ppc64 with a kernel patch by Suzuki.
+>>
+>> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+>> Tested-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+>>
 >> ---
->>   kexec/arch/mips/crashdump-mips.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
->> index f988698..6f9f6c6 100644
->> --- a/kexec/arch/mips/crashdump-mips.c
->> +++ b/kexec/arch/mips/crashdump-mips.c
->> @@ -83,7 +83,7 @@ static int get_kernel_vaddr_and_size(struct crash_elf_info *elf_info,
->>   		dbgprintf("kernel_vaddr= 0x%llx paddr %llx\n",
->>   				elf_info->kern_vaddr_start,
->>   				elf_info->kern_paddr_start);
->> -		dbgprintf("kernel size = 0x%llx\n", elf_info->kern_size);
->> +		dbgprintf("kernel size = 0x%lx\n", elf_info->kern_size);
->>   		return 0;
->>   		}
->>   	fprintf(stderr, "Cannot determine kernel virtual load addr and  size\n");
->> @@ -356,7 +356,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
->>   #ifdef __mips64
->>   	if (arch_options.core_header_type == CORE_TYPE_ELF64) {
->>   		elf_info = &elf_info64;
->> -		crash_create = crash_create_elf64;
->> +		crash_create = crash_create_elf64_headers;
->>   		start_offset = 0xffffffff80000000UL;
->>   	}
->>   #endif
->> --
->> 1.7.11.7
+>> Mahesh Salgaonkar (2):
+>>       kexec: Respect memory limit while building crash memory ranges on ppc32.
+>>       kexec: Respect memory limit while building crash memory ranges on ppc64
 >>
->
+>>
+>>  kexec/arch/ppc/crashdump-powerpc.c |   14 ++++++++---
+>>  kexec/arch/ppc/crashdump-powerpc.h |    1 +
+>>  kexec/arch/ppc/kexec-ppc.c         |   48 ++++++++++++++++++++++++++++++++++++
+>>  kexec/arch/ppc64/crashdump-ppc64.c |   11 ++++++++
+>>  kexec/arch/ppc64/crashdump-ppc64.h |    1 +
+>>  kexec/arch/ppc64/kexec-ppc64.c     |   28 +++++++++++++++++++++
+>>  6 files changed, 99 insertions(+), 4 deletions(-)
+>>
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 _______________________________________________
