@@ -1,30 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp09.au.ibm.com ([202.81.31.142])
+Received: from mail-qa0-f49.google.com ([209.85.216.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TeGxt-00082O-EM
- for kexec@lists.infradead.org; Fri, 30 Nov 2012 03:08:35 +0000
-Received: from /spool/local
- by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
- Fri, 30 Nov 2012 13:03:57 +1000
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- qAU2vTJ366846720
- for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 13:57:30 +1100
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- qAU38J8Y005144
- for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 14:08:19 +1100
-Message-ID: <50B82321.1070506@linux.vnet.ibm.com>
-Date: Fri, 30 Nov 2012 08:38:17 +0530
-From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+ id 1TeR7K-0000AR-R6
+ for kexec@lists.infradead.org; Fri, 30 Nov 2012 13:58:59 +0000
+Received: by mail-qa0-f49.google.com with SMTP id r4so501232qaq.15
+ for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 05:58:57 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] kexec: Limit the crash memory ranges according to
- first kernel's memory limit.
-References: <20120829082201.19391.15191.stgit@mars.in.ibm.com>
- <50875E18.8010808@linux.vnet.ibm.com>
-In-Reply-To: <50875E18.8010808@linux.vnet.ibm.com>
+Date: Fri, 30 Nov 2012 19:28:56 +0530
+Message-ID: <CAJXQGfJRQ9SO5MLpG5RC1DffaRRaWvRzpX1Rq=wEM5V=Pm31EA@mail.gmail.com>
+Subject: 
+From: Naresh Bhat <nareshgbhat@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,67 +22,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Suzuki Poulose <suzuki@in.ibm.com>
+To: kexec@lists.infradead.org
+Cc: magnus.damm@gmail.com, Daniel Mack <zonque@gmail.com>
 
-On 10/24/2012 08:48 AM, Mahesh Jagannath Salgaonkar wrote:
-> On 08/29/2012 01:54 PM, Mahesh J Salgaonkar wrote:
->> So far powerpc kernel never exported memory limit information which is
->> reflected by mem= kernel cmdline option. Hence, kexec-tools always use
->> to build ELF header for entire system RAM generating a dump bigger than
->> the actual memory used by the first kernel.
->>
->> The proposed upstream kernel patch at
->> https://lists.ozlabs.org/pipermail/linuxppc-dev/2012-August/100500.html
->> now exports memory limit information through /proc/device-tree file.
->> The above patch is still in discussion.
-> 
-> The above mentioned kernel patches are now upstream. Below are commit ids:
-> 4bc77a5e - powerpc: Export memory limit via device tree
-> a84fcd468 - powerpc: Change memory_limit from phys_addr_t to unsigned
-> long long
+Hi,
 
-Hi Simon,
+I am using Versatile express target at Daughterboard Site 1:
+V2P-CA15_A7 Cortex A15
 
-Did you get chance to review these patchset? The kernel patches are
-already in upstream.
+root@arm-cortex-a15:~# kexec -f zImage --dtb=vexpress.dtb
+--append="root=/dev/nfs rw ip=dhcp
+nfsroot=<Host-IP>:/mnt/sda3/nfs/cortexa15/core-image
+console=ttyAMA0,38400n8 nosmp"
+Starting new kernel
+Bye!
+Uncompressing Linux...
 
-Thanks,
--Mahesh.
+It stops here nothing is coming on serial console/terminal.
 
-> 
->>
->> This patch series now reads the memory limit information from
->> device-tree file if present and limits the crash memory ranges accordingly.
->>
->> Tested these patches on ppc32(ppc440) and ppc64 with a kernel patch by Suzuki.
->>
->> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
->> Tested-by: Suzuki K. Poulose <suzuki@in.ibm.com>
->>
->> ---
->>
->> Mahesh Salgaonkar (2):
->>       kexec: Respect memory limit while building crash memory ranges on ppc32.
->>       kexec: Respect memory limit while building crash memory ranges on ppc64
->>
->>
->>  kexec/arch/ppc/crashdump-powerpc.c |   14 ++++++++---
->>  kexec/arch/ppc/crashdump-powerpc.h |    1 +
->>  kexec/arch/ppc/kexec-ppc.c         |   48 ++++++++++++++++++++++++++++++++++++
->>  kexec/arch/ppc64/crashdump-ppc64.c |   11 ++++++++
->>  kexec/arch/ppc64/crashdump-ppc64.h |    1 +
->>  kexec/arch/ppc64/kexec-ppc64.c     |   28 +++++++++++++++++++++
->>  6 files changed, 99 insertions(+), 4 deletions(-)
->>
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+1. vexpress.dtb is generated from vexpress-v2p-ca15_a7.dts file.
+2. Kernel version:
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+3. Userland Tool:
+git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
 
+Please, help me to overcome from the above issue.  I appreciate your help
+
+My questions are
+1. My command line parameters are correct ?
+2. Is it possible to test kexec using ATAGs on ca15_a7 architecture ??
+
+Thanks and Regards
+-Naresh Bhat
 
 _______________________________________________
 kexec mailing list
