@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-la0-f49.google.com ([209.85.215.49])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TeRZ8-0002hA-8T
- for kexec@lists.infradead.org; Fri, 30 Nov 2012 14:27:42 +0000
-Received: by mail-la0-f49.google.com with SMTP id r15so374869lag.36
- for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 06:27:40 -0800 (PST)
-Message-ID: <50B8C259.9080902@gmail.com>
-Date: Fri, 30 Nov 2012 15:27:37 +0100
-From: Daniel Mack <zonque@gmail.com>
+ id 1TeSri-0008W3-FS
+ for kexec@lists.infradead.org; Fri, 30 Nov 2012 15:51:00 +0000
+Message-ID: <50B8D571.3000000@jp.fujitsu.com>
+Date: Fri, 30 Nov 2012 10:49:05 -0500
+From: MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re:
-References: <CAJXQGfJRQ9SO5MLpG5RC1DffaRRaWvRzpX1Rq=wEM5V=Pm31EA@mail.gmail.com>
-In-Reply-To: <CAJXQGfJRQ9SO5MLpG5RC1DffaRRaWvRzpX1Rq=wEM5V=Pm31EA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
+In-Reply-To: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,54 +23,136 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Naresh Bhat <nareshgbhat@gmail.com>
-Cc: magnus.damm@gmail.com, kexec@lists.infradead.org
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: muneda.takahiro@jp.fujitsu.com, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-On 30.11.2012 14:58, Naresh Bhat wrote:
-> Hi,
+On Tue, 27 Nov 2012 09:42:20 +0900 (JST),
+Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
+
+> These patches reset PCIe devices at boot time to address DMA problem on
+> kdump with iommu. When "reset_devices" is specified, a hot reset is
+> triggered on each PCIe root port and downstream port to reset its
+> downstream endpoint.
 > 
-> I am using Versatile express target at Daughterboard Site 1:
-> V2P-CA15_A7 Cortex A15
+> Background:
+> A kdump problem about DMA has been discussed for a long time. That is,
+> when a kernel is switched to the kdump kernel, DMA derived from first
+> kernel affects second kernel. Especially this problem surfaces when
+> iommu is used for PCI passthrough on KVM guest. In the case of the
+> machine I use, when intel_iommu=on is specified, DMAR error is detected
+> in kdump kernel and PCI SERR is also detected. Finally kdump fails
+> because some devices does not work correctly.
 > 
-> root@arm-cortex-a15:~# kexec -f zImage --dtb=vexpress.dtb
-> --append="root=/dev/nfs rw ip=dhcp
-> nfsroot=<Host-IP>:/mnt/sda3/nfs/cortexa15/core-image
-> console=ttyAMA0,38400n8 nosmp"
-> Starting new kernel
-> Bye!
-> Uncompressing Linux...
+> The root cause is that ongoing DMA from first kernel causes DMAR fault
+> because page table of DMAR is initialized while kdump kernel is booting
+> up. Therefore to solve this problem DMA needs to be stopped before DMAR
+> is initialized at kdump kernel boot time. By these patches, PCIe devices
+> are reset by hot reset and its DMA is stopped when reset_devices is
+> specified. One problem of this solution is that the monitor blacks out
+> when VGA controller is reset. So this patch does not reset the port
+> whose child endpoint is VGA device.
+> 
+> What I tried:
+> - Clearing bus master bit and INTx disable bit at boot time
+>      This did not solve this problem. I still got DMAR error on devices.
+> - Resetting devices in fixup_final(v1 patch)
+>      DMAR error disappeared, but sometimes PCI SERR was detected. This
+>      is well explained here.
+>      https://lkml.org/lkml/2012/9/9/245
+>      This PCI SERR seems to be related to interrupt remapping.
+> - Clearing bus master in setup_arch() and resetting devices in
+>    fixup_final
+>      Neither DMAR error nor PCI SERR occurred. But on certain machine
+>      kdump kernel hung up when resetting devices. It seems to be a
+>      problem specific to the platform.
+> - Resetting devices in setup_arch() (v2 and later patch)
+>      This solution solves all problems I found so far.
 
-That could be just that the new kernel is missing its bootargs cmdline
-with the appropriate console= tag. How are you booting the first kernel?
-Does you bootloader add a /chosen tag?
+Thank you for updating a patchset.
+I have a server which raises PCI Error while system is rebooting when
+I set intel_iommu=on.  With v7 on top of 3.7-rc7, I don't see any PCI
+Errors or other hardware related errors. So,
 
-Some suggestions:
+Tested-by: MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>
 
-1. Add a static CMDLINE to the second kernel, so it doesn't rely on that
-information being passed from the first on.
+Thanks,
+Takahiro
 
-2. Try running kexec without the --dtb option. kexec will then walk
-/proc/device-tree and build up one dynamically (CONFIG_PROC_DEVICETREE
-is needed for that).
-
-3. Try passing --command-line to kexec. Note that this won't work
-together with --dtb, as there's currently no code that adds the cmdline
-to a dtb binary blob. But with two patches I recently submitted, it
-works with the dynamic /proc/device-tree parsing mode.
-
-4. In case you have LEDs connected to GPIOs on your board, configure
-them to the heartbeat trigger mode. If that works, you know that the
-kernel is actually booting, but just not showing anything on the console.
-
-5. If 4) fails, try to toggle the GPIOs very early in the boot process,
-as some sort of interface to trace the control flow, even without a JTAG.
-
-6. In case you have CONFIG_THUMB2_KERNEL set, switch it off. I had no
-luck yet booting into a kernel that was compiled in Thumb-2 mode.
-
-
-Daniel
-
+> 
+> Changelog:
+> v7:
+> Update Yinghai's dummy-pci patch with macros in linux/pci.h, and fix
+> some bugs
+> 
+> v6:
+> Rewrite using Yinghai's dummy-pci patch
+> https://lkml.org/lkml/2012/11/13/118
+> 
+> v5:
+> Do bus reset after all devices are scanned and its config registers are
+> saved. This fixes a bug that config register is accessed without delay
+> after reset.
+> https://lkml.org/lkml/2012/10/17/47
+> 
+> v4:
+> Reduce waiting time after resetting devices. A previous patch does reset
+> like this:
+>    for (each device) {
+>      save config registers
+>      reset
+>      wait for 500 ms
+>      restore config registers
+>    }
+> 
+> If there are N devices to be reset, it takes N*500 ms. On the other
+> hand, the v4 patch does:
+>    for (each device) {
+>      save config registers
+>      reset
+>    }
+>    wait 500 ms
+>    for (each device) {
+>      restore config registers
+>    }
+> Though it needs more memory space to save config registers, the waiting
+> time is always 500ms.
+> https://lkml.org/lkml/2012/10/15/49
+> 
+> v3:
+> Move alloc_bootmem and free_bootmem to early_reset_pcie_devices so that
+> they are called only once.
+> https://lkml.org/lkml/2012/10/10/57
+> 
+> v2:
+> Reset devices in setup_arch() because reset need to be done before
+> interrupt remapping is initialized.
+> https://lkml.org/lkml/2012/10/2/54
+> 
+> v1:
+> Add fixup_final quirk to reset PCIe devices
+> https://lkml.org/lkml/2012/8/3/160
+> 
+> Takao Indoh (5):
+>    x86, pci: add dummy pci device for early stage
+>    PCI: Define the maximum number of PCI function
+>    Make reset_devices available at early stage
+>    x86, pci: Reset PCIe devices at boot time
+>    x86, pci: Enable PCI INTx when MSI is disabled
+> 
+>   arch/x86/include/asm/pci-direct.h |    3 +
+>   arch/x86/kernel/setup.c           |    3 +
+>   arch/x86/pci/common.c             |    4 +-
+>   arch/x86/pci/early.c              |  315 +++++++++++++++++++++++++++++++++++++
+>   include/linux/pci.h               |    2 +
+>   init/main.c                       |    4 +-
+>   6 files changed, 328 insertions(+), 3 deletions(-)
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 _______________________________________________
 kexec mailing list
