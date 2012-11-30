@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qa0-f49.google.com ([209.85.216.49])
+Received: from mail-la0-f49.google.com ([209.85.215.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TeR7K-0000AR-R6
- for kexec@lists.infradead.org; Fri, 30 Nov 2012 13:58:59 +0000
-Received: by mail-qa0-f49.google.com with SMTP id r4so501232qaq.15
- for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 05:58:57 -0800 (PST)
+ id 1TeRZ8-0002hA-8T
+ for kexec@lists.infradead.org; Fri, 30 Nov 2012 14:27:42 +0000
+Received: by mail-la0-f49.google.com with SMTP id r15so374869lag.36
+ for <kexec@lists.infradead.org>; Fri, 30 Nov 2012 06:27:40 -0800 (PST)
+Message-ID: <50B8C259.9080902@gmail.com>
+Date: Fri, 30 Nov 2012 15:27:37 +0100
+From: Daniel Mack <zonque@gmail.com>
 MIME-Version: 1.0
-Date: Fri, 30 Nov 2012 19:28:56 +0530
-Message-ID: <CAJXQGfJRQ9SO5MLpG5RC1DffaRRaWvRzpX1Rq=wEM5V=Pm31EA@mail.gmail.com>
-Subject: 
-From: Naresh Bhat <nareshgbhat@gmail.com>
+Subject: Re:
+References: <CAJXQGfJRQ9SO5MLpG5RC1DffaRRaWvRzpX1Rq=wEM5V=Pm31EA@mail.gmail.com>
+In-Reply-To: <CAJXQGfJRQ9SO5MLpG5RC1DffaRRaWvRzpX1Rq=wEM5V=Pm31EA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,38 +24,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: magnus.damm@gmail.com, Daniel Mack <zonque@gmail.com>
+To: Naresh Bhat <nareshgbhat@gmail.com>
+Cc: magnus.damm@gmail.com, kexec@lists.infradead.org
 
-Hi,
+On 30.11.2012 14:58, Naresh Bhat wrote:
+> Hi,
+> 
+> I am using Versatile express target at Daughterboard Site 1:
+> V2P-CA15_A7 Cortex A15
+> 
+> root@arm-cortex-a15:~# kexec -f zImage --dtb=vexpress.dtb
+> --append="root=/dev/nfs rw ip=dhcp
+> nfsroot=<Host-IP>:/mnt/sda3/nfs/cortexa15/core-image
+> console=ttyAMA0,38400n8 nosmp"
+> Starting new kernel
+> Bye!
+> Uncompressing Linux...
 
-I am using Versatile express target at Daughterboard Site 1:
-V2P-CA15_A7 Cortex A15
+That could be just that the new kernel is missing its bootargs cmdline
+with the appropriate console= tag. How are you booting the first kernel?
+Does you bootloader add a /chosen tag?
 
-root@arm-cortex-a15:~# kexec -f zImage --dtb=vexpress.dtb
---append="root=/dev/nfs rw ip=dhcp
-nfsroot=<Host-IP>:/mnt/sda3/nfs/cortexa15/core-image
-console=ttyAMA0,38400n8 nosmp"
-Starting new kernel
-Bye!
-Uncompressing Linux...
+Some suggestions:
 
-It stops here nothing is coming on serial console/terminal.
+1. Add a static CMDLINE to the second kernel, so it doesn't rely on that
+information being passed from the first on.
 
-1. vexpress.dtb is generated from vexpress-v2p-ca15_a7.dts file.
-2. Kernel version:
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-3. Userland Tool:
-git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+2. Try running kexec without the --dtb option. kexec will then walk
+/proc/device-tree and build up one dynamically (CONFIG_PROC_DEVICETREE
+is needed for that).
 
-Please, help me to overcome from the above issue.  I appreciate your help
+3. Try passing --command-line to kexec. Note that this won't work
+together with --dtb, as there's currently no code that adds the cmdline
+to a dtb binary blob. But with two patches I recently submitted, it
+works with the dynamic /proc/device-tree parsing mode.
 
-My questions are
-1. My command line parameters are correct ?
-2. Is it possible to test kexec using ATAGs on ca15_a7 architecture ??
+4. In case you have LEDs connected to GPIOs on your board, configure
+them to the heartbeat trigger mode. If that works, you know that the
+kernel is actually booting, but just not showing anything on the console.
 
-Thanks and Regards
--Naresh Bhat
+5. If 4) fails, try to toggle the GPIOs very early in the boot process,
+as some sort of interface to trace the control flow, even without a JTAG.
+
+6. In case you have CONFIG_THUMB2_KERNEL set, switch it off. I had no
+luck yet booting into a kernel that was compiled in Thumb-2 mode.
+
+
+Daniel
+
 
 _______________________________________________
 kexec mailing list
