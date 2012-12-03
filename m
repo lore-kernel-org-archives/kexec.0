@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TfbgU-0006K5-Rd
- for kexec@lists.infradead.org; Mon, 03 Dec 2012 19:28:08 +0000
-Date: Mon, 3 Dec 2012 13:40:01 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Message-ID: <20121203184001.GA27470@redhat.com>
-References: <50A60CF2.6010309@linux.vnet.ibm.com>
- <20121116143649.GA4515@redhat.com>
- <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
- <50AC809E.9060907@linux.vnet.ibm.com>
- <20121121135721.GB13114@redhat.com>
- <50AE5D89.2090101@linux.vnet.ibm.com>
- <20121126140448.GA28057@redhat.com>
- <50BC4073.7060402@linux.vnet.ibm.com>
- <20121203132059.GC24836@redhat.com>
- <50BCB8CA.3030909@linux.vnet.ibm.com>
+Received: from mail-bk0-f49.google.com ([209.85.214.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TfciN-0001qh-GP
+ for kexec@lists.infradead.org; Mon, 03 Dec 2012 20:34:08 +0000
+Received: by mail-bk0-f49.google.com with SMTP id jm19so1256454bkc.36
+ for <kexec@lists.infradead.org>; Mon, 03 Dec 2012 12:34:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <50BCB8CA.3030909@linux.vnet.ibm.com>
+In-Reply-To: <87r4np4jm1.fsf@xmission.com>
+References: <87r4np4jm1.fsf@xmission.com>
+Date: Mon, 3 Dec 2012 12:34:04 -0800
+Message-ID: <CAE9FiQWvNYOfg1=uYYzdfoy5q6RnroNCVyqXRw2ffgLQp_UvFw@mail.gmail.com>
+Subject: Re: [PATCH] kexec x86_64: Make purgatory relocatable anywhere in the
+ 64bit address space.
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,44 +25,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, anderson@redhat.com, buendgen@de.ibm.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
 
-On Mon, Dec 03, 2012 at 08:05:54PM +0530, Aravinda Prasad wrote:
+On Mon, Nov 19, 2012 at 8:56 AM, Eric W. Biederman
+<ebiederm@xmission.com> wrote:
+> diff --git a/purgatory/Makefile b/purgatory/Makefile
+> index ee1679c..e39adec 100644
+> --- a/purgatory/Makefile
+> +++ b/purgatory/Makefile
+> @@ -64,6 +64,7 @@ $(PURGATORY): $(PURGATORY_OBJS)
+>         $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+>
+>  #      $(LD) $(LDFLAGS) $(EXTRA_LDFLAGS) --no-undefined -e purgatory_start -r -o $@ $(PURGATORY_OBJS) $(UTIL_LIB)
+> +       $(STRIP) --strip-debug $@
+>
+>  echo::
+>         @echo "PURGATORY_SRCS $(PURGATORY_SRCS)"
 
-[..]
-> >> Another approach is to dynamically load libeppic library - similar way
-> >> how crash does it. No major changes will be done to makedumpfile code,
-> >> except the addition of --eppic flag. Upon specifying --eppic flag
-> >> makedumpfile will dlopen libeppic.so, which will have functionality to
-> >> scrub the specified data. This will prevent makedumpfile bloat and will
-> >> not affect the size of initramfs as --eppic is only specified during
-> >> post processing. The distribution should build and ship libeppic.so and
-> >> the procedure for building .so will be similar to what we have in crash.
-> > 
-> > It will still show up in dynamic library dependencing using ldd. We will
-> > have to put some hack to exclude the leppic despite the fact that
-> > makedumpfile is dependent on it. 
-> > 
-> > In F18, now we use dracut to build kdump initramfs. On command line we
-> > specify any extra binaries to be included and makedumpfile is one of
-> > those. Dracut will determine all the dependencies and automatically pull
-> > these in. So even if we don't use --eppic flag, dracult will pull in
-> > eppic shared library anyway.
-> 
-> 
-> I think ldd or dracut will not be able to make out that we are dependent
-> on libeppic.so as we will be using the dlopen("libeppic.so, ...) call to
-> dynamically load. No extra flags will be added to Makefile to specify
-> -leppic while building makedumpfile. Hence, from my understanding, while
-> building kdump initramfs, dracut cannot determine that we are dependent
-> on eppic
-
-Ok, if dracut does not pull in libeppic and does not bloat size of
-initramfs, I am fine.
-
-Thanks
-Vivek
+looks like configure does not set
+STRIP in top Makefile
 
 _______________________________________________
 kexec mailing list
