@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TfPYE-00016w-S1
- for kexec@lists.infradead.org; Mon, 03 Dec 2012 06:30:48 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.192])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id qB36UgO4018496
- for <kexec@lists.infradead.org>; Mon, 3 Dec 2012 15:30:42 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id qB36Ug814088 for kexec@lists.infradead.org;
- Mon, 3 Dec 2012 15:30:42 +0900 (JST)
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id qB36UfSY013146
- for <kexec@lists.infradead.org>; Mon, 3 Dec 2012 15:30:41 +0900 (JST)
-Date: Mon, 3 Dec 2012 15:28:20 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [ANNOUNCE] makedumpfile: Postpone the release of 1.5.1
-Message-Id: <20121203152820.2097b468454604ec06d0785b@mxc.nes.nec.co.jp>
-In-Reply-To: <20121127193727.fbb54d248b75b5106570bdef@mxc.nes.nec.co.jp>
-References: <20121127193727.fbb54d248b75b5106570bdef@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TfQwa-0002uO-6x
+ for kexec@lists.infradead.org; Mon, 03 Dec 2012 08:00:01 +0000
+Date: Mon, 3 Dec 2012 16:59:56 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: Fix compile errors in  crashdump-mips.c
+Message-ID: <20121203075956.GA7239@verge.net.au>
+References: <1354219369-10520-1-git-send-email-ddaney.cavm@gmail.com>
+ <20121130000243.GC21935@verge.net.au> <50B7F9F6.1030806@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50B7F9F6.1030806@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,57 +24,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: kexec@lists.infradead.org, ralf@linux-mips.org, David Daney <david.daney@cavium.com>
 
-Hello,
+On Thu, Nov 29, 2012 at 04:12:38PM -0800, David Daney wrote:
+> On 11/29/2012 04:02 PM, Simon Horman wrote:
+> >On Thu, Nov 29, 2012 at 12:02:49PM -0800, David Daney wrote:
+> >>From: David Daney <david.daney@cavium.com>
+> >>
+> >>When building configured as '--host=mips64-octeon-linux-gnu' using
+> >>GCC-4.7.0 there are two compile errors, fix them.
+> >>
+> >>Signed-off-by: David Daney <david.daney@cavium.com>
+> >
+> >Thanks, is the first hunk also ok on 32bit?
+> 
+> Yes,  in crashdump.h kern_size is declared as type unsigned long, so
+> the proper printf format is ABI independent and should be "%lx"
 
-On Tue, 27 Nov 2012 19:37:27 +0900
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-
-> Hello,
-> 
-> > If there is no problem, I will release v1.5.1 GA on Nov 28.
-> 
-> I did regression test for v1.5.1 in the last weekend and found some bugs.
-> So the release date will be delayed by few weeks, sorry.
-> 
-> However, I don't think there are big issues for almost all users, because:
->  
->   - #1 doesn't happen unless users specify -x option, and it's unnecessary
->     for these kernels.
->   - As for #2, I think there are few users.
-> 
-> So, I think v1.5.1-rc is enough for almost all users.
-> 
-> BUGS:
-> 
->   #1. Fail to exclude free pages with page_is_buddy_v2() in some cases.
->       I mentioned this issue in the post below:
-> 
->         http://lists.infradead.org/pipermail/kexec/2012-November/007404.html
-> 
->       Related kernel: v2.6.27 to v2.6.37
-> 
->   #2. Fail to exclude free pages with page_is_buddy_v1() in some cases.
->       I'm investigating this issue now.
-> 
->       Related kernel: v2.6.15 to v2.6.17
-
-I've fixed the bugs above, I will release v1.5.1 GA on Dec 6.
-
-
-Thanks
-Atsushi Kumagai
-
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
