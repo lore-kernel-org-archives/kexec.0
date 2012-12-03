@@ -1,38 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e32.co.us.ibm.com ([32.97.110.150])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TfP75-0007uY-Mn
- for kexec@lists.infradead.org; Mon, 03 Dec 2012 06:02:44 +0000
-Received: from /spool/local
- by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Sun, 2 Dec 2012 23:02:37 -0700
-Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
- [9.17.195.228])
- by d03dlp02.boulder.ibm.com (Postfix) with ESMTP id B4A463E4003F
- for <kexec@lists.infradead.org>; Sun,  2 Dec 2012 23:02:31 -0700 (MST)
-Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
- by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- qB362Xa7168974
- for <kexec@lists.infradead.org>; Sun, 2 Dec 2012 23:02:33 -0700
-Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
- by d03av03.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- qB362WTL024374
- for <kexec@lists.infradead.org>; Sun, 2 Dec 2012 23:02:33 -0700
-Message-ID: <50BC4073.7060402@linux.vnet.ibm.com>
-Date: Mon, 03 Dec 2012 11:32:27 +0530
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-References: <50A4E524.8020702@linux.vnet.ibm.com>
- <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
- <20121115155557.GF2529@redhat.com> <50A60CF2.6010309@linux.vnet.ibm.com>
- <20121116143649.GA4515@redhat.com>
- <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
- <50AC809E.9060907@linux.vnet.ibm.com> <20121121135721.GB13114@redhat.com>
- <50AE5D89.2090101@linux.vnet.ibm.com> <20121126140448.GA28057@redhat.com>
-In-Reply-To: <20121126140448.GA28057@redhat.com>
+ id 1TfPXg-00014v-C1
+ for kexec@lists.infradead.org; Mon, 03 Dec 2012 06:30:14 +0000
+Date: Mon, 3 Dec 2012 15:28:15 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCHv3 5/9] Initialize phys_start during early Xen setup
+Message-Id: <20121203152815.2a6dd036120210030a0eefbb@mxc.nes.nec.co.jp>
+In-Reply-To: <20121128145658.d1d4dd1f386462cba4417ae7@mxc.nes.nec.co.jp>
+References: <201208241742.24409.ptesarik@suse.cz>
+ <20121128145658.d1d4dd1f386462cba4417ae7@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,50 +23,169 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, buendgen@de.ibm.com
+To: ptesarik@suse.cz
+Cc: kexec@lists.infradead.org, Norbert.Trapp@ts.fujitsu.com
 
+Hello Petr,
 
+On Wed, 28 Nov 2012 14:56:58 +0900
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-On 2012-11-26 19:34, Vivek Goyal wrote:
-
-> On Thu, Nov 22, 2012 at 10:44:49PM +0530, Aravinda Prasad wrote:
+> Hello Petr,
 > 
-> [..]
->> Customers who want to filter their dump would certainly prefer a single
->> tool and a single shot to throw away pages, scrub data and then
->> compress, split or send the resulting dump to some target using ssh.
->> This important functionality is lost if scrubbing is not part of
->> makedumpfile and a separate tool is developed which just does scrubbing.
+> On Fri, 24 Aug 2012 17:42:24 +0200
+> Petr Tesarik <ptesarik@suse.cz> wrote:
 > 
-> Customers do filtering from initramfs context. It is not practical to
-> save TB of memory and filter it later. And we just concluded that is
-> it not practical to do scrubbing from initramfs due to need of vmlinux.
+> > With early Xen setup, we can move the initialization of xen_phys_start
+> > to the setup routine. This is cleaner, as we can get rid of ifdef'ed
+> > arch-specific code in makedumpfile.c (which should IMO stay generic).
+> > 
+> > Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+> > 
+> > ---
+> >  arch/x86.c     |    9 +++++++++
+> >  arch/x86_64.c  |    9 +++++++++
+> >  makedumpfile.c |   16 ----------------
+> >  3 files changed, 18 insertions(+), 16 deletions(-)
+> > 
+> > --- a/arch/x86.c
+> > +++ b/arch/x86.c
+> > @@ -296,6 +296,15 @@ int get_xen_basic_info_x86(void)
+> >  	unsigned long frame_table_vaddr;
+> >  	unsigned long xen_end;
+> >  
+> > +	if (!info->xen_phys_start) {
+> > +		if (info->xen_crash_info_v < 2) {
+> > +			ERRMSG("Can't get Xen physical start address.\n"
+> > +			       "Please use the --xen_phys_start option.");
+> > +			return FALSE;
+> > +		}
+> > +		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+> > +	}
+> > +
 > 
-> So doing filtering and doing scrubbing will not happen at the same
-> time practically. So bloating size of makedumpfile does not make
-> sense to me.
+> I tested for the vmcore which doesn't include xen_phys_start, then the 
+> error message below showed:
 > 
+>   $ makedumpfile_v1.5.1 -E -X --xen-syms xen-syms-2.6.18-92.el5.debug vmcore dumpfile.EX
+>   get_xen_basic_info_x86: Can't get Xen physical start address.
+>   Please use the --xen_phys_start option.
+>   makedumpfile Failed.
+>   $
+> 
+> So, should I understand this result as reasonable error handling ?
+> 
+> The reason why I have this question is because the same vmcore can be
+> filtered out with makedumpfile-1.5.0 or before like below:
+> 
+>   $ makedumpfile_v1.5.0 -E -X --xen-syms xen-syms-2.6.18-92.el5.debug vmcore dumpfile.EX
+>   Switched running mode from cyclic to non-cyclic,
+>   because the cyclic mode doesn't support Xen.
+>   Copying data                       : [100 %]
+> 
+>   The dumpfile is saved to dumpfile.EX.
+> 
+>   makedumpfile Completed.
+>   $
+> 
+> I have checked with grep, it seems that xen_phys_start is used for
+> x86_64 only. So, is the valid check really necessary for x86 ?
+
+I don't know much about Xen, but I think this is just regression.
+And I want to release v1.5.1 in this week, so I will fix this regression
+with the patch below:
+
+diff --git a/arch/x86.c b/arch/x86.c
+index 7de0495..ef29e3c 100644
+--- a/arch/x86.c
++++ b/arch/x86.c
+@@ -294,15 +294,6 @@ kvtop_xen_x86(unsigned long kvaddr)
+
+ int get_xen_basic_info_x86(void)
+ {
+-       if (!info->xen_phys_start) {
+-               if (info->xen_crash_info_v < 2) {
+-                       ERRMSG("Can't get Xen physical start address.\n"
+-                              "Please use the --xen_phys_start option.");
+-                       return FALSE;
+-               }
+-               info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+-       }
+-
+        if (SYMBOL(pgd_l2) == NOT_FOUND_SYMBOL &&
+            SYMBOL(pgd_l3) == NOT_FOUND_SYMBOL) {
+                ERRMSG("Can't get pgd.\n");
 
 
-Another approach is to dynamically load libeppic library - similar way
-how crash does it. No major changes will be done to makedumpfile code,
-except the addition of --eppic flag. Upon specifying --eppic flag
-makedumpfile will dlopen libeppic.so, which will have functionality to
-scrub the specified data. This will prevent makedumpfile bloat and will
-not affect the size of initramfs as --eppic is only specified during
-post processing. The distribution should build and ship libeppic.so and
-the procedure for building .so will be similar to what we have in crash.
+Please let me know if you have any objections.
+
+Thanks
+Atsushi Kumagai
+
 
 > Thanks
-> Vivek
+> Atsushi Kumagai
 > 
-
-
--- 
-Regards,
-Aravinda
-
+> >  	if (SYMBOL(pgd_l2) == NOT_FOUND_SYMBOL &&
+> >  	    SYMBOL(pgd_l3) == NOT_FOUND_SYMBOL) {
+> >  		ERRMSG("Can't get pgd.\n");
+> > --- a/arch/x86_64.c
+> > +++ b/arch/x86_64.c
+> > @@ -361,6 +361,15 @@ int get_xen_basic_info_x86_64(void)
+> >  	unsigned long frame_table_vaddr;
+> >  	unsigned long xen_end;
+> >  
+> > + 	if (!info->xen_phys_start) {
+> > +		if (info->xen_crash_info_v < 2) {
+> > +			ERRMSG("Can't get Xen physical start address.\n"
+> > +			       "Please use the --xen_phys_start option.");
+> > +			return FALSE;
+> > +		}
+> > +		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+> > +	}
+> > +
+> >  	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
+> >  		ERRMSG("Can't get pml4.\n");
+> >  		return FALSE;
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -5365,20 +5365,6 @@ init_xen_crash_info(void)
+> >  }
+> >  
+> >  int
+> > -get_xen_phys_start(void)
+> > -{
+> > -	if (info->xen_phys_start)
+> > -		return TRUE;
+> > -
+> > -#if defined(__x86__) || defined(__x86_64__)
+> > -	if (info->xen_crash_info_v >= 2)
+> > -		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+> > -#endif
+> > -
+> > -	return TRUE;
+> > -}
+> > -
+> > -int
+> >  get_xen_info(void)
+> >  {
+> >  	unsigned long domain;
+> > @@ -5877,8 +5863,6 @@ initial_xen(void)
+> >  		if (!read_vmcoreinfo_from_vmcore(offset, size, TRUE))
+> >  			return FALSE;
+> >  	}
+> > -	if (!get_xen_phys_start())
+> > -		return FALSE;
+> >  	if (!get_xen_info())
+> >  		return FALSE;
+> >  
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
