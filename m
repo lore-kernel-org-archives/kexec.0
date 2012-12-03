@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TfQwa-0002uO-6x
- for kexec@lists.infradead.org; Mon, 03 Dec 2012 08:00:01 +0000
-Date: Mon, 3 Dec 2012 16:59:56 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: Fix compile errors in  crashdump-mips.c
-Message-ID: <20121203075956.GA7239@verge.net.au>
-References: <1354219369-10520-1-git-send-email-ddaney.cavm@gmail.com>
- <20121130000243.GC21935@verge.net.au> <50B7F9F6.1030806@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <50B7F9F6.1030806@gmail.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TfSzE-0003J8-HV
+ for kexec@lists.infradead.org; Mon, 03 Dec 2012 10:10:53 +0000
+Date: Mon, 3 Dec 2012 11:10:04 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCHv3 5/9] Initialize phys_start during early Xen setup
+Message-ID: <20121203111004.374e78c4@azariah.suse.cz>
+In-Reply-To: <20121203152815.2a6dd036120210030a0eefbb@mxc.nes.nec.co.jp>
+References: <201208241742.24409.ptesarik@suse.cz>
+ <20121128145658.d1d4dd1f386462cba4417ae7@mxc.nes.nec.co.jp>
+ <20121203152815.2a6dd036120210030a0eefbb@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +20,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: kexec@lists.infradead.org, ralf@linux-mips.org, David Daney <david.daney@cavium.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org, Norbert.Trapp@ts.fujitsu.com
 
-On Thu, Nov 29, 2012 at 04:12:38PM -0800, David Daney wrote:
-> On 11/29/2012 04:02 PM, Simon Horman wrote:
-> >On Thu, Nov 29, 2012 at 12:02:49PM -0800, David Daney wrote:
-> >>From: David Daney <david.daney@cavium.com>
-> >>
-> >>When building configured as '--host=mips64-octeon-linux-gnu' using
-> >>GCC-4.7.0 there are two compile errors, fix them.
-> >>
-> >>Signed-off-by: David Daney <david.daney@cavium.com>
-> >
-> >Thanks, is the first hunk also ok on 32bit?
-> 
-> Yes,  in crashdump.h kern_size is declared as type unsigned long, so
-> the proper printf format is ABI independent and should be "%lx"
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ViBNb24sIDMgRGVjIDIwMTIgMTU6Mjg6MTUgKzA5MDAKQXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2Fp
+LWF0c3VzaGlAbXhjLm5lcy5uZWMuY28uanA+IG5hcHPDoW5vOgoKPiBIZWxsbyBQZXRyLAo+IAo+
+IE9uIFdlZCwgMjggTm92IDIwMTIgMTQ6NTY6NTggKzA5MDAKPiBBdHN1c2hpIEt1bWFnYWkgPGt1
+bWFnYWktYXRzdXNoaUBteGMubmVzLm5lYy5jby5qcD4gd3JvdGU6Cj4gCj4gPiBIZWxsbyBQZXRy
+LAo+ID4gCj4gPiBPbiBGcmksIDI0IEF1ZyAyMDEyIDE3OjQyOjI0ICswMjAwCj4gPiBQZXRyIFRl
+c2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+IHdyb3RlOgo+ID4gCj4gPiA+IFdpdGggZWFybHkgWGVu
+IHNldHVwLCB3ZSBjYW4gbW92ZSB0aGUgaW5pdGlhbGl6YXRpb24gb2YKPiA+ID4geGVuX3BoeXNf
+c3RhcnQgdG8gdGhlIHNldHVwIHJvdXRpbmUuIFRoaXMgaXMgY2xlYW5lciwgYXMgd2UgY2FuCj4g
+PiA+IGdldCByaWQgb2YgaWZkZWYnZWQgYXJjaC1zcGVjaWZpYyBjb2RlIGluIG1ha2VkdW1wZmls
+ZS5jICh3aGljaAo+ID4gPiBzaG91bGQgSU1PIHN0YXkgZ2VuZXJpYykuCj4gPiA+IAo+ID4gPiBT
+aWduZWQtb2ZmLWJ5OiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+Cj4gPiA+IAo+ID4g
+PiAtLS0KPiA+ID4gIGFyY2gveDg2LmMgICAgIHwgICAgOSArKysrKysrKysKPiA+ID4gIGFyY2gv
+eDg2XzY0LmMgIHwgICAgOSArKysrKysrKysKPiA+ID4gIG1ha2VkdW1wZmlsZS5jIHwgICAxNiAt
+LS0tLS0tLS0tLS0tLS0tCj4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyks
+IDE2IGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4gLS0tIGEvYXJjaC94ODYuYwo+ID4gPiArKysg
+Yi9hcmNoL3g4Ni5jCj4gPiA+IEBAIC0yOTYsNiArMjk2LDE1IEBAIGludCBnZXRfeGVuX2Jhc2lj
+X2luZm9feDg2KHZvaWQpCj4gPiA+ICAJdW5zaWduZWQgbG9uZyBmcmFtZV90YWJsZV92YWRkcjsK
+PiA+ID4gIAl1bnNpZ25lZCBsb25nIHhlbl9lbmQ7Cj4gPiA+ICAKPiA+ID4gKwlpZiAoIWluZm8t
+Pnhlbl9waHlzX3N0YXJ0KSB7Cj4gPiA+ICsJCWlmIChpbmZvLT54ZW5fY3Jhc2hfaW5mb192IDwg
+Mikgewo+ID4gPiArCQkJRVJSTVNHKCJDYW4ndCBnZXQgWGVuIHBoeXNpY2FsIHN0YXJ0Cj4gPiA+
+IGFkZHJlc3MuXG4iCj4gPiA+ICsJCQkgICAgICAgIlBsZWFzZSB1c2UgdGhlIC0teGVuX3BoeXNf
+c3RhcnQKPiA+ID4gb3B0aW9uLiIpOwo+ID4gPiArCQkJcmV0dXJuIEZBTFNFOwo+ID4gPiArCQl9
+Cj4gPiA+ICsJCWluZm8tPnhlbl9waHlzX3N0YXJ0ID0KPiA+ID4gaW5mby0+eGVuX2NyYXNoX2lu
+Zm8udjItPnhlbl9waHlzX3N0YXJ0Owo+ID4gPiArCX0KPiA+ID4gKwo+ID4gCj4gPiBJIHRlc3Rl
+ZCBmb3IgdGhlIHZtY29yZSB3aGljaCBkb2Vzbid0IGluY2x1ZGUgeGVuX3BoeXNfc3RhcnQsIHRo
+ZW4KPiA+IHRoZSBlcnJvciBtZXNzYWdlIGJlbG93IHNob3dlZDoKPiA+IAo+ID4gICAkIG1ha2Vk
+dW1wZmlsZV92MS41LjEgLUUgLVggLS14ZW4tc3ltcwo+ID4geGVuLXN5bXMtMi42LjE4LTkyLmVs
+NS5kZWJ1ZyB2bWNvcmUgZHVtcGZpbGUuRVgKPiA+IGdldF94ZW5fYmFzaWNfaW5mb194ODY6IENh
+bid0IGdldCBYZW4gcGh5c2ljYWwgc3RhcnQgYWRkcmVzcy4KPiA+IFBsZWFzZSB1c2UgdGhlIC0t
+eGVuX3BoeXNfc3RhcnQgb3B0aW9uLiBtYWtlZHVtcGZpbGUgRmFpbGVkLgo+ID4gICAkCj4gPiAK
+PiA+IFNvLCBzaG91bGQgSSB1bmRlcnN0YW5kIHRoaXMgcmVzdWx0IGFzIHJlYXNvbmFibGUgZXJy
+b3IgaGFuZGxpbmcgPwo+ID4gCj4gPiBUaGUgcmVhc29uIHdoeSBJIGhhdmUgdGhpcyBxdWVzdGlv
+biBpcyBiZWNhdXNlIHRoZSBzYW1lIHZtY29yZSBjYW4KPiA+IGJlIGZpbHRlcmVkIG91dCB3aXRo
+IG1ha2VkdW1wZmlsZS0xLjUuMCBvciBiZWZvcmUgbGlrZSBiZWxvdzoKPiA+IAo+ID4gICAkIG1h
+a2VkdW1wZmlsZV92MS41LjAgLUUgLVggLS14ZW4tc3ltcwo+ID4geGVuLXN5bXMtMi42LjE4LTky
+LmVsNS5kZWJ1ZyB2bWNvcmUgZHVtcGZpbGUuRVggU3dpdGNoZWQgcnVubmluZwo+ID4gbW9kZSBm
+cm9tIGN5Y2xpYyB0byBub24tY3ljbGljLCBiZWNhdXNlIHRoZSBjeWNsaWMgbW9kZSBkb2Vzbid0
+Cj4gPiBzdXBwb3J0IFhlbi4gQ29weWluZyBkYXRhICAgICAgICAgICAgICAgICAgICAgICA6IFsx
+MDAgJV0KPiA+IAo+ID4gICBUaGUgZHVtcGZpbGUgaXMgc2F2ZWQgdG8gZHVtcGZpbGUuRVguCj4g
+PiAKPiA+ICAgbWFrZWR1bXBmaWxlIENvbXBsZXRlZC4KPiA+ICAgJAo+ID4gCj4gPiBJIGhhdmUg
+Y2hlY2tlZCB3aXRoIGdyZXAsIGl0IHNlZW1zIHRoYXQgeGVuX3BoeXNfc3RhcnQgaXMgdXNlZCBm
+b3IKPiA+IHg4Nl82NCBvbmx5LiBTbywgaXMgdGhlIHZhbGlkIGNoZWNrIHJlYWxseSBuZWNlc3Nh
+cnkgZm9yIHg4NiA/Cj4gCj4gSSBkb24ndCBrbm93IG11Y2ggYWJvdXQgWGVuLCBidXQgSSB0aGlu
+ayB0aGlzIGlzIGp1c3QgcmVncmVzc2lvbi4KPiBBbmQgSSB3YW50IHRvIHJlbGVhc2UgdjEuNS4x
+IGluIHRoaXMgd2Vlaywgc28gSSB3aWxsIGZpeCB0aGlzCj4gcmVncmVzc2lvbiB3aXRoIHRoZSBw
+YXRjaCBiZWxvdzoKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYuYyBiL2FyY2gveDg2LmMKPiBp
+bmRleCA3ZGUwNDk1Li5lZjI5ZTNjIDEwMDY0NAo+IC0tLSBhL2FyY2gveDg2LmMKPiArKysgYi9h
+cmNoL3g4Ni5jCj4gQEAgLTI5NCwxNSArMjk0LDYgQEAga3Z0b3BfeGVuX3g4Nih1bnNpZ25lZCBs
+b25nIGt2YWRkcikKPiAKPiAgaW50IGdldF94ZW5fYmFzaWNfaW5mb194ODYodm9pZCkKPiAgewo+
+IC0gICAgICAgaWYgKCFpbmZvLT54ZW5fcGh5c19zdGFydCkgewo+IC0gICAgICAgICAgICAgICBp
+ZiAoaW5mby0+eGVuX2NyYXNoX2luZm9fdiA8IDIpIHsKPiAtICAgICAgICAgICAgICAgICAgICAg
+ICBFUlJNU0coIkNhbid0IGdldCBYZW4gcGh5c2ljYWwgc3RhcnQKPiBhZGRyZXNzLlxuIgo+IC0g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiUGxlYXNlIHVzZSB0aGUgLS14ZW5fcGh5c19z
+dGFydAo+IG9wdGlvbi4iKTsKPiAtICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gRkFMU0U7
+Cj4gLSAgICAgICAgICAgICAgIH0KPiAtICAgICAgICAgICAgICAgaW5mby0+eGVuX3BoeXNfc3Rh
+cnQgPQo+IGluZm8tPnhlbl9jcmFzaF9pbmZvLnYyLT54ZW5fcGh5c19zdGFydDsKPiAtICAgICAg
+IH0KPiAtCj4gICAgICAgICBpZiAoU1lNQk9MKHBnZF9sMikgPT0gTk9UX0ZPVU5EX1NZTUJPTCAm
+Jgo+ICAgICAgICAgICAgIFNZTUJPTChwZ2RfbDMpID09IE5PVF9GT1VORF9TWU1CT0wpIHsKPiAg
+ICAgICAgICAgICAgICAgRVJSTVNHKCJDYW4ndCBnZXQgcGdkLlxuIik7Cj4gCj4gCj4gUGxlYXNl
+IGxldCBtZSBrbm93IGlmIHlvdSBoYXZlIGFueSBvYmplY3Rpb25zLgoKSGVsbG8gQXRzdXNoaS1z
+YW4sCgpJJ20gc29ycnkgZm9yIG15IGxhdGUgcmVhY3Rpb24uIFllcywgdGhpcyBwaWVjZSBzaG91
+bGQgYmUgcmVtb3ZlZC4KV2hpbGUgdGhlcmUgaXMgYSB4ZW5fcGh5c19zdGFydCB2YXJpYWJsZSBp
+biAzMi1iaXQgWGVuLCBpdCBpcyBhbHdheXMKemVybywgc28gd2Ugc2hvdWxkbid0IGNvbXBsYWlu
+IGlmIHdlIGNhbid0IGdldCBpdC4KClBldHIgVGVzYXJpawoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9rZXhlYwo=
