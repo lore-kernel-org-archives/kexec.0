@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TfSzE-0003J8-HV
- for kexec@lists.infradead.org; Mon, 03 Dec 2012 10:10:53 +0000
-Date: Mon, 3 Dec 2012 11:10:04 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCHv3 5/9] Initialize phys_start during early Xen setup
-Message-ID: <20121203111004.374e78c4@azariah.suse.cz>
-In-Reply-To: <20121203152815.2a6dd036120210030a0eefbb@mxc.nes.nec.co.jp>
-References: <201208241742.24409.ptesarik@suse.cz>
- <20121128145658.d1d4dd1f386462cba4417ae7@mxc.nes.nec.co.jp>
- <20121203152815.2a6dd036120210030a0eefbb@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TfVxS-0004yR-JE
+ for kexec@lists.infradead.org; Mon, 03 Dec 2012 13:21:15 +0000
+Date: Mon, 3 Dec 2012 08:20:59 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Message-ID: <20121203132059.GC24836@redhat.com>
+References: <348117236.32179739.1352989665917.JavaMail.root@redhat.com>
+ <20121115155557.GF2529@redhat.com>
+ <50A60CF2.6010309@linux.vnet.ibm.com>
+ <20121116143649.GA4515@redhat.com>
+ <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
+ <50AC809E.9060907@linux.vnet.ibm.com>
+ <20121121135721.GB13114@redhat.com>
+ <50AE5D89.2090101@linux.vnet.ibm.com>
+ <20121126140448.GA28057@redhat.com>
+ <50BC4073.7060402@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50BC4073.7060402@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,77 +28,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org, Norbert.Trapp@ts.fujitsu.com
+To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, anderson@redhat.com, buendgen@de.ibm.com
 
-ViBNb24sIDMgRGVjIDIwMTIgMTU6Mjg6MTUgKzA5MDAKQXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2Fp
-LWF0c3VzaGlAbXhjLm5lcy5uZWMuY28uanA+IG5hcHPDoW5vOgoKPiBIZWxsbyBQZXRyLAo+IAo+
-IE9uIFdlZCwgMjggTm92IDIwMTIgMTQ6NTY6NTggKzA5MDAKPiBBdHN1c2hpIEt1bWFnYWkgPGt1
-bWFnYWktYXRzdXNoaUBteGMubmVzLm5lYy5jby5qcD4gd3JvdGU6Cj4gCj4gPiBIZWxsbyBQZXRy
-LAo+ID4gCj4gPiBPbiBGcmksIDI0IEF1ZyAyMDEyIDE3OjQyOjI0ICswMjAwCj4gPiBQZXRyIFRl
-c2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+IHdyb3RlOgo+ID4gCj4gPiA+IFdpdGggZWFybHkgWGVu
-IHNldHVwLCB3ZSBjYW4gbW92ZSB0aGUgaW5pdGlhbGl6YXRpb24gb2YKPiA+ID4geGVuX3BoeXNf
-c3RhcnQgdG8gdGhlIHNldHVwIHJvdXRpbmUuIFRoaXMgaXMgY2xlYW5lciwgYXMgd2UgY2FuCj4g
-PiA+IGdldCByaWQgb2YgaWZkZWYnZWQgYXJjaC1zcGVjaWZpYyBjb2RlIGluIG1ha2VkdW1wZmls
-ZS5jICh3aGljaAo+ID4gPiBzaG91bGQgSU1PIHN0YXkgZ2VuZXJpYykuCj4gPiA+IAo+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+Cj4gPiA+IAo+ID4g
-PiAtLS0KPiA+ID4gIGFyY2gveDg2LmMgICAgIHwgICAgOSArKysrKysrKysKPiA+ID4gIGFyY2gv
-eDg2XzY0LmMgIHwgICAgOSArKysrKysrKysKPiA+ID4gIG1ha2VkdW1wZmlsZS5jIHwgICAxNiAt
-LS0tLS0tLS0tLS0tLS0tCj4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyks
-IDE2IGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4gLS0tIGEvYXJjaC94ODYuYwo+ID4gPiArKysg
-Yi9hcmNoL3g4Ni5jCj4gPiA+IEBAIC0yOTYsNiArMjk2LDE1IEBAIGludCBnZXRfeGVuX2Jhc2lj
-X2luZm9feDg2KHZvaWQpCj4gPiA+ICAJdW5zaWduZWQgbG9uZyBmcmFtZV90YWJsZV92YWRkcjsK
-PiA+ID4gIAl1bnNpZ25lZCBsb25nIHhlbl9lbmQ7Cj4gPiA+ICAKPiA+ID4gKwlpZiAoIWluZm8t
-Pnhlbl9waHlzX3N0YXJ0KSB7Cj4gPiA+ICsJCWlmIChpbmZvLT54ZW5fY3Jhc2hfaW5mb192IDwg
-Mikgewo+ID4gPiArCQkJRVJSTVNHKCJDYW4ndCBnZXQgWGVuIHBoeXNpY2FsIHN0YXJ0Cj4gPiA+
-IGFkZHJlc3MuXG4iCj4gPiA+ICsJCQkgICAgICAgIlBsZWFzZSB1c2UgdGhlIC0teGVuX3BoeXNf
-c3RhcnQKPiA+ID4gb3B0aW9uLiIpOwo+ID4gPiArCQkJcmV0dXJuIEZBTFNFOwo+ID4gPiArCQl9
-Cj4gPiA+ICsJCWluZm8tPnhlbl9waHlzX3N0YXJ0ID0KPiA+ID4gaW5mby0+eGVuX2NyYXNoX2lu
-Zm8udjItPnhlbl9waHlzX3N0YXJ0Owo+ID4gPiArCX0KPiA+ID4gKwo+ID4gCj4gPiBJIHRlc3Rl
-ZCBmb3IgdGhlIHZtY29yZSB3aGljaCBkb2Vzbid0IGluY2x1ZGUgeGVuX3BoeXNfc3RhcnQsIHRo
-ZW4KPiA+IHRoZSBlcnJvciBtZXNzYWdlIGJlbG93IHNob3dlZDoKPiA+IAo+ID4gICAkIG1ha2Vk
-dW1wZmlsZV92MS41LjEgLUUgLVggLS14ZW4tc3ltcwo+ID4geGVuLXN5bXMtMi42LjE4LTkyLmVs
-NS5kZWJ1ZyB2bWNvcmUgZHVtcGZpbGUuRVgKPiA+IGdldF94ZW5fYmFzaWNfaW5mb194ODY6IENh
-bid0IGdldCBYZW4gcGh5c2ljYWwgc3RhcnQgYWRkcmVzcy4KPiA+IFBsZWFzZSB1c2UgdGhlIC0t
-eGVuX3BoeXNfc3RhcnQgb3B0aW9uLiBtYWtlZHVtcGZpbGUgRmFpbGVkLgo+ID4gICAkCj4gPiAK
-PiA+IFNvLCBzaG91bGQgSSB1bmRlcnN0YW5kIHRoaXMgcmVzdWx0IGFzIHJlYXNvbmFibGUgZXJy
-b3IgaGFuZGxpbmcgPwo+ID4gCj4gPiBUaGUgcmVhc29uIHdoeSBJIGhhdmUgdGhpcyBxdWVzdGlv
-biBpcyBiZWNhdXNlIHRoZSBzYW1lIHZtY29yZSBjYW4KPiA+IGJlIGZpbHRlcmVkIG91dCB3aXRo
-IG1ha2VkdW1wZmlsZS0xLjUuMCBvciBiZWZvcmUgbGlrZSBiZWxvdzoKPiA+IAo+ID4gICAkIG1h
-a2VkdW1wZmlsZV92MS41LjAgLUUgLVggLS14ZW4tc3ltcwo+ID4geGVuLXN5bXMtMi42LjE4LTky
-LmVsNS5kZWJ1ZyB2bWNvcmUgZHVtcGZpbGUuRVggU3dpdGNoZWQgcnVubmluZwo+ID4gbW9kZSBm
-cm9tIGN5Y2xpYyB0byBub24tY3ljbGljLCBiZWNhdXNlIHRoZSBjeWNsaWMgbW9kZSBkb2Vzbid0
-Cj4gPiBzdXBwb3J0IFhlbi4gQ29weWluZyBkYXRhICAgICAgICAgICAgICAgICAgICAgICA6IFsx
-MDAgJV0KPiA+IAo+ID4gICBUaGUgZHVtcGZpbGUgaXMgc2F2ZWQgdG8gZHVtcGZpbGUuRVguCj4g
-PiAKPiA+ICAgbWFrZWR1bXBmaWxlIENvbXBsZXRlZC4KPiA+ICAgJAo+ID4gCj4gPiBJIGhhdmUg
-Y2hlY2tlZCB3aXRoIGdyZXAsIGl0IHNlZW1zIHRoYXQgeGVuX3BoeXNfc3RhcnQgaXMgdXNlZCBm
-b3IKPiA+IHg4Nl82NCBvbmx5LiBTbywgaXMgdGhlIHZhbGlkIGNoZWNrIHJlYWxseSBuZWNlc3Nh
-cnkgZm9yIHg4NiA/Cj4gCj4gSSBkb24ndCBrbm93IG11Y2ggYWJvdXQgWGVuLCBidXQgSSB0aGlu
-ayB0aGlzIGlzIGp1c3QgcmVncmVzc2lvbi4KPiBBbmQgSSB3YW50IHRvIHJlbGVhc2UgdjEuNS4x
-IGluIHRoaXMgd2Vlaywgc28gSSB3aWxsIGZpeCB0aGlzCj4gcmVncmVzc2lvbiB3aXRoIHRoZSBw
-YXRjaCBiZWxvdzoKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYuYyBiL2FyY2gveDg2LmMKPiBp
-bmRleCA3ZGUwNDk1Li5lZjI5ZTNjIDEwMDY0NAo+IC0tLSBhL2FyY2gveDg2LmMKPiArKysgYi9h
-cmNoL3g4Ni5jCj4gQEAgLTI5NCwxNSArMjk0LDYgQEAga3Z0b3BfeGVuX3g4Nih1bnNpZ25lZCBs
-b25nIGt2YWRkcikKPiAKPiAgaW50IGdldF94ZW5fYmFzaWNfaW5mb194ODYodm9pZCkKPiAgewo+
-IC0gICAgICAgaWYgKCFpbmZvLT54ZW5fcGh5c19zdGFydCkgewo+IC0gICAgICAgICAgICAgICBp
-ZiAoaW5mby0+eGVuX2NyYXNoX2luZm9fdiA8IDIpIHsKPiAtICAgICAgICAgICAgICAgICAgICAg
-ICBFUlJNU0coIkNhbid0IGdldCBYZW4gcGh5c2ljYWwgc3RhcnQKPiBhZGRyZXNzLlxuIgo+IC0g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiUGxlYXNlIHVzZSB0aGUgLS14ZW5fcGh5c19z
-dGFydAo+IG9wdGlvbi4iKTsKPiAtICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gRkFMU0U7
-Cj4gLSAgICAgICAgICAgICAgIH0KPiAtICAgICAgICAgICAgICAgaW5mby0+eGVuX3BoeXNfc3Rh
-cnQgPQo+IGluZm8tPnhlbl9jcmFzaF9pbmZvLnYyLT54ZW5fcGh5c19zdGFydDsKPiAtICAgICAg
-IH0KPiAtCj4gICAgICAgICBpZiAoU1lNQk9MKHBnZF9sMikgPT0gTk9UX0ZPVU5EX1NZTUJPTCAm
-Jgo+ICAgICAgICAgICAgIFNZTUJPTChwZ2RfbDMpID09IE5PVF9GT1VORF9TWU1CT0wpIHsKPiAg
-ICAgICAgICAgICAgICAgRVJSTVNHKCJDYW4ndCBnZXQgcGdkLlxuIik7Cj4gCj4gCj4gUGxlYXNl
-IGxldCBtZSBrbm93IGlmIHlvdSBoYXZlIGFueSBvYmplY3Rpb25zLgoKSGVsbG8gQXRzdXNoaS1z
-YW4sCgpJJ20gc29ycnkgZm9yIG15IGxhdGUgcmVhY3Rpb24uIFllcywgdGhpcyBwaWVjZSBzaG91
-bGQgYmUgcmVtb3ZlZC4KV2hpbGUgdGhlcmUgaXMgYSB4ZW5fcGh5c19zdGFydCB2YXJpYWJsZSBp
-biAzMi1iaXQgWGVuLCBpdCBpcyBhbHdheXMKemVybywgc28gd2Ugc2hvdWxkbid0IGNvbXBsYWlu
-IGlmIHdlIGNhbid0IGdldCBpdC4KClBldHIgVGVzYXJpawoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9rZXhlYwo=
+On Mon, Dec 03, 2012 at 11:32:27AM +0530, Aravinda Prasad wrote:
+> 
+> 
+> On 2012-11-26 19:34, Vivek Goyal wrote:
+> 
+> > On Thu, Nov 22, 2012 at 10:44:49PM +0530, Aravinda Prasad wrote:
+> > 
+> > [..]
+> >> Customers who want to filter their dump would certainly prefer a single
+> >> tool and a single shot to throw away pages, scrub data and then
+> >> compress, split or send the resulting dump to some target using ssh.
+> >> This important functionality is lost if scrubbing is not part of
+> >> makedumpfile and a separate tool is developed which just does scrubbing.
+> > 
+> > Customers do filtering from initramfs context. It is not practical to
+> > save TB of memory and filter it later. And we just concluded that is
+> > it not practical to do scrubbing from initramfs due to need of vmlinux.
+> > 
+> > So doing filtering and doing scrubbing will not happen at the same
+> > time practically. So bloating size of makedumpfile does not make
+> > sense to me.
+> > 
+> 
+> 
+> Another approach is to dynamically load libeppic library - similar way
+> how crash does it. No major changes will be done to makedumpfile code,
+> except the addition of --eppic flag. Upon specifying --eppic flag
+> makedumpfile will dlopen libeppic.so, which will have functionality to
+> scrub the specified data. This will prevent makedumpfile bloat and will
+> not affect the size of initramfs as --eppic is only specified during
+> post processing. The distribution should build and ship libeppic.so and
+> the procedure for building .so will be similar to what we have in crash.
+
+It will still show up in dynamic library dependencing using ldd. We will
+have to put some hack to exclude the leppic despite the fact that
+makedumpfile is dependent on it. 
+
+In F18, now we use dracut to build kdump initramfs. On command line we
+specify any extra binaries to be included and makedumpfile is one of
+those. Dracut will determine all the dependencies and automatically pull
+these in. So even if we don't use --eppic flag, dracult will pull in
+eppic shared library anyway.
+
+Thanks
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
