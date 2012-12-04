@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bk0-f49.google.com ([209.85.214.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TfhK8-0006G6-Bg
- for kexec@lists.infradead.org; Tue, 04 Dec 2012 01:29:25 +0000
-Received: by mail-bk0-f49.google.com with SMTP id jm19so1328188bkc.36
- for <kexec@lists.infradead.org>; Mon, 03 Dec 2012 17:29:22 -0800 (PST)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TflLe-0000sQ-KO
+ for kexec@lists.infradead.org; Tue, 04 Dec 2012 05:47:15 +0000
+Date: Tue, 4 Dec 2012 14:47:09 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 0/5] kexec: put bzImage and ramdisk above 4G for x86
+ 64bit
+Message-ID: <20121204054709.GB15969@verge.net.au>
+References: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87lide7gl4.fsf@xmission.com>
-References: <87r4np4jm1.fsf@xmission.com>
- <CAE9FiQWvNYOfg1=uYYzdfoy5q6RnroNCVyqXRw2ffgLQp_UvFw@mail.gmail.com>
- <8738zm93je.fsf_-_@xmission.com>
- <20121204000908.GD15738@verge.net.au> <87txs27h9g.fsf@xmission.com>
- <CAE9FiQVc_3SC5JM497x3uPYyLqAyrOaRqocNNoZh98_5or1vzw@mail.gmail.com>
- <87lide7gl4.fsf@xmission.com>
-Date: Mon, 3 Dec 2012 17:29:22 -0800
-Message-ID: <CAE9FiQVbg3d=NLdWpKUd640C1cdW5FcF-AcZYyJtYVr++3G2Uw@mail.gmail.com>
-Subject: Re: [PATCH] kexec: Teach configure to find the strip binary.
-From: Yinghai Lu <yinghai@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,18 +24,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-On Mon, Dec 3, 2012 at 5:26 PM, Eric W. Biederman <ebiederm@xmission.com> wrote:
-> Yinghai Lu <yinghai@kernel.org> writes:
->>
->> STRIP = strip
->
-> Run bootstrap.  At the very least it looks like you haven't regeneratged
-> configure by running autoconf.
+Hi Everyone,
 
-works. Thanks.
+there was some healthy discussion around the previous versions
+of this series, but so far none on this version. Have we reached
+consensus?
+
+On Wed, Nov 28, 2012 at 02:09:49PM -0800, Yinghai Lu wrote:
+> Now we have limit kdump reserved under 896M, because kexec has the limitation.
+> and also bzImage need to stay under 4g.
+> 
+> kernel parts changes could be found at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/yinghai/linux-yinghai.git for-x86-boot
+> 
+> here patches are for kexec tools to load bzImage and ramdisk above 4G
+> acccording to new added boot header fields.
+> 
+> -v3: address review from Eric to use locate_hole at first.
+>      use xloadflags instead.
+> -v4: remove the restriction about bzImage not crossing GB boundary.
+>      add real-mode fix for bzImage.
+>      add --entry-32bit and --real-mode for skip bzImage64.
+> -v5: use USE_EXT_BOOT_PARAMS bit in xloadflags.
+> 
+> Yinghai Lu (5):
+>   kexec, x86: add boot header member for version 2.12
+>   kexec, x86: clean boot_params area for entry-32bit path
+>   kexec, x86: Fix bzImage real-mode booting
+>   kexec, x86: put ramdisk/cmd_line above 4G for 64bit bzImage
+>   kexec, x86_64: Load bzImage64 above 4G
+> 
+>  include/x86/x86-linux.h                |   32 +++-
+>  kexec/arch/i386/include/arch/options.h |    4 +-
+>  kexec/arch/i386/kexec-bzImage.c        |   80 +++++++--
+>  kexec/arch/i386/x86-linux-setup.c      |   26 ++-
+>  kexec/arch/x86_64/Makefile             |    1 +
+>  kexec/arch/x86_64/kexec-bzImage64.c    |  335 ++++++++++++++++++++++++++++++++
+>  kexec/arch/x86_64/kexec-x86_64.c       |    1 +
+>  kexec/arch/x86_64/kexec-x86_64.h       |    5 +
+>  8 files changed, 462 insertions(+), 22 deletions(-)
+>  create mode 100644 kexec/arch/x86_64/kexec-bzImage64.c
+> 
+> -- 
+> 1.7.7
+> 
 
 _______________________________________________
 kexec mailing list
