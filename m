@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mail-bk0-f49.google.com ([209.85.214.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TfmWx-0002wH-MP
- for kexec@lists.infradead.org; Tue, 04 Dec 2012 07:03:00 +0000
-Message-ID: <50BDA016.2070404@zytor.com>
-Date: Mon, 03 Dec 2012 23:02:46 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1Tfn9W-0005Ve-S9
+ for kexec@lists.infradead.org; Tue, 04 Dec 2012 07:42:51 +0000
+Received: by mail-bk0-f49.google.com with SMTP id jm19so1389795bkc.36
+ for <kexec@lists.infradead.org>; Mon, 03 Dec 2012 23:42:49 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <50BDA016.2070404@zytor.com>
+References: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
+ <20121204054709.GB15969@verge.net.au> <50BDA016.2070404@zytor.com>
+Date: Mon, 3 Dec 2012 23:42:48 -0800
+Message-ID: <CAE9FiQUxmfO1NdZCPooMzDRj6NBQYWJBZwn6Aiozq8J4NtAJwg@mail.gmail.com>
 Subject: Re: [PATCH v5 0/5] kexec: put bzImage and ramdisk above 4G for x86
  64bit
-References: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
- <20121204054709.GB15969@verge.net.au>
-In-Reply-To: <20121204054709.GB15969@verge.net.au>
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +22,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Yinghai Lu <yinghai@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 12/03/2012 09:47 PM, Simon Horman wrote:
-> Hi Everyone,
+On Mon, Dec 3, 2012 at 11:02 PM, H. Peter Anvin <hpa@zytor.com> wrote:
+> On 12/03/2012 09:47 PM, Simon Horman wrote:
+>>
+>> Hi Everyone,
+>>
+>> there was some healthy discussion around the previous versions
+>> of this series, but so far none on this version. Have we reached
+>> consensus?
+>>
 >
-> there was some healthy discussion around the previous versions
-> of this series, but so far none on this version. Have we reached
-> consensus?
->
+> No, we haven't converged on the boot protocol yet and just respinning the
+> patch set doesn't change that.
 
-No, we haven't converged on the boot protocol yet and just respinning 
-the patch set doesn't change that.
+please check if you are ok with bit 15 in xloadflags.
 
-	-hpa
++Field name:     xloadflags
++Type:           modify (obligatory)
++Offset/size:    0x236/2
++Protocol:       2.12+
++
++  This field is a bitmask.
++
++  Bit 0 (read): CAN_BE_LOADED_ABOVE_4G
++        - If 1, kernel/boot_params/cmdline/ramdisk can be above 4g,
++
++  Bit 15 (write): USE_EXT_BOOT_PARAMS
++       - If 1, set by bootloader, and kernel could check new fields
++               in boot_params that are added from 2.12 safely.
 
+Thanks
 
--- 
-H. Peter Anvin, Intel Open Source Technology Center
-I work for Intel.  I don't speak on their behalf.
-
+Yinghai
 
 _______________________________________________
 kexec mailing list
