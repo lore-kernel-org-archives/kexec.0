@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bk0-f49.google.com ([209.85.214.49])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tfn9W-0005Ve-S9
- for kexec@lists.infradead.org; Tue, 04 Dec 2012 07:42:51 +0000
-Received: by mail-bk0-f49.google.com with SMTP id jm19so1389795bkc.36
- for <kexec@lists.infradead.org>; Mon, 03 Dec 2012 23:42:49 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <50BDA016.2070404@zytor.com>
-References: <1354140594-3686-1-git-send-email-yinghai@kernel.org>
- <20121204054709.GB15969@verge.net.au> <50BDA016.2070404@zytor.com>
-Date: Mon, 3 Dec 2012 23:42:48 -0800
-Message-ID: <CAE9FiQUxmfO1NdZCPooMzDRj6NBQYWJBZwn6Aiozq8J4NtAJwg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] kexec: put bzImage and ramdisk above 4G for x86
- 64bit
-From: Yinghai Lu <yinghai@kernel.org>
+ id 1Tfo19-0008KD-PQ
+ for kexec@lists.infradead.org; Tue, 04 Dec 2012 08:38:17 +0000
+Date: Tue, 4 Dec 2012 17:36:25 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Message-Id: <20121204173625.b79ad10832e0adaa6e4db451@mxc.nes.nec.co.jp>
+In-Reply-To: <20121203184001.GA27470@redhat.com>
+References: <50A60CF2.6010309@linux.vnet.ibm.com>
+ <20121116143649.GA4515@redhat.com>
+ <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
+ <50AC809E.9060907@linux.vnet.ibm.com>
+ <20121121135721.GB13114@redhat.com>
+ <50AE5D89.2090101@linux.vnet.ibm.com>
+ <20121126140448.GA28057@redhat.com>
+ <50BC4073.7060402@linux.vnet.ibm.com>
+ <20121203132059.GC24836@redhat.com>
+ <50BCB8CA.3030909@linux.vnet.ibm.com>
+ <20121203184001.GA27470@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +32,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: aravinda@linux.vnet.ibm.com
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, vgoyal@redhat.com, buendgen@de.ibm.com
 
-On Mon, Dec 3, 2012 at 11:02 PM, H. Peter Anvin <hpa@zytor.com> wrote:
-> On 12/03/2012 09:47 PM, Simon Horman wrote:
->>
->> Hi Everyone,
->>
->> there was some healthy discussion around the previous versions
->> of this series, but so far none on this version. Have we reached
->> consensus?
->>
->
-> No, we haven't converged on the boot protocol yet and just respinning the
-> patch set doesn't change that.
+Hello Aravinda,
 
-please check if you are ok with bit 15 in xloadflags.
+On Mon, 3 Dec 2012 13:40:01 -0500
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-+Field name:     xloadflags
-+Type:           modify (obligatory)
-+Offset/size:    0x236/2
-+Protocol:       2.12+
-+
-+  This field is a bitmask.
-+
-+  Bit 0 (read): CAN_BE_LOADED_ABOVE_4G
-+        - If 1, kernel/boot_params/cmdline/ramdisk can be above 4g,
-+
-+  Bit 15 (write): USE_EXT_BOOT_PARAMS
-+       - If 1, set by bootloader, and kernel could check new fields
-+               in boot_params that are added from 2.12 safely.
+> On Mon, Dec 03, 2012 at 08:05:54PM +0530, Aravinda Prasad wrote:
+> 
+> [..]
+> > >> Another approach is to dynamically load libeppic library - similar way
+> > >> how crash does it. No major changes will be done to makedumpfile code,
+> > >> except the addition of --eppic flag. Upon specifying --eppic flag
+> > >> makedumpfile will dlopen libeppic.so, which will have functionality to
+> > >> scrub the specified data. This will prevent makedumpfile bloat and will
+> > >> not affect the size of initramfs as --eppic is only specified during
+> > >> post processing. The distribution should build and ship libeppic.so and
+> > >> the procedure for building .so will be similar to what we have in crash.
+> > > 
+> > > It will still show up in dynamic library dependencing using ldd. We will
+> > > have to put some hack to exclude the leppic despite the fact that
+> > > makedumpfile is dependent on it. 
+> > > 
+> > > In F18, now we use dracut to build kdump initramfs. On command line we
+> > > specify any extra binaries to be included and makedumpfile is one of
+> > > those. Dracut will determine all the dependencies and automatically pull
+> > > these in. So even if we don't use --eppic flag, dracult will pull in
+> > > eppic shared library anyway.
+> > 
+> > 
+> > I think ldd or dracut will not be able to make out that we are dependent
+> > on libeppic.so as we will be using the dlopen("libeppic.so, ...) call to
+> > dynamically load. No extra flags will be added to Makefile to specify
+> > -leppic while building makedumpfile. Hence, from my understanding, while
+> > building kdump initramfs, dracut cannot determine that we are dependent
+> > on eppic
+> 
+> Ok, if dracut does not pull in libeppic and does not bloat size of
+> initramfs, I am fine.
+
+I agree with this idea too.
+
+However, the release date is closing in, so would you re-send the patch set
+based on v1.5.1 ? I will accept it as official feature in v1.5.2.
+
 
 Thanks
-
-Yinghai
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
