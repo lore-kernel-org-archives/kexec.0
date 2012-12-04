@@ -1,38 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e7.ny.us.ibm.com ([32.97.182.137])
+Received: from g5t0007.atlanta.hp.com ([15.192.0.44])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TfoIh-0000AU-Ja
- for kexec@lists.infradead.org; Tue, 04 Dec 2012 08:56:24 +0000
-Received: from /spool/local
- by e7.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Tue, 4 Dec 2012 03:56:22 -0500
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
- by d01dlp03.pok.ibm.com (Postfix) with ESMTP id A7DFCC90026
- for <kexec@lists.infradead.org>; Tue,  4 Dec 2012 03:56:18 -0500 (EST)
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
- by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- qB48uIkx328134
- for <kexec@lists.infradead.org>; Tue, 4 Dec 2012 03:56:18 -0500
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
- by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- qB48uHUW009247
- for <kexec@lists.infradead.org>; Tue, 4 Dec 2012 06:56:18 -0200
-Message-ID: <50BDBAAB.6050207@linux.vnet.ibm.com>
-Date: Tue, 04 Dec 2012 14:26:11 +0530
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-References: <50A60CF2.6010309@linux.vnet.ibm.com>
- <20121116143649.GA4515@redhat.com>
- <20121120184755.01bc3c780dc226fe32f06e66@mxc.nes.nec.co.jp>
- <50AC809E.9060907@linux.vnet.ibm.com>	<20121121135721.GB13114@redhat.com>
- <50AE5D89.2090101@linux.vnet.ibm.com>	<20121126140448.GA28057@redhat.com>
- <50BC4073.7060402@linux.vnet.ibm.com>	<20121203132059.GC24836@redhat.com>
- <50BCB8CA.3030909@linux.vnet.ibm.com>	<20121203184001.GA27470@redhat.com>
- <20121204173625.b79ad10832e0adaa6e4db451@mxc.nes.nec.co.jp>
-In-Reply-To: <20121204173625.b79ad10832e0adaa6e4db451@mxc.nes.nec.co.jp>
+ id 1TfwOB-00085d-7D
+ for kexec@lists.infradead.org; Tue, 04 Dec 2012 17:34:36 +0000
+Subject: Re: [RFC] makedumpfile-1.5.1 RC
+From: Lisa Mitchell <lisa.mitchell@hp.com>
+In-Reply-To: <1353413695.13097.131.camel@lisamlinux.fc.hp.com>
+References: <20121116171539.152467f3611c12fbd6b6be0d@mxc.nes.nec.co.jp>
+ <1353413695.13097.131.camel@lisamlinux.fc.hp.com>
+Date: Tue, 04 Dec 2012 06:31:39 -0700
+Message-ID: <1354627899.13097.320.camel@lisamlinux.fc.hp.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -46,68 +24,107 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, vgoyal@redhat.com, buendgen@de.ibm.com
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, jerry.hoemann@hp.com
 
-
-
-On 2012-12-04 14:06, Atsushi Kumagai wrote:
-
-> Hello Aravinda,
-> 
-> On Mon, 3 Dec 2012 13:40:01 -0500
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
->> On Mon, Dec 03, 2012 at 08:05:54PM +0530, Aravinda Prasad wrote:
->>
->> [..]
->>>>> Another approach is to dynamically load libeppic library - similar way
->>>>> how crash does it. No major changes will be done to makedumpfile code,
->>>>> except the addition of --eppic flag. Upon specifying --eppic flag
->>>>> makedumpfile will dlopen libeppic.so, which will have functionality to
->>>>> scrub the specified data. This will prevent makedumpfile bloat and will
->>>>> not affect the size of initramfs as --eppic is only specified during
->>>>> post processing. The distribution should build and ship libeppic.so and
->>>>> the procedure for building .so will be similar to what we have in crash.
->>>>
->>>> It will still show up in dynamic library dependencing using ldd. We will
->>>> have to put some hack to exclude the leppic despite the fact that
->>>> makedumpfile is dependent on it. 
->>>>
->>>> In F18, now we use dracut to build kdump initramfs. On command line we
->>>> specify any extra binaries to be included and makedumpfile is one of
->>>> those. Dracut will determine all the dependencies and automatically pull
->>>> these in. So even if we don't use --eppic flag, dracult will pull in
->>>> eppic shared library anyway.
->>>
->>>
->>> I think ldd or dracut will not be able to make out that we are dependent
->>> on libeppic.so as we will be using the dlopen("libeppic.so, ...) call to
->>> dynamically load. No extra flags will be added to Makefile to specify
->>> -leppic while building makedumpfile. Hence, from my understanding, while
->>> building kdump initramfs, dracut cannot determine that we are dependent
->>> on eppic
->>
->> Ok, if dracut does not pull in libeppic and does not bloat size of
->> initramfs, I am fine.
-> 
-> I agree with this idea too.
-> 
-> However, the release date is closing in, so would you re-send the patch set
-> based on v1.5.1 ? I will accept it as official feature in v1.5.2.
-> 
-
-
-sure. Thanks Atsushi
+On Tue, 2012-11-20 at 05:14 -0700, Lisa Mitchell wrote:
 
 > 
-> Thanks
-> Atsushi Kumagai
 > 
+> I tested this makedumpfile v1.5.1-rc on a 4 TB DL980, on 2.6.32 based
+> kernel, and got good results. With crashkernel=256M, and default
+> settings (i.e. no cyclic buffer option selected), the dump successfully
+> completed in about 2 hours, 40 minutes, and then I specified a cyclic
+> buffer size of 48 M, and the dump completed in the same time, no
+> measurable differences within the accuracy of our measurements. 
+> 
+> We are still evaluating perfomance data, and don't have very precise
+> measurements here for comparisons, but the results look promising so
+> far.   
+> 
+> Lisa Mitchell
+
+Update:
+
+ I did another test over the last few days that was a better apples-to-
+apples comparison, contrasting the performance of makedumpfile 1.4  with
+makedumpfile v1.5.1-rc on a RHEL 6.3 system with 4 TB of memory.
+
+Earlier I had not taken good comparable measurements of the dump times,
+from the exact same machine configuration comparisons of the timing
+differences between the two makedumpfiles.  I had noted that
+makedumpfile 1.5.1-rc seemed a performance improvemnt over makedumpfile
+v1.5.0 results seen earlier.
+
+Unfortunately this weekend, the results showed a significant performance
+regression still with makedumpfile v1.5.1-rc compared to makedumpfile
+1.4 
+
+This time my performance measurements were based on comparing the file
+system timestamps in the /var/crash directory, showing the difference
+from when the crash directory was created by makedumpfile, to the
+timestamp on the vmcore file, to show when the copy of the memory to
+this file was complete. 
+
+1. Baseline:  On the 4 TB DL980, with the RHEL 6.3 installation,(2.6.32
+based kernel) with a crashkernel size of 512M or 384M  (both big enough
+to contain the 256M bit map required, plus the kernel).The makedumpfile
+command line was the same for both tests: " -c --message-level 1 -d 31"
+The timestamps shown for the dump copy were:
+
+# cd /var/crash
+# ls
+127.0.0.1-2012-11-30-15:28:22
+# cd 127.0.0.1-2012-11-30-15:28:22
+#ls -al 127.0.0.1-2012-11-30-15:28:22
+total 10739980^M
+drwxr-xr-x. 2 root root        4096 Nov 30 17:07 .^M
+drwxr-xr-x. 3 root root        4096 Nov 30 15:28 ..^M
+-rw-------. 1 root root 10997727069 Nov 30 17:07 vmcore
+
+From the time stamps above the dump started at 15:28, completed at
+17:07, the dump time was 1 hour, 41 minutes.
+
+2. Makedumpfile-v1.5.1-rc on the same system configuration as (1.)
+above, but with crashkernel size set to 256 M to insure the use of the
+cyclic buffer feature to fit in smaller crashkernel space.  The same
+makedumpfile command line of "-c --message-level 1 -d 31" was used.
+
+#cd /var/crash
+# ls -al
+total 12
+drwxr-xr-x.  3 root root 4096 Nov 30 23:25 .
+drwxr-xr-x. 22 root root 4096 Nov 30 08:41 ..
+drwxr-xr-x.  2 root root 4096 Dec  1 02:05 127.0.0.1-2012-11-30-23:25:20
+
+#ls -al *
+total 10734932
+drwxr-xr-x. 2 root root        4096 Dec  1 02:05 .
+drwxr-xr-x. 3 root root        4096 Nov 30 23:25 ..
+-rw-------. 1 root root 10992554141 Dec  1 02:05 vmcore
+
+From the timestamps above, the dump started at 23:25 and completed at
+2:05 after midnight, so the total dump time was 2 hours and 40 minutes.
+
+So for this 4 TB system, in this test, the dump write phase took 1 hour
+longer for makedumpfile-v1.5.1-rc, versus makedumpfile v1.4. This time
+seems dominated by the dump filtering activity, assuming the  copy to
+disk times should have been the same, though I don't have a good
+breakdown. 
+
+I look forward to the GA version of makedumpfile v1.5.1 to see if there
+are any improvements, but it now looks to me like there are still a lot
+of improvements needed before v1.5.1 will have performance parity with
+v1.4
+
+Has anyone else done performance comparisons on multi-terabyte systems
+between makedumpfile 1.5.1 and makedumpfile 1.4, to see if others get
+similar results, or if my measurement method is inaccurate?
 
 
--- 
-Regards,
-Aravinda
+
+
+
+
 
 
 _______________________________________________
