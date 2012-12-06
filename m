@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f49.google.com ([209.85.220.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tge3g-0004Wc-O2
- for kexec@lists.infradead.org; Thu, 06 Dec 2012 16:12:22 +0000
-Received: by mail-pa0-f49.google.com with SMTP id bi1so4037897pad.36
- for <kexec@lists.infradead.org>; Thu, 06 Dec 2012 08:12:20 -0800 (PST)
-From: Joonsoo Kim <js1304@gmail.com>
-Subject: [RFC PATCH 8/8] mm,
- vmalloc: remove list management operation after initializing vmalloc
-Date: Fri,  7 Dec 2012 01:09:35 +0900
-Message-Id: <1354810175-4338-9-git-send-email-js1304@gmail.com>
-In-Reply-To: <1354810175-4338-1-git-send-email-js1304@gmail.com>
-References: <1354810175-4338-1-git-send-email-js1304@gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TgeJX-0006WX-7N
+ for kexec@lists.infradead.org; Thu, 06 Dec 2012 16:28:43 +0000
+Date: Thu, 6 Dec 2012 18:28:39 +0200
+From: Gleb Natapov <gleb@redhat.com>
+Subject: Re: [PATCH v11 0/2] x86: vmclear vmcss on all cpus when doing kdump
+ if necessary
+Message-ID: <20121206162839.GG19514@redhat.com>
+References: <50C0BB90.1080804@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50C0BB90.1080804@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,149 +20,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Joonsoo Kim <js1304@gmail.com>, linux-mm@kvack.org
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-Now, there is no need to maintain vmlist_early after initializing vmalloc.
-So remove related code and data structure.
+On Thu, Dec 06, 2012 at 11:36:48PM +0800, Zhang Yanfei wrote:
+> Currently, kdump just makes all the logical processors leave VMX operation by
+> executing VMXOFF instruction, so any VMCSs active on the logical processors may
+> be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
+> in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
+> executing the VMXOFF instruction.
+> 
+> The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
+> executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
+> vmcore updated and non-corrupted.
+> 
+Applied to queue. Thanks.
 
-Signed-off-by: Joonsoo Kim <js1304@gmail.com>
+> Changelog from v10 to v11:
+> 1. regenerate the patch set against current queue branch in
+>    git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+> 
+> Changelog from v9 to v10:
+> 1. add rcu protect to the callback function
+> 
+> Changelog from v8 to v9:
+> 1. KEXEC: use a callback function instead of a notifier.
+> 2. KVM-INTEL: use a new vmclear function instead of just calling 
+>    vmclear_local_loaded_vmcss to make sure we just do the core vmclear
+>    operation in kdump.
+> 
+> Changelog from v7 to v8:
+> 1. KEXEC: regression for using name crash_notifier_list
+>    and remove comments related to KVM
+>    and just call function atomic_notifier_call_chain directly.
+> 
+> Changelog from v6 to v7:
+> 1. KVM-INTEL: in hardware_disable, we needn't disable the
+>    vmclear, so remove it.
+> 
+> Changelog from v5 to v6:
+> 1. KEXEC: the atomic notifier list renamed:
+>    crash_notifier_list --> vmclear_notifier_list
+> 2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
+>    not defined and remove unnecessary #ifdef's.
+> 
+> Changelog from v4 to v5:
+> 1. use an atomic notifier instead of function call, so
+>    have all the vmclear codes in vmx.c.
+> 
+> Changelog from v3 to v4:
+> 1. add a new percpu variable vmclear_skipped to skip
+>    vmclear in kdump in some conditions.
+> 
+> Changelog from v2 to v3:
+> 1. remove unnecessary conditions in function
+>    cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
+> 
+> Changelog from v1 to v2:
+> 1. remove the sysctl and clear VMCSs unconditionally.
+> 
+> Zhang Yanfei (2):
+>   x86/kexec: VMCLEAR VMCSs loaded on all cpus if necessary
+>   KVM-INTEL: provide the vmclear function and a bitmap to support
+>     VMCLEAR in kdump
+> 
+>  arch/x86/include/asm/kexec.h |    2 + 
+>  arch/x86/kernel/crash.c      |   32 ++++++++++++++++++++
+>  arch/x86/kvm/vmx.c           |   67 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 101 insertions(+), 0 deletions(-)
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 698b1e5..10d19c9 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -130,7 +130,6 @@ extern long vwrite(char *buf, char *addr, unsigned long count);
- /*
-  *	Internals.  Dont't use..
-  */
--extern rwlock_t vmlist_lock;
- extern struct vm_struct *vmlist;
- extern __init void vm_area_add_early(struct vm_struct *vm);
- extern __init void vm_area_register_early(struct vm_struct *vm, size_t align);
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 8a1b959..957a098 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -272,8 +272,6 @@ static unsigned long cached_align;
- 
- static unsigned long vmap_area_pcpu_hole;
- 
--/*** Old vmalloc interfaces ***/
--DEFINE_RWLOCK(vmlist_lock);
- /* vmlist is only for kexec */
- struct vm_struct *vmlist;
- static struct vm_struct dummy_vm;
-@@ -334,7 +332,7 @@ static void __insert_vmap_area(struct vmap_area *va)
- 	rb_link_node(&va->rb_node, parent, p);
- 	rb_insert_color(&va->rb_node, &vmap_area_root);
- 
--	/* address-sort this list so it is usable like the vmlist_early */
-+	/* address-sort this list */
- 	tmp = rb_prev(&va->rb_node);
- 	if (tmp) {
- 		struct vmap_area *prev;
-@@ -1150,7 +1148,7 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node, pgprot_t pro
- }
- EXPORT_SYMBOL(vm_map_ram);
- 
--static struct vm_struct *vmlist_early;
-+static struct vm_struct *vmlist_early __initdata;
- 
- /**
-  * vm_area_add_early - add vmap area early during boot
-@@ -1323,7 +1321,7 @@ static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
- 	spin_unlock(&vmap_area_lock);
- }
- 
--static void insert_vmalloc_vmlist(struct vm_struct *vm)
-+static void remove_vm_unlist(struct vm_struct *vm)
- {
- 	struct vm_struct *tmp, **p;
- 
-@@ -1334,22 +1332,13 @@ static void insert_vmalloc_vmlist(struct vm_struct *vm)
- 	 */
- 	smp_wmb();
- 	vm->flags &= ~VM_UNLIST;
--
--	write_lock(&vmlist_lock);
--	for (p = &vmlist_early; (tmp = *p) != NULL; p = &tmp->next) {
--		if (tmp->addr >= vm->addr)
--			break;
--	}
--	vm->next = *p;
--	*p = vm;
--	write_unlock(&vmlist_lock);
- }
- 
- static void insert_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
- 			      unsigned long flags, const void *caller)
- {
- 	setup_vmalloc_vm(vm, va, flags, caller);
--	insert_vmalloc_vmlist(vm);
-+	remove_vm_unlist(vm);
- }
- 
- static struct vm_struct *__get_vm_area_node(unsigned long size,
-@@ -1392,10 +1381,9 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
- 
- 	/*
- 	 * When this function is called from __vmalloc_node_range,
--	 * we do not add vm_struct to vmlist_early here to avoid
--	 * accessing uninitialized members of vm_struct such as
--	 * pages and nr_pages fields. They will be set later.
--	 * To distinguish it from others, we use a VM_UNLIST flag.
-+	 * we add VM_UNLIST flag to avoid accessing uninitialized
-+	 * members of vm_struct such as pages and nr_pages fields.
-+	 * They will be set later.
- 	 */
- 	if (flags & VM_UNLIST)
- 		setup_vmalloc_vm(area, va, flags, caller);
-@@ -1483,21 +1471,6 @@ struct vm_struct *remove_vm_area(const void *addr)
- 		va->flags &= ~VM_VM_AREA;
- 		spin_unlock(&vmap_area_lock);
- 
--		if (!(vm->flags & VM_UNLIST)) {
--			struct vm_struct *tmp, **p;
--			/*
--			 * remove from list and disallow access to
--			 * this vm_struct before unmap. (address range
--			 * confliction is maintained by vmap.)
--			 */
--			write_lock(&vmlist_lock);
--			for (p = &vmlist_early; (tmp = *p) != vm;
--							p = &tmp->next)
--				;
--			*p = tmp->next;
--			write_unlock(&vmlist_lock);
--		}
--
- 		vmap_debug_free_range(va->va_start, va->va_end);
- 		free_unmap_vmap_area(va);
- 		vm->size -= PAGE_SIZE;
-@@ -1717,10 +1690,11 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
- 		return NULL;
- 
- 	/*
--	 * In this function, newly allocated vm_struct is not added
--	 * to vmlist_early at __get_vm_area_node(). so, it is added here.
-+	 * In this function, newly allocated vm_struct has VM_UNLIST flag.
-+	 * It means that vm_struct is not fully initialized.
-+	 * Now, it is fully initialized, so remove this flag here.
- 	 */
--	insert_vmalloc_vmlist(area);
-+	remove_vm_unlist(area);
- 
- 	/*
- 	 * A ref_count = 3 is needed because the vm_struct and vmap_area
--- 
-1.7.9.5
-
+--
+			Gleb.
 
 _______________________________________________
 kexec mailing list
