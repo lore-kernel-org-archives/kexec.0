@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TgdLw-0001bD-9N
- for kexec@lists.infradead.org; Thu, 06 Dec 2012 15:27:09 +0000
-Date: Thu, 6 Dec 2012 10:26:58 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1350981766.43974385.1354807618743.JavaMail.root@redhat.com>
-In-Reply-To: <50BC4073.7060402@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TgdVT-0001oO-Ty
+ for kexec@lists.infradead.org; Thu, 06 Dec 2012 15:37:00 +0000
+Received: by mail-pb0-f49.google.com with SMTP id un15so4055604pbc.36
+ for <kexec@lists.infradead.org>; Thu, 06 Dec 2012 07:36:57 -0800 (PST)
+Message-ID: <50C0BB90.1080804@gmail.com>
+Date: Thu, 06 Dec 2012 23:36:48 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
+Subject: [PATCH v11 0/2] x86: vmclear vmcss on all cpus when doing kdump if
+ necessary
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,46 +23,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Vivek Goyal <vgoyal@redhat.com>, buendgen@de.ibm.com
+To: Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
+Currently, kdump just makes all the logical processors leave VMX operation by
+executing VMXOFF instruction, so any VMCSs active on the logical processors may
+be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
+in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
+executing the VMXOFF instruction.
 
+The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
+executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
+vmcore updated and non-corrupted.
 
------ Original Message -----
+Changelog from v10 to v11:
+1. regenerate the patch set against current queue branch in
+   git://git.kernel.org/pub/scm/virt/kvm/kvm.git
 
-> 
-> Another approach is to dynamically load libeppic library - similar way
-> how crash does it. No major changes will be done to makedumpfile code,
-> except the addition of --eppic flag. Upon specifying --eppic flag
-> makedumpfile will dlopen libeppic.so, which will have functionality to
-> scrub the specified data. This will prevent makedumpfile bloat and will
-> not affect the size of initramfs as --eppic is only specified during
-> post processing. The distribution should build and ship libeppic.so and
-> the procedure for building .so will be similar to what we have in
-> crash.
+Changelog from v9 to v10:
+1. add rcu protect to the callback function
 
-OK, so based upon the most recent discussion here:
+Changelog from v8 to v9:
+1. KEXEC: use a callback function instead of a notifier.
+2. KVM-INTEL: use a new vmclear function instead of just calling 
+   vmclear_local_loaded_vmcss to make sure we just do the core vmclear
+   operation in kdump.
 
- Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
- http://lists.infradead.org/pipermail/kexec/2012-December/007452.html
+Changelog from v7 to v8:
+1. KEXEC: regression for using name crash_notifier_list
+   and remove comments related to KVM
+   and just call function atomic_notifier_call_chain directly.
 
-Aravinda states that he will be posting an update for makedumpfile 
-that will dlopen() a new "libeppic.so" shared object that is built
-with the libeppic.a library.
+Changelog from v6 to v7:
+1. KVM-INTEL: in hardware_disable, we needn't disable the
+   vmclear, so remove it.
 
-The upstream eppic git tree contains an "applications/crash" subdirectory
-that contains the code that creates a crash-utility-specific "eppic.so" file.
+Changelog from v5 to v6:
+1. KEXEC: the atomic notifier list renamed:
+   crash_notifier_list --> vmclear_notifier_list
+2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
+   not defined and remove unnecessary #ifdef's.
 
-Accordingly, this new proposal will also require new source file(s) and
-a build process to create this new makedumpfile-specific "libeppic.so" 
-shared object.
-   
-Arvinda -- will you be proposing an additional "applications/makedumpfile"
-subdirectory for the upstream eppic git tree that can be used to create
-the makedumpfile-specific libeppic.so file?
+Changelog from v4 to v5:
+1. use an atomic notifier instead of function call, so
+   have all the vmclear codes in vmx.c.
 
-Dave
+Changelog from v3 to v4:
+1. add a new percpu variable vmclear_skipped to skip
+   vmclear in kdump in some conditions.
 
+Changelog from v2 to v3:
+1. remove unnecessary conditions in function
+   cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
+
+Changelog from v1 to v2:
+1. remove the sysctl and clear VMCSs unconditionally.
+
+Zhang Yanfei (2):
+  x86/kexec: VMCLEAR VMCSs loaded on all cpus if necessary
+  KVM-INTEL: provide the vmclear function and a bitmap to support
+    VMCLEAR in kdump
+
+ arch/x86/include/asm/kexec.h |    2 + 
+ arch/x86/kernel/crash.c      |   32 ++++++++++++++++++++
+ arch/x86/kvm/vmx.c           |   67 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 101 insertions(+), 0 deletions(-)
 
 _______________________________________________
 kexec mailing list
