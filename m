@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-da0-f49.google.com ([209.85.210.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tgdc0-0002Cg-2B
- for kexec@lists.infradead.org; Thu, 06 Dec 2012 15:43:45 +0000
-Received: by mail-da0-f49.google.com with SMTP id v40so2484733dad.36
- for <kexec@lists.infradead.org>; Thu, 06 Dec 2012 07:43:42 -0800 (PST)
-Message-ID: <50C0BD26.2010408@gmail.com>
-Date: Thu, 06 Dec 2012 23:43:34 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v11 2/2] KVM-INTEL: provide the vmclear function and a
- bitmap to support VMCLEAR in kdump
-References: <50C0BB90.1080804@gmail.com>
-In-Reply-To: <50C0BB90.1080804@gmail.com>
+ id 1Tge3F-0004Vx-JL
+ for kexec@lists.infradead.org; Thu, 06 Dec 2012 16:11:54 +0000
+Received: by mail-da0-f49.google.com with SMTP id v40so2493627dad.36
+ for <kexec@lists.infradead.org>; Thu, 06 Dec 2012 08:11:52 -0800 (PST)
+From: Joonsoo Kim <js1304@gmail.com>
+Subject: [RFC PATCH 0/8] remove vm_struct list management
+Date: Fri,  7 Dec 2012 01:09:27 +0900
+Message-Id: <1354810175-4338-1-git-send-email-js1304@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,161 +17,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marcelo Tosatti <mtosatti@redhat.com>, Gleb Natapov <gleb@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Joonsoo Kim <js1304@gmail.com>, linux-mm@kvack.org
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+This patchset remove vm_struct list management after initializing vmalloc.
+Adding and removing an entry to vmlist is linear time complexity, so
+it is inefficient. If we maintain this list, overall time complexity of
+adding and removing area to vmalloc space is O(N), although we use
+rbtree for finding vacant place and it's time complexity is just O(logN).
 
-The vmclear function will be assigned to the callback function pointer
-when loading kvm-intel module. And the bitmap indicates whether we
-should do VMCLEAR operation in kdump. The bits in the bitmap are
-set/unset according to different conditions.
+And vmlist and vmlist_lock is used many places of outside of vmalloc.c.
+It is preferable that we hide this raw data structure and provide
+well-defined function for supporting them, because it makes that they
+cannot mistake when manipulating theses structure and it makes us easily
+maintain vmalloc layer.
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/kvm/vmx.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 67 insertions(+), 0 deletions(-)
+I'm not sure that "7/8: makes vmlist only for kexec" is fine.
+Because it is related to userspace program.
+As far as I know, makedumpfile use kexec's output information and it only
+need first address of vmalloc layer. So my implementation reflect this
+fact, but I'm not sure. And now, I don't fully test this patchset.
+Basic operation work well, but I don't test kexec. So I send this
+patchset with 'RFC'.
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 94833e2..1a30fd5 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -42,6 +42,7 @@
- #include <asm/i387.h>
- #include <asm/xcr.h>
- #include <asm/perf_event.h>
-+#include <asm/kexec.h>
- 
- #include "trace.h"
- 
-@@ -987,6 +988,46 @@ static void vmcs_load(struct vmcs *vmcs)
- 		       vmcs, phys_addr);
- }
- 
-+#ifdef CONFIG_KEXEC
-+/*
-+ * This bitmap is used to indicate whether the vmclear
-+ * operation is enabled on all cpus. All disabled by
-+ * default.
-+ */
-+static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
-+
-+static inline void crash_enable_local_vmclear(int cpu)
-+{
-+	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static inline void crash_disable_local_vmclear(int cpu)
-+{
-+	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static inline int crash_local_vmclear_enabled(int cpu)
-+{
-+	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
-+}
-+
-+static void crash_vmclear_local_loaded_vmcss(void)
-+{
-+	int cpu = raw_smp_processor_id();
-+	struct loaded_vmcs *v;
-+
-+	if (!crash_local_vmclear_enabled(cpu))
-+		return;
-+
-+	list_for_each_entry(v, &per_cpu(loaded_vmcss_on_cpu, cpu),
-+			    loaded_vmcss_on_cpu_link)
-+		vmcs_clear(v->vmcs);
-+}
-+#else
-+static inline void crash_enable_local_vmclear(int cpu) { }
-+static inline void crash_disable_local_vmclear(int cpu) { }
-+#endif /* CONFIG_KEXEC */
-+
- static void __loaded_vmcs_clear(void *arg)
- {
- 	struct loaded_vmcs *loaded_vmcs = arg;
-@@ -996,6 +1037,7 @@ static void __loaded_vmcs_clear(void *arg)
- 		return; /* vcpu migration can race with cpu offline */
- 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
- 		per_cpu(current_vmcs, cpu) = NULL;
-+	crash_disable_local_vmclear(cpu);
- 	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
- 
- 	/*
-@@ -1007,6 +1049,7 @@ static void __loaded_vmcs_clear(void *arg)
- 	smp_wmb();
- 
- 	loaded_vmcs_init(loaded_vmcs);
-+	crash_enable_local_vmclear(cpu);
- }
- 
- static void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
-@@ -1530,6 +1573,7 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
- 		local_irq_disable();
-+		crash_disable_local_vmclear(cpu);
- 
- 		/*
- 		 * Read loaded_vmcs->cpu should be before fetching
-@@ -1540,6 +1584,7 @@ static void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
- 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
-+		crash_enable_local_vmclear(cpu);
- 		local_irq_enable();
- 
- 		/*
-@@ -2353,6 +2398,18 @@ static int hardware_enable(void *garbage)
- 		return -EBUSY;
- 
- 	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-+
-+	/*
-+	 * Now we can enable the vmclear operation in kdump
-+	 * since the loaded_vmcss_on_cpu list on this cpu
-+	 * has been initialized.
-+	 *
-+	 * Though the cpu is not in VMX operation now, there
-+	 * is no problem to enable the vmclear operation
-+	 * for the loaded_vmcss_on_cpu list is empty!
-+	 */
-+	crash_enable_local_vmclear(cpu);
-+
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
- 
- 	test_bits = FEATURE_CONTROL_LOCKED;
-@@ -7383,6 +7440,11 @@ static int __init vmx_init(void)
- 	if (r)
- 		goto out3;
- 
-+#ifdef CONFIG_KEXEC
-+	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
-+			   crash_vmclear_local_loaded_vmcss);
-+#endif
-+
- 	vmx_disable_intercept_for_msr(MSR_FS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_GS_BASE, false);
- 	vmx_disable_intercept_for_msr(MSR_KERNEL_GS_BASE, true);
-@@ -7420,6 +7482,11 @@ static void __exit vmx_exit(void)
- 	free_page((unsigned long)vmx_io_bitmap_b);
- 	free_page((unsigned long)vmx_io_bitmap_a);
- 
-+#ifdef CONFIG_KEXEC
-+	rcu_assign_pointer(crash_vmclear_loaded_vmcss, NULL);
-+	synchronize_rcu();
-+#endif
-+
- 	kvm_exit();
- }
- 
+Please let me know what I am missing.
+
+This series based on v3.7-rc7 and on top of submitted patchset for ARM.
+'introduce static_vm for ARM-specific static mapped area'
+https://lkml.org/lkml/2012/11/27/356
+But, running properly on x86 without ARM patchset.
+
+Joonsoo Kim (8):
+  mm, vmalloc: change iterating a vmlist to find_vm_area()
+  mm, vmalloc: move get_vmalloc_info() to vmalloc.c
+  mm, vmalloc: protect va->vm by vmap_area_lock
+  mm, vmalloc: iterate vmap_area_list, instead of vmlist in
+    vread/vwrite()
+  mm, vmalloc: iterate vmap_area_list in get_vmalloc_info()
+  mm, vmalloc: iterate vmap_area_list, instead of vmlist, in
+    vmallocinfo()
+  mm, vmalloc: makes vmlist only for kexec
+  mm, vmalloc: remove list management operation after initializing
+    vmalloc
+
+ arch/tile/mm/pgtable.c      |    7 +-
+ arch/unicore32/mm/ioremap.c |   17 +--
+ arch/x86/mm/ioremap.c       |    7 +-
+ fs/proc/Makefile            |    2 +-
+ fs/proc/internal.h          |   18 ---
+ fs/proc/meminfo.c           |    1 +
+ fs/proc/mmu.c               |   60 ----------
+ include/linux/vmalloc.h     |   19 +++-
+ mm/vmalloc.c                |  258 +++++++++++++++++++++++++++++--------------
+ 9 files changed, 204 insertions(+), 185 deletions(-)
+ delete mode 100644 fs/proc/mmu.c
+
 -- 
-1.7.1
+1.7.9.5
 
 
 _______________________________________________
