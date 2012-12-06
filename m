@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TgeJX-0006WX-7N
- for kexec@lists.infradead.org; Thu, 06 Dec 2012 16:28:43 +0000
-Date: Thu, 6 Dec 2012 18:28:39 +0200
-From: Gleb Natapov <gleb@redhat.com>
-Subject: Re: [PATCH v11 0/2] x86: vmclear vmcss on all cpus when doing kdump
- if necessary
-Message-ID: <20121206162839.GG19514@redhat.com>
-References: <50C0BB90.1080804@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <50C0BB90.1080804@gmail.com>
+ id 1TgkCL-0001ol-Ok
+ for kexec@lists.infradead.org; Thu, 06 Dec 2012 22:45:43 +0000
+Date: Thu, 6 Dec 2012 14:45:34 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
+Message-Id: <20121206144534.23d26318.akpm@linux-foundation.org>
+In-Reply-To: <1354810175-4338-1-git-send-email-js1304@gmail.com>
+References: <1354810175-4338-1-git-send-email-js1304@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,77 +22,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Joonsoo Kim <js1304@gmail.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 
-On Thu, Dec 06, 2012 at 11:36:48PM +0800, Zhang Yanfei wrote:
-> Currently, kdump just makes all the logical processors leave VMX operation by
-> executing VMXOFF instruction, so any VMCSs active on the logical processors may
-> be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
-> in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
-> executing the VMXOFF instruction.
-> 
-> The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
-> executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
-> vmcore updated and non-corrupted.
-> 
-Applied to queue. Thanks.
+On Fri,  7 Dec 2012 01:09:27 +0900
+Joonsoo Kim <js1304@gmail.com> wrote:
 
-> Changelog from v10 to v11:
-> 1. regenerate the patch set against current queue branch in
->    git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+> This patchset remove vm_struct list management after initializing vmalloc.
+> Adding and removing an entry to vmlist is linear time complexity, so
+> it is inefficient. If we maintain this list, overall time complexity of
+> adding and removing area to vmalloc space is O(N), although we use
+> rbtree for finding vacant place and it's time complexity is just O(logN).
 > 
-> Changelog from v9 to v10:
-> 1. add rcu protect to the callback function
+> And vmlist and vmlist_lock is used many places of outside of vmalloc.c.
+> It is preferable that we hide this raw data structure and provide
+> well-defined function for supporting them, because it makes that they
+> cannot mistake when manipulating theses structure and it makes us easily
+> maintain vmalloc layer.
 > 
-> Changelog from v8 to v9:
-> 1. KEXEC: use a callback function instead of a notifier.
-> 2. KVM-INTEL: use a new vmclear function instead of just calling 
->    vmclear_local_loaded_vmcss to make sure we just do the core vmclear
->    operation in kdump.
+> I'm not sure that "7/8: makes vmlist only for kexec" is fine.
+> Because it is related to userspace program.
+> As far as I know, makedumpfile use kexec's output information and it only
+> need first address of vmalloc layer. So my implementation reflect this
+> fact, but I'm not sure. And now, I don't fully test this patchset.
+> Basic operation work well, but I don't test kexec. So I send this
+> patchset with 'RFC'.
 > 
-> Changelog from v7 to v8:
-> 1. KEXEC: regression for using name crash_notifier_list
->    and remove comments related to KVM
->    and just call function atomic_notifier_call_chain directly.
+> Please let me know what I am missing.
 > 
-> Changelog from v6 to v7:
-> 1. KVM-INTEL: in hardware_disable, we needn't disable the
->    vmclear, so remove it.
-> 
-> Changelog from v5 to v6:
-> 1. KEXEC: the atomic notifier list renamed:
->    crash_notifier_list --> vmclear_notifier_list
-> 2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
->    not defined and remove unnecessary #ifdef's.
-> 
-> Changelog from v4 to v5:
-> 1. use an atomic notifier instead of function call, so
->    have all the vmclear codes in vmx.c.
-> 
-> Changelog from v3 to v4:
-> 1. add a new percpu variable vmclear_skipped to skip
->    vmclear in kdump in some conditions.
-> 
-> Changelog from v2 to v3:
-> 1. remove unnecessary conditions in function
->    cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
-> 
-> Changelog from v1 to v2:
-> 1. remove the sysctl and clear VMCSs unconditionally.
-> 
-> Zhang Yanfei (2):
->   x86/kexec: VMCLEAR VMCSs loaded on all cpus if necessary
->   KVM-INTEL: provide the vmclear function and a bitmap to support
->     VMCLEAR in kdump
-> 
->  arch/x86/include/asm/kexec.h |    2 + 
->  arch/x86/kernel/crash.c      |   32 ++++++++++++++++++++
->  arch/x86/kvm/vmx.c           |   67 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 101 insertions(+), 0 deletions(-)
+> This series based on v3.7-rc7 and on top of submitted patchset for ARM.
+> 'introduce static_vm for ARM-specific static mapped area'
+> https://lkml.org/lkml/2012/11/27/356
+> But, running properly on x86 without ARM patchset.
 
---
-			Gleb.
+This all looks rather nice, but not mergeable into anything at this
+stage in the release cycle.
+
+What are the implications of "on top of submitted patchset for ARM"? 
+Does it depens on the ARM patches in any way, or it it independently
+mergeable and testable?
+
 
 _______________________________________________
 kexec mailing list
