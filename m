@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TgTX9-00018L-R2
- for kexec@lists.infradead.org; Thu, 06 Dec 2012 04:58:05 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.192])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id qB64w0lB004578
- for <kexec@lists.infradead.org>; Thu, 6 Dec 2012 13:58:00 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id qB64w0C29703 for kexec@lists.infradead.org;
- Thu, 6 Dec 2012 13:58:00 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id qB64viSr017780
- for <kexec@lists.infradead.org>; Thu, 6 Dec 2012 13:58:00 +0900 (JST)
-Date: Thu, 6 Dec 2012 13:33:19 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makedumpfile-1.5.1: Improve performance for cyclic mode.
-Message-Id: <20121206133319.4db220fba320ec1345d667d0@mxc.nes.nec.co.jp>
-In-Reply-To: <20121206133208.43a8ea142a88c2e17f5aab19@mxc.nes.nec.co.jp>
-References: <20121206133208.43a8ea142a88c2e17f5aab19@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TgYVb-0005Qk-VN
+ for kexec@lists.infradead.org; Thu, 06 Dec 2012 10:16:49 +0000
+Date: Thu, 6 Dec 2012 11:39:59 +0200
+From: Gleb Natapov <gleb@redhat.com>
+Subject: Re: [PATCH v10 0/2] x86: vmclear vmcss on all cpus when doing kdump
+ if necessary
+Message-ID: <20121206093959.GF19514@redhat.com>
+References: <50BEFEBA.6070602@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50BEFEBA.6070602@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,82 +24,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, 6 Dec 2012 13:32:08 +0900
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+Can you regenerate against current queue branch in
+git://git.kernel.org/pub/scm/virt/kvm/kvm.git please?
 
-> Hello,
+On Wed, Dec 05, 2012 at 03:58:50PM +0800, Zhang Yanfei wrote:
+> Currently, kdump just makes all the logical processors leave VMX operation by
+> executing VMXOFF instruction, so any VMCSs active on the logical processors may
+> be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
+> in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
+> executing the VMXOFF instruction.
 > 
-> makedumpfile version 1.5.1 is released.
-> Your comments/patches are welcome.
+> The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
+> executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
+> vmcore updated and non-corrupted.
 > 
-> Main new feature:
-> o Support for snappy compression
->   This feature allows you to compress dump data by each page using snappy.
->   This feature is optional, the user has to prepare snappy library and
->   build binary with USESNAPPY=on to use it. 
+> Changelog from v9 to v10:
+> 1. add rcu protect to the callback function
 > 
-> o Introduce mem_map array logic
->   This is the new logic of excluding free pages. This logic excludes free 
->   pages by looking up mem_map array instead of free lists, and is expected
->   good performance for cyclic mode.
+> Changelog from v8 to v9:
+> 1. KEXEC: use a callback function instead of a notifier.
+> 2. KVM-INTEL: use a new vmclear function instead of just calling 
+>    vmclear_local_loaded_vmcss to make sure we just do the core vmclear
+>    operation in kdump.
 > 
->   This feature requires the values below but vmcore doesn't include them,
->   so the user has to prepare vmlinux or vmcoreinfo which includes them. 
->   When running on cyclic mode and the required values exist, mem_map array
->   logic is used. Otherwise, free list logic is used.
+> Changelog from v7 to v8:
+> 1. KEXEC: regression for using name crash_notifier_list
+>    and remove comments related to KVM
+>    and just call function atomic_notifier_call_chain directly.
 > 
->     kernel v2.6.38 to latest:
->       - OFFSET(page._mapcount)
->       - OFFSET(page.private)
->       - NUMBER(PG_slab)
->       - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> Changelog from v6 to v7:
+> 1. KVM-INTEL: in hardware_disable, we needn't disable the
+>    vmclear, so remove it.
 > 
->     kernel v2.6.18 to v2.6.37:
->       - OFFSET(page.private)
->       - NUMBER(PG_buddy)
+> Changelog from v5 to v6:
+> 1. KEXEC: the atomic notifier list renamed:
+>    crash_notifier_list --> vmclear_notifier_list
+> 2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
+>    not defined and remove unnecessary #ifdef's.
 > 
->     kernel v2.6.15 to v2.6.17:
->       Not supported.
+> Changelog from v4 to v5:
+> 1. use an atomic notifier instead of function call, so
+>    have all the vmclear codes in vmx.c.
 > 
->   Additionally, I posted the patch below to add the values above to the
->   upstream kernel:
+> Changelog from v3 to v4:
+> 1. add a new percpu variable vmclear_skipped to skip
+>    vmclear in kdump in some conditions.
 > 
->     https://lkml.org/lkml/2012/11/21/90
+> Changelog from v2 to v3:
+> 1. remove unnecessary conditions in function
+>    cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
 > 
->   If you apply it to 1st kernel, you can use mem_map array logic without
->   vmlinux.
+> Changelog from v1 to v2:
+> 1. remove the sysctl and clear VMCSs unconditionally.
+> 
+> Zhang Yanfei (2):
+>   x86/kexec: VMCLEAR VMCSs loaded on all cpus if necessary
+>   KVM-INTEL: provide the vmclear function and a bitmap to support
+>     VMCLEAR in kdump
+> 
+>  arch/x86/include/asm/kexec.h |    2 +
+>  arch/x86/kernel/crash.c      |   32 ++++++++++++++++++++
+>  arch/x86/kvm/vmx.c           |   67 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 101 insertions(+), 0 deletions(-)
 
-NOTE: The patch above is for latest kernel. So you need to fix it as
-      below if your kernel version is between v2.6.18 and v2.6.37:
-
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 511151b..56583a4 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1490,7 +1490,6 @@ static int __init crash_save_vmcoreinfo_init(void)
-	VMCOREINFO_OFFSET(page, flags);
-	VMCOREINFO_OFFSET(page, _count);
-	VMCOREINFO_OFFSET(page, mapping);
--	VMCOREINFO_OFFSET(page, _mapcount);
-	VMCOREINFO_OFFSET(page, private);
-	VMCOREINFO_OFFSET(page, lru);
-	VMCOREINFO_OFFSET(pglist_data, node_zones);
-@@ -1515,8 +1514,7 @@ static int __init crash_save_vmcoreinfo_init(void)
-	VMCOREINFO_NUMBER(PG_lru);
-	VMCOREINFO_NUMBER(PG_private);
-	VMCOREINFO_NUMBER(PG_swapcache);
--	VMCOREINFO_NUMBER(PG_slab);
--	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-+	VMCOREINFO_NUMBER(PG_buddy);
-
-	arch_crash_save_vmcoreinfo();
-	update_vmcoreinfo_note();
-
-
-Thanks
-Atsushi Kumagai
+--
+			Gleb.
 
 _______________________________________________
 kexec mailing list
