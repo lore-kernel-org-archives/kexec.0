@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TgYVb-0005Qk-VN
- for kexec@lists.infradead.org; Thu, 06 Dec 2012 10:16:49 +0000
-Date: Thu, 6 Dec 2012 11:39:59 +0200
-From: Gleb Natapov <gleb@redhat.com>
-Subject: Re: [PATCH v10 0/2] x86: vmclear vmcss on all cpus when doing kdump
- if necessary
-Message-ID: <20121206093959.GF19514@redhat.com>
-References: <50BEFEBA.6070602@cn.fujitsu.com>
+ id 1TgcaV-0004vv-1f
+ for kexec@lists.infradead.org; Thu, 06 Dec 2012 14:38:08 +0000
+Date: Thu, 6 Dec 2012 09:38:02 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: makedumpfile-1.5.1: Improve performance for cyclic mode.
+Message-ID: <20121206143802.GB25829@redhat.com>
+References: <20121206133208.43a8ea142a88c2e17f5aab19@mxc.nes.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <50BEFEBA.6070602@cn.fujitsu.com>
+In-Reply-To: <20121206133208.43a8ea142a88c2e17f5aab19@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,74 +23,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-Can you regenerate against current queue branch in
-git://git.kernel.org/pub/scm/virt/kvm/kvm.git please?
+On Thu, Dec 06, 2012 at 01:32:08PM +0900, Atsushi Kumagai wrote:
 
-On Wed, Dec 05, 2012 at 03:58:50PM +0800, Zhang Yanfei wrote:
-> Currently, kdump just makes all the logical processors leave VMX operation by
-> executing VMXOFF instruction, so any VMCSs active on the logical processors may
-> be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
-> in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
-> executing the VMXOFF instruction.
+[..]
+>   Additionally, I posted the patch below to add the values above to the
+>   upstream kernel:
 > 
-> The patch set provides a way to VMCLEAR vmcss related to guests on all cpus before
-> executing the VMXOFF when doing kdump. This is used to ensure the VMCSs in the
-> vmcore updated and non-corrupted.
-> 
-> Changelog from v9 to v10:
-> 1. add rcu protect to the callback function
-> 
-> Changelog from v8 to v9:
-> 1. KEXEC: use a callback function instead of a notifier.
-> 2. KVM-INTEL: use a new vmclear function instead of just calling 
->    vmclear_local_loaded_vmcss to make sure we just do the core vmclear
->    operation in kdump.
-> 
-> Changelog from v7 to v8:
-> 1. KEXEC: regression for using name crash_notifier_list
->    and remove comments related to KVM
->    and just call function atomic_notifier_call_chain directly.
-> 
-> Changelog from v6 to v7:
-> 1. KVM-INTEL: in hardware_disable, we needn't disable the
->    vmclear, so remove it.
-> 
-> Changelog from v5 to v6:
-> 1. KEXEC: the atomic notifier list renamed:
->    crash_notifier_list --> vmclear_notifier_list
-> 2. KVM-INTEL: provide empty functions if CONFIG_KEXEC is
->    not defined and remove unnecessary #ifdef's.
-> 
-> Changelog from v4 to v5:
-> 1. use an atomic notifier instead of function call, so
->    have all the vmclear codes in vmx.c.
-> 
-> Changelog from v3 to v4:
-> 1. add a new percpu variable vmclear_skipped to skip
->    vmclear in kdump in some conditions.
-> 
-> Changelog from v2 to v3:
-> 1. remove unnecessary conditions in function
->    cpu_emergency_clear_loaded_vmcss as Marcelo suggested.
-> 
-> Changelog from v1 to v2:
-> 1. remove the sysctl and clear VMCSs unconditionally.
-> 
-> Zhang Yanfei (2):
->   x86/kexec: VMCLEAR VMCSs loaded on all cpus if necessary
->   KVM-INTEL: provide the vmclear function and a bitmap to support
->     VMCLEAR in kdump
-> 
->  arch/x86/include/asm/kexec.h |    2 +
->  arch/x86/kernel/crash.c      |   32 ++++++++++++++++++++
->  arch/x86/kvm/vmx.c           |   67 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 101 insertions(+), 0 deletions(-)
+>     https://lkml.org/lkml/2012/11/21/90
 
---
-			Gleb.
+Thanks for the release Atsushi. Has this patch been included in upstream
+kernels? Is it going to show up in 3.7?
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
