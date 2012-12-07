@@ -1,17 +1,18 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from s2exchange2.hq.s2sys.com ([23.25.203.146])
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TgyGX-0007Rj-1C
- for kexec@lists.infradead.org; Fri, 07 Dec 2012 13:46:58 +0000
-Content-class: urn:content-classes:message
+ id 1TgzOc-0007H5-5D
+ for kexec@lists.infradead.org; Fri, 07 Dec 2012 14:59:23 +0000
+Date: Fri, 7 Dec 2012 09:59:09 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
+Message-ID: <20121207145909.GA4928@redhat.com>
+References: <1354810175-4338-1-git-send-email-js1304@gmail.com>
+ <20121206145020.93fd7128.akpm@linux-foundation.org>
+ <CAAmzW4N-=uXBdgjbkdL=aNVtKvvXZs-6BNgpDzi7CLkeo0-jBg@mail.gmail.com>
 MIME-Version: 1.0
-Subject: RE: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Date: Fri, 7 Dec 2012 08:46:33 -0500
-Message-ID: <C14DE2E60140984C9CEB63D47F21D9D40499579E@s2exchange2.hq.s2sys.com>
-In-Reply-To: <50C18718.40902@linux.vnet.ibm.com>
-References: <1350981766.43974385.1354807618743.JavaMail.root@redhat.com>
- <50C18718.40902@linux.vnet.ibm.com>
-From: "Luc Chouinard" <LChouinard@s2sys.com>
+Content-Disposition: inline
+In-Reply-To: <CAAmzW4N-=uXBdgjbkdL=aNVtKvvXZs-6BNgpDzi7CLkeo0-jBg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,126 +24,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>, Dave Anderson <anderson@redhat.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Vivek Goyal <vgoyal@redhat.com>, buendgen@de.ibm.com
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: JoonSoo Kim <js1304@gmail.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Dave Anderson <anderson@redhat.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
+On Fri, Dec 07, 2012 at 10:16:55PM +0900, JoonSoo Kim wrote:
+> 2012/12/7 Andrew Morton <akpm@linux-foundation.org>:
+> > On Fri,  7 Dec 2012 01:09:27 +0900
+> > Joonsoo Kim <js1304@gmail.com> wrote:
+> >
+> >> I'm not sure that "7/8: makes vmlist only for kexec" is fine.
+> >> Because it is related to userspace program.
+> >> As far as I know, makedumpfile use kexec's output information and it only
+> >> need first address of vmalloc layer. So my implementation reflect this
+> >> fact, but I'm not sure. And now, I don't fully test this patchset.
+> >> Basic operation work well, but I don't test kexec. So I send this
+> >> patchset with 'RFC'.
+> >
+> > Yes, this is irritating.  Perhaps Vivek or one of the other kexec
+> > people could take a look at this please - if would obviously be much
+> > better if we can avoid merging [patch 7/8] at all.
+> 
+> I'm not sure, but I almost sure that [patch 7/8] have no problem.
+> In kexec.c, they write an address of vmlist and offset of vm_struct's
+> address field.
+> It imply that user for this information doesn't have any other
+> information about vm_struct,
+> and they can't use other field of vm_struct. They can use *only* address field.
+> So, remaining just one vm_struct for vmlist which represent first area
+> of vmalloc layer
+> may be safe.
 
+I browsed through makedumpfile source quickly. So yes it does look like
+that we look at first vmlist element ->addr field to figure out where
+vmalloc area is starting.
 
-> -----Original Message-----
-> From: Aravinda Prasad [mailto:aravinda@linux.vnet.ibm.com]
-> Sent: Friday, December 07, 2012 1:05 AM
-> To: Dave Anderson
-> Cc: ananth@in.ibm.com; mahesh@linux.vnet.ibm.com;
-> kexec@lists.infradead.org; Luc Chouinard; tachibana@mxm.nes.nec.co.jp;
-> Atsushi Kumagai; Vivek Goyal; buendgen@de.ibm.com
-> Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with
-eppic
-> 
-> 
-> 
-> On 2012-12-06 20:56, Dave Anderson wrote:
-> 
-> >
-> >
-> > ----- Original Message -----
-> >
-> >>
-> >> Another approach is to dynamically load libeppic library - similar
-> >> way how crash does it. No major changes will be done to
-makedumpfile
-> >> code, except the addition of --eppic flag. Upon specifying --eppic
-> >> flag makedumpfile will dlopen libeppic.so, which will have
-> >> functionality to scrub the specified data. This will prevent
-> >> makedumpfile bloat and will not affect the size of initramfs as
-> >> --eppic is only specified during post processing. The distribution
-> >> should build and ship libeppic.so and the procedure for building
-.so
-> >> will be similar to what we have in crash.
-> >
-> > OK, so based upon the most recent discussion here:
-> >
-> >  Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-> > http://lists.infradead.org/pipermail/kexec/2012-December/007452.html
-> >
-> > Aravinda states that he will be posting an update for makedumpfile
-> > that will dlopen() a new "libeppic.so" shared object that is built
-> > with the libeppic.a library.
-> >
-> > The upstream eppic git tree contains an "applications/crash"
-> > subdirectory that contains the code that creates a
-crash-utility-specific
-> "eppic.so" file.
-> >
-> > Accordingly, this new proposal will also require new source file(s)
-> > and a build process to create this new makedumpfile-specific
-"libeppic.so"
-> > shared object.
-> >
-> > Arvinda -- will you be proposing an additional
-"applications/makedumpfile"
-> > subdirectory for the upstream eppic git tree that can be used to
-> > create the makedumpfile-specific libeppic.so file?
-> 
-> 
-> This is what I am planning.
-> 
-> A new extension_eppic.c file will be created under makedumpfile source
-> directory. This file is equivalent to applications/crash/eppic.c in
-upstream eppic
-> repository. A new target will be added to the Makefile of makedumpfile
-to build
-> the shared library and to build this shared library libeppic.a would
-be required.
-> The makedumpfile specific shared library will be named different - say
-> eppic_mkdumpfile.so to avoid conflict with crash specific libeppic.so.
-> 
-> The reason for including extension_eppic.c under makedumpfile source
-is
-> because it will be dependent on other functions in makedumpfile code
-like dwarf
-> related calls etc. People modifying those functions should be aware of
-the
-> callers in extension_eppic.c and if this is included in upstream eppic
-code, it will
-> be easily overlooked (or may not be aware of its existence).
+Can we get the same information from this rb-tree of vmap_area? Is
+->va_start field communication same information as vmlist was
+communicating? What's the difference between vmap_area_root and vmlist.
 
-The same reasons exists for applications/crash/eppic.c. It only ended up
-on eppic's git for two reasons. To provide for a complete example of
-integration into a tool and, because I originally wrote it,  I could
-support it from there without having to send a patch Dave's way.
- 
-I expect other applications to own their glue/integration file(s) and
-only grab libeppic from the git. These applications, will comply to
-libeppic's APIs and only fixes or new functions will be added to
-libeppic to support these applications and valid new requirements they
-may have. Like we did for mkdumpfile.
+So without knowing details of both the data structures, I think if vmlist
+is going away, then user space tools should be able to traverse vmap_area_root
+rb tree. I am assuming it is sorted using ->addr field and we should be
+able to get vmalloc area start from there. It will just be a matter of
+exporting right fields to user space (instead of vmlist).
 
-Same libeppic.so and same libeppic Makefile for all.
+CCing Atsushi Kumagai and Dave Anderson. Atsushi-san is the one who
+maintains makedumpfile. Dave Anderson maintains "crash" and looks like
+it already has the capability to traverse through vmap_area_root
+rb-tree.
 
-> 
-> A flag --eppic will be added to makedumpfile which will dlopen the
-shared
-> library. Few additional helper functions will be added to dwarf_info.c
-and
-> erase_info.c - the same functions which are in v2 of the patchset.
-> 
-> 
-> >
-> > Dave
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> >
-> 
-> 
-> --
-> Regards,
-> Aravinda
+So please let us know if left most element of vmap_area_root rb-tree will
+give us start of vmalloc area or not?
 
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
