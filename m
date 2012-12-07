@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oa0-f49.google.com ([209.85.219.49])
+Received: from mail-ob0-f177.google.com ([209.85.214.177])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tgy5l-0006jT-OI
- for kexec@lists.infradead.org; Fri, 07 Dec 2012 13:35:50 +0000
-Received: by mail-oa0-f49.google.com with SMTP id l10so398934oag.36
- for <kexec@lists.infradead.org>; Fri, 07 Dec 2012 05:35:49 -0800 (PST)
+ id 1Tgy9z-0007Hh-0O
+ for kexec@lists.infradead.org; Fri, 07 Dec 2012 13:40:12 +0000
+Received: by mail-ob0-f177.google.com with SMTP id uo13so389485obb.36
+ for <kexec@lists.infradead.org>; Fri, 07 Dec 2012 05:40:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAA_GA1fiQfOqApE05oh=2Wr-GejbHtOd4o7sqcGdQFH6cxWPpQ@mail.gmail.com>
+In-Reply-To: <CAOJsxLFy5TP_xJ0GcqYdpsZ_Lj+Sf2Bfn99CqCqOv8P21N8+UA@mail.gmail.com>
 References: <1354810175-4338-1-git-send-email-js1304@gmail.com>
- <CAA_GA1fiQfOqApE05oh=2Wr-GejbHtOd4o7sqcGdQFH6cxWPpQ@mail.gmail.com>
-Date: Fri, 7 Dec 2012 22:35:48 +0900
-Message-ID: <CAAmzW4O0EY=-ZBytrWmGVax47_ygNh+hcGpbGOCt9cnXH7HU-g@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
+ <1354810175-4338-2-git-send-email-js1304@gmail.com>
+ <CAOJsxLFy5TP_xJ0GcqYdpsZ_Lj+Sf2Bfn99CqCqOv8P21N8+UA@mail.gmail.com>
+Date: Fri, 7 Dec 2012 22:40:10 +0900
+Message-ID: <CAAmzW4PDmL-1U6SVFohS_du-7uJngbR-4EBa4UUSWa-xs66Lmw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/8] mm,
+ vmalloc: change iterating a vmlist to find_vm_area()
 From: JoonSoo Kim <js1304@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,56 +27,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bob Liu <lliubbo@gmail.com>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+To: Pekka Enberg <penberg@kernel.org>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chris Metcalf <cmetcalf@tilera.com>, linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Guan Xuetao <gxt@mprc.pku.edu.cn>, Thomas Gleixner <tglx@linutronix.de>
 
-Hello, Bob.
+Hello, Pekka.
 
-2012/12/7 Bob Liu <lliubbo@gmail.com>:
-> Hi Joonsoo,
+2012/12/7 Pekka Enberg <penberg@kernel.org>:
+> On Thu, Dec 6, 2012 at 6:09 PM, Joonsoo Kim <js1304@gmail.com> wrote:
+>> The purpose of iterating a vmlist is finding vm area with specific
+>> virtual address. find_vm_area() is provided for this purpose
+>> and more efficient, because it uses a rbtree.
+>> So change it.
 >
-> On Fri, Dec 7, 2012 at 12:09 AM, Joonsoo Kim <js1304@gmail.com> wrote:
->> This patchset remove vm_struct list management after initializing vmalloc.
->> Adding and removing an entry to vmlist is linear time complexity, so
->> it is inefficient. If we maintain this list, overall time complexity of
->> adding and removing area to vmalloc space is O(N), although we use
->> rbtree for finding vacant place and it's time complexity is just O(logN).
->>
->> And vmlist and vmlist_lock is used many places of outside of vmalloc.c.
->> It is preferable that we hide this raw data structure and provide
->> well-defined function for supporting them, because it makes that they
->> cannot mistake when manipulating theses structure and it makes us easily
->> maintain vmalloc layer.
->>
->> I'm not sure that "7/8: makes vmlist only for kexec" is fine.
->> Because it is related to userspace program.
->> As far as I know, makedumpfile use kexec's output information and it only
->> need first address of vmalloc layer. So my implementation reflect this
->> fact, but I'm not sure. And now, I don't fully test this patchset.
->> Basic operation work well, but I don't test kexec. So I send this
->> patchset with 'RFC'.
->>
->> Please let me know what I am missing.
->>
->
-> Nice work!
-> I also thought about this several weeks ago but I think the efficiency
-> may be a problem.
->
-> As you know two locks(vmap_area_lock and vmlist_lock) are used
-> currently so that some
-> work may be done in parallel(not proved).
-> If removed vmlist, i'm afraid vmap_area_lock will become a bottleneck
-> which will reduce the efficiency.
+> You no longer take the 'vmlist_lock'. This is safe, because...?
 
-Thanks for comment!
-
-Yes, there were some place that work may be done in parallel.
-For example, access to '/proc/meminfo', '/proc/vmallocinfo' and '/proc/kcore'
-may be done in parallel. But, access to these are not main
-functionality of vmalloc layer.
-Optimizing main function like vmalloc, vfree is more preferable than above.
-And this patchset optimize main function with removing vmlist iteration.
+As Bob mentioned, find_vm_area() hold a 'vmap_area_lock' during
+searching a area.
+When we hold a 'vmap_area_lock', area can't be removed.
+So this change is safe.
 
 Thanks.
 
