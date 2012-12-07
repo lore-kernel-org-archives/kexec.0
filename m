@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TgkGs-0003od-Nj
- for kexec@lists.infradead.org; Thu, 06 Dec 2012 22:50:23 +0000
-Date: Thu, 6 Dec 2012 14:50:20 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
-Message-Id: <20121206145020.93fd7128.akpm@linux-foundation.org>
+Received: from mail-vb0-f44.google.com ([209.85.212.44])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Tgokm-0000EJ-IG
+ for kexec@lists.infradead.org; Fri, 07 Dec 2012 03:37:34 +0000
+Received: by mail-vb0-f44.google.com with SMTP id fc26so57633vbb.17
+ for <kexec@lists.infradead.org>; Thu, 06 Dec 2012 19:37:31 -0800 (PST)
+MIME-Version: 1.0
 In-Reply-To: <1354810175-4338-1-git-send-email-js1304@gmail.com>
 References: <1354810175-4338-1-git-send-email-js1304@gmail.com>
-Mime-Version: 1.0
+Date: Fri, 7 Dec 2012 11:37:30 +0800
+Message-ID: <CAA_GA1fiQfOqApE05oh=2Wr-GejbHtOd4o7sqcGdQFH6cxWPpQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
+From: Bob Liu <lliubbo@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,11 +25,23 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Joonsoo Kim <js1304@gmail.com>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, linux-mm@kvack.org
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 
-On Fri,  7 Dec 2012 01:09:27 +0900
-Joonsoo Kim <js1304@gmail.com> wrote:
+Hi Joonsoo,
 
+On Fri, Dec 7, 2012 at 12:09 AM, Joonsoo Kim <js1304@gmail.com> wrote:
+> This patchset remove vm_struct list management after initializing vmalloc.
+> Adding and removing an entry to vmlist is linear time complexity, so
+> it is inefficient. If we maintain this list, overall time complexity of
+> adding and removing area to vmalloc space is O(N), although we use
+> rbtree for finding vacant place and it's time complexity is just O(logN).
+>
+> And vmlist and vmlist_lock is used many places of outside of vmalloc.c.
+> It is preferable that we hide this raw data structure and provide
+> well-defined function for supporting them, because it makes that they
+> cannot mistake when manipulating theses structure and it makes us easily
+> maintain vmalloc layer.
+>
 > I'm not sure that "7/8: makes vmlist only for kexec" is fine.
 > Because it is related to userspace program.
 > As far as I know, makedumpfile use kexec's output information and it only
@@ -35,10 +49,57 @@ Joonsoo Kim <js1304@gmail.com> wrote:
 > fact, but I'm not sure. And now, I don't fully test this patchset.
 > Basic operation work well, but I don't test kexec. So I send this
 > patchset with 'RFC'.
+>
+> Please let me know what I am missing.
+>
 
-Yes, this is irritating.  Perhaps Vivek or one of the other kexec
-people could take a look at this please - if would obviously be much
-better if we can avoid merging [patch 7/8] at all.
+Nice work!
+I also thought about this several weeks ago but I think the efficiency
+may be a problem.
+
+As you know two locks(vmap_area_lock and vmlist_lock) are used
+currently so that some
+work may be done in parallel(not proved).
+If removed vmlist, i'm afraid vmap_area_lock will become a bottleneck
+which will reduce the efficiency.
+
+> This series based on v3.7-rc7 and on top of submitted patchset for ARM.
+> 'introduce static_vm for ARM-specific static mapped area'
+> https://lkml.org/lkml/2012/11/27/356
+> But, running properly on x86 without ARM patchset.
+>
+> Joonsoo Kim (8):
+>   mm, vmalloc: change iterating a vmlist to find_vm_area()
+>   mm, vmalloc: move get_vmalloc_info() to vmalloc.c
+>   mm, vmalloc: protect va->vm by vmap_area_lock
+>   mm, vmalloc: iterate vmap_area_list, instead of vmlist in
+>     vread/vwrite()
+>   mm, vmalloc: iterate vmap_area_list in get_vmalloc_info()
+>   mm, vmalloc: iterate vmap_area_list, instead of vmlist, in
+>     vmallocinfo()
+>   mm, vmalloc: makes vmlist only for kexec
+>   mm, vmalloc: remove list management operation after initializing
+>     vmalloc
+>
+>  arch/tile/mm/pgtable.c      |    7 +-
+>  arch/unicore32/mm/ioremap.c |   17 +--
+>  arch/x86/mm/ioremap.c       |    7 +-
+>  fs/proc/Makefile            |    2 +-
+>  fs/proc/internal.h          |   18 ---
+>  fs/proc/meminfo.c           |    1 +
+>  fs/proc/mmu.c               |   60 ----------
+>  include/linux/vmalloc.h     |   19 +++-
+>  mm/vmalloc.c                |  258 +++++++++++++++++++++++++++++--------------
+>  9 files changed, 204 insertions(+), 185 deletions(-)
+>  delete mode 100644 fs/proc/mmu.c
+>
+> --
+> 1.7.9.5
+>
+
+-- 
+Regards,
+--Bob
 
 _______________________________________________
 kexec mailing list
