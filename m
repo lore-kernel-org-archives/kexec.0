@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mail-ee0-f49.google.com ([74.125.83.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tgr7q-0001dV-Ek
- for kexec@lists.infradead.org; Fri, 07 Dec 2012 06:09:31 +0000
-Date: Fri, 7 Dec 2012 15:03:40 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makedumpfile-1.5.1: Improve performance for cyclic mode.
-Message-Id: <20121207150340.3d22f1e72286c866d0c742fb@mxc.nes.nec.co.jp>
-In-Reply-To: <20121206143802.GB25829@redhat.com>
-References: <20121206133208.43a8ea142a88c2e17f5aab19@mxc.nes.nec.co.jp>
- <20121206143802.GB25829@redhat.com>
-Mime-Version: 1.0
+ id 1TgsbX-00066w-Gk
+ for kexec@lists.infradead.org; Fri, 07 Dec 2012 07:44:18 +0000
+Received: by mail-ee0-f49.google.com with SMTP id c4so94668eek.36
+ for <kexec@lists.infradead.org>; Thu, 06 Dec 2012 23:44:11 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <1354810175-4338-2-git-send-email-js1304@gmail.com>
+References: <1354810175-4338-1-git-send-email-js1304@gmail.com>
+ <1354810175-4338-2-git-send-email-js1304@gmail.com>
+Date: Fri, 7 Dec 2012 09:44:11 +0200
+Message-ID: <CAOJsxLFy5TP_xJ0GcqYdpsZ_Lj+Sf2Bfn99CqCqOv8P21N8+UA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/8] mm,
+ vmalloc: change iterating a vmlist to find_vm_area()
+From: Pekka Enberg <penberg@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,35 +26,103 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org
+To: Joonsoo Kim <js1304@gmail.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chris Metcalf <cmetcalf@tilera.com>, linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Guan Xuetao <gxt@mprc.pku.edu.cn>, Thomas Gleixner <tglx@linutronix.de>
 
-Hello Vivek,
+On Thu, Dec 6, 2012 at 6:09 PM, Joonsoo Kim <js1304@gmail.com> wrote:
+> The purpose of iterating a vmlist is finding vm area with specific
+> virtual address. find_vm_area() is provided for this purpose
+> and more efficient, because it uses a rbtree.
+> So change it.
 
-On Thu, 6 Dec 2012 09:38:02 -0500
-Vivek Goyal <vgoyal@redhat.com> wrote:
+You no longer take the 'vmlist_lock'. This is safe, because...?
 
-> On Thu, Dec 06, 2012 at 01:32:08PM +0900, Atsushi Kumagai wrote:
-> 
-> [..]
-> >   Additionally, I posted the patch below to add the values above to the
-> >   upstream kernel:
-> > 
-> >     https://lkml.org/lkml/2012/11/21/90
-> 
-> Thanks for the release Atsushi. Has this patch been included in upstream
-> kernels? Is it going to show up in 3.7?
-> 
-> Thanks
-> Vivek
-
-No, this patch hasn't gotten any response yet.
-I'll continue to take care of it, but I think it will not be included
-in 3.7.
-
-
-Thanks
-Atsushi Kumagai
+> Cc: Chris Metcalf <cmetcalf@tilera.com>
+> Cc: Guan Xuetao <gxt@mprc.pku.edu.cn>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Signed-off-by: Joonsoo Kim <js1304@gmail.com>
+>
+> diff --git a/arch/tile/mm/pgtable.c b/arch/tile/mm/pgtable.c
+> index de0de0c..862782d 100644
+> --- a/arch/tile/mm/pgtable.c
+> +++ b/arch/tile/mm/pgtable.c
+> @@ -592,12 +592,7 @@ void iounmap(volatile void __iomem *addr_in)
+>            in parallel. Reuse of the virtual address is prevented by
+>            leaving it in the global lists until we're done with it.
+>            cpa takes care of the direct mappings. */
+> -       read_lock(&vmlist_lock);
+> -       for (p = vmlist; p; p = p->next) {
+> -               if (p->addr == addr)
+> -                       break;
+> -       }
+> -       read_unlock(&vmlist_lock);
+> +       p = find_vm_area((void *)addr);
+>
+>         if (!p) {
+>                 pr_err("iounmap: bad address %p\n", addr);
+> diff --git a/arch/unicore32/mm/ioremap.c b/arch/unicore32/mm/ioremap.c
+> index b7a6055..13068ee 100644
+> --- a/arch/unicore32/mm/ioremap.c
+> +++ b/arch/unicore32/mm/ioremap.c
+> @@ -235,7 +235,7 @@ EXPORT_SYMBOL(__uc32_ioremap_cached);
+>  void __uc32_iounmap(volatile void __iomem *io_addr)
+>  {
+>         void *addr = (void *)(PAGE_MASK & (unsigned long)io_addr);
+> -       struct vm_struct **p, *tmp;
+> +       struct vm_struct *vm;
+>
+>         /*
+>          * If this is a section based mapping we need to handle it
+> @@ -244,17 +244,10 @@ void __uc32_iounmap(volatile void __iomem *io_addr)
+>          * all the mappings before the area can be reclaimed
+>          * by someone else.
+>          */
+> -       write_lock(&vmlist_lock);
+> -       for (p = &vmlist ; (tmp = *p) ; p = &tmp->next) {
+> -               if ((tmp->flags & VM_IOREMAP) && (tmp->addr == addr)) {
+> -                       if (tmp->flags & VM_UNICORE_SECTION_MAPPING) {
+> -                               unmap_area_sections((unsigned long)tmp->addr,
+> -                                                   tmp->size);
+> -                       }
+> -                       break;
+> -               }
+> -       }
+> -       write_unlock(&vmlist_lock);
+> +       vm = find_vm_area(addr);
+> +       if (vm && (vm->flags & VM_IOREMAP) &&
+> +               (vm->flags & VM_UNICORE_SECTION_MAPPING))
+> +               unmap_area_sections((unsigned long)vm->addr, vm->size);
+>
+>         vunmap(addr);
+>  }
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index 78fe3f1..9a1e658 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -282,12 +282,7 @@ void iounmap(volatile void __iomem *addr)
+>            in parallel. Reuse of the virtual address is prevented by
+>            leaving it in the global lists until we're done with it.
+>            cpa takes care of the direct mappings. */
+> -       read_lock(&vmlist_lock);
+> -       for (p = vmlist; p; p = p->next) {
+> -               if (p->addr == (void __force *)addr)
+> -                       break;
+> -       }
+> -       read_unlock(&vmlist_lock);
+> +       p = find_vm_area((void __force *)addr);
+>
+>         if (!p) {
+>                 printk(KERN_ERR "iounmap: bad address %p\n", addr);
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe, send a message with 'unsubscribe linux-mm' in
+> the body to majordomo@kvack.org.  For more info on Linux MM,
+> see: http://www.linux-mm.org/ .
+> Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
 
 _______________________________________________
 kexec mailing list
