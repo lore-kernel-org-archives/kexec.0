@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TgzX5-0007zi-AQ
- for kexec@lists.infradead.org; Fri, 07 Dec 2012 15:08:07 +0000
-Date: Fri, 7 Dec 2012 10:08:05 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] Add the values related to buddy system for filtering
- free pages
-Message-ID: <20121207150805.GC4928@redhat.com>
-References: <20121121170247.6b57465f2fc1d7f91cd1cddf@mxc.nes.nec.co.jp>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20121121170247.6b57465f2fc1d7f91cd1cddf@mxc.nes.nec.co.jp>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Th19O-0007GQ-5g
+ for kexec@lists.infradead.org; Fri, 07 Dec 2012 16:51:47 +0000
+Received: from relay1.suse.de (unknown [195.135.220.254])
+ (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mx2.suse.de (Postfix) with ESMTP id 798B2A4EB7
+ for <kexec@lists.infradead.org>; Fri,  7 Dec 2012 17:51:03 +0100 (CET)
+Date: Fri, 7 Dec 2012 17:50:55 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+Message-ID: <20121207175055.4e588fd7@azariah.suse.cz>
+In-Reply-To: <20121119180710.GA16448@sgi.com>
+References: <E1TZ8Ia-0000Gn-1v@eag09.americas.sgi.com>
+ <20121116203944.GO4515@redhat.com> <20121119180710.GA16448@sgi.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,50 +24,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 
-On Wed, Nov 21, 2012 at 05:02:47PM +0900, Atsushi Kumagai wrote:
-> This patch adds the values related to buddy system to vmcoreinfo data
-> so that makedumpfile (dump filtering command) can filter out all free
-> pages with the new logic.
-> It's faster than the current logic because it can distinguish free page
-> by analyzing page structure at the same time as filtering for other
-> unnecessary pages (e.g. anonymous page).
-> OTOH, the current logic has to trace free_list to distinguish free 
-> pages while analyzing page structure to filter out other unnecessary
-> pages.
-> 
-> The new logic uses the fact that buddy page is marked by _mapcount == 
-> PAGE_BUDDY_MAPCOUNT_VALUE. The values below are required to distinguish
-> it.
-> 
-> Required values:
->   - OFFSET(page._mapcount)
->   - OFFSET(page.private)
->   - SIZE(pageflags)
->   - NUMBER(PG_slab)
->   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
->   
-
-As per your explanation, you should just need to export page._mapcount
-offset and PAGE_BUDDY_MAPCOUNT_VALUE value so that you can figure out
-if a page is free or not.
-
-Why do we need rest of the three fields.
-
-- OFFSET(page.private)
-- SIZE(pageflags)
-- NUMBER(PG_slab)
-
-Thanks
-Vivek
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ViBNb24sIDE5IE5vdiAyMDEyIDEyOjA3OjEwIC0wNjAwCkNsaWZmIFdpY2ttYW4gPGNwd0BzZ2ku
+Y29tPiBuYXBzw6FubzoKCj4gT24gRnJpLCBOb3YgMTYsIDIwMTIgYXQgMDM6Mzk6NDRQTSAtMDUw
+MCwgVml2ZWsgR295YWwgd3JvdGU6Cj4gPiBPbiBUaHUsIE5vdiAxNSwgMjAxMiBhdCAwNDo1Mjo0
+MFBNIC0wNjAwLCBDbGlmZiBXaWNrbWFuIHdyb3RlOgo+ID4gPiAKPiA+ID4gR2VudGxlbWVuLAo+
+ID4gPiAKPiA+ID4gSSBrbm93IHRoaXMgaXMgcmF0aGVyIGxhdGUgdG8gdGhlIGdhbWUsIGdpdmVu
+IGFsbCB0aGUgcmVjZW50IHdvcmsKPiA+ID4gdG8gc3BlZWQgdXAgbWFrZWR1bXBmaWxlIGFuZCBy
+ZWR1Y2UgdGhlIG1lbW9yeSB0aGF0IGl0IGNvbnN1bWVzLgo+ID4gPiBCdXQgSSd2ZSBiZWVuIGV4
+cGVyaW1lbnRpbmcgd2l0aCBhc2tpbmcgdGhlIGtlcm5lbCB0byBzY2FuIHRoZQo+ID4gPiBwYWdl
+IHRhYmxlcyBpbnN0ZWFkIG9mIHJlYWRpbmcgYWxsIHRob3NlIHBhZ2Ugc3RydWN0dXJlcwo+ID4g
+PiB0aHJvdWdoIC9wcm9jL3ZtY29yZS4KPiA+ID4gCj4gPiA+IFRoZSByZXN1bHRzIGFyZSByYXRo
+ZXIgZHJhbWF0aWMgLS0gaWYgdGhleSB3ZXJlbid0IEkgd291bGQgbm90Cj4gPiA+IHByZXN1bWUg
+dG8gc3VnZ2VzdCBzdWNoIGEgcmFkaWNhbCBwYXRoLgo+ID4gPiBPbiBhIHNtYWxsLCBpZGxlIFVW
+IHN5c3RlbTogYWJvdXQgNCBzZWMuIHZlcnN1cyBhYm91dCA0MCBzZWMuCj4gPiA+IE9uIGEgOFRC
+IFVWIHRoZSB1bm5lY2Vzc2FyeSBwYWdlIHNjYW4gYWxvbmUgdGFrZXMgNCBtaW51dGVzLCB2cy4K
+PiA+ID4gYWJvdXQgMjAwIG1pbiB0aHJvdWdoIC9wcm9jL3ZtY29yZS4KPiA+ID4gCj4gPiA+IEkg
+aGF2ZSBub3QgY29tcGFyZWQgaXQgdG8geW91ciB2ZXJzaW9uIDEuNS4xLCBzbyBJIGRvbid0IGtu
+b3cgaWYKPiA+ID4geW91ciByZWNlbnQgd29yayBwcm92aWRlcyBzaW1pbGFyIHNwZWVkdXBzLgo+
+ID4gCj4gPiBJIGd1ZXNzIHRyeSAxLjUuMS1yYy4gSUlVQywgd2UgaGFkIHRoZSBsb2dpYyBvZiBn
+b2luZyB0aHJvdWdoIHBhZ2UKPiA+IHRhYmxlcyBidXQgdGhhdCByZXF1aXJlZCBvbmUgc2luZ2xl
+IGJpdG1hcCB0byBiZSBwcmVzZW50IGFuZCBpbgo+ID4gY29uc3RyYWluZWQgbWVtb3J5IGVudmly
+b25tZW50IHdlIHdpbGwgbm90IGhhdmUgdGhhdC4KPiA+IAo+ID4gVGhhdCdzIHdoZW4gdGhpcyBp
+ZGVhIGNhbWUgdXAgdGhhdCBzY2FuIHBvcnRpb24gb2Ygc3RydWN0IHBhZ2UKPiA+IHJhbmdlLCBm
+aWx0ZXIgaXQsIGR1bXAgaXQgYW5kIHRoZW4gbW92ZSBvbiB0byBuZXh0IHJhbmdlLgo+ID4gCj4g
+PiBFdmVuIGFmdGVyIDEuNS4xLXJjIGlmIGRpZmZlcmVuY2UgaXMgdGhpcyBkcmFtYXRpYywgdGhh
+dCBtZWFucyB3ZQo+ID4gYXJlIG5vdCBkb2luZyBzb21ldGhpbmcgcmlnaHQgaW4gbWFrZWR1bXBm
+aWxlIGFuZCBpdCBuZWVkcyB0byBiZQo+ID4gZml4ZWQvb3B0aW1pemVkLgo+ID4gCj4gPiBCdXQg
+bW92aW5nIHRoZSBsb2dpYyB0byBrZXJuZWwgZG9lcyBub3QgbWFrZSBtdWNoIHNlbnNlIHRvIG1l
+IGF0Cj4gPiB0aGlzIHBvaW50IG9mIHRpbWUgdW50aWxlIGFuZCB1bmxlc3MgdGhlcmUgaXMgYSBn
+b29kIGV4cGxhbmF0aW9uCj4gPiB0aGF0IHdoeSB1c2VyIHNwYWNlIGNhbid0IGRvIGEgZ29vZCBq
+b2Igb2Ygd2hhdCBrZXJuZWwgaXMgZG9pbmcuCj4gCj4gSSB0ZXN0ZWQgYSBwYXRjaCBpbiB3aGlj
+aCBtYWtlZHVtcGZpbGUgZG9lcyBub3RoaW5nIGJ1dCBzY2FuIGFsbCB0aGUKPiBwYWdlIHN0cnVj
+dHVyZXMgdXNpbmcgL3Byb2Mvdm1jb3JlLiAgSXQgaXMgc2ltcGx5IHJlYWRpbmcgZWFjaAo+IGNv
+bnNlY3V0aXZlIHJhbmdlIG9mIHBhZ2Ugc3RydWN0dXJlcyBpbiByZWFkbWVtKCkgY2h1bmtzIG9m
+IDUxMgo+IHN0cnVjdHVyZXMuIEFuZCBkb2luZyBub3RoaW5nIG1vcmUgdGhhbiBhY2N1bXVsYXRp
+bmcgYSBoYXNoIHRvdGFsIG9mCj4gdGhlICdmbGFncycgZmllbGQgaW4gZWFjaCBwYWdlIChmb3Ig
+YSBzYW5pdHkgY2hlY2spLiBPbiBteSB0ZXN0Cj4gbWFjaGluZSB0aGVyZSBhcmUgNiBibG9ja3Mg
+b2YgcGFnZSBzdHJ1Y3R1cmVzLCB0b3RhbGluZyAxMiBtaWxsaW9uCj4gc3RydWN0dXJlcy4gVGhp
+cyB0YWtlcyAzMS4xICd1bml0cyBvZiB0aW1lJyAoSSB3b24ndCBzYXkgc2Vjb25kcywgYXMKPiB0
+aGUgc3BlZWQgb2YgdGhlIGNsb2NrIHNlZW1zIHRvIGJlIHdheSB0b28gZmFzdCBpbiB0aGUgY3Jh
+c2gga2VybmVsKS4KPiBJZiBJIGluY3JlYXNlIHRoZSBidWZmZXIgc2l6ZSB0byA1MTIwIHN0cnVj
+dHVyZXM6IDMxLjAgdW5pdHMuIEF0Cj4gNTEyMDAgc3RydWN0dXJlczogMzAuOS4gIFNvIGJ1ZmZl
+ciBzaXplIGhhcyB2aXJ0dWFsbHkgbm8gZWZmZWN0Lgo+IAo+IEkgYWxzbyByZXF1ZXN0IHRoZSBr
+ZXJuZWwgdG8gZG8gdGhlIHNhbWUgdGhpbmcuICBFYWNoIG9mIHRoZSA2Cj4gcmVxdWVzdHMgYXNr
+cyB0aGUga2VybmVsIHRvIHNjYW4gYSByYW5nZSBvZiBwYWdlIHN0cnVjdHVyZXMgYW5kCj4gYWNj
+dW11bGF0ZSBhIGhhc2ggdG90YWwgb2YgdGhlICdmbGFncycgZmllbGQuICAoQW5kIGFsc28gY29w
+eSBhCj4gMTAwMDAtZWxlbWVudCBwZm4gbGlzdCBiYWNrIHRvIHVzZXIgc3BhY2UsIHRvIHRlc3Qg
+dGhhdCBzdWNoIGNvcGllcwo+IGRvbid0IGFkZCBzaWduaWZpY2FudCBvdmVyaGVhZC4pIEFuZCB0
+aGUgMTIgbWlsbGlvbiBwYWdlcyBhcmUgc2Nhbm5lZAo+IGluIDEuNiAndW5pdHMgb2YgdGltZScu
+Cj4gCj4gSWYgSSBjb21wYXJlIHRoZSB0aW1lIGZvciBhY3R1YWwgcGFnZSBzY2FubmluZyAodW5u
+ZWNlc3NhcnkgcGFnZXMgYW5kCj4gZnJlZSBwYWdlcykgdGhyb3VnaCAvcHJvYy92bWNvcmUgdnMu
+ICByZXF1ZXN0aW5nIHRoZSBrZXJuZWwgdG8gZG8gdGhlCj4gc2Nhbm5pbmc6ICA0MCB1bml0cyB2
+cy4gMy44IHVuaXRzLgo+IAo+IE15IGNvbmNsdXNpb24gaXMgdGhhdCBtYWtlZHVtcGZpbGUncyBw
+YWdlIHNjYW5uaW5nIHByb2NlZHVyZSBpcwo+IGV4dHJlbWVseSBkb21pbmF0ZWQgYnkgdGhlIG92
+ZXJoZWFkIG9mIGNvcHlpbmcgcGFnZSBzdHJ1Y3R1cmVzCj4gdGhyb3VnaCAvcHJvYy92bWNvcmUu
+IEFuZCB0aGF0IGlzIGFib3V0IDIweCBzbG93ZXIgdGhhbiB1c2luZyB0aGUKPiBrZXJuZWwgdG8g
+YWNjZXNzIHBhZ2VzLgoKVW5kZXJzdG9vZC4KCkkgd29uZGVyIGlmIHdlIGNhbiBnZXQgdGhlIHNh
+bWUgc3BlZWQgaWYgbWFrZWR1bXBmaWxlCm1tYXBzIC9wcm9jL3ZtY29yZSBpbnN0ZWFkIG9mIHJl
+YWRpbmcgaXQuIEl0J3MganVzdCBhIHF1aWNrIGlkZWEsIHNvCm1heWJlIHRoZSBmaXJzdCB0aGlu
+ZyB0byBmaW5kIG91dCBpcyB3aGV0aGVyIC9wcm9jL3ZtY29yZSBpbXBsZW1lbnRzCm1tYXAoKSwg
+YnV0IGlmIHRoZSBib3R0bGVuZWNrIGlzIGluZGVlZCBjb3B5X3RvX3VzZXIoKSwgdGhlbiB0aGlz
+CnNob3VsZCBoZWxwLgoKU3RheSB0dW5lZCwKUGV0ciBUZXNhcmlrCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
