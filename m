@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Ti3EM-0006LQ-MQ
- for kexec@lists.infradead.org; Mon, 10 Dec 2012 13:17:20 +0000
-Date: Mon, 10 Dec 2012 08:17:05 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] Add the values related to buddy system for filtering
- free pages.
-Message-ID: <20121210131705.GC26447@redhat.com>
-References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+Received: from mail-oa0-f49.google.com ([209.85.219.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Ti4XN-0003ln-Tg
+ for kexec@lists.infradead.org; Mon, 10 Dec 2012 14:40:55 +0000
+Received: by mail-oa0-f49.google.com with SMTP id l10so2488815oag.36
+ for <kexec@lists.infradead.org>; Mon, 10 Dec 2012 06:40:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+In-Reply-To: <20121207145909.GA4928@redhat.com>
+References: <1354810175-4338-1-git-send-email-js1304@gmail.com>
+ <20121206145020.93fd7128.akpm@linux-foundation.org>
+ <CAAmzW4N-=uXBdgjbkdL=aNVtKvvXZs-6BNgpDzi7CLkeo0-jBg@mail.gmail.com>
+ <20121207145909.GA4928@redhat.com>
+Date: Mon, 10 Dec 2012 23:40:47 +0900
+Message-ID: <CAAmzW4NHO=y=utmK_at+JxvyYMd4O_7W_6n541GEA0aeDfukyw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
+From: JoonSoo Kim <js1304@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,86 +27,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Dave Anderson <anderson@redhat.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-On Mon, Dec 10, 2012 at 10:39:13AM +0900, Atsushi Kumagai wrote:
-> This patch adds the values related to buddy system to vmcoreinfo data
-> so that makedumpfile (dump filtering command) can filter out all free
-> pages with the new logic.
-> It's faster than the current logic because it can distinguish free page
-> by analyzing page structure at the same time as filtering for other
-> unnecessary pages (e.g. anonymous page).
-> OTOH, the current logic has to trace free_list to distinguish free 
-> pages while analyzing page structure to filter out other unnecessary
-> pages.
-> 
-> The new logic uses the fact that buddy page is marked by _mapcount == 
-> PAGE_BUDDY_MAPCOUNT_VALUE. But, _mapcount shares its memory with other
-> fields for SLAB/SLUB when PG_slab is set, so we need to check if PG_slab
-> is set or not before looking up _mapcount value.
-> And we can get the order of buddy system from private field.
-> To sum it up, the values below are required for this logic.
-> 
-> Required values:
->   - OFFSET(page._mapcount)
->   - OFFSET(page.private)
->   - NUMBER(PG_slab)
->   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
-> 
-> Changelog from v1 to v2:
-> 1. remove SIZE(pageflags)
->   The new logic was changed after I sent v1 patch.  
->   Accordingly, SIZE(pageflags) has been unnecessary for makedumpfile.
-> 
-> What's makedumpfile:
->   makedumpfile creates a small dumpfile by excluding unnecessary pages
->   for the analysis. To distinguish unnecessary pages, makedumpfile gets
->   the vmcoreinfo data which has the minimum debugging information only
->   for dump filtering.
-> 
-> Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Hello, Vivek.
 
-Looks good to me.
+2012/12/7 Vivek Goyal <vgoyal@redhat.com>:
+> On Fri, Dec 07, 2012 at 10:16:55PM +0900, JoonSoo Kim wrote:
+>> 2012/12/7 Andrew Morton <akpm@linux-foundation.org>:
+>> > On Fri,  7 Dec 2012 01:09:27 +0900
+>> > Joonsoo Kim <js1304@gmail.com> wrote:
+>> >
+>> >> I'm not sure that "7/8: makes vmlist only for kexec" is fine.
+>> >> Because it is related to userspace program.
+>> >> As far as I know, makedumpfile use kexec's output information and it only
+>> >> need first address of vmalloc layer. So my implementation reflect this
+>> >> fact, but I'm not sure. And now, I don't fully test this patchset.
+>> >> Basic operation work well, but I don't test kexec. So I send this
+>> >> patchset with 'RFC'.
+>> >
+>> > Yes, this is irritating.  Perhaps Vivek or one of the other kexec
+>> > people could take a look at this please - if would obviously be much
+>> > better if we can avoid merging [patch 7/8] at all.
+>>
+>> I'm not sure, but I almost sure that [patch 7/8] have no problem.
+>> In kexec.c, they write an address of vmlist and offset of vm_struct's
+>> address field.
+>> It imply that user for this information doesn't have any other
+>> information about vm_struct,
+>> and they can't use other field of vm_struct. They can use *only* address field.
+>> So, remaining just one vm_struct for vmlist which represent first area
+>> of vmalloc layer
+>> may be safe.
+>
+> I browsed through makedumpfile source quickly. So yes it does look like
+> that we look at first vmlist element ->addr field to figure out where
+> vmalloc area is starting.
+>
+> Can we get the same information from this rb-tree of vmap_area? Is
+> ->va_start field communication same information as vmlist was
+> communicating? What's the difference between vmap_area_root and vmlist.
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Thanks for comment.
 
-Thanks
-Vivek
+Yes. vmap_area's va_start field represent same information as vm_struct's addr.
+vmap_area_root is data structure for fast searching an area.
+vmap_area_list is address sorted list, so we can use it like as vmlist.
 
-> ---
->  kernel/kexec.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 5e4bd78..b27efe4 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1490,6 +1490,8 @@ static int __init crash_save_vmcoreinfo_init(void)
-> 	VMCOREINFO_OFFSET(page, _count);
-> 	VMCOREINFO_OFFSET(page, mapping);
-> 	VMCOREINFO_OFFSET(page, lru);
-> +	VMCOREINFO_OFFSET(page, _mapcount);
-> +	VMCOREINFO_OFFSET(page, private);
-> 	VMCOREINFO_OFFSET(pglist_data, node_zones);
-> 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
->  #ifdef CONFIG_FLAT_NODE_MEM_MAP
-> @@ -1512,6 +1514,8 @@ static int __init crash_save_vmcoreinfo_init(void)
-> 	VMCOREINFO_NUMBER(PG_lru);
-> 	VMCOREINFO_NUMBER(PG_private);
-> 	VMCOREINFO_NUMBER(PG_swapcache);
-> +	VMCOREINFO_NUMBER(PG_slab);
-> +	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-> 
-> 	arch_crash_save_vmcoreinfo();
-> 	update_vmcoreinfo_note();
-> --
-> 1.7.9.2
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+There is a little difference vmap_area_list and vmlist.
+vmlist is lack of information about some areas in vmalloc address space.
+For example, vm_map_ram() allocate area in vmalloc address space,
+but it doesn't make a link with vmlist. To provide full information
+about vmalloc address space,
+using vmap_area_list is more adequate.
+
+> So without knowing details of both the data structures, I think if vmlist
+> is going away, then user space tools should be able to traverse vmap_area_root
+> rb tree. I am assuming it is sorted using ->addr field and we should be
+> able to get vmalloc area start from there. It will just be a matter of
+> exporting right fields to user space (instead of vmlist).
+
+There is address sorted list of vmap_area, vmap_area_list.
+So we can use it for traversing vmalloc areas if it is necessary.
+But, as I mentioned before, kexec write *just* address of vmlist and
+offset of vm_struct's address field.
+It imply that they don't traverse vmlist,
+because they didn't write vm_struct's next field which is needed for traversing.
+Without vm_struct's next field, they have no method for traversing.
+So, IMHO, assigning dummy vm_struct to vmlist which is implemented by [7/8] is
+a safe way to maintain a compatibility of userspace tool. :)
+
+Thanks.
 
 _______________________________________________
 kexec mailing list
