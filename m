@@ -1,27 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TiEEl-0005AA-8R
- for kexec@lists.infradead.org; Tue, 11 Dec 2012 01:02:29 +0000
-Received: from ayumi.akashicho.tokyo.vergenet.net
- (p4024-ipbfp1903kobeminato.hyogo.ocn.ne.jp [114.172.131.24])
- by kirsty.vergenet.net (Postfix) with ESMTP id F0B4A266CE0
- for <kexec@lists.infradead.org>; Tue, 11 Dec 2012 12:02:17 +1100 (EST)
-Resent-Message-ID: <20121211010216.GJ18345@verge.net.au>
-Resent-To: kexec@lists.infradead.org
 Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Ti5O3-0004Ad-VX
- for kexec@lists.infradead.org; Mon, 10 Dec 2012 15:35:28 +0000
-Date: Mon, 10 Dec 2012 09:36:14 -0600
+ id 1Ti5cH-0004PS-Cf
+ for kexec@lists.infradead.org; Mon, 10 Dec 2012 15:50:10 +0000
+Date: Mon, 10 Dec 2012 09:50:58 -0600
 From: Cliff Wickman <cpw@sgi.com>
 Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
-Message-ID: <20121210153614.GA9037@sgi.com>
+Message-ID: <20121210155058.GA9603@sgi.com>
 References: <E1TZ8Ia-0000Gn-1v@eag09.americas.sgi.com>
  <20121116203944.GO4515@redhat.com> <20121119180710.GA16448@sgi.com>
  <20121210.095929.249234826.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="/9DWx/yDrRhgMJTb"
+Content-Type: multipart/mixed; boundary="sm4nu43k4a2Rpi4c"
 Content-Disposition: inline
 In-Reply-To: <20121210.095929.249234826.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -35,10 +25,10 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: ""@jp.fujitsu.com, kexec@lists.infradead.org, ptesarik@suse.cz, linux-kernel@vger.kernel.org, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
+Cc: ptesarik@suse.cz, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
 
---/9DWx/yDrRhgMJTb
+--sm4nu43k4a2Rpi4c
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -162,15 +152,18 @@ re.
 > Thanks.
 > HATAYAMA, Daisuke
 
+(resending this as I seem to have messed up the email header)
 Hi Hatayama,
 
 If ioremap/iounmap is the bottleneck then perhaps you could do what
 my patch does: it consolidates all the ranges of physical addresses
 where the boot kernel's page structures reside (see make_kernel_mmap())
-and passes them to the kernel, which then does a handfull of ioremaps's to
+and passes them to the kernel, which then does a handfull of ioremaps's
+to
 cover all of them.  Then /proc/vmcore could look up the already-mapped
 virtual address.
-(also note a kludge in get_mm_sparsemem() that verifies that each section
+(also note a kludge in get_mm_sparsemem() that verifies that each
+section
 of the mem_map spans contiguous ranges of page structures.  I had
 trouble with some sections when I made that assumption)
 
@@ -3806,13 +3799,13 @@ SGI
 cpw@sgi.com
 (651) 683-3824
 
---/9DWx/yDrRhgMJTb
+--sm4nu43k4a2Rpi4c
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="121210.proc_vmcore2"
+Content-Disposition: attachment; filename="121207.proc_vmcore2"
 
 To: kumagai-atsushi@mxc.nes.nec.co.jp d.hatayama@jp.fujitsu.com
 Cc: kexec@lists.infradead.org
-Subject: [PATCH] makedumpfile: request the kernel do page scans
+Subject: [PATCH v2] makedumpfile: request the kernel do page scans
 From: Cliff Wickman <cpw@sgi.com>
 
 I've been experimenting with asking the kernel to scan the page tables
@@ -3839,25 +3832,27 @@ This patch:
 The patch [PATCH] makedumpfile: fix to exclude_unnecessary_pages_cyclic
 is re-done by the below, so that patch should not be applied.
 
-This patch depends on a kernel patch.
+This patch depends on a kernel patch, so I'm also sending one that applies
+to a 3.0.13 kernel:
+   [PATCH] scan page tables for makedumpfile, 3.0.13 kernel
 
-Diffed against the released makedumpfile-1.5.1
+Diffed against makedumpfile-1.5.1
 
 Signed-off-by: Cliff Wickman <cpw@sgi.com>
 ---
  dwarf_info.c   |    2 
- makedumpfile.c |  523 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---
- makedumpfile.h |   92 +++++++++-
+ makedumpfile.c |  527 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ makedumpfile.h |   93 +++++++++-
  print_info.c   |    5 
  print_info.h   |    3 
- 5 files changed, 601 insertions(+), 24 deletions(-)
+ 5 files changed, 605 insertions(+), 25 deletions(-)
 
 
-Index: makedumpfile-1.5.1.released/makedumpfile.h
+Index: makedumpfile-1.5.1/makedumpfile.h
 ===================================================================
---- makedumpfile-1.5.1.released.orig/makedumpfile.h
-+++ makedumpfile-1.5.1.released/makedumpfile.h
-@@ -86,6 +86,8 @@ int get_mem_type(void);
+--- makedumpfile-1.5.1.orig/makedumpfile.h
++++ makedumpfile-1.5.1/makedumpfile.h
+@@ -89,6 +89,8 @@ int get_mem_type(void);
  #define LSEEKED_PDESC	(2)
  #define LSEEKED_PDATA	(3)
  
@@ -3866,16 +3861,17 @@ Index: makedumpfile-1.5.1.released/makedumpfile.h
  /*
   * Xen page flags
   */
-@@ -418,7 +420,7 @@ do { \
+@@ -421,7 +423,8 @@ do { \
  #define KVER_MIN_SHIFT 16
  #define KERNEL_VERSION(x,y,z) (((x) << KVER_MAJ_SHIFT) | ((y) << KVER_MIN_SHIFT) | (z))
  #define OLDEST_VERSION		KERNEL_VERSION(2, 6, 15)/* linux-2.6.15 */
--#define LATEST_VERSION		KERNEL_VERSION(3, 6, 7)/* linux-3.6.7 */
-+#define LATEST_VERSION		KERNEL_VERSION(3, 7, 8)/* linux-3.7.8 */
+-#define LATEST_VERSION		KERNEL_VERSION(3, 4, 8)/* linux-3.4.8 */
++//define LATEST_VERSION		KERNEL_VERSION(3, 4, 8)/* linux-3.4.8 */
++#define LATEST_VERSION		KERNEL_VERSION(3, 7, 8)/* linux-3.4.8 */
  
  /*
   * vmcoreinfo in /proc/vmcore
-@@ -794,9 +796,20 @@ typedef struct {
+@@ -797,9 +800,20 @@ typedef struct {
  } xen_crash_info_v2_t;
  
  struct mem_map_data {
@@ -3897,7 +3893,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.h
  };
  
  struct dump_bitmap {
-@@ -875,6 +888,7 @@ struct DumpInfo {
+@@ -878,6 +892,7 @@ struct DumpInfo {
  	int		flag_rearrange;      /* flag of creating dumpfile from
  						flattened format */
  	int		flag_split;	     /* splitting vmcore */
@@ -3905,7 +3901,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.h
    	int		flag_cyclic;	     /* cyclic processing to keep memory consumption */
  	int		flag_reassemble;     /* reassemble multiple dumpfiles into one */
  	int		flag_refiltering;    /* refilter from kdump-compressed file */
-@@ -1384,6 +1398,80 @@ struct domain_list {
+@@ -1393,6 +1408,80 @@ struct domain_list {
  	unsigned int  pickled_id;
  };
  
@@ -3986,11 +3982,11 @@ Index: makedumpfile-1.5.1.released/makedumpfile.h
  #define PAGES_PER_MAPWORD 	(sizeof(unsigned long) * 8)
  #define MFNS_PER_FRAME		(info->page_size / sizeof(unsigned long))
  
-Index: makedumpfile-1.5.1.released/dwarf_info.c
+Index: makedumpfile-1.5.1/dwarf_info.c
 ===================================================================
---- makedumpfile-1.5.1.released.orig/dwarf_info.c
-+++ makedumpfile-1.5.1.released/dwarf_info.c
-@@ -324,6 +324,8 @@ get_data_member_location(Dwarf_Die *die,
+--- makedumpfile-1.5.1.orig/dwarf_info.c
++++ makedumpfile-1.5.1/dwarf_info.c
+@@ -350,6 +350,8 @@ get_data_member_location(Dwarf_Die *die,
  	return TRUE;
  }
  
@@ -3999,10 +3995,10 @@ Index: makedumpfile-1.5.1.released/dwarf_info.c
  static int
  get_die_type(Dwarf_Die *die, Dwarf_Die *die_type)
  {
-Index: makedumpfile-1.5.1.released/print_info.c
+Index: makedumpfile-1.5.1/print_info.c
 ===================================================================
---- makedumpfile-1.5.1.released.orig/print_info.c
-+++ makedumpfile-1.5.1.released/print_info.c
+--- makedumpfile-1.5.1.orig/print_info.c
++++ makedumpfile-1.5.1/print_info.c
 @@ -244,6 +244,11 @@ print_usage(void)
  	MSG("  [-f]:\n");
  	MSG("      Overwrite DUMPFILE even if it already exists.\n");
@@ -4015,10 +4011,10 @@ Index: makedumpfile-1.5.1.released/print_info.c
  	MSG("  [-h]:\n");
  	MSG("      Show help message and LZO/snappy support status (enabled/disabled).\n");
  	MSG("\n");
-Index: makedumpfile-1.5.1.released/print_info.h
+Index: makedumpfile-1.5.1/print_info.h
 ===================================================================
---- makedumpfile-1.5.1.released.orig/print_info.h
-+++ makedumpfile-1.5.1.released/print_info.h
+--- makedumpfile-1.5.1.orig/print_info.h
++++ makedumpfile-1.5.1/print_info.h
 @@ -43,7 +43,8 @@ void print_execution_time(char *step_nam
   */
  #define MIN_MSG_LEVEL		(0)
@@ -4029,10 +4025,10 @@ Index: makedumpfile-1.5.1.released/print_info.h
  					   common message, the error message */
  #define ML_PRINT_PROGRESS	(0x001) /* Print the progress indicator */
  #define ML_PRINT_COMMON_MSG	(0x002)	/* Print the common message */
-Index: makedumpfile-1.5.1.released/makedumpfile.c
+Index: makedumpfile-1.5.1/makedumpfile.c
 ===================================================================
---- makedumpfile-1.5.1.released.orig/makedumpfile.c
-+++ makedumpfile-1.5.1.released/makedumpfile.c
+--- makedumpfile-1.5.1.orig/makedumpfile.c
++++ makedumpfile-1.5.1/makedumpfile.c
 @@ -13,6 +13,8 @@
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   * GNU General Public License for more details.
@@ -4056,7 +4052,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  
  char filename_stdout[] = FILENAME_STDOUT;
  
-@@ -2415,6 +2424,22 @@ get_mm_sparsemem(void)
+@@ -2423,6 +2432,22 @@ get_mm_sparsemem(void)
  	unsigned long long pfn_start, pfn_end;
  	unsigned long section, mem_map;
  	unsigned long *mem_sec = NULL;
@@ -4079,7 +4075,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  
  	int ret = FALSE;
  
-@@ -2441,7 +2466,8 @@ get_mm_sparsemem(void)
+@@ -2449,7 +2474,8 @@ get_mm_sparsemem(void)
  	}
  	info->num_mem_map = num_section;
  	if ((info->mem_map_data = (struct mem_map_data *)
@@ -4089,7 +4085,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		ERRMSG("Can't allocate memory for the mem_map_data. %s\n",
  		    strerror(errno));
  		goto out;
-@@ -2459,6 +2485,74 @@ get_mm_sparsemem(void)
+@@ -2467,6 +2493,74 @@ get_mm_sparsemem(void)
  		dump_mem_map(pfn_start, pfn_end, mem_map, section_nr);
  	}
  	ret = TRUE;
@@ -4164,7 +4160,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  out:
  	if (mem_sec != NULL)
  		free(mem_sec);
-@@ -2571,6 +2665,105 @@ initialize_bitmap_memory(void)
+@@ -2579,6 +2673,105 @@ initialize_bitmap_memory(void)
  	return TRUE;
  }
  
@@ -4270,7 +4266,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  int
  initial(void)
  {
-@@ -2833,7 +3026,19 @@ out:
+@@ -2841,7 +3034,19 @@ out:
  	if (!get_value_for_old_linux())
  		return FALSE;
  
@@ -4290,7 +4286,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		setup_page_is_buddy();
  
  	return TRUE;
-@@ -3549,6 +3754,65 @@ out:
+@@ -3557,6 +3762,65 @@ out:
  	return ret;
  }
  
@@ -4356,7 +4352,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  
  int
  _exclude_free_page(void)
-@@ -3556,6 +3820,7 @@ _exclude_free_page(void)
+@@ -3564,6 +3828,7 @@ _exclude_free_page(void)
  	int i, nr_zones, num_nodes, node;
  	unsigned long node_zones, zone, spanned_pages, pgdat;
  	struct timeval tv_start;
@@ -4364,7 +4360,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  
  	if ((node = next_online_node(0)) < 0) {
  		ERRMSG("Can't get next online node.\n");
-@@ -3568,7 +3833,24 @@ _exclude_free_page(void)
+@@ -3576,7 +3841,24 @@ _exclude_free_page(void)
  	gettimeofday(&tv_start, NULL);
  
  	for (num_nodes = 1; num_nodes <= vt.numnodes; num_nodes++) {
@@ -4390,7 +4386,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		print_progress(PROGRESS_FREE_PAGES, num_nodes - 1, vt.numnodes);
  
  		node_zones = pgdat + OFFSET(pglist_data.node_zones);
-@@ -3592,9 +3874,11 @@ _exclude_free_page(void)
+@@ -3600,9 +3882,11 @@ _exclude_free_page(void)
  			}
  			if (!spanned_pages)
  				continue;
@@ -4402,7 +4398,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		if (num_nodes < vt.numnodes) {
  			if ((node = next_online_node(node + 1)) < 0) {
  				ERRMSG("Can't get next online node.\n");
-@@ -3612,6 +3896,8 @@ _exclude_free_page(void)
+@@ -3620,6 +3904,8 @@ _exclude_free_page(void)
  	 */
  	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes);
  	print_execution_time(PROGRESS_FREE_PAGES, &tv_start);
@@ -4411,7 +4407,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  
  	return TRUE;
  }
-@@ -3755,7 +4041,6 @@ setup_page_is_buddy(void)
+@@ -3780,7 +4066,6 @@ setup_page_is_buddy(void)
  		}
  	} else
  		info->page_is_buddy = page_is_buddy_v2;
@@ -4419,7 +4415,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  out:
  	if (!info->page_is_buddy)
  		DEBUG_MSG("Can't select page_is_buddy handler; "
-@@ -3964,10 +4249,88 @@ exclude_zero_pages(void)
+@@ -3989,10 +4274,88 @@ exclude_zero_pages(void)
  	return TRUE;
  }
  
@@ -4510,7 +4506,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  	unsigned long long pfn, pfn_mm, maddr;
  	unsigned long long pfn_read_start, pfn_read_end, index_pg;
  	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
-@@ -3975,6 +4338,12 @@ __exclude_unnecessary_pages(unsigned lon
+@@ -4000,6 +4363,12 @@ __exclude_unnecessary_pages(unsigned lon
  	unsigned int _count, _mapcount = 0;
  	unsigned long flags, mapping, private = 0;
  
@@ -4523,7 +4519,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  	/*
  	 * Refresh the buffer of struct page, when changing mem_map.
  	 */
-@@ -4012,7 +4381,6 @@ __exclude_unnecessary_pages(unsigned lon
+@@ -4037,7 +4406,6 @@ __exclude_unnecessary_pages(unsigned lon
  				pfn_mm = PGMM_CACHED - index_pg;
  			else
  				pfn_mm = pfn_end - pfn;
@@ -4531,7 +4527,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  			if (!readmem(VADDR, mem_map,
  			    page_cache + (index_pg * SIZE(page)),
  			    SIZE(page) * pfn_mm)) {
-@@ -4036,7 +4404,6 @@ __exclude_unnecessary_pages(unsigned lon
+@@ -4061,7 +4429,6 @@ __exclude_unnecessary_pages(unsigned lon
  		 * Exclude the free page managed by a buddy
  		 */
  		if ((info->dump_level & DL_EXCLUDE_FREE)
@@ -4539,7 +4535,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		    && info->page_is_buddy
  		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
  			int i;
-@@ -4085,19 +4452,78 @@ __exclude_unnecessary_pages(unsigned lon
+@@ -4110,19 +4477,78 @@ __exclude_unnecessary_pages(unsigned lon
  	return TRUE;
  }
  
@@ -4621,7 +4617,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  
  	for (mm = 0; mm < info->num_mem_map; mm++) {
  		print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
-@@ -4106,9 +4532,9 @@ exclude_unnecessary_pages(void)
+@@ -4131,9 +4557,9 @@ exclude_unnecessary_pages(void)
  
  		if (mmd->mem_map == NOT_MEMMAP_ADDR)
  			continue;
@@ -4634,7 +4630,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  			return FALSE;
  	}
  
-@@ -4139,7 +4565,11 @@ exclude_unnecessary_pages_cyclic(void)
+@@ -4164,7 +4590,11 @@ exclude_unnecessary_pages_cyclic(void)
  	 */
  	copy_bitmap_cyclic();
  
@@ -4647,17 +4643,21 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		if (!exclude_free_page())
  			return FALSE;
  
-@@ -4164,8 +4594,7 @@ exclude_unnecessary_pages_cyclic(void)
+@@ -4187,9 +4617,10 @@ exclude_unnecessary_pages_cyclic(void)
+ 			if (mmd->mem_map == NOT_MEMMAP_ADDR)
+ 				continue;
  
- 			if (mmd->pfn_end >= info->cyclic_start_pfn &&
- 			    mmd->pfn_start <= info->cyclic_end_pfn) {
+-			if (mmd->pfn_end >= info->cyclic_start_pfn || mmd->pfn_start <= info->cyclic_end_pfn) {
 -				if (!__exclude_unnecessary_pages(mmd->mem_map,
 -								 mmd->pfn_start, mmd->pfn_end))
-+				if (!__exclude_unnecessary_pages(mm, mmd))
++			if (mmd->pfn_end >= info->cyclic_start_pfn &&
++			    mmd->pfn_start <= info->cyclic_end_pfn) {
++				if (__exclude_unnecessary_pages(mm, mmd)
++								== FALSE)
  					return FALSE;
  			}
  		}
-@@ -4195,7 +4624,7 @@ update_cyclic_region(unsigned long long 
+@@ -4219,7 +4650,7 @@ update_cyclic_region(unsigned long long 
  	if (!create_1st_bitmap_cyclic())
  		return FALSE;
  
@@ -4666,7 +4666,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		return FALSE;
  
  	return TRUE;
-@@ -4255,7 +4684,7 @@ create_2nd_bitmap(void)
+@@ -4279,7 +4710,7 @@ create_2nd_bitmap(void)
  	if (info->dump_level & DL_EXCLUDE_CACHE ||
  	    info->dump_level & DL_EXCLUDE_CACHE_PRI ||
  	    info->dump_level & DL_EXCLUDE_USER_DATA) {
@@ -4675,7 +4675,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  			ERRMSG("Can't exclude unnecessary pages.\n");
  			return FALSE;
  		}
-@@ -4263,8 +4692,10 @@ create_2nd_bitmap(void)
+@@ -4287,8 +4718,10 @@ create_2nd_bitmap(void)
  
  	/*
  	 * Exclude free pages.
@@ -4687,7 +4687,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		if (!exclude_free_page())
  			return FALSE;
  
-@@ -4395,6 +4826,10 @@ create_dump_bitmap(void)
+@@ -4419,6 +4852,10 @@ create_dump_bitmap(void)
  	int ret = FALSE;
  
  	if (info->flag_cyclic) {
@@ -4698,7 +4698,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		if (!prepare_bitmap_buffer_cyclic())
  			goto out;
  
-@@ -4872,6 +5307,7 @@ get_num_dumpable_cyclic(void)
+@@ -4896,6 +5333,7 @@ get_num_dumpable_cyclic(void)
  {
  	unsigned long long pfn, num_dumpable=0;
  
@@ -4706,7 +4706,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
  		if (!update_cyclic_region(pfn))
  			return FALSE;
-@@ -5201,7 +5637,7 @@ get_loads_dumpfile_cyclic(void)
+@@ -5225,7 +5663,7 @@ get_loads_dumpfile_cyclic(void)
  	info->cyclic_end_pfn = info->pfn_cyclic;
  	if (!create_1st_bitmap_cyclic())
  		return FALSE;
@@ -4715,7 +4715,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		return FALSE;
  
  	if (!(phnum = get_phnum_memory()))
-@@ -5613,6 +6049,10 @@ write_kdump_pages(struct cache_data *cd_
+@@ -5637,6 +6075,10 @@ write_kdump_pages(struct cache_data *cd_
  			pfn_zero++;
  			continue;
  		}
@@ -4726,7 +4726,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		/*
  		 * Compress the page data.
  		 */
-@@ -5768,6 +6208,7 @@ write_kdump_pages_cyclic(struct cache_da
+@@ -5792,6 +6234,7 @@ write_kdump_pages_cyclic(struct cache_da
  	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
  
  		if ((num_dumped % per) == 0)
@@ -4734,7 +4734,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
  
  		/*
-@@ -5786,11 +6227,17 @@ write_kdump_pages_cyclic(struct cache_da
+@@ -5810,11 +6253,17 @@ write_kdump_pages_cyclic(struct cache_da
  		 */
  		if ((info->dump_level & DL_EXCLUDE_ZERO)
  		    && is_zero_page(buf, info->page_size)) {
@@ -4752,7 +4752,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		/*
  		 * Compress the page data.
  		 */
-@@ -6208,6 +6655,8 @@ write_kdump_pages_and_bitmap_cyclic(stru
+@@ -6232,6 +6681,8 @@ write_kdump_pages_and_bitmap_cyclic(stru
  		if (!update_cyclic_region(pfn))
                          return FALSE;
  
@@ -4761,7 +4761,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero, &offset_data))
  			return FALSE;
  
-@@ -8231,6 +8680,22 @@ static struct option longopts[] = {
+@@ -8257,6 +8708,22 @@ static struct option longopts[] = {
  	{0, 0, 0, 0}
  };
  
@@ -4784,7 +4784,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  int
  main(int argc, char *argv[])
  {
-@@ -8256,7 +8721,7 @@ main(int argc, char *argv[])
+@@ -8282,7 +8749,7 @@ main(int argc, char *argv[])
  	
  	info->block_order = DEFAULT_ORDER;
  	message_level = DEFAULT_MSG_LEVEL;
@@ -4793,7 +4793,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  	    NULL)) != -1) {
  		switch (opt) {
  		case 'b':
-@@ -8314,6 +8779,13 @@ main(int argc, char *argv[])
+@@ -8340,6 +8807,13 @@ main(int argc, char *argv[])
  		case 'M':
  			info->flag_dmesg = 1;
  			break;
@@ -4807,7 +4807,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		case 'p':
  			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
  			break;
-@@ -8329,6 +8801,9 @@ main(int argc, char *argv[])
+@@ -8358,6 +8832,9 @@ main(int argc, char *argv[])
  		case 'r':
  			info->flag_reassemble = 1;
  			break;
@@ -4817,7 +4817,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		case 'V':
  			info->vaddr_for_vtop = strtoul(optarg, NULL, 0);
  			break;
-@@ -8360,6 +8835,12 @@ main(int argc, char *argv[])
+@@ -8389,6 +8866,12 @@ main(int argc, char *argv[])
  			goto out;
  		}
  	}
@@ -4831,745 +4831,7 @@ Index: makedumpfile-1.5.1.released/makedumpfile.c
  		message_level |= ML_PRINT_DEBUG_MSG;
  
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="121207.vmcore_pagescans.rhel"
-
-Subject: [PATCH] scan page tables for makedumpfile
-
----
- fs/proc/vmcore.c             |  568 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/makedumpfile.h |  115 ++++++++
- 2 files changed, 683 insertions(+)
-
-Index: linux/fs/proc/vmcore.c
-===================================================================
---- linux.orig/fs/proc/vmcore.c
-+++ linux/fs/proc/vmcore.c
-@@ -17,8 +17,18 @@
- #include <linux/init.h>
- #include <linux/crash_dump.h>
- #include <linux/list.h>
-+#include <linux/makedumpfile.h>
-+#include <linux/mmzone.h>
- #include <asm/uaccess.h>
- #include <asm/io.h>
-+#include <asm/page.h>
-+static int num_mem_map_data = 0;
-+static struct mem_map_data *mem_map_data;
-+static struct pfn_element *pfn_list;
-+static long in_pfn_list;
-+static int last_found_vaddr = 0;
-+static int last_found_paddr = 0;
-+static int max_pfn_list;
- 
- /* List representing chunks of contiguous memory areas and their offsets in
-  * vmcore file.
-@@ -33,6 +43,7 @@ static size_t elfcorebuf_sz;
- static u64 vmcore_size;
- 
- static struct proc_dir_entry *proc_vmcore = NULL;
-+static struct proc_dir_entry *proc_vmcore_pfn_lists = NULL;
- 
- /* Reads a page from the oldmem device from given offset. */
- static ssize_t read_from_oldmem(char *buf, size_t count,
-@@ -160,10 +171,563 @@ static ssize_t read_vmcore(struct file *
- 	return acc;
- }
- 
-+/*
-+ * Given the boot-kernel-relative virtual address of a page
-+ * return its crashkernel-relative virtual address.
-+ *
-+ * We have a memory map named mem_map_data
-+ *
-+ * return 0 if it cannot be found
-+ */
-+unsigned long
-+find_local_vaddr(unsigned long orig_vaddr)
-+{
-+	int i;
-+	int fnd = 0;
-+	struct mem_map_data *mmd, *next_mmd;
-+	unsigned long paddr;
-+	unsigned long local_vaddr;
-+	unsigned long offset;
-+
-+	if (!num_mem_map_data) {
-+		printk("find_page_paddr !! num_mem_map_data is %d\n",
-+			num_mem_map_data);
-+		return 0;
-+	}
-+
-+fullsearch:
-+	for (i = last_found_vaddr, mmd = mem_map_data + last_found_vaddr,
-+		next_mmd = mem_map_data + last_found_vaddr + 1;
-+		i < num_mem_map_data; i++, mmd++, next_mmd++) {
-+		if (mmd->mem_map && mmd->paddr) {
-+			if (orig_vaddr >= mmd->mem_map &&
-+			    orig_vaddr < next_mmd->mem_map) {
-+				offset = orig_vaddr - mmd->mem_map;
-+				paddr = mmd->paddr + offset;
-+				fnd++;
-+				/* caching gives about 99% hit on first pass */
-+				last_found_vaddr = i;
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (! fnd) {
-+		if (last_found_vaddr > 0) {
-+			last_found_vaddr = 0;
-+			goto fullsearch;
-+		}
-+		return 0;
-+	}
-+
-+	/* paddr is now the physical address of the page structure */
-+	/* and offset is the offset into the found section, and we have
-+	   a table of how those sections are ioremap_cache'd */
-+	local_vaddr = (unsigned long)mmd->section_vaddr + offset;
-+	return local_vaddr;
-+}
-+
-+/*
-+ * Given a paddr, return its crashkernel-relative virtual address.
-+ *
-+ * We have a memory map named mem_map_data
-+ *
-+ * return 0 if it cannot be found
-+ */
-+void *
-+find_local_from_paddr(unsigned long paddr)
-+{
-+	int i;
-+	struct mem_map_data *mmd;
-+	unsigned long offset;
-+
-+	if (!num_mem_map_data) {
-+		printk("find_page_paddr !! num_mem_map_data is %d\n",
-+			num_mem_map_data);
-+		return 0;
-+	}
-+
-+fullsearch:
-+	for (i = last_found_paddr, mmd = mem_map_data + last_found_paddr;
-+		i < num_mem_map_data; i++, mmd++) {
-+		if ((paddr >= mmd->paddr) && (paddr < mmd->ending_paddr)) {
-+			offset = paddr - mmd->paddr;
-+			last_found_paddr = i;
-+			/* caching gives about 98% hit on first pass */
-+			return (void *)(mmd->section_vaddr + offset);
-+		}
-+	}
-+
-+	if (last_found_paddr > 0) {
-+		last_found_paddr = 0;
-+		goto fullsearch;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * given an anchoring list_head, walk the list of free pages
-+ * 'root' is a virtual address based on the ioremap_cache'd pointer pgp
-+ * 'boot_root' is the virtual address of the list root, boot kernel relative
-+ *
-+ * return the number of pages found on the list
-+ */
-+int
-+walk_freelist(struct list_head *root, int node, int zone, int order, int list,
-+		int restart_list, int start_page, struct pfn_list_request *reqp,
-+		struct pfn_reply *replyp, struct list_head *boot_root)
-+{
-+	int list_ct = 0;
-+	int list_free_pages = 0;
-+	int doit;
-+	unsigned long start_pfn;
-+	struct page *pagep;
-+	struct page *local_pagep;
-+	struct list_head *lhp;
-+	struct list_head *local_lhp; /* crashkernel-relative */
-+	struct list_head *prev;
-+	struct pfn_element *pe;
-+
-+	/*
-+	 * root is the crashkernel-relative address of the anchor of the
-+	 * free_list.
-+	 */
-+	prev = root;
-+	if (root == NULL) {
-+		printk(KERN_EMERG "root is null!!, node %d order %d\n",
-+			node, order);
-+			return 0;
-+	}
-+
-+	if (root->next == boot_root)
-+		/* list is empty */
-+		return 0;
-+
-+	lhp = root->next;
-+	local_lhp = (struct list_head *)find_local_vaddr((unsigned long)lhp);
-+	if (!local_lhp) {
-+		return 0;
-+	}
-+
-+	while (local_lhp != boot_root) {
-+		list_ct++;
-+		if (lhp == NULL) {
-+			printk(KERN_EMERG
-+			 "The free list has a null!!, node %d order %d\n",
-+				node, order);
-+			break;
-+		}
-+		if (list_ct > 1 && local_lhp->prev != prev) {
-+			/* can't be compared to root, as that is local */
-+			printk(KERN_EMERG "The free list is broken!!\n");
-+			break;
-+		}
-+
-+		/* we want the boot kernel's pfn that this page represents */
-+		pagep = container_of((struct list_head *)lhp,
-+							struct page, lru);
-+		start_pfn = pagep - vmemmap;
-+		local_pagep = container_of((struct list_head *)local_lhp,
-+							struct page, lru);
-+		doit = 1;
-+		if (restart_list && list_ct < start_page)
-+			doit = 0;
-+		if (doit) {
-+			if (in_pfn_list == max_pfn_list) {
-+			 	/* if array would overflow, come back to
-+				   this page with a continuation */
-+				replyp->more = 1;
-+				replyp->zone_index = zone;
-+				replyp->freearea_index = order;
-+				replyp->type_index = list;
-+				replyp->list_ct = list_ct;
-+				goto list_is_full;
-+			}
-+			pe = &pfn_list[in_pfn_list++];
-+			pe->pfn = start_pfn;
-+			pe->order = order;
-+			list_free_pages += (1 << order);
-+		}
-+		prev = lhp;
-+		lhp = local_pagep->lru.next;
-+		/* the local node-relative vaddr: */
-+		local_lhp = (struct list_head *)
-+					find_local_vaddr((unsigned long)lhp);
-+		if (!local_lhp)
-+			break;
-+	}
-+
-+list_is_full:
-+	return list_free_pages;
-+}
-+
-+/*
-+ * Return the pfns of free pages on this node
-+ */
-+int
-+write_vmcore_get_free(struct pfn_list_request *reqp)
-+{
-+	int node;
-+	int nr_zones;
-+	int nr_orders = MAX_ORDER;
-+	int nr_freelist = MIGRATE_TYPES;
-+	int zone;
-+	int order;
-+	int list;
-+	int start_zone = 0;
-+	int start_order = 0;
-+	int start_list = 0;
-+	int ret;
-+	int restart = 0;
-+	int start_page = 0;
-+	int node_free_pages = 0;
-+	struct pfn_reply rep;
-+	struct pglist_data *pgp;
-+	struct zone *zonep;
-+	struct free_area *fap;
-+	struct list_head *flp;
-+	struct list_head *boot_root;
-+	unsigned long pgdat_paddr;
-+	unsigned long pgdat_vaddr;
-+	unsigned long page_aligned_pgdat;
-+	unsigned long page_aligned_size;
-+	void *mapped_vaddr;
-+
-+	node = reqp->node;
-+	pgdat_paddr = reqp->pgdat_paddr;
-+	pgdat_vaddr = reqp->pgdat_vaddr;
-+
-+	/* map this pglist_data structure within a page-aligned area */
-+	page_aligned_pgdat = pgdat_paddr & ~(PAGE_SIZE - 1);
-+	page_aligned_size = sizeof(struct pglist_data) +
-+					(pgdat_paddr - page_aligned_pgdat);
-+	page_aligned_size = ((page_aligned_size + (PAGE_SIZE - 1))
-+				>> PAGE_SHIFT) << PAGE_SHIFT;
-+	mapped_vaddr = ioremap_cache(page_aligned_pgdat, page_aligned_size);
-+	if (!mapped_vaddr) {
-+		printk("ioremap_cache of pgdat %#lx failed\n",
-+				page_aligned_pgdat);
-+        	return -EINVAL;
-+	}
-+	pgp = (struct pglist_data *)(mapped_vaddr +
-+				(pgdat_paddr - page_aligned_pgdat));
-+	nr_zones = pgp->nr_zones;
-+	memset(&rep, 0, sizeof(rep));
-+
-+	if (reqp->more) {
-+		restart = 1;
-+		start_zone = reqp->zone_index;
-+		start_order = reqp->freearea_index;
-+		start_list = reqp->type_index;
-+		start_page = reqp->list_ct;
-+	}
-+
-+	in_pfn_list = 0;
-+	for (zone = start_zone; zone < nr_zones; zone++) {
-+		zonep = &pgp->node_zones[zone];
-+		for (order = start_order; order < nr_orders; order++) {
-+			fap = &zonep->free_area[order];
-+			/* some free_area's are all zero */
-+			if (fap->nr_free) {
-+				for (list = start_list; list < nr_freelist;
-+								list++) {
-+					flp = &fap->free_list[list];
-+					boot_root = (struct list_head *)
-+						(pgdat_vaddr +
-+				    		 ((unsigned long)flp -
-+						 (unsigned long)pgp));
-+					ret = walk_freelist(flp, node, zone,
-+						order, list, restart,
-+						start_page, reqp, &rep,
-+						boot_root);
-+					node_free_pages += ret;
-+					restart = 0;
-+					if (rep.more)
-+						goto list_full;
-+				}
-+			}
-+		}
-+	}
-+list_full:
-+
-+	iounmap(mapped_vaddr);
-+
-+	/* copy the reply and the valid part of our pfn list to the user */
-+	rep.pfn_free = node_free_pages; /* the total, for statistics */
-+	rep.in_pfn_list = in_pfn_list;
-+	if (copy_to_user(reqp->reply_ptr, &rep, sizeof(struct pfn_reply)))
-+		return -EFAULT;
-+	if (in_pfn_list) {
-+		if (copy_to_user(reqp->pfn_list_ptr, pfn_list,
-+				(in_pfn_list * sizeof(struct pfn_element))))
-+			return -EFAULT;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * Get the memap_data table from makedumpfile
-+ * and do the single allocate of the pfn_list.
-+ */
-+int
-+write_vmcore_get_memmap(struct pfn_list_request *reqp)
-+{
-+	int i;
-+	int count;
-+	int size;
-+	int ret = 0;
-+	long pfn_list_elements;
-+	long malloc_size;
-+	unsigned long page_section_start;
-+	unsigned long page_section_size;
-+	struct mem_map_data *mmd, *dum_mmd;
-+	struct pfn_reply rep;
-+	void *bufptr;
-+
-+	rep.pfn_list_elements = 0;
-+	if (num_mem_map_data) {
-+		/* shouldn't have been done before, but if it was.. */
-+		printk(KERN_INFO "warning: PL_REQUEST_MEMMAP is repeated\n");
-+		for (i = 0, mmd = mem_map_data; i < num_mem_map_data;
-+								i++, mmd++) {
-+			iounmap(mmd->section_vaddr);
-+		}
-+		kfree(mem_map_data);
-+		mem_map_data = NULL;
-+		num_mem_map_data = 0;
-+		kfree(pfn_list);
-+		pfn_list = NULL;
-+	}
-+
-+	count = reqp->map_count;
-+	size = reqp->map_size;
-+	bufptr = reqp->map_ptr;
-+	if (size != (count * sizeof(struct mem_map_data))) {
-+		printk("Error in mem_map_data, %d * %ld != %d\n",
-+			count, sizeof(struct mem_map_data), size);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	/* add a dummy at the end to limit the size of the last entry */
-+	size += sizeof(struct mem_map_data);
-+
-+	mem_map_data = kzalloc(size, GFP_KERNEL);
-+	if (!mem_map_data) {
-+		printk("kmalloc of mem_map_data for %d failed\n", size);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+        if (copy_from_user(mem_map_data, bufptr, size)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	num_mem_map_data = count;
-+
-+	/* construct the dummy entry to limit the size of 'next_mmd->mem_map' */
-+	/* (see find_local_vaddr() ) */
-+	mmd = mem_map_data + (num_mem_map_data - 1);
-+	page_section_size = (mmd->pfn_end - mmd->pfn_start) *
-+							sizeof(struct page);
-+	dum_mmd = mmd + 1;
-+	*dum_mmd = *mmd;
-+	dum_mmd->mem_map += page_section_size;
-+
-+	/* Fill in the ending address of array of page struct */
-+	for (i = 0, mmd = mem_map_data; i < num_mem_map_data; i++, mmd++) {
-+		mmd->ending_paddr = mmd->paddr +
-+			((mmd->pfn_end - mmd->pfn_start) * sizeof(struct page));
-+	}
-+
-+	/* Map each section of page structures to local virtual addresses */
-+	/* (these are never iounmap'd, as this is the crash kernel) */
-+	for (i = 0, mmd = mem_map_data; i < num_mem_map_data; i++, mmd++) {
-+		page_section_start = mmd->paddr;
-+		page_section_size = (mmd->pfn_end - mmd->pfn_start) *
-+							sizeof(struct page);
-+		mmd->section_vaddr = ioremap_cache(page_section_start,
-+							page_section_size);
-+		if (!mmd->section_vaddr) {
-+			printk(
-+			  "ioremap_cache of [%d] node %#lx for %#lx failed\n",
-+				i, page_section_start, page_section_size);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+	/*
-+	 * allocate the array for PFN's (just once)
-+	 * get as much as we can, up to what the user specified, and return
-+	 * that count to the user
-+	 */
-+	pfn_list_elements = reqp->list_size;
-+	do {
-+		malloc_size = pfn_list_elements * sizeof(struct pfn_element);
-+		if ((pfn_list = kmalloc(malloc_size, GFP_KERNEL)) != NULL) {
-+			rep.pfn_list_elements = pfn_list_elements;
-+			max_pfn_list = pfn_list_elements;
-+			goto out;
-+		}
-+		pfn_list_elements -= 1000;
-+	} while (pfn_list == NULL && pfn_list_elements > 0);
-+
-+	ret = -EINVAL;
-+out:
-+	if (copy_to_user(reqp->reply_ptr, &rep, sizeof(struct pfn_reply)))
-+		return -EFAULT;
-+	return ret;
-+}
-+
-+/*
-+ * Return the pfns of to-be-excluded pages fulfilling this request.
-+ * This is called for each mem_map in makedumpfile's list.
-+ */
-+int
-+write_vmcore_get_excludes(struct pfn_list_request *reqp)
-+{
-+	int i;
-+	int start = 0;
-+	int end;
-+	unsigned long paddr;
-+	unsigned long pfn;
-+	void *vaddr;
-+	struct page *pagep;
-+	struct pfn_reply rep;
-+	struct pfn_element *pe;
-+
-+	if (!num_mem_map_data) {
-+		/* sanity check */
-+		printk(
-+		"ERROR:PL_REQUEST_MEMMAP not done before PL_REQUEST_EXCLUDE\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * the request contains (besides request type and bufptr):
-+	 *  paddr (physical address of the page[0]
-+	 *  count of pages in the block
-+	 *  exclude bits (DL_EXCLUDE_...)
-+	 */
-+	paddr = reqp->paddr;
-+	end = reqp->count;
-+	pfn = reqp->pfn_start;
-+	/* find the already-mapped vaddr of this paddr */
-+	vaddr = find_local_from_paddr(paddr);
-+	if (!vaddr) {
-+		printk("ERROR: PL_REQUEST_EXCLUDE cannot find paddr %#lx\n",
-+			paddr);
-+		return -EINVAL;
-+	}
-+	if (reqp->more) {
-+		start = reqp->map_index;
-+		vaddr += (reqp->map_index * sizeof(struct page));
-+		pfn += reqp->map_index;
-+	}
-+	memset(&rep, 0, sizeof(rep));
-+	in_pfn_list = 0;
-+
-+	for (i = start, pagep = (struct page *)vaddr; i < end;
-+							i++, pagep++, pfn++) {
-+		if (in_pfn_list == max_pfn_list) {
-+			rep.in_pfn_list = in_pfn_list;
-+			rep.more = 1;
-+			rep.map_index = i;
-+			break;
-+		}
-+		/*
-+		 * Exclude the free page managed by a buddy
-+		 */
-+		if ((reqp->exclude_bits & DL_EXCLUDE_FREE)
-+		    && (pagep->flags & (1UL << PG_buddy))) {
-+			pe = &pfn_list[in_pfn_list++];
-+			pe->pfn = pfn;
-+			pe->order = pagep->private;
-+			rep.pfn_free += (1 << pe->order);
-+		}
-+		/*
-+		 * Exclude the cache page without the private page.
-+		 */
-+		else if ((reqp->exclude_bits & DL_EXCLUDE_CACHE)
-+		    && (isLRU(pagep->flags) || isSwapCache(pagep->flags))
-+		    && !isPrivate(pagep->flags) && !isAnon(pagep->mapping)) {
-+			pe = &pfn_list[in_pfn_list++];
-+			pe->pfn = pfn;
-+			pe->order = 0; /* assume 4k */
-+			rep.pfn_cache++;
-+		}
-+		/*
-+		 * Exclude the cache page with the private page.
-+		 */
-+		else if ((reqp->exclude_bits & DL_EXCLUDE_CACHE_PRI)
-+		    && (isLRU(pagep->flags) || isSwapCache(pagep->flags))
-+		    && !isAnon(pagep->mapping)) {
-+			pe = &pfn_list[in_pfn_list++];
-+			pe->pfn = pfn;
-+			pe->order = 0; /* assume 4k */
-+			rep.pfn_cache_private++;
-+		}
-+		/*
-+		 * Exclude the data page of the user process.
-+		 */
-+		else if ((reqp->exclude_bits & DL_EXCLUDE_USER_DATA)
-+		    && isAnon(pagep->mapping)) {
-+			pe = &pfn_list[in_pfn_list++];
-+			pe->pfn = pfn;
-+			pe->order = 0; /* assume 4k */
-+			rep.pfn_user++;
-+		}
-+
-+	}
-+	rep.in_pfn_list = in_pfn_list;
-+	if (copy_to_user(reqp->reply_ptr, &rep, sizeof(struct pfn_reply)))
-+		return -EFAULT;
-+	if (in_pfn_list) {
-+		if (copy_to_user(reqp->pfn_list_ptr, pfn_list,
-+				(in_pfn_list * sizeof(struct pfn_element))))
-+			return -EFAULT;
-+	}
-+        return 0;
-+}
-+
-+static ssize_t write_vmcore_pfn_lists(struct file *file,
-+	const char __user *user_buf, size_t count, loff_t *ppos)
-+{
-+	int ret;
-+	struct pfn_list_request pfn_list_request;
-+
-+	if (count != sizeof(struct pfn_list_request)) {
-+                return -EINVAL;
-+	}
-+
-+        if (copy_from_user(&pfn_list_request, user_buf, count))
-+                return -EFAULT;
-+
-+	if (pfn_list_request.request == PL_REQUEST_FREE) {
-+		ret = write_vmcore_get_free(&pfn_list_request);
-+	} else if (pfn_list_request.request == PL_REQUEST_EXCLUDE) {
-+		ret = write_vmcore_get_excludes(&pfn_list_request);
-+	} else if (pfn_list_request.request == PL_REQUEST_MEMMAP) {
-+		ret = write_vmcore_get_memmap(&pfn_list_request);
-+	} else {
-+                return -EINVAL;
-+	}
-+
-+	if (ret)
-+		return ret;
-+        return count;
-+}
-+
- static const struct file_operations proc_vmcore_operations = {
- 	.read		= read_vmcore,
- };
- 
-+static const struct file_operations proc_vmcore_pfn_lists_operations = {
-+	.write		= write_vmcore_pfn_lists,
-+};
-+
- static struct vmcore* __init get_new_element(void)
- {
- 	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
-@@ -648,6 +1212,10 @@ static int __init vmcore_init(void)
- 	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
- 	if (proc_vmcore)
- 		proc_vmcore->size = vmcore_size;
-+
-+	proc_vmcore_pfn_lists = proc_create("vmcore_pfn_lists", S_IWUSR, NULL,
-+					&proc_vmcore_pfn_lists_operations);
-+
- 	return 0;
- }
- module_init(vmcore_init)
-Index: linux/include/linux/makedumpfile.h
-===================================================================
---- /dev/null
-+++ linux/include/linux/makedumpfile.h
-@@ -0,0 +1,115 @@
-+/*
-+ * makedumpfile.h
-+ * portions Copyright (C) 2006, 2007, 2008, 2009  NEC Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define isLRU(flags)		(flags & (1UL << PG_lru))
-+#define isPrivate(flags)	(flags & (1UL << PG_private))
-+#define isSwapCache(flags)	(flags & (1UL << PG_swapcache))
-+
-+static inline int
-+isAnon(struct address_space *mapping)
-+{
-+	return ((unsigned long)mapping & PAGE_MAPPING_ANON) != 0;
-+}
-+
-+#define DL_EXCLUDE_ZERO		(0x001) /* Exclude Pages filled with Zeros */
-+#define DL_EXCLUDE_CACHE	(0x002) /* Exclude Cache Pages
-+				           without Private Pages */
-+#define DL_EXCLUDE_CACHE_PRI	(0x004) /* Exclude Cache Pages
-+				           with Private Pages */
-+#define DL_EXCLUDE_USER_DATA	(0x008) /* Exclude UserProcessData Pages */
-+#define DL_EXCLUDE_FREE		(0x010)	/* Exclude Free Pages */
-+
-+#define PL_REQUEST_FREE		1	/* request for a list of free pages */
-+#define PL_REQUEST_EXCLUDE	2	/* request for a list of excludable
-+					   pages */
-+#define PL_REQUEST_MEMMAP	3	/* request to pass in the makedumpfile
-+					   mem_map_data table */
-+/*
-+ * a request for finding pfn's that can be excluded from the dump
-+ * they may be pages of particular types or free pages
-+ */
-+struct pfn_list_request {
-+	int request;		/* PL_REQUEST_FREE PL_REQUEST_EXCLUDE or */
-+				/* PL_REQUEST_MEMMAP */
-+	int debug;
-+	unsigned long paddr;	/* mem_map address for PL_REQUEST_EXCLUDE */
-+	unsigned long pfn_start;/* pfn represented by paddr */
-+	unsigned long pgdat_paddr; /* for PL_REQUEST_FREE */
-+	unsigned long pgdat_vaddr; /* for PL_REQUEST_FREE */
-+	int node;		/* for PL_REQUEST_FREE */
-+	int exclude_bits;	/* for PL_REQUEST_EXCLUDE */
-+	int count;		/* for PL_REQUEST_EXCLUDE */
-+	void *reply_ptr;	/* address of user's pfn_reply, for reply */
-+	void *pfn_list_ptr;	/* address of user's pfn array (*pfn_list) */
-+	int map_count;		/* for PL_REQUEST_MEMMAP; elements */
-+	int map_size;		/* for PL_REQUEST_MEMMAP; bytes in table */
-+	void *map_ptr;		/* for PL_REQUEST_MEMMAP; address of table */
-+	long list_size;		/* for PL_REQUEST_MEMMAP negotiation */
-+	/* resume info: */
-+	int more;		/* 0 for done, 1 for "there's more" */
-+				/* PL_REQUEST_EXCLUDE: */
-+	int map_index;		/* slot in the mem_map array of page structs */
-+				/* PL_REQUEST_FREE: */
-+	int zone_index;		/* zone within the node's pgdat_list */
-+	int freearea_index;	/* free_area within the zone */
-+	int type_index;		/* free_list within the free_area */
-+	int list_ct;		/* page within the list */
-+};
-+
-+/*
-+ * the reply from a pfn_list_request
-+ * the list of pfn's itself is pointed to by pfn_list
-+ */
-+struct pfn_reply {
-+	long pfn_list_elements;	/* negotiated on PL_REQUEST_MEMMAP */
-+	long in_pfn_list;	/* returned by PL_REQUEST_EXCLUDE and
-+				   PL_REQUEST_FREE */
-+	/* resume info */
-+	int more;		/* 0 == done, 1 == there is more */
-+				/* PL_REQUEST_MEMMAP: */
-+	int map_index;		/* slot in the mem_map array of page structs */
-+				/* PL_REQUEST_FREE: */
-+	int zone_index;		/* zone within the node's pgdat_list */
-+	int freearea_index;	/* free_area within the zone */
-+	int type_index;		/* free_list within the free_area */
-+	int list_ct;		/* page within the list */
-+	/* statistic counters: */
-+	unsigned long long pfn_cache;		/* PL_REQUEST_EXCLUDE */
-+	unsigned long long pfn_cache_private;	/* PL_REQUEST_EXCLUDE */
-+	unsigned long long pfn_user;		/* PL_REQUEST_EXCLUDE */
-+	unsigned long long pfn_free;		/* PL_REQUEST_FREE */
-+};
-+
-+struct pfn_element {
-+        unsigned long pfn;
-+        unsigned long order;
-+};
-+
-+struct mem_map_data {
-+	/*
-+	 * pfn_start/pfn_end are the pfn's represented by this mem_map entry.
-+	 * mem_map is the virtual address of the array of page structures
-+	 * that represent these pages.
-+	 * paddr is the physical address of that array of structures.
-+	 * ending_paddr would be (pfn_end - pfn_start) * sizeof(struct page).
-+	 * section_vaddr is the address we get from ioremap_cache().
-+	 */
-+	unsigned long long	pfn_start;
-+	unsigned long long	pfn_end;
-+	unsigned long		mem_map;
-+	unsigned long long	paddr;		/* filled in by makedumpfile */
-+	unsigned long long	ending_paddr;	/* filled in by kernel */
-+	void 			*section_vaddr;	/* filled in by kernel */
-+};
-
---/9DWx/yDrRhgMJTb
+--sm4nu43k4a2Rpi4c
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename="121207.vmcore_pagescans.sles"
 
@@ -6320,7 +5582,745 @@ Index: linux/include/linux/makedumpfile.h
 +	void 			*section_vaddr;	/* filled in by kernel */
 +};
 
---/9DWx/yDrRhgMJTb
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="121207.vmcore_pagescans.rhel"
+
+Subject: [PATCH] scan page tables for makedumpfile
+
+---
+ fs/proc/vmcore.c             |  568 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/makedumpfile.h |  115 ++++++++
+ 2 files changed, 683 insertions(+)
+
+Index: linux/fs/proc/vmcore.c
+===================================================================
+--- linux.orig/fs/proc/vmcore.c
++++ linux/fs/proc/vmcore.c
+@@ -17,8 +17,18 @@
+ #include <linux/init.h>
+ #include <linux/crash_dump.h>
+ #include <linux/list.h>
++#include <linux/makedumpfile.h>
++#include <linux/mmzone.h>
+ #include <asm/uaccess.h>
+ #include <asm/io.h>
++#include <asm/page.h>
++static int num_mem_map_data = 0;
++static struct mem_map_data *mem_map_data;
++static struct pfn_element *pfn_list;
++static long in_pfn_list;
++static int last_found_vaddr = 0;
++static int last_found_paddr = 0;
++static int max_pfn_list;
+ 
+ /* List representing chunks of contiguous memory areas and their offsets in
+  * vmcore file.
+@@ -33,6 +43,7 @@ static size_t elfcorebuf_sz;
+ static u64 vmcore_size;
+ 
+ static struct proc_dir_entry *proc_vmcore = NULL;
++static struct proc_dir_entry *proc_vmcore_pfn_lists = NULL;
+ 
+ /* Reads a page from the oldmem device from given offset. */
+ static ssize_t read_from_oldmem(char *buf, size_t count,
+@@ -160,10 +171,563 @@ static ssize_t read_vmcore(struct file *
+ 	return acc;
+ }
+ 
++/*
++ * Given the boot-kernel-relative virtual address of a page
++ * return its crashkernel-relative virtual address.
++ *
++ * We have a memory map named mem_map_data
++ *
++ * return 0 if it cannot be found
++ */
++unsigned long
++find_local_vaddr(unsigned long orig_vaddr)
++{
++	int i;
++	int fnd = 0;
++	struct mem_map_data *mmd, *next_mmd;
++	unsigned long paddr;
++	unsigned long local_vaddr;
++	unsigned long offset;
++
++	if (!num_mem_map_data) {
++		printk("find_page_paddr !! num_mem_map_data is %d\n",
++			num_mem_map_data);
++		return 0;
++	}
++
++fullsearch:
++	for (i = last_found_vaddr, mmd = mem_map_data + last_found_vaddr,
++		next_mmd = mem_map_data + last_found_vaddr + 1;
++		i < num_mem_map_data; i++, mmd++, next_mmd++) {
++		if (mmd->mem_map && mmd->paddr) {
++			if (orig_vaddr >= mmd->mem_map &&
++			    orig_vaddr < next_mmd->mem_map) {
++				offset = orig_vaddr - mmd->mem_map;
++				paddr = mmd->paddr + offset;
++				fnd++;
++				/* caching gives about 99% hit on first pass */
++				last_found_vaddr = i;
++				break;
++			}
++		}
++	}
++
++	if (! fnd) {
++		if (last_found_vaddr > 0) {
++			last_found_vaddr = 0;
++			goto fullsearch;
++		}
++		return 0;
++	}
++
++	/* paddr is now the physical address of the page structure */
++	/* and offset is the offset into the found section, and we have
++	   a table of how those sections are ioremap_cache'd */
++	local_vaddr = (unsigned long)mmd->section_vaddr + offset;
++	return local_vaddr;
++}
++
++/*
++ * Given a paddr, return its crashkernel-relative virtual address.
++ *
++ * We have a memory map named mem_map_data
++ *
++ * return 0 if it cannot be found
++ */
++void *
++find_local_from_paddr(unsigned long paddr)
++{
++	int i;
++	struct mem_map_data *mmd;
++	unsigned long offset;
++
++	if (!num_mem_map_data) {
++		printk("find_page_paddr !! num_mem_map_data is %d\n",
++			num_mem_map_data);
++		return 0;
++	}
++
++fullsearch:
++	for (i = last_found_paddr, mmd = mem_map_data + last_found_paddr;
++		i < num_mem_map_data; i++, mmd++) {
++		if ((paddr >= mmd->paddr) && (paddr < mmd->ending_paddr)) {
++			offset = paddr - mmd->paddr;
++			last_found_paddr = i;
++			/* caching gives about 98% hit on first pass */
++			return (void *)(mmd->section_vaddr + offset);
++		}
++	}
++
++	if (last_found_paddr > 0) {
++		last_found_paddr = 0;
++		goto fullsearch;
++	}
++	return 0;
++}
++
++/*
++ * given an anchoring list_head, walk the list of free pages
++ * 'root' is a virtual address based on the ioremap_cache'd pointer pgp
++ * 'boot_root' is the virtual address of the list root, boot kernel relative
++ *
++ * return the number of pages found on the list
++ */
++int
++walk_freelist(struct list_head *root, int node, int zone, int order, int list,
++		int restart_list, int start_page, struct pfn_list_request *reqp,
++		struct pfn_reply *replyp, struct list_head *boot_root)
++{
++	int list_ct = 0;
++	int list_free_pages = 0;
++	int doit;
++	unsigned long start_pfn;
++	struct page *pagep;
++	struct page *local_pagep;
++	struct list_head *lhp;
++	struct list_head *local_lhp; /* crashkernel-relative */
++	struct list_head *prev;
++	struct pfn_element *pe;
++
++	/*
++	 * root is the crashkernel-relative address of the anchor of the
++	 * free_list.
++	 */
++	prev = root;
++	if (root == NULL) {
++		printk(KERN_EMERG "root is null!!, node %d order %d\n",
++			node, order);
++			return 0;
++	}
++
++	if (root->next == boot_root)
++		/* list is empty */
++		return 0;
++
++	lhp = root->next;
++	local_lhp = (struct list_head *)find_local_vaddr((unsigned long)lhp);
++	if (!local_lhp) {
++		return 0;
++	}
++
++	while (local_lhp != boot_root) {
++		list_ct++;
++		if (lhp == NULL) {
++			printk(KERN_EMERG
++			 "The free list has a null!!, node %d order %d\n",
++				node, order);
++			break;
++		}
++		if (list_ct > 1 && local_lhp->prev != prev) {
++			/* can't be compared to root, as that is local */
++			printk(KERN_EMERG "The free list is broken!!\n");
++			break;
++		}
++
++		/* we want the boot kernel's pfn that this page represents */
++		pagep = container_of((struct list_head *)lhp,
++							struct page, lru);
++		start_pfn = pagep - vmemmap;
++		local_pagep = container_of((struct list_head *)local_lhp,
++							struct page, lru);
++		doit = 1;
++		if (restart_list && list_ct < start_page)
++			doit = 0;
++		if (doit) {
++			if (in_pfn_list == max_pfn_list) {
++			 	/* if array would overflow, come back to
++				   this page with a continuation */
++				replyp->more = 1;
++				replyp->zone_index = zone;
++				replyp->freearea_index = order;
++				replyp->type_index = list;
++				replyp->list_ct = list_ct;
++				goto list_is_full;
++			}
++			pe = &pfn_list[in_pfn_list++];
++			pe->pfn = start_pfn;
++			pe->order = order;
++			list_free_pages += (1 << order);
++		}
++		prev = lhp;
++		lhp = local_pagep->lru.next;
++		/* the local node-relative vaddr: */
++		local_lhp = (struct list_head *)
++					find_local_vaddr((unsigned long)lhp);
++		if (!local_lhp)
++			break;
++	}
++
++list_is_full:
++	return list_free_pages;
++}
++
++/*
++ * Return the pfns of free pages on this node
++ */
++int
++write_vmcore_get_free(struct pfn_list_request *reqp)
++{
++	int node;
++	int nr_zones;
++	int nr_orders = MAX_ORDER;
++	int nr_freelist = MIGRATE_TYPES;
++	int zone;
++	int order;
++	int list;
++	int start_zone = 0;
++	int start_order = 0;
++	int start_list = 0;
++	int ret;
++	int restart = 0;
++	int start_page = 0;
++	int node_free_pages = 0;
++	struct pfn_reply rep;
++	struct pglist_data *pgp;
++	struct zone *zonep;
++	struct free_area *fap;
++	struct list_head *flp;
++	struct list_head *boot_root;
++	unsigned long pgdat_paddr;
++	unsigned long pgdat_vaddr;
++	unsigned long page_aligned_pgdat;
++	unsigned long page_aligned_size;
++	void *mapped_vaddr;
++
++	node = reqp->node;
++	pgdat_paddr = reqp->pgdat_paddr;
++	pgdat_vaddr = reqp->pgdat_vaddr;
++
++	/* map this pglist_data structure within a page-aligned area */
++	page_aligned_pgdat = pgdat_paddr & ~(PAGE_SIZE - 1);
++	page_aligned_size = sizeof(struct pglist_data) +
++					(pgdat_paddr - page_aligned_pgdat);
++	page_aligned_size = ((page_aligned_size + (PAGE_SIZE - 1))
++				>> PAGE_SHIFT) << PAGE_SHIFT;
++	mapped_vaddr = ioremap_cache(page_aligned_pgdat, page_aligned_size);
++	if (!mapped_vaddr) {
++		printk("ioremap_cache of pgdat %#lx failed\n",
++				page_aligned_pgdat);
++        	return -EINVAL;
++	}
++	pgp = (struct pglist_data *)(mapped_vaddr +
++				(pgdat_paddr - page_aligned_pgdat));
++	nr_zones = pgp->nr_zones;
++	memset(&rep, 0, sizeof(rep));
++
++	if (reqp->more) {
++		restart = 1;
++		start_zone = reqp->zone_index;
++		start_order = reqp->freearea_index;
++		start_list = reqp->type_index;
++		start_page = reqp->list_ct;
++	}
++
++	in_pfn_list = 0;
++	for (zone = start_zone; zone < nr_zones; zone++) {
++		zonep = &pgp->node_zones[zone];
++		for (order = start_order; order < nr_orders; order++) {
++			fap = &zonep->free_area[order];
++			/* some free_area's are all zero */
++			if (fap->nr_free) {
++				for (list = start_list; list < nr_freelist;
++								list++) {
++					flp = &fap->free_list[list];
++					boot_root = (struct list_head *)
++						(pgdat_vaddr +
++				    		 ((unsigned long)flp -
++						 (unsigned long)pgp));
++					ret = walk_freelist(flp, node, zone,
++						order, list, restart,
++						start_page, reqp, &rep,
++						boot_root);
++					node_free_pages += ret;
++					restart = 0;
++					if (rep.more)
++						goto list_full;
++				}
++			}
++		}
++	}
++list_full:
++
++	iounmap(mapped_vaddr);
++
++	/* copy the reply and the valid part of our pfn list to the user */
++	rep.pfn_free = node_free_pages; /* the total, for statistics */
++	rep.in_pfn_list = in_pfn_list;
++	if (copy_to_user(reqp->reply_ptr, &rep, sizeof(struct pfn_reply)))
++		return -EFAULT;
++	if (in_pfn_list) {
++		if (copy_to_user(reqp->pfn_list_ptr, pfn_list,
++				(in_pfn_list * sizeof(struct pfn_element))))
++			return -EFAULT;
++	}
++	return 0;
++}
++
++/*
++ * Get the memap_data table from makedumpfile
++ * and do the single allocate of the pfn_list.
++ */
++int
++write_vmcore_get_memmap(struct pfn_list_request *reqp)
++{
++	int i;
++	int count;
++	int size;
++	int ret = 0;
++	long pfn_list_elements;
++	long malloc_size;
++	unsigned long page_section_start;
++	unsigned long page_section_size;
++	struct mem_map_data *mmd, *dum_mmd;
++	struct pfn_reply rep;
++	void *bufptr;
++
++	rep.pfn_list_elements = 0;
++	if (num_mem_map_data) {
++		/* shouldn't have been done before, but if it was.. */
++		printk(KERN_INFO "warning: PL_REQUEST_MEMMAP is repeated\n");
++		for (i = 0, mmd = mem_map_data; i < num_mem_map_data;
++								i++, mmd++) {
++			iounmap(mmd->section_vaddr);
++		}
++		kfree(mem_map_data);
++		mem_map_data = NULL;
++		num_mem_map_data = 0;
++		kfree(pfn_list);
++		pfn_list = NULL;
++	}
++
++	count = reqp->map_count;
++	size = reqp->map_size;
++	bufptr = reqp->map_ptr;
++	if (size != (count * sizeof(struct mem_map_data))) {
++		printk("Error in mem_map_data, %d * %ld != %d\n",
++			count, sizeof(struct mem_map_data), size);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* add a dummy at the end to limit the size of the last entry */
++	size += sizeof(struct mem_map_data);
++
++	mem_map_data = kzalloc(size, GFP_KERNEL);
++	if (!mem_map_data) {
++		printk("kmalloc of mem_map_data for %d failed\n", size);
++		ret = -EINVAL;
++		goto out;
++	}
++
++        if (copy_from_user(mem_map_data, bufptr, size)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	num_mem_map_data = count;
++
++	/* construct the dummy entry to limit the size of 'next_mmd->mem_map' */
++	/* (see find_local_vaddr() ) */
++	mmd = mem_map_data + (num_mem_map_data - 1);
++	page_section_size = (mmd->pfn_end - mmd->pfn_start) *
++							sizeof(struct page);
++	dum_mmd = mmd + 1;
++	*dum_mmd = *mmd;
++	dum_mmd->mem_map += page_section_size;
++
++	/* Fill in the ending address of array of page struct */
++	for (i = 0, mmd = mem_map_data; i < num_mem_map_data; i++, mmd++) {
++		mmd->ending_paddr = mmd->paddr +
++			((mmd->pfn_end - mmd->pfn_start) * sizeof(struct page));
++	}
++
++	/* Map each section of page structures to local virtual addresses */
++	/* (these are never iounmap'd, as this is the crash kernel) */
++	for (i = 0, mmd = mem_map_data; i < num_mem_map_data; i++, mmd++) {
++		page_section_start = mmd->paddr;
++		page_section_size = (mmd->pfn_end - mmd->pfn_start) *
++							sizeof(struct page);
++		mmd->section_vaddr = ioremap_cache(page_section_start,
++							page_section_size);
++		if (!mmd->section_vaddr) {
++			printk(
++			  "ioremap_cache of [%d] node %#lx for %#lx failed\n",
++				i, page_section_start, page_section_size);
++			ret = -EINVAL;
++			goto out;
++		}
++	}
++
++	/*
++	 * allocate the array for PFN's (just once)
++	 * get as much as we can, up to what the user specified, and return
++	 * that count to the user
++	 */
++	pfn_list_elements = reqp->list_size;
++	do {
++		malloc_size = pfn_list_elements * sizeof(struct pfn_element);
++		if ((pfn_list = kmalloc(malloc_size, GFP_KERNEL)) != NULL) {
++			rep.pfn_list_elements = pfn_list_elements;
++			max_pfn_list = pfn_list_elements;
++			goto out;
++		}
++		pfn_list_elements -= 1000;
++	} while (pfn_list == NULL && pfn_list_elements > 0);
++
++	ret = -EINVAL;
++out:
++	if (copy_to_user(reqp->reply_ptr, &rep, sizeof(struct pfn_reply)))
++		return -EFAULT;
++	return ret;
++}
++
++/*
++ * Return the pfns of to-be-excluded pages fulfilling this request.
++ * This is called for each mem_map in makedumpfile's list.
++ */
++int
++write_vmcore_get_excludes(struct pfn_list_request *reqp)
++{
++	int i;
++	int start = 0;
++	int end;
++	unsigned long paddr;
++	unsigned long pfn;
++	void *vaddr;
++	struct page *pagep;
++	struct pfn_reply rep;
++	struct pfn_element *pe;
++
++	if (!num_mem_map_data) {
++		/* sanity check */
++		printk(
++		"ERROR:PL_REQUEST_MEMMAP not done before PL_REQUEST_EXCLUDE\n");
++		return -EINVAL;
++	}
++
++	/*
++	 * the request contains (besides request type and bufptr):
++	 *  paddr (physical address of the page[0]
++	 *  count of pages in the block
++	 *  exclude bits (DL_EXCLUDE_...)
++	 */
++	paddr = reqp->paddr;
++	end = reqp->count;
++	pfn = reqp->pfn_start;
++	/* find the already-mapped vaddr of this paddr */
++	vaddr = find_local_from_paddr(paddr);
++	if (!vaddr) {
++		printk("ERROR: PL_REQUEST_EXCLUDE cannot find paddr %#lx\n",
++			paddr);
++		return -EINVAL;
++	}
++	if (reqp->more) {
++		start = reqp->map_index;
++		vaddr += (reqp->map_index * sizeof(struct page));
++		pfn += reqp->map_index;
++	}
++	memset(&rep, 0, sizeof(rep));
++	in_pfn_list = 0;
++
++	for (i = start, pagep = (struct page *)vaddr; i < end;
++							i++, pagep++, pfn++) {
++		if (in_pfn_list == max_pfn_list) {
++			rep.in_pfn_list = in_pfn_list;
++			rep.more = 1;
++			rep.map_index = i;
++			break;
++		}
++		/*
++		 * Exclude the free page managed by a buddy
++		 */
++		if ((reqp->exclude_bits & DL_EXCLUDE_FREE)
++		    && (pagep->flags & (1UL << PG_buddy))) {
++			pe = &pfn_list[in_pfn_list++];
++			pe->pfn = pfn;
++			pe->order = pagep->private;
++			rep.pfn_free += (1 << pe->order);
++		}
++		/*
++		 * Exclude the cache page without the private page.
++		 */
++		else if ((reqp->exclude_bits & DL_EXCLUDE_CACHE)
++		    && (isLRU(pagep->flags) || isSwapCache(pagep->flags))
++		    && !isPrivate(pagep->flags) && !isAnon(pagep->mapping)) {
++			pe = &pfn_list[in_pfn_list++];
++			pe->pfn = pfn;
++			pe->order = 0; /* assume 4k */
++			rep.pfn_cache++;
++		}
++		/*
++		 * Exclude the cache page with the private page.
++		 */
++		else if ((reqp->exclude_bits & DL_EXCLUDE_CACHE_PRI)
++		    && (isLRU(pagep->flags) || isSwapCache(pagep->flags))
++		    && !isAnon(pagep->mapping)) {
++			pe = &pfn_list[in_pfn_list++];
++			pe->pfn = pfn;
++			pe->order = 0; /* assume 4k */
++			rep.pfn_cache_private++;
++		}
++		/*
++		 * Exclude the data page of the user process.
++		 */
++		else if ((reqp->exclude_bits & DL_EXCLUDE_USER_DATA)
++		    && isAnon(pagep->mapping)) {
++			pe = &pfn_list[in_pfn_list++];
++			pe->pfn = pfn;
++			pe->order = 0; /* assume 4k */
++			rep.pfn_user++;
++		}
++
++	}
++	rep.in_pfn_list = in_pfn_list;
++	if (copy_to_user(reqp->reply_ptr, &rep, sizeof(struct pfn_reply)))
++		return -EFAULT;
++	if (in_pfn_list) {
++		if (copy_to_user(reqp->pfn_list_ptr, pfn_list,
++				(in_pfn_list * sizeof(struct pfn_element))))
++			return -EFAULT;
++	}
++        return 0;
++}
++
++static ssize_t write_vmcore_pfn_lists(struct file *file,
++	const char __user *user_buf, size_t count, loff_t *ppos)
++{
++	int ret;
++	struct pfn_list_request pfn_list_request;
++
++	if (count != sizeof(struct pfn_list_request)) {
++                return -EINVAL;
++	}
++
++        if (copy_from_user(&pfn_list_request, user_buf, count))
++                return -EFAULT;
++
++	if (pfn_list_request.request == PL_REQUEST_FREE) {
++		ret = write_vmcore_get_free(&pfn_list_request);
++	} else if (pfn_list_request.request == PL_REQUEST_EXCLUDE) {
++		ret = write_vmcore_get_excludes(&pfn_list_request);
++	} else if (pfn_list_request.request == PL_REQUEST_MEMMAP) {
++		ret = write_vmcore_get_memmap(&pfn_list_request);
++	} else {
++                return -EINVAL;
++	}
++
++	if (ret)
++		return ret;
++        return count;
++}
++
+ static const struct file_operations proc_vmcore_operations = {
+ 	.read		= read_vmcore,
+ };
+ 
++static const struct file_operations proc_vmcore_pfn_lists_operations = {
++	.write		= write_vmcore_pfn_lists,
++};
++
+ static struct vmcore* __init get_new_element(void)
+ {
+ 	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
+@@ -648,6 +1212,10 @@ static int __init vmcore_init(void)
+ 	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
+ 	if (proc_vmcore)
+ 		proc_vmcore->size = vmcore_size;
++
++	proc_vmcore_pfn_lists = proc_create("vmcore_pfn_lists", S_IWUSR, NULL,
++					&proc_vmcore_pfn_lists_operations);
++
+ 	return 0;
+ }
+ module_init(vmcore_init)
+Index: linux/include/linux/makedumpfile.h
+===================================================================
+--- /dev/null
++++ linux/include/linux/makedumpfile.h
+@@ -0,0 +1,115 @@
++/*
++ * makedumpfile.h
++ * portions Copyright (C) 2006, 2007, 2008, 2009  NEC Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#define isLRU(flags)		(flags & (1UL << PG_lru))
++#define isPrivate(flags)	(flags & (1UL << PG_private))
++#define isSwapCache(flags)	(flags & (1UL << PG_swapcache))
++
++static inline int
++isAnon(struct address_space *mapping)
++{
++	return ((unsigned long)mapping & PAGE_MAPPING_ANON) != 0;
++}
++
++#define DL_EXCLUDE_ZERO		(0x001) /* Exclude Pages filled with Zeros */
++#define DL_EXCLUDE_CACHE	(0x002) /* Exclude Cache Pages
++				           without Private Pages */
++#define DL_EXCLUDE_CACHE_PRI	(0x004) /* Exclude Cache Pages
++				           with Private Pages */
++#define DL_EXCLUDE_USER_DATA	(0x008) /* Exclude UserProcessData Pages */
++#define DL_EXCLUDE_FREE		(0x010)	/* Exclude Free Pages */
++
++#define PL_REQUEST_FREE		1	/* request for a list of free pages */
++#define PL_REQUEST_EXCLUDE	2	/* request for a list of excludable
++					   pages */
++#define PL_REQUEST_MEMMAP	3	/* request to pass in the makedumpfile
++					   mem_map_data table */
++/*
++ * a request for finding pfn's that can be excluded from the dump
++ * they may be pages of particular types or free pages
++ */
++struct pfn_list_request {
++	int request;		/* PL_REQUEST_FREE PL_REQUEST_EXCLUDE or */
++				/* PL_REQUEST_MEMMAP */
++	int debug;
++	unsigned long paddr;	/* mem_map address for PL_REQUEST_EXCLUDE */
++	unsigned long pfn_start;/* pfn represented by paddr */
++	unsigned long pgdat_paddr; /* for PL_REQUEST_FREE */
++	unsigned long pgdat_vaddr; /* for PL_REQUEST_FREE */
++	int node;		/* for PL_REQUEST_FREE */
++	int exclude_bits;	/* for PL_REQUEST_EXCLUDE */
++	int count;		/* for PL_REQUEST_EXCLUDE */
++	void *reply_ptr;	/* address of user's pfn_reply, for reply */
++	void *pfn_list_ptr;	/* address of user's pfn array (*pfn_list) */
++	int map_count;		/* for PL_REQUEST_MEMMAP; elements */
++	int map_size;		/* for PL_REQUEST_MEMMAP; bytes in table */
++	void *map_ptr;		/* for PL_REQUEST_MEMMAP; address of table */
++	long list_size;		/* for PL_REQUEST_MEMMAP negotiation */
++	/* resume info: */
++	int more;		/* 0 for done, 1 for "there's more" */
++				/* PL_REQUEST_EXCLUDE: */
++	int map_index;		/* slot in the mem_map array of page structs */
++				/* PL_REQUEST_FREE: */
++	int zone_index;		/* zone within the node's pgdat_list */
++	int freearea_index;	/* free_area within the zone */
++	int type_index;		/* free_list within the free_area */
++	int list_ct;		/* page within the list */
++};
++
++/*
++ * the reply from a pfn_list_request
++ * the list of pfn's itself is pointed to by pfn_list
++ */
++struct pfn_reply {
++	long pfn_list_elements;	/* negotiated on PL_REQUEST_MEMMAP */
++	long in_pfn_list;	/* returned by PL_REQUEST_EXCLUDE and
++				   PL_REQUEST_FREE */
++	/* resume info */
++	int more;		/* 0 == done, 1 == there is more */
++				/* PL_REQUEST_MEMMAP: */
++	int map_index;		/* slot in the mem_map array of page structs */
++				/* PL_REQUEST_FREE: */
++	int zone_index;		/* zone within the node's pgdat_list */
++	int freearea_index;	/* free_area within the zone */
++	int type_index;		/* free_list within the free_area */
++	int list_ct;		/* page within the list */
++	/* statistic counters: */
++	unsigned long long pfn_cache;		/* PL_REQUEST_EXCLUDE */
++	unsigned long long pfn_cache_private;	/* PL_REQUEST_EXCLUDE */
++	unsigned long long pfn_user;		/* PL_REQUEST_EXCLUDE */
++	unsigned long long pfn_free;		/* PL_REQUEST_FREE */
++};
++
++struct pfn_element {
++        unsigned long pfn;
++        unsigned long order;
++};
++
++struct mem_map_data {
++	/*
++	 * pfn_start/pfn_end are the pfn's represented by this mem_map entry.
++	 * mem_map is the virtual address of the array of page structures
++	 * that represent these pages.
++	 * paddr is the physical address of that array of structures.
++	 * ending_paddr would be (pfn_end - pfn_start) * sizeof(struct page).
++	 * section_vaddr is the address we get from ioremap_cache().
++	 */
++	unsigned long long	pfn_start;
++	unsigned long long	pfn_end;
++	unsigned long		mem_map;
++	unsigned long long	paddr;		/* filled in by makedumpfile */
++	unsigned long long	ending_paddr;	/* filled in by kernel */
++	void 			*section_vaddr;	/* filled in by kernel */
++};
+
+--sm4nu43k4a2Rpi4c
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -6331,6 +6331,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---/9DWx/yDrRhgMJTb--
-
+--sm4nu43k4a2Rpi4c--
 
