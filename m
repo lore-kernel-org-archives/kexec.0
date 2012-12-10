@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1ThsMM-0002S8-N3
- for kexec@lists.infradead.org; Mon, 10 Dec 2012 01:40:44 +0000
-Date: Mon, 10 Dec 2012 10:39:13 +0900
+ id 1ThtLj-00055Y-0d
+ for kexec@lists.infradead.org; Mon, 10 Dec 2012 02:44:09 +0000
+Date: Mon, 10 Dec 2012 11:42:32 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH v2] Add the values related to buddy system for filtering
- free pages.
-Message-Id: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] Add the values related to buddy system for filtering
+ free pages
+Message-Id: <20121210114232.625dd1acd7d0f88b58d85619@mxc.nes.nec.co.jp>
+In-Reply-To: <20121207150805.GC4928@redhat.com>
+References: <20121121170247.6b57465f2fc1d7f91cd1cddf@mxc.nes.nec.co.jp>
+ <20121207150805.GC4928@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,72 +24,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
+To: vgoyal@redhat.com
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-This patch adds the values related to buddy system to vmcoreinfo data
-so that makedumpfile (dump filtering command) can filter out all free
-pages with the new logic.
-It's faster than the current logic because it can distinguish free page
-by analyzing page structure at the same time as filtering for other
-unnecessary pages (e.g. anonymous page).
-OTOH, the current logic has to trace free_list to distinguish free 
-pages while analyzing page structure to filter out other unnecessary
-pages.
+Hello Vivek,
 
-The new logic uses the fact that buddy page is marked by _mapcount == 
-PAGE_BUDDY_MAPCOUNT_VALUE. But, _mapcount shares its memory with other
-fields for SLAB/SLUB when PG_slab is set, so we need to check if PG_slab
-is set or not before looking up _mapcount value.
-And we can get the order of buddy system from private field.
-To sum it up, the values below are required for this logic.
+On Fri, 7 Dec 2012 10:08:05 -0500
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Required values:
-  - OFFSET(page._mapcount)
-  - OFFSET(page.private)
-  - NUMBER(PG_slab)
-  - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> On Wed, Nov 21, 2012 at 05:02:47PM +0900, Atsushi Kumagai wrote:
+> > This patch adds the values related to buddy system to vmcoreinfo data
+> > so that makedumpfile (dump filtering command) can filter out all free
+> > pages with the new logic.
+> > It's faster than the current logic because it can distinguish free page
+> > by analyzing page structure at the same time as filtering for other
+> > unnecessary pages (e.g. anonymous page).
+> > OTOH, the current logic has to trace free_list to distinguish free 
+> > pages while analyzing page structure to filter out other unnecessary
+> > pages.
+> > 
+> > The new logic uses the fact that buddy page is marked by _mapcount == 
+> > PAGE_BUDDY_MAPCOUNT_VALUE. The values below are required to distinguish
+> > it.
+> > 
+> > Required values:
+> >   - OFFSET(page._mapcount)
+> >   - OFFSET(page.private)
+> >   - SIZE(pageflags)
+> >   - NUMBER(PG_slab)
+> >   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> >   
+> 
+> As per your explanation, you should just need to export page._mapcount
+> offset and PAGE_BUDDY_MAPCOUNT_VALUE value so that you can figure out
+> if a page is free or not.
+> 
+> Why do we need rest of the three fields.
+> 
+> - OFFSET(page.private)
+> - SIZE(pageflags)
+> - NUMBER(PG_slab)
 
-Changelog from v1 to v2:
-1. remove SIZE(pageflags)
-  The new logic was changed after I sent v1 patch.  
-  Accordingly, SIZE(pageflags) has been unnecessary for makedumpfile.
+Thanks for your comment.
 
-What's makedumpfile:
-  makedumpfile creates a small dumpfile by excluding unnecessary pages
-  for the analysis. To distinguish unnecessary pages, makedumpfile gets
-  the vmcoreinfo data which has the minimum debugging information only
-  for dump filtering.
+SIZE(pageflags) is unnecessary as you said, but the other two are
+certainly necessary.
+I modified the description in v2 to make it clear, please see below:
 
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
----
- kernel/kexec.c |    4 ++++
- 1 file changed, 4 insertions(+)
+  https://lkml.org/lkml/2012/12/9/138
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 5e4bd78..b27efe4 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1490,6 +1490,8 @@ static int __init crash_save_vmcoreinfo_init(void)
-	VMCOREINFO_OFFSET(page, _count);
-	VMCOREINFO_OFFSET(page, mapping);
-	VMCOREINFO_OFFSET(page, lru);
-+	VMCOREINFO_OFFSET(page, _mapcount);
-+	VMCOREINFO_OFFSET(page, private);
-	VMCOREINFO_OFFSET(pglist_data, node_zones);
-	VMCOREINFO_OFFSET(pglist_data, nr_zones);
- #ifdef CONFIG_FLAT_NODE_MEM_MAP
-@@ -1512,6 +1514,8 @@ static int __init crash_save_vmcoreinfo_init(void)
-	VMCOREINFO_NUMBER(PG_lru);
-	VMCOREINFO_NUMBER(PG_private);
-	VMCOREINFO_NUMBER(PG_swapcache);
-+	VMCOREINFO_NUMBER(PG_slab);
-+	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
 
-	arch_crash_save_vmcoreinfo();
-	update_vmcoreinfo_note();
---
-1.7.9.2
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
