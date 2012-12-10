@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Th5xO-0007lh-4P
- for kexec@lists.infradead.org; Fri, 07 Dec 2012 21:59:43 +0000
-Date: Fri, 7 Dec 2012 16:59:31 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2 0/7] makedumpfile security key filtering with eppic
-Message-ID: <20121207215930.GE4928@redhat.com>
-References: <1350981766.43974385.1354807618743.JavaMail.root@redhat.com>
- <50C18718.40902@linux.vnet.ibm.com>
- <C14DE2E60140984C9CEB63D47F21D9D40499579E@s2exchange2.hq.s2sys.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <C14DE2E60140984C9CEB63D47F21D9D40499579E@s2exchange2.hq.s2sys.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1ThsMM-0002S8-N3
+ for kexec@lists.infradead.org; Mon, 10 Dec 2012 01:40:44 +0000
+Date: Mon, 10 Dec 2012 10:39:13 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [PATCH v2] Add the values related to buddy system for filtering
+ free pages.
+Message-Id: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +21,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Luc Chouinard <LChouinard@s2sys.com>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, Dave Anderson <anderson@redhat.com>, Aravinda Prasad <aravinda@linux.vnet.ibm.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, buendgen@de.ibm.com
+To: ebiederm@xmission.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Fri, Dec 07, 2012 at 08:46:33AM -0500, Luc Chouinard wrote:
+This patch adds the values related to buddy system to vmcoreinfo data
+so that makedumpfile (dump filtering command) can filter out all free
+pages with the new logic.
+It's faster than the current logic because it can distinguish free page
+by analyzing page structure at the same time as filtering for other
+unnecessary pages (e.g. anonymous page).
+OTOH, the current logic has to trace free_list to distinguish free 
+pages while analyzing page structure to filter out other unnecessary
+pages.
 
-[..]
-> > This is what I am planning.
-> > 
-> > A new extension_eppic.c file will be created under makedumpfile source
-> > directory. This file is equivalent to applications/crash/eppic.c in
-> upstream eppic
-> > repository. A new target will be added to the Makefile of makedumpfile
-> to build
-> > the shared library and to build this shared library libeppic.a would
-> be required.
-> > The makedumpfile specific shared library will be named different - say
-> > eppic_mkdumpfile.so to avoid conflict with crash specific libeppic.so.
-> > 
-> > The reason for including extension_eppic.c under makedumpfile source
-> is
-> > because it will be dependent on other functions in makedumpfile code
-> like dwarf
-> > related calls etc. People modifying those functions should be aware of
-> the
-> > callers in extension_eppic.c and if this is included in upstream eppic
-> code, it will
-> > be easily overlooked (or may not be aware of its existence).
-> 
-> The same reasons exists for applications/crash/eppic.c. It only ended up
-> on eppic's git for two reasons. To provide for a complete example of
-> integration into a tool and, because I originally wrote it,  I could
-> support it from there without having to send a patch Dave's way.
->  
-> I expect other applications to own their glue/integration file(s) and
-> only grab libeppic from the git. These applications, will comply to
-> libeppic's APIs and only fixes or new functions will be added to
-> libeppic to support these applications and valid new requirements they
-> may have. Like we did for mkdumpfile.
-> 
-> Same libeppic.so and same libeppic Makefile for all.
+The new logic uses the fact that buddy page is marked by _mapcount == 
+PAGE_BUDDY_MAPCOUNT_VALUE. But, _mapcount shares its memory with other
+fields for SLAB/SLUB when PG_slab is set, so we need to check if PG_slab
+is set or not before looking up _mapcount value.
+And we can get the order of buddy system from private field.
+To sum it up, the values below are required for this logic.
 
-I am lost here. Can somebody explain this thing in layman's terms with
-simple example. (We have a function foo() in libeppic which makeudmpfile
-wants to call. Now what?)
+Required values:
+  - OFFSET(page._mapcount)
+  - OFFSET(page.private)
+  - NUMBER(PG_slab)
+  - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
 
-Few questions come to my mind.
+Changelog from v1 to v2:
+1. remove SIZE(pageflags)
+  The new logic was changed after I sent v1 patch.  
+  Accordingly, SIZE(pageflags) has been unnecessary for makedumpfile.
 
-- What is glue logic and why do we need application specific glue
-  logic to use this library.
+What's makedumpfile:
+  makedumpfile creates a small dumpfile by excluding unnecessary pages
+  for the analysis. To distinguish unnecessary pages, makedumpfile gets
+  the vmcoreinfo data which has the minimum debugging information only
+  for dump filtering.
 
-- Assuming we need glue logic and assuming it is small enough, will
-  it make sense to build statically build glue logic in application
-  and build actual libeppic as shared object and do dlopen() on it.
+Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+---
+ kernel/kexec.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks
-Vivek
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 5e4bd78..b27efe4 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1490,6 +1490,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+	VMCOREINFO_OFFSET(page, _count);
+	VMCOREINFO_OFFSET(page, mapping);
+	VMCOREINFO_OFFSET(page, lru);
++	VMCOREINFO_OFFSET(page, _mapcount);
++	VMCOREINFO_OFFSET(page, private);
+	VMCOREINFO_OFFSET(pglist_data, node_zones);
+	VMCOREINFO_OFFSET(pglist_data, nr_zones);
+ #ifdef CONFIG_FLAT_NODE_MEM_MAP
+@@ -1512,6 +1514,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+	VMCOREINFO_NUMBER(PG_lru);
+	VMCOREINFO_NUMBER(PG_private);
+	VMCOREINFO_NUMBER(PG_swapcache);
++	VMCOREINFO_NUMBER(PG_slab);
++	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+
+	arch_crash_save_vmcoreinfo();
+	update_vmcoreinfo_note();
+--
+1.7.9.2
 
 _______________________________________________
 kexec mailing list
