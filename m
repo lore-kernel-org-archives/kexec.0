@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TiLuG-0002Xy-6x
- for kexec@lists.infradead.org; Tue, 11 Dec 2012 09:13:40 +0000
-Message-ID: <50C6F8C6.9000008@cn.fujitsu.com>
-Date: Tue, 11 Dec 2012 17:11:34 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+ id 1TiR1s-00018c-QH
+ for kexec@lists.infradead.org; Tue, 11 Dec 2012 14:41:53 +0000
+Date: Tue, 11 Dec 2012 09:41:39 -0500 (EST)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1672785544.45808556.1355236899164.JavaMail.root@redhat.com>
+In-Reply-To: <CAAmzW4NHO=y=utmK_at+JxvyYMd4O_7W_6n541GEA0aeDfukyw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
 MIME-Version: 1.0
-Subject: [PATCH] [RESEND] x86/kexec: crash_vmclear_local_vmcss needs __rcu
-References: <50C18168.305@cn.fujitsu.com>
-In-Reply-To: <50C18168.305@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,54 +21,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Gleb Natapov <gleb@redhat.com>
-Cc: kbuild test robot <fengguang.wu@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+To: JoonSoo Kim <js1304@gmail.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-This removes the sparse warning:
-arch/x86/kernel/crash.c:49:32: sparse: incompatible types in comparison expression (different address spaces)
 
-Reported-by: kbuild test robot <fengguang.wu@intel.com>
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/include/asm/kexec.h |    3 ++-
- arch/x86/kernel/crash.c      |    4 ++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 28feeba..6080d26 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -163,7 +163,8 @@ struct kimage_arch {
- };
- #endif
- 
--extern void (*crash_vmclear_loaded_vmcss)(void);
-+typedef void crash_vmclear_fn(void);
-+extern crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss;
- 
- #endif /* __ASSEMBLY__ */
- 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 2f6b8e8..74467fe 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -38,12 +38,12 @@ int in_crash_kexec;
-  *
-  * protected by rcu.
-  */
--void (*crash_vmclear_loaded_vmcss)(void) = NULL;
-+crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss = NULL;
- EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
- 
- static inline void cpu_crash_vmclear_loaded_vmcss(void)
- {
--	void (*do_vmclear_operation)(void) = NULL;
-+	crash_vmclear_fn *do_vmclear_operation = NULL;
- 
- 	rcu_read_lock();
- 	do_vmclear_operation = rcu_dereference(crash_vmclear_loaded_vmcss);
--- 
-1.7.1
+----- Original Message -----
+
+> > Can we get the same information from this rb-tree of vmap_area? Is
+> > ->va_start field communication same information as vmlist was
+> > communicating? What's the difference between vmap_area_root and vmlist.
+> 
+> Thanks for comment.
+> 
+> Yes. vmap_area's va_start field represent same information as vm_struct's addr.
+> vmap_area_root is data structure for fast searching an area.
+> vmap_area_list is address sorted list, so we can use it like as vmlist.
+> 
+> There is a little difference vmap_area_list and vmlist.
+> vmlist is lack of information about some areas in vmalloc address space.
+> For example, vm_map_ram() allocate area in vmalloc address space,
+> but it doesn't make a link with vmlist. To provide full information
+> about vmalloc address space, using vmap_area_list is more adequate.
+> 
+> > So without knowing details of both the data structures, I think if vmlist
+> > is going away, then user space tools should be able to traverse vmap_area_root
+> > rb tree. I am assuming it is sorted using ->addr field and we should be
+> > able to get vmalloc area start from there. It will just be a matter of
+> > exporting right fields to user space (instead of vmlist).
+> 
+> There is address sorted list of vmap_area, vmap_area_list.
+> So we can use it for traversing vmalloc areas if it is necessary.
+> But, as I mentioned before, kexec write *just* address of vmlist and
+> offset of vm_struct's address field.  It imply that they don't traverse vmlist,
+> because they didn't write vm_struct's next field which is needed for traversing.
+> Without vm_struct's next field, they have no method for traversing.
+> So, IMHO, assigning dummy vm_struct to vmlist which is implemented by [7/8] is
+> a safe way to maintain a compatibility of userspace tool. :)
+
+Why bother keeping vmlist around?  kdump's makedumpfile command would not
+even need to traverse the vmap_area rbtree, because it could simply look
+at the first vmap_area in the sorted vmap_area_list, correct?
+
+Dave Anderson
+
 
 
 _______________________________________________
