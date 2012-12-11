@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TiY8Y-00072F-O5
- for kexec@lists.infradead.org; Tue, 11 Dec 2012 22:17:16 +0000
-Date: Tue, 11 Dec 2012 17:17:05 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <104724866.46130887.1355264225876.JavaMail.root@redhat.com>
-In-Reply-To: <20121211214859.GG5580@redhat.com>
-Subject: Re: [RFC PATCH 0/8] remove vm_struct list management
+ id 1TiYbO-0001wQ-4h
+ for kexec@lists.infradead.org; Tue, 11 Dec 2012 22:47:03 +0000
+Date: Tue, 11 Dec 2012 19:55:39 -0200
+From: Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH] [RESEND] x86/kexec: crash_vmclear_local_vmcss needs __rcu
+Message-ID: <20121211215539.GA4468@amt.cnet>
+References: <50C18168.305@cn.fujitsu.com>
+ <50C6F8C6.9000008@cn.fujitsu.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50C6F8C6.9000008@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +24,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: JoonSoo Kim <js1304@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Gleb Natapov <gleb@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kbuild test robot <fengguang.wu@intel.com>
 
-
-
------ Original Message -----
-> On Mon, Dec 10, 2012 at 11:40:47PM +0900, JoonSoo Kim wrote:
+On Tue, Dec 11, 2012 at 05:11:34PM +0800, Zhang Yanfei wrote:
+> This removes the sparse warning:
+> arch/x86/kernel/crash.c:49:32: sparse: incompatible types in comparison expression (different address spaces)
 > 
-> [..]
-> > > So without knowing details of both the data structures, I think if vmlist
-> > > is going away, then user space tools should be able to traverse vmap_area_root
-> > > rb tree. I am assuming it is sorted using ->addr field and we should be
-> > > able to get vmalloc area start from there. It will just be a matter of
-> > > exporting right fields to user space (instead of vmlist).
-> > 
-> > There is address sorted list of vmap_area, vmap_area_list.
-> > So we can use it for traversing vmalloc areas if it is necessary.
-> > But, as I mentioned before, kexec write *just* address of vmlist and
-> > offset of vm_struct's address field.  It imply that they don't traverse vmlist,
-> > because they didn't write vm_struct's next field which is needed for traversing.
-> > Without vm_struct's next field, they have no method for traversing.
-> > So, IMHO, assigning dummy vm_struct to vmlist which is implemented by [7/8] is
-> > a safe way to maintain a compatibility of userspace tool. :)
-> 
-> Actually the design of "makedumpfile" and "crash" tool is that they know
-> about kernel data structures and they adopt to changes. So for major
-> changes they keep track of kernel version numbers and if access the
-> data structures accordingly.
-> 
-> Currently we access first element of vmlist to determine start of vmalloc
-> address. True we don't have to traverse the list.
-> 
-> But as you mentioned we should be able to get same information by
-> traversing to left most element of vmap_area_list rb tree. So I think
-> instead of trying to retain vmlist first element just for backward
-> compatibility, I will rather prefer get rid of that code completely
-> from kernel and let user space tool traverse rbtree. Just export
-> minimum needed info for traversal in user space.
+> Reported-by: kbuild test robot <fengguang.wu@intel.com>
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  arch/x86/include/asm/kexec.h |    3 ++-
+>  arch/x86/kernel/crash.c      |    4 ++--
+>  2 files changed, 4 insertions(+), 3 deletions(-)
 
-There's no need to traverse the rbtree.  There is a vmap_area_list
-linked list of vmap_area structures that is also sorted by virtual
-address.
+Applied, thanks.
 
-All that makedumpfile would have to do is to access the first vmap_area
-in the vmap_area_list -- as opposed to the way that it does now, which is
-by accessing the first vm_struct in the to-be-obsoleted vmlist list.
-
-So it seems silly to keep the dummy "vmlist" around.
-
-Dave
 
 _______________________________________________
 kexec mailing list
