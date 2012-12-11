@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TiLsP-0002La-6W
- for kexec@lists.infradead.org; Tue, 11 Dec 2012 09:11:47 +0000
-Message-ID: <50C6F84D.7010701@cn.fujitsu.com>
-Date: Tue, 11 Dec 2012 17:09:33 +0800
+ id 1TiLuG-0002Xy-6x
+ for kexec@lists.infradead.org; Tue, 11 Dec 2012 09:13:40 +0000
+Message-ID: <50C6F8C6.9000008@cn.fujitsu.com>
+Date: Tue, 11 Dec 2012 17:11:34 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] x86/kexec: crash_vmclear_local_vmcss needs __rcu
-References: <50C18168.305@cn.fujitsu.com> <20121210203014.GB2402@amt.cnet>
- <50C6E927.9040605@cn.fujitsu.com> <20121211081024.GC11016@redhat.com>
-In-Reply-To: <20121211081024.GC11016@redhat.com>
+Subject: [PATCH] [RESEND] x86/kexec: crash_vmclear_local_vmcss needs __rcu
+References: <50C18168.305@cn.fujitsu.com>
+In-Reply-To: <50C18168.305@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,59 +18,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Gleb Natapov <gleb@redhat.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Marcelo Tosatti <mtosatti@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kbuild test robot <fengguang.wu@intel.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Gleb Natapov <gleb@redhat.com>
+Cc: kbuild test robot <fengguang.wu@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 
-5LqOIDIwMTLlubQxMuaciDEx5pelIDE2OjEwLCBHbGViIE5hdGFwb3Yg5YaZ6YGTOgo+IE9uIFR1
-ZSwgRGVjIDExLCAyMDEyIGF0IDA0OjA0OjU1UE0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
-Pj4g5LqOIDIwMTLlubQxMuaciDEx5pelIDA0OjMwLCBNYXJjZWxvIFRvc2F0dGkg5YaZ6YGTOgo+
-Pj4gT24gRnJpLCBEZWMgMDcsIDIwMTIgYXQgMDE6NDA6NTZQTSArMDgwMCwgWmhhbmcgWWFuZmVp
-IHdyb3RlOgo+Pj4+IFRoaXMgcmVtb3ZlcyB0aGUgc3BhcnNlIHdhcm5pbmc6Cj4+Pj4gYXJjaC94
-ODYva2VybmVsL2NyYXNoLmM6NDk6MzI6IHNwYXJzZTogaW5jb21wYXRpYmxlIHR5cGVzIGluIGNv
-bXBhcmlzb24gZXhwcmVzc2lvbiAoZGlmZmVyZW50IGFkZHJlc3Mgc3BhY2VzKQo+Pj4+Cj4+Pj4g
-UmVwb3J0ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxmZW5nZ3Vhbmcud3VAaW50ZWwuY29tPgo+
-Pj4+IFNpZ25lZC1vZmYtYnk6IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5j
-b20+Cj4+Pj4gLS0tCj4+Pj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmggfCAgICA0ICsr
-Ky0KPj4+PiAgYXJjaC94ODYva2VybmVsL2NyYXNoLmMgICAgICB8ICAgIDQgKystLQo+Pj4+ICAy
-IGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPj4+Pgo+Pj4+
-IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhlYy5oIGIvYXJjaC94ODYvaW5j
-bHVkZS9hc20va2V4ZWMuaAo+Pj4+IGluZGV4IDI4ZmVlYmEuLjE2ODgyY2QgMTAwNjQ0Cj4+Pj4g
-LS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaAo+Pj4+ICsrKyBiL2FyY2gveDg2L2lu
-Y2x1ZGUvYXNtL2tleGVjLmgKPj4+PiBAQCAtMTYzLDcgKzE2Myw5IEBAIHN0cnVjdCBraW1hZ2Vf
-YXJjaCB7Cj4+Pj4gIH07Cj4+Pj4gICNlbmRpZgo+Pj4+ICAKPj4+PiAtZXh0ZXJuIHZvaWQgKCpj
-cmFzaF92bWNsZWFyX2xvYWRlZF92bWNzcykodm9pZCk7Cj4+Pj4gK2V4dGVybiB2b2lkIF9fcmN1
-ICgqY3Jhc2hfdm1jbGVhcl9sb2FkZWRfdm1jc3MpKHZvaWQpOwo+Pj4+ICsjZGVmaW5lIHZtY2xl
-YXJfZnVuY19yY3Uodm1jbGVhcl9mdW5jKSBcCj4+Pj4gKwkoKHZvaWQgKCopKHZvaWQpKSByY3Vf
-ZGVyZWZlcmVuY2Uodm1jbGVhcl9mdW5jKSkKPj4+PiAgCj4+Pj4gICNlbmRpZiAvKiBfX0FTU0VN
-QkxZX18gKi8KPj4+PiAgCj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5j
-IGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4+PiBpbmRleCAyZjZiOGU4Li41MGNlMWQ2IDEw
-MDY0NAo+Pj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCj4+Pj4gKysrIGIvYXJjaC94
-ODYva2VybmVsL2NyYXNoLmMKPj4+PiBAQCAtMzgsNyArMzgsNyBAQCBpbnQgaW5fY3Jhc2hfa2V4
-ZWM7Cj4+Pj4gICAqCj4+Pj4gICAqIHByb3RlY3RlZCBieSByY3UuCj4+Pj4gICAqLwo+Pj4+IC12
-b2lkICgqY3Jhc2hfdm1jbGVhcl9sb2FkZWRfdm1jc3MpKHZvaWQpID0gTlVMTDsKPj4+PiArdm9p
-ZCBfX3JjdSAoKmNyYXNoX3ZtY2xlYXJfbG9hZGVkX3ZtY3NzKSh2b2lkKSA9IE5VTEw7Cj4+Pgo+
-Pj4gSXNudCB0aGlzIChfX3JjdSBBUyB0YWcpIHN1ZmZpY2llbnQ/IEFmdGVyIGFsbCwgc3BhcnNl
-IGlzIGNvbXBsYWluaW5nCj4+PiBhYm91dCBuYW1lc3BhY2VzLgo+Pj4KPj4+IENyZWF0aW5nIGEg
-I2RlZmluZSB0byBjYXN0IHNlZW1zIGV4Y2Vzc2l2ZS4KPj4+Cj4+Pgo+Pgo+PiBJIGFtIG5vdCB2
-ZXJ5IGZhbWlsaWFyIHdpdGggdGhlIHJjdS4KPj4gQWRkaW5nIF9fcmN1IHRhZyBjb3VsZCBzb2x2
-ZSB0aGUgcHJvYmxlbS4gQnV0IGl0IGltcG9ydGVkIGFub3RoZXIgd2FybmluZwo+PiB3aGVuIEkg
-dHJ5IHRvIGFzc2lnbiByY3VfZGVyZWZlcmVuY2UoY3Jhc2hfdm1jbGVhcl9sb2FkZWRfdm1jc3Mp
-IHRvCj4+IGRvX3ZtY2xlYXJfb3BlcmF0aW9uOgo+Pgo+PiBhcmNoL3g4Ni9rZXJuZWwvY3Jhc2gu
-Yzo0OTozMDogd2FybmluZzogaW5jb3JyZWN0IHR5cGUgaW4gYXNzaWdubWVudCAoZGlmZmVyZW50
-IG1vZGlmaWVycykKPj4gYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NDk6MzA6ICAgIGV4cGVjdGVk
-IHZvaWQgKCAqZG9fdm1jbGVhcl9vcGVyYXRpb24gKSggLi4uICkKPj4gYXJjaC94ODYva2VybmVs
-L2NyYXNoLmM6NDk6MzA6ICAgIGdvdCB2b2lkICggW25vZGVyZWZdICo8bm9pZGVudD4gKSggLi4u
-ICkKPj4gYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NDk6MzA6IHdhcm5pbmc6IGluY29ycmVjdCB0
-eXBlIGluIGFzc2lnbm1lbnQgKGRpZmZlcmVudCBtb2RpZmllcnMpCj4+IGFyY2gveDg2L2tlcm5l
-bC9jcmFzaC5jOjQ5OjMwOiAgICBleHBlY3RlZCB2b2lkICggKmRvX3ZtY2xlYXJfb3BlcmF0aW9u
-ICkoIC4uLiApCj4+IGFyY2gveDg2L2tlcm5lbC9jcmFzaC5jOjQ5OjMwOiAgICBnb3Qgdm9pZCAo
-IFtub2RlcmVmXSAqPG5vaWRlbnQ+ICkoIC4uLiApCj4+Cj4+IFNvIEkgbWFkZSB0aGUgI2RlZmlu
-ZSB0byBjYXN0IGl0cyB0eXBlLgo+Pgo+PiBJZiB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlvbiwgdGhh
-dCdsbCBiZSBoZWxwZnVsLgo+Pgo+IFRyeSB0byB1c2UgdHlwZWRlZi4KPiAKClRoYW5rcy4gdHlw
-ZWRlZiB3b3Jrcy4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+This removes the sparse warning:
+arch/x86/kernel/crash.c:49:32: sparse: incompatible types in comparison expression (different address spaces)
+
+Reported-by: kbuild test robot <fengguang.wu@intel.com>
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ arch/x86/include/asm/kexec.h |    3 ++-
+ arch/x86/kernel/crash.c      |    4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 28feeba..6080d26 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -163,7 +163,8 @@ struct kimage_arch {
+ };
+ #endif
+ 
+-extern void (*crash_vmclear_loaded_vmcss)(void);
++typedef void crash_vmclear_fn(void);
++extern crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss;
+ 
+ #endif /* __ASSEMBLY__ */
+ 
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 2f6b8e8..74467fe 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -38,12 +38,12 @@ int in_crash_kexec;
+  *
+  * protected by rcu.
+  */
+-void (*crash_vmclear_loaded_vmcss)(void) = NULL;
++crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss = NULL;
+ EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
+ 
+ static inline void cpu_crash_vmclear_loaded_vmcss(void)
+ {
+-	void (*do_vmclear_operation)(void) = NULL;
++	crash_vmclear_fn *do_vmclear_operation = NULL;
+ 
+ 	rcu_read_lock();
+ 	do_vmclear_operation = rcu_dereference(crash_vmclear_loaded_vmcss);
+-- 
+1.7.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
