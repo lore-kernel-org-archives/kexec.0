@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TjH7C-000107-VW
- for kexec@lists.infradead.org; Thu, 13 Dec 2012 22:18:52 +0000
+ id 1TjH7D-000100-0a
+ for kexec@lists.infradead.org; Thu, 13 Dec 2012 22:18:53 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v6 3/6] kexec, x86: Fix bzImage real-mode booting
-Date: Thu, 13 Dec 2012 14:18:29 -0800
-Message-Id: <1355437112-9250-4-git-send-email-yinghai@kernel.org>
-In-Reply-To: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
-References: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v6 0/6] kexec: put bzImage and ramdisk above 4G for x86 64bit
+Date: Thu, 13 Dec 2012 14:18:26 -0800
+Message-Id: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,132 +23,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-We need to keep space for bss, heap/stack before command line.
-otherwise command_line will be cleared by kernel 16bit init code.
+Now we have limit kdump reserved under 896M, because kexec has the limitation.
+and also bzImage need to stay under 4g.
 
-also need to set 32bit start in real_mode header, kernel 16bit code
-need to jump there.
+kernel parts changes could be found at:
+        git://git.kernel.org/pub/scm/linux/kernel/git/yinghai/linux-yinghai.git for-x86-boot
 
-Also don't touch regs16 if --real-mode is not specified.
+here patches are for kexec tools to load bzImage and ramdisk above 4G
+acccording to new added boot header fields.
 
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
----
- kexec/arch/i386/kexec-bzImage.c |   65 +++++++++++++++++++++++++++++++--------
- 1 file changed, 52 insertions(+), 13 deletions(-)
+-v3: address review from Eric to use locate_hole at first.
+     use xloadflags instead.
+-v4: remove the restriction about bzImage not crossing GB boundary.
+     add real-mode fix for bzImage.
+     add --entry-32bit and --real-mode for skip bzImage64.
+-v5: use USE_EXT_BOOT_PARAMS bit in xloadflags.
+-v6: use sentinel instead of USE_EXT_BOOT_PARAMS.
+     add crashkernel_low support
 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index a5896be..da3ebd1 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -130,6 +130,8 @@ int do_bzImage_load(struct kexec_info *info,
- 	unsigned long kernel32_load_addr;
- 	char *modified_cmdline;
- 	unsigned long cmdline_end;
-+	unsigned long kern16_size_needed;
-+	unsigned long heap_size = 0;
- 
- 	/*
- 	 * Find out about the file I am about to load.
-@@ -221,9 +223,31 @@ int do_bzImage_load(struct kexec_info *info,
- 		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
- 					0x3000, 640*1024, -1, 0);
- 	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
-+
- 	/* The argument/parameter segment */
--	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
-+	if (real_mode_entry) {
-+		/* need to include size for bss and heap etc */
-+		if (setup_header.protocol_version >= 0x0201)
-+			kern16_size_needed = setup_header.heap_end_ptr;
-+		else
-+			kern16_size_needed = kern16_size + 8192; /* bss */
-+		if (kern16_size_needed < kern16_size)
-+			kern16_size_needed = kern16_size;
-+		if (kern16_size_needed > 0xfffc)
-+			die("kern16_size_needed is more then 64k\n");
-+		heap_size = 0xfffc - kern16_size_needed; /* less 64k */
-+		heap_size &= ~(0x200 - 1);
-+		kern16_size_needed += heap_size;
-+	} else {
-+		kern16_size_needed = kern16_size;
-+		/* need to bigger than size of struct bootparams */
-+		if (kern16_size_needed < 4096)
-+			kern16_size_needed = 4096;
-+	}
-+	setup_size = kern16_size_needed + command_line_len +
-+			 PURGATORY_CMDLINE_SIZE;
- 	real_mode = xmalloc(setup_size);
-+	memset(real_mode, 0, setup_size);
- 	memcpy(real_mode, kernel, kern16_size);
- 	if (!real_mode_entry)
- 		clean_boot_params((unsigned char *)real_mode, kern16_size);
-@@ -281,11 +305,20 @@ int do_bzImage_load(struct kexec_info *info,
- 
- 	/* Tell the kernel what is going on */
- 	setup_linux_bootloader_parameters(info, real_mode, setup_base,
--		kern16_size, command_line, command_line_len,
-+		kern16_size_needed, command_line, command_line_len,
- 		initrd, initrd_len);
- 
-+	if (real_mode_entry) {
-+		/* restore can use heap and load high */
-+		real_mode->loader_flags = 0x81;
-+		if (real_mode->protocol_version >= 0x0201)
-+			real_mode->heap_end_ptr += heap_size - 0x200; /*stack*/
-+	}
-+
- 	/* Get the initial register values */
--	elf_rel_get_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
-+	if (real_mode_entry)
-+		elf_rel_get_symbol(&info->rhdr, "entry16_regs",
-+					 &regs16, sizeof(regs16));
- 	elf_rel_get_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
- 	/*
- 
-@@ -304,16 +337,18 @@ int do_bzImage_load(struct kexec_info *info,
- 	/*
- 	 * Initialize the 16bit start information.
- 	 */
--	regs16.ds = regs16.es = regs16.fs = regs16.gs = setup_base >> 4;
--	regs16.cs = regs16.ds + 0x20;
--	regs16.ip = 0;
--	/* XXX: Documentation/i386/boot.txt says 'ss' must equal 'ds' */
--	regs16.ss = (elf_rel_get_addr(&info->rhdr, "stack_end") - 64*1024) >> 4;
--	/* XXX: Documentation/i386/boot.txt says 'sp' must equal heap_end */
--	regs16.esp = 0xFFFC;
- 	if (real_mode_entry) {
-+		regs16.ds = regs16.es = regs16.fs = regs16.gs = setup_base >> 4;
-+		regs16.cs = regs16.ds + 0x20;
-+		regs16.ip = 0;
-+		/* XXX: Documentation/i386/boot.txt says 'ss' must equal 'ds' */
-+		regs16.ss = (elf_rel_get_addr(&info->rhdr, "stack_end") - 64*1024) >> 4;
-+		/* XXX: Documentation/i386/boot.txt says 'sp' must equal heap_end */
-+		regs16.esp = 0xFFFC;
-+
- 		printf("Starting the kernel in real mode\n");
- 		regs32.eip = elf_rel_get_addr(&info->rhdr, "entry16");
-+		real_mode->kernel_start = kernel32_load_addr;
- 	}
- 	if (real_mode_entry && kexec_debug) {
- 		unsigned long entry16_debug, pre32, first32;
-@@ -333,10 +368,14 @@ int do_bzImage_load(struct kexec_info *info,
- 	
- 		regs32.eip = entry16_debug;
- 	}
--	elf_rel_set_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
--	elf_rel_set_symbol(&info->rhdr, "entry16_debug_regs", &regs16, sizeof(regs16));
-+	if (real_mode_entry) {
-+		elf_rel_set_symbol(&info->rhdr, "entry16_regs",
-+					 &regs16, sizeof(regs16));
-+		elf_rel_set_symbol(&info->rhdr, "entry16_debug_regs",
-+					 &regs16, sizeof(regs16));
-+	}
- 	elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
--	cmdline_end = setup_base + kern16_size + command_line_len - 1;
-+	cmdline_end = setup_base + kern16_size_needed + command_line_len - 1;
- 	elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
- 			   sizeof(unsigned long));
- 
+Yinghai Lu (6):
+  kexec, x86: add boot header member for version 2.12
+  kexec, x86: clean boot_params area for entry-32bit path
+  kexec, x86: Fix bzImage real-mode booting
+  kexec, x86: put ramdisk/cmd_line above 4G for 64bit bzImage
+  kexec, x86_64: Load bzImage64 above 4G
+  kexec, x86: handle Crash low kernel range
+
+ include/x86/x86-linux.h                |   33 +++-
+ kexec/arch/i386/crashdump-x86.c        |   21 +++
+ kexec/arch/i386/include/arch/options.h |    4 +-
+ kexec/arch/i386/kexec-bzImage.c        |   81 +++++++--
+ kexec/arch/i386/x86-linux-setup.c      |   27 ++-
+ kexec/arch/x86_64/Makefile             |    1 +
+ kexec/arch/x86_64/kexec-bzImage64.c    |  312 ++++++++++++++++++++++++++++++++
+ kexec/arch/x86_64/kexec-x86_64.c       |    1 +
+ kexec/arch/x86_64/kexec-x86_64.h       |    5 +
+ 9 files changed, 461 insertions(+), 24 deletions(-)
+ create mode 100644 kexec/arch/x86_64/kexec-bzImage64.c
+
 -- 
 1.7.10.4
 
