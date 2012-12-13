@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TjH7C-0000zw-UJ
- for kexec@lists.infradead.org; Thu, 13 Dec 2012 22:18:52 +0000
+ id 1TjH7D-00010G-2e
+ for kexec@lists.infradead.org; Thu, 13 Dec 2012 22:18:54 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v6 2/6] kexec, x86: clean boot_params area for entry-32bit path
-Date: Thu, 13 Dec 2012 14:18:28 -0800
-Message-Id: <1355437112-9250-3-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v6 6/6] kexec, x86: handle Crash low kernel range
+Date: Thu, 13 Dec 2012 14:18:32 -0800
+Message-Id: <1355437112-9250-7-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
 References: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,54 +25,66 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-kexec bzImage path setup data is shared with real-mode path, and
-setup_header is copied together with setup_code.
-Later 32bit just use whole area as boot_params for real_mode_data.
-but those area for boot_params around setup_header is
-not cleaned that will leave some field in boot_param as
-non-zero value.
-
-So clean around setup_header area for non real-mode entry path.
+kernel could have that in /proc/iomem, will use it for kdump kernel
+for dma32
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/i386/kexec-bzImage.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ kexec/arch/i386/crashdump-x86.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 6998587..a5896be 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -98,6 +98,19 @@ void bzImage_usage(void)
-        
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 245402c..83bff5e 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -188,6 +188,8 @@ static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
+ 
+ /* Memory region reserved for storing panic kernel and other data. */
+ static struct memory_range crash_reserved_mem;
++/* under 4G parts */
++static struct memory_range crash_reserved_low_mem;
+ 
+ /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
+  * create Elf headers. Keeping it separate from get_memory_ranges() as
+@@ -282,6 +284,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+ 	if (exclude_region(&memory_ranges, crash_reserved_mem.start,
+ 				crash_reserved_mem.end) < 0)
+ 		return -1;
++	if (crash_reserved_low_mem.start &&
++	    exclude_region(&memory_ranges, crash_reserved_low_mem.start,
++				crash_reserved_low_mem.end) < 0)
++		return -1;
+ 	if (gart) {
+ 		/* exclude GART region if the system has one */
+ 		if (exclude_region(&memory_ranges, gart_start, gart_end) < 0)
+@@ -984,6 +990,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 		return ENOCRASHKERNEL;
+ 	}
+ 
++	if (crash_reserved_low_mem.start) {
++		sz = crash_reserved_low_mem.end - crash_reserved_low_mem.start
++					 +1;
++		add_memmap(memmap_p, crash_reserved_low_mem.start, sz);
++	}
++
+ 	/* Create a backup region segment to store backup data*/
+ 	if (!(info->kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
+ 		sz = (info->backup_src_size + align) & ~(align - 1);
+@@ -1059,5 +1071,14 @@ int is_crashkernel_mem_reserved(void)
+ 	crash_reserved_mem.end = end;
+ 	crash_reserved_mem.type = RANGE_RAM;
+ 
++	/* If there is no Crash low kernel, still can go on */
++	if (parse_iomem_single("Crash kernel low\n", &start, &end) ||
++					start == end)
++		return 1;
++
++	crash_reserved_low_mem.start = start;
++	crash_reserved_low_mem.end = end;
++	crash_reserved_low_mem.type = RANGE_RAM;
++
+ 	return 1;
  }
- 
-+static void clean_boot_params(unsigned char *real_mode, unsigned long size)
-+{
-+	unsigned long end;
-+
-+	/* clear value before header */
-+	memset(real_mode, 0, 0x1f1);
-+	/* clear value after setup_header  */
-+	end = *(real_mode + 0x201);
-+	end += 0x202;
-+	if (end < size)
-+		memset(real_mode + end, 0, size - end);
-+}
-+
- int do_bzImage_load(struct kexec_info *info,
- 	const char *kernel, off_t kernel_len,
- 	const char *command_line, off_t command_line_len,
-@@ -212,6 +225,9 @@ int do_bzImage_load(struct kexec_info *info,
- 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
- 	real_mode = xmalloc(setup_size);
- 	memcpy(real_mode, kernel, kern16_size);
-+	if (!real_mode_entry)
-+		clean_boot_params((unsigned char *)real_mode, kern16_size);
-+	real_mode->xloadflags &= ~(1<<0); /* clear CAN_BE_LOADED_ABOVE_4G */
- 
- 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
- 		/* If using bzImage for capture kernel, then we will not be
 -- 
 1.7.10.4
 
