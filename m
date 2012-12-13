@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mo6-p00-ob.rzone.de ([2a01:238:20a:202:5300::1])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TjB1y-0002H1-JW
- for kexec@lists.infradead.org; Thu, 13 Dec 2012 15:49:04 +0000
-From: Olaf Hering <olaf@aepfle.de>
-Subject: [PATCH 3/5] fix message and indenting in putnode in ppc64
-Date: Thu, 13 Dec 2012 16:48:48 +0100
-Message-Id: <1355413730-18190-3-git-send-email-olaf@aepfle.de>
-In-Reply-To: <1355413730-18190-1-git-send-email-olaf@aepfle.de>
-References: <1355413730-18190-1-git-send-email-olaf@aepfle.de>
+ id 1TjH7C-000107-VW
+ for kexec@lists.infradead.org; Thu, 13 Dec 2012 22:18:52 +0000
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: [PATCH v6 3/6] kexec, x86: Fix bzImage real-mode booting
+Date: Thu, 13 Dec 2012 14:18:29 -0800
+Message-Id: <1355437112-9250-4-git-send-email-yinghai@kernel.org>
+In-Reply-To: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
+References: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +22,137 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Olaf Hering <olaf@aepfle.de>
+To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
+We need to keep space for bss, heap/stack before command line.
+otherwise command_line will be cleared by kernel 16bit init code.
+
+also need to set 32bit start in real_mode header, kernel 16bit code
+need to jump there.
+
+Also don't touch regs16 if --real-mode is not specified.
+
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/ppc64/fs2dt.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c |   65 +++++++++++++++++++++++++++++++--------
+ 1 file changed, 52 insertions(+), 13 deletions(-)
 
-diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
-index f02540d..9750c34 100644
---- a/kexec/arch/ppc64/fs2dt.c
-+++ b/kexec/arch/ppc64/fs2dt.c
-@@ -602,13 +602,11 @@ static void putnode(void)
- 		strncat(filename, "linux,stdout-path", MAXPATH - strlen(filename) - 1);
- 		fd = open(filename, O_RDONLY);
- 		if (fd == -1) {
--			printf("Unable to find %s, printing from purgatory is diabled\n",
--														filename);
-+			printf("Unable to find %s, printing from purgatory is disabled\n", filename);
- 			goto no_debug;
- 		}
- 		if (fstat(fd, &statbuf)) {
--			printf("Unable to stat %s, printing from purgatory is diabled\n",
--														filename);
-+			printf("Unable to stat %s, printing from purgatory is disabled\n", filename);
- 			close(fd);
- 			goto no_debug;
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index a5896be..da3ebd1 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -130,6 +130,8 @@ int do_bzImage_load(struct kexec_info *info,
+ 	unsigned long kernel32_load_addr;
+ 	char *modified_cmdline;
+ 	unsigned long cmdline_end;
++	unsigned long kern16_size_needed;
++	unsigned long heap_size = 0;
  
-@@ -627,13 +625,11 @@ static void putnode(void)
- 		strncat(filename, "/compatible", MAXPATH - strlen(filename) - 1);
- 		fd = open(filename, O_RDONLY);
- 		if (fd == -1) {
--			printf("Unable to find %s printing from purgatory is diabled\n",
--														filename);
-+			printf("Unable to find %s printing from purgatory is disabled\n", filename);
- 			goto no_debug;
- 		}
- 		if (fstat(fd, &statbuf)) {
--			printf("Unable to stat %s printing from purgatory is diabled\n",
--														filename);
-+			printf("Unable to stat %s printing from purgatory is disabled\n", filename);
- 			close(fd);
- 			goto no_debug;
- 		}
+ 	/*
+ 	 * Find out about the file I am about to load.
+@@ -221,9 +223,31 @@ int do_bzImage_load(struct kexec_info *info,
+ 		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+ 					0x3000, 640*1024, -1, 0);
+ 	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
++
+ 	/* The argument/parameter segment */
+-	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
++	if (real_mode_entry) {
++		/* need to include size for bss and heap etc */
++		if (setup_header.protocol_version >= 0x0201)
++			kern16_size_needed = setup_header.heap_end_ptr;
++		else
++			kern16_size_needed = kern16_size + 8192; /* bss */
++		if (kern16_size_needed < kern16_size)
++			kern16_size_needed = kern16_size;
++		if (kern16_size_needed > 0xfffc)
++			die("kern16_size_needed is more then 64k\n");
++		heap_size = 0xfffc - kern16_size_needed; /* less 64k */
++		heap_size &= ~(0x200 - 1);
++		kern16_size_needed += heap_size;
++	} else {
++		kern16_size_needed = kern16_size;
++		/* need to bigger than size of struct bootparams */
++		if (kern16_size_needed < 4096)
++			kern16_size_needed = 4096;
++	}
++	setup_size = kern16_size_needed + command_line_len +
++			 PURGATORY_CMDLINE_SIZE;
+ 	real_mode = xmalloc(setup_size);
++	memset(real_mode, 0, setup_size);
+ 	memcpy(real_mode, kernel, kern16_size);
+ 	if (!real_mode_entry)
+ 		clean_boot_params((unsigned char *)real_mode, kern16_size);
+@@ -281,11 +305,20 @@ int do_bzImage_load(struct kexec_info *info,
+ 
+ 	/* Tell the kernel what is going on */
+ 	setup_linux_bootloader_parameters(info, real_mode, setup_base,
+-		kern16_size, command_line, command_line_len,
++		kern16_size_needed, command_line, command_line_len,
+ 		initrd, initrd_len);
+ 
++	if (real_mode_entry) {
++		/* restore can use heap and load high */
++		real_mode->loader_flags = 0x81;
++		if (real_mode->protocol_version >= 0x0201)
++			real_mode->heap_end_ptr += heap_size - 0x200; /*stack*/
++	}
++
+ 	/* Get the initial register values */
+-	elf_rel_get_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
++	if (real_mode_entry)
++		elf_rel_get_symbol(&info->rhdr, "entry16_regs",
++					 &regs16, sizeof(regs16));
+ 	elf_rel_get_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
+ 	/*
+ 
+@@ -304,16 +337,18 @@ int do_bzImage_load(struct kexec_info *info,
+ 	/*
+ 	 * Initialize the 16bit start information.
+ 	 */
+-	regs16.ds = regs16.es = regs16.fs = regs16.gs = setup_base >> 4;
+-	regs16.cs = regs16.ds + 0x20;
+-	regs16.ip = 0;
+-	/* XXX: Documentation/i386/boot.txt says 'ss' must equal 'ds' */
+-	regs16.ss = (elf_rel_get_addr(&info->rhdr, "stack_end") - 64*1024) >> 4;
+-	/* XXX: Documentation/i386/boot.txt says 'sp' must equal heap_end */
+-	regs16.esp = 0xFFFC;
+ 	if (real_mode_entry) {
++		regs16.ds = regs16.es = regs16.fs = regs16.gs = setup_base >> 4;
++		regs16.cs = regs16.ds + 0x20;
++		regs16.ip = 0;
++		/* XXX: Documentation/i386/boot.txt says 'ss' must equal 'ds' */
++		regs16.ss = (elf_rel_get_addr(&info->rhdr, "stack_end") - 64*1024) >> 4;
++		/* XXX: Documentation/i386/boot.txt says 'sp' must equal heap_end */
++		regs16.esp = 0xFFFC;
++
+ 		printf("Starting the kernel in real mode\n");
+ 		regs32.eip = elf_rel_get_addr(&info->rhdr, "entry16");
++		real_mode->kernel_start = kernel32_load_addr;
+ 	}
+ 	if (real_mode_entry && kexec_debug) {
+ 		unsigned long entry16_debug, pre32, first32;
+@@ -333,10 +368,14 @@ int do_bzImage_load(struct kexec_info *info,
+ 	
+ 		regs32.eip = entry16_debug;
+ 	}
+-	elf_rel_set_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
+-	elf_rel_set_symbol(&info->rhdr, "entry16_debug_regs", &regs16, sizeof(regs16));
++	if (real_mode_entry) {
++		elf_rel_set_symbol(&info->rhdr, "entry16_regs",
++					 &regs16, sizeof(regs16));
++		elf_rel_set_symbol(&info->rhdr, "entry16_debug_regs",
++					 &regs16, sizeof(regs16));
++	}
+ 	elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
+-	cmdline_end = setup_base + kern16_size + command_line_len - 1;
++	cmdline_end = setup_base + kern16_size_needed + command_line_len - 1;
+ 	elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
+ 			   sizeof(unsigned long));
+ 
 -- 
-1.8.0.1
+1.7.10.4
 
 
 _______________________________________________
