@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bk0-f49.google.com ([209.85.214.49])
+Received: from vwp2514.webpack.hosteurope.de ([2a01:488:42:1000:57e6:2a18::])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TjJRE-0006Xc-RJ
- for kexec@lists.infradead.org; Fri, 14 Dec 2012 00:47:41 +0000
-Received: by mail-bk0-f49.google.com with SMTP id jm19so1385063bkc.36
- for <kexec@lists.infradead.org>; Thu, 13 Dec 2012 16:47:38 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <50CA75A7.2060009@zytor.com>
-References: <1355437112-9250-1-git-send-email-yinghai@kernel.org>
- <50CA75A7.2060009@zytor.com>
-Date: Thu, 13 Dec 2012 16:47:38 -0800
-Message-ID: <CAE9FiQVR=41H4-5y1CSyqjmaNYzO0b23rTCBvwmQVeFoYX6zkA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/6] kexec: put bzImage and ramdisk above 4G for x86
- 64bit
-From: Yinghai Lu <yinghai@kernel.org>
+ id 1TjRRU-0008TP-7d
+ for kexec@lists.infradead.org; Fri, 14 Dec 2012 09:20:29 +0000
+Message-ID: <1355476821.1341.10.camel@sven>
+Subject: Re: [PATCH] kexec-zImage-arm: add code to support --command-line
+ along with --dtb
+From: Sven Neumann <s.neumann@raumfeld.com>
+Date: Fri, 14 Dec 2012 10:20:21 +0100
+In-Reply-To: <1355405734-19630-1-git-send-email-zonque@gmail.com>
+References: <1355405734-19630-1-git-send-email-zonque@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,20 +23,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+Cc: matthew.leach@arm.com, horms@verge.net.au, Daniel Mack <zonque@gmail.com>
 
-On Thu, Dec 13, 2012 at 4:41 PM, H. Peter Anvin <hpa@zytor.com> wrote:
-> Also, please do update the boot loader ID.
+Hi,
 
-i squash that into  patch 4
+On Thu, 2012-12-13 at 14:35 +0100, Daniel Mack wrote:
+> If --dtb is called together with --command-line, we need to modify the
+> binary dtb buffer. Luckily, we have libfdt functions available, so this
+> is straight forward.
+> 
+> Signed-off-by: Daniel Mack <zonque@gmail.com>
 
-[PATCH v6 4/6] kexec, x86: put ramdisk/cmd_line above 4G for 64bit bzImage
+Tested-by: Sven Neumann <s.neumann@raumfeld.com>
 
-We could put ramdisk/cmdline above for bzImage on 64bit for protocol 2.12.
+Works fine for us. Please include this upstream as we rely on this
+functionality to be present.
 
--v2: change ext_... handling to way that eric like.
--v3: set LOADER_TYPE_KEXEC
+
+Regards,
+Sven
+
+
 
 _______________________________________________
 kexec mailing list
