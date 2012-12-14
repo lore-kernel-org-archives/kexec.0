@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TjVMs-0000D6-O2
- for kexec@lists.infradead.org; Fri, 14 Dec 2012 13:31:59 +0000
-Date: Fri, 14 Dec 2012 22:31:55 +0900
+ id 1TjVO4-0000FP-0p
+ for kexec@lists.infradead.org; Fri, 14 Dec 2012 13:33:12 +0000
+Date: Fri, 14 Dec 2012 22:33:09 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/5] Fix xen_cpuid() inline asm to not clobber stack's
- red zone
-Message-ID: <20121214133155.GH16382@verge.net.au>
-References: <1355413730-18190-1-git-send-email-olaf@aepfle.de>
+Subject: Re: [PATCH] kexec-zImage-arm: add code to support --command-line
+ along with --dtb
+Message-ID: <20121214133309.GJ16382@verge.net.au>
+References: <1355405734-19630-1-git-send-email-zonque@gmail.com>
+ <1355476821.1341.10.camel@sven>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1355413730-18190-1-git-send-email-olaf@aepfle.de>
+In-Reply-To: <1355476821.1341.10.camel@sven>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,18 +25,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Olaf Hering <olaf@aepfle.de>
-Cc: kexec@lists.infradead.org
+To: Sven Neumann <s.neumann@raumfeld.com>
+Cc: matthew.leach@arm.com, kexec@lists.infradead.org, Daniel Mack <zonque@gmail.com>
 
-On Thu, Dec 13, 2012 at 04:48:46PM +0100, Olaf Hering wrote:
-> Port xen-unstable changeset 24344:72f4e4cb7440 to kexec-tools:
+On Fri, Dec 14, 2012 at 10:20:21AM +0100, Sven Neumann wrote:
+> Hi,
 > 
->   Pushing stuff onto the stack on x86-64 when we do not specify
->   -mno-red-zone is unsafe. Since the complicated asm is due to register
->   pressure on i386, we simply implement an all-new simpler alternative
->   for x86-64.
+> On Thu, 2012-12-13 at 14:35 +0100, Daniel Mack wrote:
+> > If --dtb is called together with --command-line, we need to modify the
+> > binary dtb buffer. Luckily, we have libfdt functions available, so this
+> > is straight forward.
+> > 
+> > Signed-off-by: Daniel Mack <zonque@gmail.com>
+> 
+> Tested-by: Sven Neumann <s.neumann@raumfeld.com>
+> 
+> Works fine for us. Please include this upstream as we rely on this
+> functionality to be present.
 
-Thanks, all 5 patches applied.
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
