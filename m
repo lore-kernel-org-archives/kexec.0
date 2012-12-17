@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bk0-f49.google.com ([209.85.214.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TjcQv-0003RP-3o
- for kexec@lists.infradead.org; Fri, 14 Dec 2012 21:04:41 +0000
-Received: by mail-bk0-f49.google.com with SMTP id jm19so1940288bkc.36
- for <kexec@lists.infradead.org>; Fri, 14 Dec 2012 13:04:35 -0800 (PST)
-Message-ID: <50CB945D.7050008@gmail.com>
-Date: Fri, 14 Dec 2012 22:04:29 +0100
-From: Daniel Mack <zonque@gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TkcDF-0006nC-Ba
+ for kexec@lists.infradead.org; Mon, 17 Dec 2012 15:02:38 +0000
+Date: Mon, 17 Dec 2012 10:02:31 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] Add the values related to buddy system for filtering
+ free pages.
+Message-ID: <20121217150231.GA7235@redhat.com>
+References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+ <20121210131705.GC26447@redhat.com>
 MIME-Version: 1.0
-Subject: Re: KEXEC on ARM Cortex-A15 versatile express V2P
-References: <CAJXQGfKcqFK7hBiKqEhZzvsGbFi44fFYAF+-L5+f4FQ=2V3pmQ@mail.gmail.com>
- <50CB92F0.40308@gmail.com>
-In-Reply-To: <50CB92F0.40308@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20121210131705.GC26447@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,78 +25,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Naresh Bhat <nareshgbhat@gmail.com>
-Cc: magnus.damm@gmail.com, kexec@lists.infradead.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
 
-On 14.12.2012 21:58, Daniel Mack wrote:
-> Hi,
-> 
-> On 14.12.2012 18:33, Naresh Bhat wrote:
->> Thanks for the suggestions.  I really appreciate your help.
->>
->> I have tried the following in my below setup
-> 
-> Your should really fix your mailer. The way you quote makes it
-> impossible to see which lines you added.
-> 
->> My setup:
->> kexec-tools - latest GIT tree with
->> http://lists.infradead.org/pipermail/kexec/2012-December/007526.html
->> patch
->> Kernel version -   3.4.22
-> 
-> Why are you running a kernel from the middle ages?
-> 
->> Hardware target -  V2P-CA15_A7 Cortex A15 (ARM Versatile Express)
->>
->> That could be just that the new kernel is missing its bootargs cmdline
->> with the appropriate console= tag. How are you booting the first
->> kernel?
->>
->> The first kernel command line console=tty0 console=ttyAMA0,38400n8
->> root=/dev/mmcblk0p1 rootwait ro mmci.fmax=6000000
->>
->> Does you bootloader add a /chosen tag?
->>
->> I did't understand what you are asking here .  can you please
->> elaborate little more ?
-> 
-> Bootloaders have two ways of passing the command line to the kernel. The
-> traditional way is to stuff it into a a linked list of boot parameters
-> (ATAGs), the other is to fill the /chosen/bootargs property in the
-> device tree and then pass the entire tree.
-> 
->> Some suggestions:
->>
->> 1. Add a static CMDLINE to the second kernel, so it doesn't rely on
->> that information being passed from the first on.
->>
->> root@arm-cortex-a15:~#  kexec -l uImage --dtb=vexpress.dtb
->> --command-line="console=tty0 console=ttyAMA0,38400n8
->> root=/dev/mmcblk0p1 rootwait ro mmci.fmax=6000000"
->> root@arm-cortex-a15:~# kexec -e
->> Starting new kernel
->> Uncompressing Linux...
-> 
-> If that doesn't work, your problem is not related to any cmdline issue,
-> and I might have midlead you here.
-> 
-> Please try a newer kernel and see if that helps. The kernels I was using
-> with kexec recently were 3.7-rcX.
-
-But just to be clear: it should of course work with the version you're
-running. So that might not be the reason.
-
-And one more thing that might be a hint: check which parts of the
-hardware are actually running. We experienced some weird lockups during
-kexec if audio was streaming on our device, but in such cases, we didn't
-see the "Uncompressing Linux..." output either.
-
-Not sure how to help you here really.
+CCing Andrew Morton. I think he picks kexec patches.
 
 
-Daniel
 
+On Mon, Dec 10, 2012 at 08:17:05AM -0500, Vivek Goyal wrote:
+> On Mon, Dec 10, 2012 at 10:39:13AM +0900, Atsushi Kumagai wrote:
+> > This patch adds the values related to buddy system to vmcoreinfo data
+> > so that makedumpfile (dump filtering command) can filter out all free
+> > pages with the new logic.
+> > It's faster than the current logic because it can distinguish free page
+> > by analyzing page structure at the same time as filtering for other
+> > unnecessary pages (e.g. anonymous page).
+> > OTOH, the current logic has to trace free_list to distinguish free 
+> > pages while analyzing page structure to filter out other unnecessary
+> > pages.
+> > 
+> > The new logic uses the fact that buddy page is marked by _mapcount == 
+> > PAGE_BUDDY_MAPCOUNT_VALUE. But, _mapcount shares its memory with other
+> > fields for SLAB/SLUB when PG_slab is set, so we need to check if PG_slab
+> > is set or not before looking up _mapcount value.
+> > And we can get the order of buddy system from private field.
+> > To sum it up, the values below are required for this logic.
+> > 
+> > Required values:
+> >   - OFFSET(page._mapcount)
+> >   - OFFSET(page.private)
+> >   - NUMBER(PG_slab)
+> >   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> > 
+> > Changelog from v1 to v2:
+> > 1. remove SIZE(pageflags)
+> >   The new logic was changed after I sent v1 patch.  
+> >   Accordingly, SIZE(pageflags) has been unnecessary for makedumpfile.
+> > 
+> > What's makedumpfile:
+> >   makedumpfile creates a small dumpfile by excluding unnecessary pages
+> >   for the analysis. To distinguish unnecessary pages, makedumpfile gets
+> >   the vmcoreinfo data which has the minimum debugging information only
+> >   for dump filtering.
+> > 
+> > Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> 
+> Looks good to me.
+> 
+> Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> 
+> Thanks
+> Vivek
+> 
+> > ---
+> >  kernel/kexec.c |    4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index 5e4bd78..b27efe4 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -1490,6 +1490,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+> > 	VMCOREINFO_OFFSET(page, _count);
+> > 	VMCOREINFO_OFFSET(page, mapping);
+> > 	VMCOREINFO_OFFSET(page, lru);
+> > +	VMCOREINFO_OFFSET(page, _mapcount);
+> > +	VMCOREINFO_OFFSET(page, private);
+> > 	VMCOREINFO_OFFSET(pglist_data, node_zones);
+> > 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
+> >  #ifdef CONFIG_FLAT_NODE_MEM_MAP
+> > @@ -1512,6 +1514,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+> > 	VMCOREINFO_NUMBER(PG_lru);
+> > 	VMCOREINFO_NUMBER(PG_private);
+> > 	VMCOREINFO_NUMBER(PG_swapcache);
+> > +	VMCOREINFO_NUMBER(PG_slab);
+> > +	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+> > 
+> > 	arch_crash_save_vmcoreinfo();
+> > 	update_vmcoreinfo_note();
+> > --
+> > 1.7.9.2
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
