@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TkcDF-0006nC-Ba
- for kexec@lists.infradead.org; Mon, 17 Dec 2012 15:02:38 +0000
-Date: Mon, 17 Dec 2012 10:02:31 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] Add the values related to buddy system for filtering
- free pages.
-Message-ID: <20121217150231.GA7235@redhat.com>
-References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
- <20121210131705.GC26447@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20121210131705.GC26447@redhat.com>
+Received: from mail-da0-f52.google.com ([209.85.210.52])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TkivR-0003GG-4Y
+ for kexec@lists.infradead.org; Mon, 17 Dec 2012 22:12:41 +0000
+Received: by mail-da0-f52.google.com with SMTP id f10so2921750dak.11
+ for <kexec@lists.infradead.org>; Mon, 17 Dec 2012 14:12:39 -0800 (PST)
+From: Anders Hedlund <anders.j.hedlund@gmail.com>
+Subject: [PATCH] kexec-elf-ppc: Fix crashkernel region overflow check
+Date: Mon, 17 Dec 2012 23:11:48 +0100
+Message-Id: <1355782308-8867-1-git-send-email-anders.j.hedlund@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,100 +17,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
+To: horms@verge.net.au, kexec@lists.infradead.org
+Cc: Anders Hedlund <anders.j.hedlund@gmail.com>
 
-CCing Andrew Morton. I think he picks kexec patches.
+Signed-off-by: Anders Hedlund <anders.j.hedlund@gmail.com>
+---
+ kexec/arch/ppc/kexec-elf-ppc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
+index 314eb1e..8e408cc 100644
+--- a/kexec/arch/ppc/kexec-elf-ppc.c
++++ b/kexec/arch/ppc/kexec-elf-ppc.c
+@@ -382,7 +382,7 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 			(ramdisk_base > crash_base + crash_size) ) {
+ 			printf("WARNING: ramdisk is above crashkernel region!\n");
+ 		}
+-		else if (ramdisk_base + initrd_size > crash_base + crash_size) {
++		else if (ramdisk_base + ramdisk_size > crash_base + crash_size) {
+ 			printf("WARNING: ramdisk overflows crashkernel region!\n");
+ 		}
+ 	}
+-- 
+1.7.10.4
 
-
-On Mon, Dec 10, 2012 at 08:17:05AM -0500, Vivek Goyal wrote:
-> On Mon, Dec 10, 2012 at 10:39:13AM +0900, Atsushi Kumagai wrote:
-> > This patch adds the values related to buddy system to vmcoreinfo data
-> > so that makedumpfile (dump filtering command) can filter out all free
-> > pages with the new logic.
-> > It's faster than the current logic because it can distinguish free page
-> > by analyzing page structure at the same time as filtering for other
-> > unnecessary pages (e.g. anonymous page).
-> > OTOH, the current logic has to trace free_list to distinguish free 
-> > pages while analyzing page structure to filter out other unnecessary
-> > pages.
-> > 
-> > The new logic uses the fact that buddy page is marked by _mapcount == 
-> > PAGE_BUDDY_MAPCOUNT_VALUE. But, _mapcount shares its memory with other
-> > fields for SLAB/SLUB when PG_slab is set, so we need to check if PG_slab
-> > is set or not before looking up _mapcount value.
-> > And we can get the order of buddy system from private field.
-> > To sum it up, the values below are required for this logic.
-> > 
-> > Required values:
-> >   - OFFSET(page._mapcount)
-> >   - OFFSET(page.private)
-> >   - NUMBER(PG_slab)
-> >   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
-> > 
-> > Changelog from v1 to v2:
-> > 1. remove SIZE(pageflags)
-> >   The new logic was changed after I sent v1 patch.  
-> >   Accordingly, SIZE(pageflags) has been unnecessary for makedumpfile.
-> > 
-> > What's makedumpfile:
-> >   makedumpfile creates a small dumpfile by excluding unnecessary pages
-> >   for the analysis. To distinguish unnecessary pages, makedumpfile gets
-> >   the vmcoreinfo data which has the minimum debugging information only
-> >   for dump filtering.
-> > 
-> > Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> 
-> Looks good to me.
-> 
-> Acked-by: Vivek Goyal <vgoyal@redhat.com>
-> 
-> Thanks
-> Vivek
-> 
-> > ---
-> >  kernel/kexec.c |    4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> > index 5e4bd78..b27efe4 100644
-> > --- a/kernel/kexec.c
-> > +++ b/kernel/kexec.c
-> > @@ -1490,6 +1490,8 @@ static int __init crash_save_vmcoreinfo_init(void)
-> > 	VMCOREINFO_OFFSET(page, _count);
-> > 	VMCOREINFO_OFFSET(page, mapping);
-> > 	VMCOREINFO_OFFSET(page, lru);
-> > +	VMCOREINFO_OFFSET(page, _mapcount);
-> > +	VMCOREINFO_OFFSET(page, private);
-> > 	VMCOREINFO_OFFSET(pglist_data, node_zones);
-> > 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
-> >  #ifdef CONFIG_FLAT_NODE_MEM_MAP
-> > @@ -1512,6 +1514,8 @@ static int __init crash_save_vmcoreinfo_init(void)
-> > 	VMCOREINFO_NUMBER(PG_lru);
-> > 	VMCOREINFO_NUMBER(PG_private);
-> > 	VMCOREINFO_NUMBER(PG_swapcache);
-> > +	VMCOREINFO_NUMBER(PG_slab);
-> > +	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-> > 
-> > 	arch_crash_save_vmcoreinfo();
-> > 	update_vmcoreinfo_note();
-> > --
-> > 1.7.9.2
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
