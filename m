@@ -1,12 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from avon.wwwdotorg.org ([2001:470:1f0f:bd7::2])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TlSvp-0001Kn-63
- for kexec@lists.infradead.org; Wed, 19 Dec 2012 23:20:09 +0000
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] kexec-zImage-arm: simply cmdline-related DTB resizing
-Date: Wed, 19 Dec 2012 16:19:56 -0700
-Message-Id: <1355959196-14500-1-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH] kexec: disable non-boot CPUs
+Date: Wed, 19 Dec 2012 16:44:41 -0700
+Message-Id: <1355960681-32015-1-git-send-email-swarren@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,68 +17,41 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eric Biederman <ebiederm@xmission.com>
-Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, Daniel Mack <zonque@gmail.com>
+Cc: linux-tegra@vger.kernel.org, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
 
 From: Stephen Warren <swarren@nvidia.com>
 
-When resizing a dtb to add the command-line, only resize the DTB once,
-rather than once to add the /chosen node, and once to add the bootargs
-property.
+Both the regular reboot and shutdown paths do this. It seems reasonable
+for kexec to work the same way.
 
-Also, simply add 1K of overhead (beyond strlen(cmdline)) to the buffer,
-to avoid requiring precise knowledge of the size impact of the requested
-FTB changes. In particular, some padding is performed when setting
-property values, which was not accounted for in the current code, which
-caused failures to set the bootargs values in some cases.
+On the Tegra ARM SoC at least, this change allows kexec to work with SMP
+enabled. ARM's machine_shutdown() simply puts all CPUs into a loop. If
+the code of that loop is over-written, the CPUs may crash, and cause the
+kexec'd kernel not to be able to initialize them. In practice, this
+causes the kexec'd kernel to hang and/or crash. The intended way to
+solve this is for ARM machines to provide a cpu_kill SMP operation to
+e.g. power down the CPUs, or place them in reset. However, at least on
+Tegra, the implementation of that function would simply be duplicating
+the hotplug code that already exists, so it seems simpler to just call
+disable_nonboot_cpus() for the kexec path, just like reboot/shutdown.
 
-Cc: Daniel Mack <zonque@gmail.com>
 Signed-off-by: Stephen Warren <swarren@nvidia.com>
 ---
- kexec/arch/arm/kexec-zImage-arm.c |   21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ kernel/kexec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 0950897..db29a7b 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -370,31 +370,22 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 				const char *prop_name = "bootargs";
- 				int off;
- 
-+				dtb_length = fdt_totalsize(dtb_buf) + 1024 +
-+					strlen(command_line);
-+				dtb_buf = xrealloc(dtb_buf, dtb_length);
-+				fdt_set_totalsize(dtb_buf, dtb_length);
-+
- 				/* check if a /choosen subnode already exists */
- 				off = fdt_path_offset(dtb_buf, node_name);
- 
--				if (off == -FDT_ERR_NOTFOUND) {
--					dtb_length = fdt_totalsize(dtb_buf)
--							+ strlen(node_name) + 1
--							+ sizeof(struct fdt_node_header)
--							+ FDT_TAGSIZE;
--					dtb_buf = xrealloc(dtb_buf, dtb_length);
--					fdt_set_totalsize(dtb_buf, dtb_length);
-+				if (off == -FDT_ERR_NOTFOUND)
- 					off = fdt_add_subnode(dtb_buf, off, node_name);
--				}
- 
- 				if (off < 0) {
- 					fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
- 					return -1;
- 				}
- 
--				dtb_length = fdt_totalsize(dtb_buf)
--						+ strlen(prop_name)
--						+ strlen(command_line) + 1
--						+ sizeof(struct fdt_property);
--				dtb_buf = xrealloc(dtb_buf, dtb_length);
--				fdt_set_totalsize(dtb_buf, dtb_length);
--
- 				if (fdt_setprop(dtb_buf, off, prop_name,
- 						command_line, strlen(command_line) + 1) != 0) {
- 					fprintf(stderr, "FDT: Error setting %s/%s property.\n",
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 5e4bd78..6fe74d3 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1570,6 +1570,7 @@ int kernel_kexec(void)
+ #endif
+ 	{
+ 		kernel_restart_prepare(NULL);
++		disable_nonboot_cpus();
+ 		printk(KERN_EMERG "Starting new kernel\n");
+ 		machine_shutdown();
+ 	}
 -- 
 1.7.10.4
 
