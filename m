@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TlVS3-0004b3-4y
- for kexec@lists.infradead.org; Thu, 20 Dec 2012 02:01:36 +0000
-Received: by mail-pb0-f46.google.com with SMTP id wy7so1615761pbc.33
- for <kexec@lists.infradead.org>; Wed, 19 Dec 2012 18:01:32 -0800 (PST)
-Message-ID: <50D27175.7030006@gmail.com>
-Date: Thu, 20 Dec 2012 10:01:25 +0800
-From: Daniel Mack <zonque@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] kexec-zImage-arm: simply cmdline-related DTB resizing
-References: <1355959196-14500-1-git-send-email-swarren@wwwdotorg.org>
-In-Reply-To: <1355959196-14500-1-git-send-email-swarren@wwwdotorg.org>
+ id 1TlVmX-0005E8-C1
+ for kexec@lists.infradead.org; Thu, 20 Dec 2012 02:22:47 +0000
+Date: Thu, 20 Dec 2012 11:21:03 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2] Add the values related to buddy system for filtering
+ free pages.
+Message-Id: <20121220112103.d698c09a9d1f27a253a63d37@mxc.nes.nec.co.jp>
+In-Reply-To: <20121219161856.e6aa984f.akpm@linux-foundation.org>
+References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+ <20121219161856.e6aa984f.akpm@linux-foundation.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,79 +24,103 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Sven Neumann <neumann@teufel.de>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, cpw@sgi.com
 
-On 12/20/2012 07:19 AM, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
+Hello Andrew,
+
+On Wed, 19 Dec 2012 16:18:56 -0800
+Andrew Morton <akpm@linux-foundation.org> wrote:
+
+> On Mon, 10 Dec 2012 10:39:13 +0900
+> Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 > 
-> When resizing a dtb to add the command-line, only resize the DTB once,
-> rather than once to add the /chosen node, and once to add the bootargs
-> property.
+> > This patch adds the values related to buddy system to vmcoreinfo data
+> > so that makedumpfile (dump filtering command) can filter out all free
+> > pages with the new logic.
+> > It's faster than the current logic because it can distinguish free page
+> > by analyzing page structure at the same time as filtering for other
+> > unnecessary pages (e.g. anonymous page).
+> > OTOH, the current logic has to trace free_list to distinguish free 
+> > pages while analyzing page structure to filter out other unnecessary
+> > pages.
+> > 
+> > The new logic uses the fact that buddy page is marked by _mapcount == 
+> > PAGE_BUDDY_MAPCOUNT_VALUE. But, _mapcount shares its memory with other
+> > fields for SLAB/SLUB when PG_slab is set, so we need to check if PG_slab
+> > is set or not before looking up _mapcount value.
+> > And we can get the order of buddy system from private field.
+> > To sum it up, the values below are required for this logic.
+> > 
+> > Required values:
+> >   - OFFSET(page._mapcount)
+> >   - OFFSET(page.private)
+> >   - NUMBER(PG_slab)
+> >   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> > 
+> > Changelog from v1 to v2:
+> > 1. remove SIZE(pageflags)
+> >   The new logic was changed after I sent v1 patch.  
+> >   Accordingly, SIZE(pageflags) has been unnecessary for makedumpfile.
+> > 
+> > What's makedumpfile:
+> >   makedumpfile creates a small dumpfile by excluding unnecessary pages
+> >   for the analysis. To distinguish unnecessary pages, makedumpfile gets
+> >   the vmcoreinfo data which has the minimum debugging information only
+> >   for dump filtering.
 > 
-> Also, simply add 1K of overhead (beyond strlen(cmdline)) to the buffer,
-> to avoid requiring precise knowledge of the size impact of the requested
-> FTB changes. In particular, some padding is performed when setting
-> property values, which was not accounted for in the current code, which
-> caused failures to set the bootargs values in some cases.
+> Gee, this info is getting highly dependent upon deep internal kernel
+> behaviour.
+
+Yes. makedumpfile should be changed depend on kernel version and we did it.
+
+> > index 5e4bd78..b27efe4 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -1490,6 +1490,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+> > 	VMCOREINFO_OFFSET(page, _count);
+> > 	VMCOREINFO_OFFSET(page, mapping);
+> > 	VMCOREINFO_OFFSET(page, lru);
+> > +	VMCOREINFO_OFFSET(page, _mapcount);
+> > +	VMCOREINFO_OFFSET(page, private);
+> > 	VMCOREINFO_OFFSET(pglist_data, node_zones);
+> > 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
+> >  #ifdef CONFIG_FLAT_NODE_MEM_MAP
+> > @@ -1512,6 +1514,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+> > 	VMCOREINFO_NUMBER(PG_lru);
+> > 	VMCOREINFO_NUMBER(PG_private);
+> > 	VMCOREINFO_NUMBER(PG_swapcache);
+> > +	VMCOREINFO_NUMBER(PG_slab);
+> > +	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
 > 
-> Cc: Daniel Mack <zonque@gmail.com>
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-
-Much cleaner, thanks Stephen.
-
-
-Daniel
-
-
-> ---
->  kexec/arch/arm/kexec-zImage-arm.c |   21 ++++++---------------
->  1 file changed, 6 insertions(+), 15 deletions(-)
+> We might change the PageBuddy() implementation at any time, and
+> makedumpfile will break.  Or in this case, become less efficient.
 > 
-> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-> index 0950897..db29a7b 100644
-> --- a/kexec/arch/arm/kexec-zImage-arm.c
-> +++ b/kexec/arch/arm/kexec-zImage-arm.c
-> @@ -370,31 +370,22 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  				const char *prop_name = "bootargs";
->  				int off;
->  
-> +				dtb_length = fdt_totalsize(dtb_buf) + 1024 +
-> +					strlen(command_line);
-> +				dtb_buf = xrealloc(dtb_buf, dtb_length);
-> +				fdt_set_totalsize(dtb_buf, dtb_length);
-> +
->  				/* check if a /choosen subnode already exists */
->  				off = fdt_path_offset(dtb_buf, node_name);
->  
-> -				if (off == -FDT_ERR_NOTFOUND) {
-> -					dtb_length = fdt_totalsize(dtb_buf)
-> -							+ strlen(node_name) + 1
-> -							+ sizeof(struct fdt_node_header)
-> -							+ FDT_TAGSIZE;
-> -					dtb_buf = xrealloc(dtb_buf, dtb_length);
-> -					fdt_set_totalsize(dtb_buf, dtb_length);
-> +				if (off == -FDT_ERR_NOTFOUND)
->  					off = fdt_add_subnode(dtb_buf, off, node_name);
-> -				}
->  
->  				if (off < 0) {
->  					fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
->  					return -1;
->  				}
->  
-> -				dtb_length = fdt_totalsize(dtb_buf)
-> -						+ strlen(prop_name)
-> -						+ strlen(command_line) + 1
-> -						+ sizeof(struct fdt_property);
-> -				dtb_buf = xrealloc(dtb_buf, dtb_length);
-> -				fdt_set_totalsize(dtb_buf, dtb_length);
-> -
->  				if (fdt_setprop(dtb_buf, off, prop_name,
->  						command_line, strlen(command_line) + 1) != 0) {
->  					fprintf(stderr, "FDT: Error setting %s/%s property.\n",
-> 
+> Is there any way in which we can move some of this logic into the
+> kernel?  In this case, add some kernel code which uses PageBuddy() on
+> behalf of makedumpfile, rather than replicating the PageBuddy() logic
+> in userspace?
 
+In last month, Cliff Wickman proposed such idea:
+
+  [PATCH v2] makedumpfile: request the kernel do page scans
+  http://lists.infradead.org/pipermail/kexec/2012-November/007318.html
+
+  [PATCH] scan page tables for makedumpfile, 3.0.13 kernel
+  http://lists.infradead.org/pipermail/kexec/2012-November/007319.html
+
+In his idea, the kernel does page scans to distinguish unnecessary pages
+(free pages and others) and returns the list of PFN's which should be
+excluded for makedumpfile.
+As a result, makedumpfile doesn't need to consider internal kernel
+behavior.
+
+I think it's a good idea from the viewpoint of maintainability and
+performance.
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
