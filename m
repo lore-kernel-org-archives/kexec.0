@@ -1,31 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TlWiM-0007az-Mo
- for kexec@lists.infradead.org; Thu, 20 Dec 2012 03:22:31 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id DD8CA3EE0B6
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id BBAE845DE6A
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9C34545DE67
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8C4AD1DB804D
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
-Received: from m020.s.css.fujitsu.com (m020.s.css.fujitsu.com [10.0.81.60])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 450081DB8051
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
-Date: Thu, 20 Dec 2012 12:22:14 +0900 (JST)
-Message-Id: <20121220.122214.503837449.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20121210153614.GA9037@sgi.com>
-References: <20121119180710.GA16448@sgi.com>
- <20121210.095929.249234826.d.hatayama@jp.fujitsu.com>
- <20121210153614.GA9037@sgi.com>
+ id 1Tlbyh-000400-QF
+ for kexec@lists.infradead.org; Thu, 20 Dec 2012 08:59:45 +0000
+Date: Thu, 20 Dec 2012 17:45:25 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v3 1/7] Initialize and setup eppic
+Message-Id: <20121220174525.fa881aafa4c3765172d2ec40@mxc.nes.nec.co.jp>
+In-Reply-To: <20121214092604.4854.9670.stgit@aravinda>
+References: <20121214092300.4854.30720.stgit@aravinda>
+ <20121214092604.4854.9670.stgit@aravinda>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,68 +23,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cpw@sgi.com
-Cc: ptesarik@suse.cz, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: aravinda@linux.vnet.ibm.com
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, buendgen@de.ibm.com
 
-From: Cliff Wickman <cpw@sgi.com>
-Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
-Date: Mon, 10 Dec 2012 09:36:14 -0600
-> On Mon, Dec 10, 2012 at 09:59:29AM +0900, HATAYAMA Daisuke wrote:
->> From: Cliff Wickman <cpw@sgi.com>
->> Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
->> Date: Mon, 19 Nov 2012 12:07:10 -0600
->> 
->> > On Fri, Nov 16, 2012 at 03:39:44PM -0500, Vivek Goyal wrote:
->> >> On Thu, Nov 15, 2012 at 04:52:40PM -0600, Cliff Wickman wrote:
+Hello Aravinda,
+
+Thank you for updating.
+I have two comments in this mail.
+
+
+On Fri, 14 Dec 2012 14:56:04 +0530
+Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
+
+> This patch contains routines which initialize eppic and register call
+> back function which will be called whenever a new eppic macro is loaded
+> using eppic_load() API. The registered call back function executes the
+> eppic macro as soon as it is loaded.
 > 
-> Hi Hatayama,
+> Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+> ---
+>  Makefile          |    5 +++
+>  extension_eppic.c |   84 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  extension_eppic.h |   23 +++++++++++++++
+>  3 files changed, 111 insertions(+), 1 deletions(-)
+>  create mode 100644 extension_eppic.c
+>  create mode 100644 extension_eppic.h
 > 
-> If ioremap/iounmap is the bottleneck then perhaps you could do what
-> my patch does: it consolidates all the ranges of physical addresses
-> where the boot kernel's page structures reside (see make_kernel_mmap())
-> and passes them to the kernel, which then does a handfull of ioremaps's to
-> cover all of them.  Then /proc/vmcore could look up the already-mapped
-> virtual address.
-> (also note a kludge in get_mm_sparsemem() that verifies that each section
-> of the mem_map spans contiguous ranges of page structures.  I had
-> trouble with some sections when I made that assumption)
-> 
-> I'm attaching 3 patches that might be useful in your testing:
-> - 121210.proc_vmcore2  my current patch that applies to the released
->   makedumpfile 1.5.1
-> - 121207.vmcore_pagescans.sles applies to a 3.0.13 kernel
-> - 121207.vmcore_pagescans.rhel applies to a 2.6.32 kernel
-> 
+> diff --git a/Makefile b/Makefile
+> index e6c4e5d..f123a5f 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -69,7 +69,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
+>  	$(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c) 
+>  
+>  makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
+> -	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
+> +	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
+>  	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
+>  	grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
+>  	mv temp.8 makedumpfile.8
+> @@ -79,6 +79,9 @@ makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
+>  	mv temp.5 makedumpfile.conf.5
+>  	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
+>  
+> +eppic_makedumpfile.so: extension_eppic.c
+> +	$(CC) $(CFLAGS) -nostartfiles -shared -rdynamic -o $@ extension_eppic.c -fPIC -leppic
+> +
 
-I used the same patch set on the benchmark.
+First, I prepared eppic_makedumpfile.so with the code above, but I failed
+with the message below:
 
-BTW, I have continuously reservation issue, so I think I cannot use
-terabyte memory machine at least in this year.
+  $ makedumpfile -cd31 -x vmlinux --eppic eppic_macro/mod.c vmcore dumpfile.cd31
+  process_eppic_file: dlopen failed: /usr/lib64/eppic_makedumpfile.so: undefined symbol: setupterm
+  
+  makedumpfile Failed.
+  $
 
-Also, your patch set is doing ioremap per a chunk of memory map,
-i.e. a number of consequtive pages at the same time. On your terabyte
-machines, how large they are? We have memory consumption issue on the
-2nd kernel so we must decrease amount of memory used. But looking into
-ioremap code quickly, it looks not using 2MB or 1GB pages to
-remap. This means more than tera bytes page table is generated. Or
-have you probably already investigated this?
+so I think '-lncurses' should be specified as gcc option, or did I mistake ?
 
-BTW, my idea to solve this issue are two:
 
-1) make linear direct mapping for old memory, and acess the old memory
-via the linear direct mapping, not by ioremap.
+[...]
+> +/* Initialize eppic */
+> +int
+> +_init()
+> +{
+> +	if (eppic_open() >= 0) {
+> +
+> +		/* Register call back functions */
+> +		eppic_apiset(NULL, 3, sizeof(long), 0);
+> +
+> +		/* set the new function callback */
+> +		eppic_setcallback(reg_callback);
+> +
+> +		return 0;
+> +	}
+> +	return 1;
+> +}
 
-  - adding remap code in vmcore, or passing the regions that need to
-    be remapped using memmap= kernel option to tell the 2nd kenrel to
-    map them in addition.
+Second, your code introduce _init() as constructor for dlopen().
+I'm not sure about dlopen(), but I found the description which recommend
+not to use _init() in man page:
 
-Or,
+   The obsolete symbols _init() and _fini()
+       The linker recognizes special symbols _init and _fini.  If a dynamic library exports a routine named _init(), then that  code  is  executed
+       after  the  loading,  before  dlopen()  returns.   If the dynamic library exports a routine named _fini(), then that routine is called just
+       before the library is unloaded.  In case you need to avoid linking against the system startup files, this can be done by using  the  gcc(1)
+       -nostartfiles command-line option.
 
-2) Support 2MB or 1GB pages in ioremap.
+       Using these routines, or the gcc -nostartfiles or -nostdlib options, is not recommended.  Their use may result in undesired behavior, since
+       the constructor/destructor routines will not be executed (unless special measures are taken).
 
-Thanks.
-HATAYAMA, Daisuke
+       Instead, libraries should export routines using the __attribute__((constructor)) and __attribute__((destructor)) function attributes.   See
+       the  gcc  info pages for information on these.  Constructor routines are executed before dlopen() returns, and destructor routines are exe-
+       cuted before dlclose() returns.
 
+So, is it OK to continue to use _init() ?
+
+BTW, would you send the patch to add the description of this feature
+to README, man page and help message ?
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
