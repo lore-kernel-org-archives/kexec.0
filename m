@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 20 Dec 2012 10:49:45 +0000
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] kexec: disable non-boot CPUs
-Message-ID: <20121220104945.GC16887@mudshark.cambridge.arm.com>
-References: <1355960681-32015-1-git-send-email-swarren@wwwdotorg.org>
+Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TliO2-0002ut-E7
+ for kexec@lists.infradead.org; Thu, 20 Dec 2012 15:50:19 +0000
+Date: Thu, 20 Dec 2012 09:51:47 -0600
+From: Cliff Wickman <cpw@sgi.com>
+Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+Message-ID: <20121220155147.GA2048@sgi.com>
+References: <20121119180710.GA16448@sgi.com>
+ <20121210.095929.249234826.d.hatayama@jp.fujitsu.com>
+ <20121210153614.GA9037@sgi.com>
+ <20121220.122214.503837449.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1355960681-32015-1-git-send-email-swarren@wwwdotorg.org>
+In-Reply-To: <20121220.122214.503837449.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,35 +26,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: ptesarik@suse.cz, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-Hi Stephen,
-
-On Wed, Dec 19, 2012 at 11:44:41PM +0000, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
+On Thu, Dec 20, 2012 at 12:22:14PM +0900, HATAYAMA Daisuke wrote:
+> From: Cliff Wickman <cpw@sgi.com>
+> Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+> Date: Mon, 10 Dec 2012 09:36:14 -0600
+> > On Mon, Dec 10, 2012 at 09:59:29AM +0900, HATAYAMA Daisuke wrote:
+> >> From: Cliff Wickman <cpw@sgi.com>
+> >> Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+> >> Date: Mon, 19 Nov 2012 12:07:10 -0600
+> >> 
+> >> > On Fri, Nov 16, 2012 at 03:39:44PM -0500, Vivek Goyal wrote:
+> >> >> On Thu, Nov 15, 2012 at 04:52:40PM -0600, Cliff Wickman wrote:
+> > 
+> > Hi Hatayama,
+> > 
+> > If ioremap/iounmap is the bottleneck then perhaps you could do what
+> > my patch does: it consolidates all the ranges of physical addresses
+> > where the boot kernel's page structures reside (see make_kernel_mmap())
+> > and passes them to the kernel, which then does a handfull of ioremaps's to
+> > cover all of them.  Then /proc/vmcore could look up the already-mapped
+> > virtual address.
+> > (also note a kludge in get_mm_sparsemem() that verifies that each section
+> > of the mem_map spans contiguous ranges of page structures.  I had
+> > trouble with some sections when I made that assumption)
+> > 
+> > I'm attaching 3 patches that might be useful in your testing:
+> > - 121210.proc_vmcore2  my current patch that applies to the released
+> >   makedumpfile 1.5.1
+> > - 121207.vmcore_pagescans.sles applies to a 3.0.13 kernel
+> > - 121207.vmcore_pagescans.rhel applies to a 2.6.32 kernel
+> > 
 > 
-> Both the regular reboot and shutdown paths do this. It seems reasonable
-> for kexec to work the same way.
+> I used the same patch set on the benchmark.
 > 
-> On the Tegra ARM SoC at least, this change allows kexec to work with SMP
-> enabled. ARM's machine_shutdown() simply puts all CPUs into a loop. If
-> the code of that loop is over-written, the CPUs may crash, and cause the
-> kexec'd kernel not to be able to initialize them. In practice, this
-> causes the kexec'd kernel to hang and/or crash. The intended way to
-> solve this is for ARM machines to provide a cpu_kill SMP operation to
-> e.g. power down the CPUs, or place them in reset. However, at least on
-> Tegra, the implementation of that function would simply be duplicating
-> the hotplug code that already exists, so it seems simpler to just call
-> disable_nonboot_cpus() for the kexec path, just like reboot/shutdown.
+> BTW, I have continuously reservation issue, so I think I cannot use
+> terabyte memory machine at least in this year.
+> 
+> Also, your patch set is doing ioremap per a chunk of memory map,
+> i.e. a number of consequtive pages at the same time. On your terabyte
+> machines, how large they are? We have memory consumption issue on the
+> 2nd kernel so we must decrease amount of memory used. But looking into
+> ioremap code quickly, it looks not using 2MB or 1GB pages to
+> remap. This means more than tera bytes page table is generated. Or
+> have you probably already investigated this?
+> 
+> BTW, my idea to solve this issue are two:
+> 
+> 1) make linear direct mapping for old memory, and acess the old memory
+> via the linear direct mapping, not by ioremap.
+> 
+>   - adding remap code in vmcore, or passing the regions that need to
+>     be remapped using memmap= kernel option to tell the 2nd kenrel to
+>     map them in addition.
 
-If you do manage to get this merged, please can you follow up with a patch
-to remove the smp_kill_cpus bits from arch/arm/kernel/smp.c please? It only
-exists as a hook to do exactly this and currently nobody is using it afaict.
+Good point.  It would take over 30G of memory to map 16TB with 4k pages.
+I recently tried to dump such a memory and ran out of kernel memory --
+no wonder!
 
-Cheers,
+Do you have a patch for doing a linear direct mapping?  Or can you name
+existing kernel infrastructure to do such mapping?  I'm just looking for
+a jumpstart to enhance the patch.
 
-Will
+-Cliff
+> 
+> Or,
+> 
+> 2) Support 2MB or 1GB pages in ioremap.
+> 
+> Thanks.
+> HATAYAMA, Daisuke
+
+-- 
+Cliff Wickman
+SGI
+cpw@sgi.com
+(651) 683-3824
 
 _______________________________________________
 kexec mailing list
