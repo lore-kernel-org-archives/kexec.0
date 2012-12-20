@@ -1,35 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TlWPa-0007MZ-2G
- for kexec@lists.infradead.org; Thu, 20 Dec 2012 03:03:07 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id CC8883EE0B5
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:02:58 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id B339245DE78
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:02:58 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 99FFC45DE4E
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:02:58 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 89B141DB803E
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:02:58 +0900 (JST)
-Received: from g01jpexchyt10.g01.fujitsu.local
- (g01jpexchyt10.g01.fujitsu.local [10.128.194.49])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 392641DB802F
- for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:02:58 +0900 (JST)
-From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: RE: [PATCH v2] Add the values related to buddy system for filtering
- free pages.
-Date: Thu, 20 Dec 2012 03:02:56 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E20AB2DEA3@G01JPEXMBYT03>
-References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
- <20121219161856.e6aa984f.akpm@linux-foundation.org>
- <20121220112103.d698c09a9d1f27a253a63d37@mxc.nes.nec.co.jp>
-In-Reply-To: <20121220112103.d698c09a9d1f27a253a63d37@mxc.nes.nec.co.jp>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1TlWiM-0007az-Mo
+ for kexec@lists.infradead.org; Thu, 20 Dec 2012 03:22:31 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id DD8CA3EE0B6
+ for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id BBAE845DE6A
+ for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9C34545DE67
+ for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8C4AD1DB804D
+ for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
+Received: from m020.s.css.fujitsu.com (m020.s.css.fujitsu.com [10.0.81.60])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 450081DB8051
+ for <kexec@lists.infradead.org>; Thu, 20 Dec 2012 12:22:28 +0900 (JST)
+Date: Thu, 20 Dec 2012 12:22:14 +0900 (JST)
+Message-Id: <20121220.122214.503837449.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20121210153614.GA9037@sgi.com>
+References: <20121119180710.GA16448@sgi.com>
+ <20121210.095929.249234826.d.hatayama@jp.fujitsu.com>
+ <20121210153614.GA9037@sgi.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,56 +39,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "cpw@sgi.com" <cpw@sgi.com>
+To: cpw@sgi.com
+Cc: ptesarik@suse.cz, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-> From: kexec-bounces@lists.infradead.org
-> [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Atsushi Kumagai
-> Sent: Thursday, December 20, 2012 11:21 AM
+From: Cliff Wickman <cpw@sgi.com>
+Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+Date: Mon, 10 Dec 2012 09:36:14 -0600
+> On Mon, Dec 10, 2012 at 09:59:29AM +0900, HATAYAMA Daisuke wrote:
+>> From: Cliff Wickman <cpw@sgi.com>
+>> Subject: Re: [PATCH] makedumpfile: request the kernel do page scans
+>> Date: Mon, 19 Nov 2012 12:07:10 -0600
+>> 
+>> > On Fri, Nov 16, 2012 at 03:39:44PM -0500, Vivek Goyal wrote:
+>> >> On Thu, Nov 15, 2012 at 04:52:40PM -0600, Cliff Wickman wrote:
+> 
+> Hi Hatayama,
+> 
+> If ioremap/iounmap is the bottleneck then perhaps you could do what
+> my patch does: it consolidates all the ranges of physical addresses
+> where the boot kernel's page structures reside (see make_kernel_mmap())
+> and passes them to the kernel, which then does a handfull of ioremaps's to
+> cover all of them.  Then /proc/vmcore could look up the already-mapped
+> virtual address.
+> (also note a kludge in get_mm_sparsemem() that verifies that each section
+> of the mem_map spans contiguous ranges of page structures.  I had
+> trouble with some sections when I made that assumption)
+> 
+> I'm attaching 3 patches that might be useful in your testing:
+> - 121210.proc_vmcore2  my current patch that applies to the released
+>   makedumpfile 1.5.1
+> - 121207.vmcore_pagescans.sles applies to a 3.0.13 kernel
+> - 121207.vmcore_pagescans.rhel applies to a 2.6.32 kernel
+> 
 
-> On Wed, 19 Dec 2012 16:18:56 -0800
-> Andrew Morton <akpm@linux-foundation.org> wrote:
-> 
-> > On Mon, 10 Dec 2012 10:39:13 +0900
-> > Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-> >
+I used the same patch set on the benchmark.
 
-> >
-> > We might change the PageBuddy() implementation at any time, and
-> > makedumpfile will break.  Or in this case, become less efficient.
-> >
-> > Is there any way in which we can move some of this logic into the
-> > kernel?  In this case, add some kernel code which uses PageBuddy() on
-> > behalf of makedumpfile, rather than replicating the PageBuddy() logic
-> > in userspace?
-> 
-> In last month, Cliff Wickman proposed such idea:
-> 
->   [PATCH v2] makedumpfile: request the kernel do page scans
->   http://lists.infradead.org/pipermail/kexec/2012-November/007318.html
-> 
->   [PATCH] scan page tables for makedumpfile, 3.0.13 kernel
->   http://lists.infradead.org/pipermail/kexec/2012-November/007319.html
-> 
-> In his idea, the kernel does page scans to distinguish unnecessary pages
-> (free pages and others) and returns the list of PFN's which should be
-> excluded for makedumpfile.
-> As a result, makedumpfile doesn't need to consider internal kernel
-> behavior.
-> 
-> I think it's a good idea from the viewpoint of maintainability and
-> performance.
+BTW, I have continuously reservation issue, so I think I cannot use
+terabyte memory machine at least in this year.
 
-I also think wide part of his code can be reused in this work. But the bad
-performance is caused by a lot of ioremap, not a lot of copying. See my
-profiling result I posted some days ago. Two issues, ioremap one and filtering
-maintainability, should be considered separately. Even on ioremap issue,
-there is secondary one to consider in memory consumption on the 2nd kernel.
+Also, your patch set is doing ioremap per a chunk of memory map,
+i.e. a number of consequtive pages at the same time. On your terabyte
+machines, how large they are? We have memory consumption issue on the
+2nd kernel so we must decrease amount of memory used. But looking into
+ioremap code quickly, it looks not using 2MB or 1GB pages to
+remap. This means more than tera bytes page table is generated. Or
+have you probably already investigated this?
 
-Also, I have one question. Can we always think of 1st and 2nd kernels are same?
-If I understand correctly, kexec/kdump can use the 2nd kernel different
-from the 1st's. So, differnet kernels need to do the same thing as makedumpfile
-does. If assuming two are same, problem is mush simplified.
+BTW, my idea to solve this issue are two:
+
+1) make linear direct mapping for old memory, and acess the old memory
+via the linear direct mapping, not by ioremap.
+
+  - adding remap code in vmcore, or passing the regions that need to
+    be remapped using memmap= kernel option to tell the 2nd kenrel to
+    map them in addition.
+
+Or,
+
+2) Support 2MB or 1GB pages in ioremap.
 
 Thanks.
 HATAYAMA, Daisuke
