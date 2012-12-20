@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1355960681-32015-1-git-send-email-swarren@wwwdotorg.org>
-Date: Wed, 19 Dec 2012 15:55:36 -0800
-In-Reply-To: <1355960681-32015-1-git-send-email-swarren@wwwdotorg.org>
- (Stephen Warren's message of "Wed, 19 Dec 2012 16:44:41 -0700")
-Message-ID: <87mwx9y4uf.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: disable non-boot CPUs
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TlTql-0002vo-Hv
+ for kexec@lists.infradead.org; Thu, 20 Dec 2012 00:19:00 +0000
+Date: Wed, 19 Dec 2012 16:18:56 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] Add the values related to buddy system for filtering
+ free pages.
+Message-Id: <20121219161856.e6aa984f.akpm@linux-foundation.org>
+In-Reply-To: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,59 +23,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-tegra@vger.kernel.org, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
 
-Stephen Warren <swarren@wwwdotorg.org> writes:
+On Mon, 10 Dec 2012 10:39:13 +0900
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-> From: Stephen Warren <swarren@nvidia.com>
->
-> Both the regular reboot and shutdown paths do this. It seems reasonable
-> for kexec to work the same way.
->
-> On the Tegra ARM SoC at least, this change allows kexec to work with SMP
-> enabled. ARM's machine_shutdown() simply puts all CPUs into a loop. If
-> the code of that loop is over-written, the CPUs may crash, and cause the
-> kexec'd kernel not to be able to initialize them. In practice, this
-> causes the kexec'd kernel to hang and/or crash. The intended way to
-> solve this is for ARM machines to provide a cpu_kill SMP operation to
-> e.g. power down the CPUs, or place them in reset. However, at least on
-> Tegra, the implementation of that function would simply be duplicating
-> the hotplug code that already exists, so it seems simpler to just call
-> disable_nonboot_cpus() for the kexec path, just like reboot/shutdown.
+> This patch adds the values related to buddy system to vmcoreinfo data
+> so that makedumpfile (dump filtering command) can filter out all free
+> pages with the new logic.
+> It's faster than the current logic because it can distinguish free page
+> by analyzing page structure at the same time as filtering for other
+> unnecessary pages (e.g. anonymous page).
+> OTOH, the current logic has to trace free_list to distinguish free 
+> pages while analyzing page structure to filter out other unnecessary
+> pages.
+> 
+> The new logic uses the fact that buddy page is marked by _mapcount == 
+> PAGE_BUDDY_MAPCOUNT_VALUE. But, _mapcount shares its memory with other
+> fields for SLAB/SLUB when PG_slab is set, so we need to check if PG_slab
+> is set or not before looking up _mapcount value.
+> And we can get the order of buddy system from private field.
+> To sum it up, the values below are required for this logic.
+> 
+> Required values:
+>   - OFFSET(page._mapcount)
+>   - OFFSET(page.private)
+>   - NUMBER(PG_slab)
+>   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
+> 
+> Changelog from v1 to v2:
+> 1. remove SIZE(pageflags)
+>   The new logic was changed after I sent v1 patch.  
+>   Accordingly, SIZE(pageflags) has been unnecessary for makedumpfile.
+> 
+> What's makedumpfile:
+>   makedumpfile creates a small dumpfile by excluding unnecessary pages
+>   for the analysis. To distinguish unnecessary pages, makedumpfile gets
+>   the vmcoreinfo data which has the minimum debugging information only
+>   for dump filtering.
 
-I would like to ack this but I think this is one of those differences
-for which there is a reason.
+Gee, this info is getting highly dependent upon deep internal kernel
+behaviour.
 
-On x86 this happens in machine_shutdown.
-
-Before this can be merged someone needs to look into the history and
-see why we don't share this code path.
-
-My hunch is because it was duplication of effort and the stop machine
-code has historically been fragile.
-
-Eric
-
-
-
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> ---
->  kernel/kexec.c |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 5e4bd78..6fe74d3 100644
+> index 5e4bd78..b27efe4 100644
 > --- a/kernel/kexec.c
 > +++ b/kernel/kexec.c
-> @@ -1570,6 +1570,7 @@ int kernel_kexec(void)
->  #endif
->  	{
->  		kernel_restart_prepare(NULL);
-> +		disable_nonboot_cpus();
->  		printk(KERN_EMERG "Starting new kernel\n");
->  		machine_shutdown();
->  	}
+> @@ -1490,6 +1490,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+> 	VMCOREINFO_OFFSET(page, _count);
+> 	VMCOREINFO_OFFSET(page, mapping);
+> 	VMCOREINFO_OFFSET(page, lru);
+> +	VMCOREINFO_OFFSET(page, _mapcount);
+> +	VMCOREINFO_OFFSET(page, private);
+> 	VMCOREINFO_OFFSET(pglist_data, node_zones);
+> 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
+>  #ifdef CONFIG_FLAT_NODE_MEM_MAP
+> @@ -1512,6 +1514,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+> 	VMCOREINFO_NUMBER(PG_lru);
+> 	VMCOREINFO_NUMBER(PG_private);
+> 	VMCOREINFO_NUMBER(PG_swapcache);
+> +	VMCOREINFO_NUMBER(PG_slab);
+> +	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+
+We might change the PageBuddy() implementation at any time, and
+makedumpfile will break.  Or in this case, become less efficient.
+
+Is there any way in which we can move some of this logic into the
+kernel?  In this case, add some kernel code which uses PageBuddy() on
+behalf of makedumpfile, rather than replicating the PageBuddy() logic
+in userspace?
+
 
 _______________________________________________
 kexec mailing list
