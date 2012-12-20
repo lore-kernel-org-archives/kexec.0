@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-pb0-f46.google.com ([209.85.160.46])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TlUpJ-0004Ae-FL
- for kexec@lists.infradead.org; Thu, 20 Dec 2012 01:21:34 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
- <20121219161856.e6aa984f.akpm@linux-foundation.org>
- <878v8ty200.fsf@xmission.com>
- <20121219170038.f7b260c3.akpm@linux-foundation.org>
-Date: Wed, 19 Dec 2012 17:20:42 -0800
-In-Reply-To: <20121219170038.f7b260c3.akpm@linux-foundation.org> (Andrew
- Morton's message of "Wed, 19 Dec 2012 17:00:38 -0800")
-Message-ID: <87ip7xwmc5.fsf@xmission.com>
+ id 1TlVS3-0004b3-4y
+ for kexec@lists.infradead.org; Thu, 20 Dec 2012 02:01:36 +0000
+Received: by mail-pb0-f46.google.com with SMTP id wy7so1615761pbc.33
+ for <kexec@lists.infradead.org>; Wed, 19 Dec 2012 18:01:32 -0800 (PST)
+Message-ID: <50D27175.7030006@gmail.com>
+Date: Thu, 20 Dec 2012 10:01:25 +0800
+From: Daniel Mack <zonque@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] Add the values related to buddy system for filtering
- free pages.
+Subject: Re: [PATCH] kexec-zImage-arm: simply cmdline-related DTB resizing
+References: <1355959196-14500-1-git-send-email-swarren@wwwdotorg.org>
+In-Reply-To: <1355959196-14500-1-git-send-email-swarren@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,63 +24,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Sven Neumann <neumann@teufel.de>
 
-Andrew Morton <akpm@linux-foundation.org> writes:
+On 12/20/2012 07:19 AM, Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+> 
+> When resizing a dtb to add the command-line, only resize the DTB once,
+> rather than once to add the /chosen node, and once to add the bootargs
+> property.
+> 
+> Also, simply add 1K of overhead (beyond strlen(cmdline)) to the buffer,
+> to avoid requiring precise knowledge of the size impact of the requested
+> FTB changes. In particular, some padding is performed when setting
+> property values, which was not accounted for in the current code, which
+> caused failures to set the bootargs values in some cases.
+> 
+> Cc: Daniel Mack <zonque@gmail.com>
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
 
-> On Wed, 19 Dec 2012 16:57:03 -0800
-> ebiederm@xmission.com (Eric W. Biederman) wrote:
->
->> Andrew Morton <akpm@linux-foundation.org> writes:
->> 
->> > Is there any way in which we can move some of this logic into the
->> > kernel?  In this case, add some kernel code which uses PageBuddy() on
->> > behalf of makedumpfile, rather than replicating the PageBuddy() logic
->> > in userspace?
->> 
->> All that exists when makedumpfile runs is a core file.  So it would have
->> to be something like a share library that builds with the kernel and
->> then makedumpfile loads.
->
-> Can we omit free pages from that core file?
->
-> And/or add a section to that core file which flags free pages?
+Much cleaner, thanks Stephen.
 
-Ommitting pages is what makedumpfile does.
 
-Very loosely shortly after boot when things are running fine /sbin/kexec
-runs.
+Daniel
 
-/sbin/kexec constructs a set of elf headers that describe where the
-memory is and load the crashdump kernel an initrd and those elf headers
-into memory.
 
-Years later when the running kernel calls panic.
-panic calls machine_kexec
-machine_kexec jmps to the preloaded crashdump kernel.
+> ---
+>  kexec/arch/arm/kexec-zImage-arm.c |   21 ++++++---------------
+>  1 file changed, 6 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index 0950897..db29a7b 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -370,31 +370,22 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  				const char *prop_name = "bootargs";
+>  				int off;
+>  
+> +				dtb_length = fdt_totalsize(dtb_buf) + 1024 +
+> +					strlen(command_line);
+> +				dtb_buf = xrealloc(dtb_buf, dtb_length);
+> +				fdt_set_totalsize(dtb_buf, dtb_length);
+> +
+>  				/* check if a /choosen subnode already exists */
+>  				off = fdt_path_offset(dtb_buf, node_name);
+>  
+> -				if (off == -FDT_ERR_NOTFOUND) {
+> -					dtb_length = fdt_totalsize(dtb_buf)
+> -							+ strlen(node_name) + 1
+> -							+ sizeof(struct fdt_node_header)
+> -							+ FDT_TAGSIZE;
+> -					dtb_buf = xrealloc(dtb_buf, dtb_length);
+> -					fdt_set_totalsize(dtb_buf, dtb_length);
+> +				if (off == -FDT_ERR_NOTFOUND)
+>  					off = fdt_add_subnode(dtb_buf, off, node_name);
+> -				}
+>  
+>  				if (off < 0) {
+>  					fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
+>  					return -1;
+>  				}
+>  
+> -				dtb_length = fdt_totalsize(dtb_buf)
+> -						+ strlen(prop_name)
+> -						+ strlen(command_line) + 1
+> -						+ sizeof(struct fdt_property);
+> -				dtb_buf = xrealloc(dtb_buf, dtb_length);
+> -				fdt_set_totalsize(dtb_buf, dtb_length);
+> -
+>  				if (fdt_setprop(dtb_buf, off, prop_name,
+>  						command_line, strlen(command_line) + 1) != 0) {
+>  					fprintf(stderr, "FDT: Error setting %s/%s property.\n",
+> 
 
-I think it is /proc/vmcore that reads the elf headers out of memory and
-presents them to userspace.
-
-Then we have options.
-vmcore-to-dmesg will just read the dmesg ring buffer so we have that.
-
-makedumpfile reads the kernel data structures and filters out the free
-pages for people who don't want to write everything to disk.
-
-So the basic interface is strongly kernel version agnostic.  The
-challenge is how to filter out undesirable pages from the core dump
-quickly and reliably.
-
-Right now what we have are a set of ELF notes that describe struct page.
-
-For my uses I have either had enough disk space that saving everything
-didn't matter or so little disk space that all I could afford was
-getting out the dmesg ring buffer.  So I don't know how robust the
-solution adopted by makedumpfile is.
-
-Eric
 
 _______________________________________________
 kexec mailing list
