@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tlrui-0005QP-3T
- for kexec@lists.infradead.org; Fri, 21 Dec 2012 02:00:42 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
- <20121219161856.e6aa984f.akpm@linux-foundation.org>
- <20121220112103.d698c09a9d1f27a253a63d37@mxc.nes.nec.co.jp>
- <33710E6CAA200E4583255F4FB666C4E20AB2DEA3@G01JPEXMBYT03>
-Date: Thu, 20 Dec 2012 18:00:11 -0800
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20AB2DEA3@G01JPEXMBYT03> (Daisuke
- Hatayama's message of "Thu, 20 Dec 2012 03:02:56 +0000")
-Message-ID: <87licsrwpg.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2] Add the values related to buddy system for filtering
- free pages.
+ id 1Tlw14-0004AQ-T5
+ for kexec@lists.infradead.org; Fri, 21 Dec 2012 06:23:33 +0000
+Date: Fri, 21 Dec 2012 15:19:03 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC] makedumpfile-1.5.1 RC
+Message-Id: <20121221151903.4fd8ab5aefb5b3a9f8f02191@mxc.nes.nec.co.jp>
+In-Reply-To: <1355851243.13097.908.camel@lisamlinux.fc.hp.com>
+References: <20121116171539.152467f3611c12fbd6b6be0d@mxc.nes.nec.co.jp>
+ <1353413695.13097.131.camel@lisamlinux.fc.hp.com>
+ <1354627899.13097.320.camel@lisamlinux.fc.hp.com>
+ <20121207142646.9c4b3dd78ab602d687194f65@mxc.nes.nec.co.jp>
+ <1355173565.13097.525.camel@lisamlinux.fc.hp.com>
+ <20121213140648.d4f3a203fcf3bad6d7e80510@mxc.nes.nec.co.jp>
+ <1355851243.13097.908.camel@lisamlinux.fc.hp.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,73 +28,151 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "cpw@sgi.com" <cpw@sgi.com>
+To: lisa.mitchell@hp.com
+Cc: kexec@lists.infradead.org, jerry.hoemann@hp.com
 
-"Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com> writes:
+Hello Lisa,
 
->> From: kexec-bounces@lists.infradead.org
->> [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Atsushi Kumagai
->> Sent: Thursday, December 20, 2012 11:21 AM
->
->> On Wed, 19 Dec 2012 16:18:56 -0800
->> Andrew Morton <akpm@linux-foundation.org> wrote:
->> 
->> > On Mon, 10 Dec 2012 10:39:13 +0900
->> > Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
->> >
->
->> >
->> > We might change the PageBuddy() implementation at any time, and
->> > makedumpfile will break.  Or in this case, become less efficient.
->> >
->> > Is there any way in which we can move some of this logic into the
->> > kernel?  In this case, add some kernel code which uses PageBuddy() on
->> > behalf of makedumpfile, rather than replicating the PageBuddy() logic
->> > in userspace?
->> 
->> In last month, Cliff Wickman proposed such idea:
->> 
->>   [PATCH v2] makedumpfile: request the kernel do page scans
->>   http://lists.infradead.org/pipermail/kexec/2012-November/007318.html
->> 
->>   [PATCH] scan page tables for makedumpfile, 3.0.13 kernel
->>   http://lists.infradead.org/pipermail/kexec/2012-November/007319.html
->> 
->> In his idea, the kernel does page scans to distinguish unnecessary pages
->> (free pages and others) and returns the list of PFN's which should be
->> excluded for makedumpfile.
->> As a result, makedumpfile doesn't need to consider internal kernel
->> behavior.
->> 
->> I think it's a good idea from the viewpoint of maintainability and
->> performance.
+On Tue, 18 Dec 2012 10:20:43 -0700
+Lisa Mitchell <lisa.mitchell@hp.com> wrote:
 
-> I also think wide part of his code can be reused in this work. But the bad
-> performance is caused by a lot of ioremap, not a lot of copying. See my
-> profiling result I posted some days ago. Two issues, ioremap one and filtering
-> maintainability, should be considered separately. Even on ioremap issue,
-> there is secondary one to consider in memory consumption on the 2nd
-> kernel.
+> On Thu, 2012-12-13 at 05:06 +0000, Atsushi Kumagai wrote:
+> 
+> > 
+> > In cyclic mode, we can save only a chunk of bitmap at a time, 
+> > this fact forces us to scan each cyclic region twice as below:
+> > 
+> >   Step1: To determine the offset of kdump's page data region.
+> >   Step2: To distinguish whether each page is unnecessary or not.
+> > 
+> > Step1 should be done before writing phase (write_kdump_pages_and_bitmap_cyclic())
+> > and step2 is run while writing phase, the whole scan is needed for
+> > each step.
+> > On the other hand, v1.4 can execute both step1 and step2 with the temporary
+> > bitmap file, the whole scan is done just one time to create the file.
+> > 
+> > It's a disadvantage in performance, but I think it's unavoidable.
+> > (There is the exception when the number of cycles is 1, but current
+> > version also scan twice in spite of redundancy.)
+> > 
+> > If more performance is needed, I think we should invent other
+> > approaches like the idea discussed in the thread below:
+> > 
+> >   http://lists.infradead.org/pipermail/kexec/2012-December/007494.html
+> > 
+> > Besides, I think v1.4 with the local disc which can contain the temporary
+> > bitmap file is the fastest version for now.
+> > 
+> > > Atushi, am I using the new makedumpfile 1.5.1GA correctly with the
+> > > kernel patch? 
+> > 
+> > Yes, I think you can use mem_map array logic correctly with the patch.
+> > And you can confirm it with -D option. If you didn't meet the conditions
+> > to use mem_map array logic, the message below will be showed.
+> > 
+> >   "Can't select page_is_buddy handler; follow free lists instead of mem_map array."
+> > 
+> > > I didn't understand how to use the options of makedumpfile you
+> > > mentioned, and when I tried with a vmlinux file, and the -x option,
+> > > makedumpfile didn't even start, just failed and reset. 
+> > 
+> > It might be another problem related -x option.
+> > For investigation, could you run the command below and show its messages ?
+> > There is no need to run in 2nd kernel environment.
+> > 
+> >   # makedumpfile -g vmcoreinfo -x vmlinux
+> > 
+> > 
+> > Thanks
+> > Atsushi Kumagai
+> > 
+> 
+> 
+> Thanks for this info, Atsushi.
+> 
+> I was able to test makedumpfile-v1.5.1 on the 4 TB DL980 we had this
+> weekend, along with the kexec patch to invoke the memory array logic,
+> and I got encouraging results, in that the difference  in dump time
+> between makedumpfile 1.4  on a RHEL 6.3 system and makedumpfile-v1.5.1
+> with the memory array logic seems to be now very small:
 
-Thanks.  I was wondering why moving the code into /proc/vmcore would
-make things faster.
+Thanks for your hard work, it's good results.
 
-> Also, I have one question. Can we always think of 1st and 2nd kernels
-> are same?
+According to your measurements on 256 GB and 4 TB, the difference in
+dump time may be about ten percent of the total time in any memory size.
 
-Not at all.  Distros frequently implement it with the same kernel in
-both role but it should be possible to use an old crusty stable kernel
-as the 2nd kernel.
+I think it's acceptable overhead costs to keep memory consumption
+and the mem_map array logic works as we expected.
 
-> If I understand correctly, kexec/kdump can use the 2nd kernel different
-> from the 1st's. So, differnet kernels need to do the same thing as makedumpfile
-> does. If assuming two are same, problem is mush simplified.
 
-As a developer it becomes attractive to use a known stable kernel to
-capture the crash dump even as I experiment with a brand new kernel.
+Thanks
+Atsushi Kumagai
 
-Eric
+
+> Here are my results (file system timestamp data and note the system had
+> it's filesystem time set way in the past):
+> 
+> 					
+> 
+> 1.  makedumpfile 1.4 (RHEL 6.3 default), crashkernel 512M:
+> 
+>        root@spb crash]# ls -al --time-style=full-iso
+> 127.0.0.1-2012-05-09-19:55:50^M
+> total 10757984^M
+> drwxr-xr-x. 2 root root        4096 2012-05-09 21:53:21.289507559
+> -0600 .^M
+> drwxr-xr-x. 4 root root        4096 2012-05-09 22:10:08.729553037
+> -0600 ..^M
+> -rw-------. 1 root root 11016160846 2012-05-09 21:53:21.020384817 -0600
+> vmcore^
+> 
+> 21:53:21 - 19:55:50 
+> 
+> Dump filter/copy time:  1 hour, 57 minutes, 29 seconds
+> 
+> 
+> 2. makedumpfile-v1.5.1, with kexec patch, using memory array logic, took
+> 3 dumps to see variations in times:
+> 
+> ls -al --time-style=full-iso 127.0.0.1-2012-05-10-23:42:35^M
+> total 10444952^M
+> drwxr-xr-x. 2 root root        4096 2012-05-11 01:52:18.512639105
+> -0600 .^M
+> drwxr-xr-x. 6 root root        4096 2012-05-10 23:42:39.270955565
+> -0600 ..^M
+> -rw-------. 1 root root 10695618226 2012-05-11 01:52:18.479636812 -0600
+> vmcore^M
+> 
+> Dump filter/copy time: 2 hours, 9 minutes, 11 sec
+> 
+> 
+> 127.0.0.1-2012-05-12-20:57:08:^M
+> total 10469304^M
+> drwxr-xr-x. 2 root root        4096 2012-05-12 23:05:39.082084132
+> -0600 .^M
+> drwxr-xr-x. 5 root root        4096 2012-05-12 20:57:12.627084279
+> -0600 ..^M
+> -rw-------. 1 root root 10720553208 2012-05-12 23:05:39.051082490 -0600
+> vmcore^M
+> 
+> 
+> Dump filter/copy time:  2 hours     8 minutes  26 seconds
+> 
+> 27.0.0.1-2012-05-10-09:52:17:^M
+> total 10650776^M
+> drwxr-xr-x. 2 root root        4096 2012-05-10 12:04:22.456078284
+> -0600 .^M
+> drwxr-xr-x. 6 root root        4096 2012-05-10 09:52:22.068605263
+> -0600 ..^M
+> -rw-------. 1 root root 10906381384 2012-05-10 12:04:22.425076466 -0600
+> vmcore
+> 
+> Dump filter/copy time: 2 hours 13 minutes
+> 
+> So the dump times seem to vary + or minus 2-3 minutes, and the average
+> was about 2 hours 10 minutes, or 10-12 minutes longer than the
+> makedumpfile 1.4 dump time for a 4 TB system, when using a crashkernel
+> constrained to 384 MB, and the cyclic buffer feature is used.
 
 _______________________________________________
 kexec mailing list
