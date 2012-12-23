@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TmfqI-00017V-Me
- for kexec@lists.infradead.org; Sun, 23 Dec 2012 07:19:27 +0000
+ id 1TmfqI-00017T-OM
+ for kexec@lists.infradead.org; Sun, 23 Dec 2012 07:19:28 +0000
+Received: from joe.kanocho.kobe.vergenet.net (124-149-116-59.dyn.iinet.net.au
+ [124.149.116.59])
+ by kirsty.vergenet.net (Postfix) with ESMTP id A6364266CE0
+ for <kexec@lists.infradead.org>; Sun, 23 Dec 2012 18:19:23 +1100 (EST)
 From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH 2/3] build: Use cross compiler's strip if available
-Date: Sun, 23 Dec 2012 16:19:17 +0900
-Message-Id: <1356247158-9671-3-git-send-email-horms@verge.net.au>
-In-Reply-To: <1356247158-9671-1-git-send-email-horms@verge.net.au>
-References: <1356247158-9671-1-git-send-email-horms@verge.net.au>
+Subject: Build Cleanup and Fixes
+Date: Sun, 23 Dec 2012 16:19:15 +0900
+Message-Id: <1356247158-9671-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +25,38 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
----
- Makefile.in  |    1 +
- configure.ac |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/Makefile.in b/Makefile.in
-index 99b4bb3..384cf0b 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -220,6 +220,7 @@ echo::
- 	@echo CC=$(CC)
- 	@echo AR=$(AR)
- 	@echo LD=$(LD)
-+	@echo STRIP=$(STRIP)
- 
- clean:
- 	$(RM) -f $(clean)
-diff --git a/configure.ac b/configure.ac
-index a423988..438b3c9 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -107,6 +107,7 @@ AC_CHECK_TOOL([LD], ld, "no", $PATH)
- AC_CHECK_TOOL([AS], as, "no", $PATH)
- AC_CHECK_TOOL([OBJCOPY], objcopy, "no", $PATH)
- AC_CHECK_TOOL([AR], ar, "", $PATH)
-+AC_CHECK_TOOL([STRIP], strip, "no", $PATH)
- 
- dnl Find compiler for target
- if test "${target}" != "${host}" ; then
-@@ -142,7 +143,6 @@ AC_CHECK_PROG([SED],      sed,      sed,      "no", [$PATH])
- AC_CHECK_PROG([FIND],     find,     find,     "no", [$PATH])
- AC_CHECK_PROG([XARGS],    xargs,    xargs,    "no", [$PATH])
- AC_CHECK_PROG([DIRNAME],  dirname,  dirname,  "no", [$PATH])
--AC_CHECK_PROG([STRIP],    strip,    strip,    "no", [$PATH])
- 
- dnl See if I have a usable copy of zlib available
- if test "$with_zlib" = yes ; then
--- 
-1.7.10.4
+I have applied this small series of patches to clean up the
+build system a little.
 
+----------------------------------------------------------------
+The following changes since commit c30e0bbd021b5744532fb8555bd4d4bbf8a00a04:
+
+  kexec-zImage-arm: simply cmdline-related DTB resizing (2012-12-23 13:20:39 +0900)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git master
+
+for you to fetch changes up to 3af8bee323bfb7894e760ac32f18e3ef082b2c5b:
+
+  build: Restrict scope of per-arch compiler flags (2012-12-23 16:10:00 +0900)
+
+----------------------------------------------------------------
+Simon Horman (3):
+      die: Use const for fmt
+      build: Use cross compiler's strip if available
+      build: Restrict scope of per-arch compiler flags
+
+ Makefile.in             |    5 +++--
+ configure.ac            |    2 +-
+ kexec/arch/arm/Makefile |    2 +-
+ kexec/arch/ppc/Makefile |    4 ++--
+ kexec/kexec.c           |    2 +-
+ kexec/kexec.h           |    2 +-
+ 6 files changed, 9 insertions(+), 8 deletions(-)
 
 _______________________________________________
 kexec mailing list
