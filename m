@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TmfqI-00017W-PU
- for kexec@lists.infradead.org; Sun, 23 Dec 2012 07:19:28 +0000
-From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH 3/3] build: Restrict scope of per-arch compiler flags
-Date: Sun, 23 Dec 2012 16:19:18 +0900
-Message-Id: <1356247158-9671-4-git-send-email-horms@verge.net.au>
-In-Reply-To: <1356247158-9671-1-git-send-email-horms@verge.net.au>
-References: <1356247158-9671-1-git-send-email-horms@verge.net.au>
+Date: Sun, 23 Dec 2012 11:06:02 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] kexec: disable non-boot CPUs
+Message-ID: <20121223110602.GA16237@mudshark.cambridge.arm.com>
+References: <1355960681-32015-1-git-send-email-swarren@wwwdotorg.org>
+ <20121220104945.GC16887@mudshark.cambridge.arm.com>
+ <50D34934.9070106@wwwdotorg.org>
+ <20121220173611.GC5387@mudshark.cambridge.arm.com>
+ <50D35214.4090008@wwwdotorg.org> <50D371E2.1030807@wwwdotorg.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50D371E2.1030807@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,75 +19,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, Joseph Lo <josephl@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Restrict the scope of compiler flags set in per-arch Makefiles
-to the architecture the Makefile belongs to.
+On Thu, Dec 20, 2012 at 08:15:30PM +0000, Stephen Warren wrote:
+> On 12/20/2012 10:59 AM, Stephen Warren wrote:
+> > On 12/20/2012 10:36 AM, Will Deacon wrote:
+> >> I think you're better off using what we currently have and hanging your code
+> >> off platform_cpu_kill.
+> > 
+> > OK, I'll look into that. Joseph Lo just posted patches to implement
+> > cpu_kill() on Tegra, which was needed to fix some issues in our hotplug
+> > code anyway. Perhaps that will remove the need for any other changes...
+> 
+> Will,
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
----
- Makefile.in             |    4 ++--
- kexec/arch/arm/Makefile |    2 +-
- kexec/arch/ppc/Makefile |    4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+Hi Stephen,
 
-diff --git a/Makefile.in b/Makefile.in
-index 384cf0b..c1859d1 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -45,10 +45,10 @@ TARGET_CFLAGS	= @TARGET_CFLAGS@
- # Base compiler flags. These are extended by the subcomponent-Makefiles
- # where necessary.
- CPPFLAGS	= @CPPFLAGS@ -I$(srcdir)/include -I$(srcdir)/util_lib/include \
--			-Iinclude/
-+			-Iinclude/ $($(ARCH)_CPPFLAGS)
- CFLAGS		= @CFLAGS@ -fno-strict-aliasing -Wall -Wstrict-prototypes
- PURGATORY_EXTRA_CFLAGS = @PURGATORY_EXTRA_CFLAGS@
--ASFLAGS		= @ASFLAGS@
-+ASFLAGS		= @ASFLAGS@ $($(ARCH)_ASFLAGS)
- LDFLAGS		= @LDFLAGS@
- LIBS		= @LIBS@
- 
-diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-index 192e6ec..682db78 100644
---- a/kexec/arch/arm/Makefile
-+++ b/kexec/arch/arm/Makefile
-@@ -16,7 +16,7 @@ arm_KEXEC_SRCS+= kexec/fs2dt.c
- 
- libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
- 
--CPPFLAGS+=-I$(srcdir)/kexec/libfdt
-+arm_CPPFLAGS = -I$(srcdir)/kexec/libfdt
- 
- arm_KEXEC_SRCS += $(libfdt_SRCS)
- 
-diff --git a/kexec/arch/ppc/Makefile b/kexec/arch/ppc/Makefile
-index 312c2b9..71871f1 100644
---- a/kexec/arch/ppc/Makefile
-+++ b/kexec/arch/ppc/Makefile
-@@ -20,11 +20,11 @@ ppc_libfdt_SRCS = kexec/arch/ppc/libfdt-wrapper.c
- libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
- ppc_ARCH_REUSE_INITRD =
- 
--CPPFLAGS+=-I$(srcdir)/kexec/libfdt
-+ppc_CPPFLAGS = -I$(srcdir)/kexec/libfdt
- 
- ppc_KEXEC_SRCS += $(libfdt_SRCS) $(ppc_libfdt_SRCS)
- 
--ASFLAGS	+= -Wa,--noexecstack
-+ppc_ASFLAGS = -Wa,--noexecstack
- 
- dist += kexec/arch/ppc/Makefile $(ppc_KEXEC_SRCS)			\
- 	kexec/arch/ppc/crashdump-powerpc.h kexec/arch/ppc/fixup_dtb.h	\
--- 
-1.7.10.4
+> I just remembered one other advantage of disable_nonboot_cpus(); it
+> always makes the kexec happen on the boot CPU. Without this, I believe
+> it's random whether CPU0 or CPU1 performs the kexec. I suspect it's most
+> likely to work if we can always kexec on the boot CPU rather than a
+> random CPU?
 
+It will be the same CPU as the one which made the kexec system call. If you
+need to invoke this from a specific CPU, you currently have to do this in
+userspace using something like the `taskset' utility. Linux can actually
+boot on any physical CPU for ARM now (thanks to the logical map) but most
+platforms have restrictions related to secure firmware.
+
+Will
 
 _______________________________________________
 kexec mailing list
