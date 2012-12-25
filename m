@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TnPxk-0005wX-IO
- for kexec@lists.infradead.org; Tue, 25 Dec 2012 08:34:17 +0000
-Message-ID: <50D96474.3080309@cn.fujitsu.com>
-Date: Tue, 25 Dec 2012 16:31:48 +0800
+ id 1TnQxm-0006eL-PO
+ for kexec@lists.infradead.org; Tue, 25 Dec 2012 09:38:22 +0000
+Message-ID: <50D97377.3010209@cn.fujitsu.com>
+Date: Tue, 25 Dec 2012 17:35:51 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH] kexec,x86: code optimization and adjustment for add_memmap
- and delete_memmap
+Subject: [PATCH] kexec: use dbgprintf instead of #if 0 for debug printing
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,198 +20,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: horms@verge.net.au, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/i386/crashdump-x86.c |   93 ++++++++++++++++++---------------------
- 1 files changed, 43 insertions(+), 50 deletions(-)
+ kexec/arch/i386/kexec-x86-common.c |   28 ++++++++++------------------
+ kexec/kexec.c                      |   18 +++++++++---------
+ 2 files changed, 19 insertions(+), 27 deletions(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 245402c..63f6b2b 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -518,21 +518,22 @@ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end)
- 
- /* Adds a segment from list of memory regions which new kernel can use to
-  * boot. Segment start and end should be aligned to 1K boundary. */
--static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
--								size_t size)
-+static int add_memmap(struct memory_range *memmap_p,
-+		      unsigned long long addr,
-+		      size_t size)
- {
- 	int i, j, nr_entries = 0, tidx = 0, align = 1024;
- 	unsigned long long mstart, mend;
- 
- 	/* Do alignment check. */
--	if ((addr%align) || (size%align))
-+	if ((addr % align) || (size % align))
- 		return -1;
- 
- 	/* Make sure at least one entry in list is free. */
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < CRASH_MAX_MEMMAP_NR; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (!mstart  && !mend)
-+		if (!mstart && !mend)
- 			break;
- 		else
- 			nr_entries++;
-@@ -540,31 +541,29 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 	if (nr_entries == CRASH_MAX_MEMMAP_NR)
- 		return -1;
- 
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0)
--			break;
--		if (mstart <= (addr+size-1) && mend >=addr)
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index 02471a8..234823c 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -88,10 +88,9 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
+ 			continue;
+ 		str = line + consumed;
+ 		end = end + 1;
+-#if 0
+-		printf("%016Lx-%016Lx : %s",
+-			start, end, str);
+-#endif
 +
-+		if (mstart <= (addr + size - 1) && mend >= addr)
- 			/* Overlapping region. */
- 			return -1;
- 		else if (addr > mend)
--			tidx = i+1;
-+			tidx = i + 1;
- 	}
--		/* Insert the memory region. */
--		for (j = nr_entries-1; j >= tidx; j--)
--			memmap_p[j+1] = memmap_p[j];
--		memmap_p[tidx].start = addr;
--		memmap_p[tidx].end = addr + size - 1;
++		dbgprintf("%016Lx-%016Lx : %s", start, end, str);
 +
-+	/* Insert the memory region. */
-+	for (j = nr_entries - 1; j >= tidx; j--)
-+		memmap_p[j+1] = memmap_p[j];
-+	memmap_p[tidx].start = addr;
-+	memmap_p[tidx].end = addr + size - 1;
-+	nr_entries++;
- 
- 	dbgprintf("Memmap after adding segment\n");
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0)
--			break;
--		dbgprintf("%016llx - %016llx\n",
--			mstart, mend);
-+		dbgprintf("%016llx - %016llx\n", mstart, mend);
- 	}
- 
- 	return 0;
-@@ -572,19 +571,20 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 
- /* Removes a segment from list of memory regions which new kernel can use to
-  * boot. Segment start and end should be aligned to 1K boundary. */
--static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
--								size_t size)
-+static int delete_memmap(struct memory_range *memmap_p,
-+			 unsigned long long addr,
-+			 size_t size)
- {
- 	int i, j, nr_entries = 0, tidx = -1, operation = 0, align = 1024;
- 	unsigned long long mstart, mend;
- 	struct memory_range temp_region;
- 
- 	/* Do alignment check. */
--	if ((addr%align) || (size%align))
-+	if ((addr % align) || (size % align))
- 		return -1;
- 
- 	/* Make sure at least one entry in list is free. */
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < CRASH_MAX_MEMMAP_NR; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
- 		if (!mstart  && !mend)
-@@ -596,20 +596,16 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 		/* List if full */
- 		return -1;
- 
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0)
--			/* Did not find the segment in the list. */
--			return -1;
-+
- 		if (mstart <= addr && mend >= (addr + size - 1)) {
- 			if (mstart == addr && mend == (addr + size - 1)) {
- 				/* Exact match. Delete region */
- 				operation = -1;
- 				tidx = i;
--				break;
--			}
--			if (mstart != addr && mend != (addr + size - 1)) {
-+			} else if (mstart != addr && mend != (addr + size - 1)) {
- 				/* Split in two */
- 				memmap_p[i].end = addr - 1;
- 				temp_region.start = addr + size;
-@@ -617,41 +613,38 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 				temp_region.type = memmap_p[i].type;
- 				operation = 1;
- 				tidx = i;
--				break;
--			}
--
--			/* No addition/deletion required. Adjust the existing.*/
--			if (mstart != addr) {
--				memmap_p[i].end = addr - 1;
--				break;
- 			} else {
--				memmap_p[i].start = addr + size;
--				break;
-+				/* No addition/deletion required. Adjust the existing.*/
-+				if (mstart != addr)
-+					memmap_p[i].end = addr - 1;
-+				else
-+					memmap_p[i].start = addr + size;
- 			}
-+			break;
+ 		if (memcmp(str, "System RAM\n", 11) == 0) {
+ 			type = RANGE_RAM;
  		}
- 	}
--	if ((operation == 1) && tidx >=0) {
+@@ -110,10 +109,9 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
+ 		memory_range[memory_ranges].start = start;
+ 		memory_range[memory_ranges].end = end;
+ 		memory_range[memory_ranges].type = type;
+-#if 0
+-		printf("%016Lx-%016Lx : %x\n",
+-			start, end, type);
+-#endif
 +
-+	if (operation == 1 && tidx >= 0) {
- 		/* Insert the split memory region. */
--		for (j = nr_entries-1; j > tidx; j--)
-+		for (j = nr_entries - 1; j > tidx; j--)
- 			memmap_p[j+1] = memmap_p[j];
- 		memmap_p[tidx+1] = temp_region;
-+		nr_entries++;
- 	}
--	if ((operation == -1) && tidx >=0) {
++		dbgprintf("%016Lx-%016Lx : %x\n", start, end, type);
 +
-+	if (operation == -1 && tidx >= 0) {
- 		/* Delete the exact match memory region. */
--		for (j = i+1; j < CRASH_MAX_MEMMAP_NR; j++)
-+		for (j = i + 1; j < nr_entries; j++)
- 			memmap_p[j-1] = memmap_p[j];
- 		memmap_p[j-1].start = memmap_p[j-1].end = 0;
-+		nr_entries--;
+ 		memory_ranges++;
+ 	}
+ 	fclose(fp);
+@@ -479,17 +477,11 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 			mem_max = end;
  	}
  
- 	dbgprintf("Memmap after deleting segment\n");
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0) {
--			break;
+-	/* just set 0 to 1 to enable printing for debugging */
+-#if 0
+-	{
+-		int i;
+-		printf("MEMORY RANGES\n");
+-		for (i = 0; i < *ranges; i++) {
+-			printf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
+-				(*range)[i].end, (*range)[i].type);
 -		}
--		dbgprintf("%016llx - %016llx\n",
--			mstart, mend);
-+		dbgprintf("%016llx - %016llx\n", mstart, mend);
++	dbgprintf("MEMORY RANGES\n");
++	for (i = 0; i < *ranges; i++) {
++		dbgprintf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
++			  (*range)[i].end, (*range)[i].type);
  	}
+-#endif
  
- 	return 0;
+ 	return ret;
+ }
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 89ec182..60ea0a5 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -669,10 +669,9 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
+ 	kernel = argv[fileind];
+ 	/* slurp in the input kernel */
+ 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
+-#if 0
+-	fprintf(stderr, "kernel: %p kernel_size: %lx\n", 
+-		kernel_buf, kernel_size);
+-#endif
++
++	dbgprintf("kernel: %p kernel_size: %lx\n",
++		  kernel_buf, kernel_size);
+ 
+ 	if (get_memory_ranges(&info.memory_range, &info.memory_ranges,
+ 		info.kexec_flags) < 0) {
+@@ -759,11 +758,12 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
+ 	update_purgatory(&info);
+ 	if (entry)
+ 		info.entry = entry;
+-#if 0
+-	fprintf(stderr, "kexec_load: entry = %p flags = %lx\n", 
+-		info.entry, info.kexec_flags);
+-	print_segments(stderr, &info);
+-#endif
++
++	dbgprintf("kexec_load: entry = %p flags = %lx\n",
++		  info.entry, info.kexec_flags);
++	if (kexec_debug)
++		print_segments(stderr, &info);
++
+ 	result = kexec_load(
+ 		info.entry, info.nr_segments, info.segment, info.kexec_flags);
+ 	if (result != 0) {
 -- 
 1.7.1
 
