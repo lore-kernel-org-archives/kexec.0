@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TnQxm-0006eL-PO
- for kexec@lists.infradead.org; Tue, 25 Dec 2012 09:38:22 +0000
-Message-ID: <50D97377.3010209@cn.fujitsu.com>
-Date: Tue, 25 Dec 2012 17:35:51 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH] kexec: use dbgprintf instead of #if 0 for debug printing
+Received: from router-fw.net-space.pl ([89.174.63.77])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1To356-0006fX-SS
+ for kexec@lists.infradead.org; Thu, 27 Dec 2012 02:20:25 +0000
+Received: from dev-00.local.net-space.pl ([192.168.1.5]:41014 "EHLO
+ localhost.localdomain" TLS-CIPHER: <none>)
+ by router-fw-old.local.net-space.pl with ESMTP id S1623742Ab2L0CTA
+ (ORCPT <rfc822;kexec@lists.infradead.org>);
+ Thu, 27 Dec 2012 03:19:00 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH v3 00/11] xen: Initial kexec/kdump implementation
+Date: Thu, 27 Dec 2012 03:18:49 +0100
+Message-Id: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,110 +20,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: andrew.cooper3@citrix.com, ebiederm@xmission.com, hpa@zytor.com, jbeulich@suse.com, konrad.wilk@oracle.com, maxim.uvarov@oracle.com, mingo@redhat.com, tglx@linutronix.de, vgoyal@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, xen-devel@lists.xensource.com
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/arch/i386/kexec-x86-common.c |   28 ++++++++++------------------
- kexec/kexec.c                      |   18 +++++++++---------
- 2 files changed, 19 insertions(+), 27 deletions(-)
 
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index 02471a8..234823c 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -88,10 +88,9 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
- 			continue;
- 		str = line + consumed;
- 		end = end + 1;
--#if 0
--		printf("%016Lx-%016Lx : %s",
--			start, end, str);
--#endif
-+
-+		dbgprintf("%016Lx-%016Lx : %s", start, end, str);
-+
- 		if (memcmp(str, "System RAM\n", 11) == 0) {
- 			type = RANGE_RAM;
- 		}
-@@ -110,10 +109,9 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
- 		memory_range[memory_ranges].start = start;
- 		memory_range[memory_ranges].end = end;
- 		memory_range[memory_ranges].type = type;
--#if 0
--		printf("%016Lx-%016Lx : %x\n",
--			start, end, type);
--#endif
-+
-+		dbgprintf("%016Lx-%016Lx : %x\n", start, end, type);
-+
- 		memory_ranges++;
- 	}
- 	fclose(fp);
-@@ -479,17 +477,11 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 			mem_max = end;
- 	}
- 
--	/* just set 0 to 1 to enable printing for debugging */
--#if 0
--	{
--		int i;
--		printf("MEMORY RANGES\n");
--		for (i = 0; i < *ranges; i++) {
--			printf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
--				(*range)[i].end, (*range)[i].type);
--		}
-+	dbgprintf("MEMORY RANGES\n");
-+	for (i = 0; i < *ranges; i++) {
-+		dbgprintf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
-+			  (*range)[i].end, (*range)[i].type);
- 	}
--#endif
- 
- 	return ret;
- }
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 89ec182..60ea0a5 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -669,10 +669,9 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 	kernel = argv[fileind];
- 	/* slurp in the input kernel */
- 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
--#if 0
--	fprintf(stderr, "kernel: %p kernel_size: %lx\n", 
--		kernel_buf, kernel_size);
--#endif
-+
-+	dbgprintf("kernel: %p kernel_size: %lx\n",
-+		  kernel_buf, kernel_size);
- 
- 	if (get_memory_ranges(&info.memory_range, &info.memory_ranges,
- 		info.kexec_flags) < 0) {
-@@ -759,11 +758,12 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 	update_purgatory(&info);
- 	if (entry)
- 		info.entry = entry;
--#if 0
--	fprintf(stderr, "kexec_load: entry = %p flags = %lx\n", 
--		info.entry, info.kexec_flags);
--	print_segments(stderr, &info);
--#endif
-+
-+	dbgprintf("kexec_load: entry = %p flags = %lx\n",
-+		  info.entry, info.kexec_flags);
-+	if (kexec_debug)
-+		print_segments(stderr, &info);
-+
- 	result = kexec_load(
- 		info.entry, info.nr_segments, info.segment, info.kexec_flags);
- 	if (result != 0) {
--- 
-1.7.1
+Hi,
+
+This set of patches contains initial kexec/kdump implementation for Xen v3.
+Currently only dom0 is supported, however, almost all infrustructure
+required for domU support is ready.
+
+Jan Beulich suggested to merge Xen x86 assembler code with baremetal x86 code.
+This could simplify and reduce a bit size of kernel code. However, this solution
+requires some changes in baremetal x86 code. First of all code which establishes
+transition page table should be moved back from machine_kexec_$(BITS).c to
+relocate_kernel_$(BITS).S. Another important thing which should be changed in that
+case is format of page_list array. Xen kexec hypercall requires to alternate physical
+addresses with virtual ones. These and other required stuff have not been done in that
+version because I am not sure that solution will be accepted by kexec/kdump maintainers.
+I hope that this email spark discussion about that topic.
+
+Daniel
+
+ arch/x86/Kconfig                     |    3 +
+ arch/x86/include/asm/kexec.h         |   10 +-
+ arch/x86/include/asm/xen/hypercall.h |    6 +
+ arch/x86/include/asm/xen/kexec.h     |   79 ++++
+ arch/x86/kernel/machine_kexec_64.c   |   12 +-
+ arch/x86/kernel/vmlinux.lds.S        |    7 +-
+ arch/x86/xen/Kconfig                 |    1 +
+ arch/x86/xen/Makefile                |    3 +
+ arch/x86/xen/enlighten.c             |   11 +
+ arch/x86/xen/kexec.c                 |  150 +++++++
+ arch/x86/xen/machine_kexec_32.c      |  226 +++++++++++
+ arch/x86/xen/machine_kexec_64.c      |  318 +++++++++++++++
+ arch/x86/xen/relocate_kernel_32.S    |  323 +++++++++++++++
+ arch/x86/xen/relocate_kernel_64.S    |  309 ++++++++++++++
+ drivers/xen/sys-hypervisor.c         |   42 ++-
+ include/linux/kexec.h                |   26 ++-
+ include/xen/interface/xen.h          |   33 ++
+ kernel/Makefile                      |    1 +
+ kernel/kexec-firmware.c              |  743 ++++++++++++++++++++++++++++++++++
+ kernel/kexec.c                       |   46 ++-
+ 20 files changed, 2331 insertions(+), 18 deletions(-)
+
+Daniel Kiper (11):
+      kexec: introduce kexec firmware support
+      x86/kexec: Add extra pointers to transition page table PGD, PUD, PMD and PTE
+      xen: Introduce architecture independent data for kexec/kdump
+      x86/xen: Introduce architecture dependent data for kexec/kdump
+      x86/xen: Register resources required by kexec-tools
+      x86/xen: Add i386 kexec/kdump implementation
+      x86/xen: Add x86_64 kexec/kdump implementation
+      x86/xen: Add kexec/kdump Kconfig and makefile rules
+      x86/xen/enlighten: Add init and crash kexec/kdump hooks
+      drivers/xen: Export vmcoreinfo through sysfs
+      x86: Add Xen kexec control code size check to linker script
 
 _______________________________________________
 kexec mailing list
