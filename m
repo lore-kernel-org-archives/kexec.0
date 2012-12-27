@@ -1,33 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from e9.ny.us.ibm.com ([32.97.182.139])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1To9V6-0000b3-H9
- for kexec@lists.infradead.org; Thu, 27 Dec 2012 09:11:41 +0000
+ id 1To9cr-0000ie-Co
+ for kexec@lists.infradead.org; Thu, 27 Dec 2012 09:19:42 +0000
 Received: from /spool/local
  by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Thu, 27 Dec 2012 04:11:36 -0500
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
- by d01dlp01.pok.ibm.com (Postfix) with ESMTP id 6872238C8051
- for <kexec@lists.infradead.org>; Thu, 27 Dec 2012 04:11:29 -0500 (EST)
+ Thu, 27 Dec 2012 04:19:40 -0500
+Received: from d01relay07.pok.ibm.com (d01relay07.pok.ibm.com [9.56.227.147])
+ by d01dlp01.pok.ibm.com (Postfix) with ESMTP id B580D38C8062
+ for <kexec@lists.infradead.org>; Thu, 27 Dec 2012 04:19:34 -0500 (EST)
 Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
- by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- qBR9BTrG298200
- for <kexec@lists.infradead.org>; Thu, 27 Dec 2012 04:11:29 -0500
+ by d01relay07.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ qBR9JYlv61014054
+ for <kexec@lists.infradead.org>; Thu, 27 Dec 2012 04:19:34 -0500
 Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
  by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- qBR9BSOo029250
- for <kexec@lists.infradead.org>; Thu, 27 Dec 2012 07:11:28 -0200
-Message-ID: <50DC10BB.7060604@linux.vnet.ibm.com>
-Date: Thu, 27 Dec 2012 14:41:23 +0530
+ qBR9JXPI018757
+ for <kexec@lists.infradead.org>; Thu, 27 Dec 2012 07:19:33 -0200
+Message-ID: <50DC12A0.1000005@linux.vnet.ibm.com>
+Date: Thu, 27 Dec 2012 14:49:28 +0530
 From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 4/7] Implement apigetctype call back function
+Subject: Re: [PATCH v3 1/7] Initialize and setup eppic
 References: <20121214092300.4854.30720.stgit@aravinda>
- <20121214092632.4854.23561.stgit@aravinda>
- <20121220174539.84328e734a10246c102f026f@mxc.nes.nec.co.jp>
-In-Reply-To: <20121220174539.84328e734a10246c102f026f@mxc.nes.nec.co.jp>
+ <20121214092604.4854.9670.stgit@aravinda>
+ <20121220174525.fa881aafa4c3765172d2ec40@mxc.nes.nec.co.jp>
+In-Reply-To: <20121220174525.fa881aafa4c3765172d2ec40@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,193 +49,123 @@ On 2012-12-20 14:15, Atsushi Kumagai wrote:
 
 > Hello Aravinda,
 > 
-> On Fri, 14 Dec 2012 14:56:32 +0530
+> Thank you for updating.
+> I have two comments in this mail.
+> 
+> 
+> On Fri, 14 Dec 2012 14:56:04 +0530
 > Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
 > 
-
-
-[...]
-
-
-
-
-> I commented for search_domain() in v1 patch:
+>> This patch contains routines which initialize eppic and register call
+>> back function which will be called whenever a new eppic macro is loaded
+>> using eppic_load() API. The registered call back function executes the
+>> eppic macro as soon as it is loaded.
+>>
+>> Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+>> ---
+>>  Makefile          |    5 +++
+>>  extension_eppic.c |   84 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  extension_eppic.h |   23 +++++++++++++++
+>>  3 files changed, 111 insertions(+), 1 deletions(-)
+>>  create mode 100644 extension_eppic.c
+>>  create mode 100644 extension_eppic.h
+>>
+>> diff --git a/Makefile b/Makefile
+>> index e6c4e5d..f123a5f 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -69,7 +69,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
+>>  	$(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c) 
+>>  
+>>  makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
+>> -	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
+>> +	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
+>>  	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
+>>  	grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
+>>  	mv temp.8 makedumpfile.8
+>> @@ -79,6 +79,9 @@ makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
+>>  	mv temp.5 makedumpfile.conf.5
+>>  	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
+>>  
+>> +eppic_makedumpfile.so: extension_eppic.c
+>> +	$(CC) $(CFLAGS) -nostartfiles -shared -rdynamic -o $@ extension_eppic.c -fPIC -leppic
+>> +
 > 
->   http://lists.infradead.org/pipermail/kexec/2012-October/007024.html
+> First, I prepared eppic_makedumpfile.so with the code above, but I failed
+> with the message below:
 > 
->   > I assume that search_domain() needs to descend into struct/union for
->   > a nested member, like how we fixed search_member() in commit:ecff242c.
->   > I want to make sure that your patches can treat even a nested member.
+>   $ makedumpfile -cd31 -x vmlinux --eppic eppic_macro/mod.c vmcore dumpfile.cd31
+>   process_eppic_file: dlopen failed: /usr/lib64/eppic_makedumpfile.so: undefined symbol: setupterm
+>   
+>   makedumpfile Failed.
+>   $
 > 
-> And I still think so, it should be fixed as below:
-> 
-> 
-> diff --git a/dwarf_info.c b/dwarf_info.c
-> index 22c9e2f..a11b6ad 100644
-> --- a/dwarf_info.c
-> +++ b/dwarf_info.c
-> @@ -814,7 +814,7 @@ search_domain(Dwarf_Die *die, int *found)
->                  * Descend into members and search for the
->                  * needed domain there.
->                  */
-> -               if (!name) {
-> +               if ((!name) || strcmp(name, dwarf_info.symbol_name)) {
->                         if (!get_die_type(die, &die_type))
->                                 continue;
-> 
-> Do you agree with me ?
+> so I think '-lncurses' should be specified as gcc option, or did I mistake ?
 
 
-Yes, I think this should be fine. I will modify and test the patch with
-the above change.
+-ltinfo was missing in the gcc option.
 
+>
+
+> 
+> [...]
+>> +/* Initialize eppic */
+>> +int
+>> +_init()
+>> +{
+>> +	if (eppic_open() >= 0) {
+>> +
+>> +		/* Register call back functions */
+>> +		eppic_apiset(NULL, 3, sizeof(long), 0);
+>> +
+>> +		/* set the new function callback */
+>> +		eppic_setcallback(reg_callback);
+>> +
+>> +		return 0;
+>> +	}
+>> +	return 1;
+>> +}
+> 
+> Second, your code introduce _init() as constructor for dlopen().
+> I'm not sure about dlopen(), but I found the description which recommend
+> not to use _init() in man page:
+> 
+>    The obsolete symbols _init() and _fini()
+>        The linker recognizes special symbols _init and _fini.  If a dynamic library exports a routine named _init(), then that  code  is  executed
+>        after  the  loading,  before  dlopen()  returns.   If the dynamic library exports a routine named _fini(), then that routine is called just
+>        before the library is unloaded.  In case you need to avoid linking against the system startup files, this can be done by using  the  gcc(1)
+>        -nostartfiles command-line option.
+> 
+>        Using these routines, or the gcc -nostartfiles or -nostdlib options, is not recommended.  Their use may result in undesired behavior, since
+>        the constructor/destructor routines will not be executed (unless special measures are taken).
+> 
+>        Instead, libraries should export routines using the __attribute__((constructor)) and __attribute__((destructor)) function attributes.   See
+>        the  gcc  info pages for information on these.  Constructor routines are executed before dlopen() returns, and destructor routines are exe-
+>        cuted before dlclose() returns.
+> 
+> So, is it OK to continue to use _init() ?
+
+
+I am planning to change _init() to eppic_init() and then explicitly call
+it after dlopen(), as using _init() is not recommended.
+
+Apart from this I am facing some minor issues with dlopen(). With static
+makedumpfile, dlopen is not able to resolve some symbols in dwarf_info.c
+and is failing, while it is working when compiled with LINKTYPE=dynamic.
+I am looking into it.
+
+> 
+> BTW, would you send the patch to add the description of this feature
+> to README, man page and help message ?
 > 
 > 
 > Thanks
 > Atsushi Kumagai
 > 
->> +
->> +		switch (dwarf_info.cmd) {
->> +		case DWARF_INFO_GET_DOMAIN_STRUCT:
->> +			if (tag == DW_TAG_structure_type)
->> +				flag = 1;
->> +			break;
->> +		case DWARF_INFO_GET_DOMAIN_UNION:
->> +			if (tag == DW_TAG_union_type)
->> +				flag = 1;
->> +			break;
->> +		case DWARF_INFO_GET_DOMAIN_TYPEDEF:
->> +			if (tag == DW_TAG_typedef)
->> +				flag = 1;
->> +			break;
->> +		/* TODO
->> +		 * Implement functionality for the rest of the domains
->> +		 */
->> +		}
->> +
->> +		if (!flag)
->> +			continue;
->> +
->> +		dwarf_info.struct_size = dwarf_bytesize(die);
->> +
->> +		if (dwarf_info.struct_size > 0) {
->> +			if (found)
->> +				*found = TRUE;
->> +			dwarf_info.die_offset = dwarf_dieoffset(die);
->> +			break;
->> +		}
->> +	} while (!dwarf_siblingof(die, die));
->> +}
->> +
->> +static void
->>  search_die_tree(Dwarf_Die *die, int *found)
->>  {
->>  	Dwarf_Die child;
->> @@ -774,6 +859,9 @@ search_die_tree(Dwarf_Die *die, int *found)
->>  
->>  	else if (is_search_typedef(dwarf_info.cmd))
->>  		search_typedef(die, found);
->> +
->> +	else if (is_search_domain(dwarf_info.cmd))
->> +		search_domain(die, found);
->>  }
->>  
->>  static int
->> @@ -1166,6 +1254,27 @@ get_source_filename(char *structname, char *src_name, int cmd)
->>  }
->>  
->>  /*
->> + * Get the domain information of the symbol
->> + */
->> +long
->> +get_domain(char *symname, int cmd, unsigned long long *die)
->> +{
->> +	dwarf_info.cmd         = cmd;
->> +	dwarf_info.symbol_name = symname;
->> +	dwarf_info.type_name   = NULL;
->> +	dwarf_info.struct_size = NOT_FOUND_STRUCTURE;
->> +	dwarf_info.die_offset  = 0;
->> +
->> +	if (!get_debug_info())
->> +		return 0;
->> +
->> +	if (die)
->> +		*die = (unsigned long long) dwarf_info.die_offset;
->> +
->> +	return dwarf_info.struct_size;
->> +}
->> +
->> +/*
->>   * Set the dwarf_info with kernel/module debuginfo file information.
->>   */
->>  int
->> diff --git a/dwarf_info.h b/dwarf_info.h
->> index 185cbb6..074b5cc 100644
->> --- a/dwarf_info.h
->> +++ b/dwarf_info.h
->> @@ -47,6 +47,14 @@ enum {
->>  	DWARF_INFO_GET_SYMBOL_TYPE,
->>  	DWARF_INFO_GET_MEMBER_TYPE,
->>  	DWARF_INFO_GET_ENUMERATION_TYPE_SIZE,
->> +	DWARF_INFO_GET_DOMAIN_STRUCT,
->> +	DWARF_INFO_GET_DOMAIN_TYPEDEF,
->> +	DWARF_INFO_GET_DOMAIN_ARRAY,
->> +	DWARF_INFO_GET_DOMAIN_UNION,
->> +	DWARF_INFO_GET_DOMAIN_ENUM,
->> +	DWARF_INFO_GET_DOMAIN_REF,
->> +	DWARF_INFO_GET_DOMAIN_STRING,
->> +	DWARF_INFO_GET_DOMAIN_BASE,
->>  };
->>  
->>  char *get_dwarf_module_name(void);
->> @@ -61,6 +69,7 @@ char *get_member_type_name(char *structname, char *membername, int cmd, long *si
->>  long get_array_length(char *name01, char *name02, unsigned int cmd);
->>  long get_enum_number(char *enum_name);
->>  int get_source_filename(char *structname, char *src_name, int cmd);
->> +long get_domain(char *symname, int cmd, unsigned long long *die);
->>  int set_dwarf_debuginfo(char *mod_name, char *os_release, char *name_debuginfo, int fd_debuginfo);
->>  
->>  #endif  /* DWARF_INFO_H */
->> diff --git a/extension_eppic.c b/extension_eppic.c
->> index 774d16e..3fa3e88 100644
->> --- a/extension_eppic.c
->> +++ b/extension_eppic.c
->> @@ -91,7 +91,33 @@ apimember(char *mname, ull pidx, type_t *tm,
->>  static int
->>  apigetctype(int ctype, char *name, type_t *tout)
->>  {
->> -	return 0;
->> +	long size = 0;
->> +	unsigned long long die = 0;
->> +
->> +	switch (ctype) {
->> +	case V_TYPEDEF:
->> +		size = get_domain(name, DWARF_INFO_GET_DOMAIN_TYPEDEF, &die);
->> +		break;
->> +	case V_STRUCT:
->> +		size = get_domain(name, DWARF_INFO_GET_DOMAIN_STRUCT, &die);
->> +		break;
->> +	case V_UNION:
->> +		size = get_domain(name, DWARF_INFO_GET_DOMAIN_UNION, &die);
->> +		break;
->> +	/* TODO
->> +	 * Implement for all the domains
->> +	 */
->> +	}
->> +
->> +	if (size <= 0 || !die)
->> +		return 0;
->> +
->> +	/* populate */
->> +	eppic_type_settype(tout, ctype);
->> +	eppic_type_setsize(tout, size);
->> +	eppic_type_setidx(tout, (ull)(unsigned long)die);
->> +	eppic_pushref(tout, 0);
->> +	return 1;
->>  }
->>  
->>  static char *
->>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
 
 
