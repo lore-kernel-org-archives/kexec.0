@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1ToQRY-0003dL-R0
- for kexec@lists.infradead.org; Fri, 28 Dec 2012 03:17:09 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <5698071f-c96c-4891-81d6-a77c4e3b77c2@default>
- <50DCDBD3.1020703@zytor.com>
-Date: Thu, 27 Dec 2012 19:16:46 -0800
-In-Reply-To: <50DCDBD3.1020703@zytor.com> (H. Peter Anvin's message of "Thu,
- 27 Dec 2012 15:37:55 -0800")
-Message-ID: <87han6n9wh.fsf@xmission.com>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1ToZXB-0001Cr-Hh
+ for kexec@lists.infradead.org; Fri, 28 Dec 2012 12:59:35 +0000
+Date: Fri, 28 Dec 2012 13:59:27 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3 02/11] x86/kexec: Add extra pointers to transition
+ page table PGD, PUD, PMD and PTE
+Message-ID: <20121228125926.GA13224@x1.alien8.de>
+References: <71b94237-c365-47ba-8d75-5ee1d8caee73@default>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 06/11] x86/xen: Add i386 kexec/kdump implementation
+Content-Disposition: inline
+In-Reply-To: <71b94237-c365-47ba-8d75-5ee1d8caee73@default>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +24,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: xen-devel@lists.xensource.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, Daniel Kiper <daniel.kiper@oracle.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, mingo@redhat.com, jbeulich@suse.com, maxim.uvarov@oracle.com, tglx@linutronix.de, vgoyal@redhat.com
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: xen-devel@lists.xensource.com, linux-kernel@vger.kernel.org, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, maxim.uvarov@oracle.com, kexec@lists.infradead.org, x86@kernel.org, virtualization@lists.linux-foundation.org, mingo@redhat.com, ebiederm@xmission.com, jbeulich@suse.com, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
 
-"H. Peter Anvin" <hpa@zytor.com> writes:
+On Thu, Dec 27, 2012 at 03:19:24PM -0800, Daniel Kiper wrote:
+> > Hmm... this code is being redone at the moment... this might conflict.
+> 
+> Is this available somewhere? May I have a look at it?
 
-> On 12/27/2012 03:23 PM, Daniel Kiper wrote:
->>> On 12/26/2012 06:18 PM, Daniel Kiper wrote:
->>>> Add i386 kexec/kdump implementation.
->>>>
->>>> v2 - suggestions/fixes:
->>>>      - allocate transition page table pages below 4 GiB
->>>>        (suggested by Jan Beulich).
->>>
->>> Why?
->>
->> Sadly all addresses are passed via unsigned long
->> variable to kexec hypercall.
->>
->
-> So can you unf*ck your broken interface before imposing it on anyone
-> else?
+http://marc.info/?l=linux-kernel&m=135581534620383
 
-Hasn't 32bit dom0 been retired?
+The for-x86-boot-v7 and -v8 branches.
 
-Untill the kexec firmware pass through and the normal kexec code paths
-are separated I can't make sense out of this code.
+HTH.
 
-The normal kexec code path should be doable without any special
-constraints on the kernel.  Just leaning on some xen paravirt calls.
-
-The kexec pass through probably should not even touch x86 arch code.
-
-Certainly the same patch should not have code for both the xen kexec
-pass through and the paravirt arch code for the normal kexec path.
-
-Eric
+-- 
+Regards/Gruss,
+Boris.
 
 _______________________________________________
 kexec mailing list
