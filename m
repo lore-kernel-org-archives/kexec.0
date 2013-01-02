@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-wg0-f48.google.com ([74.125.82.48])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TqMnd-0002nR-Bb
- for kexec@lists.infradead.org; Wed, 02 Jan 2013 11:47:58 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
- <50DBC856.6030208@zytor.com>
- <791b4922-078f-4adc-b3f3-0651f2266147@email.android.com>
- <50DC58C4.3000307@citrix.com> <874nj7qsor.fsf@xmission.com>
- <50E41973.9050705@citrix.com>
-Date: Wed, 02 Jan 2013 03:47:28 -0800
-In-Reply-To: <50E41973.9050705@citrix.com> (Andrew Cooper's message of "Wed, 2
- Jan 2013 11:26:43 +0000")
-Message-ID: <87r4m3yffz.fsf@xmission.com>
+ id 1TqOoF-000531-JV
+ for kexec@lists.infradead.org; Wed, 02 Jan 2013 13:56:46 +0000
+Received: by mail-wg0-f48.google.com with SMTP id dt10so6380961wgb.15
+ for <kexec@lists.infradead.org>; Wed, 02 Jan 2013 05:56:40 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [Xen-devel] [PATCH v3 00/11] xen: Initial kexec/kdump
- implementation
+In-Reply-To: <50CB945D.7050008@gmail.com>
+References: <CAJXQGfKcqFK7hBiKqEhZzvsGbFi44fFYAF+-L5+f4FQ=2V3pmQ@mail.gmail.com>
+ <50CB92F0.40308@gmail.com> <50CB945D.7050008@gmail.com>
+Date: Wed, 2 Jan 2013 19:26:39 +0530
+Message-ID: <CAJXQGfJjm6LJRWHRd-ZHs-7z__mR0f4C0yka3foTq5cxEMq7oA@mail.gmail.com>
+Subject: Re: KEXEC on ARM Cortex-A15 versatile express V2P
+From: Naresh Bhat <nareshgbhat@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +25,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, Daniel Kiper <daniel.kiper@oracle.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "jbeulich@suse.com" <jbeulich@suse.com>, "H. Peter Anvin" <hpa@zytor.com>, "maxim.uvarov@oracle.com" <maxim.uvarov@oracle.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Daniel Mack <zonque@gmail.com>
+Cc: magnus.damm@gmail.com, kexec@lists.infradead.org
 
-Andrew Cooper <andrew.cooper3@citrix.com> writes:
+Hi Daniel Mack,
 
-> On 27/12/12 18:02, Eric W. Biederman wrote:
->> Andrew Cooper<andrew.cooper3@citrix.com>  writes:
+I have tried with the latest kernel and getting the below error
+
+root@arm-cortex-a15:~/3.7-kernel#
+3.7-kernel# kexec -f zImage --dtb=v.dtb --command-line="console=ttyAMA0,38400n8"
+FDT: Error setting /chosen/bootargs property.
+Cannot load zImage
+root@arm-cortex-a15:~/3.7-kernel#
+
+I will appreciate your inputs
+
+Thanks and Regards
+-Naresh Bhat
+
+On Sat, Dec 15, 2012 at 2:34 AM, Daniel Mack <zonque@gmail.com> wrote:
+> On 14.12.2012 21:58, Daniel Mack wrote:
+>> Hi,
 >>
->>> On 27/12/2012 07:53, Eric W. Biederman wrote:
->>>> The syscall ABI still has the wrong semantics.
->>>>
->>>> Aka totally unmaintainable and umergeable.
->>>>
->>>> The concept of domU support is also strange.  What does domU support even mean, when the dom0 support is loading a kernel to pick up Xen when Xen falls over.
->>> There are two requirements pulling at this patch series, but I agree
->>> that we need to clarify them.
->> It probably make sense to split them apart a little even.
+>> On 14.12.2012 18:33, Naresh Bhat wrote:
+>>> Thanks for the suggestions.  I really appreciate your help.
+>>>
+>>> I have tried the following in my below setup
 >>
+>> Your should really fix your mailer. The way you quote makes it
+>> impossible to see which lines you added.
 >>
+>>> My setup:
+>>> kexec-tools - latest GIT tree with
+>>> http://lists.infradead.org/pipermail/kexec/2012-December/007526.html
+>>> patch
+>>> Kernel version -   3.4.22
+>>
+>> Why are you running a kernel from the middle ages?
+>>
+>>> Hardware target -  V2P-CA15_A7 Cortex A15 (ARM Versatile Express)
+>>>
+>>> That could be just that the new kernel is missing its bootargs cmdline
+>>> with the appropriate console= tag. How are you booting the first
+>>> kernel?
+>>>
+>>> The first kernel command line console=tty0 console=ttyAMA0,38400n8
+>>> root=/dev/mmcblk0p1 rootwait ro mmci.fmax=6000000
+>>>
+>>> Does you bootloader add a /chosen tag?
+>>>
+>>> I did't understand what you are asking here .  can you please
+>>> elaborate little more ?
+>>
+>> Bootloaders have two ways of passing the command line to the kernel. The
+>> traditional way is to stuff it into a a linked list of boot parameters
+>> (ATAGs), the other is to fill the /chosen/bootargs property in the
+>> device tree and then pass the entire tree.
+>>
+>>> Some suggestions:
+>>>
+>>> 1. Add a static CMDLINE to the second kernel, so it doesn't rely on
+>>> that information being passed from the first on.
+>>>
+>>> root@arm-cortex-a15:~#  kexec -l uImage --dtb=vexpress.dtb
+>>> --command-line="console=tty0 console=ttyAMA0,38400n8
+>>> root=/dev/mmcblk0p1 rootwait ro mmci.fmax=6000000"
+>>> root@arm-cortex-a15:~# kexec -e
+>>> Starting new kernel
+>>> Uncompressing Linux...
+>>
+>> If that doesn't work, your problem is not related to any cmdline issue,
+>> and I might have midlead you here.
+>>
+>> Please try a newer kernel and see if that helps. The kernels I was using
+>> with kexec recently were 3.7-rcX.
 >
-> Thinking about this split, there might be a way to simply it even more.
+> But just to be clear: it should of course work with the version you're
+> running. So that might not be the reason.
 >
-> /sbin/kexec can load the "Xen" crash kernel itself by issuing
-> hypercalls using /dev/xen/privcmd.  This would remove the need for the
-> dom0 kernel to distinguish between loading a crash kernel for itself
-> and loading a kernel for Xen.
+> And one more thing that might be a hint: check which parts of the
+> hardware are actually running. We experienced some weird lockups during
+> kexec if audio was streaming on our device, but in such cases, we didn't
+> see the "Uncompressing Linux..." output either.
 >
-> Or is this just a silly idea complicating the matter?
+> Not sure how to help you here really.
+>
+>
+> Daniel
+>
 
-At a first approximation it sounds reasonable.
 
-If the Xen kexec actually copies the loaded kernel to somewhere internal
-like the linux kexec that would be entirely reasonable.  If Xen has
-other requirements on the dom0 case you might not be able to implement
-the call without linux kernel support.
 
-But if you can implement it all in terms of /dev/xen/privcmd go for it.
-
-Eric
-
+-- 
+"For things to change, we must change"
+-Naresh Bhat
 
 _______________________________________________
 kexec mailing list
