@@ -1,11 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <50E4C9C6.20609@codeaurora.org>
-Date: Wed, 02 Jan 2013 15:59:02 -0800
-From: Stephen Boyd <sboyd@codeaurora.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
-References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
-In-Reply-To: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
+Received: from nat28.tlf.novell.com ([130.57.49.28])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Tqh9A-00072k-KW
+ for kexec@lists.infradead.org; Thu, 03 Jan 2013 09:31:35 +0000
+Message-Id: <50E55DFD02000078000B2A10@nat28.tlf.novell.com>
+Date: Thu, 03 Jan 2013 09:31:25 +0000
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] [PATCH v3 00/11] xen: Initial kexec/kdump
+ implementation
+References: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
+ <50DBC856.6030208@zytor.com>
+ <791b4922-078f-4adc-b3f3-0651f2266147@email.android.com>
+ <50DC58C4.3000307@citrix.com> <874nj7qsor.fsf@xmission.com>
+ <50E41973.9050705@citrix.com>
+In-Reply-To: <50E41973.9050705@citrix.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,50 +28,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Stephen Warren <swarren@nvidia.com>, linux-arm-kernel@lists.infradead.org
+To: Andrew Cooper <andrew.cooper3@citrix.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "H. PeterAnvin" <hpa@zytor.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, Daniel Kiper <daniel.kiper@oracle.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "maxim.uvarov@oracle.com" <maxim.uvarov@oracle.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On 01/02/13 13:07, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
->
-> On Tegra at least, this change allows kexec to work with SMP enabled.
-> Without this,  machine_shutdown() simply puts all CPUs into a loop. If
-> the code of that loop is over-written, the CPUs may hang or crash (which
-> I do observe in practice), or cause the kexec'd kernel not to be able to
-> initialize them.
->
-> This fix has the added benefit that the kexec always happens on the boot
-> CPU, and thus kexec mirrors the initial kernel boot as much as possible.
->
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> ---
-> Russell, I assume this should go into the ARM patch tracker if OK?
->
->  arch/arm/kernel/process.c |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
-> index f79dd1e..1893bda 100644
-> --- a/arch/arm/kernel/process.c
-> +++ b/arch/arm/kernel/process.c
-> @@ -239,6 +239,7 @@ __setup("reboot=", reboot_setup);
->  
->  void machine_shutdown(void)
->  {
-> +	disable_nonboot_cpus();
->  #ifdef CONFIG_SMP
->  	smp_send_stop();
->  #endif
+>>> On 02.01.13 at 12:26, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+> On 27/12/12 18:02, Eric W. Biederman wrote:
+>> It probably make sense to split them apart a little even.
+> 
+> Thinking about this split, there might be a way to simply it even more.
+> 
+> /sbin/kexec can load the "Xen" crash kernel itself by issuing hypercalls 
+> using /dev/xen/privcmd.  This would remove the need for the dom0 kernel 
+> to distinguish between loading a crash kernel for itself and loading a 
+> kernel for Xen.
+> 
+> Or is this just a silly idea complicating the matter?
 
-How does this work in a CONFIG_SUSPEND=n build? It looks like
-disable_nonboot_cpus() would be a no-op and so we wouldn't actually hot
-unplug the other CPUs before sending the smp_send_stop(). And then the
-smp_send_stop() seems a little unnecessary if we do actually shutdown
-the other CPUs.
+I don't think so (and suggested that before as a response to an
+earlier submission of this patch set), and it would make most of
+the discussion here mute.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Jan
 
 
 _______________________________________________
