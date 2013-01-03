@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TqhCV-00079A-9s
- for kexec@lists.infradead.org; Thu, 03 Jan 2013 09:34:59 +0000
-Message-Id: <50E55ECF02000078000B2A13@nat28.tlf.novell.com>
-Date: Thu, 03 Jan 2013 09:34:55 +0000
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [PATCH v3 02/11] x86/kexec: Add extra pointers to
- transition page table PGD, PUD, PMD and PTE
-References: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
- <1356574740-6806-2-git-send-email-daniel.kiper@oracle.com>
- <1356574740-6806-3-git-send-email-daniel.kiper@oracle.com>
-In-Reply-To: <1356574740-6806-3-git-send-email-daniel.kiper@oracle.com>
-Mime-Version: 1.0
+Date: Thu, 3 Jan 2013 12:02:59 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
+Message-ID: <20130103120259.GB5193@mudshark.cambridge.arm.com>
+References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
+ <50E4C9C6.20609@codeaurora.org>
+MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <50E4C9C6.20609@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,24 +20,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: hpa@zytor.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel <xen-devel@lists.xen.org>, mingo@redhat.com, ebiederm@xmission.com, maxim.uvarov@oracle.com, tglx@linutronix.de, virtualization@lists.linux-foundation.org, vgoyal@redhat.com
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
->>> On 27.12.12 at 03:18, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> Some implementations (e.g. Xen PVOPS) could not use part of identity page 
-> table
-> to construct transition page table. It means that they require separate 
-> PUDs,
-> PMDs and PTEs for virtual and physical (identity) mapping. To satisfy that
-> requirement add extra pointer to PGD, PUD, PMD and PTE and align existing 
-> code.
+On Wed, Jan 02, 2013 at 11:59:02PM +0000, Stephen Boyd wrote:
+> On 01/02/13 13:07, Stephen Warren wrote:
+> > From: Stephen Warren <swarren@nvidia.com>
+> >
+> > On Tegra at least, this change allows kexec to work with SMP enabled.
+> > Without this,  machine_shutdown() simply puts all CPUs into a loop. If
+> > the code of that loop is over-written, the CPUs may hang or crash (which
+> > I do observe in practice), or cause the kexec'd kernel not to be able to
+> > initialize them.
+> >
+> > This fix has the added benefit that the kexec always happens on the boot
+> > CPU, and thus kexec mirrors the initial kernel boot as much as possible.
+> >
+> > Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> > ---
+> > Russell, I assume this should go into the ARM patch tracker if OK?
+> >
+> >  arch/arm/kernel/process.c |    1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
+> > index f79dd1e..1893bda 100644
+> > --- a/arch/arm/kernel/process.c
+> > +++ b/arch/arm/kernel/process.c
+> > @@ -239,6 +239,7 @@ __setup("reboot=", reboot_setup);
+> >  
+> >  void machine_shutdown(void)
+> >  {
+> > +	disable_nonboot_cpus();
+> >  #ifdef CONFIG_SMP
+> >  	smp_send_stop();
+> >  #endif
+> 
+> How does this work in a CONFIG_SUSPEND=n build? It looks like
+> disable_nonboot_cpus() would be a no-op and so we wouldn't actually hot
+> unplug the other CPUs before sending the smp_send_stop(). And then the
+> smp_send_stop() seems a little unnecessary if we do actually shutdown
+> the other CPUs.
 
-So you keep posting this despite it having got pointed out on each
-earlier submission that this is unnecessary, proven by the fact that
-the non-pvops Xen kernels can get away without it. Why?
+You need the smp_send_stop call in order to send the cpu_kill (looks like
+tegra needs die and then kill). So you really need hotplug support as well
+as suspend for this to do much (if not, the secondaries end up spinning
+with interrupts disabled which is probably the best we can do anyway).
 
-Jan
+We could add SUSPEND as a KEXEC dependency if SMP (we already have HOTPLUG
+there) if you like?
 
+Will
 
 _______________________________________________
 kexec mailing list
