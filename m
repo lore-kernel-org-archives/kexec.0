@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <50E5E967.3020805@wwwdotorg.org>
-Date: Thu, 03 Jan 2013 13:26:15 -0700
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Tr7tN-0007bT-Ar
+ for kexec@lists.infradead.org; Fri, 04 Jan 2013 14:05:03 +0000
+Date: Fri, 4 Jan 2013 15:04:26 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v3 01/11] kexec: introduce kexec firmware support
+Message-ID: <20130104140122.GA3346@host-192-168-1-59.local.net-space.pl>
+References: <2f3acfe3-c608-43d8-b76a-6ba69a872692@default>
+ <874nj6ooyi.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
-References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
- <50E4C9C6.20609@codeaurora.org>
- <20130103120259.GB5193@mudshark.cambridge.arm.com>
- <20130103122100.GN2631@n2100.arm.linux.org.uk>
-In-Reply-To: <20130103122100.GN2631@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+In-Reply-To: <874nj6ooyi.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,38 +24,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Stephen Warren <swarren@nvidia.com>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Eric Biederman <ebiederm@xmission.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: ebiederm@xmission.com
+Cc: xen-devel@lists.xensource.com, linux-kernel@vger.kernel.org, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, hpa@zytor.com, kexec@lists.infradead.org, x86@kernel.org, virtualization@lists.linux-foundation.org, mingo@redhat.com, jbeulich@suse.com, maxim.uvarov@oracle.com, tglx@linutronix.de, vgoyal@redhat.com
 
-On 01/03/2013 05:21 AM, Russell King - ARM Linux wrote:
-> On Thu, Jan 03, 2013 at 12:02:59PM +0000, Will Deacon wrote:
->> You need the smp_send_stop call in order to send the cpu_kill (looks like
->> tegra needs die and then kill). So you really need hotplug support as well
->> as suspend for this to do much (if not, the secondaries end up spinning
->> with interrupts disabled which is probably the best we can do anyway).
->>
->> We could add SUSPEND as a KEXEC dependency if SMP (we already have HOTPLUG
->> there) if you like?
-> 
-> Or we could look into bringing in the code to do this when KEXEC is
-> enabled - which would mean an amount of restructuring of the Kconfig
-> files.
+On Thu, Dec 27, 2012 at 07:06:13PM -0800, ebiederm@xmission.com wrote:
+> Daniel Kiper <daniel.kiper@oracle.com> writes:
+>
+> >> Daniel Kiper <daniel.kiper@oracle.com> writes:
+> >>
+> >> > Some kexec/kdump implementations (e.g. Xen PVOPS) could not use default
+> >> > Linux infrastructure and require some support from firmware and/or hypervisor.
+> >> > To cope with that problem kexec firmware infrastructure was introduced.
+> >> > It allows a developer to use all kexec/kdump features of given firmware
+> >> > or hypervisor.
+> >>
+> >> As this stands this patch is wrong.
+> >>
+> >> You need to pass an additional flag from userspace through /sbin/kexec
+> >> that says load the kexec image in the firmware.  A global variable here
+> >> is not ok.
+> >>
+> >> As I understand it you are loading a kexec on xen panic image.  Which
+> >> is semantically different from a kexec on linux panic image.  It is not
+> >> ok to do have a silly global variable kexec_use_firmware.
+> >
+> > Earlier we agreed that /sbin/kexec should call kexec syscall with
+> > special flag. However, during work on Xen kexec/kdump v3 patch
+> > I stated that this is insufficient because e.g. crash_kexec()
+> > should execute different code in case of use of firmware support too.
+>
+> That implies you have the wrong model of userspace.
+>
+> Very simply there is:
+> linux kexec pass through to xen kexec.
+>
+> And
+> linux kexec (ultimately pv kexec because the pv machine is a slightly
+> different architecture).
 
-I'm not sure if any of this thread means we should hold off on this
-patch, or just that the Kconfig could/should be enhanced later?
+As I understand in Xen dom0 kexec/kdump case machine_kexec() should call
+stub which should call relevant hypercall to initiate kexec/kdump in
+Xen itself. Right?
 
-One thing I did just notice with my patch: disable_nonboot_cpus() ends
-up being called twice for the poweroff path:
+> > Sadly syscall does not save this flag anywhere.
+>
+> > Additionally, I stated
+> > that kernel itself has the best knowledge which code path should be
+> > used (firmware or plain Linux). If this decision will be left to userspace
+> > then simple kexec syscall could crash system at worst case (e.g. when
+> > plain Linux kexec will be used in case when firmware kaxec should be
+> > used).
+>
+> And that path selection bit is strongly non-sense.  You are advocating
+> hardcoding unnecessary policy in the kernel.
+>
+> If for dom0 you need crash_kexec to do something different from domU
+> you should be able to load a small piece of code via kexec that makes
+> the hypervisor calls you need.
+>
+> > However, if you wish I could add this flag to syscall.
+>
+> I do wish.  We need to distinguish between the kexec firmware pass
+> through, and normal kexec.
 
-[   30.461847] Disabling non-boot CPUs ...
-[   30.478797] CPU1: shutdown
-[   30.492104] Power down.
-[   30.494578] Disabling non-boot CPUs ...
+OK.
 
-Is this worth worrying about?
+> > Additionally, I could
+> > add function which enables firmware support and then kexec_use_firmware
+> > variable will be global only in kexec.c module.
+>
+> No.  kexec_use_firmware is the wrong mental model.
+>
+> Do not mix the kexec pass through and the normal kexec case.
+>
+> We most definitely need to call different code in the kexec firmware
+> pass through case.
+>
+> For normal kexec we just need to use a paravirt aware version of
+> machine_kexec and machine_kexec_shutdown.
 
-It's because kernel_power_off() calls disable_nonboot_cpus() then
-machine_shutdown() which also calls disable_nonboot_cpus().
+OK, but this solves problem in crash_kexec() only. However, kernel_kexec()
+still calls machine_shutdown() which breaks kexec on Xen dom0 (to be precise
+it shutdown machine via hypercall). Should I add machine_kexec_shutdown()
+(like machine_crash_shutdown()) which would call, let's say,
+machine_ops.kexec_shutdown()?
+
+Additionally, crash_shrink_memory() does not make sens in Xen dom0 case.
+How do you wish disable it if kexec_use_firmware is the wrong mental model?
+
+> >> Furthermore it is not ok to have a conditional
+> >> code outside of header files.
+> >
+> > I agree but how to dispatch execution e.g. in crash_kexec()
+> > if we would like (I suppose) compile kexec firmware
+> > support conditionally?
+>
+> The classic pattern is to have the #ifdefs in the header and have an
+> noop function that is inlined when the functionality is compiled out.
+> This allows all of the logic to always be compiled.
+
+OK.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
