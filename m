@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TrCgX-0000pW-8I
- for kexec@lists.infradead.org; Fri, 04 Jan 2013 19:12:05 +0000
-Date: Fri, 4 Jan 2013 14:11:46 -0500
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [Xen-devel] [PATCH v3 00/11] xen: Initial kexec/kdump
- implementation
-Message-ID: <20130104191146.GC6721@phenom.dumpdata.com>
-References: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
- <50DBC856.6030208@zytor.com>
- <791b4922-078f-4adc-b3f3-0651f2266147@email.android.com>
- <50DC58C4.3000307@citrix.com> <874nj7qsor.fsf@xmission.com>
- <50E41973.9050705@citrix.com>
- <20130104142257.GC3346@host-192-168-1-59.local.net-space.pl>
- <50E6F81D02000078000B3245@nat28.tlf.novell.com>
- <20130104170751.GB3472@host-192-168-1-59.local.net-space.pl>
+Date: Sun, 6 Jan 2013 16:22:00 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
+Message-ID: <20130106162200.GC11025@mudshark.cambridge.arm.com>
+References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
+ <50E4C9C6.20609@codeaurora.org>
+ <20130103120259.GB5193@mudshark.cambridge.arm.com>
+ <20130103122100.GN2631@n2100.arm.linux.org.uk>
+ <50E5E967.3020805@wwwdotorg.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130104170751.GB3472@host-192-168-1-59.local.net-space.pl>
+In-Reply-To: <50E5E967.3020805@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,50 +23,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Cooper <andrew.cooper3@citrix.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Jan Beulich <JBeulich@suse.com>, "maxim.uvarov@oracle.com" <maxim.uvarov@oracle.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Eric Biederman <ebiederm@xmission.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Fri, Jan 04, 2013 at 06:07:51PM +0100, Daniel Kiper wrote:
-> On Fri, Jan 04, 2013 at 02:41:17PM +0000, Jan Beulich wrote:
-> > >>> On 04.01.13 at 15:22, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> > > On Wed, Jan 02, 2013 at 11:26:43AM +0000, Andrew Cooper wrote:
-> > >> /sbin/kexec can load the "Xen" crash kernel itself by issuing
-> > >> hypercalls using /dev/xen/privcmd.  This would remove the need for
-> > >> the dom0 kernel to distinguish between loading a crash kernel for
-> > >> itself and loading a kernel for Xen.
-> > >>
-> > >> Or is this just a silly idea complicating the matter?
-> > >
-> > > This is impossible with current Xen kexec/kdump interface.
-> >
-> > Why?
+On Thu, Jan 03, 2013 at 08:26:15PM +0000, Stephen Warren wrote:
+> On 01/03/2013 05:21 AM, Russell King - ARM Linux wrote:
+> > On Thu, Jan 03, 2013 at 12:02:59PM +0000, Will Deacon wrote:
+> >> You need the smp_send_stop call in order to send the cpu_kill (looks like
+> >> tegra needs die and then kill). So you really need hotplug support as well
+> >> as suspend for this to do much (if not, the secondaries end up spinning
+> >> with interrupts disabled which is probably the best we can do anyway).
+> >>
+> >> We could add SUSPEND as a KEXEC dependency if SMP (we already have HOTPLUG
+> >> there) if you like?
+> > 
+> > Or we could look into bringing in the code to do this when KEXEC is
+> > enabled - which would mean an amount of restructuring of the Kconfig
+> > files.
 > 
-> Because current KEXEC_CMD_kexec_load does not load kernel
-> image and other things into Xen memory. It means that it
-> should live somewhere in dom0 Linux kernel memory.
+> I'm not sure if any of this thread means we should hold off on this
+> patch, or just that the Kconfig could/should be enhanced later?
 
-We could have a very simple hypercall which would have:
+Well, Russell's suggestion looked easy enough to have a crack out so you
+could always post a series implementing it along with this patch.
 
-struct fancy_new_hypercall {
-	xen_pfn_t payload; // IN
-	ssize_t len; // IN
-#define DATA (1<<1)
-#define DATA_EOF (1<<2)
-#define DATA_KERNEL (1<<3)
-#define DATA_RAMDISK (1<<4)
-	unsigned int flags; // IN
-	unsigned int status; // OUT
-};
-
-which would in a loop just iterate over the payloads and
-let the hypervisor stick it in the crashkernel space.
-
-This is all hand-waving of course. There probably would be a need
-to figure out how much space you have in the reserved Xen's
-'crashkernel' memory region too.
-
+> One thing I did just notice with my patch: disable_nonboot_cpus() ends
+> up being called twice for the poweroff path:
 > 
-> Daniel
+> [   30.461847] Disabling non-boot CPUs ...
+> [   30.478797] CPU1: shutdown
+> [   30.492104] Power down.
+> [   30.494578] Disabling non-boot CPUs ...
+> 
+> Is this worth worrying about?
+
+It's harmless but it's also pretty horrible. Unfortunately, I don't see
+what we can do about it: it's a direct side-effect of generic code calling
+disable_nonboot_cpus for poweroff and not for kexec.
+
+Will
 
 _______________________________________________
 kexec mailing list
