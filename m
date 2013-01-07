@@ -1,25 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from mail-bk0-f44.google.com ([209.85.214.44])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TsFRI-0001HL-SZ
- for kexec@lists.infradead.org; Mon, 07 Jan 2013 16:20:41 +0000
-Date: Mon, 7 Jan 2013 11:20:18 -0500
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [Xen-devel] [PATCH v3 00/11] xen: Initial kexec/kdump
- implementation
-Message-ID: <20130107162018.GJ3219@phenom.dumpdata.com>
-References: <50DBC856.6030208@zytor.com>
- <791b4922-078f-4adc-b3f3-0651f2266147@email.android.com>
- <50DC58C4.3000307@citrix.com> <874nj7qsor.fsf@xmission.com>
- <50E41973.9050705@citrix.com>
- <20130104142257.GC3346@host-192-168-1-59.local.net-space.pl>
- <50E6F81D02000078000B3245@nat28.tlf.novell.com>
- <20130104170751.GB3472@host-192-168-1-59.local.net-space.pl>
- <20130104191146.GC6721@phenom.dumpdata.com>
- <20130107123404.GA2927@host-192-168-1-59.local.net-space.pl>
+ id 1TsJ7m-00009I-UQ
+ for kexec@lists.infradead.org; Mon, 07 Jan 2013 20:16:47 +0000
+Received: by mail-bk0-f44.google.com with SMTP id w11so8834247bku.31
+ for <kexec@lists.infradead.org>; Mon, 07 Jan 2013 12:16:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130107123404.GA2927@host-192-168-1-59.local.net-space.pl>
+In-Reply-To: <1593084.QhbTkmoq3N@hammer82.arch.suse.de>
+References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
+ <50B8D571.3000000@jp.fujitsu.com>
+ <CAE9FiQVaqXMfju5j7qBsk+g=RpES-adBBdrDcnkW=YQTQOfugQ@mail.gmail.com>
+ <1593084.QhbTkmoq3N@hammer82.arch.suse.de>
+Date: Mon, 7 Jan 2013 12:16:42 -0800
+Message-ID: <CAE9FiQWTiFu0+ymVroK84L-LCc7FBU1trdZAcaXqMGM2My6LzQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,70 +28,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Cooper <andrew.cooper3@citrix.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Jan Beulich <JBeulich@suse.com>, "maxim.uvarov@oracle.com" <maxim.uvarov@oracle.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Thomas Renninger <trenn@suse.de>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-On Mon, Jan 07, 2013 at 01:34:04PM +0100, Daniel Kiper wrote:
-> On Fri, Jan 04, 2013 at 02:11:46PM -0500, Konrad Rzeszutek Wilk wrote:
-> > On Fri, Jan 04, 2013 at 06:07:51PM +0100, Daniel Kiper wrote:
-> > > On Fri, Jan 04, 2013 at 02:41:17PM +0000, Jan Beulich wrote:
-> > > > >>> On 04.01.13 at 15:22, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> > > > > On Wed, Jan 02, 2013 at 11:26:43AM +0000, Andrew Cooper wrote:
-> > > > >> /sbin/kexec can load the "Xen" crash kernel itself by issuing
-> > > > >> hypercalls using /dev/xen/privcmd.  This would remove the need for
-> > > > >> the dom0 kernel to distinguish between loading a crash kernel for
-> > > > >> itself and loading a kernel for Xen.
-> > > > >>
-> > > > >> Or is this just a silly idea complicating the matter?
-> > > > >
-> > > > > This is impossible with current Xen kexec/kdump interface.
-> > > >
-> > > > Why?
-> > >
-> > > Because current KEXEC_CMD_kexec_load does not load kernel
-> > > image and other things into Xen memory. It means that it
-> > > should live somewhere in dom0 Linux kernel memory.
-> >
-> > We could have a very simple hypercall which would have:
-> >
-> > struct fancy_new_hypercall {
-> > 	xen_pfn_t payload; // IN
-> > 	ssize_t len; // IN
-> > #define DATA (1<<1)
-> > #define DATA_EOF (1<<2)
-> > #define DATA_KERNEL (1<<3)
-> > #define DATA_RAMDISK (1<<4)
-> > 	unsigned int flags; // IN
-> > 	unsigned int status; // OUT
-> > };
-> >
-> > which would in a loop just iterate over the payloads and
-> > let the hypervisor stick it in the crashkernel space.
-> >
-> > This is all hand-waving of course. There probably would be a need
-> > to figure out how much space you have in the reserved Xen's
-> > 'crashkernel' memory region too.
-> 
-> I think that new kexec hypercall function should mimics kexec syscall.
-> It means that all arguments passed to hypercall should have same types
-> if it is possible or if it is not possible then conversion should be done
-> in very easy way. Additionally, I think that one call of new hypercall
-> load function should load all needed thinks in right place and
-> return relevant status. Last but not least, new functionality should
+On Mon, Jan 7, 2013 at 11:09 AM, Thomas Renninger <trenn@suse.de> wrote:
+> e820: BIOS-provided physical RAM map:
+> BIOS-e820: [mem 0x0000000000000100-0x000000000009bfff] usable
+> BIOS-e820: [mem 0x0000000000100000-0x00000000bd2effff] usable
+> BIOS-e820: [mem 0x00000000bd2f0000-0x00000000bd31bfff] reserved
+> BIOS-e820: [mem 0x00000000bd31c000-0x00000000bd35afff] ACPI data
+> BIOS-e820: [mem 0x00000000bd35b000-0x00000000bfffffff] reserved
+> BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+> BIOS-e820: [mem 0x00000000fe000000-0x00000000ffffffff] reserved
+> BIOS-e820: [mem 0x0000000100000000-0x000000603fffffff] usable
+> debug: ignoring loglevel setting.
+> e820: last_pfn = 0x6040000 max_arch_pfn = 0x400000000
+> NX (Execute Disable) protection: active
+> e820: user-defined physical RAM map:
+> user: [mem 0x0000000000000000-0x000000000009ffff] usable
+> user: [mem 0x00000000070a0000-0x000000001effafff] usable
+> user: [mem 0x00000000bd31c000-0x00000000bd35afff] ACPI data
 
-We are not restricted to just _one_ hypercall. And this loading
-thing could be similar to the micrcode hypercall - which just points
-to a virtual address along with the length - and says 'load me'.
+can you make sure kdump kernel command line take
+"memmap=256M$3584M" ?
 
-> be available through /dev/xen/privcmd or directly from kernel without
-> bigger effort.
+it will make mmconf working.
 
-Perhaps we should have a email thread on xen-devel where we hash out
-some ideas. Eric, would you be OK included on this - it would make
-sense for this mechanism to be as future-proof as possible - and I am not
-sure what your plans for kexec are in the future?
-> 
-> Daniel
+> megasas: 06.504.01.00-rc1 Mon. Oct. 1 17:00:00 PDT 2012
+
+also need to append "debug ignore_loglevel" to see why the disks are not
+probed.
+
+Thanks
+
+Yinghai
 
 _______________________________________________
 kexec mailing list
