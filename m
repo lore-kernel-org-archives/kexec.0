@@ -1,25 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.eu.citrix.com ([46.33.159.39])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TsD5I-0005zy-6q
- for kexec@lists.infradead.org; Mon, 07 Jan 2013 13:49:49 +0000
-Message-ID: <1357566584.7989.73.camel@zakaz.uk.xensource.com>
-Subject: Re: [Xen-devel] [PATCH v3 00/11] xen: Initial kexec/kdump
- implementation
-From: Ian Campbell <Ian.Campbell@citrix.com>
-Date: Mon, 7 Jan 2013 13:49:44 +0000
-In-Reply-To: <20130107123404.GA2927@host-192-168-1-59.local.net-space.pl>
-References: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
- <50DBC856.6030208@zytor.com>
- <791b4922-078f-4adc-b3f3-0651f2266147@email.android.com>
- <50DC58C4.3000307@citrix.com> <874nj7qsor.fsf@xmission.com>
- <50E41973.9050705@citrix.com>
- <20130104142257.GC3346@host-192-168-1-59.local.net-space.pl>
- <50E6F81D02000078000B3245@nat28.tlf.novell.com>
- <20130104170751.GB3472@host-192-168-1-59.local.net-space.pl>
- <20130104191146.GC6721@phenom.dumpdata.com>
- <20130107123404.GA2927@host-192-168-1-59.local.net-space.pl>
+Date: Mon, 7 Jan 2013 14:25:54 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
+Message-ID: <20130107142554.GG13542@mudshark.cambridge.arm.com>
+References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
+ <50E4C9C6.20609@codeaurora.org>
+ <20130103120259.GB5193@mudshark.cambridge.arm.com>
+ <20130103122100.GN2631@n2100.arm.linux.org.uk>
+ <50E5E967.3020805@wwwdotorg.org>
+ <20130106162200.GC11025@mudshark.cambridge.arm.com>
+ <20130106164033.GA3222@n2100.arm.linux.org.uk>
+ <87ehhxahd1.fsf@xmission.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87ehhxahd1.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,25 +26,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andrew Cooper <Andrew.Cooper3@citrix.com>, "maxim.uvarov@oracle.com" <maxim.uvarov@oracle.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Jan Beulich <JBeulich@suse.com>, "H. Peter
- Anvin" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Mon, 2013-01-07 at 12:34 +0000, Daniel Kiper wrote:
-> I think that new kexec hypercall function should mimics kexec syscall.
+Hi Eric,
 
-We want to have an interface can be used by non-Linux domains (both dom0
-and domU) as well though, so please bear this in mind.
+On Mon, Jan 07, 2013 at 01:53:30AM +0000, Eric W. Biederman wrote:
+> Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
+> > The problem is... on ARM we're yet again shot in the foot through the
+> > unwillingness to architect certain aspects of the system: there is no
+> > architecturally known way to place CPUs into a reset state once they've
+> > been started up.  In other words, once a CPU starts executing kernel
+> > code, it needs to always execute kernel code or there must be some kind
+> > of platform specific hook to disable it.
+> >
+> > Maybe that's the answer here: have machine_shutdown() call out to some
+> > platform specific function to do the forced-takedown of secondary CPUs,
+> > and if there's no such specific function, then we use our present CPU
+> > stopping method of making them spin in a WFI loop with IRQs disabled.
+> 
+> Yes.  On x86 we have had the generic equivalent of disable_nonboot_cpus
+> in the machine_shutdown for a long time.
 
-Historically we've not always been good at this when the hypercall
-interface is strongly tied to a particular guest implementation (in some
-sense this is the problem with the current kexec hypercall).
+Ok, we can do that that on ARM too, but we currently call machine_shutdown
+from machine_{power_off, halt, restart} so we just need to fix that and we
+will be doing functionally the same thing as x86.
 
-Also what makes for a good syscall interface does not necessarily make
-for a good hypercall interface.
+> Please note the only code path that generically calls machine_shutdown()
+> is kernel_kexec() so if you wish you can avoid duplication by
+> refactoring you architecture specific code.
 
-Ian.
+Exactly, that sounds like the right way forward to me. Thanks.
 
+Will
 
 _______________________________________________
 kexec mailing list
