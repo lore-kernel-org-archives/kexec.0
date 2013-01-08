@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TsI5Z-00033R-6O
- for kexec@lists.infradead.org; Mon, 07 Jan 2013 19:10:30 +0000
+ id 1TsNHB-0003Fe-P4
+ for kexec@lists.infradead.org; Tue, 08 Jan 2013 00:42:49 +0000
 From: Thomas Renninger <trenn@suse.de>
 Subject: Re: [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
  with iommu
-Date: Mon, 07 Jan 2013 20:09:27 +0100
-Message-ID: <1593084.QhbTkmoq3N@hammer82.arch.suse.de>
-In-Reply-To: <CAE9FiQVaqXMfju5j7qBsk+g=RpES-adBBdrDcnkW=YQTQOfugQ@mail.gmail.com>
+Date: Tue, 08 Jan 2013 01:42:33 +0100
+Message-ID: <3649945.08HKjS0y0c@hammer82.arch.suse.de>
+In-Reply-To: <CAE9FiQWTiFu0+ymVroK84L-LCc7FBU1trdZAcaXqMGM2My6LzQ@mail.gmail.com>
 References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
- <50B8D571.3000000@jp.fujitsu.com>
- <CAE9FiQVaqXMfju5j7qBsk+g=RpES-adBBdrDcnkW=YQTQOfugQ@mail.gmail.com>
+ <1593084.QhbTkmoq3N@hammer82.arch.suse.de>
+ <CAE9FiQWTiFu0+ymVroK84L-LCc7FBU1trdZAcaXqMGM2My6LzQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="nextPart15991581.1eyK26DXFJ"
-Content-Transfer-Encoding: 7Bit
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,54 +21,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Yinghai Lu <yinghai@kernel.org>
 Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-
---nextPart15991581.1eyK26DXFJ
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Friday, December 21, 2012 08:19:05 AM Yinghai Lu wrote:
-> On Fri, Nov 30, 2012 at 7:49 AM, MUNEDA Takahiro
+On Monday, January 07, 2013 12:16:42 PM Yinghai Lu wrote:
+> On Mon, Jan 7, 2013 at 11:09 AM, Thomas Renninger <trenn@suse.de> wrote:
+> > e820: BIOS-provided physical RAM map:
+> > BIOS-e820: [mem 0x0000000000000100-0x000000000009bfff] usable
+> > BIOS-e820: [mem 0x0000000000100000-0x00000000bd2effff] usable
+> > BIOS-e820: [mem 0x00000000bd2f0000-0x00000000bd31bfff] reserved
+> > BIOS-e820: [mem 0x00000000bd31c000-0x00000000bd35afff] ACPI data
+> > BIOS-e820: [mem 0x00000000bd35b000-0x00000000bfffffff] reserved
+> > BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+> > BIOS-e820: [mem 0x00000000fe000000-0x00000000ffffffff] reserved
+> > BIOS-e820: [mem 0x0000000100000000-0x000000603fffffff] usable
+> > debug: ignoring loglevel setting.
+> > e820: last_pfn = 0x6040000 max_arch_pfn = 0x400000000
+> > NX (Execute Disable) protection: active
+> > e820: user-defined physical RAM map:
+> > user: [mem 0x0000000000000000-0x000000000009ffff] usable
+> > user: [mem 0x00000000070a0000-0x000000001effafff] usable
+> > user: [mem 0x00000000bd31c000-0x00000000bd35afff] ACPI data
 > 
-> <muneda.takahiro@jp.fujitsu.com> wrote:
-> > On Tue, 27 Nov 2012 09:42:20 +0900 (JST),
-> > 
-> > Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
-> >> These patches reset PCIe devices at boot time to address DMA problem on
-> >> kdump with iommu. When "reset_devices" is specified, a hot reset is
-> >> triggered on each PCIe root port and downstream port to reset its
-> >> downstream endpoint.
+> can you make sure kdump kernel command line take
+> "memmap=256M$3584M" ?
 > 
-> ThomasR, Can you check if this one help your test case about interrupt ?
+> it will make mmconf working.
+Why is this needed?
+This area:
+BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+already is reserved?
 
-Sorry for the long delay...
+I tried with: memmap=256M$3584M, memmap=256M\$3584M and
+\"memmap=256M\$3584M\"
+embedded into:
+KDUMP_COMMANDLINE_APPEND=""
 
-First: I cannot reproduce this myself. I get one error like:
-DRHD: handling fault status reg 2
-INTR-REMAP: Request device [[01:00.0] fault index 33
-INTR-REMAP:[fault reason 34] Present field in the IRTE entry is clear
-when a dump is written and the dump completes successfully.
+resulting in following strings  when letting kdump reload the kexec kernel:
+memmap=256M3584M, memmap=256M$3584M and "memmap=256M$3584M"
+but all three resulted in:
+Malformed early option 'memmap'
 
-The other report with a specific 10G network card is that they seem
-to get an irq storm and see about 80 per second of above messages
-in the kdump kernel until things are dead.
+I also tried to manually:
+/sbin/kexec -p /boot/vmlinuz-3.8.0-rc2-default+ --append="... memmap=256M\$3584M"
+without success.
+Hm, I should have used single quotes, but really annoying is that the line:
+Command line:
+is cut to 100 bytes in kdump case and I cannot verify what got passed
+(cmp with the provided serial output below).
 
-I tried the provided patches first on 2.6.32, then I verfied with 3.8-rc2
-and in both cases the disk is not detected anymore in
-reset_devices (kexec'ed/kdump) case (but things work fine without these
-patches).
+Here is one full command line as generated by the kdump tools:
 
-Find the relevant serial output here:
-(starting when the sysrq c(rash) got triggered until
-the disk is not found anymore.)
-lspci -nn attached:
+Loading kdump kernel: /sbin/kexec -p /boot/vmlinuz-3.8.0-rc2-default+ --append="root=/dev/disk/by-label/ROOT-BE2 resume=/dev/disk/by-id/scsi-36d4ae52076eef40017f5c9690b9c848e-part8 nmi_watchdog=0 elevator=noop log_buf_len=4M printk.time=0 udev_timeout=180 cgroup_disable=memory console=tty0 console=ttyS0,115200n elevator=deadline sysrq=yes reset_devices irqpoll maxcpus=1  sysrq=7 debug ignore_loglevel memmap=256M$3584M" --initrd=/boot/initrd-3.8.0-rc2-default+-kdump
 
+> 
+> > megasas: 06.504.01.00-rc1 Mon. Oct. 1 17:00:00 PDT 2012
+> 
+> also need to append "debug ignore_loglevel" to see why the disks are not
+> probed.
+
+with additional debug param, but with bad memmap param:
+linux-dwlr:~ # SysRq : Trigger a crash
+BUG: unable to handle kernel NULL pointer dereference at           (null)
+IP: [<ffffffff813b05b1>] sysrq_handle_crash+0x11/0x20
+PGD 2f62e6b067 PUD 2f63b3f067 PMD 0
+Oops: 0002 [#1] SMP
+Modules linked in: nfsv3 nfs_acl nfs fscache lockd sunrpc af_packet igb ipmi_devintf ipmi_si ipmi_ms
+CPU 12
+Pid: 20173, comm: bash Tainted: G        W    3.8.0-rc2-default+ #4 Dell Inc. PowerEdge R720/0M1GCR
+RIP: 0010:[<ffffffff813b05b1>]  [<ffffffff813b05b1>] sysrq_handle_crash+0x11/0x20
+RSP: 0018:ffff882f57f09e38  EFLAGS: 00010092
+RAX: 000000000000000f RBX: 0000000000000063 RCX: 0000000000001966
+RDX: 00000000000039ae RSI: 0000000000000082 RDI: 0000000000000063
+RBP: ffff882f57f09e38 R08: 000000000002127c R09: ffff88603fc00000
+R10: 00000000000005f2 R11: 00000000000005f1 R12: ffffffff81a57ec0
+R13: 0000000000000286 R14: 0000000000000001 R15: 0000000000000000
+FS:  00007f5680caa700(0000) GS:ffff882f7fcc0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000002f655e0000 CR4: 00000000000407e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Process bash (pid: 20173, threadinfo ffff882f57f08000, task ffff882f61cec400)
+Stack:
+ ffff882f57f09e78 ffffffff813b0d29 ffff882f65729440 0000000000000002
+ ffff882f639223c0 00007f5680b47000 0000000000000002 fffffffffffffffb
+ ffff882f57f09e98 ffffffff813b0dcd ffff882f57f09eb8 ffff882f659ce480
+Call Trace:
+ [<ffffffff813b0d29>] __handle_sysrq+0x129/0x190
+ [<ffffffff813b0dcd>] write_sysrq_trigger+0x3d/0x40
+ [<ffffffff811d9d46>] proc_reg_write+0x76/0xb0
+ [<ffffffff81177496>] vfs_write+0xc6/0x180
+ [<ffffffff811777ca>] sys_write+0x5a/0xa0
+ [<ffffffff815ae669>] system_call_fastpath+0x16/0x1b
+Code: ff e9 78 ff ff ff 45 01 f4 45 39 65 2c 75 cd 4c 89 ef e8 83 f7 ff ff eb c3 90 55 c7 05 f5 f3
 RIP  [<ffffffff813b05b1>] sysrq_handle_crash+0x11/0x20
- RSP <ffff885f64ee1e38>
+ RSP <ffff882f57f09e38>
 CR2: 0000000000000000
 Initializing cgroup subsys cpuset
 Initializing cgroup subsys cpu
@@ -128,7 +177,7 @@ init_memory_mapping: [mem 0x00000000-0x1effafff]
  [mem 0x1ee00000-0x1effafff] page 4k
 kernel direct mapping tables up to 0x1effafff @ [mem 0x1eff8000-0x1effafff]
 log_buf_len: 4194304
-early log buf free: 258384(98%)
+early log buf free: 258360(98%)
 RAMDISK: [mem 0x1ea3f000-0x1efeefff]
 ACPI: RSDP 00000000000f10d0 00024 (v02 DELL  )
 ACPI: XSDT 00000000000f11d4 0009C (v01 DELL   PE_SC3   00000001 DELL 00000001)
@@ -309,15 +358,14 @@ Hierarchical RCU implementation.
 NR_IRQS:33024 nr_irqs:2024 16
 Extended CMOS year: 2000
 Spurious LAPIC timer interrupt on cpu 0
-do_IRQ: 0.47 No irq handler for vector (irq -1)
 Console: colour VGA+ 80x25
 console [tty0] enabled
 console [ttyS0] enabled
 Enabling automatic NUMA balancing. Configure with numa_balancing= or sysctl
 hpet clockevent registered
 tsc: Fast TSC calibration using PIT
-tsc: Detected 2699.982 MHz processor
-Calibrating delay loop (skipped), value calculated using timer frequency.. 5399.96 BogoMIPS (lpj=10)
+tsc: Detected 2700.011 MHz processor
+Calibrating delay loop (skipped), value calculated using timer frequency.. 5400.02 BogoMIPS (lpj=10)
 pid_max: default: 32768 minimum: 301
 Security Framework initialized
 AppArmor: AppArmor initialized
@@ -333,7 +381,7 @@ Initializing cgroup subsys blkio
 Initializing cgroup subsys perf_event
 Initializing cgroup subsys hugetlb
 CPU: Physical Processor ID: 0
-CPU: Processor Core ID: 0
+CPU: Processor Core ID: 6
 mce: CPU supports 20 MCE banks
 CPU0: Thermal LVT vector (0xfa) already installed
 process: using mwait in idle threads
@@ -379,7 +427,7 @@ Call Trace:
  [<ffffffff815928b9>] kernel_init+0x9/0xf0
  [<ffffffff815ae5bc>] ret_from_fork+0x7c/0xb0
  [<ffffffff815928b0>] ? rest_init+0x80/0x80
----[ end trace 5046c9e3737e7b93 ]---
+---[ end trace 8f259c928ef86db3 ]---
 Enabled IRQ remapping in xapic mode
 x2apic not enabled, IRQ remapping is in xapic mode
 Switched APIC routing to physical flat.
@@ -396,9 +444,9 @@ perf_event_intel: PEBS disabled due to CPU errata, please upgrade microcode
 ... fixed-purpose events:   3
 ... event mask:             000000070000000f
 Brought up 1 CPUs
-smpboot: Total of 1 processors activated (5399.96 BogoMIPS)
+smpboot: Total of 1 processors activated (5400.02 BogoMIPS)
 devtmpfs: initialized
-RTC time: 17:51:12, date: 01/07/13
+RTC time:  0:09:43, date: 01/08/13
 NET: Registered protocol family 16
 ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
 ACPI: bus type pci registered
@@ -936,7 +984,7 @@ PCI: CLS 64 bytes, default 64
 Unpacking initramfs...
 Freeing initrd memory: 5824k freed
 audit: initializing netlink socket (disabled)
-type=2000 audit(1357581073.824:1): initialized
+type=2000 audit(1357603783.820:1): initialized
 HugeTLB registered 2 MB page size, pre-allocated 0 pages
 VFS: Disk quotas dquot_6.5.2
 Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
@@ -1049,19 +1097,19 @@ TCP: cubic registered
 NET: Registered protocol family 10
 Key type dns_resolver registered
 PM: Checking hibernation image partition /dev/disk/by-id/scsi-36d4ae52076eef40017f5c9690b9c848e-par8
-ata6: SATA link down (SStatus 0 SControl 300)
-ata5: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+ata3: SATA link down (SStatus 0 SControl 300)
 ata4: SATA link down (SStatus 0 SControl 300)
 ata1: SATA link down (SStatus 0 SControl 300)
 ata2: SATA link down (SStatus 0 SControl 300)
-ata3: SATA link down (SStatus 0 SControl 300)
+ata5: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+ata6: SATA link down (SStatus 0 SControl 300)
 ata5.00: ATAPI: TEAC DVD-ROM DV-28SW, R.2A, max UDMA/100
 ata5.00: configured for UDMA/100
 scsi 4:0:0:0: CD-ROM            TEAC     DVD-ROM DV-28SW  R.2A PQ: 0 ANSI: 5
 PM: Hibernation image not present or could not be loaded.
 registered taskstats version 1
-  Magic number: 13:635:895
-rtc_cmos 00:03: setting system clock to 2013-01-07 17:51:18 UTC (1357581078)
+  Magic number: 13:181:152
+rtc_cmos 00:03: setting system clock to 2013-01-08 00:09:48 UTC (1357603788)
 Freeing unused kernel memory: 1000k freed
 Write protecting the kernel read-only data: 10240k
 Freeing unused kernel memory: 300k freed
@@ -1075,167 +1123,33 @@ teradata-kdump: Skipping mpt2sas
 BIOS EDD facility v0.16 2004-Jun-25, 2 devices found
 FATAL: Module jbd not found.
 FATAL: Module ext3 not found.
-Creating device nodes with udev
-udevd (180): /proc/180/oom_adj is deprecated, please use /proc/180/oom_score_adj instead.
-udevd version 128 started
+preping 03-storage.sh
+running 03-storage.sh
+udevd (184): /proc/184/oom_adj is deprecated, please use /proc/184/oom_score_adj instead.
+
+running 04-udev.sh
+Creating deudevd version 128 started
+vice nodes with udev
+preping 05-blogd.sh
+running 05-blogd.sh
 mount: devpts already mounted or /dev/pts busy
 mount: according to mtab, devpts is already mounted on /dev/pts
-Boot logging started on /dev/ttyS0(/dev/console) at Mon Jan  7 12:51:19 2013
-Waiting for device /dev/disk/by-label/ROOT-BE2 to appear: ...............
+Boot logging started on /dev/ttyS0(/dev/console) at Mon Jan  7 19:09:49 2013
+preping 05-clock.sh
+running 05-clock.sh
+preping 11-block.sh
+running 11-block.sh
+preping 11-usb.sh
+running 11-usb.sh
+preping 21-devinit_done.sh
+running 21-devinit_done.sh
+preping 81-mount.sh
+running 81-mount.sh
+Waiting for device /dev/disk/by-label/ROOT-BE2 to appear: ..........................................
+.
 
-....................................................................................................
-Want me to fall back to /dev/disk/by-id/scsi-36d4ae52076eef40017f5c9690b9c848e-part3? (Y/n)
-Waiting for device /dev/disk/by-id/scsi-36d4ae52076eef40017f5c9690b9c848e-part3 to appear: ........h
-$
-$
---nextPart15991581.1eyK26DXFJ
-Content-Disposition: attachment; filename="lspci"
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"; name="lspci"
-
-00:00.0 Host bridge [0600]: Intel Corporation Device [8086:3c00] (rev 05)
-00:01.0 PCI bridge [0604]: Intel Corporation Device [8086:3c02] (rev 05)
-00:02.0 PCI bridge [0604]: Intel Corporation Device [8086:3c04] (rev 05)
-00:02.2 PCI bridge [0604]: Intel Corporation Device [8086:3c06] (rev 05)
-00:03.0 PCI bridge [0604]: Intel Corporation Device [8086:3c08] (rev 05)
-00:03.2 PCI bridge [0604]: Intel Corporation Device [8086:3c0a] (rev 05)
-00:05.0 System peripheral [0880]: Intel Corporation Device [8086:3c28] (rev 05)
-00:05.2 System peripheral [0880]: Intel Corporation Device [8086:3c2a] (rev 05)
-00:11.0 PCI bridge [0604]: Intel Corporation Device [8086:1d3e] (rev 05)
-00:16.0 Communication controller [0780]: Intel Corporation Device [8086:1d3a] (rev 05)
-00:16.1 Communication controller [0780]: Intel Corporation Device [8086:1d3b] (rev 05)
-00:1a.0 USB Controller [0c03]: Intel Corporation Device [8086:1d2d] (rev 05)
-00:1c.0 PCI bridge [0604]: Intel Corporation Device [8086:1d10] (rev b5)
-00:1c.7 PCI bridge [0604]: Intel Corporation Device [8086:1d1e] (rev b5)
-00:1d.0 USB Controller [0c03]: Intel Corporation Device [8086:1d26] (rev 05)
-00:1e.0 PCI bridge [0604]: Intel Corporation 82801 PCI Bridge [8086:244e] (rev a5)
-00:1f.0 ISA bridge [0601]: Intel Corporation Device [8086:1d41] (rev 05)
-00:1f.2 SATA controller [0106]: Intel Corporation Device [8086:1d02] (rev 05)
-01:00.0 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
-01:00.1 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
-01:00.2 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
-01:00.3 Ethernet controller [0200]: Intel Corporation I350 Gigabit Network Connection [8086:1521] (rev 01)
-02:00.0 RAID bus controller [0104]: LSI Logic / Symbios Logic Device [1000:005b] (rev 01)
-05:00.0 Serial Attached SCSI controller [0107]: LSI Logic / Symbios Logic SAS2116 PCI-Express Fusion-MPT SAS-2 [Meteor] [1000:0064] (rev 02)
-08:00.0 PCI bridge [0604]: Renesas Technology Corp. Device [1912:0013]
-09:00.0 PCI bridge [0604]: Renesas Technology Corp. Device [1912:0013]
-09:01.0 PCI bridge [0604]: Renesas Technology Corp. Device [1912:0013]
-0a:00.0 PCI bridge [0604]: Renesas Technology Corp. Device [1912:0012]
-0b:00.0 VGA compatible controller [0300]: Matrox Graphics, Inc. Device [102b:0534]
-3f:08.0 System peripheral [0880]: Intel Corporation Device [8086:3c80] (rev 05)
-3f:09.0 System peripheral [0880]: Intel Corporation Device [8086:3c90] (rev 05)
-3f:0a.0 System peripheral [0880]: Intel Corporation Device [8086:3cc0] (rev 05)
-3f:0a.1 System peripheral [0880]: Intel Corporation Device [8086:3cc1] (rev 05)
-3f:0a.2 System peripheral [0880]: Intel Corporation Device [8086:3cc2] (rev 05)
-3f:0a.3 System peripheral [0880]: Intel Corporation Device [8086:3cd0] (rev 05)
-3f:0b.0 System peripheral [0880]: Intel Corporation Device [8086:3ce0] (rev 05)
-3f:0b.3 System peripheral [0880]: Intel Corporation Device [8086:3ce3] (rev 05)
-3f:0c.0 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0c.1 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0c.2 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0c.3 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0c.6 System peripheral [0880]: Intel Corporation Device [8086:3cf4] (rev 05)
-3f:0c.7 System peripheral [0880]: Intel Corporation Device [8086:3cf6] (rev 05)
-3f:0d.0 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0d.1 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0d.2 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0d.3 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-3f:0d.6 System peripheral [0880]: Intel Corporation Device [8086:3cf5] (rev 05)
-3f:0e.0 System peripheral [0880]: Intel Corporation Device [8086:3ca0] (rev 05)
-3f:0e.1 Performance counters [1101]: Intel Corporation Device [8086:3c46] (rev 05)
-3f:0f.0 System peripheral [0880]: Intel Corporation Device [8086:3ca8] (rev 05)
-3f:0f.1 System peripheral [0880]: Intel Corporation Device [8086:3c71] (rev 05)
-3f:0f.2 System peripheral [0880]: Intel Corporation Device [8086:3caa] (rev 05)
-3f:0f.3 System peripheral [0880]: Intel Corporation Device [8086:3cab] (rev 05)
-3f:0f.4 System peripheral [0880]: Intel Corporation Device [8086:3cac] (rev 05)
-3f:0f.5 System peripheral [0880]: Intel Corporation Device [8086:3cad] (rev 05)
-3f:0f.6 System peripheral [0880]: Intel Corporation Device [8086:3cae] (rev 05)
-3f:10.0 System peripheral [0880]: Intel Corporation Device [8086:3cb0] (rev 05)
-3f:10.1 System peripheral [0880]: Intel Corporation Device [8086:3cb1] (rev 05)
-3f:10.2 System peripheral [0880]: Intel Corporation Device [8086:3cb2] (rev 05)
-3f:10.3 System peripheral [0880]: Intel Corporation Device [8086:3cb3] (rev 05)
-3f:10.4 System peripheral [0880]: Intel Corporation Device [8086:3cb4] (rev 05)
-3f:10.5 System peripheral [0880]: Intel Corporation Device [8086:3cb5] (rev 05)
-3f:10.6 System peripheral [0880]: Intel Corporation Device [8086:3cb6] (rev 05)
-3f:10.7 System peripheral [0880]: Intel Corporation Device [8086:3cb7] (rev 05)
-3f:11.0 System peripheral [0880]: Intel Corporation Device [8086:3cb8] (rev 05)
-3f:13.0 System peripheral [0880]: Intel Corporation Device [8086:3ce4] (rev 05)
-3f:13.1 Performance counters [1101]: Intel Corporation Device [8086:3c43] (rev 05)
-3f:13.4 Performance counters [1101]: Intel Corporation Device [8086:3ce6] (rev 05)
-3f:13.5 Performance counters [1101]: Intel Corporation Device [8086:3c44] (rev 05)
-3f:13.6 System peripheral [0880]: Intel Corporation Device [8086:3c45] (rev 05)
-40:01.0 PCI bridge [0604]: Intel Corporation Device [8086:3c02] (rev 05)
-40:02.0 PCI bridge [0604]: Intel Corporation Device [8086:3c04] (rev 05)
-40:03.0 PCI bridge [0604]: Intel Corporation Device [8086:3c08] (rev 05)
-40:03.2 PCI bridge [0604]: Intel Corporation Device [8086:3c0a] (rev 05)
-40:05.0 System peripheral [0880]: Intel Corporation Device [8086:3c28] (rev 05)
-40:05.2 System peripheral [0880]: Intel Corporation Device [8086:3c2a] (rev 05)
-41:00.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8624 24-lane, 6-Port PCI Express Gen 2 (5.0 GT/s) Switch [ExpressLane] [10b5:8624] (rev bb)
-42:04.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8624 24-lane, 6-Port PCI Express Gen 2 (5.0 GT/s) Switch [ExpressLane] [10b5:8624] (rev bb)
-42:05.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8624 24-lane, 6-Port PCI Express Gen 2 (5.0 GT/s) Switch [ExpressLane] [10b5:8624] (rev bb)
-42:06.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8624 24-lane, 6-Port PCI Express Gen 2 (5.0 GT/s) Switch [ExpressLane] [10b5:8624] (rev bb)
-42:08.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8624 24-lane, 6-Port PCI Express Gen 2 (5.0 GT/s) Switch [ExpressLane] [10b5:8624] (rev bb)
-42:09.0 PCI bridge [0604]: PLX Technology, Inc. PEX 8624 24-lane, 6-Port PCI Express Gen 2 (5.0 GT/s) Switch [ExpressLane] [10b5:8624] (rev bb)
-44:00.0 Encryption controller [1080]: Hifn Inc. DS4100 Secure Multi-Gigabit Server Adapter with Compression [13a3:0037]
-45:00.0 Encryption controller [1080]: Hifn Inc. DS4100 Secure Multi-Gigabit Server Adapter with Compression [13a3:0037]
-46:00.0 Encryption controller [1080]: Hifn Inc. DS4100 Secure Multi-Gigabit Server Adapter with Compression [13a3:0037]
-47:00.0 Encryption controller [1080]: Hifn Inc. DS4100 Secure Multi-Gigabit Server Adapter with Compression [13a3:0037]
-48:00.0 Ethernet controller [0200]: Intel Corporation 82599EB 10-Gigabit Network Connection [8086:10fb] (rev 01)
-48:00.1 Ethernet controller [0200]: Intel Corporation 82599EB 10-Gigabit Network Connection [8086:10fb] (rev 01)
-7f:08.0 System peripheral [0880]: Intel Corporation Device [8086:3c80] (rev 05)
-7f:09.0 System peripheral [0880]: Intel Corporation Device [8086:3c90] (rev 05)
-7f:0a.0 System peripheral [0880]: Intel Corporation Device [8086:3cc0] (rev 05)
-7f:0a.1 System peripheral [0880]: Intel Corporation Device [8086:3cc1] (rev 05)
-7f:0a.2 System peripheral [0880]: Intel Corporation Device [8086:3cc2] (rev 05)
-7f:0a.3 System peripheral [0880]: Intel Corporation Device [8086:3cd0] (rev 05)
-7f:0b.0 System peripheral [0880]: Intel Corporation Device [8086:3ce0] (rev 05)
-7f:0b.3 System peripheral [0880]: Intel Corporation Device [8086:3ce3] (rev 05)
-7f:0c.0 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0c.1 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0c.2 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0c.3 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0c.6 System peripheral [0880]: Intel Corporation Device [8086:3cf4] (rev 05)
-7f:0c.7 System peripheral [0880]: Intel Corporation Device [8086:3cf6] (rev 05)
-7f:0d.0 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0d.1 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0d.2 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0d.3 System peripheral [0880]: Intel Corporation Device [8086:3ce8] (rev 05)
-7f:0d.6 System peripheral [0880]: Intel Corporation Device [8086:3cf5] (rev 05)
-7f:0e.0 System peripheral [0880]: Intel Corporation Device [8086:3ca0] (rev 05)
-7f:0e.1 Performance counters [1101]: Intel Corporation Device [8086:3c46] (rev 05)
-7f:0f.0 System peripheral [0880]: Intel Corporation Device [8086:3ca8] (rev 05)
-7f:0f.1 System peripheral [0880]: Intel Corporation Device [8086:3c71] (rev 05)
-7f:0f.2 System peripheral [0880]: Intel Corporation Device [8086:3caa] (rev 05)
-7f:0f.3 System peripheral [0880]: Intel Corporation Device [8086:3cab] (rev 05)
-7f:0f.4 System peripheral [0880]: Intel Corporation Device [8086:3cac] (rev 05)
-7f:0f.5 System peripheral [0880]: Intel Corporation Device [8086:3cad] (rev 05)
-7f:0f.6 System peripheral [0880]: Intel Corporation Device [8086:3cae] (rev 05)
-7f:10.0 System peripheral [0880]: Intel Corporation Device [8086:3cb0] (rev 05)
-7f:10.1 System peripheral [0880]: Intel Corporation Device [8086:3cb1] (rev 05)
-7f:10.2 System peripheral [0880]: Intel Corporation Device [8086:3cb2] (rev 05)
-7f:10.3 System peripheral [0880]: Intel Corporation Device [8086:3cb3] (rev 05)
-7f:10.4 System peripheral [0880]: Intel Corporation Device [8086:3cb4] (rev 05)
-7f:10.5 System peripheral [0880]: Intel Corporation Device [8086:3cb5] (rev 05)
-7f:10.6 System peripheral [0880]: Intel Corporation Device [8086:3cb6] (rev 05)
-7f:10.7 System peripheral [0880]: Intel Corporation Device [8086:3cb7] (rev 05)
-7f:11.0 System peripheral [0880]: Intel Corporation Device [8086:3cb8] (rev 05)
-7f:13.0 System peripheral [0880]: Intel Corporation Device [8086:3ce4] (rev 05)
-7f:13.1 Performance counters [1101]: Intel Corporation Device [8086:3c43] (rev 05)
-7f:13.4 Performance counters [1101]: Intel Corporation Device [8086:3ce6] (rev 05)
-7f:13.5 Performance counters [1101]: Intel Corporation Device [8086:3c44] (rev 05)
-7f:13.6 System peripheral [0880]: Intel Corporation Device [8086:3c45] (rev 05)
-
---nextPart15991581.1eyK26DXFJ
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---nextPart15991581.1eyK26DXFJ--
-
-
