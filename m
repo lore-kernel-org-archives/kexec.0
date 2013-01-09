@@ -1,16 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TsxK1-00077K-Uh
- for kexec@lists.infradead.org; Wed, 09 Jan 2013 15:12:08 +0000
-Date: Thu, 10 Jan 2013 00:09:54 +0900 (JST)
-Message-Id: <20130110.000954.305449175.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2] makedumpfile: request the kernel do page scans
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130107133935.GA1207@sgi.com>
-References: <E1TbGZV-0008DR-Tb@eag09.americas.sgi.com>
- <20130107133935.GA1207@sgi.com>
-Mime-Version: 1.0
+ id 1Tt0cp-0000Ws-MF
+ for kexec@lists.infradead.org; Wed, 09 Jan 2013 18:44:15 +0000
+Date: Wed, 9 Jan 2013 19:42:53 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v3 02/11] x86/kexec: Add extra pointers to transition
+ page table PGD, PUD, PMD and PTE
+Message-ID: <20130109184253.GA5150@host-192-168-1-59.local.net-space.pl>
+References: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
+ <1356574740-6806-2-git-send-email-daniel.kiper@oracle.com>
+ <1356574740-6806-3-git-send-email-daniel.kiper@oracle.com>
+ <50E55ECF02000078000B2A13@nat28.tlf.novell.com>
+ <20130104151542.GD3346@host-192-168-1-59.local.net-space.pl>
+ <50E70D8002000078000B336D@nat28.tlf.novell.com>
+ <20130104172538.GC3472@host-192-168-1-59.local.net-space.pl>
+ <50EAA7F402000078000B34C3@nat28.tlf.novell.com>
+ <20130107125211.GB2927@host-192-168-1-59.local.net-space.pl>
+ <50EAD61602000078000B36A0@nat28.tlf.novell.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <50EAD61602000078000B36A0@nat28.tlf.novell.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,47 +33,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cpw@sgi.com
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com
+To: Jan Beulich <JBeulich@suse.com>
+Cc: hpa@zytor.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel <xen-devel@lists.xen.org>, mingo@redhat.com, ebiederm@xmission.com, maxim.uvarov@oracle.com, tglx@linutronix.de, virtualization@lists.linux-foundation.org, vgoyal@redhat.com
 
-From: Cliff Wickman <cpw@sgi.com>
-Subject: Re: [PATCH v2] makedumpfile: request the kernel do page scans
-Date: Mon, 7 Jan 2013 07:39:35 -0600
+On Mon, Jan 07, 2013 at 01:05:10PM +0000, Jan Beulich wrote:
+> >>> On 07.01.13 at 13:52, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> > On Mon, Jan 07, 2013 at 09:48:20AM +0000, Jan Beulich wrote:
+> >> >>> On 04.01.13 at 18:25, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> >> > Right, so where is virtual mapping of control page established?
+> >> > I could not find relevant code in SLES kernel which does that.
+> >>
+> >> In the hypervisor (xen/arch/x86/machine_kexec.c:machine_kexec_load()).
+> >> xen/arch/x86/machine_kexec.c:machine_kexec() then simply uses
+> >> image->page_list[1].
+> >
+> > This (xen/arch/x86/machine_kexec.c:machine_kexec_load()) maps relevant
+> > page (allocated earlier by dom0) in hypervisor fixmap area. However,
+> > it does not make relevant mapping in transition page table which
+> > leads to crash when %cr3 is switched from Xen page table to
+> > transition page table.
+>
+> That indeed could explain _random_ failures - the fixmap entries
+> get created with _PAGE_GLOBAL set, i.e. don't get flushed with
+> the CR3 write unless CR4.PGE is clear.
 
-> An update on testing thise patches:
-> 
->> This version of the patch improves the consolidation of the mem_map table
->> that is passed to the kernel.  See make_kernel_mmap().
->> Particularly the seemingly duplicate pfn ranges generated on an older
->> (2.6.32-based, rhel6) kernel.
-> 
-> 
-> On a 2TB machine (idle) machine:
->   the crash kernel ran successfully in 512M
->   the scan for unnecessary pages takes about 40 seconds
->   it was a single scan, not cyclic
->   
-> On a 16TB machine (idle) machine:
->   the crash kernel ran successfully in 512M
->   there is a pause of about 4 minutes during makedumpfile initialization
->   the scan for unnecessary pages takes about 4.8 minutes
->   it was a single scan, not cyclic
-> 
+This does not matter. As I stated earlier virtual mapping is wrong.
+relocate_kernel() is mapped at its virtual address in Linux kernel
+instead of control page at its virtual address in Xen hypervisor.
+I tested SLES kernel once again. It does not work.
 
-I wonder why this didn't result in OOM on 16TB. Was that really done
-in non-cyclic mode? Could you show me a log of makedumpfile? You can
-create it by passing --message-level 31.
+> And I don't see how your allocation of intermediate page tables
+> would help: You wouldn't know where the mapping of the control
+> page lives until you're actually in the early relocate_kernel code.
 
-Also, to consider how to resolve this performance issue, this test is
-not enough. We also need to benchmark that *without filtering in
-kernel-space* but with making page tables, not using ioremap. As I
-said before, I think the bad performance is caused by too many calls
-of ioremap/iounmap. We then need to comapre two results of these
-benchmarks.
+Right. Allocation itself is not a solution for this problem.
+It should be acompanied by code which establishes transition
+page table in relocate_kernel() (which is later copied
+to control page, i.e. code of relocate_kernel()).
 
-Thanks.
-HATAYAMA, Daisuke
+> Or was it that what distinguishes your cloned code from the
+> native original?
 
+No, my code is based on native original.
+There are some implementation differences.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
