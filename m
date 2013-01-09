@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <50ECB49C.7010609@wwwdotorg.org>
-Date: Tue, 08 Jan 2013 17:06:52 -0700
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TslU7-0002XP-1p
+ for kexec@lists.infradead.org; Wed, 09 Jan 2013 02:33:45 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+Date: Wed, 09 Jan 2013 03:32:50 +0100
+Message-ID: <3564889.4S6qWWRR6X@hammer82.arch.suse.de>
+In-Reply-To: <CAE9FiQXUCtfeKuZVb1=13SL-UUu5hkNE3Q3K8MTZA2ap1qDCAg@mail.gmail.com>
+References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
+ <201301081750.07296.trenn@suse.de>
+ <CAE9FiQXUCtfeKuZVb1=13SL-UUu5hkNE3Q3K8MTZA2ap1qDCAg@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
-References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
- <50E4C9C6.20609@codeaurora.org>
- <20130103120259.GB5193@mudshark.cambridge.arm.com>
- <20130103122100.GN2631@n2100.arm.linux.org.uk>
- <50E5E967.3020805@wwwdotorg.org>
- <20130106162200.GC11025@mudshark.cambridge.arm.com>
- <20130106164033.GA3222@n2100.arm.linux.org.uk> <87ehhxahd1.fsf@xmission.com>
-In-Reply-To: <87ehhxahd1.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,77 +25,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-On 01/06/2013 06:53 PM, Eric W. Biederman wrote:
-...
-> Yes.  On x86 we have had the generic equivalent of disable_nonboot_cpus
-> in the machine_shutdown for a long time.
+On Tuesday, January 08, 2013 09:27:55 AM Yinghai Lu wrote:
+> On Tue, Jan 8, 2013 at 8:50 AM, Thomas Renninger <trenn@suse.de> wrote:
+> > megaraid_sas
+> 
+> can you check if your initrd for kdump kernel has that driver and
+> module that it depends on like
+> scsi sas transport etc ?
 
-It looks like the x86 implementation does a bit more than
-disable_nonboot_cpus():
+Removing the 5 patches and the disk works and the
+dump is written.
 
-disable_nonboot_cpus():
-	find first cpu in online cpu mask
-	disable everything else
+I can look a bit further at the memmap=exactmap issue tomorrow.
+I can also double check above then, but I am rather sure about it
+already:
+I tried plain vanilla -> worked, dumping started
+I tried with only these 5 patches added -> no disk.
 
-x86's machine_shutdown():
-	default to rebooting on cpu 0
-	if user specified a different cpu, override default
-	bring that cpu online
-	disable everything else
 
-So, x86 always kexec's on a specific CPU, whereas if we use
-disable_nonboot_cpus() on ARM, we'll end up kexec'ing on whichever is
-the first online CPU, which might not be the actual boot CPU, and can vary.
+Some questions:
 
-On Tegra this doesn't (currently?) matter since CPU 0 can't be taken
-offline due to our CPU hotplug driver disallowing it. But, perhaps other
-SoCs or future Tegra versions don't/won't have this restriction, so the
-difference will be material.
+You try to initialize the PCI subsystem in a way the BIOS typically has
+to do it in kexec case?
 
-Should the x86 code be lifted into the implementation of
-disable_nonboot_cpus()?
+Reacting and trying to handle error condtitions more gracefully
+at the place where they are caught could be another approach which
+imo makes sense to implement in parallel.
 
-For the record, here's what I can tell about what the various
-arch-specific machine_shutdown() do:
+In my case for example I see:
+"Present field in the IRTE entry is clear"
+DMAR errors. I expect this comes from a device which still throws
+interrupts, but irq vector got not set-up or registered in the kexec'ed 
+kernel.
 
-ARM, ARM64: calls smp_send_stop()
-  -> disable_nonboot_cpus() would be correct
+I could imagine this is the same error which happens when an irq is
+wrongly configured and spurious interrupts happen (but in irq remapped case).
+In my case it's not sever as I only see this message once, but according
+to another report, they see about 80 of such DMAR error messages per
+second. This seem to result in endless DMAR error interrupts and finally
+a dead system.
 
-IA64: shuts down all CPUs except the current one
-  -> disable_nonboot_cpus() would be correct
+I wonder whether the DMAR error handler could already invoke a PCIe
+reset.
+I found:
+int pci_set_pcie_reset_state(struct pci_dev *dev, enum pcie_reset_state state)
+which unfortunatly is only implemented for PPC, but would it make sense to
+implement this one and trigger function level reset if several specific DMAR
+errors are seen (or other PCI(e) error handlers get active?)?
 
-Microblaze: nothing (but no SMP support?)
-  -> disable_nonboot_cpus() would be irrelevant, but fine
+If this does not help the next step could be to stop DMAR error interrupt
+handling or other iommu commands to keep the machine alive, even if one
+device keeps firing interrupts to an unconfigured irq vector (or whatever other
+things could happen).
 
-MIPS: machine-specific:
-  Cavium Octeon: Shuts down CPUs, waits until num_online_cpus()==1
-    Not sure which CPU isn't shut down though; the current one?
-  Others: Nothing (but at least some have SMP support)
-  -> disable_nonboot_cpus() would be a behaviour change
+Just some ideas...
+Comments appreciated.
 
-PPC: machine-specific
-  Only implementations either aren't for SMP, or do nothing (but
-presumably many have SMP support)
-  -> disable_nonboot_cpus() would be a behaviour change
-
-SH: smp_send_stop()
-  -> disable_nonboot_cpus() would be correct
-
-S390: nothing (but appears to have SMP support)
-  -> disable_nonboot_cpus() would be a behaviour change
-
-Tile: nothing (but bans kexec unless no SMP or only 1 CPU online)
-  -> disable_nonboot_cpus() would be irrelevant, but fine, and perhaps
-even allow removal of the kexec ban for SMP?
-
-So at least I don't see anything that would particularly indicate that
-having the kexec generic/core code call disable_nonboot_cpus() would
-cause problems; many architectures have done something like that
-themselves. That said, it certainly would cause some behavioural
-differences on some big platforms like PPC...
+   Thomas
 
 _______________________________________________
 kexec mailing list
