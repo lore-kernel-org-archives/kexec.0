@@ -1,19 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
- <50E4C9C6.20609@codeaurora.org>
- <20130103120259.GB5193@mudshark.cambridge.arm.com>
- <20130103122100.GN2631@n2100.arm.linux.org.uk>
- <50E5E967.3020805@wwwdotorg.org>
- <20130106162200.GC11025@mudshark.cambridge.arm.com>
- <20130106164033.GA3222@n2100.arm.linux.org.uk>
- <87ehhxahd1.fsf@xmission.com> <50ECB49C.7010609@wwwdotorg.org>
-Date: Thu, 10 Jan 2013 22:28:42 -0800
-In-Reply-To: <50ECB49C.7010609@wwwdotorg.org> (Stephen Warren's message of
- "Tue, 08 Jan 2013 17:06:52 -0700")
-Message-ID: <87obgwb5d1.fsf@xmission.com>
+Received: from e28smtp06.in.ibm.com ([122.248.162.6])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TtYJ8-0007CP-OE
+ for kexec@lists.infradead.org; Fri, 11 Jan 2013 06:41:40 +0000
+Received: from /spool/local
+ by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Fri, 11 Jan 2013 12:10:00 +0530
+Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
+ by d28dlp01.in.ibm.com (Postfix) with ESMTP id 2D4F0E004D
+ for <kexec@lists.infradead.org>; Fri, 11 Jan 2013 12:11:42 +0530 (IST)
+Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
+ by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r0B6fPfk30212126
+ for <kexec@lists.infradead.org>; Fri, 11 Jan 2013 12:11:25 +0530
+Received: from d28av02.in.ibm.com (loopback [127.0.0.1])
+ by d28av02.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r0B6fQUW004326
+ for <kexec@lists.infradead.org>; Fri, 11 Jan 2013 17:41:26 +1100
+Subject: [PATCH 0/3] kexec: Support for uImage RAMDisks
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Date: Fri, 11 Jan 2013 12:11:26 +0530
+Message-ID: <20130111063547.11490.28174.stgit@suzukikp.in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,124 +36,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Stephen Warren <swarren@nvidia.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: horms@verge.net.au
+Cc: bigeasy@linutronix.de, lethal@linux-sh.org, kexec@lists.infradead.org, mat@brain-dump.org
+
+The following series adds support for uImage RAMDisks in kexec-tools.
+
+The first two patches in the series modifies the common uImage handling code.
+
+The third patch in the series adds PPC support for processing the ramdisks.
+
+NOTE: Tested *only* on PPC. Though the other archs are not affected much,
+I would appreciate some help in (compile) testing these patches on ARM and SH,
+just to make sure we are safe there.
+
+With these patches, one can easily add support in other archs for supporting
+the uImage RAMDisks.
+
+---
+
+Suzuki K. Poulose (3):
+      kexec/uImage: Return the image type for uImage_probe
+      kexec/uImage: Recognize uImage RAM Disks
+      ppc/uImage: Add support for RAM Disks
 
 
-Thanks for the cross architecture survey.
+ kexec/arch/arm/kexec-uImage-arm.c |    8 +++++++-
+ kexec/arch/ppc/kexec-uImage-ppc.c |   30 ++++++++++++++++++++++++++++--
+ kexec/arch/sh/kexec-uImage-sh.c   |    9 ++++++++-
+ kexec/kexec-uImage.c              |   18 ++++++++++++------
+ 4 files changed, 55 insertions(+), 10 deletions(-)
 
-Stephen Warren <swarren@wwwdotorg.org> writes:
+-- 
+Suzuki
 
-> On 01/06/2013 06:53 PM, Eric W. Biederman wrote:
-> ...
->> Yes.  On x86 we have had the generic equivalent of disable_nonboot_cpus
->> in the machine_shutdown for a long time.
->
-> It looks like the x86 implementation does a bit more than
-> disable_nonboot_cpus():
->
-> disable_nonboot_cpus():
-> 	find first cpu in online cpu mask
-> 	disable everything else
->
-> x86's machine_shutdown():
-> 	default to rebooting on cpu 0
-> 	if user specified a different cpu, override default
-> 	bring that cpu online
-> 	disable everything else
-
-That you can no longer specify a reboot_cpu_id on x86 is a regression
-since Oct caused by people fixing another piece of the ARM SMP reboot.
-
-Not that I know it is knew I wonder what other x86 regressions it
-causes.  The migrating of irqs to different cpus with interrupts
-disabled on interrupt the architectural x86 interrupt controllers that
-don't support that and that I have experimentally verified can be locked
-on with no recovery short of power cycling gives me the willies.
-
-The actual reboot_cpu_id option was someones first hack at getting
-the reboot to happen on the boot cpu so it may not matter much as
-long as we reboot on the boot cpu.
-
-reboot_cpu_id really wasn't a kexec thing in this case.
-
-> So, x86 always kexec's on a specific CPU, whereas if we use
-> disable_nonboot_cpus() on ARM, we'll end up kexec'ing on whichever is
-> the first online CPU, which might not be the actual boot CPU, and can
-> vary.
-
-> On Tegra this doesn't (currently?) matter since CPU 0 can't be taken
-> offline due to our CPU hotplug driver disallowing it. But, perhaps other
-> SoCs or future Tegra versions don't/won't have this restriction, so the
-> difference will be material.
-
-> Should the x86 code be lifted into the implementation of
-> disable_nonboot_cpus()?
-
-disable_nonboot_cpus() roughly as it exists today is needed for
-hibernation and some silliness like that.
-
-I don't have any problem with generic code in the reboot path
-doing:
-if (cpu_online(0))
-	set_cpus_allowed_ptr(current, cpumask_of(0));
-
-All of the code in native_stop_other_cpus() on x86 is both simple and
-pretty architecture specific so I don't see much if any point in making
-a generic version.  At most there is an argument for an arch specific
-stop_other_cpus() call.
-
-I have a real hard time believe that power management and cpu hot-unplug
-need to be as complex as disable_nonboot_cpus() suggest.
-
-For justifying disable_nonboot_cpus() there is the question of how many
-architectures is it safe to migrate irqs from one cpu to another with
-irqs disabled.
-
-> For the record, here's what I can tell about what the various
-> arch-specific machine_shutdown() do:
->
-> ARM, ARM64: calls smp_send_stop()
->   -> disable_nonboot_cpus() would be correct
->
-> IA64: shuts down all CPUs except the current one
->   -> disable_nonboot_cpus() would be correct
->
-> Microblaze: nothing (but no SMP support?)
->   -> disable_nonboot_cpus() would be irrelevant, but fine
->
-> MIPS: machine-specific:
->   Cavium Octeon: Shuts down CPUs, waits until num_online_cpus()==1
->     Not sure which CPU isn't shut down though; the current one?
->   Others: Nothing (but at least some have SMP support)
->   -> disable_nonboot_cpus() would be a behaviour change
->
-> PPC: machine-specific
->   Only implementations either aren't for SMP, or do nothing (but
-> presumably many have SMP support)
->   -> disable_nonboot_cpus() would be a behaviour change
->
-> SH: smp_send_stop()
->   -> disable_nonboot_cpus() would be correct
->
-> S390: nothing (but appears to have SMP support)
->   -> disable_nonboot_cpus() would be a behaviour change
->
-> Tile: nothing (but bans kexec unless no SMP or only 1 CPU online)
->   -> disable_nonboot_cpus() would be irrelevant, but fine, and perhaps
-> even allow removal of the kexec ban for SMP?
->
-> So at least I don't see anything that would particularly indicate that
-> having the kexec generic/core code call disable_nonboot_cpus() would
-> cause problems; many architectures have done something like that
-> themselves. That said, it certainly would cause some behavioural
-> differences on some big platforms like PPC...
-
-Behavior differences someone introduced just a kernel ago in the PPC
-reboot code to deal with ARMs lack of code in machine_shutdown to handle
-this at all.
-
-Eric
 
 _______________________________________________
 kexec mailing list
