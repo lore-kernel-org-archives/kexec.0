@@ -1,23 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:4e20:1eda::1] (helo=caramon.arm.linux.org.uk)
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TtbTs-0003LK-Mg
- for kexec@lists.infradead.org; Fri, 11 Jan 2013 10:04:57 +0000
-Date: Fri, 11 Jan 2013 10:04:07 +0000
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
-Message-ID: <20130111100407.GB30875@n2100.arm.linux.org.uk>
-References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
- <50E4C9C6.20609@codeaurora.org>
- <20130103120259.GB5193@mudshark.cambridge.arm.com>
- <20130103122100.GN2631@n2100.arm.linux.org.uk>
- <50E5E967.3020805@wwwdotorg.org>
- <20130106162200.GC11025@mudshark.cambridge.arm.com>
- <20130106164033.GA3222@n2100.arm.linux.org.uk> <87ehhxahd1.fsf@xmission.com>
- <20130107144812.GD3222@n2100.arm.linux.org.uk> <87d2xcfeew.fsf@xmission.com>
+ id 1TteZH-0007m2-21
+ for kexec@lists.infradead.org; Fri, 11 Jan 2013 13:22:46 +0000
+Date: Fri, 11 Jan 2013 14:22:12 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [Xen-devel] [PATCH v3 00/11] xen: Initial kexec/kdump
+ implementation
+Message-ID: <20130111132212.GB5150@host-192-168-1-59.local.net-space.pl>
+References: <1356574740-6806-1-git-send-email-daniel.kiper@oracle.com>
+ <50DBC856.6030208@zytor.com>
+ <791b4922-078f-4adc-b3f3-0651f2266147@email.android.com>
+ <50DC58C4.3000307@citrix.com> <874nj7qsor.fsf@xmission.com>
+ <50E41973.9050705@citrix.com>
+ <20130104142257.GC3346@host-192-168-1-59.local.net-space.pl>
+ <50E6E974.5090805@citrix.com>
+ <20130104170120.GA3472@host-192-168-1-59.local.net-space.pl>
+ <50EECE0B.2080604@citrix.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87d2xcfeew.fsf@xmission.com>
+In-Reply-To: <50EECE0B.2080604@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,76 +32,134 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, Will Deacon <will.deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, Andrew Cooper <andrew.cooper3@citrix.com>, "maxim.uvarov@oracle.com" <maxim.uvarov@oracle.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "jbeulich@suse.com" <jbeulich@suse.com>, "H. Peter Anvin" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On Thu, Jan 10, 2013 at 09:59:35PM -0800, Eric W. Biederman wrote:
-> Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
-> 
-> > On Sun, Jan 06, 2013 at 05:53:30PM -0800, Eric W. Biederman wrote:
-> >> I have cleaned up the mess that is the reboot path once a bunch of years
-> >> ago, and apparently it is deteriorating again.
+On Thu, Jan 10, 2013 at 02:19:55PM +0000, David Vrabel wrote:
+> On 04/01/13 17:01, Daniel Kiper wrote:
+> > On Fri, Jan 04, 2013 at 02:38:44PM +0000, David Vrabel wrote:
+> >> On 04/01/13 14:22, Daniel Kiper wrote:
+> >>> On Wed, Jan 02, 2013 at 11:26:43AM +0000, Andrew Cooper wrote:
+> >>>> On 27/12/12 18:02, Eric W. Biederman wrote:
+> >>>>> Andrew Cooper<andrew.cooper3@citrix.com>  writes:
+> >>>>>
+> >>>>>> On 27/12/2012 07:53, Eric W. Biederman wrote:
+> >>>>>>> The syscall ABI still has the wrong semantics.
+> >>>>>>>
+> >>>>>>> Aka totally unmaintainable and umergeable.
+> >>>>>>>
+> >>>>>>> The concept of domU support is also strange.  What does domU support even mean, when the dom0 support is loading a kernel to pick up Xen when Xen falls over.
+> >>>>>> There are two requirements pulling at this patch series, but I agree
+> >>>>>> that we need to clarify them.
+> >>>>> It probably make sense to split them apart a little even.
+> >>>>>
+> >>>>>
+> >>>>
+> >>>> Thinking about this split, there might be a way to simply it even more.
+> >>>>
+> >>>> /sbin/kexec can load the "Xen" crash kernel itself by issuing
+> >>>> hypercalls using /dev/xen/privcmd.  This would remove the need for
+> >>>> the dom0 kernel to distinguish between loading a crash kernel for
+> >>>> itself and loading a kernel for Xen.
+> >>>>
+> >>>> Or is this just a silly idea complicating the matter?
+> >>>
+> >>> This is impossible with current Xen kexec/kdump interface.
+> >>> It should be changed to do that. However, I suppose that
+> >>> Xen community would not be interested in such changes.
+> >>
+> >> I don't see why the hypercall ABI cannot be extended with new sub-ops
+> >> that do the right thing -- the existing ABI is a bit weird.
+> >>
+> >> I plan to start prototyping something shortly (hopefully next week) for
+> >> the Xen kexec case.
 > >
-> > Unfortunately, that's what happens when lots of cooks get their fingers
-> > in a pie with no coordination.  This is why having maintainers is soo
-> > important for code - a good maintainer ensures that the code remains
-> > high quality by whatever means.
-> >
-> > Code without maintainers is subject to modification in all kinds of
-> > random ways, including duplicating code amongst architectures which
-> > should be generic code - that happens because no one wants to understand
-> > what other architectures require.
-> 
-> I don't think you meant to but I have been rather strongly insulted.
+> > Wow... As I can this time Xen community is interested in...
+> > That is great. I agree that current kexec interface is not ideal.
+>
+> I spent some more time looking at the existing interface and
+> implementation and it really is broken.
+>
+> > David, I am happy to help in that process. However, if you wish I could
+> > carry it myself. Anyway, it looks that I should hold on with my
+> > Linux kexec/kdump patches.
+>
+> I should be able to post some prototype patches for Xen in a few weeks.
+>  No guarantees though.
 
-Why would you be insulted by the above?  It's a statement of fact that
-is true for anything.  Ever heard of the expression "Too many cooks
-spoil the broth" ?  Does that expression insult you too?
+That is great. If you need any help drop me a line.
 
-You've admitted that you don't have time to look at the shutdown/reboot
-paths very much, so they are by way of that fact lacking in maintainer
-input - but if you read the rest of what I wrote, I also commented that
-they were still in pretty good shape inspite of that.
+> > My .5 cents:
+> >   - We should focus on KEXEC_CMD_kexec_load and KEXEC_CMD_kexec_unload;
+> >     probably we should introduce KEXEC_CMD_kexec_load2 and KEXEC_CMD_kexec_unload2;
+> >     load should __LOAD__ kernel image and other things into hypervisor memory;
+>
+> Yes, but I don't see how we can easily support both ABIs easily.  I'd be
+> in favour of replacing the existing hypercalls and requiring updated
+> kexec tools in dom0 (this isn't that different to requiring the correct
+> libxc in dom0).
 
-So actually, there's a complement there.  Shame you missed it.
+Why? Just define new strutures for new functions of kexec hypercall.
+That should suffice.
 
-> Now sometimes_dangerously_hotunplug_all_but_one_cpu() on the reboot path 
-> was added just a few months ago in Oct 2012, and it appears to due to
-> weird ARM maintainership.
+> >     I suppose that allmost all things could be copied from linux/kernel/kexec.c,
+> >     linux/arch/x86/kernel/{machine_kexec_$(BITS).c,relocate_kernel_$(BITS).c};
+> >     I think that KEXEC_CMD_kexec should stay as is,
+>
+> I don't think we want all the junk from Linux inside Xen -- we only want
+> to support the kdump case and do not have to handle returning from the
+> kexec image.
 
-Err.  No.  Stop trying to accuse people of being crap when there's no
-evidence:
+I do not want to implement kexec jump or stuff like. However, I think that
+it is worth use code which could be used. As I know there are lot of stuff
+which was taken with smaller or bigger changes from Linux Kernel.
+Why we would like to reinvent the wheel this time?
 
-commit f96972f2dc6365421cf2366ebd61ee4cf060c8d5
-Author: Shawn Guo <shawn.guo@linaro.org>
-Date:   Thu Oct 4 17:12:23 2012 -0700
+Additionally, we should not drop kexec support. It is main part of kdump.
+In case of kdump new kernel (and other stuff) is placed in prealocated
+space in contrary to kexec. That's all. kexec is useful if you would like
+to quickly (skipping BIOS) switch from Xen to baremetal Linux. If you drop
+kexec support from Xen then you need alter kexec-tools package in bunch
+of distros to take into account new Xen behavior.
+I think that it is not we want to do.
 
-    kernel/sys.c: call disable_nonboot_cpus() in kernel_restart()
-...
-    Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-    Cc: <stable@vger.kernel.org>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> >   - Hmmm... Now I think that we should still use kexec syscall to load image
+> >     into Xen memory (with new KEXEC_CMD_kexec_load2) because it establishes
+> >     all things which are needed to call kdump if dom0 crashes; however,
+> >     I could be wrong...
+>
+> I don't think we need the kexec syscall.  The kernel can unconditionally
+> do the crash hypercall, which will return if the kdump kernel isn't
+> loaded and the kernel can fall back to the regular non-kexec panic.
 
-No ARM maintainers were involved in that change.  I just checked my
-mailboxes for September 2012 which is when it was mailed to the list.
-It got missed, and Andrew replied and accepted the patch (as is
-illustrated by the sign-offs).  And even if _I_ had been involved with
-it, _I_ would not have spotted the x86 behaviour, just the same that
-Andrew didn't.
+No, please do not do that. When you call HYPERVISOR_kexec_op(KEXEC_CMD_kexec)
+system is completly shutdown. Return form HYPERVISOR_kexec_op(KEXEC_CMD_kexec)
+would require to restore some kernel functionalities. It maybe impossible
+in some cases. Additionally, it means that some changes should be made
+in generic kexec code path. As I know kexec maintainers are very reluctant
+to make such things.
 
-Is this not itself evidence of my comment above: had the above change
-gone through someone who had a deep understanding of that code - iow,
-a maintainer, it probably would not have been committed to the kernel?
+> This will allow the kexec syscall to be used only for the domU kexec case.
+>
+> >   - last but not least, we should think about support for PV guests
+> >     too.
+>
+> I won't be looking at this.
 
-To accuse others who have nothing to do with the area, and weren't
-involved with the change in any way of being responsible for that
-change is... well... I don't think there's anything that can be said
-to that which isn't inflamatory.
+OK.
 
-It seems that, given your comments, the above commit needs to be reverted,
-and then _maybe_ the disable_nonboot_cpus() call should be added to ARMs
-machine_shutdown() instead.
+> To avoid confusion about the two largely orthogonal sorts of kexec how
+> about defining some terms.  I suggest:
+>
+> Xen kexec: Xen executes the image in response to a Xen crash or a
+> hypercall from a privileged domain.
+>
+> Guest kexec: The guest kernel executes the images within the domain in
+> response to a guest kernel crash or a system call.
+
+OK.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
