@@ -1,20 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TtktI-00029E-O2
- for kexec@lists.infradead.org; Fri, 11 Jan 2013 20:07:50 +0000
-Message-ID: <50F070D8.2080109@zytor.com>
-Date: Fri, 11 Jan 2013 12:06:48 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+Received: from out02.mta.xmission.com ([166.70.13.232])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TtlC0-0000Jj-UW
+ for kexec@lists.infradead.org; Fri, 11 Jan 2013 20:27:09 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <50DC58C4.3000307@citrix.com> <874nj7qsor.fsf@xmission.com>
+ <50E41973.9050705@citrix.com>
+ <20130104142257.GC3346@host-192-168-1-59.local.net-space.pl>
+ <50E6F81D02000078000B3245@nat28.tlf.novell.com>
+ <20130104170751.GB3472@host-192-168-1-59.local.net-space.pl>
+ <20130104191146.GC6721@phenom.dumpdata.com>
+ <20130107123404.GA2927@host-192-168-1-59.local.net-space.pl>
+ <20130107162018.GJ3219@phenom.dumpdata.com>
+ <87ehhsqrpr.fsf@xmission.com>
+ <20130111165506.GD25620@phenom.dumpdata.com>
+Date: Fri, 11 Jan 2013 12:26:56 -0800
+In-Reply-To: <20130111165506.GD25620@phenom.dumpdata.com> (Konrad Rzeszutek
+ Wilk's message of "Fri, 11 Jan 2013 11:55:06 -0500")
+Message-ID: <87k3rjtqi7.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] x86 e820: only void usable memory areas in memmap=exactmap
- case
-References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
- <201301111333.49238.trenn@suse.de>
- <CAE9FiQWPJdER++ZrkKx7cQpF0QvwBeghNjpFqK18pMNC0w20tw@mail.gmail.com>
- <1603289.LXteBtkifD@hammer82.arch.suse.de>
- <CAE9FiQU6RWH6cBKc9th3Eb2gCjcHfotbC1sYspQ7dU+cG=VMFA@mail.gmail.com>
-In-Reply-To: <CAE9FiQU6RWH6cBKc9th3Eb2gCjcHfotbC1sYspQ7dU+cG=VMFA@mail.gmail.com>
+Subject: Re: [Xen-devel] [PATCH v3 00/11] xen: Initial kexec/kdump
+ implementation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,26 +33,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: horms@verge.net.au, Takao Indoh <indou.takao@jp.fujitsu.com>, MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, Thomas Renninger <trenn@suse.de>, vgoyal@redhat.com, khalid@gonehiking.org
+To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, Andrew Cooper <andrew.cooper3@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, Jan Beulich <JBeulich@suse.com>, "H. Peter Anvin" <hpa@zytor.com>, "maxim.uvarov@oracle.com" <maxim.uvarov@oracle.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On 01/11/2013 11:59 AM, Yinghai Lu wrote:
-> On Fri, Jan 11, 2013 at 10:24 AM, Thomas Renninger <trenn@suse.de> wrote:
->>> We may need to keep exactmap intact.
->> Why?
->> Kexec/kdump should have been the only user?
->> If older/current kexec calls still add ACPI maps via memmap=X#Y,
->> they should already exist in the original e820 map and fall off or
->> get glued to one region if (wrongly) overlapping via sanitize_map.
-> 
-> No, kexec/kdump is not the only user for memmap=exactmap.
-> 
+Konrad Rzeszutek Wilk <konrad.wilk@oracle.com> writes:
 
-Who is using it then, since you seem to know?
+> On Thu, Jan 10, 2013 at 08:16:48PM -0800, Eric W. Biederman wrote:
 
-	-hpa
+>> The basic kexec interface is.
+>> 
+>> load ranges of virtual addresses physical addresses.
+>> jump to the physical address  with identity mapped page tables.
+>> 
+>> There are a few flags to allow for different usage scenarios like
+>> kexec on panic vs normal kexec.
+>
+> And there is nothing fancy to be done for EFI and SecureBoot?
 
+There is a mess with EFI.  Reports are that EFI is a bug ridden pile,
+and people keep advocating that we make more and more EFI calls in the
+main kernel.  There is an argument over set_virtual_mapping, which is a
+call that can be made only once which relocates the EFI code to a
+different address, which makes life inconvient for kexec.  There is
+another argument that EFI doesn't actually work if you don't make the
+set_virtual_mapping call so we can't remove it and always use physical
+addresses.
 
+Frankly the only sane way to run a linux kernel under EFI is to scrape
+up the information needed to talk to the hardware directly and ignore
+EFI.  That is what we have historically done in the face of BIOS madness
+and if anything the situation is worse with EFI, but it looks like we
+are going to have to learn that the hard way.
+
+Recently there is a desire to figure out how to /sbin/kexec support
+signed kernel images.  What will probably happen is to have a specially
+trusted userspace application perform the verification.  Sort of like
+dom0 for the linux userspace.  A few other ideas have been batted around
+but none that have stuck.
+
+None of that is really about SecureBoot.  It is all trusting the kernel
+binary but not trusting userspace.  With SecureBoot being an excuse for
+coming up with a policy like that.
+
+It looks like the answer to SecureBoot at this point may simply be just
+reconfigure your BIOS or root Windows and EFI to get the hardware to do
+what you want.
+
+So the answer for looking forward for Xen dom0 is: A trusted /sbin/kexec
+won't require changes.  The other suggest solution is a flag that says a
+specific chunk of the loaded image is a signature that the magic trust
+faires can verify.  As long as you have a flag bit free you should be
+able to implement that policy if we ever implement it.
+
+Eric
 
 _______________________________________________
 kexec mailing list
