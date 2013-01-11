@@ -1,15 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TtaUV-0004kz-RA
- for kexec@lists.infradead.org; Fri, 11 Jan 2013 09:01:32 +0000
-Message-ID: <50EFD445.2090002@cn.fujitsu.com>
-Date: Fri, 11 Jan 2013 16:58:45 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Received: from [2002:4e20:1eda::1] (helo=caramon.arm.linux.org.uk)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TtbTs-0003LK-Mg
+ for kexec@lists.infradead.org; Fri, 11 Jan 2013 10:04:57 +0000
+Date: Fri, 11 Jan 2013 10:04:07 +0000
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
+Message-ID: <20130111100407.GB30875@n2100.arm.linux.org.uk>
+References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
+ <50E4C9C6.20609@codeaurora.org>
+ <20130103120259.GB5193@mudshark.cambridge.arm.com>
+ <20130103122100.GN2631@n2100.arm.linux.org.uk>
+ <50E5E967.3020805@wwwdotorg.org>
+ <20130106162200.GC11025@mudshark.cambridge.arm.com>
+ <20130106164033.GA3222@n2100.arm.linux.org.uk> <87ehhxahd1.fsf@xmission.com>
+ <20130107144812.GD3222@n2100.arm.linux.org.uk> <87d2xcfeew.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/2] kexec: add additional check when getting memory info
-References: <50EFD3F0.9030900@cn.fujitsu.com>
-In-Reply-To: <50EFD3F0.9030900@cn.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <87d2xcfeew.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,31 +30,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, Will Deacon <will.deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-This check makes sure that we indeed get the memory information.
+On Thu, Jan 10, 2013 at 09:59:35PM -0800, Eric W. Biederman wrote:
+> Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
+> 
+> > On Sun, Jan 06, 2013 at 05:53:30PM -0800, Eric W. Biederman wrote:
+> >> I have cleaned up the mess that is the reboot path once a bunch of years
+> >> ago, and apparently it is deteriorating again.
+> >
+> > Unfortunately, that's what happens when lots of cooks get their fingers
+> > in a pie with no coordination.  This is why having maintainers is soo
+> > important for code - a good maintainer ensures that the code remains
+> > high quality by whatever means.
+> >
+> > Code without maintainers is subject to modification in all kinds of
+> > random ways, including duplicating code amongst architectures which
+> > should be generic code - that happens because no one wants to understand
+> > what other architectures require.
+> 
+> I don't think you meant to but I have been rather strongly insulted.
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/kexec.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Why would you be insulted by the above?  It's a statement of fact that
+is true for anything.  Ever heard of the expression "Too many cooks
+spoil the broth" ?  Does that expression insult you too?
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 89ec182..16c6308 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -675,7 +675,7 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- #endif
- 
- 	if (get_memory_ranges(&info.memory_range, &info.memory_ranges,
--		info.kexec_flags) < 0) {
-+		info.kexec_flags) < 0 || info.memory_ranges == 0) {
- 		fprintf(stderr, "Could not get memory layout\n");
- 		return -1;
- 	}
--- 
-1.7.1
+You've admitted that you don't have time to look at the shutdown/reboot
+paths very much, so they are by way of that fact lacking in maintainer
+input - but if you read the rest of what I wrote, I also commented that
+they were still in pretty good shape inspite of that.
+
+So actually, there's a complement there.  Shame you missed it.
+
+> Now sometimes_dangerously_hotunplug_all_but_one_cpu() on the reboot path 
+> was added just a few months ago in Oct 2012, and it appears to due to
+> weird ARM maintainership.
+
+Err.  No.  Stop trying to accuse people of being crap when there's no
+evidence:
+
+commit f96972f2dc6365421cf2366ebd61ee4cf060c8d5
+Author: Shawn Guo <shawn.guo@linaro.org>
+Date:   Thu Oct 4 17:12:23 2012 -0700
+
+    kernel/sys.c: call disable_nonboot_cpus() in kernel_restart()
+...
+    Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+    Cc: <stable@vger.kernel.org>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+No ARM maintainers were involved in that change.  I just checked my
+mailboxes for September 2012 which is when it was mailed to the list.
+It got missed, and Andrew replied and accepted the patch (as is
+illustrated by the sign-offs).  And even if _I_ had been involved with
+it, _I_ would not have spotted the x86 behaviour, just the same that
+Andrew didn't.
+
+Is this not itself evidence of my comment above: had the above change
+gone through someone who had a deep understanding of that code - iow,
+a maintainer, it probably would not have been committed to the kernel?
+
+To accuse others who have nothing to do with the area, and weren't
+involved with the change in any way of being responsible for that
+change is... well... I don't think there's anything that can be said
+to that which isn't inflamatory.
+
+It seems that, given your comments, the above commit needs to be reverted,
+and then _maybe_ the disable_nonboot_cpus() call should be added to ARMs
+machine_shutdown() instead.
 
 _______________________________________________
 kexec mailing list
