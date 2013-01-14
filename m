@@ -1,18 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TuZUA-00078H-TR
- for kexec@lists.infradead.org; Mon, 14 Jan 2013 02:09:16 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH] x86 e820: only void usable memory areas in
- memmap=exactmap case
-Date: Mon, 14 Jan 2013 03:08:17 +0100
-Message-ID: <2741365.qqWvlU8HGl@hammer82.arch.suse.de>
-In-Reply-To: <CAE9FiQWNRS6rBzx+fbX+O9_L+Z-4T-oBWZUdzR0sS=P22ctZ0w@mail.gmail.com>
-References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
- <4068140.Uym9gOXymC@hammer82.arch.suse.de>
- <CAE9FiQWNRS6rBzx+fbX+O9_L+Z-4T-oBWZUdzR0sS=P22ctZ0w@mail.gmail.com>
+ id 1TucOA-0002rp-0j
+ for kexec@lists.infradead.org; Mon, 14 Jan 2013 05:15:16 +0000
+Received: from /spool/local
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Mon, 14 Jan 2013 15:09:12 +1000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id A7D5F3578051
+ for <kexec@lists.infradead.org>; Mon, 14 Jan 2013 16:15:03 +1100 (EST)
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r0E5F22A61997256
+ for <kexec@lists.infradead.org>; Mon, 14 Jan 2013 16:15:03 +1100
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+ by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r0E5F1MA023678
+ for <kexec@lists.infradead.org>; Mon, 14 Jan 2013 16:15:01 +1100
+Message-ID: <50F3944D.7080506@in.ibm.com>
+Date: Mon, 14 Jan 2013 10:44:53 +0530
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH 3/3] ppc/uImage: Add support for RAM Disks
+References: <20130111063547.11490.28174.stgit@suzukikp.in.ibm.com>
+ <20130111064203.11490.72998.stgit@suzukikp.in.ibm.com>
+ <70CC66F5C30A414DADDA6973E4CA391A820296@039-SN1MPN1-002.039d.mgd.msft.net>
+In-Reply-To: <70CC66F5C30A414DADDA6973E4CA391A820296@039-SN1MPN1-002.039d.mgd.msft.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,94 +36,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: horms@verge.net.au, Takao Indoh <indou.takao@jp.fujitsu.com>, MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
+To: McClintock Matthew-B29882 <B29882@freescale.com>
+Cc: "lethal@linux-sh.org" <lethal@linux-sh.org>, "bigeasy@linutronix.de" <bigeasy@linutronix.de>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "mat@brain-dump.org" <mat@brain-dump.org>
 
-On Saturday, January 12, 2013 09:07:12 AM Yinghai Lu wrote:
-> On Sat, Jan 12, 2013 at 3:31 AM, Thomas Renninger <trenn@suse.de> wrote:
-> >         memmap=exactmap [KNL,X86] Enable setting of an exact
-> > 
-> > -                       E820 memory map, as specified by the user.
-> > -                       Such memmap=exactmap lines can be constructed
-> > based on -                       BIOS output or other requirements. See
-> > the memmap=nn@ss -                       option description.
-> > +                       E820 usable memory map, as specified by the user.
-> > +                       All unusable (reserved, ACPI, NVS,...) ranges from
-> > the +                       original e820 table are preserved.
-> > +                       But the usable memory regions from the original
-> > e820 +                       table are removed.
-> > +                       This parameter is explicitly for kdump usage:
-> > +                       The memory the kdump kernel is allowed to use must
-> > +                       be passed via below memmap=nn[KMG]@ss[KMG] param.
-> > +                       All reserved regions the kernel may use for
-> > ioremapping +                       and similar are still considered.
-> > +
-> > +       memmap=voidmap  [KNL,X86] Do not use any e820 ranges from BIOS or
-> > +                       bootloader. Instead you have to pass regions via
-> > +                       below memmap= options.
-> 
-> I would suggest to keep memmap=exactmap meaning not changed, and add
-> memmap=exactusablemap
-> instead.
-I disagree.
-I would like to change memmap=exactmap behavior.
+On 01/11/2013 12:41 PM, McClintock Matthew-B29882 wrote:
+> On Fri, Jan 11, 2013 at 12:42 AM, Suzuki K. Poulose <suzuki@in.ibm.com> wrote:
+>> From: Suzuki K. Poulose <suzuki@in.ibm.com>
+>>
+>> Handle the RAM Disks in uImage format
+>
+> As opposed to simple ext2.gz ramdisk?
 
-Why:
-1)
-This is a sever bug (for kdump/kexec). I could imagine quite a lot
-kdump related bugs get silently solved by this fix.
-I expect we agree that the change, however it looks like in the end, should
-still get in in this kernel round?
-With my approach, I would also suggest to spread this to stable kernels.
--> No need to update/patch kexec-tools, things will just work as they should.
+Yep. Any supported ramdisk format can be wrapped up in a uImage file.
 
-2)
-I would introduce 2 new memmap= options. However they look like, for example:
-=void_usable_map
-=void_orig_map
-and deprecated exactmap= via
-printk(KERN_INFO "exactmap usage changed and is deprecated\n");
-but still fix it.
-Latest kexec-tools will just use memmap=void_usable_map, old ones
-are still fixed via stable kernel updates.
+Thanks
+Suzuki
 
+>
+> -M
+>
+>>
+>> Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+>> ---
+>>   kexec/arch/ppc/kexec-uImage-ppc.c |   22 +++++++++++++++++++++-
+>>   1 file changed, 21 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+>> index eaea3c1..58935c0 100644
+>> --- a/kexec/arch/ppc/kexec-uImage-ppc.c
+>> +++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+>> @@ -46,6 +46,26 @@ void uImage_ppc_usage(void)
+>>          );
+>>   }
+>>
+>> +char* slurp_ramdisk_ppc(const char *filename, off_t *r_size)
+>> +{
+>> +       struct Image_info img;
+>> +       off_t size;
+>> +       const unsigned char *buf =
+>> +                       (const unsigned char *)slurp_file(filename, &size);
+>> +
+>> +       /* Check if this is a uImage RAMDisk */
+>> +       if (buf != (void*)0 &&
+>> +               uImage_probe(buf, size, IH_ARCH_PPC) == IH_TYPE_RAMDISK) {
+>> +               if (uImage_load(buf, size, &img) != 0)
+>> +                       die ("uImage: Reading %ld bytes from %s failed\n", size, filename);
+>> +               buf = img.buf;
+>> +               size = img.len;
+>> +       }
+>> +
+>> +       *r_size = size;
+>> +       return buf;
+>> +}
+>> +
+>>   int uImage_ppc_probe(const char *buf, off_t len)
+>>   {
+>>          int type;
+>> @@ -196,7 +216,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+>>          blob_buf = fixup_dtb_init(info, blob_buf, &blob_size, load_addr, &dtb_addr);
+>>
+>>          if (ramdisk) {
+>> -               seg_buf = slurp_file(ramdisk, &seg_size);
+>> +               seg_buf = slurp_ramdisk_ppc(ramdisk, &seg_size);
+>>                  /* Load ramdisk at top of memory */
+>>                  hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
+>>                                  0, dtb_addr + blob_size, max_addr, -1);
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-> kexec-tools could be updated to support exactusablemap with
-> kernelversion checking for kdump.
-No, please not. It will be a maintenance/compatibility issue that will remain
-for years or ever in kdump and/or the kernel and it's not necessary.
-
-> also we need to double check to make sure:
-> 1. exactmap should override exactusablemap, even the out of order sequence.
-So that one can override the whole map in kdump case (which was broken until
-today)?
-I agree. But in my case it would be:
-=void_orig_map overrides =void_usable_map
-
-> 2. when exactusablemap is used, not just remove old usable type range,
-> also need to remove overlapped range
-> with new usable range.
-Why should this be necessary?
-The e820 map passed by BIOS/bootloader should already be sanity checked
--> no overlaps.
-
-Then usable ranges are removed and the memmap= defined are added and
-sanity check is called again.
--> no overlaps.
-
-Sanity checking prefers reserved/unusable memory ranges (in this case always 
-using the original ones from BIOS) over usable ones and this is a good idea to 
-do...
-
-I guess it's up to further votes/comments/ideas and a final maintainer 
-(kexec/x86?) decision?
-
-
-    Thomas
 
 _______________________________________________
 kexec mailing list
