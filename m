@@ -1,33 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp09.au.ibm.com ([202.81.31.142])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TucOA-0002rp-0j
- for kexec@lists.infradead.org; Mon, 14 Jan 2013 05:15:16 +0000
-Received: from /spool/local
- by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
- Mon, 14 Jan 2013 15:09:12 +1000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id A7D5F3578051
- for <kexec@lists.infradead.org>; Mon, 14 Jan 2013 16:15:03 +1100 (EST)
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
- by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r0E5F22A61997256
- for <kexec@lists.infradead.org>; Mon, 14 Jan 2013 16:15:03 +1100
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
- by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r0E5F1MA023678
- for <kexec@lists.infradead.org>; Mon, 14 Jan 2013 16:15:01 +1100
-Message-ID: <50F3944D.7080506@in.ibm.com>
-Date: Mon, 14 Jan 2013 10:44:53 +0530
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+ id 1Tulbn-0003iT-Ki
+ for kexec@lists.infradead.org; Mon, 14 Jan 2013 15:05:56 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH] x86 e820: only void usable memory areas in
+ memmap=exactmap case
+Date: Mon, 14 Jan 2013 16:05:43 +0100
+References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
+ <2741365.qqWvlU8HGl@hammer82.arch.suse.de>
+ <CAE9FiQV+W21WcZuuWJYJKXhN4sf0mi=iAFgjX644c3EytPXptw@mail.gmail.com>
+In-Reply-To: <CAE9FiQV+W21WcZuuWJYJKXhN4sf0mi=iAFgjX644c3EytPXptw@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/3] ppc/uImage: Add support for RAM Disks
-References: <20130111063547.11490.28174.stgit@suzukikp.in.ibm.com>
- <20130111064203.11490.72998.stgit@suzukikp.in.ibm.com>
- <70CC66F5C30A414DADDA6973E4CA391A820296@039-SN1MPN1-002.039d.mgd.msft.net>
-In-Reply-To: <70CC66F5C30A414DADDA6973E4CA391A820296@039-SN1MPN1-002.039d.mgd.msft.net>
+Message-Id: <201301141605.43428.trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,88 +21,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: McClintock Matthew-B29882 <B29882@freescale.com>
-Cc: "lethal@linux-sh.org" <lethal@linux-sh.org>, "bigeasy@linutronix.de" <bigeasy@linutronix.de>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "mat@brain-dump.org" <mat@brain-dump.org>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: horms@verge.net.au, Takao Indoh <indou.takao@jp.fujitsu.com>, MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-On 01/11/2013 12:41 PM, McClintock Matthew-B29882 wrote:
-> On Fri, Jan 11, 2013 at 12:42 AM, Suzuki K. Poulose <suzuki@in.ibm.com> wrote:
->> From: Suzuki K. Poulose <suzuki@in.ibm.com>
->>
->> Handle the RAM Disks in uImage format
->
-> As opposed to simple ext2.gz ramdisk?
+On Monday, January 14, 2013 03:43:46 AM Yinghai Lu wrote:
+> On Sun, Jan 13, 2013 at 6:08 PM, Thomas Renninger <trenn@suse.de> wrote:
+> > On Saturday, January 12, 2013 09:07:12 AM Yinghai Lu wrote:
+...
+> everyone could understand it straightforward:
+> exactmap:  memmap will be specified, and it should be honored without
+> considering old any memmap.
+> exactusablemap: will make sure only old ram range get removed, and
+> specified usable ranges will become final usable
+> ranges in the final memmap. so we need to remove overlapping to old
+> reserved ranges.
+> 
+> aka: exact means EXACT ...
+The naming is not my point...
+Anyway after a quick talk with Alexander Graf, I guess I won't have
+much of a chance: rule is rule and a boot param is a public interface
+which must not change just like that (deprecation phase, etc.).
 
-Yep. Any supported ramdisk format can be wrapped up in a uImage file.
+...
+ 
+> those just some kind of improvement without considering kdump.
+> because kdump/scripts already does good job to provide right exactmap
+> with usable and acpi reserved areas.
+No it's conceptional wrong to provide the reserved areas via memmap
+while the original ones are declared already via boot loader structures.
 
-Thanks
-Suzuki
+There are store ACPI NVS memory in suspend/resume workarounds (suspend does not
+fit that much for kdump, but there may be more than this and mmconf).
+The reserved areas in kdump kernel should be the same than with the
+original e820 table to avoid any unforseen issues.
+And kdump got them already passed and should use this info.
 
->
-> -M
->
->>
->> Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
->> ---
->>   kexec/arch/ppc/kexec-uImage-ppc.c |   22 +++++++++++++++++++++-
->>   1 file changed, 21 insertions(+), 1 deletion(-)
->>
->> diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
->> index eaea3c1..58935c0 100644
->> --- a/kexec/arch/ppc/kexec-uImage-ppc.c
->> +++ b/kexec/arch/ppc/kexec-uImage-ppc.c
->> @@ -46,6 +46,26 @@ void uImage_ppc_usage(void)
->>          );
->>   }
->>
->> +char* slurp_ramdisk_ppc(const char *filename, off_t *r_size)
->> +{
->> +       struct Image_info img;
->> +       off_t size;
->> +       const unsigned char *buf =
->> +                       (const unsigned char *)slurp_file(filename, &size);
->> +
->> +       /* Check if this is a uImage RAMDisk */
->> +       if (buf != (void*)0 &&
->> +               uImage_probe(buf, size, IH_ARCH_PPC) == IH_TYPE_RAMDISK) {
->> +               if (uImage_load(buf, size, &img) != 0)
->> +                       die ("uImage: Reading %ld bytes from %s failed\n", size, filename);
->> +               buf = img.buf;
->> +               size = img.len;
->> +       }
->> +
->> +       *r_size = size;
->> +       return buf;
->> +}
->> +
->>   int uImage_ppc_probe(const char *buf, off_t len)
->>   {
->>          int type;
->> @@ -196,7 +216,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
->>          blob_buf = fixup_dtb_init(info, blob_buf, &blob_size, load_addr, &dtb_addr);
->>
->>          if (ramdisk) {
->> -               seg_buf = slurp_file(ramdisk, &seg_size);
->> +               seg_buf = slurp_ramdisk_ppc(ramdisk, &seg_size);
->>                  /* Load ramdisk at top of memory */
->>                  hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
->>                                  0, dtb_addr + blob_size, max_addr, -1);
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
+> for mmconf, some system that range reserved in e820, and some have that in ACPI.
+> and those systems will have that mmconf enabled in kdumped kernel.
 
+ 
+> attached is what I like to have with exactusablemap, but maybe is not
+> needed, and we can just stay with exactmap...
+> 
+> ps: we don't need to add e820_remove_type...
+I thought this tiny loop:
++       for (i = 0; i < e820.nr_map; i++) {
++               struct e820entry *ei = &e820.map[i];
++               if (ei->type == type) {
++                       memset(ei, 0, sizeof(struct e820entry));
++                       continue;
++               }
++       }
+would be easier to evaluate what it's doing (cmp to.
+e820_remove_range(0, ULLONG_MAX, E820_RAM, 1);)
+But I do not have a strong opinion on that.
+
+What is this for?:
+@@ -871,6 +879,11 @@ static int __init parse_memmap_one(char
+ 	userdef = 1;
+ 	if (*p == '@') {
+ 		start_at = memparse(p+1, &p);
++		if (exactusablemap_parsed) {
++			/* remove all range with other types */
++			e820_remove_range(start_at, mem_size,
++						 E820_RAM, 0);
++		}
+ 		e820_add_region(start_at, mem_size, E820_RAM);
+ 	} else if (*p == '#') {
+ 		start_at = memparse(p+1, &p);
+
+
+    Thomas
 
 _______________________________________________
 kexec mailing list
