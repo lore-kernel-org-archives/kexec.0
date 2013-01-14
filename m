@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from co9ehsobe003.messaging.microsoft.com ([207.46.163.26]
- helo=co9outboundpool.messaging.microsoft.com)
+Received: from mail-bk0-f48.google.com ([209.85.214.48])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tuljy-0005Nr-Aq
- for kexec@lists.infradead.org; Mon, 14 Jan 2013 15:14:23 +0000
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-Subject: Re: [PATCH 3/3] ppc/uImage: Add support for RAM Disks
-Date: Mon, 14 Jan 2013 15:14:16 +0000
-Message-ID: <70CC66F5C30A414DADDA6973E4CA391A83353D@039-SN1MPN1-001.039d.mgd.msft.net>
-References: <20130111063547.11490.28174.stgit@suzukikp.in.ibm.com>
- <20130111064203.11490.72998.stgit@suzukikp.in.ibm.com>
- <70CC66F5C30A414DADDA6973E4CA391A820296@039-SN1MPN1-002.039d.mgd.msft.net>
- <50F3944D.7080506@in.ibm.com>
-In-Reply-To: <50F3944D.7080506@in.ibm.com>
-Content-Language: en-US
-Content-ID: <66580EA42E62964BBF076F35E78C5F89@mgd.freescale.com>
+ id 1TupKn-0001uG-Ul
+ for kexec@lists.infradead.org; Mon, 14 Jan 2013 19:04:39 +0000
+Received: by mail-bk0-f48.google.com with SMTP id jc3so2197291bkc.35
+ for <kexec@lists.infradead.org>; Mon, 14 Jan 2013 11:04:36 -0800 (PST)
 MIME-Version: 1.0
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
+In-Reply-To: <201301141605.43428.trenn@suse.de>
+References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
+ <2741365.qqWvlU8HGl@hammer82.arch.suse.de>
+ <CAE9FiQV+W21WcZuuWJYJKXhN4sf0mi=iAFgjX644c3EytPXptw@mail.gmail.com>
+ <201301141605.43428.trenn@suse.de>
+Date: Mon, 14 Jan 2013 11:04:36 -0800
+Message-ID: <CAE9FiQVQvj1TPokoCgx_jbp0VACC8cgtFibH4KoqOssEc6JSPw@mail.gmail.com>
+Subject: Re: [PATCH] x86 e820: only void usable memory areas in
+ memmap=exactmap case
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,111 +28,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: "horms@verge.net.au" <horms@verge.net.au>, "bigeasy@linutronix.de" <bigeasy@linutronix.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lethal@linux-sh.org" <lethal@linux-sh.org>, "mat@brain-dump.org" <mat@brain-dump.org>, McClintock Matthew-B29882 <B29882@freescale.com>
+To: Thomas Renninger <trenn@suse.de>
+Cc: horms@verge.net.au, Takao Indoh <indou.takao@jp.fujitsu.com>, MUNEDA Takahiro <muneda.takahiro@jp.fujitsu.com>, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-On Sun, Jan 13, 2013 at 11:14 PM, Suzuki K. Poulose <suzuki@in.ibm.com> wrote:
-> On 01/11/2013 12:41 PM, McClintock Matthew-B29882 wrote:
->>
->> On Fri, Jan 11, 2013 at 12:42 AM, Suzuki K. Poulose <suzuki@in.ibm.com>
->> wrote:
->>>
->>> From: Suzuki K. Poulose <suzuki@in.ibm.com>
->>>
->>> Handle the RAM Disks in uImage format
->>
->>
->> As opposed to simple ext2.gz ramdisk?
+On Mon, Jan 14, 2013 at 7:05 AM, Thomas Renninger <trenn@suse.de> wrote:
+> What is this for?:
+> @@ -871,6 +879,11 @@ static int __init parse_memmap_one(char
+>         userdef = 1;
+>         if (*p == '@') {
+>                 start_at = memparse(p+1, &p);
+> +               if (exactusablemap_parsed) {
+> +                       /* remove all range with other types */
+> +                       e820_remove_range(start_at, mem_size,
+> +                                                E820_RAM, 0);
+> +               }
+>                 e820_add_region(start_at, mem_size, E820_RAM);
+>         } else if (*p == '#') {
+>                 start_at = memparse(p+1, &p);
 
-OK - it's been a while but we only supported uImage for kernel image
-not ramdisk. That's what threw me off when I wrote this email I
-believe.
-
--M
-
->
->
-> Yep. Any supported ramdisk format can be wrapped up in a uImage file.
->
-> Thanks
-> Suzuki
->
->
->>
->> -M
->>
->>>
->>> Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
->>> ---
->>>   kexec/arch/ppc/kexec-uImage-ppc.c |   22 +++++++++++++++++++++-
->>>   1 file changed, 21 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c
->>> b/kexec/arch/ppc/kexec-uImage-ppc.c
->>> index eaea3c1..58935c0 100644
->>> --- a/kexec/arch/ppc/kexec-uImage-ppc.c
->>> +++ b/kexec/arch/ppc/kexec-uImage-ppc.c
->>> @@ -46,6 +46,26 @@ void uImage_ppc_usage(void)
->>>          );
->>>   }
->>>
->>> +char* slurp_ramdisk_ppc(const char *filename, off_t *r_size)
->>> +{
->>> +       struct Image_info img;
->>> +       off_t size;
->>> +       const unsigned char *buf =
->>> +                       (const unsigned char *)slurp_file(filename,
->>> &size);
->>> +
->>> +       /* Check if this is a uImage RAMDisk */
->>> +       if (buf != (void*)0 &&
->>> +               uImage_probe(buf, size, IH_ARCH_PPC) == IH_TYPE_RAMDISK)
->>> {
->>> +               if (uImage_load(buf, size, &img) != 0)
->>> +                       die ("uImage: Reading %ld bytes from %s
->>> failed\n", size, filename);
->>> +               buf = img.buf;
->>> +               size = img.len;
->>> +       }
->>> +
->>> +       *r_size = size;
->>> +       return buf;
->>> +}
->>> +
->>>   int uImage_ppc_probe(const char *buf, off_t len)
->>>   {
->>>          int type;
->>> @@ -196,7 +216,7 @@ static int ppc_load_bare_bits(int argc, char **argv,
->>> const char *buf,
->>>          blob_buf = fixup_dtb_init(info, blob_buf, &blob_size, load_addr,
->>> &dtb_addr);
->>>
->>>          if (ramdisk) {
->>> -               seg_buf = slurp_file(ramdisk, &seg_size);
->>> +               seg_buf = slurp_ramdisk_ppc(ramdisk, &seg_size);
->>>                  /* Load ramdisk at top of memory */
->>>                  hole_addr = add_buffer(info, seg_buf, seg_size,
->>> seg_size,
->>>                                  0, dtb_addr + blob_size, max_addr, -1);
->>>
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+remove all old renges before add E820_RAM, otherwise new add E820
+ranges could be ignored.
 
 _______________________________________________
 kexec mailing list
