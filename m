@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ie0-f179.google.com ([209.85.223.179])
+Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Txjam-0008DA-H2
- for kexec@lists.infradead.org; Tue, 22 Jan 2013 19:33:09 +0000
-Received: by mail-ie0-f179.google.com with SMTP id k14so12186824iea.38
- for <kexec@lists.infradead.org>; Tue, 22 Jan 2013 11:33:07 -0800 (PST)
+ id 1TvVvt-0006ST-JD
+ for kexec@lists.infradead.org; Wed, 16 Jan 2013 16:33:46 +0000
+Message-ID: <50F6D666.5040906@citrix.com>
+Date: Wed, 16 Jan 2013 16:33:42 +0000
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
-In-Reply-To: <1358868049-19884-2-git-send-email-trenn@suse.de>
-References: <1358868049-19884-1-git-send-email-trenn@suse.de>
- <1358868049-19884-2-git-send-email-trenn@suse.de>
-Date: Tue, 22 Jan 2013 11:33:06 -0800
-Message-ID: <CAE9FiQXHG_HMuQK=d+vOXNokZnZ1eSmU+V2_50zuWvtJ=ayEWA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86 e820: Check for exactmap appearance when parsing
- first memmap option
-From: Yinghai Lu <yinghai@kernel.org>
+Subject: Re: [RFC PATCH 0/3] Improve kexec support in Xen hypervisor
+References: <1358353746-1899-1-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1358353746-1899-1-git-send-email-david.vrabel@citrix.com>
+Content-Type: multipart/mixed; boundary="------------090102050701040100040100"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,58 +19,157 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Renninger <trenn@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, hpa@zytor.com, vgoyal@redhat.com
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-On Tue, Jan 22, 2013 at 7:20 AM, Thomas Renninger <trenn@suse.de> wrote:
->
-> memmap=exactmap will throw away all original, but also until then
-> user defined (through other provided memmap= parameters) areas.
-> That means all memmap= boot parameters passed before a memmap=exactmap
-> parameter are not recognized.
-> Without this fix:
-> memmap=x@y memmap=exactmap memmap=i#k
-> only i#k would get recognized.
->
-> This is wrong, this fix will only throw away all original e820 areas once
-> when memmap=exactmap is found in the whole boot command line and before
-> any other memmap= option is parsed.
+--------------090102050701040100040100
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 
-Actually I put this patch already in for-x86-boot branch.
+On 16/01/13 16:29, David Vrabel wrote:
+> This series of patches improves the kexec hypercall in the Xen
+> hypervisor.  It is an incomplete prototype but I posting it early for
+> comments on the proposed ABI/API.
 
-http://git.kernel.org/?p=linux/kernel/git/yinghai/linux-yinghai.git;a=commit;h=bd40ee79abf2351109ebd469b0b9ba6a8f3b0872
+And here is a (very) simple test program and a trivial test image I have
+used.  This provides an example of how the libxc API can be used.
 
-And will update change log to following to merge two change log.
+David
 
----
-Subject: [PATCH] x86: Handle multiple exactmaps and out of order exactmap
+--------------090102050701040100040100
+Content-Type: text/x-csrc; name="xen-kexec-test.c"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="xen-kexec-test.c"
 
-Current code expect that we only have one exactmap and exactmap need to
-first one in memmap=.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <xenctrl.h>
+#include <xen/kexec.h>
+#include "xc_kexec.h"
 
-memmap=exactmap will throw away all original entries, but also until
-then user defined (through other provided memmap= parameters) areas.
-That means all memmap= boot parameters passed before a memmap=exactmap
-parameter are not recognized.
+extern unsigned long image;
+extern unsigned long image_end;
 
-Without this fix:
-        memmap=x@y memmap=exactmap memmap=i#k
-only i#k would get recognized.  This is wrong.
+int main(void)
+{
+    xc_interface *xch;
+    unsigned long start, size;
+    size_t image_size;
+    DECLARE_HYPERCALL_BUFFER(xen_kexec_segment_t, segments);
+    DECLARE_HYPERCALL_BUFFER(void, image_buf);
+    xen_kexec_load_v2_t load;
+    int ret;
 
-This fix will scan the boot_command_line to find if there is exactmap at
-first and only throw away all original e820 entries once, and then parse
-other memmap= option.
+    xch = xc_interface_open(NULL, NULL, 0);
+    if ( !xch )
+    {
+        perror("xc_open");
+        exit(1);
+    }
 
--v2: incorporate change log from Thomas Renninger.
+    ret = xc_kexec_get_range(xch, KEXEC_RANGE_MA_CRASH, 0, &start, &size);
+    if ( ret )
+    {
+        perror("xc_kexec_get_range");
+        exit(1);
+    }
 
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Reviewed-by: Thomas Renninger <trenn@suse.de>
+    printf("Crash region: 0x%08lx-0x%08lx\n", start, start + size);
+
+    image_size = (void *)&image_end - (void *)&image;
+
+    printf("Image %p-%p\n", &image, (void *)&image + image_size);
+
+    image_buf = xc_hypercall_buffer_alloc(xch, image_buf, image_size);
+    if ( !image_buf )
+    {
+        perror("xc_hypercall_buffer_alloc");
+        exit(1);
+    }
+    segments = xc_hypercall_buffer_alloc(xch, segments, sizeof(*segments) * 1);
+    if ( !segments )
+    {
+        perror("xc_hypercall_buffer_alloc");
+        exit(1);
+    }
+
+    memcpy(image_buf, &image, image_size);
+
+    set_xen_guest_handle(segments[0].buf, image_buf);
+    segments[0].size = image_size;
+    segments[0].dest_maddr = start;
+
+    load.type = KEXEC_TYPE_DEFAULT;
+    load.class = KEXEC_CLASS_32;
+    load.nr_segments = 1;
+    set_xen_guest_handle(load.segments, segments);
+    load.entry_maddr = start;
+
+    ret = xc_kexec_load(xch, &load);
+    if ( ret )
+    {
+        perror("xc_kexec_load");
+        exit(1);
+    }
+
+    xc_hypercall_buffer_free(xch, image_buf);
+    xc_hypercall_buffer_free(xch, segments);
+
+    ret = xc_kexec(xch, KEXEC_TYPE_DEFAULT);
+    if ( ret )
+    {
+        perror("xc_kexec_exec");
+        exit(1);
+    }
+
+    xc_interface_close(xch);
+
+    return 0;
+}
+
+/*
+ * Local variables:
+ * mode: C
+ * c-file-style: "BSD"
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
+
+--------------090102050701040100040100
+Content-Type: text/plain; name="image.S"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="image.S"
+
+        .text
+        .code32
+	.globl image
+image:
+1:      mov     $0x3f8+5, %dx
+        inb     %dx, %al
+        test    $0x20, %al
+        je      1b
+        mov     $0x3f8, %dx
+        mov     $'I', %al
+        outb    %al, %dx
+        hlt
+
+        .globl image_end
+image_end:
+
+--------------090102050701040100040100
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------090102050701040100040100--
+
