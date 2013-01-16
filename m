@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from www.linutronix.de ([62.245.132.108] helo=Galois.linutronix.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TvWkX-0007Co-VF
- for kexec@lists.infradead.org; Wed, 16 Jan 2013 17:26:06 +0000
-Date: Wed, 16 Jan 2013 18:26:01 +0100
+ id 1TvWoz-0007Y7-Sx
+ for kexec@lists.infradead.org; Wed, 16 Jan 2013 17:30:42 +0000
+Date: Wed, 16 Jan 2013 18:30:34 +0100
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Subject: Re: [PATCH 3/3] ppc/uImage: Add support for RAM Disks
-Message-ID: <20130116172601.GB20369@linutronix.de>
+Message-ID: <20130116173034.GC20369@linutronix.de>
 References: <20130111063547.11490.28174.stgit@suzukikp.in.ibm.com>
  <20130111064203.11490.72998.stgit@suzukikp.in.ibm.com>
+ <70CC66F5C30A414DADDA6973E4CA391A820296@039-SN1MPN1-002.039d.mgd.msft.net>
+ <50F3944D.7080506@in.ibm.com>
+ <70CC66F5C30A414DADDA6973E4CA391A83353D@039-SN1MPN1-001.039d.mgd.msft.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130111064203.11490.72998.stgit@suzukikp.in.ibm.com>
+In-Reply-To: <70CC66F5C30A414DADDA6973E4CA391A83353D@039-SN1MPN1-001.039d.mgd.msft.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,50 +23,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: mat@brain-dump.org, horms@verge.net.au, kexec@lists.infradead.org, lethal@linux-sh.org
+To: McClintock Matthew-B29882 <B29882@freescale.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lethal@linux-sh.org" <lethal@linux-sh.org>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, "horms@verge.net.au" <horms@verge.net.au>, "mat@brain-dump.org" <mat@brain-dump.org>
 
-KiBTdXp1a2kgSy4gUG91bG9zZSB8IDIwMTMtMDEtMTEgMTI6MTI6MTEgWyswNTMwXToKCm9ubHkg
-c29tZSBzdHlsaXNoIGNvbW1lbnRz4oCmCgo+ZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvcHBjL2tl
-eGVjLXVJbWFnZS1wcGMuYyBiL2tleGVjL2FyY2gvcHBjL2tleGVjLXVJbWFnZS1wcGMuYwo+aW5k
-ZXggZWFlYTNjMS4uNTg5MzVjMCAxMDA2NDQKPi0tLSBhL2tleGVjL2FyY2gvcHBjL2tleGVjLXVJ
-bWFnZS1wcGMuYwo+KysrIGIva2V4ZWMvYXJjaC9wcGMva2V4ZWMtdUltYWdlLXBwYy5jCj5AQCAt
-NDYsNiArNDYsMjYgQEAgdm9pZCB1SW1hZ2VfcHBjX3VzYWdlKHZvaWQpCj4gCSk7Cj4gfQo+IAo+
-K2NoYXIqIHNsdXJwX3JhbWRpc2tfcHBjKGNvbnN0IGNoYXIgKmZpbGVuYW1lLCBvZmZfdCAqcl9z
-aXplKQpjaGFyICpzbHVycF9yYW1kaXNrX3BwYyhjb25zdCBjaGFyICpmaWxlbmFtZSwgb2ZmX3Qg
-KnJfc2l6ZSkKPwoKPit7Cj4rCXN0cnVjdCBJbWFnZV9pbmZvIGltZzsKPisJb2ZmX3Qgc2l6ZTsK
-PisJY29uc3QgdW5zaWduZWQgY2hhciAqYnVmID0gCj4rCQkJKGNvbnN0IHVuc2lnbmVkIGNoYXIg
-KilzbHVycF9maWxlKGZpbGVuYW1lLCAmc2l6ZSk7CgppcyB0aGUgY29uc3QgY2FzdCByZXF1aXJl
-ZCBoZXJlPwoKPisJLyogQ2hlY2sgaWYgdGhpcyBpcyBhIHVJbWFnZSBSQU1EaXNrICovCj4rCWlm
-IChidWYgIT0gKHZvaWQqKTAgJiYKdGhpcyBzaG91bGQgYmUgTlVMTCBpZiBhdCBhbGwKCj4rCQl1
-SW1hZ2VfcHJvYmUoYnVmLCBzaXplLCBJSF9BUkNIX1BQQykgPT0gSUhfVFlQRV9SQU1ESVNLKSB7
-CmFuZCBtYXliZSBzcGxpdHRlZCBpbiBtb3JlIHRoYW4gb25lIGxpbmUKCj4rCQlpZiAodUltYWdl
-X2xvYWQoYnVmLCBzaXplLCAmaW1nKSAhPSAwKQo+KwkJCWRpZSAoInVJbWFnZTogUmVhZGluZyAl
-bGQgYnl0ZXMgZnJvbSAlcyBmYWlsZWRcbiIsIHNpemUsIGZpbGVuYW1lKTsKbm8gc3BhY2UgYmV0
-d2VlbiB0aGUgZnVuY3Rpb24uCgo+KwkJYnVmID0gaW1nLmJ1ZjsKPisJCXNpemUgPSBpbWcubGVu
-Owo+Kwl9Cj4rCj4rCSpyX3NpemUgPSBzaXplOwo+KwlyZXR1cm4gYnVmOwo+K30KPisJCj4gaW50
-IHVJbWFnZV9wcGNfcHJvYmUoY29uc3QgY2hhciAqYnVmLCBvZmZfdCBsZW4pCj4gewo+IAlpbnQg
-dHlwZTsKPkBAIC0xOTYsNyArMjE2LDcgQEAgc3RhdGljIGludCBwcGNfbG9hZF9iYXJlX2JpdHMo
-aW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYsCj4gCWJsb2JfYnVmID0gZml4
-dXBfZHRiX2luaXQoaW5mbywgYmxvYl9idWYsICZibG9iX3NpemUsIGxvYWRfYWRkciwgJmR0Yl9h
-ZGRyKTsKPiAKPiAJaWYgKHJhbWRpc2spIHsKPi0JCXNlZ19idWYgPSBzbHVycF9maWxlKHJhbWRp
-c2ssICZzZWdfc2l6ZSk7Cj4rCQlzZWdfYnVmID0gc2x1cnBfcmFtZGlza19wcGMocmFtZGlzaywg
-JnNlZ19zaXplKTsKCkknbSBub3Qgc3VyZSBidXQgdGhpcyBraW5kYSBicmVha3MgdGhlIGNhc2Ug
-d2hlcmUgc29tZW9uZSB3YXMgdXNpbmcgYQpwbGFpbiBmaWxlIHdpdGhvdXQgdGhlIHVJbWFnZSBo
-ZWFkZXIuIEkgZG9uJ3Qga25vdyBpZiBzb21lb25lIHVzZWQgdGhpcwphdCBhbGwgYnV0IGl0IHNl
-ZW1zIHdlIGhhdmUgY29kZSBmb3IgdGhpcy4gVGhlIHdheSB5b3UgbG9hZCB0aGUgdUltYWdlCmlz
-IHZlcnkgZ2VuZXJpYyBhbmQgSSB3b3VsZCBleHBlY3QgdG8gbG9hZCBpdCB0aGUgc2FtZSB3YXkg
-b24gQVJNIG9yIFNILgoKT25lIHRoaW5nIHRoYXQgaXMgZGlmZmVyZW50IGNvbXBhcmVkIHRvIGtl
-cm5lbDogSWYgdGhlIGNvbXByZXNzaW9uIGlzCnNldCB0byBHWiBvbiBhIHJhbWRpc2sgaW1hZ2Ug
-eW91IHNob3VsZCBub3QgdW5jb21wcmVzcyBpdC4gSSB0aGluayB0aGF0CnVJbWFnZV9sb2FkKCkg
-ZGVjb21wcmVzc2VzIHRoZSAuZ3ogcGFydCBmb3IgeW91IGJ1dCBJIGFtIG5vdCBzdXJlLgoKPiAJ
-CS8qIExvYWQgcmFtZGlzayBhdCB0b3Agb2YgbWVtb3J5ICovCj4gCQlob2xlX2FkZHIgPSBhZGRf
-YnVmZmVyKGluZm8sIHNlZ19idWYsIHNlZ19zaXplLCBzZWdfc2l6ZSwKPiAJCQkJMCwgZHRiX2Fk
-ZHIgKyBibG9iX3NpemUsIG1heF9hZGRyLCAtMSk7Cj4KClNlYmFzdGlhbgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
-eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9rZXhlYwo=
+* McClintock Matthew-B29882 | 2013-01-14 15:14:16 [+0000]:
+
+>On Sun, Jan 13, 2013 at 11:14 PM, Suzuki K. Poulose <suzuki@in.ibm.com> wrote:
+>> On 01/11/2013 12:41 PM, McClintock Matthew-B29882 wrote:
+>>>
+>>> On Fri, Jan 11, 2013 at 12:42 AM, Suzuki K. Poulose <suzuki@in.ibm.com>
+>>> wrote:
+>>>>
+>>>> From: Suzuki K. Poulose <suzuki@in.ibm.com>
+>>>>
+>>>> Handle the RAM Disks in uImage format
+>>>
+>>>
+>>> As opposed to simple ext2.gz ramdisk?
+>
+>OK - it's been a while but we only supported uImage for kernel image
+>not ramdisk. That's what threw me off when I wrote this email I
+>believe.
+
+Who is "we"? Did you use kexec and pass ext2.gz as a ramdisk?
+
+u-boot supports this like for ever. You start the kernel via
+ bootm x y z
+
+where y is the address of the ramdisk / initrd. passing the address the
+ext2.gz files does not work.
+As an alternative to this you can only pass x to bootm and the image has
+the "uImage.FIT" format which can contain the kernel, device tree and a
+ramdisk in one piece.
+
+>-M
+
+Sebastian
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
