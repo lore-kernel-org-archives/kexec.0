@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from va3ehsobe002.messaging.microsoft.com ([216.32.180.12]
- helo=va3outboundpool.messaging.microsoft.com)
+Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TvWwn-0000ot-EY
- for kexec@lists.infradead.org; Wed, 16 Jan 2013 17:38:46 +0000
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-Subject: Re: [PATCH 3/3] ppc/uImage: Add support for RAM Disks
-Date: Wed, 16 Jan 2013 17:37:45 +0000
-Message-ID: <70CC66F5C30A414DADDA6973E4CA391A83F787@039-SN1MPN1-001.039d.mgd.msft.net>
-References: <20130111063547.11490.28174.stgit@suzukikp.in.ibm.com>
- <20130111064203.11490.72998.stgit@suzukikp.in.ibm.com>
- <70CC66F5C30A414DADDA6973E4CA391A820296@039-SN1MPN1-002.039d.mgd.msft.net>
- <50F3944D.7080506@in.ibm.com>
- <70CC66F5C30A414DADDA6973E4CA391A83353D@039-SN1MPN1-001.039d.mgd.msft.net>
- <20130116173034.GC20369@linutronix.de>
-In-Reply-To: <20130116173034.GC20369@linutronix.de>
-Content-Language: en-US
-Content-ID: <1A17697BEB2D3B40937350E5271C580C@mgd.freescale.com>
+ id 1TvX6Q-0001mc-FL
+ for kexec@lists.infradead.org; Wed, 16 Jan 2013 17:48:43 +0000
+Message-ID: <50F6E7F6.7060905@citrix.com>
+Date: Wed, 16 Jan 2013 17:48:38 +0000
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
+Subject: Re: [Xen-devel] [RFC PATCH 0/3] Improve kexec support in Xen
+ hypervisor
+References: <1358353746-1899-1-git-send-email-david.vrabel@citrix.com>
+ <1358355772.13856.11.camel@zakaz.uk.xensource.com>
+In-Reply-To: <1358355772.13856.11.camel@zakaz.uk.xensource.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,18 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lethal@linux-sh.org" <lethal@linux-sh.org>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, "mat@brain-dump.org" <mat@brain-dump.org>, McClintock Matthew-B29882 <B29882@freescale.com>
+To: Ian Campbell <Ian.Campbell@citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-On Wed, Jan 16, 2013 at 11:30 AM, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
-> Who is "we"? Did you use kexec and pass ext2.gz as a ramdisk?
+On 16/01/13 17:02, Ian Campbell wrote:
+> On Wed, 2013-01-16 at 16:29 +0000, David Vrabel wrote:
+>> Since the kexec hypercall is for use by dom0 I have removed the
+>> implementation of the old load/unload ops and thus guests will require
+>> updated kexec-tools to load images.  Is this acceptable? 
+> 
+> How hard would it be to also support the old interface for the benefit
+> of old kernels and userspaces (e.g. existing distros)?
 
-We = me for the most part.
+There's an easy way (see patch 1), but it doesn't have full
+compatibility as it no longer executes the code page supplied by the
+guest.  This won't matter with Linux guests as their code pages can be
+replaced by the code in Xen, but may matter with some more obscure
+guests that do unusual things in their code pages (are there any like
+this -- I doubt it?).
 
-Yes, that's what I did, I never passed in a uboot wrapped image.
+Full compatibility is possible and not that hard.  Is it actually worth
+it though?  Will there be people updating Xen to 4.3 and unable to
+update their kernel or userspace tools?
 
--M
+> Rather than a _v2 suffix we have in the past renamed the old ones
+> _compat and introduced the new ones, with appropriate use of
+> __XEN_INTERFACE_VERSION__ to paper over things for old users.
+> 
+> See __HYPERVISOR_sched_op for example.
+
+Ok. I'll look at this.
+
+David
 
 _______________________________________________
 kexec mailing list
