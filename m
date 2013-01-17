@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from mo6-p00-ob.rzone.de ([2a01:238:20a:202:5300::1])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TvteY-0005mm-1a
- for kexec@lists.infradead.org; Thu, 17 Jan 2013 17:53:26 +0000
-Message-ID: <50F83A8D.2030307@citrix.com>
-Date: Thu, 17 Jan 2013 17:53:17 +0000
-From: David Vrabel <david.vrabel@citrix.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] kexec: extend hypercall with improved load/unload ops
-References: <1358353746-1899-1-git-send-email-david.vrabel@citrix.com>
- <1358353746-1899-2-git-send-email-david.vrabel@citrix.com>
- <20130117122803.GC2871@host-192-168-1-59.local.net-space.pl>
- <50F80FB2.9080107@citrix.com>
- <20130117151712.GE2871@host-192-168-1-59.local.net-space.pl>
-In-Reply-To: <20130117151712.GE2871@host-192-168-1-59.local.net-space.pl>
+ id 1TvuVC-00017D-OH
+ for kexec@lists.infradead.org; Thu, 17 Jan 2013 18:47:55 +0000
+From: Olaf Hering <olaf@aepfle.de>
+Subject: [PATCH] x86: update x86_linux_header
+Date: Thu, 17 Jan 2013 19:47:25 +0100
+Message-Id: <1358448445-27576-1-git-send-email-olaf@aepfle.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,45 +15,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: kexec@lists.infradead.org
+Cc: Olaf Hering <olaf@aepfle.de>, "H. Peter Anvin" <hpa@zytor.com>
 
-On 17/01/13 15:17, Daniel Kiper wrote:
-> On Thu, Jan 17, 2013 at 02:50:26PM +0000, David Vrabel wrote:
->> On 17/01/13 12:28, Daniel Kiper wrote:
->>> On Wed, Jan 16, 2013 at 04:29:04PM +0000, David Vrabel wrote:
-[..]
->>>> +    if ( image->class == KEXEC_CLASS_32 )
->>>> +        compat_machine_kexec(image->entry_maddr);
->>>
->>> Why do you need that?
->>
->> image->class controls whether the processor is in 32-bit or 64-bit mode
->> when calling the image.  The current implementation only allows images
->> to be executed with the same class as dom0.
->>
->> It's called class because that's the term ELF uses in the ELF header.
-> 
-> As I correctly understand this sets processor mode before new kernel exection.
-> If yes then it is not needed. Purgatory code (from kexec-tools) does all
-> needed things. Please check.
+Update struct x86_linux_header with new fields, based on
+arch/x86/include/asm/bootparam.h as included in linux-3.7.
+Upcoming changes will use the payload_offset/payload_length fields.
 
-On x86 I think it would probably be fine to specify entry is always in
-64-bit mode but for ARM and future architectures it is less clear and it
-becomes more difficult to have a well-defined ABI.
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
 
-In fact, we probably want a more generic architecture field. e.g,
+Compile tested only!
 
-#define XEN_KEXEC_ARCH_X86_32 0
-#define XEN_KEXEC_ARCH_X86_64 1
-#define XEN_KEXEC_ARCH_ARMv7  2
-#define XEN_KEXEC_ARCH_ARMv8  3
+ include/x86/x86-linux.h | 40 ++++++++++++++++------------------------
+ 1 file changed, 16 insertions(+), 24 deletions(-)
 
-David
+diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
+index 27af02b..8f7a797 100644
+--- a/include/x86/x86-linux.h
++++ b/include/x86/x86-linux.h
+@@ -198,14 +198,13 @@ struct x86_linux_header {
+ 	uint8_t  reserved1[0x1f1];		/* 0x000 */
+ 	uint8_t  setup_sects;			/* 0x1f1 */
+ 	uint16_t root_flags;			/* 0x1f2 */
+-	uint16_t syssize;			/* 0x1f4 */
+-	uint16_t swapdev;			/* 0x1f6 */
+-	uint16_t ramdisk_flags;			/* 0x1f6 */
++	uint32_t syssize;			/* 0x1f4 */
++	uint16_t ram_size;			/* 0x1f8 */
+ 	uint16_t vid_mode;			/* 0x1fa */
+ 	uint16_t root_dev;			/* 0x1fc */
+ 	uint16_t boot_sector_magic;		/* 0x1fe */
+ 	/* 2.00+ */
+-	uint8_t  reserved3[2];			/* 0x200 */
++	uint16_t jump;				/* 0x200 */
+ 	uint8_t  header_magic[4];		/* 0x202 */
+ 	uint16_t protocol_version;		/* 0x206 */
+ 	uint32_t realmode_swtch;		/* 0x208 */
+@@ -217,35 +216,28 @@ struct x86_linux_header {
+ 	uint32_t code32_start;			/* 0x214 */
+ 	uint32_t ramdisk_image;			/* 0x218 */
+ 	uint32_t ramdisk_size;			/* 0x21c */
+-	uint8_t  reserved4[4];			/* 0x220 */
++	uint32_t bootsect_kludge;		/* 0x220 */
+ 	/* 2.01+ */
+ 	uint16_t heap_end_ptr;			/* 0x224 */
+-	uint8_t  reserved5[2];			/* 0x226 */
++	uint8_t  ext_loader_ver;		/* 0x226 */
++	uint8_t  ext_loader_type;		/* 0x227 */
+ 	/* 2.02+ */
+ 	uint32_t cmd_line_ptr;			/* 0x228 */
+ 	/* 2.03+ */
+ 	uint32_t initrd_addr_max;		/* 0x22c */
+-#if TENATIVE
+-	/* 2.04+ */
+-	uint16_t entry32_off;			/* 0x230 */
+-	uint16_t internal_cmdline_off;		/* 0x232 */
+-	uint32_t low_base;			/* 0x234 */
+-	uint32_t low_memsz;			/* 0x238 */
+-	uint32_t low_filesz;			/* 0x23c */
+-	uint32_t real_base;			/* 0x240 */
+-	uint32_t real_memsz;			/* 0x244 */
+-	uint32_t real_filesz;			/* 0x248 */
+-	uint32_t high_base;			/* 0x24C */
+-	uint32_t high_memsz;			/* 0x250 */
+-	uint32_t high_filesz;			/* 0x254 */
+-#else
++
+ 	uint32_t kernel_alignment;		/* 0x230 */
+ 	uint8_t  relocatable_kernel;		/* 0x234 */
+ 	uint8_t  reserved6[3];			/* 0x235 */
+-	uint32_t cmdline_size;                  /* 0x238 */
+-	uint32_t hardware_subarch;              /* 0x23C */
+-	uint64_t hardware_subarch_data;         /* 0x240 */
+-#endif
++	uint32_t cmdline_size;			/* 0x238 */
++	uint32_t hardware_subarch;		/* 0x23C */
++	uint64_t hardware_subarch_data;		/* 0x240 */
++	uint32_t payload_offset;		/* 0x248 */
++	uint32_t payload_size;			/* 0x24C */
++	uint64_t setup_data;			/* 0x250 */
++	uint64_t pref_address;			/* 0x258 */
++	uint32_t init_size;			/* 0x260 */
++	uint32_t handover_offset;		/* 0x264 */
+ } PACKED;
+ 
+ #endif /* ASSEMBLY */
+-- 
+1.8.0.1
+
 
 _______________________________________________
 kexec mailing list
