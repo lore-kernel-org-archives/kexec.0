@@ -1,32 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TveTB-000590-1P
- for kexec@lists.infradead.org; Thu, 17 Jan 2013 01:40:43 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 33C283EE0BC
- for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 10:40:38 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 1D3AB45DE4E
- for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 10:40:38 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id EA5C245DD78
- for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 10:40:37 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id C8AF01DB802C
- for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 10:40:37 +0900 (JST)
-Received: from m023.s.css.fujitsu.com (m023.s.css.fujitsu.com [10.0.81.63])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 774421DB803A
- for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 10:40:37 +0900 (JST)
-Date: Thu, 17 Jan 2013 10:38:13 +0900 (JST)
-Message-Id: <20130117.103813.295979615.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2] makedumpfile: request the kernel do page scans
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130111223034.GA2154@sgi.com>
-References: <20130107133935.GA1207@sgi.com>
- <20130110.000954.305449175.d.hatayama@jp.fujitsu.com>
- <20130111223034.GA2154@sgi.com>
-Mime-Version: 1.0
+ id 1TvgxK-0002ms-V6
+ for kexec@lists.infradead.org; Thu, 17 Jan 2013 04:20:00 +0000
+Received: from /spool/local
+ by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Thu, 17 Jan 2013 14:13:42 +1000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id 81E072BB004A
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 15:19:47 +1100 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r0H4Jk4766846906
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 15:19:46 +1100
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r0H4JkLB019121
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 15:19:47 +1100
+Message-ID: <50F76BB0.2070000@in.ibm.com>
+Date: Thu, 17 Jan 2013 08:40:40 +0530
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/3] kexec/uImage: Return the image type for uImage_probe
+References: <20130111063547.11490.28174.stgit@suzukikp.in.ibm.com>
+ <20130111064131.11490.22173.stgit@suzukikp.in.ibm.com>
+ <20130116172036.GA20369@linutronix.de>
+In-Reply-To: <20130116172036.GA20369@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,101 +36,176 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cpw@sgi.com
-Cc: kexec@lists.infradead.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: mat@brain-dump.org, horms@verge.net.au, kexec@lists.infradead.org, lethal@linux-sh.org
 
-From: Cliff Wickman <cpw@sgi.com>
-Subject: Re: [PATCH v2] makedumpfile: request the kernel do page scans
-Date: Fri, 11 Jan 2013 16:30:34 -0600
+On 01/16/2013 10:50 PM, Sebastian Andrzej Siewior wrote:
+> * Suzuki K. Poulose | 2013-01-11 12:11:36 [+0530]:
+>
+>> From: Suzuki K. Poulose <suzuki@in.ibm.com>
+>>
+>> uImage supports different types of payloads, including kernel,
+>> ramdisks etc. uImage_probe() as of now checks whether the supplied
+>> payload is of type KERNEL ( i.e, IH_TYPE_KERNEL or IH_TYPE_KERNEL_NOLOAD ).
+>>
+>> Change this behaviour to return the image type, if it is one of the supported
+>> payloads. This change is in prepartion to support ramdisks in uImage format.
+>>
+>> Also, I have changed the code to check for the OS type only for the kernel images.
+>>
+>> Is this check really needed ? We shouldn't bother what OS is being loaded. Isn't it ?
+>
+> We should bother because mostly linux is supported. Other operating
+> systems like NetBSD might have other ABI for the enter point or some
+> special requirements. The entry ABI for linux comapared to WindowsCE is
+> different for ARM just to name one example.
+>
 
-> Hi Hatayama,
-> 
+Ok. Makes sense now. Thanks for the clarification.
 
-Hello Cliff,
+>> This change would allow the user to decide if the image is of their interest.
+>>
+>> Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+>> ---
+>> kexec/arch/arm/kexec-uImage-arm.c |    8 +++++++-
+>> kexec/arch/ppc/kexec-uImage-ppc.c |    8 +++++++-
+>> kexec/arch/sh/kexec-uImage-sh.c   |    9 ++++++++-
+>> kexec/kexec-uImage.c              |   16 ++++++++++------
+>> 4 files changed, 32 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/kexec/arch/arm/kexec-uImage-arm.c b/kexec/arch/arm/kexec-uImage-arm.c
+>> index 4875185..dc1bcb8 100644
+>> --- a/kexec/arch/arm/kexec-uImage-arm.c
+>> +++ b/kexec/arch/arm/kexec-uImage-arm.c
+>> @@ -11,7 +11,13 @@
+>>
+>> int uImage_arm_probe(const char *buf, off_t len)
+>> {
+>> -	return uImage_probe(buf, len, IH_ARCH_ARM);
+>> +	int type;
+>> +	int rc = -1;
+>> +
+>> +	type = uImage_probe(buf, len, IH_ARCH_ARM);
+>> +	if (type == IH_TYPE_KERNEL || type == IH_TYPE_KERNEL_NOLOAD)
+>> +		rc = 0;
+>> +	return rc;
+>> }
+>>
+>> int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>> diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+>> index e55bf94..eaea3c1 100644
+>> --- a/kexec/arch/ppc/kexec-uImage-ppc.c
+>> +++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+>> @@ -48,7 +48,13 @@ void uImage_ppc_usage(void)
+>>
+>> int uImage_ppc_probe(const char *buf, off_t len)
+>> {
+>> -	return uImage_probe(buf, len, IH_ARCH_PPC);
+>> +	int type;
+>> +	int rc = -1;
+>> +
+>> +	type = uImage_probe(buf, len, IH_ARCH_PPC);
+>> +	if (type == IH_TYPE_KERNEL || type == IH_TYPE_KERNEL_NOLOAD)
+>> +		rc = 0;
+>> +	return rc;
+>> }
+>>
+>> static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+>> diff --git a/kexec/arch/sh/kexec-uImage-sh.c b/kexec/arch/sh/kexec-uImage-sh.c
+>> index e983165..54bb073 100644
+>> --- a/kexec/arch/sh/kexec-uImage-sh.c
+>> +++ b/kexec/arch/sh/kexec-uImage-sh.c
+>> @@ -13,7 +13,14 @@
+>>
+>> int uImage_sh_probe(const char *buf, off_t len)
+>> {
+>> -	return uImage_probe(buf, len, IH_ARCH_SH);
+>> +	int type;
+>> +	int rc = -1;
+>> +
+>> +	type = uImage_probe(buf, len, IH_ARCH_SH);
+>> +	if (type == IH_TYPE_KERNEL || type == IH_TYPE_KERNEL_NOLOAD)
+>> +		rc = uImage_probe(buf, len, IH_ARCH_SH);
+>
+> This looks like a typo compared to ppc/arm above. If so you could create
+> uImage_probe_kernel() which has the type == check.
+>
 
-Sorry, I failed to reply this to you. I have not noticed error mail
-returned back to from system...
+Yes, indeed. Thanks for catching that. Will fix that. It should have
+been :
+	rc = 0;
 
-First, today I sent the RFC patch set focussing on mapping vmcore
-regions in direct mapping region. Please see it. I signed off the 2nd
-patch with your signature because I reused your code constructing page
-tables.
+>> +
+>> +	return rc;
+>> }
+>>
+>> int uImage_sh_load(int argc, char **argv, const char *buf, off_t len,
+>> diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
+>> index 3bc85c5..dcbd635 100644
+>> --- a/kexec/kexec-uImage.c
+>> +++ b/kexec/kexec-uImage.c
+>> @@ -16,6 +16,10 @@
+>>   * Basic uImage loader. Not rocket science.
+>>   */
+>>
+>> +/*
+>> + * Returns the image type if everything goes well. This would
+>> + * allow the user to decide if the image is of their interest.
+>> + */
+>> int uImage_probe(const unsigned char *buf, off_t len, unsigned int arch)
+>> {
+>> 	struct image_header header;
+>> @@ -42,17 +46,17 @@ int uImage_probe(const unsigned char *buf, off_t len, unsigned int arch)
+>> 	switch (header.ih_type) {
+>> 	case IH_TYPE_KERNEL:
+>> 	case IH_TYPE_KERNEL_NOLOAD:
+>> +		/* XXX: Should we really check this ? */
+> Yes.
+>> +		if (header.ih_os != IH_OS_LINUX) {
+>> +			printf("uImage os %d unsupported\n", header.ih_os);
+>> +			return -1;
+>> +		}
+>
+> Why did move this piece. Is it because ramdisk does not have an OS
+> selected?
+>
+To be frank, I don't know. Is it otherwise ?
 
-> On Thu, Jan 10, 2013 at 12:09:54AM +0900, HATAYAMA Daisuke wrote:
->> From: Cliff Wickman <cpw@sgi.com>
->> Subject: Re: [PATCH v2] makedumpfile: request the kernel do page scans
->> Date: Mon, 7 Jan 2013 07:39:35 -0600
->> 
->> > An update on testing thise patches:
->> > 
->> >> This version of the patch improves the consolidation of the mem_map table
->> >> that is passed to the kernel.  See make_kernel_mmap().
->> >> Particularly the seemingly duplicate pfn ranges generated on an older
->> >> (2.6.32-based, rhel6) kernel.
->> > 
->> > 
->> > On a 2TB machine (idle) machine:
->> >   the crash kernel ran successfully in 512M
->> >   the scan for unnecessary pages takes about 40 seconds
->> >   it was a single scan, not cyclic
->> >   
->> > On a 16TB machine (idle) machine:
->> >   the crash kernel ran successfully in 512M
->> >   there is a pause of about 4 minutes during makedumpfile initialization
->> >   the scan for unnecessary pages takes about 4.8 minutes
->> >   it was a single scan, not cyclic
->> > 
->> 
->> I wonder why this didn't result in OOM on 16TB. Was that really done
->> in non-cyclic mode? Could you show me a log of makedumpfile? You can
->> create it by passing --message-level 31.
-> 
-> The test was done in non-cyclic mode.
-> 
-> But I had changed the kernel patch to do a direct mapping of the page
-> structures, rather than using ioremap.
+>> 		break;
+>> 	default:
+>> 		printf("uImage type %d unsupported\n", header.ih_type);
+>> 		return -1;
+>> 	}
+>>
+>> -	if (header.ih_os != IH_OS_LINUX) {
+>> -		printf("uImage os %d unsupported\n", header.ih_os);
+>> -		return -1;
+>> -	}
+>> -
+>> 	if (header.ih_arch != arch) {
+>> 		printf("uImage arch %d unsupported\n", header.ih_arch);
+>> 		return -1;
+>> @@ -84,7 +88,7 @@ int uImage_probe(const unsigned char *buf, off_t len, unsigned int arch)
+>> 		return -1;
+>> 	}
+>> #endif
+>> -	return 0;
+>> +	return (int)header.ih_type;
+>
+> Why do you return type here?
+>
+This will help the caller to decide if the target is of his interest,
+and deal with it. This will be used in the later patches in the series
+to check for a RAMDISK type. See patch 2/3 and 3/3.
 
-Then, I still wonder why this didn't result in OOM. This OOM is not
-caused by memory consumption of page table, by two bitmaps of
-makedumpfile that grows in proportion to memory size. On 2TB, there
-are 64MB two bitmaps and on 16TB, there are 512MB two bitmaps.
+Thanks
+Suzuki
 
-> I'll attach the kernel patch and the makedumpfile patch, if you would
-> like to test them.
-> (2 kernel patches, one for 2.6.32-based and one for 3.0.13-based)
 
-As I said some times previously, I have already tried your patch set
-on local machine. See the url below, where I attached result profiling
-your patch set with perf record.
-
-http://lists.infradead.org/pipermail/kexec/2012-December/007500.html
-
-> I'm also experimenting with the same interface to copy pages back to
-> makedumpfile without using /proc/vmcore.  There is some improvement
-> there.  I just now dumped a 2TB idle system (it wrote a 3.6GB dump
-> file).
-
-So, I have already understood your patch is effective for this issue
-but I have continued to say that this is mainly caused by calling
-ioremap too many times. IOW, I guess the performance improvement you
-saw is mostly by remapping a whole memory by ioremap at the same time.
-
-> The copy phase took 7:12 with the direct copy, 8:35 using /proc/vmcore.
-> I'll attach that patch too.
-
-Please show us more detailed results. I don't know how you did this
-benchmark and how I should evaluate this.
-
-I also think that makedumpfile also does IO. Improvement of a few
-minutes seems a small impact, not enough for porting filtering into
-kernel-space.
-
-Thanks.
-HATAYAMA, Daisuke
 
 
 _______________________________________________
