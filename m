@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tvn3z-00021x-D5
- for kexec@lists.infradead.org; Thu, 17 Jan 2013 10:51:18 +0000
-Message-Id: <50F7E5B002000078000B6BB5@nat28.tlf.novell.com>
-Date: Thu, 17 Jan 2013 10:51:12 +0000
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [RFC PATCH 0/3] Improve kexec support in Xen
- hypervisor
+ id 1Tvndc-0005DX-4o
+ for kexec@lists.infradead.org; Thu, 17 Jan 2013 11:28:04 +0000
+Date: Thu, 17 Jan 2013 12:27:43 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [RFC PATCH 0/3] Improve kexec support in Xen hypervisor
+Message-ID: <20130117112743.GB2871@host-192-168-1-59.local.net-space.pl>
 References: <1358353746-1899-1-git-send-email-david.vrabel@citrix.com>
- <1358355772.13856.11.camel@zakaz.uk.xensource.com>
- <50F6E7F6.7060905@citrix.com>
- <50F7E4B102000078000B6BA7@nat28.tlf.novell.com>
-In-Reply-To: <50F7E4B102000078000B6BA7@nat28.tlf.novell.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1358353746-1899-1-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,28 +23,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>, Ian Campbell <Ian.Campbell@citrix.com>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, xen-devel@lists.xen.org
 
->>> On 17.01.13 at 11:46, "Jan Beulich" <JBeulich@suse.com> wrote:
->>>> On 16.01.13 at 18:48, David Vrabel <david.vrabel@citrix.com> wrote:
->> Full compatibility is possible and not that hard.  Is it actually worth
->> it though?  Will there be people updating Xen to 4.3 and unable to
->> update their kernel or userspace tools?
-> 
-> I think we simply shouldn't even be considering removal of
-> functionality that we can't tell for sure is not being used
-> anywhere, and that we don't deliberately want to go away (like
-> was the case with 32-bit hypervisor support).
+On Wed, Jan 16, 2013 at 04:29:03PM +0000, David Vrabel wrote:
+> This series of patches improves the kexec hypercall in the Xen
+> hypervisor.  It is an incomplete prototype but I posting it early for
+> comments on the proposed ABI/API.
+>
+> This allows a privileged Xen guest to load kexec images into the
+> hypervisor from a userspace tool without using the Linux kernel's
+> kexec subsystem.  It is the first step to supporting kexec of crash
+> kernels from a pv-ops dom0 kernel (the required kernel and kexec-tools
+> patches will be posted later).
+>
+> The kernel will require a kexec hypercall somewhere in the
+> crash_kexec() path to actually exec the loaded image.  Any preferences
+> on how the hook for this should be implemented?  Note that the kernel
 
-Forgot to say - for our distros, the kernel is being updated quite
-regularly, whereas I have no idea at what intervals the kexec
-user space code gets pulled. Plus I don't think I've seen any
-patches to this one yet, so you're basically disabling all kexec
-functionality for the time being when you remove the old code.
+This should be implemented as stub which be called by machine_kexec()
+and later it would call relevant hypercall.
 
-Jan
+> won't be aware that an image as been loaded as it is loaded directly
+> into the hypervisor and not via the kernel's kexec_load system call.
 
+Maybe we should have sepcial kexec hypercall function which allow us
+to ask hypervisor that image is loaded or not.
+
+> Since the kexec hypercall is for use by dom0 I have removed the
+> implementation of the old load/unload ops and thus guests will require
+> updated kexec-tools to load images.  Is this acceptable?
+
+Not yet. I think that old interface should stay as long as Xen Linux Kernel
+could run on latest versions of hypervisor.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
