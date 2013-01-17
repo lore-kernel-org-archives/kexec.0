@@ -1,18 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.eu.citrix.com ([46.33.159.39])
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tvlt4-00019M-6z
- for kexec@lists.infradead.org; Thu, 17 Jan 2013 09:35:56 +0000
-Message-ID: <1358415350.13856.30.camel@zakaz.uk.xensource.com>
-Subject: Re: [Xen-devel] [RFC PATCH 0/3] Improve kexec support in Xen
- hypervisor
-From: Ian Campbell <Ian.Campbell@citrix.com>
-Date: Thu, 17 Jan 2013 09:35:50 +0000
-In-Reply-To: <50F6E7F6.7060905@citrix.com>
-References: <1358353746-1899-1-git-send-email-david.vrabel@citrix.com>
- <1358355772.13856.11.camel@zakaz.uk.xensource.com>
- <50F6E7F6.7060905@citrix.com>
+ id 1Tvlti-0001OE-32
+ for kexec@lists.infradead.org; Thu, 17 Jan 2013 09:36:35 +0000
+Received: from /spool/local
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Thu, 17 Jan 2013 19:30:27 +1000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id CBBCD2CE804A
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 20:36:25 +1100 (EST)
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r0H9aPr128704962
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 20:36:25 +1100
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+ by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r0H9aPJB001177
+ for <kexec@lists.infradead.org>; Thu, 17 Jan 2013 20:36:25 +1100
+Message-ID: <50F7C617.4070300@linux.vnet.ibm.com>
+Date: Thu, 17 Jan 2013 15:06:23 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Subject: Re: makedumpfile bug with ppc64 CONFIG_SPARSEMEM_EXTREME
+References: <1268295784.3657868.1357852163361.JavaMail.root@redhat.com>
+In-Reply-To: <1268295784.3657868.1357852163361.JavaMail.root@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +38,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Dave Anderson <anderson@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, CAI Qian <caiqian@redhat.com>
 
-On Wed, 2013-01-16 at 17:48 +0000, David Vrabel wrote:
-> On 16/01/13 17:02, Ian Campbell wrote:
-> > On Wed, 2013-01-16 at 16:29 +0000, David Vrabel wrote:
-> >> Since the kexec hypercall is for use by dom0 I have removed the
-> >> implementation of the old load/unload ops and thus guests will require
-> >> updated kexec-tools to load images.  Is this acceptable? 
-> > 
-> > How hard would it be to also support the old interface for the benefit
-> > of old kernels and userspaces (e.g. existing distros)?
+On 01/11/2013 02:39 AM, Dave Anderson wrote:
 > 
-> There's an easy way (see patch 1), but it doesn't have full
-> compatibility as it no longer executes the code page supplied by the
-> guest.  This won't matter with Linux guests as their code pages can be
-> replaced by the code in Xen, but may matter with some more obscure
-> guests that do unusual things in their code pages (are there any like
-> this -- I doubt it?).
-
-I'm not sure that any other PV dom0 support kexec on Xen at all.
-
-> Full compatibility is possible and not that hard.  Is it actually worth
-> it though?  Will there be people updating Xen to 4.3 and unable to
-> update their kernel or userspace tools?
-
-We've been telling people for a while to try and use their distro
-packages where possible. Even if they build Xen from source it would be
-nice if they didn't have to also then rebuild their kernel or the kexec
-tools etc and could keep their existing packages.
-
-That said I'm not sure how widespread use of kexec is outside of distros
-anyway, and they can obviously integrate the right bits.
-
-> > Rather than a _v2 suffix we have in the past renamed the old ones
-> > _compat and introduced the new ones, with appropriate use of
-> > __XEN_INTERFACE_VERSION__ to paper over things for old users.
-> > 
-> > See __HYPERVISOR_sched_op for example.
 > 
-> Ok. I'll look at this.
+> ----- Original Message -----
+>>
+>> Our QA group recently ran into a makedumpfile problem while
+>> testing kdump/makedumpfile w/upstream 3.7.1 kernels, which
+>> had to do with the filtering of pages on a 12GB ppc64 system.
+>>
+> ... [ cut ] ...
+>>
+>> I haven't checked why the original math fails in the case of the
+>> ppc64 kernel, while it does not fail in a CONFIG_SPARSEMEM_EXTREME
+>> x86_64 kernel, for example. (page size maybe?)  But obviously the
+>> simpler dimemsion-check is a better way to do it.
+>>
+>> Of course, within the current constraints of makedumpfile, it's not
+>> that easy.  Ideally the kernel could pass the configuration in
+>> the vmcoreinfo with a VMCOREINFO_CONFIG(name).  But anyway, I'll leave
+>> that up to you.
+>>
+>> Thanks,
+>>   Dave
 > 
-> David
+> It's presumably being seen in 3.7.1 because of this commit:
+> 
+>   $ git log -p arch/powerpc/include/asm/sparsemem.h
+>   commit 048ee0993ec8360abb0b51bdf8f8721e9ed62ec4
+>   Author: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
+>   Date:   Mon Sep 10 02:52:55 2012 +0000
+> 
+>       powerpc/mm: Add 64TB support
+>     
+>       Increase max addressable range to 64TB. This is not tested on
+>       real hardware yet.
+>     
+>       Reviewed-by: Paul Mackerras <paulus@samba.org>
+>       Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
+>       Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> 
+>   diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
+>   index 0c5fa31..f6fc0ee 100644
+>   --- a/arch/powerpc/include/asm/sparsemem.h
+>   +++ b/arch/powerpc/include/asm/sparsemem.h
+>   @@ -10,8 +10,8 @@
+>     */
+>    #define SECTION_SIZE_BITS       24
+> 
+>   -#define MAX_PHYSADDR_BITS       44
+>   -#define MAX_PHYSMEM_BITS        44
+>   +#define MAX_PHYSADDR_BITS       46
+>   +#define MAX_PHYSMEM_BITS        46
+> 
+>    #endif /* CONFIG_SPARSEMEM */
+> 
+>   $ git describe --contains 048ee0993ec8360abb0b51bdf8f8721e9ed62ec4
+>   v3.7-rc1~108^2~32
+>   $
+>   
+> Dave
+
+Similar issue was seen on s390x last year
+(http://lists.infradead.org/pipermail/kexec/2011-December/005905.html).
+The change in
+MAX_PHYSMEM_BITS define in kernel causes sparsemem extreme check to fail
+in makedumpfile. This needs to be fixed in the same way as it was on
+s390x. Will post a fix patch for makedumpfile after testing it on
+upstream kernel.
+
+Thanks,
+-Mahesh.
 
 
 
