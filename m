@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TxfNU-0001zY-D6
- for kexec@lists.infradead.org; Tue, 22 Jan 2013 15:03:10 +0000
+ id 1TxfNU-0001zZ-DC
+ for kexec@lists.infradead.org; Tue, 22 Jan 2013 15:03:09 +0000
 From: Thomas Renninger <trenn@suse.de>
-Subject: [PATCH 1/3] kexec: Split kernel_version() to also be able to pass a
- release string
-Date: Tue, 22 Jan 2013 16:02:13 +0100
-Message-Id: <1358866935-18458-2-git-send-email-trenn@suse.de>
+Subject: [PATCH 2/3] kexec x86: Extract kernel version and convert it to
+ KERNEL_VERSION() style
+Date: Tue, 22 Jan 2013 16:02:14 +0100
+Message-Id: <1358866935-18458-3-git-send-email-trenn@suse.de>
 In-Reply-To: <1358866935-18458-1-git-send-email-trenn@suse.de>
 References: <1358866935-18458-1-git-send-email-trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
@@ -26,113 +26,66 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: x86@kernel.org, kexec@lists.infradead.org, hpa@zytor.com, yinghai@kernel.org, Thomas Renninger <trenn@suse.de>, vgoyal@redhat.com
 
-No functional change, later patches need this.
+from the kernel which is going to be loaded.
+This is needed if kexec wants to check for available features by kernel release
+version.
 
 Signed-off-by: Thomas Renninger <trenn@suse.de>
 ---
- kexec/arch/i386/crashdump-x86.c |    2 +-
- kexec/kernel_version.c          |   33 +++++++++++++++++++--------------
- kexec/kexec.h                   |    3 ++-
- 3 files changed, 22 insertions(+), 16 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c |   13 +++++++++++--
+ kexec/arch/i386/kexec-x86.h     |    1 +
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 245402c..a900b03 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -63,7 +63,7 @@ static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
- 	int kv;
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 0605909..0c8c6bc 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -40,6 +40,7 @@
+ #include <arch/options.h>
  
- 	if (elf_info->machine == EM_X86_64) {
--		kv = kernel_version();
-+		kv = kernel_version_running();
- 		if (kv < 0)
- 			return -1;
+ static const int probe_debug = 0;
++long kv_to_load;
  
-diff --git a/kexec/kernel_version.c b/kexec/kernel_version.c
-index 079312b..e27a0b7 100644
---- a/kexec/kernel_version.c
-+++ b/kexec/kernel_version.c
-@@ -6,18 +6,15 @@
- #include <limits.h>
- #include <stdlib.h>
- 
--long kernel_version(void)
-+#define unsupported_release(str) \
-+	fprintf(stderr, "Unsupported release string: %s\n", str);
-+
-+long kernel_version(char *release_str)
+ int bzImage_probe(const char *buf, off_t len)
  {
--	struct utsname utsname;
- 	unsigned long major, minor, patch;
- 	char *p;
- 
--	if (uname(&utsname) < 0) {
--		fprintf(stderr, "uname failed: %s\n", strerror(errno));
--		return -1;
--	}
--
--	p = utsname.release;
-+	p = release_str;
- 	major = strtoul(p, &p, 10);
- 	if (major == ULONG_MAX) {
- 		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
-@@ -25,8 +22,7 @@ long kernel_version(void)
+@@ -107,7 +108,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 	struct x86_linux_header setup_header;
+ 	struct x86_linux_param_header *real_mode;
+ 	int setup_sects;
+-	char *kernel_version;
++	char kernel_release[12];
+ 	size_t size;
+ 	int kern16_size;
+ 	unsigned long setup_base, setup_size;
+@@ -131,7 +132,15 @@ int do_bzImage_load(struct kexec_info *info,
  	}
  
- 	if (*p++ != '.') {
--		fprintf(stderr, "Unsupported utsname.release: %s\n",
--			utsname.release);
-+		unsupported_release(release_str);
- 		return -1;
- 	}
- 
-@@ -37,8 +33,7 @@ long kernel_version(void)
- 	}
- 
- 	if (*p++ != '.') {
--		fprintf(stderr, "Unsupported utsname.release: %s\n",
--			utsname.release);
-+		unsupported_release(release_str);
- 		return -1;
- 	}
- 
-@@ -49,10 +44,20 @@ long kernel_version(void)
- 	}
- 
- 	if (major >= 256 || minor >= 256 || patch >= 256) {
--		fprintf(stderr, "Unsupported utsname.release: %s\n",
--			utsname.release);
-+		unsupported_release(release_str);
- 		return -1;
- 	}
- 
- 	return KERNEL_VERSION(major, minor, patch);
- }
+ 	kern16_size = (setup_sects +1) *512;
+-	kernel_version = ((char *)&setup_header) + 512 + setup_header.kver_addr;
 +
-+long kernel_version_running(void)
-+{
-+	struct utsname utsname;
++	memcpy(kernel_release, kernel +  setup_header.kver_addr + 512, 12);
++	kernel_release[11] = '\0';
++	kv_to_load = kernel_version(kernel_release);
++	if (kv_to_load < 0)
++		die("Invalid kernel version\n");
++	dbgprintf("Kernel release: %s in long format: 0x%lx\n",
++		  kernel_release, kv_to_load);
 +
-+	if (uname(&utsname) < 0) {
-+		fprintf(stderr, "uname failed: %s\n", strerror(errno));
-+		return -1;
-+	}
-+	return kernel_version(utsname.release);
-+}
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 94c62c1..ecc75d9 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -154,7 +154,8 @@ long physical_arch(void);
+ 	if (kernel_len < kern16_size) {
+ 		fprintf(stderr, "BzImage truncated?\n");
+ 		return -1;
+diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+index 5aa2a46..db80879 100644
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -11,6 +11,7 @@ enum coretype {
  
- #define KERNEL_VERSION(major, minor, patch) \
- 	(((major) << 16) | ((minor) << 8) | patch)
--long kernel_version(void);
-+long kernel_version(char *release);
-+long kernel_version_running(void);
+ extern unsigned char compat_x86_64[];
+ extern uint32_t compat_x86_64_size, compat_x86_64_entry32;
++extern long kv_to_load;
  
- void usage(void);
- int get_memory_ranges(struct memory_range **range, int *ranges,
+ struct entry32_regs {
+ 	uint32_t eax;
 -- 
 1.7.6.1
 
