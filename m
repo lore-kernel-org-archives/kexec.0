@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TxCfb-0008J0-6z
- for kexec@lists.infradead.org; Mon, 21 Jan 2013 08:24:04 +0000
-Date: Mon, 21 Jan 2013 17:18:54 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile, sadump: fix bug in checking a given
- physical address is present on memory
-Message-Id: <20130121171854.d59f6c6f1b5b25ca609cb3ec@mxc.nes.nec.co.jp>
-In-Reply-To: <20130121.151501.404516000.d.hatayama@jp.fujitsu.com>
-References: <20130121.151501.404516000.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Received: from youngberry.canonical.com ([91.189.89.112])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TxeGt-0000zZ-U3
+ for kexec@lists.infradead.org; Tue, 22 Jan 2013 13:52:17 +0000
+Message-ID: <50FE9989.5070601@canonical.com>
+Date: Tue, 22 Jan 2013 14:52:09 +0100
+From: Bouchard Louis <louis.bouchard@canonical.com>
+MIME-Version: 1.0
+Subject: makedumpfile --dump-dmesg option broken on 3.5 kernels and later
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,48 +20,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: d.hatayama@jp.fujitsu.com
-Cc: kexec@lists.infradead.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello HATAYAMA-san,
+Hello Kumagai-san,
 
-Thanks for your three patches for sadump.
-I'll merge them to v1.5.2.
+Following a suggestion from Dave Anderson, I have tested the
+makedumpfile --dump-dmesg option. After some research, I realized that
+the option was no longer working on 3.5 kernel and later. Here is an
+example of the result (on Ubuntu Quantal) :
 
+# makedumpfile --dump-dmesg /proc/vmcore /tmp/dmesg
+dump_dmesg: Can't find some symbols for log_buf.
 
-Thanks
-Atsushi Kumagai
+makedumpfile Failed.
 
-On Mon, 21 Jan 2013 15:15:01 +0900 (JST)
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+On 3.5 kernel and later, the log_end symbol no longer exists.
 
-> Due to lack of checking if sadump flag, interface for ELF had been
-> used wrongly for sadump format. By this, all the ranges had been
-> ignored and most kinds of filtering had been failed except for zero
-> pages.
-> 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> ---
->  makedumpfile.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 314dc46..7ce7138 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -3027,7 +3027,7 @@ clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
->  static inline int
->  is_in_segs(unsigned long long paddr)
->  {
-> -	if (info->flag_refiltering) {
-> +	if (info->flag_refiltering || info->flag_sadump) {
->  		static struct dump_bitmap bitmap1 = {0};
->  
->  		if (bitmap1.fd == 0)
-> -- 
-> 1.7.7.6
-> 
-> 
+This is caused by the change from byte-buffer structure to
+variable-length record buffer of the kernel log buffer introduced by
+this commit :
+	http://goo.gl/NCgLI
+
+I am curious to know if you were aware of this change and if you had
+done some work on modifying dump_dmesg() accordingly ? Just so I don't
+go off and try to work on something that you have already solved.
+
+Kind regards,
+
+...Louis
+-- 
+Louis Bouchard
+Backline Support Analyst
+Canonical Ltd
+Ubuntu support: http://landscape.canonical.com
 
 _______________________________________________
 kexec mailing list
