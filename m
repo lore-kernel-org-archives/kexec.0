@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mail-ie0-f179.google.com ([209.85.223.179])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Txgma-0008Aq-Ht
- for kexec@lists.infradead.org; Tue, 22 Jan 2013 16:33:08 +0000
-Message-ID: <50FEBF35.6010502@zytor.com>
-Date: Tue, 22 Jan 2013 10:32:53 -0600
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1Txjam-0008DA-H2
+ for kexec@lists.infradead.org; Tue, 22 Jan 2013 19:33:09 +0000
+Received: by mail-ie0-f179.google.com with SMTP id k14so12186824iea.38
+ for <kexec@lists.infradead.org>; Tue, 22 Jan 2013 11:33:07 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] x86 e820: Introduce memmap=resetusablemap for kdump
- usage
+In-Reply-To: <1358868049-19884-2-git-send-email-trenn@suse.de>
 References: <1358868049-19884-1-git-send-email-trenn@suse.de>
- <1358868049-19884-3-git-send-email-trenn@suse.de>
- <50FEB620.3020805@zytor.com> <201301221723.03863.trenn@suse.de>
-In-Reply-To: <201301221723.03863.trenn@suse.de>
+ <1358868049-19884-2-git-send-email-trenn@suse.de>
+Date: Tue, 22 Jan 2013 11:33:06 -0800
+Message-ID: <CAE9FiQXHG_HMuQK=d+vOXNokZnZ1eSmU+V2_50zuWvtJ=ayEWA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86 e820: Check for exactmap appearance when parsing
+ first memmap option
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,48 +27,51 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Thomas Renninger <trenn@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, yinghai@kernel.org, vgoyal@redhat.com
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, hpa@zytor.com, vgoyal@redhat.com
 
-On 01/22/2013 10:23 AM, Thomas Renninger wrote:
-> This would be wrong. If kexec tries to declare usable memory via memmap=
-> which is set to reserved by the BIOS, a WARN_ON() or even better BUG_ON()
-> can/should be issued. This is then not possible anymore.
+On Tue, Jan 22, 2013 at 7:20 AM, Thomas Renninger <trenn@suse.de> wrote:
+>
+> memmap=exactmap will throw away all original, but also until then
+> user defined (through other provided memmap= parameters) areas.
+> That means all memmap= boot parameters passed before a memmap=exactmap
+> parameter are not recognized.
+> Without this fix:
+> memmap=x@y memmap=exactmap memmap=i#k
+> only i#k would get recognized.
+>
+> This is wrong, this fix will only throw away all original e820 areas once
+> when memmap=exactmap is found in the whole boot command line and before
+> any other memmap= option is parsed.
 
-You can't do that anyway, because memmap= is not kexec-specific.
+Actually I put this patch already in for-x86-boot branch.
 
-> Your suggestion would again make the e820 data useless. One would again 
-> not know whether an area which is reserved really is meant for BIOS/HW
-> communication. And for example broken mmconf platforms for which
-> the check "is mmconf area is in reserved space" returns false, would now
-> try to setup mmconf in kdump case. Do you want to introduce another
-> e820 type: KDUMP_RESERVED which formerly was usable? This would preserve
-> e820 info, but I cannot see for what this should be good for.
+http://git.kernel.org/?p=linux/kernel/git/yinghai/linux-yinghai.git;a=commit;h=bd40ee79abf2351109ebd469b0b9ba6a8f3b0872
 
-You just answered your own question.  Yes, we already have such "kernel
-reserved" types, and we could make a "memmap reserved"
+And will update change log to following to merge two change log.
 
->> Even more sense would be to pass the modified memmap to kexec...
-> Not sure what you mean with this. When kexec is called, you are in a 
-> kernel which does not have a modified memmap. How can a modified map
-> get passed to kexec?
+---
+Subject: [PATCH] x86: Handle multiple exactmaps and out of order exactmap
 
-The memory map is simply a data structure which is passed by kexec.  It
-can be modified at will by the kexec tools.  This is the Right Way to do
-any of this; using the command line is just a horribly fscked up hack in
-the first place.
+Current code expect that we only have one exactmap and exactmap need to
+first one in memmap=.
 
-> Again: Please explain what is bad with this solution.
-> I cannot see a better and more robust way for kdump other than
-> reserving the original reserved memory areas as declared by the BIOS.
+memmap=exactmap will throw away all original entries, but also until
+then user defined (through other provided memmap= parameters) areas.
+That means all memmap= boot parameters passed before a memmap=exactmap
+parameter are not recognized.
 
-It is bad because it creates more complexity than is needed.
+Without this fix:
+        memmap=x@y memmap=exactmap memmap=i#k
+only i#k would get recognized.  This is wrong.
 
-The whole point is that what we want is simply to switch type 1 to type
-X, with the sole exceptions being the areas explicitly reserved for the
-kdump kernel.
+This fix will scan the boot_command_line to find if there is exactmap at
+first and only throw away all original e820 entries once, and then parse
+other memmap= option.
 
-	-hpa
+-v2: incorporate change log from Thomas Renninger.
 
+Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+Reviewed-by: Thomas Renninger <trenn@suse.de>
 
 _______________________________________________
 kexec mailing list
