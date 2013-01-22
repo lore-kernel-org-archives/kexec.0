@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from youngberry.canonical.com ([91.189.89.112])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TxeGt-0000zZ-U3
- for kexec@lists.infradead.org; Tue, 22 Jan 2013 13:52:17 +0000
-Message-ID: <50FE9989.5070601@canonical.com>
-Date: Tue, 22 Jan 2013 14:52:09 +0100
-From: Bouchard Louis <louis.bouchard@canonical.com>
-MIME-Version: 1.0
-Subject: makedumpfile --dump-dmesg option broken on 3.5 kernels and later
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TxfNU-0001zX-D3
+ for kexec@lists.infradead.org; Tue, 22 Jan 2013 15:03:09 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: [PATCH 0/3] Make use of new memmap= kernel parameter syntax
+Date: Tue, 22 Jan 2013 16:02:12 +0100
+Message-Id: <1358866935-18458-1-git-send-email-trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,43 +15,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: horms@verge.net.au
+Cc: yinghai@kernel.org, x86@kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com, hpa@zytor.com
 
-Hello Kumagai-san,
+Details were discussed on quite some lists (kexec, lkml, x86, etc)
+in a kernel thread with subject:
+[PATCH] x86 e820: only void usable memory areas in memmap=exactmap case
 
-Following a suggestion from Dave Anderson, I have tested the
-makedumpfile --dump-dmesg option. After some research, I realized that
-the option was no longer working on 3.5 kernel and later. Here is an
-example of the result (on Ubuntu Quantal) :
+The patch that memmap= can take several arguments is already queued
+in linux-x86-tip in the mm2 branch.
 
-# makedumpfile --dump-dmesg /proc/vmcore /tmp/dmesg
-dump_dmesg: Can't find some symbols for log_buf.
+There have been no objections on the introduction to memmap=resetusablemap
+for several days after discussing things in detail. The repost patches
+(will do that now) propably will show up in x86-tip mainline kernel
+tree pretty soon as well.
+Target for this feature to show up in Linus' tree is 3.9-rc1.
+Therefore these patches check for 3.9.0 and newer kernels. If such a
+kernel is tried to get loaded via kexec -p, the new memmap= syntax is used.
 
-makedumpfile Failed.
+Please consider to apply these to the kexec-tools repository.
 
-On 3.5 kernel and later, the log_end symbol no longer exists.
+Thanks,
 
-This is caused by the change from byte-buffer structure to
-variable-length record buffer of the kernel log buffer introduced by
-this commit :
-	http://goo.gl/NCgLI
+    Thomas
 
-I am curious to know if you were aware of this change and if you had
-done some work on modifying dump_dmesg() accordingly ? Just so I don't
-go off and try to work on something that you have already solved.
-
-Kind regards,
-
-...Louis
--- 
-Louis Bouchard
-Backline Support Analyst
-Canonical Ltd
-Ubuntu support: http://landscape.canonical.com
 
 _______________________________________________
 kexec mailing list
