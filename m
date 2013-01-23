@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TxoVZ-0000nb-TH
- for kexec@lists.infradead.org; Wed, 23 Jan 2013 00:48:06 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
- with iommu
-Date: Wed, 23 Jan 2013 01:47:56 +0100
-Message-ID: <1508535.gXZDAVy6sT@hammer82.arch.suse.de>
-In-Reply-To: <50FC95A8.6060402@jp.fujitsu.com>
-References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
- <1593084.QhbTkmoq3N@hammer82.arch.suse.de> <50FC95A8.6060402@jp.fujitsu.com>
-MIME-Version: 1.0
+ id 1Txp97-0003oy-HQ
+ for kexec@lists.infradead.org; Wed, 23 Jan 2013 01:29:03 +0000
+Date: Wed, 23 Jan 2013 10:19:52 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: makedumpfile --dump-dmesg option broken on 3.5 kernels and later
+Message-Id: <20130123101952.79072daf31bb30e217d38adf@mxc.nes.nec.co.jp>
+In-Reply-To: <50FE9989.5070601@canonical.com>
+References: <50FE9989.5070601@canonical.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,41 +22,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: muneda.takahiro@jp.fujitsu.com, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
+To: louis.bouchard@canonical.com
+Cc: kexec@lists.infradead.org
 
-On Monday, January 21, 2013 10:11:04 AM Takao Indoh wrote:
-> (2013/01/08 4:09), Thomas Renninger wrote:
-...
-> > I tried the provided patches first on 2.6.32, then I verfied with 3.8-rc2
-> > and in both cases the disk is not detected anymore in
-> > reset_devices (kexec'ed/kdump) case (but things work fine without these
-> > patches).
+Hello Louis,
+
+On Tue, 22 Jan 2013 14:52:09 +0100
+Bouchard Louis <louis.bouchard@canonical.com> wrote:
+
+> Hello Kumagai-san,
 > 
-> So the problem that the disk is not detected was caused by exactmap
-> problem you guys are discussing? Or still not detected even if exactmap
-> problem is fixed?
-This problem is related to the 5 PCI resetting patches.
-Dumping worked with a 2.6.32 and a 3.8-rc2 kernel, adding the PCI resetting
-patches broke both. I first tried 2.6.32 and verified with 3.8-rc2 to make sure
-I didn't mess up the backport adjustings of the patches to 2.6.32.
+> Following a suggestion from Dave Anderson, I have tested the
+> makedumpfile --dump-dmesg option. After some research, I realized that
+> the option was no longer working on 3.5 kernel and later. Here is an
+> example of the result (on Ubuntu Quantal) :
+> 
+> # makedumpfile --dump-dmesg /proc/vmcore /tmp/dmesg
+> dump_dmesg: Can't find some symbols for log_buf.
+> 
+> makedumpfile Failed.
+> 
+> On 3.5 kernel and later, the log_end symbol no longer exists.
+> 
+> This is caused by the change from byte-buffer structure to
+> variable-length record buffer of the kernel log buffer introduced by
+> this commit :
+> 	http://goo.gl/NCgLI
+> 
+> I am curious to know if you were aware of this change and if you had
+> done some work on modifying dump_dmesg() accordingly ? Just so I don't
+> go off and try to work on something that you have already solved.
 
-Unfortunately this Dell platform takes really long to boot.
-I can give it the one or other test, but please do not bomb me with patches.
+Thanks for your report.
+I haven't been aware of this, so could I ask you to help me ?
 
-For info:
-About the interrupt remapping error interrupt storm in kdump case I tried to 
-reproduce on this machine, but never could: The guys who saw that also cannot 
-reproduce this anymore.
 
-Two ideas I had about this:
-  - As said already, (also) try to catch the error case and try to reset the
-    the device in AER/Specific iterrupt remapping error interrupt caught.
-  - Have a look at coreboot, these guys should know how to initialize the PCI
-    subsystem from scratch and might have some well tested PCI resetting
-    code in place already (no idea, just a thought).
+Thanks
+Atsushi Kumagai
 
-    Thomas
+> Kind regards,
+> 
+> ...Louis
+> -- 
+> Louis Bouchard
+> Backline Support Analyst
+> Canonical Ltd
+> Ubuntu support: http://landscape.canonical.com
 
 _______________________________________________
 kexec mailing list
