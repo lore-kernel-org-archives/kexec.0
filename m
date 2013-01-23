@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Txt5R-00008N-Il
- for kexec@lists.infradead.org; Wed, 23 Jan 2013 05:41:27 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.192])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r0N5fMAt025913
- for <kexec@lists.infradead.org>; Wed, 23 Jan 2013 14:41:22 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id r0N5fMj14028 for kexec@lists.infradead.org;
- Wed, 23 Jan 2013 14:41:22 +0900 (JST)
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id r0N5fMn0008126
- for <kexec@lists.infradead.org>; Wed, 23 Jan 2013 14:41:22 +0900 (JST)
-Date: Wed, 23 Jan 2013 14:31:02 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH] makedumpfile: Fix cyclic mode to scrub data with -E option.
-Message-Id: <20130123143102.6135a4b2add12bbd7c4b9c2a@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from youngberry.canonical.com ([91.189.89.112])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Txw1H-0005uy-5H
+ for kexec@lists.infradead.org; Wed, 23 Jan 2013 08:49:19 +0000
+Message-ID: <50FFA40B.3020405@canonical.com>
+Date: Wed, 23 Jan 2013 09:49:15 +0100
+From: Bouchard Louis <louis.bouchard@canonical.com>
+MIME-Version: 1.0
+Subject: Re: makedumpfile --dump-dmesg option broken on 3.5 kernels and later
+References: <50FE9989.5070601@canonical.com>
+ <20130123101952.79072daf31bb30e217d38adf@mxc.nes.nec.co.jp>
+In-Reply-To: <20130123101952.79072daf31bb30e217d38adf@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,84 +19,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-Hello,
+Hi Kumagai-san,
 
-I found a bug in cyclic mode, I'll merge this patch to next version.
+Le 23/01/2013 02:19, Atsushi Kumagai a =E9crit :
+> Hello Louis,
+> =
+
+> On Tue, 22 Jan 2013 14:52:09 +0100
+> Bouchard Louis <louis.bouchard@canonical.com> wrote:
+> =
+
+>> Hello Kumagai-san,
+>>
+>> Following a suggestion from Dave Anderson, I have tested the
+>> makedumpfile --dump-dmesg option. After some research, I realized that
+>> the option was no longer working on 3.5 kernel and later. Here is an
+>> example of the result (on Ubuntu Quantal) :
+>>
+>> # makedumpfile --dump-dmesg /proc/vmcore /tmp/dmesg
+>> dump_dmesg: Can't find some symbols for log_buf.
+>>
+>> makedumpfile Failed.
+>>
+>> On 3.5 kernel and later, the log_end symbol no longer exists.
+>>
+>> This is caused by the change from byte-buffer structure to
+>> variable-length record buffer of the kernel log buffer introduced by
+>> this commit :
+>> 	http://goo.gl/NCgLI
+>>
+>> I am curious to know if you were aware of this change and if you had
+>> done some work on modifying dump_dmesg() accordingly ? Just so I don't
+>> go off and try to work on something that you have already solved.
+> =
+
+> Thanks for your report.
+> I haven't been aware of this, so could I ask you to help me ?
+> =
 
 
-Thanks
-Atsushi Kumagai
+I will be happy to do so. Dave Anderson has already fixed in for crash,
+so I have an example to follow. I've already started work on a patch for
+the post 3.5 kernels.
 
---
-In cyclic mode, get_loads_dumpfile_cyclic() is called as setup for
-writing phase. But get_loads_dumpfile_cyclic() calls filter_data_buffer()
-via read_pfn(), then filter_info is consumed. As a result, filter_info
-doesn't exist at the moment when it is actually necessary to scrub data.
+I might need to come back to you for some details about the code though.
 
-That's why --config option doesn't work correctly in cyclic mode
-with -E option.
+Kind regards,
 
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
----
- makedumpfile.c |   14 ++++++++++++--
- 1 files changed, 12 insertios(+), 2 deletions(-)
+...Louis
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index ebdc31a..4187b84 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5207,6 +5207,7 @@ get_loads_dumpfile_cyclic(void)
- 	long page_size = info->page_size;
- 	unsigned char buf[info->page_size];
- 	unsigned long long pfn, pfn_start, pfn_end, num_excluded;
-+	unsigned long long paddr;
- 	unsigned long frac_head, frac_tail;
- 	Elf64_Phdr load;
- 
-@@ -5260,8 +5261,12 @@ get_loads_dumpfile_cyclic(void)
- 			 * Exclude zero pages.
- 			 */
- 			if (info->dump_level & DL_EXCLUDE_ZERO) {
--				if (!read_pfn(pfn, buf))
-+				paddr = pfn_to_paddr(pfn);
-+				if (!readmem(PADDR, paddr, buf, page_size)) {
-+					ERRMSG("Can't get the page data(pfn:%llx,max_mapnr:%llx).\n",
-+					       pfn, info->max_mapnr);
- 					return FALSE;
-+				}
- 				if (is_zero_page(buf, page_size)) {
- 					num_excluded++;
- 					continue;
-@@ -5291,6 +5296,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	long page_size = info->page_size;
- 	unsigned char buf[info->page_size];
- 	unsigned long long pfn, pfn_start, pfn_end, paddr, num_excluded;
-+	unsigned long long paddr_buf;
- 	unsigned long long num_dumpable, per;
- 	unsigned long long memsz, filesz;
- 	unsigned long frac_head, frac_tail;
-@@ -5370,8 +5376,12 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 			 * Exclude zero pages.
- 			 */
- 			if (info->dump_level & DL_EXCLUDE_ZERO) {
--				if (!read_pfn(pfn, buf))
-+				paddr_buf = pfn_to_paddr(pfn);
-+				if (!readmem(PADDR, paddr_buf, buf, page_size)) {
-+					ERRMSG("Can't get the page data(pfn:%llx max_mapnr:%llx).\n",
-+					       pfn, info->max_mapnr);
- 					return FALSE;
-+				}
- 				if (is_zero_page(buf, page_size)) {
- 					pfn_zero++;
- 					num_excluded++;
--- 
-1.7.1
+
+-- =
+
+Louis Bouchard
+Backline Support Analyst
+Canonical Ltd
+Ubuntu support: http://landscape.canonical.com
 
 _______________________________________________
 kexec mailing list
