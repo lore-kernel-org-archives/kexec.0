@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TyTf0-00050D-J0
- for kexec@lists.infradead.org; Thu, 24 Jan 2013 20:44:37 +0000
+ id 1TyTf0-0004zy-J2
+ for kexec@lists.infradead.org; Thu, 24 Jan 2013 20:44:38 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v7 4/7] kexec,
- x86: put ramdisk/cmd_line above 4G for 64bit bzImage
-Date: Thu, 24 Jan 2013 12:44:21 -0800
-Message-Id: <1359060264-10671-5-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v7 2/7] kexec, x86: clean boot_params area for entry-32bit path
+Date: Thu, 24 Jan 2013 12:44:19 -0800
+Message-Id: <1359060264-10671-3-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1359060264-10671-1-git-send-email-yinghai@kernel.org>
 References: <1359060264-10671-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -26,65 +25,54 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-We could put ramdisk/cmdline above for bzImage on 64bit for protocol 2.12.
+kexec bzImage path setup data is shared with real-mode path, and
+setup_header is copied together with setup_code.
+Later 32bit just use whole area as boot_params for real_mode_data.
+but those area for boot_params around setup_header is
+not cleaned that will leave some field in boot_param as
+non-zero value.
 
--v2: change ext_... handling to way that eric like.
+So clean around setup_header area for non real-mode entry path.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/i386/x86-linux-setup.c |   25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index b7ab8ea..eb8b794 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -64,7 +64,11 @@ void setup_linux_bootloader_parameters(
- 	/* Find the maximum initial ramdisk address */
- 	initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
- 	if (real_mode->protocol_version >= 0x0203) {
--		initrd_addr_max = real_mode->initrd_addr_max;
-+		if (real_mode->protocol_version >= 0x020c &&
-+		    real_mode->xloadflags & (1<<0)) /* CAN_BE_LOADED_ABOVE_4G */
-+			initrd_addr_max = ULONG_MAX;
-+		else
-+			initrd_addr_max = real_mode->initrd_addr_max;
- 		dbgprintf("initrd_addr_max is 0x%lx\n", initrd_addr_max);
- 	}
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 0605909..4cc394d 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -98,6 +98,19 @@ void bzImage_usage(void)
+        
+ }
  
-@@ -81,8 +85,16 @@ void setup_linux_bootloader_parameters(
- 	}
- 
- 	/* Ramdisk address and size */
--	real_mode->initrd_start = initrd_base;
--	real_mode->initrd_size  = initrd_size;
-+	real_mode->initrd_start = initrd_base & 0xffffffffUL;
-+	real_mode->initrd_size  = initrd_size & 0xffffffffUL;
++static void clean_boot_params(unsigned char *real_mode, unsigned long size)
++{
++	unsigned long end;
 +
-+	if (real_mode->protocol_version >= 0x020c &&
-+	    (initrd_base & 0xffffffffUL) != initrd_base)
-+		real_mode->ext_ramdisk_image = initrd_base >> 32;
++	/* clear value before header */
++	memset(real_mode, 0, 0x1f1);
++	/* clear value after setup_header  */
++	end = *(real_mode + 0x201);
++	end += 0x202;
++	if (end < size)
++		memset(real_mode + end, 0, size - end);
++}
 +
-+	if (real_mode->protocol_version >= 0x020c &&
-+	    (initrd_size & 0xffffffffUL) != initrd_size)
-+		real_mode->ext_ramdisk_size = initrd_size >> 32;
+ int do_bzImage_load(struct kexec_info *info,
+ 	const char *kernel, off_t kernel_len,
+ 	const char *command_line, off_t command_line_len,
+@@ -212,6 +225,9 @@ int do_bzImage_load(struct kexec_info *info,
+ 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
+ 	real_mode = xmalloc(setup_size);
+ 	memcpy(real_mode, kernel, kern16_size);
++	if (!real_mode_entry)
++		clean_boot_params((unsigned char *)real_mode, kern16_size);
++	real_mode->xloadflags &= ~(1<<0); /* clear CAN_BE_LOADED_ABOVE_4G */
  
- 	/* The location of the command line */
- 	/* if (real_mode_base == 0x90000) { */
-@@ -91,7 +103,12 @@ void setup_linux_bootloader_parameters(
- 		/* setup_move_size */
- 	/* } */
- 	if (real_mode->protocol_version >= 0x0202) {
--		real_mode->cmd_line_ptr = real_mode_base + cmdline_offset;
-+		unsigned long cmd_line_ptr = real_mode_base + cmdline_offset;
-+
-+		real_mode->cmd_line_ptr = cmd_line_ptr & 0xffffffffUL;
-+		if ((real_mode->protocol_version >= 0x020c) &&
-+		    ((cmd_line_ptr & 0xffffffffUL) != cmd_line_ptr))
-+			real_mode->ext_cmd_line_ptr = cmd_line_ptr >> 32;
- 	}
- 
- 	/* Fill in the command line */
+ 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
+ 		/* If using bzImage for capture kernel, then we will not be
 -- 
 1.7.10.4
 
