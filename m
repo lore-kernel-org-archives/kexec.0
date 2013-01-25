@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ob0-f180.google.com ([209.85.214.180])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TyE5x-0001r5-PG
- for kexec@lists.infradead.org; Thu, 24 Jan 2013 04:07:23 +0000
-Received: by mail-ob0-f180.google.com with SMTP id wd20so9248005obb.11
- for <kexec@lists.infradead.org>; Wed, 23 Jan 2013 20:07:19 -0800 (PST)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TyfGm-0006AL-Nf
+ for kexec@lists.infradead.org; Fri, 25 Jan 2013 09:08:21 +0000
+Date: Fri, 25 Jan 2013 18:08:18 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v7 0/7] kexec: put bzImage and ramdisk above 4G for x86
+ 64bit
+Message-ID: <20130125090818.GF30990@verge.net.au>
+References: <1359060264-10671-1-git-send-email-yinghai@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAE9FiQWJqWQJhoJb2dBn=iAsKjxuf3MJro-jz+6k+WNZor8-xQ@mail.gmail.com>
-References: <1358868049-19884-1-git-send-email-trenn@suse.de>
- <1358868049-19884-3-git-send-email-trenn@suse.de>
- <50FEB620.3020805@zytor.com> <201301221723.03863.trenn@suse.de>
- <50FEBF35.6010502@zytor.com>
- <CAE9FiQWJqWQJhoJb2dBn=iAsKjxuf3MJro-jz+6k+WNZor8-xQ@mail.gmail.com>
-Date: Wed, 23 Jan 2013 20:07:19 -0800
-Message-ID: <CAE9FiQWXcwagEb0jdFfdHvNcByNxtaLbvvoRC-jAppQmiGS22w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86 e820: Introduce memmap=resetusablemap for kdump
- usage
-From: Yinghai Lu <yinghai@kernel.org>
-Content-Type: multipart/mixed; boundary=f46d043bdf6473cbee04d400f24a
+Content-Disposition: inline
+In-Reply-To: <1359060264-10671-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,105 +20,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Renninger <trenn@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, vgoyal@redhat.com
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 
---f46d043bdf6473cbee04d400f24a
-Content-Type: text/plain; charset=ISO-8859-1
+On Thu, Jan 24, 2013 at 12:44:17PM -0800, Yinghai Lu wrote:
+> Now we have limit kdump reserved under 896M, because kexec has the limitation.
+> and also bzImage need to stay under 4g.
+> 
+> kernel parts changes could be found at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/yinghai/linux-yinghai.git for-x86-boot
+> 
+> here patches are for kexec tools to load bzImage and ramdisk above 4G
+> acccording to new added boot header fields.
+> 
+> -v3: address review from Eric to use locate_hole at first.
+>      use xloadflags instead.
+> -v4: remove the restriction about bzImage not crossing GB boundary.
+>      add real-mode fix for bzImage.
+>      add --entry-32bit and --real-mode for skip bzImage64.
+> -v5: use USE_EXT_BOOT_PARAMS bit in xloadflags.
+> -v6: use sentinel instead of USE_EXT_BOOT_PARAMS.
+>      add crashkernel_low support
+> -v7: Separate bootloader id setting in another patch
 
-On Tue, Jan 22, 2013 at 12:06 PM, Yinghai Lu <yinghai@kernel.org> wrote:
-> On Tue, Jan 22, 2013 at 8:32 AM, H. Peter Anvin <hpa@zytor.com> wrote:
->>> Again: Please explain what is bad with this solution.
->>> I cannot see a better and more robust way for kdump other than
->>> reserving the original reserved memory areas as declared by the BIOS.
->>
->> It is bad because it creates more complexity than is needed.
->>
->> The whole point is that what we want is simply to switch type 1 to type
->> X, with the sole exceptions being the areas explicitly reserved for the
->> kdump kernel.
->
-> Do you prefer to  "reserveram" way in attached patch?
+Hi Yinghai, Hi All,
 
-Hi, Thomas,
-
-Can you please check attached reserveram version on your setup?
-
-If it is ok, i will put it in for-x86-boot patchset and send it to
-Peter for v3.9.
-
-Thanks
-
-Yinghai
-
---f46d043bdf6473cbee04d400f24a
-Content-Type: application/octet-stream; name="e820_reserveram_v2.patch"
-Content-Disposition: attachment; filename="e820_reserveram_v2.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_hcbdpfo71
-
-U3ViamVjdDogW1BBVENIXSB4ODYsIG1tOiBJbnRyb2R1Y2UgbWVtbWFwPXJlc2VydmVyYW0KCmtk
-dW1wIHZvaWRlZCB0aGUgd2hvbGUgb3JpZ2luYWwgZTgyMCBtYXAgYW5kIGhhbGYgd2F5IG1hZGUK
-aXQgdXAgdmlhIG1lbW1hcD0gb3B0aW9ucyBwYXNzZWQgdmlhIGtkdW1wIGJvb3QgcGFyYW1zIGFn
-YWluLgoKQnV0IHRoaXMgaXMgY29uY2VwdGlvbmFsbHkgd3JvbmcuIFRoZSB3aG9sZSBvcmlnaW5h
-bCBtZW1vcnkgcmFuZ2VzCndoaWNoIGFyZSBkZWNsYXJlZCByZXNlcnZlZCwgQUNQSSBkYXRhL252
-cyBvciBob3dldmVyIGFyZSBub3QgdXNhYmxlCm11c3Qgc3RheSB0aGUgc2FtZSBhbmQgZ2V0IGhv
-bm9yZWQgYnkgdGhlIGtkdW1wIGtlcm5lbC4KClRoZXJlZm9yZSBtZW1tYXA9cmVzZXJ2ZXJhbSBn
-ZXRzIGludHJvZHVjZWQuCmtkdW1wIHBhc3NlcyB0aGlzIG9uZSBhbmQgb25seSB0aGUgdXNhYmxl
-IGU4MjAgcmFuZ2VzIGFyZSB1cGRhdGVkIHRvCnJlc2VydmVkIGF0IGZpcnN0IGJ5IGtlcm5lbCwg
-dGhlbiB3aGVuIGtkdW1wIHBhc3NlcyB0aGUgdXNhYmxlIHJhbmdlcwp0byB1c2UgdmlhIG1lbW1h
-cD14QHkgcGFyYW1ldGVyKHMpLCBrZXJuZWwgd2lsbCByZW1vdmUgcmVzZXJ2ZWQgcmFuZ2UKYW5k
-IGFkZCB1c2FibGUgcmFuZ2UgYWNjb3JkaW5nbHkuCgpUaGlzIGZvciBleGFtcGxlIGZpeGVzIG1t
-Y29uZiAoZXh0ZW5kZWQgUENJIGNvbmZpZyBhY2Nlc3MpIGFuZApwb3NzaWJseSBvdGhlciBrZXJu
-ZWwgcGFydHMgd2hpY2ggcmVseSBvbiByZW1hcHBlZCBtZW1vcnkgdG8gYmUKaW4gcmVzZXJ2ZWQg
-b3IgQUNQSSAoZGF0YS9udnMpIGRlY2xhcmVkIGU4MjAgbWVtb3J5IGFyZWFzLgoKQ2hhbmdlbG9n
-IGlzIGZyb20gVGhvbWFzIFJlbm5pbmdlciwgYW5kIHVwZGF0ZWQgdG8gcmVzZXJ2ZXJhbQoKLXYy
-OiBBY2NvcmRpbmcgdG8gSFBBLCB1c2UgcmVzZXJ2ZXJhbSBpbnN0ZWFkIG9mIHJlc2V0dXNhYmxl
-bWFwLgoKU2lnbmVkLW9mZi1ieTogWWluZ2hhaSBMdSA8eWluZ2hhaUBrZXJuZWwub3JnPgoKLS0t
-CiBhcmNoL3g4Ni9rZXJuZWwvZTgyMC5jIHwgICAxOSArKysrKysrKysrKysrKysrKy0tCiAxIGZp
-bGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCkluZGV4OiBsaW51
-eC0yLjYvYXJjaC94ODYva2VybmVsL2U4MjAuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC0yLjYub3Jp
-Zy9hcmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBsaW51eC0yLjYvYXJjaC94ODYva2VybmVsL2U4
-MjAuYwpAQCAtODM2LDYgKzgzNiw3IEBAIHN0YXRpYyBpbnQgX19pbml0IHBhcnNlX21lbW9wdChj
-aGFyICpwKQogZWFybHlfcGFyYW0oIm1lbSIsIHBhcnNlX21lbW9wdCk7CiAKIHN0YXRpYyBib29s
-IF9faW5pdGRhdGEgZXhhY3RtYXBfcGFyc2VkOworc3RhdGljIGJvb2wgX19pbml0ZGF0YSByZXNl
-cnZlcmFtX3BhcnNlZDsKIAogc3RhdGljIGludCBfX2luaXQgcGFyc2VfbWVtbWFwX29uZShjaGFy
-ICpwKQogewpAQCAtODQ1LDcgKzg0Niw3IEBAIHN0YXRpYyBpbnQgX19pbml0IHBhcnNlX21lbW1h
-cF9vbmUoY2hhcgogCWlmICghcCkKIAkJcmV0dXJuIC1FSU5WQUw7CiAKLQlpZiAoIXN0cm5jbXAo
-cCwgImV4YWN0bWFwIiwgOCkpIHsKKwlpZiAoIXN0cm5jbXAocCwgImV4YWN0bWFwIiwgOCkgfHwg
-IXN0cm5jbXAocCwgInJlc2VydmVyYW0iLCAxMCkpIHsKIAkJaWYgKGV4YWN0bWFwX3BhcnNlZCkK
-IAkJCXJldHVybiAwOwogCkBAIC04NTgsNyArODU5LDEyIEBAIHN0YXRpYyBpbnQgX19pbml0IHBh
-cnNlX21lbW1hcF9vbmUoY2hhcgogCQkgKi8KIAkJc2F2ZWRfbWF4X3BmbiA9IGU4MjBfZW5kX29m
-X3JhbV9wZm4oKTsKICNlbmRpZgotCQllODIwLm5yX21hcCA9IDA7CisJCWlmICghc3RybmNtcChw
-LCAicmVzZXJ2ZXJhbSIsIDEwKSkgeworCQkJZTgyMF91cGRhdGVfcmFuZ2UoMCwgVUxMT05HX01B
-WCwgRTgyMF9SQU0sCisJCQkJCSAgRTgyMF9SRVNFUlZFRCk7CisJCQlyZXNlcnZlcmFtX3BhcnNl
-ZCA9IHRydWU7CisJCX0gZWxzZQorCQkJZTgyMC5ucl9tYXAgPSAwOwogCQl1c2VyZGVmID0gMTsK
-IAkJcmV0dXJuIDA7CiAJfQpAQCAtODcxLDYgKzg3NywxMCBAQCBzdGF0aWMgaW50IF9faW5pdCBw
-YXJzZV9tZW1tYXBfb25lKGNoYXIKIAl1c2VyZGVmID0gMTsKIAlpZiAoKnAgPT0gJ0AnKSB7CiAJ
-CXN0YXJ0X2F0ID0gbWVtcGFyc2UocCsxLCAmcCk7CisJCWlmIChyZXNlcnZlcmFtX3BhcnNlZCkg
-eworCQkJLyogUmVtb3ZlIG9sZCByZXNlcnZlZCBzbyBuZXcgcmFtIGNvdWxkIHRha2Ugb3Zlci4g
-Ki8KKwkJCWU4MjBfcmVtb3ZlX3JhbmdlKHN0YXJ0X2F0LCBtZW1fc2l6ZSwgRTgyMF9SRVNFUlZF
-RCwgMCk7CisJCX0KIAkJZTgyMF9hZGRfcmVnaW9uKHN0YXJ0X2F0LCBtZW1fc2l6ZSwgRTgyMF9S
-QU0pOwogCX0gZWxzZSBpZiAoKnAgPT0gJyMnKSB7CiAJCXN0YXJ0X2F0ID0gbWVtcGFyc2UocCsx
-LCAmcCk7CkBAIC04OTAsNiArOTAwLDExIEBAIHN0YXRpYyBpbnQgX19pbml0IHBhcnNlX21lbW1h
-cF9vcHQoY2hhcgogCXAgPSBzdHJzdHIocCwgImV4YWN0bWFwIik7CiAJaWYgKHApCiAJCXBhcnNl
-X21lbW1hcF9vbmUoImV4YWN0bWFwIik7CisJZWxzZSB7CisJCXAgPSBzdHJzdHIoYm9vdF9jb21t
-YW5kX2xpbmUsICJyZXNlcnZlcmFtIik7CisJCWlmIChwKQorCQkJcGFyc2VfbWVtbWFwX29uZSgi
-cmVzZXJ2ZXJhbSIpOworCX0KIAogCXdoaWxlIChzdHIpIHsKIAkJY2hhciAqayA9IHN0cmNocihz
-dHIsICcsJyk7Cg==
---f46d043bdf6473cbee04d400f24a
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+my current thinking with regards to this is that I would like to take
+these changes into the kexec-tools tree once there is consensus and
+kernel portions have been accepted. If that makes sense please let me know
+when those conditions have been met. Otherwise lets discuss a different
+strategy.
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---f46d043bdf6473cbee04d400f24a--
-
