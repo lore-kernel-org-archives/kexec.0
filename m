@@ -1,17 +1,20 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mail-ia0-x22d.google.com ([2607:f8b0:4001:c02::22d])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tzzn5-0006Yu-LJ
- for kexec@lists.infradead.org; Tue, 29 Jan 2013 01:15:12 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
- with iommu
-Date: Tue, 29 Jan 2013 02:14:54 +0100
-Message-ID: <3404772.bJenOLl2bH@hammer82.arch.suse.de>
-In-Reply-To: <51007EF2.3090208@jp.fujitsu.com>
-References: <20121127004144.3604.61708.sendpatchset@tindoh.g01.fujitsu.local>
- <1508535.gXZDAVy6sT@hammer82.arch.suse.de> <51007EF2.3090208@jp.fujitsu.com>
+ id 1U00Va-0000b5-Gv
+ for kexec@lists.infradead.org; Tue, 29 Jan 2013 02:01:11 +0000
+Received: by mail-ia0-f173.google.com with SMTP id l29so5258374iag.32
+ for <kexec@lists.infradead.org>; Mon, 28 Jan 2013 18:01:08 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <51072147.9090306@zytor.com>
+References: <1358868049-19884-1-git-send-email-trenn@suse.de>
+ <1358868049-19884-2-git-send-email-trenn@suse.de>
+ <51072147.9090306@zytor.com>
+Date: Mon, 28 Jan 2013 18:01:08 -0800
+Message-ID: <CAE9FiQUZu4_wnJ+TZBqE_k+WxS6803r_i7LpOaCNY06xBGyWQA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86 e820: Check for exactmap appearance when parsing
+ first memmap option
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,39 +26,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: muneda.takahiro@jp.fujitsu.com, tokunaga.keiich@jp.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, Thomas Renninger <trenn@suse.de>, vgoyal@redhat.com
 
-On Thursday, January 24, 2013 09:23:14 AM Takao Indoh wrote:
-> (2013/01/23 9:47), Thomas Renninger wrote:
-> > On Monday, January 21, 2013 10:11:04 AM Takao Indoh wrote:
-> >> (2013/01/08 4:09), Thomas Renninger wrote:
-> > ...
-> > 
-> >>> I tried the provided patches first on 2.6.32, then I verfied with
-> >>> 3.8-rc2
-> >>> and in both cases the disk is not detected anymore in
-> >>> reset_devices (kexec'ed/kdump) case (but things work fine without these
-> >>> patches).
-> >> 
-> >> So the problem that the disk is not detected was caused by exactmap
-> >> problem you guys are discussing? Or still not detected even if exactmap
-> >> problem is fixed?
-> > 
-> > This problem is related to the 5 PCI resetting patches.
-> > Dumping worked with a 2.6.32 and a 3.8-rc2 kernel, adding the PCI
-> > resetting
-> > patches broke both. I first tried 2.6.32 and verified with 3.8-rc2 to make
-> > sure I didn't mess up the backport adjustings of the patches to 2.6.32.
-> If you have a chance please try again the patches with the latest
-> firmware.
-Not sure I can update the firmware as this is a reference platform used exactly
-like this in production.
+On Mon, Jan 28, 2013 at 5:09 PM, H. Peter Anvin <hpa@zytor.com> wrote:
+> On 01/22/2013 07:20 AM, Thomas Renninger wrote:
+>> From: Yinghai Lu <yinghai@kernel.org>
+>>
+>> memmap=exactmap will throw away all original, but also until then
+>> user defined (through other provided memmap= parameters) areas.
+>> That means all memmap= boot parameters passed before a memmap=exactmap
+>> parameter are not recognized.
+>> Without this fix:
+>> memmap=x@y memmap=exactmap memmap=i#k
+>> only i#k would get recognized.
+>>
+>> This is wrong, this fix will only throw away all original e820 areas once
+>> when memmap=exactmap is found in the whole boot command line and before
+>> any other memmap= option is parsed.
+>>
+>
+> I don't understand why this is wrong.  The kernel command line is always
+> parsed from left to right, and I don't see anything inherently
+> problematic with that with something like a big hammer like exactmap.
 
-I also cannot see how this could help.
-
-   Thomas
+Ok, let's drop it.
 
 _______________________________________________
 kexec mailing list
