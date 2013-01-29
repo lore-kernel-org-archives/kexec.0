@@ -1,30 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U044L-0005TJ-CB
- for kexec@lists.infradead.org; Tue, 29 Jan 2013 05:49:18 +0000
-Received: from /spool/local
- by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
- Tue, 29 Jan 2013 15:42:34 +1000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id 38CA63578023
- for <kexec@lists.infradead.org>; Tue, 29 Jan 2013 16:49:06 +1100 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r0T5n4EY59310316
- for <kexec@lists.infradead.org>; Tue, 29 Jan 2013 16:49:05 +1100
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r0T5n4dw015909
- for <kexec@lists.infradead.org>; Tue, 29 Jan 2013 16:49:05 +1100
-Subject: [PATCH] makedumpfile: ppc64: Auto-detect the correct MAX_PHYSMEM_BITS
- used in vmcore being analyzed.
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Tue, 29 Jan 2013 11:19:01 +0530
-Message-ID: <20130129054831.11980.72845.stgit@mars.in.ibm.com>
+ id 1U07n7-00032d-P5
+ for kexec@lists.infradead.org; Tue, 29 Jan 2013 09:47:46 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 2/2] x86 e820: Introduce memmap=resetusablemap for kdump
+ usage
+Date: Tue, 29 Jan 2013 10:47:34 +0100
+References: <1358868049-19884-1-git-send-email-trenn@suse.de>
+ <510721C6.6080705@zytor.com>
+ <CAE9FiQWDcFR+6L-GiR6rk60TC0zH=xewyH_h1Rx_QB+8PTiU3Q@mail.gmail.com>
+In-Reply-To: <CAE9FiQWDcFR+6L-GiR6rk60TC0zH=xewyH_h1Rx_QB+8PTiU3Q@mail.gmail.com>
 MIME-Version: 1.0
+Message-Id: <201301291047.34957.trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,87 +25,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Kexec-ml <kexec@lists.infradead.org>
-Cc: Dave Young <dyoung@redhat.com>, Dave Anderson <anderson@redhat.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Ananth Narayan <ananth@in.ibm.com>, CAI Qian <caiqian@redhat.com>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, vgoyal@redhat.com
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+On Tuesday, January 29, 2013 03:10:38 AM Yinghai Lu wrote:
+> On Mon, Jan 28, 2013 at 5:11 PM, H. Peter Anvin <hpa@zytor.com> wrote:
+> >> So I guess the final patch should be:
+> >>    - Add a new e820 type:
+> >>         E820_KDUMP_RESERVED /* Originally usable memory where the crashed
+> >>                                                     kernel kernel resided in */
+> >>   - Use Yinghai's last posted patch, but instead of:
+> >> +                     e820_update_range(0, ULLONG_MAX, E820_RAM,
+> >> +                                       E820_RESERVED);
+> >> ...
+> >> +                     e820_remove_range(start_at, mem_size, E820_RESERVED, 0);
+> >> do:
+> >> +                     e820_update_range(0, ULLONG_MAX, E820_RAM,
+> >> +                                       E820_KDUMP_RESERVED);
+> >> ...
+> >> +                     e820_remove_range(start_at, mem_size, E820_KDUMP_RESERVED, 0);
+> >>
+> >>   - Come up with another memmap=kdump_reserve_ram memmap option name
+> >>     or however it should get named...
+> >>
+> >> If this proposal gets accepted, I can send a tested patch...
+> >>
+> >
+> > Yes, this is much saner.  There really shouldn't need to be an option,
+> > even; since the tools need to be modified anyway, just modify the actual
+> > memory map data structure itself.
+> 
+> yes,
+> 
+> kexec-tools will change that to E820_KDUMP_RESERVED (or other good name).
+> 
+> We only need to update kernel to get old max_pfn by
+> checking E820_KDUMP_RESERVED.
 
-The latest upstream kernel commit 048ee0993ec8360abb0b51bdf8f8721e9ed62ec4 adds
-64TB support to ppc64 kernel and bumps the MAX_PHYSMEM_BITS from 44 to 46. This
-change causes sparsemem extreme check to fail in makedumpfile.
+Wait, above proposal does not include kexec-tools mangling of the
+e820 table, for several reasons:
 
-This patch auto-detects the correct value to use for MAX_PHYSMEM_BITS by
-examining the mem_section array size from the vmcore being analyzed.
+- Keep the boot interface clean and pass the original table
+- Only one possible error source on e820 table modifications
+- While hpa proposed kexec-tools to pass a modified e820 table to
+  make things easier, exactly the opposite is the case:
+  If kexec-tools and the kernel modify the table, things are more
+  complex and hard to understand in case of debugging where things
+  went wrong
+- It's really easy to do that in the kernel. As shown above it should
+  simply be this line to change usable areas into E820_KDUMP_RESERVED
+  ones:
+  e820_update_range(0, ULLONG_MAX, E820_RAM, E820_KDUMP_RESERVED);
+  and possibly slight adjusting when the memmap=X#Y memory
+  the kdump kernel uses is added (has to override E820_KDUMP_RESERVED
+  areas with usable memory again)
 
-This patch has been tested on upstream kernel 3.8.0-rc4 and older kernel
-2.6.32.
+My previously posted kexec-tools patches should simply work,
+it's just that the memmap option name changes to:
+memmap=kdump_reserve_ram
 
-Reported-by: Dave Anderson <anderson@redhat.com>
-Reported-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
- arch/ppc64.c   |   27 ++++++++++++++++++++++++++-
- makedumpfile.h |    3 ++-
- 2 files changed, 28 insertions(+), 2 deletions(-)
+This is what I proposed and is IMO the best and less complex
+way to go. I guess I still wait another day for comments and
+will send something if you agree.
 
-diff --git a/arch/ppc64.c b/arch/ppc64.c
-index 1cb69e1..afbaf55 100644
---- a/arch/ppc64.c
-+++ b/arch/ppc64.c
-@@ -25,12 +25,37 @@
- #include "../makedumpfile.h"
- 
- int
-+set_ppc64_max_physmem_bits(void)
-+{
-+	long array_len = ARRAY_LENGTH(mem_section);
-+	/*
-+	 * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
-+	 * newer kernels 3.7 onwards uses 46 bits.
-+	 */
-+
-+	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
-+	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-+		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-+		return TRUE;
-+
-+	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
-+	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-+		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-+		return TRUE;
-+
-+	return FALSE;
-+}
-+
-+int
- get_machdep_info_ppc64(void)
- {
- 	unsigned long vmlist, vmalloc_start;
- 
- 	info->section_size_bits = _SECTION_SIZE_BITS;
--	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-+	if (!set_ppc64_max_physmem_bits()) {
-+		ERRMSG("Can't detect max_physmem_bits.\n");
-+		return FALSE;
-+	}
- 	info->page_offset = __PAGE_OFFSET;
- 
- 	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index d2bdc0c..d758a3c 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -566,7 +566,8 @@ do { \
- #define VMALLOCBASE     	(0xD000000000000000)
- #define KVBASE			(SYMBOL(_stext))
- #define _SECTION_SIZE_BITS	(24)
--#define _MAX_PHYSMEM_BITS	(44)
-+#define _MAX_PHYSMEM_BITS_ORIG  (44)
-+#define _MAX_PHYSMEM_BITS_3_7   (46)
- #endif
- 
- #ifdef __powerpc32__
-
+   Thomas
 
 _______________________________________________
 kexec mailing list
