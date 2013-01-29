@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Tzzf0-0005sW-DF
- for kexec@lists.infradead.org; Tue, 29 Jan 2013 01:06:51 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH 2/2] x86 e820: Introduce memmap=resetusablemap for kdump
- usage
-Date: Tue, 29 Jan 2013 02:05:53 +0100
-Message-ID: <6950516.1uefDuthAH@hammer82.arch.suse.de>
-In-Reply-To: <CAE9FiQWXcwagEb0jdFfdHvNcByNxtaLbvvoRC-jAppQmiGS22w@mail.gmail.com>
-References: <1358868049-19884-1-git-send-email-trenn@suse.de>
- <CAE9FiQWJqWQJhoJb2dBn=iAsKjxuf3MJro-jz+6k+WNZor8-xQ@mail.gmail.com>
- <CAE9FiQWXcwagEb0jdFfdHvNcByNxtaLbvvoRC-jAppQmiGS22w@mail.gmail.com>
+ id 1Tzzhp-00061I-SB
+ for kexec@lists.infradead.org; Tue, 29 Jan 2013 01:09:46 +0000
+Message-ID: <51072147.9090306@zytor.com>
+Date: Mon, 28 Jan 2013 17:09:27 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH 1/2] x86 e820: Check for exactmap appearance when parsing
+ first memmap option
+References: <1358868049-19884-1-git-send-email-trenn@suse.de>
+ <1358868049-19884-2-git-send-email-trenn@suse.de>
+In-Reply-To: <1358868049-19884-2-git-send-email-trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,63 +24,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, "H. Peter Anvin" <hpa@zytor.com>, vgoyal@redhat.com
+To: Thomas Renninger <trenn@suse.de>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, yinghai@kernel.org, vgoyal@redhat.com
 
-On Wednesday, January 23, 2013 08:07:19 PM Yinghai Lu wrote:
-> On Tue, Jan 22, 2013 at 12:06 PM, Yinghai Lu <yinghai@kernel.org> wrote:
-> > On Tue, Jan 22, 2013 at 8:32 AM, H. Peter Anvin <hpa@zytor.com> wrote:
-> >>> Again: Please explain what is bad with this solution.
-> >>> I cannot see a better and more robust way for kdump other than
-> >>> reserving the original reserved memory areas as declared by the BIOS.
-> >> 
-> >> It is bad because it creates more complexity than is needed.
-> >> 
-> >> The whole point is that what we want is simply to switch type 1 to type
-> >> X, with the sole exceptions being the areas explicitly reserved for the
-> >> kdump kernel.
-> > 
-> > Do you prefer to  "reserveram" way in attached patch?
+On 01/22/2013 07:20 AM, Thomas Renninger wrote:
+> From: Yinghai Lu <yinghai@kernel.org>
 > 
-> Hi, Thomas,
+> memmap=exactmap will throw away all original, but also until then
+> user defined (through other provided memmap= parameters) areas.
+> That means all memmap= boot parameters passed before a memmap=exactmap
+> parameter are not recognized.
+> Without this fix:
+> memmap=x@y memmap=exactmap memmap=i#k
+> only i#k would get recognized.
 > 
-> Can you please check attached reserveram version on your setup?
+> This is wrong, this fix will only throw away all original e820 areas once
+> when memmap=exactmap is found in the whole boot command line and before
+> any other memmap= option is parsed.
 > 
-> If it is ok, i will put it in for-x86-boot patchset and send it to
-> Peter for v3.9.
 
-But this (converting usable memory to reserved one before usable kdump memory
-is added) will let machines run into problems again for which the check:
-"mmconf area must be in reserved memory" got added?
+I don't understand why this is wrong.  The kernel command line is always
+parsed from left to right, and I don't see anything inherently
+problematic with that with something like a big hammer like exactmap.
 
-If, then memory which was usable before has to be converted to a special
-E820_KUMP (or whatever type) to make sure existing checks which look for
-"is reserved memory" still work the same way as in a productive kernel.
+	-hpa
 
-Advantage of this would be that the info what originally was usable
-memory is preserved and can be used in future kdump related patches.
 
-So I guess the final patch should be:
-   - Add a new e820 type:
-        E820_KDUMP_RESERVED /* Originally usable memory where the crashed
-                                                    kernel kernel resided in */
-  - Use Yinghai's last posted patch, but instead of:
-+			e820_update_range(0, ULLONG_MAX, E820_RAM,
-+					  E820_RESERVED);
-...
-+			e820_remove_range(start_at, mem_size, E820_RESERVED, 0);
-do:
-+			e820_update_range(0, ULLONG_MAX, E820_RAM,
-+					  E820_KDUMP_RESERVED);
-...
-+			e820_remove_range(start_at, mem_size, E820_KDUMP_RESERVED, 0);
-
-  - Come up with another memmap=kdump_reserve_ram memmap option name
-    or however it should get named...
-
-If this proposal gets accepted, I can send a tested patch...
-
-       Thomas
 
 _______________________________________________
 kexec mailing list
