@@ -1,6 +1,6 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <510846BE.5090704@wwwdotorg.org>
-Date: Tue, 29 Jan 2013 15:01:34 -0700
+Message-ID: <510848E2.50203@wwwdotorg.org>
+Date: Tue, 29 Jan 2013 15:10:42 -0700
 From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH] ARM: call disable_nonboot_cpus() from machine_shutdown()
@@ -11,8 +11,8 @@ References: <1357160861-26282-1-git-send-email-swarren@wwwdotorg.org>
  <50E5E967.3020805@wwwdotorg.org>
  <20130106162200.GC11025@mudshark.cambridge.arm.com>
  <20130106164033.GA3222@n2100.arm.linux.org.uk> <87ehhxahd1.fsf@xmission.com>
- <20130107144812.GD3222@n2100.arm.linux.org.uk> <87d2xcfeew.fsf@xmission.com>
-In-Reply-To: <87d2xcfeew.fsf@xmission.com>
+ <50ECB49C.7010609@wwwdotorg.org> <87obgwb5d1.fsf@xmission.com>
+In-Reply-To: <87obgwb5d1.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,59 +26,35 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Stephen Warren <swarren@nvidia.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 01/10/2013 10:59 PM, Eric W. Biederman wrote:
+On 01/10/2013 11:28 PM, Eric W. Biederman wrote:
 ...
-> disable_nonboot_cpus() should really be called
-> sometimes_dangerously_hotunplug_all_but_one_cpu().
-> 
-> If that code is going to be something other than power management
-> specific it is not cool that disable_nonboot_cpus() is not always
-> enabled when SMP is enabled.  It means that architectures need to
-> implement two different ways of shutting down cpus.
-> 
-> One of the truly nasty things about cpu_hotplug is that it requires that
-> irqs be migrated away from a cpu with interrupts disabled, which at
-> least on x86 in some interrupt delivery modes is impossible to do
-> safely.  The only way to losslessly (and without wedging irq
-> controllers) in those interrupt delivery modes (needed for more than 8
-> cpus) is to migrate an irq in it's irq handler.  Which is fine for
-> setting /proc/irq/$N/smp_affinity but is useless for cpu hot-unplug,
-> where we need to guarantee that all irqs are going to stop hitting a
-> cpu.
+> I don't have any problem with generic code in the reboot path
+> doing:
+> if (cpu_online(0))
+> 	set_cpus_allowed_ptr(current, cpumask_of(0));
 
-I'm a little confused about this; disable_nonboot_cpus() calls
-_cpu_down() to hot-unplug the CPU, and the regular CPU hotplug path is
-drivers/base/cpu.c:store_online() -> cpu_down() -> _cpu_down(), i.e. the
-same basic code.
+It looks like that API just affects the scheduler, and not whether the
+other CPUs are actually active/hot-plugged-in. At least for my use-case,
+I need something that really disables the other CPUs so they aren't
+executing code, hence my tendency to hot-un-plug them using
+disable_nonboot_cpus(), rather than just shift task execution off them
+using the code above.
 
-Given that, why is CPU hot unplug safe on x86 via sysfs (well, I'm just
-assuming it must be, since it's enabled in my regular distro kernel and
-appears to work fine), but not safe when it's done from
-disable_nonboot_cpus()?
+I wonder if all architectures shouldn't always do the following in all
+reboot/shutdown/kexec cases:
 
-> Now sometimes_dangerously_hotunplug_all_but_one_cpu() on the reboot path 
-> was added just a few months ago in Oct 2012, and it appears to due to
-> weird ARM maintainership.  At least the x86 reboot_cpu_id option is
-> broken due to that addition.
+* set_cpus_allowed_ptr() to limit code execution to a single CPU.
+* disable_nonboot_cpus() (or equivalent) if it's available to turn off
+all the other CPUs.
 
-I guess this is true because reboot_cpu_id() isn't honored unless that
-CPU is already offline, and disable_nonboot_cpus() probably took it
-offline on average.
-
-Perhaps x86's native_machine_shutdown() should explicitly bring that CPU
-online if it's in cpu_possible_mask? Or perhaps disable_nonboot_cpus()
-should be enhanced with x86's reboot_cpu_id logic, so it simply works
-the same way across all architectures; that way some chunk of x86's
-native_machine_shutdown() could be made common.
-
-...
-> We should remove disable_nonboot_cpus() from the reboot path.   It is
-> still a crazy unmaintained cpu hotplug mess.
-
-Even if we updated it to standardize the reboot_cpu_id logic across all
-architectures, and hence made it still suitable for x86?
+The issue here would be that disable_nonboot_cpus() isn't always
+available; I assume that's part of the reason that there are
+arch-specific machine_xxx() hooks, so that architectures can
+power-off/reset their CPUs even when hotplug isn't enabled? I wonder if
+that can be refactored so that reboot/poweroff/kexec can share some
+CPU-disable code with CPU hotplug?
 
 _______________________________________________
 kexec mailing list
