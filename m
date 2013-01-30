@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U0atx-000808-HL
- for kexec@lists.infradead.org; Wed, 30 Jan 2013 16:52:46 +0000
-Message-ID: <51094FD5.2070909@zytor.com>
-Date: Wed, 30 Jan 2013 08:52:37 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+Received: from mx4-phx2.redhat.com ([209.132.183.25])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1U0bCS-0005AY-4O
+ for kexec@lists.infradead.org; Wed, 30 Jan 2013 17:11:52 +0000
+Received: from zmail15.collab.prod.int.phx2.redhat.com
+ (zmail15.collab.prod.int.phx2.redhat.com [10.5.83.17])
+ by mx4-phx2.redhat.com (8.13.8/8.13.8) with ESMTP id r0UHBoaE000330
+ for <kexec@lists.infradead.org>; Wed, 30 Jan 2013 12:11:50 -0500
+Date: Wed, 30 Jan 2013 12:11:50 -0500 (EST)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <184157494.18614364.1359565910010.JavaMail.root@redhat.com>
+In-Reply-To: <mailman.13964.1359561994.1038.kexec@lists.infradead.org>
+Subject: Re: makedumpfile --dump-dmesg option broken on 3.5 kernels and later
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] Cleanup kdump memmap= passing and e820 usage
-References: <1358866935-18458-1-git-send-email-trenn@suse.de>
- <201301301713.43946.trenn@suse.de>
- <4dc77552-977d-4761-860e-afdec61c4317@email.android.com>
- <201301301739.52358.trenn@suse.de>
-In-Reply-To: <201301301739.52358.trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,68 +21,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Renninger <trenn@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, yinghai@kernel.org, vgoyal@redhat.com
+To: kexec@lists.infradead.org
 
-On 01/30/2013 08:39 AM, Thomas Renninger wrote:
->
->>> This:
->>> - heavily cleans up the unnecesary reserved memory passing via memmap=
->>> - still provides a clean way of passing a valid e820 table through
->>>    boot structures (no Linux kernel made up e820 type passing)
->>> - Keeps complexity as low as possible and at one place and does not
->>>    involve kexec-tools as another error source (passing a badly
->>>    mangled e820 table or not being able to consider stuff the kernel
->>>    can when mangeling).
->
-> If for some reason the e820 table in kdump case needs to be
-> touched again, I am pretty sure you do not want to look up
-> kexec-tools code.
-> Also you won't be able to fix/workaround things in kexec-tools
-> the way you can in the kernel.
->
 
-Say what?  The kernel is an open source tool, so is kexec, and a *lot* 
-of people have dependencies on specific kernel versions which does not
 
-> I also do not think it's a good idea to pass an unspecified,
-> Linux kernel made up e820 type through the public boot interface.
+----- Original Message -----
+>  Bouchard Louis <louis.bouchard@canonical.com> wrote:
+> 
+> I now have what looks like a working patch for this issue. Thank to Dave
+> Anderson (crash) and Eric Biederman (vmcore-dmesg) for having chewed
+> most of the work for me.
+> 
+> My only remaining problem is to be able to print the syslog level as is
+> provided in the previous version.  Currently, the kernel doesn't export
+> the 'level:3' offset of the log structure in the vmcoreinfo information
+> provided in the vmcore.
+> 
+> Vivek who authored the original kernel/printk.c patch might be able to
+> suggest a better way to expose log.level:3 (I did try to patch the
+> kernel but got thrown away because of the nature of .level:3 that didn't
+> fit the VMCOREINFO_OFFSET macro)
+> 
+> In the meantime, I only found this kinda ugly hack to work around the
+> absence of the structure element :
+> 
+> >                 /*
+> >                  * Ugly hack around absence of log.level:3
+> >                  * Hard code log.level offset = log.dict_len + 3
+> >                  */
+> >                 level = (UCHAR(logptr + OFFSET(log.dict_len)+3)&level_mask);
+> >
+> >         sprintf(buf,"<%d>[%5lld.%06ld] ",level,nanos,rem/1000);
+> 
+> Aside from that, I get an identical dmesg output on kernel 3.5 and after.
+> 
+> I would appreciate comments on the following before I send the patch to
+> the list.
 
-It's our interface.  We specify it.  On the other hand, we may want to 
-make these negative numbers rather than starting at 128 to avoid future 
-collisions with real memory types (not that they are growing very fast.)
+IMHO, just drop it.
 
-> So looking from the other side, passing a modified e820 table
-> only has disadvantages. The only advantage I can see that
-> memmap=..,X@Y,W@Z needs not to be passed. But this is rather
-> short and static now and not huge depending on the e820 reserved
-> entries from the BIOS (and still obvious where it comes from and why
-> it gets passed. Passing things hidden in a modified e820 boot structure
-> is not a good idea).
+As I mentioned on the crash-utility list, it's a PITA keeping up with 
+the log structure changes, especially when it involves bit-fields.
+The vmcore-dmesg facility just ignores displaying the message evel. 
+And for the next crash release, I'm putting the finishing touches on 
+a new "crash --log vmcore" option (i.e., without requiring the vmlinux
+file), and I'm also going to ignore the log-level.
 
-The command line is fundamentally a human-oriented interface and its 
-semantics change over time (considering the built-in command line stuff, 
-for example.)  It is thus fragile.
+I understand that "makedumpfile --dump-dmesg" and vmcore-dmesg show
+the log level for the legacy log buffer dumps, but that's because
+they're embedded in the messages themselves. 
 
-The e820 map is fundamentally what you care about, and it has to be 
-passed correctly anyway -- or your changes are utterly broken.  The 
-modifications that have to be performed (from RAM to KDUMP) is trivial.
-
-I have to admit to being rather confused as to the separation of various 
-bits of kdump between the host kernel and various user-space components, 
-but the whole use of the command line to pass the memory map seems just 
-broken in light of everything that can go wrong.
-
-	-hpa
-
--- 
-H. Peter Anvin, Intel Open Source Technology Center
-I work for Intel.  I don't speak on their behalf.
-
+Dave
 
 _______________________________________________
 kexec mailing list
