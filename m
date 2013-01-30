@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U0f9p-0005zv-O4
- for kexec@lists.infradead.org; Wed, 30 Jan 2013 21:25:26 +0000
+ id 1U0f9p-0005zw-Ob
+ for kexec@lists.infradead.org; Wed, 30 Jan 2013 21:25:27 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v8 1/7] kexec, x86: set booloader id in setup_header
-Date: Wed, 30 Jan 2013 13:25:14 -0800
-Message-Id: <1359581120-24397-2-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v8 3/7] kexec, x86: clean boot_params area for entry-32bit path
+Date: Wed, 30 Jan 2013 13:25:16 -0800
+Message-Id: <1359581120-24397-4-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1359581120-24397-1-git-send-email-yinghai@kernel.org>
 References: <1359581120-24397-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,39 +25,53 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-set LOADER_TYPE_KEXEC
+kexec bzImage path setup data is shared with real-mode path, and
+setup_header is copied together with setup_code.
+Later 32bit just use whole area as boot_params for real_mode_data.
+but those area for boot_params around setup_header is
+not cleaned that will leave some field in boot_param as
+non-zero value.
+
+So clean around setup_header area for non real-mode entry path.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- include/x86/x86-linux.h           |    1 +
- kexec/arch/i386/x86-linux-setup.c |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ kexec/arch/i386/kexec-bzImage.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index 8f7a797..ea11042 100644
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -142,6 +142,7 @@ struct x86_linux_param_header {
- #define LOADER_TYPE_BOOTSECT_LOADER 2
- #define LOADER_TYPE_SYSLINUX        3
- #define LOADER_TYPE_ETHERBOOT       4
-+#define LOADER_TYPE_KEXEC           0x0D
- #define LOADER_TYPE_UNKNOWN         0xFF
- 	uint8_t  loader_flags;			/* 0x211 */
- 	uint8_t  reserved12[2];			/* 0x212 */
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index ef62553..d09c6ce 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -56,7 +56,7 @@ void setup_linux_bootloader_parameters(
- 	unsigned long initrd_base, initrd_addr_max;
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 83a023d..1dfa3d7 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -98,6 +98,19 @@ void bzImage_usage(void)
+        
+ }
  
- 	/* Say I'm a boot loader */
--	real_mode->loader_type = LOADER_TYPE_UNKNOWN;
-+	real_mode->loader_type = LOADER_TYPE_KEXEC << 4;
++static void clean_boot_params(unsigned char *real_mode, unsigned long size)
++{
++	unsigned long end;
++
++	/* clear value before header */
++	memset(real_mode, 0, 0x1f1);
++	/* clear value after setup_header  */
++	end = *(real_mode + 0x201);
++	end += 0x202;
++	if (end < size)
++		memset(real_mode + end, 0, size - end);
++}
++
+ int do_bzImage_load(struct kexec_info *info,
+ 	const char *kernel, off_t kernel_len,
+ 	const char *command_line, off_t command_line_len,
+@@ -212,6 +225,8 @@ int do_bzImage_load(struct kexec_info *info,
+ 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
+ 	real_mode = xmalloc(setup_size);
+ 	memcpy(real_mode, kernel, kern16_size);
++	if (!real_mode_entry)
++		clean_boot_params((unsigned char *)real_mode, kern16_size);
  
- 	/* No loader flags */
- 	real_mode->loader_flags = 0;
+ 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
+ 		/* If using bzImage for capture kernel, then we will not be
 -- 
 1.7.10.4
 
