@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U0f9p-0005zz-Vo
- for kexec@lists.infradead.org; Wed, 30 Jan 2013 21:25:29 +0000
+ id 1U0f9q-0005zx-0w
+ for kexec@lists.infradead.org; Wed, 30 Jan 2013 21:25:30 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v8 5/7] kexec,
- x86: put ramdisk/cmd_line above 4G for 64bit bzImage
-Date: Wed, 30 Jan 2013 13:25:18 -0800
-Message-Id: <1359581120-24397-6-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v8 7/7] kexec, x86: handle Crash low kernel range
+Date: Wed, 30 Jan 2013 13:25:20 -0800
+Message-Id: <1359581120-24397-8-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1359581120-24397-1-git-send-email-yinghai@kernel.org>
 References: <1359581120-24397-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -26,116 +25,66 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-We could put ramdisk/cmdline above for bzImage on 64bit for protocol 2.12.
-
--v2: change ext_... handling to way that eric like.
+kernel could have that in /proc/iomem, will use it for kdump kernel
+for dma32
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/i386/x86-linux-setup.c |   36 +++++++++++++++++++++++++++---------
- kexec/arch/i386/x86-linux-setup.h |   15 +++++++++++++--
- 2 files changed, 40 insertions(+), 11 deletions(-)
+ kexec/arch/i386/crashdump-x86.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index d09c6ce..e0ddc84 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -46,11 +46,11 @@ void init_linux_parameters(struct x86_linux_param_header *real_mode)
- 	real_mode->cmdline_size = COMMAND_LINE_SIZE;
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 245402c..83bff5e 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -188,6 +188,8 @@ static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
+ 
+ /* Memory region reserved for storing panic kernel and other data. */
+ static struct memory_range crash_reserved_mem;
++/* under 4G parts */
++static struct memory_range crash_reserved_low_mem;
+ 
+ /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
+  * create Elf headers. Keeping it separate from get_memory_ranges() as
+@@ -282,6 +284,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+ 	if (exclude_region(&memory_ranges, crash_reserved_mem.start,
+ 				crash_reserved_mem.end) < 0)
+ 		return -1;
++	if (crash_reserved_low_mem.start &&
++	    exclude_region(&memory_ranges, crash_reserved_low_mem.start,
++				crash_reserved_low_mem.end) < 0)
++		return -1;
+ 	if (gart) {
+ 		/* exclude GART region if the system has one */
+ 		if (exclude_region(&memory_ranges, gart_start, gart_end) < 0)
+@@ -984,6 +990,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 		return ENOCRASHKERNEL;
+ 	}
+ 
++	if (crash_reserved_low_mem.start) {
++		sz = crash_reserved_low_mem.end - crash_reserved_low_mem.start
++					 +1;
++		add_memmap(memmap_p, crash_reserved_low_mem.start, sz);
++	}
++
+ 	/* Create a backup region segment to store backup data*/
+ 	if (!(info->kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
+ 		sz = (info->backup_src_size + align) & ~(align - 1);
+@@ -1059,5 +1071,14 @@ int is_crashkernel_mem_reserved(void)
+ 	crash_reserved_mem.end = end;
+ 	crash_reserved_mem.type = RANGE_RAM;
+ 
++	/* If there is no Crash low kernel, still can go on */
++	if (parse_iomem_single("Crash kernel low\n", &start, &end) ||
++					start == end)
++		return 1;
++
++	crash_reserved_low_mem.start = start;
++	crash_reserved_low_mem.end = end;
++	crash_reserved_low_mem.type = RANGE_RAM;
++
+ 	return 1;
  }
- 
--void setup_linux_bootloader_parameters(
-+void setup_linux_bootloader_parameters_high(
- 	struct kexec_info *info, struct x86_linux_param_header *real_mode,
- 	unsigned long real_mode_base, unsigned long cmdline_offset,
- 	const char *cmdline, off_t cmdline_len,
--	const char *initrd_buf, off_t initrd_size)
-+	const char *initrd_buf, off_t initrd_size, int initrd_high)
- {
- 	char *cmdline_ptr;
- 	unsigned long initrd_base, initrd_addr_max;
-@@ -62,10 +62,15 @@ void setup_linux_bootloader_parameters(
- 	real_mode->loader_flags = 0;
- 
- 	/* Find the maximum initial ramdisk address */
--	initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
--	if (real_mode->protocol_version >= 0x0203) {
--		initrd_addr_max = real_mode->initrd_addr_max;
--		dbgprintf("initrd_addr_max is 0x%lx\n", initrd_addr_max);
-+	if (initrd_high)
-+		initrd_addr_max = ULONG_MAX;
-+	else {
-+		initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
-+		if (real_mode->protocol_version >= 0x0203) {
-+			initrd_addr_max = real_mode->initrd_addr_max;
-+			dbgprintf("initrd_addr_max is 0x%lx\n",
-+					 initrd_addr_max);
-+		}
- 	}
- 
- 	/* Load the initrd if we have one */
-@@ -81,8 +86,16 @@ void setup_linux_bootloader_parameters(
- 	}
- 
- 	/* Ramdisk address and size */
--	real_mode->initrd_start = initrd_base;
--	real_mode->initrd_size  = initrd_size;
-+	real_mode->initrd_start = initrd_base & 0xffffffffUL;
-+	real_mode->initrd_size  = initrd_size & 0xffffffffUL;
-+
-+	if (real_mode->protocol_version >= 0x020c &&
-+	    (initrd_base & 0xffffffffUL) != initrd_base)
-+		real_mode->ext_ramdisk_image = initrd_base >> 32;
-+
-+	if (real_mode->protocol_version >= 0x020c &&
-+	    (initrd_size & 0xffffffffUL) != initrd_size)
-+		real_mode->ext_ramdisk_size = initrd_size >> 32;
- 
- 	/* The location of the command line */
- 	/* if (real_mode_base == 0x90000) { */
-@@ -91,7 +104,12 @@ void setup_linux_bootloader_parameters(
- 		/* setup_move_size */
- 	/* } */
- 	if (real_mode->protocol_version >= 0x0202) {
--		real_mode->cmd_line_ptr = real_mode_base + cmdline_offset;
-+		unsigned long cmd_line_ptr = real_mode_base + cmdline_offset;
-+
-+		real_mode->cmd_line_ptr = cmd_line_ptr & 0xffffffffUL;
-+		if ((real_mode->protocol_version >= 0x020c) &&
-+		    ((cmd_line_ptr & 0xffffffffUL) != cmd_line_ptr))
-+			real_mode->ext_cmd_line_ptr = cmd_line_ptr >> 32;
- 	}
- 
- 	/* Fill in the command line */
-diff --git a/kexec/arch/i386/x86-linux-setup.h b/kexec/arch/i386/x86-linux-setup.h
-index 96fbd33..09aed4d 100644
---- a/kexec/arch/i386/x86-linux-setup.h
-+++ b/kexec/arch/i386/x86-linux-setup.h
-@@ -2,11 +2,22 @@
- #define X86_LINUX_SETUP_H
- 
- void init_linux_parameters(struct x86_linux_param_header *real_mode);
--void setup_linux_bootloader_parameters(
-+void setup_linux_bootloader_parameters_high(
- 	struct kexec_info *info, struct x86_linux_param_header *real_mode,
- 	unsigned long real_mode_base, unsigned long cmdline_offset,
- 	const char *cmdline, off_t cmdline_len,
--	const char *initrd_buf, off_t initrd_size);
-+	const char *initrd_buf, off_t initrd_size, int initrd_high);
-+static inline void setup_linux_bootloader_parameters(
-+	struct kexec_info *info, struct x86_linux_param_header *real_mode,
-+	unsigned long real_mode_base, unsigned long cmdline_offset,
-+	const char *cmdline, off_t cmdline_len,
-+	const char *initrd_buf, off_t initrd_size)
-+{
-+	setup_linux_bootloader_parameters_high(info,
-+			real_mode, real_mode_base,
-+			cmdline_offset, cmdline, cmdline_len,
-+			initrd_buf, initrd_size, 0);
-+}
- void setup_linux_system_parameters(struct kexec_info *info,
- 	struct x86_linux_param_header *real_mode);
- 
 -- 
 1.7.10.4
 
