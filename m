@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mail-ia0-x231.google.com ([2607:f8b0:4001:c02::231])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U0ffM-0000Gq-Oi
- for kexec@lists.infradead.org; Wed, 30 Jan 2013 21:58:01 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1358866935-18458-1-git-send-email-trenn@suse.de>
- <201301301713.43946.trenn@suse.de>
- <4dc77552-977d-4761-860e-afdec61c4317@email.android.com>
- <201301301739.52358.trenn@suse.de> <51094FD5.2070909@zytor.com>
- <87obg6sdtv.fsf@xmission.com> <510992C7.2050000@zytor.com>
-Date: Wed, 30 Jan 2013 13:57:44 -0800
-In-Reply-To: <510992C7.2050000@zytor.com> (H. Peter Anvin's message of "Wed,
- 30 Jan 2013 13:38:15 -0800")
-Message-ID: <877gmumizr.fsf@xmission.com>
+ id 1U0fq3-0001ME-CI
+ for kexec@lists.infradead.org; Wed, 30 Jan 2013 22:09:04 +0000
+Received: by mail-ia0-f177.google.com with SMTP id h8so2973670iaa.8
+ for <kexec@lists.infradead.org>; Wed, 30 Jan 2013 14:09:02 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] Cleanup kdump memmap= passing and e820 usage
+In-Reply-To: <510991F3.9020006@zytor.com>
+References: <1359581120-24397-1-git-send-email-yinghai@kernel.org>
+ <1359581120-24397-4-git-send-email-yinghai@kernel.org>
+ <510991F3.9020006@zytor.com>
+Date: Wed, 30 Jan 2013 14:09:02 -0800
+Message-ID: <CAE9FiQXaTkgmJbQ_6ZacwPx=2v+8XV0HBChtx+pE0agc=QkAjg@mail.gmail.com>
+Subject: Re: [PATCH v8 3/7] kexec,
+ x86: clean boot_params area for entry-32bit path
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,54 +28,62 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, yinghai@kernel.org, Thomas Renninger <trenn@suse.de>, vgoyal@redhat.com
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-"H. Peter Anvin" <hpa@zytor.com> writes:
-
-> On 01/30/2013 10:52 AM, Eric W. Biederman wrote:
->> "H. Peter Anvin" <hpa@zytor.com> writes:
->> 
->>> I have to admit to being rather confused as to the separation of various bits of
->>> kdump between the host kernel and various user-space components, but the whole
->>> use of the command line to pass the memory map seems just broken in light of
->>> everything that can go wrong.
->> 
->> It certainly seems time to look at this design decision and see if it
->> still makes sense.
->> 
->> The original idea was to pass the e820 map in the e820 variables, and to
->> slightly override that map to report which memory it was safe for the
->> kdump kernel to run in.  Leaving the kernel with the knowledge that
->> of where everything actually is, and that we just don't happen to be
->> using all of the memory.
->> 
->> Now something seems to have gone wrong with that strategy as we wound
->> up needing to play games with acpi and gart addresses.
->> 
->> I see one of two very basic options going forward.
->> - Pass a kernel command line option that just changes the kernels idea
->>   of which memory it can touch (and we can remove all of the other options).
->> - Modify the e820 map we pass to the kdump kernel and don't bother to
->>   pass anything on the command line.
->> 
+On Wed, Jan 30, 2013 at 1:34 PM, H. Peter Anvin <hpa@zytor.com> wrote:
+> On 01/30/2013 01:25 PM, Yinghai Lu wrote:
+>>
+>> +static void clean_boot_params(unsigned char *real_mode, unsigned long size)
+>> +{
+>> +     unsigned long end;
+>> +
+>> +     /* clear value before header */
+>> +     memset(real_mode, 0, 0x1f1);
+>> +     /* clear value after setup_header  */
+>> +     end = *(real_mode + 0x201);
 >
-> Yes, those seem to be the options, and we're currently discussing which one.
+> real_mode[0x201] might be clearer...
 >
-> The second seems to make more sense to me.  The kexec tools build the
-> memory map anyway, and it makes sense to me at least to just build a
-> memory map with the appropriate regions marked as a dumpable type.
+>> +     end += 0x202;
+>> +     if (end < size)
+>> +             memset(real_mode + end, 0, size - end);
+>> +}
+>
+> You don't actually need the test... the value is inherently smaller than
+> 0x301 which is less than the size.
+>
+> That being said, if you want to sanity-check it you can check that the
+> value is in a sensible range -- the permitted range is 0x22 to 0x7f
+> inclusive, corresponding to a total end value of 0x224 to 0x281.
 
-This dumpable type doesn't make sense to me.  Are you suggesting making
-regions that are memory but that we should not use a special memory
-type?
+yes.
 
-I think I would prefer that to call that new type RESERVED_MEM or
-RESERVED_CACHABLE.  Being more specific is fine but dumpable certainly
-doesn't bring to mind what we are saying.  Especially since we already
-communicate which areas were memory to the last kernel in an
-architecture generic format.
+how about clear all and copy only setup_header?
 
-Eric
+that looks more readable.
+
+Index: kexec-tools/kexec/arch/i386/kexec-bzImage.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/i386/kexec-bzImage.c
++++ kexec-tools/kexec/arch/i386/kexec-bzImage.c
+@@ -211,7 +211,16 @@ int do_bzImage_load(struct kexec_info *i
+        /* The argument/parameter segment */
+        setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
+        real_mode = xmalloc(setup_size);
+-       memcpy(real_mode, kernel, kern16_size);
++       if (!real_mode_entry) {
++               unsigned long size = kernel[0x201] + 0x202 - 0x1f1;
++
++               /* only copy setup_header */
++               memset(real_mode, 0, setup_size);
++               if (size > 0x7f)
++                       size = 0x7f;
++               memcpy(real_mode + 0x1f1, kernel + 0x1f1, size);
++       } else
++               memcpy(real_mode, kernel, kern16_size);
+
+        if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
+                /* If using bzImage for capture kernel, then we will not be
 
 _______________________________________________
 kexec mailing list
