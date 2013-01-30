@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U0aFA-0002WB-MK
- for kexec@lists.infradead.org; Wed, 30 Jan 2013 16:10:40 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: [PATCH 3/3] x86 e820: Introduce memmap=kdump_reserve_usable for kdump
- usage
-Date: Wed, 30 Jan 2013 17:10:27 +0100
+ id 1U0aFS-0002Y2-Je
+ for kexec@lists.infradead.org; Wed, 30 Jan 2013 16:10:55 +0000
+In-Reply-To: <201301301703.42601.trenn@suse.de>
 References: <1358866935-18458-1-git-send-email-trenn@suse.de>
+ <20130130043100.GO28230@verge.net.au>
  <bfc13f3d-3ee2-4b7c-8d25-04718536a05a@email.android.com>
  <201301301703.42601.trenn@suse.de>
-In-Reply-To: <201301301703.42601.trenn@suse.de>
 MIME-Version: 1.0
-Message-Id: <201301301710.27822.trenn@suse.de>
+Subject: Re: [PATCH 0/3] Make use of new memmap= kernel parameter syntax
+From: "H. Peter Anvin" <hpa@zytor.com>
+Date: Wed, 30 Jan 2013 08:10:45 -0800
+Message-ID: <9223c059-9938-4760-975a-7b904d1b629d@email.android.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,119 +25,244 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
+To: Thomas Renninger <trenn@suse.de>
 Cc: yinghai@kernel.org, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, x86@kernel.org, vgoyal@redhat.com
 
-kdump voided the whole original e820 map and half way made
-it up via memmap= options passed via kdump boot params again.
+I don't see why this is "unnecessarily complex" compared to this stuff...
 
-But this is conceptionally wrong. The whole original memory ranges
-which are declared reserved, ACPI data/nvs or however are not usable
-must stay the same and get honored by the kdump kernel.
+Thomas Renninger <trenn@suse.de> wrote:
 
-Therefore memmap=kdump_reserve_usable gets introduced.
-kdump passes this one and originally usable memory gets converted
-by the kernel to the Linux kernel specific kdump reserved e820 type.
-kdump passes the usable memory ranges where the kdump kernel resides
-in via memmap=x@y parameter(s).
+>On Wednesday, January 30, 2013 06:40:46 AM H. Peter Anvin wrote:
+>> The right thing to do as I have discussed with the people involved is
+>to
+>> modify the memory map data structure to have a new memory type ID for
+>> memory which is to be dumped.  That eliminates the need to put all
+>this
+>> info into the command line.
+>As said before..., after looking closely into this I am convinced that
+>passing a kexec-tools modified e820 table makes things unnecessary
+>complex.
+>
+>So I suggest to still pass the original e820 table and kexec-tools
+>only needs to pass the memory to use (usable) where the kdump kernel
+>resides in via memmap=X@Y.
+>This:
+> - heavily cleans up the unnecesary reserved memory passing via memmap=
+>- still provides a clean way of passing a valid e820 table through boot
+>    structures (no Linux kernel made up e820 type passing)
+>  - fixes mmconf and possible other bugs
+>- provides the kdump kernel with all availabe info, it then knows
+>about:
+>    original e820 map (all reserved, usable, etc. as specified by BIOS)
+>    kdump kernel memory area, former (crashed kernel) usable memory.
+>  - Keeps complexity as low as possible and at one place and does not
+>    involve kexec-tools as another error source (passing a badly
+>    mangled e820 table or not being able to consider stuff the kernel
+>    can when mangeling).
+>
+>Having that said I will reply to this mail with two kernel patches
+>which implement this.
+>The 3 kexec-tools patches would be more or less the same, only the
+>string memmap=resetusable has to be exchanged to
+>memmap=kdump_reserve_usable
+>I wait until the kernel patches are in x86-tip and queued for
+>3.9 and will resend them then.
+>
+>Please consider to apply the two kernel patches already.
+>But I can also resend in a new thread.
+>
+>   Thomas
+>
+>Ah yes, here the test results:
+>Kdump specific boot parameter appends before:
+>---------------------------------------------
+>memmap=exactmap memmap=559K@64K memmap=261560K@638976K
+>elfcorehdr=900536K memmap=488K#3034988K memmap=3076K#3067744K
+>memmap=2048K#3106804K memmap=676K#3110812K 
+>memmap=4K#3111488K memmap=476K#3111492K memmap=4K#3111968K
+>memmap=8K#3111972K memmap=4K#3111980K memmap=4K#3111984K
+>memmap=92K#3111988K memmap=564K#3112080K
+>
+>Kdump specific boot parameter appends now:
+>------------------------------------------
+>memmap=kdump_reserve_usable,559K@64K,261560K@638976K elfcorehdr=900536K
+>
+>
+>important parts of the serial console output of the
+>---------------------------------------------------
+>modified kdump kernel:
+>----------------------
+>[691036.954392] RIP  [<ffffffff812f368d>] sysrq_handle_crash+0xd/0x20
+>[691036.968140]  RSP <ffff88042473de90>
+>[691036.976113] CR2: 0000000000000000
+>[    0.000000] Initializing cgroup subsys cpuset
+>[    0.000000] Initializing cgroup subsys cpu
+>[    0.000000] Linux version 3.8.0-rc5-default+ (trenn@ett) (gcc
+>version 4.5.1 20101208 [gcc-4_5-branch revision 167585] (SUSE Linux) )
+>#4 SMP Wed Jan 30 15:45:36 
+>CET 2013
+>[    0.000000] Command line:
+>root=/dev/disk/by-id/ata-Hitachi_HDS721016CLA382_JPAB40HM2KUK6B-part6
+>console=tty0 console=ttyS0,57600 sysrq_always_enabled panic=100 
+>ignore_loglevel
+>resume=/dev/disk/by-id/ata-Hitachi_HDS721016CLA382_JPAB40HM2KUK6B-part2
+>apic=verbose debug vga=normal elevator=deadline sysrq=yes reset_devices
+>
+>irqpoll maxcpus=1  
+>memmap=kdump_reserve_usable,559K@64K,261560K@638976K elfcorehdr=900536K
+>[    0.000000] e820: BIOS-provided physical RAM map:
+>[    0.000000] BIOS-e820: [mem 0x0000000000000100-0x000000000009bbff]
+>usable
+>[    0.000000] BIOS-e820: [mem 0x000000000009bc00-0x000000000009ffff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000b93dafff]
+>usable
+>[    0.000000] BIOS-e820: [mem 0x00000000b93db000-0x00000000b9454fff]
+>ACPI data
+>[    0.000000] BIOS-e820: [mem 0x00000000b9455000-0x00000000bb155fff]
+>usable
+>[    0.000000] BIOS-e820: [mem 0x00000000bb156000-0x00000000bb166fff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000bb167000-0x00000000bb3d7fff]
+>usable
+>[    0.000000] BIOS-e820: [mem 0x00000000bb3d8000-0x00000000bb6d8fff]
+>ACPI NVS
+>[    0.000000] BIOS-e820: [mem 0x00000000bb6d9000-0x00000000bd9fcfff]
+>usable
+>[    0.000000] BIOS-e820: [mem 0x00000000bd9fd000-0x00000000bdbfcfff]
+>ACPI NVS
+>[    0.000000] BIOS-e820: [mem 0x00000000bdbfd000-0x00000000bdcdcfff]
+>usable
+>[    0.000000] BIOS-e820: [mem 0x00000000bdcdd000-0x00000000bdde6fff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000bdde7000-0x00000000bde8ffff]
+>ACPI NVS
+>[    0.000000] BIOS-e820: [mem 0x00000000bde90000-0x00000000bde90fff]
+>ACPI data
+>[    0.000000] BIOS-e820: [mem 0x00000000bde91000-0x00000000bdf07fff]
+>ACPI NVS
+>[    0.000000] BIOS-e820: [mem 0x00000000bdf08000-0x00000000bdf08fff]
+>ACPI data
+>[    0.000000] BIOS-e820: [mem 0x00000000bdf09000-0x00000000bdf0afff]
+>ACPI NVS
+>[    0.000000] BIOS-e820: [mem 0x00000000bdf0b000-0x00000000bdf0bfff]
+>ACPI data
+>[    0.000000] BIOS-e820: [mem 0x00000000bdf0c000-0x00000000bdf0cfff]
+>ACPI NVS
+>[    0.000000] BIOS-e820: [mem 0x00000000bdf0d000-0x00000000bdf23fff]
+>ACPI data
+>[    0.000000] BIOS-e820: [mem 0x00000000bdf24000-0x00000000bdfb0fff]
+>ACPI NVS
+>[    0.000000] BIOS-e820: [mem 0x00000000bdfb1000-0x00000000bdffffff]
+>usable
+>[    0.000000] BIOS-e820: [mem 0x00000000be000000-0x00000000cfffffff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000fed19000-0x00000000fed19fff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x00000000ffa20000-0x00000000ffffffff]
+>reserved
+>[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000083fffffff]
+>usable
+>[    0.000000] debug: ignoring loglevel setting.
+>[    0.000000] e820: last_pfn = 0x840000 max_arch_pfn = 0x400000000
+>[    0.000000] e820: update [mem 0x00000000-0xfffffffffffffffe] usable
+>==> kdump reserved
+>[    0.000000] e820: remove [mem 0x00010000-0x0009bbff] 
+>[    0.000000] e820: remove [mem 0x27000000-0x36f6dfff] 
+>[    0.000000] NX (Execute Disable) protection: active
+>[    0.000000] e820: user-defined physical RAM map:
+>[    0.000000] user: [mem 0x0000000000000100-0x000000000000ffff] kdump
+>reserved
+>[    0.000000] user: [mem 0x0000000000010000-0x000000000009bbff] usable
+>[    0.000000] user: [mem 0x000000000009bc00-0x000000000009ffff]
+>reserved
+>[    0.000000] user: [mem 0x00000000000e0000-0x00000000000fffff]
+>reserved
+>[    0.000000] user: [mem 0x0000000000100000-0x0000000026ffffff] kdump
+>reserved
+>[    0.000000] user: [mem 0x0000000027000000-0x0000000036f6dfff] usable
+>[    0.000000] user: [mem 0x0000000036f6e000-0x00000000b93dafff] kdump
+>reserved
+>[    0.000000] user: [mem 0x00000000b93db000-0x00000000b9454fff] ACPI
+>data
+>[    0.000000] user: [mem 0x00000000b9455000-0x00000000bb155fff] kdump
+>reserved
+>[    0.000000] user: [mem 0x00000000bb156000-0x00000000bb166fff]
+>reserved
+>[    0.000000] user: [mem 0x00000000bb167000-0x00000000bb3d7fff] kdump
+>reserved
+>[    0.000000] user: [mem 0x00000000bb3d8000-0x00000000bb6d8fff] ACPI
+>NVS
+>[    0.000000] user: [mem 0x00000000bb6d9000-0x00000000bd9fcfff] kdump
+>reserved
+>[    0.000000] user: [mem 0x00000000bd9fd000-0x00000000bdbfcfff] ACPI
+>NVS
+>[    0.000000] user: [mem 0x00000000bdbfd000-0x00000000bdcdcfff] kdump
+>reserved
+>[    0.000000] user: [mem 0x00000000bdcdd000-0x00000000bdde6fff]
+>reserved
+>[    0.000000] user: [mem 0x00000000bdde7000-0x00000000bde8ffff] ACPI
+>NVS
+>[    0.000000] user: [mem 0x00000000bde90000-0x00000000bde90fff] ACPI
+>data
+>[    0.000000] user: [mem 0x00000000bde91000-0x00000000bdf07fff] ACPI
+>NVS
+>[    0.000000] user: [mem 0x00000000bdf08000-0x00000000bdf08fff] ACPI
+>data
+>[    0.000000] user: [mem 0x00000000bdf09000-0x00000000bdf0afff] ACPI
+>NVS
+>[    0.000000] user: [mem 0x00000000bdf0b000-0x00000000bdf0bfff] ACPI
+>data
+>[    0.000000] user: [mem 0x00000000bdf0c000-0x00000000bdf0cfff] ACPI
+>NVS
+>[    0.000000] user: [mem 0x00000000bdf0d000-0x00000000bdf23fff] ACPI
+>data
+>[    0.000000] user: [mem 0x00000000bdf24000-0x00000000bdfb0fff] ACPI
+>NVS
+>[    0.000000] user: [mem 0x00000000bdfb1000-0x00000000bdffffff] kdump
+>reserved
+>[    0.000000] user: [mem 0x00000000be000000-0x00000000cfffffff]
+>reserved
+>[    0.000000] user: [mem 0x00000000fec00000-0x00000000fec00fff]
+>reserved
+>[    0.000000] user: [mem 0x00000000fed19000-0x00000000fed19fff]
+>reserved
+>[    0.000000] user: [mem 0x00000000fed1c000-0x00000000fed1ffff]
+>reserved
+>[    0.000000] user: [mem 0x00000000fee00000-0x00000000fee00fff]
+>reserved
+>[    0.000000] user: [mem 0x00000000ffa20000-0x00000000ffffffff]
+>reserved
+>[    0.000000] user: [mem 0x0000000100000000-0x000000083fffffff] kdump
+>reserved
+>[    0.000000] SMBIOS 2.6 present.
+>[    0.000000] DMI: Intel Corporation S2600CP/S2600CP, BIOS
+>SE5C600.86B.99.99.x040.111920110024 11/19/2011
+>[    0.000000] e820: update [mem 0x00000000-0x0000ffff] usable ==>
+>reserved
+>[    0.000000] e820: remove [mem 0x000a0000-0x000fffff] usable
+>[    0.000000] No AGP bridge found
+>...
+>[    2.220298] ACPI: bus type pci registered
+>[    2.229486] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem
+>0xc0000000-0xcfffffff] (base 0xc0000000)
+>[    2.250283] PCI: MMCONFIG at [mem 0xc0000000-0xcfffffff] reserved in
+>E820
+>[    2.349583] PCI: Using configuration type 1 for base access
+>...
+>Copying data                       : [100 %]
+>The dumpfile is saved to /root/abuild/dumps/2013-01-30-15:52/vmcore.
 
-This preserves all e820 information and the kdump kernel can look
-it up and be sure it is valid.
-It also cleans up unnecessary memmap= boot parameter passing of
-reserved memory areas via kexec-tools. This information is already
-passed via boot structures.
-
-This also fixes mmconf (extended PCI config access) and
-possibly other kernel parts which rely on remapped memory to be
-in reserved or ACPI (data/nvs) declared e820 memory areas.
-
-Signed-off-by: Thomas Renninger <trenn@suse.de>
----
- Documentation/kernel-parameters.txt |    9 +++++++++
- arch/x86/kernel/e820.c              |   22 ++++++++++++++++++++--
- 2 files changed, 29 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index da0e077..f38375a 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -1518,6 +1518,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			BIOS output or other requirements. See the memmap=nn@ss
- 			option description.
- 
-+	memmap=kdump_reserve_usable
-+			[KNL,X86] Convert usable memory areas into a special
-+			Linux kernel specific kdump reserved type.
-+			Usable memory areas the kdump kernel resides in have
-+			to be passed via memmap=X@Y parameters which overrides
-+			these areas again to be usable.
-+			This boot parameter is intended for kdump usage.
-+			Passing exactmap overrules kdump_reserve_usable.
-+
- 	memmap=nn[KMG]@ss[KMG]
- 			[KNL] Force usage of a specific region of memory
- 			Region of memory to be used, from ss to ss+nn.
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 7c6a72e..9c00bfa 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -839,6 +839,7 @@ static int __init parse_memopt(char *p)
- early_param("mem", parse_memopt);
- 
- static bool __initdata exactmap_parsed;
-+static bool __initdata kdump_res_parsed;
- 
- static int __init parse_memmap_one(char *p)
- {
-@@ -848,7 +849,8 @@ static int __init parse_memmap_one(char *p)
- 	if (!p)
- 		return -EINVAL;
- 
--	if (!strncmp(p, "exactmap", 8)) {
-+	if (!strncmp(p, "exactmap", 8) ||
-+	    !strncmp(p, "kdump_reserve_usable", 20)) {
- 		if (exactmap_parsed)
- 			return 0;
- 
-@@ -861,7 +863,13 @@ static int __init parse_memmap_one(char *p)
- 		 */
- 		saved_max_pfn = e820_end_of_ram_pfn();
- #endif
--		e820.nr_map = 0;
-+		if (!strncmp(p, "kdump_reserve_usable", 20)) {
-+			/* remove all old E820_RAM ranges */
-+			e820_update_range(0, ULLONG_MAX, E820_RAM,
-+					  E820_RESERVED_KDUMP);
-+			kdump_res_parsed = true;
-+		} else
-+			e820.nr_map = 0;
- 		userdef = 1;
- 		return 0;
- 	}
-@@ -874,6 +882,11 @@ static int __init parse_memmap_one(char *p)
- 	userdef = 1;
- 	if (*p == '@') {
- 		start_at = memparse(p+1, &p);
-+		if (kdump_res_parsed) {
-+			/* Remove old reserved so new ram could take over. */
-+			e820_remove_range(start_at, mem_size,
-+					  E820_RESERVED_KDUMP, 0);
-+		}
- 		e820_add_region(start_at, mem_size, E820_RAM);
- 	} else if (*p == '#') {
- 		start_at = memparse(p+1, &p);
-@@ -893,6 +906,11 @@ static int __init parse_memmap_opt(char *str)
- 	p = strstr(p, "exactmap");
- 	if (p)
- 		parse_memmap_one("exactmap");
-+	else {
-+		p = strstr(boot_command_line, "kdump_reserve_usable");
-+		if (p)
-+			parse_memmap_one("kdump_reserve_usable");
-+	}
- 
- 	while (str) {
- 		char *k = strchr(str, ',');
+-- 
+Sent from my mobile phone. Please excuse brevity and lack of formatting.
 
 _______________________________________________
 kexec mailing list
