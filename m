@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ie-in-x0236.1e100.net ([2607:f8b0:4001:c03::236]
- helo=mail-ie0-x236.google.com)
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U0gTA-0004zz-H5
- for kexec@lists.infradead.org; Wed, 30 Jan 2013 22:49:29 +0000
-Received: by mail-ie0-f182.google.com with SMTP id k14so1775603iea.41
- for <kexec@lists.infradead.org>; Wed, 30 Jan 2013 14:49:25 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <5109A1A7.1040609@zytor.com>
-References: <1358866935-18458-1-git-send-email-trenn@suse.de>
- <201301301713.43946.trenn@suse.de>
- <4dc77552-977d-4761-860e-afdec61c4317@email.android.com>
- <201301301739.52358.trenn@suse.de> <51094FD5.2070909@zytor.com>
- <87obg6sdtv.fsf@xmission.com> <510992C7.2050000@zytor.com>
- <877gmumizr.fsf@xmission.com> <51099A3E.5090705@zytor.com>
- <87ehh2l2z3.fsf@xmission.com> <5109A1A7.1040609@zytor.com>
-Date: Wed, 30 Jan 2013 14:49:25 -0800
-Message-ID: <CAE9FiQXjGe335nCFu4df4KRsxpD=zxCk=9pxzABsCwGnStYX3g@mail.gmail.com>
+ id 1U0hoj-0002gw-Lm
+ for kexec@lists.infradead.org; Thu, 31 Jan 2013 00:15:50 +0000
+From: Thomas Renninger <trenn@suse.de>
 Subject: Re: [PATCH 0/3] Cleanup kdump memmap= passing and e820 usage
-From: Yinghai Lu <yinghai@kernel.org>
+Date: Thu, 31 Jan 2013 01:15:34 +0100
+Message-ID: <2271353.GLUCBHDxBG@hammer82.arch.suse.de>
+In-Reply-To: <87ehh2l2z3.fsf@xmission.com>
+References: <1358866935-18458-1-git-send-email-trenn@suse.de>
+ <51099A3E.5090705@zytor.com> <87ehh2l2z3.fsf@xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,23 +23,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Thomas Renninger <trenn@suse.de>, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, yinghai@kernel.org, vgoyal@redhat.com
 
-On Wed, Jan 30, 2013 at 2:41 PM, H. Peter Anvin <hpa@zytor.com> wrote:
-> On 01/30/2013 02:29 PM, Eric W. Biederman wrote:
-> The bigger question is if we need a separate value from the current
-> E820_RESERVED_KERN.  Since it is always easier to have multiple values
-> with the same semantics than it is to have too few, I would still prefer
-> we added a new E820_RESERVED_KDUMP, which would then be 2000000001.
+On Wednesday, January 30, 2013 02:29:04 PM Eric W. Biederman wrote:
+> "H. Peter Anvin" <hpa@zytor.com> writes:
+> > On 01/30/2013 01:57 PM, Eric W. Biederman wrote:
+> >>> Yes, those seem to be the options, and we're currently discussing which
+> >>> one.
+> >>> 
+> >>> The second seems to make more sense to me.  The kexec tools build the
+> >>> memory map anyway, and it makes sense to me at least to just build a
+> >>> memory map with the appropriate regions marked as a dumpable type.
+> >> 
+> >> This dumpable type doesn't make sense to me.  Are you suggesting making
+> >> regions that are memory but that we should not use a special memory
+> >> type?
+> > 
+> > Yes.
+> > 
+> >> I think I would prefer that to call that new type RESERVED_MEM or
+> >> RESERVED_CACHABLE.  Being more specific is fine but dumpable certainly
+> >> doesn't bring to mind what we are saying.  Especially since we already
+> >> communicate which areas were memory to the last kernel in an
+> >> architecture generic format.
+> > 
+> > I was thinking that marking them differently might help debugging, at
+> > least, but yes, we can have a RESERVED_MEM type.
+> > 
+> > However, Thomas does have a point that the current use of fairly small
+> > positive values for Linux-defined types is a bad idea.  We should use
+> > negative types, or at least something north of 0x40000000 or so.
+> 
+> Yes.  It doesn't much matter in the kernel but when it because part of
+> the ABI it is a real issue.
+That's one point (self made up e820 type should better be kept kernel
+internal).
+ 
+> Since old kernels treat any value they don't understand as reserved
+> passing a modified e820 map seems reasonable to me once we have reserved
+> a special linux value for it.
+The other one: Why should several instances modify the e820 table
+if this is not necessary?
 
-current for E820_RESERVED_KERN: during filling memblock.memory,
-it will be treated as E820_RAM, and also memblock.reserve already have entries
-for them.
+I guess both ways are a huge enhancement compared to what we have now.
+Which approach to finally take should not matter that much, but because
+of above I still prefer to go this way:
+- Pass a kernel command line option that just changes the kernels idea
+  of which memory it can touch
 
-For E820_RESERVED_KDUMP, looks only usage is for kernel to find saved_max_pfn.
+Whether the value(s) of these types should be ramped up is a different
+discussion then. If they still should have bigger values, this can be
+addressed by a separate patch now or later to whatever you like to see.
 
-So we may have to separate them.
+   Thomas
 
 _______________________________________________
 kexec mailing list
