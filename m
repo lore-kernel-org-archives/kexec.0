@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e34.co.us.ibm.com ([32.97.110.152])
+Received: from e7.ny.us.ibm.com ([32.97.182.137])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U2GBk-0002i6-0T
- for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:00 +0000
+ id 1U2GBu-0002ls-VE
+ for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:11 +0000
 Received: from /spool/local
- by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e7.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Mon, 4 Feb 2013 00:09:58 -0700
-Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
- [9.17.195.226])
- by d03dlp03.boulder.ibm.com (Postfix) with ESMTP id EB76219D8042
- for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 00:09:54 -0700 (MST)
-Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
- by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r1479tnJ540292
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:09:55 -0700
-Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
- by d03av03.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r1479sl7027925
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:09:55 -0700
-Subject: [PATCH v4 2/9] makedumpfile and eppic interface layer
+ Mon, 4 Feb 2013 02:10:08 -0500
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+ by d01dlp02.pok.ibm.com (Postfix) with ESMTP id 2522E6E803C
+ for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 02:10:05 -0500 (EST)
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+ by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r147A6c1138726
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 02:10:06 -0500
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+ by d03av01.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r147A3Ht007946
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:10:05 -0700
+Subject: [PATCH v4 3/9] Eppic call back functions to query a dump image
 From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Date: Mon, 04 Feb 2013 12:39:50 +0530
-Message-ID: <20130204070950.9292.76945.stgit@aravinda>
+Date: Mon, 04 Feb 2013 12:40:00 +0530
+Message-ID: <20130204070959.9292.49811.stgit@aravinda>
 In-Reply-To: <20130204070724.9292.6640.stgit@aravinda>
 References: <20130204070724.9292.6640.stgit@aravinda>
 MIME-Version: 1.0
@@ -42,194 +41,232 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 Cc: LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, ananth@in.ibm.com, buendgen@de.ibm.com
 
-This patch extends the makedumpfile functionality to include eppic
-language support. The patch dynamically loads the makedumpfile specific
-shared object and calls the eppic_load function in shared object to
-load/compile and execute the specified eppic macros.
+This patch implements a series of apigetuint* call back functions
+which are used to access data from the dump image. Eppic uses these
+call back functions to fetch the actual value of the global variables.
 
-This patch also includes "--eppic" option to makedumpfile command to
-specify the eppic macro or the directory containing eppic macros. The
-specified eppic macro will be executed to scrub the data in the
-dumpfile. In case of a directory, all the eppic macros inside the
-directory will be executed for scrubbing the data.
-
-TODO
-	- Support specifying eppic macros in the makedumpfile.conf file.
-	  A new command should be added to makedumpfile.conf to identify
-	  an eppic macro. This command could be used in any section of
-	  the makedumpfile.conf, where the section name indicates the kernel
-	  module name. makedumpfile will only search for symbols encountered
-	  by eppic macro only in the specified module. Because, searching
-	  these symbols in all the modules will cause huge performance
-	  overhead.
+This patch also adds other call back functions as a place holder which
+will be implemented in later patches. This is mainly to avoid
+compilation error while registering the call back functions using
+eppic_apiset() function.
 
 Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
- erase_info.c      |   69 +++++++++++++++++++++++++++++++++++++++++++++++++++--
- extension_eppic.h |    1 +
- makedumpfile.c    |    7 +++++
- makedumpfile.h    |    6 +++++
- 4 files changed, 80 insertions(+), 3 deletions(-)
+ extension_eppic.c |  128 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ extension_eppic.h |   49 ++++++++++++++++++++
+ 2 files changed, 175 insertions(+), 2 deletions(-)
 
-diff --git a/erase_info.c b/erase_info.c
-index e2e6a52..72ae75b 100644
---- a/erase_info.c
-+++ b/erase_info.c
-@@ -21,6 +21,8 @@
- #include "dwarf_info.h"
- #include "erase_info.h"
+diff --git a/extension_eppic.c b/extension_eppic.c
+index fc47b1f..26c945f 100644
+--- a/extension_eppic.c
++++ b/extension_eppic.c
+@@ -20,6 +20,7 @@
+ #include <sys/types.h>
+ #include <fcntl.h>
  
-+#include <dlfcn.h>
-+
- struct erase_info	*erase_info = NULL;
- unsigned long		num_erase_info = 1; /* Node 0 is unused. */
++#include "makedumpfile.h"
+ #include "extension_eppic.h"
  
-@@ -1811,6 +1813,59 @@ process_config_file(const char *name_config)
- 	return TRUE;
+ /*
+@@ -64,6 +65,131 @@ reg_callback(char *name, int load)
+ 	return;
  }
  
++/*
++ * Call back functions for eppic to query the dump image
++ */
 +
-+/* Process the eppic macro using eppic library */
 +static int
-+process_eppic_file(char *name_config)
++apigetmem(ull iaddr, void *p, int nbytes)
 +{
-+	void *handle;
-+	void (*eppic_load)(char *), (*eppic_unload)(char *);
-+	int (*eppic_init)();
-+
-+	/*
-+	 * Dynamically load the eppic_makedumpfile.so library.
-+	 */
-+	handle = dlopen("eppic_makedumpfile.so", RTLD_LAZY);
-+	if (!handle) {
-+		ERRMSG("dlopen failed: %s\n", dlerror());
-+		return FALSE;
-+	}
-+
-+	/* TODO
-+	 * Support specifying eppic macros in makedumpfile.conf file
-+	 */
-+
-+	eppic_init = dlsym(handle, "eppic_init");
-+	if (!eppic_init) {
-+		ERRMSG("Could not find eppic_init function\n");
-+		return FALSE;
-+	}
-+
-+	eppic_load = dlsym(handle, "eppic_load");
-+	if (!eppic_load) {
-+		ERRMSG("Could not find eppic_load function\n");
-+		return FALSE;
-+	}
-+
-+	eppic_unload = dlsym(handle, "eppic_unload");
-+	if (!eppic_unload)
-+		ERRMSG("Could not find eppic_unload function\n");
-+
-+	if (eppic_init()) {
-+		ERRMSG("Init failed \n");
-+		return FALSE;
-+	}
-+
-+	/* Load/compile, execute and unload the eppic macro */
-+	eppic_load(name_config);
-+	eppic_unload(name_config);
-+
-+	if (dlclose(handle))
-+		ERRMSG("dlclose failed: %s\n", dlerror());
-+
-+	return TRUE;
++	return readmem(VADDR, iaddr, p, nbytes);
 +}
 +
- static void
- split_filter_info(struct filter_info *prev, unsigned long long next_paddr,
- 						size_t size)
-@@ -1904,7 +1959,7 @@ extract_filter_info(unsigned long long start_paddr,
- int
- gather_filter_info(void)
- {
--	int ret;
-+	int ret = TRUE;
- 
- 	/*
- 	 * Before processing filter config file, load the symbol data of
-@@ -1915,7 +1970,17 @@ gather_filter_info(void)
- 	if (!load_module_symbols())
- 		return FALSE;
- 
--	ret = process_config_file(info->name_filterconfig);
-+	/*
-+	 * XXX: We support specifying both makedumpfile.conf and
-+	 * eppic macro at the same time. Whether to retain or discard the
-+	 * functionality provided by makedumpfile.conf is open for
-+	 * discussion
-+	 */
-+	if (info->name_filterconfig)
-+		ret = process_config_file(info->name_filterconfig);
++static int
++apiputmem(ull iaddr, void *p, int nbytes)
++{
++	return 1;
++}
 +
-+	if (info->name_eppic_config)
-+		ret &= process_eppic_file(info->name_eppic_config);
++static char *
++apimember(char *mname, ull pidx, type_t *tm,
++		member_t *m, ull *lidx)
++{
++	return 0;
++}
++
++static int
++apigetctype(int ctype, char *name, type_t *tout)
++{
++	return 0;
++}
++
++static char *
++apigetrtype(ull idx, type_t *t)
++{
++	return "";
++}
++
++static int
++apialignment(ull idx)
++{
++	return 0;
++}
++
++int
++apigetval(char *name, ull *val, VALUE_S *value)
++{
++	ull ptr = 0;
++
++	ptr = get_symbol_addr(name);
++	if (!ptr)
++		return 0;
++
++	*val = ptr;
++	return 1;
++}
++
++static enum_t *
++apigetenum(char *name)
++{
++	return 0;
++}
++
++static def_t *
++apigetdefs(void)
++{
++	return 0;
++}
++
++static uint8_t
++apigetuint8(void *ptr)
++{
++	uint8_t val;
++	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
++		return (uint8_t) -1;
++	return val;
++}
++
++static uint16_t
++apigetuint16(void *ptr)
++{
++	uint16_t val;
++	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
++		return (uint16_t) -1;
++	return val;
++}
++
++static uint32_t
++apigetuint32(void *ptr)
++{
++	uint32_t val;
++	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
++		return (uint32_t) -1;
++	return val;
++}
++
++static uint64_t
++apigetuint64(void *ptr)
++{
++	uint64_t val;
++	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
++		return (uint64_t) -1;
++	return val;
++}
++
++static char *
++apifindsym(char *p)
++{
++	return NULL;
++}
++
++apiops icops = {
++	apigetmem,
++	apiputmem,
++	apimember,
++	apigetctype,
++	apigetrtype,
++	apialignment,
++	apigetval,
++	apigetenum,
++	apigetdefs,
++	apigetuint8,
++	apigetuint16,
++	apigetuint32,
++	apigetuint64,
++	apifindsym
++};
++
  
- 	/*
- 	 * Remove modules symbol information, we dont need now.
+ /* Initialize eppic */
+ int
+@@ -72,7 +198,7 @@ eppic_init()
+ 	if (eppic_open() >= 0) {
+ 
+ 		/* Register call back functions */
+-		eppic_apiset(NULL, 3, sizeof(long), 0);
++		eppic_apiset(&icops, 3, sizeof(long), 0);
+ 
+ 		/* set the new function callback */
+ 		eppic_setcallback(reg_callback);
 diff --git a/extension_eppic.h b/extension_eppic.h
-index ca74ce4..34396e4 100644
+index 34396e4..beb68e4 100644
 --- a/extension_eppic.h
 +++ b/extension_eppic.h
-@@ -21,3 +21,4 @@
+@@ -20,5 +20,52 @@
+ 
  #include "eppic_api.h"
  
- #endif /* _EXTENSION_EPPIC_H */
+-#endif /* _EXTENSION_EPPIC_H */
++/*
++ * MEMBER_S, ENUM_S, DEF_S and TYPE_S are extracts from eppic header
++ * file eppic.h. The reason for not including the eppic.h header file
++ * in this file is because, lot of things in eppic.h are not required
++ * for makedumpfile extension.
++ */
 +
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 314dc46..087f556 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -7330,7 +7330,8 @@ retry:
- 		}
- 	}
- 
--	if (info->name_filterconfig && !gather_filter_info())
-+	if ((info->name_filterconfig || info->name_eppic_config)
-+			&& !gather_filter_info())
- 		return FALSE;
- 
- 	if (!create_dump_bitmap())
-@@ -8228,6 +8229,7 @@ static struct option longopts[] = {
- 	{"diskset", required_argument, NULL, 'k'},
- 	{"non-cyclic", no_argument, NULL, 'Y'},
- 	{"cyclic-buffer", required_argument, NULL, 'Z'},
-+	{"eppic", required_argument, NULL, 'S'},
- 	{0, 0, 0, 0}
- };
- 
-@@ -8326,6 +8328,9 @@ main(int argc, char *argv[])
- 		case 's':
- 			info->flag_split = 1;
- 			break;
-+		case 'S':
-+			info->name_eppic_config = optarg;
-+			break;
- 		case 'r':
- 			info->flag_reassemble = 1;
- 			break;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index d2bdc0c..a9b7680 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -905,6 +905,12 @@ struct DumpInfo {
- 	FILE		*file_filterconfig;
- 
- 	/*
-+	 * Filter config file containing eppic language filtering rules
-+	 * to filter out kernel data from vmcore
-+	 */
-+	char		*name_eppic_config;
++/* member information */
++typedef MEMBER_S {
 +
-+	/*
- 	 * diskdimp info:
- 	 */
- 	int		block_order;
++	char *name;
++	int offset; /* offset from top of structure */
++	int size;   /* size in bytes of the member or of the bit array */
++	int fbit;   /* fist bit (-1) is not a bit field */
++	int nbits;  /* number of bits for this member */
++	int value;  /* for a enum member, the corresponding value_t */
++
++} member_t;
++
++/* list to hold enum constant information */
++typedef ENUM_S {
++	struct enum_s *next;
++	char *name;
++	int value;
+ 
++} enum_t;
++
++/* list of macro symbols and there corresponding value_ts */
++typedef DEF_S {
++	struct def_s *next;
++	char *name;
++	char *val;
++
++} def_t;
++
++
++typedef TYPE_S {
++	int type;   /* type_t of type_t */
++	ull idx;    /* index to basetype_t or ctype_t */
++	int size;   /* size of this item */
++	/* ... next fields are use internally */
++	int typattr;    /* base type_t qualifiers */
++	int ref;    /* level of reference */
++	int fct;        /* 1 if function pointer */
++	int *idxlst;    /* points to list of indexes if array */
++	ull rtype;  /* type_t a reference refers too */
++} type_t;
++
++#endif /* _EXTENSION_EPPIC_H */
 
 
 _______________________________________________
