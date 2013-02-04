@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e7.ny.us.ibm.com ([32.97.182.137])
+Received: from e39.co.us.ibm.com ([32.97.110.160])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U2GBu-0002ls-VE
- for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:11 +0000
+ id 1U2GC4-0002qs-SZ
+ for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:21 +0000
 Received: from /spool/local
- by e7.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e39.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Mon, 4 Feb 2013 02:10:08 -0500
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
- by d01dlp02.pok.ibm.com (Postfix) with ESMTP id 2522E6E803C
- for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 02:10:05 -0500 (EST)
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
- by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r147A6c1138726
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 02:10:06 -0500
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
- by d03av01.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r147A3Ht007946
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:10:05 -0700
-Subject: [PATCH v4 3/9] Eppic call back functions to query a dump image
+ Mon, 4 Feb 2013 00:10:19 -0700
+Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
+ [9.17.195.226])
+ by d03dlp01.boulder.ibm.com (Postfix) with ESMTP id A6FAF1FF0044
+ for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 00:09:44 -0700 (MST)
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+ by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r1479juN522676
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:09:45 -0700
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+ by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r1479jkA026914
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:09:45 -0700
+Subject: [PATCH v4 1/9] Initialize and setup eppic
 From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Date: Mon, 04 Feb 2013 12:40:00 +0530
-Message-ID: <20130204070959.9292.49811.stgit@aravinda>
+Date: Mon, 04 Feb 2013 12:39:41 +0530
+Message-ID: <20130204070941.9292.33785.stgit@aravinda>
 In-Reply-To: <20130204070724.9292.6640.stgit@aravinda>
 References: <20130204070724.9292.6640.stgit@aravinda>
 MIME-Version: 1.0
@@ -41,230 +42,160 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 Cc: LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, ananth@in.ibm.com, buendgen@de.ibm.com
 
-This patch implements a series of apigetuint* call back functions
-which are used to access data from the dump image. Eppic uses these
-call back functions to fetch the actual value of the global variables.
-
-This patch also adds other call back functions as a place holder which
-will be implemented in later patches. This is mainly to avoid
-compilation error while registering the call back functions using
-eppic_apiset() function.
+This patch contains routines which initialize eppic and register call
+back function which will be called whenever a new eppic macro is loaded
+using eppic_load() API. The registered call back function executes the
+eppic macro as soon as it is loaded.
 
 Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
- extension_eppic.c |  128 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- extension_eppic.h |   49 ++++++++++++++++++++
- 2 files changed, 175 insertions(+), 2 deletions(-)
+ Makefile          |    5 +++
+ extension_eppic.c |   84 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ extension_eppic.h |   23 +++++++++++++++
+ 3 files changed, 111 insertions(+), 1 deletions(-)
+ create mode 100644 extension_eppic.c
+ create mode 100644 extension_eppic.h
 
+diff --git a/Makefile b/Makefile
+index e6c4e5d..5b8df31 100644
+--- a/Makefile
++++ b/Makefile
+@@ -69,7 +69,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
+ 	$(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c) 
+ 
+ makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
+-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
++	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
+ 	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
+ 	grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
+ 	mv temp.8 makedumpfile.8
+@@ -79,6 +79,9 @@ makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
+ 	mv temp.5 makedumpfile.conf.5
+ 	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
+ 
++eppic_makedumpfile.so: extension_eppic.c
++	$(CC) $(CFLAGS) -shared -rdynamic -o $@ extension_eppic.c -fPIC -leppic -ltinfo
++
+ clean:
+ 	rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8.gz makedumpfile.conf.5.gz
+ 
 diff --git a/extension_eppic.c b/extension_eppic.c
-index fc47b1f..26c945f 100644
---- a/extension_eppic.c
+new file mode 100644
+index 0000000..fc47b1f
+--- /dev/null
 +++ b/extension_eppic.c
-@@ -20,6 +20,7 @@
- #include <sys/types.h>
- #include <fcntl.h>
- 
-+#include "makedumpfile.h"
- #include "extension_eppic.h"
- 
- /*
-@@ -64,6 +65,131 @@ reg_callback(char *name, int load)
- 	return;
- }
- 
+@@ -0,0 +1,84 @@
 +/*
-+ * Call back functions for eppic to query the dump image
++ * extension_eppic.c
++ *
++ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
++ *
++ * Copyright (C) 2012  IBM Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <stdio.h>
++#include <string.h>
++#include <sys/types.h>
++#include <fcntl.h>
++
++#include "extension_eppic.h"
++
++/*
++ * Most of the functions included in this file performs similar
++ * functionality as in the applications/crash/eppic.c file part of
++ * eppic, but uses DWARF instead of gdb. Few of the functions are
++ * reused directly which are acknowledged in the comment before the
++ * function.
 + */
 +
-+static int
-+apigetmem(ull iaddr, void *p, int nbytes)
++/*
++ * This is the call back function called when a new eppic macro is
++ * loaded. This will execute the loaded eppic macro.
++ *
++ * "fname" is considered as the entry point of an eppic macro only if
++ * the following functions are defined:
++ *
++ *  fname_help()
++ *  fname_usage()
++ *
++ * These functions have no relevance in makedumpfile context as
++ * makedumpfile automatically executes the eppic macro by calling the
++ * entry point and user will not have any option to execute the usage
++ * or help functions. However they are required to identify the entry
++ * points in the eppic macro.
++ */
++void
++reg_callback(char *name, int load)
 +{
-+	return readmem(VADDR, iaddr, p, nbytes);
++	char fname[MAX_SYMNAMELEN];
++
++	/* Nothing to process for unload request */
++	if (!load)
++		return;
++
++	snprintf(fname, sizeof(fname), "%s_help", name);
++	if (eppic_chkfname(fname, 0)) {
++		snprintf(fname, sizeof(fname), "%s_usage", name);
++		if (eppic_chkfname(fname, 0))
++			eppic_cmd(name, NULL, 0);
++	}
++	return;
 +}
 +
-+static int
-+apiputmem(ull iaddr, void *p, int nbytes)
-+{
-+	return 1;
-+}
 +
-+static char *
-+apimember(char *mname, ull pidx, type_t *tm,
-+		member_t *m, ull *lidx)
-+{
-+	return 0;
-+}
-+
-+static int
-+apigetctype(int ctype, char *name, type_t *tout)
-+{
-+	return 0;
-+}
-+
-+static char *
-+apigetrtype(ull idx, type_t *t)
-+{
-+	return "";
-+}
-+
-+static int
-+apialignment(ull idx)
-+{
-+	return 0;
-+}
-+
++/* Initialize eppic */
 +int
-+apigetval(char *name, ull *val, VALUE_S *value)
++eppic_init()
 +{
-+	ull ptr = 0;
++	if (eppic_open() >= 0) {
 +
-+	ptr = get_symbol_addr(name);
-+	if (!ptr)
++		/* Register call back functions */
++		eppic_apiset(NULL, 3, sizeof(long), 0);
++
++		/* set the new function callback */
++		eppic_setcallback(reg_callback);
++
 +		return 0;
-+
-+	*val = ptr;
++	}
 +	return 1;
 +}
 +
-+static enum_t *
-+apigetenum(char *name)
-+{
-+	return 0;
-+}
-+
-+static def_t *
-+apigetdefs(void)
-+{
-+	return 0;
-+}
-+
-+static uint8_t
-+apigetuint8(void *ptr)
-+{
-+	uint8_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
-+		return (uint8_t) -1;
-+	return val;
-+}
-+
-+static uint16_t
-+apigetuint16(void *ptr)
-+{
-+	uint16_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
-+		return (uint16_t) -1;
-+	return val;
-+}
-+
-+static uint32_t
-+apigetuint32(void *ptr)
-+{
-+	uint32_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
-+		return (uint32_t) -1;
-+	return val;
-+}
-+
-+static uint64_t
-+apigetuint64(void *ptr)
-+{
-+	uint64_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof(val)))
-+		return (uint64_t) -1;
-+	return val;
-+}
-+
-+static char *
-+apifindsym(char *p)
-+{
-+	return NULL;
-+}
-+
-+apiops icops = {
-+	apigetmem,
-+	apiputmem,
-+	apimember,
-+	apigetctype,
-+	apigetrtype,
-+	apialignment,
-+	apigetval,
-+	apigetenum,
-+	apigetdefs,
-+	apigetuint8,
-+	apigetuint16,
-+	apigetuint32,
-+	apigetuint64,
-+	apifindsym
-+};
-+
- 
- /* Initialize eppic */
- int
-@@ -72,7 +198,7 @@ eppic_init()
- 	if (eppic_open() >= 0) {
- 
- 		/* Register call back functions */
--		eppic_apiset(NULL, 3, sizeof(long), 0);
-+		eppic_apiset(&icops, 3, sizeof(long), 0);
- 
- 		/* set the new function callback */
- 		eppic_setcallback(reg_callback);
 diff --git a/extension_eppic.h b/extension_eppic.h
-index 34396e4..beb68e4 100644
---- a/extension_eppic.h
+new file mode 100644
+index 0000000..ca74ce4
+--- /dev/null
 +++ b/extension_eppic.h
-@@ -20,5 +20,52 @@
- 
- #include "eppic_api.h"
- 
--#endif /* _EXTENSION_EPPIC_H */
+@@ -0,0 +1,23 @@
 +/*
-+ * MEMBER_S, ENUM_S, DEF_S and TYPE_S are extracts from eppic header
-+ * file eppic.h. The reason for not including the eppic.h header file
-+ * in this file is because, lot of things in eppic.h are not required
-+ * for makedumpfile extension.
++ * extension_eppic.h
++ *
++ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
++ *
++ * Copyright (C) 2012  IBM Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
++#ifndef _EXTENSION_EPPIC_H
++#define _EXTENSION_EPPIC_H
 +
-+/* member information */
-+typedef MEMBER_S {
-+
-+	char *name;
-+	int offset; /* offset from top of structure */
-+	int size;   /* size in bytes of the member or of the bit array */
-+	int fbit;   /* fist bit (-1) is not a bit field */
-+	int nbits;  /* number of bits for this member */
-+	int value;  /* for a enum member, the corresponding value_t */
-+
-+} member_t;
-+
-+/* list to hold enum constant information */
-+typedef ENUM_S {
-+	struct enum_s *next;
-+	char *name;
-+	int value;
- 
-+} enum_t;
-+
-+/* list of macro symbols and there corresponding value_ts */
-+typedef DEF_S {
-+	struct def_s *next;
-+	char *name;
-+	char *val;
-+
-+} def_t;
-+
-+
-+typedef TYPE_S {
-+	int type;   /* type_t of type_t */
-+	ull idx;    /* index to basetype_t or ctype_t */
-+	int size;   /* size of this item */
-+	/* ... next fields are use internally */
-+	int typattr;    /* base type_t qualifiers */
-+	int ref;    /* level of reference */
-+	int fct;        /* 1 if function pointer */
-+	int *idxlst;    /* points to list of indexes if array */
-+	ull rtype;  /* type_t a reference refers too */
-+} type_t;
++#include "eppic_api.h"
 +
 +#endif /* _EXTENSION_EPPIC_H */
 
