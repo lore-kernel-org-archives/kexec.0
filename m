@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e39.co.us.ibm.com ([32.97.110.160])
+Received: from e8.ny.us.ibm.com ([32.97.182.138])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U2GC4-0002qs-SZ
- for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:21 +0000
+ id 1U2GCB-0002tW-Ft
+ for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:28 +0000
 Received: from /spool/local
- by e39.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e8.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Mon, 4 Feb 2013 00:10:19 -0700
-Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
- [9.17.195.226])
- by d03dlp01.boulder.ibm.com (Postfix) with ESMTP id A6FAF1FF0044
- for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 00:09:44 -0700 (MST)
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
- by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r1479juN522676
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:09:45 -0700
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
- by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r1479jkA026914
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 00:09:45 -0700
-Subject: [PATCH v4 1/9] Initialize and setup eppic
+ Mon, 4 Feb 2013 02:10:24 -0500
+Received: from d01relay03.pok.ibm.com (d01relay03.pok.ibm.com [9.56.227.235])
+ by d01dlp01.pok.ibm.com (Postfix) with ESMTP id B883938C8026
+ for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 02:10:14 -0500 (EST)
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+ by d01relay03.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r147AEnH297272
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 02:10:14 -0500
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+ by d01av04.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r147ACsU006121
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 02:10:14 -0500
+Subject: [PATCH v4 4/9] Implement apigetctype call back function
 From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Date: Mon, 04 Feb 2013 12:39:41 +0530
-Message-ID: <20130204070941.9292.33785.stgit@aravinda>
+Date: Mon, 04 Feb 2013 12:40:09 +0530
+Message-ID: <20130204071009.9292.25685.stgit@aravinda>
 In-Reply-To: <20130204070724.9292.6640.stgit@aravinda>
 References: <20130204070724.9292.6640.stgit@aravinda>
 MIME-Version: 1.0
@@ -42,162 +41,233 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 Cc: LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, ananth@in.ibm.com, buendgen@de.ibm.com
 
-This patch contains routines which initialize eppic and register call
-back function which will be called whenever a new eppic macro is loaded
-using eppic_load() API. The registered call back function executes the
-eppic macro as soon as it is loaded.
+libeppic will call apigetctype call back function whenever it
+encounters a token in the eppic macro. The call back function will use
+DWARF to query information related to the requested token and will
+pass it back to eppic using libeppic API calls. If the token does not
+exist, then apigetctype call returns 0.
 
 Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
- Makefile          |    5 +++
- extension_eppic.c |   84 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- extension_eppic.h |   23 +++++++++++++++
- 3 files changed, 111 insertions(+), 1 deletions(-)
- create mode 100644 extension_eppic.c
- create mode 100644 extension_eppic.h
+ dwarf_info.c      |  109 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ dwarf_info.h      |    9 ++++
+ extension_eppic.c |   28 +++++++++++++-
+ 3 files changed, 145 insertions(+), 1 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index e6c4e5d..5b8df31 100644
---- a/Makefile
-+++ b/Makefile
-@@ -69,7 +69,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
- 	$(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c) 
+diff --git a/dwarf_info.c b/dwarf_info.c
+index 09a8e1e..2d28f87 100644
+--- a/dwarf_info.c
++++ b/dwarf_info.c
+@@ -51,6 +51,7 @@ struct dwarf_info {
+ 	long	enum_number;		/* OUT */
+ 	unsigned char	type_flag;	/* OUT */
+ 	char	src_name[LEN_SRCFILE];	/* OUT */
++	Dwarf_Off die_offset;		/* OUT */
+ };
+ static struct dwarf_info	dwarf_info;
  
- makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
--	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
-+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
- 	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
- 	grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
- 	mv temp.8 makedumpfile.8
-@@ -79,6 +79,9 @@ makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
- 	mv temp.5 makedumpfile.conf.5
- 	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
+@@ -102,6 +103,22 @@ is_search_typedef(int cmd)
+ }
  
-+eppic_makedumpfile.so: extension_eppic.c
-+	$(CC) $(CFLAGS) -shared -rdynamic -o $@ extension_eppic.c -fPIC -leppic -ltinfo
-+
- clean:
- 	rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8.gz makedumpfile.conf.5.gz
- 
-diff --git a/extension_eppic.c b/extension_eppic.c
-new file mode 100644
-index 0000000..fc47b1f
---- /dev/null
-+++ b/extension_eppic.c
-@@ -0,0 +1,84 @@
-+/*
-+ * extension_eppic.c
-+ *
-+ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-+ *
-+ * Copyright (C) 2012  IBM Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <stdio.h>
-+#include <string.h>
-+#include <sys/types.h>
-+#include <fcntl.h>
-+
-+#include "extension_eppic.h"
-+
-+/*
-+ * Most of the functions included in this file performs similar
-+ * functionality as in the applications/crash/eppic.c file part of
-+ * eppic, but uses DWARF instead of gdb. Few of the functions are
-+ * reused directly which are acknowledged in the comment before the
-+ * function.
-+ */
-+
-+/*
-+ * This is the call back function called when a new eppic macro is
-+ * loaded. This will execute the loaded eppic macro.
-+ *
-+ * "fname" is considered as the entry point of an eppic macro only if
-+ * the following functions are defined:
-+ *
-+ *  fname_help()
-+ *  fname_usage()
-+ *
-+ * These functions have no relevance in makedumpfile context as
-+ * makedumpfile automatically executes the eppic macro by calling the
-+ * entry point and user will not have any option to execute the usage
-+ * or help functions. However they are required to identify the entry
-+ * points in the eppic macro.
-+ */
-+void
-+reg_callback(char *name, int load)
+ static int
++is_search_domain(int cmd)
 +{
-+	char fname[MAX_SYMNAMELEN];
-+
-+	/* Nothing to process for unload request */
-+	if (!load)
-+		return;
-+
-+	snprintf(fname, sizeof(fname), "%s_help", name);
-+	if (eppic_chkfname(fname, 0)) {
-+		snprintf(fname, sizeof(fname), "%s_usage", name);
-+		if (eppic_chkfname(fname, 0))
-+			eppic_cmd(name, NULL, 0);
-+	}
-+	return;
++	if ((cmd == DWARF_INFO_GET_DOMAIN_STRUCT)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_TYPEDEF)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_ARRAY)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_UNION)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_ENUM)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_REF)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_STRING)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_BASE))
++		return TRUE;
++	else
++		return FALSE;
 +}
 +
-+
-+/* Initialize eppic */
-+int
-+eppic_init()
++static int
+ process_module (Dwfl_Module *dwflmod,
+ 		void **userdata __attribute__ ((unused)),
+ 		const char *name __attribute__ ((unused)),
+@@ -750,6 +767,74 @@ search_symbol(Dwarf_Die *die, int *found)
+ }
+ 
+ static void
++search_domain(Dwarf_Die *die, int *found)
 +{
-+	if (eppic_open() >= 0) {
++	int tag;
++	const char *name;
++	short flag = 0;
++	Dwarf_Die die_type;
 +
-+		/* Register call back functions */
-+		eppic_apiset(NULL, 3, sizeof(long), 0);
++	do {
++		tag  = dwarf_tag(die);
++		name = dwarf_diename(die);
 +
-+		/* set the new function callback */
-+		eppic_setcallback(reg_callback);
++		/*
++		 * Descend into members and search for the
++		 * needed domain there.
++		 */
++		if ((!name) || strcmp(name, dwarf_info.symbol_name)) {
++			if (!get_die_type(die, &die_type))
++				continue;
 +
++			if (is_container(&die_type)) {
++				Dwarf_Die child;
++
++				if (dwarf_child(&die_type, &child) != 0)
++					continue;
++
++				search_domain(&child, found);
++
++				if (*found)
++					return;
++			}
++		}
++
++		if ((!name) || strcmp(name, dwarf_info.symbol_name))
++			continue;
++
++		switch (dwarf_info.cmd) {
++		case DWARF_INFO_GET_DOMAIN_STRUCT:
++			if (tag == DW_TAG_structure_type)
++				flag = 1;
++			break;
++		case DWARF_INFO_GET_DOMAIN_UNION:
++			if (tag == DW_TAG_union_type)
++				flag = 1;
++			break;
++		case DWARF_INFO_GET_DOMAIN_TYPEDEF:
++			if (tag == DW_TAG_typedef)
++				flag = 1;
++			break;
++		/* TODO
++		 * Implement functionality for the rest of the domains
++		 */
++		}
++
++		if (!flag)
++			continue;
++
++		dwarf_info.struct_size = dwarf_bytesize(die);
++
++		if (dwarf_info.struct_size > 0) {
++			if (found)
++				*found = TRUE;
++			dwarf_info.die_offset = dwarf_dieoffset(die);
++			break;
++		}
++	} while (!dwarf_siblingof(die, die));
++}
++
++static void
+ search_die_tree(Dwarf_Die *die, int *found)
+ {
+ 	Dwarf_Die child;
+@@ -774,6 +859,9 @@ search_die_tree(Dwarf_Die *die, int *found)
+ 
+ 	else if (is_search_typedef(dwarf_info.cmd))
+ 		search_typedef(die, found);
++
++	else if (is_search_domain(dwarf_info.cmd))
++		search_domain(die, found);
+ }
+ 
+ static int
+@@ -1166,6 +1254,27 @@ get_source_filename(char *structname, char *src_name, int cmd)
+ }
+ 
+ /*
++ * Get the domain information of the symbol
++ */
++long
++get_domain(char *symname, int cmd, unsigned long long *die)
++{
++	dwarf_info.cmd         = cmd;
++	dwarf_info.symbol_name = symname;
++	dwarf_info.type_name   = NULL;
++	dwarf_info.struct_size = NOT_FOUND_STRUCTURE;
++	dwarf_info.die_offset  = 0;
++
++	if (!get_debug_info())
 +		return 0;
-+	}
-+	return 1;
++
++	if (die)
++		*die = (unsigned long long) dwarf_info.die_offset;
++
++	return dwarf_info.struct_size;
 +}
 +
-diff --git a/extension_eppic.h b/extension_eppic.h
-new file mode 100644
-index 0000000..ca74ce4
---- /dev/null
-+++ b/extension_eppic.h
-@@ -0,0 +1,23 @@
 +/*
-+ * extension_eppic.h
-+ *
-+ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-+ *
-+ * Copyright (C) 2012  IBM Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef _EXTENSION_EPPIC_H
-+#define _EXTENSION_EPPIC_H
+  * Set the dwarf_info with kernel/module debuginfo file information.
+  */
+ int
+diff --git a/dwarf_info.h b/dwarf_info.h
+index 185cbb6..074b5cc 100644
+--- a/dwarf_info.h
++++ b/dwarf_info.h
+@@ -47,6 +47,14 @@ enum {
+ 	DWARF_INFO_GET_SYMBOL_TYPE,
+ 	DWARF_INFO_GET_MEMBER_TYPE,
+ 	DWARF_INFO_GET_ENUMERATION_TYPE_SIZE,
++	DWARF_INFO_GET_DOMAIN_STRUCT,
++	DWARF_INFO_GET_DOMAIN_TYPEDEF,
++	DWARF_INFO_GET_DOMAIN_ARRAY,
++	DWARF_INFO_GET_DOMAIN_UNION,
++	DWARF_INFO_GET_DOMAIN_ENUM,
++	DWARF_INFO_GET_DOMAIN_REF,
++	DWARF_INFO_GET_DOMAIN_STRING,
++	DWARF_INFO_GET_DOMAIN_BASE,
+ };
+ 
+ char *get_dwarf_module_name(void);
+@@ -61,6 +69,7 @@ char *get_member_type_name(char *structname, char *membername, int cmd, long *si
+ long get_array_length(char *name01, char *name02, unsigned int cmd);
+ long get_enum_number(char *enum_name);
+ int get_source_filename(char *structname, char *src_name, int cmd);
++long get_domain(char *symname, int cmd, unsigned long long *die);
+ int set_dwarf_debuginfo(char *mod_name, char *os_release, char *name_debuginfo, int fd_debuginfo);
+ 
+ #endif  /* DWARF_INFO_H */
+diff --git a/extension_eppic.c b/extension_eppic.c
+index 26c945f..6e9fff8 100644
+--- a/extension_eppic.c
++++ b/extension_eppic.c
+@@ -91,7 +91,33 @@ apimember(char *mname, ull pidx, type_t *tm,
+ static int
+ apigetctype(int ctype, char *name, type_t *tout)
+ {
+-	return 0;
++	long size = 0;
++	unsigned long long die = 0;
 +
-+#include "eppic_api.h"
++	switch (ctype) {
++	case V_TYPEDEF:
++		size = get_domain(name, DWARF_INFO_GET_DOMAIN_TYPEDEF, &die);
++		break;
++	case V_STRUCT:
++		size = get_domain(name, DWARF_INFO_GET_DOMAIN_STRUCT, &die);
++		break;
++	case V_UNION:
++		size = get_domain(name, DWARF_INFO_GET_DOMAIN_UNION, &die);
++		break;
++	/* TODO
++	 * Implement for all the domains
++	 */
++	}
 +
-+#endif /* _EXTENSION_EPPIC_H */
++	if (size <= 0 || !die)
++		return 0;
++
++	/* populate */
++	eppic_type_settype(tout, ctype);
++	eppic_type_setsize(tout, size);
++	eppic_type_setidx(tout, (ull)(unsigned long)die);
++	eppic_pushref(tout, 0);
++	return 1;
+ }
+ 
+ static char *
 
 
 _______________________________________________
