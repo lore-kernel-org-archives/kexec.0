@@ -1,28 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e9.ny.us.ibm.com ([32.97.182.139])
+Received: from e8.ny.us.ibm.com ([32.97.182.138])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U2GCC-0002u6-TU
- for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:30 +0000
+ id 1U2GCV-00032S-C7
+ for kexec@lists.infradead.org; Mon, 04 Feb 2013 07:10:47 +0000
 Received: from /spool/local
- by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e8.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Mon, 4 Feb 2013 02:10:26 -0500
-Received: from d01relay03.pok.ibm.com (d01relay03.pok.ibm.com [9.56.227.235])
- by d01dlp02.pok.ibm.com (Postfix) with ESMTP id AEEC66E8041
- for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 02:10:21 -0500 (EST)
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
- by d01relay03.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r147AMG4290286
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 02:10:23 -0500
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
- by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r147ALs4026995
- for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 05:10:22 -0200
-Subject: [PATCH v4 5/9] Implement apimember and apigetrtype call back functions
+ Mon, 4 Feb 2013 02:10:46 -0500
+Received: from d01relay01.pok.ibm.com (d01relay01.pok.ibm.com [9.56.227.233])
+ by d01dlp03.pok.ibm.com (Postfix) with ESMTP id DEE00C9003C
+ for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 02:10:44 -0500 (EST)
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+ by d01relay01.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r147AinT285856
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 02:10:44 -0500
+Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
+ by d01av02.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r147Agch013245
+ for <kexec@lists.infradead.org>; Mon, 4 Feb 2013 05:10:43 -0200
+Subject: [PATCH v4 7/9] Support fully typed symbol access mode
 From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Date: Mon, 04 Feb 2013 12:40:18 +0530
-Message-ID: <20130204071018.9292.49054.stgit@aravinda>
+Date: Mon, 04 Feb 2013 12:40:38 +0530
+Message-ID: <20130204071038.9292.57922.stgit@aravinda>
 In-Reply-To: <20130204070724.9292.6640.stgit@aravinda>
 References: <20130204070724.9292.6640.stgit@aravinda>
 MIME-Version: 1.0
@@ -41,495 +41,168 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 Cc: LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, ananth@in.ibm.com, buendgen@de.ibm.com
 
-The patch includes functionality for apimember and apigetrtype eppic
-callback routines along with helper functions to fetch information
-related to the member of the structure/union
+Eppic enables access to symbols in two ways. The first, is a more
+natural mode in that it makes symbols available as fully typed
+entities. The second, is generic and treats all symbols as an address
+to data which then needs to be cast to the proper type explicitly. The
+former obviously enables an easier cut & pasting of target code into
+eppic code.
 
-Whenever a structure/union member is accessed inside the eppic macro,
-eppic will query makedumpfile through call back functions requesting
-more information on the structure or union member. The information
-includes member name, offset from structure, data type and size.
-makedumpfile will get all these information using DWARF and pass
-back to eppic using libeppic API calls.
+Currently generic symbol access mode is supported. This patch extends
+the functionality to include support for fully typed symbol access mode
+(which will be the default mode) in eppic macros. User can switch to
+generic symbol access mode by setting the following environmental
+variable - EPPIC_LEGACY_MODE. libeppic.a will take care of handling
+EPPIC_LEGACY_MODE. libeppic.a will pass NULL to VALUE_S* argument of
+apigetval() call back function if EPPIC_LEGACY_MODE is set.
+
+Refer to http://code.google.com/p/eppic/ for more information.
 
 Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
- dwarf_info.c      |  206 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- dwarf_info.h      |    7 ++
- extension_eppic.c |  179 +++++++++++++++++++++++++++++++++++++++++++++-
- extension_eppic.h |    2 +
- 4 files changed, 390 insertions(+), 4 deletions(-)
+ dwarf_info.c      |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ dwarf_info.h      |    2 ++
+ extension_eppic.c |   24 ++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+), 0 deletions(-)
 
 diff --git a/dwarf_info.c b/dwarf_info.c
-index 2d28f87..f149da1 100644
+index f149da1..a11b6ad 100644
 --- a/dwarf_info.c
 +++ b/dwarf_info.c
-@@ -463,6 +463,29 @@ get_dwarf_base_type(Dwarf_Die *die)
- 	return TRUE;
+@@ -119,6 +119,15 @@ is_search_domain(int cmd)
  }
  
-+/*
-+ * Get the die, given the offset
-+ */
-+static int
-+get_die_from_offset(Dwarf_Off offset, Dwarf_Die *die)
+ static int
++is_search_die(int cmd)
 +{
-+	if (!init_dwarf_info())
++	if (cmd == DWARF_INFO_GET_DIE)
++		return TRUE;
++	else
 +		return FALSE;
-+
-+	if ((!offset) || (!die))
-+		return FALSE;
-+
-+	if (!dwarf_offdie(dwarf_info.dwarfd, offset, die)) {
-+		ERRMSG("Can't find the DIE.\n");
-+		return FALSE;
-+	}
-+
-+	return TRUE;
 +}
 +
-+/*
-+ * Function for searching struct page.union.struct.mapping.
-+ */
- static int
- is_container(Dwarf_Die *die)
++static int
+ process_module (Dwfl_Module *dwflmod,
+ 		void **userdata __attribute__ ((unused)),
+ 		const char *name __attribute__ ((unused)),
+@@ -858,6 +867,25 @@ search_domain(Dwarf_Die *die, int *found)
+ }
+ 
+ static void
++search_die(Dwarf_Die *die, int *found)
++{
++	const char *name;
++
++	do {
++		name = dwarf_diename(die);
++
++		if ((!name) || strcmp(name, dwarf_info.symbol_name))
++			continue;
++
++		if (found)
++			*found = TRUE;
++
++		dwarf_info.die_offset = dwarf_dieoffset(die);
++		return;
++	} while (!dwarf_siblingof(die, die));
++}
++
++static void
+ search_die_tree(Dwarf_Die *die, int *found)
  {
-@@ -1275,6 +1298,189 @@ get_domain(char *symname, int cmd, unsigned long long *die)
+ 	Dwarf_Die child;
+@@ -885,6 +913,9 @@ search_die_tree(Dwarf_Die *die, int *found)
+ 
+ 	else if (is_search_domain(dwarf_info.cmd))
+ 		search_domain(die, found);
++
++	else if (is_search_die(dwarf_info.cmd))
++		search_die(die, found);
+ }
+ 
+ static int
+@@ -1452,6 +1483,27 @@ get_die_name(unsigned long long die_off)
  }
  
  /*
-+ * Get the number of fields in a structure or union provided the
-+ * die offset of the structure or union
++ * Get the die offset given the die name
 + */
-+int
-+get_die_nfields(unsigned long long die_off)
++unsigned long long
++get_die_offset(char *sysname)
 +{
-+	int tag, nfields = 0;
-+	Dwarf_Die result, child, *die;
++	dwarf_info.cmd         = DWARF_INFO_GET_DIE;
++	dwarf_info.symbol_name = sysname;
++	dwarf_info.type_name   = NULL;
++	dwarf_info.struct_size = NOT_FOUND_STRUCTURE;
++	dwarf_info.die_offset  = 0;
 +
-+	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
-+		ERRMSG("Can't find the DIE.\n");
-+		return -1;
-+	}
-+
-+	die = &result;
-+	tag = dwarf_tag(die);
-+	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
-+		ERRMSG("DIE is not of structure or union type.\n");
-+		return -1;
-+	}
-+
-+	if (dwarf_child(die, &child) != 0)
-+		return -1;
-+
-+	/* Find the number of fields in the structure */
-+	die = &child;
-+	do {
-+		tag = dwarf_tag(die);
-+		if (tag == DW_TAG_member)
-+			nfields++;
-+		else
-+			continue;
-+	} while (!dwarf_siblingof(die, die));
-+
-+	return nfields;
-+}
-+
-+/*
-+ * Get the information of the structure member given by index
-+ */
-+int
-+get_die_member(unsigned long long die_off, int index, long *offset,
-+		char **name, int *nbits, int *fbits, unsigned long long *m_die)
-+{
-+	int tag, size, nfields = 0;
-+	Dwarf_Die result, child, die_base, *die;
-+
-+	if (!offset || !nbits || !fbits || !name || !m_die)
-+		return -1;
-+
-+	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
-+		ERRMSG("Can't find the DIE.\n");
-+		return -1;
-+	}
-+
-+	die = &result;
-+	tag = dwarf_tag(die);
-+	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
-+		ERRMSG("DIE is not of structure or union type.\n");
-+		return -1;
-+	}
-+
-+	if (dwarf_child(die, &child) != 0)
-+		return -1;
-+
-+	/* Find the correct field in the structure */
-+	die = &child;
-+	do {
-+		tag = dwarf_tag(die);
-+		if (tag == DW_TAG_member) {
-+			if (nfields == index)
-+				break;
-+			else
-+				nfields++;
-+		}
-+	} while (!dwarf_siblingof(die, die));
-+
-+	if (nfields != index) {
-+		ERRMSG("No member found at index %d.\n", index);
-+		return -1;
-+	}
-+
-+	/* Fill in the required info for the member */
-+	if (!get_data_member_location(die, offset))
-+		*offset = 0;
-+
-+	*name = dwarf_diename(die);
-+	*m_die = dwarf_dieoffset(die);
-+
-+	get_die_type(die, &die_base);
-+	if (dwarf_tag(&die_base) == DW_TAG_array_type) {
-+		dwarf_info.array_length = 0;
-+		get_data_array_length(die);
-+		size = dwarf_info.array_length;
-+	} else {
-+		size = dwarf_bytesize(&die_base);
-+	}
-+
-+	/* TODO
-+	 * Correctly update fbits and nbits
-+	 */
-+	*nbits = *fbits = 0;
-+
-+	if (size < 0)
++	if (!sysname)
 +		return 0;
-+	else
-+		return size;
++
++	if (!get_debug_info())
++		return 0;
++
++	return (unsigned long long)dwarf_info.die_offset;
 +}
 +
 +/*
-+ * Get the die attribute type
-+ */
-+int
-+get_die_attr_type(unsigned long long die_off, int *type_flag,
-+		unsigned long long *die_attr_off)
-+{
-+	Dwarf_Die result;
-+
-+	if (!die_attr_off)
-+		return FALSE;
-+
-+	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
-+		ERRMSG("Can't find the DIE.\n");
-+		return FALSE;
-+	}
-+
-+	if (!get_die_type(&result, &result))
-+		return FALSE;
-+
-+	*die_attr_off = dwarf_dieoffset(&result);
-+	*type_flag = dwarf_tag(&result);
-+	return TRUE;
-+}
-+
-+/*
-+ * Get name attribute given the die offset
-+ */
-+char *
-+get_die_name(unsigned long long die_off)
-+{
-+	Dwarf_Die result;
-+
-+	if (!die_off)
-+		return NULL;
-+
-+	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
-+		ERRMSG("Can't find the DIE.\n");
-+		return NULL;
-+	}
-+
-+	return dwarf_diename(&result);
-+}
-+
-+/*
-+ * Get length attribute given the die offset
-+ */
-+int
-+get_die_length(unsigned long long die_off, int flag)
-+{
-+	Dwarf_Die result, die_base;
-+
-+	if (!die_off)
-+		return FALSE;
-+
-+	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
-+		ERRMSG("Can't find the DIE.\n");
-+		return FALSE;
-+	}
-+
-+	if (flag)
-+		return dwarf_bytesize(&result);
-+
-+	get_die_type(&result, &die_base);
-+	if (dwarf_tag(&die_base) == DW_TAG_array_type) {
-+		dwarf_info.array_length = 0;
-+		get_data_array_length(&result);
-+		return dwarf_info.array_length;
-+	} else {
-+		return dwarf_bytesize(&die_base);
-+	}
-+}
-+
-+/*
-  * Set the dwarf_info with kernel/module debuginfo file information.
+  * Get length attribute given the die offset
   */
  int
 diff --git a/dwarf_info.h b/dwarf_info.h
-index 074b5cc..d1d15a9 100644
+index d1d15a9..c5128f2 100644
 --- a/dwarf_info.h
 +++ b/dwarf_info.h
-@@ -70,6 +70,13 @@ long get_array_length(char *name01, char *name02, unsigned int cmd);
- long get_enum_number(char *enum_name);
- int get_source_filename(char *structname, char *src_name, int cmd);
- long get_domain(char *symname, int cmd, unsigned long long *die);
-+int get_die_nfields(unsigned long long die_off);
-+int get_die_member(unsigned long long die_off, int index, long *offset,
-+	char **name, int *nbits, int *fbits, unsigned long long *m_die);
-+int get_die_attr_type(unsigned long long die_off, int *type_flag,
-+	unsigned long long *die_attr_off);
-+char *get_die_name(unsigned long long die_off);
-+int get_die_length(unsigned long long die_off, int flag);
+@@ -55,6 +55,7 @@ enum {
+ 	DWARF_INFO_GET_DOMAIN_REF,
+ 	DWARF_INFO_GET_DOMAIN_STRING,
+ 	DWARF_INFO_GET_DOMAIN_BASE,
++	DWARF_INFO_GET_DIE,
+ };
+ 
+ char *get_dwarf_module_name(void);
+@@ -76,6 +77,7 @@ int get_die_member(unsigned long long die_off, int index, long *offset,
+ int get_die_attr_type(unsigned long long die_off, int *type_flag,
+ 	unsigned long long *die_attr_off);
+ char *get_die_name(unsigned long long die_off);
++unsigned long long get_die_offset(char *sysname);
+ int get_die_length(unsigned long long die_off, int flag);
  int set_dwarf_debuginfo(char *mod_name, char *os_release, char *name_debuginfo, int fd_debuginfo);
  
- #endif  /* DWARF_INFO_H */
 diff --git a/extension_eppic.c b/extension_eppic.c
-index 6e9fff8..f2540e1 100644
+index 037c1bf..331a7e6 100644
 --- a/extension_eppic.c
 +++ b/extension_eppic.c
-@@ -19,9 +19,11 @@
- #include <string.h>
- #include <sys/types.h>
- #include <fcntl.h>
-+#include <dwarf.h>
+@@ -313,6 +313,30 @@ apigetval(char *name, ull *val, VALUE_S *value)
+ 		return 0;
  
- #include "makedumpfile.h"
- #include "extension_eppic.h"
-+#include "print_info.h"
- 
- /*
-  * Most of the functions included in this file performs similar
-@@ -66,6 +68,35 @@ reg_callback(char *name, int load)
- }
- 
- /*
-+ * This function is a copy of eppic_setupidx() function in
-+ * applications/crash/eppic.c file from eppic source code
-+ * repository.
-+ *
-+ * set idx value to actual array indexes from specified size
-+ */
-+static void
-+eppic_setupidx(TYPE_S *t, int ref, int nidx, int *idxlst)
-+{
-+	/* put the idxlst in index size format */
-+	if (nidx) {
-+		int i;
-+		for (i = 0; i < nidx - 1; i++) {
-+			/* kludge for array dimensions of [1] */
-+			if (idxlst[i + 1] == 0)
-+				idxlst[i + 1] = 1;
-+			idxlst[i] = idxlst[i] / idxlst[i + 1];
-+		}
+ 	*val = ptr;
 +
-+		/* divide by element size for last element bound */
-+		if (ref)
-+			idxlst[i] /= eppic_defbsize();
-+		else
-+			idxlst[i] /= eppic_type_getsize(t);
-+		eppic_type_setidxlst(t, idxlst);
++	if (!value)
++		return 1;
++
++	/* Support for fully typed symbol access */
++	ull type;
++	TYPE_S *stype;
++
++	type = get_die_offset(name);
++	stype = eppic_gettype(value);
++
++	apigetrtype(type, stype);
++
++	eppic_pushref(stype, 1);
++	eppic_setmemaddr(value, *val);
++	eppic_do_deref(1, value, value);
++
++	*val = eppic_getval(value);
++
++	if (!eppic_typeislocal(stype) && eppic_type_getidx(stype) > 100) {
++		char *tname = get_die_name(eppic_type_getidx(stype));
++		if (tname)
++			eppic_chktype(stype, tname);
 +	}
-+}
-+
-+/*
-  * Call back functions for eppic to query the dump image
-  */
- 
-@@ -81,11 +112,151 @@ apiputmem(ull iaddr, void *p, int nbytes)
  	return 1;
  }
- 
-+/*
-+ * Drill down the type of the member and update eppic with information
-+ * about the member
-+ */
- static char *
--apimember(char *mname, ull pidx, type_t *tm,
--		member_t *m, ull *lidx)
-+drilldown(ull offset, type_t *t)
- {
--	return 0;
-+	int type_flag, len = 0, t_len = 0, nidx = 0;
-+	int fctflg = 0, ref = 0, *idxlst = 0;
-+	ull die_off = offset, t_die_off;
-+	char *tstr = NULL;
-+
-+	while (get_die_attr_type(die_off, &type_flag, &t_die_off)) {
-+		switch (type_flag) {
-+		/* typedef inserts a level of reference to the actual type */
-+		case DW_TAG_pointer_type:
-+			ref++;
-+			die_off = t_die_off;
-+			/*
-+			 * This could be a void *, in which case the drill
-+			 * down stops here
-+			 */
-+			if (!get_die_attr_type(die_off, &type_flag,
-+						&t_die_off)) {
-+				/* make it a char* */
-+				eppic_parsetype("char", t, ref);
-+				return eppic_strdup("");
-+			}
-+			break;
-+		/* Handle pointer to function */
-+		case DW_TAG_subroutine_type:
-+			fctflg = 1;
-+			die_off = t_die_off;
-+			break;
-+		/* Handle arrays */
-+		case DW_TAG_array_type:
-+			if (!idxlst) {
-+				idxlst = eppic_calloc(sizeof(int) * \
-+					(MAX_ARRAY_DIMENSION + 1));
-+				if (!idxlst) {
-+					ERRMSG("Out of memory\n");
-+					return NULL;
-+				}
-+			}
-+			if (nidx >= MAX_ARRAY_DIMENSION) {
-+				ERRMSG("Too many array indexes. Max=%d\n",
-+						MAX_ARRAY_DIMENSION);
-+				return NULL;
-+			}
-+
-+			/* handle multi-dimensional array */
-+			len = get_die_length(die_off, FALSE);
-+			t_len = get_die_length(t_die_off, FALSE);
-+			if (len > 0 && t_len > 0)
-+				idxlst[nidx++] = len / t_len;
-+			die_off = t_die_off;
-+			break;
-+		/* Handle typedef */
-+		case DW_TAG_typedef:
-+			die_off = t_die_off;
-+			break;
-+		case DW_TAG_base_type:
-+			eppic_parsetype(tstr = get_die_name(t_die_off), t, 0);
-+			goto out;
-+		case DW_TAG_union_type:
-+			eppic_type_mkunion(t);
-+			goto label;
-+		case DW_TAG_enumeration_type:
-+			eppic_type_mkenum(t);
-+			goto label;
-+		case DW_TAG_structure_type:
-+			eppic_type_mkstruct(t);
-+			goto label;
-+		/* Unknown TAG ? */
-+		default:
-+			die_off = t_die_off;
-+			break;
-+		}
-+	}
-+
-+label:
-+	eppic_type_setsize(t, get_die_length(t_die_off, TRUE));
-+	eppic_type_setidx(t, (ull)t_die_off);
-+	tstr = get_die_name(t_die_off);
-+
-+out:
-+	eppic_setupidx(t, ref, nidx, idxlst);
-+	if (fctflg)
-+		eppic_type_setfct(t, 1);
-+	eppic_pushref(t, ref + (nidx ? 1 : 0));
-+	if (tstr)
-+		return eppic_strdup(tstr);
-+	return eppic_strdup("");
-+}
-+
-+/*
-+ * Get the type, size and position information for a member of a structure.
-+ */
-+static char *
-+apimember(char *mname, ull idx, type_t *tm, member_t *m, ull *last_index)
-+{
-+	int index, nfields = -1, size;
-+	int nbits = 0, fbits = 0;
-+	long offset;
-+	ull m_die, die_off = idx;
-+	char *name;
-+
-+	nfields = get_die_nfields(die_off);
-+	/*
-+	 * get_die_nfields() returns < 0 if the die is not structure type
-+	 * or union type
-+	 */
-+	if (nfields <= 0)
-+		return NULL;
-+
-+	/* if we're being asked the next member in a getfirst/getnext
-+	 * sequence
-+	 */
-+	if (mname && !mname[0] && last_index && (*last_index))
-+		index = *last_index;
-+	else
-+		index = 0;
-+
-+	while (index < nfields) {
-+		size = get_die_member(die_off, index, &offset, &name, &nbits,
-+				&fbits, &m_die);
-+
-+		if (size < 0)
-+			return NULL;
-+
-+		if (!mname || !mname[0] || !strcmp(mname, name)) {
-+			eppic_member_ssize(m, size);
-+			if (name)
-+				eppic_member_sname(m, name);
-+			else
-+				eppic_member_sname(m, "");
-+			eppic_member_soffset(m, offset);
-+			eppic_member_snbits(m, nbits);
-+			eppic_member_sfbit(m, fbits);
-+			*last_index = index + 1;
-+			return drilldown(m_die, tm);
-+		}
-+		index++;
-+	}
-+	return NULL;
- }
- 
- static int
-@@ -123,7 +294,7 @@ apigetctype(int ctype, char *name, type_t *tout)
- static char *
- apigetrtype(ull idx, type_t *t)
- {
--	return "";
-+	return drilldown(idx, t);
- }
- 
- static int
-diff --git a/extension_eppic.h b/extension_eppic.h
-index beb68e4..15d7efc 100644
---- a/extension_eppic.h
-+++ b/extension_eppic.h
-@@ -27,6 +27,8 @@
-  * for makedumpfile extension.
-  */
- 
-+#define MAX_ARRAY_DIMENSION 16
-+
- /* member information */
- typedef MEMBER_S {
  
 
 
