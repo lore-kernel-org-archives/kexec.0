@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U2S78-0001ns-Uf
- for kexec@lists.infradead.org; Mon, 04 Feb 2013 19:54:03 +0000
-Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
- by relay3.corp.sgi.com (Postfix) with ESMTP id E3CAAAC001
- for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 11:54:00 -0800 (PST)
-Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
- by estes.americas.sgi.com (Postfix) with ESMTP id A2955700179D
- for <kexec@lists.infradead.org>; Mon,  4 Feb 2013 13:54:00 -0600 (CST)
-Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
- (envelope-from <cpw@sgi.com>) id 1U2S76-00057L-Kp
- for kexec@lists.infradead.org; Mon, 04 Feb 2013 13:54:00 -0600
-Subject: [PATCH] kexec: include reserved e820 sections in crash kernel
-Message-Id: <E1U2S76-00057L-Kp@eag09.americas.sgi.com>
-From: Cliff Wickman <cpw@sgi.com>
-Date: Mon, 04 Feb 2013 13:54:00 -0600
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1U2XY8-0005JG-J7
+ for kexec@lists.infradead.org; Tue, 05 Feb 2013 01:42:18 +0000
+Date: Tue, 5 Feb 2013 10:24:23 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] --dump-dmesg fix for post 3.5 kernels
+Message-Id: <20130205102423.11b32c83823f8b02fead026d@mxc.nes.nec.co.jp>
+In-Reply-To: <510F756F.9050604@canonical.com>
+References: <1359632888-11345-1-git-send-email-louis.bouchard@canonical.com>
+ <1359632888-11345-2-git-send-email-louis.bouchard@canonical.com>
+ <20130204172705.85ee974cbefdad1b2b4a7aaa@mxc.nes.nec.co.jp>
+ <510F756F.9050604@canonical.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,124 +21,157 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: louis.bouchard@canonical.com
+Cc: kexec@lists.infradead.org
 
-From: Cliff Wickman <cpw@sgi.com>
+Hello Louis,
 
-The crash kernel is not able to find its root device if that device is not
-on PCI 0.
+On Mon, 04 Feb 2013 09:46:39 +0100
+Bouchard Louis <louis.bouchard@canonical.com> wrote:
 
-This is because it is booted with the command line option memmap=exactmap
-which currently clears the e820 table and does not restore reserved spaces.
+[...]
+> >>  
+> >> +	SIZE_INIT(log, "log");
+> >> +	OFFSET_INIT(log.ts_nsec, "log", "ts_nsec");
+> >> +	OFFSET_INIT(log.len, "log", "len");
+> >> +	OFFSET_INIT(log.text_len, "log", "text_len");
+> >> +	OFFSET_INIT(log.dict_len, "log", "dict_len");
+> >> +	OFFSET_INIT(log.dict_len, "log", "level");
+> >> +
+> > 
+> > Why you overwrite log.dict_len with log.level ?
+> > And is log.dict_len necessary for this feature ?
+> > 
+> 
+> Sorry, this is a leftover from my log-level hack. The rest of the code
+> has been removed, so this should be removed as well.
 
-This works for a device on PCI 0 because ACPI falls back to a legacy mode.
-But the error message " [Firmware Bug]: PCI: MMCONFIG at
- [mem 0x80000000-0x80cfffff] not reserved in ACPI motherboard resources"
-is written to the log even in this functioning case.
+OK, I removed them.
 
-It fails for some devices on UV2, and only for UV2, because SGI seems to
-be the only manufacturer currently using the extended PCI(>0).
+> 
+> >>  	return TRUE;
+> >>  }
+> >>  
+> >> @@ -1354,6 +1364,8 @@ write_vmcoreinfo_data(void)
+> >>  	WRITE_SYMBOL("log_buf", log_buf);
+> >>  	WRITE_SYMBOL("log_buf_len", log_buf_len);
+> >>  	WRITE_SYMBOL("log_end", log_end);
+> >> +	WRITE_SYMBOL("log_first_idx", log_first_idx);
+> >> +	WRITE_SYMBOL("log_next_idx", log_next_idx);
+> >>  	WRITE_SYMBOL("max_pfn", max_pfn);
+> >>  	WRITE_SYMBOL("high_memory", high_memory);
+> >>  	WRITE_SYMBOL("node_remap_start_vaddr", node_remap_start_vaddr);
+> >> @@ -1404,6 +1416,10 @@ write_vmcoreinfo_data(void)
+> >>  	WRITE_MEMBER_OFFSET("node_memblk_s.size", node_memblk_s.size);
+> >>  	WRITE_MEMBER_OFFSET("node_memblk_s.nid", node_memblk_s.nid);
+> >>  	WRITE_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
+> >> +	WRITE_MEMBER_OFFSET("log.ts_nsec",log.ts_nsec);
+> >> +	WRITE_MEMBER_OFFSET("log.len",log.len);
+> >> +	WRITE_MEMBER_OFFSET("log.text_len",log.text_len);
+> >> +	WRITE_MEMBER_OFFSET("log.dict_len",log.dict_len);
+> >>  
+> >>  	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
+> >>  		WRITE_ARRAY_LENGTH("node_data", node_data);
+> >> @@ -1664,6 +1680,8 @@ read_vmcoreinfo(void)
+> >>  	READ_SYMBOL("log_buf", log_buf);
+> >>  	READ_SYMBOL("log_buf_len", log_buf_len);
+> >>  	READ_SYMBOL("log_end", log_end);
+> >> +	READ_SYMBOL("log_first_idx",log_first_idx);
+> >> +	READ_SYMBOL("log_next_idx",log_next_idx);
+> >>  	READ_SYMBOL("max_pfn", max_pfn);
+> >>  	READ_SYMBOL("high_memory", high_memory);
+> >>  	READ_SYMBOL("node_remap_start_vaddr", node_remap_start_vaddr);
+> >> @@ -1679,6 +1697,7 @@ read_vmcoreinfo(void)
+> >>  	READ_STRUCTURE_SIZE("node_memblk_s", node_memblk_s);
+> >>  	READ_STRUCTURE_SIZE("nodemask_t", nodemask_t);
+> >>  	READ_STRUCTURE_SIZE("pageflags", pageflags);
+> >> +	READ_STRUCTURE_SIZE("log", log);
+> > 
+> > You forgot to add "WRITE_STRUCTURE_SIZE("log", log)", I'll add it.
+> > 
+> > Lastly, your patch causes the following warning:
+> > 
+> >   makedumpfile.c: In function 'dump_dmesg':
+> >   makedumpfile.c:3562: warning: 'log_end' may be used uninitialized in this function
+> > 
+> > So, I'll fix this patch with the change below:
+> > 
+> > 
+> > diff --git a/makedumpfile.c b/makedumpfile.c
+> > index 2a2fcbd..ebedd07 100644
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -1384,6 +1384,7 @@ write_vmcoreinfo_data(void)
+> > 	WRITE_STRUCTURE_SIZE("node_memblk_s", node_memblk_s);
+> > 	WRITE_STRUCTURE_SIZE("nodemask_t", nodemask_t);
+> > 	WRITE_STRUCTURE_SIZE("pageflags", pageflags);
+> > +	WRITE_STRUCTURE_SIZE("log", log);
+> > 
+> > 	/*
+> > 	 * write the member offset of 1st kernel
+> > @@ -3626,7 +3627,9 @@ dump_dmesg()
+> > 			}
+> > 			log_end = log_end_2_6_24;
+> > 		}
+> > -	}
+> > +	} else
+> > +		log_end = 0;
+> > +
+> 
+> Oups, I missed this one, sorry.
+> 
+> > 	if (!readmem(VADDR, SYMBOL(log_buf_len), &log_buf_len,
+> > 	    sizeof(log_buf_len))) {
+> > 		ERRMSG("Can't get log_buf_len.\n");
+> > 
+> > 
+> > Thanks
+> > Atsushi Kumagai
+> > 
+> 
+> This all looks fine. I am planning to add this patch over your 1.5.1
+> version for Debian/Sid so we get this working (I need it myself for the
+> upcoming Ubuntu/Raring) if you don't see any problem. The debian patch
+> will be removed in the next version when it makes it into your upstream
+> release.
+> 
+> I'll go pick up your patch in your repo as soon as it makes it in. Just
+> let me know when you commit if you have a chance.
 
-The fix is simple, as long as the command line is long enough to include
-all the reserved spaces.
-The command line may have to be lengthened. See
-  [PATCH] kexec: lengthen the kernel command line image
+I fixed the patch, please pick up it from the devel branch:
 
-Signed-off-by: Cliff Wickman <cpw@sgi.com>
----
- kexec/arch/i386/crashdump-x86.c |   43 ++++++++++++++++++++++++++++++++++++++--
- kexec/kexec-syscall.h           |    2 -
- 2 files changed, 42 insertions(+), 3 deletions(-)
+http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/devel
 
-Index: kexec-tools-2.0.3/kexec/arch/i386/crashdump-x86.c
-===================================================================
---- kexec-tools-2.0.3.orig/kexec/arch/i386/crashdump-x86.c
-+++ kexec-tools-2.0.3/kexec/arch/i386/crashdump-x86.c
-@@ -236,6 +236,8 @@ static int get_crash_memory_ranges(struc
- 			type = RANGE_ACPI;
- 		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
- 			type = RANGE_ACPI_NVS;
-+		} else if(memcmp(str,"reserved\n", 9) == 0 ) {
-+			type = RANGE_RESERVED;
- 		} else if (memcmp(str, "GART\n", 5) == 0) {
- 			gart_start = start;
- 			gart_end = end;
-@@ -708,6 +710,39 @@ static void get_backup_area(unsigned lon
- 	fclose(fp);
- }
- 
-+/* Appends memmap=X$Y commandline for reserved memory to command line*/
-+static int cmdline_add_memmap_reserved(char *cmdline, unsigned long start,
-+					unsigned long end)
-+{
-+	int cmdlen, len, align = 1024;
-+	unsigned long startk, endk;
-+	char str_mmap[256], str_tmp[20];
-+
-+	if (!(end - start))
-+		return 0;
-+
-+	startk = start/1024;
-+	endk = (end + align - 1)/1024;
-+	strcpy (str_mmap, " memmap=");
-+	ultoa((endk - startk), str_tmp);
-+	strcat (str_mmap, str_tmp);
-+	strcat (str_mmap, "K$");
-+	ultoa(startk, str_tmp);
-+	strcat (str_mmap, str_tmp);
-+	strcat (str_mmap, "K");
-+	len = strlen(str_mmap);
-+	cmdlen = strlen(cmdline) + len;
-+	if (cmdlen > (COMMAND_LINE_SIZE - 1))
-+		die("Command line overflow\n");
-+	strcat(cmdline, str_mmap);
-+
-+#ifdef DEBUG
-+		printf("Command line after adding reserved memmap\n");
-+		printf("%s\n", cmdline);
-+#endif
-+	return 0;
-+}
-+
- /* Loads additional segments in case of a panic kernel is being loaded.
-  * One segment for backup region, another segment for storing elf headers
-  * for crash memory image.
-@@ -844,11 +879,15 @@ int load_crashdump_segments(struct kexec
- 	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
- 		unsigned long start, end;
- 		if ( !( mem_range[i].type == RANGE_ACPI
--			|| mem_range[i].type == RANGE_ACPI_NVS) )
-+			|| mem_range[i].type == RANGE_ACPI_NVS
-+			|| mem_range[i].type == RANGE_RESERVED) )
- 			continue;
- 		start = mem_range[i].start;
- 		end = mem_range[i].end;
--		cmdline_add_memmap_acpi(mod_cmdline, start, end);
-+		if (mem_range[i].type == RANGE_RESERVED)
-+			cmdline_add_memmap_reserved(mod_cmdline, start, end);
-+		else
-+			cmdline_add_memmap_acpi(mod_cmdline, start, end);
- 	}
- 	return 0;
- }
-Index: kexec-tools-2.0.3/kexec/kexec-syscall.h
-===================================================================
---- kexec-tools-2.0.3.orig/kexec/kexec-syscall.h
-+++ kexec-tools-2.0.3/kexec/kexec-syscall.h
-@@ -96,7 +96,7 @@ static inline long kexec_reboot(void)
- #define KEXEC_ARCH_MIPS    ( 8 << 16)
- #define KEXEC_ARCH_CRIS    (76 << 16)
- 
--#define KEXEC_MAX_SEGMENTS 16
-+#define KEXEC_MAX_SEGMENTS 70
- 
- #ifdef __i386__
- #define KEXEC_ARCH_NATIVE	KEXEC_ARCH_386
+I haven't introduced it until now, this is a branch for development:
+
+ - There are the patches reviewed by me, so I hope that this branch
+   hasn't many bugs. 
+
+ - This branch will be released as a next official version if
+   there is no problem.
+
+ - But, this branch could be broken without a announcement,
+   don't trust too much.
+
+At least, the dmesg patch will be merged into the next version without
+more changes, I'm sure that this branch meet your purpose.
+
+
+Thanks
+Atsushi Kumagai
+
+> Kind regards,
+> 
+> ...Louis
+> -- 
+> Louis Bouchard
+> Backline Support Analyst
+> Canonical Ltd
+> Ubuntu support: http://landscape.canonical.com
 
 _______________________________________________
 kexec mailing list
