@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U2zCU-0002wV-2V
- for kexec@lists.infradead.org; Wed, 06 Feb 2013 07:13:48 +0000
-Date: Wed, 6 Feb 2013 16:01:08 +0900
+ id 1U2zFN-00034H-6w
+ for kexec@lists.infradead.org; Wed, 06 Feb 2013 07:16:46 +0000
+Date: Wed, 6 Feb 2013 16:02:15 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: keep dumpfile pages in a cache
-Message-Id: <20130206160108.821ff55d6566dabff2a18f24@mxc.nes.nec.co.jp>
-In-Reply-To: <20130110094851.61168ff4486308c27aa567f6@mxc.nes.nec.co.jp>
-References: <201208281949.50286.ptesarik@suse.cz>
- <201209061750.52702.ptesarik@suse.cz>
- <20121114124724.749a64b12cca86223a92f1b1@mxc.nes.nec.co.jp>
- <2267600.lHCcsG40Ue@azariah.suse.cz>
- <20121119174044.3144d3df02b62128d1d2bfe2@mxc.nes.nec.co.jp>
- <20121219160125.036d5de8@azariah>
- <20130110094851.61168ff4486308c27aa567f6@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v4 0/9] makedumpfile security key filtering with eppic
+Message-Id: <20130206160215.8a4dfa7f5d58238d9e2cc270@mxc.nes.nec.co.jp>
+In-Reply-To: <20130204070724.9292.6640.stgit@aravinda>
+References: <20130204070724.9292.6640.stgit@aravinda>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,85 +18,127 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ptesarik@suse.cz
-Cc: kexec@lists.infradead.org
+To: aravinda@linux.vnet.ibm.com
+Cc: ananth@in.ibm.com, kexec@lists.infradead.org, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, buendgen@de.ibm.com
 
-SGVsbG8gUGV0ciwKCk9uIFRodSwgMTAgSmFuIDIwMTMgMDk6NDg6NTEgKzA5MDAKQXRzdXNoaSBL
-dW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlAbXhjLm5lcy5uZWMuY28uanA+IHdyb3RlOgoKPiBIZWxs
-byBQZXRyLAo+IAo+IE9uIFdlZCwgMTkgRGVjIDIwMTIgMTY6MDE6MjUgKzAxMDAKPiBQZXRyIFRl
-c2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+IHdyb3RlOgo+IAo+ID4gViBNb24sIDE5IE5vdiAyMDEy
-IDE3OjQwOjQ0ICswOTAwCj4gPiBBdHN1c2hpIEt1bWFnYWkgPGt1bWFnYWktYXRzdXNoaUBteGMu
-bmVzLm5lYy5jby5qcD4gbmFwc8Ohbm86Cj4gPiAKPiA+ID4gSGVsbG8gUGV0ciwKPiA+ID4gCj4g
-PiA+IE9uIFdlZCwgMTQgTm92IDIwMTIgMTU6NDI6MTIgKzAxMDAKPiA+ID4gUGV0ciBUZXNhcmlr
-IDxwdGVzYXJpa0BzdXNlLmN6PiB3cm90ZToKPiA+ID4gIAo+ID4gPiA+ID4gU29ycnkgZm9yIHRo
-ZSBsYXRlIHJlcGx5Lgo+ID4gPiA+ID4gQWNjb3JkaW5nIHRvIHlvdXIgbWVhc3VyZW1lbnQsIGl0
-IGxvb2tzIGdvb2Qgb24gcGVyZm9ybWFuY2UuCj4gPiA+ID4gPiAKPiA+ID4gPiA+IEhvd2V2ZXIs
-IEkgZm91bmQgdGhlIGlzc3VlIGJlbG93IGluIHYxLjUuMS1iZXRhIGFuZCBtYWRlIHN1cmUKPiA+
-ID4gPiA+IHRoYXQgdGhpcyBwYXRjaCBjYXVzZXMgaXQgYnkgZ2l0IGJpc2VjdCAoYnV0IEkgZG9u
-J3QgZmluZCB0aGUKPiA+ID4gPiA+IHRydWUgY2F1c2UgeWV0KS4KPiA+ID4gPiA+IAo+ID4gPiA+
-ID4gICByZXN1bHQgb24ga2VybmVsIDMuNDoKPiA+ID4gPiA+ICAgICAkIG1ha2VkdW1wZmlsZSAt
-LW5vbi1jeWNsaWMgdm1jb3JlIGR1bXBmaWxlCj4gPiA+ID4gPiAgICAgQ29weWluZyBkYXRhICAg
-ICAgICAgICAgICAgICAgICAgICA6IFsgNjIgJV0KPiA+ID4gPiA+ICAgICByZWFkcGFnZV9lbGY6
-IENhbid0IGNvbnZlcnQgYSBwaHlzaWNhbCBhZGRyZXNzKGEwMDAwKSB0byBcCj4gPiA+ID4gPiBv
-ZmZzZXQuIHJlYWRtZW06IHR5cGVfYWRkcjogMSwgYWRkcjoxMDAwYTAwMDAsIHNpemU6NDA5Ngo+
-ID4gPiA+ID4gICAgIHJlYWRfcGZuOiBDYW4ndCBnZXQgdGhlIHBhZ2UgZGF0YS4KPiA+ID4gPiA+
-IAo+ID4gPiA+ID4gICAgIG1ha2VkdW1wZmlsZSBGYWlsZWQuCj4gPiA+ID4gPiAgICAgJAo+ID4g
-PiA+ID4gCj4gPiA+ID4gPiBJdCBzZWVtcyBjcml0aWNhbCBpc3N1ZSBmb3IgYWxsIHVzZXJzLCBz
-byBJIHdpbGwgcG9zdHBvbmUgbWVyZ2luZwo+ID4gPiA+ID4gdGhpcyBwYXRjaCB1bnRpbCB0aGlz
-IGlzc3VlIGlzIHNvbHZlZC4KCkkgZm91bmQgdGhlIGNhdXNlIG9mIHRoaXMgaXNzdWUuCgpJbiB0
-aGUgbG9nIGFib3ZlLCByZWFkbWVtKCkgdHJ5IHRvIHJlYWQgMHgxMDAwYTAwMDAgKGFuZCBpdCdz
-IGNvcnJlY3QpLApidXQgcmVhZHBhZ2VfZWxmKCkgdHJ5IHRvIHJlYWQgMHhhMDAwMC4KVGhpcyBp
-cyBiZWNhdXNlIHlvdXIgY29kZSB1c2VzIFBBR0VCQVNFIG1hY3JvIGJlZm9yZSByZWFkcGFnZV9l
-bGYoKS4KCiAgI2RlZmluZSBQQUdFQkFTRShYKSAgICAgICAgICAgICAoKCh1bnNpZ25lZCBsb25n
-KShYKSkgJiB+KFBBR0VTSVpFKCkgLSAxKSkKIApJbiAzMmJpdCBzeXN0ZW1zLCBzaXplb2YodW5z
-aWduZWQgbG9uZykgaXMgMzIsIDB4MTAwMGEwMDAwIGlzIHRydW5jYXRlZAp0byAweGEwMDAwIGFu
-ZCByZWFkcGFnZV9lbGYoKSBnZXRzIGl0LgoKSXQncyBQQUdFQkFTRSBtYWNybydzIGlzc3VlLCB0
-aGVyZSBpcyBubyBwcm9ibGVtIGluIHlvdXIgY29kZS4gClNvLCBJJ2xsIG1lcmdlIHlvdXIgcGF0
-Y2gganVzdCBhcyBpdCBpcywgYW5kIG1lcmdlIHRoZSBwYXRjaCBiZWxvdy4KCgpUaGFua3MKQXRz
-dXNoaSBLdW1hZ2FpCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KW1BBVENIXSBGaXggUEFHRU9GRlNFVCBhbmQgUEFHRUJB
-U0UgbWFjcm9zIGZvciBpMzg2IFBBRS4KCmkzODYgUEFFIHN5c3RlbSBoYXMgcGh5c2ljYWwgYWRk
-cmVzcyBvZiAzNmJpdCwgYnV0IFBBR0VPRkZTRVQgYW5kClBBR0VCQVNFIGNhc3QgdGhlIGFyZ3Vt
-ZW50IHRvICJ1bnNpZ25lZCBsb25nICgzMmJpdCkiLgpBcyBhIHJlc3VsdCwgdGhleSByZXR1cm4g
-aW52YWxpZCBhZGRyZXNzIGluIGkzODYgUEFFIHN5c3RlbS4KClNpZ25lZC1vZmYtYnk6IEF0c3Vz
-aGkgS3VtYWdhaSA8a3VtYWdhaS1hdHN1c2hpQG14Yy5uZXMubmVjLmNvLmpwPgoKLS0tCiBtYWtl
-ZHVtcGZpbGUuaCB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBk
-ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuaCBiL21ha2VkdW1wZmlsZS5o
-CmluZGV4IDk4Y2Q1MjguLjYwMjZmYTIgMTAwNjQ0Ci0tLSBhL21ha2VkdW1wZmlsZS5oCisrKyBi
-L21ha2VkdW1wZmlsZS5oCkBAIC0xNTEsOCArMTUxLDggQEAgaXNBbm9uKHVuc2lnbmVkIGxvbmcg
-bWFwcGluZykKIAogI2RlZmluZSBQQUdFU0laRSgpCQkoaW5mby0+cGFnZV9zaXplKQogI2RlZmlu
-ZSBQQUdFU0hJRlQoKQkJKGluZm8tPnBhZ2Vfc2hpZnQpCi0jZGVmaW5lIFBBR0VPRkZTRVQoWCkJ
-CSgoKHVuc2lnbmVkIGxvbmcpKFgpKSAmIChQQUdFU0laRSgpIC0gMSkpCi0jZGVmaW5lIFBBR0VC
-QVNFKFgpCQkoKCh1bnNpZ25lZCBsb25nKShYKSkgJiB+KFBBR0VTSVpFKCkgLSAxKSkKKyNkZWZp
-bmUgUEFHRU9GRlNFVChYKQkJKCgodW5zaWduZWQgbG9uZyBsb25nKShYKSkgJiAoUEFHRVNJWkUo
-KSAtIDEpKQorI2RlZmluZSBQQUdFQkFTRShYKQkJKCgodW5zaWduZWQgbG9uZyBsb25nKShYKSkg
-JiB+KFBBR0VTSVpFKCkgLSAxKSkKIAogLyoKICAqIGZvciBTUEFSU0VNRU0KLS0gCjEuOC4wLjIK
-CgoKPiA+ID4gPiAKPiA+ID4gPiBVbmRlcnN0b29kLiBIb3dldmVyLCBJIGhhdmVuJ3QgcnVuIGlu
-dG8gdGhpcyBzaXR1YXRpb24sIGJ1dCBJJ2QKPiA+ID4gPiBsaWtlIHRvIGhlbHAuCj4gPiA+IAo+
-ID4gPiBUaGFua3MgaW4gYWR2YW5jZS4KPiA+ID4gCj4gPiA+ID4gV2hpY2ggYXJjaGl0ZWN0dXJl
-IGlzIHRoaXM/Cj4gPiA+ID4gQ291bGQgeW91IHBvc3NpYmx5IHNoYXJlIHRoZSB2bWNvcmUgZmls
-ZSB3aXRoIG1lPwo+ID4gPiAKPiA+ID4gSSB0ZXN0ZWQgb24gaTM4NiB3aXRoIGtlcm5lbC0zLjQu
-OC4KPiA+ID4gCj4gPiA+IEkgaGF2ZSBubyB3YXkgdG8gc2VuZCB0aGUgdm1jb3JlIHRvIHlvdSwg
-c28gSSBhdHRhY2ggdGhlIC5jb25maWcgZmlsZQo+ID4gPiBpbnN0ZWFkIG9mIGl0Lgo+ID4gCj4g
-PiBJIGhhdmUgZmluYWxseSBjb21waWxlZCBhbmQgaW5zdGFsbGVkIHRoZSBrZXJuZWwuIEkgd2Fz
-IGFibGUgdG8gc2F2ZSBhbgo+ID4gRUxGIGR1bXAgZmlsZS4gSG93ZXZlciwgbWFrZWR1bXBmaWxl
-IGZhaWxzIGxpa2UgdGhpczoKPiA+IAo+ID4gcHRlc2FyaWtAbmF0aGFuOn4vbWFrZWR1bXBmaWxl
-PiAuL21ha2VkdW1wZmlsZSAtLW5vbi1jeWNsaWMgdm1jb3JlCj4gPiBkdW1wZmlsZQo+ID4gX19y
-ZWFkX2Rpc2tfZHVtcF9oZWFkZXI6IENhbid0IHNlZWsgYSBmaWxlKHZtY29yZSkuIEludmFsaWQg
-YXJndW1lbnQKPiA+IHJlYWRfZGV2aWNlOiBDYW4ndCBzZWVrIGEgZmlsZSh2bWNvcmUpLiBJbnZh
-bGlkIGFyZ3VtZW50Cj4gPiBjaGVja19lbGZfZm9ybWF0OiBDYW4ndCBzZWVrIHZtY29yZS4gSW52
-YWxpZCBhcmd1bWVudAo+ID4gCj4gPiBtYWtlZHVtcGZpbGUgRmFpbGVkLgo+ID4gCj4gPiBBbnkg
-aWRlYXM/Cj4gCj4gSG1tbS4uLnRoZSBlcnJvcnMgYXJlIHNob3duIHdpdGggImxzZWVrKGZkLCAw
-eDAsIFNFRUtfU0VUKSIgYW5kIHZtY29yZQo+IG1pZ2h0IGJlIGJyb2tlbiBmb3Igc29tZSByZWFz
-b24sIGJ1dCBJJ20gbm90IHN1cmUuLi4KPiBJIGFzc3VtZSB0aGF0IHRoZSB2bWNvcmUgY2FuJ3Qg
-YmUgb3BlbmVkIHdpdGggY3Jhc2ggZWl0aGVyLCByaWdodCA/Cj4gCj4gQW55d2F5LCBpdCBzZWVt
-cyBkaWZmaWN1bHQgdG8gcmVwcm9kdWNlIHRoaXMgaXNzdWUgaW4geW91ciBlbnZpcm9ubWVudC4K
-PiBTbywgSSB0YWtlIG9uIHRoZSBpbnZlc3RpZ2F0aW9uIGZvciB0aGlzIGlzc3VlLCBwbGVhc2Ug
-Z2l2ZSBtZSBtb3JlIHRpbWUuCj4gCj4gCj4gVGhhbmtzCj4gQXRzdXNoaSBLdW1hZ2FpCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Aravinda,
+
+On Mon, 04 Feb 2013 12:39:31 +0530
+Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
+
+> makedumpfile security key filtering enhancement - Add Eppic language
+> support (formerly known as SIAL) to specify rules to scrub data in a
+> dumpfile. Eppic was previously part of crash source code repository.
+> 
+> The following series of patches enhance the makedumpfile to provide
+> a more powerful way to specify rules and commands to traverse and
+> erase complex data structures in a dump file by integrating Embeddable
+> Pre-Processor and Interpreter for C (eppic).
+> 
+> Eppic is an interpreter that facilitates access to the symbol and type
+> information stored in an executable image or a dump file. Eppic defines
+> a language semantic which is similar to C. Eppic macros can be used to
+> specify rules/commands to erase data in an image file. makedumpfile
+> will interpret the rules/commands provided by eppic macros with the
+> help of eppic library and will suitably erase the required data in a
+> dump file. Eppic provides a lot of language constructs like conditional
+> statements, logical and arithmetic operators, nested loops, functions,
+> etc., to traverse nested lists and trees and conditionally erase data
+> in the dump file, enabling users to literally erase any data in the
+> dump file which is accessible through global symbols.
+> 
+> The series of patches integrates eppic with makdumpfile. These patches
+> require eppic library libeppic.a and eppic_api.h header file. The
+> libeppic.a library can be built from the eppic source code available
+> at the following URL:
+> 
+> http://code.google.com/p/eppic/
+> 
+> TODO:
+> 
+>   - Currently, works only for symbols in vmlinux, extend it to module
+>     symbols
+>   - Functionality support:
+>     - Implement the following callback functions.
+>       - apialignment
+>       - apigetenum
+>       - apigetdefs
+>     - Other functionalities specified in the code with TODO tag
+>   - Support specifying eppic macros in makedumpfile.conf file
+>   - Update erase info
+> 
+> Changelog from v3 to v4:
+> 
+>   - Incorporated review comments from Atsushi
+>     - Removed obsolete symbol _init().
+>     - Changed to explicit initialization of dlopen library
+>     - Added missing -ltinfo in Makefile
+>   - Additional 8th patch, a hack to workaround the limitation when
+>     makedumpfile is compiled with "-static" flag
+>   - Additional 9th patch which includes man page updates
+
+Good, I'll merge v4 patches into the next version with small addition
+to README. Thanks for all your hard work !
+
+
+Thanks
+Atsushi Kumagai
+ 
+> Changelog from v2 to v3:
+>   - Re-based to v1.5.1
+>   - Removed EPPIC=on option from Makefile.
+>   - Dynamically loads eppic shared object instead of statically linking
+>     - Based on the discussion in the mailing list
+>     - http://lists.infradead.org/pipermail/kexec/2012-December/007450.html
+>     - Only patches 1 and 2 are modified
+> 
+> Changelog from v1 to v2:
+> 
+>   - Re-based to v1.5.0
+>   - Introduced EPPIC=on in makefile, and hence eppic is now optional
+>   - Incorporated review comments from Atsushi
+>   - Minor formatting changes
+> 
+> Regards,
+> Aravinda
+> ---
+> 
+> Aravinda Prasad (9):
+>       Initialize and setup eppic
+>       makedumpfile and eppic interface layer
+>       Eppic call back functions to query a dump image
+>       Implement apigetctype call back function
+>       Implement apimember and apigetrtype call back functions
+>       Extend eppic built-in functions to include memset function
+>       Support fully typed symbol access mode
+>       Hack for the limitation when compiled with -static
+>       Update Documentation
+> 
+> 
+>  Makefile          |    5 -
+>  dwarf_info.c      |  367 +++++++++++++++++++++++++++++++++++++++++++
+>  dwarf_info.h      |   18 ++
+>  erase_info.c      |  116 +++++++++++++-
+>  erase_info.h      |   17 ++
+>  extension_eppic.c |  452 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  extension_eppic.h |   95 +++++++++++
+>  makedumpfile.8    |   18 ++
+>  makedumpfile.c    |    7 +
+>  makedumpfile.h    |    6 +
+>  print_info.c      |   13 +-
+>  11 files changed, 1105 insertions(+), 9 deletions(-)
+>  create mode 100644 extension_eppic.c
+>  create mode 100644 extension_eppic.h
+> 
+> -- 
+> Aravinda Prasad
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
