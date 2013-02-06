@@ -1,33 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U2zNG-0003bD-VS
- for kexec@lists.infradead.org; Wed, 06 Feb 2013 07:24:58 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A8C1A3EE0BD
- for <kexec@lists.infradead.org>; Wed,  6 Feb 2013 16:24:48 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8F2F745DE53
- for <kexec@lists.infradead.org>; Wed,  6 Feb 2013 16:24:48 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 776D245DE5A
- for <kexec@lists.infradead.org>; Wed,  6 Feb 2013 16:24:48 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6998B1DB8045
- for <kexec@lists.infradead.org>; Wed,  6 Feb 2013 16:24:48 +0900 (JST)
-Received: from g01jpexchyt12.g01.fujitsu.local
- (g01jpexchyt12.g01.fujitsu.local [10.128.194.51])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 132E8E08002
- for <kexec@lists.infradead.org>; Wed,  6 Feb 2013 16:24:48 +0900 (JST)
-From: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Subject: RE: [PATCH] kdump, oldmem: support mmap on /dev/oldmem
-Date: Wed, 6 Feb 2013 07:24:46 +0000
-Message-ID: <33710E6CAA200E4583255F4FB666C4E20AC61B3C@G01JPEXMBYT03>
-References: <33710E6CAA200E4583255F4FB666C4E20AC36B01@G01JPEXMBYT03>
- <20130205151256.GB12853@redhat.com>
-In-Reply-To: <20130205151256.GB12853@redhat.com>
-Content-Language: ja-JP
+ id 1U36ra-0000Xm-QM
+ for kexec@lists.infradead.org; Wed, 06 Feb 2013 15:24:44 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 0/3] Cleanup kdump memmap= passing and e820 usage
+Date: Wed, 6 Feb 2013 16:23:49 +0100
+References: <1358866935-18458-1-git-send-email-trenn@suse.de>
+ <87ehh2l2z3.fsf@xmission.com> <2271353.GLUCBHDxBG@hammer82.arch.suse.de>
+In-Reply-To: <2271353.GLUCBHDxBG@hammer82.arch.suse.de>
 MIME-Version: 1.0
+Message-Id: <201302061623.50126.trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,65 +23,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "cpw@sgi.com" <cpw@sgi.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, yinghai@kernel.org, vgoyal@redhat.com
 
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kdump, oldmem: support mmap on /dev/oldmem
-Date: Tue, 5 Feb 2013 10:12:56 -0500
+On Thursday, January 31, 2013 01:15:34 AM Thomas Renninger wrote:
+> On Wednesday, January 30, 2013 02:29:04 PM Eric W. Biederman wrote:
+> > "H. Peter Anvin" <hpa@zytor.com> writes:
+> > > On 01/30/2013 01:57 PM, Eric W. Biederman wrote:
+> > >>> Yes, those seem to be the options, and we're currently discussing which
+> > >>> one.
+> > >>> 
+> > >>> The second seems to make more sense to me.  The kexec tools build the
+> > >>> memory map anyway, and it makes sense to me at least to just build a
+> > >>> memory map with the appropriate regions marked as a dumpable type.
+> > >> 
+> > >> This dumpable type doesn't make sense to me.  Are you suggesting making
+> > >> regions that are memory but that we should not use a special memory
+> > >> type?
+> > > 
+> > > Yes.
+> > > 
+> > >> I think I would prefer that to call that new type RESERVED_MEM or
+> > >> RESERVED_CACHABLE.  Being more specific is fine but dumpable certainly
+> > >> doesn't bring to mind what we are saying.  Especially since we already
+> > >> communicate which areas were memory to the last kernel in an
+> > >> architecture generic format.
+> > > 
+> > > I was thinking that marking them differently might help debugging, at
+> > > least, but yes, we can have a RESERVED_MEM type.
+> > > 
+> > > However, Thomas does have a point that the current use of fairly small
+> > > positive values for Linux-defined types is a bad idea.  We should use
+> > > negative types, or at least something north of 0x40000000 or so.
+> > 
+> > Yes.  It doesn't much matter in the kernel but when it because part of
+> > the ABI it is a real issue.
+> That's one point (self made up e820 type should better be kept kernel
+> internal).
 
-> On Mon, Feb 04, 2013 at 04:59:35AM +0000, Hatayama, Daisuke wrote:
+There is another important point, why the command line approach
+should be preferred:
+Backward compatibility and the ability to backport the whole stuff to
+fix mmconf in kdump which would be nice for example for SLES11.
 
-> [..]
->> For design decision, I didn't support mmap() on /proc/vmcore because
->> it abstracts old memory as ELF format, so there's range consequtive on
->> /proc/vmcore but not consequtive on the actual old memory. For
->> example, consider ELF headers on the 2nd kernel and the note objects,
->> memory chunks corresponding to PT_LOAD entries on the first kernel.
->> They are not consequtive on the old memory. So reampping them so
->> /proc/vmcore appears consequtive using existing remap_pfn_range() needs
->> some complicated work.
-> 
-> Can't we call remap_pfn_range() multiple times. Once for each sequential
-> range of memory. /proc/vmcore already has list of contiguous memory areas.
-> So we can parse user passed file offset and size and map into respective
-> physical chunks and call rempa_pfn_range() on all these chunks.
-> 
-> I think supporting mmap() both on /dev/oldmem as well as /proc/vmcore will
-> be nice.
-> 
-> Agreed that supporting mmap() on /proc/vmcore is more work as compared to
-> /dev/oldmem but should be doable.
-> 
+kexec-tools can detect the kernel version of the kernel which is loaded
+as kdump/crash kernel. If its version is:
+"$MAINLINE_VERSION_THE_CHANGE_GETS_INTRODUCED"
+or newer, things are fine.
+But if the kernel version is older, there is no way for kexec-tools to
+find out whether the older kernel may have the feature included.
+That's bad!
 
-The complication to support mmap() on /proc/vmcore lies in kdump
-side. Objects exported from /proc/vmcore needs to be page-size aligned
-on /proc/vmcore. This comes from the restriction of mmap() that
-requires user-space address and physical address to be page-size
-aligned.
+In case of the command line apprach kexec-tools can pass the whole memmap=
+mess as passed before, plus the new format: memmap=kdump_reserve_usable,X@Y.
+In older kernels the newly formatted string will get passed to:
+memmparse("kdump_reserve_usable,X@Y")
+and the memmap early_param function will return with -EINVAL:
+        mem_size = memparse(p, &p);                                                                                            
+        if (p == oldp)                                                                                                         
+                return -EINVAL;
 
-As I said in the description, objects implicitly referened by
-/proc/vmcore are
+Ok, the kdump kernel which does not have the stuff backported would issue a:
+printk(KERN_WARNING "Malformed early option '%s'\n", param);
+which could get ignored. I guess this is fine compared to any other backport
+nightmare approach.
 
-  - ELF headers,
-  - NOTE objects (NT_PRSTATUS entries x cpus, VMCOREINFO), and
-  - memory chunks x (the number of PT_LOAD entries).
-
-Note objects are scattered on old memory. They are exported as a
-single NOTE entry from program headers, so they need to be gathered at
-the same location in the 2nd kernel starting from the page-size
-aligned address.
-
-VMCOREINFO is about 1.5KB on 2.6.32 kernel. One NT_PRSTATUS is 355
-bytes. Recent limit of NR_CPUS is 5120 on x86_64. So less than about 2
-MB is enough even on the worst case.
-
-Note that the format of /proc/vmcore need to change since offset of
-each object need to be page-size aligned.
-
-Thanks.
-HATAYAMA, Daisuke
-
+   Thomas
 
 _______________________________________________
 kexec mailing list
