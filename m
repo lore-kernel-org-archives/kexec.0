@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U3T3V-0006j3-CO
- for kexec@lists.infradead.org; Thu, 07 Feb 2013 15:06:30 +0000
-Date: Thu, 7 Feb 2013 10:06:23 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kdump, oldmem: support mmap on /dev/oldmem
-Message-ID: <20130207150623.GC6462@redhat.com>
-References: <33710E6CAA200E4583255F4FB666C4E20AC36B01@G01JPEXMBYT03>
- <20130205151256.GB12853@redhat.com>
- <33710E6CAA200E4583255F4FB666C4E20AC61B3C@G01JPEXMBYT03>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20AC61B3C@G01JPEXMBYT03>
+Received: from g1t0028.austin.hp.com ([15.216.28.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1U3UWP-0003bq-8q
+ for kexec@lists.infradead.org; Thu, 07 Feb 2013 16:40:26 +0000
+Subject: Re: [PATCH v2] Add the values related to buddy system for
+ filtering free pages.
+From: Lisa Mitchell <lisa.mitchell@hp.com>
+In-Reply-To: <20121227173523.5e414c342fed3e59a887fa87@mxc.nes.nec.co.jp>
+References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+ <20121219161856.e6aa984f.akpm@linux-foundation.org>
+ <20121220112103.d698c09a9d1f27a253a63d37@mxc.nes.nec.co.jp>
+ <33710E6CAA200E4583255F4FB666C4E20AB2DEA3@G01JPEXMBYT03>
+ <87licsrwpg.fsf@xmission.com>
+ <20121227173523.5e414c342fed3e59a887fa87@mxc.nes.nec.co.jp>
+Date: Thu, 07 Feb 2013 05:29:11 -0700
+Message-ID: <1360240151.12251.15.camel@lisamlinux.fc.hp.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,73 +28,129 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "cpw@sgi.com" <cpw@sgi.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, vgoyal@redhat.com
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "cpw@sgi.com" <cpw@sgi.com>
 
-On Wed, Feb 06, 2013 at 07:24:46AM +0000, Hatayama, Daisuke wrote:
-> From: Vivek Goyal <vgoyal@redhat.com>
-> Subject: Re: [PATCH] kdump, oldmem: support mmap on /dev/oldmem
-> Date: Tue, 5 Feb 2013 10:12:56 -0500
+On Thu, 2012-12-27 at 08:35 +0000, Atsushi Kumagai wrote:
+> Hello,
 > 
-> > On Mon, Feb 04, 2013 at 04:59:35AM +0000, Hatayama, Daisuke wrote:
+> On Thu, 20 Dec 2012 18:00:11 -0800
+> ebiederm@xmission.com (Eric W. Biederman) wrote:
 > 
-> > [..]
-> >> For design decision, I didn't support mmap() on /proc/vmcore because
-> >> it abstracts old memory as ELF format, so there's range consequtive on
-> >> /proc/vmcore but not consequtive on the actual old memory. For
-> >> example, consider ELF headers on the 2nd kernel and the note objects,
-> >> memory chunks corresponding to PT_LOAD entries on the first kernel.
-> >> They are not consequtive on the old memory. So reampping them so
-> >> /proc/vmcore appears consequtive using existing remap_pfn_range() needs
-> >> some complicated work.
+> > "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com> writes:
 > > 
-> > Can't we call remap_pfn_range() multiple times. Once for each sequential
-> > range of memory. /proc/vmcore already has list of contiguous memory areas.
-> > So we can parse user passed file offset and size and map into respective
-> > physical chunks and call rempa_pfn_range() on all these chunks.
+> > >> From: kexec-bounces@lists.infradead.org
+> > >> [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Atsushi Kumagai
+> > >> Sent: Thursday, December 20, 2012 11:21 AM
+> > >
+> > >> On Wed, 19 Dec 2012 16:18:56 -0800
+> > >> Andrew Morton <akpm@linux-foundation.org> wrote:
+> > >> 
+> > >> > On Mon, 10 Dec 2012 10:39:13 +0900
+> > >> > Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+> > >> >
+> > >
+> > >> >
+> > >> > We might change the PageBuddy() implementation at any time, and
+> > >> > makedumpfile will break.  Or in this case, become less efficient.
+> > >> >
+> > >> > Is there any way in which we can move some of this logic into the
+> > >> > kernel?  In this case, add some kernel code which uses PageBuddy() on
+> > >> > behalf of makedumpfile, rather than replicating the PageBuddy() logic
+> > >> > in userspace?
+> > >> 
+> > >> In last month, Cliff Wickman proposed such idea:
+> > >> 
+> > >>   [PATCH v2] makedumpfile: request the kernel do page scans
+> > >>   http://lists.infradead.org/pipermail/kexec/2012-November/007318.html
+> > >> 
+> > >>   [PATCH] scan page tables for makedumpfile, 3.0.13 kernel
+> > >>   http://lists.infradead.org/pipermail/kexec/2012-November/007319.html
+> > >> 
+> > >> In his idea, the kernel does page scans to distinguish unnecessary pages
+> > >> (free pages and others) and returns the list of PFN's which should be
+> > >> excluded for makedumpfile.
+> > >> As a result, makedumpfile doesn't need to consider internal kernel
+> > >> behavior.
+> > >> 
+> > >> I think it's a good idea from the viewpoint of maintainability and
+> > >> performance.
 > > 
-> > I think supporting mmap() both on /dev/oldmem as well as /proc/vmcore will
-> > be nice.
+> > > I also think wide part of his code can be reused in this work. But the bad
+> > > performance is caused by a lot of ioremap, not a lot of copying. See my
+> > > profiling result I posted some days ago. Two issues, ioremap one and filtering
+> > > maintainability, should be considered separately. Even on ioremap issue,
+> > > there is secondary one to consider in memory consumption on the 2nd
+> > > kernel.
 > > 
-> > Agreed that supporting mmap() on /proc/vmcore is more work as compared to
-> > /dev/oldmem but should be doable.
+> > Thanks.  I was wondering why moving the code into /proc/vmcore would
+> > make things faster.
+> 
+> Thanks HATAYAMA-san, I've understood the issues correctly.
+> We should continue improving the ioremap issue as Cliff and HATAYAMA-san
+> are doing now.
+> 
 > > 
+> > > Also, I have one question. Can we always think of 1st and 2nd kernels
+> > > are same?
+> > 
+> > Not at all.  Distros frequently implement it with the same kernel in
+> > both role but it should be possible to use an old crusty stable kernel
+> > as the 2nd kernel.
+> > 
+> > > If I understand correctly, kexec/kdump can use the 2nd kernel different
+> > > from the 1st's. So, differnet kernels need to do the same thing as makedumpfile
+> > > does. If assuming two are same, problem is mush simplified.
+> > 
+> > As a developer it becomes attractive to use a known stable kernel to
+> > capture the crash dump even as I experiment with a brand new kernel.
 > 
-> The complication to support mmap() on /proc/vmcore lies in kdump
-> side. Objects exported from /proc/vmcore needs to be page-size aligned
-> on /proc/vmcore. This comes from the restriction of mmap() that
-> requires user-space address and physical address to be page-size
-> aligned.
+> To allow to use the 2nd kernel different from the 1st's, I think we have
+> to take care of each kernel version with the logic included in makedumpfile
+> for them. That's to say, makedumpfile goes on as before.
 > 
-> As I said in the description, objects implicitly referened by
-> /proc/vmcore are
 > 
->   - ELF headers,
->   - NOTE objects (NT_PRSTATUS entries x cpus, VMCOREINFO), and
->   - memory chunks x (the number of PT_LOAD entries).
-> 
-> Note objects are scattered on old memory. They are exported as a
-> single NOTE entry from program headers, so they need to be gathered at
-> the same location in the 2nd kernel starting from the page-size
-> aligned address.
-> 
-> VMCOREINFO is about 1.5KB on 2.6.32 kernel. One NT_PRSTATUS is 355
-> bytes. Recent limit of NR_CPUS is 5120 on x86_64. So less than about 2
-> MB is enough even on the worst case.
-> 
-> Note that the format of /proc/vmcore need to change since offset of
-> each object need to be page-size aligned.
+> Thanks
+> Atsushi Kumagai
 
-Ok, got it. So everything needs to be page aligned and if size is not
-sufficient then we need a way to pad memory areas to make next object
-page aligned. 
 
-To begin with supporting mmap on /dev/oldmem is fine with me. Once that
-gets in, it will be good to look at how to make all the individual items
-page aligned  so that mmap can be supported on /proc/vmcore.
+Atsushi and Vivek:  
 
-Thanks
-Vivek
+I'm trying to get the status of whether the patch submitted in
+https://lkml.org/lkml/2012/11/21/90  is going to be accepted upstream
+and get in some version of the Linux 3.8 kernel.   I'm replying to the
+last email thread above on kexec_lists and lkml.org  that I could find
+about this patch.  
+
+I was counting on this kernel patch to improve performance of
+makedumpfilev1.5.1, so at least it wouldn't be a regression in
+performance over makedumpfile v1.4.   It was listed as recommended in
+the makedumpfilev1.5.1 release posting:
+http://lists.infradead.org/pipermail/kexec/2012-December/007460.html
+
+
+All the conversations in the thread since this patch was committed seem
+to voice some reservations now, and reference other fixes being tried to
+improve performance.  
+
+Does that mean you are abandoning getting this patch accepted upstream,
+in favor of pursuing other alternatives?
+
+I had hoped this patch would be okay to get accepted upstream, and then
+other improvements could be built on top of it.  
+
+Is that not the case?   
+
+Or has further review concluded now that this change is a bad idea due
+to adding dependence of this new makedumpfile feature on some deep
+kernel memory internals?
+
+Thanks,
+
+Lisa Mitchell
+
+ 
+
 
 _______________________________________________
 kexec mailing list
