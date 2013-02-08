@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from g4t3425.houston.hp.com ([15.201.208.53])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U3jmQ-0003R0-F7
- for kexec@lists.infradead.org; Fri, 08 Feb 2013 08:58:00 +0000
-Date: Fri, 8 Feb 2013 17:49:44 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 2/2 v2] kexec: Export PG_hwpoison flag into vmcoreinfo
-Message-Id: <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
-In-Reply-To: <50913011.2030900@hitachi.com>
-References: <508FDEF3.8030601@hitachi.com> <20121030143750.GF2290@redhat.com>
- <50913011.2030900@hitachi.com>
-Mime-Version: 1.0
+ id 1U3pQj-0001Jx-4H
+ for kexec@lists.infradead.org; Fri, 08 Feb 2013 14:59:58 +0000
+From: "Mitchell, Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>
+Subject: RE: [PATCH v2] Add the values related to buddy system for filtering
+ free pages.
+Date: Fri, 8 Feb 2013 14:59:10 +0000
+Message-ID: <D1EE06D5773FD14B8B7BE95DA4B3A74443203BCA@G4W3231.americas.hpqcorp.net>
+References: <20121210103913.020858db777e2f48c59713b6@mxc.nes.nec.co.jp>
+ <20121219161856.e6aa984f.akpm@linux-foundation.org>
+ <20121220112103.d698c09a9d1f27a253a63d37@mxc.nes.nec.co.jp>
+ <33710E6CAA200E4583255F4FB666C4E20AB2DEA3@G01JPEXMBYT03>
+ <87licsrwpg.fsf@xmission.com>
+ <20121227173523.5e414c342fed3e59a887fa87@mxc.nes.nec.co.jp>
+ <1360240151.12251.15.camel@lisamlinux.fc.hp.com>
+ <20130208114509.0755d9012cdfbcbd99c3a4ff@mxc.nes.nec.co.jp>
+In-Reply-To: <20130208114509.0755d9012cdfbcbd99c3a4ff@mxc.nes.nec.co.jp>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,58 +31,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: mitsuhiro.tanino.gm@hitachi.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ebiederm@xmission.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "cpw@sgi.com" <cpw@sgi.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-Hello,
+Thanks, that's good news, and thanks for the commit ID, that was the thing I was having trouble finding.
 
-On Wed, 31 Oct 2012 23:05:05 +0900
-Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> wrote:
+-----Original Message-----
+From: Atsushi Kumagai [mailto:kumagai-atsushi@mxc.nes.nec.co.jp] 
+Sent: Thursday, February 07, 2013 7:45 PM
+To: Mitchell, Lisa (MCLinux in Fort Collins)
+Cc: vgoyal@redhat.com; kexec@lists.infradead.org; linux-kernel@vger.kernel.org; linux-mm@kvack.org; d.hatayama@jp.fujitsu.com; ebiederm@xmission.com; akpm@linux-foundation.org; cpw@sgi.com
+Subject: Re: [PATCH v2] Add the values related to buddy system for filtering free pages.
 
-> This patch exports a PG_hwpoison into vmcoreinfo when
-> CONFIG_MEMORY_FAILURE is defined.
-> "makedumpfile" needs to read information of memory, such as
-> 'mem_section', 'zone', 'pageflags' from vmcore.
+Hello Lisa,
+
+On Thu, 07 Feb 2013 05:29:11 -0700
+Lisa Mitchell <lisa.mitchell@hp.com> wrote:
+
+> > > > Also, I have one question. Can we always think of 1st and 2nd 
+> > > > kernels are same?
+> > > 
+> > > Not at all.  Distros frequently implement it with the same kernel 
+> > > in both role but it should be possible to use an old crusty stable 
+> > > kernel as the 2nd kernel.
+> > > 
+> > > > If I understand correctly, kexec/kdump can use the 2nd kernel 
+> > > > different from the 1st's. So, differnet kernels need to do the 
+> > > > same thing as makedumpfile does. If assuming two are same, problem is mush simplified.
+> > > 
+> > > As a developer it becomes attractive to use a known stable kernel 
+> > > to capture the crash dump even as I experiment with a brand new kernel.
+> > 
+> > To allow to use the 2nd kernel different from the 1st's, I think we 
+> > have to take care of each kernel version with the logic included in 
+> > makedumpfile for them. That's to say, makedumpfile goes on as before.
+> > 
+> > 
+> > Thanks
+> > Atsushi Kumagai
 > 
-> We introduce a function into "makedumpfile" to exclude
-> hwpoison page from vmcore dump.
-> In order to introduce this function, PG_hwpoison flag have
-> to export into vmcoreinfo.
 > 
-> Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+> Atsushi and Vivek:  
+> 
+> I'm trying to get the status of whether the patch submitted in
+> https://lkml.org/lkml/2012/11/21/90  is going to be accepted upstream
+> and get in some version of the Linux 3.8 kernel.   I'm replying to the
+> last email thread above on kexec_lists and lkml.org  that I could find 
+> about this patch.
+> 
+> I was counting on this kernel patch to improve performance of 
+> makedumpfilev1.5.1, so at least it wouldn't be a regression in
+> performance over makedumpfile v1.4.   It was listed as recommended in
+> the makedumpfilev1.5.1 release posting:
+> http://lists.infradead.org/pipermail/kexec/2012-December/007460.html
+> 
+> 
+> All the conversations in the thread since this patch was committed 
+> seem to voice some reservations now, and reference other fixes being 
+> tried to improve performance.
+> 
+> Does that mean you are abandoning getting this patch accepted 
+> upstream, in favor of pursuing other alternatives?
 
-I'm curious to know the status of this patch because I'll release
-makedumpfile-1.5.2 with the feature to exclude hwpoison page soon.
+No, this patch has been merged into -next, we should just wait for it to be merged into linus tree.
+
+  http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=0c63e90dd1c7b35ae2ea9475ba67cf68d8801a26
+
+What interests us now is improvement for interfaces of /proc/vmcore, it's not alternative but another idea which can be consistent with this patch.
 
 
 Thanks
 Atsushi Kumagai
 
-> ---
->  kernel/kexec.c |    3 +++
->  1 file changed, 3 insertions(+)
 > 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 0668d58..0d5d6bc 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1513,6 +1513,9 @@ static int __init crash_save_vmcoreinfo_init(void)
->         VMCOREINFO_NUMBER(PG_lru);
->         VMCOREINFO_NUMBER(PG_private);
->         VMCOREINFO_NUMBER(PG_swapcache);
-> +#ifdef CONFIG_MEMORY_FAILURE
-> +       VMCOREINFO_NUMBER(PG_hwpoison);
-> +#endif
+> I had hoped this patch would be okay to get accepted upstream, and 
+> then other improvements could be built on top of it.
 > 
->         arch_crash_save_vmcoreinfo();
->         update_vmcoreinfo_note();
-> --
-> 1.7.10.1
+> Is that not the case?   
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> Or has further review concluded now that this change is a bad idea due 
+> to adding dependence of this new makedumpfile feature on some deep 
+> kernel memory internals?
+> 
+> Thanks,
+> 
+> Lisa Mitchell
+> 
+>
 
 _______________________________________________
 kexec mailing list
