@@ -1,17 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U56DI-0008Ef-62
- for kexec@lists.infradead.org; Tue, 12 Feb 2013 03:07:22 +0000
-Message-ID: <5119B1E1.4010405@hitachi.com>
-Date: Tue, 12 Feb 2013 12:07:13 +0900
-From: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1U5DOF-0000uM-6w
+ for kexec@lists.infradead.org; Tue, 12 Feb 2013 10:47:09 +0000
+Received: from /spool/local
+ by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Tue, 12 Feb 2013 20:39:55 +1000
+Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [9.190.234.120])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 1196D3578023
+ for <kexec@lists.infradead.org>; Tue, 12 Feb 2013 21:46:55 +1100 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r1CAYij466978004
+ for <kexec@lists.infradead.org>; Tue, 12 Feb 2013 21:34:44 +1100
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r1CAksAa024032
+ for <kexec@lists.infradead.org>; Tue, 12 Feb 2013 21:46:54 +1100
+Subject: [PATCH v2 0/2] kexec: Limit the crash memory ranges according to
+ first kernel's memory limit.
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Tue, 12 Feb 2013 16:16:50 +0530
+Message-ID: <20130212104624.7781.32716.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2 v2] kexec: Export PG_hwpoison flag into vmcoreinfo
-References: <508FDEF3.8030601@hitachi.com> <20121030143750.GF2290@redhat.com>
- <50913011.2030900@hitachi.com>
- <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
-In-Reply-To: <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,87 +37,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, ebiederm@xmission.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>
+Cc: Suzuki Poulose <suzuki@in.ibm.com>, Ananth Narayan <ananth@in.ibm.com>, bhe@redhat.com
 
-Re: [Patch 0/2] Exclude hwpoison page from vmcore dump
-(2012/11/01 19:40), Eric W. Biederman wrote:
-> Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> writes:
-> I agree.  If we are performing filtering filtering out of poisoned pages
-> seems very reasonable.  So ack on the basic concept.
-> 
-> Eric
+So far powerpc kernel never exported memory limit information which is
+reflected by mem= kernel cmdline option. Hence, kexec-tools always use
+to build ELF header for entire system RAM generating a dump bigger than
+the actual memory used by the first kernel.
 
-Hello, Eric,
+The following upstream kernel commits now exports memory limit information
+through /proc/device-tree file:
+  4bc77a5ed - powerpc: Export memory limit via device tree
+  a84fcd468 - powerpc: Change memory_limit from phys_addr_t to unsigned
+	      long long
 
-Could you please push the patch to export PG_hwpoison flag into 3.9 during
-next merge window?
+This patch series now reads the memory limit information from
+device-tree file if present and limits the crash memory ranges accordingly.
 
-Kumagai-san acked the patch which provides the feature to exclude hwpoison
-page and he will push the fix of makedumpfile side into makedumpfile-1.5.2.
-This kernel patch is also required to enable this feature.
+Tested these patches on ppc32(ppc440) and ppc64 with a kernel patch by Suzuki.
 
-Regards,
-Mitsuhiro Tanino
+Changes in v2:
+- Fixed few formatting and coding style issues.
+- Fixed error handling path and possible buffer overflow issue in patch 1/2.
+- Fixed an issue where an additional PT_LOAD section, representing zero size
+  memory segment (with start address == memory_limit), was getting added to ELF
+  section.
+
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Tested-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+---
+
+Mahesh Salgaonkar (2):
+      kexec: Respect memory limit while building crash memory ranges on ppc32.
+      kexec: Respect memory limit while building crash memory ranges on ppc64
 
 
-(2013/02/08 17:49), Atsushi Kumagai wrote:
-> Hello,
-> 
-> On Wed, 31 Oct 2012 23:05:05 +0900
-> Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> wrote:
-> 
->> This patch exports a PG_hwpoison into vmcoreinfo when
->> CONFIG_MEMORY_FAILURE is defined.
->> "makedumpfile" needs to read information of memory, such as
->> 'mem_section', 'zone', 'pageflags' from vmcore.
->>
->> We introduce a function into "makedumpfile" to exclude
->> hwpoison page from vmcore dump.
->> In order to introduce this function, PG_hwpoison flag have
->> to export into vmcoreinfo.
->>
->> Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
-> 
-> I'm curious to know the status of this patch because I'll release
-> makedumpfile-1.5.2 with the feature to exclude hwpoison page soon.
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
->> ---
->>  kernel/kexec.c |    3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/kernel/kexec.c b/kernel/kexec.c
->> index 0668d58..0d5d6bc 100644
->> --- a/kernel/kexec.c
->> +++ b/kernel/kexec.c
->> @@ -1513,6 +1513,9 @@ static int __init crash_save_vmcoreinfo_init(void)
->>         VMCOREINFO_NUMBER(PG_lru);
->>         VMCOREINFO_NUMBER(PG_private);
->>         VMCOREINFO_NUMBER(PG_swapcache);
->> +#ifdef CONFIG_MEMORY_FAILURE
->> +       VMCOREINFO_NUMBER(PG_hwpoison);
->> +#endif
->>
->>         arch_crash_save_vmcoreinfo();
->>         update_vmcoreinfo_note();
->> --
->> 1.7.10.1
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> .
-> 
+ kexec/arch/ppc/crashdump-powerpc.c |   14 ++++++++--
+ kexec/arch/ppc/crashdump-powerpc.h |    1 +
+ kexec/arch/ppc/kexec-ppc.c         |   51 ++++++++++++++++++++++++++++++++++++
+ kexec/arch/ppc64/crashdump-ppc64.c |   11 +++++++-
+ kexec/arch/ppc64/crashdump-ppc64.h |    1 +
+ kexec/arch/ppc64/kexec-ppc64.c     |   27 +++++++++++++++++++
+ 6 files changed, 101 insertions(+), 4 deletions(-)
+
+-- 
+-Mahesh
 
 
 _______________________________________________
