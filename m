@@ -1,32 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.31.147])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U5DOu-00010u-VO
- for kexec@lists.infradead.org; Tue, 12 Feb 2013 10:47:50 +0000
-Received: from /spool/local
- by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
- Tue, 12 Feb 2013 20:43:56 +1000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id 3E4F32BB0050
- for <kexec@lists.infradead.org>; Tue, 12 Feb 2013 21:47:40 +1100 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r1CAlckk38338572
- for <kexec@lists.infradead.org>; Tue, 12 Feb 2013 21:47:38 +1100
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r1CAld60024537
- for <kexec@lists.infradead.org>; Tue, 12 Feb 2013 21:47:39 +1100
-Subject: [PATCH v2 2/2] kexec: Respect memory limit while building crash
- memory ranges on ppc64
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Tue, 12 Feb 2013 16:17:37 +0530
-Message-ID: <20130212104724.7781.67322.stgit@mars.in.ibm.com>
-In-Reply-To: <20130212104624.7781.32716.stgit@mars.in.ibm.com>
-References: <20130212104624.7781.32716.stgit@mars.in.ibm.com>
+ id 1U5DZy-0002Aj-10
+ for kexec@lists.infradead.org; Tue, 12 Feb 2013 10:59:16 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <508FDEF3.8030601@hitachi.com> <20121030143750.GF2290@redhat.com>
+ <50913011.2030900@hitachi.com>
+ <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
+ <5119B1E1.4010405@hitachi.com>
+Date: Tue, 12 Feb 2013 02:58:50 -0800
+In-Reply-To: <5119B1E1.4010405@hitachi.com> (Mitsuhiro Tanino's message of
+ "Tue, 12 Feb 2013 12:07:13 +0900")
+Message-ID: <8738x1hk7p.fsf@xmission.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH 2/2 v2] kexec: Export PG_hwpoison flag into vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,106 +26,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>
-Cc: Suzuki Poulose <suzuki@in.ibm.com>, Ananth Narayan <ananth@in.ibm.com>, bhe@redhat.com
+To: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> writes:
 
-Fix it on ppc64 also. This patch now reads the memory limit information
-from device-tree file and limits the crash memory ranges accordingly.
+> Re: [Patch 0/2] Exclude hwpoison page from vmcore dump
+> (2012/11/01 19:40), Eric W. Biederman wrote:
+>> Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> writes:
+>> I agree.  If we are performing filtering filtering out of poisoned pages
+>> seems very reasonable.  So ack on the basic concept.
+>> 
+>> Eric
+>
+> Hello, Eric,
+>
+> Could you please push the patch to export PG_hwpoison flag into 3.9 during
+> next merge window?
+>
+> Kumagai-san acked the patch which provides the feature to exclude hwpoison
+> page and he will push the fix of makedumpfile side into makedumpfile-1.5.2.
+> This kernel patch is also required to enable this feature.
 
-Tested this patch on ppc64 with upstream kernel version 3.8.0-rc4
+If Andrew hasn't already picked this up please send send a copy of the
+patch through him.  Kexec related patches have historically gone through
+Andrew after review.
 
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
- kexec/arch/ppc64/crashdump-ppc64.c |   11 ++++++++++-
- kexec/arch/ppc64/crashdump-ppc64.h |    1 +
- kexec/arch/ppc64/kexec-ppc64.c     |   27 +++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 1 deletion(-)
+Right now I don't have a kexec tree in linux-next and I don't have the
+time/energy to start running one right now.
 
-diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
-index 30ef443..b8a63bd 100644
---- a/kexec/arch/ppc64/crashdump-ppc64.c
-+++ b/kexec/arch/ppc64/crashdump-ppc64.c
-@@ -84,10 +84,19 @@ static unsigned long long cstart, cend;
- static int memory_ranges;
- 
- /*
-- * Exclude the region that lies within crashkernel
-+ * Exclude the region that lies within crashkernel and above the memory
-+ * limit which is reflected by mem= kernel option.
-  */
- static void exclude_crash_region(uint64_t start, uint64_t end)
- {
-+	/* If memory_limit is set then exclude the memory region above it. */
-+	if (memory_limit) {
-+		if (start >= memory_limit)
-+			return;
-+		if (end > memory_limit)
-+			end = memory_limit;
-+	}
-+
- 	if (cstart < end && cend > start) {
- 		if (start < cstart && end > cend) {
- 			crash_memory_range[memory_ranges].start = start;
-diff --git a/kexec/arch/ppc64/crashdump-ppc64.h b/kexec/arch/ppc64/crashdump-ppc64.h
-index be02213..739c61f 100644
---- a/kexec/arch/ppc64/crashdump-ppc64.h
-+++ b/kexec/arch/ppc64/crashdump-ppc64.h
-@@ -27,6 +27,7 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size);
- 
- extern uint64_t crash_base;
- extern uint64_t crash_size;
-+extern uint64_t memory_limit;
- extern unsigned int rtas_base;
- extern unsigned int rtas_size;
- 
-diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
-index 2f12907..389741a 100644
---- a/kexec/arch/ppc64/kexec-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-ppc64.c
-@@ -39,6 +39,7 @@ static struct memory_range *memory_range = NULL;
- static struct memory_range *base_memory_range = NULL;
- static uint64_t rmo_top;
- uint64_t memory_max = 0;
-+uint64_t memory_limit;
- static int nr_memory_ranges, nr_exclude_ranges;
- uint64_t crash_base, crash_size;
- unsigned int rtas_base, rtas_size;
-@@ -408,6 +409,32 @@ static int get_devtree_details(unsigned long kexec_flags)
- 				add_usable_mem_rgns(0, crash_base + crash_size);
- 				reserve(KDUMP_BACKUP_LIMIT, crash_base-KDUMP_BACKUP_LIMIT);
- 			}
-+			/*
-+			 * Read the first kernel's memory limit.
-+			 * If the first kernel is booted with mem= option then
-+			 * it would export "linux,memory-limit" file
-+			 * reflecting value for the same.
-+			 */
-+			memset(fname, 0, sizeof(fname));
-+			strcpy(fname, device_tree);
-+			strcat(fname, dentry->d_name);
-+			strcat(fname, "/linux,memory-limit");
-+			if ((file = fopen(fname, "r")) == NULL) {
-+				if (errno != ENOENT) {
-+					perror(fname);
-+					goto error_opencdir;
-+				}
-+				errno = 0;
-+				/*
-+				 * File not present.
-+				 * fall through. On older kernel this file
-+				 * is not present.
-+				 */
-+			} else if (fread(&memory_limit, sizeof(uint64_t), 1,
-+								file) != 1) {
-+				perror(fname);
-+				goto error_openfile;
-+			}
- 
- 			memset(fname, 0, sizeof(fname));
- 			strcpy(fname, device_tree);
+But I am happy to add my acked-by to the patch.  Exporting PG_hwpoison
+seems entirely reasonable.
 
+I thought I read somewhere upthread that Andrew had already picked this
+patch up though?
+
+Eric
+
+
+> Regards,
+> Mitsuhiro Tanino
+>
+>
+> (2013/02/08 17:49), Atsushi Kumagai wrote:
+>> Hello,
+>> 
+>> On Wed, 31 Oct 2012 23:05:05 +0900
+>> Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> wrote:
+>> 
+>>> This patch exports a PG_hwpoison into vmcoreinfo when
+>>> CONFIG_MEMORY_FAILURE is defined.
+>>> "makedumpfile" needs to read information of memory, such as
+>>> 'mem_section', 'zone', 'pageflags' from vmcore.
+>>>
+>>> We introduce a function into "makedumpfile" to exclude
+>>> hwpoison page from vmcore dump.
+>>> In order to introduce this function, PG_hwpoison flag have
+>>> to export into vmcoreinfo.
+>>>
+>>> Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+>> 
+>> I'm curious to know the status of this patch because I'll release
+>> makedumpfile-1.5.2 with the feature to exclude hwpoison page soon.
+>> 
+>> 
+>> Thanks
+>> Atsushi Kumagai
+>> 
+>>> ---
+
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+>>>  kernel/kexec.c |    3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/kernel/kexec.c b/kernel/kexec.c
+>>> index 0668d58..0d5d6bc 100644
+>>> --- a/kernel/kexec.c
+>>> +++ b/kernel/kexec.c
+>>> @@ -1513,6 +1513,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>>         VMCOREINFO_NUMBER(PG_lru);
+>>>         VMCOREINFO_NUMBER(PG_private);
+>>>         VMCOREINFO_NUMBER(PG_swapcache);
+>>> +#ifdef CONFIG_MEMORY_FAILURE
+>>> +       VMCOREINFO_NUMBER(PG_hwpoison);
+>>> +#endif
+>>>
+>>>         arch_crash_save_vmcoreinfo();
+>>>         update_vmcoreinfo_note();
+>>> --
+>>> 1.7.10.1
+>>>
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+>> 
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>> .
+>> 
 
 _______________________________________________
 kexec mailing list
