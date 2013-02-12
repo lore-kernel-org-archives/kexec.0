@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U50Er-0003Nq-IJ
- for kexec@lists.infradead.org; Mon, 11 Feb 2013 20:44:34 +0000
-Date: Mon, 11 Feb 2013 15:44:14 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kdump, oldmem: support mmap on /dev/oldmem
-Message-ID: <20130211204414.GA24936@redhat.com>
-References: <33710E6CAA200E4583255F4FB666C4E20AC36B01@G01JPEXMBYT03>
- <20130205151256.GB12853@redhat.com>
- <33710E6CAA200E4583255F4FB666C4E20AC61B3C@G01JPEXMBYT03>
- <20130207150623.GC6462@redhat.com>
- <33710E6CAA200E4583255F4FB666C4E20AC6735D@G01JPEXMBYT03>
- <33710E6CAA200E4583255F4FB666C4E20AC67384@G01JPEXMBYT03>
+ id 1U56DI-0008Ef-62
+ for kexec@lists.infradead.org; Tue, 12 Feb 2013 03:07:22 +0000
+Message-ID: <5119B1E1.4010405@hitachi.com>
+Date: Tue, 12 Feb 2013 12:07:13 +0900
+From: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <33710E6CAA200E4583255F4FB666C4E20AC67384@G01JPEXMBYT03>
+Subject: Re: [PATCH 2/2 v2] kexec: Export PG_hwpoison flag into vmcoreinfo
+References: <508FDEF3.8030601@hitachi.com> <20121030143750.GF2290@redhat.com>
+ <50913011.2030900@hitachi.com>
+ <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
+In-Reply-To: <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,20 +24,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Hatayama, Daisuke" <d.hatayama@jp.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "cpw@sgi.com" <cpw@sgi.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, ebiederm@xmission.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-On Fri, Feb 08, 2013 at 12:33:49AM +0000, Hatayama, Daisuke wrote:
+Re: [Patch 0/2] Exclude hwpoison page from vmcore dump
+(2012/11/01 19:40), Eric W. Biederman wrote:
+> Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> writes:
+> I agree.  If we are performing filtering filtering out of poisoned pages
+> seems very reasonable.  So ack on the basic concept.
+> 
+> Eric
 
-[..]
-> Also, remap_pfn_range is the function exported into kernel modules, so changing the third argument means changing ABI. Introducing a kind of remap_pfn_range_64 is a good idea? if there's someone needing the feature on 32-bit kernel.
+Hello, Eric,
 
-I thought kernel does not care about compatibility with out of tree
-modules and any user of in-tree module is updated to use new API. I could
-be wrong though...
+Could you please push the patch to export PG_hwpoison flag into 3.9 during
+next merge window?
 
-Thanks
-Vivek
+Kumagai-san acked the patch which provides the feature to exclude hwpoison
+page and he will push the fix of makedumpfile side into makedumpfile-1.5.2.
+This kernel patch is also required to enable this feature.
+
+Regards,
+Mitsuhiro Tanino
+
+
+(2013/02/08 17:49), Atsushi Kumagai wrote:
+> Hello,
+> 
+> On Wed, 31 Oct 2012 23:05:05 +0900
+> Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> wrote:
+> 
+>> This patch exports a PG_hwpoison into vmcoreinfo when
+>> CONFIG_MEMORY_FAILURE is defined.
+>> "makedumpfile" needs to read information of memory, such as
+>> 'mem_section', 'zone', 'pageflags' from vmcore.
+>>
+>> We introduce a function into "makedumpfile" to exclude
+>> hwpoison page from vmcore dump.
+>> In order to introduce this function, PG_hwpoison flag have
+>> to export into vmcoreinfo.
+>>
+>> Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+> 
+> I'm curious to know the status of this patch because I'll release
+> makedumpfile-1.5.2 with the feature to exclude hwpoison page soon.
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+>> ---
+>>  kernel/kexec.c |    3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/kernel/kexec.c b/kernel/kexec.c
+>> index 0668d58..0d5d6bc 100644
+>> --- a/kernel/kexec.c
+>> +++ b/kernel/kexec.c
+>> @@ -1513,6 +1513,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>         VMCOREINFO_NUMBER(PG_lru);
+>>         VMCOREINFO_NUMBER(PG_private);
+>>         VMCOREINFO_NUMBER(PG_swapcache);
+>> +#ifdef CONFIG_MEMORY_FAILURE
+>> +       VMCOREINFO_NUMBER(PG_hwpoison);
+>> +#endif
+>>
+>>         arch_crash_save_vmcoreinfo();
+>>         update_vmcoreinfo_note();
+>> --
+>> 1.7.10.1
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> .
+> 
+
 
 _______________________________________________
 kexec mailing list
