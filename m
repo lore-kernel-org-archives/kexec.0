@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U5Fve-0004SQ-RQ
- for kexec@lists.infradead.org; Tue, 12 Feb 2013 13:29:48 +0000
-Message-ID: <511A43C4.1040204@hitachi.com>
-Date: Tue, 12 Feb 2013 22:29:40 +0900
-From: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/2 v2] kexec: Export PG_hwpoison flag into vmcoreinfo
-References: <508FDEF3.8030601@hitachi.com> <20121030143750.GF2290@redhat.com>
- <50913011.2030900@hitachi.com>
- <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
- <5119B1E1.4010405@hitachi.com> <8738x1hk7p.fsf@xmission.com>
-In-Reply-To: <8738x1hk7p.fsf@xmission.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1U5bIp-00026Z-UP
+ for kexec@lists.infradead.org; Wed, 13 Feb 2013 12:19:08 +0000
+Date: Wed, 13 Feb 2013 13:18:20 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] makedumpfile: keep dumpfile pages in a cache
+Message-ID: <20130213131820.6371a4df@azariah.suse.cz>
+In-Reply-To: <20130206160108.821ff55d6566dabff2a18f24@mxc.nes.nec.co.jp>
+References: <201208281949.50286.ptesarik@suse.cz>
+ <201209061750.52702.ptesarik@suse.cz>
+ <20121114124724.749a64b12cca86223a92f1b1@mxc.nes.nec.co.jp>
+ <2267600.lHCcsG40Ue@azariah.suse.cz>
+ <20121119174044.3144d3df02b62128d1d2bfe2@mxc.nes.nec.co.jp>
+ <20121219160125.036d5de8@azariah>
+ <20130110094851.61168ff4486308c27aa567f6@mxc.nes.nec.co.jp>
+ <20130206160108.821ff55d6566dabff2a18f24@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,67 +25,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com, linux-kernel@vger.kernel.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-Hello Andrew,
-
-I proposed following patch set to support hwpoison flag at kdump second kernel.
-These patch set includes fixes of both kernel side and makedumpfile side, and
-both pathes have been acked by maintainers who are Eric and Kumagai-san.
-
-  [PATCH 0/2 v2] Exclude hwpoison page from vmcore dump
-  https://lkml.org/lkml/2012/10/31/805
-
-  [PATCH 1/2 v2] makedumpfile: Add a default action to exclude hwpoison page from vmcore
-  https://lkml.org/lkml/2012/10/31/376
-
-  [PATCH 2/2 v2] kexec: Export PG_hwpoison flag into vmcoreinfo
-  https://lkml.org/lkml/2012/10/31/359
-
-Could you please push the kernel side patch to export PG_hwpoison flag into 3.9 during
-next merge window?
-
-
-
-This patch exports a PG_hwpoison into vmcoreinfo when
-CONFIG_MEMORY_FAILURE is defined.
-"makedumpfile" needs to read information of memory, such as
-'mem_section', 'zone', 'pageflags' from vmcore.
-
-We introduce a function into "makedumpfile" to exclude
-hwpoison page from vmcore dump.
-In order to introduce this function, PG_hwpoison flag have
-to export into vmcoreinfo.
-
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
----
- kernel/kexec.c |    3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 0668d58..0d5d6bc 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1513,6 +1513,9 @@ static int __init crash_save_vmcoreinfo_init(void)
-        VMCOREINFO_NUMBER(PG_lru);
-        VMCOREINFO_NUMBER(PG_private);
-        VMCOREINFO_NUMBER(PG_swapcache);
-+#ifdef CONFIG_MEMORY_FAILURE
-+       VMCOREINFO_NUMBER(PG_hwpoison);
-+#endif
-
-        arch_crash_save_vmcoreinfo();
-        update_vmcoreinfo_note();
---
-1.7.10.1
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCA2IEZlYiAyMDEzIDE2OjAxOjA4ICswOTAwCkF0c3VzaGkgS3VtYWdhaSA8a3VtYWdh
+aS1hdHN1c2hpQG14Yy5uZXMubmVjLmNvLmpwPiB3cm90ZToKCj4gSGVsbG8gUGV0ciwKPiAKPiBP
+biBUaHUsIDEwIEphbiAyMDEzIDA5OjQ4OjUxICswOTAwCj4gQXRzdXNoaSBLdW1hZ2FpIDxrdW1h
+Z2FpLWF0c3VzaGlAbXhjLm5lcy5uZWMuY28uanA+IHdyb3RlOgo+IAo+ID4gSGVsbG8gUGV0ciwK
+PiA+IAo+ID4gT24gV2VkLCAxOSBEZWMgMjAxMiAxNjowMToyNSArMDEwMAo+ID4gUGV0ciBUZXNh
+cmlrIDxwdGVzYXJpa0BzdXNlLmN6PiB3cm90ZToKPiA+IAo+ID4gPiBWIE1vbiwgMTkgTm92IDIw
+MTIgMTc6NDA6NDQgKzA5MDAKPiA+ID4gQXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlA
+bXhjLm5lcy5uZWMuY28uanA+IG5hcHPDoW5vOgo+ID4gPiAKPiA+ID4gPiBIZWxsbyBQZXRyLAo+
+ID4gPiA+IAo+ID4gPiA+IE9uIFdlZCwgMTQgTm92IDIwMTIgMTU6NDI6MTIgKzAxMDAKPiA+ID4g
+PiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+IHdyb3RlOgo+ID4gPiA+ICAKPiA+ID4g
+PiA+ID4gU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5Lgo+ID4gPiA+ID4gPiBBY2NvcmRpbmcgdG8g
+eW91ciBtZWFzdXJlbWVudCwgaXQgbG9va3MgZ29vZCBvbiBwZXJmb3JtYW5jZS4KPiA+ID4gPiA+
+ID4gCj4gPiA+ID4gPiA+IEhvd2V2ZXIsIEkgZm91bmQgdGhlIGlzc3VlIGJlbG93IGluIHYxLjUu
+MS1iZXRhIGFuZCBtYWRlIHN1cmUKPiA+ID4gPiA+ID4gdGhhdCB0aGlzIHBhdGNoIGNhdXNlcyBp
+dCBieSBnaXQgYmlzZWN0IChidXQgSSBkb24ndCBmaW5kIHRoZQo+ID4gPiA+ID4gPiB0cnVlIGNh
+dXNlIHlldCkuCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiAgIHJlc3VsdCBvbiBrZXJuZWwgMy40
+Ogo+ID4gPiA+ID4gPiAgICAgJCBtYWtlZHVtcGZpbGUgLS1ub24tY3ljbGljIHZtY29yZSBkdW1w
+ZmlsZQo+ID4gPiA+ID4gPiAgICAgQ29weWluZyBkYXRhICAgICAgICAgICAgICAgICAgICAgICA6
+IFsgNjIgJV0KPiA+ID4gPiA+ID4gICAgIHJlYWRwYWdlX2VsZjogQ2FuJ3QgY29udmVydCBhIHBo
+eXNpY2FsIGFkZHJlc3MoYTAwMDApIHRvIFwKPiA+ID4gPiA+ID4gb2Zmc2V0LiByZWFkbWVtOiB0
+eXBlX2FkZHI6IDEsIGFkZHI6MTAwMGEwMDAwLCBzaXplOjQwOTYKPiA+ID4gPiA+ID4gICAgIHJl
+YWRfcGZuOiBDYW4ndCBnZXQgdGhlIHBhZ2UgZGF0YS4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+
+ICAgICBtYWtlZHVtcGZpbGUgRmFpbGVkLgo+ID4gPiA+ID4gPiAgICAgJAo+ID4gPiA+ID4gPiAK
+PiA+ID4gPiA+ID4gSXQgc2VlbXMgY3JpdGljYWwgaXNzdWUgZm9yIGFsbCB1c2Vycywgc28gSSB3
+aWxsIHBvc3Rwb25lIG1lcmdpbmcKPiA+ID4gPiA+ID4gdGhpcyBwYXRjaCB1bnRpbCB0aGlzIGlz
+c3VlIGlzIHNvbHZlZC4KPiAKPiBJIGZvdW5kIHRoZSBjYXVzZSBvZiB0aGlzIGlzc3VlLgo+IAo+
+IEluIHRoZSBsb2cgYWJvdmUsIHJlYWRtZW0oKSB0cnkgdG8gcmVhZCAweDEwMDBhMDAwMCAoYW5k
+IGl0J3MgY29ycmVjdCksCj4gYnV0IHJlYWRwYWdlX2VsZigpIHRyeSB0byByZWFkIDB4YTAwMDAu
+Cj4gVGhpcyBpcyBiZWNhdXNlIHlvdXIgY29kZSB1c2VzIFBBR0VCQVNFIG1hY3JvIGJlZm9yZSBy
+ZWFkcGFnZV9lbGYoKS4KPiAKPiAgICNkZWZpbmUgUEFHRUJBU0UoWCkgICAgICAgICAgICAgKCgo
+dW5zaWduZWQgbG9uZykoWCkpICYgfihQQUdFU0laRSgpIC0gMSkpCj4gIAo+IEluIDMyYml0IHN5
+c3RlbXMsIHNpemVvZih1bnNpZ25lZCBsb25nKSBpcyAzMiwgMHgxMDAwYTAwMDAgaXMgdHJ1bmNh
+dGVkCj4gdG8gMHhhMDAwMCBhbmQgcmVhZHBhZ2VfZWxmKCkgZ2V0cyBpdC4KPiAKPiBJdCdzIFBB
+R0VCQVNFIG1hY3JvJ3MgaXNzdWUsIHRoZXJlIGlzIG5vIHByb2JsZW0gaW4geW91ciBjb2RlLiAK
+PiBTbywgSSdsbCBtZXJnZSB5b3VyIHBhdGNoIGp1c3QgYXMgaXQgaXMsIGFuZCBtZXJnZSB0aGUg
+cGF0Y2ggYmVsb3cuCgpPaCwgdGhpcyBpcyBncmVhdCBuZXdzISBUaGFuayB5b3UgZm9yIHRoZSB3
+b3JrLCBhbmQgc29ycnkgZm9yIG15IGxhdGUKcmVwbHkuCgpQZXRyIFRlc2FyaWsKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
