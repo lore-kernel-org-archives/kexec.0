@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U5bIp-00026Z-UP
- for kexec@lists.infradead.org; Wed, 13 Feb 2013 12:19:08 +0000
-Date: Wed, 13 Feb 2013 13:18:20 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: keep dumpfile pages in a cache
-Message-ID: <20130213131820.6371a4df@azariah.suse.cz>
-In-Reply-To: <20130206160108.821ff55d6566dabff2a18f24@mxc.nes.nec.co.jp>
-References: <201208281949.50286.ptesarik@suse.cz>
- <201209061750.52702.ptesarik@suse.cz>
- <20121114124724.749a64b12cca86223a92f1b1@mxc.nes.nec.co.jp>
- <2267600.lHCcsG40Ue@azariah.suse.cz>
- <20121119174044.3144d3df02b62128d1d2bfe2@mxc.nes.nec.co.jp>
- <20121219160125.036d5de8@azariah>
- <20130110094851.61168ff4486308c27aa567f6@mxc.nes.nec.co.jp>
- <20130206160108.821ff55d6566dabff2a18f24@mxc.nes.nec.co.jp>
+ id 1U5opp-000407-60
+ for kexec@lists.infradead.org; Thu, 14 Feb 2013 02:46:07 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.193])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r1E2jwen024777
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 11:45:58 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+ (8.11.7/3.7W-MAILGATE-NEC)
+ id r1E2jwb16513 for kexec@lists.infradead.org;
+ Thu, 14 Feb 2013 11:45:58 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id r1E2jvox002656
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 11:45:57 +0900 (JST)
+Date: Thu, 14 Feb 2013 11:07:16 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: makedumpfile-1.5.2: Secret data scrubbing with eppic language.
+Message-Id: <20130214110716.7b2b9f9b0eba662caefc9410@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,50 +26,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-T24gV2VkLCA2IEZlYiAyMDEzIDE2OjAxOjA4ICswOTAwCkF0c3VzaGkgS3VtYWdhaSA8a3VtYWdh
-aS1hdHN1c2hpQG14Yy5uZXMubmVjLmNvLmpwPiB3cm90ZToKCj4gSGVsbG8gUGV0ciwKPiAKPiBP
-biBUaHUsIDEwIEphbiAyMDEzIDA5OjQ4OjUxICswOTAwCj4gQXRzdXNoaSBLdW1hZ2FpIDxrdW1h
-Z2FpLWF0c3VzaGlAbXhjLm5lcy5uZWMuY28uanA+IHdyb3RlOgo+IAo+ID4gSGVsbG8gUGV0ciwK
-PiA+IAo+ID4gT24gV2VkLCAxOSBEZWMgMjAxMiAxNjowMToyNSArMDEwMAo+ID4gUGV0ciBUZXNh
-cmlrIDxwdGVzYXJpa0BzdXNlLmN6PiB3cm90ZToKPiA+IAo+ID4gPiBWIE1vbiwgMTkgTm92IDIw
-MTIgMTc6NDA6NDQgKzA5MDAKPiA+ID4gQXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlA
-bXhjLm5lcy5uZWMuY28uanA+IG5hcHPDoW5vOgo+ID4gPiAKPiA+ID4gPiBIZWxsbyBQZXRyLAo+
-ID4gPiA+IAo+ID4gPiA+IE9uIFdlZCwgMTQgTm92IDIwMTIgMTU6NDI6MTIgKzAxMDAKPiA+ID4g
-PiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+IHdyb3RlOgo+ID4gPiA+ICAKPiA+ID4g
-PiA+ID4gU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5Lgo+ID4gPiA+ID4gPiBBY2NvcmRpbmcgdG8g
-eW91ciBtZWFzdXJlbWVudCwgaXQgbG9va3MgZ29vZCBvbiBwZXJmb3JtYW5jZS4KPiA+ID4gPiA+
-ID4gCj4gPiA+ID4gPiA+IEhvd2V2ZXIsIEkgZm91bmQgdGhlIGlzc3VlIGJlbG93IGluIHYxLjUu
-MS1iZXRhIGFuZCBtYWRlIHN1cmUKPiA+ID4gPiA+ID4gdGhhdCB0aGlzIHBhdGNoIGNhdXNlcyBp
-dCBieSBnaXQgYmlzZWN0IChidXQgSSBkb24ndCBmaW5kIHRoZQo+ID4gPiA+ID4gPiB0cnVlIGNh
-dXNlIHlldCkuCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiAgIHJlc3VsdCBvbiBrZXJuZWwgMy40
-Ogo+ID4gPiA+ID4gPiAgICAgJCBtYWtlZHVtcGZpbGUgLS1ub24tY3ljbGljIHZtY29yZSBkdW1w
-ZmlsZQo+ID4gPiA+ID4gPiAgICAgQ29weWluZyBkYXRhICAgICAgICAgICAgICAgICAgICAgICA6
-IFsgNjIgJV0KPiA+ID4gPiA+ID4gICAgIHJlYWRwYWdlX2VsZjogQ2FuJ3QgY29udmVydCBhIHBo
-eXNpY2FsIGFkZHJlc3MoYTAwMDApIHRvIFwKPiA+ID4gPiA+ID4gb2Zmc2V0LiByZWFkbWVtOiB0
-eXBlX2FkZHI6IDEsIGFkZHI6MTAwMGEwMDAwLCBzaXplOjQwOTYKPiA+ID4gPiA+ID4gICAgIHJl
-YWRfcGZuOiBDYW4ndCBnZXQgdGhlIHBhZ2UgZGF0YS4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+
-ICAgICBtYWtlZHVtcGZpbGUgRmFpbGVkLgo+ID4gPiA+ID4gPiAgICAgJAo+ID4gPiA+ID4gPiAK
-PiA+ID4gPiA+ID4gSXQgc2VlbXMgY3JpdGljYWwgaXNzdWUgZm9yIGFsbCB1c2Vycywgc28gSSB3
-aWxsIHBvc3Rwb25lIG1lcmdpbmcKPiA+ID4gPiA+ID4gdGhpcyBwYXRjaCB1bnRpbCB0aGlzIGlz
-c3VlIGlzIHNvbHZlZC4KPiAKPiBJIGZvdW5kIHRoZSBjYXVzZSBvZiB0aGlzIGlzc3VlLgo+IAo+
-IEluIHRoZSBsb2cgYWJvdmUsIHJlYWRtZW0oKSB0cnkgdG8gcmVhZCAweDEwMDBhMDAwMCAoYW5k
-IGl0J3MgY29ycmVjdCksCj4gYnV0IHJlYWRwYWdlX2VsZigpIHRyeSB0byByZWFkIDB4YTAwMDAu
-Cj4gVGhpcyBpcyBiZWNhdXNlIHlvdXIgY29kZSB1c2VzIFBBR0VCQVNFIG1hY3JvIGJlZm9yZSBy
-ZWFkcGFnZV9lbGYoKS4KPiAKPiAgICNkZWZpbmUgUEFHRUJBU0UoWCkgICAgICAgICAgICAgKCgo
-dW5zaWduZWQgbG9uZykoWCkpICYgfihQQUdFU0laRSgpIC0gMSkpCj4gIAo+IEluIDMyYml0IHN5
-c3RlbXMsIHNpemVvZih1bnNpZ25lZCBsb25nKSBpcyAzMiwgMHgxMDAwYTAwMDAgaXMgdHJ1bmNh
-dGVkCj4gdG8gMHhhMDAwMCBhbmQgcmVhZHBhZ2VfZWxmKCkgZ2V0cyBpdC4KPiAKPiBJdCdzIFBB
-R0VCQVNFIG1hY3JvJ3MgaXNzdWUsIHRoZXJlIGlzIG5vIHByb2JsZW0gaW4geW91ciBjb2RlLiAK
-PiBTbywgSSdsbCBtZXJnZSB5b3VyIHBhdGNoIGp1c3QgYXMgaXQgaXMsIGFuZCBtZXJnZSB0aGUg
-cGF0Y2ggYmVsb3cuCgpPaCwgdGhpcyBpcyBncmVhdCBuZXdzISBUaGFuayB5b3UgZm9yIHRoZSB3
-b3JrLCBhbmQgc29ycnkgZm9yIG15IGxhdGUKcmVwbHkuCgpQZXRyIFRlc2FyaWsKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hello,
+
+makedumpfile version 1.5.2 is released.
+Your comments/patches are welcome.
+
+Main new feature:
+o Support for eppic language
+  This feature enables us to specify rules to scrub data in a
+  dumpfile with eppic macro instead of the current configuration
+  file (makedumpfile.conf). Currently, this feature works only
+  for symbols in vmlinux while the current feature can work also
+  for module symbols.
+  
+  To use this feature, you should build the extension module as
+  below and move it to your library directory:
+  
+  # make eppic_makedumpfile.so
+
+  To build this module, you should prepare eppic library from 
+  the following URL:
+  http://code.google.com/p/eppic/
+
+o Exclude hwpoison page
+  This is the default action in new makedumpfile.
+  This feature excludes hwpoison pages in any dump_level, we can
+  avoid touching poisoned pages and running into MCE during dump
+  process.
+
+Changelog:
+o New feature
+   Commits related to "Support for eppic language"
+    - [PATCH v4 1/9] Initialize and setup eppic. (by Aravinda Prasad) 86f38e9
+    - [PATCH v4 2/9] makedumpfile and eppic interface layer. (by Aravinda Prasad) 3e0747f
+    - [PATCH v4 3/9] Eppic call back functions to query a dump image. (by Aravinda Prasad) 83b85ca
+    - [PATCH v4 4/9] Implement apigetctype call back function. (by Aravinda Prasad) 9c5f56c
+    - [PATCH v4 5/9] Implement apimember and apigetrtype call back functions. 
+      (by Aravinda Prasad) b0bb9fb
+    - [PATCH v4 6/9] Extend eppic built-in functions to include memset function. 
+      (by Aravinda Prasad) 9c19ab0
+    - [PATCH v4 7/9] Support fully typed symbol access mode. (by Aravinda Prasad) 63676e8
+    - [PATCH v4 8/9] Hack for the limitation when compiled with -static. (by Aravinda Prasad) 46373c5
+    - [PATCH v4 9/9] Update Documentation. (by Aravinda Prasad) a910399
+   Other commit
+    - [PATCH v2] Add a default action to exclude hwpoison page from vmcore.
+      (by Mitsuhiro Tanino) 030800d
+    - [PATCH] keep dumpfile pages in a cache. (by Petr Tesarik) 0aff0e5
+o Bugfix
+    - [PATCH] Fix PAGEOFFSET and PAGEBASE macros for i386 PAE. (by Atsushi Kumagai) 5d83960
+    - [PATCH] --dump-dmesg fix for post 3.5 kernels. (by Louis Bouchard) 36c2458
+    - [PATCH] ppc64: Auto-detect the correct MAX_PHYSMEM_BITS used in vmcore being analyzed. 
+              (by Mahesh Salgaonkar) bfff315
+    - [PATCH] Fix cyclic mode to scrub data with -E option. (by Atsushi Kumagai) f06bdd9
+    - [PATCH] sadump: fix bug in checking a given physical address is present on memory. 
+              (by HATAYAMA Daisuke) 1128de7
+    - [PATCH] s390x: Allow HW Change-bit override for page table entries. (by Michael Holzheu) 6073b28
+o Cleanup
+    - [PATCH] sadump: fix warning about unused variable. (by HATAYAMA Daisuke) b93de26
+    - [PATCH] sadump: fix warning messages in building time. (by HATAYAMA Daisuke) a1238cd
+    - [PATCH] Cleanup: Delete incorrect comments of file handling. (by Atsushi Kumagai) 3104500
+
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the git page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Atsushi Kumagai
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
