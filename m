@@ -1,23 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U5opp-000407-60
- for kexec@lists.infradead.org; Thu, 14 Feb 2013 02:46:07 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r1E2jwen024777
- for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 11:45:58 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id r1E2jwb16513 for kexec@lists.infradead.org;
- Thu, 14 Feb 2013 11:45:58 +0900 (JST)
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id r1E2jvox002656
- for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 11:45:57 +0900 (JST)
-Date: Thu, 14 Feb 2013 11:07:16 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: makedumpfile-1.5.2: Secret data scrubbing with eppic language.
-Message-Id: <20130214110716.7b2b9f9b0eba662caefc9410@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+ id 1U5vnD-0002ph-TR
+ for kexec@lists.infradead.org; Thu, 14 Feb 2013 10:11:53 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 2C2ED3EE0B5
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:11:45 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id CFF8545DE52
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:11:44 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id AFEB345DD74
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:11:44 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id A1F94E08003
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:11:44 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 507FB1DB802C
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:11:44 +0900 (JST)
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Subject: [PATCH 00/13] kdump, vmcore: support mmap() on /proc/vmcore
+Date: Thu, 14 Feb 2013 19:11:43 +0900
+Message-ID: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,100 +35,187 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: ebiederm@xmission.com, vgoyal@redhat.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hello,
+Currently, read to /proc/vmcore is done by read_oldmem() that uses
+ioremap/iounmap per a single page. For example, if memory is 1GB,
+ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
+times. This causes big performance degradation.
 
-makedumpfile version 1.5.2 is released.
-Your comments/patches are welcome.
+To address the issue, this patch implements mmap() on /proc/vmcore to
+improve read performance. My simple benchmark shows the improvement
+from 200 [MiB/sec] to over 50.0 [GiB/sec].
 
-Main new feature:
-o Support for eppic language
-  This feature enables us to specify rules to scrub data in a
-  dumpfile with eppic macro instead of the current configuration
-  file (makedumpfile.conf). Currently, this feature works only
-  for symbols in vmlinux while the current feature can work also
-  for module symbols.
+Benchmark
+=========
+
+= Machine spec
+  - CPU: Intel(R) Xeon(R) CPU E7- 4820 @ 2.00GHz (4 sockets, 8 cores) (*)
+  - memory: 32GB
+  - kernel: 3.8-rc6 with this patch
+  - vmcore size: 31.7GB
+
+  (*) only 1 cpu is used in the 2nd kernel now.
+
+= Benchmark Case
+
+1) copy /proc/vmcore *WITHOUT* mmap() on /proc/vmcore
+
+$ time dd bs=4096 if=/proc/vmcore of=/dev/null
+8307246+1 records in
+8307246+1 records out
+real    2m 31.50s
+user    0m 1.06s
+sys     2m 27.60s
+
+So performance is 214.26 [MiB/sec].
+
+2) copy /proc/vmcore with mmap()
+
+  I ran the next command and recorded real time:
+
+  $ for n in $(seq 1 15) ; do \
+  >   time copyvmcore2 --blocksize=$((4096 * (1 << (n - 1)))) /proc/vmcore /dev/null \
+  > done
+
+  where copyvmcore2 is an ad-hoc test tool that read data from
+  /proc/vmcore via mmap() in given block-size unit and write them to
+  some file.
+
+|  n | map size |  time | page table | performance |
+|    |          | (sec) |            |   [GiB/sec] |
+|----+----------+-------+------------+-------------|
+|  1 | 4 KiB    | 78.35 | 8 iB       |        0.40 |
+|  2 | 8 KiB    | 45.29 | 16 iB      |        0.70 |
+|  3 | 16 KiB   | 23.82 | 32 iB      |        1.33 |
+|  4 | 32 KiB   | 12.90 | 64 iB      |        2.46 |
+|  5 | 64 KiB   |  6.13 | 128 iB     |        5.17 |
+|  6 | 128 KiB  |  3.26 | 256 iB     |        9.72 |
+|  7 | 256 KiB  |  1.86 | 512 iB     |       17.04 |
+|  8 | 512 KiB  |  1.13 | 1 KiB      |       28.04 |
+|  9 | 1 MiB    |  0.77 | 2 KiB      |       41.16 |
+| 10 | 2 MiB    |  0.58 | 4 KiB      |       54.64 |
+| 11 | 4 MiB    |  0.50 | 8 KiB      |       63.38 |
+| 12 | 8 MiB    |  0.46 | 16 KiB     |       68.89 |
+| 13 | 16 MiB   |  0.44 | 32 KiB     |       72.02 |
+| 14 | 32 MiB   |  0.44 | 64 KiB     |       72.02 |
+| 15 | 64 MiB   |  0.45 | 128 KiB    |       70.42 |
+
+3) copy /proc/vmcore with mmap() on /dev/oldmem
+
+I posted another patch series for mmap() on /dev/oldmem a few weeks ago.
+See: https://lkml.org/lkml/2013/2/3/431
+
+Next is the table shown on the post showing the benchmark.
+
+|  n | map size |  time | page table | performance |
+|    |          | (sec) |            |   [GiB/sec] |
+|----+----------+-------+------------+-------------|
+|  1 | 4 KiB    | 41.86 | 8 iB       |        0.76 |
+|  2 | 8 KiB    | 25.43 | 16 iB      |        1.25 |
+|  3 | 16 KiB   | 13.28 | 32 iB      |        2.39 |
+|  4 | 32 KiB   |  7.20 | 64 iB      |        4.40 |
+|  5 | 64 KiB   |  3.45 | 128 iB     |        9.19 |
+|  6 | 128 KiB  |  1.82 | 256 iB     |       17.42 |
+|  7 | 256 KiB  |  1.03 | 512 iB     |       30.78 |
+|  8 | 512 KiB  |  0.61 | 1K iB      |       51.97 |
+|  9 | 1 MiB    |  0.41 | 2K iB      |       77.32 |
+| 10 | 2 MiB    |  0.32 | 4K iB      |       99.06 |
+| 11 | 4 MiB    |  0.27 | 8K iB      |      117.41 |
+| 12 | 8 MiB    |  0.24 | 16 KiB     |      132.08 |
+| 13 | 16 MiB   |  0.23 | 32 KiB     |      137.83 |
+| 14 | 32 MiB   |  0.22 | 64 KiB     |      144.09 |
+| 15 | 64 MiB   |  0.22 | 128 KiB    |      144.09 |
+
+= Discussion
+
+- For small map size, we can see performance degradation on mmap()
+  case due to many page table modification and TLB flushes similarly
+  to read_oldmem() case. But for large map size we can see the
+  improved performance.
+
+  Each application need to choose appropreate map size for their
+  preferable performance.
+
+- mmap() on /dev/oldmem appears better than that on /proc/vmcore. But
+  actual processing does not only copying but also IO work. This
+  difference is not a problem.
+
+- Both mmap() case shows drastically better performance than previous
+  RFC patch set's about 2.5 [GiB/sec] that maps all dump target memory
+  in kernel direct mapping address space. This is because there's no
+  longer memcpy() from kernel-space to user-space.
+
+Design
+======
+
+= Support Range
+
+- mmap() on /proc/vmcore is supported on ELF64 interface only. ELF32
+  interface is used only if dump target size is less than 4GB. Then,
+  the existing interface is enough in performance.
+
+= Change of /proc/vmcore format
+
+For mmap()'s page-size boundary requirement, /proc/vmcore changed its
+own shape and now put its objects in page-size boundary.
+
+- Allocate buffer for ELF headers in page-size boundary.
+  => See [PATCH 01/13].
+
+- Note objects scattered on old memory are copied in a single
+  page-size aligned buffer on 2nd kernel, and it is remapped to
+  user-space.
+  => See [PATCH 09/13].
   
-  To use this feature, you should build the extension module as
-  below and move it to your library directory:
-  
-  # make eppic_makedumpfile.so
+- The head and/or tail pages of memroy chunks are also copied on 2nd
+  kernel if either of their ends is not page-size aligned. See
+  => See [PATCH 12/13].
 
-  To build this module, you should prepare eppic library from 
-  the following URL:
-  http://code.google.com/p/eppic/
+= 32-bit PAE limitation
 
-o Exclude hwpoison page
-  This is the default action in new makedumpfile.
-  This feature excludes hwpoison pages in any dump_level, we can
-  avoid touching poisoned pages and running into MCE during dump
-  process.
+- On 32-bit PAE limitation, mmap_vmcore() can handle upto 16TB memory
+  only since remap_pfn_range()'s third argument, pfn, has 32-bit
+  length only, defined as unsigned long type.
 
-Changelog:
-o New feature
-   Commits related to "Support for eppic language"
-    - [PATCH v4 1/9] Initialize and setup eppic. (by Aravinda Prasad) 86f38e9
-    - [PATCH v4 2/9] makedumpfile and eppic interface layer. (by Aravinda Prasad) 3e0747f
-    - [PATCH v4 3/9] Eppic call back functions to query a dump image. (by Aravinda Prasad) 83b85ca
-    - [PATCH v4 4/9] Implement apigetctype call back function. (by Aravinda Prasad) 9c5f56c
-    - [PATCH v4 5/9] Implement apimember and apigetrtype call back functions. 
-      (by Aravinda Prasad) b0bb9fb
-    - [PATCH v4 6/9] Extend eppic built-in functions to include memset function. 
-      (by Aravinda Prasad) 9c19ab0
-    - [PATCH v4 7/9] Support fully typed symbol access mode. (by Aravinda Prasad) 63676e8
-    - [PATCH v4 8/9] Hack for the limitation when compiled with -static. (by Aravinda Prasad) 46373c5
-    - [PATCH v4 9/9] Update Documentation. (by Aravinda Prasad) a910399
-   Other commit
-    - [PATCH v2] Add a default action to exclude hwpoison page from vmcore.
-      (by Mitsuhiro Tanino) 030800d
-    - [PATCH] keep dumpfile pages in a cache. (by Petr Tesarik) 0aff0e5
-o Bugfix
-    - [PATCH] Fix PAGEOFFSET and PAGEBASE macros for i386 PAE. (by Atsushi Kumagai) 5d83960
-    - [PATCH] --dump-dmesg fix for post 3.5 kernels. (by Louis Bouchard) 36c2458
-    - [PATCH] ppc64: Auto-detect the correct MAX_PHYSMEM_BITS used in vmcore being analyzed. 
-              (by Mahesh Salgaonkar) bfff315
-    - [PATCH] Fix cyclic mode to scrub data with -E option. (by Atsushi Kumagai) f06bdd9
-    - [PATCH] sadump: fix bug in checking a given physical address is present on memory. 
-              (by HATAYAMA Daisuke) 1128de7
-    - [PATCH] s390x: Allow HW Change-bit override for page table entries. (by Michael Holzheu) 6073b28
-o Cleanup
-    - [PATCH] sadump: fix warning about unused variable. (by HATAYAMA Daisuke) b93de26
-    - [PATCH] sadump: fix warning messages in building time. (by HATAYAMA Daisuke) a1238cd
-    - [PATCH] Cleanup: Delete incorrect comments of file handling. (by Atsushi Kumagai) 3104500
+TODO
+====
+
+- fix makedumpfile to use mmap() on /proc/vmcore and benchmark it to
+  confirm whether we can see enough performance improvement.
+
+Test
+====
+
+Done on x86-64, x86-32 both with 1GB and over 4GB memory environments.
+
+---
+
+HATAYAMA Daisuke (13):
+      vmcore: introduce mmap_vmcore()
+      vmcore: copy non page-size aligned head and tail pages in 2nd kernel
+      vmcore: count holes generated by round-up operation for vmcore size
+      vmcore: round-up offset of vmcore object in page-size boundary
+      vmcore: copy ELF note segments in buffer on 2nd kernel
+      vmcore: remove unused helper function
+      vmcore: modify read_vmcore() to read buffer on 2nd kernel
+      vmcore: modify vmcore clean-up function to free buffer on 2nd kernel
+      vmcore: modify ELF32 code according to new type
+      vmcore: introduce types for objects copied in 2nd kernel
+      vmcore: fill unused part of buffer for ELF headers with 0
+      vmcore: round up buffer size of ELF headers by PAGE_SIZE
+      vmcore: allocate buffer for ELF headers on page-size alignment
 
 
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
+ fs/proc/vmcore.c        |  408 +++++++++++++++++++++++++++++++++++------------
+ include/linux/proc_fs.h |   11 +
+ 2 files changed, 313 insertions(+), 106 deletions(-)
 
-Download:
-  You can download the latest makedumpfile from the following URL.
-  Details of the change are written on the git page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
+-- 
 
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
-  2. "cd makedumpfile-x.y.z"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
-
-  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
-
-
-Thanks
-Atsushi Kumagai
+Thanks.
+HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
