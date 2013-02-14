@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U5vnZ-0002zc-Ne
- for kexec@lists.infradead.org; Thu, 14 Feb 2013 10:12:14 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 1A8A63EE0BC
- for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:12 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id EB7E945DD74
- for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:11 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id D117E45DD78
- for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:11 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id BC07FE08003
- for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:11 +0900 (JST)
+ id 1U5vnf-00031p-0p
+ for kexec@lists.infradead.org; Thu, 14 Feb 2013 10:12:20 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 6D9DF3EE0BD
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:17 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 500DE45DEBF
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:17 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3738245DEB2
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:17 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 294321DB8040
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:17 +0900 (JST)
 Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
  [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 718451DB8038
- for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:11 +0900 (JST)
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id D56EB1DB803B
+ for <kexec@lists.infradead.org>; Thu, 14 Feb 2013 19:12:16 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 05/13] vmcore: modify ELF32 code according to new type
-Date: Thu, 14 Feb 2013 19:12:10 +0900
-Message-ID: <20130214101210.22466.36330.stgit@localhost6.localdomain6>
+Subject: [PATCH 06/13] vmcore: modify vmcore clean-up function to free buffer
+ on 2nd kernel
+Date: Thu, 14 Feb 2013 19:12:16 +0900
+Message-ID: <20130214101216.22466.52389.stgit@localhost6.localdomain6>
 In-Reply-To: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
 References: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -41,35 +42,35 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ebiederm@xmission.com, vgoyal@redhat.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On elf32 mmap() is not supported. All vmcore objects are in old
-memory.
+Vmcore object has buffer on 2nd kernel if it has VMCORE_2ND_KERNEL
+type, which needs to be freed.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- fs/proc/vmcore.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ fs/proc/vmcore.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
 diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 43d338a..7e3f922 100644
+index 7e3f922..77e0a0e 100644
 --- a/fs/proc/vmcore.c
 +++ b/fs/proc/vmcore.c
-@@ -389,6 +389,7 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
- 			kfree(notes_section);
- 			return -ENOMEM;
- 		}
-+		new->type = VMCORE_OLD_MEMORY;
- 		new->paddr = phdr_ptr->p_offset;
- 		new->size = real_sz;
- 		list_add_tail(&new->list, vc_list);
-@@ -486,6 +487,7 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
- 		new = get_new_element();
- 		if (!new)
- 			return -ENOMEM;
-+		new->type = VMCORE_OLD_MEMORY;
- 		new->paddr = phdr_ptr->p_offset;
- 		new->size = phdr_ptr->p_memsz;
- 		list_add_tail(&new->list, vc_list);
+@@ -735,6 +735,15 @@ void vmcore_cleanup(void)
+ 		struct vmcore *m;
+ 
+ 		m = list_entry(pos, struct vmcore, list);
++
++		switch (m->type) {
++		case VMCORE_OLD_MEMORY:
++			break;
++		case VMCORE_2ND_KERNEL:
++			free_pages((unsigned long)m->buf, get_order(m->size));
++			break;
++		}
++
+ 		list_del(&m->list);
+ 		kfree(m);
+ 	}
 
 
 _______________________________________________
