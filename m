@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U6NHV-0001ml-9g
- for kexec@lists.infradead.org; Fri, 15 Feb 2013 15:32:58 +0000
-Date: Fri, 15 Feb 2013 10:32:53 -0500
+ id 1U6NZS-0002sl-Bf
+ for kexec@lists.infradead.org; Fri, 15 Feb 2013 15:51:31 +0000
+Date: Fri, 15 Feb 2013 10:51:25 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 06/13] vmcore: modify vmcore clean-up function to free
- buffer on 2nd kernel
-Message-ID: <20130215153253.GE27784@redhat.com>
+Subject: Re: [PATCH 07/13] vmcore: modify read_vmcore() to read buffer on 2nd
+ kernel
+Message-ID: <20130215155124.GF27784@redhat.com>
 References: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
- <20130214101216.22466.52389.stgit@localhost6.localdomain6>
+ <20130214101221.22466.97636.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130214101216.22466.52389.stgit@localhost6.localdomain6>
+In-Reply-To: <20130214101221.22466.97636.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,40 +28,113 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, cpw@sgi.com
 
-On Thu, Feb 14, 2013 at 07:12:16PM +0900, HATAYAMA Daisuke wrote:
-> Vmcore object has buffer on 2nd kernel if it has VMCORE_2ND_KERNEL
-> type, which needs to be freed.
+On Thu, Feb 14, 2013 at 07:12:21PM +0900, HATAYAMA Daisuke wrote:
+> If a given vmcore object has VMCORE_2ND_KERNEL type, target data is in
+> the buffer on 2nd kernel.
 > 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> ---
-> 
->  fs/proc/vmcore.c |    9 +++++++++
->  1 files changed, 9 insertions(+), 0 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 7e3f922..77e0a0e 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -735,6 +735,15 @@ void vmcore_cleanup(void)
->  		struct vmcore *m;
->  
->  		m = list_entry(pos, struct vmcore, list);
-> +
-> +		switch (m->type) {
-> +		case VMCORE_OLD_MEMORY:
-> +			break;
-> +		case VMCORE_2ND_KERNEL:
-> +			free_pages((unsigned long)m->buf, get_order(m->size));
-> +			break;
 
-I think order of patches is little wrong. None of the patches so far has
-done any memory allocation for VMCORE_2ND_KERNEL, and we are already
-freeing the memory which will be allocated in future patches. May be just
-merge this patch with the patch which does memory allocation. No need
-to separate it out.
+Looks like this patch is doing two things.
+
+- Cleanup how read is performed. Get rid of map_offset_to_paddr() and
+  open code it and use list_for_each_entry(). 
+
+- Read some memory from current kernel if VMCORE_2ND_KERNEL is set.
+
+Can you break it down in two patches.
 
 Thanks
 Vivek
+
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+> 
+>  fs/proc/vmcore.c |   64 ++++++++++++++++++++++++++----------------------------
+>  1 files changed, 31 insertions(+), 33 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 77e0a0e..4125a65 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -146,8 +146,7 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
+>  {
+>  	ssize_t acc = 0, tmp;
+>  	size_t tsz;
+> -	u64 start, nr_bytes;
+> -	struct vmcore *curr_m = NULL;
+> +	struct vmcore *m;
+>  
+>  	if (buflen == 0 || *fpos >= vmcore_size)
+>  		return 0;
+> @@ -173,39 +172,38 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
+>  			return acc;
+>  	}
+>  
+> -	start = map_offset_to_paddr(*fpos, &vmcore_list, &curr_m);
+> -	if (!curr_m)
+> -        	return -EINVAL;
+> -	if ((tsz = (PAGE_SIZE - (start & ~PAGE_MASK))) > buflen)
+> -		tsz = buflen;
+> -
+> -	/* Calculate left bytes in current memory segment. */
+> -	nr_bytes = (curr_m->size - (start - curr_m->paddr));
+> -	if (tsz > nr_bytes)
+> -		tsz = nr_bytes;
+> -
+> -	while (buflen) {
+> -		tmp = read_from_oldmem(buffer, tsz, &start, 1);
+> -		if (tmp < 0)
+> -			return tmp;
+> -		buflen -= tsz;
+> -		*fpos += tsz;
+> -		buffer += tsz;
+> -		acc += tsz;
+> -		if (start >= (curr_m->paddr + curr_m->size)) {
+> -			if (curr_m->list.next == &vmcore_list)
+> -				return acc;	/*EOF*/
+> -			curr_m = list_entry(curr_m->list.next,
+> -						struct vmcore, list);
+> -			start = curr_m->paddr;
+> +	list_for_each_entry(m, &vmcore_list, list) {
+> +		if (*fpos < m->offset + m->size) {
+> +			tsz = m->offset + m->size - *fpos;
+> +			if (buflen < tsz)
+> +				tsz = buflen;
+> +			switch (m->type) {
+> +			case VMCORE_OLD_MEMORY: {
+> +				u64 paddr = m->paddr + *fpos - m->offset;
+> +
+> +				tmp = read_from_oldmem(buffer, tsz, &paddr, 1);
+> +				if (tmp < 0)
+> +					return tmp;
+> +				break;
+> +			}
+> +			case VMCORE_2ND_KERNEL:
+> +				if (copy_to_user(buffer,
+> +						 m->buf + (*fpos - m->offset),
+> +						 tsz))
+> +					return -EFAULT;
+> +				break;
+> +			}
+> +			buflen -= tsz;
+> +			*fpos += tsz;
+> +			buffer += tsz;
+> +			acc += tsz;
+> +
+> +			/* leave now if filled buffer already */
+> +			if (buflen == 0)
+> +				return acc;
+>  		}
+> -		if ((tsz = (PAGE_SIZE - (start & ~PAGE_MASK))) > buflen)
+> -			tsz = buflen;
+> -		/* Calculate left bytes in current memory segment. */
+> -		nr_bytes = (curr_m->size - (start - curr_m->paddr));
+> -		if (tsz > nr_bytes)
+> -			tsz = nr_bytes;
+>  	}
+> +
+>  	return acc;
+>  }
+>  
 
 _______________________________________________
 kexec mailing list
