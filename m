@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U6Cnl-0004EA-HY
- for kexec@lists.infradead.org; Fri, 15 Feb 2013 04:21:35 +0000
-Date: Fri, 15 Feb 2013 12:57:01 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 00/13] kdump, vmcore: support mmap() on /proc/vmcore
-Message-Id: <20130215125701.75d134af8fd3d99f7853e014@mxc.nes.nec.co.jp>
-In-Reply-To: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
-References: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
-Mime-Version: 1.0
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1U6Gy7-0004qk-0q
+ for kexec@lists.infradead.org; Fri, 15 Feb 2013 08:48:32 +0000
+Message-ID: <511DF658.9080005@hitachi.com>
+Date: Fri, 15 Feb 2013 17:48:24 +0900
+From: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/2 v2] kexec: Export PG_hwpoison flag into vmcoreinfo
+References: <508FDEF3.8030601@hitachi.com> <20121030143750.GF2290@redhat.com>
+ <50913011.2030900@hitachi.com>
+ <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
+In-Reply-To: <20130208174944.96a3b50952e45e1219a94819@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,206 +24,148 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: d.hatayama@jp.fujitsu.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, ebiederm@xmission.com, cpw@sgi.com, vgoyal@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ebiederm@xmission.com
 
-Hello HATAYAMA-san,
+Hello Kumagai-san,
 
-On Thu, 14 Feb 2013 19:11:43 +0900
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> I'm curious to know the status of this patch because I'll release
+> makedumpfile-1.5.2 with the feature to exclude hwpoison page soon.
 
-> Currently, read to /proc/vmcore is done by read_oldmem() that uses
-> ioremap/iounmap per a single page. For example, if memory is 1GB,
-> ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
-> times. This causes big performance degradation.
-> 
-> To address the issue, this patch implements mmap() on /proc/vmcore to
-> improve read performance. My simple benchmark shows the improvement
-> from 200 [MiB/sec] to over 50.0 [GiB/sec].
+I requested Andrew to merge the kernel side patch, and the patch
+has been added the -mm tree.
 
-Thanks for your hard work, I think it's a good enough improvement.
- 
-> Benchmark
-> =========
-> 
-> = Machine spec
->   - CPU: Intel(R) Xeon(R) CPU E7- 4820 @ 2.00GHz (4 sockets, 8 cores) (*)
->   - memory: 32GB
->   - kernel: 3.8-rc6 with this patch
->   - vmcore size: 31.7GB
-> 
->   (*) only 1 cpu is used in the 2nd kernel now.
-> 
-> = Benchmark Case
-> 
-> 1) copy /proc/vmcore *WITHOUT* mmap() on /proc/vmcore
-> 
-> $ time dd bs=4096 if=/proc/vmcore of=/dev/null
-> 8307246+1 records in
-> 8307246+1 records out
-> real    2m 31.50s
-> user    0m 1.06s
-> sys     2m 27.60s
-> 
-> So performance is 214.26 [MiB/sec].
-> 
-> 2) copy /proc/vmcore with mmap()
-> 
->   I ran the next command and recorded real time:
-> 
->   $ for n in $(seq 1 15) ; do \
->   >   time copyvmcore2 --blocksize=$((4096 * (1 << (n - 1)))) /proc/vmcore /dev/null \
->   > done
-> 
->   where copyvmcore2 is an ad-hoc test tool that read data from
->   /proc/vmcore via mmap() in given block-size unit and write them to
->   some file.
-> 
-> |  n | map size |  time | page table | performance |
-> |    |          | (sec) |            |   [GiB/sec] |
-> |----+----------+-------+------------+-------------|
-> |  1 | 4 KiB    | 78.35 | 8 iB       |        0.40 |
-> |  2 | 8 KiB    | 45.29 | 16 iB      |        0.70 |
-> |  3 | 16 KiB   | 23.82 | 32 iB      |        1.33 |
-> |  4 | 32 KiB   | 12.90 | 64 iB      |        2.46 |
-> |  5 | 64 KiB   |  6.13 | 128 iB     |        5.17 |
-> |  6 | 128 KiB  |  3.26 | 256 iB     |        9.72 |
-> |  7 | 256 KiB  |  1.86 | 512 iB     |       17.04 |
-> |  8 | 512 KiB  |  1.13 | 1 KiB      |       28.04 |
-> |  9 | 1 MiB    |  0.77 | 2 KiB      |       41.16 |
-> | 10 | 2 MiB    |  0.58 | 4 KiB      |       54.64 |
-> | 11 | 4 MiB    |  0.50 | 8 KiB      |       63.38 |
-> | 12 | 8 MiB    |  0.46 | 16 KiB     |       68.89 |
-> | 13 | 16 MiB   |  0.44 | 32 KiB     |       72.02 |
-> | 14 | 32 MiB   |  0.44 | 64 KiB     |       72.02 |
-> | 15 | 64 MiB   |  0.45 | 128 KiB    |       70.42 |
-> 
-> 3) copy /proc/vmcore with mmap() on /dev/oldmem
-> 
-> I posted another patch series for mmap() on /dev/oldmem a few weeks ago.
-> See: https://lkml.org/lkml/2013/2/3/431
-> 
-> Next is the table shown on the post showing the benchmark.
-> 
-> |  n | map size |  time | page table | performance |
-> |    |          | (sec) |            |   [GiB/sec] |
-> |----+----------+-------+------------+-------------|
-> |  1 | 4 KiB    | 41.86 | 8 iB       |        0.76 |
-> |  2 | 8 KiB    | 25.43 | 16 iB      |        1.25 |
-> |  3 | 16 KiB   | 13.28 | 32 iB      |        2.39 |
-> |  4 | 32 KiB   |  7.20 | 64 iB      |        4.40 |
-> |  5 | 64 KiB   |  3.45 | 128 iB     |        9.19 |
-> |  6 | 128 KiB  |  1.82 | 256 iB     |       17.42 |
-> |  7 | 256 KiB  |  1.03 | 512 iB     |       30.78 |
-> |  8 | 512 KiB  |  0.61 | 1K iB      |       51.97 |
-> |  9 | 1 MiB    |  0.41 | 2K iB      |       77.32 |
-> | 10 | 2 MiB    |  0.32 | 4K iB      |       99.06 |
-> | 11 | 4 MiB    |  0.27 | 8K iB      |      117.41 |
-> | 12 | 8 MiB    |  0.24 | 16 KiB     |      132.08 |
-> | 13 | 16 MiB   |  0.23 | 32 KiB     |      137.83 |
-> | 14 | 32 MiB   |  0.22 | 64 KiB     |      144.09 |
-> | 15 | 64 MiB   |  0.22 | 128 KiB    |      144.09 |
-> 
-> = Discussion
-> 
-> - For small map size, we can see performance degradation on mmap()
->   case due to many page table modification and TLB flushes similarly
->   to read_oldmem() case. But for large map size we can see the
->   improved performance.
-> 
->   Each application need to choose appropreate map size for their
->   preferable performance.
-> 
-> - mmap() on /dev/oldmem appears better than that on /proc/vmcore. But
->   actual processing does not only copying but also IO work. This
->   difference is not a problem.
+Please push the makedumpfile side patch into makedumpfile-1.5.2.
 
-To keep the makedumpfile code simple, I wouldn't like to use /dev/oldmem
-as another input interface. And I hope that we can get enough performance 
-with only /proc/vmcore.
+Regards,
+Mitsuhiro Tanino
 
-> - Both mmap() case shows drastically better performance than previous
->   RFC patch set's about 2.5 [GiB/sec] that maps all dump target memory
->   in kernel direct mapping address space. This is because there's no
->   longer memcpy() from kernel-space to user-space.
+> TO: mm-commits@vger.kernel.org; 
+> CC: mitsuhiro.tanino.gm@hitachi.com; ebiederm@xmission.com; vgoyal@redhat.com; 
+> Sender: akpm@linux-foundation.org
+> Sugject: + kexec-export-pg_hwpoison-flag-into-vmcoreinfo.patch added to -mm tree
+> Date: 2013/02/13 07:50
 > 
-> Design
-> ======
 > 
-> = Support Range
+> The patch titled
+>      Subject: kexec: export PG_hwpoison flag into vmcoreinfo
+> has been added to the -mm tree.  Its filename is
+>      kexec-export-pg_hwpoison-flag-into-vmcoreinfo.patch
 > 
-> - mmap() on /proc/vmcore is supported on ELF64 interface only. ELF32
->   interface is used only if dump target size is less than 4GB. Then,
->   the existing interface is enough in performance.
+> Before you just go and hit "reply", please:
+>    a) Consider who else should be cc'ed
+>    b) Prefer to cc a suitable mailing list as well
+>    c) Ideally: find the original patch on the mailing list and do a
+>       reply-to-all to that, adding suitable additional cc's
 > 
-> = Change of /proc/vmcore format
+> *** Remember to use Documentation/SubmitChecklist when testing your code ***
 > 
-> For mmap()'s page-size boundary requirement, /proc/vmcore changed its
-> own shape and now put its objects in page-size boundary.
+> The -mm tree is included into linux-next and is updated
+> there every 3-4 working days
 > 
-> - Allocate buffer for ELF headers in page-size boundary.
->   => See [PATCH 01/13].
+> ------------------------------------------------------
+> From: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+> Subject: kexec: export PG_hwpoison flag into vmcoreinfo
 > 
-> - Note objects scattered on old memory are copied in a single
->   page-size aligned buffer on 2nd kernel, and it is remapped to
->   user-space.
->   => See [PATCH 09/13].
->   
-> - The head and/or tail pages of memroy chunks are also copied on 2nd
->   kernel if either of their ends is not page-size aligned. See
->   => See [PATCH 12/13].
+> This patch exports a PG_hwpoison into vmcoreinfo when
+> CONFIG_MEMORY_FAILURE is defined.  "makedumpfile" needs to read
+> information of memory, such as 'mem_section', 'zone', 'pageflags' from
+> vmcore.
 > 
-> = 32-bit PAE limitation
+> We introduce a function into "makedumpfile" to exclude hwpoison page from
+> vmcore dump.  In order to introduce this function, PG_hwpoison flag have
+> to export into vmcoreinfo.
 > 
-> - On 32-bit PAE limitation, mmap_vmcore() can handle upto 16TB memory
->   only since remap_pfn_range()'s third argument, pfn, has 32-bit
->   length only, defined as unsigned long type.
-> 
-> TODO
-> ====
-> 
-> - fix makedumpfile to use mmap() on /proc/vmcore and benchmark it to
->   confirm whether we can see enough performance improvement.
-
-As a first step, I'll make a prototype patch for benchmarking unless you
-have already done it.
-
-
-Thanks
-Atsushi Kumagai
-
-> 
-> Test
-> ====
-> 
-> Done on x86-64, x86-32 both with 1GB and over 4GB memory environments.
-> 
+> Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 > ---
 > 
-> HATAYAMA Daisuke (13):
->       vmcore: introduce mmap_vmcore()
->       vmcore: copy non page-size aligned head and tail pages in 2nd kernel
->       vmcore: count holes generated by round-up operation for vmcore size
->       vmcore: round-up offset of vmcore object in page-size boundary
->       vmcore: copy ELF note segments in buffer on 2nd kernel
->       vmcore: remove unused helper function
->       vmcore: modify read_vmcore() to read buffer on 2nd kernel
->       vmcore: modify vmcore clean-up function to free buffer on 2nd kernel
->       vmcore: modify ELF32 code according to new type
->       vmcore: introduce types for objects copied in 2nd kernel
->       vmcore: fill unused part of buffer for ELF headers with 0
->       vmcore: round up buffer size of ELF headers by PAGE_SIZE
->       vmcore: allocate buffer for ELF headers on page-size alignment
+>  kernel/kexec.c |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff -puN kernel/kexec.c~kexec-export-pg_hwpoison-flag-into-vmcoreinfo kernel/kexec.c
+> --- a/kernel/kexec.c~kexec-export-pg_hwpoison-flag-into-vmcoreinfo
+> +++ a/kernel/kexec.c
+> @@ -1537,6 +1537,9 @@ static int __init crash_save_vmcoreinfo_
+>  	VMCOREINFO_NUMBER(PG_private);
+>  	VMCOREINFO_NUMBER(PG_swapcache);
+>  	VMCOREINFO_NUMBER(PG_slab);
+> +#ifdef CONFIG_MEMORY_FAILURE
+> +	VMCOREINFO_NUMBER(PG_hwpoison);
+> +#endif
+>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+>  
+>  	arch_crash_save_vmcoreinfo();
+> _
+> 
+> Patches currently in -mm which might be from mitsuhiro.tanino.gm@hitachi.com are
+> 
+> kexec-export-pg_hwpoison-flag-into-vmcoreinfo.patch
+
+
+
+
+(2013/02/08 17:49), Atsushi Kumagai wrote:
+> Hello,
+> 
+> On Wed, 31 Oct 2012 23:05:05 +0900
+> Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com> wrote:
+> 
+>> This patch exports a PG_hwpoison into vmcoreinfo when
+>> CONFIG_MEMORY_FAILURE is defined.
+>> "makedumpfile" needs to read information of memory, such as
+>> 'mem_section', 'zone', 'pageflags' from vmcore.
+>>
+>> We introduce a function into "makedumpfile" to exclude
+>> hwpoison page from vmcore dump.
+>> In order to introduce this function, PG_hwpoison flag have
+>> to export into vmcoreinfo.
+>>
+>> Signed-off-by: Mitsuhiro Tanino <mitsuhiro.tanino.gm@hitachi.com>
+> 
+> I'm curious to know the status of this patch because I'll release
+> makedumpfile-1.5.2 with the feature to exclude hwpoison page soon.
 > 
 > 
->  fs/proc/vmcore.c        |  408 +++++++++++++++++++++++++++++++++++------------
->  include/linux/proc_fs.h |   11 +
->  2 files changed, 313 insertions(+), 106 deletions(-)
+> Thanks
+> Atsushi Kumagai
 > 
-> -- 
+>> ---
+>>  kernel/kexec.c |    3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/kernel/kexec.c b/kernel/kexec.c
+>> index 0668d58..0d5d6bc 100644
+>> --- a/kernel/kexec.c
+>> +++ b/kernel/kexec.c
+>> @@ -1513,6 +1513,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>         VMCOREINFO_NUMBER(PG_lru);
+>>         VMCOREINFO_NUMBER(PG_private);
+>>         VMCOREINFO_NUMBER(PG_swapcache);
+>> +#ifdef CONFIG_MEMORY_FAILURE
+>> +       VMCOREINFO_NUMBER(PG_hwpoison);
+>> +#endif
+>>
+>>         arch_crash_save_vmcoreinfo();
+>>         update_vmcoreinfo_note();
+>> --
+>> 1.7.10.1
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 > 
-> Thanks.
-> HATAYAMA, Daisuke
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> .
+> 
+
 
 _______________________________________________
 kexec mailing list
