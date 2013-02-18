@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U7Kyz-0005LC-Ak
- for kexec@lists.infradead.org; Mon, 18 Feb 2013 07:17:51 +0000
-Date: Mon, 18 Feb 2013 16:11:44 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makedumpfile-1.5.2: Secret data scrubbing with eppic language.
-Message-Id: <20130218161144.7b961a9026c8d0efa487c637@mxc.nes.nec.co.jp>
-In-Reply-To: <5121CB85.6040306@redhat.com>
-References: <20130214110716.7b2b9f9b0eba662caefc9410@mxc.nes.nec.co.jp>
- <511F597A.2030900@redhat.com> <51204EE1.8040406@redhat.com>
- <20130218131431.9a1a5bcf811767788cd0e38f@mxc.nes.nec.co.jp>
- <5121CB85.6040306@redhat.com>
+ id 1U7T7U-0006q9-Qp
+ for kexec@lists.infradead.org; Mon, 18 Feb 2013 15:59:10 +0000
+Date: Tue, 19 Feb 2013 00:58:56 +0900 (JST)
+Message-Id: <20130219.005856.267479651.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH 02/13] vmcore: round up buffer size of ELF headers by
+ PAGE_SIZE
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20130215151821.GB27784@redhat.com>
+References: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
+ <20130214101154.22466.21769.stgit@localhost6.localdomain6>
+ <20130215151821.GB27784@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,111 +25,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: kexec@lists.infradead.org, bhe@redhat.com
+To: vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, cpw@sgi.com
 
-Hello Dave,
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 02/13] vmcore: round up buffer size of ELF headers by PAGE_SIZE
+Date: Fri, 15 Feb 2013 10:18:21 -0500
 
-On Mon, 18 Feb 2013 14:34:45 +0800
-Dave Young <dyoung@redhat.com> wrote:
-
-> On 02/18/2013 12:14 PM, Atsushi Kumagai wrote:
-> > Hello Dave,
-> > 
-> > On Sat, 16 Feb 2013 18:03:38 +0800
-> > Dave Young <dyoung@redhat.com> wrote:
-> > 
-> >> On 02/14/2013 10:07 AM, Atsushi Kumagai wrote:
-> >>> Hello,
-> >>>
-> >>> makedumpfile version 1.5.2 is released.
-> >>> Your comments/patches are welcome.
-> >>
-> >> Hi,
-> >> ppc64 build fails with "undefined reference to readpage_sadump".
-> >>
-> > 
-> > Thanks for reporting this issue.
-> > 
-> > readpage_sadump() was introduced as modification of readpmem_sadump
-> > to use caching feature, but the dummy implementation of it wasn't
-> > renamed.
-> > 
-> > I'll fix this issue with the patch below, so could you test it in your
-> > environment ?
+> On Thu, Feb 14, 2013 at 07:11:54PM +0900, HATAYAMA Daisuke wrote:
+>> To satisfy mmap() page-size boundary requirement, reound up buffer
+>> size of ELF headers by PAGE_SIZE. The resulting value becomes offset
+>> of ELF note segments and it's assigned in unique PT_NOTE program
+>> header entry.
+>> 
+>> Also, some part that assumes past ELF headers' size is replaced by
+>> this new rounded-up value.
+>> 
+>> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+>> ---
+>> 
+>>  fs/proc/vmcore.c |    9 +++++----
+>>  1 files changed, 5 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+>> index 85714c3..5010ead 100644
+>> --- a/fs/proc/vmcore.c
+>> +++ b/fs/proc/vmcore.c
+>> @@ -313,7 +313,7 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>>  	phdr.p_flags   = 0;
+>>  	note_off = sizeof(Elf64_Ehdr) +
+>>  			(ehdr_ptr->e_phnum - nr_ptnote +1) * sizeof(Elf64_Phdr);
+>> -	phdr.p_offset  = note_off;
+>> +	phdr.p_offset  = roundup(note_off, PAGE_SIZE);
+>>  	phdr.p_vaddr   = phdr.p_paddr = 0;
+>>  	phdr.p_filesz  = phdr.p_memsz = phdr_sz;
+>>  	phdr.p_align   = 0;
+>> @@ -331,6 +331,8 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>>  	/* Modify e_phnum to reflect merged headers. */
+>>  	ehdr_ptr->e_phnum = ehdr_ptr->e_phnum - nr_ptnote + 1;
+>>  
 > 
-> Hi, Atsushi
+> Hi Hatayama,
 > 
-> It works for me, thanks.
+> While reading the /proc/vmcore code again, I realized that we are making
+> a horrible assumption. And that is that all PT_NOTE program headers
+> prepared by kexec-tools are contiguous. And we also seem to be assuming
+> that all PT_NOTE phdrs are following immediately Elf Header.
 > 
-> Tested-by: Dave Young <dyoung@redhat.com>
-
-Thanks for your quick response.
-I'll release a fixed version soon.
-
-
-Thanks
-Atsushi Kumagai
-
+>         /* Add merged PT_NOTE program header*/
+>         tmp = elfptr + sizeof(Elf64_Ehdr);
+>         memcpy(tmp, &phdr, sizeof(phdr));
+>         tmp += sizeof(phdr);
 > 
-> > 
-> > 
-> > Thanks
-> > Atsushi Kumagai
-> > -----------------------------------------------------------------
-> > 
-> > [PATCH] Fix dummy implementation for readpage_sadump.
-> > 
-> > readpage_sadump() was introduced as modification of readpmem_sadump,
-> > but the dummy implementation of it wasn't renamed.
-> > 
-> > Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> > 
-> > diff --git a/sadump_info.h b/sadump_info.h
-> > index 766f35d..c0175dd 100644
-> > --- a/sadump_info.h
-> > +++ b/sadump_info.h
-> > @@ -97,8 +97,8 @@ static inline unsigned long long sadump_get_max_mapnr(void)
-> >         return 0;
-> >  }
-> > 
-> > -static inline int readpmem_sadump(unsigned long long paddr,
-> > -                                 void *bufptr, size_t size)
-> > +static inline int
-> > +readpage_sadump(unsigned long long paddr, void *bufptr)
-> >  {
-> >         return FALSE;
-> >  }
-> > 
-> > 
-> >> Below patch fixes this, but feel free to fix it without the #if in other way.
-> >>
-> >> diff -uprN makedumpfile/makedumpfile.c makedumpfile.new/makedumpfile.c
-> >> --- makedumpfile/makedumpfile.c	2013-02-16 17:58:58.158576503 +0800
-> >> +++ makedumpfile.new/makedumpfile.c	2013-02-16 17:59:19.775577017 +0800
-> >> @@ -412,9 +412,11 @@ readmem(int type_addr, unsigned long lon
-> >>  		if (info->flag_refiltering) {
-> >>  			if (!readpage_kdump_compressed(pgaddr, pgbuf))
-> >>  				goto error;
-> >> +#if defined(__x86__) || defined(__x86_64__)
-> >>  		} else if (info->flag_sadump) {
-> >>  			if (!readpage_sadump(pgaddr, pgbuf))
-> >>  				goto error;
-> >> +#endif
-> >>  		} else {
-> >>  			if (!readpage_elf(pgaddr, pgbuf))
-> >>  				goto error;
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
+>         /* Remove unwanted PT_NOTE program headers. */
+>         i = (nr_ptnote - 1) * sizeof(Elf64_Phdr);
+>         *elfsz = *elfsz - i;
+>         memmove(tmp, tmp+i, ((*elfsz)-sizeof(Elf64_Ehdr)-sizeof(Elf64_Phdr)));
 > 
+> I know I wrote this code but now I realize that this is very bad
+> assumption. We should not be assuming where PT_NOTE headers are and
+> also should not be assuming that these are contiguous.
 > 
-> -- 
+> This will require fixing. I think we just need to read old elf headers
+> in a buffer and prepare new headers (merged one) in a separate buffer
+> instead of trying to make do with single buffer.
+> 
+> If it is not too much of trouble, can you please do this cleanup and
+> rebase your patches on top of it.
+> 
 > Thanks
-> Dave
+> Vivek
+
+Yes, I'll do this.
+
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
