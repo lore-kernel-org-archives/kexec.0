@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U7T7U-0006q9-Qp
- for kexec@lists.infradead.org; Mon, 18 Feb 2013 15:59:10 +0000
-Date: Tue, 19 Feb 2013 00:58:56 +0900 (JST)
-Message-Id: <20130219.005856.267479651.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH 02/13] vmcore: round up buffer size of ELF headers by
- PAGE_SIZE
+ id 1U7TEp-0007TP-GC
+ for kexec@lists.infradead.org; Mon, 18 Feb 2013 16:06:44 +0000
+Date: Tue, 19 Feb 2013 01:06:31 +0900 (JST)
+Message-Id: <20130219.010631.336702748.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH 04/13] vmcore: introduce types for objects copied in
+ 2nd kernel
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130215151821.GB27784@redhat.com>
+In-Reply-To: <20130215152828.GC27784@redhat.com>
 References: <20130214100945.22466.4172.stgit@localhost6.localdomain6>
- <20130214101154.22466.21769.stgit@localhost6.localdomain6>
- <20130215151821.GB27784@redhat.com>
+ <20130214101205.22466.5909.stgit@localhost6.localdomain6>
+ <20130215152828.GC27784@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,74 +29,46 @@ To: vgoyal@redhat.com
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, cpw@sgi.com
 
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 02/13] vmcore: round up buffer size of ELF headers by PAGE_SIZE
-Date: Fri, 15 Feb 2013 10:18:21 -0500
+Subject: Re: [PATCH 04/13] vmcore: introduce types for objects copied in 2nd kernel
+Date: Fri, 15 Feb 2013 10:28:28 -0500
 
-> On Thu, Feb 14, 2013 at 07:11:54PM +0900, HATAYAMA Daisuke wrote:
->> To satisfy mmap() page-size boundary requirement, reound up buffer
->> size of ELF headers by PAGE_SIZE. The resulting value becomes offset
->> of ELF note segments and it's assigned in unique PT_NOTE program
->> header entry.
->> 
->> Also, some part that assumes past ELF headers' size is replaced by
->> this new rounded-up value.
+> On Thu, Feb 14, 2013 at 07:12:05PM +0900, HATAYAMA Daisuke wrote:
+>> Some parts of old memory need to be copied in buffers on 2nd kernel to
+>> be remapped to user-space. To distinguish objects in the buffer on 2nd
+>> kernel and the ones on old memory, enum vmcore_type is introduced: the
+>> object in the buffer on 2nd kernel has VMCORE_2ND_KERNEL type, and the
+>> one on old memory has VMCORE_OLD_MEMORY type.
 >> 
 >> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 >> ---
 >> 
->>  fs/proc/vmcore.c |    9 +++++----
->>  1 files changed, 5 insertions(+), 4 deletions(-)
+>>  include/linux/proc_fs.h |   11 ++++++++++-
+>>  1 files changed, 10 insertions(+), 1 deletions(-)
 >> 
->> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
->> index 85714c3..5010ead 100644
->> --- a/fs/proc/vmcore.c
->> +++ b/fs/proc/vmcore.c
->> @@ -313,7 +313,7 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
->>  	phdr.p_flags   = 0;
->>  	note_off = sizeof(Elf64_Ehdr) +
->>  			(ehdr_ptr->e_phnum - nr_ptnote +1) * sizeof(Elf64_Phdr);
->> -	phdr.p_offset  = note_off;
->> +	phdr.p_offset  = roundup(note_off, PAGE_SIZE);
->>  	phdr.p_vaddr   = phdr.p_paddr = 0;
->>  	phdr.p_filesz  = phdr.p_memsz = phdr_sz;
->>  	phdr.p_align   = 0;
->> @@ -331,6 +331,8 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
->>  	/* Modify e_phnum to reflect merged headers. */
->>  	ehdr_ptr->e_phnum = ehdr_ptr->e_phnum - nr_ptnote + 1;
+>> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+>> index 32676b3..4b153ed 100644
+>> --- a/include/linux/proc_fs.h
+>> +++ b/include/linux/proc_fs.h
+>> @@ -97,11 +97,20 @@ struct kcore_list {
+>>  	int type;
+>>  };
 >>  
+>> +enum vmcore_type {
+>> +	VMCORE_OLD_MEMORY,
+>> +	VMCORE_2ND_KERNEL,
 > 
-> Hi Hatayama,
+> This VMCORE_2ND_KERNEL tag looks bad.
 > 
-> While reading the /proc/vmcore code again, I realized that we are making
-> a horrible assumption. And that is that all PT_NOTE program headers
-> prepared by kexec-tools are contiguous. And we also seem to be assuming
-> that all PT_NOTE phdrs are following immediately Elf Header.
+> How about introducing a "unsigned int flag" element in "struct vmcore"
+> and set the flag MEM_TYPE_OLDMEM for any contents which come from oldmem.
 > 
->         /* Add merged PT_NOTE program header*/
->         tmp = elfptr + sizeof(Elf64_Ehdr);
->         memcpy(tmp, &phdr, sizeof(phdr));
->         tmp += sizeof(phdr);
-> 
->         /* Remove unwanted PT_NOTE program headers. */
->         i = (nr_ptnote - 1) * sizeof(Elf64_Phdr);
->         *elfsz = *elfsz - i;
->         memmove(tmp, tmp+i, ((*elfsz)-sizeof(Elf64_Ehdr)-sizeof(Elf64_Phdr)));
-> 
-> I know I wrote this code but now I realize that this is very bad
-> assumption. We should not be assuming where PT_NOTE headers are and
-> also should not be assuming that these are contiguous.
-> 
-> This will require fixing. I think we just need to read old elf headers
-> in a buffer and prepare new headers (merged one) in a separate buffer
-> instead of trying to make do with single buffer.
-> 
-> If it is not too much of trouble, can you please do this cleanup and
-> rebase your patches on top of it.
-> 
-> Thanks
-> Vivek
+> If MEM_TYPE_OLDMEM is not set, it is assumed that contents are to be
+> fetched from current kernel using pointer vmcore->buf.
 
-Yes, I'll do this.
+This sounds strange to me. There has not been contents to be fetched
+from current kenrel so far. So, object with MEM_TYPE_OLDMEM seems more
+normal than without. Should we prepare special type for objects in 2nd
+kernel?
 
 Thanks.
 HATAYAMA, Daisuke
