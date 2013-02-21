@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8aP2-00074G-Gl
- for kexec@lists.infradead.org; Thu, 21 Feb 2013 17:57:55 +0000
-From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 4/4] kexec/xen: directly load images images into Xen
-Date: Thu, 21 Feb 2013 17:57:40 +0000
-Message-ID: <1361469460-18771-5-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
-References: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
+ id 1U8ee8-0006R2-Uz
+ for kexec@lists.infradead.org; Thu, 21 Feb 2013 22:29:45 +0000
+Date: Thu, 21 Feb 2013 23:29:28 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH 3/8] kexec: add public interface for improved load/unload
+ sub-ops
+Message-ID: <20130221222928.GA18464@host-192-168-1-59.local.net-space.pl>
+References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
+ <1361468894-18655-4-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1361468894-18655-4-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,279 +25,163 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xen-devel@lists.xen.org
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: kexec@lists.infradead.org, xen-devel@lists.xen.org
 
-From: David Vrabel <david.vrabel@citrix.com>
+On Thu, Feb 21, 2013 at 05:48:09PM +0000, David Vrabel wrote:
+> From: David Vrabel <david.vrabel@citrix.com>
+>
+> Add replacement KEXEC_CMD_load and KEXEC_CMD_unload sub-ops to the
+> kexec hypercall.  These new sub-ops allow a priviledged guest to
+> provide the image data to be loaded into Xen memory or the crash
+> region instead of guests loading the image data themselves and
+> providing the relocation code and metadata.
+>
+> The old interface is provided to guests requesting an interface
+> version prior to 4.3.
+>
+> Signed-off: David Vrabel <david.vrabel@citrix.com>
+> ---
+>  xen/common/kexec.c         |   12 ++++----
+>  xen/include/public/kexec.h |   66 +++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 68 insertions(+), 10 deletions(-)
+>
+> diff --git a/xen/common/kexec.c b/xen/common/kexec.c
+> index 6dd20c6..2cbb62c 100644
+> --- a/xen/common/kexec.c
+> +++ b/xen/common/kexec.c
+> @@ -732,7 +732,7 @@ static void crash_save_vmcoreinfo(void)
+>  #endif
+>  }
+>
+> -static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_t *load)
+> +static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_v1_t *load)
+>  {
+>      xen_kexec_image_t *image;
+>      int base, bit, pos;
+> @@ -779,7 +779,7 @@ static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_t *load)
+>
+>  static int kexec_load_unload(unsigned long op, XEN_GUEST_HANDLE_PARAM(void) uarg)
+>  {
+> -    xen_kexec_load_t load;
+> +    xen_kexec_load_v1_t load;
+>
+>      if ( unlikely(copy_from_guest(&load, uarg, 1)) )
+>          return -EFAULT;
+> @@ -791,8 +791,8 @@ static int kexec_load_unload_compat(unsigned long op,
+>                                      XEN_GUEST_HANDLE_PARAM(void) uarg)
+>  {
+>  #ifdef CONFIG_COMPAT
+> -    compat_kexec_load_t compat_load;
+> -    xen_kexec_load_t load;
+> +    compat_kexec_load_v1_t compat_load;
+> +    xen_kexec_load_v1_t load;
+>
+>      if ( unlikely(copy_from_guest(&compat_load, uarg, 1)) )
+>          return -EFAULT;
+> @@ -864,8 +864,8 @@ static int do_kexec_op_internal(unsigned long op,
+>          else
+>                  ret = kexec_get_range(uarg);
+>          break;
+> -    case KEXEC_CMD_kexec_load:
+> -    case KEXEC_CMD_kexec_unload:
+> +    case KEXEC_CMD_kexec_load_v1:
+> +    case KEXEC_CMD_kexec_unload_v1:
+>          spin_lock_irqsave(&kexec_lock, flags);
+>          if (!test_bit(KEXEC_FLAG_IN_PROGRESS, &kexec_flags))
+>          {
+> diff --git a/xen/include/public/kexec.h b/xen/include/public/kexec.h
+> index 61a8d7d..5259446 100644
+> --- a/xen/include/public/kexec.h
+> +++ b/xen/include/public/kexec.h
+> @@ -116,12 +116,12 @@ typedef struct xen_kexec_exec {
+>   * type  == KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH [in]
+>   * image == relocation information for kexec (ignored for unload) [in]
+>   */
+> -#define KEXEC_CMD_kexec_load            1
+> -#define KEXEC_CMD_kexec_unload          2
+> -typedef struct xen_kexec_load {
+> +#define KEXEC_CMD_kexec_load_v1         1 /* obsolete since 0x00040300 */
+> +#define KEXEC_CMD_kexec_unload_v1       2 /* obsolete since 0x00040300 */
+> +typedef struct xen_kexec_load_v1 {
+>      int type;
+>      xen_kexec_image_t image;
+> -} xen_kexec_load_t;
+> +} xen_kexec_load_v1_t;
+>
+>  #define KEXEC_RANGE_MA_CRASH      0 /* machine address and size of crash area */
+>  #define KEXEC_RANGE_MA_XEN        1 /* machine address and size of Xen itself */
+> @@ -152,6 +152,64 @@ typedef struct xen_kexec_range {
+>      unsigned long start;
+>  } xen_kexec_range_t;
+>
+> +#if __XEN_INTERFACE_VERSION__ >= 0x00040300
+> +/*
+> + * A contiguous chunk of a kexec image and it's destination machine
+> + * address.
+> + */
+> +typedef struct xen_kexec_segment {
+> +    XEN_GUEST_HANDLE_64(const_void) buf;
+> +    uint64_t buf_size;
+> +    uint64_t dest_maddr;
+> +    uint64_t dest_size;
+> +} xen_kexec_segment_t;
+> +DEFINE_XEN_GUEST_HANDLE(xen_kexec_segment_t);
+> +
+> +/*
+> + * Load a kexec image into memory.
+> + *
+> + * For KEXEC_TYPE_DEFAULT images, the segments may be anywhere in RAM.
+> + * The image is relocated prior to being executed.
+> + *
+> + * For KEXEC_TYPE_CRASH images, each segment of the image must reside
+> + * in the memory region reserved for kexec (KEXEC_RANGE_MA_CRASH) and
+> + * the entry point must be within the image. The caller is responsible
+> + * for ensuring that multiple images do not overlap.
 
-Xen 4.3 has an improvided kexec hypercall ABI that allows images to be
-loaded and executed without any kernel involvement.  Use the API
-provided by libxc to load images when running in a Xen guest.
+What do you mean by "The caller is responsible for ensuring
+that multiple images do not overlap."?
 
-Support for loading images via the kexec_load syscall in non-upstream
-("classic") Xen kernels is no longer supported.
+> + */
+> +
+> +#define KEXEC_CMD_kexec_load 4
+> +typedef struct xen_kexec_load {
+> +    uint8_t  type;        /* One of KEXEC_TYPE_* */
+> +    uint16_t arch;        /* ELF machine type (EM_*). */
+> +    uint32_t __pad;
 
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
----
- kexec/Makefile                     |    1 +
- kexec/arch/i386/crashdump-x86.c    |   19 ++++++++-
- kexec/arch/i386/kexec-x86-common.c |    6 +-
- kexec/crashdump-xen.c              |   34 ++++++++++++++++
- kexec/crashdump.h                  |    3 +-
- kexec/kexec-xen.c                  |   76 ++++++++++++++++++++++++++++++++++++
- kexec/kexec.c                      |   10 ++++-
- kexec/kexec.h                      |    5 ++
- 8 files changed, 147 insertions(+), 7 deletions(-)
- create mode 100644 kexec/kexec-xen.c
+Why do you need __pad here?
 
-diff --git a/kexec/Makefile b/kexec/Makefile
-index 8a6138d..dc9dab1 100644
---- a/kexec/Makefile
-+++ b/kexec/Makefile
-@@ -25,6 +25,7 @@ KEXEC_SRCS_base += kexec/phys_arch.c
- KEXEC_SRCS_base += kexec/kernel_version.c
- KEXEC_SRCS_base += kexec/lzma.c
- KEXEC_SRCS_base += kexec/zlib.c
-+KEXEC_SRCS_base += kexec/kexec-xen.c
- 
- KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
- 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index f9709fe..46a76f9 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -939,11 +939,28 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	return 0;
- }
- 
-+int get_crashkernel_region(uint64_t *start, uint64_t *end)
-+{
-+	int ret;
-+
-+	if (xen_present())
-+		ret = xen_get_crashkernel_region(start, end);
-+	else
-+		ret = parse_iomem_single("Crash kernel\n", start, end);
-+	if (ret < 0)
-+		return ret;
-+	if (start == end)
-+		return -1;
-+	return 0;
-+}
-+
- int is_crashkernel_mem_reserved(void)
- {
- 	uint64_t start, end;
-+	int rc;
- 
--	if (parse_iomem_single("Crash kernel\n", &start, &end) || start == end)
-+	rc = get_crashkernel_region(&start, &end);
-+	if (rc < 0)
- 		return 0;
- 
- 	crash_reserved_mem.start = start;
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index dba89f2..2477dee 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -364,9 +364,9 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 	    !(kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
- 		uint64_t start, end;
- 
--		ret = parse_iomem_single("Crash kernel\n", &start, &end);
--		if (ret != 0) {
--			fprintf(stderr, "parse_iomem_single failed.\n");
-+		ret = get_crashkernel_region(&start, &end);
-+		if (ret < 0) {
-+			fprintf(stderr, "No crash region available.\n");
- 			return -1;
- 		}
- 
-diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-index 13335a5..434fe66 100644
---- a/kexec/crashdump-xen.c
-+++ b/kexec/crashdump-xen.c
-@@ -223,3 +223,37 @@ int xen_get_note(int cpu, uint64_t *addr, uint64_t *len)
- 
- 	return 0;
- }
-+
-+#ifdef HAVE_LIBXENCTRL
-+int xen_get_crashkernel_region(uint64_t *start, uint64_t *end)
-+{
-+	uint64_t size;
-+	xc_interface *xc;
-+	int rc = -1;
-+
-+	xc = xc_interface_open(NULL, NULL, 0);
-+	if (!xc) {
-+		fprintf(stderr, "failed to open xen control interface.\n");
-+		goto out;
-+	}
-+
-+	rc = xc_kexec_get_range(xc, KEXEC_RANGE_MA_CRASH, 0, &size, start);
-+	if (rc < 0) {
-+		fprintf(stderr, "failed to get crash region from hypervisor.\n");
-+		goto out_close;
-+	}
-+
-+	*end = *start + size - 1;
-+
-+out_close:
-+	xc_interface_close(xc);
-+
-+out:
-+	return rc;
-+}
-+#else
-+int xen_get_crashkernel_region(uint64_t *start, uint64_t *end)
-+{
-+	return -1;
-+}
-+#endif
-diff --git a/kexec/crashdump.h b/kexec/crashdump.h
-index 0f7c2ea..95f1f0c 100644
---- a/kexec/crashdump.h
-+++ b/kexec/crashdump.h
-@@ -1,6 +1,7 @@
- #ifndef CRASHDUMP_H
- #define CRASHDUMP_H
- 
-+int get_crashkernel_region(uint64_t *start, uint64_t *end);
- extern int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len);
- extern int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len);
- extern int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len);
-@@ -56,9 +57,9 @@ unsigned long crash_architecture(struct crash_elf_info *elf_info);
- unsigned long phys_to_virt(struct crash_elf_info *elf_info,
- 			   unsigned long paddr);
- 
--int xen_present(void);
- unsigned long xen_architecture(struct crash_elf_info *elf_info);
- int xen_get_nr_phys_cpus(void);
- int xen_get_note(int cpu, uint64_t *addr, uint64_t *len);
-+int xen_get_crashkernel_region(uint64_t *start, uint64_t *end);
- 
- #endif /* CRASHDUMP_H */
-diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-new file mode 100644
-index 0000000..8bc16aa
---- /dev/null
-+++ b/kexec/kexec-xen.c
-@@ -0,0 +1,76 @@
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include "kexec.h"
-+#include "crashdump.h"
-+
-+#include "config.h"
-+
-+#ifdef HAVE_LIBXENCTRL
-+#include <xenctrl.h>
-+
-+#include "crashdump.h"
-+
-+int xen_kexec_load(uint64_t entry,
-+		   uint32_t nr_segments, struct kexec_segment *segments,
-+		   uint64_t kexec_flags)
-+{
-+	xc_interface *xch;
-+	xc_hypercall_buffer_array_t *array = NULL;
-+	uint8_t type;
-+	uint8_t arch;
-+	xen_kexec_segment_t *xen_segs;
-+	int s;
-+	int ret = -1;
-+
-+	xch = xc_interface_open(NULL, NULL, 0);
-+	if (!xch)
-+		return -1;
-+
-+	xen_segs = calloc(nr_segments, sizeof(*xen_segs));
-+	if (!xen_segs)
-+		goto out;
-+
-+	array = xc_hypercall_buffer_array_create(xch, nr_segments);
-+	if (array == NULL)
-+		goto out;
-+
-+	for (s = 0; s < nr_segments; s++) {
-+		DECLARE_HYPERCALL_BUFFER(void, seg_buf);
-+
-+		seg_buf = xc_hypercall_buffer_array_alloc(xch, array, s,
-+							  seg_buf, segments[s].bufsz);
-+		if (seg_buf == NULL)
-+			goto out;
-+		memcpy(seg_buf, segments[s].buf, segments[s].bufsz);
-+
-+		set_xen_guest_handle(xen_segs[s].buf, seg_buf);
-+		xen_segs[s].buf_size = segments[s].bufsz;
-+		xen_segs[s].dest_maddr = (uint64_t)segments[s].mem;
-+		xen_segs[s].dest_size = segments[s].memsz;
-+	}
-+
-+	type = kexec_flags & KEXEC_TYPE_CRASH;
-+	arch = (kexec_flags >> 16) & 0xffff;
-+
-+	ret = xc_kexec_load(xch, type, arch, entry, nr_segments, xen_segs);
-+
-+out:
-+	xc_hypercall_buffer_array_destroy(xch, array);
-+	free(xen_segs);
-+	xc_interface_close(xch);
-+
-+	return ret;
-+}
-+
-+#else /* ! HAVE_LIBXENCTRL */
-+
-+int xen_kexec_load(uint64_t entry,
-+		   uint32_t nr_segments, struct kexec_segment *segments,
-+		   uint64_t kexec_flags)
-+{
-+	return -1;
-+}
-+
-+#endif
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 16c6308..3eab839 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -764,8 +764,14 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 		info.entry, info.kexec_flags);
- 	print_segments(stderr, &info);
- #endif
--	result = kexec_load(
--		info.entry, info.nr_segments, info.segment, info.kexec_flags);
-+	if (xen_present())
-+		result = xen_kexec_load((uint64_t)info.entry,
-+					info.nr_segments, info.segment,
-+					info.kexec_flags);
-+	else
-+		result = kexec_load(info.entry,
-+				    info.nr_segments, info.segment,
-+				    info.kexec_flags);
- 	if (result != 0) {
- 		/* The load failed, print some debugging information */
- 		fprintf(stderr, "kexec_load failed: %s\n", 
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 94c62c1..4ef8906 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -280,4 +280,9 @@ extern int add_backup_segments(struct kexec_info *info,
- 
- char *concat_cmdline(const char *base, const char *append);
- 
-+int xen_present(void);
-+int xen_kexec_load(uint64_t entry,
-+		   uint32_t nr_segments, struct kexec_segment *segments,
-+		   uint64_t kexec_flags);
-+
- #endif /* KEXEC_H */
--- 
-1.7.2.5
+> +    uint64_t entry_maddr; /* image entry point machine address. */
+> +    uint32_t nr_segments;
+> +    XEN_GUEST_HANDLE_64(xen_kexec_segment_t) segments;
+> +} xen_kexec_load_t;
+> +DEFINE_XEN_GUEST_HANDLE(xen_kexec_load_t);
+> +
+> +/*
+> + * Unload a kexec image.
+> + *
+> + * Type must be one of KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
+> + */
+> +#define KEXEC_CMD_kexec_unload 5
+> +typedef struct xen_kexec_unload {
+> +    uint8_t type;
+> +} xen_kexec_unload_t;
+> +DEFINE_XEN_GUEST_HANDLE(xen_kexec_unload_t);
+> +
+> +#else /* __XEN_INTERFACE_VERSION__ < 0x00040300 */
+> +
+> +#undef KEXEC_CMD_kexec_load
+> +#undef KEXEC_CMD_kexec_unload
+> +#define KEXEC_CMD_kexec_load KEXEC_CMD_kexec_load_v1
+> +#define KEXEC_CMD_kexec_unload KEXEC_CMD_kexec_unload_v1
 
+Could you define all constants in one place at the
+beginning of this file? It is very difficult to
+see what is going on. Especially those undefs are
+crazy for me.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
