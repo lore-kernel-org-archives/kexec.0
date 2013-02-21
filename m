@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8aFv-00068s-Ge
- for kexec@lists.infradead.org; Thu, 21 Feb 2013 17:48:29 +0000
+ id 1U8aFv-00068K-QG
+ for kexec@lists.infradead.org; Thu, 21 Feb 2013 17:48:31 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 2/8] xen: make GUEST_HANDLE_64() and uint64_aligned_t
- available everywhere
-Date: Thu, 21 Feb 2013 17:48:08 +0000
-Message-ID: <1361468894-18655-3-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 3/8] kexec: add public interface for improved load/unload
+ sub-ops
+Date: Thu, 21 Feb 2013 17:48:09 +0000
+Message-ID: <1361468894-18655-4-git-send-email-david.vrabel@citrix.com>
 In-Reply-To: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
 References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
@@ -28,73 +28,149 @@ Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vra
 
 From: David Vrabel <david.vrabel@citrix.com>
 
-GUEST_HANDLE_64() and uint64_aligned_t allow hypercall ABI structures
-to be identical (binary compatible) for 32 and 64-bit guests.  They
-are currently limited to only being available for use in sysctls and
-domctls.  Relax this limit so it may be used by any new structures.
+Add replacement KEXEC_CMD_load and KEXEC_CMD_unload sub-ops to the
+kexec hypercall.  These new sub-ops allow a priviledged guest to
+provide the image data to be loaded into Xen memory or the crash
+region instead of guests loading the image data themselves and
+providing the relocation code and metadata.
 
-There is a minimal cost for 32-bit guests on 64-but hypervisors as
-set_guest_handle() needs to 0 the whole field on GUEST_HANDLE_64()
-handles, but this is expected to be less than the overhead of having
-to translate compat structures.
+The old interface is provided to guests requesting an interface
+version prior to 4.3.
 
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+Signed-off: David Vrabel <david.vrabel@citrix.com>
 ---
- xen/include/public/arch-x86/xen-x86_32.h |    4 +---
- xen/include/public/xen.h                 |   13 ++++++++-----
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ xen/common/kexec.c         |   12 ++++----
+ xen/include/public/kexec.h |   66 +++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 68 insertions(+), 10 deletions(-)
 
-diff --git a/xen/include/public/arch-x86/xen-x86_32.h b/xen/include/public/arch-x86/xen-x86_32.h
-index 906e74a..08fac7a 100644
---- a/xen/include/public/arch-x86/xen-x86_32.h
-+++ b/xen/include/public/arch-x86/xen-x86_32.h
-@@ -91,8 +91,7 @@
- #define machine_to_phys_mapping ((unsigned long *)MACH2PHYS_VIRT_START)
+diff --git a/xen/common/kexec.c b/xen/common/kexec.c
+index 6dd20c6..2cbb62c 100644
+--- a/xen/common/kexec.c
++++ b/xen/common/kexec.c
+@@ -732,7 +732,7 @@ static void crash_save_vmcoreinfo(void)
  #endif
+ }
  
--/* 32-/64-bit invariability for control interfaces (domctl/sysctl). */
--#if defined(__XEN__) || defined(__XEN_TOOLS__)
-+/* 32-/64-bit invariability. */
- #undef ___DEFINE_XEN_GUEST_HANDLE
- #define ___DEFINE_XEN_GUEST_HANDLE(name, type)                  \
-     typedef struct { type *p; }                                 \
-@@ -107,7 +106,6 @@
- #define uint64_aligned_t uint64_t __attribute__((aligned(8)))
- #define __XEN_GUEST_HANDLE_64(name) __guest_handle_64_ ## name
- #define XEN_GUEST_HANDLE_64(name) __XEN_GUEST_HANDLE_64(name)
--#endif
+-static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_t *load)
++static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_v1_t *load)
+ {
+     xen_kexec_image_t *image;
+     int base, bit, pos;
+@@ -779,7 +779,7 @@ static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_t *load)
  
- #ifndef __ASSEMBLY__
+ static int kexec_load_unload(unsigned long op, XEN_GUEST_HANDLE_PARAM(void) uarg)
+ {
+-    xen_kexec_load_t load;
++    xen_kexec_load_v1_t load;
  
-diff --git a/xen/include/public/xen.h b/xen/include/public/xen.h
-index 5593066..c18e7ce 100644
---- a/xen/include/public/xen.h
-+++ b/xen/include/public/xen.h
-@@ -840,9 +840,14 @@ __DEFINE_XEN_GUEST_HANDLE(uint64, uint64_t);
+     if ( unlikely(copy_from_guest(&load, uarg, 1)) )
+         return -EFAULT;
+@@ -791,8 +791,8 @@ static int kexec_load_unload_compat(unsigned long op,
+                                     XEN_GUEST_HANDLE_PARAM(void) uarg)
+ {
+ #ifdef CONFIG_COMPAT
+-    compat_kexec_load_t compat_load;
+-    xen_kexec_load_t load;
++    compat_kexec_load_v1_t compat_load;
++    xen_kexec_load_v1_t load;
  
- #endif /* !__ASSEMBLY__ */
+     if ( unlikely(copy_from_guest(&compat_load, uarg, 1)) )
+         return -EFAULT;
+@@ -864,8 +864,8 @@ static int do_kexec_op_internal(unsigned long op,
+         else
+                 ret = kexec_get_range(uarg);
+         break;
+-    case KEXEC_CMD_kexec_load:
+-    case KEXEC_CMD_kexec_unload:
++    case KEXEC_CMD_kexec_load_v1:
++    case KEXEC_CMD_kexec_unload_v1:
+         spin_lock_irqsave(&kexec_lock, flags);
+         if (!test_bit(KEXEC_FLAG_IN_PROGRESS, &kexec_flags))
+         {
+diff --git a/xen/include/public/kexec.h b/xen/include/public/kexec.h
+index 61a8d7d..5259446 100644
+--- a/xen/include/public/kexec.h
++++ b/xen/include/public/kexec.h
+@@ -116,12 +116,12 @@ typedef struct xen_kexec_exec {
+  * type  == KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH [in]
+  * image == relocation information for kexec (ignored for unload) [in]
+  */
+-#define KEXEC_CMD_kexec_load            1
+-#define KEXEC_CMD_kexec_unload          2
+-typedef struct xen_kexec_load {
++#define KEXEC_CMD_kexec_load_v1         1 /* obsolete since 0x00040300 */
++#define KEXEC_CMD_kexec_unload_v1       2 /* obsolete since 0x00040300 */
++typedef struct xen_kexec_load_v1 {
+     int type;
+     xen_kexec_image_t image;
+-} xen_kexec_load_t;
++} xen_kexec_load_v1_t;
  
--/* Default definitions for macros used by domctl/sysctl. */
--#if defined(__XEN__) || defined(__XEN_TOOLS__)
--
+ #define KEXEC_RANGE_MA_CRASH      0 /* machine address and size of crash area */
+ #define KEXEC_RANGE_MA_XEN        1 /* machine address and size of Xen itself */
+@@ -152,6 +152,64 @@ typedef struct xen_kexec_range {
+     unsigned long start;
+ } xen_kexec_range_t;
+ 
++#if __XEN_INTERFACE_VERSION__ >= 0x00040300
 +/*
-+ * Default definitions for 32/64-bit invariant macros.
-+ *
-+ * Use these in ABI structures that should be identical for 32 and
-+ * 64-bit guests. There is some (very small) overhead in using
-+ * XEN_GUEST_HANDLE_64() instead of XEN_GUEST_HANDLE() so avoid for
-+ * very hot paths.
++ * A contiguous chunk of a kexec image and it's destination machine
++ * address.
 + */
- #ifndef uint64_aligned_t
- #define uint64_aligned_t uint64_t
- #endif
-@@ -857,8 +862,6 @@ struct xenctl_cpumap {
- };
- #endif
- 
--#endif /* defined(__XEN__) || defined(__XEN_TOOLS__) */
--
- #endif /* __XEN_PUBLIC_XEN_H__ */
++typedef struct xen_kexec_segment {
++    XEN_GUEST_HANDLE_64(const_void) buf;
++    uint64_t buf_size;
++    uint64_t dest_maddr;
++    uint64_t dest_size;
++} xen_kexec_segment_t;
++DEFINE_XEN_GUEST_HANDLE(xen_kexec_segment_t);
++
++/*
++ * Load a kexec image into memory.
++ *
++ * For KEXEC_TYPE_DEFAULT images, the segments may be anywhere in RAM.
++ * The image is relocated prior to being executed.
++ *
++ * For KEXEC_TYPE_CRASH images, each segment of the image must reside
++ * in the memory region reserved for kexec (KEXEC_RANGE_MA_CRASH) and
++ * the entry point must be within the image. The caller is responsible
++ * for ensuring that multiple images do not overlap.
++ */
++
++#define KEXEC_CMD_kexec_load 4
++typedef struct xen_kexec_load {
++    uint8_t  type;        /* One of KEXEC_TYPE_* */
++    uint16_t arch;        /* ELF machine type (EM_*). */
++    uint32_t __pad;
++    uint64_t entry_maddr; /* image entry point machine address. */
++    uint32_t nr_segments;
++    XEN_GUEST_HANDLE_64(xen_kexec_segment_t) segments;
++} xen_kexec_load_t;
++DEFINE_XEN_GUEST_HANDLE(xen_kexec_load_t);
++
++/*
++ * Unload a kexec image.
++ *
++ * Type must be one of KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
++ */
++#define KEXEC_CMD_kexec_unload 5
++typedef struct xen_kexec_unload {
++    uint8_t type;
++} xen_kexec_unload_t;
++DEFINE_XEN_GUEST_HANDLE(xen_kexec_unload_t);
++
++#else /* __XEN_INTERFACE_VERSION__ < 0x00040300 */
++
++#undef KEXEC_CMD_kexec_load
++#undef KEXEC_CMD_kexec_unload
++#define KEXEC_CMD_kexec_load KEXEC_CMD_kexec_load_v1
++#define KEXEC_CMD_kexec_unload KEXEC_CMD_kexec_unload_v1
++
++typedef struct xen_kexec_load_v1_t xen_kexec_load_t;
++
++#endif
++
+ #endif /* _XEN_PUBLIC_KEXEC_H */
  
  /*
 -- 
