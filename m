@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.citrix.com ([66.165.176.89])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8aP0-00074E-BZ
+ id 1U8aOy-00074G-Ce
  for kexec@lists.infradead.org; Thu, 21 Feb 2013 17:57:52 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 1/4] purgatory: put variables altered by kexec in .data not
- .bss
-Date: Thu, 21 Feb 2013 17:57:37 +0000
-Message-ID: <1361469460-18771-2-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 2/4] kexec/xen: require libxc from Xen 4.3
+Date: Thu, 21 Feb 2013 17:57:38 +0000
+Message-ID: <1361469460-18771-3-git-send-email-david.vrabel@citrix.com>
 In-Reply-To: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
 References: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
@@ -28,106 +27,362 @@ Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vra
 
 From: David Vrabel <david.vrabel@citrix.com>
 
-elf_rel_set_symbol() fails if the symbol is in the .bss section.
+libxc from Xen 4.3 added xc_kexec_load() which will be required to
+load images into Xen in the future.
+
+Remove all the #ifdef'ery for older versions of libxc.
 
 Signed-off-by: David Vrabel <david.vrabel@citrix.com>
 ---
- purgatory/arch/i386/console-x86.c        |    6 +++---
- purgatory/arch/i386/crashdump_backup.c   |    8 +++++---
- purgatory/arch/x86_64/purgatory-x86_64.c |    6 +++---
- purgatory/include/purgatory.h            |    4 ++++
- purgatory/purgatory.c                    |    4 ++--
- 5 files changed, 17 insertions(+), 11 deletions(-)
+ configure.ac                       |    5 +-
+ kexec/arch/i386/crashdump-x86.c    |  109 ------------------------------------
+ kexec/arch/i386/kexec-x86-common.c |  103 ----------------------------------
+ kexec/crashdump-xen.c              |   12 ----
+ 4 files changed, 1 insertions(+), 228 deletions(-)
 
-diff --git a/purgatory/arch/i386/console-x86.c b/purgatory/arch/i386/console-x86.c
-index 9773573..40a734b 100644
---- a/purgatory/arch/i386/console-x86.c
-+++ b/purgatory/arch/i386/console-x86.c
-@@ -55,9 +55,9 @@ static void putchar_vga(int ch)
+diff --git a/configure.ac b/configure.ac
+index 438b3c9..120a5ed 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -161,11 +161,8 @@ fi
+ dnl find Xen control stack libraries
+ if test "$with_xen" = yes ; then
+ 	AC_CHECK_HEADER(xenctrl.h,
+-		AC_CHECK_LIB(xenctrl, xc_version, ,
++		AC_CHECK_LIB(xenctrl, xc_kexec_load, ,
+ 		AC_MSG_NOTICE([Xen support disabled])))
+-	if test "$ac_cv_lib_xenctrl_xc_version" = yes ; then
+-		AC_CHECK_FUNCS(xc_get_machine_memory_map)
+-	fi
+ fi
+ 
+ dnl ---Sanity checks
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 245402c..f9709fe 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -43,14 +43,7 @@
+ #include "crashdump-x86.h"
+ 
+ #ifdef HAVE_LIBXENCTRL
+-#ifdef HAVE_XC_GET_MACHINE_MEMORY_MAP
+ #include <xenctrl.h>
+-#else
+-#define __XEN_TOOLS__	1
+-#include <xen/xen.h>
+-#include <xen/memory.h>
+-#include <xen/sys/privcmd.h>
+-#endif /* HAVE_XC_GET_MACHINE_MEMORY_MAP */
+ #endif /* HAVE_LIBXENCTRL */
+ 
+ #include <x86/x86-linux.h>
+@@ -294,34 +287,20 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+ }
+ 
+ #ifdef HAVE_LIBXENCTRL
+-#ifdef HAVE_XC_GET_MACHINE_MEMORY_MAP
+ static int get_crash_memory_ranges_xen(struct memory_range **range,
+ 					int *ranges, unsigned long lowmem_limit)
+ {
+ 	int j, rc, ret = -1;
+ 	struct e820entry e820entries[CRASH_MAX_MEMORY_RANGES];
+ 	unsigned int i;
+-#ifdef XENCTRL_HAS_XC_INTERFACE
+ 	xc_interface *xc;
+-#else
+-	int xc;
+-#endif
+ 
+-#ifdef XENCTRL_HAS_XC_INTERFACE
+ 	xc = xc_interface_open(NULL, NULL, 0);
+ 
+ 	if (!xc) {
+ 		fprintf(stderr, "%s: Failed to open Xen control interface\n", __func__);
+ 		goto err;
+ 	}
+-#else
+-	xc = xc_interface_open();
+-
+-	if (xc == -1) {
+-		fprintf(stderr, "%s: Failed to open Xen control interface\n", __func__);
+-		goto err;
+-	}
+-#endif
+ 
+ 	rc = xc_get_machine_memory_map(xc, e820entries, CRASH_MAX_MEMORY_RANGES);
+ 
+@@ -357,94 +336,6 @@ err:
+ static int get_crash_memory_ranges_xen(struct memory_range **range,
+ 					int *ranges, unsigned long lowmem_limit)
+ {
+-	int fd, j, rc, ret = -1;
+-	privcmd_hypercall_t hypercall;
+-	struct e820entry *e820entries = NULL;
+-	struct xen_memory_map *xen_memory_map = NULL;
+-	unsigned int i;
+-
+-	fd = open("/proc/xen/privcmd", O_RDWR);
+-
+-	if (fd == -1) {
+-		fprintf(stderr, "%s: open(/proc/xen/privcmd): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	rc = posix_memalign((void **)&e820entries, getpagesize(),
+-			    sizeof(struct e820entry) * CRASH_MAX_MEMORY_RANGES);
+-
+-	if (rc) {
+-		fprintf(stderr, "%s: posix_memalign(e820entries): %s\n", __func__, strerror(rc));
+-		e820entries = NULL;
+-		goto err;
+-	}
+-
+-	rc = posix_memalign((void **)&xen_memory_map, getpagesize(),
+-			    sizeof(struct xen_memory_map));
+-
+-	if (rc) {
+-		fprintf(stderr, "%s: posix_memalign(xen_memory_map): %s\n", __func__, strerror(rc));
+-		xen_memory_map = NULL;
+-		goto err;
+-	}
+-
+-	if (mlock(e820entries, sizeof(struct e820entry) * CRASH_MAX_MEMORY_RANGES) == -1) {
+-		fprintf(stderr, "%s: mlock(e820entries): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	if (mlock(xen_memory_map, sizeof(struct xen_memory_map)) == -1) {
+-		fprintf(stderr, "%s: mlock(xen_memory_map): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	xen_memory_map->nr_entries = CRASH_MAX_MEMORY_RANGES;
+-	set_xen_guest_handle(xen_memory_map->buffer, e820entries);
+-
+-	hypercall.op = __HYPERVISOR_memory_op;
+-	hypercall.arg[0] = XENMEM_machine_memory_map;
+-	hypercall.arg[1] = (__u64)xen_memory_map;
+-
+-	rc = ioctl(fd, IOCTL_PRIVCMD_HYPERCALL, &hypercall);
+-
+-	if (rc == -1) {
+-		fprintf(stderr, "%s: ioctl(IOCTL_PRIVCMD_HYPERCALL): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	for (i = 0, j = 0; i < xen_memory_map->nr_entries &&
+-				j < CRASH_MAX_MEMORY_RANGES; ++i, ++j) {
+-		crash_memory_range[j].start = e820entries[i].addr;
+-		crash_memory_range[j].end = e820entries[i].addr + e820entries[i].size - 1;
+-		crash_memory_range[j].type = xen_e820_to_kexec_type(e820entries[i].type);
+-		segregate_lowmem_region(&j, lowmem_limit);
+-	}
+-
+-	*range = crash_memory_range;
+-	*ranges = j;
+-
+-	qsort(*range, *ranges, sizeof(struct memory_range), compare_ranges);
+-
+-	if (exclude_region(ranges, crash_reserved_mem.start,
+-						crash_reserved_mem.end) < 0)
+-		goto err;
+-
+-	ret = 0;
+-
+-err:
+-	munlock(xen_memory_map, sizeof(struct xen_memory_map));
+-	munlock(e820entries, sizeof(struct e820entry) * CRASH_MAX_MEMORY_RANGES);
+-	free(xen_memory_map);
+-	free(e820entries);
+-	close(fd);
+-
+-	return ret;
+-}
+-#endif /* HAVE_XC_GET_MACHINE_MEMORY_MAP */
+-#else
+-static int get_crash_memory_ranges_xen(struct memory_range **range,
+-					int *ranges, unsigned long lowmem_limit)
+-{
+ 	return 0;
+ }
+ #endif /* HAVE_LIBXENCTRL */
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index 02471a8..dba89f2 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -40,15 +40,7 @@
+ #include "kexec-x86.h"
+ 
+ #ifdef HAVE_LIBXENCTRL
+-#ifdef HAVE_XC_GET_MACHINE_MEMORY_MAP
+ #include <xenctrl.h>
+-#else
+-#define __XEN_TOOLS__	1
+-#include <x86/x86-linux.h>
+-#include <xen/xen.h>
+-#include <xen/memory.h>
+-#include <xen/sys/privcmd.h>
+-#endif /* HAVE_XC_GET_MACHINE_MEMORY_MAP */
+ #endif /* HAVE_LIBXENCTRL */
+ 
+ static struct memory_range memory_range[MAX_MEMORY_RANGES];
+@@ -175,33 +167,19 @@ unsigned xen_e820_to_kexec_type(uint32_t type)
+  *
+  * @return 0 on success, any other value on failure.
   */
- 
- /* Base Address */
--uint8_t console_serial = 0;
--uint16_t serial_base = 0x3f8; /* TTYS0 */
--uint32_t serial_baud = 0;
-+uint8_t console_serial __data = 0;
-+uint16_t serial_base __data = 0x3f8; /* TTYS0 */
-+uint32_t serial_baud __data = 0;
- 
- #define XMTRDY          0x20
- 
-diff --git a/purgatory/arch/i386/crashdump_backup.c b/purgatory/arch/i386/crashdump_backup.c
-index 365eb5d..0438a75 100644
---- a/purgatory/arch/i386/crashdump_backup.c
-+++ b/purgatory/arch/i386/crashdump_backup.c
-@@ -21,13 +21,15 @@
- #include <stdint.h>
- #include <string.h>
- 
-+#include <purgatory.h>
-+
- /* Backup region start gets set after /proc/iomem has been parsed. */
- /* We reuse the same code for x86_64 also so changing backup_start to
-    unsigned long */
--unsigned long  backup_start = 0;
-+unsigned long  backup_start __data = 0;
- 
--unsigned long backup_src_start = 0;
--unsigned long backup_src_size = 0;
-+unsigned long backup_src_start __data = 0;
-+unsigned long backup_src_size __data = 0;
- 
- /* Backup first 640K of memory to backup region as reserved by kexec.
-  * Assuming first 640K has to be present on i386 machines and no address
-diff --git a/purgatory/arch/x86_64/purgatory-x86_64.c b/purgatory/arch/x86_64/purgatory-x86_64.c
-index c25a9c2..8a3e24d 100644
---- a/purgatory/arch/x86_64/purgatory-x86_64.c
-+++ b/purgatory/arch/x86_64/purgatory-x86_64.c
-@@ -3,11 +3,11 @@
- #include <purgatory.h>
- #include "purgatory-x86_64.h"
- 
--uint8_t reset_vga = 0;
-+uint8_t reset_vga __data = 0;
- uint8_t legacy_pic = 0;
--uint8_t panic_kernel = 0;
-+uint8_t panic_kernel __data = 0;
- unsigned long jump_back_entry = 0;
--char *cmdline_end = NULL;
-+char *cmdline_end __data = NULL;
- 
- void setup_arch(void)
+-#ifdef HAVE_XC_GET_MACHINE_MEMORY_MAP
+ static int get_memory_ranges_xen(struct memory_range **range, int *ranges)
  {
-diff --git a/purgatory/include/purgatory.h b/purgatory/include/purgatory.h
-index ed50dc4..e2b061a 100644
---- a/purgatory/include/purgatory.h
-+++ b/purgatory/include/purgatory.h
-@@ -1,6 +1,10 @@
- #ifndef PURGATORY_H
- #define PURGATORY_H
+ 	int rc, ret = -1;
+ 	struct e820entry e820entries[MAX_MEMORY_RANGES];
+ 	unsigned int i;
+-#ifdef XENCTRL_HAS_XC_INTERFACE
+ 	xc_interface *xc;
+-#else
+-	int xc;
+-#endif
  
-+/* Force variables that are adjusted by kexec to be in .data not
-+   .bss. */
-+#define __data __attribute__((section("data")))
-+
- void putchar(int ch);
- void sprintf(char *buffer, const char *fmt, ...);
- void printf(const char *fmt, ...);
-diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
-index 3bbcc09..05f3b48 100644
---- a/purgatory/purgatory.c
-+++ b/purgatory/purgatory.c
-@@ -6,8 +6,8 @@
- #include <string.h>
- #include "../kexec/kexec-sha256.h"
+-#ifdef XENCTRL_HAS_XC_INTERFACE
+ 	xc = xc_interface_open(NULL, NULL, 0);
  
--struct sha256_region sha256_regions[SHA256_REGIONS] = {};
--sha256_digest_t sha256_digest = { };
-+struct sha256_region sha256_regions[SHA256_REGIONS] __data = {};
-+sha256_digest_t sha256_digest __data = { };
+ 	if (!xc) {
+ 		fprintf(stderr, "%s: Failed to open Xen control interface\n", __func__);
+ 		goto err;
+ 	}
+-#else
+-	xc = xc_interface_open();
+-
+-	if (xc == -1) {
+-		fprintf(stderr, "%s: Failed to open Xen control interface\n", __func__);
+-		goto err;
+-	}
+-#endif
  
- int verify_sha256_digest(void)
+ 	rc = xc_get_machine_memory_map(xc, e820entries, MAX_MEMORY_RANGES);
+ 
+@@ -231,87 +209,6 @@ err:
+ #else
+ static int get_memory_ranges_xen(struct memory_range **range, int *ranges)
  {
+-	int fd, rc, ret = -1;
+-	privcmd_hypercall_t hypercall;
+-	struct e820entry *e820entries = NULL;
+-	struct xen_memory_map *xen_memory_map = NULL;
+-	unsigned int i;
+-
+-	fd = open("/proc/xen/privcmd", O_RDWR);
+-
+-	if (fd == -1) {
+-		fprintf(stderr, "%s: open(/proc/xen/privcmd): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	rc = posix_memalign((void **)&e820entries, sysconf(_SC_PAGESIZE),
+-			    sizeof(struct e820entry) * MAX_MEMORY_RANGES);
+-
+-	if (rc) {
+-		fprintf(stderr, "%s: posix_memalign(e820entries): %s\n", __func__, strerror(rc));
+-		e820entries = NULL;
+-		goto err;
+-	}
+-
+-	rc = posix_memalign((void **)&xen_memory_map, sysconf(_SC_PAGESIZE),
+-			    sizeof(struct xen_memory_map));
+-
+-	if (rc) {
+-		fprintf(stderr, "%s: posix_memalign(xen_memory_map): %s\n", __func__, strerror(rc));
+-		xen_memory_map = NULL;
+-		goto err;
+-	}
+-
+-	if (mlock(e820entries, sizeof(struct e820entry) * MAX_MEMORY_RANGES) == -1) {
+-		fprintf(stderr, "%s: mlock(e820entries): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	if (mlock(xen_memory_map, sizeof(struct xen_memory_map)) == -1) {
+-		fprintf(stderr, "%s: mlock(xen_memory_map): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	xen_memory_map->nr_entries = MAX_MEMORY_RANGES;
+-	set_xen_guest_handle(xen_memory_map->buffer, e820entries);
+-
+-	hypercall.op = __HYPERVISOR_memory_op;
+-	hypercall.arg[0] = XENMEM_machine_memory_map;
+-	hypercall.arg[1] = (__u64)xen_memory_map;
+-
+-	rc = ioctl(fd, IOCTL_PRIVCMD_HYPERCALL, &hypercall);
+-
+-	if (rc == -1) {
+-		fprintf(stderr, "%s: ioctl(IOCTL_PRIVCMD_HYPERCALL): %m\n", __func__);
+-		goto err;
+-	}
+-
+-	for (i = 0; i < xen_memory_map->nr_entries; ++i) {
+-		memory_range[i].start = e820entries[i].addr;
+-		memory_range[i].end = e820entries[i].addr + e820entries[i].size;
+-		memory_range[i].type = xen_e820_to_kexec_type(e820entries[i].type);
+-	}
+-
+-	qsort(memory_range, xen_memory_map->nr_entries, sizeof(struct memory_range), compare_ranges);
+-
+-	*range = memory_range;
+-	*ranges = xen_memory_map->nr_entries;
+-
+-	ret = 0;
+-
+-err:
+-	munlock(xen_memory_map, sizeof(struct xen_memory_map));
+-	munlock(e820entries, sizeof(struct e820entry) * MAX_MEMORY_RANGES);
+-	free(xen_memory_map);
+-	free(e820entries);
+-	close(fd);
+-
+-	return ret;
+-}
+-#endif /* HAVE_XC_GET_MACHINE_MEMORY_MAP */
+-#else
+-static int get_memory_ranges_xen(struct memory_range **range, int *ranges)
+-{
+ 	return 0;
+ }
+ #endif /* HAVE_LIBXENCTRL */
+diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
+index d8bd0f4..ff4706c 100644
+--- a/kexec/crashdump-xen.c
++++ b/kexec/crashdump-xen.c
+@@ -131,30 +131,18 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
+ #ifdef HAVE_LIBXENCTRL
+ 	int rc;
+ 	xen_capabilities_info_t capabilities;
+-#ifdef XENCTRL_HAS_XC_INTERFACE
+ 	xc_interface *xc;
+-#else
+-	int xc;
+-#endif
+ 
+ 	if (!xen_present())
+ 		goto out;
+ 
+ 	memset(capabilities, '0', XEN_CAPABILITIES_INFO_LEN);
+ 
+-#ifdef XENCTRL_HAS_XC_INTERFACE
+ 	xc = xc_interface_open(NULL, NULL, 0);
+ 	if ( !xc ) {
+ 		fprintf(stderr, "failed to open xen control interface.\n");
+ 		goto out;
+ 	}
+-#else
+-	xc = xc_interface_open();
+-	if ( xc == -1 ) {
+-		fprintf(stderr, "failed to open xen control interface.\n");
+-		goto out;
+-	}
+-#endif
+ 
+ 	rc = xc_version(xc, XENVER_capabilities, &capabilities[0]);
+ 	if ( rc == -1 ) {
 -- 
 1.7.2.5
 
