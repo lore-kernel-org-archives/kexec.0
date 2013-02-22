@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8jw9-0008Nr-29
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:41 +0000
+ id 1U8jw9-0008O6-S0
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:42 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v9 1/7] kexec, x86: set booloader id in setup_header
-Date: Thu, 21 Feb 2013 20:07:50 -0800
-Message-Id: <1361506076-13112-2-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v9 2/7] kexec, x86: add boot header member for version 2.12
+Date: Thu, 21 Feb 2013 20:07:51 -0800
+Message-Id: <1361506076-13112-3-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
 References: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,39 +25,82 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-set LOADER_TYPE_KEXEC
+will use ext_ramdisk_image/size, and xloadflags to put
+ramdisk and bzImage high for 64bit.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- include/x86/x86-linux.h           |    1 +
- kexec/arch/i386/x86-linux-setup.c |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ include/x86/x86-linux.h |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
 diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index 8f7a797..ea11042 100644
+index ea11042..0949dc2 100644
 --- a/include/x86/x86-linux.h
 +++ b/include/x86/x86-linux.h
-@@ -142,6 +142,7 @@ struct x86_linux_param_header {
- #define LOADER_TYPE_BOOTSECT_LOADER 2
- #define LOADER_TYPE_SYSLINUX        3
- #define LOADER_TYPE_ETHERBOOT       4
-+#define LOADER_TYPE_KEXEC           0x0D
- #define LOADER_TYPE_UNKNOWN         0xFF
- 	uint8_t  loader_flags;			/* 0x211 */
- 	uint8_t  reserved12[2];			/* 0x212 */
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index ef62553..d09c6ce 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -56,7 +56,7 @@ void setup_linux_bootloader_parameters(
- 	unsigned long initrd_base, initrd_addr_max;
+@@ -32,7 +32,7 @@ struct drive_info_struct {
+ };
+ struct sys_desc_table {
+ 	uint16_t length;
+-	uint8_t  table[318];
++	uint8_t  table[30];
+ };
  
- 	/* Say I'm a boot loader */
--	real_mode->loader_type = LOADER_TYPE_UNKNOWN;
-+	real_mode->loader_type = LOADER_TYPE_KEXEC << 4;
+ struct apm_bios_info {
+@@ -112,6 +112,10 @@ struct x86_linux_param_header {
+ 	struct apm_bios_info apm_bios_info;	/* 0x40 */
+ 	struct drive_info_struct drive_info;	/* 0x80 */
+ 	struct sys_desc_table sys_desc_table;	/* 0xa0 */
++	uint32_t ext_ramdisk_image;		/* 0xc0 */
++	uint32_t ext_ramdisk_size;		/* 0xc4 */
++	uint32_t ext_cmd_line_ptr;		/* 0xc8 */
++	uint8_t reserved4_1[0x1e0 - 0xcc];	/* 0xcc */
+ 	uint32_t alt_mem_k;			/* 0x1e0 */
+ 	uint8_t  reserved5[4];			/* 0x1e4 */
+ 	uint8_t  e820_map_nr;			/* 0x1e8 */
+@@ -175,11 +179,18 @@ struct x86_linux_param_header {
+ 	/* 2.04+ */
+ 	uint32_t kernel_alignment;		/* 0x230 */
+ 	uint8_t  relocatable_kernel;		/* 0x234 */
+-	uint8_t  reserved15[3];			/* 0x235 */
++	uint8_t  min_alignment;			/* 0x235 */
++	uint16_t xloadflags;			/* 0x236 */
+ 	uint32_t cmdline_size;			/* 0x238 */
+ 	uint32_t hardware_subarch;		/* 0x23C */
+ 	uint64_t hardware_subarch_data;		/* 0x240 */
+-	uint8_t  reserved16[0x290 - 0x248];	/* 0x248 */
++	uint32_t payload_offset;		/* 0x248 */
++	uint32_t payload_length;		/* 0x24C */
++	uint64_t setup_data;			/* 0x250 */
++	uint64_t pref_address;			/* 0x258 */
++	uint32_t init_size;			/* 0x260 */
++	uint32_t handover_offset;		/* 0x264 */
++	uint8_t  reserved16[0x290 - 0x268];	/* 0x268 */
+ 	uint32_t edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];	/* 0x290 */
+ #endif
+ 	struct 	e820entry e820_map[E820MAX];	/* 0x2d0 */
+@@ -196,7 +207,11 @@ struct x86_linux_faked_param_header {
+ };
  
- 	/* No loader flags */
- 	real_mode->loader_flags = 0;
+ struct x86_linux_header {
+-	uint8_t  reserved1[0x1f1];		/* 0x000 */
++	uint8_t  reserved1[0xc0];		/* 0x000 */
++	uint32_t ext_ramdisk_image;		/* 0x0c0 */
++	uint32_t ext_ramdisk_size;		/* 0x0c4 */
++	uint32_t ext_cmd_line_ptr;		/* 0x0c8 */
++	uint8_t  reserved1_1[0x1f1-0xcc];	/* 0x0cc */
+ 	uint8_t  setup_sects;			/* 0x1f1 */
+ 	uint16_t root_flags;			/* 0x1f2 */
+ 	uint32_t syssize;			/* 0x1f4 */
+@@ -229,7 +244,8 @@ struct x86_linux_header {
+ 
+ 	uint32_t kernel_alignment;		/* 0x230 */
+ 	uint8_t  relocatable_kernel;		/* 0x234 */
+-	uint8_t  reserved6[3];			/* 0x235 */
++	uint8_t  min_alignment;			/* 0x235 */
++	uint16_t xloadflags;			/* 0x236 */
+ 	uint32_t cmdline_size;			/* 0x238 */
+ 	uint32_t hardware_subarch;		/* 0x23C */
+ 	uint64_t hardware_subarch_data;		/* 0x240 */
 -- 
 1.7.10.4
 
