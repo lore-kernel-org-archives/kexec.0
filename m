@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ia0-x22e.google.com ([2607:f8b0:4001:c02::22e])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8k0A-0000Nu-0L
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:12:50 +0000
-Received: by mail-ia0-f174.google.com with SMTP id u20so207852iag.33
- for <kexec@lists.infradead.org>; Thu, 21 Feb 2013 20:12:48 -0800 (PST)
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1U8kON-0000eJ-Mj
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:37:53 +0000
+Message-ID: <5126F5BD.1030602@cn.fujitsu.com>
+Date: Fri, 22 Feb 2013 12:36:13 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <CAE9FiQXUbEupR03v65gExrNwwzUQyCoQrMjh_UX-YHe3Zxb_2Q@mail.gmail.com>
-References: <1359060264-10671-1-git-send-email-yinghai@kernel.org>
- <20130125090818.GF30990@verge.net.au>
- <CAE9FiQWjj4GiBWqkCaR_hyXx8HjKrigk+erA2f9+Z7OUyC_e2w@mail.gmail.com>
- <20130128004913.GF3423@verge.net.au>
- <CAE9FiQXUbEupR03v65gExrNwwzUQyCoQrMjh_UX-YHe3Zxb_2Q@mail.gmail.com>
-Date: Thu, 21 Feb 2013 20:12:48 -0800
-Message-ID: <CAE9FiQUm4=GetjTqWvm+rem0zh2ebcd=Od7q0WVnuqhZovhLJw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/7] kexec: put bzImage and ramdisk above 4G for x86
- 64bit
-From: Yinghai Lu <yinghai@kernel.org>
+Subject: [PATCH] kexec: fix memory leak in function kimage_normal_alloc
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,28 +20,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Sasha Levin <sasha.levin@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Sun, Jan 27, 2013 at 6:39 PM, Yinghai Lu <yinghai@kernel.org> wrote:
-> On Sun, Jan 27, 2013 at 4:49 PM, Simon Horman <horms@verge.net.au> wrote:
->>> Do you want to wait those kexec-tools patches hit tip tree or Linus tree?
->>
->> Yes, if you could ping me when they hit Linus's tree that would be great.
->
-> ok, will resend them after it hit Linus's tree.
+If kimage_normal_alloc() fails to alloc pages for image->swap_page, it
+should call kimage_free_page_list() to free allocated pages in
+image->control_pages list before it frees image.
 
-Hi, Simon,
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Sasha Levin <sasha.levin@oracle.com>
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kernel/kexec.c |   18 ++++++++++--------
+ 1 files changed, 10 insertions(+), 8 deletions(-)
 
-Kernel parts change get merged into linus' tree today via hpa.
-
-I just resent kexec-tools parts, with v9 in the subject.
-
-Please check them.
-
-Thanks
-
-Yinghai
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 5e4bd78..a57face 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -223,6 +223,8 @@ out:
+ 
+ }
+ 
++static void kimage_free_page_list(struct list_head *list);
++
+ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 				unsigned long nr_segments,
+ 				struct kexec_segment __user *segments)
+@@ -248,22 +250,22 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+ 	if (!image->control_code_page) {
+ 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+-		goto out;
++		goto out_free;
+ 	}
+ 
+ 	image->swap_page = kimage_alloc_control_pages(image, 0);
+ 	if (!image->swap_page) {
+ 		printk(KERN_ERR "Could not allocate swap buffer\n");
+-		goto out;
++		goto out_free;
+ 	}
+ 
+-	result = 0;
+- out:
+-	if (result == 0)
+-		*rimage = image;
+-	else
+-		kfree(image);
++	*rimage = image;
++	return 0;
+ 
++out_free:
++	kimage_free_page_list(&image->control_pages);
++	kfree(image);
++out:
+ 	return result;
+ }
+ 
+-- 
+1.7.1
 
 _______________________________________________
 kexec mailing list
