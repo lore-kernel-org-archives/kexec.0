@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8jw9-0008O6-S0
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:42 +0000
+ id 1U8jwB-0008Of-JZ
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:44 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v9 2/7] kexec, x86: add boot header member for version 2.12
-Date: Thu, 21 Feb 2013 20:07:51 -0800
-Message-Id: <1361506076-13112-3-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v9 3/7] kexec, x86: clean boot_params area for entry-32bit path
+Date: Thu, 21 Feb 2013 20:07:52 -0800
+Message-Id: <1361506076-13112-4-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
 References: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,82 +25,46 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-will use ext_ramdisk_image/size, and xloadflags to put
-ramdisk and bzImage high for 64bit.
+kexec bzImage path setup data is shared with real-mode path, and
+setup_header is copied together with setup_code.
+Later 32bit just use whole area as boot_params for real_mode_data.
+but those area for boot_params around setup_header is
+not cleaned that will leave some field in boot_param as
+non-zero value.
+
+So clean whole buffer at first, and only copy setup_header for non
+real-mode entry path.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- include/x86/x86-linux.h |   26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index ea11042..0949dc2 100644
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -32,7 +32,7 @@ struct drive_info_struct {
- };
- struct sys_desc_table {
- 	uint16_t length;
--	uint8_t  table[318];
-+	uint8_t  table[30];
- };
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 83a023d..35005c7 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -211,7 +211,19 @@ int do_bzImage_load(struct kexec_info *info,
+ 	/* The argument/parameter segment */
+ 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
+ 	real_mode = xmalloc(setup_size);
+-	memcpy(real_mode, kernel, kern16_size);
++	memset(real_mode, 0, setup_size);
++	if (!real_mode_entry) {
++		unsigned long setup_header_size = kernel[0x201] + 0x202 - 0x1f1;
++
++		/* only copy setup_header */
++		if (setup_header_size > 0x7f)
++			setup_header_size = 0x7f;
++		memcpy((unsigned char *)real_mode + 0x1f1, kernel + 0x1f1,
++			setup_header_size);
++	} else {
++		/* copy setup code and setup_header */
++		memcpy(real_mode, kernel, kern16_size);
++	}
  
- struct apm_bios_info {
-@@ -112,6 +112,10 @@ struct x86_linux_param_header {
- 	struct apm_bios_info apm_bios_info;	/* 0x40 */
- 	struct drive_info_struct drive_info;	/* 0x80 */
- 	struct sys_desc_table sys_desc_table;	/* 0xa0 */
-+	uint32_t ext_ramdisk_image;		/* 0xc0 */
-+	uint32_t ext_ramdisk_size;		/* 0xc4 */
-+	uint32_t ext_cmd_line_ptr;		/* 0xc8 */
-+	uint8_t reserved4_1[0x1e0 - 0xcc];	/* 0xcc */
- 	uint32_t alt_mem_k;			/* 0x1e0 */
- 	uint8_t  reserved5[4];			/* 0x1e4 */
- 	uint8_t  e820_map_nr;			/* 0x1e8 */
-@@ -175,11 +179,18 @@ struct x86_linux_param_header {
- 	/* 2.04+ */
- 	uint32_t kernel_alignment;		/* 0x230 */
- 	uint8_t  relocatable_kernel;		/* 0x234 */
--	uint8_t  reserved15[3];			/* 0x235 */
-+	uint8_t  min_alignment;			/* 0x235 */
-+	uint16_t xloadflags;			/* 0x236 */
- 	uint32_t cmdline_size;			/* 0x238 */
- 	uint32_t hardware_subarch;		/* 0x23C */
- 	uint64_t hardware_subarch_data;		/* 0x240 */
--	uint8_t  reserved16[0x290 - 0x248];	/* 0x248 */
-+	uint32_t payload_offset;		/* 0x248 */
-+	uint32_t payload_length;		/* 0x24C */
-+	uint64_t setup_data;			/* 0x250 */
-+	uint64_t pref_address;			/* 0x258 */
-+	uint32_t init_size;			/* 0x260 */
-+	uint32_t handover_offset;		/* 0x264 */
-+	uint8_t  reserved16[0x290 - 0x268];	/* 0x268 */
- 	uint32_t edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];	/* 0x290 */
- #endif
- 	struct 	e820entry e820_map[E820MAX];	/* 0x2d0 */
-@@ -196,7 +207,11 @@ struct x86_linux_faked_param_header {
- };
- 
- struct x86_linux_header {
--	uint8_t  reserved1[0x1f1];		/* 0x000 */
-+	uint8_t  reserved1[0xc0];		/* 0x000 */
-+	uint32_t ext_ramdisk_image;		/* 0x0c0 */
-+	uint32_t ext_ramdisk_size;		/* 0x0c4 */
-+	uint32_t ext_cmd_line_ptr;		/* 0x0c8 */
-+	uint8_t  reserved1_1[0x1f1-0xcc];	/* 0x0cc */
- 	uint8_t  setup_sects;			/* 0x1f1 */
- 	uint16_t root_flags;			/* 0x1f2 */
- 	uint32_t syssize;			/* 0x1f4 */
-@@ -229,7 +244,8 @@ struct x86_linux_header {
- 
- 	uint32_t kernel_alignment;		/* 0x230 */
- 	uint8_t  relocatable_kernel;		/* 0x234 */
--	uint8_t  reserved6[3];			/* 0x235 */
-+	uint8_t  min_alignment;			/* 0x235 */
-+	uint16_t xloadflags;			/* 0x236 */
- 	uint32_t cmdline_size;			/* 0x238 */
- 	uint32_t hardware_subarch;		/* 0x23C */
- 	uint64_t hardware_subarch_data;		/* 0x240 */
+ 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
+ 		/* If using bzImage for capture kernel, then we will not be
 -- 
 1.7.10.4
 
