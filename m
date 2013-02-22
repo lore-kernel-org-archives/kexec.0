@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8jwK-0008SI-4p
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:53 +0000
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v9 7/7] kexec, x86: handle Crash low kernel range
-Date: Thu, 21 Feb 2013 20:07:56 -0800
-Message-Id: <1361506076-13112-8-git-send-email-yinghai@kernel.org>
-In-Reply-To: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
-References: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1U8jyp-0000Kr-Fj
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:11:28 +0000
+Message-ID: <5126ECF8.2050806@cn.fujitsu.com>
+Date: Fri, 22 Feb 2013 11:58:48 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] kexec: prevent double free on image allocation failure
+References: <1361496375-30994-1-git-send-email-sasha.levin@oracle.com>
+ <87vc9l5cz4.fsf@xmission.com> <5126DC06.5020005@cn.fujitsu.com>
+ <5126E8F2.70502@oracle.com>
+In-Reply-To: <5126E8F2.70502@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,79 +20,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
+To: Sasha Levin <sasha.levin@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-kernel could have that in /proc/iomem, will use it for kdump kernel
-for dma32
-
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
----
- kexec/arch/i386/crashdump-x86.c |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 245402c..83bff5e 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -188,6 +188,8 @@ static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
- 
- /* Memory region reserved for storing panic kernel and other data. */
- static struct memory_range crash_reserved_mem;
-+/* under 4G parts */
-+static struct memory_range crash_reserved_low_mem;
- 
- /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
-  * create Elf headers. Keeping it separate from get_memory_ranges() as
-@@ -282,6 +284,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
- 	if (exclude_region(&memory_ranges, crash_reserved_mem.start,
- 				crash_reserved_mem.end) < 0)
- 		return -1;
-+	if (crash_reserved_low_mem.start &&
-+	    exclude_region(&memory_ranges, crash_reserved_low_mem.start,
-+				crash_reserved_low_mem.end) < 0)
-+		return -1;
- 	if (gart) {
- 		/* exclude GART region if the system has one */
- 		if (exclude_region(&memory_ranges, gart_start, gart_end) < 0)
-@@ -984,6 +990,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 		return ENOCRASHKERNEL;
- 	}
- 
-+	if (crash_reserved_low_mem.start) {
-+		sz = crash_reserved_low_mem.end - crash_reserved_low_mem.start
-+					 +1;
-+		add_memmap(memmap_p, crash_reserved_low_mem.start, sz);
-+	}
-+
- 	/* Create a backup region segment to store backup data*/
- 	if (!(info->kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
- 		sz = (info->backup_src_size + align) & ~(align - 1);
-@@ -1059,5 +1071,14 @@ int is_crashkernel_mem_reserved(void)
- 	crash_reserved_mem.end = end;
- 	crash_reserved_mem.type = RANGE_RAM;
- 
-+	/* If there is no Crash low kernel, still can go on */
-+	if (parse_iomem_single("Crash kernel low\n", &start, &end) ||
-+					start == end)
-+		return 1;
-+
-+	crash_reserved_low_mem.start = start;
-+	crash_reserved_low_mem.end = end;
-+	crash_reserved_low_mem.type = RANGE_RAM;
-+
- 	return 1;
- }
--- 
-1.7.10.4
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+09ogMjAxM8TqMDLUwjIyyNUgMTE6NDEsIFNhc2hhIExldmluINC0tcA6Cj4gT24gMDIvMjEvMjAx
+MyAwOTo0NiBQTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+PiDT2iAyMDEzxOowMtTCMjLI1SAwOTo1
+NSwgRXJpYyBXLiBCaWVkZXJtYW4g0LS1wDoKPj4+IFNhc2hhIExldmluIDxzYXNoYS5sZXZpbkBv
+cmFjbGUuY29tPiB3cml0ZXM6Cj4+Pgo+Pj4+IElmIGtpbWFnZV9ub3JtYWxfYWxsb2MoKSBmYWls
+cyB0byBpbml0aWFsaXplIGFuIGFsbG9jYXRlZCBraW1hZ2UsIGl0IHdpbGwgZnJlZQo+Pj4+IHRo
+ZSBpbWFnZSBidXQgd291bGQgc3RpbGwgc2V0ICdyaW1hZ2UnLCBhcyBhIHJlc3VsdCBrZXhlY19s
+b2FkIHdpbGwgdHJ5Cj4+Pj4gdG8gZnJlZSBpdCBhZ2Fpbi4KPj4+Pgo+Pj4+IFRoaXMgd291bGQg
+ZXhwbG9kZSBhcyBwYXJ0IG9mIHRoZSBmcmVlaW5nIHByb2Nlc3MgaXMgYWNjZXNzaW5nIGludGVy
+bmFsCj4+Pj4gbWVtYmVycyB3aGljaCBwb2ludCB0byB1bmluaXRpYWxpemVkIG1lbW9yeS4KPj4+
+Cj4+PiBBZ3JlZWQuCj4+Pgo+Pj4gSSBkb24ndCB0aGluayB0aGF0IGZhaWx1cmUgcGF0aCBoYXMg
+ZXZlciBhY3R1YWxseSBiZWVuIGV4ZXJjaXNlZC4KPj4+Cj4+PiBUaGUgY29kZSBpcyB3cm9uZywg
+YW5kIGl0IGlzIHdvcnRoIGZpeGluZy4KPj4+Cj4+PiBBbmRyZXcgSSBkbyB5b3UgdGhpbmsgeW91
+IGNvdWxkIHF1ZXVlIHRoaXMgdXA/ICBJIGRvbid0IGhhdmUgYSBoYW5keSB0cmVlLgo+Pgo+Pgo+
+PiBJIHN0aWxsIGZvdW5kIGFub3RoZXIgbWFsbG9jL2ZyZWUgcHJvYmxlbSBpbiB0aGlzIGZ1bmN0
+aW9uLiBTbyBJIHVwZGF0ZSB0aGUgcGF0Y2guCj4+Cj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
+Pgo+PiBGcm9tIDFmYjc2YTM1ZTQxMDllMTQzNWY1NTA0OGMyMGVhNTg2MjJlN2Y4N2IgTW9uIFNl
+cCAxNyAwMDowMDowMCAyMDAxCj4+IEZyb206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24u
+ZnVqaXRzdS5jb20+Cj4+IERhdGU6IEZyaSwgMjIgRmViIDIwMTMgMTA6MzQ6MDIgKzA4MDAKPj4g
+U3ViamVjdDogW1BBVENIXSBrZXhlYzogZml4IGFsbG9jYXRpb24gcHJvYmxlbXMgaW4gZnVuY3Rp
+b24ga2ltYWdlX25vcm1hbF9hbGxvYwo+Pgo+PiBUaGUgZnVuY3Rpb24ga2ltYWdlX25vcm1hbF9h
+bGxvYygpIGhhcyAyIGFsbG9jYXRpb24gcHJvYmxlbXMgdGhhdCBtYXkgY2F1c2UKPj4gZmFpbHVy
+ZXM6Cj4+Cj4+ICAgMS4gSWYga2ltYWdlX25vcm1hbF9hbGxvYygpIGZhaWxzIHRvIGluaXRpYWxp
+emUgYW4gYWxsb2NhdGVkIGtpbWFnZSwgaXQgd2lsbAo+PiAgICAgIGZyZWUgdGhlIGltYWdlIGJ1
+dCB3b3VsZCBzdGlsbCBzZXQgJ3JpbWFnZScsIGFzIGEgcmVzdWx0IGtleGVjX2xvYWQgd2lsbAo+
+PiAgICAgIHRyeSB0byBmcmVlIGl0IGFnYWluLgo+Pgo+PiAgICAgIFRoaXMgd291bGQgZXhwbG9k
+ZSBhcyBwYXJ0IG9mIHRoZSBmcmVlaW5nIHByb2Nlc3MgaXMgYWNjZXNzaW5nIGludGVybmFsCj4+
+ICAgICAgbWVtYmVycyB3aGljaCBwb2ludCB0byB1bmluaXRpYWxpemVkIG1lbW9yeS4KPj4KPj4g
+ICAyLiBJZiBraW1hZ2Vfbm9ybWFsX2FsbG9jKCkgZmFpbHMgdG8gYWxsb2MgcGFnZXMgZm9yIGlt
+YWdlLT5zd2FwX3BhZ2UsIGl0Cj4+ICAgICAgc2hvdWxkIGNhbGwga2ltYWdlX2ZyZWVfcGFnZV9s
+aXN0KCkgdG8gZnJlZSBhbGxvY2F0ZWQgcGFnZXMgaW4KPj4gICAgICBpbWFnZS0+Y29udHJvbF9w
+YWdlcyBsaXN0IGJlZm9yZSBpdCBmcmVlcyBpbWFnZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogU2Fz
+aGEgTGV2aW4gPHNhc2hhLmxldmluQG9yYWNsZS5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6IFpoYW5n
+IFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4+IC0tLQo+PiAga2VybmVsL2tl
+eGVjLmMgfCAgIDEwICsrKysrKy0tLS0KPj4gIDEgZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25z
+KCspLCA0IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjLmMgYi9r
+ZXJuZWwva2V4ZWMuYwo+PiBpbmRleCA1ZTRiZDc4Li5mMjE5MzU3IDEwMDY0NAo+PiAtLS0gYS9r
+ZXJuZWwva2V4ZWMuYwo+PiArKysgYi9rZXJuZWwva2V4ZWMuYwo+PiBAQCAtMjIzLDYgKzIyMyw4
+IEBAIG91dDoKPj4gIAo+PiAgfQo+PiAgCj4+ICtzdGF0aWMgdm9pZCBraW1hZ2VfZnJlZV9wYWdl
+X2xpc3Qoc3RydWN0IGxpc3RfaGVhZCAqbGlzdCk7Cj4+ICsKPj4gIHN0YXRpYyBpbnQga2ltYWdl
+X25vcm1hbF9hbGxvYyhzdHJ1Y3Qga2ltYWdlICoqcmltYWdlLCB1bnNpZ25lZCBsb25nIGVudHJ5
+LAo+PiAgCQkJCXVuc2lnbmVkIGxvbmcgbnJfc2VnbWVudHMsCj4+ICAJCQkJc3RydWN0IGtleGVj
+X3NlZ21lbnQgX191c2VyICpzZWdtZW50cykKPj4gQEAgLTIzNiw4ICsyMzgsNiBAQCBzdGF0aWMg
+aW50IGtpbWFnZV9ub3JtYWxfYWxsb2Moc3RydWN0IGtpbWFnZSAqKnJpbWFnZSwgdW5zaWduZWQg
+bG9uZyBlbnRyeSwKPj4gIAlpZiAocmVzdWx0KQo+PiAgCQlnb3RvIG91dDsKPj4gIAo+PiAtCSpy
+aW1hZ2UgPSBpbWFnZTsKPj4gLQo+PiAgCS8qCj4+ICAJICogRmluZCBhIGxvY2F0aW9uIGZvciB0
+aGUgY29udHJvbCBjb2RlIGJ1ZmZlciwgYW5kIGFkZCBpdAo+PiAgCSAqIHRoZSB2ZWN0b3Igb2Yg
+c2VnbWVudHMgc28gdGhhdCBpdCdzIHBhZ2VzIHdpbGwgYWxzbyBiZQo+PiBAQCAtMjU5LDEwICsy
+NTksMTIgQEAgc3RhdGljIGludCBraW1hZ2Vfbm9ybWFsX2FsbG9jKHN0cnVjdCBraW1hZ2UgKipy
+aW1hZ2UsIHVuc2lnbmVkIGxvbmcgZW50cnksCj4+ICAKPj4gIAlyZXN1bHQgPSAwOwo+PiAgIG91
+dDoKPj4gLQlpZiAocmVzdWx0ID09IDApCj4+ICsJaWYgKHJlc3VsdCA9PSAwKSB7Cj4+ICAJCSpy
+aW1hZ2UgPSBpbWFnZTsKPj4gLQllbHNlCj4+ICsJfSBlbHNlIHsKPj4gKwkJa2ltYWdlX2ZyZWVf
+cGFnZV9saXN0KCZpbWFnZS0+Y29udHJvbF9wYWdlcyk7Cj4+ICAJCWtmcmVlKGltYWdlKTsKPj4g
+Kwl9Cj4+ICAKPj4gIAlyZXR1cm4gcmVzdWx0Owo+PiAgfQo+IAo+IEFuZCBpZiBkb19raW1hZ2Vf
+YWxsb2MoKSBmYWlscyBpbnN0ZWFkIG9mIGtpbWFnZV9hbGxvY19jb250cm9sX3BhZ2VzKCkKPiB5
+b3Ugd2lsbCBOVUxMIGRlcmVmICdpbWFnZScsIHNvIG5vdyBpbnN0ZWFkIG9mIGxlYWtpbmcgcGFn
+ZXMgdGhlIGtlcm5lbAo+IHdpbGwgZXhwbG9kZS4KCk9oLCBJIG1pc3NlZCB0aGlzLgoKPiAKPiBF
+aXRoZXIgd2F5LCB0aGlzIGlzc3VlIHlvdSd2ZSBwb2ludGVkIG91dCBzaG91bGQgYmUgZml4ZWQg
+aW4gYSBzZXBhcmF0ZQo+IHBhdGNoLgo+IAo+IAoKT0ujrEkgd2lsbCBzZW5kIGFub3RoZXIgcGF0
+Y2guCgpUaGFua3MKWmhhbmcKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
