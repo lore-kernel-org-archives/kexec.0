@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U90ea-0000fG-9t
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 21:59:40 +0000
-Date: Fri, 22 Feb 2013 13:59:38 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] kexec: fix memory leak in function kimage_normal_alloc
-Message-Id: <20130222135938.c6f28ff5.akpm@linux-foundation.org>
-In-Reply-To: <5126F5BD.1030602@cn.fujitsu.com>
-References: <5126F5BD.1030602@cn.fujitsu.com>
-Mime-Version: 1.0
+ id 1U9BuZ-00025R-PB
+ for kexec@lists.infradead.org; Sat, 23 Feb 2013 10:00:56 +0000
+Date: Fri, 22 Feb 2013 15:12:15 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: avoid freeing NULL pointer in function
+ kimage_crash_alloc
+Message-ID: <20130222231214.GH4737@verge.net.au>
+References: <5126F92A.2030007@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5126F92A.2030007@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,29 +25,38 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: Sasha Levin <sasha.levin@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Fri, 22 Feb 2013 12:36:13 +0800
-Zhang Yanfei <zhangyanfei@cn.fujitsu.com> wrote:
+On Fri, Feb 22, 2013 at 12:50:50PM +0800, Zhang Yanfei wrote:
+> Though there is no error if we free a NULL pointer, I think we could
+> avoid this behaviour. Change the code a little in kimage_crash_alloc()
+> could avoid this kind of unnecessary free.
+> 
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-> If kimage_normal_alloc() fails to alloc pages for image->swap_page, it
-> should call kimage_free_page_list() to free allocated pages in
-> image->control_pages list before it frees image.
->
-> ...
->
+
+Reviewed-by: Simon Horman <horms@verge.net.au>
+
+> ---
+>  kernel/kexec.c |   15 +++++++--------
+>  1 files changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 5e4bd78..4e96fa7 100644
 > --- a/kernel/kexec.c
 > +++ b/kernel/kexec.c
-> @@ -223,6 +223,8 @@ out:
+> @@ -310,7 +310,7 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+>  		mend = mstart + image->segment[i].memsz - 1;
+>  		/* Ensure we are within the crash kernel limits */
+>  		if ((mstart < crashk_res.start) || (mend > crashk_res.end))
+> -			goto out;
+> +			goto out_free;
+>  	}
 >  
->  }
->  
-> +static void kimage_free_page_list(struct list_head *list);
-> +
->  static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
->  				unsigned long nr_segments,
->  				struct kexec_segment __user *segments)
-> @@ -248,22 +250,22 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+>  	/*
+> @@ -323,16 +323,15 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
 >  					   get_order(KEXEC_CONTROL_PAGE_SIZE));
 >  	if (!image->control_code_page) {
 >  		printk(KERN_ERR "Could not allocate control_code_buffer\n");
@@ -53,15 +64,8 @@ Zhang Yanfei <zhangyanfei@cn.fujitsu.com> wrote:
 > +		goto out_free;
 >  	}
 >  
->  	image->swap_page = kimage_alloc_control_pages(image, 0);
->  	if (!image->swap_page) {
->  		printk(KERN_ERR "Could not allocate swap buffer\n");
-> -		goto out;
-> +		goto out_free;
->  	}
->  
 > -	result = 0;
-> - out:
+> -out:
 > -	if (result == 0)
 > -		*rimage = image;
 > -	else
@@ -70,22 +74,19 @@ Zhang Yanfei <zhangyanfei@cn.fujitsu.com> wrote:
 > +	return 0;
 >  
 > +out_free:
-> +	kimage_free_page_list(&image->control_pages);
 > +	kfree(image);
 > +out:
 >  	return result;
 >  }
-
-kimage_alloc_normal_control_pages() won't add any pages to the image if
-one of its allocation attemtps failed.  So afaict the first `goto
-out_free' could be just `goto out'.
-
-The second `goto out_free' does appear to be needed: it frees the pages
-allocated by the first call to kimage_alloc_control_pages().  I think. 
-The kimage_alloc_control_pages() handling of image->type is a bit
-twisty.
-
-Please double-check the logic?
+>  
+> -- 
+> 1.7.1
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
