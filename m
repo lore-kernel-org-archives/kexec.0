@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from nat28.tlf.novell.com ([130.57.49.28])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8nkg-0004nO-7T
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 08:13:07 +0000
-Message-Id: <512736DA02000078000C038C@nat28.tlf.novell.com>
-Date: Fri, 22 Feb 2013 08:14:02 +0000
+ id 1U8nnv-0005nD-OH
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 08:16:28 +0000
+Message-Id: <512737A302000078000C038F@nat28.tlf.novell.com>
+Date: Fri, 22 Feb 2013 08:17:23 +0000
 From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [PATCH 0/4] kexec-tools: add support for Xen
- 4.3
-References: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
+Subject: Re: [Xen-devel] [PATCH 0/8] kexec: extended kexec hypercall
+ for use with pv-ops kernels
+References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
 Mime-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -27,41 +27,34 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: David Vrabel <david.vrabel@citrix.com>
 Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
->>> On 21.02.13 at 18:57, David Vrabel <david.vrabel@citrix.com> wrote:
-> The series adds support for the new hypercall ABI which should be
-> provided by Xen 4.3.  Images are loaded into Xen directly with no
-> kernel involvement.
+>>> On 21.02.13 at 18:48, David Vrabel <david.vrabel@citrix.com> wrote:
+> The series improves the kexec hypercall by making Xen responsible for
+> loading and relocating the image.  This allows kexec to be usable by
+> pv-ops kernels and should allow kexec to be usable from a HVM or PVH
+> privileged domain.
 > 
-> Do not apply until the hypervisor side patches are applied to Xen.
+> The first patch is a simple clean-up.
 > 
-> Patch 1 is unrelated but kexec wouldn't work for me without it. Not
-> sure why I had problems, perhaps a toolstack specific issue?
+> The second patch allows hypercall structures to be ABI compatible
+> between 32- and 64-bit guests (by reusing stuff present for domctls
+> and sysctls).  This seems better than having to keep adding compat
+> handling for new hypercalls etc.
 > 
-> Patch 2 makes libxc 4.3 mandatory for Xen support.
+> Patch 3 introduces the new ABI.
+> 
+> Patch 4 and 5 nearly completely reimplement the kexec load, unload and
+> exec sub-ops.  The old load_v1 sub-op is then implemented on top of
+> the new code.
+> 
+> Patch 6 calls the kexec image when dom0 crashes.  This avoids having
+> to alter dom0 kernels to do a exec sub-op call on crash -- an existing
+> SHUTDOWN_crash.
 
-That doesn't sound right. How do you envision this to be
-incorporated into existing distros that don't right away switch
-to Xen 4.3?
+Am I right in understanding that at this point no kexec support is
+necessary in the Dom0 kernel at all anymore? If so, that's a very
+nice move - thanks for doing that!
 
 Jan
-
-> Patch 3 removes a use of /proc/iomem in favour of libxc.
-> 
-> Patch 4 adds the support for loading an image into Xen.
-> 
-> This series explicitly drops support for older version of libxc/Xen as
-> supporting kexec on these hypervisors requires kernel support that
-> will never be available upstream.
-> 
-> David
-> 
-> 
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel@lists.xen.org 
-> http://lists.xen.org/xen-devel 
-
-
 
 
 _______________________________________________
