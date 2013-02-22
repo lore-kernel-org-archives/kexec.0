@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U8kcW-0000q6-BM
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:52:29 +0000
-Message-ID: <5126F92A.2030007@cn.fujitsu.com>
-Date: Fri, 22 Feb 2013 12:50:50 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH] kexec: avoid freeing NULL pointer in function
- kimage_crash_alloc
+Received: from nat28.tlf.novell.com ([130.57.49.28])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1U8nkg-0004nO-7T
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 08:13:07 +0000
+Message-Id: <512736DA02000078000C038C@nat28.tlf.novell.com>
+Date: Fri, 22 Feb 2013 08:14:02 +0000
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] [PATCH 0/4] kexec-tools: add support for Xen
+ 4.3
+References: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,58 +24,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
-Though there is no error if we free a NULL pointer, I think we could
-avoid this behaviour. Change the code a little in kimage_crash_alloc()
-could avoid this kind of unnecessary free.
+>>> On 21.02.13 at 18:57, David Vrabel <david.vrabel@citrix.com> wrote:
+> The series adds support for the new hypercall ABI which should be
+> provided by Xen 4.3.  Images are loaded into Xen directly with no
+> kernel involvement.
+> 
+> Do not apply until the hypervisor side patches are applied to Xen.
+> 
+> Patch 1 is unrelated but kexec wouldn't work for me without it. Not
+> sure why I had problems, perhaps a toolstack specific issue?
+> 
+> Patch 2 makes libxc 4.3 mandatory for Xen support.
 
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kernel/kexec.c |   15 +++++++--------
- 1 files changed, 7 insertions(+), 8 deletions(-)
+That doesn't sound right. How do you envision this to be
+incorporated into existing distros that don't right away switch
+to Xen 4.3?
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 5e4bd78..4e96fa7 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -310,7 +310,7 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
- 		mend = mstart + image->segment[i].memsz - 1;
- 		/* Ensure we are within the crash kernel limits */
- 		if ((mstart < crashk_res.start) || (mend > crashk_res.end))
--			goto out;
-+			goto out_free;
- 	}
- 
- 	/*
-@@ -323,16 +323,15 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
- 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
- 	if (!image->control_code_page) {
- 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
--		goto out;
-+		goto out_free;
- 	}
- 
--	result = 0;
--out:
--	if (result == 0)
--		*rimage = image;
--	else
--		kfree(image);
-+	*rimage = image;
-+	return 0;
- 
-+out_free:
-+	kfree(image);
-+out:
- 	return result;
- }
- 
--- 
-1.7.1
+Jan
+
+> Patch 3 removes a use of /proc/iomem in favour of libxc.
+> 
+> Patch 4 adds the support for loading an image into Xen.
+> 
+> This series explicitly drops support for older version of libxc/Xen as
+> supporting kexec on these hypervisors requires kernel support that
+> will never be available upstream.
+> 
+> David
+> 
+> 
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xen.org 
+> http://lists.xen.org/xen-devel 
+
+
+
 
 _______________________________________________
 kexec mailing list
