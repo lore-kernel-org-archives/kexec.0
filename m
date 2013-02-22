@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8sO4-0002bL-Fz
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 13:10:04 +0000
-Message-Id: <51277C7602000078000C0634@nat28.tlf.novell.com>
-Date: Fri, 22 Feb 2013 13:11:02 +0000
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [PATCH 5/8] kexec: extend hypercall with
- improved load/unload ops
-References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
- <1361468894-18655-6-git-send-email-david.vrabel@citrix.com>
- <51273D9D02000078000C03D4@nat28.tlf.novell.com>
- <51275C8C.80506@citrix.com>
-In-Reply-To: <51275C8C.80506@citrix.com>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1U90ea-0000fG-9t
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 21:59:40 +0000
+Date: Fri, 22 Feb 2013 13:59:38 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] kexec: fix memory leak in function kimage_normal_alloc
+Message-Id: <20130222135938.c6f28ff5.akpm@linux-foundation.org>
+In-Reply-To: <5126F5BD.1030602@cn.fujitsu.com>
+References: <5126F5BD.1030602@cn.fujitsu.com>
 Mime-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,19 +22,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: Sasha Levin <sasha.levin@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
->>> On 22.02.13 at 12:54, David Vrabel <david.vrabel@citrix.com> wrote:
-> I take your point though and will change it to use the dom heap.  Is
-> there a way to verify that all the map/unmaps are correctly done and it
-> isn't just working by chance?  Some sort of debug option?
+On Fri, 22 Feb 2013 12:36:13 +0800
+Zhang Yanfei <zhangyanfei@cn.fujitsu.com> wrote:
 
-Not currently (other than running out of map space at some point,
-resulting in a BUG_ON() to trigger).
+> If kimage_normal_alloc() fails to alloc pages for image->swap_page, it
+> should call kimage_free_page_list() to free allocated pages in
+> image->control_pages list before it frees image.
+>
+> ...
+>
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -223,6 +223,8 @@ out:
+>  
+>  }
+>  
+> +static void kimage_free_page_list(struct list_head *list);
+> +
+>  static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+>  				unsigned long nr_segments,
+>  				struct kexec_segment __user *segments)
+> @@ -248,22 +250,22 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+>  					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+>  	if (!image->control_code_page) {
+>  		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+> -		goto out;
+> +		goto out_free;
+>  	}
+>  
+>  	image->swap_page = kimage_alloc_control_pages(image, 0);
+>  	if (!image->swap_page) {
+>  		printk(KERN_ERR "Could not allocate swap buffer\n");
+> -		goto out;
+> +		goto out_free;
+>  	}
+>  
+> -	result = 0;
+> - out:
+> -	if (result == 0)
+> -		*rimage = image;
+> -	else
+> -		kfree(image);
+> +	*rimage = image;
+> +	return 0;
+>  
+> +out_free:
+> +	kimage_free_page_list(&image->control_pages);
+> +	kfree(image);
+> +out:
+>  	return result;
+>  }
 
-Jan
+kimage_alloc_normal_control_pages() won't add any pages to the image if
+one of its allocation attemtps failed.  So afaict the first `goto
+out_free' could be just `goto out'.
 
+The second `goto out_free' does appear to be needed: it frees the pages
+allocated by the first call to kimage_alloc_control_pages().  I think. 
+The kimage_alloc_control_pages() handling of image->type is a bit
+twisty.
+
+Please double-check the logic?
 
 _______________________________________________
 kexec mailing list
