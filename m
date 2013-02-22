@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8jWN-0007Jv-BF
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 03:42:04 +0000
-Message-ID: <5126E8F2.70502@oracle.com>
-Date: Thu, 21 Feb 2013 22:41:38 -0500
-From: Sasha Levin <sasha.levin@oracle.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: prevent double free on image allocation failure
-References: <1361496375-30994-1-git-send-email-sasha.levin@oracle.com>
- <87vc9l5cz4.fsf@xmission.com> <5126DC06.5020005@cn.fujitsu.com>
-In-Reply-To: <5126DC06.5020005@cn.fujitsu.com>
+ id 1U8jw2-0008NL-Cz
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:35 +0000
+From: Yinghai Lu <yinghai@kernel.org>
+Subject: [PATCH v9 0/7] kexec: put bzImage and ramdisk above 4G for x86 64bit
+Date: Thu, 21 Feb 2013 20:07:49 -0800
+Message-Id: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,68 +15,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-T24gMDIvMjEvMjAxMyAwOTo0NiBQTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+INPaIDIwMTPE6jAy
-1MIyMsjVIDA5OjU1LCBFcmljIFcuIEJpZWRlcm1hbiDQtLXAOgo+PiBTYXNoYSBMZXZpbiA8c2Fz
-aGEubGV2aW5Ab3JhY2xlLmNvbT4gd3JpdGVzOgo+Pgo+Pj4gSWYga2ltYWdlX25vcm1hbF9hbGxv
-YygpIGZhaWxzIHRvIGluaXRpYWxpemUgYW4gYWxsb2NhdGVkIGtpbWFnZSwgaXQgd2lsbCBmcmVl
-Cj4+PiB0aGUgaW1hZ2UgYnV0IHdvdWxkIHN0aWxsIHNldCAncmltYWdlJywgYXMgYSByZXN1bHQg
-a2V4ZWNfbG9hZCB3aWxsIHRyeQo+Pj4gdG8gZnJlZSBpdCBhZ2Fpbi4KPj4+Cj4+PiBUaGlzIHdv
-dWxkIGV4cGxvZGUgYXMgcGFydCBvZiB0aGUgZnJlZWluZyBwcm9jZXNzIGlzIGFjY2Vzc2luZyBp
-bnRlcm5hbAo+Pj4gbWVtYmVycyB3aGljaCBwb2ludCB0byB1bmluaXRpYWxpemVkIG1lbW9yeS4K
-Pj4KPj4gQWdyZWVkLgo+Pgo+PiBJIGRvbid0IHRoaW5rIHRoYXQgZmFpbHVyZSBwYXRoIGhhcyBl
-dmVyIGFjdHVhbGx5IGJlZW4gZXhlcmNpc2VkLgo+Pgo+PiBUaGUgY29kZSBpcyB3cm9uZywgYW5k
-IGl0IGlzIHdvcnRoIGZpeGluZy4KPj4KPj4gQW5kcmV3IEkgZG8geW91IHRoaW5rIHlvdSBjb3Vs
-ZCBxdWV1ZSB0aGlzIHVwPyAgSSBkb24ndCBoYXZlIGEgaGFuZHkgdHJlZS4KPiAKPiAKPiBJIHN0
-aWxsIGZvdW5kIGFub3RoZXIgbWFsbG9jL2ZyZWUgcHJvYmxlbSBpbiB0aGlzIGZ1bmN0aW9uLiBT
-byBJIHVwZGF0ZSB0aGUgcGF0Y2guCj4gCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gCj4gRnJv
-bSAxZmI3NmEzNWU0MTA5ZTE0MzVmNTUwNDhjMjBlYTU4NjIyZTdmODdiIE1vbiBTZXAgMTcgMDA6
-MDA6MDAgMjAwMQo+IEZyb206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5j
-b20+Cj4gRGF0ZTogRnJpLCAyMiBGZWIgMjAxMyAxMDozNDowMiArMDgwMAo+IFN1YmplY3Q6IFtQ
-QVRDSF0ga2V4ZWM6IGZpeCBhbGxvY2F0aW9uIHByb2JsZW1zIGluIGZ1bmN0aW9uIGtpbWFnZV9u
-b3JtYWxfYWxsb2MKPiAKPiBUaGUgZnVuY3Rpb24ga2ltYWdlX25vcm1hbF9hbGxvYygpIGhhcyAy
-IGFsbG9jYXRpb24gcHJvYmxlbXMgdGhhdCBtYXkgY2F1c2UKPiBmYWlsdXJlczoKPiAKPiAgIDEu
-IElmIGtpbWFnZV9ub3JtYWxfYWxsb2MoKSBmYWlscyB0byBpbml0aWFsaXplIGFuIGFsbG9jYXRl
-ZCBraW1hZ2UsIGl0IHdpbGwKPiAgICAgIGZyZWUgdGhlIGltYWdlIGJ1dCB3b3VsZCBzdGlsbCBz
-ZXQgJ3JpbWFnZScsIGFzIGEgcmVzdWx0IGtleGVjX2xvYWQgd2lsbAo+ICAgICAgdHJ5IHRvIGZy
-ZWUgaXQgYWdhaW4uCj4gCj4gICAgICBUaGlzIHdvdWxkIGV4cGxvZGUgYXMgcGFydCBvZiB0aGUg
-ZnJlZWluZyBwcm9jZXNzIGlzIGFjY2Vzc2luZyBpbnRlcm5hbAo+ICAgICAgbWVtYmVycyB3aGlj
-aCBwb2ludCB0byB1bmluaXRpYWxpemVkIG1lbW9yeS4KPiAKPiAgIDIuIElmIGtpbWFnZV9ub3Jt
-YWxfYWxsb2MoKSBmYWlscyB0byBhbGxvYyBwYWdlcyBmb3IgaW1hZ2UtPnN3YXBfcGFnZSwgaXQK
-PiAgICAgIHNob3VsZCBjYWxsIGtpbWFnZV9mcmVlX3BhZ2VfbGlzdCgpIHRvIGZyZWUgYWxsb2Nh
-dGVkIHBhZ2VzIGluCj4gICAgICBpbWFnZS0+Y29udHJvbF9wYWdlcyBsaXN0IGJlZm9yZSBpdCBm
-cmVlcyBpbWFnZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTYXNoYSBMZXZpbiA8c2FzaGEubGV2aW5A
-b3JhY2xlLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZYW5mZWkgPHpoYW5neWFuZmVpQGNu
-LmZ1aml0c3UuY29tPgo+IC0tLQo+ICBrZXJuZWwva2V4ZWMuYyB8ICAgMTAgKysrKysrLS0tLQo+
-ICAxIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPiAKPiBk
-aWZmIC0tZ2l0IGEva2VybmVsL2tleGVjLmMgYi9rZXJuZWwva2V4ZWMuYwo+IGluZGV4IDVlNGJk
-NzguLmYyMTkzNTcgMTAwNjQ0Cj4gLS0tIGEva2VybmVsL2tleGVjLmMKPiArKysgYi9rZXJuZWwv
-a2V4ZWMuYwo+IEBAIC0yMjMsNiArMjIzLDggQEAgb3V0Ogo+ICAKPiAgfQo+ICAKPiArc3RhdGlj
-IHZvaWQga2ltYWdlX2ZyZWVfcGFnZV9saXN0KHN0cnVjdCBsaXN0X2hlYWQgKmxpc3QpOwo+ICsK
-PiAgc3RhdGljIGludCBraW1hZ2Vfbm9ybWFsX2FsbG9jKHN0cnVjdCBraW1hZ2UgKipyaW1hZ2Us
-IHVuc2lnbmVkIGxvbmcgZW50cnksCj4gIAkJCQl1bnNpZ25lZCBsb25nIG5yX3NlZ21lbnRzLAo+
-ICAJCQkJc3RydWN0IGtleGVjX3NlZ21lbnQgX191c2VyICpzZWdtZW50cykKPiBAQCAtMjM2LDgg
-KzIzOCw2IEBAIHN0YXRpYyBpbnQga2ltYWdlX25vcm1hbF9hbGxvYyhzdHJ1Y3Qga2ltYWdlICoq
-cmltYWdlLCB1bnNpZ25lZCBsb25nIGVudHJ5LAo+ICAJaWYgKHJlc3VsdCkKPiAgCQlnb3RvIG91
-dDsKPiAgCj4gLQkqcmltYWdlID0gaW1hZ2U7Cj4gLQo+ICAJLyoKPiAgCSAqIEZpbmQgYSBsb2Nh
-dGlvbiBmb3IgdGhlIGNvbnRyb2wgY29kZSBidWZmZXIsIGFuZCBhZGQgaXQKPiAgCSAqIHRoZSB2
-ZWN0b3Igb2Ygc2VnbWVudHMgc28gdGhhdCBpdCdzIHBhZ2VzIHdpbGwgYWxzbyBiZQo+IEBAIC0y
-NTksMTAgKzI1OSwxMiBAQCBzdGF0aWMgaW50IGtpbWFnZV9ub3JtYWxfYWxsb2Moc3RydWN0IGtp
-bWFnZSAqKnJpbWFnZSwgdW5zaWduZWQgbG9uZyBlbnRyeSwKPiAgCj4gIAlyZXN1bHQgPSAwOwo+
-ICAgb3V0Ogo+IC0JaWYgKHJlc3VsdCA9PSAwKQo+ICsJaWYgKHJlc3VsdCA9PSAwKSB7Cj4gIAkJ
-KnJpbWFnZSA9IGltYWdlOwo+IC0JZWxzZQo+ICsJfSBlbHNlIHsKPiArCQlraW1hZ2VfZnJlZV9w
-YWdlX2xpc3QoJmltYWdlLT5jb250cm9sX3BhZ2VzKTsKPiAgCQlrZnJlZShpbWFnZSk7Cj4gKwl9
-Cj4gIAo+ICAJcmV0dXJuIHJlc3VsdDsKPiAgfQoKQW5kIGlmIGRvX2tpbWFnZV9hbGxvYygpIGZh
-aWxzIGluc3RlYWQgb2Yga2ltYWdlX2FsbG9jX2NvbnRyb2xfcGFnZXMoKQp5b3Ugd2lsbCBOVUxM
-IGRlcmVmICdpbWFnZScsIHNvIG5vdyBpbnN0ZWFkIG9mIGxlYWtpbmcgcGFnZXMgdGhlIGtlcm5l
-bAp3aWxsIGV4cGxvZGUuCgpFaXRoZXIgd2F5LCB0aGlzIGlzc3VlIHlvdSd2ZSBwb2ludGVkIG91
-dCBzaG91bGQgYmUgZml4ZWQgaW4gYSBzZXBhcmF0ZQpwYXRjaC4KCgpUaGFua3MsClNhc2hhCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Now we have limit kdump reserved under 896M, because kexec has the limitation.
+and also bzImage need to stay under 4g.
+
+kernel parts changes get merged to linus tree already.
+
+here patches are for kexec tools to load bzImage and ramdisk above 4G
+acccording to new added boot header fields.
+
+it will only load high with 64bit kernel with 2.12 setup header.
+
+-v3: address review from Eric to use locate_hole at first.
+     use xloadflags instead.
+-v4: remove the restriction about bzImage not crossing GB boundary.
+     add real-mode fix for bzImage.
+     add --entry-32bit and --real-mode for skip bzImage64.
+-v5: use USE_EXT_BOOT_PARAMS bit in xloadflags.
+-v6: use sentinel instead of USE_EXT_BOOT_PARAMS.
+     add crashkernel_low support
+-v7: Separate bootloader id setting in another patch
+-v8: update for CAN_BE_LOADED_ABOVE_4G is changed to bit1.
+     also make it appliable to current kexec-tools devel tree.
+-v9: only copy setup_header when it is not with real_mode_entry.
+
+Yinghai Lu (7):
+  kexec, x86: set booloader id in setup_header
+  kexec, x86: add boot header member for version 2.12
+  kexec, x86: clean boot_params area for entry-32bit path
+  kexec, x86: Fix bzImage real-mode booting
+  kexec, x86: put ramdisk/cmd_line above 4G for 64bit bzImage
+  kexec, x86_64: Load bzImage64 above 4G
+  kexec, x86: handle Crash low kernel range
+
+ include/x86/x86-linux.h                |   27 ++-
+ kexec/arch/i386/crashdump-x86.c        |   21 +++
+ kexec/arch/i386/include/arch/options.h |    4 +-
+ kexec/arch/i386/kexec-bzImage.c        |   76 ++++++--
+ kexec/arch/i386/x86-linux-setup.c      |   38 ++--
+ kexec/arch/i386/x86-linux-setup.h      |   15 +-
+ kexec/arch/x86_64/Makefile             |    1 +
+ kexec/arch/x86_64/kexec-bzImage64.c    |  304 ++++++++++++++++++++++++++++++++
+ kexec/arch/x86_64/kexec-x86_64.c       |    1 +
+ kexec/arch/x86_64/kexec-x86_64.h       |    5 +
+ 10 files changed, 460 insertions(+), 32 deletions(-)
+ create mode 100644 kexec/arch/x86_64/kexec-bzImage64.c
+
+-- 
+1.7.10.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
