@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8iSg-0003cH-Dg
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 02:34:11 +0000
-Message-ID: <5126D90D.4080603@oracle.com>
-Date: Thu, 21 Feb 2013 21:33:49 -0500
-From: Sasha Levin <sasha.levin@oracle.com>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1U8isy-0005mw-80
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 03:01:21 +0000
+Message-ID: <5126DC06.5020005@cn.fujitsu.com>
+Date: Fri, 22 Feb 2013 10:46:30 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH] kexec: prevent double free on image allocation failure
 References: <1361496375-30994-1-git-send-email-sasha.levin@oracle.com>
@@ -19,70 +19,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
-Cc: Dave Jones <davej@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Sasha Levin <sasha.levin@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 02/21/2013 08:55 PM, ebiederm@xmission.com wrote:
-> Sasha Levin <sasha.levin@oracle.com> writes:
-> 
->> If kimage_normal_alloc() fails to initialize an allocated kimage, it will free
->> the image but would still set 'rimage', as a result kexec_load will try
->> to free it again.
->>
->> This would explode as part of the freeing process is accessing internal
->> members which point to uninitialized memory.
-> 
-> Agreed.
-> 
-> I don't think that failure path has ever actually been exercised.
-
-trinity is actually quite good at hitting that, which is how I discovered
-it:
-
-[  418.138251] Could not allocate control_code_buffer
-[  418.143739] general protection fault: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
-[  418.147131] Dumping ftrace buffer:
-[  418.147901]    (ftrace buffer empty)
-[  418.148697] Modules linked in:
-[  418.153440] CPU 1
-[  418.153440] Pid: 18098, comm: trinity Tainted: G        W    3.8.0-next-20130220-sasha-00037-gc07b3b2-dirty #7
-[  418.153440] RIP: 0010:[<ffffffff8119b5a6>]  [<ffffffff8119b5a6>] kimage_free_page_list+0x16/0x50
-[  418.153440] RSP: 0018:ffff88009bfade78  EFLAGS: 00010292
-[  418.153440] RAX: 0000000000180004 RBX: 0000000000000002 RCX: 0000000000000000
-[  418.153440] RDX: ffff88009c1a0000 RSI: 0000000000000001 RDI: 6b6b6b6b6b6b6b6b
-[  418.153440] RBP: ffff88009bfade98 R08: 0000000000002782 R09: 0000000000000000
-[  418.153440] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88009c6cb4d0
-[  418.153440] R13: ffff88009c6cb720 R14: ffff88009c6cb4d0 R15: 00000000000000f6
-[  418.153440] FS:  00007fb7eb95b700(0000) GS:ffff8800bb800000(0000) knlGS:0000000000000000
-[  418.153440] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  418.153440] CR2: 00000000004808e0 CR3: 000000009eaaa000 CR4: 00000000000406e0
-[  418.153440] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  418.153440] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-[  418.153440] Process trinity (pid: 18098, threadinfo ffff88009bfac000, task ffff88009c1a0000)
-[  418.153440] Stack:
-[  418.153440]  ffffffff8546e948 0000000000000002 ffff88009c6cb4d0 0000000000000000
-[  418.153440]  ffff88009bfaded8 ffffffff8119b60f 0000000000000002 0000000000000002
-[  418.153440]  ffff88009c6cb4d0 ffff88009c6cb4d0 fffffffffffffff4 00000000000000f6
-[  418.153440] Call Trace:
-[  418.153440]  [<ffffffff8119b60f>] kimage_free+0x2f/0x100
-[  418.153440]  [<ffffffff8119c563>] sys_kexec_load+0x593/0x660
-[  418.153440]  [<ffffffff8118363d>] ? trace_hardirqs_on+0xd/0x10
-[  418.153440]  [<ffffffff83dab7d8>] tracesys+0xe1/0xe6
-[  418.153440] Code: c1 ef 0c 55 48 c1 e7 06 48 89 e5 48 01 c7 e8 82 ff ff ff 5d c3 55 48 89 e5 41 55 49 89 fd 41 54 53 48 83 ec
-08 48 8b 3f 49 39 fd <48> 8b 1f 75 08 eb 22 0f 1f 00 48 89 d3 4c 8d 67 e0 e8 54 a6 8a
-[  418.153440] RIP  [<ffffffff8119b5a6>] kimage_free_page_list+0x16/0x50
-[  418.153440]  RSP <ffff88009bfade78>
-[  418.219646] ---[ end trace 0adb1d6b71fefb29 ]---
-
-
-Thanks,
-Sasha
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+09ogMjAxM8TqMDLUwjIyyNUgMDk6NTUsIEVyaWMgVy4gQmllZGVybWFuINC0tcA6Cj4gU2FzaGEg
+TGV2aW4gPHNhc2hhLmxldmluQG9yYWNsZS5jb20+IHdyaXRlczoKPiAKPj4gSWYga2ltYWdlX25v
+cm1hbF9hbGxvYygpIGZhaWxzIHRvIGluaXRpYWxpemUgYW4gYWxsb2NhdGVkIGtpbWFnZSwgaXQg
+d2lsbCBmcmVlCj4+IHRoZSBpbWFnZSBidXQgd291bGQgc3RpbGwgc2V0ICdyaW1hZ2UnLCBhcyBh
+IHJlc3VsdCBrZXhlY19sb2FkIHdpbGwgdHJ5Cj4+IHRvIGZyZWUgaXQgYWdhaW4uCj4+Cj4+IFRo
+aXMgd291bGQgZXhwbG9kZSBhcyBwYXJ0IG9mIHRoZSBmcmVlaW5nIHByb2Nlc3MgaXMgYWNjZXNz
+aW5nIGludGVybmFsCj4+IG1lbWJlcnMgd2hpY2ggcG9pbnQgdG8gdW5pbml0aWFsaXplZCBtZW1v
+cnkuCj4gCj4gQWdyZWVkLgo+IAo+IEkgZG9uJ3QgdGhpbmsgdGhhdCBmYWlsdXJlIHBhdGggaGFz
+IGV2ZXIgYWN0dWFsbHkgYmVlbiBleGVyY2lzZWQuCj4gCj4gVGhlIGNvZGUgaXMgd3JvbmcsIGFu
+ZCBpdCBpcyB3b3J0aCBmaXhpbmcuCj4gCj4gQW5kcmV3IEkgZG8geW91IHRoaW5rIHlvdSBjb3Vs
+ZCBxdWV1ZSB0aGlzIHVwPyAgSSBkb24ndCBoYXZlIGEgaGFuZHkgdHJlZS4KCgpJIHN0aWxsIGZv
+dW5kIGFub3RoZXIgbWFsbG9jL2ZyZWUgcHJvYmxlbSBpbiB0aGlzIGZ1bmN0aW9uLiBTbyBJIHVw
+ZGF0ZSB0aGUgcGF0Y2guCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0KCkZyb20gMWZiNzZhMzVlNDEw
+OWUxNDM1ZjU1MDQ4YzIwZWE1ODYyMmU3Zjg3YiBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDEKRnJv
+bTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KRGF0ZTogRnJpLCAy
+MiBGZWIgMjAxMyAxMDozNDowMiArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIGtleGVjOiBmaXggYWxs
+b2NhdGlvbiBwcm9ibGVtcyBpbiBmdW5jdGlvbiBraW1hZ2Vfbm9ybWFsX2FsbG9jCgpUaGUgZnVu
+Y3Rpb24ga2ltYWdlX25vcm1hbF9hbGxvYygpIGhhcyAyIGFsbG9jYXRpb24gcHJvYmxlbXMgdGhh
+dCBtYXkgY2F1c2UKZmFpbHVyZXM6CgogIDEuIElmIGtpbWFnZV9ub3JtYWxfYWxsb2MoKSBmYWls
+cyB0byBpbml0aWFsaXplIGFuIGFsbG9jYXRlZCBraW1hZ2UsIGl0IHdpbGwKICAgICBmcmVlIHRo
+ZSBpbWFnZSBidXQgd291bGQgc3RpbGwgc2V0ICdyaW1hZ2UnLCBhcyBhIHJlc3VsdCBrZXhlY19s
+b2FkIHdpbGwKICAgICB0cnkgdG8gZnJlZSBpdCBhZ2Fpbi4KCiAgICAgVGhpcyB3b3VsZCBleHBs
+b2RlIGFzIHBhcnQgb2YgdGhlIGZyZWVpbmcgcHJvY2VzcyBpcyBhY2Nlc3NpbmcgaW50ZXJuYWwK
+ICAgICBtZW1iZXJzIHdoaWNoIHBvaW50IHRvIHVuaW5pdGlhbGl6ZWQgbWVtb3J5LgoKICAyLiBJ
+ZiBraW1hZ2Vfbm9ybWFsX2FsbG9jKCkgZmFpbHMgdG8gYWxsb2MgcGFnZXMgZm9yIGltYWdlLT5z
+d2FwX3BhZ2UsIGl0CiAgICAgc2hvdWxkIGNhbGwga2ltYWdlX2ZyZWVfcGFnZV9saXN0KCkgdG8g
+ZnJlZSBhbGxvY2F0ZWQgcGFnZXMgaW4KICAgICBpbWFnZS0+Y29udHJvbF9wYWdlcyBsaXN0IGJl
+Zm9yZSBpdCBmcmVlcyBpbWFnZS4KClNpZ25lZC1vZmYtYnk6IFNhc2hhIExldmluIDxzYXNoYS5s
+ZXZpbkBvcmFjbGUuY29tPgpTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZYW5mZWkgPHpoYW5neWFuZmVp
+QGNuLmZ1aml0c3UuY29tPgotLS0KIGtlcm5lbC9rZXhlYy5jIHwgICAxMCArKysrKystLS0tCiAx
+IGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9rZXJuZWwva2V4ZWMuYyBiL2tlcm5lbC9rZXhlYy5jCmluZGV4IDVlNGJkNzguLmYyMTkz
+NTcgMTAwNjQ0Ci0tLSBhL2tlcm5lbC9rZXhlYy5jCisrKyBiL2tlcm5lbC9rZXhlYy5jCkBAIC0y
+MjMsNiArMjIzLDggQEAgb3V0OgogCiB9CiAKK3N0YXRpYyB2b2lkIGtpbWFnZV9mcmVlX3BhZ2Vf
+bGlzdChzdHJ1Y3QgbGlzdF9oZWFkICpsaXN0KTsKKwogc3RhdGljIGludCBraW1hZ2Vfbm9ybWFs
+X2FsbG9jKHN0cnVjdCBraW1hZ2UgKipyaW1hZ2UsIHVuc2lnbmVkIGxvbmcgZW50cnksCiAJCQkJ
+dW5zaWduZWQgbG9uZyBucl9zZWdtZW50cywKIAkJCQlzdHJ1Y3Qga2V4ZWNfc2VnbWVudCBfX3Vz
+ZXIgKnNlZ21lbnRzKQpAQCAtMjM2LDggKzIzOCw2IEBAIHN0YXRpYyBpbnQga2ltYWdlX25vcm1h
+bF9hbGxvYyhzdHJ1Y3Qga2ltYWdlICoqcmltYWdlLCB1bnNpZ25lZCBsb25nIGVudHJ5LAogCWlm
+IChyZXN1bHQpCiAJCWdvdG8gb3V0OwogCi0JKnJpbWFnZSA9IGltYWdlOwotCiAJLyoKIAkgKiBG
+aW5kIGEgbG9jYXRpb24gZm9yIHRoZSBjb250cm9sIGNvZGUgYnVmZmVyLCBhbmQgYWRkIGl0CiAJ
+ICogdGhlIHZlY3RvciBvZiBzZWdtZW50cyBzbyB0aGF0IGl0J3MgcGFnZXMgd2lsbCBhbHNvIGJl
+CkBAIC0yNTksMTAgKzI1OSwxMiBAQCBzdGF0aWMgaW50IGtpbWFnZV9ub3JtYWxfYWxsb2Moc3Ry
+dWN0IGtpbWFnZSAqKnJpbWFnZSwgdW5zaWduZWQgbG9uZyBlbnRyeSwKIAogCXJlc3VsdCA9IDA7
+CiAgb3V0OgotCWlmIChyZXN1bHQgPT0gMCkKKwlpZiAocmVzdWx0ID09IDApIHsKIAkJKnJpbWFn
+ZSA9IGltYWdlOwotCWVsc2UKKwl9IGVsc2UgeworCQlraW1hZ2VfZnJlZV9wYWdlX2xpc3QoJmlt
+YWdlLT5jb250cm9sX3BhZ2VzKTsKIAkJa2ZyZWUoaW1hZ2UpOworCX0KIAogCXJldHVybiByZXN1
+bHQ7CiB9Ci0tIAoxLjcuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
