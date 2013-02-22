@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U8jwB-0008Of-JZ
- for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:44 +0000
+ id 1U8jwD-0008PM-OW
+ for kexec@lists.infradead.org; Fri, 22 Feb 2013 04:08:47 +0000
 From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v9 3/7] kexec, x86: clean boot_params area for entry-32bit path
-Date: Thu, 21 Feb 2013 20:07:52 -0800
-Message-Id: <1361506076-13112-4-git-send-email-yinghai@kernel.org>
+Subject: [PATCH v9 4/7] kexec, x86: Fix bzImage real-mode booting
+Date: Thu, 21 Feb 2013 20:07:53 -0800
+Message-Id: <1361506076-13112-5-git-send-email-yinghai@kernel.org>
 In-Reply-To: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
 References: <1361506076-13112-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,46 +25,128 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org
 
-kexec bzImage path setup data is shared with real-mode path, and
-setup_header is copied together with setup_code.
-Later 32bit just use whole area as boot_params for real_mode_data.
-but those area for boot_params around setup_header is
-not cleaned that will leave some field in boot_param as
-non-zero value.
+We need to keep space for bss, heap/stack before command line.
+otherwise command_line will be cleared by kernel 16bit init code.
 
-So clean whole buffer at first, and only copy setup_header for non
-real-mode entry path.
+also need to set 32bit start in real_mode header, kernel 16bit code
+need to jump there.
+
+Also don't touch regs16 if --real-mode is not specified.
 
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 ---
- kexec/arch/i386/kexec-bzImage.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ kexec/arch/i386/kexec-bzImage.c |   62 +++++++++++++++++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 13 deletions(-)
 
 diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 83a023d..35005c7 100644
+index 35005c7..0756f23 100644
 --- a/kexec/arch/i386/kexec-bzImage.c
 +++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -211,7 +211,19 @@ int do_bzImage_load(struct kexec_info *info,
- 	/* The argument/parameter segment */
- 	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
- 	real_mode = xmalloc(setup_size);
--	memcpy(real_mode, kernel, kern16_size);
-+	memset(real_mode, 0, setup_size);
-+	if (!real_mode_entry) {
-+		unsigned long setup_header_size = kernel[0x201] + 0x202 - 0x1f1;
-+
-+		/* only copy setup_header */
-+		if (setup_header_size > 0x7f)
-+			setup_header_size = 0x7f;
-+		memcpy((unsigned char *)real_mode + 0x1f1, kernel + 0x1f1,
-+			setup_header_size);
-+	} else {
-+		/* copy setup code and setup_header */
-+		memcpy(real_mode, kernel, kern16_size);
-+	}
+@@ -117,6 +117,8 @@ int do_bzImage_load(struct kexec_info *info,
+ 	unsigned long kernel32_load_addr;
+ 	char *modified_cmdline;
+ 	unsigned long cmdline_end;
++	unsigned long kern16_size_needed;
++	unsigned long heap_size = 0;
  
- 	if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)) {
- 		/* If using bzImage for capture kernel, then we will not be
+ 	/*
+ 	 * Find out about the file I am about to load.
+@@ -208,8 +210,29 @@ int do_bzImage_load(struct kexec_info *info,
+ 		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+ 					0x3000, 640*1024, -1, 0);
+ 	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
++
+ 	/* The argument/parameter segment */
+-	setup_size = kern16_size + command_line_len + PURGATORY_CMDLINE_SIZE;
++	if (real_mode_entry) {
++		/* need to include size for bss and heap etc */
++		if (setup_header.protocol_version >= 0x0201)
++			kern16_size_needed = setup_header.heap_end_ptr;
++		else
++			kern16_size_needed = kern16_size + 8192; /* bss */
++		if (kern16_size_needed < kern16_size)
++			kern16_size_needed = kern16_size;
++		if (kern16_size_needed > 0xfffc)
++			die("kern16_size_needed is more then 64k\n");
++		heap_size = 0xfffc - kern16_size_needed; /* less 64k */
++		heap_size &= ~(0x200 - 1);
++		kern16_size_needed += heap_size;
++	} else {
++		kern16_size_needed = kern16_size;
++		/* need to bigger than size of struct bootparams */
++		if (kern16_size_needed < 4096)
++			kern16_size_needed = 4096;
++	}
++	setup_size = kern16_size_needed + command_line_len +
++			 PURGATORY_CMDLINE_SIZE;
+ 	real_mode = xmalloc(setup_size);
+ 	memset(real_mode, 0, setup_size);
+ 	if (!real_mode_entry) {
+@@ -275,11 +298,18 @@ int do_bzImage_load(struct kexec_info *info,
+ 
+ 	/* Tell the kernel what is going on */
+ 	setup_linux_bootloader_parameters(info, real_mode, setup_base,
+-		kern16_size, command_line, command_line_len,
++		kern16_size_needed, command_line, command_line_len,
+ 		initrd, initrd_len);
+ 
++	if (real_mode_entry && real_mode->protocol_version >= 0x0201) {
++		real_mode->loader_flags |= 0x80; /* CAN_USE_HEAP */
++		real_mode->heap_end_ptr += heap_size - 0x200; /*stack*/
++	}
++
+ 	/* Get the initial register values */
+-	elf_rel_get_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
++	if (real_mode_entry)
++		elf_rel_get_symbol(&info->rhdr, "entry16_regs",
++					 &regs16, sizeof(regs16));
+ 	elf_rel_get_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
+ 	/*
+ 
+@@ -298,16 +328,18 @@ int do_bzImage_load(struct kexec_info *info,
+ 	/*
+ 	 * Initialize the 16bit start information.
+ 	 */
+-	regs16.ds = regs16.es = regs16.fs = regs16.gs = setup_base >> 4;
+-	regs16.cs = regs16.ds + 0x20;
+-	regs16.ip = 0;
+-	/* XXX: Documentation/i386/boot.txt says 'ss' must equal 'ds' */
+-	regs16.ss = (elf_rel_get_addr(&info->rhdr, "stack_end") - 64*1024) >> 4;
+-	/* XXX: Documentation/i386/boot.txt says 'sp' must equal heap_end */
+-	regs16.esp = 0xFFFC;
+ 	if (real_mode_entry) {
++		regs16.ds = regs16.es = regs16.fs = regs16.gs = setup_base >> 4;
++		regs16.cs = regs16.ds + 0x20;
++		regs16.ip = 0;
++		/* XXX: Documentation/i386/boot.txt says 'ss' must equal 'ds' */
++		regs16.ss = (elf_rel_get_addr(&info->rhdr, "stack_end") - 64*1024) >> 4;
++		/* XXX: Documentation/i386/boot.txt says 'sp' must equal heap_end */
++		regs16.esp = 0xFFFC;
++
+ 		printf("Starting the kernel in real mode\n");
+ 		regs32.eip = elf_rel_get_addr(&info->rhdr, "entry16");
++		real_mode->kernel_start = kernel32_load_addr;
+ 	}
+ 	if (real_mode_entry && kexec_debug) {
+ 		unsigned long entry16_debug, pre32, first32;
+@@ -327,10 +359,14 @@ int do_bzImage_load(struct kexec_info *info,
+ 	
+ 		regs32.eip = entry16_debug;
+ 	}
+-	elf_rel_set_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
+-	elf_rel_set_symbol(&info->rhdr, "entry16_debug_regs", &regs16, sizeof(regs16));
++	if (real_mode_entry) {
++		elf_rel_set_symbol(&info->rhdr, "entry16_regs",
++					 &regs16, sizeof(regs16));
++		elf_rel_set_symbol(&info->rhdr, "entry16_debug_regs",
++					 &regs16, sizeof(regs16));
++	}
+ 	elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
+-	cmdline_end = setup_base + kern16_size + command_line_len - 1;
++	cmdline_end = setup_base + kern16_size_needed + command_line_len - 1;
+ 	elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
+ 			   sizeof(unsigned long));
+ 
 -- 
 1.7.10.4
 
