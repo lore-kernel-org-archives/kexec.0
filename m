@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-da0-f47.google.com ([209.85.210.47])
+Received: from mail-pa0-f43.google.com ([209.85.220.43])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1U9bBI-0001c2-4S
- for kexec@lists.infradead.org; Sun, 24 Feb 2013 12:59:53 +0000
-Received: by mail-da0-f47.google.com with SMTP id s35so1068939dak.20
- for <kexec@lists.infradead.org>; Sun, 24 Feb 2013 04:59:51 -0800 (PST)
-Message-ID: <512A0EBB.30406@gmail.com>
-Date: Sun, 24 Feb 2013 20:59:39 +0800
+ id 1U9cho-0003zc-Oe
+ for kexec@lists.infradead.org; Sun, 24 Feb 2013 14:37:33 +0000
+Received: by mail-pa0-f43.google.com with SMTP id bh2so1295550pad.2
+ for <kexec@lists.infradead.org>; Sun, 24 Feb 2013 06:37:30 -0800 (PST)
+Message-ID: <512A25A1.4040002@gmail.com>
+Date: Sun, 24 Feb 2013 22:37:21 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: use min_t/max_t to avoid 'if (foo == bar)' thing
-References: <512990F4.3030203@cn.fujitsu.com>
- <20130224105533.GG18639@verge.net.au>
-In-Reply-To: <20130224105533.GG18639@verge.net.au>
+Subject: [PATCH v2] kexec: Use min_t to simplify logic
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,62 +18,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-5LqOIDIwMTPlubQwMuaciDI05pelIDE4OjU1LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIFN1
-biwgRmViIDI0LCAyMDEzIGF0IDEyOjAzOjAwUE0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
-Pj4gVGhpcyBpcyBqdXN0IGEgdHdlYWs6IHVzaW5nIG1pbl90L21heF90IHRvIGF2b2lkIGBpZiAo
-Zm9vID0gYmFyKScgdGhpbmcuCj4gCj4gLSBzLz0vPT0vOyBzL1svXW1heF90Ly8KPiAKPiAKPiBC
-dXQgaW4gYW55IGNhc2UgdGhlIGNoYW5nZSBpcyBtb3JlIHRoYW4gdGhhdC4KPiBJJ2QgYmUgaGFw
-cGllciB3aXRoIHNvbWV0aGluZyBsaWtlOgo+IAo+IAlrZXhlYzogVXNlIG1pbl90IHRvIHNpbXBs
-aWZ5IGxvZ2ljCgpIbW0sIGFncmVlZC4KCj4gCj4+IENjOiAiRXJpYyBXLiBCaWVkZXJtYW4iIDxl
-YmllZGVybUB4bWlzc2lvbi5jb20+Cj4+IENjOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZv
-dW5kYXRpb24ub3JnPgo+PiBDYzogU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Cj4+
-IFNpZ25lZC1vZmYtYnk6IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+
-Cj4+IC0tLQo+PiAga2VybmVsL2tleGVjLmMgfCAgIDIwICsrKysrLS0tLS0tLS0tLS0tLS0tCj4+
-ICAxIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pCj4+Cj4+
-IGRpZmYgLS1naXQgYS9rZXJuZWwva2V4ZWMuYyBiL2tlcm5lbC9rZXhlYy5jCj4+IGluZGV4IDI0
-MzZmZmMuLjA2NWRiODcgMTAwNjQ0Cj4+IC0tLSBhL2tlcm5lbC9rZXhlYy5jCj4+ICsrKyBiL2tl
-cm5lbC9rZXhlYy5jCj4+IEBAIC04MjIsMTMgKzgyMiw4IEBAIHN0YXRpYyBpbnQga2ltYWdlX2xv
-YWRfbm9ybWFsX3NlZ21lbnQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsCj4+ICAJCS8qIFN0YXJ0IHdp
-dGggYSBjbGVhciBwYWdlICovCj4+ICAJCWNsZWFyX3BhZ2UocHRyKTsKPj4gIAkJcHRyICs9IG1h
-ZGRyICYgflBBR0VfTUFTSzsKPj4gLQkJbWNodW5rID0gUEFHRV9TSVpFIC0gKG1hZGRyICYgflBB
-R0VfTUFTSyk7Cj4+IC0JCWlmIChtY2h1bmsgPiBtYnl0ZXMpCj4+IC0JCQltY2h1bmsgPSBtYnl0
-ZXM7Cj4+IC0KPj4gLQkJdWNodW5rID0gbWNodW5rOwo+PiAtCQlpZiAodWNodW5rID4gdWJ5dGVz
-KQo+PiAtCQkJdWNodW5rID0gdWJ5dGVzOwo+PiArCQltY2h1bmsgPSBtaW5fdChzaXplX3QsIG1i
-eXRlcywgUEFHRV9TSVpFIC0gKG1hZGRyICYgflBBR0VfTUFTSykpOwo+PiArCQl1Y2h1bmsgPSBt
-aW5fdChzaXplX3QsIHVieXRlcywgbWNodW5rKTsKPj4gIAo+PiAgCQlyZXN1bHQgPSBjb3B5X2Zy
-b21fdXNlcihwdHIsIGJ1ZiwgdWNodW5rKTsKPj4gIAkJa3VubWFwKHBhZ2UpOwo+PiBAQCAtODc0
-LDEzICs4NjksOSBAQCBzdGF0aWMgaW50IGtpbWFnZV9sb2FkX2NyYXNoX3NlZ21lbnQoc3RydWN0
-IGtpbWFnZSAqaW1hZ2UsCj4+ICAJCX0KPj4gIAkJcHRyID0ga21hcChwYWdlKTsKPj4gIAkJcHRy
-ICs9IG1hZGRyICYgflBBR0VfTUFTSzsKPj4gLQkJbWNodW5rID0gUEFHRV9TSVpFIC0gKG1hZGRy
-ICYgflBBR0VfTUFTSyk7Cj4+IC0JCWlmIChtY2h1bmsgPiBtYnl0ZXMpCj4+IC0JCQltY2h1bmsg
-PSBtYnl0ZXM7Cj4+IC0KPj4gLQkJdWNodW5rID0gbWNodW5rOwo+PiArCQltY2h1bmsgPSBtaW5f
-dChzaXplX3QsIG1ieXRlcywgUEFHRV9TSVpFIC0gKG1hZGRyICYgflBBR0VfTUFTSykpOwo+PiAr
-CQl1Y2h1bmsgPSBtaW5fdChzaXplX3QsIHVieXRlcywgbWNodW5rKTsKPiAKPiBUaGUgbGluZSBh
-Ym92ZSBtZWFucyB0aGF0IHVjaHVuayBjYW4gbm93IG5ldmVyIGJlIGdyZWF0ZXIgdGhhbiB1Ynl0
-ZXMuCj4gCj4+ICAJCWlmICh1Y2h1bmsgPiB1Ynl0ZXMpIHsKPiAKPiBTbyB0aGUgZm9sbG93aW5n
-IHNlZW1zIG1vcmUgYXBwcm9wcmlhdGUgdG8gbWU6Cj4gCj4gCQlpZiAobWNodW5rID4gdWNodW5r
-KSB7CgpPb3BzLCB0aGlzIGlzIHJlYWxseSBhIG1pc3Rha2UuIFRoYW5rcy4KCkkgd2lsbCBzZW5k
-IHRoZSB2MiBwYXRjaC4KCj4gCj4gCj4+IC0JCQl1Y2h1bmsgPSB1Ynl0ZXM7Cj4+ICAJCQkvKiBa
-ZXJvIHRoZSB0cmFpbGluZyBwYXJ0IG9mIHRoZSBwYWdlICovCj4+ICAJCQltZW1zZXQocHRyICsg
-dWNodW5rLCAwLCBtY2h1bmsgLSB1Y2h1bmspOwo+PiAgCQl9Cj4+IEBAIC0xNDYxLDggKzE0NTIs
-NyBAQCB2b2lkIHZtY29yZWluZm9fYXBwZW5kX3N0cihjb25zdCBjaGFyICpmbXQsIC4uLikKPj4g
-IAlyID0gdnNucHJpbnRmKGJ1Ziwgc2l6ZW9mKGJ1ZiksIGZtdCwgYXJncyk7Cj4+ICAJdmFfZW5k
-KGFyZ3MpOwo+PiAgCj4+IC0JaWYgKHIgKyB2bWNvcmVpbmZvX3NpemUgPiB2bWNvcmVpbmZvX21h
-eF9zaXplKQo+PiAtCQlyID0gdm1jb3JlaW5mb19tYXhfc2l6ZSAtIHZtY29yZWluZm9fc2l6ZTsK
-Pj4gKwlyID0gbWluX3Qoc2l6ZV90LCByLCB2bWNvcmVpbmZvX21heF9zaXplIC0gdm1jb3JlaW5m
-b19zaXplKTsKPj4gIAo+PiAgCW1lbWNweSgmdm1jb3JlaW5mb19kYXRhW3ZtY29yZWluZm9fc2l6
-ZV0sIGJ1Ziwgcik7Cj4+ICAKPj4gLS0gCj4+IDEuNy4xCj4+Cj4gLS0KPiBUbyB1bnN1YnNjcmli
-ZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgta2VybmVs
-IiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3Jn
-Cj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
-bW8taW5mby5odG1sCj4gUGxlYXNlIHJlYWQgdGhlIEZBUSBhdCAgaHR0cDovL3d3dy50dXgub3Jn
-L2xrbWwvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+
+This is just a tweak: using min_t to simplify logic of variable
+assignments.
+
+v2:
+- Rewrite patch description as Simon suggested.
+- Fix an inappropriate if test introduced by v1. Thanks Simon.
+
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Simon Horman <horms@verge.net.au>
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kernel/kexec.c |   22 ++++++----------------
+ 1 files changed, 6 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 2436ffc..effd655 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -822,13 +822,8 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 		/* Start with a clear page */
+ 		clear_page(ptr);
+ 		ptr += maddr & ~PAGE_MASK;
+-		mchunk = PAGE_SIZE - (maddr & ~PAGE_MASK);
+-		if (mchunk > mbytes)
+-			mchunk = mbytes;
+-
+-		uchunk = mchunk;
+-		if (uchunk > ubytes)
+-			uchunk = ubytes;
++		mchunk = min_t(size_t, mbytes, PAGE_SIZE - (maddr & ~PAGE_MASK));
++		uchunk = min_t(size_t, ubytes, mchunk);
+ 
+ 		result = copy_from_user(ptr, buf, uchunk);
+ 		kunmap(page);
+@@ -874,13 +869,9 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 		}
+ 		ptr = kmap(page);
+ 		ptr += maddr & ~PAGE_MASK;
+-		mchunk = PAGE_SIZE - (maddr & ~PAGE_MASK);
+-		if (mchunk > mbytes)
+-			mchunk = mbytes;
+-
+-		uchunk = mchunk;
+-		if (uchunk > ubytes) {
+-			uchunk = ubytes;
++		mchunk = min_t(size_t, mbytes, PAGE_SIZE - (maddr & ~PAGE_MASK));
++		uchunk = min_t(size_t, ubytes, mchunk);
++		if (mchunk > uchunk) {
+ 			/* Zero the trailing part of the page */
+ 			memset(ptr + uchunk, 0, mchunk - uchunk);
+ 		}
+@@ -1461,8 +1452,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+ 	r = vsnprintf(buf, sizeof(buf), fmt, args);
+ 	va_end(args);
+ 
+-	if (r + vmcoreinfo_size > vmcoreinfo_max_size)
+-		r = vmcoreinfo_max_size - vmcoreinfo_size;
++	r = min_t(size_t, r, vmcoreinfo_max_size - vmcoreinfo_size);
+ 
+ 	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+ 
+-- 
+1.7.1
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
