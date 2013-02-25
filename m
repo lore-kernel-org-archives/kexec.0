@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U9m3u-0005Gq-Tq
- for kexec@lists.infradead.org; Mon, 25 Feb 2013 00:37:00 +0000
-Date: Mon, 25 Feb 2013 09:36:51 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] kexec: Use min_t to simplify logic
-Message-ID: <20130225003651.GD17964@verge.net.au>
-References: <512A25A1.4040002@gmail.com>
+ id 1U9xMB-0001Yn-Lv
+ for kexec@lists.infradead.org; Mon, 25 Feb 2013 12:40:38 +0000
+Message-ID: <512B5B51.2060209@cn.fujitsu.com>
+Date: Mon, 25 Feb 2013 20:38:41 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <512A25A1.4040002@gmail.com>
+Subject: [PATCH] kexec,x86: code optimization and adjustment for add_memmap
+ and delete_memmap
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,88 +21,220 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Sun, Feb 24, 2013 at 10:37:21PM +0800, Zhang Yanfei wrote:
-> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> 
-> This is just a tweak: using min_t to simplify logic of variable
-> assignments.
-> 
-> v2:
-> - Rewrite patch description as Simon suggested.
-> - Fix an inappropriate if test introduced by v1. Thanks Simon.
+The code in the two functions seems a little messy, So I modify
+some of them, trying to make the logic more clearly.
 
-Hi Zhang,
+For example,
+code before:
 
-thanks for the update.
+         for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
+                 mstart = memmap_p[i].start;
+                 mend = memmap_p[i].end;
+                 if (mstart == 0 && mend == 0)
+                         break;
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
+for we already have nr_entries for this memmap_p array, so we needn't
+have a check in every loop to see if we have go through the whole array.
+code after:
 
-> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Simon Horman <horms@verge.net.au>
-> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> ---
->  kernel/kexec.c |   22 ++++++----------------
->  1 files changed, 6 insertions(+), 16 deletions(-)
-> 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 2436ffc..effd655 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -822,13 +822,8 @@ static int kimage_load_normal_segment(struct kimage *image,
->  		/* Start with a clear page */
->  		clear_page(ptr);
->  		ptr += maddr & ~PAGE_MASK;
-> -		mchunk = PAGE_SIZE - (maddr & ~PAGE_MASK);
-> -		if (mchunk > mbytes)
-> -			mchunk = mbytes;
-> -
-> -		uchunk = mchunk;
-> -		if (uchunk > ubytes)
-> -			uchunk = ubytes;
-> +		mchunk = min_t(size_t, mbytes, PAGE_SIZE - (maddr & ~PAGE_MASK));
-> +		uchunk = min_t(size_t, ubytes, mchunk);
->  
->  		result = copy_from_user(ptr, buf, uchunk);
->  		kunmap(page);
-> @@ -874,13 +869,9 @@ static int kimage_load_crash_segment(struct kimage *image,
->  		}
->  		ptr = kmap(page);
->  		ptr += maddr & ~PAGE_MASK;
-> -		mchunk = PAGE_SIZE - (maddr & ~PAGE_MASK);
-> -		if (mchunk > mbytes)
-> -			mchunk = mbytes;
-> -
-> -		uchunk = mchunk;
-> -		if (uchunk > ubytes) {
-> -			uchunk = ubytes;
-> +		mchunk = min_t(size_t, mbytes, PAGE_SIZE - (maddr & ~PAGE_MASK));
-> +		uchunk = min_t(size_t, ubytes, mchunk);
-> +		if (mchunk > uchunk) {
->  			/* Zero the trailing part of the page */
->  			memset(ptr + uchunk, 0, mchunk - uchunk);
->  		}
-> @@ -1461,8 +1452,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
->  	r = vsnprintf(buf, sizeof(buf), fmt, args);
->  	va_end(args);
->  
-> -	if (r + vmcoreinfo_size > vmcoreinfo_max_size)
-> -		r = vmcoreinfo_max_size - vmcoreinfo_size;
-> +	r = min_t(size_t, r, vmcoreinfo_max_size - vmcoreinfo_size);
->  
->  	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
->  
-> -- 
-> 1.7.1
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+         for (i = 0; i < nr_entries; i++) {
+ 		mstart = memmap_p[i].start;
+ 		mend = memmap_p[i].end;
+
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kexec/arch/i386/crashdump-x86.c |   93 ++++++++++++++++++---------------------
+ 1 files changed, 43 insertions(+), 50 deletions(-)
+
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 245402c..63f6b2b 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -518,21 +518,22 @@ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end)
+ 
+ /* Adds a segment from list of memory regions which new kernel can use to
+  * boot. Segment start and end should be aligned to 1K boundary. */
+-static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
+-								size_t size)
++static int add_memmap(struct memory_range *memmap_p,
++		      unsigned long long addr,
++		      size_t size)
+ {
+ 	int i, j, nr_entries = 0, tidx = 0, align = 1024;
+ 	unsigned long long mstart, mend;
+ 
+ 	/* Do alignment check. */
+-	if ((addr%align) || (size%align))
++	if ((addr % align) || (size % align))
+ 		return -1;
+ 
+ 	/* Make sure at least one entry in list is free. */
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
++	for (i = 0; i < CRASH_MAX_MEMMAP_NR; i++) {
+ 		mstart = memmap_p[i].start;
+ 		mend = memmap_p[i].end;
+-		if (!mstart  && !mend)
++		if (!mstart && !mend)
+ 			break;
+ 		else
+ 			nr_entries++;
+@@ -540,31 +541,29 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
+ 	if (nr_entries == CRASH_MAX_MEMMAP_NR)
+ 		return -1;
+ 
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
++	for (i = 0; i < nr_entries; i++) {
+ 		mstart = memmap_p[i].start;
+ 		mend = memmap_p[i].end;
+-		if (mstart == 0 && mend == 0)
+-			break;
+-		if (mstart <= (addr+size-1) && mend >=addr)
++
++		if (mstart <= (addr + size - 1) && mend >= addr)
+ 			/* Overlapping region. */
+ 			return -1;
+ 		else if (addr > mend)
+-			tidx = i+1;
++			tidx = i + 1;
+ 	}
+-		/* Insert the memory region. */
+-		for (j = nr_entries-1; j >= tidx; j--)
+-			memmap_p[j+1] = memmap_p[j];
+-		memmap_p[tidx].start = addr;
+-		memmap_p[tidx].end = addr + size - 1;
++
++	/* Insert the memory region. */
++	for (j = nr_entries - 1; j >= tidx; j--)
++		memmap_p[j+1] = memmap_p[j];
++	memmap_p[tidx].start = addr;
++	memmap_p[tidx].end = addr + size - 1;
++	nr_entries++;
+ 
+ 	dbgprintf("Memmap after adding segment\n");
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
++	for (i = 0; i < nr_entries; i++) {
+ 		mstart = memmap_p[i].start;
+ 		mend = memmap_p[i].end;
+-		if (mstart == 0 && mend == 0)
+-			break;
+-		dbgprintf("%016llx - %016llx\n",
+-			mstart, mend);
++		dbgprintf("%016llx - %016llx\n", mstart, mend);
+ 	}
+ 
+ 	return 0;
+@@ -572,19 +571,20 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
+ 
+ /* Removes a segment from list of memory regions which new kernel can use to
+  * boot. Segment start and end should be aligned to 1K boundary. */
+-static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
+-								size_t size)
++static int delete_memmap(struct memory_range *memmap_p,
++			 unsigned long long addr,
++			 size_t size)
+ {
+ 	int i, j, nr_entries = 0, tidx = -1, operation = 0, align = 1024;
+ 	unsigned long long mstart, mend;
+ 	struct memory_range temp_region;
+ 
+ 	/* Do alignment check. */
+-	if ((addr%align) || (size%align))
++	if ((addr % align) || (size % align))
+ 		return -1;
+ 
+ 	/* Make sure at least one entry in list is free. */
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
++	for (i = 0; i < CRASH_MAX_MEMMAP_NR; i++) {
+ 		mstart = memmap_p[i].start;
+ 		mend = memmap_p[i].end;
+ 		if (!mstart  && !mend)
+@@ -596,20 +596,16 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
+ 		/* List if full */
+ 		return -1;
+ 
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
++	for (i = 0; i < nr_entries; i++) {
+ 		mstart = memmap_p[i].start;
+ 		mend = memmap_p[i].end;
+-		if (mstart == 0 && mend == 0)
+-			/* Did not find the segment in the list. */
+-			return -1;
++
+ 		if (mstart <= addr && mend >= (addr + size - 1)) {
+ 			if (mstart == addr && mend == (addr + size - 1)) {
+ 				/* Exact match. Delete region */
+ 				operation = -1;
+ 				tidx = i;
+-				break;
+-			}
+-			if (mstart != addr && mend != (addr + size - 1)) {
++			} else if (mstart != addr && mend != (addr + size - 1)) {
+ 				/* Split in two */
+ 				memmap_p[i].end = addr - 1;
+ 				temp_region.start = addr + size;
+@@ -617,41 +613,38 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
+ 				temp_region.type = memmap_p[i].type;
+ 				operation = 1;
+ 				tidx = i;
+-				break;
+-			}
+-
+-			/* No addition/deletion required. Adjust the existing.*/
+-			if (mstart != addr) {
+-				memmap_p[i].end = addr - 1;
+-				break;
+ 			} else {
+-				memmap_p[i].start = addr + size;
+-				break;
++				/* No addition/deletion required. Adjust the existing.*/
++				if (mstart != addr)
++					memmap_p[i].end = addr - 1;
++				else
++					memmap_p[i].start = addr + size;
+ 			}
++			break;
+ 		}
+ 	}
+-	if ((operation == 1) && tidx >=0) {
++
++	if (operation == 1 && tidx >= 0) {
+ 		/* Insert the split memory region. */
+-		for (j = nr_entries-1; j > tidx; j--)
++		for (j = nr_entries - 1; j > tidx; j--)
+ 			memmap_p[j+1] = memmap_p[j];
+ 		memmap_p[tidx+1] = temp_region;
++		nr_entries++;
+ 	}
+-	if ((operation == -1) && tidx >=0) {
++
++	if (operation == -1 && tidx >= 0) {
+ 		/* Delete the exact match memory region. */
+-		for (j = i+1; j < CRASH_MAX_MEMMAP_NR; j++)
++		for (j = i + 1; j < nr_entries; j++)
+ 			memmap_p[j-1] = memmap_p[j];
+ 		memmap_p[j-1].start = memmap_p[j-1].end = 0;
++		nr_entries--;
+ 	}
+ 
+ 	dbgprintf("Memmap after deleting segment\n");
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
++	for (i = 0; i < nr_entries; i++) {
+ 		mstart = memmap_p[i].start;
+ 		mend = memmap_p[i].end;
+-		if (mstart == 0 && mend == 0) {
+-			break;
+-		}
+-		dbgprintf("%016llx - %016llx\n",
+-			mstart, mend);
++		dbgprintf("%016llx - %016llx\n", mstart, mend);
+ 	}
+ 
+ 	return 0;
+-- 
+1.7.1
 
 _______________________________________________
 kexec mailing list
