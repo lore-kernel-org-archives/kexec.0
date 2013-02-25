@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1UA2LT-0005pm-1R
- for kexec@lists.infradead.org; Mon, 25 Feb 2013 18:00:11 +0000
-Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
- by relay1.corp.sgi.com (Postfix) with ESMTP id 45DF78F8049
- for <kexec@lists.infradead.org>; Mon, 25 Feb 2013 10:00:07 -0800 (PST)
-Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
- by estes.americas.sgi.com (Postfix) with ESMTP id 1AE867001DB4
- for <kexec@lists.infradead.org>; Mon, 25 Feb 2013 12:00:07 -0600 (CST)
-Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
- (envelope-from <cpw@sgi.com>) id 1UA2LP-0007z2-2z
- for kexec@lists.infradead.org; Mon, 25 Feb 2013 12:00:07 -0600
-Subject: [PATCH] kexec x86: drop truncation warning for crash kernel
-Message-Id: <E1UA2LP-0007z2-2z@eag09.americas.sgi.com>
-From: Cliff Wickman <cpw@sgi.com>
-Date: Mon, 25 Feb 2013 12:00:07 -0600
+Received: from hub021-nj-6.exch021.serverdata.net ([206.225.164.222])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1UA2ss-0007i5-6V
+ for kexec@lists.infradead.org; Mon, 25 Feb 2013 18:34:43 +0000
+Message-ID: <512BAEB3.4010708@CloudSwitch.Com>
+Date: Mon, 25 Feb 2013 13:34:27 -0500
+From: Don Slutz <Don@CloudSwitch.Com>
+MIME-Version: 1.0
+Subject: Re: [Xen-devel] [PATCH 0/4] kexec-tools: add support for Xen 4.3
+References: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +18,107 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
-From: Cliff Wickman <cpw@sgi.com>
+On 02/21/13 12:57, David Vrabel wrote:
+> The series adds support for the new hypercall ABI which should be
+> provided by Xen 4.3.  Images are loaded into Xen directly with no
+> kernel involvement.
+>
+> Do not apply until the hypervisor side patches are applied to Xen.
+>
+> Patch 1 is unrelated but kexec wouldn't work for me without it. Not
+> sure why I had problems, perhaps a toolstack specific issue?
+>
+> Patch 2 makes libxc 4.3 mandatory for Xen support.
+>
+> Patch 3 removes a use of /proc/iomem in favour of libxc.
+>
+> Patch 4 adds the support for loading an image into Xen.
+>
+> This series explicitly drops support for older version of libxc/Xen as
+> supporting kexec on these hypervisors requires kernel support that
+> will never be available upstream.
+>
+> David
+>
+>
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xen.org
+> http://lists.xen.org/xen-devel
+I did not find a fix/change to get_xen_vmcoreinfo() to call on 
+xc_kexec_get_range(xc, KEXEC_RANGE_MA_VMCOREINFO, ...
 
-On kexec set-up of a crash kernel on a very large memory machine we
-sometimes see the worrisome warning:
-  Too many memory ranges, truncating...
-meaning that the total count of e820 ram, reserved and ACPI spaces is over 128.
+I found the following to work.
+    -Don Slutz
 
-Per the comment in do_bzImage_load():
-                /* If using bzImage for capture kernel, then we will not be
-                 * executing real mode code. setup segment can be loaded
-                 * anywhere as we will be just reading command line.
-                 */
-So if I understand, the e820 table built here and added to the 'real_mode'
-area is not going to be used.
-So the warning message can be omitted.
+ From 2cabc018d7613b0d2ac487cbf2a2e9438a441a8d Mon Sep 17 00:00:00 2001
+From: Don Slutz <Don@CloudSwitch.com>
+Date: Fri, 22 Feb 2013 22:27:03 -0500
+Subject: [PATCH 1/2] Switch to use xc_kexec_get_range for 
+get_xen_vmcoreinfo.
 
-Signed-off-by: Cliff Wickman <cpw@sgi.com>
+Signed-off-by: Don Slutz <Don@CloudSwitch.com>
 ---
- kexec/arch/i386/x86-linux-setup.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+  kexec/crashdump-xen.c |   20 ++++++++++++++++++++
+  kexec/crashdump.c     |    2 ++
+  2 files changed, 22 insertions(+), 0 deletions(-)
 
-Index: kexec-tools-2.0.4-rc1/kexec/arch/i386/x86-linux-setup.c
-===================================================================
---- kexec-tools-2.0.4-rc1.orig/kexec/arch/i386/x86-linux-setup.c
-+++ kexec-tools-2.0.4-rc1/kexec/arch/i386/x86-linux-setup.c
-@@ -34,6 +34,7 @@
- #include "../../kexec.h"
- #include "kexec-x86.h"
- #include "x86-linux-setup.h"
-+#include "../../kexec/kexec-syscall.h"
- 
- void init_linux_parameters(struct x86_linux_param_header *real_mode)
- {
-@@ -491,7 +492,13 @@ void setup_linux_system_parameters(struc
- 		die("Cannot get memory information\n");
- 	}
- 	if (ranges > E820MAX) {
--		fprintf(stderr, "Too many memory ranges, truncating...\n");
-+		if (!(kexec_flags & KEXEC_ON_CRASH))
-+			/*
-+			 * this e820 not used for capture kernel, see
-+			 * do_bzImage_load()
-+			 */
-+			fprintf(stderr,
-+				"Too many memory ranges, truncating...\n");
- 		ranges = E820MAX;
- 	}
- 	real_mode->e820_map_nr = ranges;
+diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
+index 56b0653..8179b72 100644
+--- a/kexec/crashdump-xen.c
++++ b/kexec/crashdump-xen.c
+@@ -161,6 +161,26 @@ unsigned long xen_architecture(struct 
+crash_elf_info *elf_info)
+  }
+
+  #ifdef HAVE_LIBXENCTRL
++int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
++{
++       xc_interface *xc;
++        int ret = 0;
++
++       xc = xc_interface_open(NULL, NULL, 0);
++       if ( !xc ) {
++               fprintf(stderr, "failed to open xen control interface.\n");
++               return -1;
++       }
++
++        ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_VMCOREINFO, 0, len, 
+addr);
++
++       xc_interface_close(xc);
++
++        if (ret < 0)
++            return -1;
++        return 0;
++}
++
+  int xen_get_nr_phys_cpus(void)
+  {
+         xc_interface *xc;
+diff --git a/kexec/crashdump.c b/kexec/crashdump.c
+index 847d080..3d2c1b9 100644
+--- a/kexec/crashdump.c
++++ b/kexec/crashdump.c
+@@ -142,7 +142,9 @@ int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
+         return get_vmcoreinfo("/sys/kernel/vmcoreinfo", addr, len);
+  }
+
++#ifndef HAVE_LIBXENCTRL
+  int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
+  {
+         return get_vmcoreinfo("/sys/hypervisor/vmcoreinfo", addr, len);
+  }
++#endif
+-- 
+1.7.1
 
 _______________________________________________
 kexec mailing list
