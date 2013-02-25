@@ -1,14 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1U9xMB-0001Yn-Lv
- for kexec@lists.infradead.org; Mon, 25 Feb 2013 12:40:38 +0000
-Message-ID: <512B5B51.2060209@cn.fujitsu.com>
-Date: Mon, 25 Feb 2013 20:38:41 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH] kexec,x86: code optimization and adjustment for add_memmap
- and delete_memmap
+ id 1UA2LT-0005pm-1R
+ for kexec@lists.infradead.org; Mon, 25 Feb 2013 18:00:11 +0000
+Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
+ by relay1.corp.sgi.com (Postfix) with ESMTP id 45DF78F8049
+ for <kexec@lists.infradead.org>; Mon, 25 Feb 2013 10:00:07 -0800 (PST)
+Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
+ by estes.americas.sgi.com (Postfix) with ESMTP id 1AE867001DB4
+ for <kexec@lists.infradead.org>; Mon, 25 Feb 2013 12:00:07 -0600 (CST)
+Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
+ (envelope-from <cpw@sgi.com>) id 1UA2LP-0007z2-2z
+ for kexec@lists.infradead.org; Mon, 25 Feb 2013 12:00:07 -0600
+Subject: [PATCH] kexec x86: drop truncation warning for crash kernel
+Message-Id: <E1UA2LP-0007z2-2z@eag09.americas.sgi.com>
+From: Cliff Wickman <cpw@sgi.com>
+Date: Mon, 25 Feb 2013 12:00:07 -0600
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,224 +24,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-The code in the two functions seems a little messy, So I modify
-some of them, trying to make the logic more clearly.
+From: Cliff Wickman <cpw@sgi.com>
 
-For example,
-code before:
+On kexec set-up of a crash kernel on a very large memory machine we
+sometimes see the worrisome warning:
+  Too many memory ranges, truncating...
+meaning that the total count of e820 ram, reserved and ACPI spaces is over 128.
 
-         for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-                 mstart = memmap_p[i].start;
-                 mend = memmap_p[i].end;
-                 if (mstart == 0 && mend == 0)
-                         break;
+Per the comment in do_bzImage_load():
+                /* If using bzImage for capture kernel, then we will not be
+                 * executing real mode code. setup segment can be loaded
+                 * anywhere as we will be just reading command line.
+                 */
+So if I understand, the e820 table built here and added to the 'real_mode'
+area is not going to be used.
+So the warning message can be omitted.
 
-for we already have nr_entries for this memmap_p array, so we needn't
-have a check in every loop to see if we have go through the whole array.
-code after:
-
-         for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
-
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
 ---
- kexec/arch/i386/crashdump-x86.c |   93 ++++++++++++++++++---------------------
- 1 files changed, 43 insertions(+), 50 deletions(-)
+ kexec/arch/i386/x86-linux-setup.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 245402c..63f6b2b 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -518,21 +518,22 @@ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end)
+Index: kexec-tools-2.0.4-rc1/kexec/arch/i386/x86-linux-setup.c
+===================================================================
+--- kexec-tools-2.0.4-rc1.orig/kexec/arch/i386/x86-linux-setup.c
++++ kexec-tools-2.0.4-rc1/kexec/arch/i386/x86-linux-setup.c
+@@ -34,6 +34,7 @@
+ #include "../../kexec.h"
+ #include "kexec-x86.h"
+ #include "x86-linux-setup.h"
++#include "../../kexec/kexec-syscall.h"
  
- /* Adds a segment from list of memory regions which new kernel can use to
-  * boot. Segment start and end should be aligned to 1K boundary. */
--static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
--								size_t size)
-+static int add_memmap(struct memory_range *memmap_p,
-+		      unsigned long long addr,
-+		      size_t size)
+ void init_linux_parameters(struct x86_linux_param_header *real_mode)
  {
- 	int i, j, nr_entries = 0, tidx = 0, align = 1024;
- 	unsigned long long mstart, mend;
- 
- 	/* Do alignment check. */
--	if ((addr%align) || (size%align))
-+	if ((addr % align) || (size % align))
- 		return -1;
- 
- 	/* Make sure at least one entry in list is free. */
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < CRASH_MAX_MEMMAP_NR; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (!mstart  && !mend)
-+		if (!mstart && !mend)
- 			break;
- 		else
- 			nr_entries++;
-@@ -540,31 +541,29 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 	if (nr_entries == CRASH_MAX_MEMMAP_NR)
- 		return -1;
- 
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0)
--			break;
--		if (mstart <= (addr+size-1) && mend >=addr)
-+
-+		if (mstart <= (addr + size - 1) && mend >= addr)
- 			/* Overlapping region. */
- 			return -1;
- 		else if (addr > mend)
--			tidx = i+1;
-+			tidx = i + 1;
+@@ -491,7 +492,13 @@ void setup_linux_system_parameters(struc
+ 		die("Cannot get memory information\n");
  	}
--		/* Insert the memory region. */
--		for (j = nr_entries-1; j >= tidx; j--)
--			memmap_p[j+1] = memmap_p[j];
--		memmap_p[tidx].start = addr;
--		memmap_p[tidx].end = addr + size - 1;
-+
-+	/* Insert the memory region. */
-+	for (j = nr_entries - 1; j >= tidx; j--)
-+		memmap_p[j+1] = memmap_p[j];
-+	memmap_p[tidx].start = addr;
-+	memmap_p[tidx].end = addr + size - 1;
-+	nr_entries++;
- 
- 	dbgprintf("Memmap after adding segment\n");
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0)
--			break;
--		dbgprintf("%016llx - %016llx\n",
--			mstart, mend);
-+		dbgprintf("%016llx - %016llx\n", mstart, mend);
+ 	if (ranges > E820MAX) {
+-		fprintf(stderr, "Too many memory ranges, truncating...\n");
++		if (!(kexec_flags & KEXEC_ON_CRASH))
++			/*
++			 * this e820 not used for capture kernel, see
++			 * do_bzImage_load()
++			 */
++			fprintf(stderr,
++				"Too many memory ranges, truncating...\n");
+ 		ranges = E820MAX;
  	}
- 
- 	return 0;
-@@ -572,19 +571,20 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 
- /* Removes a segment from list of memory regions which new kernel can use to
-  * boot. Segment start and end should be aligned to 1K boundary. */
--static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
--								size_t size)
-+static int delete_memmap(struct memory_range *memmap_p,
-+			 unsigned long long addr,
-+			 size_t size)
- {
- 	int i, j, nr_entries = 0, tidx = -1, operation = 0, align = 1024;
- 	unsigned long long mstart, mend;
- 	struct memory_range temp_region;
- 
- 	/* Do alignment check. */
--	if ((addr%align) || (size%align))
-+	if ((addr % align) || (size % align))
- 		return -1;
- 
- 	/* Make sure at least one entry in list is free. */
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < CRASH_MAX_MEMMAP_NR; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
- 		if (!mstart  && !mend)
-@@ -596,20 +596,16 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 		/* List if full */
- 		return -1;
- 
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0)
--			/* Did not find the segment in the list. */
--			return -1;
-+
- 		if (mstart <= addr && mend >= (addr + size - 1)) {
- 			if (mstart == addr && mend == (addr + size - 1)) {
- 				/* Exact match. Delete region */
- 				operation = -1;
- 				tidx = i;
--				break;
--			}
--			if (mstart != addr && mend != (addr + size - 1)) {
-+			} else if (mstart != addr && mend != (addr + size - 1)) {
- 				/* Split in two */
- 				memmap_p[i].end = addr - 1;
- 				temp_region.start = addr + size;
-@@ -617,41 +613,38 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
- 				temp_region.type = memmap_p[i].type;
- 				operation = 1;
- 				tidx = i;
--				break;
--			}
--
--			/* No addition/deletion required. Adjust the existing.*/
--			if (mstart != addr) {
--				memmap_p[i].end = addr - 1;
--				break;
- 			} else {
--				memmap_p[i].start = addr + size;
--				break;
-+				/* No addition/deletion required. Adjust the existing.*/
-+				if (mstart != addr)
-+					memmap_p[i].end = addr - 1;
-+				else
-+					memmap_p[i].start = addr + size;
- 			}
-+			break;
- 		}
- 	}
--	if ((operation == 1) && tidx >=0) {
-+
-+	if (operation == 1 && tidx >= 0) {
- 		/* Insert the split memory region. */
--		for (j = nr_entries-1; j > tidx; j--)
-+		for (j = nr_entries - 1; j > tidx; j--)
- 			memmap_p[j+1] = memmap_p[j];
- 		memmap_p[tidx+1] = temp_region;
-+		nr_entries++;
- 	}
--	if ((operation == -1) && tidx >=0) {
-+
-+	if (operation == -1 && tidx >= 0) {
- 		/* Delete the exact match memory region. */
--		for (j = i+1; j < CRASH_MAX_MEMMAP_NR; j++)
-+		for (j = i + 1; j < nr_entries; j++)
- 			memmap_p[j-1] = memmap_p[j];
- 		memmap_p[j-1].start = memmap_p[j-1].end = 0;
-+		nr_entries--;
- 	}
- 
- 	dbgprintf("Memmap after deleting segment\n");
--	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		mstart = memmap_p[i].start;
- 		mend = memmap_p[i].end;
--		if (mstart == 0 && mend == 0) {
--			break;
--		}
--		dbgprintf("%016llx - %016llx\n",
--			mstart, mend);
-+		dbgprintf("%016llx - %016llx\n", mstart, mend);
- 	}
- 
- 	return 0;
--- 
-1.7.1
+ 	real_mode->e820_map_nr = ranges;
 
 _______________________________________________
 kexec mailing list
