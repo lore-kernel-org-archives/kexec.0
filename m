@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.citrix.com ([66.165.176.89])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1UA3of-0001Nn-0p
- for kexec@lists.infradead.org; Mon, 25 Feb 2013 19:34:26 +0000
-Message-ID: <512BBCBC.8050404@citrix.com>
-Date: Mon, 25 Feb 2013 19:34:20 +0000
-From: David Vrabel <david.vrabel@citrix.com>
-MIME-Version: 1.0
-Subject: Re: [Xen-devel] [PATCH 0/4] kexec-tools: add support for Xen 4.3
-References: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
- <512BAEB3.4010708@CloudSwitch.Com>
-In-Reply-To: <512BAEB3.4010708@CloudSwitch.Com>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1UA7aO-0002te-NV
+ for kexec@lists.infradead.org; Mon, 25 Feb 2013 23:35:57 +0000
+Date: Mon, 25 Feb 2013 15:35:54 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] kexec: Use min_t to simplify logic
+Message-Id: <20130225153554.19cde4b4.akpm@linux-foundation.org>
+In-Reply-To: <20130225003651.GD17964@verge.net.au>
+References: <512A25A1.4040002@gmail.com> <20130225003651.GD17964@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,80 +22,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Slutz <Don@CloudSwitch.Com>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On 25/02/13 18:34, Don Slutz wrote:
-> 
-> I did not find a fix/change to get_xen_vmcoreinfo() to call on 
-> xc_kexec_get_range(xc, KEXEC_RANGE_MA_VMCOREINFO, ...
-> 
-> I found the following to work.
->     -Don Slutz
-> 
->  From 2cabc018d7613b0d2ac487cbf2a2e9438a441a8d Mon Sep 17 00:00:00 2001
-> From: Don Slutz <Don@CloudSwitch.com>
-> Date: Fri, 22 Feb 2013 22:27:03 -0500
-> Subject: [PATCH 1/2] Switch to use xc_kexec_get_range for 
-> get_xen_vmcoreinfo.
+On Mon, 25 Feb 2013 09:36:51 +0900
+Simon Horman <horms@verge.net.au> wrote:
 
-Thanks.  I'll add this to my series.
+> On Sun, Feb 24, 2013 at 10:37:21PM +0800, Zhang Yanfei wrote:
+> > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> > 
+> > This is just a tweak: using min_t to simplify logic of variable
+> > assignments.
+> > 
+> > v2:
+> > - Rewrite patch description as Simon suggested.
+> > - Fix an inappropriate if test introduced by v1. Thanks Simon.
+> 
+> Hi Zhang,
+> 
+> thanks for the update.
+> 
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 
-David
+Signed-off-by: implies that you were involved in the development or
+patch delivery.  Were you?  If not, an Acked-by or Reviewed-by is more
+appropriate.
 
-> Signed-off-by: Don Slutz <Don@CloudSwitch.com>
-> ---
->   kexec/crashdump-xen.c |   20 ++++++++++++++++++++
->   kexec/crashdump.c     |    2 ++
->   2 files changed, 22 insertions(+), 0 deletions(-)
-> 
-> diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-> index 56b0653..8179b72 100644
-> --- a/kexec/crashdump-xen.c
-> +++ b/kexec/crashdump-xen.c
-> @@ -161,6 +161,26 @@ unsigned long xen_architecture(struct 
-> crash_elf_info *elf_info)
->   }
-> 
->   #ifdef HAVE_LIBXENCTRL
-> +int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
-> +{
-> +       xc_interface *xc;
-> +        int ret = 0;
-> +
-> +       xc = xc_interface_open(NULL, NULL, 0);
-> +       if ( !xc ) {
-> +               fprintf(stderr, "failed to open xen control interface.\n");
-> +               return -1;
-> +       }
-> +
-> +        ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_VMCOREINFO, 0, len, 
-> addr);
-> +
-> +       xc_interface_close(xc);
-> +
-> +        if (ret < 0)
-> +            return -1;
-> +        return 0;
-> +}
-> +
->   int xen_get_nr_phys_cpus(void)
->   {
->          xc_interface *xc;
-> diff --git a/kexec/crashdump.c b/kexec/crashdump.c
-> index 847d080..3d2c1b9 100644
-> --- a/kexec/crashdump.c
-> +++ b/kexec/crashdump.c
-> @@ -142,7 +142,9 @@ int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
->          return get_vmcoreinfo("/sys/kernel/vmcoreinfo", addr, len);
->   }
-> 
-> +#ifndef HAVE_LIBXENCTRL
->   int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
->   {
->          return get_vmcoreinfo("/sys/hypervisor/vmcoreinfo", addr, len);
->   }
-> +#endif
+Also, the need to use min_t rather than min is a sign that the types
+are screwed up.  Let's take a look.
+
+> > 
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index 2436ffc..effd655 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -822,13 +822,8 @@ static int kimage_load_normal_segment(struct kimage *image,
+> >  		/* Start with a clear page */
+> >  		clear_page(ptr);
+> >  		ptr += maddr & ~PAGE_MASK;
+> > -		mchunk = PAGE_SIZE - (maddr & ~PAGE_MASK);
+> > -		if (mchunk > mbytes)
+> > -			mchunk = mbytes;
+> > -
+> > -		uchunk = mchunk;
+> > -		if (uchunk > ubytes)
+> > -			uchunk = ubytes;
+> > +		mchunk = min_t(size_t, mbytes, PAGE_SIZE - (maddr & ~PAGE_MASK));
+> > +		uchunk = min_t(size_t, ubytes, mchunk);
+
+The types of ubytes and mbytes are clearly wrong.  They are initialised
+from a size_t and they are manipulated alongside size_t's.
+
+The types of PAGE_SIZE and PAGE_MASK are vague - iirc they once had
+different types on different architectures, so some form of casting is
+unavoidable here.
+
+> >  		result = copy_from_user(ptr, buf, uchunk);
+> >  		kunmap(page);
+> > @@ -874,13 +869,9 @@ static int kimage_load_crash_segment(struct kimage *image,
+> >  		}
+> >  		ptr = kmap(page);
+> >  		ptr += maddr & ~PAGE_MASK;
+> > -		mchunk = PAGE_SIZE - (maddr & ~PAGE_MASK);
+> > -		if (mchunk > mbytes)
+> > -			mchunk = mbytes;
+> > -
+> > -		uchunk = mchunk;
+> > -		if (uchunk > ubytes) {
+> > -			uchunk = ubytes;
+> > +		mchunk = min_t(size_t, mbytes, PAGE_SIZE - (maddr & ~PAGE_MASK));
+> > +		uchunk = min_t(size_t, ubytes, mchunk);
+> > +		if (mchunk > uchunk) {
+> >  			/* Zero the trailing part of the page */
+> >  			memset(ptr + uchunk, 0, mchunk - uchunk);
+> >  		}
+
+Again, mybtes and ubytes have the wrong type.
+
+> > @@ -1461,8 +1452,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+> >  	r = vsnprintf(buf, sizeof(buf), fmt, args);
+> >  	va_end(args);
+> >  
+> > -	if (r + vmcoreinfo_size > vmcoreinfo_max_size)
+> > -		r = vmcoreinfo_max_size - vmcoreinfo_size;
+> > +	r = min_t(size_t, r, vmcoreinfo_max_size - vmcoreinfo_size);
+> >  
+> >  	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+
+vmcoreinfo_max_size is a size_t and vmcoreinfo_size is a size_t and
+memcpy's `size' argument is a size_t.  Therefore the type of `r' should
+be...  what?  int!  bzzzzt.
 
 
 _______________________________________________
