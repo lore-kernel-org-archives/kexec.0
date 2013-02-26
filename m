@@ -1,32 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1UA8sX-0007By-VA
- for kexec@lists.infradead.org; Tue, 26 Feb 2013 00:58:47 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 6DD223EE0BC
- for <kexec@lists.infradead.org>; Tue, 26 Feb 2013 09:58:37 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5700A45DE4F
- for <kexec@lists.infradead.org>; Tue, 26 Feb 2013 09:58:37 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 35F6745DE4E
- for <kexec@lists.infradead.org>; Tue, 26 Feb 2013 09:58:37 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 298B01DB8037
- for <kexec@lists.infradead.org>; Tue, 26 Feb 2013 09:58:37 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id D6B561DB802F
- for <kexec@lists.infradead.org>; Tue, 26 Feb 2013 09:58:36 +0900 (JST)
-Date: Tue, 26 Feb 2013 09:58:14 +0900 (JST)
-Message-Id: <20130226.095814.331287795.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH] kexec,x86: code optimization and adjustment for
- add_memmap and delete_memmap
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <512B5B51.2060209@cn.fujitsu.com>
-References: <512B5B51.2060209@cn.fujitsu.com>
-Mime-Version: 1.0
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1UACQd-0007OL-BV
+ for kexec@lists.infradead.org; Tue, 26 Feb 2013 04:46:12 +0000
+Message-ID: <512C3DA6.8080304@cn.fujitsu.com>
+Date: Tue, 26 Feb 2013 12:44:22 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2] kexec: Use min_t to simplify logic
+References: <512A25A1.4040002@gmail.com> <20130225003651.GD17964@verge.net.au>
+ <20130225153554.19cde4b4.akpm@linux-foundation.org>
+In-Reply-To: <20130225153554.19cde4b4.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,95 +19,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhangyanfei@cn.fujitsu.com
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Subject: [PATCH] kexec,x86: code optimization and adjustment for add_memmap and delete_memmap
-Date: Mon, 25 Feb 2013 20:38:41 +0800
-
-> The code in the two functions seems a little messy, So I modify
-> some of them, trying to make the logic more clearly.
-> 
-> For example,
-> code before:
-> 
->          for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
->                  mstart = memmap_p[i].start;
->                  mend = memmap_p[i].end;
->                  if (mstart == 0 && mend == 0)
->                          break;
-> 
-> for we already have nr_entries for this memmap_p array, so we needn't
-> have a check in every loop to see if we have go through the whole array.
-> code after:
-> 
->          for (i = 0; i < nr_entries; i++) {
->  		mstart = memmap_p[i].start;
->  		mend = memmap_p[i].end;
-> 
-
-Then, but even if doing so, times of the loop is unchanged after your
-fix. The loop doesn't always look up a whole part of memmap_p; it
-looks up until it reaches the end of elements with 0 in their members.
-Also, CRASH_MAX_MEMMAP_NR is 17 on i386. Is it problematic in
-performance?
-
-Rather, it seems problematic to me how length of memmap_p is handled
-here. It is initialized first here:
-
-        /* Memory regions which panic kernel can safely use to boot into */
-        sz = (sizeof(struct memory_range) * (KEXEC_MAX_SEGMENTS + 1));
-        memmap_p = xmalloc(sz);
-        memset(memmaSp_p, 0, sz);
-
-and then it is passed to add_memmap,
-
-        add_memmap(memmap_p, info->backup_src_start, info->backup_src_size);
-
-and there the passed memmap_p is assumed to have length of
-CRASH_MAX_MEMMAP_NR that is defined as (KEXEC_MAX_SEGMENTS + 1)
-according to the condition of the for loop above. (The
-(KEXEC_MAX_SEGMENTS + 1) in the allocation should also be
-CRASH_MAX_MEMMAP_NR for clarification?)
-
-The ideas I have for cleaning up here, are for example:
-
-- introduce specific for-each statement to iterate memmap_p just like:
-
-  for_each_memmap(memmap_p, start, end) {
-    ...
-  }
-
-  or
-
-- use struct memory_ranges instead of struct memory_range and pass it
-  to add_memmap; the former has size member in addition to ranges
-  member, and then in add_memmap:
-
-  for (i = 0; i < ranges.size; i++) {
-    mstart = ranges.ranges[i].start;
-    mend = ranges.ranges[i].end;
-  }
-
-The former hides actual length of memmap_p from users because they
-don't need to care about it, while the latter makes length of memmap_p
-explicitly handled even in add_memmp.
-
-But sorry, this idea comes from some minuts look on the code around.
-
-Also, you should have divided the patch into two: nr_entires part and
-the others.
-
-Thanks.
-HATAYAMA, Daisuke
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwMuaciDI25pelIDA3OjM1LCBBbmRyZXcgTW9ydG9uIOWGmemBkzoKPiBPbiBN
+b24sIDI1IEZlYiAyMDEzIDA5OjM2OjUxICswOTAwCj4gU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJn
+ZS5uZXQuYXU+IHdyb3RlOgo+IAo+PiBPbiBTdW4sIEZlYiAyNCwgMjAxMyBhdCAxMDozNzoyMVBN
+ICswODAwLCBaaGFuZyBZYW5mZWkgd3JvdGU6Cj4+PiBGcm9tOiBaaGFuZyBZYW5mZWkgPHpoYW5n
+eWFuZmVpQGNuLmZ1aml0c3UuY29tPgo+Pj4KPj4+IFRoaXMgaXMganVzdCBhIHR3ZWFrOiB1c2lu
+ZyBtaW5fdCB0byBzaW1wbGlmeSBsb2dpYyBvZiB2YXJpYWJsZQo+Pj4gYXNzaWdubWVudHMuCj4+
+Pgo+Pj4gdjI6Cj4+PiAtIFJld3JpdGUgcGF0Y2ggZGVzY3JpcHRpb24gYXMgU2ltb24gc3VnZ2Vz
+dGVkLgo+Pj4gLSBGaXggYW4gaW5hcHByb3ByaWF0ZSBpZiB0ZXN0IGludHJvZHVjZWQgYnkgdjEu
+IFRoYW5rcyBTaW1vbi4KPj4KPj4gSGkgWmhhbmcsCj4+Cj4+IHRoYW5rcyBmb3IgdGhlIHVwZGF0
+ZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+
+Cj4gCj4gU2lnbmVkLW9mZi1ieTogaW1wbGllcyB0aGF0IHlvdSB3ZXJlIGludm9sdmVkIGluIHRo
+ZSBkZXZlbG9wbWVudCBvcgo+IHBhdGNoIGRlbGl2ZXJ5LiAgV2VyZSB5b3U/ICBJZiBub3QsIGFu
+IEFja2VkLWJ5IG9yIFJldmlld2VkLWJ5IGlzIG1vcmUKPiBhcHByb3ByaWF0ZS4KPiAKPiBBbHNv
+LCB0aGUgbmVlZCB0byB1c2UgbWluX3QgcmF0aGVyIHRoYW4gbWluIGlzIGEgc2lnbiB0aGF0IHRo
+ZSB0eXBlcwo+IGFyZSBzY3Jld2VkIHVwLiAgTGV0J3MgdGFrZSBhIGxvb2suCj4gCj4+Pgo+Pj4g
+ZGlmZiAtLWdpdCBhL2tlcm5lbC9rZXhlYy5jIGIva2VybmVsL2tleGVjLmMKPj4+IGluZGV4IDI0
+MzZmZmMuLmVmZmQ2NTUgMTAwNjQ0Cj4+PiAtLS0gYS9rZXJuZWwva2V4ZWMuYwo+Pj4gKysrIGIv
+a2VybmVsL2tleGVjLmMKPj4+IEBAIC04MjIsMTMgKzgyMiw4IEBAIHN0YXRpYyBpbnQga2ltYWdl
+X2xvYWRfbm9ybWFsX3NlZ21lbnQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsCj4+PiAgCQkvKiBTdGFy
+dCB3aXRoIGEgY2xlYXIgcGFnZSAqLwo+Pj4gIAkJY2xlYXJfcGFnZShwdHIpOwo+Pj4gIAkJcHRy
+ICs9IG1hZGRyICYgflBBR0VfTUFTSzsKPj4+IC0JCW1jaHVuayA9IFBBR0VfU0laRSAtIChtYWRk
+ciAmIH5QQUdFX01BU0spOwo+Pj4gLQkJaWYgKG1jaHVuayA+IG1ieXRlcykKPj4+IC0JCQltY2h1
+bmsgPSBtYnl0ZXM7Cj4+PiAtCj4+PiAtCQl1Y2h1bmsgPSBtY2h1bms7Cj4+PiAtCQlpZiAodWNo
+dW5rID4gdWJ5dGVzKQo+Pj4gLQkJCXVjaHVuayA9IHVieXRlczsKPj4+ICsJCW1jaHVuayA9IG1p
+bl90KHNpemVfdCwgbWJ5dGVzLCBQQUdFX1NJWkUgLSAobWFkZHIgJiB+UEFHRV9NQVNLKSk7Cj4+
+PiArCQl1Y2h1bmsgPSBtaW5fdChzaXplX3QsIHVieXRlcywgbWNodW5rKTsKPiAKPiBUaGUgdHlw
+ZXMgb2YgdWJ5dGVzIGFuZCBtYnl0ZXMgYXJlIGNsZWFybHkgd3JvbmcuICBUaGV5IGFyZSBpbml0
+aWFsaXNlZAo+IGZyb20gYSBzaXplX3QgYW5kIHRoZXkgYXJlIG1hbmlwdWxhdGVkIGFsb25nc2lk
+ZSBzaXplX3Qncy4KCkFoLCB5ZXMuIEkgZGlkbid0IHJlYWxpemUgdGhpcyBiZWZvcmUuCgo+IAo+
+IFRoZSB0eXBlcyBvZiBQQUdFX1NJWkUgYW5kIFBBR0VfTUFTSyBhcmUgdmFndWUgLSBpaXJjIHRo
+ZXkgb25jZSBoYWQKPiBkaWZmZXJlbnQgdHlwZXMgb24gZGlmZmVyZW50IGFyY2hpdGVjdHVyZXMs
+IHNvIHNvbWUgZm9ybSBvZiBjYXN0aW5nIGlzCj4gdW5hdm9pZGFibGUgaGVyZS4KClllcy4KCj4g
+Cj4+PiAgCQlyZXN1bHQgPSBjb3B5X2Zyb21fdXNlcihwdHIsIGJ1ZiwgdWNodW5rKTsKPj4+ICAJ
+CWt1bm1hcChwYWdlKTsKPj4+IEBAIC04NzQsMTMgKzg2OSw5IEBAIHN0YXRpYyBpbnQga2ltYWdl
+X2xvYWRfY3Jhc2hfc2VnbWVudChzdHJ1Y3Qga2ltYWdlICppbWFnZSwKPj4+ICAJCX0KPj4+ICAJ
+CXB0ciA9IGttYXAocGFnZSk7Cj4+PiAgCQlwdHIgKz0gbWFkZHIgJiB+UEFHRV9NQVNLOwo+Pj4g
+LQkJbWNodW5rID0gUEFHRV9TSVpFIC0gKG1hZGRyICYgflBBR0VfTUFTSyk7Cj4+PiAtCQlpZiAo
+bWNodW5rID4gbWJ5dGVzKQo+Pj4gLQkJCW1jaHVuayA9IG1ieXRlczsKPj4+IC0KPj4+IC0JCXVj
+aHVuayA9IG1jaHVuazsKPj4+IC0JCWlmICh1Y2h1bmsgPiB1Ynl0ZXMpIHsKPj4+IC0JCQl1Y2h1
+bmsgPSB1Ynl0ZXM7Cj4+PiArCQltY2h1bmsgPSBtaW5fdChzaXplX3QsIG1ieXRlcywgUEFHRV9T
+SVpFIC0gKG1hZGRyICYgflBBR0VfTUFTSykpOwo+Pj4gKwkJdWNodW5rID0gbWluX3Qoc2l6ZV90
+LCB1Ynl0ZXMsIG1jaHVuayk7Cj4+PiArCQlpZiAobWNodW5rID4gdWNodW5rKSB7Cj4+PiAgCQkJ
+LyogWmVybyB0aGUgdHJhaWxpbmcgcGFydCBvZiB0aGUgcGFnZSAqLwo+Pj4gIAkJCW1lbXNldChw
+dHIgKyB1Y2h1bmssIDAsIG1jaHVuayAtIHVjaHVuayk7Cj4+PiAgCQl9Cj4gCj4gQWdhaW4sIG15
+YnRlcyBhbmQgdWJ5dGVzIGhhdmUgdGhlIHdyb25nIHR5cGUuCj4gCj4+PiBAQCAtMTQ2MSw4ICsx
+NDUyLDcgQEAgdm9pZCB2bWNvcmVpbmZvX2FwcGVuZF9zdHIoY29uc3QgY2hhciAqZm10LCAuLi4p
+Cj4+PiAgCXIgPSB2c25wcmludGYoYnVmLCBzaXplb2YoYnVmKSwgZm10LCBhcmdzKTsKPj4+ICAJ
+dmFfZW5kKGFyZ3MpOwo+Pj4gIAo+Pj4gLQlpZiAociArIHZtY29yZWluZm9fc2l6ZSA+IHZtY29y
+ZWluZm9fbWF4X3NpemUpCj4+PiAtCQlyID0gdm1jb3JlaW5mb19tYXhfc2l6ZSAtIHZtY29yZWlu
+Zm9fc2l6ZTsKPj4+ICsJciA9IG1pbl90KHNpemVfdCwgciwgdm1jb3JlaW5mb19tYXhfc2l6ZSAt
+IHZtY29yZWluZm9fc2l6ZSk7Cj4+PiAgCj4+PiAgCW1lbWNweSgmdm1jb3JlaW5mb19kYXRhW3Zt
+Y29yZWluZm9fc2l6ZV0sIGJ1Ziwgcik7Cj4gCj4gdm1jb3JlaW5mb19tYXhfc2l6ZSBpcyBhIHNp
+emVfdCBhbmQgdm1jb3JlaW5mb19zaXplIGlzIGEgc2l6ZV90IGFuZAo+IG1lbWNweSdzIGBzaXpl
+JyBhcmd1bWVudCBpcyBhIHNpemVfdC4gIFRoZXJlZm9yZSB0aGUgdHlwZSBvZiBgcicgc2hvdWxk
+Cj4gYmUuLi4gIHdoYXQ/ICBpbnQhICBienp6enQuCgp5ZXMuCgpTbyBJIHdpbGwgc3BsaXQgdGhl
+IHBhdGNoIGludG8gdHdvLCBmaXJzdCBmaXggdGhlIHdyb25nIHR5cGVzIGhlcmUuIFRoZW4KdXNl
+IG1pbl90IHRvIHNpbXBseSB0aGUgbG9naWMuCgpUaGFua3MKWmhhbmcKCj4gCj4gCj4gX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5n
+IGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
