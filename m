@@ -1,32 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e24smtp02.br.ibm.com ([32.104.18.86])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UCwKs-00014P-Ku
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 18:11:35 +0000
-Received: from /spool/local
- by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <leosilva@linux.vnet.ibm.com>;
- Tue, 5 Mar 2013 15:11:27 -0300
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id 9EC8B3520060
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 13:11:24 -0500 (EST)
-Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
- by d24relay03.br.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r25IAiKR20971664
- for <kexec@lists.infradead.org>; Tue, 5 Mar 2013 15:10:44 -0300
-Received: from d24av04.br.ibm.com (loopback [127.0.0.1])
- by d24av04.br.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r25GBAlB031107
- for <kexec@lists.infradead.org>; Tue, 5 Mar 2013 13:11:10 -0300
-Received: from [9.18.235.119] (lain-ibm.br.ibm.com [9.18.235.119])
- by d24av04.br.ibm.com (8.14.4/8.13.1/NCO v10.0 AVin) with ESMTP id
- r25GBAcO031101
- for <kexec@lists.infradead.org>; Tue, 5 Mar 2013 13:11:10 -0300
-Message-ID: <1362507083.14158.32.camel@lain-ibm>
-Subject: kernel image start, kernel load address/entry point
-From: leosilva <leosilva@linux.vnet.ibm.com>
-Date: Tue, 05 Mar 2013 15:11:23 -0300
+ id 1UD1an-0008LO-ON
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 23:48:23 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 881D03EE0BC
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 08:48:14 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7019445DEB6
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 08:48:14 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4E66B45DEB5
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 08:48:14 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 404271DB803C
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 08:48:14 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id EBFB41DB8038
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 08:48:13 +0900 (JST)
+Date: Tue, 26 Feb 2013 09:57:01 +0900 (JST)
+Message-Id: <20130226.095701.464318826.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH] kexec,x86: code optimization and adjustment for
+ add_memmap and delete_memmap
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <512B5B51.2060209@cn.fujitsu.com>
+References: <512B5B51.2060209@cn.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -40,51 +39,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: zhangyanfei@cn.fujitsu.com
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-Hi,
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Subject: [PATCH] kexec,x86: code optimization and adjustment for add_memmap and delete_memmap
+Date: Mon, 25 Feb 2013 20:38:41 +0800
 
-I'm studying the kexec code and try to figure out where is the best
-place to grab these informations: kernel image start address, kernel
-load address/kernel entry point.
+> The code in the two functions seems a little messy, So I modify
+> some of them, trying to make the logic more clearly.
+> 
+> For example,
+> code before:
+> 
+>          for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
+>                  mstart = memmap_p[i].start;
+>                  mend = memmap_p[i].end;
+>                  if (mstart == 0 && mend == 0)
+>                          break;
+> 
+> for we already have nr_entries for this memmap_p array, so we needn't
+> have a check in every loop to see if we have go through the whole array.
+> code after:
+> 
+>          for (i = 0; i < nr_entries; i++) {
+>  		mstart = memmap_p[i].start;
+>  		mend = memmap_p[i].end;
+> 
 
-I've read the kexec-tools code, most precisely  do_bzImage_load function
-and purgatory/entry64.S, entry64-32.S and setup-x86_64.S. I found some
-informations there as this regs32.eip = kernel32_load_address assign
-where I'm assuming it's the kernel entry point that I'm looking for. But
-I'm also staring in this code on entry64-32.S to understand what it
-does:
-ljmp    *%cs:entry32_addr - entry32
+Then, but even if doing so, times of the loop is unchanged after your
+fix. The loop doesn't always look up a whole part of memmap_p; it
+looks up until it reaches the end of elements that has 0 in their
+members. Also, CRASH_MAX_MEMMAP_NR appears 17 on i386. Is it
+problematic in performance?
 
+Rather, it seems problematic to me how length of memmap_p is handled
+here. It is initialized first here:
 
-As I'm not good in asm I don't understand what it does. I saw that
-assign regs32.eip = 0x1000000 /* kernel32_load_address */ first in
-do_bzImage_load  so in .S file I saw it moves eip to %eax does that asm
-mentioned, and in the end jump to what it calls  loaded image. 
-I'm assuming it as the new kernel entry point, the address that I'm
-looking to grab, but not sure if it is the the whole *%cs:entry32_addr -
-entry32 or just the first assign (0x1000000).
+        /* Memory regions which panic kernel can safely use to boot into */
+        sz = (sizeof(struct memory_range) * (KEXEC_MAX_SEGMENTS + 1));
+        memmap_p = xmalloc(sz);
+        memset(memmaSp_p, 0, sz);
 
+and then it is passed to add_memmap,
 
-Beyond that I have this real_mode->kernel_start, that to me seems be the
-start point in the kernel image, but is just set up if kernel will run
-in real mode. So is there no way to grab start image address except it
-runs in real mode?
+        add_memmap(memmap_p, info->backup_src_start, info->backup_src_size);
 
-Regardless entry point address I also read this thread 
- http://lists.infradead.org/pipermail/kexec/2012-June/006394.html,
-I noticed that this kernel32_load_address seems be just the first
-address to where the purgatory jumps to then new kernel starts and in
-some moment relocate itself. (guesses). 
+and there the passed memmap_p is assumed to have length of
+CRASH_MAX_MEMMAP_NR that is defined as (KEXEC_MAX_SEGMENTS + 1)
+according to the condition of the for loop above. (The
+(KEXEC_MAX_SEGMENTS + 1) in the allocation should also be
+CRASH_MAX_MEMMAP_NR for clarification?)
 
-My whole point is if my guesses here is correct, if this address are
-related to what I want or I'm misunderstanding everything. 
+The ideas I have for cleaning up here, are for example:
 
+- introduce specific for-each statement to iterate memmap_p just like:
 
-Thanks in advance
-Leonidas
--- 
+  for_each_memmap(memmap_p, start, end) {
+    ...
+  }
 
+  or
+
+- use struct memory_ranges instead of struct memory_range and pass it
+  to add_memmap; the former has size member in addition to ranges
+  member, and then in add_memmap:
+
+  for (i = 0; i < ranges.size; i++) {
+    mstart = ranges.ranges[i].start;
+    mend = ranges.ranges[i].end;
+  }
+
+The former hides actual length of memmap_p from users because they
+don't need to care about it, while the latter makes length of memmap_p
+explicitly handled even in add_memmp.
+
+But sorry, this idea comes from some minuts look on the code around.
+
+Also, you should have divided the patch into two: nr_entires part and
+the others.
+
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
