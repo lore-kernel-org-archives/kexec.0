@@ -1,13 +1,15 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1UAD3e-0000Nl-JF
- for kexec@lists.infradead.org; Tue, 26 Feb 2013 05:26:31 +0000
-Message-ID: <512C44E4.70907@cn.fujitsu.com>
-Date: Tue, 26 Feb 2013 13:15:16 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH v3 1/2] kexec: fix wrong types of some local variables
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from perches-mx.perches.com ([206.117.179.246] helo=labridge.com)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1UAG35-0007Kf-GG
+ for kexec@lists.infradead.org; Tue, 26 Feb 2013 08:38:08 +0000
+Message-ID: <1361867881.2023.16.camel@joe-AO722>
+Subject: Re: [PATCH v3 2/2] kexec: Use min_t to simplify logic
+From: Joe Perches <joe@perches.com>
+Date: Tue, 26 Feb 2013 00:38:01 -0800
+In-Reply-To: <512C4881.90409@cn.fujitsu.com>
+References: <512C44E4.70907@cn.fujitsu.com> <512C4881.90409@cn.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,56 +21,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-The types of the following local variables:
-  - ubytes/mbytes in kimage_load_crash_segment()/kimage_load_normal_segment()
-  - r in vmcoreinfo_append_str()
-are wrong, so fix them.
+On Tue, 2013-02-26 at 13:30 +0800, Zhang Yanfei wrote:
+> This is just a tweak: using min_t to simplify logic of variable
+> assignments.
+> 
+> v3:
+> - cast type of (PAGE_SIZE - (maddr & ~PAGE_MASK)) into size_t.
 
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Simon Horman <horms@verge.net.au>
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kernel/kexec.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+Why?  Isn't this just a redundant cast?
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 2436ffc..3cbfcc7 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -789,7 +789,7 @@ static int kimage_load_normal_segment(struct kimage *image,
- 					 struct kexec_segment *segment)
- {
- 	unsigned long maddr;
--	unsigned long ubytes, mbytes;
-+	size_t ubytes, mbytes;
- 	int result;
- 	unsigned char __user *buf;
- 
-@@ -853,7 +853,7 @@ static int kimage_load_crash_segment(struct kimage *image,
- 	 * We do things a page at a time for the sake of kmap.
- 	 */
- 	unsigned long maddr;
--	unsigned long ubytes, mbytes;
-+	size_t ubytes, mbytes;
- 	int result;
- 	unsigned char __user *buf;
- 
-@@ -1455,7 +1455,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- {
- 	va_list args;
- 	char buf[0x50];
--	int r;
-+	size_t r;
- 
- 	va_start(args, fmt);
- 	r = vsnprintf(buf, sizeof(buf), fmt, args);
--- 
-1.7.1
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+[]
+> @@ -822,13 +822,9 @@ static int kimage_load_normal_segment(struct kimage *image,
+[]
+> +		mchunk = min_t(size_t, mbytes,
+> +			       (size_t)(PAGE_SIZE - (maddr & ~PAGE_MASK)));
+
+#define min_t(type, x, y) ({			\
+	type __min1 = (x);			\
+	type __min2 = (y);			\
+	__min1 < __min2 ? __min1: __min2; })
+
+
 
 _______________________________________________
 kexec mailing list
