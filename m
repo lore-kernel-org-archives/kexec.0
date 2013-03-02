@@ -1,28 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UClwY-0006nw-UF
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 07:05:48 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 67B973EE0BC
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:45 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4E18D45DE5A
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:45 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2C47F45DE58
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:45 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 19CA71DB803A
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:45 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B82AB1DB804B
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:44 +0900 (JST)
+ id 1UClwh-0006qR-2R
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 07:05:56 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 845D03EE0B6
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:52 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 144032C6FD7
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:51 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id EDB6645DE51
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:50 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id DE78E1DB8043
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:50 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7F4871DB803F
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:50 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 09/20] vmcore: clean up read_vmcore()
-Date: Sat, 02 Mar 2013 17:36:38 +0900
-Message-ID: <20130302083638.31252.11496.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 10/20] vmcore: read buffers for vmcore objects copied from
+ old memory
+Date: Sat, 02 Mar 2013 17:36:44 +0900
+Message-ID: <20130302083644.31252.31560.stgit@localhost6.localdomain6>
 In-Reply-To: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
 References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -41,115 +41,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, heiko.carstens@de.ibm.com, akpm@linux-foundation.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Clean up read_vmcore(). Part for objects in vmcore_list can be written
-uniformly to part for ELF headers. By this change, duplicate and
-complicated codes are removed, so it's more clear to see what's done
-there.
-
-Also, by this change, map_offset_to_paddr() is no longer used. Remove
-it.
+If flag MEM_TYPE_CURRENT_KERNEL is set, the object is copied in the
+buffer on the 2nd kernel, then read_vmcore() reads the buffer. If the
+flag is not set, read_vmcore() reads old memory as usual.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- fs/proc/vmcore.c |   68 ++++++++++++++++--------------------------------------
- 1 files changed, 20 insertions(+), 48 deletions(-)
+ fs/proc/vmcore.c |   15 +++++++++++----
+ 1 files changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index e4751ce..09b7f34 100644
+index 09b7f34..c8899dc 100644
 --- a/fs/proc/vmcore.c
 +++ b/fs/proc/vmcore.c
-@@ -118,27 +118,6 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
- 	return read;
- }
- 
--/* Maps vmcore file offset to respective physical address in memroy. */
--static u64 map_offset_to_paddr(loff_t offset, struct list_head *vc_list,
--					struct vmcore **m_ptr)
--{
--	struct vmcore *m;
--	u64 paddr;
--
--	list_for_each_entry(m, vc_list, list) {
--		u64 start, end;
--		start = m->offset;
--		end = m->offset + m->size - 1;
--		if (offset >= start && offset <= end) {
--			paddr = m->paddr + offset - start;
--			*m_ptr = m;
--			return paddr;
--		}
--	}
--	*m_ptr = NULL;
--	return 0;
--}
--
- /* Read from the ELF header and then the crash dump. On error, negative value is
-  * returned otherwise number of bytes read are returned.
-  */
-@@ -147,8 +126,8 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- {
- 	ssize_t acc = 0, tmp;
- 	size_t tsz;
--	u64 start, nr_bytes;
--	struct vmcore *curr_m = NULL;
-+	u64 start;
-+	struct vmcore *m;
- 
- 	if (buflen == 0 || *fpos >= vmcore_size)
- 		return 0;
-@@ -174,33 +153,26 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- 			return acc;
- 	}
- 
--	start = map_offset_to_paddr(*fpos, &vmcore_list, &curr_m);
--	if (!curr_m)
--        	return -EINVAL;
--
--	while (buflen) {
--		tsz = min_t(size_t, buflen, PAGE_SIZE - (start & ~PAGE_MASK));
--
--		/* Calculate left bytes in current memory segment. */
--		nr_bytes = (curr_m->size - (start - curr_m->paddr));
--		if (tsz > nr_bytes)
--			tsz = nr_bytes;
--
--		tmp = read_from_oldmem(buffer, tsz, &start, 1);
--		if (tmp < 0)
--			return tmp;
--		buflen -= tsz;
--		*fpos += tsz;
--		buffer += tsz;
--		acc += tsz;
--		if (start >= (curr_m->paddr + curr_m->size)) {
--			if (curr_m->list.next == &vmcore_list)
--				return acc;	/*EOF*/
--			curr_m = list_entry(curr_m->list.next,
--						struct vmcore, list);
--			start = curr_m->paddr;
-+	list_for_each_entry(m, &vmcore_list, list) {
-+		if (*fpos < m->offset + m->size) {
-+			tsz = m->offset + m->size - *fpos;
-+			if (buflen < tsz)
-+				tsz = buflen;
-+			start = m->paddr + *fpos - m->offset;
-+			tmp = read_from_oldmem(buffer, tsz, &start, 1);
-+			if (tmp < 0)
-+				return tmp;
-+			buflen -= tsz;
-+			*fpos += tsz;
-+			buffer += tsz;
-+			acc += tsz;
-+
-+			/* leave now if filled buffer already */
-+			if (buflen == 0)
-+				return acc;
- 		}
- 	}
-+
- 	return acc;
- }
- 
+@@ -158,10 +158,17 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
+ 			tsz = m->offset + m->size - *fpos;
+ 			if (buflen < tsz)
+ 				tsz = buflen;
+-			start = m->paddr + *fpos - m->offset;
+-			tmp = read_from_oldmem(buffer, tsz, &start, 1);
+-			if (tmp < 0)
+-				return tmp;
++			if (m->flag & MEM_TYPE_CURRENT_KERNEL) {
++				if (copy_to_user(buffer,
++						 m->buf + *fpos - m->offset,
++						 tsz))
++					return -EFAULT;
++			} else {
++				start = m->paddr + *fpos - m->offset;
++				tmp = read_from_oldmem(buffer, tsz, &start, 1);
++				if (tmp < 0)
++					return tmp;
++			}
+ 			buflen -= tsz;
+ 			*fpos += tsz;
+ 			buffer += tsz;
 
 
 _______________________________________________
