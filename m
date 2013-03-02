@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UClxF-00072W-0r
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 07:06:29 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id D25123EE0C8
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:26 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id B176145DE56
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:26 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 95C2D45DE4E
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:26 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 803DCE08009
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:26 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 353FDE08002
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:26 +0900 (JST)
+ id 1UClxK-00074O-A3
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 07:06:35 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 998323EE0C1
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:32 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6C5402AEA89
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:32 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4E10745DE59
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:32 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 39257E08005
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:32 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id E18E51DB804F
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:06:31 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 16/20] vmcore: check NT_VMCORE_PAD as a mark indicating the
- end of ELF note buffer
-Date: Sat, 02 Mar 2013 17:37:20 +0900
-Message-ID: <20130302083720.31252.92900.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 17/20] vmcore: check if vmcore objects satify mmap()'s
+ page-size boundary requirement
+Date: Sat, 02 Mar 2013 17:37:25 +0900
+Message-ID: <20130302083725.31252.54610.stgit@localhost6.localdomain6>
 In-Reply-To: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
 References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -42,71 +41,67 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, heiko.carstens@de.ibm.com, akpm@linux-foundation.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Modern kernel marks the end of ELF note buffer with NT_VMCORE_PAD type
-note in order to make the buffer satisfy mmap()'s page-size boundary
-requirement. This patch makes finishing reading each buffer if the
-note type now being read is NT_VMCORE_PAD type.
+If there's some vmcore object that doesn't satisfy page-size boundary
+requirement, remap_pfn_range() fails to remap it to user-space.
+
+Objects that posisbly don't satisfy the requirement are ELF note
+segments only. The memory chunks corresponding to PT_LOAD entries are
+guaranteed to satisfy page-size boundary requirement by the copy from
+old memory to buffer in 2nd kernel done in later patch.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- fs/proc/vmcore.c |   24 ++++++++++++++++++++++++
- 1 files changed, 24 insertions(+), 0 deletions(-)
+ fs/proc/vmcore.c |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
 
 diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index c8899dc..e432946 100644
+index e432946..5582aaa 100644
 --- a/fs/proc/vmcore.c
 +++ b/fs/proc/vmcore.c
-@@ -259,12 +259,24 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
- 		}
- 		nhdr_ptr = notes_section;
- 		for (j = 0; j < max_sz; j += sz) {
-+			char *name;
-+
-+			/* Old kernel marks the end of ELF note buffer
-+			 * with empty header. */
- 			if (nhdr_ptr->n_namesz == 0)
- 				break;
- 			sz = sizeof(Elf64_Nhdr) +
- 				((nhdr_ptr->n_namesz + 3) & ~3) +
- 				((nhdr_ptr->n_descsz + 3) & ~3);
- 			real_sz += sz;
-+
-+			/* Modern kernel marks the end of ELF note
-+			 * buffer with NT_VMCORE_PAD type note. */
-+			name = (char *)(nhdr_ptr + 1);
-+			if (strncmp(name, VMCOREINFO_NOTE_NAME,
-+				    sizeof(VMCOREINFO_NOTE_NAME)) == 0
-+			    && nhdr_ptr->n_type == NT_VMCORE_PAD)
-+				break;
- 			nhdr_ptr = (Elf64_Nhdr*)((char*)nhdr_ptr + sz);
- 		}
+@@ -38,6 +38,8 @@ static u64 vmcore_size;
  
-@@ -369,12 +381,24 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
- 		}
- 		nhdr_ptr = notes_section;
- 		for (j = 0; j < max_sz; j += sz) {
-+			char *name;
-+
-+			/* Old kernel marks the end of ELF note buffer
-+			 * with empty header. */
- 			if (nhdr_ptr->n_namesz == 0)
- 				break;
- 			sz = sizeof(Elf32_Nhdr) +
- 				((nhdr_ptr->n_namesz + 3) & ~3) +
- 				((nhdr_ptr->n_descsz + 3) & ~3);
- 			real_sz += sz;
-+
-+			/* Modern kernel marks the end of ELF note
-+			 * buffer with NT_VMCORE_PAD type note. */
-+			name = (char *)(nhdr_ptr + 1);
-+			if (strncmp(name, VMCOREINFO_NOTE_NAME,
-+				    sizeof(VMCOREINFO_NOTE_NAME)) == 0
-+			    && nhdr_ptr->n_type == NT_VMCORE_PAD)
-+				break;
- 			nhdr_ptr = (Elf32_Nhdr*)((char*)nhdr_ptr + sz);
- 		}
+ static struct proc_dir_entry *proc_vmcore = NULL;
  
++static bool support_mmap_vmcore;
++
+ /*
+  * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
+  * The called function has to take care of module refcounting.
+@@ -897,6 +899,7 @@ static int __init parse_crash_elf_headers(void)
+ static int __init vmcore_init(void)
+ {
+ 	int rc = 0;
++	struct vmcore *m;
+ 
+ 	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
+ 	if (!(is_vmcore_usable()))
+@@ -907,6 +910,25 @@ static int __init vmcore_init(void)
+ 		return rc;
+ 	}
+ 
++	/* If some object doesn't satisfy PAGE_SIZE boundary
++	 * requirement, mmap_vmcore() is not exported to
++	 * user-space. */
++	support_mmap_vmcore = true;
++	list_for_each_entry(m, &vmcore_list, list) {
++		u64 paddr;
++
++		if (m->flag & MEM_TYPE_CURRENT_KERNEL)
++			paddr = (u64)__pa(m->buf);
++		else
++			paddr = m->paddr;
++
++		if ((m->offset & ~PAGE_MASK) || (paddr & ~PAGE_MASK)
++		    || (m->size & ~PAGE_MASK)) {
++			support_mmap_vmcore = false;
++			break;
++		}
++	}
++
+ 	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
+ 	if (proc_vmcore)
+ 		proc_vmcore->size = vmcore_size;
 
 
 _______________________________________________
