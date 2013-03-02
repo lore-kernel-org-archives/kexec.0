@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UChfl-0003KF-1P
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 02:32:09 +0000
-Date: Tue, 5 Mar 2013 11:32:06 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: consolidate crash late initialization
-Message-ID: <20130305023206.GL16128@verge.net.au>
-References: <1338372309-24983-1-git-send-email-vdavydov@parallels.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UClvs-0006bm-Mc
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 07:05:06 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A2AA33EE0BC
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:04:55 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 5684145DE4D
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:04:55 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 26C5E45DE52
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:04:55 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 020AAE08006
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:04:55 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 97332E08003
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:04:54 +0900 (JST)
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Subject: [PATCH v2 00/20] kdump, vmcore: support mmap() on /proc/vmcore
+Date: Sat, 02 Mar 2013 17:35:48 +0900
+Message-ID: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1338372309-24983-1-git-send-email-vdavydov@parallels.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,54 +36,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vladimir Davydov <vdavydov@parallels.com>
-Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, heiko.carstens@de.ibm.com, akpm@linux-foundation.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Wed, May 30, 2012 at 02:05:09PM +0400, Vladimir Davydov wrote:
-> Use one module_init() instead of two.
+Currently, read to /proc/vmcore is done by read_oldmem() that uses
+ioremap/iounmap per a single page. For example, if memory is 1GB,
+ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
+times. This causes big performance degradation.
 
-I'm not sure I understand the motivation for this change.
+In particular, the current main user of this mmap() is makedumpfile,
+which not only reads memory from /proc/vmcore but also does other
+processing like filtering, compression and IO work. Update of page
+table and the following TLB flush makes such processing much slow;
+though I have yet to make patch for makedumpfile and yet to confirm
+how it's improved.
 
-> ---
->  kernel/kexec.c |    9 +++++++--
->  1 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 4e2e472..c3341cb 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1240,7 +1240,6 @@ static int __init crash_notes_memory_init(void)
->  	}
->  	return 0;
->  }
-> -module_init(crash_notes_memory_init)
->  
->  
->  /*
-> @@ -1520,7 +1519,13 @@ static int __init crash_save_vmcoreinfo_init(void)
->  	return 0;
->  }
->  
-> -module_init(crash_save_vmcoreinfo_init)
-> +static int __init crash_init(void)
-> +{
-> +	crash_notes_memory_init();
-> +	crash_save_vmcoreinfo_init();
-> +	return 0;
-> +}
-> +module_init(crash_init)
->  
->  /*
->   * Move into place and start executing a preloaded standalone
-> -- 
-> 1.7.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+To address the issue, this patch implements mmap() on /proc/vmcore to
+improve read performance. My simple benchmark shows the improvement
+from 200 [MiB/sec] to over 50.0 [GiB/sec].
+
+ChangeLog
+=========
+
+v1 => v2)
+
+- Clean up the existing codes: use e_phoff, and remove the assumption
+  on PT_NOTE entries.
+  => See PATCH 01, 02.
+
+- Fix potencial bug that ELF haeader size is not included in exported
+  vmcoreinfo size.
+  => See Patch 03.
+
+- Divide patch modifying read_vmcore() into two: clean-up and primary
+  code change.
+  => See Patch 9, 10.
+
+- Put ELF note segments in page-size boundary on the 1st kernel
+  instead of copying them into the buffer on the 2nd kernel.
+  => See Patch 11, 12, 13, 14, 16.
+
+Benchmark
+=========
+
+No change is seen from the previous patch series. See the previous
+one from here:
+
+  https://lkml.org/lkml/2013/2/14/89
+
+TODO
+====
+
+- fix makedumpfile to use mmap() on /proc/vmcore and benchmark it to
+  confirm whether we can see enough performance improvement. The idea
+  is described here:
+  http://lists.infradead.org/pipermail/kexec/2013-February/007982.html
+
+- fix crash utility and makedumpfile to support NT_VMCORE_PAD note
+  type. Both tools don't distinguish the same note types from
+  different note names, which is not conform to ELF specification; now
+  both reads NT_VMCORE_PAD note type as NT_VMCORE_DEBUGINFO.
+
+Test
+====
+
+This patch set is composed based on v3.9-rc1.
+
+Done on x86-64, x86-32 both with 1GB and over 4GB memory environments.
+
+---
+
+HATAYAMA Daisuke (20):
+      vmcore: introduce mmap_vmcore()
+      vmcore: count holes generated by round-up operation for vmcore size
+      vmcore: round-up offset of vmcore object in page-size boundary
+      vmcore: check if vmcore objects satify mmap()'s page-size boundary requirement
+      vmcore: check NT_VMCORE_PAD as a mark indicating the end of ELF note buffer
+      kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
+      elf: introduce NT_VMCORE_PAD type
+      kexec, elf: introduce NT_VMCORE_DEBUGINFO note type
+      kexec: allocate vmcoreinfo note buffer on page-size boundary
+      vmcore: allocate per-cpu crash_notes objects on page-size boundary
+      vmcore: read buffers for vmcore objects copied from old memory
+      vmcore: clean up read_vmcore()
+      vmcore: modify vmcore clean-up function to free buffer on 2nd kernel
+      vmcore: copy non page-size aligned head and tail pages in 2nd kernel
+      vmcore, procfs: introduce a flag to distinguish objects copied in 2nd kernel
+      vmcore: round up buffer size of ELF headers by PAGE_SIZE
+      vmcore: allocate buffer for ELF headers on page-size alignment
+      vmcore, sysfs: export ELF note segment size instead of vmcoreinfo data size
+      vmcore: rearrange program headers without assuming consequtive PT_NOTE entries
+      vmcore: refer to e_phoff member explicitly
+
+
+ arch/s390/include/asm/kexec.h |    7 
+ fs/proc/vmcore.c              |  577 ++++++++++++++++++++++++++++++++---------
+ include/linux/kexec.h         |   16 +
+ include/linux/proc_fs.h       |    8 -
+ include/uapi/linux/elf.h      |    5 
+ kernel/kexec.c                |   47 ++-
+ kernel/ksysfs.c               |    2 
+ 7 files changed, 505 insertions(+), 157 deletions(-)
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
