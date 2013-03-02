@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UClwh-0006qR-2R
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 07:05:56 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 845D03EE0B6
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:52 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 144032C6FD7
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:51 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id EDB6645DE51
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:50 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id DE78E1DB8043
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:50 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7F4871DB803F
- for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:50 +0900 (JST)
+ id 1UClwk-0006ra-Fz
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 07:05:59 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id DE4E53EE0C8
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:56 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7805C45DEC0
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:56 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5D50945DEB5
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:56 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 47AE4E08008
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:56 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id DD037E08003
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 16:05:55 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 10/20] vmcore: read buffers for vmcore objects copied from
- old memory
-Date: Sat, 02 Mar 2013 17:36:44 +0900
-Message-ID: <20130302083644.31252.31560.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 11/20] vmcore: allocate per-cpu crash_notes objects on
+ page-size boundary
+Date: Sat, 02 Mar 2013 17:36:50 +0900
+Message-ID: <20130302083649.31252.99922.stgit@localhost6.localdomain6>
 In-Reply-To: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
 References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -41,42 +42,34 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, heiko.carstens@de.ibm.com, akpm@linux-foundation.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-If flag MEM_TYPE_CURRENT_KERNEL is set, the object is copied in the
-buffer on the 2nd kernel, then read_vmcore() reads the buffer. If the
-flag is not set, read_vmcore() reads old memory as usual.
+To satisfy mmap()'s page-size boundary requirement, allocate per-cpu
+crash_notes objects on page-size boundary.
+
+/proc/vmcore on the 2nd kernel checks if each note objects is
+allocated on page-size boundary. If there's some object not satisfying
+the page-size boundary requirement, /proc/vmcore doesn't provide
+mmap() interface.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- fs/proc/vmcore.c |   15 +++++++++++----
- 1 files changed, 11 insertions(+), 4 deletions(-)
+ kernel/kexec.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 09b7f34..c8899dc 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -158,10 +158,17 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- 			tsz = m->offset + m->size - *fpos;
- 			if (buflen < tsz)
- 				tsz = buflen;
--			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem(buffer, tsz, &start, 1);
--			if (tmp < 0)
--				return tmp;
-+			if (m->flag & MEM_TYPE_CURRENT_KERNEL) {
-+				if (copy_to_user(buffer,
-+						 m->buf + *fpos - m->offset,
-+						 tsz))
-+					return -EFAULT;
-+			} else {
-+				start = m->paddr + *fpos - m->offset;
-+				tmp = read_from_oldmem(buffer, tsz, &start, 1);
-+				if (tmp < 0)
-+					return tmp;
-+			}
- 			buflen -= tsz;
- 			*fpos += tsz;
- 			buffer += tsz;
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index bddd3d7..d1f365e 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1234,7 +1234,8 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+ static int __init crash_notes_memory_init(void)
+ {
+ 	/* Allocate memory for saving cpu registers. */
+-	crash_notes = alloc_percpu(note_buf_t);
++	crash_notes = __alloc_percpu(roundup(sizeof(note_buf_t), PAGE_SIZE),
++				     PAGE_SIZE);
+ 	if (!crash_notes) {
+ 		printk("Kexec: Memory allocation for saving cpu register"
+ 		" states failed\n");
 
 
 _______________________________________________
