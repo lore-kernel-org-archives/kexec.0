@@ -1,28 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDQru-0007YH-RY
- for kexec@lists.infradead.org; Thu, 07 Mar 2013 02:47:44 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id E093F3EE081
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:36 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C384745DE58
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:36 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A94E045DE54
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:36 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 7BE90E08005
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:36 +0900 (JST)
+ id 1UDQrv-0007YI-Kn
+ for kexec@lists.infradead.org; Thu, 07 Mar 2013 02:47:45 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 032673EE0C2
+ for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:42 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id DF62F45DEB7
+ for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:41 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id C77B645DEB6
+ for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:41 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id BB8271DB803B
+ for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:41 +0900 (JST)
 Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 33E4DE08001
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:36 +0900 (JST)
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 6FCBA1DB8038
+ for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:41 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 1/3] elf,
- sadump: move KEXEC macros from sadump_info.c to elf_info.h
-Date: Mon, 04 Mar 2013 13:18:29 +0900
-Message-ID: <20130304041829.16856.83840.stgit@localhost6.localdomain6>
+Subject: [PATCH 2/3] elf: swap checking order of VMCOREINFO and VMCOREINFO_XEN
+Date: Mon, 04 Mar 2013 13:18:35 +0900
+Message-ID: <20130304041834.16856.83544.stgit@localhost6.localdomain6>
 In-Reply-To: <20130304041724.16856.19272.stgit@localhost6.localdomain6>
 References: <20130304041724.16856.19272.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -41,56 +40,51 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
-Move KEXEC_CORE_NOTE_NAME and KEXEC_CORE_NOTE_NAME_BYTES in elf_info.h
-to export them in elf_info.c. Later patch refers to them when reading
-PT_NOTE program header entries.
-
-During this change, round-up operations are dropped to make it uniform
-to other macros such as VMCOREINFO_NOTE_NAME that is similarly
-exported from elf_info.h.
-
-Instead, the roundup-operations dropped are moved into
-KEXEC_NOTE_BYTES.
+Currently, get_pt_note_info() checks ELF note in "VMCOREINFO_XEN" name
+first and then in "VMCOREINFO" name to avoid the case where
+"VMCOREINFO_XEN" is wrongly interpreted as "VMCOREINFO". However,
+characters checked by strncmp() includes null character. The case
+concerned about there can never happen. This patch swaps checking
+order of VMCOREINFO and VMCOREINFO_XEN, which is natural in the sense
+that the direction from general one to specific one is natural.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- elf_info.h    |    3 +++
- sadump_info.c |    4 +---
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ elf_info.c |   13 ++++---------
+ 1 files changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/elf_info.h b/elf_info.h
-index 3b430dd..eb58023 100644
---- a/elf_info.h
-+++ b/elf_info.h
-@@ -19,6 +19,9 @@
- #include <elf.h>
- #include <sys/types.h>
+diff --git a/elf_info.c b/elf_info.c
+index b0e45b5..f9c554d 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -323,22 +323,17 @@ get_pt_note_info(void)
+ 		offset_desc = offset + offset_note_desc(note);
+ 		size_desc   = note_descsz(note);
  
-+#define KEXEC_CORE_NOTE_NAME "CORE"
-+#define KEXEC_CORE_NOTE_NAME_BYTES sizeof(KEXEC_CORE_NOTE_NAME)
-+
- #define ERASEINFO_NOTE_NAME		"ERASEINFO"
- #define ERASEINFO_NOTE_NAME_BYTES	(sizeof(ERASEINFO_NOTE_NAME))
- 
-diff --git a/sadump_info.c b/sadump_info.c
-index 9346bf1..be6cf55 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -37,12 +37,10 @@
- 
- #endif
- 
--#define KEXEC_CORE_NOTE_NAME "CORE"
--#define KEXEC_CORE_NOTE_NAME_BYTES roundup(sizeof(KEXEC_CORE_NOTE_NAME), 4)
- #define KEXEC_CORE_NOTE_DESC_BYTES roundup(sizeof(struct elf_prstatus), 4)
- 
- #define KEXEC_NOTE_BYTES ((KEXEC_NOTE_HEAD_BYTES * 2) +                \
--			  KEXEC_CORE_NOTE_NAME_BYTES +		       \
-+			  roundup(KEXEC_CORE_NOTE_NAME_BYTES, 4) +     \
- 			  KEXEC_CORE_NOTE_DESC_BYTES )
- 
- #define for_each_online_cpu(cpu)					\
++		if (!strncmp(VMCOREINFO_NOTE_NAME, buf,
++		    VMCOREINFO_NOTE_NAME_BYTES)) {
++			set_vmcoreinfo(offset_desc, size_desc);
+ 		/*
+ 		 * Check whether /proc/vmcore contains vmcoreinfo,
+ 		 * and get both the offset and the size.
+-		 *
+-		 * NOTE: The owner name of xen should be checked at first,
+-		 *       because its name is "VMCOREINFO_XEN" and the one
+-		 *       of linux is "VMCOREINFO".
+ 		 */
+-		if (!strncmp(VMCOREINFO_XEN_NOTE_NAME, buf,
++		} else if (!strncmp(VMCOREINFO_XEN_NOTE_NAME, buf,
+ 		    VMCOREINFO_XEN_NOTE_NAME_BYTES)) {
+ 			offset_vmcoreinfo_xen = offset_desc;
+ 			size_vmcoreinfo_xen   = size_desc;
+-		} else if (!strncmp(VMCOREINFO_NOTE_NAME, buf,
+-		    VMCOREINFO_NOTE_NAME_BYTES)) {
+-			set_vmcoreinfo(offset_desc, size_desc);
+-
+ 		/*
+ 		 * Check whether /proc/vmcore contains xen's note.
+ 		 */
 
 
 _______________________________________________
