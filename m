@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UCh2Q-0006mF-Pr
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 01:51:31 +0000
-Date: Tue, 5 Mar 2013 10:51:27 +0900
+ id 1UCh3R-0006vg-TR
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 01:52:34 +0000
+Date: Tue, 5 Mar 2013 10:52:31 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: lengthen the kernel command line image
-Message-ID: <20130305015127.GA28547@verge.net.au>
-References: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
+Subject: Re: [PATCH] kexec: include reserved e820 sections in crash kernel
+Message-ID: <20130305015231.GB28547@verge.net.au>
+References: <E1U2S76-00057L-Kp@eag09.americas.sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
+In-Reply-To: <E1U2S76-00057L-Kp@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,16 +26,27 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Cliff Wickman <cpw@sgi.com>
 Cc: kexec@lists.infradead.org
 
-On Mon, Feb 04, 2013 at 01:53:55PM -0600, Cliff Wickman wrote:
+On Mon, Feb 04, 2013 at 01:54:00PM -0600, Cliff Wickman wrote:
 > From: Cliff Wickman <cpw@sgi.com>
 > 
-> The crash kernel's boot command line is not long enough to contain the
-> necessary memmap= options for a large memory.
+> The crash kernel is not able to find its root device if that device is not
+> on PCI 0.
 > 
-> The fix is simple, as long as the boot loader's command line is also long enough.
-> I'm not sure about boot loader or kernel restrictions to this length.
+> This is because it is booted with the command line option memmap=exactmap
+> which currently clears the e820 table and does not restore reserved spaces.
 > 
-> Signed-off-by: Cliff Wickman <cpw@sgi.com>
+> This works for a device on PCI 0 because ACPI falls back to a legacy mode.
+> But the error message " [Firmware Bug]: PCI: MMCONFIG at
+>  [mem 0x80000000-0x80cfffff] not reserved in ACPI motherboard resources"
+> is written to the log even in this functioning case.
+> 
+> It fails for some devices on UV2, and only for UV2, because SGI seems to
+> be the only manufacturer currently using the extended PCI(>0).
+> 
+> The fix is simple, as long as the command line is long enough to include
+> all the reserved spaces.
+> The command line may have to be lengthened. See
+>   [PATCH] kexec: lengthen the kernel command line image
 
 Thanks, applied.
 
