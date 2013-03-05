@@ -1,17 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UCnOe-0006q5-Ek
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 08:38:54 +0000
-Message-ID: <5135AEA5.7000605@cn.fujitsu.com>
-Date: Tue, 05 Mar 2013 16:36:53 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UCnlv-0001fQ-83
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 09:02:56 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 9C4A13EE0B6
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 18:02:50 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 85E5C45DEC0
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 18:02:50 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 6DC7045DEB5
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 18:02:50 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5B2EB1DB803E
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 18:02:50 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id D858FE08009
+ for <kexec@lists.infradead.org>; Tue,  5 Mar 2013 18:02:49 +0900 (JST)
+Date: Tue, 05 Mar 2013 18:02:43 +0900 (JST)
+Message-Id: <20130305.180243.45653001.d.hatayama@jp.fujitsu.com>
 Subject: Re: [PATCH v2 02/20] vmcore: rearrange program headers without
  assuming consequtive PT_NOTE entries
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <5135AEA5.7000605@cn.fujitsu.com>
 References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
  <20130302083559.31252.60341.stgit@localhost6.localdomain6>
-In-Reply-To: <20130302083559.31252.60341.stgit@localhost6.localdomain6>
+ <5135AEA5.7000605@cn.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,139 +36,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+To: zhangyanfei@cn.fujitsu.com
 Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
-5LqOIDIwMTPlubQwM+aciDAy5pelIDE2OjM1LCBIQVRBWUFNQSBEYWlzdWtlIOWGmemBkzoKPiBD
-dXJyZW50IGNvZGUgYXNzdW1lcyBhbGwgUFRfTk9URSBoZWFkZXJzIGFyZSBwbGFjZWQgYXQgdGhl
-IGJlZ2lubmluZwo+IG9mIHByb2dyYW0gaGVhZGVyIHRhYmxlIGFuZCB0aGV5IGFyZSBjb25zZXF1
-dGl2ZS4gQnV0IHRoZSBhc3N1bXB0aW9uCj4gY291bGQgYmUgYnJva2VuIGJ5IGZ1dHVyZSBjaGFu
-Z2VzIG9uIGVpdGhlciBrZXhlYy10b29scyBvciB0aGUgMXN0Cj4ga2VybmVsLiBUaGlzIHBhdGNo
-IHJlbW92ZXMgdGhlIGFzc3VtcHRpb24gYW5kIHJlYXJyYW5nZXMgcHJvZ3JhbQo+IGhlYWRlcnMg
-YXMgdGhlIGZvbGxvd2luZyBjb25kaXRpb25zIGFyZSBzYXRpc2ZpZWQ6Cj4gCj4gLSBQVF9OT1RF
-IGVudHJ5IGlzIHVuaXF1ZSBhdCB0aGUgZmlyc3QgZW50cnksCj4gCj4gLSB0aGUgb3JkZXIgb2Yg
-cHJvZ3JhbSBoZWFkZXJzIGFyZSB1bmNoYW5nZWQgZHVyaW5nIHRoaXMKPiAgIHJlYXJyYW5nZW1l
-bnQsIG9ubHkgdGhlaXIgcG9zaXRpb25zIGFyZSBjaGFuZ2VkIGluIHBvc2l0aXZlCj4gICBkaXJl
-Y3Rpb24uCj4gCj4gLSB1bnVzZWQgcGFydCB0aGF0IG9jY3VycyBpbiB0aGUgYm90dG9tIG9mIHBy
-b2dyYW0gaGVhZGVycyBhcmUgZmlsbGVkCj4gICB3aXRoIDAuCj4gCj4gQWxzbywgdGhpcyBwYXRj
-aCBhZGRzIG9uZSBleGNlcHRpb25hbCBjYXNlIHdoZXJlIHRoZSBudW1iZXIgb2YgUFRfTk9URQo+
-IGVudHJpZXMgaXMgc29tZWhvdyAwLiBUaGVuLCBpbW1lZGlhdGVseSBnbyBvdXQgb2YgdGhlIGZ1
-bmN0aW9uLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEhBVEFZQU1BIERhaXN1a2UgPGQuaGF0YXlhbWFA
-anAuZnVqaXRzdS5jb20+Cj4gLS0tCj4gCj4gIGZzL3Byb2Mvdm1jb3JlLmMgfCAgIDkyICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQo+ICAxIGZp
-bGVzIGNoYW5nZWQsIDc0IGluc2VydGlvbnMoKyksIDE4IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYg
-LS1naXQgYS9mcy9wcm9jL3ZtY29yZS5jIGIvZnMvcHJvYy92bWNvcmUuYwo+IGluZGV4IGFiZjRm
-MDEuLmI1YzllMzMgMTAwNjQ0Cj4gLS0tIGEvZnMvcHJvYy92bWNvcmUuYwo+ICsrKyBiL2ZzL3By
-b2Mvdm1jb3JlLmMKPiBAQCAtMjUxLDggKzI1MSw3IEBAIHN0YXRpYyB1NjQgX19pbml0IGdldF92
-bWNvcmVfc2l6ZV9lbGYzMihjaGFyICplbGZwdHIpCj4gIHN0YXRpYyBpbnQgX19pbml0IG1lcmdl
-X25vdGVfaGVhZGVyc19lbGY2NChjaGFyICplbGZwdHIsIHNpemVfdCAqZWxmc3osCj4gIAkJCQkJ
-CXN0cnVjdCBsaXN0X2hlYWQgKnZjX2xpc3QpCj4gIHsKPiAtCWludCBpLCBucl9wdG5vdGU9MCwg
-cmM9MDsKPiAtCWNoYXIgKnRtcDsKPiArCWludCBpLCBqLCBucl9wdG5vdGU9MCwgaV9wdG5vdGUs
-IHJjPTA7CgpBZnRlciBhcHBseWluZyB0aGUgcGF0Y2gsIHRoZXJlIGFyZSB0d28gImoiIGRlZmlu
-ZWQuCgoyNTEgc3RhdGljIGludCBfX2luaXQgbWVyZ2Vfbm90ZV9oZWFkZXJzX2VsZjY0KGNoYXIg
-KmVsZnB0ciwgc2l6ZV90ICplbGZzeiwKMjUyICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHN0cnVjdCBsaXN0X2hlYWQgKnZjX2xpc3QpCjI1MyB7CjI1NCAg
-ICAgICAgIGludCBpLCBqLCBucl9wdG5vdGU9MCwgaV9wdG5vdGUsIHJjPTA7CjI1NSAgICAgICAg
-IEVsZjY0X0VoZHIgKmVoZHJfcHRyOwoyNTYgICAgICAgICBFbGY2NF9QaGRyIHBoZHIsICpwaGRy
-X3B0cjsKMjU3ICAgICAgICAgRWxmNjRfTmhkciAqbmhkcl9wdHI7CjI1OCAgICAgICAgIHU2NCBw
-aGRyX3N6ID0gMCwgbm90ZV9vZmY7CjI1OSAKMjYwICAgICAgICAgZWhkcl9wdHIgPSAoRWxmNjRf
-RWhkciAqKWVsZnB0cjsKMjYxICAgICAgICAgcGhkcl9wdHIgPSAoRWxmNjRfUGhkciopKGVsZnB0
-ciArIGVoZHJfcHRyLT5lX3Bob2ZmKTsKMjYyICAgICAgICAgZm9yIChpID0gMDsgaSA8IGVoZHJf
-cHRyLT5lX3BobnVtOyBpKyssIHBoZHJfcHRyKyspIHsKMjYzICAgICAgICAgICAgICAgICBpbnQg
-ajsKMjY0ICAgICAgICAgICAgICAgICB2b2lkICpub3Rlc19zZWN0aW9uOwoyNjUgICAgICAgICAg
-ICAgICAgIHN0cnVjdCB2bWNvcmUgKm5ldzsKCgpsaW5lIDI1NCBhbmQgMjYzLgoKCj4gIAlFbGY2
-NF9FaGRyICplaGRyX3B0cjsKPiAgCUVsZjY0X1BoZHIgcGhkciwgKnBoZHJfcHRyOwo+ICAJRWxm
-NjRfTmhkciAqbmhkcl9wdHI7Cj4gQEAgLTMwMiw2ICszMDEsMzkgQEAgc3RhdGljIGludCBfX2lu
-aXQgbWVyZ2Vfbm90ZV9oZWFkZXJzX2VsZjY0KGNoYXIgKmVsZnB0ciwgc2l6ZV90ICplbGZzeiwK
-PiAgCQlrZnJlZShub3Rlc19zZWN0aW9uKTsKPiAgCX0KPiAgCj4gKwlpZiAobnJfcHRub3RlID09
-IDApCj4gKwkJZ290byBvdXQ7Cj4gKwo+ICsJcGhkcl9wdHIgPSAoRWxmNjRfUGhkciAqKShlbGZw
-dHIgKyBlaGRyX3B0ci0+ZV9waG9mZik7Cj4gKwo+ICsJLyogUmVtb3ZlIHVud2FudGVkIFBUX05P
-VEUgcHJvZ3JhbSBoZWFkZXJzLiAqLwo+ICsKPiArICAgICAgICAvKiAtIDFzdCBwYXNzIHNoaWZ0
-cyBub24tUFRfTk9URSBlbnRyaWVzIHVudGlsIHRoZSBmaXJzdAo+ICsJICAgICBQVF9OT1RFIGVu
-dHJ5LiAqLwo+ICsJaV9wdG5vdGUgPSAtMTsKPiArCWZvciAoaSA9IDA7IGkgPCBlaGRyX3B0ci0+
-ZV9waG51bTsgKytpKSB7Cj4gKwkJaWYgKHBoZHJfcHRyW2ldLnBfdHlwZSA9PSBQVF9OT1RFKSB7
-Cj4gKwkJCWlfcHRub3RlID0gaTsKPiArCQkJYnJlYWs7Cj4gKwkJfQo+ICsJfQo+ICsJQlVHX09O
-KGlfcHRub3RlID09IC0xKTsgLyogaW1wb3NzaWJsZSBjYXNlIHNpbmNlIG5yX3B0bm90ZSA+IDAu
-ICovCj4gKwltZW1tb3ZlKHBoZHJfcHRyICsgMSwgcGhkcl9wdHIsCWlfcHRub3RlICogc2l6ZW9m
-KEVsZjY0X1BoZHIpKTsKCmlzIHRoZXJlIGFueSBwcm9ibGVtIHdpdGggdGhpcyBtb3ZlPyBXaGF0
-IGlzIHRoZSBiYXRjaCBieXRlcyBmb3IgZXZlcnkgbG9vcApvZiBtZW1tb3ZlPyAKCmlmIGlfcHRu
-b2RlID09IDIsIHNvIHdlIGhhdmUKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0KfCBQVF9MT0FEIDEgfCBQVF9MT0FEIDIgfCBQVF9OT1RFIDEgfAotLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tCgotLT4KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0KfCAgICAgICAgICAgfCBQVF9MT0FEIDEgfCBQVF9MT0FEIDIgfAotLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgpyaWdodD8gSW4gdGhlIG1vdmUsIERvZXMgUFRf
-TE9BRCAxIG92ZXJ3cml0ZSB0aGUgb3JpZ2luYWwgUFRfTE9BRCAyPwoKPiArCj4gKwkvKiAtIDJu
-ZCBwYXNzIG1vdmVzIHRoZSByZW1haW5pbmcgbm9uLVBUX05PVEUgZW50cmllcyB1bmRlcgo+ICsJ
-ICAgICB0aGUgZmlyc3QgUFRfTk9URSBlbnRyeS4gKi8KPiArCWZvciAoaSA9IGogPSBpX3B0bm90
-ZSArIDE7IGkgPCBlaGRyX3B0ci0+ZV9waG51bTsgaSsrKSB7Cj4gKwkJaWYgKHBoZHJfcHRyW2ld
-LnBfdHlwZSAhPSBQVF9OT1RFKSB7Cj4gKwkJCW1lbW1vdmUocGhkcl9wdHIgKyBqLCBwaGRyX3B0
-ciArIGksCj4gKwkJCQlzaXplb2YoRWxmNjRfUGhkcikpOwo+ICsJCQlqKys7Cj4gKwkJfQo+ICsJ
-fQo+ICsKPiArCS8qIC0gRmluYWxseSwgZmlsbCB1bnVzZWQgcGFydCB3aXRoIDAuICovCj4gKwlt
-ZW1zZXQocGhkcl9wdHIgKyBlaGRyX3B0ci0+ZV9waG51bSAtIChucl9wdG5vdGUgLSAxKSwgMCwK
-PiArCSAgICAgICAobnJfcHRub3RlIC0gMSkgKiBzaXplb2YoRWxmNjRfUGhkcikpOwo+ICsKPiAg
-CS8qIFByZXBhcmUgbWVyZ2VkIFBUX05PVEUgcHJvZ3JhbSBoZWFkZXIuICovCj4gIAlwaGRyLnBf
-dHlwZSAgICA9IFBUX05PVEU7Cj4gIAlwaGRyLnBfZmxhZ3MgICA9IDA7Cj4gQEAgLTMxMywxOCAr
-MzQ1LDE0IEBAIHN0YXRpYyBpbnQgX19pbml0IG1lcmdlX25vdGVfaGVhZGVyc19lbGY2NChjaGFy
-ICplbGZwdHIsIHNpemVfdCAqZWxmc3osCj4gIAlwaGRyLnBfYWxpZ24gICA9IDA7Cj4gIAo+ICAJ
-LyogQWRkIG1lcmdlZCBQVF9OT1RFIHByb2dyYW0gaGVhZGVyKi8KPiAtCXRtcCA9IGVsZnB0ciAr
-IGVoZHJfcHRyLT5lX3Bob2ZmOwo+IC0JbWVtY3B5KHRtcCwgJnBoZHIsIHNpemVvZihwaGRyKSk7
-Cj4gLQl0bXAgKz0gc2l6ZW9mKHBoZHIpOwo+ICsJbWVtY3B5KHBoZHJfcHRyLCAmcGhkciwgc2l6
-ZW9mKEVsZjY0X1BoZHIpKTsKPiAgCj4gLQkvKiBSZW1vdmUgdW53YW50ZWQgUFRfTk9URSBwcm9n
-cmFtIGhlYWRlcnMuICovCj4gLQlpID0gKG5yX3B0bm90ZSAtIDEpICogc2l6ZW9mKEVsZjY0X1Bo
-ZHIpOwo+IC0JKmVsZnN6ID0gKmVsZnN6IC0gaTsKPiAtCW1lbW1vdmUodG1wLCB0bXAraSwgKCgq
-ZWxmc3opLWVoZHJfcHRyLT5lX3Bob2ZmLXNpemVvZihFbGY2NF9QaGRyKSkpOwo+ICsJKmVsZnN6
-ID0gKmVsZnN6IC0gKG5yX3B0bm90ZSAtIDEpICogc2l6ZW9mKEVsZjY0X1BoZHIpOwo+ICAKPiAg
-CS8qIE1vZGlmeSBlX3BobnVtIHRvIHJlZmxlY3QgbWVyZ2VkIGhlYWRlcnMuICovCj4gIAllaGRy
-X3B0ci0+ZV9waG51bSA9IGVoZHJfcHRyLT5lX3BobnVtIC0gbnJfcHRub3RlICsgMTsKPiAgCj4g
-K291dDoKPiAgCXJldHVybiAwOwo+ICB9Cj4gIAo+IEBAIC0zMzIsOCArMzYwLDcgQEAgc3RhdGlj
-IGludCBfX2luaXQgbWVyZ2Vfbm90ZV9oZWFkZXJzX2VsZjY0KGNoYXIgKmVsZnB0ciwgc2l6ZV90
-ICplbGZzeiwKPiAgc3RhdGljIGludCBfX2luaXQgbWVyZ2Vfbm90ZV9oZWFkZXJzX2VsZjMyKGNo
-YXIgKmVsZnB0ciwgc2l6ZV90ICplbGZzeiwKPiAgCQkJCQkJc3RydWN0IGxpc3RfaGVhZCAqdmNf
-bGlzdCkKPiAgewo+IC0JaW50IGksIG5yX3B0bm90ZT0wLCByYz0wOwo+IC0JY2hhciAqdG1wOwo+
-ICsJaW50IGksIGosIG5yX3B0bm90ZT0wLCBpX3B0bm90ZSwgcmM9MDsKPiAgCUVsZjMyX0VoZHIg
-KmVoZHJfcHRyOwo+ICAJRWxmMzJfUGhkciBwaGRyLCAqcGhkcl9wdHI7Cj4gIAlFbGYzMl9OaGRy
-ICpuaGRyX3B0cjsKPiBAQCAtMzgzLDYgKzQxMCwzOSBAQCBzdGF0aWMgaW50IF9faW5pdCBtZXJn
-ZV9ub3RlX2hlYWRlcnNfZWxmMzIoY2hhciAqZWxmcHRyLCBzaXplX3QgKmVsZnN6LAo+ICAJCWtm
-cmVlKG5vdGVzX3NlY3Rpb24pOwo+ICAJfQo+ICAKPiArCWlmIChucl9wdG5vdGUgPT0gMCkKPiAr
-CQlnb3RvIG91dDsKPiArCj4gKwlwaGRyX3B0ciA9IChFbGYzMl9QaGRyICopKGVsZnB0ciArIGVo
-ZHJfcHRyLT5lX3Bob2ZmKTsKPiArCj4gKwkvKiBSZW1vdmUgdW53YW50ZWQgUFRfTk9URSBwcm9n
-cmFtIGhlYWRlcnMuICovCj4gKwo+ICsJLyogLSAxc3QgcGFzcyBzaGlmdHMgbm9uLVBUX05PVEUg
-ZW50cmllcyB1bnRpbCB0aGUgZmlyc3QKPiArCSAgICAgUFRfTk9URSBlbnRyeS4gKi8KPiArCWlf
-cHRub3RlID0gLTE7Cj4gKwlmb3IgKGkgPSAwOyBpIDwgZWhkcl9wdHItPmVfcGhudW07ICsraSkg
-ewo+ICsJCWlmIChwaGRyX3B0cltpXS5wX3R5cGUgPT0gUFRfTk9URSkgewo+ICsJCQlpX3B0bm90
-ZSA9IGk7Cj4gKwkJCWJyZWFrOwo+ICsJCX0KPiArCX0KPiArCUJVR19PTihpX3B0bm90ZSA9PSAt
-MSk7IC8qIGltcG9zc2libGUgY2FzZSBzaW5jZSBucl9wdG5vdGUgPiAwLiAqLwo+ICsJbWVtbW92
-ZShwaGRyX3B0ciArIDEsIHBoZHJfcHRyLCBpX3B0bm90ZSAqIHNpemVvZihFbGYzMl9QaGRyKSk7
-Cj4gKwo+ICsJLyogLSAybmQgcGFzcyBtb3ZlcyB0aGUgcmVtYWluaW5nIG5vbi1QVF9OT1RFIGVu
-dHJpZXMgdW5kZXIKPiArCSAgICAgdGhlIGZpcnN0IFBUX05PVEUgZW50cnkuICovCj4gKwlmb3Ig
-KGkgPSBqID0gaV9wdG5vdGUgKyAxOyBpIDwgZWhkcl9wdHItPmVfcGhudW07IGkrKykgewo+ICsJ
-CWlmIChwaGRyX3B0cltpXS5wX3R5cGUgIT0gUFRfTk9URSkgewo+ICsJCQltZW1tb3ZlKHBoZHJf
-cHRyICsgaiwgcGhkcl9wdHIgKyBpLAo+ICsJCQkJc2l6ZW9mKEVsZjMyX1BoZHIpKTsKPiArCQkJ
-aisrOwo+ICsJCX0KPiArCX0KPiArCj4gKwkvKiAtIEZpbmFsbHksIGZpbGwgdW51c2VkIHBhcnQg
-d2l0aCAwLiAqLwo+ICsJbWVtc2V0KHBoZHJfcHRyICsgZWhkcl9wdHItPmVfcGhudW0gLSAobnJf
-cHRub3RlIC0gMSksIDAsCj4gKwkgICAgICAgKG5yX3B0bm90ZSAtIDEpICogc2l6ZW9mKEVsZjMy
-X1BoZHIpKTsKPiArCj4gIAkvKiBQcmVwYXJlIG1lcmdlZCBQVF9OT1RFIHByb2dyYW0gaGVhZGVy
-LiAqLwo+ICAJcGhkci5wX3R5cGUgICAgPSBQVF9OT1RFOwo+ICAJcGhkci5wX2ZsYWdzICAgPSAw
-Owo+IEBAIC0zOTQsMTggKzQ1NCwxNCBAQCBzdGF0aWMgaW50IF9faW5pdCBtZXJnZV9ub3RlX2hl
-YWRlcnNfZWxmMzIoY2hhciAqZWxmcHRyLCBzaXplX3QgKmVsZnN6LAo+ICAJcGhkci5wX2FsaWdu
-ICAgPSAwOwo+ICAKPiAgCS8qIEFkZCBtZXJnZWQgUFRfTk9URSBwcm9ncmFtIGhlYWRlciovCj4g
-LQl0bXAgPSBlbGZwdHIgKyBlaGRyX3B0ci0+ZV9waG9mZjsKPiAtCW1lbWNweSh0bXAsICZwaGRy
-LCBzaXplb2YocGhkcikpOwo+IC0JdG1wICs9IHNpemVvZihwaGRyKTsKPiArCW1lbWNweShwaGRy
-X3B0ciwgJnBoZHIsIHNpemVvZihFbGYzMl9QaGRyKSk7Cj4gIAo+IC0JLyogUmVtb3ZlIHVud2Fu
-dGVkIFBUX05PVEUgcHJvZ3JhbSBoZWFkZXJzLiAqLwo+IC0JaSA9IChucl9wdG5vdGUgLSAxKSAq
-IHNpemVvZihFbGYzMl9QaGRyKTsKPiAtCSplbGZzeiA9ICplbGZzeiAtIGk7Cj4gLQltZW1tb3Zl
-KHRtcCwgdG1wK2ksICgoKmVsZnN6KS1laGRyX3B0ci0+ZV9waG9mZi1zaXplb2YoRWxmMzJfUGhk
-cikpKTsKPiArCSplbGZzeiA9ICplbGZzeiAtIChucl9wdG5vdGUgLSAxKSAqIHNpemVvZihFbGYz
-Ml9QaGRyKTsKPiAgCj4gIAkvKiBNb2RpZnkgZV9waG51bSB0byByZWZsZWN0IG1lcmdlZCBoZWFk
-ZXJzLiAqLwo+ICAJZWhkcl9wdHItPmVfcGhudW0gPSBlaGRyX3B0ci0+ZV9waG51bSAtIG5yX3B0
-bm90ZSArIDE7Cj4gIAo+ICtvdXQ6Cj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiAKPiAKPiBfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtleGVjIG1haWxp
-bmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9rZXhlYwo=
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Subject: Re: [PATCH v2 02/20] vmcore: rearrange program headers without assuming consequtive PT_NOTE entries
+Date: Tue, 5 Mar 2013 16:36:53 +0800
+
+> 于 2013年03月02日 16:35, HATAYAMA Daisuke 写道:
+>> Current code assumes all PT_NOTE headers are placed at the beginning
+>> of program header table and they are consequtive. But the assumption
+>> could be broken by future changes on either kexec-tools or the 1st
+>> kernel. This patch removes the assumption and rearranges program
+>> headers as the following conditions are satisfied:
+>> 
+>> - PT_NOTE entry is unique at the first entry,
+>> 
+>> - the order of program headers are unchanged during this
+>>   rearrangement, only their positions are changed in positive
+>>   direction.
+>> 
+>> - unused part that occurs in the bottom of program headers are filled
+>>   with 0.
+>> 
+>> Also, this patch adds one exceptional case where the number of PT_NOTE
+>> entries is somehow 0. Then, immediately go out of the function.
+>> 
+>> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+>> ---
+>> 
+>>  fs/proc/vmcore.c |   92 +++++++++++++++++++++++++++++++++++++++++++-----------
+>>  1 files changed, 74 insertions(+), 18 deletions(-)
+>> 
+>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+>> index abf4f01..b5c9e33 100644
+>> --- a/fs/proc/vmcore.c
+>> +++ b/fs/proc/vmcore.c
+>> @@ -251,8 +251,7 @@ static u64 __init get_vmcore_size_elf32(char *elfptr)
+>>  static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>>  						struct list_head *vc_list)
+>>  {
+>> -	int i, nr_ptnote=0, rc=0;
+>> -	char *tmp;
+>> +	int i, j, nr_ptnote=0, i_ptnote, rc=0;
+> 
+> After applying the patch, there are two "j" defined.
+> 
+> 251 static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+> 252                                                 struct list_head *vc_list)
+> 253 {
+> 254         int i, j, nr_ptnote=0, i_ptnote, rc=0;
+> 255         Elf64_Ehdr *ehdr_ptr;
+> 256         Elf64_Phdr phdr, *phdr_ptr;
+> 257         Elf64_Nhdr *nhdr_ptr;
+> 258         u64 phdr_sz = 0, note_off;
+> 259 
+> 260         ehdr_ptr = (Elf64_Ehdr *)elfptr;
+> 261         phdr_ptr = (Elf64_Phdr*)(elfptr + ehdr_ptr->e_phoff);
+> 262         for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
+> 263                 int j;
+> 264                 void *notes_section;
+> 265                 struct vmcore *new;
+> 
+> 
+> line 254 and 263.
+> 
+
+I've already noticed the name of the inner j is never best in meaning
+under development but I didn't make patch for it; it's beyond the
+scope of this patch series.
+
+I'll replace the outer j by another incremental variable like k. 
+
+> 
+>>  	Elf64_Ehdr *ehdr_ptr;
+>>  	Elf64_Phdr phdr, *phdr_ptr;
+>>  	Elf64_Nhdr *nhdr_ptr;
+>> @@ -302,6 +301,39 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>>  		kfree(notes_section);
+>>  	}
+>>  
+>> +	if (nr_ptnote == 0)
+>> +		goto out;
+>> +
+>> +	phdr_ptr = (Elf64_Phdr *)(elfptr + ehdr_ptr->e_phoff);
+>> +
+>> +	/* Remove unwanted PT_NOTE program headers. */
+>> +
+>> +        /* - 1st pass shifts non-PT_NOTE entries until the first
+>> +	     PT_NOTE entry. */
+>> +	i_ptnote = -1;
+>> +	for (i = 0; i < ehdr_ptr->e_phnum; ++i) {
+>> +		if (phdr_ptr[i].p_type == PT_NOTE) {
+>> +			i_ptnote = i;
+>> +			break;
+>> +		}
+>> +	}
+>> +	BUG_ON(i_ptnote == -1); /* impossible case since nr_ptnote > 0. */
+>> +	memmove(phdr_ptr + 1, phdr_ptr,	i_ptnote * sizeof(Elf64_Phdr));
+> 
+> is there any problem with this move? What is the batch bytes for every loop
+> of memmove? 
+> 
+> if i_ptnode == 2, so we have
+> 
+> -------------------------------------
+> | PT_LOAD 1 | PT_LOAD 2 | PT_NOTE 1 |
+> -------------------------------------
+> 
+> -->
+> 
+> -------------------------------------
+> |           | PT_LOAD 1 | PT_LOAD 2 |
+> -------------------------------------
+> 
+> right? In the move, Does PT_LOAD 1 overwrite the original PT_LOAD 2?
+> 
+
+Right and yes, see man memmove and man memcpy, and please compare
+them.
+
+Thanks.
+HATAYAMA, Daisuke
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
