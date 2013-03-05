@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UCh4P-00076R-9N
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 01:53:33 +0000
-Date: Tue, 5 Mar 2013 10:53:30 +0900
+ id 1UChOX-0001LW-HE
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 02:14:22 +0000
+Date: Tue, 5 Mar 2013 11:14:18 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec x86: drop truncation warning for crash kernel
-Message-ID: <20130305015330.GC28547@verge.net.au>
-References: <E1UA2LP-0007z2-2z@eag09.americas.sgi.com>
+Subject: Re: [PATCH v2 0/2] kexec: Limit the crash memory ranges according to
+ first kernel's memory limit.
+Message-ID: <20130305021418.GI16128@verge.net.au>
+References: <20130212104624.7781.32716.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E1UA2LP-0007z2-2z@eag09.americas.sgi.com>
+In-Reply-To: <20130212104624.7781.32716.stgit@mars.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +24,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kexec@lists.infradead.org
+To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Suzuki Poulose <suzuki@in.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Ananth Narayan <ananth@in.ibm.com>, bhe@redhat.com
 
-On Mon, Feb 25, 2013 at 12:00:07PM -0600, Cliff Wickman wrote:
-> From: Cliff Wickman <cpw@sgi.com>
+On Tue, Feb 12, 2013 at 04:16:50PM +0530, Mahesh J Salgaonkar wrote:
+> So far powerpc kernel never exported memory limit information which is
+> reflected by mem= kernel cmdline option. Hence, kexec-tools always use
+> to build ELF header for entire system RAM generating a dump bigger than
+> the actual memory used by the first kernel.
 > 
-> On kexec set-up of a crash kernel on a very large memory machine we
-> sometimes see the worrisome warning:
->   Too many memory ranges, truncating...
-> meaning that the total count of e820 ram, reserved and ACPI spaces is over 128.
+> The following upstream kernel commits now exports memory limit information
+> through /proc/device-tree file:
+>   4bc77a5ed - powerpc: Export memory limit via device tree
+>   a84fcd468 - powerpc: Change memory_limit from phys_addr_t to unsigned
+> 	      long long
 > 
-> Per the comment in do_bzImage_load():
->                 /* If using bzImage for capture kernel, then we will not be
->                  * executing real mode code. setup segment can be loaded
->                  * anywhere as we will be just reading command line.
->                  */
-> So if I understand, the e820 table built here and added to the 'real_mode'
-> area is not going to be used.
-> So the warning message can be omitted.
+> This patch series now reads the memory limit information from
+> device-tree file if present and limits the crash memory ranges accordingly.
+> 
+> Tested these patches on ppc32(ppc440) and ppc64 with a kernel patch by Suzuki.
+> 
+> Changes in v2:
+> - Fixed few formatting and coding style issues.
+> - Fixed error handling path and possible buffer overflow issue in patch 1/2.
+> - Fixed an issue where an additional PT_LOAD section, representing zero size
+>   memory segment (with start address == memory_limit), was getting added to ELF
+>   section.
+> 
+> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+> Tested-by: Suzuki K. Poulose <suzuki@in.ibm.com>
 
-Thanks, applied.
+Thanks, both patches applied.
 
 _______________________________________________
 kexec mailing list
