@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UChOX-0001LW-HE
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 02:14:22 +0000
-Date: Tue, 5 Mar 2013 11:14:18 +0900
+ id 1UChR3-0001aZ-QP
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 02:16:58 +0000
+Date: Tue, 5 Mar 2013 11:16:54 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/2] kexec: Limit the crash memory ranges according to
- first kernel's memory limit.
-Message-ID: <20130305021418.GI16128@verge.net.au>
-References: <20130212104624.7781.32716.stgit@mars.in.ibm.com>
+Subject: Re: [PATCH] kexec: fix some compiler warnings
+Message-ID: <20130305021654.GJ16128@verge.net.au>
+References: <50D96423.8000606@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130212104624.7781.32716.stgit@mars.in.ibm.com>
+In-Reply-To: <50D96423.8000606@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,37 +23,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: Suzuki Poulose <suzuki@in.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Ananth Narayan <ananth@in.ibm.com>, bhe@redhat.com
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Tue, Feb 12, 2013 at 04:16:50PM +0530, Mahesh J Salgaonkar wrote:
-> So far powerpc kernel never exported memory limit information which is
-> reflected by mem= kernel cmdline option. Hence, kexec-tools always use
-> to build ELF header for entire system RAM generating a dump bigger than
-> the actual memory used by the first kernel.
+On Tue, Dec 25, 2012 at 04:30:27PM +0800, Zhang Yanfei wrote:
+> I got the following warnings when I compiled kexec-tools:
 > 
-> The following upstream kernel commits now exports memory limit information
-> through /proc/device-tree file:
->   4bc77a5ed - powerpc: Export memory limit via device tree
->   a84fcd468 - powerpc: Change memory_limit from phys_addr_t to unsigned
-> 	      long long
+> kexec/kexec-elf-rel.c: In function 'elf_rel_load':
+> kexec/kexec-elf-rel.c:367: warning: format '%lx' expects type 'long unsigned int', but argument 6 has type 'unsigned int'
+> kexec/kexec-elf-rel.c:367: warning: format '%lx' expects type 'long unsigned int', but argument 7 has type 'long long unsigned int'
+> kexec/kexec-elf-rel.c:367: warning: format '%lx' expects type 'long unsigned int', but argument 8 has type 'long long unsigned int'
+> kexec/arch/i386/crashdump-x86.c: In function 'get_kernel_paddr':
+> kexec/arch/i386/crashdump-x86.c:99: warning: format '%016Lx' expects type 'long long unsigned int', but argument 3 has type 'uint64_t'
+> kexec/arch/i386/crashdump-x86.c: In function 'get_kernel_vaddr_and_size':
+> kexec/arch/i386/crashdump-x86.c:171: warning: format '%lx' expects type 'long unsigned int', but argument 3 has type 'long long unsigned int'
+> kexec/arch/i386/crashdump-x86.c: In function 'get_crash_notes':
+> kexec/arch/i386/crashdump-x86.c:781: warning: format '%Lx' expects type 'long long unsigned int', but argument 3 has type 'uint64_t'
+> kexec/arch/i386/crashdump-x86.c: In function 'load_crashdump_segments':
+> kexec/arch/i386/crashdump-x86.c:905: warning: 'nr_ranges' may be used uninitialized in this function
 > 
-> This patch series now reads the memory limit information from
-> device-tree file if present and limits the crash memory ranges accordingly.
-> 
-> Tested these patches on ppc32(ppc440) and ppc64 with a kernel patch by Suzuki.
-> 
-> Changes in v2:
-> - Fixed few formatting and coding style issues.
-> - Fixed error handling path and possible buffer overflow issue in patch 1/2.
-> - Fixed an issue where an additional PT_LOAD section, representing zero size
->   memory segment (with start address == memory_limit), was getting added to ELF
->   section.
-> 
-> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> Tested-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+> The patch fix above warnings.
 
-Thanks, both patches applied.
+Thanks! Applied.
 
 _______________________________________________
 kexec mailing list
