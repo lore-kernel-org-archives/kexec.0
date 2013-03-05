@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UCguV-0005oo-Ks
- for kexec@lists.infradead.org; Tue, 05 Mar 2013 01:43:20 +0000
-Date: Tue, 5 Mar 2013 10:43:16 +0900
-From: Simon Horman <simon@horms.net>
-Subject: Re: kexec,x86: Use macro CRASH_MAX_MEMMAP_NR for clarification
-Message-ID: <20130305014316.GF16128@verge.net.au>
-References: <512C8AA6.2020503@cn.fujitsu.com>
+ id 1UCh2Q-0006mF-Pr
+ for kexec@lists.infradead.org; Tue, 05 Mar 2013 01:51:31 +0000
+Date: Tue, 5 Mar 2013 10:51:27 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: lengthen the kernel command line image
+Message-ID: <20130305015127.GA28547@verge.net.au>
+References: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <512C8AA6.2020503@cn.fujitsu.com>
+In-Reply-To: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,12 +23,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Cliff Wickman <cpw@sgi.com>
+Cc: kexec@lists.infradead.org
 
-On Tue, Feb 26, 2013 at 06:12:54PM +0800, Zhang Yanfei wrote:
-> For the allocation, using CRASH_MAX_MEMMAP_NR instead of KEXEC_MAX_SEGMENTS + 1 
-> seems more understandable.
+On Mon, Feb 04, 2013 at 01:53:55PM -0600, Cliff Wickman wrote:
+> From: Cliff Wickman <cpw@sgi.com>
+> 
+> The crash kernel's boot command line is not long enough to contain the
+> necessary memmap= options for a large memory.
+> 
+> The fix is simple, as long as the boot loader's command line is also long enough.
+> I'm not sure about boot loader or kernel restrictions to this length.
+> 
+> Signed-off-by: Cliff Wickman <cpw@sgi.com>
 
 Thanks, applied.
 
