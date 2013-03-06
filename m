@@ -1,31 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp07.in.ibm.com ([122.248.162.7])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UD9uy-0007AY-8E
- for kexec@lists.infradead.org; Wed, 06 Mar 2013 08:41:45 +0000
-Received: from /spool/local
- by e28smtp07.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
- Wed, 6 Mar 2013 14:08:24 +0530
-Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
- by d28dlp03.in.ibm.com (Postfix) with ESMTP id C7574125804E
- for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 14:12:36 +0530 (IST)
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
- by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r268fa2d21692594
- for <kexec@lists.infradead.org>; Wed, 6 Mar 2013 14:11:36 +0530
-Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
- by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r268fbl8014577
- for <kexec@lists.infradead.org>; Wed, 6 Mar 2013 19:41:38 +1100
-Subject: [PATCH 4/4] ppc/uImage: Add support for RAM Disks
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Date: Wed, 06 Mar 2013 14:11:37 +0530
-Message-ID: <20130306084111.18627.44615.stgit@suzukikp.in.ibm.com>
-In-Reply-To: <20130306083331.18627.82812.stgit@suzukikp.in.ibm.com>
-References: <20130306083331.18627.82812.stgit@suzukikp.in.ibm.com>
-MIME-Version: 1.0
+ id 1UDAQH-00054j-6T
+ for kexec@lists.infradead.org; Wed, 06 Mar 2013 09:14:06 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 4C9453EE0BD
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 18:13:58 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 2FB9345DE51
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 18:13:58 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 0298645DE50
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 18:13:58 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id E7FC11DB8041
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 18:13:57 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9E2F01DB803E
+ for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 18:13:57 +0900 (JST)
+Date: Wed, 06 Mar 2013 18:13:50 +0900 (JST)
+Message-Id: <20130306.181349.528423566.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20130306154804.00650801c5973637e6a5c82d@mxc.nes.nec.co.jp>
+References: <20130306154804.00650801c5973637e6a5c82d@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,63 +37,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: msm@freescale.com, bigeasy@linutronix.de, lethal@linux-sh.org, kexec@lists.infradead.org
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, cpw@sgi.com, lisa.mitchell@hp.com, vgoyal@redhat.com
 
-From: Suzuki K. Poulose <suzuki@in.ibm.com>
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [RFC] makedumpfile: Improve reading speed with mmap()
+Date: Wed, 6 Mar 2013 15:48:04 +0900
 
-Handle the RAM Disks in uImage format
+> Hello,
+> 
+> I made the prototype patch to use mmap() on /proc/vmcore for
+> benchmarking.
+> 
+> This patch simply replaces read(2) with mmap(2), I think we can see
+> the pure performance improvement by reducing the number of map/unmap.
+> 
+>   - When /proc/vmcore supports mmap(), readmem() calls read_with_mmap() 
+>     to read /proc/vmcore with mmap() instead of read().
+> 
+>   - Introduce --map-size <Kbyte> option to specify the map size.
+>     This option is necessary to use mmap() in this patch, but just for
+>     benchmarking. I'll remove this option in release version and change
+>     the map size into suitable constant size to get enough performance
+>     improvement.
+> 
+>   - This patch is based on devel branch:
+>     http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/devel
+> 
+> Unfortunately, I haven't done test and benchmarking in 2nd kernel yet
+> because I can't start up newer kernel as 2nd kernel on my machine.
+> (It seems just my environment issue.) 
+> 
+> At least, this patch works for vmcores saved on local disk,
+> so it will work in 2nd kernel too.
+> 
+> If anyone helps to do benchmarking, it's very helpful for me.
+> And any comments for this patch are welcome.
 
-Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
----
- kexec/arch/ppc/kexec-uImage-ppc.c |   27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Kumagai-san,
 
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index ef9adc4..e0bc7bb 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -46,6 +46,31 @@ void uImage_ppc_usage(void)
- 	);
- }
- 
-+/*
-+ * Load the ramdisk into buffer.
-+ *  If the supplied image is in uImage format use
-+ *  uImage_load() to read the payload from the image.
-+ */
-+char *slurp_ramdisk_ppc(const char *filename, off_t *r_size)
-+{
-+	struct Image_info img;
-+	off_t size;
-+	const unsigned char *buf = slurp_file(filename, &size);
-+
-+	/* Check if this is a uImage RAMDisk */
-+	if (buf &&
-+	    uImage_probe_ramdisk(buf, size, IH_ARCH_PPC) == 0) {
-+		if (uImage_load(buf, size, &img) != 0)
-+			die("uImage: Reading %ld bytes from %s failed\n",
-+				size, filename);
-+		buf = img.buf;
-+		size = img.len;
-+	}
-+
-+	*r_size = size;
-+	return buf;
-+}
-+	
- int uImage_ppc_probe(const char *buf, off_t len)
- {
- 	return uImage_probe_kernel(buf, len, IH_ARCH_PPC);
-@@ -190,7 +215,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	blob_buf = fixup_dtb_init(info, blob_buf, &blob_size, load_addr, &dtb_addr);
- 
- 	if (ramdisk) {
--		seg_buf = slurp_file(ramdisk, &seg_size);
-+		seg_buf = slurp_ramdisk_ppc(ramdisk, &seg_size);
- 		/* Load ramdisk at top of memory */
- 		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
- 				0, dtb_addr + blob_size, max_addr, -1);
+I think it necessary to compare this generic one with the idea
+considering virtual memory mapping, which should affect filtering
+performance to some degree.
+
+http://lists.infradead.org/pipermail/kexec/2013-February/007982.html
+
+I guess implementation can relatively be moduler. I'll post a
+prorotype patch for benchmark later.
+
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
