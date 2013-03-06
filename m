@@ -1,33 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UD1tu-0001VS-DC
- for kexec@lists.infradead.org; Wed, 06 Mar 2013 00:08:07 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 6BF373EE0BC
- for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 09:07:59 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 4C8E645DE55
- for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 09:07:59 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 2CDEB45DE50
- for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 09:07:59 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1DBC81DB8041
- for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 09:07:59 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id C5E681DB8037
- for <kexec@lists.infradead.org>; Wed,  6 Mar 2013 09:07:58 +0900 (JST)
-Date: Wed, 06 Mar 2013 09:07:53 +0900 (JST)
-Message-Id: <20130306.090753.332720289.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 03/20] vmcore, sysfs: export ELF note segment size
- instead of vmcoreinfo data size
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130302083605.31252.26646.stgit@localhost6.localdomain6>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UD8LV-0004cv-Ew
+ for kexec@lists.infradead.org; Wed, 06 Mar 2013 07:01:05 +0000
+Message-ID: <5136E8EE.6080301@cn.fujitsu.com>
+Date: Wed, 06 Mar 2013 14:57:50 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2 04/20] vmcore: allocate buffer for ELF headers on
+ page-size alignment
 References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
- <20130302083605.31252.26646.stgit@localhost6.localdomain6>
-Mime-Version: 1.0
+ <20130302083610.31252.18601.stgit@localhost6.localdomain6>
+In-Reply-To: <20130302083610.31252.18601.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,62 +20,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, heiko.carstens@de.ibm.com, akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 03/20] vmcore, sysfs: export ELF note segment size instead of vmcoreinfo data size
-Date: Sat, 2 Mar 2013 17:36:05 +0900
-
-> p_memsz member of program header entry with PT_NOTE type needs to have
-> size of the corresponding ELF note segment. Currently, vmcoreinfo
-> exports data part only. If vmcoreinfo reachs vmcoreinfo_max_size, then
-> in merge_note_headers_elf{32,64}, empty ELF note header cannot be
-> found or buffer overrun can happen.
-
-Sorry, I noticed this "buffer overrun can happen" was completely
-wrong. In merge_note_headers_elf{32,64}, the size is being checked to
-avoid buffer overrun.
-
-                int j;
-                void *notes_section;
-                struct vmcore *new;
-                u64 offset, max_sz, sz, real_sz = 0;
-...
-                for (j = 0; j < max_sz; j += sz) {
-                        if (nhdr_ptr->n_namesz == 0)
-                                break;
-                        sz = sizeof(Elf32_Nhdr) +
-                                ((nhdr_ptr->n_namesz + 3) & ~3) +
-                                ((nhdr_ptr->n_descsz + 3) & ~3);
-                        real_sz += sz;
-                        nhdr_ptr = (Elf32_Nhdr*)((char*)nhdr_ptr + sz);
-                }
-
-But later patch changes teminator of ELF note segments from the null
-not header to NT_VMCORE_PAD note type. It's important to export a
-whole buffer for ELF note segments, not data part only. This patch
-description doesn't explain this, and I'll add this explanation in the
-next version.
-
-Also, here j has int type but the other variables compared with the j
-have u64 type. This is strange, and in fact verbose because for the
-purpose of the j, real_sz seems exact. I'll replace the for statement
-by while statement in additional clean-up patch as:
-
-  while (real_sz < max_sz) {
-    ..
-  }
-
-Thanks.
-HATAYAMA, Daisuke
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwM+aciDAy5pelIDE2OjM2LCBIQVRBWUFNQSBEYWlzdWtlIOWGmemBkzoKPiBB
+bGxvY2F0ZSBidWZmZXIgZm9yIEVMRiBoZWFkZXJzIG9uIHBhZ2Utc2l6ZSBhbGlnbmVkIGJvdWRh
+cnkgdG8KPiBzYXRpc2Z5IG1tYXAoKSByZXF1aXJlbWVudC4gRm9yIHRoaXMsIF9fZ2V0X2ZyZWVf
+cGFnZXMoKSBpcyB1c2VkCj4gaW5zdGVhZCBvZiBrbWFsbG9jKCkuCj4gCj4gQWxzbywgbGF0ZXIg
+cGF0Y2ggd2lsbCBkZWNyZWFzZSBhY3R1YWxseSB1c2VkIGJ1ZmZlciBzaXplIGZvciBFTEYKPiBo
+ZWFkZXJzLCBzbyBpdCdzIG5lY2Vzc2FyeSB0byBrZWVwIG9yaWdpbmFsIGJ1ZmZlciBzaXplIGFu
+ZCBhY3R1YWxseQo+IHVzZWQgYnVmZmVyIHNpemUgc2VwYXJhdGVseS4gZWxmY29yZWJ1Zl9zel9v
+cmlnIGtlZXBzIHRoZSBvcmlnaW5hbCBvbmUKPiBhbmQgZWxmY29yZWJ1Zl9zeiB0aGUgYWN0dWFs
+bHkgdXNlZCBvbmUuCj4gCj4gU2lnbmVkLW9mZi1ieTogSEFUQVlBTUEgRGFpc3VrZSA8ZC5oYXRh
+eWFtYUBqcC5mdWppdHN1LmNvbT4KPiAtLS0KPiAKPiAgZnMvcHJvYy92bWNvcmUuYyB8ICAgMzAg
+KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tCj4gIDEgZmlsZXMgY2hhbmdlZCwgMjEgaW5z
+ZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZnMvcHJvYy92bWNv
+cmUuYyBiL2ZzL3Byb2Mvdm1jb3JlLmMKPiBpbmRleCBiNWM5ZTMzLi4xYjAyZDAxIDEwMDY0NAo+
+IC0tLSBhL2ZzL3Byb2Mvdm1jb3JlLmMKPiArKysgYi9mcy9wcm9jL3ZtY29yZS5jCj4gQEAgLTMx
+LDYgKzMxLDcgQEAgc3RhdGljIExJU1RfSEVBRCh2bWNvcmVfbGlzdCk7Cj4gIC8qIFN0b3JlcyB0
+aGUgcG9pbnRlciB0byB0aGUgYnVmZmVyIGNvbnRhaW5pbmcga2VybmVsIGVsZiBjb3JlIGhlYWRl
+cnMuICovCj4gIHN0YXRpYyBjaGFyICplbGZjb3JlYnVmOwo+ICBzdGF0aWMgc2l6ZV90IGVsZmNv
+cmVidWZfc3o7Cj4gK3N0YXRpYyBzaXplX3QgZWxmY29yZWJ1Zl9zel9vcmlnOwo+ICAKPiAgLyog
+VG90YWwgc2l6ZSBvZiB2bWNvcmUgZmlsZS4gKi8KPiAgc3RhdGljIHU2NCB2bWNvcmVfc2l6ZTsK
+PiBAQCAtNjEwLDI2ICs2MTEsMzEgQEAgc3RhdGljIGludCBfX2luaXQgcGFyc2VfY3Jhc2hfZWxm
+NjRfaGVhZGVycyh2b2lkKQo+ICAKPiAgCS8qIFJlYWQgaW4gYWxsIGVsZiBoZWFkZXJzLiAqLwo+
+ICAJZWxmY29yZWJ1Zl9zeiA9IGVoZHIuZV9waG9mZiArIGVoZHIuZV9waG51bSAqIHNpemVvZihF
+bGY2NF9QaGRyKTsKPiAtCWVsZmNvcmVidWYgPSBrbWFsbG9jKGVsZmNvcmVidWZfc3osIEdGUF9L
+RVJORUwpOwo+ICsJZWxmY29yZWJ1Zl9zel9vcmlnID0gZWxmY29yZWJ1Zl9zejsKPiArCWVsZmNv
+cmVidWYgPSAodm9pZCAqKSBfX2dldF9mcmVlX3BhZ2VzKEdGUF9LRVJORUwgfCBfX0dGUF9aRVJP
+LAo+ICsJCQkJCSAgICAgICBnZXRfb3JkZXIoZWxmY29yZWJ1Zl9zel9vcmlnKSk7Cj4gIAlpZiAo
+IWVsZmNvcmVidWYpCj4gIAkJcmV0dXJuIC1FTk9NRU07Cj4gIAlhZGRyID0gZWxmY29yZWhkcl9h
+ZGRyOwo+ICAJcmMgPSByZWFkX2Zyb21fb2xkbWVtKGVsZmNvcmVidWYsIGVsZmNvcmVidWZfc3os
+ICZhZGRyLCAwKTsKPiAgCWlmIChyYyA8IDApIHsKPiAtCQlrZnJlZShlbGZjb3JlYnVmKTsKPiAr
+CQlmcmVlX3BhZ2VzKCh1bnNpZ25lZCBsb25nKWVsZmNvcmVidWYsCj4gKwkJCSAgIGdldF9vcmRl
+cihlbGZjb3JlYnVmX3N6X29yaWcpKTsKPiAgCQlyZXR1cm4gcmM7Cj4gIAl9Cj4gIAo+ICAJLyog
+TWVyZ2UgYWxsIFBUX05PVEUgaGVhZGVycyBpbnRvIG9uZS4gKi8KPiAgCXJjID0gbWVyZ2Vfbm90
+ZV9oZWFkZXJzX2VsZjY0KGVsZmNvcmVidWYsICZlbGZjb3JlYnVmX3N6LCAmdm1jb3JlX2xpc3Qp
+Owo+ICAJaWYgKHJjKSB7Cj4gLQkJa2ZyZWUoZWxmY29yZWJ1Zik7Cj4gKwkJZnJlZV9wYWdlcygo
+dW5zaWduZWQgbG9uZyllbGZjb3JlYnVmLAo+ICsJCQkgICBnZXRfb3JkZXIoZWxmY29yZWJ1Zl9z
+el9vcmlnKSk7Cj4gIAkJcmV0dXJuIHJjOwo+ICAJfQo+ICAJcmMgPSBwcm9jZXNzX3B0bG9hZF9w
+cm9ncmFtX2hlYWRlcnNfZWxmNjQoZWxmY29yZWJ1ZiwgZWxmY29yZWJ1Zl9zeiwKPiAgCQkJCQkJ
+CSZ2bWNvcmVfbGlzdCk7Cj4gIAlpZiAocmMpIHsKPiAtCQlrZnJlZShlbGZjb3JlYnVmKTsKPiAr
+CQlmcmVlX3BhZ2VzKCh1bnNpZ25lZCBsb25nKWVsZmNvcmVidWYsCj4gKwkJCSAgIGdldF9vcmRl
+cihlbGZjb3JlYnVmX3N6X29yaWcpKTsKPiAgCQlyZXR1cm4gcmM7Cj4gIAl9Cj4gIAlzZXRfdm1j
+b3JlX2xpc3Rfb2Zmc2V0c19lbGY2NChlbGZjb3JlYnVmLCAmdm1jb3JlX2xpc3QpOwo+IEBAIC02
+NjUsMjYgKzY3MSwzMSBAQCBzdGF0aWMgaW50IF9faW5pdCBwYXJzZV9jcmFzaF9lbGYzMl9oZWFk
+ZXJzKHZvaWQpCj4gIAo+ICAJLyogUmVhZCBpbiBhbGwgZWxmIGhlYWRlcnMuICovCj4gIAllbGZj
+b3JlYnVmX3N6ID0gZWhkci5lX3Bob2ZmICsgZWhkci5lX3BobnVtICogc2l6ZW9mKEVsZjMyX1Bo
+ZHIpOwo+IC0JZWxmY29yZWJ1ZiA9IGttYWxsb2MoZWxmY29yZWJ1Zl9zeiwgR0ZQX0tFUk5FTCk7
+Cj4gKwllbGZjb3JlYnVmX3N6X29yaWcgPSBlbGZjb3JlYnVmX3N6Owo+ICsJZWxmY29yZWJ1ZiA9
+ICh2b2lkICopIF9fZ2V0X2ZyZWVfcGFnZXMoR0ZQX0tFUk5FTCB8IF9fR0ZQX1pFUk8sCj4gKwkJ
+CQkJICAgICAgIGdldF9vcmRlcihlbGZjb3JlYnVmX3N6KSk7CgpXaHkgbm90IGVsZmNvcmVidWZf
+c3pfb3JpZyBoZXJlPwoKPiAgCWlmICghZWxmY29yZWJ1ZikKPiAgCQlyZXR1cm4gLUVOT01FTTsK
+PiAgCWFkZHIgPSBlbGZjb3JlaGRyX2FkZHI7Cj4gIAlyYyA9IHJlYWRfZnJvbV9vbGRtZW0oZWxm
+Y29yZWJ1ZiwgZWxmY29yZWJ1Zl9zeiwgJmFkZHIsIDApOwo+ICAJaWYgKHJjIDwgMCkgewo+IC0J
+CWtmcmVlKGVsZmNvcmVidWYpOwo+ICsJCWZyZWVfcGFnZXMoKHVuc2lnbmVkIGxvbmcpZWxmY29y
+ZWJ1ZiwKPiArCQkJICAgZ2V0X29yZGVyKGVsZmNvcmVidWZfc3pfb3JpZykpOwo+ICAJCXJldHVy
+biByYzsKPiAgCX0KPiAgCj4gIAkvKiBNZXJnZSBhbGwgUFRfTk9URSBoZWFkZXJzIGludG8gb25l
+LiAqLwo+ICAJcmMgPSBtZXJnZV9ub3RlX2hlYWRlcnNfZWxmMzIoZWxmY29yZWJ1ZiwgJmVsZmNv
+cmVidWZfc3osICZ2bWNvcmVfbGlzdCk7Cj4gIAlpZiAocmMpIHsKPiAtCQlrZnJlZShlbGZjb3Jl
+YnVmKTsKPiArCQlmcmVlX3BhZ2VzKCh1bnNpZ25lZCBsb25nKWVsZmNvcmVidWYsCj4gKwkJCSAg
+IGdldF9vcmRlcihlbGZjb3JlYnVmX3N6X29yaWcpKTsKPiAgCQlyZXR1cm4gcmM7Cj4gIAl9Cj4g
+IAlyYyA9IHByb2Nlc3NfcHRsb2FkX3Byb2dyYW1faGVhZGVyc19lbGYzMihlbGZjb3JlYnVmLCBl
+bGZjb3JlYnVmX3N6LAo+ICAJCQkJCQkJCSZ2bWNvcmVfbGlzdCk7Cj4gIAlpZiAocmMpIHsKPiAt
+CQlrZnJlZShlbGZjb3JlYnVmKTsKPiArCQlmcmVlX3BhZ2VzKCh1bnNpZ25lZCBsb25nKWVsZmNv
+cmVidWYsCj4gKwkJCSAgIGdldF9vcmRlcihlbGZjb3JlYnVmX3N6X29yaWcpKTsKPiAgCQlyZXR1
+cm4gcmM7Cj4gIAl9Cj4gIAlzZXRfdm1jb3JlX2xpc3Rfb2Zmc2V0c19lbGYzMihlbGZjb3JlYnVm
+LCAmdm1jb3JlX2xpc3QpOwo+IEBAIC03NjYsNyArNzc3LDggQEAgdm9pZCB2bWNvcmVfY2xlYW51
+cCh2b2lkKQo+ICAJCWxpc3RfZGVsKCZtLT5saXN0KTsKPiAgCQlrZnJlZShtKTsKPiAgCX0KPiAt
+CWtmcmVlKGVsZmNvcmVidWYpOwo+ICsJZnJlZV9wYWdlcygodW5zaWduZWQgbG9uZyllbGZjb3Jl
+YnVmLAo+ICsJCSAgIGdldF9vcmRlcihlbGZjb3JlYnVmX3N6X29yaWcpKTsKPiAgCWVsZmNvcmVi
+dWYgPSBOVUxMOwo+ICB9Cj4gIEVYUE9SVF9TWU1CT0xfR1BMKHZtY29yZV9jbGVhbnVwKTsKPiAK
+PiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtl
+eGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
