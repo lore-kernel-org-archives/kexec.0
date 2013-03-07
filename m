@@ -1,30 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDQs0-0007cz-TD
- for kexec@lists.infradead.org; Thu, 07 Mar 2013 02:47:51 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 55DA53EE081
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:47 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 377F445DE4D
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:47 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 1844745DD78
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:47 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 02EB1E08007
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:47 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 9B2EC1DB803A
- for <kexec@lists.infradead.org>; Thu,  7 Mar 2013 11:47:46 +0900 (JST)
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 3/3] elf: distinguish ELF note types by ELF note name space
-Date: Mon, 04 Mar 2013 13:18:40 +0900
-Message-ID: <20130304041840.16856.37483.stgit@localhost6.localdomain6>
-In-Reply-To: <20130304041724.16856.19272.stgit@localhost6.localdomain6>
-References: <20130304041724.16856.19272.stgit@localhost6.localdomain6>
+ id 1UDQtb-0008Lo-An
+ for kexec@lists.infradead.org; Thu, 07 Mar 2013 02:49:28 +0000
+Message-ID: <1362624402.8941.106.camel@hastur.hellion.org.uk>
+Subject: Re: [Xen-devel] [PATCH 8/8] libxc: add API for kexec hypercall
+From: Ian Campbell <ian.campbell@citrix.com>
+Date: Thu, 7 Mar 2013 02:46:42 +0000
+In-Reply-To: <1361468894-18655-9-git-send-email-david.vrabel@citrix.com>
+References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
+ <1361468894-18655-9-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -38,147 +23,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-In ELF, the same integers for two note type represent different
-meanings if the names they belong to are different. However,
-get_pt_note_info() doesn't distinguish note types by name space, due
-to which, for example, any new note type in "VMCOREINFO" name space is
-wrongly interpretted as NT_PRSTATUS or the unique note type in
-"VMCOREINFO" name space. This patch checks first ELF note names
-explicitly and then ELF note types.
+On Thu, 2013-02-21 at 17:48 +0000, David Vrabel wrote:
+> From: David Vrabel <david.vrabel@citrix.com>
+> 
+> Add xc_kexec_exec(), xc_kexec_get_ranges(), xc_kexec_load(), and
+> xc_kexec_unload().  The load and unload calls require the v2 load and
+> unload ops.
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
+Looks good, few nits below, but
 
- elf_info.c |   76 +++++++++++++++++++++++++++++++++++++++++++-----------------
- 1 files changed, 54 insertions(+), 22 deletions(-)
+Acked-by: Ian Campbell <ian.campbell@citrix.com>
 
-diff --git a/elf_info.c b/elf_info.c
-index f9c554d..9bd8cd0 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -254,6 +254,23 @@ note_type(void *note)
- }
- 
- static int
-+note_namesz(void *note)
-+{
-+	int size;
-+	Elf64_Nhdr *note64;
-+	Elf32_Nhdr *note32;
-+
-+	if (is_elf64_memory()) {
-+		note64 = (Elf64_Nhdr *)note;
-+		size = note64->n_namesz;
-+	} else {
-+		note32 = (Elf32_Nhdr *)note;
-+		size = note32->n_namesz;
-+	}
-+	return size;
-+}
-+
-+static int
- note_descsz(void *note)
- {
- 	int size;
-@@ -290,7 +307,7 @@ offset_note_desc(void *note)
- static int
- get_pt_note_info(void)
- {
--	int n_type, size_desc;
-+	int n_type, size_name, size_desc;
- 	off_t offset, offset_desc;
- 	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES];
- 	char note[MAX_SIZE_NHDR];
-@@ -308,40 +325,51 @@ get_pt_note_info(void)
- 			    name_memory, strerror(errno));
- 			return FALSE;
- 		}
-+
-+		n_type = note_type(note);
-+		size_name = note_namesz(note);
-+		size_desc   = note_descsz(note);
-+		offset_desc = offset + offset_note_desc(note);
-+
-+		if (!size_name || size_name >= sizeof(buf))
-+			goto next_note;
-+
- 		if (read(fd_memory, &buf, sizeof(buf)) != sizeof(buf)) {
- 			ERRMSG("Can't read the dump memory(%s). %s\n",
- 			    name_memory, strerror(errno));
- 			return FALSE;
- 		}
--		n_type = note_type(note);
- 
--		if (n_type == NT_PRSTATUS) {
--			nr_cpus++;
--			offset += offset_next_note(note);
--			continue;
--		}
--		offset_desc = offset + offset_note_desc(note);
--		size_desc   = note_descsz(note);
-+		if (!strncmp(KEXEC_CORE_NOTE_NAME, buf,
-+			     KEXEC_CORE_NOTE_NAME_BYTES)) {
-+			if (n_type == NT_PRSTATUS) {
-+				nr_cpus++;
-+			}
- 
--		if (!strncmp(VMCOREINFO_NOTE_NAME, buf,
--		    VMCOREINFO_NOTE_NAME_BYTES)) {
--			set_vmcoreinfo(offset_desc, size_desc);
-+		} else if (!strncmp(VMCOREINFO_NOTE_NAME, buf,
-+				    VMCOREINFO_NOTE_NAME_BYTES)) {
-+			if (n_type == 0) {
-+				set_vmcoreinfo(offset_desc, size_desc);
-+			}
- 		/*
- 		 * Check whether /proc/vmcore contains vmcoreinfo,
- 		 * and get both the offset and the size.
- 		 */
- 		} else if (!strncmp(VMCOREINFO_XEN_NOTE_NAME, buf,
--		    VMCOREINFO_XEN_NOTE_NAME_BYTES)) {
--			offset_vmcoreinfo_xen = offset_desc;
--			size_vmcoreinfo_xen   = size_desc;
-+				    VMCOREINFO_XEN_NOTE_NAME_BYTES)) {
-+			if (n_type == 0) {
-+				offset_vmcoreinfo_xen = offset_desc;
-+				size_vmcoreinfo_xen   = size_desc;
-+			}
- 		/*
- 		 * Check whether /proc/vmcore contains xen's note.
- 		 */
--		} else if (n_type == XEN_ELFNOTE_CRASH_INFO) {
--			flags_memory |= MEMORY_XEN;
--			offset_xen_crash_info = offset_desc;
--			size_xen_crash_info   = size_desc;
--
-+		} else if (!strncmp("Xen", buf, 4)) {
-+			if (n_type == XEN_ELFNOTE_CRASH_INFO) {
-+				flags_memory |= MEMORY_XEN;
-+				offset_xen_crash_info = offset_desc;
-+				size_xen_crash_info   = size_desc;
-+			}
- 		/*
- 		 * Check whether a source dumpfile contains eraseinfo.
- 		 *   /proc/vmcore does not contain eraseinfo, because eraseinfo
-@@ -349,9 +377,13 @@ get_pt_note_info(void)
- 		 *   create /proc/vmcore.
- 		 */
- 		} else if (!strncmp(ERASEINFO_NOTE_NAME, buf,
--		    ERASEINFO_NOTE_NAME_BYTES)) {
--			set_eraseinfo(offset_desc, size_desc);
-+				    ERASEINFO_NOTE_NAME_BYTES)) {
-+			if (n_type == 0) {
-+				set_eraseinfo(offset_desc, size_desc);
-+			}
- 		}
-+
-+	next_note:
- 		offset += offset_next_note(note);
- 	}
- 	if (is_xen_memory())
+> +/*
+> + * Find the machine address and size of certain memory areas.
+> + *
+> + *   KEXEC_RANGE_MA_CRASH       crash area
+> + *   KEXEC_RANGE_MA_XEN         Xen itself
+> + *   KEXEC_RANGE_MA_CPU         CPU note for CPU number 'nr'
+> + *   KEXEC_RANGE_MA_XENHEAP     xenheap
+> + *   KEXEC_RANGE_MA_EFI_MEMMAP  EFI Memory Map
+> + *   KEXEC_RANGE_MA_VMCOREINFO  vmcoreinfo
+
+I expect there is a canonical list of these somewhere, can we get a
+pointer to it here?
+
+> + *
+> + * Fails with:
+> + *   EINVAL if the range or CPU number isn't valid.
+> + */
+> +int xc_kexec_get_range(xc_interface *xch, int range,  int nr,
+> +                       uint64_t *size, uint64_t *start);
+> +
+> +/*
+> + * Load a kexec image into memory.
+> + *
+> + * The image may be of type KEXEC_TYPE_DEFAULT (executed on request)
+> + * or KEXEC_TYPE_CRASH (executed on a crash).
+> + *
+> + * The image architecture may be a 32-bit variant of the hypervisor
+> + * architecture (e.g, EM_386 on a x86-64 hypervisor).
+
+arch is an ELF arch? Worth mentioning explicitly I think.
+
+Ian
 
 
 _______________________________________________
