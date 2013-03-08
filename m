@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDnEF-0000f6-42
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 02:40:24 +0000
-Date: Fri, 8 Mar 2013 11:33:32 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
-Message-Id: <20130308113332.12c1d2e83e973e652757eaf0@mxc.nes.nec.co.jp>
-In-Reply-To: <20130308.104518.339920543.d.hatayama@jp.fujitsu.com>
-References: <20130306154804.00650801c5973637e6a5c82d@mxc.nes.nec.co.jp>
- <20130306.181349.528423566.d.hatayama@jp.fujitsu.com>
- <20130308.104518.339920543.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UDpX6-0004q8-SD
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 05:07:55 +0000
+Date: Fri, 8 Mar 2013 06:07:43 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/4] kexec: Support for uImage RAMDISK
+Message-ID: <20130308050743.GA22687@verge.net.au>
+References: <20130306083331.18627.82812.stgit@suzukikp.in.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130306083331.18627.82812.stgit@suzukikp.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,94 +23,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: d.hatayama@jp.fujitsu.com
-Cc: kexec@lists.infradead.org, cpw@sgi.com, lisa.mitchell@hp.com, vgoyal@redhat.com
+To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Cc: msm@freescale.com, bigeasy@linutronix.de, lethal@linux-sh.org, kexec@lists.infradead.org
 
-Hello HATAYAMA-san,
-
-On Fri, 08 Mar 2013 10:45:18 +0900 (JST)
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-
-> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
-> Date: Wed, 6 Mar 2013 18:13:50 +0900
+On Wed, Mar 06, 2013 at 02:07:35PM +0530, Suzuki K. Poulose wrote:
+> The following series adds support and APIs for 
+> handling uImage formatted RAMDISK. The support for PPC
+> has been implemented.
 > 
-> > From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> > Subject: [RFC] makedumpfile: Improve reading speed with mmap()
-> > Date: Wed, 6 Mar 2013 15:48:04 +0900
-> > 
-> >> Hello,
-> >> 
-> >> I made the prototype patch to use mmap() on /proc/vmcore for
-> >> benchmarking.
-> >> 
-> >> This patch simply replaces read(2) with mmap(2), I think we can see
-> >> the pure performance improvement by reducing the number of map/unmap.
-> >> 
-> >>   - When /proc/vmcore supports mmap(), readmem() calls read_with_mmap() 
-> >>     to read /proc/vmcore with mmap() instead of read().
-> >> 
-> >>   - Introduce --map-size <Kbyte> option to specify the map size.
-> >>     This option is necessary to use mmap() in this patch, but just for
-> >>     benchmarking. I'll remove this option in release version and change
-> >>     the map size into suitable constant size to get enough performance
-> >>     improvement.
-> >> 
-> >>   - This patch is based on devel branch:
-> >>     http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/devel
-> >> 
-> >> Unfortunately, I haven't done test and benchmarking in 2nd kernel yet
-> >> because I can't start up newer kernel as 2nd kernel on my machine.
-> >> (It seems just my environment issue.) 
-> >> 
-> >> At least, this patch works for vmcores saved on local disk,
-> >> so it will work in 2nd kernel too.
-> >> 
-> >> If anyone helps to do benchmarking, it's very helpful for me.
-> >> And any comments for this patch are welcome.
-> > 
-> > Kumagai-san,
-> > 
-> > I think it necessary to compare this generic one with the idea
-> > considering virtual memory mapping, which should affect filtering
-> > performance to some degree.
-> > 
-> > http://lists.infradead.org/pipermail/kexec/2013-February/007982.html
-> > 
-> > I guess implementation can relatively be moduler. I'll post a
-> > prorotype patch for benchmark later.
+> Changes since V1:
+>   * Do not uncompress RAMDISK uImage (Pointed by Sebastian)
+>   * Introduce new APIs uImage_probe_kernel/uImage_probe_ramdisk to be
+>     used by the arch specific code.
+>   * Fix coding style related issues pointed by Sebastian.
+>   * Add a new patch for fixing payload length calculation and also
+>     fix a vulnerability where the image is manipulated.
+>     (catches only the file size related changes. When
+>      compiled with zlib, CRC check is enabled by
+>      default and the contents are verified.)
 > 
-> Sorry, I investigated this around again and now I think this generic
-> one is enough if size of mmap() range is large enough more than 2MB
-> that is page size used for mapping virtual memory mapping.
+>  TODO: Implement crc check in kexec, if ZLIB is not compiled in
 > 
-> So, let's benchmark this version.
+> ---
 > 
-> BTW, I think it useful to prepare a temporary branch for this
-> benchmark for people who help benchmark. It's awkward to manage
-> patches manually.
+> Suzuki K. Poulose (4):
+>       kexec/uImage: Introduce uImage_probe_kernel
+>       kexec/uImage: Fix the payload length in uImage_load
+>       kexec/uImage: Recognize uImage RAM Disks
+>       ppc/uImage: Add support for RAM Disks
 
-Yes, I thought that I should prepare such a branch when the patch for
-benchmark is fixed, and now is the time.
-
-> 
-> Also, I posted the following patch yesterday. The v2 patch for mmap()
-> on /proc/vmcore needs this since new note type is added in
-> "VMCOREINFO" name.
-> 
-> [PATCH 0/3] makedumpfile, elf: distinguish ELF note types by ELF note names
-> http://lists.infradead.org/pipermail/kexec/2013-March/008136.html
-
-Now, I can't get the chance to review the patch set above.
-But, anyway, I created the branch "mmap":
-
-http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/mmap
-
-Please use it for benchmark.
-
-
-Thanks
-Atsushi Kumagai
+Thanks, all 4 patches applied.
 
 _______________________________________________
 kexec mailing list
