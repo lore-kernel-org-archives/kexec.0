@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDvby-0003Iy-MD
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 11:37:21 +0000
-Date: Fri, 8 Mar 2013 12:37:08 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 4/8] kexec: add infrastructure for handling kexec images
-Message-ID: <20130308113708.GF10740@debian70-amd64.local.net-space.pl>
-References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
- <1361468894-18655-5-git-send-email-david.vrabel@citrix.com>
+ id 1UDvfN-0004Ms-QZ
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 11:40:51 +0000
+Message-ID: <5139CE3C.8070801@citrix.com>
+Date: Fri, 8 Mar 2013 11:40:44 +0000
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1361468894-18655-5-git-send-email-david.vrabel@citrix.com>
+Subject: Re: [PATCH 5/8] kexec: extend hypercall with improved load/unload ops
+References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
+ <1361468894-18655-6-git-send-email-david.vrabel@citrix.com>
+ <20130308112301.GE10740@debian70-amd64.local.net-space.pl>
+In-Reply-To: <20130308112301.GE10740@debian70-amd64.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,47 +24,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: kexec@lists.infradead.org, xen-devel@lists.xen.org
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-On Thu, Feb 21, 2013 at 05:48:10PM +0000, David Vrabel wrote:
-> From: David Vrabel <david.vrabel@citrix.com>
->
-> Add the code needed to handle and load kexec images into Xen memory or
-> into the crash region.  This is needed for the new KEXEC_CMD_load and
-> KEXEC_CMD_unload hypercall sub-ops.
->
-> Much of this code is derived from the Linux kernel.
->
-> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+On 08/03/13 11:23, Daniel Kiper wrote:
+> On Thu, Feb 21, 2013 at 05:48:11PM +0000, David Vrabel wrote:
+>> 
+>> +        /* Need to switch to 32-bit mode? */
+>> +        testq $KEXEC_RELOC_FLAG_COMPAT, %r8
+>> +        jnz call_32_bit
+> 
+> Why do you need that? This is not needed because purgatory code
+> from kexec-tools always switches to 32-bit mode. Please check
+> kexec-tools/purgatory/arch/x86_64/entry64.S.
 
-[...]
+The sub-architecture is a property of the image.  Why should the tool
+know or care about the sub-architecture of the hypervisor?
 
-> diff --git a/xen/common/kimage.c b/xen/common/kimage.c
+The ABI isn't designed only for kexec-tools.
 
-[...]
-
-> +static int kimage_load_segment(struct kexec_image *image, xen_kexec_segment_t *segment)
-> +{
-> +    int result = -ENOMEM;
-
-Somewhere should be a check that arhitecture of loaded image
-is compatible with arhitecture on which we currently running.
-
-> +    switch ( image->type )
-> +    {
-> +    case KEXEC_TYPE_DEFAULT:
-> +        result = kimage_load_normal_segment(image, segment);
-> +        break;
-> +    case KEXEC_TYPE_CRASH:
-> +        result = kimage_load_crash_segment(image, segment);
-> +        break;
-> +    }
-> +
-> +    return result;
-> +}
-
-Daniel
+David
 
 _______________________________________________
 kexec mailing list
