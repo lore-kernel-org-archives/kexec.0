@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
+Received: from g5t0006.atlanta.hp.com ([15.192.0.43])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDuCJ-0001bq-QS
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 10:06:45 +0000
-Message-ID: <5139B827.3050500@hp.com>
-Date: Fri, 08 Mar 2013 18:06:31 +0800
+ id 1UDuMC-00028u-Go
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 10:16:57 +0000
+Message-ID: <5139BA90.4080606@hp.com>
+Date: Fri, 08 Mar 2013 18:16:48 +0800
 From: Jingbai Ma <jingbai.ma@hp.com>
 MIME-Version: 1.0
 Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel
@@ -26,7 +26,7 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Mitchell,
- Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, yinghai@kernel.org, Jingbai Ma <jingbai.ma@hp.com>
+ Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, yinghai@kernel.org, jingbai.ma@hp.com
 
 On 03/07/2013 11:21 PM, Vivek Goyal wrote:
 > On Thu, Mar 07, 2013 at 10:58:18PM +0800, Jingbai Ma wrote:
