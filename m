@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDuZh-0002RU-BC
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 10:30:59 +0000
-Date: Fri, 8 Mar 2013 11:30:44 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 0/4] kexec-tools: add support for Xen 4.3
-Message-ID: <20130308103044.GC10740@debian70-amd64.local.net-space.pl>
-References: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
+ id 1UDuck-0002uK-Gp
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 10:34:03 +0000
+Message-ID: <5139BE7F.5020905@zytor.com>
+Date: Fri, 08 Mar 2013 02:33:35 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1361469460-18771-1-git-send-email-david.vrabel@citrix.com>
+Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel
+ to speedup kernel dump process
+References: <20130307145808.29098.41592.stgit@k.asiapacific.hpqcorp.net>
+ <20130307152108.GC2790@redhat.com> <5139B827.3050500@hp.com>
+In-Reply-To: <5139B827.3050500@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,47 +24,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: kexec@lists.infradead.org, xen-devel@lists.xen.org
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Mitchell,
+ Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, yinghai@kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-David,
+On 03/08/2013 02:06 AM, Jingbai Ma wrote:
+> 
+> Kernel do have some abilities that user space haven't. It's possible to
+> map whole memory space of the first kernel into user space on the second
+> kernel. But the user space code has to re-implement some parts of the
+> kernel memory management system again. And worse, it's architecture
+> dependent, more architectures supported, more codes have to be
+> implemented. All implementation in user space must be sync to kernel
+> implementation. It's may called "flexibility", but it's painful to
+> maintain the codes.
+> 
 
-I have done some tests. I will send my thoughts
-and comments as reply to relevant emails.
+What?  You are basically talking about /dev/mem... there is nothing
+particularly magic about it at all.
 
-On Thu, Feb 21, 2013 at 05:57:36PM +0000, David Vrabel wrote:
-> The series adds support for the new hypercall ABI which should be
-> provided by Xen 4.3.  Images are loaded into Xen directly with no
-> kernel involvement.
->
-> Do not apply until the hypervisor side patches are applied to Xen.
->
-> Patch 1 is unrelated but kexec wouldn't work for me without it. Not
-> sure why I had problems, perhaps a toolstack specific issue?
->
-> Patch 2 makes libxc 4.3 mandatory for Xen support.
->
-> Patch 3 removes a use of /proc/iomem in favour of libxc.
->
-> Patch 4 adds the support for loading an image into Xen.
->
-> This series explicitly drops support for older version of libxc/Xen as
-> supporting kexec on these hypervisors requires kernel support that
-> will never be available upstream.
+	-hpa
 
-Please do not do that. I agree with Jan that there are many
-distros in the wild which uses old interface (and they will
-be doing that long time) and we should not make their life
-more difficult.
+-- 
+H. Peter Anvin, Intel Open Source Technology Center
+I work for Intel.  I don't speak on their behalf.
 
-I have found that simple kexec does not work. It means that
-if you call kexec -e (after kexec -l) it displays:
-
-Nothing has been loaded!
-
-Linux on baremetal works without any issue.
-
-Daniel
 
 _______________________________________________
 kexec mailing list
