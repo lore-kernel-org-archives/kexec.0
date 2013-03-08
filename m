@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
+Received: from mail-wg0-f46.google.com ([74.125.82.46])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDwWB-00038f-Tm
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 12:35:27 +0000
-Message-Id: <5139E95002000078000C42EC@nat28.tlf.novell.com>
-Date: Fri, 08 Mar 2013 12:36:16 +0000
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [PATCH 3/8] kexec: add public interface for
- improved load/unload sub-ops
-References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
- <1361468894-18655-4-git-send-email-david.vrabel@citrix.com>
- <20130308105004.GD10740@debian70-amd64.local.net-space.pl>
- <5139D0F5.1000206@citrix.com>
- <20130308122824.GI10740@debian70-amd64.local.net-space.pl>
-In-Reply-To: <20130308122824.GI10740@debian70-amd64.local.net-space.pl>
-Mime-Version: 1.0
-Content-Disposition: inline
+ id 1UDwwq-0000MD-C9
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 13:03:03 +0000
+Received: by mail-wg0-f46.google.com with SMTP id fg15so2418086wgb.25
+ for <kexec@lists.infradead.org>; Fri, 08 Mar 2013 05:02:51 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
+References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
+ <20130302083714.31252.17863.stgit@localhost6.localdomain6>
+ <513867D2.7090501@cn.fujitsu.com>
+ <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
+Date: Fri, 8 Mar 2013 21:02:50 +0800
+Message-ID: <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes
+ in page-size boundary
+From: Yanfei Zhang <zhangyanfei.yes@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,75 +24,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, ian.campbell@citrix.com, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
->>> On 08.03.13 at 13:28, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> On Fri, Mar 08, 2013 at 11:52:21AM +0000, David Vrabel wrote:
->> On 08/03/13 10:50, Daniel Kiper wrote:
->> > On Thu, Feb 21, 2013 at 05:48:09PM +0000, David Vrabel wrote:
->> >> From: David Vrabel <david.vrabel@citrix.com>
->> >>
->> >> Add replacement KEXEC_CMD_load and KEXEC_CMD_unload sub-ops to the
->> >> kexec hypercall.  These new sub-ops allow a priviledged guest to
->> >> provide the image data to be loaded into Xen memory or the crash
->> >> region instead of guests loading the image data themselves and
->> >> providing the relocation code and metadata.
->> >>
->> >> The old interface is provided to guests requesting an interface
->> >> version prior to 4.3.
->> >>
->> >> Signed-off: David Vrabel <david.vrabel@citrix.com>
->> >
->> > [...]
->> >
->> >> diff --git a/xen/include/public/kexec.h b/xen/include/public/kexec.h
->> >> index 61a8d7d..5259446 100644
->> >> --- a/xen/include/public/kexec.h
->> >> +++ b/xen/include/public/kexec.h
->> >> @@ -116,12 +116,12 @@ typedef struct xen_kexec_exec {
->> >>   * type  == KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH [in]
->> >>   * image == relocation information for kexec (ignored for unload) [in]
->> >>   */
->> >> -#define KEXEC_CMD_kexec_load            1
->> >> -#define KEXEC_CMD_kexec_unload          2
->> >> -typedef struct xen_kexec_load {
->> >> +#define KEXEC_CMD_kexec_load_v1         1 /* obsolete since 0x00040300 */
->> >> +#define KEXEC_CMD_kexec_unload_v1       2 /* obsolete since 0x00040300 */
->> >> +typedef struct xen_kexec_load_v1 {
->> >>      int type;
->> >>      xen_kexec_image_t image;
->> >> -} xen_kexec_load_t;
->> >> +} xen_kexec_load_v1_t;
->> >
->> > I think that this is not good idea to redefine meaning of constants,
->> > types, structures, etc. IMO it is comparable to redefining meaning
->> > of words in any laguage (e.g. English). It will be very confusing
->> > and may easily lead to stupid bugs. I think that old interface should
->> > stay as is (with its bad behavior). New interface should be introduced
->> > with "_v2" suffix, e.g. KEXEC_CMD_kexec_load_v2, ...
->> > This would not confuse our descendants.
->>
->> This is something that was requested (by Ian C) as the Xen way of doing it.
-> 
-> Yes, I remember but still do not agree with that idea in general.
-> Maybe discussion on kexec interface is good point to change
-> that Xen community behavior? Ian?
-
-Together with all consumers being expected to properly make
-use of __XEN_INTERFACE_VERSION__ (or else they get the
-lowest possible definitions), I don't think there's a big issue here
-as long as all old definitions retain their meaning when said
-symbol is set low enough.
-
-Jan
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+MjAxMy8zLzggSEFUQVlBTUEgRGFpc3VrZSA8ZC5oYXRheWFtYUBqcC5mdWppdHN1LmNvbT46Cj4g
+RnJvbTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiBTdWJqZWN0
+OiBSZTogW1BBVENIIHYyIDE1LzIwXSBrZXhlYzogZmlsbCBub3RlIGJ1ZmZlcnMgYnkgTlRfVk1D
+T1JFX1BBRCBub3RlcyBpbiBwYWdlLXNpemUgYm91bmRhcnkKPiBEYXRlOiBUaHUsIDcgTWFyIDIw
+MTMgMTg6MTE6MzAgKzA4MDAKPgo+PiDkuo4gMjAxM+W5tDAz5pyIMDLml6UgMTY6MzcsIEhBVEFZ
+QU1BIERhaXN1a2Ug5YaZ6YGTOgo+Pj4gRmlsbCBib3RoIGNyYXNoX25vdGVzIGFuZCB2bWNvcmVp
+bmZvX25vdGUgYnVmZmVycyBieSBOVF9WTUNPUkVfUEFECj4+PiBub3RlIHR5cGUgdG8gbWFrZSB0
+aGVtIHNhdGlzZnkgbW1hcCgpJ3MgcGFnZS1zaXplIGJvdW5kYXJ5Cj4+PiByZXF1aXJlbWVudC4K
+Pj4+Cj4+PiBTbyBmYXIsIGVuZCBvZiBub3RlIHNlZ21lbnRzIGhhcyBiZWVuIG1hcmtlZCBieSB6
+ZXJvLWZpbGxlZCBlbGYKPj4+IGhlYWRlci4gSW5zdGVhZCwgdGhpcyBwYXRjaCB3cml0ZXMgTlRf
+Vk1DT1JFX1BBRCBub3RlIGluIHRoZSBlbmQgb2YKPj4+IG5vdGUgc2VnbWVudHMgdW50aWwgdGhl
+IG9mZnNldCBvbiBwYWdlLXNpemUgYm91bmRhcnkuCj4+Cj4+Cj4+IEluIHRoZSBjb2RlcyBiZWxv
+dywgaXQgc2VlbXMgdGhhdCB5b3UgYXNzaWduIG5hbWUgIlZNQ09SRUlORk8iIGZvcgo+PiBub3Rl
+IHR5cGUgTlRfVk1DT1JFX1BBRCwgcmlnaHQ/IFRoaXMgaXMga2luZCBvZiB3aXJlZCwgaSB0aGlu
+ay4gVGhpcwo+PiBuYW1lIGhhcyBiZWVuIHVzZWQgZm9yIE5UX1ZNQ09SRV9ERUJVR0lORk8gbm90
+ZSBhbHJlYWR5LiBXaHkgbm90IHNvbWV0aGluZwo+PiBsaWtlICJWTUNPUkVQQUQiIG9yICJQQUQi
+Pwo+Pgo+Cj4gSXQgbG9va3MgeW91IGFyZSBjb25mdXNpbmcgb3IgZG9uJ3Qga25vdyBuYW1lIGFu
+ZCB0eXBlLiBUaGUgbmFtZSBpcwo+IG5hbWVzcGFjZSBhbmQgaW4gdGhlIG5hbWVzcGFjZSwgdGhl
+cmUgYXJlIG11bHRpcGxlIG5vdGUgdHlwZXMsIGVhY2ggb2YKPiB3aGljaCBoYXMgdGhlIGNvcnJl
+c3BvbmRpbmcgZGF0YS4gSW4gb3RoZXIgd29yZHMsIGRhdGEgY29ycmVzcG9uZGluZwo+IHRvIHR5
+cGVzIGRpZmZlciBpZiB0aGV5IGJlbG9uZyB0byBkaWZmZXJuZXQgbmFtZSBzcGFjZSBldmVuIGlm
+Cj4gaW50ZWdlcnMgb2YgdGhlIHR5cGVzIGFyZSBjb2luY2lkZSB3aXRoLgoKWWVzLCBJIGtuZXcg
+dGhpcy4gSnVzdCBhcyB0aGUgc3BlYyBzYWlkICIgYSBwcm9ncmFtIG11c3QgcmVjb2duaXplIGJv
+dGggdGhlIG5hbWUKYW5kIHRoZSB0eXBlIHRvIHJlY29nbml6ZSBhIGRlc2NyaXB0b3IuIi4gQnV0
+IEkgY2Fubm90IHVuZGVyc3RhbmQgd2hhdCB5b3VyIHdvcmQKIm5hbWVzcGFjZSIgY2FtZSBmcm9t
+PyBJIHRoaW5rIHlvdSBjb21wbGljYXRlIHNpbXBsZSB0aGluZ3MgaGVyZS4KCk9ubHkgd2l0aCBh
+IHR5cGUsIHdlIGNhbm5vdCByZWNvZ25pemUgYSBkZXNjcmlwdG9yLCBiZWNhdXNlICJtdWx0aXBs
+ZQppbnRlcnByZXRhdGlvbnMgb2YKYSBzaW5nbGUgdHlwZSB2YWx1ZSBtYXkgZXhpc3QiLCBTbyB3
+ZSBzaG91bGQgY29tYmluZSB0aGUgbmFtZSBhbmQgdGhlIHR5cGUKdG9nZXRoZXIuIElmIGJvdGgg
+dGhlIG5hbWUgYW5kIHR5cGUgb2YgdHdvIGRlc2NyaXB0b3JzIGFyZSB0aGUgc2FtZSwKd2UgY291
+bGQgc2F5IHdlCmhhdmUgdHdvIHNhbWUgZGVzY3JpcHRvcnMuIElmIG9uZSBvZiB0aGVtICh0eXBl
+IG9yIG5hbWUpIGFyZQpkaWZmZXJlbnQsIHdlIHNheSB0aGUKdHdvIGRlc2NyaXB0b3JzIGFyZSBk
+aWZmZXJlbnQgYW5kIHRoZSB0d28gbm90ZXMgaGF2ZSBkaWZmZXJlbnQgZGF0YS4KCklmIEkgYW0g
+d3JvbmcsIHBsZWFzZSBjb3JyZWN0IG1lLgoKPgo+IFRoZSAiVk1DT1JFSU5GTyIgbmFtZSByZXBy
+ZXNlbnRzIGluZm9ybWF0aW9uIGV4cG9ydGVkIGZyb20KPiAvcHJvYy92bWNvcmUgdGhhdCBpcyB1
+c2VkIGluIGtkdW1wIGZyYW1ld29yay4gSW4gdGhpcyBzZW5zZSwKPiBOVF9WTUNPUkVfUEFEIHRo
+YXQgaXMgc3BlY2lmaWMgZm9yIC9wcm9jL3ZtY29yZSBhbmQga2R1bXAgZnJhbWV3b3JrLAo+IHNo
+b3VsZCBiZWxvbmcgdG8gdGhlICJWTUNPUkVJTkZPIiBuYW1lLgoKSSBjYW5ub3QgdW5kZXJzdGFu
+ZCB0aGUgbmFtZSBleHBsYW5hdGlvbiB0b3RhbGx5LiBEb2VzIHRoZSBuYW1lIHJlYWxseQpoYXZl
+IHRoaXMgbWVhbmluZz8gSXMgdGhlcmUgYW55IGF1dGhlbnRpYyBkb2N1bWVudD8gSSB3YXMgYWx3
+YXlzIHRoaW5raW5nIHdlCmNvdWxkIGZlZWwgZnJlZSB0byBuYW1lIGEgbmFtZSBieSBvdXJzZWx2
+ZXMhCgo+Cj4gVGhhbmtzLgo+IEhBVEFZQU1BLCBEYWlzdWtlCj4KPiAtLQo+IFRvIHVuc3Vic2Ny
+aWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1rZXJu
+ZWwiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5v
+cmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9y
+ZG9tby1pbmZvLmh0bWwKPiBQbGVhc2UgcmVhZCB0aGUgRkFRIGF0ICBodHRwOi8vd3d3LnR1eC5v
+cmcvbGttbC8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
