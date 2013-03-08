@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wg0-f46.google.com ([74.125.82.46])
+Received: from g4t0016.houston.hp.com ([15.201.24.19])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDwwq-0000MD-C9
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 13:03:03 +0000
-Received: by mail-wg0-f46.google.com with SMTP id fg15so2418086wgb.25
- for <kexec@lists.infradead.org>; Fri, 08 Mar 2013 05:02:51 -0800 (PST)
+ id 1UDxPw-00032A-Vh
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 13:33:04 +0000
+From: "Ma, Jingbai (Kingboard)" <kingboard.ma@hp.com>
+Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel
+ to speedup kernel dump process
+Date: Fri, 8 Mar 2013 13:31:51 +0000
+Message-ID: <CD6006EB.36EC%kingboard.ma@hp.com>
+In-Reply-To: <5139BE7F.5020905@zytor.com>
+Content-Language: en-US
+Content-ID: <FA1383B8AC63C845BC9B29552C0C764C@Compaq.com>
 MIME-Version: 1.0
-In-Reply-To: <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
-References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
- <20130302083714.31252.17863.stgit@localhost6.localdomain6>
- <513867D2.7090501@cn.fujitsu.com>
- <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
-Date: Fri, 8 Mar 2013 21:02:50 +0800
-Message-ID: <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
-Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes
- in page-size boundary
-From: Yanfei Zhang <zhangyanfei.yes@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,59 +20,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mitchell,
+ Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, "mingo@redhat.com" <mingo@redhat.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "yinghai@kernel.org" <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-MjAxMy8zLzggSEFUQVlBTUEgRGFpc3VrZSA8ZC5oYXRheWFtYUBqcC5mdWppdHN1LmNvbT46Cj4g
-RnJvbTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHYyIDE1LzIwXSBrZXhlYzogZmlsbCBub3RlIGJ1ZmZlcnMgYnkgTlRfVk1D
-T1JFX1BBRCBub3RlcyBpbiBwYWdlLXNpemUgYm91bmRhcnkKPiBEYXRlOiBUaHUsIDcgTWFyIDIw
-MTMgMTg6MTE6MzAgKzA4MDAKPgo+PiDkuo4gMjAxM+W5tDAz5pyIMDLml6UgMTY6MzcsIEhBVEFZ
-QU1BIERhaXN1a2Ug5YaZ6YGTOgo+Pj4gRmlsbCBib3RoIGNyYXNoX25vdGVzIGFuZCB2bWNvcmVp
-bmZvX25vdGUgYnVmZmVycyBieSBOVF9WTUNPUkVfUEFECj4+PiBub3RlIHR5cGUgdG8gbWFrZSB0
-aGVtIHNhdGlzZnkgbW1hcCgpJ3MgcGFnZS1zaXplIGJvdW5kYXJ5Cj4+PiByZXF1aXJlbWVudC4K
-Pj4+Cj4+PiBTbyBmYXIsIGVuZCBvZiBub3RlIHNlZ21lbnRzIGhhcyBiZWVuIG1hcmtlZCBieSB6
-ZXJvLWZpbGxlZCBlbGYKPj4+IGhlYWRlci4gSW5zdGVhZCwgdGhpcyBwYXRjaCB3cml0ZXMgTlRf
-Vk1DT1JFX1BBRCBub3RlIGluIHRoZSBlbmQgb2YKPj4+IG5vdGUgc2VnbWVudHMgdW50aWwgdGhl
-IG9mZnNldCBvbiBwYWdlLXNpemUgYm91bmRhcnkuCj4+Cj4+Cj4+IEluIHRoZSBjb2RlcyBiZWxv
-dywgaXQgc2VlbXMgdGhhdCB5b3UgYXNzaWduIG5hbWUgIlZNQ09SRUlORk8iIGZvcgo+PiBub3Rl
-IHR5cGUgTlRfVk1DT1JFX1BBRCwgcmlnaHQ/IFRoaXMgaXMga2luZCBvZiB3aXJlZCwgaSB0aGlu
-ay4gVGhpcwo+PiBuYW1lIGhhcyBiZWVuIHVzZWQgZm9yIE5UX1ZNQ09SRV9ERUJVR0lORk8gbm90
-ZSBhbHJlYWR5LiBXaHkgbm90IHNvbWV0aGluZwo+PiBsaWtlICJWTUNPUkVQQUQiIG9yICJQQUQi
-Pwo+Pgo+Cj4gSXQgbG9va3MgeW91IGFyZSBjb25mdXNpbmcgb3IgZG9uJ3Qga25vdyBuYW1lIGFu
-ZCB0eXBlLiBUaGUgbmFtZSBpcwo+IG5hbWVzcGFjZSBhbmQgaW4gdGhlIG5hbWVzcGFjZSwgdGhl
-cmUgYXJlIG11bHRpcGxlIG5vdGUgdHlwZXMsIGVhY2ggb2YKPiB3aGljaCBoYXMgdGhlIGNvcnJl
-c3BvbmRpbmcgZGF0YS4gSW4gb3RoZXIgd29yZHMsIGRhdGEgY29ycmVzcG9uZGluZwo+IHRvIHR5
-cGVzIGRpZmZlciBpZiB0aGV5IGJlbG9uZyB0byBkaWZmZXJuZXQgbmFtZSBzcGFjZSBldmVuIGlm
-Cj4gaW50ZWdlcnMgb2YgdGhlIHR5cGVzIGFyZSBjb2luY2lkZSB3aXRoLgoKWWVzLCBJIGtuZXcg
-dGhpcy4gSnVzdCBhcyB0aGUgc3BlYyBzYWlkICIgYSBwcm9ncmFtIG11c3QgcmVjb2duaXplIGJv
-dGggdGhlIG5hbWUKYW5kIHRoZSB0eXBlIHRvIHJlY29nbml6ZSBhIGRlc2NyaXB0b3IuIi4gQnV0
-IEkgY2Fubm90IHVuZGVyc3RhbmQgd2hhdCB5b3VyIHdvcmQKIm5hbWVzcGFjZSIgY2FtZSBmcm9t
-PyBJIHRoaW5rIHlvdSBjb21wbGljYXRlIHNpbXBsZSB0aGluZ3MgaGVyZS4KCk9ubHkgd2l0aCBh
-IHR5cGUsIHdlIGNhbm5vdCByZWNvZ25pemUgYSBkZXNjcmlwdG9yLCBiZWNhdXNlICJtdWx0aXBs
-ZQppbnRlcnByZXRhdGlvbnMgb2YKYSBzaW5nbGUgdHlwZSB2YWx1ZSBtYXkgZXhpc3QiLCBTbyB3
-ZSBzaG91bGQgY29tYmluZSB0aGUgbmFtZSBhbmQgdGhlIHR5cGUKdG9nZXRoZXIuIElmIGJvdGgg
-dGhlIG5hbWUgYW5kIHR5cGUgb2YgdHdvIGRlc2NyaXB0b3JzIGFyZSB0aGUgc2FtZSwKd2UgY291
-bGQgc2F5IHdlCmhhdmUgdHdvIHNhbWUgZGVzY3JpcHRvcnMuIElmIG9uZSBvZiB0aGVtICh0eXBl
-IG9yIG5hbWUpIGFyZQpkaWZmZXJlbnQsIHdlIHNheSB0aGUKdHdvIGRlc2NyaXB0b3JzIGFyZSBk
-aWZmZXJlbnQgYW5kIHRoZSB0d28gbm90ZXMgaGF2ZSBkaWZmZXJlbnQgZGF0YS4KCklmIEkgYW0g
-d3JvbmcsIHBsZWFzZSBjb3JyZWN0IG1lLgoKPgo+IFRoZSAiVk1DT1JFSU5GTyIgbmFtZSByZXBy
-ZXNlbnRzIGluZm9ybWF0aW9uIGV4cG9ydGVkIGZyb20KPiAvcHJvYy92bWNvcmUgdGhhdCBpcyB1
-c2VkIGluIGtkdW1wIGZyYW1ld29yay4gSW4gdGhpcyBzZW5zZSwKPiBOVF9WTUNPUkVfUEFEIHRo
-YXQgaXMgc3BlY2lmaWMgZm9yIC9wcm9jL3ZtY29yZSBhbmQga2R1bXAgZnJhbWV3b3JrLAo+IHNo
-b3VsZCBiZWxvbmcgdG8gdGhlICJWTUNPUkVJTkZPIiBuYW1lLgoKSSBjYW5ub3QgdW5kZXJzdGFu
-ZCB0aGUgbmFtZSBleHBsYW5hdGlvbiB0b3RhbGx5LiBEb2VzIHRoZSBuYW1lIHJlYWxseQpoYXZl
-IHRoaXMgbWVhbmluZz8gSXMgdGhlcmUgYW55IGF1dGhlbnRpYyBkb2N1bWVudD8gSSB3YXMgYWx3
-YXlzIHRoaW5raW5nIHdlCmNvdWxkIGZlZWwgZnJlZSB0byBuYW1lIGEgbmFtZSBieSBvdXJzZWx2
-ZXMhCgo+Cj4gVGhhbmtzLgo+IEhBVEFZQU1BLCBEYWlzdWtlCj4KPiAtLQo+IFRvIHVuc3Vic2Ny
-aWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1rZXJu
-ZWwiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5v
-cmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9y
-ZG9tby1pbmZvLmh0bWwKPiBQbGVhc2UgcmVhZCB0aGUgRkFRIGF0ICBodHRwOi8vd3d3LnR1eC5v
-cmcvbGttbC8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 3/8/13 6:33 PM, "H. Peter Anvin" <hpa@zytor.com> wrote:
+
+
+>On 03/08/2013 02:06 AM, Jingbai Ma wrote:
+>> 
+>> Kernel do have some abilities that user space haven't. It's possible to
+>> map whole memory space of the first kernel into user space on the second
+>> kernel. But the user space code has to re-implement some parts of the
+>> kernel memory management system again. And worse, it's architecture
+>> dependent, more architectures supported, more codes have to be
+>> implemented. All implementation in user space must be sync to kernel
+>> implementation. It's may called "flexibility", but it's painful to
+>> maintain the codes.
+>> 
+>
+>What?  You are basically talking about /dev/mem... there is nothing
+>particularly magic about it at all.
+
+What we are talking about is filtering memory pages (AKA memory pages
+classification)
+The makedumpfile (or any other dumper in user space) has to know the
+exactly
+memory layout of the memory management data structures, it not only
+architecture dependent, but also may varies in different kernel release.
+At this point, /dev/mem doesn't give any help.
+So IMHO, I would like to do it in kernel, rather than So keep tracking
+changes in user space code.
+
+>
+>	-hpa
+>
+>-- 
+>H. Peter Anvin, Intel Open Source Technology Center
+>I work for Intel.  I don't speak on their behalf.
+>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
