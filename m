@@ -1,31 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDmNC-0004EW-W6
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 01:45:29 +0000
+ id 1UDmWz-0004j6-Lk
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 01:55:35 +0000
 Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 573E73EE0BC
- for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:45:24 +0900 (JST)
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 101B73EE0C5
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:55:26 +0900 (JST)
 Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4092145DE56
- for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:45:24 +0900 (JST)
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id E517345DE65
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:55:25 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1F92545DE58
- for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:45:24 +0900 (JST)
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C196345DE5F
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:55:25 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1386A1DB804B
- for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:45:24 +0900 (JST)
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B2639E0800E
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:55:25 +0900 (JST)
 Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
  [10.240.81.139])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id BE55D1DB804D
- for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:45:23 +0900 (JST)
-Date: Fri, 08 Mar 2013 10:45:18 +0900 (JST)
-Message-Id: <20130308.104518.339920543.d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5CB12E08002
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 10:55:25 +0900 (JST)
+Date: Fri, 08 Mar 2013 10:55:19 +0900 (JST)
+Message-Id: <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD
+ notes in page-size boundary
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130306.181349.528423566.d.hatayama@jp.fujitsu.com>
-References: <20130306154804.00650801c5973637e6a5c82d@mxc.nes.nec.co.jp>
- <20130306.181349.528423566.d.hatayama@jp.fujitsu.com>
+In-Reply-To: <513867D2.7090501@cn.fujitsu.com>
+References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
+ <20130302083714.31252.17863.stgit@localhost6.localdomain6>
+ <513867D2.7090501@cn.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -35,78 +37,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, cpw@sgi.com, lisa.mitchell@hp.com, vgoyal@redhat.com
+To: zhangyanfei@cn.fujitsu.com
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
-Date: Wed, 6 Mar 2013 18:13:50 +0900
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
+Date: Thu, 7 Mar 2013 18:11:30 +0800
 
-> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> Subject: [RFC] makedumpfile: Improve reading speed with mmap()
-> Date: Wed, 6 Mar 2013 15:48:04 +0900
+> 于 2013年03月02日 16:37, HATAYAMA Daisuke 写道:
+>> Fill both crash_notes and vmcoreinfo_note buffers by NT_VMCORE_PAD
+>> note type to make them satisfy mmap()'s page-size boundary
+>> requirement.
+>> 
+>> So far, end of note segments has been marked by zero-filled elf
+>> header. Instead, this patch writes NT_VMCORE_PAD note in the end of
+>> note segments until the offset on page-size boundary.
 > 
->> Hello,
->> 
->> I made the prototype patch to use mmap() on /proc/vmcore for
->> benchmarking.
->> 
->> This patch simply replaces read(2) with mmap(2), I think we can see
->> the pure performance improvement by reducing the number of map/unmap.
->> 
->>   - When /proc/vmcore supports mmap(), readmem() calls read_with_mmap() 
->>     to read /proc/vmcore with mmap() instead of read().
->> 
->>   - Introduce --map-size <Kbyte> option to specify the map size.
->>     This option is necessary to use mmap() in this patch, but just for
->>     benchmarking. I'll remove this option in release version and change
->>     the map size into suitable constant size to get enough performance
->>     improvement.
->> 
->>   - This patch is based on devel branch:
->>     http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/devel
->> 
->> Unfortunately, I haven't done test and benchmarking in 2nd kernel yet
->> because I can't start up newer kernel as 2nd kernel on my machine.
->> (It seems just my environment issue.) 
->> 
->> At least, this patch works for vmcores saved on local disk,
->> so it will work in 2nd kernel too.
->> 
->> If anyone helps to do benchmarking, it's very helpful for me.
->> And any comments for this patch are welcome.
 > 
-> Kumagai-san,
+> In the codes below, it seems that you assign name "VMCOREINFO" for
+> note type NT_VMCORE_PAD, right? This is kind of wired, i think. This
+> name has been used for NT_VMCORE_DEBUGINFO note already. Why not something
+> like "VMCOREPAD" or "PAD"?
 > 
-> I think it necessary to compare this generic one with the idea
-> considering virtual memory mapping, which should affect filtering
-> performance to some degree.
-> 
-> http://lists.infradead.org/pipermail/kexec/2013-February/007982.html
-> 
-> I guess implementation can relatively be moduler. I'll post a
-> prorotype patch for benchmark later.
 
-Sorry, I investigated this around again and now I think this generic
-one is enough if size of mmap() range is large enough more than 2MB
-that is page size used for mapping virtual memory mapping.
+It looks you are confusing or don't know name and type. The name is
+namespace and in the namespace, there are multiple note types, each of
+which has the corresponding data. In other words, data corresponding
+to types differ if they belong to differnet name space even if
+integers of the types are coincide with.
 
-So, let's benchmark this version.
-
-BTW, I think it useful to prepare a temporary branch for this
-benchmark for people who help benchmark. It's awkward to manage
-patches manually.
-
-Also, I posted the following patch yesterday. The v2 patch for mmap()
-on /proc/vmcore needs this since new note type is added in
-"VMCOREINFO" name.
-
-[PATCH 0/3] makedumpfile, elf: distinguish ELF note types by ELF note names
-http://lists.infradead.org/pipermail/kexec/2013-March/008136.html
+The "VMCOREINFO" name represents information exported from
+/proc/vmcore that is used in kdump framework. In this sense,
+NT_VMCORE_PAD that is specific for /proc/vmcore and kdump framework,
+should belong to the "VMCOREINFO" name.
 
 Thanks.
 HATAYAMA, Daisuke
