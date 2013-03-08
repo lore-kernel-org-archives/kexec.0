@@ -1,12 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oa0-f51.google.com ([209.85.219.51])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDs43-0001sI-5h
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 07:50:03 +0000
-Received: by mail-oa0-f51.google.com with SMTP id h2so1650769oag.24
- for <kexec@lists.infradead.org>; Thu, 07 Mar 2013 23:50:01 -0800 (PST)
+ id 1UDs7A-0002Qr-EC
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 07:53:18 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 9F9A33EE0BD
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 16:53:09 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 85C6C45DEBA
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 16:53:09 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 6D0A545DEB7
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 16:53:09 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5F5A91DB803E
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 16:53:09 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 10DFA1DB803C
+ for <kexec@lists.infradead.org>; Fri,  8 Mar 2013 16:53:09 +0900 (JST)
+Message-ID: <513998A6.3030201@jp.fujitsu.com>
+Date: Fri, 08 Mar 2013 16:52:06 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <51399442.1080609@redhat.com>
+Subject: Re: 3.9-rc1: crash kernel panic - not syncing: Can not allocate
+ SWIOTLB
+ buffer earlier and can't now provide you with the DMA bounce buffer
 References: <51397D1D.5030602@redhat.com>
  <1750036321.11235774.1362722613994.JavaMail.root@redhat.com>
  <CAE9FiQUtDcwJkPMPfjur8LQ+u0Hc2J7sbxC=xkcemqRQ1_Gd8g@mail.gmail.com>
@@ -14,11 +33,7 @@ References: <51397D1D.5030602@redhat.com>
  <51399154.5030500@redhat.com>
  <CAE9FiQVPaG5P7mG9HoFzCkaxF62hkU5hEtq_FhdT7n+38aNs9A@mail.gmail.com>
  <51399442.1080609@redhat.com>
-Date: Thu, 7 Mar 2013 23:50:00 -0800
-Message-ID: <CAE9FiQWCfnOjOuWKihv1GamgHb4KLrrPEiBTspQMqK7_fBDunw@mail.gmail.com>
-Subject: Re: 3.9-rc1: crash kernel panic - not syncing: Can not allocate
- SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer
-From: Yinghai Lu <yinghai@kernel.org>
+In-Reply-To: <51399442.1080609@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,14 +42,14 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: CAI Qian <caiqian@redhat.com>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@linux.intel.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: chaowang@redhat.com
+Cc: caiqian@redhat.com, yinghai@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hpa@linux.intel.com, dyoung@redhat.com, vgoyal@redhat.com
 
-On Thu, Mar 7, 2013 at 11:33 PM, WANG Chao <chaowang@redhat.com> wrote:
+(2013/03/08 16:33), WANG Chao wrote:
 > On 03/08/2013 03:27 PM, Yinghai Lu wrote:
 >> On Thu, Mar 7, 2013 at 11:20 PM, WANG Chao <chaowang@redhat.com> wrote:
 >>>>
@@ -75,16 +90,14 @@ On Thu, Mar 7, 2013 at 11:33 PM, WANG Chao <chaowang@redhat.com> wrote:
 > [    2.200570] dmar: DMAR:[DMA Read] Request device [00:02.0] fault addr ff873000
 > [    2.200570] DMAR:[fault reason 06] PTE Read access is not set
 > [    2.213618] dmar: DRHD: handling fault status reg 3
+> [..]
 
-my Nehalem-EX and Westmere-EX is working with iommu enabled in second kernel.
+This is the problem I'm working on.
+https://lkml.org/lkml/2012/11/26/814
 
-what is 00:02.0 in your system?
+Thansk,
+Takao Indoh
 
-Is your kernel upsteam kernel or redhat flavor one?
-
-Thanks
-
-Yinghai
 
 _______________________________________________
 kexec mailing list
