@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UDpX6-0004q8-SD
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 05:07:55 +0000
-Date: Fri, 8 Mar 2013 06:07:43 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/4] kexec: Support for uImage RAMDISK
-Message-ID: <20130308050743.GA22687@verge.net.au>
-References: <20130306083331.18627.82812.stgit@suzukikp.in.ibm.com>
+Received: from mail-ie0-x236.google.com ([2607:f8b0:4001:c03::236])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UDqrA-0000yL-VF
+ for kexec@lists.infradead.org; Fri, 08 Mar 2013 06:32:41 +0000
+Received: by mail-ie0-f182.google.com with SMTP id k14so1616221iea.41
+ for <kexec@lists.infradead.org>; Thu, 07 Mar 2013 22:32:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130306083331.18627.82812.stgit@suzukikp.in.ibm.com>
+In-Reply-To: <1750036321.11235774.1362722613994.JavaMail.root@redhat.com>
+References: <51397D1D.5030602@redhat.com>
+ <1750036321.11235774.1362722613994.JavaMail.root@redhat.com>
+Date: Thu, 7 Mar 2013 22:32:39 -0800
+Message-ID: <CAE9FiQUtDcwJkPMPfjur8LQ+u0Hc2J7sbxC=xkcemqRQ1_Gd8g@mail.gmail.com>
+Subject: Re: 3.9-rc1: crash kernel panic - not syncing: Can not allocate
+ SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +26,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: msm@freescale.com, bigeasy@linutronix.de, lethal@linux-sh.org, kexec@lists.infradead.org
+To: CAI Qian <caiqian@redhat.com>
+Cc: kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@linux.intel.com>, Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
 
-On Wed, Mar 06, 2013 at 02:07:35PM +0530, Suzuki K. Poulose wrote:
-> The following series adds support and APIs for 
-> handling uImage formatted RAMDISK. The support for PPC
-> has been implemented.
-> 
-> Changes since V1:
->   * Do not uncompress RAMDISK uImage (Pointed by Sebastian)
->   * Introduce new APIs uImage_probe_kernel/uImage_probe_ramdisk to be
->     used by the arch specific code.
->   * Fix coding style related issues pointed by Sebastian.
->   * Add a new patch for fixing payload length calculation and also
->     fix a vulnerability where the image is manipulated.
->     (catches only the file size related changes. When
->      compiled with zlib, CRC check is enabled by
->      default and the contents are verified.)
-> 
->  TODO: Implement crc check in kexec, if ZLIB is not compiled in
-> 
-> ---
-> 
-> Suzuki K. Poulose (4):
->       kexec/uImage: Introduce uImage_probe_kernel
->       kexec/uImage: Fix the payload length in uImage_load
->       kexec/uImage: Recognize uImage RAM Disks
->       ppc/uImage: Add support for RAM Disks
+On Thu, Mar 7, 2013 at 10:03 PM, CAI Qian <caiqian@redhat.com> wrote:
+> CC'ing kexec ML. Also mentioned that 3.8 has no such issue.
+>
+> This message looks suspicious and out of range while 3.8 reservation
+> looks within the range.
+>
+> [    0.000000] Reserving 128MB of memory at 5216MB for crashkernel
+> (System RAM: 3977MB)
+>
+> Wondering if anything to do with memblock again...
 
-Thanks, all 4 patches applied.
+that is intended...
+
+> ----- Original Message -----
+>> From: "WANG Chao" <chaowang@redhat.com>
+>> To: "LKML" vger.kernel.org>
+>> Cc: "CAI Qian" <caiqian@redhat.com>
+>> Sent: Friday, March 8, 2013 1:54:37 PM
+>> Subject: 3.9-rc1: crash kernel panic - not syncing: Can not allocate SWIOTLB buffer earlier and can't now provide you
+>> with the DMA bounce buffer
+>>
+>> Hi, All
+>>
+>> On 3.9-rc1, I load crash kernel with latest kexec-tools(up to
+>> 28d413a), but
+>> 2nd kernel panic at early time:
+>> [    2.948076] Kernel panic - not syncing: Can not allocate SWIOTLB
+>> buffer earlier and can't now provide you with the DMA bounce buffer
+>> [    2.959958] Pid: 53, comm: khubd Not tainted 3.9.0-rc1+ #1
+
+You need to add crashkernel_low=64M in first kernel.
+
+As your system does not support DMA remapping.
+
+Thanks
+
+Yinghai
 
 _______________________________________________
 kexec mailing list
