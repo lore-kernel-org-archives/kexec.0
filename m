@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UEAkY-0004QJ-H8
- for kexec@lists.infradead.org; Sat, 09 Mar 2013 03:47:12 +0000
-Date: Sat, 09 Mar 2013 12:46:33 +0900 (JST)
-Message-Id: <20130309.124633.504064737.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD
- notes in page-size boundary
+ id 1UEBRO-0006NR-17
+ for kexec@lists.infradead.org; Sat, 09 Mar 2013 04:31:27 +0000
+Date: Sat, 09 Mar 2013 13:31:18 +0900 (JST)
+Message-Id: <20130309.133118.214580151.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel
+ to speedup kernel dump process
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
-References: <513867D2.7090501@cn.fujitsu.com>
- <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
- <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
+In-Reply-To: <5139B827.3050500@hp.com>
+References: <20130307145808.29098.41592.stgit@k.asiapacific.hpqcorp.net>
+ <20130307152108.GC2790@redhat.com> <5139B827.3050500@hp.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,118 +20,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhangyanfei.yes@gmail.com
-Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
+To: jingbai.ma@hp.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, yinghai@kernel.org, vgoyal@redhat.com
 
-From: Yanfei Zhang <zhangyanfei.yes@gmail.com>
-Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
-Date: Fri, 8 Mar 2013 21:02:50 +0800
+From: Jingbai Ma <jingbai.ma@hp.com>
+Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel to speedup kernel dump process
+Date: Fri, 8 Mar 2013 18:06:31 +0800
 
-> 2013/3/8 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>:
->> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
->> Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
->> Date: Thu, 7 Mar 2013 18:11:30 +0800
->>
->>> 于 2013年03月02日 16:37, HATAYAMA Daisuke 写道:
->>>> Fill both crash_notes and vmcoreinfo_note buffers by NT_VMCORE_PAD
->>>> note type to make them satisfy mmap()'s page-size boundary
->>>> requirement.
->>>>
->>>> So far, end of note segments has been marked by zero-filled elf
->>>> header. Instead, this patch writes NT_VMCORE_PAD note in the end of
->>>> note segments until the offset on page-size boundary.
->>>
->>>
->>> In the codes below, it seems that you assign name "VMCOREINFO" for
->>> note type NT_VMCORE_PAD, right? This is kind of wired, i think. This
->>> name has been used for NT_VMCORE_DEBUGINFO note already. Why not something
->>> like "VMCOREPAD" or "PAD"?
->>>
->>
->> It looks you are confusing or don't know name and type. The name is
->> namespace and in the namespace, there are multiple note types, each of
->> which has the corresponding data. In other words, data corresponding
->> to types differ if they belong to differnet name space even if
->> integers of the types are coincide with.
-> 
-> Yes, I knew this. Just as the spec said " a program must recognize both the name
-> and the type to recognize a descriptor.". But I cannot understand what your word
-> "namespace" came from? I think you complicate simple things here.
-> 
-> Only with a type, we cannot recognize a descriptor, because "multiple
-> interpretations of
-> a single type value may exist", So we should combine the name and the type
-> together. If both the name and type of two descriptors are the same,
-> we could say we
-> have two same descriptors. If one of them (type or name) are
-> different, we say the
-> two descriptors are different and the two notes have different data.
-> 
-> If I am wrong, please correct me.
-
-??? I think you're saying here the same thing as my explanation above.
-
-Although the term ''name space'' never occurs in ELF, it seems to me
-standard to represent the same values as different ones by combining
-additional elements as names to them.
-
-Well, formally, it is represented as simply tuples or vector
-space. For example, support set S and S' and define new set S x S' by
-
-  S x S' := { (s, s') | s in S, s' in S' }
-
-and equality of the S x S' are defined as usual:
-
-  (s1, s1') == (s2, s2') iff s1 == s2 and s1' == s2'.
-
-In ELF, S is names and S' is types. There's no other formal meaning
-there.
-
->>
->> The "VMCOREINFO" name represents information exported from
->> /proc/vmcore that is used in kdump framework. In this sense,
->> NT_VMCORE_PAD that is specific for /proc/vmcore and kdump framework,
->> should belong to the "VMCOREINFO" name.
-> 
-> I cannot understand the name explanation totally. Does the name really
-> have this meaning? Is there any authentic document? I was always thinking we
-> could feel free to name a name by ourselves!
-
-Of course, it's optional for you to decide how to name notes within
-the mechanism. But it's important to treat naming for ease of managing
-note types. In addition to the above formal definition, it's important
-to consider what name gives us. It's readability, telling us that note
-types that belong to unique name are treated in common in the sense of
-the name. This is apart from the formal definition above.
-
-It's certainly possible to distinguish notes by giving names only and
-not giving types. For example, imagine there are new 27 notes and they
-have different names but have 0 as type.
-
-name          type
-"SOME_NOTE_A" 0
-"SOME_NOTE_B" 0
+> On 03/07/2013 11:21 PM, Vivek Goyal wrote:
+>> On Thu, Mar 07, 2013 at 10:58:18PM +0800, Jingbai Ma wrote:
 ...
-"SOME_NOTE_Z" 0
+>> First of all 64MB per TB should not be a huge deal. And makedumpfile
+>> also has this cyclic mode where you process a map, discard it and then
+>> move on to next section. So memory usage remains constant at the
+>> expense
+>> of processing time.
+> 
+> Yes, that's true. But in cyclic mode, makedumpfile will have to
+> write/read bitmap from storage, it will also impact the performance.
+> I have measured the penalty for cyclic mode is about 70%
+> slowdown. Maybe could be faster after mmap implemented.
 
-Also, for example,
+I guess the slowdown came from the issue that enough VMCOREINFO was
+not provided from the kernel, and unnecessary filtering processing for
+free pages is done multiple times.
 
-name        type
-"SOME_NOTE" 0     => NT_SOME_NOTE_A
-"SOME_NOTE" 1     => NT_SOME_NOTE_B
+For example, confirm how filtering is done in your environment like
+this:
+
+$ makedumpfile --message-level 16      # 16 is report message
+makedumpfile: map_size = 4
+sadump: does not have partition header
 ...
-"SOME_NOTE" 26    => NT_SOME_NOTE_Z
+  pfn_end    : 880000
+Can't select page_is_buddy handler; follow free lists instead of mem_map array.
+STEP [Excluding free pages       ] : 0.431724 seconds
+STEP [Excluding unnecessary pages] : 1.052160 seconds
 
-For the former case, it *looks to me* that space of time is not used
-effectively and it *looks to me* that space of name is not consumed
-efficiently.
+Here STEP [..] colum occurs the number of cycles in cyclic-mode. If
+STEP [Excluding free pages ] column occurs multiple times in log, it
+causes the slowdown on your environment. (free_list doesn't sort its
+elements in pfn's order, so we have only to iterate a whole part of
+free_list in each cycle...; it could amount to be close to a whole
+memory size in worst case just after system boot)
 
-After all, it amounts to individual preference about naming. I cannot
-say anything more.
+To use mem_map array logic, VMCOREINFO nees to have the corresponding
+information to refer to related data structures. The patch is 
+
+commit 8d67091ec6ae98ca67f77990ef9e9ec21337f077
+Author: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Date:   Wed Feb 27 17:03:25 2013 -0800
+
+    kexec: add the values related to buddy system for filtering free pages.
+
+and it has been merged in 3.9-rc1.
+
+$ git describe 8d67091ec6ae98ca67f77990ef9e9ec21337f077
+v3.8-9443-g8d67091
+
+Or you can edit VMCOREINFO manually and specify it to makedumpfile as:
+
+1. generate vmcoreinfo from vmlinux
+
+  makedumpfile -x vmlinux -g vmcoreinfo.txt
+
+2. Add the following values in the generated vmcoreinfo.txt
+
+- 3.1, 3.4, 3.8.x
+NUMBER(PG_slab)=7
+SIZE(pageflags)=4
+OFFSET(page._mapcount)=24
+OFFSET(page.private)=48
+NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-128
+
+- 2.6.38
+SIZE(pageflags)=4
+OFFSET(page._mapcount)=12
+OFFSET(page.private)=16
+NUMBER(PG_slab)=7
+NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-2
+
+- 2.6.32
+NUMBER(PG_slab)=7
+NUMBER(PG_buddy)=19
+OFFSET(page._mapcount)=12
+OFFSET(page.private)=16
+SIZE(pageflags)=4
+
+- 2.6.18
+NUMBER(PG_slab)=7
+NUMBER(PG_buddy)=19
+OFFSET(page._mapcount)=12
+OFFSET(page.private)=16
+
+3. Specify the vmcoreinfo.txt to makedumpfile via -i option
+
+  makedumpfile -i vmcoreinfo.txt [-c|-l|-p] -d 31 /proc/vmcore dumpfile
+
+Anyway, please help benchmark. I'll send CC to you too.
 
 Thanks.
 HATAYAMA, Daisuke
