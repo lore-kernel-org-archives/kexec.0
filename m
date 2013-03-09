@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UE6ra-0004Dr-P7
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 23:38:12 +0000
-Message-ID: <513A765B.8000709@citrix.com>
-Date: Fri, 8 Mar 2013 23:38:03 +0000
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-MIME-Version: 1.0
-Subject: Re: [Xen-devel] [PATCH 5/8] kexec: extend hypercall with improved
- load/unload ops
-References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
- <1361468894-18655-6-git-send-email-david.vrabel@citrix.com>
- <20130308112301.GE10740@debian70-amd64.local.net-space.pl>
- <5139CE3C.8070801@citrix.com>
- <20130308122149.GH10740@debian70-amd64.local.net-space.pl>
- <5139EF2F.2060107@citrix.com>
- <20130308152334.GA11057@debian70-amd64.local.net-space.pl>
- <513A1FE1.9040407@citrix.com>
- <20130308214547.GC11057@debian70-amd64.local.net-space.pl>
-In-Reply-To: <20130308214547.GC11057@debian70-amd64.local.net-space.pl>
+ id 1UEAkY-0004QJ-H8
+ for kexec@lists.infradead.org; Sat, 09 Mar 2013 03:47:12 +0000
+Date: Sat, 09 Mar 2013 12:46:33 +0900 (JST)
+Message-Id: <20130309.124633.504064737.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD
+ notes in page-size boundary
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
+References: <513867D2.7090501@cn.fujitsu.com>
+ <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
+ <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,173 +21,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, David Vrabel <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: zhangyanfei.yes@gmail.com
+Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
-On 08/03/13 21:45, Daniel Kiper wrote:
-> On Fri, Mar 08, 2013 at 05:29:05PM +0000, Andrew Cooper wrote:
->> <snip>
->>>> The tools know what mode the image must be called it and it can tell the
->>>> hypervisor and the hypervisor can trivial setup the correct mode.
->>>>
->>>> I propose:
->>>>
->>>> * Tools say: "here's an image, call it in mode X".
->>>>
->>>> You suggest:
->>>>
->>>> * Hypervisor implicitly says through some unspecified side channel: "I
->>>> only call images in mode Y".
->>> Purgatory is clearly defined. Please look into kexec-tools/purgatory.
->>> It is integral part of kexec infrastructure.
->> Purgatory might be well defined, but that is not relevant here.
+From: Yanfei Zhang <zhangyanfei.yes@gmail.com>
+Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
+Date: Fri, 8 Mar 2013 21:02:50 +0800
+
+> 2013/3/8 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>:
+>> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+>> Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
+>> Date: Thu, 7 Mar 2013 18:11:30 +0800
 >>
->> The kexec syscall and hypercall basically amount to "Here is a blob.
->> Its architecture is $X and its entry point is $Y"
-> kexec syscall use architecture information to check that given
-> image could be executed on given platform. That is all.
-
-And how is 'could' distinguished?
-
-A basic sanity check at load time of "is $X an operating mode I can get
-to at some point in the future" is fine, and useful to eliminate the
-case of trying to load something claiming to be an ARM blob on an x86
-machine.
-
-However, the entry point given can only possibly work in one operating
-mode.  If $X is i386 and Xen jumps to it with long mode enabled, then it
-will crash very quickly.  Conversely, if $X is x86_64 and Xen jumps to
-it in protected mode, another crash will occur.
-
->
->> (Give or take some reconstruction)
-> What does this reconstruction? Hypervisor?
-
-Under the current implementation, the dom0 kernel.  Under the new
-planned implementation, Xen.
-
->
->> Xen should not be making any assumptions about these things.
+>>> 于 2013年03月02日 16:37, HATAYAMA Daisuke 写道:
+>>>> Fill both crash_notes and vmcoreinfo_note buffers by NT_VMCORE_PAD
+>>>> note type to make them satisfy mmap()'s page-size boundary
+>>>> requirement.
+>>>>
+>>>> So far, end of note segments has been marked by zero-filled elf
+>>>> header. Instead, this patch writes NT_VMCORE_PAD note in the end of
+>>>> note segments until the offset on page-size boundary.
+>>>
+>>>
+>>> In the codes below, it seems that you assign name "VMCOREINFO" for
+>>> note type NT_VMCORE_PAD, right? This is kind of wired, i think. This
+>>> name has been used for NT_VMCORE_DEBUGINFO note already. Why not something
+>>> like "VMCOREPAD" or "PAD"?
+>>>
 >>
->> As it currently stands, Xen will assume that KEXEC_load from a pv_32on64
->> domain is an i386 image, while a KEXEC_load from a 64bit PV domain is an
->> x86_64 image.
-> I do not understand. First you write that "Xen should not be making any
-> assumptions about these things" and in the next sentence you state
-> that "Xen will assume that...". What do you mean by that?
+>> It looks you are confusing or don't know name and type. The name is
+>> namespace and in the namespace, there are multiple note types, each of
+>> which has the corresponding data. In other words, data corresponding
+>> to types differ if they belong to differnet name space even if
+>> integers of the types are coincide with.
+> 
+> Yes, I knew this. Just as the spec said " a program must recognize both the name
+> and the type to recognize a descriptor.". But I cannot understand what your word
+> "namespace" came from? I think you complicate simple things here.
+> 
+> Only with a type, we cannot recognize a descriptor, because "multiple
+> interpretations of
+> a single type value may exist", So we should combine the name and the type
+> together. If both the name and type of two descriptors are the same,
+> we could say we
+> have two same descriptors. If one of them (type or name) are
+> different, we say the
+> two descriptors are different and the two notes have different data.
+> 
+> If I am wrong, please correct me.
 
-Sorry for the confustion - That is what happens in the current
-implementation.
+??? I think you're saying here the same thing as my explanation above.
 
->
-> And why do you force users to use image for one architecture (in this case
-> subarchitecture)? I (as a user) would like to have a choice.
+Although the term ''name space'' never occurs in ELF, it seems to me
+standard to represent the same values as different ones by combining
+additional elements as names to them.
 
-The image can do whatever it wants once it is running.
+Well, formally, it is represented as simply tuples or vector
+space. For example, support set S and S' and define new set S x S' by
 
->
->> The fact that this currently works in the common case of having the
->> crash kernel with the same architecture as the dom0 kernel is by luck
->> rather than good guidance.
-> OK, I agree but in this case following part of patch 5/8:
->
-> if ( image->arch == EM_386 )
->   reloc_flags |= KEXEC_RELOC_FLAG_COMPAT;
->
-> should be change to:
->
-> if ( is_pv_32on64_domain(dom0) )
->   reloc_flags |= KEXEC_RELOC_FLAG_COMPAT;
+  S x S' := { (s, s') | s in S, s' in S' }
 
-No - specifically not.  This is the whole problem we are trying to avoid.
+and equality of the S x S' are defined as usual:
 
-The current running architecture of dom0 has no place trying to
-second-guess the intended architecture of the blob.
+  (s1, s1') == (s2, s2') iff s1 == s2 and s1' == s2'.
 
-What happens if I as the user am currently running a 32bit dom0 on 64
-bit Xen, and want to load a 64bit blob to jump to?
+In ELF, S is names and S' is types. There's no other formal meaning
+there.
 
-Under your suggestion, I as the user have to declare it to be a 32bit
-blob and write a 32->64 shim at the beginning of it.  Under Davids
-suggestion, all I as the user have to do is to tell Xen that it is
-indeed a 64bit image.
+>>
+>> The "VMCOREINFO" name represents information exported from
+>> /proc/vmcore that is used in kdump framework. In this sense,
+>> NT_VMCORE_PAD that is specific for /proc/vmcore and kdump framework,
+>> should belong to the "VMCOREINFO" name.
+> 
+> I cannot understand the name explanation totally. Does the name really
+> have this meaning? Is there any authentic document? I was always thinking we
+> could feel free to name a name by ourselves!
 
->
->> Furthmore, the design of the interface should not be deliberately
->> crippled because the common user of it "can deal with it like this";
-> If something is good and tested in many ways, on many architectures,
-> very long time, why not use it? What is the difference between Xen
-> and other architectures?
+Of course, it's optional for you to decide how to name notes within
+the mechanism. But it's important to treat naming for ease of managing
+note types. In addition to the above formal definition, it's important
+to consider what name gives us. It's readability, telling us that note
+types that belong to unique name are treated in common in the sense of
+the name. This is apart from the formal definition above.
 
-argumentum ad antiquitatem
+It's certainly possible to distinguish notes by giving names only and
+not giving types. For example, imagine there are new 27 notes and they
+have different names but have 0 as type.
 
-Not that I wish to jibe at kexec-tools, but to point out the fallacy of
-an argument on that basis.
+name          type
+"SOME_NOTE_A" 0
+"SOME_NOTE_B" 0
+...
+"SOME_NOTE_Z" 0
 
+Also, for example,
 
-About "good and tested", the current kexec handover mechanism is insane,
-and is frankly a miracle it ever worked in the first place.
+name        type
+"SOME_NOTE" 0     => NT_SOME_NOTE_A
+"SOME_NOTE" 1     => NT_SOME_NOTE_B
+...
+"SOME_NOTE" 26    => NT_SOME_NOTE_Z
 
-Lets take the example of a 32bit dom0 on 64bit Xen and a 32bit crash kernel
+For the former case, it *looks to me* that space of time is not used
+effectively and it *looks to me* that space of name is not consumed
+efficiently.
 
-(The following is to the best of my understanding, so apologies if I
-have misunderstood bits)
+After all, it amounts to individual preference about naming. I cannot
+say anything more.
 
-1) /sbin/kexec bundles a 32bit kernel and initrd, along with purgatory
-etc and makes a kexec system call
-2) dom0 copies the segments into regular kalloc()'d chunks
-3) dom0 constructs a control page, bundles some control state together
-and makes a kexec hypercall
-4) Xen saves the control data and overwrites the dom0 provided virtual
-addresses
+Thanks.
+HATAYAMA, Daisuke
 
-In the case of a crash
-
-1) Xen writes crash notes and shuts down as fast as possible
-2) Because dom0 is 32bit, Xen sets up 32bit mode non-pae 1:1mapped and
-3a) might die there and then because the control page living in dom0
-kalloc()'d space might now be above the 4GB boundary
-3b) be lucky that the control page is below the 4GB and
-4) Execute the control page which sets up 32bit mode non-pae 1:1mapped
-(on a different set of pagetables/GDT etc)
-5) Works to reconstruct the image in the crash region which
-6a) might copy in the wrong block because of 32bit truncation issues
-7) Jump to the beginning of purgatory which sets up 32bit mode
-
-And amongst all of that, I am still unsure of whether there are other
-issues because of an "unsigned long page_list[]" in the 64bit hypervisor
-being different from the "unsigned long page_list[]" used by the 32bit
-control page.  In machine_kexec_load() in the hypervisor, we make no
-sanity checks against the assertions of the comments.
-
-
-In the proposed new interface, we do not need to set up the correct
-state for purgatory, jump into the dom0 control page which re-sets up
-different equivalent state, just to reconstruct the image and jump to it.
-
-As for the different architecture of Xen, I hope the above shows exacly
-why it is different, and why it is dangerous to use assumptions based on
-is_pv_32on64_domain(dom0)
-
->
->> kexec-tools is not the only potential consumer of this interface.
-> Potentialy yes but as I know (correct me if I am wrong) kexec-tools
-> is only one tool, until now, which uses kexec syscall/hypercall.
-> If we use this tool we should align to widely accepted rules.
-> If we do not like them then we should convince maintainers that
-> our approach is better or write our own tool with our own rules.
-> But then we should not call it kexec.
->
-> Daniel
-
-I see no reason why Davids proposed interface is incompatible with
-kexec-tools.  Do you?
-
-~Andrew
 
 _______________________________________________
 kexec mailing list
