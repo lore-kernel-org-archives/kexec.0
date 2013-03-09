@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UEBRO-0006NR-17
- for kexec@lists.infradead.org; Sat, 09 Mar 2013 04:31:27 +0000
-Date: Sat, 09 Mar 2013 13:31:18 +0900 (JST)
-Message-Id: <20130309.133118.214580151.d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel
- to speedup kernel dump process
+ id 1UECxZ-0007uj-W0
+ for kexec@lists.infradead.org; Sat, 09 Mar 2013 06:08:48 +0000
+Date: Sat, 09 Mar 2013 15:08:05 +0900 (JST)
+Message-Id: <20130309.150805.363182260.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <5139B827.3050500@hp.com>
-References: <20130307145808.29098.41592.stgit@k.asiapacific.hpqcorp.net>
- <20130307152108.GC2790@redhat.com> <5139B827.3050500@hp.com>
+In-Reply-To: <20130308113332.12c1d2e83e973e652757eaf0@mxc.nes.nec.co.jp>
+References: <20130306.181349.528423566.d.hatayama@jp.fujitsu.com>
+ <20130308.104518.339920543.d.hatayama@jp.fujitsu.com>
+ <20130308113332.12c1d2e83e973e652757eaf0@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,107 +24,186 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: jingbai.ma@hp.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, yinghai@kernel.org, vgoyal@redhat.com
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, cpw@sgi.com, lisa.mitchell@hp.com, vgoyal@redhat.com
 
-From: Jingbai Ma <jingbai.ma@hp.com>
-Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel to speedup kernel dump process
-Date: Fri, 8 Mar 2013 18:06:31 +0800
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
+Date: Fri, 8 Mar 2013 11:33:32 +0900
 
-> On 03/07/2013 11:21 PM, Vivek Goyal wrote:
->> On Thu, Mar 07, 2013 at 10:58:18PM +0800, Jingbai Ma wrote:
-...
->> First of all 64MB per TB should not be a huge deal. And makedumpfile
->> also has this cyclic mode where you process a map, discard it and then
->> move on to next section. So memory usage remains constant at the
->> expense
->> of processing time.
+> Hello HATAYAMA-san,
 > 
-> Yes, that's true. But in cyclic mode, makedumpfile will have to
-> write/read bitmap from storage, it will also impact the performance.
-> I have measured the penalty for cyclic mode is about 70%
-> slowdown. Maybe could be faster after mmap implemented.
+> On Fri, 08 Mar 2013 10:45:18 +0900 (JST)
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> 
+>> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+>> Subject: Re: [RFC] makedumpfile: Improve reading speed with mmap()
+>> Date: Wed, 6 Mar 2013 18:13:50 +0900
+>> 
+>> > From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>> > Subject: [RFC] makedumpfile: Improve reading speed with mmap()
+>> > Date: Wed, 6 Mar 2013 15:48:04 +0900
+>> > 
+>> >> Hello,
+>> >> 
+>> >> I made the prototype patch to use mmap() on /proc/vmcore for
+>> >> benchmarking.
+>> >> 
+>> >> This patch simply replaces read(2) with mmap(2), I think we can see
+>> >> the pure performance improvement by reducing the number of map/unmap.
+>> >> 
+>> >>   - When /proc/vmcore supports mmap(), readmem() calls read_with_mmap() 
+>> >>     to read /proc/vmcore with mmap() instead of read().
+>> >> 
+>> >>   - Introduce --map-size <Kbyte> option to specify the map size.
+>> >>     This option is necessary to use mmap() in this patch, but just for
+>> >>     benchmarking. I'll remove this option in release version and change
+>> >>     the map size into suitable constant size to get enough performance
+>> >>     improvement.
+>> >> 
+>> >>   - This patch is based on devel branch:
+>> >>     http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/devel
+>> >> 
+>> >> Unfortunately, I haven't done test and benchmarking in 2nd kernel yet
+>> >> because I can't start up newer kernel as 2nd kernel on my machine.
+>> >> (It seems just my environment issue.) 
+>> >> 
+>> >> At least, this patch works for vmcores saved on local disk,
+>> >> so it will work in 2nd kernel too.
+>> >> 
+>> >> If anyone helps to do benchmarking, it's very helpful for me.
+>> >> And any comments for this patch are welcome.
+>> > 
+>> > Kumagai-san,
+>> > 
+>> > I think it necessary to compare this generic one with the idea
+>> > considering virtual memory mapping, which should affect filtering
+>> > performance to some degree.
+>> > 
+>> > http://lists.infradead.org/pipermail/kexec/2013-February/007982.html
+>> > 
+>> > I guess implementation can relatively be moduler. I'll post a
+>> > prorotype patch for benchmark later.
+>> 
+>> Sorry, I investigated this around again and now I think this generic
+>> one is enough if size of mmap() range is large enough more than 2MB
+>> that is page size used for mapping virtual memory mapping.
+>> 
+>> So, let's benchmark this version.
+>> 
+>> BTW, I think it useful to prepare a temporary branch for this
+>> benchmark for people who help benchmark. It's awkward to manage
+>> patches manually.
+> 
+> Yes, I thought that I should prepare such a branch when the patch for
+> benchmark is fixed, and now is the time.
+> 
+>> 
+>> Also, I posted the following patch yesterday. The v2 patch for mmap()
+>> on /proc/vmcore needs this since new note type is added in
+>> "VMCOREINFO" name.
+>> 
+>> [PATCH 0/3] makedumpfile, elf: distinguish ELF note types by ELF note names
+>> http://lists.infradead.org/pipermail/kexec/2013-March/008136.html
+> 
+> Now, I can't get the chance to review the patch set above.
+> But, anyway, I created the branch "mmap":
+> 
+> http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/mmap
+> 
+> Please use it for benchmark.
 
-I guess the slowdown came from the issue that enough VMCOREINFO was
-not provided from the kernel, and unnecessary filtering processing for
-free pages is done multiple times.
+Thanks! It's very helpful.
 
-For example, confirm how filtering is done in your environment like
-this:
+Also, I tested a little the mmap branch code and found a small bug
+that max file offset used in calculating mmap()'s position is
+wrong. Please see the next patch.
 
-$ makedumpfile --message-level 16      # 16 is report message
-makedumpfile: map_size = 4
-sadump: does not have partition header
-...
-  pfn_end    : 880000
-Can't select page_is_buddy handler; follow free lists instead of mem_map array.
-STEP [Excluding free pages       ] : 0.431724 seconds
-STEP [Excluding unnecessary pages] : 1.052160 seconds
+# But sorry, I made this quickly so I didn't consider design enough.
 
-Here STEP [..] colum occurs the number of cycles in cyclic-mode. If
-STEP [Excluding free pages ] column occurs multiple times in log, it
-causes the slowdown on your environment. (free_list doesn't sort its
-elements in pfn's order, so we have only to iterate a whole part of
-free_list in each cycle...; it could amount to be close to a whole
-memory size in worst case just after system boot)
+From 77ef0e836bba4713bfb578949d2785962179d630 Mon Sep 17 00:00:00 2001
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Sat, 9 Mar 2013 13:49:43 +0900
+Subject: [PATCH] makedumpfile: fix max offset relative to file
 
-To use mem_map array logic, VMCOREINFO nees to have the corresponding
-information to refer to related data structures. The patch is 
+To see file offset of each memory chunk, it's correct to read p_offset
+in the corresponing PT_LOAD entrie.
 
-commit 8d67091ec6ae98ca67f77990ef9e9ec21337f077
-Author: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date:   Wed Feb 27 17:03:25 2013 -0800
+On /proc/vmcore PT_LOAD entries are sorted on p_load values in
+increasing order. So, it's sufficient to refer to the last PT_LOAD
+entry only. But the code here doesn't assuming that, calculating
+maximum one from all the PT_LOAD entries.
 
-    kexec: add the values related to buddy system for filtering free pages.
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ elf_info.c     | 12 ++++++++++++
+ elf_info.h     |  2 ++
+ makedumpfile.c |  2 +-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-and it has been merged in 3.9-rc1.
+diff --git a/elf_info.c b/elf_info.c
+index 9bd8cd0..aa8cacb 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -45,6 +45,7 @@ struct pt_load_segment {
+ };
+ 
+ static int			nr_cpus;             /* number of cpu */
++static off_t			max_file_offset;
+ 
+ /*
+  * File information about /proc/vmcore:
+@@ -637,6 +638,12 @@ get_elf_info(int fd, char *filename)
+ 			return FALSE;
+ 		j++;
+ 	}
++	max_file_offset = 0;
++	for (i = 0; i < num_pt_loads; ++i) {
++		struct pt_load_segment *p = &pt_loads[i];
++		max_file_offset=MAX(max_file_offset,
++				    p->file_offset+p->phys_end-p->phys_start);
++	}
+ 	if (!has_pt_note()) {
+ 		ERRMSG("Can't find PT_NOTE Phdr.\n");
+ 		return FALSE;
+@@ -869,3 +876,8 @@ set_eraseinfo(off_t offset, unsigned long size)
+ 	size_eraseinfo   = size;
+ }
+ 
++off_t
++get_max_file_offset(void)
++{
++	return max_file_offset;
++}
+diff --git a/elf_info.h b/elf_info.h
+index eb58023..61ab3c9 100644
+--- a/elf_info.h
++++ b/elf_info.h
+@@ -71,6 +71,8 @@ int has_eraseinfo(void);
+ void get_eraseinfo(off_t *offset, unsigned long *size);
+ void set_eraseinfo(off_t offset, unsigned long size);
+ 
++off_t get_max_file_offset(void);
++
+ #endif  /* ELF_INFO_H */
+ 
+ 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 3351158..7acbf72 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -235,7 +235,7 @@ static int
+ update_mmap_range(off_t offset) {
+ 	off_t start_offset;
+ 	off_t map_size;
+-	off_t max_offset = info->max_mapnr * info->page_size;
++	off_t max_offset = get_max_file_offset();
+ 
+ 	munmap(info->mmap_buf,
+ 	       info->mmap_end_offset - info->mmap_start_offset);
+-- 
+1.8.1.4
 
-$ git describe 8d67091ec6ae98ca67f77990ef9e9ec21337f077
-v3.8-9443-g8d67091
-
-Or you can edit VMCOREINFO manually and specify it to makedumpfile as:
-
-1. generate vmcoreinfo from vmlinux
-
-  makedumpfile -x vmlinux -g vmcoreinfo.txt
-
-2. Add the following values in the generated vmcoreinfo.txt
-
-- 3.1, 3.4, 3.8.x
-NUMBER(PG_slab)=7
-SIZE(pageflags)=4
-OFFSET(page._mapcount)=24
-OFFSET(page.private)=48
-NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-128
-
-- 2.6.38
-SIZE(pageflags)=4
-OFFSET(page._mapcount)=12
-OFFSET(page.private)=16
-NUMBER(PG_slab)=7
-NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-2
-
-- 2.6.32
-NUMBER(PG_slab)=7
-NUMBER(PG_buddy)=19
-OFFSET(page._mapcount)=12
-OFFSET(page.private)=16
-SIZE(pageflags)=4
-
-- 2.6.18
-NUMBER(PG_slab)=7
-NUMBER(PG_buddy)=19
-OFFSET(page._mapcount)=12
-OFFSET(page.private)=16
-
-3. Specify the vmcoreinfo.txt to makedumpfile via -i option
-
-  makedumpfile -i vmcoreinfo.txt [-c|-l|-p] -d 31 /proc/vmcore dumpfile
-
-Anyway, please help benchmark. I'll send CC to you too.
-
-Thanks.
-HATAYAMA, Daisuke
 
 
 _______________________________________________
