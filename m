@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UEW6m-00009h-NK
- for kexec@lists.infradead.org; Sun, 10 Mar 2013 02:35:34 +0000
-Message-ID: <513BF104.6040700@cn.fujitsu.com>
-Date: Sun, 10 Mar 2013 10:33:40 +0800
+ id 1UEa4M-0006aJ-7s
+ for kexec@lists.infradead.org; Sun, 10 Mar 2013 06:49:20 +0000
+Message-ID: <513C2C47.5020008@cn.fujitsu.com>
+Date: Sun, 10 Mar 2013 14:46:31 +0800
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes
- in page-size boundary
-References: <513867D2.7090501@cn.fujitsu.com>
- <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
- <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
- <20130309.124633.504064737.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130309.124633.504064737.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 01/20] vmcore: refer to e_phoff member explicitly
+References: <20130302083447.31252.93914.stgit@localhost6.localdomain6>
+ <20130302083554.31252.30615.stgit@localhost6.localdomain6>
+ <5135A054.7010401@cn.fujitsu.com>
+In-Reply-To: <5135A054.7010401@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,129 +20,163 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com, zhangyanfei.yes@gmail.com
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
-于 2013年03月09日 11:46, HATAYAMA Daisuke 写道:
-> From: Yanfei Zhang <zhangyanfei.yes@gmail.com>
-> Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
-> Date: Fri, 8 Mar 2013 21:02:50 +0800
-> 
->> 2013/3/8 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>:
->>> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
->>> Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
->>> Date: Thu, 7 Mar 2013 18:11:30 +0800
->>>
->>>> 于 2013年03月02日 16:37, HATAYAMA Daisuke 写道:
->>>>> Fill both crash_notes and vmcoreinfo_note buffers by NT_VMCORE_PAD
->>>>> note type to make them satisfy mmap()'s page-size boundary
->>>>> requirement.
->>>>>
->>>>> So far, end of note segments has been marked by zero-filled elf
->>>>> header. Instead, this patch writes NT_VMCORE_PAD note in the end of
->>>>> note segments until the offset on page-size boundary.
->>>>
->>>>
->>>> In the codes below, it seems that you assign name "VMCOREINFO" for
->>>> note type NT_VMCORE_PAD, right? This is kind of wired, i think. This
->>>> name has been used for NT_VMCORE_DEBUGINFO note already. Why not something
->>>> like "VMCOREPAD" or "PAD"?
->>>>
->>>
->>> It looks you are confusing or don't know name and type. The name is
->>> namespace and in the namespace, there are multiple note types, each of
->>> which has the corresponding data. In other words, data corresponding
->>> to types differ if they belong to differnet name space even if
->>> integers of the types are coincide with.
->>
->> Yes, I knew this. Just as the spec said " a program must recognize both the name
->> and the type to recognize a descriptor.". But I cannot understand what your word
->> "namespace" came from? I think you complicate simple things here.
->>
->> Only with a type, we cannot recognize a descriptor, because "multiple
->> interpretations of
->> a single type value may exist", So we should combine the name and the type
->> together. If both the name and type of two descriptors are the same,
->> we could say we
->> have two same descriptors. If one of them (type or name) are
->> different, we say the
->> two descriptors are different and the two notes have different data.
->>
->> If I am wrong, please correct me.
-> 
-> ??? I think you're saying here the same thing as my explanation above.
-> 
-> Although the term ''name space'' never occurs in ELF, it seems to me
-> standard to represent the same values as different ones by combining
-> additional elements as names to them.
-> 
-> Well, formally, it is represented as simply tuples or vector
-> space. For example, support set S and S' and define new set S x S' by
-> 
->   S x S' := { (s, s') | s in S, s' in S' }
-> 
-> and equality of the S x S' are defined as usual:
-> 
->   (s1, s1') == (s2, s2') iff s1 == s2 and s1' == s2'.
-> 
-> In ELF, S is names and S' is types. There's no other formal meaning
-> there.
-> 
->>>
->>> The "VMCOREINFO" name represents information exported from
->>> /proc/vmcore that is used in kdump framework. In this sense,
->>> NT_VMCORE_PAD that is specific for /proc/vmcore and kdump framework,
->>> should belong to the "VMCOREINFO" name.
->>
->> I cannot understand the name explanation totally. Does the name really
->> have this meaning? Is there any authentic document? I was always thinking we
->> could feel free to name a name by ourselves!
-> 
-> Of course, it's optional for you to decide how to name notes within
-> the mechanism. But it's important to treat naming for ease of managing
-> note types. In addition to the above formal definition, it's important
-> to consider what name gives us. It's readability, telling us that note
-> types that belong to unique name are treated in common in the sense of
-> the name. This is apart from the formal definition above.
-> 
-> It's certainly possible to distinguish notes by giving names only and
-> not giving types. For example, imagine there are new 27 notes and they
-> have different names but have 0 as type.
-> 
-> name          type
-> "SOME_NOTE_A" 0
-> "SOME_NOTE_B" 0
-> ...
-> "SOME_NOTE_Z" 0
-> 
-> Also, for example,
-> 
-> name        type
-> "SOME_NOTE" 0     => NT_SOME_NOTE_A
-> "SOME_NOTE" 1     => NT_SOME_NOTE_B
-> ...
-> "SOME_NOTE" 26    => NT_SOME_NOTE_Z
-> 
-> For the former case, it *looks to me* that space of time is not used
-> effectively and it *looks to me* that space of name is not consumed
-> efficiently.
-> 
-> After all, it amounts to individual preference about naming. I cannot
-> say anything more.
-> 
-
-I see. I know what you mean now. I was just surprised and puzzled about your
-"namespace" concept. 
-
-Other than the name of NT_VMCORE_PAD, no complaints about the code.
-
-Reviewed-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwM+aciDA15pelIDE1OjM1LCBaaGFuZyBZYW5mZWkg5YaZ6YGTOgo+IOS6jiAy
+MDEz5bm0MDPmnIgwMuaXpSAxNjozNSwgSEFUQVlBTUEgRGFpc3VrZSDlhpnpgZM6Cj4+IENvZGUg
+YXJvdW5kIC9wcm9jL3ZtY29yZSBjdXJyZW50bHkgYXNzdW1lcyBwcm9ncmFtIGhlYWRlciB0YWJs
+ZSBpcwo+PiBuZXh0IHRvIEVMRiBoZWFkZXIuIEJ1dCBmdXR1cmUgY2hhbmdlIGNhbiBicmVhayB0
+aGUgYXNzdW1wdGlvbiBvbgo+PiBrZXhlYy10b29scyBhbmQgdGhlIDFzdCBrZXJuZWwuIFRvIGF2
+b2lkIHdvcnN0IGNhc2UsIG5vdyByZWZlciB0bwo+PiBlX3Bob2ZmIG1lbWJlciB0aGF0IGluZGlj
+YXRlcyBwb3NpdGlvbiBvZiBwcm9ncmFtIGhlYWRlciB0YWJsZSBpbgo+PiBmaWxlLW9mZnNldC4K
+PiAKPiBSZXZpZXdlZC1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNv
+bT4KPiAKPj4KPj4gU2lnbmVkLW9mZi1ieTogSEFUQVlBTUEgRGFpc3VrZSA8ZC5oYXRheWFtYUBq
+cC5mdWppdHN1LmNvbT4KPj4gLS0tCj4+Cj4+ICBmcy9wcm9jL3ZtY29yZS5jIHwgICA0MCArKysr
+KysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ICAxIGZpbGVzIGNoYW5nZWQs
+IDIwIGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZnMv
+cHJvYy92bWNvcmUuYyBiL2ZzL3Byb2Mvdm1jb3JlLmMKPj4gaW5kZXggYjg3MGY3NC4uYWJmNGYw
+MSAxMDA2NDQKPj4gLS0tIGEvZnMvcHJvYy92bWNvcmUuYwo+PiArKysgYi9mcy9wcm9jL3ZtY29y
+ZS5jCj4+IEBAIC0yMjEsOCArMjIxLDggQEAgc3RhdGljIHU2NCBfX2luaXQgZ2V0X3ZtY29yZV9z
+aXplX2VsZjY0KGNoYXIgKmVsZnB0cikKPj4gIAlFbGY2NF9QaGRyICpwaGRyX3B0cjsKPj4gIAo+
+PiAgCWVoZHJfcHRyID0gKEVsZjY0X0VoZHIgKillbGZwdHI7Cj4+IC0JcGhkcl9wdHIgPSAoRWxm
+NjRfUGhkciopKGVsZnB0ciArIHNpemVvZihFbGY2NF9FaGRyKSk7Cj4+IC0Jc2l6ZSA9IHNpemVv
+ZihFbGY2NF9FaGRyKSArICgoZWhkcl9wdHItPmVfcGhudW0pICogc2l6ZW9mKEVsZjY0X1BoZHIp
+KTsKPj4gKwlwaGRyX3B0ciA9IChFbGY2NF9QaGRyKikoZWxmcHRyICsgZWhkcl9wdHItPmVfcGhv
+ZmYpOwo+PiArCXNpemUgPSBlaGRyX3B0ci0+ZV9waG9mZiArICgoZWhkcl9wdHItPmVfcGhudW0p
+ICogc2l6ZW9mKEVsZjY0X1BoZHIpKTsKPj4gIAlmb3IgKGkgPSAwOyBpIDwgZWhkcl9wdHItPmVf
+cGhudW07IGkrKykgewo+PiAgCQlzaXplICs9IHBoZHJfcHRyLT5wX21lbXN6Owo+PiAgCQlwaGRy
+X3B0cisrOwo+PiBAQCAtMjM4LDggKzIzOCw4IEBAIHN0YXRpYyB1NjQgX19pbml0IGdldF92bWNv
+cmVfc2l6ZV9lbGYzMihjaGFyICplbGZwdHIpCj4+ICAJRWxmMzJfUGhkciAqcGhkcl9wdHI7Cj4+
+ICAKPj4gIAllaGRyX3B0ciA9IChFbGYzMl9FaGRyICopZWxmcHRyOwo+PiAtCXBoZHJfcHRyID0g
+KEVsZjMyX1BoZHIqKShlbGZwdHIgKyBzaXplb2YoRWxmMzJfRWhkcikpOwo+PiAtCXNpemUgPSBz
+aXplb2YoRWxmMzJfRWhkcikgKyAoKGVoZHJfcHRyLT5lX3BobnVtKSAqIHNpemVvZihFbGYzMl9Q
+aGRyKSk7Cj4+ICsJcGhkcl9wdHIgPSAoRWxmMzJfUGhkciopKGVsZnB0ciArIGVoZHJfcHRyLT5l
+X3Bob2ZmKTsKPj4gKwlzaXplID0gZWhkcl9wdHItPmVfcGhvZmYgKyAoKGVoZHJfcHRyLT5lX3Bo
+bnVtKSAqIHNpemVvZihFbGYzMl9QaGRyKSk7Cj4+ICAJZm9yIChpID0gMDsgaSA8IGVoZHJfcHRy
+LT5lX3BobnVtOyBpKyspIHsKPj4gIAkJc2l6ZSArPSBwaGRyX3B0ci0+cF9tZW1zejsKPj4gIAkJ
+cGhkcl9wdHIrKzsKPj4gQEAgLTI1OSw3ICsyNTksNyBAQCBzdGF0aWMgaW50IF9faW5pdCBtZXJn
+ZV9ub3RlX2hlYWRlcnNfZWxmNjQoY2hhciAqZWxmcHRyLCBzaXplX3QgKmVsZnN6LAo+PiAgCXU2
+NCBwaGRyX3N6ID0gMCwgbm90ZV9vZmY7Cj4+ICAKPj4gIAllaGRyX3B0ciA9IChFbGY2NF9FaGRy
+ICopZWxmcHRyOwo+PiAtCXBoZHJfcHRyID0gKEVsZjY0X1BoZHIqKShlbGZwdHIgKyBzaXplb2Yo
+RWxmNjRfRWhkcikpOwo+PiArCXBoZHJfcHRyID0gKEVsZjY0X1BoZHIqKShlbGZwdHIgKyBlaGRy
+X3B0ci0+ZV9waG9mZik7Cj4+ICAJZm9yIChpID0gMDsgaSA8IGVoZHJfcHRyLT5lX3BobnVtOyBp
+KyssIHBoZHJfcHRyKyspIHsKPj4gIAkJaW50IGo7Cj4+ICAJCXZvaWQgKm5vdGVzX3NlY3Rpb247
+Cj4+IEBAIC0zMDUsNyArMzA1LDcgQEAgc3RhdGljIGludCBfX2luaXQgbWVyZ2Vfbm90ZV9oZWFk
+ZXJzX2VsZjY0KGNoYXIgKmVsZnB0ciwgc2l6ZV90ICplbGZzeiwKPj4gIAkvKiBQcmVwYXJlIG1l
+cmdlZCBQVF9OT1RFIHByb2dyYW0gaGVhZGVyLiAqLwo+PiAgCXBoZHIucF90eXBlICAgID0gUFRf
+Tk9URTsKPj4gIAlwaGRyLnBfZmxhZ3MgICA9IDA7Cj4+IC0Jbm90ZV9vZmYgPSBzaXplb2YoRWxm
+NjRfRWhkcikgKwo+PiArCW5vdGVfb2ZmID0gZWhkcl9wdHItPmVfcGhvZmYgKwo+PiAgCQkJKGVo
+ZHJfcHRyLT5lX3BobnVtIC0gbnJfcHRub3RlICsxKSAqIHNpemVvZihFbGY2NF9QaGRyKTsKPj4g
+IAlwaGRyLnBfb2Zmc2V0ICA9IG5vdGVfb2ZmOwo+PiAgCXBoZHIucF92YWRkciAgID0gcGhkci5w
+X3BhZGRyID0gMDsKPj4gQEAgLTMxMywxNCArMzEzLDE0IEBAIHN0YXRpYyBpbnQgX19pbml0IG1l
+cmdlX25vdGVfaGVhZGVyc19lbGY2NChjaGFyICplbGZwdHIsIHNpemVfdCAqZWxmc3osCj4+ICAJ
+cGhkci5wX2FsaWduICAgPSAwOwo+PiAgCj4+ICAJLyogQWRkIG1lcmdlZCBQVF9OT1RFIHByb2dy
+YW0gaGVhZGVyKi8KPj4gLQl0bXAgPSBlbGZwdHIgKyBzaXplb2YoRWxmNjRfRWhkcik7Cj4+ICsJ
+dG1wID0gZWxmcHRyICsgZWhkcl9wdHItPmVfcGhvZmY7Cj4+ICAJbWVtY3B5KHRtcCwgJnBoZHIs
+IHNpemVvZihwaGRyKSk7Cj4+ICAJdG1wICs9IHNpemVvZihwaGRyKTsKPj4gIAo+PiAgCS8qIFJl
+bW92ZSB1bndhbnRlZCBQVF9OT1RFIHByb2dyYW0gaGVhZGVycy4gKi8KPj4gIAlpID0gKG5yX3B0
+bm90ZSAtIDEpICogc2l6ZW9mKEVsZjY0X1BoZHIpOwo+PiAgCSplbGZzeiA9ICplbGZzeiAtIGk7
+Cj4+IC0JbWVtbW92ZSh0bXAsIHRtcCtpLCAoKCplbGZzeiktc2l6ZW9mKEVsZjY0X0VoZHIpLXNp
+emVvZihFbGY2NF9QaGRyKSkpOwo+PiArCW1lbW1vdmUodG1wLCB0bXAraSwgKCgqZWxmc3opLWVo
+ZHJfcHRyLT5lX3Bob2ZmLXNpemVvZihFbGY2NF9QaGRyKSkpOwo+PiAgCj4+ICAJLyogTW9kaWZ5
+IGVfcGhudW0gdG8gcmVmbGVjdCBtZXJnZWQgaGVhZGVycy4gKi8KPj4gIAllaGRyX3B0ci0+ZV9w
+aG51bSA9IGVoZHJfcHRyLT5lX3BobnVtIC0gbnJfcHRub3RlICsgMTsKPj4gQEAgLTM0MCw3ICsz
+NDAsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBtZXJnZV9ub3RlX2hlYWRlcnNfZWxmMzIoY2hhciAq
+ZWxmcHRyLCBzaXplX3QgKmVsZnN6LAo+PiAgCXU2NCBwaGRyX3N6ID0gMCwgbm90ZV9vZmY7Cj4+
+ICAKPj4gIAllaGRyX3B0ciA9IChFbGYzMl9FaGRyICopZWxmcHRyOwo+PiAtCXBoZHJfcHRyID0g
+KEVsZjMyX1BoZHIqKShlbGZwdHIgKyBzaXplb2YoRWxmMzJfRWhkcikpOwo+PiArCXBoZHJfcHRy
+ID0gKEVsZjMyX1BoZHIqKShlbGZwdHIgKyBlaGRyX3B0ci0+ZV9waG9mZik7Cj4+ICAJZm9yIChp
+ID0gMDsgaSA8IGVoZHJfcHRyLT5lX3BobnVtOyBpKyssIHBoZHJfcHRyKyspIHsKPj4gIAkJaW50
+IGo7Cj4+ICAJCXZvaWQgKm5vdGVzX3NlY3Rpb247Cj4+IEBAIC0zODYsNyArMzg2LDcgQEAgc3Rh
+dGljIGludCBfX2luaXQgbWVyZ2Vfbm90ZV9oZWFkZXJzX2VsZjMyKGNoYXIgKmVsZnB0ciwgc2l6
+ZV90ICplbGZzeiwKPj4gIAkvKiBQcmVwYXJlIG1lcmdlZCBQVF9OT1RFIHByb2dyYW0gaGVhZGVy
+LiAqLwo+PiAgCXBoZHIucF90eXBlICAgID0gUFRfTk9URTsKPj4gIAlwaGRyLnBfZmxhZ3MgICA9
+IDA7Cj4+IC0Jbm90ZV9vZmYgPSBzaXplb2YoRWxmMzJfRWhkcikgKwo+PiArCW5vdGVfb2ZmID0g
+ZWhkcl9wdHItPmVfcGhvZmYgKwo+PiAgCQkJKGVoZHJfcHRyLT5lX3BobnVtIC0gbnJfcHRub3Rl
+ICsxKSAqIHNpemVvZihFbGYzMl9QaGRyKTsKPj4gIAlwaGRyLnBfb2Zmc2V0ICA9IG5vdGVfb2Zm
+Owo+PiAgCXBoZHIucF92YWRkciAgID0gcGhkci5wX3BhZGRyID0gMDsKPj4gQEAgLTM5NCwxNCAr
+Mzk0LDE0IEBAIHN0YXRpYyBpbnQgX19pbml0IG1lcmdlX25vdGVfaGVhZGVyc19lbGYzMihjaGFy
+ICplbGZwdHIsIHNpemVfdCAqZWxmc3osCj4+ICAJcGhkci5wX2FsaWduICAgPSAwOwo+PiAgCj4+
+ICAJLyogQWRkIG1lcmdlZCBQVF9OT1RFIHByb2dyYW0gaGVhZGVyKi8KPj4gLQl0bXAgPSBlbGZw
+dHIgKyBzaXplb2YoRWxmMzJfRWhkcik7Cj4+ICsJdG1wID0gZWxmcHRyICsgZWhkcl9wdHItPmVf
+cGhvZmY7Cj4+ICAJbWVtY3B5KHRtcCwgJnBoZHIsIHNpemVvZihwaGRyKSk7Cj4+ICAJdG1wICs9
+IHNpemVvZihwaGRyKTsKPj4gIAo+PiAgCS8qIFJlbW92ZSB1bndhbnRlZCBQVF9OT1RFIHByb2dy
+YW0gaGVhZGVycy4gKi8KPj4gIAlpID0gKG5yX3B0bm90ZSAtIDEpICogc2l6ZW9mKEVsZjMyX1Bo
+ZHIpOwo+PiAgCSplbGZzeiA9ICplbGZzeiAtIGk7Cj4+IC0JbWVtbW92ZSh0bXAsIHRtcCtpLCAo
+KCplbGZzeiktc2l6ZW9mKEVsZjMyX0VoZHIpLXNpemVvZihFbGYzMl9QaGRyKSkpOwo+PiArCW1l
+bW1vdmUodG1wLCB0bXAraSwgKCgqZWxmc3opLWVoZHJfcHRyLT5lX3Bob2ZmLXNpemVvZihFbGYz
+Ml9QaGRyKSkpOwo+PiAgCj4+ICAJLyogTW9kaWZ5IGVfcGhudW0gdG8gcmVmbGVjdCBtZXJnZWQg
+aGVhZGVycy4gKi8KPj4gIAllaGRyX3B0ci0+ZV9waG51bSA9IGVoZHJfcHRyLT5lX3BobnVtIC0g
+bnJfcHRub3RlICsgMTsKPj4gQEAgLTQyMiwxMCArNDIyLDEwIEBAIHN0YXRpYyBpbnQgX19pbml0
+IHByb2Nlc3NfcHRsb2FkX3Byb2dyYW1faGVhZGVyc19lbGY2NChjaGFyICplbGZwdHIsCj4+ICAJ
+c3RydWN0IHZtY29yZSAqbmV3Owo+PiAgCj4+ICAJZWhkcl9wdHIgPSAoRWxmNjRfRWhkciAqKWVs
+ZnB0cjsKPj4gLQlwaGRyX3B0ciA9IChFbGY2NF9QaGRyKikoZWxmcHRyICsgc2l6ZW9mKEVsZjY0
+X0VoZHIpKTsgLyogUFRfTk9URSBoZHIgKi8KPj4gKwlwaGRyX3B0ciA9IChFbGY2NF9QaGRyKiko
+ZWxmcHRyICsgZWhkcl9wdHItPmVfcGhvZmYpOyAvKiBQVF9OT1RFIGhkciAqLwo+PiAgCj4+ICAJ
+LyogRmlyc3QgcHJvZ3JhbSBoZWFkZXIgaXMgUFRfTk9URSBoZWFkZXIuICovCj4+IC0Jdm1jb3Jl
+X29mZiA9IHNpemVvZihFbGY2NF9FaGRyKSArCj4+ICsJdm1jb3JlX29mZiA9IGVoZHJfcHRyLT5l
+X3Bob2ZmICsKPj4gIAkJCShlaGRyX3B0ci0+ZV9waG51bSkgKiBzaXplb2YoRWxmNjRfUGhkcikg
+Kwo+PiAgCQkJcGhkcl9wdHItPnBfbWVtc3o7IC8qIE5vdGUgc2VjdGlvbnMgKi8KPj4gIAo+PiBA
+QCAtNDU5LDEwICs0NTksMTAgQEAgc3RhdGljIGludCBfX2luaXQgcHJvY2Vzc19wdGxvYWRfcHJv
+Z3JhbV9oZWFkZXJzX2VsZjMyKGNoYXIgKmVsZnB0ciwKPj4gIAlzdHJ1Y3Qgdm1jb3JlICpuZXc7
+Cj4+ICAKPj4gIAllaGRyX3B0ciA9IChFbGYzMl9FaGRyICopZWxmcHRyOwo+PiAtCXBoZHJfcHRy
+ID0gKEVsZjMyX1BoZHIqKShlbGZwdHIgKyBzaXplb2YoRWxmMzJfRWhkcikpOyAvKiBQVF9OT1RF
+IGhkciAqLwo+PiArCXBoZHJfcHRyID0gKEVsZjMyX1BoZHIqKShlbGZwdHIgKyBlaGRyX3B0ci0+
+ZV9waG9mZik7IC8qIFBUX05PVEUgaGRyICovCj4+ICAKPj4gIAkvKiBGaXJzdCBwcm9ncmFtIGhl
+YWRlciBpcyBQVF9OT1RFIGhlYWRlci4gKi8KPj4gLQl2bWNvcmVfb2ZmID0gc2l6ZW9mKEVsZjMy
+X0VoZHIpICsKPj4gKwl2bWNvcmVfb2ZmID0gZWhkcl9wdHItPmVfcGhvZmYgKwo+PiAgCQkJKGVo
+ZHJfcHRyLT5lX3BobnVtKSAqIHNpemVvZihFbGYzMl9QaGRyKSArCj4+ICAJCQlwaGRyX3B0ci0+
+cF9tZW1zejsgLyogTm90ZSBzZWN0aW9ucyAqLwo+PiAgCj4+IEBAIC00OTYsNyArNDk2LDcgQEAg
+c3RhdGljIHZvaWQgX19pbml0IHNldF92bWNvcmVfbGlzdF9vZmZzZXRzX2VsZjY0KGNoYXIgKmVs
+ZnB0ciwKPj4gIAllaGRyX3B0ciA9IChFbGY2NF9FaGRyICopZWxmcHRyOwo+PiAgCj4+ICAJLyog
+U2tpcCBFbGYgaGVhZGVyIGFuZCBwcm9ncmFtIGhlYWRlcnMuICovCj4+IC0Jdm1jb3JlX29mZiA9
+IHNpemVvZihFbGY2NF9FaGRyKSArCj4+ICsJdm1jb3JlX29mZiA9IGVoZHJfcHRyLT5lX3Bob2Zm
+ICsKPj4gIAkJCShlaGRyX3B0ci0+ZV9waG51bSkgKiBzaXplb2YoRWxmNjRfUGhkcik7Cj4+ICAK
+Pj4gIAlsaXN0X2Zvcl9lYWNoX2VudHJ5KG0sIHZjX2xpc3QsIGxpc3QpIHsKPj4gQEAgLTUxNiw3
+ICs1MTYsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgc2V0X3ZtY29yZV9saXN0X29mZnNldHNfZWxm
+MzIoY2hhciAqZWxmcHRyLAo+PiAgCWVoZHJfcHRyID0gKEVsZjMyX0VoZHIgKillbGZwdHI7Cj4+
+ICAKPj4gIAkvKiBTa2lwIEVsZiBoZWFkZXIgYW5kIHByb2dyYW0gaGVhZGVycy4gKi8KPj4gLQl2
+bWNvcmVfb2ZmID0gc2l6ZW9mKEVsZjMyX0VoZHIpICsKPj4gKwl2bWNvcmVfb2ZmID0gZWhkcl9w
+dHItPmVfcGhvZmYgKwo+PiAgCQkJKGVoZHJfcHRyLT5lX3BobnVtKSAqIHNpemVvZihFbGYzMl9Q
+aGRyKTsKPj4gIAo+PiAgCWxpc3RfZm9yX2VhY2hfZW50cnkobSwgdmNfbGlzdCwgbGlzdCkgewo+
+PiBAQCAtNTUzLDcgKzU1Myw3IEBAIHN0YXRpYyBpbnQgX19pbml0IHBhcnNlX2NyYXNoX2VsZjY0
+X2hlYWRlcnModm9pZCkKPj4gIAl9Cj4+ICAKPj4gIAkvKiBSZWFkIGluIGFsbCBlbGYgaGVhZGVy
+cy4gKi8KPj4gLQllbGZjb3JlYnVmX3N6ID0gc2l6ZW9mKEVsZjY0X0VoZHIpICsgZWhkci5lX3Bo
+bnVtICogc2l6ZW9mKEVsZjY0X1BoZHIpOwo+PiArCWVsZmNvcmVidWZfc3ogPSBlaGRyLmVfcGhv
+ZmYgKyBlaGRyLmVfcGhudW0gKiBzaXplb2YoRWxmNjRfUGhkcik7CgpPbmUgbWlub3Igc3VnZ2Vz
+dGlvbi4KClByZXZpb3VzbHksIHdoZW4gdGhlIGNvZGUgYXNzdW1lcyBwcm9ncmFtIGhlYWRlcnMg
+YXJlIGZvbGxvd2luZyBpbW1lZGlhdGVseQp0aGUgRUxGIGhlYWRlciwgaXQgdXNlcwoKIGVsZmNv
+cmVidWZfc3ogPSBzaXplb2YoRWxmNjRfRWhkcikgKyBlaGRyLmVfcGhudW0gKiBzaXplb2YoRWxm
+NjRfUGhkcik7Cgp0byBjYWxjdWxhdGUgdGhlIHNpemUgb2YgRUxGIGhlYWRlciBhbmQgRUxGIHBy
+b2dyYW0gaGVhZGVycwoKVGhpcyBwYXRjaCBhdm9pZHMgdGhlIGFzc3VtcHRpb24sIGFuZCB1c2Vz
+IGVoZHIuZV9waG9mZiB0byBnZXQgdGhlIHByb2dyYW0KaGVhZGVycycgYWRkcmVzcy4gQnV0IGl0
+IHdpbGwgcmVhZCB1bnJlbGF0ZWQgY29udGVudHMgaW50byBlbGZjb3JlYnVmIGlmCnByb2dyYW0g
+aGVhZGVycyBhcmUgbm90IGZvbGxvd2luZyBpbW1lZGlhdGVseSB0aGUgRUxGIGhlYWRlci4gU28g
+Y291bGQgdGhlCmNvZGUgYmU6CgplbGZjb3JlYnVmX3N6ID0gc2l6ZW9mKEVsZjY0X0VoZHIpICsg
+ZWhkci5lX3BobnVtICogc2l6ZW9mKEVsZjY0X1BoZHIpOwphZGRyID0gZWxmY29yZWhkcl9hZGRy
+ICsgZWhkci5lX3Bob2ZmOwptZW1jcHkoZWxmY29yZWJ1ZiwgJmVoZHIsIHNpemVvZihFbGY2NF9F
+aGRyKSk7CnJlYWRfZnJvbV9vbGRtZW0oZWxmY29yZWJ1ZiArIHNpemVvZihFbGY2NF9FaGRyKSwg
+ZWxmY29yZWJ1Zl9zeiAtCiAgICAgICAgICAgICAgICAgc2l6ZW9mKEVsZjY0X0VoZHIpLCAmYWRk
+ciwgMCk7CihFbGY2NF9FaGRyICopZWxmY29yZWJ1Zi0+ZV9waG9mZiA9IHNpemVvZihFbGY2NF9F
+aGRyKTsKCj4+ICAJZWxmY29yZWJ1ZiA9IGttYWxsb2MoZWxmY29yZWJ1Zl9zeiwgR0ZQX0tFUk5F
+TCk7Cj4+ICAJaWYgKCFlbGZjb3JlYnVmKQo+PiAgCQlyZXR1cm4gLUVOT01FTTsKPj4gQEAgLTYw
+OCw3ICs2MDgsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBwYXJzZV9jcmFzaF9lbGYzMl9oZWFkZXJz
+KHZvaWQpCj4+ICAJfQo+PiAgCj4+ICAJLyogUmVhZCBpbiBhbGwgZWxmIGhlYWRlcnMuICovCj4+
+IC0JZWxmY29yZWJ1Zl9zeiA9IHNpemVvZihFbGYzMl9FaGRyKSArIGVoZHIuZV9waG51bSAqIHNp
+emVvZihFbGYzMl9QaGRyKTsKPj4gKwllbGZjb3JlYnVmX3N6ID0gZWhkci5lX3Bob2ZmICsgZWhk
+ci5lX3BobnVtICogc2l6ZW9mKEVsZjMyX1BoZHIpOwo+PiAgCWVsZmNvcmVidWYgPSBrbWFsbG9j
+KGVsZmNvcmVidWZfc3osIEdGUF9LRVJORUwpOwo+PiAgCWlmICghZWxmY29yZWJ1ZikKPj4gIAkJ
+cmV0dXJuIC1FTk9NRU07Cj4+Cj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCj4+IGtleGVjIG1haWxpbmcgbGlzdAo+PiBrZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMKPj4KPiAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
