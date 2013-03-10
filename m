@@ -1,28 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ie0-x22b.google.com ([2607:f8b0:4001:c03::22b])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UE38z-00004r-KE
- for kexec@lists.infradead.org; Fri, 08 Mar 2013 19:39:54 +0000
-Received: by mail-ie0-f171.google.com with SMTP id 10so2544486ied.2
- for <kexec@lists.infradead.org>; Fri, 08 Mar 2013 11:39:51 -0800 (PST)
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UEW6m-00009h-NK
+ for kexec@lists.infradead.org; Sun, 10 Mar 2013 02:35:34 +0000
+Message-ID: <513BF104.6040700@cn.fujitsu.com>
+Date: Sun, 10 Mar 2013 10:33:40 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <CAE9FiQU7RP8zTsm9QMnANf8-a9=QRY9Y6sFdEev7+YWd87NDAw@mail.gmail.com>
-References: <51397D1D.5030602@redhat.com>
- <1750036321.11235774.1362722613994.JavaMail.root@redhat.com>
- <CAE9FiQUtDcwJkPMPfjur8LQ+u0Hc2J7sbxC=xkcemqRQ1_Gd8g@mail.gmail.com>
- <CAE9FiQU7ccdWCL=t=Zn1w33GHpHk56=JXTcotn-Huq9Wiqu7wg@mail.gmail.com>
- <51399154.5030500@redhat.com>
- <CAE9FiQVPaG5P7mG9HoFzCkaxF62hkU5hEtq_FhdT7n+38aNs9A@mail.gmail.com>
- <51399442.1080609@redhat.com>
- <CAE9FiQWCfnOjOuWKihv1GamgHb4KLrrPEiBTspQMqK7_fBDunw@mail.gmail.com>
- <5139D5A0.6000600@redhat.com>
- <CAE9FiQU7RP8zTsm9QMnANf8-a9=QRY9Y6sFdEev7+YWd87NDAw@mail.gmail.com>
-Date: Fri, 8 Mar 2013 11:39:51 -0800
-Message-ID: <CAE9FiQUwWLUqdvtGZPY7WOFSiC5YZjm7Mcoj+V+m6qJzeRNCLQ@mail.gmail.com>
-Subject: Re: 3.9-rc1: crash kernel panic - not syncing: Can not allocate
- SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer
-From: Yinghai Lu <yinghai@kernel.org>
-Content-Type: multipart/mixed; boundary=f46d04462e0aa3bde104d76efcaa
+Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes
+ in page-size boundary
+References: <513867D2.7090501@cn.fujitsu.com>
+ <20130308.105519.82764856.d.hatayama@jp.fujitsu.com>
+ <CANBD6kFwTjKL9CqUzVSWFSRH6ibdQstCU5wTBkv4+=4HhPiG4Q@mail.gmail.com>
+ <20130309.124633.504064737.d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20130309.124633.504064737.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,118 +22,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuahkhan@gmail.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Dave Young <dyoung@redhat.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, kexec <kexec@lists.infradead.org>, CAI Qian <caiqian@redhat.com>, LKML <linux-kernel@vger.kernel.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com, zhangyanfei.yes@gmail.com
 
---f46d04462e0aa3bde104d76efcaa
-Content-Type: text/plain; charset=ISO-8859-1
-
-[ Add more to To list ]
-
-On Fri, Mar 8, 2013 at 10:24 AM, Yinghai Lu <yinghai@kernel.org> wrote:
-> On Fri, Mar 8, 2013 at 4:12 AM, WANG Chao <chaowang@redhat.com> wrote:
->
->>> what is 00:02.0 in your system?
->> This IOMMU issue is related to https://lkml.org/lkml/2012/11/26/814. We can
->> discuss this IOMMU issue in that thread.
->> Anyway 00:02.0 is a video card, the box is Ivy Bridge.
->> # lspci -s 00:02.0 -v
->> 00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor
->> Graphics Controller (rev 09) (prog-if 00 [VGA controller])
->>         Subsystem: Intel Corporation Device 2211
->>         Flags: bus master, fast devsel, latency 0, IRQ 44
->>         Memory at afc00000 (64-bit, non-prefetchable) [size=4M]
->>         Memory at c0000000 (64-bit, prefetchable) [size=256M]
->>         I/O ports at 6000 [size=64]
->>         Expansion ROM at <unassigned> [disabled]
->>         Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit-
->>         Capabilities: [d0] Power Management version 2
->>         Capabilities: [a4] PCI Advanced Features
->>         Kernel driver in use: i915
->
-> disable drm for i915 will make your iommu work with dump?
->
+于 2013年03月09日 11:46, HATAYAMA Daisuke 写道:
+> From: Yanfei Zhang <zhangyanfei.yes@gmail.com>
+> Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
+> Date: Fri, 8 Mar 2013 21:02:50 +0800
+> 
+>> 2013/3/8 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>:
+>>> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+>>> Subject: Re: [PATCH v2 15/20] kexec: fill note buffers by NT_VMCORE_PAD notes in page-size boundary
+>>> Date: Thu, 7 Mar 2013 18:11:30 +0800
+>>>
+>>>> 于 2013年03月02日 16:37, HATAYAMA Daisuke 写道:
+>>>>> Fill both crash_notes and vmcoreinfo_note buffers by NT_VMCORE_PAD
+>>>>> note type to make them satisfy mmap()'s page-size boundary
+>>>>> requirement.
+>>>>>
+>>>>> So far, end of note segments has been marked by zero-filled elf
+>>>>> header. Instead, this patch writes NT_VMCORE_PAD note in the end of
+>>>>> note segments until the offset on page-size boundary.
+>>>>
+>>>>
+>>>> In the codes below, it seems that you assign name "VMCOREINFO" for
+>>>> note type NT_VMCORE_PAD, right? This is kind of wired, i think. This
+>>>> name has been used for NT_VMCORE_DEBUGINFO note already. Why not something
+>>>> like "VMCOREPAD" or "PAD"?
+>>>>
+>>>
+>>> It looks you are confusing or don't know name and type. The name is
+>>> namespace and in the namespace, there are multiple note types, each of
+>>> which has the corresponding data. In other words, data corresponding
+>>> to types differ if they belong to differnet name space even if
+>>> integers of the types are coincide with.
 >>
+>> Yes, I knew this. Just as the spec said " a program must recognize both the name
+>> and the type to recognize a descriptor.". But I cannot understand what your word
+>> "namespace" came from? I think you complicate simple things here.
 >>
->> Is it expected to intel_iommu=on or crashkernel_low to make 2nd kernel boot in
->> 3.9? Back in 3.8, it works just fine w/ only crashkernel param.
->
-> Yes, I really do not want to set crashkernel low range like 72M
-> automatically for all.
-> that would have the system with proper iommu support lose 72M under 4G
-> in first kernel.
-> And can not play allocate and return tricks, as first kernel have no
-> idea if iommu will work
-> on second kernel even iommu is working on first kernel.
->
-> Better to fix iommu support at first.
->
-> For old system that does not have DMAR or kernel does not have IOMMU
-> support enabled, or
-> user does not pass intel_iommu=on.
-> We could set crashkernel low range to 72M automatically.
+>> Only with a type, we cannot recognize a descriptor, because "multiple
+>> interpretations of
+>> a single type value may exist", So we should combine the name and the type
+>> together. If both the name and type of two descriptors are the same,
+>> we could say we
+>> have two same descriptors. If one of them (type or name) are
+>> different, we say the
+>> two descriptors are different and the two notes have different data.
+>>
+>> If I am wrong, please correct me.
+> 
+> ??? I think you're saying here the same thing as my explanation above.
+> 
+> Although the term ''name space'' never occurs in ELF, it seems to me
+> standard to represent the same values as different ones by combining
+> additional elements as names to them.
+> 
+> Well, formally, it is represented as simply tuples or vector
+> space. For example, support set S and S' and define new set S x S' by
+> 
+>   S x S' := { (s, s') | s in S, s' in S' }
+> 
+> and equality of the S x S' are defined as usual:
+> 
+>   (s1, s1') == (s2, s2') iff s1 == s2 and s1' == s2'.
+> 
+> In ELF, S is names and S' is types. There's no other formal meaning
+> there.
+> 
+>>>
+>>> The "VMCOREINFO" name represents information exported from
+>>> /proc/vmcore that is used in kdump framework. In this sense,
+>>> NT_VMCORE_PAD that is specific for /proc/vmcore and kdump framework,
+>>> should belong to the "VMCOREINFO" name.
+>>
+>> I cannot understand the name explanation totally. Does the name really
+>> have this meaning? Is there any authentic document? I was always thinking we
+>> could feel free to name a name by ourselves!
+> 
+> Of course, it's optional for you to decide how to name notes within
+> the mechanism. But it's important to treat naming for ease of managing
+> note types. In addition to the above formal definition, it's important
+> to consider what name gives us. It's readability, telling us that note
+> types that belong to unique name are treated in common in the sense of
+> the name. This is apart from the formal definition above.
+> 
+> It's certainly possible to distinguish notes by giving names only and
+> not giving types. For example, imagine there are new 27 notes and they
+> have different names but have 0 as type.
+> 
+> name          type
+> "SOME_NOTE_A" 0
+> "SOME_NOTE_B" 0
+> ...
+> "SOME_NOTE_Z" 0
+> 
+> Also, for example,
+> 
+> name        type
+> "SOME_NOTE" 0     => NT_SOME_NOTE_A
+> "SOME_NOTE" 1     => NT_SOME_NOTE_B
+> ...
+> "SOME_NOTE" 26    => NT_SOME_NOTE_Z
+> 
+> For the former case, it *looks to me* that space of time is not used
+> effectively and it *looks to me* that space of name is not consumed
+> efficiently.
+> 
+> After all, it amounts to individual preference about naming. I cannot
+> say anything more.
+> 
 
-It seem that it is not worthy to check case that does not support
-IOMMU in second kernel.
+I see. I know what you mean now. I was just surprised and puzzled about your
+"namespace" concept. 
 
-Please check attached patch that will just set crashkernel_low auto, and if the
-system DO support iommu with kdump, user can specify crashkernel_low=0
-to save low 72M.
+Other than the name of NT_VMCORE_PAD, no complaints about the code.
 
-Thanks
-
-Yinghai
-
---f46d04462e0aa3bde104d76efcaa
-Content-Type: application/octet-stream; name="fix_crashkernel_low.patch"
-Content-Disposition: attachment; filename="fix_crashkernel_low.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_he1qwxp30
-
-U3ViamVjdDogW1BBVENIfSB4ODYsIGtkdW1wOiBhdXRvIHNldCBjcmFzaGtlcm5lbCBsb3cgc2l6
-ZQoKQ3VycmVudCBjb2RlIGRvZXMgbm90IHNldCBsb3cgcmFuZ2UgZm9yIGNyYXNoa2VybmVsIGlm
-CnRoZSB1c2VyIGRvZXMgbm90IHNwZWNpZnkgdGhhdC4KClRoYXQgY2F1c2UgcmVncmVzc2lvbnMg
-b24gc3lzdGVtIHRoYXQgZG9lcyBub3Qgc3VwcG9ydAppbnRlbF9pb21tdSBwcm9wZXJseS4KCkNo
-YW8gc2FpZCBoaXMgc3lzdGVtIGRvZXMgd29yayB3ZWxsIG9uIDMuOCB3aXRob3V0IGV4dHJhIHBh
-cmFtZXRlci4KYW5kIGlvbW11IGRvZXMgbm90IHdvcmsgd2l0aCBrZHVtcC4KClNldCBsb3cgYXV0
-b21hdGljYWxseSBpZiB0aGUgdXNlciBkb2VzIG5vdCBzcGVjaWZ5IHRoYXQuCgpGb3Igc3lzdGVt
-IHRoYXQgZG9lcyBzdXBwb3J0IElPTU1VIHdpdGgga2R1bXAgcHJvcGVybHksIHVzZXIgY291bGQK
-c3BlY2lmeSBjcmFzaGtlcm5lbF9sb3c9MCB0byBzYXZlIHRoYXQgNzJNIGxvdyByYW0uCgpSZXBv
-cnRlZC1ieTogV0FORyBDaGFvIDxjaGFvd2FuZ0ByZWRoYXQuY29tPgpTaWduZWQtb2ZmLWJ5OiBZ
-aW5naGFpIEx1IDx5aW5naGFpQGtlcm5lbC5vcmc+CgotLS0KIGFyY2gveDg2L2tlcm5lbC9zZXR1
-cC5jIHwgICAxNSArKysrKysrKysrKystLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQoKSW5kZXg6IGxpbnV4LTIuNi9hcmNoL3g4Ni9rZXJuZWwvc2V0
-dXAuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09Ci0tLSBsaW51eC0yLjYub3JpZy9hcmNoL3g4Ni9rZXJuZWwvc2V0dXAu
-YworKysgbGludXgtMi42L2FyY2gveDg2L2tlcm5lbC9zZXR1cC5jCkBAIC01MjEsMTkgKzUyMSwy
-OCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgcmVzZXJ2ZV9jcmFzaGtlcm5lbF9sCiAJdW5zaWduZWQg
-bG9uZyBsb25nIGxvd19iYXNlID0gMCwgbG93X3NpemUgPSAwOwogCXVuc2lnbmVkIGxvbmcgdG90
-YWxfbG93X21lbTsKIAl1bnNpZ25lZCBsb25nIGxvbmcgYmFzZTsKKwlib29sIGF1dG9fc2V0ID0g
-ZmFsc2U7CiAJaW50IHJldDsKIAogCXRvdGFsX2xvd19tZW0gPSBtZW1ibG9ja19tZW1fc2l6ZSgx
-VUw8PCgzMi1QQUdFX1NISUZUKSk7CiAJcmV0ID0gcGFyc2VfY3Jhc2hrZXJuZWxfbG93KGJvb3Rf
-Y29tbWFuZF9saW5lLCB0b3RhbF9sb3dfbWVtLAogCQkJCQkJJmxvd19zaXplLCAmYmFzZSk7Ci0J
-aWYgKHJldCAhPSAwIHx8IGxvd19zaXplIDw9IDApCi0JCXJldHVybjsKKwlpZiAocmV0ICE9IDAp
-IHsKKwkJLyogZGVmYXVsdCBzd2lvdGxiIHNpemUgYW5kIG92ZXJmbG93OiA2NE0gKyA4TSAqLwor
-CQlsb3dfc2l6ZSA9IDcyVUwgPDwgMjA7CisJCWF1dG9fc2V0ID0gdHJ1ZTsKKwl9IGVsc2Ugewor
-CQkvKiBwYXNzZWQgd2l0aCBjcmFzaGtlcm5lbF9sb3c9MCA/ICovCisJCWlmICghbG93X3NpemUp
-CisJCQlyZXR1cm47CisJfQogCiAJbG93X2Jhc2UgPSBtZW1ibG9ja19maW5kX2luX3JhbmdlKGxv
-d19zaXplLCAoMVVMTDw8MzIpLAogCQkJCQlsb3dfc2l6ZSwgYWxpZ25tZW50KTsKIAogCWlmICgh
-bG93X2Jhc2UpIHsKLQkJcHJfaW5mbygiY3Jhc2hrZXJuZWwgbG93IHJlc2VydmF0aW9uIGZhaWxl
-ZCAtIE5vIHN1aXRhYmxlIGFyZWEgZm91bmQuXG4iKTsKKwkJaWYgKCFhdXRvX3NldCkKKwkJCXBy
-X2luZm8oImNyYXNoa2VybmVsIGxvdyByZXNlcnZhdGlvbiBmYWlsZWQgLSBObyBzdWl0YWJsZSBh
-cmVhIGZvdW5kLlxuIik7CiAKIAkJcmV0dXJuOwogCX0K
---f46d04462e0aa3bde104d76efcaa
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Reviewed-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---f46d04462e0aa3bde104d76efcaa--
-
