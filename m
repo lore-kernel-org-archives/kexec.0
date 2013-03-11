@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g1t0028.austin.hp.com ([15.216.28.35])
+Received: from g1t0026.austin.hp.com ([15.216.28.33])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UEy8n-0006SD-RI
- for kexec@lists.infradead.org; Mon, 11 Mar 2013 08:31:30 +0000
-Message-ID: <513D965B.8010503@hp.com>
-Date: Mon, 11 Mar 2013 16:31:23 +0800
+ id 1UEyUW-0001iF-LJ
+ for kexec@lists.infradead.org; Mon, 11 Mar 2013 08:53:57 +0000
+Message-ID: <513D9B9F.4000204@hp.com>
+Date: Mon, 11 Mar 2013 16:53:51 +0800
 From: Jingbai Ma <jingbai.ma@hp.com>
 MIME-Version: 1.0
 Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel
  to speedup kernel dump process
-References: <CD6006EB.36EC%kingboard.ma@hp.com> <87r4jpoono.fsf@xmission.com>
-In-Reply-To: <87r4jpoono.fsf@xmission.com>
+References: <20130307145808.29098.41592.stgit@k.asiapacific.hpqcorp.net>
+ <20130307152108.GC2790@redhat.com> <5139B827.3050500@hp.com>
+ <20130308161912.GD8219@redhat.com>
+In-Reply-To: <20130308161912.GD8219@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,71 +25,70 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: jingbai.ma@hp.com, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mitchell,
- Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, "mingo@redhat.com" <mingo@redhat.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "Ma,
- Jingbai (Kingboard)" <kingboard.ma@hp.com>, "H. Peter Anvin" <hpa@zytor.com>, "yinghai@kernel.org" <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Mitchell,
+ Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, yinghai@kernel.org, Jingbai Ma <jingbai.ma@hp.com>
 
-On 03/09/2013 12:13 AM, Eric W. Biederman wrote:
-> "Ma, Jingbai (Kingboard)"<kingboard.ma@hp.com>  writes:
+On 03/09/2013 12:19 AM, Vivek Goyal wrote:
+> On Fri, Mar 08, 2013 at 06:06:31PM +0800, Jingbai Ma wrote:
 >
->> On 3/8/13 6:33 PM, "H. Peter Anvin"<hpa@zytor.com>  wrote:
+> [..]
+>>> - First of all it is doing more stuff in first kernel. And that runs
+>>>    contrary to kdump design where we want to do stuff in second kernel.
+>>>    After a kernel crash, you can't trust running kernel's data structures.
+>>>    So to improve reliability just do minial stuff in crashed kernel and
+>>>    get out quickly.
 >>
+>> I agreed with you, the first kernel should do as less as possible.
+>> Intuitively, filter memory pages in the first kernel will harm the
+>> reliability of kernel dump, but let's think it thoroughly:
 >>
->>> On 03/08/2013 02:06 AM, Jingbai Ma wrote:
->>>>
->>>> Kernel do have some abilities that user space haven't. It's possible to
->>>> map whole memory space of the first kernel into user space on the second
->>>> kernel. But the user space code has to re-implement some parts of the
->>>> kernel memory management system again. And worse, it's architecture
->>>> dependent, more architectures supported, more codes have to be
->>>> implemented. All implementation in user space must be sync to kernel
->>>> implementation. It's may called "flexibility", but it's painful to
->>>> maintain the codes.
->>>>
->>>
->>> What?  You are basically talking about /dev/mem... there is nothing
->>> particularly magic about it at all.
+>> 1. It only relies on the memory management data structure that
+>> makedumpfile also relies on, so no any reliability degradation at
+>> this point.
+>
+> Its not same. If there is something wrong with memory management
+> data structures, you can panic() again and self lock yourself and
+> never even transition to the second kernel.
+>
+> With makedumpfile, if something is wrong, either we will save wrong
+> bits or get segmentation fault. But one can still try to be careful
+> or save whole dump and try to get specific pieces out.
+>
+> So it it is not apples to apples comparison.
+>
+
+Understood, the double panic() does harm the reliabilities. But consider 
+the chance to panic in to memory filtering code, it shouldn't increase 
+the risks very much.
+If the filtering code panicked, I doubt even without it, the second 
+kernel could be booted up normally.
+
+> [..]
+>>> Looks like now hpa and yinghai have done the work to be able to load
+>>> kdump kernel above 4GB. I am assuming this also removes the restriction
+>>> that we can only reserve 512MB or 896MB in second kernel. If that's
+>>> the case, then I don't see why people can't get away with reserving
+>>> 64MB per TB.
 >>
->> What we are talking about is filtering memory pages (AKA memory pages
->> classification)
->> The makedumpfile (or any other dumper in user space) has to know the
->> exactly
->> memory layout of the memory management data structures, it not only
->> architecture dependent, but also may varies in different kernel release.
->> At this point, /dev/mem doesn't give any help.
->> So IMHO, I would like to do it in kernel, rather than So keep tracking
->> changes in user space code.
+>> That's true. With kernel 3.9-rc1 with kexec-tools 2.0.4, capture
+>> kernel will have enough memory to run. And makedumpfile could be
+>> always run at non-cyclic mode, but we still concern about the kernel
+>> dump performance on systems with huge memory (above 4TB).
 >
-> But the fact is there is no requirment that the crash dump capture
-> kernel is the same version as the kernel that crashed.  In fact it has
-> been common at some points in time to use slightly different build
-> options, or slightly different kernels.  Say a 32bit PAE kernel to
-> capture a 64bit x86_64 kernel.
+> I would think that lets first try to make mmap() on /proc/vmcore work and
+> optimize makefumpfile to make use of it and then see if performance is
+> acceptable or not on large machines. And then take it from there.
 
-The filtering code will be executed in the first kernel, so this problem 
-will not be exist.
+Sure, you are right, I'm going to test the mmap() solution first, if it 
+doesn't meet the performance requirement on large machine, We still need 
+a solution here.
+
+Thanks!
 
 >
-> So in fact performing this work in the kernel and is actively harmful to
-> reliability and maintenance because it adds an incorrect assumption.
->
-> If you do want the benefit of shared maintenance with the kernel one
-> solution that has been suggested several times is to put code into
-> tools/makedumpfile (probably a library) that encapsulates the kernel
-> specific knowledge that can be loaded into the ramdisk when the
-> crahsdump kernel is being loaded.
->
-> That would allow shared maintenance along without breaking the
-> possibility of supporting kernel versions.
-
-Yes, you are right. But it requires makedumpfile changes significantly, 
-and if we also want to shared the code with kernel memory management 
-subsystem, I believe that's not a easy job. (at least to my limited 
-kernel knowledge)
-
->
-> Eric
+> Thanks
+> Vivek
 
 
 -- 
