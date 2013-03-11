@@ -1,30 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UEqeX-0001sL-LE
- for kexec@lists.infradead.org; Mon, 11 Mar 2013 00:31:46 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id AE1833EE0AE
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 09:31:43 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 9062945DD73
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 09:31:43 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 7778445DE50
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 09:31:43 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 62D7E1DB8038
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 09:31:43 +0900 (JST)
+ id 1UErD8-0005W0-19
+ for kexec@lists.infradead.org; Mon, 11 Mar 2013 01:07:32 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id E27A13EE0BB
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id C278D45DE55
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8F41D45DE4D
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7DAE51DB8048
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
 Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 19FC0E08002
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 09:31:43 +0900 (JST)
-Date: Mon, 11 Mar 2013 09:31:41 +0900 (JST)
-Message-Id: <20130311.093141.331282420.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 01/20] vmcore: refer to e_phoff member explicitly
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 300EC1DB803E
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
+Date: Mon, 11 Mar 2013 10:07:21 +0900 (JST)
+Message-Id: <20130311.100721.32982204.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <513C2C47.5020008@cn.fujitsu.com>
-References: <20130302083554.31252.30615.stgit@localhost6.localdomain6>
- <5135A054.7010401@cn.fujitsu.com> <513C2C47.5020008@cn.fujitsu.com>
+In-Reply-To: <87r4oloopm.fsf@xmission.com>
+References: <5085E663.6040307@zytor.com>
+ <20121026.122406.13396329.d.hatayama@jp.fujitsu.com>
+ <87r4oloopm.fsf@xmission.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -34,49 +35,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhangyanfei@cn.fujitsu.com
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
+To: ebiederm@xmission.com
+Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, hpa@zytor.com, tglx@linutronix.de, mingo@elte.hu, vgoyal@redhat.com
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Subject: Re: [PATCH v2 01/20] vmcore: refer to e_phoff member explicitly
-Date: Sun, 10 Mar 2013 14:46:31 +0800
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
+Date: Thu, 25 Oct 2012 21:13:25 -0700
 
-> 于 2013年03月05日 15:35, Zhang Yanfei 写道:
->> 于 2013年03月02日 16:35, HATAYAMA Daisuke 写道:
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
+> 
+>> From: "H. Peter Anvin" <hpa@zytor.com>
+>> Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
+>> Date: Mon, 22 Oct 2012 17:35:47 -0700
+>>
+>>> On 10/22/2012 02:29 PM, Eric W. Biederman wrote:
 <cut>
+>> Considering these, I'll make a patch to clear BSP flag at appropreate
+>> position in kernel boot-up code. OTOH, according to the discussion, it
+>> was reported that clearing BSP flag affected some BIOSes. To deal with
+>> this, I'll prepare a kernel option to decide whether to clear BSP flag
+>> or not.
+>>
+>> Does anyone have any comments now? Or please comment after I submit a
+>> new patch.
 > 
-> One minor suggestion.
+> I think you are on right track with preparing some patches, and this
+> certainly looks like worth experimenting with.
 > 
-> Previously, when the code assumes program headers are following immediately
-> the ELF header, it uses
-> 
->  elfcorebuf_sz = sizeof(Elf64_Ehdr) + ehdr.e_phnum * sizeof(Elf64_Phdr);
-> 
-> to calculate the size of ELF header and ELF program headers
-> 
-> This patch avoids the assumption, and uses ehdr.e_phoff to get the program
-> headers' address. But it will read unrelated contents into elfcorebuf if
-> program headers are not following immediately the ELF header. So could the
-> code be:
-> 
-> elfcorebuf_sz = sizeof(Elf64_Ehdr) + ehdr.e_phnum * sizeof(Elf64_Phdr);
-> addr = elfcorehdr_addr + ehdr.e_phoff;
-> memcpy(elfcorebuf, &ehdr, sizeof(Elf64_Ehdr));
-> read_from_oldmem(elfcorebuf + sizeof(Elf64_Ehdr), elfcorebuf_sz -
->                  sizeof(Elf64_Ehdr), &addr, 0);
-> (Elf64_Ehdr *)elfcorebuf->e_phoff = sizeof(Elf64_Ehdr);
+> At least for i386 the code need to verify you have a cpu new enough to
+> have an APIC_BASE_MSR, but I don't think that is going to be hard.
 
-Thanks. This is not minor suggestion. This is critical. My code is
-completely broken. On ELF, segments and headers other than ELF header
-can occur in any positions. This means program header table can occur
-after segments. So, on terabyte systems, e_phoff can be more than
-terabytes.
+Eric, you have probably forgotten this work but I want to restart the
+work to allow multiple CPUs on the 2nd kernel. But on my
+investigation, I have a question about inconsistent states kdump
+framework assumes in the crash path on the 1st kernel.
 
-Sorry, this was due to my carelessness.
+Now I'm re-investigating how to unset BSP flag on the 1st kernel in a
+safe manner. But then I must discuss possibility of BSP flag being set
+again after the unsetting of BSP. This includes firmware that assumes
+BSP flag is kept set throughtout system execution, but I noticed,
+fundamentally, it can happen even only with kernel code in the
+inconsistent state from the point where any bug happpens to before
+entering 2nd kernel.
+
+For example, some bug that causes buffer overrun can rewrite kdump
+code so some part of it be wrmsr but any other part is safe enough to
+boot 2nd kernel successfully... Although this is very low, but it must
+actually happen. Of course, we face the same situation if we put
+unsetting code in machine_shutdown() path, which is similarly not
+guaranteed to work well in inconsistent state.
+
+Different from kernel state and similar to any other device states, it
+seems to me that it's impossible to unset BSP flag in a safe manner
+together with inconsistent state kdump framework considers. Then, it
+seems to me that disabling BSP on 2nd kernel is a final resort.
 
 Thanks.
 HATAYAMA, Daisuke
