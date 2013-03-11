@@ -1,26 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UF0ja-0006yd-Op
- for kexec@lists.infradead.org; Mon, 11 Mar 2013 11:17:40 +0000
-Date: Mon, 11 Mar 2013 12:17:20 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [Xen-devel] [PATCH 5/8] kexec: extend hypercall with improved
- load/unload ops
-Message-ID: <20130311111720.GA13175@debian70-amd64.local.net-space.pl>
-References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
- <1361468894-18655-6-git-send-email-david.vrabel@citrix.com>
- <20130308112301.GE10740@debian70-amd64.local.net-space.pl>
- <5139CE3C.8070801@citrix.com>
- <20130308122149.GH10740@debian70-amd64.local.net-space.pl>
- <5139EF2F.2060107@citrix.com>
- <20130308152334.GA11057@debian70-amd64.local.net-space.pl>
- <513A1FE1.9040407@citrix.com>
- <20130308214547.GC11057@debian70-amd64.local.net-space.pl>
- <513A765B.8000709@citrix.com>
+ id 1UF2Yn-0001po-I6
+ for kexec@lists.infradead.org; Mon, 11 Mar 2013 13:14:38 +0000
+Date: Mon, 11 Mar 2013 09:14:17 -0400
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: 3.9-rc1: crash kernel panic - not syncing: Can not allocate
+ SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer
+Message-ID: <20130311131417.GF23018@phenom.dumpdata.com>
+References: <1750036321.11235774.1362722613994.JavaMail.root@redhat.com>
+ <CAE9FiQUtDcwJkPMPfjur8LQ+u0Hc2J7sbxC=xkcemqRQ1_Gd8g@mail.gmail.com>
+ <CAE9FiQU7ccdWCL=t=Zn1w33GHpHk56=JXTcotn-Huq9Wiqu7wg@mail.gmail.com>
+ <51399154.5030500@redhat.com>
+ <CAE9FiQVPaG5P7mG9HoFzCkaxF62hkU5hEtq_FhdT7n+38aNs9A@mail.gmail.com>
+ <51399442.1080609@redhat.com>
+ <CAE9FiQWCfnOjOuWKihv1GamgHb4KLrrPEiBTspQMqK7_fBDunw@mail.gmail.com>
+ <5139D5A0.6000600@redhat.com>
+ <CAE9FiQU7RP8zTsm9QMnANf8-a9=QRY9Y6sFdEev7+YWd87NDAw@mail.gmail.com>
+ <CAE9FiQUwWLUqdvtGZPY7WOFSiC5YZjm7Mcoj+V+m6qJzeRNCLQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <513A765B.8000709@citrix.com>
+In-Reply-To: <CAE9FiQUwWLUqdvtGZPY7WOFSiC5YZjm7Mcoj+V+m6qJzeRNCLQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,173 +33,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, David Vrabel <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, CAI Qian <caiqian@redhat.com>, kexec <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuahkhan@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Fri, Mar 08, 2013 at 11:38:03PM +0000, Andrew Cooper wrote:
-> On 08/03/13 21:45, Daniel Kiper wrote:
-> > On Fri, Mar 08, 2013 at 05:29:05PM +0000, Andrew Cooper wrote:
-> >> <snip>
-> >>>> The tools know what mode the image must be called it and it can tell the
-> >>>> hypervisor and the hypervisor can trivial setup the correct mode.
-> >>>>
-> >>>> I propose:
-> >>>>
-> >>>> * Tools say: "here's an image, call it in mode X".
-> >>>>
-> >>>> You suggest:
-> >>>>
-> >>>> * Hypervisor implicitly says through some unspecified side channel: "I
-> >>>> only call images in mode Y".
-> >>> Purgatory is clearly defined. Please look into kexec-tools/purgatory.
-> >>> It is integral part of kexec infrastructure.
-> >> Purgatory might be well defined, but that is not relevant here.
+On Fri, Mar 08, 2013 at 11:39:51AM -0800, Yinghai Lu wrote:
+> [ Add more to To list ]
+> 
+> On Fri, Mar 8, 2013 at 10:24 AM, Yinghai Lu <yinghai@kernel.org> wrote:
+> > On Fri, Mar 8, 2013 at 4:12 AM, WANG Chao <chaowang@redhat.com> wrote:
+> >
+> >>> what is 00:02.0 in your system?
+> >> This IOMMU issue is related to https://lkml.org/lkml/2012/11/26/814. We can
+> >> discuss this IOMMU issue in that thread.
+> >> Anyway 00:02.0 is a video card, the box is Ivy Bridge.
+> >> # lspci -s 00:02.0 -v
+> >> 00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor
+> >> Graphics Controller (rev 09) (prog-if 00 [VGA controller])
+> >>         Subsystem: Intel Corporation Device 2211
+> >>         Flags: bus master, fast devsel, latency 0, IRQ 44
+> >>         Memory at afc00000 (64-bit, non-prefetchable) [size=4M]
+> >>         Memory at c0000000 (64-bit, prefetchable) [size=256M]
+> >>         I/O ports at 6000 [size=64]
+> >>         Expansion ROM at <unassigned> [disabled]
+> >>         Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit-
+> >>         Capabilities: [d0] Power Management version 2
+> >>         Capabilities: [a4] PCI Advanced Features
+> >>         Kernel driver in use: i915
+> >
+> > disable drm for i915 will make your iommu work with dump?
+> >
 > >>
-> >> The kexec syscall and hypercall basically amount to "Here is a blob.
-> >> Its architecture is $X and its entry point is $Y"
-> > kexec syscall use architecture information to check that given
-> > image could be executed on given platform. That is all.
->
-> And how is 'could' distinguished?
->
-> A basic sanity check at load time of "is $X an operating mode I can get
-> to at some point in the future" is fine, and useful to eliminate the
-> case of trying to load something claiming to be an ARM blob on an x86
-> machine.
->
-> However, the entry point given can only possibly work in one operating
-> mode.  If $X is i386 and Xen jumps to it with long mode enabled, then it
-> will crash very quickly.  Conversely, if $X is x86_64 and Xen jumps to
-> it in protected mode, another crash will occur.
-
-It always works because purgatory sets "native mode". It means that machine
-before execution of new kernel is in state like it would be after BIOS
-initialization. It is assumption for all architectures and it is always
-done by purgatory.
-
-> >> (Give or take some reconstruction)
-> > What does this reconstruction? Hypervisor?
->
-> Under the current implementation, the dom0 kernel.  Under the new
-> planned implementation, Xen.
-
-What do you mean by reconstruction? Setting to "native mode"?
-
-[...]
-
-> >> The fact that this currently works in the common case of having the
-> >> crash kernel with the same architecture as the dom0 kernel is by luck
-> >> rather than good guidance.
-> > OK, I agree but in this case following part of patch 5/8:
+> >>
+> >> Is it expected to intel_iommu=on or crashkernel_low to make 2nd kernel boot in
+> >> 3.9? Back in 3.8, it works just fine w/ only crashkernel param.
 > >
-> > if ( image->arch == EM_386 )
-> >   reloc_flags |= KEXEC_RELOC_FLAG_COMPAT;
+> > Yes, I really do not want to set crashkernel low range like 72M
+> > automatically for all.
+> > that would have the system with proper iommu support lose 72M under 4G
+> > in first kernel.
+> > And can not play allocate and return tricks, as first kernel have no
+> > idea if iommu will work
+> > on second kernel even iommu is working on first kernel.
 > >
-> > should be change to:
+> > Better to fix iommu support at first.
+
+It would seem that if we really want to go that route we should export
+the number of megabytes that SWIOTLB is using. And it actually is - via the
+swiotlb_nr_tbl() - thought it is no megabytes but slabs so you do have
+to do some bit-shifting around.
+
+If you want to use that, and perhaps alter the function to be swiotlb_size()
+(and the xen-swiotlb to do the proper bit-shifting)?
+
 > >
-> > if ( is_pv_32on64_domain(dom0) )
-> >   reloc_flags |= KEXEC_RELOC_FLAG_COMPAT;
->
-> No - specifically not.  This is the whole problem we are trying to avoid.
->
-> The current running architecture of dom0 has no place trying to
-> second-guess the intended architecture of the blob.
->
-> What happens if I as the user am currently running a 32bit dom0 on 64
-> bit Xen, and want to load a 64bit blob to jump to?
->
-> Under your suggestion, I as the user have to declare it to be a 32bit
-> blob and write a 32->64 shim at the beginning of it.  Under Davids
-> suggestion, all I as the user have to do is to tell Xen that it is
-> indeed a 64bit image.
+> > For old system that does not have DMAR or kernel does not have IOMMU
+> > support enabled, or
+> > user does not pass intel_iommu=on.
+> > We could set crashkernel low range to 72M automatically.
+> 
+> It seem that it is not worthy to check case that does not support
+> IOMMU in second kernel.
+> 
+> Please check attached patch that will just set crashkernel_low auto, and if the
+> system DO support iommu with kdump, user can specify crashkernel_low=0
+> to save low 72M.
+> 
+> Thanks
+> 
+> Yinghai
 
-You forgot about purgatory code. Just reminder:
 
-old_kernel (Xen) -> purgatory (native mode) -> new_kernel
-
-purgatory architecture is same as kexec-tools architecture. If you
-use dom0 i386 it means that kexec-tools is (and must be) i386 too.
-We do not support Xen i386 anymore. It means that my condition is
-correct.
-
-> >> Furthmore, the design of the interface should not be deliberately
-> >> crippled because the common user of it "can deal with it like this";
-> > If something is good and tested in many ways, on many architectures,
-> > very long time, why not use it? What is the difference between Xen
-> > and other architectures?
->
-> argumentum ad antiquitatem
->
-> Not that I wish to jibe at kexec-tools, but to point out the fallacy of
-> an argument on that basis.
->
->
-> About "good and tested", the current kexec handover mechanism is insane,
-> and is frankly a miracle it ever worked in the first place.
->
-> Lets take the example of a 32bit dom0 on 64bit Xen and a 32bit crash kernel
->
-> (The following is to the best of my understanding, so apologies if I
-> have misunderstood bits)
->
-> 1) /sbin/kexec bundles a 32bit kernel and initrd, along with purgatory
-> etc and makes a kexec system call
-> 2) dom0 copies the segments into regular kalloc()'d chunks
-> 3) dom0 constructs a control page, bundles some control state together
-> and makes a kexec hypercall
-> 4) Xen saves the control data and overwrites the dom0 provided virtual
-> addresses
->
-> In the case of a crash
->
-> 1) Xen writes crash notes and shuts down as fast as possible
-> 2) Because dom0 is 32bit, Xen sets up 32bit mode non-pae 1:1mapped and
-> 3a) might die there and then because the control page living in dom0
-> kalloc()'d space might now be above the 4GB boundary
-> 3b) be lucky that the control page is below the 4GB and
-> 4) Execute the control page which sets up 32bit mode non-pae 1:1mapped
-> (on a different set of pagetables/GDT etc)
-> 5) Works to reconstruct the image in the crash region which
-> 6a) might copy in the wrong block because of 32bit truncation issues
-> 7) Jump to the beginning of purgatory which sets up 32bit mode
->
-> And amongst all of that, I am still unsure of whether there are other
-> issues because of an "unsigned long page_list[]" in the 64bit hypervisor
-> being different from the "unsigned long page_list[]" used by the 32bit
-> control page.  In machine_kexec_load() in the hypervisor, we make no
-> sanity checks against the assertions of the comments.
->
->
-> In the proposed new interface, we do not need to set up the correct
-> state for purgatory, jump into the dom0 control page which re-sets up
-> different equivalent state, just to reconstruct the image and jump to it.
->
-> As for the different architecture of Xen, I hope the above shows exacly
-> why it is different, and why it is dangerous to use assumptions based on
-> is_pv_32on64_domain(dom0)
->
-> >
-> >> kexec-tools is not the only potential consumer of this interface.
-> > Potentialy yes but as I know (correct me if I am wrong) kexec-tools
-> > is only one tool, until now, which uses kexec syscall/hypercall.
-> > If we use this tool we should align to widely accepted rules.
-> > If we do not like them then we should convince maintainers that
-> > our approach is better or write our own tool with our own rules.
-> > But then we should not call it kexec.
-> >
-> > Daniel
->
-> I see no reason why Davids proposed interface is incompatible with
-> kexec-tools.  Do you?
-
-Heh... It looks that there is a misunderstanding. At first I thought
-that David was going to replace purgatory functionality by switching
-from 64-bit to 32-bit in kexec_reloc. But later I realized that
-I missed Xen 64-bit/dom 32-bit case. Now I agree that this switch
-must stay as is. However, now I think that there is another
-small mistake which should be fixed. Please look above.
-
-Daniel
 
 _______________________________________________
 kexec mailing list
