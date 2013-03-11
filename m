@@ -1,33 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UEsFW-0002Cn-O5
- for kexec@lists.infradead.org; Mon, 11 Mar 2013 02:14:04 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 54C093EE0C1
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:58 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3650045DEC1
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:58 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0E36345DEBB
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:58 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id ED4F91DB803F
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:57 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 966261DB8038
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:57 +0900 (JST)
-Date: Mon, 11 Mar 2013 11:13:52 +0900 (JST)
-Message-Id: <20130311.111352.105946462.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130311.100721.32982204.d.hatayama@jp.fujitsu.com>
-References: <20121026.122406.13396329.d.hatayama@jp.fujitsu.com>
- <87r4oloopm.fsf@xmission.com>
- <20130311.100721.32982204.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UEtdk-0007Lj-4Z
+ for kexec@lists.infradead.org; Mon, 11 Mar 2013 03:43:09 +0000
+Message-ID: <513D52BA.3070206@redhat.com>
+Date: Mon, 11 Mar 2013 11:42:50 +0800
+From: WANG Chao <chaowang@redhat.com>
+MIME-Version: 1.0
+Subject: Re: 3.9-rc1: crash kernel panic - not syncing: Can not allocate
+ SWIOTLB
+ buffer earlier and can't now provide you with the DMA bounce buffer
+References: <51397D1D.5030602@redhat.com>
+ <1750036321.11235774.1362722613994.JavaMail.root@redhat.com>
+ <CAE9FiQUtDcwJkPMPfjur8LQ+u0Hc2J7sbxC=xkcemqRQ1_Gd8g@mail.gmail.com>
+ <CAE9FiQU7ccdWCL=t=Zn1w33GHpHk56=JXTcotn-Huq9Wiqu7wg@mail.gmail.com>
+ <51399154.5030500@redhat.com>
+ <CAE9FiQVPaG5P7mG9HoFzCkaxF62hkU5hEtq_FhdT7n+38aNs9A@mail.gmail.com>
+ <51399442.1080609@redhat.com>
+ <CAE9FiQWCfnOjOuWKihv1GamgHb4KLrrPEiBTspQMqK7_fBDunw@mail.gmail.com>
+ <5139D5A0.6000600@redhat.com>
+ <CAE9FiQU7RP8zTsm9QMnANf8-a9=QRY9Y6sFdEev7+YWd87NDAw@mail.gmail.com>
+ <CAE9FiQUwWLUqdvtGZPY7WOFSiC5YZjm7Mcoj+V+m6qJzeRNCLQ@mail.gmail.com>
+In-Reply-To: <CAE9FiQUwWLUqdvtGZPY7WOFSiC5YZjm7Mcoj+V+m6qJzeRNCLQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,85 +34,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
-Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, hpa@zytor.com, tglx@linutronix.de, mingo@elte.hu, vgoyal@redhat.com
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, CAI Qian <caiqian@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuahkhan@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
-Date: Mon, 11 Mar 2013 10:07:21 +0900
-
-> From: "Eric W. Biederman" <ebiederm@xmission.com>
-> Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
-> Date: Thu, 25 Oct 2012 21:13:25 -0700
+On 03/09/2013 03:39 AM, Yinghai Lu wrote:
+> [ Add more to To list ]
 > 
->> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
->> 
->>> From: "H. Peter Anvin" <hpa@zytor.com>
->>> Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
->>> Date: Mon, 22 Oct 2012 17:35:47 -0700
+> On Fri, Mar 8, 2013 at 10:24 AM, Yinghai Lu <yinghai@kernel.org> wrote:
+>> On Fri, Mar 8, 2013 at 4:12 AM, WANG Chao <chaowang@redhat.com> wrote:
+>>
+>>>> what is 00:02.0 in your system?
+>>> This IOMMU issue is related to https://lkml.org/lkml/2012/11/26/814. We can
+>>> discuss this IOMMU issue in that thread.
+>>> Anyway 00:02.0 is a video card, the box is Ivy Bridge.
+>>> # lspci -s 00:02.0 -v
+>>> 00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor
+>>> Graphics Controller (rev 09) (prog-if 00 [VGA controller])
+>>>         Subsystem: Intel Corporation Device 2211
+>>>         Flags: bus master, fast devsel, latency 0, IRQ 44
+>>>         Memory at afc00000 (64-bit, non-prefetchable) [size=4M]
+>>>         Memory at c0000000 (64-bit, prefetchable) [size=256M]
+>>>         I/O ports at 6000 [size=64]
+>>>         Expansion ROM at <unassigned> [disabled]
+>>>         Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>>>         Capabilities: [d0] Power Management version 2
+>>>         Capabilities: [a4] PCI Advanced Features
+>>>         Kernel driver in use: i915
+>>
+>> disable drm for i915 will make your iommu work with dump?
+>>
 >>>
->>>> On 10/22/2012 02:29 PM, Eric W. Biederman wrote:
-> <cut>
->>> Considering these, I'll make a patch to clear BSP flag at appropreate
->>> position in kernel boot-up code. OTOH, according to the discussion, it
->>> was reported that clearing BSP flag affected some BIOSes. To deal with
->>> this, I'll prepare a kernel option to decide whether to clear BSP flag
->>> or not.
 >>>
->>> Does anyone have any comments now? Or please comment after I submit a
->>> new patch.
->> 
->> I think you are on right track with preparing some patches, and this
->> certainly looks like worth experimenting with.
->> 
->> At least for i386 the code need to verify you have a cpu new enough to
->> have an APIC_BASE_MSR, but I don't think that is going to be hard.
+>>> Is it expected to intel_iommu=on or crashkernel_low to make 2nd kernel boot in
+>>> 3.9? Back in 3.8, it works just fine w/ only crashkernel param.
+>>
+>> Yes, I really do not want to set crashkernel low range like 72M
+>> automatically for all.
+>> that would have the system with proper iommu support lose 72M under 4G
+>> in first kernel.
+>> And can not play allocate and return tricks, as first kernel have no
+>> idea if iommu will work
+>> on second kernel even iommu is working on first kernel.
+>>
+>> Better to fix iommu support at first.
+>>
+>> For old system that does not have DMAR or kernel does not have IOMMU
+>> support enabled, or
+>> user does not pass intel_iommu=on.
+>> We could set crashkernel low range to 72M automatically.
 > 
-> Eric, you have probably forgotten this work but I want to restart the
-> work to allow multiple CPUs on the 2nd kernel. But on my
-> investigation, I have a question about inconsistent states kdump
-> framework assumes in the crash path on the 1st kernel.
+> It seem that it is not worthy to check case that does not support
+> IOMMU in second kernel.
 > 
-> Now I'm re-investigating how to unset BSP flag on the 1st kernel in a
-> safe manner. But then I must discuss possibility of BSP flag being set
-> again after the unsetting of BSP. This includes firmware that assumes
-> BSP flag is kept set throughtout system execution, but I noticed,
-> fundamentally, it can happen even only with kernel code in the
-> inconsistent state from the point where any bug happpens to before
-> entering 2nd kernel.
+> Please check attached patch that will just set crashkernel_low auto, and if the
+> system DO support iommu with kdump, user can specify crashkernel_low=0
+> to save low 72M.
+
+The patch works flawlessly on my box! Thank you, Yinghai!
+Let me know if anything else I can help.
+
+WANG Chao
+
 > 
-> For example, some bug that causes buffer overrun can rewrite kdump
-> code so some part of it be wrmsr but any other part is safe enough to
-> boot 2nd kernel successfully... Although this is very low, but it must
-> actually happen. Of course, we face the same situation if we put
-> unsetting code in machine_shutdown() path, which is similarly not
-> guaranteed to work well in inconsistent state.
+> Thanks
 > 
-> Different from kernel state and similar to any other device states, it
-> seems to me that it's impossible to unset BSP flag in a safe manner
-> together with inconsistent state kdump framework considers. Then, it
-> seems to me that disabling BSP on 2nd kernel is a final resort.
-
-I noticed this was not enough. In the inconsistent state, even AP can
-have BSP flag set due to some bug. Then, in conclusion, we cannot use
-multiple cpus on the 2nd kernel on top of kdump framework policy if
-any change cannot be made there.
-
-It seems to me that at least there needs to be the following design
-policy for multiple CPUs on the 2nd kenrel:
-
-- There's no firmware, kernel components and modules that depend on
-  BSP flag being kept set on the original BSP flag and never set BSP
-  flag of any of the existing CPUs again at runtime.
-
-- Exclude a kind of bugs on which kdump framework works well, that set
-  BSP flag on any of the existing CPUs including AP.
-
-If one of the assumption doesn't hold, we have to accept a risk of
-system leading to unspecified behaviour.
-
-Thanks.
-HATAYAMA, Daisuke
+> Yinghai
+> 
 
 
 _______________________________________________
