@@ -1,31 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UErD8-0005W0-19
- for kexec@lists.infradead.org; Mon, 11 Mar 2013 01:07:32 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id E27A13EE0BB
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id C278D45DE55
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8F41D45DE4D
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7DAE51DB8048
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 300EC1DB803E
- for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 10:07:27 +0900 (JST)
-Date: Mon, 11 Mar 2013 10:07:21 +0900 (JST)
-Message-Id: <20130311.100721.32982204.d.hatayama@jp.fujitsu.com>
+ id 1UEsFW-0002Cn-O5
+ for kexec@lists.infradead.org; Mon, 11 Mar 2013 02:14:04 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 54C093EE0C1
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:58 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3650045DEC1
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:58 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0E36345DEBB
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:58 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id ED4F91DB803F
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:57 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 966261DB8038
+ for <kexec@lists.infradead.org>; Mon, 11 Mar 2013 11:13:57 +0900 (JST)
+Date: Mon, 11 Mar 2013 11:13:52 +0900 (JST)
+Message-Id: <20130311.111352.105946462.d.hatayama@jp.fujitsu.com>
 Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <87r4oloopm.fsf@xmission.com>
-References: <5085E663.6040307@zytor.com>
- <20121026.122406.13396329.d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20130311.100721.32982204.d.hatayama@jp.fujitsu.com>
+References: <20121026.122406.13396329.d.hatayama@jp.fujitsu.com>
  <87r4oloopm.fsf@xmission.com>
+ <20130311.100721.32982204.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -42,57 +43,79 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ebiederm@xmission.com
 Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, hpa@zytor.com, tglx@linutronix.de, mingo@elte.hu, vgoyal@redhat.com
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
-Date: Thu, 25 Oct 2012 21:13:25 -0700
+Date: Mon, 11 Mar 2013 10:07:21 +0900
 
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
+> From: "Eric W. Biederman" <ebiederm@xmission.com>
+> Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
+> Date: Thu, 25 Oct 2012 21:13:25 -0700
 > 
->> From: "H. Peter Anvin" <hpa@zytor.com>
->> Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
->> Date: Mon, 22 Oct 2012 17:35:47 -0700
->>
->>> On 10/22/2012 02:29 PM, Eric W. Biederman wrote:
-<cut>
->> Considering these, I'll make a patch to clear BSP flag at appropreate
->> position in kernel boot-up code. OTOH, according to the discussion, it
->> was reported that clearing BSP flag affected some BIOSes. To deal with
->> this, I'll prepare a kernel option to decide whether to clear BSP flag
->> or not.
->>
->> Does anyone have any comments now? Or please comment after I submit a
->> new patch.
+>> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
+>> 
+>>> From: "H. Peter Anvin" <hpa@zytor.com>
+>>> Subject: Re: [PATCH v1 2/2] x86, apic: Disable BSP if boot cpu is AP
+>>> Date: Mon, 22 Oct 2012 17:35:47 -0700
+>>>
+>>>> On 10/22/2012 02:29 PM, Eric W. Biederman wrote:
+> <cut>
+>>> Considering these, I'll make a patch to clear BSP flag at appropreate
+>>> position in kernel boot-up code. OTOH, according to the discussion, it
+>>> was reported that clearing BSP flag affected some BIOSes. To deal with
+>>> this, I'll prepare a kernel option to decide whether to clear BSP flag
+>>> or not.
+>>>
+>>> Does anyone have any comments now? Or please comment after I submit a
+>>> new patch.
+>> 
+>> I think you are on right track with preparing some patches, and this
+>> certainly looks like worth experimenting with.
+>> 
+>> At least for i386 the code need to verify you have a cpu new enough to
+>> have an APIC_BASE_MSR, but I don't think that is going to be hard.
 > 
-> I think you are on right track with preparing some patches, and this
-> certainly looks like worth experimenting with.
+> Eric, you have probably forgotten this work but I want to restart the
+> work to allow multiple CPUs on the 2nd kernel. But on my
+> investigation, I have a question about inconsistent states kdump
+> framework assumes in the crash path on the 1st kernel.
 > 
-> At least for i386 the code need to verify you have a cpu new enough to
-> have an APIC_BASE_MSR, but I don't think that is going to be hard.
+> Now I'm re-investigating how to unset BSP flag on the 1st kernel in a
+> safe manner. But then I must discuss possibility of BSP flag being set
+> again after the unsetting of BSP. This includes firmware that assumes
+> BSP flag is kept set throughtout system execution, but I noticed,
+> fundamentally, it can happen even only with kernel code in the
+> inconsistent state from the point where any bug happpens to before
+> entering 2nd kernel.
+> 
+> For example, some bug that causes buffer overrun can rewrite kdump
+> code so some part of it be wrmsr but any other part is safe enough to
+> boot 2nd kernel successfully... Although this is very low, but it must
+> actually happen. Of course, we face the same situation if we put
+> unsetting code in machine_shutdown() path, which is similarly not
+> guaranteed to work well in inconsistent state.
+> 
+> Different from kernel state and similar to any other device states, it
+> seems to me that it's impossible to unset BSP flag in a safe manner
+> together with inconsistent state kdump framework considers. Then, it
+> seems to me that disabling BSP on 2nd kernel is a final resort.
 
-Eric, you have probably forgotten this work but I want to restart the
-work to allow multiple CPUs on the 2nd kernel. But on my
-investigation, I have a question about inconsistent states kdump
-framework assumes in the crash path on the 1st kernel.
+I noticed this was not enough. In the inconsistent state, even AP can
+have BSP flag set due to some bug. Then, in conclusion, we cannot use
+multiple cpus on the 2nd kernel on top of kdump framework policy if
+any change cannot be made there.
 
-Now I'm re-investigating how to unset BSP flag on the 1st kernel in a
-safe manner. But then I must discuss possibility of BSP flag being set
-again after the unsetting of BSP. This includes firmware that assumes
-BSP flag is kept set throughtout system execution, but I noticed,
-fundamentally, it can happen even only with kernel code in the
-inconsistent state from the point where any bug happpens to before
-entering 2nd kernel.
+It seems to me that at least there needs to be the following design
+policy for multiple CPUs on the 2nd kenrel:
 
-For example, some bug that causes buffer overrun can rewrite kdump
-code so some part of it be wrmsr but any other part is safe enough to
-boot 2nd kernel successfully... Although this is very low, but it must
-actually happen. Of course, we face the same situation if we put
-unsetting code in machine_shutdown() path, which is similarly not
-guaranteed to work well in inconsistent state.
+- There's no firmware, kernel components and modules that depend on
+  BSP flag being kept set on the original BSP flag and never set BSP
+  flag of any of the existing CPUs again at runtime.
 
-Different from kernel state and similar to any other device states, it
-seems to me that it's impossible to unset BSP flag in a safe manner
-together with inconsistent state kdump framework considers. Then, it
-seems to me that disabling BSP on 2nd kernel is a final resort.
+- Exclude a kind of bugs on which kdump framework works well, that set
+  BSP flag on any of the existing CPUs including AP.
+
+If one of the assumption doesn't hold, we have to accept a risk of
+system leading to unspecified behaviour.
 
 Thanks.
 HATAYAMA, Daisuke
