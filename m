@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFNVq-00017P-Og
- for kexec@lists.infradead.org; Tue, 12 Mar 2013 11:36:59 +0000
-Date: Tue, 12 Mar 2013 12:36:49 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 5/8] kexec: extend hypercall with improved load/unload ops
-Message-ID: <20130312113649.GD13567@debian70-amd64.local.net-space.pl>
-References: <1361468894-18655-1-git-send-email-david.vrabel@citrix.com>
- <1361468894-18655-6-git-send-email-david.vrabel@citrix.com>
+ id 1UFVBb-0006Vl-Bq
+ for kexec@lists.infradead.org; Tue, 12 Mar 2013 19:48:42 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20130307145808.29098.41592.stgit@k.asiapacific.hpqcorp.net>
+ <20130307152108.GC2790@redhat.com> <87k3piri3e.fsf@xmission.com>
+ <20130308155216.GB8219@redhat.com> <513D9338.20402@hp.com>
+ <87wqtenug7.fsf@xmission.com> <513EFDD6.806@hp.com>
+Date: Tue, 12 Mar 2013 12:48:07 -0700
+In-Reply-To: <513EFDD6.806@hp.com> (Jingbai Ma's message of "Tue, 12 Mar 2013
+ 18:05:10 +0800")
+Message-ID: <87sj408knc.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1361468894-18655-6-git-send-email-david.vrabel@citrix.com>
+Subject: Re: [RFC PATCH 0/5] crash dump bitmap: scan memory pages in kernel to
+ speedup kernel dump process
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,95 +27,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: kexec@lists.infradead.org, xen-devel@lists.xen.org
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, hpa@zytor.com, yinghai@kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Feb 21, 2013 at 05:48:11PM +0000, David Vrabel wrote:
-> From: David Vrabel <david.vrabel@citrix.com>
+Jingbai Ma <jingbai.ma@hp.com> writes:
+
+> On 03/11/2013 05:42 PM, Eric W. Biederman wrote:
+
+>> The kernel is known bad.  What is bad is unclear.
+>> Executing any extra code is a bad idea.
+>>
+>> The history here is that before kexec-on-panic there were lots of dump
+>> routines that did all of the crashdump logic in the kernel before they
+>> shutdown.  They all worked beautifully during development, and on
+>> developers test machines and were absolutely worthless in real world
+>> situations.
 >
-> In the existing kexec hypercall, the load and unload ops depend on
-> internals of the Linux kernel (the page list and code page provided by
-> the kernel).  The code page is used to transition between Xen context
-> and the image so using kernel code doesn't make sense and will not
-> work for PVH guests.
+> I also have learned some from the old style kernel dump. Yes, they do have some
+> problems in real world situations. The primary problems come from I/O operations
+> (disk writing/network sending) and invalid page table.
+
+That and they provide no guarantee that you won't write corrupt data.
+
+The kdump based solutions fail safe.  The worst that will happen is that
+you don't take a crash dump.  There is no chance of corrupting your
+system.
+
+
+>> A piece of code that walks all of the page tables is most definitely
+>> opening itself up to all kinds of failure situations I can't even
+>> imagine.
 >
-> Add replacement KEXEC_CMD_kexec_load and KEXEC_CMD_kexec_unload ops
-> that no longer require a code page to be provided by the guest -- Xen
-> now provides the code for calling the image directly.
->
-> The new load op looks similar to the Linux kexec_load system call and
-> allows the guest to provide the image data to be loaded.  The guest
-> specifies the architecture of the image which may be a 32-bit subarch
-> of the hypervisor's architecture (i.e., an EM_386 image on an
-> EM_X86_64 hypervisor).
->
-> The toolstack can now load images without kernel involvement.  This is
-> required for supporting kexec when using a dom0 with an upstream
-> kernel.
->
-> Crash images are copied directly into the crash region on load.
-> Default images are copied into Xen heap pages and a list of source and
-> destination machine addresses is created.  This is list is used in
-> kexec_reloc() to relocate the image to its destination.
->
-> The old load and unload sub-ops are still available (as
-> KEXEC_CMD_load_v1 and KEXEC_CMD_unload_v1) and are implemented on top
-> of the new infrastructure.
->
-> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+> Agree, invalid page table will cause disaster.
+> But even in the capture kernel with user space program, it may only causes a
+> core dump, user still have chance to dump the crashed system by themselves with
+> some special tools, It's possible, but should be very rare in real world.
+> I doubt how many users be able to handle it in such kind of situations.
+> So in most cases, if page tables have corrupted, and can not dump it normally,
+> user would like to reboot the system directly.
 
-[...]
+For whatever it is worth corrupted page tables.  Or at least page tables
+that the cpu thinks are invalid are one of the crash scenarios that I
+have seen in the wild on enough occasions to remember them.
 
-> diff --git a/xen/common/kexec.c b/xen/common/kexec.c
+Eric
 
-[...]
-
-> -static int kexec_load_unload_compat(unsigned long op,
-> -                                    XEN_GUEST_HANDLE_PARAM(void) uarg)
-> +static int kexec_load_v1_compat(XEN_GUEST_HANDLE_PARAM(void) uarg)
->  {
->  #ifdef CONFIG_COMPAT
->      compat_kexec_load_v1_t compat_load;
-> @@ -807,49 +990,113 @@ static int kexec_load_unload_compat(unsigned long op,
->      load.type = compat_load.type;
->      XLAT_kexec_image(&load.image, &compat_load.image);
->
-> -    return kexec_load_unload_internal(op, &load);
-> -#else /* CONFIG_COMPAT */
-> +    return kexec_do_load_v1(&load);
-> +#else
->      return 0;
-
--ENOSYS?
-
-> -#endif /* CONFIG_COMPAT */
-> +#endif
->  }
-
-[...]
-
-> +static int kexec_unload_v1_compat(XEN_GUEST_HANDLE_PARAM(void) uarg)
-> +{
-> +#ifdef CONFIG_COMPAT
-> +    compat_kexec_load_v1_t compat_load;
-> +    xen_kexec_unload_t unload;
-> +
-> +    if ( copy_from_guest(&compat_load, uarg, 1) )
-> +        return -EFAULT;
-> +
-> +    unload.type = compat_load.type;
-> +    return kexec_do_unload(&unload);
-> +#else
-> +    return 0;
-
--ENOSYS?
-
-> +#endif
-> +}
-
-...and in other similar places...
-
-Daniel
 
 _______________________________________________
 kexec mailing list
