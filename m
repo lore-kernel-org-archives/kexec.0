@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f43.google.com ([209.85.160.43])
+Received: from mail-da0-x22e.google.com ([2607:f8b0:400e:c00::22e])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFpYw-0006af-T8
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:34:03 +0000
-Received: by mail-pb0-f43.google.com with SMTP id md12so1254021pbc.2
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:34:01 -0700 (PDT)
-Message-ID: <5140B881.8010504@gmail.com>
-Date: Thu, 14 Mar 2013 01:33:53 +0800
+ id 1UFpZi-0006gT-SX
+ for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:34:51 +0000
+Received: by mail-da0-f46.google.com with SMTP id z8so512766dad.33
+ for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:34:48 -0700 (PDT)
+Message-ID: <5140B8B1.8090402@gmail.com>
+Date: Thu, 14 Mar 2013 01:34:41 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 11/13] kexec: s390: remove ALIGN_UP and use _ALIGN_UP
+Subject: [PATCH 12/13] kexec: sh: use _ALIGN* to make the logic clear
 References: <5140B511.7020109@gmail.com>
 In-Reply-To: <5140B511.7020109@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -29,40 +29,50 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-We have _ALIGN_UP now, so remove ALIGN_UP and use _ALIGN_UP
-instead of it.
+By replacing all the explicit align opertion with marco _ALIGN*,
+the code logic could be more clear.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/s390/kexec-image.c |    2 +-
- kexec/arch/s390/kexec-s390.h  |    1 -
- 2 files changed, 1 insertions(+), 2 deletions(-)
+ kexec/arch/sh/kexec-netbsd-sh.c |    4 ++--
+ kexec/arch/sh/kexec-zImage-sh.c |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
-index ee101cb..d3af800 100644
---- a/kexec/arch/s390/kexec-image.c
-+++ b/kexec/arch/s390/kexec-image.c
-@@ -112,7 +112,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
- 			return -1;
+diff --git a/kexec/arch/sh/kexec-netbsd-sh.c b/kexec/arch/sh/kexec-netbsd-sh.c
+index 8e80486..8a7e75e 100644
+--- a/kexec/arch/sh/kexec-netbsd-sh.c
++++ b/kexec/arch/sh/kexec-netbsd-sh.c
+@@ -121,7 +121,7 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
+ 		        size = bbs;
  		}
- 		ramdisk_origin = MAX(RAMDISK_ORIGIN_ADDR, kernel_size);
--		ramdisk_origin = ALIGN_UP(ramdisk_origin, 0x100000);
-+		ramdisk_origin = _ALIGN_UP(ramdisk_origin, 0x100000);
- 		add_segment_check(info, rd_buffer, ramdisk_len,
- 				  ramdisk_origin, ramdisk_len);
+ 
+-		size = (size + psz - 1) & ~(psz - 1);
++		size = _ALIGN(size, psz);
+ 		memset(&img[bbs], 0, size-bbs);
+ 		add_segment(info, img, size, start, size);
+ 		start += size;
+@@ -132,7 +132,7 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
+ 	if (miniroot) {
+ 		miniroot_buf = slurp_file(miniroot, &miniroot_length);
+ 		howto_value |= 0x200;
+-		size = (miniroot_length + psz - 1) & ~(psz - 1);
++		size = _ALIGN(miniroot_length, psz);
+ 		add_segment(info, miniroot_buf, size, start, size);
+ 		start += size;
  	}
-diff --git a/kexec/arch/s390/kexec-s390.h b/kexec/arch/s390/kexec-s390.h
-index cbc3340..ee62888 100644
---- a/kexec/arch/s390/kexec-s390.h
-+++ b/kexec/arch/s390/kexec-s390.h
-@@ -21,7 +21,6 @@
- #define COMMAND_LINESIZE      896
- #define MAX_MEMORY_RANGES     1024
+diff --git a/kexec/arch/sh/kexec-zImage-sh.c b/kexec/arch/sh/kexec-zImage-sh.c
+index 1ce185a..7399052 100644
+--- a/kexec/arch/sh/kexec-zImage-sh.c
++++ b/kexec/arch/sh/kexec-zImage-sh.c
+@@ -138,7 +138,7 @@ int zImage_sh_load(int argc, char **argv, const char *buf, off_t len,
+ 	 * the zImage will relocate itself, but only up seems supported.
+ 	 */
  
--#define ALIGN_UP(addr, size) (((addr) + ((size)-1)) & (~((size)-1)))
- #define MAX(x, y) ((x) > (y) ? (x) : (y))
- #define MIN(x, y) ((x) < (y) ? (x) : (y))
- 
+-	image_base = (empty_zero + (0x10000 - 1)) & ~(0x10000 - 1);
++	image_base = _ALIGN(empty_zero, 0x10000);
+ 	add_segment(info, buf, len, image_base, len);
+ 	info->entry = (void *)virt_to_phys(image_base);
+ 	return 0;
 -- 
 1.7.1
 
