@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-da0-x229.google.com ([2607:f8b0:400e:c00::229])
+Received: from mail-pb0-f43.google.com ([209.85.160.43])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFpYC-0006Xk-Le
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:33:17 +0000
-Received: by mail-da0-f41.google.com with SMTP id j17so514911dan.0
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:33:14 -0700 (PDT)
-Message-ID: <5140B853.2050906@gmail.com>
-Date: Thu, 14 Mar 2013 01:33:07 +0800
+ id 1UFpYw-0006af-T8
+ for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:34:03 +0000
+Received: by mail-pb0-f43.google.com with SMTP id md12so1254021pbc.2
+ for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:34:01 -0700 (PDT)
+Message-ID: <5140B881.8010504@gmail.com>
+Date: Thu, 14 Mar 2013 01:33:53 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 10/13] kexec: ppc64: use _ALIGN* to make the logic clear
+Subject: [PATCH 11/13] kexec: s390: remove ALIGN_UP and use _ALIGN_UP
 References: <5140B511.7020109@gmail.com>
 In-Reply-To: <5140B511.7020109@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -29,61 +29,40 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-By replacing all the explicit align opertion with marco _ALIGN*,
-the code logic could be more clear.
+We have _ALIGN_UP now, so remove ALIGN_UP and use _ALIGN_UP
+instead of it.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/ppc64/crashdump-ppc64.c |    4 ++--
- kexec/arch/ppc64/fs2dt.c           |    6 ++----
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ kexec/arch/s390/kexec-image.c |    2 +-
+ kexec/arch/s390/kexec-s390.h  |    1 -
+ 2 files changed, 1 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
-index b8a63bd..49cab12 100644
---- a/kexec/arch/ppc64/crashdump-ppc64.c
-+++ b/kexec/arch/ppc64/crashdump-ppc64.c
-@@ -298,7 +298,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 		 * to the next page size boundary though, so makedumpfile can
- 		 * read it safely without going south on us.
- 		 */
--		cend = (cend + page_size - 1) & (~(page_size - 1));
-+		cend = _ALIGN(cend, page_size);
+diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
+index ee101cb..d3af800 100644
+--- a/kexec/arch/s390/kexec-image.c
++++ b/kexec/arch/s390/kexec-image.c
+@@ -112,7 +112,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+ 			return -1;
+ 		}
+ 		ramdisk_origin = MAX(RAMDISK_ORIGIN_ADDR, kernel_size);
+-		ramdisk_origin = ALIGN_UP(ramdisk_origin, 0x100000);
++		ramdisk_origin = _ALIGN_UP(ramdisk_origin, 0x100000);
+ 		add_segment_check(info, rd_buffer, ramdisk_len,
+ 				  ramdisk_origin, ramdisk_len);
+ 	}
+diff --git a/kexec/arch/s390/kexec-s390.h b/kexec/arch/s390/kexec-s390.h
+index cbc3340..ee62888 100644
+--- a/kexec/arch/s390/kexec-s390.h
++++ b/kexec/arch/s390/kexec-s390.h
+@@ -21,7 +21,6 @@
+ #define COMMAND_LINESIZE      896
+ #define MAX_MEMORY_RANGES     1024
  
- 		crash_memory_range[memory_ranges].start = cstart;
- 		crash_memory_range[memory_ranges++].end = cend;
-@@ -400,7 +400,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	info->backup_src_start = BACKUP_SRC_START;
- 	info->backup_src_size = BACKUP_SRC_SIZE;
- 	/* Create a backup region segment to store backup data*/
--	sz = (BACKUP_SRC_SIZE + align - 1) & ~(align - 1);
-+	sz = _ALIGN(BACKUP_SRC_SIZE, align);
- 	tmp = xmalloc(sz);
- 	memset(tmp, 0, sz);
- 	info->backup_start = add_buffer(info, tmp, sz, sz, align,
-diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
-index 9750c34..62edc93 100644
---- a/kexec/arch/ppc64/fs2dt.c
-+++ b/kexec/arch/ppc64/fs2dt.c
-@@ -698,8 +698,7 @@ int create_flatten_tree(char **bufp, off_t *sizep, char *cmdline)
- 	dt_reserve(&dt, 1);
- 	*dt++ = 9;
+-#define ALIGN_UP(addr, size) (((addr) + ((size)-1)) & (~((size)-1)))
+ #define MAX(x, y) ((x) > (y) ? (x) : (y))
+ #define MIN(x, y) ((x) < (y) ? (x) : (y))
  
--	len = sizeof(bb[0]);
--	len += 7; len &= ~7;
-+	len = _ALIGN(sizeof(bb[0], 8);
- 
- 	bb->off_mem_rsvmap = len;
- 
-@@ -714,8 +713,7 @@ int create_flatten_tree(char **bufp, off_t *sizep, char *cmdline)
- 	len *= sizeof(unsigned);
- 	bb->off_dt_strings = bb->off_dt_struct + len;
- 
--	len = propnum("");
--	len +=  3; len &= ~3;
-+	len = _ALIGN(propnum(""), 4);
- 	bb->totalsize = bb->off_dt_strings + len;
- 
- 	bb->magic = 0xd00dfeed;
 -- 
 1.7.1
 
