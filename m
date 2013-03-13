@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from lgemrelse1q.lge.com ([156.147.1.111])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFdEN-0000MM-7K
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 04:24:00 +0000
-Message-ID: <513FFF4D.8000407@redhat.com>
-Date: Wed, 13 Mar 2013 12:23:41 +0800
-From: WANG Chao <chaowang@redhat.com>
-MIME-Version: 1.0
-Subject: Re: failed to compile kexec from git
-References: <526259845.192944.1363143172053.JavaMail.root@redhat.com>
- <513FF037.80308@cn.fujitsu.com>
-In-Reply-To: <513FF037.80308@cn.fujitsu.com>
+ id 1UFfFO-0004di-9x
+ for kexec@lists.infradead.org; Wed, 13 Mar 2013 06:33:12 +0000
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH v2 0/8] remove vm_struct list management
+Date: Wed, 13 Mar 2013 15:32:52 +0900
+Message-Id: <1363156381-2881-1-git-send-email-iamjoonsoo.kim@lge.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,57 +15,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: kexec <kexec@lists.infradead.org>, CAI Qian <caiqian@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bob Liu <lliubbo@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gMDMvMTMvMjAxMyAxMToxOSBBTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+IOS6jiAyMDEz5bm0
-MDPmnIgxM+aXpSAxMDo1MiwgQ0FJIFFpYW4g5YaZ6YGTOgo+PiBMb29rcyBsaWtlIHRoaXMgaXMg
-YnJva2VuIHJlY2VudGx5LiBJIGNsb25lZCB0aGUgdHJlZQo+PiBhdCB0aGUgdG9wIGNvbW1pdCBi
-ZWVuLAo+Pgo+PiBlNzNkNDgxYzRhZGQxN2VlOTUzYzgwYmI0YmU3MjM3MmQ5MGQ5M2QzCj4+IHBw
-Yy91SW1hZ2U6IEFkZCBzdXBwb3J0IGZvciBSQU0gRGlza3MKPj4KPj4gVGhlbiwgZXJyb3Igb3V0
-Lgo+Pgo+PiBrZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmM6IEluIGZ1bmN0aW9uIOKA
-mHNldHVwX2xpbnV4X3N5c3RlbV9wYXJhbWV0ZXJz4oCZOgo+PiBrZXhlYy9hcmNoL2kzODYveDg2
-LWxpbnV4LXNldHVwLmM6NTExOjk6IGVycm9yOiDigJhrZXhlY19mbGFnc+KAmSB1bmRlY2xhcmVk
-IChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbikKPj4ga2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51
-eC1zZXR1cC5jOjUxMTo5OiBub3RlOiBlYWNoIHVuZGVjbGFyZWQgaWRlbnRpZmllciBpcyByZXBv
-cnRlZCBvbmx5IG9uY2UgZm9yIGVhY2ggZnVuY3Rpb24gaXQgYXBwZWFycyBpbgo+PiBtYWtlOiAq
-KiogW2tleGVjL2FyY2gvaTM4Ni94ODYtbGludXgtc2V0dXAub10gRXJyb3IgMQo+Pgo+PiBDQUkg
-UWlhbgo+Pgo+IAo+IEhlbGxvIENBSSwKPiAKPiBUaGUgYmVsb3cgcGF0Y2ggc2hvdWxkIGZpeCB0
-aGUgYnVnLgo+IAo+IC0tLQo+IEZyb20gMzUxMWRkYWUyOGY1MGVjMTNmNzNjMGQxMjRjNTg3YWU1
-ZmU3ODA0OCBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDEKPiBGcm9tOiBaaGFuZyBZYW5mZWkgPHpo
-YW5neWFuZmVpQGNuLmZ1aml0c3UuY29tPgo+IERhdGU6IFdlZCwgMTMgTWFyIDIwMTMgMTE6MTA6
-MzYgKzA4MDAKPiBTdWJqZWN0OiBbUEFUQ0hdIGtleGVjOiBpMzg2OiBmaXggYSBidWcgZHVlIHRv
-IHBhcmFtZXRlciBjaGFuZ2UKPiAKPiBUaGUga2V4ZWMtdG9vbHMgZmFpbHMgdG8gYmUgY29tcGls
-ZWQgYW5kIGhlcmUgaXMgdGhlIGVycm9yIG1lc3NhZ2U6Cj4gCj4ga2V4ZWMvYXJjaC9pMzg2L3g4
-Ni1saW51eC1zZXR1cC5jOiBJbiBmdW5jdGlvbiDigJhzZXR1cF9saW51eF9zeXN0ZW1fcGFyYW1l
-dGVyc+KAmToKPiBrZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmM6NTExOjk6IGVycm9y
-OiDigJhrZXhlY19mbGFnc+KAmSB1bmRlY2xhcmVkIChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlv
-bikKPiBrZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmM6NTExOjk6IG5vdGU6IGVhY2gg
-dW5kZWNsYXJlZCBpZGVudGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZSBmb3IgZWFjaCBmdW5j
-dGlvbiBpdCBhcHBlYXJzIGluCj4gbWFrZTogKioqIFtrZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4
-LXNldHVwLm9dIEVycm9yIDEKPiAKPiBUaGlzIGlzIGR1ZSB0byB0aGUgcGFyYW1ldGVyIGNoYW5n
-ZSBvZiBmdW5jdGlvbiBzZXR1cF9saW51eF9zeXN0ZW1fcGFyYW1ldGVycywKPiBhbmQgdGhlIGJ1
-ZyB3YXMgaW1wb3J0ZWQgYnkgY29tbWl0IDZkZjE1ZDFjY2E1NWIyY2Q1OWM3OWFlZDY5ZjAwNGUx
-YjJhNmJhMzYKPiAgICAga2V4ZWMgeDg2OiBkcm9wIHRydW5jYXRpb24gd2FybmluZyBmb3IgY3Jh
-c2gga2VybmVsCj4gCj4gVGhlIHBhdGNoIGZpeCB0aGUgYnVnLgo+IAo+IFJlcG9ydGVkLWJ5OiAi
-Q0FJIFFpYW4iIDxjYWlxaWFuQHJlZGhhdC5jb20+Cj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWFu
-ZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiAtLS0KPiAga2V4ZWMvYXJjaC9pMzg2
-L3g4Ni1saW51eC1zZXR1cC5jIHwgICAgMiArLQo+ICAxIGZpbGVzIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9ucygrKSwgMSBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2
-L3g4Ni1saW51eC1zZXR1cC5jIGIva2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jCj4g
-aW5kZXggYjkwM2Q0My4uNDU0ZmFkNiAxMDA2NDQKPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYveDg2
-LWxpbnV4LXNldHVwLmMKPiArKysgYi9rZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMK
-PiBAQCAtNTA4LDcgKzUwOCw3IEBAIHZvaWQgc2V0dXBfbGludXhfc3lzdGVtX3BhcmFtZXRlcnMo
-c3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gIAlyYW5nZSA9IGluZm8tPm1lbW9yeV9yYW5nZTsK
-PiAgCXJhbmdlcyA9IGluZm8tPm1lbW9yeV9yYW5nZXM7Cj4gIAlpZiAocmFuZ2VzID4gRTgyME1B
-WCkgewo+IC0JCWlmICghKGtleGVjX2ZsYWdzICYgS0VYRUNfT05fQ1JBU0gpKQo+ICsJCWlmICgh
-KGluZm8tPmtleGVjX2ZsYWdzICYgS0VYRUNfT05fQ1JBU0gpKQo+ICAJCQkvKgo+ICAJCQkgKiB0
-aGlzIGU4MjAgbm90IHVzZWQgZm9yIGNhcHR1cmUga2VybmVsLCBzZWUKPiAgCQkJICogZG9fYnpJ
-bWFnZV9sb2FkKCkKPiAKCkl0IHdvcmtzIGZvciBtZS4KClRoYW5rcywKV0FORyBDaGFvCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+This patchset remove vm_struct list management after initializing vmalloc.
+Adding and removing an entry to vmlist is linear time complexity, so
+it is inefficient. If we maintain this list, overall time complexity of
+adding and removing area to vmalloc space is O(N), although we use
+rbtree for finding vacant place and it's time complexity is just O(logN).
+
+And vmlist and vmlist_lock is used many places of outside of vmalloc.c.
+It is preferable that we hide this raw data structure and provide
+well-defined function for supporting them, because it makes that they
+cannot mistake when manipulating theses structure and it makes us easily
+maintain vmalloc layer.
+
+For kexec and makedumpfile, I export vmap_area_list, instead of vmlist.
+This comes from Atsushi's recommendation.
+For more information, please refer below link.
+https://lkml.org/lkml/2012/12/6/184
+
+These are based on v3.9-rc2.
+
+Changes from v1
+5/8: skip areas for lazy_free
+6/8: skip areas for lazy_free
+7/8: export vmap_area_list for kexec, instead of vmlist
+
+Joonsoo Kim (8):
+  mm, vmalloc: change iterating a vmlist to find_vm_area()
+  mm, vmalloc: move get_vmalloc_info() to vmalloc.c
+  mm, vmalloc: protect va->vm by vmap_area_lock
+  mm, vmalloc: iterate vmap_area_list, instead of vmlist in
+    vread/vwrite()
+  mm, vmalloc: iterate vmap_area_list in get_vmalloc_info()
+  mm, vmalloc: iterate vmap_area_list, instead of vmlist, in
+    vmallocinfo()
+  mm, vmalloc: export vmap_area_list, instead of vmlist
+  mm, vmalloc: remove list management of vmlist after initializing
+    vmalloc
+
+ arch/tile/mm/pgtable.c      |    7 +-
+ arch/unicore32/mm/ioremap.c |   17 ++--
+ arch/x86/mm/ioremap.c       |    7 +-
+ fs/proc/Makefile            |    2 +-
+ fs/proc/internal.h          |   18 ----
+ fs/proc/meminfo.c           |    1 +
+ fs/proc/mmu.c               |   60 -------------
+ include/linux/vmalloc.h     |   21 ++++-
+ kernel/kexec.c              |    2 +-
+ mm/nommu.c                  |    3 +-
+ mm/vmalloc.c                |  207 +++++++++++++++++++++++++++++--------------
+ 11 files changed, 170 insertions(+), 175 deletions(-)
+ delete mode 100644 fs/proc/mmu.c
+
+-- 
+1.7.9.5
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
