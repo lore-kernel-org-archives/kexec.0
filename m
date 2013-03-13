@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f53.google.com ([209.85.160.53])
+Received: from mail-da0-x229.google.com ([2607:f8b0:400e:c00::229])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFpXR-0006Sp-N0
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:32:30 +0000
-Received: by mail-pb0-f53.google.com with SMTP id un1so1244982pbc.26
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:32:28 -0700 (PDT)
-Message-ID: <5140B824.5050601@gmail.com>
-Date: Thu, 14 Mar 2013 01:32:20 +0800
+ id 1UFpYC-0006Xk-Le
+ for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:33:17 +0000
+Received: by mail-da0-f41.google.com with SMTP id j17so514911dan.0
+ for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:33:14 -0700 (PDT)
+Message-ID: <5140B853.2050906@gmail.com>
+Date: Thu, 14 Mar 2013 01:33:07 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 09/13] kexec: ppc: use _ALIGN* to make the logic clear
+Subject: [PATCH 10/13] kexec: ppc64: use _ALIGN* to make the logic clear
 References: <5140B511.7020109@gmail.com>
 In-Reply-To: <5140B511.7020109@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -32,50 +32,40 @@ From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 By replacing all the explicit align opertion with marco _ALIGN*,
 the code logic could be more clear.
 
-Besides, remove the duplicate _ALIGN_* definition in file
-kexec/arch/ppc/crashdump-powerpc.h.
-
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/ppc/crashdump-powerpc.c |    2 +-
- kexec/arch/ppc/crashdump-powerpc.h |    2 --
- kexec/arch/ppc/fs2dt.c             |    5 ++---
- kexec/arch/ppc/kexec-dol-ppc.c     |   10 +++++-----
- kexec/arch/ppc/kexec-elf-ppc.c     |    8 ++++----
- 5 files changed, 12 insertions(+), 15 deletions(-)
+ kexec/arch/ppc64/crashdump-ppc64.c |    4 ++--
+ kexec/arch/ppc64/fs2dt.c           |    6 ++----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index d367643..eee5b37 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -329,7 +329,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index b8a63bd..49cab12 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -298,7 +298,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
+ 		 * to the next page size boundary though, so makedumpfile can
+ 		 * read it safely without going south on us.
+ 		 */
+-		cend = (cend + page_size - 1) & (~(page_size - 1));
++		cend = _ALIGN(cend, page_size);
+ 
+ 		crash_memory_range[memory_ranges].start = cstart;
+ 		crash_memory_range[memory_ranges++].end = cend;
+@@ -400,7 +400,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	info->backup_src_start = BACKUP_SRC_START;
  	info->backup_src_size = BACKUP_SRC_SIZE;
- #ifndef CONFIG_BOOKE
  	/* Create a backup region segment to store backup data*/
 -	sz = (BACKUP_SRC_SIZE + align - 1) & ~(align - 1);
 +	sz = _ALIGN(BACKUP_SRC_SIZE, align);
  	tmp = xmalloc(sz);
  	memset(tmp, 0, sz);
  	info->backup_start = add_buffer(info, tmp, sz, sz, align,
-diff --git a/kexec/arch/ppc/crashdump-powerpc.h b/kexec/arch/ppc/crashdump-powerpc.h
-index 84a73aa..efdc7e3 100644
---- a/kexec/arch/ppc/crashdump-powerpc.h
-+++ b/kexec/arch/ppc/crashdump-powerpc.h
-@@ -35,8 +35,6 @@ extern struct arch_options_t arch_options;
- #endif
- 
- #define KDUMP_BACKUP_LIMIT	BACKUP_SRC_SIZE
--#define _ALIGN_UP(addr, size)	(((addr)+((size)-1))&(~((size)-1)))
--#define _ALIGN_DOWN(addr, size)	((addr)&(~((size)-1)))
- 
- extern unsigned long long crash_base;
- extern unsigned long long crash_size;
-diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
-index cdae69e..56ffb91 100644
---- a/kexec/arch/ppc/fs2dt.c
-+++ b/kexec/arch/ppc/fs2dt.c
-@@ -407,8 +407,7 @@ int create_flatten_tree(struct kexec_info *info, unsigned char **bufp,
- 	putnode();
+diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
+index 9750c34..62edc93 100644
+--- a/kexec/arch/ppc64/fs2dt.c
++++ b/kexec/arch/ppc64/fs2dt.c
+@@ -698,8 +698,7 @@ int create_flatten_tree(char **bufp, off_t *sizep, char *cmdline)
+ 	dt_reserve(&dt, 1);
  	*dt++ = 9;
  
 -	len = sizeof(bb[0]);
@@ -84,82 +74,16 @@ index cdae69e..56ffb91 100644
  
  	bb->off_mem_rsvmap = len;
  
-@@ -426,7 +425,7 @@ int create_flatten_tree(struct kexec_info *info, unsigned char **bufp,
+@@ -714,8 +713,7 @@ int create_flatten_tree(char **bufp, off_t *sizep, char *cmdline)
+ 	len *= sizeof(unsigned);
+ 	bb->off_dt_strings = bb->off_dt_struct + len;
  
- 	len = propnum("");
- 	bb->dt_strings_size = len;
+-	len = propnum("");
 -	len +=  3; len &= ~3;
-+	len = _ALIGN(len, 4);
++	len = _ALIGN(propnum(""), 4);
  	bb->totalsize = bb->off_dt_strings + len;
  
  	bb->magic = 0xd00dfeed;
-diff --git a/kexec/arch/ppc/kexec-dol-ppc.c b/kexec/arch/ppc/kexec-dol-ppc.c
-index 5fc5e06..8d0d1a0 100644
---- a/kexec/arch/ppc/kexec-dol-ppc.c
-+++ b/kexec/arch/ppc/kexec-dol-ppc.c
-@@ -87,11 +87,11 @@ typedef struct {
- #define PAGE_SHIFT		12
- #define PAGE_SIZE		(1UL << PAGE_SHIFT)
- #define PAGE_MASK		(~((1 << PAGE_SHIFT) - 1))
--#define PAGE_ALIGN(addr)	(((addr) + PAGE_SIZE - 1) & PAGE_MASK)
-+#define PAGE_ALIGN(addr)	_ALIGN(addr, PAGE_SIZE)
- 
- #define MAX_COMMAND_LINE   256
- 
--#define UPSZ(X) ((sizeof(X) + 3) & ~3)
-+#define UPSZ(X) _ALIGN_UP(sizeof(X), 4)
- static struct boot_notes {
- 	Elf_Bhdr hdr;
- 	Elf_Nhdr bl_hdr;
-@@ -442,14 +442,14 @@ int dol_ppc_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
- 	}
- 
- 	/* build the setup glue and argument segment (segment 0) */
--	note_bytes = sizeof(elf_boot_notes) + ((command_line_len + 3) & ~3);
--	arg_bytes = note_bytes + ((setup_dol_size + 3) & ~3);
-+	note_bytes = sizeof(elf_boot_notes) + _ALIGN(command_line_len, 4);
-+	arg_bytes = note_bytes + _ALIGN(setup_dol_size, 4);
- 
- 	arg_buf = xmalloc(arg_bytes);
- 	arg_base = add_buffer(info,
- 		arg_buf, arg_bytes, arg_bytes, 4, 0, 0xFFFFFFFFUL, 1);
- 
--	notes = (struct boot_notes *)(arg_buf + ((setup_dol_size + 3) & ~3));
-+	notes = (struct boot_notes *)(arg_buf + _ALIGN(setup_dol_size, 4));
- 
- 	notes->hdr.b_size = note_bytes;
- 	notes->cmd_hdr.n_descsz = command_line_len;
-diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index 5f63a64..65a65cc 100644
---- a/kexec/arch/ppc/kexec-elf-ppc.c
-+++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -37,7 +37,7 @@ const char *ramdisk;
- int create_flatten_tree(struct kexec_info *, unsigned char **, unsigned long *,
- 			char *);
- 
--#define UPSZ(X) ((sizeof(X) + 3) & ~3)
-+#define UPSZ(X) _ALIGN_UP(sizeof(X), 4);
- #ifdef WITH_GAMECUBE
- static struct boot_notes {
- 	Elf_Bhdr hdr;
-@@ -327,14 +327,14 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 		setup_size = setup_simple_size;
- 		setup_simple_regs.spr8 = ehdr.e_entry;	/* Link Register */
- 	}
--	note_bytes = sizeof(elf_boot_notes) + ((command_line_len + 3) & ~3);
--	arg_bytes = note_bytes + ((setup_size + 3) & ~3);
-+	note_bytes = sizeof(elf_boot_notes) + _ALIGN(command_line_len, 4);
-+	arg_bytes = note_bytes + _ALIGN(setup_size, 4);
- 
- 	arg_buf = xmalloc(arg_bytes);
- 	arg_base = add_buffer(info, 
- 		arg_buf, arg_bytes, arg_bytes, 4, 0, elf_max_addr(&ehdr), 1);
- 
--	notes = (struct boot_notes *)(arg_buf + ((setup_size + 3) & ~3));
-+	notes = (struct boot_notes *)(arg_buf + _ALIGN(setup_size, 4));
- 
- 	memcpy(arg_buf, setup_start, setup_size);
- 	memcpy(notes, &elf_boot_notes, sizeof(elf_boot_notes));
 -- 
 1.7.1
 
