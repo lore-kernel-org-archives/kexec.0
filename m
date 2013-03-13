@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-da0-x22e.google.com ([2607:f8b0:400e:c00::22e])
+Received: from mail-pb0-f54.google.com ([209.85.160.54])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFpZi-0006gT-SX
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:34:51 +0000
-Received: by mail-da0-f46.google.com with SMTP id z8so512766dad.33
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:34:48 -0700 (PDT)
-Message-ID: <5140B8B1.8090402@gmail.com>
-Date: Thu, 14 Mar 2013 01:34:41 +0800
+ id 1UFpaR-0006pZ-Ms
+ for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:35:36 +0000
+Received: by mail-pb0-f54.google.com with SMTP id rr4so1252838pbb.27
+ for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:35:34 -0700 (PDT)
+Message-ID: <5140B8DE.1000701@gmail.com>
+Date: Thu, 14 Mar 2013 01:35:26 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 12/13] kexec: sh: use _ALIGN* to make the logic clear
+Subject: [PATCH 13/13] kexec: x86_64: use _ALIGN* to make the logic clear
 References: <5140B511.7020109@gmail.com>
 In-Reply-To: <5140B511.7020109@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -34,45 +34,22 @@ the code logic could be more clear.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/sh/kexec-netbsd-sh.c |    4 ++--
- kexec/arch/sh/kexec-zImage-sh.c |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ kexec/arch/x86_64/kexec-bzImage64.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/kexec/arch/sh/kexec-netbsd-sh.c b/kexec/arch/sh/kexec-netbsd-sh.c
-index 8e80486..8a7e75e 100644
---- a/kexec/arch/sh/kexec-netbsd-sh.c
-+++ b/kexec/arch/sh/kexec-netbsd-sh.c
-@@ -121,7 +121,7 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
- 		        size = bbs;
- 		}
- 
--		size = (size + psz - 1) & ~(psz - 1);
-+		size = _ALIGN(size, psz);
- 		memset(&img[bbs], 0, size-bbs);
- 		add_segment(info, img, size, start, size);
- 		start += size;
-@@ -132,7 +132,7 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
- 	if (miniroot) {
- 		miniroot_buf = slurp_file(miniroot, &miniroot_length);
- 		howto_value |= 0x200;
--		size = (miniroot_length + psz - 1) & ~(psz - 1);
-+		size = _ALIGN(miniroot_length, psz);
- 		add_segment(info, miniroot_buf, size, start, size);
- 		start += size;
- 	}
-diff --git a/kexec/arch/sh/kexec-zImage-sh.c b/kexec/arch/sh/kexec-zImage-sh.c
-index 1ce185a..7399052 100644
---- a/kexec/arch/sh/kexec-zImage-sh.c
-+++ b/kexec/arch/sh/kexec-zImage-sh.c
-@@ -138,7 +138,7 @@ int zImage_sh_load(int argc, char **argv, const char *buf, off_t len,
- 	 * the zImage will relocate itself, but only up seems supported.
- 	 */
- 
--	image_base = (empty_zero + (0x10000 - 1)) & ~(0x10000 - 1);
-+	image_base = _ALIGN(empty_zero, 0x10000);
- 	add_segment(info, buf, len, image_base, len);
- 	info->entry = (void *)virt_to_phys(image_base);
- 	return 0;
+diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
+index 1496573..86e6d13 100644
+--- a/kexec/arch/x86_64/kexec-bzImage64.c
++++ b/kexec/arch/x86_64/kexec-bzImage64.c
+@@ -197,7 +197,7 @@ static int do_bzImage64_load(struct kexec_info *info,
+ 	k_size = kernel_len - kern16_size;
+ 	/* need to use run-time size for buffer searching */
+ 	dbgprintf("kernel init_size 0x%x\n", real_mode->init_size);
+-	size = (real_mode->init_size + (4096 - 1)) & ~(4096 - 1);
++	size = _ALIGN(real_mode->init_size, 4096);
+ 	align = real_mode->kernel_alignment;
+ 	addr = add_buffer(info, kernel + kern16_size, k_size,
+ 			  size, align, 0x100000, -1, -1);
 -- 
 1.7.1
 
