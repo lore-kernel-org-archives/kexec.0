@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f43.google.com ([209.85.160.43])
+Received: from mail-pb0-f41.google.com ([209.85.160.41])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFpVe-0006LC-8D
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:30:38 +0000
-Received: by mail-pb0-f43.google.com with SMTP id md12so1251047pbc.2
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:30:35 -0700 (PDT)
-Message-ID: <5140B7B3.2010300@gmail.com>
-Date: Thu, 14 Mar 2013 01:30:27 +0800
+ id 1UFpWe-0006P6-U0
+ for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:31:42 +0000
+Received: by mail-pb0-f41.google.com with SMTP id um15so1259352pbc.0
+ for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:31:39 -0700 (PDT)
+Message-ID: <5140B7F3.3050001@gmail.com>
+Date: Thu, 14 Mar 2013 01:31:31 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 07/13] kexec: ia64: use _ALIGN* to make the logic clear
+Subject: [PATCH 08/13] kexec: mips: use _ALIGN* to make the logic clear
 References: <5140B511.7020109@gmail.com>
 In-Reply-To: <5140B511.7020109@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -30,76 +30,40 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
 By replacing all the explicit align opertion with marco _ALIGN*,
-the code logic could be simplified.
+the code logic could be more clear.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/ia64/crashdump-ia64.c |    6 +++---
- kexec/arch/ia64/kexec-elf-ia64.c |    2 +-
- kexec/arch/ia64/kexec-ia64.c     |    6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ kexec/arch/mips/crashdump-mips.c |    2 +-
+ kexec/arch/mips/kexec-elf-mips.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/ia64/crashdump-ia64.c b/kexec/arch/ia64/crashdump-ia64.c
-index 782f49e..726c9f4 100644
---- a/kexec/arch/ia64/crashdump-ia64.c
-+++ b/kexec/arch/ia64/crashdump-ia64.c
-@@ -83,7 +83,7 @@ static void add_loaded_segments_info(struct mem_ehdr *ehdr)
- 		}
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index 6f9f6c6..8e7b1c3 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -373,7 +373,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	info->backup_src_start = BACKUP_SRC_START;
+ 	info->backup_src_size = BACKUP_SRC_SIZE;
+ 	/* Create a backup region segment to store backup data*/
+-	sz = (BACKUP_SRC_SIZE + align - 1) & ~(align - 1);
++	sz = _ALIGN(BACKUP_SRC_SIZE, align);
+ 	tmp = xmalloc(sz);
+ 	memset(tmp, 0, sz);
+ 	info->backup_start = add_buffer(info, tmp, sz, sz, align,
+diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
+index 3e19ca2..6951247 100644
+--- a/kexec/arch/mips/kexec-elf-mips.c
++++ b/kexec/arch/mips/kexec-elf-mips.c
+@@ -34,7 +34,7 @@ static const int probe_debug = 0;
  
- 		loaded_segments[loaded_segments_num].start =
--			phdr->p_paddr & ~(ELF_PAGE_SIZE-1);
-+			_ALIGN_DOWN(phdr->p_paddr, ELF_PAGE_SIZE);
-                 loaded_segments[loaded_segments_num].end =
- 			loaded_segments[loaded_segments_num].start;
+ #define BOOTLOADER         "kexec"
+ #define MAX_COMMAND_LINE   256
+-#define UPSZ(X) ((sizeof(X) + 3) & ~3)
++#define UPSZ(X) _ALIGN_UP(sizeof(X), 4)
+ static char cmdline_buf[256] = "kexec ";
  
-@@ -97,8 +97,8 @@ static void add_loaded_segments_info(struct mem_ehdr *ehdr)
- 	                if (phdr->p_type != PT_LOAD)
- 	                        break;
- 			loaded_segments[loaded_segments_num].end =
--				(phdr->p_paddr + phdr->p_memsz +
--				ELF_PAGE_SIZE - 1) & ~(ELF_PAGE_SIZE - 1);
-+				_ALIGN(phdr->p_paddr + phdr->p_memsz,
-+				       ELF_PAGE_SIZE);
- 			i++;
- 		}
- 		loaded_segments_num++;
-diff --git a/kexec/arch/ia64/kexec-elf-ia64.c b/kexec/arch/ia64/kexec-elf-ia64.c
-index 8da061e..7303c03 100644
---- a/kexec/arch/ia64/kexec-elf-ia64.c
-+++ b/kexec/arch/ia64/kexec-elf-ia64.c
-@@ -264,7 +264,7 @@ int elf_ia64_load(int argc, char **argv, const char *buf, off_t len,
- 			strcat(cmdline, buf);
- 		}
- 
--		command_line_len = (command_line_len + 15)&(~15);
-+		command_line_len = _ALIGN(command_line_len, 16);
- 		command_line_base = add_buffer(info, cmdline,
- 				command_line_len, command_line_len,
- 				getpagesize(), 0UL,
-diff --git a/kexec/arch/ia64/kexec-ia64.c b/kexec/arch/ia64/kexec-ia64.c
-index aa510a9..418d997 100644
---- a/kexec/arch/ia64/kexec-ia64.c
-+++ b/kexec/arch/ia64/kexec-ia64.c
-@@ -50,8 +50,8 @@ static int split_range(int range, unsigned long start, unsigned long end)
- 	unsigned int type = memory_range[range - 1].type;
- 	int i;
- 	//align end and start to page size of EFI
--	start = start & ~((1UL<<12) - 1);
--	end = (end + (1UL<<12) - 1)& ~((1UL<<12) - 1);
-+	start = _ALIGN_DOWN(start, 1UL<<12);
-+	end = _ALIGN(end, 1UL<<12);
- 	for (i = 0; i < range; i++)
- 		if(memory_range[i].start <= start && memory_range[i].end >=end)
- 			break;
-@@ -230,7 +230,7 @@ int update_loaded_segments(struct mem_ehdr *ehdr)
- 	for (i = 0; i < memory_ranges; i++) {
- 		if (memory_range[i].type != RANGE_RAM)
- 			continue;
--		start = (memory_range[i].start + align - 1) & ~(align - 1);
-+		start = _ALIGN(memory_range[i].start, align);
- 		end = memory_range[i].end;
- 		if (end > start && (end - start) > (end_addr - start_addr)) {
- 		    move_loaded_segments(ehdr, start);
+ int elf_mips_probe(const char *buf, off_t len)
 -- 
 1.7.1
 
