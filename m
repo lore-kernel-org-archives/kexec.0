@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFaNg-0005js-L7
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 01:21:26 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r2D1LK1F021839
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:21:20 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id r2D1LKv22571 for kexec@lists.infradead.org;
- Wed, 13 Mar 2013 10:21:20 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id r2D1LKYb009410
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:21:20 +0900 (JST)
-Date: Wed, 13 Mar 2013 10:15:04 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [ANNOUNCE] makedumpfile: the git repository has been changed
-Message-Id: <20130313101504.34664e7e43a9dae8aeabe4ff@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UFboF-0000zm-01
+ for kexec@lists.infradead.org; Wed, 13 Mar 2013 02:52:56 +0000
+Received: from zmail14.collab.prod.int.phx2.redhat.com
+ (zmail14.collab.prod.int.phx2.redhat.com [10.5.83.16])
+ by mx3-phx2.redhat.com (8.13.8/8.13.8) with ESMTP id r2D2qqgQ014783
+ for <kexec@lists.infradead.org>; Tue, 12 Mar 2013 22:52:52 -0400
+Date: Tue, 12 Mar 2013 22:52:52 -0400 (EDT)
+From: CAI Qian <caiqian@redhat.com>
+Message-ID: <526259845.192944.1363143172053.JavaMail.root@redhat.com>
+Subject: failed to compile kexec from git
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,26 +20,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: kexec  <kexec@lists.infradead.org>
 
-Hello,
-
-Now, SourceForge is upgrading to a new platform.
-Accordingly, the URL used to access the git repository of makedumpfile
-has been changed:
-
-  git://git.code.sf.net/p/makedumpfile/code
-
-Thanks for your understanding.
-
-
-Atsushi Kumagai
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TG9va3MgbGlrZSB0aGlzIGlzIGJyb2tlbiByZWNlbnRseS4gSSBjbG9uZWQgdGhlIHRyZWUKYXQg
+dGhlIHRvcCBjb21taXQgYmVlbiwKCmU3M2Q0ODFjNGFkZDE3ZWU5NTNjODBiYjRiZTcyMzcyZDkw
+ZDkzZDMKcHBjL3VJbWFnZTogQWRkIHN1cHBvcnQgZm9yIFJBTSBEaXNrcwoKVGhlbiwgZXJyb3Ig
+b3V0LgoKa2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5jOiBJbiBmdW5jdGlvbiDigJhz
+ZXR1cF9saW51eF9zeXN0ZW1fcGFyYW1ldGVyc+KAmToKa2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51
+eC1zZXR1cC5jOjUxMTo5OiBlcnJvcjog4oCYa2V4ZWNfZmxhZ3PigJkgdW5kZWNsYXJlZCAoZmly
+c3QgdXNlIGluIHRoaXMgZnVuY3Rpb24pCmtleGVjL2FyY2gvaTM4Ni94ODYtbGludXgtc2V0dXAu
+Yzo1MTE6OTogbm90ZTogZWFjaCB1bmRlY2xhcmVkIGlkZW50aWZpZXIgaXMgcmVwb3J0ZWQgb25s
+eSBvbmNlIGZvciBlYWNoIGZ1bmN0aW9uIGl0IGFwcGVhcnMgaW4KbWFrZTogKioqIFtrZXhlYy9h
+cmNoL2kzODYveDg2LWxpbnV4LXNldHVwLm9dIEVycm9yIDEKCkNBSSBRaWFuCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
