@@ -1,29 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UG30N-00040O-Bx
- for kexec@lists.infradead.org; Thu, 14 Mar 2013 07:55:16 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 3FBC73EE081
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2A56345DE59
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1445845DE58
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 06C9D1DB804E
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B52141DB8046
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:05 +0900 (JST)
-Date: Thu, 14 Mar 2013 16:54:15 +0900 (JST)
-Message-Id: <20130314.165415.412290566.d.hatayama@jp.fujitsu.com>
-Subject: [PATCH] makedumpfile: fix missing count of filtered free pages
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UG3ex-0007IB-Sz
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 08:37:12 +0000
+Date: Thu, 14 Mar 2013 09:37:03 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: check size before trying the malloc
+Message-ID: <20130314083702.GB11196@verge.net.au>
+References: <5140B469.8080308@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5140B469.8080308@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,41 +23,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On the current implementation, __exclude_unnecessary_pages() can refer
-to page frames not belonging to current cycle. Thus, pfn_free can be
-now counted up even if it doesn't belong to the current cycle.
+On Thu, Mar 14, 2013 at 01:16:25AM +0800, Zhang Yanfei wrote:
+> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> 
+> If size is zero, it is unnecessary to do the malloc operation.
+> So checking size first is better than doing malloc first.
+> 
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-This patch changes it so pfn_free is counted up only if the
-corresponding pfn really belongs to the cycle.
+Thanks, applied.
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- makedumpfile.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index acb1b21..817da34 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4224,9 +4224,9 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 				 * See check_cyclic_buffer_overrun()
- 				 * for the detail.
- 				 */
--				clear_bit_on_2nd_bitmap_for_kernel(pfn + i);
-+				if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
-+					pfn_free++;
- 			}
--			pfn_free += i;
- 		}
- 		/*
- 		 * Exclude the cache page without the private page.
--- 
-1.7.7.6
-
-
+> ---
+>  kexec/kexec.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index 3ef6f0d..494c5b3 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -76,9 +76,9 @@ static char *xstrdup(const char *str)
+>  void *xmalloc(size_t size)
+>  {
+>  	void *buf;
+> -	buf = malloc(size);
+>  	if (!size)
+>  		return NULL;
+> +	buf = malloc(size);
+>  	if (!buf) {
+>  		die("Cannot malloc %ld bytes: %s\n",
+>  			size + 0UL, strerror(errno));
+> -- 
+> 1.7.1
+> 
 
 _______________________________________________
 kexec mailing list
