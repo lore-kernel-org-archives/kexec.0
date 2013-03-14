@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UG48y-0006WV-DZ
- for kexec@lists.infradead.org; Thu, 14 Mar 2013 09:08:13 +0000
-Date: Thu, 14 Mar 2013 10:08:06 +0100
+ id 1UG4A9-0006hZ-2d
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 09:09:26 +0000
+Date: Thu, 14 Mar 2013 10:09:19 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 04/13] kexec: use _ALIGN* to make the logic clear
-Message-ID: <20130314090805.GH11196@verge.net.au>
+Subject: Re: [PATCH 09/13] kexec: ppc: use _ALIGN* to make the logic clear
+Message-ID: <20130314090919.GI11196@verge.net.au>
 References: <5140B511.7020109@gmail.com>
- <5140B6E0.1080202@gmail.com>
+ <5140B824.5050601@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5140B6E0.1080202@gmail.com>
+In-Reply-To: <5140B824.5050601@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,212 +27,166 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, Mar 14, 2013 at 01:26:56AM +0800, Zhang Yanfei wrote:
+On Thu, Mar 14, 2013 at 01:32:20AM +0800, Zhang Yanfei wrote:
 > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > 
-> By replacing all the explicit align opertions with marco _ALIGN*,
+> By replacing all the explicit align opertion with marco _ALIGN*,
 > the code logic could be more clear.
+> 
+> Besides, remove the duplicate _ALIGN_* definition in file
+> kexec/arch/ppc/crashdump-powerpc.h.
 
-Not a big deal, but I believe this patch needs to come after
-the arm changes in the series in order to avoid breaking the build
-on that architecture.
+This appears to break the build on ppc.
+
+
+powerpc-linux-gnu-gcc -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wformat -O2 -fomit-frame-pointer -pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -I/include -I./include -I./util_lib/include -Iinclude/ -I./kexec/libfdt -I./kexec/arch/ppc/include  -c -MD -o kexec/arch/ppc/fs2dt.o kexec/arch/ppc/fs2dt.c
+kexec/arch/ppc/fs2dt.c: In function 'add_usable_mem_property':
+kexec/arch/ppc/fs2dt.c:146: warning: comparison between signed and unsigned integer expressions
+kexec/arch/ppc/fs2dt.c:128: warning: unused variable 'buf'
+kexec/arch/ppc/fs2dt.c:125: warning: unused parameter 'len'
+kexec/arch/ppc/fs2dt.c: In function 'putnode':
+kexec/arch/ppc/fs2dt.c:326: warning: passing argument 4 of 'scandir' from incompatible pointer type
+/usr/powerpc-linux-gnu/include/dirent.h:252: note: expected 'int (*)(const struct dirent **, const struct dirent **)' but argument is of type 'int (*)(const void *, const void *)'
+kexec/arch/ppc/fs2dt.c:449:1: error: unterminated argument list invoking macro "_ALIGN"
+kexec/arch/ppc/fs2dt.c: In function 'create_flatten_tree':
+kexec/arch/ppc/fs2dt.c:410: error: '_ALIGN' undeclared (first use in this function)
+kexec/arch/ppc/fs2dt.c:410: error: (Each undeclared identifier is reported only once
+kexec/arch/ppc/fs2dt.c:410: error: for each function it appears in.)
+kexec/arch/ppc/fs2dt.c:410: error: expected ';' at end of input
+kexec/arch/ppc/fs2dt.c:410: error: expected declaration or statement at end of input
+kexec/arch/ppc/fs2dt.c:395: warning: unused variable 'buf'
+kexec/arch/ppc/fs2dt.c:394: warning: unused variable 'tlen'
+kexec/arch/ppc/fs2dt.c:390: warning: unused parameter 'info'
+kexec/arch/ppc/fs2dt.c:390: warning: unused parameter 'bufp'
+kexec/arch/ppc/fs2dt.c:391: warning: unused parameter 'sizep'
+make: *** [kexec/arch/ppc/fs2dt.o] Error 1
 
 > 
 > Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > ---
->  kexec/crashdump-elf.c          |    3 +--
->  kexec/fs2dt.c                  |    5 ++---
->  kexec/kexec-elf-boot.c         |    2 +-
->  kexec/kexec-elf-rel.c          |    8 ++++----
->  kexec/kexec-elf.c              |    8 ++++----
->  kexec/kexec.c                  |   15 +++++++--------
->  kexec/libfdt/libfdt_internal.h |    2 +-
->  7 files changed, 20 insertions(+), 23 deletions(-)
+>  kexec/arch/ppc/crashdump-powerpc.c |    2 +-
+>  kexec/arch/ppc/crashdump-powerpc.h |    2 --
+>  kexec/arch/ppc/fs2dt.c             |    5 ++---
+>  kexec/arch/ppc/kexec-dol-ppc.c     |   10 +++++-----
+>  kexec/arch/ppc/kexec-elf-ppc.c     |    8 ++++----
+>  5 files changed, 12 insertions(+), 15 deletions(-)
 > 
-> diff --git a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
-> index ec66548..2baa357 100644
-> --- a/kexec/crashdump-elf.c
-> +++ b/kexec/crashdump-elf.c
-> @@ -96,8 +96,7 @@ int FUNC(struct kexec_info *info,
->  		return -1;
->  	}
+> diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
+> index d367643..eee5b37 100644
+> --- a/kexec/arch/ppc/crashdump-powerpc.c
+> +++ b/kexec/arch/ppc/crashdump-powerpc.c
+> @@ -329,7 +329,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+>  	info->backup_src_size = BACKUP_SRC_SIZE;
+>  #ifndef CONFIG_BOOKE
+>  	/* Create a backup region segment to store backup data*/
+> -	sz = (BACKUP_SRC_SIZE + align - 1) & ~(align - 1);
+> +	sz = _ALIGN(BACKUP_SRC_SIZE, align);
+>  	tmp = xmalloc(sz);
+>  	memset(tmp, 0, sz);
+>  	info->backup_start = add_buffer(info, tmp, sz, sz, align,
+> diff --git a/kexec/arch/ppc/crashdump-powerpc.h b/kexec/arch/ppc/crashdump-powerpc.h
+> index 84a73aa..efdc7e3 100644
+> --- a/kexec/arch/ppc/crashdump-powerpc.h
+> +++ b/kexec/arch/ppc/crashdump-powerpc.h
+> @@ -35,8 +35,6 @@ extern struct arch_options_t arch_options;
+>  #endif
 >  
-> -	sz += align - 1;
-> -	sz &= ~(align - 1);
-> +	sz = _ALIGN(sz, align);
+>  #define KDUMP_BACKUP_LIMIT	BACKUP_SRC_SIZE
+> -#define _ALIGN_UP(addr, size)	(((addr)+((size)-1))&(~((size)-1)))
+> -#define _ALIGN_DOWN(addr, size)	((addr)&(~((size)-1)))
 >  
->  	bufp = xmalloc(sz);
->  	memset(bufp, 0, sz);
-> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-> index 5d933c8..bd972ba 100644
-> --- a/kexec/fs2dt.c
-> +++ b/kexec/fs2dt.c
-> @@ -697,8 +697,7 @@ static void add_boot_block(char **bufp, off_t *sizep)
->  	unsigned long tlen, toff;
->  	char *buf;
+>  extern unsigned long long crash_base;
+>  extern unsigned long long crash_size;
+> diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+> index cdae69e..56ffb91 100644
+> --- a/kexec/arch/ppc/fs2dt.c
+> +++ b/kexec/arch/ppc/fs2dt.c
+> @@ -407,8 +407,7 @@ int create_flatten_tree(struct kexec_info *info, unsigned char **bufp,
+>  	putnode();
+>  	*dt++ = 9;
 >  
 > -	len = sizeof(bb[0]);
 > -	len += 7; len &= ~7;
 > +	len = _ALIGN(sizeof(bb[0], 8);
 >  
->  	bb->off_mem_rsvmap = cpu_to_be32(len);
+>  	bb->off_mem_rsvmap = len;
 >  
-> @@ -721,7 +720,7 @@ static void add_boot_block(char **bufp, off_t *sizep)
+> @@ -426,7 +425,7 @@ int create_flatten_tree(struct kexec_info *info, unsigned char **bufp,
 >  
 >  	len = propnum("");
->  	bb->dt_strings_size = cpu_to_be32(len);
+>  	bb->dt_strings_size = len;
 > -	len +=  3; len &= ~3;
 > +	len = _ALIGN(len, 4);
->  	bb->totalsize = cpu_to_be32(be32_to_cpu(bb->off_dt_strings) + len);
+>  	bb->totalsize = bb->off_dt_strings + len;
 >  
->  	bb->magic = cpu_to_be32(0xd00dfeed);
-> diff --git a/kexec/kexec-elf-boot.c b/kexec/kexec-elf-boot.c
-> index f082f8b..38f9056 100644
-> --- a/kexec/kexec-elf-boot.c
-> +++ b/kexec/kexec-elf-boot.c
-> @@ -31,7 +31,7 @@
->  #include "kexec-elf-boot.h"
+>  	bb->magic = 0xd00dfeed;
+> diff --git a/kexec/arch/ppc/kexec-dol-ppc.c b/kexec/arch/ppc/kexec-dol-ppc.c
+> index 5fc5e06..8d0d1a0 100644
+> --- a/kexec/arch/ppc/kexec-dol-ppc.c
+> +++ b/kexec/arch/ppc/kexec-dol-ppc.c
+> @@ -87,11 +87,11 @@ typedef struct {
+>  #define PAGE_SHIFT		12
+>  #define PAGE_SIZE		(1UL << PAGE_SHIFT)
+>  #define PAGE_MASK		(~((1 << PAGE_SHIFT) - 1))
+> -#define PAGE_ALIGN(addr)	(((addr) + PAGE_SIZE - 1) & PAGE_MASK)
+> +#define PAGE_ALIGN(addr)	_ALIGN(addr, PAGE_SIZE)
 >  
+>  #define MAX_COMMAND_LINE   256
 >  
-> -#define UPSZ(X) ((sizeof(X) + 3) &~3)
+> -#define UPSZ(X) ((sizeof(X) + 3) & ~3)
 > +#define UPSZ(X) _ALIGN_UP(sizeof(X), 4)
->  
 >  static struct boot_notes {
 >  	Elf_Bhdr hdr;
-> diff --git a/kexec/kexec-elf-rel.c b/kexec/kexec-elf-rel.c
-> index 8880c8b..38e34ec 100644
-> --- a/kexec/kexec-elf-rel.c
-> +++ b/kexec/kexec-elf-rel.c
-> @@ -225,7 +225,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
->  				buf_align = align;
->  			}
->  			/* Now align bufsz */
-> -			bufsz = (bufsz + (align - 1)) & ~(align - 1);
-> +			bufsz = _ALIGN(bufsz, align);
->  			/* And now add our buffer */
->  			bufsz += shdr->sh_size;
->  		}
-> @@ -237,7 +237,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
->  				bss_align = align;
->  			}
->  			/* Now align bsssz */
-> -			bsssz = (bsssz + (align - 1)) & ~(align -1);
-> +			bsssz = _ALIGN(bsssz, align);
->  			/* And now add our buffer */
->  			bsssz += shdr->sh_size;
->  		}
-> @@ -269,7 +269,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
->  		if (shdr->sh_type != SHT_NOBITS) {
->  			unsigned long off;
->  			/* Adjust the address */
-> -			data_addr = (data_addr + (align - 1)) & ~(align -1);
-> +			data_addr = _ALIGN(data_addr, align);
->  
->  			/* Update the section */
->  			off = data_addr - buf_addr;
-> @@ -281,7 +281,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
->  			data_addr += shdr->sh_size;
->  		} else {
->  			/* Adjust the address */
-> -			bss_addr = (bss_addr + (align - 1)) & ~(align -1);
-> +			bss_addr = _ALIGN(bss_addr, align);
->  
->  			/* Update the section */
->  			shdr->sh_addr = bss_addr;
-> diff --git a/kexec/kexec-elf.c b/kexec/kexec-elf.c
-> index b88aced..3515203 100644
-> --- a/kexec/kexec-elf.c
-> +++ b/kexec/kexec-elf.c
-> @@ -704,8 +704,8 @@ static int build_mem_notes(struct mem_ehdr *ehdr)
->  		ElfNN_Nhdr hdr;
->  		read_nhdr(ehdr, &hdr, note);
->  		note_size  = sizeof(hdr);
-> -		note_size += (hdr.n_namesz + 3) & ~3;
-> -		note_size += (hdr.n_descsz + 3) & ~3;
-> +		note_size += _ALIGN(hdr.n_namesz, 4);
-> +		note_size += _ALIGN(hdr.n_descsz, 4);
->  		ehdr->e_notenum += 1;
+>  	Elf_Nhdr bl_hdr;
+> @@ -442,14 +442,14 @@ int dol_ppc_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
 >  	}
->  	/* Now walk and normalize the notes */
-> @@ -716,9 +716,9 @@ static int build_mem_notes(struct mem_ehdr *ehdr)
->  		read_nhdr(ehdr, &hdr, note);
->  		note_size  = sizeof(hdr);
->  		name       = note + note_size;
-> -		note_size += (hdr.n_namesz + 3) & ~3;
-> +		note_size += _ALIGN(hdr.n_namesz, 4);
->  		desc       = note + note_size;
-> -		note_size += (hdr.n_descsz + 3) & ~3;
-> +		note_size += _ALIGN(hdr.n_descsz, 4);
 >  
->  		if ((hdr.n_namesz != 0) && (name[hdr.n_namesz -1] != '\0')) {
->  			/* If note name string is not null terminated, just
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index 494c5b3..f3928af 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -257,8 +257,7 @@ unsigned long locate_hole(struct kexec_info *info,
->  		if (start < hole_min) {
->  			start = hole_min;
->  		}
-> -		start = (start + hole_align - 1) &
-> -			~((unsigned long long)hole_align - 1);
-> +		start = _ALIGN(start, hole_align);
->  		if (end > mem_max) {
->  			end = mem_max;
->  		}
-> @@ -276,8 +275,8 @@ unsigned long locate_hole(struct kexec_info *info,
->  				hole_base = start;
->  				break;
->  			} else {
-> -				hole_base = (end - hole_size) &
-> -					~((unsigned long long)hole_align - 1);
-> +				hole_base = _ALIGN_DOWN(end - hole_size,
-> +					hole_align);
->  			}
->  		}
+>  	/* build the setup glue and argument segment (segment 0) */
+> -	note_bytes = sizeof(elf_boot_notes) + ((command_line_len + 3) & ~3);
+> -	arg_bytes = note_bytes + ((setup_dol_size + 3) & ~3);
+> +	note_bytes = sizeof(elf_boot_notes) + _ALIGN(command_line_len, 4);
+> +	arg_bytes = note_bytes + _ALIGN(setup_dol_size, 4);
+>  
+>  	arg_buf = xmalloc(arg_bytes);
+>  	arg_base = add_buffer(info,
+>  		arg_buf, arg_bytes, arg_bytes, 4, 0, 0xFFFFFFFFUL, 1);
+>  
+> -	notes = (struct boot_notes *)(arg_buf + ((setup_dol_size + 3) & ~3));
+> +	notes = (struct boot_notes *)(arg_buf + _ALIGN(setup_dol_size, 4));
+>  
+>  	notes->hdr.b_size = note_bytes;
+>  	notes->cmd_hdr.n_descsz = command_line_len;
+> diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
+> index 5f63a64..65a65cc 100644
+> --- a/kexec/arch/ppc/kexec-elf-ppc.c
+> +++ b/kexec/arch/ppc/kexec-elf-ppc.c
+> @@ -37,7 +37,7 @@ const char *ramdisk;
+>  int create_flatten_tree(struct kexec_info *, unsigned char **, unsigned long *,
+>  			char *);
+>  
+> -#define UPSZ(X) ((sizeof(X) + 3) & ~3)
+> +#define UPSZ(X) _ALIGN_UP(sizeof(X), 4);
+>  #ifdef WITH_GAMECUBE
+>  static struct boot_notes {
+>  	Elf_Bhdr hdr;
+> @@ -327,14 +327,14 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+>  		setup_size = setup_simple_size;
+>  		setup_simple_regs.spr8 = ehdr.e_entry;	/* Link Register */
 >  	}
-> @@ -313,7 +312,7 @@ void add_segment_phys_virt(struct kexec_info *info,
+> -	note_bytes = sizeof(elf_boot_notes) + ((command_line_len + 3) & ~3);
+> -	arg_bytes = note_bytes + ((setup_size + 3) & ~3);
+> +	note_bytes = sizeof(elf_boot_notes) + _ALIGN(command_line_len, 4);
+> +	arg_bytes = note_bytes + _ALIGN(setup_size, 4);
 >  
->  	/* Round memsz up to a multiple of pagesize */
->  	pagesize = getpagesize();
-> -	memsz = (memsz + (pagesize - 1)) & ~(pagesize - 1);
-> +	memsz = _ALIGN(memsz, pagesize);
+>  	arg_buf = xmalloc(arg_bytes);
+>  	arg_base = add_buffer(info, 
+>  		arg_buf, arg_bytes, arg_bytes, 4, 0, elf_max_addr(&ehdr), 1);
 >  
->  	/* Verify base is pagesize aligned.
->  	 * Finding a way to cope with this problem
-> @@ -363,7 +362,7 @@ unsigned long add_buffer_phys_virt(struct kexec_info *info,
+> -	notes = (struct boot_notes *)(arg_buf + ((setup_size + 3) & ~3));
+> +	notes = (struct boot_notes *)(arg_buf + _ALIGN(setup_size, 4));
 >  
->  	/* Round memsz up to a multiple of pagesize */
->  	pagesize = getpagesize();
-> -	memsz = (memsz + (pagesize - 1)) & ~(pagesize - 1);
-> +	memsz = _ALIGN(memsz, pagesize);
->  
->  	base = locate_hole(info, memsz, buf_align, buf_min, buf_max, buf_end);
->  	if (base == ULONG_MAX) {
-> @@ -457,8 +456,8 @@ int add_backup_segments(struct kexec_info *info, unsigned long backup_base,
->  				return -1;
->  			if (!find_segment_hole(info, &bkseg_base, &bkseg_size))
->  				break;
-> -			start = (bkseg_base + pagesize - 1) & ~(pagesize - 1);
-> -			end = (bkseg_base + bkseg_size) & ~(pagesize - 1);
-> +			start = _ALIGN(bkseg_base, pagesize);
-> +			end = _ALIGN_DOWN(bkseg_base + bkseg_size, pagesize);
->  			add_segment_phys_virt(info, NULL, 0,
->  					      start, end-start, 0);
->  			mem_size = mem_base + mem_size - \
-> diff --git a/kexec/libfdt/libfdt_internal.h b/kexec/libfdt/libfdt_internal.h
-> index 46eb93e..3635d98 100644
-> --- a/kexec/libfdt/libfdt_internal.h
-> +++ b/kexec/libfdt/libfdt_internal.h
-> @@ -52,7 +52,7 @@
->   */
->  #include <fdt.h>
->  
-> -#define FDT_ALIGN(x, a)		(((x) + (a) - 1) & ~((a) - 1))
-> +#define FDT_ALIGN(x, a)		_ALIGN(x, a)
->  #define FDT_TAGALIGN(x)		(FDT_ALIGN((x), FDT_TAGSIZE))
->  
->  #define FDT_CHECK_HEADER(fdt) \
+>  	memcpy(arg_buf, setup_start, setup_size);
+>  	memcpy(notes, &elf_boot_notes, sizeof(elf_boot_notes));
 > -- 
 > 1.7.1
 > 
