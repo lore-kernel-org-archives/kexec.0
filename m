@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UG4zp-0002BJ-0m
- for kexec@lists.infradead.org; Thu, 14 Mar 2013 10:02:49 +0000
-Date: Thu, 14 Mar 2013 11:02:41 +0100
+ id 1UG505-0002DA-JO
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 10:03:06 +0000
+Date: Thu, 14 Mar 2013 11:03:00 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 11/13] kexec: s390: remove ALIGN_UP and use _ALIGN_UP
-Message-ID: <20130314100241.GA11196@verge.net.au>
+Subject: Re: [PATCH 12/13] kexec: sh: use _ALIGN* to make the logic clear
+Message-ID: <20130314100300.GB11196@verge.net.au>
 References: <5140B511.7020109@gmail.com>
- <5140B881.8010504@gmail.com>
+ <5140B8B1.8090402@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5140B881.8010504@gmail.com>
+In-Reply-To: <5140B8B1.8090402@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,11 +27,11 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, Mar 14, 2013 at 01:33:53AM +0800, Zhang Yanfei wrote:
+On Thu, Mar 14, 2013 at 01:34:41AM +0800, Zhang Yanfei wrote:
 > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > 
-> We have _ALIGN_UP now, so remove ALIGN_UP and use _ALIGN_UP
-> instead of it.
+> By replacing all the explicit align opertion with marco _ALIGN*,
+> the code logic could be more clear.
 > 
 > Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
