@@ -1,17 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f54.google.com ([209.85.160.54])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UFpaR-0006pZ-Ms
- for kexec@lists.infradead.org; Wed, 13 Mar 2013 17:35:36 +0000
-Received: by mail-pb0-f54.google.com with SMTP id rr4so1252838pbb.27
- for <kexec@lists.infradead.org>; Wed, 13 Mar 2013 10:35:34 -0700 (PDT)
-Message-ID: <5140B8DE.1000701@gmail.com>
-Date: Thu, 14 Mar 2013 01:35:26 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-MIME-Version: 1.0
-Subject: [PATCH 13/13] kexec: x86_64: use _ALIGN* to make the logic clear
-References: <5140B511.7020109@gmail.com>
-In-Reply-To: <5140B511.7020109@gmail.com>
+ id 1UG30N-00040O-Bx
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 07:55:16 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 3FBC73EE081
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2A56345DE59
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1445845DE58
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 06C9D1DB804E
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:06 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B52141DB8046
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 16:55:05 +0900 (JST)
+Date: Thu, 14 Mar 2013 16:54:15 +0900 (JST)
+Message-Id: <20130314.165415.412290566.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH] makedumpfile: fix missing count of filtered free pages
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,34 +36,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+On the current implementation, __exclude_unnecessary_pages() can refer
+to page frames not belonging to current cycle. Thus, pfn_free can be
+now counted up even if it doesn't belong to the current cycle.
 
-By replacing all the explicit align opertion with marco _ALIGN*,
-the code logic could be more clear.
+This patch changes it so pfn_free is counted up only if the
+corresponding pfn really belongs to the cycle.
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- kexec/arch/x86_64/kexec-bzImage64.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ makedumpfile.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
-index 1496573..86e6d13 100644
---- a/kexec/arch/x86_64/kexec-bzImage64.c
-+++ b/kexec/arch/x86_64/kexec-bzImage64.c
-@@ -197,7 +197,7 @@ static int do_bzImage64_load(struct kexec_info *info,
- 	k_size = kernel_len - kern16_size;
- 	/* need to use run-time size for buffer searching */
- 	dbgprintf("kernel init_size 0x%x\n", real_mode->init_size);
--	size = (real_mode->init_size + (4096 - 1)) & ~(4096 - 1);
-+	size = _ALIGN(real_mode->init_size, 4096);
- 	align = real_mode->kernel_alignment;
- 	addr = add_buffer(info, kernel + kern16_size, k_size,
- 			  size, align, 0x100000, -1, -1);
+diff --git a/makedumpfile.c b/makedumpfile.c
+index acb1b21..817da34 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -4224,9 +4224,9 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 				 * See check_cyclic_buffer_overrun()
+ 				 * for the detail.
+ 				 */
+-				clear_bit_on_2nd_bitmap_for_kernel(pfn + i);
++				if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
++					pfn_free++;
+ 			}
+-			pfn_free += i;
+ 		}
+ 		/*
+ 		 * Exclude the cache page without the private page.
 -- 
-1.7.1
+1.7.7.6
+
 
 
 _______________________________________________
