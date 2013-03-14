@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UG53U-0002Sj-4y
- for kexec@lists.infradead.org; Thu, 14 Mar 2013 10:06:40 +0000
-Date: Thu, 14 Mar 2013 11:06:30 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 04/13] kexec: use _ALIGN* to make the logic clear
-Message-ID: <20130314100629.GE11196@verge.net.au>
-References: <5140B511.7020109@gmail.com> <5140B6E0.1080202@gmail.com>
- <20130314090805.GH11196@verge.net.au>
- <51419CF8.1020501@cn.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51419CF8.1020501@cn.fujitsu.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UG5Mo-0005qZ-L1
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 10:26:39 +0000
+Date: Thu, 14 Mar 2013 19:26:10 +0900 (JST)
+Message-Id: <20130314.192610.502672204.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH] kexec: check size before trying the malloc
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20130314083702.GB11196@verge.net.au>
+References: <5140B469.8080308@gmail.com> <20130314083702.GB11196@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,161 +18,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org, zhangyanfei.yes@gmail.com
 
-T24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMDU6NDg6NDBQTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
-b3RlOgo+IOS6jiAyMDEz5bm0MDPmnIgxNOaXpSAxNzowOCwgU2ltb24gSG9ybWFuIOWGmemBkzoK
-PiA+IE9uIFRodSwgTWFyIDE0LCAyMDEzIGF0IDAxOjI2OjU2QU0gKzA4MDAsIFpoYW5nIFlhbmZl
-aSB3cm90ZToKPiA+PiBGcm9tOiBaaGFuZyBZYW5mZWkgPHpoYW5neWFuZmVpQGNuLmZ1aml0c3Uu
-Y29tPgo+ID4+Cj4gPj4gQnkgcmVwbGFjaW5nIGFsbCB0aGUgZXhwbGljaXQgYWxpZ24gb3BlcnRp
-b25zIHdpdGggbWFyY28gX0FMSUdOKiwKPiA+PiB0aGUgY29kZSBsb2dpYyBjb3VsZCBiZSBtb3Jl
-IGNsZWFyLgo+ID4gCj4gPiBOb3QgYSBiaWcgZGVhbCwgYnV0IEkgYmVsaWV2ZSB0aGlzIHBhdGNo
-IG5lZWRzIHRvIGNvbWUgYWZ0ZXIKPiA+IHRoZSBhcm0gY2hhbmdlcyBpbiB0aGUgc2VyaWVzIGlu
-IG9yZGVyIHRvIGF2b2lkIGJyZWFraW5nIHRoZSBidWlsZAo+ID4gb24gdGhhdCBhcmNoaXRlY3R1
-cmUuCj4gCj4gU29ycnksIGNvdWxkIHlvdSBleHBsYWluIG1vcmU/IEkgZG9uJ3QgaGF2ZSBhbiBh
-cm0gbWFjaGluZSwgc28sIEkgY291bGRuJ3QKPiB0ZXN0IHRoZW0uCgpUaGUgcHJvYmxlbSBpcyB0
-aGF0IGtleGVjL2ZzMmR0LmMgaXMgdXNlZCBieSBBUk0uClNvIF9BTElHTigpIG5lZWRzIHRvIGJl
-IGFkZGVkIHRvIEFSTSBiZWZvcmUgdXNpbmcgX0FMSUdOKCkgaW4ga2V4ZWMvZnMyZHQuYy4KCj4g
-QW5kIEkgZm91bmQgYSBidWcgaW4gdGhpcyBwYXRjaCwgc3RpbGwgdGhlICIpIiBpc3N1ZQo+IAo+
-ICsJbGVuID0gX0FMSUdOKHNpemVvZihiYlswXSwgOCk7Cj4gCj4gb29wcy4uLgo+IAo+ID4gCj4g
-Pj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZYW5mZWkgPHpoYW5neWFuZmVpQGNuLmZ1aml0
-c3UuY29tPgo+ID4+IC0tLQo+ID4+ICBrZXhlYy9jcmFzaGR1bXAtZWxmLmMgICAgICAgICAgfCAg
-ICAzICstLQo+ID4+ICBrZXhlYy9mczJkdC5jICAgICAgICAgICAgICAgICAgfCAgICA1ICsrLS0t
-Cj4gPj4gIGtleGVjL2tleGVjLWVsZi1ib290LmMgICAgICAgICB8ICAgIDIgKy0KPiA+PiAga2V4
-ZWMva2V4ZWMtZWxmLXJlbC5jICAgICAgICAgIHwgICAgOCArKysrLS0tLQo+ID4+ICBrZXhlYy9r
-ZXhlYy1lbGYuYyAgICAgICAgICAgICAgfCAgICA4ICsrKystLS0tCj4gPj4gIGtleGVjL2tleGVj
-LmMgICAgICAgICAgICAgICAgICB8ICAgMTUgKysrKysrKy0tLS0tLS0tCj4gPj4gIGtleGVjL2xp
-YmZkdC9saWJmZHRfaW50ZXJuYWwuaCB8ICAgIDIgKy0KPiA+PiAgNyBmaWxlcyBjaGFuZ2VkLCAy
-MCBpbnNlcnRpb25zKCspLCAyMyBkZWxldGlvbnMoLSkKPiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9r
-ZXhlYy9jcmFzaGR1bXAtZWxmLmMgYi9rZXhlYy9jcmFzaGR1bXAtZWxmLmMKPiA+PiBpbmRleCBl
-YzY2NTQ4Li4yYmFhMzU3IDEwMDY0NAo+ID4+IC0tLSBhL2tleGVjL2NyYXNoZHVtcC1lbGYuYwo+
-ID4+ICsrKyBiL2tleGVjL2NyYXNoZHVtcC1lbGYuYwo+ID4+IEBAIC05Niw4ICs5Niw3IEBAIGlu
-dCBGVU5DKHN0cnVjdCBrZXhlY19pbmZvICppbmZvLAo+ID4+ICAJCXJldHVybiAtMTsKPiA+PiAg
-CX0KPiA+PiAgCj4gPj4gLQlzeiArPSBhbGlnbiAtIDE7Cj4gPj4gLQlzeiAmPSB+KGFsaWduIC0g
-MSk7Cj4gPj4gKwlzeiA9IF9BTElHTihzeiwgYWxpZ24pOwo+ID4+ICAKPiA+PiAgCWJ1ZnAgPSB4
-bWFsbG9jKHN6KTsKPiA+PiAgCW1lbXNldChidWZwLCAwLCBzeik7Cj4gPj4gZGlmZiAtLWdpdCBh
-L2tleGVjL2ZzMmR0LmMgYi9rZXhlYy9mczJkdC5jCj4gPj4gaW5kZXggNWQ5MzNjOC4uYmQ5NzJi
-YSAxMDA2NDQKPiA+PiAtLS0gYS9rZXhlYy9mczJkdC5jCj4gPj4gKysrIGIva2V4ZWMvZnMyZHQu
-Ywo+ID4+IEBAIC02OTcsOCArNjk3LDcgQEAgc3RhdGljIHZvaWQgYWRkX2Jvb3RfYmxvY2soY2hh
-ciAqKmJ1ZnAsIG9mZl90ICpzaXplcCkKPiA+PiAgCXVuc2lnbmVkIGxvbmcgdGxlbiwgdG9mZjsK
-PiA+PiAgCWNoYXIgKmJ1ZjsKPiA+PiAgCj4gPj4gLQlsZW4gPSBzaXplb2YoYmJbMF0pOwo+ID4+
-IC0JbGVuICs9IDc7IGxlbiAmPSB+NzsKPiA+PiArCWxlbiA9IF9BTElHTihzaXplb2YoYmJbMF0s
-IDgpOwo+ID4+ICAKPiA+PiAgCWJiLT5vZmZfbWVtX3Jzdm1hcCA9IGNwdV90b19iZTMyKGxlbik7
-Cj4gPj4gIAo+ID4+IEBAIC03MjEsNyArNzIwLDcgQEAgc3RhdGljIHZvaWQgYWRkX2Jvb3RfYmxv
-Y2soY2hhciAqKmJ1ZnAsIG9mZl90ICpzaXplcCkKPiA+PiAgCj4gPj4gIAlsZW4gPSBwcm9wbnVt
-KCIiKTsKPiA+PiAgCWJiLT5kdF9zdHJpbmdzX3NpemUgPSBjcHVfdG9fYmUzMihsZW4pOwo+ID4+
-IC0JbGVuICs9ICAzOyBsZW4gJj0gfjM7Cj4gPj4gKwlsZW4gPSBfQUxJR04obGVuLCA0KTsKPiA+
-PiAgCWJiLT50b3RhbHNpemUgPSBjcHVfdG9fYmUzMihiZTMyX3RvX2NwdShiYi0+b2ZmX2R0X3N0
-cmluZ3MpICsgbGVuKTsKPiA+PiAgCj4gPj4gIAliYi0+bWFnaWMgPSBjcHVfdG9fYmUzMigweGQw
-MGRmZWVkKTsKPiA+PiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMtZWxmLWJvb3QuYyBiL2tleGVj
-L2tleGVjLWVsZi1ib290LmMKPiA+PiBpbmRleCBmMDgyZjhiLi4zOGY5MDU2IDEwMDY0NAo+ID4+
-IC0tLSBhL2tleGVjL2tleGVjLWVsZi1ib290LmMKPiA+PiArKysgYi9rZXhlYy9rZXhlYy1lbGYt
-Ym9vdC5jCj4gPj4gQEAgLTMxLDcgKzMxLDcgQEAKPiA+PiAgI2luY2x1ZGUgImtleGVjLWVsZi1i
-b290LmgiCj4gPj4gIAo+ID4+ICAKPiA+PiAtI2RlZmluZSBVUFNaKFgpICgoc2l6ZW9mKFgpICsg
-MykgJn4zKQo+ID4+ICsjZGVmaW5lIFVQU1ooWCkgX0FMSUdOX1VQKHNpemVvZihYKSwgNCkKPiA+
-PiAgCj4gPj4gIHN0YXRpYyBzdHJ1Y3QgYm9vdF9ub3RlcyB7Cj4gPj4gIAlFbGZfQmhkciBoZHI7
-Cj4gPj4gZGlmZiAtLWdpdCBhL2tleGVjL2tleGVjLWVsZi1yZWwuYyBiL2tleGVjL2tleGVjLWVs
-Zi1yZWwuYwo+ID4+IGluZGV4IDg4ODBjOGIuLjM4ZTM0ZWMgMTAwNjQ0Cj4gPj4gLS0tIGEva2V4
-ZWMva2V4ZWMtZWxmLXJlbC5jCj4gPj4gKysrIGIva2V4ZWMva2V4ZWMtZWxmLXJlbC5jCj4gPj4g
-QEAgLTIyNSw3ICsyMjUsNyBAQCBpbnQgZWxmX3JlbF9sb2FkKHN0cnVjdCBtZW1fZWhkciAqZWhk
-ciwgc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gPj4gIAkJCQlidWZfYWxpZ24gPSBhbGlnbjsK
-PiA+PiAgCQkJfQo+ID4+ICAJCQkvKiBOb3cgYWxpZ24gYnVmc3ogKi8KPiA+PiAtCQkJYnVmc3og
-PSAoYnVmc3ogKyAoYWxpZ24gLSAxKSkgJiB+KGFsaWduIC0gMSk7Cj4gPj4gKwkJCWJ1ZnN6ID0g
-X0FMSUdOKGJ1ZnN6LCBhbGlnbik7Cj4gPj4gIAkJCS8qIEFuZCBub3cgYWRkIG91ciBidWZmZXIg
-Ki8KPiA+PiAgCQkJYnVmc3ogKz0gc2hkci0+c2hfc2l6ZTsKPiA+PiAgCQl9Cj4gPj4gQEAgLTIz
-Nyw3ICsyMzcsNyBAQCBpbnQgZWxmX3JlbF9sb2FkKHN0cnVjdCBtZW1fZWhkciAqZWhkciwgc3Ry
-dWN0IGtleGVjX2luZm8gKmluZm8sCj4gPj4gIAkJCQlic3NfYWxpZ24gPSBhbGlnbjsKPiA+PiAg
-CQkJfQo+ID4+ICAJCQkvKiBOb3cgYWxpZ24gYnNzc3ogKi8KPiA+PiAtCQkJYnNzc3ogPSAoYnNz
-c3ogKyAoYWxpZ24gLSAxKSkgJiB+KGFsaWduIC0xKTsKPiA+PiArCQkJYnNzc3ogPSBfQUxJR04o
-YnNzc3osIGFsaWduKTsKPiA+PiAgCQkJLyogQW5kIG5vdyBhZGQgb3VyIGJ1ZmZlciAqLwo+ID4+
-ICAJCQlic3NzeiArPSBzaGRyLT5zaF9zaXplOwo+ID4+ICAJCX0KPiA+PiBAQCAtMjY5LDcgKzI2
-OSw3IEBAIGludCBlbGZfcmVsX2xvYWQoc3RydWN0IG1lbV9laGRyICplaGRyLCBzdHJ1Y3Qga2V4
-ZWNfaW5mbyAqaW5mbywKPiA+PiAgCQlpZiAoc2hkci0+c2hfdHlwZSAhPSBTSFRfTk9CSVRTKSB7
-Cj4gPj4gIAkJCXVuc2lnbmVkIGxvbmcgb2ZmOwo+ID4+ICAJCQkvKiBBZGp1c3QgdGhlIGFkZHJl
-c3MgKi8KPiA+PiAtCQkJZGF0YV9hZGRyID0gKGRhdGFfYWRkciArIChhbGlnbiAtIDEpKSAmIH4o
-YWxpZ24gLTEpOwo+ID4+ICsJCQlkYXRhX2FkZHIgPSBfQUxJR04oZGF0YV9hZGRyLCBhbGlnbik7
-Cj4gPj4gIAo+ID4+ICAJCQkvKiBVcGRhdGUgdGhlIHNlY3Rpb24gKi8KPiA+PiAgCQkJb2ZmID0g
-ZGF0YV9hZGRyIC0gYnVmX2FkZHI7Cj4gPj4gQEAgLTI4MSw3ICsyODEsNyBAQCBpbnQgZWxmX3Jl
-bF9sb2FkKHN0cnVjdCBtZW1fZWhkciAqZWhkciwgc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4g
-Pj4gIAkJCWRhdGFfYWRkciArPSBzaGRyLT5zaF9zaXplOwo+ID4+ICAJCX0gZWxzZSB7Cj4gPj4g
-IAkJCS8qIEFkanVzdCB0aGUgYWRkcmVzcyAqLwo+ID4+IC0JCQlic3NfYWRkciA9IChic3NfYWRk
-ciArIChhbGlnbiAtIDEpKSAmIH4oYWxpZ24gLTEpOwo+ID4+ICsJCQlic3NfYWRkciA9IF9BTElH
-Tihic3NfYWRkciwgYWxpZ24pOwo+ID4+ICAKPiA+PiAgCQkJLyogVXBkYXRlIHRoZSBzZWN0aW9u
-ICovCj4gPj4gIAkJCXNoZHItPnNoX2FkZHIgPSBic3NfYWRkcjsKPiA+PiBkaWZmIC0tZ2l0IGEv
-a2V4ZWMva2V4ZWMtZWxmLmMgYi9rZXhlYy9rZXhlYy1lbGYuYwo+ID4+IGluZGV4IGI4OGFjZWQu
-LjM1MTUyMDMgMTAwNjQ0Cj4gPj4gLS0tIGEva2V4ZWMva2V4ZWMtZWxmLmMKPiA+PiArKysgYi9r
-ZXhlYy9rZXhlYy1lbGYuYwo+ID4+IEBAIC03MDQsOCArNzA0LDggQEAgc3RhdGljIGludCBidWls
-ZF9tZW1fbm90ZXMoc3RydWN0IG1lbV9laGRyICplaGRyKQo+ID4+ICAJCUVsZk5OX05oZHIgaGRy
-Owo+ID4+ICAJCXJlYWRfbmhkcihlaGRyLCAmaGRyLCBub3RlKTsKPiA+PiAgCQlub3RlX3NpemUg
-ID0gc2l6ZW9mKGhkcik7Cj4gPj4gLQkJbm90ZV9zaXplICs9IChoZHIubl9uYW1lc3ogKyAzKSAm
-IH4zOwo+ID4+IC0JCW5vdGVfc2l6ZSArPSAoaGRyLm5fZGVzY3N6ICsgMykgJiB+MzsKPiA+PiAr
-CQlub3RlX3NpemUgKz0gX0FMSUdOKGhkci5uX25hbWVzeiwgNCk7Cj4gPj4gKwkJbm90ZV9zaXpl
-ICs9IF9BTElHTihoZHIubl9kZXNjc3osIDQpOwo+ID4+ICAJCWVoZHItPmVfbm90ZW51bSArPSAx
-Owo+ID4+ICAJfQo+ID4+ICAJLyogTm93IHdhbGsgYW5kIG5vcm1hbGl6ZSB0aGUgbm90ZXMgKi8K
-PiA+PiBAQCAtNzE2LDkgKzcxNiw5IEBAIHN0YXRpYyBpbnQgYnVpbGRfbWVtX25vdGVzKHN0cnVj
-dCBtZW1fZWhkciAqZWhkcikKPiA+PiAgCQlyZWFkX25oZHIoZWhkciwgJmhkciwgbm90ZSk7Cj4g
-Pj4gIAkJbm90ZV9zaXplICA9IHNpemVvZihoZHIpOwo+ID4+ICAJCW5hbWUgICAgICAgPSBub3Rl
-ICsgbm90ZV9zaXplOwo+ID4+IC0JCW5vdGVfc2l6ZSArPSAoaGRyLm5fbmFtZXN6ICsgMykgJiB+
-MzsKPiA+PiArCQlub3RlX3NpemUgKz0gX0FMSUdOKGhkci5uX25hbWVzeiwgNCk7Cj4gPj4gIAkJ
-ZGVzYyAgICAgICA9IG5vdGUgKyBub3RlX3NpemU7Cj4gPj4gLQkJbm90ZV9zaXplICs9IChoZHIu
-bl9kZXNjc3ogKyAzKSAmIH4zOwo+ID4+ICsJCW5vdGVfc2l6ZSArPSBfQUxJR04oaGRyLm5fZGVz
-Y3N6LCA0KTsKPiA+PiAgCj4gPj4gIAkJaWYgKChoZHIubl9uYW1lc3ogIT0gMCkgJiYgKG5hbWVb
-aGRyLm5fbmFtZXN6IC0xXSAhPSAnXDAnKSkgewo+ID4+ICAJCQkvKiBJZiBub3RlIG5hbWUgc3Ry
-aW5nIGlzIG5vdCBudWxsIHRlcm1pbmF0ZWQsIGp1c3QKPiA+PiBkaWZmIC0tZ2l0IGEva2V4ZWMv
-a2V4ZWMuYyBiL2tleGVjL2tleGVjLmMKPiA+PiBpbmRleCA0OTRjNWIzLi5mMzkyOGFmIDEwMDY0
-NAo+ID4+IC0tLSBhL2tleGVjL2tleGVjLmMKPiA+PiArKysgYi9rZXhlYy9rZXhlYy5jCj4gPj4g
-QEAgLTI1Nyw4ICsyNTcsNyBAQCB1bnNpZ25lZCBsb25nIGxvY2F0ZV9ob2xlKHN0cnVjdCBrZXhl
-Y19pbmZvICppbmZvLAo+ID4+ICAJCWlmIChzdGFydCA8IGhvbGVfbWluKSB7Cj4gPj4gIAkJCXN0
-YXJ0ID0gaG9sZV9taW47Cj4gPj4gIAkJfQo+ID4+IC0JCXN0YXJ0ID0gKHN0YXJ0ICsgaG9sZV9h
-bGlnbiAtIDEpICYKPiA+PiAtCQkJfigodW5zaWduZWQgbG9uZyBsb25nKWhvbGVfYWxpZ24gLSAx
-KTsKPiA+PiArCQlzdGFydCA9IF9BTElHTihzdGFydCwgaG9sZV9hbGlnbik7Cj4gPj4gIAkJaWYg
-KGVuZCA+IG1lbV9tYXgpIHsKPiA+PiAgCQkJZW5kID0gbWVtX21heDsKPiA+PiAgCQl9Cj4gPj4g
-QEAgLTI3Niw4ICsyNzUsOCBAQCB1bnNpZ25lZCBsb25nIGxvY2F0ZV9ob2xlKHN0cnVjdCBrZXhl
-Y19pbmZvICppbmZvLAo+ID4+ICAJCQkJaG9sZV9iYXNlID0gc3RhcnQ7Cj4gPj4gIAkJCQlicmVh
-azsKPiA+PiAgCQkJfSBlbHNlIHsKPiA+PiAtCQkJCWhvbGVfYmFzZSA9IChlbmQgLSBob2xlX3Np
-emUpICYKPiA+PiAtCQkJCQl+KCh1bnNpZ25lZCBsb25nIGxvbmcpaG9sZV9hbGlnbiAtIDEpOwo+
-ID4+ICsJCQkJaG9sZV9iYXNlID0gX0FMSUdOX0RPV04oZW5kIC0gaG9sZV9zaXplLAo+ID4+ICsJ
-CQkJCWhvbGVfYWxpZ24pOwo+ID4+ICAJCQl9Cj4gPj4gIAkJfQo+ID4+ICAJfQo+ID4+IEBAIC0z
-MTMsNyArMzEyLDcgQEAgdm9pZCBhZGRfc2VnbWVudF9waHlzX3ZpcnQoc3RydWN0IGtleGVjX2lu
-Zm8gKmluZm8sCj4gPj4gIAo+ID4+ICAJLyogUm91bmQgbWVtc3ogdXAgdG8gYSBtdWx0aXBsZSBv
-ZiBwYWdlc2l6ZSAqLwo+ID4+ICAJcGFnZXNpemUgPSBnZXRwYWdlc2l6ZSgpOwo+ID4+IC0JbWVt
-c3ogPSAobWVtc3ogKyAocGFnZXNpemUgLSAxKSkgJiB+KHBhZ2VzaXplIC0gMSk7Cj4gPj4gKwlt
-ZW1zeiA9IF9BTElHTihtZW1zeiwgcGFnZXNpemUpOwo+ID4+ICAKPiA+PiAgCS8qIFZlcmlmeSBi
-YXNlIGlzIHBhZ2VzaXplIGFsaWduZWQuCj4gPj4gIAkgKiBGaW5kaW5nIGEgd2F5IHRvIGNvcGUg
-d2l0aCB0aGlzIHByb2JsZW0KPiA+PiBAQCAtMzYzLDcgKzM2Miw3IEBAIHVuc2lnbmVkIGxvbmcg
-YWRkX2J1ZmZlcl9waHlzX3ZpcnQoc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gPj4gIAo+ID4+
-ICAJLyogUm91bmQgbWVtc3ogdXAgdG8gYSBtdWx0aXBsZSBvZiBwYWdlc2l6ZSAqLwo+ID4+ICAJ
-cGFnZXNpemUgPSBnZXRwYWdlc2l6ZSgpOwo+ID4+IC0JbWVtc3ogPSAobWVtc3ogKyAocGFnZXNp
-emUgLSAxKSkgJiB+KHBhZ2VzaXplIC0gMSk7Cj4gPj4gKwltZW1zeiA9IF9BTElHTihtZW1zeiwg
-cGFnZXNpemUpOwo+ID4+ICAKPiA+PiAgCWJhc2UgPSBsb2NhdGVfaG9sZShpbmZvLCBtZW1zeiwg
-YnVmX2FsaWduLCBidWZfbWluLCBidWZfbWF4LCBidWZfZW5kKTsKPiA+PiAgCWlmIChiYXNlID09
-IFVMT05HX01BWCkgewo+ID4+IEBAIC00NTcsOCArNDU2LDggQEAgaW50IGFkZF9iYWNrdXBfc2Vn
-bWVudHMoc3RydWN0IGtleGVjX2luZm8gKmluZm8sIHVuc2lnbmVkIGxvbmcgYmFja3VwX2Jhc2Us
-Cj4gPj4gIAkJCQlyZXR1cm4gLTE7Cj4gPj4gIAkJCWlmICghZmluZF9zZWdtZW50X2hvbGUoaW5m
-bywgJmJrc2VnX2Jhc2UsICZia3NlZ19zaXplKSkKPiA+PiAgCQkJCWJyZWFrOwo+ID4+IC0JCQlz
-dGFydCA9IChia3NlZ19iYXNlICsgcGFnZXNpemUgLSAxKSAmIH4ocGFnZXNpemUgLSAxKTsKPiA+
-PiAtCQkJZW5kID0gKGJrc2VnX2Jhc2UgKyBia3NlZ19zaXplKSAmIH4ocGFnZXNpemUgLSAxKTsK
-PiA+PiArCQkJc3RhcnQgPSBfQUxJR04oYmtzZWdfYmFzZSwgcGFnZXNpemUpOwo+ID4+ICsJCQll
-bmQgPSBfQUxJR05fRE9XTihia3NlZ19iYXNlICsgYmtzZWdfc2l6ZSwgcGFnZXNpemUpOwo+ID4+
-ICAJCQlhZGRfc2VnbWVudF9waHlzX3ZpcnQoaW5mbywgTlVMTCwgMCwKPiA+PiAgCQkJCQkgICAg
-ICBzdGFydCwgZW5kLXN0YXJ0LCAwKTsKPiA+PiAgCQkJbWVtX3NpemUgPSBtZW1fYmFzZSArIG1l
-bV9zaXplIC0gXAo+ID4+IGRpZmYgLS1naXQgYS9rZXhlYy9saWJmZHQvbGliZmR0X2ludGVybmFs
-LmggYi9rZXhlYy9saWJmZHQvbGliZmR0X2ludGVybmFsLmgKPiA+PiBpbmRleCA0NmViOTNlLi4z
-NjM1ZDk4IDEwMDY0NAo+ID4+IC0tLSBhL2tleGVjL2xpYmZkdC9saWJmZHRfaW50ZXJuYWwuaAo+
-ID4+ICsrKyBiL2tleGVjL2xpYmZkdC9saWJmZHRfaW50ZXJuYWwuaAo+ID4+IEBAIC01Miw3ICs1
-Miw3IEBACj4gPj4gICAqLwo+ID4+ICAjaW5jbHVkZSA8ZmR0Lmg+Cj4gPj4gIAo+ID4+IC0jZGVm
-aW5lIEZEVF9BTElHTih4LCBhKQkJKCgoeCkgKyAoYSkgLSAxKSAmIH4oKGEpIC0gMSkpCj4gPj4g
-KyNkZWZpbmUgRkRUX0FMSUdOKHgsIGEpCQlfQUxJR04oeCwgYSkKPiA+PiAgI2RlZmluZSBGRFRf
-VEFHQUxJR04oeCkJCShGRFRfQUxJR04oKHgpLCBGRFRfVEFHU0laRSkpCj4gPj4gIAo+ID4+ICAj
-ZGVmaW5lIEZEVF9DSEVDS19IRUFERVIoZmR0KSBcCj4gPj4gLS0gCj4gPj4gMS43LjEKPiA+Pgo+
-ID4gCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+
-ID4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4gPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gPiBo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gPiAKPiAK
-PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: check size before trying the malloc
+Date: Thu, 14 Mar 2013 09:37:03 +0100
+
+> On Thu, Mar 14, 2013 at 01:16:25AM +0800, Zhang Yanfei wrote:
+>> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+>> 
+>> If size is zero, it is unnecessary to do the malloc operation.
+>> So checking size first is better than doing malloc first.
+>> 
+>> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> 
+> Thanks, applied.
+> 
+
+Wait. The check should not be removed.
+
+The behaviour when malloc() receives 0 as size is
+implementation-defined. man malloc explains this:
+
+     cannot be  allocated, a null  pointer shall be  returned. If
+     the  size of  the  space  requested is  0,  the behavior  is
+     implementation-defined: the value returned shall be either a
+     null pointer or a unique pointer.
+
+For example, on fedora 18 environement, malloc returns some object as
+follows:
+
+$ cat ./test.c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+        printf("%p\n", malloc(0));
+
+        return 0;
+}
+$ gcc ./test.c -o test
+$ ./test
+0x1451010
+$ rpm -qa | grep glibc
+glibc-2.16-28.fc18.x86_64
+
+Normally, object returned by allocator consists of header part plus
+data part. This returned size might have header part only, I'm not
+sure. The programmer usually expects the size to be positive, so this
+bug typically leads to buffer overrun.
+
+Anyway, it must be abnormal case when 0 is passed to malloc() as
+size. As explained in patch description, it's best if it's possible to
+check the size before calling malloc(). But it's impossible to make
+sure that everyone does that; so bug happens. There's no reason to
+remove the zero check.
+
+Thanks.
+HATAYAMA, Daisuke
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
