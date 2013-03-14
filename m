@@ -1,19 +1,13 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f45.google.com ([209.85.160.45])
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UG6In-0001vB-4G
- for kexec@lists.infradead.org; Thu, 14 Mar 2013 11:26:33 +0000
-Received: by mail-pb0-f45.google.com with SMTP id ro8so2080793pbb.4
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 04:26:27 -0700 (PDT)
-Message-ID: <5141B3DA.2030004@gmail.com>
-Date: Thu, 14 Mar 2013 19:26:18 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 04/13] kexec: use _ALIGN* to make the logic clear
-References: <5140B511.7020109@gmail.com> <5140B6E0.1080202@gmail.com>
- <20130314090805.GH11196@verge.net.au> <20130314094950.GR11196@verge.net.au>
- <20130314095852.GY11196@verge.net.au>
-In-Reply-To: <20130314095852.GY11196@verge.net.au>
+ id 1UG6cD-0007BD-SD
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 11:46:38 +0000
+Date: Thu, 14 Mar 2013 20:46:18 +0900 (JST)
+Message-Id: <20130314.204618.00667752.d.hatayama@jp.fujitsu.com>
+Subject: makedumpfile: benchmark on mmap() with /proc/vmcore
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,60 +16,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, akpm@linux-foundation.org, kingboard.ma@hp.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-5LqOIDIwMTPlubQwM+aciDE05pelIDE3OjU4LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIFRo
-dSwgTWFyIDE0LCAyMDEzIGF0IDEwOjQ5OjUxQU0gKzAxMDAsIFNpbW9uIEhvcm1hbiB3cm90ZToK
-Pj4gT24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMTA6MDg6MDZBTSArMDEwMCwgU2ltb24gSG9ybWFu
-IHdyb3RlOgo+Pj4gT24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMDE6MjY6NTZBTSArMDgwMCwgWmhh
-bmcgWWFuZmVpIHdyb3RlOgo+Pj4+IEZyb206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24u
-ZnVqaXRzdS5jb20+Cj4+Pj4KPj4+PiBCeSByZXBsYWNpbmcgYWxsIHRoZSBleHBsaWNpdCBhbGln
-biBvcGVydGlvbnMgd2l0aCBtYXJjbyBfQUxJR04qLAo+Pj4+IHRoZSBjb2RlIGxvZ2ljIGNvdWxk
-IGJlIG1vcmUgY2xlYXIuCj4+Pgo+Pj4gTm90IGEgYmlnIGRlYWwsIGJ1dCBJIGJlbGlldmUgdGhp
-cyBwYXRjaCBuZWVkcyB0byBjb21lIGFmdGVyCj4+PiB0aGUgYXJtIGNoYW5nZXMgaW4gdGhlIHNl
-cmllcyBpbiBvcmRlciB0byBhdm9pZCBicmVha2luZyB0aGUgYnVpbGQKPj4+IG9uIHRoYXQgYXJj
-aGl0ZWN0dXJlLgo+Pgo+PiBJIGhhdmUgYXBwbGllZCB0aGlzIGFzIHRoZSBsYXN0IHBhdGNoIG9m
-IHRoaXMgc2VyaWVzIHRoYXQgSSBoYXZlIGFwcGxpZWQuCj4gCj4gQWN0dWFsbHksIEkgdGFrZSB0
-aGF0IGJhY2suCj4gCj4gSSBhbSBhbHNvIHNlZWluZyBwcm9ibGVtcyB3aXRoIHRoaXMgcGF0Y2gg
-b24gcHBjLgo+IEkgaGF2ZSBkcm9wcGVkIHRoaXMgcGF0Y2ggZm9yIG5vdy4KPiAKPiBwb3dlcnBj
-LWxpbnV4LWdudS1hcjogY3JlYXRpbmcgbGlidXRpbC5hCj4gcG93ZXJwYy1saW51eC1nbnUtZ2Nj
-IC1ML2xpYiAgLW8gYnVpbGQvc2Jpbi9rZXhlYyBrZXhlYy9rZXhlYy5vIGtleGVjL2lmZG93bi5v
-IGtleGVjL2tleGVjLWVsZi5vIGtleGVjL2tleGVjLWVsZi1leGVjLm8ga2V4ZWMva2V4ZWMtZWxm
-LWNvcmUubyBrZXhlYy9rZXhlYy1lbGYtcmVsLm8ga2V4ZWMva2V4ZWMtZWxmLWJvb3QubyBrZXhl
-Yy9rZXhlYy1pb21lbS5vIGtleGVjL2Zpcm13YXJlX21lbW1hcC5vIGtleGVjL2NyYXNoZHVtcC5v
-IGtleGVjL2NyYXNoZHVtcC14ZW4ubyBrZXhlYy9waHlzX2FyY2gubyBrZXhlYy9rZXJuZWxfdmVy
-c2lvbi5vIGtleGVjL2x6bWEubyBrZXhlYy96bGliLm8ga2V4ZWMvcHJvY19pb21lbS5vIGtleGVj
-L3ZpcnRfdG9fcGh5cy5vIGtleGVjL3BoeXNfdG9fdmlydC5vIGtleGVjL2FkZF9zZWdtZW50Lm8g
-a2V4ZWMvYWRkX2J1ZmZlci5vIGtleGVjL2tleGVjLXVJbWFnZS5vIGtleGVjL2FyY2gvcHBjL2tl
-eGVjLXBwYy5vIGtleGVjL2FyY2gvcHBjL2tleGVjLWVsZi1wcGMubyBrZXhlYy9hcmNoL3BwYy9r
-ZXhlYy1lbGYtcmVsLXBwYy5vIGtleGVjL2FyY2gvcHBjL2tleGVjLWRvbC1wcGMubyBrZXhlYy9h
-cmNoL3BwYy9rZXhlYy11SW1hZ2UtcHBjLm8ga2V4ZWMvYXJjaC9wcGMvcHBjLXNldHVwLXNpbXBs
-ZS5vIGtleGVjL2FyY2gvcHBjL3BwYy1zZXR1cC1kb2wubyBrZXhlYy9hcmNoL3BwYy9maXh1cF9k
-dGIubyBrZXhlYy9hcmNoL3BwYy9mczJkdC5vIGtleGVjL2FyY2gvcHBjL2NyYXNoZHVtcC1wb3dl
-cnBjLm8ga2V4ZWMvbGliZmR0L2ZkdC5vIGtleGVjL2xpYmZkdC9mZHRfcm8ubyBrZXhlYy9saWJm
-ZHQvZmR0X3dpcC5vIGtleGVjL2xpYmZkdC9mZHRfc3cubyBrZXhlYy9saWJmZHQvZmR0X3J3Lm8g
-a2V4ZWMvbGliZmR0L2ZkdF9zdHJlcnJvci5vIGtleGVjL2FyY2gvcHBjL2xpYmZkdC13cmFwcGVy
-Lm8ga2V4ZWMvcHVyZ2F0b3J5Lm8gbGlidXRpbC5hIC1XYWxsIC1XZXh0cmEgLVdwb2ludGVyLWFy
-aXRoIC1XdwpyaXRlLXN0cmluZ3MgLVdmb3JtYXQgLU8yIC1mb21pdC1mcmFtZS1wb2ludGVyIC1w
-aXBlIC1mbm8tc3RyaWN0LWFsaWFzaW5nIC1XYWxsIC1Xc3RyaWN0LXByb3RvdHlwZXMgCj4ga2V4
-ZWMvbGliZmR0L2ZkdC5vOiBJbiBmdW5jdGlvbiBgZmR0X25leHRfdGFnJzoKPiBmZHQuYzooLnRl
-eHQrMHgzMDQpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfQUxJR04nCj4ga2V4ZWMvbGliZmR0
-L2ZkdF9zdy5vOiBJbiBmdW5jdGlvbiBgZmR0X2JlZ2luX25vZGUnOgo+IGZkdF9zdy5jOigudGV4
-dCsweDRmNCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYF9BTElHTicKPiBrZXhlYy9saWJmZHQv
-ZmR0X3N3Lm86IEluIGZ1bmN0aW9uIGBmZHRfcHJvcGVydHknOgo+IGZkdF9zdy5jOigudGV4dCsw
-eDY0OCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYF9BTElHTicKPiBrZXhlYy9saWJmZHQvZmR0
-X3N3Lm86IEluIGZ1bmN0aW9uIGBmZHRfY3JlYXRlJzoKPiBmZHRfc3cuYzooLnRleHQrMHg3NDQp
-OiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfQUxJR04nCj4ga2V4ZWMvbGliZmR0L2ZkdF9ydy5v
-OiBJbiBmdW5jdGlvbiBgX2ZkdF9ibG9ja3NfbWlzb3JkZXJlZCc6Cj4gZmR0X3J3LmM6KC50ZXh0
-KzB4NDApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfQUxJR04nCj4ga2V4ZWMvbGliZmR0L2Zk
-dF9ydy5vOmZkdF9ydy5jOigudGV4dCsweDE5Yyk6IG1vcmUgdW5kZWZpbmVkIHJlZmVyZW5jZXMg
-dG8gYF9BTElHTicgZm9sbG93Cj4gY29sbGVjdDI6IGxkIHJldHVybmVkIDEgZXhpdCBzdGF0dXMK
-CkhpIHNpbW9uLAoKQ291bGQgeW91IHRyeSB0aGUgdjIsIHBsZWFzZT8KClRoYW5rcwpaaGFuZwoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hello,
+
+I did benchmark makedumpfile performance with mmap() on /proc/vmcore
+on 32GB memory system. Even smaller than terabytes memory, it's
+possible to see performance improvement precisely to some amount.
+
+However, it's definitely necessary to see how performance is changed
+on terabyte-class memory system. Of course, I'll do it and I'm
+reserving the system now, but it's restricted on 2TB memory system. If
+anyone wants to see performance on more memory system, please help.
+
+In summary, this benchmark shows the improvement from 4.5 seconds to
+0.6 seconds for filtering processing on 32GB memory. Roughly, this
+corresponds to 19.2 seconds on 1TB memory.
+
+= Machine spec
+  - CPU: Intel(R) Xeon(R) CPU E7- 4820 @ 2.00GHz (4 sockets, 8 cores) (*)
+  - memory: 32GB
+    - vmcore size: 31.7GB
+  - kernel
+    - 3.9-rc1 with the patch set in: http://lists.infradead.org/pipermail/kexec/2013-March/008092.html
+    - 3.8.2-206.fc18.x86_64 for makedumpfile v1.5.1
+  - kexec tools: commit: 53bb3029557936ed12960e7cc2619a20ee7d382b
+    # v2.0.4-rc1 failed to be compiled.
+
+  (*) only 1 cpu is used in the 2nd kernel now.
+
+= Makedumpfile
+
+I used the following three versions of makedumpfile:
+
+- v1.5.1
+  - cyclic mode + free pages filtering on mem_map array was introduced.
+
+- v1.5.2
+  - 8-slot cache was introduced
+
+- v1.5.2-map: git map branch
+  - mmap() on /proc/vmcore.
+  - To use mmap, specify --map-size <size in kilo-bytes> option.
+
+= How to measure
+
+I collected time contained in makedumpfile's report message as
+follows:
+
+$ makedumpfile --message-level 31 -p -d 31 /proc/vmcore vmcore-pd31
+...
+STEP [Checking for memory holes  ] : 0.163673 seconds
+STEP [Excluding unnecessary pages] : 1.321702 seconds
+STEP [Excluding free pages       ] : 0.489022 seconds
+STEP [Copying data               ] : 26.221380 seconds
+
+The message starting with "STEP [Excluding" corresponds to the message
+of filtering processing.
+
+- STEP [Excluding unnecessary pages] corresponds to the time for
+  mem_map array logic.
+
+- STEP [Excluding free pages ] corresponds to the time for free list
+  logic.
+
+I didn't collect times for other two messages here.
+
+The message is displayed multiple times in cyclic mode, exactly the
+same number of cycles. But note that throughout this benchmark, the
+number of cycles is 1. Much more memory system must need more cycles.
+
+= Benchmark Result
+
+v1.5.1
+| cyclic            | non-cyclic        | non-cyclic |
+| unnecessary pages | unnecessary pages | free pages |
+|-------------------+-------------------+------------|
+| 4.618960          | 4.443426          | 1.058048   |
+
+v1.5.2
+| cyclic            | non-cyclic        | non-cyclic |
+| unnecessary pages | unnecessary pages | free pages |
+|-------------------+-------------------+------------|
+| 1.438702          | 1.321702          | 0.489022   |
+
+v1.5.2 with mmap
+| map size |            cyclic |        non-cyclic | non-cyclic |
+|    (KiB) | unnecessary pages | unnecessary pages | free pages |
+|----------+-------------------+-------------------+------------|
+|        4 |          1.319516 |          1.171109 |   0.247905 |
+|        8 |          0.977871 |          0.847379 |   0.253978 |
+|       16 |          0.798567 |          0.676428 |   0.261278 |
+|       32 |          0.712903 |          0.576884 |   0.267791 |
+|       64 |          0.660195 |          0.544579 |   0.266696 |
+|      128 |          0.635026 |          0.503244 |   0.279830 |
+|      256 |          0.618651 |          0.486801 |   0.304053 |
+|      512 |          0.612802 |          0.479643 |   0.350388 |
+|     1024 |          0.606328 |          0.480465 |   0.434638 |
+|     2048 |          0.604407 |          0.473270 |   0.555480 |
+|     4096 |          0.602786 |          0.471901 |   0.745003 |
+|     8192 |          0.598396 |          0.468123 |   1.264968 |
+|    16384 |          0.598102 |          0.467604 |   2.604322 |
+|    32768 |          0.597832 |          0.469231 |   5.336002 |
+
+= Discussion
+
+- From v1.5.2 to v1.5.1, simple 8-slot cache mechanism was
+  introduced. By this, access time to /proc/vmcore for paging is
+  reduced from about 4.5 to about 1.5.
+
+- On v1.5.2 with mmap: if map size is 4KB, the perforamce looks
+  similar to v1.5.2's ioremap case. If large enough map size is
+  specified, there's no longer pernalty due to TLB flush caused by
+  ioremap/iounmap from access to /proc/vmcore.
+
+- In non-cyclic mode, it takes about 0.5 second to filter a whole
+  mem_map array.
+
+- In cyclic mode, it takes about 0.6 second to filter a whole mem_map
+  array.
+
+  What is the additional 0.1 second compared to the one in non-cyclic
+  mode? One of the reasons is that in cyclic mode, filtering
+  processing includes the case for free pages in addition to other
+  kind of memory. That is, it's part the below:
+
+  makedumpfile.c:__exclude_unnecessary_pages
+                /*
+                 * Exclude the free page managed by a buddy
+                 */
+                if ((info->dump_level & DL_EXCLUDE_FREE)
+                    && info->flag_cyclic
+                    && info->page_is_buddy
+                    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+
+  If we don't specify free pages filitering, the time is reduced from
+  0.6 to 0.55 ~ 0.57.
+
+  I guess the remaining 0.07 second was caused by duplicate processing
+  in the implementation of cyclic-mode. I don't know now if this can
+  actually be problematic on terabyte memory machine, but then it
+  indicates we should treat __exclude_unnecessary_page() as fast path,
+  and I think it's possible to remove the duplication if necessary.
+
+- For degradation in case of free list with large map size, to be
+  honest, I have yet to investigate why precisely now... I guess it's
+  caused by the fact that elements linked in free list is not sorted
+  increasing order with regard to pfn, so the degradation comes from
+  the many calls of mmap() with large map size just like cache miss
+  hit.
+
+Thanks.
+HATAYAMA, Daisuke
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
