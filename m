@@ -1,13 +1,18 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UG6cD-0007BD-SD
- for kexec@lists.infradead.org; Thu, 14 Mar 2013 11:46:38 +0000
-Date: Thu, 14 Mar 2013 20:46:18 +0900 (JST)
-Message-Id: <20130314.204618.00667752.d.hatayama@jp.fujitsu.com>
-Subject: makedumpfile: benchmark on mmap() with /proc/vmcore
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UG8ck-0004C3-S5
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 13:55:19 +0000
+Date: Thu, 14 Mar 2013 09:55:07 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: 3.9.0-rc1: kexec not working: root disk does not show up
+Message-ID: <20130314135507.GA24238@redhat.com>
+References: <20130308171704.GE8219@redhat.com>
+ <20130312192922.GA2268@redhat.com> <51402ED5.6000902@openvz.org>
+ <20130313135351.GB11528@redhat.com> <514092DC.5020500@openvz.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <514092DC.5020500@openvz.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,160 +24,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, akpm@linux-foundation.org, kingboard.ma@hp.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Konstantin Khlebnikov <khlebnikov@openvz.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux kernel mailing list <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>, Jeff Garzik <jgarzik@pobox.com>
 
-Hello,
+On Wed, Mar 13, 2013 at 06:53:16PM +0400, Konstantin Khlebnikov wrote:
 
-I did benchmark makedumpfile performance with mmap() on /proc/vmcore
-on 32GB memory system. Even smaller than terabytes memory, it's
-possible to see performance improvement precisely to some amount.
+[..]
+> PCI: Don't try to disable Bus Master on disconnected PCI devices
+> 
+> From: Konstantin Khlebnikov <khlebnikov@openvz.org>
+> 
+> This is fix for commit 7897e6022761ace7377f0f784fca059da55f5d71 from v3.9-rc1
+> ("PCI: Disable Bus Master unconditionally in pci_device_shutdown()")
+> in turn that was fix for b566a22c23327f18ce941ffad0ca907e50a53d41 from v3.5-rc1
+> ("PCI: disable Bus Master on PCI device shutdown")
+> 
+> Unfortunately fixing one bug uncovers another: after ->shutdown() device can be
+> already disconnected from the bus and configuration space in no longer available
+> 
+> Link: https://lkml.org/lkml/2013/3/12/529
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@openvz.org>
+> Reported-by: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/pci/pci-driver.c |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 1fa1e48..79277fb 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -390,9 +390,10 @@ static void pci_device_shutdown(struct device *dev)
+>  
+>  	/*
+>  	 * Turn off Bus Master bit on the device to tell it to not
+> -	 * continue to do DMA
+> +	 * continue to do DMA. Don't touch devices in D3cold or unknown states.
+>  	 */
+> -	pci_clear_master(pci_dev);
+> +	if (pci_dev->current_state <= PCI_D3hot)
+> +		pci_clear_master(pci_dev);
+>  }
+>  
+>  #ifdef CONFIG_PM
 
-However, it's definitely necessary to see how performance is changed
-on terabyte-class memory system. Of course, I'll do it and I'm
-reserving the system now, but it's restricted on 2TB memory system. If
-anyone wants to see performance on more memory system, please help.
+Hi,
 
-In summary, this benchmark shows the improvement from 4.5 seconds to
-0.6 seconds for filtering processing on 32GB memory. Roughly, this
-corresponds to 19.2 seconds on 1TB memory.
+Above patch fixed the issue on my box. Now I can kexec. Thanks.
 
-= Machine spec
-  - CPU: Intel(R) Xeon(R) CPU E7- 4820 @ 2.00GHz (4 sockets, 8 cores) (*)
-  - memory: 32GB
-    - vmcore size: 31.7GB
-  - kernel
-    - 3.9-rc1 with the patch set in: http://lists.infradead.org/pipermail/kexec/2013-March/008092.html
-    - 3.8.2-206.fc18.x86_64 for makedumpfile v1.5.1
-  - kexec tools: commit: 53bb3029557936ed12960e7cc2619a20ee7d382b
-    # v2.0.4-rc1 failed to be compiled.
-
-  (*) only 1 cpu is used in the 2nd kernel now.
-
-= Makedumpfile
-
-I used the following three versions of makedumpfile:
-
-- v1.5.1
-  - cyclic mode + free pages filtering on mem_map array was introduced.
-
-- v1.5.2
-  - 8-slot cache was introduced
-
-- v1.5.2-map: git map branch
-  - mmap() on /proc/vmcore.
-  - To use mmap, specify --map-size <size in kilo-bytes> option.
-
-= How to measure
-
-I collected time contained in makedumpfile's report message as
-follows:
-
-$ makedumpfile --message-level 31 -p -d 31 /proc/vmcore vmcore-pd31
-...
-STEP [Checking for memory holes  ] : 0.163673 seconds
-STEP [Excluding unnecessary pages] : 1.321702 seconds
-STEP [Excluding free pages       ] : 0.489022 seconds
-STEP [Copying data               ] : 26.221380 seconds
-
-The message starting with "STEP [Excluding" corresponds to the message
-of filtering processing.
-
-- STEP [Excluding unnecessary pages] corresponds to the time for
-  mem_map array logic.
-
-- STEP [Excluding free pages ] corresponds to the time for free list
-  logic.
-
-I didn't collect times for other two messages here.
-
-The message is displayed multiple times in cyclic mode, exactly the
-same number of cycles. But note that throughout this benchmark, the
-number of cycles is 1. Much more memory system must need more cycles.
-
-= Benchmark Result
-
-v1.5.1
-| cyclic            | non-cyclic        | non-cyclic |
-| unnecessary pages | unnecessary pages | free pages |
-|-------------------+-------------------+------------|
-| 4.618960          | 4.443426          | 1.058048   |
-
-v1.5.2
-| cyclic            | non-cyclic        | non-cyclic |
-| unnecessary pages | unnecessary pages | free pages |
-|-------------------+-------------------+------------|
-| 1.438702          | 1.321702          | 0.489022   |
-
-v1.5.2 with mmap
-| map size |            cyclic |        non-cyclic | non-cyclic |
-|    (KiB) | unnecessary pages | unnecessary pages | free pages |
-|----------+-------------------+-------------------+------------|
-|        4 |          1.319516 |          1.171109 |   0.247905 |
-|        8 |          0.977871 |          0.847379 |   0.253978 |
-|       16 |          0.798567 |          0.676428 |   0.261278 |
-|       32 |          0.712903 |          0.576884 |   0.267791 |
-|       64 |          0.660195 |          0.544579 |   0.266696 |
-|      128 |          0.635026 |          0.503244 |   0.279830 |
-|      256 |          0.618651 |          0.486801 |   0.304053 |
-|      512 |          0.612802 |          0.479643 |   0.350388 |
-|     1024 |          0.606328 |          0.480465 |   0.434638 |
-|     2048 |          0.604407 |          0.473270 |   0.555480 |
-|     4096 |          0.602786 |          0.471901 |   0.745003 |
-|     8192 |          0.598396 |          0.468123 |   1.264968 |
-|    16384 |          0.598102 |          0.467604 |   2.604322 |
-|    32768 |          0.597832 |          0.469231 |   5.336002 |
-
-= Discussion
-
-- From v1.5.2 to v1.5.1, simple 8-slot cache mechanism was
-  introduced. By this, access time to /proc/vmcore for paging is
-  reduced from about 4.5 to about 1.5.
-
-- On v1.5.2 with mmap: if map size is 4KB, the perforamce looks
-  similar to v1.5.2's ioremap case. If large enough map size is
-  specified, there's no longer pernalty due to TLB flush caused by
-  ioremap/iounmap from access to /proc/vmcore.
-
-- In non-cyclic mode, it takes about 0.5 second to filter a whole
-  mem_map array.
-
-- In cyclic mode, it takes about 0.6 second to filter a whole mem_map
-  array.
-
-  What is the additional 0.1 second compared to the one in non-cyclic
-  mode? One of the reasons is that in cyclic mode, filtering
-  processing includes the case for free pages in addition to other
-  kind of memory. That is, it's part the below:
-
-  makedumpfile.c:__exclude_unnecessary_pages
-                /*
-                 * Exclude the free page managed by a buddy
-                 */
-                if ((info->dump_level & DL_EXCLUDE_FREE)
-                    && info->flag_cyclic
-                    && info->page_is_buddy
-                    && info->page_is_buddy(flags, _mapcount, private, _count)) {
-
-  If we don't specify free pages filitering, the time is reduced from
-  0.6 to 0.55 ~ 0.57.
-
-  I guess the remaining 0.07 second was caused by duplicate processing
-  in the implementation of cyclic-mode. I don't know now if this can
-  actually be problematic on terabyte memory machine, but then it
-  indicates we should treat __exclude_unnecessary_page() as fast path,
-  and I think it's possible to remove the duplication if necessary.
-
-- For degradation in case of free list with large map size, to be
-  honest, I have yet to investigate why precisely now... I guess it's
-  caused by the fact that elements linked in free list is not sorted
-  increasing order with regard to pfn, so the degradation comes from
-  the many calls of mmap() with large map size just like cache miss
-  hit.
-
-Thanks.
-HATAYAMA, Daisuke
+Vivek
 
 
 _______________________________________________
