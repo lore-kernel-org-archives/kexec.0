@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f54.google.com ([209.85.160.54])
+Received: from mail-pb0-f45.google.com ([209.85.160.45])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UG6HL-0001lo-Ty
- for kexec@lists.infradead.org; Thu, 14 Mar 2013 11:25:04 +0000
-Received: by mail-pb0-f54.google.com with SMTP id rr4so2068321pbb.13
- for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 04:24:56 -0700 (PDT)
-Message-ID: <5141B37E.50205@gmail.com>
-Date: Thu, 14 Mar 2013 19:24:46 +0800
+ id 1UG6In-0001vB-4G
+ for kexec@lists.infradead.org; Thu, 14 Mar 2013 11:26:33 +0000
+Received: by mail-pb0-f45.google.com with SMTP id ro8so2080793pbb.4
+ for <kexec@lists.infradead.org>; Thu, 14 Mar 2013 04:26:27 -0700 (PDT)
+Message-ID: <5141B3DA.2030004@gmail.com>
+Date: Thu, 14 Mar 2013 19:26:18 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH v2 04/13] kexec: use _ALIGN* to make the logic clear
+Subject: Re: [PATCH 04/13] kexec: use _ALIGN* to make the logic clear
 References: <5140B511.7020109@gmail.com> <5140B6E0.1080202@gmail.com>
  <20130314090805.GH11196@verge.net.au> <20130314094950.GR11196@verge.net.au>
  <20130314095852.GY11196@verge.net.au>
@@ -22,218 +22,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-
-By replacing all the explicit align opertion with marco _ALIGN*,
-the code logic could more clear.
-
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/crashdump-elf.c          |    3 +--
- kexec/fs2dt.c                  |    5 ++---
- kexec/kexec-elf-boot.c         |    2 +-
- kexec/kexec-elf-rel.c          |    8 ++++----
- kexec/kexec-elf.c              |    8 ++++----
- kexec/kexec.c                  |   15 +++++++--------
- kexec/libfdt/libfdt_internal.h |    2 +-
- 7 files changed, 20 insertions(+), 23 deletions(-)
-
-diff --git a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
-index ec66548..2baa357 100644
---- a/kexec/crashdump-elf.c
-+++ b/kexec/crashdump-elf.c
-@@ -96,8 +96,7 @@ int FUNC(struct kexec_info *info,
- 		return -1;
- 	}
- 
--	sz += align - 1;
--	sz &= ~(align - 1);
-+	sz = _ALIGN(sz, align);
- 
- 	bufp = xmalloc(sz);
- 	memset(bufp, 0, sz);
-diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-index 5d933c8..bd972ba 100644
---- a/kexec/fs2dt.c
-+++ b/kexec/fs2dt.c
-@@ -697,8 +697,7 @@ static void add_boot_block(char **bufp, off_t *sizep)
- 	unsigned long tlen, toff;
- 	char *buf;
- 
--	len = sizeof(bb[0]);
--	len += 7; len &= ~7;
-+	len = _ALIGN(sizeof(bb[0]), 8);
- 
- 	bb->off_mem_rsvmap = cpu_to_be32(len);
- 
-@@ -721,7 +720,7 @@ static void add_boot_block(char **bufp, off_t *sizep)
- 
- 	len = propnum("");
- 	bb->dt_strings_size = cpu_to_be32(len);
--	len +=  3; len &= ~3;
-+	len = _ALIGN(len, 4);
- 	bb->totalsize = cpu_to_be32(be32_to_cpu(bb->off_dt_strings) + len);
- 
- 	bb->magic = cpu_to_be32(0xd00dfeed);
-diff --git a/kexec/kexec-elf-boot.c b/kexec/kexec-elf-boot.c
-index f082f8b..38f9056 100644
---- a/kexec/kexec-elf-boot.c
-+++ b/kexec/kexec-elf-boot.c
-@@ -31,7 +31,7 @@
- #include "kexec-elf-boot.h"
- 
- 
--#define UPSZ(X) ((sizeof(X) + 3) &~3)
-+#define UPSZ(X) _ALIGN_UP(sizeof(X), 4)
- 
- static struct boot_notes {
- 	Elf_Bhdr hdr;
-diff --git a/kexec/kexec-elf-rel.c b/kexec/kexec-elf-rel.c
-index 8880c8b..38e34ec 100644
---- a/kexec/kexec-elf-rel.c
-+++ b/kexec/kexec-elf-rel.c
-@@ -225,7 +225,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
- 				buf_align = align;
- 			}
- 			/* Now align bufsz */
--			bufsz = (bufsz + (align - 1)) & ~(align - 1);
-+			bufsz = _ALIGN(bufsz, align);
- 			/* And now add our buffer */
- 			bufsz += shdr->sh_size;
- 		}
-@@ -237,7 +237,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
- 				bss_align = align;
- 			}
- 			/* Now align bsssz */
--			bsssz = (bsssz + (align - 1)) & ~(align -1);
-+			bsssz = _ALIGN(bsssz, align);
- 			/* And now add our buffer */
- 			bsssz += shdr->sh_size;
- 		}
-@@ -269,7 +269,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
- 		if (shdr->sh_type != SHT_NOBITS) {
- 			unsigned long off;
- 			/* Adjust the address */
--			data_addr = (data_addr + (align - 1)) & ~(align -1);
-+			data_addr = _ALIGN(data_addr, align);
- 
- 			/* Update the section */
- 			off = data_addr - buf_addr;
-@@ -281,7 +281,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
- 			data_addr += shdr->sh_size;
- 		} else {
- 			/* Adjust the address */
--			bss_addr = (bss_addr + (align - 1)) & ~(align -1);
-+			bss_addr = _ALIGN(bss_addr, align);
- 
- 			/* Update the section */
- 			shdr->sh_addr = bss_addr;
-diff --git a/kexec/kexec-elf.c b/kexec/kexec-elf.c
-index b88aced..3515203 100644
---- a/kexec/kexec-elf.c
-+++ b/kexec/kexec-elf.c
-@@ -704,8 +704,8 @@ static int build_mem_notes(struct mem_ehdr *ehdr)
- 		ElfNN_Nhdr hdr;
- 		read_nhdr(ehdr, &hdr, note);
- 		note_size  = sizeof(hdr);
--		note_size += (hdr.n_namesz + 3) & ~3;
--		note_size += (hdr.n_descsz + 3) & ~3;
-+		note_size += _ALIGN(hdr.n_namesz, 4);
-+		note_size += _ALIGN(hdr.n_descsz, 4);
- 		ehdr->e_notenum += 1;
- 	}
- 	/* Now walk and normalize the notes */
-@@ -716,9 +716,9 @@ static int build_mem_notes(struct mem_ehdr *ehdr)
- 		read_nhdr(ehdr, &hdr, note);
- 		note_size  = sizeof(hdr);
- 		name       = note + note_size;
--		note_size += (hdr.n_namesz + 3) & ~3;
-+		note_size += _ALIGN(hdr.n_namesz, 4);
- 		desc       = note + note_size;
--		note_size += (hdr.n_descsz + 3) & ~3;
-+		note_size += _ALIGN(hdr.n_descsz, 4);
- 
- 		if ((hdr.n_namesz != 0) && (name[hdr.n_namesz -1] != '\0')) {
- 			/* If note name string is not null terminated, just
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 494c5b3..f3928af 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -257,8 +257,7 @@ unsigned long locate_hole(struct kexec_info *info,
- 		if (start < hole_min) {
- 			start = hole_min;
- 		}
--		start = (start + hole_align - 1) &
--			~((unsigned long long)hole_align - 1);
-+		start = _ALIGN(start, hole_align);
- 		if (end > mem_max) {
- 			end = mem_max;
- 		}
-@@ -276,8 +275,8 @@ unsigned long locate_hole(struct kexec_info *info,
- 				hole_base = start;
- 				break;
- 			} else {
--				hole_base = (end - hole_size) &
--					~((unsigned long long)hole_align - 1);
-+				hole_base = _ALIGN_DOWN(end - hole_size,
-+					hole_align);
- 			}
- 		}
- 	}
-@@ -313,7 +312,7 @@ void add_segment_phys_virt(struct kexec_info *info,
- 
- 	/* Round memsz up to a multiple of pagesize */
- 	pagesize = getpagesize();
--	memsz = (memsz + (pagesize - 1)) & ~(pagesize - 1);
-+	memsz = _ALIGN(memsz, pagesize);
- 
- 	/* Verify base is pagesize aligned.
- 	 * Finding a way to cope with this problem
-@@ -363,7 +362,7 @@ unsigned long add_buffer_phys_virt(struct kexec_info *info,
- 
- 	/* Round memsz up to a multiple of pagesize */
- 	pagesize = getpagesize();
--	memsz = (memsz + (pagesize - 1)) & ~(pagesize - 1);
-+	memsz = _ALIGN(memsz, pagesize);
- 
- 	base = locate_hole(info, memsz, buf_align, buf_min, buf_max, buf_end);
- 	if (base == ULONG_MAX) {
-@@ -457,8 +456,8 @@ int add_backup_segments(struct kexec_info *info, unsigned long backup_base,
- 				return -1;
- 			if (!find_segment_hole(info, &bkseg_base, &bkseg_size))
- 				break;
--			start = (bkseg_base + pagesize - 1) & ~(pagesize - 1);
--			end = (bkseg_base + bkseg_size) & ~(pagesize - 1);
-+			start = _ALIGN(bkseg_base, pagesize);
-+			end = _ALIGN_DOWN(bkseg_base + bkseg_size, pagesize);
- 			add_segment_phys_virt(info, NULL, 0,
- 					      start, end-start, 0);
- 			mem_size = mem_base + mem_size - \
-diff --git a/kexec/libfdt/libfdt_internal.h b/kexec/libfdt/libfdt_internal.h
-index 46eb93e..3635d98 100644
---- a/kexec/libfdt/libfdt_internal.h
-+++ b/kexec/libfdt/libfdt_internal.h
-@@ -52,7 +52,7 @@
-  */
- #include <fdt.h>
- 
--#define FDT_ALIGN(x, a)		(((x) + (a) - 1) & ~((a) - 1))
-+#define FDT_ALIGN(x, a)		_ALIGN(x, a)
- #define FDT_TAGALIGN(x)		(FDT_ALIGN((x), FDT_TAGSIZE))
- 
- #define FDT_CHECK_HEADER(fdt) \
--- 
-1.7.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwM+aciDE05pelIDE3OjU4LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIFRo
+dSwgTWFyIDE0LCAyMDEzIGF0IDEwOjQ5OjUxQU0gKzAxMDAsIFNpbW9uIEhvcm1hbiB3cm90ZToK
+Pj4gT24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMTA6MDg6MDZBTSArMDEwMCwgU2ltb24gSG9ybWFu
+IHdyb3RlOgo+Pj4gT24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMDE6MjY6NTZBTSArMDgwMCwgWmhh
+bmcgWWFuZmVpIHdyb3RlOgo+Pj4+IEZyb206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24u
+ZnVqaXRzdS5jb20+Cj4+Pj4KPj4+PiBCeSByZXBsYWNpbmcgYWxsIHRoZSBleHBsaWNpdCBhbGln
+biBvcGVydGlvbnMgd2l0aCBtYXJjbyBfQUxJR04qLAo+Pj4+IHRoZSBjb2RlIGxvZ2ljIGNvdWxk
+IGJlIG1vcmUgY2xlYXIuCj4+Pgo+Pj4gTm90IGEgYmlnIGRlYWwsIGJ1dCBJIGJlbGlldmUgdGhp
+cyBwYXRjaCBuZWVkcyB0byBjb21lIGFmdGVyCj4+PiB0aGUgYXJtIGNoYW5nZXMgaW4gdGhlIHNl
+cmllcyBpbiBvcmRlciB0byBhdm9pZCBicmVha2luZyB0aGUgYnVpbGQKPj4+IG9uIHRoYXQgYXJj
+aGl0ZWN0dXJlLgo+Pgo+PiBJIGhhdmUgYXBwbGllZCB0aGlzIGFzIHRoZSBsYXN0IHBhdGNoIG9m
+IHRoaXMgc2VyaWVzIHRoYXQgSSBoYXZlIGFwcGxpZWQuCj4gCj4gQWN0dWFsbHksIEkgdGFrZSB0
+aGF0IGJhY2suCj4gCj4gSSBhbSBhbHNvIHNlZWluZyBwcm9ibGVtcyB3aXRoIHRoaXMgcGF0Y2gg
+b24gcHBjLgo+IEkgaGF2ZSBkcm9wcGVkIHRoaXMgcGF0Y2ggZm9yIG5vdy4KPiAKPiBwb3dlcnBj
+LWxpbnV4LWdudS1hcjogY3JlYXRpbmcgbGlidXRpbC5hCj4gcG93ZXJwYy1saW51eC1nbnUtZ2Nj
+IC1ML2xpYiAgLW8gYnVpbGQvc2Jpbi9rZXhlYyBrZXhlYy9rZXhlYy5vIGtleGVjL2lmZG93bi5v
+IGtleGVjL2tleGVjLWVsZi5vIGtleGVjL2tleGVjLWVsZi1leGVjLm8ga2V4ZWMva2V4ZWMtZWxm
+LWNvcmUubyBrZXhlYy9rZXhlYy1lbGYtcmVsLm8ga2V4ZWMva2V4ZWMtZWxmLWJvb3QubyBrZXhl
+Yy9rZXhlYy1pb21lbS5vIGtleGVjL2Zpcm13YXJlX21lbW1hcC5vIGtleGVjL2NyYXNoZHVtcC5v
+IGtleGVjL2NyYXNoZHVtcC14ZW4ubyBrZXhlYy9waHlzX2FyY2gubyBrZXhlYy9rZXJuZWxfdmVy
+c2lvbi5vIGtleGVjL2x6bWEubyBrZXhlYy96bGliLm8ga2V4ZWMvcHJvY19pb21lbS5vIGtleGVj
+L3ZpcnRfdG9fcGh5cy5vIGtleGVjL3BoeXNfdG9fdmlydC5vIGtleGVjL2FkZF9zZWdtZW50Lm8g
+a2V4ZWMvYWRkX2J1ZmZlci5vIGtleGVjL2tleGVjLXVJbWFnZS5vIGtleGVjL2FyY2gvcHBjL2tl
+eGVjLXBwYy5vIGtleGVjL2FyY2gvcHBjL2tleGVjLWVsZi1wcGMubyBrZXhlYy9hcmNoL3BwYy9r
+ZXhlYy1lbGYtcmVsLXBwYy5vIGtleGVjL2FyY2gvcHBjL2tleGVjLWRvbC1wcGMubyBrZXhlYy9h
+cmNoL3BwYy9rZXhlYy11SW1hZ2UtcHBjLm8ga2V4ZWMvYXJjaC9wcGMvcHBjLXNldHVwLXNpbXBs
+ZS5vIGtleGVjL2FyY2gvcHBjL3BwYy1zZXR1cC1kb2wubyBrZXhlYy9hcmNoL3BwYy9maXh1cF9k
+dGIubyBrZXhlYy9hcmNoL3BwYy9mczJkdC5vIGtleGVjL2FyY2gvcHBjL2NyYXNoZHVtcC1wb3dl
+cnBjLm8ga2V4ZWMvbGliZmR0L2ZkdC5vIGtleGVjL2xpYmZkdC9mZHRfcm8ubyBrZXhlYy9saWJm
+ZHQvZmR0X3dpcC5vIGtleGVjL2xpYmZkdC9mZHRfc3cubyBrZXhlYy9saWJmZHQvZmR0X3J3Lm8g
+a2V4ZWMvbGliZmR0L2ZkdF9zdHJlcnJvci5vIGtleGVjL2FyY2gvcHBjL2xpYmZkdC13cmFwcGVy
+Lm8ga2V4ZWMvcHVyZ2F0b3J5Lm8gbGlidXRpbC5hIC1XYWxsIC1XZXh0cmEgLVdwb2ludGVyLWFy
+aXRoIC1XdwpyaXRlLXN0cmluZ3MgLVdmb3JtYXQgLU8yIC1mb21pdC1mcmFtZS1wb2ludGVyIC1w
+aXBlIC1mbm8tc3RyaWN0LWFsaWFzaW5nIC1XYWxsIC1Xc3RyaWN0LXByb3RvdHlwZXMgCj4ga2V4
+ZWMvbGliZmR0L2ZkdC5vOiBJbiBmdW5jdGlvbiBgZmR0X25leHRfdGFnJzoKPiBmZHQuYzooLnRl
+eHQrMHgzMDQpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfQUxJR04nCj4ga2V4ZWMvbGliZmR0
+L2ZkdF9zdy5vOiBJbiBmdW5jdGlvbiBgZmR0X2JlZ2luX25vZGUnOgo+IGZkdF9zdy5jOigudGV4
+dCsweDRmNCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYF9BTElHTicKPiBrZXhlYy9saWJmZHQv
+ZmR0X3N3Lm86IEluIGZ1bmN0aW9uIGBmZHRfcHJvcGVydHknOgo+IGZkdF9zdy5jOigudGV4dCsw
+eDY0OCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYF9BTElHTicKPiBrZXhlYy9saWJmZHQvZmR0
+X3N3Lm86IEluIGZ1bmN0aW9uIGBmZHRfY3JlYXRlJzoKPiBmZHRfc3cuYzooLnRleHQrMHg3NDQp
+OiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfQUxJR04nCj4ga2V4ZWMvbGliZmR0L2ZkdF9ydy5v
+OiBJbiBmdW5jdGlvbiBgX2ZkdF9ibG9ja3NfbWlzb3JkZXJlZCc6Cj4gZmR0X3J3LmM6KC50ZXh0
+KzB4NDApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfQUxJR04nCj4ga2V4ZWMvbGliZmR0L2Zk
+dF9ydy5vOmZkdF9ydy5jOigudGV4dCsweDE5Yyk6IG1vcmUgdW5kZWZpbmVkIHJlZmVyZW5jZXMg
+dG8gYF9BTElHTicgZm9sbG93Cj4gY29sbGVjdDI6IGxkIHJldHVybmVkIDEgZXhpdCBzdGF0dXMK
+CkhpIHNpbW9uLAoKQ291bGQgeW91IHRyeSB0aGUgdjIsIHBsZWFzZT8KClRoYW5rcwpaaGFuZwoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
+bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
