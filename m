@@ -1,14 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UGWGr-0006ke-8T
- for kexec@lists.infradead.org; Fri, 15 Mar 2013 15:10:13 +0000
-Date: Fri, 15 Mar 2013 16:10:06 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 2/2] xen: Fix console buffer content length calculation
-Message-ID: <20130315151006.GC12758@debian70-amd64.local.net-space.pl>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UGWw6-0004A0-Os
+ for kexec@lists.infradead.org; Fri, 15 Mar 2013 15:52:51 +0000
+Date: Fri, 15 Mar 2013 16:52:44 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 04/13] kexec: use _ALIGN* to make the logic clear
+Message-ID: <20130315155243.GD16561@verge.net.au>
+References: <5140B511.7020109@gmail.com> <5140B6E0.1080202@gmail.com>
+ <20130314090805.GH11196@verge.net.au>
+ <20130314094950.GR11196@verge.net.au>
+ <20130314095852.GY11196@verge.net.au> <5141B3DA.2030004@gmail.com>
+ <20130315083544.GE1846@verge.net.au>
+ <5142EDFB.80601@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <5142EDFB.80601@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,69 +28,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: anderson@redhat.com, crash-utility@redhat.com, kexec@lists.infradead.org, xen-devel@lists.xensource.com
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-Function displaying console buffer always assumes its content lenght
-equal to console buffer size. This is not true and sometimes it sends
-garbage to the screen. This patch fixes this issue.
+On Fri, Mar 15, 2013 at 05:46:35PM +0800, Zhang Yanfei wrote:
+> By replacing all the explicit align opertion with marco _ALIGN*,
+> the code logic could more clear.
 
-Additionally, remove references to unused conringc variable.
-
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-
-diff -Npru crash-6.1.4.orig/xen_hyper_command.c crash-6.1.4/xen_hyper_command.c
---- crash-6.1.4.orig/xen_hyper_command.c	2013-02-14 21:38:54.000000000 +0100
-+++ crash-6.1.4/xen_hyper_command.c	2013-03-14 15:03:58.045075917 +0100
-@@ -585,11 +585,10 @@ xen_hyper_cmd_log(void)
- void
- xen_hyper_dump_log(void)
- {
--	uint conringc, conringp;
--	uint warp, start, len, idx, i;
-+	uint conringp, warp, len, idx, i;
- 	ulong conring;
- 	char *buf;
--	char last;
-+	char last = 0;
- 	uint32_t conring_size;
- 
- 	if (get_symbol_type("conring", NULL, NULL) == TYPE_CODE_ARRAY)
-@@ -597,7 +596,6 @@ xen_hyper_dump_log(void)
- 	else
- 		get_symbol_data("conring", sizeof(ulong), &conring);
- 
--	get_symbol_data("conringc", sizeof(uint), &conringc);
- 	get_symbol_data("conringp", sizeof(uint), &conringp);
- 
- 	if (symbol_exists("conring_size"))
-@@ -605,21 +603,19 @@ xen_hyper_dump_log(void)
- 	else
- 		conring_size = XEN_HYPER_CONRING_SIZE;
- 
--	warp = FALSE;
- 	if (conringp >= conring_size) {
--		if ((start = conringp & (conring_size - 1))) {
--			warp = TRUE;
--		}
-+		idx = conringp & (conring_size - 1);
-+		len = conring_size;
-+		warp = TRUE;
- 	} else {
--		start = 0;
-+		idx = 0;
-+		len = conringp;
-+		warp = FALSE;
- 	}
- 
- 	buf = GETBUF(conring_size);
- 	readmem(conring, KVADDR, buf, conring_size,
- 		"conring contents", FAULT_ON_ERROR);
--	idx = start;
--	len = conring_size;
--	last = 0;
- 
- wrap_around:
- 	for (i = idx; i < len; i++) {
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
