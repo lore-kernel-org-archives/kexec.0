@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UGWG8-0006aW-Ux
- for kexec@lists.infradead.org; Fri, 15 Mar 2013 15:09:29 +0000
-Date: Fri, 15 Mar 2013 16:09:21 +0100
+ id 1UGWGr-0006ke-8T
+ for kexec@lists.infradead.org; Fri, 15 Mar 2013 15:10:13 +0000
+Date: Fri, 15 Mar 2013 16:10:06 +0100
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 1/2] xen: Improve calculation of beginning of virtual address
- space
-Message-ID: <20130315150921.GB12758@debian70-amd64.local.net-space.pl>
+Subject: [PATCH 2/2] xen: Fix console buffer content length calculation
+Message-ID: <20130315151006.GC12758@debian70-amd64.local.net-space.pl>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -24,35 +23,67 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: anderson@redhat.com, crash-utility@redhat.com, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 
-Xen changeset 26447 (x86: re-introduce map_domain_page() et al) once again
-altered virtual address space. Current algorithm calculating its start could
-not cope with that change. New version establishes this value on the base of
-image start address and is more generic.
+Function displaying console buffer always assumes its content lenght
+equal to console buffer size. This is not true and sometimes it sends
+garbage to the screen. This patch fixes this issue.
+
+Additionally, remove references to unused conringc variable.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
-diff -Npru crash-6.1.4.orig/xen_hyper.c crash-6.1.4/xen_hyper.c
---- crash-6.1.4.orig/xen_hyper.c	2013-02-14 21:38:54.000000000 +0100
-+++ crash-6.1.4/xen_hyper.c	2013-03-15 13:11:16.595713662 +0100
-@@ -43,10 +43,14 @@ xen_hyper_init(void)
- #endif
+diff -Npru crash-6.1.4.orig/xen_hyper_command.c crash-6.1.4/xen_hyper_command.c
+--- crash-6.1.4.orig/xen_hyper_command.c	2013-02-14 21:38:54.000000000 +0100
++++ crash-6.1.4/xen_hyper_command.c	2013-03-14 15:03:58.045075917 +0100
+@@ -585,11 +585,10 @@ xen_hyper_cmd_log(void)
+ void
+ xen_hyper_dump_log(void)
+ {
+-	uint conringc, conringp;
+-	uint warp, start, len, idx, i;
++	uint conringp, warp, len, idx, i;
+ 	ulong conring;
+ 	char *buf;
+-	char last;
++	char last = 0;
+ 	uint32_t conring_size;
  
- #ifdef X86_64
--	if (xen_major_version() >= 4)
--		xht->xen_virt_start = 0xffff82c480000000;
--	else
--		xht->xen_virt_start = 0xffff828c80000000;
-+	xht->xen_virt_start = symbol_value("start");
-+
-+	/*
-+	 * Xen virtual mapping is aligned to 1 GiB boundary.
-+	 * Image starts no more than 1 GiB below
-+	 * beginning of virtual address space.
-+	 */
-+	xht->xen_virt_start &= 0xffffffffc0000000;
- #endif
+ 	if (get_symbol_type("conring", NULL, NULL) == TYPE_CODE_ARRAY)
+@@ -597,7 +596,6 @@ xen_hyper_dump_log(void)
+ 	else
+ 		get_symbol_data("conring", sizeof(ulong), &conring);
  
- 	if (machine_type("X86_64") &&
+-	get_symbol_data("conringc", sizeof(uint), &conringc);
+ 	get_symbol_data("conringp", sizeof(uint), &conringp);
+ 
+ 	if (symbol_exists("conring_size"))
+@@ -605,21 +603,19 @@ xen_hyper_dump_log(void)
+ 	else
+ 		conring_size = XEN_HYPER_CONRING_SIZE;
+ 
+-	warp = FALSE;
+ 	if (conringp >= conring_size) {
+-		if ((start = conringp & (conring_size - 1))) {
+-			warp = TRUE;
+-		}
++		idx = conringp & (conring_size - 1);
++		len = conring_size;
++		warp = TRUE;
+ 	} else {
+-		start = 0;
++		idx = 0;
++		len = conringp;
++		warp = FALSE;
+ 	}
+ 
+ 	buf = GETBUF(conring_size);
+ 	readmem(conring, KVADDR, buf, conring_size,
+ 		"conring contents", FAULT_ON_ERROR);
+-	idx = start;
+-	len = conring_size;
+-	last = 0;
+ 
+ wrap_around:
+ 	for (i = idx; i < len; i++) {
 
 _______________________________________________
 kexec mailing list
