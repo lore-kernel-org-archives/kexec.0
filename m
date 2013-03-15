@@ -1,28 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UGIZU-0003o2-8Q
- for kexec@lists.infradead.org; Fri, 15 Mar 2013 00:32:34 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id B1AFB3EE0C0
- for <kexec@lists.infradead.org>; Fri, 15 Mar 2013 09:32:26 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 95EDE45DE58
- for <kexec@lists.infradead.org>; Fri, 15 Mar 2013 09:32:26 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 736A645DE5B
- for <kexec@lists.infradead.org>; Fri, 15 Mar 2013 09:32:26 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 617AB1DB8052
- for <kexec@lists.infradead.org>; Fri, 15 Mar 2013 09:32:26 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 182791DB8050
- for <kexec@lists.infradead.org>; Fri, 15 Mar 2013 09:32:26 +0900 (JST)
-Date: Fri, 15 Mar 2013 09:31:46 +0900 (JST)
-Message-Id: <20130315.093146.401285457.d.hatayama@jp.fujitsu.com>
-Subject: makedumpfile: question about memory hole
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+ id 1UGNAs-00055a-Ma
+ for kexec@lists.infradead.org; Fri, 15 Mar 2013 05:27:28 +0000
+Date: Fri, 15 Mar 2013 14:16:40 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 0/3] makedumpfile, elf: distinguish ELF note types by
+ ELF note names
+Message-Id: <20130315141640.b19dcb7c86289e6fe3da6ce3@mxc.nes.nec.co.jp>
+In-Reply-To: <20130304041724.16856.19272.stgit@localhost6.localdomain6>
+References: <20130304041724.16856.19272.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -36,58 +23,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-Hello Kumagai-san,
+Hello HATAYAMA-san,
 
-I have a question about memory hole.
+On Mon, 04 Mar 2013 13:18:24 +0900
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-For example, create_1st_bitmap() calculates memory holes in the part
-below:
+> In ELF, the same integers for two note type represent different
+> meanings if the names they belong to are different. However,
+> get_pt_note_info() doesn't distinguish note types by name space, due
+> to which, for example, any new note type in "VMCOREINFO" name space is
+> wrongly interpretted as NT_PRSTATUS or the unique note type in
+> "VMCOREINFO" name space.
+> 
+> This patch series makes get_pt_note_info() distinguish ELF note types
+> by ELF note names along with cleanups related to this change.
 
-int
-create_1st_bitmap(void)
-{
-...
-        /*
-         * If page is on memory hole, set bit on the 1st-bitmap.
-         */
-        pfn_bitmap1 = 0;
-        for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+Reviewed and applied.
 
-                print_progress(PROGRESS_HOLES, i, num_pt_loads);
 
-                pfn_start = paddr_to_pfn(phys_start);
-                pfn_end   = paddr_to_pfn(phys_end);
+Thanks
+Atsushi Kumagai.
 
-                if (!is_in_segs(pfn_to_paddr(pfn_start)))
-                        pfn_start++;
-                for (pfn = pfn_start; pfn < pfn_end; pfn++) {
-                        set_bit_on_1st_bitmap(pfn);
-                        pfn_bitmap1++;
-                }
-        }
-        pfn_memhole = info->max_mapnr - pfn_bitmap1;
-
-What I don't understand well is that the part here:
-
-                pfn_start = paddr_to_pfn(phys_start);
-                pfn_end   = paddr_to_pfn(phys_end);
-
-                if (!is_in_segs(pfn_to_paddr(pfn_start)))
-                        pfn_start++;
-
-phys_start and pfn_to_paddr(pfn_start) should belong to the same page
-frame, so I suspect the pfn_start should be included in vmcore.
-
-Looking into kexec-tool side, I don't see additional modification made
-to phys_start after it's parsed from /proc/iomem or counterpart on EFI
-interface. Is there any assumption about memory holes behind kernel?
-
-Thanks.
-HATAYAMA, Daisuke
-
+> 
+> For reference:
+> 
+>   Note Section
+>   http://www.sco.com/developers/gabi/latest/ch5.pheader.html#note_section
+> 
+> type
+> 
+>     This word gives the interpretation of the descriptor. Each
+>     originator controls its own types; multiple interpretations of a
+>     single type value may exist. Thus, a program must recognize both
+>     the name and the type to recognize a descriptor. Types currently
+>     must be non-negative. The ABI does not define what descriptors
+>     mean.
+> 
+> ---
+> 
+> HATAYAMA Daisuke (3):
+>       elf: distinguish ELF note types by ELF note name space
+>       elf: swap checking order of VMCOREINFO and VMCOREINFO_XEN
+>       elf, sadump: move KEXEC macros from sadump_info.c to elf_info.h
+> 
+> 
+>  elf_info.c    |   83 ++++++++++++++++++++++++++++++++++++++-------------------
+>  elf_info.h    |    3 ++
+>  sadump_info.c |    4 +--
+>  3 files changed, 59 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 
+> Thanks.
+> HATAYAMA, Daisuke
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
