@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UGNCK-0005AD-HD
- for kexec@lists.infradead.org; Fri, 15 Mar 2013 05:28:57 +0000
-Date: Fri, 15 Mar 2013 14:17:15 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: fix missing count of filtered free pages
-Message-Id: <20130315141715.94cdf3da2079adfd44141367@mxc.nes.nec.co.jp>
-In-Reply-To: <20130314.165415.412290566.d.hatayama@jp.fujitsu.com>
-References: <20130314.165415.412290566.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UGQ7H-0007w6-JG
+ for kexec@lists.infradead.org; Fri, 15 Mar 2013 08:35:56 +0000
+Date: Fri, 15 Mar 2013 09:35:44 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 04/13] kexec: use _ALIGN* to make the logic clear
+Message-ID: <20130315083544.GE1846@verge.net.au>
+References: <5140B511.7020109@gmail.com> <5140B6E0.1080202@gmail.com>
+ <20130314090805.GH11196@verge.net.au>
+ <20130314094950.GR11196@verge.net.au>
+ <20130314095852.GY11196@verge.net.au> <5141B3DA.2030004@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5141B3DA.2030004@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,60 +22,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: d.hatayama@jp.fujitsu.com
-Cc: kexec@lists.infradead.org
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, 14 Mar 2013 16:54:15 +0900 (JST)
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-
-> On the current implementation, __exclude_unnecessary_pages() can refer
-> to page frames not belonging to current cycle. Thus, pfn_free can be
-> now counted up even if it doesn't belong to the current cycle.
-> 
-> This patch changes it so pfn_free is counted up only if the
-> corresponding pfn really belongs to the cycle.
-> 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-
-Thanks, applied.
-
-Atsushi Kumagai
-
-> ---
->  makedumpfile.c |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index acb1b21..817da34 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -4224,9 +4224,9 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  				 * See check_cyclic_buffer_overrun()
->  				 * for the detail.
->  				 */
-> -				clear_bit_on_2nd_bitmap_for_kernel(pfn + i);
-> +				if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
-> +					pfn_free++;
->  			}
-> -			pfn_free += i;
->  		}
->  		/*
->  		 * Exclude the cache page without the private page.
-> -- 
-> 1.7.7.6
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMDc6MjY6MThQTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
+b3RlOgo+IOS6jiAyMDEz5bm0MDPmnIgxNOaXpSAxNzo1OCwgU2ltb24gSG9ybWFuIOWGmemBkzoK
+PiA+IE9uIFRodSwgTWFyIDE0LCAyMDEzIGF0IDEwOjQ5OjUxQU0gKzAxMDAsIFNpbW9uIEhvcm1h
+biB3cm90ZToKPiA+PiBPbiBUaHUsIE1hciAxNCwgMjAxMyBhdCAxMDowODowNkFNICswMTAwLCBT
+aW1vbiBIb3JtYW4gd3JvdGU6Cj4gPj4+IE9uIFRodSwgTWFyIDE0LCAyMDEzIGF0IDAxOjI2OjU2
+QU0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToKPiA+Pj4+IEZyb206IFpoYW5nIFlhbmZlaSA8
+emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4gPj4+Pgo+ID4+Pj4gQnkgcmVwbGFjaW5nIGFs
+bCB0aGUgZXhwbGljaXQgYWxpZ24gb3BlcnRpb25zIHdpdGggbWFyY28gX0FMSUdOKiwKPiA+Pj4+
+IHRoZSBjb2RlIGxvZ2ljIGNvdWxkIGJlIG1vcmUgY2xlYXIuCj4gPj4+Cj4gPj4+IE5vdCBhIGJp
+ZyBkZWFsLCBidXQgSSBiZWxpZXZlIHRoaXMgcGF0Y2ggbmVlZHMgdG8gY29tZSBhZnRlcgo+ID4+
+PiB0aGUgYXJtIGNoYW5nZXMgaW4gdGhlIHNlcmllcyBpbiBvcmRlciB0byBhdm9pZCBicmVha2lu
+ZyB0aGUgYnVpbGQKPiA+Pj4gb24gdGhhdCBhcmNoaXRlY3R1cmUuCj4gPj4KPiA+PiBJIGhhdmUg
+YXBwbGllZCB0aGlzIGFzIHRoZSBsYXN0IHBhdGNoIG9mIHRoaXMgc2VyaWVzIHRoYXQgSSBoYXZl
+IGFwcGxpZWQuCj4gPiAKPiA+IEFjdHVhbGx5LCBJIHRha2UgdGhhdCBiYWNrLgo+ID4gCj4gPiBJ
+IGFtIGFsc28gc2VlaW5nIHByb2JsZW1zIHdpdGggdGhpcyBwYXRjaCBvbiBwcGMuCj4gPiBJIGhh
+dmUgZHJvcHBlZCB0aGlzIHBhdGNoIGZvciBub3cuCj4gPiAKPiA+IHBvd2VycGMtbGludXgtZ251
+LWFyOiBjcmVhdGluZyBsaWJ1dGlsLmEKPiA+IHBvd2VycGMtbGludXgtZ251LWdjYyAtTC9saWIg
+IC1vIGJ1aWxkL3NiaW4va2V4ZWMga2V4ZWMva2V4ZWMubyBrZXhlYy9pZmRvd24ubyBrZXhlYy9r
+ZXhlYy1lbGYubyBrZXhlYy9rZXhlYy1lbGYtZXhlYy5vIGtleGVjL2tleGVjLWVsZi1jb3JlLm8g
+a2V4ZWMva2V4ZWMtZWxmLXJlbC5vIGtleGVjL2tleGVjLWVsZi1ib290Lm8ga2V4ZWMva2V4ZWMt
+aW9tZW0ubyBrZXhlYy9maXJtd2FyZV9tZW1tYXAubyBrZXhlYy9jcmFzaGR1bXAubyBrZXhlYy9j
+cmFzaGR1bXAteGVuLm8ga2V4ZWMvcGh5c19hcmNoLm8ga2V4ZWMva2VybmVsX3ZlcnNpb24ubyBr
+ZXhlYy9sem1hLm8ga2V4ZWMvemxpYi5vIGtleGVjL3Byb2NfaW9tZW0ubyBrZXhlYy92aXJ0X3Rv
+X3BoeXMubyBrZXhlYy9waHlzX3RvX3ZpcnQubyBrZXhlYy9hZGRfc2VnbWVudC5vIGtleGVjL2Fk
+ZF9idWZmZXIubyBrZXhlYy9rZXhlYy11SW1hZ2UubyBrZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMu
+byBrZXhlYy9hcmNoL3BwYy9rZXhlYy1lbGYtcHBjLm8ga2V4ZWMvYXJjaC9wcGMva2V4ZWMtZWxm
+LXJlbC1wcGMubyBrZXhlYy9hcmNoL3BwYy9rZXhlYy1kb2wtcHBjLm8ga2V4ZWMvYXJjaC9wcGMv
+a2V4ZWMtdUltYWdlLXBwYy5vIGtleGVjL2FyY2gvcHBjL3BwYy1zZXR1cC1zaW1wbGUubyBrZXhl
+Yy9hcmNoL3BwYy9wcGMtc2V0dXAtZG9sLm8ga2V4ZWMvYXJjaC9wcGMvZml4dXBfZHRiLm8ga2V4
+ZWMvYXJjaC9wcGMvZnMyZHQubyBrZXhlYy9hcmNoL3BwYy9jcmFzaGR1bXAtcG93ZXJwYy5vIGtl
+eGVjL2xpYmZkdC9mZHQubyBrZXhlYy9saWJmZHQvZmR0X3JvLm8ga2V4ZWMvbGliZmR0L2ZkdF93
+aXAubyBrZXhlYy9saWJmZHQvZmR0X3N3Lm8ga2V4ZWMvbGliZmR0L2ZkdF9ydy5vIGtleGVjL2xp
+YmZkdC9mZHRfc3RyZXJyb3IubyBrZXhlYy9hcmNoL3BwYy9saWJmZHQtd3JhcHBlci5vIGtleGVj
+L3B1cmdhdG9yeS5vIGxpYnV0aWwuYSAtV2FsbCAtV2V4dHJhIC1XcG9pbnRlci1hcml0aCAtV3cK
+PiByaXRlLXN0cmluZ3MgLVdmb3JtYXQgLU8yIC1mb21pdC1mcmFtZS1wb2ludGVyIC1waXBlIC1m
+bm8tc3RyaWN0LWFsaWFzaW5nIC1XYWxsIC1Xc3RyaWN0LXByb3RvdHlwZXMgCj4gPiBrZXhlYy9s
+aWJmZHQvZmR0Lm86IEluIGZ1bmN0aW9uIGBmZHRfbmV4dF90YWcnOgo+ID4gZmR0LmM6KC50ZXh0
+KzB4MzA0KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgX0FMSUdOJwo+ID4ga2V4ZWMvbGliZmR0
+L2ZkdF9zdy5vOiBJbiBmdW5jdGlvbiBgZmR0X2JlZ2luX25vZGUnOgo+ID4gZmR0X3N3LmM6KC50
+ZXh0KzB4NGY0KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgX0FMSUdOJwo+ID4ga2V4ZWMvbGli
+ZmR0L2ZkdF9zdy5vOiBJbiBmdW5jdGlvbiBgZmR0X3Byb3BlcnR5JzoKPiA+IGZkdF9zdy5jOigu
+dGV4dCsweDY0OCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYF9BTElHTicKPiA+IGtleGVjL2xp
+YmZkdC9mZHRfc3cubzogSW4gZnVuY3Rpb24gYGZkdF9jcmVhdGUnOgo+ID4gZmR0X3N3LmM6KC50
+ZXh0KzB4NzQ0KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgX0FMSUdOJwo+ID4ga2V4ZWMvbGli
+ZmR0L2ZkdF9ydy5vOiBJbiBmdW5jdGlvbiBgX2ZkdF9ibG9ja3NfbWlzb3JkZXJlZCc6Cj4gPiBm
+ZHRfcncuYzooLnRleHQrMHg0MCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYF9BTElHTicKPiA+
+IGtleGVjL2xpYmZkdC9mZHRfcncubzpmZHRfcncuYzooLnRleHQrMHgxOWMpOiBtb3JlIHVuZGVm
+aW5lZCByZWZlcmVuY2VzIHRvIGBfQUxJR04nIGZvbGxvdwo+ID4gY29sbGVjdDI6IGxkIHJldHVy
+bmVkIDEgZXhpdCBzdGF0dXMKPiAKPiBIaSBzaW1vbiwKPiAKPiBDb3VsZCB5b3UgdHJ5IHRoZSB2
+MiwgcGxlYXNlPwoKVW5mb3J0dW5hdGVseSBJIGFtIHN0aWxsIHNlZWluZyB0aGUgc2FtZSBwcm9i
+bGVtIHdpdGggdjIuCgpXaGF0IEkgc3VnZ2VzdCBpcyB0aGF0IHdlIGRyb3AgdGhlIGtleGVjL2xp
+YmZkdC9saWJmZHRfaW50ZXJuYWwuaCBwb3J0aW9uCm9mIHRoZSBwYXRjaCBlbnRpcmVseS4gV2l0
+aCB0aGF0IHZlcnNpb24gaW4gcGxhY2UgSSBjYW4gY29tcGlsZSB0aGUgY29kZQpjbGVhbmx5IGZv
+ciBhbGwgc3VwcG9ydGVkIGFyY2hpdGVjdHVyZXMuCgpJZiB5b3UgYXJlIG9rIHdpdGggdGhpcyBj
+aGFuZ2UgY291bGQgeW91IHBsZWFzZSBzZW5kIGl0IGFzIHYzPwoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
