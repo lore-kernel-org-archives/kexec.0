@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UHmKq-0005u1-FG
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 02:31:36 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 67D0E3EE0C8
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:29 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4942445DE61
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:29 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 19D8C45DE5C
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:29 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 06F9BE08003
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:29 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id A98AC1DB804E
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:28 +0900 (JST)
+ id 1UHmKy-0005xC-9W
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 02:31:41 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 336A23EE0BC
+ for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:35 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1979745DE5F
+ for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:35 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id EE20645DE58
+ for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:34 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id DE8651DB803F
+ for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:34 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7B05B1DB8037
+ for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 11:31:34 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v3 16/21] kexec: fill note buffers by NT_VMCORE_PAD notes in
- page-size boundary
-Date: Sat, 16 Mar 2013 13:02:17 +0900
-Message-ID: <20130316040217.15064.61582.stgit@localhost6.localdomain6>
+Subject: [PATCH v3 17/21] vmcore: check NT_VMCORE_PAD as a mark indicating the
+ end of ELF note buffer
+Date: Sat, 16 Mar 2013 13:02:23 +0900
+Message-ID: <20130316040223.15064.77472.stgit@localhost6.localdomain6>
 In-Reply-To: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -42,191 +41,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: vgoyal@redhat.com, ebiederm@xmission.com, cpw@sgi.com, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com, heiko.carstens@de.ibm.com, akpm@linux-foundation.org
 Cc: zhangyanfei@cn.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Fill both crash_notes and vmcoreinfo_note buffers by NT_VMCORE_PAD
-note type to make them satisfy mmap()'s page-size boundary
-requirement.
-
-So far, end of note segments has been marked by zero-filled elf
-header. Instead, this patch writes NT_VMCORE_PAD note in the end of
-note segments until the offset on page-size boundary.
-
-Also, old kernel can treat the ELF segments created without null
-header because it stops reading ELF segments if real size it reads
-reachs p_memsz.
+Modern kernel marks the end of ELF note buffer with NT_VMCORE_PAD type
+note in order to make the buffer satisfy mmap()'s page-size boundary
+requirement. This patch makes finishing reading each buffer if the
+note type now being read is NT_VMCORE_PAD type.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- arch/s390/include/asm/kexec.h |    8 ++++---
- include/linux/kexec.h         |   12 ++++++-----
- kernel/kexec.c                |   46 ++++++++++++++++++++++++++---------------
- 3 files changed, 41 insertions(+), 25 deletions(-)
+ fs/proc/vmcore.c |   24 ++++++++++++++++++++++++
+ 1 files changed, 24 insertions(+), 0 deletions(-)
 
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 694bcd6..f33ec08 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -41,8 +41,8 @@
- /*
-  * Size for s390x ELF notes per CPU
-  *
-- * Seven notes plus zero note at the end: prstatus, fpregset, timer,
-- * tod_cmp, tod_reg, control regs, and prefix
-+ * Seven notes plus note with NT_VMCORE_PAD type at the end: prstatus,
-+ * fpregset, timer, tod_cmp, tod_reg, control regs, and prefix
-  */
- #define KEXEC_NOTE_BYTES \
- 	(ALIGN(sizeof(struct elf_note), 4) * 8 + \
-@@ -53,7 +53,9 @@
- 	 ALIGN(sizeof(u64), 4) + \
- 	 ALIGN(sizeof(u32), 4) + \
- 	 ALIGN(sizeof(u64) * 16, 4) + \
--	 ALIGN(sizeof(u32), 4) \
-+	 ALIGN(sizeof(u32), 4) + \
-+	 KEXEC_CORE_NOTE_DESC_BYTES + \
-+	 VMCOREINFO_NOTE_NAME_BYTES \
- 	)
- 
- /* Provide a dummy definition to avoid build failures. */
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 5113570..6592935 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -47,14 +47,16 @@
- #define KEXEC_CORE_NOTE_NAME_BYTES ALIGN(sizeof(KEXEC_CORE_NOTE_NAME), 4)
- #define KEXEC_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
- /*
-- * The per-cpu notes area is a list of notes terminated by a "NULL"
-- * note header.  For kdump, the code in vmcore.c runs in the context
-- * of the second kernel to combine them into one note.
-+ * The per-cpu notes area is a list of notes terminated by a note
-+ * header with NT_VMCORE_PAD type. For kdump, the code in vmcore.c
-+ * runs in the context of the second kernel to combine them into one
-+ * note.
-  */
- #ifndef KEXEC_NOTE_BYTES
- #define KEXEC_NOTE_BYTES ( (KEXEC_NOTE_HEAD_BYTES * 2) +		\
- 			    KEXEC_CORE_NOTE_NAME_BYTES +		\
--			    KEXEC_CORE_NOTE_DESC_BYTES )
-+			    KEXEC_CORE_NOTE_DESC_BYTES +		\
-+			    VMCOREINFO_NOTE_NAME_BYTES)
- #endif
- 
- /*
-@@ -187,7 +189,7 @@ extern struct kimage *kexec_crash_image;
- #define VMCOREINFO_NOTE_NAME_BYTES ALIGN(sizeof(VMCOREINFO_NOTE_NAME), 4)
- #define VMCOREINFO_NOTE_SIZE       ALIGN(KEXEC_NOTE_HEAD_BYTES*2	\
- 					 +VMCOREINFO_BYTES		\
--					 +VMCOREINFO_NOTE_NAME_BYTES,	\
-+					 +VMCOREINFO_NOTE_NAME_BYTES*2,	\
- 					 PAGE_SIZE)
- 
- /* Location of a reserved region to hold the crash kernel.
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 6597b82..fbdc0f0 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -40,6 +40,7 @@
- 
- /* Per cpu memory for storing cpu states in case of system crash. */
- note_buf_t __percpu *crash_notes;
-+static size_t crash_notes_size = ALIGN(sizeof(note_buf_t), PAGE_SIZE);
- 
- /* vmcoreinfo stuff */
- static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
-@@ -1177,6 +1178,7 @@ unlock:
- 	return ret;
- }
- 
-+/* If @data is NULL, fill @buf with 0 in @data_len bytes. */
- static u32 *append_elf_note(u32 *buf, char *name, unsigned type, void *data,
- 			    size_t data_len)
- {
-@@ -1189,26 +1191,36 @@ static u32 *append_elf_note(u32 *buf, char *name, unsigned type, void *data,
- 	buf += (sizeof(note) + 3)/4;
- 	memcpy(buf, name, note.n_namesz);
- 	buf += (note.n_namesz + 3)/4;
--	memcpy(buf, data, note.n_descsz);
-+	if (data)
-+		memcpy(buf, data, note.n_descsz);
-+	else
-+		memset(buf, 0, note.n_descsz);
- 	buf += (note.n_descsz + 3)/4;
- 
- 	return buf;
- }
- 
--static void final_note(u32 *buf)
-+static void final_note(u32 *buf, size_t buf_len, size_t data_len)
- {
--	struct elf_note note;
-+	size_t used_bytes, pad_hdr_size;
- 
--	note.n_namesz = 0;
--	note.n_descsz = 0;
--	note.n_type   = 0;
--	memcpy(buf, &note, sizeof(note));
-+	pad_hdr_size = KEXEC_NOTE_HEAD_BYTES + VMCOREINFO_NOTE_NAME_BYTES;
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index b252d17..2a0f885 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -258,12 +258,24 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+ 		}
+ 		nhdr_ptr = notes_section;
+ 		while (real_sz < max_sz) {
++			char *name;
 +
-+	/*
-+	 * keep space for ELF note header and "VMCOREINFO" name to
-+	 * terminate ELF segment by NT_VMCORE_PAD note.
-+	 */
-+	BUG_ON(data_len + pad_hdr_size > buf_len);
++			/* Old kernel marks the end of ELF note buffer
++			 * with empty header. */
+ 			if (nhdr_ptr->n_namesz == 0)
+ 				break;
+ 			sz = sizeof(Elf64_Nhdr) +
+ 				((nhdr_ptr->n_namesz + 3) & ~3) +
+ 				((nhdr_ptr->n_descsz + 3) & ~3);
+ 			real_sz += sz;
 +
-+	used_bytes = data_len + pad_hdr_size;
-+	append_elf_note(buf, VMCOREINFO_NOTE_NAME, NT_VMCORE_PAD, NULL,
-+			roundup(used_bytes, PAGE_SIZE) - used_bytes);
- }
++			/* Modern kernel marks the end of ELF note
++			 * buffer with NT_VMCORE_PAD type note. */
++			name = (char *)(nhdr_ptr + 1);
++			if (strncmp(name, VMCOREINFO_NOTE_NAME,
++				    sizeof(VMCOREINFO_NOTE_NAME)) == 0
++			    && nhdr_ptr->n_type == NT_VMCORE_PAD)
++				break;
+ 			nhdr_ptr = (Elf64_Nhdr*)((char*)nhdr_ptr + sz);
+ 		}
  
- void crash_save_cpu(struct pt_regs *regs, int cpu)
- {
- 	struct elf_prstatus prstatus;
--	u32 *buf;
-+	u32 *buf, *buf_end;
+@@ -367,12 +379,24 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+ 		}
+ 		nhdr_ptr = notes_section;
+ 		while (real_sz < max_sz) {
++			char *name;
++
++			/* Old kernel marks the end of ELF note buffer
++			 * with empty header. */
+ 			if (nhdr_ptr->n_namesz == 0)
+ 				break;
+ 			sz = sizeof(Elf32_Nhdr) +
+ 				((nhdr_ptr->n_namesz + 3) & ~3) +
+ 				((nhdr_ptr->n_descsz + 3) & ~3);
+ 			real_sz += sz;
++
++			/* Modern kernel marks the end of ELF note
++			 * buffer with NT_VMCORE_PAD type note. */
++			name = (char *)(nhdr_ptr + 1);
++			if (strncmp(name, VMCOREINFO_NOTE_NAME,
++				    sizeof(VMCOREINFO_NOTE_NAME)) == 0
++			    && nhdr_ptr->n_type == NT_VMCORE_PAD)
++				break;
+ 			nhdr_ptr = (Elf32_Nhdr*)((char*)nhdr_ptr + sz);
+ 		}
  
- 	if ((cpu < 0) || (cpu >= nr_cpu_ids))
- 		return;
-@@ -1226,16 +1238,15 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
- 	memset(&prstatus, 0, sizeof(prstatus));
- 	prstatus.pr_pid = current->pid;
- 	elf_core_copy_kernel_regs(&prstatus.pr_reg, regs);
--	buf = append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
--		      	      &prstatus, sizeof(prstatus));
--	final_note(buf);
-+	buf_end = append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
-+				  &prstatus, sizeof(prstatus));
-+	final_note(buf_end, crash_notes_size, (buf_end - buf) * sizeof(u32));
- }
- 
- static int __init crash_notes_memory_init(void)
- {
- 	/* Allocate memory for saving cpu registers. */
--	crash_notes = __alloc_percpu(roundup(sizeof(note_buf_t), PAGE_SIZE),
--				     PAGE_SIZE);
-+	crash_notes = __alloc_percpu(crash_notes_size, PAGE_SIZE);
- 	if (!crash_notes) {
- 		printk("Kexec: Memory allocation for saving cpu register"
- 		" states failed\n");
-@@ -1434,13 +1445,14 @@ int __init parse_crashkernel_low(char *cmdline,
- 
- static void update_vmcoreinfo_note(void)
- {
--	u32 *buf = vmcoreinfo_note;
-+	u32 *buf = vmcoreinfo_note, *buf_end;
- 
- 	if (!vmcoreinfo_size)
- 		return;
--	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, NT_VMCORE_DEBUGINFO,
--			      vmcoreinfo_data, vmcoreinfo_size);
--	final_note(buf);
-+	buf_end = append_elf_note(buf, VMCOREINFO_NOTE_NAME, NT_VMCORE_DEBUGINFO,
-+				  vmcoreinfo_data, vmcoreinfo_size);
-+	final_note(buf_end, sizeof(vmcoreinfo_note),
-+		   (buf_end - buf) * sizeof(u32));
- }
- 
- void crash_save_vmcoreinfo(void)
 
 
 _______________________________________________
