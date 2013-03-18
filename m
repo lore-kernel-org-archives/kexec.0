@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cavan.codon.org.uk ([2a00:1098:0:80:1000:c:0:1])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UHhfs-0001vC-CU
- for kexec@lists.infradead.org; Mon, 18 Mar 2013 21:33:08 +0000
+ id 1UHhfx-0001xO-0s
+ for kexec@lists.infradead.org; Mon, 18 Mar 2013 21:33:09 +0000
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: [PATCH 04/12] efi: Enable secure boot lockdown automatically when
- enabled in firmware
-Date: Mon, 18 Mar 2013 17:32:25 -0400
-Message-Id: <1363642353-30749-4-git-send-email-matthew.garrett@nebula.com>
+Subject: [PATCH 08/12] asus-wmi: Restrict debugfs interface
+Date: Mon, 18 Mar 2013 17:32:29 -0400
+Message-Id: <1363642353-30749-8-git-send-email-matthew.garrett@nebula.com>
 In-Reply-To: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
 References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
 List-Id: <kexec.lists.infradead.org>
@@ -24,143 +23,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-efi@vger.kernel.org, Josh Boyer <jwboyer@redhat.com>, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-security-module@vger.kernel.org
+Cc: linux-pci@vger.kernel.org, linux-security-module@vger.kernel.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, Matthew Garrett <matthew.garrett@nebula.com>
 
-The firmware has a set of flags that indicate whether secure boot is enabled
-and enforcing. Use them to indicate whether the kernel should lock itself
-down.  We also indicate the machine is in secure boot mode by adding the
-EFI_SECURE_BOOT bit for use with efi_enabled.
+We have no way of validating what all of the Asus WMI methods do on a
+given machine, and there's a risk that some will allow hardware state to
+be manipulated in such a way that arbitrary code can be executed in the
+kernel. Add a capability check to prevent that.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
-Signed-off-by: Josh Boyer <jwboyer@redhat.com>
 ---
- Documentation/x86/zero-page.txt       |  3 ++-
- arch/x86/boot/compressed/eboot.c      | 32 ++++++++++++++++++++++++++++++++
- arch/x86/include/uapi/asm/bootparam.h |  3 ++-
- arch/x86/kernel/setup.c               |  5 +++++
- include/linux/cred.h                  |  2 ++
- include/linux/efi.h                   |  1 +
- 6 files changed, 44 insertions(+), 2 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/x86/zero-page.txt b/Documentation/x86/zero-page.txt
-index 199f453..16f2464 100644
---- a/Documentation/x86/zero-page.txt
-+++ b/Documentation/x86/zero-page.txt
-@@ -29,7 +29,8 @@ Offset	Proto	Name		Meaning
- 1E8/001	ALL	e820_entries	Number of entries in e820_map (below)
- 1E9/001	ALL	eddbuf_entries	Number of entries in eddbuf (below)
- 1EA/001	ALL	edd_mbr_sig_buf_entries	Number of entries in edd_mbr_sig_buffer
--				(below)
-+1EB/001	ALL	kbd_status	Numlock is enabled
-+1EC/001	ALL	secure_boot	Kernel should enable secure boot lockdowns
- 1EF/001	ALL	sentinel	Used to detect broken bootloaders
- 290/040	ALL	edd_mbr_sig_buffer EDD MBR signatures
- 2D0/A00	ALL	e820_map	E820 memory map table
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index c205035..96d859d 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -861,6 +861,36 @@ fail:
- 	return status;
- }
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index c11b242..6d5f88f 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1617,6 +1617,9 @@ static int show_dsts(struct seq_file *m, void *data)
+ 	int err;
+ 	u32 retval = -1;
  
-+static int get_secure_boot(efi_system_table_t *_table)
-+{
-+	u8 sb, setup;
-+	unsigned long datasize = sizeof(sb);
-+	efi_guid_t var_guid = EFI_GLOBAL_VARIABLE_GUID;
-+	efi_status_t status;
++	if (!capable(CAP_COMPROMISE_KERNEL))
++		return -EPERM;
 +
-+	status = efi_call_phys5(sys_table->runtime->get_variable,
-+				L"SecureBoot", &var_guid, NULL, &datasize, &sb);
-+
-+	if (status != EFI_SUCCESS)
-+		return 0;
-+
-+	if (sb == 0)
-+		return 0;
-+
-+
-+	status = efi_call_phys5(sys_table->runtime->get_variable,
-+				L"SetupMode", &var_guid, NULL, &datasize,
-+				&setup);
-+
-+	if (status != EFI_SUCCESS)
-+		return 0;
-+
-+	if (setup == 1)
-+		return 0;
-+
-+	return 1;
-+}
-+
- /*
-  * Because the x86 boot code expects to be passed a boot_params we
-  * need to create one ourselves (usually the bootloader would create
-@@ -1155,6 +1185,8 @@ struct boot_params *efi_main(void *handle, efi_system_table_t *_table,
- 	if (sys_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
- 		goto fail;
+ 	err = asus_wmi_get_devstate(asus, asus->debug.dev_id, &retval);
  
-+	boot_params->secure_boot = get_secure_boot(sys_table);
+ 	if (err < 0)
+@@ -1633,6 +1636,9 @@ static int show_devs(struct seq_file *m, void *data)
+ 	int err;
+ 	u32 retval = -1;
+ 
++	if (!capable(CAP_COMPROMISE_KERNEL))
++		return -EPERM;
 +
- 	setup_graphics(boot_params);
+ 	err = asus_wmi_set_devstate(asus->debug.dev_id, asus->debug.ctrl_param,
+ 				    &retval);
  
- 	setup_efi_pci(boot_params);
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index c15ddaf..85d7685 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -131,7 +131,8 @@ struct boot_params {
- 	__u8  eddbuf_entries;				/* 0x1e9 */
- 	__u8  edd_mbr_sig_buf_entries;			/* 0x1ea */
- 	__u8  kbd_status;				/* 0x1eb */
--	__u8  _pad5[3];					/* 0x1ec */
-+	__u8  secure_boot;				/* 0x1ec */
-+	__u8  _pad5[2];					/* 0x1ed */
- 	/*
- 	 * The sentinel is set to a nonzero value (0xff) in header.S.
- 	 *
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 90d8cc9..5ef9285 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1104,6 +1104,11 @@ void __init setup_arch(char **cmdline_p)
+@@ -1657,6 +1663,9 @@ static int show_call(struct seq_file *m, void *data)
+ 	union acpi_object *obj;
+ 	acpi_status status;
  
- 	io_delay_init();
- 
-+	if (boot_params.secure_boot) {
-+		set_bit(EFI_SECURE_BOOT, &x86_efi_facility);
-+		secureboot_enable();
-+	}
++	if (!capable(CAP_COMPROMISE_KERNEL))
++		return -EPERM;
 +
- 	/*
- 	 * Parse the ACPI tables for possible boot-time SMP configuration.
- 	 */
-diff --git a/include/linux/cred.h b/include/linux/cred.h
-index 04421e8..9e69542 100644
---- a/include/linux/cred.h
-+++ b/include/linux/cred.h
-@@ -156,6 +156,8 @@ extern int set_security_override_from_ctx(struct cred *, const char *);
- extern int set_create_files_as(struct cred *, struct inode *);
- extern void __init cred_init(void);
- 
-+extern void secureboot_enable(void);
-+
- /*
-  * check for validity of credentials
-  */
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 9bf2f1f..1bf382b 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -627,6 +627,7 @@ extern int __init efi_setup_pcdp_console(char *);
- #define EFI_RUNTIME_SERVICES	3	/* Can we use runtime services? */
- #define EFI_MEMMAP		4	/* Can we use EFI memory map? */
- #define EFI_64BIT		5	/* Is the firmware 64-bit? */
-+#define EFI_SECURE_BOOT	6	/* Are we in Secure Boot mode? */
- 
- #ifdef CONFIG_EFI
- # ifdef CONFIG_X86
+ 	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
+ 				     1, asus->debug.method_id,
+ 				     &input, &output);
 -- 
 1.8.1.2
 
