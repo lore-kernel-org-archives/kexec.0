@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cavan.codon.org.uk ([2a00:1098:0:80:1000:c:0:1])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UHhfr-0001un-9Q
- for kexec@lists.infradead.org; Mon, 18 Mar 2013 21:32:58 +0000
+ id 1UHhfv-0001xA-Qx
+ for kexec@lists.infradead.org; Mon, 18 Mar 2013 21:33:04 +0000
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
-Date: Mon, 18 Mar 2013 17:32:22 -0400
-Message-Id: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+Subject: [PATCH 07/12] ACPI: Limit access to custom_method
+Date: Mon, 18 Mar 2013 17:32:28 -0400
+Message-Id: <1363642353-30749-7-git-send-email-matthew.garrett@nebula.com>
+In-Reply-To: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,47 +25,29 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: linux-pci@vger.kernel.org, linux-security-module@vger.kernel.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, Matthew Garrett <matthew.garrett@nebula.com>
 
-Caring about protecting the kernel from UID 0 was previously relatively
-uninteresting, since an attacker could simply modify the kernel, a module
-or an earlier part of the boot chain in order to insert new code. However,
-there are now a range of widely-deployed mechanisms for ensuring the
-authenticity of the early boot process and kernel. The addition of module
-signing makes most of these attacks infeasible.
-
-This means we can return our focus to the kernel. There's currently a number
-of kernel interfaces that permit privileged userspace to modify the running
-kernel. These are currently protected by CAP_SYS_RAWIO, but unfortunately
-the semantics of this capability are poorly defined and it now covers a large
-superset of the desired behaviour.
-
-This patch introduces CAP_COMPROMISE_KERNEL. Holding this capability
-indicates that a process is empowered to perform tasks that may result in
-modification of the running kernel. While aimed at handling the specific
-use-case of Secure Boot, it is generalisable to any other environment where
-permitting userspace to modify the kernel is undesirable.
+It must be impossible for even root to get code executed in kernel context
+under a secure boot environment. custom_method effectively allows arbitrary
+access to system memory, so it needs to have a capability check here.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 ---
- include/uapi/linux/capability.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/acpi/custom_method.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-index ba478fa..7109e650 100644
---- a/include/uapi/linux/capability.h
-+++ b/include/uapi/linux/capability.h
-@@ -343,7 +343,11 @@ struct vfs_cap_data {
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index 12b62f2..edf0710 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -29,6 +29,9 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 	struct acpi_table_header table;
+ 	acpi_status status;
  
- #define CAP_BLOCK_SUSPEND    36
- 
--#define CAP_LAST_CAP         CAP_BLOCK_SUSPEND
-+/* Allow things that trivially permit root to modify the running kernel */
++	if (!capable(CAP_COMPROMISE_KERNEL))
++		return -EPERM;
 +
-+#define CAP_COMPROMISE_KERNEL  37
-+
-+#define CAP_LAST_CAP         CAP_COMPROMISE_KERNEL
- 
- #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
- 
+ 	if (!(*ppos)) {
+ 		/* parse the table header to get the table length */
+ 		if (count <= sizeof(struct acpi_table_header))
 -- 
 1.8.1.2
 
