@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cavan.codon.org.uk ([2a00:1098:0:80:1000:c:0:1])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UHhfr-0001ut-9T
+ id 1UHhfr-0001un-9Q
  for kexec@lists.infradead.org; Mon, 18 Mar 2013 21:32:58 +0000
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: [PATCH 02/12] SELinux: define mapping for CAP_COMPROMISE_KERNEL
-Date: Mon, 18 Mar 2013 17:32:23 -0400
-Message-Id: <1363642353-30749-2-git-send-email-matthew.garrett@nebula.com>
-In-Reply-To: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
-References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+Subject: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
+Date: Mon, 18 Mar 2013 17:32:22 -0400
+Message-Id: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,34 +21,49 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, linux-security-module@vger.kernel.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, Josh Boyer <jwboyer@redhat.com>
+Cc: linux-pci@vger.kernel.org, linux-security-module@vger.kernel.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, Matthew Garrett <matthew.garrett@nebula.com>
 
-From: Josh Boyer <jwboyer@redhat.com>
+Caring about protecting the kernel from UID 0 was previously relatively
+uninteresting, since an attacker could simply modify the kernel, a module
+or an earlier part of the boot chain in order to insert new code. However,
+there are now a range of widely-deployed mechanisms for ensuring the
+authenticity of the early boot process and kernel. The addition of module
+signing makes most of these attacks infeasible.
 
-Add the name of the new CAP_COMPROMISE_KERNEL capability. This allows SELinux
-policies to properly map CAP_COMPROMISE_KERNEL to the appropriate
-capability class.
+This means we can return our focus to the kernel. There's currently a number
+of kernel interfaces that permit privileged userspace to modify the running
+kernel. These are currently protected by CAP_SYS_RAWIO, but unfortunately
+the semantics of this capability are poorly defined and it now covers a large
+superset of the desired behaviour.
 
-Signed-off-by: Josh Boyer <jwboyer@redhat.com>
+This patch introduces CAP_COMPROMISE_KERNEL. Holding this capability
+indicates that a process is empowered to perform tasks that may result in
+modification of the running kernel. While aimed at handling the specific
+use-case of Secure Boot, it is generalisable to any other environment where
+permitting userspace to modify the kernel is undesirable.
+
+Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 ---
- security/selinux/include/classmap.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/uapi/linux/capability.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index 14d04e6..ed99a2d 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -146,8 +146,8 @@ struct security_class_mapping secclass_map[] = {
- 	{ "memprotect", { "mmap_zero", NULL } },
- 	{ "peer", { "recv", NULL } },
- 	{ "capability2",
--	  { "mac_override", "mac_admin", "syslog", "wake_alarm", "block_suspend",
--	    NULL } },
-+	  { "mac_override", "mac_admin", "syslog", "wake_alarm",
-+	    "block_suspend", "compromise_kernel", NULL } },
- 	{ "kernel_service", { "use_as_override", "create_files_as", NULL } },
- 	{ "tun_socket",
- 	  { COMMON_SOCK_PERMS, "attach_queue", NULL } },
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+index ba478fa..7109e650 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -343,7 +343,11 @@ struct vfs_cap_data {
+ 
+ #define CAP_BLOCK_SUSPEND    36
+ 
+-#define CAP_LAST_CAP         CAP_BLOCK_SUSPEND
++/* Allow things that trivially permit root to modify the running kernel */
++
++#define CAP_COMPROMISE_KERNEL  37
++
++#define CAP_LAST_CAP         CAP_COMPROMISE_KERNEL
+ 
+ #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 
 -- 
 1.8.1.2
 
