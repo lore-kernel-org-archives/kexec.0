@@ -1,33 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UHsD7-0005O3-Gp
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 08:47:59 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 36E033EE0BB
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 17:47:51 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 1D40F45DEB5
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 17:47:51 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id F370C45DEB2
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 17:47:50 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id E7C2E1DB803C
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 17:47:50 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 903181DB8038
- for <kexec@lists.infradead.org>; Tue, 19 Mar 2013 17:47:50 +0900 (JST)
-Date: Tue, 19 Mar 2013 17:47:45 +0900 (JST)
-Message-Id: <20130319.174745.69663044.d.hatayama@jp.fujitsu.com>
-Subject: Re: makedumpfile: question about memory hole
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130319164926.2f5a8bff1b5ee4ab4857df65@mxc.nes.nec.co.jp>
-References: <20130319104137.b8aff16a428e6393e32e9d20@mxc.nes.nec.co.jp>
- <20130319.114220.118274790.d.hatayama@jp.fujitsu.com>
- <20130319164926.2f5a8bff1b5ee4ab4857df65@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UHsDB-0005OM-8G
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 08:48:02 +0000
+Message-ID: <5148261F.3030806@redhat.com>
+Date: Tue, 19 Mar 2013 16:47:27 +0800
+From: Dave Young <dyoung@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 10/12] acpi: Ignore acpi_rsdp kernel parameter in a secure
+ boot environment
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+ <1363642353-30749-10-git-send-email-matthew.garrett@nebula.com>
+In-Reply-To: <1363642353-30749-10-git-send-email-matthew.garrett@nebula.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,98 +24,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: linux-efi@vger.kernel.org, Josh Boyer <jwboyer@redhat.com>, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makedumpfile: question about memory hole
-Date: Tue, 19 Mar 2013 16:49:26 +0900
-
-> On Tue, 19 Mar 2013 11:42:20 +0900 (JST)
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+On 03/19/2013 05:32 AM, Matthew Garrett wrote:
+> From: Josh Boyer <jwboyer@redhat.com>
 > 
->> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
->> Subject: Re: makedumpfile: question about memory hole
->> Date: Tue, 19 Mar 2013 10:41:37 +0900
->> 
->> > On Fri, 15 Mar 2013 09:31:46 +0900 (JST)
->> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->> 
->> >> What I don't understand well is that the part here:
->> >> 
->> >>                 pfn_start = paddr_to_pfn(phys_start);
->> >>                 pfn_end   = paddr_to_pfn(phys_end);
->> >> 
->> >>                 if (!is_in_segs(pfn_to_paddr(pfn_start)))
->> >>                         pfn_start++;
->> >> 
->> >> phys_start and pfn_to_paddr(pfn_start) should belong to the same page
->> >> frame, so I suspect the pfn_start should be included in vmcore.
->> >> 
->> >> Looking into kexec-tool side, I don't see additional modification made
->> >> to phys_start after it's parsed from /proc/iomem or counterpart on EFI
->> >> interface. Is there any assumption about memory holes behind kernel?
->> > 
->> > Here is a PT_LOAD segment of ia64 machine which I actually use:
->> > 
->> >   Type           Offset             VirtAddr           PhysAddr
->> >                  FileSiz            MemSiz              Flags  Align
->> > [...]
->> >   LOAD           0x000000015fd0b490 0xe0000040ffda5000 0x00000040ffda5000
->> >                  0x000000000005a000 0x000000000005a000  RWE    0
->> > 
->> > In this case, pfn_to_paddr(pfn_start) is aligned to 0x40ffda4000 
->> > because the page size is 16KiB, and this address is out of PT_LOAD
->> > segment.
->> > 
->> >          phys_start
->> >          = 0x40ffda5000                        
->> >             |------------- PT_LOAD ----------------
->> >      ----+----------+----------+----------+--------
->> >          |   pfn:N  |  pfn:N+1 | pfn:N+2  |  ...
->> >      ----+----------+----------+----------+--------
->> >          |
->> >    pfn_to_paddr(pfn:N)
->> >    = 0x40ffda4000
->> > 
->> > The statement you said is for care the case that phys_start isn't aligned
->> > with the page size.
->> > 
->> > BTW, I'll add a comment to explain this intention into here.
->> 
->> Thanks for the pictorial explanation. It's easy to understand.
->> 
->> Still I think pfn:N should be included in vmcore. The current
->> implementation drops [0x40ffda5000, 0x40ffda8000] that is contained in
->> the PT_LOAD. Or, the range must be hole or other kinds of unnecessary
->> memory from some kernel-side assumption?
+> This option allows userspace to pass the RSDP address to the kernel.  This
+> could potentially be used to circumvent the secure boot trust model.
+> We ignore the setting if we don't have the CAP_COMPROMISE_KERNEL capability.
 > 
-> Oh, I understand your question correctly now.
+> Signed-off-by: Josh Boyer <jwboyer@redhat.com>
+> ---
+>  drivers/acpi/osl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> When Ohmichi-san wrote this code, he thought the page which include
-> memory hole isn't be used. This came from the fact that the basic
-> unit of memory management is *page*, but there is no detailed
-> investigation. 
-
-You mean on at least IA64 case such parts are always holes?
-
+> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+> index 586e7e9..0ef63f1 100644
+> --- a/drivers/acpi/osl.c
+> +++ b/drivers/acpi/osl.c
+> @@ -245,7 +245,7 @@ early_param("acpi_rsdp", setup_acpi_rsdp);
+>  acpi_physical_address __init acpi_os_get_root_pointer(void)
+>  {
+>  #ifdef CONFIG_KEXEC
+> -	if (acpi_rsdp)
+> +	if (acpi_rsdp && capable(CAP_COMPROMISE_KERNEL))
+>  		return acpi_rsdp;
+>  #endif
+>  
 > 
-> So, if there is any case where pfn:N is actually used, this statement
-> should be removed. Maybe, does this question come from an idea of such
-> cases ?
 
-I'm wondering if such case can actually happens.
+This does not work because capable is not usable at this early point.
 
-Even apart from the IA64 case, the regions that is not page-size
-aligned can occur if some parts of System RAM are converted into other
-types of memory at runtime.
+Josh, could you update your fix here?
 
-So, ideally, we should handle page frames that corresponds to start
-and end of each PT_LOAD entries specially, filling the ranges not
-covered by any PT_LOAD entries with 0.
+-- 
+Thanks
+Dave
 
-Thanks.
-HATAYAMA, Daisuke
 
 
 _______________________________________________
