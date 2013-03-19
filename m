@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI2jv-0004US-Df
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 20:02:32 +0000
-Date: Tue, 19 Mar 2013 13:02:29 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify
- mmap()'s page-size boundary requirement
-Message-Id: <20130319130229.fe83c985678146980ecc6102@linux-foundation.org>
-In-Reply-To: <20130316040228.15064.28019.stgit@localhost6.localdomain6>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UI3e9-0006sA-AL
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 21:00:38 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040228.15064.28019.stgit@localhost6.localdomain6>
-Mime-Version: 1.0
+ <20130316040132.15064.42257.stgit@localhost6.localdomain6>
+Date: Tue, 19 Mar 2013 13:59:57 -0700
+In-Reply-To: <20130316040132.15064.42257.stgit@localhost6.localdomain6>
+ (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:01:32 +0900")
+Message-ID: <878v5jqf5e.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v3 08/21] vmcore: copy non page-size aligned head and tail
+ pages in 2nd kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,42 +26,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, cpw@sgi.com, vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
-On Sat, 16 Mar 2013 13:02:29 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> If there's some vmcore object that doesn't satisfy page-size boundary
-> requirement, remap_pfn_range() fails to remap it to user-space.
-> 
-> Objects that posisbly don't satisfy the requirement are ELF note
-> segments only. The memory chunks corresponding to PT_LOAD entries are
-> guaranteed to satisfy page-size boundary requirement by the copy from
-> old memory to buffer in 2nd kernel done in later patch.
-> 
-> This patch doesn't copy each note segment into the 2nd kernel since
-> they amount to so large in total if there are multiple CPUs. For
-> example, current maximum number of CPUs in x86_64 is 5120, where note
-> segments exceed 1MB with NT_PRSTATUS only.
+> Due to mmap() requirement, we need to copy pages not starting or
+> ending with page-size aligned address in 2nd kernel and to map them to
+> user-space.
+>
+> For example, see the map below:
+>
+>     00000000-00010000 : reserved
+>     00010000-0009f800 : System RAM
+>     0009f800-000a0000 : reserved
+>
+> where the System RAM ends with 0x9f800 that is not page-size
+> aligned. This map is divided into two parts:
+>
+>     00010000-0009f000
+>     0009f000-0009f800
+>
+> and the first one is kept in old memory and the 2nd one is copied into
+> buffer on 2nd kernel.
+>
+> This kind of non-page-size-aligned area can always occur since any
+> part of System RAM can be converted into reserved area at runtime.
+>
+> If not doing copying like this and if remapping non page-size aligned
+> pages on old memory directly, mmap() had to export memory which is not
+> dump target to user-space. In the above example this is reserved
+> 0x9f800-0xa0000.
 
-I don't really understand this.  Why does the number of or size of
-note segments affect their alignment?
+So I have a question.  Would it not be easier to only support mmaping on
+the things that are easily mmapable?  And in the oddball corner cases
+require reading the data instead.
 
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -38,6 +38,8 @@ static u64 vmcore_size;
->  
->  static struct proc_dir_entry *proc_vmcore = NULL;
->  
-> +static bool support_mmap_vmcore;
+My gut feel says that would reduce the net complexity of the system a
+bit, and would also reduce the amount of memory that the kernel has to
+allocate.
 
-This is quite regrettable.  It means that on some kernels/machines,
-mmap(vmcore) simply won't work.  This means that people might write
-code which works for them, but which will fail for others when deployed
-on a small number of machines.
+Alrernatively and probably better given the nature of what is happening
+here.  It seems entirely reasonable to round up the boundaries of the
+supported mappings to the nearest page.  A little memory leak of data
+in a reserved page should be harmless.
 
-Can we avoid this?  Why can't we just copy the notes even if there are
-a large number of them?
-
+Eric
 
 _______________________________________________
 kexec mailing list
