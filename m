@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI4qr-0001TZ-P0
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:17:50 +0000
+ id 1UI4tf-0001a1-IU
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:20:43 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040217.15064.61582.stgit@localhost6.localdomain6>
-Date: Tue, 19 Mar 2013 15:17:42 -0700
-In-Reply-To: <20130316040217.15064.61582.stgit@localhost6.localdomain6>
- (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:02:17 +0900")
-Message-ID: <87sj3rkpa1.fsf@xmission.com>
+ <20130316040223.15064.77472.stgit@localhost6.localdomain6>
+Date: Tue, 19 Mar 2013 15:20:34 -0700
+In-Reply-To: <20130316040223.15064.77472.stgit@localhost6.localdomain6>
+ (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:02:23 +0900")
+Message-ID: <87li9jkp59.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 16/21] kexec: fill note buffers by NT_VMCORE_PAD notes
- in page-size boundary
+Subject: Re: [PATCH v3 17/21] vmcore: check NT_VMCORE_PAD as a mark indicating
+ the end of ELF note buffer
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,17 +30,17 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> Fill both crash_notes and vmcoreinfo_note buffers by NT_VMCORE_PAD
-> note type to make them satisfy mmap()'s page-size boundary
-> requirement.
+> Modern kernel marks the end of ELF note buffer with NT_VMCORE_PAD type
+> note in order to make the buffer satisfy mmap()'s page-size boundary
+> requirement. This patch makes finishing reading each buffer if the
+> note type now being read is NT_VMCORE_PAD type.
 
-The requirement does not exist.  Making this change wasteful wrong, and
-potentially a ABI change between the first and second kernels.
-
-Further I believe if you check that final_note comes out of the ELF spec
-for note segments.
+There is absolutely no need for this ABI change.  If you need a wasteful
+pad note taking up space (which I see no evicence for) you can still
+terminate this with an empty note.
 
 Eric
+
 
 _______________________________________________
 kexec mailing list
