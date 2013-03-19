@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI9gQ-0000Db-6T
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 03:27:22 +0000
-Message-ID: <1363750040.24132.483.camel@bling.home>
+Received: from [2002:4ec0:442e::1] (helo=molly.corsac.net)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UHqoj-0006ca-By
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 07:18:42 +0000
+Message-ID: <1363677512.30246.8.camel@scapa>
 Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
-From: Alex Williamson <alex.williamson@redhat.com>
-Date: Tue, 19 Mar 2013 21:27:20 -0600
-In-Reply-To: <51492B78.7020404@zytor.com>
-References: <3pfl8u1ugprwkcs5xmtjth3l.1363742692541@email.android.com>
- <51492379.3090302@zytor.com> <51492828.5070803@zytor.com>
- <1363749503.24132.482.camel@bling.home> <51492B78.7020404@zytor.com>
+From: Yves-Alexis Perez <corsac@debian.org>
+Date: Tue, 19 Mar 2013 08:18:32 +0100
+In-Reply-To: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,33 +18,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1568675315884330115=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: linux-pci@vger.kernel.org, linux-security-module@vger.kernel.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Tue, 2013-03-19 at 20:22 -0700, H. Peter Anvin wrote:
-> On 03/19/2013 08:18 PM, Alex Williamson wrote:
-> >>
-> >> The "pinning" process needs to involve a call to the kernel to process
-> >> the page for DMA (pinning the page and opening it in the iommu) and
-> >> return a transaction address, of course.
-> >>
-> >> I think we have the interface for that in vfio, but I haven't followed
-> >> that work.
-> > 
-> > Yes, vfio does this and is meant to provide a secure-boot-friendly PCI
-> > passthrough interface.  Thanks,
-> > 
-> 
-> Right, and presumably vfio does *not* require CAP_SYS_RAWIO, right?
 
-Correct
+--===============1568675315884330115==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-eUMu4ZYo4BfAZvVev1OO"
 
+
+--=-eUMu4ZYo4BfAZvVev1OO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On lun., 2013-03-18 at 17:32 -0400, Matthew Garrett wrote:
+> This patch introduces CAP_COMPROMISE_KERNEL. Holding this capability
+> indicates that a process is empowered to perform tasks that may result
+> in
+> modification of the running kernel. While aimed at handling the
+> specific
+> use-case of Secure Boot, it is generalisable to any other environment
+> where
+> permitting userspace to modify the kernel is undesirable.
+
+About that, did someone looked at the way securelevel(7) is handled on
+OpenBSD? This is more or less the same thing, where there's a desire to
+distinguish uid 0 from ring0. They're not using a capability but more a
+global state which allows more or less stuff depending on the value
+(securelevel=3D-1 to securelevel=3D2).
+
+Regards,
+--=20
+Yves-Alexis
+
+--=-eUMu4ZYo4BfAZvVev1OO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQEcBAABCAAGBQJRSBFIAAoJEG3bU/KmdcClL0gIAJRs+oqqdMUUXqQFHoXRqSD9
+LEcmDlaSh/QAkPr7TQjYMS40AGoY9j4aUzgNlCsQjXjGLYCledGtiZP2rUTWUEfV
+5x3vxb9Kv9rGb8GJ6LieRwqvoDEmtOg9nUbnr7/iHtzYYmuEhWUOdki2XuQ2n85q
+dO22Pd6aXtWQzFL/l91oHTOll9VB2iIwnKzUcQLpW241Be238YSB5tqD6Gc5yN4E
+uFu+NN7lDxSNPYa57WJvaPXQTwMtDBJZV2RekeLp+5DEVCPDjoXQP2h/KxUTmhBj
+EgvcQ8fxlKzb9UHMUDsFQHIRIpozCOuvVzIZdjZU0jSDEh9duNPmoMr4oOYIKm0=
+=z+Fj
+-----END PGP SIGNATURE-----
+
+--=-eUMu4ZYo4BfAZvVev1OO--
+
+
+--===============1568675315884330115==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1568675315884330115==--
+
