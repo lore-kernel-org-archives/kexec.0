@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI00v-0005uV-3G
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 17:07:55 +0000
-Date: Tue, 19 Mar 2013 13:07:48 -0400
-From: Josh Boyer <jwboyer@redhat.com>
-Subject: [PATCH v2] acpi: Ignore acpi_rsdp kernel parameter in a secure boot
- environment
-Message-ID: <20130319170747.GA15821@hansolo.jdub.homelinux.org>
-References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
- <1363642353-30749-10-git-send-email-matthew.garrett@nebula.com>
- <5148261F.3030806@redhat.com>
- <20130319111916.GI11243@hansolo.jdub.homelinux.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130319111916.GI11243@hansolo.jdub.homelinux.org>
+ id 1UI2EZ-0001lM-QA
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 19:30:08 +0000
+Date: Tue, 19 Mar 2013 12:30:05 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
+Message-Id: <20130319123005.46e48e3f154acf594da5737c@linux-foundation.org>
+In-Reply-To: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
+References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,39 +22,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: linux-efi@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Dave Young <dyoung@redhat.com>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, cpw@sgi.com, vgoyal@redhat.com
 
-This option allows userspace to pass the RSDP address to the kernel.  This
-could potentially be used to circumvent the secure boot trust model.
-This is setup through the setup_arch function, which is called before the
-security_init function sets up the security_ops, so we cannot use a
-capable call here.  We ignore the setting if we are booted in Secure Boot
-mode.
+On Sat, 16 Mar 2013 13:00:47 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-Signed-off-by: Josh Boyer <jwboyer@redhat.com>
----
+> Currently, read to /proc/vmcore is done by read_oldmem() that uses
+> ioremap/iounmap per a single page. For example, if memory is 1GB,
+> ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
+> times. This causes big performance degradation.
+> 
+> In particular, the current main user of this mmap() is makedumpfile,
+> which not only reads memory from /proc/vmcore but also does other
+> processing like filtering, compression and IO work. Update of page
+> table and the following TLB flush makes such processing much slow;
+> though I have yet to make patch for makedumpfile and yet to confirm
+> how it's improved.
+> 
+> To address the issue, this patch implements mmap() on /proc/vmcore to
+> improve read performance. My simple benchmark shows the improvement
+> from 200 [MiB/sec] to over 50.0 [GiB/sec].
 
- v2: Actually send it to Matthew this time
-
- drivers/acpi/osl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 586e7e9..8950454 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -245,7 +245,7 @@ early_param("acpi_rsdp", setup_acpi_rsdp);
- acpi_physical_address __init acpi_os_get_root_pointer(void)
- {
- #ifdef CONFIG_KEXEC
--	if (acpi_rsdp)
-+	if (acpi_rsdp && !efi_enabled(EFI_SECURE_BOOT))
- 		return acpi_rsdp;
- #endif
- 
--- 
-1.8.1.2
+There are quite a lot of userspace-visible vmcore changes here.  Is it
+all fully back-compatible?  Will all known userspace continue to work
+OK on newer kernels?
 
 
 _______________________________________________
