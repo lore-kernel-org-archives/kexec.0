@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI4lX-0000Vo-3y
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:12:19 +0000
+ id 1UI4m8-0000d7-Pq
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:12:57 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040154.15064.35482.stgit@localhost6.localdomain6>
-Date: Tue, 19 Mar 2013 15:12:10 -0700
-In-Reply-To: <20130316040154.15064.35482.stgit@localhost6.localdomain6>
- (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:01:54 +0900")
-Message-ID: <877gl3m43p.fsf@xmission.com>
+ <20130316040200.15064.86851.stgit@localhost6.localdomain6>
+Date: Tue, 19 Mar 2013 15:12:48 -0700
+In-Reply-To: <20130316040200.15064.86851.stgit@localhost6.localdomain6>
+ (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:02:00 +0900")
+Message-ID: <871ubbm42n.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 12/21] vmcore: allocate per-cpu crash_notes objects on
+Subject: Re: [PATCH v3 13/21] kexec: allocate vmcoreinfo note buffer on
  page-size boundary
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,44 +30,51 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> To satisfy mmap()'s page-size boundary requirement, allocate per-cpu
-> crash_notes objects on page-size boundary.
->
-> /proc/vmcore on the 2nd kernel checks if each note objects is
-> allocated on page-size boundary. If there's some object not satisfying
-> the page-size boundary requirement, /proc/vmcore doesn't provide
-> mmap() interface.
+> To satisfy mmap()'s page-size boundary requirement, specify aligned
+> attribute to vmcoreinfo_note objects to allocate it on page-size
+> boundary.
 
-On second look this requirement does not exist.  These all get copyied
-into the unifed PT_NOTE segment so this patch is pointless and wrong.
-
-I see no evidence of any need to change anything in the first kernel,
-and this noticably increases the amount of memory used in the first
-kernel and in the second kernel for no gain.
+Those requirements don't exist.  Making this patch wasteful and wrong.
 
 Eric
 
->
 > Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 > ---
 >
->  kernel/kexec.c |    3 ++-
->  1 files changed, 2 insertions(+), 1 deletions(-)
+>  include/linux/kexec.h |    6 ++++--
+>  kernel/kexec.c        |    2 +-
+>  2 files changed, 5 insertions(+), 3 deletions(-)
 >
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index d2e6927..5113570 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -185,8 +185,10 @@ extern struct kimage *kexec_crash_image;
+>  #define VMCOREINFO_BYTES           (4096)
+>  #define VMCOREINFO_NOTE_NAME       "VMCOREINFO"
+>  #define VMCOREINFO_NOTE_NAME_BYTES ALIGN(sizeof(VMCOREINFO_NOTE_NAME), 4)
+> -#define VMCOREINFO_NOTE_SIZE       (KEXEC_NOTE_HEAD_BYTES*2 + VMCOREINFO_BYTES \
+> -				    + VMCOREINFO_NOTE_NAME_BYTES)
+> +#define VMCOREINFO_NOTE_SIZE       ALIGN(KEXEC_NOTE_HEAD_BYTES*2	\
+> +					 +VMCOREINFO_BYTES		\
+> +					 +VMCOREINFO_NOTE_NAME_BYTES,	\
+> +					 PAGE_SIZE)
+>  
+>  /* Location of a reserved region to hold the crash kernel.
+>   */
 > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index bddd3d7..d1f365e 100644
+> index d1f365e..195de6d 100644
 > --- a/kernel/kexec.c
 > +++ b/kernel/kexec.c
-> @@ -1234,7 +1234,8 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
->  static int __init crash_notes_memory_init(void)
->  {
->  	/* Allocate memory for saving cpu registers. */
-> -	crash_notes = alloc_percpu(note_buf_t);
-> +	crash_notes = __alloc_percpu(roundup(sizeof(note_buf_t), PAGE_SIZE),
-> +				     PAGE_SIZE);
->  	if (!crash_notes) {
->  		printk("Kexec: Memory allocation for saving cpu register"
->  		" states failed\n");
+> @@ -43,7 +43,7 @@ note_buf_t __percpu *crash_notes;
+>  
+>  /* vmcoreinfo stuff */
+>  static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
+> -u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+> +u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4] __aligned(PAGE_SIZE);
+>  size_t vmcoreinfo_size;
+>  size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
+>  
 
 _______________________________________________
 kexec mailing list
