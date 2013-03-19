@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI5BG-00037n-5V
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:38:55 +0000
+ id 1UI5ll-0003gS-MM
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 23:16:38 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040228.15064.28019.stgit@localhost6.localdomain6>
-Date: Tue, 19 Mar 2013 15:38:45 -0700
-In-Reply-To: <20130316040228.15064.28019.stgit@localhost6.localdomain6>
- (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:02:29 +0900")
-Message-ID: <877gl3koay.fsf@xmission.com>
+Date: Tue, 19 Mar 2013 16:16:25 -0700
+In-Reply-To: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
+ (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:00:47 +0900")
+Message-ID: <87ip4nj7zq.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
- page-size boundary requirement
+Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,24 +28,44 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> If there's some vmcore object that doesn't satisfy page-size boundary
-> requirement, remap_pfn_range() fails to remap it to user-space.
+> Currently, read to /proc/vmcore is done by read_oldmem() that uses
+> ioremap/iounmap per a single page. For example, if memory is 1GB,
+> ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
+> times. This causes big performance degradation.
 >
-> Objects that posisbly don't satisfy the requirement are ELF note
-> segments only. The memory chunks corresponding to PT_LOAD entries are
-> guaranteed to satisfy page-size boundary requirement by the copy from
-> old memory to buffer in 2nd kernel done in later patch.
+> In particular, the current main user of this mmap() is makedumpfile,
+> which not only reads memory from /proc/vmcore but also does other
+> processing like filtering, compression and IO work. Update of page
+> table and the following TLB flush makes such processing much slow;
+> though I have yet to make patch for makedumpfile and yet to confirm
+> how it's improved.
 >
-> This patch doesn't copy each note segment into the 2nd kernel since
-> they amount to so large in total if there are multiple CPUs. For
-> example, current maximum number of CPUs in x86_64 is 5120, where note
-> segments exceed 1MB with NT_PRSTATUS only.
+> To address the issue, this patch implements mmap() on /proc/vmcore to
+> improve read performance. My simple benchmark shows the improvement
+> from 200 [MiB/sec] to over 50.0 [GiB/sec].
 
-So you require the first kernel to reserve an additional 20MB, instead
-of just 1.6MB.  336 bytes versus 4096 bytes.
+I am in favor of this direction and the performance and other gains look
+good.
 
-That seems like completely the wrong tradeoff in memory consumption,
-filesize, and backwards compatibility.
+I am not in favor of the ABI changes nor of the nearly order of
+magnitude memory usage increase for elf notes by rounding everything up
+to a page size boundary.
+
+As a general note it is possible to support mmaping any partial page
+by just rounding inside of your mmap function so you should not need to
+copy partial pages.
+
+If you don't want the memory overhead of merging the ELF notes in memory
+in the second kernel you can simply require that the ELF header, the ELF
+program header, and the PT_NOTE section be read from /proc/vmcore
+instead of mmaped.
+
+I did the math and with your changes to note generation in the worst
+case you are reserving 20MiB in the first kernel to replace a 1.6MiB
+with a 240KiB allocation in the second kernel.  That is the wrong
+tradeoff, especially when you require an ABI change at the same time,
+and the 5120+ entries in vmcore_list will likely measurably slow down
+setting up your mappings with mmap.
 
 Eric
 
