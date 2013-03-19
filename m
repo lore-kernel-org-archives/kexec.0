@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI4hJ-0007tL-SJ
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:07:58 +0000
+ id 1UI4lX-0000Vo-3y
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:12:19 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040121.15064.35279.stgit@localhost6.localdomain6>
-Date: Tue, 19 Mar 2013 15:07:47 -0700
-In-Reply-To: <20130316040121.15064.35279.stgit@localhost6.localdomain6>
- (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:01:21 +0900")
-Message-ID: <87hak7m4b0.fsf@xmission.com>
+ <20130316040154.15064.35482.stgit@localhost6.localdomain6>
+Date: Tue, 19 Mar 2013 15:12:10 -0700
+In-Reply-To: <20130316040154.15064.35482.stgit@localhost6.localdomain6>
+ (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:01:54 +0900")
+Message-ID: <877gl3m43p.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 06/21] vmcore: round up buffer size of ELF headers by
- PAGE_SIZE
+Subject: Re: [PATCH v3 12/21] vmcore: allocate per-cpu crash_notes objects on
+ page-size boundary
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,25 +30,44 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> To satisfy mmap() page-size boundary requirement, round up buffer size
-> of ELF headers by PAGE_SIZE. The resulting value becomes offset of ELF
-> note segments and it's assigned in unique PT_NOTE program header
-> entry.
+> To satisfy mmap()'s page-size boundary requirement, allocate per-cpu
+> crash_notes objects on page-size boundary.
+>
+> /proc/vmcore on the 2nd kernel checks if each note objects is
+> allocated on page-size boundary. If there's some object not satisfying
+> the page-size boundary requirement, /proc/vmcore doesn't provide
+> mmap() interface.
 
-Ok. That is just silly.  You can use a single buffer for the ELF header,
-the program header and the notes.  It just requires a bit of counting
-ahead of time.
+On second look this requirement does not exist.  These all get copyied
+into the unifed PT_NOTE segment so this patch is pointless and wrong.
 
-The ELF header itself is small, and so are the program headers,
-especially if you only have one PT_NOTE segment.  The only thing that
-possibly gets big is the note segment, and then that only happens if you
-have a lot of cpus.
-
-Since there are entirely local constructs it seems extremely silly,
-wasteful and complicated to place each logical part in a separately
-mmapable buffer instead of placing them in the same mmapable buffer.
+I see no evidence of any need to change anything in the first kernel,
+and this noticably increases the amount of memory used in the first
+kernel and in the second kernel for no gain.
 
 Eric
+
+>
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+>
+>  kernel/kexec.c |    3 ++-
+>  1 files changed, 2 insertions(+), 1 deletions(-)
+>
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index bddd3d7..d1f365e 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1234,7 +1234,8 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+>  static int __init crash_notes_memory_init(void)
+>  {
+>  	/* Allocate memory for saving cpu registers. */
+> -	crash_notes = alloc_percpu(note_buf_t);
+> +	crash_notes = __alloc_percpu(roundup(sizeof(note_buf_t), PAGE_SIZE),
+> +				     PAGE_SIZE);
+>  	if (!crash_notes) {
+>  		printk("Kexec: Memory allocation for saving cpu register"
+>  		" states failed\n");
 
 _______________________________________________
 kexec mailing list
