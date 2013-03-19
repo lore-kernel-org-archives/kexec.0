@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI3e9-0006sA-AL
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 21:00:38 +0000
+ id 1UI3k6-00072I-Rg
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 21:06:47 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040132.15064.42257.stgit@localhost6.localdomain6>
-Date: Tue, 19 Mar 2013 13:59:57 -0700
-In-Reply-To: <20130316040132.15064.42257.stgit@localhost6.localdomain6>
- (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:01:32 +0900")
-Message-ID: <878v5jqf5e.fsf@xmission.com>
+ <20130316040154.15064.35482.stgit@localhost6.localdomain6>
+Date: Tue, 19 Mar 2013 14:06:39 -0700
+In-Reply-To: <20130316040154.15064.35482.stgit@localhost6.localdomain6>
+ (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:01:54 +0900")
+Message-ID: <87zjxzp09s.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 08/21] vmcore: copy non page-size aligned head and tail
- pages in 2nd kernel
+Subject: Re: [PATCH v3 12/21] vmcore: allocate per-cpu crash_notes objects on
+ page-size boundary
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,47 +30,46 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> Due to mmap() requirement, we need to copy pages not starting or
-> ending with page-size aligned address in 2nd kernel and to map them to
-> user-space.
+> To satisfy mmap()'s page-size boundary requirement, allocate per-cpu
+> crash_notes objects on page-size boundary.
 >
-> For example, see the map below:
->
->     00000000-00010000 : reserved
->     00010000-0009f800 : System RAM
->     0009f800-000a0000 : reserved
->
-> where the System RAM ends with 0x9f800 that is not page-size
-> aligned. This map is divided into two parts:
->
->     00010000-0009f000
->     0009f000-0009f800
->
-> and the first one is kept in old memory and the 2nd one is copied into
-> buffer on 2nd kernel.
->
-> This kind of non-page-size-aligned area can always occur since any
-> part of System RAM can be converted into reserved area at runtime.
->
-> If not doing copying like this and if remapping non page-size aligned
-> pages on old memory directly, mmap() had to export memory which is not
-> dump target to user-space. In the above example this is reserved
-> 0x9f800-0xa0000.
+> /proc/vmcore on the 2nd kernel checks if each note objects is
+> allocated on page-size boundary. If there's some object not satisfying
+> the page-size boundary requirement, /proc/vmcore doesn't provide
+> mmap() interface.
 
-So I have a question.  Would it not be easier to only support mmaping on
-the things that are easily mmapable?  And in the oddball corner cases
-require reading the data instead.
+Does this actually help?  My memory is that /proc/vmcore did some magic
+behind the scenes to combine these multiple note sections into a single
+note section.
 
-My gut feel says that would reduce the net complexity of the system a
-bit, and would also reduce the amount of memory that the kernel has to
-allocate.
+Certainly someone has to combine them together to make a valid elf
+executable.
 
-Alrernatively and probably better given the nature of what is happening
-here.  It seems entirely reasonable to round up the boundaries of the
-supported mappings to the nearest page.  A little memory leak of data
-in a reserved page should be harmless.
+At the same time I don't see any harm in rounding up to a page size
+here, but I don't see the point either.
 
 Eric
+
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+>
+>  kernel/kexec.c |    3 ++-
+>  1 files changed, 2 insertions(+), 1 deletions(-)
+>
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index bddd3d7..d1f365e 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1234,7 +1234,8 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+>  static int __init crash_notes_memory_init(void)
+>  {
+>  	/* Allocate memory for saving cpu registers. */
+> -	crash_notes = alloc_percpu(note_buf_t);
+> +	crash_notes = __alloc_percpu(roundup(sizeof(note_buf_t), PAGE_SIZE),
+> +				     PAGE_SIZE);
+>  	if (!crash_notes) {
+>  		printk("Kexec: Memory allocation for saving cpu register"
+>  		" states failed\n");
 
 _______________________________________________
 kexec mailing list
