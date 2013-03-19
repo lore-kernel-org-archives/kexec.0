@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI2Jt-0001yF-4I
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 19:35:37 +0000
-Date: Tue, 19 Mar 2013 12:35:31 -0700
+ id 1UI2Lz-00023q-Vi
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 19:37:48 +0000
+Date: Tue, 19 Mar 2013 12:37:46 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 07/21] vmcore, procfs: introduce a flag to
- distinguish objects copied in 2nd kernel
-Message-Id: <20130319123531.9777a366ff0e1611727405cd@linux-foundation.org>
-In-Reply-To: <20130316040126.15064.67305.stgit@localhost6.localdomain6>
+Subject: Re: [PATCH v3 08/21] vmcore: copy non page-size aligned head and
+ tail pages in 2nd kernel
+Message-Id: <20130319123746.595a38d90c6071730ed6364b@linux-foundation.org>
+In-Reply-To: <20130316040132.15064.42257.stgit@localhost6.localdomain6>
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040126.15064.67305.stgit@localhost6.localdomain6>
+ <20130316040132.15064.42257.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,50 +27,39 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, cpw@sgi.com, vgoyal@redhat.com
 
-On Sat, 16 Mar 2013 13:01:26 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+On Sat, 16 Mar 2013 13:01:32 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-> The part of dump target memory is copied into the 2nd kernel if it
-> doesn't satisfy mmap()'s page-size boundary requirement. To
-> distinguish such copied object from usual old memory, a flag
-> MEM_TYPE_CURRENT_KERNEL is introduced. If this flag is set, the object
-> is considered being copied into buffer on the 2nd kernel.
+> Due to mmap() requirement, we need to copy pages not starting or
+> ending with page-size aligned address in 2nd kernel and to map them to
+> user-space.
 > 
+> For example, see the map below:
+> 
+>     00000000-00010000 : reserved
+>     00010000-0009f800 : System RAM
+>     0009f800-000a0000 : reserved
+> 
+> where the System RAM ends with 0x9f800 that is not page-size
+> aligned. This map is divided into two parts:
+> 
+>     00010000-0009f000
+>     0009f000-0009f800
+> 
+> and the first one is kept in old memory and the 2nd one is copied into
+> buffer on 2nd kernel.
+> 
+> This kind of non-page-size-aligned area can always occur since any
+> part of System RAM can be converted into reserved area at runtime.
+> 
+> If not doing copying like this and if remapping non page-size aligned
+> pages on old memory directly, mmap() had to export memory which is not
+> dump target to user-space. In the above example this is reserved
+> 0x9f800-0xa0000.
 
-I don't understand this description at all :( Perhaps we can have a
-lengthier version which expands on the concepts a bit further?
+Ah.  This is all the missing info from [patch 07/21].  I suggest we
+join 7 and 8 into a single patch, use the above changelog, add the
+MEM_TYPE_CURRENT_KERNEL code comments.
 
-> --- a/include/linux/proc_fs.h
-> +++ b/include/linux/proc_fs.h
-> @@ -97,11 +97,17 @@ struct kcore_list {
->  	int type;
->  };
->  
-> +#define MEM_TYPE_CURRENT_KERNEL 0x1
-
-A comment describing this would be useful.
-
->  struct vmcore {
->  	struct list_head list;
-> -	unsigned long long paddr;
-> +	union {
-> +		unsigned long long paddr;
-> +		char *buf;
-> +	};
-
-This change wasn't described in the changelog?
-
->  	unsigned long long size;
->  	loff_t offset;
-> +	unsigned int flag;
-
-Presumably this is the place where we put MEM_TYPE_CURRENT_KERNEL? 
-That's unobvious from reading the code.  Add the text "vmcore.flag
-fields:" above the MEM_TYPE_CURRENT_KERNEL definition.
-
-
->  };
->  
->  #ifdef CONFIG_PROC_FS
 
 _______________________________________________
 kexec mailing list
