@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI3zN-0000W1-KL
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 21:22:34 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UI3zj-0000bz-EQ
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 21:22:57 +0000
+Date: Tue, 19 Mar 2013 17:22:44 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 08/21] vmcore: copy non page-size aligned head and
+ tail pages in 2nd kernel
+Message-ID: <20130319212244.GE3872@redhat.com>
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040228.15064.28019.stgit@localhost6.localdomain6>
- <20130319130229.fe83c985678146980ecc6102@linux-foundation.org>
-Date: Tue, 19 Mar 2013 14:22:22 -0700
-In-Reply-To: <20130319130229.fe83c985678146980ecc6102@linux-foundation.org>
- (Andrew Morton's message of "Tue, 19 Mar 2013 13:02:29 -0700")
-Message-ID: <87fvzrozjl.fsf@xmission.com>
+ <20130316040132.15064.42257.stgit@localhost6.localdomain6>
+ <878v5jqf5e.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
- page-size boundary requirement
+Content-Disposition: inline
+In-Reply-To: <878v5jqf5e.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +26,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, cpw@sgi.com, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
 
-Andrew Morton <akpm@linux-foundation.org> writes:
+On Tue, Mar 19, 2013 at 01:59:57PM -0700, Eric W. Biederman wrote:
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
+> 
+> > Due to mmap() requirement, we need to copy pages not starting or
+> > ending with page-size aligned address in 2nd kernel and to map them to
+> > user-space.
+> >
+> > For example, see the map below:
+> >
+> >     00000000-00010000 : reserved
+> >     00010000-0009f800 : System RAM
+> >     0009f800-000a0000 : reserved
+> >
+> > where the System RAM ends with 0x9f800 that is not page-size
+> > aligned. This map is divided into two parts:
+> >
+> >     00010000-0009f000
+> >     0009f000-0009f800
+> >
+> > and the first one is kept in old memory and the 2nd one is copied into
+> > buffer on 2nd kernel.
+> >
+> > This kind of non-page-size-aligned area can always occur since any
+> > part of System RAM can be converted into reserved area at runtime.
+> >
+> > If not doing copying like this and if remapping non page-size aligned
+> > pages on old memory directly, mmap() had to export memory which is not
+> > dump target to user-space. In the above example this is reserved
+> > 0x9f800-0xa0000.
+> 
+> So I have a question.  Would it not be easier to only support mmaping on
+> the things that are easily mmapable?  And in the oddball corner cases
+> require reading the data instead.
 
-> On Sat, 16 Mar 2013 13:02:29 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->
->> If there's some vmcore object that doesn't satisfy page-size boundary
->> requirement, remap_pfn_range() fails to remap it to user-space.
->> 
->> Objects that posisbly don't satisfy the requirement are ELF note
->> segments only. The memory chunks corresponding to PT_LOAD entries are
->> guaranteed to satisfy page-size boundary requirement by the copy from
->> old memory to buffer in 2nd kernel done in later patch.
->> 
->> This patch doesn't copy each note segment into the 2nd kernel since
->> they amount to so large in total if there are multiple CPUs. For
->> example, current maximum number of CPUs in x86_64 is 5120, where note
->> segments exceed 1MB with NT_PRSTATUS only.
->
-> I don't really understand this.  Why does the number of or size of
-> note segments affect their alignment?
->
->> --- a/fs/proc/vmcore.c
->> +++ b/fs/proc/vmcore.c
->> @@ -38,6 +38,8 @@ static u64 vmcore_size;
->>  
->>  static struct proc_dir_entry *proc_vmcore = NULL;
->>  
->> +static bool support_mmap_vmcore;
->
-> This is quite regrettable.  It means that on some kernels/machines,
-> mmap(vmcore) simply won't work.  This means that people might write
-> code which works for them, but which will fail for others when deployed
-> on a small number of machines.
->
-> Can we avoid this?  Why can't we just copy the notes even if there are
-> a large number of them?
+Hi Eric, 
 
-Yes.  If it simplifies things I don't see a need to support mmapping
-everything.  But even there I don't see much of an issue.
+Are you saying that some parts of the vmcore file will support mmap() and
+others will not. If yes, how would a user know which parts of file are
+mappable and which are not.
 
-Today we allocate a buffer to hold the ELF header program headers and
-the note segment, and we could easily allocate that buffer in such a way
-to make it mmapable.
-
-Eric
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
