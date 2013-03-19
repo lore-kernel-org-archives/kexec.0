@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI4tf-0001a1-IU
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:20:43 +0000
+ id 1UI5BG-00037n-5V
+ for kexec@lists.infradead.org; Tue, 19 Mar 2013 22:38:55 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040223.15064.77472.stgit@localhost6.localdomain6>
-Date: Tue, 19 Mar 2013 15:20:34 -0700
-In-Reply-To: <20130316040223.15064.77472.stgit@localhost6.localdomain6>
- (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:02:23 +0900")
-Message-ID: <87li9jkp59.fsf@xmission.com>
+ <20130316040228.15064.28019.stgit@localhost6.localdomain6>
+Date: Tue, 19 Mar 2013 15:38:45 -0700
+In-Reply-To: <20130316040228.15064.28019.stgit@localhost6.localdomain6>
+ (HATAYAMA Daisuke's message of "Sat, 16 Mar 2013 13:02:29 +0900")
+Message-ID: <877gl3koay.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 17/21] vmcore: check NT_VMCORE_PAD as a mark indicating
- the end of ELF note buffer
+Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
+ page-size boundary requirement
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,17 +30,26 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> Modern kernel marks the end of ELF note buffer with NT_VMCORE_PAD type
-> note in order to make the buffer satisfy mmap()'s page-size boundary
-> requirement. This patch makes finishing reading each buffer if the
-> note type now being read is NT_VMCORE_PAD type.
+> If there's some vmcore object that doesn't satisfy page-size boundary
+> requirement, remap_pfn_range() fails to remap it to user-space.
+>
+> Objects that posisbly don't satisfy the requirement are ELF note
+> segments only. The memory chunks corresponding to PT_LOAD entries are
+> guaranteed to satisfy page-size boundary requirement by the copy from
+> old memory to buffer in 2nd kernel done in later patch.
+>
+> This patch doesn't copy each note segment into the 2nd kernel since
+> they amount to so large in total if there are multiple CPUs. For
+> example, current maximum number of CPUs in x86_64 is 5120, where note
+> segments exceed 1MB with NT_PRSTATUS only.
 
-There is absolutely no need for this ABI change.  If you need a wasteful
-pad note taking up space (which I see no evicence for) you can still
-terminate this with an empty note.
+So you require the first kernel to reserve an additional 20MB, instead
+of just 1.6MB.  336 bytes versus 4096 bytes.
+
+That seems like completely the wrong tradeoff in memory consumption,
+filesize, and backwards compatibility.
 
 Eric
-
 
 _______________________________________________
 kexec mailing list
