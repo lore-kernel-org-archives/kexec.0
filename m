@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-da0-x22f.google.com ([2607:f8b0:400e:c00::22f])
+Received: from am1ehsobe004.messaging.microsoft.com ([213.199.154.207]
+ helo=am1outboundpool.messaging.microsoft.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIIs9-0003fq-7O
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 13:16:05 +0000
-Received: by mail-da0-f47.google.com with SMTP id s35so984064dak.34
- for <kexec@lists.infradead.org>; Wed, 20 Mar 2013 06:16:02 -0700 (PDT)
-Message-ID: <5149B68C.1080704@gmail.com>
-Date: Wed, 20 Mar 2013 21:15:56 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+ id 1UIIs9-0003fu-Hw
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 13:16:07 +0000
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
+Date: Wed, 20 Mar 2013 13:15:55 +0000
+Message-ID: <1363785354.2553.15.camel@x230.sbx07502.somerma.wayport.net>
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+ <51490ABD.3050205@zytor.com>
+In-Reply-To: <51490ABD.3050205@zytor.com>
+Content-Language: en-US
+Content-ID: <DC5092F7787488468759C704BBD7BF60@namprd05.prod.outlook.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] kexec: Add new interface for printing error messages
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,37 +26,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+On Tue, 2013-03-19 at 18:02 -0700, H. Peter Anvin wrote:
 
-This patch imports an interface err() for printing error messages.
+> Looking at it in detail, EVERYTHING in CAP_SYS_RAWIO has the possibility
+> of compromising the kernel, because they let device drivers be bypassed,
+> which means arbitrary DMA, which means you have everything.
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/kexec.h |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+Having checked again, I don't think this is true. The most obvious case
+is libata, which uses CAP_SYS_RAWIO to limit the ability to send raw ATA
+commands. Being able to do so clearly permits userspace to avoid any
+kind of policy the vfs has put in place, but there's no obvious way for
+the user to modify the running kernel. Are you suggesting that removing
+the CAP_SYS_RAWIO check there would be reasonable?
 
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 916a24b..4c43b8c 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -121,6 +121,11 @@ do { \
- 		fprintf(stderr, __VA_ARGS__); \
- } while(0)
- 
-+#define err(...) \
-+do { \
-+	fprintf(stderr, __VA_ARGS__); \
-+} while(0);
-+
- struct kexec_segment {
- 	const void *buf;
- 	size_t bufsz;
 -- 
-1.7.1
-
+Matthew Garrett | mjg59@srcf.ucam.org
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
