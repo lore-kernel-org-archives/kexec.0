@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from co1ehsobe001.messaging.microsoft.com ([216.32.180.184]
- helo=co1outboundpool.messaging.microsoft.com)
+Received: from ch1ehsobe005.messaging.microsoft.com ([216.32.181.185]
+ helo=ch1outboundpool.messaging.microsoft.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UI7V4-0004Zf-RD
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 01:07:31 +0000
+ id 1UI7XG-0004iN-8D
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 01:09:47 +0000
 From: Matthew Garrett <matthew.garrett@nebula.com>
 Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
-Date: Wed, 20 Mar 2013 01:07:25 +0000
-Message-ID: <k1r3u75sumyfkayvoobjrce1.1363741640644@email.android.com>
+Date: Wed, 20 Mar 2013 01:09:35 +0000
+Message-ID: <94lcejawn6db48uv4ou0vly2.1363741770288@email.android.com>
 Content-Language: en-US
-Content-ID: <772F9D422F826A4E91A028F471B9D3A7@nebula.com>
+Content-ID: <C16844816AA7FF43AB7A53B946268002@nebula.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,7 +26,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "H. Peter Anvin" <hpa@zytor.com>
 Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Yeah, I'd like the option of relaxing restrictions when drivers explicitly opt in based on iommu support.
+The cases I'd looked at seemed to mostly involve obsolete hardware or only allow command submission to SCSI targets, so I wasn't too worried about them - but, like I said, I've no inherent objection to using CAP_SYS_RAWIO as long as we modify any cases where userspace really does need that access. 
 -- 
 Matthew Garrett | matthew.garrett@nebula.com
 _______________________________________________
