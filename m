@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIIxg-0003wG-Eg
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 13:21:49 +0000
-Date: Wed, 20 Mar 2013 22:21:45 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] kexec: Use err() instead of fprintf()
-Message-ID: <20130320132145.GK16436@verge.net.au>
-References: <5149B68C.1080704@gmail.com>
- <5149B6FF.70908@gmail.com>
+ id 1UIJO2-0000a2-Ou
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 13:49:04 +0000
+Date: Wed, 20 Mar 2013 09:48:50 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 12/21] vmcore: allocate per-cpu crash_notes objects on
+ page-size boundary
+Message-ID: <20130320134850.GC17274@redhat.com>
+References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
+ <20130316040154.15064.35482.stgit@localhost6.localdomain6>
+ <877gl3m43p.fsf@xmission.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5149B6FF.70908@gmail.com>
+In-Reply-To: <877gl3m43p.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,64 +26,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
 
-On Wed, Mar 20, 2013 at 09:17:51PM +0800, Zhang Yanfei wrote:
-> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+On Tue, Mar 19, 2013 at 03:12:10PM -0700, Eric W. Biederman wrote:
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 > 
-> Since we have the err() interface, so replace the error printing
-> function with err().
+> > To satisfy mmap()'s page-size boundary requirement, allocate per-cpu
+> > crash_notes objects on page-size boundary.
+> >
+> > /proc/vmcore on the 2nd kernel checks if each note objects is
+> > allocated on page-size boundary. If there's some object not satisfying
+> > the page-size boundary requirement, /proc/vmcore doesn't provide
+> > mmap() interface.
+> 
+> On second look this requirement does not exist.  These all get copyied
+> into the unifed PT_NOTE segment so this patch is pointless and wrong.
 
-This patch introduces a lot of code changes and I'm not entirely
-sure that I see the benefit.
+Hi Eric,
 
-> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> ---
->  kexec/arch/arm/kexec-arm.c            |    3 +-
->  kexec/arch/arm/kexec-zImage-arm.c     |   18 ++++-----
->  kexec/arch/i386/crashdump-x86.c       |   37 ++++++++---------
->  kexec/arch/i386/kexec-bzImage.c       |   18 ++++----
->  kexec/arch/i386/kexec-elf-x86.c       |    4 +-
->  kexec/arch/i386/kexec-multiboot-x86.c |   11 ++---
->  kexec/arch/i386/kexec-nbi.c           |   14 +++---
->  kexec/arch/i386/kexec-x86-common.c    |   27 ++++++-------
->  kexec/arch/i386/kexec-x86.c           |    9 +---
->  kexec/arch/i386/x86-linux-setup.c     |   19 ++++-----
->  kexec/arch/ia64/crashdump-ia64.c      |    5 +-
->  kexec/arch/ia64/kexec-elf-ia64.c      |   12 +++---
->  kexec/arch/ia64/kexec-ia64.c          |    3 +-
->  kexec/arch/mips/crashdump-mips.c      |   11 ++---
->  kexec/arch/mips/kexec-elf-mips.c      |    2 +-
->  kexec/arch/mips/kexec-mips.c          |    4 +-
->  kexec/arch/ppc/crashdump-powerpc.c    |    5 +-
->  kexec/arch/ppc/fixup_dtb.c            |    3 +-
->  kexec/arch/ppc/kexec-dol-ppc.c        |   14 +++----
->  kexec/arch/ppc/kexec-elf-ppc.c        |    4 +-
->  kexec/arch/ppc/kexec-ppc.c            |   36 ++++++++--------
->  kexec/arch/ppc/kexec-uImage-ppc.c     |    2 +-
->  kexec/arch/ppc64/crashdump-ppc64.c    |   10 ++---
->  kexec/arch/ppc64/fs2dt.c              |    2 +-
->  kexec/arch/ppc64/kexec-elf-ppc64.c    |   17 ++++----
->  kexec/arch/ppc64/kexec-ppc64.c        |    6 +-
->  kexec/arch/ppc64/kexec-zImage-ppc64.c |   18 +++-----
->  kexec/arch/s390/kexec-image.c         |    4 +-
->  kexec/arch/s390/kexec-s390.c          |    2 +-
->  kexec/arch/sh/kexec-sh.c              |    2 +-
->  kexec/arch/x86_64/kexec-bzImage64.c   |   16 ++++----
->  kexec/arch/x86_64/kexec-elf-x86_64.c  |    6 +-
->  kexec/arch/x86_64/kexec-x86_64.c      |    5 +-
->  kexec/crashdump-xen.c                 |    8 ++--
->  kexec/firmware_memmap.c               |   12 ++---
->  kexec/fs2dt.c                         |    2 +-
->  kexec/kernel_version.c                |   17 +++-----
->  kexec/kexec-elf-exec.c                |    8 ++--
->  kexec/kexec-elf-rel.c                 |   10 ++--
->  kexec/kexec-elf.c                     |   70 ++++++++++++++++-----------------
->  kexec/kexec.c                         |   64 ++++++++++++------------------
->  kexec/phys_arch.c                     |    6 +--
->  kexec/zlib.c                          |    2 +-
->  43 files changed, 249 insertions(+), 299 deletions(-)
+They get copied only temporarily and then we free them. Actual reading
+of note data still goes to old kernel's memory.
+
+We copy them temporarily to figure out how much data is there in the
+note and update the size of single PT_NOTE header accordingly. We also
+add a new element to vmcore_list so that next time a read happens on
+an offset which falls into this particular note, we go and read it from
+old memory.
+
+merge_note_headers_elf64() {
+	notes_section = kmalloc(max_sz, GFP_KERNEL);
+	rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
+	/* parse the note, update relevant data structuers */
+	kfree(notes_section);
+}
+
+And that's why we have the problem. Actually note buffers are physically
+present in old kernel's memory but in /proc/vmcore we have exported them
+as contiguous view. So we don't even have the option of mapping extra
+bytes (there is no space for mapping extra bytes).
+
+So there seem to be few options.
+
+- Do not merge headers. Keep one separate PT_NOTE header for each note and
+  then map extra bytes aligned. But that's kind of different and gdb does
+  not expect that. All elf_prstatus are supposed to be in single PT_NOTE
+  header.
+
+- Copy all notes to second kernel's memory.
+
+- align notes in first kernel to page boundary and pad them. I had assumed
+  that we are already allocating close to 4K of memory in first kernel but
+  looks like that's not the case. So agree that will be quite wasteful of
+  memory.
+
+  In fact we are not exporting size of note to user space and kexec-tools 
+  seems to be assuming MAX_NOTE_BYTES of 1024 and that seems very horrible.
+  Anyway, thats a different issue. We should also export size of reserved
+  memory for elf notes.
+
+
+Then how about option 2. That is copy all notes in new kernel's memory.
+Hatayama had initially implemented that appraoch and I suggested to pad
+notes in first kernel to 4K page size boundary. (In an attempt to reduce
+second kernel's memory usage). But sounds like per cpu elf note is much
+smaller and not 4K. So rounding off these to 4K sounds much more wasteful
+of memory.
+
+Will you like option 2 here where we copy notes to new kernel's memory
+in contiguous memory and go from there?
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
