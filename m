@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:4ec0:442e::1] (helo=molly.corsac.net)
+Received: from mail-da0-x22a.google.com ([2607:f8b0:400e:c00::22a])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UHqoj-0006ca-By
- for kexec@lists.infradead.org; Tue, 19 Mar 2013 07:18:42 +0000
-Message-ID: <1363677512.30246.8.camel@scapa>
-Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
-From: Yves-Alexis Perez <corsac@debian.org>
-Date: Tue, 19 Mar 2013 08:18:32 +0100
-In-Reply-To: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
-References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
-Mime-Version: 1.0
+ id 1UIIr7-0003eG-Hb
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 13:15:02 +0000
+Received: by mail-da0-f42.google.com with SMTP id n15so985987dad.29
+ for <kexec@lists.infradead.org>; Wed, 20 Mar 2013 06:14:59 -0700 (PDT)
+Message-ID: <5149B64C.7050405@gmail.com>
+Date: Wed, 20 Mar 2013 21:14:52 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+MIME-Version: 1.0
+Subject: [PATCH] kexec: debug: Use dbgprintf() instead of #ifdef DEBUG
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,71 +18,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1568675315884330115=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: linux-pci@vger.kernel.org, linux-security-module@vger.kernel.org, linux-efi@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
---===============1568675315884330115==
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-eUMu4ZYo4BfAZvVev1OO"
+When use -d option, dbgprintf() will be used to print the debug info.
+And we don't have a DEBUG definition, so replace #ifdef DEBUG test
+with dbgprinf().
 
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kexec/arch/i386/crashdump-x86.c    |    6 ++----
+ kexec/arch/ppc64/crashdump-ppc64.c |   12 +++---------
+ 2 files changed, 5 insertions(+), 13 deletions(-)
 
---=-eUMu4ZYo4BfAZvVev1OO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On lun., 2013-03-18 at 17:32 -0400, Matthew Garrett wrote:
-> This patch introduces CAP_COMPROMISE_KERNEL. Holding this capability
-> indicates that a process is empowered to perform tasks that may result
-> in
-> modification of the running kernel. While aimed at handling the
-> specific
-> use-case of Secure Boot, it is generalisable to any other environment
-> where
-> permitting userspace to modify the kernel is undesirable.
-
-About that, did someone looked at the way securelevel(7) is handled on
-OpenBSD? This is more or less the same thing, where there's a desire to
-distinguish uid 0 from ring0. They're not using a capability but more a
-global state which allows more or less stuff depending on the value
-(securelevel=3D-1 to securelevel=3D2).
-
-Regards,
---=20
-Yves-Alexis
-
---=-eUMu4ZYo4BfAZvVev1OO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQEcBAABCAAGBQJRSBFIAAoJEG3bU/KmdcClL0gIAJRs+oqqdMUUXqQFHoXRqSD9
-LEcmDlaSh/QAkPr7TQjYMS40AGoY9j4aUzgNlCsQjXjGLYCledGtiZP2rUTWUEfV
-5x3vxb9Kv9rGb8GJ6LieRwqvoDEmtOg9nUbnr7/iHtzYYmuEhWUOdki2XuQ2n85q
-dO22Pd6aXtWQzFL/l91oHTOll9VB2iIwnKzUcQLpW241Be238YSB5tqD6Gc5yN4E
-uFu+NN7lDxSNPYa57WJvaPXQTwMtDBJZV2RekeLp+5DEVCPDjoXQP2h/KxUTmhBj
-EgvcQ8fxlKzb9UHMUDsFQHIRIpozCOuvVzIZdjZU0jSDEh9duNPmoMr4oOYIKm0=
-=z+Fj
------END PGP SIGNATURE-----
-
---=-eUMu4ZYo4BfAZvVev1OO--
-
-
---===============1568675315884330115==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 5462f8b..31748c2 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -929,10 +929,8 @@ static int cmdline_add_memmap_reserved(char *cmdline, unsigned long start,
+ 		die("Command line overflow\n");
+ 	strcat(cmdline, str_mmap);
+ 
+-#ifdef DEBUG
+-		printf("Command line after adding reserved memmap\n");
+-		printf("%s\n", cmdline);
+-#endif
++	dbgprintf("Command line after adding reserved memmap\n");
++	dbgprintf("%s\n", cmdline);
+ 	return 0;
+ }
+ 
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index 49cab12..6b2eb4c 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -472,24 +472,18 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size)
+ 			if (base < ustart && end > uend) {
+ 				usablemem_rgns.ranges[i].start = base;
+ 				usablemem_rgns.ranges[i].end = end;
+-#ifdef DEBUG
+-				fprintf(stderr, "usable memory rgn %u: new base:%llx new size:%llx\n",
++				dbgprintf("usable memory rgn %u: new base:%llx new size:%llx\n",
+ 					i, base, size);
+-#endif
+ 				return;
+ 			} else if (base < ustart) {
+ 				usablemem_rgns.ranges[i].start = base;
+-#ifdef DEBUG
+-				fprintf(stderr, "usable memory rgn %u: new base:%llx new size:%llx",
++				dbgprintf("usable memory rgn %u: new base:%llx new size:%llx",
+ 					i, base, usablemem_rgns.ranges[i].end - base);
+-#endif
+ 				return;
+ 			} else if (end > uend){
+ 				usablemem_rgns.ranges[i].end = end;
+-#ifdef DEBUG
+-				fprintf(stderr, "usable memory rgn %u: new end:%llx, new size:%llx",
++				dbgprintf("usable memory rgn %u: new end:%llx, new size:%llx",
+ 					i, end, end - usablemem_rgns.ranges[i].start);
+-#endif
+ 				return;
+ 			}
+ 		}
+-- 
+1.7.1
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1568675315884330115==--
-
