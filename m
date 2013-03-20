@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIPw5-0000wP-Qb
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 20:48:38 +0000
+ id 1UIQ3H-00020B-PP
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 20:56:04 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040154.15064.35482.stgit@localhost6.localdomain6>
- <877gl3m43p.fsf@xmission.com> <20130320134850.GC17274@redhat.com>
-Date: Wed, 20 Mar 2013 13:48:27 -0700
-In-Reply-To: <20130320134850.GC17274@redhat.com> (Vivek Goyal's message of
- "Wed, 20 Mar 2013 09:48:50 -0400")
-Message-ID: <87boaddch0.fsf@xmission.com>
+ <20130316040228.15064.28019.stgit@localhost6.localdomain6>
+ <877gl3koay.fsf@xmission.com> <20130320135716.GE17274@redhat.com>
+Date: Wed, 20 Mar 2013 13:55:55 -0700
+In-Reply-To: <20130320135716.GE17274@redhat.com> (Vivek Goyal's message of
+ "Wed, 20 Mar 2013 09:57:16 -0400")
+Message-ID: <87txo5bxk4.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 12/21] vmcore: allocate per-cpu crash_notes objects on
- page-size boundary
+Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
+ page-size boundary requirement
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,89 +31,55 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 Vivek Goyal <vgoyal@redhat.com> writes:
 
-> On Tue, Mar 19, 2013 at 03:12:10PM -0700, Eric W. Biederman wrote:
+> On Tue, Mar 19, 2013 at 03:38:45PM -0700, Eric W. Biederman wrote:
 >> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 >> 
->> > To satisfy mmap()'s page-size boundary requirement, allocate per-cpu
->> > crash_notes objects on page-size boundary.
+>> > If there's some vmcore object that doesn't satisfy page-size boundary
+>> > requirement, remap_pfn_range() fails to remap it to user-space.
 >> >
->> > /proc/vmcore on the 2nd kernel checks if each note objects is
->> > allocated on page-size boundary. If there's some object not satisfying
->> > the page-size boundary requirement, /proc/vmcore doesn't provide
->> > mmap() interface.
+>> > Objects that posisbly don't satisfy the requirement are ELF note
+>> > segments only. The memory chunks corresponding to PT_LOAD entries are
+>> > guaranteed to satisfy page-size boundary requirement by the copy from
+>> > old memory to buffer in 2nd kernel done in later patch.
+>> >
+>> > This patch doesn't copy each note segment into the 2nd kernel since
+>> > they amount to so large in total if there are multiple CPUs. For
+>> > example, current maximum number of CPUs in x86_64 is 5120, where note
+>> > segments exceed 1MB with NT_PRSTATUS only.
 >> 
->> On second look this requirement does not exist.  These all get copyied
->> into the unifed PT_NOTE segment so this patch is pointless and wrong.
+>> So you require the first kernel to reserve an additional 20MB, instead
+>> of just 1.6MB.  336 bytes versus 4096 bytes.
+>> 
+>> That seems like completely the wrong tradeoff in memory consumption,
+>> filesize, and backwards compatibility.
 >
-> Hi Eric,
+> Agreed. 
 >
-> They get copied only temporarily and then we free them. Actual reading
-> of note data still goes to old kernel's memory.
->
-> We copy them temporarily to figure out how much data is there in the
-> note and update the size of single PT_NOTE header accordingly. We also
-> add a new element to vmcore_list so that next time a read happens on
-> an offset which falls into this particular note, we go and read it from
-> old memory.
->
-> merge_note_headers_elf64() {
-> 	notes_section = kmalloc(max_sz, GFP_KERNEL);
-> 	rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
-> 	/* parse the note, update relevant data structuers */
-> 	kfree(notes_section);
-> }
->
-> And that's why we have the problem. Actually note buffers are physically
-> present in old kernel's memory but in /proc/vmcore we have exported them
-> as contiguous view. So we don't even have the option of mapping extra
-> bytes (there is no space for mapping extra bytes).
->
-> So there seem to be few options.
->
-> - Do not merge headers. Keep one separate PT_NOTE header for each note and
->   then map extra bytes aligned. But that's kind of different and gdb does
->   not expect that. All elf_prstatus are supposed to be in single PT_NOTE
->   header.
->
-> - Copy all notes to second kernel's memory.
->
-> - align notes in first kernel to page boundary and pad them. I had assumed
->   that we are already allocating close to 4K of memory in first kernel but
->   looks like that's not the case. So agree that will be quite wasteful of
->   memory.
->
->   In fact we are not exporting size of note to user space and kexec-tools 
->   seems to be assuming MAX_NOTE_BYTES of 1024 and that seems very horrible.
->   Anyway, thats a different issue. We should also export size of reserved
->   memory for elf notes.
->
->
-> Then how about option 2. That is copy all notes in new kernel's memory.
-> Hatayama had initially implemented that appraoch and I suggested to pad
-> notes in first kernel to 4K page size boundary. (In an attempt to reduce
-> second kernel's memory usage). But sounds like per cpu elf note is much
-> smaller and not 4K. So rounding off these to 4K sounds much more wasteful
-> of memory.
->
-> Will you like option 2 here where we copy notes to new kernel's memory
-> in contiguous memory and go from there?
+> So we already copy ELF headers in second kernel's memory. If we start
+> copying notes too, then both headers and notes will support mmap().
 
-Blink.  I had missed the fact that we were not keeping the merged copy
-of the elf notes.  That does seem silly after we go to all of the work
-to create it.
+The only real is it could be a bit tricky to allocate all of the memory
+for the notes section on high cpu count systems in a single allocation.
 
-The two practical options I see are. 
-1) Don't allow mmap of the new headers and the merged notes.
-2) Copy the notes into a merged note section in the second kernel.
+> For mmap() of memory regions which are not page aligned, we can map
+> extra bytes (as you suggested in one of the mails). Given the fact
+> that we have one ELF header for every memory range, we can always modify
+> the file offset where phdr data is starting to make space for mapping
+> of extra bytes.
 
-I have no problem with either option.
+Agreed ELF file offset % PAGE_SIZE should == physical address % PAGE_SIZE to
+make mmap work.
 
-In practice I expect copying of the notes will scale better as that
-terribly long link list won't need to hold all of the previous note
-sections, but there are other ways to get that speed up.
+> That way whole of vmcore should be mmappable and user does not have
+> to worry about reading part of the file and mmaping the rest.
+
+That sounds simplest.
+
+If core counts on the high end do more than double every 2 years we
+might have a problem.  Otherwise making everything mmapable seems easy
+and sound.
 
 Eric
-
 
 _______________________________________________
 kexec mailing list
