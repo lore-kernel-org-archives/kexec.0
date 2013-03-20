@@ -1,19 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from e8.ny.us.ibm.com ([32.97.182.138])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIQ3H-00020B-PP
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 20:56:04 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040228.15064.28019.stgit@localhost6.localdomain6>
- <877gl3koay.fsf@xmission.com> <20130320135716.GE17274@redhat.com>
-Date: Wed, 20 Mar 2013 13:55:55 -0700
-In-Reply-To: <20130320135716.GE17274@redhat.com> (Vivek Goyal's message of
- "Wed, 20 Mar 2013 09:57:16 -0400")
-Message-ID: <87txo5bxk4.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
- page-size boundary requirement
+ id 1UIQI8-00038h-Dn
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 21:11:25 +0000
+Received: from /spool/local
+ by e8.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Wed, 20 Mar 2013 17:11:23 -0400
+Received: from d01relay03.pok.ibm.com (d01relay03.pok.ibm.com [9.56.227.235])
+ by d01dlp03.pok.ibm.com (Postfix) with ESMTP id CCD6FC9001A
+ for <kexec@lists.infradead.org>; Wed, 20 Mar 2013 17:11:19 -0400 (EDT)
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+ by d01relay03.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r2KLBJTV306568
+ for <kexec@lists.infradead.org>; Wed, 20 Mar 2013 17:11:19 -0400
+Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
+ by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r2KLBIDF019053
+ for <kexec@lists.infradead.org>; Wed, 20 Mar 2013 18:11:18 -0300
+Message-ID: <1363813877.2580.120.camel@falcor1.watson.ibm.com>
+Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Wed, 20 Mar 2013 17:11:17 -0400
+In-Reply-To: <1363811856.2553.37.camel@x230.sbx07502.somerma.wayport.net>
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+ <alpine.LRH.2.02.1303191542200.30973@tundra.namei.org>
+ <1363797717.2580.10.camel@falcor1.watson.ibm.com>
+ <1363798166.2553.29.camel@x230.sbx07502.somerma.wayport.net>
+ <1363802506.2580.55.camel@falcor1.watson.ibm.com>
+ <1363803158.2553.33.camel@x230.sbx07502.somerma.wayport.net>
+ <1363806968.2580.86.camel@falcor1.watson.ibm.com>
+ <1363811856.2553.37.camel@x230.sbx07502.somerma.wayport.net>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,60 +45,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "Serge E. Hallyn" <serge@hallyn.com>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+On Wed, 2013-03-20 at 20:37 +0000, Matthew Garrett wrote:
+> On Wed, 2013-03-20 at 15:16 -0400, Mimi Zohar wrote:
+> > On Wed, 2013-03-20 at 18:12 +0000, Matthew Garrett wrote:
+> > > Well, in the absence of hardcoded in-kernel policy, there needs to be
+> > > some mechanism for ensuring the integrity of a policy. Shipping a signed
+> > > policy initramfs fragment and having any Secure Boot bootloaders pass a
+> > > flag in bootparams indicating that the kernel should panic if that
+> > > fragment isn't present would seem to be the easiest way of doing that.
+> > > Or have I misunderstood the question?
+> > 
+> > Ok, I was confused by the term "fragmented" initramfs.  So once you have
+> > verified the "early" fragmented initramfs signature, this initramfs will
+> > load the "trusted" public keys and could also load the MAC policy. (I
+> > realize that dracut is currently loading the MAC policy, not the
+> > initramfs.)  The MAC policy would then be trusted, right?  Could we then
+> > use the LSM labels for defining an integrity policy for kexec?
+> 
+> Right, that'd be the rough idea. Any further runtime policy updates
+> would presumably need to be signed with a trusted key.
 
-> On Tue, Mar 19, 2013 at 03:38:45PM -0700, Eric W. Biederman wrote:
->> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
->> 
->> > If there's some vmcore object that doesn't satisfy page-size boundary
->> > requirement, remap_pfn_range() fails to remap it to user-space.
->> >
->> > Objects that posisbly don't satisfy the requirement are ELF note
->> > segments only. The memory chunks corresponding to PT_LOAD entries are
->> > guaranteed to satisfy page-size boundary requirement by the copy from
->> > old memory to buffer in 2nd kernel done in later patch.
->> >
->> > This patch doesn't copy each note segment into the 2nd kernel since
->> > they amount to so large in total if there are multiple CPUs. For
->> > example, current maximum number of CPUs in x86_64 is 5120, where note
->> > segments exceed 1MB with NT_PRSTATUS only.
->> 
->> So you require the first kernel to reserve an additional 20MB, instead
->> of just 1.6MB.  336 bytes versus 4096 bytes.
->> 
->> That seems like completely the wrong tradeoff in memory consumption,
->> filesize, and backwards compatibility.
->
-> Agreed. 
->
-> So we already copy ELF headers in second kernel's memory. If we start
-> copying notes too, then both headers and notes will support mmap().
+I'm really sorry to belabor this point, but can kexec rely on an LSM
+label to identify a specific file, out of all the files being executed,
+in a secure boot environment?  The SELinux integrity rule for kexec
+would then look something like,
 
-The only real is it could be a bit tricky to allocate all of the memory
-for the notes section on high cpu count systems in a single allocation.
+appraise func=BPRM_CHECK obj_type=kdump_exec_t appraise_type=imasig
 
-> For mmap() of memory regions which are not page aligned, we can map
-> extra bytes (as you suggested in one of the mails). Given the fact
-> that we have one ELF header for every memory range, we can always modify
-> the file offset where phdr data is starting to make space for mapping
-> of extra bytes.
+We could then follow this up with Serge's idea of, "a capset
+akin to the bounding set, saying you can only have the caps in this set
+if the running binary was a signed one."  kexec already requires
+CAP_SYS_BOOT.
 
-Agreed ELF file offset % PAGE_SIZE should == physical address % PAGE_SIZE to
-make mmap work.
+thanks,
 
-> That way whole of vmcore should be mmappable and user does not have
-> to worry about reading part of the file and mmaping the rest.
+Mimi
 
-That sounds simplest.
-
-If core counts on the high end do more than double every 2 years we
-might have a problem.  Otherwise making everything mmapable seems easy
-and sound.
-
-Eric
 
 _______________________________________________
 kexec mailing list
