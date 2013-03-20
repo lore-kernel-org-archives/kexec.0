@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIJWE-00032V-Lu
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 13:57:31 +0000
-Date: Wed, 20 Mar 2013 09:57:16 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
- page-size boundary requirement
-Message-ID: <20130320135716.GE17274@redhat.com>
-References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040228.15064.28019.stgit@localhost6.localdomain6>
- <877gl3koay.fsf@xmission.com>
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UIKYH-0003xB-TS
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 15:03:42 +0000
+In-Reply-To: <1363785354.2553.15.camel@x230.sbx07502.somerma.wayport.net>
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+ <51490ABD.3050205@zytor.com>
+ <1363785354.2553.15.camel@x230.sbx07502.somerma.wayport.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <877gl3koay.fsf@xmission.com>
+Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
+From: "H. Peter Anvin" <hpa@zytor.com>
+Date: Wed, 20 Mar 2013 08:03:37 -0700
+Message-ID: <db71c48c-4ec4-4611-935b-bb1b0441112d@email.android.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,47 +24,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Tue, Mar 19, 2013 at 03:38:45PM -0700, Eric W. Biederman wrote:
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
-> 
-> > If there's some vmcore object that doesn't satisfy page-size boundary
-> > requirement, remap_pfn_range() fails to remap it to user-space.
-> >
-> > Objects that posisbly don't satisfy the requirement are ELF note
-> > segments only. The memory chunks corresponding to PT_LOAD entries are
-> > guaranteed to satisfy page-size boundary requirement by the copy from
-> > old memory to buffer in 2nd kernel done in later patch.
-> >
-> > This patch doesn't copy each note segment into the 2nd kernel since
-> > they amount to so large in total if there are multiple CPUs. For
-> > example, current maximum number of CPUs in x86_64 is 5120, where note
-> > segments exceed 1MB with NT_PRSTATUS only.
-> 
-> So you require the first kernel to reserve an additional 20MB, instead
-> of just 1.6MB.  336 bytes versus 4096 bytes.
-> 
-> That seems like completely the wrong tradeoff in memory consumption,
-> filesize, and backwards compatibility.
+CAP_SYS_RAWIO is definitely inappropriate there.
 
-Agreed. 
+Matthew Garrett <matthew.garrett@nebula.com> wrote:
 
-So we already copy ELF headers in second kernel's memory. If we start
-copying notes too, then both headers and notes will support mmap().
+>On Tue, 2013-03-19 at 18:02 -0700, H. Peter Anvin wrote:
+>
+>> Looking at it in detail, EVERYTHING in CAP_SYS_RAWIO has the
+>possibility
+>> of compromising the kernel, because they let device drivers be
+>bypassed,
+>> which means arbitrary DMA, which means you have everything.
+>
+>Having checked again, I don't think this is true. The most obvious case
+>is libata, which uses CAP_SYS_RAWIO to limit the ability to send raw
+>ATA
+>commands. Being able to do so clearly permits userspace to avoid any
+>kind of policy the vfs has put in place, but there's no obvious way for
+>the user to modify the running kernel. Are you suggesting that removing
+>the CAP_SYS_RAWIO check there would be reasonable?
 
-For mmap() of memory regions which are not page aligned, we can map
-extra bytes (as you suggested in one of the mails). Given the fact
-that we have one ELF header for every memory range, we can always modify
-the file offset where phdr data is starting to make space for mapping
-of extra bytes.
-
-That way whole of vmcore should be mmappable and user does not have
-to worry about reading part of the file and mmaping the rest.
-
-Thanks
-Vivek
+-- 
+Sent from my mobile phone. Please excuse brevity and lack of formatting.
 
 _______________________________________________
 kexec mailing list
