@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mail-db8lp0189.outbound.messaging.microsoft.com
+ ([213.199.154.189] helo=db8outboundpool.messaging.microsoft.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIM9O-0004rL-FM
- for kexec@lists.infradead.org; Wed, 20 Mar 2013 16:46:06 +0000
-Message-ID: <5149E7C3.3080707@zytor.com>
-Date: Wed, 20 Mar 2013 09:45:55 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-MIME-Version: 1.0
+ id 1UIMCq-00061J-SD
+ for kexec@lists.infradead.org; Wed, 20 Mar 2013 16:49:43 +0000
+From: Matthew Garrett <matthew.garrett@nebula.com>
 Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
+Date: Wed, 20 Mar 2013 16:49:26 +0000
+Message-ID: <1363798166.2553.29.camel@x230.sbx07502.somerma.wayport.net>
 References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
- <51490ABD.3050205@zytor.com>
- <1363785354.2553.15.camel@x230.sbx07502.somerma.wayport.net>
- <db71c48c-4ec4-4611-935b-bb1b0441112d@email.android.com>
- <1363792462.2553.24.camel@x230.sbx07502.somerma.wayport.net>
-In-Reply-To: <1363792462.2553.24.camel@x230.sbx07502.somerma.wayport.net>
+ <alpine.LRH.2.02.1303191542200.30973@tundra.namei.org>
+ <1363797717.2580.10.camel@falcor1.watson.ibm.com>
+In-Reply-To: <1363797717.2580.10.camel@falcor1.watson.ibm.com>
+Content-Language: en-US
+Content-ID: <CFFF9AAF2DD7E140831E2625553BC0C9@namprd05.prod.outlook.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,27 +27,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
 
-On 03/20/2013 08:14 AM, Matthew Garrett wrote:
-> On Wed, 2013-03-20 at 08:03 -0700, H. Peter Anvin wrote:
->> CAP_SYS_RAWIO is definitely inappropriate there.
-> 
-> Ok. How do we fix that without breaking userspace that expects
-> CAP_SYS_RAWIO to be sufficient?
-> 
+On Wed, 2013-03-20 at 12:41 -0400, Mimi Zohar wrote:
 
-I don't think we can to some way, because when what you have is
-fundamentally broken, it's hard to fix.
+> Matthrew, perhaps you could clarify whether this will be tied to MAC
+> security.  Based on the kexec thread, I'm under the impression that is
+> not the intention, or at least not for kexec.  As root isn't trusted,
+> neither is the boot command line, nor any policy that is loaded by root,
+> including those for MAC.
 
-However, it is extremely likely that the number of affected applications
-is vanishingly small.  There probably are a handful of apps that do
-this, and I wouldn't be surprised if most of them simply run as root.
+The work done on signed initramfs fragments would seem to be the best
+option here so far?
 
-	-hpa
-
-
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
