@@ -1,25 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIfmc-0006mY-EM
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 13:43:55 +0000
-Date: Thu, 21 Mar 2013 09:43:48 -0400
+ id 1UIftH-0007ry-Bo
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 13:50:48 +0000
+Date: Thu, 21 Mar 2013 09:50:28 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
-Message-ID: <20130321134348.GA3934@redhat.com>
-References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
- <alpine.LRH.2.02.1303191542200.30973@tundra.namei.org>
- <1363797717.2580.10.camel@falcor1.watson.ibm.com>
- <1363798166.2553.29.camel@x230.sbx07502.somerma.wayport.net>
- <1363802506.2580.55.camel@falcor1.watson.ibm.com>
- <1363803158.2553.33.camel@x230.sbx07502.somerma.wayport.net>
- <1363806968.2580.86.camel@falcor1.watson.ibm.com>
- <1363811856.2553.37.camel@x230.sbx07502.somerma.wayport.net>
- <1363813877.2580.120.camel@falcor1.watson.ibm.com>
- <1363814289.2553.41.camel@x230.sbx07502.somerma.wayport.net>
+Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
+ page-size boundary requirement
+Message-ID: <20130321135027.GB3934@redhat.com>
+References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
+ <20130316040228.15064.28019.stgit@localhost6.localdomain6>
+ <877gl3koay.fsf@xmission.com> <20130320135716.GE17274@redhat.com>
+ <87txo5bxk4.fsf@xmission.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1363814289.2553.41.camel@x230.sbx07502.somerma.wayport.net>
+In-Reply-To: <87txo5bxk4.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,64 +27,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Serge E. Hallyn" <serge@hallyn.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
 
-On Wed, Mar 20, 2013 at 09:18:10PM +0000, Matthew Garrett wrote:
-> On Wed, 2013-03-20 at 17:11 -0400, Mimi Zohar wrote:
-> > On Wed, 2013-03-20 at 20:37 +0000, Matthew Garrett wrote:
-> > > Right, that'd be the rough idea. Any further runtime policy updates
-> > > would presumably need to be signed with a trusted key.
-> > 
-> > I'm really sorry to belabor this point, but can kexec rely on an LSM
-> > label to identify a specific file, out of all the files being executed,
-> > in a secure boot environment?  The SELinux integrity rule for kexec
-> > would then look something like,
-> >
-> > appraise func=BPRM_CHECK obj_type=kdump_exec_t appraise_type=imasig
-> 
-> It would certainly be possible to configure a system such that this was
-> true (assuming support for signed initramfs and restricted policy
-> loading), and anyone wanting to ensure that kexec only loaded trusted
-> binaries would have to ensure that their system was appropriately
-> configured. Having some mechanism to then give the kexec binary
-> CAP_MODIFY_KERNEL would avoid needing an extra kexec entry point.
+On Wed, Mar 20, 2013 at 01:55:55PM -0700, Eric W. Biederman wrote:
 
-Giving CAP_MODIFY_KERNEL to processess upon signature verification
-will simplify things a bit.
+[..]
+> If core counts on the high end do more than double every 2 years we
+> might have a problem.  Otherwise making everything mmapable seems easy
+> and sound.
 
-Only thing is that signature verification alone is not sufficient. We
-also need to make sure after signature verification executable can
-not be modified in memory in any way. So that means atleast couple of
-things.
-
-- Process code/data should not be swapped out. Otherwise it can possibly
-  be written by unsigned priviliged processes and then faulted in back.
-
-- Because priviliged unsigned processes can bypass file system and
-  directly write to disk, do not cache appraisal results. So create a
-  way in IMA rules to not cache the results.
-
-I think memory locking part is little tricky as what part of files are
-to be locked will depend on the binary loader (and not IMA). May be IMA
-can set a flag somewhere which gives an hint to binary loader that lock
-down file. Once the file has been locked down, binary loader should
-set some flag too and call security hook. This flag will be a hint to IMA
-that file has been locked down, another appraisal happens and if
-it passes successfuly, then IMA can give CAP_MODIFY_KERNEL capability
-to the process.
-
-Another small nit is appraise_type=imasig. Given the fact that there
-can be many formats of digital signature, we might have to make it
-more fine grained to be able to specify a particular kind of digital
-signature and not every possible digital signature supported. 
-
-Assuming all this works, I can look into how /sbin/kexec can call into
-kernel to verify integrity of bzImage before it is loaded. Not sure one
-needs to very PE/COFF signature or bzImage will be re-signed using IMA
-and one needs to call into IMA. I think here also we will have to first
-lock down file in memory, make sure nobody can open file for writes,
-and then do signature verification. 
+We already have mechanism to translate file offset into actual physical
+address where data is. So if we can't allocate one contiguous chunk of
+memory for notes, we should be able to break it down into multiple
+page aligned areas and map offset into respective discontiguous areas
+using vmcore_list.
 
 Thanks
 Vivek
