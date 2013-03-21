@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIftH-0007ry-Bo
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 13:50:48 +0000
-Date: Thu, 21 Mar 2013 09:50:28 -0400
+ id 1UIgE3-0001bw-0i
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 14:12:17 +0000
+Date: Thu, 21 Mar 2013 10:12:02 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
- page-size boundary requirement
-Message-ID: <20130321135027.GB3934@redhat.com>
+Subject: Re: [PATCH v3 01/21] vmcore: reference e_phoff member explicitly to
+ get position of program header table
+Message-ID: <20130321141202.GF3934@redhat.com>
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040228.15064.28019.stgit@localhost6.localdomain6>
- <877gl3koay.fsf@xmission.com> <20130320135716.GE17274@redhat.com>
- <87txo5bxk4.fsf@xmission.com>
+ <20130316040053.15064.93652.stgit@localhost6.localdomain6>
+ <87ppyvnjyn.fsf@xmission.com>
+ <20130321.115041.225288996.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87txo5bxk4.fsf@xmission.com>
+In-Reply-To: <20130321.115041.225288996.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,21 +27,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
 
-On Wed, Mar 20, 2013 at 01:55:55PM -0700, Eric W. Biederman wrote:
+On Thu, Mar 21, 2013 at 11:50:41AM +0900, HATAYAMA Daisuke wrote:
+> From: "Eric W. Biederman" <ebiederm@xmission.com>
+> Subject: Re: [PATCH v3 01/21] vmcore: reference e_phoff member explicitly to get position of program header table
+> Date: Tue, 19 Mar 2013 14:44:16 -0700
+> 
+> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
+> > 
+> >> Currently, the code assumes that position of program header table is
+> >> next to ELF header. But future change can break the assumption on
+> >> kexec-tools and the 1st kernel. To avoid worst case, reference e_phoff
+> >> member explicitly to get position of program header table in
+> >> file-offset.
+> > 
+> > In principle this looks good.  However when I read this it looks like
+> > you are going a little too far.
+> > 
+> > You are changing not only the reading of the supplied headers, but
+> > you are changing the generation of the new new headers that describe
+> > the data provided by /proc/vmcore.
+> > 
+> > I get lost in following this after you mangle merge_note_headers.
+> > 
+> > In principle removing silly assumptions seems reasonable, but I think
+> > it is completely orthogonal to the task of maping vmcore mmapable.
+> > 
+> > I think it is fine to claim that the assumptions made here in vmcore are
+> > part of the kexec on panic ABI at this point, which would generally make
+> > this change unnecessary.
+> 
+> This was suggested by Vivek. He prefers generic one.
+> 
+> Vivek, do you agree to this? Or is it better to re-post this and other
+> clean-up patches as another one separately to this patch set?
 
-[..]
-> If core counts on the high end do more than double every 2 years we
-> might have a problem.  Otherwise making everything mmapable seems easy
-> and sound.
-
-We already have mechanism to translate file offset into actual physical
-address where data is. So if we can't allocate one contiguous chunk of
-memory for notes, we should be able to break it down into multiple
-page aligned areas and map offset into respective discontiguous areas
-using vmcore_list.
+Given the fact that current code has been working, I am fine to just
+re-post and take care of mmap() related issues. And we can take care
+of cleaning up of some assumptions about PT_NOTE headers later. Trying
+to club large cleanup with mmap() patches is making it hard to review.
 
 Thanks
 Vivek
