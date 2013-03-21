@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIZi3-0004HX-3v
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 07:14:48 +0000
-Message-ID: <514AB343.40708@redhat.com>
-Date: Thu, 21 Mar 2013 15:14:11 +0800
-From: Baoquan <bhe@redhat.com>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UIZiC-0004J9-DK
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 07:14:57 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20130319123005.46e48e3f154acf594da5737c@linux-foundation.org>
+ <20130321.125245.142520187.d.hatayama@jp.fujitsu.com>
+ <87d2ut2s7f.fsf@xmission.com>
+ <20130321.153537.03532110.d.hatayama@jp.fujitsu.com>
+Date: Thu, 21 Mar 2013 00:14:43 -0700
+In-Reply-To: <20130321.153537.03532110.d.hatayama@jp.fujitsu.com> (HATAYAMA
+ Daisuke's message of "Thu, 21 Mar 2013 15:35:37 +0900 (JST)")
+Message-ID: <87d2utxlzw.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [ANNOUNCE] kexec-tools 2.0.4
-References: <20130319021145.GA4372@verge.net.au>
-In-Reply-To: <20130319021145.GA4372@verge.net.au>
+Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,41 +26,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
-Hi Simon,
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-After "git pull", I didn't find release 2.0.4. Could you please double
-check it?
+> The breakage was caused by the introduction of new NT_VMCORE_PAD to
+> "VMCOREINFO" name, except for which it worked fine. But it will be
+> dropped in the next version. It'll be no problem for some time.
+>
+> The breakage was caused by makedumpfile itself due to the bug that it
+> had so far seen note type only, not note name. It was possible to
+> avoid the breakage by choosing another note name but I didn't do
+> it. This topic will probably arise when some kind of new note types
+> are needed.
 
-Baoquan
-Thanks a lot
+Yes.  Not ignoring unknown note types is a a deficiency in makedumpfile.
+And definitely not something to keep us from introducing new note types.
 
+It should be noted that a common use of /proc/vmcore is to do:
+cp /proc/vmcore /somepath/core
 
-On 03/19/2013 10:11 AM, Simon Horman wrote:
+gdb /somepath/core
 
-> Hi all,
-> 
-> I am happy to announce the release of kexec-tools 2.0.4.
-> 
-> The release can be downloaded from kernel.org:
-> 
-> 	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.4.tar.xz
-> 	http://kernel.org/pub/linux/utils/kernel/kexec/
-> 
-> I have also tagged it in git:
-> 
-> 	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> 
-> Thanks to everyone who has contributed to kexec.
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+makedumpfile is just an optimization on that for people who want to
+write a smaller file.
 
-
+Eric
 
 _______________________________________________
 kexec mailing list
