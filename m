@@ -1,31 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIZ6I-0001PX-69
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 06:35:47 +0000
+ id 1UIZH5-0002Iu-F0
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 06:46:56 +0000
 Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 1B2613EE0C3
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:35:44 +0900 (JST)
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 469763EE0BB
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:46:53 +0900 (JST)
 Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id F398845DE59
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:35:43 +0900 (JST)
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2B57045DE58
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:46:53 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id D1F6745DE5B
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:35:43 +0900 (JST)
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 0161845DE5B
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:46:53 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id BBB6A1DB8051
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:35:43 +0900 (JST)
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id E7DCCE08003
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:46:52 +0900 (JST)
 Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 588B71DB8042
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:35:43 +0900 (JST)
-Date: Thu, 21 Mar 2013 15:35:37 +0900 (JST)
-Message-Id: <20130321.153537.03532110.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9A6531DB803F
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 15:46:52 +0900 (JST)
+Date: Thu, 21 Mar 2013 15:46:50 +0900 (JST)
+Message-Id: <20130321.154650.424925595.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify
+ mmap()'s page-size boundary requirement
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <87d2ut2s7f.fsf@xmission.com>
-References: <20130319123005.46e48e3f154acf594da5737c@linux-foundation.org>
- <20130321.125245.142520187.d.hatayama@jp.fujitsu.com>
- <87d2ut2s7f.fsf@xmission.com>
+In-Reply-To: <87ip4l1d1q.fsf@xmission.com>
+References: <8738vp75cy.fsf@xmission.com>
+ <20130321.151428.393714972.d.hatayama@jp.fujitsu.com>
+ <87ip4l1d1q.fsf@xmission.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -43,60 +44,58 @@ To: ebiederm@xmission.com
 Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
 From: "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
-Date: Wed, 20 Mar 2013 23:16:20 -0700
+Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s page-size boundary requirement
+Date: Wed, 20 Mar 2013 23:29:05 -0700
 
 > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
-> 
->> From: Andrew Morton <akpm@linux-foundation.org>
->> Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
->> Date: Tue, 19 Mar 2013 12:30:05 -0700
 >>
->>> On Sat, 16 Mar 2013 13:00:47 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->>> 
->>>> Currently, read to /proc/vmcore is done by read_oldmem() that uses
->>>> ioremap/iounmap per a single page. For example, if memory is 1GB,
->>>> ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
->>>> times. This causes big performance degradation.
->>>> 
->>>> In particular, the current main user of this mmap() is makedumpfile,
->>>> which not only reads memory from /proc/vmcore but also does other
->>>> processing like filtering, compression and IO work. Update of page
->>>> table and the following TLB flush makes such processing much slow;
->>>> though I have yet to make patch for makedumpfile and yet to confirm
->>>> how it's improved.
->>>> 
->>>> To address the issue, this patch implements mmap() on /proc/vmcore to
->>>> improve read performance. My simple benchmark shows the improvement
->>>> from 200 [MiB/sec] to over 50.0 [GiB/sec].
->>> 
->>> There are quite a lot of userspace-visible vmcore changes here.  Is it
->>> all fully back-compatible?  Will all known userspace continue to work
->>> OK on newer kernels?
->>> 
+>> Do you mean for each range represented by each PT_LOAD entry, say:
 >>
->> I designed it to keep backward-compatibility at least for gdb and
->> binutils but not less for makedumpfile since it should follow kernel
->> changes; old makedumpfile cannot use newer kernels, and this is within
->> the range of this review.
+>>   [p_paddr, p_paddr + p_memsz]
+>>
+>> extend it as:
+>>
+>>   [rounddown(p_paddr, PAGE_SIZE), roundup(p_paddr + p_memsz, PAGE_SIZE)].
+>>
+>> not only objects in vmcore_list, but also updating p_paddr and p_memsz
+>> members themselves of each PT_LOAD entry? In other words, there's no
+>> new holes not referenced by any PT_LOAD entry since the regions
+>> referenced by some PT_LOAD entry, themselves are extended.
 > 
-> To the extent possible we should different versions of tools to be
-> interchanged.  That helps with bug hunting and for people who are in
-> resource constrained systems that build old versions of the tools that
-> are tiny and fit.
+> No.  p_paddr and p_memsz as exported should remain the same.
+> I am suggesting that we change p_offset.
 > 
-> Given that rounding the per cpu NOTES turns out to be a waste of memory
-> I didn't see anything in the patchset that justfies any breakage.
+> I am suggesting to include the data in the file as if we had changed
+> p_paddr and p_memsz.
+> 
+>> Then, the vmcores seen from read and mmap methods are coincide in the
+>> direction of including both ranges
+>>
+>>   [rounddown(p_paddr, PAGE_SIZE), p_paddr]
+>>
+>> and
+>>
+>>   [p_paddr + p_memsz, roundup(p_paddr + p_memsz, PAGE_SIZE)]
+>>
+>> are included in both vmcores seen from read and mmap methods, although
+>> they are originally not dump target memory, which you are not
+>> problematic for ease of implementation.
+>>
+>> Is there difference here from you understanding?
+> 
+> Preserving the actual PT_LOAD segments p_paddr and p_memsz values is
+> important. p_offset we can change as much as we want.  Which means there
+> can be logical holes in the file between PT_LOAD segments, where we put
+> the extra data needed to keep everything page aligned.
+> 
 
-The breakage was caused by the introduction of new NT_VMCORE_PAD to
-"VMCOREINFO" name, except for which it worked fine. But it will be
-dropped in the next version. It'll be no problem for some time.
+So, I have to make the same question again. Is it OK if two vmcores
+are different? How do you intend the ``extra data'' to be deal with? I
+mean mmap() has to export part of old memory as the ``extra data''.
 
-The breakage was caused by makedumpfile itself due to the bug that it
-had so far seen note type only, not note name. It was possible to
-avoid the breakage by choosing another note name but I didn't do
-it. This topic will probably arise when some kind of new note types
-are needed.
+If you think OK, I'll fill the ``extra data'' with 0 in case of read
+method. If not OK, I'll fill with the corresponding part of old
+memory.
 
 Thanks.
 HATAYAMA, Daisuke
