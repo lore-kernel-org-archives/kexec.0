@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIWxi-0003O4-Dq
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 04:18:47 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <877gl3koay.fsf@xmission.com> <20130320135716.GE17274@redhat.com>
- <87txo5bxk4.fsf@xmission.com>
- <20130321.122501.82758179.d.hatayama@jp.fujitsu.com>
-Date: Wed, 20 Mar 2013 21:18:37 -0700
-In-Reply-To: <20130321.122501.82758179.d.hatayama@jp.fujitsu.com> (HATAYAMA
- Daisuke's message of "Thu, 21 Mar 2013 12:25:01 +0900 (JST)")
-Message-ID: <8738vp75cy.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
- page-size boundary requirement
+Received: from haggis.pcug.org.au ([203.10.76.10] helo=members.tip.net.au)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UIWXo-00032f-J0
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 03:52:02 +0000
+Date: Thu, 21 Mar 2013 14:51:54 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: linux-next: Tree for Mar 20 (vmcore)
+Message-Id: <20130321145154.78c7c46b69894c6d15aeb4da@canb.auug.org.au>
+In-Reply-To: <alpine.DEB.2.02.1303201945580.29880@chino.kir.corp.google.com>
+References: <20130320160536.54e62fc11a3651494b710e3b@canb.auug.org.au>
+ <5149E813.8060307@infradead.org>
+ <alpine.DEB.2.02.1303201153330.17761@chino.kir.corp.google.com>
+ <alpine.DEB.2.02.1303201709440.23363@chino.kir.corp.google.com>
+ <20130321132012.e6f9a10287fb171dcd05c62d@canb.auug.org.au>
+ <alpine.DEB.2.02.1303201945580.29880@chino.kir.corp.google.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,112 +23,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1943477158401682962=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
+To: David Rientjes <rientjes@google.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, linux-next@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
+--===============1943477158401682962==
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA256";
+ boundary="Signature=_Thu__21_Mar_2013_14_51_54_+1100_GllQRO_d+oZbhF3a"
 
-> From: "Eric W. Biederman" <ebiederm@xmission.com>
-> Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s page-size boundary requirement
-> Date: Wed, 20 Mar 2013 13:55:55 -0700
+--Signature=_Thu__21_Mar_2013_14_51_54_+1100_GllQRO_d+oZbhF3a
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi David,
+
+On Wed, 20 Mar 2013 19:49:09 -0700 (PDT) David Rientjes <rientjes@google.co=
+m> wrote:
 >
->> Vivek Goyal <vgoyal@redhat.com> writes:
->> 
->>> On Tue, Mar 19, 2013 at 03:38:45PM -0700, Eric W. Biederman wrote:
->>>> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
->>>> 
->>>> > If there's some vmcore object that doesn't satisfy page-size boundary
->>>> > requirement, remap_pfn_range() fails to remap it to user-space.
->>>> >
->>>> > Objects that posisbly don't satisfy the requirement are ELF note
->>>> > segments only. The memory chunks corresponding to PT_LOAD entries are
->>>> > guaranteed to satisfy page-size boundary requirement by the copy from
->>>> > old memory to buffer in 2nd kernel done in later patch.
->>>> >
->>>> > This patch doesn't copy each note segment into the 2nd kernel since
->>>> > they amount to so large in total if there are multiple CPUs. For
->>>> > example, current maximum number of CPUs in x86_64 is 5120, where note
->>>> > segments exceed 1MB with NT_PRSTATUS only.
->>>> 
->>>> So you require the first kernel to reserve an additional 20MB, instead
->>>> of just 1.6MB.  336 bytes versus 4096 bytes.
->>>> 
->>>> That seems like completely the wrong tradeoff in memory consumption,
->>>> filesize, and backwards compatibility.
->>>
->>> Agreed. 
->>>
->>> So we already copy ELF headers in second kernel's memory. If we start
->>> copying notes too, then both headers and notes will support mmap().
->> 
->> The only real is it could be a bit tricky to allocate all of the memory
->> for the notes section on high cpu count systems in a single allocation.
->> 
->
-> Do you mean it's getting difficult on many-cpus machine to get free
-> pages consequtive enough to be able to cover all the notes?
->
-> If so, is it necessary to think about any care to it in the next
-> patch? Or, should it be pending for now?
+> On Thu, 21 Mar 2013, Stephen Rothwell wrote:
+>=20
+> > What exactly are "these patches" so that I can remove them from my copy
+> > of the mmotm tree (assuming that Andrew does not get a new mmotm releas=
+ed
+> > in the next hour or so).
+> >=20
+>=20
+> [nacked] vmcore-reference-e_phoff-member-explicitly-to-get-position-of-pr=
+ogram-header-table.patch
+> [nacked] vmcore-clean-up-by-removing-unnecessary-variable.patch
+> [nacked] vmcore-rearrange-program-headers-without-assuming-consequtive-pt=
+_note-entries.patch
+> [nacked] vmcore-sysfs-export-elf-note-segment-size-instead-of-vmcoreinfo-=
+data-size.patch
+> [nacked] vmcore-allocate-buffer-for-elf-headers-on-page-size-alignment.pa=
+tch
+> [nacked] vmcore-round-up-buffer-size-of-elf-headers-by-page_size.patch
+> [nacked] vmcore-procfs-introduce-a-flag-to-distinguish-objects-copied-in-=
+2nd-kernel.patch
+> [nacked] vmcore-copy-non-page-size-aligned-head-and-tail-pages-in-2nd-ker=
+nel.patch
+> [nacked] vmcore-modify-vmcore-clean-up-function-to-free-buffer-on-2nd-ker=
+nel.patch
+> [nacked] vmcore-clean-up-read_vmcore.patch
+> [nacked] vmcore-read-buffers-for-vmcore-objects-copied-from-old-memory.pa=
+tch
+> [nacked] vmcore-allocate-per-cpu-crash_notes-objects-on-page-size-boundar=
+y.patch
+> [nacked] kexec-allocate-vmcoreinfo-note-buffer-on-page-size-boundary.patch
+> [nacked] kexec-elf-introduce-nt_vmcore_debuginfo-note-type.patch
+> [nacked] elf-introduce-nt_vmcore_pad-type.patch
+> [nacked] kexec-fill-note-buffers-by-nt_vmcore_pad-notes-in-page-size-boun=
+dary.patch
+> [nacked] vmcore-check-nt_vmcore_pad-as-a-mark-indicating-the-end-of-elf-n=
+ote-buffer.patch
+> [nacked] vmcore-check-if-vmcore-objects-satify-mmaps-page-size-boundary-r=
+equirement.patch
+> [nacked] vmcore-round-up-offset-of-vmcore-object-in-page-size-boundary.pa=
+tch
+> [nacked] vmcore-count-holes-generated-by-round-up-operation-for-vmcore-si=
+ze.patch
+> [nacked] vmcore-introduce-mmap_vmcore.patch
 
-I meant that in general allocations > PAGE_SIZE get increasingly
-unreliable the larger they are.  And on large cpu count machines we are
-having larger allocations.  Of course large cpu count machines typically
-have more memory so the odds go up.
+Thanks.  I have removed these from my copy so that even if Andrew doesn't
+get done in time, they will not be in linux-next today.
 
-Right now MAX_ORDER seems to be set to 11 which is 8MiB, and my x86_64
-machine certainly succeeded in an order 11 allocation during boot so I
-don't expect any real problems with a 2MiB allocation but it is
-something to keep an eye on with kernel memory.
+--=20
+Cheers,
+Stephen Rothwell                    sfr@canb.auug.org.au
 
->>> For mmap() of memory regions which are not page aligned, we can map
->>> extra bytes (as you suggested in one of the mails). Given the fact
->>> that we have one ELF header for every memory range, we can always modify
->>> the file offset where phdr data is starting to make space for mapping
->>> of extra bytes.
->> 
->> Agreed ELF file offset % PAGE_SIZE should == physical address % PAGE_SIZE to
->> make mmap work.
->> 
->
-> OK, your conclusion is the 1st version is better than the 2nd.
->
-> The purpose of this design was not to export anything but dump target
-> memory to user-space from /proc/vmcore. I think it better to do it if
-> possible. it's possible for read interface to fill the corresponding
-> part with 0. But it's impossible for mmap interface to data on modify
-> old memory.
+--Signature=_Thu__21_Mar_2013_14_51_54_+1100_GllQRO_d+oZbhF3a
+Content-Type: application/pgp-signature
 
-In practice someone lied.  You can't have a chunk of memory that is
-smaller than page size.  So I don't see it doing any harm to export
-the memory that is there but some silly system lied to us about.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> Do you agree two vmcores seen from read and mmap interfaces are no
-> longer coincide?
+iQIcBAEBCAAGBQJRSoPaAAoJEECxmPOUX5FEsFMP/1XUB7sSdCsE51mtDMAlqbS7
+630meZOrgpQk63NtKgSXim3h2BWhoCCIbOl5S9IsqjwBxqwfZimXvFD/f7+DrLgx
+gMf3YkwalaWoENW6/HIpDLuGYdY/wRj9IKAjOBm/BmAiN3eTqV7zKFXCWFd33eB3
+ESWcSY1n1cthhiqF0k0gB35JhKlGCUdE3cFwzwugnwrPZrVJcJNEpCaLxOTTS79X
+AstiGNLk9wXWbpA/FgwlmJWs10+VqkiiwcuAoKXFgUpfbxJEIonjlu0Ph4cglKhe
+WpGQtFu53d9EEnwQHReTb4D45ulEt3aYR8PqBwO+hxlIsTd+BgrzUZd6YnuQnp+Q
+dTE/6E3zA7qH+w0K+ARbEHVd5tDapitawjg/lZV2bOdC/tZA53K9apb1NRSw6BxK
+cz0cat3dW+BgB0LlqaQl0GDwGRFIft+ktJNPmW5/hjD8H/eA5laJ+36PYygBW52b
+oAdzR/CNkzEK5CpFkPb486zOgj6fs5eA1G2dbGU4Y4JK32VEI8OsnT91+B0uRzAW
+sDHQWSHrzsLWTBh6UP7az1FeeB+H67/IDCCWua61abv0ZcXTlTIbjZFb2yphceOA
+g1XduyaHp3daq5nKBKNGiQcaJqKWMNzTdJSmEbRMWyJw/v5BjN5tVgGvTzizhfoj
+J1NcF9pH0lVHhFB8uNKR
+=mFVX
+-----END PGP SIGNATURE-----
 
-That is an interesting point.  I don't think there is any point in
-having read and mmap disagree, that just seems to lead to complications,
-especially since the data we are talking about adding is actually memory
-contents.
+--Signature=_Thu__21_Mar_2013_14_51_54_+1100_GllQRO_d+oZbhF3a--
 
-I do think it makes sense to have logical chunks of the file that are
-not covered by PT_LOAD segments.  Logical chunks like the leading edge
-of a page inside of which a PT_LOAD segment starts, and the trailing
-edge of a page in which a PT_LOAD segment ends.
 
-Implementaton wise this would mean extending the struct vmcore entry to
-cover missing bits, by rounding down the start address and rounding up
-the end address to the nearest page size boundary.  The generated
-PT_LOAD segment would then have it's file offset adjusted to point skip
-the bytes of the page that are there but we don't care about.
-
-Eric
+--===============1943477158401682962==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1943477158401682962==--
+
