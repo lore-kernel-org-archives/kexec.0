@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIZiC-0004J9-DK
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 07:14:57 +0000
+ id 1UIZqD-0004pp-3i
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 07:23:17 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20130319123005.46e48e3f154acf594da5737c@linux-foundation.org>
- <20130321.125245.142520187.d.hatayama@jp.fujitsu.com>
- <87d2ut2s7f.fsf@xmission.com>
- <20130321.153537.03532110.d.hatayama@jp.fujitsu.com>
-Date: Thu, 21 Mar 2013 00:14:43 -0700
-In-Reply-To: <20130321.153537.03532110.d.hatayama@jp.fujitsu.com> (HATAYAMA
- Daisuke's message of "Thu, 21 Mar 2013 15:35:37 +0900 (JST)")
-Message-ID: <87d2utxlzw.fsf@xmission.com>
+References: <87txo5bxk4.fsf@xmission.com>
+ <20130321.122501.82758179.d.hatayama@jp.fujitsu.com>
+ <8738vp75cy.fsf@xmission.com>
+ <20130321.151428.393714972.d.hatayama@jp.fujitsu.com>
+Date: Thu, 21 Mar 2013 00:22:59 -0700
+In-Reply-To: <20130321.151428.393714972.d.hatayama@jp.fujitsu.com> (HATAYAMA
+ Daisuke's message of "Thu, 21 Mar 2013 15:14:28 +0900 (JST)")
+Message-ID: <87y5dhw71o.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
+Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
+ page-size boundary requirement
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,28 +32,23 @@ Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kern
 
 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 
-> The breakage was caused by the introduction of new NT_VMCORE_PAD to
-> "VMCOREINFO" name, except for which it worked fine. But it will be
-> dropped in the next version. It'll be no problem for some time.
->
-> The breakage was caused by makedumpfile itself due to the bug that it
-> had so far seen note type only, not note name. It was possible to
-> avoid the breakage by choosing another note name but I didn't do
-> it. This topic will probably arise when some kind of new note types
-> are needed.
+> OK, rigorously, suceess or faliure of the requested free pages
+> allocation depends on actual memory layout at the 2nd kernel boot. To
+> increase the possibility of allocating memory, we have no method but
+> reserve more memory for the 2nd kernel now.
 
-Yes.  Not ignoring unknown note types is a a deficiency in makedumpfile.
-And definitely not something to keep us from introducing new note types.
+Good enough.   If there are fragmentation issues that cause allocation
+problems on larger boxes we can use vmalloc and remap_vmalloc_range, but
+we certainly don't need to start there.
 
-It should be noted that a common use of /proc/vmcore is to do:
-cp /proc/vmcore /somepath/core
+Especialy as for most 8 or 16 core boxes we are talking about a 4KiB or
+an 8KiBP allocation.  Aka order 0 or order 1.
 
-gdb /somepath/core
-
-makedumpfile is just an optimization on that for people who want to
-write a smaller file.
+Adding more memory is also useful.  It is important in general to keep
+the amount of memory needed for the kdump kernel low.
 
 Eric
+
 
 _______________________________________________
 kexec mailing list
