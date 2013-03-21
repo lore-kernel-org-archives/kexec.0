@@ -1,32 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIVaf-0000DY-46
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 02:50:54 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id B43D444DD81
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:50:47 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 9D78645DE52
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:50:47 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 862E845DE4D
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:50:47 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 76D121DB803A
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:50:47 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 2E2341DB802C
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:50:47 +0900 (JST)
-Date: Thu, 21 Mar 2013 11:50:41 +0900 (JST)
-Message-Id: <20130321.115041.225288996.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v3 01/21] vmcore: reference e_phoff member explicitly
- to get position of program header table
+ id 1UIViz-0000Mv-1y
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 02:59:30 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 487EF3EE0C3
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:59:26 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 0FFED45DE59
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:59:26 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id E9CF545DE5B
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:59:25 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id CF6711DB8042
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:59:25 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 82710E08006
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 11:59:25 +0900 (JST)
+Date: Thu, 21 Mar 2013 11:59:20 +0900 (JST)
+Message-Id: <20130321.115920.339923125.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v3 17/21] vmcore: check NT_VMCORE_PAD as a mark
+ indicating the end of ELF note buffer
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <87ppyvnjyn.fsf@xmission.com>
+In-Reply-To: <87ppyvp014.fsf@xmission.com>
 References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
- <20130316040053.15064.93652.stgit@localhost6.localdomain6>
- <87ppyvnjyn.fsf@xmission.com>
+ <20130316040223.15064.77472.stgit@localhost6.localdomain6>
+ <87ppyvp014.fsf@xmission.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -40,41 +41,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
+To: ebiederm@xmission.com
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
 
 From: "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 01/21] vmcore: reference e_phoff member explicitly to get position of program header table
-Date: Tue, 19 Mar 2013 14:44:16 -0700
+Subject: Re: [PATCH v3 17/21] vmcore: check NT_VMCORE_PAD as a mark indicating the end of ELF note buffer
+Date: Tue, 19 Mar 2013 14:11:51 -0700
 
 > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
 > 
->> Currently, the code assumes that position of program header table is
->> next to ELF header. But future change can break the assumption on
->> kexec-tools and the 1st kernel. To avoid worst case, reference e_phoff
->> member explicitly to get position of program header table in
->> file-offset.
+>> Modern kernel marks the end of ELF note buffer with NT_VMCORE_PAD type
+>> note in order to make the buffer satisfy mmap()'s page-size boundary
+>> requirement. This patch makes finishing reading each buffer if the
+>> note type now being read is NT_VMCORE_PAD type.
 > 
-> In principle this looks good.  However when I read this it looks like
-> you are going a little too far.
+> Ick.  Even with a pad header you can mark the end with an empty header,
+> and my memory may be deceiving me but I believe an empty header is
+> specified by the ELF ABI docs.
 > 
-> You are changing not only the reading of the supplied headers, but
-> you are changing the generation of the new new headers that describe
-> the data provided by /proc/vmcore.
-> 
-> I get lost in following this after you mangle merge_note_headers.
-> 
-> In principle removing silly assumptions seems reasonable, but I think
-> it is completely orthogonal to the task of maping vmcore mmapable.
-> 
-> I think it is fine to claim that the assumptions made here in vmcore are
-> part of the kexec on panic ABI at this point, which would generally make
-> this change unnecessary.
+> Beyond which I don't quite see the point of any of this as all of these
+> headers need to be combined into a single note section before being
+> presented to user space.
 
-This was suggested by Vivek. He prefers generic one.
+Though this patch might get unecessary later, I cannot find part
+explaining necessity of marking end of ELF segmetns with an empty
+header in ELF spec. For example:
 
-Vivek, do you agree to this? Or is it better to re-post this and other
-clean-up patches as another one separately to this patch set?
+gabi
+http://www.sco.com/developers/gabi/latest/ch5.pheader.html#note_section
+
+AMD64
+http://www.x86-64.org/documentation/abi.pdf
+
+But still there's possibility of another particular spec that says
+necessity of empty header.
+
+Also, it's possible to get size of a whole part of ELF note segments
+from p_memsz or p_filesz, and gdb and binutils are reading the note
+segments until reaching the size.
 
 Thanks.
 HATAYAMA, Daisuke
