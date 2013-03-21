@@ -1,32 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIW7q-0000hc-Aq
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 03:25:11 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A149C3EE0CF
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:25:07 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 8958A45DEBC
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:25:07 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 48EBC45DEB2
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:25:07 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3949F1DB803E
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:25:07 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id E3BAB1DB803B
- for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:25:06 +0900 (JST)
-Date: Thu, 21 Mar 2013 12:25:01 +0900 (JST)
-Message-Id: <20130321.122501.82758179.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify
- mmap()'s page-size boundary requirement
+ id 1UIWYk-000341-KE
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 03:53:00 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A4F313EE0AE
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:52:54 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8E60245DE59
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:52:54 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 76C9445DE55
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:52:54 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 648D91DB803F
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:52:54 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1B7941DB8042
+ for <kexec@lists.infradead.org>; Thu, 21 Mar 2013 12:52:54 +0900 (JST)
+Date: Thu, 21 Mar 2013 12:52:45 +0900 (JST)
+Message-Id: <20130321.125245.142520187.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <87txo5bxk4.fsf@xmission.com>
-References: <877gl3koay.fsf@xmission.com> <20130320135716.GE17274@redhat.com>
- <87txo5bxk4.fsf@xmission.com>
+In-Reply-To: <20130319123005.46e48e3f154acf594da5737c@linux-foundation.org>
+References: <20130316040003.15064.62308.stgit@localhost6.localdomain6>
+ <20130319123005.46e48e3f154acf594da5737c@linux-foundation.org>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -40,72 +39,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, vgoyal@redhat.com
+To: akpm@linux-foundation.org
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, cpw@sgi.com, vgoyal@redhat.com
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s page-size boundary requirement
-Date: Wed, 20 Mar 2013 13:55:55 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 00/21] kdump, vmcore: support mmap() on /proc/vmcore
+Date: Tue, 19 Mar 2013 12:30:05 -0700
 
-> Vivek Goyal <vgoyal@redhat.com> writes:
+> On Sat, 16 Mar 2013 13:00:47 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 > 
->> On Tue, Mar 19, 2013 at 03:38:45PM -0700, Eric W. Biederman wrote:
->>> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
->>> 
->>> > If there's some vmcore object that doesn't satisfy page-size boundary
->>> > requirement, remap_pfn_range() fails to remap it to user-space.
->>> >
->>> > Objects that posisbly don't satisfy the requirement are ELF note
->>> > segments only. The memory chunks corresponding to PT_LOAD entries are
->>> > guaranteed to satisfy page-size boundary requirement by the copy from
->>> > old memory to buffer in 2nd kernel done in later patch.
->>> >
->>> > This patch doesn't copy each note segment into the 2nd kernel since
->>> > they amount to so large in total if there are multiple CPUs. For
->>> > example, current maximum number of CPUs in x86_64 is 5120, where note
->>> > segments exceed 1MB with NT_PRSTATUS only.
->>> 
->>> So you require the first kernel to reserve an additional 20MB, instead
->>> of just 1.6MB.  336 bytes versus 4096 bytes.
->>> 
->>> That seems like completely the wrong tradeoff in memory consumption,
->>> filesize, and backwards compatibility.
->>
->> Agreed. 
->>
->> So we already copy ELF headers in second kernel's memory. If we start
->> copying notes too, then both headers and notes will support mmap().
+>> Currently, read to /proc/vmcore is done by read_oldmem() that uses
+>> ioremap/iounmap per a single page. For example, if memory is 1GB,
+>> ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
+>> times. This causes big performance degradation.
+>> 
+>> In particular, the current main user of this mmap() is makedumpfile,
+>> which not only reads memory from /proc/vmcore but also does other
+>> processing like filtering, compression and IO work. Update of page
+>> table and the following TLB flush makes such processing much slow;
+>> though I have yet to make patch for makedumpfile and yet to confirm
+>> how it's improved.
+>> 
+>> To address the issue, this patch implements mmap() on /proc/vmcore to
+>> improve read performance. My simple benchmark shows the improvement
+>> from 200 [MiB/sec] to over 50.0 [GiB/sec].
 > 
-> The only real is it could be a bit tricky to allocate all of the memory
-> for the notes section on high cpu count systems in a single allocation.
+> There are quite a lot of userspace-visible vmcore changes here.  Is it
+> all fully back-compatible?  Will all known userspace continue to work
+> OK on newer kernels?
 > 
 
-Do you mean it's getting difficult on many-cpus machine to get free
-pages consequtive enough to be able to cover all the notes?
-
-If so, is it necessary to think about any care to it in the next
-patch? Or, should it be pending for now?
-
->> For mmap() of memory regions which are not page aligned, we can map
->> extra bytes (as you suggested in one of the mails). Given the fact
->> that we have one ELF header for every memory range, we can always modify
->> the file offset where phdr data is starting to make space for mapping
->> of extra bytes.
-> 
-> Agreed ELF file offset % PAGE_SIZE should == physical address % PAGE_SIZE to
-> make mmap work.
-> 
-
-OK, your conclusion is the 1st version is better than the 2nd.
-
-The purpose of this design was not to export anything but dump target
-memory to user-space from /proc/vmcore. I think it better to do it if
-possible. it's possible for read interface to fill the corresponding
-part with 0. But it's impossible for mmap interface to data on modify
-old memory.
-
-Do you agree two vmcores seen from read and mmap interfaces are no
-longer coincide?
+I designed it to keep backward-compatibility at least for gdb and
+binutils but not less for makedumpfile since it should follow kernel
+changes; old makedumpfile cannot use newer kernels, and this is within
+the range of this review.
 
 Thanks.
 HATAYAMA, Daisuke
