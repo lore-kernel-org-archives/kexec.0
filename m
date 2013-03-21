@@ -1,21 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from hrndva-omtalb.mail.rr.com ([71.74.56.122])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIhPQ-0006ld-Qi
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 15:28:05 +0000
-Date: Thu, 21 Mar 2013 11:27:51 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s
- page-size boundary requirement
-Message-ID: <20130321152751.GK3934@redhat.com>
-References: <8738vp75cy.fsf@xmission.com>
- <20130321.151428.393714972.d.hatayama@jp.fujitsu.com>
- <87ip4l1d1q.fsf@xmission.com>
- <20130321.154650.424925595.d.hatayama@jp.fujitsu.com>
- <87a9pxz0wv.fsf@xmission.com> <20130321152124.GJ3934@redhat.com>
+ id 1UIhXj-00079l-Db
+ for kexec@lists.infradead.org; Thu, 21 Mar 2013 15:36:40 +0000
+Date: Thu, 21 Mar 2013 10:37:25 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
+Message-ID: <20130321153725.GA3656@austin.hallyn.com>
+References: <alpine.LRH.2.02.1303191542200.30973@tundra.namei.org>
+ <1363797717.2580.10.camel@falcor1.watson.ibm.com>
+ <1363798166.2553.29.camel@x230.sbx07502.somerma.wayport.net>
+ <1363802506.2580.55.camel@falcor1.watson.ibm.com>
+ <1363803158.2553.33.camel@x230.sbx07502.somerma.wayport.net>
+ <1363806968.2580.86.camel@falcor1.watson.ibm.com>
+ <1363811856.2553.37.camel@x230.sbx07502.somerma.wayport.net>
+ <1363813877.2580.120.camel@falcor1.watson.ibm.com>
+ <1363814289.2553.41.camel@x230.sbx07502.somerma.wayport.net>
+ <20130321134348.GA3934@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130321152124.GJ3934@redhat.com>
+In-Reply-To: <20130321134348.GA3934@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,29 +32,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, "Serge E. Hallyn" <serge@hallyn.com>
 
-On Thu, Mar 21, 2013 at 11:21:24AM -0400, Vivek Goyal wrote:
+Quoting Vivek Goyal (vgoyal@redhat.com):
+...
+> Giving CAP_MODIFY_KERNEL to processess upon signature verification
+> will simplify things a bit.
+> 
+> Only thing is that signature verification alone is not sufficient. We
+> also need to make sure after signature verification executable can
+> not be modified in memory in any way. So that means atleast couple of
+> things.
 
-[..]
-> So if starting or end address of PT_LOAD header is not aligned, why
-> not we simply allocate a page. Copy the relevant data from old memory,
-> fill rest with zero. That way mmap and read view will be same. There
-> will be no surprises w.r.t reading old kernel memory beyond what's 
-> specified by the headers.
+Also what about context?  If I construct a mounts namespace a certain
+way, can I trick this executable into loading an old singed bzImage that
+I had laying around?
 
-Copying from old memory might spring surprises w.r.t hw poisoned
-pages. I guess we will have to disable MCE, read page, enable it
-back or something like that to take care of these issues.
-
-In the past we have recommended makedumpfile to be careful, look
-at struct pages and make sure we are not reading poisoned pages.
-But vmcore itself is reading old memory and can run into this
-issue too.
-
-Thanks
-Vivek
+ISTM the only sane thing to do, if you're going down this road,
+is to have CAP_MODIFIY_KERNEL pulled from bounding set for everyone
+except a getty started by init on ttyS0.  Then log in on serial
+to update.  Or run a damon with CAP_MODIFIY_KERNEL which listens
+to a init_net_ns netlink socket for very basic instructions, like
+"find and install latest signed bzImage in /boot".  Then you can
+at least trust that /boot for that daemon is not faked.
 
 _______________________________________________
 kexec mailing list
