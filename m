@@ -1,25 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIj5u-0001q8-KR
- for kexec@lists.infradead.org; Thu, 21 Mar 2013 17:16:04 +0000
-Date: Thu, 21 Mar 2013 13:15:56 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 01/12] Security: Add CAP_COMPROMISE_KERNEL
-Message-ID: <20130321171556.GM3934@redhat.com>
-References: <1363806968.2580.86.camel@falcor1.watson.ibm.com>
- <1363811856.2553.37.camel@x230.sbx07502.somerma.wayport.net>
- <1363813877.2580.120.camel@falcor1.watson.ibm.com>
- <1363814289.2553.41.camel@x230.sbx07502.somerma.wayport.net>
- <20130321134348.GA3934@redhat.com>
- <20130321153725.GA3656@austin.hallyn.com>
- <20130321155220.GL3934@redhat.com>
- <20130321155823.GA4438@austin.hallyn.com>
- <20130321160441.GB6575@redhat.com>
- <20130321161952.GA4957@austin.hallyn.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130321161952.GA4957@austin.hallyn.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UIpof-0003oH-Gg
+ for kexec@lists.infradead.org; Fri, 22 Mar 2013 00:26:43 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 9F8203EE0BD
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 09:26:33 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 83CB145DE54
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 09:26:33 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6863645DE55
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 09:26:33 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 565E41DB8052
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 09:26:33 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id F2B06E08002
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 09:26:32 +0900 (JST)
+Date: Fri, 22 Mar 2013 09:25:47 +0900 (JST)
+Message-Id: <20130322.092547.57832612.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v3 01/21] vmcore: reference e_phoff member explicitly
+ to get position of program header table
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20130321141202.GF3934@redhat.com>
+References: <87ppyvnjyn.fsf@xmission.com>
+ <20130321.115041.225288996.d.hatayama@jp.fujitsu.com>
+ <20130321141202.GF3934@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,84 +41,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>
+To: vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
 
-On Thu, Mar 21, 2013 at 11:19:52AM -0500, Serge E. Hallyn wrote:
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 01/21] vmcore: reference e_phoff member explicitly to get position of program header table
+Date: Thu, 21 Mar 2013 10:12:02 -0400
 
-[..]
-> > I am hoping I did not miss your point entirely.
+> On Thu, Mar 21, 2013 at 11:50:41AM +0900, HATAYAMA Daisuke wrote:
+>> From: "Eric W. Biederman" <ebiederm@xmission.com>
+>> Subject: Re: [PATCH v3 01/21] vmcore: reference e_phoff member explicitly to get position of program header table
+>> Date: Tue, 19 Mar 2013 14:44:16 -0700
+>> 
+>> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
+>> > 
+>> >> Currently, the code assumes that position of program header table is
+>> >> next to ELF header. But future change can break the assumption on
+>> >> kexec-tools and the 1st kernel. To avoid worst case, reference e_phoff
+>> >> member explicitly to get position of program header table in
+>> >> file-offset.
+>> > 
+>> > In principle this looks good.  However when I read this it looks like
+>> > you are going a little too far.
+>> > 
+>> > You are changing not only the reading of the supplied headers, but
+>> > you are changing the generation of the new new headers that describe
+>> > the data provided by /proc/vmcore.
+>> > 
+>> > I get lost in following this after you mangle merge_note_headers.
+>> > 
+>> > In principle removing silly assumptions seems reasonable, but I think
+>> > it is completely orthogonal to the task of maping vmcore mmapable.
+>> > 
+>> > I think it is fine to claim that the assumptions made here in vmcore are
+>> > part of the kexec on panic ABI at this point, which would generally make
+>> > this change unnecessary.
+>> 
+>> This was suggested by Vivek. He prefers generic one.
+>> 
+>> Vivek, do you agree to this? Or is it better to re-post this and other
+>> clean-up patches as another one separately to this patch set?
 > 
-> No, you didn't.  If replay attacks are not a concern then that bit
-> doesn't matter.  But if^Wwhen there is a vulnerability in a signed kernel,
-> and a user has a copy of bzImage sitting around, signed kexec alone does
-> not suffice (and I'm assuming revocation is not going into the kernel?).
-> It seems to me if replay attacks are ignored, this is all for theater...
+> Given the fact that current code has been working, I am fine to just
+> re-post and take care of mmap() related issues. And we can take care
+> of cleaning up of some assumptions about PT_NOTE headers later. Trying
+> to club large cleanup with mmap() patches is making it hard to review.
 > 
 
-As matthew mentioned, revocation list is in kernel. So old vulnerable
-kernels should fail signature verification.
+I see. I'll post the clean-up series separately.
 
-> The other concern is analogous, just more general - seems like I may very
-> well be able to find a way to corrupt kexec or even corrupt the kernel with
-> a bad environment.
-> 
-> So I'm just saying that in general it doesn't seem worth having a special
-> list of capabilities that only signed executables can have, without doing 
-> something about the environment.
+Thanks.
+HATAYAMA, Daisuke
 
-Agreed that only being signed is part of the problem. Environment is
-important too. And running signed binaries memory locked is I think
-one part of controlling the environment. But there might be other
-things too which I am blissfully unaware of.
-
-Right now there were few things we were considering for controlling
-the environemnt.
-
-- Build /sbin/kexec statically and sign only statically linked exeutables.
-- Run executables memory locked
-- Unsigned binary can not ptrace() signed one.
-
-> And that the solution to that seems like
-> what we can already do today (with a bounding set and init-launched
-> services).
-
-Frankly speaking I did not understand this part. For secureboot issue
-we don't trust root and don't trust init. I am assuming any restricted
-environment setup will have to be done by a trusted entity.
- 
-> 
-> All of this is probably premature though.  IIUC the first thing you are
-> after is a way to record on the file the fact that it is a verified-signature
-> binary, and that's what CAP_SIGNED meant right?
-
-Yes, that was the first thing. How to reliably sign and verify signature
-of a executable. Also make sure executable code/data can not modified
-in memory later by anything untrusted.
-
->   I agree we need something
-> like that, but using a capability is not right.  You can add a field to
-> the binprm or file or f_cred, or even add a field to the capability struct,
-> meaningful only on files, to show it was signed - but not taint the list of
-> capabilities with something that is not a capability. 
-
-Ok, I will look into other options too. Agreed being signed is not a
-capability. But being signed along with other attributes should allow to 
-get one a capability (CAP_MODIFY_KERNEL in this case). I am not sure why
-nobody likes that idea. But that's fine, I will go with advice of subject
-matter experts.
-
-> I haven't looked
-> closer to see which would be the best way (my hunch would be binprm), will 
-> be happy to come up with a proposal when I have time, but I don't want to slow
-> you down :)
-
-Any suggetions are greatly appreciated whenever time permits. In the mean
-time I will atleast write more code and post it for RFC and hopefully
-there will be some consensus on how to solve kexec issue.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
