@@ -1,32 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UIw8Z-0003Lx-S6
- for kexec@lists.infradead.org; Fri, 22 Mar 2013 07:11:44 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id EE87E3EE0BD
- for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 16:11:29 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id D24E045DE4D
- for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 16:11:29 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id B11C845DE51
- for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 16:11:29 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id A23BFE18002
- for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 16:11:29 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 435FE1DB8041
- for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 16:11:29 +0900 (JST)
-Date: Fri, 22 Mar 2013 16:11:21 +0900 (JST)
-Message-Id: <20130322.161121.07584638.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify
- mmap()'s page-size boundary requirement
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20130321144929.GH3934@redhat.com>
-References: <20130321.151428.393714972.d.hatayama@jp.fujitsu.com>
- <87y5dhw71o.fsf@xmission.com> <20130321144929.GH3934@redhat.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UJ6Fb-0005nz-A2
+ for kexec@lists.infradead.org; Fri, 22 Mar 2013 17:59:36 +0000
+Date: Fri, 22 Mar 2013 13:59:25 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kdump, x86: Process multiple Crash kernel in /proc/iomem
+Message-ID: <20130322175925.GA10004@redhat.com>
+References: <20130320163131.GE2273@redhat.com>
+ <1363807494-25127-1-git-send-email-yinghai@kernel.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1363807494-25127-1-git-send-email-yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,86 +24,203 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 18/21] vmcore: check if vmcore objects satify mmap()'s page-size boundary requirement
-Date: Thu, 21 Mar 2013 10:49:29 -0400
-
-> On Thu, Mar 21, 2013 at 12:22:59AM -0700, Eric W. Biederman wrote:
->> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> writes:
->> 
->> > OK, rigorously, suceess or faliure of the requested free pages
->> > allocation depends on actual memory layout at the 2nd kernel boot. To
->> > increase the possibility of allocating memory, we have no method but
->> > reserve more memory for the 2nd kernel now.
->> 
->> Good enough.   If there are fragmentation issues that cause allocation
->> problems on larger boxes we can use vmalloc and remap_vmalloc_range, but
->> we certainly don't need to start there.
->> 
->> Especialy as for most 8 or 16 core boxes we are talking about a 4KiB or
->> an 8KiBP allocation.  Aka order 0 or order 1.
->> 
+On Wed, Mar 20, 2013 at 12:24:54PM -0700, Yinghai Lu wrote:
+> Vivek found specical handling crashkernel low in not good.
+> We should extend kexec-tools to handle multiple Crash kernel instead.
 > 
-> Actually we are already handling the large SGI machines so we need
-> to plan for 4096 cpus now while we write these patches.
+> Extend crash_reserved_mem to array instead and use
+> kexec_iomem_for_each_line directly.  After that we can drop
+> crashkernel low.
+
+Hi Yinghai,
+
+I get following error while loading kernel.
+
+parse_iomem_single failed.
+Could not get memory layout
+
+I think you need to handle parse_iomem_single("Crash Kernel") in
+kexec-x86-common.c. It assumes that there is a single contiguous
+reserved region of memory and set mem_min and mem_max based on
+that. But that will not work when there are multiple "Crash Kernel"
+entries.
+
+In case of kexec_on_panic, we seem to have all the memory ranges in
+info->memory_ranges[]. I guess we don't need that. We just need ranges
+which are reserved for crash kernel and marked by "Crash Kernel". In
+that case we will be able to handle multiple "Crash Kernel" ranges. 
+
+Thanks
+Vivek
+
 > 
-> vmalloc() and remap_vmalloc_range() sounds reasonable. So that's what
-> we should probaly use.
+> Suggested-by: Vivek Goyal <vgoyal@redhat.com>
+> Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 > 
-> Alternatively why not allocate everything in 4K pages and use vmcore_list
-> to map offset into right addresses and call remap_pfn_range() on these
-> addresses.
-
-I have an introductory question about design of vmalloc. My
-understanding is that vmalloc allocates *pages* enough to cover a
-requested size and returns the first corresponding virtual address.
-So, the address returned is inherently always page-size aligned.
-
-It looks like vmalloc does so in the current implementation, but I
-don't know older implementations and I cannot make sure this is
-guranteed in vmalloc's interface. There's the comment explaing the
-interface of vmalloc as below, but it seems to me a little vague in
-that it doesn't say clearly what's is returned as an address.
-
-/**
- *      vmalloc  -  allocate virtually contiguous memory
- *      @size:          allocation size
- *      Allocate enough pages to cover @size from the page level
- *      allocator and map them into contiguous kernel virtual space.
- *
- *      For tight control over page level allocator and protection flags
- *      use __vmalloc() instead.
- */
-void *vmalloc(unsigned long size)
-{
-        return __vmalloc_node_flags(size, NUMA_NO_NODE,
-                                    GFP_KERNEL | __GFP_HIGHMEM);
-}
-EXPORT_SYMBOL(vmalloc);
-
-BTW, simple test module code also shows they returns page-size aligned
-objects, where 1-byte objects are allocated 12-times.
-
-$ dmesg | tail -n 12
-[3552817.290982] test: objects[0] = ffffc9000060c000
-[3552817.291197] test: objects[1] = ffffc9000060e000
-[3552817.291379] test: objects[2] = ffffc9000067d000
-[3552817.291566] test: objects[3] = ffffc90010f99000
-[3552817.291833] test: objects[4] = ffffc90010f9b000
-[3552817.292015] test: objects[5] = ffffc90010f9d000
-[3552817.292207] test: objects[6] = ffffc90010f9f000
-[3552817.292386] test: objects[7] = ffffc90010fa1000
-[3552817.292574] test: objects[8] = ffffc90010fa3000
-[3552817.292785] test: objects[9] = ffffc90010fa5000
-[3552817.292964] test: objects[10] = ffffc90010fa7000
-[3552817.293143] test: objects[11] = ffffc90010fa9000
-
-Thanks.
-HATAYAMA, Daisuke
-
+> ---
+>  kexec/arch/i386/crashdump-x86.c |   91 ++++++++++++++++++----------------------
+>  1 file changed, 43 insertions(+), 48 deletions(-)
+> 
+> Index: kexec-tools/kexec/arch/i386/crashdump-x86.c
+> ===================================================================
+> --- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
+> +++ kexec-tools/kexec/arch/i386/crashdump-x86.c
+> @@ -188,9 +188,9 @@ static int exclude_region(int *nr_ranges
+>  static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
+>  
+>  /* Memory region reserved for storing panic kernel and other data. */
+> -static struct memory_range crash_reserved_mem;
+> -/* under 4G parts */
+> -static struct memory_range crash_reserved_low_mem;
+> +#define CRASH_RESERVED_MEM_NR	8
+> +static struct memory_range crash_reserved_mem[CRASH_RESERVED_MEM_NR];
+> +static int crash_reserved_mem_nr;
+>  
+>  /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
+>   * create Elf headers. Keeping it separate from get_memory_ranges() as
+> @@ -207,7 +207,7 @@ static int get_crash_memory_ranges(struc
+>  				   int kexec_flags, unsigned long lowmem_limit)
+>  {
+>  	const char *iomem = proc_iomem();
+> -	int memory_ranges = 0, gart = 0;
+> +	int memory_ranges = 0, gart = 0, i;
+>  	char line[MAX_LINE];
+>  	FILE *fp;
+>  	unsigned long long start, end;
+> @@ -268,29 +268,28 @@ static int get_crash_memory_ranges(struc
+>  	}
+>  	fclose(fp);
+>  	if (kexec_flags & KEXEC_PRESERVE_CONTEXT) {
+> -		int i;
+>  		for (i = 0; i < memory_ranges; i++) {
+>  			if (crash_memory_range[i].end > 0x0009ffff) {
+> -				crash_reserved_mem.start = \
+> +				crash_reserved_mem[0].start = \
+>  					crash_memory_range[i].start;
+>  				break;
+>  			}
+>  		}
+> -		if (crash_reserved_mem.start >= mem_max) {
+> +		if (crash_reserved_mem[0].start >= mem_max) {
+>  			fprintf(stderr, "Too small mem_max: 0x%llx.\n",
+>  				mem_max);
+>  			return -1;
+>  		}
+> -		crash_reserved_mem.end = mem_max;
+> -		crash_reserved_mem.type = RANGE_RAM;
+> +		crash_reserved_mem[0].end = mem_max;
+> +		crash_reserved_mem[0].type = RANGE_RAM;
+> +		crash_reserved_mem_nr = 1;
+>  	}
+> -	if (exclude_region(&memory_ranges, crash_reserved_mem.start,
+> -				crash_reserved_mem.end) < 0)
+> -		return -1;
+> -	if (crash_reserved_low_mem.start &&
+> -	    exclude_region(&memory_ranges, crash_reserved_low_mem.start,
+> -				crash_reserved_low_mem.end) < 0)
+> -		return -1;
+> +
+> +	for (i = 0; i < crash_reserved_mem_nr; i++)
+> +		if (exclude_region(&memory_ranges, crash_reserved_mem[i].start,
+> +				crash_reserved_mem[i].end) < 0)
+> +			return -1;
+> +
+>  	if (gart) {
+>  		/* exclude GART region if the system has one */
+>  		if (exclude_region(&memory_ranges, gart_start, gart_end) < 0)
+> @@ -351,9 +350,10 @@ static int get_crash_memory_ranges_xen(s
+>  
+>  	qsort(*range, *ranges, sizeof(struct memory_range), compare_ranges);
+>  
+> -	if (exclude_region(ranges, crash_reserved_mem.start,
+> -						crash_reserved_mem.end) < 0)
+> -		goto err;
+> +	for (i = 0; i < crash_reserved_mem_nr; i++)
+> +		if (exclude_region(ranges, crash_reserved_mem[i].start,
+> +						crash_reserved_mem[i].end) < 0)
+> +			goto err;
+>  
+>  	ret = 0;
+>  
+> @@ -434,9 +434,10 @@ static int get_crash_memory_ranges_xen(s
+>  
+>  	qsort(*range, *ranges, sizeof(struct memory_range), compare_ranges);
+>  
+> -	if (exclude_region(ranges, crash_reserved_mem.start,
+> -						crash_reserved_mem.end) < 0)
+> -		goto err;
+> +	for (i = 0; i < crash_reserved_mem_nr; i++)
+> +		if (exclude_region(ranges, crash_reserved_mem[i].start,
+> +						crash_reserved_mem[i].end) < 0)
+> +			goto err;
+>  
+>  	ret = 0;
+>  
+> @@ -1022,15 +1023,10 @@ int load_crashdump_segments(struct kexec
+>  	memmap_p = xmalloc(sz);
+>  	memset(memmap_p, 0, sz);
+>  	add_memmap(memmap_p, info->backup_src_start, info->backup_src_size);
+> -	sz = crash_reserved_mem.end - crash_reserved_mem.start +1;
+> -	if (add_memmap(memmap_p, crash_reserved_mem.start, sz) < 0) {
+> -		return ENOCRASHKERNEL;
+> -	}
+> -
+> -	if (crash_reserved_low_mem.start) {
+> -		sz = crash_reserved_low_mem.end - crash_reserved_low_mem.start
+> -					 +1;
+> -		add_memmap(memmap_p, crash_reserved_low_mem.start, sz);
+> +	for (i = 0; i < crash_reserved_mem_nr; i++) {
+> +		sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
+> +		if (add_memmap(memmap_p, crash_reserved_mem[i].start, sz) < 0)
+> +			return ENOCRASHKERNEL;
+>  	}
+>  
+>  	/* Create a backup region segment to store backup data*/
+> @@ -1101,25 +1097,24 @@ int load_crashdump_segments(struct kexec
+>  	return 0;
+>  }
+>  
+> -int is_crashkernel_mem_reserved(void)
+> +static int crashkernel_mem_callback(void *UNUSED(data), int nr,
+> +                                          char *UNUSED(str),
+> +                                          unsigned long base,
+> +                                          unsigned long length)
+>  {
+> -	uint64_t start, end;
+> -
+> -	if (parse_iomem_single("Crash kernel\n", &start, &end) || start == end)
+> -		return 0;
+> -
+> -	crash_reserved_mem.start = start;
+> -	crash_reserved_mem.end = end;
+> -	crash_reserved_mem.type = RANGE_RAM;
+> -
+> -	/* If there is no Crash low kernel, still can go on */
+> -	if (parse_iomem_single("Crash kernel low\n", &start, &end) ||
+> -					start == end)
+> +	if (nr >= CRASH_RESERVED_MEM_NR)
+>  		return 1;
+>  
+> -	crash_reserved_low_mem.start = start;
+> -	crash_reserved_low_mem.end = end;
+> -	crash_reserved_low_mem.type = RANGE_RAM;
+> +	crash_reserved_mem[nr].start = base;
+> +	crash_reserved_mem[nr].end   = base + length - 1;
+> +	crash_reserved_mem[nr].type  = RANGE_RAM;
+> +	return 0;
+> +}
+> +
+> +int is_crashkernel_mem_reserved(void)
+> +{
+> +	crash_reserved_mem_nr = kexec_iomem_for_each_line("Crash kernel\n",
+> +                                       crashkernel_mem_callback, NULL);
+>  
+> -	return 1;
+> +	return !!crash_reserved_mem_nr;
+>  }
 
 _______________________________________________
 kexec mailing list
