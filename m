@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mail-ie0-x22f.google.com ([2607:f8b0:4001:c03::22f])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UJ9Uw-000135-R0
- for kexec@lists.infradead.org; Fri, 22 Mar 2013 21:27:39 +0000
-Message-ID: <514CCCB8.4000108@zytor.com>
-Date: Fri, 22 Mar 2013 14:27:20 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1UJ9Zo-0001Ah-3H
+ for kexec@lists.infradead.org; Fri, 22 Mar 2013 21:32:41 +0000
+Received: by mail-ie0-f175.google.com with SMTP id c12so5336211ieb.6
+ for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 14:32:39 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH] kdump, x86: Process multiple Crash kernel in /proc/iomem
+In-Reply-To: <20130322212104.GI4544@redhat.com>
 References: <20130320163131.GE2273@redhat.com>
  <1363807494-25127-1-git-send-email-yinghai@kernel.org>
  <20130322175925.GA10004@redhat.com>
  <CAE9FiQXZP0zbGA=nTg6bHG29sJJRvzNHHbBi1WUsO60cksSUSQ@mail.gmail.com>
  <20130322212104.GI4544@redhat.com>
-In-Reply-To: <20130322212104.GI4544@redhat.com>
+Date: Fri, 22 Mar 2013 14:32:39 -0700
+Message-ID: <CAE9FiQWAEnoejkAQub-qKerQy=KWRZ7BwEq0n3FQ4-t99GaTBQ@mail.gmail.com>
+Subject: Re: [PATCH] kdump, x86: Process multiple Crash kernel in /proc/iomem
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,35 +29,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Yinghai Lu <yinghai@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-On 03/22/2013 02:21 PM, Vivek Goyal wrote:
-> 
-> BTW, I had a query about loading 64bit entry point bzImage. In 32bit
-> bzImage entry point logic, we used to load bzImage at the beginning
-> of memory hole and initrd at the end of memory hole. So that bzImage
-> and initramfs are as far as possible and initramfs decompression does
-> not overwrite anything or for that matter setting bss are does not
-> spill over into initramfs.
-> 
-> In new code, It looks like we seem to be loading kernel towards the end
-> of the hole.
-> 
->        addr = add_buffer(info, kernel + kern16_size, k_size,
->                           size, align, 0x100000, -1, -1);
-> 
-> IIUC, this has potential that new kernel can overwrite some of the old
-> kernel's data structure while setting up bss. Shouldn't we do it 32bit
-> entry code way where bzImage is loaded towards the beginning of hole and
-> initramfs is loaded towards the end of the hole.
-> 
+On Fri, Mar 22, 2013 at 2:21 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Since boot protocol 2.10+ the kernel actively exports how much memory it
-needs during its setup phase.
+>> > In case of kexec_on_panic, we seem to have all the memory ranges in
+>> > info->memory_ranges[]. I guess we don't need that. We just need ranges
+>> > which are reserved for crash kernel and marked by "Crash Kernel". In
+>> > that case we will be able to handle multiple "Crash Kernel" ranges.
+>>
+>> but we still like to put kernel and initrd high, and leave low range
+>> for swiotlb.
+>> could just find mem_min and mem_max for largest and last one.
+>
+> Yes, but I guess that should not be hard coded here. It is during load
+> phase we should enforce where we want to load all the segments.
+>
+> It will work though for our current usage. May be later we can improve
+> it further. Where loader sees all the memory ranges (low and high) and
+> we choose appropriate segment.
 
-	-hpa
-
-
+ok.
 
 _______________________________________________
 kexec mailing list
