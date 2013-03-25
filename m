@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f169.google.com ([209.85.192.169])
+Received: from mail-pb0-f47.google.com ([209.85.160.47])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK8uK-00078Y-MQ
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:01:57 +0000
-Received: by mail-pd0-f169.google.com with SMTP id 10so17434pdc.0
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:01:54 -0700 (PDT)
-Message-ID: <515066DD.20906@gmail.com>
-Date: Mon, 25 Mar 2013 23:01:49 +0800
+ id 1UK8wJ-0007cv-6G
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:04:00 +0000
+Received: by mail-pb0-f47.google.com with SMTP id rp2so4209418pbb.34
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:03:57 -0700 (PDT)
+Message-ID: <51506758.4070902@gmail.com>
+Date: Mon, 25 Mar 2013 23:03:52 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: lengthen the kernel command line image
-References: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
- <20130305015127.GA28547@verge.net.au> <514FFFD1.5080704@cn.fujitsu.com>
- <20130325123955.GA30905@sgi.com>
-In-Reply-To: <20130325123955.GA30905@sgi.com>
+Subject: [PATCH 01/13] kexec: fix possible memory leak in check_reuse_initrd
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +18,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-5LqOIDIwMTPlubQwM+aciDI15pelIDIwOjM5LCBDbGlmZiBXaWNrbWFuIOWGmemBkzoKPiBPbiBN
-b24sIE1hciAyNSwgMjAxMyBhdCAwMzo0MjowOVBNICswODAwLCBaaGFuZyBZYW5mZWkgd3JvdGU6
-Cj4+ID8/PyAyMDEzPz8/MDM/Pz8wNT8/PyAwOTo1MSwgU2ltb24gSG9ybWFuID8/Pz8/PzoKPj4+
-IE9uIE1vbiwgRmViIDA0LCAyMDEzIGF0IDAxOjUzOjU1UE0gLTA2MDAsIENsaWZmIFdpY2ttYW4g
-d3JvdGU6Cj4+Pj4gRnJvbTogQ2xpZmYgV2lja21hbiA8Y3B3QHNnaS5jb20+Cj4+Pj4KPj4+PiBU
-aGUgY3Jhc2gga2VybmVsJ3MgYm9vdCBjb21tYW5kIGxpbmUgaXMgbm90IGxvbmcgZW5vdWdoIHRv
-IGNvbnRhaW4gdGhlCj4+Pj4gbmVjZXNzYXJ5IG1lbW1hcD0gb3B0aW9ucyBmb3IgYSBsYXJnZSBt
-ZW1vcnkuCj4+Pj4KPj4+PiBUaGUgZml4IGlzIHNpbXBsZSwgYXMgbG9uZyBhcyB0aGUgYm9vdCBs
-b2FkZXIncyBjb21tYW5kIGxpbmUgaXMgYWxzbyBsb25nIGVub3VnaC4KPj4+PiBJJ20gbm90IHN1
-cmUgYWJvdXQgYm9vdCBsb2FkZXIgb3Iga2VybmVsIHJlc3RyaWN0aW9ucyB0byB0aGlzIGxlbmd0
-aC4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IENsaWZmIFdpY2ttYW4gPGNwd0BzZ2kuY29tPgo+
-Pj4KPj4+IFRoYW5rcywgYXBwbGllZC4KPj4KPj4gSGVsbG8KPj4KPj4gSSBoYXZlIGEgcXVlc3Rp
-b24gYWJvdXQgdGhpcyBwYXRjaC4KPj4KPj4gSW4geDg2IGNvZGUsIENPTU1BTkRfTElORV9TSVpF
-IGlzIGRlZmluZWQgYXMgYmVsb3c6Cj4+Cj4+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3NldHVwLmgK
-Pj4KPj4gI2RlZmluZSBDT01NQU5EX0xJTkVfU0laRSAyMDQ4Cj4+Cj4+IFNvIGV2ZW4gdGhlIHBh
-dGNoIGxlbmd0aGVucyB0aGUgY29tbWFuZGxpbmUgbGVuZ3RoIGhlcmUsIHdoZW4gcmVib290IGlu
-dG8KPj4gdGhlIG5ldyBrZXJuZWwsIHRoZSBjb21tYW5kbGluZSB3aWxsIHN0aWxsIGJlIHN0cmlw
-cGVkIHRvIDIwNDg/IHJpZ2h0Pwo+Pgo+PiBTbyB0aGUgcGF0Y2ggc2VlbXMgdW5uZWNlc3Nhcnkg
-b3IgdW51c2FibGUuIENvcnJlY3QgbWUgaWYgSSBhbSB3cm9uZy4KPiAKPiBZb3UgYXJlIHJpZ2h0
-LCB3ZSBjYW4ndCBnbyBiZXlvbmQgMjA0OC4KPiAKPiBXZSBoYWQgYSBwcm9ibGVtIGNhdXNlZCBi
-eSB0aGUgZmFjdCB0aGF0IHRoZSBlODIwIHRhYmxlIHdhcyBub3QgZnVsbHkKPiByZS1jcmVhdGVk
-IGluIHRoZSBjcmFzaCBrZXJuZWwuICBXaXRob3V0IHRoZSByZXNlcnZlZCBpL28gc3BhY2VzIG91
-cgo+IHJvb3QgbWVnYXJhaWQgZGV2aWNlcyB3ZXJlIG5vdCBiZWluZyBkaXNjb3ZlcmVkICh3ZSB1
-c2UgZXh0ZW5kZWQgUENJLCBhbmQKPiBQQ0kgc2VnbWVudCAxLCB3aGljaCBzZWVtcyB0byBtYWtl
-IHRoYXQgcHJvYmxlbSBleGNsdXNpdmVseSBTR0kncyBmb3Igbm93KS4gIAo+IAo+IE15IHdvcmth
-cm91bmQgYXQgZmlyc3Qgd2FzIHRvIHBhc3MgYWxsIHRoZSBpL28gcmVzZXJ2YXRpb25zIGFzIG1l
-bW1hcD0KPiBvcHRpb25zLCBidXQgdGhhdCBjcmVhdGVkIGEgY29tbWFuZCBsaW5lIGxvbmdlciB0
-aGFuIDIwNDguICBIZW5jZSB0aGlzCj4gcGF0Y2guICBUaGVuIEkgaGFkIHRvIGFtZW5kIHRoYXQg
-aWRlYSBieSBjcmVhdGluZyBhIHNpbmdsZSBtZW1tYXA9IGVudHJ5IHRoYXQKPiBjb2FsZXNjZWQg
-YWxsIHJlc2VydmVkIHNwYWNlcyBiZXlvbmQgdXNhYmxlIG1lbW9yeSBpbnRvIG9uZSBiaWcgcmVz
-ZXJ2ZWQKPiBzcGFjZS4gIEkgc2hvdWxkIGhhdmUgd2l0aGRyYXduIHRoZSBhYm92ZSBwYXRjaCB3
-aGVuIEkgcmVhbGl6ZWQgdGhhdCB3ZQo+IGNhbm5vdCBnZXQgYXJvdW5kIHRoZSAyMDQ4IGxpbWl0
-Lgo+IAo+IEkgZGlkIG5vdCBwdXJzdWUgdGhlIHN1Y2Nlc3NmdWwgdmVyc2lvbiBvZiB0aGlzIHBh
-dGNoIGhvd2V2ZXIsIGJlY2F1c2UKPiBvZiB0aGUgYWx0ZXJuYXRlIGRpcmVjdGlvbiBiZWluZyB0
-YWtlbjogdGhhdCBvZiBzb21laG93IHBhc3NpbmcgdGhlIGVudGlyZQo+IGU4MjAgdGFibGUgdG8g
-dGhlIGNyYXNoIGtlcm5lbC4gIFRoYXQgd2lsbCBmaXggdGhlIHByb2JsZW0gd2UgaGF2ZSB3aXRo
-Cj4gcmVzZXJ2ZWQgaS9vIHNwYWNlcy4KClNvIGNvdWxkIEkgc2VuZCBhIHBhdGNoIHRvIHJldmVy
-dCB0aGlzIGNoYW5nZT8gQW55d2F5LCBJIHRoaW5rIHdlIHNob3VsZCBrZWVwIHRoZQp2YWx1ZSAy
-MDQ4IGNvbnNpc3RlbnQgd2l0aCB0aGUga2VybmVsIHNpZGUuCgpUaGFua3MKWmhhbmcKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+
+If the if test is ok, then it will call die() to exit the process,
+so freeing line will not be reached, causing memory leak. Fix this.
+
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kexec/kexec.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index f3928af..6575ada 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1020,13 +1020,15 @@ char *get_command_line(void)
+ /* check we retained the initrd */
+ static void check_reuse_initrd(void)
+ {
++	char *str = NULL;
+ 	char *line = get_command_line();
+ 
+-	if (strstr(line, "retain_initrd") == NULL)
++	str = strstr(line, "retain_initrd");
++	free(line);
++
++	if (str == NULL)
+ 		die("unrecoverable error: current boot didn't "
+ 		    "retain the initrd for reuse.\n");
+-
+-	free(line);
+ }
+ 
+ char *concat_cmdline(const char *base, const char *append)
+-- 
+1.7.1
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
