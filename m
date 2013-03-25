@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK6gy-00058F-KQ
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 12:40:02 +0000
-Date: Mon, 25 Mar 2013 07:39:55 -0500
-From: Cliff Wickman <cpw@sgi.com>
+Received: from mail-pd0-f169.google.com ([209.85.192.169])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UK8uK-00078Y-MQ
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:01:57 +0000
+Received: by mail-pd0-f169.google.com with SMTP id 10so17434pdc.0
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:01:54 -0700 (PDT)
+Message-ID: <515066DD.20906@gmail.com>
+Date: Mon, 25 Mar 2013 23:01:49 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH] kexec: lengthen the kernel command line image
-Message-ID: <20130325123955.GA30905@sgi.com>
 References: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
  <20130305015127.GA28547@verge.net.au> <514FFFD1.5080704@cn.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <514FFFD1.5080704@cn.fujitsu.com>
+ <20130325123955.GA30905@sgi.com>
+In-Reply-To: <20130325123955.GA30905@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,70 +22,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Cliff Wickman <cpw@sgi.com>
+Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-On Mon, Mar 25, 2013 at 03:42:09PM +0800, Zhang Yanfei wrote:
-> ??? 2013???03???05??? 09:51, Simon Horman ??????:
-> > On Mon, Feb 04, 2013 at 01:53:55PM -0600, Cliff Wickman wrote:
-> >> From: Cliff Wickman <cpw@sgi.com>
-> >>
-> >> The crash kernel's boot command line is not long enough to contain the
-> >> necessary memmap= options for a large memory.
-> >>
-> >> The fix is simple, as long as the boot loader's command line is also long enough.
-> >> I'm not sure about boot loader or kernel restrictions to this length.
-> >>
-> >> Signed-off-by: Cliff Wickman <cpw@sgi.com>
-> > 
-> > Thanks, applied.
-> 
-> Hello
-> 
-> I have a question about this patch.
-> 
-> In x86 code, COMMAND_LINE_SIZE is defined as below:
-> 
-> arch/x86/include/asm/setup.h
-> 
-> #define COMMAND_LINE_SIZE 2048
-> 
-> So even the patch lengthens the commandline length here, when reboot into
-> the new kernel, the commandline will still be stripped to 2048? right?
-> 
-> So the patch seems unnecessary or unusable. Correct me if I am wrong.
-
-You are right, we can't go beyond 2048.
-
-We had a problem caused by the fact that the e820 table was not fully
-re-created in the crash kernel.  Without the reserved i/o spaces our
-root megaraid devices were not being discovered (we use extended PCI, and
-PCI segment 1, which seems to make that problem exclusively SGI's for now).  
-
-My workaround at first was to pass all the i/o reservations as memmap=
-options, but that created a command line longer than 2048.  Hence this
-patch.  Then I had to amend that idea by creating a single memmap= entry that
-coalesced all reserved spaces beyond usable memory into one big reserved
-space.  I should have withdrawn the above patch when I realized that we
-cannot get around the 2048 limit.
-
-I did not pursue the successful version of this patch however, because
-of the alternate direction being taken: that of somehow passing the entire
-e820 table to the crash kernel.  That will fix the problem we have with
-reserved i/o spaces.
-
--Cliff
--- 
-Cliff Wickman
-SGI
-cpw@sgi.com
-(651) 683-3824
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwM+aciDI15pelIDIwOjM5LCBDbGlmZiBXaWNrbWFuIOWGmemBkzoKPiBPbiBN
+b24sIE1hciAyNSwgMjAxMyBhdCAwMzo0MjowOVBNICswODAwLCBaaGFuZyBZYW5mZWkgd3JvdGU6
+Cj4+ID8/PyAyMDEzPz8/MDM/Pz8wNT8/PyAwOTo1MSwgU2ltb24gSG9ybWFuID8/Pz8/PzoKPj4+
+IE9uIE1vbiwgRmViIDA0LCAyMDEzIGF0IDAxOjUzOjU1UE0gLTA2MDAsIENsaWZmIFdpY2ttYW4g
+d3JvdGU6Cj4+Pj4gRnJvbTogQ2xpZmYgV2lja21hbiA8Y3B3QHNnaS5jb20+Cj4+Pj4KPj4+PiBU
+aGUgY3Jhc2gga2VybmVsJ3MgYm9vdCBjb21tYW5kIGxpbmUgaXMgbm90IGxvbmcgZW5vdWdoIHRv
+IGNvbnRhaW4gdGhlCj4+Pj4gbmVjZXNzYXJ5IG1lbW1hcD0gb3B0aW9ucyBmb3IgYSBsYXJnZSBt
+ZW1vcnkuCj4+Pj4KPj4+PiBUaGUgZml4IGlzIHNpbXBsZSwgYXMgbG9uZyBhcyB0aGUgYm9vdCBs
+b2FkZXIncyBjb21tYW5kIGxpbmUgaXMgYWxzbyBsb25nIGVub3VnaC4KPj4+PiBJJ20gbm90IHN1
+cmUgYWJvdXQgYm9vdCBsb2FkZXIgb3Iga2VybmVsIHJlc3RyaWN0aW9ucyB0byB0aGlzIGxlbmd0
+aC4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IENsaWZmIFdpY2ttYW4gPGNwd0BzZ2kuY29tPgo+
+Pj4KPj4+IFRoYW5rcywgYXBwbGllZC4KPj4KPj4gSGVsbG8KPj4KPj4gSSBoYXZlIGEgcXVlc3Rp
+b24gYWJvdXQgdGhpcyBwYXRjaC4KPj4KPj4gSW4geDg2IGNvZGUsIENPTU1BTkRfTElORV9TSVpF
+IGlzIGRlZmluZWQgYXMgYmVsb3c6Cj4+Cj4+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3NldHVwLmgK
+Pj4KPj4gI2RlZmluZSBDT01NQU5EX0xJTkVfU0laRSAyMDQ4Cj4+Cj4+IFNvIGV2ZW4gdGhlIHBh
+dGNoIGxlbmd0aGVucyB0aGUgY29tbWFuZGxpbmUgbGVuZ3RoIGhlcmUsIHdoZW4gcmVib290IGlu
+dG8KPj4gdGhlIG5ldyBrZXJuZWwsIHRoZSBjb21tYW5kbGluZSB3aWxsIHN0aWxsIGJlIHN0cmlw
+cGVkIHRvIDIwNDg/IHJpZ2h0Pwo+Pgo+PiBTbyB0aGUgcGF0Y2ggc2VlbXMgdW5uZWNlc3Nhcnkg
+b3IgdW51c2FibGUuIENvcnJlY3QgbWUgaWYgSSBhbSB3cm9uZy4KPiAKPiBZb3UgYXJlIHJpZ2h0
+LCB3ZSBjYW4ndCBnbyBiZXlvbmQgMjA0OC4KPiAKPiBXZSBoYWQgYSBwcm9ibGVtIGNhdXNlZCBi
+eSB0aGUgZmFjdCB0aGF0IHRoZSBlODIwIHRhYmxlIHdhcyBub3QgZnVsbHkKPiByZS1jcmVhdGVk
+IGluIHRoZSBjcmFzaCBrZXJuZWwuICBXaXRob3V0IHRoZSByZXNlcnZlZCBpL28gc3BhY2VzIG91
+cgo+IHJvb3QgbWVnYXJhaWQgZGV2aWNlcyB3ZXJlIG5vdCBiZWluZyBkaXNjb3ZlcmVkICh3ZSB1
+c2UgZXh0ZW5kZWQgUENJLCBhbmQKPiBQQ0kgc2VnbWVudCAxLCB3aGljaCBzZWVtcyB0byBtYWtl
+IHRoYXQgcHJvYmxlbSBleGNsdXNpdmVseSBTR0kncyBmb3Igbm93KS4gIAo+IAo+IE15IHdvcmth
+cm91bmQgYXQgZmlyc3Qgd2FzIHRvIHBhc3MgYWxsIHRoZSBpL28gcmVzZXJ2YXRpb25zIGFzIG1l
+bW1hcD0KPiBvcHRpb25zLCBidXQgdGhhdCBjcmVhdGVkIGEgY29tbWFuZCBsaW5lIGxvbmdlciB0
+aGFuIDIwNDguICBIZW5jZSB0aGlzCj4gcGF0Y2guICBUaGVuIEkgaGFkIHRvIGFtZW5kIHRoYXQg
+aWRlYSBieSBjcmVhdGluZyBhIHNpbmdsZSBtZW1tYXA9IGVudHJ5IHRoYXQKPiBjb2FsZXNjZWQg
+YWxsIHJlc2VydmVkIHNwYWNlcyBiZXlvbmQgdXNhYmxlIG1lbW9yeSBpbnRvIG9uZSBiaWcgcmVz
+ZXJ2ZWQKPiBzcGFjZS4gIEkgc2hvdWxkIGhhdmUgd2l0aGRyYXduIHRoZSBhYm92ZSBwYXRjaCB3
+aGVuIEkgcmVhbGl6ZWQgdGhhdCB3ZQo+IGNhbm5vdCBnZXQgYXJvdW5kIHRoZSAyMDQ4IGxpbWl0
+Lgo+IAo+IEkgZGlkIG5vdCBwdXJzdWUgdGhlIHN1Y2Nlc3NmdWwgdmVyc2lvbiBvZiB0aGlzIHBh
+dGNoIGhvd2V2ZXIsIGJlY2F1c2UKPiBvZiB0aGUgYWx0ZXJuYXRlIGRpcmVjdGlvbiBiZWluZyB0
+YWtlbjogdGhhdCBvZiBzb21laG93IHBhc3NpbmcgdGhlIGVudGlyZQo+IGU4MjAgdGFibGUgdG8g
+dGhlIGNyYXNoIGtlcm5lbC4gIFRoYXQgd2lsbCBmaXggdGhlIHByb2JsZW0gd2UgaGF2ZSB3aXRo
+Cj4gcmVzZXJ2ZWQgaS9vIHNwYWNlcy4KClNvIGNvdWxkIEkgc2VuZCBhIHBhdGNoIHRvIHJldmVy
+dCB0aGlzIGNoYW5nZT8gQW55d2F5LCBJIHRoaW5rIHdlIHNob3VsZCBrZWVwIHRoZQp2YWx1ZSAy
+MDQ4IGNvbnNpc3RlbnQgd2l0aCB0aGUga2VybmVsIHNpZGUuCgpUaGFua3MKWmhhbmcKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
