@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f48.google.com ([209.85.160.48])
+Received: from mail-da0-x22f.google.com ([2607:f8b0:400e:c00::22f])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK4z4-0006fr-PS
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 10:50:36 +0000
-Received: by mail-pb0-f48.google.com with SMTP id wy12so4068934pbc.7
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 03:50:30 -0700 (PDT)
-From: Zhouyi Zhou <zhouzhouyi@gmail.com>
-Subject: [PATCH 1/1] On Documentation/kdump/kdump.txt,
- section Boot into System Kernel: On x86 and x86_64, use "crashkernel=64M@16M",
- but some OSes like ubuntu 12.10 use ram fs larger than 64M,
- so in these cases the memory reserved for crashkernel should be at least 128M.
-Date: Mon, 25 Mar 2013 18:50:10 +0800
-Message-Id: <1364208610-11409-1-git-send-email-yizhouzhou@ict.ac.cn>
+ id 1UK55R-0008Ay-CX
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 10:57:10 +0000
+Received: by mail-da0-f47.google.com with SMTP id s35so3166253dak.20
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 03:57:06 -0700 (PDT)
+From: zhouzhouyi@gmail.com
+Subject: [PATCH 1/1 v1] the recommended crash memory reservation is too small
+ for x86_64.
+Date: Mon, 25 Mar 2013 18:56:49 +0800
+Message-Id: <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,6 +26,11 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, yizhouzhou@ict.ac.cn
 
 From: root <root@zzy-Lenovo.(none)>
+
+
+ On Documentation/kdump/kdump.txt, section Boot into  System Kernel: On x86 and x86_64, use
+ "crashkernel=64M@16M", but some OSes like ubuntu 12.10 use ram fs larger than 64M, so in these cases the
+ memory reserved for crashkernel should be at least 128M.
 
 
 Signed-off-by: Zhouyi Zhou <yizhouzhou@ict.ac.cn>
