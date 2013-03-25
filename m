@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-da0-x22f.google.com ([2607:f8b0:400e:c00::22f])
+Received: from szxga01-in.huawei.com ([119.145.14.64])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK55R-0008Ay-CX
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 10:57:10 +0000
-Received: by mail-da0-f47.google.com with SMTP id s35so3166253dak.20
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 03:57:06 -0700 (PDT)
-From: zhouzhouyi@gmail.com
-Subject: [PATCH 1/1 v1] the recommended crash memory reservation is too small
- for x86_64.
-Date: Mon, 25 Mar 2013 18:56:49 +0800
-Message-Id: <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
+ id 1UK5My-0002lq-Fa
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 11:15:18 +0000
+Message-ID: <51503188.8060706@huawei.com>
+Date: Mon, 25 Mar 2013 19:14:16 +0800
+From: Xishi Qiu <qiuxishi@huawei.com>
+MIME-Version: 1.0
+Subject: [PATCH] ia64/mm: add size restriction to the kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,43 +16,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, yizhouzhou@ict.ac.cn
+To: "Luck, Tony" <tony.luck@intel.com>, vgoyal@redhat.com, hbabu@us.ibm.com, rob@landley.net
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 
-From: root <root@zzy-Lenovo.(none)>
+In efi_init() memory aligns in IA64_GRANULE_SIZE(16M). If set "crashkernel=1024M-:600M"
+and use sparse memory model, when crash kernel booting it changes [128M-728M] to [128M-720M].
 
+But initrd memory is in [709M-727M], and virt_addr_valid() *can not* check the invalid pages
+when freeing initrd memory, because there are some pages missed at the end of the seciton,
+and this causes error.
 
- On Documentation/kdump/kdump.txt, section Boot into  System Kernel: On x86 and x86_64, use
- "crashkernel=64M@16M", but some OSes like ubuntu 12.10 use ram fs larger than 64M, so in these cases the
- memory reserved for crashkernel should be at least 128M.
+...
+Unpacking initramfs...
+Freeing initrd memory: 19648kB freed
+BUG: Bad page state in process swapper  pfn:02d00
+page:e0000000102dd800 flags:(null) count:0 mapcount:1 mapping:(null) index:0
 
+Call Trace:
+ [<a000000100018dc0>] show_stack+0x80/0xa0
+                                sp=e000000021e8fbd0 bsp=e000000021e81360
+ [<a00000010090fcc0>] dump_stack+0x30/0x50
+                                sp=e000000021e8fda0 bsp=e000000021e81348
+ [<a0000001001a3180>] bad_page+0x280/0x380
+                                sp=e000000021e8fda0 bsp=e000000021e81308
+ [<a0000001001a8740>] free_hot_cold_page+0x3a0/0x5c0
+                                sp=e000000021e8fda0 bsp=e000000021e812a0
+ [<a0000001001a8a50>] free_hot_page+0x30/0x60
+                                sp=e000000021e8fda0 bsp=e000000021e81280
+ [<a0000001001a8b30>] __free_pages+0xb0/0xe0
+                                sp=e000000021e8fda0 bsp=e000000021e81258
+ [<a0000001001a8c00>] free_pages+0xa0/0xc0
+                                sp=e000000021e8fda0 bsp=e000000021e81230
+ [<a000000100bb40c0>] free_initrd_mem+0x230/0x290
+                                sp=e000000021e8fda0 bsp=e000000021e811d8
+ [<a000000100ba6620>] populate_rootfs+0x1c0/0x280
+                                sp=e000000021e8fdb0 bsp=e000000021e811a0
+ [<a00000010000ac30>] do_one_initcall+0x3b0/0x3e0
+                                sp=e000000021e8fdb0 bsp=e000000021e81158
+ [<a000000100ba0a90>] kernel_init+0x3f0/0x4b0
+                                sp=e000000021e8fdb0 bsp=e000000021e81108
+ [<a000000100016890>] kernel_thread_helper+0xd0/0x100
+                                sp=e000000021e8fe30 bsp=e000000021e810e0
+ [<a00000010000a4c0>] start_kernel_thread+0x20/0x40
+                                sp=e000000021e8fe30 bsp=e000000021e810e0
+...
 
-Signed-off-by: Zhouyi Zhou <yizhouzhou@ict.ac.cn>
+In "http://marc.info/?l=linux-arch&m=136147092429314&w=2" Tony said:
+"Perhaps in Documentation/kdump/kdump.txt (which the crashkernel entry
+in kernel-parameters.txt points at).  The ia64 section of kdump.txt
+notes that the start address will be rounded up to a GRANULE boundary,
+but doesn't talk about restrictions on the size."
+
+This patch add size restriction to the documentation of kdump.
+
+Signed-off-by: Xishi Qiu <qiuxishi@huawei.com>
 ---
- Documentation/kdump/kdump.txt |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/kdump/kdump.txt |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
 diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index 13f1aa0..1e850e0 100644
+index 13f1aa0..9c7fd98 100644
 --- a/Documentation/kdump/kdump.txt
 +++ b/Documentation/kdump/kdump.txt
-@@ -290,7 +290,9 @@ Boot into System Kernel
-    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
-    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
- 
--   On x86 and x86_64, use "crashkernel=64M@16M".
-+   On x86 and x86_64, use "crashkernel=64M@16M" (some OSes use init ram fs larger
-+than 64M, for example ubuntu-12.10, use crashkernel=128M@16M instead, or dump-capture
-+kernel will out of memory).
- 
-    On ppc64, use "crashkernel=128M@32M".
- 
+@@ -297,6 +297,7 @@ Boot into System Kernel
+    On ia64, 256M@256M is a generous value that typically works.
+    The region may be automatically placed on ia64, see the
+    dump-capture kernel config option notes above.
++   If use sparse memory, the size should be rounded to GRANULE boundaries.
+
+    On s390x, typically use "crashkernel=xxM". The value of xx is dependent
+    on the memory consumption of the kdump system. In general this is not
 -- 
-1.7.10.4
+1.7.6.1
+
 
 
 _______________________________________________
