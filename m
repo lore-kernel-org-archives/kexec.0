@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f169.google.com ([209.85.192.169])
+Received: from mail-pa0-f41.google.com ([209.85.220.41])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK8yC-0000UZ-1Q
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:05:57 +0000
-Received: by mail-pd0-f169.google.com with SMTP id 10so19244pdc.0
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:05:54 -0700 (PDT)
-Message-ID: <515067CD.8000002@gmail.com>
-Date: Mon, 25 Mar 2013 23:05:49 +0800
+ id 1UK909-0001jo-Vn
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:07:59 +0000
+Received: by mail-pa0-f41.google.com with SMTP id kx1so626978pab.28
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:07:55 -0700 (PDT)
+Message-ID: <51506845.30303@gmail.com>
+Date: Mon, 25 Mar 2013 23:07:49 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 02/13] kexec: i386: bzImage: fix memory leak caused by
- get_command_line
+Subject: [PATCH 03/13] kexec: i386: elf: fix possible memory leak in
+ elf_x86_load
 References: <51506758.4070902@gmail.com>
 In-Reply-To: <51506758.4070902@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -30,50 +30,83 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-Since get_command_line returns dynamically allocated memory, it is
-easy for the caller to forget freeing the memory. Here fixes a
-memory leak caused by this function.
+In elf_x86_load, allocated memory may not be free'd if the code
+exits abnormally, by calling die() or return. So the patch fixes
+the possible memory leak.
+
+This patch is also a preparation for patch04.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/i386/kexec-bzImage.c |    8 ++++++--
- 1 files changed, 6 insertions(+), 2 deletions(-)
+ kexec/arch/i386/kexec-elf-x86.c |   20 ++++++++++++++------
+ 1 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 99fd790..39452a4 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -382,6 +382,7 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
- 	char *command_line = NULL;
-+	char *tmp_cmdline = NULL;
- 	const char *ramdisk, *append = NULL;
- 	char *ramdisk_buf;
- 	off_t ramdisk_length;
-@@ -421,7 +422,7 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
- 			append = optarg;
- 			break;
- 		case OPT_REUSE_CMDLINE:
--			command_line = get_command_line();
-+			tmp_cmdline = get_command_line();
- 			break;
- 		case OPT_RAMDISK:
- 			ramdisk = optarg;
-@@ -431,7 +432,10 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
- 			break;
+diff --git a/kexec/arch/i386/kexec-elf-x86.c b/kexec/arch/i386/kexec-elf-x86.c
+index e62ebcb..de855c4 100644
+--- a/kexec/arch/i386/kexec-elf-x86.c
++++ b/kexec/arch/i386/kexec-elf-x86.c
+@@ -90,6 +90,8 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct mem_ehdr ehdr;
+ 	char *command_line = NULL, *modified_cmdline = NULL;
+ 	const char *append = NULL;
++	char *error_msg = NULL;
++	int result;
+ 	int command_line_len;
+ 	int modified_cmdline_len;
+ 	const char *ramdisk;
+@@ -120,9 +122,9 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	 * Parse the command line arguments
+ 	 */
+ 	arg_style = ARG_STYLE_ELF;
+-	modified_cmdline = 0;
+ 	modified_cmdline_len = 0;
+ 	ramdisk = 0;
++	result = 0;
+ 	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+ 		switch(opt) {
+ 		default:
+@@ -215,7 +217,8 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 		elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs, sizeof(regs));
+ 
+ 		if (ramdisk) {
+-			die("Ramdisks not supported with generic elf arguments");
++			error_msg = "Ramdisks not supported with generic elf arguments";
++			goto out;
  		}
  	}
--	command_line = concat_cmdline(command_line, append);
-+	command_line = concat_cmdline(tmp_cmdline, append);
-+	if (tmp_cmdline) {
-+		free(tmp_cmdline);
-+	}
- 	command_line_len = 0;
- 	if (command_line) {
- 		command_line_len = strlen(command_line) +1;
+ 	else if (arg_style == ARG_STYLE_LINUX) {
+@@ -256,8 +259,10 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 		if (info->kexec_flags & (KEXEC_ON_CRASH|KEXEC_PRESERVE_CONTEXT)) {
+ 			rc = load_crashdump_segments(info, modified_cmdline,
+ 						max_addr, 0);
+-			if (rc < 0)
+-				return -1;
++			if (rc < 0) {
++				result = -1;
++				goto out;
++			}
+ 			/* Use new command line. */
+ 			free(command_line);
+ 			command_line = modified_cmdline;
+@@ -283,10 +288,13 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 		elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs, sizeof(regs));
+ 	}
+ 	else {
+-		die("Unknown argument style\n");
++		error_msg = "Unknown argument style\n";
+ 	}
+ 
++out:
+ 	free(command_line);
+ 	free(modified_cmdline);
+-	return 0;
++	if (error_msg)
++		die(error_msg);
++	return result;
+ }
 -- 
 1.7.1
+
 
 _______________________________________________
 kexec mailing list
