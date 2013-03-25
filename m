@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f54.google.com ([209.85.220.54])
+Received: from mail-pa0-f48.google.com ([209.85.220.48])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK9AH-0004by-98
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:18:26 +0000
-Received: by mail-pa0-f54.google.com with SMTP id fa10so1083715pad.13
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:18:23 -0700 (PDT)
-Message-ID: <51506ABB.2030808@gmail.com>
-Date: Mon, 25 Mar 2013 23:18:19 +0800
+ id 1UK9Di-0006o4-OP
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:21:59 +0000
+Received: by mail-pa0-f48.google.com with SMTP id hz10so1083670pad.21
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:21:56 -0700 (PDT)
+Message-ID: <51506B8F.2090106@gmail.com>
+Date: Mon, 25 Mar 2013 23:21:51 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 13/13] kexec: x86_64: elf: fix possible memory leak in
- elf_x86_64_load
-References: <51506758.4070902@gmail.com>
-In-Reply-To: <51506758.4070902@gmail.com>
+Subject: Re: [PATCH 2/2] kexec: Use err() instead of fprintf()
+References: <5149B68C.1080704@gmail.com> <5149B6FF.70908@gmail.com>
+ <20130320132145.GK16436@verge.net.au>
+In-Reply-To: <20130320132145.GK16436@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,81 +21,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-
-In elf_x86_64_load, allocated memory may not be free'd if the code
-exits abnormally, by calling die() or return. So the patch fixes
-the possible memory leak.
-
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/arch/x86_64/kexec-elf-x86_64.c |   18 +++++++++++++-----
- 1 files changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/kexec/arch/x86_64/kexec-elf-x86_64.c b/kexec/arch/x86_64/kexec-elf-x86_64.c
-index 4a41780..7944be4 100644
---- a/kexec/arch/x86_64/kexec-elf-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-elf-x86_64.c
-@@ -98,6 +98,8 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
- #define ARG_STYLE_LINUX 1
- #define ARG_STYLE_NONE  2
- 	int opt;
-+	int result = 0;
-+	char *error_msg = NULL;
- 
- 	/* See options.h and add any new options there too! */
- 	static const struct option options[] = {
-@@ -208,7 +210,8 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
- 		elf_rel_set_symbol(&info->rhdr, "entry64_regs", &regs, sizeof(regs));
- 
- 		if (ramdisk) {
--			die("Ramdisks not supported with generic elf arguments");
-+			error_msg = "Ramdisks not supported with generic elf arguments";
-+			goto out;
- 		}
- 	}
- 	else if (arg_style == ARG_STYLE_LINUX) {
-@@ -240,8 +243,10 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
- 		if (info->kexec_flags & KEXEC_ON_CRASH) {
- 			rc = load_crashdump_segments(info, modified_cmdline,
- 							max_addr, 0);
--			if (rc < 0)
--				return -1;
-+			if (rc < 0) {
-+				result = -1;
-+				goto out;
-+			}
- 			/* Use new command line. */
- 			free(command_line);
- 			command_line = modified_cmdline;
-@@ -267,10 +272,13 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
- 		elf_rel_set_symbol(&info->rhdr, "entry64_regs", &regs, sizeof(regs));
- 	}
- 	else {
--		die("Unknown argument style\n");
-+		error_msg = "Unknown argument style\n";
- 	}
- 
-+out:
- 	free(command_line);
- 	free(modified_cmdline);
--	return 0;
-+	if (error_msg)
-+		die(error_msg);
-+	return result;
- }
--- 
-1.7.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwM+aciDIw5pelIDIxOjIxLCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIFdl
+ZCwgTWFyIDIwLCAyMDEzIGF0IDA5OjE3OjUxUE0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
+Pj4gRnJvbTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPj4KPj4g
+U2luY2Ugd2UgaGF2ZSB0aGUgZXJyKCkgaW50ZXJmYWNlLCBzbyByZXBsYWNlIHRoZSBlcnJvciBw
+cmludGluZwo+PiBmdW5jdGlvbiB3aXRoIGVycigpLgo+IAo+IFRoaXMgcGF0Y2ggaW50cm9kdWNl
+cyBhIGxvdCBvZiBjb2RlIGNoYW5nZXMgYW5kIEknbSBub3QgZW50aXJlbHkKPiBzdXJlIHRoYXQg
+SSBzZWUgdGhlIGJlbmVmaXQuCgpTb3JyeSBmb3IgdGhlIGxvbmcgcGF0Y2guCgpJIGp1c3Qgd2Fu
+dGVkIHRvIHVzZSBhIHNpbXBsZXIgZXJyb3IgZGlzcGxheWluZyBmdW5jdGlvbiBpbnN0ZWFkIG9m
+CmZwcmludGYoc3RkZXJyLCAuLi4pLiBKdXN0IGxpa2Ugd2UgdXNlIGRpZSgpIG9yIGRiZ3ByaW50
+Zi4gSWYgeW91CnRoaW5rIHRoaXMgaXMgdW5uZWNlc3NhcnksIGp1c3QgaWdub3JlIHRoZSBwYXRj
+aCBwbGVhc2UuCgpUaGFua3MKWmhhbmcgCgo+IAo+PiBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZYW5m
+ZWkgPHpoYW5neWFuZmVpQGNuLmZ1aml0c3UuY29tPgo+PiAtLS0KPj4gIGtleGVjL2FyY2gvYXJt
+L2tleGVjLWFybS5jICAgICAgICAgICAgfCAgICAzICstCj4+ICBrZXhlYy9hcmNoL2FybS9rZXhl
+Yy16SW1hZ2UtYXJtLmMgICAgIHwgICAxOCArKysrLS0tLS0KPj4gIGtleGVjL2FyY2gvaTM4Ni9j
+cmFzaGR1bXAteDg2LmMgICAgICAgfCAgIDM3ICsrKysrKysrLS0tLS0tLS0tCj4+ICBrZXhlYy9h
+cmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jICAgICAgIHwgICAxOCArKysrLS0tLQo+PiAga2V4ZWMv
+YXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYyAgICAgICB8ICAgIDQgKy0KPj4gIGtleGVjL2FyY2gv
+aTM4Ni9rZXhlYy1tdWx0aWJvb3QteDg2LmMgfCAgIDExICsrLS0tCj4+ICBrZXhlYy9hcmNoL2kz
+ODYva2V4ZWMtbmJpLmMgICAgICAgICAgIHwgICAxNCArKystLS0KPj4gIGtleGVjL2FyY2gvaTM4
+Ni9rZXhlYy14ODYtY29tbW9uLmMgICAgfCAgIDI3ICsrKysrKy0tLS0tLS0KPj4gIGtleGVjL2Fy
+Y2gvaTM4Ni9rZXhlYy14ODYuYyAgICAgICAgICAgfCAgICA5ICstLS0KPj4gIGtleGVjL2FyY2gv
+aTM4Ni94ODYtbGludXgtc2V0dXAuYyAgICAgfCAgIDE5ICsrKystLS0tLQo+PiAga2V4ZWMvYXJj
+aC9pYTY0L2NyYXNoZHVtcC1pYTY0LmMgICAgICB8ICAgIDUgKy0KPj4gIGtleGVjL2FyY2gvaWE2
+NC9rZXhlYy1lbGYtaWE2NC5jICAgICAgfCAgIDEyICsrKy0tLQo+PiAga2V4ZWMvYXJjaC9pYTY0
+L2tleGVjLWlhNjQuYyAgICAgICAgICB8ICAgIDMgKy0KPj4gIGtleGVjL2FyY2gvbWlwcy9jcmFz
+aGR1bXAtbWlwcy5jICAgICAgfCAgIDExICsrLS0tCj4+ICBrZXhlYy9hcmNoL21pcHMva2V4ZWMt
+ZWxmLW1pcHMuYyAgICAgIHwgICAgMiArLQo+PiAga2V4ZWMvYXJjaC9taXBzL2tleGVjLW1pcHMu
+YyAgICAgICAgICB8ICAgIDQgKy0KPj4gIGtleGVjL2FyY2gvcHBjL2NyYXNoZHVtcC1wb3dlcnBj
+LmMgICAgfCAgICA1ICstCj4+ICBrZXhlYy9hcmNoL3BwYy9maXh1cF9kdGIuYyAgICAgICAgICAg
+IHwgICAgMyArLQo+PiAga2V4ZWMvYXJjaC9wcGMva2V4ZWMtZG9sLXBwYy5jICAgICAgICB8ICAg
+MTQgKysrLS0tLQo+PiAga2V4ZWMvYXJjaC9wcGMva2V4ZWMtZWxmLXBwYy5jICAgICAgICB8ICAg
+IDQgKy0KPj4gIGtleGVjL2FyY2gvcHBjL2tleGVjLXBwYy5jICAgICAgICAgICAgfCAgIDM2ICsr
+KysrKysrLS0tLS0tLS0KPj4gIGtleGVjL2FyY2gvcHBjL2tleGVjLXVJbWFnZS1wcGMuYyAgICAg
+fCAgICAyICstCj4+ICBrZXhlYy9hcmNoL3BwYzY0L2NyYXNoZHVtcC1wcGM2NC5jICAgIHwgICAx
+MCArKy0tLQo+PiAga2V4ZWMvYXJjaC9wcGM2NC9mczJkdC5jICAgICAgICAgICAgICB8ICAgIDIg
+Ky0KPj4gIGtleGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXBwYzY0LmMgICAgfCAgIDE3ICsrKyst
+LS0tCj4+ICBrZXhlYy9hcmNoL3BwYzY0L2tleGVjLXBwYzY0LmMgICAgICAgIHwgICAgNiArLQo+
+PiAga2V4ZWMvYXJjaC9wcGM2NC9rZXhlYy16SW1hZ2UtcHBjNjQuYyB8ICAgMTggKysrLS0tLS0K
+Pj4gIGtleGVjL2FyY2gvczM5MC9rZXhlYy1pbWFnZS5jICAgICAgICAgfCAgICA0ICstCj4+ICBr
+ZXhlYy9hcmNoL3MzOTAva2V4ZWMtczM5MC5jICAgICAgICAgIHwgICAgMiArLQo+PiAga2V4ZWMv
+YXJjaC9zaC9rZXhlYy1zaC5jICAgICAgICAgICAgICB8ICAgIDIgKy0KPj4gIGtleGVjL2FyY2gv
+eDg2XzY0L2tleGVjLWJ6SW1hZ2U2NC5jICAgfCAgIDE2ICsrKystLS0tCj4+ICBrZXhlYy9hcmNo
+L3g4Nl82NC9rZXhlYy1lbGYteDg2XzY0LmMgIHwgICAgNiArLQo+PiAga2V4ZWMvYXJjaC94ODZf
+NjQva2V4ZWMteDg2XzY0LmMgICAgICB8ICAgIDUgKy0KPj4gIGtleGVjL2NyYXNoZHVtcC14ZW4u
+YyAgICAgICAgICAgICAgICAgfCAgICA4ICsrLS0KPj4gIGtleGVjL2Zpcm13YXJlX21lbW1hcC5j
+ICAgICAgICAgICAgICAgfCAgIDEyICsrLS0tCj4+ICBrZXhlYy9mczJkdC5jICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgICAgMiArLQo+PiAga2V4ZWMva2VybmVsX3ZlcnNpb24uYyAgICAgICAg
+ICAgICAgICB8ICAgMTcgKysrLS0tLS0KPj4gIGtleGVjL2tleGVjLWVsZi1leGVjLmMgICAgICAg
+ICAgICAgICAgfCAgICA4ICsrLS0KPj4gIGtleGVjL2tleGVjLWVsZi1yZWwuYyAgICAgICAgICAg
+ICAgICAgfCAgIDEwICsrLS0KPj4gIGtleGVjL2tleGVjLWVsZi5jICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDcwICsrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLQo+PiAga2V4ZWMva2V4
+ZWMuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNjQgKysrKysrKysrKysrLS0tLS0tLS0t
+LS0tLS0tLS0tCj4+ICBrZXhlYy9waHlzX2FyY2guYyAgICAgICAgICAgICAgICAgICAgIHwgICAg
+NiArLS0KPj4gIGtleGVjL3psaWIuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICst
+Cj4+ICA0MyBmaWxlcyBjaGFuZ2VkLCAyNDkgaW5zZXJ0aW9ucygrKSwgMjk5IGRlbGV0aW9ucygt
+KQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
