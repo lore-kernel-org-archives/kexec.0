@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f49.google.com ([209.85.160.49])
+Received: from mail-pa0-f54.google.com ([209.85.220.54])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK99U-0004Lo-TQ
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:17:38 +0000
-Received: by mail-pb0-f49.google.com with SMTP id um15so471276pbc.22
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:17:35 -0700 (PDT)
-Message-ID: <51506A89.2010501@gmail.com>
-Date: Mon, 25 Mar 2013 23:17:29 +0800
+ id 1UK9AH-0004by-98
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:18:26 +0000
+Received: by mail-pa0-f54.google.com with SMTP id fa10so1083715pad.13
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:18:23 -0700 (PDT)
+Message-ID: <51506ABB.2030808@gmail.com>
+Date: Mon, 25 Mar 2013 23:18:19 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 12/13] kexec: x86_64: elf: fix memory leak caused by
- get_command_line
+Subject: [PATCH 13/13] kexec: x86_64: elf: fix possible memory leak in
+ elf_x86_64_load
 References: <51506758.4070902@gmail.com>
 In-Reply-To: <51506758.4070902@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -30,47 +30,67 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-Since get_command_line returns dynamically allocated memory, it is
-easy for the caller to forget freeing the memory. Here fixes a
-memory leak caused by this function.
+In elf_x86_64_load, allocated memory may not be free'd if the code
+exits abnormally, by calling die() or return. So the patch fixes
+the possible memory leak.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/x86_64/kexec-elf-x86_64.c |    7 +++++--
- 1 files changed, 5 insertions(+), 2 deletions(-)
+ kexec/arch/x86_64/kexec-elf-x86_64.c |   18 +++++++++++++-----
+ 1 files changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/kexec/arch/x86_64/kexec-elf-x86_64.c b/kexec/arch/x86_64/kexec-elf-x86_64.c
-index a3fc728..4a41780 100644
+index 4a41780..7944be4 100644
 --- a/kexec/arch/x86_64/kexec-elf-x86_64.c
 +++ b/kexec/arch/x86_64/kexec-elf-x86_64.c
-@@ -89,6 +89,7 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
- 	struct mem_ehdr ehdr;
- 	const char *append = NULL;
- 	char *command_line = NULL, *modified_cmdline;
-+	char *tmp_cmdline = NULL;
- 	int command_line_len;
- 	const char *ramdisk;
- 	unsigned long entry, max_addr;
-@@ -135,7 +136,7 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
- 			append = optarg;
- 			break;
- 		case OPT_REUSE_CMDLINE:
--			command_line = get_command_line();
-+			tmp_cmdline = get_command_line();
- 			break;
- 		case OPT_RAMDISK:
- 			ramdisk = optarg;
-@@ -155,7 +156,9 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
- 			break;
+@@ -98,6 +98,8 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ #define ARG_STYLE_LINUX 1
+ #define ARG_STYLE_NONE  2
+ 	int opt;
++	int result = 0;
++	char *error_msg = NULL;
+ 
+ 	/* See options.h and add any new options there too! */
+ 	static const struct option options[] = {
+@@ -208,7 +210,8 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ 		elf_rel_set_symbol(&info->rhdr, "entry64_regs", &regs, sizeof(regs));
+ 
+ 		if (ramdisk) {
+-			die("Ramdisks not supported with generic elf arguments");
++			error_msg = "Ramdisks not supported with generic elf arguments";
++			goto out;
  		}
  	}
--	command_line = concat_cmdline(command_line, append);
-+	command_line = concat_cmdline(tmp_cmdline, append);
-+	if (tmp_cmdline)
-+		free(tmp_cmdline);
- 	command_line_len = 0;
- 	if (command_line) {
- 		command_line_len = strlen(command_line) +1;
+ 	else if (arg_style == ARG_STYLE_LINUX) {
+@@ -240,8 +243,10 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ 		if (info->kexec_flags & KEXEC_ON_CRASH) {
+ 			rc = load_crashdump_segments(info, modified_cmdline,
+ 							max_addr, 0);
+-			if (rc < 0)
+-				return -1;
++			if (rc < 0) {
++				result = -1;
++				goto out;
++			}
+ 			/* Use new command line. */
+ 			free(command_line);
+ 			command_line = modified_cmdline;
+@@ -267,10 +272,13 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ 		elf_rel_set_symbol(&info->rhdr, "entry64_regs", &regs, sizeof(regs));
+ 	}
+ 	else {
+-		die("Unknown argument style\n");
++		error_msg = "Unknown argument style\n";
+ 	}
+ 
++out:
+ 	free(command_line);
+ 	free(modified_cmdline);
+-	return 0;
++	if (error_msg)
++		die(error_msg);
++	return result;
+ }
 -- 
 1.7.1
 
