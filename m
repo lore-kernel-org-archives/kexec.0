@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f43.google.com ([209.85.160.43])
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK98b-000457-BS
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:16:42 +0000
-Received: by mail-pb0-f43.google.com with SMTP id md12so4240560pbc.30
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:16:39 -0700 (PDT)
-Message-ID: <51506A52.8000906@gmail.com>
-Date: Mon, 25 Mar 2013 23:16:34 +0800
+ id 1UK99U-0004Lo-TQ
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:17:38 +0000
+Received: by mail-pb0-f49.google.com with SMTP id um15so471276pbc.22
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:17:35 -0700 (PDT)
+Message-ID: <51506A89.2010501@gmail.com>
+Date: Mon, 25 Mar 2013 23:17:29 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 11/13] kexec: x86_64: bzImage64: fix memory leak caused by
+Subject: [PATCH 12/13] kexec: x86_64: elf: fix memory leak caused by
  get_command_line
 References: <51506758.4070902@gmail.com>
 In-Reply-To: <51506758.4070902@gmail.com>
@@ -36,23 +36,22 @@ memory leak caused by this function.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/x86_64/kexec-bzImage64.c |    8 +++++---
- 1 files changed, 5 insertions(+), 3 deletions(-)
+ kexec/arch/x86_64/kexec-elf-x86_64.c |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
-index 86e6d13..21bc4ae 100644
---- a/kexec/arch/x86_64/kexec-bzImage64.c
-+++ b/kexec/arch/x86_64/kexec-bzImage64.c
-@@ -232,7 +232,7 @@ static int do_bzImage64_load(struct kexec_info *info,
- int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
--	char *command_line = NULL;
-+	char *command_line = NULL, *tmp_cmdline = NULL;
- 	const char *ramdisk = NULL, *append = NULL;
- 	char *ramdisk_buf;
- 	off_t ramdisk_length = 0;
-@@ -269,7 +269,7 @@ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+diff --git a/kexec/arch/x86_64/kexec-elf-x86_64.c b/kexec/arch/x86_64/kexec-elf-x86_64.c
+index a3fc728..4a41780 100644
+--- a/kexec/arch/x86_64/kexec-elf-x86_64.c
++++ b/kexec/arch/x86_64/kexec-elf-x86_64.c
+@@ -89,6 +89,7 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct mem_ehdr ehdr;
+ 	const char *append = NULL;
+ 	char *command_line = NULL, *modified_cmdline;
++	char *tmp_cmdline = NULL;
+ 	int command_line_len;
+ 	const char *ramdisk;
+ 	unsigned long entry, max_addr;
+@@ -135,7 +136,7 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
  			append = optarg;
  			break;
  		case OPT_REUSE_CMDLINE:
@@ -61,7 +60,7 @@ index 86e6d13..21bc4ae 100644
  			break;
  		case OPT_RAMDISK:
  			ramdisk = optarg;
-@@ -282,7 +282,9 @@ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+@@ -155,7 +156,9 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
  			break;
  		}
  	}
@@ -70,8 +69,8 @@ index 86e6d13..21bc4ae 100644
 +	if (tmp_cmdline)
 +		free(tmp_cmdline);
  	command_line_len = 0;
- 	if (command_line)
- 		command_line_len = strlen(command_line) + 1;
+ 	if (command_line) {
+ 		command_line_len = strlen(command_line) +1;
 -- 
 1.7.1
 
