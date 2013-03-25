@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f47.google.com ([209.85.160.47])
+Received: from mail-pd0-f169.google.com ([209.85.192.169])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK8wJ-0007cv-6G
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:04:00 +0000
-Received: by mail-pb0-f47.google.com with SMTP id rp2so4209418pbb.34
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:03:57 -0700 (PDT)
-Message-ID: <51506758.4070902@gmail.com>
-Date: Mon, 25 Mar 2013 23:03:52 +0800
+ id 1UK8yC-0000UZ-1Q
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:05:57 +0000
+Received: by mail-pd0-f169.google.com with SMTP id 10so19244pdc.0
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:05:54 -0700 (PDT)
+Message-ID: <515067CD.8000002@gmail.com>
+Date: Mon, 25 Mar 2013 23:05:49 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 01/13] kexec: fix possible memory leak in check_reuse_initrd
+Subject: [PATCH 02/13] kexec: i386: bzImage: fix memory leak caused by
+ get_command_line
+References: <51506758.4070902@gmail.com>
+In-Reply-To: <51506758.4070902@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,37 +30,48 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-If the if test is ok, then it will call die() to exit the process,
-so freeing line will not be reached, causing memory leak. Fix this.
+Since get_command_line returns dynamically allocated memory, it is
+easy for the caller to forget freeing the memory. Here fixes a
+memory leak caused by this function.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/kexec.c |    8 +++++---
- 1 files changed, 5 insertions(+), 3 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c |    8 ++++++--
+ 1 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index f3928af..6575ada 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1020,13 +1020,15 @@ char *get_command_line(void)
- /* check we retained the initrd */
- static void check_reuse_initrd(void)
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 99fd790..39452a4 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -382,6 +382,7 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
  {
-+	char *str = NULL;
- 	char *line = get_command_line();
- 
--	if (strstr(line, "retain_initrd") == NULL)
-+	str = strstr(line, "retain_initrd");
-+	free(line);
-+
-+	if (str == NULL)
- 		die("unrecoverable error: current boot didn't "
- 		    "retain the initrd for reuse.\n");
--
--	free(line);
- }
- 
- char *concat_cmdline(const char *base, const char *append)
+ 	char *command_line = NULL;
++	char *tmp_cmdline = NULL;
+ 	const char *ramdisk, *append = NULL;
+ 	char *ramdisk_buf;
+ 	off_t ramdisk_length;
+@@ -421,7 +422,7 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 			append = optarg;
+ 			break;
+ 		case OPT_REUSE_CMDLINE:
+-			command_line = get_command_line();
++			tmp_cmdline = get_command_line();
+ 			break;
+ 		case OPT_RAMDISK:
+ 			ramdisk = optarg;
+@@ -431,7 +432,10 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 			break;
+ 		}
+ 	}
+-	command_line = concat_cmdline(command_line, append);
++	command_line = concat_cmdline(tmp_cmdline, append);
++	if (tmp_cmdline) {
++		free(tmp_cmdline);
++	}
+ 	command_line_len = 0;
+ 	if (command_line) {
+ 		command_line_len = strlen(command_line) +1;
 -- 
 1.7.1
 
