@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp15.cstnet.cn ([2001:cc0:2fff:7::15] helo=cstnet.cn)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK5ak-0006PR-6R
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 11:29:31 +0000
-Message-ID: <5150350A.5050002@redhat.com>
-Date: Mon, 25 Mar 2013 19:29:14 +0800
-From: WANG Chao <chaowang@redhat.com>
+ id 1UK5x7-0000jP-Ec
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 11:52:43 +0000
+Date: Mon, 25 Mar 2013 19:52:24 +0800 (GMT+08:00)
+From: =?UTF-8?B?5ZGo5rSy5Luq?= <yizhouzhou@ict.ac.cn>
+Message-ID: <1cd75ef.b411.13da1646593.Coremail.yizhouzhou@ict.ac.cn>
+In-Reply-To: <5150350A.5050002@redhat.com>
+References: <5150350A.5050002@redhat.com>
+ <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
+Subject: Re: Re: [PATCH 1/1 v1] the recommended crash memory reservation is
+ too small for x86_64.
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/1 v1] the recommended crash memory reservation is too
- small for x86_64.
-References: <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
-In-Reply-To: <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,59 +20,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhouzhouyi@gmail.com
-Cc: yizhouzhou@ict.ac.cn, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, linux-doc@vger.kernel.org
+To: WANG Chao <chaowang@redhat.com>
+Cc: zhouzhouyi@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, linux-doc@vger.kernel.org
 
-On 03/25/2013 06:56 PM, zhouzhouyi@gmail.com wrote:
-> From: root <root@zzy-Lenovo.(none)>
-> 
-> 
->  On Documentation/kdump/kdump.txt, section Boot into  System Kernel: On x86 and x86_64, use
->  "crashkernel=64M@16M", but some OSes like ubuntu 12.10 use ram fs larger than 64M, so in these cases the
->  memory reserved for crashkernel should be at least 128M.
-
-People use different initramfs generators for different purpose. That means
-the size of initramfs and also its memory consuming can vary very much from
-each other. You just can't list all these generators and their recommended
-reserved memory here. Though I have to say crashkernel=128M is good choice.
-
-I think it would be better to leave this to user or distribution itself to
-determine how much memory should be reserved for crash kernel, then export
-this value to kernel in some ways.
-
-Thanks,
-WANG Chao
-
-> 
-> 
-> Signed-off-by: Zhouyi Zhou <yizhouzhou@ict.ac.cn>
-> ---
->  Documentation/kdump/kdump.txt |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> index 13f1aa0..1e850e0 100644
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -290,7 +290,9 @@ Boot into System Kernel
->     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
->     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
->  
-> -   On x86 and x86_64, use "crashkernel=64M@16M".
-> +   On x86 and x86_64, use "crashkernel=64M@16M" (some OSes use init ram fs larger
-> +than 64M, for example ubuntu-12.10, use crashkernel=128M@16M instead, or dump-capture
-> +kernel will out of memory).
->  
->     On ppc64, use "crashkernel=128M@32M".
->  
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhhbmtzIGZvciByZXZpZXdpbmcKICBJcyBpdCBzb3VuZHMgZ29vZCB0byBhZGQgZm9sbG93aW5n
+IGxpbmUgaW50byBzZWN0aW9uICJCb290IGludG8gU3lzdGVtIEtlcm5lbCI6CgogIFRoZSBtZW1v
+cnkgcmVzZXJ2ZWQgZm9yIGNyYXNoIGtlcm5lbCBzaG91bGQgYmUgbm8gbGVzcyB0aGFuIHRoZSB1
+bnBhY2tlZCBpbml0IHJhbSBkaXNrIHNpemUKdGhhdCBsb2FkZWQgd2l0aCBkdW1wLWNhcHR1cmUg
+a2VybmVsIHBsdXMgd2lyZWQgbWVtb3J5IHVzZWQgYnkga2VybmVsIGl0c2VsZi4KCiAgIyMjIyMj
+IyMjIyMjIyMjIyMKICBBZnRlciBhbGwsIEkgaGF2ZSBiZWVuIHRyYXBwZWQgaW50byAiaGFuZyBh
+ZnRlciBjYXB0dXJlIiBwcm9ibGVtIHdoZW4gc3RpY2tpbmcgc3RyaWN0bHkgdG8gdGhpcyBkb2N1
+bWVudC4KQ2hlZXJzClpob3V5aSAgCgo+wqAKPsKgT27CoDAzLzI1LzIwMTPCoDA2OjU2wqBQTSzC
+oHpob3V6aG91eWlAZ21haWwuY29twqB3cm90ZToKPsKgPsKgRnJvbTrCoHJvb3TCoDxyb290QHp6
+eS1MZW5vdm8uKG5vbmUpPgo+wqA+wqAKPsKgPsKgCj7CoD7CoMKgT27CoERvY3VtZW50YXRpb24v
+a2R1bXAva2R1bXAudHh0LMKgc2VjdGlvbsKgQm9vdMKgaW50b8KgwqBTeXN0ZW3CoEtlcm5lbDrC
+oE9uwqB4ODbCoGFuZMKgeDg2XzY0LMKgdXNlCj7CoD7CoMKgImNyYXNoa2VybmVsPTY0TUAxNk0i
+LMKgYnV0wqBzb21lwqBPU2VzwqBsaWtlwqB1YnVudHXCoDEyLjEwwqB1c2XCoHJhbcKgZnPCoGxh
+cmdlcsKgdGhhbsKgNjRNLMKgc2/CoGluwqB0aGVzZcKgY2FzZXPCoHRoZQo+wqA+wqDCoG1lbW9y
+ecKgcmVzZXJ2ZWTCoGZvcsKgY3Jhc2hrZXJuZWzCoHNob3VsZMKgYmXCoGF0wqBsZWFzdMKgMTI4
+TS4KPsKgCj7CoFBlb3BsZcKgdXNlwqBkaWZmZXJlbnTCoGluaXRyYW1mc8KgZ2VuZXJhdG9yc8Kg
+Zm9ywqBkaWZmZXJlbnTCoHB1cnBvc2UuwqBUaGF0wqBtZWFucwo+wqB0aGXCoHNpemXCoG9mwqBp
+bml0cmFtZnPCoGFuZMKgYWxzb8KgaXRzwqBtZW1vcnnCoGNvbnN1bWluZ8KgY2FuwqB2YXJ5wqB2
+ZXJ5wqBtdWNowqBmcm9tCj7CoGVhY2jCoG90aGVyLsKgWW91wqBqdXN0wqBjYW4ndMKgbGlzdMKg
+YWxswqB0aGVzZcKgZ2VuZXJhdG9yc8KgYW5kwqB0aGVpcsKgcmVjb21tZW5kZWQKPsKgcmVzZXJ2
+ZWTCoG1lbW9yecKgaGVyZS7CoFRob3VnaMKgScKgaGF2ZcKgdG/CoHNhecKgY3Jhc2hrZXJuZWw9
+MTI4TcKgaXPCoGdvb2TCoGNob2ljZS4KPsKgCj7CoEnCoHRoaW5rwqBpdMKgd291bGTCoGJlwqBi
+ZXR0ZXLCoHRvwqBsZWF2ZcKgdGhpc8KgdG/CoHVzZXLCoG9ywqBkaXN0cmlidXRpb27CoGl0c2Vs
+ZsKgdG8KPsKgZGV0ZXJtaW5lwqBob3fCoG11Y2jCoG1lbW9yecKgc2hvdWxkwqBiZcKgcmVzZXJ2
+ZWTCoGZvcsKgY3Jhc2jCoGtlcm5lbCzCoHRoZW7CoGV4cG9ydAo+wqB0aGlzwqB2YWx1ZcKgdG/C
+oGtlcm5lbMKgaW7CoHNvbWXCoHdheXMuCj7CoAo+wqBUaGFua3MsCj7CoFdBTkfCoENoYW8KPsKg
+Cj7CoD7CoAo+wqA+wqAKPsKgPsKgU2lnbmVkLW9mZi1ieTrCoFpob3V5acKgWmhvdcKgPHlpemhv
+dXpob3VAaWN0LmFjLmNuPgo+wqA+wqAtLS0KPsKgPsKgwqBEb2N1bWVudGF0aW9uL2tkdW1wL2tk
+dW1wLnR4dMKgfMKgwqDCoMKgNMKgKysrLQo+wqA+wqDCoDHCoGZpbGXCoGNoYW5nZWQswqAzwqBp
+bnNlcnRpb25zKCspLMKgMcKgZGVsZXRpb24oLSkKPsKgPsKgCj7CoD7CoGRpZmbCoC0tZ2l0wqBh
+L0RvY3VtZW50YXRpb24va2R1bXAva2R1bXAudHh0wqBiL0RvY3VtZW50YXRpb24va2R1bXAva2R1
+bXAudHh0Cj7CoD7CoGluZGV4wqAxM2YxYWEwLi4xZTg1MGUwwqAxMDA2NDQKPsKgPsKgLS0twqBh
+L0RvY3VtZW50YXRpb24va2R1bXAva2R1bXAudHh0Cj7CoD7CoCsrK8KgYi9Eb2N1bWVudGF0aW9u
+L2tkdW1wL2tkdW1wLnR4dAo+wqA+wqBAQMKgLTI5MCw3wqArMjkwLDnCoEBAwqBCb290wqBpbnRv
+wqBTeXN0ZW3CoEtlcm5lbAo+wqA+wqDCoMKgwqDCoCJjcmFzaGtlcm5lbD02NE1AMTZNIsKgdGVs
+bHPCoHRoZcKgc3lzdGVtwqBrZXJuZWzCoHRvwqByZXNlcnZlwqA2NMKgTULCoG9mwqBtZW1vcnkK
+PsKgPsKgwqDCoMKgwqBzdGFydGluZ8KgYXTCoHBoeXNpY2FswqBhZGRyZXNzwqAweDAxMDAwMDAw
+wqAoMTZNQinCoGZvcsKgdGhlwqBkdW1wLWNhcHR1cmXCoGtlcm5lbC4KPsKgPsKgwqAKPsKgPsKg
+LcKgwqDCoE9uwqB4ODbCoGFuZMKgeDg2XzY0LMKgdXNlwqAiY3Jhc2hrZXJuZWw9NjRNQDE2TSIu
+Cj7CoD7CoCvCoMKgwqBPbsKgeDg2wqBhbmTCoHg4Nl82NCzCoHVzZcKgImNyYXNoa2VybmVsPTY0
+TUAxNk0iwqAoc29tZcKgT1Nlc8KgdXNlwqBpbml0wqByYW3CoGZzwqBsYXJnZXIKPsKgPsKgK3Ro
+YW7CoDY0TSzCoGZvcsKgZXhhbXBsZcKgdWJ1bnR1LTEyLjEwLMKgdXNlwqBjcmFzaGtlcm5lbD0x
+MjhNQDE2TcKgaW5zdGVhZCzCoG9ywqBkdW1wLWNhcHR1cmUKPsKgPsKgK2tlcm5lbMKgd2lsbMKg
+b3V0wqBvZsKgbWVtb3J5KS4KPsKgPsKgwqAKPsKgPsKgwqDCoMKgwqBPbsKgcHBjNjQswqB1c2XC
+oCJjcmFzaGtlcm5lbD0xMjhNQDMyTSIuCj7CoD7CoMKgCj7CoD7CoAo+wqAKCgoKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
+c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
