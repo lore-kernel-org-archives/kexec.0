@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f42.google.com ([209.85.160.42])
+Received: from mail-pb0-f43.google.com ([209.85.160.43])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UK97k-0003rc-PM
- for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:15:49 +0000
-Received: by mail-pb0-f42.google.com with SMTP id xb4so4212557pbc.15
- for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:15:48 -0700 (PDT)
-Message-ID: <51506A1E.8010906@gmail.com>
-Date: Mon, 25 Mar 2013 23:15:42 +0800
+ id 1UK98b-000457-BS
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 15:16:42 +0000
+Received: by mail-pb0-f43.google.com with SMTP id md12so4240560pbc.30
+ for <kexec@lists.infradead.org>; Mon, 25 Mar 2013 08:16:39 -0700 (PDT)
+Message-ID: <51506A52.8000906@gmail.com>
+Date: Mon, 25 Mar 2013 23:16:34 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 10/13] kexec: ppc: uImage: fix memory leak caused by
+Subject: [PATCH 11/13] kexec: x86_64: bzImage64: fix memory leak caused by
  get_command_line
 References: <51506758.4070902@gmail.com>
 In-Reply-To: <51506758.4070902@gmail.com>
@@ -36,63 +36,42 @@ memory leak caused by this function.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/ppc/kexec-uImage-ppc.c |   12 ++++++++----
- 1 files changed, 8 insertions(+), 4 deletions(-)
+ kexec/arch/x86_64/kexec-bzImage64.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index fd8959c..c4d39f2 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -81,6 +81,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 		unsigned int ep)
+diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
+index 86e6d13..21bc4ae 100644
+--- a/kexec/arch/x86_64/kexec-bzImage64.c
++++ b/kexec/arch/x86_64/kexec-bzImage64.c
+@@ -232,7 +232,7 @@ static int do_bzImage64_load(struct kexec_info *info,
+ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
  {
- 	char *command_line, *cmdline_buf, *crash_cmdline;
-+	char *tmp_cmdline;
- 	int command_line_len;
- 	char *dtb;
- 	unsigned int addr;
-@@ -101,6 +102,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 
- 	cmdline_buf = NULL;
- 	command_line = NULL;
-+	tmp_cmdline = NULL;
- 	dtb = NULL;
- 	max_addr = LONG_MAX;
- 
-@@ -115,7 +117,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 			usage();
- 			return -1;
- 		case OPT_APPEND:
--			command_line = optarg;
-+			tmp_cmdline = optarg;
+-	char *command_line = NULL;
++	char *command_line = NULL, *tmp_cmdline = NULL;
+ 	const char *ramdisk = NULL, *append = NULL;
+ 	char *ramdisk_buf;
+ 	off_t ramdisk_length = 0;
+@@ -269,7 +269,7 @@ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 			append = optarg;
  			break;
- 
+ 		case OPT_REUSE_CMDLINE:
+-			command_line = get_command_line();
++			tmp_cmdline = get_command_line();
+ 			break;
  		case OPT_RAMDISK:
-@@ -141,12 +143,12 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
- 
- 	command_line_len = 0;
--	if (command_line) {
--		command_line_len = strlen(command_line) + 1;
-+	if (tmp_cmdline) {
-+		command_line = tmp_cmdline;
- 	} else {
- 		command_line = get_command_line();
--		command_line_len = strlen(command_line) + 1;
+ 			ramdisk = optarg;
+@@ -282,7 +282,9 @@ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 			break;
+ 		}
  	}
-+	command_line_len = strlen(command_line) + 1;
- 
- 	fixup_nodes[cur_fixup] = NULL;
- 
-@@ -295,6 +297,8 @@ out2:
- 	free(cmdline_buf);
- out:
- 	free(crash_cmdline);
-+	if (!tmp_cmdline)
-+		free(command_line);
- 	if (error_msg)
- 		die(error_msg);
- 	return ret;
+-	command_line = concat_cmdline(command_line, append);
++	command_line = concat_cmdline(tmp_cmdline, append);
++	if (tmp_cmdline)
++		free(tmp_cmdline);
+ 	command_line_len = 0;
+ 	if (command_line)
+ 		command_line_len = strlen(command_line) + 1;
 -- 
 1.7.1
 
