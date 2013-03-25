@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ia0-x22d.google.com ([2607:f8b0:4001:c02::22d])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UJ9cX-0001J2-UF
- for kexec@lists.infradead.org; Fri, 22 Mar 2013 21:35:30 +0000
-Received: by mail-ia0-f173.google.com with SMTP id h37so3960657iak.32
- for <kexec@lists.infradead.org>; Fri, 22 Mar 2013 14:35:28 -0700 (PDT)
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UK24F-0003p8-IC
+ for kexec@lists.infradead.org; Mon, 25 Mar 2013 07:43:44 +0000
+Message-ID: <514FFFD1.5080704@cn.fujitsu.com>
+Date: Mon, 25 Mar 2013 15:42:09 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <514CCCB8.4000108@zytor.com>
-References: <20130320163131.GE2273@redhat.com>
- <1363807494-25127-1-git-send-email-yinghai@kernel.org>
- <20130322175925.GA10004@redhat.com>
- <CAE9FiQXZP0zbGA=nTg6bHG29sJJRvzNHHbBi1WUsO60cksSUSQ@mail.gmail.com>
- <20130322212104.GI4544@redhat.com> <514CCCB8.4000108@zytor.com>
-Date: Fri, 22 Mar 2013 14:35:28 -0700
-Message-ID: <CAE9FiQVS+wVzLfe3t4nA7M8wUDGhX073aFvR4Lzh2dz49xdzuw@mail.gmail.com>
-Subject: Re: [PATCH] kdump, x86: Process multiple Crash kernel in /proc/iomem
-From: Yinghai Lu <yinghai@kernel.org>
+Subject: Re: [PATCH] kexec: lengthen the kernel command line image
+References: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
+ <20130305015127.GA28547@verge.net.au>
+In-Reply-To: <20130305015127.GA28547@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,47 +19,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Cliff Wickman <cpw@sgi.com>
 
-On Fri, Mar 22, 2013 at 2:27 PM, H. Peter Anvin <hpa@zytor.com> wrote:
-> On 03/22/2013 02:21 PM, Vivek Goyal wrote:
->>
->> BTW, I had a query about loading 64bit entry point bzImage. In 32bit
->> bzImage entry point logic, we used to load bzImage at the beginning
->> of memory hole and initrd at the end of memory hole. So that bzImage
->> and initramfs are as far as possible and initramfs decompression does
->> not overwrite anything or for that matter setting bss are does not
->> spill over into initramfs.
->>
->> In new code, It looks like we seem to be loading kernel towards the end
->> of the hole.
->>
->>        addr = add_buffer(info, kernel + kern16_size, k_size,
->>                           size, align, 0x100000, -1, -1);
->>
->> IIUC, this has potential that new kernel can overwrite some of the old
->> kernel's data structure while setting up bss. Shouldn't we do it 32bit
->> entry code way where bzImage is loaded towards the beginning of hole and
->> initramfs is loaded towards the end of the hole.
->>
->
-> Since boot protocol 2.10+ the kernel actively exports how much memory it
-> needs during its setup phase.
->
-
-yes, we got that size that kernel needed from hdr. more lines from the new code.
-
-        /* need to use run-time size for buffer searching */
-        dbgprintf("kernel init_size 0x%x\n", real_mode->init_size);
-        size = _ALIGN(real_mode->init_size, 4096);
-        align = real_mode->kernel_alignment;
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwM+aciDA15pelIDA5OjUxLCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIE1v
+biwgRmViIDA0LCAyMDEzIGF0IDAxOjUzOjU1UE0gLTA2MDAsIENsaWZmIFdpY2ttYW4gd3JvdGU6
+Cj4+IEZyb206IENsaWZmIFdpY2ttYW4gPGNwd0BzZ2kuY29tPgo+Pgo+PiBUaGUgY3Jhc2gga2Vy
+bmVsJ3MgYm9vdCBjb21tYW5kIGxpbmUgaXMgbm90IGxvbmcgZW5vdWdoIHRvIGNvbnRhaW4gdGhl
+Cj4+IG5lY2Vzc2FyeSBtZW1tYXA9IG9wdGlvbnMgZm9yIGEgbGFyZ2UgbWVtb3J5Lgo+Pgo+PiBU
+aGUgZml4IGlzIHNpbXBsZSwgYXMgbG9uZyBhcyB0aGUgYm9vdCBsb2FkZXIncyBjb21tYW5kIGxp
+bmUgaXMgYWxzbyBsb25nIGVub3VnaC4KPj4gSSdtIG5vdCBzdXJlIGFib3V0IGJvb3QgbG9hZGVy
+IG9yIGtlcm5lbCByZXN0cmljdGlvbnMgdG8gdGhpcyBsZW5ndGguCj4+Cj4+IFNpZ25lZC1vZmYt
+Ynk6IENsaWZmIFdpY2ttYW4gPGNwd0BzZ2kuY29tPgo+IAo+IFRoYW5rcywgYXBwbGllZC4KCkhl
+bGxvCgpJIGhhdmUgYSBxdWVzdGlvbiBhYm91dCB0aGlzIHBhdGNoLgoKSW4geDg2IGNvZGUsIENP
+TU1BTkRfTElORV9TSVpFIGlzIGRlZmluZWQgYXMgYmVsb3c6CgphcmNoL3g4Ni9pbmNsdWRlL2Fz
+bS9zZXR1cC5oCgojZGVmaW5lIENPTU1BTkRfTElORV9TSVpFIDIwNDgKClNvIGV2ZW4gdGhlIHBh
+dGNoIGxlbmd0aGVucyB0aGUgY29tbWFuZGxpbmUgbGVuZ3RoIGhlcmUsIHdoZW4gcmVib290IGlu
+dG8KdGhlIG5ldyBrZXJuZWwsIHRoZSBjb21tYW5kbGluZSB3aWxsIHN0aWxsIGJlIHN0cmlwcGVk
+IHRvIDIwNDg/IHJpZ2h0PwoKU28gdGhlIHBhdGNoIHNlZW1zIHVubmVjZXNzYXJ5IG9yIHVudXNh
+YmxlLiBDb3JyZWN0IG1lIGlmIEkgYW0gd3JvbmcuCgpUaGFua3MKWmhhbmcKCj4gCj4gX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5n
+IGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
