@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKL0G-00089o-7G
- for kexec@lists.infradead.org; Tue, 26 Mar 2013 03:56:53 +0000
-Message-ID: <51511C6A.1000001@redhat.com>
-Date: Tue, 26 Mar 2013 11:56:26 +0800
-From: WANG Chao <chaowang@redhat.com>
+Received: from mail-da0-x233.google.com ([2607:f8b0:400e:c00::233])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UKUF9-0004Ui-Ch
+ for kexec@lists.infradead.org; Tue, 26 Mar 2013 13:48:52 +0000
+Received: by mail-da0-f51.google.com with SMTP id g27so3575486dan.38
+ for <kexec@lists.infradead.org>; Tue, 26 Mar 2013 06:48:48 -0700 (PDT)
+Message-ID: <5151A739.6070502@gmail.com>
+Date: Tue, 26 Mar 2013 21:48:41 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/1 v1] the recommended crash memory reservation is too
- small for x86_64.
-References: <5150350A.5050002@redhat.com>
- <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
- <1cd75ef.b411.13da1646593.Coremail.yizhouzhou@ict.ac.cn>
-In-Reply-To: <1cd75ef.b411.13da1646593.Coremail.yizhouzhou@ict.ac.cn>
+Subject: [PATCH] kexec: fix a minor mistake in an error message
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +18,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?5ZGo5rSy5Luq?= <yizhouzhou@ict.ac.cn>
-Cc: zhouzhouyi@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, linux-doc@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-T24gMDMvMjUvMjAxMyAwNzo1MiBQTSwg5ZGo5rSy5LuqIHdyb3RlOgo+IFRoYW5rcyBmb3IgcmV2
-aWV3aW5nCj4gICBJcyBpdCBzb3VuZHMgZ29vZCB0byBhZGQgZm9sbG93aW5nIGxpbmUgaW50byBz
-ZWN0aW9uICJCb290IGludG8gU3lzdGVtIEtlcm5lbCI6Cj4gCj4gICBUaGUgbWVtb3J5IHJlc2Vy
-dmVkIGZvciBjcmFzaCBrZXJuZWwgc2hvdWxkIGJlIG5vIGxlc3MgdGhhbiB0aGUgdW5wYWNrZWQg
-aW5pdCByYW0gZGlzayBzaXplCj4gdGhhdCBsb2FkZWQgd2l0aCBkdW1wLWNhcHR1cmUga2VybmVs
-IHBsdXMgd2lyZWQgbWVtb3J5IHVzZWQgYnkga2VybmVsIGl0c2VsZi4KClNvcnJ5LCB0aGF0IGlz
-IGp1c3QgYmFzaWMga25vd2xlZGdlIGZvciBldmVyeW9uZS4KCj4gCj4gICAjIyMjIyMjIyMjIyMj
-IyMjIwo+ICAgQWZ0ZXIgYWxsLCBJIGhhdmUgYmVlbiB0cmFwcGVkIGludG8gImhhbmcgYWZ0ZXIg
-Y2FwdHVyZSIgcHJvYmxlbSB3aGVuIHN0aWNraW5nIHN0cmljdGx5IHRvIHRoaXMgZG9jdW1lbnQu
-Cj4gQ2hlZXJzCj4gWmhvdXlpICAKPiAKPj4gIAo+PiAgT24gMDMvMjUvMjAxMyAwNjo1NiBQTSwg
-emhvdXpob3V5aUBnbWFpbC5jb20gd3JvdGU6Cj4+ICA+IEZyb206IHJvb3QgPHJvb3RAenp5LUxl
-bm92by4obm9uZSk+Cj4+ICA+IAo+PiAgPiAKPj4gID4gIE9uIERvY3VtZW50YXRpb24va2R1bXAv
-a2R1bXAudHh0LCBzZWN0aW9uIEJvb3QgaW50byAgU3lzdGVtIEtlcm5lbDogT24geDg2IGFuZCB4
-ODZfNjQsIHVzZQo+PiAgPiAgImNyYXNoa2VybmVsPTY0TUAxNk0iLCBidXQgc29tZSBPU2VzIGxp
-a2UgdWJ1bnR1IDEyLjEwIHVzZSByYW0gZnMgbGFyZ2VyIHRoYW4gNjRNLCBzbyBpbiB0aGVzZSBj
-YXNlcyB0aGUKPj4gID4gIG1lbW9yeSByZXNlcnZlZCBmb3IgY3Jhc2hrZXJuZWwgc2hvdWxkIGJl
-IGF0IGxlYXN0IDEyOE0uCj4+ICAKPj4gIFBlb3BsZSB1c2UgZGlmZmVyZW50IGluaXRyYW1mcyBn
-ZW5lcmF0b3JzIGZvciBkaWZmZXJlbnQgcHVycG9zZS4gVGhhdCBtZWFucwo+PiAgdGhlIHNpemUg
-b2YgaW5pdHJhbWZzIGFuZCBhbHNvIGl0cyBtZW1vcnkgY29uc3VtaW5nIGNhbiB2YXJ5IHZlcnkg
-bXVjaCBmcm9tCj4+ICBlYWNoIG90aGVyLiBZb3UganVzdCBjYW4ndCBsaXN0IGFsbCB0aGVzZSBn
-ZW5lcmF0b3JzIGFuZCB0aGVpciByZWNvbW1lbmRlZAo+PiAgcmVzZXJ2ZWQgbWVtb3J5IGhlcmUu
-IFRob3VnaCBJIGhhdmUgdG8gc2F5IGNyYXNoa2VybmVsPTEyOE0gaXMgZ29vZCBjaG9pY2UuCj4+
-ICAKPj4gIEkgdGhpbmsgaXQgd291bGQgYmUgYmV0dGVyIHRvIGxlYXZlIHRoaXMgdG8gdXNlciBv
-ciBkaXN0cmlidXRpb24gaXRzZWxmIHRvCj4+ICBkZXRlcm1pbmUgaG93IG11Y2ggbWVtb3J5IHNo
-b3VsZCBiZSByZXNlcnZlZCBmb3IgY3Jhc2gga2VybmVsLCB0aGVuIGV4cG9ydAo+PiAgdGhpcyB2
-YWx1ZSB0byBrZXJuZWwgaW4gc29tZSB3YXlzLgo+PiAgCj4+ICBUaGFua3MsCj4+ICBXQU5HIENo
-YW8KPj4gIAo+PiAgPiAKPj4gID4gCj4+ICA+IFNpZ25lZC1vZmYtYnk6IFpob3V5aSBaaG91IDx5
-aXpob3V6aG91QGljdC5hYy5jbj4KPj4gID4gLS0tCj4+ICA+ICBEb2N1bWVudGF0aW9uL2tkdW1w
-L2tkdW1wLnR4dCB8ICAgIDQgKysrLQo+PiAgPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQo+PiAgPiAKPj4gID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24va2R1bXAva2R1bXAudHh0IGIvRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVtcC50eHQKPj4gID4g
-aW5kZXggMTNmMWFhMC4uMWU4NTBlMCAxMDA2NDQKPj4gID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9r
-ZHVtcC9rZHVtcC50eHQKPj4gID4gKysrIGIvRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVtcC50eHQK
-Pj4gID4gQEAgLTI5MCw3ICsyOTAsOSBAQCBCb290IGludG8gU3lzdGVtIEtlcm5lbAo+PiAgPiAg
-ICAgImNyYXNoa2VybmVsPTY0TUAxNk0iIHRlbGxzIHRoZSBzeXN0ZW0ga2VybmVsIHRvIHJlc2Vy
-dmUgNjQgTUIgb2YgbWVtb3J5Cj4+ICA+ICAgICBzdGFydGluZyBhdCBwaHlzaWNhbCBhZGRyZXNz
-IDB4MDEwMDAwMDAgKDE2TUIpIGZvciB0aGUgZHVtcC1jYXB0dXJlIGtlcm5lbC4KPj4gID4gIAo+
-PiAgPiAtICAgT24geDg2IGFuZCB4ODZfNjQsIHVzZSAiY3Jhc2hrZXJuZWw9NjRNQDE2TSIuCj4+
-ICA+ICsgICBPbiB4ODYgYW5kIHg4Nl82NCwgdXNlICJjcmFzaGtlcm5lbD02NE1AMTZNIiAoc29t
-ZSBPU2VzIHVzZSBpbml0IHJhbSBmcyBsYXJnZXIKPj4gID4gK3RoYW4gNjRNLCBmb3IgZXhhbXBs
-ZSB1YnVudHUtMTIuMTAsIHVzZSBjcmFzaGtlcm5lbD0xMjhNQDE2TSBpbnN0ZWFkLCBvciBkdW1w
-LWNhcHR1cmUKPj4gID4gK2tlcm5lbCB3aWxsIG91dCBvZiBtZW1vcnkpLgo+PiAgPiAgCj4+ICA+
-ICAgICBPbiBwcGM2NCwgdXNlICJjcmFzaGtlcm5lbD0xMjhNQDMyTSIuCj4+ICA+ICAKPj4gID4g
-Cj4+ICAKPiAKPiAKPiAKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+
+when specified a wrong --entry option, it outputs the error message:
+    "Bad option value in --load-jump-back-helper=%s\n"
+which is obviously wrong, it should be:
+    "Bad option value in --entry=%s\n"
+
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kexec/kexec.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index f3928af..e6395f5 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1121,7 +1121,7 @@ int main(int argc, char *argv[])
+ 			entry = (void *)strtoul(optarg, &endptr, 0);
+ 			if (*endptr) {
+ 				fprintf(stderr,
+-					"Bad option value in --load-jump-back-helper=%s\n",
++					"Bad option value in --entry=%s\n",
+ 					optarg);
+ 				usage();
+ 				return 1;
+-- 
+1.7.1
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
