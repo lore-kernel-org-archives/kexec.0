@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-da0-x233.google.com ([2607:f8b0:400e:c00::233])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKUF9-0004Ui-Ch
- for kexec@lists.infradead.org; Tue, 26 Mar 2013 13:48:52 +0000
-Received: by mail-da0-f51.google.com with SMTP id g27so3575486dan.38
- for <kexec@lists.infradead.org>; Tue, 26 Mar 2013 06:48:48 -0700 (PDT)
-Message-ID: <5151A739.6070502@gmail.com>
-Date: Tue, 26 Mar 2013 21:48:41 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Received: from 8bytes.org ([85.214.48.195] helo=mail.8bytes.org)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UKV94-0006vI-84
+ for kexec@lists.infradead.org; Tue, 26 Mar 2013 14:46:39 +0000
+Received: from localhost (localhost [127.0.0.1])
+ by mail.8bytes.org (Postfix) with SMTP id 806C912AFA3
+ for <kexec@lists.infradead.org>; Tue, 26 Mar 2013 15:46:31 +0100 (CET)
+Date: Tue, 26 Mar 2013 15:46:30 +0100
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] intel-iommu: Synchronize gcmd value with global command
+ register
+Message-ID: <20130326144629.GB2727@8bytes.org>
+References: <1363829556-2128-1-git-send-email-indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH] kexec: fix a minor mistake in an error message
+Content-Disposition: inline
+In-Reply-To: <1363829556-2128-1-git-send-email-indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,36 +27,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+On Thu, Mar 21, 2013 at 10:32:36AM +0900, Takao Indoh wrote:
+> In this function, clearing IRE bit in iommu->gcmd and writing it to
+> global command register. But initial value of iommu->gcmd is zero, so
+> this writel means clearing all bits in global command register.
 
-when specified a wrong --entry option, it outputs the error message:
-    "Bad option value in --load-jump-back-helper=%s\n"
-which is obviously wrong, it should be:
-    "Bad option value in --entry=%s\n"
+Seems weird. Why is the value of gcmd zero in your case? The usage of
+this register is well encapsulated by the different parts of the VT-d
+driver. There are other places which enable/disable translation and qpi
+the same way it is done with interrupt remapping. So it looks to me that
+it is unlikely that gcmd is really zero in your case.
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/kexec.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Can you explain that more and also describe what the actual misbehavior
+is you are trying to fix here?
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index f3928af..e6395f5 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1121,7 +1121,7 @@ int main(int argc, char *argv[])
- 			entry = (void *)strtoul(optarg, &endptr, 0);
- 			if (*endptr) {
- 				fprintf(stderr,
--					"Bad option value in --load-jump-back-helper=%s\n",
-+					"Bad option value in --entry=%s\n",
- 					optarg);
- 				usage();
- 				return 1;
--- 
-1.7.1
+Thanks,
+
+	Joerg
+
+
 
 _______________________________________________
 kexec mailing list
