@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKpgE-0007e0-HX
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:42:15 +0000
-Date: Wed, 27 Mar 2013 21:42:12 +0900
+ id 1UKpgZ-0007gx-Vr
+ for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:42:36 +0000
+Date: Wed, 27 Mar 2013 21:42:33 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 12/13] kexec: x86_64: elf: fix memory leak caused by
- get_command_line
-Message-ID: <20130327124211.GY17248@verge.net.au>
+Subject: Re: [PATCH 13/13] kexec: x86_64: elf: fix possible memory leak in
+ elf_x86_64_load
+Message-ID: <20130327124233.GZ17248@verge.net.au>
 References: <51506758.4070902@gmail.com>
- <51506A89.2010501@gmail.com>
+ <51506ABB.2030808@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51506A89.2010501@gmail.com>
+In-Reply-To: <51506ABB.2030808@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,19 +28,16 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, Mar 25, 2013 at 11:17:29PM +0800, Zhang Yanfei wrote:
+On Mon, Mar 25, 2013 at 11:18:19PM +0800, Zhang Yanfei wrote:
 > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > 
-> Since get_command_line returns dynamically allocated memory, it is
-> easy for the caller to forget freeing the memory. Here fixes a
-> memory leak caused by this function.
+> In elf_x86_64_load, allocated memory may not be free'd if the code
+> exits abnormally, by calling die() or return. So the patch fixes
+> the possible memory leak.
 > 
 > Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> ---
->  kexec/arch/x86_64/kexec-elf-x86_64.c |    7 +++++--
->  1 files changed, 5 insertions(+), 2 deletions(-)
 
-Thanks, applied.
+Thanks applied.
 
 _______________________________________________
 kexec mailing list
