@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKr5F-0004Sz-JD
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 14:12:10 +0000
-Date: Wed, 27 Mar 2013 23:12:06 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: ppc: Use die() instead of fatal()
-Message-ID: <20130327141206.GJ4324@verge.net.au>
-References: <5152FD8C.2070100@gmail.com>
+Received: from mail-oa0-f41.google.com ([209.85.219.41])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UKrst-0003uE-OS
+ for kexec@lists.infradead.org; Wed, 27 Mar 2013 15:03:28 +0000
+Received: by mail-oa0-f41.google.com with SMTP id f4so6334395oah.28
+ for <kexec@lists.infradead.org>; Wed, 27 Mar 2013 08:03:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5152FD8C.2070100@gmail.com>
+In-Reply-To: <1363642353-30749-5-git-send-email-matthew.garrett@nebula.com>
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+ <1363642353-30749-5-git-send-email-matthew.garrett@nebula.com>
+Date: Wed, 27 Mar 2013 11:03:26 -0400
+Message-ID: <CA+5PVA4VFgExGNrt5Yh+F4f48amAXKYAbdNFDy7VTFTguh6qTA@mail.gmail.com>
+Subject: Re: [PATCH 05/12] PCI: Require CAP_COMPROMISE_KERNEL for PCI BAR
+ access
+From: Josh Boyer <jwboyer@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,18 +26,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: linux-efi@vger.kernel.org, linux-pci@vger.kernel.org, kmcmartin@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 10:09:16PM +0800, Zhang Yanfei wrote:
-> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> 
-> fatal() nearly does the same thing as die() does, so this is kind of
-> duplicate. Remove fatal() and use die() instead.
-> 
-> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+On Mon, Mar 18, 2013 at 5:32 PM, Matthew Garrett
+<matthew.garrett@nebula.com> wrote:
+> Any hardware that can potentially generate DMA has to be locked down from
+> userspace in order to avoid it being possible for an attacker to cause
+> arbitrary kernel behaviour. Default to paranoid - in future we can
+> potentially relax this for sufficiently IOMMU-isolated devices.
+>
+> Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 
-Thanks, applied.
+As noted here:
+
+https://bugzilla.redhat.com/show_bug.cgi?id=908888
+
+this breaks pci passthru with QEMU.  The suggestion in the bug is to move
+the check from read/write to open, but sysfs makes that somewhat
+difficult.  The open code is part of the core sysfs functionality shared
+with the majority of sysfs files, so adding a check there would restrict
+things that clearly don't need to be restricted.
+
+Kyle had the idea to add a cap field to the attribute structure, and do
+a capable check if that is set.  That would allow for a more generic
+usage of capabilities in sysfs code, at the cost of slightly increasing
+the structure size and open path.  That seems somewhat promising if we
+stick with capabilities.
+
+I would love to just squarely blame capabilities for causing this, but we
+can't just replace it with an efi_enabled(EFI_SECURE_BOOT) check because
+of the sysfs open case.  I'm not sure there are great answers here.
+
+josh
 
 _______________________________________________
 kexec mailing list
