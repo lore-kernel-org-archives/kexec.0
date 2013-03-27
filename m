@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKpTP-0004iR-EZ
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:29:01 +0000
-Date: Wed, 27 Mar 2013 21:28:57 +0900
+ id 1UKpYl-0005mw-JO
+ for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:34:32 +0000
+Date: Wed, 27 Mar 2013 21:34:28 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/1 v1] the recommended crash memory reservation is too
- small for x86_64.
-Message-ID: <20130327122856.GK17248@verge.net.au>
-References: <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
+Subject: Re: [ANNOUNCE] kexec-tools 2.0.4
+Message-ID: <20130327123428.GM17248@verge.net.au>
+References: <20130319021145.GA4372@verge.net.au> <514AB343.40708@redhat.com>
+ <20130321085141.GA30650@verge.net.au> <514ACB52.1090800@redhat.com>
+ <514ACCB9.4060206@redhat.com> <514ADA3D.6070702@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1364209009-11592-1-git-send-email-zhouzhouyi@gmail.com>
+In-Reply-To: <514ADA3D.6070702@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,51 +25,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhouzhouyi@gmail.com
-Cc: yizhouzhou@ict.ac.cn, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, linux-doc@vger.kernel.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, Baoquan <bhe@redhat.com>
 
-On Mon, Mar 25, 2013 at 06:56:49PM +0800, zhouzhouyi@gmail.com wrote:
-> From: root <root@zzy-Lenovo.(none)>
-
-The above line is bogus.
-
->  On Documentation/kdump/kdump.txt, section Boot into  System Kernel: On x86 and x86_64, use
->  "crashkernel=64M@16M", but some OSes like ubuntu 12.10 use ram fs larger than 64M, so in these cases the
->  memory reserved for crashkernel should be at least 128M.
-
-The above lines are way to wide. Something less than 80 columns is normal.
-
-> Signed-off-by: Zhouyi Zhou <yizhouzhou@ict.ac.cn>
-> ---
->  Documentation/kdump/kdump.txt |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+On Thu, Mar 21, 2013 at 06:00:29PM +0800, Dave Young wrote:
+> On 03/21/2013 05:02 PM, Baoquan wrote:
+> > On 03/21/2013 04:56 PM, Baoquan wrote:
+> > 
+> >> On 03/21/2013 04:51 PM, Simon Horman wrote:
+> >>
+> >>> On Thu, Mar 21, 2013 at 03:14:11PM +0800, Baoquan wrote:
+> >>>> Hi Simon,
+> >>>>
+> >>>> After "git pull", I didn't find release 2.0.4. Could you please double
+> >>>> check it?
+> >>>
+> >>> Please try v2.0.4, it is a tag in git.
+> >>
+> >>
+> > 
+> > 
+> > Hi,
+> > 
+> > Sorry, I just create a new dir and "git clone", v2.0.4 can be seen now.
+> > But in my old clone, "git pull" can't get v2.0.4. It's a little weird.
 > 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> index 13f1aa0..1e850e0 100644
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -290,7 +290,9 @@ Boot into System Kernel
->     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
->     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
->  
-> -   On x86 and x86_64, use "crashkernel=64M@16M".
-> +   On x86 and x86_64, use "crashkernel=64M@16M" (some OSes use init ram fs larger
-> +than 64M, for example ubuntu-12.10, use crashkernel=128M@16M instead, or dump-capture
-> +kernel will out of memory).
+> Looks like the commit is not in master branch, the tag v2.0.4 itself is ok.
+> 
+> git log --oneline
+> 
+> b2dc426 s390: Replace clgfi with cghi
+> 56af4f5 kexec: use _ALIGN* to make the logic clear
+> 337d4fc kexec: ppc64: use _ALIGN* to make the logic clear
+> bb3f9f5 kexec: ppc: use _ALIGN* to make the logic clear
+> f36d320 kexec: x86_64: use _ALIGN* to make the logic clear
+> 58a22bd kexec: sh: use _ALIGN* to make the logic clear
+> 333f487 kexec: s390: remove ALIGN_UP and use _ALIGN_UP
+> d41a4db kexec: mips: use _ALIGN* to make the logic clear
+> e8a7f63 kexec: ia64: use _ALIGN* to make the logic clear
+> cf190f6 kexec: arm: use _ALIGN* to make the logic clear
+> 8388bdc kexec: i386: use _ALIGN* to make the logic clear
+> 0c1b89d kexec: ppc: remove duplicated _ALIGN_* macros
+> 412561a kexec: use _ALIGN() instead of align()
+> 9ea6e05 kexec: add _ALIGN* marcos for align operation
+> 5db7ba5 kexec: check size before trying the malloc
+> ...
 
-I believe lines of kdmump.txt should also be 80 columns wide or less.
-
->     On ppc64, use "crashkernel=128M@32M".
->  
-> -- 
-> 1.7.10.4
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Strange. I have pushed again.
 
 _______________________________________________
 kexec mailing list
