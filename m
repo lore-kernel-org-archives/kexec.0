@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKpOk-0004D5-Ma
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:24:11 +0000
-Date: Wed, 27 Mar 2013 21:24:08 +0900
+ id 1UKpRo-0004dw-3D
+ for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:27:21 +0000
+Date: Wed, 27 Mar 2013 21:27:17 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: lengthen the kernel command line image
-Message-ID: <20130327122408.GI17248@verge.net.au>
-References: <E1U2S71-00057C-Hj@eag09.americas.sgi.com>
- <20130305015127.GA28547@verge.net.au>
- <514FFFD1.5080704@cn.fujitsu.com> <20130325123955.GA30905@sgi.com>
- <515066DD.20906@gmail.com>
+Subject: Re: [PATCH] kexec:Fix Makefile of linking kdump file
+Message-ID: <20130327122717.GJ17248@verge.net.au>
+References: <CAFNq8R6tPJXVAyE-zzYgMPw1n5CGRtrqDZUFgOFW-0Z8nEd5iw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <515066DD.20906@gmail.com>
+In-Reply-To: <CAFNq8R6tPJXVAyE-zzYgMPw1n5CGRtrqDZUFgOFW-0Z8nEd5iw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,55 +19,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: kexec@lists.infradead.org, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, Cliff Wickman <cpw@sgi.com>
+To: Li Haifeng <omycle@gmail.com>
+Cc: kexec@lists.infradead.org
 
-T24gTW9uLCBNYXIgMjUsIDIwMTMgYXQgMTE6MDE6NDlQTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
-b3RlOgo+IOS6jiAyMDEz5bm0MDPmnIgyNeaXpSAyMDozOSwgQ2xpZmYgV2lja21hbiDlhpnpgZM6
-Cj4gPiBPbiBNb24sIE1hciAyNSwgMjAxMyBhdCAwMzo0MjowOVBNICswODAwLCBaaGFuZyBZYW5m
-ZWkgd3JvdGU6Cj4gPj4gPz8/IDIwMTM/Pz8wMz8/PzA1Pz8/IDA5OjUxLCBTaW1vbiBIb3JtYW4g
-Pz8/Pz8/Ogo+ID4+PiBPbiBNb24sIEZlYiAwNCwgMjAxMyBhdCAwMTo1Mzo1NVBNIC0wNjAwLCBD
-bGlmZiBXaWNrbWFuIHdyb3RlOgo+ID4+Pj4gRnJvbTogQ2xpZmYgV2lja21hbiA8Y3B3QHNnaS5j
-b20+Cj4gPj4+Pgo+ID4+Pj4gVGhlIGNyYXNoIGtlcm5lbCdzIGJvb3QgY29tbWFuZCBsaW5lIGlz
-IG5vdCBsb25nIGVub3VnaCB0byBjb250YWluIHRoZQo+ID4+Pj4gbmVjZXNzYXJ5IG1lbW1hcD0g
-b3B0aW9ucyBmb3IgYSBsYXJnZSBtZW1vcnkuCj4gPj4+Pgo+ID4+Pj4gVGhlIGZpeCBpcyBzaW1w
-bGUsIGFzIGxvbmcgYXMgdGhlIGJvb3QgbG9hZGVyJ3MgY29tbWFuZCBsaW5lIGlzIGFsc28gbG9u
-ZyBlbm91Z2guCj4gPj4+PiBJJ20gbm90IHN1cmUgYWJvdXQgYm9vdCBsb2FkZXIgb3Iga2VybmVs
-IHJlc3RyaWN0aW9ucyB0byB0aGlzIGxlbmd0aC4KPiA+Pj4+Cj4gPj4+PiBTaWduZWQtb2ZmLWJ5
-OiBDbGlmZiBXaWNrbWFuIDxjcHdAc2dpLmNvbT4KPiA+Pj4KPiA+Pj4gVGhhbmtzLCBhcHBsaWVk
-Lgo+ID4+Cj4gPj4gSGVsbG8KPiA+Pgo+ID4+IEkgaGF2ZSBhIHF1ZXN0aW9uIGFib3V0IHRoaXMg
-cGF0Y2guCj4gPj4KPiA+PiBJbiB4ODYgY29kZSwgQ09NTUFORF9MSU5FX1NJWkUgaXMgZGVmaW5l
-ZCBhcyBiZWxvdzoKPiA+Pgo+ID4+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3NldHVwLmgKPiA+Pgo+
-ID4+ICNkZWZpbmUgQ09NTUFORF9MSU5FX1NJWkUgMjA0OAo+ID4+Cj4gPj4gU28gZXZlbiB0aGUg
-cGF0Y2ggbGVuZ3RoZW5zIHRoZSBjb21tYW5kbGluZSBsZW5ndGggaGVyZSwgd2hlbiByZWJvb3Qg
-aW50bwo+ID4+IHRoZSBuZXcga2VybmVsLCB0aGUgY29tbWFuZGxpbmUgd2lsbCBzdGlsbCBiZSBz
-dHJpcHBlZCB0byAyMDQ4PyByaWdodD8KPiA+Pgo+ID4+IFNvIHRoZSBwYXRjaCBzZWVtcyB1bm5l
-Y2Vzc2FyeSBvciB1bnVzYWJsZS4gQ29ycmVjdCBtZSBpZiBJIGFtIHdyb25nLgo+ID4gCj4gPiBZ
-b3UgYXJlIHJpZ2h0LCB3ZSBjYW4ndCBnbyBiZXlvbmQgMjA0OC4KPiA+IAo+ID4gV2UgaGFkIGEg
-cHJvYmxlbSBjYXVzZWQgYnkgdGhlIGZhY3QgdGhhdCB0aGUgZTgyMCB0YWJsZSB3YXMgbm90IGZ1
-bGx5Cj4gPiByZS1jcmVhdGVkIGluIHRoZSBjcmFzaCBrZXJuZWwuICBXaXRob3V0IHRoZSByZXNl
-cnZlZCBpL28gc3BhY2VzIG91cgo+ID4gcm9vdCBtZWdhcmFpZCBkZXZpY2VzIHdlcmUgbm90IGJl
-aW5nIGRpc2NvdmVyZWQgKHdlIHVzZSBleHRlbmRlZCBQQ0ksIGFuZAo+ID4gUENJIHNlZ21lbnQg
-MSwgd2hpY2ggc2VlbXMgdG8gbWFrZSB0aGF0IHByb2JsZW0gZXhjbHVzaXZlbHkgU0dJJ3MgZm9y
-IG5vdykuICAKPiA+IAo+ID4gTXkgd29ya2Fyb3VuZCBhdCBmaXJzdCB3YXMgdG8gcGFzcyBhbGwg
-dGhlIGkvbyByZXNlcnZhdGlvbnMgYXMgbWVtbWFwPQo+ID4gb3B0aW9ucywgYnV0IHRoYXQgY3Jl
-YXRlZCBhIGNvbW1hbmQgbGluZSBsb25nZXIgdGhhbiAyMDQ4LiAgSGVuY2UgdGhpcwo+ID4gcGF0
-Y2guICBUaGVuIEkgaGFkIHRvIGFtZW5kIHRoYXQgaWRlYSBieSBjcmVhdGluZyBhIHNpbmdsZSBt
-ZW1tYXA9IGVudHJ5IHRoYXQKPiA+IGNvYWxlc2NlZCBhbGwgcmVzZXJ2ZWQgc3BhY2VzIGJleW9u
-ZCB1c2FibGUgbWVtb3J5IGludG8gb25lIGJpZyByZXNlcnZlZAo+ID4gc3BhY2UuICBJIHNob3Vs
-ZCBoYXZlIHdpdGhkcmF3biB0aGUgYWJvdmUgcGF0Y2ggd2hlbiBJIHJlYWxpemVkIHRoYXQgd2UK
-PiA+IGNhbm5vdCBnZXQgYXJvdW5kIHRoZSAyMDQ4IGxpbWl0Lgo+ID4gCj4gPiBJIGRpZCBub3Qg
-cHVyc3VlIHRoZSBzdWNjZXNzZnVsIHZlcnNpb24gb2YgdGhpcyBwYXRjaCBob3dldmVyLCBiZWNh
-dXNlCj4gPiBvZiB0aGUgYWx0ZXJuYXRlIGRpcmVjdGlvbiBiZWluZyB0YWtlbjogdGhhdCBvZiBz
-b21laG93IHBhc3NpbmcgdGhlIGVudGlyZQo+ID4gZTgyMCB0YWJsZSB0byB0aGUgY3Jhc2gga2Vy
-bmVsLiAgVGhhdCB3aWxsIGZpeCB0aGUgcHJvYmxlbSB3ZSBoYXZlIHdpdGgKPiA+IHJlc2VydmVk
-IGkvbyBzcGFjZXMuCj4gCj4gU28gY291bGQgSSBzZW5kIGEgcGF0Y2ggdG8gcmV2ZXJ0IHRoaXMg
-Y2hhbmdlPyBBbnl3YXksIEkgdGhpbmsgd2Ugc2hvdWxkIGtlZXAgdGhlCj4gdmFsdWUgMjA0OCBj
-b25zaXN0ZW50IHdpdGggdGhlIGtlcm5lbCBzaWRlLgoKSSB3b3VsZCBiZSBoYXBweSB0byBhY2Nl
-cHQgc3VjaCBhIHBhdGNoLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Mon, Mar 25, 2013 at 03:53:44PM +0800, Li Haifeng wrote:
+> When make kdump object file, the expression of linking kdump ignores
+> LDFLAGS. If someone want to build kdump with static links, it won't
+> product object file with static attributes. So, fix it.
+> 
+> Signed-off-by: Haifeng Li <omycle@gmail.com>
+
+Thanks, applied.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
