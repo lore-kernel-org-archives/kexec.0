@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKpeO-0007KK-IX
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:40:21 +0000
-Date: Wed, 27 Mar 2013 21:40:17 +0900
+ id 1UKpeq-0007Oc-AO
+ for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:40:48 +0000
+Date: Wed, 27 Mar 2013 21:40:45 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 07/13] kexec: ppc: elf: fix possible memory leak in
- elf_ppc_load
-Message-ID: <20130327124017.GT17248@verge.net.au>
+Subject: Re: [PATCH 08/13] kexec: ppc: elf: fix memory leak caused by
+ get_command_line
+Message-ID: <20130327124045.GU17248@verge.net.au>
 References: <51506758.4070902@gmail.com>
- <51506973.7050301@gmail.com>
+ <515069A4.6000804@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51506973.7050301@gmail.com>
+In-Reply-To: <515069A4.6000804@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,14 +28,12 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, Mar 25, 2013 at 11:12:51PM +0800, Zhang Yanfei wrote:
+On Mon, Mar 25, 2013 at 11:13:40PM +0800, Zhang Yanfei wrote:
 > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > 
-> In elf_ppc_load, allocated memory may not be free'd if the code
-> exits abnormally, by calling die() or return. So the patch fixes
-> the possible memory leak.
-> 
-> This patch is also a preparation for patch08.
+> Since get_command_line returns dynamically allocated memory, it is
+> easy for the caller to forget freeing the memory. Here fixes a
+> memory leak caused by this function.
 > 
 > Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
