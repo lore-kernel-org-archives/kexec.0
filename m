@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKpZM-0006AK-B6
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:35:08 +0000
-Date: Wed, 27 Mar 2013 21:35:05 +0900
+ id 1UKpaJ-0006NZ-87
+ for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:36:07 +0000
+Date: Wed, 27 Mar 2013 21:36:04 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 01/13] kexec: fix possible memory leak in
- check_reuse_initrd
-Message-ID: <20130327123505.GN17248@verge.net.au>
+Subject: Re: [PATCH 02/13] kexec: i386: bzImage: fix memory leak caused by
+ get_command_line
+Message-ID: <20130327123604.GO17248@verge.net.au>
 References: <51506758.4070902@gmail.com>
+ <515067CD.8000002@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51506758.4070902@gmail.com>
+In-Reply-To: <515067CD.8000002@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,11 +28,14 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, Mar 25, 2013 at 11:03:52PM +0800, Zhang Yanfei wrote:
+On Mon, Mar 25, 2013 at 11:05:49PM +0800, Zhang Yanfei wrote:
 > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > 
-> If the if test is ok, then it will call die() to exit the process,
-> so freeing line will not be reached, causing memory leak. Fix this.
+> Since get_command_line returns dynamically allocated memory, it is
+> easy for the caller to forget freeing the memory. Here fixes a
+> memory leak caused by this function.
+> 
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
 Thanks, applied.
 
