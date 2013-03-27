@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKpfy-0007bI-Sv
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:42:00 +0000
-Date: Wed, 27 Mar 2013 21:41:56 +0900
+ id 1UKpgE-0007e0-HX
+ for kexec@lists.infradead.org; Wed, 27 Mar 2013 12:42:15 +0000
+Date: Wed, 27 Mar 2013 21:42:12 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 11/13] kexec: x86_64: bzImage64: fix memory leak caused
- by get_command_line
-Message-ID: <20130327124156.GX17248@verge.net.au>
+Subject: Re: [PATCH 12/13] kexec: x86_64: elf: fix memory leak caused by
+ get_command_line
+Message-ID: <20130327124211.GY17248@verge.net.au>
 References: <51506758.4070902@gmail.com>
- <51506A52.8000906@gmail.com>
+ <51506A89.2010501@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51506A52.8000906@gmail.com>
+In-Reply-To: <51506A89.2010501@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,7 +28,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, Mar 25, 2013 at 11:16:34PM +0800, Zhang Yanfei wrote:
+On Mon, Mar 25, 2013 at 11:17:29PM +0800, Zhang Yanfei wrote:
 > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > 
 > Since get_command_line returns dynamically allocated memory, it is
@@ -36,6 +36,9 @@ On Mon, Mar 25, 2013 at 11:16:34PM +0800, Zhang Yanfei wrote:
 > memory leak caused by this function.
 > 
 > Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  kexec/arch/x86_64/kexec-elf-x86_64.c |    7 +++++--
+>  1 files changed, 5 insertions(+), 2 deletions(-)
 
 Thanks, applied.
 
