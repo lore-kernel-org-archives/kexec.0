@@ -1,13 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UL8AS-0006IN-SC
- for kexec@lists.infradead.org; Thu, 28 Mar 2013 08:26:41 +0000
-Message-ID: <5153FC27.70001@cn.fujitsu.com>
-Date: Thu, 28 Mar 2013 16:15:35 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Received: from mail-oa0-f52.google.com ([209.85.219.52])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ULCDW-0007Kh-Lj
+ for kexec@lists.infradead.org; Thu, 28 Mar 2013 12:46:07 +0000
+Received: by mail-oa0-f52.google.com with SMTP id k14so10006396oag.11
+ for <kexec@lists.infradead.org>; Thu, 28 Mar 2013 05:46:05 -0700 (PDT)
 MIME-Version: 1.0
-Subject: [PATCH 1/2] sysfs: Add crash_notes_size to export percpu note size
+In-Reply-To: <20130327150807.GC14004@redacted.bos.redhat.com>
+References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
+ <1363642353-30749-5-git-send-email-matthew.garrett@nebula.com>
+ <CA+5PVA4VFgExGNrt5Yh+F4f48amAXKYAbdNFDy7VTFTguh6qTA@mail.gmail.com>
+ <20130327150807.GC14004@redacted.bos.redhat.com>
+Date: Thu, 28 Mar 2013 08:46:04 -0400
+Message-ID: <CA+5PVA6zYkjnzgHvso4zwg_PRZ+kssU76Fugc4p5rw3RDnYhpA@mail.gmail.com>
+Subject: Re: [PATCH 05/12] PCI: Require CAP_COMPROMISE_KERNEL for PCI BAR
+ access
+From: Josh Boyer <jwboyer@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,60 +28,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>, "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Kyle McMartin <kmcmarti@redhat.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-efi@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
 
-For percpu notes, we are exporting only address and not size. So
-the userspace tool kexec-tools is putting an upper limit of 1024
-and putting the value in p_memsz and p_filesz fields. So the patch
-add the new sysfile crash_notes_size to export the exact percpu
-note size and let the kexec-tools parse it intead of using 1024.
+On Wed, Mar 27, 2013 at 11:08 AM, Kyle McMartin <kmcmarti@redhat.com> wrote:
+> On Wed, Mar 27, 2013 at 11:03:26AM -0400, Josh Boyer wrote:
+>> On Mon, Mar 18, 2013 at 5:32 PM, Matthew Garrett
+>> <matthew.garrett@nebula.com> wrote:
+>> > Any hardware that can potentially generate DMA has to be locked down from
+>> > userspace in order to avoid it being possible for an attacker to cause
+>> > arbitrary kernel behaviour. Default to paranoid - in future we can
+>> > potentially relax this for sufficiently IOMMU-isolated devices.
+>> >
+>> > Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
+>>
+>> As noted here:
+>>
+>> https://bugzilla.redhat.com/show_bug.cgi?id=908888
+>>
+>> this breaks pci passthru with QEMU.  The suggestion in the bug is to move
+>> the check from read/write to open, but sysfs makes that somewhat
+>> difficult.  The open code is part of the core sysfs functionality shared
+>> with the majority of sysfs files, so adding a check there would restrict
+>> things that clearly don't need to be restricted.
+>>
+>> Kyle had the idea to add a cap field to the attribute structure, and do
+>> a capable check if that is set.  That would allow for a more generic
+>> usage of capabilities in sysfs code, at the cost of slightly increasing
+>> the structure size and open path.  That seems somewhat promising if we
+>> stick with capabilities.
+>>
+>> I would love to just squarely blame capabilities for causing this, but we
+>> can't just replace it with an efi_enabled(EFI_SECURE_BOOT) check because
+>> of the sysfs open case.  I'm not sure there are great answers here.
+>>
+>
+> Yeah, that was something like this (I don't even remember which Fedora
+> kernel version this was against.)
 
-The idea came from Vivek Goyal. And a later patch will be sent to
-kexec-tools to let it parse the size.
+Mostly an FYI for the peanut gallery, but we noticed moving the cap check
+to open breaks lspci being run by an unprivileged user.  It also doesn't
+fix pci passthrough because QEMU opens the PCI resource files by itself
+after it's already dropped all caps.
 
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- drivers/base/cpu.c |   14 ++++++++++++++
- 1 files changed, 14 insertions(+), 0 deletions(-)
+More thinking required.
 
-diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-index fb10728..a55b590 100644
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -132,6 +132,17 @@ static ssize_t show_crash_notes(struct device *dev, struct device_attribute *att
- 	return rc;
- }
- static DEVICE_ATTR(crash_notes, 0400, show_crash_notes, NULL);
-+
-+static ssize_t show_crash_notes_size(struct device *dev,
-+				     struct device_attribute *attr,
-+				     char *buf)
-+{
-+	ssize_t rc;
-+
-+	rc = sprintf(buf, "%lu\n", sizeof(note_buf_t));
-+	return rc;
-+}
-+static DEVICE_ATTR(crash_notes_size, 0400, show_crash_notes_size, NULL);
- #endif
- 
- /*
-@@ -259,6 +270,9 @@ int __cpuinit register_cpu(struct cpu *cpu, int num)
- #ifdef CONFIG_KEXEC
- 	if (!error)
- 		error = device_create_file(&cpu->dev, &dev_attr_crash_notes);
-+	if (!error)
-+		error = device_create_file(&cpu->dev,
-+					   &dev_attr_crash_notes_size);
- #endif
- 	return error;
- }
--- 
-1.7.1
+josh
 
 _______________________________________________
 kexec mailing list
