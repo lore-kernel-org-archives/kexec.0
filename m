@@ -1,9 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UL82a-00069L-TA
+ for kexec@lists.infradead.org; Thu, 28 Mar 2013 08:18:34 +0000
+Message-ID: <5153FC6D.5020801@cn.fujitsu.com>
+Date: Thu, 28 Mar 2013 16:16:45 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Date: Thu, 28 Mar 2013 10:50:11 +0800
-Message-ID: <CAFNq8R6pgz_-yfB2DPhcH02e-NZGh1LJHJ0GpD2QJ_iy0SP83Q@mail.gmail.com>
-Subject: Question about crashkernel parameter on cmdline
-From: Li Haifeng <omycle@gmail.com>
+Subject: [PATCH 2/2] Documentation: Add ABI entry for crash_notes and
+ crash_notes_size
+References: <5153FC27.70001@cn.fujitsu.com>
+In-Reply-To: <5153FC27.70001@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,37 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>, "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi, list.
+Add an Documentation/ABI entry for /sys/devices/system/cpu/cpu0/crash_notes
+and /sys/devices/system/cpu/cpu0/crash_notes_size.
 
-I am running kexec-tools on ARM soc to dump vmcore file. In my case,
-the crashkernel parameter of crash kernel 's cmdline is
-"crashkernel=20M@10M". Then in bash of crash kernel, "echo c >
-/proc/sysrq-trigger", and the capture kernel launches. But it will
-fail on initializing /proc/vmcore. Because it trigger
-"WARN_ON(pfn_valid(pfn))" in   __arm_ioremap_pfn_caller()
-@arch/arm/mm/ioremap.c.
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ Documentation/ABI/testing/sysfs-devices-system-cpu |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
 
-I check the reason as follows.
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index 9c978dc..2447698 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -173,3 +173,15 @@ Description:	Processor frequency boosting control
+ 		Boosting allows the CPU and the firmware to run at a frequency
+ 		beyound it's nominal limit.
+ 		More details can be found in Documentation/cpu-freq/boost.txt
++
++
++What:		/sys/devices/system/cpu/cpu#/crash_notes
++		/sys/devices/system/cpu/cpu#/crash_notes_size
++Date:		April 2013
++Contact:	kexec@lists.infradead.org
++Description:	address and size of the percpu note.
++
++		crash_notes: the physical address of the memory that holds the
++		note of cpu#.
++
++		crash_notes_size: size of the note of cpu#.
+-- 
+1.7.1
 
- #define pfn_valid(pfn) ((pfn) >= ARCH_PFN_OFFSET && ((pfn) -
-ARCH_PFN_OFFSET) < max_mapnr)
-
-To my case, pfn:x01d00, ARCH_PFN_OFFSET:0, max_mapnr:0x1300.
-So pfn-ARCH_PFN_OFFSET is less than max_mapnr, and the
-WARN_ON(pfn_valid(pfn)) is triggered on.
-
-I want to know, to ignore this warning, whether I should comment this
-WARN_ON() in kernel source code for my case.
-And another doubt, will this warning corrupt my dumpfile? Because,
-when I use the crash utility to analyse this vmcore, many errors
-throw.
-
-Any suggestion will be appreciate.
-
-Thanks.
 
 _______________________________________________
 kexec mailing list
