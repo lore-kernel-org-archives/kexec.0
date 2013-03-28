@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oa0-f52.google.com ([209.85.219.52])
+Received: from mail-pd0-f172.google.com ([209.85.192.172])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ULCDW-0007Kh-Lj
- for kexec@lists.infradead.org; Thu, 28 Mar 2013 12:46:07 +0000
-Received: by mail-oa0-f52.google.com with SMTP id k14so10006396oag.11
- for <kexec@lists.infradead.org>; Thu, 28 Mar 2013 05:46:05 -0700 (PDT)
+ id 1ULCan-0001DO-5b
+ for kexec@lists.infradead.org; Thu, 28 Mar 2013 13:10:10 +0000
+Received: by mail-pd0-f172.google.com with SMTP id w10so4110425pde.3
+ for <kexec@lists.infradead.org>; Thu, 28 Mar 2013 06:10:07 -0700 (PDT)
+Message-ID: <51544127.5080502@gmail.com>
+Date: Thu, 28 Mar 2013 21:09:59 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20130327150807.GC14004@redacted.bos.redhat.com>
-References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
- <1363642353-30749-5-git-send-email-matthew.garrett@nebula.com>
- <CA+5PVA4VFgExGNrt5Yh+F4f48amAXKYAbdNFDy7VTFTguh6qTA@mail.gmail.com>
- <20130327150807.GC14004@redacted.bos.redhat.com>
-Date: Thu, 28 Mar 2013 08:46:04 -0400
-Message-ID: <CA+5PVA6zYkjnzgHvso4zwg_PRZ+kssU76Fugc4p5rw3RDnYhpA@mail.gmail.com>
-Subject: Re: [PATCH 05/12] PCI: Require CAP_COMPROMISE_KERNEL for PCI BAR
- access
-From: Josh Boyer <jwboyer@gmail.com>
+Subject: [PATCH] kexec: i386: Add cmdline_add_memmap_internal() to reduce
+ the code duplication
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,52 +23,151 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kyle McMartin <kmcmarti@redhat.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-efi@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Wed, Mar 27, 2013 at 11:08 AM, Kyle McMartin <kmcmarti@redhat.com> wrote:
-> On Wed, Mar 27, 2013 at 11:03:26AM -0400, Josh Boyer wrote:
->> On Mon, Mar 18, 2013 at 5:32 PM, Matthew Garrett
->> <matthew.garrett@nebula.com> wrote:
->> > Any hardware that can potentially generate DMA has to be locked down from
->> > userspace in order to avoid it being possible for an attacker to cause
->> > arbitrary kernel behaviour. Default to paranoid - in future we can
->> > potentially relax this for sufficiently IOMMU-isolated devices.
->> >
->> > Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
->>
->> As noted here:
->>
->> https://bugzilla.redhat.com/show_bug.cgi?id=908888
->>
->> this breaks pci passthru with QEMU.  The suggestion in the bug is to move
->> the check from read/write to open, but sysfs makes that somewhat
->> difficult.  The open code is part of the core sysfs functionality shared
->> with the majority of sysfs files, so adding a check there would restrict
->> things that clearly don't need to be restricted.
->>
->> Kyle had the idea to add a cap field to the attribute structure, and do
->> a capable check if that is set.  That would allow for a more generic
->> usage of capabilities in sysfs code, at the cost of slightly increasing
->> the structure size and open path.  That seems somewhat promising if we
->> stick with capabilities.
->>
->> I would love to just squarely blame capabilities for causing this, but we
->> can't just replace it with an efi_enabled(EFI_SECURE_BOOT) check because
->> of the sysfs open case.  I'm not sure there are great answers here.
->>
->
-> Yeah, that was something like this (I don't even remember which Fedora
-> kernel version this was against.)
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-Mostly an FYI for the peanut gallery, but we noticed moving the cap check
-to open breaks lspci being run by an unprivileged user.  It also doesn't
-fix pci passthrough because QEMU opens the PCI resource files by itself
-after it's already dropped all caps.
+Functions:
+- cmdline_add_memmap()
+- cmdline_add_memmap_acpi()
+- cmdline_add_memmap_reserved()
+is kind of similar, So add a new function cmdline_add_memmap_internal() to
+hold the common codes, reducing the duplication.
 
-More thinking required.
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kexec/arch/i386/crashdump-x86.c |   74 +++++++++++++++++---------------------
+ 1 files changed, 33 insertions(+), 41 deletions(-)
 
-josh
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 5462f8b..9ab648b 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -685,13 +685,40 @@ static void ultoa(unsigned long i, char *str)
+ 	}
+ }
+ 
++static void cmdline_add_memmap_internal(char *cmdline, unsigned long startk,
++					unsigned long endk, int type)
++{
++	int cmdlen, len;
++	char str_mmap[256], str_tmp[20];
++
++	strcpy (str_mmap, " memmap=");
++	ultoa((endk-startk), str_tmp);
++	strcat (str_mmap, str_tmp);
++
++	if (type == RANGE_RAM)
++		strcat (str_mmap, "K@");
++	else if (type == RANGE_RESERVED)
++		strcat (str_mmap, "K$");
++	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
++		strcat (str_mmap, "K#");
++
++	ultoa(startk, str_tmp);
++	strcat (str_mmap, str_tmp);
++	strcat (str_mmap, "K");
++	len = strlen(str_mmap);
++	cmdlen = strlen(cmdline) + len;
++	if (cmdlen > (COMMAND_LINE_SIZE - 1))
++		die("Command line overflow\n");
++	strcat(cmdline, str_mmap);
++}
++
+ /* Adds the appropriate memmap= options to command line, indicating the
+  * memory regions the new kernel can use to boot into. */
+ static int cmdline_add_memmap(char *cmdline, struct memory_range *memmap_p)
+ {
+ 	int i, cmdlen, len;
+ 	unsigned long min_sizek = 100;
+-	char str_mmap[256], str_tmp[20];
++	char str_mmap[256];
+ 
+ 	/* Exact map */
+ 	strcpy(str_mmap, " memmap=exactmap");
+@@ -713,18 +740,7 @@ static int cmdline_add_memmap(char *cmdline, struct memory_range *memmap_p)
+ 		 * up precious command line length. */
+ 		if ((endk - startk) < min_sizek)
+ 			continue;
+-		strcpy (str_mmap, " memmap=");
+-		ultoa((endk-startk), str_tmp);
+-		strcat (str_mmap, str_tmp);
+-		strcat (str_mmap, "K@");
+-		ultoa(startk, str_tmp);
+-		strcat (str_mmap, str_tmp);
+-		strcat (str_mmap, "K");
+-		len = strlen(str_mmap);
+-		cmdlen = strlen(cmdline) + len;
+-		if (cmdlen > (COMMAND_LINE_SIZE - 1))
+-			die("Command line overflow\n");
+-		strcat(cmdline, str_mmap);
++		cmdline_add_memmap_internal(cmdline, startk, endk, RANGE_RAM);
+ 	}
+ 
+ 	dbgprintf("Command line after adding memmap\n");
+@@ -817,27 +833,15 @@ static enum coretype get_core_type(struct crash_elf_info *elf_info,
+ static int cmdline_add_memmap_acpi(char *cmdline, unsigned long start,
+ 					unsigned long end)
+ {
+-	int cmdlen, len, align = 1024;
++	int align = 1024;
+ 	unsigned long startk, endk;
+-	char str_mmap[256], str_tmp[20];
+ 
+ 	if (!(end - start))
+ 		return 0;
+ 
+ 	startk = start/1024;
+ 	endk = (end + align - 1)/1024;
+-	strcpy (str_mmap, " memmap=");
+-	ultoa((endk - startk), str_tmp);
+-	strcat (str_mmap, str_tmp);
+-	strcat (str_mmap, "K#");
+-	ultoa(startk, str_tmp);
+-	strcat (str_mmap, str_tmp);
+-	strcat (str_mmap, "K");
+-	len = strlen(str_mmap);
+-	cmdlen = strlen(cmdline) + len;
+-	if (cmdlen > (COMMAND_LINE_SIZE - 1))
+-		die("Command line overflow\n");
+-	strcat(cmdline, str_mmap);
++	cmdline_add_memmap_internal(cmdline, startk, endk, RANGE_ACPI);
+ 
+ 	dbgprintf("Command line after adding acpi memmap\n");
+ 	dbgprintf("%s\n", cmdline);
+@@ -907,27 +911,15 @@ static void get_backup_area(struct kexec_info *info,
+ static int cmdline_add_memmap_reserved(char *cmdline, unsigned long start,
+ 					unsigned long end)
+ {
+-	int cmdlen, len, align = 1024;
++	int align = 1024;
+ 	unsigned long startk, endk;
+-	char str_mmap[256], str_tmp[20];
+ 
+ 	if (!(end - start))
+ 		return 0;
+ 
+ 	startk = start/1024;
+ 	endk = (end + align - 1)/1024;
+-	strcpy (str_mmap, " memmap=");
+-	ultoa((endk - startk), str_tmp);
+-	strcat (str_mmap, str_tmp);
+-	strcat (str_mmap, "K$");
+-	ultoa(startk, str_tmp);
+-	strcat (str_mmap, str_tmp);
+-	strcat (str_mmap, "K");
+-	len = strlen(str_mmap);
+-	cmdlen = strlen(cmdline) + len;
+-	if (cmdlen > (COMMAND_LINE_SIZE - 1))
+-		die("Command line overflow\n");
+-	strcat(cmdline, str_mmap);
++	cmdline_add_memmap_internal(cmdline, startk, endk, RANGE_RESERVED);
+ 
+ #ifdef DEBUG
+ 		printf("Command line after adding reserved memmap\n");
+-- 
+1.7.1
 
 _______________________________________________
 kexec mailing list
