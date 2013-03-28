@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UKrxU-0004nL-Ir
- for kexec@lists.infradead.org; Wed, 27 Mar 2013 15:08:14 +0000
-Date: Wed, 27 Mar 2013 11:08:07 -0400
-From: Kyle McMartin <kmcmarti@redhat.com>
-Subject: Re: [PATCH 05/12] PCI: Require CAP_COMPROMISE_KERNEL for PCI BAR
- access
-Message-ID: <20130327150807.GC14004@redacted.bos.redhat.com>
-References: <1363642353-30749-1-git-send-email-matthew.garrett@nebula.com>
- <1363642353-30749-5-git-send-email-matthew.garrett@nebula.com>
- <CA+5PVA4VFgExGNrt5Yh+F4f48amAXKYAbdNFDy7VTFTguh6qTA@mail.gmail.com>
+ id 1UL1vq-0005PA-Sp
+ for kexec@lists.infradead.org; Thu, 28 Mar 2013 01:47:12 +0000
+Message-ID: <5153A107.1040705@redhat.com>
+Date: Thu, 28 Mar 2013 09:46:47 +0800
+From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CA+5PVA4VFgExGNrt5Yh+F4f48amAXKYAbdNFDy7VTFTguh6qTA@mail.gmail.com>
+Subject: Re: [ANNOUNCE] kexec-tools 2.0.4
+References: <20130319021145.GA4372@verge.net.au> <514AB343.40708@redhat.com>
+ <20130321085141.GA30650@verge.net.au> <514ACB52.1090800@redhat.com>
+ <514ACCB9.4060206@redhat.com> <514ADA3D.6070702@redhat.com>
+ <20130327123428.GM17248@verge.net.au>
+In-Reply-To: <20130327123428.GM17248@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,150 +25,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Josh Boyer <jwboyer@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-efi@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Baoquan <bhe@redhat.com>
 
-On Wed, Mar 27, 2013 at 11:03:26AM -0400, Josh Boyer wrote:
-> On Mon, Mar 18, 2013 at 5:32 PM, Matthew Garrett
-> <matthew.garrett@nebula.com> wrote:
-> > Any hardware that can potentially generate DMA has to be locked down from
-> > userspace in order to avoid it being possible for an attacker to cause
-> > arbitrary kernel behaviour. Default to paranoid - in future we can
-> > potentially relax this for sufficiently IOMMU-isolated devices.
-> >
-> > Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
+On 03/27/2013 08:34 PM, Simon Horman wrote:
+> On Thu, Mar 21, 2013 at 06:00:29PM +0800, Dave Young wrote:
+>> On 03/21/2013 05:02 PM, Baoquan wrote:
+>>> On 03/21/2013 04:56 PM, Baoquan wrote:
+>>>
+>>>> On 03/21/2013 04:51 PM, Simon Horman wrote:
+>>>>
+>>>>> On Thu, Mar 21, 2013 at 03:14:11PM +0800, Baoquan wrote:
+>>>>>> Hi Simon,
+>>>>>>
+>>>>>> After "git pull", I didn't find release 2.0.4. Could you please double
+>>>>>> check it?
+>>>>>
+>>>>> Please try v2.0.4, it is a tag in git.
+>>>>
+>>>>
+>>>
+>>>
+>>> Hi,
+>>>
+>>> Sorry, I just create a new dir and "git clone", v2.0.4 can be seen now.
+>>> But in my old clone, "git pull" can't get v2.0.4. It's a little weird.
+>>
+>> Looks like the commit is not in master branch, the tag v2.0.4 itself is ok.
+>>
+>> git log --oneline
+>>
+>> b2dc426 s390: Replace clgfi with cghi
+>> 56af4f5 kexec: use _ALIGN* to make the logic clear
+>> 337d4fc kexec: ppc64: use _ALIGN* to make the logic clear
+>> bb3f9f5 kexec: ppc: use _ALIGN* to make the logic clear
+>> f36d320 kexec: x86_64: use _ALIGN* to make the logic clear
+>> 58a22bd kexec: sh: use _ALIGN* to make the logic clear
+>> 333f487 kexec: s390: remove ALIGN_UP and use _ALIGN_UP
+>> d41a4db kexec: mips: use _ALIGN* to make the logic clear
+>> e8a7f63 kexec: ia64: use _ALIGN* to make the logic clear
+>> cf190f6 kexec: arm: use _ALIGN* to make the logic clear
+>> 8388bdc kexec: i386: use _ALIGN* to make the logic clear
+>> 0c1b89d kexec: ppc: remove duplicated _ALIGN_* macros
+>> 412561a kexec: use _ALIGN() instead of align()
+>> 9ea6e05 kexec: add _ALIGN* marcos for align operation
+>> 5db7ba5 kexec: check size before trying the malloc
+>> ...
 > 
-> As noted here:
-> 
-> https://bugzilla.redhat.com/show_bug.cgi?id=908888
-> 
-> this breaks pci passthru with QEMU.  The suggestion in the bug is to move
-> the check from read/write to open, but sysfs makes that somewhat
-> difficult.  The open code is part of the core sysfs functionality shared
-> with the majority of sysfs files, so adding a check there would restrict
-> things that clearly don't need to be restricted.
-> 
-> Kyle had the idea to add a cap field to the attribute structure, and do
-> a capable check if that is set.  That would allow for a more generic
-> usage of capabilities in sysfs code, at the cost of slightly increasing
-> the structure size and open path.  That seems somewhat promising if we
-> stick with capabilities.
-> 
-> I would love to just squarely blame capabilities for causing this, but we
-> can't just replace it with an efi_enabled(EFI_SECURE_BOOT) check because
-> of the sysfs open case.  I'm not sure there are great answers here.
+> Strange. I have pushed again.
 > 
 
-Yeah, that was something like this (I don't even remember which Fedora
-kernel version this was against.)
+It's ok now, thanks!
 
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -546,9 +546,6 @@ pci_write_config(struct file* filp, struct kobject *kobj,
- 	loff_t init_off = off;
- 	u8 *data = (u8*) buf;
- 
--	if (!capable(CAP_COMPROMISE_KERNEL))
--		return -EPERM;
--
- 	if (off > dev->cfg_size)
- 		return 0;
- 	if (off + count > dev->cfg_size) {
-@@ -772,6 +769,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_io->attr.name = "legacy_io";
- 	b->legacy_io->size = 0xffff;
- 	b->legacy_io->attr.mode = S_IRUSR | S_IWUSR;
-+	b->legacy_io->attr.cap = CAP_COMPROMISE_KERNEL;
- 	b->legacy_io->read = pci_read_legacy_io;
- 	b->legacy_io->write = pci_write_legacy_io;
- 	b->legacy_io->mmap = pci_mmap_legacy_io;
-@@ -786,6 +784,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_mem->attr.name = "legacy_mem";
- 	b->legacy_mem->size = 1024*1024;
- 	b->legacy_mem->attr.mode = S_IRUSR | S_IWUSR;
-+	b->legacy_io->attr.cap = CAP_COMPROMISE_KERNEL;
- 	b->legacy_mem->mmap = pci_mmap_legacy_mem;
- 	pci_adjust_legacy_attr(b, pci_mmap_mem);
- 	error = device_create_bin_file(&b->dev, b->legacy_mem);
-@@ -855,9 +854,6 @@ pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
- 	resource_size_t start, end;
- 	int i;
- 
--	if (!capable(CAP_COMPROMISE_KERNEL))
--		return -EPERM;
--
- 	for (i = 0; i < PCI_ROM_RESOURCE; i++)
- 		if (res == &pdev->resource[i])
- 			break;
-@@ -965,9 +961,6 @@ pci_write_resource_io(struct file *filp, struct kobject *kobj,
- 		      struct bin_attribute *attr, char *buf,
- 		      loff_t off, size_t count)
- {
--	if (!capable(CAP_COMPROMISE_KERNEL))
--		return -EPERM;
--
- 	return pci_resource_io(filp, kobj, attr, buf, off, count, true);
- }
- 
-@@ -1027,6 +1020,7 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 		}
- 		res_attr->attr.name = res_attr_name;
- 		res_attr->attr.mode = S_IRUSR | S_IWUSR;
-+		res_attr->attr.cap = CAP_COMPROMISE_KERNEL;
- 		res_attr->size = pci_resource_len(pdev, num);
- 		res_attr->private = &pdev->resource[num];
- 		retval = sysfs_create_bin_file(&pdev->dev.kobj, res_attr);
-@@ -1142,6 +1136,7 @@ static struct bin_attribute pci_config_attr = {
- 	.attr =	{
- 		.name = "config",
- 		.mode = S_IRUGO | S_IWUSR,
-+		.cap  = CAP_COMPROMISE_KERNEL,
- 	},
- 	.size = PCI_CFG_SPACE_SIZE,
- 	.read = pci_read_config,
-@@ -1152,6 +1147,7 @@ static struct bin_attribute pcie_config_attr = {
- 	.attr =	{
- 		.name = "config",
- 		.mode = S_IRUGO | S_IWUSR,
-+		.cap  = CAP_COMPROMISE_KERNEL,
- 	},
- 	.size = PCI_CFG_SPACE_EXP_SIZE,
- 	.read = pci_read_config,
-@@ -1201,6 +1197,7 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
- 		attr->size = dev->vpd->len;
- 		attr->attr.name = "vpd";
- 		attr->attr.mode = S_IRUSR | S_IWUSR;
-+		attr->attr.cap = CAP_COMPROMISE_KERNEL;
- 		attr->read = read_vpd_attr;
- 		attr->write = write_vpd_attr;
- 		retval = sysfs_create_bin_file(&dev->dev.kobj, attr);
-diff --git a/fs/sysfs/bin.c b/fs/sysfs/bin.c
-index 614b2b5..e40a725 100644
---- a/fs/sysfs/bin.c
-+++ b/fs/sysfs/bin.c
-@@ -402,6 +402,10 @@ static int open(struct inode * inode, struct file * file)
- 	if (!sysfs_get_active(attr_sd))
- 		return -ENODEV;
- 
-+	error = -EACCES;
-+	if (attr->attr.cap && !capable(attr->attr.cap))
-+		goto err_out;
-+
- 	error = -EACCES;
- 	if ((file->f_mode & FMODE_WRITE) && !(attr->write || attr->mmap))
- 		goto err_out;
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 381f06d..0cf0034 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -26,6 +26,7 @@ enum kobj_ns_type;
- struct attribute {
- 	const char		*name;
- 	umode_t			mode;
-+	int			cap;
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	bool			ignore_lockdep:1;
- 	struct lock_class_key	*key;
+git log --oneline
+...
+3a33a60 kexec: fix possible memory leak in check_reuse_initrd
+fa101c3 kexec: Fix Makefile of linking kdump file
+8f1cfc6 kexec-tools 2.0.4.git
+709dee5 kexec-tools 2.0.4
+b2dc426 s390: Replace clgfi with cghi
+...
+-- 
+Thanks
+Dave
+
+
 
 _______________________________________________
 kexec mailing list
