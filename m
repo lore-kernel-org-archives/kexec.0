@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ULQYa-0005mV-Hs
- for kexec@lists.infradead.org; Fri, 29 Mar 2013 04:04:50 +0000
-Date: Fri, 29 Mar 2013 13:04:45 +0900
+ id 1ULQZ0-0005nz-2y
+ for kexec@lists.infradead.org; Fri, 29 Mar 2013 04:05:14 +0000
+Date: Fri, 29 Mar 2013 13:05:11 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] sysfs: Add crash_notes_size to export percpu note size
-Message-ID: <20130329040445.GH13429@verge.net.au>
-References: <5153FC27.70001@cn.fujitsu.com> <51550F8B.1000402@cn.fujitsu.com>
+Subject: Re: [PATCH 2/2] Documentation: Add ABI entry for crash_notes and
+ crash_notes_size
+Message-ID: <20130329040511.GI13429@verge.net.au>
+References: <5153FC27.70001@cn.fujitsu.com> <5153FC6D.5020801@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51550F8B.1000402@cn.fujitsu.com>
+In-Reply-To: <5153FC6D.5020801@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,51 +20,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-T24gRnJpLCBNYXIgMjksIDIwMTMgYXQgMTE6NTA6MzVBTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
-b3RlOgo+IEhpLCBzaW1vbgo+IAo+IEkgZm9yZ290IHRvIGFkZCB5b3VyIGVtYWlsIGluIHRoZSBD
-QywgY291bGQgeW91IHBsZWFzZSBoZWxwCj4gcmV2aWV3aW5nIHRoaXMgcGF0Y2ggc2luY2UgSSB3
-aWxsIHNlbmQgdGhlIGtleGVjLXRvb2xzIHBhdGNoCj4gaWYgdGhpcyBwYXRjaCBpcyBhY2NlcHRl
-ZC4KPiAKPiBUaGFua3MKPiBaaGFuZwo+IAo+IOS6jiAyMDEz5bm0MDPmnIgyOOaXpSAxNjoxNSwg
-WmhhbmcgWWFuZmVpIOWGmemBkzoKPiA+IEZvciBwZXJjcHUgbm90ZXMsIHdlIGFyZSBleHBvcnRp
-bmcgb25seSBhZGRyZXNzIGFuZCBub3Qgc2l6ZS4gU28KPiA+IHRoZSB1c2Vyc3BhY2UgdG9vbCBr
-ZXhlYy10b29scyBpcyBwdXR0aW5nIGFuIHVwcGVyIGxpbWl0IG9mIDEwMjQKPiA+IGFuZCBwdXR0
-aW5nIHRoZSB2YWx1ZSBpbiBwX21lbXN6IGFuZCBwX2ZpbGVzeiBmaWVsZHMuIFNvIHRoZSBwYXRj
-aAo+ID4gYWRkIHRoZSBuZXcgc3lzZmlsZSBjcmFzaF9ub3Rlc19zaXplIHRvIGV4cG9ydCB0aGUg
-ZXhhY3QgcGVyY3B1Cj4gPiBub3RlIHNpemUgYW5kIGxldCB0aGUga2V4ZWMtdG9vbHMgcGFyc2Ug
-aXQgaW50ZWFkIG9mIHVzaW5nIDEwMjQuCj4gPiAKPiA+IFRoZSBpZGVhIGNhbWUgZnJvbSBWaXZl
-ayBHb3lhbC4gQW5kIGEgbGF0ZXIgcGF0Y2ggd2lsbCBiZSBzZW50IHRvCj4gPiBrZXhlYy10b29s
-cyB0byBsZXQgaXQgcGFyc2UgdGhlIHNpemUuCgpBY2tlZC1ieTogU2ltb24gSG9ybWFuIDxob3Jt
-c0B2ZXJnZS5uZXQuYXU+Cgo+ID4gCj4gPiBDYzogR3JlZyBLSCA8Z3JlZ2toQGxpbnV4Zm91bmRh
-dGlvbi5vcmc+Cj4gPiBDYzogIkVyaWMgVy4gQmllZGVybWFuIiA8ZWJpZWRlcm1AeG1pc3Npb24u
-Y29tPgo+ID4gQ2M6IFZpdmVrIEdveWFsIDx2Z295YWxAcmVkaGF0LmNvbT4KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4gPiAtLS0K
-PiA+ICBkcml2ZXJzL2Jhc2UvY3B1LmMgfCAgIDE0ICsrKysrKysrKysrKysrCj4gPiAgMSBmaWxl
-cyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9iYXNlL2NwdS5jIGIvZHJpdmVycy9iYXNlL2NwdS5jCj4gPiBpbmRl
-eCBmYjEwNzI4Li5hNTViNTkwIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9iYXNlL2NwdS5jCj4g
-PiArKysgYi9kcml2ZXJzL2Jhc2UvY3B1LmMKPiA+IEBAIC0xMzIsNiArMTMyLDE3IEBAIHN0YXRp
-YyBzc2l6ZV90IHNob3dfY3Jhc2hfbm90ZXMoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
-aWNlX2F0dHJpYnV0ZSAqYXR0Cj4gPiAgCXJldHVybiByYzsKPiA+ICB9Cj4gPiAgc3RhdGljIERF
-VklDRV9BVFRSKGNyYXNoX25vdGVzLCAwNDAwLCBzaG93X2NyYXNoX25vdGVzLCBOVUxMKTsKPiA+
-ICsKPiA+ICtzdGF0aWMgc3NpemVfdCBzaG93X2NyYXNoX25vdGVzX3NpemUoc3RydWN0IGRldmlj
-ZSAqZGV2LAo+ID4gKwkJCQkgICAgIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLAo+ID4g
-KwkJCQkgICAgIGNoYXIgKmJ1ZikKPiA+ICt7Cj4gPiArCXNzaXplX3QgcmM7Cj4gPiArCj4gPiAr
-CXJjID0gc3ByaW50ZihidWYsICIlbHVcbiIsIHNpemVvZihub3RlX2J1Zl90KSk7Cj4gPiArCXJl
-dHVybiByYzsKPiA+ICt9Cj4gPiArc3RhdGljIERFVklDRV9BVFRSKGNyYXNoX25vdGVzX3NpemUs
-IDA0MDAsIHNob3dfY3Jhc2hfbm90ZXNfc2l6ZSwgTlVMTCk7Cj4gPiAgI2VuZGlmCj4gPiAgCj4g
-PiAgLyoKPiA+IEBAIC0yNTksNiArMjcwLDkgQEAgaW50IF9fY3B1aW5pdCByZWdpc3Rlcl9jcHUo
-c3RydWN0IGNwdSAqY3B1LCBpbnQgbnVtKQo+ID4gICNpZmRlZiBDT05GSUdfS0VYRUMKPiA+ICAJ
-aWYgKCFlcnJvcikKPiA+ICAJCWVycm9yID0gZGV2aWNlX2NyZWF0ZV9maWxlKCZjcHUtPmRldiwg
-JmRldl9hdHRyX2NyYXNoX25vdGVzKTsKPiA+ICsJaWYgKCFlcnJvcikKPiA+ICsJCWVycm9yID0g
-ZGV2aWNlX2NyZWF0ZV9maWxlKCZjcHUtPmRldiwKPiA+ICsJCQkJCSAgICZkZXZfYXR0cl9jcmFz
-aF9ub3Rlc19zaXplKTsKPiA+ICAjZW5kaWYKPiA+ICAJcmV0dXJuIGVycm9yOwo+ID4gIH0KPiAK
-PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Mar 28, 2013 at 04:16:45PM +0800, Zhang Yanfei wrote:
+> Add an Documentation/ABI entry for /sys/devices/system/cpu/cpu0/crash_notes
+> and /sys/devices/system/cpu/cpu0/crash_notes_size.
+> 
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+
+Assuming that patch 1 of this series is accepted:
+
+Acked-by: Simon Horman <horms@verge.net.au>
+
+> ---
+>  Documentation/ABI/testing/sysfs-devices-system-cpu |   12 ++++++++++++
+>  1 files changed, 12 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> index 9c978dc..2447698 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -173,3 +173,15 @@ Description:	Processor frequency boosting control
+>  		Boosting allows the CPU and the firmware to run at a frequency
+>  		beyound it's nominal limit.
+>  		More details can be found in Documentation/cpu-freq/boost.txt
+> +
+> +
+> +What:		/sys/devices/system/cpu/cpu#/crash_notes
+> +		/sys/devices/system/cpu/cpu#/crash_notes_size
+> +Date:		April 2013
+> +Contact:	kexec@lists.infradead.org
+> +Description:	address and size of the percpu note.
+> +
+> +		crash_notes: the physical address of the memory that holds the
+> +		note of cpu#.
+> +
+> +		crash_notes_size: size of the note of cpu#.
+> -- 
+> 1.7.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
