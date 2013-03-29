@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ULQIN-00055b-N5
- for kexec@lists.infradead.org; Fri, 29 Mar 2013 03:48:04 +0000
-Date: Fri, 29 Mar 2013 12:47:57 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: i386: Add cmdline_add_memmap_internal() to reduce
- the code duplication
-Message-ID: <20130329034754.GA13429@verge.net.au>
-References: <51544127.5080502@gmail.com>
+ id 1ULQMM-0005Qs-CM
+ for kexec@lists.infradead.org; Fri, 29 Mar 2013 03:52:11 +0000
+Message-ID: <51550F8B.1000402@cn.fujitsu.com>
+Date: Fri, 29 Mar 2013 11:50:35 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51544127.5080502@gmail.com>
+Subject: Re: [PATCH 1/2] sysfs: Add crash_notes_size to export percpu note size
+References: <5153FC27.70001@cn.fujitsu.com>
+In-Reply-To: <5153FC27.70001@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +18,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Greg KH <gregkh@linuxfoundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, Mar 28, 2013 at 09:09:59PM +0800, Zhang Yanfei wrote:
-> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> 
-> Functions:
-> - cmdline_add_memmap()
-> - cmdline_add_memmap_acpi()
-> - cmdline_add_memmap_reserved()
-> is kind of similar, So add a new function cmdline_add_memmap_internal() to
-> hold the common codes, reducing the duplication.
-> 
-> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> ---
->  kexec/arch/i386/crashdump-x86.c |   74 +++++++++++++++++---------------------
->  1 files changed, 33 insertions(+), 41 deletions(-)
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksIHNpbW9uCgpJIGZvcmdvdCB0byBhZGQgeW91ciBlbWFpbCBpbiB0aGUgQ0MsIGNvdWxkIHlv
+dSBwbGVhc2UgaGVscApyZXZpZXdpbmcgdGhpcyBwYXRjaCBzaW5jZSBJIHdpbGwgc2VuZCB0aGUg
+a2V4ZWMtdG9vbHMgcGF0Y2gKaWYgdGhpcyBwYXRjaCBpcyBhY2NlcHRlZC4KClRoYW5rcwpaaGFu
+ZwoK5LqOIDIwMTPlubQwM+aciDI45pelIDE2OjE1LCBaaGFuZyBZYW5mZWkg5YaZ6YGTOgo+IEZv
+ciBwZXJjcHUgbm90ZXMsIHdlIGFyZSBleHBvcnRpbmcgb25seSBhZGRyZXNzIGFuZCBub3Qgc2l6
+ZS4gU28KPiB0aGUgdXNlcnNwYWNlIHRvb2wga2V4ZWMtdG9vbHMgaXMgcHV0dGluZyBhbiB1cHBl
+ciBsaW1pdCBvZiAxMDI0Cj4gYW5kIHB1dHRpbmcgdGhlIHZhbHVlIGluIHBfbWVtc3ogYW5kIHBf
+ZmlsZXN6IGZpZWxkcy4gU28gdGhlIHBhdGNoCj4gYWRkIHRoZSBuZXcgc3lzZmlsZSBjcmFzaF9u
+b3Rlc19zaXplIHRvIGV4cG9ydCB0aGUgZXhhY3QgcGVyY3B1Cj4gbm90ZSBzaXplIGFuZCBsZXQg
+dGhlIGtleGVjLXRvb2xzIHBhcnNlIGl0IGludGVhZCBvZiB1c2luZyAxMDI0Lgo+IAo+IFRoZSBp
+ZGVhIGNhbWUgZnJvbSBWaXZlayBHb3lhbC4gQW5kIGEgbGF0ZXIgcGF0Y2ggd2lsbCBiZSBzZW50
+IHRvCj4ga2V4ZWMtdG9vbHMgdG8gbGV0IGl0IHBhcnNlIHRoZSBzaXplLgo+IAo+IENjOiBHcmVn
+IEtIIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KPiBDYzogIkVyaWMgVy4gQmllZGVybWFu
+IiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+IENjOiBWaXZlayBHb3lhbCA8dmdveWFsQHJlZGhh
+dC5jb20+Cj4gU2lnbmVkLW9mZi1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWpp
+dHN1LmNvbT4KPiAtLS0KPiAgZHJpdmVycy9iYXNlL2NwdS5jIHwgICAxNCArKysrKysrKysrKysr
+Kwo+ICAxIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmFzZS9jcHUuYyBiL2RyaXZlcnMvYmFzZS9jcHUuYwo+
+IGluZGV4IGZiMTA3MjguLmE1NWI1OTAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9iYXNlL2NwdS5j
+Cj4gKysrIGIvZHJpdmVycy9iYXNlL2NwdS5jCj4gQEAgLTEzMiw2ICsxMzIsMTcgQEAgc3RhdGlj
+IHNzaXplX3Qgc2hvd19jcmFzaF9ub3RlcyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZp
+Y2VfYXR0cmlidXRlICphdHQKPiAgCXJldHVybiByYzsKPiAgfQo+ICBzdGF0aWMgREVWSUNFX0FU
+VFIoY3Jhc2hfbm90ZXMsIDA0MDAsIHNob3dfY3Jhc2hfbm90ZXMsIE5VTEwpOwo+ICsKPiArc3Rh
+dGljIHNzaXplX3Qgc2hvd19jcmFzaF9ub3Rlc19zaXplKHN0cnVjdCBkZXZpY2UgKmRldiwKPiAr
+CQkJCSAgICAgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsCj4gKwkJCQkgICAgIGNoYXIg
+KmJ1ZikKPiArewo+ICsJc3NpemVfdCByYzsKPiArCj4gKwlyYyA9IHNwcmludGYoYnVmLCAiJWx1
+XG4iLCBzaXplb2Yobm90ZV9idWZfdCkpOwo+ICsJcmV0dXJuIHJjOwo+ICt9Cj4gK3N0YXRpYyBE
+RVZJQ0VfQVRUUihjcmFzaF9ub3Rlc19zaXplLCAwNDAwLCBzaG93X2NyYXNoX25vdGVzX3NpemUs
+IE5VTEwpOwo+ICAjZW5kaWYKPiAgCj4gIC8qCj4gQEAgLTI1OSw2ICsyNzAsOSBAQCBpbnQgX19j
+cHVpbml0IHJlZ2lzdGVyX2NwdShzdHJ1Y3QgY3B1ICpjcHUsIGludCBudW0pCj4gICNpZmRlZiBD
+T05GSUdfS0VYRUMKPiAgCWlmICghZXJyb3IpCj4gIAkJZXJyb3IgPSBkZXZpY2VfY3JlYXRlX2Zp
+bGUoJmNwdS0+ZGV2LCAmZGV2X2F0dHJfY3Jhc2hfbm90ZXMpOwo+ICsJaWYgKCFlcnJvcikKPiAr
+CQllcnJvciA9IGRldmljZV9jcmVhdGVfZmlsZSgmY3B1LT5kZXYsCj4gKwkJCQkJICAgJmRldl9h
+dHRyX2NyYXNoX25vdGVzX3NpemUpOwo+ICAjZW5kaWYKPiAgCXJldHVybiBlcnJvcjsKPiAgfQoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
