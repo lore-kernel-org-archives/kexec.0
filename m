@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ULDD5-0007BT-Gi
- for kexec@lists.infradead.org; Thu, 28 Mar 2013 13:49:44 +0000
-Received: from zmail15.collab.prod.int.phx2.redhat.com
- (zmail15.collab.prod.int.phx2.redhat.com [10.5.83.17])
- by mx3-phx2.redhat.com (8.13.8/8.13.8) with ESMTP id r2SDncq5020128
- for <kexec@lists.infradead.org>; Thu, 28 Mar 2013 09:49:38 -0400
-Date: Thu, 28 Mar 2013 09:49:38 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1852019213.17058749.1364478578885.JavaMail.root@redhat.com>
-In-Reply-To: <895483690.17058174.1364478520268.JavaMail.root@redhat.com>
-Subject: kdump on ARM LPAE?
+ id 1ULQIN-00055b-N5
+ for kexec@lists.infradead.org; Fri, 29 Mar 2013 03:48:04 +0000
+Date: Fri, 29 Mar 2013 12:47:57 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: i386: Add cmdline_add_memmap_internal() to reduce
+ the code duplication
+Message-ID: <20130329034754.GA13429@verge.net.au>
+References: <51544127.5080502@gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51544127.5080502@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,14 +24,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
+On Thu, Mar 28, 2013 at 09:09:59PM +0800, Zhang Yanfei wrote:
+> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> 
+> Functions:
+> - cmdline_add_memmap()
+> - cmdline_add_memmap_acpi()
+> - cmdline_add_memmap_reserved()
+> is kind of similar, So add a new function cmdline_add_memmap_internal() to
+> hold the common codes, reducing the duplication.
+> 
+> Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  kexec/arch/i386/crashdump-x86.c |   74 +++++++++++++++++---------------------
+>  1 files changed, 33 insertions(+), 41 deletions(-)
 
-Does anybody know whether the kernel kdump facility works
-with 32-bit ARM LPAE kernels?
-
-Dave
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
