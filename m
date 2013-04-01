@@ -1,33 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from mail-la0-f44.google.com ([209.85.215.44])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UMXZE-0007AX-OI
- for kexec@lists.infradead.org; Mon, 01 Apr 2013 05:46:05 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A9FB93EE0BC
- for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8BF2245DE50
- for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6B30145DE4D
- for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C4AD1DB803F
- for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 083181DB8037
- for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
-Message-ID: <51591EEE.60401@jp.fujitsu.com>
-Date: Mon, 01 Apr 2013 14:45:18 +0900
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
+ id 1UMZf0-0005wl-U0
+ for kexec@lists.infradead.org; Mon, 01 Apr 2013 08:00:11 +0000
+Received: by mail-la0-f44.google.com with SMTP id eb20so1927831lab.17
+ for <kexec@lists.infradead.org>; Mon, 01 Apr 2013 01:00:05 -0700 (PDT)
+Message-ID: <51593E81.3030800@openvz.org>
+Date: Mon, 01 Apr 2013 12:00:01 +0400
+From: Konstantin Khlebnikov <khlebnikov@openvz.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] intel-iommu: Synchronize gcmd value with global command
- register
-References: <1363829556-2128-1-git-send-email-indou.takao@jp.fujitsu.com>
- <20130326144629.GB2727@8bytes.org> <51527D74.9080209@jp.fujitsu.com>
- <20130327103122.GK30540@8bytes.org>
-In-Reply-To: <20130327103122.GK30540@8bytes.org>
+Subject: Re: [PATCH bugfix 3.9] PCI: Don't try to disable Bus Master on
+ disconnected PCI devices
+References: <20130314144936.10073.2403.stgit@zurg>
+In-Reply-To: <20130314144936.10073.2403.stgit@zurg>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,84 +21,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: joro@8bytes.org
-Cc: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>, Jeff Garzik <jgarzik@pobox.com>, Vivek Goyal <vgoyal@redhat.com>
 
-(2013/03/27 19:31), Joerg Roedel wrote:
-> On Wed, Mar 27, 2013 at 02:02:44PM +0900, Takao Indoh wrote:
->> The root cause of this problem is mismatch between iommu->gcmd and
->> global command register in the case of kdump. At boot time, initial
->> value of iommu->gcmd is zero as I wrote above, but actual global command
->> register is *not* zero because some bits like IRE/TE/QIE are already set
->> in *first* kernel. Therefore this patch synchronize them to fix this
->> problem.
-> 
-> Ok, I understand, but I still don't see why this is a problem. There is
-> no point for the kdump kernel to preserve hardware state from the
-> previous kernel. So I think the way it is implemented is correct.
+BUMP. This is degradation from 3.8, so this patch must be in 3.9.
 
-Sorry, my explanation was misleading. The purpose is not preserving
-hardware state, but cleaning up hardware status at appropriate place.
+I still don't like this forced clearing bus-master bit. But this hack
+definitely fixes problems in kexec, so there is reason to keep it here.
 
-kdump kernel boots up without power-on-reset, so we have to disable
-hardware functions like DMAR before initializing them.
-
-<Current flow on kdump boot>
-enable_IR
-  intel_enable_irq_remapping
-    iommu_disable_irq_remapping  <== IRES/QIES/TES disabled here
-    dmar_disable_qi              <== do nothing
-    dmar_enable_qi               <== QIES enabled
-    intel_setup_irq_remapping    <== IRES enabled
-
-intel_iommu_init
-  init_dmars
-    iommu_enable_translation     <== TES enabled
-
-
-<New flow on kdump boot after applying patch>
-enable_IR
-  intel_enable_irq_remapping
-    iommu_disable_irq_remapping  <== IRES disabled
-    dmar_disable_qi              <== QIES disabled
-    dmar_enable_qi               <== QIES enabled
-    intel_setup_irq_remapping    <== IRES enabled
-
-intel_iommu_init
-  init_dmars
-    iommu_disable_translation    <== TES disabled (added by patch)
-    iommu_enable_translation     <== TES enabled
-
-I want to change flow like this to avoid misunderstanding. In that sense,
-this patch is a kind of cleanup rather than fixing problem.
-
-Backgroud:
-I'm working on kdump problem with iommu and investigated when DMAR and
-IR are disabled in kdump kernel boot. As for IR, I can easily find the
-code in intel_enable_irq_remapping() since there is good comment for
-that.
-
-                /*
-                 * Disable intr remapping and queued invalidation, if already
-                 * enabled prior to OS handover.
-                 */
-                iommu_disable_irq_remapping(iommu);
-
-                dmar_disable_qi(iommu);
-
-However, there is no code to disable DMAR on startup, but it is actually
-disabled somewhere during bootup. And finally I found out is is done in
-intel_enable_irq_remapping(). This is very misleading. Why
-"iommu_disable_irq_remapping" is disabling bits other than IR? After
-applying patch, it is easy to understand because it disables only IR, as
-the name suggests.
-
-Thanks,
-Takao Indoh
+Konstantin Khlebnikov wrote:
+> This is fix for commit 7897e6022761ace7377f0f784fca059da55f5d71 from v3.9-rc1
+> ("PCI: Disable Bus Master unconditionally in pci_device_shutdown()")
+> in turn that was fix for b566a22c23327f18ce941ffad0ca907e50a53d41 from v3.5-rc1
+> ("PCI: disable Bus Master on PCI device shutdown")
+>
+> Unfortunately fixing one bug uncovers another:
+> ->shutdown() callback might switch device to deep sleep state.
+> PCI config space no longer available after that.
+>
+> Link: https://lkml.org/lkml/2013/3/12/529
+> Signed-off-by: Konstantin Khlebnikov<khlebnikov@openvz.org>
+> Reported-and-Tested-by: Vivek Goyal<vgoyal@redhat.com>
+> Cc: Bjorn Helgaas<bhelgaas@google.com>
+> Cc: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
+> ---
+>   drivers/pci/pci-driver.c |    5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 1fa1e48..79277fb 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -390,9 +390,10 @@ static void pci_device_shutdown(struct device *dev)
+>
+>   	/*
+>   	 * Turn off Bus Master bit on the device to tell it to not
+> -	 * continue to do DMA
+> +	 * continue to do DMA. Don't touch devices in D3cold or unknown states.
+>   	 */
+> -	pci_clear_master(pci_dev);
+> +	if (pci_dev->current_state <= PCI_D3hot)
+> +		pci_clear_master(pci_dev);
+>   }
+>
+>   #ifdef CONFIG_PM
+>
 
 
 _______________________________________________
