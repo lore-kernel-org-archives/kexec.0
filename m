@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-la0-f44.google.com ([209.85.215.44])
+Received: from a.ns.miles-group.at ([95.130.255.143] helo=radon.swed.at)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UMZf0-0005wl-U0
- for kexec@lists.infradead.org; Mon, 01 Apr 2013 08:00:11 +0000
-Received: by mail-la0-f44.google.com with SMTP id eb20so1927831lab.17
- for <kexec@lists.infradead.org>; Mon, 01 Apr 2013 01:00:05 -0700 (PDT)
-Message-ID: <51593E81.3030800@openvz.org>
-Date: Mon, 01 Apr 2013 12:00:01 +0400
-From: Konstantin Khlebnikov <khlebnikov@openvz.org>
+ id 1UMbcq-0001U5-L9
+ for kexec@lists.infradead.org; Mon, 01 Apr 2013 10:06:05 +0000
+Message-ID: <51595C03.6030302@nod.at>
+Date: Mon, 01 Apr 2013 12:05:55 +0200
+From: Richard Weinberger <richard@nod.at>
 MIME-Version: 1.0
-Subject: Re: [PATCH bugfix 3.9] PCI: Don't try to disable Bus Master on
- disconnected PCI devices
-References: <20130314144936.10073.2403.stgit@zurg>
-In-Reply-To: <20130314144936.10073.2403.stgit@zurg>
+Subject: Re: [PATCH] purgatory: compile sha256.c only on ia64 with -O0
+References: <1364763549-10790-1-git-send-email-richard@nod.at>
+ <20130401050431.GJ16289@verge.net.au> <51591849.2000502@cn.fujitsu.com>
+In-Reply-To: <51591849.2000502@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,52 +23,36 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>, Jeff Garzik <jgarzik@pobox.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-BUMP. This is degradation from 3.8, so this patch must be in 3.9.
+Simon, Zhang,
 
-I still don't like this forced clearing bus-master bit. But this hack
-definitely fixes problems in kexec, so there is reason to keep it here.
+Am 01.04.2013 07:16, schrieb Zhang Yanfei:
+>> I believe the above portion will break make dist my
+>> causing it to omit purgatory/arch/* other than
+>> purgatory/arch/$(ARCH)
+>
+> Ah, I've missed this in my review, too.
+>
+> Other than this, the change about purgatory/sha256.o below looks sound,
+> right?
 
-Konstantin Khlebnikov wrote:
-> This is fix for commit 7897e6022761ace7377f0f784fca059da55f5d71 from v3.9-rc1
-> ("PCI: Disable Bus Master unconditionally in pci_device_shutdown()")
-> in turn that was fix for b566a22c23327f18ce941ffad0ca907e50a53d41 from v3.5-rc1
-> ("PCI: disable Bus Master on PCI device shutdown")
->
-> Unfortunately fixing one bug uncovers another:
-> ->shutdown() callback might switch device to deep sleep state.
-> PCI config space no longer available after that.
->
-> Link: https://lkml.org/lkml/2013/3/12/529
-> Signed-off-by: Konstantin Khlebnikov<khlebnikov@openvz.org>
-> Reported-and-Tested-by: Vivek Goyal<vgoyal@redhat.com>
-> Cc: Bjorn Helgaas<bhelgaas@google.com>
-> Cc: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
-> ---
->   drivers/pci/pci-driver.c |    5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 1fa1e48..79277fb 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -390,9 +390,10 @@ static void pci_device_shutdown(struct device *dev)
->
->   	/*
->   	 * Turn off Bus Master bit on the device to tell it to not
-> -	 * continue to do DMA
-> +	 * continue to do DMA. Don't touch devices in D3cold or unknown states.
->   	 */
-> -	pci_clear_master(pci_dev);
-> +	if (pci_dev->current_state <= PCI_D3hot)
-> +		pci_clear_master(pci_dev);
->   }
->
->   #ifdef CONFIG_PM
->
+The dist mechanism is quite strange and error prone.
+Why can't you just use git archive in the $(TARBALL) target?
+I'll happily send a patch...
 
+Back to the purgatory/sha256.o issue, I did some more tests.
+First I thought memcpy() within purgatory is slow, but it isn't.
+Does kexec reset the CPU so some kind of legacy mode during purgatory?
+It looks like the same code in sha256.o is fast in normal user space
+but very slow during purgatory.
+
+Computing sha256 of a 9MiB blob takes less than a second in user space
+and 16 seconds (with my patch). Otherwise it takes > 25 seconds.
+
+Thanks,
+//richard
 
 _______________________________________________
 kexec mailing list
