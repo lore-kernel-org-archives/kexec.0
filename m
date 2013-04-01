@@ -1,16 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UMX8g-0005wq-QQ
- for kexec@lists.infradead.org; Mon, 01 Apr 2013 05:18:40 +0000
-Message-ID: <51591849.2000502@cn.fujitsu.com>
-Date: Mon, 01 Apr 2013 13:16:57 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UMXZE-0007AX-OI
+ for kexec@lists.infradead.org; Mon, 01 Apr 2013 05:46:05 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A9FB93EE0BC
+ for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8BF2245DE50
+ for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6B30145DE4D
+ for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C4AD1DB803F
+ for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 083181DB8037
+ for <kexec@lists.infradead.org>; Mon,  1 Apr 2013 14:45:57 +0900 (JST)
+Message-ID: <51591EEE.60401@jp.fujitsu.com>
+Date: Mon, 01 Apr 2013 14:45:18 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] purgatory: compile sha256.c only on ia64 with -O0
-References: <1364763549-10790-1-git-send-email-richard@nod.at>
- <20130401050431.GJ16289@verge.net.au>
-In-Reply-To: <20130401050431.GJ16289@verge.net.au>
+Subject: Re: [PATCH] intel-iommu: Synchronize gcmd value with global command
+ register
+References: <1363829556-2128-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <20130326144629.GB2727@8bytes.org> <51527D74.9080209@jp.fujitsu.com>
+ <20130327103122.GK30540@8bytes.org>
+In-Reply-To: <20130327103122.GK30540@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,67 +36,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Richard Weinberger <richard@nod.at>, kexec@lists.infradead.org
+To: joro@8bytes.org
+Cc: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org
 
-5LqOIDIwMTPlubQwNOaciDAx5pelIDEzOjA0LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIFN1
-biwgTWFyIDMxLCAyMDEzIGF0IDEwOjU5OjA5UE0gKzAyMDAsIFJpY2hhcmQgV2VpbmJlcmdlciB3
-cm90ZToKPj4gSWYgd2UgaGF2ZSB0byBjb21waWxlIHNoYTI1Ni5jIG9uIGlhNjQgd2l0aCAtTzAg
-dG8gcHJvZHVjZSBzYW5lIGNvZGUKPj4gZG8gaXQgb25seSBvbiBpYTY0Lgo+Pgo+PiBUaGlzIGNo
-YW5nZSBtYWtlcyBleGVjdXRpbmcgYSBuZXcga2VybmVsIG9uIG15IEFNRCBnZW9kZSBDUFUgbXVj
-aCBmYXN0ZXIuCj4+IFdpdGhvdXQgdGhlIHBhdGNoICJrZXhlYyAtZSIgdGFrZXMgMjcgc2Vjb25k
-cywgd2l0aCBvbmx5IDE2Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBSaWNoYXJkIFdlaW5iZXJnZXIg
-PHJpY2hhcmRAbm9kLmF0Pgo+PiAtLS0KPj4gIHB1cmdhdG9yeS9NYWtlZmlsZSAgICAgICAgICAg
-fCAxNSArLS0tLS0tLS0tLS0tLS0KPj4gIHB1cmdhdG9yeS9hcmNoL2lhNjQvTWFrZWZpbGUgfCAg
-MyArKysKPj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMo
-LSkKPj4KPj4gZGlmZiAtLWdpdCBhL3B1cmdhdG9yeS9NYWtlZmlsZSBiL3B1cmdhdG9yeS9NYWtl
-ZmlsZQo+PiBpbmRleCBlMzlhZGVjLi42YmU4MzYyIDEwMDY0NAo+PiAtLS0gYS9wdXJnYXRvcnkv
-TWFrZWZpbGUKPj4gKysrIGIvcHVyZ2F0b3J5L01ha2VmaWxlCj4+IEBAIC0xNiwxNiArMTYsNyBA
-QCBQVVJHQVRPUllfU1JDUyArPSBwdXJnYXRvcnkvc3RyaW5nLmMKPj4gIGRpc3QgKz0gcHVyZ2F0
-b3J5L01ha2VmaWxlICQoUFVSR0FUT1JZX1NSQ1MpCQkJCVwKPj4gIAlwdXJnYXRvcnkvaW5jbHVk
-ZS9wdXJnYXRvcnkuaCBwdXJnYXRvcnkvaW5jbHVkZS9zdHJpbmcuaAo+PiAgCj4+IC1pbmNsdWRl
-ICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJjaC9hbHBoYS9NYWtlZmlsZQo+PiAtaW5jbHVkZSAkKHNy
-Y2RpcikvcHVyZ2F0b3J5L2FyY2gvYXJtL01ha2VmaWxlCj4+IC1pbmNsdWRlICQoc3JjZGlyKS9w
-dXJnYXRvcnkvYXJjaC9pMzg2L01ha2VmaWxlCj4+IC1pbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRv
-cnkvYXJjaC9pYTY0L01ha2VmaWxlCj4+IC1pbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJj
-aC9taXBzL01ha2VmaWxlCj4+IC1pbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJjaC9wcGMv
-TWFrZWZpbGUKPj4gLWluY2x1ZGUgJChzcmNkaXIpL3B1cmdhdG9yeS9hcmNoL3BwYzY0L01ha2Vm
-aWxlCj4+IC1pbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJjaC9zMzkwL01ha2VmaWxlCj4+
-IC1pbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJjaC9zaC9NYWtlZmlsZQo+PiAtaW5jbHVk
-ZSAkKHNyY2RpcikvcHVyZ2F0b3J5L2FyY2gveDg2XzY0L01ha2VmaWxlCj4+ICtpbmNsdWRlICQo
-c3JjZGlyKS9wdXJnYXRvcnkvYXJjaC8kKEFSQ0gpL01ha2VmaWxlCj4gCj4gSSBiZWxpZXZlIHRo
-ZSBhYm92ZSBwb3J0aW9uIHdpbGwgYnJlYWsgbWFrZSBkaXN0IG15Cj4gY2F1c2luZyBpdCB0byBv
-bWl0IHB1cmdhdG9yeS9hcmNoLyogb3RoZXIgdGhhbgo+IHB1cmdhdG9yeS9hcmNoLyQoQVJDSCkK
-CkFoLCBJJ3ZlIG1pc3NlZCB0aGlzIGluIG15IHJldmlldywgdG9vLgoKT3RoZXIgdGhhbiB0aGlz
-LCB0aGUgY2hhbmdlIGFib3V0IHB1cmdhdG9yeS9zaGEyNTYubyBiZWxvdyBsb29rcyBzb3VuZCwK
-cmlnaHQ/CgpUaGFua3MKWmhhbmcKCj4gCj4+ICAKPj4gIFBVUkdBVE9SWV9TUkNTKz0kKCQoQVJD
-SClfUFVSR0FUT1JZX1NSQ1MpCj4+ICAKPj4gQEAgLTM2LDEwICsyNyw2IEBAIGNsZWFuICs9ICQo
-UFVSR0FUT1JZX09CSlMpICQoUFVSR0FUT1JZX0RFUFMpICQoUFVSR0FUT1JZKQo+PiAgCj4+ICAt
-aW5jbHVkZSAkKFBVUkdBVE9SWV9ERVBTKQo+PiAgCj4+IC0jIHNoYTI1Ni5jIG5lZWRzIHRvIGJl
-IGNvbXBpbGVkIHdpdGhvdXQgb3B0aW1pemF0aW9uLCBlbHNlCj4+IC0jIHB1cmdhdG9yeSBmYWls
-cyB0byBleGVjdXRlIG9uIGlhNjQuCj4+IC1wdXJnYXRvcnkvc2hhMjU2Lm86IENGTEFHUyArPSAt
-TzAKPj4gLQo+PiAgcHVyZ2F0b3J5L3NoYTI1Ni5vOiAkKHNyY2RpcikvdXRpbF9saWIvc2hhMjU2
-LmMKPj4gIAlta2RpciAtcCAkKEBEKQo+PiAgCSQoQ09NUElMRS5jKSAtbyAkQCAkXgo+PiBkaWZm
-IC0tZ2l0IGEvcHVyZ2F0b3J5L2FyY2gvaWE2NC9NYWtlZmlsZSBiL3B1cmdhdG9yeS9hcmNoL2lh
-NjQvTWFrZWZpbGUKPj4gaW5kZXggMzJjM2Q5Ny4uYThhNWM2MiAxMDA2NDQKPj4gLS0tIGEvcHVy
-Z2F0b3J5L2FyY2gvaWE2NC9NYWtlZmlsZQo+PiArKysgYi9wdXJnYXRvcnkvYXJjaC9pYTY0L01h
-a2VmaWxlCj4+IEBAIC0xMSwzICsxMSw2IEBAIGlhNjRfUFVSR0FUT1JZX0VYVFJBX0NGTEFHUyA9
-IC1mZml4ZWQtcjI4Cj4+ICBkaXN0ICs9IHB1cmdhdG9yeS9hcmNoL2lhNjQvTWFrZWZpbGUgJChp
-YTY0X1BVUkdBVE9SWV9TUkNTKQlcCj4+ICAJcHVyZ2F0b3J5L2FyY2gvaWE2NC9pby5oIHB1cmdh
-dG9yeS9hcmNoL2lhNjQvcHVyZ2F0b3J5LWlhNjQuaAo+PiAgCj4+ICsjIHNoYTI1Ni5jIG5lZWRz
-IHRvIGJlIGNvbXBpbGVkIHdpdGhvdXQgb3B0aW1pemF0aW9uLCBlbHNlCj4+ICsjIHB1cmdhdG9y
-eSBmYWlscyB0byBleGVjdXRlIG9uIGlhNjQuCj4+ICtwdXJnYXRvcnkvc2hhMjU2Lm86IGlhNjRf
-UFVSR0FUT1JZX0VYVFJBX0NGTEFHUyArPSAtTzAKPj4gLS0gCj4+IDEuOC4xLjQKPj4KPj4KPj4g
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPj4ga2V4ZWMg
-bWFpbGluZyBsaXN0Cj4+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+Pgo+IAo+IF9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4ga2V4ZWMgbWFpbGluZyBsaXN0
-Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+(2013/03/27 19:31), Joerg Roedel wrote:
+> On Wed, Mar 27, 2013 at 02:02:44PM +0900, Takao Indoh wrote:
+>> The root cause of this problem is mismatch between iommu->gcmd and
+>> global command register in the case of kdump. At boot time, initial
+>> value of iommu->gcmd is zero as I wrote above, but actual global command
+>> register is *not* zero because some bits like IRE/TE/QIE are already set
+>> in *first* kernel. Therefore this patch synchronize them to fix this
+>> problem.
+> 
+> Ok, I understand, but I still don't see why this is a problem. There is
+> no point for the kdump kernel to preserve hardware state from the
+> previous kernel. So I think the way it is implemented is correct.
+
+Sorry, my explanation was misleading. The purpose is not preserving
+hardware state, but cleaning up hardware status at appropriate place.
+
+kdump kernel boots up without power-on-reset, so we have to disable
+hardware functions like DMAR before initializing them.
+
+<Current flow on kdump boot>
+enable_IR
+  intel_enable_irq_remapping
+    iommu_disable_irq_remapping  <== IRES/QIES/TES disabled here
+    dmar_disable_qi              <== do nothing
+    dmar_enable_qi               <== QIES enabled
+    intel_setup_irq_remapping    <== IRES enabled
+
+intel_iommu_init
+  init_dmars
+    iommu_enable_translation     <== TES enabled
+
+
+<New flow on kdump boot after applying patch>
+enable_IR
+  intel_enable_irq_remapping
+    iommu_disable_irq_remapping  <== IRES disabled
+    dmar_disable_qi              <== QIES disabled
+    dmar_enable_qi               <== QIES enabled
+    intel_setup_irq_remapping    <== IRES enabled
+
+intel_iommu_init
+  init_dmars
+    iommu_disable_translation    <== TES disabled (added by patch)
+    iommu_enable_translation     <== TES enabled
+
+I want to change flow like this to avoid misunderstanding. In that sense,
+this patch is a kind of cleanup rather than fixing problem.
+
+Backgroud:
+I'm working on kdump problem with iommu and investigated when DMAR and
+IR are disabled in kdump kernel boot. As for IR, I can easily find the
+code in intel_enable_irq_remapping() since there is good comment for
+that.
+
+                /*
+                 * Disable intr remapping and queued invalidation, if already
+                 * enabled prior to OS handover.
+                 */
+                iommu_disable_irq_remapping(iommu);
+
+                dmar_disable_qi(iommu);
+
+However, there is no code to disable DMAR on startup, but it is actually
+disabled somewhere during bootup. And finally I found out is is done in
+intel_enable_irq_remapping(). This is very misleading. Why
+"iommu_disable_irq_remapping" is disabling bits other than IR? After
+applying patch, it is easy to understand because it disables only IR, as
+the name suggests.
+
+Thanks,
+Takao Indoh
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
