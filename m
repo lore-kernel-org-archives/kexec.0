@@ -1,17 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UMpkA-0002uv-Hk
- for kexec@lists.infradead.org; Tue, 02 Apr 2013 01:10:35 +0000
-Date: Tue, 2 Apr 2013 10:10:32 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] [RFC] get rid of dist
-Message-ID: <20130402011031.GD14785@verge.net.au>
-References: <1364815385-26722-1-git-send-email-richard@nod.at>
- <1364815385-26722-2-git-send-email-richard@nod.at>
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UMtYf-0006tG-Pe
+ for kexec@lists.infradead.org; Tue, 02 Apr 2013 05:14:59 +0000
+Received: from /spool/local
+ by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Tue, 2 Apr 2013 15:06:04 +1000
+Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [9.190.235.152])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id CD55E357804A
+ for <kexec@lists.infradead.org>; Tue,  2 Apr 2013 16:14:43 +1100 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r3250tXE58785958
+ for <kexec@lists.infradead.org>; Tue, 2 Apr 2013 16:00:56 +1100
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r325ECFp018340
+ for <kexec@lists.infradead.org>; Tue, 2 Apr 2013 16:14:12 +1100
+Subject: [PATCH] makedumpfile: copy over the 'erase_ch' member while splitting
+ filter info.
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Tue, 02 Apr 2013 10:43:59 +0530
+Message-ID: <20130402051243.24410.23935.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1364815385-26722-2-git-send-email-richard@nod.at>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,15 +37,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Richard Weinberger <richard@nod.at>
-Cc: zhangyanfei@cn.fujitsu.com, kexec@lists.infradead.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Kexec-ml <kexec@lists.infradead.org>
+Cc: Hemanth Siddarajaiah <hsiddara@in.ibm.com>, Suzuki Poulose <suzuki@in.ibm.com>, Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 
-On Mon, Apr 01, 2013 at 01:23:05PM +0200, Richard Weinberger wrote:
-> Replace the dist variable by git ls-files.
-> The following files are now included in the dist tarball too:
+From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-I'm sorry but I don't think it is reasonable to
-add git as a requirement for building a tarball.
+Recent eppic support in makedumpfile has introduced 'erase_ch' member in
+filter_info structure. This member holds the erase character specified by the
+user to poison the memory location in the dump file that require to be scrubbed
+out. But, when the memory range to be scrubbed out is spanned across multiple
+pages, only the memory that belongs to first page is poisoned with the
+character set in 'erase_ch' member. The rest of the memory gets poisoned with
+'null' character. This is because, the 'erase_ch' member is not copied over
+while splitting filter info in split_filter_info() function.
+
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Signed-off-by: Suzuki Poulose <suzuki@in.ibm.com>
+---
+ erase_info.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/erase_info.c b/erase_info.c
+index 61fe637..a1b08e0 100644
+--- a/erase_info.c
++++ b/erase_info.c
+@@ -1921,12 +1921,15 @@ split_filter_info(struct filter_info *prev, unsigned long long next_paddr,
+ 		ERRMSG("Can't allocate memory to split filter info\n");
+ 		return;
+ 	}
+-	new->nullify        = prev->nullify;
+-	new->erase_info_idx = prev->erase_info_idx;
+-	new->size_idx       = prev->size_idx;
++	
++	/*
++	 * copy over existing data from prev node and only update fields
++	 * that differ. This approach will take care of copying over of any
++	 * future member addition to filter_info structure.
++	 */
++	*new = *prev;
+ 	new->paddr          = next_paddr;
+ 	new->size           = size;
+-	new->next           = prev->next;
+ 	prev->next          = new;
+ }
+ 
+
 
 _______________________________________________
 kexec mailing list
