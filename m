@@ -1,30 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+Received: from a.ns.miles-group.at ([95.130.255.143] helo=radon.swed.at)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UMtYf-0006tG-Pe
- for kexec@lists.infradead.org; Tue, 02 Apr 2013 05:14:59 +0000
-Received: from /spool/local
- by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
- Tue, 2 Apr 2013 15:06:04 +1000
-Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [9.190.235.152])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id CD55E357804A
- for <kexec@lists.infradead.org>; Tue,  2 Apr 2013 16:14:43 +1100 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r3250tXE58785958
- for <kexec@lists.infradead.org>; Tue, 2 Apr 2013 16:00:56 +1100
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r325ECFp018340
- for <kexec@lists.infradead.org>; Tue, 2 Apr 2013 16:14:12 +1100
-Subject: [PATCH] makedumpfile: copy over the 'erase_ch' member while splitting
- filter info.
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Tue, 02 Apr 2013 10:43:59 +0530
-Message-ID: <20130402051243.24410.23935.stgit@mars.in.ibm.com>
+ id 1UMtu6-0005vS-PJ
+ for kexec@lists.infradead.org; Tue, 02 Apr 2013 05:37:09 +0000
+Message-ID: <515A6E6E.8030805@nod.at>
+Date: Tue, 02 Apr 2013 07:36:46 +0200
+From: Richard Weinberger <richard@nod.at>
 MIME-Version: 1.0
+Subject: Re: [PATCH 2/2] [RFC] get rid of dist
+References: <1364815385-26722-1-git-send-email-richard@nod.at>
+ <1364815385-26722-2-git-send-email-richard@nod.at>
+ <20130402011031.GD14785@verge.net.au>
+In-Reply-To: <20130402011031.GD14785@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,54 +20,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Kexec-ml <kexec@lists.infradead.org>
-Cc: Hemanth Siddarajaiah <hsiddara@in.ibm.com>, Suzuki Poulose <suzuki@in.ibm.com>, Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: zhangyanfei@cn.fujitsu.com, kexec@lists.infradead.org
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Simon,
 
-Recent eppic support in makedumpfile has introduced 'erase_ch' member in
-filter_info structure. This member holds the erase character specified by the
-user to poison the memory location in the dump file that require to be scrubbed
-out. But, when the memory range to be scrubbed out is spanned across multiple
-pages, only the memory that belongs to first page is poisoned with the
-character set in 'erase_ch' member. The rest of the memory gets poisoned with
-'null' character. This is because, the 'erase_ch' member is not copied over
-while splitting filter info in split_filter_info() function.
+Am 02.04.2013 03:10, schrieb Simon Horman:
+> On Mon, Apr 01, 2013 at 01:23:05PM +0200, Richard Weinberger wrote:
+>> Replace the dist variable by git ls-files.
+>> The following files are now included in the dist tarball too:
+>
+> I'm sorry but I don't think it is reasonable to
+> add git as a requirement for building a tarball.
 
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Signed-off-by: Suzuki Poulose <suzuki@in.ibm.com>
----
- erase_info.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+It is not about building a tarball, it is about tracking files.
+Currently you are abusing make to keep track of your files.
+git does this already for you.
+Tracking files manually in the Makefile is also error prone.
+doc/mpc85xx.txt and arch/i386/timer.c have already been forgotten...
+If I'm not mistaken kexec-tools uses git as SCM, so you'll need
+git anyways to checkout the source and work with it.
 
-diff --git a/erase_info.c b/erase_info.c
-index 61fe637..a1b08e0 100644
---- a/erase_info.c
-+++ b/erase_info.c
-@@ -1921,12 +1921,15 @@ split_filter_info(struct filter_info *prev, unsigned long long next_paddr,
- 		ERRMSG("Can't allocate memory to split filter info\n");
- 		return;
- 	}
--	new->nullify        = prev->nullify;
--	new->erase_info_idx = prev->erase_info_idx;
--	new->size_idx       = prev->size_idx;
-+	
-+	/*
-+	 * copy over existing data from prev node and only update fields
-+	 * that differ. This approach will take care of copying over of any
-+	 * future member addition to filter_info structure.
-+	 */
-+	*new = *prev;
- 	new->paddr          = next_paddr;
- 	new->size           = size;
--	new->next           = prev->next;
- 	prev->next          = new;
- }
- 
+Thanks,
+//richard
 
 
 _______________________________________________
