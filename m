@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from a.ns.miles-group.at ([95.130.255.143] helo=radon.swed.at)
+Received: from mail-pb0-f47.google.com ([209.85.160.47])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UMxUq-000628-DE
- for kexec@lists.infradead.org; Tue, 02 Apr 2013 09:27:17 +0000
-Date: Tue, 2 Apr 2013 11:27:09 +0200
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH 2/2] [RFC] get rid of dist
-Message-ID: <20130402112709.76c8792f@spider.haslach.nod.at>
-In-Reply-To: <20130402090307.GB25093@verge.net.au>
-References: <1364815385-26722-1-git-send-email-richard@nod.at>
- <1364815385-26722-2-git-send-email-richard@nod.at>
- <20130402011031.GD14785@verge.net.au> <515A6E6E.8030805@nod.at>
- <515A71ED.7050104@cn.fujitsu.com> <515A72BA.5040607@nod.at>
- <515A75FE.1060200@cn.fujitsu.com>
- <20130402072051.514be33d@spider.haslach.nod.at>
- <20130402090307.GB25093@verge.net.au>
-Mime-Version: 1.0
+ id 1UMyk6-0002SG-Cz
+ for kexec@lists.infradead.org; Tue, 02 Apr 2013 10:47:07 +0000
+Received: by mail-pb0-f47.google.com with SMTP id rq13so176411pbb.20
+ for <kexec@lists.infradead.org>; Tue, 02 Apr 2013 03:47:04 -0700 (PDT)
+Message-ID: <515AB71F.3080307@gmail.com>
+Date: Tue, 02 Apr 2013 18:46:55 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] Revert "kexec: include reserved e820 sections in crash
+ kernel"
+References: <5157A9B5.1040704@gmail.com>
+In-Reply-To: <5157A9B5.1040704@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,44 +21,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Cliff Wickman <cpw@sgi.com>
 
-Am Tue, 2 Apr 2013 18:03:07 +0900
-schrieb Simon Horman <horms@verge.net.au>:
-
-> On Tue, Apr 02, 2013 at 07:20:51AM +0200, Richard Weinberger wrote:
-> > Am Tue, 02 Apr 2013 14:09:02 +0800
-> > schrieb Zhang Yanfei <zhangyanfei@cn.fujitsu.com>:
-> > > Yeah, this is one case.
-> > > 
-> > > Someone may also download a kexec-tools tarball from internet,
-> > > and then want to build a RPM. Even git isn't installed in his
-> > > system, the RPM could be built.
-> > 
-> > Building the tarball is maintainer work.
-> > The maintainer creates a "clean" tarball to distribute it.
-> > Don't tell me that the maintainer has no git installed.
-> > 
-> > End users fetch the generated tarball to build/distribute
-> > kexec-tools. AFAIK the rpm spec file is generated and only
-> > available in the generated tarball. They don't need git. Only the
-> > maintainer which generates the distribution tarball needs git...
-> 
-> There are many ways to obtain kexec-tools.
-> I'm really not very exited about requiring git to make a tarball.
-
-So, messing around in every Makefile with "dist +=" is better...?
-What about having a dist_file file in the top level directory?
-
-Thanks,
-//richard
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+cGluZy4uLgoK09ogMjAxM8TqMDPUwjMxyNUgMTE6MTIsIFpoYW5nIFlhbmZlaSDQtLXAOgo+IEZy
+b206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4gCj4gVGhpcyBy
+ZXZlcnRzIGNvbW1pdCBlMzVhYTI5ZmI0MGIzN2JmODZkOTgwYjJlMTlhZjVlMDFjMmQyNTQ5Lgo+
+IFRoaXMgcGF0Y2ggaXMgYmFzZWQgb24gdGhlIGNvbW1pdCA0OTMyMDM0MGY3MDU2OTRlMzg3ZDc5
+NGY3ZjE5ZDQwN2FkOWJhZWZhCj4gICAgICAia2V4ZWM6IGxlbmd0aGVuIHRoZSBrZXJuZWwgY29t
+bWFuZCBsaW5lIGltYWdlIgo+IFNpbmNlIHRoZSBsYXR0ZXIgY29tbWl0IGhhcyBiZWVuIHJldmVy
+dGVkIGR1ZSB0byBpdHMgdXNlbGVzcywgdGhpcwo+IHBhdGNoIHNob3VsZCBiZSByZXZlcnRlZCB0
+b28uCj4gCj4gQmVzaWRlcywgVGhpcyBwYXRjaCBhbHNvIGNoYW5nZWQgYSBrZXJuZWwgcmVzdHJp
+Y3Rpb24gb2YgbWF4IHNlZ21lbnRzCj4gZnJvbSAxNiB0byA3MC4gVGhvdWdoIGtleGVjLXRvb2xz
+IGNvdWxkIGhhdmUgbW9yZSBzZWdtZW50cywgbW9yZSB0aGFuIDE2LAo+IHRoZSBrZXhlY19sb2Fk
+IHN5c2NhbGwgd2lsbCBzdGlsbCBmYWlsIGZvciB0aGUga2VybmVsIHNpZGUgaGFzIGEgcmVzdHJp
+Y3Rpb24KPiBvZiAxNi4KPiAKPiBDYzogQ2xpZmYgV2lja21hbiA8Y3B3QHNnaS5jb20+Cj4gU2ln
+bmVkLW9mZi1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiAt
+LS0KPiAga2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYyB8ICAgMzEgKystLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQo+ICBrZXhlYy9rZXhlYy1zeXNjYWxsLmggICAgICAgICAgIHwg
+ICAgMiArLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25z
+KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMgYi9r
+ZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5jCj4gaW5kZXggOWFiNjQ4Yi4uYmJkMDc0MSAx
+MDA2NDQKPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5jCj4gKysrIGIva2V4
+ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+IEBAIC0yNDcsOCArMjQ3LDYgQEAgc3RhdGlj
+IGludCBnZXRfY3Jhc2hfbWVtb3J5X3JhbmdlcyhzdHJ1Y3QgbWVtb3J5X3JhbmdlICoqcmFuZ2Us
+IGludCAqcmFuZ2VzLAo+ICAJCQl0eXBlID0gUkFOR0VfQUNQSTsKPiAgCQl9IGVsc2UgaWYobWVt
+Y21wKHN0ciwiQUNQSSBOb24tdm9sYXRpbGUgU3RvcmFnZVxuIiwyNikgPT0gMCApIHsKPiAgCQkJ
+dHlwZSA9IFJBTkdFX0FDUElfTlZTOwo+IC0JCX0gZWxzZSBpZihtZW1jbXAoc3RyLCJyZXNlcnZl
+ZFxuIiwgOSkgPT0gMCApIHsKPiAtCQkJdHlwZSA9IFJBTkdFX1JFU0VSVkVEOwo+ICAJCX0gZWxz
+ZSBpZiAobWVtY21wKHN0ciwgIkdBUlRcbiIsIDUpID09IDApIHsKPiAgCQkJZ2FydF9zdGFydCA9
+IHN0YXJ0Owo+ICAJCQlnYXJ0X2VuZCA9IGVuZDsKPiBAQCAtOTA3LDI3ICs5MDUsNiBAQCBzdGF0
+aWMgdm9pZCBnZXRfYmFja3VwX2FyZWEoc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gIAlpbmZv
+LT5iYWNrdXBfc3JjX3NpemUgPSBCQUNLVVBfU1JDX0VORCAtIEJBQ0tVUF9TUkNfU1RBUlQgKyAx
+Owo+ICB9Cj4gIAo+IC0vKiBBcHBlbmRzIG1lbW1hcD1YJFkgY29tbWFuZGxpbmUgZm9yIHJlc2Vy
+dmVkIG1lbW9yeSB0byBjb21tYW5kIGxpbmUqLwo+IC1zdGF0aWMgaW50IGNtZGxpbmVfYWRkX21l
+bW1hcF9yZXNlcnZlZChjaGFyICpjbWRsaW5lLCB1bnNpZ25lZCBsb25nIHN0YXJ0LAo+IC0JCQkJ
+CXVuc2lnbmVkIGxvbmcgZW5kKQo+IC17Cj4gLQlpbnQgYWxpZ24gPSAxMDI0Owo+IC0JdW5zaWdu
+ZWQgbG9uZyBzdGFydGssIGVuZGs7Cj4gLQo+IC0JaWYgKCEoZW5kIC0gc3RhcnQpKQo+IC0JCXJl
+dHVybiAwOwo+IC0KPiAtCXN0YXJ0ayA9IHN0YXJ0LzEwMjQ7Cj4gLQllbmRrID0gKGVuZCArIGFs
+aWduIC0gMSkvMTAyNDsKPiAtCWNtZGxpbmVfYWRkX21lbW1hcF9pbnRlcm5hbChjbWRsaW5lLCBz
+dGFydGssIGVuZGssIFJBTkdFX1JFU0VSVkVEKTsKPiAtCj4gLSNpZmRlZiBERUJVRwo+IC0JCXBy
+aW50ZigiQ29tbWFuZCBsaW5lIGFmdGVyIGFkZGluZyByZXNlcnZlZCBtZW1tYXBcbiIpOwo+IC0J
+CXByaW50ZigiJXNcbiIsIGNtZGxpbmUpOwo+IC0jZW5kaWYKPiAtCXJldHVybiAwOwo+IC19Cj4g
+LQo+ICAvKiBMb2FkcyBhZGRpdGlvbmFsIHNlZ21lbnRzIGluIGNhc2Ugb2YgYSBwYW5pYyBrZXJu
+ZWwgaXMgYmVpbmcgbG9hZGVkLgo+ICAgKiBPbmUgc2VnbWVudCBmb3IgYmFja3VwIHJlZ2lvbiwg
+YW5vdGhlciBzZWdtZW50IGZvciBzdG9yaW5nIGVsZiBoZWFkZXJzCj4gICAqIGZvciBjcmFzaCBt
+ZW1vcnkgaW1hZ2UuCj4gQEAgLTEwODAsMTUgKzEwNTcsMTEgQEAgaW50IGxvYWRfY3Jhc2hkdW1w
+X3NlZ21lbnRzKHN0cnVjdCBrZXhlY19pbmZvICppbmZvLCBjaGFyKiBtb2RfY21kbGluZSwKPiAg
+CWZvciAoaSA9IDA7IGkgPCBDUkFTSF9NQVhfTUVNT1JZX1JBTkdFUzsgaSsrKSB7Cj4gIAkJdW5z
+aWduZWQgbG9uZyBzdGFydCwgZW5kOwo+ICAJCWlmICggISggbWVtX3JhbmdlW2ldLnR5cGUgPT0g
+UkFOR0VfQUNQSQo+IC0JCQl8fCBtZW1fcmFuZ2VbaV0udHlwZSA9PSBSQU5HRV9BQ1BJX05WUwo+
+IC0JCQl8fCBtZW1fcmFuZ2VbaV0udHlwZSA9PSBSQU5HRV9SRVNFUlZFRCkgKQo+ICsJCQl8fCBt
+ZW1fcmFuZ2VbaV0udHlwZSA9PSBSQU5HRV9BQ1BJX05WUykgKQo+ICAJCQljb250aW51ZTsKPiAg
+CQlzdGFydCA9IG1lbV9yYW5nZVtpXS5zdGFydDsKPiAgCQllbmQgPSBtZW1fcmFuZ2VbaV0uZW5k
+Owo+IC0JCWlmIChtZW1fcmFuZ2VbaV0udHlwZSA9PSBSQU5HRV9SRVNFUlZFRCkKPiAtCQkJY21k
+bGluZV9hZGRfbWVtbWFwX3Jlc2VydmVkKG1vZF9jbWRsaW5lLCBzdGFydCwgZW5kKTsKPiAtCQll
+bHNlCj4gLQkJCWNtZGxpbmVfYWRkX21lbW1hcF9hY3BpKG1vZF9jbWRsaW5lLCBzdGFydCwgZW5k
+KTsKPiArCQljbWRsaW5lX2FkZF9tZW1tYXBfYWNwaShtb2RfY21kbGluZSwgc3RhcnQsIGVuZCk7
+Cj4gIAl9Cj4gIAlyZXR1cm4gMDsKPiAgfQo+IGRpZmYgLS1naXQgYS9rZXhlYy9rZXhlYy1zeXNj
+YWxsLmggYi9rZXhlYy9rZXhlYy1zeXNjYWxsLmgKPiBpbmRleCBmNWVlOTkyLi5iNTZjYjAwIDEw
+MDY0NAo+IC0tLSBhL2tleGVjL2tleGVjLXN5c2NhbGwuaAo+ICsrKyBiL2tleGVjL2tleGVjLXN5
+c2NhbGwuaAo+IEBAIC03OCw3ICs3OCw3IEBAIHN0YXRpYyBpbmxpbmUgbG9uZyBrZXhlY19sb2Fk
+KHZvaWQgKmVudHJ5LCB1bnNpZ25lZCBsb25nIG5yX3NlZ21lbnRzLAo+ICAjZGVmaW5lIEtFWEVD
+X0FSQ0hfTUlQUyAgICAoIDggPDwgMTYpCj4gICNkZWZpbmUgS0VYRUNfQVJDSF9DUklTICAgICg3
+NiA8PCAxNikKPiAgCj4gLSNkZWZpbmUgS0VYRUNfTUFYX1NFR01FTlRTIDcwCj4gKyNkZWZpbmUg
+S0VYRUNfTUFYX1NFR01FTlRTIDE2Cj4gIAo+ICAjaWZkZWYgX19pMzg2X18KPiAgI2RlZmluZSBL
+RVhFQ19BUkNIX05BVElWRQlLRVhFQ19BUkNIXzM4NgoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
