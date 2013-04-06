@@ -1,26 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([85.214.48.195] helo=mail.8bytes.org)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UO4TO-000138-4N
- for kexec@lists.infradead.org; Fri, 05 Apr 2013 11:06:23 +0000
-Received: from localhost (localhost [127.0.0.1])
- by mail.8bytes.org (Postfix) with SMTP id 269CE12B05A
- for <kexec@lists.infradead.org>; Fri,  5 Apr 2013 13:06:17 +0200 (CEST)
-Date: Fri, 5 Apr 2013 13:06:16 +0200
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] intel-iommu: Synchronize gcmd value with global command
- register
-Message-ID: <20130405110616.GB6858@8bytes.org>
-References: <1363829556-2128-1-git-send-email-indou.takao@jp.fujitsu.com>
- <20130326144629.GB2727@8bytes.org>
- <51527D74.9080209@jp.fujitsu.com>
- <20130327103122.GK30540@8bytes.org> <51591EEE.60401@jp.fujitsu.com>
- <20130402140546.GA15687@8bytes.org>
- <515BD638.8070307@jp.fujitsu.com>
- <1364977479.28127.15.camel@i7.infradead.org>
+Received: from mail-da0-x22e.google.com ([2607:f8b0:400e:c00::22e])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UOLr5-0006DQ-06
+ for kexec@lists.infradead.org; Sat, 06 Apr 2013 05:40:00 +0000
+Received: by mail-da0-f46.google.com with SMTP id y19so1852465dan.5
+ for <kexec@lists.infradead.org>; Fri, 05 Apr 2013 22:39:54 -0700 (PDT)
+Message-ID: <515FB51C.70005@gmail.com>
+Date: Sat, 06 Apr 2013 13:39:40 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1364977479.28127.15.camel@i7.infradead.org>
+Subject: [PATCH] kexec, i386: Fix build warning of size_t print
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,38 +18,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, Takao Indoh <indou.takao@jp.fujitsu.com>, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Wed, Apr 03, 2013 at 09:24:39AM +0100, David Woodhouse wrote:
-> On Wed, 2013-04-03 at 16:11 +0900, Takao Indoh wrote:
-> > Yeah, you are right. I forgot such a case.
-> 
-> If you disable translation and there's some device still doing DMA, it's
-> going to scribble over random areas of memory. You really want to have
-> translation enabled and all the page tables *cleared*, during kexec. I
-> think it's fair to insist that the secondary kernel should use the IOMMU
-> if the first one did.
-
-Do we really need to insist on that? The IOMMU initialization on x86
-happens after the kernel scanned and enumerated the PCI bus. While doing
-this the kernel (at least it should) disables all devices it finds. So
-when the IOMMU init code runs we should be safe from any in-flight DMA
-and can either disable translation or re-initialize it for the kdump
-kernel. Until then translation needs to stay enabled of course, so that
-the old page-tables are still used and in-flight DMA doesn't corrupt
-any data.
-
-
-	Joerg
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RnJvbTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KCldoZW4gY29t
+cGlsZSBrZXhlYy10b29scyBpbiBpMzg2LCB3ZSBnb3QgdGhlIGZvbGxvd2luZyB3YXJuaW5nczoK
+CmtleGVjL2tleGVjLWVsZi1yZWwuYzogSW4gZnVuY3Rpb24goa5lbGZfcmVsX3NldF9zeW1ib2yh
+rzoKa2V4ZWMva2V4ZWMtZWxmLXJlbC5jOjUxNzogd2FybmluZzogZm9ybWF0IKGuJWxkoa8gZXhw
+ZWN0cyB0eXBlIKGubG9uZyBpbnShrywgYnV0IGFyZ3VtZW50IDQgaGFzIHR5cGUgoa5zaXplX3Sh
+rwprZXhlYy9rZXhlYy1lbGYtcmVsLmM6IEluIGZ1bmN0aW9uIKGuZWxmX3JlbF9nZXRfc3ltYm9s
+oa86CmtleGVjL2tleGVjLWVsZi1yZWwuYzo1NDE6IHdhcm5pbmc6IGZvcm1hdCChriVsZKGvIGV4
+cGVjdHMgdHlwZSChrmxvbmcgaW50oa8sIGJ1dCBhcmd1bWVudCA0IGhhcyB0eXBlIKGuc2l6ZV90
+oa8KClRoaXMgaXMgYmVjYXVzZSB0aGUgdHdvIGZ1bmN0aW9ucyBvdXRwdXQgYSBzaXplX3QgdmFs
+dWUgYXMgJWxkCndoZW4gaXQgc2hvdWxkIGJlICV6ZCwgcmVzdWx0aW5nIGluIHRoaXMgd2Fybmlu
+Zy4KClNpZ25lZC1vZmYtYnk6IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5j
+b20+Ci0tLQoga2V4ZWMva2V4ZWMtZWxmLXJlbC5jIHwgICAgNCArKy0tCiAxIGZpbGVzIGNoYW5n
+ZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXhlYy9r
+ZXhlYy1lbGYtcmVsLmMgYi9rZXhlYy9rZXhlYy1lbGYtcmVsLmMKaW5kZXggMzhlMzRlYy4uNmFj
+ZDUwZCAxMDA2NDQKLS0tIGEva2V4ZWMva2V4ZWMtZWxmLXJlbC5jCisrKyBiL2tleGVjL2tleGVj
+LWVsZi1yZWwuYwpAQCAtNTEzLDcgKzUxMyw3IEBAIHZvaWQgZWxmX3JlbF9zZXRfc3ltYm9sKHN0
+cnVjdCBtZW1fZWhkciAqZWhkciwKICAgICAgICAgICAgICAgICAgICAgICAgbmFtZSk7CiAgICAg
+ICAgfQogICAgICAgIGlmIChzeW0uc3Rfc2l6ZSAhPSBzaXplKSB7Ci0gICAgICAgICAgICAgICBk
+aWUoIlN5bWJvbDogJXMgaGFzIHNpemU6ICVsbGQgbm90ICVsZFxuIiwKKyAgICAgICAgICAgICAg
+IGRpZSgiU3ltYm9sOiAlcyBoYXMgc2l6ZTogJWxsZCBub3QgJXpkXG4iLAogICAgICAgICAgICAg
+ICAgICAgICAgICBuYW1lLCBzeW0uc3Rfc2l6ZSwgc2l6ZSk7CiAgICAgICAgfQogICAgICAgIHNo
+ZHIgPSAmZWhkci0+ZV9zaGRyW3N5bS5zdF9zaG5keF07CkBAIC01MzcsNyArNTM3LDcgQEAgdm9p
+ZCBlbGZfcmVsX2dldF9zeW1ib2woc3RydWN0IG1lbV9laGRyICplaGRyLAogICAgICAgICAgICAg
+ICAgZGllKCJTeW1ib2w6ICVzIG5vdCBmb3VuZCBjYW5ub3QgZ2V0XG4iLCBuYW1lKTsKICAgICAg
+ICB9CiAgICAgICAgaWYgKHN5bS5zdF9zaXplICE9IHNpemUpIHsKLSAgICAgICAgICAgICAgIGRp
+ZSgiU3ltYm9sOiAlcyBoYXMgc2l6ZTogJWxsZCBub3QgJWxkXG4iLAorICAgICAgICAgICAgICAg
+ZGllKCJTeW1ib2w6ICVzIGhhcyBzaXplOiAlbGxkIG5vdCAlemRcbiIsCiAgICAgICAgICAgICAg
+ICAgICAgICAgIG5hbWUsIHN5bS5zdF9zaXplLCBzaXplKTsKICAgICAgICB9CiAgICAgICAgc2hk
+ciA9ICZlaGRyLT5lX3NoZHJbc3ltLnN0X3NobmR4XTsKLS0gCjEuNy4xCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
