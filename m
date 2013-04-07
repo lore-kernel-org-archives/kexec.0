@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP1Za-0005nX-So
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 02:12:45 +0000
-Message-ID: <5162273D.70903@cn.fujitsu.com>
-Date: Mon, 08 Apr 2013 10:11:09 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Received: from mail-pd0-f170.google.com ([209.85.192.170])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UOm1m-0005wB-Bo
+ for kexec@lists.infradead.org; Sun, 07 Apr 2013 09:36:48 +0000
+Received: by mail-pd0-f170.google.com with SMTP id 10so2697519pdi.29
+ for <kexec@lists.infradead.org>; Sun, 07 Apr 2013 02:36:42 -0700 (PDT)
+Date: Sun, 7 Apr 2013 17:35:41 +0800
+From: Wang YanQing <udknight@gmail.com>
+Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead of
+ empty command line
+Message-ID: <20130407093540.GA4046@udknight>
+References: <20130403094356.GA7259@udknight> <515FB809.3020103@gmail.com>
+ <20130407010103.GA2176@udknight> <51610A32.6080200@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec, i386: Fix build warning of size_t print
-References: <515FB51C.70005@gmail.com> <20130408013736.GB13103@verge.net.au>
- <51621FA9.80403@cn.fujitsu.com> <20130408020814.GG13103@verge.net.au>
-In-Reply-To: <20130408020814.GG13103@verge.net.au>
+Content-Disposition: inline
+In-Reply-To: <51610A32.6080200@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,70 +23,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: jbarnes@sgi.com, tjd21@cl.cam.ac.uk, khalid.aziz@hp.com, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-5LqOIDIwMTPlubQwNOaciDA45pelIDEwOjA4LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIE1v
-biwgQXByIDA4LCAyMDEzIGF0IDA5OjM4OjQ5QU0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
-Pj4g5LqOIDIwMTPlubQwNOaciDA45pelIDA5OjM3LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+Pj4g
-T24gU2F0LCBBcHIgMDYsIDIwMTMgYXQgMDE6Mzk6NDBQTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
-b3RlOgo+Pj4+IEZyb206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+
-Cj4+Pj4KPj4+PiBXaGVuIGNvbXBpbGUga2V4ZWMtdG9vbHMgaW4gaTM4Niwgd2UgZ290IHRoZSBm
-b2xsb3dpbmcgd2FybmluZ3M6Cj4+Pj4KPj4+PiBrZXhlYy9rZXhlYy1lbGYtcmVsLmM6IEluIGZ1
-bmN0aW9uIOKAmGVsZl9yZWxfc2V0X3N5bWJvbOKAmToKPj4+PiBrZXhlYy9rZXhlYy1lbGYtcmVs
-LmM6NTE3OiB3YXJuaW5nOiBmb3JtYXQg4oCYJWxk4oCZIGV4cGVjdHMgdHlwZSDigJhsb25nIGlu
-dOKAmSwgYnV0IGFyZ3VtZW50IDQgaGFzIHR5cGUg4oCYc2l6ZV904oCZCj4+Pj4ga2V4ZWMva2V4
-ZWMtZWxmLXJlbC5jOiBJbiBmdW5jdGlvbiDigJhlbGZfcmVsX2dldF9zeW1ib2zigJk6Cj4+Pj4g
-a2V4ZWMva2V4ZWMtZWxmLXJlbC5jOjU0MTogd2FybmluZzogZm9ybWF0IOKAmCVsZOKAmSBleHBl
-Y3RzIHR5cGUg4oCYbG9uZyBpbnTigJksIGJ1dCBhcmd1bWVudCA0IGhhcyB0eXBlIOKAmHNpemVf
-dOKAmQo+Pj4+Cj4+Pj4gVGhpcyBpcyBiZWNhdXNlIHRoZSB0d28gZnVuY3Rpb25zIG91dHB1dCBh
-IHNpemVfdCB2YWx1ZSBhcyAlbGQKPj4+PiB3aGVuIGl0IHNob3VsZCBiZSAlemQsIHJlc3VsdGlu
-ZyBpbiB0aGlzIHdhcm5pbmcuCj4+Pgo+Pj4gVGhhbmtzLAo+Pj4KPj4+IFRoaXMgY2hhbmdlIGxv
-b2tzIGdvb2QgdG8gbWUsIGhvd2V2ZXIsIHRoZSBwYXRjaCBkb2VzCj4+PiBub3QgYXBwZWFyIHRv
-IGFwcGx5IG9uIHRoZSBtYXN0ZXIgYnJhbmNoIG9mIHRoZSBrZXhlYy10b29scyB0cmVlLgo+Pj4g
-Q291bGQgeW91IHJlYmFzZSBhbmQgcmVwb3N0IGl0Pwo+Pgo+PiBSZWFsbHk/IE1heWJlIEkgbWFk
-ZSBzb21lIG1pc3Rha2UuIEFueXdheSBJIHdpbGwgcmVnZW5lcmF0ZSBpdCBhbmQKPj4gcmVzZW5k
-IGl0IGFnYWluLgo+IAo+IFBlcmhhcHMgSSBtYWRlIGEgbWlzdGFrZSBeKQo+IAo+IFRoZSBoZWFk
-IGNvbW1pdCBJIGhhdmUgaXM6Cj4gCj4gY29tbWl0IDk2OWYzZThjMWM1MzRmNjNiODY5MTgzY2Nm
-MjkyYmNhZWYwZTU1NTgKPiBBdXRob3I6IFJpY2hhcmQgV2VpbmJlcmdlciA8cmljaGFyZEBub2Qu
-YXQ+Cj4gRGF0ZTogICBNb24gQXByIDEgMTM6MjM6MDQgMjAxMyArMDIwMAo+IAo+ICAgICBwdXJn
-YXRvcnk6IHJlbW92ZSBhcmNoL2kzODYvdGltZXIuYwo+ICAgICAKPiAgICAgVGhpcyBmaWxlIGlz
-IG5vd2hlcmUgcmVmZXJlbmNlZCwgbGV0J3MgZ2V0IHJpZCBvZiBpdC4KPiAgICAgCj4gICAgIFNp
-Z25lZC1vZmYtYnk6IFJpY2hhcmQgV2VpbmJlcmdlciA8cmljaGFyZEBub2QuYXQ+Cj4gICAgIFNp
-Z25lZC1vZmYtYnk6IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pgo+IAoKU2FtZSB3
-aXRoIHlvdS4KCkkgcmVnZW5lcmF0ZSBvbmUsIHNlZSBiZWxvdzoKLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgpGcm9tOiBaaGFuZyBZYW5mZWkgPHpoYW5neWFu
-ZmVpQGNuLmZ1aml0c3UuY29tPgpEYXRlOiBNb24sIDggQXByIDIwMTMgMDI6MDU6MDcgKzA4MDAK
-U3ViamVjdDogW1BBVENIXSBrZXhlYywgaTM4NjogRml4IGJ1aWxkIHdhcm5pbmcgb2Ygc2l6ZV90
-IHByaW50CgpXaGVuIGNvbXBpbGUga2V4ZWMtdG9vbHMgaW4gaTM4Niwgd2UgZ290IHRoZSBmb2xs
-b3dpbmcgd2FybmluZ3M6CgprZXhlYy9rZXhlYy1lbGYtcmVsLmM6IEluIGZ1bmN0aW9uIOKAmGVs
-Zl9yZWxfc2V0X3N5bWJvbOKAmToKa2V4ZWMva2V4ZWMtZWxmLXJlbC5jOjUxNzogd2FybmluZzog
-Zm9ybWF0IOKAmCVsZOKAmSBleHBlY3RzIHR5cGUg4oCYbG9uZyBpbnTigJksIGJ1dCBhcmd1bWVu
-dCA0IGhhcyB0eXBlIOKAmHNpemVfdOKAmQprZXhlYy9rZXhlYy1lbGYtcmVsLmM6IEluIGZ1bmN0
-aW9uIOKAmGVsZl9yZWxfZ2V0X3N5bWJvbOKAmToKa2V4ZWMva2V4ZWMtZWxmLXJlbC5jOjU0MTog
-d2FybmluZzogZm9ybWF0IOKAmCVsZOKAmSBleHBlY3RzIHR5cGUg4oCYbG9uZyBpbnTigJksIGJ1
-dCBhcmd1bWVudCA0IGhhcyB0eXBlIOKAmHNpemVfdOKAmQoKVGhpcyBpcyBiZWNhdXNlIHRoZSB0
-d28gZnVuY3Rpb25zIG91dHB1dCBhIHNpemVfdCB2YWx1ZSBhcyAlbGQKd2hlbiBpdCBzaG91bGQg
-YmUgJXpkLCByZXN1bHRpbmcgaW4gdGhpcyB3YXJuaW5nLgoKU2lnbmVkLW9mZi1ieTogWmhhbmcg
-WWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KLS0tCiBrZXhlYy9rZXhlYy1lbGYt
-cmVsLmMgfCAgICA0ICsrLS0KIDEgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2tleGVjLWVsZi1yZWwuYyBiL2tleGVjL2tl
-eGVjLWVsZi1yZWwuYwppbmRleCAzOGUzNGVjLi5mNTkxNDBmIDEwMDY0NAotLS0gYS9rZXhlYy9r
-ZXhlYy1lbGYtcmVsLmMKKysrIGIva2V4ZWMva2V4ZWMtZWxmLXJlbC5jCkBAIC01MTMsNyArNTEz
-LDcgQEAgdm9pZCBlbGZfcmVsX3NldF9zeW1ib2woc3RydWN0IG1lbV9laGRyICplaGRyLAogCQkJ
-bmFtZSk7CiAJfQogCWlmIChzeW0uc3Rfc2l6ZSAhPSBzaXplKSB7Ci0JCWRpZSgiU3ltYm9sOiAl
-cyBoYXMgc2l6ZTogJWxsZCBub3QgJWxkXG4iLAorCQlkaWUoIlN5bWJvbDogJXMgaGFzIHNpemU6
-ICVsbGQgbm90ICV6ZFxuIiwKIAkJCW5hbWUsIHN5bS5zdF9zaXplLCBzaXplKTsKIAl9CiAJc2hk
-ciA9ICZlaGRyLT5lX3NoZHJbc3ltLnN0X3NobmR4XTsKQEAgLTUzNyw3ICs1MzcsNyBAQCB2b2lk
-IGVsZl9yZWxfZ2V0X3N5bWJvbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIsCiAJCWRpZSgiU3ltYm9s
-OiAlcyBub3QgZm91bmQgY2Fubm90IGdldFxuIiwgbmFtZSk7CiAJfQogCWlmIChzeW0uc3Rfc2l6
-ZSAhPSBzaXplKSB7Ci0JCWRpZSgiU3ltYm9sOiAlcyBoYXMgc2l6ZTogJWxsZCBub3QgJWxkXG4i
-LAorCQlkaWUoIlN5bWJvbDogJXMgaGFzIHNpemU6ICVsbGQgbm90ICV6ZFxuIiwKIAkJCW5hbWUs
-IHN5bS5zdF9zaXplLCBzaXplKTsKIAl9CiAJc2hkciA9ICZlaGRyLT5lX3NoZHJbc3ltLnN0X3No
-bmR4XTsKLS0gCjEuNy4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Sun, Apr 07, 2013 at 01:54:58PM +0800, Zhang Yanfei wrote:
+> With no commandline, can the new kernel boot?
+> I tried in my box and the new kernel just panicked for it cannot
+> find a root= argument in its commandline.
+I am sure the kernel boot, 
+rootfs_initcall(populate_rootfs) in initramfs.c
+well populate the root fs, and there is a /init
+in initramfs, this /init will mount the really 
+root device, and the system is running.
+ 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
