@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UOiaq-0003Sv-H2
- for kexec@lists.infradead.org; Sun, 07 Apr 2013 05:56:45 +0000
-Message-ID: <51610A32.6080200@cn.fujitsu.com>
-Date: Sun, 07 Apr 2013 13:54:58 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Received: from mail-da0-x229.google.com ([2607:f8b0:400e:c00::229])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UOdz8-00018S-5V
+ for kexec@lists.infradead.org; Sun, 07 Apr 2013 01:01:31 +0000
+Received: by mail-da0-f41.google.com with SMTP id w4so2100895dam.14
+ for <kexec@lists.infradead.org>; Sat, 06 Apr 2013 18:01:21 -0700 (PDT)
+Date: Sun, 7 Apr 2013 09:01:03 +0800
+From: Wang YanQing <udknight@gmail.com>
+Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead of
+ empty command line
+Message-ID: <20130407010103.GA2176@udknight>
+References: <20130403094356.GA7259@udknight>
+ <515FB809.3020103@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead
- of empty command line
-References: <20130403094356.GA7259@udknight> <515FB809.3020103@gmail.com>
- <20130407010103.GA2176@udknight>
-In-Reply-To: <20130407010103.GA2176@udknight>
+Content-Disposition: inline
+In-Reply-To: <515FB809.3020103@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +27,28 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wang YanQing <udknight@gmail.com>
-Cc: jbarnes@sgi.com, tjd21@cl.cam.ac.uk, khalid.aziz@hp.com, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: jbarnes@sgi.com, tjd21@cl.cam.ac.uk, khalid.aziz@hp.com, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com
 
-5LqOIDIwMTPlubQwNOaciDA35pelIDA5OjAxLCBXYW5nIFlhblFpbmcg5YaZ6YGTOgo+IE9uIFNh
-dCwgQXByIDA2LCAyMDEzIGF0IDAxOjUyOjA5UE0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
-Pj4g5LqOIDIwMTPlubQwNOaciDAz5pelIDE3OjQzLCBXYW5nIFlhblFpbmcg5YaZ6YGTOgo+Pj4g
-SSBnZXQgZ2FyYmFnZSBvdXRwdXQgb2YgL3Byb2MvY21kbGluZSBhbmQgaW4gZG1lc2cgd2hlbiBJ
-Cj4+PiB1c2Uga2V4ZWMgdG8gbG9hZCBuZXcga2VybmVsIGJ6SW1hZ2Ugd2l0aG91dCBhcHBlbmQg
-Y29tbWFuZAo+Pj4gbGluZSBsaWtlIGJlbG93Ogo+Pj4KPj4+IGtleGVjIC1sIGJ6SW1hZ2UgLS1p
-bml0cmQ9aW5pdHJhbWZzLgo+Pgo+PiBIZWxsbyBXYW5nCj4+Cj4+IEkgdHJpZWQgdGhpczoKPj4K
-Pj4gLi9idWlsZC9zYmluL2tleGVjIC1sIC9ib290L3ZtbGludXotMi42LjMyLTI3OS5lbDYuaTY4
-NiAtLWluaXRyZD0vYm9vdC9pbml0cmFtZnMtMi42LjMyLTI3OS5lbDYuaTY4Ni5pbWcgCj4+Cj4+
-IEJ1dCBub3RoaW5nIGhhcHBlbmVkIGFuZCBpdCBzZWVtZWQgdGhlIGNvbW1hbmQgbG9hZGVkIHRo
-ZSBrZXJuZWwgc3VjY2Vzc2Z1bGx5Lgo+PiBDYW4geW91IGRlc2NyaWJlIHlvdXIgc2l0dWF0aW9u
-IG1vcmUgY29uY3JldGVseSwgcGxlYXNlPwo+IFllcywgaXQgd2lsbCBsb2FkIHRoZSBrZXJuZWwg
-c3VjY2Vzc2Z1bGx5LCBidXQgd2hlbiB5b3UgdXNlIGtleGVjIC1lIHRvIHJ1biBpbnRvCj4gdGhl
-IGxvYWRlZCBrZXJuZWwsIGluIHRoZSBuZXcga2VybmVsIGNvbnRleHQsIHlvdSB3aWxsIGdldCBn
-YXJiYWdlIG91dHB1dCB3aGVuIAo+IGV4ZWN1dGUgYGNhdCAvcHJvYy9jbWRsaW5lYCwgYW5kIHlv
-dSBhbHNvIGNhbiBzZWUgdGhlIGdhcmJhZ2UgaW4gIktlcm5lbCBjb21tYW5kCj4gbGluZSIgZnJv
-bSBkbWVzZy4gCgpXaXRoIG5vIGNvbW1hbmRsaW5lLCBjYW4gdGhlIG5ldyBrZXJuZWwgYm9vdD8K
-SSB0cmllZCBpbiBteSBib3ggYW5kIHRoZSBuZXcga2VybmVsIGp1c3QgcGFuaWNrZWQgZm9yIGl0
-IGNhbm5vdApmaW5kIGEgcm9vdD0gYXJndW1lbnQgaW4gaXRzIGNvbW1hbmRsaW5lLgoKVGhhbmtz
-ClpoYW5nCgo+IAo+IEkgYW0gc3VyZSB5b3Ugd2lsbCBzZWUgdGhpcyBpc3N1ZSwgYmVjYXVzZSB3
-aGVuIHVzZXIgcGFzcyBubyBjbWRsaW5lLCBhbmQgY21kbGluZV9sZW4KPiB3aWxsIGJlY2F1c2Ug
-emVybywgc28gdGhlIGxpbmUgYmVsb3cgaW4gc2V0dXBfbGludXhfYm9vdGxvYWRlcl9wYXJhbWV0
-ZXJzX2hpZ2ggd2lsbAo+IG5vdCB3b3JrOgo+IGNtZGxpbmVfcHRyW2NtZGxpbmVfbGVuIC0gMV0g
-PSAnXDAnOwo+IAo+IFRoYW5rcwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+T24gU2F0LCBBcHIgMDYsIDIwMTMgYXQgMDE6NTI6MDlQTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
+b3RlOgo+IOS6jiAyMDEz5bm0MDTmnIgwM+aXpSAxNzo0MywgV2FuZyBZYW5RaW5nIOWGmemBkzoK
+PiA+IEkgZ2V0IGdhcmJhZ2Ugb3V0cHV0IG9mIC9wcm9jL2NtZGxpbmUgYW5kIGluIGRtZXNnIHdo
+ZW4gSQo+ID4gdXNlIGtleGVjIHRvIGxvYWQgbmV3IGtlcm5lbCBiekltYWdlIHdpdGhvdXQgYXBw
+ZW5kIGNvbW1hbmQKPiA+IGxpbmUgbGlrZSBiZWxvdzoKPiA+IAo+ID4ga2V4ZWMgLWwgYnpJbWFn
+ZSAtLWluaXRyZD1pbml0cmFtZnMuCj4gCj4gSGVsbG8gV2FuZwo+IAo+IEkgdHJpZWQgdGhpczoK
+PiAKPiAuL2J1aWxkL3NiaW4va2V4ZWMgLWwgL2Jvb3Qvdm1saW51ei0yLjYuMzItMjc5LmVsNi5p
+Njg2IC0taW5pdHJkPS9ib290L2luaXRyYW1mcy0yLjYuMzItMjc5LmVsNi5pNjg2LmltZyAKPiAK
+PiBCdXQgbm90aGluZyBoYXBwZW5lZCBhbmQgaXQgc2VlbWVkIHRoZSBjb21tYW5kIGxvYWRlZCB0
+aGUga2VybmVsIHN1Y2Nlc3NmdWxseS4KPiBDYW4geW91IGRlc2NyaWJlIHlvdXIgc2l0dWF0aW9u
+IG1vcmUgY29uY3JldGVseSwgcGxlYXNlPwpZZXMsIGl0IHdpbGwgbG9hZCB0aGUga2VybmVsIHN1
+Y2Nlc3NmdWxseSwgYnV0IHdoZW4geW91IHVzZSBrZXhlYyAtZSB0byBydW4gaW50bwp0aGUgbG9h
+ZGVkIGtlcm5lbCwgaW4gdGhlIG5ldyBrZXJuZWwgY29udGV4dCwgeW91IHdpbGwgZ2V0IGdhcmJh
+Z2Ugb3V0cHV0IHdoZW4gCmV4ZWN1dGUgYGNhdCAvcHJvYy9jbWRsaW5lYCwgYW5kIHlvdSBhbHNv
+IGNhbiBzZWUgdGhlIGdhcmJhZ2UgaW4gIktlcm5lbCBjb21tYW5kCmxpbmUiIGZyb20gZG1lc2cu
+IAoKSSBhbSBzdXJlIHlvdSB3aWxsIHNlZSB0aGlzIGlzc3VlLCBiZWNhdXNlIHdoZW4gdXNlciBw
+YXNzIG5vIGNtZGxpbmUsIGFuZCBjbWRsaW5lX2xlbgp3aWxsIGJlY2F1c2UgemVybywgc28gdGhl
+IGxpbmUgYmVsb3cgaW4gc2V0dXBfbGludXhfYm9vdGxvYWRlcl9wYXJhbWV0ZXJzX2hpZ2ggd2ls
+bApub3Qgd29yazoKY21kbGluZV9wdHJbY21kbGluZV9sZW4gLSAxXSA9ICdcMCc7CgpUaGFua3MK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
