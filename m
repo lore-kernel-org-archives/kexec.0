@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-da0-x232.google.com ([2607:f8b0:400e:c00::232])
+Received: from mail-da0-x22e.google.com ([2607:f8b0:400e:c00::22e])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP8Id-0005QP-KY
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 09:23:40 +0000
-Received: by mail-da0-f50.google.com with SMTP id t1so2557095dae.37
- for <kexec@lists.infradead.org>; Mon, 08 Apr 2013 02:23:36 -0700 (PDT)
-Date: Mon, 8 Apr 2013 17:23:25 +0800
+ id 1UP8KN-0005Ti-Cf
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 09:25:28 +0000
+Received: by mail-da0-f46.google.com with SMTP id y19so2535389dan.5
+ for <kexec@lists.infradead.org>; Mon, 08 Apr 2013 02:25:24 -0700 (PDT)
+Date: Mon, 8 Apr 2013 17:25:07 +0800
 From: Wang YanQing <udknight@gmail.com>
-Subject: [PATCH
- RESEND]kexec:i386/kexec-[bzImage|elf-x86]:x86_64/kexec-bzImage64: Use "\0"
- as command line instead of empty command line
-Message-ID: <20130408092325.GA23318@udknight>
+Subject: [PATCH]kexec:i386:kexec-bzImage: Fix pass garbage command line to
+ new kernel
+Message-ID: <20130408092507.GA23367@udknight>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -28,75 +27,72 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: tjd21@cl.cam.ac.uk, horms@verge.net.au, zhangyanfei@cn.fujitsu.com, ebiederm@xmission.com, hari@in.ibm.com, zhangyanfei.yes@gmail.com
 
-This patch prevents the problems to happen below:
-In setup_linux_bootloader_parameters_high
-120         cmdline_ptr = ((char *)real_mode) + cmdline_offset;
-121         memcpy(cmdline_ptr, cmdline, cmdline_len);
-122         cmdline_ptr[cmdline_len - 1] = '\0';
 
-if cmdline_len == 0, Line 122 will corrupt kernel16 buf just before the commandline.
-And in do_bzImage_load, for example,
-369         cmdline_end = setup_base + kern16_size_needed + command_line_len - 1;
-370         elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
-371                            sizeof(unsigned long));
-Line 369 will go wrong, too.
+I get garbage output of /proc/cmdline and in dmesg in new
+kernel context when I use kexec to load new kernel bzImage
+without append command line like below:
+
+kexec -l bzImage --initrd=/boot/initramfs
+kexec -e
+
+The reason is kernel copy the command line
+from the bootloader like below which copy/paste
+from linux/arch/x86/kernel/head_32.S:
+
+        movl pa(boot_params) + NEW_CL_POINTER,%esi
+        andl %esi,%esi
+        jz 1f                   # No command line
+        movl $pa(boot_command_line),%edi
+        movl $(COMMAND_LINE_SIZE/4),%ecx
+
+This patch fix it.
+
+[
+although another patch
+"kexec:i386/kexec-[bzImage|elf-x86]:x86_64/kexec-bzImage64: Use "\0" as command line instead of empty command line"
+has resolved the garbage output by put a '\0' at the start, but I thinks this patch has sense too, it stop
+kernel copy not command line data into the command line buffer in kernel
+]
 
 Signed-off-by: Wang YanQing <udknight@gmail.com>
 ---
- Hi Zhang Yanfei, could you give your signed-off-by to
- this patch?
-
- kexec/arch/i386/kexec-bzImage.c     | 3 +++
- kexec/arch/i386/kexec-elf-x86.c     | 3 +++
- kexec/arch/x86_64/kexec-bzImage64.c | 6 +++++-
- 3 files changed, 11 insertions(+), 1 deletion(-)
+ kexec/arch/i386/kexec-bzImage.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 99fd790..29f280d 100644
+index 29f280d..13cd3f9 100644
 --- a/kexec/arch/i386/kexec-bzImage.c
 +++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -435,6 +435,9 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
- 	command_line_len = 0;
- 	if (command_line) {
- 		command_line_len = strlen(command_line) +1;
-+	} else {
-+	    command_line = strdup("\0");
-+	    command_line_len = 1;
- 	}
- 	ramdisk_buf = 0;
- 	if (ramdisk) {
-diff --git a/kexec/arch/i386/kexec-elf-x86.c b/kexec/arch/i386/kexec-elf-x86.c
-index e62ebcb..788a209 100644
---- a/kexec/arch/i386/kexec-elf-x86.c
-+++ b/kexec/arch/i386/kexec-elf-x86.c
-@@ -161,6 +161,9 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
- 	command_line_len = 0;
- 	if (command_line) {
- 		command_line_len = strlen(command_line) +1;
-+	} else {
-+	    command_line = strdup("\0");
-+	    command_line_len = 1;
+@@ -119,6 +119,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 	unsigned long cmdline_end;
+ 	unsigned long kern16_size_needed;
+ 	unsigned long heap_size = 0;
++	off_t alloc_command_line_len = 0;
+ 
+ 	/*
+ 	 * Find out about the file I am about to load.
+@@ -145,10 +146,12 @@ int do_bzImage_load(struct kexec_info *info,
+ 			dbgprintf("Kernel command line too long for kernel!\n");
+ 			return -1;
+ 		}
++		alloc_command_line_len = (uintmax_t)setup_header.cmdline_size;
+ 	} else {
+ 		if (command_line_len > 255) {
+ 			dbgprintf("WARNING: This kernel may only support 255 byte command lines\n");
+ 		}
++		alloc_command_line_len = 255;
  	}
  
- 	/* Need to append some command line parameters internally in case of
-diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
-index 86e6d13..ec614a4 100644
---- a/kexec/arch/x86_64/kexec-bzImage64.c
-+++ b/kexec/arch/x86_64/kexec-bzImage64.c
-@@ -284,8 +284,12 @@ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (setup_header.protocol_version >= 0x0205) {
+@@ -231,7 +234,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 		if (kern16_size_needed < 4096)
+ 			kern16_size_needed = 4096;
  	}
- 	command_line = concat_cmdline(command_line, append);
- 	command_line_len = 0;
--	if (command_line)
-+	if (command_line) {
- 		command_line_len = strlen(command_line) + 1;
-+	} else {
-+		command_line = strdup("\0");
-+		command_line_len = 1;
-+	}
- 	ramdisk_buf = 0;
- 	if (ramdisk)
- 		ramdisk_buf = slurp_file(ramdisk, &ramdisk_length);
+-	setup_size = kern16_size_needed + command_line_len +
++	setup_size = kern16_size_needed + alloc_command_line_len +
+ 			 PURGATORY_CMDLINE_SIZE;
+ 	real_mode = xmalloc(setup_size);
+ 	memset(real_mode, 0, setup_size);
 -- 
 1.7.12.4.dirty
 
