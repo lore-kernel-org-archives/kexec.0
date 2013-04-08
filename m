@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP2tB-0006f0-0g
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 03:37:02 +0000
-Message-ID: <51623AFD.9000605@cn.fujitsu.com>
-Date: Mon, 08 Apr 2013 11:35:25 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead
- of empty command line
+Received: from mail-pa0-f50.google.com ([209.85.220.50])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UP39y-0006p8-Sw
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 03:54:23 +0000
+Received: by mail-pa0-f50.google.com with SMTP id bg2so3056337pad.37
+ for <kexec@lists.infradead.org>; Sun, 07 Apr 2013 20:54:20 -0700 (PDT)
+Date: Mon, 8 Apr 2013 11:53:45 +0800
+From: Wang YanQing <udknight@gmail.com>
+Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead of
+ empty command line
+Message-ID: <20130408035345.GA6651@udknight>
 References: <20130403094356.GA7259@udknight> <515FB809.3020103@gmail.com>
  <20130407010103.GA2176@udknight> <51610A32.6080200@cn.fujitsu.com>
  <20130407093540.GA4046@udknight> <20130408010804.GA2241@udknight>
-In-Reply-To: <20130408010804.GA2241@udknight>
+ <51623AFD.9000605@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51623AFD.9000605@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,58 +25,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wang YanQing <udknight@gmail.com>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 Cc: jbarnes@sgi.com, tjd21@cl.cam.ac.uk, khalid.aziz@hp.com, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-5LqOIDIwMTPlubQwNOaciDA45pelIDA5OjA4LCBXYW5nIFlhblFpbmcg5YaZ6YGTOgo+IE9uIFN1
-biwgQXByIDA3LCAyMDEzIGF0IDA1OjM1OjQwUE0gKzA4MDAsIFdhbmcgWWFuUWluZyB3cm90ZToK
-Pj4gT24gU3VuLCBBcHIgMDcsIDIwMTMgYXQgMDE6NTQ6NThQTSArMDgwMCwgWmhhbmcgWWFuZmVp
-IHdyb3RlOgo+Pj4gV2l0aCBubyBjb21tYW5kbGluZSwgY2FuIHRoZSBuZXcga2VybmVsIGJvb3Q/
-Cj4+PiBJIHRyaWVkIGluIG15IGJveCBhbmQgdGhlIG5ldyBrZXJuZWwganVzdCBwYW5pY2tlZCBm
-b3IgaXQgY2Fubm90Cj4+PiBmaW5kIGEgcm9vdD0gYXJndW1lbnQgaW4gaXRzIGNvbW1hbmRsaW5l
-Lgo+PiBJIGFtIHN1cmUgdGhlIGtlcm5lbCBib290LCAKPj4gcm9vdGZzX2luaXRjYWxsKHBvcHVs
-YXRlX3Jvb3RmcykgaW4gaW5pdHJhbWZzLmMKPj4gd2VsbCBwb3B1bGF0ZSB0aGUgcm9vdCBmcywg
-YW5kIHRoZXJlIGlzIGEgL2luaXQKPj4gaW4gaW5pdHJhbWZzLCB0aGlzIC9pbml0IHdpbGwgbW91
-bnQgdGhlIHJlYWxseSAKPj4gcm9vdCBkZXZpY2UsIGFuZCB0aGUgc3lzdGVtIGlzIHJ1bm5pbmcu
-Cj4gCj4gWW91ciBrZXJuZWwgcGFuaWMsIGJlY2F1c2UgdGhlIGJlbG93IGxpbmUgaW4gaW5pdC9t
-YWluLmMgZmFpbGVkOgo+IAo+IGlmIChzeXNfYWNjZXNzKChjb25zdCBjaGFyIF9fdXNlciAqKSBy
-YW1kaXNrX2V4ZWN1dGVfY29tbWFuZCwgMCkgIT0gMCkKPiAKPiBrZXJuZWwgdGhlbiBydW4gaW50
-byBwcmVwYXJlX25hbWVzcGFjZSwgYnV0IHByZXBhcmVfbmFtZXNwYWNlIGZhaWxlZCB0b28sCj4g
-dGhlbiB0aGUga2VybmVsIHBhbmljLgo+IAo+IEkgZG9uJ3Qga25vdyB3aHksIGJ1dCBpZiByb290
-ZnNfaW5pdGNhbGwocG9wdWxhdGVfcm9vdGZzKSB3b3JrcyBvaywKPiBrZXJuZWwgZG9uJ3QgbmVl
-ZCB0byBjYWxsIHByZXBhcmVfbmFtZXNwYWNlLCBiZWNhdXNlIHRoZSBkZWNvbXByZXNzZWQgCj4g
-aW5pdHJhbWZzIHdpbGwgYmVjb21lIHRoZSByb290IGZzIGFuZCBzeXNfYWNjZXNzIHdpbGwgc3Vj
-Y2Vzcy4KPiAKPiBTb3JyeSBmb3IgSSBmb3JnZXQgdG8gbWVudGlvbiBteSB0ZXN0IGtlcm5lbCBp
-cyB2My44LjYsIAoKSSB0cmllZCAzLjguMCBrZXJuZWwuIFVuZm9ydHVuYXRlbHksIHBhbmlja2Vk
-IGFnYWluLiBGb3Igc29tZSByZWFzb24sIEkgZGlkbid0CnNlZSB0aGUgcGFuaWMgbWVzc2FnZS4K
-CmJ1dCBpZiBteSBtZW1vcnkgZG9uJ3QgbGllIG1lLAo+IEkgY2FuIGJvb3QgdjIuNi4zMiB3aXRo
-b3V0IGEgcm9vdD0gcGFyYW1ldGVyLCB3ZSBoYWQgdXNlIHYyLjYuMzIgYXMgcHJvZHVjdCBrZXJu
-ZWwKPiBzdGlsbCBtb3JlIHRoYW4gb25lIHllYXIgdHdvIHllYXJzIGFnby4KClNpZ2gsIEkgdHJp
-ZWQgaW4gYSByZWFsIGJveCBhbmQgYSBrdm0gbWFjaGluZS4gQm90aCBwYW5pY2tlZCB3aXRoIG5v
-IHJvb3Q9IGFyZ3VtZW50Cm1lc3NhZ2UuIEkgZG9uJ3Qga25vdyB3aHkuCgpBbnl3YXksIEp1c3Qg
-ZnJvbSB0aGUgY29kZSwgeW91ciBwYXRjaCBkaWRuJ3QgZml4IGFsbCB0aGUgcG9zc2libGUgcGxh
-Y2UuCmRvX2J6SW1hZ2U2NF9sb2FkIG1heSBhbHNvIGNhbGwgc2V0dXBfbGludXhfYm9vdGxvYWRl
-cl9wYXJhbWV0ZXJzX2hpZ2ggd2l0aAphIG51bGwgY29tbWFuZGxpbmUuIFNvIHdoeSBub3QgY2hh
-bmdlIHRoZSBjaGVjayBpbgpzZXR1cF9saW51eF9ib290bG9hZGVyX3BhcmFtZXRlcnNfaGlnaC4K
-Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCmRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYv
-eDg2LWxpbnV4LXNldHVwLmMgYi9rZXhlYy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMKaW5k
-ZXggNDU0ZmFkNi4uNmViMmU2ZSAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51
-eC1zZXR1cC5jCisrKyBiL2tleGVjL2FyY2gvaTM4Ni94ODYtbGludXgtc2V0dXAuYwpAQCAtMTE2
-LDcgKzExNiw4IEBAIHZvaWQgc2V0dXBfbGludXhfYm9vdGxvYWRlcl9wYXJhbWV0ZXJzX2hpZ2go
-CiAgICAgICAgLyogRmlsbCBpbiB0aGUgY29tbWFuZCBsaW5lICovCiAgICAgICAgaWYgKGNtZGxp
-bmVfbGVuID4gQ09NTUFORF9MSU5FX1NJWkUpIHsKICAgICAgICAgICAgICAgIGNtZGxpbmVfbGVu
-ID0gQ09NTUFORF9MSU5FX1NJWkU7Ci0gICAgICAgfQorICAgICAgIH0gZWxzZSBpZiAoY21kbGlu
-ZV9sZW4gPT0gMCkKKyAgICAgICAgICAgICAgIHJldHVybjsKICAgICAgICBjbWRsaW5lX3B0ciA9
-ICgoY2hhciAqKXJlYWxfbW9kZSkgKyBjbWRsaW5lX29mZnNldDsKICAgICAgICBtZW1jcHkoY21k
-bGluZV9wdHIsIGNtZGxpbmUsIGNtZGxpbmVfbGVuKTsKICAgICAgICBjbWRsaW5lX3B0cltjbWRs
-aW5lX2xlbiAtIDFdID0gJ1wwJzsKClRoYW5rcwpaaGFuZwoKPiAKPiBUaGFua3MKPiAKPiAKPiBf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtleGVjIG1h
-aWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+On Mon, Apr 08, 2013 at 11:35:25AM +0800, Zhang Yanfei wrote:
+> I tried 3.8.0 kernel. Unfortunately, panicked again. For some reason, I didn't
+> see the panic message.
+> 
+> >but if my memory don't lie me,
+> > I can boot v2.6.32 without a root= parameter, we had use v2.6.32 as product kernel
+> > still more than one year two years ago.
+> 
+> Sigh, I tried in a real box and a kvm machine. Both panicked with no root= argument
+> message. I don't know why.
+
+It maybe your CONFIG relation problem, I guess. I have booted ok more than 3 times.
+Are your have CONFIG_BLK_DEV_INITRD=y in .config? And your cpio format initramfs
+has init script in root directory? And your init script will auto-mount your really
+device right before switch_root into it?
+
+> Anyway, Just from the code, your patch didn't fix all the possible place.
+> do_bzImage64_load may also call setup_linux_bootloader_parameters_high with
+> a null commandline. So why not change the check in
+> setup_linux_bootloader_parameters_high.
+Your are right. But your patch is wrong too.
+See below.
+
+> 
+> --------------------------
+> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+> index 454fad6..6eb2e6e 100644
+> --- a/kexec/arch/i386/x86-linux-setup.c
+> +++ b/kexec/arch/i386/x86-linux-setup.c
+> @@ -116,7 +116,8 @@ void setup_linux_bootloader_parameters_high(
+>         /* Fill in the command line */
+>         if (cmdline_len > COMMAND_LINE_SIZE) {
+>                 cmdline_len = COMMAND_LINE_SIZE;
+> -       }
+> +       } else if (cmdline_len == 0)
+> +               return;
+Can't just return, we must set the string termination guard like below:
+
++ else if (cmdline_len == 0)
++       cmdline_len = 1;
+
+If you agreed, maybe I can resend the v2 patch.
+>         cmdline_ptr = ((char *)real_mode) + cmdline_offset;
+>         memcpy(cmdline_ptr, cmdline, cmdline_len);
+>         cmdline_ptr[cmdline_len - 1] = '\0';
+> 
+
+Thanks.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
