@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPHIZ-000718-Di
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 19:00:12 +0000
+ id 1UPHIa-000719-EJ
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 19:00:14 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 2/8] xen: make GUEST_HANDLE_64() and uint64_aligned_t
- available everywhere
-Date: Mon, 8 Apr 2013 19:59:47 +0100
-Message-ID: <1365447593-11988-3-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 7/8] libxc: add hypercall buffer arrays
+Date: Mon, 8 Apr 2013 19:59:52 +0100
+Message-ID: <1365447593-11988-8-git-send-email-david.vrabel@citrix.com>
 In-Reply-To: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
 References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
@@ -28,75 +27,138 @@ Cc: Ian Jackson <Ian.Jackson@eu.citrix.com>, Daniel Kiper <daniel.kiper@oracle.c
 
 From: David Vrabel <david.vrabel@citrix.com>
 
-GUEST_HANDLE_64() and uint64_aligned_t allow hypercall ABI structures
-to be identical (binary compatible) for 32 and 64-bit guests.  They
-are currently limited to only being available for use in sysctls and
-domctls.  Relax this limit so it may be used by any new structures.
-
-There is a minimal cost for 32-bit guests on 64-but hypervisors as
-set_guest_handle() needs to 0 the whole field on GUEST_HANDLE_64()
-handles, but this is expected to be less than the overhead of having
-to translate compat structures.
+Hypercall buffer arrays are used when a hypercall takes a variable
+length array of buffers.
 
 Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+Acked-by: Ian Campbell <ian.campbell@citrix.com>
 ---
- xen/include/public/arch-x86/xen-x86_32.h |    4 +---
- xen/include/public/xen.h                 |   13 ++++++++-----
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ tools/libxc/xc_hcall_buf.c |   73 ++++++++++++++++++++++++++++++++++++++++++++
+ tools/libxc/xenctrl.h      |   27 ++++++++++++++++
+ 2 files changed, 100 insertions(+), 0 deletions(-)
 
-diff --git a/xen/include/public/arch-x86/xen-x86_32.h b/xen/include/public/arch-x86/xen-x86_32.h
-index 1504191..f6b4f49 100644
---- a/xen/include/public/arch-x86/xen-x86_32.h
-+++ b/xen/include/public/arch-x86/xen-x86_32.h
-@@ -91,8 +91,7 @@
- #define machine_to_phys_mapping ((unsigned long *)MACH2PHYS_VIRT_START)
- #endif
+diff --git a/tools/libxc/xc_hcall_buf.c b/tools/libxc/xc_hcall_buf.c
+index c354677..e762a93 100644
+--- a/tools/libxc/xc_hcall_buf.c
++++ b/tools/libxc/xc_hcall_buf.c
+@@ -228,6 +228,79 @@ void xc__hypercall_bounce_post(xc_interface *xch, xc_hypercall_buffer_t *b)
+     xc__hypercall_buffer_free(xch, b);
+ }
  
--/* 32-/64-bit invariability for control interfaces (domctl/sysctl). */
--#if defined(__XEN__) || defined(__XEN_TOOLS__)
-+/* 32-/64-bit invariability. */
- #undef ___DEFINE_XEN_GUEST_HANDLE
- #define ___DEFINE_XEN_GUEST_HANDLE(name, type)                  \
-     typedef struct { type *p; }                                 \
-@@ -107,7 +106,6 @@
- #define uint64_aligned_t uint64_t __attribute__((aligned(8)))
- #define __XEN_GUEST_HANDLE_64(name) __guest_handle_64_ ## name
- #define XEN_GUEST_HANDLE_64(name) __XEN_GUEST_HANDLE_64(name)
--#endif
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/xen/include/public/xen.h b/xen/include/public/xen.h
-index e9431e2..af421a2 100644
---- a/xen/include/public/xen.h
-+++ b/xen/include/public/xen.h
-@@ -840,9 +840,14 @@ __DEFINE_XEN_GUEST_HANDLE(uint64, uint64_t);
- 
- #endif /* !__ASSEMBLY__ */
- 
--/* Default definitions for macros used by domctl/sysctl. */
--#if defined(__XEN__) || defined(__XEN_TOOLS__)
--
-+/*
-+ * Default definitions for 32/64-bit invariant macros.
-+ *
-+ * Use these in ABI structures that should be identical for 32 and
-+ * 64-bit guests. There is some (very small) overhead in using
-+ * XEN_GUEST_HANDLE_64() instead of XEN_GUEST_HANDLE() so avoid for
-+ * very hot paths.
-+ */
- #ifndef uint64_aligned_t
- #define uint64_aligned_t uint64_t
- #endif
-@@ -857,8 +862,6 @@ struct xenctl_cpumap {
- };
- #endif
- 
--#endif /* defined(__XEN__) || defined(__XEN_TOOLS__) */
--
- #endif /* __XEN_PUBLIC_XEN_H__ */
++struct xc_hypercall_buffer_array {
++    unsigned max_bufs;
++    xc_hypercall_buffer_t *bufs;
++};
++
++xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch,
++                                                              unsigned n)
++{
++    xc_hypercall_buffer_array_t *array;
++    xc_hypercall_buffer_t *bufs = NULL;
++
++    array = malloc(sizeof(*array));
++    if ( array == NULL )
++        goto error;
++
++    bufs = calloc(n, sizeof(*bufs));
++    if ( bufs == NULL )
++        goto error;
++
++    array->max_bufs = n;
++    array->bufs     = bufs;
++
++    return array;
++
++error:
++    free(bufs);
++    free(array);
++    return NULL;
++}
++
++void *xc__hypercall_buffer_array_alloc(xc_interface *xch,
++                                       xc_hypercall_buffer_array_t *array,
++                                       unsigned index,
++                                       xc_hypercall_buffer_t *hbuf,
++                                       size_t size)
++{
++    void *buf;
++
++    if ( index >= array->max_bufs || array->bufs[index].hbuf )
++        abort();
++
++    buf = xc__hypercall_buffer_alloc(xch, hbuf, size);
++    if ( buf )
++        array->bufs[index] = *hbuf;
++    return buf;
++}
++
++void *xc__hypercall_buffer_array_get(xc_interface *xch,
++                                     xc_hypercall_buffer_array_t *array,
++                                     unsigned index,
++                                     xc_hypercall_buffer_t *hbuf)
++{
++    if ( index >= array->max_bufs || array->bufs[index].hbuf == NULL )
++        abort();
++
++    *hbuf = array->bufs[index];
++    return array->bufs[index].hbuf;
++}
++
++void xc_hypercall_buffer_array_destroy(xc_interface *xc,
++                                       xc_hypercall_buffer_array_t *array)
++{
++    unsigned i;
++
++    if ( array == NULL )
++        return;
++
++    for (i = 0; i < array->max_bufs; i++ )
++        xc__hypercall_buffer_free(xc, &array->bufs[i]);
++    free(array->bufs);
++    free(array);
++}
++
+ /*
+  * Local variables:
+  * mode: C
+diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
+index 32122fd..c3b2c28 100644
+--- a/tools/libxc/xenctrl.h
++++ b/tools/libxc/xenctrl.h
+@@ -317,6 +317,33 @@ void xc__hypercall_buffer_free_pages(xc_interface *xch, xc_hypercall_buffer_t *b
+ #define xc_hypercall_buffer_free_pages(_xch, _name, _nr) xc__hypercall_buffer_free_pages(_xch, HYPERCALL_BUFFER(_name), _nr)
  
  /*
++ * Array of hypercall buffers.
++ *
++ * Create an array with xc_hypercall_buffer_array_create() and
++ * populate it by declaring one hypercall buffer in a loop and
++ * allocating the buffer with xc_hypercall_buffer_array_alloc().
++ *
++ * To access a previously allocated buffers, declare a new hypercall
++ * buffer and call xc_hypercall_buffer_array_get().
++ *
++ * Destroy the array with xc_hypercall_buffer_array_destroy() to free
++ * the array and all its alocated hypercall buffers.
++ */
++struct xc_hypercall_buffer_array;
++typedef struct xc_hypercall_buffer_array xc_hypercall_buffer_array_t;
++
++xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch, unsigned n);
++void *xc__hypercall_buffer_array_alloc(xc_interface *xch, xc_hypercall_buffer_array_t *array,
++                                       unsigned index, xc_hypercall_buffer_t *hbuf, size_t size);
++#define xc_hypercall_buffer_array_alloc(_xch, _array, _index, _name, _size) \
++    xc__hypercall_buffer_array_alloc(_xch, _array, _index, HYPERCALL_BUFFER(_name), _size)
++void *xc__hypercall_buffer_array_get(xc_interface *xch, xc_hypercall_buffer_array_t *array,
++                                     unsigned index, xc_hypercall_buffer_t *hbuf);
++#define xc_hypercall_buffer_array_get(_xch, _array, _index, _name, _size) \
++    xc__hypercall_buffer_array_get(_xch, _array, _index, HYPERCALL_BUFFER(_name))
++void xc_hypercall_buffer_array_destroy(xc_interface *xc, xc_hypercall_buffer_array_t *array);
++
++/*
+  * CPUMAP handling
+  */
+ typedef uint8_t *xc_cpumap_t;
 -- 
 1.7.2.5
 
