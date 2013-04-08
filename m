@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pa0-f53.google.com ([209.85.220.53])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP0ZQ-00050O-8s
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 01:08:28 +0000
-Received: by mail-pa0-f53.google.com with SMTP id bh4so2951535pad.40
- for <kexec@lists.infradead.org>; Sun, 07 Apr 2013 18:08:25 -0700 (PDT)
-Date: Mon, 8 Apr 2013 09:08:04 +0800
-From: Wang YanQing <udknight@gmail.com>
-Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead of
- empty command line
-Message-ID: <20130408010804.GA2241@udknight>
-References: <20130403094356.GA7259@udknight> <515FB809.3020103@gmail.com>
- <20130407010103.GA2176@udknight> <51610A32.6080200@cn.fujitsu.com>
- <20130407093540.GA4046@udknight>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UP11g-0005Pv-Fb
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 01:37:41 +0000
+Date: Mon, 8 Apr 2013 10:37:37 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec, i386: Fix build warning of size_t print
+Message-ID: <20130408013736.GB13103@verge.net.au>
+References: <515FB51C.70005@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130407093540.GA4046@udknight>
+In-Reply-To: <515FB51C.70005@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,43 +19,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: jbarnes@sgi.com, tjd21@cl.cam.ac.uk, khalid.aziz@hp.com, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Sun, Apr 07, 2013 at 05:35:40PM +0800, Wang YanQing wrote:
-> On Sun, Apr 07, 2013 at 01:54:58PM +0800, Zhang Yanfei wrote:
-> > With no commandline, can the new kernel boot?
-> > I tried in my box and the new kernel just panicked for it cannot
-> > find a root= argument in its commandline.
-> I am sure the kernel boot, 
-> rootfs_initcall(populate_rootfs) in initramfs.c
-> well populate the root fs, and there is a /init
-> in initramfs, this /init will mount the really 
-> root device, and the system is running.
-
-Your kernel panic, because the below line in init/main.c failed:
-
-if (sys_access((const char __user *) ramdisk_execute_command, 0) != 0)
-
-kernel then run into prepare_namespace, but prepare_namespace failed too,
-then the kernel panic.
-
-I don't know why, but if rootfs_initcall(populate_rootfs) works ok,
-kernel don't need to call prepare_namespace, because the decompressed 
-initramfs will become the root fs and sys_access will success.
-
-Sorry for I forget to mention my test kernel is v3.8.6, but if my memory don't lie me,
-I can boot v2.6.32 without a root= parameter, we had use v2.6.32 as product kernel
-still more than one year two years ago.
-
-Thanks
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCBBcHIgMDYsIDIwMTMgYXQgMDE6Mzk6NDBQTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
+b3RlOgo+IEZyb206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4g
+Cj4gV2hlbiBjb21waWxlIGtleGVjLXRvb2xzIGluIGkzODYsIHdlIGdvdCB0aGUgZm9sbG93aW5n
+IHdhcm5pbmdzOgo+IAo+IGtleGVjL2tleGVjLWVsZi1yZWwuYzogSW4gZnVuY3Rpb24g4oCYZWxm
+X3JlbF9zZXRfc3ltYm9s4oCZOgo+IGtleGVjL2tleGVjLWVsZi1yZWwuYzo1MTc6IHdhcm5pbmc6
+IGZvcm1hdCDigJglbGTigJkgZXhwZWN0cyB0eXBlIOKAmGxvbmcgaW504oCZLCBidXQgYXJndW1l
+bnQgNCBoYXMgdHlwZSDigJhzaXplX3TigJkKPiBrZXhlYy9rZXhlYy1lbGYtcmVsLmM6IEluIGZ1
+bmN0aW9uIOKAmGVsZl9yZWxfZ2V0X3N5bWJvbOKAmToKPiBrZXhlYy9rZXhlYy1lbGYtcmVsLmM6
+NTQxOiB3YXJuaW5nOiBmb3JtYXQg4oCYJWxk4oCZIGV4cGVjdHMgdHlwZSDigJhsb25nIGludOKA
+mSwgYnV0IGFyZ3VtZW50IDQgaGFzIHR5cGUg4oCYc2l6ZV904oCZCj4gCj4gVGhpcyBpcyBiZWNh
+dXNlIHRoZSB0d28gZnVuY3Rpb25zIG91dHB1dCBhIHNpemVfdCB2YWx1ZSBhcyAlbGQKPiB3aGVu
+IGl0IHNob3VsZCBiZSAlemQsIHJlc3VsdGluZyBpbiB0aGlzIHdhcm5pbmcuCgpUaGFua3MsCgpU
+aGlzIGNoYW5nZSBsb29rcyBnb29kIHRvIG1lLCBob3dldmVyLCB0aGUgcGF0Y2ggZG9lcwpub3Qg
+YXBwZWFyIHRvIGFwcGx5IG9uIHRoZSBtYXN0ZXIgYnJhbmNoIG9mIHRoZSBrZXhlYy10b29scyB0
+cmVlLgpDb3VsZCB5b3UgcmViYXNlIGFuZCByZXBvc3QgaXQ/Cgo+IAo+IFNpZ25lZC1vZmYtYnk6
+IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4gLS0tCj4gIGtleGVj
+L2tleGVjLWVsZi1yZWwuYyB8ICAgIDQgKystLQo+ICAxIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0
+aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMtZWxm
+LXJlbC5jIGIva2V4ZWMva2V4ZWMtZWxmLXJlbC5jCj4gaW5kZXggMzhlMzRlYy4uNmFjZDUwZCAx
+MDA2NDQKPiAtLS0gYS9rZXhlYy9rZXhlYy1lbGYtcmVsLmMKPiArKysgYi9rZXhlYy9rZXhlYy1l
+bGYtcmVsLmMKPiBAQCAtNTEzLDcgKzUxMyw3IEBAIHZvaWQgZWxmX3JlbF9zZXRfc3ltYm9sKHN0
+cnVjdCBtZW1fZWhkciAqZWhkciwKPiAgICAgICAgICAgICAgICAgICAgICAgICBuYW1lKTsKPiAg
+ICAgICAgIH0KPiAgICAgICAgIGlmIChzeW0uc3Rfc2l6ZSAhPSBzaXplKSB7Cj4gLSAgICAgICAg
+ICAgICAgIGRpZSgiU3ltYm9sOiAlcyBoYXMgc2l6ZTogJWxsZCBub3QgJWxkXG4iLAo+ICsgICAg
+ICAgICAgICAgICBkaWUoIlN5bWJvbDogJXMgaGFzIHNpemU6ICVsbGQgbm90ICV6ZFxuIiwKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBuYW1lLCBzeW0uc3Rfc2l6ZSwgc2l6ZSk7Cj4gICAgICAg
+ICB9Cj4gICAgICAgICBzaGRyID0gJmVoZHItPmVfc2hkcltzeW0uc3Rfc2huZHhdOwo+IEBAIC01
+MzcsNyArNTM3LDcgQEAgdm9pZCBlbGZfcmVsX2dldF9zeW1ib2woc3RydWN0IG1lbV9laGRyICpl
+aGRyLAo+ICAgICAgICAgICAgICAgICBkaWUoIlN5bWJvbDogJXMgbm90IGZvdW5kIGNhbm5vdCBn
+ZXRcbiIsIG5hbWUpOwo+ICAgICAgICAgfQo+ICAgICAgICAgaWYgKHN5bS5zdF9zaXplICE9IHNp
+emUpIHsKPiAtICAgICAgICAgICAgICAgZGllKCJTeW1ib2w6ICVzIGhhcyBzaXplOiAlbGxkIG5v
+dCAlbGRcbiIsCj4gKyAgICAgICAgICAgICAgIGRpZSgiU3ltYm9sOiAlcyBoYXMgc2l6ZTogJWxs
+ZCBub3QgJXpkXG4iLAo+ICAgICAgICAgICAgICAgICAgICAgICAgIG5hbWUsIHN5bS5zdF9zaXpl
+LCBzaXplKTsKPiAgICAgICAgIH0KPiAgICAgICAgIHNoZHIgPSAmZWhkci0+ZV9zaGRyW3N5bS5z
+dF9zaG5keF07Cj4gLS0gCj4gMS43LjEKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
