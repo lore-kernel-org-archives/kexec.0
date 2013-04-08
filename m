@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPHIW-000718-Ng
+ id 1UPHIW-000719-Nt
  for kexec@lists.infradead.org; Mon, 08 Apr 2013 19:00:10 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 1/8] x86: give FIX_EFI_MPF its own fixmap entry
-Date: Mon, 8 Apr 2013 19:59:46 +0100
-Message-ID: <1365447593-11988-2-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
-References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCHv3 0/8] kexec: extend kexec hypercall for use with pv-ops
+ kernels
+Date: Mon, 8 Apr 2013 19:59:45 +0100
+Message-ID: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,44 +24,41 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: xen-devel@lists.xen.org
 Cc: Ian Jackson <Ian.Jackson@eu.citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Ian Campbell <Ian.Campbell@citrix.com>
 
-From: David Vrabel <david.vrabel@citrix.com>
+The series improves the kexec hypercall by making Xen responsible for
+loading and relocating the image.  This allows kexec to be usable by
+pv-ops kernels and should allow kexec to be usable from a HVM or PVH
+privileged domain.
 
-FIX_EFI_MPF was the same as FIX_KEXEC_BASE_0 which is going away.  So
-add its own entry.
+The first patch is a simple clean-up.
 
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
----
- xen/arch/x86/mpparse.c       |    2 --
- xen/include/asm-x86/fixmap.h |    1 +
- 2 files changed, 1 insertions(+), 2 deletions(-)
+The second patch allows hypercall structures to be ABI compatible
+between 32- and 64-bit guests (by reusing stuff present for domctls
+and sysctls).  This seems better than having to keep adding compat
+handling for new hypercalls etc.
 
-diff --git a/xen/arch/x86/mpparse.c b/xen/arch/x86/mpparse.c
-index 97ab5d3..f13ba93 100644
---- a/xen/arch/x86/mpparse.c
-+++ b/xen/arch/x86/mpparse.c
-@@ -538,8 +538,6 @@ static inline void __init construct_default_ISA_mptable(int mpc_default_type)
- 	}
- }
- 
--#define FIX_EFI_MPF FIX_KEXEC_BASE_0
--
- static __init void efi_unmap_mpf(void)
- {
- 	if (efi_enabled)
-diff --git a/xen/include/asm-x86/fixmap.h b/xen/include/asm-x86/fixmap.h
-index d026d78..2eefcf4 100644
---- a/xen/include/asm-x86/fixmap.h
-+++ b/xen/include/asm-x86/fixmap.h
-@@ -71,6 +71,7 @@ enum fixed_addresses {
-     FIX_APEI_RANGE_BASE,
-     FIX_APEI_RANGE_END = FIX_APEI_RANGE_BASE + FIX_APEI_RANGE_MAX -1,
-     FIX_IGD_MMIO,
-+    FIX_EFI_MPF,
-     __end_of_fixed_addresses
- };
- 
--- 
-1.7.2.5
+Patch 3 introduces the new ABI.
+
+Patch 4 and 5 nearly completely reimplement the kexec load, unload and
+exec sub-ops.  The old load_v1 sub-op is then implemented on top of
+the new code.
+
+Patch 6 calls the kexec image when dom0 crashes.  This avoids having
+to alter dom0 kernels to do a exec sub-op call on crash -- a
+SHUTDOWN_crash by dom0 will trigger the kexec.
+
+Patches 7 and 8 add the libxc API for the kexec calls.  These have
+been acked-by Ian Campbell already.
+
+The required patch series for kexec-tools will be posted shortly.
+
+Changes since v2: 
+
+- Provide old struct xen_kexec_load if __XEN_INTERFACE_VERSION__ < 4.3
+- Adjust new struct xen_kexec_load to avoid unnecessary padding.
+- Use domheap pages for the image and control pages.
+- Remove the DBG() macros from the reloc code.
+
+David
 
 
 _______________________________________________
