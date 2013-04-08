@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pa0-f42.google.com ([209.85.220.42])
+Received: from mail-da0-x232.google.com ([2607:f8b0:400e:c00::232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP8HO-0005Na-PB
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 09:22:23 +0000
-Received: by mail-pa0-f42.google.com with SMTP id kq13so3156905pab.29
- for <kexec@lists.infradead.org>; Mon, 08 Apr 2013 02:22:21 -0700 (PDT)
-Date: Mon, 8 Apr 2013 17:21:53 +0800
+ id 1UP8Id-0005QP-KY
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 09:23:40 +0000
+Received: by mail-da0-f50.google.com with SMTP id t1so2557095dae.37
+ for <kexec@lists.infradead.org>; Mon, 08 Apr 2013 02:23:36 -0700 (PDT)
+Date: Mon, 8 Apr 2013 17:23:25 +0800
 From: Wang YanQing <udknight@gmail.com>
-Subject: [PATCH]kexec:i386/kexec-[bzImage|elf-x86]:x86_64/kexec-bzImage64:
-Message-ID: <20130408092153.GA23281@udknight>
+Subject: [PATCH
+ RESEND]kexec:i386/kexec-[bzImage|elf-x86]:x86_64/kexec-bzImage64: Use "\0"
+ as command line instead of empty command line
+Message-ID: <20130408092325.GA23318@udknight>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
