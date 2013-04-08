@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPHIW-000719-Nt
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 19:00:10 +0000
+ id 1UPHIZ-000719-EZ
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 19:00:11 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCHv3 0/8] kexec: extend kexec hypercall for use with pv-ops
- kernels
-Date: Mon, 8 Apr 2013 19:59:45 +0100
-Message-ID: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 6/8] xen: kexec crash image when dom0 crashes
+Date: Mon, 8 Apr 2013 19:59:51 +0100
+Message-ID: <1365447593-11988-7-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
+References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,41 +25,29 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: xen-devel@lists.xen.org
 Cc: Ian Jackson <Ian.Jackson@eu.citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Ian Campbell <Ian.Campbell@citrix.com>
 
-The series improves the kexec hypercall by making Xen responsible for
-loading and relocating the image.  This allows kexec to be usable by
-pv-ops kernels and should allow kexec to be usable from a HVM or PVH
-privileged domain.
+From: David Vrabel <david.vrabel@citrix.com>
 
-The first patch is a simple clean-up.
+Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+---
+ xen/common/shutdown.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-The second patch allows hypercall structures to be ABI compatible
-between 32- and 64-bit guests (by reusing stuff present for domctls
-and sysctls).  This seems better than having to keep adding compat
-handling for new hypercalls etc.
-
-Patch 3 introduces the new ABI.
-
-Patch 4 and 5 nearly completely reimplement the kexec load, unload and
-exec sub-ops.  The old load_v1 sub-op is then implemented on top of
-the new code.
-
-Patch 6 calls the kexec image when dom0 crashes.  This avoids having
-to alter dom0 kernels to do a exec sub-op call on crash -- a
-SHUTDOWN_crash by dom0 will trigger the kexec.
-
-Patches 7 and 8 add the libxc API for the kexec calls.  These have
-been acked-by Ian Campbell already.
-
-The required patch series for kexec-tools will be posted shortly.
-
-Changes since v2: 
-
-- Provide old struct xen_kexec_load if __XEN_INTERFACE_VERSION__ < 4.3
-- Adjust new struct xen_kexec_load to avoid unnecessary padding.
-- Use domheap pages for the image and control pages.
-- Remove the DBG() macros from the reloc code.
-
-David
+diff --git a/xen/common/shutdown.c b/xen/common/shutdown.c
+index 73a7d7b..b676a03 100644
+--- a/xen/common/shutdown.c
++++ b/xen/common/shutdown.c
+@@ -47,6 +47,9 @@ void dom0_shutdown(u8 reason)
+     {
+         debugger_trap_immediate();
+         printk("Domain 0 crashed: ");
++#ifdef CONFIG_KEXEC
++        kexec_crash();
++#endif
+         maybe_reboot();
+         break; /* not reached */
+     }
+-- 
+1.7.2.5
 
 
 _______________________________________________
