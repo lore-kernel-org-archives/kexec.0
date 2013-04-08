@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-f170.google.com ([209.85.192.170])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UOm1m-0005wB-Bo
- for kexec@lists.infradead.org; Sun, 07 Apr 2013 09:36:48 +0000
-Received: by mail-pd0-f170.google.com with SMTP id 10so2697519pdi.29
- for <kexec@lists.infradead.org>; Sun, 07 Apr 2013 02:36:42 -0700 (PDT)
-Date: Sun, 7 Apr 2013 17:35:41 +0800
-From: Wang YanQing <udknight@gmail.com>
-Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead of
- empty command line
-Message-ID: <20130407093540.GA4046@udknight>
-References: <20130403094356.GA7259@udknight> <515FB809.3020103@gmail.com>
- <20130407010103.GA2176@udknight> <51610A32.6080200@cn.fujitsu.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UP2pu-0006db-5C
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 03:33:39 +0000
+Date: Mon, 8 Apr 2013 12:33:35 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec, i386: Fix build warning of size_t print
+Message-ID: <20130408033335.GB10151@verge.net.au>
+References: <515FB51C.70005@gmail.com> <20130408013736.GB13103@verge.net.au>
+ <51621FA9.80403@cn.fujitsu.com>
+ <20130408020814.GG13103@verge.net.au>
+ <5162273D.70903@cn.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51610A32.6080200@cn.fujitsu.com>
+In-Reply-To: <5162273D.70903@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,25 +22,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: jbarnes@sgi.com, tjd21@cl.cam.ac.uk, khalid.aziz@hp.com, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On Sun, Apr 07, 2013 at 01:54:58PM +0800, Zhang Yanfei wrote:
-> With no commandline, can the new kernel boot?
-> I tried in my box and the new kernel just panicked for it cannot
-> find a root= argument in its commandline.
-I am sure the kernel boot, 
-rootfs_initcall(populate_rootfs) in initramfs.c
-well populate the root fs, and there is a /init
-in initramfs, this /init will mount the really 
-root device, and the system is running.
- 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBBcHIgMDgsIDIwMTMgYXQgMTA6MTE6MDlBTSArMDgwMCwgWmhhbmcgWWFuZmVpIHdy
+b3RlOgo+IOS6jiAyMDEz5bm0MDTmnIgwOOaXpSAxMDowOCwgU2ltb24gSG9ybWFuIOWGmemBkzoK
+PiA+IE9uIE1vbiwgQXByIDA4LCAyMDEzIGF0IDA5OjM4OjQ5QU0gKzA4MDAsIFpoYW5nIFlhbmZl
+aSB3cm90ZToKPiA+PiDkuo4gMjAxM+W5tDA05pyIMDjml6UgMDk6MzcsIFNpbW9uIEhvcm1hbiDl
+hpnpgZM6Cj4gPj4+IE9uIFNhdCwgQXByIDA2LCAyMDEzIGF0IDAxOjM5OjQwUE0gKzA4MDAsIFpo
+YW5nIFlhbmZlaSB3cm90ZToKPiA+Pj4+IEZyb206IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5mZWlA
+Y24uZnVqaXRzdS5jb20+Cj4gPj4+Pgo+ID4+Pj4gV2hlbiBjb21waWxlIGtleGVjLXRvb2xzIGlu
+IGkzODYsIHdlIGdvdCB0aGUgZm9sbG93aW5nIHdhcm5pbmdzOgo+ID4+Pj4KPiA+Pj4+IGtleGVj
+L2tleGVjLWVsZi1yZWwuYzogSW4gZnVuY3Rpb24g4oCYZWxmX3JlbF9zZXRfc3ltYm9s4oCZOgo+
+ID4+Pj4ga2V4ZWMva2V4ZWMtZWxmLXJlbC5jOjUxNzogd2FybmluZzogZm9ybWF0IOKAmCVsZOKA
+mSBleHBlY3RzIHR5cGUg4oCYbG9uZyBpbnTigJksIGJ1dCBhcmd1bWVudCA0IGhhcyB0eXBlIOKA
+mHNpemVfdOKAmQo+ID4+Pj4ga2V4ZWMva2V4ZWMtZWxmLXJlbC5jOiBJbiBmdW5jdGlvbiDigJhl
+bGZfcmVsX2dldF9zeW1ib2zigJk6Cj4gPj4+PiBrZXhlYy9rZXhlYy1lbGYtcmVsLmM6NTQxOiB3
+YXJuaW5nOiBmb3JtYXQg4oCYJWxk4oCZIGV4cGVjdHMgdHlwZSDigJhsb25nIGludOKAmSwgYnV0
+IGFyZ3VtZW50IDQgaGFzIHR5cGUg4oCYc2l6ZV904oCZCj4gPj4+Pgo+ID4+Pj4gVGhpcyBpcyBi
+ZWNhdXNlIHRoZSB0d28gZnVuY3Rpb25zIG91dHB1dCBhIHNpemVfdCB2YWx1ZSBhcyAlbGQKPiA+
+Pj4+IHdoZW4gaXQgc2hvdWxkIGJlICV6ZCwgcmVzdWx0aW5nIGluIHRoaXMgd2FybmluZy4KPiA+
+Pj4KPiA+Pj4gVGhhbmtzLAo+ID4+Pgo+ID4+PiBUaGlzIGNoYW5nZSBsb29rcyBnb29kIHRvIG1l
+LCBob3dldmVyLCB0aGUgcGF0Y2ggZG9lcwo+ID4+PiBub3QgYXBwZWFyIHRvIGFwcGx5IG9uIHRo
+ZSBtYXN0ZXIgYnJhbmNoIG9mIHRoZSBrZXhlYy10b29scyB0cmVlLgo+ID4+PiBDb3VsZCB5b3Ug
+cmViYXNlIGFuZCByZXBvc3QgaXQ/Cj4gPj4KPiA+PiBSZWFsbHk/IE1heWJlIEkgbWFkZSBzb21l
+IG1pc3Rha2UuIEFueXdheSBJIHdpbGwgcmVnZW5lcmF0ZSBpdCBhbmQKPiA+PiByZXNlbmQgaXQg
+YWdhaW4uCj4gPiAKPiA+IFBlcmhhcHMgSSBtYWRlIGEgbWlzdGFrZSBeKQo+ID4gCj4gPiBUaGUg
+aGVhZCBjb21taXQgSSBoYXZlIGlzOgo+ID4gCj4gPiBjb21taXQgOTY5ZjNlOGMxYzUzNGY2M2I4
+NjkxODNjY2YyOTJiY2FlZjBlNTU1OAo+ID4gQXV0aG9yOiBSaWNoYXJkIFdlaW5iZXJnZXIgPHJp
+Y2hhcmRAbm9kLmF0Pgo+ID4gRGF0ZTogICBNb24gQXByIDEgMTM6MjM6MDQgMjAxMyArMDIwMAo+
+ID4gCj4gPiAgICAgcHVyZ2F0b3J5OiByZW1vdmUgYXJjaC9pMzg2L3RpbWVyLmMKPiA+ICAgICAK
+PiA+ICAgICBUaGlzIGZpbGUgaXMgbm93aGVyZSByZWZlcmVuY2VkLCBsZXQncyBnZXQgcmlkIG9m
+IGl0Lgo+ID4gICAgIAo+ID4gICAgIFNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgV2VpbmJlcmdlciA8
+cmljaGFyZEBub2QuYXQ+Cj4gPiAgICAgU2lnbmVkLW9mZi1ieTogU2ltb24gSG9ybWFuIDxob3Jt
+c0B2ZXJnZS5uZXQuYXU+Cj4gPiAKPiAKPiBTYW1lIHdpdGggeW91Lgo+IAo+IEkgcmVnZW5lcmF0
+ZSBvbmUsIHNlZSBiZWxvdzoKClRoYW5rcywgYXBwbGllZC4KCj4gLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gCj4gRnJvbTogWmhhbmcgWWFuZmVpIDx6aGFu
+Z3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiBEYXRlOiBNb24sIDggQXByIDIwMTMgMDI6MDU6MDcg
+KzA4MDAKPiBTdWJqZWN0OiBbUEFUQ0hdIGtleGVjLCBpMzg2OiBGaXggYnVpbGQgd2FybmluZyBv
+ZiBzaXplX3QgcHJpbnQKPiAKPiBXaGVuIGNvbXBpbGUga2V4ZWMtdG9vbHMgaW4gaTM4Niwgd2Ug
+Z290IHRoZSBmb2xsb3dpbmcgd2FybmluZ3M6Cj4gCj4ga2V4ZWMva2V4ZWMtZWxmLXJlbC5jOiBJ
+biBmdW5jdGlvbiDigJhlbGZfcmVsX3NldF9zeW1ib2zigJk6Cj4ga2V4ZWMva2V4ZWMtZWxmLXJl
+bC5jOjUxNzogd2FybmluZzogZm9ybWF0IOKAmCVsZOKAmSBleHBlY3RzIHR5cGUg4oCYbG9uZyBp
+bnTigJksIGJ1dCBhcmd1bWVudCA0IGhhcyB0eXBlIOKAmHNpemVfdOKAmQo+IGtleGVjL2tleGVj
+LWVsZi1yZWwuYzogSW4gZnVuY3Rpb24g4oCYZWxmX3JlbF9nZXRfc3ltYm9s4oCZOgo+IGtleGVj
+L2tleGVjLWVsZi1yZWwuYzo1NDE6IHdhcm5pbmc6IGZvcm1hdCDigJglbGTigJkgZXhwZWN0cyB0
+eXBlIOKAmGxvbmcgaW504oCZLCBidXQgYXJndW1lbnQgNCBoYXMgdHlwZSDigJhzaXplX3TigJkK
+PiAKPiBUaGlzIGlzIGJlY2F1c2UgdGhlIHR3byBmdW5jdGlvbnMgb3V0cHV0IGEgc2l6ZV90IHZh
+bHVlIGFzICVsZAo+IHdoZW4gaXQgc2hvdWxkIGJlICV6ZCwgcmVzdWx0aW5nIGluIHRoaXMgd2Fy
+bmluZy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZYW5mZWkgPHpoYW5neWFuZmVpQGNuLmZ1
+aml0c3UuY29tPgo+IC0tLQo+ICBrZXhlYy9rZXhlYy1lbGYtcmVsLmMgfCAgICA0ICsrLS0KPiAg
+MSBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlm
+ZiAtLWdpdCBhL2tleGVjL2tleGVjLWVsZi1yZWwuYyBiL2tleGVjL2tleGVjLWVsZi1yZWwuYwo+
+IGluZGV4IDM4ZTM0ZWMuLmY1OTE0MGYgMTAwNjQ0Cj4gLS0tIGEva2V4ZWMva2V4ZWMtZWxmLXJl
+bC5jCj4gKysrIGIva2V4ZWMva2V4ZWMtZWxmLXJlbC5jCj4gQEAgLTUxMyw3ICs1MTMsNyBAQCB2
+b2lkIGVsZl9yZWxfc2V0X3N5bWJvbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIsCj4gIAkJCW5hbWUp
+Owo+ICAJfQo+ICAJaWYgKHN5bS5zdF9zaXplICE9IHNpemUpIHsKPiAtCQlkaWUoIlN5bWJvbDog
+JXMgaGFzIHNpemU6ICVsbGQgbm90ICVsZFxuIiwKPiArCQlkaWUoIlN5bWJvbDogJXMgaGFzIHNp
+emU6ICVsbGQgbm90ICV6ZFxuIiwKPiAgCQkJbmFtZSwgc3ltLnN0X3NpemUsIHNpemUpOwo+ICAJ
+fQo+ICAJc2hkciA9ICZlaGRyLT5lX3NoZHJbc3ltLnN0X3NobmR4XTsKPiBAQCAtNTM3LDcgKzUz
+Nyw3IEBAIHZvaWQgZWxmX3JlbF9nZXRfc3ltYm9sKHN0cnVjdCBtZW1fZWhkciAqZWhkciwKPiAg
+CQlkaWUoIlN5bWJvbDogJXMgbm90IGZvdW5kIGNhbm5vdCBnZXRcbiIsIG5hbWUpOwo+ICAJfQo+
+ICAJaWYgKHN5bS5zdF9zaXplICE9IHNpemUpIHsKPiAtCQlkaWUoIlN5bWJvbDogJXMgaGFzIHNp
+emU6ICVsbGQgbm90ICVsZFxuIiwKPiArCQlkaWUoIlN5bWJvbDogJXMgaGFzIHNpemU6ICVsbGQg
+bm90ICV6ZFxuIiwKPiAgCQkJbmFtZSwgc3ltLnN0X3NpemUsIHNpemUpOwo+ICAJfQo+ICAJc2hk
+ciA9ICZlaGRyLT5lX3NoZHJbc3ltLnN0X3NobmR4XTsKPiAtLSAKPiAxLjcuMQo+IAo+IAoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
