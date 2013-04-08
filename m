@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-bk0-x22b.google.com ([2a00:1450:4008:c01::22b])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP8cl-0005tp-QX
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 09:44:28 +0000
-Received: by mail-bk0-f43.google.com with SMTP id jm2so2970783bkc.2
- for <kexec@lists.infradead.org>; Mon, 08 Apr 2013 02:44:26 -0700 (PDT)
-Date: Mon, 8 Apr 2013 17:43:58 +0800
-From: Wang YanQing <udknight@gmail.com>
-Subject: [PATCH v2]kexec:i386:kexec-bzImage: Fix pass garbage command line to
- new kernel
-Message-ID: <20130408094358.GB23828@udknight>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UP8s3-0006jb-8t
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 10:00:16 +0000
+Message-ID: <51629338.5080906@cn.fujitsu.com>
+Date: Mon, 08 Apr 2013 17:51:52 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [PATCH v2]kexec:i386:kexec-bzImage: Fix pass garbage command
+ line to new kernel
+References: <20130408094358.GB23828@udknight>
+In-Reply-To: <20130408094358.GB23828@udknight>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,93 +19,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: tjd21@cl.cam.ac.uk, horms@verge.net.au, zhangyanfei@cn.fujitsu.com, ebiederm@xmission.com, hari@in.ibm.com, zhangyanfei.yes@gmail.com
+To: Wang YanQing <udknight@gmail.com>
+Cc: tjd21@cl.cam.ac.uk, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, zhangyanfei.yes@gmail.com
 
-I get garbage output of /proc/cmdline and in dmesg in new
-kernel context when I use kexec to load new kernel bzImage
-without append command line like below:
-
-kexec -l bzImage --initrd=/boot/initramfs
-kexec -e
-
-The reason is kernel copy the command line
-from the bootloader like below which copy/paste
-from linux/arch/x86/kernel/head_32.S:
-
-        movl pa(boot_params) + NEW_CL_POINTER,%esi
-        andl %esi,%esi
-        jz 1f                   # No command line
-        movl $pa(boot_command_line),%edi
-        movl $(COMMAND_LINE_SIZE/4),%ecx
-
-This patch fix it.
-
-[
-although another patch
-"kexec:i386/kexec-[bzImage|elf-x86]:x86_64/kexec-bzImage64: Use "\0" as command line instead of empty command line"
-has resolved the garbage output by put a '\0' at the start, but I thinks this patch has sense too, it stop
-kernel copy not command line data into the command line buffer in kernel
-]
-
-Signed-off-by: Wang YanQing <udknight@gmail.com>
----
-Changes v1-v2:
-1:Fix the wrong cmdline_end's value
- kexec/arch/i386/kexec-bzImage.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 29f280d..2954f92 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -119,6 +119,7 @@ int do_bzImage_load(struct kexec_info *info,
- 	unsigned long cmdline_end;
- 	unsigned long kern16_size_needed;
- 	unsigned long heap_size = 0;
-+	off_t alloc_command_line_len = 0;
- 
- 	/*
- 	 * Find out about the file I am about to load.
-@@ -145,10 +146,12 @@ int do_bzImage_load(struct kexec_info *info,
- 			dbgprintf("Kernel command line too long for kernel!\n");
- 			return -1;
- 		}
-+		alloc_command_line_len = (uintmax_t)setup_header.cmdline_size;
- 	} else {
- 		if (command_line_len > 255) {
- 			dbgprintf("WARNING: This kernel may only support 255 byte command lines\n");
- 		}
-+		alloc_command_line_len = 255;
- 	}
- 
- 	if (setup_header.protocol_version >= 0x0205) {
-@@ -231,7 +234,7 @@ int do_bzImage_load(struct kexec_info *info,
- 		if (kern16_size_needed < 4096)
- 			kern16_size_needed = 4096;
- 	}
--	setup_size = kern16_size_needed + command_line_len +
-+	setup_size = kern16_size_needed + alloc_command_line_len +
- 			 PURGATORY_CMDLINE_SIZE;
- 	real_mode = xmalloc(setup_size);
- 	memset(real_mode, 0, setup_size);
-@@ -366,7 +369,7 @@ int do_bzImage_load(struct kexec_info *info,
- 					 &regs16, sizeof(regs16));
- 	}
- 	elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
--	cmdline_end = setup_base + kern16_size_needed + command_line_len - 1;
-+	cmdline_end = setup_base + kern16_size_needed + alloc_command_line_len - 1;
- 	elf_rel_set_symbol(&info->rhdr, "cmdline_end", &cmdline_end,
- 			   sizeof(unsigned long));
- 
--- 
-1.7.12.4.dirty
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwNOaciDA45pelIDE3OjQzLCBXYW5nIFlhblFpbmcg5YaZ6YGTOgo+IEkgZ2V0
+IGdhcmJhZ2Ugb3V0cHV0IG9mIC9wcm9jL2NtZGxpbmUgYW5kIGluIGRtZXNnIGluIG5ldwo+IGtl
+cm5lbCBjb250ZXh0IHdoZW4gSSB1c2Uga2V4ZWMgdG8gbG9hZCBuZXcga2VybmVsIGJ6SW1hZ2UK
+PiB3aXRob3V0IGFwcGVuZCBjb21tYW5kIGxpbmUgbGlrZSBiZWxvdzoKPiAKPiBrZXhlYyAtbCBi
+ekltYWdlIC0taW5pdHJkPS9ib290L2luaXRyYW1mcwo+IGtleGVjIC1lCj4gCj4gVGhlIHJlYXNv
+biBpcyBrZXJuZWwgY29weSB0aGUgY29tbWFuZCBsaW5lCj4gZnJvbSB0aGUgYm9vdGxvYWRlciBs
+aWtlIGJlbG93IHdoaWNoIGNvcHkvcGFzdGUKPiBmcm9tIGxpbnV4L2FyY2gveDg2L2tlcm5lbC9o
+ZWFkXzMyLlM6Cj4gCj4gICAgICAgICBtb3ZsIHBhKGJvb3RfcGFyYW1zKSArIE5FV19DTF9QT0lO
+VEVSLCVlc2kKPiAgICAgICAgIGFuZGwgJWVzaSwlZXNpCj4gICAgICAgICBqeiAxZiAgICAgICAg
+ICAgICAgICAgICAjIE5vIGNvbW1hbmQgbGluZQo+ICAgICAgICAgbW92bCAkcGEoYm9vdF9jb21t
+YW5kX2xpbmUpLCVlZGkKPiAgICAgICAgIG1vdmwgJChDT01NQU5EX0xJTkVfU0laRS80KSwlZWN4
+Cj4gCj4gVGhpcyBwYXRjaCBmaXggaXQuCj4gCj4gWwo+IGFsdGhvdWdoIGFub3RoZXIgcGF0Y2gK
+PiAia2V4ZWM6aTM4Ni9rZXhlYy1bYnpJbWFnZXxlbGYteDg2XTp4ODZfNjQva2V4ZWMtYnpJbWFn
+ZTY0OiBVc2UgIlwwIiBhcyBjb21tYW5kIGxpbmUgaW5zdGVhZCBvZiBlbXB0eSBjb21tYW5kIGxp
+bmUiCj4gaGFzIHJlc29sdmVkIHRoZSBnYXJiYWdlIG91dHB1dCBieSBwdXQgYSAnXDAnIGF0IHRo
+ZSBzdGFydCwgYnV0IEkgdGhpbmtzIHRoaXMgcGF0Y2ggaGFzIHNlbnNlIHRvbywgaXQgc3RvcAo+
+IGtlcm5lbCBjb3B5IG5vdCBjb21tYW5kIGxpbmUgZGF0YSBpbnRvIHRoZSBjb21tYW5kIGxpbmUg
+YnVmZmVyIGluIGtlcm5lbAoKSSBkb24ndCB0aGluayB0aGUgcGF0Y2ggaXMgbmVjZXNzYXJ5LCBw
+bGVhc2Ugc2VlIGJlbG93LgoKPiBdCj4gCj4gU2lnbmVkLW9mZi1ieTogV2FuZyBZYW5RaW5nIDx1
+ZGtuaWdodEBnbWFpbC5jb20+Cj4gLS0tCj4gQ2hhbmdlcyB2MS12MjoKPiAxOkZpeCB0aGUgd3Jv
+bmcgY21kbGluZV9lbmQncyB2YWx1ZQo+ICBrZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5j
+IHwgNyArKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDIgZGVsZXRp
+b25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMg
+Yi9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jCj4gaW5kZXggMjlmMjgwZC4uMjk1NGY5
+MiAxMDA2NDQKPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jCj4gKysrIGIv
+a2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYwo+IEBAIC0xMTksNiArMTE5LDcgQEAgaW50
+IGRvX2J6SW1hZ2VfbG9hZChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywKPiAgCXVuc2lnbmVkIGxv
+bmcgY21kbGluZV9lbmQ7Cj4gIAl1bnNpZ25lZCBsb25nIGtlcm4xNl9zaXplX25lZWRlZDsKPiAg
+CXVuc2lnbmVkIGxvbmcgaGVhcF9zaXplID0gMDsKPiArCW9mZl90IGFsbG9jX2NvbW1hbmRfbGlu
+ZV9sZW4gPSAwOwo+ICAKPiAgCS8qCj4gIAkgKiBGaW5kIG91dCBhYm91dCB0aGUgZmlsZSBJIGFt
+IGFib3V0IHRvIGxvYWQuCj4gQEAgLTE0NSwxMCArMTQ2LDEyIEBAIGludCBkb19iekltYWdlX2xv
+YWQoc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gIAkJCWRiZ3ByaW50ZigiS2VybmVsIGNvbW1h
+bmQgbGluZSB0b28gbG9uZyBmb3Iga2VybmVsIVxuIik7Cj4gIAkJCXJldHVybiAtMTsKPiAgCQl9
+Cj4gKwkJYWxsb2NfY29tbWFuZF9saW5lX2xlbiA9ICh1aW50bWF4X3Qpc2V0dXBfaGVhZGVyLmNt
+ZGxpbmVfc2l6ZTsKPiAgCX0gZWxzZSB7Cj4gIAkJaWYgKGNvbW1hbmRfbGluZV9sZW4gPiAyNTUp
+IHsKPiAgCQkJZGJncHJpbnRmKCJXQVJOSU5HOiBUaGlzIGtlcm5lbCBtYXkgb25seSBzdXBwb3J0
+IDI1NSBieXRlIGNvbW1hbmQgbGluZXNcbiIpOwo+ICAJCX0KPiArCQlhbGxvY19jb21tYW5kX2xp
+bmVfbGVuID0gMjU1Owo+ICAJfQo+ICAKPiAgCWlmIChzZXR1cF9oZWFkZXIucHJvdG9jb2xfdmVy
+c2lvbiA+PSAweDAyMDUpIHsKPiBAQCAtMjMxLDcgKzIzNCw3IEBAIGludCBkb19iekltYWdlX2xv
+YWQoc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gIAkJaWYgKGtlcm4xNl9zaXplX25lZWRlZCA8
+IDQwOTYpCj4gIAkJCWtlcm4xNl9zaXplX25lZWRlZCA9IDQwOTY7Cj4gIAl9Cj4gLQlzZXR1cF9z
+aXplID0ga2VybjE2X3NpemVfbmVlZGVkICsgY29tbWFuZF9saW5lX2xlbiArCj4gKwlzZXR1cF9z
+aXplID0ga2VybjE2X3NpemVfbmVlZGVkICsgYWxsb2NfY29tbWFuZF9saW5lX2xlbiArCj4gIAkJ
+CSBQVVJHQVRPUllfQ01ETElORV9TSVpFOwo+ICAJcmVhbF9tb2RlID0geG1hbGxvYyhzZXR1cF9z
+aXplKTsKPiAgCW1lbXNldChyZWFsX21vZGUsIDAsIHNldHVwX3NpemUpOwo+IEBAIC0zNjYsNyAr
+MzY5LDcgQEAgaW50IGRvX2J6SW1hZ2VfbG9hZChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywKPiAg
+CQkJCQkgJnJlZ3MxNiwgc2l6ZW9mKHJlZ3MxNikpOwo+ICAJfQo+ICAJZWxmX3JlbF9zZXRfc3lt
+Ym9sKCZpbmZvLT5yaGRyLCAiZW50cnkzMl9yZWdzIiwgJnJlZ3MzMiwgc2l6ZW9mKHJlZ3MzMikp
+Owo+IC0JY21kbGluZV9lbmQgPSBzZXR1cF9iYXNlICsga2VybjE2X3NpemVfbmVlZGVkICsgY29t
+bWFuZF9saW5lX2xlbiAtIDE7Cj4gKwljbWRsaW5lX2VuZCA9IHNldHVwX2Jhc2UgKyBrZXJuMTZf
+c2l6ZV9uZWVkZWQgKyBhbGxvY19jb21tYW5kX2xpbmVfbGVuIC0gMTsKClRoaXMgaXMgb2J2aW91
+c2x5IHdyb25nLiAKUHVyZ2F0b3J5IG1heSBhcHBlbmQgYSBrZXhlY19qdW1wX2JhY2tfZW50cnk9
+IGFyZ3VtZW50IGludG8gdGhlIGNvbW1hbmRsaW5lLiBJdCBpcwphbiBhcmd1bWVudCBiZWxvbmdz
+IHRvIHRoZSBjb21tYW5kbGluZS4gU28gd2h5IHRoZXJlIGlzIGEgYnVmIGZpbGxlZCB3aXRoIDAg
+CihhbGxvY19jb21tYW5kX2xpbmVfbGVuKSBiZWZvcmUgaXQgaW4gdGhlIGNvbW1hbmRsaW5lIGJ1
+Zi4KCj4gIAllbGZfcmVsX3NldF9zeW1ib2woJmluZm8tPnJoZHIsICJjbWRsaW5lX2VuZCIsICZj
+bWRsaW5lX2VuZCwKPiAgCQkJICAgc2l6ZW9mKHVuc2lnbmVkIGxvbmcpKTsKPiAgCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
