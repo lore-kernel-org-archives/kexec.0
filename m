@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-f172.google.com ([209.85.192.172])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP3Xy-00072J-1R
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 04:19:11 +0000
-Received: by mail-pd0-f172.google.com with SMTP id 5so3025628pdd.17
- for <kexec@lists.infradead.org>; Sun, 07 Apr 2013 21:19:08 -0700 (PDT)
-Date: Mon, 8 Apr 2013 12:18:33 +0800
-From: Wang YanQing <udknight@gmail.com>
-Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead of
- empty command line
-Message-ID: <20130408041833.GA6810@udknight>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UP3nS-0007BJ-Vl
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 04:35:12 +0000
+Message-ID: <516248A4.6030500@cn.fujitsu.com>
+Date: Mon, 08 Apr 2013 12:33:40 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] i386:kexec-bzImage: Use "\0" as command line instead
+ of empty command line
 References: <20130403094356.GA7259@udknight> <515FB809.3020103@gmail.com>
  <20130407010103.GA2176@udknight> <51610A32.6080200@cn.fujitsu.com>
  <20130407093540.GA4046@udknight> <20130408010804.GA2241@udknight>
- <51623AFD.9000605@cn.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51623AFD.9000605@cn.fujitsu.com>
+ <51623AFD.9000605@cn.fujitsu.com> <20130408035345.GA6651@udknight>
+In-Reply-To: <20130408035345.GA6651@udknight>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,22 +22,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+To: Wang YanQing <udknight@gmail.com>
 Cc: jbarnes@sgi.com, tjd21@cl.cam.ac.uk, khalid.aziz@hp.com, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On Mon, Apr 08, 2013 at 11:35:25AM +0800, Zhang Yanfei wrote:
-> I tried 3.8.0 kernel. Unfortunately, panicked again. For some reason, I didn't
-> see the panic message.
-Maybe it hasn't paniced. Could you ping it from another machine? I meet 
-an situation which looks like panic after I run kexec -e, but it isn't 
-except the screen is hang, I can't see any output from screen, but I can 
-login in through ssh from another machine, of course, it is another story.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwNOaciDA45pelIDExOjUzLCBXYW5nIFlhblFpbmcg5YaZ6YGTOgo+IE9uIE1v
+biwgQXByIDA4LCAyMDEzIGF0IDExOjM1OjI1QU0gKzA4MDAsIFpoYW5nIFlhbmZlaSB3cm90ZToK
+Pj4gSSB0cmllZCAzLjguMCBrZXJuZWwuIFVuZm9ydHVuYXRlbHksIHBhbmlja2VkIGFnYWluLiBG
+b3Igc29tZSByZWFzb24sIEkgZGlkbid0Cj4+IHNlZSB0aGUgcGFuaWMgbWVzc2FnZS4KPj4KPj4+
+IGJ1dCBpZiBteSBtZW1vcnkgZG9uJ3QgbGllIG1lLAo+Pj4gSSBjYW4gYm9vdCB2Mi42LjMyIHdp
+dGhvdXQgYSByb290PSBwYXJhbWV0ZXIsIHdlIGhhZCB1c2UgdjIuNi4zMiBhcyBwcm9kdWN0IGtl
+cm5lbAo+Pj4gc3RpbGwgbW9yZSB0aGFuIG9uZSB5ZWFyIHR3byB5ZWFycyBhZ28uCj4+Cj4+IFNp
+Z2gsIEkgdHJpZWQgaW4gYSByZWFsIGJveCBhbmQgYSBrdm0gbWFjaGluZS4gQm90aCBwYW5pY2tl
+ZCB3aXRoIG5vIHJvb3Q9IGFyZ3VtZW50Cj4+IG1lc3NhZ2UuIEkgZG9uJ3Qga25vdyB3aHkuCj4g
+Cj4gSXQgbWF5YmUgeW91ciBDT05GSUcgcmVsYXRpb24gcHJvYmxlbSwgSSBndWVzcy4gSSBoYXZl
+IGJvb3RlZCBvayBtb3JlIHRoYW4gMyB0aW1lcy4KPiBBcmUgeW91ciBoYXZlIENPTkZJR19CTEtf
+REVWX0lOSVRSRD15IGluIC5jb25maWc/IEFuZCB5b3VyIGNwaW8gZm9ybWF0IGluaXRyYW1mcwo+
+IGhhcyBpbml0IHNjcmlwdCBpbiByb290IGRpcmVjdG9yeT8gQW5kIHlvdXIgaW5pdCBzY3JpcHQg
+d2lsbCBhdXRvLW1vdW50IHlvdXIgcmVhbGx5Cj4gZGV2aWNlIHJpZ2h0IGJlZm9yZSBzd2l0Y2hf
+cm9vdCBpbnRvIGl0Pwo+IAo+PiBBbnl3YXksIEp1c3QgZnJvbSB0aGUgY29kZSwgeW91ciBwYXRj
+aCBkaWRuJ3QgZml4IGFsbCB0aGUgcG9zc2libGUgcGxhY2UuCj4+IGRvX2J6SW1hZ2U2NF9sb2Fk
+IG1heSBhbHNvIGNhbGwgc2V0dXBfbGludXhfYm9vdGxvYWRlcl9wYXJhbWV0ZXJzX2hpZ2ggd2l0
+aAo+PiBhIG51bGwgY29tbWFuZGxpbmUuIFNvIHdoeSBub3QgY2hhbmdlIHRoZSBjaGVjayBpbgo+
+PiBzZXR1cF9saW51eF9ib290bG9hZGVyX3BhcmFtZXRlcnNfaGlnaC4KPiBZb3VyIGFyZSByaWdo
+dC4gQnV0IHlvdXIgcGF0Y2ggaXMgd3JvbmcgdG9vLgo+IFNlZSBiZWxvdy4KPiAKPj4KPj4gLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni94
+ODYtbGludXgtc2V0dXAuYyBiL2tleGVjL2FyY2gvaTM4Ni94ODYtbGludXgtc2V0dXAuYwo+PiBp
+bmRleCA0NTRmYWQ2Li42ZWIyZTZlIDEwMDY0NAo+PiAtLS0gYS9rZXhlYy9hcmNoL2kzODYveDg2
+LWxpbnV4LXNldHVwLmMKPj4gKysrIGIva2V4ZWMvYXJjaC9pMzg2L3g4Ni1saW51eC1zZXR1cC5j
+Cj4+IEBAIC0xMTYsNyArMTE2LDggQEAgdm9pZCBzZXR1cF9saW51eF9ib290bG9hZGVyX3BhcmFt
+ZXRlcnNfaGlnaCgKPj4gICAgICAgICAvKiBGaWxsIGluIHRoZSBjb21tYW5kIGxpbmUgKi8KPj4g
+ICAgICAgICBpZiAoY21kbGluZV9sZW4gPiBDT01NQU5EX0xJTkVfU0laRSkgewo+PiAgICAgICAg
+ICAgICAgICAgY21kbGluZV9sZW4gPSBDT01NQU5EX0xJTkVfU0laRTsKPj4gLSAgICAgICB9Cj4+
+ICsgICAgICAgfSBlbHNlIGlmIChjbWRsaW5lX2xlbiA9PSAwKQo+PiArICAgICAgICAgICAgICAg
+cmV0dXJuOwo+IENhbid0IGp1c3QgcmV0dXJuLCB3ZSBtdXN0IHNldCB0aGUgc3RyaW5nIHRlcm1p
+bmF0aW9uIGd1YXJkIGxpa2UgYmVsb3c6CgpJIHRoaW5rIHRoaXMgaXMgb2sgZm9yIHdlIGhhdmUg
+ZmlsbGVkIGFsbCB0aGUgcmVhbF9tb2RlIGJ1ZmZlciB3aXRoIDAuCgpCdXQgSSBqdXN0IGZvdW5k
+IHRoaXMgZml4IHN0aWxsIGhhcyBwcm9ibGVtLi4uCgpMZXQncyBnbyB0aHJvdWdoIHRoZSBjb2Rl
+LCB0YWtlIGRvX2J6SW1hZ2VfbG9hZCBmb3IgZXhhbXBsZS4KCjIzNCAgICAgICAgIHNldHVwX3Np
+emUgPSBrZXJuMTZfc2l6ZV9uZWVkZWQgKyBjb21tYW5kX2xpbmVfbGVuICsKMjM1ICAgICAgICAg
+ICAgICAgICAgICAgICAgICBQVVJHQVRPUllfQ01ETElORV9TSVpFOwoyMzYgICAgICAgICByZWFs
+X21vZGUgPSB4bWFsbG9jKHNldHVwX3NpemUpOwoyMzcgICAgICAgICBtZW1zZXQocmVhbF9tb2Rl
+LCAwLCBzZXR1cF9zaXplKTsKLi4uLi4uCjMwMCAgICAgICAgIHNldHVwX2xpbnV4X2Jvb3Rsb2Fk
+ZXJfcGFyYW1ldGVycyhpbmZvLCByZWFsX21vZGUsIHNldHVwX2Jhc2UsCjMwMSAgICAgICAgICAg
+ICAgICAga2VybjE2X3NpemVfbmVlZGVkLCBjb21tYW5kX2xpbmUsIGNvbW1hbmRfbGluZV9sZW4s
+CjMwMiAgICAgICAgICAgICAgICAgaW5pdHJkLCBpbml0cmRfbGVuKTsKLi4uLi4uCjM2OSAgICAg
+ICAgIGNtZGxpbmVfZW5kID0gc2V0dXBfYmFzZSArIGtlcm4xNl9zaXplX25lZWRlZCArIGNvbW1h
+bmRfbGluZV9sZW4gLSAxOwozNzAgICAgICAgICBlbGZfcmVsX3NldF9zeW1ib2woJmluZm8tPnJo
+ZHIsICJjbWRsaW5lX2VuZCIsICZjbWRsaW5lX2VuZCwKMzcxICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHNpemVvZih1bnNpZ25lZCBsb25nKSk7CgppZiBubyBjb21tYW5kbGluZSBhbmQgd2Ug
+c2V0IGNvbW1hbmRfbGluZV9sZW4gdG8gMCwgbGluZSAzNjkgaXMgc3RpbGwgd3JvbmcuIEl0Cndp
+bGwgY29ycnVwdCB0aGUga2VybmVsMTYgYnVmLgoKU28geW91ciBvcmlnaW5hbCBwYXRjaCBpcyBv
+ayBpZiB3ZSBhbHNvIHNldCBjb21tYW5kX2xpbmVfbGVuIHRvIDEgYW5kIG1ha2UKY21kbGluZSA9
+ICJcMCIgaW4gYnpJbWFnZTY0X2xvYWQuCgo+IAo+ICsgZWxzZSBpZiAoY21kbGluZV9sZW4gPT0g
+MCkKPiArICAgICAgIGNtZGxpbmVfbGVuID0gMTsKPiAKPiBJZiB5b3UgYWdyZWVkLCBtYXliZSBJ
+IGNhbiByZXNlbmQgdGhlIHYyIHBhdGNoLgo+PiAgICAgICAgIGNtZGxpbmVfcHRyID0gKChjaGFy
+ICopcmVhbF9tb2RlKSArIGNtZGxpbmVfb2Zmc2V0Owo+PiAgICAgICAgIG1lbWNweShjbWRsaW5l
+X3B0ciwgY21kbGluZSwgY21kbGluZV9sZW4pOwo+PiAgICAgICAgIGNtZGxpbmVfcHRyW2NtZGxp
+bmVfbGVuIC0gMV0gPSAnXDAnOwo+Pgo+IAo+IFRoYW5rcy4KPiAKPiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
