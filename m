@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UP8s3-0006jb-8t
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 10:00:16 +0000
-Message-ID: <51629338.5080906@cn.fujitsu.com>
-Date: Mon, 08 Apr 2013 17:51:52 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+ id 1UPBVT-0003wF-AR
+ for kexec@lists.infradead.org; Mon, 08 Apr 2013 12:49:08 +0000
+Date: Mon, 8 Apr 2013 08:48:58 -0400
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: [RFC PATCH] watchdog: Add hook for kicking in kdump path
+Message-ID: <20130408124858.GC79013@redhat.com>
+References: <1365192994-94850-1-git-send-email-dzickus@redhat.com>
+ <516259D2.7000805@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2]kexec:i386:kexec-bzImage: Fix pass garbage command
- line to new kernel
-References: <20130408094358.GB23828@udknight>
-In-Reply-To: <20130408094358.GB23828@udknight>
+Content-Disposition: inline
+In-Reply-To: <516259D2.7000805@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,70 +20,169 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wang YanQing <udknight@gmail.com>
-Cc: tjd21@cl.cam.ac.uk, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, zhangyanfei.yes@gmail.com
+To: Dave Young <dyoung@redhat.com>
+Cc: wim@iguana.be, kexec@lists.infradead.org, linux-watchdog@vger.kernel.org, vgoyal@redhat.com, LKML <linux-kernel@vger.kernel.org>
 
-5LqOIDIwMTPlubQwNOaciDA45pelIDE3OjQzLCBXYW5nIFlhblFpbmcg5YaZ6YGTOgo+IEkgZ2V0
-IGdhcmJhZ2Ugb3V0cHV0IG9mIC9wcm9jL2NtZGxpbmUgYW5kIGluIGRtZXNnIGluIG5ldwo+IGtl
-cm5lbCBjb250ZXh0IHdoZW4gSSB1c2Uga2V4ZWMgdG8gbG9hZCBuZXcga2VybmVsIGJ6SW1hZ2UK
-PiB3aXRob3V0IGFwcGVuZCBjb21tYW5kIGxpbmUgbGlrZSBiZWxvdzoKPiAKPiBrZXhlYyAtbCBi
-ekltYWdlIC0taW5pdHJkPS9ib290L2luaXRyYW1mcwo+IGtleGVjIC1lCj4gCj4gVGhlIHJlYXNv
-biBpcyBrZXJuZWwgY29weSB0aGUgY29tbWFuZCBsaW5lCj4gZnJvbSB0aGUgYm9vdGxvYWRlciBs
-aWtlIGJlbG93IHdoaWNoIGNvcHkvcGFzdGUKPiBmcm9tIGxpbnV4L2FyY2gveDg2L2tlcm5lbC9o
-ZWFkXzMyLlM6Cj4gCj4gICAgICAgICBtb3ZsIHBhKGJvb3RfcGFyYW1zKSArIE5FV19DTF9QT0lO
-VEVSLCVlc2kKPiAgICAgICAgIGFuZGwgJWVzaSwlZXNpCj4gICAgICAgICBqeiAxZiAgICAgICAg
-ICAgICAgICAgICAjIE5vIGNvbW1hbmQgbGluZQo+ICAgICAgICAgbW92bCAkcGEoYm9vdF9jb21t
-YW5kX2xpbmUpLCVlZGkKPiAgICAgICAgIG1vdmwgJChDT01NQU5EX0xJTkVfU0laRS80KSwlZWN4
-Cj4gCj4gVGhpcyBwYXRjaCBmaXggaXQuCj4gCj4gWwo+IGFsdGhvdWdoIGFub3RoZXIgcGF0Y2gK
-PiAia2V4ZWM6aTM4Ni9rZXhlYy1bYnpJbWFnZXxlbGYteDg2XTp4ODZfNjQva2V4ZWMtYnpJbWFn
-ZTY0OiBVc2UgIlwwIiBhcyBjb21tYW5kIGxpbmUgaW5zdGVhZCBvZiBlbXB0eSBjb21tYW5kIGxp
-bmUiCj4gaGFzIHJlc29sdmVkIHRoZSBnYXJiYWdlIG91dHB1dCBieSBwdXQgYSAnXDAnIGF0IHRo
-ZSBzdGFydCwgYnV0IEkgdGhpbmtzIHRoaXMgcGF0Y2ggaGFzIHNlbnNlIHRvbywgaXQgc3RvcAo+
-IGtlcm5lbCBjb3B5IG5vdCBjb21tYW5kIGxpbmUgZGF0YSBpbnRvIHRoZSBjb21tYW5kIGxpbmUg
-YnVmZmVyIGluIGtlcm5lbAoKSSBkb24ndCB0aGluayB0aGUgcGF0Y2ggaXMgbmVjZXNzYXJ5LCBw
-bGVhc2Ugc2VlIGJlbG93LgoKPiBdCj4gCj4gU2lnbmVkLW9mZi1ieTogV2FuZyBZYW5RaW5nIDx1
-ZGtuaWdodEBnbWFpbC5jb20+Cj4gLS0tCj4gQ2hhbmdlcyB2MS12MjoKPiAxOkZpeCB0aGUgd3Jv
-bmcgY21kbGluZV9lbmQncyB2YWx1ZQo+ICBrZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5j
-IHwgNyArKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDIgZGVsZXRp
-b25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMg
-Yi9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jCj4gaW5kZXggMjlmMjgwZC4uMjk1NGY5
-MiAxMDA2NDQKPiAtLS0gYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jCj4gKysrIGIv
-a2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYwo+IEBAIC0xMTksNiArMTE5LDcgQEAgaW50
-IGRvX2J6SW1hZ2VfbG9hZChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywKPiAgCXVuc2lnbmVkIGxv
-bmcgY21kbGluZV9lbmQ7Cj4gIAl1bnNpZ25lZCBsb25nIGtlcm4xNl9zaXplX25lZWRlZDsKPiAg
-CXVuc2lnbmVkIGxvbmcgaGVhcF9zaXplID0gMDsKPiArCW9mZl90IGFsbG9jX2NvbW1hbmRfbGlu
-ZV9sZW4gPSAwOwo+ICAKPiAgCS8qCj4gIAkgKiBGaW5kIG91dCBhYm91dCB0aGUgZmlsZSBJIGFt
-IGFib3V0IHRvIGxvYWQuCj4gQEAgLTE0NSwxMCArMTQ2LDEyIEBAIGludCBkb19iekltYWdlX2xv
-YWQoc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gIAkJCWRiZ3ByaW50ZigiS2VybmVsIGNvbW1h
-bmQgbGluZSB0b28gbG9uZyBmb3Iga2VybmVsIVxuIik7Cj4gIAkJCXJldHVybiAtMTsKPiAgCQl9
-Cj4gKwkJYWxsb2NfY29tbWFuZF9saW5lX2xlbiA9ICh1aW50bWF4X3Qpc2V0dXBfaGVhZGVyLmNt
-ZGxpbmVfc2l6ZTsKPiAgCX0gZWxzZSB7Cj4gIAkJaWYgKGNvbW1hbmRfbGluZV9sZW4gPiAyNTUp
-IHsKPiAgCQkJZGJncHJpbnRmKCJXQVJOSU5HOiBUaGlzIGtlcm5lbCBtYXkgb25seSBzdXBwb3J0
-IDI1NSBieXRlIGNvbW1hbmQgbGluZXNcbiIpOwo+ICAJCX0KPiArCQlhbGxvY19jb21tYW5kX2xp
-bmVfbGVuID0gMjU1Owo+ICAJfQo+ICAKPiAgCWlmIChzZXR1cF9oZWFkZXIucHJvdG9jb2xfdmVy
-c2lvbiA+PSAweDAyMDUpIHsKPiBAQCAtMjMxLDcgKzIzNCw3IEBAIGludCBkb19iekltYWdlX2xv
-YWQoc3RydWN0IGtleGVjX2luZm8gKmluZm8sCj4gIAkJaWYgKGtlcm4xNl9zaXplX25lZWRlZCA8
-IDQwOTYpCj4gIAkJCWtlcm4xNl9zaXplX25lZWRlZCA9IDQwOTY7Cj4gIAl9Cj4gLQlzZXR1cF9z
-aXplID0ga2VybjE2X3NpemVfbmVlZGVkICsgY29tbWFuZF9saW5lX2xlbiArCj4gKwlzZXR1cF9z
-aXplID0ga2VybjE2X3NpemVfbmVlZGVkICsgYWxsb2NfY29tbWFuZF9saW5lX2xlbiArCj4gIAkJ
-CSBQVVJHQVRPUllfQ01ETElORV9TSVpFOwo+ICAJcmVhbF9tb2RlID0geG1hbGxvYyhzZXR1cF9z
-aXplKTsKPiAgCW1lbXNldChyZWFsX21vZGUsIDAsIHNldHVwX3NpemUpOwo+IEBAIC0zNjYsNyAr
-MzY5LDcgQEAgaW50IGRvX2J6SW1hZ2VfbG9hZChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywKPiAg
-CQkJCQkgJnJlZ3MxNiwgc2l6ZW9mKHJlZ3MxNikpOwo+ICAJfQo+ICAJZWxmX3JlbF9zZXRfc3lt
-Ym9sKCZpbmZvLT5yaGRyLCAiZW50cnkzMl9yZWdzIiwgJnJlZ3MzMiwgc2l6ZW9mKHJlZ3MzMikp
-Owo+IC0JY21kbGluZV9lbmQgPSBzZXR1cF9iYXNlICsga2VybjE2X3NpemVfbmVlZGVkICsgY29t
-bWFuZF9saW5lX2xlbiAtIDE7Cj4gKwljbWRsaW5lX2VuZCA9IHNldHVwX2Jhc2UgKyBrZXJuMTZf
-c2l6ZV9uZWVkZWQgKyBhbGxvY19jb21tYW5kX2xpbmVfbGVuIC0gMTsKClRoaXMgaXMgb2J2aW91
-c2x5IHdyb25nLiAKUHVyZ2F0b3J5IG1heSBhcHBlbmQgYSBrZXhlY19qdW1wX2JhY2tfZW50cnk9
-IGFyZ3VtZW50IGludG8gdGhlIGNvbW1hbmRsaW5lLiBJdCBpcwphbiBhcmd1bWVudCBiZWxvbmdz
-IHRvIHRoZSBjb21tYW5kbGluZS4gU28gd2h5IHRoZXJlIGlzIGEgYnVmIGZpbGxlZCB3aXRoIDAg
-CihhbGxvY19jb21tYW5kX2xpbmVfbGVuKSBiZWZvcmUgaXQgaW4gdGhlIGNvbW1hbmRsaW5lIGJ1
-Zi4KCj4gIAllbGZfcmVsX3NldF9zeW1ib2woJmluZm8tPnJoZHIsICJjbWRsaW5lX2VuZCIsICZj
-bWRsaW5lX2VuZCwKPiAgCQkJICAgc2l6ZW9mKHVuc2lnbmVkIGxvbmcpKTsKPiAgCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Mon, Apr 08, 2013 at 01:46:58PM +0800, Dave Young wrote:
+> On 04/06/2013 04:16 AM, Don Zickus wrote:
+> > A common problem with kdump is that during the boot up of the
+> > second kernel, the hardware watchdog times out and reboots the
+> > machine before a vmcore can be captured.
+> > 
+> > Instead of tellling customers to disable their hardware watchdog
+> > timers, I hacked up a hook to put in the kdump path that provides
+> > one last kick before jumping into the second kernel.
+> > 
+> > The assumption is the watchdog timeout is at least 10-30 seconds
+> > long, enough to get the second kernel to userspace to kick the watchdog
+> > again, if needed.
+> 
+> For kdump kernel some devices need to reset, this might increase the
+> boot time, it's not so reliable for the 10-30s for us to kicking the
+> watchdog.
+> 
+> Could we have another option to disable/stop the watchdog while panic
+> happens? Ie. add a kernel cmdline panic_stop_wd=<0|1> for 1st kernel, if
+> it's set to 1, then just stop the watchdog or we can kick the watchdog
+> like what you do in this patch. Of course stopping watchdog should be
+> lockless as well..
+
+Hmm, I can look into that.  But I am not sure all watchdogs have the
+ability to stop once started.  I was also worried about the case where
+kdump hangs for some reason.  Having the watchdog there to 'reboot' would
+be a nice safety net.
+
+Perhaps adjusting the watchdog 'timeout' to something like 3 minutes would
+be easier?
+
+I'll wait on feedback from the watchdog community to help point me in a
+good direction.
+
+Cheers,
+Don
+
+> 
+> > 
+> > Of course kdump is usually executed on a panic path, so grabbing the
+> > watchdog mutexes to communicate with the hardware won't work.  For now,
+> > I do everything locklessly.
+> > 
+> > I can attempt a 'mutex_trylock' but not sure what to do in the failure
+> > case?  spin up to a second?
+> > 
+> > This patch is more of a proof of concept right now.  Hopefully feedback
+> > will help solve this problem better.
+> > 
+> > I have tested this with a machine using iTCO_wdt and the 'watchdog' app.
+> > The extra kicked happened as expected.
+> > 
+> > Signed-off-by: Don Zickus <dzickus@redhat.com>
+> > ---
+> >  drivers/watchdog/watchdog_dev.c |   35 +++++++++++++++++++++++++++++++++++
+> >  include/linux/watchdog.h        |    7 +++++++
+> >  kernel/kexec.c                  |    6 ++++++
+> >  3 files changed, 48 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> > index 08b48bb..6393572 100644
+> > --- a/drivers/watchdog/watchdog_dev.c
+> > +++ b/drivers/watchdog/watchdog_dev.c
+> > @@ -84,6 +84,41 @@ out_ping:
+> >  }
+> >  
+> >  /*
+> > + *	watchdog_kick_for_kdump: kick the watchdog in the kdump path
+> > + *
+> > + * 	The kdump path needs time to reboot the kernel back into
+> > + * 	userspace.  This window is big enough the hardware watchdog
+> > + * 	may come in and reboot the box.  This hook gives the watchdog
+> > + * 	one final kick to get kdump over the hump.
+> > + *
+> > + * 	We don't know what devices are open, so just use the legacy
+> > + * 	interface for now.  We have to do this locklessly as we can
+> > + * 	not wait.
+> > + */
+> > +
+> > +void watchdog_kick_for_kdump(void)
+> > +{
+> > +	struct watchdog_device *wddev = old_wdd;
+> > +
+> > +	/* FIXME - Perhaps use a mutex_trylock? */
+> > +
+> > +	if (!wddev)
+> > +		return;
+> > +
+> > +	if (test_bit(WDOG_UNREGISTERED, &wddev->status))
+> > +		return;
+> > +
+> > +	if (!watchdog_active(wddev))
+> > +		return;
+> > +
+> > +	if (wddev->ops->ping)
+> > +		wddev->ops->ping(wddev);  /* ping the watchdog */
+> > +	else
+> > +		wddev->ops->start(wddev); /* restart watchdog */
+> > +}
+> > +EXPORT_SYMBOL_GPL(watchdog_kick_for_kdump);
+> > +
+> > +/*
+> >   *	watchdog_start: wrapper to start the watchdog.
+> >   *	@wddev: the watchdog device to start
+> >   *
+> > diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+> > index 2a3038e..5dff975 100644
+> > --- a/include/linux/watchdog.h
+> > +++ b/include/linux/watchdog.h
+> > @@ -142,4 +142,11 @@ extern int watchdog_init_timeout(struct watchdog_device *wdd,
+> >  extern int watchdog_register_device(struct watchdog_device *);
+> >  extern void watchdog_unregister_device(struct watchdog_device *);
+> >  
+> > +#ifdef CONFIG_WATCHDOG_CORE
+> > +/* drivers/watchdog/watchdog_dev.c */
+> > +extern void watchdog_kick_for_kdump(void);
+> > +#else
+> > +static inline void watchdog_kick_for_kdump(void) { };
+> > +#endif
+> > +
+> >  #endif  /* ifndef _LINUX_WATCHDOG_H */
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index bddd3d7..ced7ccd 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -32,6 +32,7 @@
+> >  #include <linux/vmalloc.h>
+> >  #include <linux/swap.h>
+> >  #include <linux/syscore_ops.h>
+> > +#include <linux/watchdog.h>
+> >  
+> >  #include <asm/page.h>
+> >  #include <asm/uaccess.h>
+> > @@ -1094,6 +1095,11 @@ void crash_kexec(struct pt_regs *regs)
+> >  		if (kexec_crash_image) {
+> >  			struct pt_regs fixed_regs;
+> >  
+> > +			/*
+> > +			 * Give panic path a chance to do its post processing
+> > +			 */
+> > +			watchdog_kick_for_kdump();
+> > +
+> >  			crash_setup_regs(&fixed_regs, regs);
+> >  			crash_save_vmcoreinfo();
+> >  			machine_crash_shutdown(&fixed_regs);
+> > 
+> 
+> 
+> -- 
+> Thanks
+> Dave
+> 
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
