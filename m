@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPUVP-0004M2-7q
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 09:06:20 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3996DnK008294
- for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:06:13 +0900 (JST)
+ id 1UPUVo-0004OE-7E
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 09:06:45 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.197])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3996fos017349
+ for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:06:41 +0900 (JST)
 Received: (from root@localhost) by mailgate3.nec.co.jp
  (8.11.7/3.7W-MAILGATE-NEC)
- id r3996D411516 for kexec@lists.infradead.org;
- Tue, 9 Apr 2013 18:06:13 +0900 (JST)
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3996Cbn008113
- for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:06:12 +0900 (JST)
-Date: Tue, 9 Apr 2013 17:28:35 +0900
+ id r3996fc05826 for kexec@lists.infradead.org;
+ Tue, 9 Apr 2013 18:06:41 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3996eTs021559
+ for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:06:40 +0900 (JST)
+Date: Tue, 9 Apr 2013 17:28:58 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 2/4] Use vmap_area_list to get vmalloc_start for i386.
-Message-Id: <20130409172835.e7d6216f792f3576a6ab6671@mxc.nes.nec.co.jp>
+Subject: [PATCH 3/4] Use vmap_area_list to get vmalloc_start for ppc32.
+Message-Id: <20130409172858.41598619131e1ad0b61cd09d@mxc.nes.nec.co.jp>
 In-Reply-To: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
 References: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
@@ -35,32 +35,23 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Thu, 14 Mar 2013 19:10:49 +0900
-Subject: [PATCH 2/4] Use vmap_area_list to get vmalloc_start for i386.
+Date: Fri, 15 Mar 2013 19:30:23 +0900
+Subject: [PATCH 3/4] Use vmap_area_list to get vmalloc_start for ppc32.
 
 Try to get vmalloc_start value from vmap_area_list first for
-newer i386 kernels.
+newer ppc32 kernels.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- arch/x86.c | 46 ++++++++++++++++++++++++++++++++--------------
- 1 file changed, 32 insertions(+), 14 deletions(-)
+ arch/ppc.c | 44 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 31 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86.c b/arch/x86.c
-index ef29e3c..e397905 100644
---- a/arch/x86.c
-+++ b/arch/x86.c
-@@ -70,7 +70,7 @@ remap_init(void)
- int
- get_machdep_info_x86(void)
- {
--	unsigned long vmlist, vmalloc_start;
-+	unsigned long vmlist, vmap_area_list, vmalloc_start;
- 
- 	/* PAE */
- 	if ((vt.mem_flags & MEMORY_X86_PAE)
-@@ -100,22 +100,40 @@ get_machdep_info_x86(void)
- 		return FALSE;
+diff --git a/arch/ppc.c b/arch/ppc.c
+index 2bc8d5f..a9b4812 100644
+--- a/arch/ppc.c
++++ b/arch/ppc.c
+@@ -44,22 +44,40 @@ get_machdep_info_ppc(void)
+ 	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
  
  	/*
 -	 * For the compatibility, makedumpfile should run without the symbol
@@ -97,7 +88,7 @@ index ef29e3c..e397905 100644
 +	} else {
 +		/*
 +		 * For the compatibility, makedumpfile should run without the symbol
-+		 * used to get vmalloc_start value if they are not necessary.
++		 * vmlist and the offset of vm_struct.addr if they are not necessary.
 +		 */
  		return TRUE;
  	}
