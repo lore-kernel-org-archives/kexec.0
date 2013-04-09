@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPftz-0005EW-LJ
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 21:16:28 +0000
-Date: Tue, 9 Apr 2013 23:16:16 +0200
+ id 1UPfyA-0005IJ-TU
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 21:20:47 +0000
+Date: Tue, 9 Apr 2013 23:20:36 +0200
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCHv2 0/4] kexec-tools: add support for Xen 4.3
-Message-ID: <20130409211616.GD31533@debian70-amd64.local.net-space.pl>
+Subject: Re: [PATCH 5/5] kexec/xen: directly load images images into Xen
+Message-ID: <20130409212036.GE31533@debian70-amd64.local.net-space.pl>
 References: <1365448014-12119-1-git-send-email-david.vrabel@citrix.com>
+ <1365448014-12119-6-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1365448014-12119-1-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1365448014-12119-6-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,38 +27,67 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: David Vrabel <david.vrabel@citrix.com>
 Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
-On Mon, Apr 08, 2013 at 08:06:49PM +0100, David Vrabel wrote:
-> The series adds support for the new hypercall ABI which should be
-> provided by Xen 4.3.  Images are loaded into Xen directly with no
-> kernel involvement.
+On Mon, Apr 08, 2013 at 08:06:54PM +0100, David Vrabel wrote:
+> From: David Vrabel <david.vrabel@citrix.com>
 >
-> Do not apply until the hypervisor side patches are applied to Xen.
+> Xen 4.3 has an improvided kexec hypercall ABI that allows images to be
+> loaded and executed without any kernel involvement.  Use the API
+> provided by libxc to load images when running in a Xen guest.
 >
-> Patch 1 is unrelated but kexec wouldn't work for me without it. Not
-> sure why I had problems, perhaps a toolstack specific issue?
+> Support for loading images via the kexec_load syscall in non-upstream
+> ("classic") Xen kernels is no longer supported.
 >
-> Patch 2 makes libxc 4.3 mandatory for Xen support.
->
-> Patch 3-4 removes a use of /proc/iomem in favour of libxc.
->
-> Patch 5 adds the support for loading, unloading, and exec'ing an image
-> in Xen.
->
-> This series explicitly drops support for older version of libxc/Xen as
-> supporting kexec on these hypervisors requires kernel support that
-> will never be available upstream.
->
-> Changes since v1:
-> - Patch from Don Sultz: use libxc for vmcoreinfo.
-> - Use xc_get_max_cpus() to get number of PCPUs.
-> - Enable unload and exec of images.
+> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
 
-I could not test new kexec implementation because this patch
-series does not cleanly apply to latest kexec-tools tree.
-Please fix that and repost.
+[...]
 
-Xen patches applies to latest Xen unstable tree with some warnings.
-I think it is worth update those patches too.
+> diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
+
+[...]
+
+> +int xen_kexec_load(uint64_t entry,
+> +		   uint32_t nr_segments, struct kexec_segment *segments,
+> +		   uint64_t kexec_flags)
+> +{
+> +	xc_interface *xch;
+> +	xc_hypercall_buffer_array_t *array = NULL;
+> +	uint8_t type;
+> +	uint8_t arch;
+> +	xen_kexec_segment_t *xen_segs;
+> +	int s;
+> +	int ret = -1;
+> +
+> +	xch = xc_interface_open(NULL, NULL, 0);
+> +	if (!xch)
+> +		return -1;
+> +
+> +	xen_segs = calloc(nr_segments, sizeof(*xen_segs));
+> +	if (!xen_segs)
+> +		goto out;
+> +
+> +	array = xc_hypercall_buffer_array_create(xch, nr_segments);
+> +	if (array == NULL)
+> +		goto out;
+> +
+> +	for (s = 0; s < nr_segments; s++) {
+> +		DECLARE_HYPERCALL_BUFFER(void, seg_buf);
+> +
+> +		seg_buf = xc_hypercall_buffer_array_alloc(xch, array, s,
+> +							  seg_buf, segments[s].bufsz);
+> +		if (seg_buf == NULL)
+> +			goto out;
+> +		memcpy(seg_buf, segments[s].buf, segments[s].bufsz);
+> +
+> +		set_xen_guest_handle(xen_segs[s].buf, seg_buf);
+> +		xen_segs[s].buf_size = segments[s].bufsz;
+> +		xen_segs[s].dest_maddr = (uint64_t)segments[s].mem;
+> +		xen_segs[s].dest_size = segments[s].memsz;
+> +	}
+> +
+> +	type = kexec_flags & KEXEC_TYPE_CRASH;
+> +	arch = (kexec_flags >> 16) & 0xffff;
+
+arch = (kexec_flags & KEXEC_ARCH_MASK) >> 16;
 
 Daniel
 
