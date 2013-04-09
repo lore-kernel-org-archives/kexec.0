@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPRqo-0000eD-3W
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 06:16:15 +0000
-Message-ID: <5163B1D1.7020207@cn.fujitsu.com>
-Date: Tue, 09 Apr 2013 14:14:41 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH
- RESEND]kexec:i386/kexec-[bzImage|elf-x86]:x86_64/kexec-bzImage64:
- Use "\0" as command line instead of empty command line
-References: <20130408092325.GA23318@udknight> <51628E04.8010002@cn.fujitsu.com>
-In-Reply-To: <51628E04.8010002@cn.fujitsu.com>
+Received: from nat28.tlf.novell.com ([130.57.49.28])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UPSxT-00020L-2L
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 07:27:11 +0000
+Message-Id: <5163DEE802000078000CB98B@nat28.tlf.novell.com>
+Date: Tue, 09 Apr 2013 08:27:04 +0100
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] [PATCH 1/8] x86: give FIX_EFI_MPF its own fixmap entry
+References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
+ <1365447593-11988-2-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1365447593-11988-2-git-send-email-david.vrabel@citrix.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,73 +20,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wang YanQing <udknight@gmail.com>, horms@verge.net.au
-Cc: hari@in.ibm.com, tjd21@cl.cam.ac.uk, kexec@lists.infradead.org, ebiederm@xmission.com, zhangyanfei.yes@gmail.com
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>, Ian Jackson <Ian.Jackson@eu.citrix.com>, Ian Campbell <Ian.Campbell@citrix.com>, xen-devel@lists.xen.org
 
-5LqOIDIwMTPlubQwNOaciDA45pelIDE3OjI5LCBaaGFuZyBZYW5mZWkg5YaZ6YGTOgo+IOS6jiAy
-MDEz5bm0MDTmnIgwOOaXpSAxNzoyMywgV2FuZyBZYW5RaW5nIOWGmemBkzoKPj4gVGhpcyBwYXRj
-aCBwcmV2ZW50cyB0aGUgcHJvYmxlbXMgdG8gaGFwcGVuIGJlbG93Ogo+PiBJbiBzZXR1cF9saW51
-eF9ib290bG9hZGVyX3BhcmFtZXRlcnNfaGlnaAo+PiAxMjAgICAgICAgICBjbWRsaW5lX3B0ciA9
-ICgoY2hhciAqKXJlYWxfbW9kZSkgKyBjbWRsaW5lX29mZnNldDsKPj4gMTIxICAgICAgICAgbWVt
-Y3B5KGNtZGxpbmVfcHRyLCBjbWRsaW5lLCBjbWRsaW5lX2xlbik7Cj4+IDEyMiAgICAgICAgIGNt
-ZGxpbmVfcHRyW2NtZGxpbmVfbGVuIC0gMV0gPSAnXDAnOwo+Pgo+PiBpZiBjbWRsaW5lX2xlbiA9
-PSAwLCBMaW5lIDEyMiB3aWxsIGNvcnJ1cHQga2VybmVsMTYgYnVmIGp1c3QgYmVmb3JlIHRoZSBj
-b21tYW5kbGluZS4KPj4gQW5kIGluIGRvX2J6SW1hZ2VfbG9hZCwgZm9yIGV4YW1wbGUsCj4+IDM2
-OSAgICAgICAgIGNtZGxpbmVfZW5kID0gc2V0dXBfYmFzZSArIGtlcm4xNl9zaXplX25lZWRlZCAr
-IGNvbW1hbmRfbGluZV9sZW4gLSAxOwo+PiAzNzAgICAgICAgICBlbGZfcmVsX3NldF9zeW1ib2wo
-JmluZm8tPnJoZHIsICJjbWRsaW5lX2VuZCIsICZjbWRsaW5lX2VuZCwKPj4gMzcxICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHNpemVvZih1bnNpZ25lZCBsb25nKSk7Cj4+IExpbmUgMzY5IHdp
-bGwgZ28gd3JvbmcsIHRvby4KPj4KPj4gU2lnbmVkLW9mZi1ieTogV2FuZyBZYW5RaW5nIDx1ZGtu
-aWdodEBnbWFpbC5jb20+Cj4+IC0tLQo+PiAgSGkgWmhhbmcgWWFuZmVpLCBjb3VsZCB5b3UgZ2l2
-ZSB5b3VyIHNpZ25lZC1vZmYtYnkgdG8KPj4gIHRoaXMgcGF0Y2g/Cj4gCj4gWWVhaC4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBaaGFuZyBZYW5mZWkgPHpoYW5neWFuZmVpQGNuLmZ1aml0c3UuY29tPgo+
-IAo+IEhpIFNpbW9uLCBjb3VsZCB5b3UgcGxlYXNlIHRha2UgYSBsb29rIGF0IHRoaXMgdG8gc2Vl
-IGlmIHRoZSBjaGFuZ2UgaXMgcmVhc29uYWJsZT8KPiBBZnRlciBhbGwsIGlmIG5vIGNvbW1hZGxp
-bmUsIHdlIG1ha2UgdGhlIGNvbW1hbmRsaW5lX2xlbiB0byAxLiBJIGRvbid0IGtub3cgaWYKPiB0
-aGlzIGJlaGF2aW91ciBjb3VsZCBiZSBhY2NlcHRlZCBieSB5b3UuCgpJIGFtIG5vdyB0aGlua2lu
-ZyB0aGF0IHdoZXRoZXIgdGhpcyB3YXkgaXMgcmVhc29uYWJsZSBvciBub3QuLi4KCj4gCj4gVGhh
-bmtzCj4gWmhhbmcKPiAKPj4KPj4gIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMgICAg
-IHwgMyArKysKPj4gIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYteDg2LmMgICAgIHwgMyArKysK
-Pj4gIGtleGVjL2FyY2gveDg2XzY0L2tleGVjLWJ6SW1hZ2U2NC5jIHwgNiArKysrKy0KPj4gIDMg
-ZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Pgo+PiBkaWZm
-IC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYyBiL2tleGVjL2FyY2gvaTM4
-Ni9rZXhlYy1iekltYWdlLmMKPj4gaW5kZXggOTlmZDc5MC4uMjlmMjgwZCAxMDA2NDQKPj4gLS0t
-IGEva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYwo+PiArKysgYi9rZXhlYy9hcmNoL2kz
-ODYva2V4ZWMtYnpJbWFnZS5jCj4+IEBAIC00MzUsNiArNDM1LDkgQEAgaW50IGJ6SW1hZ2VfbG9h
-ZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAo+PiAg
-CWNvbW1hbmRfbGluZV9sZW4gPSAwOwo+PiAgCWlmIChjb21tYW5kX2xpbmUpIHsKPj4gIAkJY29t
-bWFuZF9saW5lX2xlbiA9IHN0cmxlbihjb21tYW5kX2xpbmUpICsxOwo+PiArCX0gZWxzZSB7Cj4+
-ICsJICAgIGNvbW1hbmRfbGluZSA9IHN0cmR1cCgiXDAiKTsKPj4gKwkgICAgY29tbWFuZF9saW5l
-X2xlbiA9IDE7Cj4+ICAJfQo+PiAgCXJhbWRpc2tfYnVmID0gMDsKPj4gIAlpZiAocmFtZGlzaykg
-ewo+PiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYyBiL2tleGVj
-L2FyY2gvaTM4Ni9rZXhlYy1lbGYteDg2LmMKPj4gaW5kZXggZTYyZWJjYi4uNzg4YTIwOSAxMDA2
-NDQKPj4gLS0tIGEva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYwo+PiArKysgYi9rZXhl
-Yy9hcmNoL2kzODYva2V4ZWMtZWxmLXg4Ni5jCj4+IEBAIC0xNjEsNiArMTYxLDkgQEAgaW50IGVs
-Zl94ODZfbG9hZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3Qg
-bGVuLAo+PiAgCWNvbW1hbmRfbGluZV9sZW4gPSAwOwo+PiAgCWlmIChjb21tYW5kX2xpbmUpIHsK
-Pj4gIAkJY29tbWFuZF9saW5lX2xlbiA9IHN0cmxlbihjb21tYW5kX2xpbmUpICsxOwo+PiArCX0g
-ZWxzZSB7Cj4+ICsJICAgIGNvbW1hbmRfbGluZSA9IHN0cmR1cCgiXDAiKTsKPj4gKwkgICAgY29t
-bWFuZF9saW5lX2xlbiA9IDE7Cj4+ICAJfQo+PiAgCj4+ICAJLyogTmVlZCB0byBhcHBlbmQgc29t
-ZSBjb21tYW5kIGxpbmUgcGFyYW1ldGVycyBpbnRlcm5hbGx5IGluIGNhc2Ugb2YKPj4gZGlmZiAt
-LWdpdCBhL2tleGVjL2FyY2gveDg2XzY0L2tleGVjLWJ6SW1hZ2U2NC5jIGIva2V4ZWMvYXJjaC94
-ODZfNjQva2V4ZWMtYnpJbWFnZTY0LmMKPj4gaW5kZXggODZlNmQxMy4uZWM2MTRhNCAxMDA2NDQK
-Pj4gLS0tIGEva2V4ZWMvYXJjaC94ODZfNjQva2V4ZWMtYnpJbWFnZTY0LmMKPj4gKysrIGIva2V4
-ZWMvYXJjaC94ODZfNjQva2V4ZWMtYnpJbWFnZTY0LmMKPj4gQEAgLTI4NCw4ICsyODQsMTIgQEAg
-aW50IGJ6SW1hZ2U2NF9sb2FkKGludCBhcmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hhciAqYnVm
-LCBvZmZfdCBsZW4sCj4+ICAJfQo+PiAgCWNvbW1hbmRfbGluZSA9IGNvbmNhdF9jbWRsaW5lKGNv
-bW1hbmRfbGluZSwgYXBwZW5kKTsKPj4gIAljb21tYW5kX2xpbmVfbGVuID0gMDsKPj4gLQlpZiAo
-Y29tbWFuZF9saW5lKQo+PiArCWlmIChjb21tYW5kX2xpbmUpIHsKPj4gIAkJY29tbWFuZF9saW5l
-X2xlbiA9IHN0cmxlbihjb21tYW5kX2xpbmUpICsgMTsKPj4gKwl9IGVsc2Ugewo+PiArCQljb21t
-YW5kX2xpbmUgPSBzdHJkdXAoIlwwIik7Cj4+ICsJCWNvbW1hbmRfbGluZV9sZW4gPSAxOwo+PiAr
-CX0KPj4gIAlyYW1kaXNrX2J1ZiA9IDA7Cj4+ICAJaWYgKHJhbWRpc2spCj4+ICAJCXJhbWRpc2tf
-YnVmID0gc2x1cnBfZmlsZShyYW1kaXNrLCAmcmFtZGlza19sZW5ndGgpOwo+IAo+IAo+IF9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4ga2V4ZWMgbWFpbGlu
-ZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+>>> On 08.04.13 at 20:59, David Vrabel <david.vrabel@citrix.com> wrote:
+> FIX_EFI_MPF was the same as FIX_KEXEC_BASE_0 which is going away.  So
+> add its own entry.
+
+To be honest, no matter how small the wastage, I'd prefer reusing
+another entry over creating a new one. FIX_TBOOT_MAP_ADDRESS
+seems like a reasonable fit (which we also don't have to expect to
+go away, unless tboot support would get ripped out altogether).
+This is not the least because sane UEFI systems aren't expected to
+have MPS tables anyway (i.e. the entry, if separate, would likely
+_never_ be used in reality), it's just that the specification allows for
+it.
+
+Jan
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
