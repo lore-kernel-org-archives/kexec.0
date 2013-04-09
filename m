@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPUWE-0004PN-5D
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 09:07:10 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r39978OX008878
- for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:07:08 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id r39978e13571 for kexec@lists.infradead.org;
- Tue, 9 Apr 2013 18:07:08 +0900 (JST)
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id r39977r8021757
- for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:07:07 +0900 (JST)
-Date: Tue, 9 Apr 2013 17:29:21 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 4/4] Use vmap_area_list to get vmalloc_start for ppc64.
-Message-Id: <20130409172921.1e3902ddb4855079589c5b09@mxc.nes.nec.co.jp>
-In-Reply-To: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UPX8R-0008UY-6B
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 11:54:48 +0000
+Date: Tue, 9 Apr 2013 20:54:40 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/4] Add support for vmap_area_list.
+Message-ID: <20130409115440.GA13835@verge.net.au>
 References: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,80 +23,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Fri, 15 Mar 2013 19:34:30 +0900
-Subject: [PATCH 4/4] Use vmap_area_list to get vmalloc_start for ppc64.
+On Tue, Apr 09, 2013 at 05:27:06PM +0900, Atsushi Kumagai wrote:
+> Hello,
+> 
+> This patchset is to work with "remove vm_struct list management":
+> 
+>   https://lkml.org/lkml/2013/3/13/40
+> 
+> I tested this on i386/x86_64, but I can't do it on other 
+> architectures. So, please let me know if you find any problems.
 
-Try to get vmalloc_start value from vmap_area_list first for
-newer ppc64 kernels.
+Perhaps CCing linuxppc-dev@lists.ozlabs.org would be a good idea.
 
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
----
- arch/ppc64.c | 44 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 31 insertions(+), 13 deletions(-)
-
-diff --git a/arch/ppc64.c b/arch/ppc64.c
-index afbaf55..c229ede 100644
---- a/arch/ppc64.c
-+++ b/arch/ppc64.c
-@@ -66,22 +66,40 @@ get_machdep_info_ppc64(void)
- 	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
- 
- 	/*
--	 * For the compatibility, makedumpfile should run without the symbol
--	 * vmlist and the offset of vm_struct.addr if they are not necessary.
-+	 * Get vmalloc_start value from either vmap_area_list or vmlist.
- 	 */
--	if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
--	    || (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
-+	if ((SYMBOL(vmap_area_list) != NOT_FOUND_SYMBOL)
-+	    && (OFFSET(vmap_area.va_start) != NOT_FOUND_STRUCTURE)
-+	    && (OFFSET(vmap_area.list) != NOT_FOUND_STRUCTURE)) {
-+		if (!readmem(VADDR, SYMBOL(vmap_area_list) + OFFSET(list_head.next),
-+			     &vmap_area_list, sizeof(vmap_area_list))) {
-+			ERRMSG("Can't get vmap_area_list.\n");
-+			return FALSE;
-+		}
-+		if (!readmem(VADDR, vmap_area_list - OFFSET(vmap_area.list) +
-+			     OFFSET(vmap_area.va_start), &vmalloc_start,
-+			     sizeof(vmalloc_start))) {
-+			ERRMSG("Can't get vmalloc_start.\n");
-+			return FALSE;
-+		}
-+	} else if ((SYMBOL(vmlist) != NOT_FOUND_SYMBOL)
-+		   && (OFFSET(vm_struct.addr) != NOT_FOUND_STRUCTURE)) {
-+		if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
-+			ERRMSG("Can't get vmlist.\n");
-+			return FALSE;
-+		}
-+		if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
-+			     sizeof(vmalloc_start))) {
-+			ERRMSG("Can't get vmalloc_start.\n");
-+			return FALSE;
-+		}
-+	} else {
-+		/*
-+		 * For the compatibility, makedumpfile should run without the symbol
-+		 * vmlist and the offset of vm_struct.addr if they are not necessary.
-+		 */
- 		return TRUE;
- 	}
--	if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
--		ERRMSG("Can't get vmlist.\n");
--		return FALSE;
--	}
--	if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
--	    sizeof(vmalloc_start))) {
--		ERRMSG("Can't get vmalloc_start.\n");
--		return FALSE;
--	}
- 	info->vmalloc_start = vmalloc_start;
- 	DEBUG_MSG("vmalloc_start: %lx\n", vmalloc_start);
- 
--- 
-1.8.0.2
+> ---
+> 
+> Atsushi Kumagai (4):
+>       Introduce new symbols to look at the first vmap_area.
+>       Use vmap_area_list to get vmalloc_start for i386.
+>       Use vmap_area_list to get vmalloc_start for ppc32.
+>       Use vmap_area_list to get vmalloc_start for ppc64.
+> 
+>  arch/ppc.c     | 46 ++++++++++++++++++++++++++++++++--------------
+>  arch/ppc64.c   | 46 ++++++++++++++++++++++++++++++++--------------
+>  arch/x86.c     | 46 ++++++++++++++++++++++++++++++++--------------
+>  makedumpfile.c |  9 +++++++++
+>  makedumpfile.h |  5 +++++
+>  5 files changed, 110 insertions(+), 42 deletions(-)
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
