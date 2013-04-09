@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPTEJ-0002LN-Ul
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 07:44:36 +0000
-Message-Id: <5163E2FE02000078000CB9B7@nat28.tlf.novell.com>
-Date: Tue, 09 Apr 2013 08:44:30 +0100
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [PATCH 4/8] kexec: add infrastructure for
- handling kexec images
-References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
- <1365447593-11988-5-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1365447593-11988-5-git-send-email-david.vrabel@citrix.com>
+ id 1UPUUe-0004Jb-7W
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 09:05:34 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.193])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3995N3o016468
+ for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:05:23 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+ (8.11.7/3.7W-MAILGATE-NEC)
+ id r3995Mh09882 for kexec@lists.infradead.org;
+ Tue, 9 Apr 2013 18:05:22 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3995M6W007688
+ for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:05:22 +0900 (JST)
+Date: Tue, 9 Apr 2013 17:27:06 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [PATCH 0/4] Add support for vmap_area_list.
+Message-Id: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +30,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>, xen-devel@lists.xen.org
-Cc: kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>, Ian Jackson <Ian.Jackson@eu.citrix.com>, Ian Campbell <Ian.Campbell@citrix.com>
+To: kexec@lists.infradead.org
 
->>> On 08.04.13 at 20:59, David Vrabel <david.vrabel@citrix.com> wrote:
-> +        ret = kimage_add_page(image, page_to_mfn(page) << PAGE_SHIFT);
+Hello,
 
-Constructs like this aren't portable. You ought to use
-page_to_maddr(), and have the called function have paddr_t
-instead of unsigned long as the respective parameter.
+This patchset is to work with "remove vm_struct list management":
 
-> +    struct page_list_head unuseable_pages;
+  https://lkml.org/lkml/2013/3/13/40
 
-unusable_pages.
+I tested this on i386/x86_64, but I can't do it on other 
+architectures. So, please let me know if you find any problems.
 
-Also there appear to be a few hard tabs here and there.
+---
 
-Jan
+Atsushi Kumagai (4):
+      Introduce new symbols to look at the first vmap_area.
+      Use vmap_area_list to get vmalloc_start for i386.
+      Use vmap_area_list to get vmalloc_start for ppc32.
+      Use vmap_area_list to get vmalloc_start for ppc64.
 
+ arch/ppc.c     | 46 ++++++++++++++++++++++++++++++++--------------
+ arch/ppc64.c   | 46 ++++++++++++++++++++++++++++++++--------------
+ arch/x86.c     | 46 ++++++++++++++++++++++++++++++++--------------
+ makedumpfile.c |  9 +++++++++
+ makedumpfile.h |  5 +++++
+ 5 files changed, 110 insertions(+), 42 deletions(-)
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
