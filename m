@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.active-venture.com ([67.228.131.205])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPZmo-0004d1-Mw
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 14:44:40 +0000
-Date: Tue, 9 Apr 2013 10:44:31 -0400
-From: Don Zickus <dzickus@redhat.com>
+ id 1UPa0t-00055O-6t
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 14:59:11 +0000
+Date: Tue, 9 Apr 2013 07:52:28 -0700
+From: Guenter Roeck <linux@roeck-us.net>
 Subject: Re: [RFC PATCH] watchdog: Add hook for kicking in kdump path
-Message-ID: <20130409144431.GL79013@redhat.com>
+Message-ID: <20130409145228.GA1111@roeck-us.net>
 References: <1365192994-94850-1-git-send-email-dzickus@redhat.com>
  <516259D2.7000805@redhat.com> <20130408124858.GC79013@redhat.com>
  <20130408151509.GA20919@roeck-us.net>
+ <20130409144431.GL79013@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130408151509.GA20919@roeck-us.net>
+In-Reply-To: <20130409144431.GL79013@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,63 +26,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
+To: Don Zickus <dzickus@redhat.com>
 Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, wim@iguana.be, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On Mon, Apr 08, 2013 at 08:15:09AM -0700, Guenter Roeck wrote:
-> On Mon, Apr 08, 2013 at 08:48:58AM -0400, Don Zickus wrote:
-> > On Mon, Apr 08, 2013 at 01:46:58PM +0800, Dave Young wrote:
-> > > On 04/06/2013 04:16 AM, Don Zickus wrote:
-> > > > A common problem with kdump is that during the boot up of the
-> > > > second kernel, the hardware watchdog times out and reboots the
-> > > > machine before a vmcore can be captured.
+On Tue, Apr 09, 2013 at 10:44:31AM -0400, Don Zickus wrote:
+> On Mon, Apr 08, 2013 at 08:15:09AM -0700, Guenter Roeck wrote:
+> > On Mon, Apr 08, 2013 at 08:48:58AM -0400, Don Zickus wrote:
+> > > On Mon, Apr 08, 2013 at 01:46:58PM +0800, Dave Young wrote:
+> > > > On 04/06/2013 04:16 AM, Don Zickus wrote:
+> > > > > A common problem with kdump is that during the boot up of the
+> > > > > second kernel, the hardware watchdog times out and reboots the
+> > > > > machine before a vmcore can be captured.
+> > > > > 
+> > > > > Instead of tellling customers to disable their hardware watchdog
+> > > > > timers, I hacked up a hook to put in the kdump path that provides
+> > > > > one last kick before jumping into the second kernel.
+> > > > > 
+> > > > > The assumption is the watchdog timeout is at least 10-30 seconds
+> > > > > long, enough to get the second kernel to userspace to kick the watchdog
+> > > > > again, if needed.
 > > > > 
-> > > > Instead of tellling customers to disable their hardware watchdog
-> > > > timers, I hacked up a hook to put in the kdump path that provides
-> > > > one last kick before jumping into the second kernel.
+> > > > For kdump kernel some devices need to reset, this might increase the
+> > > > boot time, it's not so reliable for the 10-30s for us to kicking the
+> > > > watchdog.
 > > > > 
-> > > > The assumption is the watchdog timeout is at least 10-30 seconds
-> > > > long, enough to get the second kernel to userspace to kick the watchdog
-> > > > again, if needed.
+> > > > Could we have another option to disable/stop the watchdog while panic
+> > > > happens? Ie. add a kernel cmdline panic_stop_wd=<0|1> for 1st kernel, if
+> > > > it's set to 1, then just stop the watchdog or we can kick the watchdog
+> > > > like what you do in this patch. Of course stopping watchdog should be
+> > > > lockless as well..
 > > > 
-> > > For kdump kernel some devices need to reset, this might increase the
-> > > boot time, it's not so reliable for the 10-30s for us to kicking the
-> > > watchdog.
+> > > Hmm, I can look into that.  But I am not sure all watchdogs have the
+> > > ability to stop once started.  I was also worried about the case where
+> > 
+> > Correct.
+> > 
+> > > kdump hangs for some reason.  Having the watchdog there to 'reboot' would
+> > > be a nice safety net.
 > > > 
-> > > Could we have another option to disable/stop the watchdog while panic
-> > > happens? Ie. add a kernel cmdline panic_stop_wd=<0|1> for 1st kernel, if
-> > > it's set to 1, then just stop the watchdog or we can kick the watchdog
-> > > like what you do in this patch. Of course stopping watchdog should be
-> > > lockless as well..
+> > Absolutely agree. After all, the reason for the kdump is most likely that
+> > something went really wrong, meaning there is some likelyhood for the hang
+> > to occur. Turning off the watchdog in this condition does not seem to be
+> > a good idea.
 > > 
-> > Hmm, I can look into that.  But I am not sure all watchdogs have the
-> > ability to stop once started.  I was also worried about the case where
+> > > Perhaps adjusting the watchdog 'timeout' to something like 3 minutes would
+> > > be easier?
+> > > 
+> > Not all watchdogs support such large timeouts, unfortunately. Maybe it would
+> > make sense to implement infrastructure support for a softdog on top of the
+> > hardware watchdog. Several drivers implement that outside the infrastructure
+> > already.
 > 
-> Correct.
+> Hi Guenter,
 > 
-> > kdump hangs for some reason.  Having the watchdog there to 'reboot' would
-> > be a nice safety net.
-> > 
-> Absolutely agree. After all, the reason for the kdump is most likely that
-> something went really wrong, meaning there is some likelyhood for the hang
-> to occur. Turning off the watchdog in this condition does not seem to be
-> a good idea.
+> I am not familar with a softdog.  Can you give me an example of how it
+> works?
 > 
-> > Perhaps adjusting the watchdog 'timeout' to something like 3 minutes would
-> > be easier?
-> > 
-> Not all watchdogs support such large timeouts, unfortunately. Maybe it would
-> make sense to implement infrastructure support for a softdog on top of the
-> hardware watchdog. Several drivers implement that outside the infrastructure
-> already.
+Just look for the use of mod_timer in the watchdog directory.
 
-Hi Guenter,
-
-I am not familar with a softdog.  Can you give me an example of how it
-works?
-
-Cheers,
-Don
+Guenter
 
 _______________________________________________
 kexec mailing list
