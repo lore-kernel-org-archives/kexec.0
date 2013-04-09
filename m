@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPUUw-0004Kl-M4
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 09:05:51 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.195])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3995mFH016786
- for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:05:48 +0900 (JST)
+ id 1UPUVP-0004M2-7q
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 09:06:20 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.193])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3996DnK008294
+ for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:06:13 +0900 (JST)
 Received: (from root@localhost) by mailgate3.nec.co.jp
  (8.11.7/3.7W-MAILGATE-NEC)
- id r3995ma03567 for kexec@lists.infradead.org;
- Tue, 9 Apr 2013 18:05:48 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3995GFe007643
- for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:05:48 +0900 (JST)
-Date: Tue, 9 Apr 2013 17:27:46 +0900
+ id r3996D411516 for kexec@lists.infradead.org;
+ Tue, 9 Apr 2013 18:06:13 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id r3996Cbn008113
+ for <kexec@lists.infradead.org>; Tue, 9 Apr 2013 18:06:12 +0900 (JST)
+Date: Tue, 9 Apr 2013 17:28:35 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 1/4] Introduce new symbols to look at the first vmap_area.
-Message-Id: <20130409172746.d1cff9900f219404f589352e@mxc.nes.nec.co.jp>
+Subject: [PATCH 2/4] Use vmap_area_list to get vmalloc_start for i386.
+Message-Id: <20130409172835.e7d6216f792f3576a6ab6671@mxc.nes.nec.co.jp>
 In-Reply-To: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
 References: <20130409172706.d6eda15764b0ef2700588e74@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
@@ -35,104 +35,84 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Thu, 14 Mar 2013 11:08:57 +0900
-Subject: [PATCH 1/4] Introduce new symbols to look at the first vmap_area.
+Date: Thu, 14 Mar 2013 19:10:49 +0900
+Subject: [PATCH 2/4] Use vmap_area_list to get vmalloc_start for i386.
 
-struct vmlist which we used to get vmalloc_start value will be
-removed from kernel soon, so we have to look at the first vmap_area
-in the sorted vmap_area_list instead of vmlist.
-
-The address which contains vmalloc_start value is represented as
-below:
-
-  vmap_area_list.next - OFFSET(vmap_area.list) + OFFSET(vmap_area.va_start)
-
-This patch introduces these symbols.
+Try to get vmalloc_start value from vmap_area_list first for
+newer i386 kernels.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- makedumpfile.c | 9 +++++++++
- makedumpfile.h | 5 +++++
- 2 files changed, 14 insertions(+)
+ arch/x86.c | 46 ++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 14 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 6de0581..9cf907c 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -854,6 +854,7 @@ get_symbol_info(void)
- 	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
- 	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
- 	SYMBOL_INIT(vmlist, "vmlist");
-+	SYMBOL_INIT(vmap_area_list, "vmap_area_list");
- 	SYMBOL_INIT(phys_base, "phys_base");
- 	SYMBOL_INIT(node_online_map, "node_online_map");
- 	SYMBOL_INIT(node_states, "node_states");
-@@ -989,6 +990,8 @@ get_structure_info(void)
- 	OFFSET_INIT(node_memblk_s.nid, "node_memblk_s", "nid");
+diff --git a/arch/x86.c b/arch/x86.c
+index ef29e3c..e397905 100644
+--- a/arch/x86.c
++++ b/arch/x86.c
+@@ -70,7 +70,7 @@ remap_init(void)
+ int
+ get_machdep_info_x86(void)
+ {
+-	unsigned long vmlist, vmalloc_start;
++	unsigned long vmlist, vmap_area_list, vmalloc_start;
  
- 	OFFSET_INIT(vm_struct.addr, "vm_struct", "addr");
-+	OFFSET_INIT(vmap_area.va_start, "vmap_area", "va_start");
-+	OFFSET_INIT(vmap_area.list, "vmap_area", "list");
+ 	/* PAE */
+ 	if ((vt.mem_flags & MEMORY_X86_PAE)
+@@ -100,22 +100,40 @@ get_machdep_info_x86(void)
+ 		return FALSE;
  
  	/*
- 	 * Get offset of the module members.
-@@ -1368,6 +1371,7 @@ write_vmcoreinfo_data(void)
- 	WRITE_SYMBOL("swapper_pg_dir", swapper_pg_dir);
- 	WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
- 	WRITE_SYMBOL("vmlist", vmlist);
-+	WRITE_SYMBOL("vmap_area_list", vmap_area_list);
- 	WRITE_SYMBOL("phys_base", phys_base);
- 	WRITE_SYMBOL("node_online_map", node_online_map);
- 	WRITE_SYMBOL("node_states", node_states);
-@@ -1430,6 +1434,8 @@ write_vmcoreinfo_data(void)
- 	WRITE_MEMBER_OFFSET("node_memblk_s.size", node_memblk_s.size);
- 	WRITE_MEMBER_OFFSET("node_memblk_s.nid", node_memblk_s.nid);
- 	WRITE_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
-+	WRITE_MEMBER_OFFSET("vmap_area.va_start", vmap_area.va_start);
-+	WRITE_MEMBER_OFFSET("vmap_area.list", vmap_area.list);
- 	WRITE_MEMBER_OFFSET("log.ts_nsec", log.ts_nsec);
- 	WRITE_MEMBER_OFFSET("log.len", log.len);
- 	WRITE_MEMBER_OFFSET("log.text_len", log.text_len);
-@@ -1684,6 +1690,7 @@ read_vmcoreinfo(void)
- 	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
- 	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
- 	READ_SYMBOL("vmlist", vmlist);
-+	READ_SYMBOL("vmap_area_list", vmap_area_list);
- 	READ_SYMBOL("phys_base", phys_base);
- 	READ_SYMBOL("node_online_map", node_online_map);
- 	READ_SYMBOL("node_states", node_states);
-@@ -1739,6 +1746,8 @@ read_vmcoreinfo(void)
- 	READ_MEMBER_OFFSET("node_memblk_s.size", node_memblk_s.size);
- 	READ_MEMBER_OFFSET("node_memblk_s.nid", node_memblk_s.nid);
- 	READ_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
-+	READ_MEMBER_OFFSET("vmap_area.va_start", vmap_area.va_start);
-+	READ_MEMBER_OFFSET("vmap_area.list", vmap_area.list);
- 	READ_MEMBER_OFFSET("log.ts_nsec", log.ts_nsec);
- 	READ_MEMBER_OFFSET("log.len", log.len);
- 	READ_MEMBER_OFFSET("log.text_len", log.text_len);
-diff --git a/makedumpfile.h b/makedumpfile.h
-index de329f3..36cb9fd 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1096,6 +1096,7 @@ struct symbol_table {
- 	unsigned long long	swapper_pg_dir;
- 	unsigned long long	init_level4_pgt;
- 	unsigned long long	vmlist;
-+	unsigned long long	vmap_area_list;
- 	unsigned long long	phys_base;
- 	unsigned long long	node_online_map;
- 	unsigned long long	node_states;
-@@ -1233,6 +1234,10 @@ struct offset_table {
- 	struct vm_struct {
- 		long	addr;
- 	} vm_struct;
-+	struct vmap_area {
-+		long	va_start;
-+		long	list;
-+	} vmap_area;
+-	 * For the compatibility, makedumpfile should run without the symbol
+-	 * vmlist and the offset of vm_struct.addr if they are not necessary.
++	 * Get vmalloc_start value from either vmap_area_list or vmlist.
+ 	 */
+-	if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
+-	    || (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
++	if ((SYMBOL(vmap_area_list) != NOT_FOUND_SYMBOL)
++	    && (OFFSET(vmap_area.va_start) != NOT_FOUND_STRUCTURE)
++	    && (OFFSET(vmap_area.list) != NOT_FOUND_STRUCTURE)) {
++		if (!readmem(VADDR, SYMBOL(vmap_area_list) + OFFSET(list_head.next),
++			     &vmap_area_list, sizeof(vmap_area_list))) {
++			ERRMSG("Can't get vmap_area_list.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR, vmap_area_list - OFFSET(vmap_area.list) +
++			     OFFSET(vmap_area.va_start), &vmalloc_start,
++			     sizeof(vmalloc_start))) {
++			ERRMSG("Can't get vmalloc_start.\n");
++			return FALSE;
++		}
++	} else if ((SYMBOL(vmlist) != NOT_FOUND_SYMBOL)
++		   && (OFFSET(vm_struct.addr) != NOT_FOUND_STRUCTURE)) {
++		if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
++			ERRMSG("Can't get vmlist.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
++			     sizeof(vmalloc_start))) {
++			ERRMSG("Can't get vmalloc_start.\n");
++			return FALSE;
++		}
++	} else {
++		/*
++		 * For the compatibility, makedumpfile should run without the symbol
++		 * used to get vmalloc_start value if they are not necessary.
++		 */
+ 		return TRUE;
+ 	}
+-	if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
+-		ERRMSG("Can't get vmlist.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
+-	    sizeof(vmalloc_start))) {
+-		ERRMSG("Can't get vmalloc_start.\n");
+-		return FALSE;
+-	}
+ 	info->vmalloc_start = vmalloc_start;
+ 	DEBUG_MSG("vmalloc_start: %lx\n", vmalloc_start);
  
- 	/*
- 	 * for Xen extraction
 -- 
 1.8.0.2
 
