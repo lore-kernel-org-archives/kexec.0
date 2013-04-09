@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from mail-da0-x22b.google.com ([2607:f8b0:400e:c00::22b])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPHPb-0007Ih-Gl
- for kexec@lists.infradead.org; Mon, 08 Apr 2013 19:07:29 +0000
-From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 4/5] kexec/xen: switch to use xc_kexec_get_range for
- get_xen_vmcoreinfo.
-Date: Mon, 8 Apr 2013 20:06:53 +0100
-Message-ID: <1365448014-12119-5-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1365448014-12119-1-git-send-email-david.vrabel@citrix.com>
-References: <1365448014-12119-1-git-send-email-david.vrabel@citrix.com>
+ id 1UPMsp-0005GS-2F
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 00:58:00 +0000
+Received: by mail-da0-f43.google.com with SMTP id u36so2862688dak.16
+ for <kexec@lists.infradead.org>; Mon, 08 Apr 2013 17:57:56 -0700 (PDT)
+Date: Tue, 9 Apr 2013 08:57:30 +0800
+From: Wang YanQing <udknight@gmail.com>
+Subject: Re: [PATCH v2]kexec:i386:kexec-bzImage: Fix pass garbage command
+ line to new kernel
+Message-ID: <20130409005730.GA2041@udknight>
+References: <20130408094358.GB23828@udknight> <51629338.5080906@cn.fujitsu.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51629338.5080906@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,66 +26,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: xen-devel@lists.xen.org
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Don Slutz <Don@CloudSwitch.com>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: tjd21@cl.cam.ac.uk, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, zhangyanfei.yes@gmail.com
 
-From: Don Slutz <Don@CloudSwitch.com>
+On Mon, Apr 08, 2013 at 05:51:52PM +0800, Zhang Yanfei wrote:
+> I don't think the patch is necessary, please see below.
 
-Signed-off-by: Don Slutz <Don@CloudSwitch.com>
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
----
- kexec/crashdump-xen.c |   20 ++++++++++++++++++++
- kexec/crashdump.c     |    2 ++
- 2 files changed, 22 insertions(+), 0 deletions(-)
+I think bootloader prepare garbage in the command line
+buffer which will be passed  into kernel command line buffer 
+is not good, and I should use RFC instead of PATCH in 
+the subject, I haven't test this patch before send it out, sorry.
 
-diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-index 13335a5..dfb86c8 100644
---- a/kexec/crashdump-xen.c
-+++ b/kexec/crashdump-xen.c
-@@ -164,6 +164,26 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
- }
- 
- #ifdef HAVE_LIBXENCTRL
-+int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
-+{
-+	xc_interface *xc;
-+	int ret = 0;
-+
-+	xc = xc_interface_open(NULL, NULL, 0);
-+	if (!xc) {
-+	        fprintf(stderr, "failed to open xen control interface.\n");
-+	        return -1;
-+	}
-+
-+	ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_VMCOREINFO, 0, len, addr);
-+
-+	xc_interface_close(xc);
-+
-+	if (ret < 0)
-+	        return -1;
-+	return 0;
-+}
-+
- int xen_get_nr_phys_cpus(void)
- {
- 	xc_interface *xc;
-diff --git a/kexec/crashdump.c b/kexec/crashdump.c
-index cdd3ef6..b8441b7 100644
---- a/kexec/crashdump.c
-+++ b/kexec/crashdump.c
-@@ -141,7 +141,9 @@ int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
- 	return get_vmcoreinfo("/sys/kernel/vmcoreinfo", addr, len);
- }
- 
-+#ifndef HAVE_LIBXENCTRL
- int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
- {
- 	return get_vmcoreinfo("/sys/hypervisor/vmcoreinfo", addr, len);
- }
-+#endif
--- 
-1.7.2.5
+After all, I have no time to dig this problem deeper right now,
+I will prepare another patch to fix it if I have time to understand 
+all the relative codes about this problem.
 
+Thanks.
 
 _______________________________________________
 kexec mailing list
