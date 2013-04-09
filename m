@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-da0-x22f.google.com ([2607:f8b0:400e:c00::22f])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPN3a-0005NN-T2
- for kexec@lists.infradead.org; Tue, 09 Apr 2013 01:09:07 +0000
-Received: by mail-da0-f47.google.com with SMTP id s35so2859121dak.20
- for <kexec@lists.infradead.org>; Mon, 08 Apr 2013 18:09:04 -0700 (PDT)
-Date: Tue, 9 Apr 2013 09:08:47 +0800
-From: Wang YanQing <udknight@gmail.com>
-Subject: Re: [PATCH v2]kexec:i386:kexec-bzImage: Fix pass garbage command
- line to new kernel
-Message-ID: <20130409010847.GA3281@udknight>
-References: <20130408094358.GB23828@udknight> <51629338.5080906@cn.fujitsu.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UPOd7-0006ho-Pl
+ for kexec@lists.infradead.org; Tue, 09 Apr 2013 02:49:54 +0000
+Date: Tue, 9 Apr 2013 11:49:50 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCHv2 0/4] kexec-tools: add support for Xen 4.3
+Message-ID: <20130409024950.GC11444@verge.net.au>
+References: <1365448014-12119-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51629338.5080906@cn.fujitsu.com>
+In-Reply-To: <1365448014-12119-1-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,25 +23,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: tjd21@cl.cam.ac.uk, kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com, zhangyanfei.yes@gmail.com
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
-On Mon, Apr 08, 2013 at 05:51:52PM +0800, Zhang Yanfei wrote:
+Hi David,
 
-> This is obviously wrong. 
-Yes, it is obviously wrong
-> Purgatory may append a kexec_jump_back_entry= argument into the commandline. It is
-> an argument belongs to the commandline. So why there is a buf filled with 0 
-> (alloc_command_line_len) before it in the commandline buf.
-Kernel will copy all the COMMAND_LINE_SIZE len buffer pointer by 
-cmd_line_ptr, but kexec-bzImage just prepare a very shorter buffer
-in the below line check failed code path:
+On Mon, Apr 08, 2013 at 08:06:49PM +0100, David Vrabel wrote:
+> The series adds support for the new hypercall ABI which should be
+> provided by Xen 4.3.  Images are loaded into Xen directly with no
+> kernel involvement.
+> 
+> Do not apply until the hypervisor side patches are applied to Xen.
 
-if (info->kexec_flags & (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT))
+Please let me know when you are ready for these to be applied
+by reposting them.
 
-in the check sucess code path, it seems good by below line:
-modified_cmdline = xmalloc(COMMAND_LINE_SIZE);
-
+> Patch 1 is unrelated but kexec wouldn't work for me without it. Not
+> sure why I had problems, perhaps a toolstack specific issue?
+> 
+> Patch 2 makes libxc 4.3 mandatory for Xen support.
+> 
+> Patch 3-4 removes a use of /proc/iomem in favour of libxc.
+> 
+> Patch 5 adds the support for loading, unloading, and exec'ing an image
+> in Xen.
+> 
+> This series explicitly drops support for older version of libxc/Xen as
+> supporting kexec on these hypervisors requires kernel support that
+> will never be available upstream.
+> 
+> Changes since v1:
+> - Patch from Don Sultz: use libxc for vmcoreinfo.
+> - Use xc_get_max_cpus() to get number of PCPUs.
+> - Enable unload and exec of images.
+> 
+> David
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
