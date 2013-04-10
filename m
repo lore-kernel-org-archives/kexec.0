@@ -1,25 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.active-venture.com ([67.228.131.205])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPxv6-0000vs-Os
- for kexec@lists.infradead.org; Wed, 10 Apr 2013 16:30:49 +0000
-Date: Wed, 10 Apr 2013 09:30:56 -0700
-From: Guenter Roeck <linux@roeck-us.net>
+ id 1UPyD3-0001Cu-8k
+ for kexec@lists.infradead.org; Wed, 10 Apr 2013 16:49:22 +0000
+Date: Wed, 10 Apr 2013 12:49:14 -0400
+From: David Teigland <teigland@redhat.com>
 Subject: Re: [RFC PATCH] watchdog: Add hook for kicking in kdump path
-Message-ID: <20130410163056.GB23891@roeck-us.net>
-References: <20130408151509.GA20919@roeck-us.net>
+Message-ID: <20130410164914.GA18946@redhat.com>
+References: <1365192994-94850-1-git-send-email-dzickus@redhat.com>
+ <516259D2.7000805@redhat.com> <20130408124858.GC79013@redhat.com>
+ <20130408151509.GA20919@roeck-us.net>
  <20130409144431.GL79013@redhat.com>
  <20130409145228.GA1111@roeck-us.net>
  <20130409151423.GM79013@redhat.com>
  <20130409160757.GA27050@roeck-us.net>
  <20130410134039.GV79013@redhat.com>
- <20130410135123.GB15456@roeck-us.net>
- <20130410142055.GW79013@redhat.com>
- <20130410151041.GA6670@roeck-us.net>
- <20130410161739.GY79013@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130410161739.GY79013@redhat.com>
+In-Reply-To: <20130410134039.GV79013@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,135 +31,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Don Zickus <dzickus@redhat.com>
-Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, wim@iguana.be, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, wim@iguana.be, vgoyal@redhat.com, Dave Young <dyoung@redhat.com>, Guenter Roeck <linux@roeck-us.net>
 
-On Wed, Apr 10, 2013 at 12:17:39PM -0400, Don Zickus wrote:
-> On Wed, Apr 10, 2013 at 08:10:41AM -0700, Guenter Roeck wrote:
-> > On Wed, Apr 10, 2013 at 10:20:55AM -0400, Don Zickus wrote:
-> > > On Wed, Apr 10, 2013 at 06:51:23AM -0700, Guenter Roeck wrote:
-> > > > On Wed, Apr 10, 2013 at 09:40:39AM -0400, Don Zickus wrote:
-> > > > > On Tue, Apr 09, 2013 at 09:07:58AM -0700, Guenter Roeck wrote:
-> > > > > > > > Just look for the use of mod_timer in the watchdog directory.
-> > > > > > > 
-> > > > > > > So looking at the mod_timer logic in various drivers, it seems regardless
-> > > > > > > if the /dev/watchdog device is opened or not, if it is running, it will
-> > > > > > > automagically kick the watchdog.
-> > > > > > > 
-> > > > > > yes
-> > > > > > 
-> > > > > > > This seems that we can avoid pulling in userspace pieces for this.  Just
-> > > > > > > load the driver and the hardware starts getting kicked.
-> > > > > > > 
-> > > > > > Only if it is already running. Also, you don't want to rely on it, because you
-> > > > > > lose protection against user space issues.
-> > > > > 
-> > > > > IOW if something goes wrong with a runaway userspace app, the kernel
-> > > > > blindly continues to kick the watchdog, which masks the problem, right?
-> > > > > 
-> > > > That would be wrong if any of the drivers does that. The kernel should stop
-> > > > kicking after the software timeout expires.
-> > > > 
-> > > > For example, if the HW needs to be kicked every second, and the high level
-> > > > timeout is set to one minute, the driver should keep kicking the hardware
-> > > > watchdog for one minute and then stop doing it if /dev/watchdog was opened
-> > > > and userspace is silent. 
-> > > 
-> > > Ah ok.
-> > > 
-> > > > 
-> > > > > > 
-> > > > > > A second use is if the hw watchdog needs to be pinged more often than user
-> > > > > > space can provide. Some of the HW watchdogs need a ping in one-second intervals
-> > > > > > or even faster.
-> > > > > > 
-> > > > > > > Is that true?  And if so, do all drivers detect if the hardware is already
-> > > > > > > running during their init?  Or is it based on the first device open?
-> > > > > > > 
-> > > > > > It is usually done in the probe function.
-> > > > > 
-> > > > > Ok.  Thanks for the understanding of how the softdog stuff works.
-> > > > > 
-> > > > > However, we still have the problem that if the machine panics and we want
-> > > > > to jump into the kdump kernel, we need to 'kick' the watchdog one more
-> > > > > time.  This provides us a sane sync point for determining how long we have
-> > > > > to load the watchdog driver in the second kernel before the hardware
-> > > > > reboots us.  Otherwise the reboots are pretty random and nothing is
-> > > > > guaranteed.
-> > > > > 
-> > > > > Hence the need for some sort of patch resembling the one I posted.
-> > > > > 
-> > > > > Soooooooo, any thoughts about that patch and what changes I should make?
-> > > > > :-)
-> > > > > 
-> > > > The FIXME is a problem, and I think the name and scope would have to be
-> > > > more generic (watchdog_kick ?). Also, it doesn't solve the problem
-> > > > of having multiple open watchdogs (my system has three, for example),
-> > > > and it doesn't check if the watchdog is running.
-> > > 
-> > > Ok.  I didn't know the watchdog subsystem well enough, so I just took
-> > > stabs in the dark about how things should work.  I appreciate the
-> > > feedback.
-> > > 
-> > > I could make the name more generic.  I wasn't sure if the watchdog
-> > > community would frown on that.  The FIXME is a problem, I am not sure how
-> > 
-> > I don't know what others think, but I would prefer a more generic name.
-> > That its current use is for kdump is besides the point; there could be
-> > other valid uses.
-> 
-> Ok.
-> 
-> > 
-> > > to handle the 'fail' scenario (can't get the mutex with trylock).  And I
-> > 
-> > I would just return without doing anything. After all, if the mutex is held,
-> > it is possible if not likely that the code crashed _in_ the watchdog code,
-> > so it might be better to just let it crash and burn in that case.
-> 
-> Hmm. Interesting point.  So you are implying most watchdog mutex locks surround
-> quickly executed code that are not called often.  And if we do catch the
-> mutex being held it is either because the watchdog code has failed (bad)
-> or just bad timing :-).
-> 
-Hopefully all locks are for short periods of time ;).
+On Wed, Apr 10, 2013 at 09:40:39AM -0400, Don Zickus wrote:
+> However, we still have the problem that if the machine panics and we want
+> to jump into the kdump kernel, we need to 'kick' the watchdog one more
+> time.  This provides us a sane sync point for determining how long we have
+> to load the watchdog driver in the second kernel before the hardware
+> reboots us.  Otherwise the reboots are pretty random and nothing is
+> guaranteed.
 
-Since the lock is per device, it would either mean that the code has crashed
-there, or that some other entity is busy dealing with the device, presumably
-trying to ping it. Either case, I think the best (safest) way to deal with
-the situation would be to ignore it.
+Some time ago I submitted this patch
+http://www.spinics.net/lists/linux-watchdog/msg01477.html
 
-> For now I can just do the trylock and return on failure, printing a big
-> fat warning for post-debug purposes.  If it becomes a bigger problem, we
-> can refine the approach later I guess.
-> 
-Ok.
+to get rid of the one "extraneous" ping that was causing me trouble.
+I'd still like to see merged, but haven't had time to follow up.
 
-> > 
-> > > have no idea how to even find out if multiple watchdogs are open on the
-> > > system.  Is there a list I could walk?  And with regard to 'watchdog is
-> > 
-> > /* the dev_t structure to store the dynamically allocated watchdog devices */
-> > static dev_t watchdog_devt;
-> > 
-> > One way to look up the allocated watchdogs might be to loop through all kobj
-> > instances for the major device using kobj_lookup. Don't know if there is a
-> > better way.
-> 
-> I can poke at that to see if I can get something to work.  Thanks.
-> 
-> > 
-> > > running', I thought 'watchdog_active' would do that.  But again, I could
-> > > be misreading the code.
-> > > 
-> > You are right. Missed that part, sorry.
-> 
-> No problem, just wanted to make sure I was understanding things correctly.
-> 
-> Again thanks for the feedback.  I'll spin a V2.
-> 
-Make sure you add the kexec maintainer to Cc and get an Ack.
+I have a use case where I need to guarantee that the watchdog
+will *not* be pinged unless my userland daemon does the ping.
+If my daemon is killed, the close() generates a ping that I
+don't intend.  This kdump ping looks like it would be another
+instance that I'd need to suppress.  Perhaps by renaming my flag
+WDOG_NO_EXTRA_PING and checking it both in release and in
+kick_for_kdump?
 
-Guenter
+(My daemon associates watchdog pings with shared storage heartbeats.
+Based on the heartbeats, hosts in a cluster can calculate when an
+unresponsive host last pinged its watchdog, and can be fairly
+certain that the "dead" host has been reset by its watchdog 60
+seconds later.  This is used as an alternative to i/o fencing
+where we're protecting data on shared storage from corruption
+after host failures.  If there are uncontrolled watchdog pings,
+then hosts don't know when a dead host might have last pinged
+its watchdog, since it is no longer based on the last timestamp
+it wrote to shared storage.)
+
+Dave
 
 _______________________________________________
 kexec mailing list
