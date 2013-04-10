@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPpI5-0005ZE-4u
- for kexec@lists.infradead.org; Wed, 10 Apr 2013 07:17:58 +0000
-Date: Wed, 10 Apr 2013 16:10:52 +0900
+ id 1UPpPD-0005lT-16
+ for kexec@lists.infradead.org; Wed, 10 Apr 2013 07:25:19 +0000
+Date: Wed, 10 Apr 2013 16:20:18 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [RESEND PATCH 3/4] Use vmap_area_list to get vmalloc_start for ppc32.
-Message-Id: <20130410161052.f25fe041330732e3c2252305@mxc.nes.nec.co.jp>
+Subject: [RESEND PATCH 4/4] Use vmap_area_list to get vmalloc_start for ppc64.
+Message-Id: <20130410162018.2ee96e649d212d69c0710b6e@mxc.nes.nec.co.jp>
 In-Reply-To: <20130410150524.804cd23b99a697f71146be67@mxc.nes.nec.co.jp>
 References: <20130410150524.804cd23b99a697f71146be67@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
@@ -26,22 +26,22 @@ To: kexec@lists.infradead.org
 Cc: linuxppc-dev@lists.ozlabs.org
 
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Fri, 15 Mar 2013 19:30:23 +0900
-Subject: [PATCH 3/4] Use vmap_area_list to get vmalloc_start for ppc32.
+Date: Fri, 15 Mar 2013 19:34:30 +0900
+Subject: [PATCH 4/4] Use vmap_area_list to get vmalloc_start for ppc64.
 
 Try to get vmalloc_start value from vmap_area_list first for
-newer ppc32 kernels.
+newer ppc64 kernels.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- arch/ppc.c | 44 +++++++++++++++++++++++++++++++-------------
+ arch/ppc64.c | 44 +++++++++++++++++++++++++++++++-------------
  1 file changed, 31 insertions(+), 13 deletions(-)
 
-diff --git a/arch/ppc.c b/arch/ppc.c
-index 2bc8d5f..a9b4812 100644
---- a/arch/ppc.c
-+++ b/arch/ppc.c
-@@ -44,22 +44,40 @@ get_machdep_info_ppc(void)
+diff --git a/arch/ppc64.c b/arch/ppc64.c
+index afbaf55..c229ede 100644
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -66,22 +66,40 @@ get_machdep_info_ppc64(void)
  	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
  
  	/*
