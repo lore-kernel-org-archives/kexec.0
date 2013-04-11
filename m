@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UQJ5d-0003iC-P0
- for kexec@lists.infradead.org; Thu, 11 Apr 2013 15:07:06 +0000
-Message-ID: <5166D18A.7090800@zytor.com>
-Date: Thu, 11 Apr 2013 08:06:50 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <5166E289.8070104@wwwdotorg.org>
+Date: Thu, 11 Apr 2013 10:19:21 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
- of memmap= boot parameter
-References: <1365683207-42425-1-git-send-email-trenn@suse.de>
- <1365683207-42425-6-git-send-email-trenn@suse.de>
- <CAE9FiQXnZzVC7dtvXWrqz=jYAGH053R8Vw1qkrMd2F+hAaMxdQ@mail.gmail.com>
-In-Reply-To: <CAE9FiQXnZzVC7dtvXWrqz=jYAGH053R8Vw1qkrMd2F+hAaMxdQ@mail.gmail.com>
+Subject: Re: Kexec couldn't reboot capture kernel on pandaboard ES with
+ OMAP4460
+References: <CAFNq8R5FFUyH+JgjoGc5ctgEfiLvxzi7fzawM7+wFX5nEyTv-w@mail.gmail.com>
+ <51658B1A.6090706@wwwdotorg.org>
+ <CAFNq8R6mRJRygfnYvZgwVWOqsrhrjNUYzyZGU0cVsnE30W_xGg@mail.gmail.com>
+In-Reply-To: <CAFNq8R6mRJRygfnYvZgwVWOqsrhrjNUYzyZGU0cVsnE30W_xGg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,54 +21,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Renninger <trenn@suse.de>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Cliff Wickman <cpw@sgi.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Li Haifeng <omycle@gmail.com>
+Cc: linux-omap@vger.kernel.org, pandaboard@googlegroups.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-On 04/11/2013 07:55 AM, Yinghai Lu wrote:
-> On Thu, Apr 11, 2013 at 5:26 AM, Thomas Renninger <trenn@suse.de> wrote:
->> Currently ranges are passed via kernel boot parameters:
->> memmap=exactmap memmap=X#Y memmap=
+On 04/10/2013 10:46 PM, Li Haifeng wrote:
+> 2013/4/10 Stephen Warren <swarren@wwwdotorg.org>:
+>> On 04/10/2013 03:35 AM, Li Haifeng wrote:
+>>> Hi, everyone.
+>>>
+>>> Recently, I try to run kdump on pandaboard ES with omap4460. After
+>>> load capture kernel by "kexec -l" and execute "kexec -e", the serial
+>>> port output "Starting new kernel" and "Bye", then the system hangs up.
+>>>
+>>> I have tried the upstream Linux Kernel v3.4 and v3.8. All are with this issue.
 >>
->> Pass them via e820 table directly instead.
+>> This is a shot in the dark. I assume you have SMP enabled. Can you use
+>> hotplug to remove all CPUs other than CPU0, so that the kexec happens on
+>> the boot CPU? That is certainly necessary for kexec to work correctly on
+>> Tegra.
 > 
-> how to address "saved_max_pfn" referring in kernel?
+> Thanks for your attention.
 > 
-> kernel need to use saved_max_pfn from old e820 in
-> drivers/char/mem.c::read_oldmem()
+> I do disable SMP feature. And the .config file for v3.8 could be found here:
+> http://pastehtml.com/view/cylyrfejt.txt
+...
+> The output:
+> [   57.373687] Starting new kernel
+> [   57.377044] Bye!
 > 
-> mips and powerpc they are passing that from command line "savemaxmem="
-> 
-> x86 should use that too?
-> 
+> Then system hangs.
 
-Oh bloody hell, yet another f-ing "max_pfn" variable.
-
-The *only* one that makes any kind of sense is max_low_pfn (marking the
-cutoff to highmem)... the pretty much the rest of them are just plain wrong.
-
-And I don't mean "mildly annoying", I mean "catastrophically wrong
-semantics".  In this case, it introduces a completely arbitrary
-distinction between a nonmemory range below a high water mark and a
-nonmemory range above that high water mark.  In fact, from reading the
-code it seems pretty clear that the device will blindly assume that
-anything below saved_max_pfn is memory and will try to map it
-cachable... which will #MC on quite a few machines.
-
-This kind of crap HAS TO STOP.  Memory is discontiguous, deal with it
-and deal with it properly.
-
-I also have to admit that I don't see the difference between /dev/mem
-and /dev/oldmem, as the former allows access to memory ranges outside
-the ones used by the current kernel, which is what the oldmem device
-seems to be intended to od.
-
-	-hpa
-
-
--- 
-H. Peter Anvin, Intel Open Source Technology Center
-I work for Intel.  I don't speak on their behalf.
-
+Oh well, you've exhausted my knowledge I'm afraid! I can only suggesting
+trying to enable earlyprintk and/or uncompressor debug in the kernel
+you're kexec'ing and see if that yields any clue. Either that, or JTAG!
 
 _______________________________________________
 kexec mailing list
