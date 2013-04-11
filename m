@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.active-venture.com ([67.228.131.205])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UPye5-0001qR-Ci
- for kexec@lists.infradead.org; Wed, 10 Apr 2013 17:17:17 +0000
-Date: Wed, 10 Apr 2013 10:17:22 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC PATCH] watchdog: Add hook for kicking in kdump path
-Message-ID: <20130410171722.GC19533@roeck-us.net>
-References: <1365192994-94850-1-git-send-email-dzickus@redhat.com>
- <516259D2.7000805@redhat.com> <20130408124858.GC79013@redhat.com>
- <20130408151509.GA20919@roeck-us.net>
- <20130409144431.GL79013@redhat.com>
- <20130409145228.GA1111@roeck-us.net>
- <20130409151423.GM79013@redhat.com>
- <20130409160757.GA27050@roeck-us.net>
- <20130410134039.GV79013@redhat.com>
- <20130410164914.GA18946@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130410164914.GA18946@redhat.com>
+In-Reply-To: <51658B1A.6090706@wwwdotorg.org>
+References: <CAFNq8R5FFUyH+JgjoGc5ctgEfiLvxzi7fzawM7+wFX5nEyTv-w@mail.gmail.com>
+ <51658B1A.6090706@wwwdotorg.org>
+Date: Thu, 11 Apr 2013 12:46:07 +0800
+Message-ID: <CAFNq8R6mRJRygfnYvZgwVWOqsrhrjNUYzyZGU0cVsnE30W_xGg@mail.gmail.com>
+Subject: Re: Kexec couldn't reboot capture kernel on pandaboard ES with
+ OMAP4460
+From: Li Haifeng <omycle@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,50 +20,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Teigland <teigland@redhat.com>
-Cc: Don Zickus <dzickus@redhat.com>, linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, wim@iguana.be, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-omap@vger.kernel.org, pandaboard@googlegroups.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Apr 10, 2013 at 12:49:14PM -0400, David Teigland wrote:
-> On Wed, Apr 10, 2013 at 09:40:39AM -0400, Don Zickus wrote:
-> > However, we still have the problem that if the machine panics and we want
-> > to jump into the kdump kernel, we need to 'kick' the watchdog one more
-> > time.  This provides us a sane sync point for determining how long we have
-> > to load the watchdog driver in the second kernel before the hardware
-> > reboots us.  Otherwise the reboots are pretty random and nothing is
-> > guaranteed.
-> 
-> Some time ago I submitted this patch
-> http://www.spinics.net/lists/linux-watchdog/msg01477.html
-> 
-> to get rid of the one "extraneous" ping that was causing me trouble.
-> I'd still like to see merged, but haven't had time to follow up.
-> 
-The use case makes sense to me, so it gets my Ack. Did Wim ever comment on it ?
+2013/4/10 Stephen Warren <swarren@wwwdotorg.org>:
+> On 04/10/2013 03:35 AM, Li Haifeng wrote:
+>> Hi, everyone.
+>>
+>> Recently, I try to run kdump on pandaboard ES with omap4460. After
+>> load capture kernel by "kexec -l" and execute "kexec -e", the serial
+>> port output "Starting new kernel" and "Bye", then the system hangs up.
+>>
+>> I have tried the upstream Linux Kernel v3.4 and v3.8. All are with this issue.
+>
+> This is a shot in the dark. I assume you have SMP enabled. Can you use
+> hotplug to remove all CPUs other than CPU0, so that the kexec happens on
+> the boot CPU? That is certainly necessary for kexec to work correctly on
+> Tegra.
 
-Thanks,
-Guenter
+Thanks for your attention.
 
-> I have a use case where I need to guarantee that the watchdog
-> will *not* be pinged unless my userland daemon does the ping.
-> If my daemon is killed, the close() generates a ping that I
-> don't intend.  This kdump ping looks like it would be another
-> instance that I'd need to suppress.  Perhaps by renaming my flag
-> WDOG_NO_EXTRA_PING and checking it both in release and in
-> kick_for_kdump?
-> 
-> (My daemon associates watchdog pings with shared storage heartbeats.
-> Based on the heartbeats, hosts in a cluster can calculate when an
-> unresponsive host last pinged its watchdog, and can be fairly
-> certain that the "dead" host has been reset by its watchdog 60
-> seconds later.  This is used as an alternative to i/o fencing
-> where we're protecting data on shared storage from corruption
-> after host failures.  If there are uncontrolled watchdog pings,
-> then hosts don't know when a dead host might have last pinged
-> its watchdog, since it is no longer based on the last timestamp
-> it wrote to shared storage.)
-> 
-> Dave
-> 
+I do disable SMP feature. And the .config file for v3.8 could be found here:
+http://pastehtml.com/view/cylyrfejt.txt
+
+The log and operation could be found here:
+http://pastehtml.com/view/cylyfrb3a.txt
+
+Some key setting list below.
+
+bootargs:
+rw vram=32M fixrtc mem=1G@0x80000000 root=/dev/mmcblk0p2
+console=ttyO2,115200n8 rootwait crashkernel=64M@0x82000000
+
+operation:
+/ # ./kexec -l  --append="rw vram=32M fixrtc  root=/dev/mmcblk0p2 console=ttyO2,
+115200n8 rootwait" uImage
+/ # ./kexec -d -e
+
+The output:
+[   57.373687] Starting new kernel
+[   57.377044] Bye!
+
+Then system hangs.
 
 _______________________________________________
 kexec mailing list
