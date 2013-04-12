@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Date: Fri, 12 Apr 2013 11:45:28 +0100
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: Kexec couldn't reboot capture kernel on pandaboard ES with
- OMAP4460
-Message-ID: <20130412104528.GE12363@mudshark.cambridge.arm.com>
-References: <CAFNq8R5FFUyH+JgjoGc5ctgEfiLvxzi7fzawM7+wFX5nEyTv-w@mail.gmail.com>
- <51658B1A.6090706@wwwdotorg.org>
- <CAFNq8R6mRJRygfnYvZgwVWOqsrhrjNUYzyZGU0cVsnE30W_xGg@mail.gmail.com>
- <5166E289.8070104@wwwdotorg.org>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UQbtn-0000tA-BA
+ for kexec@lists.infradead.org; Fri, 12 Apr 2013 11:12:08 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
+ of memmap= boot parameter
+Date: Fri, 12 Apr 2013 13:12:05 +0200
+Message-ID: <1410654.3hYHXcXR8B@skinner.arch.suse.de>
+In-Reply-To: <5167DA38.3050600@cn.fujitsu.com>
+References: <1365683207-42425-1-git-send-email-trenn@suse.de>
+ <1365683207-42425-6-git-send-email-trenn@suse.de>
+ <5167DA38.3050600@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5166E289.8070104@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,55 +21,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Li Haifeng <omycle@gmail.com>, "pandaboard@googlegroups.com" <pandaboard@googlegroups.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, yinghai@kernel.org, cpw@sgi.com, vgoyal@redhat.com
 
-On Thu, Apr 11, 2013 at 05:19:21PM +0100, Stephen Warren wrote:
-> On 04/10/2013 10:46 PM, Li Haifeng wrote:
-> > 2013/4/10 Stephen Warren <swarren@wwwdotorg.org>:
-> >> On 04/10/2013 03:35 AM, Li Haifeng wrote:
-> >>> Hi, everyone.
-> >>>
-> >>> Recently, I try to run kdump on pandaboard ES with omap4460. After
-> >>> load capture kernel by "kexec -l" and execute "kexec -e", the serial
-> >>> port output "Starting new kernel" and "Bye", then the system hangs up.
-> >>>
-> >>> I have tried the upstream Linux Kernel v3.4 and v3.8. All are with this issue.
-> >>
-> >> This is a shot in the dark. I assume you have SMP enabled. Can you use
-> >> hotplug to remove all CPUs other than CPU0, so that the kexec happens on
-> >> the boot CPU? That is certainly necessary for kexec to work correctly on
-> >> Tegra.
-> > 
-> > Thanks for your attention.
-> > 
-> > I do disable SMP feature. And the .config file for v3.8 could be found here:
-> > http://pastehtml.com/view/cylyrfejt.txt
-> ...
-> > The output:
-> > [   57.373687] Starting new kernel
-> > [   57.377044] Bye!
-> > 
-> > Then system hangs.
-> 
-> Oh well, you've exhausted my knowledge I'm afraid! I can only suggesting
-> trying to enable earlyprintk and/or uncompressor debug in the kernel
-> you're kexec'ing and see if that yields any clue. Either that, or JTAG!
-
-Also worth using the bleeding edge kexec-tools (i.e. build from source),
-especially if you want to anything device-tree related.
-
-Back to the SMP point: Stephen, did you ever get anywhere with that
-disable_nonboot_cpus thread from a few months back? I'm still keen to get
-that working, and I *thought* we had a potential solution...
-
-Will
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+U29ycnksIG15IGZpcnN0IGFuc3dlciB3YXMgYW4gaHRtbCBtYWlsLCBwbGVhc2UgaWdub3JlLgpG
+b3Igc29tZSByZWFzb24gbXkgbWFpbGVyIHN3aXRjaGVzIHRvIGh0bWwgaW4gcmFyZSBjYXNlcywg
+ZXZlbgpkZWZhdWx0IGlzIHRleHQuLi46CgpPbiBGcmlkYXksIEFwcmlsIDEyLCAyMDEzIDA1OjU2
+OjA4IFBNIFpoYW5nIFlhbmZlaSB3cm90ZToKPiDkuo4gMjAxM+W5tDA05pyIMTHml6UgMjA6MjYs
+IFRob21hcyBSZW5uaW5nZXIg5YaZ6YGTOgoKLi4uCj4gPiArCSAqIElnbm9yZSB1c2FibGUgbWVt
+b3J5IHJhbmdlcyBmb3Iga2R1bXAga2VybmVsIHNtYWxsZXIKPiA+ICsJICogdGhhbiAxMDBrIHRv
+IGF2b2lkIHRvbyBtdWNoIHJhbmdlcyBwYXNzZWQKPiA+ICsJICogU2F2ZSB0aGUgbmV3IHJhbmdl
+cyAoZXhsdWRpbmcgbG93ZXIgdGhhbiAxMDBrIHJhbmdlcykgaW4gdG1wX21hcAo+ID4gKwkgKiBh
+bmQgc3RvcmUgdGhlIG51bWJlciBvZiBlbGVtZW50cyBpbiB0bXBfbWFwX3Jhbmdlcwo+ID4gKwkg
+Ki8KPiA+ICsJZm9yIChtID0gMCwgaSA9IDA7IGkgPCBDUkFTSF9NQVhfTUVNTUFQX05SOyBpKysp
+IHsKPiA+ICsJCXVuc2lnbmVkIGxvbmcgc3RhcnRrLCBlbmRrOwo+ID4gKwkJc3RhcnRrID0gKHVz
+YWJsZV9tZW1baV0uc3RhcnQvMTAyNCk7Cj4gPiArCQllbmRrID0gKCh1c2FibGVfbWVtW2ldLmVu
+ZCArIDEpLzEwMjQpOwo+ID4gKwkJaWYgKCFzdGFydGsgJiYgIWVuZGspCj4gPiArCQkJLyogQWxs
+IHJlZ2lvbnMgdHJhdmVyc2VkLiAqLwo+ID4gKwkJCWJyZWFrOwo+ID4gKwo+ID4gKwkJLyogQSBy
+ZWdpb24gaXMgbm90IHdvcnRoIGFkZGluZyBpZiByZWdpb24gc2l6ZSA8IDEwMEsuIEl0IGVhdHMK
+PiA+ICsJCSAqIHVwIHByZWNpb3VzIGNvbW1hbmQgbGluZSBsZW5ndGguICovCj4gCj4gTm93IHlv
+dSBhcmUgcGFzc2luZyB0aGUgZTgyMCB0YWJsZSBkaXJlY3RseSBpbnN0ZWFkIG9mIHRoZSBjb21t
+YW5kbGluZSwgc28KPiBkb2VzIHRoaXMgY29tbWVudCBtYWtlIHNlbnNlIG5vdz8KWWVzLgpUaGVy
+ZSBpcyBzb21lIHNwZWNpZmljIGRhdGEgZ2VuZXJhdGVkIGZvciB0aGUgY3Jhc2gga2VybmVsIGlu
+IHRoZSAKY3Jhc2hrZXJuZWw9Li4uIGFyZWEgCndoaWNoIG11c3Qgbm90IGdldCB1c2VkL292ZXJy
+aWRkZW4gYnkgY3Jhc2gKa2VybmVsIHVzYWdlLgpUaGVyZSBhcmUgc29tZSBzbWFsbCBhcmVhcyBi
+ZXR3ZWVuIHRoZW0gd2hpY2ggY291bGQgZ2V0IHVzZWQgYWdhaW46Cgo+ICsgICAgICAgICAgICAg
+aWYgKChlbmRrIC0gc3RhcnRrKSA8IG1pbl9zaXplaykgewo+ICsgICAgICAgICAgICAgICAgICAg
+ICBkYmdwcmludGYoIlJlbW92aW5nOiAlbHVrIC0gJWx1a1xuIiwgc3RhcnRrLCBlbmRrKTsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgY29udGludWU7CkluIG15IHRlc3RzIEkgc2F3OgpSZW1vdmlu
+ZzogOTAwNTUyayAtIDkwMDU1NmsKUmVtb3Zpbmc6IDkwMTExNWsgLSA5MDExMjBrCkFuZCBhZGRp
+bmcgYSA0ayBhbmQgYSA1ayB1c2FibGUgbWVtb3J5IHJhbmdlIGlzIHJlYWxseSBub3Qgd29ydGgg
+aXQuCkFsc28gdGhlIGU4MjAgdGFibGUgaXMgcmVzdHJpY3RlZCB0byAxMjggZW50cmllcyBhbmQg
+ZXNwZWNpYWxseSB1ZWZpCnN5c3RlbXMgcmVhY2ggdGhlbSBxdWlja2x5LgpUaGUgKG9yaWdpbmFs
+bHkpIHVzYWJsZSBtZW1vcnkgcmFuZ2VzIGFyZSBjdXQgb3V0IGFuZCBub3QgcGFzc2VkCihldmVy
+eXRoaW5nIGlzIGV4YWN0bHkgdGhlIHNhbWUgYXMgaW4gbWVtbWFwPSBjYXNlKSwgYnV0IHVzYWJs
+ZQptZW1vcnkgcmFuZ2VzIGZvciB0aGUgY3Jhc2gga2VybmVsIGFyZSBhZGRlZC4KT24gbXkgc3lz
+dGVtIHRoZSBvcmlnaW5hbCBCSU9TL2Jvb3Rsb2FkZXIgZTgyMCB0YWJsZSBoYXMgMjEgZW50cmll
+cwphbmQgdGhlIChub3cpIGtleGVjIG1vZGlmaWVkIG9uZXMgYWxzbyBoYXZlIDIxLiBUaGlzIG1h
+eSB2YXJ5LgpCdXQgaXQncyBnb29kIHRvIG5vdCBhZGQgdGhhdCBtdWNoIGFuZCBlYXNpZXIgYnJl
+YWsgdGhlIDEyOCBlODIwIHRhYmxlcwp3b3JrIHJ1bGUuCgpIb3BlZnVsbHkgdGhpcyBzdGlsbCBy
+ZWFkcyBzb21lb25lLCBvdGhlcndpc2UgSSdsbCBzZW5kIHNvbWV0aGluZwppZiBJIGdldCBmdXJ0
+aGVyOgpJIGN1cnJlbnRseSB0cnkgbWFrZSB1cCBhIHVlZmkgbWVtb3J5IG1hcCBhcmVhIGFuZCBw
+b2ludCB0byBpdCBieQpmaWxsaW5nOgpzdHJ1Y3QgZWZpX2luZm8gewogICAgICAgIHVpbnQzMl90
+IGVmaV9sb2FkZXJfc2lnbmF0dXJlOwogICAgICAgIHVpbnQzMl90IGVmaV9zeXN0YWI7CiAgICAg
+ICAgdWludDMyX3QgZWZpX21lbWRlc2Nfc2l6ZTsKICAgICAgICB1aW50MzJfdCBlZmlfbWVtZGVz
+Y192ZXJzaW9uOwogICAgICAgIHVpbnQzMl90IGVmaV9tZW1tYXA7CiAgICAgICAgdWludDMyX3Qg
+ZWZpX21lbW1hcF9zaXplOwogICAgICAgIHVpbnQzMl90IGVmaV9zeXN0YWJfaGk7CiAgICAgICAg
+dWludDMyX3QgZWZpX21lbW1hcF9oaTsKfTsKcGFzc2VkIHZpYSBib290IGxvYWRlciBzdHJ1Y3R1
+cmUgKHplcm8gcGFnZSkuClRoaXMgd291bGQgYnJlYWsgdGhlIDEyOCBlODIwIGVudHJpZXMgcmVz
+dHJpY3Rpb24gYW5kIGxvdHMgb2YgbWVtb3J5IHJhbmdlcwpvbiBVRUZJIHN5c3RlbXMgd291bGQg
+bm90IGJlIGFuIGlzc3VlIGFueW1vcmUuCgogICAgICAgVGhvbWFzCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
