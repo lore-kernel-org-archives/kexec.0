@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UQbtn-0000tA-BA
- for kexec@lists.infradead.org; Fri, 12 Apr 2013 11:12:08 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
- of memmap= boot parameter
-Date: Fri, 12 Apr 2013 13:12:05 +0200
-Message-ID: <1410654.3hYHXcXR8B@skinner.arch.suse.de>
-In-Reply-To: <5167DA38.3050600@cn.fujitsu.com>
-References: <1365683207-42425-1-git-send-email-trenn@suse.de>
- <1365683207-42425-6-git-send-email-trenn@suse.de>
- <5167DA38.3050600@cn.fujitsu.com>
+Received: from smtp02.citrix.com ([66.165.176.63])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UQcaq-0001i5-CO
+ for kexec@lists.infradead.org; Fri, 12 Apr 2013 11:56:37 +0000
+Message-ID: <5167F670.2040001@citrix.com>
+Date: Fri, 12 Apr 2013 12:56:32 +0100
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
+Subject: Re: [Xen-devel] [PATCH 3/8] kexec: add public interface for improved
+ load/unload sub-ops
+References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
+ <1365447593-11988-4-git-send-email-david.vrabel@citrix.com>
+ <5163E04702000078000CB994@nat28.tlf.novell.com>
+In-Reply-To: <5163E04702000078000CB994@nat28.tlf.novell.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,60 +21,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, yinghai@kernel.org, cpw@sgi.com, vgoyal@redhat.com
+To: Jan Beulich <JBeulich@suse.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Daniel Kiper <daniel.kiper@oracle.com>, Ian Jackson <Ian.Jackson@eu.citrix.com>, Ian Campbell <Ian.Campbell@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-U29ycnksIG15IGZpcnN0IGFuc3dlciB3YXMgYW4gaHRtbCBtYWlsLCBwbGVhc2UgaWdub3JlLgpG
-b3Igc29tZSByZWFzb24gbXkgbWFpbGVyIHN3aXRjaGVzIHRvIGh0bWwgaW4gcmFyZSBjYXNlcywg
-ZXZlbgpkZWZhdWx0IGlzIHRleHQuLi46CgpPbiBGcmlkYXksIEFwcmlsIDEyLCAyMDEzIDA1OjU2
-OjA4IFBNIFpoYW5nIFlhbmZlaSB3cm90ZToKPiDkuo4gMjAxM+W5tDA05pyIMTHml6UgMjA6MjYs
-IFRob21hcyBSZW5uaW5nZXIg5YaZ6YGTOgoKLi4uCj4gPiArCSAqIElnbm9yZSB1c2FibGUgbWVt
-b3J5IHJhbmdlcyBmb3Iga2R1bXAga2VybmVsIHNtYWxsZXIKPiA+ICsJICogdGhhbiAxMDBrIHRv
-IGF2b2lkIHRvbyBtdWNoIHJhbmdlcyBwYXNzZWQKPiA+ICsJICogU2F2ZSB0aGUgbmV3IHJhbmdl
-cyAoZXhsdWRpbmcgbG93ZXIgdGhhbiAxMDBrIHJhbmdlcykgaW4gdG1wX21hcAo+ID4gKwkgKiBh
-bmQgc3RvcmUgdGhlIG51bWJlciBvZiBlbGVtZW50cyBpbiB0bXBfbWFwX3Jhbmdlcwo+ID4gKwkg
-Ki8KPiA+ICsJZm9yIChtID0gMCwgaSA9IDA7IGkgPCBDUkFTSF9NQVhfTUVNTUFQX05SOyBpKysp
-IHsKPiA+ICsJCXVuc2lnbmVkIGxvbmcgc3RhcnRrLCBlbmRrOwo+ID4gKwkJc3RhcnRrID0gKHVz
-YWJsZV9tZW1baV0uc3RhcnQvMTAyNCk7Cj4gPiArCQllbmRrID0gKCh1c2FibGVfbWVtW2ldLmVu
-ZCArIDEpLzEwMjQpOwo+ID4gKwkJaWYgKCFzdGFydGsgJiYgIWVuZGspCj4gPiArCQkJLyogQWxs
-IHJlZ2lvbnMgdHJhdmVyc2VkLiAqLwo+ID4gKwkJCWJyZWFrOwo+ID4gKwo+ID4gKwkJLyogQSBy
-ZWdpb24gaXMgbm90IHdvcnRoIGFkZGluZyBpZiByZWdpb24gc2l6ZSA8IDEwMEsuIEl0IGVhdHMK
-PiA+ICsJCSAqIHVwIHByZWNpb3VzIGNvbW1hbmQgbGluZSBsZW5ndGguICovCj4gCj4gTm93IHlv
-dSBhcmUgcGFzc2luZyB0aGUgZTgyMCB0YWJsZSBkaXJlY3RseSBpbnN0ZWFkIG9mIHRoZSBjb21t
-YW5kbGluZSwgc28KPiBkb2VzIHRoaXMgY29tbWVudCBtYWtlIHNlbnNlIG5vdz8KWWVzLgpUaGVy
-ZSBpcyBzb21lIHNwZWNpZmljIGRhdGEgZ2VuZXJhdGVkIGZvciB0aGUgY3Jhc2gga2VybmVsIGlu
-IHRoZSAKY3Jhc2hrZXJuZWw9Li4uIGFyZWEgCndoaWNoIG11c3Qgbm90IGdldCB1c2VkL292ZXJy
-aWRkZW4gYnkgY3Jhc2gKa2VybmVsIHVzYWdlLgpUaGVyZSBhcmUgc29tZSBzbWFsbCBhcmVhcyBi
-ZXR3ZWVuIHRoZW0gd2hpY2ggY291bGQgZ2V0IHVzZWQgYWdhaW46Cgo+ICsgICAgICAgICAgICAg
-aWYgKChlbmRrIC0gc3RhcnRrKSA8IG1pbl9zaXplaykgewo+ICsgICAgICAgICAgICAgICAgICAg
-ICBkYmdwcmludGYoIlJlbW92aW5nOiAlbHVrIC0gJWx1a1xuIiwgc3RhcnRrLCBlbmRrKTsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgY29udGludWU7CkluIG15IHRlc3RzIEkgc2F3OgpSZW1vdmlu
-ZzogOTAwNTUyayAtIDkwMDU1NmsKUmVtb3Zpbmc6IDkwMTExNWsgLSA5MDExMjBrCkFuZCBhZGRp
-bmcgYSA0ayBhbmQgYSA1ayB1c2FibGUgbWVtb3J5IHJhbmdlIGlzIHJlYWxseSBub3Qgd29ydGgg
-aXQuCkFsc28gdGhlIGU4MjAgdGFibGUgaXMgcmVzdHJpY3RlZCB0byAxMjggZW50cmllcyBhbmQg
-ZXNwZWNpYWxseSB1ZWZpCnN5c3RlbXMgcmVhY2ggdGhlbSBxdWlja2x5LgpUaGUgKG9yaWdpbmFs
-bHkpIHVzYWJsZSBtZW1vcnkgcmFuZ2VzIGFyZSBjdXQgb3V0IGFuZCBub3QgcGFzc2VkCihldmVy
-eXRoaW5nIGlzIGV4YWN0bHkgdGhlIHNhbWUgYXMgaW4gbWVtbWFwPSBjYXNlKSwgYnV0IHVzYWJs
-ZQptZW1vcnkgcmFuZ2VzIGZvciB0aGUgY3Jhc2gga2VybmVsIGFyZSBhZGRlZC4KT24gbXkgc3lz
-dGVtIHRoZSBvcmlnaW5hbCBCSU9TL2Jvb3Rsb2FkZXIgZTgyMCB0YWJsZSBoYXMgMjEgZW50cmll
-cwphbmQgdGhlIChub3cpIGtleGVjIG1vZGlmaWVkIG9uZXMgYWxzbyBoYXZlIDIxLiBUaGlzIG1h
-eSB2YXJ5LgpCdXQgaXQncyBnb29kIHRvIG5vdCBhZGQgdGhhdCBtdWNoIGFuZCBlYXNpZXIgYnJl
-YWsgdGhlIDEyOCBlODIwIHRhYmxlcwp3b3JrIHJ1bGUuCgpIb3BlZnVsbHkgdGhpcyBzdGlsbCBy
-ZWFkcyBzb21lb25lLCBvdGhlcndpc2UgSSdsbCBzZW5kIHNvbWV0aGluZwppZiBJIGdldCBmdXJ0
-aGVyOgpJIGN1cnJlbnRseSB0cnkgbWFrZSB1cCBhIHVlZmkgbWVtb3J5IG1hcCBhcmVhIGFuZCBw
-b2ludCB0byBpdCBieQpmaWxsaW5nOgpzdHJ1Y3QgZWZpX2luZm8gewogICAgICAgIHVpbnQzMl90
-IGVmaV9sb2FkZXJfc2lnbmF0dXJlOwogICAgICAgIHVpbnQzMl90IGVmaV9zeXN0YWI7CiAgICAg
-ICAgdWludDMyX3QgZWZpX21lbWRlc2Nfc2l6ZTsKICAgICAgICB1aW50MzJfdCBlZmlfbWVtZGVz
-Y192ZXJzaW9uOwogICAgICAgIHVpbnQzMl90IGVmaV9tZW1tYXA7CiAgICAgICAgdWludDMyX3Qg
-ZWZpX21lbW1hcF9zaXplOwogICAgICAgIHVpbnQzMl90IGVmaV9zeXN0YWJfaGk7CiAgICAgICAg
-dWludDMyX3QgZWZpX21lbW1hcF9oaTsKfTsKcGFzc2VkIHZpYSBib290IGxvYWRlciBzdHJ1Y3R1
-cmUgKHplcm8gcGFnZSkuClRoaXMgd291bGQgYnJlYWsgdGhlIDEyOCBlODIwIGVudHJpZXMgcmVz
-dHJpY3Rpb24gYW5kIGxvdHMgb2YgbWVtb3J5IHJhbmdlcwpvbiBVRUZJIHN5c3RlbXMgd291bGQg
-bm90IGJlIGFuIGlzc3VlIGFueW1vcmUuCgogICAgICAgVGhvbWFzCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+On 09/04/13 08:32, Jan Beulich wrote:
+>>>> On 08.04.13 at 20:59, David Vrabel <david.vrabel@citrix.com> wrote:
+>> @@ -152,6 +152,63 @@ typedef struct xen_kexec_range {
+>>      unsigned long start;
+>>  } xen_kexec_range_t;
+>>  
+>> +#if __XEN_INTERFACE_VERSION__ >= 0x00040300
+>> +/*
+>> + * A contiguous chunk of a kexec image and it's destination machine
+>> + * address.
+>> + */
+>> +typedef struct xen_kexec_segment {
+>> +    XEN_GUEST_HANDLE_64(const_void) buf;
+>> +    uint64_t buf_size;
+>> +    uint64_t dest_maddr;
+>> +    uint64_t dest_size;
+> 
+> So you made uint64_aligned_t available in the previous patch,
+> but now you don't use it?
+
+It's not needed here.  Should I use uint64_aligned_t anyway?
+
+It was easier to make both XEN_GUEST_HANDLE_64() and uint64_aligned_t
+available than to make only one.
+
+David
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
