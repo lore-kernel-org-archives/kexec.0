@@ -1,25 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.active-venture.com ([67.228.131.205])
+Received: from www.sr71.net ([198.145.64.142] helo=blackbird.sr71.net)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UQlY5-0004K6-Ei
- for kexec@lists.infradead.org; Fri, 12 Apr 2013 21:30:21 +0000
-Date: Fri, 12 Apr 2013 14:30:24 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC PATCH] watchdog: Add hook for kicking in kdump path
-Message-ID: <20130412213024.GA5812@roeck-us.net>
-References: <20130408151509.GA20919@roeck-us.net>
- <20130409144431.GL79013@redhat.com>
- <20130409145228.GA1111@roeck-us.net>
- <20130409151423.GM79013@redhat.com>
- <20130409160757.GA27050@roeck-us.net>
- <20130410134039.GV79013@redhat.com>
- <20130410135123.GB15456@roeck-us.net>
- <20130410142055.GW79013@redhat.com>
- <20130410151041.GA6670@roeck-us.net>
- <20130412211627.GM79013@redhat.com>
+ id 1UQmHw-0004t6-Dv
+ for kexec@lists.infradead.org; Fri, 12 Apr 2013 22:17:45 +0000
+Message-ID: <51688803.8020401@sr71.net>
+Date: Fri, 12 Apr 2013 15:17:39 -0700
+From: Dave Hansen <dave@sr71.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130412211627.GM79013@redhat.com>
+Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
+ of memmap= boot parameter
+References: <1365683207-42425-1-git-send-email-trenn@suse.de>
+ <1365683207-42425-6-git-send-email-trenn@suse.de>
+ <CAE9FiQXnZzVC7dtvXWrqz=jYAGH053R8Vw1qkrMd2F+hAaMxdQ@mail.gmail.com>
+ <5166D18A.7090800@zytor.com> <20130412143104.GA4301@redhat.com>
+ <5168208B.7050107@zytor.com>
+In-Reply-To: <5168208B.7050107@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,36 +27,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, wim@iguana.be, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Cliff Wickman <cpw@sgi.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Yinghai Lu <yinghai@kernel.org>, Thomas Renninger <trenn@suse.de>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Apr 12, 2013 at 05:16:27PM -0400, Don Zickus wrote:
-> On Wed, Apr 10, 2013 at 08:10:41AM -0700, Guenter Roeck wrote:
-> > > have no idea how to even find out if multiple watchdogs are open on the
-> > > system.  Is there a list I could walk?  And with regard to 'watchdog is
-> > 
-> > /* the dev_t structure to store the dynamically allocated watchdog devices */
-> > static dev_t watchdog_devt;
-> > 
-> > One way to look up the allocated watchdogs might be to loop through all kobj
-> > instances for the major device using kobj_lookup. Don't know if there is a
-> > better way.
-> 
-> Hmm, I got around to poking at this today and I am not sure kobj_lookup
-> will work.  Besides being surrounded with another mutex, I don't have
-> access to the character device domain to pass to kobj_lookup.
-> 
-> Perhaps I am not reading the code right, but I can't find a good way
-> forward.
-> 
-> The only other hack I can think of, is to embed a list object in the
-> watchdog structure and list_add each new register'd watchdog.  Then it
-> would be trivial to walk the watchdog list.
-> 
-After looking into it again, I agree. Maybe you can give it a try. At least
-other options look even more complicated (eg creating a watchdog class ?).
+On 04/12/2013 07:56 AM, H. Peter Anvin wrote:
+> On 04/12/2013 07:31 AM, Vivek Goyal wrote:
+>>> I also have to admit that I don't see the difference between /dev/mem
+>>> and /dev/oldmem, as the former allows access to memory ranges outside
+>>> the ones used by the current kernel, which is what the oldmem device
+>>> seems to be intended to od.
 
-Guenter
+It varies from arch to arch of course.
+
+But, /dev/mem has restrictions on it, like CONFIG_STRICT_DEVMEM or the
+ARCH_HAS_VALID_PHYS_ADDR_RANGE.  There's a lot of stuff that depends on
+it, *and* folks have tried to fix it up so that it's not _as_ blatant of
+a way to completely screw your system.
+
+/dev/mem also tries to be nice to arches that have restrictions like:
+
+>                         /*
+>                          * On ia64 if a page has been mapped somewhere as
+>                          * uncached, then it must also be accessed uncached
+>                          * by the kernel or data corruption may occur
+>                          */
+
+I think /dev/oldmem isn't so nice and could actually cause some real
+problems if used on ia64 where the cached/uncached accesses are mixed.
 
 _______________________________________________
 kexec mailing list
