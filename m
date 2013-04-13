@@ -1,28 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1USlEu-000081-Mx
- for kexec@lists.infradead.org; Thu, 18 Apr 2013 09:34:50 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 4B0703EE0C0
- for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:36 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2F4EA45DE59
- for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:36 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 0D44345DE54
- for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:36 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id F31451DB8048
- for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:35 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9D14D1DB804D
- for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:35 +0900 (JST)
+ id 1USlF3-00009Q-Jj
+ for kexec@lists.infradead.org; Thu, 18 Apr 2013 09:34:58 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 665E43EE0C1
+ for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:53 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4CD7445DEBB
+ for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:53 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 347F245DEB6
+ for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:53 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 25ABE1DB8040
+ for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:53 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id CE7C91DB803C
+ for <kexec@lists.infradead.org>; Thu, 18 Apr 2013 18:34:52 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v4 0/8] kdump, vmcore: support mmap() on /proc/vmcore
-Date: Sat, 13 Apr 2013 09:21:05 +0900
-Message-ID: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
+Subject: [PATCH v4 3/8] vmcore,
+ procfs: introduce MEM_TYPE_CURRENT_KERNEL flag to distinguish objects
+ copied in 2nd kernel
+Date: Sat, 13 Apr 2013 09:21:22 +0900
+Message-ID: <20130413002122.18245.5882.stgit@localhost6.localdomain6>
+In-Reply-To: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
+References: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,94 +42,42 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: vgoyal@redhat.com, ebiederm@xmission.com, akpm@linux-foundation.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, zhangyanfei@cn.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, cpw@sgi.com, jingbai.ma@hp.com
 
-Currently, read to /proc/vmcore is done by read_oldmem() that uses
-ioremap/iounmap per a single page. For example, if memory is 1GB,
-ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
-times. This causes big performance degradation.
+Later patch will copy ELF note segments in buffer on the 2nd
+kernel. To handle memory on the 1st kernel (old memory) and memory on
+the 2nd kernel in vmcore_list uniformly, introduce
+MEM_TYPE_CURRENT_KERNEL flag. If this flag is set, the vmcore object
+corresponds to buffer on the 2nd kernel.
 
-In particular, the current main user of this mmap() is makedumpfile,
-which not only reads memory from /proc/vmcore but also does other
-processing like filtering, compression and IO work.
-
-To address the issue, this patch implements mmap() on /proc/vmcore to
-improve read performance.
-
-Benchmark
-=========
-
-You can see two benchmarks on terabyte memory system. Both show about
-40 seconds on 2TB system. This is almost equal to performance by
-experimtanal kernel-side memory filtering.
-
-- makedumpfile mmap() benchmark, by Jingbai Ma
-  https://lkml.org/lkml/2013/3/27/19
-
-- makedumpfile: benchmark on mmap() with /proc/vmcore on 2TB memory system
-  https://lkml.org/lkml/2013/3/26/914
-
-ChangeLog
-=========
-
-v3 => v4)
-
-- Rebase 3.9-rc7.
-- Drop clean-up patches orthogonal to the main topic of this patch set.
-- Copy ELF note segments in the 1st kernel just as in v1. Allocate
-  vmcore objects per pages. => See [PATCH 5/8]
-- Map memory referenced by PT_LOAD entry directly even if the start or
-  end of the region doesn't fit inside page boundary, no longer copy
-  them as the previous v3. Then, holes, outside OS memory, are visible
-  from /proc/vmcore. => See [PATCH 7/8]
-
-v2 => v3)
-
-- Rebase 3.9-rc3.
-- Copy program headers seprately from e_phoff in ELF note segment
-  buffer. Now there's no risk to allocate huge memory if program
-  header table positions after memory segment.
-- Add cleanup patch that removes unnecessary variable.
-- Fix wrongly using the variable that is buffer size configurable at
-  runtime. Instead, use the varibale that has original buffer size.
-
-v1 => v2)
-
-- Clean up the existing codes: use e_phoff, and remove the assumption
-  on PT_NOTE entries.
-- Fix potencial bug that ELF haeader size is not included in exported
-  vmcoreinfo size.
-- Divide patch modifying read_vmcore() into two: clean-up and primary
-  code change.
-- Put ELF note segments in page-size boundary on the 1st kernel
-  instead of copying them into the buffer on the 2nd kernel.
-
-Test
-====
-
-This patch set is composed based on v3.9-rc7.
-
-Done on x86-64, x86-32 both with 1GB and over 4GB memory environments.
-
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
-HATAYAMA Daisuke (8):
-      vmcore: support mmap() on /proc/vmcore
-      vmcore: treat memory chunks referenced by PT_LOAD program header entries in page-size boundary in vmcore_list
-      vmcore: count holes generated by round-up operation for page boudary for size of /proc/vmcore
-      vmcore: copy ELF note segments in the 2nd kernel per page vmcore objects
-      vmcore: Add helper function vmcore_add()
-      vmcore, procfs: introduce MEM_TYPE_CURRENT_KERNEL flag to distinguish objects copied in 2nd kernel
-      vmcore: clean up read_vmcore()
-      vmcore: allocate buffer for ELF headers on page-size alignment
+ include/linux/proc_fs.h |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
 
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index 94dfb2a..fefead4 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -97,11 +97,17 @@ struct kcore_list {
+ 	int type;
+ };
+ 
++#define MEM_TYPE_CURRENT_KERNEL 0x1
++
+ struct vmcore {
+ 	struct list_head list;
+-	unsigned long long paddr;
++	union {
++		unsigned long long paddr;
++		char *buf;
++	};
+ 	unsigned long long size;
+ 	loff_t offset;
++	unsigned int flag;
+ };
+ 
+ #ifdef CONFIG_PROC_FS
 
- fs/proc/vmcore.c        |  349 ++++++++++++++++++++++++++++++++---------------
- include/linux/proc_fs.h |    8 +
- 2 files changed, 245 insertions(+), 112 deletions(-)
-
--- 
-
-Thanks.
-HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
