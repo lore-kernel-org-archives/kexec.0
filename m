@@ -1,9 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <1366054836.2146.96.camel@smoke>
-Subject: [RFC] Add --dtb option to ppc64
-From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 15 Apr 2013 12:40:36 -0700
-Mime-Version: 1.0
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1URpQ2-0004R4-Hs
+ for kexec@lists.infradead.org; Mon, 15 Apr 2013 19:50:27 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
+ of memmap= boot parameter
+Date: Mon, 15 Apr 2013 21:48:58 +0200
+Message-ID: <2503756.Y82nn6164B@hammer82.arch.suse.de>
+In-Reply-To: <be30cb86-285f-4ff0-af0d-ea7d18a3490c@email.android.com>
+References: <1365683207-42425-1-git-send-email-trenn@suse.de>
+ <2471280.iW0sCiTc3x@skinner.arch.suse.de>
+ <be30cb86-285f-4ff0-af0d-ea7d18a3490c@email.android.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,63 +25,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, yinghai@kernel.org, cpw@sgi.com, vgoyal@redhat.com
 
-All other architectures use the command line option --dtb to pass
-a dtb file name.  For consistency add that option to ppc64.
+On Monday, April 15, 2013 05:20:24 AM H. Peter Anvin wrote:
+> Except that is wrong. The kernel can receive more than 128 e820 entries,
+> they just have to be passed via a different mechanism.
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
+Would it make sense to pass the tables via efi_map by moving up
+efi_map parsing to the beginning of efi init in arch/x86/platform/efi/efi.c?
 
----
-Hi All,
-
-This consistency in option names will make it easier for platform
-independent scripts and kexec front ends like petitboot.
-
-I haven't yet tested this on ppc64, but if someone can do that
-before I find some time I certainly would be grateful.
-
--Geoff
-
- kexec/arch/ppc64/include/arch/options.h |    1 +
- kexec/arch/ppc64/kexec-elf-ppc64.c      |    2 ++
- 2 files changed, 3 insertions(+)
-
-diff --git a/kexec/arch/ppc64/include/arch/options.h b/kexec/arch/ppc64/include/arch/options.h
-index 8f11c83..4ad9b75 100644
---- a/kexec/arch/ppc64/include/arch/options.h
-+++ b/kexec/arch/ppc64/include/arch/options.h
-@@ -38,6 +38,7 @@
- 	{ "ramdisk",            1, NULL, OPT_RAMDISK },	\
- 	{ "initrd",             1, NULL, OPT_RAMDISK },		\
- 	{ "devicetreeblob",     1, NULL, OPT_DEVICETREEBLOB },	\
-+	{ "dtb",                1, NULL, OPT_DEVICETREEBLOB },	\
- 	{ "args-linux",         0, NULL, OPT_ARGS_IGNORE },
- 
- #define KEXEC_ALL_OPT_STR KEXEC_OPT_STR
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index f68f2bc..9a0e69a 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -101,6 +101,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 		{ "ramdisk",            1, NULL, OPT_RAMDISK },
- 		{ "initrd",             1, NULL, OPT_RAMDISK },
- 		{ "devicetreeblob",     1, NULL, OPT_DEVICETREEBLOB },
-+		{ "dtb",                1, NULL, OPT_DEVICETREEBLOB },
- 		{ "args-linux",		0, NULL, OPT_ARGS_IGNORE },
- 		{ 0,                    0, NULL, 0 },
- 	};
-@@ -345,6 +346,7 @@ void elf_ppc64_usage(void)
- 	fprintf(stderr, "     --ramdisk=<filename> Initial RAM disk.\n");
- 	fprintf(stderr, "     --initrd=<filename> same as --ramdisk.\n");
- 	fprintf(stderr, "     --devicetreeblob=<filename> Specify device tree blob file.\n");
-+	fprintf(stderr, "     --dtb=<filename> same as --devicetreeblob.\n");
- 
- 	fprintf(stderr, "elf support is still broken\n");
- }
+And in kexec pass the efi signature, efi map pointers, add add_efi_memmap
+param (and possibly some more?)?
+Then there would be no limit at all anymore.
 
 
+     Thomas
 
 _______________________________________________
 kexec mailing list
