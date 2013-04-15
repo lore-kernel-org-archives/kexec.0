@@ -1,36 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UReJM-0003Uz-H8
- for kexec@lists.infradead.org; Mon, 15 Apr 2013 07:58:49 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 269B044DD82
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 16:58:42 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0A34845DEBC
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 16:58:42 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id E3D1C45DEB5
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 16:58:41 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id D1CA61DB8046
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 16:58:41 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 8261A1DB803E
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 16:58:41 +0900 (JST)
-Message-ID: <516BB310.20209@jp.fujitsu.com>
-Date: Mon, 15 Apr 2013 16:58:08 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+ id 1URfHo-0004za-Ih
+ for kexec@lists.infradead.org; Mon, 15 Apr 2013 09:01:19 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 567583EE0B6
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 18:01:06 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 13C3F45DE5C
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 18:01:06 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id D7BE645DE52
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 18:01:05 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BDAA81DB802F
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 18:01:05 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6BBB91DB803B
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 18:01:05 +0900 (JST)
+Message-ID: <516BC19D.4090303@jp.fujitsu.com>
+Date: Mon, 15 Apr 2013 18:00:13 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
- of memmap= boot parameter
-References: <1365683207-42425-1-git-send-email-trenn@suse.de>
- <1365683207-42425-6-git-send-email-trenn@suse.de>
- <CAE9FiQXnZzVC7dtvXWrqz=jYAGH053R8Vw1qkrMd2F+hAaMxdQ@mail.gmail.com>
- <5166D18A.7090800@zytor.com> <20130412143104.GA4301@redhat.com>
- <5168208B.7050107@zytor.com> <51688803.8020401@sr71.net>
- <516B87A6.9080708@jp.fujitsu.com> <516B9714.80007@sr71.net>
-In-Reply-To: <516B9714.80007@sr71.net>
+Subject: Re: [PATCH] intel-iommu: Synchronize gcmd value with global command
+ register
+References: <1363829556-2128-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <20130326144629.GB2727@8bytes.org> <51527D74.9080209@jp.fujitsu.com>
+ <20130327103122.GK30540@8bytes.org> <51591EEE.60401@jp.fujitsu.com>
+ <20130402140546.GA15687@8bytes.org> <515BD638.8070307@jp.fujitsu.com>
+ <1364977479.28127.15.camel@i7.infradead.org>
+ <20130405110616.GB6858@8bytes.org> <5164EEE6.8000707@jp.fujitsu.com>
+In-Reply-To: <5164EEE6.8000707@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,39 +40,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Hansen <dave@sr71.net>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Cliff Wickman <cpw@sgi.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Yinghai Lu <yinghai@kernel.org>, Thomas Renninger <trenn@suse.de>, Vivek Goyal <vgoyal@redhat.com>
+To: joro@8bytes.org, dwmw2@infradead.org
+Cc: iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tindoh@gmail.com
 
-(2013/04/15 14:58), Dave Hansen wrote:
-> On 04/14/2013 09:52 PM, HATAYAMA Daisuke wrote:
->> This sounds like there's no such issue on x86 cache mechanism. Is it
->> correct? If so, what is the difference between ia64 and x86 cache
->> mechanisms?
->
-> I'm just going by the code comments:
->
-> drivers/char/mem.c
->>                  /*
->>                   * On ia64 if a page has been mapped somewhere as uncached, then
->>                   * it must also be accessed uncached by the kernel or data
->>                   * corruption may occur.
->>                   */
+(2013/04/10 13:47), Takao Indoh wrote:
+> (2013/04/05 20:06), Joerg Roedel wrote:
+>> On Wed, Apr 03, 2013 at 09:24:39AM +0100, David Woodhouse wrote:
+>>> On Wed, 2013-04-03 at 16:11 +0900, Takao Indoh wrote:
+>>>> Yeah, you are right. I forgot such a case.
+>>>
+>>> If you disable translation and there's some device still doing DMA, it's
+>>> going to scribble over random areas of memory. You really want to have
+>>> translation enabled and all the page tables *cleared*, during kexec. I
+>>> think it's fair to insist that the secondary kernel should use the IOMMU
+>>> if the first one did.
+>>
+>> Do we really need to insist on that? The IOMMU initialization on x86
+>> happens after the kernel scanned and enumerated the PCI bus. While doing
+>> this the kernel (at least it should) disables all devices it finds. So
+>> when the IOMMU init code runs we should be safe from any in-flight DMA
+>> and can either disable translation or re-initialize it for the kdump
+>> kernel. Until then translation needs to stay enabled of course, so that
+>> the old page-tables are still used and in-flight DMA doesn't corrupt
+>> any data.
+> 
+> So we should do in this order, right?
+> (1) PCI initialization. Stop all ongoing DMA here.
+> (2) Disable translation if already enable.
+> (3) Make pgtable and enable translation.
 
-I think it reasonable, in complexity of design, to decide cache or 
-uncache according to whether target memory is RAM or some device. If 
-we're concerned about page levels, things are to be complicated further 
-since memory typing is done per pages. How large does such table become 
-to represent memory types for all the target pages, how do we create it 
-and when? (I don't know ia64 but I guess caching on ia64 is also done in 
-per pages just like x86...)
+Joerg, David,
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+On DMAR initialization during kdump boot, do you guys agree to change
+order like this?
+
+Current order:
+(1) Disable translation
+(2) PCI initialization
+(3) Make pgtable and enable translation.
+
+Order I'm proposing:
+(1) PCI initialization
+(2) Disable translation
+(3) Make pgtable and enable translation.
+
+The purpose to change the behavior is to stop DMA in PCI layer.
+
+As Joerg said, if we need to consider the case that kdump kernel is
+compiled without dma-remapping(CONFIG_INTEL_IOMMU is off?), I can update
+my patch to handle such a case properly by adding ifdef
+CONFIG_INTEL_IOMMU.
+
+About how to stop the DMA on PCI layer, I'll post another mail to
+discuss it to iommu and pci list.
+
+Thanks,
+Takao Indoh
 
 
 _______________________________________________
