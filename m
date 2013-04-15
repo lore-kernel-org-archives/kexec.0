@@ -1,27 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([85.214.48.195] helo=mail.8bytes.org)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1URgUg-0006Kd-GK
- for kexec@lists.infradead.org; Mon, 15 Apr 2013 10:18:40 +0000
-Received: from localhost (localhost [127.0.0.1])
- by mail.8bytes.org (Postfix) with SMTP id 3351D12B07F
- for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 12:18:30 +0200 (CEST)
-Date: Mon, 15 Apr 2013 12:18:29 +0200
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] intel-iommu: Synchronize gcmd value with global command
- register
-Message-ID: <20130415101829.GP6858@8bytes.org>
-References: <20130326144629.GB2727@8bytes.org>
- <51527D74.9080209@jp.fujitsu.com>
- <20130327103122.GK30540@8bytes.org> <51591EEE.60401@jp.fujitsu.com>
- <20130402140546.GA15687@8bytes.org>
- <515BD638.8070307@jp.fujitsu.com>
- <1364977479.28127.15.camel@i7.infradead.org>
- <20130405110616.GB6858@8bytes.org>
- <5164EEE6.8000707@jp.fujitsu.com> <516BC19D.4090303@jp.fujitsu.com>
+Received: from e23smtp02.au.ibm.com ([202.81.31.144])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1URgXR-0006Pi-VD
+ for kexec@lists.infradead.org; Mon, 15 Apr 2013 10:21:31 +0000
+Received: from /spool/local
+ by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Mon, 15 Apr 2013 20:13:40 +1000
+Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [9.190.234.120])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 524712CE804C
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 20:21:13 +1000 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r3FA7me65898508
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 20:07:48 +1000
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r3FALBlK006510
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 20:21:12 +1000
+Subject: [PATCH] makedumpfile: close the dwfl handle before next invocation of
+ init_dwarf_info()
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Mon, 15 Apr 2013 15:50:52 +0530
+Message-ID: <20130415102049.1348.77064.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <516BC19D.4090303@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,43 +37,261 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org, tindoh@gmail.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Kexec-ml <kexec@lists.infradead.org>
+Cc: Aravinda Prasad <aravinda@linux.vnet.ibm.com>, Hemanth Siddarajaiah <hemanths@linux.vnet.ibm.com>, ptesarik@suse.cz, Ananth Narayan <ananth@in.ibm.com>
 
-On Mon, Apr 15, 2013 at 06:00:13PM +0900, Takao Indoh wrote:
-> On DMAR initialization during kdump boot, do you guys agree to change
-> order like this?
-> 
-> Current order:
-> (1) Disable translation
-> (2) PCI initialization
-> (3) Make pgtable and enable translation.
-> 
-> Order I'm proposing:
-> (1) PCI initialization
-> (2) Disable translation
-> (3) Make pgtable and enable translation.
+From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-I think this should work. In fact, translation only needs to be disabled
-while the IOMMU hardware is reprogrammed to the new data structures the
-kdump kernel set up.
+The init_dwarf_info() function initializes "dwarf_info.dwfl" handle everytime
+when it is called. The "dwarf_info.dwfl" handle should be freed once we are
+done with searching of desired debuginfo and before next invocation of
+init_dwarf_info().
 
-> As Joerg said, if we need to consider the case that kdump kernel is
-> compiled without dma-remapping(CONFIG_INTEL_IOMMU is off?), I can update
-> my patch to handle such a case properly by adding ifdef
-> CONFIG_INTEL_IOMMU.
+Most of the functions (e.g get_debug_info()) that invokes init_dwarf_info()
+also invokes clean_dwfl_info() to free dwfl handle. But the function
+get_die_from_offset() that invokes init_dwarf_info(), does not free the dwfl
+handle and hence it keeps re-reading debuginfo ELF section into memory every
+time it is invoked until it starts failing with following errors:
 
-Thinking about it, this case is a bit more special. If the kdump kernel
-has no IOMMU driver at all there is also no code to disable it. So
-unless we want to force the kdump kernel to have the driver when the
-first kernel had it, I think we also want some quirk (depending on
-!CONFIG_INTEL_IOMMU) that disables translation at boot.
+init_dwarf_info: Can't get first elf header of /usr/lib/debug/boot/vmlinux-x.x.x
+get_die_attr_type: Can't find the DIE.
+init_dwarf_info: Can't get first elf header of /usr/lib/debug/boot/vmlinux-x.x.x
+init_dwarf_info: Can't get first elf header of /usr/lib/debug/boot/vmlinux-x.x.x
+File eppic_macro/key.c, line 32, Error: Oops! Var ref1.[keyring_name_hash]
 
-I know, its complicated :)
+This patch makes sure that clean_dwfl_info() is called once we are done with
+the debuginfo search.
 
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+---
+ dwarf_info.c      |   58 +++++++++++++++++++++++++++++++++++++++++++++--------
+ extension_eppic.c |   23 +++++++++++++++------
+ 2 files changed, 65 insertions(+), 16 deletions(-)
 
-	Joerg
-
+diff --git a/dwarf_info.c b/dwarf_info.c
+index a11b6ad..478d637 100644
+--- a/dwarf_info.c
++++ b/dwarf_info.c
+@@ -1347,11 +1347,14 @@ get_die_nfields(unsigned long long die_off)
+ 	tag = dwarf_tag(die);
+ 	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+ 		ERRMSG("DIE is not of structure or union type.\n");
++		clean_dwfl_info();
+ 		return -1;
+ 	}
+ 
+-	if (dwarf_child(die, &child) != 0)
++	if (dwarf_child(die, &child) != 0) {
++		clean_dwfl_info();
+ 		return -1;
++	}
+ 
+ 	/* Find the number of fields in the structure */
+ 	die = &child;
+@@ -1363,6 +1366,7 @@ get_die_nfields(unsigned long long die_off)
+ 			continue;
+ 	} while (!dwarf_siblingof(die, die));
+ 
++	clean_dwfl_info();
+ 	return nfields;
+ }
+ 
+@@ -1388,11 +1392,14 @@ get_die_member(unsigned long long die_off, int index, long *offset,
+ 	tag = dwarf_tag(die);
+ 	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+ 		ERRMSG("DIE is not of structure or union type.\n");
++		clean_dwfl_info();
+ 		return -1;
+ 	}
+ 
+-	if (dwarf_child(die, &child) != 0)
++	if (dwarf_child(die, &child) != 0) {
++		clean_dwfl_info();
+ 		return -1;
++	}
+ 
+ 	/* Find the correct field in the structure */
+ 	die = &child;
+@@ -1408,6 +1415,7 @@ get_die_member(unsigned long long die_off, int index, long *offset,
+ 
+ 	if (nfields != index) {
+ 		ERRMSG("No member found at index %d.\n", index);
++		clean_dwfl_info();
+ 		return -1;
+ 	}
+ 
+@@ -1416,6 +1424,13 @@ get_die_member(unsigned long long die_off, int index, long *offset,
+ 		*offset = 0;
+ 
+ 	*name = dwarf_diename(die);
++	/*
++	 * Duplicate the string before we pass it to eppic layer. The
++	 * original string returned by dwarf layer will become invalid
++	 * after clean_dwfl_info() call.
++	 */
++	if (*name)
++		*name = strdup(*name);
+ 	*m_die = dwarf_dieoffset(die);
+ 
+ 	get_die_type(die, &die_base);
+@@ -1432,6 +1447,7 @@ get_die_member(unsigned long long die_off, int index, long *offset,
+ 	 */
+ 	*nbits = *fbits = 0;
+ 
++	clean_dwfl_info();
+ 	if (size < 0)
+ 		return 0;
+ 	else
+@@ -1455,21 +1471,35 @@ get_die_attr_type(unsigned long long die_off, int *type_flag,
+ 		return FALSE;
+ 	}
+ 
+-	if (!get_die_type(&result, &result))
++	if (!get_die_type(&result, &result)) {
++		clean_dwfl_info();
+ 		return FALSE;
++	}
+ 
+ 	*die_attr_off = dwarf_dieoffset(&result);
+ 	*type_flag = dwarf_tag(&result);
++	clean_dwfl_info();
+ 	return TRUE;
+ }
+ 
+ /*
+- * Get name attribute given the die offset
++ * Get name attribute given the die offset This function is called by eppic
++ * layer directly as one of the callback functions.
++ *
++ * This function returns a pointer to newly allocated string which is a
++ * duplicate of original string returned from dwarf APIs. The reason for doing
++ * this is because the original string returned by dwarf layer will become
++ * invalid (freed) as soon as we close the dwarf handle through
++ * clean_dwfl_info(). This avoids the segfault when caller (eppic layer) of
++ * this function tries to access the string pointer.
++ *
++ * NOTE: It is callers responsibility to free the memory of new string.
+  */
+ char *
+ get_die_name(unsigned long long die_off)
+ {
+ 	Dwarf_Die result;
++	char *name = NULL;
+ 
+ 	if (!die_off)
+ 		return NULL;
+@@ -1479,7 +1509,11 @@ get_die_name(unsigned long long die_off)
+ 		return NULL;
+ 	}
+ 
+-	return dwarf_diename(&result);
++	name = dwarf_diename(&result);
++	if (name)
++		name = strdup(name);
++	clean_dwfl_info();
++	return name;
+ }
+ 
+ /*
+@@ -1510,6 +1544,7 @@ int
+ get_die_length(unsigned long long die_off, int flag)
+ {
+ 	Dwarf_Die result, die_base;
++	int size = 0;
+ 
+ 	if (!die_off)
+ 		return FALSE;
+@@ -1519,17 +1554,22 @@ get_die_length(unsigned long long die_off, int flag)
+ 		return FALSE;
+ 	}
+ 
+-	if (flag)
+-		return dwarf_bytesize(&result);
++	if (flag) {
++		size = dwarf_bytesize(&result);
++		goto out;
++	}
+ 
+ 	get_die_type(&result, &die_base);
+ 	if (dwarf_tag(&die_base) == DW_TAG_array_type) {
+ 		dwarf_info.array_length = 0;
+ 		get_data_array_length(&result);
+-		return dwarf_info.array_length;
++		size = dwarf_info.array_length;
+ 	} else {
+-		return dwarf_bytesize(&die_base);
++		size = dwarf_bytesize(&die_base);
+ 	}
++out:
++	clean_dwfl_info();
++	return size;
+ }
+ 
+ /*
+diff --git a/extension_eppic.c b/extension_eppic.c
+index a1981eb..d5e5ad0 100644
+--- a/extension_eppic.c
++++ b/extension_eppic.c
+@@ -121,7 +121,7 @@ drilldown(ull offset, type_t *t)
+ 	int type_flag, len = 0, t_len = 0, nidx = 0;
+ 	int fctflg = 0, ref = 0, *idxlst = 0;
+ 	ull die_off = offset, t_die_off;
+-	char *tstr = NULL;
++	char *tstr = NULL, *tstr_dup = NULL;
+ 
+ 	while (GET_DIE_ATTR_TYPE(die_off, &type_flag, &t_die_off)) {
+ 		switch (type_flag) {
+@@ -201,9 +201,10 @@ out:
+ 	if (fctflg)
+ 		eppic_type_setfct(t, 1);
+ 	eppic_pushref(t, ref + (nidx ? 1 : 0));
+-	if (tstr)
+-		return eppic_strdup(tstr);
+-	return eppic_strdup("");
++	tstr_dup = (tstr) ? eppic_strdup(tstr) : eppic_strdup("");
++	/* Free the memory allocated by makedumpfile. */
++	free(tstr);
++	return tstr_dup;
+ }
+ 
+ /*
+@@ -216,7 +217,7 @@ apimember(char *mname, ull idx, type_t *tm, member_t *m, ull *last_index)
+ 	int nbits = 0, fbits = 0;
+ 	long offset;
+ 	ull m_die, die_off = idx;
+-	char *name;
++	char *name = NULL;
+ 
+ 	nfields = GET_DIE_NFIELDS(die_off);
+ 	/*
+@@ -243,8 +244,13 @@ apimember(char *mname, ull idx, type_t *tm, member_t *m, ull *last_index)
+ 
+ 		if (!mname || !mname[0] || !strcmp(mname, name)) {
+ 			eppic_member_ssize(m, size);
+-			if (name)
++			if (name) {
+ 				eppic_member_sname(m, name);
++				/*
++				 * Free the memory allocated by makedumpfile.
++				 */
++				free(name);
++			}
+ 			else
+ 				eppic_member_sname(m, "");
+ 			eppic_member_soffset(m, offset);
+@@ -334,8 +340,11 @@ apigetval(char *name, ull *val, VALUE_S *value)
+ 
+ 	if (!eppic_typeislocal(stype) && eppic_type_getidx(stype) > 100) {
+ 		char *tname = GET_DIE_NAME(eppic_type_getidx(stype));
+-		if (tname)
++		if (tname) {
+ 			eppic_chktype(stype, tname);
++			/* Free the memory allocated by makedumpfile. */
++			free(tname);
++		}
+ 	}
+ 	return 1;
+ }
 
 
 _______________________________________________
