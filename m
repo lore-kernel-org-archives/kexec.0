@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from 8bytes.org ([85.214.48.195] helo=mail.8bytes.org)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1URfMk-00056k-2w
- for kexec@lists.infradead.org; Mon, 15 Apr 2013 09:06:22 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
- of memmap= boot parameter
-Date: Mon, 15 Apr 2013 11:05:34 +0200
-Message-ID: <2471280.iW0sCiTc3x@skinner.arch.suse.de>
-In-Reply-To: <5167DA38.3050600@cn.fujitsu.com>
-References: <1365683207-42425-1-git-send-email-trenn@suse.de>
- <1365683207-42425-6-git-send-email-trenn@suse.de>
- <5167DA38.3050600@cn.fujitsu.com>
+ id 1URgUg-0006Kd-GK
+ for kexec@lists.infradead.org; Mon, 15 Apr 2013 10:18:40 +0000
+Received: from localhost (localhost [127.0.0.1])
+ by mail.8bytes.org (Postfix) with SMTP id 3351D12B07F
+ for <kexec@lists.infradead.org>; Mon, 15 Apr 2013 12:18:30 +0200 (CEST)
+Date: Mon, 15 Apr 2013 12:18:29 +0200
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] intel-iommu: Synchronize gcmd value with global command
+ register
+Message-ID: <20130415101829.GP6858@8bytes.org>
+References: <20130326144629.GB2727@8bytes.org>
+ <51527D74.9080209@jp.fujitsu.com>
+ <20130327103122.GK30540@8bytes.org> <51591EEE.60401@jp.fujitsu.com>
+ <20130402140546.GA15687@8bytes.org>
+ <515BD638.8070307@jp.fujitsu.com>
+ <1364977479.28127.15.camel@i7.infradead.org>
+ <20130405110616.GB6858@8bytes.org>
+ <5164EEE6.8000707@jp.fujitsu.com> <516BC19D.4090303@jp.fujitsu.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <516BC19D.4090303@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,37 +30,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, yinghai@kernel.org, cpw@sgi.com, vgoyal@redhat.com
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org, tindoh@gmail.com
 
-T24gRnJpZGF5LCBBcHJpbCAxMiwgMjAxMyAwNTo1NjowOCBQTSBaaGFuZyBZYW5mZWkgd3JvdGU6
-Cj4g5LqOIDIwMTPlubQwNOaciDEx5pelIDIwOjI2LCBUaG9tYXMgUmVubmluZ2VyIOWGmemBkzoK
-PiA+IEN1cnJlbnRseSByYW5nZXMgYXJlIHBhc3NlZCB2aWEga2VybmVsIGJvb3QgcGFyYW1ldGVy
-czoKPiA+IG1lbW1hcD1leGFjdG1hcCBtZW1tYXA9WCNZIG1lbW1hcD0KPiA+IAouLi4KPiA+IC0J
-aWYgKCEoZW5kIC0gc3RhcnQpKQo+ID4gLQkJcmV0dXJuIDA7Cj4gPiArCS8qCj4gPiArCSAqIEln
-bm9yZSB1c2FibGUgbWVtb3J5IHJhbmdlcyBmb3Iga2R1bXAga2VybmVsIHNtYWxsZXIKPiA+ICsJ
-ICogdGhhbiAxMDBrIHRvIGF2b2lkIHRvbyBtdWNoIHJhbmdlcyBwYXNzZWQKPiA+ICsJICogU2F2
-ZSB0aGUgbmV3IHJhbmdlcyAoZXhsdWRpbmcgbG93ZXIgdGhhbiAxMDBrIHJhbmdlcykgaW4gdG1w
-X21hcAo+ID4gKwkgKiBhbmQgc3RvcmUgdGhlIG51bWJlciBvZiBlbGVtZW50cyBpbiB0bXBfbWFw
-X3Jhbmdlcwo+ID4gKwkgKi8KPiA+ICsJZm9yIChtID0gMCwgaSA9IDA7IGkgPCBDUkFTSF9NQVhf
-TUVNTUFQX05SOyBpKyspIHsKPiA+ICsJCXVuc2lnbmVkIGxvbmcgc3RhcnRrLCBlbmRrOwo+ID4g
-KwkJc3RhcnRrID0gKHVzYWJsZV9tZW1baV0uc3RhcnQvMTAyNCk7Cj4gPiArCQllbmRrID0gKCh1
-c2FibGVfbWVtW2ldLmVuZCArIDEpLzEwMjQpOwo+ID4gKwkJaWYgKCFzdGFydGsgJiYgIWVuZGsp
-Cj4gPiArCQkJLyogQWxsIHJlZ2lvbnMgdHJhdmVyc2VkLiAqLwo+ID4gKwkJCWJyZWFrOwo+ID4g
-Kwo+ID4gKwkJLyogQSByZWdpb24gaXMgbm90IHdvcnRoIGFkZGluZyBpZiByZWdpb24gc2l6ZSA8
-IDEwMEsuIEl0IGVhdHMKPiA+ICsJCSAqIHVwIHByZWNpb3VzIGNvbW1hbmQgbGluZSBsZW5ndGgu
-ICovCj4gCj4gTm93IHlvdSBhcmUgcGFzc2luZyB0aGUgZTgyMCB0YWJsZSBkaXJlY3RseSBpbnN0
-ZWFkIG9mIHRoZSBjb21tYW5kbGluZSwgc28KPiBkb2VzIHRoaXMgY29tbWVudCBtYWtlIHNlbnNl
-IG5vdz8KWWVzIHlvdSBhcmUgcmlnaHQsIHRoZSBjb21tZW50IGlzIHdyb25nLgpJdCBzaG91bGQg
-bW9yZSBiZSBsaWtlOgovKgpBIHJlZ2lvbiBpcyBub3Qgd29ydGggYWRkaW5nIGlmIHJlZ2lvbiBz
-aXplIDwgMTAwSy4gZTgyMCBlbnRyaWVzIGFyZSAKcmVzdHJpY3RlZCB0byAxMjggaW4ga2VybmVs
-LCB3aXRoIGtkdW1wIHdlIG1heSBoYXZlIHRvIHBhc3MgdGhlIG9uZSBvciBvdGhlcgptb3JlIGFu
-ZCB3ZSB3YW50IHRvIHRyeSB0byBzdGF5IGF0IDEyOCBtYXggZW50cmllcyAoZnJvbSBvcmlnaW5h
-bCB0YWJsZSkgYXMgCmNsb3NlIGFzIHBvc3NpYmxlLgoqLwoKVGhhbmtzLAoKICAgICAgVGhvbWFz
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Mon, Apr 15, 2013 at 06:00:13PM +0900, Takao Indoh wrote:
+> On DMAR initialization during kdump boot, do you guys agree to change
+> order like this?
+> 
+> Current order:
+> (1) Disable translation
+> (2) PCI initialization
+> (3) Make pgtable and enable translation.
+> 
+> Order I'm proposing:
+> (1) PCI initialization
+> (2) Disable translation
+> (3) Make pgtable and enable translation.
+
+I think this should work. In fact, translation only needs to be disabled
+while the IOMMU hardware is reprogrammed to the new data structures the
+kdump kernel set up.
+
+> As Joerg said, if we need to consider the case that kdump kernel is
+> compiled without dma-remapping(CONFIG_INTEL_IOMMU is off?), I can update
+> my patch to handle such a case properly by adding ifdef
+> CONFIG_INTEL_IOMMU.
+
+Thinking about it, this case is a bit more special. If the kdump kernel
+has no IOMMU driver at all there is also no code to disable it. So
+unless we want to force the kdump kernel to have the driver when the
+first kernel had it, I think we also want some quirk (depending on
+!CONFIG_INTEL_IOMMU) that disables translation at boot.
+
+I know, its complicated :)
+
+
+	Joerg
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
