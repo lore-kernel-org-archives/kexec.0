@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1US9Rj-00037f-Rl
- for kexec@lists.infradead.org; Tue, 16 Apr 2013 17:13:33 +0000
+ id 1US9Rk-00037B-BO
+ for kexec@lists.infradead.org; Tue, 16 Apr 2013 17:13:37 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 6/8] xen: kexec crash image when dom0 crashes
-Date: Tue, 16 Apr 2013 18:13:08 +0100
-Message-ID: <1366132390-5269-7-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 7/8] libxc: add hypercall buffer arrays
+Date: Tue, 16 Apr 2013 18:13:09 +0100
+Message-ID: <1366132390-5269-8-git-send-email-david.vrabel@citrix.com>
 In-Reply-To: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
 References: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
@@ -27,39 +27,138 @@ Cc: kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>, Keir Fras
 
 From: David Vrabel <david.vrabel@citrix.com>
 
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
----
- xen/common/kexec.c    |    2 ++
- xen/common/shutdown.c |    3 +++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+Hypercall buffer arrays are used when a hypercall takes a variable
+length array of buffers.
 
-diff --git a/xen/common/kexec.c b/xen/common/kexec.c
-index 9e2f2b3..fa1029d 100644
---- a/xen/common/kexec.c
-+++ b/xen/common/kexec.c
-@@ -307,6 +307,8 @@ void kexec_crash(void)
-     if ( !test_bit(KEXEC_IMAGE_CRASH_BASE + pos, &kexec_flags) )
-         return;
+Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+Acked-by: Ian Campbell <ian.campbell@citrix.com>
+---
+ tools/libxc/xc_hcall_buf.c |   73 ++++++++++++++++++++++++++++++++++++++++++++
+ tools/libxc/xenctrl.h      |   27 ++++++++++++++++
+ 2 files changed, 100 insertions(+), 0 deletions(-)
+
+diff --git a/tools/libxc/xc_hcall_buf.c b/tools/libxc/xc_hcall_buf.c
+index c354677..e762a93 100644
+--- a/tools/libxc/xc_hcall_buf.c
++++ b/tools/libxc/xc_hcall_buf.c
+@@ -228,6 +228,79 @@ void xc__hypercall_bounce_post(xc_interface *xch, xc_hypercall_buffer_t *b)
+     xc__hypercall_buffer_free(xch, b);
+ }
  
-+    printk("Executing crash image\n");
++struct xc_hypercall_buffer_array {
++    unsigned max_bufs;
++    xc_hypercall_buffer_t *bufs;
++};
 +
-     kexecing = TRUE;
++xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch,
++                                                              unsigned n)
++{
++    xc_hypercall_buffer_array_t *array;
++    xc_hypercall_buffer_t *bufs = NULL;
++
++    array = malloc(sizeof(*array));
++    if ( array == NULL )
++        goto error;
++
++    bufs = calloc(n, sizeof(*bufs));
++    if ( bufs == NULL )
++        goto error;
++
++    array->max_bufs = n;
++    array->bufs     = bufs;
++
++    return array;
++
++error:
++    free(bufs);
++    free(array);
++    return NULL;
++}
++
++void *xc__hypercall_buffer_array_alloc(xc_interface *xch,
++                                       xc_hypercall_buffer_array_t *array,
++                                       unsigned index,
++                                       xc_hypercall_buffer_t *hbuf,
++                                       size_t size)
++{
++    void *buf;
++
++    if ( index >= array->max_bufs || array->bufs[index].hbuf )
++        abort();
++
++    buf = xc__hypercall_buffer_alloc(xch, hbuf, size);
++    if ( buf )
++        array->bufs[index] = *hbuf;
++    return buf;
++}
++
++void *xc__hypercall_buffer_array_get(xc_interface *xch,
++                                     xc_hypercall_buffer_array_t *array,
++                                     unsigned index,
++                                     xc_hypercall_buffer_t *hbuf)
++{
++    if ( index >= array->max_bufs || array->bufs[index].hbuf == NULL )
++        abort();
++
++    *hbuf = array->bufs[index];
++    return array->bufs[index].hbuf;
++}
++
++void xc_hypercall_buffer_array_destroy(xc_interface *xc,
++                                       xc_hypercall_buffer_array_t *array)
++{
++    unsigned i;
++
++    if ( array == NULL )
++        return;
++
++    for (i = 0; i < array->max_bufs; i++ )
++        xc__hypercall_buffer_free(xc, &array->bufs[i]);
++    free(array->bufs);
++    free(array);
++}
++
+ /*
+  * Local variables:
+  * mode: C
+diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
+index 50853af..b4b4043 100644
+--- a/tools/libxc/xenctrl.h
++++ b/tools/libxc/xenctrl.h
+@@ -321,6 +321,33 @@ void xc__hypercall_buffer_free_pages(xc_interface *xch, xc_hypercall_buffer_t *b
+ #define xc_hypercall_buffer_free_pages(_xch, _name, _nr) xc__hypercall_buffer_free_pages(_xch, HYPERCALL_BUFFER(_name), _nr)
  
-     kexec_common_shutdown();
-diff --git a/xen/common/shutdown.c b/xen/common/shutdown.c
-index 73a7d7b..b676a03 100644
---- a/xen/common/shutdown.c
-+++ b/xen/common/shutdown.c
-@@ -47,6 +47,9 @@ void dom0_shutdown(u8 reason)
-     {
-         debugger_trap_immediate();
-         printk("Domain 0 crashed: ");
-+#ifdef CONFIG_KEXEC
-+        kexec_crash();
-+#endif
-         maybe_reboot();
-         break; /* not reached */
-     }
+ /*
++ * Array of hypercall buffers.
++ *
++ * Create an array with xc_hypercall_buffer_array_create() and
++ * populate it by declaring one hypercall buffer in a loop and
++ * allocating the buffer with xc_hypercall_buffer_array_alloc().
++ *
++ * To access a previously allocated buffers, declare a new hypercall
++ * buffer and call xc_hypercall_buffer_array_get().
++ *
++ * Destroy the array with xc_hypercall_buffer_array_destroy() to free
++ * the array and all its alocated hypercall buffers.
++ */
++struct xc_hypercall_buffer_array;
++typedef struct xc_hypercall_buffer_array xc_hypercall_buffer_array_t;
++
++xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch, unsigned n);
++void *xc__hypercall_buffer_array_alloc(xc_interface *xch, xc_hypercall_buffer_array_t *array,
++                                       unsigned index, xc_hypercall_buffer_t *hbuf, size_t size);
++#define xc_hypercall_buffer_array_alloc(_xch, _array, _index, _name, _size) \
++    xc__hypercall_buffer_array_alloc(_xch, _array, _index, HYPERCALL_BUFFER(_name), _size)
++void *xc__hypercall_buffer_array_get(xc_interface *xch, xc_hypercall_buffer_array_t *array,
++                                     unsigned index, xc_hypercall_buffer_t *hbuf);
++#define xc_hypercall_buffer_array_get(_xch, _array, _index, _name, _size) \
++    xc__hypercall_buffer_array_get(_xch, _array, _index, HYPERCALL_BUFFER(_name))
++void xc_hypercall_buffer_array_destroy(xc_interface *xc, xc_hypercall_buffer_array_t *array);
++
++/*
+  * CPUMAP handling
+  */
+ typedef uint8_t *xc_cpumap_t;
 -- 
 1.7.2.5
 
