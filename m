@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pa0-f48.google.com ([209.85.220.48])
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1US5UR-0005I3-6I
- for kexec@lists.infradead.org; Tue, 16 Apr 2013 13:00:04 +0000
-Received: by mail-pa0-f48.google.com with SMTP id lj1so332011pab.35
- for <kexec@lists.infradead.org>; Tue, 16 Apr 2013 06:00:00 -0700 (PDT)
-Message-ID: <516D4B47.1070109@gmail.com>
-Date: Tue, 16 Apr 2013 20:59:51 +0800
+ id 1US5Yv-0005Rs-C8
+ for kexec@lists.infradead.org; Tue, 16 Apr 2013 13:04:42 +0000
+Received: by mail-pb0-f49.google.com with SMTP id um15so283864pbc.22
+ for <kexec@lists.infradead.org>; Tue, 16 Apr 2013 06:04:39 -0700 (PDT)
+Message-ID: <516D4C5F.4020905@gmail.com>
+Date: Tue, 16 Apr 2013 21:04:31 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH RESEND] kexec/powerpc: Handle buffer overflow in kernel command
- line
-References: <516D48F8.3010202@gmail.com>
-In-Reply-To: <516D48F8.3010202@gmail.com>
+Subject: Re: [PATCH] Revert "kexec/powerpc: Handle buffer overflow in kernel
+ command line"
+References: <516D4B35.3060300@gmail.com>
+In-Reply-To: <516D4B35.3060300@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,158 +21,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: "Suzuki K. Poulose" <suzuki@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: Suzuki K. Poulose <suzuki@in.ibm.com>
-
-Enforce size check for kernel command line to make sure it
-doesn't overflow COMMAND_LINE_SIZE.
-
-Reported-by: Nathan D. Miller <nathanm2@us.ibm.com>
-Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
----
- kexec/arch/ppc/kexec-elf-ppc.c    |   29 ++++++++++++++++-------------
- kexec/arch/ppc/kexec-uImage-ppc.c |   23 ++++++++++++++---------
- 2 files changed, 30 insertions(+), 22 deletions(-)
-
-diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index 3daca2d..98cae9c 100644
---- a/kexec/arch/ppc/kexec-elf-ppc.c
-+++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -157,7 +157,7 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	struct mem_ehdr ehdr;
- 	char *command_line, *crash_cmdline, *cmdline_buf;
- 	char *tmp_cmdline;
--	int command_line_len;
-+	int command_line_len, crash_cmdline_len;
- 	char *dtb;
- 	int result;
- 	char *error_msg;
-@@ -244,19 +244,10 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	} else {
- 		command_line = get_command_line();
- 	}
--	command_line_len = strlen(command_line) + 1;
-+	command_line_len = strlen(command_line);
- 
- 	fixup_nodes[cur_fixup] = NULL;
- 
--	/* Need to append some command line parameters internally in case of
--	 * taking crash dumps.
--	 */
--	if (info->kexec_flags & KEXEC_ON_CRASH) {
--		crash_cmdline = xmalloc(COMMAND_LINE_SIZE);
--		memset((void *)crash_cmdline, 0, COMMAND_LINE_SIZE);
--	} else
--		crash_cmdline = NULL;
--
- 	/* Parse the Elf file */
- 	result = build_elf_exec_info(buf, len, &ehdr, 0);
- 	if (result < 0) {
-@@ -292,16 +283,23 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 		goto out;
- 	}
- 
--	/* If panic kernel is being loaded, additional segments need
--	 * to be created.
-+	/*
-+	 * Need to append some command line parameters internally in case of
-+	 * taking crash dumps. Additional segments need to be created.
- 	 */
- 	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		crash_cmdline = xmalloc(COMMAND_LINE_SIZE);
-+		memset((void *)crash_cmdline, 0, COMMAND_LINE_SIZE);
- 		result = load_crashdump_segments(info, crash_cmdline,
- 						max_addr, 0);
- 		if (result < 0) {
- 			result = -1;
- 			goto out;
- 		}
-+		crash_cmdline_len = strlen(crash_cmdline);
-+	} else {
-+		crash_cmdline = NULL;
-+		crash_cmdline_len = 0;
- 	}
- 
- 	/*
-@@ -337,6 +335,11 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 
- 	info->entry = (void *)arg_base;
- #else
-+	if (crash_cmdline_len + command_line_len + 1 > COMMAND_LINE_SIZE) {
-+		printf("Kernel command line exceeds size\n");
-+		return -1;
-+	}
-+
- 	cmdline_buf = xmalloc(COMMAND_LINE_SIZE);
- 	memset((void *)cmdline_buf, 0, COMMAND_LINE_SIZE);
- 	if (command_line)
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index 9113fbe..008463b 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -82,7 +82,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- {
- 	char *command_line, *cmdline_buf, *crash_cmdline;
- 	char *tmp_cmdline;
--	int command_line_len;
-+	int command_line_len, crash_cmdline_len;
- 	char *dtb;
- 	unsigned int addr;
- 	unsigned long dtb_addr;
-@@ -178,29 +178,34 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 
- 	add_segment(info, buf, len, load_addr, len + _1MiB);
- 
-+
- 	if (info->kexec_flags & KEXEC_ON_CRASH) {
-                 crash_cmdline = xmalloc(COMMAND_LINE_SIZE);
-                 memset((void *)crash_cmdline, 0, COMMAND_LINE_SIZE);
--        } else
--                crash_cmdline = NULL;
--
--	if (info->kexec_flags & KEXEC_ON_CRASH) {
- 		ret = load_crashdump_segments(info, crash_cmdline,
- 						max_addr, 0);
- 		if (ret < 0) {
- 			ret = -1;
- 			goto out;
- 		}
-+		crash_cmdline_len = strlen(crash_cmdline);
-+	} else {
-+		crash_cmdline = NULL;
-+		crash_cmdline_len = 0;
-+	}
-+
-+	if (crash_cmdline_len + command_line_len + 1 > COMMAND_LINE_SIZE) {
-+		printf("Kernel command line exceeds maximum possible length\n");
-+		return -1;
- 	}
- 
- 	cmdline_buf = xmalloc(COMMAND_LINE_SIZE);
- 	memset((void *)cmdline_buf, 0, COMMAND_LINE_SIZE);
-+
- 	if (command_line)
--		strncat(cmdline_buf, command_line, command_line_len);
-+		strcpy(cmdline_buf, command_line);
- 	if (crash_cmdline)
--		strncat(cmdline_buf, crash_cmdline,
--			sizeof(crash_cmdline) -
--			strlen(crash_cmdline) - 1);
-+		strncat(cmdline_buf, crash_cmdline, crash_cmdline_len);
- 
- 	elf_rel_build_load(info, &info->rhdr, (const char *)purgatory,
- 				purgatory_size, 0, -1, -1, 0);
--- 
-1.7.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgU2ltb24sCgpJIGZvdW5kIHRoYXQgeW91IG1heSBhcHBseSB0aGUgcGF0Y2ggZnJvbSBTdXp1
+a2kgd2l0aCBhIHdyb25nIGNvbW1pdApkZXNjcmlwdGlvbiBieSBtaXN0YWtlLiBTbyBJIHNlbmQg
+dGhpcyByZXZlcnQgcGF0Y2ggYW5kIHJlc2VuZCB0aGUKcGF0Y2ggaW4gYW5vdGhlciBtYWlsIHdp
+dGggYSBzdWJqZWN0OgogICAgIltQQVRDSCBSRVNFTkRdIGtleGVjL3Bvd2VycGM6IEhhbmRsZSBi
+dWZmZXIgb3ZlcmZsb3cgaW4ga2VybmVsIGNvbW1hbmQgbGluZSIKCkNvdWxkIHlvdSBwbGVhc2Ug
+YXBwbHkgdGhlIHR3byBwYXRjaGVzPwoKVGhhbmtzClpoYW5nCgrT2iAyMDEzxOowNNTCMTbI1SAy
+MDo1OSwgWmhhbmcgWWFuZmVpINC0tcA6Cj4gRnJvbTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZl
+aUBjbi5mdWppdHN1LmNvbT4KPiAKPiBUaGlzIHJldmVydHMgY29tbWl0IGQ1OGRjYWUzZTYxYjM3
+NTU3OGZmMzE0NWU2MjdhNWQ4NWFmYjVmNTIuCj4gCj4gVGhlIGNvbW1pdCBkZXNjcmlwdGlvbiBp
+cyBraW5kIG9mIHdyb25nIGFuZCBtYXliZSBjYXVzZWQgYnkgU2ltb24KPiB3aGVuIGhlIGFwcGxp
+ZWQgdGhlIHBhdGNoLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFpoYW5nIFlhbmZlaSA8emhhbmd5YW5m
+ZWlAY24uZnVqaXRzdS5jb20+Cj4gLS0tCj4gIGtleGVjL2FyY2gvcHBjL2tleGVjLWVsZi1wcGMu
+YyAgICB8ICAgMjkgKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0KPiAga2V4ZWMvYXJjaC9w
+cGMva2V4ZWMtdUltYWdlLXBwYy5jIHwgICAyMyArKysrKysrKystLS0tLS0tLS0tLS0tLQo+ICAy
+IGZpbGVzIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQo+IAo+IGRp
+ZmYgLS1naXQgYS9rZXhlYy9hcmNoL3BwYy9rZXhlYy1lbGYtcHBjLmMgYi9rZXhlYy9hcmNoL3Bw
+Yy9rZXhlYy1lbGYtcHBjLmMKPiBpbmRleCA5OGNhZTljLi4zZGFjYTJkIDEwMDY0NAo+IC0tLSBh
+L2tleGVjL2FyY2gvcHBjL2tleGVjLWVsZi1wcGMuYwo+ICsrKyBiL2tleGVjL2FyY2gvcHBjL2tl
+eGVjLWVsZi1wcGMuYwo+IEBAIC0xNTcsNyArMTU3LDcgQEAgaW50IGVsZl9wcGNfbG9hZChpbnQg
+YXJnYywgY2hhciAqKmFyZ3YsCWNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAo+ICAJc3RydWN0
+IG1lbV9laGRyIGVoZHI7Cj4gIAljaGFyICpjb21tYW5kX2xpbmUsICpjcmFzaF9jbWRsaW5lLCAq
+Y21kbGluZV9idWY7Cj4gIAljaGFyICp0bXBfY21kbGluZTsKPiAtCWludCBjb21tYW5kX2xpbmVf
+bGVuLCBjcmFzaF9jbWRsaW5lX2xlbjsKPiArCWludCBjb21tYW5kX2xpbmVfbGVuOwo+ICAJY2hh
+ciAqZHRiOwo+ICAJaW50IHJlc3VsdDsKPiAgCWNoYXIgKmVycm9yX21zZzsKPiBAQCAtMjQ0LDEw
+ICsyNDQsMTkgQEAgaW50IGVsZl9wcGNfbG9hZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsCWNvbnN0
+IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAo+ICAJfSBlbHNlIHsKPiAgCQljb21tYW5kX2xpbmUgPSBn
+ZXRfY29tbWFuZF9saW5lKCk7Cj4gIAl9Cj4gLQljb21tYW5kX2xpbmVfbGVuID0gc3RybGVuKGNv
+bW1hbmRfbGluZSk7Cj4gKwljb21tYW5kX2xpbmVfbGVuID0gc3RybGVuKGNvbW1hbmRfbGluZSkg
+KyAxOwo+ICAKPiAgCWZpeHVwX25vZGVzW2N1cl9maXh1cF0gPSBOVUxMOwo+ICAKPiArCS8qIE5l
+ZWQgdG8gYXBwZW5kIHNvbWUgY29tbWFuZCBsaW5lIHBhcmFtZXRlcnMgaW50ZXJuYWxseSBpbiBj
+YXNlIG9mCj4gKwkgKiB0YWtpbmcgY3Jhc2ggZHVtcHMuCj4gKwkgKi8KPiArCWlmIChpbmZvLT5r
+ZXhlY19mbGFncyAmIEtFWEVDX09OX0NSQVNIKSB7Cj4gKwkJY3Jhc2hfY21kbGluZSA9IHhtYWxs
+b2MoQ09NTUFORF9MSU5FX1NJWkUpOwo+ICsJCW1lbXNldCgodm9pZCAqKWNyYXNoX2NtZGxpbmUs
+IDAsIENPTU1BTkRfTElORV9TSVpFKTsKPiArCX0gZWxzZQo+ICsJCWNyYXNoX2NtZGxpbmUgPSBO
+VUxMOwo+ICsKPiAgCS8qIFBhcnNlIHRoZSBFbGYgZmlsZSAqLwo+ICAJcmVzdWx0ID0gYnVpbGRf
+ZWxmX2V4ZWNfaW5mbyhidWYsIGxlbiwgJmVoZHIsIDApOwo+ICAJaWYgKHJlc3VsdCA8IDApIHsK
+PiBAQCAtMjgzLDIzICsyOTIsMTYgQEAgaW50IGVsZl9wcGNfbG9hZChpbnQgYXJnYywgY2hhciAq
+KmFyZ3YsCWNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAo+ICAJCWdvdG8gb3V0Owo+ICAJfQo+
+ICAKPiAtCS8qCj4gLQkgKiBOZWVkIHRvIGFwcGVuZCBzb21lIGNvbW1hbmQgbGluZSBwYXJhbWV0
+ZXJzIGludGVybmFsbHkgaW4gY2FzZSBvZgo+IC0JICogdGFraW5nIGNyYXNoIGR1bXBzLiBBZGRp
+dGlvbmFsIHNlZ21lbnRzIG5lZWQgdG8gYmUgY3JlYXRlZC4KPiArCS8qIElmIHBhbmljIGtlcm5l
+bCBpcyBiZWluZyBsb2FkZWQsIGFkZGl0aW9uYWwgc2VnbWVudHMgbmVlZAo+ICsJICogdG8gYmUg
+Y3JlYXRlZC4KPiAgCSAqLwo+ICAJaWYgKGluZm8tPmtleGVjX2ZsYWdzICYgS0VYRUNfT05fQ1JB
+U0gpIHsKPiAtCQljcmFzaF9jbWRsaW5lID0geG1hbGxvYyhDT01NQU5EX0xJTkVfU0laRSk7Cj4g
+LQkJbWVtc2V0KCh2b2lkICopY3Jhc2hfY21kbGluZSwgMCwgQ09NTUFORF9MSU5FX1NJWkUpOwo+
+ICAJCXJlc3VsdCA9IGxvYWRfY3Jhc2hkdW1wX3NlZ21lbnRzKGluZm8sIGNyYXNoX2NtZGxpbmUs
+Cj4gIAkJCQkJCW1heF9hZGRyLCAwKTsKPiAgCQlpZiAocmVzdWx0IDwgMCkgewo+ICAJCQlyZXN1
+bHQgPSAtMTsKPiAgCQkJZ290byBvdXQ7Cj4gIAkJfQo+IC0JCWNyYXNoX2NtZGxpbmVfbGVuID0g
+c3RybGVuKGNyYXNoX2NtZGxpbmUpOwo+IC0JfSBlbHNlIHsKPiAtCQljcmFzaF9jbWRsaW5lID0g
+TlVMTDsKPiAtCQljcmFzaF9jbWRsaW5lX2xlbiA9IDA7Cj4gIAl9Cj4gIAo+ICAJLyoKPiBAQCAt
+MzM1LDExICszMzcsNiBAQCBpbnQgZWxmX3BwY19sb2FkKGludCBhcmdjLCBjaGFyICoqYXJndiwJ
+Y29uc3QgY2hhciAqYnVmLCBvZmZfdCBsZW4sCj4gIAo+ICAJaW5mby0+ZW50cnkgPSAodm9pZCAq
+KWFyZ19iYXNlOwo+ICAjZWxzZQo+IC0JaWYgKGNyYXNoX2NtZGxpbmVfbGVuICsgY29tbWFuZF9s
+aW5lX2xlbiArIDEgPiBDT01NQU5EX0xJTkVfU0laRSkgewo+IC0JCXByaW50ZigiS2VybmVsIGNv
+bW1hbmQgbGluZSBleGNlZWRzIHNpemVcbiIpOwo+IC0JCXJldHVybiAtMTsKPiAtCX0KPiAtCj4g
+IAljbWRsaW5lX2J1ZiA9IHhtYWxsb2MoQ09NTUFORF9MSU5FX1NJWkUpOwo+ICAJbWVtc2V0KCh2
+b2lkICopY21kbGluZV9idWYsIDAsIENPTU1BTkRfTElORV9TSVpFKTsKPiAgCWlmIChjb21tYW5k
+X2xpbmUpCj4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvcHBjL2tleGVjLXVJbWFnZS1wcGMuYyBi
+L2tleGVjL2FyY2gvcHBjL2tleGVjLXVJbWFnZS1wcGMuYwo+IGluZGV4IDAwODQ2M2IuLjkxMTNm
+YmUgMTAwNjQ0Cj4gLS0tIGEva2V4ZWMvYXJjaC9wcGMva2V4ZWMtdUltYWdlLXBwYy5jCj4gKysr
+IGIva2V4ZWMvYXJjaC9wcGMva2V4ZWMtdUltYWdlLXBwYy5jCj4gQEAgLTgyLDcgKzgyLDcgQEAg
+c3RhdGljIGludCBwcGNfbG9hZF9iYXJlX2JpdHMoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25z
+dCBjaGFyICpidWYsCj4gIHsKPiAgCWNoYXIgKmNvbW1hbmRfbGluZSwgKmNtZGxpbmVfYnVmLCAq
+Y3Jhc2hfY21kbGluZTsKPiAgCWNoYXIgKnRtcF9jbWRsaW5lOwo+IC0JaW50IGNvbW1hbmRfbGlu
+ZV9sZW4sIGNyYXNoX2NtZGxpbmVfbGVuOwo+ICsJaW50IGNvbW1hbmRfbGluZV9sZW47Cj4gIAlj
+aGFyICpkdGI7Cj4gIAl1bnNpZ25lZCBpbnQgYWRkcjsKPiAgCXVuc2lnbmVkIGxvbmcgZHRiX2Fk
+ZHI7Cj4gQEAgLTE3OCwzNCArMTc4LDI5IEBAIHN0YXRpYyBpbnQgcHBjX2xvYWRfYmFyZV9iaXRz
+KGludCBhcmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hhciAqYnVmLAo+ICAKPiAgCWFkZF9zZWdt
+ZW50KGluZm8sIGJ1ZiwgbGVuLCBsb2FkX2FkZHIsIGxlbiArIF8xTWlCKTsKPiAgCj4gLQo+ICAJ
+aWYgKGluZm8tPmtleGVjX2ZsYWdzICYgS0VYRUNfT05fQ1JBU0gpIHsKPiAgICAgICAgICAgICAg
+ICAgIGNyYXNoX2NtZGxpbmUgPSB4bWFsbG9jKENPTU1BTkRfTElORV9TSVpFKTsKPiAgICAgICAg
+ICAgICAgICAgIG1lbXNldCgodm9pZCAqKWNyYXNoX2NtZGxpbmUsIDAsIENPTU1BTkRfTElORV9T
+SVpFKTsKPiArICAgICAgICB9IGVsc2UKPiArICAgICAgICAgICAgICAgIGNyYXNoX2NtZGxpbmUg
+PSBOVUxMOwo+ICsKPiArCWlmIChpbmZvLT5rZXhlY19mbGFncyAmIEtFWEVDX09OX0NSQVNIKSB7
+Cj4gIAkJcmV0ID0gbG9hZF9jcmFzaGR1bXBfc2VnbWVudHMoaW5mbywgY3Jhc2hfY21kbGluZSwK
+PiAgCQkJCQkJbWF4X2FkZHIsIDApOwo+ICAJCWlmIChyZXQgPCAwKSB7Cj4gIAkJCXJldCA9IC0x
+Owo+ICAJCQlnb3RvIG91dDsKPiAgCQl9Cj4gLQkJY3Jhc2hfY21kbGluZV9sZW4gPSBzdHJsZW4o
+Y3Jhc2hfY21kbGluZSk7Cj4gLQl9IGVsc2Ugewo+IC0JCWNyYXNoX2NtZGxpbmUgPSBOVUxMOwo+
+IC0JCWNyYXNoX2NtZGxpbmVfbGVuID0gMDsKPiAtCX0KPiAtCj4gLQlpZiAoY3Jhc2hfY21kbGlu
+ZV9sZW4gKyBjb21tYW5kX2xpbmVfbGVuICsgMSA+IENPTU1BTkRfTElORV9TSVpFKSB7Cj4gLQkJ
+cHJpbnRmKCJLZXJuZWwgY29tbWFuZCBsaW5lIGV4Y2VlZHMgbWF4aW11bSBwb3NzaWJsZSBsZW5n
+dGhcbiIpOwo+IC0JCXJldHVybiAtMTsKPiAgCX0KPiAgCj4gIAljbWRsaW5lX2J1ZiA9IHhtYWxs
+b2MoQ09NTUFORF9MSU5FX1NJWkUpOwo+ICAJbWVtc2V0KCh2b2lkICopY21kbGluZV9idWYsIDAs
+IENPTU1BTkRfTElORV9TSVpFKTsKPiAtCj4gIAlpZiAoY29tbWFuZF9saW5lKQo+IC0JCXN0cmNw
+eShjbWRsaW5lX2J1ZiwgY29tbWFuZF9saW5lKTsKPiArCQlzdHJuY2F0KGNtZGxpbmVfYnVmLCBj
+b21tYW5kX2xpbmUsIGNvbW1hbmRfbGluZV9sZW4pOwo+ICAJaWYgKGNyYXNoX2NtZGxpbmUpCj4g
+LQkJc3RybmNhdChjbWRsaW5lX2J1ZiwgY3Jhc2hfY21kbGluZSwgY3Jhc2hfY21kbGluZV9sZW4p
+Owo+ICsJCXN0cm5jYXQoY21kbGluZV9idWYsIGNyYXNoX2NtZGxpbmUsCj4gKwkJCXNpemVvZihj
+cmFzaF9jbWRsaW5lKSAtCj4gKwkJCXN0cmxlbihjcmFzaF9jbWRsaW5lKSAtIDEpOwo+ICAKPiAg
+CWVsZl9yZWxfYnVpbGRfbG9hZChpbmZvLCAmaW5mby0+cmhkciwgKGNvbnN0IGNoYXIgKilwdXJn
+YXRvcnksCj4gIAkJCQlwdXJnYXRvcnlfc2l6ZSwgMCwgLTEsIC0xLCAwKTsKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
