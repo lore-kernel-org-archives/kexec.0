@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from mail-pa0-f45.google.com ([209.85.220.45])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1US4eI-0004Ni-Nz
- for kexec@lists.infradead.org; Tue, 16 Apr 2013 12:06:11 +0000
-Date: Tue, 16 Apr 2013 14:05:41 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 5/8] kexec: extend hypercall with improved load/unload ops
-Message-ID: <20130416120541.GA4286@debian70-amd64.local.net-space.pl>
-References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
- <1365447593-11988-6-git-send-email-david.vrabel@citrix.com>
- <20130409210241.GB31533@debian70-amd64.local.net-space.pl>
- <516C4DD6.4020805@citrix.com>
+ id 1US5Cf-0004yH-Kt
+ for kexec@lists.infradead.org; Tue, 16 Apr 2013 12:41:42 +0000
+Received: by mail-pa0-f45.google.com with SMTP id kl13so325466pab.18
+ for <kexec@lists.infradead.org>; Tue, 16 Apr 2013 05:41:37 -0700 (PDT)
+Message-ID: <516D46F6.2020907@gmail.com>
+Date: Tue, 16 Apr 2013 20:41:26 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <516C4DD6.4020805@citrix.com>
+Subject: Re: [PATCH 5/5] kexec: X86: Pass memory ranges via e820 table instead
+ of memmap= boot parameter
+References: <1365683207-42425-1-git-send-email-trenn@suse.de>
+ <2503756.Y82nn6164B@hammer82.arch.suse.de> <516C5B07.4010306@zytor.com>
+ <8993037.v16xiECWWu@skinner.arch.suse.de>
+In-Reply-To: <8993037.v16xiECWWu@skinner.arch.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,39 +23,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Ian Jackson <Ian.Jackson@eu.citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Ian Campbell <Ian.Campbell@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Thomas Renninger <trenn@suse.de>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, yinghai@kernel.org, cpw@sgi.com, vgoyal@redhat.com
 
-On Mon, Apr 15, 2013 at 07:58:30PM +0100, David Vrabel wrote:
-> On 09/04/13 22:02, Daniel Kiper wrote:
-> > On Mon, Apr 08, 2013 at 07:59:50PM +0100, David Vrabel wrote:
-> >>
-> >> +
-> >> +        /* Jump to identity mapped code. */
-> >> +        movq %rdi, %r9
-> >> +        addq $(identity_mapped - kexec_reloc), %r9
-> >> +
-> >> +        jmp *%r9
-> >
-> > jmpq *(identity_mapped - kexec_reloc)(%rdi)
->
-> This isn't equivalent.  It loads the value at the specified memory
-> location and jumps to that address.
->
->         leaq (identity_mapped - kexec_reloc)(%rdi), %rax
->         jmpq *%rax
->
-> Does the right thing.
-
-You are right. Sorry for confusion.
-
-Daniel
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwNOaciDE25pelIDE1OjUyLCBUaG9tYXMgUmVubmluZ2VyIOWGmemBkzoKPiBP
+biBNb25kYXksIEFwcmlsIDE1LCAyMDEzIDEyOjU0OjQ3IFBNIEguIFBldGVyIEFudmluIHdyb3Rl
+Ogo+PiBPbiAwNC8xNS8yMDEzIDEyOjQ4IFBNLCBUaG9tYXMgUmVubmluZ2VyIHdyb3RlOgo+Pj4g
+T24gTW9uZGF5LCBBcHJpbCAxNSwgMjAxMyAwNToyMDoyNCBBTSBILiBQZXRlciBBbnZpbiB3cm90
+ZToKPj4+PiBFeGNlcHQgdGhhdCBpcyB3cm9uZy4gVGhlIGtlcm5lbCBjYW4gcmVjZWl2ZSBtb3Jl
+IHRoYW4gMTI4IGU4MjAgZW50cmllcywKPj4+PiB0aGV5IGp1c3QgaGF2ZSB0byBiZSBwYXNzZWQg
+dmlhIGEgZGlmZmVyZW50IG1lY2hhbmlzbS4KPiAKPiBCdXQgeW91IGRvIG5vdCBuYW1lL2Rlc2Ny
+aWJlIGl0Lgo+IElzIGl0IHRoZSAiZWZpIG1hcCBtZWNoYW5pc20iIHlvdSBhcmUgdGFsa2luZyBh
+Ym91dCBvciBpcyB0aGVyZQo+IHNvbWV0aGluZyBlbHNlPwoKSGkgVGhvbWFzCgpJIHRoaW5rIGhw
+YSBtZWFudCB0aGUgbWVjaGFuaXNtIHJlbGF0ZWQgdG8gdGhlIGZpZWxkIHNldHVwX2RhdGEgaW4K
+c2V0dXBfaGVhZGVyLgoKRmllbGQgbmFtZTogICAgIHNldHVwX2RhdGEKVHlwZTogICAgICAgICAg
+IHdyaXRlIChzcGVjaWFsKQpPZmZzZXQvc2l6ZTogICAgMHgyNTAvOApQcm90b2NvbDogICAgICAg
+Mi4wOSsKCiAgVGhlIDY0LWJpdCBwaHlzaWNhbCBwb2ludGVyIHRvIE5VTEwgdGVybWluYXRlZCBz
+aW5nbGUgbGlua2VkIGxpc3Qgb2YKICBzdHJ1Y3Qgc2V0dXBfZGF0YS4gVGhpcyBpcyB1c2VkIHRv
+IGRlZmluZSBhIG1vcmUgZXh0ZW5zaWJsZSBib290IAogIHBhcmFtZXRlcnMgcGFzc2luZyBtZWNo
+YW5pc20uIFRoZSBkZWZpbml0aW9uIG9mIHN0cnVjdCBzZXR1cF9kYXRhIGlzCiAgYXMgZm9sbG93
+OgoKICBzdHJ1Y3Qgc2V0dXBfZGF0YSB7CiAgICAgICAgICB1NjQgbmV4dDsKICAgICAgICAgIHUz
+MiB0eXBlOwogICAgICAgICAgdTMyIGxlbjsgCiAgICAgICAgICB1OCAgZGF0YVswXTsKICB9OwoK
+ICBXaGVyZSwgdGhlIG5leHQgaXMgYSA2NC1iaXQgcGh5c2ljYWwgcG9pbnRlciB0byB0aGUgbmV4
+dCBub2RlIG9mCiAgbGlua2VkIGxpc3QsIHRoZSBuZXh0IGZpZWxkIG9mIHRoZSBsYXN0IG5vZGUg
+aXMgMDsgdGhlIHR5cGUgaXMgdXNlZCAKICB0byBpZGVudGlmeSB0aGUgY29udGVudHMgb2YgZGF0
+YTsgdGhlIGxlbiBpcyB0aGUgbGVuZ3RoIG9mIGRhdGEgCiAgZmllbGQ7IHRoZSBkYXRhIGhvbGRz
+IHRoZSByZWFsIHBheWxvYWQuCgogIFRoaXMgbGlzdCBtYXkgYmUgbW9kaWZpZWQgYXQgYSBudW1i
+ZXIgb2YgcG9pbnRzIGR1cmluZyB0aGUgYm9vdHVwCiAgcHJvY2Vzcy4gIFRoZXJlZm9yZSwgd2hl
+biBtb2RpZnlpbmcgdGhpcyBsaXN0IG9uZSBzaG91bGQgYWx3YXlzIG1ha2UgCiAgc3VyZSB0byBj
+b25zaWRlciB0aGUgY2FzZSB3aGVyZSB0aGUgbGlua2VkIGxpc3QgYWxyZWFkeSBjb250YWlucwog
+IGVudHJpZXMuCgpBbmQgTGludXggaGFzIHRoZSBzZXR1cF9kYXRhIHR5cGUgU0VUVVBfRTgyMF9F
+WFQgd2hpY2ggbWVhbnMgZXh0ZW5kZWQKZTgyMCBlbnRyaWVzLgoKQWxzbyBzZWUga2VybmVsIGZ1
+bmN0aW9uczoKc2V0dXBfYXJjaAogIC0tPiBwYXJzZV9zZXR1cF9kYXRhCiAgICAtLT4gcGFyc2Vf
+ZTgyMF9leHQKClRoYW5rcwpaaGFuZwoKPiAKPiAgICAgICBUaG9tYXMKPiAKPj4+IFdvdWxkIGl0
+IG1ha2Ugc2Vuc2UgdG8gcGFzcyB0aGUgdGFibGVzIHZpYSBlZmlfbWFwIGJ5IG1vdmluZyB1cAo+
+Pj4gZWZpX21hcCBwYXJzaW5nIHRvIHRoZSBiZWdpbm5pbmcgb2YgZWZpIGluaXQgaW4KPj4+IGFy
+Y2gveDg2L3BsYXRmb3JtL2VmaS9lZmkuYz8KPj4+Cj4+PiBBbmQgaW4ga2V4ZWMgcGFzcyB0aGUg
+ZWZpIHNpZ25hdHVyZSwgZWZpIG1hcCBwb2ludGVycywgYWRkIGFkZF9lZmlfbWVtbWFwCj4+PiBw
+YXJhbSAoYW5kIHBvc3NpYmx5IHNvbWUgbW9yZT8pPwo+Pj4gVGhlbiB0aGVyZSB3b3VsZCBiZSBu
+byBsaW1pdCBhdCBhbGwgYW55bW9yZS4KPj4KPj4gVGhlcmUgaXMgbm8gbGltaXQuLi4gdGhhdCdz
+IHdoYXQgSSdtIHRlbGxpbmcgeW91Lgo+ICAKPj4ga2V4ZWMgc2hvdWxkIGNlcnRhaW5seSBwYXNz
+IHRoZSBFRkkgaW5mb3JtYXRpb24sIG90aGVyd2lzZSB0aGUgc2Vjb25kCj4+IGtlcm5lbCBjYW4n
+dCBpbnZva2UgRUZJIHJ1bnRpbWUgY2FsbHMgYXQgYWxsLiAgVGhlcmVpbiBsaWVzIGEgd2hvbGUg
+Yml0Cj4+IG9mIHBhaW4uCj4+Cj4+IAktaHBhCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
