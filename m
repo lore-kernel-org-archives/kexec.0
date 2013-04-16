@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1US9Rj-00037B-C8
- for kexec@lists.infradead.org; Tue, 16 Apr 2013 17:13:32 +0000
+ id 1US9Ri-00037C-0J
+ for kexec@lists.infradead.org; Tue, 16 Apr 2013 17:13:31 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 2/8] xen: make GUEST_HANDLE_64() and uint64_aligned_t
- available everywhere
-Date: Tue, 16 Apr 2013 18:13:04 +0100
-Message-ID: <1366132390-5269-3-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
-References: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCHv4 0/8] kexec: extend kexec hypercall for use with pv-ops
+ kernels
+Date: Tue, 16 Apr 2013 18:13:02 +0100
+Message-ID: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,80 +24,59 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: xen-devel@lists.xen.org
 Cc: kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>, Keir Fraser <keir@xen.org>, David Vrabel <david.vrabel@citrix.com>
 
-From: David Vrabel <david.vrabel@citrix.com>
+The series improves the kexec hypercall by making Xen responsible for
+loading and relocating the image.  This allows kexec to be usable by
+pv-ops kernels and should allow kexec to be usable from a HVM or PVH
+privileged domain.
 
-GUEST_HANDLE_64() and uint64_aligned_t allow hypercall ABI structures
-to be identical (binary compatible) for 32 and 64-bit guests.  They
-are currently limited to only being available for use in sysctls and
-domctls.  Relax this restriction so they may be used by any new
-structures.
+This has now missed the code freeze deadline but could it be
+considered for 4.3 anyway?  kexec isn't a core piece of functionality
+and I see minimal risk of introducing regressions to Xen as a whole
+with this series.
 
-There is a minimal cost for 32-bit guests on 64-but hypervisors as
-set_xen_guest_handle() needs to zero the whole field on
-GUEST_HANDLE_64() handles, but this is expected to be less than the
-overhead of having to translate compat structures.
+The first patch is a simple clean-up.
 
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
----
- xen/include/public/arch-x86/xen-x86_32.h |    4 +---
- xen/include/public/xen.h                 |   13 ++++++++-----
- 2 files changed, 9 insertions(+), 8 deletions(-)
+The second patch allows hypercall structures to be ABI compatible
+between 32- and 64-bit guests (by reusing stuff present for domctls
+and sysctls).  This seems better than having to keep adding compat
+handling for new hypercalls etc.
 
-diff --git a/xen/include/public/arch-x86/xen-x86_32.h b/xen/include/public/arch-x86/xen-x86_32.h
-index 1504191..f6b4f49 100644
---- a/xen/include/public/arch-x86/xen-x86_32.h
-+++ b/xen/include/public/arch-x86/xen-x86_32.h
-@@ -91,8 +91,7 @@
- #define machine_to_phys_mapping ((unsigned long *)MACH2PHYS_VIRT_START)
- #endif
- 
--/* 32-/64-bit invariability for control interfaces (domctl/sysctl). */
--#if defined(__XEN__) || defined(__XEN_TOOLS__)
-+/* 32-/64-bit invariability. */
- #undef ___DEFINE_XEN_GUEST_HANDLE
- #define ___DEFINE_XEN_GUEST_HANDLE(name, type)                  \
-     typedef struct { type *p; }                                 \
-@@ -107,7 +106,6 @@
- #define uint64_aligned_t uint64_t __attribute__((aligned(8)))
- #define __XEN_GUEST_HANDLE_64(name) __guest_handle_64_ ## name
- #define XEN_GUEST_HANDLE_64(name) __XEN_GUEST_HANDLE_64(name)
--#endif
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/xen/include/public/xen.h b/xen/include/public/xen.h
-index 4dd9615..d0aa0c5 100644
---- a/xen/include/public/xen.h
-+++ b/xen/include/public/xen.h
-@@ -858,9 +858,14 @@ __DEFINE_XEN_GUEST_HANDLE(uint64, uint64_t);
- 
- #endif /* !__ASSEMBLY__ */
- 
--/* Default definitions for macros used by domctl/sysctl. */
--#if defined(__XEN__) || defined(__XEN_TOOLS__)
--
-+/*
-+ * Default definitions for 32/64-bit invariant macros.
-+ *
-+ * Use these in ABI structures that should be identical for 32 and
-+ * 64-bit guests. There is some (very small) overhead in using
-+ * XEN_GUEST_HANDLE_64() instead of XEN_GUEST_HANDLE() so avoid for
-+ * very hot paths.
-+ */
- #ifndef uint64_aligned_t
- #define uint64_aligned_t uint64_t
- #endif
-@@ -875,8 +880,6 @@ struct xenctl_cpumap {
- };
- #endif
- 
--#endif /* defined(__XEN__) || defined(__XEN_TOOLS__) */
--
- #endif /* __XEN_PUBLIC_XEN_H__ */
- 
- /*
--- 
-1.7.2.5
+Patch 3 introduces the new ABI.
+
+Patch 4 and 5 nearly completely reimplement the kexec load, unload and
+exec sub-ops.  The old load_v1 sub-op is then implemented on top of
+the new code.
+
+Patch 6 calls the kexec image when dom0 crashes.  This avoids having
+to alter dom0 kernels to do a exec sub-op call on crash -- a
+SHUTDOWN_crash by dom0 will trigger the kexec.
+
+Patches 7 and 8 add the libxc API for the kexec calls.  These have
+been acked-by Ian Campbell already.
+
+The required patch series for kexec-tools have previously been posted
+and this series has been rebased on the latest kexec-tools and is
+available from the xen-v3 branch of:
+
+http://xenbits.xen.org/gitweb/?p=people/dvrabel/kexec-tools.git;a=summary
+
+Changes since v3:
+
+- Use paddr_t and page_to_maddr() etc. for portability.
+- Add explicit padding to hypercall structures where required.
+- Minor cleanup of the kexec_reloc assembly.
+- Print a message before exec'ing a crash image.
+- Style fixes (tabs, trailing whitespace) and typos.
+- Fix a bug where using the V1 interface and unloading a image may crash.
+
+Changes since v2: 
+
+- Provide old struct xen_kexec_load if __XEN_INTERFACE_VERSION__ < 4.3
+- Adjust new struct xen_kexec_load to avoid unnecessary padding.
+- Use domheap pages for the image and control pages.
+- Remove the DBG() macros from the reloc code.
+
+David
 
 
 _______________________________________________
