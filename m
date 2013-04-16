@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pb0-f51.google.com ([209.85.160.51])
+Received: from mail-pb0-f54.google.com ([209.85.160.54])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1US6Zf-0006rX-3N
- for kexec@lists.infradead.org; Tue, 16 Apr 2013 14:09:32 +0000
-Received: by mail-pb0-f51.google.com with SMTP id rr4so313105pbb.38
- for <kexec@lists.infradead.org>; Tue, 16 Apr 2013 07:09:28 -0700 (PDT)
-Message-ID: <516D5B8E.6070302@gmail.com>
-Date: Tue, 16 Apr 2013 22:09:18 +0800
+ id 1US6jY-00077T-2L
+ for kexec@lists.infradead.org; Tue, 16 Apr 2013 14:19:44 +0000
+Received: by mail-pb0-f54.google.com with SMTP id xa7so322456pbc.13
+ for <kexec@lists.infradead.org>; Tue, 16 Apr 2013 07:19:42 -0700 (PDT)
+Message-ID: <516D5DF6.8060906@gmail.com>
+Date: Tue, 16 Apr 2013 22:19:34 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH
- RESEND]kexec:i386/kexec-[bzImage|elf-x86]:x86_64/kexec-bzImage64:
- Use "\0" as command line instead of empty command line
-References: <20130408092325.GA23318@udknight> <51628E04.8010002@cn.fujitsu.com>
-In-Reply-To: <51628E04.8010002@cn.fujitsu.com>
+Subject: [PATCH] kexec, i386, bzImage: Remove unnecessary symbol value get
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,69 +18,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: tjd21@cl.cam.ac.uk, kexec@lists.infradead.org, Wang YanQing <udknight@gmail.com>, horms@verge.net.au, ebiederm@xmission.com, hari@in.ibm.com
+To: Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-5LqOIDIwMTPlubQwNOaciDA45pelIDE3OjI5LCBaaGFuZyBZYW5mZWkg5YaZ6YGTOgo+IOS6jiAy
-MDEz5bm0MDTmnIgwOOaXpSAxNzoyMywgV2FuZyBZYW5RaW5nIOWGmemBkzoKPj4gVGhpcyBwYXRj
-aCBwcmV2ZW50cyB0aGUgcHJvYmxlbXMgdG8gaGFwcGVuIGJlbG93Ogo+PiBJbiBzZXR1cF9saW51
-eF9ib290bG9hZGVyX3BhcmFtZXRlcnNfaGlnaAo+PiAxMjAgICAgICAgICBjbWRsaW5lX3B0ciA9
-ICgoY2hhciAqKXJlYWxfbW9kZSkgKyBjbWRsaW5lX29mZnNldDsKPj4gMTIxICAgICAgICAgbWVt
-Y3B5KGNtZGxpbmVfcHRyLCBjbWRsaW5lLCBjbWRsaW5lX2xlbik7Cj4+IDEyMiAgICAgICAgIGNt
-ZGxpbmVfcHRyW2NtZGxpbmVfbGVuIC0gMV0gPSAnXDAnOwo+Pgo+PiBpZiBjbWRsaW5lX2xlbiA9
-PSAwLCBMaW5lIDEyMiB3aWxsIGNvcnJ1cHQga2VybmVsMTYgYnVmIGp1c3QgYmVmb3JlIHRoZSBj
-b21tYW5kbGluZS4KPj4gQW5kIGluIGRvX2J6SW1hZ2VfbG9hZCwgZm9yIGV4YW1wbGUsCj4+IDM2
-OSAgICAgICAgIGNtZGxpbmVfZW5kID0gc2V0dXBfYmFzZSArIGtlcm4xNl9zaXplX25lZWRlZCAr
-IGNvbW1hbmRfbGluZV9sZW4gLSAxOwo+PiAzNzAgICAgICAgICBlbGZfcmVsX3NldF9zeW1ib2wo
-JmluZm8tPnJoZHIsICJjbWRsaW5lX2VuZCIsICZjbWRsaW5lX2VuZCwKPj4gMzcxICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHNpemVvZih1bnNpZ25lZCBsb25nKSk7Cj4+IExpbmUgMzY5IHdp
-bGwgZ28gd3JvbmcsIHRvby4KPj4KPj4gU2lnbmVkLW9mZi1ieTogV2FuZyBZYW5RaW5nIDx1ZGtu
-aWdodEBnbWFpbC5jb20+Cj4+IC0tLQo+PiAgSGkgWmhhbmcgWWFuZmVpLCBjb3VsZCB5b3UgZ2l2
-ZSB5b3VyIHNpZ25lZC1vZmYtYnkgdG8KPj4gIHRoaXMgcGF0Y2g/Cj4gCj4gWWVhaC4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBaaGFuZyBZYW5mZWkgPHpoYW5neWFuZmVpQGNuLmZ1aml0c3UuY29tPgo+
-IAo+IEhpIFNpbW9uLCBjb3VsZCB5b3UgcGxlYXNlIHRha2UgYSBsb29rIGF0IHRoaXMgdG8gc2Vl
-IGlmIHRoZSBjaGFuZ2UgaXMgcmVhc29uYWJsZT8KPiBBZnRlciBhbGwsIGlmIG5vIGNvbW1hZGxp
-bmUsIHdlIG1ha2UgdGhlIGNvbW1hbmRsaW5lX2xlbiB0byAxLiBJIGRvbid0IGtub3cgaWYKPiB0
-aGlzIGJlaGF2aW91ciBjb3VsZCBiZSBhY2NlcHRlZCBieSB5b3UuCj4gCgpIaSBTaW1vbgoKV2hh
-dCBpcyB5b3VyIG9waW5pb24gYWJvdXQgdGhpcyBwYXRjaD8KCgo+Pgo+PiAga2V4ZWMvYXJjaC9p
-Mzg2L2tleGVjLWJ6SW1hZ2UuYyAgICAgfCAzICsrKwo+PiAga2V4ZWMvYXJjaC9pMzg2L2tleGVj
-LWVsZi14ODYuYyAgICAgfCAzICsrKwo+PiAga2V4ZWMvYXJjaC94ODZfNjQva2V4ZWMtYnpJbWFn
-ZTY0LmMgfCA2ICsrKysrLQo+PiAgMyBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAx
-IGRlbGV0aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJ
-bWFnZS5jIGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYwo+PiBpbmRleCA5OWZkNzkw
-Li4yOWYyODBkIDEwMDY0NAo+PiAtLS0gYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5j
-Cj4+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMKPj4gQEAgLTQzNSw2ICs0
-MzUsOSBAQCBpbnQgYnpJbWFnZV9sb2FkKGludCBhcmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hh
-ciAqYnVmLCBvZmZfdCBsZW4sCj4+ICAJY29tbWFuZF9saW5lX2xlbiA9IDA7Cj4+ICAJaWYgKGNv
-bW1hbmRfbGluZSkgewo+PiAgCQljb21tYW5kX2xpbmVfbGVuID0gc3RybGVuKGNvbW1hbmRfbGlu
-ZSkgKzE7Cj4+ICsJfSBlbHNlIHsKPj4gKwkgICAgY29tbWFuZF9saW5lID0gc3RyZHVwKCJcMCIp
-Owo+PiArCSAgICBjb21tYW5kX2xpbmVfbGVuID0gMTsKPj4gIAl9Cj4+ICAJcmFtZGlza19idWYg
-PSAwOwo+PiAgCWlmIChyYW1kaXNrKSB7Cj4+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYv
-a2V4ZWMtZWxmLXg4Ni5jIGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYwo+PiBpbmRl
-eCBlNjJlYmNiLi43ODhhMjA5IDEwMDY0NAo+PiAtLS0gYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMt
-ZWxmLXg4Ni5jCj4+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYteDg2LmMKPj4gQEAg
-LTE2MSw2ICsxNjEsOSBAQCBpbnQgZWxmX3g4Nl9sb2FkKGludCBhcmdjLCBjaGFyICoqYXJndiwg
-Y29uc3QgY2hhciAqYnVmLCBvZmZfdCBsZW4sCj4+ICAJY29tbWFuZF9saW5lX2xlbiA9IDA7Cj4+
-ICAJaWYgKGNvbW1hbmRfbGluZSkgewo+PiAgCQljb21tYW5kX2xpbmVfbGVuID0gc3RybGVuKGNv
-bW1hbmRfbGluZSkgKzE7Cj4+ICsJfSBlbHNlIHsKPj4gKwkgICAgY29tbWFuZF9saW5lID0gc3Ry
-ZHVwKCJcMCIpOwo+PiArCSAgICBjb21tYW5kX2xpbmVfbGVuID0gMTsKPj4gIAl9Cj4+ICAKPj4g
-IAkvKiBOZWVkIHRvIGFwcGVuZCBzb21lIGNvbW1hbmQgbGluZSBwYXJhbWV0ZXJzIGludGVybmFs
-bHkgaW4gY2FzZSBvZgo+PiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC94ODZfNjQva2V4ZWMtYnpJ
-bWFnZTY0LmMgYi9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1iekltYWdlNjQuYwo+PiBpbmRleCA4
-NmU2ZDEzLi5lYzYxNGE0IDEwMDY0NAo+PiAtLS0gYS9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1i
-ekltYWdlNjQuYwo+PiArKysgYi9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1iekltYWdlNjQuYwo+
-PiBAQCAtMjg0LDggKzI4NCwxMiBAQCBpbnQgYnpJbWFnZTY0X2xvYWQoaW50IGFyZ2MsIGNoYXIg
-Kiphcmd2LCBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKPj4gIAl9Cj4+ICAJY29tbWFuZF9s
-aW5lID0gY29uY2F0X2NtZGxpbmUoY29tbWFuZF9saW5lLCBhcHBlbmQpOwo+PiAgCWNvbW1hbmRf
-bGluZV9sZW4gPSAwOwo+PiAtCWlmIChjb21tYW5kX2xpbmUpCj4+ICsJaWYgKGNvbW1hbmRfbGlu
-ZSkgewo+PiAgCQljb21tYW5kX2xpbmVfbGVuID0gc3RybGVuKGNvbW1hbmRfbGluZSkgKyAxOwo+
-PiArCX0gZWxzZSB7Cj4+ICsJCWNvbW1hbmRfbGluZSA9IHN0cmR1cCgiXDAiKTsKPj4gKwkJY29t
-bWFuZF9saW5lX2xlbiA9IDE7Cj4+ICsJfQo+PiAgCXJhbWRpc2tfYnVmID0gMDsKPj4gIAlpZiAo
-cmFtZGlzaykKPj4gIAkJcmFtZGlza19idWYgPSBzbHVycF9maWxlKHJhbWRpc2ssICZyYW1kaXNr
-X2xlbmd0aCk7Cj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+
+We needn't get the initial values for every regs in regs32
+from symbol entry32_regs for we will manually initialize them
+one by one next:
+
+        /*  
+         * Initialize the 32bit start information.
+         */
+        regs32.eax = 0; /* unused */
+        regs32.ebx = 0; /* 0 == boot not AP processor start */
+        regs32.ecx = 0; /* unused */
+        regs32.edx = 0; /* unused */
+        regs32.esi = setup_base; /* kernel parameters */
+        regs32.edi = 0; /* unused */
+        regs32.esp = elf_rel_get_addr(&info->rhdr, "stack_end"); /* stack, unused */
+        regs32.ebp = 0; /* unused */
+        regs32.eip = kernel32_load_addr; /* kernel entry point */
+
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+---
+ kexec/arch/i386/kexec-bzImage.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 39452a4..6a34279 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -310,9 +310,8 @@ int do_bzImage_load(struct kexec_info *info,
+ 	if (real_mode_entry)
+ 		elf_rel_get_symbol(&info->rhdr, "entry16_regs",
+ 					 &regs16, sizeof(regs16));
+-	elf_rel_get_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
+-	/*
+ 
++	/*
+ 	 * Initialize the 32bit start information.
+ 	 */
+ 	regs32.eax = 0; /* unused */
+-- 
+1.7.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
