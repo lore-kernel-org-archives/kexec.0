@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pb0-f54.google.com ([209.85.160.54])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1US6jY-00077T-2L
- for kexec@lists.infradead.org; Tue, 16 Apr 2013 14:19:44 +0000
-Received: by mail-pb0-f54.google.com with SMTP id xa7so322456pbc.13
- for <kexec@lists.infradead.org>; Tue, 16 Apr 2013 07:19:42 -0700 (PDT)
-Message-ID: <516D5DF6.8060906@gmail.com>
-Date: Tue, 16 Apr 2013 22:19:34 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+ id 1US7K3-0008CL-9I
+ for kexec@lists.infradead.org; Tue, 16 Apr 2013 14:57:27 +0000
+Message-ID: <516D66C8.2070900@citrix.com>
+Date: Tue, 16 Apr 2013 15:57:12 +0100
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
-Subject: [PATCH] kexec, i386, bzImage: Remove unnecessary symbol value get
+Subject: Re: [PATCH 5/8] kexec: extend hypercall with improved load/unload ops
+References: <1365447593-11988-1-git-send-email-david.vrabel@citrix.com>
+ <1365447593-11988-6-git-send-email-david.vrabel@citrix.com>
+ <20130409210241.GB31533@debian70-amd64.local.net-space.pl>
+In-Reply-To: <20130409210241.GB31533@debian70-amd64.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,50 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: Ian Jackson <Ian.Jackson@eu.citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Ian Campbell <Ian.Campbell@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+On 09/04/13 22:02, Daniel Kiper wrote:
+> On Mon, Apr 08, 2013 at 07:59:50PM +0100, David Vrabel wrote:
+>> 
+>> -static int kexec_load_unload_compat(unsigned long op,
+>> -                                    XEN_GUEST_HANDLE_PARAM(void) uarg)
+>> +static int kexec_load_v1_compat(XEN_GUEST_HANDLE_PARAM(void) uarg)
+>>  {
+>>  #ifdef CONFIG_COMPAT
+>>      compat_kexec_load_v1_t compat_load;
+>> @@ -808,49 +1011,113 @@ static int kexec_load_unload_compat(unsigned long op,
+>>      load.type = compat_load.type;
+>>      XLAT_kexec_image(&load.image, &compat_load.image);
+>>
+>> -    return kexec_load_unload_internal(op, &load);
+>> -#else /* CONFIG_COMPAT */
+>> +    return kexec_do_load_v1(&load, 1);
+>> +#else
+> 
+> Why did you removed comment?
 
-We needn't get the initial values for every regs in regs32
-from symbol entry32_regs for we will manually initialize them
-one by one next:
+It's unhelpful clutter when the #if/#else/#endif are close together.
 
-        /*  
-         * Initialize the 32bit start information.
-         */
-        regs32.eax = 0; /* unused */
-        regs32.ebx = 0; /* 0 == boot not AP processor start */
-        regs32.ecx = 0; /* unused */
-        regs32.edx = 0; /* unused */
-        regs32.esi = setup_base; /* kernel parameters */
-        regs32.edi = 0; /* unused */
-        regs32.esp = elf_rel_get_addr(&info->rhdr, "stack_end"); /* stack, unused */
-        regs32.ebp = 0; /* unused */
-        regs32.eip = kernel32_load_addr; /* kernel entry point */
+>>      return 0;
+> 
+> Why not -ENOSYS?
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/arch/i386/kexec-bzImage.c |    3 +--
- 1 files changed, 1 insertions(+), 2 deletions(-)
+It's unreachable code so it doesn't matter.
 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 39452a4..6a34279 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -310,9 +310,8 @@ int do_bzImage_load(struct kexec_info *info,
- 	if (real_mode_entry)
- 		elf_rel_get_symbol(&info->rhdr, "entry16_regs",
- 					 &regs16, sizeof(regs16));
--	elf_rel_get_symbol(&info->rhdr, "entry32_regs", &regs32, sizeof(regs32));
--	/*
- 
-+	/*
- 	 * Initialize the 32bit start information.
- 	 */
- 	regs32.eax = 0; /* unused */
--- 
-1.7.1
-
+David
 
 _______________________________________________
 kexec mailing list
