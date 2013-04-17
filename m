@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UST5s-0005fT-2Y
- for kexec@lists.infradead.org; Wed, 17 Apr 2013 14:12:16 +0000
-Date: Wed, 17 Apr 2013 16:12:05 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 5/5] kexec/xen: directly load images images into Xen
-Message-ID: <20130417141205.GD906@debian70-amd64.local.net-space.pl>
-References: <1365448014-12119-1-git-send-email-david.vrabel@citrix.com>
- <1365448014-12119-6-git-send-email-david.vrabel@citrix.com>
- <20130409212036.GE31533@debian70-amd64.local.net-space.pl>
- <20130417125602.GC906@debian70-amd64.local.net-space.pl>
- <516EA95D.8010200@citrix.com>
+ id 1UST9C-0005nh-GG
+ for kexec@lists.infradead.org; Wed, 17 Apr 2013 14:15:43 +0000
+Message-ID: <516EAE8B.8030200@citrix.com>
+Date: Wed, 17 Apr 2013 15:15:39 +0100
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
-Content-Description: aniel.kiper@oracle.co
-Content-Disposition: inline
-In-Reply-To: <516EA95D.8010200@citrix.com>
+Subject: Re: [PATCHv4 0/8] kexec: extend kexec hypercall for use with pv-ops
+ kernels
+References: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
+ <20130417123437.GA906@debian70-amd64.local.net-space.pl>
+In-Reply-To: <20130417123437.GA906@debian70-amd64.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,61 +24,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Keir (Xen.org)" <keir@xen.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-On Wed, Apr 17, 2013 at 02:53:33PM +0100, David Vrabel wrote:
-> On 17/04/13 13:56, Daniel Kiper wrote:
-> > On Tue, Apr 09, 2013 at 11:20:36PM +0200, Daniel Kiper wrote:
-> >>
-> >> arch = (kexec_flags & KEXEC_ARCH_MASK) >> 16;
-> >
-> > What is wrong with this line?
-> > Why did not you applied it?
->
-> I haven't reposted the kexec-tools patches so it's not clear what you
-> are expecting this to be applied to.
+On 17/04/13 13:34, Daniel Kiper wrote:
+> On Tue, Apr 16, 2013 at 06:13:02PM +0100, David Vrabel wrote:
+>> 
+>> The required patch series for kexec-tools have previously been posted
+>> and this series has been rebased on the latest kexec-tools and is
+>> available from the xen-v3 branch of:
+>>
+>> http://xenbits.xen.org/gitweb/?p=people/dvrabel/kexec-tools.git;a=summary
+> 
+> kexec -e still does not work. I see in my console:
+> 
+> I'm in purgatory
+> sha256 digests do not match :(
 
-arch = (kexec_flags >> 16) & 0xffff;
+Some recent updates to kexec-tools has broken this.  If you use the
+xen-v2 branch of kexec-tools it should be fine.
 
-should be changed to:
+I suspect the recent change to load 64-bit images about 4G but my unit
+testing says images above 4G work fine.
 
-arch = (kexec_flags & KEXEC_ARCH_MASK) >> 16;
+Working out what's wrong here is going to push the final patches even
+further into the code freeze so this will now be a Xen 4.4 candidate.
 
-or add comment what are you doing but I think
-that former is better.
-
-Additionally I found in kexec-tools git tree something like that:
-
-kexec/crashdump-xen.c:
-
-...
-#ifdef HAVE_LIBXENCTRL
-int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
-{
-...
-}
-
-and in
-
-kexec/crashdump.c:
-
-...
-
-#ifndef HAVE_LIBXENCTRL
-int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
-{
-  return get_vmcoreinfo("/sys/hypervisor/vmcoreinfo", addr, len);
-}
-#endif
-
-Move get_xen_vmcoreinfo() from kexec/crashdump.c to kexec/crashdump-xen.c
-and make it return -1 ifndef HAVE_LIBXENCTRL. /sys/hypervisor/vmcoreinfo
-is valid for legacy kexec implementation only.
-
-Please repost next time Xen and kexec-tools patches.
-
-Daniel
+David
 
 _______________________________________________
 kexec mailing list
