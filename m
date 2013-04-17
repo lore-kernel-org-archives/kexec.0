@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from mail-ie0-x22c.google.com ([2607:f8b0:4001:c03::22c])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1USTkI-0006jn-Gz
- for kexec@lists.infradead.org; Wed, 17 Apr 2013 14:54:03 +0000
-Date: Wed, 17 Apr 2013 16:53:51 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCHv4 0/8] kexec: extend kexec hypercall for use with pv-ops
- kernels
-Message-ID: <20130417145351.GE906@debian70-amd64.local.net-space.pl>
-References: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
- <20130417123437.GA906@debian70-amd64.local.net-space.pl>
- <516EAE8B.8030200@citrix.com>
+ id 1USVEK-0000kU-HA
+ for kexec@lists.infradead.org; Wed, 17 Apr 2013 16:29:09 +0000
+Received: by mail-ie0-f172.google.com with SMTP id c10so2130040ieb.17
+ for <kexec@lists.infradead.org>; Wed, 17 Apr 2013 09:29:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <516EAE8B.8030200@citrix.com>
+In-Reply-To: <3354091.h1CDj18vOb@skinner.arch.suse.de>
+References: <3354091.h1CDj18vOb@skinner.arch.suse.de>
+Date: Wed, 17 Apr 2013 09:29:06 -0700
+Message-ID: <CAE9FiQXXFupeMLm0irwtfchM0FsQhzPMfHpE0fwfO-0Z=hFtaQ@mail.gmail.com>
+Subject: Re: reserved crash memory above #define DEFAULT_BZIMAGE_ADDR_MAX
+ 0x37FFFFFF
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +25,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Keir (Xen.org)" <keir@xen.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Thomas Renninger <trenn@suse.de>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-On Wed, Apr 17, 2013 at 03:15:39PM +0100, David Vrabel wrote:
-> On 17/04/13 13:34, Daniel Kiper wrote:
-> > On Tue, Apr 16, 2013 at 06:13:02PM +0100, David Vrabel wrote:
-> >>
-> >> The required patch series for kexec-tools have previously been posted
-> >> and this series has been rebased on the latest kexec-tools and is
-> >> available from the xen-v3 branch of:
-> >>
-> >> http://xenbits.xen.org/gitweb/?p=people/dvrabel/kexec-tools.git;a=summary
-> >
-> > kexec -e still does not work. I see in my console:
-> >
-> > I'm in purgatory
-> > sha256 digests do not match :(
+On Wed, Apr 17, 2013 at 6:52 AM, Thomas Renninger <trenn@suse.de> wrote:
+> Hi,
 >
-> Some recent updates to kexec-tools has broken this.  If you use the
-> xen-v2 branch of kexec-tools it should be fine.
-
-xen-v2 works without any issue...
-
-> I suspect the recent change to load 64-bit images about 4G but my unit
-> testing says images above 4G work fine.
+> while trying to switch to kvm setup with a latest kernel I realized that
+> blank:
+> crashkernel=64M
+> param will reserve this memory area:
+> 7b000000-7effffff : Crash kernel
 >
-> Working out what's wrong here is going to push the final patches even
-> further into the code freeze so this will now be a Xen 4.4 candidate.
+> and kexec does not successfully load the kernel due to (hole_max output
+> added myself):
+> Could not find a free area of memory of 4c1000 bytes, hole_max: 0x37ffffff...
+> locate_hole failed
 
-If you wish I could put my Reviewed-by and Tested-by for all Xen
-patches. But please add this fix for memcpy() for patch 5 and repost
-all Xen patches. However, I could not add Reviewed-by and Tested-by
-for kexec-tools patches until all problems will be solved.
-
-Daniel
+https://patchwork.kernel.org/patch/2447581/
+https://patchwork.kernel.org/patch/2447561/
+https://patchwork.kernel.org/patch/2447571/
+https://patchwork.kernel.org/patch/2447591/
 
 _______________________________________________
 kexec mailing list
