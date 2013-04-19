@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UStHD-0005Ql-0R
- for kexec@lists.infradead.org; Thu, 18 Apr 2013 18:09:43 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1366233596-34681-1-git-send-email-dzickus@redhat.com>
- <87ip3j94qu.fsf@xmission.com> <20130418174432.GN79013@redhat.com>
-Date: Thu, 18 Apr 2013 11:09:29 -0700
-In-Reply-To: <20130418174432.GN79013@redhat.com> (Don Zickus's message of
- "Thu, 18 Apr 2013 13:44:32 -0400")
-Message-ID: <87ehe77lt2.fsf@xmission.com>
+ id 1UT6NS-0007pG-Pg
+ for kexec@lists.infradead.org; Fri, 19 Apr 2013 08:09:03 +0000
+Date: Fri, 19 Apr 2013 10:08:41 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH 5/8] kexec: extend hypercall with improved load/unload ops
+Message-ID: <20130419080841.GA3823@debian70-amd64.local.net-space.pl>
+References: <1366132390-5269-1-git-send-email-david.vrabel@citrix.com>
+ <1366132390-5269-6-git-send-email-david.vrabel@citrix.com>
+ <20130417125106.GB906@debian70-amd64.local.net-space.pl>
+ <51701F6D.6050608@citrix.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3] watchdog: Add hook for kicking in kdump path
+Content-Disposition: inline
+In-Reply-To: <51701F6D.6050608@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,59 +26,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, wim@iguana.be, Guenter Roeck <linux@roeck-us.net>, dyoung@redhat.com, vgoyal@redhat.com
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Keir (Xen.org)" <keir@xen.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-Don Zickus <dzickus@redhat.com> writes:
-
-> On Thu, Apr 18, 2013 at 09:35:05AM -0700, Eric W. Biederman wrote:
->> Don Zickus <dzickus@redhat.com> writes:
->> 
->> > A common problem with kdump is that during the boot up of the
->> > second kernel, the hardware watchdog times out and reboots the
->> > machine before a vmcore can be captured.
->> >
->> > Instead of tellling customers to disable their hardware watchdog
->> > timers, I hacked up a hook to put in the kdump path that provides
->> > one last kick before jumping into the second kernel.
->> 
->> Having thought about this a little more this patch is actively wrong.
->> 
->> The problem is you can easily be petting the watchdog in violation of
->> whatever policy is normally in place.  Which means that this extra
->> petting can result in a system that is unavailable for an unacceptably
->> long period of time.
+On Thu, Apr 18, 2013 at 05:29:33PM +0100, David Vrabel wrote:
+> On 17/04/13 13:51, Daniel Kiper wrote:
+> > On Tue, Apr 16, 2013 at 06:13:07PM +0100, David Vrabel wrote:
+> >>
+> >>      }
+> >>
+> >> +    code_page = __map_domain_page(image->control_code_page);
+> >> +    memcpy(code_page, kexec_reloc, PAGE_SIZE);
+> >
+> > memcpy(code_page, kexec_reloc, kexec_reloc_size);
 >
-> Not really, just an extra period which isn't that much.  This would only
-> be noticable if kdump is setup and enabled and then _hung_, otherwise it
-> just quickly reboots and noone notices. :-)
+> kexec_reloc_size is absolute symbol and doing this give linker errors.
 
-For the folks who care the definition of acceptable unavailability would
-look like: watchdog timeout + max boot time + margin of error.  So it
-is possible for an extra watchdog pet to eat up or exceed your margin
-of error.
+Yes, it should be changed to something like that:
 
-You are more likely to cause a how in the world did that happen than
-something more extreme, but even playing invalidating peoples mental
-model can be a problem sometimes.
+kexec_reloc_size:
+  .long . - xen_relocate_kernel
 
->> I expect most watchdog policies are not that strict, but this patch
->> would preclude using those that are.
->
-> I would assume most of those users would not enable kdump and would not be
-> affected.
+Somwhere in xen/include/asm-x86/machine_kexec.h:
 
-I have seen it be the case that the goal is to record what went wrong
-if there is time, but to get back into service in a timely manner
-regardless.
+extern unsigned int kexec_reloc_size;
 
->> And like is being discussed in another subthread it does look like
->> changing the timeout and the interval should be enough all on it's own.
->
-> Probably and I will pursue that.  Thanks for the suggestion.
+> FWIW, Linux also uses a #define'd value for its similar memcpy.
 
-Eric
+I saw that sometime ago and I think this is a bug.
+We should copy only kexec_reloc() code and nothing else.
+Otherwise we ask for problems.
 
+I am going to post relevant patches for this and
+others kexec issues found in Linux Kernel.
+
+> I have added a link time check that kexec_reloc_size <= PAGE_SIZE.
+
+Good idea but it should be kexec_reloc_size <= KEXEC_CONTROL_PAGE_SIZE.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
