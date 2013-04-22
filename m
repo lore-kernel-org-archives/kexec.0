@@ -1,33 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
+Received: from g4t0016.houston.hp.com ([15.201.24.19])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UUCmT-0001tZ-Rw
- for kexec@lists.infradead.org; Mon, 22 Apr 2013 09:11:27 +0000
-Received: from /spool/local
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 22 Apr 2013 10:06:15 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com
- (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id BD5201B0806B
- for <kexec@lists.infradead.org>; Mon, 22 Apr 2013 10:11:20 +0100 (BST)
-Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
- [9.149.37.216])
- by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r3M9BAgN45744202
- for <kexec@lists.infradead.org>; Mon, 22 Apr 2013 09:11:10 GMT
-Received: from d06av04.portsmouth.uk.ibm.com (loopback [127.0.0.1])
- by d06av04.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r3M9BKT4023380
- for <kexec@lists.infradead.org>; Mon, 22 Apr 2013 03:11:20 -0600
-Date: Mon, 22 Apr 2013 11:11:17 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH] makedumpfile: Check dump file early
-Message-ID: <20130422111117.00c1ecef@holzheu>
-In-Reply-To: <51747DD3.8000104@jp.fujitsu.com>
-References: <20130419173644.4c24dead@holzheu> <51747DD3.8000104@jp.fujitsu.com>
-Mime-Version: 1.0
+ id 1UUEfx-0005Wk-ID
+ for kexec@lists.infradead.org; Mon, 22 Apr 2013 11:12:50 +0000
+Message-ID: <51751B21.4080505@hp.com>
+Date: Mon, 22 Apr 2013 19:12:33 +0800
+From: Jingbai Ma <jingbai.ma@hp.com>
+MIME-Version: 1.0
+Subject: makedumpfile parallel dumping test
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,109 +16,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, zhangyanfei@cn.fujitsu.com, "Mitchell, Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "Eric W. Biederman" <ebiederm@xmission.com>, cpw@sgi.com, akpm@linux-foundation.org, "yinghai@kernel.org" <yinghai@kernel.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, jingbai.ma@hp.com
 
-On Mon, 22 Apr 2013 09:01:23 +0900
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> > +	if (info->flag_force) {
-> > +		if (access(path, W_OK) == 0)
-> > +			return TRUE; /* We have write permission */
-> > +		err_str = strerror(errno);
-> > +	} else {
-> > +		err_str = "File exists";
-> 
-> How about strerror(EEXIST)? It's better to avoid hard code to use the 
-> same string as what libc returns.
+Hi all,
 
-Yes, this solution is better.
+I have done some experiments on parallel kernel dumping. I would like to 
+share the test result with you. Hope it helps.
 
-Here the updated patch:
----
- makedumpfile.c |   37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+Test environment:
+Machine: HP ProLiant DL980 G7 with 4TB RAM.
+CPU: Intel(R) Xeon(R) CPU E7- 2860  @ 2.27GHz (8 sockets, 10 cores) (4 
+CPU were enabled the 2nd kernel by nr_cpus=4)
+Kernel 3.9.0-rc7
+kexec-tools 2.0.4
+makedumpfile v1.5.3 with lzo library
+crashkernel=4096M (I have tested with 2048M but failed with OOM on 3 or 
+4 parallels dumping in cyclic mode)
 
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -730,6 +730,24 @@ open_dump_file(void)
- }
- 
- int
-+check_dump_file(const char *path)
-+{
-+	char *err_str;
-+
-+	if (access(path, F_OK) != 0)
-+		return TRUE; /* File does not exist */
-+	if (info->flag_force) {
-+		if (access(path, W_OK) == 0)
-+			return TRUE; /* We have write permission */
-+		err_str = strerror(errno);
-+	} else {
-+		err_str = strerror(EEXIST);
-+	}
-+	ERRMSG("Can't open the dump file (%s). %s\n", path, err_str);
-+	return FALSE;
-+}
-+
-+int
- open_dump_bitmap(void)
- {
- 	int i, fd;
-@@ -8609,6 +8627,9 @@ main(int argc, char *argv[])
- 			MSG("Try `makedumpfile --help' for more information.\n");
- 			goto out;
- 		}
-+		if (!check_dump_file(info->name_dumpfile))
-+			goto out;
-+
- 		if (!open_files_for_rearranging_dumpdata())
- 			goto out;
- 
-@@ -8626,9 +8647,11 @@ main(int argc, char *argv[])
- 			MSG("Try `makedumpfile --help' for more information.\n");
- 			goto out;
- 		}
--		if (!reassemble_dumpfile())
-+		if (!check_dump_file(info->name_dumpfile))
- 			goto out;
- 
-+		if (!reassemble_dumpfile())
-+			goto out;
- 		MSG("\n");
- 		MSG("The dumpfile is saved to %s.\n", info->name_dumpfile);
- 	} else if (info->flag_dmesg) {
-@@ -8637,6 +8660,8 @@ main(int argc, char *argv[])
- 			MSG("Try `makedumpfile --help' for more information.\n");
- 			goto out;
- 		}
-+		if (!check_dump_file(info->name_dumpfile))
-+			goto out;
- 		if (!dump_dmesg())
- 			goto out;
- 
-@@ -8648,6 +8673,16 @@ main(int argc, char *argv[])
- 			MSG("Try `makedumpfile --help' for more information.\n");
- 			goto out;
- 		}
-+		if (info->flag_split) {
-+			for (i = 0; i < info->num_dumpfile; i++) {
-+				if (!check_dump_file(SPLITTING_DUMPFILE(i)))
-+					goto out;
-+			}
-+		} else {
-+			if (!check_dump_file(info->name_dumpfile))
-+				goto out;
-+		}
-+
- 		if (!create_dumpfile())
- 			goto out;
- 
+I didn't get a real multipath storage device, so I just put dump files 
+on 4 different disks via 3 HP Smart Array controllers. (mounted on /0, 
+/1, /2 and /3 in the capture kernel)
 
+Measured time like this (for example: lzo compression, non-cyclic, 4 
+parallels):
+time makedumpfile -l -non-cyclic --split --message-level 23 -d 31 
+/proc/vmcore /0/vmcore_0 /1/vmcore_1 /2/vmcore_2 /3/vmcore_3
+
+I run several tests with different option, parallels from 1 to 4, and 
+combined with zlib and lzo compression.
+
+Test result:
+-----------------------------------------------------------------
+|               |Parallels 1|Parallels 2|Parallels 3|Parallels 4|
+-----------------------------------------------------------------
+|zlib cyclic    | 42m25.321s|  34m0.168s| 29m44.908s| 28m50.387s|
+-----------------------------------------------------------------
+|zlib non-cyclic|  42m7.842s| 28m28.275s| 23m25.750s|  21m6.476s|
+-----------------------------------------------------------------
+|lzo cyclic     | 23m40.010s| 18m19.932s| 21m47.903s| 22m47.605s|
+-----------------------------------------------------------------
+|lzo non-cyclic | 20m45.749s| 16m42.045s| 15m41.070s| 15m18.605s|
+-----------------------------------------------------------------
+
+
+-- 
+Thanks,
+Jingbai Ma
 
 _______________________________________________
 kexec mailing list
