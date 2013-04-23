@@ -1,18 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ie0-x229.google.com ([2607:f8b0:4001:c03::229])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UUITW-00036R-Lq
- for kexec@lists.infradead.org; Mon, 22 Apr 2013 15:16:16 +0000
-Received: by mail-ie0-f169.google.com with SMTP id ar20so7315041iec.28
- for <kexec@lists.infradead.org>; Mon, 22 Apr 2013 08:16:13 -0700 (PDT)
+ id 1UURGj-0004V7-1S
+ for kexec@lists.infradead.org; Tue, 23 Apr 2013 00:39:38 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id BC9FC3EE0C1
+ for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 09:39:27 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9F61045DE55
+ for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 09:39:27 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 739C345DE56
+ for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 09:39:27 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 67FA51DB804F
+ for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 09:39:27 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1AD911DB804C
+ for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 09:39:27 +0900 (JST)
+Message-ID: <5175D821.3060106@jp.fujitsu.com>
+Date: Tue, 23 Apr 2013 09:38:57 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <1363985646-30112-1-git-send-email-yinghai@kernel.org>
-References: <1363985646-30112-1-git-send-email-yinghai@kernel.org>
-Date: Mon, 22 Apr 2013 08:16:13 -0700
-Message-ID: <CAE9FiQU6DhcMyfCMO9g7SmLFsbCWq1u6zav1jSEj3zFo9jgm_g@mail.gmail.com>
-Subject: Re: [PATCH v2] kdump,
- x86: Process multiple Crash kernel in /proc/iomem
-From: Yinghai Lu <yinghai@kernel.org>
+Subject: Re: /proc/vmcore kernel patches
+References: <E1UQGbu-0000on-Qi@eag09.americas.sgi.com>
+ <20130412101056.a7371f1297e3057125c44521@mxc.nes.nec.co.jp>
+ <20130422175504.GA26312@sgi.com>
+In-Reply-To: <20130422175504.GA26312@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,250 +35,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Yinghai Lu <yinghai@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Cliff Wickman <cpw@sgi.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-On Fri, Mar 22, 2013 at 1:54 PM, Yinghai Lu <yinghai@kernel.org> wrote:
-> Vivek found specical handling crashkernel low in not good.
-> We should extend kexec-tools to handle multiple Crash kernel instead.
+(2013/04/23 2:55), Cliff Wickman wrote:
+> Hello Mr. Atayama and Mr. Kumagai,
 >
-> Extend crash_reserved_mem to array instead and use
-> kexec_iomem_for_each_line directly.  After that we can drop
-> crashkernel low.
+> I have been playing with the v4 patches
+>       kdump, vmcore: support mmap() on /proc/vmcore
+> and find the mmap interface to /proc/vmcore potentially about 80x faster than
+> the read interface.
 >
-> -v2: fix left over calling of parse_iomem_single() found by Vivek.
+> But in practice (using a makedumpfile that mmap's instead of read's) I find
+> it about 10x slower.
 >
-> Suggested-by: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Yinghai Lu <yinghai@kernel.org>
->
-> ---
->  kexec/arch/i386/crashdump-x86.c    |  109 +++++++++++++++++++++----------------
->  kexec/arch/i386/kexec-x86-common.c |    4 -
->  kexec/kexec.h                      |    1
->  3 files changed, 66 insertions(+), 48 deletions(-)
->
-> Index: kexec-tools/kexec/arch/i386/crashdump-x86.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
-> +++ kexec-tools/kexec/arch/i386/crashdump-x86.c
-> @@ -188,9 +188,9 @@ static int exclude_region(int *nr_ranges
->  static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
->
->  /* Memory region reserved for storing panic kernel and other data. */
-> -static struct memory_range crash_reserved_mem;
-> -/* under 4G parts */
-> -static struct memory_range crash_reserved_low_mem;
-> +#define CRASH_RESERVED_MEM_NR  8
-> +static struct memory_range crash_reserved_mem[CRASH_RESERVED_MEM_NR];
-> +static int crash_reserved_mem_nr;
->
->  /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
->   * create Elf headers. Keeping it separate from get_memory_ranges() as
-> @@ -207,7 +207,7 @@ static int get_crash_memory_ranges(struc
->                                    int kexec_flags, unsigned long lowmem_limit)
->  {
->         const char *iomem = proc_iomem();
-> -       int memory_ranges = 0, gart = 0;
-> +       int memory_ranges = 0, gart = 0, i;
->         char line[MAX_LINE];
->         FILE *fp;
->         unsigned long long start, end;
-> @@ -268,29 +268,28 @@ static int get_crash_memory_ranges(struc
->         }
->         fclose(fp);
->         if (kexec_flags & KEXEC_PRESERVE_CONTEXT) {
-> -               int i;
->                 for (i = 0; i < memory_ranges; i++) {
->                         if (crash_memory_range[i].end > 0x0009ffff) {
-> -                               crash_reserved_mem.start = \
-> +                               crash_reserved_mem[0].start = \
->                                         crash_memory_range[i].start;
->                                 break;
->                         }
->                 }
-> -               if (crash_reserved_mem.start >= mem_max) {
-> +               if (crash_reserved_mem[0].start >= mem_max) {
->                         fprintf(stderr, "Too small mem_max: 0x%llx.\n",
->                                 mem_max);
->                         return -1;
->                 }
-> -               crash_reserved_mem.end = mem_max;
-> -               crash_reserved_mem.type = RANGE_RAM;
-> +               crash_reserved_mem[0].end = mem_max;
-> +               crash_reserved_mem[0].type = RANGE_RAM;
-> +               crash_reserved_mem_nr = 1;
->         }
-> -       if (exclude_region(&memory_ranges, crash_reserved_mem.start,
-> -                               crash_reserved_mem.end) < 0)
-> -               return -1;
-> -       if (crash_reserved_low_mem.start &&
-> -           exclude_region(&memory_ranges, crash_reserved_low_mem.start,
-> -                               crash_reserved_low_mem.end) < 0)
-> -               return -1;
-> +
-> +       for (i = 0; i < crash_reserved_mem_nr; i++)
-> +               if (exclude_region(&memory_ranges, crash_reserved_mem[i].start,
-> +                               crash_reserved_mem[i].end) < 0)
-> +                       return -1;
-> +
->         if (gart) {
->                 /* exclude GART region if the system has one */
->                 if (exclude_region(&memory_ranges, gart_start, gart_end) < 0)
-> @@ -351,9 +350,10 @@ static int get_crash_memory_ranges_xen(s
->
->         qsort(*range, *ranges, sizeof(struct memory_range), compare_ranges);
->
-> -       if (exclude_region(ranges, crash_reserved_mem.start,
-> -                                               crash_reserved_mem.end) < 0)
-> -               goto err;
-> +       for (i = 0; i < crash_reserved_mem_nr; i++)
-> +               if (exclude_region(ranges, crash_reserved_mem[i].start,
-> +                                               crash_reserved_mem[i].end) < 0)
-> +                       goto err;
->
->         ret = 0;
->
-> @@ -434,9 +434,10 @@ static int get_crash_memory_ranges_xen(s
->
->         qsort(*range, *ranges, sizeof(struct memory_range), compare_ranges);
->
-> -       if (exclude_region(ranges, crash_reserved_mem.start,
-> -                                               crash_reserved_mem.end) < 0)
-> -               goto err;
-> +       for (i = 0; i < crash_reserved_mem_nr; i++)
-> +               if (exclude_region(ranges, crash_reserved_mem[i].start,
-> +                                               crash_reserved_mem[i].end) < 0)
-> +                       goto err;
->
->         ret = 0;
->
-> @@ -1022,15 +1023,10 @@ int load_crashdump_segments(struct kexec
->         memmap_p = xmalloc(sz);
->         memset(memmap_p, 0, sz);
->         add_memmap(memmap_p, info->backup_src_start, info->backup_src_size);
-> -       sz = crash_reserved_mem.end - crash_reserved_mem.start +1;
-> -       if (add_memmap(memmap_p, crash_reserved_mem.start, sz) < 0) {
-> -               return ENOCRASHKERNEL;
-> -       }
-> -
-> -       if (crash_reserved_low_mem.start) {
-> -               sz = crash_reserved_low_mem.end - crash_reserved_low_mem.start
-> -                                        +1;
-> -               add_memmap(memmap_p, crash_reserved_low_mem.start, sz);
-> +       for (i = 0; i < crash_reserved_mem_nr; i++) {
-> +               sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
-> +               if (add_memmap(memmap_p, crash_reserved_mem[i].start, sz) < 0)
-> +                       return ENOCRASHKERNEL;
->         }
->
->         /* Create a backup region segment to store backup data*/
-> @@ -1101,25 +1097,46 @@ int load_crashdump_segments(struct kexec
->         return 0;
->  }
->
-> -int is_crashkernel_mem_reserved(void)
-> +int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
->  {
-> -       uint64_t start, end;
-> +       int i, idx = -1;
-> +       unsigned long sz_max = 0, sz;
->
-> -       if (parse_iomem_single("Crash kernel\n", &start, &end) || start == end)
-> -               return 0;
-> +       if (!crash_reserved_mem_nr)
-> +               return -1;
->
-> -       crash_reserved_mem.start = start;
-> -       crash_reserved_mem.end = end;
-> -       crash_reserved_mem.type = RANGE_RAM;
-> -
-> -       /* If there is no Crash low kernel, still can go on */
-> -       if (parse_iomem_single("Crash kernel low\n", &start, &end) ||
-> -                                       start == end)
-> +       for (i = crash_reserved_mem_nr - 1; i >= 0; i--) {
-> +               sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
-> +               if (sz <= sz_max)
-> +                       continue;
-> +               sz_max = sz;
-> +               idx = i;
-> +       }
-> +
-> +       *start = crash_reserved_mem[idx].start;
-> +       *end = crash_reserved_mem[idx].end;
-> +
-> +       return 0;
-> +}
-> +
-> +static int crashkernel_mem_callback(void *UNUSED(data), int nr,
-> +                                          char *UNUSED(str),
-> +                                          unsigned long base,
-> +                                          unsigned long length)
-> +{
-> +       if (nr >= CRASH_RESERVED_MEM_NR)
->                 return 1;
->
-> -       crash_reserved_low_mem.start = start;
-> -       crash_reserved_low_mem.end = end;
-> -       crash_reserved_low_mem.type = RANGE_RAM;
-> +       crash_reserved_mem[nr].start = base;
-> +       crash_reserved_mem[nr].end   = base + length - 1;
-> +       crash_reserved_mem[nr].type  = RANGE_RAM;
-> +       return 0;
-> +}
-> +
-> +int is_crashkernel_mem_reserved(void)
-> +{
-> +       crash_reserved_mem_nr = kexec_iomem_for_each_line("Crash kernel\n",
-> +                                       crashkernel_mem_callback, NULL);
->
-> -       return 1;
-> +       return !!crash_reserved_mem_nr;
->  }
-> Index: kexec-tools/kexec/arch/i386/kexec-x86-common.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/i386/kexec-x86-common.c
-> +++ kexec-tools/kexec/arch/i386/kexec-x86-common.c
-> @@ -465,9 +465,9 @@ int get_memory_ranges(struct memory_rang
->             !(kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
->                 uint64_t start, end;
->
-> -               ret = parse_iomem_single("Crash kernel\n", &start, &end);
-> +               ret = get_max_crash_kernel_limit(&start, &end);
->                 if (ret != 0) {
-> -                       fprintf(stderr, "parse_iomem_single failed.\n");
-> +                       fprintf(stderr, "get_max_crash_kernel_limit failed.\n");
->                         return -1;
->                 }
->
-> Index: kexec-tools/kexec/kexec.h
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec.h
-> +++ kexec-tools/kexec/kexec.h
-> @@ -272,6 +272,7 @@ int arch_process_options(int argc, char
->  int arch_compat_trampoline(struct kexec_info *info);
->  void arch_update_purgatory(struct kexec_info *info);
->  int is_crashkernel_mem_reserved(void);
-> +int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end);
->  char *get_command_line(void);
->
->  int kexec_iomem_for_each_line(char *match,
+> It looks like makedumpfile's usage of the interface is very inefficient.
+> It will mmap an area, read a page, then back up the offset to a previous
+> page.  It has to munmap and mmap on virtually every read.
 
-Simon,
+You can change size of mapping memory through command-line option 
+--map-size <some KB>.
 
-Can you pick up this one?
+The version of makedumpfile is experimental. The design should be 
+changed if it turns out to be problematic.
 
-Related change in kernel has been merged to upsteam via hpa.
+>
+> Do you have a re-worked makedumpfile that predicts a large range of
+> pages and mmap's the whole range just once?
+> It seems that makedumpfile should have the information available to do
+> that.
+>
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=157752d84f5df47e01577970f9c5f61a0b9f4546
+The benchmark result has already shown that under large enough map size, 
+the current implementation performs as well as other kernel-space 
+implementation that maps a whole range of memory.
 
+In addition, the current implementation of remap_pfn_range uses 4KB 
+pages only. This means that total size of PTEs amounts to 2GB per 1TB. 
+It's better to map pages little by little for small memory programming.
 
-Thanks
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-Yinghai
 
 _______________________________________________
 kexec mailing list
