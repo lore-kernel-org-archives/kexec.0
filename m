@@ -1,32 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e38.co.us.ibm.com ([32.97.110.159])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UUs8Z-0008MZ-Pv
- for kexec@lists.infradead.org; Wed, 24 Apr 2013 05:21:00 +0000
-Received: from /spool/local
- by e38.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
- Tue, 23 Apr 2013 23:20:48 -0600
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
- [9.17.195.227])
- by d03dlp01.boulder.ibm.com (Postfix) with ESMTP id 4575B1FF0044
- for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 23:15:44 -0600 (MDT)
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
- by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r3O5KkQi127714
- for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 23:20:46 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
- by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r3O5KkgQ018530
- for <kexec@lists.infradead.org>; Tue, 23 Apr 2013 23:20:46 -0600
-Message-ID: <51776BAB.5000705@in.ibm.com>
-Date: Wed, 24 Apr 2013 10:50:43 +0530
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UV0u4-0002iX-L1
+ for kexec@lists.infradead.org; Wed, 24 Apr 2013 14:42:37 +0000
+Date: Wed, 24 Apr 2013 10:42:26 -0400
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: [PATCH v3] watchdog: Add hook for kicking in kdump path
+Message-ID: <20130424144226.GI79013@redhat.com>
+References: <1366233596-34681-1-git-send-email-dzickus@redhat.com>
+ <87li8gaku0.fsf@xmission.com> <20130418130009.GH79013@redhat.com>
+ <20130418134904.GC2767@roeck-us.net>
+ <20130418135257.GL79013@redhat.com>
+ <20130418145413.GA1980@roeck-us.net>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec/uImage: probe to identify a corrupted image
-References: <20130417102022.6919.82083.stgit@suzukikp>
-In-Reply-To: <20130417102022.6919.82083.stgit@suzukikp>
+Content-Disposition: inline
+In-Reply-To: <20130418145413.GA1980@roeck-us.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,66 +23,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: msm@freescale.com, bigeasy@linutronix.de, kexec@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, wim@iguana.be, "Eric W. Biederman" <ebiederm@xmission.com>, dyoung@redhat.com, vgoyal@redhat.com
 
-On 04/17/2013 03:52 PM, Suzuki K. Poulose wrote:
-> From: Suzuki K. Poulose <suzuki@in.ibm.com>
->
-> Teach uImage_probe_xxx() to return the information about
-> a corrupted image. This is required to prevent the loading
-> of a corrupted ramdisk, where we don't have strict checking
-> for the other formats, unlike the kernel. So, we should abort
-> the operation than causing a problem with the new kernel.
->
-> Without this patch, a corrupted uImage ramdisk is treated as
-> a plain ramdisk where there is no format check involved.
->
-> # kexec -l uImage --initrd romfs-initrd.corrupt
-> The data CRC does not match. Computed: 867e73f7 expected 8f097cc0
-> # echo $?
-> 0
-> # kexec -e
-> Starting new kernel
-> Bye!
-> Reserving 55MB of memory at 70MB for crashkernel (System RAM: 256MB)
-> Using Xilinx Virtex440 machine description
-> Linux version 3.6.0-rc3 (root@suzukikp) (gcc version 4.3.4 [gcc-4_3-branch revision 152973] (GCC) ) #66 Tue Apr 16 06:36:56 UTC 2013
-> Found initrd at 0xcf5f8000:0xcfff8040
-> ...
->
-> NET: Registered protocol family 17
-> RAMDISK: Couldn't find valid RAM disk image starting at 0.
-> List of all partitions:
-> No filesystem could mount root, tried:  ext2 cramfs
-> Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(1,0)
->
->
-> With this patch :
->
-> # kexec -l uImage --initrd romfs-initrd.corrupt
-> uImage: The data CRC does not match. Computed: 867e73f7 expected 8f097cc0
-> uImage: Corrupted ramdisk file romfs-initrd
->
-> With a corrupted kernel image(the behaviour remains the same) :
-> # kexec -l uImage.corrupt --initrd romfs-initrd
-> uImage: The data CRC does not match. Computed: 285787b7 expected e37f65ad
-> Cannot determine the file type of uImage.corrupt
->
-> Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+On Thu, Apr 18, 2013 at 07:54:13AM -0700, Guenter Roeck wrote:
+> > No, that will probably work.  It is my misunderstanding.  Is there a
+> > common way to check the timeout length and the ping frequency?
+> > 
+> Usually it is configured in /etc/watchdog.conf if the watchdog package
+> is installed. The standard ping interval is "interval", the timeout is
+> "watchdog-timeout". See "man watchdog.conf" for details.
+> 
+> Minimum and maximum values for a given watchdog driver are not exported
+> to user space, so you would have to look into the driver sources to find
+> out what they are.
 
-Simon,
+Hi Guenter,
 
-Looks like there are no concerns about the approach in this patch. Could 
-you please pull this in ?
+Is there an easy way to determine which driver is loaded for each
+/dev/watchdogN device (from a script perspective).
 
-Thanks
-Suzuki
+Basically, I wanted to determine the module that needs to be included in
+the kdump initrd image.
 
+Thanks,
+Don
 
 _______________________________________________
 kexec mailing list
