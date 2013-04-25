@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UVMCN-0000qa-3S
- for kexec@lists.infradead.org; Thu, 25 Apr 2013 13:26:56 +0000
-Date: Thu, 25 Apr 2013 22:26:47 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec/uImage: probe to identify a corrupted image
-Message-ID: <20130425132647.GA10898@verge.net.au>
-References: <20130417102022.6919.82083.stgit@suzukikp>
- <51776BAB.5000705@in.ibm.com>
+ id 1UVMNY-0001NP-9a
+ for kexec@lists.infradead.org; Thu, 25 Apr 2013 13:38:29 +0000
+Date: Thu, 25 Apr 2013 08:38:25 -0500
+From: Cliff Wickman <cpw@sgi.com>
+Subject: Re: [PATCH v4 0/8] kdump, vmcore: support mmap() on /proc/vmcore
+Message-ID: <20130425133825.GA25089@sgi.com>
+References: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51776BAB.5000705@in.ibm.com>
+In-Reply-To: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +23,124 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: msm@freescale.com, bigeasy@linutronix.de, kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, vgoyal@redhat.com
 
-On Wed, Apr 24, 2013 at 10:50:43AM +0530, Suzuki K. Poulose wrote:
-> On 04/17/2013 03:52 PM, Suzuki K. Poulose wrote:
-> >From: Suzuki K. Poulose <suzuki@in.ibm.com>
-> >
-> >Teach uImage_probe_xxx() to return the information about
-> >a corrupted image. This is required to prevent the loading
-> >of a corrupted ramdisk, where we don't have strict checking
-> >for the other formats, unlike the kernel. So, we should abort
-> >the operation than causing a problem with the new kernel.
-> >
-> >Without this patch, a corrupted uImage ramdisk is treated as
-> >a plain ramdisk where there is no format check involved.
-> >
-> ># kexec -l uImage --initrd romfs-initrd.corrupt
-> >The data CRC does not match. Computed: 867e73f7 expected 8f097cc0
-> ># echo $?
-> >0
-> ># kexec -e
-> >Starting new kernel
-> >Bye!
-> >Reserving 55MB of memory at 70MB for crashkernel (System RAM: 256MB)
-> >Using Xilinx Virtex440 machine description
-> >Linux version 3.6.0-rc3 (root@suzukikp) (gcc version 4.3.4 [gcc-4_3-branch revision 152973] (GCC) ) #66 Tue Apr 16 06:36:56 UTC 2013
-> >Found initrd at 0xcf5f8000:0xcfff8040
-> >...
-> >
-> >NET: Registered protocol family 17
-> >RAMDISK: Couldn't find valid RAM disk image starting at 0.
-> >List of all partitions:
-> >No filesystem could mount root, tried:  ext2 cramfs
-> >Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(1,0)
-> >
-> >
-> >With this patch :
-> >
-> ># kexec -l uImage --initrd romfs-initrd.corrupt
-> >uImage: The data CRC does not match. Computed: 867e73f7 expected 8f097cc0
-> >uImage: Corrupted ramdisk file romfs-initrd
-> >
-> >With a corrupted kernel image(the behaviour remains the same) :
-> ># kexec -l uImage.corrupt --initrd romfs-initrd
-> >uImage: The data CRC does not match. Computed: 285787b7 expected e37f65ad
-> >Cannot determine the file type of uImage.corrupt
-> >
-> >Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+On Fri, Apr 05, 2013 at 12:04:02AM +0000, HATAYAMA Daisuke wrote:
+> Currently, read to /proc/vmcore is done by read_oldmem() that uses
+> ioremap/iounmap per a single page. For example, if memory is 1GB,
+> ioremap/iounmap is called (1GB / 4KB)-times, that is, 262144
+> times. This causes big performance degradation.
 > 
-> Simon,
+> In particular, the current main user of this mmap() is makedumpfile,
+> which not only reads memory from /proc/vmcore but also does other
+> processing like filtering, compression and IO work.
 > 
-> Looks like there are no concerns about the approach in this patch.
-> Could you please pull this in ?
+> To address the issue, this patch implements mmap() on /proc/vmcore to
+> improve read performance.
+> 
+> Benchmark
+> =========
+> 
+> You can see two benchmarks on terabyte memory system. Both show about
+> 40 seconds on 2TB system. This is almost equal to performance by
+> experimtanal kernel-side memory filtering.
+> 
+> - makedumpfile mmap() benchmark, by Jingbai Ma
+>   https://lkml.org/lkml/2013/3/27/19
+> 
+> - makedumpfile: benchmark on mmap() with /proc/vmcore on 2TB memory system
+>   https://lkml.org/lkml/2013/3/26/914
+> 
+> ChangeLog
+> =========
+> 
+> v3 => v4)
+> 
+> - Rebase 3.9-rc7.
+> - Drop clean-up patches orthogonal to the main topic of this patch set.
+> - Copy ELF note segments in the 1st kernel just as in v1. Allocate
+>   vmcore objects per pages. => See [PATCH 5/8]
+> - Map memory referenced by PT_LOAD entry directly even if the start or
+>   end of the region doesn't fit inside page boundary, no longer copy
+>   them as the previous v3. Then, holes, outside OS memory, are visible
+>   from /proc/vmcore. => See [PATCH 7/8]
+> 
+> v2 => v3)
+> 
+> - Rebase 3.9-rc3.
+> - Copy program headers seprately from e_phoff in ELF note segment
+>   buffer. Now there's no risk to allocate huge memory if program
+>   header table positions after memory segment.
+> - Add cleanup patch that removes unnecessary variable.
+> - Fix wrongly using the variable that is buffer size configurable at
+>   runtime. Instead, use the varibale that has original buffer size.
+> 
+> v1 => v2)
+> 
+> - Clean up the existing codes: use e_phoff, and remove the assumption
+>   on PT_NOTE entries.
+> - Fix potencial bug that ELF haeader size is not included in exported
+>   vmcoreinfo size.
+> - Divide patch modifying read_vmcore() into two: clean-up and primary
+>   code change.
+> - Put ELF note segments in page-size boundary on the 1st kernel
+>   instead of copying them into the buffer on the 2nd kernel.
+> 
+> Test
+> ====
+> 
+> This patch set is composed based on v3.9-rc7.
+> 
+> Done on x86-64, x86-32 both with 1GB and over 4GB memory environments.
+> 
+> ---
+> 
+> HATAYAMA Daisuke (8):
+>       vmcore: support mmap() on /proc/vmcore
+>       vmcore: treat memory chunks referenced by PT_LOAD program header entries in \
+>                 page-size boundary in vmcore_list
+>       vmcore: count holes generated by round-up operation for page boudary for size \
+>                 of /proc/vmcore
+>       vmcore: copy ELF note segments in the 2nd kernel per page vmcore objects
+>       vmcore: Add helper function vmcore_add()
+>       vmcore, procfs: introduce MEM_TYPE_CURRENT_KERNEL flag to distinguish objects \
+> copied in 2nd kernel  vmcore: clean up read_vmcore()
+>       vmcore: allocate buffer for ELF headers on page-size alignment
+> 
+> 
+>  fs/proc/vmcore.c        |  349 ++++++++++++++++++++++++++++++++---------------
+>  include/linux/proc_fs.h |    8 +
+>  2 files changed, 245 insertions(+), 112 deletions(-)
+> 
+> -- 
+> 
+> Thanks.
+> HATAYAMA, Daisuke
 
-Done.
+This is a very important patch set for speeding the kdump process.
+(patches 1 - 8)
+
+We have found the mmap interface to /proc/vmcore about 80x faster than the 
+read interface.
+That is, doing mmap's and copying data (in pieces the size of page
+structures) transfers all of /proc/vmcore about 80 times faster than
+reading it.
+
+This greatly speeds up the capture of a kdump, as the scan of page
+structures takes the bulk of the time in dumping the OS on a machine
+with terabytes of memory.
+
+We would very much like to see this set make it into the 3.10 release.
+
+Acked-by: Cliff Wickman <cpw@sgi.com>
+
+-Cliff
+-- 
+Cliff Wickman
+SGI
+cpw@sgi.com
+(651) 683-3824
 
 _______________________________________________
 kexec mailing list
