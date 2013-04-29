@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pa0-f51.google.com ([209.85.220.51])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UVyjA-0002C9-OI
- for kexec@lists.infradead.org; Sat, 27 Apr 2013 06:35:21 +0000
-Received: by mail-pa0-f51.google.com with SMTP id lj1so131028pab.38
- for <kexec@lists.infradead.org>; Fri, 26 Apr 2013 23:35:17 -0700 (PDT)
-Message-ID: <517B719F.6030503@gmail.com>
-Date: Sat, 27 Apr 2013 14:35:11 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UWtsR-0002M8-Ay
+ for kexec@lists.infradead.org; Mon, 29 Apr 2013 19:36:44 +0000
+Date: Mon, 29 Apr 2013 15:36:12 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v4 5/8] vmcore: copy ELF note segments in the 2nd kernel
+ per page vmcore objects
+Message-ID: <20130429193611.GQ8204@redhat.com>
+References: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
+ <20130413002133.18245.91528.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Subject: [PATCH] kexec: cleanup: make add_backup_segments static
+Content-Disposition: inline
+In-Reply-To: <20130413002133.18245.91528.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,54 +25,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+On Sat, Apr 13, 2013 at 09:21:33AM +0900, HATAYAMA Daisuke wrote:
 
-The function add_backup_segments is only called by my_load and
-they are in the same file. So unnecessary to export it. Make it
-static.
+[..]
+> ELF notes are per-cpu, so total size of ELF note segments increases
+> according to the number of CPUs. The current maximum number of CPUs on
+> x86_64 is 5192, and there's already system with 4192 CPUs in SGI,
+> where total size amounts to 1MB. This can be larger in the neare
+> futrue or possibly even now on another architecture. Thus, to avoid
+> the case where memory allocation for large block fails, we allocate
+> vmcore objects per pages.
 
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
----
- kexec/kexec.c |    5 +++--
- kexec/kexec.h |    4 ----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+IIRC, eric had suggested using vmalloc() and remap_vmalloc_range(). What's
+wrong with that? That should keep your vc_list relatively smaller.
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index cf3fcb9..53d6edc 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -434,8 +434,9 @@ static int find_segment_hole(struct kexec_info *info,
- 	return *size;
- }
- 
--int add_backup_segments(struct kexec_info *info, unsigned long backup_base,
--			unsigned long backup_size)
-+static int add_backup_segments(struct kexec_info *info,
-+			       unsigned long backup_base,
-+			       unsigned long backup_size)
- {
- 	unsigned long mem_base, mem_size, bkseg_base, bkseg_size, start, end;
- 	unsigned long pagesize;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 5ded390..715b568 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -285,10 +285,6 @@ int kexec_iomem_for_each_line(char *match,
- int parse_iomem_single(char *str, uint64_t *start, uint64_t *end);
- const char * proc_iomem(void);
- 
--extern int add_backup_segments(struct kexec_info *info,
--			       unsigned long backup_base,
--			       unsigned long backup_size);
--
- #define MAX_LINE	160
- 
- char *concat_cmdline(const char *base, const char *append);
--- 
-1.7.1
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
