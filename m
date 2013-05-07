@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UZijb-0004gu-EV
- for kexec@lists.infradead.org; Tue, 07 May 2013 14:19:16 +0000
-Date: Tue, 7 May 2013 10:18:51 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1785236816.7828370.1367936331637.JavaMail.root@redhat.com>
-In-Reply-To: <CAEyr1FSxmTW2st4BSzWa3K6AJpBLj-PqJh6-zmA_K6f5C8r7ng@mail.gmail.com>
-References: <CAEyr1FSxmTW2st4BSzWa3K6AJpBLj-PqJh6-zmA_K6f5C8r7ng@mail.gmail.com>
-Subject: Re: [Crash-utility] crash read error: kernel virtual address /
- vmcore	address mismatch ?
+ id 1UZjVw-00064k-Vq
+ for kexec@lists.infradead.org; Tue, 07 May 2013 15:09:13 +0000
+Date: Tue, 7 May 2013 11:08:40 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v4 5/8] vmcore: copy ELF note segments in the 2nd kernel
+ per page vmcore objects
+Message-ID: <20130507150840.GA12965@redhat.com>
+References: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
+ <20130413002133.18245.91528.stgit@localhost6.localdomain6>
+ <20130429193611.GQ8204@redhat.com>
+ <5188B3BE.9040104@jp.fujitsu.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5188B3BE.9040104@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,93 +27,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
-Cc: kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-
-
------ Original Message -----
-> Hi ,
-> Sorry about re posting this as i did not find solution ...
+On Tue, May 07, 2013 at 04:56:46PM +0900, HATAYAMA Daisuke wrote:
+> (2013/04/30 4:36), Vivek Goyal wrote:
+> >On Sat, Apr 13, 2013 at 09:21:33AM +0900, HATAYAMA Daisuke wrote:
+> >
+> >[..]
+> >>ELF notes are per-cpu, so total size of ELF note segments increases
+> >>according to the number of CPUs. The current maximum number of CPUs on
+> >>x86_64 is 5192, and there's already system with 4192 CPUs in SGI,
+> >>where total size amounts to 1MB. This can be larger in the neare
+> >>futrue or possibly even now on another architecture. Thus, to avoid
+> >>the case where memory allocation for large block fails, we allocate
+> >>vmcore objects per pages.
+> >
+> >IIRC, eric had suggested using vmalloc() and remap_vmalloc_range(). What's
+> >wrong with that? That should keep your vc_list relatively smaller.
+> >
 > 
-> I m facing a issue where on
+> Yes, it's handy if it's possible to remap them in vmalloc space, but
+> the problem here is that remap_vmalloc_range requires the first
+> argument vma to cover full range of the requested map. This becomes
+> problem when requested area for mmap() overlaps multiple objects,
+> for example, ELF headers and memory refered to by the first PT_LOAD
+> program header.
 > 
-> #crash /data/linux-2.6.30.8/vmlinux /proc/vmcore
+> To use remap_vmalloc_range, it's necessary to prepare a new variant
+> similar to remap_pfn_range by which we can remap different objects
+> separately to a single vma.
 
-Do yourself a favor and copy /proc/vmcore to somewhere on disk.  Then
-reboot the system into the original kernel, and run crash on the saved
-vmcore.  I've never seen crash run on a /proc/vmcore file from the
-secondary kernel.  
+Ok. Is it hard to prepare one such variant. If we can write one, it will
+simplify the vmcore code.
 
-Also, after rebooting the the original kernel, please confirm that
-crash runs OK on the live system.
- 
-> crash 6.1.6
-> Copyright (C) 2002-2013  Red Hat, Inc.
-> Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
-> Copyright (C) 1999-2006  Hewlett-Packard Co
-> Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
-> Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
-> Copyright (C) 2005, 2011  NEC Corporation
-> Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
-> Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
-> This program is free software, covered by the GNU General Public License,
-> and you are welcome to change it and/or distribute copies of it under
-> certain conditions.  Enter "help copying" to see the conditions.
-> This program has absolutely no warranty.  Enter "help warranty" for details.
-> 
-> GNU gdb (GDB) 7.3.1
-> Copyright (C) 2011 Free Software Foundation, Inc.
-> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-> This is free software: you are free to change and redistribute it.
-> There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
-> and "show warranty" for details.
-> This GDB was configured as "i686-pc-linux-gnu"...
-> 
-> crash: read error: kernel virtual address: c127a9c8  type: "cpu_possible_mask"
-
-Please show the full output of "crash -d8 vmlinux vmcore".
- 
-> 
-> I did follow few threads around , I have a case similar to
-> https://www.redhat.com/archives/crash-utility/2010-August/msg00029.html
-> 
-> Both the System Kernel and the Debug Kernel are the same.
-
-I don't know what you mean by "System Kernel" and "Debug Kernel". 
-
-With respect to kdump and the crash utility, the only kernel that is
-of interest is the vmlinux that was running when the primary system
-crashed.
-
-> 
-> My current config for
-> 
-> CONFIG_PHYSICAL_START=0x1000000
-> CONFIG_RELOCATABLE=y
-> CONFIG_PHYSICAL_ALIGN=0x400000
-> 
-> The /proc/kallsyms is diffrent between the System Kernel and Debug Kernel.
-> On the System Kernel it starts from 0x400000 .On the Debug kernel it
-> starts from 0x1000000.
-
-Again, the "Debug" kernel is irrelevant -- presuming by "Debug" you mean
-the relocated "secondary" kernel that was kexec'd after the primary kernel
-crashed.
-
-> 
-> if  i change the CONFIG_PHYSICAL_START=0x400000 . It does NOT core dump.
-> 
-> my crashkernel=128M is the setting on grub.
-> Let me know if you need more info
-> 
-
-What "core dumps", the crash utility?  Again, trying to run the crash utility
-while running on a 128MB secondary kernel is definitely not advisable.  
-
-Dave
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
