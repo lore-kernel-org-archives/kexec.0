@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UZjkp-0006QW-5U
- for kexec@lists.infradead.org; Tue, 07 May 2013 15:24:35 +0000
-Date: Tue, 7 May 2013 11:24:01 -0400
+ id 1UZkvA-0008WL-4A
+ for kexec@lists.infradead.org; Tue, 07 May 2013 16:39:21 +0000
+Date: Tue, 7 May 2013 12:37:01 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4 7/8] vmcore: treat memory chunks referenced by PT_LOAD
- program header entries in page-size boundary in vmcore_list
-Message-ID: <20130507152401.GB12965@redhat.com>
-References: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
- <20130413002145.18245.73180.stgit@localhost6.localdomain6>
- <20130429195154.GR8204@redhat.com>
- <5188AF5C.2070807@jp.fujitsu.com>
+Subject: Re: [PATCH 0/4] kdump: Allow ELF header creation in new kernel
+Message-ID: <20130507163701.GA14403@redhat.com>
+References: <1367845799-29125-1-git-send-email-holzheu@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5188AF5C.2070807@jp.fujitsu.com>
+In-Reply-To: <1367845799-29125-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,45 +23,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-On Tue, May 07, 2013 at 04:38:04PM +0900, HATAYAMA Daisuke wrote:
-
-[..]
-> >>  		/* Update the program header offset. */
-> >>-		phdr_ptr->p_offset = vmcore_off;
-> >>-		vmcore_off = vmcore_off + phdr_ptr->p_memsz;
-> >>+		phdr_ptr->p_offset = vmcore_off + (paddr - start);
-> >
-> >What's paddr-start. Why following is not sufficient.
-> >
-> >phdr_ptr->p_offset = vmcore_off
-> >
+On Mon, May 06, 2013 at 03:09:55PM +0200, Michael Holzheu wrote:
+> Hello Vivek,
 > 
-> (paddr - start) is offset of the memory program header refers to,
-> from which kernel memory starts. Pictrically:
+> For s390 we want to use /proc/vmcore for our SCSI stand-alone
+> dump (zfcpdump). We have support where the first HSA_SIZE bytes are
+> saved into a hypervisor owned memory area (HSA) before the kdump
+> kernel is booted. When the kdump kernel starts, it is restricted
+> to use only HSA_SIZE bytes.
 > 
->   vmcore_off                   +----------------------+
->                                |  extra memory        |
->                                |  (non kernel memory) |
-> phdr->p_offset =               +----------------------+
->   vmcore_off + (paddr - start) |                      |\
->                                |  kernel memory       | phdr->p_memsz
->                                |                      |/
->                                +----------------------+
->                                |  extra memory        |
->                                |  (non kernel memory) |
->   vmcore_off + size            +----------------------+
 
-Ok, got it. So PT_LOAD header refers to only part of memory and we
-align start and end to PAGE_SIZE and then add that full chunk to
-vmcore list. We update the phdr->offset to point to PT_LOAD
-mapping. vc_list area can contain the page aligned extra memory at the
-beginning and end and that can be read from old memory if user wishes
-to.
+Hi Michael,
 
-So this is not an issue.
+Hatayama is changing /proc/vmcore interface to support mmap(). Can you
+please rebase your changes on top of those patches.
+
+http://thread.gmane.org/gmane.linux.kernel/1477622
+
+Secondly, I think /proc/vmcore does not have to know whether elf
+headers are in old memory or new memory. Given that s390 is taking
+a deviation, so it now becomes an arch specific detail. Can't we
+just create few arch specific helper functions to retrieve and free
+elf headers.
+
+- arch_get_crash_headers()
+	- All arch except return elfcorehdr_add except s390.
+- arch_read_crash_header_data()
+	- All arch just call into read_from_oldmem() except s390. We
+  	  can provide a generic implementation in /proc/vmcore.c so
+	  all other arch can use that generic implementation.  Or
+	  use symbol override trick.
+- arch_free_crash_headers()
+	- All arch do nothing except s390 which can reclaim the memory
+ 	  for elf headers prepared. Generic code has parsed/copied the
+	  headers by now.
+
+What do you think? Above 3 calls should solve the problem and allow
+arch to handle elf headers differently. And generic implementation
+still keeps common logic for processing headers.
 
 Thanks
 Vivek
