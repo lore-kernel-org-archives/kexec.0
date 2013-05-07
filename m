@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UZkvA-0008WL-4A
- for kexec@lists.infradead.org; Tue, 07 May 2013 16:39:21 +0000
-Date: Tue, 7 May 2013 12:37:01 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/4] kdump: Allow ELF header creation in new kernel
-Message-ID: <20130507163701.GA14403@redhat.com>
-References: <1367845799-29125-1-git-send-email-holzheu@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1367845799-29125-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ id 1UZkw1-00005U-B3
+ for kexec@lists.infradead.org; Tue, 07 May 2013 16:40:14 +0000
+Message-ID: <1367944782.2868.106.camel@ul30vt.home>
+Subject: Re: [PATCH] Reset PCIe devices to stop ongoing DMA
+From: Alex Williamson <alex.williamson@redhat.com>
+Date: Tue, 07 May 2013 10:39:42 -0600
+In-Reply-To: <1366779539-3584-1-git-send-email-indou.takao@jp.fujitsu.com>
+References: <1366779539-3584-1-git-send-email-indou.takao@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,50 +22,207 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2013 at 03:09:55PM +0200, Michael Holzheu wrote:
-> Hello Vivek,
+On Wed, 2013-04-24 at 13:58 +0900, Takao Indoh wrote:
+> This patch resets PCIe devices on boot to stop ongoing DMA. When
+> "pci=pcie_reset_devices" is specified, a hot reset is triggered on each
+> PCIe root port and downstream port to reset its downstream endpoint.
 > 
-> For s390 we want to use /proc/vmcore for our SCSI stand-alone
-> dump (zfcpdump). We have support where the first HSA_SIZE bytes are
-> saved into a hypervisor owned memory area (HSA) before the kdump
-> kernel is booted. When the kdump kernel starts, it is restricted
-> to use only HSA_SIZE bytes.
+> Problem:
+> This patch solves the problem that kdump can fail when intel_iommu=on is
+> specified. When intel_iommu=on is specified, many dma-remapping errors
+> occur in second kernel and it causes problems like driver error or PCI
+> SERR, at last kdump fails. This problem is caused as follows.
+> 1) Devices are working on first kernel.
+> 2) Switch to second kernel(kdump kernel). The devices are still working
+>    and its DMA continues during this switch.
+> 3) iommu is initialized during second kernel boot and ongoing DMA causes
+>    dma-remapping errors.
 > 
+> Solution:
+> All DMA transactions have to be stopped before iommu is initialized. By
+> this patch devices are reset and in-flight DMA is stopped before
+> pci_iommu_init.
+> 
+> To invoke hot reset on an endpoint, its upstream link need to be reset.
+> reset_pcie_devices() is called from fs_initcall_sync, and it finds root
+> port/downstream port whose child is PCIe endpoint, and then reset link
+> between them. If the endpoint is VGA device, it is skipped because the
+> monitor blacks out if VGA controller is reset.
+> 
+> Actually this is v8 patch but quite different from v7 and it's been so
+> long since previous post, so I start over again.
+> Previous post:
+> [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
+> https://lkml.org/lkml/2012/11/26/814
+> 
+> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+> ---
+>  Documentation/kernel-parameters.txt |    2 +
+>  drivers/pci/pci.c                   |  103 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 105 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index 4609e81..2a31ade 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -2250,6 +2250,8 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>  				any pair of devices, possibly at the cost of
+>  				reduced performance.  This also guarantees
+>  				that hot-added devices will work.
+> +		pcie_reset_devices	Reset PCIe endpoint on boot by hot
+> +				reset
+>  		cbiosize=nn[KMG]	The fixed amount of bus space which is
+>  				reserved for the CardBus bridge's IO window.
+>  				The default value is 256 bytes.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b099e00..42385c9 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3878,6 +3878,107 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
+>  }
+>  EXPORT_SYMBOL(pci_fixup_cardbus);
+>  
+> +/*
+> + * Return true if dev is PCIe root port or downstream port whose child is PCIe
+> + * endpoint except VGA device.
+> + */
+> +static int __init need_reset(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *subordinate;
+> +	struct pci_dev *child;
+> +
+> +	if (!pci_is_pcie(dev) || !dev->subordinate ||
+> +	    list_empty(&dev->subordinate->devices) ||
+> +	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
+> +		return 0;
+> +
+> +	subordinate = dev->subordinate;
+> +	list_for_each_entry(child, &subordinate->devices, bus_list) {
+> +		if ((pci_pcie_type(child) == PCI_EXP_TYPE_UPSTREAM) ||
+> +		    (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) ||
+> +		    ((child->class >> 16) == PCI_BASE_CLASS_DISPLAY))
+> +			/* Don't reset switch, bridge, VGA device */
+> +			return 0;
+> +	}
+> +
+> +	return 1;
+> +}
+> +
+> +static void __init save_config(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *subordinate;
+> +	struct pci_dev *child;
+> +
+> +	if (!need_reset(dev))
+> +		return;
+> +
+> +	subordinate = dev->subordinate;
+> +	list_for_each_entry(child, &subordinate->devices, bus_list) {
+> +		dev_info(&child->dev, "save state\n");
+> +		pci_save_state(child);
+> +	}
+> +}
+> +
+> +static void __init restore_config(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *subordinate;
+> +	struct pci_dev *child;
+> +
+> +	if (!need_reset(dev))
+> +		return;
+> +
+> +	subordinate = dev->subordinate;
+> +	list_for_each_entry(child, &subordinate->devices, bus_list) {
+> +		dev_info(&child->dev, "restore state\n");
+> +		pci_restore_state(child);
+> +	}
+> +}
+> +
+> +static void __init do_device_reset(struct pci_dev *dev)
+> +{
+> +	u16 ctrl;
+> +
+> +	if (!need_reset(dev))
+> +		return;
+> +
+> +	dev_info(&dev->dev, "Reset Secondary bus\n");
+> +
+> +	/* Assert Secondary Bus Reset */
+> +	pci_read_config_word(dev, PCI_BRIDGE_CONTROL, &ctrl);
+> +	ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
+> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+> +
+> +	msleep(2);
+> +
+> +	/* De-assert Secondary Bus Reset */
+> +	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
+> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+> +}
+> +
+> +static int __initdata pcie_reset_devices;
+> +static int __init reset_pcie_devices(void)
+> +{
+> +	struct pci_dev *dev = NULL;
+> +
+> +	if (!pcie_reset_devices)
+> +		return 0;
+> +
+> +	for_each_pci_dev(dev)
+> +		save_config(dev);
+> +
+> +	for_each_pci_dev(dev)
+> +		do_device_reset(dev);
 
-Hi Michael,
+So we do a reset on each root port or downstream port, but the PCI to
+PCI bridge spec (1.2) states:
 
-Hatayama is changing /proc/vmcore interface to support mmap(). Can you
-please rebase your changes on top of those patches.
+        11.1.1. Secondary Reset Signal
+                The secondary reset signal, RST#, is a logical OR of the
+                primary interface RST# signal and
+                the state of the Secondary Bus Reset bit of the Bridge
+                Control register (see Section 3.2.5.18).
 
-http://thread.gmane.org/gmane.linux.kernel/1477622
+I read that to mean that in a legacy topology, doing a reset on the top
+level bridge triggers a reset down the entire hierarchy.  How does this
+apply to a PCIe topology?  Can we just do a reset on the top level root
+ports?  If so, that would also imply that a reset propagates down
+through PCIe-to-PCI bridges, so legacy PCI devices may be reset and the
+option name is misleading.
 
-Secondly, I think /proc/vmcore does not have to know whether elf
-headers are in old memory or new memory. Given that s390 is taking
-a deviation, so it now becomes an arch specific detail. Can't we
-just create few arch specific helper functions to retrieve and free
-elf headers.
+Even so, you still have root complex endpoints, which are not getting
+reset through this, so it's really not a complete solution.  Thanks,
 
-- arch_get_crash_headers()
-	- All arch except return elfcorehdr_add except s390.
-- arch_read_crash_header_data()
-	- All arch just call into read_from_oldmem() except s390. We
-  	  can provide a generic implementation in /proc/vmcore.c so
-	  all other arch can use that generic implementation.  Or
-	  use symbol override trick.
-- arch_free_crash_headers()
-	- All arch do nothing except s390 which can reclaim the memory
- 	  for elf headers prepared. Generic code has parsed/copied the
-	  headers by now.
+Alex
 
-What do you think? Above 3 calls should solve the problem and allow
-arch to handle elf headers differently. And generic implementation
-still keeps common logic for processing headers.
+> +
+> +	msleep(1000);
+> +
+> +	for_each_pci_dev(dev)
+> +		restore_config(dev);
+> +
+> +	return 0;
+> +}
+> +fs_initcall_sync(reset_pcie_devices);
+> +
+>  static int __init pci_setup(char *str)
+>  {
+>  	while (str) {
+> @@ -3920,6 +4021,8 @@ static int __init pci_setup(char *str)
+>  				pcie_bus_config = PCIE_BUS_PEER2PEER;
+>  			} else if (!strncmp(str, "pcie_scan_all", 13)) {
+>  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+> +			} else if (!strncmp(str, "pcie_reset_devices", 18)) {
+> +				pcie_reset_devices = 1;
+>  			} else {
+>  				printk(KERN_ERR "PCI: Unknown option `%s'\n",
+>  						str);
 
-Thanks
-Vivek
+
+
 
 _______________________________________________
 kexec mailing list
