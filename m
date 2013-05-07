@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UZjVw-00064k-Vq
- for kexec@lists.infradead.org; Tue, 07 May 2013 15:09:13 +0000
-Date: Tue, 7 May 2013 11:08:40 -0400
+ id 1UZjkp-0006QW-5U
+ for kexec@lists.infradead.org; Tue, 07 May 2013 15:24:35 +0000
+Date: Tue, 7 May 2013 11:24:01 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4 5/8] vmcore: copy ELF note segments in the 2nd kernel
- per page vmcore objects
-Message-ID: <20130507150840.GA12965@redhat.com>
+Subject: Re: [PATCH v4 7/8] vmcore: treat memory chunks referenced by PT_LOAD
+ program header entries in page-size boundary in vmcore_list
+Message-ID: <20130507152401.GB12965@redhat.com>
 References: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
- <20130413002133.18245.91528.stgit@localhost6.localdomain6>
- <20130429193611.GQ8204@redhat.com>
- <5188B3BE.9040104@jp.fujitsu.com>
+ <20130413002145.18245.73180.stgit@localhost6.localdomain6>
+ <20130429195154.GR8204@redhat.com>
+ <5188AF5C.2070807@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5188B3BE.9040104@jp.fujitsu.com>
+In-Reply-To: <5188AF5C.2070807@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,36 +30,42 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-On Tue, May 07, 2013 at 04:56:46PM +0900, HATAYAMA Daisuke wrote:
-> (2013/04/30 4:36), Vivek Goyal wrote:
-> >On Sat, Apr 13, 2013 at 09:21:33AM +0900, HATAYAMA Daisuke wrote:
-> >
-> >[..]
-> >>ELF notes are per-cpu, so total size of ELF note segments increases
-> >>according to the number of CPUs. The current maximum number of CPUs on
-> >>x86_64 is 5192, and there's already system with 4192 CPUs in SGI,
-> >>where total size amounts to 1MB. This can be larger in the neare
-> >>futrue or possibly even now on another architecture. Thus, to avoid
-> >>the case where memory allocation for large block fails, we allocate
-> >>vmcore objects per pages.
-> >
-> >IIRC, eric had suggested using vmalloc() and remap_vmalloc_range(). What's
-> >wrong with that? That should keep your vc_list relatively smaller.
-> >
-> 
-> Yes, it's handy if it's possible to remap them in vmalloc space, but
-> the problem here is that remap_vmalloc_range requires the first
-> argument vma to cover full range of the requested map. This becomes
-> problem when requested area for mmap() overlaps multiple objects,
-> for example, ELF headers and memory refered to by the first PT_LOAD
-> program header.
-> 
-> To use remap_vmalloc_range, it's necessary to prepare a new variant
-> similar to remap_pfn_range by which we can remap different objects
-> separately to a single vma.
+On Tue, May 07, 2013 at 04:38:04PM +0900, HATAYAMA Daisuke wrote:
 
-Ok. Is it hard to prepare one such variant. If we can write one, it will
-simplify the vmcore code.
+[..]
+> >>  		/* Update the program header offset. */
+> >>-		phdr_ptr->p_offset = vmcore_off;
+> >>-		vmcore_off = vmcore_off + phdr_ptr->p_memsz;
+> >>+		phdr_ptr->p_offset = vmcore_off + (paddr - start);
+> >
+> >What's paddr-start. Why following is not sufficient.
+> >
+> >phdr_ptr->p_offset = vmcore_off
+> >
+> 
+> (paddr - start) is offset of the memory program header refers to,
+> from which kernel memory starts. Pictrically:
+> 
+>   vmcore_off                   +----------------------+
+>                                |  extra memory        |
+>                                |  (non kernel memory) |
+> phdr->p_offset =               +----------------------+
+>   vmcore_off + (paddr - start) |                      |\
+>                                |  kernel memory       | phdr->p_memsz
+>                                |                      |/
+>                                +----------------------+
+>                                |  extra memory        |
+>                                |  (non kernel memory) |
+>   vmcore_off + size            +----------------------+
+
+Ok, got it. So PT_LOAD header refers to only part of memory and we
+align start and end to PAGE_SIZE and then add that full chunk to
+vmcore list. We update the phdr->offset to point to PT_LOAD
+mapping. vc_list area can contain the page aligned extra memory at the
+beginning and end and that can be read from old memory if user wishes
+to.
+
+So this is not an issue.
 
 Thanks
 Vivek
