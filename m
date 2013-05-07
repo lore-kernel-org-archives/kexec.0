@@ -1,31 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UZdZJ-0006bu-UR
- for kexec@lists.infradead.org; Tue, 07 May 2013 08:48:21 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id D8CDC3EE0C0
- for <kexec@lists.infradead.org>; Tue,  7 May 2013 17:47:53 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id C365245DE54
- for <kexec@lists.infradead.org>; Tue,  7 May 2013 17:47:53 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id A58BE45DDCF
- for <kexec@lists.infradead.org>; Tue,  7 May 2013 17:47:53 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 961181DB803F
- for <kexec@lists.infradead.org>; Tue,  7 May 2013 17:47:53 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 47ECA1DB803E
- for <kexec@lists.infradead.org>; Tue,  7 May 2013 17:47:53 +0900 (JST)
-Message-ID: <5188BFA6.5070606@jp.fujitsu.com>
-Date: Tue, 07 May 2013 17:47:34 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UZhMR-0002Ri-Gk
+ for kexec@lists.infradead.org; Tue, 07 May 2013 12:51:17 +0000
+Message-ID: <5188F8A1.5040707@redhat.com>
+Date: Tue, 07 May 2013 08:50:41 -0400
+From: Don Dutile <ddutile@redhat.com>
 MIME-Version: 1.0
-Subject: Re: makedumpfile mmap() benchmark
-References: <E1UYLNS-0003H3-NC@eag09.americas.sgi.com>
-In-Reply-To: <E1UYLNS-0003H3-NC@eag09.americas.sgi.com>
+Subject: Re: [PATCH] Reset PCIe devices to stop ongoing DMA
+References: <1366779539-3584-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <51783987.2040604@redhat.com> <5178BAFB.9060100@jp.fujitsu.com>
+ <51796F77.1040108@redhat.com> <5179F038.2030706@jp.fujitsu.com>
+ <517A8451.7010202@redhat.com>
+ <875D89B79D1D86448A583A7302C022A054E4DDF3@G9W0337.americas.hpqcorp.net>
+ <5188A8B4.2080503@jp.fujitsu.com>
+In-Reply-To: <5188A8B4.2080503@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,115 +27,376 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, vgoyal@redhat.com
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tindoh@gmail.com, iommu@lists.linux-foundation.org, bhelgaas@google.com, bill.sumner@hp.com
 
-(2013/05/04 4:10), Cliff Wickman wrote:
+On 05/07/2013 03:09 AM, Takao Indoh wrote:
+> Sorry for the delayed response.
 > 
->> Jingbai Ma wote on 27 Mar 2013:
->> I have tested the makedumpfile mmap patch on a machine with 2TB memory,
->> here is testing results:
->> Test environment:
->> Machine: HP ProLiant DL980 G7 with 2TB RAM.
->> CPU: Intel(R) Xeon(R) CPU E7- 2860  @ 2.27GHz (8 sockets, 10 cores)
->> (Only 1 cpu was enabled the 2nd kernel)
->> Kernel: 3.9.0-rc3+ with mmap kernel patch v3
->> vmcore size: 2.0TB
->> Dump file size: 3.6GB
->> makedumpfile mmap branch with parameters: -c --message-level 23 -d 31
->> --map-size <map-size>
->> All measured time from debug message of makedumpfile.
+> (2013/04/30 23:54), Sumner, William wrote:
+>> I have installed your original patch set (from last November) and tested with three platforms, each with a different IO configuration.  On the first platform crashdumps were consistently successful.  On the second and third platforms, the reset of one specific PCI device on each platform (a different device type on each platform) immediately hung the crash kernel. This was consistent across multiple tries.  Temporarily modifying the patch to skip resetting the one problem-device on each platform allowed each platform to create a dump successfully.
 >>
->> As a comparison, I also have tested with original kernel and original
->> makedumpfile 1.5.1 and 1.5.3.
->> I added all [Excluding unnecessary pages] and [Excluding free pages]
->> time together as "Filter Pages", and [Copyying Data] as "Copy data" here.
+>> I am now working with our IO team to determine the exact nature of the hang and to see if the hang is unique to the specific cards or the specific platforms.
 >>
->> makedumjpfile	Kernel	map-size (KB)	Filter pages (s)	Copy data (s)	Total (s)
->> 1.5.1	 3.7.0-0.36.el7.x86_64	N/A	940.28	1269.25	2209.53
->> 1.5.3	 3.7.0-0.36.el7.x86_64	N/A	380.09	992.77	1372.86
->> 1.5.3	v3.9-rc3	N/A	197.77	892.27	1090.04
->> 1.5.3+mmap	v3.9-rc3+mmap	0	164.87	606.06	770.93
->> 1.5.3+mmap	v3.9-rc3+mmap	4	88.62	576.07	664.69
->> 1.5.3+mmap	v3.9-rc3+mmap	1024	83.66	477.23	560.89
->> 1.5.3+mmap	v3.9-rc3+mmap	2048	83.44	477.21	560.65
->> 1.5.3+mmap	v3.9-rc3+mmap	10240	83.84	476.56	560.4
+>> Also I am starting to look at an alternate possibility:
+>>
+>> The PCIe spec (my copy is version 2.0) in section 6.6.2 (Function-Level Reset) describes reset use-cases for "a partitioned environment where hardware is migrated from one partition to another" and for "system software is taking down the software stack for a Function and then rebuilding that stack".
+>>
+>> These use-cases seem very similar to transitioning into the crash kernel.  The "Implementation Note" at the end of that section describes an algorithm for "Avoiding Data Corruption From Stale Completions" which looks like it might be applicable to stopping ongoing DMA.  I am hopeful that adding some of the steps from this algorithm to one of the already proposed patches would avoid the hang that I saw on two platforms.
 > 
-> I have also tested the makedumpfile mmap patch on a machine with 2TB memory,
-> here are the results:
-> Test environment:
-> Machine: SGI UV1000 with 2TB RAM.
-> CPU: Intel(R) Xeon(R) CPU E7- 8837  @ 2.67GHz
-> (only 1 cpu was enabled in the 2nd kernel)
-> Kernel: 3.0.13 with mmap kernel patch v3 (I had to tweak the patch a bit)
-> vmcore size: 2.0TB
-> Dump file size: 3.6GB
-> makedumpfile mmap branch with parameters: -c --message-level 23 -d 31
->     --map-size <map-size>
-> All measured times are actual clock times.
-> All tests are noncyclic.   Crash kernel memory: crashkernel=512M
+> It seems that the algorithm you mentioned requires four steps.
 > 
-> As did Jingbai Ma, I also tested with an unpatched kernel and
-> makedumpfile 1.5.1 and 1.5.3.  But they do 2 filtering scans: unnecessary
-> pages and free pages; here added together as filter pages time.
+> 1. Clear Command register
+> 2. Wait a few milliseconds (Or polling Transactions Pending bit)
+> 3. Do FLR
+> 4. Wait 100 ms
 > 
->                                        Filter    Copy
-> makedumpfile Kernel	 map-size(KB) pages(s)	data(s) Total(s)
-> 1.5.1	     3.0.13	   N/A	      671   	511    1182
-> 1.5.3	     3.0.13	   N/A	      294       535     829
-> 1.5.3+mmap   3.0.13+mmap     0	       54    	506   	560
-> 1.5.3+mmap   3.0.13+mmap  4096	       40    	416	456
-> 1.5.3+mmap   3.0.13+mmap 10240	       37	424	461
+> My patch does not do step 1 and 2. So, I would appreciate it if you
+> could add the following into save_config() in my latest patch and
+> confirm if kernel still hangs up or not.
 > 
-> Using mmap for the copy data as well as for filtering pages did little:
-> 1.5.3+mmap   3.0.13+mmap  4096	       37    	414	451
+>          subordinate = dev->subordinate;
+>          list_for_each_entry(child,&subordinate->devices, bus_list) {
+>                  dev_info(&child->dev, "save state\n");
+>                  pci_save_state(child);
+> +               pci_write_config_word(child, PCI_COMMAND, 0);
+> +               msleep(1000);
+As Linus pointed out in an earlier patch, msleep() after each device
+is s-l-o-w and unnecessary; should do a single msleep(1000) after
+*all* the command registers are written.  That way, the added delay is 1sec,
+not 1sec*ndevs.
+q: is this turning off command register for only PCI(e) endpoints?
+-- shouldn't have to turn off command register in bridges/switches.
+
+>          }
 > 
-> My results are quite similar to Jingbai Ma's.
-> The mmap patch to the kernel greatly speeds the filtering of pages, so
-> we at SGI would very much like to see this patch in the 3.10 kernel.
->    http://marc.info/?l=linux-kernel&m=136627770125345&w=2
+> Thanks,
+> Takao Indoh
 > 
-> What puzzles me is that the patch greatly speeds the read's of /proc/vmcore
-> (where map-size is 0) as well as providing the mmap ability.  I can now
-> seek/read page structures almost as fast as mmap'ing and copying them.
-> (versus Jingbai Ma's results where mmap almost doubled the speed of reads)
-> I have put counters in to verify, and we are doing several million
-> seek/read's vs. a few thousand mmap's.  Yet the performance is similar
-> (54sec vs. 37sec, above). I can't rationalize that much improvement.
-
-The change between 1.5.3+mmap between 1.5.3 that might be affecting the
-result I guess is the below only.
-
-commit ba1fd638ac024d01f70b5d7e16f0978cff978c22
-Author: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date:   Wed Feb 20 20:13:07 2013 +0900
-
-    [PATCH] Clean up readmem() by removing its recursive call.
-
-In addition to your and Ma's results, my result also showed similar
-result: 100 secs for read() and 70 secs for mmap() with 4KB map. See:
-https://lkml.org/lkml/2013/3/26/914
-
-So I think:
-
-- the performance degradation not only had come from many
-ioremap/iounmap calls but also from the way makedumpfile was implemented.
-
-- The changes of makedumpfile that impacted performance gain are the
-below two:
-  - Implement 8-entry cache for readmem() by Petr Tesarik, and
-  - The above clean up patch that removes unnecessary recursive call of
-readmem().
-
-- Even by these changes only, we can get enough performance gain.
-Further, using mmap allows us to get the performance close to
-kernel-side processing; this might be unnecessary in practice but might
-be meaningful in kdump's design that uses user-space tools as a part of
-framework.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
+> 
+>>
+>> Bill Sumner
+>>
+>> -----Original Message-----
+>> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Don Dutile
+>> Sent: Friday, April 26, 2013 8:43 AM
+>> To: Takao Indoh
+>> Cc: linux-pci@vger.kernel.org; kexec@lists.infradead.org; linux-kernel@vger.kernel.org; tindoh@gmail.com; iommu@lists.linux-foundation.org; bhelgaas@google.com
+>> Subject: Re: [PATCH] Reset PCIe devices to stop ongoing DMA
+>>
+>> On 04/25/2013 11:10 PM, Takao Indoh wrote:
+>>> (2013/04/26 3:01), Don Dutile wrote:
+>>>> On 04/25/2013 01:11 AM, Takao Indoh wrote:
+>>>>> (2013/04/25 4:59), Don Dutile wrote:
+>>>>>> On 04/24/2013 12:58 AM, Takao Indoh wrote:
+>>>>>>> This patch resets PCIe devices on boot to stop ongoing DMA. When
+>>>>>>> "pci=pcie_reset_devices" is specified, a hot reset is triggered on each
+>>>>>>> PCIe root port and downstream port to reset its downstream endpoint.
+>>>>>>>
+>>>>>>> Problem:
+>>>>>>> This patch solves the problem that kdump can fail when intel_iommu=on is
+>>>>>>> specified. When intel_iommu=on is specified, many dma-remapping errors
+>>>>>>> occur in second kernel and it causes problems like driver error or PCI
+>>>>>>> SERR, at last kdump fails. This problem is caused as follows.
+>>>>>>> 1) Devices are working on first kernel.
+>>>>>>> 2) Switch to second kernel(kdump kernel). The devices are still working
+>>>>>>>          and its DMA continues during this switch.
+>>>>>>> 3) iommu is initialized during second kernel boot and ongoing DMA causes
+>>>>>>>          dma-remapping errors.
+>>>>>>>
+>>>>>>> Solution:
+>>>>>>> All DMA transactions have to be stopped before iommu is initialized. By
+>>>>>>> this patch devices are reset and in-flight DMA is stopped before
+>>>>>>> pci_iommu_init.
+>>>>>>>
+>>>>>>> To invoke hot reset on an endpoint, its upstream link need to be reset.
+>>>>>>> reset_pcie_devices() is called from fs_initcall_sync, and it finds root
+>>>>>>> port/downstream port whose child is PCIe endpoint, and then reset link
+>>>>>>> between them. If the endpoint is VGA device, it is skipped because the
+>>>>>>> monitor blacks out if VGA controller is reset.
+>>>>>>>
+>>>>>> Couple questions wrt VGA device:
+>>>>>> (1) Many graphics devices are multi-function, one function being VGA;
+>>>>>>           is the VGA always function 0, so this scan sees it first&    doesn't
+>>>>>>           do a reset on that PCIe link?  if the VGA is not function 0, won't
+>>>>>>           this logic break (will reset b/c function 0 is non-VGA graphics) ?
+>>>>>
+>>>>> VGA is not reset irrespective of its function number. The logic of this
+>>>>> patch is:
+>>>>>
+>>>>> for_each_pci_dev(dev) {
+>>>>>          if (dev is not PCIe)
+>>>>>             continue;
+>>>>>          if (dev is not root port/downstream port) ---(1)
+>>>>>             continue;
+>>>>>          list_for_each_entry(child,&dev->subordinate->devices, bus_list) {
+>>>>>              if (child is upstream port or bridge or VGA) ---(2)
+>>>>>                  continue;
+>>>>>          }
+>>>>>          do_reset_its_child(dev);
+>>>>> }
+>>>>>
+>>>>> Therefore VGA itself is skipped by (1), and upstream device(root port or
+>>>>> downstream port) of VGA is also skipped by (2).
+>>>>>
+>>>>>
+>>>>>> (2) I'm hearing VGA will soon not be the a required console; this logic
+>>>>>>           assumes it is, and why it isn't blanked.
+>>>>>>           Q: Should the filter be based on a device having a device-class of display ?
+>>>>>
+>>>>> I want to avoid the situation that user's monitor blacks out and user
+>>>>> cannot know what's going on. That's reason why I introduced the logic to
+>>>>> skip VGA. As far as I tested the logic based on device-class works well,
+>>>> sorry, I read your description, which said VGA, but your are filtering on display class,
+>>>> which includes non-VGA as well. So, all set ... but large, (x16) non-VGA display devices
+>>>> are probably one of the most aggressive DMA engines on a system.... and will grow as
+>>>> asymmetric processing using GPUs gets architected into a device-agnostic manner.
+>>>> So, this may work well for servers, which is the primary consumer/user of this feature,
+>>>> and they typically have built-in graphics that are generally used in simple VGA mode,
+>>>> so this may be sufficient for now.
+>>>
+>>> Ok, understood.
+>>>
+>>>
+>>>>
+>>>>> but I would appreciate it if there are better ways.
+>>>>>
+>>>> You probably don't want to hear it but....
+>>>> a) only turn off cmd-reg master enable bit
+>>>> b) only do reset based on a list of devices known not to
+>>>>        obey their cmd-reg master enable bit, and only do reset to those devices.
+>>>> But, given the testing you've done so far, this optional (need cmdline) feature,
+>>>> let's start here.
+>>>
+>>> Ok. Either way I think we need more testing.
+>>>
+>>>
+>>>>>>
+>>>>>>> Actually this is v8 patch but quite different from v7 and it's been so
+>>>>>>> long since previous post, so I start over again.
+>>>>>> Thanks for this re-start.  I need to continue reviewing the rest.
+>>>>>
+>>>>> Thank you for your review!
+>>>>>
+>>>>>>
+>>>>>> Q: Why not force IOMMU off when re-booting a kexec kernel to perform a crash
+>>>>>>          dump?  After the crash dump, the system is rebooting to previous (iommu=on) setting.
+>>>>>>          That logic, along w/your previous patch to disable the IOMMU if iommu=off
+>>>>>>          is set, would remove this (relatively slow) PCI init sequencing ?
+>>>>>
+>>>>> To force iommu off, all ongoing DMA have to be stopped before that since
+>>>>> they are accessing the device address, not physical address. If we disable
+>>>>> iommu without stopping in-flihgt DMA, devices access invalid memory area
+>>>>> and it causes memory corruption or PCI-SERR due to DMA error.
+>>>> Right, that's a 'duh' on my part.
+>>>> I thought 'disable iommu' == 'block all dma' and it just turns it off&
+>>>> let's the ongoing DMA run...
+>>>> Please ignore this question... sigh.
+>>>>
+>>>>>
+>>>>> So, whether we use iommu or not in second kernel, we have to stop DMA in
+>>>>> second kernel if iommu is used in first kernel.
+>>>>>
+>>>>> Thanks,
+>>>>> Takao Indoh
+>>>>>
+>>>>>
+>>>>>>
+>>>>>>> Previous post:
+>>>>>>> [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
+>>>>>>> https://lkml.org/lkml/2012/11/26/814
+>>>>>>>
+>>>>>>> Signed-off-by: Takao Indoh<indou.takao@jp.fujitsu.com>
+>>>>>>> ---
+>>>>>>>        Documentation/kernel-parameters.txt |    2 +
+>>>>>>>        drivers/pci/pci.c                   |  103 +++++++++++++++++++++++++++++++++++
+>>>>>>>        2 files changed, 105 insertions(+), 0 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+>>>>>>> index 4609e81..2a31ade 100644
+>>>>>>> --- a/Documentation/kernel-parameters.txt
+>>>>>>> +++ b/Documentation/kernel-parameters.txt
+>>>>>>> @@ -2250,6 +2250,8 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>>>>>>>                        any pair of devices, possibly at the cost of
+>>>>>>>                        reduced performance.  This also guarantees
+>>>>>>>                        that hot-added devices will work.
+>>>>>>> +        pcie_reset_devices    Reset PCIe endpoint on boot by hot
+>>>>>>> +                reset
+>>>>>>>                cbiosize=nn[KMG]    The fixed amount of bus space which is
+>>>>>>>                        reserved for the CardBus bridge's IO window.
+>>>>>>>                        The default value is 256 bytes.
+>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>>>>> index b099e00..42385c9 100644
+>>>>>>> --- a/drivers/pci/pci.c
+>>>>>>> +++ b/drivers/pci/pci.c
+>>>>>>> @@ -3878,6 +3878,107 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
+>>>>>>>        }
+>>>>>>>        EXPORT_SYMBOL(pci_fixup_cardbus);
+>>>>>>>
+>>>>>>> +/*
+>>>>>>> + * Return true if dev is PCIe root port or downstream port whose child is PCIe
+>>>>>>> + * endpoint except VGA device.
+>>>>>>> + */
+>>>>>>> +static int __init need_reset(struct pci_dev *dev)
+>>>>>>> +{
+>>>>>>> +    struct pci_bus *subordinate;
+>>>>>>> +    struct pci_dev *child;
+>>>>>>> +
+>>>>>>> +    if (!pci_is_pcie(dev) || !dev->subordinate ||
+>>>>>>> +        list_empty(&dev->subordinate->devices) ||
+>>>>>>> +        ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)&&
+>>>>>>> +         (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
+>>>>>>> +        return 0;
+>>>>>>> +
+>>>>>>> +    subordinate = dev->subordinate;
+>>>>>>> +    list_for_each_entry(child,&subordinate->devices, bus_list) {
+>>>>>>> +        if ((pci_pcie_type(child) == PCI_EXP_TYPE_UPSTREAM) ||
+>>>>>>> +            (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) ||
+>>>>>>> +            ((child->class>>     16) == PCI_BASE_CLASS_DISPLAY))
+>>>>>>> +            /* Don't reset switch, bridge, VGA device */
+>>>>>>> +            return 0;
+>>>>>>> +    }
+>>>>>>> +
+>>>>>>> +    return 1;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static void __init save_config(struct pci_dev *dev)
+>>>> This should be renamed.  it implies it is saving the config of the pdev passed in,
+>>>> when in reality, it is saving the config of all the devices attached to this pdev.
+>>>> i.e., save_downstream_configs()
+>>>>
+>>>>>>> +{
+>>>>>>> +    struct pci_bus *subordinate;
+>>>>>>> +    struct pci_dev *child;
+>>>>>>> +
+>>>>>>> +    if (!need_reset(dev))
+>>>>>>> +        return;
+>>>>>>> +
+>>>>>>> +    subordinate = dev->subordinate;
+>>>>>>> +    list_for_each_entry(child,&subordinate->devices, bus_list) {
+>>>>>>> +        dev_info(&child->dev, "save state\n");
+>>>>>>> +        pci_save_state(child);
+>>>>>>> +    }
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static void __init restore_config(struct pci_dev *dev)
+>>>> inverse of above: restore_downstream_configs()
+>>>>>>> +{
+>>>>>>> +    struct pci_bus *subordinate;
+>>>>>>> +    struct pci_dev *child;
+>>>>>>> +
+>>>>>>> +    if (!need_reset(dev))
+>>>>>>> +        return;
+>>>>>>> +
+>>>>>>> +    subordinate = dev->subordinate;
+>>>>>>> +    list_for_each_entry(child,&subordinate->devices, bus_list) {
+>>>>>>> +        dev_info(&child->dev, "restore state\n");
+>>>>>>> +        pci_restore_state(child);
+>>>>>>> +    }
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static void __init do_device_reset(struct pci_dev *dev)
+>>>> do_downstream_device_reset() -- it's not resetting this pdev,
+>>>> but the pdev's of the devices attached to it.
+>>>>
+>>> Right, I'll change them as you said.
+>>>
+>>>
+>>>>>>> +{
+>>>>>>> +    u16 ctrl;
+>>>>>>> +
+>>>>>>> +    if (!need_reset(dev))
+>>>>>>> +        return;
+>>>>>>> +
+>>>>>>> +    dev_info(&dev->dev, "Reset Secondary bus\n");
+>>>>>>> +
+>>>>>>> +    /* Assert Secondary Bus Reset */
+>>>>>>> +    pci_read_config_word(dev, PCI_BRIDGE_CONTROL,&ctrl);
+>>>>>>> +    ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
+>>>>>>> +    pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+>>>>>>> +
+>>>>>>> +    msleep(2);
+>>>>>>> +
+>>>> This works well for x86, which uses ioport registers to access
+>>>> these<256-offset registers, b/c the write() function can't return
+>>>> until the write is actually completed, but for a non-x86 system,
+>>>> with fully mmconf'd PCI space, a write() may still be a write&   run
+>>>> (sitting in CPU write-merge) buffer, so if you need a full 2ms,
+>>>> you ought to do another read_config() to the device, to flush the write,
+>>>> before starting the msleep(2) clock.
+>>>>
+>>> I didn't know that... I'll insert something like this before msleep.
+>>>
+>>> pci_read_config_word(dev, PCI_BRIDGE_CONTROL,&dummy);
+>>>
+>>> BTW, I referred aer_do_secondary_bus_reset() when I wrote this code.
+>>> Probably need the same fix, right?
+>>>
+>> sounds like it.
+>> Interested to hear from someone in non-x86-land how
+>> they ensure pci cfg writes aren't buffered in their cpus;
+>> maybe handled via special uncached regions on other arches.
+>>
+>>>
+>>>>>>> +    /* De-assert Secondary Bus Reset */
+>>>>>>> +    ctrl&= ~PCI_BRIDGE_CTL_BUS_RESET;
+>>>>>>> +    pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int __initdata pcie_reset_devices;
+>>>>>>> +static int __init reset_pcie_devices(void)
+>>>> this should be reset_pcie_endpoints() ... it's not resetting all pcie devices
+>>>>>>> +{
+>>>>>>> +    struct pci_dev *dev = NULL;
+>>>>>>> +
+>>>>>>> +    if (!pcie_reset_devices)
+>>>>>>> +        return 0;
+>>>>>>> +
+>>>>>>> +    for_each_pci_dev(dev)
+>>>>>>> +        save_config(dev);
+>>>>>>> +
+>>>>>>> +    for_each_pci_dev(dev)
+>>>>>>> +        do_device_reset(dev);
+>>>>>>> +
+>>>>>>> +    msleep(1000);
+>>>>>>> +
+>>>>>>> +    for_each_pci_dev(dev)
+>>>>>>> +        restore_config(dev);
+>>>>>>> +
+>>>> My apologies if past thread covered this sequence...
+>>>> Why three loops through all PCIe devices on the system?
+>>>> why not have the first for-each-pci-dev() loop filter devices
+>>>> to be reset, and save_config those pdev's,
+>>>> return a list of saved_pdev's;  feed that list into the do_device_reset();
+>>>> then mpsleep(), then restore the list.
+>>>> in fact, once you create a link list of pdev's to reset,
+>>>> just loop that list doing save, then reset; rtn the list, do msleep(),
+>>>> then restore the config of pdevs in the list.
+>>>> Otherwise, doing much more traversing than what's needed.
+>>>> Doing a great deal more config-saving then needed right now as well
+>>>> (saving all non-endpt devices that aren't reset).
+>>>>
+>>>
+>>> Creating list is nice idea, thanks. I'll do.
+>>>
+>>> I'll have vacation next week, so I'll post v2 patch the week after
+>>> next.
+>>>
+>>> Thanks,
+>>> Takao Indoh
+>>>
+>> Have a good vacation! Thanks for your willingness
+>> to respin again&  make this improvement.
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+>>
+> 
+> 
 
 
 _______________________________________________
