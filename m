@@ -1,33 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UZzqF-0003ep-Rp
- for kexec@lists.infradead.org; Wed, 08 May 2013 08:35:21 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id B90363EE0C0
- for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:34:50 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A681C45DE5B
- for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:34:50 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 82D8445DE58
- for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:34:50 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6F6371DB8055
- for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:34:50 +0900 (JST)
+ id 1UZztS-0003ju-S1
+ for kexec@lists.infradead.org; Wed, 08 May 2013 08:38:39 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id CE78E3EE0B6
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:38:12 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id BF04645DE4E
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:38:12 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id A92C045DE4D
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:38:12 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9DA361DB803B
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:38:12 +0900 (JST)
 Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
  [10.240.81.136])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1BF1E1DB8046
- for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:34:50 +0900 (JST)
-Message-ID: <518A0E1D.60104@jp.fujitsu.com>
-Date: Wed, 08 May 2013 17:34:37 +0900
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 476FA1DB802F
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 17:38:12 +0900 (JST)
+Message-ID: <518A0EE8.1060005@jp.fujitsu.com>
+Date: Wed, 08 May 2013 17:38:00 +0900
 From: Takao Indoh <indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH] Reset PCIe devices to stop ongoing DMA
 References: <1366779539-3584-1-git-send-email-indou.takao@jp.fujitsu.com>
- <1367944782.2868.106.camel@ul30vt.home> <51895FAB.5010805@redhat.com>
- <1367964279.2868.128.camel@ul30vt.home>
-In-Reply-To: <1367964279.2868.128.camel@ul30vt.home>
+ <51783987.2040604@redhat.com> <5178BAFB.9060100@jp.fujitsu.com>
+ <51796F77.1040108@redhat.com>
+In-Reply-To: <51796F77.1040108@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,13 +40,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: alex.williamson@redhat.com
-Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, bhelgaas@google.com
+To: ddutile@redhat.com
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-(2013/05/08 7:04), Alex Williamson wrote:
-> On Tue, 2013-05-07 at 16:10 -0400, Don Dutile wrote:
->> On 05/07/2013 12:39 PM, Alex Williamson wrote:
->>> On Wed, 2013-04-24 at 13:58 +0900, Takao Indoh wrote:
+(2013/04/26 3:01), Don Dutile wrote:
+> On 04/25/2013 01:11 AM, Takao Indoh wrote:
+>> (2013/04/25 4:59), Don Dutile wrote:
+>>> On 04/24/2013 12:58 AM, Takao Indoh wrote:
 >>>> This patch resets PCIe devices on boot to stop ongoing DMA. When
 >>>> "pci=pcie_reset_devices" is specified, a hot reset is triggered on each
 >>>> PCIe root port and downstream port to reset its downstream endpoint.
@@ -58,9 +58,9 @@ Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kern
 >>>> SERR, at last kdump fails. This problem is caused as follows.
 >>>> 1) Devices are working on first kernel.
 >>>> 2) Switch to second kernel(kdump kernel). The devices are still working
->>>>      and its DMA continues during this switch.
+>>>>       and its DMA continues during this switch.
 >>>> 3) iommu is initialized during second kernel boot and ongoing DMA causes
->>>>      dma-remapping errors.
+>>>>       dma-remapping errors.
 >>>>
 >>>> Solution:
 >>>> All DMA transactions have to be stopped before iommu is initialized. By
@@ -73,38 +73,117 @@ Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kern
 >>>> between them. If the endpoint is VGA device, it is skipped because the
 >>>> monitor blacks out if VGA controller is reset.
 >>>>
+>>> Couple questions wrt VGA device:
+>>> (1) Many graphics devices are multi-function, one function being VGA;
+>>>        is the VGA always function 0, so this scan sees it first&  doesn't
+>>>        do a reset on that PCIe link?  if the VGA is not function 0, won't
+>>>        this logic break (will reset b/c function 0 is non-VGA graphics) ?
+>>
+>> VGA is not reset irrespective of its function number. The logic of this
+>> patch is:
+>>
+>> for_each_pci_dev(dev) {
+>>       if (dev is not PCIe)
+>>          continue;
+>>       if (dev is not root port/downstream port) ---(1)
+>>          continue;
+>>       list_for_each_entry(child,&dev->subordinate->devices, bus_list) {
+>>           if (child is upstream port or bridge or VGA) ---(2)
+>>               continue;
+>>       }
+>>       do_reset_its_child(dev);
+>> }
+>>
+>> Therefore VGA itself is skipped by (1), and upstream device(root port or
+>> downstream port) of VGA is also skipped by (2).
+>>
+>>
+>>> (2) I'm hearing VGA will soon not be the a required console; this logic
+>>>        assumes it is, and why it isn't blanked.
+>>>        Q: Should the filter be based on a device having a device-class of display ?
+>>
+>> I want to avoid the situation that user's monitor blacks out and user
+>> cannot know what's going on. That's reason why I introduced the logic to
+>> skip VGA. As far as I tested the logic based on device-class works well,
+> sorry, I read your description, which said VGA, but your are filtering on display class,
+> which includes non-VGA as well. So, all set ... but large, (x16) non-VGA display devices
+> are probably one of the most aggressive DMA engines on a system.... and will grow as
+> asymmetric processing using GPUs gets architected into a device-agnostic manner.
+> So, this may work well for servers, which is the primary consumer/user of this feature,
+> and they typically have built-in graphics that are generally used in simple VGA mode,
+> so this may be sufficient for now.
+>   
+> 
+>> but I would appreciate it if there are better ways.
+>>
+> You probably don't want to hear it but....
+> a) only turn off cmd-reg master enable bit
+> b) only do reset based on a list of devices known not to
+>     obey their cmd-reg master enable bit, and only do reset to those devices.
+> But, given the testing you've done so far, this optional (need cmdline) feature,
+> let's start here.
+> 
+>>>
 >>>> Actually this is v8 patch but quite different from v7 and it's been so
 >>>> long since previous post, so I start over again.
+>>> Thanks for this re-start.  I need to continue reviewing the rest.
+>>
+>> Thank you for your review!
+>>
+>>>
+>>> Q: Why not force IOMMU off when re-booting a kexec kernel to perform a crash
+>>>       dump?  After the crash dump, the system is rebooting to previous (iommu=on) setting.
+>>>       That logic, along w/your previous patch to disable the IOMMU if iommu=off
+>>>       is set, would remove this (relatively slow) PCI init sequencing ?
+>>
+>> To force iommu off, all ongoing DMA have to be stopped before that since
+>> they are accessing the device address, not physical address. If we disable
+>> iommu without stopping in-flihgt DMA, devices access invalid memory area
+>> and it causes memory corruption or PCI-SERR due to DMA error.
+> Right, that's a 'duh' on my part.
+> I thought 'disable iommu' == 'block all dma' and it just turns it off &
+> let's the ongoing DMA run...
+> Please ignore this question... sigh.
+> 
+>>
+>> So, whether we use iommu or not in second kernel, we have to stop DMA in
+>> second kernel if iommu is used in first kernel.
+>>
+>> Thanks,
+>> Takao Indoh
+>>
+>>
+>>>
 >>>> Previous post:
 >>>> [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
 >>>> https://lkml.org/lkml/2012/11/26/814
 >>>>
 >>>> Signed-off-by: Takao Indoh<indou.takao@jp.fujitsu.com>
 >>>> ---
->>>>    Documentation/kernel-parameters.txt |    2 +
->>>>    drivers/pci/pci.c                   |  103 +++++++++++++++++++++++++++++++++++
->>>>    2 files changed, 105 insertions(+), 0 deletions(-)
+>>>>     Documentation/kernel-parameters.txt |    2 +
+>>>>     drivers/pci/pci.c                   |  103 +++++++++++++++++++++++++++++++++++
+>>>>     2 files changed, 105 insertions(+), 0 deletions(-)
 >>>>
 >>>> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
 >>>> index 4609e81..2a31ade 100644
 >>>> --- a/Documentation/kernel-parameters.txt
 >>>> +++ b/Documentation/kernel-parameters.txt
 >>>> @@ -2250,6 +2250,8 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
->>>>    				any pair of devices, possibly at the cost of
->>>>    				reduced performance.  This also guarantees
->>>>    				that hot-added devices will work.
->>>> +		pcie_reset_devices	Reset PCIe endpoint on boot by hot
->>>> +				reset
->>>>    		cbiosize=nn[KMG]	The fixed amount of bus space which is
->>>>    				reserved for the CardBus bridge's IO window.
->>>>    				The default value is 256 bytes.
+>>>>                     any pair of devices, possibly at the cost of
+>>>>                     reduced performance.  This also guarantees
+>>>>                     that hot-added devices will work.
+>>>> +        pcie_reset_devices    Reset PCIe endpoint on boot by hot
+>>>> +                reset
+>>>>             cbiosize=nn[KMG]    The fixed amount of bus space which is
+>>>>                     reserved for the CardBus bridge's IO window.
+>>>>                     The default value is 256 bytes.
 >>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
 >>>> index b099e00..42385c9 100644
 >>>> --- a/drivers/pci/pci.c
 >>>> +++ b/drivers/pci/pci.c
 >>>> @@ -3878,6 +3878,107 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
->>>>    }
->>>>    EXPORT_SYMBOL(pci_fixup_cardbus);
+>>>>     }
+>>>>     EXPORT_SYMBOL(pci_fixup_cardbus);
 >>>>
 >>>> +/*
 >>>> + * Return true if dev is PCIe root port or downstream port whose child is PCIe
@@ -112,223 +191,175 @@ Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kern
 >>>> + */
 >>>> +static int __init need_reset(struct pci_dev *dev)
 >>>> +{
->>>> +	struct pci_bus *subordinate;
->>>> +	struct pci_dev *child;
+>>>> +    struct pci_bus *subordinate;
+>>>> +    struct pci_dev *child;
 >>>> +
->>>> +	if (!pci_is_pcie(dev) || !dev->subordinate ||
->>>> +	    list_empty(&dev->subordinate->devices) ||
->>>> +	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)&&
->>>> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
->>>> +		return 0;
+>>>> +    if (!pci_is_pcie(dev) || !dev->subordinate ||
+>>>> +        list_empty(&dev->subordinate->devices) ||
+>>>> +        ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)&&
+>>>> +         (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
+>>>> +        return 0;
 >>>> +
->>>> +	subordinate = dev->subordinate;
->>>> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
->>>> +		if ((pci_pcie_type(child) == PCI_EXP_TYPE_UPSTREAM) ||
->>>> +		    (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) ||
->>>> +		    ((child->class>>  16) == PCI_BASE_CLASS_DISPLAY))
->>>> +			/* Don't reset switch, bridge, VGA device */
->>>> +			return 0;
->>>> +	}
+>>>> +    subordinate = dev->subordinate;
+>>>> +    list_for_each_entry(child,&subordinate->devices, bus_list) {
+>>>> +        if ((pci_pcie_type(child) == PCI_EXP_TYPE_UPSTREAM) ||
+>>>> +            (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) ||
+>>>> +            ((child->class>>   16) == PCI_BASE_CLASS_DISPLAY))
+>>>> +            /* Don't reset switch, bridge, VGA device */
+>>>> +            return 0;
+>>>> +    }
 >>>> +
->>>> +	return 1;
+>>>> +    return 1;
 >>>> +}
 >>>> +
 >>>> +static void __init save_config(struct pci_dev *dev)
+> This should be renamed.  it implies it is saving the config of the pdev passed in,
+> when in reality, it is saving the config of all the devices attached to this pdev.
+> i.e., save_downstream_configs()
+> 
 >>>> +{
->>>> +	struct pci_bus *subordinate;
->>>> +	struct pci_dev *child;
+>>>> +    struct pci_bus *subordinate;
+>>>> +    struct pci_dev *child;
 >>>> +
->>>> +	if (!need_reset(dev))
->>>> +		return;
+>>>> +    if (!need_reset(dev))
+>>>> +        return;
 >>>> +
->>>> +	subordinate = dev->subordinate;
->>>> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
->>>> +		dev_info(&child->dev, "save state\n");
->>>> +		pci_save_state(child);
->>>> +	}
+>>>> +    subordinate = dev->subordinate;
+>>>> +    list_for_each_entry(child,&subordinate->devices, bus_list) {
+>>>> +        dev_info(&child->dev, "save state\n");
+>>>> +        pci_save_state(child);
+>>>> +    }
 >>>> +}
 >>>> +
 >>>> +static void __init restore_config(struct pci_dev *dev)
+> inverse of above: restore_downstream_configs()
 >>>> +{
->>>> +	struct pci_bus *subordinate;
->>>> +	struct pci_dev *child;
+>>>> +    struct pci_bus *subordinate;
+>>>> +    struct pci_dev *child;
 >>>> +
->>>> +	if (!need_reset(dev))
->>>> +		return;
+>>>> +    if (!need_reset(dev))
+>>>> +        return;
 >>>> +
->>>> +	subordinate = dev->subordinate;
->>>> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
->>>> +		dev_info(&child->dev, "restore state\n");
->>>> +		pci_restore_state(child);
->>>> +	}
+>>>> +    subordinate = dev->subordinate;
+>>>> +    list_for_each_entry(child,&subordinate->devices, bus_list) {
+>>>> +        dev_info(&child->dev, "restore state\n");
+>>>> +        pci_restore_state(child);
+>>>> +    }
 >>>> +}
 >>>> +
 >>>> +static void __init do_device_reset(struct pci_dev *dev)
+> do_downstream_device_reset() -- it's not resetting this pdev,
+> but the pdev's of the devices attached to it.
+> 
 >>>> +{
->>>> +	u16 ctrl;
+>>>> +    u16 ctrl;
 >>>> +
->>>> +	if (!need_reset(dev))
->>>> +		return;
+>>>> +    if (!need_reset(dev))
+>>>> +        return;
 >>>> +
->>>> +	dev_info(&dev->dev, "Reset Secondary bus\n");
+>>>> +    dev_info(&dev->dev, "Reset Secondary bus\n");
 >>>> +
->>>> +	/* Assert Secondary Bus Reset */
->>>> +	pci_read_config_word(dev, PCI_BRIDGE_CONTROL,&ctrl);
->>>> +	ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
->>>> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+>>>> +    /* Assert Secondary Bus Reset */
+>>>> +    pci_read_config_word(dev, PCI_BRIDGE_CONTROL,&ctrl);
+>>>> +    ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
+>>>> +    pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
 >>>> +
->>>> +	msleep(2);
+>>>> +    msleep(2);
 >>>> +
->>>> +	/* De-assert Secondary Bus Reset */
->>>> +	ctrl&= ~PCI_BRIDGE_CTL_BUS_RESET;
->>>> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+> This works well for x86, which uses ioport registers to access
+> these <256-offset registers, b/c the write() function can't return
+> until the write is actually completed, but for a non-x86 system,
+> with fully mmconf'd PCI space, a write() may still be a write & run
+> (sitting in CPU write-merge) buffer, so if you need a full 2ms,
+> you ought to do another read_config() to the device, to flush the write,
+> before starting the msleep(2) clock.
+> 
+>>>> +    /* De-assert Secondary Bus Reset */
+>>>> +    ctrl&= ~PCI_BRIDGE_CTL_BUS_RESET;
+>>>> +    pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
 >>>> +}
 >>>> +
 >>>> +static int __initdata pcie_reset_devices;
 >>>> +static int __init reset_pcie_devices(void)
+> this should be reset_pcie_endpoints() ... it's not resetting all pcie devices
 >>>> +{
->>>> +	struct pci_dev *dev = NULL;
+>>>> +    struct pci_dev *dev = NULL;
 >>>> +
->>>> +	if (!pcie_reset_devices)
->>>> +		return 0;
+>>>> +    if (!pcie_reset_devices)
+>>>> +        return 0;
 >>>> +
->>>> +	for_each_pci_dev(dev)
->>>> +		save_config(dev);
+>>>> +    for_each_pci_dev(dev)
+>>>> +        save_config(dev);
 >>>> +
->>>> +	for_each_pci_dev(dev)
->>>> +		do_device_reset(dev);
->>>
->>> So we do a reset on each root port or downstream port, but the PCI to
->>> PCI bridge spec (1.2) states:
->>>
->>>           11.1.1. Secondary Reset Signal
->>>                   The secondary reset signal, RST#, is a logical OR of the
->>>                   primary interface RST# signal and
->>>                   the state of the Secondary Bus Reset bit of the Bridge
->>>                   Control register (see Section 3.2.5.18).
->>>
->>> I read that to mean that in a legacy topology, doing a reset on the top
->>> level bridge triggers a reset down the entire hierarchy.  How does this
->>> apply to a PCIe topology?  Can we just do a reset on the top level root
->>> ports?  If so, that would also imply that a reset propagates down
->> On PCIe, a reset does not propagate down the tree (from upstream link to
->> downstream link of a bridge/switch).
-> 
-> I don't think this is actually true.  Section 6.6.1 of the spec defines
-> 3 types of conventional resets, cold, warm and hot.  I believe the one
-> we're interested in is hot, which is an in-band mechanism for
-> propagating a conventional reset across a link.  Section 4.2.5.11
-> defines hot reset:
-> 
->          Hot Reset uses bit 0 (Hot Reset) in the Training Control field
->          (see Table 4-5 and Table 4-6) within the TS1 and TS2 Ordered
->          Sets.
->          
->          A Link can enter Hot Reset if directed by a higher Layer. A Link
->          can also reach the Hot Reset state by receiving two consecutive
->          TS1 Ordered Sets with the Hot Reset bit asserted (see Section
->          4.2.6.11).
-> 
-> Section 4.2.6.11 then goes on as:
-> 
->        * Lanes that were not directed by a higher Layer to initiate Hot
->          Reset (i.e., received two consecutive TS1 Ordered Sets with the
->          Hot Reset bit asserted on any configured Lanes):
->                * If any Lane of an Upstream Port of a Switch receives two
->                  consecutive TS1 Ordered Sets with the Hot Reset bit
->                  asserted, all configured Downstream Ports must
->                  transition to Hot Reset as soon as possible.
->                * All Lanes in the configured Link transmit TS1 Ordered
->                  Sets with the Hot Reset bit asserted and the configured
->                  Link and Lane numbers.
-> 
-> Also included is the footnote:
-> 
->          Note: Generally, Lanes of a Downstream or optional crosslink
->          Port will be directed to Hot Reset, and Lanes of an Upstream or
->          optional crosslink Port will enter Hot Reset by receiving two
->          consecutive TS1 Ordered Sets with the Hot Reset bit asserted on
->          any configured Lanes...
-> 
-> So I think that means that if a hot reset is received by an upstream
-> port, it's propagated to the downstream ports and on to the downstream
-> links.  The latter point is where there's potential for interpretation.
-> 
-> Going back to sections 6.6.1, we can generate a hot reset via:
-> 
->        * For any Root or Switch Downstream Port, setting the Secondary
->          Bus Reset bit of the Bridge Control register associated with the
->          Port must cause a hot reset to be sent.
->        * For a Switch, the following must cause a hot reset to be sent on
->          all Downstream Ports:
->                * Setting the Secondary Bus Reset bit of the Bridge
->                  Control register associated with the    Upstream Port
->                * Receiving a hot reset on the Upstream Port
-> 
-> Sounds like it propagates to me.  But, re-reading this patch, I think
-> the goal is to attempt a bus reset on the most downstream
-> root/downstream port, but it's pretty confusing.
+>>>> +    for_each_pci_dev(dev)
+>>>> +        do_device_reset(dev);
+>>>> +
+>>>> +    msleep(1000);
+>>>> +
+>>>> +    for_each_pci_dev(dev)
+>>>> +        restore_config(dev);
+>>>> +
+> My apologies if past thread covered this sequence...
+> Why three loops through all PCIe devices on the system?
+> why not have the first for-each-pci-dev() loop filter devices
+> to be reset, and save_config those pdev's,
+> return a list of saved_pdev's;  feed that list into the do_device_reset();
+> then mpsleep(), then restore the list.
+> in fact, once you create a link list of pdev's to reset,
+> just loop that list doing save, then reset; rtn the list, do msleep(),
+> then restore the config of pdevs in the list.
+> Otherwise, doing much more traversing than what's needed.
+> Doing a great deal more config-saving then needed right now as well
+> (saving all non-endpt devices that aren't reset).
 
-Yes, I also think a hot reset is propagated to all downstream link. This
-patch does bus reset only on root port/downstream port whose children
-are endpoints since I need to skip display class devices to avoid
-monitor blacks out. 
+One question, do you mean we should have two lists? For example,
+
+LIST_HEAD(pci_reset_list); /* pdev list to reset */
+LIST_HEAD(pci_saved_list); /* pdev list to save/restore config */
+
+Or simply making one list and just loop it like this:
+
+    LIST_HEAD(pdev_list);
+
+    for_each_pci_dev(pdev)
+        if (need_reset(pdev))
+            /* Add pdev to pdev_list */
+
+    list_for_each_entry(pdev, &pdev_list)
+        save_downstream_configs(pdev);
+
+    list_for_each_entry(pdev, &pdev_list)
+        do_downstream_device_reset(pdev);
+
+    list_for_each_entry(pdev, &pdev_list)
+        restore_downstream_configs(pdev);
 
 Thanks,
 Takao Indoh
 
 > 
-> I also have a need to add a bus reset interface, in my case though the
-> end goal is specifically to reset display class devices to get them into
-> a usable state.  I just want to provide the kernel interfaces though,
-> it's up to the drivers how to use them.  Thanks,
-> 
-> Alex
-> 
->>> through PCIe-to-PCI bridges, so legacy PCI devices may be reset and the
->>> option name is misleading.
->>>
->> In earlier reply, I stated that the functions ought to be renamed to
->> reflect their intentions: endpoint reset.
->> It is not a reset-all-pci-devices interface, as it implies
->>
->>> Even so, you still have root complex endpoints, which are not getting
->>> reset through this, so it's really not a complete solution.  Thanks,
->>>
->>> Alex
->>>
->>>> +
->>>> +	msleep(1000);
->>>> +
->>>> +	for_each_pci_dev(dev)
->>>> +		restore_config(dev);
->>>> +
->>>> +	return 0;
+>>>> +    return 0;
 >>>> +}
 >>>> +fs_initcall_sync(reset_pcie_devices);
 >>>> +
->>>>    static int __init pci_setup(char *str)
->>>>    {
->>>>    	while (str) {
+>>>>     static int __init pci_setup(char *str)
+>>>>     {
+>>>>         while (str) {
 >>>> @@ -3920,6 +4021,8 @@ static int __init pci_setup(char *str)
->>>>    				pcie_bus_config = PCIE_BUS_PEER2PEER;
->>>>    			} else if (!strncmp(str, "pcie_scan_all", 13)) {
->>>>    				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
->>>> +			} else if (!strncmp(str, "pcie_reset_devices", 18)) {
->>>> +				pcie_reset_devices = 1;
->>>>    			} else {
->>>>    				printk(KERN_ERR "PCI: Unknown option `%s'\n",
->>>>    						str);
+>>>>                     pcie_bus_config = PCIE_BUS_PEER2PEER;
+>>>>                 } else if (!strncmp(str, "pcie_scan_all", 13)) {
+>>>>                     pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+>>>> +            } else if (!strncmp(str, "pcie_reset_devices", 18)) {
+> pcie_reset_endpoint_devices
+>>>> +                pcie_reset_devices = 1;
+> pcie_reset_endpoint_devices
+>>>>                 } else {
+>>>>                     printk(KERN_ERR "PCI: Unknown option `%s'\n",
+>>>>                             str);
 >>>
 >>>
 >>>
->>> _______________________________________________
->>> iommu mailing list
->>> iommu@lists.linux-foundation.org
->>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 >>
-> 
-> 
 > 
 > 
 > 
