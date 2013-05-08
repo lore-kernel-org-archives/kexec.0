@@ -1,18 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ua4Rl-0000ms-Rw
- for kexec@lists.infradead.org; Wed, 08 May 2013 13:30:22 +0000
-Date: Wed, 8 May 2013 09:29:51 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <300993645.8498114.1368019791503.JavaMail.root@redhat.com>
-In-Reply-To: <CAEyr1FRhLFjyoqWKyQoMc4cQqqA8fX7bPA=MWpY-z2RK74fekQ@mail.gmail.com>
-References: <CAEyr1FSxmTW2st4BSzWa3K6AJpBLj-PqJh6-zmA_K6f5C8r7ng@mail.gmail.com>
- <CAEyr1FQ6MGMJK1+dyrLF+YaPwDFa1d+WVeRe6fuKojPUJO--xQ@mail.gmail.com>
- <CAEyr1FRhLFjyoqWKyQoMc4cQqqA8fX7bPA=MWpY-z2RK74fekQ@mail.gmail.com>
-Subject: Re: [Crash-utility] crash read error: kernel virtual address /
- vmcore address mismatch ?
-MIME-Version: 1.0
+Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Ua6IV-0003ua-1R
+ for kexec@lists.infradead.org; Wed, 08 May 2013 15:28:51 +0000
+Received: from /spool/local
+ by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Wed, 8 May 2013 16:25:23 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com
+ (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id A52161B0805D
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 16:28:22 +0100 (BST)
+Received: from d06av07.portsmouth.uk.ibm.com (d06av07.portsmouth.uk.ibm.com
+ [9.149.37.248])
+ by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r48FSCCn43516028
+ for <kexec@lists.infradead.org>; Wed, 8 May 2013 15:28:12 GMT
+Received: from d06av07.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av07.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r48FSMK5010628
+ for <kexec@lists.infradead.org>; Wed, 8 May 2013 11:28:22 -0400
+Date: Wed, 8 May 2013 17:28:20 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/4] kdump: Allow ELF header creation in new kernel
+Message-ID: <20130508172820.77075d23@holzheu>
+In-Reply-To: <20130507163701.GA14403@redhat.com>
+References: <1367845799-29125-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <20130507163701.GA14403@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,174 +41,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
-Cc: kexec@lists.infradead.org, Anand Raj Manickam <anandrm@gmail.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
+Hello Vivek,
 
+On Tue, 7 May 2013 12:37:01 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-
------ Original Message -----
-> On Wed, May 8, 2013 at 11:23 AM, Anand Raj Manickam <anandrm@gmail.com>
-> wrote:
-> >> Hi ,
-> >> Sorry about re posting this as i did not find solution ...
-> >>
-> >> I m facing a issue where on
-> >>
-> >> #crash /data/linux-2.6.30.8/vmlinux /proc/vmcore
-> >
-> > Do yourself a favor and copy /proc/vmcore to somewhere on disk.  Then
-> > reboot the system into the original kernel, and run crash on the saved
-> > vmcore.  I've never seen crash run on a /proc/vmcore file from the
-> > secondary kernel.
-> >
-> > Also, after rebooting the the original kernel, please confirm that
-> > crash runs OK on the live system.
-> >
-> >
-> >> crash 6.1.6
-> >> Copyright (C) 2002-2013  Red Hat, Inc.
-> >> Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
-> >> Copyright (C) 1999-2006  Hewlett-Packard Co
-> >> Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
-> >> Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
-> >> Copyright (C) 2005, 2011  NEC Corporation
-> >> Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
-> >> Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
-> >> This program is free software, covered by the GNU General Public License,
-> >> and you are welcome to change it and/or distribute copies of it under
-> >> certain conditions.  Enter "help copying" to see the conditions.
-> >> This program has absolutely no warranty.  Enter "help warranty" for
-> >> details.
-> >>
-> >> GNU gdb (GDB) 7.3.1
-> >> Copyright (C) 2011 Free Software Foundation, Inc.
-> >> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-> >> This is free software: you are free to change and redistribute it.
-> >> There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
-> >> and "show warranty" for details.
-> >> This GDB was configured as "i686-pc-linux-gnu"...
-> >>
-> >> crash: read error: kernel virtual address: c127a9c8  type: "cpu_possible_mask"
-> >
-> > Please show the full output of "crash -d8 vmlinux vmcore".
+> On Mon, May 06, 2013 at 03:09:55PM +0200, Michael Holzheu wrote:
+> > Hello Vivek,
+> > 
+> > For s390 we want to use /proc/vmcore for our SCSI stand-alone
+> > dump (zfcpdump). We have support where the first HSA_SIZE bytes are
+> > saved into a hypervisor owned memory area (HSA) before the kdump
+> > kernel is booted. When the kdump kernel starts, it is restricted
+> > to use only HSA_SIZE bytes.
+> > 
 > 
-> After rebooting to the primary / live kernel
+> Hi Michael,
 > 
->    I have attached the output for "crash -d8 vmlinux /data/vmcore" in d8.txt
+> Hatayama is changing /proc/vmcore interface to support mmap(). Can you
+> please rebase your changes on top of those patches.
+> 
+> http://thread.gmane.org/gmane.linux.kernel/1477622
 
-Looking at the ELF header data in the debug output, your configuration 
-does require special handling.  X86 kernels are typically not configured
-with CONFIG_PHYSICAL_START larger than CONFIG_PHYSICAL_ALIGN, because
-when that is done, the vmlinux unity-mapped symbol values do not match
-their relocated values when the kernel is loaded.  This entry in the 
-crash.changelog describes the situation:
+Fine, we will do that.
+ 
+> Secondly, I think /proc/vmcore does not have to know whether elf
+> headers are in old memory or new memory. Given that s390 is taking
+> a deviation, so it now becomes an arch specific detail. Can't we
+> just create few arch specific helper functions to retrieve and free
+> elf headers.
+> 
+> - arch_get_crash_headers()
+> 	- All arch except return elfcorehdr_add except s390.
+> - arch_read_crash_header_data()
+> 	- All arch just call into read_from_oldmem() except s390. We
+>   	  can provide a generic implementation in /proc/vmcore.c so
+> 	  all other arch can use that generic implementation.  Or
+> 	  use symbol override trick.
+> - arch_free_crash_headers()
+> 	- All arch do nothing except s390 which can reclaim the memory
+>  	  for elf headers prepared. Generic code has parsed/copied
+> the headers by now.
+> 
+> What do you think? Above 3 calls should solve the problem and allow
+> arch to handle elf headers differently. And generic implementation
+> still keeps common logic for processing headers.
 
-http://people.redhat.com/anderson/crash.changelog.html#4_0_4_5
+Ok, we will try that. There might be a problem that our ELF notes
+content is also in the new kernel memory. But also for that there be a
+solution.
 
-4.0-4.5  - Addresses FC7/upstream x86 kernels that have been configured such
-           that the vmlinux symbol values do not match their relocated values
-           when loaded.  If CONFIG_PHYSICAL_START contains a value that is
-           greater then CONFIG_PHYSICAL_ALIGN, then this mismatch occurs.
-           Since the crash utility and its embedded gdb have always expected
-           that the compiled-in kernel symbol addresses are "real", the virtual
-           to physical translation fails, leading to an initialization-time
-           failure with the message: "crash: vmlinux and /dev/crash do not
-           match!" (/dev/mem or the dumpfile name may replace /dev/crash).
-           To deal with this issue, there are several alternatives:
-
-            1) Configure the kernel with CONFIG_PHYSICAL_START less than
-               or equal to CONFIG_PHYSICAL_ALIGN.  Having done that, there
-               is no problem; the resultant vmlinux file will be loaded at
-               the address for which it was compiled, which has always
-               been the case.
-            2) Since /proc/kallsyms uses the same format as a System.map file,
-               and since it reflects the relocated symbol addresses, it
-               can be placed on the crash command line as if it were
-               a System.map file.  (Note that the System.map file created
-               by these relocated kernels contains the same "wrong" symbol
-               values as the vmlinux file from which it was created.)
-            3) On a live system that has /proc/kallsyms (i.e., the kernel was
-               configured with CONFIG_KALLSYMS), this version of the crash
-               utility will replace/patch the vmlinux symbol values with those
-               seen in /proc/kallsyms.  The relocation value will be displayed
-               as a WARNING message during initialization.
-            4) On a dumpfile, the relocation will not be performed automatically
-               as on a live system.  It will require the addition of the 
-               /proc/kallsyms on the command line, or if run on a different
-               host, a copy of the crashed system's /proc/kallsyms may be
-               used.
-            5) Alternatively on a dumpfile, a new command line option has been
-               created to specify the relocation amount.  For example, if a  
-               kernel was configured with a CONFIG_PHYSICAL_START value of 16MB
-               and a CONFIG_PHYSICAL_ALIGN of 4MB, that results in a relocation
-               of 12MB.  To specify that, enter "crash --reloc=12m ..." on the
-               command line.  (Recall that if crash is run on the live system,
-               a WARNING message will specify the relocation amount.)
-
-           Using /proc/kallsyms or a --reloc=[size] as a command line argument
-           is similar to using a System.map file, in that it results in the loss
-           of the use of line number debug data.  (anderson@redhat.com)
-
-           ...
-
->> My current config for
->>
->> CONFIG_PHYSICAL_START=0x1000000
->> CONFIG_RELOCATABLE=y
->> CONFIG_PHYSICAL_ALIGN=0x400000
->>
->> The /proc/kallsyms is diffrent between the System Kernel and Debug Kernel.
->> On the System Kernel it starts from 0x400000 .On the Debug kernel it
->> starts from 0x1000000.
-
-So your configuration exactly matches paragraph 5) above, you should
-be able to come up OK by entering either:
-
- $ crash vmlinux vmcore --reloc=12m
-
-or
-
- $ crash vmlinux vmcore /proc/kallsyms
-
-where the /proc/kallsyms is from the *primary* kernel, so option #2
-will *not* work when running from the secondary kernel.
-
-You didn't show any output of a live crash session (while running
-on the primary kernel), but I believe it should work without using 
-the /proc/kallsyms as an argument or using --reloc=12m option.  There
-was a further fix for these configurations for running on live systems:
-
-http://people.redhat.com/anderson/crash.changelog.html#5_1_4
-
-5.1.4    - Fix for RT kernels in which the schedule() function has become a 
-           ... [ cut] ...
-
-         - Fix for running against live x86 kernels that were configured with
-           CONFIG_PHYSICAL_START containing a value that is greater than its
-           CONFIG_PHYSICAL_ALIGN value, and where the first symbol listed by
-           /proc/kallsyms is not "_text".  Without the patch, the crash session
-           fails during invocation with the error message "crash: vmlinux and
-           /dev/mem do not match!" (or "/dev/crash" if applicable).  As a work-
-           around, "/proc/kallsyms" can be entered on the command line, or the
-           "--reloc=<size>" option could be used, but the fix obviates that
-           requirement for live systems.  It should be noted that dumpfiles of
-           kernels configured that way still do require that "/proc/kallsyms",
-           or a copy of it, or alternatively the "--reloc=<size>" option, to
-           be entered on the command line, as detailed in this changelog entry:
-           http://people.redhat.com/anderson/crash.changelog.html#4_0_4_5
-           (anderson@redhat.com)
-
-So on the live system on the primary kernel, I believe this should just work:
-
- $ crash vmlinux
-
-Normally you don't even need to put the vmlinux file on the command line for
-running on the live system because it will be "found" automatically unless
-you've put it in some non-standard location.
-
-Dave
+Michael
 
 
 _______________________________________________
