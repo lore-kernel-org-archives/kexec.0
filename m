@@ -1,16 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UZq0S-0005Tw-IO
- for kexec@lists.infradead.org; Tue, 07 May 2013 22:05:10 +0000
-Message-ID: <1367964279.2868.128.camel@ul30vt.home>
-Subject: Re: [PATCH] Reset PCIe devices to stop ongoing DMA
-From: Alex Williamson <alex.williamson@redhat.com>
-Date: Tue, 07 May 2013 16:04:39 -0600
-In-Reply-To: <51895FAB.5010805@redhat.com>
-References: <1366779539-3584-1-git-send-email-indou.takao@jp.fujitsu.com>
- <1367944782.2868.106.camel@ul30vt.home> <51895FAB.5010805@redhat.com>
-Mime-Version: 1.0
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UZwSx-00013x-3v
+ for kexec@lists.infradead.org; Wed, 08 May 2013 04:59:00 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id DE4803EE0C5
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 13:58:32 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id CEDF945DE5D
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 13:58:32 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id B2F1A45DE59
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 13:58:32 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8B9ACE38005
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 13:58:32 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 31DB21DB804F
+ for <kexec@lists.infradead.org>; Wed,  8 May 2013 13:58:32 +0900 (JST)
+Message-ID: <5189DB4A.8020902@jp.fujitsu.com>
+Date: Wed, 08 May 2013 13:57:46 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v4 5/8] vmcore: copy ELF note segments in the 2nd kernel
+ per page vmcore objects
+References: <20130413002000.18245.21513.stgit@localhost6.localdomain6>
+ <20130413002133.18245.91528.stgit@localhost6.localdomain6>
+ <20130429193611.GQ8204@redhat.com> <5188B3BE.9040104@jp.fujitsu.com>
+ <20130507150840.GA12965@redhat.com>
+In-Reply-To: <20130507150840.GA12965@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,289 +37,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Don Dutile <ddutile@redhat.com>
-Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, bhelgaas@google.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-On Tue, 2013-05-07 at 16:10 -0400, Don Dutile wrote:
-> On 05/07/2013 12:39 PM, Alex Williamson wrote:
-> > On Wed, 2013-04-24 at 13:58 +0900, Takao Indoh wrote:
-> >> This patch resets PCIe devices on boot to stop ongoing DMA. When
-> >> "pci=pcie_reset_devices" is specified, a hot reset is triggered on each
-> >> PCIe root port and downstream port to reset its downstream endpoint.
-> >>
-> >> Problem:
-> >> This patch solves the problem that kdump can fail when intel_iommu=on is
-> >> specified. When intel_iommu=on is specified, many dma-remapping errors
-> >> occur in second kernel and it causes problems like driver error or PCI
-> >> SERR, at last kdump fails. This problem is caused as follows.
-> >> 1) Devices are working on first kernel.
-> >> 2) Switch to second kernel(kdump kernel). The devices are still working
-> >>     and its DMA continues during this switch.
-> >> 3) iommu is initialized during second kernel boot and ongoing DMA causes
-> >>     dma-remapping errors.
-> >>
-> >> Solution:
-> >> All DMA transactions have to be stopped before iommu is initialized. By
-> >> this patch devices are reset and in-flight DMA is stopped before
-> >> pci_iommu_init.
-> >>
-> >> To invoke hot reset on an endpoint, its upstream link need to be reset.
-> >> reset_pcie_devices() is called from fs_initcall_sync, and it finds root
-> >> port/downstream port whose child is PCIe endpoint, and then reset link
-> >> between them. If the endpoint is VGA device, it is skipped because the
-> >> monitor blacks out if VGA controller is reset.
-> >>
-> >> Actually this is v8 patch but quite different from v7 and it's been so
-> >> long since previous post, so I start over again.
-> >> Previous post:
-> >> [PATCH v7 0/5] Reset PCIe devices to address DMA problem on kdump
-> >> https://lkml.org/lkml/2012/11/26/814
-> >>
-> >> Signed-off-by: Takao Indoh<indou.takao@jp.fujitsu.com>
-> >> ---
-> >>   Documentation/kernel-parameters.txt |    2 +
-> >>   drivers/pci/pci.c                   |  103 +++++++++++++++++++++++++++++++++++
-> >>   2 files changed, 105 insertions(+), 0 deletions(-)
-> >>
-> >> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> >> index 4609e81..2a31ade 100644
-> >> --- a/Documentation/kernel-parameters.txt
-> >> +++ b/Documentation/kernel-parameters.txt
-> >> @@ -2250,6 +2250,8 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
-> >>   				any pair of devices, possibly at the cost of
-> >>   				reduced performance.  This also guarantees
-> >>   				that hot-added devices will work.
-> >> +		pcie_reset_devices	Reset PCIe endpoint on boot by hot
-> >> +				reset
-> >>   		cbiosize=nn[KMG]	The fixed amount of bus space which is
-> >>   				reserved for the CardBus bridge's IO window.
-> >>   				The default value is 256 bytes.
-> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >> index b099e00..42385c9 100644
-> >> --- a/drivers/pci/pci.c
-> >> +++ b/drivers/pci/pci.c
-> >> @@ -3878,6 +3878,107 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
-> >>   }
-> >>   EXPORT_SYMBOL(pci_fixup_cardbus);
-> >>
-> >> +/*
-> >> + * Return true if dev is PCIe root port or downstream port whose child is PCIe
-> >> + * endpoint except VGA device.
-> >> + */
-> >> +static int __init need_reset(struct pci_dev *dev)
-> >> +{
-> >> +	struct pci_bus *subordinate;
-> >> +	struct pci_dev *child;
-> >> +
-> >> +	if (!pci_is_pcie(dev) || !dev->subordinate ||
-> >> +	    list_empty(&dev->subordinate->devices) ||
-> >> +	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)&&
-> >> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
-> >> +		return 0;
-> >> +
-> >> +	subordinate = dev->subordinate;
-> >> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
-> >> +		if ((pci_pcie_type(child) == PCI_EXP_TYPE_UPSTREAM) ||
-> >> +		    (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) ||
-> >> +		    ((child->class>>  16) == PCI_BASE_CLASS_DISPLAY))
-> >> +			/* Don't reset switch, bridge, VGA device */
-> >> +			return 0;
-> >> +	}
-> >> +
-> >> +	return 1;
-> >> +}
-> >> +
-> >> +static void __init save_config(struct pci_dev *dev)
-> >> +{
-> >> +	struct pci_bus *subordinate;
-> >> +	struct pci_dev *child;
-> >> +
-> >> +	if (!need_reset(dev))
-> >> +		return;
-> >> +
-> >> +	subordinate = dev->subordinate;
-> >> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
-> >> +		dev_info(&child->dev, "save state\n");
-> >> +		pci_save_state(child);
-> >> +	}
-> >> +}
-> >> +
-> >> +static void __init restore_config(struct pci_dev *dev)
-> >> +{
-> >> +	struct pci_bus *subordinate;
-> >> +	struct pci_dev *child;
-> >> +
-> >> +	if (!need_reset(dev))
-> >> +		return;
-> >> +
-> >> +	subordinate = dev->subordinate;
-> >> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
-> >> +		dev_info(&child->dev, "restore state\n");
-> >> +		pci_restore_state(child);
-> >> +	}
-> >> +}
-> >> +
-> >> +static void __init do_device_reset(struct pci_dev *dev)
-> >> +{
-> >> +	u16 ctrl;
-> >> +
-> >> +	if (!need_reset(dev))
-> >> +		return;
-> >> +
-> >> +	dev_info(&dev->dev, "Reset Secondary bus\n");
-> >> +
-> >> +	/* Assert Secondary Bus Reset */
-> >> +	pci_read_config_word(dev, PCI_BRIDGE_CONTROL,&ctrl);
-> >> +	ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
-> >> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
-> >> +
-> >> +	msleep(2);
-> >> +
-> >> +	/* De-assert Secondary Bus Reset */
-> >> +	ctrl&= ~PCI_BRIDGE_CTL_BUS_RESET;
-> >> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
-> >> +}
-> >> +
-> >> +static int __initdata pcie_reset_devices;
-> >> +static int __init reset_pcie_devices(void)
-> >> +{
-> >> +	struct pci_dev *dev = NULL;
-> >> +
-> >> +	if (!pcie_reset_devices)
-> >> +		return 0;
-> >> +
-> >> +	for_each_pci_dev(dev)
-> >> +		save_config(dev);
-> >> +
-> >> +	for_each_pci_dev(dev)
-> >> +		do_device_reset(dev);
-> >
-> > So we do a reset on each root port or downstream port, but the PCI to
-> > PCI bridge spec (1.2) states:
-> >
-> >          11.1.1. Secondary Reset Signal
-> >                  The secondary reset signal, RST#, is a logical OR of the
-> >                  primary interface RST# signal and
-> >                  the state of the Secondary Bus Reset bit of the Bridge
-> >                  Control register (see Section 3.2.5.18).
-> >
-> > I read that to mean that in a legacy topology, doing a reset on the top
-> > level bridge triggers a reset down the entire hierarchy.  How does this
-> > apply to a PCIe topology?  Can we just do a reset on the top level root
-> > ports?  If so, that would also imply that a reset propagates down
-> On PCIe, a reset does not propagate down the tree (from upstream link to
-> downstream link of a bridge/switch).
+(2013/05/08 0:08), Vivek Goyal wrote:
+> On Tue, May 07, 2013 at 04:56:46PM +0900, HATAYAMA Daisuke wrote:
+>> (2013/04/30 4:36), Vivek Goyal wrote:
+>>> On Sat, Apr 13, 2013 at 09:21:33AM +0900, HATAYAMA Daisuke wrote:
+>>>
+>>> [..]
+>>>> ELF notes are per-cpu, so total size of ELF note segments increases
+>>>> according to the number of CPUs. The current maximum number of CPUs on
+>>>> x86_64 is 5192, and there's already system with 4192 CPUs in SGI,
+>>>> where total size amounts to 1MB. This can be larger in the neare
+>>>> futrue or possibly even now on another architecture. Thus, to avoid
+>>>> the case where memory allocation for large block fails, we allocate
+>>>> vmcore objects per pages.
+>>>
+>>> IIRC, eric had suggested using vmalloc() and remap_vmalloc_range(). What's
+>>> wrong with that? That should keep your vc_list relatively smaller.
+>>>
+>>
+>> Yes, it's handy if it's possible to remap them in vmalloc space, but
+>> the problem here is that remap_vmalloc_range requires the first
+>> argument vma to cover full range of the requested map. This becomes
+>> problem when requested area for mmap() overlaps multiple objects,
+>> for example, ELF headers and memory refered to by the first PT_LOAD
+>> program header.
+>>
+>> To use remap_vmalloc_range, it's necessary to prepare a new variant
+>> similar to remap_pfn_range by which we can remap different objects
+>> separately to a single vma.
+>
+> Ok. Is it hard to prepare one such variant. If we can write one, it will
+> simplify the vmcore code.
 
-I don't think this is actually true.  Section 6.6.1 of the spec defines
-3 types of conventional resets, cold, warm and hot.  I believe the one
-we're interested in is hot, which is an in-band mechanism for
-propagating a conventional reset across a link.  Section 4.2.5.11
-defines hot reset:
+I'll try to write it. Although I avoided implementing it once, now it 
+looks relatively easy to implement thanks to vm_insert_page, which does 
+all essential thing. All I have to do should be consider sanity-check only.
 
-        Hot Reset uses bit 0 (Hot Reset) in the Training Control field
-        (see Table 4-5 and Table 4-6) within the TS1 and TS2 Ordered
-        Sets.
-        
-        A Link can enter Hot Reset if directed by a higher Layer. A Link
-        can also reach the Hot Reset state by receiving two consecutive
-        TS1 Ordered Sets with the Hot Reset bit asserted (see Section
-        4.2.6.11).
-
-Section 4.2.6.11 then goes on as:
-
-      * Lanes that were not directed by a higher Layer to initiate Hot
-        Reset (i.e., received two consecutive TS1 Ordered Sets with the
-        Hot Reset bit asserted on any configured Lanes):
-              * If any Lane of an Upstream Port of a Switch receives two
-                consecutive TS1 Ordered Sets with the Hot Reset bit
-                asserted, all configured Downstream Ports must
-                transition to Hot Reset as soon as possible.
-              * All Lanes in the configured Link transmit TS1 Ordered
-                Sets with the Hot Reset bit asserted and the configured
-                Link and Lane numbers.
-
-Also included is the footnote:
-
-        Note: Generally, Lanes of a Downstream or optional crosslink
-        Port will be directed to Hot Reset, and Lanes of an Upstream or
-        optional crosslink Port will enter Hot Reset by receiving two
-        consecutive TS1 Ordered Sets with the Hot Reset bit asserted on
-        any configured Lanes...
-
-So I think that means that if a hot reset is received by an upstream
-port, it's propagated to the downstream ports and on to the downstream
-links.  The latter point is where there's potential for interpretation.
-
-Going back to sections 6.6.1, we can generate a hot reset via:
-
-      * For any Root or Switch Downstream Port, setting the Secondary
-        Bus Reset bit of the Bridge Control register associated with the
-        Port must cause a hot reset to be sent.
-      * For a Switch, the following must cause a hot reset to be sent on
-        all Downstream Ports:
-              * Setting the Secondary Bus Reset bit of the Bridge
-                Control register associated with the    Upstream Port
-              * Receiving a hot reset on the Upstream Port
-
-Sounds like it propagates to me.  But, re-reading this patch, I think
-the goal is to attempt a bus reset on the most downstream
-root/downstream port, but it's pretty confusing.
-
-I also have a need to add a bus reset interface, in my case though the
-end goal is specifically to reset display class devices to get them into
-a usable state.  I just want to provide the kernel interfaces though,
-it's up to the drivers how to use them.  Thanks,
-
-Alex
-
-> > through PCIe-to-PCI bridges, so legacy PCI devices may be reset and the
-> > option name is misleading.
-> >
-> In earlier reply, I stated that the functions ought to be renamed to
-> reflect their intentions: endpoint reset.
-> It is not a reset-all-pci-devices interface, as it implies
-> 
-> > Even so, you still have root complex endpoints, which are not getting
-> > reset through this, so it's really not a complete solution.  Thanks,
-> >
-> > Alex
-> >
-> >> +
-> >> +	msleep(1000);
-> >> +
-> >> +	for_each_pci_dev(dev)
-> >> +		restore_config(dev);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +fs_initcall_sync(reset_pcie_devices);
-> >> +
-> >>   static int __init pci_setup(char *str)
-> >>   {
-> >>   	while (str) {
-> >> @@ -3920,6 +4021,8 @@ static int __init pci_setup(char *str)
-> >>   				pcie_bus_config = PCIE_BUS_PEER2PEER;
-> >>   			} else if (!strncmp(str, "pcie_scan_all", 13)) {
-> >>   				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
-> >> +			} else if (!strncmp(str, "pcie_reset_devices", 18)) {
-> >> +				pcie_reset_devices = 1;
-> >>   			} else {
-> >>   				printk(KERN_ERR "PCI: Unknown option `%s'\n",
-> >>   						str);
-> >
-> >
-> >
-> > _______________________________________________
-> > iommu mailing list
-> > iommu@lists.linux-foundation.org
-> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
-
-
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
