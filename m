@@ -1,15 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uc70Y-0004sv-OI
- for kexec@lists.infradead.org; Tue, 14 May 2013 04:38:39 +0000
-Message-ID: <5191BF18.4000503@cn.fujitsu.com>
-Date: Tue, 14 May 2013 12:35:36 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: Replace printf() with die() to error out to stderr
-References: <1368503808-16601-1-git-send-email-chaowang@redhat.com>
-In-Reply-To: <1368503808-16601-1-git-send-email-chaowang@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Uc7ot-0005M5-WC
+ for kexec@lists.infradead.org; Tue, 14 May 2013 05:30:41 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id C22153EE0BB
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 14:30:10 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id A919E45DE54
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 14:30:10 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 872AC45DE4D
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 14:30:10 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7498DE18005
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 14:30:10 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 214AA1DB803B
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 14:30:10 +0900 (JST)
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Subject: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
+Date: Tue, 14 May 2013 14:29:25 +0900
+Message-Id: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,40 +30,207 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com
+Cc: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, alex.williamson@redhat.com, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, bill.sumner@hp.com
 
-5LqOIDIwMTPlubQwNeaciDE05pelIDExOjU2LCBXQU5HIENoYW8g5YaZ6YGTOgo+IEVycm9yIG1l
-c3NhZ2VzIGFyZSBtaXhlZCBzdGRlcnIgd2l0aCBzdGRvdXQgd2hlbiB3ZSB1c2UgZGllKCkgYWxv
-bmcgd2l0aAo+IHByaW50ZigpLiBTbyB1c2UgZGllKCkgdG8ga2VlcCBlcnJvciBvdXQgY29uc2lz
-dGVudC4KCkxvb2tzIGdvb2QgdG8gbWUuCgpBY2tlZC1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lh
-bmZlaUBjbi5mdWppdHN1LmNvbT4KCj4gCj4gU2lnbmVkLW9mZi1ieTogV0FORyBDaGFvIDxjaGFv
-d2FuZ0ByZWRoYXQuY29tPgo+IC0tLQo+ICBrZXhlYy9rZXhlYy5jIHwgMTQgKysrKysrKy0tLS0t
-LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAK
-PiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMuYyBiL2tleGVjL2tleGVjLmMKPiBpbmRleCA1M2Q2
-ZWRjLi45MTFjMGY2IDEwMDY0NAo+IC0tLSBhL2tleGVjL2tleGVjLmMKPiArKysgYi9rZXhlYy9r
-ZXhlYy5jCj4gQEAgLTExNzYsMTcgKzExNzYsMTcgQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIg
-KmFyZ3ZbXSkKPiAgCX0KPiAgCj4gIAlpZiAoKGtleGVjX2ZsYWdzICYgS0VYRUNfT05fQ1JBU0gp
-ICYmICFpc19jcmFzaGtlcm5lbF9tZW1fcmVzZXJ2ZWQoKSkgewo+IC0JCXByaW50ZigiTWVtb3J5
-IGZvciBjcmFzaGtlcm5lbCBpcyBub3QgcmVzZXJ2ZWRcbiIpOwo+IC0JCXByaW50ZigiUGxlYXNl
-IHJlc2VydmUgbWVtb3J5IGJ5IHBhc3NpbmcgIik7Cj4gLQkJcHJpbnRmKCJcImNyYXNoa2VybmVs
-PVhAWVwiIHBhcmFtZXRlciB0byB0aGUga2VybmVsXG4iKTsKPiAtCQlkaWUoIlRoZW4gdHJ5IGxv
-YWRpbmcga2R1bXAga2VybmVsXG4iKTsKPiArCQlkaWUoIk1lbW9yeSBmb3IgY3Jhc2hrZXJuZWwg
-aXMgbm90IHJlc2VydmVkXG4iCj4gKwkJICAgICJQbGVhc2UgcmVzZXJ2ZSBtZW1vcnkgYnkgcGFz
-c2luZyIKPiArCQkgICAgIlwiY3Jhc2hrZXJuZWw9WEBZXCIgcGFyYW1ldGVyIHRvIGtlcm5lbFxu
-Igo+ICsJCSAgICAiVGhlbiB0cnkgdG8gbG9hZGluZyBrZHVtcCBrZXJuZWxcbiIpOwo+ICAJfQo+
-ICAKPiAgCWlmIChkb19sb2FkICYmIChrZXhlY19mbGFncyAmIEtFWEVDX1BSRVNFUlZFX0NPTlRF
-WFQpICYmCj4gIAkgICAgbWVtX21heCA9PSBVTE9OR19NQVgpIHsKPiAtCQlwcmludGYoIlBsZWFz
-ZSBzcGVjaWZ5IG1lbW9yeSByYW5nZSB1c2VkIGJ5IGtleGVjZWQga2VybmVsXG4iKTsKPiAtCQlw
-cmludGYoInRvIHByZXNlcnZlIHRoZSBjb250ZXh0IG9mIG9yaWdpbmFsIGtlcm5lbCB3aXRoIFxu
-Iik7Cj4gLQkJZGllKCJcIi0tbWVtLW1heFwiIHBhcmFtZXRlclxuIik7Cj4gKwkJZGllKCJQbGVh
-c2Ugc3BlY2lmeSBtZW1vcnkgcmFuZ2UgdXNlZCBieSBrZXhlY2VkIGtlcm5lbFxuIgo+ICsJCSAg
-ICAidG8gcHJlc2VydmUgdGhlIGNvbnRleHQgb2Ygb3JpZ2luYWwga2VybmVsIHdpdGggXG4iCj4g
-KwkJICAgICJcIi0tbWVtLW1heFwiIHBhcmFtZXRlclxuIik7Cj4gIAl9Cj4gIAo+ICAJZmlsZWlu
-ZCA9IG9wdGluZDsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+This patch resets PCIe devices on boot to stop ongoing DMA. When
+"pci=pcie_reset_endpoint_devices" is specified, a hot reset is triggered
+on each PCIe root port and downstream port to reset its downstream
+endpoint.
+
+Problem:
+This patch solves the problem that kdump can fail when intel_iommu=on is
+specified. When intel_iommu=on is specified, many dma-remapping errors
+occur in second kernel and it causes problems like driver error or PCI
+SERR, at last kdump fails. This problem is caused as follows.
+1) Devices are working on first kernel.
+2) Switch to second kernel(kdump kernel). The devices are still working
+   and its DMA continues during this switch.
+3) iommu is initialized during second kernel boot and ongoing DMA causes
+   dma-remapping errors.
+
+Solution:
+All DMA transactions have to be stopped before iommu is initialized. By
+this patch devices are reset and in-flight DMA is stopped before
+pci_iommu_init.
+
+To invoke hot reset on an endpoint, its upstream link need to be reset.
+reset_pcie_endpoints() is called from fs_initcall_sync, and it finds
+root port/downstream port whose child is PCIe endpoint, and then reset
+link between them. If the endpoint is VGA device, it is skipped because
+the monitor blacks out if VGA controller is reset.
+
+Changelog:
+v2:
+- Read pci config before de-assert secondary bus reset to flush previous
+  write
+- Change function/variable name
+- Make a list of devices to be reset
+
+v1:
+https://patchwork.kernel.org/patch/2482291/
+
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+---
+ Documentation/kernel-parameters.txt |    2 +
+ drivers/pci/pci.c                   |  113 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 115 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index c3bfacb..8c9e8e4 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -2321,6 +2321,8 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 				any pair of devices, possibly at the cost of
+ 				reduced performance.  This also guarantees
+ 				that hot-added devices will work.
++		pcie_reset_endpoint_devices	Reset PCIe endpoint on boot by
++				hot reset
+ 		cbiosize=nn[KMG]	The fixed amount of bus space which is
+ 				reserved for the CardBus bridge's IO window.
+ 				The default value is 256 bytes.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a899d8b..70c1205 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3873,6 +3873,116 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
+ }
+ EXPORT_SYMBOL(pci_fixup_cardbus);
+ 
++/*
++ * Return true if dev is PCIe root port or downstream port whose child is PCIe
++ * endpoint except VGA device.
++ */
++static int __init need_reset(struct pci_dev *dev)
++{
++	struct pci_bus *subordinate;
++	struct pci_dev *child;
++
++	if (!pci_is_pcie(dev) || !dev->subordinate ||
++	    list_empty(&dev->subordinate->devices) ||
++	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
++	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
++		return 0;
++
++	subordinate = dev->subordinate;
++	list_for_each_entry(child, &subordinate->devices, bus_list) {
++		if ((pci_pcie_type(child) == PCI_EXP_TYPE_UPSTREAM) ||
++		    (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) ||
++		    ((child->class >> 16) == PCI_BASE_CLASS_DISPLAY))
++			/* Don't reset switch, bridge, VGA device */
++			return 0;
++	}
++
++	return 1;
++}
++
++static void __init save_downstream_configs(struct pci_dev *dev)
++{
++	struct pci_bus *subordinate;
++	struct pci_dev *child;
++
++	subordinate = dev->subordinate;
++	list_for_each_entry(child, &subordinate->devices, bus_list) {
++		dev_info(&child->dev, "save state\n");
++		pci_save_state(child);
++	}
++}
++
++static void __init restore_downstream_configs(struct pci_dev *dev)
++{
++	struct pci_bus *subordinate;
++	struct pci_dev *child;
++
++	subordinate = dev->subordinate;
++	list_for_each_entry(child, &subordinate->devices, bus_list) {
++		dev_info(&child->dev, "restore state\n");
++		pci_restore_state(child);
++	}
++}
++
++static void __init do_downstream_device_reset(struct pci_dev *dev)
++{
++	u16 ctrl;
++
++	dev_info(&dev->dev, "Reset Secondary bus\n");
++
++	/* Assert Secondary Bus Reset */
++	pci_read_config_word(dev, PCI_BRIDGE_CONTROL, &ctrl);
++	ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
++	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
++
++	/* Read config again to flush previous write */
++	pci_read_config_word(dev, PCI_BRIDGE_CONTROL, &ctrl);
++
++	msleep(2);
++
++	/* De-assert Secondary Bus Reset */
++	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
++	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
++}
++
++struct pci_dev_entry {
++	struct list_head list;
++	struct pci_dev *dev;
++};
++static int __initdata pcie_reset_endpoint_devices;
++static int __init reset_pcie_endpoints(void)
++{
++	struct pci_dev *dev = NULL;
++	struct pci_dev_entry *pdev_entry, *tmp;
++	LIST_HEAD(pdev_list);
++
++	if (!pcie_reset_endpoint_devices)
++		return 0;
++
++	for_each_pci_dev(dev)
++		if (need_reset(dev)) {
++			pdev_entry = kmalloc(sizeof(*pdev_entry), GFP_KERNEL);
++			pdev_entry->dev = dev;
++			list_add(&pdev_entry->list, &pdev_list);
++		}
++
++	list_for_each_entry(pdev_entry, &pdev_list, list)
++		save_downstream_configs(pdev_entry->dev);
++
++	list_for_each_entry(pdev_entry, &pdev_list, list)
++		do_downstream_device_reset(pdev_entry->dev);
++
++	msleep(1000);
++
++	list_for_each_entry_safe(pdev_entry, tmp, &pdev_list, list) {
++		restore_downstream_configs(pdev_entry->dev);
++		kfree(pdev_entry);
++	}
++
++	return 0;
++}
++fs_initcall_sync(reset_pcie_endpoints);
++
+ static int __init pci_setup(char *str)
+ {
+ 	while (str) {
+@@ -3915,6 +4025,9 @@ static int __init pci_setup(char *str)
+ 				pcie_bus_config = PCIE_BUS_PEER2PEER;
+ 			} else if (!strncmp(str, "pcie_scan_all", 13)) {
+ 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
++			} else if (!strncmp(str, "pcie_reset_endpoint_devices",
++						27)) {
++				pcie_reset_endpoint_devices = 1;
+ 			} else {
+ 				printk(KERN_ERR "PCI: Unknown option `%s'\n",
+ 						str);
+-- 
+1.7.1
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
