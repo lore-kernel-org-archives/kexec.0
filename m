@@ -1,33 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcX2b-0001w3-QA
- for kexec@lists.infradead.org; Wed, 15 May 2013 08:26:30 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 6E04D3EE0C7
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:26:02 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5F66245DE5B
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:26:02 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4580645DE59
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:26:02 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2C327E08003
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:26:02 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id D4FF11DB8043
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:26:01 +0900 (JST)
-Message-ID: <51934685.9080909@jp.fujitsu.com>
-Date: Wed, 15 May 2013 17:25:41 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v5 7/8] vmcore: calculate vmcore file size from buffer
- size and total size of vmcore objects
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UcGUn-00007e-6i
+ for kexec@lists.infradead.org; Tue, 14 May 2013 14:46:29 +0000
+Date: Tue, 14 May 2013 10:46:02 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v5 2/8] vmcore: clean up read_vmcore()
+Message-ID: <20130514144602.GB16772@redhat.com>
 References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
- <20130514015746.18697.1089.stgit@localhost6.localdomain6>
- <20130514164739.GJ13674@redhat.com>
-In-Reply-To: <20130514164739.GJ13674@redhat.com>
+ <20130514015717.18697.43144.stgit@localhost6.localdomain6>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130514015717.18697.43144.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,35 +20,126 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-(2013/05/15 1:47), Vivek Goyal wrote:
-> On Tue, May 14, 2013 at 10:57:46AM +0900, HATAYAMA Daisuke wrote:
->> The previous patches newly added holes before each chunk of memory and
->> the holes need to be count in vmcore file size. There are two ways to
->> count file size in such a way:
->>
->> 1) supporse p as a poitner to the last program header entry with
->> PT_LOAD type, then roundup(p->p_offset + p->p_memsz, PAGE_SIZE), or
+On Tue, May 14, 2013 at 10:57:17AM +0900, HATAYAMA Daisuke wrote:
+> Rewrite part of read_vmcore() that reads objects in vmcore_list in the
+> same way as part reading ELF headers, by which some duplicated and
+> redundant codes are removed.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 
-This part was wrong. This should have been:
+Looks good to me.
 
-1) support m as a pointer to the last vmcore object in vmcore_list, then 
-file size is (m->offset + m->size), or
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-I'll correct this way in next patch.
+Vivek
 
-Note that no functional change, only description is wrong here.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+> ---
+> 
+>  fs/proc/vmcore.c |   68 ++++++++++++++++--------------------------------------
+>  1 files changed, 20 insertions(+), 48 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 69e1198..48886e6 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -119,27 +119,6 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
+>  	return read;
+>  }
+>  
+> -/* Maps vmcore file offset to respective physical address in memroy. */
+> -static u64 map_offset_to_paddr(loff_t offset, struct list_head *vc_list,
+> -					struct vmcore **m_ptr)
+> -{
+> -	struct vmcore *m;
+> -	u64 paddr;
+> -
+> -	list_for_each_entry(m, vc_list, list) {
+> -		u64 start, end;
+> -		start = m->offset;
+> -		end = m->offset + m->size - 1;
+> -		if (offset >= start && offset <= end) {
+> -			paddr = m->paddr + offset - start;
+> -			*m_ptr = m;
+> -			return paddr;
+> -		}
+> -	}
+> -	*m_ptr = NULL;
+> -	return 0;
+> -}
+> -
+>  /* Read from the ELF header and then the crash dump. On error, negative value is
+>   * returned otherwise number of bytes read are returned.
+>   */
+> @@ -148,8 +127,8 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
+>  {
+>  	ssize_t acc = 0, tmp;
+>  	size_t tsz;
+> -	u64 start, nr_bytes;
+> -	struct vmcore *curr_m = NULL;
+> +	u64 start;
+> +	struct vmcore *m = NULL;
+>  
+>  	if (buflen == 0 || *fpos >= vmcore_size)
+>  		return 0;
+> @@ -175,33 +154,26 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
+>  			return acc;
+>  	}
+>  
+> -	start = map_offset_to_paddr(*fpos, &vmcore_list, &curr_m);
+> -	if (!curr_m)
+> -        	return -EINVAL;
+> -
+> -	while (buflen) {
+> -		tsz = min_t(size_t, buflen, PAGE_SIZE - (start & ~PAGE_MASK));
+> -
+> -		/* Calculate left bytes in current memory segment. */
+> -		nr_bytes = (curr_m->size - (start - curr_m->paddr));
+> -		if (tsz > nr_bytes)
+> -			tsz = nr_bytes;
+> -
+> -		tmp = read_from_oldmem(buffer, tsz, &start, 1);
+> -		if (tmp < 0)
+> -			return tmp;
+> -		buflen -= tsz;
+> -		*fpos += tsz;
+> -		buffer += tsz;
+> -		acc += tsz;
+> -		if (start >= (curr_m->paddr + curr_m->size)) {
+> -			if (curr_m->list.next == &vmcore_list)
+> -				return acc;	/*EOF*/
+> -			curr_m = list_entry(curr_m->list.next,
+> -						struct vmcore, list);
+> -			start = curr_m->paddr;
+> +	list_for_each_entry(m, &vmcore_list, list) {
+> +		if (*fpos < m->offset + m->size) {
+> +			tsz = m->offset + m->size - *fpos;
+> +			if (buflen < tsz)
+> +				tsz = buflen;
+> +			start = m->paddr + *fpos - m->offset;
+> +			tmp = read_from_oldmem(buffer, tsz, &start, 1);
+> +			if (tmp < 0)
+> +				return tmp;
+> +			buflen -= tsz;
+> +			*fpos += tsz;
+> +			buffer += tsz;
+> +			acc += tsz;
+> +
+> +			/* leave now if filled buffer already */
+> +			if (buflen == 0)
+> +				return acc;
+>  		}
+>  	}
+> +
+>  	return acc;
+>  }
+>  
 
 _______________________________________________
 kexec mailing list
