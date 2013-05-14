@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uc6yE-0004pn-IF
- for kexec@lists.infradead.org; Tue, 14 May 2013 04:36:15 +0000
-Date: Tue, 14 May 2013 13:35:49 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: Replace printf() with die() to error out to stderr
-Message-ID: <20130514043549.GI20239@verge.net.au>
-References: <1368503808-16601-1-git-send-email-chaowang@redhat.com>
+ id 1Uc70Y-0004sv-OI
+ for kexec@lists.infradead.org; Tue, 14 May 2013 04:38:39 +0000
+Message-ID: <5191BF18.4000503@cn.fujitsu.com>
+Date: Tue, 14 May 2013 12:35:36 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [PATCH] kexec: Replace printf() with die() to error out to stderr
+References: <1368503808-16601-1-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1368503808-16601-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,22 +18,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-On Tue, May 14, 2013 at 11:56:48AM +0800, WANG Chao wrote:
-> Error messages are mixed stderr with stdout when we use die() along with
-> printf(). So use die() to keep error out consistent.
-> 
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwNeaciDE05pelIDExOjU2LCBXQU5HIENoYW8g5YaZ6YGTOgo+IEVycm9yIG1l
+c3NhZ2VzIGFyZSBtaXhlZCBzdGRlcnIgd2l0aCBzdGRvdXQgd2hlbiB3ZSB1c2UgZGllKCkgYWxv
+bmcgd2l0aAo+IHByaW50ZigpLiBTbyB1c2UgZGllKCkgdG8ga2VlcCBlcnJvciBvdXQgY29uc2lz
+dGVudC4KCkxvb2tzIGdvb2QgdG8gbWUuCgpBY2tlZC1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lh
+bmZlaUBjbi5mdWppdHN1LmNvbT4KCj4gCj4gU2lnbmVkLW9mZi1ieTogV0FORyBDaGFvIDxjaGFv
+d2FuZ0ByZWRoYXQuY29tPgo+IC0tLQo+ICBrZXhlYy9rZXhlYy5jIHwgMTQgKysrKysrKy0tLS0t
+LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAK
+PiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMuYyBiL2tleGVjL2tleGVjLmMKPiBpbmRleCA1M2Q2
+ZWRjLi45MTFjMGY2IDEwMDY0NAo+IC0tLSBhL2tleGVjL2tleGVjLmMKPiArKysgYi9rZXhlYy9r
+ZXhlYy5jCj4gQEAgLTExNzYsMTcgKzExNzYsMTcgQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIg
+KmFyZ3ZbXSkKPiAgCX0KPiAgCj4gIAlpZiAoKGtleGVjX2ZsYWdzICYgS0VYRUNfT05fQ1JBU0gp
+ICYmICFpc19jcmFzaGtlcm5lbF9tZW1fcmVzZXJ2ZWQoKSkgewo+IC0JCXByaW50ZigiTWVtb3J5
+IGZvciBjcmFzaGtlcm5lbCBpcyBub3QgcmVzZXJ2ZWRcbiIpOwo+IC0JCXByaW50ZigiUGxlYXNl
+IHJlc2VydmUgbWVtb3J5IGJ5IHBhc3NpbmcgIik7Cj4gLQkJcHJpbnRmKCJcImNyYXNoa2VybmVs
+PVhAWVwiIHBhcmFtZXRlciB0byB0aGUga2VybmVsXG4iKTsKPiAtCQlkaWUoIlRoZW4gdHJ5IGxv
+YWRpbmcga2R1bXAga2VybmVsXG4iKTsKPiArCQlkaWUoIk1lbW9yeSBmb3IgY3Jhc2hrZXJuZWwg
+aXMgbm90IHJlc2VydmVkXG4iCj4gKwkJICAgICJQbGVhc2UgcmVzZXJ2ZSBtZW1vcnkgYnkgcGFz
+c2luZyIKPiArCQkgICAgIlwiY3Jhc2hrZXJuZWw9WEBZXCIgcGFyYW1ldGVyIHRvIGtlcm5lbFxu
+Igo+ICsJCSAgICAiVGhlbiB0cnkgdG8gbG9hZGluZyBrZHVtcCBrZXJuZWxcbiIpOwo+ICAJfQo+
+ICAKPiAgCWlmIChkb19sb2FkICYmIChrZXhlY19mbGFncyAmIEtFWEVDX1BSRVNFUlZFX0NPTlRF
+WFQpICYmCj4gIAkgICAgbWVtX21heCA9PSBVTE9OR19NQVgpIHsKPiAtCQlwcmludGYoIlBsZWFz
+ZSBzcGVjaWZ5IG1lbW9yeSByYW5nZSB1c2VkIGJ5IGtleGVjZWQga2VybmVsXG4iKTsKPiAtCQlw
+cmludGYoInRvIHByZXNlcnZlIHRoZSBjb250ZXh0IG9mIG9yaWdpbmFsIGtlcm5lbCB3aXRoIFxu
+Iik7Cj4gLQkJZGllKCJcIi0tbWVtLW1heFwiIHBhcmFtZXRlclxuIik7Cj4gKwkJZGllKCJQbGVh
+c2Ugc3BlY2lmeSBtZW1vcnkgcmFuZ2UgdXNlZCBieSBrZXhlY2VkIGtlcm5lbFxuIgo+ICsJCSAg
+ICAidG8gcHJlc2VydmUgdGhlIGNvbnRleHQgb2Ygb3JpZ2luYWwga2VybmVsIHdpdGggXG4iCj4g
+KwkJICAgICJcIi0tbWVtLW1heFwiIHBhcmFtZXRlclxuIik7Cj4gIAl9Cj4gIAo+ICAJZmlsZWlu
+ZCA9IG9wdGluZDsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
