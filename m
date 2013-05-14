@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcCXo-0002D4-LO
- for kexec@lists.infradead.org; Tue, 14 May 2013 10:33:22 +0000
-From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH] kexec: check if memory is reserved only when loading kdump
- kernel.
-Date: Tue, 14 May 2013 18:32:50 +0800
-Message-Id: <1368527570-19499-1-git-send-email-chaowang@redhat.com>
+ id 1UcGhU-0000gL-DH
+ for kexec@lists.infradead.org; Tue, 14 May 2013 14:59:37 +0000
+Date: Tue, 14 May 2013 10:59:06 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v5 4/8] vmalloc: introduce remap_vmalloc_range_partial
+Message-ID: <20130514145906.GD16772@redhat.com>
+References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
+ <20130514015729.18697.88256.stgit@localhost6.localdomain6>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130514015729.18697.88256.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,56 +20,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: Rik Van Riel <riel@redhat.com>, Hugh Dickins <hughd@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, Michel Lespinasse <walken@google.com>, cpw@sgi.com, jingbai.ma@hp.com
 
-When memory for crashkernel isn't reserved, it's confusing that kexec
-spits error message for unloading kdump kernel as if we were loading it:
+On Tue, May 14, 2013 at 10:57:29AM +0900, HATAYAMA Daisuke wrote:
+> We want to allocate ELF note segment buffer on the 2nd kernel in
+> vmalloc space and remap it to user-space in order to reduce the risk
+> that memory allocation fails on system with huge number of CPUs and so
+> with huge ELF note segment that exceeds 11-order block size.
+> 
+> Although there's already remap_vmalloc_range for the purpose of
+> remapping vmalloc memory to user-space, we need to specify user-space
+> range via vma. Mmap on /proc/vmcore needs to remap range across
+> multiple objects, so the interface that requires vma to cover full
+> range is problematic.
+> 
+> This patch introduces remap_vmalloc_range_partial that receives
+> user-space range as a pair of base address and size and can be used
+> for mmap on /proc/vmcore case.
+> 
+> remap_vmalloc_range is rewritten using remap_vmalloc_range_partial.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 
-  # kexec -p -u
-  Memory for crashkernel is not reserved
-  Please reserve memory by passing "crashkernel=X@Y" parameter to the kernel
-  Then try loading kdump kernel
-  # echo $?
-  1
+This also needs ACK of VM folks. CCing some of them.
 
-It's more appropriate to test if memory is reserved only when
-loading kdump kernel. With this patch:
+Thanks
+Vivek
 
-  # kexec -p -u
-  # echo $?
-  0
+> ---
+> 
+>  include/linux/vmalloc.h |    4 +++
+>  mm/vmalloc.c            |   63 +++++++++++++++++++++++++++++++++--------------
+>  2 files changed, 48 insertions(+), 19 deletions(-)
+> 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 7d5773a..dd0a2c8 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -82,6 +82,10 @@ extern void *vmap(struct page **pages, unsigned int count,
+>  			unsigned long flags, pgprot_t prot);
+>  extern void vunmap(const void *addr);
+>  
+> +extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
+> +				       unsigned long uaddr, void *kaddr,
+> +				       unsigned long size);
+> +
 
-It's also the same behavior with the case of trying to unload kernel
-from unloaded state.
-
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- kexec/kexec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 911c0f6..6a13f79 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1175,7 +1175,8 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 
--	if ((kexec_flags & KEXEC_ON_CRASH) && !is_crashkernel_mem_reserved()) {
-+	if (do_load && (kexec_flags & KEXEC_ON_CRASH) &&
-+	    !is_crashkernel_mem_reserved()) {
- 		die("Memory for crashkernel is not reserved\n"
- 		    "Please reserve memory by passing"
- 		    "\"crashkernel=X@Y\" parameter to kernel\n"
--- 
-1.8.2.1
-
+>  extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+>  							unsigned long pgoff);
+>  void vmalloc_sync_all(void);
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 3875fa2..d9a9f4f6 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2148,42 +2148,44 @@ finished:
+>  }
+>  
+>  /**
+> - *	remap_vmalloc_range  -  map vmalloc pages to userspace
+> - *	@vma:		vma to cover (map full range of vma)
+> - *	@addr:		vmalloc memory
+> - *	@pgoff:		number of pages into addr before first page to map
+> + *	remap_vmalloc_range_partial  -  map vmalloc pages to userspace
+> + *	@vma:		vma to cover
+> + *	@uaddr:		target user address to start at
+> + *	@kaddr:		virtual address of vmalloc kernel memory
+> + *	@size:		size of map area
+>   *
+>   *	Returns:	0 for success, -Exxx on failure
+>   *
+> - *	This function checks that addr is a valid vmalloc'ed area, and
+> - *	that it is big enough to cover the vma. Will return failure if
+> - *	that criteria isn't met.
+> + *	This function checks that @kaddr is a valid vmalloc'ed area,
+> + *	and that it is big enough to cover the range starting at
+> + *	@uaddr in @vma. Will return failure if that criteria isn't
+> + *	met.
+>   *
+>   *	Similar to remap_pfn_range() (see mm/memory.c)
+>   */
+> -int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+> -						unsigned long pgoff)
+> +int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
+> +				void *kaddr, unsigned long size)
+>  {
+>  	struct vm_struct *area;
+> -	unsigned long uaddr = vma->vm_start;
+> -	unsigned long usize = vma->vm_end - vma->vm_start;
+>  
+> -	if ((PAGE_SIZE-1) & (unsigned long)addr)
+> +	size = PAGE_ALIGN(size);
+> +
+> +	if (((PAGE_SIZE-1) & (unsigned long)uaddr) ||
+> +	    ((PAGE_SIZE-1) & (unsigned long)kaddr))
+>  		return -EINVAL;
+>  
+> -	area = find_vm_area(addr);
+> +	area = find_vm_area(kaddr);
+>  	if (!area)
+>  		return -EINVAL;
+>  
+>  	if (!(area->flags & VM_USERMAP))
+>  		return -EINVAL;
+>  
+> -	if (usize + (pgoff << PAGE_SHIFT) > area->size - PAGE_SIZE)
+> +	if (kaddr + size > area->addr + area->size)
+>  		return -EINVAL;
+>  
+> -	addr += pgoff << PAGE_SHIFT;
+>  	do {
+> -		struct page *page = vmalloc_to_page(addr);
+> +		struct page *page = vmalloc_to_page(kaddr);
+>  		int ret;
+>  
+>  		ret = vm_insert_page(vma, uaddr, page);
+> @@ -2191,14 +2193,37 @@ int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+>  			return ret;
+>  
+>  		uaddr += PAGE_SIZE;
+> -		addr += PAGE_SIZE;
+> -		usize -= PAGE_SIZE;
+> -	} while (usize > 0);
+> +		kaddr += PAGE_SIZE;
+> +		size -= PAGE_SIZE;
+> +	} while (size > 0);
+>  
+>  	vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL(remap_vmalloc_range_partial);
+> +
+> +/**
+> + *	remap_vmalloc_range  -  map vmalloc pages to userspace
+> + *	@vma:		vma to cover (map full range of vma)
+> + *	@addr:		vmalloc memory
+> + *	@pgoff:		number of pages into addr before first page to map
+> + *
+> + *	Returns:	0 for success, -Exxx on failure
+> + *
+> + *	This function checks that addr is a valid vmalloc'ed area, and
+> + *	that it is big enough to cover the vma. Will return failure if
+> + *	that criteria isn't met.
+> + *
+> + *	Similar to remap_pfn_range() (see mm/memory.c)
+> + */
+> +int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+> +						unsigned long pgoff)
+> +{
+> +	return remap_vmalloc_range_partial(vma, vma->vm_start,
+> +					   addr + (pgoff << PAGE_SHIFT),
+> +					   vma->vm_end - vma->vm_start);
+> +}
+>  EXPORT_SYMBOL(remap_vmalloc_range);
+>  
+>  /*
 
 _______________________________________________
 kexec mailing list
