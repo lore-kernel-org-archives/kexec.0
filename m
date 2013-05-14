@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcIOW-0004IT-Ax
- for kexec@lists.infradead.org; Tue, 14 May 2013 16:48:09 +0000
-Date: Tue, 14 May 2013 12:47:39 -0400
+ id 1UcHcP-0002St-EG
+ for kexec@lists.infradead.org; Tue, 14 May 2013 15:58:26 +0000
+Date: Tue, 14 May 2013 11:57:55 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v5 7/8] vmcore: calculate vmcore file size from buffer
- size and total size of vmcore objects
-Message-ID: <20130514164739.GJ13674@redhat.com>
+Subject: Re: [PATCH v5 5/8] vmcore: allocate ELF note segment in the 2nd
+ kernel vmalloc memory
+Message-ID: <20130514155755.GH13674@redhat.com>
 References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
- <20130514015746.18697.1089.stgit@localhost6.localdomain6>
+ <20130514015734.18697.32447.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130514015746.18697.1089.stgit@localhost6.localdomain6>
+In-Reply-To: <20130514015734.18697.32447.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,109 +28,24 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-On Tue, May 14, 2013 at 10:57:46AM +0900, HATAYAMA Daisuke wrote:
-> The previous patches newly added holes before each chunk of memory and
-> the holes need to be count in vmcore file size. There are two ways to
-> count file size in such a way:
-> 
-> 1) supporse p as a poitner to the last program header entry with
-> PT_LOAD type, then roundup(p->p_offset + p->p_memsz, PAGE_SIZE), or
-> 
-> 2) calculate sum of size of buffers for ELF header, program headers,
-> ELF note segments and objects in vmcore_list.
-> 
-> Although 1) is more direct and simpler than 2), 2) seems better in
-> that it reflects internal object structure of /proc/vmcore. Thus, this
-> patch changes get_vmcore_size_elf{64, 32} so that it calculates size
-> in the way of 2).
-> 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> ---
+On Tue, May 14, 2013 at 10:57:35AM +0900, HATAYAMA Daisuke wrote:
 
-Looks good to me.
+[..]
+> +/* Merges all the PT_NOTE headers into one. */
+> +static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+> +					   char **notesegptr, size_t *notesegsz,
+> +					   struct list_head *vc_list)
+> +{
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Given that we are copying notes in second kernel, we are not using vc_list
+in merge_note_headers() any more. So remove vc_list from paramter list
+here.
 
+For local parameters we could simply use notes_buf (instead of notesgptr)
+and notes_sz (instead of notesgsz). It seems mroe readable.
+
+Thanks
 Vivek
-
-> 
->  fs/proc/vmcore.c |   40 ++++++++++++++++++----------------------
->  1 files changed, 18 insertions(+), 22 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index eb7ff29..ad6da17 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -210,36 +210,28 @@ static struct vmcore* __init get_new_element(void)
->  	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
->  }
->  
-> -static u64 __init get_vmcore_size_elf64(char *elfptr, size_t elfsz)
-> +static u64 __init get_vmcore_size_elf64(size_t elfsz, size_t elfnotesegsz,
-> +					struct list_head *vc_list)
->  {
-> -	int i;
->  	u64 size;
-> -	Elf64_Ehdr *ehdr_ptr;
-> -	Elf64_Phdr *phdr_ptr;
-> +	struct vmcore *m;
->  
-> -	ehdr_ptr = (Elf64_Ehdr *)elfptr;
-> -	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr));
-> -	size = elfsz;
-> -	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
-> -		size += phdr_ptr->p_memsz;
-> -		phdr_ptr++;
-> +	size = elfsz + elfnotesegsz;
-> +	list_for_each_entry(m, vc_list, list) {
-> +		size += m->size;
->  	}
->  	return size;
->  }
->  
-> -static u64 __init get_vmcore_size_elf32(char *elfptr, size_t elfsz)
-> +static u64 __init get_vmcore_size_elf32(size_t elfsz, size_t elfnotesegsz,
-> +					struct list_head *vc_list)
->  {
-> -	int i;
->  	u64 size;
-> -	Elf32_Ehdr *ehdr_ptr;
-> -	Elf32_Phdr *phdr_ptr;
-> +	struct vmcore *m;
->  
-> -	ehdr_ptr = (Elf32_Ehdr *)elfptr;
-> -	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr));
-> -	size = elfsz;
-> -	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
-> -		size += phdr_ptr->p_memsz;
-> -		phdr_ptr++;
-> +	size = elfsz + elfnotesegsz;
-> +	list_for_each_entry(m, vc_list, list) {
-> +		size += m->size;
->  	}
->  	return size;
->  }
-> @@ -755,14 +747,18 @@ static int __init parse_crash_elf_headers(void)
->  			return rc;
->  
->  		/* Determine vmcore size. */
-> -		vmcore_size = get_vmcore_size_elf64(elfcorebuf, elfcorebuf_sz);
-> +		vmcore_size = get_vmcore_size_elf64(elfcorebuf_sz,
-> +						    elfnotesegbuf_sz,
-> +						    &vmcore_list);
->  	} else if (e_ident[EI_CLASS] == ELFCLASS32) {
->  		rc = parse_crash_elf32_headers();
->  		if (rc)
->  			return rc;
->  
->  		/* Determine vmcore size. */
-> -		vmcore_size = get_vmcore_size_elf32(elfcorebuf, elfcorebuf_sz);
-> +		vmcore_size = get_vmcore_size_elf32(elfcorebuf_sz,
-> +						    elfnotesegbuf_sz,
-> +						    &vmcore_list);
->  	} else {
->  		pr_warn("Warning: Core image elf header is not sane\n");
->  		return -EINVAL;
 
 _______________________________________________
 kexec mailing list
