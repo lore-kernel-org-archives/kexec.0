@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uc4V0-0002fn-2T
- for kexec@lists.infradead.org; Tue, 14 May 2013 01:57:55 +0000
+ id 1Uc4VI-0002jt-Sa
+ for kexec@lists.infradead.org; Tue, 14 May 2013 01:58:14 +0000
 Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id BFEF43EE0C0
- for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:34 +0900 (JST)
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id EFEF03EE0BD
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:47 +0900 (JST)
 Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8095545DE52
- for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:30 +0900 (JST)
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id D8AF445DE51
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:47 +0900 (JST)
 Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6822845DE4D
- for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:30 +0900 (JST)
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id B93E745DE4E
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:47 +0900 (JST)
 Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 53A6BE18001
- for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:30 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 0346C1DB8037
- for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:30 +0900 (JST)
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id A9794E18001
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:47 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 4AF971DB8037
+ for <kexec@lists.infradead.org>; Tue, 14 May 2013 10:57:47 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v5 4/8] vmalloc: introduce remap_vmalloc_range_partial
-Date: Tue, 14 May 2013 10:57:29 +0900
-Message-ID: <20130514015729.18697.88256.stgit@localhost6.localdomain6>
+Subject: [PATCH v5 7/8] vmcore: calculate vmcore file size from buffer size
+ and total size of vmcore objects
+Date: Tue, 14 May 2013 10:57:46 +0900
+Message-ID: <20130514015746.18697.1089.stgit@localhost6.localdomain6>
 In-Reply-To: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
 References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -41,151 +42,101 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: vgoyal@redhat.com, ebiederm@xmission.com, akpm@linux-foundation.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, zhangyanfei@cn.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, cpw@sgi.com, jingbai.ma@hp.com
 
-We want to allocate ELF note segment buffer on the 2nd kernel in
-vmalloc space and remap it to user-space in order to reduce the risk
-that memory allocation fails on system with huge number of CPUs and so
-with huge ELF note segment that exceeds 11-order block size.
+The previous patches newly added holes before each chunk of memory and
+the holes need to be count in vmcore file size. There are two ways to
+count file size in such a way:
 
-Although there's already remap_vmalloc_range for the purpose of
-remapping vmalloc memory to user-space, we need to specify user-space
-range via vma. Mmap on /proc/vmcore needs to remap range across
-multiple objects, so the interface that requires vma to cover full
-range is problematic.
+1) supporse p as a poitner to the last program header entry with
+PT_LOAD type, then roundup(p->p_offset + p->p_memsz, PAGE_SIZE), or
 
-This patch introduces remap_vmalloc_range_partial that receives
-user-space range as a pair of base address and size and can be used
-for mmap on /proc/vmcore case.
+2) calculate sum of size of buffers for ELF header, program headers,
+ELF note segments and objects in vmcore_list.
 
-remap_vmalloc_range is rewritten using remap_vmalloc_range_partial.
+Although 1) is more direct and simpler than 2), 2) seems better in
+that it reflects internal object structure of /proc/vmcore. Thus, this
+patch changes get_vmcore_size_elf{64, 32} so that it calculates size
+in the way of 2).
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- include/linux/vmalloc.h |    4 +++
- mm/vmalloc.c            |   63 +++++++++++++++++++++++++++++++++--------------
- 2 files changed, 48 insertions(+), 19 deletions(-)
+ fs/proc/vmcore.c |   40 ++++++++++++++++++----------------------
+ 1 files changed, 18 insertions(+), 22 deletions(-)
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 7d5773a..dd0a2c8 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -82,6 +82,10 @@ extern void *vmap(struct page **pages, unsigned int count,
- 			unsigned long flags, pgprot_t prot);
- extern void vunmap(const void *addr);
- 
-+extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
-+				       unsigned long uaddr, void *kaddr,
-+				       unsigned long size);
-+
- extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
- 							unsigned long pgoff);
- void vmalloc_sync_all(void);
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 3875fa2..d9a9f4f6 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2148,42 +2148,44 @@ finished:
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index eb7ff29..ad6da17 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -210,36 +210,28 @@ static struct vmcore* __init get_new_element(void)
+ 	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
  }
  
- /**
-- *	remap_vmalloc_range  -  map vmalloc pages to userspace
-- *	@vma:		vma to cover (map full range of vma)
-- *	@addr:		vmalloc memory
-- *	@pgoff:		number of pages into addr before first page to map
-+ *	remap_vmalloc_range_partial  -  map vmalloc pages to userspace
-+ *	@vma:		vma to cover
-+ *	@uaddr:		target user address to start at
-+ *	@kaddr:		virtual address of vmalloc kernel memory
-+ *	@size:		size of map area
-  *
-  *	Returns:	0 for success, -Exxx on failure
-  *
-- *	This function checks that addr is a valid vmalloc'ed area, and
-- *	that it is big enough to cover the vma. Will return failure if
-- *	that criteria isn't met.
-+ *	This function checks that @kaddr is a valid vmalloc'ed area,
-+ *	and that it is big enough to cover the range starting at
-+ *	@uaddr in @vma. Will return failure if that criteria isn't
-+ *	met.
-  *
-  *	Similar to remap_pfn_range() (see mm/memory.c)
-  */
--int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
--						unsigned long pgoff)
-+int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
-+				void *kaddr, unsigned long size)
+-static u64 __init get_vmcore_size_elf64(char *elfptr, size_t elfsz)
++static u64 __init get_vmcore_size_elf64(size_t elfsz, size_t elfnotesegsz,
++					struct list_head *vc_list)
  {
- 	struct vm_struct *area;
--	unsigned long uaddr = vma->vm_start;
--	unsigned long usize = vma->vm_end - vma->vm_start;
+-	int i;
+ 	u64 size;
+-	Elf64_Ehdr *ehdr_ptr;
+-	Elf64_Phdr *phdr_ptr;
++	struct vmcore *m;
  
--	if ((PAGE_SIZE-1) & (unsigned long)addr)
-+	size = PAGE_ALIGN(size);
-+
-+	if (((PAGE_SIZE-1) & (unsigned long)uaddr) ||
-+	    ((PAGE_SIZE-1) & (unsigned long)kaddr))
- 		return -EINVAL;
- 
--	area = find_vm_area(addr);
-+	area = find_vm_area(kaddr);
- 	if (!area)
- 		return -EINVAL;
- 
- 	if (!(area->flags & VM_USERMAP))
- 		return -EINVAL;
- 
--	if (usize + (pgoff << PAGE_SHIFT) > area->size - PAGE_SIZE)
-+	if (kaddr + size > area->addr + area->size)
- 		return -EINVAL;
- 
--	addr += pgoff << PAGE_SHIFT;
- 	do {
--		struct page *page = vmalloc_to_page(addr);
-+		struct page *page = vmalloc_to_page(kaddr);
- 		int ret;
- 
- 		ret = vm_insert_page(vma, uaddr, page);
-@@ -2191,14 +2193,37 @@ int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
- 			return ret;
- 
- 		uaddr += PAGE_SIZE;
--		addr += PAGE_SIZE;
--		usize -= PAGE_SIZE;
--	} while (usize > 0);
-+		kaddr += PAGE_SIZE;
-+		size -= PAGE_SIZE;
-+	} while (size > 0);
- 
- 	vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
- 
- 	return 0;
+-	ehdr_ptr = (Elf64_Ehdr *)elfptr;
+-	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr));
+-	size = elfsz;
+-	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
+-		size += phdr_ptr->p_memsz;
+-		phdr_ptr++;
++	size = elfsz + elfnotesegsz;
++	list_for_each_entry(m, vc_list, list) {
++		size += m->size;
+ 	}
+ 	return size;
  }
-+EXPORT_SYMBOL(remap_vmalloc_range_partial);
-+
-+/**
-+ *	remap_vmalloc_range  -  map vmalloc pages to userspace
-+ *	@vma:		vma to cover (map full range of vma)
-+ *	@addr:		vmalloc memory
-+ *	@pgoff:		number of pages into addr before first page to map
-+ *
-+ *	Returns:	0 for success, -Exxx on failure
-+ *
-+ *	This function checks that addr is a valid vmalloc'ed area, and
-+ *	that it is big enough to cover the vma. Will return failure if
-+ *	that criteria isn't met.
-+ *
-+ *	Similar to remap_pfn_range() (see mm/memory.c)
-+ */
-+int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
-+						unsigned long pgoff)
-+{
-+	return remap_vmalloc_range_partial(vma, vma->vm_start,
-+					   addr + (pgoff << PAGE_SHIFT),
-+					   vma->vm_end - vma->vm_start);
-+}
- EXPORT_SYMBOL(remap_vmalloc_range);
  
- /*
+-static u64 __init get_vmcore_size_elf32(char *elfptr, size_t elfsz)
++static u64 __init get_vmcore_size_elf32(size_t elfsz, size_t elfnotesegsz,
++					struct list_head *vc_list)
+ {
+-	int i;
+ 	u64 size;
+-	Elf32_Ehdr *ehdr_ptr;
+-	Elf32_Phdr *phdr_ptr;
++	struct vmcore *m;
+ 
+-	ehdr_ptr = (Elf32_Ehdr *)elfptr;
+-	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr));
+-	size = elfsz;
+-	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
+-		size += phdr_ptr->p_memsz;
+-		phdr_ptr++;
++	size = elfsz + elfnotesegsz;
++	list_for_each_entry(m, vc_list, list) {
++		size += m->size;
+ 	}
+ 	return size;
+ }
+@@ -755,14 +747,18 @@ static int __init parse_crash_elf_headers(void)
+ 			return rc;
+ 
+ 		/* Determine vmcore size. */
+-		vmcore_size = get_vmcore_size_elf64(elfcorebuf, elfcorebuf_sz);
++		vmcore_size = get_vmcore_size_elf64(elfcorebuf_sz,
++						    elfnotesegbuf_sz,
++						    &vmcore_list);
+ 	} else if (e_ident[EI_CLASS] == ELFCLASS32) {
+ 		rc = parse_crash_elf32_headers();
+ 		if (rc)
+ 			return rc;
+ 
+ 		/* Determine vmcore size. */
+-		vmcore_size = get_vmcore_size_elf32(elfcorebuf, elfcorebuf_sz);
++		vmcore_size = get_vmcore_size_elf32(elfcorebuf_sz,
++						    elfnotesegbuf_sz,
++						    &vmcore_list);
+ 	} else {
+ 		pr_warn("Warning: Core image elf header is not sane\n");
+ 		return -EINVAL;
 
 
 _______________________________________________
