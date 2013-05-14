@@ -1,33 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcX6U-00021F-E4
- for kexec@lists.infradead.org; Wed, 15 May 2013 08:30:31 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 624393EE0C2
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4BD6D45DE53
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 2EF0745DE4E
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 19D811DB8038
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 786DC1DB8044
- for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:07 +0900 (JST)
-Message-ID: <51934781.4040704@jp.fujitsu.com>
-Date: Wed, 15 May 2013 17:29:53 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v5 5/8] vmcore: allocate ELF note segment in the 2nd kernel
- vmalloc memory
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UcGUZ-00007E-H9
+ for kexec@lists.infradead.org; Tue, 14 May 2013 14:46:17 +0000
+Date: Tue, 14 May 2013 10:45:41 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v5 1/8] vmcore: allocate buffer for ELF headers on
+ page-size alignment
+Message-ID: <20130514144541.GA16772@redhat.com>
 References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
- <20130514015734.18697.32447.stgit@localhost6.localdomain6>
- <20130514153552.GG13674@redhat.com>
-In-Reply-To: <20130514153552.GG13674@redhat.com>
+ <20130514015712.18697.39725.stgit@localhost6.localdomain6>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130514015712.18697.39725.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,139 +21,304 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-(2013/05/15 0:35), Vivek Goyal wrote:
-> On Tue, May 14, 2013 at 10:57:35AM +0900, HATAYAMA Daisuke wrote:
->> The reasons why we don't allocate ELF note segment in the 1st kernel
->> (old memory) on page boundary is to keep backward compatibility for
->> old kernels, and that if doing so, we waste not a little memory due to
->> round-up operation to fit the memory to page boundary since most of
->> the buffers are in per-cpu area.
->>
->> ELF notes are per-cpu, so total size of ELF note segments depends on
->> number of CPUs. The current maximum number of CPUs on x86_64 is 5192,
->> and there's already system with 4192 CPUs in SGI, where total size
->> amounts to 1MB. This can be larger in the near future or possibly even
->> now on another architecture that has larger size of note per a single
->> cpu. Thus, to avoid the case where memory allocation for large block
->> fails, we allocate vmcore objects on vmalloc memory.
->>
->> This patch adds elfnotesegbuf and elfnotesegbuf_sz variables to keep
->> pointer to the ELF note segment buffer and its size. There's no longer
->> the vmcore object that corresponds to the ELF note segment in
->> vmcore_list. Accordingly, read_vmcore() has new case for ELF note
->> segment and set_vmcore_list_offsets_elf{64,32}() and other helper
->> functions starts calculating offset from sum of size of ELF headers
->> and size of ELF note segment.
->>
->> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
->> ---
->>
->>   fs/proc/vmcore.c |  225 ++++++++++++++++++++++++++++++++++++++++--------------
->>   1 files changed, 165 insertions(+), 60 deletions(-)
->>
->> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
->> index 48886e6..795efd2 100644
->> --- a/fs/proc/vmcore.c
->> +++ b/fs/proc/vmcore.c
->> @@ -34,6 +34,9 @@ static char *elfcorebuf;
->>   static size_t elfcorebuf_sz;
->>   static size_t elfcorebuf_sz_orig;
->>
->> +static char *elfnotesegbuf;
->> +static size_t elfnotesegbuf_sz;
->
-> How about calling these just elfnotes_buf and elfnotes_sz.
->
-> [..]
->> +/* Merges all the PT_NOTE headers into one. */
->> +static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
->> +					   char **notesegptr, size_t *notesegsz,
->> +					   struct list_head *vc_list)
->> +{
->> +	int i, nr_ptnote=0, rc=0;
->> +	char *tmp;
->> +	Elf64_Ehdr *ehdr_ptr;
->> +	Elf64_Phdr phdr;
->> +	u64 phdr_sz = 0, note_off;
->> +	struct vm_struct *vm;
->> +
->> +	ehdr_ptr = (Elf64_Ehdr *)elfptr;
->> +
->> +	/* The first path calculates the number of PT_NOTE entries and
->> +	 * total size of ELF note segment. */
->> +	rc = process_note_headers_elf64(ehdr_ptr, &nr_ptnote, &phdr_sz, NULL);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	*notesegsz = roundup(phdr_sz, PAGE_SIZE);
->> +	*notesegptr = vzalloc(*notesegsz);
->> +	if (!*notesegptr)
->> +		return -ENOMEM;
->> +
->> +	vm = find_vm_area(*notesegptr);
->> +	BUG_ON(!vm);
->> +	vm->flags |= VM_USERMAP;
->> +
->> +	/* The second path copies the ELF note segment in the ELF note
->> +	 * segment buffer. */
->> +	rc = process_note_headers_elf64(ehdr_ptr, NULL, NULL, *notesegptr);
->
-> So same function process_note_headers_elf64() is doing two different
-> things based on parameters passed. Please create two new functions
-> to do two different things and name these appropriately.
->
-> Say
->
-> get_elf_note_number_and_size()
-> copy_elf_notes()
+On Tue, May 14, 2013 at 10:57:12AM +0900, HATAYAMA Daisuke wrote:
+> Allocate ELF headers on page-size boundary using __get_free_pages()
+> instead of kmalloc().
+> 
+> Later patch will merge PT_NOTE entries into a single unique one and
+> decrease the buffer size actually used. Keep original buffer size in
+> variable elfcorebuf_sz_orig to kfree the buffer later and actually
+> used buffer size with rounded up to page-size boundary in variable
+> elfcorebuf_sz separately.
+> 
+> The size of part of the ELF buffer exported from /proc/vmcore is
+> elfcorebuf_sz.
+> 
+> The merged, removed PT_NOTE entries, i.e. the range [elfcorebuf_sz,
+> elfcorebuf_sz_orig], is filled with 0.
+> 
+> Use size of the ELF headers as an initial offset value in
+> set_vmcore_list_offsets_elf{64,32} and
+> process_ptload_program_headers_elf{64,32} in order to indicate that
+> the offset includes the holes towards the page boundary.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 
-I see. Similar to other functions, 32-bit and 64-bit versions are 
-needed. So I give them symbols:
+Looks good to me.
 
-get_note_number_and_size_elf64()
-copy_notes_elf64()
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-and elf32 counterpart.
+Vivek
 
->
->
->> +	if (rc < 0)
->> +		return rc;
->> +
->>   	/* Prepare merged PT_NOTE program header. */
->>   	phdr.p_type    = PT_NOTE;
->>   	phdr.p_flags   = 0;
->> @@ -304,23 +364,18 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
->>   	return 0;
->>   }
->>
->> -/* Merges all the PT_NOTE headers into one. */
->> -static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
->> -						struct list_head *vc_list)
->> +static int __init process_note_headers_elf32(const Elf32_Ehdr *ehdr_ptr,
->> +					     int *nr_ptnotep, u64 *phdr_szp,
->> +					     char *notesegp)
->
-> Can you please describe function parameters at the beginning of function
-> in a comment. Things are gettting little confusing now.
->
-> What does notesegp signify? phdr_szp could be simply *phdr_sz,
-> nr_ptnotesp could be *nr_notes. Please simplify the naming a bit.
-> Seems too twisted to me.
-
-I see. I'll reflect that in addition to your other comments.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+> ---
+> 
+>  fs/proc/vmcore.c |   80 ++++++++++++++++++++++++++++++------------------------
+>  1 files changed, 45 insertions(+), 35 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 17f7e08..69e1198 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -32,6 +32,7 @@ static LIST_HEAD(vmcore_list);
+>  /* Stores the pointer to the buffer containing kernel elf core headers. */
+>  static char *elfcorebuf;
+>  static size_t elfcorebuf_sz;
+> +static size_t elfcorebuf_sz_orig;
+>  
+>  /* Total size of vmcore file. */
+>  static u64 vmcore_size;
+> @@ -214,7 +215,7 @@ static struct vmcore* __init get_new_element(void)
+>  	return kzalloc(sizeof(struct vmcore), GFP_KERNEL);
+>  }
+>  
+> -static u64 __init get_vmcore_size_elf64(char *elfptr)
+> +static u64 __init get_vmcore_size_elf64(char *elfptr, size_t elfsz)
+>  {
+>  	int i;
+>  	u64 size;
+> @@ -223,7 +224,7 @@ static u64 __init get_vmcore_size_elf64(char *elfptr)
+>  
+>  	ehdr_ptr = (Elf64_Ehdr *)elfptr;
+>  	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr));
+> -	size = sizeof(Elf64_Ehdr) + ((ehdr_ptr->e_phnum) * sizeof(Elf64_Phdr));
+> +	size = elfsz;
+>  	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
+>  		size += phdr_ptr->p_memsz;
+>  		phdr_ptr++;
+> @@ -231,7 +232,7 @@ static u64 __init get_vmcore_size_elf64(char *elfptr)
+>  	return size;
+>  }
+>  
+> -static u64 __init get_vmcore_size_elf32(char *elfptr)
+> +static u64 __init get_vmcore_size_elf32(char *elfptr, size_t elfsz)
+>  {
+>  	int i;
+>  	u64 size;
+> @@ -240,7 +241,7 @@ static u64 __init get_vmcore_size_elf32(char *elfptr)
+>  
+>  	ehdr_ptr = (Elf32_Ehdr *)elfptr;
+>  	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr));
+> -	size = sizeof(Elf32_Ehdr) + ((ehdr_ptr->e_phnum) * sizeof(Elf32_Phdr));
+> +	size = elfsz;
+>  	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
+>  		size += phdr_ptr->p_memsz;
+>  		phdr_ptr++;
+> @@ -308,7 +309,7 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>  	phdr.p_flags   = 0;
+>  	note_off = sizeof(Elf64_Ehdr) +
+>  			(ehdr_ptr->e_phnum - nr_ptnote +1) * sizeof(Elf64_Phdr);
+> -	phdr.p_offset  = note_off;
+> +	phdr.p_offset  = roundup(note_off, PAGE_SIZE);
+>  	phdr.p_vaddr   = phdr.p_paddr = 0;
+>  	phdr.p_filesz  = phdr.p_memsz = phdr_sz;
+>  	phdr.p_align   = 0;
+> @@ -322,6 +323,8 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>  	i = (nr_ptnote - 1) * sizeof(Elf64_Phdr);
+>  	*elfsz = *elfsz - i;
+>  	memmove(tmp, tmp+i, ((*elfsz)-sizeof(Elf64_Ehdr)-sizeof(Elf64_Phdr)));
+> +	memset(elfptr + *elfsz, 0, i);
+> +	*elfsz = roundup(*elfsz, PAGE_SIZE);
+>  
+>  	/* Modify e_phnum to reflect merged headers. */
+>  	ehdr_ptr->e_phnum = ehdr_ptr->e_phnum - nr_ptnote + 1;
+> @@ -389,7 +392,7 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+>  	phdr.p_flags   = 0;
+>  	note_off = sizeof(Elf32_Ehdr) +
+>  			(ehdr_ptr->e_phnum - nr_ptnote +1) * sizeof(Elf32_Phdr);
+> -	phdr.p_offset  = note_off;
+> +	phdr.p_offset  = roundup(note_off, PAGE_SIZE);
+>  	phdr.p_vaddr   = phdr.p_paddr = 0;
+>  	phdr.p_filesz  = phdr.p_memsz = phdr_sz;
+>  	phdr.p_align   = 0;
+> @@ -403,6 +406,8 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+>  	i = (nr_ptnote - 1) * sizeof(Elf32_Phdr);
+>  	*elfsz = *elfsz - i;
+>  	memmove(tmp, tmp+i, ((*elfsz)-sizeof(Elf32_Ehdr)-sizeof(Elf32_Phdr)));
+> +	memset(elfptr + *elfsz, 0, i);
+> +	*elfsz = roundup(*elfsz, PAGE_SIZE);
+>  
+>  	/* Modify e_phnum to reflect merged headers. */
+>  	ehdr_ptr->e_phnum = ehdr_ptr->e_phnum - nr_ptnote + 1;
+> @@ -426,9 +431,7 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
+>  	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr)); /* PT_NOTE hdr */
+>  
+>  	/* First program header is PT_NOTE header. */
+> -	vmcore_off = sizeof(Elf64_Ehdr) +
+> -			(ehdr_ptr->e_phnum) * sizeof(Elf64_Phdr) +
+> -			phdr_ptr->p_memsz; /* Note sections */
+> +	vmcore_off = elfsz + roundup(phdr_ptr->p_memsz, PAGE_SIZE);
+>  
+>  	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
+>  		if (phdr_ptr->p_type != PT_LOAD)
+> @@ -463,9 +466,7 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+>  	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr)); /* PT_NOTE hdr */
+>  
+>  	/* First program header is PT_NOTE header. */
+> -	vmcore_off = sizeof(Elf32_Ehdr) +
+> -			(ehdr_ptr->e_phnum) * sizeof(Elf32_Phdr) +
+> -			phdr_ptr->p_memsz; /* Note sections */
+> +	vmcore_off = elfsz + roundup(phdr_ptr->p_memsz, PAGE_SIZE);
+>  
+>  	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
+>  		if (phdr_ptr->p_type != PT_LOAD)
+> @@ -487,7 +488,7 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+>  }
+>  
+>  /* Sets offset fields of vmcore elements. */
+> -static void __init set_vmcore_list_offsets_elf64(char *elfptr,
+> +static void __init set_vmcore_list_offsets_elf64(char *elfptr, size_t elfsz,
+>  						struct list_head *vc_list)
+>  {
+>  	loff_t vmcore_off;
+> @@ -497,8 +498,7 @@ static void __init set_vmcore_list_offsets_elf64(char *elfptr,
+>  	ehdr_ptr = (Elf64_Ehdr *)elfptr;
+>  
+>  	/* Skip Elf header and program headers. */
+> -	vmcore_off = sizeof(Elf64_Ehdr) +
+> -			(ehdr_ptr->e_phnum) * sizeof(Elf64_Phdr);
+> +	vmcore_off = elfsz;
+>  
+>  	list_for_each_entry(m, vc_list, list) {
+>  		m->offset = vmcore_off;
+> @@ -507,7 +507,7 @@ static void __init set_vmcore_list_offsets_elf64(char *elfptr,
+>  }
+>  
+>  /* Sets offset fields of vmcore elements. */
+> -static void __init set_vmcore_list_offsets_elf32(char *elfptr,
+> +static void __init set_vmcore_list_offsets_elf32(char *elfptr, size_t elfsz,
+>  						struct list_head *vc_list)
+>  {
+>  	loff_t vmcore_off;
+> @@ -517,8 +517,7 @@ static void __init set_vmcore_list_offsets_elf32(char *elfptr,
+>  	ehdr_ptr = (Elf32_Ehdr *)elfptr;
+>  
+>  	/* Skip Elf header and program headers. */
+> -	vmcore_off = sizeof(Elf32_Ehdr) +
+> -			(ehdr_ptr->e_phnum) * sizeof(Elf32_Phdr);
+> +	vmcore_off = elfsz;
+>  
+>  	list_for_each_entry(m, vc_list, list) {
+>  		m->offset = vmcore_off;
+> @@ -554,30 +553,35 @@ static int __init parse_crash_elf64_headers(void)
+>  	}
+>  
+>  	/* Read in all elf headers. */
+> -	elfcorebuf_sz = sizeof(Elf64_Ehdr) + ehdr.e_phnum * sizeof(Elf64_Phdr);
+> -	elfcorebuf = kmalloc(elfcorebuf_sz, GFP_KERNEL);
+> +	elfcorebuf_sz_orig = sizeof(Elf64_Ehdr) + ehdr.e_phnum * sizeof(Elf64_Phdr);
+> +	elfcorebuf_sz = elfcorebuf_sz_orig;
+> +	elfcorebuf = (void *) __get_free_pages(GFP_KERNEL | __GFP_ZERO,
+> +					       get_order(elfcorebuf_sz_orig));
+>  	if (!elfcorebuf)
+>  		return -ENOMEM;
+>  	addr = elfcorehdr_addr;
+> -	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz, &addr, 0);
+> +	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
+>  	if (rc < 0) {
+> -		kfree(elfcorebuf);
+> +		free_pages((unsigned long)elfcorebuf,
+> +			   get_order(elfcorebuf_sz_orig));
+>  		return rc;
+>  	}
+>  
+>  	/* Merge all PT_NOTE headers into one. */
+>  	rc = merge_note_headers_elf64(elfcorebuf, &elfcorebuf_sz, &vmcore_list);
+>  	if (rc) {
+> -		kfree(elfcorebuf);
+> +		free_pages((unsigned long)elfcorebuf,
+> +			   get_order(elfcorebuf_sz_orig));
+>  		return rc;
+>  	}
+>  	rc = process_ptload_program_headers_elf64(elfcorebuf, elfcorebuf_sz,
+>  							&vmcore_list);
+>  	if (rc) {
+> -		kfree(elfcorebuf);
+> +		free_pages((unsigned long)elfcorebuf,
+> +			   get_order(elfcorebuf_sz_orig));
+>  		return rc;
+>  	}
+> -	set_vmcore_list_offsets_elf64(elfcorebuf, &vmcore_list);
+> +	set_vmcore_list_offsets_elf64(elfcorebuf, elfcorebuf_sz, &vmcore_list);
+>  	return 0;
+>  }
+>  
+> @@ -609,30 +613,35 @@ static int __init parse_crash_elf32_headers(void)
+>  	}
+>  
+>  	/* Read in all elf headers. */
+> -	elfcorebuf_sz = sizeof(Elf32_Ehdr) + ehdr.e_phnum * sizeof(Elf32_Phdr);
+> -	elfcorebuf = kmalloc(elfcorebuf_sz, GFP_KERNEL);
+> +	elfcorebuf_sz_orig = sizeof(Elf32_Ehdr) + ehdr.e_phnum * sizeof(Elf32_Phdr);
+> +	elfcorebuf_sz = elfcorebuf_sz_orig;
+> +	elfcorebuf = (void *) __get_free_pages(GFP_KERNEL | __GFP_ZERO,
+> +					       get_order(elfcorebuf_sz_orig));
+>  	if (!elfcorebuf)
+>  		return -ENOMEM;
+>  	addr = elfcorehdr_addr;
+> -	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz, &addr, 0);
+> +	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
+>  	if (rc < 0) {
+> -		kfree(elfcorebuf);
+> +		free_pages((unsigned long)elfcorebuf,
+> +			   get_order(elfcorebuf_sz_orig));
+>  		return rc;
+>  	}
+>  
+>  	/* Merge all PT_NOTE headers into one. */
+>  	rc = merge_note_headers_elf32(elfcorebuf, &elfcorebuf_sz, &vmcore_list);
+>  	if (rc) {
+> -		kfree(elfcorebuf);
+> +		free_pages((unsigned long)elfcorebuf,
+> +			   get_order(elfcorebuf_sz_orig));
+>  		return rc;
+>  	}
+>  	rc = process_ptload_program_headers_elf32(elfcorebuf, elfcorebuf_sz,
+>  								&vmcore_list);
+>  	if (rc) {
+> -		kfree(elfcorebuf);
+> +		free_pages((unsigned long)elfcorebuf,
+> +			   get_order(elfcorebuf_sz_orig));
+>  		return rc;
+>  	}
+> -	set_vmcore_list_offsets_elf32(elfcorebuf, &vmcore_list);
+> +	set_vmcore_list_offsets_elf32(elfcorebuf, elfcorebuf_sz, &vmcore_list);
+>  	return 0;
+>  }
+>  
+> @@ -657,14 +666,14 @@ static int __init parse_crash_elf_headers(void)
+>  			return rc;
+>  
+>  		/* Determine vmcore size. */
+> -		vmcore_size = get_vmcore_size_elf64(elfcorebuf);
+> +		vmcore_size = get_vmcore_size_elf64(elfcorebuf, elfcorebuf_sz);
+>  	} else if (e_ident[EI_CLASS] == ELFCLASS32) {
+>  		rc = parse_crash_elf32_headers();
+>  		if (rc)
+>  			return rc;
+>  
+>  		/* Determine vmcore size. */
+> -		vmcore_size = get_vmcore_size_elf32(elfcorebuf);
+> +		vmcore_size = get_vmcore_size_elf32(elfcorebuf, elfcorebuf_sz);
+>  	} else {
+>  		pr_warn("Warning: Core image elf header is not sane\n");
+>  		return -EINVAL;
+> @@ -711,7 +720,8 @@ void vmcore_cleanup(void)
+>  		list_del(&m->list);
+>  		kfree(m);
+>  	}
+> -	kfree(elfcorebuf);
+> +	free_pages((unsigned long)elfcorebuf,
+> +		   get_order(elfcorebuf_sz_orig));
+>  	elfcorebuf = NULL;
+>  }
+>  EXPORT_SYMBOL_GPL(vmcore_cleanup);
 
 _______________________________________________
 kexec mailing list
