@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcGYn-0000JW-Il
- for kexec@lists.infradead.org; Tue, 14 May 2013 14:50:38 +0000
-Date: Tue, 14 May 2013 10:50:03 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v5 3/8] vmalloc: make find_vm_area check in range
-Message-ID: <20130514145003.GC16772@redhat.com>
-References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
- <20130514015723.18697.34468.stgit@localhost6.localdomain6>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UcNI7-0001gR-M9
+ for kexec@lists.infradead.org; Tue, 14 May 2013 22:01:53 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <CAKw_n9E=Hf0=ao1+tjbarHhQoJUdw70xhTUFaY_s4g3OARpdMg@mail.gmail.com>
+Date: Tue, 14 May 2013 15:01:06 -0700
+In-Reply-To: <CAKw_n9E=Hf0=ao1+tjbarHhQoJUdw70xhTUFaY_s4g3OARpdMg@mail.gmail.com>
+ (Dave Lloyd's message of "Mon, 13 May 2013 10:40:09 -0500")
+Message-ID: <87k3n1w7a5.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130514015723.18697.34468.stgit@localhost6.localdomain6>
+Subject: Re: Kernel panics when using kexec for rebooting
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,46 +23,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: Rik Van Riel <riel@redhat.com>, Hugh Dickins <hughd@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, Michel Lespinasse <walken@google.com>, cpw@sgi.com, jingbai.ma@hp.com
+To: Dave Lloyd <dave@davelloyd.com>
+Cc: kexec@lists.infradead.org
 
-On Tue, May 14, 2013 at 10:57:23AM +0900, HATAYAMA Daisuke wrote:
-> Currently, __find_vmap_area searches for the kernel VM area starting
-> at a given address. This patch changes this behavior so that it
-> searches for the kernel VM area to which the address belongs. This
-> change is needed by remap_vmalloc_range_partial to be introduced in
-> later patch that receives any position of kernel VM area as target
-> address.
-> 
-> This patch changes the condition (addr > va->va_start) to the
-> equivalent (addr >= va->va_end) by taking advantage of the fact that
-> each kernel VM area is non-overlapping.
-> 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Dave Lloyd <dave@davelloyd.com> writes:
 
-This will require ack from mm folks. CCing some of them. 
+> All:
+>
+> I seem to be able to relatively reliably panic a system when using
+> kexec to reboot. This does not happen during a normal boot sequence.
+> Unfortunately, the stack trace I get for the panic is not consistent.
+> I've included a few here. Mostly they seem to center on what smells
+> like some sort of memory corruption to me. I'm kind of banging my head
+> against the wall with this, so any help would be greatly appreciated.
 
-Thanks
-Vivek
+Yes this does seem to be all over the place, and memory corruption
+probably caused by ongoing-dma seems like a reasonable hypothesis.
 
-> ---
-> 
->  mm/vmalloc.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index d365724..3875fa2 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -292,7 +292,7 @@ static struct vmap_area *__find_vmap_area(unsigned long addr)
->  		va = rb_entry(n, struct vmap_area, rb_node);
->  		if (addr < va->va_start)
->  			n = n->rb_left;
-> -		else if (addr > va->va_start)
-> +		else if (addr >= va->va_end)
->  			n = n->rb_right;
->  		else
->  			return va;
+The easy first thing to try is to remove all of your kernel modules
+before you reboot with kexec.  Not infrequently the module remove path
+is better tested than the device shutdown path.
+
+Eric
 
 _______________________________________________
 kexec mailing list
