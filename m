@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcPhN-00042H-Do
- for kexec@lists.infradead.org; Wed, 15 May 2013 00:36:06 +0000
-Date: Wed, 15 May 2013 09:35:33 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: check if memory is reserved only when loading
- kdump kernel.
-Message-ID: <20130515003533.GA12246@verge.net.au>
-References: <1368527570-19499-1-git-send-email-chaowang@redhat.com>
+ id 1UcY8k-0003ie-1Z
+ for kexec@lists.infradead.org; Wed, 15 May 2013 09:36:54 +0000
+Message-ID: <5193564F.9090408@cn.fujitsu.com>
+Date: Wed, 15 May 2013 17:33:03 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1368527570-19499-1-git-send-email-chaowang@redhat.com>
+Subject: Re: [PATCH v6 1/8] vmcore: clean up read_vmcore()
+References: <20130515090507.28109.28956.stgit@localhost6.localdomain6>
+ <20130515090545.28109.86085.stgit@localhost6.localdomain6>
+In-Reply-To: <20130515090545.28109.86085.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,39 +19,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: riel@redhat.com, hughd@google.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, akpm@linux-foundation.org, walken@google.com, cpw@sgi.com, vgoyal@redhat.com
 
-On Tue, May 14, 2013 at 06:32:50PM +0800, WANG Chao wrote:
-> When memory for crashkernel isn't reserved, it's confusing that kexec
-> spits error message for unloading kdump kernel as if we were loading it:
-> 
->   # kexec -p -u
->   Memory for crashkernel is not reserved
->   Please reserve memory by passing "crashkernel=X@Y" parameter to the kernel
->   Then try loading kdump kernel
->   # echo $?
->   1
-> 
-> It's more appropriate to test if memory is reserved only when
-> loading kdump kernel. With this patch:
-> 
->   # kexec -p -u
->   # echo $?
->   0
-> 
-> It's also the same behavior with the case of trying to unload kernel
-> from unloaded state.
-> 
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwNeaciDE15pelIDE3OjA1LCBIQVRBWUFNQSBEYWlzdWtlIOWGmemBkzoKPiBS
+ZXdyaXRlIHBhcnQgb2YgcmVhZF92bWNvcmUoKSB0aGF0IHJlYWRzIG9iamVjdHMgaW4gdm1jb3Jl
+X2xpc3QgaW4gdGhlCj4gc2FtZSB3YXkgYXMgcGFydCByZWFkaW5nIEVMRiBoZWFkZXJzLCBieSB3
+aGljaCBzb21lIGR1cGxpY2F0ZWQgYW5kCj4gcmVkdW5kYW50IGNvZGVzIGFyZSByZW1vdmVkLgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IEhBVEFZQU1BIERhaXN1a2UgPGQuaGF0YXlhbWFAanAuZnVqaXRz
+dS5jb20+Cj4gQWNrZWQtYnk6IFZpdmVrIEdveWFsIDx2Z295YWxAcmVkaGF0LmNvbT4KClRoaXMg
+Y2xlYW51cCByZWFsbHkgbWFrZXMgdGhlIGNvZGUgbW9yZSBjbGVhci4KCkp1c3Qgb25lIG1pbm9y
+IG5pdHBpY2sgYmVsb3cuCgpBY2tlZC1ieTogWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5m
+dWppdHN1LmNvbT4KCj4gLS0tCj4gCj4gIGZzL3Byb2Mvdm1jb3JlLmMgfCAgIDY4ICsrKysrKysr
+KysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICAxIGZpbGVz
+IGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDQ4IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1n
+aXQgYS9mcy9wcm9jL3ZtY29yZS5jIGIvZnMvcHJvYy92bWNvcmUuYwo+IGluZGV4IDE3ZjdlMDgu
+LmFiMGM5MmUgMTAwNjQ0Cj4gLS0tIGEvZnMvcHJvYy92bWNvcmUuYwo+ICsrKyBiL2ZzL3Byb2Mv
+dm1jb3JlLmMKPiBAQCAtMTE4LDI3ICsxMTgsNiBAQCBzdGF0aWMgc3NpemVfdCByZWFkX2Zyb21f
+b2xkbWVtKGNoYXIgKmJ1Ziwgc2l6ZV90IGNvdW50LAo+ICAJcmV0dXJuIHJlYWQ7Cj4gIH0KPiAg
+Cj4gLS8qIE1hcHMgdm1jb3JlIGZpbGUgb2Zmc2V0IHRvIHJlc3BlY3RpdmUgcGh5c2ljYWwgYWRk
+cmVzcyBpbiBtZW1yb3kuICovCj4gLXN0YXRpYyB1NjQgbWFwX29mZnNldF90b19wYWRkcihsb2Zm
+X3Qgb2Zmc2V0LCBzdHJ1Y3QgbGlzdF9oZWFkICp2Y19saXN0LAo+IC0JCQkJCXN0cnVjdCB2bWNv
+cmUgKiptX3B0cikKPiAtewo+IC0Jc3RydWN0IHZtY29yZSAqbTsKPiAtCXU2NCBwYWRkcjsKPiAt
+Cj4gLQlsaXN0X2Zvcl9lYWNoX2VudHJ5KG0sIHZjX2xpc3QsIGxpc3QpIHsKPiAtCQl1NjQgc3Rh
+cnQsIGVuZDsKPiAtCQlzdGFydCA9IG0tPm9mZnNldDsKPiAtCQllbmQgPSBtLT5vZmZzZXQgKyBt
+LT5zaXplIC0gMTsKPiAtCQlpZiAob2Zmc2V0ID49IHN0YXJ0ICYmIG9mZnNldCA8PSBlbmQpIHsK
+PiAtCQkJcGFkZHIgPSBtLT5wYWRkciArIG9mZnNldCAtIHN0YXJ0Owo+IC0JCQkqbV9wdHIgPSBt
+Owo+IC0JCQlyZXR1cm4gcGFkZHI7Cj4gLQkJfQo+IC0JfQo+IC0JKm1fcHRyID0gTlVMTDsKPiAt
+CXJldHVybiAwOwo+IC19Cj4gLQo+ICAvKiBSZWFkIGZyb20gdGhlIEVMRiBoZWFkZXIgYW5kIHRo
+ZW4gdGhlIGNyYXNoIGR1bXAuIE9uIGVycm9yLCBuZWdhdGl2ZSB2YWx1ZSBpcwo+ICAgKiByZXR1
+cm5lZCBvdGhlcndpc2UgbnVtYmVyIG9mIGJ5dGVzIHJlYWQgYXJlIHJldHVybmVkLgo+ICAgKi8K
+PiBAQCAtMTQ3LDggKzEyNiw4IEBAIHN0YXRpYyBzc2l6ZV90IHJlYWRfdm1jb3JlKHN0cnVjdCBm
+aWxlICpmaWxlLCBjaGFyIF9fdXNlciAqYnVmZmVyLAo+ICB7Cj4gIAlzc2l6ZV90IGFjYyA9IDAs
+IHRtcDsKPiAgCXNpemVfdCB0c3o7Cj4gLQl1NjQgc3RhcnQsIG5yX2J5dGVzOwo+IC0Jc3RydWN0
+IHZtY29yZSAqY3Vycl9tID0gTlVMTDsKPiArCXU2NCBzdGFydDsKPiArCXN0cnVjdCB2bWNvcmUg
+Km0gPSBOVUxMOwo+ICAKPiAgCWlmIChidWZsZW4gPT0gMCB8fCAqZnBvcyA+PSB2bWNvcmVfc2l6
+ZSkKPiAgCQlyZXR1cm4gMDsKPiBAQCAtMTc0LDMzICsxNTMsMjYgQEAgc3RhdGljIHNzaXplX3Qg
+cmVhZF92bWNvcmUoc3RydWN0IGZpbGUgKmZpbGUsIGNoYXIgX191c2VyICpidWZmZXIsCj4gIAkJ
+CXJldHVybiBhY2M7Cj4gIAl9Cj4gIAo+IC0Jc3RhcnQgPSBtYXBfb2Zmc2V0X3RvX3BhZGRyKCpm
+cG9zLCAmdm1jb3JlX2xpc3QsICZjdXJyX20pOwo+IC0JaWYgKCFjdXJyX20pCj4gLSAgICAgICAg
+CXJldHVybiAtRUlOVkFMOwo+IC0KPiAtCXdoaWxlIChidWZsZW4pIHsKPiAtCQl0c3ogPSBtaW5f
+dChzaXplX3QsIGJ1ZmxlbiwgUEFHRV9TSVpFIC0gKHN0YXJ0ICYgflBBR0VfTUFTSykpOwo+IC0K
+PiAtCQkvKiBDYWxjdWxhdGUgbGVmdCBieXRlcyBpbiBjdXJyZW50IG1lbW9yeSBzZWdtZW50LiAq
+Lwo+IC0JCW5yX2J5dGVzID0gKGN1cnJfbS0+c2l6ZSAtIChzdGFydCAtIGN1cnJfbS0+cGFkZHIp
+KTsKPiAtCQlpZiAodHN6ID4gbnJfYnl0ZXMpCj4gLQkJCXRzeiA9IG5yX2J5dGVzOwo+IC0KPiAt
+CQl0bXAgPSByZWFkX2Zyb21fb2xkbWVtKGJ1ZmZlciwgdHN6LCAmc3RhcnQsIDEpOwo+IC0JCWlm
+ICh0bXAgPCAwKQo+IC0JCQlyZXR1cm4gdG1wOwo+IC0JCWJ1ZmxlbiAtPSB0c3o7Cj4gLQkJKmZw
+b3MgKz0gdHN6Owo+IC0JCWJ1ZmZlciArPSB0c3o7Cj4gLQkJYWNjICs9IHRzejsKPiAtCQlpZiAo
+c3RhcnQgPj0gKGN1cnJfbS0+cGFkZHIgKyBjdXJyX20tPnNpemUpKSB7Cj4gLQkJCWlmIChjdXJy
+X20tPmxpc3QubmV4dCA9PSAmdm1jb3JlX2xpc3QpCj4gLQkJCQlyZXR1cm4gYWNjOwkvKkVPRiov
+Cj4gLQkJCWN1cnJfbSA9IGxpc3RfZW50cnkoY3Vycl9tLT5saXN0Lm5leHQsCj4gLQkJCQkJCXN0
+cnVjdCB2bWNvcmUsIGxpc3QpOwo+IC0JCQlzdGFydCA9IGN1cnJfbS0+cGFkZHI7Cj4gKwlsaXN0
+X2Zvcl9lYWNoX2VudHJ5KG0sICZ2bWNvcmVfbGlzdCwgbGlzdCkgewo+ICsJCWlmICgqZnBvcyA8
+IG0tPm9mZnNldCArIG0tPnNpemUpIHsKPiArCQkJdHN6ID0gbS0+b2Zmc2V0ICsgbS0+c2l6ZSAt
+ICpmcG9zOwo+ICsJCQlpZiAoYnVmbGVuIDwgdHN6KQo+ICsJCQkJdHN6ID0gYnVmbGVuOwoKaWYg
+KHRzeiA+IGJ1ZmxlbikKICAgICAgICB0c3ogPSBidWZsZW47CgpzZWVtcyBiZXR0ZXIuCgpPciB5
+b3UgY2FuIHVzZSBhIG1pbl90IGhlcmU6Cgp0c3ogPSBtaW5fdChzaXplX3QsIG0tPm9mZnNldCAr
+IG0tPnNpemUgLSAqZnBvcywgYnVmbGVuKTsKCgo+ICsJCQlzdGFydCA9IG0tPnBhZGRyICsgKmZw
+b3MgLSBtLT5vZmZzZXQ7Cj4gKwkJCXRtcCA9IHJlYWRfZnJvbV9vbGRtZW0oYnVmZmVyLCB0c3os
+ICZzdGFydCwgMSk7Cj4gKwkJCWlmICh0bXAgPCAwKQo+ICsJCQkJcmV0dXJuIHRtcDsKPiArCQkJ
+YnVmbGVuIC09IHRzejsKPiArCQkJKmZwb3MgKz0gdHN6Owo+ICsJCQlidWZmZXIgKz0gdHN6Owo+
+ICsJCQlhY2MgKz0gdHN6Owo+ICsKPiArCQkJLyogbGVhdmUgbm93IGlmIGZpbGxlZCBidWZmZXIg
+YWxyZWFkeSAqLwo+ICsJCQlpZiAoYnVmbGVuID09IDApCj4gKwkJCQlyZXR1cm4gYWNjOwo+ICAJ
+CX0KPiAgCX0KPiArCj4gIAlyZXR1cm4gYWNjOwo+ICB9Cj4gIAo+IAo+IAoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
