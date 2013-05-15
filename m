@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcggZ-0007rl-LQ
+ id 1UcggZ-0007ro-LM
  for kexec@lists.infradead.org; Wed, 15 May 2013 18:44:24 +0000
-Subject: [PATCH] makedumpfile: non-cyclic default
-Message-Id: <E1UcggB-0005h5-8e@eag09.americas.sgi.com>
+Subject: [PATCH] makedumpfile: warn on vmlinux without dwarf
+Message-Id: <E1UcggB-0005hQ-Gr@eag09.americas.sgi.com>
 From: Cliff Wickman <cpw@sgi.com>
 Date: Wed, 15 May 2013 13:43:59 -0500
 List-Id: <kexec.lists.infradead.org>
@@ -25,47 +25,31 @@ Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
 From: Cliff Wickman <cpw@sgi.com>
 
-Make non-cyclic the default, as it is faster.
+If the vmlinux does not have dwarf information makedumpfile fails in
+a rather obscure way, with a flood of redundant errors,
 
-Dumping a 1TB memory is successful with a crashkernel=512M.
-And allow -Y on the command line, as well as --non-cylic.
+Make it fail with more of a hint of what is wrong.
 
 Signed-off-by: Cliff Wickman <cpw@sgi.com>
 ---
- makedumpfile.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ dwarf_info.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-Index: makedumpfile.mmap/makedumpfile.c
+Index: makedumpfile.mmap/dwarf_info.c
 ===================================================================
---- makedumpfile.mmap.orig/makedumpfile.c
-+++ makedumpfile.mmap/makedumpfile.c
-@@ -8585,13 +8585,14 @@ main(int argc, char *argv[])
- 	initialize_tables();
+--- makedumpfile.mmap.orig/dwarf_info.c
++++ makedumpfile.mmap/dwarf_info.c
+@@ -139,6 +139,10 @@ process_module (Dwfl_Module *dwflmod,
  
- 	/*
--	 * By default, makedumpfile works in constant memory space.
-+	 * By default, makedumpfile makes one pass through page structures.
-+	 * Use --cyclic-buffer to work in constant memory space.
- 	 */
--	info->flag_cyclic = TRUE;
-+	info->flag_cyclic = FALSE;
- 	
- 	info->block_order = DEFAULT_ORDER;
- 	message_level = DEFAULT_MSG_LEVEL;
--	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:", longopts,
-+	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:Y", longopts,
- 	    NULL)) != -1) {
- 		switch (opt) {
- 		case 'A':
-@@ -8694,6 +8695,8 @@ main(int argc, char *argv[])
- 			break;
- 		case 'Z':
- 			info->bufsize_cyclic = atoi(optarg);
-+			if (info->bufsize_cyclic)
-+				info->flag_cyclic = TRUE;
- 			break;
- 		case '?':
- 			MSG("Commandline parameter is invalid.\n");
+ 	/* get a debug context descriptor.*/
+ 	dwarf_info.dwarfd = dwfl_module_getdwarf (dwflmod, &dwbias);
++	if (dwarf_info.dwarfd == NULL) {
++		fprintf(stderr, "makedumpfile: dwfl_module_getdwarf error\n");
++		exit(1);
++	}
+ 	dwarf_info.elfd = dwarf_getelf(dwarf_info.dwarfd);
+ 
+ 	mod_name = dwfl_module_info(dwflmod, NULL, NULL, NULL, NULL, NULL,
 
 _______________________________________________
 kexec mailing list
