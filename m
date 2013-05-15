@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcggZ-0007rk-LS
+ id 1UcggZ-0007rm-LL
  for kexec@lists.infradead.org; Wed, 15 May 2013 18:44:25 +0000
-Subject: [PATCH] makedumpfile: message on non-mmap kernels
-Message-Id: <E1UcggB-0005hX-L1@eag09.americas.sgi.com>
+Subject: [PATCH] makedumpfile: buddy identification when noncyclic
+Message-Id: <E1UcggB-0005hC-Bf@eag09.americas.sgi.com>
 From: Cliff Wickman <cpw@sgi.com>
 Date: Wed, 15 May 2013 13:43:59 -0500
 List-Id: <kexec.lists.infradead.org>
@@ -25,90 +25,64 @@ Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
 From: Cliff Wickman <cpw@sgi.com>
 
-If the crash kernel does not support mmap(2) of /proc/vmcore, make
-makedumpfile fall back to using reads with a non-alarming message.
+The 'buddy' identification of free pages should be done for non-cyclical
+dumps as well as cyclical.
+Remove the cyclic test from this condition:
+    if (info->flag_cyclic && (info->dump_level & DL_EXCLUDE_FREE))
+I find this to speed the scan of page structures for a 1TB system from
+60sec to 30sec.
+
+And only do the exclude_free_page() procedure if free pages cannot be
+identified using the buddy technique.
 
 Signed-off-by: Cliff Wickman <cpw@sgi.com>
 ---
- makedumpfile.c |   37 ++++++++++++++++++++++---------------
- 1 file changed, 22 insertions(+), 15 deletions(-)
+ makedumpfile.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 Index: makedumpfile.mmap/makedumpfile.c
 ===================================================================
 --- makedumpfile.mmap.orig/makedumpfile.c
 +++ makedumpfile.mmap/makedumpfile.c
-@@ -239,7 +239,7 @@ read_page_desc(unsigned long long paddr,
- }
- 
- static int
--update_mmap_range(off_t offset) {
-+update_mmap_range(off_t offset, int initial) {
- 	off_t start_offset;
- 	off_t map_size;
- 	off_t max_offset = get_max_file_offset();
-@@ -258,10 +258,11 @@ update_mmap_range(off_t offset) {
- 				     info->fd_memory, start_offset);
- 
- 	if (info->mmap_buf == MAP_FAILED) {
--		ERRMSG("Can't map [%llx-%llx] with mmap()\n %s",
--		       (ulonglong)start_offset,
--		       (ulonglong)(start_offset + map_size),
--		       strerror(errno));
-+		if (!initial)
-+			ERRMSG("Can't map [%llx-%llx] with mmap()\n %s",
-+				(ulonglong)start_offset,
-+				(ulonglong)(start_offset + map_size),
-+				strerror(errno));
- 		return FALSE;
- 	}
- 
-@@ -285,7 +286,7 @@ is_mapped_with_mmap(off_t offset) {
- int
- initialize_mmap(void) {
- 	info->mmap_buf = MAP_FAILED;
--	if (!update_mmap_range(0))
-+	if (!update_mmap_range(0, 1))
+@@ -2979,7 +2979,9 @@ out:
+ 	if (!get_value_for_old_linux())
  		return FALSE;
  
- 	return TRUE;
-@@ -298,7 +299,7 @@ read_with_mmap(off_t offset, void *bufpt
- next_region:
- 
- 	if (!is_mapped_with_mmap(offset)) {
--		if (!update_mmap_range(offset))
-+		if (!update_mmap_range(offset, 0))
- 			return FALSE;
- 	}
- 
-@@ -2984,14 +2985,20 @@ out:
- 	if (info->dump_level & DL_EXCLUDE_FREE)
+-	if (info->flag_cyclic && (info->dump_level & DL_EXCLUDE_FREE))
++	/* use buddy identification of free pages whether cyclic or not */
++	/* (this can reduce pages scan of 1TB memory from 60sec to 30sec) */
++	if (info->dump_level & DL_EXCLUDE_FREE)
  		setup_page_is_buddy();
  
--	if (info->mmap_region_size > 0 && initialize_mmap()) {
--		/*
--		 * The map size is specified as Kbyte with
--		 * --map-size <size> option.
--		 */
--		info->mmap_region_size <<= 10;
--		info->flag_usemmap = TRUE;
--		DEBUG_MSG("read %s with mmap()\n", info->name_memory);
-+	if (info->mmap_region_size > 0) {
-+		if (!initialize_mmap()) {
-+			/* this kernel does not support mmap of vmcore */
-+			ERRMSG("Kernel can't mmap vmcore, using reads.\n");
-+			info->flag_usemmap = FALSE;
-+		} else {
-+			/*
-+			 * The map size is specified as Kbyte with
-+			 * --map-size <size> option.
-+			 */
-+			info->mmap_region_size <<= 10;
-+			info->flag_usemmap = TRUE;
-+			DEBUG_MSG("read %s with mmap()\n", info->name_memory);
-+		}
- 	} else {
- 		info->flag_usemmap = FALSE;
- 		DEBUG_MSG("read %s with read()\n", info->name_memory);
+ 	if (info->mmap_region_size > 0 && initialize_mmap()) {
+@@ -4154,6 +4156,7 @@ create_1st_bitmap(void)
+ 
+ 	/*
+ 	 * If page is on memory hole, set bit on the 1st-bitmap.
++	 * (note that this is not done in cyclic mode)
+ 	 */
+ 	pfn_bitmap1 = 0;
+ 	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
+@@ -4341,9 +4344,9 @@ __exclude_unnecessary_pages(unsigned lon
+ 
+ 		/*
+ 		 * Exclude the free page managed by a buddy
++		 * Use buddy identification of free pages whether cyclic or not.
+ 		 */
+ 		if ((info->dump_level & DL_EXCLUDE_FREE)
+-		    && info->flag_cyclic
+ 		    && info->page_is_buddy
+ 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+ 			int i, nr_pages = 1 << private;
+@@ -4584,7 +4587,7 @@ create_2nd_bitmap(void)
+ 	/*
+ 	 * Exclude free pages.
+ 	 */
+-	if (info->dump_level & DL_EXCLUDE_FREE)
++	if ((info->dump_level & DL_EXCLUDE_FREE) && !info->page_is_buddy)
+ 		if (!exclude_free_page())
+ 			return FALSE;
+ 
 
 _______________________________________________
 kexec mailing list
