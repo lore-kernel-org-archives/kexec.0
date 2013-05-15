@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcggZ-0007ro-LM
- for kexec@lists.infradead.org; Wed, 15 May 2013 18:44:24 +0000
-Subject: [PATCH] makedumpfile: warn on vmlinux without dwarf
-Message-Id: <E1UcggB-0005hQ-Gr@eag09.americas.sgi.com>
+ id 1UcggZ-0007rk-LS
+ for kexec@lists.infradead.org; Wed, 15 May 2013 18:44:25 +0000
+Subject: [PATCH] makedumpfile: message on non-mmap kernels
+Message-Id: <E1UcggB-0005hX-L1@eag09.americas.sgi.com>
 From: Cliff Wickman <cpw@sgi.com>
 Date: Wed, 15 May 2013 13:43:59 -0500
 List-Id: <kexec.lists.infradead.org>
@@ -25,31 +25,90 @@ Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
 From: Cliff Wickman <cpw@sgi.com>
 
-If the vmlinux does not have dwarf information makedumpfile fails in
-a rather obscure way, with a flood of redundant errors,
-
-Make it fail with more of a hint of what is wrong.
+If the crash kernel does not support mmap(2) of /proc/vmcore, make
+makedumpfile fall back to using reads with a non-alarming message.
 
 Signed-off-by: Cliff Wickman <cpw@sgi.com>
 ---
- dwarf_info.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ makedumpfile.c |   37 ++++++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
-Index: makedumpfile.mmap/dwarf_info.c
+Index: makedumpfile.mmap/makedumpfile.c
 ===================================================================
---- makedumpfile.mmap.orig/dwarf_info.c
-+++ makedumpfile.mmap/dwarf_info.c
-@@ -139,6 +139,10 @@ process_module (Dwfl_Module *dwflmod,
+--- makedumpfile.mmap.orig/makedumpfile.c
++++ makedumpfile.mmap/makedumpfile.c
+@@ -239,7 +239,7 @@ read_page_desc(unsigned long long paddr,
+ }
  
- 	/* get a debug context descriptor.*/
- 	dwarf_info.dwarfd = dwfl_module_getdwarf (dwflmod, &dwbias);
-+	if (dwarf_info.dwarfd == NULL) {
-+		fprintf(stderr, "makedumpfile: dwfl_module_getdwarf error\n");
-+		exit(1);
-+	}
- 	dwarf_info.elfd = dwarf_getelf(dwarf_info.dwarfd);
+ static int
+-update_mmap_range(off_t offset) {
++update_mmap_range(off_t offset, int initial) {
+ 	off_t start_offset;
+ 	off_t map_size;
+ 	off_t max_offset = get_max_file_offset();
+@@ -258,10 +258,11 @@ update_mmap_range(off_t offset) {
+ 				     info->fd_memory, start_offset);
  
- 	mod_name = dwfl_module_info(dwflmod, NULL, NULL, NULL, NULL, NULL,
+ 	if (info->mmap_buf == MAP_FAILED) {
+-		ERRMSG("Can't map [%llx-%llx] with mmap()\n %s",
+-		       (ulonglong)start_offset,
+-		       (ulonglong)(start_offset + map_size),
+-		       strerror(errno));
++		if (!initial)
++			ERRMSG("Can't map [%llx-%llx] with mmap()\n %s",
++				(ulonglong)start_offset,
++				(ulonglong)(start_offset + map_size),
++				strerror(errno));
+ 		return FALSE;
+ 	}
+ 
+@@ -285,7 +286,7 @@ is_mapped_with_mmap(off_t offset) {
+ int
+ initialize_mmap(void) {
+ 	info->mmap_buf = MAP_FAILED;
+-	if (!update_mmap_range(0))
++	if (!update_mmap_range(0, 1))
+ 		return FALSE;
+ 
+ 	return TRUE;
+@@ -298,7 +299,7 @@ read_with_mmap(off_t offset, void *bufpt
+ next_region:
+ 
+ 	if (!is_mapped_with_mmap(offset)) {
+-		if (!update_mmap_range(offset))
++		if (!update_mmap_range(offset, 0))
+ 			return FALSE;
+ 	}
+ 
+@@ -2984,14 +2985,20 @@ out:
+ 	if (info->dump_level & DL_EXCLUDE_FREE)
+ 		setup_page_is_buddy();
+ 
+-	if (info->mmap_region_size > 0 && initialize_mmap()) {
+-		/*
+-		 * The map size is specified as Kbyte with
+-		 * --map-size <size> option.
+-		 */
+-		info->mmap_region_size <<= 10;
+-		info->flag_usemmap = TRUE;
+-		DEBUG_MSG("read %s with mmap()\n", info->name_memory);
++	if (info->mmap_region_size > 0) {
++		if (!initialize_mmap()) {
++			/* this kernel does not support mmap of vmcore */
++			ERRMSG("Kernel can't mmap vmcore, using reads.\n");
++			info->flag_usemmap = FALSE;
++		} else {
++			/*
++			 * The map size is specified as Kbyte with
++			 * --map-size <size> option.
++			 */
++			info->mmap_region_size <<= 10;
++			info->flag_usemmap = TRUE;
++			DEBUG_MSG("read %s with mmap()\n", info->name_memory);
++		}
+ 	} else {
+ 		info->flag_usemmap = FALSE;
+ 		DEBUG_MSG("read %s with read()\n", info->name_memory);
 
 _______________________________________________
 kexec mailing list
