@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ucggd-0007rn-Tn
- for kexec@lists.infradead.org; Wed, 15 May 2013 18:44:29 +0000
-Subject: [PATCH] makedumpfile: turn off mmap for free page scan
-Message-Id: <E1UcggB-0005hJ-E0@eag09.americas.sgi.com>
+ id 1UcggZ-0007rl-LQ
+ for kexec@lists.infradead.org; Wed, 15 May 2013 18:44:24 +0000
+Subject: [PATCH] makedumpfile: non-cyclic default
+Message-Id: <E1UcggB-0005h5-8e@eag09.americas.sgi.com>
 From: Cliff Wickman <cpw@sgi.com>
 Date: Wed, 15 May 2013 13:43:59 -0500
 List-Id: <kexec.lists.infradead.org>
@@ -25,52 +25,47 @@ Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
 From: Cliff Wickman <cpw@sgi.com>
 
-Because addresses of each successive page structure are often descending
-it is much faster to use read()'s, so set off info->flag_usemmap
-while doing exclude_free_page().
+Make non-cyclic the default, as it is faster.
+
+Dumping a 1TB memory is successful with a crashkernel=512M.
+And allow -Y on the command line, as well as --non-cylic.
 
 Signed-off-by: Cliff Wickman <cpw@sgi.com>
 ---
- makedumpfile.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ makedumpfile.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 Index: makedumpfile.mmap/makedumpfile.c
 ===================================================================
 --- makedumpfile.mmap.orig/makedumpfile.c
 +++ makedumpfile.mmap/makedumpfile.c
-@@ -3925,9 +3925,18 @@ _exclude_free_page(void)
- 	return TRUE;
- }
+@@ -8585,13 +8585,14 @@ main(int argc, char *argv[])
+ 	initialize_tables();
  
-+/*
-+ * Note that this is a very lengthy process, even using mmap(2). The
-+ * page structures in the free lists are read one-at-a-time, but using
-+ * readpage_elf(), which reads an entire page.  And addresses of each
-+ * successive page structure are often descending, which means that each
-+ * read is another mmap(2) operation.
-+ * It is much faster to use read()'s, so set off info->flag_usemmap here.
-+ */
- int
- exclude_free_page(void)
- {
-+	int save = info->flag_usemmap;
  	/*
- 	 * Check having necessary information.
+-	 * By default, makedumpfile works in constant memory space.
++	 * By default, makedumpfile makes one pass through page structures.
++	 * Use --cyclic-buffer to work in constant memory space.
  	 */
-@@ -3961,8 +3970,12 @@ exclude_free_page(void)
- 	/*
- 	 * Detect free pages and update 2nd-bitmap.
- 	 */
--	if (!_exclude_free_page())
-+	info->flag_usemmap = 0;
-+	if (!_exclude_free_page()) {
-+		info->flag_usemmap = save;
- 		return FALSE;
-+	}
-+	info->flag_usemmap = save;
- 
- 	return TRUE;
- }
+-	info->flag_cyclic = TRUE;
++	info->flag_cyclic = FALSE;
+ 	
+ 	info->block_order = DEFAULT_ORDER;
+ 	message_level = DEFAULT_MSG_LEVEL;
+-	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:", longopts,
++	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:Y", longopts,
+ 	    NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'A':
+@@ -8694,6 +8695,8 @@ main(int argc, char *argv[])
+ 			break;
+ 		case 'Z':
+ 			info->bufsize_cyclic = atoi(optarg);
++			if (info->bufsize_cyclic)
++				info->flag_cyclic = TRUE;
+ 			break;
+ 		case '?':
+ 			MSG("Commandline parameter is invalid.\n");
 
 _______________________________________________
 kexec mailing list
