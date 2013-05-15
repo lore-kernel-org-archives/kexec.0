@@ -1,17 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UcGUn-00007e-6i
- for kexec@lists.infradead.org; Tue, 14 May 2013 14:46:29 +0000
-Date: Tue, 14 May 2013 10:46:02 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v5 2/8] vmcore: clean up read_vmcore()
-Message-ID: <20130514144602.GB16772@redhat.com>
-References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
- <20130514015717.18697.43144.stgit@localhost6.localdomain6>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UcX6U-00021F-E4
+ for kexec@lists.infradead.org; Wed, 15 May 2013 08:30:31 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 624393EE0C2
+ for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4BD6D45DE53
+ for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 2EF0745DE4E
+ for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 19D811DB8038
+ for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:08 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 786DC1DB8044
+ for <kexec@lists.infradead.org>; Wed, 15 May 2013 17:30:07 +0900 (JST)
+Message-ID: <51934781.4040704@jp.fujitsu.com>
+Date: Wed, 15 May 2013 17:29:53 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130514015717.18697.43144.stgit@localhost6.localdomain6>
+Subject: Re: [PATCH v5 5/8] vmcore: allocate ELF note segment in the 2nd kernel
+ vmalloc memory
+References: <20130514015622.18697.77191.stgit@localhost6.localdomain6>
+ <20130514015734.18697.32447.stgit@localhost6.localdomain6>
+ <20130514153552.GG13674@redhat.com>
+In-Reply-To: <20130514153552.GG13674@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,126 +36,139 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, cpw@sgi.com, jingbai.ma@hp.com
 
-On Tue, May 14, 2013 at 10:57:17AM +0900, HATAYAMA Daisuke wrote:
-> Rewrite part of read_vmcore() that reads objects in vmcore_list in the
-> same way as part reading ELF headers, by which some duplicated and
-> redundant codes are removed.
-> 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+(2013/05/15 0:35), Vivek Goyal wrote:
+> On Tue, May 14, 2013 at 10:57:35AM +0900, HATAYAMA Daisuke wrote:
+>> The reasons why we don't allocate ELF note segment in the 1st kernel
+>> (old memory) on page boundary is to keep backward compatibility for
+>> old kernels, and that if doing so, we waste not a little memory due to
+>> round-up operation to fit the memory to page boundary since most of
+>> the buffers are in per-cpu area.
+>>
+>> ELF notes are per-cpu, so total size of ELF note segments depends on
+>> number of CPUs. The current maximum number of CPUs on x86_64 is 5192,
+>> and there's already system with 4192 CPUs in SGI, where total size
+>> amounts to 1MB. This can be larger in the near future or possibly even
+>> now on another architecture that has larger size of note per a single
+>> cpu. Thus, to avoid the case where memory allocation for large block
+>> fails, we allocate vmcore objects on vmalloc memory.
+>>
+>> This patch adds elfnotesegbuf and elfnotesegbuf_sz variables to keep
+>> pointer to the ELF note segment buffer and its size. There's no longer
+>> the vmcore object that corresponds to the ELF note segment in
+>> vmcore_list. Accordingly, read_vmcore() has new case for ELF note
+>> segment and set_vmcore_list_offsets_elf{64,32}() and other helper
+>> functions starts calculating offset from sum of size of ELF headers
+>> and size of ELF note segment.
+>>
+>> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+>> ---
+>>
+>>   fs/proc/vmcore.c |  225 ++++++++++++++++++++++++++++++++++++++++--------------
+>>   1 files changed, 165 insertions(+), 60 deletions(-)
+>>
+>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+>> index 48886e6..795efd2 100644
+>> --- a/fs/proc/vmcore.c
+>> +++ b/fs/proc/vmcore.c
+>> @@ -34,6 +34,9 @@ static char *elfcorebuf;
+>>   static size_t elfcorebuf_sz;
+>>   static size_t elfcorebuf_sz_orig;
+>>
+>> +static char *elfnotesegbuf;
+>> +static size_t elfnotesegbuf_sz;
+>
+> How about calling these just elfnotes_buf and elfnotes_sz.
+>
+> [..]
+>> +/* Merges all the PT_NOTE headers into one. */
+>> +static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>> +					   char **notesegptr, size_t *notesegsz,
+>> +					   struct list_head *vc_list)
+>> +{
+>> +	int i, nr_ptnote=0, rc=0;
+>> +	char *tmp;
+>> +	Elf64_Ehdr *ehdr_ptr;
+>> +	Elf64_Phdr phdr;
+>> +	u64 phdr_sz = 0, note_off;
+>> +	struct vm_struct *vm;
+>> +
+>> +	ehdr_ptr = (Elf64_Ehdr *)elfptr;
+>> +
+>> +	/* The first path calculates the number of PT_NOTE entries and
+>> +	 * total size of ELF note segment. */
+>> +	rc = process_note_headers_elf64(ehdr_ptr, &nr_ptnote, &phdr_sz, NULL);
+>> +	if (rc < 0)
+>> +		return rc;
+>> +
+>> +	*notesegsz = roundup(phdr_sz, PAGE_SIZE);
+>> +	*notesegptr = vzalloc(*notesegsz);
+>> +	if (!*notesegptr)
+>> +		return -ENOMEM;
+>> +
+>> +	vm = find_vm_area(*notesegptr);
+>> +	BUG_ON(!vm);
+>> +	vm->flags |= VM_USERMAP;
+>> +
+>> +	/* The second path copies the ELF note segment in the ELF note
+>> +	 * segment buffer. */
+>> +	rc = process_note_headers_elf64(ehdr_ptr, NULL, NULL, *notesegptr);
+>
+> So same function process_note_headers_elf64() is doing two different
+> things based on parameters passed. Please create two new functions
+> to do two different things and name these appropriately.
+>
+> Say
+>
+> get_elf_note_number_and_size()
+> copy_elf_notes()
 
-Looks good to me.
+I see. Similar to other functions, 32-bit and 64-bit versions are 
+needed. So I give them symbols:
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+get_note_number_and_size_elf64()
+copy_notes_elf64()
 
-Vivek
+and elf32 counterpart.
 
-> ---
-> 
->  fs/proc/vmcore.c |   68 ++++++++++++++++--------------------------------------
->  1 files changed, 20 insertions(+), 48 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 69e1198..48886e6 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -119,27 +119,6 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
->  	return read;
->  }
->  
-> -/* Maps vmcore file offset to respective physical address in memroy. */
-> -static u64 map_offset_to_paddr(loff_t offset, struct list_head *vc_list,
-> -					struct vmcore **m_ptr)
-> -{
-> -	struct vmcore *m;
-> -	u64 paddr;
-> -
-> -	list_for_each_entry(m, vc_list, list) {
-> -		u64 start, end;
-> -		start = m->offset;
-> -		end = m->offset + m->size - 1;
-> -		if (offset >= start && offset <= end) {
-> -			paddr = m->paddr + offset - start;
-> -			*m_ptr = m;
-> -			return paddr;
-> -		}
-> -	}
-> -	*m_ptr = NULL;
-> -	return 0;
-> -}
-> -
->  /* Read from the ELF header and then the crash dump. On error, negative value is
->   * returned otherwise number of bytes read are returned.
->   */
-> @@ -148,8 +127,8 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
->  {
->  	ssize_t acc = 0, tmp;
->  	size_t tsz;
-> -	u64 start, nr_bytes;
-> -	struct vmcore *curr_m = NULL;
-> +	u64 start;
-> +	struct vmcore *m = NULL;
->  
->  	if (buflen == 0 || *fpos >= vmcore_size)
->  		return 0;
-> @@ -175,33 +154,26 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
->  			return acc;
->  	}
->  
-> -	start = map_offset_to_paddr(*fpos, &vmcore_list, &curr_m);
-> -	if (!curr_m)
-> -        	return -EINVAL;
-> -
-> -	while (buflen) {
-> -		tsz = min_t(size_t, buflen, PAGE_SIZE - (start & ~PAGE_MASK));
-> -
-> -		/* Calculate left bytes in current memory segment. */
-> -		nr_bytes = (curr_m->size - (start - curr_m->paddr));
-> -		if (tsz > nr_bytes)
-> -			tsz = nr_bytes;
-> -
-> -		tmp = read_from_oldmem(buffer, tsz, &start, 1);
-> -		if (tmp < 0)
-> -			return tmp;
-> -		buflen -= tsz;
-> -		*fpos += tsz;
-> -		buffer += tsz;
-> -		acc += tsz;
-> -		if (start >= (curr_m->paddr + curr_m->size)) {
-> -			if (curr_m->list.next == &vmcore_list)
-> -				return acc;	/*EOF*/
-> -			curr_m = list_entry(curr_m->list.next,
-> -						struct vmcore, list);
-> -			start = curr_m->paddr;
-> +	list_for_each_entry(m, &vmcore_list, list) {
-> +		if (*fpos < m->offset + m->size) {
-> +			tsz = m->offset + m->size - *fpos;
-> +			if (buflen < tsz)
-> +				tsz = buflen;
-> +			start = m->paddr + *fpos - m->offset;
-> +			tmp = read_from_oldmem(buffer, tsz, &start, 1);
-> +			if (tmp < 0)
-> +				return tmp;
-> +			buflen -= tsz;
-> +			*fpos += tsz;
-> +			buffer += tsz;
-> +			acc += tsz;
-> +
-> +			/* leave now if filled buffer already */
-> +			if (buflen == 0)
-> +				return acc;
->  		}
->  	}
-> +
->  	return acc;
->  }
->  
+>
+>
+>> +	if (rc < 0)
+>> +		return rc;
+>> +
+>>   	/* Prepare merged PT_NOTE program header. */
+>>   	phdr.p_type    = PT_NOTE;
+>>   	phdr.p_flags   = 0;
+>> @@ -304,23 +364,18 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+>>   	return 0;
+>>   }
+>>
+>> -/* Merges all the PT_NOTE headers into one. */
+>> -static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+>> -						struct list_head *vc_list)
+>> +static int __init process_note_headers_elf32(const Elf32_Ehdr *ehdr_ptr,
+>> +					     int *nr_ptnotep, u64 *phdr_szp,
+>> +					     char *notesegp)
+>
+> Can you please describe function parameters at the beginning of function
+> in a comment. Things are gettting little confusing now.
+>
+> What does notesegp signify? phdr_szp could be simply *phdr_sz,
+> nr_ptnotesp could be *nr_notes. Please simplify the naming a bit.
+> Seems too twisted to me.
+
+I see. I'll reflect that in addition to your other comments.
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
