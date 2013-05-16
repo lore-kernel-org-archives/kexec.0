@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uct7k-0002fj-Qc
- for kexec@lists.infradead.org; Thu, 16 May 2013 08:01:18 +0000
-Message-ID: <519489EA.7000209@cn.fujitsu.com>
-Date: Thu, 16 May 2013 15:25:30 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v6 8/8] vmcore: support mmap() on /proc/vmcore
+ id 1Ud1P1-0000jf-F3
+ for kexec@lists.infradead.org; Thu, 16 May 2013 16:51:40 +0000
+Date: Thu, 16 May 2013 12:51:05 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v6 2/8] vmcore: allocate buffer for ELF headers on
+ page-size alignment
+Message-ID: <20130516165105.GB8726@redhat.com>
 References: <20130515090507.28109.28956.stgit@localhost6.localdomain6>
- <20130515090626.28109.95938.stgit@localhost6.localdomain6>
-In-Reply-To: <20130515090626.28109.95938.stgit@localhost6.localdomain6>
+ <20130515090551.28109.73350.stgit@localhost6.localdomain6>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130515090551.28109.73350.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,83 +21,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: riel@redhat.com, hughd@google.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, akpm@linux-foundation.org, walken@google.com, cpw@sgi.com, vgoyal@redhat.com
+Cc: riel@redhat.com, hughd@google.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, walken@google.com, cpw@sgi.com, jingbai.ma@hp.com
 
-5LqOIDIwMTPlubQwNeaciDE15pelIDE3OjA2LCBIQVRBWUFNQSBEYWlzdWtlIOWGmemBkzoKPiBU
-aGlzIHBhdGNoIGludHJvZHVjZXMgbW1hcF92bWNvcmUoKS4KPiAKPiBEb24ndCBwZXJtaXQgd3Jp
-dGFibGUgbm9yIGV4ZWN1dGFibGUgbWFwcGluZyBldmVuIHdpdGggbXByb3RlY3QoKQo+IGJlY2F1
-c2UgdGhpcyBtbWFwKCkgaXMgYWltZWQgYXQgcmVhZGluZyBjcmFzaCBkdW1wIG1lbW9yeS4KPiBO
-b24td3JpdGFibGUgbWFwcGluZyBpcyBhbHNvIHJlcXVpcmVtZW50IG9mIHJlbWFwX3Bmbl9yYW5n
-ZSgpIHdoZW4KPiBtYXBwaW5nIGxpbmVhciBwYWdlcyBvbiBub24tY29uc2VjdXRpdmUgcGh5c2lj
-YWwgcGFnZXM7IHNlZQo+IGlzX2Nvd19tYXBwaW5nKCkuCj4gCj4gU2V0IFZNX01JWEVETUFQIGZs
-YWcgdG8gcmVtYXAgbWVtb3J5IGJ5IHJlbWFwX3Bmbl9yYW5nZSBhbmQgYnkKPiByZW1hcF92bWFs
-bG9jX3JhbmdlX3BlcnRpYWwgYXQgdGhlIHNhbWUgdGltZSBmb3IgYSBzaW5nbGUKPiB2bWEuIGRv
-X211bm1hcCgpIGNhbiBjb3JyZWN0bHkgY2xlYW4gcGFydGlhbGx5IHJlbWFwcGVkIHZtYSB3aXRo
-IHR3bwo+IGZ1bmN0aW9ucyBpbiBhYm5vcm1hbCBjYXNlLiBTZWUgemFwX3B0ZV9yYW5nZSgpLCB2
-bV9ub3JtYWxfcGFnZSgpIGFuZAo+IHRoZWlyIGNvbW1lbnRzIGZvciBkZXRhaWxzLgo+IAo+IE9u
-IHg4Ni0zMiBQQUUga2VybmVscywgbW1hcCgpIHN1cHBvcnRzIGF0IG1vc3QgMTZUQiBtZW1vcnkg
-b25seS4gVGhpcwo+IGxpbWl0YXRpb24gY29tZXMgZnJvbSB0aGUgZmFjdCB0aGF0IHRoZSB0aGly
-ZCBhcmd1bWVudCBvZgo+IHJlbWFwX3Bmbl9yYW5nZSgpLCBwZm4sIGlzIG9mIDMyLWJpdCBsZW5n
-dGggb24geDg2LTMyOiB1bnNpZ25lZCBsb25nLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEhBVEFZQU1B
-IERhaXN1a2UgPGQuaGF0YXlhbWFAanAuZnVqaXRzdS5jb20+Cj4gLS0tCgpBc3N1bWluZyB0aGF0
-IHBhdGNoIDQgJiA1IG9mIHRoaXMgc2VyaWVzIGFyZSBvazoKCkFja2VkLWJ5OiBaaGFuZyBZYW5m
-ZWkgPHpoYW5neWFuZmVpQGNuLmZ1aml0c3UuY29tPgoKPiAKPiAgZnMvcHJvYy92bWNvcmUuYyB8
-ICAgODYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrCj4gIDEgZmlsZXMgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvZnMvcHJvYy92bWNvcmUuYyBiL2ZzL3Byb2Mvdm1jb3JlLmMKPiBp
-bmRleCA3ZjIwNDFjLi4yYzcyNDg3IDEwMDY0NAo+IC0tLSBhL2ZzL3Byb2Mvdm1jb3JlLmMKPiAr
-KysgYi9mcy9wcm9jL3ZtY29yZS5jCj4gQEAgLTIwLDYgKzIwLDcgQEAKPiAgI2luY2x1ZGUgPGxp
-bnV4L2luaXQuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2NyYXNoX2R1bXAuaD4KPiAgI2luY2x1ZGUg
-PGxpbnV4L2xpc3QuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3ZtYWxsb2MuaD4KPiAgI2luY2x1ZGUg
-PGFzbS91YWNjZXNzLmg+Cj4gICNpbmNsdWRlIDxhc20vaW8uaD4KPiAgI2luY2x1ZGUgImludGVy
-bmFsLmgiCj4gQEAgLTIwMCw5ICsyMDEsOTQgQEAgc3RhdGljIHNzaXplX3QgcmVhZF92bWNvcmUo
-c3RydWN0IGZpbGUgKmZpbGUsIGNoYXIgX191c2VyICpidWZmZXIsCj4gIAlyZXR1cm4gYWNjOwo+
-ICB9Cj4gIAo+ICtzdGF0aWMgaW50IG1tYXBfdm1jb3JlKHN0cnVjdCBmaWxlICpmaWxlLCBzdHJ1
-Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSkKPiArewo+ICsJc2l6ZV90IHNpemUgPSB2bWEtPnZtX2Vu
-ZCAtIHZtYS0+dm1fc3RhcnQ7Cj4gKwl1NjQgc3RhcnQsIGVuZCwgbGVuLCB0c3o7Cj4gKwlzdHJ1
-Y3Qgdm1jb3JlICptOwo+ICsKPiArCXN0YXJ0ID0gKHU2NCl2bWEtPnZtX3Bnb2ZmIDw8IFBBR0Vf
-U0hJRlQ7Cj4gKwllbmQgPSBzdGFydCArIHNpemU7Cj4gKwo+ICsJaWYgKHNpemUgPiB2bWNvcmVf
-c2l6ZSB8fCBlbmQgPiB2bWNvcmVfc2l6ZSkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCj4gKwlp
-ZiAodm1hLT52bV9mbGFncyAmIChWTV9XUklURSB8IFZNX0VYRUMpKQo+ICsJCXJldHVybiAtRVBF
-Uk07Cj4gKwo+ICsJdm1hLT52bV9mbGFncyAmPSB+KFZNX01BWVdSSVRFIHwgVk1fTUFZRVhFQyk7
-Cj4gKwl2bWEtPnZtX2ZsYWdzIHw9IFZNX01JWEVETUFQOwo+ICsKPiArCWxlbiA9IDA7Cj4gKwo+
-ICsJaWYgKHN0YXJ0IDwgZWxmY29yZWJ1Zl9zeikgewo+ICsJCXU2NCBwZm47Cj4gKwo+ICsJCXRz
-eiA9IGVsZmNvcmVidWZfc3ogLSBzdGFydDsKPiArCQlpZiAoc2l6ZSA8IHRzeikKPiArCQkJdHN6
-ID0gc2l6ZTsKPiArCQlwZm4gPSBfX3BhKGVsZmNvcmVidWYgKyBzdGFydCkgPj4gUEFHRV9TSElG
-VDsKPiArCQlpZiAocmVtYXBfcGZuX3JhbmdlKHZtYSwgdm1hLT52bV9zdGFydCwgcGZuLCB0c3os
-Cj4gKwkJCQkgICAgdm1hLT52bV9wYWdlX3Byb3QpKQo+ICsJCQlyZXR1cm4gLUVBR0FJTjsKPiAr
-CQlzaXplIC09IHRzejsKPiArCQlzdGFydCArPSB0c3o7Cj4gKwkJbGVuICs9IHRzejsKPiArCj4g
-KwkJaWYgKHNpemUgPT0gMCkKPiArCQkJcmV0dXJuIDA7Cj4gKwl9Cj4gKwo+ICsJaWYgKHN0YXJ0
-IDwgZWxmY29yZWJ1Zl9zeiArIGVsZm5vdGVzX3N6KSB7Cj4gKwkJdm9pZCAqa2FkZHI7Cj4gKwo+
-ICsJCXRzeiA9IGVsZmNvcmVidWZfc3ogKyBlbGZub3Rlc19zeiAtIHN0YXJ0Owo+ICsJCWlmIChz
-aXplIDwgdHN6KQo+ICsJCQl0c3ogPSBzaXplOwo+ICsJCWthZGRyID0gZWxmbm90ZXNfYnVmICsg
-c3RhcnQgLSBlbGZjb3JlYnVmX3N6Owo+ICsJCWlmIChyZW1hcF92bWFsbG9jX3JhbmdlX3BhcnRp
-YWwodm1hLCB2bWEtPnZtX3N0YXJ0ICsgbGVuLAo+ICsJCQkJCQlrYWRkciwgdHN6KSkgewo+ICsJ
-CQlkb19tdW5tYXAodm1hLT52bV9tbSwgdm1hLT52bV9zdGFydCwgbGVuKTsKPiArCQkJcmV0dXJu
-IC1FQUdBSU47Cj4gKwkJfQo+ICsJCXNpemUgLT0gdHN6Owo+ICsJCXN0YXJ0ICs9IHRzejsKPiAr
-CQlsZW4gKz0gdHN6Owo+ICsKPiArCQlpZiAoc2l6ZSA9PSAwKQo+ICsJCQlyZXR1cm4gMDsKPiAr
-CX0KPiArCj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KG0sICZ2bWNvcmVfbGlzdCwgbGlzdCkgewo+
-ICsJCWlmIChzdGFydCA8IG0tPm9mZnNldCArIG0tPnNpemUpIHsKPiArCQkJdTY0IHBhZGRyID0g
-MDsKPiArCj4gKwkJCXRzeiA9IG0tPm9mZnNldCArIG0tPnNpemUgLSBzdGFydDsKPiArCQkJaWYg
-KHNpemUgPCB0c3opCj4gKwkJCQl0c3ogPSBzaXplOwo+ICsJCQlwYWRkciA9IG0tPnBhZGRyICsg
-c3RhcnQgLSBtLT5vZmZzZXQ7Cj4gKwkJCWlmIChyZW1hcF9wZm5fcmFuZ2Uodm1hLCB2bWEtPnZt
-X3N0YXJ0ICsgbGVuLAo+ICsJCQkJCSAgICBwYWRkciA+PiBQQUdFX1NISUZULCB0c3osCj4gKwkJ
-CQkJICAgIHZtYS0+dm1fcGFnZV9wcm90KSkgewo+ICsJCQkJZG9fbXVubWFwKHZtYS0+dm1fbW0s
-IHZtYS0+dm1fc3RhcnQsIGxlbik7Cj4gKwkJCQlyZXR1cm4gLUVBR0FJTjsKPiArCQkJfQo+ICsJ
-CQlzaXplIC09IHRzejsKPiArCQkJc3RhcnQgKz0gdHN6Owo+ICsJCQlsZW4gKz0gdHN6Owo+ICsK
-PiArCQkJaWYgKHNpemUgPT0gMCkKPiArCQkJCXJldHVybiAwOwo+ICsJCX0KPiArCX0KPiArCj4g
-KwlyZXR1cm4gMDsKPiArfQo+ICsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxlX29wZXJhdGlv
-bnMgcHJvY192bWNvcmVfb3BlcmF0aW9ucyA9IHsKPiAgCS5yZWFkCQk9IHJlYWRfdm1jb3JlLAo+
-ICAJLmxsc2VlawkJPSBkZWZhdWx0X2xsc2VlaywKPiArCS5tbWFwCQk9IG1tYXBfdm1jb3JlLAo+
-ICB9Owo+ICAKPiAgc3RhdGljIHN0cnVjdCB2bWNvcmUqIF9faW5pdCBnZXRfbmV3X2VsZW1lbnQo
-dm9pZCkKPiAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Wed, May 15, 2013 at 06:05:51PM +0900, HATAYAMA Daisuke wrote:
+
+[..]
+> @@ -398,9 +403,7 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
+>  	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr)); /* PT_NOTE hdr */
+>  
+>  	/* First program header is PT_NOTE header. */
+> -	vmcore_off = sizeof(Elf64_Ehdr) +
+> -			(ehdr_ptr->e_phnum) * sizeof(Elf64_Phdr) +
+> -			phdr_ptr->p_memsz; /* Note sections */
+> +	vmcore_off = elfsz + roundup(phdr_ptr->p_memsz, PAGE_SIZE);
+>  
+>  	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
+>  		if (phdr_ptr->p_type != PT_LOAD)
+> @@ -435,9 +438,7 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+>  	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr)); /* PT_NOTE hdr */
+>  
+>  	/* First program header is PT_NOTE header. */
+> -	vmcore_off = sizeof(Elf32_Ehdr) +
+> -			(ehdr_ptr->e_phnum) * sizeof(Elf32_Phdr) +
+> -			phdr_ptr->p_memsz; /* Note sections */
+> +	vmcore_off = elfsz + roundup(phdr_ptr->p_memsz, PAGE_SIZE);
+
+Hmm.., so we are rounding up ELF note data size too here. I think this belongs
+in some other patch as in this patch we are just rounding up the elf
+headers.
+
+This might create read problems too as we have not taking care of this
+rounding when adding note to vc_list and it might happen that we are
+reading wrong data at a particular offset.
+
+So may be this rounding up we should do in later patches when we take
+care of copying ELF notes data to second kernel.
+
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
