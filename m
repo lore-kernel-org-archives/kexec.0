@@ -1,17 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ud52x-0005Wt-Tt
- for kexec@lists.infradead.org; Thu, 16 May 2013 20:45:09 +0000
-Date: Thu, 16 May 2013 16:44:37 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v6 8/8] vmcore: support mmap() on /proc/vmcore
-Message-ID: <20130516204437.GH5904@redhat.com>
-References: <20130515090507.28109.28956.stgit@localhost6.localdomain6>
- <20130515090626.28109.95938.stgit@localhost6.localdomain6>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Ud7sV-0003FK-Gx
+ for kexec@lists.infradead.org; Thu, 16 May 2013 23:46:33 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 300D43EE0AE
+ for <kexec@lists.infradead.org>; Fri, 17 May 2013 08:46:03 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 20DFC45DE4E
+ for <kexec@lists.infradead.org>; Fri, 17 May 2013 08:46:03 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 0B5D845DDCF
+ for <kexec@lists.infradead.org>; Fri, 17 May 2013 08:46:03 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id EE81C1DB803A
+ for <kexec@lists.infradead.org>; Fri, 17 May 2013 08:46:02 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id A60921DB802C
+ for <kexec@lists.infradead.org>; Fri, 17 May 2013 08:46:02 +0900 (JST)
+Message-ID: <51956FA3.6040806@jp.fujitsu.com>
+Date: Fri, 17 May 2013 08:45:39 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130515090626.28109.95938.stgit@localhost6.localdomain6>
+Subject: Re: [PATCH v6 4/8] vmalloc: make find_vm_area check in range
+References: <20130515090507.28109.28956.stgit@localhost6.localdomain6>
+ <20130515090602.28109.90142.stgit@localhost6.localdomain6>
+ <CAHGf_=q-91cYOMPFfSGLsWWst7STgp6pxX4__9UMYUGh=Ef3oA@mail.gmail.com>
+In-Reply-To: <CAHGf_=q-91cYOMPFfSGLsWWst7STgp6pxX4__9UMYUGh=Ef3oA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,154 +36,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: riel@redhat.com, hughd@google.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, walken@google.com, cpw@sgi.com, jingbai.ma@hp.com
+To: KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>
+Cc: "riel@redhat.com" <riel@redhat.com>, Hugh Dickins <hughd@google.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, lisa.mitchell@hp.com, vgoyal@redhat.com, "linux-mm@kvack.org" <linux-mm@kvack.org>, kumagai-atsushi@mxc.nes.nec.co.jp, "Eric W. Biederman" <ebiederm@xmission.com>, zhangyanfei@cn.fujitsu.com, Andrew Morton <akpm@linux-foundation.org>, Michel Lespinasse <walken@google.com>, cpw@sgi.com, jingbai.ma@hp.com
 
-On Wed, May 15, 2013 at 06:06:26PM +0900, HATAYAMA Daisuke wrote:
-> This patch introduces mmap_vmcore().
-> 
-> Don't permit writable nor executable mapping even with mprotect()
-> because this mmap() is aimed at reading crash dump memory.
-> Non-writable mapping is also requirement of remap_pfn_range() when
-> mapping linear pages on non-consecutive physical pages; see
-> is_cow_mapping().
-> 
-> Set VM_MIXEDMAP flag to remap memory by remap_pfn_range and by
-> remap_vmalloc_range_pertial at the same time for a single
-> vma. do_munmap() can correctly clean partially remapped vma with two
-> functions in abnormal case. See zap_pte_range(), vm_normal_page() and
-> their comments for details.
-> 
-> On x86-32 PAE kernels, mmap() supports at most 16TB memory only. This
-> limitation comes from the fact that the third argument of
-> remap_pfn_range(), pfn, is of 32-bit length on x86-32: unsigned long.
-> 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> ---
+(2013/05/16 6:37), KOSAKI Motohiro wrote:
+> On Wed, May 15, 2013 at 5:06 AM, HATAYAMA Daisuke
+> <d.hatayama@jp.fujitsu.com> wrote:
+>> Currently, __find_vmap_area searches for the kernel VM area starting
+>> at a given address. This patch changes this behavior so that it
+>> searches for the kernel VM area to which the address belongs. This
+>> change is needed by remap_vmalloc_range_partial to be introduced in
+>> later patch that receives any position of kernel VM area as target
+>> address.
+>>
+>> This patch changes the condition (addr > va->va_start) to the
+>> equivalent (addr >= va->va_end) by taking advantage of the fact that
+>> each kernel VM area is non-overlapping.
+>>
+>> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+>> ---
+>>
+>>   mm/vmalloc.c |    2 +-
+>>   1 files changed, 1 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+>> index d365724..3875fa2 100644
+>> --- a/mm/vmalloc.c
+>> +++ b/mm/vmalloc.c
+>> @@ -292,7 +292,7 @@ static struct vmap_area *__find_vmap_area(unsigned long addr)
+>>                  va = rb_entry(n, struct vmap_area, rb_node);
+>>                  if (addr < va->va_start)
+>>                          n = n->rb_left;
+>> -               else if (addr > va->va_start)
+>> +               else if (addr >= va->va_end)
+>>                          n = n->rb_right;
+>
+> OK. This is natural definition. Looks good.
+>
+> Acked-by: KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>
 
-This one looks fine to me assuming vm folks like
-remap_vmalloc_range_partial().
+Thanks for your reviewing. Could you or other someone review the next 
+5/8 patch too? It also changes vmalloc and cc people's review is needed.
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-Thanks
-Vivek
-
-> 
->  fs/proc/vmcore.c |   86 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 86 insertions(+), 0 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 7f2041c..2c72487 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -20,6 +20,7 @@
->  #include <linux/init.h>
->  #include <linux/crash_dump.h>
->  #include <linux/list.h>
-> +#include <linux/vmalloc.h>
->  #include <asm/uaccess.h>
->  #include <asm/io.h>
->  #include "internal.h"
-> @@ -200,9 +201,94 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
->  	return acc;
->  }
->  
-> +static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	size_t size = vma->vm_end - vma->vm_start;
-> +	u64 start, end, len, tsz;
-> +	struct vmcore *m;
-> +
-> +	start = (u64)vma->vm_pgoff << PAGE_SHIFT;
-> +	end = start + size;
-> +
-> +	if (size > vmcore_size || end > vmcore_size)
-> +		return -EINVAL;
-> +
-> +	if (vma->vm_flags & (VM_WRITE | VM_EXEC))
-> +		return -EPERM;
-> +
-> +	vma->vm_flags &= ~(VM_MAYWRITE | VM_MAYEXEC);
-> +	vma->vm_flags |= VM_MIXEDMAP;
-> +
-> +	len = 0;
-> +
-> +	if (start < elfcorebuf_sz) {
-> +		u64 pfn;
-> +
-> +		tsz = elfcorebuf_sz - start;
-> +		if (size < tsz)
-> +			tsz = size;
-> +		pfn = __pa(elfcorebuf + start) >> PAGE_SHIFT;
-> +		if (remap_pfn_range(vma, vma->vm_start, pfn, tsz,
-> +				    vma->vm_page_prot))
-> +			return -EAGAIN;
-> +		size -= tsz;
-> +		start += tsz;
-> +		len += tsz;
-> +
-> +		if (size == 0)
-> +			return 0;
-> +	}
-> +
-> +	if (start < elfcorebuf_sz + elfnotes_sz) {
-> +		void *kaddr;
-> +
-> +		tsz = elfcorebuf_sz + elfnotes_sz - start;
-> +		if (size < tsz)
-> +			tsz = size;
-> +		kaddr = elfnotes_buf + start - elfcorebuf_sz;
-> +		if (remap_vmalloc_range_partial(vma, vma->vm_start + len,
-> +						kaddr, tsz)) {
-> +			do_munmap(vma->vm_mm, vma->vm_start, len);
-> +			return -EAGAIN;
-> +		}
-> +		size -= tsz;
-> +		start += tsz;
-> +		len += tsz;
-> +
-> +		if (size == 0)
-> +			return 0;
-> +	}
-> +
-> +	list_for_each_entry(m, &vmcore_list, list) {
-> +		if (start < m->offset + m->size) {
-> +			u64 paddr = 0;
-> +
-> +			tsz = m->offset + m->size - start;
-> +			if (size < tsz)
-> +				tsz = size;
-> +			paddr = m->paddr + start - m->offset;
-> +			if (remap_pfn_range(vma, vma->vm_start + len,
-> +					    paddr >> PAGE_SHIFT, tsz,
-> +					    vma->vm_page_prot)) {
-> +				do_munmap(vma->vm_mm, vma->vm_start, len);
-> +				return -EAGAIN;
-> +			}
-> +			size -= tsz;
-> +			start += tsz;
-> +			len += tsz;
-> +
-> +			if (size == 0)
-> +				return 0;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static const struct file_operations proc_vmcore_operations = {
->  	.read		= read_vmcore,
->  	.llseek		= default_llseek,
-> +	.mmap		= mmap_vmcore,
->  };
->  
->  static struct vmcore* __init get_new_element(void)
 
 _______________________________________________
 kexec mailing list
