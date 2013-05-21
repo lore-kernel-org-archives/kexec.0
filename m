@@ -1,30 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UeaaH-0004T9-Gs
- for kexec@lists.infradead.org; Tue, 21 May 2013 00:37:46 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 62C253EE0BD
- for <kexec@lists.infradead.org>; Tue, 21 May 2013 09:37:15 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5061245DE5B
- for <kexec@lists.infradead.org>; Tue, 21 May 2013 09:37:15 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 365DD45DE5A
- for <kexec@lists.infradead.org>; Tue, 21 May 2013 09:37:15 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1FC7F1DB8047
- for <kexec@lists.infradead.org>; Tue, 21 May 2013 09:37:15 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id CB9681DB8048
- for <kexec@lists.infradead.org>; Tue, 21 May 2013 09:37:14 +0900 (JST)
-Message-ID: <519AC18C.1070705@jp.fujitsu.com>
-Date: Tue, 21 May 2013 09:36:28 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
+ id 1UecAz-0005UJ-8K
+ for kexec@lists.infradead.org; Tue, 21 May 2013 02:19:47 +0000
+Date: Tue, 21 May 2013 11:15:16 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Subject: Re: [PATCH] makedumpfile: non-cyclic default
-References: <E1UcggB-0005h5-8e@eag09.americas.sgi.com>
+Message-Id: <20130521111516.af6d1f8d14f39c8d34d9d18d@mxc.nes.nec.co.jp>
 In-Reply-To: <E1UcggB-0005h5-8e@eag09.americas.sgi.com>
+References: <E1UcggB-0005h5-8e@eag09.americas.sgi.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,33 +18,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+To: cpw@sgi.com
+Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
 
-(2013/05/16 3:43), Cliff Wickman wrote:
+On Wed, 15 May 2013 13:43:59 -0500
+Cliff Wickman <cpw@sgi.com> wrote:
+
 > From: Cliff Wickman <cpw@sgi.com>
->
+> 
 > Make non-cyclic the default, as it is faster.
->
-
-Default behaviour should not be changed so easily, and I think 
-performance of cyclic mode can be improved to some amount because 
-cyclic-mode shows slow result even if the number of cycles is 1...
-
+> 
 > Dumping a 1TB memory is successful with a crashkernel=512M.
 > And allow -Y on the command line, as well as --non-cylic.
+> 
+> Signed-off-by: Cliff Wickman <cpw@sgi.com>
 
-Is the '-Y' definitely necessary? I'm thinking this is hideded 
-intentionally.
+This change causes the failure due to lack of memory, again.
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+I think reliability is more important than performance, it's desirable
+that anyone can use makedumpfile safely without any considerations.
 
+Only experts who can set "crashkernel" appropriately based on physical
+memory size should use --non-cyclic option manually for performance.
+
+
+Thanks
+Atsushi Kumagai
+
+> ---
+>  makedumpfile.c |    9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> Index: makedumpfile.mmap/makedumpfile.c
+> ===================================================================
+> --- makedumpfile.mmap.orig/makedumpfile.c
+> +++ makedumpfile.mmap/makedumpfile.c
+> @@ -8585,13 +8585,14 @@ main(int argc, char *argv[])
+>  	initialize_tables();
+>  
+>  	/*
+> -	 * By default, makedumpfile works in constant memory space.
+> +	 * By default, makedumpfile makes one pass through page structures.
+> +	 * Use --cyclic-buffer to work in constant memory space.
+>  	 */
+> -	info->flag_cyclic = TRUE;
+> +	info->flag_cyclic = FALSE;
+>  	
+>  	info->block_order = DEFAULT_ORDER;
+>  	message_level = DEFAULT_MSG_LEVEL;
+> -	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:", longopts,
+> +	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:Y", longopts,
+>  	    NULL)) != -1) {
+>  		switch (opt) {
+>  		case 'A':
+> @@ -8694,6 +8695,8 @@ main(int argc, char *argv[])
+>  			break;
+>  		case 'Z':
+>  			info->bufsize_cyclic = atoi(optarg);
+> +			if (info->bufsize_cyclic)
+> +				info->flag_cyclic = TRUE;
+>  			break;
+>  		case '?':
+>  			MSG("Commandline parameter is invalid.\n");
 
 _______________________________________________
 kexec mailing list
