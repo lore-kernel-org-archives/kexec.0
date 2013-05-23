@@ -1,17 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UfZXK-00044W-0l
- for kexec@lists.infradead.org; Thu, 23 May 2013 17:42:47 +0000
-Date: Thu, 23 May 2013 13:41:27 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UfadZ-0005tf-2Q
+ for kexec@lists.infradead.org; Thu, 23 May 2013 18:53:18 +0000
+Received: from /spool/local
+ by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Thu, 23 May 2013 19:49:29 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id DA900219005E
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 19:55:41 +0100 (BST)
+Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+ [9.149.37.228])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r4NIqX1N54263808
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 18:52:33 GMT
+Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r4NIqhTo006168
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 12:52:43 -0600
+Date: Thu, 23 May 2013 20:52:41 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Subject: Re: [PATCH v2 1/3] kdump: Introduce ELF header in new memory feature
-Message-ID: <20130523174127.GA12290@redhat.com>
+Message-ID: <20130523205241.4b9e4fde@holzheu>
+In-Reply-To: <20130523174127.GA12290@redhat.com>
 References: <1369245517-16204-1-git-send-email-holzheu@linux.vnet.ibm.com>
  <1369245517-16204-2-git-send-email-holzheu@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1369245517-16204-2-git-send-email-holzheu@linux.vnet.ibm.com>
+ <20130523174127.GA12290@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,121 +42,143 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2013 at 07:58:35PM +0200, Michael Holzheu wrote:
-> or s390 we create the ELF core header in the 2nd kernel
-> with a small trick. We relocate the addresses in the ELF header in
-> a way that for the /proc/vmcore code it seems to be in the 1st kernel
-> (old) memory and the read_from_oldmem() returns the correct data.
-> This allows the /proc/vmcore code to use the ELF header in the
-> 2nd kernel.
+Hello Vivek,
+
+Thanks for your reply. I will integrate your feedback into the v3 patch
+set and will make the following changes:
+
+- Get rid of ELFCORE_ADDR_NEWMEM (sorry for that:)
+- Make read_from_crash_header() only read from kernel
+- Move read_from_crash_header() to weak function
+  arch_read_from_crash_header()
+- Implement read_from_crash_header() strong function for s390
+- Set elfcorehdr_addr to address of new ELF header
+
+Best Regards,
+Michael
+
+On Thu, 23 May 2013 13:41:27 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
+
+> On Wed, May 22, 2013 at 07:58:35PM +0200, Michael Holzheu wrote:
+> > or s390 we create the ELF core header in the 2nd kernel
+> > with a small trick. We relocate the addresses in the ELF header in
+> > a way that for the /proc/vmcore code it seems to be in the 1st
+> > kernel (old) memory and the read_from_oldmem() returns the correct
+> > data. This allows the /proc/vmcore code to use the ELF header in the
+> > 2nd kernel.
+> > 
+> > This patch now exchanges the old mechanism with the new and much
+> > cleaner function call override feature that now offcially allows to
+> > create the ELF core header in the 2nd kernel.
+> > 
+> > To use the new feature the following has to be done by the
+> > architecture backend code:
+> > 
+> >  * Set elfcorehdr_addr to ELFCORE_ADDR_NEWMEM
+> >    -> is_kdump_kernel() will return true
 > 
-> This patch now exchanges the old mechanism with the new and much
-> cleaner function call override feature that now offcially allows to
-> create the ELF core header in the 2nd kernel.
+> setting elfcorehdr_addr to ELFCORE_ADDR_NEWMEM looks really odd to me.
+> There is no need for arch independent code to know whether crash
+> headers are in new memory or not. Our old assumption was that
+> everything is in old memory. Now that is broken because of s390. So
+> arch should be able to override read_from_crash_header() call and
+> read headers from new memory. If need be s390 can maintain another
+> variable for this state to figure out where headers are.
 > 
-> To use the new feature the following has to be done by the architecture
-> backend code:
+> Also arch should be able to  set elfcorehdr_addr to virtual address
+> of ELF header. is_kdump_kernel() does not care whether address stored
+> in elfcorehdr_addr is physical or virtual.
 > 
->  * Set elfcorehdr_addr to ELFCORE_ADDR_NEWMEM
->    -> is_kdump_kernel() will return true
-
-setting elfcorehdr_addr to ELFCORE_ADDR_NEWMEM looks really odd to me.
-There is no need for arch independent code to know whether crash headers
-are in new memory or not. Our old assumption was that everything is in
-old memory. Now that is broken because of s390. So arch should be
-able to override read_from_crash_header() call and read headers from
-new memory. If need be s390 can maintain another variable for this
-state to figure out where headers are.
-
-Also arch should be able to  set elfcorehdr_addr to virtual address
-of ELF header. is_kdump_kernel() does not care whether address stored
-in elfcorehdr_addr is physical or virtual.
-
-IOW, generic code would not care whether headers are in new memory
-or old memory. All the operations on header will be abstracted with
-the help of helper functions.
-
-Can we please get rid of this NEWMEM stuff.
-
-
->  * Override arch_get_crash_header() to return the address of the ELF
->    header in new memory.
->  * Override arch_free_crash_header() to free the memory of the ELF
->    header in new memory.
+> IOW, generic code would not care whether headers are in new memory
+> or old memory. All the operations on header will be abstracted with
+> the help of helper functions.
 > 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> ---
->  fs/proc/vmcore.c           | 80 +++++++++++++++++++++++++++++++++++-----------
->  include/linux/crash_dump.h |  3 ++
->  2 files changed, 65 insertions(+), 18 deletions(-)
+> Can we please get rid of this NEWMEM stuff.
 > 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 6ba32f8..d97ed31 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -123,6 +123,47 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
->  	return read;
->  }
->  
-> +/*
-> + * Read from the current (new) kernel memory
-> + */
-> +static ssize_t read_from_newmem(char *buf, size_t count, u64 *ppos, int userbuf)
-> +{
-> +	if (userbuf) {
-> +		if (copy_to_user(buf, (void *)*ppos, count))
-> +			return -EFAULT;
-> +	} else {
-> +		memcpy(buf, (void *)*ppos, count);
-> +	}
-> +	*ppos += count;
-> +	return count;
-> +}
-> +
+> 
+> >  * Override arch_get_crash_header() to return the address of the ELF
+> >    header in new memory.
+> >  * Override arch_free_crash_header() to free the memory of the ELF
+> >    header in new memory.
+> > 
+> > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > ---
+> >  fs/proc/vmcore.c           | 80
+> > +++++++++++++++++++++++++++++++++++-----------
+> > include/linux/crash_dump.h |  3 ++ 2 files changed, 65
+> > insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> > index 6ba32f8..d97ed31 100644
+> > --- a/fs/proc/vmcore.c
+> > +++ b/fs/proc/vmcore.c
+> > @@ -123,6 +123,47 @@ static ssize_t read_from_oldmem(char *buf,
+> > size_t count, return read;
+> >  }
+> >  
+> > +/*
+> > + * Read from the current (new) kernel memory
+> > + */
+> > +static ssize_t read_from_newmem(char *buf, size_t count, u64
+> > *ppos, int userbuf) +{
+> > +	if (userbuf) {
+> > +		if (copy_to_user(buf, (void *)*ppos, count))
+> > +			return -EFAULT;
+> > +	} else {
+> > +		memcpy(buf, (void *)*ppos, count);
+> > +	}
+> > +	*ppos += count;
+> > +	return count;
+> > +}
+> > +
+> 
+> Why do we need read_from_newmem? I thought arch code will override
+> read_from_crash_header() and write a variant of read_from_newmem()
+> internally. I think could still be an helper function in vmcore.c if
+> there are many arch keeping headers in new memory so that we don't
+> have same code across multiple arches. But s390 seems to be the only
+> expcetion at this point of time.
+> 
+> > +/*
+> > + * Provide access to the header
+> > + */
+> > +static ssize_t read_from_crash_header(char *buf, size_t count, u64
+> > *ppos,
+> > +				      int userbuf)
+> > +{
+> > +	if (elfcorehdr_addr == ELFCORE_ADDR_NEWMEM)
+> > +		return read_from_newmem(buf, count, ppos, userbuf);
+> > +	else
+> > +		return read_from_oldmem(buf, count, ppos, userbuf);
+> > +}
+> > +
+> 
+> I thought read_from_crash_header() will simply be
+> 
+> read_from_crash_header() {
+> 	return read_from_oldmem()
+> }
+> 
+> And arch code will override it to read the headers from new memory.
+> That way generic code does not have to know whether headers are in
+> old memory or in new memory or somewhere else.
+> 
+> Also current usage of read_from_crash_header() seems to be that we are
+> not copying header data to user space buffer directly. Generic code
+> will process headers and copy them in kernel memory and it will be
+> copied to user space from there if need be.
+> 
+> So for time being I think it should be just fine to assume that
+> read_from_crash_header() is copying data to kernel memory only.
+> 
+> Thanks
+> Vivek
+> 
 
-Why do we need read_from_newmem? I thought arch code will override
-read_from_crash_header() and write a variant of read_from_newmem()
-internally. I think could still be an helper function in vmcore.c if
-there are many arch keeping headers in new memory so that we don't
-have same code across multiple arches. But s390 seems to be the only
-expcetion at this point of time.
-
-> +/*
-> + * Provide access to the header
-> + */
-> +static ssize_t read_from_crash_header(char *buf, size_t count, u64 *ppos,
-> +				      int userbuf)
-> +{
-> +	if (elfcorehdr_addr == ELFCORE_ADDR_NEWMEM)
-> +		return read_from_newmem(buf, count, ppos, userbuf);
-> +	else
-> +		return read_from_oldmem(buf, count, ppos, userbuf);
-> +}
-> +
-
-I thought read_from_crash_header() will simply be
-
-read_from_crash_header() {
-	return read_from_oldmem()
-}
-
-And arch code will override it to read the headers from new memory. That
-way generic code does not have to know whether headers are in old memory
-or in new memory or somewhere else.
-
-Also current usage of read_from_crash_header() seems to be that we are
-not copying header data to user space buffer directly. Generic code will
-process headers and copy them in kernel memory and it will be copied to
-user space from there if need be.
-
-So for time being I think it should be just fine to assume that
-read_from_crash_header() is copying data to kernel memory only.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
