@@ -1,18 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UfFvt-0003QE-VH
- for kexec@lists.infradead.org; Wed, 22 May 2013 20:46:50 +0000
-Date: Wed, 22 May 2013 16:46:03 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v7 7/8] vmcore: calculate vmcore file size from buffer
- size and total size of vmcore objects
-Message-ID: <20130522204603.GC15738@redhat.com>
-References: <20130522025410.12215.16793.stgit@localhost6.localdomain6>
- <20130522025612.12215.74462.stgit@localhost6.localdomain6>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UfO1u-0001IW-DE
+ for kexec@lists.infradead.org; Thu, 23 May 2013 05:25:35 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 211B63EE0C0
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 14:25:15 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id D322A45DE59
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 14:25:14 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id AF3F745DE55
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 14:25:14 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8E70AE08002
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 14:25:14 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2D729E08004
+ for <kexec@lists.infradead.org>; Thu, 23 May 2013 14:25:14 +0900 (JST)
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Subject: [PATCH v8 3/9] vmcore: treat memory chunks referenced by PT_LOAD
+ program header entries in page-size boundary in vmcore_list
+Date: Thu, 23 May 2013 14:25:13 +0900
+Message-ID: <20130523052513.13864.85440.stgit@localhost6.localdomain6>
+In-Reply-To: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
+References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130522025612.12215.74462.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,61 +38,110 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: riel@redhat.com, hughd@google.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, akpm@linux-foundation.org, walken@google.com, cpw@sgi.com, jingbai.ma@hp.com
+To: vgoyal@redhat.com, ebiederm@xmission.com, akpm@linux-foundation.org
+Cc: riel@redhat.com, hughd@google.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, zhangyanfei@cn.fujitsu.com, kosaki.motohiro@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, walken@google.com, cpw@sgi.com, jingbai.ma@hp.com
 
-On Wed, May 22, 2013 at 11:56:12AM +0900, HATAYAMA Daisuke wrote:
+Treat memory chunks referenced by PT_LOAD program header entries in
+page-size boundary in vmcore_list. Formally, for each range [start,
+end], we set up the corresponding vmcore object in vmcore_list to
+[rounddown(start, PAGE_SIZE), roundup(end, PAGE_SIZE)].
 
-[..]
-> -static u64 __init get_vmcore_size_elf64(char *elfptr, size_t elfsz)
-> +static u64 __init get_vmcore_size_elf64(size_t elfsz, size_t elfnotesegsz,
-> +					struct list_head *vc_list)
->  {
-> -	int i;
->  	u64 size;
-> -	Elf64_Ehdr *ehdr_ptr;
-> -	Elf64_Phdr *phdr_ptr;
-> +	struct vmcore *m;
->  
-> -	ehdr_ptr = (Elf64_Ehdr *)elfptr;
-> -	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr));
-> -	size = elfsz;
-> -	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
-> -		size += phdr_ptr->p_memsz;
-> -		phdr_ptr++;
-> +	size = elfsz + elfnotesegsz;
-> +	list_for_each_entry(m, vc_list, list) {
-> +		size += m->size;
->  	}
->  	return size;
->  }
->  
-> -static u64 __init get_vmcore_size_elf32(char *elfptr, size_t elfsz)
-> +static u64 __init get_vmcore_size_elf32(size_t elfsz, size_t elfnotesegsz,
-> +					struct list_head *vc_list)
->  {
-> -	int i;
->  	u64 size;
-> -	Elf32_Ehdr *ehdr_ptr;
-> -	Elf32_Phdr *phdr_ptr;
-> +	struct vmcore *m;
->  
-> -	ehdr_ptr = (Elf32_Ehdr *)elfptr;
-> -	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr));
-> -	size = elfsz;
-> -	for (i = 0; i < ehdr_ptr->e_phnum; i++) {
-> -		size += phdr_ptr->p_memsz;
-> -		phdr_ptr++;
-> +	size = elfsz + elfnotesegsz;
-> +	list_for_each_entry(m, vc_list, list) {
-> +		size += m->size;
+This change affects layout of /proc/vmcore. The gaps generated by the
+rearrangement are newly made visible to applications as
+holes. Concretely, they are two ranges [rounddown(start, PAGE_SIZE),
+start] and [end, roundup(end, PAGE_SIZE)].
 
+Suppose variable m points at a vmcore object in vmcore_list, and
+variable phdr points at the program header of PT_LOAD type the
+variable m corresponds to. Then, pictorially:
 
-Now get_vmcore_size_elf64() and get_vmcore_size_elf32() function are same.
-We can get rid of one and rename other get_vmcore_size().
+  m->offset                    +---------------+
+                               | hole          |
+phdr->p_offset =               +---------------+
+  m->offset + (paddr - start)  |               |\
+                               | kernel memory | phdr->p_memsz
+                               |               |/
+                               +---------------+
+                               | hole          |
+  m->offset + m->size          +---------------+
 
-Thanks
-Vivek
+where m->offset and m->offset + m->size are always page-size aligned.
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+---
+
+ fs/proc/vmcore.c |   30 ++++++++++++++++++++++--------
+ 1 files changed, 22 insertions(+), 8 deletions(-)
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 80fea97..686068d 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -407,20 +407,27 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
+ 			phdr_ptr->p_memsz; /* Note sections */
+ 
+ 	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
++		u64 paddr, start, end, size;
++
+ 		if (phdr_ptr->p_type != PT_LOAD)
+ 			continue;
+ 
++		paddr = phdr_ptr->p_offset;
++		start = rounddown(paddr, PAGE_SIZE);
++		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
++		size = end - start;
++
+ 		/* Add this contiguous chunk of memory to vmcore list.*/
+ 		new = get_new_element();
+ 		if (!new)
+ 			return -ENOMEM;
+-		new->paddr = phdr_ptr->p_offset;
+-		new->size = phdr_ptr->p_memsz;
++		new->paddr = start;
++		new->size = size;
+ 		list_add_tail(&new->list, vc_list);
+ 
+ 		/* Update the program header offset. */
+-		phdr_ptr->p_offset = vmcore_off;
+-		vmcore_off = vmcore_off + phdr_ptr->p_memsz;
++		phdr_ptr->p_offset = vmcore_off + (paddr - start);
++		vmcore_off = vmcore_off + size;
+ 	}
+ 	return 0;
+ }
+@@ -443,20 +450,27 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+ 			phdr_ptr->p_memsz; /* Note sections */
+ 
+ 	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
++		u64 paddr, start, end, size;
++
+ 		if (phdr_ptr->p_type != PT_LOAD)
+ 			continue;
+ 
++		paddr = phdr_ptr->p_offset;
++		start = rounddown(paddr, PAGE_SIZE);
++		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
++		size = end - start;
++
+ 		/* Add this contiguous chunk of memory to vmcore list.*/
+ 		new = get_new_element();
+ 		if (!new)
+ 			return -ENOMEM;
+-		new->paddr = phdr_ptr->p_offset;
+-		new->size = phdr_ptr->p_memsz;
++		new->paddr = start;
++		new->size = size;
+ 		list_add_tail(&new->list, vc_list);
+ 
+ 		/* Update the program header offset */
+-		phdr_ptr->p_offset = vmcore_off;
+-		vmcore_off = vmcore_off + phdr_ptr->p_memsz;
++		phdr_ptr->p_offset = vmcore_off + (paddr - start);
++		vmcore_off = vmcore_off + size;
+ 	}
+ 	return 0;
+ }
 
 
 _______________________________________________
