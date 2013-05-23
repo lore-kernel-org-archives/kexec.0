@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UfdpJ-0000qE-DP
- for kexec@lists.infradead.org; Thu, 23 May 2013 22:17:38 +0000
-Date: Thu, 23 May 2013 15:17:14 -0700
+ id 1UfdwZ-0000ud-Ea
+ for kexec@lists.infradead.org; Thu, 23 May 2013 22:25:08 +0000
+Date: Thu, 23 May 2013 15:24:45 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v8 6/9] vmcore: allocate ELF note segment in the 2nd
- kernel vmalloc memory
-Message-Id: <20130523151714.a4096553280794de47d0fdb6@linux-foundation.org>
-In-Reply-To: <20130523052530.13864.7616.stgit@localhost6.localdomain6>
+Subject: Re: [PATCH v8 9/9] vmcore: support mmap() on /proc/vmcore
+Message-Id: <20130523152445.17549682ae45b5aab3f3cde0@linux-foundation.org>
+In-Reply-To: <20130523052547.13864.83306.stgit@localhost6.localdomain6>
 References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
- <20130523052530.13864.7616.stgit@localhost6.localdomain6>
+ <20130523052547.13864.83306.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,98 +26,33 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Cc: riel@redhat.com, hughd@google.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, walken@google.com, cpw@sgi.com, vgoyal@redhat.com
 
-On Thu, 23 May 2013 14:25:30 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+On Thu, 23 May 2013 14:25:48 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-> The reasons why we don't allocate ELF note segment in the 1st kernel
-> (old memory) on page boundary is to keep backward compatibility for
-> old kernels, and that if doing so, we waste not a little memory due to
-> round-up operation to fit the memory to page boundary since most of
-> the buffers are in per-cpu area.
+> This patch introduces mmap_vmcore().
 > 
-> ELF notes are per-cpu, so total size of ELF note segments depends on
-> number of CPUs. The current maximum number of CPUs on x86_64 is 5192,
-> and there's already system with 4192 CPUs in SGI, where total size
-> amounts to 1MB. This can be larger in the near future or possibly even
-> now on another architecture that has larger size of note per a single
-> cpu. Thus, to avoid the case where memory allocation for large block
-> fails, we allocate vmcore objects on vmalloc memory.
+> Don't permit writable nor executable mapping even with mprotect()
+> because this mmap() is aimed at reading crash dump memory.
+> Non-writable mapping is also requirement of remap_pfn_range() when
+> mapping linear pages on non-consecutive physical pages; see
+> is_cow_mapping().
 > 
-> This patch adds elfnotes_buf and elfnotes_sz variables to keep pointer
-> to the ELF note segment buffer and its size. There's no longer the
-> vmcore object that corresponds to the ELF note segment in
-> vmcore_list. Accordingly, read_vmcore() has new case for ELF note
-> segment and set_vmcore_list_offsets_elf{64,32}() and other helper
-> functions starts calculating offset from sum of size of ELF headers
-> and size of ELF note segment.
+> Set VM_MIXEDMAP flag to remap memory by remap_pfn_range and by
+> remap_vmalloc_range_pertial at the same time for a single
+> vma. do_munmap() can correctly clean partially remapped vma with two
+> functions in abnormal case. See zap_pte_range(), vm_normal_page() and
+> their comments for details.
 > 
-> ...
->
-> @@ -154,6 +157,26 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
->  			return acc;
->  	}
->  
-> +	/* Read Elf note segment */
-> +	if (*fpos < elfcorebuf_sz + elfnotes_sz) {
-> +		void *kaddr;
-> +
-> +		tsz = elfcorebuf_sz + elfnotes_sz - *fpos;
-> +		if (buflen < tsz)
-> +			tsz = buflen;
+> On x86-32 PAE kernels, mmap() supports at most 16TB memory only. This
+> limitation comes from the fact that the third argument of
+> remap_pfn_range(), pfn, is of 32-bit length on x86-32: unsigned long.
 
-We have min().
+More reviewing and testing, please.
 
->
-> ...
->
-> +/* Merges all the PT_NOTE headers into one. */
-> +static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
-> +					   char **notes_buf, size_t *notes_sz)
-> +{
-> +	int i, nr_ptnote=0, rc=0;
-> +	char *tmp;
-> +	Elf64_Ehdr *ehdr_ptr;
-> +	Elf64_Phdr phdr;
-> +	u64 phdr_sz = 0, note_off;
-> +
-> +	ehdr_ptr = (Elf64_Ehdr *)elfptr;
-> +
-> +	rc = update_note_header_size_elf64(ehdr_ptr);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = get_note_number_and_size_elf64(ehdr_ptr, &nr_ptnote, &phdr_sz);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
-> +	*notes_buf = vzalloc(*notes_sz);
-
-I think this gets leaked in a number of places.
-
-> +	if (!*notes_buf)
-> +		return -ENOMEM;
-> +
-> +	rc = copy_notes_elf64(ehdr_ptr, *notes_buf);
-> +	if (rc < 0)
-> +		return rc;
-> +
->  	/* Prepare merged PT_NOTE program header. */
->  	phdr.p_type    = PT_NOTE;
->  	phdr.p_flags   = 0;
->  	note_off = sizeof(Elf64_Ehdr) +
->  			(ehdr_ptr->e_phnum - nr_ptnote +1) * sizeof(Elf64_Phdr);
-> -	phdr.p_offset  = note_off;
-> +	phdr.p_offset  = roundup(note_off, PAGE_SIZE);
->  	phdr.p_vaddr   = phdr.p_paddr = 0;
->  	phdr.p_filesz  = phdr.p_memsz = phdr_sz;
->  	phdr.p_align   = 0;
-
-Please review and test:
 
 From: Andrew Morton <akpm@linux-foundation.org>
-Subject: vmcore-allocate-elf-note-segment-in-the-2nd-kernel-vmalloc-memory-fix
+Subject: vmcore-support-mmap-on-proc-vmcore-fix
 
-use min(), fix error-path vzalloc() leaks
+use min(), switch to conventional error-unwinding approach
 
 Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
@@ -129,63 +63,72 @@ Cc: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
 
- fs/proc/vmcore.c |   16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ fs/proc/vmcore.c |   27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
-diff -puN fs/proc/vmcore.c~vmcore-allocate-elf-note-segment-in-the-2nd-kernel-vmalloc-memory-fix fs/proc/vmcore.c
---- a/fs/proc/vmcore.c~vmcore-allocate-elf-note-segment-in-the-2nd-kernel-vmalloc-memory-fix
+diff -puN fs/proc/vmcore.c~vmcore-support-mmap-on-proc-vmcore-fix fs/proc/vmcore.c
+--- a/fs/proc/vmcore.c~vmcore-support-mmap-on-proc-vmcore-fix
 +++ a/fs/proc/vmcore.c
-@@ -142,9 +142,7 @@ static ssize_t read_vmcore(struct file *
+@@ -218,9 +218,7 @@ static int mmap_vmcore(struct file *file
+ 	if (start < elfcorebuf_sz) {
+ 		u64 pfn;
  
- 	/* Read ELF core header */
- 	if (*fpos < elfcorebuf_sz) {
--		tsz = elfcorebuf_sz - *fpos;
--		if (buflen < tsz)
--			tsz = buflen;
-+		tsz = min(elfcorebuf_sz - (size_t)*fpos, buflen);
- 		if (copy_to_user(buffer, elfcorebuf + *fpos, tsz))
- 			return -EFAULT;
- 		buflen -= tsz;
-@@ -161,9 +159,7 @@ static ssize_t read_vmcore(struct file *
- 	if (*fpos < elfcorebuf_sz + elfnotes_sz) {
+-		tsz = elfcorebuf_sz - start;
+-		if (size < tsz)
+-			tsz = size;
++		tsz = min(elfcorebuf_sz - (size_t)start, size);
+ 		pfn = __pa(elfcorebuf + start) >> PAGE_SHIFT;
+ 		if (remap_pfn_range(vma, vma->vm_start, pfn, tsz,
+ 				    vma->vm_page_prot))
+@@ -236,15 +234,11 @@ static int mmap_vmcore(struct file *file
+ 	if (start < elfcorebuf_sz + elfnotes_sz) {
  		void *kaddr;
  
--		tsz = elfcorebuf_sz + elfnotes_sz - *fpos;
--		if (buflen < tsz)
--			tsz = buflen;
-+		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, buflen);
- 		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz;
- 		if (copy_to_user(buffer, kaddr, tsz))
- 			return -EFAULT;
-@@ -179,9 +175,7 @@ static ssize_t read_vmcore(struct file *
+-		tsz = elfcorebuf_sz + elfnotes_sz - start;
+-		if (size < tsz)
+-			tsz = size;
++		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)start, size);
+ 		kaddr = elfnotes_buf + start - elfcorebuf_sz;
+ 		if (remap_vmalloc_range_partial(vma, vma->vm_start + len,
+-						kaddr, tsz)) {
+-			do_munmap(vma->vm_mm, vma->vm_start, len);
+-			return -EAGAIN;
+-		}
++						kaddr, tsz))
++			goto fail;
+ 		size -= tsz;
+ 		start += tsz;
+ 		len += tsz;
+@@ -257,16 +251,12 @@ static int mmap_vmcore(struct file *file
+ 		if (start < m->offset + m->size) {
+ 			u64 paddr = 0;
  
- 	list_for_each_entry(m, &vmcore_list, list) {
- 		if (*fpos < m->offset + m->size) {
--			tsz = m->offset + m->size - *fpos;
--			if (buflen < tsz)
--				tsz = buflen;
-+			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
- 			start = m->paddr + *fpos - m->offset;
- 			tmp = read_from_oldmem(buffer, tsz, &start, 1);
- 			if (tmp < 0)
-@@ -710,6 +704,8 @@ static void free_elfcorebuf(void)
- {
- 	free_pages((unsigned long)elfcorebuf, get_order(elfcorebuf_sz_orig));
- 	elfcorebuf = NULL;
-+	vfree(elfnotes_buf);
-+	elfnotes_buf = NULL;
- }
- 
- static int __init parse_crash_elf64_headers(void)
-@@ -898,8 +894,6 @@ void vmcore_cleanup(void)
- 		list_del(&m->list);
- 		kfree(m);
+-			tsz = m->offset + m->size - start;
+-			if (size < tsz)
+-				tsz = size;
++			tsz = min_t(size_t, m->offset + m->size - start, size);
+ 			paddr = m->paddr + start - m->offset;
+ 			if (remap_pfn_range(vma, vma->vm_start + len,
+ 					    paddr >> PAGE_SHIFT, tsz,
+-					    vma->vm_page_prot)) {
+-				do_munmap(vma->vm_mm, vma->vm_start, len);
+-				return -EAGAIN;
+-			}
++					    vma->vm_page_prot))
++				goto fail;
+ 			size -= tsz;
+ 			start += tsz;
+ 			len += tsz;
+@@ -277,6 +267,9 @@ static int mmap_vmcore(struct file *file
  	}
--	vfree(elfnotes_buf);
--	elfnotes_buf = NULL;
- 	free_elfcorebuf();
+ 
+ 	return 0;
++fail:
++	do_munmap(vma->vm_mm, vma->vm_start, len);
++	return -EAGAIN;
  }
- EXPORT_SYMBOL_GPL(vmcore_cleanup);
+ 
+ static const struct file_operations proc_vmcore_operations = {
 _
 
 
