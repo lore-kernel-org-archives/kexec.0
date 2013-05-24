@@ -1,34 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp18.uk.ibm.com ([195.75.94.114])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ufta4-0001HT-DW
- for kexec@lists.infradead.org; Fri, 24 May 2013 15:06:57 +0000
-Received: from /spool/local
- by e06smtp18.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 24 May 2013 16:01:58 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1503117D8025
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 16:07:41 +0100 (BST)
-Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
- [9.149.37.249])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r4OF6I8A52232262
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 15:06:18 GMT
-Received: from d06av08.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av08.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r4OF6SrF012861
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 09:06:28 -0600
-Date: Fri, 24 May 2013 17:06:26 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Uftvy-0001fw-7h
+ for kexec@lists.infradead.org; Fri, 24 May 2013 15:29:35 +0000
+Date: Fri, 24 May 2013 11:28:49 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
-Message-ID: <20130524170626.2ac06efe@holzheu>
-In-Reply-To: <20130524143644.GD18218@redhat.com>
+Message-ID: <20130524152849.GF18218@redhat.com>
 References: <1369400889-11064-1-git-send-email-holzheu@linux.vnet.ibm.com>
  <20130524143644.GD18218@redhat.com>
-Mime-Version: 1.0
+ <20130524170626.2ac06efe@holzheu>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130524170626.2ac06efe@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,39 +25,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 
-Hello Vivek,
-
-On Fri, 24 May 2013 10:36:44 -0400
-Vivek Goyal <vgoyal@redhat.com> wrote:
-
-[snip]
-
-> Sorry, I don't understand the problem. If we swapped low memory and
-> crash reserved memory, that should have been taken care by prepared
-> ELF headers so that we map the right pfns. In x86 we swap 640K of low
-> memory with 640K of memory in reserved and we take care of this by
-> preparing elf headers accordingly.
+On Fri, May 24, 2013 at 05:06:26PM +0200, Michael Holzheu wrote:
+> Hello Vivek,
 > 
-> So why s390 can't do the same thing?
+> On Fri, 24 May 2013 10:36:44 -0400
+> Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> [snip]
+> 
+> > Sorry, I don't understand the problem. If we swapped low memory and
+> > crash reserved memory, that should have been taken care by prepared
+> > ELF headers so that we map the right pfns. In x86 we swap 640K of low
+> > memory with 640K of memory in reserved and we take care of this by
+> > preparing elf headers accordingly.
+> > 
+> > So why s390 can't do the same thing?
+> 
+> I am not sure if I understand this. Currently we create the ELF
+> header in a way that we have virtual=real. In the copy_oldmem_page() we
+> do the swap so that for the /proc/vmcore code it looks like contiguous
+> non-swapped memory.
+> 
+> One reason why I thought this was necessary was that /dev/oldmem
+> also uses the function and it should provide linear memory access like
+> it is on the live system with /dev/mem.
+> 
+> Is that implementation incorrect?
 
-I am not sure if I understand this. Currently we create the ELF
-header in a way that we have virtual=real. In the copy_oldmem_page() we
-do the swap so that for the /proc/vmcore code it looks like contiguous
-non-swapped memory.
+[ CC Andrew. Keep him in loop for all kernel kdump patches as all kdump
+  patches are routed through him ].
 
-One reason why I thought this was necessary was that /dev/oldmem
-also uses the function and it should provide linear memory access like
-it is on the live system with /dev/mem.
+[ CC Eric Biederman ]
 
-Is that implementation incorrect?
+Looking at the code, looks like /dev/oldmem is broken. It does not know
+anything about swap of any of the memory areas and it will simply
+return the contents of page frame asked. And this has been like this
+since the beginning.
 
-Best Regards,
-Michael
+I have always questioned the utility of /dev/oldmem. Atleast I am not
+aware of any tool making use of it.
 
+If we want to fix it, then somebow all the swapped memory region info
+needs to be communicated to second kernel so that read_oldmem() can
+do the mapping correctly and we really don't have any mechanism for
+that. (I am assuming that in s390 you must have hardcoded the regions
+of memory which are always swapped).
 
+As /proc/vmcore is the most used and useful interface, I prefer that
+we swap memory and put that info in elf headers. For /dev/oldme, I
+don't mind if we leave it as it is. If somebody really cares, then
+I guess we need to write a new command line option which /dev/mem
+can parse and which tells it about swaps so that /dev/oldmem can
+map things correctly. (This is better than hardcoding things).
+
+Eric, do you have any thoughts on this.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
