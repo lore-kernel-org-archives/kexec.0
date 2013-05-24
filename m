@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UfvRG-0003ty-RX
- for kexec@lists.infradead.org; Fri, 24 May 2013 17:06:00 +0000
-Date: Fri, 24 May 2013 13:05:07 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
-Message-ID: <20130524170507.GG18218@redhat.com>
+Received: from etrn.xmission.com ([198.60.22.17])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Ug0jp-000192-6F
+ for kexec@lists.infradead.org; Fri, 24 May 2013 22:45:29 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1369400889-11064-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <20130524143644.GD18218@redhat.com>
- <20130524170626.2ac06efe@holzheu>
+ <20130524143644.GD18218@redhat.com> <20130524170626.2ac06efe@holzheu>
  <20130524152849.GF18218@redhat.com>
- <20130524184653.52d75b5f@holzheu>
+Date: Fri, 24 May 2013 15:44:33 -0700
+In-Reply-To: <20130524152849.GF18218@redhat.com> (Vivek Goyal's message of
+ "Fri, 24 May 2013 11:28:49 -0400")
+Message-ID: <87mwrkatgu.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130524184653.52d75b5f@holzheu>
+Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,41 +25,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-On Fri, May 24, 2013 at 06:46:53PM +0200, Michael Holzheu wrote:
-> On Fri, 24 May 2013 11:28:49 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Fri, May 24, 2013 at 05:06:26PM +0200, Michael Holzheu wrote:
-> 
-> [snip] 
-> 
-> > As /proc/vmcore is the most used and useful interface, I prefer that
-> > we swap memory and put that info in elf headers. For /dev/oldme, I
-> > don't mind if we leave it as it is. If somebody really cares, then
-> > I guess we need to write a new command line option which /dev/mem
-> > can parse and which tells it about swaps so that /dev/oldmem can
-> > map things correctly. (This is better than hardcoding things).
-> 
-> Besides of the potential /dev/oldmem issue, I still do not understand
-> the option of doing the swap in the elf header. Looks like I missed
-> here a fundamental design point of kdump :(
-> 
-> Is that done by specifying different virtual and physical addresses in
-> the ELF header?
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Nope. We keep the virtual to physical address mapping same. We just modify
-the p_offset in PT_LOAD elf header to represent where actually the
-memory is present physically. And when /proc/vmcore reads the data, it
-reads it from p_offset.
+> On Fri, May 24, 2013 at 05:06:26PM +0200, Michael Holzheu wrote:
+>> Hello Vivek,
+>> 
+>> On Fri, 24 May 2013 10:36:44 -0400
+>> Vivek Goyal <vgoyal@redhat.com> wrote:
+>> 
+>> [snip]
+>> 
+>> > Sorry, I don't understand the problem. If we swapped low memory and
+>> > crash reserved memory, that should have been taken care by prepared
+>> > ELF headers so that we map the right pfns. In x86 we swap 640K of low
+>> > memory with 640K of memory in reserved and we take care of this by
+>> > preparing elf headers accordingly.
+>> > 
+>> > So why s390 can't do the same thing?
+>> 
+>> I am not sure if I understand this. Currently we create the ELF
+>> header in a way that we have virtual=real. In the copy_oldmem_page() we
+>> do the swap so that for the /proc/vmcore code it looks like contiguous
+>> non-swapped memory.
+>> 
+>> One reason why I thought this was necessary was that /dev/oldmem
+>> also uses the function and it should provide linear memory access like
+>> it is on the live system with /dev/mem.
+>> 
+>> Is that implementation incorrect?
+>
+> [ CC Andrew. Keep him in loop for all kernel kdump patches as all kdump
+>   patches are routed through him ].
+>
+> [ CC Eric Biederman ]
+>
+> Looking at the code, looks like /dev/oldmem is broken. It does not know
+> anything about swap of any of the memory areas and it will simply
+> return the contents of page frame asked. And this has been like this
+> since the beginning.
+>
+> I have always questioned the utility of /dev/oldmem. Atleast I am not
+> aware of any tool making use of it.
+>
+> If we want to fix it, then somebow all the swapped memory region info
+> needs to be communicated to second kernel so that read_oldmem() can
+> do the mapping correctly and we really don't have any mechanism for
+> that. (I am assuming that in s390 you must have hardcoded the regions
+> of memory which are always swapped).
+>
+> As /proc/vmcore is the most used and useful interface, I prefer that
+> we swap memory and put that info in elf headers. For /dev/oldme, I
+> don't mind if we leave it as it is. If somebody really cares, then
+> I guess we need to write a new command line option which /dev/mem
+> can parse and which tells it about swaps so that /dev/oldmem can
+> map things correctly. (This is better than hardcoding things).
+>
+> Eric, do you have any thoughts on this.
 
-IOW, p_offset and p_paddr will be different for swapped memory but 
-should be same for memory which has not been swapped.
+I don't think anyone actually uses /dev/oldmem.  I would like to cite
+the s390 confusion as proof but I don't think that quite works.
 
-Thanks
-Vivek
+I think the solution is for someone to send a patch removing /dev/oldmem
+as an unused piece of code.  That will also move us in the direction of
+resolving HPAs concerns.
+
+The function copy_oldmem_page also concerns me.  I don't have a clue why
+we duplicate that function on every architecutre in a slightly different
+form.  There should be enough abstractions in the kernel to make that
+unnecessary.  I would be glad to see that function go, and remove the
+possibility of confusion that happened on s390.
+
+Eric
 
 _______________________________________________
 kexec mailing list
