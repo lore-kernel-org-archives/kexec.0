@@ -1,30 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
+Received: from e06smtp11.uk.ibm.com ([195.75.94.107])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UfqCJ-0004hJ-Ce
- for kexec@lists.infradead.org; Fri, 24 May 2013 11:30:12 +0000
+ id 1UfqCJ-0004hM-Mw
+ for kexec@lists.infradead.org; Fri, 24 May 2013 11:30:14 +0000
 Received: from /spool/local
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 24 May 2013 12:25:58 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id C0AC417D8063
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 12:30:56 +0100 (BST)
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
- [9.149.37.247])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r4OBTYAt46596222
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 11:29:34 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av12.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r4OBThso020459
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 05:29:44 -0600
+ Fri, 24 May 2013 12:25:18 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com
+ (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id E789617D805C
+ for <kexec@lists.infradead.org>; Fri, 24 May 2013 12:30:55 +0100 (BST)
+Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
+ [9.149.37.252])
+ by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r4OBTXuY20906028
+ for <kexec@lists.infradead.org>; Fri, 24 May 2013 11:29:33 GMT
+Received: from d06av11.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av11.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r4OBThG7017901
+ for <kexec@lists.infradead.org>; Fri, 24 May 2013 05:29:43 -0600
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH v4 2/3] s390/kdump: Use ELF header in new memory feature
-Date: Fri, 24 May 2013 13:29:42 +0200
-Message-Id: <1369394983-65360-3-git-send-email-holzheu@linux.vnet.ibm.com>
+Subject: [PATCH v4 1/3] kdump: Introduce ELF header in new memory feature
+Date: Fri, 24 May 2013 13:29:41 +0200
+Message-Id: <1369394983-65360-2-git-send-email-holzheu@linux.vnet.ibm.com>
 In-Reply-To: <1369394983-65360-1-git-send-email-holzheu@linux.vnet.ibm.com>
 References: <1369394983-65360-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -43,131 +43,192 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-This patch now exchanges the old relocate mechanism with the new
-arch function call override mechanism that allows to create the ELF
-core header in the 2nd kernel.
+Currently for s390 we create the ELF core header in the 2nd kernel
+with a small trick. We relocate the addresses in the ELF header in
+a way that for the /proc/vmcore code it seems to be in the 1st kernel
+(old) memory and the read_from_oldmem() returns the correct data.
+This allows the /proc/vmcore code to use the ELF header in the
+2nd kernel.
+
+This patch now exchanges the old mechanism with the new and much
+cleaner function call override feature that now offcially allows to
+create the ELF core header in the 2nd kernel.
+
+To use the new feature the following has to be done by the architecture
+backend code:
+
+ * Override arch_get_crash_header() to return the address of the ELF
+   header in new memory.
+ * Override arch_free_crash_header() to free the memory of the ELF
+   header in new memory.
+ * Override arch_read_from_crash_header() to read from the ELF header
+   in new memory
+ * Set elfcorehdr_addr to the address of ELF header in new memory
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- arch/s390/kernel/crash_dump.c | 64 ++++++++++++++++++++++++++++++-------------
- 1 file changed, 45 insertions(+), 19 deletions(-)
+ fs/proc/vmcore.c           | 58 ++++++++++++++++++++++++++++++++++------------
+ include/linux/crash_dump.h |  4 ++++
+ 2 files changed, 47 insertions(+), 15 deletions(-)
 
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index f703d91..aeb1207 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -21,6 +21,9 @@
- #define PTR_SUB(x, y) (((char *) (x)) - ((unsigned long) (y)))
- #define PTR_DIFF(x, y) ((unsigned long)(((char *) (x)) - ((unsigned long) (y))))
- 
-+static size_t elfcorebuf_sz;
-+static char *elfcorebuf;
-+
- /*
-  * Copy one page from "oldmem"
-  *
-@@ -325,14 +328,6 @@ static int get_mem_chunk_cnt(void)
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 80221d7..eb47346 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -123,6 +123,28 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
+ 	return read;
  }
  
- /*
-- * Relocate pointer in order to allow vmcore code access the data
-- */
--static inline unsigned long relocate(unsigned long addr)
--{
--	return OLDMEM_BASE + addr;
--}
++/*
++ * Architetures may override this function to read header data
++ */
++ssize_t __weak arch_read_from_crash_header(char *buf, size_t count, u64 *ppos)
++{
++	return read_from_oldmem(buf, count, ppos, 0);
++}
++
++/*
++ * Architetures may override this function to get header address
++ */
++unsigned long long __weak arch_get_crash_header(void)
++{
++	return elfcorehdr_addr;
++}
++
++/*
++ * Architetures may override this function to free header
++ */
++void __weak arch_free_crash_header(void)
++{}
++
+ /* Read from the ELF header and then the crash dump. On error, negative value is
+  * returned otherwise number of bytes read are returned.
+  */
+@@ -335,7 +357,8 @@ static int __init update_note_header_size_elf64(const Elf64_Ehdr *ehdr_ptr)
+ 		notes_section = kmalloc(max_sz, GFP_KERNEL);
+ 		if (!notes_section)
+ 			return -ENOMEM;
+-		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
++		rc = arch_read_from_crash_header(notes_section, max_sz,
++						 &offset);
+ 		if (rc < 0) {
+ 			kfree(notes_section);
+ 			return rc;
+@@ -422,7 +445,8 @@ static int __init copy_notes_elf64(const Elf64_Ehdr *ehdr_ptr, char *notes_buf)
+ 		if (phdr_ptr->p_type != PT_NOTE)
+ 			continue;
+ 		offset = phdr_ptr->p_offset;
+-		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
++		rc =  arch_read_from_crash_header(notes_buf, phdr_ptr->p_memsz,
++						  &offset, 0);
+ 		if (rc < 0)
+ 			return rc;
+ 		notes_buf += phdr_ptr->p_memsz;
+@@ -521,7 +545,8 @@ static int __init update_note_header_size_elf32(const Elf32_Ehdr *ehdr_ptr)
+ 		notes_section = kmalloc(max_sz, GFP_KERNEL);
+ 		if (!notes_section)
+ 			return -ENOMEM;
+-		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
++		rc = arch_read_from_crash_header(notes_section, max_sz,
++						 &offset);
+ 		if (rc < 0) {
+ 			kfree(notes_section);
+ 			return rc;
+@@ -608,7 +633,8 @@ static int __init copy_notes_elf32(const Elf32_Ehdr *ehdr_ptr, char *notes_buf)
+ 		if (phdr_ptr->p_type != PT_NOTE)
+ 			continue;
+ 		offset = phdr_ptr->p_offset;
+-		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
++		rc =  arch_read_from_crash_header(notes_buf, phdr_ptr->p_memsz,
++						  &offset, 0);
+ 		if (rc < 0)
+ 			return rc;
+ 		notes_buf += phdr_ptr->p_memsz;
+@@ -791,10 +817,11 @@ static int __init parse_crash_elf64_headers(void)
+ 	Elf64_Ehdr ehdr;
+ 	u64 addr;
+ 
+-	addr = elfcorehdr_addr;
++	addr = arch_get_crash_header();
+ 
+ 	/* Read Elf header */
+-	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf64_Ehdr), &addr, 0);
++	rc = arch_read_from_crash_header((char *)&ehdr, sizeof(Elf64_Ehdr),
++					 &addr);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -819,8 +846,8 @@ static int __init parse_crash_elf64_headers(void)
+ 					       get_order(elfcorebuf_sz_orig));
+ 	if (!elfcorebuf)
+ 		return -ENOMEM;
+-	addr = elfcorehdr_addr;
+-	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
++	addr = arch_get_crash_header();
++	rc = arch_read_from_crash_header(elfcorebuf, elfcorebuf_sz_orig, &addr);
+ 	if (rc < 0) {
+ 		free_pages((unsigned long)elfcorebuf,
+ 			   get_order(elfcorebuf_sz_orig));
+@@ -853,10 +880,11 @@ static int __init parse_crash_elf32_headers(void)
+ 	Elf32_Ehdr ehdr;
+ 	u64 addr;
+ 
+-	addr = elfcorehdr_addr;
++	addr = arch_get_crash_header();
+ 
+ 	/* Read Elf header */
+-	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf32_Ehdr), &addr, 0);
++	rc = arch_read_from_crash_header((char *)&ehdr, sizeof(Elf32_Ehdr),
++					 &addr);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -881,8 +909,8 @@ static int __init parse_crash_elf32_headers(void)
+ 					       get_order(elfcorebuf_sz_orig));
+ 	if (!elfcorebuf)
+ 		return -ENOMEM;
+-	addr = elfcorehdr_addr;
+-	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
++	addr = arch_get_crash_header();
++	rc = arch_read_from_crash_header(elfcorebuf, elfcorebuf_sz_orig, &addr);
+ 	if (rc < 0) {
+ 		free_pages((unsigned long)elfcorebuf,
+ 			   get_order(elfcorebuf_sz_orig));
+@@ -915,8 +943,8 @@ static int __init parse_crash_elf_headers(void)
+ 	u64 addr;
+ 	int rc=0;
+ 
+-	addr = elfcorehdr_addr;
+-	rc = read_from_oldmem(e_ident, EI_NIDENT, &addr, 0);
++	addr = arch_get_crash_header();
++	rc = arch_read_from_crash_header(e_ident, EI_NIDENT, &addr);
+ 	if (rc < 0)
+ 		return rc;
+ 	if (memcmp(e_ident, ELFMAG, SELFMAG) != 0) {
+@@ -940,7 +968,7 @@ static int __init parse_crash_elf_headers(void)
+ 	/* Determine vmcore size. */
+ 	vmcore_size = get_vmcore_size(elfcorebuf_sz, elfnotes_sz,
+ 				      &vmcore_list);
 -
--/*
-  * Initialize ELF loads (new kernel)
-  */
- static int loads_init(Elf64_Phdr *phdr, u64 loads_offset)
-@@ -383,7 +378,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
- 	ptr = nt_vmcoreinfo(ptr);
- 	memset(phdr, 0, sizeof(*phdr));
- 	phdr->p_type = PT_NOTE;
--	phdr->p_offset = relocate(notes_offset);
-+	phdr->p_offset = notes_offset;
- 	phdr->p_filesz = (unsigned long) PTR_SUB(ptr, ptr_start);
- 	phdr->p_memsz = phdr->p_filesz;
- 	return ptr;
-@@ -392,7 +387,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
- /*
-  * Create ELF core header (new kernel)
-  */
--static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
-+static int s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
- {
- 	Elf64_Phdr *phdr_notes, *phdr_loads;
- 	int mem_chunk_cnt;
-@@ -414,28 +409,59 @@ static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
- 	ptr = PTR_ADD(ptr, sizeof(Elf64_Phdr) * mem_chunk_cnt);
- 	/* Init notes */
- 	hdr_off = PTR_DIFF(ptr, hdr);
--	ptr = notes_init(phdr_notes, ptr, ((unsigned long) hdr) + hdr_off);
-+	ptr = notes_init(phdr_notes, ptr, (unsigned long) hdr + hdr_off);
- 	/* Init loads */
- 	hdr_off = PTR_DIFF(ptr, hdr);
--	loads_init(phdr_loads, ((unsigned long) hdr) + hdr_off);
-+	loads_init(phdr_loads, hdr_off);
- 	*elfcorebuf_sz = hdr_off;
--	*elfcorebuf = (void *) relocate((unsigned long) hdr);
-+	*elfcorebuf = hdr;
- 	BUG_ON(*elfcorebuf_sz > alloc_size);
-+	return 0;
- }
- 
- /*
-- * Create kdump ELF core header in new kernel, if it has not been passed via
-- * the "elfcorehdr" kernel parameter
-+ * Return address of ELF core header (new or old memory)
-  */
--static int setup_kdump_elfcorehdr(void)
-+unsigned long long arch_get_crash_header(void)
- {
--	size_t elfcorebuf_sz;
--	char *elfcorebuf;
-+	if (elfcorebuf)
-+		return elfcorehdr_addr;
-+	else
-+		return __pa(elfcorebuf);
-+}
- 
-+/*
-+ * Free crash header
-+ */
-+void arch_free_crash_header(void)
-+{
-+	kfree(elfcorebuf);
-+	elfcorebuf = 0;
-+}
-+
-+/*
-+ * Read from crash header (new or old memory)
-+ */
-+ssize_t arch_read_from_crash_header(char *buf, size_t count, u64 *ppos)
-+{
-+	if (elfcorebuf)
-+		memcpy(buf, (void *)*ppos, count);
-+	else
-+		copy_from_oldmem(buf, (void *)*ppos, count);
-+	*ppos += count;
-+	return count;
-+}
-+
-+/*
-+ * Create kdump ELF core header in new kernel if it has not been passed via
-+ * the "elfcorehdr=" kernel parameter
-+ */
-+static int setup_kdump_elfcorehdr(void)
-+{
- 	if (!OLDMEM_BASE || is_kdump_kernel())
- 		return -EINVAL;
- 	s390_elf_corehdr_create(&elfcorebuf, &elfcorebuf_sz);
--	elfcorehdr_addr = (unsigned long long) elfcorebuf;
-+	elfcorehdr_addr = __pa(elfcorebuf);
- 	elfcorehdr_size = elfcorebuf_sz;
++	arch_free_crash_header();
  	return 0;
  }
+ 
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index 37e4f8d..c66da41 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -14,6 +14,10 @@ extern unsigned long long elfcorehdr_size;
+ 
+ extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+ 						unsigned long, int);
++extern unsigned long long __weak arch_get_crash_header(void);
++extern void __weak arch_free_crash_header(void);
++extern ssize_t __weak arch_read_from_crash_header(char *buf, size_t count,
++						  u64 *ppos);
+ 
+ /* Architecture code defines this if there are other possible ELF
+  * machine types, e.g. on bi-arch capable hardware. */
 -- 
 1.8.1.6
 
