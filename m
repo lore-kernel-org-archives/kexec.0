@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ufrnh-0007DN-8G
- for kexec@lists.infradead.org; Fri, 24 May 2013 13:12:53 +0000
-Date: Fri, 24 May 2013 09:12:17 -0400
+ id 1Uft85-0000hL-Ll
+ for kexec@lists.infradead.org; Fri, 24 May 2013 14:38:02 +0000
+Date: Fri, 24 May 2013 10:36:44 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v8 3/9] vmcore: treat memory chunks referenced by PT_LOAD
- program header entries in page-size boundary in vmcore_list
-Message-ID: <20130524131217.GA18218@redhat.com>
-References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
- <20130523052513.13864.85440.stgit@localhost6.localdomain6>
- <20130523144928.0328bb3ad7ccc1ff2da9558d@linux-foundation.org>
+Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
+Message-ID: <20130524143644.GD18218@redhat.com>
+References: <1369400889-11064-1-git-send-email-holzheu@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130523144928.0328bb3ad7ccc1ff2da9558d@linux-foundation.org>
+In-Reply-To: <1369400889-11064-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,36 +23,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: riel@redhat.com, hughd@google.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, walken@google.com, cpw@sgi.com, jingbai.ma@hp.com
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-On Thu, May 23, 2013 at 02:49:28PM -0700, Andrew Morton wrote:
-> On Thu, 23 May 2013 14:25:13 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+On Fri, May 24, 2013 at 03:08:07PM +0200, Michael Holzheu wrote:
+> Hello Vivek and Hatayama,
 > 
-> > Treat memory chunks referenced by PT_LOAD program header entries in
-> > page-size boundary in vmcore_list. Formally, for each range [start,
-> > end], we set up the corresponding vmcore object in vmcore_list to
-> > [rounddown(start, PAGE_SIZE), roundup(end, PAGE_SIZE)].
-> > 
-> > This change affects layout of /proc/vmcore.
+> Currently the /proc/vmcore mmap patches are not working on s390. The
+> problem is that on s390 the kernel in not relocatable and therefore
+> always runs in the lower memory area. Therefore for kdump on s390 we
+> swap the lower memory area with the crashkernel area before starting
+> the kdump kernel:
 > 
-> Well, changing a userspace interface is generally unacceptable because
-> it can break existing userspace code.
+> [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
 > 
-> If you think the risk is acceptable then please do explain why.  In
-> great detail!
+> To fix /proc/vmcore mmap memory below OLDMEMSIZE needs to be mapped
+> with OLDMEM_BASE as offset. To achieve that, a new weak function
+> arch_oldmem_remap_pfn_range() is introduced.
+> 
+> If you agree with our approach, could you integrate the two patches
+> into the mmap patch series?
 
-I think it should not be a problem as /proc/vmcore is useful only when
-one parses the elf headers and then accesses the contents of file based
-on the header information. This patch just introduces additional areas
-in /proc/vmcore file and ELF headers still point to right contents. So
-any tool parsing ELF headers and then accessing file contents based on
-that info should still be fine.
+Hi Michael, 
 
-AFAIK, no user space tool should be broken there.
+Sorry, I don't understand the problem. If we swapped low memory and crash
+reserved memory, that should have been taken care by prepared ELF headers
+so that we map the right pfns. In x86 we swap 640K of low memory with 640K
+of memory in reserved and we take care of this by preparing elf headers
+accordingly.
+
+So why s390 can't do the same thing?
 
 Thanks
 Vivek
+
+> 
+> Best Regards,
+> Michael
+> 
+> ---
+> Jan Willeke (2):
+>   kdump/mmap: Introduce arch_oldmem_remap_pfn_range()
+>   s390/kdump/mmap: Implement arch_oldmem_remap_pfn_range() for s390
+> 
+>  arch/s390/kernel/crash_dump.c | 27 +++++++++++++++++++++++++++
+>  fs/proc/vmcore.c              | 15 ++++++++++++++-
+>  include/linux/crash_dump.h    |  5 +++++
+>  3 files changed, 46 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 1.8.1.6
 
 _______________________________________________
 kexec mailing list
