@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-f176.google.com ([209.85.192.176])
+Received: from mail-pa0-f42.google.com ([209.85.220.42])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ug5HZ-0003ny-CV
- for kexec@lists.infradead.org; Sat, 25 May 2013 03:36:37 +0000
-Received: by mail-pd0-f176.google.com with SMTP id r11so4763681pdi.7
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 20:36:16 -0700 (PDT)
-Message-ID: <51A031A6.4060406@gmail.com>
-Date: Sat, 25 May 2013 11:36:06 +0800
+ id 1Ug5BC-0003it-DG
+ for kexec@lists.infradead.org; Sat, 25 May 2013 03:30:03 +0000
+Received: by mail-pa0-f42.google.com with SMTP id bj3so4991910pad.15
+ for <kexec@lists.infradead.org>; Fri, 24 May 2013 20:29:40 -0700 (PDT)
+Message-ID: <51A0301C.3020206@gmail.com>
+Date: Sat, 25 May 2013 11:29:32 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 7/7] s390: Remove setting for saved_max_pfn
+Subject: [PATCH 4/7] mips: Remove savemaxmem parameter setup
 References: <51A02E50.5020507@gmail.com>
 In-Reply-To: <51A02E50.5020507@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -24,38 +24,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Simon Horman <horms@verge.net.au>, Heiko Carstens <heiko.carstens@de.ibm.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Ralf Baechle <ralf@linux-mips.org>, Simon Horman <horms@verge.net.au>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-The only user of saved_max_pfn in s390 is read_oldmem interface but we
-have removed that interface, so saved_max_pfn is now unneeded in s390,
-and we needn't set it anymore.
+saved_max_pfn is used to know the amount of memory that the previous
+kernel used. And for powerpc, we set saved_max_pfn by passing the
+kernel commandline parameter "savemaxmem=".
+
+The only user of saved_max_pfn in mips is read_oldmem interface.
+Since we have removed read_oldmem, so we don't need this parameter
+anymore.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
 ---
- arch/s390/kernel/setup.c |    4 ----
- 1 files changed, 0 insertions(+), 4 deletions(-)
+ arch/mips/kernel/crash_dump.c |   10 ----------
+ 1 files changed, 0 insertions(+), 10 deletions(-)
 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 0a49095..497451e 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -719,10 +719,6 @@ static void reserve_oldmem(void)
- 	}
- 	create_mem_hole(memory_chunk, OLDMEM_BASE, OLDMEM_SIZE);
- 	create_mem_hole(memory_chunk, OLDMEM_SIZE, real_size - OLDMEM_SIZE);
--	if (OLDMEM_BASE + OLDMEM_SIZE == real_size)
--		saved_max_pfn = PFN_DOWN(OLDMEM_BASE) - 1;
--	else
--		saved_max_pfn = PFN_DOWN(real_size) - 1;
- #endif
- }
+diff --git a/arch/mips/kernel/crash_dump.c b/arch/mips/kernel/crash_dump.c
+index 3be9e7b..f291cf9 100644
+--- a/arch/mips/kernel/crash_dump.c
++++ b/arch/mips/kernel/crash_dump.c
+@@ -4,16 +4,6 @@
+ #include <asm/uaccess.h>
+ #include <linux/slab.h>
  
+-static int __init parse_savemaxmem(char *p)
+-{
+-	if (p)
+-		saved_max_pfn = (memparse(p, &p) >> PAGE_SHIFT) - 1;
+-
+-	return 1;
+-}
+-__setup("savemaxmem=", parse_savemaxmem);
+-
+-
+ static void *kdump_buf_page;
+ 
+ /**
 -- 
 1.7.1
 
