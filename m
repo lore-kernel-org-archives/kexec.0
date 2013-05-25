@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UgNmR-00077T-Hu
- for kexec@lists.infradead.org; Sat, 25 May 2013 23:21:44 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <51A02E50.5020507@gmail.com> <51A02F59.8000103@gmail.com>
-Date: Sat, 25 May 2013 16:20:31 -0700
-In-Reply-To: <51A02F59.8000103@gmail.com> (Zhang Yanfei's message of "Sat, 25
- May 2013 11:26:17 +0800")
-Message-ID: <87vc668x4w.fsf@xmission.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UgNoe-00079k-Ns
+ for kexec@lists.infradead.org; Sat, 25 May 2013 23:24:01 +0000
+Date: Sun, 26 May 2013 08:24:19 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] kexec/s390: cleanup: Fix a mistaken comment
+Message-ID: <20130525232419.GB24131@verge.net.au>
+References: <51A0CB91.3090607@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/7] Documentation/devices.txt: Remove /dev/oldmem
- description
+Content-Disposition: inline
+In-Reply-To: <51A0CB91.3090607@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,35 +24,35 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, davej@redhat.com, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Zhang Yanfei <zhangyanfei.yes@gmail.com> writes:
-
+On Sat, May 25, 2013 at 10:32:49PM +0800, Zhang Yanfei wrote:
 > From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-
-Won't we want to keep this reservation around to so that this number
-doesn't get reused, and cause people confusion when
-upgrading/downgrading kernels?
-
+> 
+> When borrowing codes from ia64 architecture, this comment was
+> forgotten to be change. So fix it.
+> 
 > Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> Cc: Dave Jones <davej@redhat.com>
+
+Reviewed-by: Simon Horman <horms@verge.net.au>
+
 > ---
->  Documentation/devices.txt |    2 --
->  1 files changed, 0 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devices.txt b/Documentation/devices.txt
-> index 08f01e7..4f85739 100644
-> --- a/Documentation/devices.txt
-> +++ b/Documentation/devices.txt
-> @@ -100,8 +100,6 @@ Your cooperation is appreciated.
->  		 10 = /dev/aio		Asynchronous I/O notification interface
->  		 11 = /dev/kmsg		Writes to this come out as printk's, reads
->  					export the buffered printk records.
-> -		 12 = /dev/oldmem	Used by crashdump kernels to access
-> -					the memory of the kernel that crashed.
+>  kexec/arch/s390/kexec-s390.h |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/kexec/arch/s390/kexec-s390.h b/kexec/arch/s390/kexec-s390.h
+> index ee62888..ef53b11 100644
+> --- a/kexec/arch/s390/kexec-s390.h
+> +++ b/kexec/arch/s390/kexec-s390.h
+> @@ -34,4 +34,4 @@ extern int get_memory_ranges_s390(struct memory_range range[], int *ranges,
+>  				  int with_crashk);
+>  extern int command_line_add(const char *str);
 >  
->    1 block	RAM disk
->  		  0 = /dev/ram0		First RAM disk
+> -#endif /* KEXEC_IA64_H */
+> +#endif /* KEXEC_S390_H */
+> -- 
+> 1.7.1
+> 
 
 _______________________________________________
 kexec mailing list
