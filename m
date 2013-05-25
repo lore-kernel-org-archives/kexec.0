@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pa0-f54.google.com ([209.85.220.54])
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ug56O-0003ey-Rz
- for kexec@lists.infradead.org; Sat, 25 May 2013 03:25:06 +0000
-Received: by mail-pa0-f54.google.com with SMTP id kx1so4986344pab.13
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 20:24:43 -0700 (PDT)
-Message-ID: <51A02EF1.5090508@gmail.com>
-Date: Sat, 25 May 2013 11:24:33 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/7] /dev/oldmem: Remove the interface
-References: <51A02E50.5020507@gmail.com>
+ id 1Ug8eK-0005TH-R7
+ for kexec@lists.infradead.org; Sat, 25 May 2013 07:12:21 +0000
 In-Reply-To: <51A02E50.5020507@gmail.com>
+References: <51A02E50.5020507@gmail.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/7] Remove unused /dev/oldmem interface
+From: "H. Peter Anvin" <hpa@zytor.com>
+Date: Sat, 25 May 2013 00:11:33 -0700
+Message-ID: <d36f8c1a-dca0-41d2-a478-7c1551844b42@email.android.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,119 +22,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Simon Horman <horms@verge.net.au>
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@verge.net.au>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Awesome!
 
-/dev/oldmem provides the interface for us to access the "old memory" in
-the dump-capture kernel. Unfortunately, no one actually uses this interface.
+Zhang Yanfei <zhangyanfei.yes@gmail.com> wrote:
 
-And this interface could actually cause some real problems if used on ia64
-where the cached/uncached accesses are mixed. See the discussion from
-the link: https://lkml.org/lkml/2013/4/12/386.
+>/dev/oldmem provides the interface for us to access the "old memory" in
+>the dump-capture kernel. Unfortunately, no one actually uses this
+>interface.
+>
+>And this interface could actually cause some real problems if used on
+>ia64
+>where the cached/uncached accesses are mixed. See the discussion from
+>the link: https://lkml.org/lkml/2013/4/12/386.
+>
+>So Eric suggested that we should remove /dev/oldmem as an unused piece
+>of
+>code.
+>
+>Besides, we used a global variable saved_max_pfn to let the capture
+>kernel
+>know the amount of memory that the previous kernel used. And for almost
+>all
+>architectures (except x86. In x86, saved_max_pfn is used by
+>detect_calgary()),
+>the only user of this variable is the read_oldmem interface of
+>/dev/oldmem, so
+>also remove the setting for saved_max_pfn in those architectures.
+>
+>Zhang Yanfei (7):
+>  /dev/oldmem: Remove this interface
+>  Documentation/devices.txt: Remove /dev/oldmem description
+>  Documentation/kdump/kdump.txt: Remove /dev/oldmem description
+>  mips: Remove savemaxmem parameter setup
+>  powerpc: Remove savemaxmem parameter setup
+>  ia64: Remove setting for saved_max_pfn
+>  s390: Remove setting for saved_max_pfn
+>
+> Documentation/devices.txt        |    2 -
+> Documentation/kdump/kdump.txt    |   31 +++++--------------------
+> arch/ia64/kernel/efi.c           |    5 ----
+> arch/mips/kernel/crash_dump.c    |   10 --------
+> arch/powerpc/kernel/crash_dump.c |   10 --------
+> arch/s390/kernel/setup.c         |    4 ---
+>drivers/char/mem.c               |   47
+>--------------------------------------
+> 7 files changed, 6 insertions(+), 103 deletions(-)
 
-So Eric suggested that we should remove /dev/oldmem as an unused piece of
-code.
-
-Suggested-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Hansen <dave@sr71.net>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- drivers/char/mem.c |   47 -----------------------------------------------
- 1 files changed, 0 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 1ccbe94..bbe8ab4 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -21,7 +21,6 @@
- #include <linux/ptrace.h>
- #include <linux/device.h>
- #include <linux/highmem.h>
--#include <linux/crash_dump.h>
- #include <linux/backing-dev.h>
- #include <linux/bootmem.h>
- #include <linux/splice.h>
-@@ -357,40 +356,6 @@ static int mmap_kmem(struct file *file, struct vm_area_struct *vma)
- }
- #endif
- 
--#ifdef CONFIG_CRASH_DUMP
--/*
-- * Read memory corresponding to the old kernel.
-- */
--static ssize_t read_oldmem(struct file *file, char __user *buf,
--				size_t count, loff_t *ppos)
--{
--	unsigned long pfn, offset;
--	size_t read = 0, csize;
--	int rc = 0;
--
--	while (count) {
--		pfn = *ppos / PAGE_SIZE;
--		if (pfn > saved_max_pfn)
--			return read;
--
--		offset = (unsigned long)(*ppos % PAGE_SIZE);
--		if (count > PAGE_SIZE - offset)
--			csize = PAGE_SIZE - offset;
--		else
--			csize = count;
--
--		rc = copy_oldmem_page(pfn, buf, csize, offset, 1);
--		if (rc < 0)
--			return rc;
--		buf += csize;
--		*ppos += csize;
--		read += csize;
--		count -= csize;
--	}
--	return read;
--}
--#endif
--
- #ifdef CONFIG_DEVKMEM
- /*
-  * This function reads the *virtual* memory as seen by the kernel.
-@@ -772,7 +737,6 @@ static int open_port(struct inode *inode, struct file *filp)
- #define aio_write_zero	aio_write_null
- #define open_mem	open_port
- #define open_kmem	open_mem
--#define open_oldmem	open_mem
- 
- static const struct file_operations mem_fops = {
- 	.llseek		= memory_lseek,
-@@ -837,14 +801,6 @@ static const struct file_operations full_fops = {
- 	.write		= write_full,
- };
- 
--#ifdef CONFIG_CRASH_DUMP
--static const struct file_operations oldmem_fops = {
--	.read	= read_oldmem,
--	.open	= open_oldmem,
--	.llseek = default_llseek,
--};
--#endif
--
- static const struct memdev {
- 	const char *name;
- 	umode_t mode;
-@@ -866,9 +822,6 @@ static const struct memdev {
- #ifdef CONFIG_PRINTK
- 	[11] = { "kmsg", 0644, &kmsg_fops, NULL },
- #endif
--#ifdef CONFIG_CRASH_DUMP
--	[12] = { "oldmem", 0, &oldmem_fops, NULL },
--#endif
- };
- 
- static int memory_open(struct inode *inode, struct file *filp)
 -- 
-1.7.1
+Sent from my mobile phone. Please excuse brevity and lack of formatting.
 
 _______________________________________________
 kexec mailing list
