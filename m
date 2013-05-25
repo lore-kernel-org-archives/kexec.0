@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pa0-f53.google.com ([209.85.220.53])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ug2Qi-0002EE-Rs
- for kexec@lists.infradead.org; Sat, 25 May 2013 00:33:53 +0000
-Received: by mail-pa0-f53.google.com with SMTP id kq12so4890307pab.12
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 17:33:29 -0700 (PDT)
-Message-ID: <51A006CF.90105@gmail.com>
-Date: Sat, 25 May 2013 08:33:19 +0800
-From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
+ id 1Ug4kO-0003T9-Ob
+ for kexec@lists.infradead.org; Sat, 25 May 2013 03:02:21 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1369400889-11064-1-git-send-email-holzheu@linux.vnet.ibm.com>
  <20130524143644.GD18218@redhat.com> <20130524170626.2ac06efe@holzheu>
  <20130524152849.GF18218@redhat.com> <87mwrkatgu.fsf@xmission.com>
-In-Reply-To: <87mwrkatgu.fsf@xmission.com>
+ <51A006CF.90105@gmail.com>
+Date: Fri, 24 May 2013 20:01:36 -0700
+In-Reply-To: <51A006CF.90105@gmail.com> (Zhang Yanfei's message of "Sat, 25
+ May 2013 08:33:19 +0800")
+Message-ID: <87k3mnahkf.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,72 +22,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-SGVsbG8gRXJpYywKCuS6jiAyMDEz5bm0MDXmnIgyNeaXpSAwNjo0NCwgRXJpYyBXLiBCaWVkZXJt
-YW4g5YaZ6YGTOgo+IFZpdmVrIEdveWFsIDx2Z295YWxAcmVkaGF0LmNvbT4gd3JpdGVzOgo+IAo+
-PiBPbiBGcmksIE1heSAyNCwgMjAxMyBhdCAwNTowNjoyNlBNICswMjAwLCBNaWNoYWVsIEhvbHpo
-ZXUgd3JvdGU6Cj4+PiBIZWxsbyBWaXZlaywKPj4+Cj4+PiBPbiBGcmksIDI0IE1heSAyMDEzIDEw
-OjM2OjQ0IC0wNDAwCj4+PiBWaXZlayBHb3lhbCA8dmdveWFsQHJlZGhhdC5jb20+IHdyb3RlOgo+
-Pj4KPj4+IFtzbmlwXQo+Pj4KPj4+PiBTb3JyeSwgSSBkb24ndCB1bmRlcnN0YW5kIHRoZSBwcm9i
-bGVtLiBJZiB3ZSBzd2FwcGVkIGxvdyBtZW1vcnkgYW5kCj4+Pj4gY3Jhc2ggcmVzZXJ2ZWQgbWVt
-b3J5LCB0aGF0IHNob3VsZCBoYXZlIGJlZW4gdGFrZW4gY2FyZSBieSBwcmVwYXJlZAo+Pj4+IEVM
-RiBoZWFkZXJzIHNvIHRoYXQgd2UgbWFwIHRoZSByaWdodCBwZm5zLiBJbiB4ODYgd2Ugc3dhcCA2
-NDBLIG9mIGxvdwo+Pj4+IG1lbW9yeSB3aXRoIDY0MEsgb2YgbWVtb3J5IGluIHJlc2VydmVkIGFu
-ZCB3ZSB0YWtlIGNhcmUgb2YgdGhpcyBieQo+Pj4+IHByZXBhcmluZyBlbGYgaGVhZGVycyBhY2Nv
-cmRpbmdseS4KPj4+Pgo+Pj4+IFNvIHdoeSBzMzkwIGNhbid0IGRvIHRoZSBzYW1lIHRoaW5nPwo+
-Pj4KPj4+IEkgYW0gbm90IHN1cmUgaWYgSSB1bmRlcnN0YW5kIHRoaXMuIEN1cnJlbnRseSB3ZSBj
-cmVhdGUgdGhlIEVMRgo+Pj4gaGVhZGVyIGluIGEgd2F5IHRoYXQgd2UgaGF2ZSB2aXJ0dWFsPXJl
-YWwuIEluIHRoZSBjb3B5X29sZG1lbV9wYWdlKCkgd2UKPj4+IGRvIHRoZSBzd2FwIHNvIHRoYXQg
-Zm9yIHRoZSAvcHJvYy92bWNvcmUgY29kZSBpdCBsb29rcyBsaWtlIGNvbnRpZ3VvdXMKPj4+IG5v
-bi1zd2FwcGVkIG1lbW9yeS4KPj4+Cj4+PiBPbmUgcmVhc29uIHdoeSBJIHRob3VnaHQgdGhpcyB3
-YXMgbmVjZXNzYXJ5IHdhcyB0aGF0IC9kZXYvb2xkbWVtCj4+PiBhbHNvIHVzZXMgdGhlIGZ1bmN0
-aW9uIGFuZCBpdCBzaG91bGQgcHJvdmlkZSBsaW5lYXIgbWVtb3J5IGFjY2VzcyBsaWtlCj4+PiBp
-dCBpcyBvbiB0aGUgbGl2ZSBzeXN0ZW0gd2l0aCAvZGV2L21lbS4KPj4+Cj4+PiBJcyB0aGF0IGlt
-cGxlbWVudGF0aW9uIGluY29ycmVjdD8KPj4KPj4gWyBDQyBBbmRyZXcuIEtlZXAgaGltIGluIGxv
-b3AgZm9yIGFsbCBrZXJuZWwga2R1bXAgcGF0Y2hlcyBhcyBhbGwga2R1bXAKPj4gICBwYXRjaGVz
-IGFyZSByb3V0ZWQgdGhyb3VnaCBoaW0gXS4KPj4KPj4gWyBDQyBFcmljIEJpZWRlcm1hbiBdCj4+
-Cj4+IExvb2tpbmcgYXQgdGhlIGNvZGUsIGxvb2tzIGxpa2UgL2Rldi9vbGRtZW0gaXMgYnJva2Vu
-LiBJdCBkb2VzIG5vdCBrbm93Cj4+IGFueXRoaW5nIGFib3V0IHN3YXAgb2YgYW55IG9mIHRoZSBt
-ZW1vcnkgYXJlYXMgYW5kIGl0IHdpbGwgc2ltcGx5Cj4+IHJldHVybiB0aGUgY29udGVudHMgb2Yg
-cGFnZSBmcmFtZSBhc2tlZC4gQW5kIHRoaXMgaGFzIGJlZW4gbGlrZSB0aGlzCj4+IHNpbmNlIHRo
-ZSBiZWdpbm5pbmcuCj4+Cj4+IEkgaGF2ZSBhbHdheXMgcXVlc3Rpb25lZCB0aGUgdXRpbGl0eSBv
-ZiAvZGV2L29sZG1lbS4gQXRsZWFzdCBJIGFtIG5vdAo+PiBhd2FyZSBvZiBhbnkgdG9vbCBtYWtp
-bmcgdXNlIG9mIGl0Lgo+Pgo+PiBJZiB3ZSB3YW50IHRvIGZpeCBpdCwgdGhlbiBzb21lYm93IGFs
-bCB0aGUgc3dhcHBlZCBtZW1vcnkgcmVnaW9uIGluZm8KPj4gbmVlZHMgdG8gYmUgY29tbXVuaWNh
-dGVkIHRvIHNlY29uZCBrZXJuZWwgc28gdGhhdCByZWFkX29sZG1lbSgpIGNhbgo+PiBkbyB0aGUg
-bWFwcGluZyBjb3JyZWN0bHkgYW5kIHdlIHJlYWxseSBkb24ndCBoYXZlIGFueSBtZWNoYW5pc20g
-Zm9yCj4+IHRoYXQuIChJIGFtIGFzc3VtaW5nIHRoYXQgaW4gczM5MCB5b3UgbXVzdCBoYXZlIGhh
-cmRjb2RlZCB0aGUgcmVnaW9ucwo+PiBvZiBtZW1vcnkgd2hpY2ggYXJlIGFsd2F5cyBzd2FwcGVk
-KS4KPj4KPj4gQXMgL3Byb2Mvdm1jb3JlIGlzIHRoZSBtb3N0IHVzZWQgYW5kIHVzZWZ1bCBpbnRl
-cmZhY2UsIEkgcHJlZmVyIHRoYXQKPj4gd2Ugc3dhcCBtZW1vcnkgYW5kIHB1dCB0aGF0IGluZm8g
-aW4gZWxmIGhlYWRlcnMuIEZvciAvZGV2L29sZG1lLCBJCj4+IGRvbid0IG1pbmQgaWYgd2UgbGVh
-dmUgaXQgYXMgaXQgaXMuIElmIHNvbWVib2R5IHJlYWxseSBjYXJlcywgdGhlbgo+PiBJIGd1ZXNz
-IHdlIG5lZWQgdG8gd3JpdGUgYSBuZXcgY29tbWFuZCBsaW5lIG9wdGlvbiB3aGljaCAvZGV2L21l
-bQo+PiBjYW4gcGFyc2UgYW5kIHdoaWNoIHRlbGxzIGl0IGFib3V0IHN3YXBzIHNvIHRoYXQgL2Rl
-di9vbGRtZW0gY2FuCj4+IG1hcCB0aGluZ3MgY29ycmVjdGx5LiAoVGhpcyBpcyBiZXR0ZXIgdGhh
-biBoYXJkY29kaW5nIHRoaW5ncykuCj4+Cj4+IEVyaWMsIGRvIHlvdSBoYXZlIGFueSB0aG91Z2h0
-cyBvbiB0aGlzLgo+IAo+IEkgZG9uJ3QgdGhpbmsgYW55b25lIGFjdHVhbGx5IHVzZXMgL2Rldi9v
-bGRtZW0uICBJIHdvdWxkIGxpa2UgdG8gY2l0ZQo+IHRoZSBzMzkwIGNvbmZ1c2lvbiBhcyBwcm9v
-ZiBidXQgSSBkb24ndCB0aGluayB0aGF0IHF1aXRlIHdvcmtzLgo+IAo+IEkgdGhpbmsgdGhlIHNv
-bHV0aW9uIGlzIGZvciBzb21lb25lIHRvIHNlbmQgYSBwYXRjaCByZW1vdmluZyAvZGV2L29sZG1l
-bQo+IGFzIGFuIHVudXNlZCBwaWVjZSBvZiBjb2RlLiAgVGhhdCB3aWxsIGFsc28gbW92ZSB1cyBp
-biB0aGUgZGlyZWN0aW9uIG9mCj4gcmVzb2x2aW5nIEhQQXMgY29uY2VybnMuCgpJIHRoaW5rIEkg
-Y2FuIHRyeSB0aGlzLgoKPiAKPiBUaGUgZnVuY3Rpb24gY29weV9vbGRtZW1fcGFnZSBhbHNvIGNv
-bmNlcm5zIG1lLiAgSSBkb24ndCBoYXZlIGEgY2x1ZSB3aHkKPiB3ZSBkdXBsaWNhdGUgdGhhdCBm
-dW5jdGlvbiBvbiBldmVyeSBhcmNoaXRlY3V0cmUgaW4gYSBzbGlnaHRseSBkaWZmZXJlbnQKPiBm
-b3JtLiAgVGhlcmUgc2hvdWxkIGJlIGVub3VnaCBhYnN0cmFjdGlvbnMgaW4gdGhlIGtlcm5lbCB0
-byBtYWtlIHRoYXQKPiB1bm5lY2Vzc2FyeS4gIEkgd291bGQgYmUgZ2xhZCB0byBzZWUgdGhhdCBm
-dW5jdGlvbiBnbywgYW5kIHJlbW92ZSB0aGUKPiBwb3NzaWJpbGl0eSBvZiBjb25mdXNpb24gdGhh
-dCBoYXBwZW5lZCBvbiBzMzkwLgoKWW91IG1lYW4gd2Ugc2hvdWxkIGhhdmUgYSBjb21tb24gY29w
-eV9vbGRtZW1fcGFnZSBmb3IgYWxsIGFyY2hpdGVjdHVyZXM/IEFuZApqdXN0IGxpa2Ugdml2ZWsg
-c2FpZCBhYm92ZSwgZm9yIHMzOTAsIHdlIHNob3VsZCBwdXQgdGhlIHN3YXAgaW5mbyBpbiB0aGUg
-ZWxmCmhlYWRlcnMgaW5zdGVhZCBvZiBkb2luZyB0aGF0IGluIGNvcHlfb2xkbWVtX3BhZ2UuCgpa
-aGFuZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Zhang Yanfei <zhangyanfei.yes@gmail.com> writes:
+
+> Hello Eric,
+>
+>> The function copy_oldmem_page also concerns me.  I don't have a clue why
+>> we duplicate that function on every architecutre in a slightly different
+>> form.  There should be enough abstractions in the kernel to make that
+>> unnecessary.  I would be glad to see that function go, and remove the
+>> possibility of confusion that happened on s390.
+>
+> You mean we should have a common copy_oldmem_page for all architectures? And
+> just like vivek said above, for s390, we should put the swap info in the elf
+> headers instead of doing that in copy_oldmem_page.
+
+Exactly.
+
+The user space change in /sbin/kexec should even be backwards compatible
+for s390.  So fixing /sbin/kexec should probably come first.
+
+Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
