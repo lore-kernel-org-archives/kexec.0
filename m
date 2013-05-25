@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mail-pa0-f48.google.com ([209.85.220.48])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ug4kO-0003T9-Ob
- for kexec@lists.infradead.org; Sat, 25 May 2013 03:02:21 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1369400889-11064-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <20130524143644.GD18218@redhat.com> <20130524170626.2ac06efe@holzheu>
- <20130524152849.GF18218@redhat.com> <87mwrkatgu.fsf@xmission.com>
- <51A006CF.90105@gmail.com>
-Date: Fri, 24 May 2013 20:01:36 -0700
-In-Reply-To: <51A006CF.90105@gmail.com> (Zhang Yanfei's message of "Sat, 25
- May 2013 08:33:19 +0800")
-Message-ID: <87k3mnahkf.fsf@xmission.com>
+ id 1Ug53u-0003cb-HU
+ for kexec@lists.infradead.org; Sat, 25 May 2013 03:22:31 +0000
+Received: by mail-pa0-f48.google.com with SMTP id kp6so4941575pab.7
+ for <kexec@lists.infradead.org>; Fri, 24 May 2013 20:22:07 -0700 (PDT)
+Message-ID: <51A02E50.5020507@gmail.com>
+Date: Sat, 25 May 2013 11:21:52 +0800
+From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
+Subject: [PATCH 0/7] Remove unused /dev/oldmem interface
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,29 +22,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei.yes@gmail.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Zhang Yanfei <zhangyanfei.yes@gmail.com> writes:
+/dev/oldmem provides the interface for us to access the "old memory" in
+the dump-capture kernel. Unfortunately, no one actually uses this interface.
 
-> Hello Eric,
->
->> The function copy_oldmem_page also concerns me.  I don't have a clue why
->> we duplicate that function on every architecutre in a slightly different
->> form.  There should be enough abstractions in the kernel to make that
->> unnecessary.  I would be glad to see that function go, and remove the
->> possibility of confusion that happened on s390.
->
-> You mean we should have a common copy_oldmem_page for all architectures? And
-> just like vivek said above, for s390, we should put the swap info in the elf
-> headers instead of doing that in copy_oldmem_page.
+And this interface could actually cause some real problems if used on ia64
+where the cached/uncached accesses are mixed. See the discussion from
+the link: https://lkml.org/lkml/2013/4/12/386.
 
-Exactly.
+So Eric suggested that we should remove /dev/oldmem as an unused piece of
+code.
 
-The user space change in /sbin/kexec should even be backwards compatible
-for s390.  So fixing /sbin/kexec should probably come first.
+Besides, we used a global variable saved_max_pfn to let the capture kernel
+know the amount of memory that the previous kernel used. And for almost all
+architectures (except x86. In x86, saved_max_pfn is used by detect_calgary()),
+the only user of this variable is the read_oldmem interface of /dev/oldmem, so
+also remove the setting for saved_max_pfn in those architectures.
 
-Eric
+Zhang Yanfei (7):
+  /dev/oldmem: Remove this interface
+  Documentation/devices.txt: Remove /dev/oldmem description
+  Documentation/kdump/kdump.txt: Remove /dev/oldmem description
+  mips: Remove savemaxmem parameter setup
+  powerpc: Remove savemaxmem parameter setup
+  ia64: Remove setting for saved_max_pfn
+  s390: Remove setting for saved_max_pfn
+
+ Documentation/devices.txt        |    2 -
+ Documentation/kdump/kdump.txt    |   31 +++++--------------------
+ arch/ia64/kernel/efi.c           |    5 ----
+ arch/mips/kernel/crash_dump.c    |   10 --------
+ arch/powerpc/kernel/crash_dump.c |   10 --------
+ arch/s390/kernel/setup.c         |    4 ---
+ drivers/char/mem.c               |   47 --------------------------------------
+ 7 files changed, 6 insertions(+), 103 deletions(-)
 
 _______________________________________________
 kexec mailing list
