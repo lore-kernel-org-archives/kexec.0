@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pa0-f48.google.com ([209.85.220.48])
+Received: from mail-pd0-f180.google.com ([209.85.192.180])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ug53u-0003cb-HU
- for kexec@lists.infradead.org; Sat, 25 May 2013 03:22:31 +0000
-Received: by mail-pa0-f48.google.com with SMTP id kp6so4941575pab.7
- for <kexec@lists.infradead.org>; Fri, 24 May 2013 20:22:07 -0700 (PDT)
-Message-ID: <51A02E50.5020507@gmail.com>
-Date: Sat, 25 May 2013 11:21:52 +0800
+ id 1Ug5FN-0003lv-Au
+ for kexec@lists.infradead.org; Sat, 25 May 2013 03:34:22 +0000
+Received: by mail-pd0-f180.google.com with SMTP id 14so2382689pdc.39
+ for <kexec@lists.infradead.org>; Fri, 24 May 2013 20:33:59 -0700 (PDT)
+Message-ID: <51A0311E.8030105@gmail.com>
+Date: Sat, 25 May 2013 11:33:50 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/7] Remove unused /dev/oldmem interface
+Subject: [PATCH 6/7] ia64: Remove setting for saved_max_pfn
+References: <51A02E50.5020507@gmail.com>
+In-Reply-To: <51A02E50.5020507@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,42 +24,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Simon Horman <horms@verge.net.au>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Matt Fleming <matt.fleming@intel.com>, Simon Horman <horms@verge.net.au>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-/dev/oldmem provides the interface for us to access the "old memory" in
-the dump-capture kernel. Unfortunately, no one actually uses this interface.
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-And this interface could actually cause some real problems if used on ia64
-where the cached/uncached accesses are mixed. See the discussion from
-the link: https://lkml.org/lkml/2013/4/12/386.
+The only user of saved_max_pfn in ia64 is read_oldmem interface but we
+have removed that interface, so saved_max_pfn is now unneeded in ia64,
+and we needn't set it anymore.
 
-So Eric suggested that we should remove /dev/oldmem as an unused piece of
-code.
+Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: Matt Fleming <matt.fleming@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+---
+ arch/ia64/kernel/efi.c |    5 -----
+ 1 files changed, 0 insertions(+), 5 deletions(-)
 
-Besides, we used a global variable saved_max_pfn to let the capture kernel
-know the amount of memory that the previous kernel used. And for almost all
-architectures (except x86. In x86, saved_max_pfn is used by detect_calgary()),
-the only user of this variable is the read_oldmem interface of /dev/oldmem, so
-also remove the setting for saved_max_pfn in those architectures.
-
-Zhang Yanfei (7):
-  /dev/oldmem: Remove this interface
-  Documentation/devices.txt: Remove /dev/oldmem description
-  Documentation/kdump/kdump.txt: Remove /dev/oldmem description
-  mips: Remove savemaxmem parameter setup
-  powerpc: Remove savemaxmem parameter setup
-  ia64: Remove setting for saved_max_pfn
-  s390: Remove setting for saved_max_pfn
-
- Documentation/devices.txt        |    2 -
- Documentation/kdump/kdump.txt    |   31 +++++--------------------
- arch/ia64/kernel/efi.c           |    5 ----
- arch/mips/kernel/crash_dump.c    |   10 --------
- arch/powerpc/kernel/crash_dump.c |   10 --------
- arch/s390/kernel/setup.c         |    4 ---
- drivers/char/mem.c               |   47 --------------------------------------
- 7 files changed, 6 insertions(+), 103 deletions(-)
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index f034563..51bce59 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -1116,11 +1116,6 @@ efi_memmap_init(u64 *s, u64 *e)
+ 		if (!is_memory_available(md))
+ 			continue;
+ 
+-#ifdef CONFIG_CRASH_DUMP
+-		/* saved_max_pfn should ignore max_addr= command line arg */
+-		if (saved_max_pfn < (efi_md_end(md) >> PAGE_SHIFT))
+-			saved_max_pfn = (efi_md_end(md) >> PAGE_SHIFT);
+-#endif
+ 		/*
+ 		 * Round ends inward to granule boundaries
+ 		 * Give trimmings to uncached allocator
+-- 
+1.7.1
 
 _______________________________________________
 kexec mailing list
