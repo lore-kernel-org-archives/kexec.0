@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ugaok-00059e-QA
- for kexec@lists.infradead.org; Sun, 26 May 2013 13:16:59 +0000
-Date: Sun, 26 May 2013 22:17:18 +0900
+ id 1Ugarh-0005BQ-Ma
+ for kexec@lists.infradead.org; Sun, 26 May 2013 13:20:02 +0000
+Date: Sun, 26 May 2013 22:20:21 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/4] kexec-tools: Introduce dbg_memrange() macro and make
- use of it
-Message-ID: <20130526131718.GD11134@verge.net.au>
+Subject: Re: [PATCH 4/4] kexec-tools: Add cgroup_disable=memory to crash
+ kernel parameters
+Message-ID: <20130526132020.GE11134@verge.net.au>
 References: <1369213056-77661-1-git-send-email-trenn@suse.de>
- <1369213056-77661-3-git-send-email-trenn@suse.de>
+ <1369213056-77661-5-git-send-email-trenn@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1369213056-77661-3-git-send-email-trenn@suse.de>
+In-Reply-To: <1369213056-77661-5-git-send-email-trenn@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,100 +28,68 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Thomas Renninger <trenn@suse.de>
 Cc: yinghai@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, vgoyal@redhat.com
 
-On Wed, May 22, 2013 at 10:57:34AM +0200, Thomas Renninger wrote:
-> There are several places where memory range arrays are printed for debug
-> reasons. In load_crashdump_segments() the memory type is missing.
+On Wed, May 22, 2013 at 10:57:36AM +0200, Thomas Renninger wrote:
+> cgroup memory subsystem pre-allocates quite some memory at boot up.
+> Example dmesg:
+> allocated 469762048 bytes of page_cgroup
+> please try 'cgroup_disable=memory' option if you don't want memory cgroups
 > 
-> Unify printing memory ranges in --debug case in a macro and add the first
-> users.
+> Due to maxcpu=1 it is by far not that much than in a productive kernel.
+> It still seem to be around 4M statically as no Numa overhead exists with
+> only one active CPU. It is still worth to disable cgroup memory
+> pre-allocating in crash kernel environment.
 > 
 > Signed-off-by: Thomas Renninger <trenn@suse.de>
 > Signed-off-by: Thomas Renninger <Thomas Renninger" trenn@suse.de>
 
-This patch seems fine, but the second signed-off-by line seems to
-be a malformed duplicate of the first one.
+I'm not really sure this kind of logic should be hard-coded into
+kexec-tools. --append should allow callers of kexec to add this
+option if it is appropriate.
 
 > ---
->  kexec/arch/i386/crashdump-x86.c    |    5 +----
->  kexec/arch/i386/kexec-x86-common.c |    6 +-----
->  kexec/arch/ppc/crashdump-powerpc.c |    8 +-------
->  kexec/kexec.h                      |   11 +++++++++++
->  4 files changed, 14 insertions(+), 16 deletions(-)
+>  kexec/arch/i386/crashdump-x86.c |   22 ++++++++++++++++++++++
+>  1 files changed, 22 insertions(+), 0 deletions(-)
 > 
 > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 17c8744..9b5a7cd 100644
+> index 7fd1c5b..e6d60a9 100644
 > --- a/kexec/arch/i386/crashdump-x86.c
 > +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -959,10 +959,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
->  
->  	get_backup_area(info, mem_range, nr_ranges);
->  
-> -	dbgprintf("CRASH MEMORY RANGES\n");
-> -
-> -	for(i = 0; i < nr_ranges; ++i)
-> -		dbgprintf("%016Lx-%016Lx\n", mem_range[i].start, mem_range[i].end);
-> +	dbg_memrange("CRASH MEMORY RANGES", &mem_range, nr_ranges);
->  
->  	/*
->  	 * if the core type has not been set on command line, set it here
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index ed6c950..015dcb6 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -477,11 +477,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
->  			mem_max = end;
->  	}
->  
-> -	dbgprintf("MEMORY RANGES\n");
-> -	for (i = 0; i < *ranges; i++) {
-> -		dbgprintf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
-> -			  (*range)[i].end, (*range)[i].type);
-> -	}
-> +	dbg_memrange("MEMORY RANGES", range, *ranges);
->  
->  	return ret;
->  }
-> diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-> index eee5b37..feb3cfd 100644
-> --- a/kexec/arch/ppc/crashdump-powerpc.c
-> +++ b/kexec/arch/ppc/crashdump-powerpc.c
-> @@ -236,13 +236,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
->  	*ranges = memory_ranges;
->  
->  	int j;
-> -	dbgprintf("CRASH MEMORY RANGES\n");
-> -	for (j = 0; j < *ranges; j++) {
-> -		start = crash_memory_range[j].start;
-> -		end = crash_memory_range[j].end;
-> -		dbgprintf("%016Lx-%016Lx\n", start, end);
-> -	}
-> -
-> +	dbg_memrange("MEMORY RANGES", &crash_memory_range, *ranges);
+> @@ -757,6 +757,23 @@ static int cmdline_add_elfcorehdr(char *cmdline, unsigned long addr)
 >  	return 0;
+>  }
 >  
->  err:
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index 715b568..eea8c50 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -121,6 +121,17 @@ do { \
->  		fprintf(stderr, __VA_ARGS__); \
->  } while(0)
+> +static void cmdline_disable_cgroup(char *cmdline)
+> +{
+> +	int cmdlen;
+> +	char str[30] = " cgroup_disable=memory";
+> +
+> +	cmdlen = strlen(cmdline) + strlen(str);
+> +	if (cmdlen > (COMMAND_LINE_SIZE - 1)) {
+> +		/* Not fatal if cgroup memory is not disabled */
+> +		dbgprintf(
+> +		  "Command line overflow, cgroup memory not disabled\n");
+> +		return;
+> +	}
+> +	strcat(cmdline, str);
+> +
+> +	dbgprintf("Command line after adding adding cgroup_disable=memory\n");
+> +	dbgprintf("%s\n", cmdline);
+> +}
 >  
-> +#define dbg_memrange(title, range, nr) \
-> +do { \
-> + int i; \
-> + dbgprintf(title "\n"); \
-> + for (i = 0; i < nr; i++) { \
-> +	 dbgprintf("%016Lx-%016Lx (%d)\n", (*range)[i].start,	\
-> +		   (*range)[i].end, (*range)[i].type);		\
-> + } \
-> + } while (0)
-> +
-> +
->  struct kexec_segment {
->  	const void *buf;
->  	size_t bufsz;
+>  /*
+>   * This routine is specific to i386 architecture to maintain the
+> @@ -1037,6 +1054,11 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+>  		end = mem_range[i].end;
+>  		cmdline_add_memmap_acpi(mod_cmdline, start, end);
+>  	}
+> +	/* 
+> +	 * Always add disabling cgroup_diable=memory param at the end,
+> +	 * it's not critical if it falls off
+> +	 */
+> +	cmdline_disable_cgroup(mod_cmdline);
+>  	return 0;
+>  }
+>  
 > -- 
 > 1.7.6.1
 > 
