@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-f172.google.com ([209.85.192.172])
+Received: from mail-pd0-f182.google.com ([209.85.192.182])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UgUia-0001eF-0R
- for kexec@lists.infradead.org; Sun, 26 May 2013 06:46:12 +0000
-Received: by mail-pd0-f172.google.com with SMTP id 10so5570358pdi.3
- for <kexec@lists.infradead.org>; Sat, 25 May 2013 23:45:50 -0700 (PDT)
-Message-ID: <51A1AF93.70202@gmail.com>
-Date: Sun, 26 May 2013 14:45:39 +0800
+ id 1UgXnC-000381-AB
+ for kexec@lists.infradead.org; Sun, 26 May 2013 10:03:11 +0000
+Received: by mail-pd0-f182.google.com with SMTP id g10so5621635pdj.27
+ for <kexec@lists.infradead.org>; Sun, 26 May 2013 03:02:48 -0700 (PDT)
+Message-ID: <51A1DDBD.3020507@gmail.com>
+Date: Sun, 26 May 2013 18:02:37 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH v2 7/7] s390: Remove setting for saved_max_pfn
-References: <51A1AC4A.60506@gmail.com>
-In-Reply-To: <51A1AC4A.60506@gmail.com>
+Subject: [PATCH] kexec-tools: ppc/ppc64: cleanup: Remove never reached return
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +22,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Simon Horman <horms@verge.net.au>, Heiko Carstens <heiko.carstens@de.ibm.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 
-The only user of saved_max_pfn in s390 is read_oldmem interface but we
-have removed that interface, so saved_max_pfn is now unneeded in s390,
-and we needn't set it anymore.
+The return will never be reached, so remove it.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- arch/s390/kernel/setup.c |    4 ----
- 1 files changed, 0 insertions(+), 4 deletions(-)
+ kexec/arch/ppc/kexec-ppc.c     |    1 -
+ kexec/arch/ppc64/kexec-ppc64.c |    1 -
+ 2 files changed, 0 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 0a49095..497451e 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -719,10 +719,6 @@ static void reserve_oldmem(void)
- 	}
- 	create_mem_hole(memory_chunk, OLDMEM_BASE, OLDMEM_SIZE);
- 	create_mem_hole(memory_chunk, OLDMEM_SIZE, real_size - OLDMEM_SIZE);
--	if (OLDMEM_BASE + OLDMEM_SIZE == real_size)
--		saved_max_pfn = PFN_DOWN(OLDMEM_BASE) - 1;
--	else
--		saved_max_pfn = PFN_DOWN(real_size) - 1;
- #endif
- }
- 
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index 5a2966e..d046110 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -736,7 +736,6 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 					!= 1) {
+ 				perror(fname);
+ 				goto error_openfile;
+-				return -1;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+ 			sprintf(fname, "%s%s%s",
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index 389741a..21bd0a8 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -590,7 +590,6 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 			if (fread(&tce_base, sizeof(uint64_t), 1, file) != 1) {
+ 				perror(fname);
+ 				goto error_openfile;
+-				return -1;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+ 			strcpy(fname, device_tree);
 -- 
 1.7.1
-
 
 _______________________________________________
 kexec mailing list
