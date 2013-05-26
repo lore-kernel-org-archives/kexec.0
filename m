@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pb0-x231.google.com ([2607:f8b0:400e:c01::231])
+Received: from mail-pd0-f178.google.com ([209.85.192.178])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UgRpd-0000Nd-Qq
- for kexec@lists.infradead.org; Sun, 26 May 2013 03:41:18 +0000
-Received: by mail-pb0-f49.google.com with SMTP id rp8so5645632pbb.36
- for <kexec@lists.infradead.org>; Sat, 25 May 2013 20:40:55 -0700 (PDT)
-Message-ID: <51A1843D.3060706@gmail.com>
-Date: Sun, 26 May 2013 11:40:45 +0800
+ id 1UgRqG-0000OG-Hk
+ for kexec@lists.infradead.org; Sun, 26 May 2013 03:41:57 +0000
+Received: by mail-pd0-f178.google.com with SMTP id w11so2436583pde.9
+ for <kexec@lists.infradead.org>; Sat, 25 May 2013 20:41:35 -0700 (PDT)
+Message-ID: <51A18465.9000709@gmail.com>
+Date: Sun, 26 May 2013 11:41:25 +0800
 From: Zhang Yanfei <zhangyanfei.yes@gmail.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/4] kexec-tools: ppc: Remove saved_max_mem
+Subject: [PATCH 3/4] kexec-tools: ppc64: Remove saved_max_mem
 References: <51A183B0.7000607@gmail.com>
 In-Reply-To: <51A183B0.7000607@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -37,14 +37,14 @@ to new kernel commandline.
 
 Signed-off-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 ---
- kexec/arch/ppc/crashdump-powerpc.c |   19 -------------------
+ kexec/arch/ppc64/crashdump-ppc64.c |   19 -------------------
  1 files changed, 0 insertions(+), 19 deletions(-)
 
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index eee5b37..c06d310 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -51,17 +51,6 @@ static int crash_max_memory_ranges;
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index 49cab12..e31dd6d 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -69,17 +69,6 @@ static int crash_max_memory_ranges;
   */
  mem_rgns_t usablemem_rgns = {0, NULL};
  
@@ -57,12 +57,12 @@ index eee5b37..c06d310 100644
 - * we can determine the RAM size unless parsing the device-tree/memoy@/reg
 - * property in the kernel.
 - */
--unsigned long long saved_max_mem;
+-uint64_t saved_max_mem = 0;
 -
- /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
-  * create Elf headers. Keeping it separate from get_memory_ranges() as
-  * requirements are different in the case of normal kexec and crashdumps.
-@@ -224,13 +213,6 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
+ static unsigned long long cstart, cend;
+ static int memory_ranges;
+ 
+@@ -303,13 +292,6 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
  		crash_memory_range[memory_ranges].start = cstart;
  		crash_memory_range[memory_ranges++].end = cend;
  	}
@@ -76,14 +76,14 @@ index eee5b37..c06d310 100644
  
  	*range = crash_memory_range;
  	*ranges = memory_ranges;
-@@ -378,7 +360,6 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+@@ -446,7 +428,6 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
  	 * read by flatten_device_tree and modified if required
  	 */
  	add_cmdline_param(mod_cmdline, elfcorehdr, " elfcorehdr=", "K");
 -	add_cmdline_param(mod_cmdline, saved_max_mem, " savemaxmem=", "M");
- 	add_cmdline(mod_cmdline, " maxcpus=1");
  	return 0;
  }
+ 
 -- 
 1.7.1
 
