@@ -1,34 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UgmZc-0004tJ-DV
- for kexec@lists.infradead.org; Mon, 27 May 2013 01:50:09 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 8B8893EE0C0
- for <kexec@lists.infradead.org>; Mon, 27 May 2013 10:49:46 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 7A65345DD78
- for <kexec@lists.infradead.org>; Mon, 27 May 2013 10:49:46 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 58DF345DDCF
- for <kexec@lists.infradead.org>; Mon, 27 May 2013 10:49:46 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id B8F111DB8044
- for <kexec@lists.infradead.org>; Mon, 27 May 2013 10:49:45 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id F20FE1DB803A
- for <kexec@lists.infradead.org>; Mon, 27 May 2013 10:49:44 +0900 (JST)
-Message-ID: <51A2BBA7.50607@jp.fujitsu.com>
-Date: Mon, 27 May 2013 10:49:27 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Ugmi2-00050Z-63
+ for kexec@lists.infradead.org; Mon, 27 May 2013 01:58:51 +0000
+Message-ID: <51A2BCCB.2090900@cn.fujitsu.com>
+Date: Mon, 27 May 2013 09:54:19 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v8 9/9] vmcore: support mmap() on /proc/vmcore
-References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
- <20130523052547.13864.83306.stgit@localhost6.localdomain6>
- <20130523152445.17549682ae45b5aab3f3cde0@linux-foundation.org>
- <CAJGZr0LwivLTH+E7WAR1B9_6B4e=jv04KgCUL_PdVpi9JjDpBw@mail.gmail.com>
-In-Reply-To: <CAJGZr0LwivLTH+E7WAR1B9_6B4e=jv04KgCUL_PdVpi9JjDpBw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] Documentation/devices.txt: Mark /dev/oldmem
+ obsolete
+References: <51A1AC4A.60506@gmail.com> <51A1AD67.4030800@gmail.com>
+ <51A2BAE9.40307@jp.fujitsu.com>
+In-Reply-To: <51A2BAE9.40307@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,54 +20,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: riel@redhat.com, hughd@google.com, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, Vivek Goyal <vgoyal@redhat.com>, linux-mm@kvack.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "Eric W. Biederman" <ebiederm@xmission.com>, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, Andrew Morton <akpm@linux-foundation.org>, walken@google.com, Cliff Wickman <cpw@sgi.com>, jingbai.ma@hp.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-(2013/05/24 18:02), Maxim Uvarov wrote:
->
->
->
-> 2013/5/24 Andrew Morton <akpm@linux-foundation.org <mailto:akpm@linux-foundation.org>>
->
->     On Thu, 23 May 2013 14:25:48 +0900 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com <mailto:d.hatayama@jp.fujitsu.com>> wrote:
->
->      > This patch introduces mmap_vmcore().
->      >
->      > Don't permit writable nor executable mapping even with mprotect()
->      > because this mmap() is aimed at reading crash dump memory.
->      > Non-writable mapping is also requirement of remap_pfn_range() when
->      > mapping linear pages on non-consecutive physical pages; see
->      > is_cow_mapping().
->      >
->      > Set VM_MIXEDMAP flag to remap memory by remap_pfn_range and by
->      > remap_vmalloc_range_pertial at the same time for a single
->      > vma. do_munmap() can correctly clean partially remapped vma with two
->      > functions in abnormal case. See zap_pte_range(), vm_normal_page() and
->      > their comments for details.
->      >
->      > On x86-32 PAE kernels, mmap() supports at most 16TB memory only. This
->      > limitation comes from the fact that the third argument of
->      > remap_pfn_range(), pfn, is of 32-bit length on x86-32: unsigned long.
->
->     More reviewing and testing, please.
->
->
-> Do you have git pull for both kernel and userland changes? I would like to do some more testing on my machines.
->
-> Maxim.
-
-Thanks! That's very helpful.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTPlubQwNeaciDI35pelIDA5OjQ2LCBIQVRBWUFNQSBEYWlzdWtlIOWGmemBkzoKPiAo
+MjAxMy8wNS8yNiAxNTozNiksIFpoYW5nIFlhbmZlaSB3cm90ZToKPj4gRnJvbTogWmhhbmcgWWFu
+ZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWmhh
+bmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPj4gQ2M6IERhdmUgSm9uZXMg
+PGRhdmVqQHJlZGhhdC5jb20+Cj4+IC0tLQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNlcy50eHQg
+fCAgICAzICstLQo+PiAgIDEgZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2VzLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNlcy50eHQKPj4gaW5kZXggMDhmMDFlNy4uYzhlNDAwMiAxMDA2NDQK
+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2VzLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXMudHh0Cj4+IEBAIC0xMDAsOCArMTAwLDcgQEAgWW91ciBjb29wZXJhdGlvbiBpcyBh
+cHByZWNpYXRlZC4KPj4gICAgICAgICAgICAxMCA9IC9kZXYvYWlvICAgICAgICBBc3luY2hyb25v
+dXMgSS9PIG5vdGlmaWNhdGlvbiBpbnRlcmZhY2UKPj4gICAgICAgICAgICAxMSA9IC9kZXYva21z
+ZyAgICAgICAgV3JpdGVzIHRvIHRoaXMgY29tZSBvdXQgYXMgcHJpbnRrJ3MsIHJlYWRzCj4+ICAg
+ICAgICAgICAgICAgICAgICAgICBleHBvcnQgdGhlIGJ1ZmZlcmVkIHByaW50ayByZWNvcmRzLgo+
+PiAtICAgICAgICAgMTIgPSAvZGV2L29sZG1lbSAgICBVc2VkIGJ5IGNyYXNoZHVtcCBrZXJuZWxz
+IHRvIGFjY2Vzcwo+PiAtICAgICAgICAgICAgICAgICAgICB0aGUgbWVtb3J5IG9mIHRoZSBrZXJu
+ZWwgdGhhdCBjcmFzaGVkLgo+PiArICAgICAgICAgMTIgPSAvZGV2L29sZG1lbSAgICBPQlNPTEVU
+RQo+Pgo+PiAgICAgMSBibG9jayAgICBSQU0gZGlzawo+PiAgICAgICAgICAgICAwID0gL2Rldi9y
+YW0wICAgICAgICBGaXJzdCBSQU0gZGlzawo+Pgo+IAo+IFRoaXMgaXMgdGhlIG5ldyBwYXRjaC4g
+TG9va2luZyBhdCBvdGhlciBwYXJ0cyBvZiBkZXZpY2VzLnR4dCwgb2Jzb2xldGUgaXMKPiBzb21l
+dGltZXMgdXNlZCB0b2dldGhlciB3aXRoIHVudXNlZC4gSSBndWVzcyBvYnNvbGV0ZSBtZWFucyB0
+aGlzIGlzIG9sZCBpbnRlcmZhY2Ugc28KPiBkb24ndCB1c2UgaXQgYXMgbXVjaCBhcyBwb3NzaWJs
+ZSBhbmQgdW51c2VkIG1lYW5zIHRoaXMgaXMgbm90IHVzZWQgYXQgYWxsIG5vdy4KPiBZb3UgcmVt
+b3ZlIG9sZCBtZW1vcnkgaW50ZXJmYWNlIGNvbXBsZXRlbHkgaW4gdGhpcyBwYXRjaCBzZXQsIHNv
+IGlzIGl0IGJldHRlciB0byBhZGQKPiB1bnVzZWQsIHRvbz8KPiAKCkRvZXMgb2Jzb2xldGUgYWxz
+byBtZWFuICJub3QgdXNlZCBhbnltb3JlIj8gSSBkb24ndCBrbm93LiBJIHRoaW5rIHdlIGNhbiB3
+YWl0IGZvciBzb21lIG5hdGl2ZQpFbmdsaXNoIHNwZWFrZXJzIHRvIGNvbW1lbnQgb24gdGhpcy4K
+ClRoYW5rcwpaaGFuZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
