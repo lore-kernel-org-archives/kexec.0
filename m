@@ -1,16 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UhLZB-0008Vk-SY
- for kexec@lists.infradead.org; Tue, 28 May 2013 15:12:02 +0000
-Message-ID: <51A4C926.2040701@zytor.com>
-Date: Tue, 28 May 2013 08:11:34 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+Received: from mail.active-venture.com ([67.228.131.205])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UhLvG-0000gC-Bo
+ for kexec@lists.infradead.org; Tue, 28 May 2013 15:34:51 +0000
+Date: Tue, 28 May 2013 08:34:52 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3] watchdog: Add hook for kicking in kdump path
+Message-ID: <20130528153452.GA21891@roeck-us.net>
+References: <1366233596-34681-1-git-send-email-dzickus@redhat.com>
+ <87li8gaku0.fsf@xmission.com> <20130418130009.GH79013@redhat.com>
+ <20130418134904.GC2767@roeck-us.net>
+ <20130418135257.GL79013@redhat.com>
+ <20130418145413.GA1980@roeck-us.net>
+ <20130424144226.GI79013@redhat.com>
+ <20130424152142.GA26864@roeck-us.net>
+ <20130527191618.GD14258@spo001.leaseweb.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/7] Remove unused /dev/oldmem interface
-References: <51A02E50.5020507@gmail.com> <87mwri8wwu.fsf@xmission.com>
- <20130528143756.GD7088@redhat.com>
-In-Reply-To: <20130528143756.GD7088@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20130527191618.GD14258@spo001.leaseweb.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +30,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Wim Van Sebroeck <wim@iguana.be>
+Cc: Don Zickus <dzickus@redhat.com>, linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, dyoung@redhat.com, vgoyal@redhat.com
 
-On 05/28/2013 07:37 AM, Vivek Goyal wrote:
+On Mon, May 27, 2013 at 09:16:18PM +0200, Wim Van Sebroeck wrote:
+>  Hi Guenter,
 > 
-> Eric,
+> > > Hi Guenter,
+> > > 
+> > > Is there an easy way to determine which driver is loaded for each
+> > > /dev/watchdogN device (from a script perspective).
+> > > 
+> > > Basically, I wanted to determine the module that needs to be included in
+> > > the kdump initrd image.
+> > > 
+> > Sometimes. For example, the iTCO_wdt driver has an entry in /sys/devices, and
+> > /sys/class/watchdog/watchdogX/device points to it. That is not always the case,
+> > howewver. In my system, for example, the MEI watchdog is active, but there is
+> > nothing I can find that would give me an indication that /dev/watchdog0 actually
+> > points to the MEI watchdog driver.
+> > 
+> > Of course I might be missing something, and there might be some other means
+> > to identify the driver from userspace. Would be great, actually, as I am having
+> > the same problem.
 > 
-> Should we schedule the removal of this interface after 1-2 releases
-> and give a warning once if anybody opens /dev/oldmem and tell them
-> to use /proc/vmcore instead? 
+> Only when you set the .parent field in the watchdog_device data you will get the
+> referal in the /sys/class/... tree. In iTCO_wdt.c you have the following code
+> that does that: iTCO_wdt_watchdog_dev.parent = dev->dev.parent;
 > 
-> I am kind of inclined towards warning approarch. If there is any xyz
-> /dev/oldmem user in the wild out there, he/she atleast gets a chance to
-> migrate to /proc/vmcore.
+> From the watchdog-kernel-api documentation:
+> * parent: set this to the parent device (or NULL) before calling
+>   watchdog_register_device.
 > 
+Hi Wim,
 
-This has been discussed ad nauseam at the Kernel Summit.  It doesn't work.
+unfortunately that only works if the driver is instantiated as platform driver,
+PCI driver, or similar, where a parent device exists. Some drivers are, however,
+instantiated directly from the init function (the BookE driver is an example).
+What is the recommended action in this case ? Convert it to a platform driver ?
 
-	-hpa
-
-
+Thanks,
+Guenter
 
 _______________________________________________
 kexec mailing list
