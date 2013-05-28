@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.active-venture.com ([67.228.131.205])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UhLvG-0000gC-Bo
- for kexec@lists.infradead.org; Tue, 28 May 2013 15:34:51 +0000
-Date: Tue, 28 May 2013 08:34:52 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3] watchdog: Add hook for kicking in kdump path
-Message-ID: <20130528153452.GA21891@roeck-us.net>
-References: <1366233596-34681-1-git-send-email-dzickus@redhat.com>
- <87li8gaku0.fsf@xmission.com> <20130418130009.GH79013@redhat.com>
- <20130418134904.GC2767@roeck-us.net>
- <20130418135257.GL79013@redhat.com>
- <20130418145413.GA1980@roeck-us.net>
- <20130424144226.GI79013@redhat.com>
- <20130424152142.GA26864@roeck-us.net>
- <20130527191618.GD14258@spo001.leaseweb.com>
+Received: from mail-ob0-x234.google.com ([2607:f8b0:4003:c01::234])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UhNfQ-00038B-2n
+ for kexec@lists.infradead.org; Tue, 28 May 2013 17:26:36 +0000
+Received: by mail-ob0-f180.google.com with SMTP id eh20so1396337obb.11
+ for <kexec@lists.infradead.org>; Tue, 28 May 2013 10:26:14 -0700 (PDT)
+Date: Tue, 28 May 2013 12:26:06 -0500
+From: Rob Landley <rob@landley.net>
+Subject: Re: [PATCH v2 2/7] Documentation/devices.txt: Mark /dev/oldmem
+ obsolete
+References: <1369721851.2776.37@driftwood> <51A44DD5.5050301@cn.fujitsu.com>
+In-Reply-To: <51A44DD5.5050301@cn.fujitsu.com> (from
+ zhangyanfei@cn.fujitsu.com on Tue May 28 01:25:25 2013)
+Message-Id: <1369761966.2776.39@driftwood>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130527191618.GD14258@spo001.leaseweb.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +23,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="Flowed"; DelSp="Yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>
-Cc: Don Zickus <dzickus@redhat.com>, linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, dyoung@redhat.com, vgoyal@redhat.com
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On Mon, May 27, 2013 at 09:16:18PM +0200, Wim Van Sebroeck wrote:
->  Hi Guenter,
-> 
-> > > Hi Guenter,
-> > > 
-> > > Is there an easy way to determine which driver is loaded for each
-> > > /dev/watchdogN device (from a script perspective).
-> > > 
-> > > Basically, I wanted to determine the module that needs to be included in
-> > > the kdump initrd image.
-> > > 
-> > Sometimes. For example, the iTCO_wdt driver has an entry in /sys/devices, and
-> > /sys/class/watchdog/watchdogX/device points to it. That is not always the case,
-> > howewver. In my system, for example, the MEI watchdog is active, but there is
-> > nothing I can find that would give me an indication that /dev/watchdog0 actually
-> > points to the MEI watchdog driver.
-> > 
-> > Of course I might be missing something, and there might be some other means
-> > to identify the driver from userspace. Would be great, actually, as I am having
-> > the same problem.
-> 
-> Only when you set the .parent field in the watchdog_device data you will get the
-> referal in the /sys/class/... tree. In iTCO_wdt.c you have the following code
-> that does that: iTCO_wdt_watchdog_dev.parent = dev->dev.parent;
-> 
-> From the watchdog-kernel-api documentation:
-> * parent: set this to the parent device (or NULL) before calling
->   watchdog_register_device.
-> 
-Hi Wim,
-
-unfortunately that only works if the driver is instantiated as platform driver,
-PCI driver, or similar, where a parent device exists. Some drivers are, however,
-instantiated directly from the init function (the BookE driver is an example).
-What is the recommended action in this case ? Convert it to a platform driver ?
-
-Thanks,
-Guenter
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDUvMjgvMjAxMyAwMToyNToyNSBBTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+IE9uIDA1LzI4
+LzIwMTMgMDI6MTcgUE0sIFJvYiBMYW5kbGV5IHdyb3RlOgo+ID4gT24gMDUvMjYvMjAxMyAwODo1
+NDoxOSBQTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+ID4+IOS6jiAyMDEz5bm0MDXmnIgyN+aXpSAw
+OTo0NiwgSEFUQVlBTUEgRGFpc3VrZSDlhpnpgZM6Cj4gPj4gPiAoMjAxMy8wNS8yNiAxNTozNiks
+IFpoYW5nIFlhbmZlaSB3cm90ZToKPiA+PiA+PiBGcm9tOiBaaGFuZyBZYW5mZWkgPHpoYW5neWFu
+ZmVpQGNuLmZ1aml0c3UuY29tPgo+ID4+ID4+Cj4gPj4gPj4gU2lnbmVkLW9mZi1ieTogWmhhbmcg
+WWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiA+PiA+PiBDYzogRGF2ZSBKb25l
+cyA8ZGF2ZWpAcmVkaGF0LmNvbT4KPiA+PiA+PiAtLS0KPiA+PiA+PiAgIERvY3VtZW50YXRpb24v
+ZGV2aWNlcy50eHQgfCAgICAzICstLQo+ID4+ID4+ICAgMSBmaWxlcyBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPj4gPj4KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2VzLnR4dCAgCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXMudHh0Cj4g
+Pj4gPj4gaW5kZXggMDhmMDFlNy4uYzhlNDAwMiAxMDA2NDQKPiA+PiA+PiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXMudHh0Cj4gPj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2VzLnR4
+dAo+ID4+ID4+IEBAIC0xMDAsOCArMTAwLDcgQEAgWW91ciBjb29wZXJhdGlvbiBpcyBhcHByZWNp
+YXRlZC4KPiA+PiA+PiAgICAgICAgICAgIDEwID0gL2Rldi9haW8gICAgICAgIEFzeW5jaHJvbm91
+cyBJL08gbm90aWZpY2F0aW9uICAKPiBpbnRlcmZhY2UKPiA+PiA+PiAgICAgICAgICAgIDExID0g
+L2Rldi9rbXNnICAgICAgICBXcml0ZXMgdG8gdGhpcyBjb21lIG91dCBhcyAgCj4gcHJpbnRrJ3Ms
+IHJlYWRzCj4gPj4gPj4gICAgICAgICAgICAgICAgICAgICAgIGV4cG9ydCB0aGUgYnVmZmVyZWQg
+cHJpbnRrIHJlY29yZHMuCj4gPj4gPj4gLSAgICAgICAgIDEyID0gL2Rldi9vbGRtZW0gICAgVXNl
+ZCBieSBjcmFzaGR1bXAga2VybmVscyB0byAgCj4gYWNjZXNzCj4gPj4gPj4gLSAgICAgICAgICAg
+ICAgICAgICAgdGhlIG1lbW9yeSBvZiB0aGUga2VybmVsIHRoYXQgY3Jhc2hlZC4KPiA+PiA+PiAr
+ICAgICAgICAgMTIgPSAvZGV2L29sZG1lbSAgICBPQlNPTEVURQo+ID4+ID4+Cj4gPj4gPj4gICAg
+IDEgYmxvY2sgICAgUkFNIGRpc2sKPiA+PiA+PiAgICAgICAgICAgICAwID0gL2Rldi9yYW0wICAg
+ICAgICBGaXJzdCBSQU0gZGlzawo+ID4+ID4+Cj4gPj4gPgo+ID4+ID4gVGhpcyBpcyB0aGUgbmV3
+IHBhdGNoLiBMb29raW5nIGF0IG90aGVyIHBhcnRzIG9mIGRldmljZXMudHh0LCAgCj4gb2Jzb2xl
+dGUgaXMKPiA+PiA+IHNvbWV0aW1lcyB1c2VkIHRvZ2V0aGVyIHdpdGggdW51c2VkLiBJIGd1ZXNz
+IG9ic29sZXRlIG1lYW5zIHRoaXMgIAo+IGlzIG9sZCBpbnRlcmZhY2Ugc28KPiA+PiA+IGRvbid0
+IHVzZSBpdCBhcyBtdWNoIGFzIHBvc3NpYmxlIGFuZCB1bnVzZWQgbWVhbnMgdGhpcyBpcyBub3Qg
+IAo+IHVzZWQgYXQgYWxsIG5vdy4KPiA+PiA+IFlvdSByZW1vdmUgb2xkIG1lbW9yeSBpbnRlcmZh
+Y2UgY29tcGxldGVseSBpbiB0aGlzIHBhdGNoIHNldCwgc28gIAo+IGlzIGl0IGJldHRlciB0byBh
+ZGQKPiA+PiA+IHVudXNlZCwgdG9vPwo+ID4+ID4KPiA+Pgo+ID4+IERvZXMgb2Jzb2xldGUgYWxz
+byBtZWFuICJub3QgdXNlZCBhbnltb3JlIj8gSSBkb24ndCBrbm93LiBJIHRoaW5rICAKPiB3ZSBj
+YW4gd2FpdCBmb3Igc29tZSBuYXRpdmUKPiA+PiBFbmdsaXNoIHNwZWFrZXJzIHRvIGNvbW1lbnQg
+b24gdGhpcy4KPiA+Cj4gPiBPYnNvbGV0ZSBpbXBsaWVzIHRoYXQgaXQgc2hvdWxkbid0IGJlIHVz
+ZWQgYW55bW9yZS4gVGhlcmUgYXJlICAKPiBleGNlcHRpb25zIHRvIGV2ZXJ5dGhpbmcsIG9mIGNv
+dXJzZS4uLgo+ID4KPiA+IChVbnVzZWQgbWVhbnMgbm90aGluZyBpcyB1c2luZyBpdC4gSWYgdGhl
+cmUncyBzdGlsbCBjb2RlIHVzaW5nIGl0LCAgCj4gaXQncyBub3QgdW51c2VkLiBTbyB5ZWFoIHVu
+dXNlZCB3b3VsZCBpbXBseSByZW1vdmVkLikKPiA+Cj4gCj4gU28sIGNvdWxkIEkganVzdCB1c2Ug
+VU5TRUQgdG8gcmVwbGFjZSBPQlNPTEVURSBoZXJlPyBPciB1c2UgIAo+ICJPQlNPTEVURS9VTlVT
+RUQiPwoKT2Jzb2xldGUgaXMgZmluZS4KCk9ic29sZXRlIG1lYW5zIGl0IHdhcyB1c2VkIGF0IHNv
+bWUgcG9pbnQsIGFuZCB0aHVzIHJldXNpbmcgaXQgbWlnaHQgIApjb25mdXNlIG9yIGNvbmZsY2l0
+IHdpdGggbGVnYWN5IHNvZnR3YXJlLiBVbnVzZWQgY291bGQganVzdCBtZWFuIHRoYXQgIAp3ZSBs
+ZWZ0IGEgZ2FwIGZvciBzb21lIHJlYXNvbiwgaXQgZG9lc24ndCBpbXBseSBpdCBldmVyIHdhcyB1
+c2VkLgoKRXhwbGljaXRseSBkb2N1bWVudGluZyAidW51c2VkIiBpcyBraW5kIG9mIHNpbGx5OiBh
+bGwgdGhlIG9uZXMgd2UgIApfZG9uJ3RfIGRvY3VtZW50IGFyZSBwcmVzdW1hYmx5IHVudXNlZC4g
+T2Jzb2xldGUgY2FycmllcyB3aXRoIGl0IGEgdmVyeSAgCm1pbGQgd2FybmluZyBhYm91dCBsZWdh
+Y3kgc29mdHdhcmUsIHdoaWNoIGlzIHByZXN1bWFibHkgd2h5IHdlIHN0aWxsICAKYm90aGVyIHRv
+IG1lbnRpb24gaXQgYXQgYWxsIGluc3RlYWQgb2YganVzdCByZW1vdmluZyB0aGUgZW50cnkuCgoo
+VGhlbiBhZ2FpbiB0aGUgcG9pbnQgd2FzIHRoYXQgbm90aGluZyBldmVyIHVzZWQgdGhpcyBpbnRl
+cmZhY2UgaW4gdGhlICAKZmlyc3QgcGxhY2UuIFBlcnNvbmFsbHkgSSdkIGp1c3QgaGF2ZSByZW1v
+dmVkIHRoZSBlbnRyeS4uLikKClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
