@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ob0-x234.google.com ([2607:f8b0:4003:c01::234])
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UhNfQ-00038B-2n
- for kexec@lists.infradead.org; Tue, 28 May 2013 17:26:36 +0000
-Received: by mail-ob0-f180.google.com with SMTP id eh20so1396337obb.11
- for <kexec@lists.infradead.org>; Tue, 28 May 2013 10:26:14 -0700 (PDT)
-Date: Tue, 28 May 2013 12:26:06 -0500
-From: Rob Landley <rob@landley.net>
+ id 1UhNoV-0003Jv-Py
+ for kexec@lists.infradead.org; Tue, 28 May 2013 17:36:00 +0000
+Message-ID: <51A4EADB.9080703@zytor.com>
+Date: Tue, 28 May 2013 10:35:23 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH v2 2/7] Documentation/devices.txt: Mark /dev/oldmem
  obsolete
 References: <1369721851.2776.37@driftwood> <51A44DD5.5050301@cn.fujitsu.com>
-In-Reply-To: <51A44DD5.5050301@cn.fujitsu.com> (from
- zhangyanfei@cn.fujitsu.com on Tue May 28 01:25:25 2013)
-Message-Id: <1369761966.2776.39@driftwood>
-MIME-Version: 1.0
-Content-Disposition: inline
+ <1369761966.2776.39@driftwood>
+In-Reply-To: <1369761966.2776.39@driftwood>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,63 +20,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="Flowed"; DelSp="Yes"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Rob Landley <rob@landley.net>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Simon Horman <horms@verge.net.au>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-T24gMDUvMjgvMjAxMyAwMToyNToyNSBBTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+IE9uIDA1LzI4
-LzIwMTMgMDI6MTcgUE0sIFJvYiBMYW5kbGV5IHdyb3RlOgo+ID4gT24gMDUvMjYvMjAxMyAwODo1
-NDoxOSBQTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+ID4+IOS6jiAyMDEz5bm0MDXmnIgyN+aXpSAw
-OTo0NiwgSEFUQVlBTUEgRGFpc3VrZSDlhpnpgZM6Cj4gPj4gPiAoMjAxMy8wNS8yNiAxNTozNiks
-IFpoYW5nIFlhbmZlaSB3cm90ZToKPiA+PiA+PiBGcm9tOiBaaGFuZyBZYW5mZWkgPHpoYW5neWFu
-ZmVpQGNuLmZ1aml0c3UuY29tPgo+ID4+ID4+Cj4gPj4gPj4gU2lnbmVkLW9mZi1ieTogWmhhbmcg
-WWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiA+PiA+PiBDYzogRGF2ZSBKb25l
-cyA8ZGF2ZWpAcmVkaGF0LmNvbT4KPiA+PiA+PiAtLS0KPiA+PiA+PiAgIERvY3VtZW50YXRpb24v
-ZGV2aWNlcy50eHQgfCAgICAzICstLQo+ID4+ID4+ICAgMSBmaWxlcyBjaGFuZ2VkLCAxIGluc2Vy
-dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPj4gPj4KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2VzLnR4dCAgCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXMudHh0Cj4g
-Pj4gPj4gaW5kZXggMDhmMDFlNy4uYzhlNDAwMiAxMDA2NDQKPiA+PiA+PiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXMudHh0Cj4gPj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2VzLnR4
-dAo+ID4+ID4+IEBAIC0xMDAsOCArMTAwLDcgQEAgWW91ciBjb29wZXJhdGlvbiBpcyBhcHByZWNp
-YXRlZC4KPiA+PiA+PiAgICAgICAgICAgIDEwID0gL2Rldi9haW8gICAgICAgIEFzeW5jaHJvbm91
-cyBJL08gbm90aWZpY2F0aW9uICAKPiBpbnRlcmZhY2UKPiA+PiA+PiAgICAgICAgICAgIDExID0g
-L2Rldi9rbXNnICAgICAgICBXcml0ZXMgdG8gdGhpcyBjb21lIG91dCBhcyAgCj4gcHJpbnRrJ3Ms
-IHJlYWRzCj4gPj4gPj4gICAgICAgICAgICAgICAgICAgICAgIGV4cG9ydCB0aGUgYnVmZmVyZWQg
-cHJpbnRrIHJlY29yZHMuCj4gPj4gPj4gLSAgICAgICAgIDEyID0gL2Rldi9vbGRtZW0gICAgVXNl
-ZCBieSBjcmFzaGR1bXAga2VybmVscyB0byAgCj4gYWNjZXNzCj4gPj4gPj4gLSAgICAgICAgICAg
-ICAgICAgICAgdGhlIG1lbW9yeSBvZiB0aGUga2VybmVsIHRoYXQgY3Jhc2hlZC4KPiA+PiA+PiAr
-ICAgICAgICAgMTIgPSAvZGV2L29sZG1lbSAgICBPQlNPTEVURQo+ID4+ID4+Cj4gPj4gPj4gICAg
-IDEgYmxvY2sgICAgUkFNIGRpc2sKPiA+PiA+PiAgICAgICAgICAgICAwID0gL2Rldi9yYW0wICAg
-ICAgICBGaXJzdCBSQU0gZGlzawo+ID4+ID4+Cj4gPj4gPgo+ID4+ID4gVGhpcyBpcyB0aGUgbmV3
-IHBhdGNoLiBMb29raW5nIGF0IG90aGVyIHBhcnRzIG9mIGRldmljZXMudHh0LCAgCj4gb2Jzb2xl
-dGUgaXMKPiA+PiA+IHNvbWV0aW1lcyB1c2VkIHRvZ2V0aGVyIHdpdGggdW51c2VkLiBJIGd1ZXNz
-IG9ic29sZXRlIG1lYW5zIHRoaXMgIAo+IGlzIG9sZCBpbnRlcmZhY2Ugc28KPiA+PiA+IGRvbid0
-IHVzZSBpdCBhcyBtdWNoIGFzIHBvc3NpYmxlIGFuZCB1bnVzZWQgbWVhbnMgdGhpcyBpcyBub3Qg
-IAo+IHVzZWQgYXQgYWxsIG5vdy4KPiA+PiA+IFlvdSByZW1vdmUgb2xkIG1lbW9yeSBpbnRlcmZh
-Y2UgY29tcGxldGVseSBpbiB0aGlzIHBhdGNoIHNldCwgc28gIAo+IGlzIGl0IGJldHRlciB0byBh
-ZGQKPiA+PiA+IHVudXNlZCwgdG9vPwo+ID4+ID4KPiA+Pgo+ID4+IERvZXMgb2Jzb2xldGUgYWxz
-byBtZWFuICJub3QgdXNlZCBhbnltb3JlIj8gSSBkb24ndCBrbm93LiBJIHRoaW5rICAKPiB3ZSBj
-YW4gd2FpdCBmb3Igc29tZSBuYXRpdmUKPiA+PiBFbmdsaXNoIHNwZWFrZXJzIHRvIGNvbW1lbnQg
-b24gdGhpcy4KPiA+Cj4gPiBPYnNvbGV0ZSBpbXBsaWVzIHRoYXQgaXQgc2hvdWxkbid0IGJlIHVz
-ZWQgYW55bW9yZS4gVGhlcmUgYXJlICAKPiBleGNlcHRpb25zIHRvIGV2ZXJ5dGhpbmcsIG9mIGNv
-dXJzZS4uLgo+ID4KPiA+IChVbnVzZWQgbWVhbnMgbm90aGluZyBpcyB1c2luZyBpdC4gSWYgdGhl
-cmUncyBzdGlsbCBjb2RlIHVzaW5nIGl0LCAgCj4gaXQncyBub3QgdW51c2VkLiBTbyB5ZWFoIHVu
-dXNlZCB3b3VsZCBpbXBseSByZW1vdmVkLikKPiA+Cj4gCj4gU28sIGNvdWxkIEkganVzdCB1c2Ug
-VU5TRUQgdG8gcmVwbGFjZSBPQlNPTEVURSBoZXJlPyBPciB1c2UgIAo+ICJPQlNPTEVURS9VTlVT
-RUQiPwoKT2Jzb2xldGUgaXMgZmluZS4KCk9ic29sZXRlIG1lYW5zIGl0IHdhcyB1c2VkIGF0IHNv
-bWUgcG9pbnQsIGFuZCB0aHVzIHJldXNpbmcgaXQgbWlnaHQgIApjb25mdXNlIG9yIGNvbmZsY2l0
-IHdpdGggbGVnYWN5IHNvZnR3YXJlLiBVbnVzZWQgY291bGQganVzdCBtZWFuIHRoYXQgIAp3ZSBs
-ZWZ0IGEgZ2FwIGZvciBzb21lIHJlYXNvbiwgaXQgZG9lc24ndCBpbXBseSBpdCBldmVyIHdhcyB1
-c2VkLgoKRXhwbGljaXRseSBkb2N1bWVudGluZyAidW51c2VkIiBpcyBraW5kIG9mIHNpbGx5OiBh
-bGwgdGhlIG9uZXMgd2UgIApfZG9uJ3RfIGRvY3VtZW50IGFyZSBwcmVzdW1hYmx5IHVudXNlZC4g
-T2Jzb2xldGUgY2FycmllcyB3aXRoIGl0IGEgdmVyeSAgCm1pbGQgd2FybmluZyBhYm91dCBsZWdh
-Y3kgc29mdHdhcmUsIHdoaWNoIGlzIHByZXN1bWFibHkgd2h5IHdlIHN0aWxsICAKYm90aGVyIHRv
-IG1lbnRpb24gaXQgYXQgYWxsIGluc3RlYWQgb2YganVzdCByZW1vdmluZyB0aGUgZW50cnkuCgoo
-VGhlbiBhZ2FpbiB0aGUgcG9pbnQgd2FzIHRoYXQgbm90aGluZyBldmVyIHVzZWQgdGhpcyBpbnRl
-cmZhY2UgaW4gdGhlICAKZmlyc3QgcGxhY2UuIFBlcnNvbmFsbHkgSSdkIGp1c3QgaGF2ZSByZW1v
-dmVkIHRoZSBlbnRyeS4uLikKClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 05/28/2013 10:26 AM, Rob Landley wrote:
+>>
+>> So, could I just use UNSED to replace OBSOLETE here? Or use
+>> "OBSOLETE/UNUSED"?
+> 
+> Obsolete is fine.
+> 
+> Obsolete means it was used at some point, and thus reusing it might
+> confuse or conflcit with legacy software. Unused could just mean that we
+> left a gap for some reason, it doesn't imply it ever was used.
+> 
+> Explicitly documenting "unused" is kind of silly: all the ones we
+> _don't_ document are presumably unused. Obsolete carries with it a very
+> mild warning about legacy software, which is presumably why we still
+> bother to mention it at all instead of just removing the entry.
+> 
+> (Then again the point was that nothing ever used this interface in the
+> first place. Personally I'd just have removed the entry...)
+> 
+
+"Obsolete" in this specific context means that the reservation is
+obsolete, but was used in kernels past, therefore the name and number
+should not be reused to prevent old software from misbehaving.
+
+	-hpa
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
