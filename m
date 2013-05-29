@@ -1,12 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UhjAw-0002Ib-R6
- for kexec@lists.infradead.org; Wed, 29 May 2013 16:24:35 +0000
-Date: Wed, 29 May 2013 12:23:26 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from e06smtp13.uk.ibm.com ([195.75.94.109])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Uhjw9-0003O0-Nw
+ for kexec@lists.infradead.org; Wed, 29 May 2013 17:13:22 +0000
+Received: from /spool/local
+ by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Wed, 29 May 2013 18:09:20 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 67C8317D8025
+ for <kexec@lists.infradead.org>; Wed, 29 May 2013 18:14:07 +0100 (BST)
+Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
+ [9.149.37.247])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r4THCgKO51118150
+ for <kexec@lists.infradead.org>; Wed, 29 May 2013 17:12:42 GMT
+Received: from d06av12.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av12.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r4THCpKr013956
+ for <kexec@lists.infradead.org>; Wed, 29 May 2013 11:12:52 -0600
+Date: Wed, 29 May 2013 19:12:49 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
-Message-ID: <20130529162325.GD22146@redhat.com>
+Message-ID: <20130529191249.19a235be@holzheu>
+In-Reply-To: <20130529162325.GD22146@redhat.com>
 References: <20130524143644.GD18218@redhat.com>
  <20130524170626.2ac06efe@holzheu>
  <20130524152849.GF18218@redhat.com> <87mwrkatgu.fsf@xmission.com>
@@ -14,9 +33,8 @@ References: <20130524143644.GD18218@redhat.com>
  <51A076FE.3060604@gmail.com> <20130525145217.0549138a@holzheu>
  <20130528135500.GC7088@redhat.com>
  <20130529135144.7f95c4c0@holzheu>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130529135144.7f95c4c0@holzheu>
+ <20130529162325.GD22146@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,83 +47,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On Wed, May 29, 2013 at 01:51:44PM +0200, Michael Holzheu wrote:
-> On Tue, 28 May 2013 09:55:01 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Sat, May 25, 2013 at 02:52:17PM +0200, Michael Holzheu wrote:
-> 
-> [snip]
-> 
-> > > Besides of the newmem mechanism, for completeness, we also
-> > > implemented the oldmem ELF header mechansim in kexec. But this is
-> > > disabled by default.
-> > > 
-> > > See: "#ifdef WITH_ELF_HEADER" in kexec/arch/s390/crashdump-s390.c
-> > > 
-> > > Currently no distribution uses the oldmem mechanism.
-> > 
-> > Hi Michael,
-> > 
-> > Mechanism to read from newmem is not there yet (your patches are still
-> > being reviewed) and you mentioned that no distribution is building
-> > kexec-tools with WITH_ELF_HEADER on s390. So how things are currently
-> > working for kdump on s390?
-> 
-> Hello Vivek,
-> 
-> On s390, if we do not get the ELF header from the 1st kernel with
-> "elfcorehdr=", we build the ELF header in the 2nd kernel. This is
-> currently the default because WITH_ELF_HEADER is not defined for
-> kexec tools.
-> 
-> >>> START QUOTE
-> 
-> [PATCH v3 1/3] kdump: Introduce ELF header in new memory feature
-> 
-> Currently for s390 we create the ELF core header in the 2nd kernel with
-> a small trick. We relocate the addresses in the ELF header in a way
-> that for the /proc/vmcore code it seems to be in the 1st kernel (old)
-> memory and the read_from_oldmem() returns the correct data. This allows
-> the /proc/vmcore code to use the ELF header in the 2nd kernel.
-> 
-> >>> END QUOTE
-> 
-> For our current zfcpdump project (see "[PATCH 3/3]s390/kdump: Use
-> vmcore for zfcpdump") we could no longer use this trick. Therefore we
-> sent you the patches to get a clean interface for ELF header creation
-> in the 2nd kernel.
-> 
-> > > 
-> > > Therefore, if necessary, IMHO we can switch to the ELF header memory
-> > > swap mechanism for s390 in the kernel. Of course we would then also
-> > > have to adjust the (disabled) kexec code.
-> > 
-> > So are you saying that s390 is ready to switch to mechanism of
-> > creating ELF headers in first kernel by kexec-tools and new kernel
-> > does not have to preare ELF headers?
-> 
-> No, I meant that currently nobody is using the kexec tools ELF header
-> creation in the 1st kernel on s390. We create the ELF header in the
-> 2nd kernel (mainly because of our cpuplugd issue).
-> 
-> Therefore, I think, we can safely change the ELF header creation in 2nd
-> kernel to use your p_offset swap trick *and* we remove the swap code in
-> the copy_oldmem_page() implementation (same kernel).
+On Wed, 29 May 2013 12:23:26 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Ok. Got it. So s390 can fix it in kernel without creating any backward
-compatibility issues (given the fact that nobody sees to be using
-kexec-tools to build headers). 
+> On Wed, May 29, 2013 at 01:51:44PM +0200, Michael Holzheu wrote:
+> > On Tue, 28 May 2013 09:55:01 -0400
+> > Vivek Goyal <vgoyal@redhat.com> wrote:
+> > 
+> > > On Sat, May 25, 2013 at 02:52:17PM +0200, Michael Holzheu wrote:
+> > 
+> > [snip]
+> > 
+> > > > Besides of the newmem mechanism, for completeness, we also
+> > > > implemented the oldmem ELF header mechansim in kexec. But this
+> > > > is disabled by default.
+> > > > 
+> > > > See: "#ifdef WITH_ELF_HEADER" in
+> > > > kexec/arch/s390/crashdump-s390.c
+> > > > 
+> > > > Currently no distribution uses the oldmem mechanism.
+> > > 
+> > > Hi Michael,
+> > > 
+> > > Mechanism to read from newmem is not there yet (your patches are
+> > > still being reviewed) and you mentioned that no distribution is
+> > > building kexec-tools with WITH_ELF_HEADER on s390. So how things
+> > > are currently working for kdump on s390?
+> > 
+> > Hello Vivek,
+> > 
+> > On s390, if we do not get the ELF header from the 1st kernel with
+> > "elfcorehdr=", we build the ELF header in the 2nd kernel. This is
+> > currently the default because WITH_ELF_HEADER is not defined for
+> > kexec tools.
+> > 
+> > >>> START QUOTE
+> > 
+> > [PATCH v3 1/3] kdump: Introduce ELF header in new memory feature
+> > 
+> > Currently for s390 we create the ELF core header in the 2nd kernel
+> > with a small trick. We relocate the addresses in the ELF header in
+> > a way that for the /proc/vmcore code it seems to be in the 1st
+> > kernel (old) memory and the read_from_oldmem() returns the correct
+> > data. This allows the /proc/vmcore code to use the ELF header in
+> > the 2nd kernel.
+> > 
+> > >>> END QUOTE
+> > 
+> > For our current zfcpdump project (see "[PATCH 3/3]s390/kdump: Use
+> > vmcore for zfcpdump") we could no longer use this trick. Therefore
+> > we sent you the patches to get a clean interface for ELF header
+> > creation in the 2nd kernel.
+> > 
+> > > > 
+> > > > Therefore, if necessary, IMHO we can switch to the ELF header
+> > > > memory swap mechanism for s390 in the kernel. Of course we
+> > > > would then also have to adjust the (disabled) kexec code.
+> > > 
+> > > So are you saying that s390 is ready to switch to mechanism of
+> > > creating ELF headers in first kernel by kexec-tools and new kernel
+> > > does not have to preare ELF headers?
+> > 
+> > No, I meant that currently nobody is using the kexec tools ELF
+> > header creation in the 1st kernel on s390. We create the ELF header
+> > in the 2nd kernel (mainly because of our cpuplugd issue).
+> > 
+> > Therefore, I think, we can safely change the ELF header creation in
+> > 2nd kernel to use your p_offset swap trick *and* we remove the swap
+> > code in the copy_oldmem_page() implementation (same kernel).
+> 
+> Ok. Got it. So s390 can fix it in kernel without creating any backward
+> compatibility issues (given the fact that nobody sees to be using
+> kexec-tools to build headers).
+> 
+> So please go ahead and fix it and that should solve your mmap() issue
+> too. Also please fix kexec-tools and that change will not be backward
+> compatible. 
 
-So please go ahead and fix it and that should solve your mmap() issue
-too. Also please fix kexec-tools and that change will not be backward
-compatible. 
+Ok, I will do this.
 
-Thanks
-Vivek
+I think we should add this "swap in ELF header" patch to the "kdump:
+Allow ELF header creation in new kernel" patch series (on top of the
+mmap patch series). Because when I remove the swap code from
+copy_oldmem_page(), the old trick to access the ELF header in the first
+kernel memory will no longer work.
+
+Is that ok for you?
+
+Michael
+
 
 _______________________________________________
 kexec mailing list
