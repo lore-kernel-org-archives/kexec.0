@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UhobV-00010X-82
- for kexec@lists.infradead.org; Wed, 29 May 2013 22:12:22 +0000
-Date: Wed, 29 May 2013 15:11:59 -0700
+ id 1UhojN-0001LB-HQ
+ for kexec@lists.infradead.org; Wed, 29 May 2013 22:20:30 +0000
+Date: Wed, 29 May 2013 15:20:07 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/7] Remove unused /dev/oldmem interface
-Message-Id: <20130529151159.2f1d6b5092c58b61724bee7c@linux-foundation.org>
-In-Reply-To: <51A4C926.2040701@zytor.com>
-References: <51A02E50.5020507@gmail.com> <87mwri8wwu.fsf@xmission.com>
- <20130528143756.GD7088@redhat.com> <51A4C926.2040701@zytor.com>
+Subject: Re: [PATCH 2/7] Documentation/devices.txt: Remove /dev/oldmem
+ description
+Message-Id: <20130529152007.893940a04d95fa1e38e851d4@linux-foundation.org>
+In-Reply-To: <51A2B68E.4060605@cn.fujitsu.com>
+References: <51A02E50.5020507@gmail.com> <51A02F59.8000103@gmail.com>
+ <87vc668x4w.fsf@xmission.com> <51A15E2F.7010308@gmail.com>
+ <51A2B693.7000701@jp.fujitsu.com> <51A2B68E.4060605@cn.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,31 +25,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, davej@redhat.com, Vivek Goyal <vgoyal@redhat.com>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On Tue, 28 May 2013 08:11:34 -0700 "H. Peter Anvin" <hpa@zytor.com> wrote:
+On Mon, 27 May 2013 09:27:42 +0800 Zhang Yanfei <zhangyanfei@cn.fujitsu.com> wrote:
 
-> On 05/28/2013 07:37 AM, Vivek Goyal wrote:
+> ___ 2013___05___27___ 09:27, HATAYAMA Daisuke ______:
+> > (2013/05/26 9:58), Zhang Yanfei wrote:
+> >> ___ 2013___05___26___ 07:20, Eric W. Biederman ______:
+> >>> Zhang Yanfei <zhangyanfei.yes@gmail.com> writes:
+> >>>
+> >>>> From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> >>>
+> >>> Won't we want to keep this reservation around to so that this number
+> >>> doesn't get reused, and cause people confusion when
+> >>> upgrading/downgrading kernels?
+> >>
+> >> Ah, yes. I will just keep this and add a note to make people know that
+> >> it is removed in the next version.
+> >>
 > > 
-> > Eric,
-> > 
-> > Should we schedule the removal of this interface after 1-2 releases
-> > and give a warning once if anybody opens /dev/oldmem and tell them
-> > to use /proc/vmcore instead? 
-> > 
-> > I am kind of inclined towards warning approarch. If there is any xyz
-> > /dev/oldmem user in the wild out there, he/she atleast gets a chance to
-> > migrate to /proc/vmcore.
+> > It looks enough writing "obsolete" according to the other parts of the same file.
 > > 
 > 
-> This has been discussed ad nauseam at the Kernel Summit.  It doesn't work.
-> 
+> I've sent the v2 version and actually did what you said.
 
-Who said that and what was their evidence?  Giving users (especially
-the more technical ones) several months warning is eminently sensible.
+I can't find any v2 version of this patchset.
 
-Although it doesn't appear to be necessary in this case.
+I did this:
+
+--- a/Documentation/devices.txt~dev-oldmem-remove-the-interface-fix
++++ a/Documentation/devices.txt
+@@ -102,6 +102,7 @@ Your cooperation is appreciated.
+ 					export the buffered printk records.
+ 		 12 = /dev/oldmem	Used by crashdump kernels to access
+ 					the memory of the kernel that crashed.
++					(obsolete)
+ 
+   1 block	RAM disk
+ 		  0 = /dev/ram0		First RAM disk
+_
+
 
 _______________________________________________
 kexec mailing list
