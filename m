@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UhixZ-0001vk-7E
- for kexec@lists.infradead.org; Wed, 29 May 2013 16:10:45 +0000
-Date: Wed, 29 May 2013 12:10:20 -0400
+ id 1UhjAw-0002Ib-R6
+ for kexec@lists.infradead.org; Wed, 29 May 2013 16:24:35 +0000
+Date: Wed, 29 May 2013 12:23:26 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/7] Remove unused /dev/oldmem interface
-Message-ID: <20130529161020.GB22146@redhat.com>
-References: <51A02E50.5020507@gmail.com> <87mwri8wwu.fsf@xmission.com>
- <20130528143756.GD7088@redhat.com>
- <ec5cd077-c314-49d5-8970-439ffb9539fa@email.android.com>
+Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
+Message-ID: <20130529162325.GD22146@redhat.com>
+References: <20130524143644.GD18218@redhat.com>
+ <20130524170626.2ac06efe@holzheu>
+ <20130524152849.GF18218@redhat.com> <87mwrkatgu.fsf@xmission.com>
+ <51A006CF.90105@gmail.com> <87k3mnahkf.fsf@xmission.com>
+ <51A076FE.3060604@gmail.com> <20130525145217.0549138a@holzheu>
+ <20130528135500.GC7088@redhat.com>
+ <20130529135144.7f95c4c0@holzheu>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ec5cd077-c314-49d5-8970-439ffb9539fa@email.android.com>
+In-Reply-To: <20130529135144.7f95c4c0@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,23 +29,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On Tue, May 28, 2013 at 12:00:45PM -0700, Eric W. Biederman wrote:
-
-[..]
-> How can anyone use /dev/oldmem correctly?  To the best of
-> my knowledge there are no parsers of the ELF header passed
-> by /sbin/kexec in userspace.
+On Wed, May 29, 2013 at 01:51:44PM +0200, Michael Holzheu wrote:
+> On Tue, 28 May 2013 09:55:01 -0400
+> Vivek Goyal <vgoyal@redhat.com> wrote:
 > 
-> If there is anyone who cares they can complain and we can
-> revert the removal. All of the evidence is that everyone uses
-> /proc/vmcore.
+> > On Sat, May 25, 2013 at 02:52:17PM +0200, Michael Holzheu wrote:
 > 
+> [snip]
+> 
+> > > Besides of the newmem mechanism, for completeness, we also
+> > > implemented the oldmem ELF header mechansim in kexec. But this is
+> > > disabled by default.
+> > > 
+> > > See: "#ifdef WITH_ELF_HEADER" in kexec/arch/s390/crashdump-s390.c
+> > > 
+> > > Currently no distribution uses the oldmem mechanism.
+> > 
+> > Hi Michael,
+> > 
+> > Mechanism to read from newmem is not there yet (your patches are still
+> > being reviewed) and you mentioned that no distribution is building
+> > kexec-tools with WITH_ELF_HEADER on s390. So how things are currently
+> > working for kdump on s390?
+> 
+> Hello Vivek,
+> 
+> On s390, if we do not get the ELF header from the 1st kernel with
+> "elfcorehdr=", we build the ELF header in the 2nd kernel. This is
+> currently the default because WITH_ELF_HEADER is not defined for
+> kexec tools.
+> 
+> >>> START QUOTE
+> 
+> [PATCH v3 1/3] kdump: Introduce ELF header in new memory feature
+> 
+> Currently for s390 we create the ELF core header in the 2nd kernel with
+> a small trick. We relocate the addresses in the ELF header in a way
+> that for the /proc/vmcore code it seems to be in the 1st kernel (old)
+> memory and the read_from_oldmem() returns the correct data. This allows
+> the /proc/vmcore code to use the ELF header in the 2nd kernel.
+> 
+> >>> END QUOTE
+> 
+> For our current zfcpdump project (see "[PATCH 3/3]s390/kdump: Use
+> vmcore for zfcpdump") we could no longer use this trick. Therefore we
+> sent you the patches to get a clean interface for ELF header creation
+> in the 2nd kernel.
+> 
+> > > 
+> > > Therefore, if necessary, IMHO we can switch to the ELF header memory
+> > > swap mechanism for s390 in the kernel. Of course we would then also
+> > > have to adjust the (disabled) kexec code.
+> > 
+> > So are you saying that s390 is ready to switch to mechanism of
+> > creating ELF headers in first kernel by kexec-tools and new kernel
+> > does not have to preare ELF headers?
+> 
+> No, I meant that currently nobody is using the kexec tools ELF header
+> creation in the 1st kernel on s390. We create the ELF header in the
+> 2nd kernel (mainly because of our cpuplugd issue).
+> 
+> Therefore, I think, we can safely change the ELF header creation in 2nd
+> kernel to use your p_offset swap trick *and* we remove the swap code in
+> the copy_oldmem_page() implementation (same kernel).
 
-Ok, that's fine. Given the fact that none of us has ever encountered
-/dev/oldmem user, it is reasonably safe to remove it.
+Ok. Got it. So s390 can fix it in kernel without creating any backward
+compatibility issues (given the fact that nobody sees to be using
+kexec-tools to build headers). 
+
+So please go ahead and fix it and that should solve your mmap() issue
+too. Also please fix kexec-tools and that change will not be backward
+compatible. 
 
 Thanks
 Vivek
