@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ui4BF-0001b2-VQ
- for kexec@lists.infradead.org; Thu, 30 May 2013 14:50:19 +0000
-Date: Thu, 30 May 2013 10:49:37 -0400
+ id 1Ui4Ij-0001wg-EJ
+ for kexec@lists.infradead.org; Thu, 30 May 2013 14:58:02 +0000
+Date: Thu, 30 May 2013 10:57:32 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4 1/3] kdump: Introduce ELF header in new memory feature
-Message-ID: <20130530144937.GE2864@redhat.com>
+Subject: Re: [PATCH v4 2/3] s390/kdump: Use ELF header in new memory feature
+Message-ID: <20130530145732.GA5724@redhat.com>
 References: <1369394983-65360-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1369394983-65360-2-git-send-email-holzheu@linux.vnet.ibm.com>
- <20130524151856.GE18218@redhat.com>
+ <1369394983-65360-3-git-send-email-holzheu@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130524151856.GE18218@redhat.com>
+In-Reply-To: <1369394983-65360-3-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +27,119 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2013 at 11:18:56AM -0400, Vivek Goyal wrote:
-> On Fri, May 24, 2013 at 01:29:41PM +0200, Michael Holzheu wrote:
-> > Currently for s390 we create the ELF core header in the 2nd kernel
-> > with a small trick. We relocate the addresses in the ELF header in
-> > a way that for the /proc/vmcore code it seems to be in the 1st kernel
-> > (old) memory and the read_from_oldmem() returns the correct data.
-> > This allows the /proc/vmcore code to use the ELF header in the
-> > 2nd kernel.
-> > 
-> > This patch now exchanges the old mechanism with the new and much
-> > cleaner function call override feature that now offcially allows to
-> > create the ELF core header in the 2nd kernel.
-> > 
-> > To use the new feature the following has to be done by the architecture
-> > backend code:
-> > 
-> >  * Override arch_get_crash_header() to return the address of the ELF
-> >    header in new memory.
-> >  * Override arch_free_crash_header() to free the memory of the ELF
-> >    header in new memory.
-> >  * Override arch_read_from_crash_header() to read from the ELF header
-> >    in new memory
+On Fri, May 24, 2013 at 01:29:42PM +0200, Michael Holzheu wrote:
+> This patch now exchanges the old relocate mechanism with the new
+> arch function call override mechanism that allows to create the ELF
+> core header in the 2nd kernel.
 > 
-> I think above function is not clear in definition. What happens to reading
-> of data pointed by ELF headers. For sections of data pointed by PT_NOTE
-> we are calling arch_read_from_crash_header() but for accessing data
-> pointed by PT_LOAD, we must be calling regular functions.
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> ---
+>  arch/s390/kernel/crash_dump.c | 64 ++++++++++++++++++++++++++++++-------------
+>  1 file changed, 45 insertions(+), 19 deletions(-)
 > 
-> Not very sure what to do about this. Just that it looks little ugly
-> right now.
+> diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
+> index f703d91..aeb1207 100644
+> --- a/arch/s390/kernel/crash_dump.c
+> +++ b/arch/s390/kernel/crash_dump.c
+> @@ -21,6 +21,9 @@
+>  #define PTR_SUB(x, y) (((char *) (x)) - ((unsigned long) (y)))
+>  #define PTR_DIFF(x, y) ((unsigned long)(((char *) (x)) - ((unsigned long) (y))))
+>  
+> +static size_t elfcorebuf_sz;
+> +static char *elfcorebuf;
+> +
+>  /*
+>   * Copy one page from "oldmem"
+>   *
+> @@ -325,14 +328,6 @@ static int get_mem_chunk_cnt(void)
+>  }
+>  
+>  /*
+> - * Relocate pointer in order to allow vmcore code access the data
+> - */
+> -static inline unsigned long relocate(unsigned long addr)
+> -{
+> -	return OLDMEM_BASE + addr;
+> -}
+> -
+> -/*
+>   * Initialize ELF loads (new kernel)
+>   */
+>  static int loads_init(Elf64_Phdr *phdr, u64 loads_offset)
+> @@ -383,7 +378,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
+>  	ptr = nt_vmcoreinfo(ptr);
+>  	memset(phdr, 0, sizeof(*phdr));
+>  	phdr->p_type = PT_NOTE;
+> -	phdr->p_offset = relocate(notes_offset);
+> +	phdr->p_offset = notes_offset;
+>  	phdr->p_filesz = (unsigned long) PTR_SUB(ptr, ptr_start);
+>  	phdr->p_memsz = phdr->p_filesz;
+>  	return ptr;
+> @@ -392,7 +387,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
+>  /*
+>   * Create ELF core header (new kernel)
+>   */
+> -static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
+> +static int s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
+>  {
+>  	Elf64_Phdr *phdr_notes, *phdr_loads;
+>  	int mem_chunk_cnt;
+> @@ -414,28 +409,59 @@ static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
+>  	ptr = PTR_ADD(ptr, sizeof(Elf64_Phdr) * mem_chunk_cnt);
+>  	/* Init notes */
+>  	hdr_off = PTR_DIFF(ptr, hdr);
+> -	ptr = notes_init(phdr_notes, ptr, ((unsigned long) hdr) + hdr_off);
+> +	ptr = notes_init(phdr_notes, ptr, (unsigned long) hdr + hdr_off);
+>  	/* Init loads */
+>  	hdr_off = PTR_DIFF(ptr, hdr);
+> -	loads_init(phdr_loads, ((unsigned long) hdr) + hdr_off);
+> +	loads_init(phdr_loads, hdr_off);
+>  	*elfcorebuf_sz = hdr_off;
+> -	*elfcorebuf = (void *) relocate((unsigned long) hdr);
+> +	*elfcorebuf = hdr;
+>  	BUG_ON(*elfcorebuf_sz > alloc_size);
+> +	return 0;
+>  }
+>  
+>  /*
+> - * Create kdump ELF core header in new kernel, if it has not been passed via
+> - * the "elfcorehdr" kernel parameter
+> + * Return address of ELF core header (new or old memory)
+>   */
+> -static int setup_kdump_elfcorehdr(void)
+> +unsigned long long arch_get_crash_header(void)
+>  {
+> -	size_t elfcorebuf_sz;
+> -	char *elfcorebuf;
+> +	if (elfcorebuf)
+> +		return elfcorehdr_addr;
+> +	else
+> +		return __pa(elfcorebuf);
+> +}
+>  
+> +/*
+> + * Free crash header
+> + */
+> +void arch_free_crash_header(void)
+> +{
+> +	kfree(elfcorebuf);
+> +	elfcorebuf = 0;
+> +}
+> +
+> +/*
+> + * Read from crash header (new or old memory)
+> + */
+> +ssize_t arch_read_from_crash_header(char *buf, size_t count, u64 *ppos)
+> +{
+> +	if (elfcorebuf)
+> +		memcpy(buf, (void *)*ppos, count);
 
-Hi Michael,
+This is ugly. It assumes that generic code will always free headers before
+reading any PT_LOAD data. It can be easily broken.
 
-How about if we introduce another function to read notes, say
-arch_read_crash_notes(). So arch_read_from_crash_header() is meant
-to get just ELF headers (ELF header and PT_LOAD, PT_NOTE type elf headers)
-and arch_read_crash_notes() gets the data as pointed by PT_NOTE elf
-header.
+Why arch_read_from_crash_header() should not always read new memory for
+s390? 
 
-Thanks
 Vivek
 
 _______________________________________________
