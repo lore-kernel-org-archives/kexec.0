@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ui4Ij-0001wg-EJ
- for kexec@lists.infradead.org; Thu, 30 May 2013 14:58:02 +0000
-Date: Thu, 30 May 2013 10:57:32 -0400
+ id 1Ui4im-0002dk-Pb
+ for kexec@lists.infradead.org; Thu, 30 May 2013 15:24:57 +0000
+Date: Thu, 30 May 2013 11:00:30 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4 2/3] s390/kdump: Use ELF header in new memory feature
-Message-ID: <20130530145732.GA5724@redhat.com>
-References: <1369394983-65360-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1369394983-65360-3-git-send-email-holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
+Message-ID: <20130530150030.GF2864@redhat.com>
+References: <20130524152849.GF18218@redhat.com> <87mwrkatgu.fsf@xmission.com>
+ <51A006CF.90105@gmail.com> <87k3mnahkf.fsf@xmission.com>
+ <51A076FE.3060604@gmail.com> <20130525145217.0549138a@holzheu>
+ <20130528135500.GC7088@redhat.com>
+ <20130529135144.7f95c4c0@holzheu>
+ <20130529162325.GD22146@redhat.com>
+ <20130529191249.19a235be@holzheu>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1369394983-65360-3-git-send-email-holzheu@linux.vnet.ibm.com>
+In-Reply-To: <20130529191249.19a235be@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,121 +30,44 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
 
-On Fri, May 24, 2013 at 01:29:42PM +0200, Michael Holzheu wrote:
-> This patch now exchanges the old relocate mechanism with the new
-> arch function call override mechanism that allows to create the ELF
-> core header in the 2nd kernel.
+On Wed, May 29, 2013 at 07:12:49PM +0200, Michael Holzheu wrote:
+
+[..]
+> > > > So are you saying that s390 is ready to switch to mechanism of
+> > > > creating ELF headers in first kernel by kexec-tools and new kernel
+> > > > does not have to preare ELF headers?
+> > > 
+> > > No, I meant that currently nobody is using the kexec tools ELF
+> > > header creation in the 1st kernel on s390. We create the ELF header
+> > > in the 2nd kernel (mainly because of our cpuplugd issue).
+> > > 
+> > > Therefore, I think, we can safely change the ELF header creation in
+> > > 2nd kernel to use your p_offset swap trick *and* we remove the swap
+> > > code in the copy_oldmem_page() implementation (same kernel).
+> > 
+> > Ok. Got it. So s390 can fix it in kernel without creating any backward
+> > compatibility issues (given the fact that nobody sees to be using
+> > kexec-tools to build headers).
+> > 
+> > So please go ahead and fix it and that should solve your mmap() issue
+> > too. Also please fix kexec-tools and that change will not be backward
+> > compatible. 
 > 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> ---
->  arch/s390/kernel/crash_dump.c | 64 ++++++++++++++++++++++++++++++-------------
->  1 file changed, 45 insertions(+), 19 deletions(-)
+> Ok, I will do this.
 > 
-> diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-> index f703d91..aeb1207 100644
-> --- a/arch/s390/kernel/crash_dump.c
-> +++ b/arch/s390/kernel/crash_dump.c
-> @@ -21,6 +21,9 @@
->  #define PTR_SUB(x, y) (((char *) (x)) - ((unsigned long) (y)))
->  #define PTR_DIFF(x, y) ((unsigned long)(((char *) (x)) - ((unsigned long) (y))))
->  
-> +static size_t elfcorebuf_sz;
-> +static char *elfcorebuf;
-> +
->  /*
->   * Copy one page from "oldmem"
->   *
-> @@ -325,14 +328,6 @@ static int get_mem_chunk_cnt(void)
->  }
->  
->  /*
-> - * Relocate pointer in order to allow vmcore code access the data
-> - */
-> -static inline unsigned long relocate(unsigned long addr)
-> -{
-> -	return OLDMEM_BASE + addr;
-> -}
-> -
-> -/*
->   * Initialize ELF loads (new kernel)
->   */
->  static int loads_init(Elf64_Phdr *phdr, u64 loads_offset)
-> @@ -383,7 +378,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
->  	ptr = nt_vmcoreinfo(ptr);
->  	memset(phdr, 0, sizeof(*phdr));
->  	phdr->p_type = PT_NOTE;
-> -	phdr->p_offset = relocate(notes_offset);
-> +	phdr->p_offset = notes_offset;
->  	phdr->p_filesz = (unsigned long) PTR_SUB(ptr, ptr_start);
->  	phdr->p_memsz = phdr->p_filesz;
->  	return ptr;
-> @@ -392,7 +387,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
->  /*
->   * Create ELF core header (new kernel)
->   */
-> -static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
-> +static int s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
->  {
->  	Elf64_Phdr *phdr_notes, *phdr_loads;
->  	int mem_chunk_cnt;
-> @@ -414,28 +409,59 @@ static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
->  	ptr = PTR_ADD(ptr, sizeof(Elf64_Phdr) * mem_chunk_cnt);
->  	/* Init notes */
->  	hdr_off = PTR_DIFF(ptr, hdr);
-> -	ptr = notes_init(phdr_notes, ptr, ((unsigned long) hdr) + hdr_off);
-> +	ptr = notes_init(phdr_notes, ptr, (unsigned long) hdr + hdr_off);
->  	/* Init loads */
->  	hdr_off = PTR_DIFF(ptr, hdr);
-> -	loads_init(phdr_loads, ((unsigned long) hdr) + hdr_off);
-> +	loads_init(phdr_loads, hdr_off);
->  	*elfcorebuf_sz = hdr_off;
-> -	*elfcorebuf = (void *) relocate((unsigned long) hdr);
-> +	*elfcorebuf = hdr;
->  	BUG_ON(*elfcorebuf_sz > alloc_size);
-> +	return 0;
->  }
->  
->  /*
-> - * Create kdump ELF core header in new kernel, if it has not been passed via
-> - * the "elfcorehdr" kernel parameter
-> + * Return address of ELF core header (new or old memory)
->   */
-> -static int setup_kdump_elfcorehdr(void)
-> +unsigned long long arch_get_crash_header(void)
->  {
-> -	size_t elfcorebuf_sz;
-> -	char *elfcorebuf;
-> +	if (elfcorebuf)
-> +		return elfcorehdr_addr;
-> +	else
-> +		return __pa(elfcorebuf);
-> +}
->  
-> +/*
-> + * Free crash header
-> + */
-> +void arch_free_crash_header(void)
-> +{
-> +	kfree(elfcorebuf);
-> +	elfcorebuf = 0;
-> +}
-> +
-> +/*
-> + * Read from crash header (new or old memory)
-> + */
-> +ssize_t arch_read_from_crash_header(char *buf, size_t count, u64 *ppos)
-> +{
-> +	if (elfcorebuf)
-> +		memcpy(buf, (void *)*ppos, count);
+> I think we should add this "swap in ELF header" patch to the "kdump:
+> Allow ELF header creation in new kernel" patch series (on top of the
+> mmap patch series). Because when I remove the swap code from
+> copy_oldmem_page(), the old trick to access the ELF header in the first
+> kernel memory will no longer work.
+> 
+> Is that ok for you?
 
-This is ugly. It assumes that generic code will always free headers before
-reading any PT_LOAD data. It can be easily broken.
+I am fine with both the patches in same series.
 
-Why arch_read_from_crash_header() should not always read new memory for
-s390? 
-
+Thanks
 Vivek
 
 _______________________________________________
