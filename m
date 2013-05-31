@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ui9d1-0000vz-Gk
- for kexec@lists.infradead.org; Thu, 30 May 2013 20:39:21 +0000
-Date: Thu, 30 May 2013 16:38:47 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
-Message-ID: <20130530203847.GB5968@redhat.com>
-References: <20130524143644.GD18218@redhat.com>
- <20130524170626.2ac06efe@holzheu>
- <20130524152849.GF18218@redhat.com> <87mwrkatgu.fsf@xmission.com>
- <51A006CF.90105@gmail.com> <87k3mnahkf.fsf@xmission.com>
- <51A076FE.3060604@gmail.com> <20130525145217.0549138a@holzheu>
- <20130528135500.GC7088@redhat.com>
- <20130529135144.7f95c4c0@holzheu>
+ id 1UiF3J-0005vs-RG
+ for kexec@lists.infradead.org; Fri, 31 May 2013 02:26:50 +0000
+Message-ID: <51A80A66.7080003@redhat.com>
+Date: Fri, 31 May 2013 10:26:46 +0800
+From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130529135144.7f95c4c0@holzheu>
+Subject: Re: [PATCH] Add a help message into man page of makedumpfile for
+ -b option.
+References: <20130530084418.15640.42675.stgit@k.asiapacific.hpqcorp.net>
+In-Reply-To: <20130530084418.15640.42675.stgit@k.asiapacific.hpqcorp.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,60 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: oomichi@mxs.nes.nec.co.jp, bhe@redhat.com, jin.wang@hp.com, nan.chen2@hp.com, gang.xing@hp.com, kexec@lists.infradead.org, lisa.mitchell@hp.com, kumagai-atsushi@mxc.nes.nec.co.jp, nigel.croxon@hp.com, vgoyal@redhat.com
 
-On Wed, May 29, 2013 at 01:51:44PM +0200, Michael Holzheu wrote:
+Add Ken'ichi Ohmichi to cc list and remove redhat list from cc
 
-[..]
-> >>> START QUOTE
+On 05/30/2013 04:44 PM, Jingbai Ma wrote:
+> This is a minor change that only adds a help message to -b option in makedumpfile man page.
+> This message has been in Red Hat's makedumpfile source, they would like it in upstream also.
 > 
-> [PATCH v3 1/3] kdump: Introduce ELF header in new memory feature
+> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+> ---
+>  makedumpfile.8 |    4 ++++
+>  1 files changed, 4 insertions(+), 0 deletions(-)
 > 
-> Currently for s390 we create the ELF core header in the 2nd kernel with
-> a small trick. We relocate the addresses in the ELF header in a way
-> that for the /proc/vmcore code it seems to be in the 1st kernel (old)
-> memory and the read_from_oldmem() returns the correct data. This allows
-> the /proc/vmcore code to use the ELF header in the 2nd kernel.
+> diff --git a/makedumpfile.8 b/makedumpfile.8
+> index cfd1270..1e844db 100644
+> --- a/makedumpfile.8
+> +++ b/makedumpfile.8
+> @@ -534,6 +534,10 @@ order from left to right.  \fIVMCORE\fRs are assembled into a single
+>  Print debugging message.
+>  
+>  .TP
+> +\fB-b <order>\fR
+> +cache 2^order pages in ram when generating vmcore info before writing to output
+> +
+> +.TP
+>  \fB\-h\fR
+>  Show help message and LZO/snappy support status (enabled/disabled).
+>  
 > 
-> >>> END QUOTE
-> 
-> For our current zfcpdump project (see "[PATCH 3/3]s390/kdump: Use
-> vmcore for zfcpdump") we could no longer use this trick. Therefore we
-> sent you the patches to get a clean interface for ELF header creation
-> in the 2nd kernel.
 
-Hi Michael,
 
-Few more questions.
-
-- What's the difference between zfcpdump and kdump. I thought zfcpdump
-  just boots specific kernel from fixed drive? If yes, why can't that
-  kernel prepare headers in similar way as regular kdump kernel does
-  and gain from kdump kernel swap trick?
-
-Also, we are accessing the contents of elf headers using physical
-address. If that's the case, does it make a difference if data is
-in old kernel's memory or new kernel's memory. We will use the physical
-address and create a temporary mapping and it should not make a difference
-whether same physical page is already mapped in current kernel or not.
-
-Only restriction this places is that all ELF header needs to be
-contiguous. I see that s390 code already creates elf headers using
-kzalloc_panic(). So memory allocated should by physically contiguous.
-
-So can't we just put __pa(elfcorebuf) in elfcorehdr_addr. And same
-is true for p_offset fields in PT_NOTE headers and everything should
-work fine?
-
-Only problem we can face is that at some point of time kzalloc() might
-not be able to contiguous memory request. We can handle that once s390
-runs into those issues. You are anyway allocating memory using kzalloc().
-
-And if this works for s390 kdump, it should work for zfcpdump too?
-
+-- 
 Thanks
-Vivek
+Dave
+
+
 
 _______________________________________________
 kexec mailing list
