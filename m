@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UjQgJ-0001Bg-Tj
- for kexec@lists.infradead.org; Mon, 03 Jun 2013 09:04:11 +0000
-Date: Mon, 3 Jun 2013 17:43:51 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v8 9/9] vmcore: support mmap() on /proc/vmcore
-Message-Id: <20130603174351.d04b2ac71d1bab0df242e0ba@mxc.nes.nec.co.jp>
-In-Reply-To: <CAJGZr0Ld6Q4a4f-VObAbvqCp=+fTFNEc6M-Fdnhh28GTcSm1=w@mail.gmail.com>
-References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
- <20130523052547.13864.83306.stgit@localhost6.localdomain6>
- <20130523152445.17549682ae45b5aab3f3cde0@linux-foundation.org>
- <CAJGZr0LwivLTH+E7WAR1B9_6B4e=jv04KgCUL_PdVpi9JjDpBw@mail.gmail.com>
- <51A2BBA7.50607@jp.fujitsu.com>
- <CAJGZr0LmsFXEgb3UXVb+rqo1aq5KJyNxyNAD+DG+3KnJm_ZncQ@mail.gmail.com>
- <51A71B49.3070003@cn.fujitsu.com>
- <CAJGZr0Ld6Q4a4f-VObAbvqCp=+fTFNEc6M-Fdnhh28GTcSm1=w@mail.gmail.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UjREW-00029q-6c
+ for kexec@lists.infradead.org; Mon, 03 Jun 2013 09:39:21 +0000
+Received: from int-mx12.intmail.prod.int.phx2.redhat.com
+ (int-mx12.intmail.prod.int.phx2.redhat.com [10.5.11.25])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r539cv3G007876
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+ for <kexec@lists.infradead.org>; Mon, 3 Jun 2013 05:38:58 -0400
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/3] change/add help message of options
+Date: Mon,  3 Jun 2013 17:38:37 +0800
+Message-Id: <cover.1370252057.git.bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,98 +20,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: muvarov@gmail.com
-Cc: riel@redhat.com, kexec@lists.infradead.org, hughd@google.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, vgoyal@redhat.com, linux-mm@kvack.org, d.hatayama@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, akpm@linux-foundation.org, walken@google.com, cpw@sgi.com, jingbai.ma@hp.com
+To: kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>
 
-Hello Maxim,
+Currently, help message of several options are missed or not correct,
+change/add it in this patchset.
 
-On Thu, 30 May 2013 14:30:01 +0400
-Maxim Uvarov <muvarov@gmail.com> wrote:
+Options not present in help:
+* --entry
 
-> 2013/5/30 Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-> 
-> > On 05/30/2013 05:14 PM, Maxim Uvarov wrote:
-> > >
-> > >
-> > >
-> > > 2013/5/27 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com <mailto:
-> > d.hatayama@jp.fujitsu.com>>
-> > >
-> > >     (2013/05/24 18:02), Maxim Uvarov wrote:
-> > >
-> > >
-> > >
-> > >
-> > >         2013/5/24 Andrew Morton <akpm@linux-foundation.org <mailto:
-> > akpm@linux-foundation.org> <mailto:akpm@linux-foundation.__org <mailto:
-> > akpm@linux-foundation.org>>>
-> > >
-> > >
-> > >             On Thu, 23 May 2013 14:25:48 +0900 HATAYAMA Daisuke <
-> > d.hatayama@jp.fujitsu.com <mailto:d.hatayama@jp.fujitsu.com> <mailto:
-> > d.hatayama@jp.fujitsu.__com <mailto:d.hatayama@jp.fujitsu.com>>> wrote:
-> > >
-> > >              > This patch introduces mmap_vmcore().
-> > >              >
-> > >              > Don't permit writable nor executable mapping even with
-> > mprotect()
-> > >              > because this mmap() is aimed at reading crash dump memory.
-> > >              > Non-writable mapping is also requirement of
-> > remap_pfn_range() when
-> > >              > mapping linear pages on non-consecutive physical pages;
-> > see
-> > >              > is_cow_mapping().
-> > >              >
-> > >              > Set VM_MIXEDMAP flag to remap memory by remap_pfn_range
-> > and by
-> > >              > remap_vmalloc_range_pertial at the same time for a single
-> > >              > vma. do_munmap() can correctly clean partially remapped
-> > vma with two
-> > >              > functions in abnormal case. See zap_pte_range(),
-> > vm_normal_page() and
-> > >              > their comments for details.
-> > >              >
-> > >              > On x86-32 PAE kernels, mmap() supports at most 16TB
-> > memory only. This
-> > >              > limitation comes from the fact that the third argument of
-> > >              > remap_pfn_range(), pfn, is of 32-bit length on x86-32:
-> > unsigned long.
-> > >
-> > >             More reviewing and testing, please.
-> > >
-> > >
-> > >         Do you have git pull for both kernel and userland changes? I
-> > would like to do some more testing on my machines.
-> > >
-> > >         Maxim.
-> > >
-> > >
-> > >     Thanks! That's very helpful.
-> > >
-> > >     --
-> > >     Thanks.
-> > >     HATAYAMA, Daisuke
-> > >
-> > > Any update for this? Where can I checkout all sources?
-> >
-> > This series is now in Andrew Morton's -mm tree.
-> >
-> > Ok, and what about makedumpfile changes? Is it possible to fetch them from
-> somewhere?
+Options not present in man:
+* --entry
+* --load-jump-back-helper
+* --load-preserve-context
+* --reuseinitrd 
 
-You can fetch them from here, "mmap" branch is the change:
+Options not correct in man:
+* --debug
 
-  git://git.code.sf.net/p/makedumpfile/code
+Baoquan He (3):
+  kexec man page change for debug option
+  add description for entry option in help and man page
+  add missed options to man page
 
-And they will be merged into v1.5.4.
+ kexec/kexec.8 |   19 ++++++++++++++++---
+ kexec/kexec.c |    4 ++++
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
-
-Thanks
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
