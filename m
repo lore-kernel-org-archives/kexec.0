@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UiRmg-0005oU-7s
- for kexec@lists.infradead.org; Fri, 31 May 2013 16:02:31 +0000
-Date: Fri, 31 May 2013 12:01:58 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/2] kdump/mmap: Fix mmap of /proc/vmcore for s390
-Message-ID: <20130531160158.GC13057@redhat.com>
-References: <20130524152849.GF18218@redhat.com> <87mwrkatgu.fsf@xmission.com>
- <51A006CF.90105@gmail.com> <87k3mnahkf.fsf@xmission.com>
- <51A076FE.3060604@gmail.com> <20130525145217.0549138a@holzheu>
- <20130528135500.GC7088@redhat.com>
- <20130529135144.7f95c4c0@holzheu>
- <20130530203847.GB5968@redhat.com>
- <20130531162127.6d512233@holzheu>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130531162127.6d512233@holzheu>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UjQgJ-0001Bg-Tj
+ for kexec@lists.infradead.org; Mon, 03 Jun 2013 09:04:11 +0000
+Date: Mon, 3 Jun 2013 17:43:51 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v8 9/9] vmcore: support mmap() on /proc/vmcore
+Message-Id: <20130603174351.d04b2ac71d1bab0df242e0ba@mxc.nes.nec.co.jp>
+In-Reply-To: <CAJGZr0Ld6Q4a4f-VObAbvqCp=+fTFNEc6M-Fdnhh28GTcSm1=w@mail.gmail.com>
+References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
+ <20130523052547.13864.83306.stgit@localhost6.localdomain6>
+ <20130523152445.17549682ae45b5aab3f3cde0@linux-foundation.org>
+ <CAJGZr0LwivLTH+E7WAR1B9_6B4e=jv04KgCUL_PdVpi9JjDpBw@mail.gmail.com>
+ <51A2BBA7.50607@jp.fujitsu.com>
+ <CAJGZr0LmsFXEgb3UXVb+rqo1aq5KJyNxyNAD+DG+3KnJm_ZncQ@mail.gmail.com>
+ <51A71B49.3070003@cn.fujitsu.com>
+ <CAJGZr0Ld6Q4a4f-VObAbvqCp=+fTFNEc6M-Fdnhh28GTcSm1=w@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,168 +29,94 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Zhang Yanfei <zhangyanfei.yes@gmail.com>
+To: muvarov@gmail.com
+Cc: riel@redhat.com, kexec@lists.infradead.org, hughd@google.com, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, vgoyal@redhat.com, linux-mm@kvack.org, d.hatayama@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, akpm@linux-foundation.org, walken@google.com, cpw@sgi.com, jingbai.ma@hp.com
 
-On Fri, May 31, 2013 at 04:21:27PM +0200, Michael Holzheu wrote:
-> On Thu, 30 May 2013 16:38:47 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
+Hello Maxim,
+
+On Thu, 30 May 2013 14:30:01 +0400
+Maxim Uvarov <muvarov@gmail.com> wrote:
+
+> 2013/5/30 Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 > 
-> > On Wed, May 29, 2013 at 01:51:44PM +0200, Michael Holzheu wrote:
-> > 
-> > [..]
-> > > >>> START QUOTE
-> > > 
-> > > [PATCH v3 1/3] kdump: Introduce ELF header in new memory feature
-> > > 
-> > > Currently for s390 we create the ELF core header in the 2nd kernel
-> > > with a small trick. We relocate the addresses in the ELF header in
-> > > a way that for the /proc/vmcore code it seems to be in the 1st
-> > > kernel (old) memory and the read_from_oldmem() returns the correct
-> > > data. This allows the /proc/vmcore code to use the ELF header in
-> > > the 2nd kernel.
-> > > 
-> > > >>> END QUOTE
-> > > 
-> > > For our current zfcpdump project (see "[PATCH 3/3]s390/kdump: Use
-> > > vmcore for zfcpdump") we could no longer use this trick. Therefore
-> > > we sent you the patches to get a clean interface for ELF header
-> > > creation in the 2nd kernel.
-> > 
-> > Hi Michael,
-> > 
-> > Few more questions.
-> > 
-> > - What's the difference between zfcpdump and kdump. I thought zfcpdump
-> >   just boots specific kernel from fixed drive? If yes, why can't that
-> >   kernel prepare headers in similar way as regular kdump kernel does
-> >   and gain from kdump kernel swap trick?
-> 
-> Correct, the zfcpdump kernel is booted from a fixed disk drive. The
-> difference is that the zfcpdump HSA memory is not mapped into real
-> memory. It is accessed using a read memory interface "memcpy_hsa()"
-> that copies memory from the hypervisor owned HSA memory into the Linux
-> memory.
-> 
-> So it looks like the following:
-> 
-> +----------+                 +------------+
-> |          |   memcpy_hsa()  |            |
-> | zfcpdump | <-------------- | HSA memory |
-> |          |                 |            |
-> +----------+                 +------------+
-> |          |
-> | old mem  |
-> |          |
-> +----------+
-> 
-> In the copy_oldmem_page() function for zfcpdump we do the following:
-> 
-> copy_oldmem_page_zfcpdump(...)
-> {
-> 	if (src < ZFCPDUMP_HSA_SIZE) {
-> 		if (memcpy_hsa(buf, src, csize, userbuf) < 0)
-> 			return -EINVAL;
-> 	} else {
-> 		if (userbuf)
-> 			copy_to_user_real((buf, src, csize);
-> 		else
-> 			memcpy_real(buf, src, csize);
-> 	}
-> }
-> 
-> So I think for zfcpdump we only can use the read() interface
-> of /proc/vmcore. But this is sufficient for us since we also provide
-> the s390 specific zfcpdump user space that copies /proc/vmcore.
-> 
-> > Also, we are accessing the contents of elf headers using physical
-> > address. If that's the case, does it make a difference if data is
-> > in old kernel's memory or new kernel's memory. We will use the
-> > physical address and create a temporary mapping and it should not
-> > make a difference whether same physical page is already mapped in
-> > current kernel or not.
+> > On 05/30/2013 05:14 PM, Maxim Uvarov wrote:
+> > >
+> > >
+> > >
+> > > 2013/5/27 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com <mailto:
+> > d.hatayama@jp.fujitsu.com>>
+> > >
+> > >     (2013/05/24 18:02), Maxim Uvarov wrote:
+> > >
+> > >
+> > >
+> > >
+> > >         2013/5/24 Andrew Morton <akpm@linux-foundation.org <mailto:
+> > akpm@linux-foundation.org> <mailto:akpm@linux-foundation.__org <mailto:
+> > akpm@linux-foundation.org>>>
+> > >
+> > >
+> > >             On Thu, 23 May 2013 14:25:48 +0900 HATAYAMA Daisuke <
+> > d.hatayama@jp.fujitsu.com <mailto:d.hatayama@jp.fujitsu.com> <mailto:
+> > d.hatayama@jp.fujitsu.__com <mailto:d.hatayama@jp.fujitsu.com>>> wrote:
+> > >
+> > >              > This patch introduces mmap_vmcore().
+> > >              >
+> > >              > Don't permit writable nor executable mapping even with
+> > mprotect()
+> > >              > because this mmap() is aimed at reading crash dump memory.
+> > >              > Non-writable mapping is also requirement of
+> > remap_pfn_range() when
+> > >              > mapping linear pages on non-consecutive physical pages;
+> > see
+> > >              > is_cow_mapping().
+> > >              >
+> > >              > Set VM_MIXEDMAP flag to remap memory by remap_pfn_range
+> > and by
+> > >              > remap_vmalloc_range_pertial at the same time for a single
+> > >              > vma. do_munmap() can correctly clean partially remapped
+> > vma with two
+> > >              > functions in abnormal case. See zap_pte_range(),
+> > vm_normal_page() and
+> > >              > their comments for details.
+> > >              >
+> > >              > On x86-32 PAE kernels, mmap() supports at most 16TB
+> > memory only. This
+> > >              > limitation comes from the fact that the third argument of
+> > >              > remap_pfn_range(), pfn, is of 32-bit length on x86-32:
+> > unsigned long.
+> > >
+> > >             More reviewing and testing, please.
+> > >
+> > >
+> > >         Do you have git pull for both kernel and userland changes? I
+> > would like to do some more testing on my machines.
+> > >
+> > >         Maxim.
+> > >
+> > >
+> > >     Thanks! That's very helpful.
+> > >
+> > >     --
+> > >     Thanks.
+> > >     HATAYAMA, Daisuke
+> > >
+> > > Any update for this? Where can I checkout all sources?
 > >
-> > Only restriction this places is that all ELF header needs to be
-> > contiguous. I see that s390 code already creates elf headers using
-> > kzalloc_panic(). So memory allocated should by physically contiguous.
-> > 
-> > So can't we just put __pa(elfcorebuf) in elfcorehdr_addr. And same
-> > is true for p_offset fields in PT_NOTE headers and everything should
-> > work fine?
-> > 
-> > Only problem we can face is that at some point of time kzalloc() might
-> > not be able to contiguous memory request. We can handle that once s390
-> > runs into those issues. You are anyway allocating memory using
-> > kzalloc().
-> > 
-> > And if this works for s390 kdump, it should work for zfcpdump too?
-> 
-> So your suggestion is that copy_oldmem_page() should also be used for
-> copying memory from the new kernel, correct?
+> > This series is now in Andrew Morton's -mm tree.
+> >
+> > Ok, and what about makedumpfile changes? Is it possible to fetch them from
+> somewhere?
 
-Yes.
+You can fetch them from here, "mmap" branch is the change:
 
-> 
-> For kdump on s390 I think this will work with the new "ELF header swap"
-> patch. With that patch access to [0, OLDMEM_SIZE] will uniquely identify
-> an address in the new kernel and access to [OLDMEM_BASE, OLDMEM_BASE +
-> OLDMEM_SIZE] will identify an address in the old kernel.
-> 
-> For zfcpdump currently we add a load from [0, HSA_SIZE] where p_offset
-> equals p_paddr. Therefore we can't distinguish in copy_oldmem_page() if
-> we read from oldmem (HSA) or newmem. The range [0, HSA_SIZE] is used
-> twice. As a workaroun we could use an artificial p_offset for the HSA
-> memory chunk that is not used by the 1st kernel physical memory. This
-> is not really beautiful, but probably doable.
+  git://git.code.sf.net/p/makedumpfile/code
 
-Ok, zfcpdump is a problem because HSA memory region is in addition to
-regular memory address space. 
+And they will be merged into v1.5.4.
 
-Yep trying to figure out unused memory region in first kernel and mapping
-HSA to that is little ugly. But you know s390 better, so you decide
-whether you want to take that path or not. Generic code does not care
-what p_offset is pointing to.
-
-If you decide not to do that, agreed that copy_oldmem_page() need to
-differentiate between reference to HSA memory and reference to new
-memory. I guess in that case we will have to go with original proposal
-of using arch functions to access and read headers. I guess we can
-export physical address of elf headers to generic code and when
-generic code reads from that address using arch function we can read
-from new memory. copy_oldmem_page() will read from HSA memory for
-anything less than HSA_SIZE and from real memory for anything above
-it.
-
-Other way could the to use lower bits of p_offset field to store
-additional info. But that would make generic code ugly.
-
-> 
-> When I tried to implement this for kdump, I noticed another problem
-> with the vmcore mmap patches. Our copy_oldmem_page() function uses
-> memcpy_real() to access the old 1st kernel memory. This function
-> switches to real mode and therefore does not require any page tables.
-> But as a side effect of that we can't copy to vmalloc memory. The mmap
-> patches use vmalloc memory for "notes_buf". So currently using our
-> copy_oldmem_page() fails here.
-> 
-> If copy_oldmem_page() now also must be able to copy to vmalloc memory,
-> we would have to add new code for that:
-> 
-> * oldmem -> newmem (real): Use direct memcpy_real()
-> * oldmem -> newmem (vmalloc): Use intermediate buffer with memcpy_real()
-> * newmem -> newmem: Use memcpy()
-> 
-> What do you think?
-
-Yep, looks like you will have to do something like that.
-
-Can't we map HSA frames temporarily, copy data and tear down the mapping?
-
-If not, how would remap_pfn_range() work with HSA region when
-/proc/vmcore is mmaped()?
 
 Thanks
-Vivek
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
