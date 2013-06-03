@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UjREW-00029u-6w
- for kexec@lists.infradead.org; Mon, 03 Jun 2013 09:39:21 +0000
+ id 1UjREW-00029r-7q
+ for kexec@lists.infradead.org; Mon, 03 Jun 2013 09:39:22 +0000
 Received: from int-mx12.intmail.prod.int.phx2.redhat.com
  (int-mx12.intmail.prod.int.phx2.redhat.com [10.5.11.25])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r539d36g024436
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r539cxjr024432
  (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Mon, 3 Jun 2013 05:39:03 -0400
+ for <kexec@lists.infradead.org>; Mon, 3 Jun 2013 05:38:59 -0400
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 3/3] add missed options to man page
-Date: Mon,  3 Jun 2013 17:38:40 +0800
-Message-Id: <88fe03bd42cc406c51ee5cdab77ece45d81a9e96.1370252057.git.bhe@redhat.com>
+Subject: [PATCH 1/3] kexec man page change for debug option
+Date: Mon,  3 Jun 2013 17:38:38 +0800
+Message-Id: <a1afe09f2560fc4ea6d0a5791d5e92d2976aa01a.1370252057.git.bhe@redhat.com>
 In-Reply-To: <cover.1370252057.git.bhe@redhat.com>
 References: <cover.1370252057.git.bhe@redhat.com>
 In-Reply-To: <cover.1370252057.git.bhe@redhat.com>
@@ -32,36 +32,39 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Baoquan He <bhe@redhat.com>
 
-several options are missed in man page, add it now. They are
---reuseinitrd, --load-preserve-context, --load-jump-back-helper
-and --entry=<addr>.
+In commit 28d4ab53, the arch-specific --debug are moved to
+generic place, but the relevant description was not updated
+accordingly in man page. Here change it.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- kexec/kexec.8 |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+ kexec/kexec.8 |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index 2f94448..2575f9e 100644
+index aff674c..120af4d 100644
 --- a/kexec/kexec.8
 +++ b/kexec/kexec.8
-@@ -162,6 +162,16 @@ to load code into.
- .TP
- .BI \-\-entry= addr
- Specify the jump back address. (0 means it's not jump back or preserve context)
-+.TP
-+.BI \-\-load\-preserve\-context
-+Load the new kernel and preserve context of current kernel during kexec.
-+.TP
-+.BI \-\-load\-jump\-back\-helper
-+Load a helper image to jump back to original kernel.
-+.TP
-+.BI \-\-reuseinitrd
-+Reuse initrd from first boot.
-+
+@@ -104,6 +104,9 @@ command:
  
- .SH SUPPORTED KERNEL FILE TYPES AND OPTIONS
- .B Beoboot-x86
+ .SH OPTIONS
+ .TP
++.B \-d\ (\-\-debug)
++Enable debugging messages.
++.TP
+ .B \-e\ (\-\-exec)
+ Run the currently loaded kernel. Note that it will reboot into the loaded kernel without calling shutdown(8).
+ .TP
+@@ -167,9 +170,6 @@ Pass ELF boot notes.
+ .B \-\-args\-linux
+ Pass Linux kernel style options.
+ .TP
+-.B \-d \ (\-\-debug)
+-Enable debugging messages.
+-.TP
+ .B \-\-real\-mode
+ Use the kernel's real mode entry point.
+ .RE
 -- 
 1.7.1
 
