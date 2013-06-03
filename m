@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UjREW-00029s-6u
- for kexec@lists.infradead.org; Mon, 03 Jun 2013 09:39:22 +0000
+ id 1UjREW-00029u-6w
+ for kexec@lists.infradead.org; Mon, 03 Jun 2013 09:39:21 +0000
 Received: from int-mx12.intmail.prod.int.phx2.redhat.com
  (int-mx12.intmail.prod.int.phx2.redhat.com [10.5.11.25])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r539d1Xf007708
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r539d36g024436
  (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Mon, 3 Jun 2013 05:39:01 -0400
+ for <kexec@lists.infradead.org>; Mon, 3 Jun 2013 05:39:03 -0400
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 2/3] add description for entry option in help and man page
-Date: Mon,  3 Jun 2013 17:38:39 +0800
-Message-Id: <1d873a29520670e81fe542b03b212820fe1548f0.1370252057.git.bhe@redhat.com>
+Subject: [PATCH 3/3] add missed options to man page
+Date: Mon,  3 Jun 2013 17:38:40 +0800
+Message-Id: <88fe03bd42cc406c51ee5cdab77ece45d81a9e96.1370252057.git.bhe@redhat.com>
 In-Reply-To: <cover.1370252057.git.bhe@redhat.com>
 References: <cover.1370252057.git.bhe@redhat.com>
 In-Reply-To: <cover.1370252057.git.bhe@redhat.com>
@@ -32,44 +32,36 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Baoquan He <bhe@redhat.com>
 
-"--entry" option is used to specify jump back entry address, but
-lack description in help message and man page. Now add it.
+several options are missed in man page, add it now. They are
+--reuseinitrd, --load-preserve-context, --load-jump-back-helper
+and --entry=<addr>.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- kexec/kexec.8 |    3 +++
- kexec/kexec.c |    4 ++++
- 2 files changed, 7 insertions(+), 0 deletions(-)
+ kexec/kexec.8 |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
 diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index 120af4d..2f94448 100644
+index 2f94448..2575f9e 100644
 --- a/kexec/kexec.8
 +++ b/kexec/kexec.8
-@@ -159,6 +159,9 @@ to load code into.
- Specify the highest memory address
- .I addr
- to load code into.
+@@ -162,6 +162,16 @@ to load code into.
+ .TP
+ .BI \-\-entry= addr
+ Specify the jump back address. (0 means it's not jump back or preserve context)
 +.TP
-+.BI \-\-entry= addr
-+Specify the jump back address. (0 means it's not jump back or preserve context)
++.BI \-\-load\-preserve\-context
++Load the new kernel and preserve context of current kernel during kexec.
++.TP
++.BI \-\-load\-jump\-back\-helper
++Load a helper image to jump back to original kernel.
++.TP
++.BI \-\-reuseinitrd
++Reuse initrd from first boot.
++
  
  .SH SUPPORTED KERNEL FILE TYPES AND OPTIONS
  .B Beoboot-x86
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 6a13f79..21ff0e7 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -905,6 +905,10 @@ void usage(void)
- 	       "                      context of current kernel during kexec.\n"
- 	       "     --load-jump-back-helper Load a helper image to jump back\n"
- 	       "                      to original kernel.\n"
-+	       "     --entry=<addr>   Specify jump back address.\n"
-+	       "                      (0 means it's not jump back or\n"
-+	       "                      preserve context)\n"
-+	       "                      to original kernel.\n"
- 	       " -d, --debug           Enable debugging to help spot a failure.\n"
- 	       "\n"
- 	       "Supported kernel file types and options: \n");
 -- 
 1.7.1
 
