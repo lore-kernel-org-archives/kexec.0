@@ -1,30 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
+Received: from e06smtp12.uk.ibm.com ([195.75.94.108])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ukzxk-0001wH-2s
+ id 1Ukzxk-0001wK-31
  for kexec@lists.infradead.org; Fri, 07 Jun 2013 16:56:33 +0000
 Received: from /spool/local
- by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 7 Jun 2013 17:51:19 +0100
+ Fri, 7 Jun 2013 17:51:37 +0100
 Received: from b06cxnps4076.portsmouth.uk.ibm.com
  (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 80B8D17D8058
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id A3EDA17D805A
  for <kexec@lists.infradead.org>; Fri,  7 Jun 2013 17:57:21 +0100 (BST)
-Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
- [9.149.37.217])
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+ [9.149.37.212])
  by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r57Gtqr038731962
+ r57GtqpB38731964
  for <kexec@lists.infradead.org>; Fri, 7 Jun 2013 16:55:52 GMT
-Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r57Gu2tu005618
+Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r57Gu2qO005532
  for <kexec@lists.infradead.org>; Fri, 7 Jun 2013 10:56:02 -0600
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
-Date: Fri,  7 Jun 2013 18:55:57 +0200
-Message-Id: <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
+Subject: [PATCH v5 5/5] s390/vmcore: Use vmcore for zfcpdump
+Date: Fri,  7 Jun 2013 18:56:01 +0200
+Message-Id: <1370624161-2298-6-git-send-email-holzheu@linux.vnet.ibm.com>
 In-Reply-To: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
 References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -43,192 +43,237 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-Currently for s390 we create the ELF core header in the 2nd kernel
-with a small trick. We relocate the addresses in the ELF header in
-a way that for the /proc/vmcore code it seems to be in the 1st kernel
-(old) memory and the read_from_oldmem() returns the correct data.
-This allows the /proc/vmcore code to use the ELF header in the
-2nd kernel.
-
-This patch now exchanges the old mechanism with the new and much
-cleaner function call override feature that now offcially allows to
-create the ELF core header in the 2nd kernel.
-
-To use the new feature the following function have to be defined
-by the architecture backend code to read from new memory:
-
- * elfcorehdr_alloc: Return the address and size of the ELF header
- * elfcorehdr_free: Free the memory of the ELF header
- * elfcorehdr_read: Read from ELF header
- * elfcorehdr_read_notes: Read from ELF notes
+This patch modifies the s390 copy_oldmem_page() and remap_oldmem_pfn_range()
+function for zfcpdump to read from the HSA memory if memory below HSA_SIZE
+bytes is requested. Otherwise real memory is used.
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- fs/proc/vmcore.c           | 63 +++++++++++++++++++++++++++++++++++++---------
- include/linux/crash_dump.h |  5 ++++
- 2 files changed, 56 insertions(+), 12 deletions(-)
+ arch/s390/Kconfig             |   3 +-
+ arch/s390/include/asm/sclp.h  |   1 +
+ arch/s390/kernel/crash_dump.c | 113 ++++++++++++++++++++++++++++++++++++------
+ drivers/s390/char/zcore.c     |   6 +--
+ 4 files changed, 103 insertions(+), 20 deletions(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 0f6db52..221f84b 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -123,6 +123,36 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
- 	return read;
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 2c9789d..a0d78f1 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -516,6 +516,7 @@ config CRASH_DUMP
+ 	bool "kernel crash dumps"
+ 	depends on 64BIT && SMP
+ 	select KEXEC
++	select ZFCPDUMP
+ 	help
+ 	  Generate crash dump after being started by kexec.
+ 	  Crash dump kernels are loaded in the main kernel with kexec-tools
+@@ -526,7 +527,7 @@ config CRASH_DUMP
+ config ZFCPDUMP
+ 	def_bool n
+ 	prompt "zfcpdump support"
+-	select SMP
++	depends on SMP
+ 	help
+ 	  Select this option if you want to build an zfcpdump enabled kernel.
+ 	  Refer to <file:Documentation/s390/zfcpdump.txt> for more details on this.
+diff --git a/arch/s390/include/asm/sclp.h b/arch/s390/include/asm/sclp.h
+index 06a1361..7dc7f9c 100644
+--- a/arch/s390/include/asm/sclp.h
++++ b/arch/s390/include/asm/sclp.h
+@@ -56,5 +56,6 @@ bool sclp_has_linemode(void);
+ bool sclp_has_vt220(void);
+ int sclp_pci_configure(u32 fid);
+ int sclp_pci_deconfigure(u32 fid);
++int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode);
+ 
+ #endif /* _ASM_S390_SCLP_H */
+diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
+index 12ccc3c..ee0770d 100644
+--- a/arch/s390/kernel/crash_dump.c
++++ b/arch/s390/kernel/crash_dump.c
+@@ -16,6 +16,7 @@
+ #include <asm/os_info.h>
+ #include <asm/elf.h>
+ #include <asm/ipl.h>
++#include <asm/sclp.h>
+ 
+ #define PTR_ADD(x, y) (((char *) (x)) + ((unsigned long) (y)))
+ #define PTR_SUB(x, y) (((char *) (x)) - ((unsigned long) (y)))
+@@ -27,21 +28,36 @@
+ static void *elfcorehdr_newmem;
+ 
+ /*
++ * For pages below ZFCPDUMP_HSA_SIZE memory from the HSA is copied. Otherwise
++ * real memory copy is used.
++ */
++static ssize_t copy_oldmem_page_zfcpdump(char *buf, size_t csize,
++					 unsigned long src, int userbuf)
++{
++	if (src < ZFCPDUMP_HSA_SIZE) {
++		if (memcpy_hsa(buf, src, csize, userbuf) < 0)
++			return -EINVAL;
++	} else {
++		if (userbuf)
++			copy_to_user_real((void __force __user *) buf,
++					  (void *) src, csize);
++		else
++			memcpy_real(buf, (void *) src, csize);
++	}
++	return csize;
++}
++
++/*
+  * Copy one page from "oldmem"
+  *
+  * For the kdump reserved memory this functions performs a swap operation:
+  *  - [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE] is mapped to [0 - OLDMEM_SIZE].
+  *  - [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
+  */
+-ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+-			 size_t csize, unsigned long offset, int userbuf)
+-{
+-	unsigned long src;
++static ssize_t copy_oldmem_page_kdump(char *buf, size_t csize,
++				      unsigned long src, int userbuf)
+ 
+-	if (!csize)
+-		return 0;
+-
+-	src = (pfn << PAGE_SHIFT) + offset;
++{
+ 	if (src < OLDMEM_SIZE)
+ 		src += OLDMEM_BASE;
+ 	else if (src > OLDMEM_BASE &&
+@@ -56,13 +72,31 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
  }
  
-+/*
-+ * Architectures may override this function to allocate ELF header in 2nd kernel
+ /*
+- * Remap "oldmem"
++ * Copy one page from "oldmem"
 + */
-+int __weak elfcorehdr_alloc(void)
++ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
++			 unsigned long offset, int userbuf)
 +{
-+	return -ENODEV;
++	unsigned long src;
++	if (!csize)
++		return 0;
++	src = (pfn << PAGE_SHIFT) + offset;
++
++	if (OLDMEM_BASE)
++		return copy_oldmem_page_kdump(buf, csize, src, userbuf);
++	else
++		return copy_oldmem_page_zfcpdump(buf, csize, src, userbuf);
 +}
 +
 +/*
-+ * Architectures may override this function to free header
-+ */
-+void __weak elfcorehdr_free(void)
-+{}
-+
-+/*
-+ * Architectures may override this function to read from ELF header
-+ */
-+ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-+{
-+	return read_from_oldmem(buf, count, ppos, 0);
-+}
-+
-+/*
-+ * Architectures may override this function to read from notes sections
-+ */
-+ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
-+{
-+	return read_from_oldmem(buf, count, ppos, 0);
-+}
-+
- /* Read from the ELF header and then the crash dump. On error, negative value is
-  * returned otherwise number of bytes read are returned.
++ * Remap "oldmem" for kdump
+  *
+  * For the kdump reserved memory this functions performs a swap operation:
+  * [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
   */
-@@ -322,7 +352,7 @@ static int __init update_note_header_size_elf64(const Elf64_Ehdr *ehdr_ptr)
- 		notes_section = kmalloc(max_sz, GFP_KERNEL);
- 		if (!notes_section)
- 			return -ENOMEM;
--		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
- 		if (rc < 0) {
- 			kfree(notes_section);
- 			return rc;
-@@ -409,7 +439,8 @@ static int __init copy_notes_elf64(const Elf64_Ehdr *ehdr_ptr, char *notes_buf)
- 		if (phdr_ptr->p_type != PT_NOTE)
- 			continue;
- 		offset = phdr_ptr->p_offset;
--		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
-+					   &offset);
- 		if (rc < 0)
- 			return rc;
- 		notes_buf += phdr_ptr->p_memsz;
-@@ -510,7 +541,7 @@ static int __init update_note_header_size_elf32(const Elf32_Ehdr *ehdr_ptr)
- 		notes_section = kmalloc(max_sz, GFP_KERNEL);
- 		if (!notes_section)
- 			return -ENOMEM;
--		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
- 		if (rc < 0) {
- 			kfree(notes_section);
- 			return rc;
-@@ -597,7 +628,8 @@ static int __init copy_notes_elf32(const Elf32_Ehdr *ehdr_ptr, char *notes_buf)
- 		if (phdr_ptr->p_type != PT_NOTE)
- 			continue;
- 		offset = phdr_ptr->p_offset;
--		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
-+					   &offset);
- 		if (rc < 0)
- 			return rc;
- 		notes_buf += phdr_ptr->p_memsz;
-@@ -793,7 +825,7 @@ static int __init parse_crash_elf64_headers(void)
- 	addr = elfcorehdr_addr;
- 
- 	/* Read Elf header */
--	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf64_Ehdr), &addr, 0);
-+	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf64_Ehdr), &addr);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -820,7 +852,7 @@ static int __init parse_crash_elf64_headers(void)
- 	if (!elfcorebuf)
- 		return -ENOMEM;
- 	addr = elfcorehdr_addr;
--	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
-+	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
- 	if (rc < 0)
- 		goto fail;
- 
-@@ -849,7 +881,7 @@ static int __init parse_crash_elf32_headers(void)
- 	addr = elfcorehdr_addr;
- 
- 	/* Read Elf header */
--	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf32_Ehdr), &addr, 0);
-+	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf32_Ehdr), &addr);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -875,7 +907,7 @@ static int __init parse_crash_elf32_headers(void)
- 	if (!elfcorebuf)
- 		return -ENOMEM;
- 	addr = elfcorehdr_addr;
--	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
-+	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
- 	if (rc < 0)
- 		goto fail;
- 
-@@ -902,7 +934,7 @@ static int __init parse_crash_elf_headers(void)
- 	int rc=0;
- 
- 	addr = elfcorehdr_addr;
--	rc = read_from_oldmem(e_ident, EI_NIDENT, &addr, 0);
-+	rc = elfcorehdr_read(e_ident, EI_NIDENT, &addr);
- 	if (rc < 0)
- 		return rc;
- 	if (memcmp(e_ident, ELFMAG, SELFMAG) != 0) {
-@@ -935,10 +967,17 @@ static int __init vmcore_init(void)
+-int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
+-			   unsigned long pfn, unsigned long size, pgprot_t prot)
++static int remap_oldmem_pfn_range_kdump(struct vm_area_struct *vma,
++					unsigned long from, unsigned long pfn,
++					unsigned long size, pgprot_t prot)
  {
- 	int rc = 0;
+ 	unsigned long size_old;
+ 	int rc;
+@@ -82,6 +116,43 @@ int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
+ }
  
--	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
--	if (!(is_vmcore_usable()))
--		return rc;
-+	/*
-+	 * If elfcorehdr= has not been passed in cmdline, try to get the
-+	 * header from 2nd kernel, then capture the dump.
-+	 */
-+	if (!(is_vmcore_usable())) {
-+		rc = elfcorehdr_alloc();
-+		if (rc)
-+			return rc;
-+	}
- 	rc = parse_crash_elf_headers();
-+	elfcorehdr_free();
- 	if (rc) {
- 		pr_warn("Kdump: vmcore not initialized\n");
- 		return rc;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 37e4f8d..dd0f434 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -12,6 +12,11 @@
- extern unsigned long long elfcorehdr_addr;
- extern unsigned long long elfcorehdr_size;
- 
-+extern int __weak elfcorehdr_alloc(void);
-+extern void __weak elfcorehdr_free(void);
-+extern ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos);
-+extern ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos);
+ /*
++ * Remap "oldmem" for zfcpdump
++ *
++ * We only map available memory above ZFCPDUMP_HSA_SIZE. Memory below
++ * ZFCPDUMP_HSA_SIZE is read on demand using the copy_oldmem_page() function.
++ */
++static int remap_oldmem_pfn_range_zfcpdump(struct vm_area_struct *vma,
++					   unsigned long from,
++					   unsigned long pfn,
++					   unsigned long size, pgprot_t prot)
++{
++	unsigned long size_hsa;
 +
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
- 						unsigned long, int);
++	if (pfn < ZFCPDUMP_HSA_SIZE >> PAGE_SHIFT) {
++		size_hsa = min(size, OLDMEM_SIZE - (pfn << PAGE_SHIFT));
++		if (size == size_hsa)
++			return 0;
++		size -= size_hsa;
++		from += size_hsa;
++		pfn += size_hsa >> PAGE_SHIFT;
++	}
++	return remap_pfn_range(vma, from, pfn, size, prot);
++}
++
++/*
++ * Remap "oldmem" for kdump or zfcpdump
++ */
++int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
++			   unsigned long pfn, unsigned long size, pgprot_t prot)
++{
++	if (OLDMEM_BASE)
++		return remap_oldmem_pfn_range_kdump(vma, from, pfn, size, prot);
++	else
++		return remap_oldmem_pfn_range_zfcpdump(vma, from, pfn, size,
++						       prot);
++}
++
++/*
+  * Copy memory from old kernel
+  */
+ int copy_from_oldmem(void *dest, void *src, size_t count)
+@@ -89,11 +160,21 @@ int copy_from_oldmem(void *dest, void *src, size_t count)
+ 	unsigned long copied = 0;
+ 	int rc;
  
+-	if ((unsigned long) src < OLDMEM_SIZE) {
+-		copied = min(count, OLDMEM_SIZE - (unsigned long) src);
+-		rc = memcpy_real(dest, src + OLDMEM_BASE, copied);
+-		if (rc)
+-			return rc;
++	if (OLDMEM_BASE) {
++		if ((unsigned long) src < OLDMEM_SIZE) {
++			copied = min(count, OLDMEM_SIZE - (unsigned long) src);
++			rc = memcpy_real(dest, src + OLDMEM_BASE, copied);
++			if (rc)
++				return rc;
++		}
++	} else {
++		if ((unsigned long) src < ZFCPDUMP_HSA_SIZE) {
++			copied = min(count,
++				     ZFCPDUMP_HSA_SIZE - (unsigned long) src);
++			rc = memcpy_hsa(dest, (unsigned long) src, copied, 0);
++			if (rc)
++				return rc;
++		}
+ 	}
+ 	return memcpy_real(dest + copied, src + copied, count - copied);
+ }
+diff --git a/drivers/s390/char/zcore.c b/drivers/s390/char/zcore.c
+index 9e5e146..794820a 100644
+--- a/drivers/s390/char/zcore.c
++++ b/drivers/s390/char/zcore.c
+@@ -30,8 +30,8 @@
+ 
+ #define TRACE(x...) debug_sprintf_event(zcore_dbf, 1, x)
+ 
+-#define TO_USER		0
+-#define TO_KERNEL	1
++#define TO_USER		1
++#define TO_KERNEL	0
+ #define CHUNK_INFO_SIZE	34 /* 2 16-byte char, each followed by blank */
+ 
+ enum arch_id {
+@@ -73,7 +73,7 @@ static struct ipl_parameter_block *ipl_block;
+  * @count: Size of buffer, which should be copied
+  * @mode:  Either TO_KERNEL or TO_USER
+  */
+-static int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode)
++int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode)
+ {
+ 	int offs, blk_num;
+ 	static char buf[PAGE_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
 -- 
 1.8.1.6
 
