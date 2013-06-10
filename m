@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UlyuD-0006LE-Oi
- for kexec@lists.infradead.org; Mon, 10 Jun 2013 10:00:55 +0000
-Message-ID: <51B596B3.8050005@cn.fujitsu.com>
-Date: Mon, 10 Jun 2013 17:04:51 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Received: from mail-vb0-x22b.google.com ([2607:f8b0:400c:c02::22b])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Um2GQ-0002hZ-1P
+ for kexec@lists.infradead.org; Mon, 10 Jun 2013 13:36:03 +0000
+Received: by mail-vb0-f43.google.com with SMTP id e12so1869793vbg.30
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 06:35:30 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH] vmcore: disable mmap_vmcore() if CONFIG_MMU is not defined
-References: <51B593C3.7030609@jp.fujitsu.com>
-In-Reply-To: <51B593C3.7030609@jp.fujitsu.com>
+In-Reply-To: <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
+References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
+Date: Mon, 10 Jun 2013 22:35:30 +0900
+Message-ID: <CABOkKT33diYR+7Nt9HdRxxqnb1KGkUz8YLTjGODsv2s5vj+3og@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
+From: HATAYAMA Daisuke <d.hatayama@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,175 +25,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 06/10/2013 04:52 PM, HATAYAMA Daisuke wrote:
-> Hello,
-> 
-> This patch fixes the issue reported by Amd on an overlook of no-MMU configuration.
-> 
-> This patch is made on top of v3.10-rc4-mmotm-2013-06-06-16-19.
-> 
-> I tested this on x86_64 and x86 with 1GB and 5GB memory.
-> 
-> I build this on arm without CONFIG_MMU configuration.
-> 
-> Thanks.
-> HATAYAMA, Daisuke
-> 
->>From e2f067a497872a9c60002c56ea550e4600072166 Mon Sep 17 00:00:00 2001
-> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> Date: Sat, 8 Jun 2013 20:46:57 +0900
-> Subject: [PATCH] vmcore: disable mmap_vmcore() if CONFIG_MMU is not defined
-> 
->>From Amd's report of a link-time build error in vmcore.c, it turned
-> out that mmap_vmcore() work overlooked no-MMU configuraiton.
-> 
-> In the current design, it's impossible to implement mmap_vmcore() for
-> no-MMU configuration since MMU is essential in order to map physically
-> non-contiguous objects (ELF header, ELF note segment and memory
-> regions in the 1st kernel pointed to by PT_LOAD entries) into
-> virtually contiguous user-space in ELF layout.
-> 
-> Hence, this patch disables mmap_vmcore() if CONFIG_MMU is not defined,
-> returning -ENOSYS.
-> 
-> Another change is to fix the build error by using vmalloc_user()
-
-Yeah, I think this change makes code more clear by hiding vmcore-irrelevant
-details.
-
-> instead of calling vzalloc() and find_vm_area() in order, by which we
-> no longer need to call find_vm_area() in vmcore.c that has no
-> counterpart on non-MMU configuration.
-> 
-> Also, on no-MMU configuration, because we don't export buffer for ELF
-> note segment to user-space, we use vzalloc() to allocate the buffer.
-> Therefore, we use differnet functions to allocate the buffer for ELF
-> note segment. To avoid code duplication, introduce a helper
-> alloc_elfnotes_buf().
-> 
-> Reported-by: Amd Bergmann <arnd@arndb.de>
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> ---
->  fs/proc/vmcore.c |   57 +++++++++++++++++++++++++++++++++++------------------
->  1 files changed, 37 insertions(+), 20 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 0f6db52..2850317 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -195,6 +195,35 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
->  	return acc;
->  }
->  
-> +/**
-> + * alloc_elfnotes_buf - allocate buffer for ELF note segment in
-> + *                      vmalloc memory
-> + *
-> + * @notes_sz: size of buffer
-> + *
-> + * If CONFIG_MMU is defined, use vmalloc_user() to allow users to mmap
-> + * the buffer to user-space by means of remap_vmalloc_range().
-> + *
-> + * If CONFIG_MMU is not defined, use vzalloc() since mmap_vmcore() is
-> + * disabled and there's no need to allow users to mmap the buffer.
-> + */
-> +static inline char *alloc_elfnotes_buf(size_t notes_sz)
-> +{
-> +#ifdef CONFIG_MMU
-> +	return vmalloc_user(notes_sz);
-> +#else
-> +	return vzalloc(notes_sz);
-> +#endif
-> +}
-> +
-> +/*
-> + * Disable mmap_vmcore() if CONFIG_MMU is not defined. MMU is
-> + * essential for mmap_vmcore() in order to map physically
-> + * non-contiguous objects (ELF header, ELF note segment and memory
-> + * regions in the 1st kernel pointed to by PT_LOAD entries) into
-> + * virtually contiguous user-space in ELF layout.
-> + */
-> +#ifdef CONFIG_MMU
->  static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
+2013/6/8 Michael Holzheu <holzheu@linux.vnet.ibm.com>:
+<cut>
+> @@ -935,10 +967,17 @@ static int __init vmcore_init(void)
 >  {
->  	size_t size = vma->vm_end - vma->vm_start;
-> @@ -271,6 +300,12 @@ fail:
->  	do_munmap(vma->vm_mm, vma->vm_start, len);
->  	return -EAGAIN;
->  }
-> +#else
-> +static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	return -ENOSYS;
-> +}
-> +#endif
->  
->  static const struct file_operations proc_vmcore_operations = {
->  	.read		= read_vmcore,
-> @@ -427,7 +462,6 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
->  	Elf64_Ehdr *ehdr_ptr;
->  	Elf64_Phdr phdr;
->  	u64 phdr_sz = 0, note_off;
-> -	struct vm_struct *vm;
->  
->  	ehdr_ptr = (Elf64_Ehdr *)elfptr;
->  
-> @@ -440,18 +474,10 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
->  		return rc;
->  
->  	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
-> -	*notes_buf = vzalloc(*notes_sz);
-> +	*notes_buf = alloc_elfnotes_buf(*notes_sz);
->  	if (!*notes_buf)
->  		return -ENOMEM;
->  
-> -	/*
-> -	 * Allow users to remap ELF note segment buffer on vmalloc memory using
-> -	 * remap_vmalloc_range.()
-> -	 */
-> -	vm = find_vm_area(*notes_buf);
-> -	BUG_ON(!vm);
-> -	vm->flags |= VM_USERMAP;
-> -
->  	rc = copy_notes_elf64(ehdr_ptr, *notes_buf);
->  	if (rc < 0)
->  		return rc;
-> @@ -615,7 +641,6 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
->  	Elf32_Ehdr *ehdr_ptr;
->  	Elf32_Phdr phdr;
->  	u64 phdr_sz = 0, note_off;
-> -	struct vm_struct *vm;
->  
->  	ehdr_ptr = (Elf32_Ehdr *)elfptr;
->  
-> @@ -628,18 +653,10 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
->  		return rc;
->  
->  	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
-> -	*notes_buf = vzalloc(*notes_sz);
-> +	*notes_buf = alloc_elfnotes_buf(*notes_sz);
->  	if (!*notes_buf)
->  		return -ENOMEM;
->  
-> -	/*
-> -	 * Allow users to remap ELF note segment buffer on vmalloc memory using
-> -	 * remap_vmalloc_range()
-> -	 */
-> -	vm = find_vm_area(*notes_buf);
-> -	BUG_ON(!vm);
-> -	vm->flags |= VM_USERMAP;
-> -
->  	rc = copy_notes_elf32(ehdr_ptr, *notes_buf);
->  	if (rc < 0)
->  		return rc;
+>         int rc = 0;
+>
+> -       /* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
+> -       if (!(is_vmcore_usable()))
+> -               return rc;
+> +       /*
+> +        * If elfcorehdr= has not been passed in cmdline, try to get the
+> +        * header from 2nd kernel, then capture the dump.
+> +        */
+> +       if (!(is_vmcore_usable())) {
+> +               rc = elfcorehdr_alloc();
+> +               if (rc)
+> +                       return rc;
+> +       }
 
+Here you removed comment in the 1st path. Please keep it.
 
--- 
 Thanks.
-Zhang Yanfei
+HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
