@@ -1,34 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp13.uk.ibm.com ([195.75.94.109])
+Received: from e06smtp18.uk.ibm.com ([195.75.94.114])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Um2St-00033I-CQ
- for kexec@lists.infradead.org; Mon, 10 Jun 2013 13:48:56 +0000
+ id 1Um2Xh-00039C-NU
+ for kexec@lists.infradead.org; Mon, 10 Jun 2013 13:53:54 +0000
 Received: from /spool/local
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp18.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 10 Jun 2013 14:44:40 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id E2841219005E
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 14:51:38 +0100 (BST)
-Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
- [9.149.37.228])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r5ADm95W51773472
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 13:48:09 GMT
-Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r5ADmJZk002705
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 07:48:19 -0600
-Date: Mon, 10 Jun 2013 15:48:17 +0200
+ Mon, 10 Jun 2013 14:48:30 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com
+ (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4886017D8059
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 14:54:48 +0100 (BST)
+Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
+ [9.149.37.249])
+ by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r5ADrH2k53477492
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 13:53:17 GMT
+Received: from d06av08.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av08.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r5ADrRRb006219
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 07:53:27 -0600
+Date: Mon, 10 Jun 2013 15:53:25 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 2/5] s390/vmcore: Use ELF header in new memory feature
-Message-ID: <20130610154817.3275672f@holzheu>
-In-Reply-To: <CABOkKT13E-nkhu1j06OPqR2dMiK6WbTMp2rPj4mzom_+uDBziQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
+Message-ID: <20130610155325.5e75f243@holzheu>
+In-Reply-To: <CABOkKT33diYR+7Nt9HdRxxqnb1KGkUz8YLTjGODsv2s5vj+3og@mail.gmail.com>
 References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1370624161-2298-3-git-send-email-holzheu@linux.vnet.ibm.com>
- <CABOkKT13E-nkhu1j06OPqR2dMiK6WbTMp2rPj4mzom_+uDBziQ@mail.gmail.com>
+ <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
+ <CABOkKT33diYR+7Nt9HdRxxqnb1KGkUz8YLTjGODsv2s5vj+3og@mail.gmail.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -45,30 +45,37 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@gmail.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, 10 Jun 2013 22:36:57 +0900
+On Mon, 10 Jun 2013 22:35:30 +0900
 HATAYAMA Daisuke <d.hatayama@gmail.com> wrote:
 
-> > -static int setup_kdump_elfcorehdr(void)
-> > +void elfcorehdr_free(void)
+> 2013/6/8 Michael Holzheu <holzheu@linux.vnet.ibm.com>:
+> <cut>
+> > @@ -935,10 +967,17 @@ static int __init vmcore_init(void)
 > >  {
-> > -       size_t elfcorebuf_sz;
-> > -       char *elfcorebuf;
-> > -
-> > -       if (!OLDMEM_BASE || is_kdump_kernel())
-> > -               return -EINVAL;
-> > -       s390_elf_corehdr_create(&elfcorebuf, &elfcorebuf_sz);
-> > -       elfcorehdr_addr = (unsigned long long) elfcorebuf;
-> > -       elfcorehdr_size = elfcorebuf_sz;
-> > -       return 0;
-> > +       if (!elfcorehdr_newmem)
-> > +               return;
-> > +       vfree(elfcorehdr_newmem);  
+> >         int rc = 0;
+> >
+> > -       /* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
+> > -       if (!(is_vmcore_usable()))
+> > -               return rc;
+> > +       /*
+> > +        * If elfcorehdr= has not been passed in cmdline, try to get the
+> > +        * header from 2nd kernel, then capture the dump.
+> > +        */
+> > +       if (!(is_vmcore_usable())) {
+> > +               rc = elfcorehdr_alloc();
+> > +               if (rc)
+> > +                       return rc;
+> > +       }
 > 
-> kfree is correct here?
+> Here you removed comment in the 1st path. Please keep it.
 
-You are right, I fixed that!
+Perhaps something like the following:
 
-Thanks!
+/*
+ * If elfcorehdr= has been passed in cmdline, then capture the dump.
+ * Otherwise, try to get the header from the 2nd kernel.
+ */
+
 Michael
 
 
