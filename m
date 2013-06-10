@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-vb0-x22b.google.com ([2607:f8b0:400c:c02::22b])
+Received: from mail-vc0-f172.google.com ([209.85.220.172])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Um2GQ-0002hZ-1P
- for kexec@lists.infradead.org; Mon, 10 Jun 2013 13:36:03 +0000
-Received: by mail-vb0-f43.google.com with SMTP id e12so1869793vbg.30
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 06:35:30 -0700 (PDT)
+ id 1Um2Hh-0002kN-5I
+ for kexec@lists.infradead.org; Mon, 10 Jun 2013 13:37:21 +0000
+Received: by mail-vc0-f172.google.com with SMTP id ib11so4402438vcb.31
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 06:36:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
+In-Reply-To: <1370624161-2298-3-git-send-email-holzheu@linux.vnet.ibm.com>
 References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
-Date: Mon, 10 Jun 2013 22:35:30 +0900
-Message-ID: <CABOkKT33diYR+7Nt9HdRxxqnb1KGkUz8YLTjGODsv2s5vj+3og@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
+ <1370624161-2298-3-git-send-email-holzheu@linux.vnet.ibm.com>
+Date: Mon, 10 Jun 2013 22:36:57 +0900
+Message-ID: <CABOkKT13E-nkhu1j06OPqR2dMiK6WbTMp2rPj4mzom_+uDBziQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] s390/vmcore: Use ELF header in new memory feature
 From: HATAYAMA Daisuke <d.hatayama@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,24 +30,44 @@ Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan W
 
 2013/6/8 Michael Holzheu <holzheu@linux.vnet.ibm.com>:
 <cut>
-> @@ -935,10 +967,17 @@ static int __init vmcore_init(void)
->  {
->         int rc = 0;
+> @@ -417,27 +416,44 @@ static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
+>         ptr = notes_init(phdr_notes, ptr, ((unsigned long) hdr) + hdr_off);
+>         /* Init loads */
+>         hdr_off = PTR_DIFF(ptr, hdr);
+> -       loads_init(phdr_loads, ((unsigned long) hdr) + hdr_off);
+> -       *elfcorebuf_sz = hdr_off;
+> -       *elfcorebuf = (void *) relocate((unsigned long) hdr);
+> -       BUG_ON(*elfcorebuf_sz > alloc_size);
+> +       loads_init(phdr_loads, hdr_off);
+> +       elfcorehdr_addr = (unsigned long long) hdr;
+> +       elfcorehdr_size = (unsigned long long) hdr_off;
+> +       elfcorehdr_newmem = hdr;
+> +       BUG_ON(elfcorehdr_size > alloc_size);
+> +       return 0;
+>  }
 >
-> -       /* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
-> -       if (!(is_vmcore_usable()))
-> -               return rc;
-> +       /*
-> +        * If elfcorehdr= has not been passed in cmdline, try to get the
-> +        * header from 2nd kernel, then capture the dump.
-> +        */
-> +       if (!(is_vmcore_usable())) {
-> +               rc = elfcorehdr_alloc();
-> +               if (rc)
-> +                       return rc;
-> +       }
+>  /*
+> - * Create kdump ELF core header in new kernel, if it has not been passed via
+> - * the "elfcorehdr" kernel parameter
+> + * Free ELF core header (new kernel)
+>   */
+> -static int setup_kdump_elfcorehdr(void)
+> +void elfcorehdr_free(void)
+>  {
+> -       size_t elfcorebuf_sz;
+> -       char *elfcorebuf;
+> -
+> -       if (!OLDMEM_BASE || is_kdump_kernel())
+> -               return -EINVAL;
+> -       s390_elf_corehdr_create(&elfcorebuf, &elfcorebuf_sz);
+> -       elfcorehdr_addr = (unsigned long long) elfcorebuf;
+> -       elfcorehdr_size = elfcorebuf_sz;
+> -       return 0;
+> +       if (!elfcorehdr_newmem)
+> +               return;
+> +       vfree(elfcorehdr_newmem);
 
-Here you removed comment in the 1st path. Please keep it.
+kfree is correct here?
 
 Thanks.
 HATAYAMA, Daisuke
