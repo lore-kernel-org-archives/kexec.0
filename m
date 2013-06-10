@@ -1,34 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp18.uk.ibm.com ([195.75.94.114])
+Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Um2Xh-00039C-NU
- for kexec@lists.infradead.org; Mon, 10 Jun 2013 13:53:54 +0000
+ id 1Um2hN-0003Pe-3c
+ for kexec@lists.infradead.org; Mon, 10 Jun 2013 14:03:53 +0000
 Received: from /spool/local
- by e06smtp18.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 10 Jun 2013 14:48:30 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com
- (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4886017D8059
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 14:54:48 +0100 (BST)
-Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
- [9.149.37.249])
- by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r5ADrH2k53477492
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 13:53:17 GMT
-Received: from d06av08.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av08.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r5ADrRRb006219
- for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 07:53:27 -0600
-Date: Mon, 10 Jun 2013 15:53:25 +0200
+ Mon, 10 Jun 2013 14:59:52 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 71B2617D805C
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 15:04:48 +0100 (BST)
+Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
+ [9.149.37.250])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r5AE3HhO51707910
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 14:03:17 GMT
+Received: from d06av09.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av09.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r5AE3R5k006233
+ for <kexec@lists.infradead.org>; Mon, 10 Jun 2013 08:03:27 -0600
+Date: Mon, 10 Jun 2013 16:03:26 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
-Message-ID: <20130610155325.5e75f243@holzheu>
-In-Reply-To: <CABOkKT33diYR+7Nt9HdRxxqnb1KGkUz8YLTjGODsv2s5vj+3og@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] vmcore: Introduce remap_oldmem_pfn_range()
+Message-ID: <20130610160326.2dd4f6fb@holzheu>
+In-Reply-To: <CABOkKT0yk6tytN=aTSdpECQWw_30m5qrZYH-W1msovkeiSeZCA@mail.gmail.com>
 References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
- <CABOkKT33diYR+7Nt9HdRxxqnb1KGkUz8YLTjGODsv2s5vj+3og@mail.gmail.com>
+ <1370624161-2298-4-git-send-email-holzheu@linux.vnet.ibm.com>
+ <CABOkKT0yk6tytN=aTSdpECQWw_30m5qrZYH-W1msovkeiSeZCA@mail.gmail.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -45,37 +45,51 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@gmail.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, 10 Jun 2013 22:35:30 +0900
+On Mon, 10 Jun 2013 22:40:24 +0900
 HATAYAMA Daisuke <d.hatayama@gmail.com> wrote:
 
-> 2013/6/8 Michael Holzheu <holzheu@linux.vnet.ibm.com>:
-> <cut>
-> > @@ -935,10 +967,17 @@ static int __init vmcore_init(void)
-> >  {
-> >         int rc = 0;
-> >
-> > -       /* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
-> > -       if (!(is_vmcore_usable()))
-> > -               return rc;
-> > +       /*
-> > +        * If elfcorehdr= has not been passed in cmdline, try to get the
-> > +        * header from 2nd kernel, then capture the dump.
-> > +        */
-> > +       if (!(is_vmcore_usable())) {
-> > +               rc = elfcorehdr_alloc();
-> > +               if (rc)
-> > +                       return rc;
+> > +static int mmap_vmcore_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
+> > +{
+> > +       struct address_space *mapping = vma->vm_private_data;
+> > +       pgoff_t index = vmf->pgoff;
+> > +       struct page *page;
+> > +       loff_t src;
+> > +       char *buf;
+> > +       int rc;
+> > +
+> > +find_page:
+> > +       page = find_lock_page(mapping, index);
+> > +       if (page) {
+> > +               unlock_page(page);
+> > +               rc = VM_FAULT_MINOR;
+> > +       } else {
+> > +               page = page_cache_alloc_cold(mapping);
+> > +               if (!page)
+> > +                       return VM_FAULT_OOM;
+> > +               rc = add_to_page_cache_lru(page, mapping, index, GFP_KERNEL);
+> > +               if (rc) {
+> > +                       page_cache_release(page);
+> > +                       if (rc == -EEXIST)
+> > +                               goto find_page;
+> > +                       /* Probably ENOMEM for radix tree node */
+> > +                       return VM_FAULT_OOM;
+> > +               }
+> > +               buf = (void *) (page_to_pfn(page) << PAGE_SHIFT);
+> > +               src = index << PAGE_CACHE_SHIFT;
+> > +               __read_vmcore(buf, PAGE_SIZE, &src, 0);
+> > +               unlock_page(page);
+> > +               rc = VM_FAULT_MAJOR;
 > > +       }
+> > +       vmf->page = page;
+> > +       return rc;
+> > +}  
 > 
-> Here you removed comment in the 1st path. Please keep it.
+> How about reusing find_or_create_page()?
 
-Perhaps something like the following:
+Hmmm, how would I know then if I have to fill the page with
+__read_vmcore() or not?
 
-/*
- * If elfcorehdr= has been passed in cmdline, then capture the dump.
- * Otherwise, try to get the header from the 2nd kernel.
- */
-
+Best Regards,
 Michael
 
 
