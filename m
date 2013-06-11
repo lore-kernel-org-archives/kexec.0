@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-vc0-f178.google.com ([209.85.220.178])
+Received: from mail-vc0-f171.google.com ([209.85.220.171])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UmNuG-0003kB-JB
- for kexec@lists.infradead.org; Tue, 11 Jun 2013 12:42:37 +0000
-Received: by mail-vc0-f178.google.com with SMTP id m17so1167788vca.37
- for <kexec@lists.infradead.org>; Tue, 11 Jun 2013 05:42:15 -0700 (PDT)
+ id 1UmOVH-0004pT-Rz
+ for kexec@lists.infradead.org; Tue, 11 Jun 2013 13:20:52 +0000
+Received: by mail-vc0-f171.google.com with SMTP id gd11so2435335vcb.16
+ for <kexec@lists.infradead.org>; Tue, 11 Jun 2013 06:20:22 -0700 (PDT)
 MIME-Version: 1.0
 In-Reply-To: <20130610173739.4d88d4ec@holzheu>
 References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
  <1370624161-2298-4-git-send-email-holzheu@linux.vnet.ibm.com>
  <CABOkKT0yk6tytN=aTSdpECQWw_30m5qrZYH-W1msovkeiSeZCA@mail.gmail.com>
  <20130610173739.4d88d4ec@holzheu>
-Date: Tue, 11 Jun 2013 21:42:15 +0900
-Message-ID: <CABOkKT05VR3V9rEz1LWnEJSEvkevhBFfQVVX5_DS0Z4rBG9EyA@mail.gmail.com>
+Date: Tue, 11 Jun 2013 22:20:22 +0900
+Message-ID: <CABOkKT3ir=bRAmD-pgQOsM_EfPsThtzVnhhY16e_A3suBe5sgg@mail.gmail.com>
 Subject: Re: [PATCH v5 3/5] vmcore: Introduce remap_oldmem_pfn_range()
 From: HATAYAMA Daisuke <d.hatayama@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -104,25 +104,14 @@ Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan W
 >         src = index << PAGE_CACHE_SHIFT;
 >         buf = (void *) (page_to_pfn(page) << PAGE_SHIFT);
 >         __read_vmcore(buf, PAGE_SIZE, &src, 0);
+
+You should check return value of __read_vmcore() since this can fail.
+Then, I think returning VM_FAULT_SIGBUS is correct.
+
 >         unlock_page(page);
 >         vmf->page = page;
 >         return 0;
 > }
->
-> I agree that this makes the function simpler but we have to copy
-> the page also if it has already been filled, correct?
->
-
-You can use for the purpose PG_uptodate flag.
-
-> But since normally only one process uses /proc/vmcore this might be
-> acceptable.
->
-> BTW: I also removed the VM_FAULT_MAJOR/MINOR because I think the fault
-> handler should return 0 if a page has been found.
->
-> Michael
->
 
 Thanks.
 HATAYAMA, Daisuke
