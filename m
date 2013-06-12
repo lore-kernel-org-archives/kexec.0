@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ob0-x231.google.com ([2607:f8b0:4003:c01::231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UmZKK-0001fn-7Q
- for kexec@lists.infradead.org; Wed, 12 Jun 2013 00:54:17 +0000
-Received: by mail-ob0-f177.google.com with SMTP id ta17so12402324obb.22
- for <kexec@lists.infradead.org>; Tue, 11 Jun 2013 17:53:52 -0700 (PDT)
+ id 1UmZod-00026m-3n
+ for kexec@lists.infradead.org; Wed, 12 Jun 2013 01:25:35 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <E1UmXSQ-0008Nq-27@eag09.americas.sgi.com>
+Date: Tue, 11 Jun 2013 18:24:24 -0700
+In-Reply-To: <E1UmXSQ-0008Nq-27@eag09.americas.sgi.com> (Cliff Wickman's
+ message of "Tue, 11 Jun 2013 17:54:30 -0500")
+Message-ID: <87wqq0ruif.fsf@xmission.com>
 MIME-Version: 1.0
-In-Reply-To: <875D89B79D1D86448A583A7302C022A054E844AA@G9W0337.americas.hpqcorp.net>
-References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
- <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
- <51B19DF3.2070009@jp.fujitsu.com>
- <CAErSpo6dfEnzriHD_aWZB_3E-kSzauhNRHPd+VuFX5HONVKgqw@mail.gmail.com>
- <51B6BEDB.3000509@jp.fujitsu.com>
- <875D89B79D1D86448A583A7302C022A054E844AA@G9W0337.americas.hpqcorp.net>
-From: Bjorn Helgaas <bhelgaas@google.com>
-Date: Tue, 11 Jun 2013 18:53:32 -0600
-Message-ID: <CAErSpo6wDNfeHE+5pVo1nCNVGEyU18PxPk_xnCjy0Pe0jx1tyw@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
+Subject: Re: kexec: purgatory hang
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,105 +23,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Sumner, William" <bill.sumner@hp.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "ddutile@redhat.com" <ddutile@redhat.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>
+To: Cliff Wickman <cpw@sgi.com>
+Cc: yinghai@kernel.org, kexec@lists.infradead.org
 
-[Your quoting is messed up below]
->> This is Takao's text
-> This is Bill's text
+Cliff Wickman <cpw@sgi.com> writes:
 
-On Tue, Jun 11, 2013 at 5:19 PM, Sumner, William <bill.sumner@hp.com> wrote:
->>(2013/06/11 11:20), Bjorn Helgaas wrote:
->>> On Fri, Jun 7, 2013 at 2:46 AM, Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
-
->>Actually Vivek Goyal, kdump maintainer said same thing. He proposed using
->>reset_devices instead of adding new one, and using quirk or something to
->>avoid such a buggy devices.
+> I'm getting a hang when trying to enter a high-memory crash kernel,
+> and I'm at a loss as to how to debug this.
 >
-> With respect to "and using quirk or something to avoid such buggy devices",
-> I believe that it will be necessary to provide a mechanism for devices that
-> need special handling to do the reset ...
-
-You mean something like pci_dev_specific_reset()?
-
->>So, basically I agree with using reset_devices, but I want to prepare
->>workaround in case this reset causes something wrong.
->>
-> I like the ability to specify the original "reset_devices" separately from
-> invoking this new mechanism.  With so many different uses for Linux in
-> so many different environments and with so many different device drivers
-> it seems reasonable to keep the ability to tell the device drivers to
-> reset their devices -- instead of pulling the reset line on all devices.
-
-The problem with adding new options for this and that is it confuses
-users and fragments testing.  Users already randomly try options and
-publish combinations that happen to work as "solutions."  Then we
-don't get problem reports and don't get a chance to fix things
-properly.  The ideal OS would have zero options and be able to figure
-everything out by itself.  So that's my bias about giving users
-flexibility by adding new options -- I don't like it, and I think we
-have to accept some lack of flexibility to keep the system complexity
-tractable  :)
-
-> ...
-> Thinking out of the box:
-> Much of the discussion about dealing with the ongoing DMA leftover
-> from the system kernel has assumed that the crash kernel will reset
-> the IOMMU -- which causes various problems if done while there is any DMA
-> still active -- which leads to the idea of stopping all of the DMA.
+> This is a 3.10.0-rc3 kernel, and set up as the crash kernel by kexec 2.0.4.
+> The machine is an SGI UV1000.
 >
-> Suppose the crash kernel does not reset the hardware IOMMU, but simply
-> detects that it is active, resets only the devices that are necessary
-> for the crash kernel to operate, and re-programs only the translations
-> for those devices.  All other translations remain the same (and remain valid)
-> so all leftover DMA continues into its buffer in the system kernel area
-> where it is harmless.  New translations needed by the kdump kernel are
-> added to the existing tables.
+> [  164.027275] SysRq : Trigger a crash
+> [  164.031136] BUG: unable to handle kernel NULL pointer dereference at           (null)
+> [  164.031136] IP: [<ffffffff81397771>] sysrq_handle_crash+0x11/0x20
+> [  164.031136] PGD 1fbe835067 PUD 1fbc2e8067 PMD 0 
+> [  164.031136] Oops: 0002 [#1] SMP 
+> [  164.031136] xpc : all partitions have deactivated
+> [  164.031136] Modules linked in: autofs4 binfmt_misc af_packet rdma_ucm rdma_cm iw_cm ib_addr ib_srp scsi_transport_srp scsi_tgt ib_ipoib ib_cm ib_uverbs ib_umad iw_cxgb3 cxgb3 mdio mlx4_en mlx4_ib ib_sa mlx4_core ib_mthca ib_mad ib_core fuse nls_iso8859_1 nls_cp437 vfat fat loop uv_mmtimer dm_mod sr_mod cdrom usb_storage iTCO_wdt iTCO_vendor_support coretemp mperf kvm_intel ipv6 kvm igb sg crc32c_intel lpc_ich pcspkr mptctl i2c_algo_bit ptp i2c_i801 microcode xhci_hcd joydev ioatdma ehci_pci hid_generic pps_core i2c_core rtc_cmos mfd_core button dca usbhid hid uhci_hcd ehci_hcd usbcore usb_common sd_mod crc_t10dif scsi_dh_hp_sw scsi_dh_alua scsi_dh_emc scsi_dh_rdac scsi_dh thermal sata_nv processor piix mptsas mptscsih scsi_transport_sas mptbase megaraid_sas fan thermal_sys hwmon ext3 jbd ata_piix ahci libahci libata scsi_mod
+> [  164.031136] CPU: 10 PID: 9299 Comm: dopanic Not tainted 3.10.0-rc3-linus-cpw+ #17
+> [  164.031136] Hardware name: Intel Corp. Stoutland Platform, BIOS 2.16 UEFI2.10 PI1.0 X64 2012-04-27
+> [  164.031136] task: ffff88203df94440 ti: ffff88203d5c2000 task.ti: ffff88203d5c2000
+> [  164.031136] RIP: 0010:[<ffffffff81397771>]  [<ffffffff81397771>] sysrq_handle_crash+0x11/0x20
+> [  164.031136] RSP: 0018:ffff88203d5c3e68  EFLAGS: 00010092
+> [  164.031136] RAX: 000000000000000f RBX: ffffffff81a974e0 RCX: 0000000000000004
+> [  164.031136] RDX: 0000000000000000 RSI: ffff881fffd0ef48 RDI: 0000000000000063
+> [  164.031136] RBP: ffff88203d5c3e68 R08: ffff881fffd0d3e8 R09: 000000000004268c
+> [  164.031136] R10: 0000000000000b8b R11: 0000000000000000 R12: 0000000000000063
+> [  164.031136] R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000296
+> [  164.031136] FS:  00007ffff7fb5700(0000) GS:ffff881fffd00000(0000) knlGS:0000000000000000
+> [  164.031136] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  164.031136] CR2: 0000000000000000 CR3: 0000001fbea6c000 CR4: 00000000000007e0
+> [  164.031136] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  164.031136] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+> [  164.031136] Stack:
+> [  164.031136]  ffff88203d5c3ea8 ffffffff81398008 01ff88203d5c3e88 0000000000000002
+> [  164.031136]  ffff895f9d478380 ffff88203d5c3f40 00007ffff7ff8000 ffff88203d5c3f40
+> [  164.031136]  ffff88203d5c3ec8 ffffffff813980ad ffff88203d5c3ee8 fffffffffffffffb
+> [  164.031136] Call Trace:
+> [  164.031136]  [<ffffffff81398008>] __handle_sysrq+0x128/0x190
+> [  164.031136]  [<ffffffff813980ad>] write_sysrq_trigger+0x3d/0x40
+> [  164.031136]  [<ffffffff811c323f>] proc_reg_write+0x4f/0x80
+> [  164.031136]  [<ffffffff8115f107>] vfs_write+0xe7/0x190
+> [  164.031136]  [<ffffffff8115f8ec>] SyS_write+0x5c/0xa0
+> [  164.031136]  [<ffffffff8153c092>] system_call_fastpath+0x16/0x1b
+> [  164.031136] Code: 00 48 8b 75 e8 48 81 c7 08 08 00 00 e8 09 c6 19 00 31 d2 eb 95 90 90 90 90 90 55 c7 05 f5 74 96 00 01 00 00 00 48 89 e5 0f ae f8 <c6> 04 25 00 00 00 00 01 c9 c3 0f 1f 44 00 00 8d 47 d0 55 83 f8 
+> [  164.031136] RIP  [<ffffffff81397771>] sysrq_handle_crash+0x11/0x20
+> [  164.031136]  RSP <ffff88203d5c3e68>
+> [  164.031136] CR2: 0000000000000000
 >
-> I have not yet tried this, so I am not ready to propose it as anything more
-> than a discussion topic at this time.
+> This is always the last output.
 >
-> It might work this way: (A small modification to case 3a above)
+> Can anyone suggest any way to debug this problem?  
 >
-> IOMMU on in system kernel, kdump kernel accepts active IOMMU
->    system kernel enables IOMMU
->       DMA targets IOMMU-mapped system-kernel memory
->    kexec to kdump kernel (IOMMU on, devices untouched)
->       DMA targets IOMMU-mapped system-kernel memory
->    kdump kernel detects active IOMMU and doesn't touch it
->       DMA targets IOMMU-mapped system-kernel memory
->    kdump kernel does not re-initialize IOMMU hardware
->    kdump kernel initializes IOMMU in-memory management structures
->    kdump kernel calls device drivers' standard initialization functions
->       Drivers initialize their own devices -- DMA from that device stops
->       When drivers request new DMA mappings, the kdump IOMMU driver:
->       1. Updates its in-memory mgt structures for that device & range
->       2. Updates IOMMU translate tables for that device & range
->          . Translations for all other devices & ranges are unchanged
->       3. Flushes IOMMU TLB to force IOMMU hardware update
+> I suppose I can hang the processor just before it executes machine_kexec()
+> and look at it with crash.  Any suggestions as to what to look at?
 
-This is certainly an interesting idea.
+Hmm.  You can enable print statements in purgatory.c.  There is a
+command line switch that allows pugatory to print to a serial console.
+That should be a simple easy thing to try.
 
-It would require some additional smarts in the IOMMU driver to take
-over existing page tables.  Those data structures from the system
-kernel are outside the memory map known to the kdump kernel, so
-there'd likely be VM issues there.  The IOMMU driver would also have
-to be able to reconstruct the state for the bus address space
-allocator, e.g., use the I/O page tables to rebuild a bitmap of
-allocated space.
+I am totally lost as to the status of the patches to make all of this
+work right.  But the change to let purgator work above 4G was merged
+early so hopefully it is not a problem in kexec.
 
-We'll end up with a bunch of dma_map() calls from the system kernel
-that don't have corresponding dma_unmap()s.  I guess when a driver
-initializes its device, there might have to be a new interface to
-"unmap any existing mappings for this device, even though I don't know
-what they are."
+You might also want to enable early printk in the crash dump kernel.
+Sometimes kernels get confused on the way up and we hang there.
 
-I think it's possible, but it sounds like quite a lot of work and I'm
-not sure it's worth it for this relatively limited use case.  And it's
-more IOMMU-specific than a "reset devices" strategy, so most of it
-would have to be done in each IOMMU driver.
-
-Bjorn
+Eric
 
 _______________________________________________
 kexec mailing list
