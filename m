@@ -1,32 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from mail-ob0-x231.google.com ([2607:f8b0:4003:c01::231])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UmYJ2-0000qV-Uv
- for kexec@lists.infradead.org; Tue, 11 Jun 2013 23:48:54 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 783FC3EE0BD
- for <kexec@lists.infradead.org>; Wed, 12 Jun 2013 08:48:24 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 67D4945DEB6
- for <kexec@lists.infradead.org>; Wed, 12 Jun 2013 08:48:24 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 527D445DEB5
- for <kexec@lists.infradead.org>; Wed, 12 Jun 2013 08:48:24 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4494C1DB803B
- for <kexec@lists.infradead.org>; Wed, 12 Jun 2013 08:48:24 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id F03EB1DB803E
- for <kexec@lists.infradead.org>; Wed, 12 Jun 2013 08:48:23 +0900 (JST)
-Message-ID: <51B7B728.9000803@jp.fujitsu.com>
-Date: Wed, 12 Jun 2013 08:47:52 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+ id 1UmZKK-0001fn-7Q
+ for kexec@lists.infradead.org; Wed, 12 Jun 2013 00:54:17 +0000
+Received: by mail-ob0-f177.google.com with SMTP id ta17so12402324obb.22
+ for <kexec@lists.infradead.org>; Tue, 11 Jun 2013 17:53:52 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 5/5] s390/vmcore: Use vmcore for zfcpdump
-References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1370624161-2298-6-git-send-email-holzheu@linux.vnet.ibm.com>
-In-Reply-To: <1370624161-2298-6-git-send-email-holzheu@linux.vnet.ibm.com>
+In-Reply-To: <875D89B79D1D86448A583A7302C022A054E844AA@G9W0337.americas.hpqcorp.net>
+References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
+ <51B19DF3.2070009@jp.fujitsu.com>
+ <CAErSpo6dfEnzriHD_aWZB_3E-kSzauhNRHPd+VuFX5HONVKgqw@mail.gmail.com>
+ <51B6BEDB.3000509@jp.fujitsu.com>
+ <875D89B79D1D86448A583A7302C022A054E844AA@G9W0337.americas.hpqcorp.net>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Date: Tue, 11 Jun 2013 18:53:32 -0600
+Message-ID: <CAErSpo6wDNfeHE+5pVo1nCNVGEyU18PxPk_xnCjy0Pe0jx1tyw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,40 +25,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "Sumner, William" <bill.sumner@hp.com>
+Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "ddutile@redhat.com" <ddutile@redhat.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>
 
-(2013/06/08 1:56), Michael Holzheu wrote:
-<cut>
-> @@ -82,6 +116,43 @@ int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
->   }
+[Your quoting is messed up below]
+>> This is Takao's text
+> This is Bill's text
+
+On Tue, Jun 11, 2013 at 5:19 PM, Sumner, William <bill.sumner@hp.com> wrote:
+>>(2013/06/11 11:20), Bjorn Helgaas wrote:
+>>> On Fri, Jun 7, 2013 at 2:46 AM, Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
+
+>>Actually Vivek Goyal, kdump maintainer said same thing. He proposed using
+>>reset_devices instead of adding new one, and using quirk or something to
+>>avoid such a buggy devices.
 >
->   /*
-> + * Remap "oldmem" for zfcpdump
-> + *
-> + * We only map available memory above ZFCPDUMP_HSA_SIZE. Memory below
-> + * ZFCPDUMP_HSA_SIZE is read on demand using the copy_oldmem_page() function.
-> + */
-> +static int remap_oldmem_pfn_range_zfcpdump(struct vm_area_struct *vma,
-> +					   unsigned long from,
-> +					   unsigned long pfn,
-> +					   unsigned long size, pgprot_t prot)
-> +{
-> +	unsigned long size_hsa;
-> +
-> +	if (pfn < ZFCPDUMP_HSA_SIZE >> PAGE_SHIFT) {
-> +		size_hsa = min(size, OLDMEM_SIZE - (pfn << PAGE_SHIFT));
+> With respect to "and using quirk or something to avoid such buggy devices",
+> I believe that it will be necessary to provide a mechanism for devices that
+> need special handling to do the reset ...
 
-ZFCPDUMP_HSA_SIZE?
+You mean something like pci_dev_specific_reset()?
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+>>So, basically I agree with using reset_devices, but I want to prepare
+>>workaround in case this reset causes something wrong.
+>>
+> I like the ability to specify the original "reset_devices" separately from
+> invoking this new mechanism.  With so many different uses for Linux in
+> so many different environments and with so many different device drivers
+> it seems reasonable to keep the ability to tell the device drivers to
+> reset their devices -- instead of pulling the reset line on all devices.
 
+The problem with adding new options for this and that is it confuses
+users and fragments testing.  Users already randomly try options and
+publish combinations that happen to work as "solutions."  Then we
+don't get problem reports and don't get a chance to fix things
+properly.  The ideal OS would have zero options and be able to figure
+everything out by itself.  So that's my bias about giving users
+flexibility by adding new options -- I don't like it, and I think we
+have to accept some lack of flexibility to keep the system complexity
+tractable  :)
+
+> ...
+> Thinking out of the box:
+> Much of the discussion about dealing with the ongoing DMA leftover
+> from the system kernel has assumed that the crash kernel will reset
+> the IOMMU -- which causes various problems if done while there is any DMA
+> still active -- which leads to the idea of stopping all of the DMA.
+>
+> Suppose the crash kernel does not reset the hardware IOMMU, but simply
+> detects that it is active, resets only the devices that are necessary
+> for the crash kernel to operate, and re-programs only the translations
+> for those devices.  All other translations remain the same (and remain valid)
+> so all leftover DMA continues into its buffer in the system kernel area
+> where it is harmless.  New translations needed by the kdump kernel are
+> added to the existing tables.
+>
+> I have not yet tried this, so I am not ready to propose it as anything more
+> than a discussion topic at this time.
+>
+> It might work this way: (A small modification to case 3a above)
+>
+> IOMMU on in system kernel, kdump kernel accepts active IOMMU
+>    system kernel enables IOMMU
+>       DMA targets IOMMU-mapped system-kernel memory
+>    kexec to kdump kernel (IOMMU on, devices untouched)
+>       DMA targets IOMMU-mapped system-kernel memory
+>    kdump kernel detects active IOMMU and doesn't touch it
+>       DMA targets IOMMU-mapped system-kernel memory
+>    kdump kernel does not re-initialize IOMMU hardware
+>    kdump kernel initializes IOMMU in-memory management structures
+>    kdump kernel calls device drivers' standard initialization functions
+>       Drivers initialize their own devices -- DMA from that device stops
+>       When drivers request new DMA mappings, the kdump IOMMU driver:
+>       1. Updates its in-memory mgt structures for that device & range
+>       2. Updates IOMMU translate tables for that device & range
+>          . Translations for all other devices & ranges are unchanged
+>       3. Flushes IOMMU TLB to force IOMMU hardware update
+
+This is certainly an interesting idea.
+
+It would require some additional smarts in the IOMMU driver to take
+over existing page tables.  Those data structures from the system
+kernel are outside the memory map known to the kdump kernel, so
+there'd likely be VM issues there.  The IOMMU driver would also have
+to be able to reconstruct the state for the bus address space
+allocator, e.g., use the I/O page tables to rebuild a bitmap of
+allocated space.
+
+We'll end up with a bunch of dma_map() calls from the system kernel
+that don't have corresponding dma_unmap()s.  I guess when a driver
+initializes its device, there might have to be a new interface to
+"unmap any existing mappings for this device, even though I don't know
+what they are."
+
+I think it's possible, but it sounds like quite a lot of work and I'm
+not sure it's worth it for this relatively limited use case.  And it's
+more IOMMU-specific than a "reset devices" strategy, so most of it
+would have to be done in each IOMMU driver.
+
+Bjorn
 
 _______________________________________________
 kexec mailing list
