@@ -1,30 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e32.co.us.ibm.com ([32.97.110.150])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UnQyO-0003cl-DV
- for kexec@lists.infradead.org; Fri, 14 Jun 2013 10:11:13 +0000
-Received: from /spool/local
- by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
- Fri, 14 Jun 2013 04:10:47 -0600
-Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
- [9.17.195.226])
- by d03dlp02.boulder.ibm.com (Postfix) with ESMTP id 68A5F3E40042
- for <kexec@lists.infradead.org>; Fri, 14 Jun 2013 04:09:49 -0600 (MDT)
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
- by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r5EAA65k152986
- for <kexec@lists.infradead.org>; Fri, 14 Jun 2013 04:10:06 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
- by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- r5EAA59Q026216
- for <kexec@lists.infradead.org>; Fri, 14 Jun 2013 04:10:05 -0600
-Message-ID: <51BAEBFA.3080204@in.ibm.com>
-Date: Fri, 14 Jun 2013 15:40:02 +0530
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UnZ8q-0006bq-Iw
+ for kexec@lists.infradead.org; Fri, 14 Jun 2013 18:54:33 +0000
+Date: Fri, 14 Jun 2013 14:54:02 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
+Message-ID: <20130614185401.GL12023@redhat.com>
+References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Cross architecture analysis for Crash
+Content-Disposition: inline
+In-Reply-To: <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,50 +20,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, crash-utiliy@redhat.com
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, anderson@redhat.com
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-Hi,
+On Fri, Jun 07, 2013 at 06:55:57PM +0200, Michael Holzheu wrote:
 
-We have been working on enabling 'cross' analysis support for
-Crash, where the target and the host differ in endian-ness.
+[..]
+> @@ -935,10 +967,17 @@ static int __init vmcore_init(void)
+>  {
+>  	int rc = 0;
+>  
+> -	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
+> -	if (!(is_vmcore_usable()))
+> -		return rc;
+> +	/*
+> +	 * If elfcorehdr= has not been passed in cmdline, try to get the
+> +	 * header from 2nd kernel, then capture the dump.
+> +	 */
+> +	if (!(is_vmcore_usable())) {
+> +		rc = elfcorehdr_alloc();
+> +		if (rc)
+> +			return rc;
+> +	}
 
-For e.g, analysing a powerpc dump on an Intel box.
+Hi Michael,
 
-This would be useful for debugging the dumps captured on an
-embedded board (say ppc44x), on a normal desktop PC(Intel based).
+Patch description says that elfcorehdr_alloc() returns the addr and 
+size of elf headers. But that does not seem to be the case here. Has
+it been modified in later patches.
 
-While the patches are being tested for 'Crash' utility we came
-across a problem with the analysis of the compressed dump formats(aka 
-diskdump). There is no information about the endian-ness of the dump
-unlike the ELF format. Hence, we need to embed this information during
-the makedumpfile processing of vmcores.
+Also will it be better if we call elfcorehdr_alloc() always and then
+check for is_vmcore_usable().
 
-Here are some of the options we thought about :
+Something like.
 
-1) Interpret the new_utsname.machine and decode the endian-ness/word
-size.
+elfcorehdr_addr = elfcorehdr_alloc()
+if (elfcorehdr_addr < )
+	return elfcorehdr_addr
 
-2) Extend the signature string to contain information about the
-endian-ness / word size.
-
-	e.g, KDUMPB64 - for KDUMP, BigEndian 64bit
-
-Since we don't know the endian-ness yet, we may not be able to use any
-of the other fields which are 'int' or 'long' (e.g, status)
-
-I am looking for suggestions or directions on the approach to add this
-information.
+if (!(is_vmcore_usable()))
+	return error
 
 Thanks
-Suzuki
-
-
-
+Vivek
 
 _______________________________________________
 kexec mailing list
