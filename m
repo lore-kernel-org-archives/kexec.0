@@ -1,18 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UpIWI-0003V7-AS
- for kexec@lists.infradead.org; Wed, 19 Jun 2013 13:33:55 +0000
-Received: from relay1.suse.de (unknown [195.135.220.254])
- by mx2.suse.de (Postfix) with ESMTP id 50BB8A52D8
- for <kexec@lists.infradead.org>; Wed, 19 Jun 2013 15:33:29 +0200 (CEST)
-Date: Wed, 19 Jun 2013 15:33:29 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: Cross architecture analysis for Crash
-Message-ID: <20130619153329.1bae4324@azariah.suse.cz>
-In-Reply-To: <51BAEBFA.3080204@in.ibm.com>
-References: <51BAEBFA.3080204@in.ibm.com>
-Mime-Version: 1.0
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UpSKe-0008SO-U3
+ for kexec@lists.infradead.org; Thu, 20 Jun 2013 00:02:35 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 81DA03EE0BB
+ for <kexec@lists.infradead.org>; Thu, 20 Jun 2013 09:02:02 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 7405F45DE56
+ for <kexec@lists.infradead.org>; Thu, 20 Jun 2013 09:02:02 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5B32B45DE55
+ for <kexec@lists.infradead.org>; Thu, 20 Jun 2013 09:02:02 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4EDCB1DB8049
+ for <kexec@lists.infradead.org>; Thu, 20 Jun 2013 09:02:02 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 079841DB8048
+ for <kexec@lists.infradead.org>; Thu, 20 Jun 2013 09:02:02 +0900 (JST)
+Message-ID: <51C24656.1080509@jp.fujitsu.com>
+Date: Thu, 20 Jun 2013 09:01:26 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] makedumpfile: add missing options to man page or help
+References: <fc047066a6f5ba18f02838f4b3e89006917db4a5.1371632010.git.bhe@redhat.com>
+In-Reply-To: <fc047066a6f5ba18f02838f4b3e89006917db4a5.1371632010.git.bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +34,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
-On Fri, 14 Jun 2013 15:40:02 +0530
-"Suzuki K. Poulose" <suzuki@in.ibm.com> wrote:
+(2013/06/19 17:55), Baoquan He wrote:
+> makedumpfile has some options which has two 2 forms, long option
+> and short option. E.g. --help  |  -h
+>
+> In man page and help, only one of them are presented, user may complain
+> of this. Here add missing options.
+>
 
-> Hi,
-> 
-> We have been working on enabling 'cross' analysis support for
-> Crash, where the target and the host differ in endian-ness.
-> 
-> For e.g, analysing a powerpc dump on an Intel box.
-> 
-> This would be useful for debugging the dumps captured on an
-> embedded board (say ppc44x), on a normal desktop PC(Intel based).
-> 
-> While the patches are being tested for 'Crash' utility we came
-> across a problem with the analysis of the compressed dump formats(aka 
-> diskdump). There is no information about the endian-ness of the dump
-> unlike the ELF format. Hence, we need to embed this information during
-> the makedumpfile processing of vmcores.
-> 
-> Here are some of the options we thought about :
-> 
-> 1) Interpret the new_utsname.machine and decode the endian-ness/word
-> size.
-> 
-> 2) Extend the signature string to contain information about the
-> endian-ness / word size.
-> 
-> 	e.g, KDUMPB64 - for KDUMP, BigEndian 64bit
+I guess the maintainer does so intentionally, I'm not sure of course. Characters for short options is limited resource, but now makedumpfile has considerably many options. We can no longer assign reasonable letters to each functionality with short options. For example, please look at the definition of longopts:
 
-I had the same issue with a dump identification tool. I ended up with
-checking whether the fields are "sane" if interpreted in a specific
-way. You may want to check my code here:
+static struct option longopts[] = {
+         {"split", no_argument, NULL, 's'},
+         {"reassemble", no_argument, NULL, 'r'},
+         {"xen-syms", required_argument, NULL, 'y'},
+         {"xen-vmcoreinfo", required_argument, NULL, 'z'},
+         {"xen_phys_start", required_argument, NULL, 'P'},
+         {"message-level", required_argument, NULL, 'm'},
+         {"vtop", required_argument, NULL, 'V'},
+         {"dump-dmesg", no_argument, NULL, 'M'},
+         {"config", required_argument, NULL, 'C'},
+         {"help", no_argument, NULL, 'h'},
+         {"diskset", required_argument, NULL, 'k'},
+         {"non-cyclic", no_argument, NULL, 'Y'},
+         {"cyclic-buffer", required_argument, NULL, 'Z'},
+         {"eppic", required_argument, NULL, 'S'},
+         {"map-size", required_argument, NULL, 'A'},
+         {0, 0, 0, 0}
+};
 
-http://sourceforge.net/projects/kdumpid/
+I don't see any relationship on the last three options: non-cyclic vs Y, cyclic-buffer vs Z, eppic vs S and map-size vs A. I don't think there are users who use short options for these features.
 
-I agree that this is ugly and a better approach would be to store the
-information in the header, but then you would not be able to read
-legacy dumps, which is a major drawback.
+One of my solution is conversely to delete short options, and I don't think it problem because the short options are only implicitly exported without explicit description on such as manual page and help message.
 
-BTW how far did you get with a cross-platform crash? I did some research
-on this subject earlier, so maybe I can help you avoid some dead ends..?
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-HTH,
-Petr Tesarik
 
 _______________________________________________
 kexec mailing list
