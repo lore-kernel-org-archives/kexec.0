@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UpYcd-0004XZ-6Q
- for kexec@lists.infradead.org; Thu, 20 Jun 2013 06:45:33 +0000
-Date: Thu, 20 Jun 2013 15:43:34 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UpZqc-0006Ha-Et
+ for kexec@lists.infradead.org; Thu, 20 Jun 2013 08:04:03 +0000
+Message-ID: <51C2B749.7050609@redhat.com>
+Date: Thu, 20 Jun 2013 16:03:21 +0800
+From: Baoquan <bhe@redhat.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH] makedumpfile: add missing options to man page or help
-Message-Id: <20130620154334.33a09ca47ec66a1c834db08e@mxc.nes.nec.co.jp>
-In-Reply-To: <51C28E41.2080903@redhat.com>
 References: <fc047066a6f5ba18f02838f4b3e89006917db4a5.1371632010.git.bhe@redhat.com>
  <51C24656.1080509@jp.fujitsu.com> <51C28E41.2080903@redhat.com>
-Mime-Version: 1.0
+ <20130620154334.33a09ca47ec66a1c834db08e@mxc.nes.nec.co.jp>
+In-Reply-To: <20130620154334.33a09ca47ec66a1c834db08e@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,80 +24,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: bhe@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
 
-Hello Baoquan and HATAYAMA-san,
+On 06/20/2013 02:43 PM, Atsushi Kumagai wrote:
 
-On Thu, 20 Jun 2013 13:08:17 +0800
-Baoquan <bhe@redhat.com> wrote:
-
-> On 06/20/2013 08:01 AM, HATAYAMA Daisuke wrote:
-> 
-> > 
-> >> makedumpfile has some options which has two 2 forms, long option
-> >> and short option. E.g. --help  |  -h
-> >>
-> >> In man page and help, only one of them are presented, user may complain
-> >> of this. Here add missing options.
-> >>
-> > 
-> > I guess the maintainer does so intentionally, I'm not sure of course.
-> > Characters for short options is limited resource, but now makedumpfile
-> > has considerably many options. We can no longer assign reasonable
-> > letters to each functionality with short options. For example, please
-> > look at the definition of longopts:
-
-That's right, some letters assigned to recent feature have no reason.
-So, they aren't suitable to be exported explicitly for users.
-
-> > 
-> > static struct option longopts[] = {
-> >         {"split", no_argument, NULL, 's'},
-> >         {"reassemble", no_argument, NULL, 'r'},
-> >         {"xen-syms", required_argument, NULL, 'y'},
-> >         {"xen-vmcoreinfo", required_argument, NULL, 'z'},
-> >         {"xen_phys_start", required_argument, NULL, 'P'},
-> >         {"message-level", required_argument, NULL, 'm'},
-> >         {"vtop", required_argument, NULL, 'V'},
-> >         {"dump-dmesg", no_argument, NULL, 'M'},
-> >         {"config", required_argument, NULL, 'C'},
-> >         {"help", no_argument, NULL, 'h'},
-> >         {"diskset", required_argument, NULL, 'k'},
-> >         {"non-cyclic", no_argument, NULL, 'Y'},
-> >         {"cyclic-buffer", required_argument, NULL, 'Z'},
-> >         {"eppic", required_argument, NULL, 'S'},
-> >         {"map-size", required_argument, NULL, 'A'},
-> >         {0, 0, 0, 0}
-> > };
-> > 
-> > I don't see any relationship on the last three options: non-cyclic vs Y,
-> > cyclic-buffer vs Z, eppic vs S and map-size vs A. I don't think there
-> > are users who use short options for these features.
-> 
-> 
-> Hi,
-> 
-> Thanks for telling. I totally understand that unmarched letters between
-> long and short options are truly annoying. But like current code, only
-> presenting long options in man page and help may cause complaint from QA
-> or customers.
-> 
-> > 
-> > One of my solution is conversely to delete short options, and I don't
-> > think it problem because the short options are only implicitly exported
-> > without explicit description on such as manual page and help message.
-> 
-> 
-> Yeah, deleting short options is also a good method, let's wait and see
-> what the maintainer say.
-
-I agree to delete short options.
-Could you re-send the patch ?
+>>> > > 
+>>> > > One of my solution is conversely to delete short options, and I don't
+>>> > > think it problem because the short options are only implicitly exported
+>>> > > without explicit description on such as manual page and help message.
+>> > 
+>> > 
+>> > Yeah, deleting short options is also a good method, let's wait and see
+>> > what the maintainer say.
+> I agree to delete short options.
+> Could you re-send the patch ?
 
 
-Thanks
-Atsushi Kumagai
+Sure, will try to repost.
+
+Baoquan
+Thanks a lot
 
 _______________________________________________
 kexec mailing list
