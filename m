@@ -1,17 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UpZqc-0006Ha-Et
- for kexec@lists.infradead.org; Thu, 20 Jun 2013 08:04:03 +0000
-Message-ID: <51C2B749.7050609@redhat.com>
-Date: Thu, 20 Jun 2013 16:03:21 +0800
-From: Baoquan <bhe@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: add missing options to man page or help
-References: <fc047066a6f5ba18f02838f4b3e89006917db4a5.1371632010.git.bhe@redhat.com>
- <51C24656.1080509@jp.fujitsu.com> <51C28E41.2080903@redhat.com>
- <20130620154334.33a09ca47ec66a1c834db08e@mxc.nes.nec.co.jp>
-In-Reply-To: <20130620154334.33a09ca47ec66a1c834db08e@mxc.nes.nec.co.jp>
+Message-ID: <1371764587.12068.5.camel@smoke>
+Subject: [PATCH] arm: Fix out of tree build error
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 20 Jun 2013 14:43:07 -0700
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +16,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org
 
-On 06/20/2013 02:43 PM, Atsushi Kumagai wrote:
+Prefix local include paths with $(srcdir)/.
 
->>> > > 
->>> > > One of my solution is conversely to delete short options, and I don't
->>> > > think it problem because the short options are only implicitly exported
->>> > > without explicit description on such as manual page and help message.
->> > 
->> > 
->> > Yeah, deleting short options is also a good method, let's wait and see
->> > what the maintainer say.
-> I agree to delete short options.
-> Could you re-send the patch ?
+Fixes build errors like these when building for ARM out of the source tree:
+
+  cc1: fatal error: kexec/arch/arm/crashdump-arm.h: No such file or directory
+
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ kexec/arch/arm/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
+index 682db78..38137d7 100644
+--- a/kexec/arch/arm/Makefile
++++ b/kexec/arch/arm/Makefile
+@@ -4,8 +4,8 @@
+ include $(srcdir)/kexec/libfdt/Makefile.libfdt
+ 
+ arm_FS2DT              = kexec/fs2dt.c
+-arm_FS2DT_INCLUDE      = -include kexec/arch/arm/crashdump-arm.h \
+-                         -include kexec/arch/arm/kexec-arm.h
++arm_FS2DT_INCLUDE      = -include $(srcdir)/kexec/arch/arm/crashdump-arm.h \
++                         -include $(srcdir)/kexec/arch/arm/kexec-arm.h
+ 
+ arm_KEXEC_SRCS=  kexec/arch/arm/kexec-elf-rel-arm.c
+ arm_KEXEC_SRCS+= kexec/arch/arm/kexec-zImage-arm.c
+-- 
+1.8.1.2
 
 
-Sure, will try to repost.
 
-Baoquan
-Thanks a lot
 
 _______________________________________________
 kexec mailing list
