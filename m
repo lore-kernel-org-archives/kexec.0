@@ -1,34 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uq1ZC-00037A-MK
- for kexec@lists.infradead.org; Fri, 21 Jun 2013 13:39:55 +0000
-Received: from /spool/local
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 21 Jun 2013 14:35:04 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com
- (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id D42E71B08023
- for <kexec@lists.infradead.org>; Fri, 21 Jun 2013 14:39:27 +0100 (BST)
-Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
- [9.149.37.212])
- by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r5LDdGw340566936
- for <kexec@lists.infradead.org>; Fri, 21 Jun 2013 13:39:16 GMT
-Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r5LDdQFK030927
- for <kexec@lists.infradead.org>; Fri, 21 Jun 2013 07:39:26 -0600
-Date: Fri, 21 Jun 2013 15:39:24 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 0/5] kdump: Allow ELF header creation in new kernel
-Message-ID: <20130621153924.1d3ad4c5@holzheu>
-In-Reply-To: <20130614185454.GM12023@redhat.com>
-References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <20130614185454.GM12023@redhat.com>
-Mime-Version: 1.0
+Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Uq29h-0004BA-MW
+ for kexec@lists.infradead.org; Fri, 21 Jun 2013 14:17:38 +0000
+Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
+ by relay3.corp.sgi.com (Postfix) with ESMTP id 4B56EAC008
+ for <kexec@lists.infradead.org>; Fri, 21 Jun 2013 07:17:15 -0700 (PDT)
+Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
+ by estes.americas.sgi.com (Postfix) with ESMTP id 03C3D700341F
+ for <kexec@lists.infradead.org>; Fri, 21 Jun 2013 09:17:15 -0500 (CDT)
+Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
+ (envelope-from <cpw@sgi.com>) id 1Uq29K-0004kW-Vd
+ for kexec@lists.infradead.org; Fri, 21 Jun 2013 09:17:15 -0500
+Subject: 32TB kdump
+Message-Id: <E1Uq29K-0004kW-Vd@eag09.americas.sgi.com>
+From: Cliff Wickman <cpw@sgi.com>
+Date: Fri, 21 Jun 2013 09:17:14 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,33 +24,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
+To: kexec@lists.infradead.org
 
-On Fri, 14 Jun 2013 14:54:54 -0400
-Vivek Goyal <vgoyal@redhat.com> wrote:
 
-> On Fri, Jun 07, 2013 at 06:55:56PM +0200, Michael Holzheu wrote:
-> 
-> [..]
-> > In this patch series I did not include the discussed ELF header swap trick
-> > patch because with the ELF header read functions this patch currently is
-> > not necessary.
-> 
-> Michael,
-> 
-> Would be good to this change atleast in a separate patch series so that
-> we have common mechanism across arches and understanding code becomes
-> easier.
+I have been testing recent kernel and kexec-tools for doing kdump of large
+memories, and found good results.
 
-Ok fine, we can do that in a separate patch series on top.
+--------------------------------
+UV2000  memory: 32TB  crashkernel=2G@4G
+command line  /usr/bin/makedumpfile --non-cylic -c --message-level 23 -d 31 \
+   --map-size 4096 -x /boot/vmlinux-3.10.0-rc5-linus-cpw+ /proc/vmcore \
+   /tmp/cpw/dumpfile
 
-Michael
+page scanning  570 sec.
+copying data  5795 sec. (72G)
+(The data copy ran out of disk space at 23%, so the time and size above are
+ extrapolated.)
 
+--------------------------------
+UV1000  memory: 8.85TB  crashkernel=1G@5G
+command line  /usr/bin/makedumpfile --non-cylic -c --message-level 23 -d 31 \
+   --map-size 4096 -x /boot/vmlinux-3.9.6-cpw-medusa /proc/vmcore \
+   /tmp/cpw/dumpfile
+
+page scanning  175 sec.
+copying data  2085 sec. (15G)
+(The data copy ran out of disk space at 60%, so the time and size above are
+ extrapolated.)
+
+Notes/observations:
+- These systems were idle, so this is the capture of basically system
+  memory only.
+- Both stable 3.9.6 and 3.10.0-rc5 worked.
+- Use of crashkernel=1G,high was usually problematic.  I assume some problem
+  with a conflict with something else using high memory.  I always use
+  the form like 1G@5G, finding memory by examining /proc/iomem.
+- Time for copying data is dominated by data compression.  Writing 15G of
+  compressed data to /dev/null takes about 35min.  Writing the same data
+  but uncompressed (140G) to /dev/null takes about 6min.
+  So a good workaround for a very large system might be to dump uncompressed
+  to an SSD.
+  The multi-threading of the crash kernel would produce a big gain.
+- Use of mmap on /proc/vmcore increased page scanning speed from 4.4 minutes
+  to 3 minutes.  It also increased data copying speed (unexpectedly) from
+  38min. to 35min.
+  So I think it is worthwhile to push Hatayama's 9-patch set into the kernel.
+- I applied a 5-patch set from Takao Indoh to fix reset_devices handling of
+  PCI devices.
+  And I applied 3 kernel hacks of my own:
+    - making a "Crash kernel low" section in /proc/iomem
+    - make crashkernel avoid some things in pci_swiotlb_detect_override(),
+      pci_swiotlb_detect_4gb() and register_mem_sect_under_node()
+    - doing a crashkernel return from cpu_up()
+  I don't understand why these should be necessary for my kernels but are
+  not reported as problems elsewhere. I'm still investigating and will discuss
+  those patches separately.
+- my makedumpfile is an mmap-using version, with about 10 patches applied. I'll
+  check which of those are not in the common version and discuss separately.
+- my kexec is version 2.0.4 with 3 patches applied. I'll check which of those
+  are not in the common version and discuss separately.
+
+-Cliff
 
 _______________________________________________
 kexec mailing list
