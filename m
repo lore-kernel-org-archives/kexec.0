@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UsIXA-0002Kr-3X
- for kexec@lists.infradead.org; Thu, 27 Jun 2013 20:11:17 +0000
-Date: Thu, 27 Jun 2013 15:10:47 -0500
-From: Cliff Wickman <cpw@sgi.com>
+ id 1UsIjb-0002nH-Th
+ for kexec@lists.infradead.org; Thu, 27 Jun 2013 20:24:05 +0000
+Date: Thu, 27 Jun 2013 16:23:34 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
-Message-ID: <20130627201047.GB28477@sgi.com>
+Message-ID: <20130627202334.GL4899@redhat.com>
 References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
  <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
- <20130614185401.GL12023@redhat.com> <20130621161703.751b5f23@holzheu>
+ <20130614185401.GL12023@redhat.com>
+ <20130621161703.751b5f23@holzheu>
  <20130627193202.GK4899@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -26,8 +27,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
 On Thu, Jun 27, 2013 at 03:32:02PM -0400, Vivek Goyal wrote:
 > On Fri, Jun 21, 2013 at 04:17:03PM +0200, Michael Holzheu wrote:
@@ -88,206 +89,28 @@ On Thu, Jun 27, 2013 at 03:32:02PM -0400, Vivek Goyal wrote:
 > pieces depdendent on elfcorehdr_addr. I think sometime later we can
 > have a separate variable to track track whether this is kdump kernel
 > and remove dependency on elfcorehdr_addr being set.
-> 
-> 
-> So I am fine with this patch.
 
-I would like to endorse this whole vmcore series.  It greatly speeds the
-writing of a system dump.
+Hi Michael,
 
-In my recent tests these patches cut 16% to 58% off the time to create a
-dump, depending on the size of the system.
-On an idle 117G memory, for example, the patches reduced the time from 4.8
-minutes to 2.0 minutes.  (the savings are less pronounced on a bigger
-system)
+Thinking more about it, I think let us cleanup with this little ugly
+bit too so that future changes become easy.
 
--Cliff
+Current convention is that elfcorehdr_addr and elfcorehdr_size are
+already set by arch code by the time vmcore.c starts reading it. Can't
+s390 allocate elf headers in early boot code and elfcorehdr_addr? Then
+we don't have to call elfcorehdr_alloc().
 
-> 
-> Vivek
-> 
-> > ---
-> >  fs/proc/vmcore.c           |   65 +++++++++++++++++++++++++++++++++++++--------
-> >  include/linux/crash_dump.h |    6 ++++
-> >  2 files changed, 60 insertions(+), 11 deletions(-)
-> > 
-> > --- a/fs/proc/vmcore.c
-> > +++ b/fs/proc/vmcore.c
-> > @@ -123,6 +123,36 @@ static ssize_t read_from_oldmem(char *bu
-> >  	return read;
-> >  }
-> >  
-> > +/*
-> > + * Architectures may override this function to allocate ELF header in 2nd kernel
-> > + */
-> > +int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +/*
-> > + * Architectures may override this function to free header
-> > + */
-> > +void __weak elfcorehdr_free(unsigned long long addr)
-> > +{}
-> > +
-> > +/*
-> > + * Architectures may override this function to read from ELF header
-> > + */
-> > +ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-> > +{
-> > +	return read_from_oldmem(buf, count, ppos, 0);
-> > +}
-> > +
-> > +/*
-> > + * Architectures may override this function to read from notes sections
-> > + */
-> > +ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
-> > +{
-> > +	return read_from_oldmem(buf, count, ppos, 0);
-> > +}
-> > +
-> >  /* Read from the ELF header and then the crash dump. On error, negative value is
-> >   * returned otherwise number of bytes read are returned.
-> >   */
-> > @@ -322,7 +352,7 @@ static int __init update_note_header_siz
-> >  		notes_section = kmalloc(max_sz, GFP_KERNEL);
-> >  		if (!notes_section)
-> >  			return -ENOMEM;
-> > -		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
-> > +		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
-> >  		if (rc < 0) {
-> >  			kfree(notes_section);
-> >  			return rc;
-> > @@ -409,7 +439,8 @@ static int __init copy_notes_elf64(const
-> >  		if (phdr_ptr->p_type != PT_NOTE)
-> >  			continue;
-> >  		offset = phdr_ptr->p_offset;
-> > -		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
-> > +		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
-> > +					   &offset);
-> >  		if (rc < 0)
-> >  			return rc;
-> >  		notes_buf += phdr_ptr->p_memsz;
-> > @@ -510,7 +541,7 @@ static int __init update_note_header_siz
-> >  		notes_section = kmalloc(max_sz, GFP_KERNEL);
-> >  		if (!notes_section)
-> >  			return -ENOMEM;
-> > -		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
-> > +		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
-> >  		if (rc < 0) {
-> >  			kfree(notes_section);
-> >  			return rc;
-> > @@ -597,7 +628,8 @@ static int __init copy_notes_elf32(const
-> >  		if (phdr_ptr->p_type != PT_NOTE)
-> >  			continue;
-> >  		offset = phdr_ptr->p_offset;
-> > -		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
-> > +		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
-> > +					   &offset);
-> >  		if (rc < 0)
-> >  			return rc;
-> >  		notes_buf += phdr_ptr->p_memsz;
-> > @@ -793,7 +825,7 @@ static int __init parse_crash_elf64_head
-> >  	addr = elfcorehdr_addr;
-> >  
-> >  	/* Read Elf header */
-> > -	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf64_Ehdr), &addr, 0);
-> > +	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf64_Ehdr), &addr);
-> >  	if (rc < 0)
-> >  		return rc;
-> >  
-> > @@ -820,7 +852,7 @@ static int __init parse_crash_elf64_head
-> >  	if (!elfcorebuf)
-> >  		return -ENOMEM;
-> >  	addr = elfcorehdr_addr;
-> > -	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
-> > +	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
-> >  	if (rc < 0)
-> >  		goto fail;
-> >  
-> > @@ -849,7 +881,7 @@ static int __init parse_crash_elf32_head
-> >  	addr = elfcorehdr_addr;
-> >  
-> >  	/* Read Elf header */
-> > -	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf32_Ehdr), &addr, 0);
-> > +	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf32_Ehdr), &addr);
-> >  	if (rc < 0)
-> >  		return rc;
-> >  
-> > @@ -875,7 +907,7 @@ static int __init parse_crash_elf32_head
-> >  	if (!elfcorebuf)
-> >  		return -ENOMEM;
-> >  	addr = elfcorehdr_addr;
-> > -	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
-> > +	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
-> >  	if (rc < 0)
-> >  		goto fail;
-> >  
-> > @@ -902,7 +934,7 @@ static int __init parse_crash_elf_header
-> >  	int rc=0;
-> >  
-> >  	addr = elfcorehdr_addr;
-> > -	rc = read_from_oldmem(e_ident, EI_NIDENT, &addr, 0);
-> > +	rc = elfcorehdr_read(e_ident, EI_NIDENT, &addr);
-> >  	if (rc < 0)
-> >  		return rc;
-> >  	if (memcmp(e_ident, ELFMAG, SELFMAG) != 0) {
-> > @@ -935,7 +967,14 @@ static int __init vmcore_init(void)
-> >  {
-> >  	int rc = 0;
-> >  
-> > -	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
-> > +	/* Allow architectures to allocate ELF header in 2nd kernel */
-> > +	rc = elfcorehdr_alloc(&elfcorehdr_addr, &elfcorehdr_size);
-> > +	if (rc)
-> > +		return rc;
-> > +	/*
-> > +	 * If elfcorehdr= has been passed in cmdline or created in 2nd kernel,
-> > +	 * then capture the dump.
-> > +	 */
-> >  	if (!(is_vmcore_usable()))
-> >  		return rc;
-> >  	rc = parse_crash_elf_headers();
-> > @@ -943,7 +982,11 @@ static int __init vmcore_init(void)
-> >  		pr_warn("Kdump: vmcore not initialized\n");
-> >  		return rc;
-> >  	}
-> > -
-> > +	elfcorehdr_free(elfcorehdr_addr);
-> > +	/*
-> > +	 * elfcorehdr_addr must not be set to NULL here to keep
-> > +	 * is_kdump_kernel() working.
-> > +	 */
-> >  	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
-> >  	if (proc_vmcore)
-> >  		proc_vmcore->size = vmcore_size;
-> > --- a/include/linux/crash_dump.h
-> > +++ b/include/linux/crash_dump.h
-> > @@ -12,6 +12,12 @@
-> >  extern unsigned long long elfcorehdr_addr;
-> >  extern unsigned long long elfcorehdr_size;
-> >  
-> > +extern int __weak elfcorehdr_alloc(unsigned long long *addr,
-> > +				   unsigned long long *size);
-> > +extern void __weak elfcorehdr_free(unsigned long long addr);
-> > +extern ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos);
-> > +extern ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos);
-> > +
-> >  extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
-> >  						unsigned long, int);
-> >  
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+And once we are done with reading headers, we can call elfcorehdr_free()
+and s390 could free memory and set elfcorehdr_addr to ELFCORE_ADDR_ERR
+and elfcorehdr_size=0. That would signify that one can not try to read
+elf headers now and it must have been freed.
 
--- 
-Cliff Wickman
-SGI
-cpw@sgi.com
-(651) 683-3824
+is_kdump_kernel() will continue to work as elfcorehdr_addr is
+ELFCORE_ADDR_ERR. And that will mean that either elfcorehdr were not
+readable/usable to begin with or they have been freed now.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
