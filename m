@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UsIjb-0002nH-Th
- for kexec@lists.infradead.org; Thu, 27 Jun 2013 20:24:05 +0000
-Date: Thu, 27 Jun 2013 16:23:34 -0400
+ id 1UsJZc-0003m0-Vr
+ for kexec@lists.infradead.org; Thu, 27 Jun 2013 21:17:50 +0000
+Date: Thu, 27 Jun 2013 17:17:25 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
-Message-ID: <20130627202334.GL4899@redhat.com>
-References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
- <20130614185401.GL12023@redhat.com>
- <20130621161703.751b5f23@holzheu>
- <20130627193202.GK4899@redhat.com>
+Subject: Re: 32TB kdump
+Message-ID: <20130627211725.GM4899@redhat.com>
+References: <E1Uq29K-0004kW-Vd@eag09.americas.sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130627193202.GK4899@redhat.com>
+In-Reply-To: <E1Uq29K-0004kW-Vd@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,87 +23,126 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
+To: Cliff Wickman <cpw@sgi.com>
+Cc: kexec@lists.infradead.org
 
-On Thu, Jun 27, 2013 at 03:32:02PM -0400, Vivek Goyal wrote:
-> On Fri, Jun 21, 2013 at 04:17:03PM +0200, Michael Holzheu wrote:
-> > On Fri, 14 Jun 2013 14:54:02 -0400
-> > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > 
-> > > On Fri, Jun 07, 2013 at 06:55:57PM +0200, Michael Holzheu wrote:
-> > > 
-> > > [..]
-> > > > @@ -935,10 +967,17 @@ static int __init vmcore_init(void)
-> > > >  {
-> > > >  	int rc = 0;
-> > > >  
-> > > > -	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
-> > > > -	if (!(is_vmcore_usable()))
-> > > > -		return rc;
-> > > > +	/*
-> > > > +	 * If elfcorehdr= has not been passed in cmdline, try to get the
-> > > > +	 * header from 2nd kernel, then capture the dump.
-> > > > +	 */
-> > > > +	if (!(is_vmcore_usable())) {
-> > > > +		rc = elfcorehdr_alloc();
-> > > > +		if (rc)
-> > > > +			return rc;
-> > > > +	}
-> > > 
-> > > Hi Michael,
-> > > 
-> > > Patch description says that elfcorehdr_alloc() returns the addr and 
-> > > size of elf headers. But that does not seem to be the case here. Has
-> > > it been modified in later patches.
-> > 
-> > Sorry, that is a relict of one of my previous experiments where I tried
-> > to implement elfcorehdr_addr() similar to the way as you suggest it now.
-> > Because elfcorehdr_addr is a global variable, I decided to not pass
-> > it in the functions. But of course I can change that again if you prefer
-> > that.
-> >  
-> > > Also will it be better if we call elfcorehdr_alloc() always and then
-> > > check for is_vmcore_usable().
-> > > 
-> > > Something like.
-> > > 
-> > > elfcorehdr_addr = elfcorehdr_alloc()
-> > > if (elfcorehdr_addr < )
-> > > 	return elfcorehdr_addr
-> > > 
-> > > if (!(is_vmcore_usable()))
-> > > 	return error
-> > 
-> > Ok, but then I think elfcorehdr_alloc() should also return
-> > the elfcorehdr_size.
-> > 
-> > So what about the following patch:
+On Fri, Jun 21, 2013 at 09:17:14AM -0500, Cliff Wickman wrote:
 > 
-> This patch looks good to me. There are little ugly pieces w.r.t not
-> setting elfcorehdr_addr null after calling free() as there are other
-> pieces depdendent on elfcorehdr_addr. I think sometime later we can
-> have a separate variable to track track whether this is kdump kernel
-> and remove dependency on elfcorehdr_addr being set.
+> I have been testing recent kernel and kexec-tools for doing kdump of large
+> memories, and found good results.
+> 
+> --------------------------------
+> UV2000  memory: 32TB  crashkernel=2G@4G
 
-Hi Michael,
+> command line  /usr/bin/makedumpfile --non-cylic -c --message-level 23 -d 31 \
+>    --map-size 4096 -x /boot/vmlinux-3.10.0-rc5-linus-cpw+ /proc/vmcore \
+>    /tmp/cpw/dumpfile
 
-Thinking more about it, I think let us cleanup with this little ugly
-bit too so that future changes become easy.
+Is --cyclic mode significantly slower for above configuration? Now cyclic
+mode already uses 80% of available memory (I guess we are little
+conservative and could bump it to 90 - 95% of available memory). That
+should mean that by default cyclic mode should be as fast as non-cyclic
+mode.
 
-Current convention is that elfcorehdr_addr and elfcorehdr_size are
-already set by arch code by the time vmcore.c starts reading it. Can't
-s390 allocate elf headers in early boot code and elfcorehdr_addr? Then
-we don't have to call elfcorehdr_alloc().
+Added benefit is that even if one reserves less memory, cyclic mode
+will atleast be able to save dump (at the cost of some time).
 
-And once we are done with reading headers, we can call elfcorehdr_free()
-and s390 could free memory and set elfcorehdr_addr to ELFCORE_ADDR_ERR
-and elfcorehdr_size=0. That would signify that one can not try to read
-elf headers now and it must have been freed.
+> 
+> page scanning  570 sec.
+> copying data  5795 sec. (72G)
+> (The data copy ran out of disk space at 23%, so the time and size above are
+>  extrapolated.)
 
-is_kdump_kernel() will continue to work as elfcorehdr_addr is
-ELFCORE_ADDR_ERR. And that will mean that either elfcorehdr were not
-readable/usable to begin with or they have been freed now.
+That's almost 110 mins. Approximately 2 hrs to dump. I think it is still
+a lot. How many people can afford to keep a machine dumping for 2hrs. They
+would rather bring the servies back online.
+
+So more work needed in scalability area. And page scanning seems to have
+been not too bad. Copying data has taken majority of time. Is it because
+of slow disk.
+
+BTW, in non-cyclic mode, 32TB physical memory will require 2G just for
+bitmap (2bits per 4K page).  And then you require some memory for
+other stuff (around 128MB). I am not sure how did it work for you just
+by reserving 2G of RAM.
+
+> 
+> --------------------------------
+> UV1000  memory: 8.85TB  crashkernel=1G@5G
+> command line  /usr/bin/makedumpfile --non-cylic -c --message-level 23 -d 31 \
+>    --map-size 4096 -x /boot/vmlinux-3.9.6-cpw-medusa /proc/vmcore \
+>    /tmp/cpw/dumpfile
+> 
+> page scanning  175 sec.
+> copying data  2085 sec. (15G)
+> (The data copy ran out of disk space at 60%, so the time and size above are
+>  extrapolated.)
+> 
+> Notes/observations:
+> - These systems were idle, so this is the capture of basically system
+>   memory only.
+> - Both stable 3.9.6 and 3.10.0-rc5 worked.
+> - Use of crashkernel=1G,high was usually problematic.  I assume some problem
+>   with a conflict with something else using high memory.  I always use
+>   the form like 1G@5G, finding memory by examining /proc/iomem.
+
+Hmm..., do you think you need to reserve some low mem too for swiotlb. (In
+case you are not using iommu).
+
+> - Time for copying data is dominated by data compression.  Writing 15G of
+>   compressed data to /dev/null takes about 35min.  Writing the same data
+>   but uncompressed (140G) to /dev/null takes about 6min.
+
+Try using snappy or lzo for faster compression.
+
+>   So a good workaround for a very large system might be to dump uncompressed
+>   to an SSD.
+
+Interesting.
+
+>   The multi-threading of the crash kernel would produce a big gain.
+
+Hatayama once was working on patches to bring up multiple cpus in second
+kernel. Not sure what happened to those patches.
+
+> - Use of mmap on /proc/vmcore increased page scanning speed from 4.4 minutes
+>   to 3 minutes.  It also increased data copying speed (unexpectedly) from
+>   38min. to 35min.
+
+Hmm.., so on large memory systems, mmap() will not help a lot? In those
+systems dump times are dominidated by disk speed and compression time.
+
+So far I was thinking that ioremap() per page was big issue and you
+also once had done the analysis that passing page list to kernel made
+things significantly faster.
+
+So on 32TB machines if it is taking 2hrs to save dump and mmap() shortens
+it by only few minutes, it really is not significant win.
+
+>   So I think it is worthwhile to push Hatayama's 9-patch set into the kernel.
+
+I think his patches are in --mm tree and should show up in next kernel
+realease. But it really does not sound much in overall scheme of things.
+
+> - I applied a 5-patch set from Takao Indoh to fix reset_devices handling of
+>   PCI devices.
+>   And I applied 3 kernel hacks of my own:
+>     - making a "Crash kernel low" section in /proc/iomem
+
+And you did it because crashkernel=2G,high crashkernel=XM,low did not
+work for you?
+
+>     - make crashkernel avoid some things in pci_swiotlb_detect_override(),
+>       pci_swiotlb_detect_4gb() and register_mem_sect_under_node()
+>     - doing a crashkernel return from cpu_up()
+>   I don't understand why these should be necessary for my kernels but are
+>   not reported as problems elsewhere. I'm still investigating and will discuss
+>   those patches separately.
+
+Nobody might have tested it yet on such large machines and these problems
+might be present for everyone.
+
+So would be great if you could fix these in upstream kernel.
 
 Thanks
 Vivek
