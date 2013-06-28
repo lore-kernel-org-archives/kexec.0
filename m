@@ -1,17 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UsTpS-0006Sz-Ly
- for kexec@lists.infradead.org; Fri, 28 Jun 2013 08:14:51 +0000
-Received: from int-mx02.intmail.prod.int.phx2.redhat.com
- (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id r5S8ETqD008351
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Fri, 28 Jun 2013 04:14:29 -0400
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 1/2] makedumpfile: Assign non-printable value as short options
-Date: Fri, 28 Jun 2013 16:13:51 +0800
-Message-Id: <3bf9ad39c659faf5e4cb03545c83d50f81d7962f.1372407106.git.bhe@redhat.com>
+Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UsTqx-0006Vf-BG
+ for kexec@lists.infradead.org; Fri, 28 Jun 2013 08:16:24 +0000
+Received: from /spool/local
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Fri, 28 Jun 2013 09:13:31 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com
+ (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3F6C51B08023
+ for <kexec@lists.infradead.org>; Fri, 28 Jun 2013 09:15:56 +0100 (BST)
+Received: from d06av10.portsmouth.uk.ibm.com (d06av10.portsmouth.uk.ibm.com
+ [9.149.37.251])
+ by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r5S8FifD54460448
+ for <kexec@lists.infradead.org>; Fri, 28 Jun 2013 08:15:44 GMT
+Received: from d06av10.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av10.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r5S8FtQN002970
+ for <kexec@lists.infradead.org>; Fri, 28 Jun 2013 02:15:55 -0600
+Date: Fri, 28 Jun 2013 10:15:52 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
+Message-ID: <20130628101552.68aab404@holzheu>
+In-Reply-To: <20130627202334.GL4899@redhat.com>
+References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
+ <20130614185401.GL12023@redhat.com>
+ <20130621161703.751b5f23@holzheu>
+ <20130627193202.GK4899@redhat.com>
+ <20130627202334.GL4899@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,252 +41,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Baoquan He <bhe@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-Characters for short options is limited, and now makedumpfile has
-considerably many options. As times go on, no enough reasonable
-letters can be assigned to each functionality with short options.
+On Thu, 27 Jun 2013 16:23:34 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-E.g non-cyclic vs Y, cyclic-buffer vs Z, eppic vs S.
+> On Thu, Jun 27, 2013 at 03:32:02PM -0400, Vivek Goyal wrote:
+> > On Fri, Jun 21, 2013 at 04:17:03PM +0200, Michael Holzheu wrote:
+> > > On Fri, 14 Jun 2013 14:54:02 -0400
+> > > Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Now assign non-printable value to these kind of short optins, meanwhile
-define them as indicative MACRO which can make code more readable.
+[snip]
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- makedumpfile.c | 88 +++++++++++++++++++++++++++++-----------------------------
- makedumpfile.h | 35 +++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 44 deletions(-)
+> Thinking more about it, I think let us cleanup with this little ugly
+> bit too so that future changes become easy.
+> 
+> Current convention is that elfcorehdr_addr and elfcorehdr_size are
+> already set by arch code by the time vmcore.c starts reading it. Can't
+> s390 allocate elf headers in early boot code and elfcorehdr_addr? Then
+> we don't have to call elfcorehdr_alloc().
+> 
+> And once we are done with reading headers, we can call elfcorehdr_free()
+> and s390 could free memory and set elfcorehdr_addr to ELFCORE_ADDR_ERR
+> and elfcorehdr_size=0. That would signify that one can not try to read
+> elf headers now and it must have been freed.
+> 
+> is_kdump_kernel() will continue to work as elfcorehdr_addr is
+> ELFCORE_ADDR_ERR. And that will mean that either elfcorehdr were not
+> readable/usable to begin with or they have been freed now.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b42565c..801eda0 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -8555,20 +8555,20 @@ calculate_cyclic_buffer_size(void) {
- }
- 
- static struct option longopts[] = {
--	{"split", no_argument, NULL, 's'}, 
--	{"reassemble", no_argument, NULL, 'r'},
--	{"xen-syms", required_argument, NULL, 'y'},
--	{"xen-vmcoreinfo", required_argument, NULL, 'z'},
--	{"xen_phys_start", required_argument, NULL, 'P'},
--	{"message-level", required_argument, NULL, 'm'},
--	{"vtop", required_argument, NULL, 'V'},
--	{"dump-dmesg", no_argument, NULL, 'M'}, 
--	{"config", required_argument, NULL, 'C'},
--	{"help", no_argument, NULL, 'h'},
--	{"diskset", required_argument, NULL, 'k'},
--	{"non-cyclic", no_argument, NULL, 'Y'},
--	{"cyclic-buffer", required_argument, NULL, 'Z'},
--	{"eppic", required_argument, NULL, 'S'},
-+	{"split", no_argument, NULL, OPT_SPLIT}, 
-+	{"reassemble", no_argument, NULL, OPT_REASSEMBLE},
-+	{"xen-syms", required_argument, NULL, OPT_XEN_SYMS},
-+	{"xen-vmcoreinfo", required_argument, NULL, OPT_XEN_VMCOREINFO},
-+	{"xen_phys_start", required_argument, NULL, OPT_XEN_PHYS_START},
-+	{"message-level", required_argument, NULL, OPT_MESSAGE_LEVEL},
-+	{"vtop", required_argument, NULL, OPT_VTOP},
-+	{"dump-dmesg", no_argument, NULL, OPT_DUMP_DMESG}, 
-+	{"config", required_argument, NULL, OPT_CONFIG},
-+	{"help", no_argument, NULL, OPT_HELP},
-+	{"diskset", required_argument, NULL, OPT_DISKSET},
-+	{"non-cyclic", no_argument, NULL, OPT_NON_CYCLIC},
-+	{"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
-+	{"eppic", required_argument, NULL, OPT_EPPIC},
- 	{0, 0, 0, 0}
- };
- 
-@@ -8597,29 +8597,29 @@ main(int argc, char *argv[])
- 	
- 	info->block_order = DEFAULT_ORDER;
- 	message_level = DEFAULT_MSG_LEVEL;
--	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:", longopts,
-+	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lpRvXx:", longopts,
- 	    NULL)) != -1) {
- 		switch (opt) {
--		case 'b':
-+		case OPT_BLOCK_ORDER:
- 			info->block_order = atoi(optarg);
- 			break;
--		case 'C':
-+		case OPT_CONFIG:
- 			info->name_filterconfig = optarg;
- 			break;
--		case 'c':
-+		case OPT_COMPRESS_ZLIB:
- 			info->flag_compress = DUMP_DH_COMPRESSED_ZLIB;
- 			break;
--		case 'D':
-+		case OPT_DEBUG:
- 			flag_debug = TRUE;
- 			break;
--		case 'd':
-+		case OPT_DUMP_LEVEL:
- 			if (!parse_dump_level(optarg))
- 				goto out;
- 			break;
--		case 'E':
-+		case OPT_ELF_DUMPFILE:
- 			info->flag_elf_dumpfile = 1;
- 			break;
--		case 'F':
-+		case OPT_FLATTEN:
- 			info->flag_flatten = 1;
- 			/*
- 			 * All messages are output to STDERR because STDOUT is
-@@ -8627,75 +8627,75 @@ main(int argc, char *argv[])
- 			 */
- 			flag_strerr_message = TRUE;
- 			break;
--		case 'f':
-+		case OPT_FORCE:
- 			info->flag_force = 1;
- 			break;
--		case 'g':
-+		case OPT_GENERATE_VMCOREINFO:
- 			info->flag_generate_vmcoreinfo = 1;
- 			info->name_vmcoreinfo = optarg;
- 			break;
--		case 'h':
-+		case OPT_HELP:
- 			info->flag_show_usage = 1;
- 			break;
--		case 'i':
-+		case OPT_READ_VMCOREINFO:
- 			info->flag_read_vmcoreinfo = 1;
- 			info->name_vmcoreinfo = optarg;
- 			break;
--		case 'k':
-+		case OPT_DISKSET:
- 			if (!sadump_add_diskset_info(optarg))
- 				goto out;
- 			info->flag_sadump_diskset = 1;
- 			break;
--		case 'l':
-+		case OPT_COMPRESS_LZO:
- 			info->flag_compress = DUMP_DH_COMPRESSED_LZO;
- 			break;
--		case 'm':
-+		case OPT_MESSAGE_LEVEL:
- 			message_level = atoi(optarg);
- 			break;
--		case 'M':
-+		case OPT_DUMP_DMESG:
- 			info->flag_dmesg = 1;
- 			break;
--		case 'p':
-+		case OPT_COMPRESS_SNAPPY:
- 			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
- 			break;
--		case 'P':
-+		case OPT_XEN_PHYS_START:
- 			info->xen_phys_start = strtoul(optarg, NULL, 0);
- 			break;
--		case 'R':
-+		case OPT_REARRANGE:
- 			info->flag_rearrange = 1;
- 			break;
--		case 's':
-+		case OPT_SPLIT:
- 			info->flag_split = 1;
- 			break;
--		case 'S':
-+		case OPT_EPPIC:
- 			info->name_eppic_config = optarg;
- 			break;
--		case 'r':
-+		case OPT_REASSEMBLE:
- 			info->flag_reassemble = 1;
- 			break;
--		case 'V':
-+		case OPT_VTOP:
- 			info->vaddr_for_vtop = strtoul(optarg, NULL, 0);
- 			break;
--		case 'v':
-+		case OPT_VERSION:
- 			info->flag_show_version = 1;
- 			break;
--		case 'X':
-+		case OPT_EXCLUDE_XEN_DOM:
- 			info->flag_exclude_xen_dom = 1;
- 			break;
--		case 'x':
-+		case OPT_VMLINUX:
- 			info->name_vmlinux = optarg;
- 			break;
--		case 'y':
-+		case OPT_XEN_SYMS:
- 			info->name_xen_syms = optarg;
- 			break;
--		case 'Y':
-+		case OPT_NON_CYCLIC:
- 			info->flag_cyclic = FALSE;
- 			break;
--		case 'z':
-+		case OPT_XEN_VMCOREINFO:
- 			info->flag_read_vmcoreinfo = 1;
- 			info->name_vmcoreinfo = optarg;
- 			break;
--		case 'Z':
-+		case OPT_CYCLIC_BUFFER:
- 			info->bufsize_cyclic = atoi(optarg);
- 			break;
- 		case '?':
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 2a6b6f2..0a2198e 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1671,6 +1671,41 @@ struct elf_prstatus {
- #endif
- 
- /*
-+ * Below are options which getopt_long can recognize. From OPT_START options are
-+ * non-printable, just used for implementation.
-+ */
-+#define OPT_BLOCK_ORDER         'b'
-+#define OPT_COMPRESS_ZLIB       'c'
-+#define OPT_DEBUG               'D'
-+#define OPT_DUMP_LEVEL          'd'
-+#define OPT_ELF_DUMPFILE        'E'
-+#define OPT_FLATTEN             'F'
-+#define OPT_FORCE               'f'
-+#define OPT_GENERATE_VMCOREINFO 'g'
-+#define OPT_HELP                'h'
-+#define OPT_READ_VMCOREINFO     'i'
-+#define OPT_COMPRESS_LZO        'l'
-+#define OPT_COMPRESS_SNAPPY     'p'
-+#define OPT_REARRANGE           'R'
-+#define OPT_VERSION             'v'
-+#define OPT_EXCLUDE_XEN_DOM     'X'
-+#define OPT_VMLINUX             'x'
-+#define OPT_START               256
-+#define OPT_SPLIT               OPT_START+0
-+#define OPT_REASSEMBLE          OPT_START+1
-+#define OPT_XEN_SYMS            OPT_START+2
-+#define OPT_XEN_VMCOREINFO      OPT_START+3
-+#define OPT_XEN_PHYS_START      OPT_START+4
-+#define OPT_MESSAGE_LEVEL       OPT_START+5
-+#define OPT_VTOP                OPT_START+6
-+#define OPT_DUMP_DMESG          OPT_START+7
-+#define OPT_CONFIG              OPT_START+8
-+#define OPT_DISKSET             OPT_START+9
-+#define OPT_NON_CYCLIC          OPT_START+10
-+#define OPT_CYCLIC_BUFFER       OPT_START+11
-+#define OPT_EPPIC               OPT_START+12
-+
-+/*
-  * Function Prototype.
-  */
- unsigned long long get_num_dumpable_cyclic(void);
--- 
-1.8.2.1
+Hello Vivek,
+
+We would like to keep the alloc/free symmetry as you have suggested in a
+previous mail. This also has the advantage that we do not have to rely
+on the ordering of init calls.
+
+Wouldn't it be sufficient to just set elfcorehdr_addr to ELFCORE_ADDR_ERR
+after elfcorehdr_free() and remove the comment?
+
+So the code would look like the following:
+
+static int __init vmcore_init(void)
+{
+        int rc = 0;
+
+        /* Allow architectures to allocate ELF header in 2nd kernel */
+        rc = elfcorehdr_alloc(&elfcorehdr_addr, &elfcorehdr_size);
+        if (rc)
+                return rc;
+        /*
+         * If elfcorehdr= has been passed in cmdline or created in 2nd kernel,
+         * then capture the dump.
+         */
+        if (!(is_vmcore_usable()))
+                return rc;
+        rc = parse_crash_elf_headers();
+        if (rc) {
+                pr_warn("Kdump: vmcore not initialized\n");
+                return rc;
+        }
+        elfcorehdr_free(elfcorehdr_addr);
+	elfcorehdr_addr = ELFCORE_ADDR_ERR;
+
+        proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
+        if (proc_vmcore)
+                proc_vmcore->size = vmcore_size;
+        return 0;
+}
+
+This looks clean for me.
+
+What do you think?
+
+Best Regards,
+Michael
 
 
 _______________________________________________
