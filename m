@@ -1,40 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
+Received: from e06smtp13.uk.ibm.com ([195.75.94.109])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Utirs-0004cu-Hl
- for kexec@lists.infradead.org; Mon, 01 Jul 2013 18:30:29 +0000
+ id 1UtjqR-0005ue-Td
+ for kexec@lists.infradead.org; Mon, 01 Jul 2013 19:33:08 +0000
 Received: from /spool/local
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 1 Jul 2013 19:22:26 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id F0670219005F
- for <kexec@lists.infradead.org>; Mon,  1 Jul 2013 19:33:44 +0100 (BST)
-Received: from d06av05.portsmouth.uk.ibm.com (d06av05.portsmouth.uk.ibm.com
- [9.149.37.229])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r61ITpvC26083334
- for <kexec@lists.infradead.org>; Mon, 1 Jul 2013 18:29:51 GMT
-Received: from d06av05.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av05.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r61IU1oN025003
- for <kexec@lists.infradead.org>; Mon, 1 Jul 2013 12:30:01 -0600
-Date: Mon, 1 Jul 2013 20:29:59 +0200
+ Mon, 1 Jul 2013 20:28:27 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id BE15D1B0805F
+ for <kexec@lists.infradead.org>; Mon,  1 Jul 2013 20:32:40 +0100 (BST)
+Received: from d06av10.portsmouth.uk.ibm.com (d06av10.portsmouth.uk.ibm.com
+ [9.149.37.251])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r61JWT1t26542290
+ for <kexec@lists.infradead.org>; Mon, 1 Jul 2013 19:32:29 GMT
+Received: from d06av10.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av10.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r61JWdIu013520
+ for <kexec@lists.infradead.org>; Mon, 1 Jul 2013 13:32:39 -0600
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
-Message-ID: <20130701202959.178a1697@holzheu>
-In-Reply-To: <20130701173727.GD9840@redhat.com>
-References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
- <20130614185401.GL12023@redhat.com>
- <20130621161703.751b5f23@holzheu>
- <20130627193202.GK4899@redhat.com>
- <20130627202334.GL4899@redhat.com>
- <20130628101552.68aab404@holzheu>
- <20130701173727.GD9840@redhat.com>
-Mime-Version: 1.0
+Subject: [PATCH v6 2/5] s390/vmcore: Use ELF header in new memory feature
+Date: Mon,  1 Jul 2013 21:32:36 +0200
+Message-Id: <1372707159-10425-3-git-send-email-holzheu@linux.vnet.ibm.com>
+In-Reply-To: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
+References: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,91 +35,156 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
+To: Vivek Goyal <vgoyal@redhat.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org
 
-On Mon, 1 Jul 2013 13:37:27 -0400
-Vivek Goyal <vgoyal@redhat.com> wrote:
+This patch now exchanges the old relocate mechanism with the new
+arch function call override mechanism that allows to create the ELF
+core header in the 2nd kernel.
 
-> On Fri, Jun 28, 2013 at 10:15:52AM +0200, Michael Holzheu wrote:
-> > On Thu, 27 Jun 2013 16:23:34 -0400
-> > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > 
-> > > On Thu, Jun 27, 2013 at 03:32:02PM -0400, Vivek Goyal wrote:
-> > > > On Fri, Jun 21, 2013 at 04:17:03PM +0200, Michael Holzheu wrote:
-> > > > > On Fri, 14 Jun 2013 14:54:02 -0400
-> > > > > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > 
-> > [snip]
-> > 
-> > > Thinking more about it, I think let us cleanup with this little ugly
-> > > bit too so that future changes become easy.
-> > > 
-> > > Current convention is that elfcorehdr_addr and elfcorehdr_size are
-> > > already set by arch code by the time vmcore.c starts reading it. Can't
-> > > s390 allocate elf headers in early boot code and elfcorehdr_addr? Then
-> > > we don't have to call elfcorehdr_alloc().
-> > > 
-> > > And once we are done with reading headers, we can call elfcorehdr_free()
-> > > and s390 could free memory and set elfcorehdr_addr to ELFCORE_ADDR_ERR
-> > > and elfcorehdr_size=0. That would signify that one can not try to read
-> > > elf headers now and it must have been freed.
-> > > 
-> > > is_kdump_kernel() will continue to work as elfcorehdr_addr is
-> > > ELFCORE_ADDR_ERR. And that will mean that either elfcorehdr were not
-> > > readable/usable to begin with or they have been freed now.
-> > 
-> > Hello Vivek,
-> > 
-> > We would like to keep the alloc/free symmetry as you have suggested in a
-> > previous mail. This also has the advantage that we do not have to rely
-> > on the ordering of init calls.
-> > 
-> > Wouldn't it be sufficient to just set elfcorehdr_addr to ELFCORE_ADDR_ERR
-> > after elfcorehdr_free() and remove the comment?
-> > 
-> 
-> Hi Michael,
-> 
-> This has only one problem and that is what's the initialization semantics
-> of elfcorehdr_addr. 
-> 
-> So far we expected it to be initialized very early in boot process and
-> once this is set, any component in the system could figure out if it
-> is kdump kernel (is_kdump_kernel()) and do kdump specific things.
-> 
-> But if we move initialization of this variable little late, then it
-> might be a problem for early users of is_kdump_kernel(). Though right
-> now I don't see drivers making use of it and only arch specific early
-> boot up code seems to have it.
-> 
-> So either we can stick to existing semantics of initializing headers
-> early or we could create a separate variable for is_kdump_kernel() which
-> is set in early boot and then one can delay initialization of
-> elfcorehdr_addr() in vmcore_init().
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ arch/s390/kernel/crash_dump.c | 81 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 54 insertions(+), 27 deletions(-)
 
-The later makes much sense to me. This would also make the s390 code
-easier to read since we then could exchange some early kdump checks
-with the official is_kdump() function.
-
-Perhaps we can do that as an additional patch after we are ready with
-this patch series.
-
-> 
-> Given the fact that I don't see any users of is_kdump_kernel() in arch
-> independent directory, and I am assuming that you will tackle all early
-> users of is_kdump_kernel() in s390, I will be fine even with your patch
-> below.
-
-Ok great, so I will send you the current patch set version 6 with all the
-discussed changes.
-
-Thanks!
-Michael
+diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
+index f703d91..bfb9cda 100644
+--- a/arch/s390/kernel/crash_dump.c
++++ b/arch/s390/kernel/crash_dump.c
+@@ -22,6 +22,11 @@
+ #define PTR_DIFF(x, y) ((unsigned long)(((char *) (x)) - ((unsigned long) (y))))
+ 
+ /*
++ * Pointer to ELF header in new kernel
++ */
++static void *elfcorehdr_newmem;
++
++/*
+  * Copy one page from "oldmem"
+  *
+  * For the kdump reserved memory this functions performs a swap operation:
+@@ -325,14 +330,6 @@ static int get_mem_chunk_cnt(void)
+ }
+ 
+ /*
+- * Relocate pointer in order to allow vmcore code access the data
+- */
+-static inline unsigned long relocate(unsigned long addr)
+-{
+-	return OLDMEM_BASE + addr;
+-}
+-
+-/*
+  * Initialize ELF loads (new kernel)
+  */
+ static int loads_init(Elf64_Phdr *phdr, u64 loads_offset)
+@@ -383,7 +380,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
+ 	ptr = nt_vmcoreinfo(ptr);
+ 	memset(phdr, 0, sizeof(*phdr));
+ 	phdr->p_type = PT_NOTE;
+-	phdr->p_offset = relocate(notes_offset);
++	phdr->p_offset = notes_offset;
+ 	phdr->p_filesz = (unsigned long) PTR_SUB(ptr, ptr_start);
+ 	phdr->p_memsz = phdr->p_filesz;
+ 	return ptr;
+@@ -392,7 +389,7 @@ static void *notes_init(Elf64_Phdr *phdr, void *ptr, u64 notes_offset)
+ /*
+  * Create ELF core header (new kernel)
+  */
+-static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
++int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
+ {
+ 	Elf64_Phdr *phdr_notes, *phdr_loads;
+ 	int mem_chunk_cnt;
+@@ -400,6 +397,11 @@ static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
+ 	u32 alloc_size;
+ 	u64 hdr_off;
+ 
++	if (!OLDMEM_BASE)
++		return 0;
++	/* If elfcorehdr= has been passed via cmdline, we use that one */
++	if (elfcorehdr_addr != ELFCORE_ADDR_MAX)
++		return 0;
+ 	mem_chunk_cnt = get_mem_chunk_cnt();
+ 
+ 	alloc_size = 0x1000 + get_cpu_cnt() * 0x300 +
+@@ -417,27 +419,52 @@ static void s390_elf_corehdr_create(char **elfcorebuf, size_t *elfcorebuf_sz)
+ 	ptr = notes_init(phdr_notes, ptr, ((unsigned long) hdr) + hdr_off);
+ 	/* Init loads */
+ 	hdr_off = PTR_DIFF(ptr, hdr);
+-	loads_init(phdr_loads, ((unsigned long) hdr) + hdr_off);
+-	*elfcorebuf_sz = hdr_off;
+-	*elfcorebuf = (void *) relocate((unsigned long) hdr);
+-	BUG_ON(*elfcorebuf_sz > alloc_size);
++	loads_init(phdr_loads, hdr_off);
++	*addr = (unsigned long long) hdr;
++	elfcorehdr_newmem = hdr;
++	*size = (unsigned long long) hdr_off;
++	BUG_ON(elfcorehdr_size > alloc_size);
++	return 0;
+ }
+ 
+ /*
+- * Create kdump ELF core header in new kernel, if it has not been passed via
+- * the "elfcorehdr" kernel parameter
++ * Free ELF core header (new kernel)
+  */
+-static int setup_kdump_elfcorehdr(void)
++void elfcorehdr_free(unsigned long long addr)
+ {
+-	size_t elfcorebuf_sz;
+-	char *elfcorebuf;
+-
+-	if (!OLDMEM_BASE || is_kdump_kernel())
+-		return -EINVAL;
+-	s390_elf_corehdr_create(&elfcorebuf, &elfcorebuf_sz);
+-	elfcorehdr_addr = (unsigned long long) elfcorebuf;
+-	elfcorehdr_size = elfcorebuf_sz;
+-	return 0;
++	if (!elfcorehdr_newmem)
++		return;
++	kfree((void *)(unsigned long)addr);
+ }
+ 
+-subsys_initcall(setup_kdump_elfcorehdr);
++/*
++ * Read from ELF header
++ */
++ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
++{
++	void *src = (void *)(unsigned long)*ppos;
++
++	src = elfcorehdr_newmem ? src : src - OLDMEM_BASE;
++	memcpy(buf, src, count);
++	*ppos += count;
++	return count;
++}
++
++/*
++ * Read from ELF notes data
++ */
++ssize_t elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
++{
++	void *src = (void *)(unsigned long)*ppos;
++	int rc;
++
++	if (elfcorehdr_newmem) {
++		memcpy(buf, src, count);
++	} else {
++		rc = copy_from_oldmem(buf, src, count);
++		if (rc)
++			return rc;
++	}
++	*ppos += count;
++	return count;
++}
+-- 
+1.8.2.2
 
 
 _______________________________________________
