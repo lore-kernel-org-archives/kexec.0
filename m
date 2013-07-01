@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UtgiK-0001ZG-SK
- for kexec@lists.infradead.org; Mon, 01 Jul 2013 16:12:29 +0000
-Date: Mon, 1 Jul 2013 12:12:06 -0400
+ id 1Uti32-0003MV-Nb
+ for kexec@lists.infradead.org; Mon, 01 Jul 2013 17:37:58 +0000
+Date: Mon, 1 Jul 2013 13:37:27 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: 32TB kdump
-Message-ID: <20130701161206.GC9840@redhat.com>
-References: <E1Uq29K-0004kW-Vd@eag09.americas.sgi.com>
- <20130627211725.GM4899@redhat.com> <20130628215631.GA11017@sgi.com>
+Subject: Re: [PATCH v5 1/5] vmcore: Introduce ELF header in new memory feature
+Message-ID: <20130701173727.GD9840@redhat.com>
+References: <1370624161-2298-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <1370624161-2298-2-git-send-email-holzheu@linux.vnet.ibm.com>
+ <20130614185401.GL12023@redhat.com>
+ <20130621161703.751b5f23@holzheu>
+ <20130627193202.GK4899@redhat.com>
+ <20130627202334.GL4899@redhat.com>
+ <20130628101552.68aab404@holzheu>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130628215631.GA11017@sgi.com>
+In-Reply-To: <20130628101552.68aab404@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,76 +29,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-On Fri, Jun 28, 2013 at 04:56:31PM -0500, Cliff Wickman wrote:
-
-[..]
-> > > page scanning  570 sec.
-> > > copying data  5795 sec. (72G)
-> > > (The data copy ran out of disk space at 23%, so the time and size above are
-> > >  extrapolated.)
+On Fri, Jun 28, 2013 at 10:15:52AM +0200, Michael Holzheu wrote:
+> On Thu, 27 Jun 2013 16:23:34 -0400
+> Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> > On Thu, Jun 27, 2013 at 03:32:02PM -0400, Vivek Goyal wrote:
+> > > On Fri, Jun 21, 2013 at 04:17:03PM +0200, Michael Holzheu wrote:
+> > > > On Fri, 14 Jun 2013 14:54:02 -0400
+> > > > Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> [snip]
+> 
+> > Thinking more about it, I think let us cleanup with this little ugly
+> > bit too so that future changes become easy.
 > > 
-> > That's almost 110 mins. Approximately 2 hrs to dump. I think it is still
-> > a lot. How many people can afford to keep a machine dumping for 2hrs. They
-> > would rather bring the servies back online.
-> 
-> It is a long time, agreed.  But a vast improvement over the hours and
-> hours (maybe 12 or more) it would have taken just to scan pages before the
-> fix of ioremap() per page.
-
-Which ioremap() fix you are referring to. I thought using mmap() was the
-fix for per page ioremap() issue and that's not showing significant
-improvements. Looks like you are referring to some other makeudmpfile
-changes which I am not aware of.
-
-> A 32T machine is probably a research engine rather than a server, and 2hrs
-> might be pretty acceptable to track down a system bug that's blocking some
-> important application.
->  
-> > So more work needed in scalability area. And page scanning seems to have
-> > been not too bad. Copying data has taken majority of time. Is it because
-> > of slow disk.
-> 
-> I think compression is the bottleneck.
-> 
-> On an idle 2TB machine: (times in seconds)
->                                 copy time
-> uncompressed, to /dev/null      61
-> uncompressed, to file           336    (probably 37G, I extrapolate, disk full)
-> compressed, to /dev/null        387
-> compressed, to file             402    (file 3.7G)
-> 
-> uncompressed disk time  336-61  275
-> compressed disk time    402-387  15
-> compress time           387-61  326
-> 
-
-Ok, so now compression is the biggest bottleneck on large machines.
-
-[..]
-> > > - Use of crashkernel=1G,high was usually problematic.  I assume some problem
-> > >   with a conflict with something else using high memory.  I always use
-> > >   the form like 1G@5G, finding memory by examining /proc/iomem.
+> > Current convention is that elfcorehdr_addr and elfcorehdr_size are
+> > already set by arch code by the time vmcore.c starts reading it. Can't
+> > s390 allocate elf headers in early boot code and elfcorehdr_addr? Then
+> > we don't have to call elfcorehdr_alloc().
 > > 
-> > Hmm..., do you think you need to reserve some low mem too for swiotlb. (In
-> > case you are not using iommu).
+> > And once we are done with reading headers, we can call elfcorehdr_free()
+> > and s390 could free memory and set elfcorehdr_addr to ELFCORE_ADDR_ERR
+> > and elfcorehdr_size=0. That would signify that one can not try to read
+> > elf headers now and it must have been freed.
+> > 
+> > is_kdump_kernel() will continue to work as elfcorehdr_addr is
+> > ELFCORE_ADDR_ERR. And that will mean that either elfcorehdr were not
+> > readable/usable to begin with or they have been freed now.
 > 
-> It is reserving 72M in low mem for swiotlb + 8M.  But this seems not
-> enough.
-> I did not realize that I could specify crashkernel=xxx,high and
-> crashkernel=xxx,low together, until you mentioned it below.  This seems
-> to solve my crashkernel=1G,high problem.  I need to specify
-> crashkernel=128M,low on some systems or else my crash kernel panics on
-> not finding enough low memory.
+> Hello Vivek,
+> 
+> We would like to keep the alloc/free symmetry as you have suggested in a
+> previous mail. This also has the advantage that we do not have to rely
+> on the ordering of init calls.
+> 
+> Wouldn't it be sufficient to just set elfcorehdr_addr to ELFCORE_ADDR_ERR
+> after elfcorehdr_free() and remove the comment?
+> 
 
-Is it possible to dive deeper and figure out why do you need more low
-memory. We might need some fixing in upstream kernel. Otherwise how a
-user would know how much low memory to reserve.
+Hi Michael,
+
+This has only one problem and that is what's the initialization semantics
+of elfcorehdr_addr. 
+
+So far we expected it to be initialized very early in boot process and
+once this is set, any component in the system could figure out if it
+is kdump kernel (is_kdump_kernel()) and do kdump specific things.
+
+But if we move initialization of this variable little late, then it
+might be a problem for early users of is_kdump_kernel(). Though right
+now I don't see drivers making use of it and only arch specific early
+boot up code seems to have it.
+
+So either we can stick to existing semantics of initializing headers
+early or we could create a separate variable for is_kdump_kernel() which
+is set in early boot and then one can delay initialization of
+elfcorehdr_addr() in vmcore_init().
+
+Given the fact that I don't see any users of is_kdump_kernel() in arch
+independent directory, and I am assuming that you will tackle all early
+users of is_kdump_kernel() in s390, I will be fine even with your patch
+below.
 
 Thanks
 Vivek
+
+
+> So the code would look like the following:
+> 
+> static int __init vmcore_init(void)
+> {
+>         int rc = 0;
+> 
+>         /* Allow architectures to allocate ELF header in 2nd kernel */
+>         rc = elfcorehdr_alloc(&elfcorehdr_addr, &elfcorehdr_size);
+>         if (rc)
+>                 return rc;
+>         /*
+>          * If elfcorehdr= has been passed in cmdline or created in 2nd kernel,
+>          * then capture the dump.
+>          */
+>         if (!(is_vmcore_usable()))
+>                 return rc;
+
+>         rc = parse_crash_elf_headers();
+>         if (rc) {
+>                 pr_warn("Kdump: vmcore not initialized\n");
+>                 return rc;
+>         }
+>         elfcorehdr_free(elfcorehdr_addr);
+> 	elfcorehdr_addr = ELFCORE_ADDR_ERR;
+> 
+>         proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
+>         if (proc_vmcore)
+>                 proc_vmcore->size = vmcore_size;
+>         return 0;
+> }
+> 
+> This looks clean for me.  > 
+> What do you think?
+> 
+> Best Regards,
+> Michael
 
 _______________________________________________
 kexec mailing list
