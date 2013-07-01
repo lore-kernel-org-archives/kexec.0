@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Utgd2-0001Qj-V0
- for kexec@lists.infradead.org; Mon, 01 Jul 2013 16:07:01 +0000
-Date: Mon, 1 Jul 2013 12:06:36 -0400
+ id 1UtgiK-0001ZG-SK
+ for kexec@lists.infradead.org; Mon, 01 Jul 2013 16:12:29 +0000
+Date: Mon, 1 Jul 2013 12:12:06 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: 32TB kdump
-Message-ID: <20130701160635.GB9840@redhat.com>
+Message-ID: <20130701161206.GC9840@redhat.com>
 References: <E1Uq29K-0004kW-Vd@eag09.americas.sgi.com>
- <20130627211725.GM4899@redhat.com>
- <51D0D399.1070501@jp.fujitsu.com>
+ <20130627211725.GM4899@redhat.com> <20130628215631.GA11017@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <51D0D399.1070501@jp.fujitsu.com>
+In-Reply-To: <20130628215631.GA11017@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,68 +24,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, Cliff Wickman <cpw@sgi.com>
+To: Cliff Wickman <cpw@sgi.com>
+Cc: kexec@lists.infradead.org
 
-On Mon, Jul 01, 2013 at 09:55:53AM +0900, HATAYAMA Daisuke wrote:
-> (2013/06/28 6:17), Vivek Goyal wrote:
-> >On Fri, Jun 21, 2013 at 09:17:14AM -0500, Cliff Wickman wrote:
+On Fri, Jun 28, 2013 at 04:56:31PM -0500, Cliff Wickman wrote:
+
+[..]
+> > > page scanning  570 sec.
+> > > copying data  5795 sec. (72G)
+> > > (The data copy ran out of disk space at 23%, so the time and size above are
+> > >  extrapolated.)
+> > 
+> > That's almost 110 mins. Approximately 2 hrs to dump. I think it is still
+> > a lot. How many people can afford to keep a machine dumping for 2hrs. They
+> > would rather bring the servies back online.
 > 
-> >
-> >Try using snappy or lzo for faster compression.
-> >
-> >>   So a good workaround for a very large system might be to dump uncompressed
-> >>   to an SSD.
-> >
-> >Interesting.
-> >
-> >>   The multi-threading of the crash kernel would produce a big gain.
-> >
-> >Hatayama once was working on patches to bring up multiple cpus in second
-> >kernel. Not sure what happened to those patches.
-> >
-> >>- Use of mmap on /proc/vmcore increased page scanning speed from 4.4 minutes
-> >>   to 3 minutes.  It also increased data copying speed (unexpectedly) from
-> >>   38min. to 35min.
-> >
-> >Hmm.., so on large memory systems, mmap() will not help a lot? In those
-> >systems dump times are dominidated by disk speed and compression time.
-> >
-> >So far I was thinking that ioremap() per page was big issue and you
-> >also once had done the analysis that passing page list to kernel made
-> >things significantly faster.
-> >
-> >So on 32TB machines if it is taking 2hrs to save dump and mmap() shortens
-> >it by only few minutes, it really is not significant win.
-> >
+> It is a long time, agreed.  But a vast improvement over the hours and
+> hours (maybe 12 or more) it would have taken just to scan pages before the
+> fix of ioremap() per page.
+
+Which ioremap() fix you are referring to. I thought using mmap() was the
+fix for per page ioremap() issue and that's not showing significant
+improvements. Looks like you are referring to some other makeudmpfile
+changes which I am not aware of.
+
+> A 32T machine is probably a research engine rather than a server, and 2hrs
+> might be pretty acceptable to track down a system bug that's blocking some
+> important application.
+>  
+> > So more work needed in scalability area. And page scanning seems to have
+> > been not too bad. Copying data has taken majority of time. Is it because
+> > of slow disk.
 > 
-> Sorry, I've explained this earlier in this ML.
+> I think compression is the bottleneck.
 > 
-> Some patches have been applied on makedumpfile to improve the filtering speed.
-> Two changes that were useful for the improvement are the one implementing
-> a 8-slot cache for physical page for the purpose of reducing the number of
-> /proc/vmcore access for paging (just as TLB), and the one that cleanups
-> makedumpfile's filtering path.
-
-So biggest performance improvement came from implementing some kind of
-TLB cache in makedumpfile?
-
+> On an idle 2TB machine: (times in seconds)
+>                                 copy time
+> uncompressed, to /dev/null      61
+> uncompressed, to file           336    (probably 37G, I extrapolate, disk full)
+> compressed, to /dev/null        387
+> compressed, to file             402    (file 3.7G)
 > 
-> Performance degradation by ioremap() is now being hided on a single cpu, but
-> it would again occur on multiple cpus. Sorry, but I have yet to do benchmark
-> showing the fact cleanly as numeral values.
+> uncompressed disk time  336-61  275
+> compressed disk time    402-387  15
+> compress time           387-61  326
+> 
 
-IIUC, are you saying that now ioremap() overhead per page is not very
-significant on single cpu system (after above makeudmpfile changes). And
-that's the reason using mmap() does not show a very significant
-improvement in overall scheme of things. And these overheads will become
-more important when multiple cpus are brought up in kdump environment.
+Ok, so now compression is the biggest bottleneck on large machines.
 
-Please correct me if I am wrong, I just want to understand it better. So
-most of our performance problems w.r.t to scanning got solved by
-makeumpdfile changes and mmap() changes bring us only little bit of
-improvements in overall scheme of things on large machines?
+[..]
+> > > - Use of crashkernel=1G,high was usually problematic.  I assume some problem
+> > >   with a conflict with something else using high memory.  I always use
+> > >   the form like 1G@5G, finding memory by examining /proc/iomem.
+> > 
+> > Hmm..., do you think you need to reserve some low mem too for swiotlb. (In
+> > case you are not using iommu).
+> 
+> It is reserving 72M in low mem for swiotlb + 8M.  But this seems not
+> enough.
+> I did not realize that I could specify crashkernel=xxx,high and
+> crashkernel=xxx,low together, until you mentioned it below.  This seems
+> to solve my crashkernel=1G,high problem.  I need to specify
+> crashkernel=128M,low on some systems or else my crash kernel panics on
+> not finding enough low memory.
 
+Is it possible to dive deeper and figure out why do you need more low
+memory. We might need some fixing in upstream kernel. Otherwise how a
+user would know how much low memory to reserve.
+
+Thanks
 Vivek
 
 _______________________________________________
