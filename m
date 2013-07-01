@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UtUX9-0006Hr-Pi
- for kexec@lists.infradead.org; Mon, 01 Jul 2013 03:12:09 +0000
-Date: Mon, 1 Jul 2013 11:57:13 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Utgd2-0001Qj-V0
+ for kexec@lists.infradead.org; Mon, 01 Jul 2013 16:07:01 +0000
+Date: Mon, 1 Jul 2013 12:06:36 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: 32TB kdump
-Message-Id: <20130701115713.f82b4cfb7f5108062cbc7509@mxc.nes.nec.co.jp>
-In-Reply-To: <20130628215631.GA11017@sgi.com>
+Message-ID: <20130701160635.GB9840@redhat.com>
 References: <E1Uq29K-0004kW-Vd@eag09.americas.sgi.com>
- <20130627211725.GM4899@redhat.com> <20130628215631.GA11017@sgi.com>
-Mime-Version: 1.0
+ <20130627211725.GM4899@redhat.com>
+ <51D0D399.1070501@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51D0D399.1070501@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,29 +25,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: cpw@sgi.com
-Cc: kexec@lists.infradead.org, vgoyal@redhat.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, Cliff Wickman <cpw@sgi.com>
 
-On Fri, 28 Jun 2013 16:56:31 -0500
-Cliff Wickman <cpw@sgi.com> wrote:
-
-> I have a small wish list for makedumpfile. Nothing major, but I'll post
-> those later.
+On Mon, Jul 01, 2013 at 09:55:53AM +0900, HATAYAMA Daisuke wrote:
+> (2013/06/28 6:17), Vivek Goyal wrote:
+> >On Fri, Jun 21, 2013 at 09:17:14AM -0500, Cliff Wickman wrote:
 > 
+> >
+> >Try using snappy or lzo for faster compression.
+> >
+> >>   So a good workaround for a very large system might be to dump uncompressed
+> >>   to an SSD.
+> >
+> >Interesting.
+> >
+> >>   The multi-threading of the crash kernel would produce a big gain.
+> >
+> >Hatayama once was working on patches to bring up multiple cpus in second
+> >kernel. Not sure what happened to those patches.
+> >
+> >>- Use of mmap on /proc/vmcore increased page scanning speed from 4.4 minutes
+> >>   to 3 minutes.  It also increased data copying speed (unexpectedly) from
+> >>   38min. to 35min.
+> >
+> >Hmm.., so on large memory systems, mmap() will not help a lot? In those
+> >systems dump times are dominidated by disk speed and compression time.
+> >
+> >So far I was thinking that ioremap() per page was big issue and you
+> >also once had done the analysis that passing page list to kernel made
+> >things significantly faster.
+> >
+> >So on 32TB machines if it is taking 2hrs to save dump and mmap() shortens
+> >it by only few minutes, it really is not significant win.
+> >
 > 
-> Could you give me an estimate when the kexec
->  (as in git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git)
-> and makedumpfile 
->  (as in git://git.code.sf.net/p/makedumpfile/code  mmap branch)
-> will be released?  We would like to advise the distro's about what level
-> of those things we require.
+> Sorry, I've explained this earlier in this ML.
+> 
+> Some patches have been applied on makedumpfile to improve the filtering speed.
+> Two changes that were useful for the improvement are the one implementing
+> a 8-slot cache for physical page for the purpose of reducing the number of
+> /proc/vmcore access for paging (just as TLB), and the one that cleanups
+> makedumpfile's filtering path.
 
-The current *devel* branch will be released as makedumpfile-1.5.4
-in this week. v1.5.4 will supports mmap.
+So biggest performance improvement came from implementing some kind of
+TLB cache in makedumpfile?
 
+> 
+> Performance degradation by ioremap() is now being hided on a single cpu, but
+> it would again occur on multiple cpus. Sorry, but I have yet to do benchmark
+> showing the fact cleanly as numeral values.
 
-Thanks
-Atsushi Kumagai
+IIUC, are you saying that now ioremap() overhead per page is not very
+significant on single cpu system (after above makeudmpfile changes). And
+that's the reason using mmap() does not show a very significant
+improvement in overall scheme of things. And these overheads will become
+more important when multiple cpus are brought up in kdump environment.
+
+Please correct me if I am wrong, I just want to understand it better. So
+most of our performance problems w.r.t to scanning got solved by
+makeumpdfile changes and mmap() changes bring us only little bit of
+improvements in overall scheme of things on large machines?
+
+Vivek
 
 _______________________________________________
 kexec mailing list
