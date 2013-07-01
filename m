@@ -1,32 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp12.uk.ibm.com ([195.75.94.108])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UtjqU-0005ul-GR
- for kexec@lists.infradead.org; Mon, 01 Jul 2013 19:33:14 +0000
-Received: from /spool/local
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 1 Jul 2013 20:27:40 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id EA2541B08061
- for <kexec@lists.infradead.org>; Mon,  1 Jul 2013 20:32:40 +0100 (BST)
-Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
- [9.149.37.252])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r61JWTcb45154538
- for <kexec@lists.infradead.org>; Mon, 1 Jul 2013 19:32:29 GMT
-Received: from d06av11.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av11.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r61JWdhw019949
- for <kexec@lists.infradead.org>; Mon, 1 Jul 2013 13:32:40 -0600
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH v6 5/5] s390/vmcore: Use vmcore for zfcpdump
-Date: Mon,  1 Jul 2013 21:32:39 +0200
-Message-Id: <1372707159-10425-6-git-send-email-holzheu@linux.vnet.ibm.com>
-In-Reply-To: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
-References: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UtkAq-0006PF-C9
+ for kexec@lists.infradead.org; Mon, 01 Jul 2013 19:54:09 +0000
+Date: Mon, 1 Jul 2013 12:53:45 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v8 9/9] vmcore: support mmap() on /proc/vmcore
+Message-Id: <20130701125345.c4a383c7b8345f9c5ae54023@linux-foundation.org>
+In-Reply-To: <CAJGZr0Jwy6OLADBO9GExWVbwG_LMk41ZsSMZKvWmwcA9StVZQA@mail.gmail.com>
+References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
+ <20130523052547.13864.83306.stgit@localhost6.localdomain6>
+ <20130523152445.17549682ae45b5aab3f3cde0@linux-foundation.org>
+ <CAJGZr0LwivLTH+E7WAR1B9_6B4e=jv04KgCUL_PdVpi9JjDpBw@mail.gmail.com>
+ <51A2BBA7.50607@jp.fujitsu.com>
+ <CAJGZr0LmsFXEgb3UXVb+rqo1aq5KJyNxyNAD+DG+3KnJm_ZncQ@mail.gmail.com>
+ <51A71B49.3070003@cn.fujitsu.com>
+ <CAJGZr0Ld6Q4a4f-VObAbvqCp=+fTFNEc6M-Fdnhh28GTcSm1=w@mail.gmail.com>
+ <20130603174351.d04b2ac71d1bab0df242e0ba@mxc.nes.nec.co.jp>
+ <CAJGZr0+9VUweN1Ssdq6P9Lug1GnTB3+RPv77JLRmnw=rpd9+Dw@mail.gmail.com>
+ <51D0C500.4060108@jp.fujitsu.com>
+ <CAJGZr0Jwy6OLADBO9GExWVbwG_LMk41ZsSMZKvWmwcA9StVZQA@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,273 +29,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: riel@redhat.com, hughd@google.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, walken@google.com, cpw@sgi.com, vgoyal@redhat.com
 
-This patch modifies the s390 copy_oldmem_page() and remap_oldmem_pfn_range()
-function for zfcpdump to read from the HSA memory if memory below HSA_SIZE
-bytes is requested. Otherwise real memory is used.
+On Mon, 1 Jul 2013 18:34:43 +0400 Maxim Uvarov <muvarov@gmail.com> wrote:
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- arch/s390/Kconfig             |   3 +-
- arch/s390/include/asm/sclp.h  |   1 +
- arch/s390/kernel/crash_dump.c | 129 +++++++++++++++++++++++++++++++++++-------
- drivers/s390/char/zcore.c     |   6 +-
- 4 files changed, 114 insertions(+), 25 deletions(-)
+> 2013/7/1 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> 
+> > (2013/06/29 1:40), Maxim Uvarov wrote:
+> >
+> >> Did test on 1TB machine. Total vmcore capture and save took 143 minutes
+> >> while vmcore size increased from 9Gb to 59Gb.
+> >>
+> >> Will do some debug for that.
+> >>
+> >> Maxim.
+> >>
+> >
+> > Please show me your kdump configuration file and tell me what you did in
+> > the test and how you confirmed the result.
+> >
+> >
+> Hello Hatayama,
+> 
+> I re-run tests in dev env. I took your latest kernel patchset from
+> patchwork for vmcore + devel branch of makedumpfile + fix to open and write
+> to /dev/null. Run this test on 1Tb memory machine with memory used by some
+> user space processes. crashkernel=384M.
+> 
+> Please see my results for makedumpfile process work:
+> [gzip compression]
+> -c -d31 /dev/null
+> real 37.8 m
+> user 29.51 m
+> sys 7.12 m
+> 
+> [no compression]
+> -d31 /dev/null
+> real 27 m
+> user 23 m
+> sys   4 m
+> 
+> [no compression, disable cyclic mode]
+> -d31 --non-cyclic /dev/null
+> real 26.25 m
+> user 23 m
+> sys 3.13 m
+> 
+> [gzip compression]
+> -c -d31 /dev/null
+> % time     seconds  usecs/call     calls    errors syscall
+> ------ ----------- ----------- --------- --------- ----------------
+>  54.75   38.840351         110    352717           mmap
+>  44.55   31.607620          90    352716         1 munmap
+>   0.70    0.497668           0  25497667           brk
+>   0.00    0.000356           0    111920           write
+>   0.00    0.000280           0    111904           lseek
+>   0.00    0.000025           4         7           open
+>   0.00    0.000000           0       473           read
+>   0.00    0.000000           0         7           close
+>   0.00    0.000000           0         3           fstat
+>   0.00    0.000000           0         1           getpid
+>   0.00    0.000000           0         1           execve
+>   0.00    0.000000           0         1           uname
+>   0.00    0.000000           0         2           unlink
+>   0.00    0.000000           0         1           arch_prctl
+> ------ ----------- ----------- --------- --------- ----------------
+> 100.00   70.946300              26427420         1 total
+> 
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 2c9789d..a0d78f1 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -516,6 +516,7 @@ config CRASH_DUMP
- 	bool "kernel crash dumps"
- 	depends on 64BIT && SMP
- 	select KEXEC
-+	select ZFCPDUMP
- 	help
- 	  Generate crash dump after being started by kexec.
- 	  Crash dump kernels are loaded in the main kernel with kexec-tools
-@@ -526,7 +527,7 @@ config CRASH_DUMP
- config ZFCPDUMP
- 	def_bool n
- 	prompt "zfcpdump support"
--	select SMP
-+	depends on SMP
- 	help
- 	  Select this option if you want to build an zfcpdump enabled kernel.
- 	  Refer to <file:Documentation/s390/zfcpdump.txt> for more details on this.
-diff --git a/arch/s390/include/asm/sclp.h b/arch/s390/include/asm/sclp.h
-index 06a1361..7dc7f9c 100644
---- a/arch/s390/include/asm/sclp.h
-+++ b/arch/s390/include/asm/sclp.h
-@@ -56,5 +56,6 @@ bool sclp_has_linemode(void);
- bool sclp_has_vt220(void);
- int sclp_pci_configure(u32 fid);
- int sclp_pci_deconfigure(u32 fid);
-+int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode);
- 
- #endif /* _ASM_S390_SCLP_H */
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index 9769aa3..9a56989 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -16,6 +16,7 @@
- #include <asm/os_info.h>
- #include <asm/elf.h>
- #include <asm/ipl.h>
-+#include <asm/sclp.h>
- 
- #define PTR_ADD(x, y) (((char *) (x)) + ((unsigned long) (y)))
- #define PTR_SUB(x, y) (((char *) (x)) - ((unsigned long) (y)))
-@@ -27,42 +28,80 @@
- static void *elfcorehdr_newmem;
- 
- /*
-- * Copy one page from "oldmem"
-+ * Copy one page from zfcpdump "oldmem"
-+ *
-+ * For pages below ZFCPDUMP_HSA_SIZE memory from the HSA is copied. Otherwise
-+ * real memory copy is used.
-+ */
-+static ssize_t copy_oldmem_page_zfcpdump(char *buf, size_t csize,
-+					 unsigned long src, int userbuf)
-+{
-+	int rc;
-+
-+	if (src < ZFCPDUMP_HSA_SIZE) {
-+		rc = memcpy_hsa(buf, src, csize, userbuf);
-+	} else {
-+		if (userbuf)
-+			rc = copy_to_user_real((void __force __user *) buf,
-+					       (void *) src, csize);
-+		else
-+			rc = memcpy_real(buf, (void *) src, csize);
-+	}
-+	return rc ? rc : csize;
-+}
-+
-+/*
-+ * Copy one page from kdump "oldmem"
-  *
-  * For the kdump reserved memory this functions performs a swap operation:
-  *  - [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE] is mapped to [0 - OLDMEM_SIZE].
-  *  - [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
-  */
--ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
--			 size_t csize, unsigned long offset, int userbuf)
--{
--	unsigned long src;
-+static ssize_t copy_oldmem_page_kdump(char *buf, size_t csize,
-+				      unsigned long src, int userbuf)
- 
--	if (!csize)
--		return 0;
-+{
-+	int rc;
- 
--	src = (pfn << PAGE_SHIFT) + offset;
- 	if (src < OLDMEM_SIZE)
- 		src += OLDMEM_BASE;
- 	else if (src > OLDMEM_BASE &&
- 		 src < OLDMEM_BASE + OLDMEM_SIZE)
- 		src -= OLDMEM_BASE;
- 	if (userbuf)
--		copy_to_user_real((void __force __user *) buf, (void *) src,
--				  csize);
-+		rc = copy_to_user_real((void __force __user *) buf,
-+				       (void *) src, csize);
-+	else
-+		rc = memcpy_real(buf, (void *) src, csize);
-+	return rc ? rc : csize;
-+}
-+
-+/*
-+ * Copy one page from "oldmem"
-+ */
-+ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
-+			 unsigned long offset, int userbuf)
-+{
-+	unsigned long src;
-+
-+	if (!csize)
-+		return 0;
-+	src = (pfn << PAGE_SHIFT) + offset;
-+	if (OLDMEM_BASE)
-+		return copy_oldmem_page_kdump(buf, csize, src, userbuf);
- 	else
--		memcpy_real(buf, (void *) src, csize);
--	return csize;
-+		return copy_oldmem_page_zfcpdump(buf, csize, src, userbuf);
- }
- 
- /*
-- * Remap "oldmem"
-+ * Remap "oldmem" for kdump
-  *
-  * For the kdump reserved memory this functions performs a swap operation:
-  * [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
-  */
--int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
--			   unsigned long pfn, unsigned long size, pgprot_t prot)
-+static int remap_oldmem_pfn_range_kdump(struct vm_area_struct *vma,
-+					unsigned long from, unsigned long pfn,
-+					unsigned long size, pgprot_t prot)
- {
- 	unsigned long size_old;
- 	int rc;
-@@ -82,6 +121,43 @@ int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
- }
- 
- /*
-+ * Remap "oldmem" for zfcpdump
-+ *
-+ * We only map available memory above ZFCPDUMP_HSA_SIZE. Memory below
-+ * ZFCPDUMP_HSA_SIZE is read on demand using the copy_oldmem_page() function.
-+ */
-+static int remap_oldmem_pfn_range_zfcpdump(struct vm_area_struct *vma,
-+					   unsigned long from,
-+					   unsigned long pfn,
-+					   unsigned long size, pgprot_t prot)
-+{
-+	unsigned long size_hsa;
-+
-+	if (pfn < ZFCPDUMP_HSA_SIZE >> PAGE_SHIFT) {
-+		size_hsa = min(size, ZFCPDUMP_HSA_SIZE - (pfn << PAGE_SHIFT));
-+		if (size == size_hsa)
-+			return 0;
-+		size -= size_hsa;
-+		from += size_hsa;
-+		pfn += size_hsa >> PAGE_SHIFT;
-+	}
-+	return remap_pfn_range(vma, from, pfn, size, prot);
-+}
-+
-+/*
-+ * Remap "oldmem" for kdump or zfcpdump
-+ */
-+int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
-+			   unsigned long pfn, unsigned long size, pgprot_t prot)
-+{
-+	if (OLDMEM_BASE)
-+		return remap_oldmem_pfn_range_kdump(vma, from, pfn, size, prot);
-+	else
-+		return remap_oldmem_pfn_range_zfcpdump(vma, from, pfn, size,
-+						       prot);
-+}
-+
-+/*
-  * Copy memory from old kernel
-  */
- int copy_from_oldmem(void *dest, void *src, size_t count)
-@@ -89,11 +165,21 @@ int copy_from_oldmem(void *dest, void *src, size_t count)
- 	unsigned long copied = 0;
- 	int rc;
- 
--	if ((unsigned long) src < OLDMEM_SIZE) {
--		copied = min(count, OLDMEM_SIZE - (unsigned long) src);
--		rc = memcpy_real(dest, src + OLDMEM_BASE, copied);
--		if (rc)
--			return rc;
-+	if (OLDMEM_BASE) {
-+		if ((unsigned long) src < OLDMEM_SIZE) {
-+			copied = min(count, OLDMEM_SIZE - (unsigned long) src);
-+			rc = memcpy_real(dest, src + OLDMEM_BASE, copied);
-+			if (rc)
-+				return rc;
-+		}
-+	} else {
-+		if ((unsigned long) src < ZFCPDUMP_HSA_SIZE) {
-+			copied = min(count,
-+				     ZFCPDUMP_HSA_SIZE - (unsigned long) src);
-+			rc = memcpy_hsa(dest, (unsigned long) src, copied, 0);
-+			if (rc)
-+				return rc;
-+		}
- 	}
- 	return memcpy_real(dest + copied, src + copied, count - copied);
- }
-@@ -423,7 +509,8 @@ int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
- 	u32 alloc_size;
- 	u64 hdr_off;
- 
--	if (!OLDMEM_BASE)
-+	/* If we are not in kdump or zfcpdump mode return */
-+	if (!OLDMEM_BASE && ipl_info.type != IPL_TYPE_FCP_DUMP)
- 		return 0;
- 	/* If elfcorehdr= has been passed via cmdline, we use that one */
- 	if (elfcorehdr_addr != ELFCORE_ADDR_MAX)
-diff --git a/drivers/s390/char/zcore.c b/drivers/s390/char/zcore.c
-index 9e5e146..794820a 100644
---- a/drivers/s390/char/zcore.c
-+++ b/drivers/s390/char/zcore.c
-@@ -30,8 +30,8 @@
- 
- #define TRACE(x...) debug_sprintf_event(zcore_dbf, 1, x)
- 
--#define TO_USER		0
--#define TO_KERNEL	1
-+#define TO_USER		1
-+#define TO_KERNEL	0
- #define CHUNK_INFO_SIZE	34 /* 2 16-byte char, each followed by blank */
- 
- enum arch_id {
-@@ -73,7 +73,7 @@ static struct ipl_parameter_block *ipl_block;
-  * @count: Size of buffer, which should be copied
-  * @mode:  Either TO_KERNEL or TO_USER
-  */
--static int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode)
-+int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode)
- {
- 	int offs, blk_num;
- 	static char buf[PAGE_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
--- 
-1.8.2.2
+I have no point of comparison here.  Is this performance good, or is
+the mmap-based approach still a lot more expensive?
+
 
 
 _______________________________________________
