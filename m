@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Utq0X-0004TC-AX
- for kexec@lists.infradead.org; Tue, 02 Jul 2013 02:07:55 +0000
-Date: Tue, 2 Jul 2013 10:59:34 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 1/2] makedumpfile: Assign non-printable value as short
- options
-Message-Id: <20130702105934.d99b1b5deb4e6fe38c08cfea@mxc.nes.nec.co.jp>
-In-Reply-To: <3bf9ad39c659faf5e4cb03545c83d50f81d7962f.1372407106.git.bhe@redhat.com>
-References: <3bf9ad39c659faf5e4cb03545c83d50f81d7962f.1372407106.git.bhe@redhat.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Uu2V0-0002DA-77
+ for kexec@lists.infradead.org; Tue, 02 Jul 2013 15:28:11 +0000
+Date: Tue, 2 Jul 2013 11:27:28 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v6 1/5] vmcore: Introduce ELF header in new memory feature
+Message-ID: <20130702152727.GB22603@redhat.com>
+References: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <1372707159-10425-2-git-send-email-holzheu@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1372707159-10425-2-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,266 +24,210 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: bhe@redhat.com
-Cc: kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-On Fri, 28 Jun 2013 16:13:51 +0800
-Baoquan He <bhe@redhat.com> wrote:
-
-> Characters for short options is limited, and now makedumpfile has
-> considerably many options. As times go on, no enough reasonable
-> letters can be assigned to each functionality with short options.
+On Mon, Jul 01, 2013 at 09:32:35PM +0200, Michael Holzheu wrote:
+> Currently for s390 we create the ELF core header in the 2nd kernel
+> with a small trick. We relocate the addresses in the ELF header in
+> a way that for the /proc/vmcore code it seems to be in the 1st kernel
+> (old) memory and the read_from_oldmem() returns the correct data.
+> This allows the /proc/vmcore code to use the ELF header in the
+> 2nd kernel.
 > 
-> E.g non-cyclic vs Y, cyclic-buffer vs Z, eppic vs S.
+> This patch now exchanges the old mechanism with the new and much
+> cleaner function call override feature that now offcially allows to
+> create the ELF core header in the 2nd kernel.
 > 
-> Now assign non-printable value to these kind of short optins, meanwhile
-> define them as indicative MACRO which can make code more readable.
+> To use the new feature the following function have to be defined
+> by the architecture backend code to read from new memory:
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+>  * elfcorehdr_alloc: Allocate ELF header
+>  * elfcorehdr_free: Free the memory of the ELF header
+>  * elfcorehdr_read: Read from ELF header
+>  * elfcorehdr_read_notes: Read from ELF notes
+> 
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-Looks good to me, thanks Baoquan.
+Looks good to me.
 
-v1.5.4 is almost ready to be released, so I'll merge this patch set
-into v1.5.5.
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-
-Thanks
-Atsushi Kumagai
+Vivek
 
 > ---
->  makedumpfile.c | 88 +++++++++++++++++++++++++++++-----------------------------
->  makedumpfile.h | 35 +++++++++++++++++++++++
->  2 files changed, 79 insertions(+), 44 deletions(-)
+>  fs/proc/vmcore.c           | 61 ++++++++++++++++++++++++++++++++++++++--------
+>  include/linux/crash_dump.h |  6 +++++
+>  2 files changed, 57 insertions(+), 10 deletions(-)
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index b42565c..801eda0 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -8555,20 +8555,20 @@ calculate_cyclic_buffer_size(void) {
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 0f6db52..c28189c 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -123,6 +123,36 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
+>  	return read;
 >  }
 >  
->  static struct option longopts[] = {
-> -	{"split", no_argument, NULL, 's'}, 
-> -	{"reassemble", no_argument, NULL, 'r'},
-> -	{"xen-syms", required_argument, NULL, 'y'},
-> -	{"xen-vmcoreinfo", required_argument, NULL, 'z'},
-> -	{"xen_phys_start", required_argument, NULL, 'P'},
-> -	{"message-level", required_argument, NULL, 'm'},
-> -	{"vtop", required_argument, NULL, 'V'},
-> -	{"dump-dmesg", no_argument, NULL, 'M'}, 
-> -	{"config", required_argument, NULL, 'C'},
-> -	{"help", no_argument, NULL, 'h'},
-> -	{"diskset", required_argument, NULL, 'k'},
-> -	{"non-cyclic", no_argument, NULL, 'Y'},
-> -	{"cyclic-buffer", required_argument, NULL, 'Z'},
-> -	{"eppic", required_argument, NULL, 'S'},
-> +	{"split", no_argument, NULL, OPT_SPLIT}, 
-> +	{"reassemble", no_argument, NULL, OPT_REASSEMBLE},
-> +	{"xen-syms", required_argument, NULL, OPT_XEN_SYMS},
-> +	{"xen-vmcoreinfo", required_argument, NULL, OPT_XEN_VMCOREINFO},
-> +	{"xen_phys_start", required_argument, NULL, OPT_XEN_PHYS_START},
-> +	{"message-level", required_argument, NULL, OPT_MESSAGE_LEVEL},
-> +	{"vtop", required_argument, NULL, OPT_VTOP},
-> +	{"dump-dmesg", no_argument, NULL, OPT_DUMP_DMESG}, 
-> +	{"config", required_argument, NULL, OPT_CONFIG},
-> +	{"help", no_argument, NULL, OPT_HELP},
-> +	{"diskset", required_argument, NULL, OPT_DISKSET},
-> +	{"non-cyclic", no_argument, NULL, OPT_NON_CYCLIC},
-> +	{"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
-> +	{"eppic", required_argument, NULL, OPT_EPPIC},
->  	{0, 0, 0, 0}
->  };
->  
-> @@ -8597,29 +8597,29 @@ main(int argc, char *argv[])
->  	
->  	info->block_order = DEFAULT_ORDER;
->  	message_level = DEFAULT_MSG_LEVEL;
-> -	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:", longopts,
-> +	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lpRvXx:", longopts,
->  	    NULL)) != -1) {
->  		switch (opt) {
-> -		case 'b':
-> +		case OPT_BLOCK_ORDER:
->  			info->block_order = atoi(optarg);
->  			break;
-> -		case 'C':
-> +		case OPT_CONFIG:
->  			info->name_filterconfig = optarg;
->  			break;
-> -		case 'c':
-> +		case OPT_COMPRESS_ZLIB:
->  			info->flag_compress = DUMP_DH_COMPRESSED_ZLIB;
->  			break;
-> -		case 'D':
-> +		case OPT_DEBUG:
->  			flag_debug = TRUE;
->  			break;
-> -		case 'd':
-> +		case OPT_DUMP_LEVEL:
->  			if (!parse_dump_level(optarg))
->  				goto out;
->  			break;
-> -		case 'E':
-> +		case OPT_ELF_DUMPFILE:
->  			info->flag_elf_dumpfile = 1;
->  			break;
-> -		case 'F':
-> +		case OPT_FLATTEN:
->  			info->flag_flatten = 1;
->  			/*
->  			 * All messages are output to STDERR because STDOUT is
-> @@ -8627,75 +8627,75 @@ main(int argc, char *argv[])
->  			 */
->  			flag_strerr_message = TRUE;
->  			break;
-> -		case 'f':
-> +		case OPT_FORCE:
->  			info->flag_force = 1;
->  			break;
-> -		case 'g':
-> +		case OPT_GENERATE_VMCOREINFO:
->  			info->flag_generate_vmcoreinfo = 1;
->  			info->name_vmcoreinfo = optarg;
->  			break;
-> -		case 'h':
-> +		case OPT_HELP:
->  			info->flag_show_usage = 1;
->  			break;
-> -		case 'i':
-> +		case OPT_READ_VMCOREINFO:
->  			info->flag_read_vmcoreinfo = 1;
->  			info->name_vmcoreinfo = optarg;
->  			break;
-> -		case 'k':
-> +		case OPT_DISKSET:
->  			if (!sadump_add_diskset_info(optarg))
->  				goto out;
->  			info->flag_sadump_diskset = 1;
->  			break;
-> -		case 'l':
-> +		case OPT_COMPRESS_LZO:
->  			info->flag_compress = DUMP_DH_COMPRESSED_LZO;
->  			break;
-> -		case 'm':
-> +		case OPT_MESSAGE_LEVEL:
->  			message_level = atoi(optarg);
->  			break;
-> -		case 'M':
-> +		case OPT_DUMP_DMESG:
->  			info->flag_dmesg = 1;
->  			break;
-> -		case 'p':
-> +		case OPT_COMPRESS_SNAPPY:
->  			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
->  			break;
-> -		case 'P':
-> +		case OPT_XEN_PHYS_START:
->  			info->xen_phys_start = strtoul(optarg, NULL, 0);
->  			break;
-> -		case 'R':
-> +		case OPT_REARRANGE:
->  			info->flag_rearrange = 1;
->  			break;
-> -		case 's':
-> +		case OPT_SPLIT:
->  			info->flag_split = 1;
->  			break;
-> -		case 'S':
-> +		case OPT_EPPIC:
->  			info->name_eppic_config = optarg;
->  			break;
-> -		case 'r':
-> +		case OPT_REASSEMBLE:
->  			info->flag_reassemble = 1;
->  			break;
-> -		case 'V':
-> +		case OPT_VTOP:
->  			info->vaddr_for_vtop = strtoul(optarg, NULL, 0);
->  			break;
-> -		case 'v':
-> +		case OPT_VERSION:
->  			info->flag_show_version = 1;
->  			break;
-> -		case 'X':
-> +		case OPT_EXCLUDE_XEN_DOM:
->  			info->flag_exclude_xen_dom = 1;
->  			break;
-> -		case 'x':
-> +		case OPT_VMLINUX:
->  			info->name_vmlinux = optarg;
->  			break;
-> -		case 'y':
-> +		case OPT_XEN_SYMS:
->  			info->name_xen_syms = optarg;
->  			break;
-> -		case 'Y':
-> +		case OPT_NON_CYCLIC:
->  			info->flag_cyclic = FALSE;
->  			break;
-> -		case 'z':
-> +		case OPT_XEN_VMCOREINFO:
->  			info->flag_read_vmcoreinfo = 1;
->  			info->name_vmcoreinfo = optarg;
->  			break;
-> -		case 'Z':
-> +		case OPT_CYCLIC_BUFFER:
->  			info->bufsize_cyclic = atoi(optarg);
->  			break;
->  		case '?':
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 2a6b6f2..0a2198e 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1671,6 +1671,41 @@ struct elf_prstatus {
->  #endif
->  
->  /*
-> + * Below are options which getopt_long can recognize. From OPT_START options are
-> + * non-printable, just used for implementation.
+> +/*
+> + * Architectures may override this function to allocate ELF header in 2nd kernel
 > + */
-> +#define OPT_BLOCK_ORDER         'b'
-> +#define OPT_COMPRESS_ZLIB       'c'
-> +#define OPT_DEBUG               'D'
-> +#define OPT_DUMP_LEVEL          'd'
-> +#define OPT_ELF_DUMPFILE        'E'
-> +#define OPT_FLATTEN             'F'
-> +#define OPT_FORCE               'f'
-> +#define OPT_GENERATE_VMCOREINFO 'g'
-> +#define OPT_HELP                'h'
-> +#define OPT_READ_VMCOREINFO     'i'
-> +#define OPT_COMPRESS_LZO        'l'
-> +#define OPT_COMPRESS_SNAPPY     'p'
-> +#define OPT_REARRANGE           'R'
-> +#define OPT_VERSION             'v'
-> +#define OPT_EXCLUDE_XEN_DOM     'X'
-> +#define OPT_VMLINUX             'x'
-> +#define OPT_START               256
-> +#define OPT_SPLIT               OPT_START+0
-> +#define OPT_REASSEMBLE          OPT_START+1
-> +#define OPT_XEN_SYMS            OPT_START+2
-> +#define OPT_XEN_VMCOREINFO      OPT_START+3
-> +#define OPT_XEN_PHYS_START      OPT_START+4
-> +#define OPT_MESSAGE_LEVEL       OPT_START+5
-> +#define OPT_VTOP                OPT_START+6
-> +#define OPT_DUMP_DMESG          OPT_START+7
-> +#define OPT_CONFIG              OPT_START+8
-> +#define OPT_DISKSET             OPT_START+9
-> +#define OPT_NON_CYCLIC          OPT_START+10
-> +#define OPT_CYCLIC_BUFFER       OPT_START+11
-> +#define OPT_EPPIC               OPT_START+12
+> +int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
+> +{
+> +	return 0;
+> +}
 > +
 > +/*
->   * Function Prototype.
+> + * Architectures may override this function to free header
+> + */
+> +void __weak elfcorehdr_free(unsigned long long addr)
+> +{}
+> +
+> +/*
+> + * Architectures may override this function to read from ELF header
+> + */
+> +ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+> +{
+> +	return read_from_oldmem(buf, count, ppos, 0);
+> +}
+> +
+> +/*
+> + * Architectures may override this function to read from notes sections
+> + */
+> +ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+> +{
+> +	return read_from_oldmem(buf, count, ppos, 0);
+> +}
+> +
+>  /* Read from the ELF header and then the crash dump. On error, negative value is
+>   * returned otherwise number of bytes read are returned.
 >   */
->  unsigned long long get_num_dumpable_cyclic(void);
+> @@ -322,7 +352,7 @@ static int __init update_note_header_size_elf64(const Elf64_Ehdr *ehdr_ptr)
+>  		notes_section = kmalloc(max_sz, GFP_KERNEL);
+>  		if (!notes_section)
+>  			return -ENOMEM;
+> -		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
+> +		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
+>  		if (rc < 0) {
+>  			kfree(notes_section);
+>  			return rc;
+> @@ -409,7 +439,8 @@ static int __init copy_notes_elf64(const Elf64_Ehdr *ehdr_ptr, char *notes_buf)
+>  		if (phdr_ptr->p_type != PT_NOTE)
+>  			continue;
+>  		offset = phdr_ptr->p_offset;
+> -		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
+> +		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
+> +					   &offset);
+>  		if (rc < 0)
+>  			return rc;
+>  		notes_buf += phdr_ptr->p_memsz;
+> @@ -510,7 +541,7 @@ static int __init update_note_header_size_elf32(const Elf32_Ehdr *ehdr_ptr)
+>  		notes_section = kmalloc(max_sz, GFP_KERNEL);
+>  		if (!notes_section)
+>  			return -ENOMEM;
+> -		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
+> +		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
+>  		if (rc < 0) {
+>  			kfree(notes_section);
+>  			return rc;
+> @@ -597,7 +628,8 @@ static int __init copy_notes_elf32(const Elf32_Ehdr *ehdr_ptr, char *notes_buf)
+>  		if (phdr_ptr->p_type != PT_NOTE)
+>  			continue;
+>  		offset = phdr_ptr->p_offset;
+> -		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
+> +		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
+> +					   &offset);
+>  		if (rc < 0)
+>  			return rc;
+>  		notes_buf += phdr_ptr->p_memsz;
+> @@ -793,7 +825,7 @@ static int __init parse_crash_elf64_headers(void)
+>  	addr = elfcorehdr_addr;
+>  
+>  	/* Read Elf header */
+> -	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf64_Ehdr), &addr, 0);
+> +	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf64_Ehdr), &addr);
+>  	if (rc < 0)
+>  		return rc;
+>  
+> @@ -820,7 +852,7 @@ static int __init parse_crash_elf64_headers(void)
+>  	if (!elfcorebuf)
+>  		return -ENOMEM;
+>  	addr = elfcorehdr_addr;
+> -	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
+> +	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
+>  	if (rc < 0)
+>  		goto fail;
+>  
+> @@ -849,7 +881,7 @@ static int __init parse_crash_elf32_headers(void)
+>  	addr = elfcorehdr_addr;
+>  
+>  	/* Read Elf header */
+> -	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf32_Ehdr), &addr, 0);
+> +	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf32_Ehdr), &addr);
+>  	if (rc < 0)
+>  		return rc;
+>  
+> @@ -875,7 +907,7 @@ static int __init parse_crash_elf32_headers(void)
+>  	if (!elfcorebuf)
+>  		return -ENOMEM;
+>  	addr = elfcorehdr_addr;
+> -	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
+> +	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
+>  	if (rc < 0)
+>  		goto fail;
+>  
+> @@ -902,7 +934,7 @@ static int __init parse_crash_elf_headers(void)
+>  	int rc=0;
+>  
+>  	addr = elfcorehdr_addr;
+> -	rc = read_from_oldmem(e_ident, EI_NIDENT, &addr, 0);
+> +	rc = elfcorehdr_read(e_ident, EI_NIDENT, &addr);
+>  	if (rc < 0)
+>  		return rc;
+>  	if (memcmp(e_ident, ELFMAG, SELFMAG) != 0) {
+> @@ -935,7 +967,14 @@ static int __init vmcore_init(void)
+>  {
+>  	int rc = 0;
+>  
+> -	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
+> +	/* Allow architectures to allocate ELF header in 2nd kernel */
+> +	rc = elfcorehdr_alloc(&elfcorehdr_addr, &elfcorehdr_size);
+> +	if (rc)
+> +		return rc;
+> +	/*
+> +	 * If elfcorehdr= has been passed in cmdline or created in 2nd kernel,
+> +	 * then capture the dump.
+> +	 */
+>  	if (!(is_vmcore_usable()))
+>  		return rc;
+>  	rc = parse_crash_elf_headers();
+> @@ -943,6 +982,8 @@ static int __init vmcore_init(void)
+>  		pr_warn("Kdump: vmcore not initialized\n");
+>  		return rc;
+>  	}
+> +	elfcorehdr_free(elfcorehdr_addr);
+> +	elfcorehdr_addr = ELFCORE_ADDR_ERR;
+>  
+>  	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
+>  	if (proc_vmcore)
+> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+> index 37e4f8d..6571f82 100644
+> --- a/include/linux/crash_dump.h
+> +++ b/include/linux/crash_dump.h
+> @@ -12,6 +12,12 @@
+>  extern unsigned long long elfcorehdr_addr;
+>  extern unsigned long long elfcorehdr_size;
+>  
+> +extern int __weak elfcorehdr_alloc(unsigned long long *addr,
+> +				   unsigned long long *size);
+> +extern void __weak elfcorehdr_free(unsigned long long addr);
+> +extern ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos);
+> +extern ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos);
+> +
+>  extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+>  						unsigned long, int);
+>  
 > -- 
-> 1.8.2.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> 1.8.2.2
 
 _______________________________________________
 kexec mailing list
