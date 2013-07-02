@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UtkAq-0006PF-C9
- for kexec@lists.infradead.org; Mon, 01 Jul 2013 19:54:09 +0000
-Date: Mon, 1 Jul 2013 12:53:45 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v8 9/9] vmcore: support mmap() on /proc/vmcore
-Message-Id: <20130701125345.c4a383c7b8345f9c5ae54023@linux-foundation.org>
-In-Reply-To: <CAJGZr0Jwy6OLADBO9GExWVbwG_LMk41ZsSMZKvWmwcA9StVZQA@mail.gmail.com>
-References: <20130523052421.13864.83978.stgit@localhost6.localdomain6>
- <20130523052547.13864.83306.stgit@localhost6.localdomain6>
- <20130523152445.17549682ae45b5aab3f3cde0@linux-foundation.org>
- <CAJGZr0LwivLTH+E7WAR1B9_6B4e=jv04KgCUL_PdVpi9JjDpBw@mail.gmail.com>
- <51A2BBA7.50607@jp.fujitsu.com>
- <CAJGZr0LmsFXEgb3UXVb+rqo1aq5KJyNxyNAD+DG+3KnJm_ZncQ@mail.gmail.com>
- <51A71B49.3070003@cn.fujitsu.com>
- <CAJGZr0Ld6Q4a4f-VObAbvqCp=+fTFNEc6M-Fdnhh28GTcSm1=w@mail.gmail.com>
- <20130603174351.d04b2ac71d1bab0df242e0ba@mxc.nes.nec.co.jp>
- <CAJGZr0+9VUweN1Ssdq6P9Lug1GnTB3+RPv77JLRmnw=rpd9+Dw@mail.gmail.com>
- <51D0C500.4060108@jp.fujitsu.com>
- <CAJGZr0Jwy6OLADBO9GExWVbwG_LMk41ZsSMZKvWmwcA9StVZQA@mail.gmail.com>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Utq0X-0004TC-AX
+ for kexec@lists.infradead.org; Tue, 02 Jul 2013 02:07:55 +0000
+Date: Tue, 2 Jul 2013 10:59:34 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 1/2] makedumpfile: Assign non-printable value as short
+ options
+Message-Id: <20130702105934.d99b1b5deb4e6fe38c08cfea@mxc.nes.nec.co.jp>
+In-Reply-To: <3bf9ad39c659faf5e4cb03545c83d50f81d7962f.1372407106.git.bhe@redhat.com>
+References: <3bf9ad39c659faf5e4cb03545c83d50f81d7962f.1372407106.git.bhe@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -33,79 +23,266 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: riel@redhat.com, hughd@google.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, linux-mm@kvack.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, ebiederm@xmission.com, kosaki.motohiro@jp.fujitsu.com, zhangyanfei@cn.fujitsu.com, walken@google.com, cpw@sgi.com, vgoyal@redhat.com
+To: bhe@redhat.com
+Cc: kexec@lists.infradead.org
 
-On Mon, 1 Jul 2013 18:34:43 +0400 Maxim Uvarov <muvarov@gmail.com> wrote:
+On Fri, 28 Jun 2013 16:13:51 +0800
+Baoquan He <bhe@redhat.com> wrote:
 
-> 2013/7/1 HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> Characters for short options is limited, and now makedumpfile has
+> considerably many options. As times go on, no enough reasonable
+> letters can be assigned to each functionality with short options.
 > 
-> > (2013/06/29 1:40), Maxim Uvarov wrote:
-> >
-> >> Did test on 1TB machine. Total vmcore capture and save took 143 minutes
-> >> while vmcore size increased from 9Gb to 59Gb.
-> >>
-> >> Will do some debug for that.
-> >>
-> >> Maxim.
-> >>
-> >
-> > Please show me your kdump configuration file and tell me what you did in
-> > the test and how you confirmed the result.
-> >
-> >
-> Hello Hatayama,
+> E.g non-cyclic vs Y, cyclic-buffer vs Z, eppic vs S.
 > 
-> I re-run tests in dev env. I took your latest kernel patchset from
-> patchwork for vmcore + devel branch of makedumpfile + fix to open and write
-> to /dev/null. Run this test on 1Tb memory machine with memory used by some
-> user space processes. crashkernel=384M.
+> Now assign non-printable value to these kind of short optins, meanwhile
+> define them as indicative MACRO which can make code more readable.
 > 
-> Please see my results for makedumpfile process work:
-> [gzip compression]
-> -c -d31 /dev/null
-> real 37.8 m
-> user 29.51 m
-> sys 7.12 m
-> 
-> [no compression]
-> -d31 /dev/null
-> real 27 m
-> user 23 m
-> sys   4 m
-> 
-> [no compression, disable cyclic mode]
-> -d31 --non-cyclic /dev/null
-> real 26.25 m
-> user 23 m
-> sys 3.13 m
-> 
-> [gzip compression]
-> -c -d31 /dev/null
-> % time     seconds  usecs/call     calls    errors syscall
-> ------ ----------- ----------- --------- --------- ----------------
->  54.75   38.840351         110    352717           mmap
->  44.55   31.607620          90    352716         1 munmap
->   0.70    0.497668           0  25497667           brk
->   0.00    0.000356           0    111920           write
->   0.00    0.000280           0    111904           lseek
->   0.00    0.000025           4         7           open
->   0.00    0.000000           0       473           read
->   0.00    0.000000           0         7           close
->   0.00    0.000000           0         3           fstat
->   0.00    0.000000           0         1           getpid
->   0.00    0.000000           0         1           execve
->   0.00    0.000000           0         1           uname
->   0.00    0.000000           0         2           unlink
->   0.00    0.000000           0         1           arch_prctl
-> ------ ----------- ----------- --------- --------- ----------------
-> 100.00   70.946300              26427420         1 total
-> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-I have no point of comparison here.  Is this performance good, or is
-the mmap-based approach still a lot more expensive?
+Looks good to me, thanks Baoquan.
+
+v1.5.4 is almost ready to be released, so I'll merge this patch set
+into v1.5.5.
 
 
+Thanks
+Atsushi Kumagai
+
+> ---
+>  makedumpfile.c | 88 +++++++++++++++++++++++++++++-----------------------------
+>  makedumpfile.h | 35 +++++++++++++++++++++++
+>  2 files changed, 79 insertions(+), 44 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index b42565c..801eda0 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -8555,20 +8555,20 @@ calculate_cyclic_buffer_size(void) {
+>  }
+>  
+>  static struct option longopts[] = {
+> -	{"split", no_argument, NULL, 's'}, 
+> -	{"reassemble", no_argument, NULL, 'r'},
+> -	{"xen-syms", required_argument, NULL, 'y'},
+> -	{"xen-vmcoreinfo", required_argument, NULL, 'z'},
+> -	{"xen_phys_start", required_argument, NULL, 'P'},
+> -	{"message-level", required_argument, NULL, 'm'},
+> -	{"vtop", required_argument, NULL, 'V'},
+> -	{"dump-dmesg", no_argument, NULL, 'M'}, 
+> -	{"config", required_argument, NULL, 'C'},
+> -	{"help", no_argument, NULL, 'h'},
+> -	{"diskset", required_argument, NULL, 'k'},
+> -	{"non-cyclic", no_argument, NULL, 'Y'},
+> -	{"cyclic-buffer", required_argument, NULL, 'Z'},
+> -	{"eppic", required_argument, NULL, 'S'},
+> +	{"split", no_argument, NULL, OPT_SPLIT}, 
+> +	{"reassemble", no_argument, NULL, OPT_REASSEMBLE},
+> +	{"xen-syms", required_argument, NULL, OPT_XEN_SYMS},
+> +	{"xen-vmcoreinfo", required_argument, NULL, OPT_XEN_VMCOREINFO},
+> +	{"xen_phys_start", required_argument, NULL, OPT_XEN_PHYS_START},
+> +	{"message-level", required_argument, NULL, OPT_MESSAGE_LEVEL},
+> +	{"vtop", required_argument, NULL, OPT_VTOP},
+> +	{"dump-dmesg", no_argument, NULL, OPT_DUMP_DMESG}, 
+> +	{"config", required_argument, NULL, OPT_CONFIG},
+> +	{"help", no_argument, NULL, OPT_HELP},
+> +	{"diskset", required_argument, NULL, OPT_DISKSET},
+> +	{"non-cyclic", no_argument, NULL, OPT_NON_CYCLIC},
+> +	{"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
+> +	{"eppic", required_argument, NULL, OPT_EPPIC},
+>  	{0, 0, 0, 0}
+>  };
+>  
+> @@ -8597,29 +8597,29 @@ main(int argc, char *argv[])
+>  	
+>  	info->block_order = DEFAULT_ORDER;
+>  	message_level = DEFAULT_MSG_LEVEL;
+> -	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMpRrsvXx:", longopts,
+> +	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lpRvXx:", longopts,
+>  	    NULL)) != -1) {
+>  		switch (opt) {
+> -		case 'b':
+> +		case OPT_BLOCK_ORDER:
+>  			info->block_order = atoi(optarg);
+>  			break;
+> -		case 'C':
+> +		case OPT_CONFIG:
+>  			info->name_filterconfig = optarg;
+>  			break;
+> -		case 'c':
+> +		case OPT_COMPRESS_ZLIB:
+>  			info->flag_compress = DUMP_DH_COMPRESSED_ZLIB;
+>  			break;
+> -		case 'D':
+> +		case OPT_DEBUG:
+>  			flag_debug = TRUE;
+>  			break;
+> -		case 'd':
+> +		case OPT_DUMP_LEVEL:
+>  			if (!parse_dump_level(optarg))
+>  				goto out;
+>  			break;
+> -		case 'E':
+> +		case OPT_ELF_DUMPFILE:
+>  			info->flag_elf_dumpfile = 1;
+>  			break;
+> -		case 'F':
+> +		case OPT_FLATTEN:
+>  			info->flag_flatten = 1;
+>  			/*
+>  			 * All messages are output to STDERR because STDOUT is
+> @@ -8627,75 +8627,75 @@ main(int argc, char *argv[])
+>  			 */
+>  			flag_strerr_message = TRUE;
+>  			break;
+> -		case 'f':
+> +		case OPT_FORCE:
+>  			info->flag_force = 1;
+>  			break;
+> -		case 'g':
+> +		case OPT_GENERATE_VMCOREINFO:
+>  			info->flag_generate_vmcoreinfo = 1;
+>  			info->name_vmcoreinfo = optarg;
+>  			break;
+> -		case 'h':
+> +		case OPT_HELP:
+>  			info->flag_show_usage = 1;
+>  			break;
+> -		case 'i':
+> +		case OPT_READ_VMCOREINFO:
+>  			info->flag_read_vmcoreinfo = 1;
+>  			info->name_vmcoreinfo = optarg;
+>  			break;
+> -		case 'k':
+> +		case OPT_DISKSET:
+>  			if (!sadump_add_diskset_info(optarg))
+>  				goto out;
+>  			info->flag_sadump_diskset = 1;
+>  			break;
+> -		case 'l':
+> +		case OPT_COMPRESS_LZO:
+>  			info->flag_compress = DUMP_DH_COMPRESSED_LZO;
+>  			break;
+> -		case 'm':
+> +		case OPT_MESSAGE_LEVEL:
+>  			message_level = atoi(optarg);
+>  			break;
+> -		case 'M':
+> +		case OPT_DUMP_DMESG:
+>  			info->flag_dmesg = 1;
+>  			break;
+> -		case 'p':
+> +		case OPT_COMPRESS_SNAPPY:
+>  			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
+>  			break;
+> -		case 'P':
+> +		case OPT_XEN_PHYS_START:
+>  			info->xen_phys_start = strtoul(optarg, NULL, 0);
+>  			break;
+> -		case 'R':
+> +		case OPT_REARRANGE:
+>  			info->flag_rearrange = 1;
+>  			break;
+> -		case 's':
+> +		case OPT_SPLIT:
+>  			info->flag_split = 1;
+>  			break;
+> -		case 'S':
+> +		case OPT_EPPIC:
+>  			info->name_eppic_config = optarg;
+>  			break;
+> -		case 'r':
+> +		case OPT_REASSEMBLE:
+>  			info->flag_reassemble = 1;
+>  			break;
+> -		case 'V':
+> +		case OPT_VTOP:
+>  			info->vaddr_for_vtop = strtoul(optarg, NULL, 0);
+>  			break;
+> -		case 'v':
+> +		case OPT_VERSION:
+>  			info->flag_show_version = 1;
+>  			break;
+> -		case 'X':
+> +		case OPT_EXCLUDE_XEN_DOM:
+>  			info->flag_exclude_xen_dom = 1;
+>  			break;
+> -		case 'x':
+> +		case OPT_VMLINUX:
+>  			info->name_vmlinux = optarg;
+>  			break;
+> -		case 'y':
+> +		case OPT_XEN_SYMS:
+>  			info->name_xen_syms = optarg;
+>  			break;
+> -		case 'Y':
+> +		case OPT_NON_CYCLIC:
+>  			info->flag_cyclic = FALSE;
+>  			break;
+> -		case 'z':
+> +		case OPT_XEN_VMCOREINFO:
+>  			info->flag_read_vmcoreinfo = 1;
+>  			info->name_vmcoreinfo = optarg;
+>  			break;
+> -		case 'Z':
+> +		case OPT_CYCLIC_BUFFER:
+>  			info->bufsize_cyclic = atoi(optarg);
+>  			break;
+>  		case '?':
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 2a6b6f2..0a2198e 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1671,6 +1671,41 @@ struct elf_prstatus {
+>  #endif
+>  
+>  /*
+> + * Below are options which getopt_long can recognize. From OPT_START options are
+> + * non-printable, just used for implementation.
+> + */
+> +#define OPT_BLOCK_ORDER         'b'
+> +#define OPT_COMPRESS_ZLIB       'c'
+> +#define OPT_DEBUG               'D'
+> +#define OPT_DUMP_LEVEL          'd'
+> +#define OPT_ELF_DUMPFILE        'E'
+> +#define OPT_FLATTEN             'F'
+> +#define OPT_FORCE               'f'
+> +#define OPT_GENERATE_VMCOREINFO 'g'
+> +#define OPT_HELP                'h'
+> +#define OPT_READ_VMCOREINFO     'i'
+> +#define OPT_COMPRESS_LZO        'l'
+> +#define OPT_COMPRESS_SNAPPY     'p'
+> +#define OPT_REARRANGE           'R'
+> +#define OPT_VERSION             'v'
+> +#define OPT_EXCLUDE_XEN_DOM     'X'
+> +#define OPT_VMLINUX             'x'
+> +#define OPT_START               256
+> +#define OPT_SPLIT               OPT_START+0
+> +#define OPT_REASSEMBLE          OPT_START+1
+> +#define OPT_XEN_SYMS            OPT_START+2
+> +#define OPT_XEN_VMCOREINFO      OPT_START+3
+> +#define OPT_XEN_PHYS_START      OPT_START+4
+> +#define OPT_MESSAGE_LEVEL       OPT_START+5
+> +#define OPT_VTOP                OPT_START+6
+> +#define OPT_DUMP_DMESG          OPT_START+7
+> +#define OPT_CONFIG              OPT_START+8
+> +#define OPT_DISKSET             OPT_START+9
+> +#define OPT_NON_CYCLIC          OPT_START+10
+> +#define OPT_CYCLIC_BUFFER       OPT_START+11
+> +#define OPT_EPPIC               OPT_START+12
+> +
+> +/*
+>   * Function Prototype.
+>   */
+>  unsigned long long get_num_dumpable_cyclic(void);
+> -- 
+> 1.8.2.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
