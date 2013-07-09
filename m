@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from avon.wwwdotorg.org ([2001:470:1f0f:bd7::2])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UwXvC-00086z-Lr
- for kexec@lists.infradead.org; Tue, 09 Jul 2013 13:25:35 +0000
-From: Maxim Uvarov <maxim.uvarov@oracle.com>
-Subject: [PATCH] calculate cyclic buffer size according to info->num_dumpfile
-Date: Tue,  9 Jul 2013 17:32:29 +0400
-Message-Id: <1373376749-5413-1-git-send-email-maxim.uvarov@oracle.com>
+ id 1UwabA-0004JV-Ff
+ for kexec@lists.infradead.org; Tue, 09 Jul 2013 16:17:06 +0000
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH REPOST] kexec: return error of machine_kexec() fails
+Date: Tue,  9 Jul 2013 10:16:37 -0600
+Message-Id: <1373386597-3884-1-git-send-email-swarren@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,40 +20,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: nishimura@mxp.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, d.hatayama@jp.fujitsu.com
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Dump kernel work in limited memory space and makedumpfile buffers
-have to fit to empty memory due to not be killed with OOM-killer.
-Signed-off-by: Maxim Uvarov <maxim.uvarov@oracle.com>
+From: Stephen Warren <swarren@nvidia.com>
+
+Prior to commit 3ab8352 "kexec jump", if machine_kexec() returned,
+sys_reboot() would return -EINVAL. This patch restores this behaviour
+for the non-KEXEC_JUMP case, where machine_kexec() is not expected to
+return.
+
+This situation can occur on ARM, where kexec requires disabling all but
+one CPU using CPU hotplug. However, if hotplug isn't supported by the
+particular HW the kernel is running on, then kexec cannot succeed.
+
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
 ---
- makedumpfile.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/kexec.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b42565c..52606ab 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2996,7 +2996,7 @@ out:
- 			/*
- 			 * Truncate the buffer size to free memory size.
- 			 */
--			free_memory = get_free_memory_size();
-+			free_memory = (get_free_memory_size() / info->num_dumpfile);
- 			if (info->bufsize_cyclic > free_memory) {
- 				MSG("Specified buffer size is larger than free memory.\n");
- 				MSG("The buffer size for the cyclic mode will ");
-@@ -8548,6 +8548,8 @@ calculate_cyclic_buffer_size(void) {
- 	 */
- 	free_size = get_free_memory_size() * 0.4;
- 	needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-+	/* if --split was specified cyclic buffer allocated per dump file */
-+	needed_size /= info->num_dumpfile;
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 59f7b55..bde1190 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1702,6 +1702,8 @@ int kernel_kexec(void)
+ 		pm_restore_console();
+ 		unlock_system_sleep();
+ 	}
++#else
++	error = -EINVAL;
+ #endif
  
- 	info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
- 
+  Unlock:
 -- 
-1.7.9.5
+1.8.1.5
 
 
 _______________________________________________
