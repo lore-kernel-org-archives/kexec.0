@@ -1,32 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UwqOD-00065d-IT
- for kexec@lists.infradead.org; Wed, 10 Jul 2013 09:08:47 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 2D1F83EE081
- for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:08:16 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1F99B45DE50
- for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:08:16 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 0845E45DE4D
- for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:08:16 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id EF78E1DB802F
- for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:08:15 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id A2FD91DB803B
- for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:08:15 +0900 (JST)
-Message-ID: <51DD246F.70007@jp.fujitsu.com>
-Date: Wed, 10 Jul 2013 18:07:59 +0900
+ id 1Uwr3D-0006vr-Jv
+ for kexec@lists.infradead.org; Wed, 10 Jul 2013 09:51:09 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 500D83EE0AE
+ for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:50:37 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 3EB3445DE4D
+ for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:50:37 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 24C9C45DD78
+ for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:50:37 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 1948A1DB802C
+ for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:50:37 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 865871DB8038
+ for <kexec@lists.infradead.org>; Wed, 10 Jul 2013 18:50:36 +0900 (JST)
+Message-ID: <51DD2E5A.1030200@jp.fujitsu.com>
+Date: Wed, 10 Jul 2013 18:50:18 +0900
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: makedumpfile 1.5.4, 734G kdump tests
-References: <20130709162403.GA25441@sgi.com>
- <CAJGZr0JPrBB3cVyVdwJdd6cEUfnXNMuRijb9EOoSy+XmRupv7A@mail.gmail.com>
-In-Reply-To: <CAJGZr0JPrBB3cVyVdwJdd6cEUfnXNMuRijb9EOoSy+XmRupv7A@mail.gmail.com>
+Subject: Re: [PATCH v6 3/5] vmcore: Introduce remap_oldmem_pfn_range()
+References: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <1372707159-10425-4-git-send-email-holzheu@linux.vnet.ibm.com>
+ <51DA4ED9.60903@jp.fujitsu.com> <20130708112839.498ccfc6@holzheu>
+ <20130708142826.GA9094@redhat.com> <51DBA47C.8090708@jp.fujitsu.com>
+ <20130710104252.479a0f92@holzheu>
+In-Reply-To: <20130710104252.479a0f92@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,54 +41,103 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, Cliff Wickman <cpw@sgi.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-(2013/07/10 17:33), Maxim Uvarov wrote:
-> does crash tool read snappy compressed files?
+(2013/07/10 17:42), Michael Holzheu wrote:
+> Hello Hatayama,
+>
+> On Tue, 09 Jul 2013 14:49:48 +0900
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+>
+>> (2013/07/08 23:28), Vivek Goyal wrote:
+>>> On Mon, Jul 08, 2013 at 11:28:39AM +0200, Michael Holzheu wrote:
+>>>> On Mon, 08 Jul 2013 14:32:09 +0900
+>>>> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+>
+> [snip]
+>
+>>> I personally perfer not to special case it for s390 only and let the
+>>> handler be generic.
+>>>
+>>> If there is a bug in remap_old_pfn_range(), only side affect is that
+>>> we will fault in the page when it is accessed and that will be slow. BUG()
+>>> sounds excessive. At max it could be WARN_ONCE().
+>>>
+>>> In regular cases for x86, this path should not even hit. So special casing
+>>> it to detect issues with remap_old_pfn_range() does not sound very good
+>>> to me. I would rather leave it as it is and if there are bugs and mmap()
+>>> slows down, then somebody needs to debug it.
+>>>
+>>
+>> I agree to WARN_ONCE(). Then, we can notice bug at least if it occurs.
+>>
+>> Interface is like this?
+>>
+>> [generic]
+>>
+>> bool __weak in_valid_fault_range(pgoff_t pgoff)
+>> {
+>>       return false;
+>> }
+>>
+>> [s390]
+>>
+>> bool in_valid_fault_range(pgoff_t pgoff)
+>> {
+>>       loff_t offset = pgoff << PAGE_CACHE_SHIFT;
+>>       u64 paddr = vmcore_offset_to_paddr(offset);
+>>
+>>       return paddr < ZFCPDUMP_HSA_SIZE;
+>> }
+>>
+>> assuming vmcore_offset_to_paddr() that looks up vmcore_list and returns physical
+>> address corresponding to given offset of vmcore. I guess this could return error
+>> value if there's no entry corresponding to given offset in vmcore_list.
+>
+> I think this is too much code (and overhead) just for checking the correctness the
+> kdump mmap implementation.
+>
+> My suggestion is to add the WARN_ONCE() for #ifndef CONFIG_S390. This has the same
+> effect as your suggestion for all architectures besides of s390. And for s390 we
+> take the risk that a programming error would result in poor /proc/vmcore
+> performance.
 >
 
-Yes, but you need to specify libraries at build.
+If you want to avoid looking up vmcore_list that takes linear time w.r.t. the number
+of the elements, you can still calculate the range of offsets in /proc/vmcore
+corresponding to HSA during /proc/vmcore initialization.
 
-http://people.redhat.com/anderson/crash.changelog.html
+Also, could you tell me how often and how much the HSA region is during crash dumping?
+I guess the read to HSA is done mainly during early part of crash dumping process only.
+According to the code, it appears at most 64MiB only. Then, I feel performance is not
+a big issue.
 
-6.0.9    - Fix for building on host machines that have glibc-2.15.90 installed,
-<cut>
+Also, cost of WARN_ONCE() is one memory access only in the 2nd and later calls. I don't
+think it too much overhead...
 
-          - Add support for reading compressed kdump dumpfiles that were
-            compressed by the snappy compressor.  This feature is disabled by
-            default.  To enable this feature, build the crash utility in the
-            following manner:
-            (1) Install the snappy libraries by using the host system's package
-                manager or by directly downloading libraries from author's
-                website.  The packages required are:
-                  - snappy
-                  - snappy-devel
-                The author's website is: http://code.google.com/p/snappy
-            (2) Create a CFLAGS.extra file and an LDFLAGS.extra file in top-level
-                crash sources directory:
-                  - enter -DSNAPPY in the CFLAGS.extra file
-                  - enter -lsnappy in the LDFLAGS.extra file.
-            (3) Build crash with "make" as always.
+> So, at least for this patch series I would implement the fault handler as follows:
+>
+> static int mmap_vmcore_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
+> {
+> ...
+>          char *buf;
+>          int rc;
+>
+> #ifndef CONFIG_S390
+>          WARN_ONCE(1, "vmcore: Unexpected call of mmap_vmcore_fault()");
+> #endif
+>          page = find_or_create_page(mapping, index, GFP_KERNEL);
+>
+> At this point I have to tell you that we plan another vmcore patch series where
+> the fault handler might be called also for other architectures. But I think we
+> should *then* discuss your issue again.
+>
 
-6.0.7    - Enhanced the "search" command to allow the searched-for value
-<cut>
-          - Add support to for reading dumpfiles compressed by LZO using
-            makedumpfile version 1.4.4 or later.  This feature is disabled by
-            default.  To enable this feature, build the crash utility in the
-            following manner:
-            (1) Install the LZO libraries by using the host system's package
-                manager or by directly downloading libraries from author's
-                website.  The packages required are:
-                  - lzo
-                  - lzo-minilzo
-                  - lzo-devel
-                The author's website is: http://www.oberhumer.com/opensource/lzo
-            (2) Create a CFLAGS.extra file and an LDFLAGS.extra file in top-level
-                crash sources directory:
-                  - enter -DLZO in the CFLAGS.extra file
-                  - enter -llzo2 in the LDFLAGS.extra file.
-            (3) Build crash with "make" as always.
+Could you explain the plan in more detail? Or I cannot review correctly since I don't
+know whether there's really usecase of this generic fault handler for other
+architectures. This is the issue for architectures other than s390, not mine; now we
+don't need it at all.
 
 -- 
 Thanks.
