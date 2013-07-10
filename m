@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UwvSz-0006Ny-LP
- for kexec@lists.infradead.org; Wed, 10 Jul 2013 14:34:02 +0000
-Date: Wed, 10 Jul 2013 10:33:09 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v6 3/5] vmcore: Introduce remap_oldmem_pfn_range()
-Message-ID: <20130710143309.GD5819@redhat.com>
-References: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1372707159-10425-4-git-send-email-holzheu@linux.vnet.ibm.com>
- <51DA4ED9.60903@jp.fujitsu.com> <20130708112839.498ccfc6@holzheu>
- <20130708142826.GA9094@redhat.com>
- <51DBA47C.8090708@jp.fujitsu.com> <20130710104252.479a0f92@holzheu>
- <51DD2E5A.1030200@jp.fujitsu.com>
+Received: from out02.mta.xmission.com ([166.70.13.232])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UwvWI-0006Zb-8m
+ for kexec@lists.infradead.org; Wed, 10 Jul 2013 14:37:29 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1373421296-6112-1-git-send-email-horms@verge.net.au>
+Date: Wed, 10 Jul 2013 07:36:33 -0700
+In-Reply-To: <1373421296-6112-1-git-send-email-horms@verge.net.au> (Simon
+ Horman's message of "Wed, 10 Jul 2013 10:54:56 +0900")
+Message-ID: <87obaaiiry.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51DD2E5A.1030200@jp.fujitsu.com>
+Subject: Re: [PATCH] kexec: return error of machine_kexec() fails
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,33 +23,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Stephen Warren <swarren@nvidia.com>, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
 
-On Wed, Jul 10, 2013 at 06:50:18PM +0900, HATAYAMA Daisuke wrote:
+Simon Horman <horms@verge.net.au> writes:
 
-[..]
-> If you want to avoid looking up vmcore_list that takes linear time w.r.t. the number
-> of the elements, you can still calculate the range of offsets in /proc/vmcore
-> corresponding to HSA during /proc/vmcore initialization.
-> 
-> Also, could you tell me how often and how much the HSA region is during crash dumping?
-> I guess the read to HSA is done mainly during early part of crash dumping process only.
-> According to the code, it appears at most 64MiB only. Then, I feel performance is not
-> a big issue.
-> 
-> Also, cost of WARN_ONCE() is one memory access only in the 2nd and later calls. I don't
-> think it too much overhead...
+> From: Stephen Warren <swarren@nvidia.com>
+>
+> Prior to commit 3ab8352 "kexec jump", if machine_kexec() returned,
+> sys_reboot() would return -EINVAL. This patch restores this behaviour
+> for the non-KEXEC_JUMP case, where machine_kexec() is not expected to
+> return.
+>
+> This situation can occur on ARM, where kexec requires disabling all but
+> one CPU using CPU hotplug. However, if hotplug isn't supported by the
+> particular HW the kernel is running on, then kexec cannot succeed.
 
-Hi Hatayama,
+Ugh. This reasoning is nonsense.  Prior to the kexec jump work
+machine_kexec could never return and so could never return -EINVAL.
 
-I think michael's proposal of just putting in WARN_ONCE for non s390 arch
-sounds reasonable. It is simple and meets your need of being able to 
-detect that non s390 arch don't make use of mmap() path yet. Introducing
-in_valid_fault_range() kind of sounds overkill to me for this issue.
+It is not ok to have an image loaded that we can not kexec.  kexec_load
+should fail not machine_shutdown or machine_kexec.
 
-Thanks
-Vivek
+The only time that machine_kexec can validly return is in the kexec_jump
+case, and that is a successful return.
+
+So formally.
+
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+My apologies for not speaking up sooner the broken ARM mutli-cpu
+shutdown architecture hurts my brain to think about
+
+ARM needs to get it's act together and stop modifying the generic code
+to deal with it's broken multi-cpu architecture.
+
+Eric
+
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> Acked-by: Will Deacon <will.deacon@arm.com>
+> Acked-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> Acked-by: Simon Horman <horms@verge.net.au>
+> ---
+>  kernel/kexec.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> Andrew, could you consider picking up this patch?
+>
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 59f7b55..bde1190 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1702,6 +1702,8 @@ int kernel_kexec(void)
+>  		pm_restore_console();
+>  		unlock_system_sleep();
+>  	}
+> +#else
+> +	error = -EINVAL;
+>  #endif
+>  
+>   Unlock:
 
 _______________________________________________
 kexec mailing list
