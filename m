@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ux6fx-0004UO-0h
- for kexec@lists.infradead.org; Thu, 11 Jul 2013 02:32:10 +0000
-Message-ID: <51DE193E.7060700@windriver.com>
-Date: Thu, 11 Jul 2013 10:32:30 +0800
-From: "tiejun.chen" <tiejun.chen@windriver.com>
-MIME-Version: 1.0
-Subject: Re: BUG: 32 Bit Kernel kexec hangs on P2020
-References: <1373445543.348.5.camel@wall-e> <51DD1FC7.6080203@windriver.com>
- <1373450412.1016.3.camel@wall-e>
-In-Reply-To: <1373450412.1016.3.camel@wall-e>
+ id 1Ux712-0004iP-G8
+ for kexec@lists.infradead.org; Thu, 11 Jul 2013 02:53:58 +0000
+Date: Thu, 11 Jul 2013 11:45:05 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCHv2] calculate cyclic buffer size according to
+ info->num_dumpfile
+Message-Id: <20130711114505.68f54a24c9a1cf3d48a988e6@mxc.nes.nec.co.jp>
+In-Reply-To: <1373450525-4872-1-git-send-email-maxim.uvarov@oracle.com>
+References: <1373450525-4872-1-git-send-email-maxim.uvarov@oracle.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,68 +19,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Stefani Seibold <stefani@seibold.net>
-Cc: Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-kernel <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
+To: maxim.uvarov@oracle.com
+Cc: usui@mxm.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, nishimura@mxp.nes.nec.co.jp, kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com
 
-On 07/10/2013 06:00 PM, Stefani Seibold wrote:
-> Am Mittwoch, den 10.07.2013, 16:48 +0800 schrieb tiejun.chen:
->> On 07/10/2013 04:39 PM, Stefani Seibold wrote:
->>> Hi,
->>>
->>> i have tried to kexec a 32 bit kernel on a Freescale P2020 dual core CPU
->>> (e500v2, revison 5.1 - pvr 8021 1051), but Kexec will hang after the
->>> "Bye!".
->>>
->>> The host and the kexec kernel are the same, based on the current kernel
->>> version 3.10.
->>>
->>> I have tried it with kexec-tools 2.0.4.git released 30 June 2013.
->>>
->>> Invoking kexec with
->>>
->>> kexec --command-line "1 maxcpus=1 noirqdistrib reset_devices $(cat /proc/cmdline)" -t elf-ppc --dtb=rs2020.dtb \
->>> --reuse-node="/cpus/PowerPC,P2020@0/timebase-frequency" \
->>> --reuse-node="/cpus/PowerPC,P2020@0/bus-frequency" \
->>> --reuse-node="/cpus/PowerPC,P2020@0/clock-frequency" \
->>> --reuse-node="/cpus/PowerPC,P2020@0/next-level-cache" \
->>> --reuse-node="/cpus/PowerPC,P2020@1/timebase-frequency" \
->>> --reuse-node="/cpus/PowerPC,P2020@1/bus-frequency" \
->>> --reuse-node="/cpus/PowerPC,P2020@1/clock-frequency" \
->>> --reuse-node="/cpus/PowerPC,P2020@1/next-level-cache" \
->>> --reuse-node="/cpus/PowerPC,P2020@1/cpu-release-addr" \
->>> --reuse-node="/cpus/PowerPC,P2020@1/enable-method" \
->>> --reuse-node="/soc@ffe00000/bus-frequency" \
->>> --reuse-node="/soc@ffe00000/serial@4500/clock-frequency" \
->>> --reuse-node="/soc@ffe00000/ethernet@24000/local-mac-address" \
->>> -d -l -x vmlinux
->>> kexec -e
->>
->> Could you try again with one simple command like,
->>
->> kexec -l vmlinux --append="`cat /proc/cmdline`";kexec -e
->>
->
-> Great, this works.
->
-> I did more test and the issue for the fail is the passing of the device
-> tree. But the device tree is exact the same as the previous used one.
->
-> Is passing a new device tree not allowed?
+Hello Maxim,
 
-No, I think this is not interdicted.
+On Wed, 10 Jul 2013 14:02:05 +0400
+Maxim Uvarov <maxim.uvarov@oracle.com> wrote:
 
-I suspect you probably don't pass a proper dtb, so you can take a further test 
-to figure out this problem.
+> Dump kernel work in limited memory space and makedumpfile buffers
+> have to fit to empty memory due to not be killed with OOM-killer.
+> 
+> v2: avoid divide by zero
+> 
+> Signed-off-by: Maxim Uvarov <maxim.uvarov@oracle.com>
 
-For example, in the u-boot prompt, you can use the fdt command to get last dtb 
-after that board setup from u-boot, then pass that directly to try.
+Thanks, I'll merge this v2 patch into v1.5.5.
 
-Tiejun
 
+Atsushi Kumagai
+
+> ---
+>  makedumpfile.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index b42565c..14bacb2 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -2997,6 +2997,8 @@ out:
+>  			 * Truncate the buffer size to free memory size.
+>  			 */
+>  			free_memory = get_free_memory_size();
+> +			if (info->num_dumpfile > 1)
+> +				free_memory /= info->num_dumpfile;
+>  			if (info->bufsize_cyclic > free_memory) {
+>  				MSG("Specified buffer size is larger than free memory.\n");
+>  				MSG("The buffer size for the cyclic mode will ");
+> @@ -8548,6 +8550,9 @@ calculate_cyclic_buffer_size(void) {
+>  	 */
+>  	free_size = get_free_memory_size() * 0.4;
+>  	needed_size = (info->max_mapnr * 2) / BITPERBYTE;
+> +	/* if --split was specified cyclic buffer allocated per dump file */
+> +	if (info->num_dumpfile > 1)
+> +		needed_size /= info->num_dumpfile;
+>  
+>  	info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
+>  
+> -- 
+> 1.7.9.5
 
 _______________________________________________
 kexec mailing list
