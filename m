@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UxgQP-0004B7-Vj
- for kexec@lists.infradead.org; Fri, 12 Jul 2013 16:42:30 +0000
-Date: Fri, 12 Jul 2013 12:42:02 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: makedumpfile 1.5.4, 734G kdump tests
-Message-ID: <20130712164202.GG2272@redhat.com>
-References: <20130709162403.GA25441@sgi.com>
- <20130711130647.GA20962@redhat.com>
- <20130712161427.GA13876@sgi.com>
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UxijT-00067S-U1
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 19:10:20 +0000
+Date: Fri, 12 Jul 2013 21:09:36 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [Xen-devel] [PATCH 2/7] elf: Increase buf size in
+ get_pt_note_info()
+Message-ID: <20130712190936.GA16948@debian70-amd64.local.net-space.pl>
+References: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
+ <1373636895-31682-3-git-send-email-daniel.kiper@oracle.com>
+ <51E00CF9.7080604@citrix.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130712161427.GA13876@sgi.com>
+In-Reply-To: <51E00CF9.7080604@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +26,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: kexec@lists.infradead.org, xen-devel@lists.xensource.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
-On Fri, Jul 12, 2013 at 11:14:27AM -0500, Cliff Wickman wrote:
-> On Thu, Jul 11, 2013 at 09:06:47AM -0400, Vivek Goyal wrote:
-> > On Tue, Jul 09, 2013 at 11:24:03AM -0500, Cliff Wickman wrote:
-> > 
-> > [..]
-> > > UV2000   memory: 734G
-> > > makedumpfile: makedumpfile-1.5.4
-> > > kexec:   git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> > > booted with   crashkernel=1G,high crashkernel=192M,low
-> > > non-cyclic mode
-> > > 
-> > > write to       option            init&scan sec.   copy sec.  dump size
-> > > -------------  -----------------           ----   ---------  ---------
-> > > megaraid disk  no compression                19          91      11.7G
-> > > megaraid disk  zlib compression              20         209       1.4G
-> > > megaraid disk  snappy compression            20          46       2.4G
-> > > megaraid disk  snappy compression no mmap    30          72       2.4G
-> > > /dev/null      no compression                19          28          -
-> > > /dev/null      zlib compression              19         206          -
-> > > /dev/null      snappy compression            19          41          -
-> > > 
-> > > Notes and observations
-> > > - Snappy compression is a big win over zlib compression; over 4 times faster
-> > >   with a cost of relatively little disk space.
-> > 
-> > Thanks for the results Cliff. If it is not too much of trouble, can you
-> > please also test with lzo compression on same configuration. I am 
-> > curious to know how much better snappy performs as compared to lzo.
-> > 
-> > Thanks
-> > Vivek
-> 
-> Ok.  I repeated the tests and included LZO compression.
-> 
-> UV2000   memory: 734G
-> makedumpfile: makedumpfile-1.5.4     non-cyclic mode
-> kexec: git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> 3.10 kernel with vmcore mmap patches
-> booted with   crashkernel=1G,high crashkernel=192M,low
-> 
-> write to       compression       init&scan sec.   copy sec.  dump size
-> -------------  -----------------           ----   ---------  ---------
-> megaraid disk  no compression                20          86      11.6G
-> megaraid disk  zlib compression              19         209       1.4G
-> megaraid disk  snappy compression            20          47       2.4G
-> megaraid disk  lzo compression               19          54       2.8G
-> 
-> /dev/null      no compression                19          28          -
-> /dev/null      zlib compression              20         206          -
-> /dev/null      snappy compression            19          42          -
-> /dev/null      lzo compression               20          47          -
-> 
-> Notes:
-> - Snappy compression is still be fastest (and more compressed than LZO),
->   but LZO is close.
-> - Compression and I/O seem pretty well overlapped, so I am not sure that
->   multithreading the crash kernel (to speed compression) will speed the
->   dump as much I was hoping, unless perhaps the I/O device is an SSD.
+On Fri, Jul 12, 2013 at 03:04:41PM +0100, Andrew Cooper wrote:
+> On 12/07/13 14:48, Daniel Kiper wrote:
+> > get_pt_note_info() always ignores VMCOREINFO_XEN note
+> > because buf size is too small. It does not have place
+> > for \0 char which marks EOS. This patch fixes that bug
+> > and VMCOREINFO_XEN note living in /proc/vmcore file
+> > could be properly detected now.
+> >
+> > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> > ---
+> >  elf_info.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/elf_info.c b/elf_info.c
+> > index 0c1e36a..70a6dd2 100644
+> > --- a/elf_info.c
+> > +++ b/elf_info.c
+> > @@ -310,7 +310,7 @@ get_pt_note_info(void)
+> >  {
+> >  	int n_type, size_name, size_desc;
+> >  	off_t offset, offset_desc;
+> > -	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES];
+> > +	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES + 1];
+> >  	char note[MAX_SIZE_NHDR];
+> >
+> >  	nr_cpus = 0;
+>
+> Elf Note namesz is defined to include the terminating null character, so
+> I would argue that VMCOREINFO_XEN_NOTE_NAME_BYTES is off-by-one.
 
-Thanks Cliff. So LZO is pretty close to snappy in this case.
+I have checked that once again. By mistake I have assumed that
+sizeof("string") does not take into account \0 char (like strlen()).
+It means that in real buf could accommodate VMCOREINFO_XEN string
+with EOS and relevant condition should be fixed instead of buf size.
+I will fix it in second patch series release.
 
-Thanks
-Vivek
+Thanks,
+
+Daniel
 
 _______________________________________________
 kexec mailing list
