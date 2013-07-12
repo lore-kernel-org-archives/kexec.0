@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uxdim-000125-Lz
- for kexec@lists.infradead.org; Fri, 12 Jul 2013 13:49:20 +0000
+ id 1Uxdim-000124-MX
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 13:49:21 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 2/7] elf: Increase buf size in get_pt_note_info()
-Date: Fri, 12 Jul 2013 15:48:10 +0200
-Message-Id: <1373636895-31682-3-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH 1/7] xen: Improve calculation of beginning of virtual address
+ space
+Date: Fri, 12 Jul 2013 15:48:09 +0200
+Message-Id: <1373636895-31682-2-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
 References: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,30 +26,63 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-get_pt_note_info() always ignores VMCOREINFO_XEN note
-because buf size is too small. It does not have place
-for \0 char which marks EOS. This patch fixes that bug
-and VMCOREINFO_XEN note living in /proc/vmcore file
-could be properly detected now.
+Xen commit 4b28bf6ae90bd83fd1113d8bdc53c3266ffeb328 (x86: re-introduce
+map_domain_page() et al) once again altered virtual address space.
+Current algorithm calculating its start could not cope with that change.
+New version establishes this value on the base of domain_list placement
+and is more generic.
+
+Similar patch was applied to crash tool.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- elf_info.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86_64.c  |   16 +++++++++++-----
+ makedumpfile.h |    2 --
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/elf_info.c b/elf_info.c
-index 0c1e36a..70a6dd2 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -310,7 +310,7 @@ get_pt_note_info(void)
- {
- 	int n_type, size_name, size_desc;
- 	off_t offset, offset_desc;
--	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES];
-+	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES + 1];
- 	char note[MAX_SIZE_NHDR];
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index 8e61b20..d864a06 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -372,14 +372,20 @@ int get_xen_basic_info_x86_64(void)
+ 		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+ 	}
  
- 	nr_cpus = 0;
++	info->xen_virt_start = SYMBOL(domain_list);
++
++	/*
++	 * Xen virtual mapping is aligned to 1 GiB boundary.
++	 * domain_list lives in bss which sits no more than
++	 * 1 GiB below beginning of virtual address space.
++	 */
++	info->xen_virt_start &= 0xffffffffc0000000;
++
+ 	if (info->xen_crash_info.com &&
+-	    info->xen_crash_info.com->xen_major_version >= 4) {
+-		info->xen_virt_start = XEN_VIRT_START_V4;
++	    info->xen_crash_info.com->xen_major_version >= 4)
+ 		info->directmap_virt_end = DIRECTMAP_VIRT_END_V4;
+-	} else {
+-		info->xen_virt_start = XEN_VIRT_START_V3;
++	else
+ 		info->directmap_virt_end = DIRECTMAP_VIRT_END_V3;
+-	}
+ 
+ 	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
+ 		ERRMSG("Can't get pml4.\n");
+diff --git a/makedumpfile.h b/makedumpfile.h
+index a5826e0..1a87500 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1473,8 +1473,6 @@ int get_xen_info_x86(void);
+ #define DIRECTMAP_VIRT_END_V3 (0xffff840000000000)
+ #define DIRECTMAP_VIRT_END_V4 (0xffff880000000000)
+ #define DIRECTMAP_VIRT_END    (info->directmap_virt_end)
+-#define XEN_VIRT_START_V3     (0xffff828c80000000)
+-#define XEN_VIRT_START_V4     (0xffff82c480000000)
+ #define XEN_VIRT_START        (info->xen_virt_start)
+ #define XEN_VIRT_END          (XEN_VIRT_START + (1UL << 30))
+ #define FRAMETABLE_VIRT_START 0xffff82f600000000
 -- 
 1.7.10.4
 
