@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uxduu-0001Jm-Sx
- for kexec@lists.infradead.org; Fri, 12 Jul 2013 14:01:49 +0000
-Message-ID: <51E00C32.6090204@citrix.com>
-Date: Fri, 12 Jul 2013 15:01:22 +0100
+ id 1Uxdy3-0001NF-7w
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 14:05:04 +0000
+Message-ID: <51E00CF9.7080604@citrix.com>
+Date: Fri, 12 Jul 2013 15:04:41 +0100
 From: Andrew Cooper <andrew.cooper3@citrix.com>
 MIME-Version: 1.0
-Subject: Re: [Xen-devel] [PATCH 0/7] Xen fixes and minor cleanups
+Subject: Re: [Xen-devel] [PATCH 2/7] elf: Increase buf size in
+ get_pt_note_info()
 References: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
-In-Reply-To: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
+ <1373636895-31682-3-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <1373636895-31682-3-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,33 +28,35 @@ To: Daniel Kiper <daniel.kiper@oracle.com>
 Cc: kexec@lists.infradead.org, xen-devel@lists.xensource.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
 On 12/07/13 14:48, Daniel Kiper wrote:
-> Hi,
+> get_pt_note_info() always ignores VMCOREINFO_XEN note
+> because buf size is too small. It does not have place
+> for \0 char which marks EOS. This patch fixes that bug
+> and VMCOREINFO_XEN note living in /proc/vmcore file
+> could be properly detected now.
 >
-> This patch series contains following Xen fixes and cleanups:
->   - xen: Improve calculation of beginning of virtual address space,
->   - elf: Increase buf size in get_pt_note_info(),
->   - xen: Take into account new frame table address since Xen 4.3,
->   - xen: Enforce page size only when xen-syms file is used,
->   - Mute some compiler warnings,
->   - Use elf_getshdrstrndx() instead of elf_getshstrndx(),
->   - Do not break progress messages.
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> ---
+>  elf_info.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> All patches were tested with Xen versions up to 4.3.
->
-> Daniel
+> diff --git a/elf_info.c b/elf_info.c
+> index 0c1e36a..70a6dd2 100644
+> --- a/elf_info.c
+> +++ b/elf_info.c
+> @@ -310,7 +310,7 @@ get_pt_note_info(void)
+>  {
+>  	int n_type, size_name, size_desc;
+>  	off_t offset, offset_desc;
+> -	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES];
+> +	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES + 1];
+>  	char note[MAX_SIZE_NHDR];
+>  
+>  	nr_cpus = 0;
 
-I presume these are all kexec-tools fixes, given the files patched, but
-no specific statement one way or another?
+Elf Note namesz is defined to include the terminating null character, so
+I would argue that VMCOREINFO_XEN_NOTE_NAME_BYTES is off-by-one.
 
 ~Andrew
-
->
->
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel@lists.xen.org
-> http://lists.xen.org/xen-devel
-
 
 _______________________________________________
 kexec mailing list
