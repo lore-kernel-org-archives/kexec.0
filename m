@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from co1ehsobe003.messaging.microsoft.com ([216.32.180.186]
+Received: from co1ehsobe004.messaging.microsoft.com ([216.32.180.187]
  helo=co1outboundpool.messaging.microsoft.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UxkaS-000823-L6
- for kexec@lists.infradead.org; Fri, 12 Jul 2013 21:09:09 +0000
-Message-ID: <51E07056.8040007@mail.usask.ca>
-Date: Fri, 12 Jul 2013 15:08:38 -0600
+ id 1UxmJW-0000v2-69
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 22:59:47 +0000
+Message-ID: <51E08A40.80900@mail.usask.ca>
+Date: Fri, 12 Jul 2013 16:59:12 -0600
 From: Chris Friesen <cbf123@mail.usask.ca>
 MIME-Version: 1.0
 Subject: Re: visible memory seems wrong in kexec crash dump kernel
 References: <51DF1BBB.5060904@mail.usask.ca> <51DF2229.5010604@mail.usask.ca>
- <20130712012142.GA24112@concordia>
-In-Reply-To: <20130712012142.GA24112@concordia>
+ <20130712012142.GA24112@concordia> <51E07056.8040007@mail.usask.ca>
+In-Reply-To: <51E07056.8040007@mail.usask.ca>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,40 +27,42 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Michael Ellerman <michael@ellerman.id.au>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On 07/11/2013 07:21 PM, Michael Ellerman wrote:
-> On Thu, Jul 11, 2013 at 03:22:49PM -0600, Chris Friesen wrote:
->> On 07/11/2013 02:55 PM, Chris Friesen wrote:
->>> Hi,
->>>
->>> I'm running 2.6.34 with kexec 2.0.1 on a Freescale p5020-based system
->>> with 8GB of memory.  (It's an embedded system and I can't do much
->>> about the fact that it's using older software.)
->>
->> I should probably clarify this...I may be able to update kexec, I
->> can't update the kernel but I can backport more recent code if
->> necessary.
->>
->> Looking at the version of kexec that I have, it seems like where x86
->> uses "memmap=" to specify the memory map usable by the capture
->> kernel, powerpc does something different.
+On 07/12/2013 03:08 PM, Chris Friesen wrote:
+
+> I turned on the instrumentation in early_init_dt_scan_memory() and got
+> the following when jumping to the capture kernel:
 >
->  From memory, it's been years, on powerpc we add properties to the memory
-> nodes in the device tree that specify which memory is usable. The
-> properties are called "linux,usable-memory", and in modern kernels they
-> are read in early_init_dt_scan_memory().
+> memory scan node memory, reg size 16, data: 0 0 2 0,
+> - 0 , 200000000
+>
+> That 0x200000000 matches the fact that I'm seeing 8GB of memory
+> available in the recovery kernel.
+>
+> If I boot the original kernel with "crashkernel=224M@32M", should I
+> expect that only 224MB is marked as "linux,usable-memory" in the
+> recovery kernel?
 
-I turned on the instrumentation in early_init_dt_scan_memory() and got 
-the following when jumping to the capture kernel:
+I started looking at the kexec side of things, and I noticed something a 
+bit odd.  In most places dealing with the device tree in kexec it 
+accepts either "memory" or "memory@" for the memory node name.  In 
+add_usable_mem_property() in arch/ppc64/fs2dt.c it seems to only accept 
+"memory@".
 
-memory scan node memory, reg size 16, data: 0 0 2 0,
-  - 0 ,  200000000
+Is this expected behaviour?  It seems to be the same in current git 
+versions of kexec-tools.
 
-That 0x200000000 matches the fact that I'm seeing 8GB of memory 
-available in the recovery kernel.
+On my system I see "/proc/device-tree/memory".
 
-If I boot the original kernel with "crashkernel=224M@32M", should I 
-expect that only 224MB is marked as "linux,usable-memory" in the 
-recovery kernel?
+If I modify add_usable_mem_property() to also accept "/memory" then my 
+recovery kernel boots up with
+
+physicalMemorySize            = 0x10000000
+
+which is 256MB (which is still a bit odd since I specified 224MB for the 
+crashkernel).
+
+However, it then hits the BUG() call at the end of mark_bootmem() in 
+mm/bootmem.c.
 
 Chris
 
