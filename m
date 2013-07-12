@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uxdim-00012R-NK
- for kexec@lists.infradead.org; Fri, 12 Jul 2013 13:49:19 +0000
+ id 1Uxdim-000129-JV
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 13:49:17 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 7/7] Do not break progress messages
-Date: Fri, 12 Jul 2013 15:48:15 +0200
-Message-Id: <1373636895-31682-8-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH 5/7] Mute some compiler warnings
+Date: Fri, 12 Jul 2013 15:48:13 +0200
+Message-Id: <1373636895-31682-6-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
 References: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,48 +18,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-DEBUG_MSG() displaying erase info size breaks progress messages.
-Fix this by moving relevant DEBUG_MSG() to write_elf_eraseinfo().
-
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
----
- makedumpfile.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b4abbe5..a3bfc80 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5045,7 +5045,6 @@ write_elf_header(struct cache_data *cd_header)
- 	 * function.
- 	 */
- 	info->size_elf_eraseinfo = size_eraseinfo;
--	DEBUG_MSG("erase info size: %lu\n", info->size_elf_eraseinfo);
- 
- 	/*
- 	 * Write a PT_NOTE header.
-@@ -6326,6 +6325,8 @@ write_elf_eraseinfo(struct cache_data *cd_header)
- 	off_t offset_eraseinfo;
- 	unsigned long note_header_size, size_written, size_note;
- 
-+	DEBUG_MSG("erase info size: %lu\n", info->size_elf_eraseinfo);
-+
- 	if (!info->size_elf_eraseinfo)
- 		return TRUE;
- 
--- 
-1.7.10.4
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBwYXRjaCBtdXRlcyBmb2xsd2luZyBjb21waWxlciB3YXJuaW5nczoKICAtIHdhcm5pbmc6
+IGFzc2lnbm1lbnQgZGlzY2FyZHMg4oCYY29uc3TigJkgcXVhbGlmaWVyIGZyb20KICAgIHBvaW50
+ZXIgdGFyZ2V0IHR5cGUgW2VuYWJsZWQgYnkgZGVmYXVsdF0sCiAgLSB3YXJuaW5nOiB2YXJpYWJs
+ZSDigJhwYWdlX29mZnNldOKAmSBzZXQgYnV0IG5vdCB1c2VkCiAgICBbLVd1bnVzZWQtYnV0LXNl
+dC12YXJpYWJsZV0uCgpTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgS2lwZXIgPGRhbmllbC5raXBlckBv
+cmFjbGUuY29tPgotLS0KIGR3YXJmX2luZm8uYyAgfCAgICA0ICsrLS0KIHNhZHVtcF9pbmZvLmMg
+fCAgICAyIC0tCiAyIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMo
+LSkKCmRpZmYgLS1naXQgYS9kd2FyZl9pbmZvLmMgYi9kd2FyZl9pbmZvLmMKaW5kZXggNmUyMWI4
+YS4uODZjYWU2OSAxMDA2NDQKLS0tIGEvZHdhcmZfaW5mby5jCisrKyBiL2R3YXJmX2luZm8uYwpA
+QCAtMTQyNyw3ICsxNDI3LDcgQEAgZ2V0X2RpZV9tZW1iZXIodW5zaWduZWQgbG9uZyBsb25nIGRp
+ZV9vZmYsIGludCBpbmRleCwgbG9uZyAqb2Zmc2V0LAogCWlmICghZ2V0X2RhdGFfbWVtYmVyX2xv
+Y2F0aW9uKGRpZSwgb2Zmc2V0KSkKIAkJKm9mZnNldCA9IDA7CiAKLQkqbmFtZSA9IGR3YXJmX2Rp
+ZW5hbWUoZGllKTsKKwkqbmFtZSA9IChjaGFyICopZHdhcmZfZGllbmFtZShkaWUpOwogCS8qCiAJ
+ICogRHVwbGljYXRlIHRoZSBzdHJpbmcgYmVmb3JlIHdlIHBhc3MgaXQgdG8gZXBwaWMgbGF5ZXIu
+IFRoZQogCSAqIG9yaWdpbmFsIHN0cmluZyByZXR1cm5lZCBieSBkd2FyZiBsYXllciB3aWxsIGJl
+Y29tZSBpbnZhbGlkCkBAIC0xNTEzLDcgKzE1MTMsNyBAQCBnZXRfZGllX25hbWUodW5zaWduZWQg
+bG9uZyBsb25nIGRpZV9vZmYpCiAJCXJldHVybiBOVUxMOwogCX0KIAotCW5hbWUgPSBkd2FyZl9k
+aWVuYW1lKCZyZXN1bHQpOworCW5hbWUgPSAoY2hhciAqKWR3YXJmX2RpZW5hbWUoJnJlc3VsdCk7
+CiAJaWYgKG5hbWUpCiAJCW5hbWUgPSBzdHJkdXAobmFtZSk7CiAJY2xlYW5fZHdmbF9pbmZvKCk7
+CmRpZmYgLS1naXQgYS9zYWR1bXBfaW5mby5jIGIvc2FkdW1wX2luZm8uYwppbmRleCBiZTZjZjU1
+Li4wMWNmNWViIDEwMDY0NAotLS0gYS9zYWR1bXBfaW5mby5jCisrKyBiL3NhZHVtcF9pbmZvLmMK
+QEAgLTk0OCw3ICs5NDgsNiBAQCBpbnQKIHJlYWRwYWdlX3NhZHVtcCh1bnNpZ25lZCBsb25nIGxv
+bmcgcGFkZHIsIHZvaWQgKmJ1ZnB0cikKIHsKIAl1bnNpZ25lZCBsb25nIGxvbmcgcGZuLCBibG9j
+aywgd2hvbGVfb2Zmc2V0LCBwZXJkaXNrX29mZnNldDsKLQl1bG9uZyBwYWdlX29mZnNldDsKIAlp
+bnQgZmRfbWVtb3J5OwogCiAJaWYgKHNpLT5rZHVtcF9iYWNrZWRfdXAgJiYKQEAgLTk1Nyw3ICs5
+NTYsNiBAQCByZWFkcGFnZV9zYWR1bXAodW5zaWduZWQgbG9uZyBsb25nIHBhZGRyLCB2b2lkICpi
+dWZwdHIpCiAJCXBhZGRyICs9IHNpLT5iYWNrdXBfb2Zmc2V0IC0gc2ktPmJhY2t1cF9zcmNfc3Rh
+cnQ7CiAKIAlwZm4gPSBwYWRkcl90b19wZm4ocGFkZHIpOwotCXBhZ2Vfb2Zmc2V0ID0gcGFkZHIg
+JSBpbmZvLT5wYWdlX3NpemU7CiAKIAlpZiAocGZuID49IHNpLT5zaF9tZW1vcnktPm1heF9tYXBu
+cikKIAkJcmV0dXJuIEZBTFNFOwotLSAKMS43LjEwLjQKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
