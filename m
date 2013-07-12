@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp.citrix.com ([66.165.176.89])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uxe5G-0001Vh-VU
- for kexec@lists.infradead.org; Fri, 12 Jul 2013 14:12:31 +0000
-Message-ID: <51E00EB8.7050907@citrix.com>
-Date: Fri, 12 Jul 2013 15:12:08 +0100
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-MIME-Version: 1.0
-Subject: Re: [Xen-devel] [PATCH 5/7] Mute some compiler warnings
+ id 1UxeN2-0001p1-2Y
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 14:30:52 +0000
+Date: Fri, 12 Jul 2013 16:30:15 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [Xen-devel] [PATCH 0/7] Xen fixes and minor cleanups
+Message-ID: <20130712143015.GA16654@debian70-amd64.local.net-space.pl>
 References: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
- <1373636895-31682-6-git-send-email-daniel.kiper@oracle.com>
-In-Reply-To: <1373636895-31682-6-git-send-email-daniel.kiper@oracle.com>
+ <51E00C32.6090204@citrix.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51E00C32.6090204@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,50 +20,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
 Cc: kexec@lists.infradead.org, xen-devel@lists.xensource.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
-T24gMTIvMDcvMTMgMTQ6NDgsIERhbmllbCBLaXBlciB3cm90ZToKPiBUaGlzIHBhdGNoIG11dGVz
-IGZvbGx3aW5nIGNvbXBpbGVyIHdhcm5pbmdzOgo+ICAgLSB3YXJuaW5nOiBhc3NpZ25tZW50IGRp
-c2NhcmRzIOKAmGNvbnN04oCZIHF1YWxpZmllciBmcm9tCj4gICAgIHBvaW50ZXIgdGFyZ2V0IHR5
-cGUgW2VuYWJsZWQgYnkgZGVmYXVsdF0sCj4gICAtIHdhcm5pbmc6IHZhcmlhYmxlIOKAmHBhZ2Vf
-b2Zmc2V04oCZIHNldCBidXQgbm90IHVzZWQKPiAgICAgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFi
-bGVdLgo+Cj4gU2lnbmVkLW9mZi1ieTogRGFuaWVsIEtpcGVyIDxkYW5pZWwua2lwZXJAb3JhY2xl
-LmNvbT4KPiAtLS0KPiAgZHdhcmZfaW5mby5jICB8ICAgIDQgKystLQo+ICBzYWR1bXBfaW5mby5j
-IHwgICAgMiAtLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlv
-bnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kd2FyZl9pbmZvLmMgYi9kd2FyZl9pbmZvLmMKPiBpbmRl
-eCA2ZTIxYjhhLi44NmNhZTY5IDEwMDY0NAo+IC0tLSBhL2R3YXJmX2luZm8uYwo+ICsrKyBiL2R3
-YXJmX2luZm8uYwo+IEBAIC0xNDI3LDcgKzE0MjcsNyBAQCBnZXRfZGllX21lbWJlcih1bnNpZ25l
-ZCBsb25nIGxvbmcgZGllX29mZiwgaW50IGluZGV4LCBsb25nICpvZmZzZXQsCj4gIAlpZiAoIWdl
-dF9kYXRhX21lbWJlcl9sb2NhdGlvbihkaWUsIG9mZnNldCkpCj4gIAkJKm9mZnNldCA9IDA7Cj4g
-IAo+IC0JKm5hbWUgPSBkd2FyZl9kaWVuYW1lKGRpZSk7Cj4gKwkqbmFtZSA9IChjaGFyICopZHdh
-cmZfZGllbmFtZShkaWUpOwoKRGlzY2FyZGluZyBhIGNvbnN0IHF1YWxpZmllciBsaWtlIHRoaXMg
-aXMgdXN1YWxseSBhIGdvb2Qgc2lnbiB0aGF0IHlvdQphcmUgbWlzdXNpbmcgbmFtZSBpbiB0aGUg
-Zmlyc3QgcGxhY2UuCgpJbmRlZWQsIG5hbWUgaXMgbWVyZWx5IG5vbi1jb25zdCB0byBzdHJkdXAo
-KSBhbmQgcmV1c2UgdGhlIHNhbWUgdmFyaWFibGUuCgpUaGlzIHdvdWxkIGJlIG1vcmUgY2xlYXJs
-eSBkb25lIHVzaW5nCgpjb25zdCBjaGFyICogZGllbmFtZSA9IGR3YXJmX2RpZW5hbWUoJnJlc3Vs
-dCkgOwoKYW5kCgpuYW1lID0gc3RyZHVwKGRpZW5hbWUpOwoKfkFuZHJldwoKPiAgCS8qCj4gIAkg
-KiBEdXBsaWNhdGUgdGhlIHN0cmluZyBiZWZvcmUgd2UgcGFzcyBpdCB0byBlcHBpYyBsYXllci4g
-VGhlCj4gIAkgKiBvcmlnaW5hbCBzdHJpbmcgcmV0dXJuZWQgYnkgZHdhcmYgbGF5ZXIgd2lsbCBi
-ZWNvbWUgaW52YWxpZAo+IEBAIC0xNTEzLDcgKzE1MTMsNyBAQCBnZXRfZGllX25hbWUodW5zaWdu
-ZWQgbG9uZyBsb25nIGRpZV9vZmYpCj4gIAkJcmV0dXJuIE5VTEw7Cj4gIAl9Cj4gIAo+IC0JbmFt
-ZSA9IGR3YXJmX2RpZW5hbWUoJnJlc3VsdCk7Cj4gKwluYW1lID0gKGNoYXIgKilkd2FyZl9kaWVu
-YW1lKCZyZXN1bHQpOwo+ICAJaWYgKG5hbWUpCj4gIAkJbmFtZSA9IHN0cmR1cChuYW1lKTsKPiAg
-CWNsZWFuX2R3ZmxfaW5mbygpOwo+IGRpZmYgLS1naXQgYS9zYWR1bXBfaW5mby5jIGIvc2FkdW1w
-X2luZm8uYwo+IGluZGV4IGJlNmNmNTUuLjAxY2Y1ZWIgMTAwNjQ0Cj4gLS0tIGEvc2FkdW1wX2lu
-Zm8uYwo+ICsrKyBiL3NhZHVtcF9pbmZvLmMKPiBAQCAtOTQ4LDcgKzk0OCw2IEBAIGludAo+ICBy
-ZWFkcGFnZV9zYWR1bXAodW5zaWduZWQgbG9uZyBsb25nIHBhZGRyLCB2b2lkICpidWZwdHIpCj4g
-IHsKPiAgCXVuc2lnbmVkIGxvbmcgbG9uZyBwZm4sIGJsb2NrLCB3aG9sZV9vZmZzZXQsIHBlcmRp
-c2tfb2Zmc2V0Owo+IC0JdWxvbmcgcGFnZV9vZmZzZXQ7Cj4gIAlpbnQgZmRfbWVtb3J5Owo+ICAK
-PiAgCWlmIChzaS0+a2R1bXBfYmFja2VkX3VwICYmCj4gQEAgLTk1Nyw3ICs5NTYsNiBAQCByZWFk
-cGFnZV9zYWR1bXAodW5zaWduZWQgbG9uZyBsb25nIHBhZGRyLCB2b2lkICpidWZwdHIpCj4gIAkJ
-cGFkZHIgKz0gc2ktPmJhY2t1cF9vZmZzZXQgLSBzaS0+YmFja3VwX3NyY19zdGFydDsKPiAgCj4g
-IAlwZm4gPSBwYWRkcl90b19wZm4ocGFkZHIpOwo+IC0JcGFnZV9vZmZzZXQgPSBwYWRkciAlIGlu
-Zm8tPnBhZ2Vfc2l6ZTsKPiAgCj4gIAlpZiAocGZuID49IHNpLT5zaF9tZW1vcnktPm1heF9tYXBu
-cikKPiAgCQlyZXR1cm4gRkFMU0U7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Fri, Jul 12, 2013 at 03:01:22PM +0100, Andrew Cooper wrote:
+> On 12/07/13 14:48, Daniel Kiper wrote:
+> > Hi,
+> >
+> > This patch series contains following Xen fixes and cleanups:
+> >   - xen: Improve calculation of beginning of virtual address space,
+> >   - elf: Increase buf size in get_pt_note_info(),
+> >   - xen: Take into account new frame table address since Xen 4.3,
+> >   - xen: Enforce page size only when xen-syms file is used,
+> >   - Mute some compiler warnings,
+> >   - Use elf_getshdrstrndx() instead of elf_getshstrndx(),
+> >   - Do not break progress messages.
+> >
+> > All patches were tested with Xen versions up to 4.3.
+> >
+> > Daniel
+>
+> I presume these are all kexec-tools fixes, given the files patched, but
+> no specific statement one way or another?
+
+Sorry, I forgot to mention that this is makedumpfile patch series.
+
+Daniel
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
