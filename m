@@ -1,8 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] ARM: kexec: validate CPU hotplug support
-Date: Thu, 11 Jul 2013 16:48:51 -0600
-Message-Id: <1373582931-11956-1-git-send-email-swarren@wwwdotorg.org>
+Received: from ozlabs.org ([2402:b800:7003:1:1::1])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UxS3j-0005mO-Gu
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 01:22:08 +0000
+Date: Fri, 12 Jul 2013 11:21:43 +1000
+From: Michael Ellerman <michael@ellerman.id.au>
+Subject: Re: visible memory seems wrong in kexec crash dump kernel
+Message-ID: <20130712012142.GA24112@concordia>
+References: <51DF1BBB.5060904@mail.usask.ca> <51DF2229.5010604@mail.usask.ca>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51DF2229.5010604@mail.usask.ca>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -11,116 +19,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Russell King <linux@arm.linux.org.uk>
-Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org
+To: Chris Friesen <cbf123@mail.usask.ca>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-From: Stephen Warren <swarren@nvidia.com>
+On Thu, Jul 11, 2013 at 03:22:49PM -0600, Chris Friesen wrote:
+> On 07/11/2013 02:55 PM, Chris Friesen wrote:
+> >Hi,
+> >
+> >I'm running 2.6.34 with kexec 2.0.1 on a Freescale p5020-based system
+> >with 8GB of memory.  (It's an embedded system and I can't do much
+> >about the fact that it's using older software.)
+> 
+> I should probably clarify this...I may be able to update kexec, I
+> can't update the kernel but I can backport more recent code if
+> necessary.
+> 
+> Looking at the version of kexec that I have, it seems like where x86
+> uses "memmap=" to specify the memory map usable by the capture
+> kernel, powerpc does something different.
 
-Architectures should fully validate whether kexec is possible as part of
-machine_kexec_prepare(), so that user-space's kexec_load() operation can
-report any problems. Performing validation in machine_kexec() itself is
-too late, since it is not allowed to return.
+From memory, it's been years, on powerpc we add properties to the memory
+nodes in the device tree that specify which memory is usable. The
+properties are called "linux,usable-memory", and in modern kernels they
+are read in early_init_dt_scan_memory().
 
-Prior to this patch, ARM's machine_kexec() was testing after-the-fact
-whether machine_kexec_prepare() was able to disable all but one CPU.
-Instead, modify machine_kexec_prepare() to validate all conditions
-necessary for machine_kexec_prepare()'s to succeed. BUG if the validation
-succeeded, yet disabling the CPUs didn't actually work.
-
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-Russell, does it make sense for this to be cc: stable as a follow-up to
-19ab428 "ARM: 7759/1: decouple CPU offlining from reboot/shutdown"?
-
- arch/arm/include/asm/smp_plat.h |  3 +++
- arch/arm/kernel/machine_kexec.c | 20 ++++++++++++++++----
- arch/arm/kernel/smp.c           |  8 ++++++++
- 3 files changed, 27 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
-index 6462a72..a252c0b 100644
---- a/arch/arm/include/asm/smp_plat.h
-+++ b/arch/arm/include/asm/smp_plat.h
-@@ -88,4 +88,7 @@ static inline u32 mpidr_hash_size(void)
- {
- 	return 1 << mpidr_hash.bits;
- }
-+
-+extern int platform_can_cpu_hotplug(void);
-+
- #endif
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index 4fb074c..d7c82df 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -15,6 +15,7 @@
- #include <asm/mmu_context.h>
- #include <asm/cacheflush.h>
- #include <asm/mach-types.h>
-+#include <asm/smp_plat.h>
- #include <asm/system_misc.h>
- 
- extern const unsigned char relocate_new_kernel[];
-@@ -39,6 +40,14 @@ int machine_kexec_prepare(struct kimage *image)
- 	int i, err;
- 
- 	/*
-+	 * Validate that if the current HW supports SMP, then the SW supports
-+	 * and implements CPU hotplug for the current HW. If not, we won't be
-+	 * able to kexec reliably, so fail the prepare operation.
-+	 */
-+	if (num_possible_cpus() > 1 && !platform_can_cpu_hotplug())
-+		return -EINVAL;
-+
-+	/*
- 	 * No segment at default ATAGs address. try to locate
- 	 * a dtb using magic.
- 	 */
-@@ -134,10 +143,13 @@ void machine_kexec(struct kimage *image)
- 	unsigned long reboot_code_buffer_phys;
- 	void *reboot_code_buffer;
- 
--	if (num_online_cpus() > 1) {
--		pr_err("kexec: error: multiple CPUs still online\n");
--		return;
--	}
-+	/*
-+	 * This can only happen if machine_shutdown() failed to disable some
-+	 * CPU, and that can only happen if the checks in
-+	 * machine_kexec_prepare() were not correct. If this fails, we can't
-+	 * reliably kexec anyway, so BUG_ON is appropriate.
-+	 */
-+	BUG_ON(num_online_cpus() > 1);
- 
- 	page_list = image->head & PAGE_MASK;
- 
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index c2b4f8f..5b9e501 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -145,6 +145,14 @@ int boot_secondary(unsigned int cpu, struct task_struct *idle)
- 	return -ENOSYS;
- }
- 
-+int platform_can_cpu_hotplug(void)
-+{
-+	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU) || !smp_ops.cpu_kill)
-+		return 0;
-+
-+	return 1;
-+}
-+
- #ifdef CONFIG_HOTPLUG_CPU
- static void percpu_timer_stop(void);
- 
--- 
-1.8.1.5
-
+cheers
 
 _______________________________________________
 kexec mailing list
