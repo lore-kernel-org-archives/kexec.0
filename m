@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uxdim-000128-JT
- for kexec@lists.infradead.org; Fri, 12 Jul 2013 13:49:17 +0000
+ id 1Uxdim-00012N-LS
+ for kexec@lists.infradead.org; Fri, 12 Jul 2013 13:49:18 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 4/7] xen: Enforce page size only when xen-syms file is used
-Date: Fri, 12 Jul 2013 15:48:12 +0200
-Message-Id: <1373636895-31682-5-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH 6/7] Use elf_getshdrstrndx() instead of elf_getshstrndx()
+Date: Fri, 12 Jul 2013 15:48:14 +0200
+Message-Id: <1373636895-31682-7-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
 References: <1373636895-31682-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,37 +25,27 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-Enforce page size only when xen-syms file is used.
-Otherwise its size could be read from VMCOREINFO
-file or /proc/vmcore file.
+Use elf_getshdrstrndx() instead of elf_getshstrndx()
+because later is marked as deprecated.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- makedumpfile.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ dwarf_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b42565c..b4abbe5 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -7324,8 +7324,6 @@ initial_xen(void)
- #endif
- 	if (!init_xen_crash_info())
- 		return FALSE;
--	if (!fallback_to_current_page_size())
--		return FALSE;
- 	/*
- 	 * Get the debug information for analysis from the vmcoreinfo file
- 	 */
-@@ -7340,6 +7338,8 @@ initial_xen(void)
- 		set_dwarf_debuginfo("xen-syms", NULL,
- 				    info->name_xen_syms, info->fd_xen_syms);
+diff --git a/dwarf_info.c b/dwarf_info.c
+index 86cae69..3678cbe 100644
+--- a/dwarf_info.c
++++ b/dwarf_info.c
+@@ -944,7 +944,7 @@ get_debug_info(void)
+ 	elfd = dwarf_info.elfd;
+ 	dwarfd = dwarf_info.dwarfd;
  
-+		if (!fallback_to_current_page_size())
-+			return FALSE;
- 		if (!get_symbol_info_xen())
- 			return FALSE;
- 		if (!get_structure_info_xen())
+-	if (elf_getshstrndx(elfd, &shstrndx) < 0) {
++	if (elf_getshdrstrndx(elfd, &shstrndx) < 0) {
+ 		ERRMSG("Can't get the section index of the string table.\n");
+ 		goto out;
+ 	}
 -- 
 1.7.10.4
 
