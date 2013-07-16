@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uz4R5-0002uY-B0
- for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:32:56 +0000
+ id 1Uz4R6-0002uX-SR
+ for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:32:58 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH v2 2/7] elf: Properly check buf size in get_pt_note_info()
-Date: Tue, 16 Jul 2013 14:32:04 +0200
-Message-Id: <1373977929-4253-3-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH v2 1/7] xen: Improve calculation of beginning of virtual
+ address space
+Date: Tue, 16 Jul 2013 14:32:03 +0200
+Message-Id: <1373977929-4253-2-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,36 +26,63 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: andrew.cooper3@citrix.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-get_pt_note_info() always ignores VMCOREINFO_XEN note because
-buf size must be smaller than note size including \0 char.
-Usualy this condition is true but when VMCOREINFO_XEN note
-is encountered it does not work due to buf size defined
-as sizeof("VMCOREINFO_XEN"). This patch fixes that bug
-and VMCOREINFO_XEN note living in /proc/vmcore file
-could be properly detected now.
+Xen commit 4b28bf6ae90bd83fd1113d8bdc53c3266ffeb328 (x86: re-introduce
+map_domain_page() et al) once again altered virtual address space.
+Current algorithm calculating its start could not cope with that change.
+New version establishes this value on the base of domain_list placement
+and is more generic.
 
-v2 - suggestions/fixes:
-   - properly check buf size instead of increasing buf size
-     (suggested by Andrew Cooper).
+Similar patch was applied to crash tool.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- elf_info.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86_64.c  |   16 +++++++++++-----
+ makedumpfile.h |    2 --
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/elf_info.c b/elf_info.c
-index 0c1e36a..e350b99 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -332,7 +332,7 @@ get_pt_note_info(void)
- 		size_desc   = note_descsz(note);
- 		offset_desc = offset + offset_note_desc(note);
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index 8e61b20..d864a06 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -372,14 +372,20 @@ int get_xen_basic_info_x86_64(void)
+ 		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+ 	}
  
--		if (!size_name || size_name >= sizeof(buf))
-+		if (!size_name || size_name > sizeof(buf))
- 			goto next_note;
++	info->xen_virt_start = SYMBOL(domain_list);
++
++	/*
++	 * Xen virtual mapping is aligned to 1 GiB boundary.
++	 * domain_list lives in bss which sits no more than
++	 * 1 GiB below beginning of virtual address space.
++	 */
++	info->xen_virt_start &= 0xffffffffc0000000;
++
+ 	if (info->xen_crash_info.com &&
+-	    info->xen_crash_info.com->xen_major_version >= 4) {
+-		info->xen_virt_start = XEN_VIRT_START_V4;
++	    info->xen_crash_info.com->xen_major_version >= 4)
+ 		info->directmap_virt_end = DIRECTMAP_VIRT_END_V4;
+-	} else {
+-		info->xen_virt_start = XEN_VIRT_START_V3;
++	else
+ 		info->directmap_virt_end = DIRECTMAP_VIRT_END_V3;
+-	}
  
- 		if (read(fd_memory, &buf, sizeof(buf)) != sizeof(buf)) {
+ 	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
+ 		ERRMSG("Can't get pml4.\n");
+diff --git a/makedumpfile.h b/makedumpfile.h
+index a5826e0..1a87500 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1473,8 +1473,6 @@ int get_xen_info_x86(void);
+ #define DIRECTMAP_VIRT_END_V3 (0xffff840000000000)
+ #define DIRECTMAP_VIRT_END_V4 (0xffff880000000000)
+ #define DIRECTMAP_VIRT_END    (info->directmap_virt_end)
+-#define XEN_VIRT_START_V3     (0xffff828c80000000)
+-#define XEN_VIRT_START_V4     (0xffff82c480000000)
+ #define XEN_VIRT_START        (info->xen_virt_start)
+ #define XEN_VIRT_END          (XEN_VIRT_START + (1UL << 30))
+ #define FRAMETABLE_VIRT_START 0xffff82f600000000
 -- 
 1.7.10.4
 
