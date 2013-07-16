@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uz4R9-0002ue-F3
+ id 1Uz4R9-0002ud-F3
  for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:33:01 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH v2 7/7] Use elf_getshdrstrndx() instead of elf_getshstrndx()
-Date: Tue, 16 Jul 2013 14:32:09 +0200
-Message-Id: <1373977929-4253-8-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH v2 6/7] Mute some compiler warnings
+Date: Tue, 16 Jul 2013 14:32:08 +0200
+Message-Id: <1373977929-4253-7-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,40 +18,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: andrew.cooper3@citrix.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-Use elf_getshdrstrndx() instead of elf_getshstrndx()
-because later is marked as deprecated.
-
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
----
- dwarf_info.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/dwarf_info.c b/dwarf_info.c
-index 85c116e..c5752c9 100644
---- a/dwarf_info.c
-+++ b/dwarf_info.c
-@@ -944,7 +944,7 @@ get_debug_info(void)
- 	elfd = dwarf_info.elfd;
- 	dwarfd = dwarf_info.dwarfd;
- 
--	if (elf_getshstrndx(elfd, &shstrndx) < 0) {
-+	if (elf_getshdrstrndx(elfd, &shstrndx) < 0) {
- 		ERRMSG("Can't get the section index of the string table.\n");
- 		goto out;
- 	}
--- 
-1.7.10.4
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBwYXRjaCBtdXRlcyBmb2xsd2luZyBjb21waWxlciB3YXJuaW5nczoKICAtIHdhcm5pbmc6
+IGFzc2lnbm1lbnQgZGlzY2FyZHMg4oCYY29uc3TigJkgcXVhbGlmaWVyIGZyb20KICAgIHBvaW50
+ZXIgdGFyZ2V0IHR5cGUgW2VuYWJsZWQgYnkgZGVmYXVsdF0sCiAgLSB3YXJuaW5nOiB2YXJpYWJs
+ZSDigJhwYWdlX29mZnNldOKAmSBzZXQgYnV0IG5vdCB1c2VkCiAgICBbLVd1bnVzZWQtYnV0LXNl
+dC12YXJpYWJsZV0uCgp2MiAtIHN1Z2dlc3Rpb25zL2ZpeGVzOgogICAtIGRvIG5vdCBkaXNjYXJk
+IGEgY29uc3QgcXVhbGlmaWVyCiAgICAgKHN1Z2dlc3RlZCBieSBBbmRyZXcgQ29vcGVyKS4KClNp
+Z25lZC1vZmYtYnk6IERhbmllbCBLaXBlciA8ZGFuaWVsLmtpcGVyQG9yYWNsZS5jb20+Ci0tLQog
+ZHdhcmZfaW5mby5jICB8ICAgMTQgKysrKysrKystLS0tLS0KIHNhZHVtcF9pbmZvLmMgfCAgICAy
+IC0tCiAyIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKCmRp
+ZmYgLS1naXQgYS9kd2FyZl9pbmZvLmMgYi9kd2FyZl9pbmZvLmMKaW5kZXggNmUyMWI4YS4uODVj
+MTE2ZSAxMDA2NDQKLS0tIGEvZHdhcmZfaW5mby5jCisrKyBiL2R3YXJmX2luZm8uYwpAQCAtMTM4
+MSw2ICsxMzgxLDcgQEAgaW50CiBnZXRfZGllX21lbWJlcih1bnNpZ25lZCBsb25nIGxvbmcgZGll
+X29mZiwgaW50IGluZGV4LCBsb25nICpvZmZzZXQsCiAJCWNoYXIgKipuYW1lLCBpbnQgKm5iaXRz
+LCBpbnQgKmZiaXRzLCB1bnNpZ25lZCBsb25nIGxvbmcgKm1fZGllKQogeworCWNvbnN0IGNoYXIg
+KmRpZW5hbWU7CiAJaW50IHRhZywgc2l6ZSwgbmZpZWxkcyA9IDA7CiAJRHdhcmZfRGllIHJlc3Vs
+dCwgY2hpbGQsIGRpZV9iYXNlLCAqZGllOwogCkBAIC0xNDI3LDE0ICsxNDI4LDE0IEBAIGdldF9k
+aWVfbWVtYmVyKHVuc2lnbmVkIGxvbmcgbG9uZyBkaWVfb2ZmLCBpbnQgaW5kZXgsIGxvbmcgKm9m
+ZnNldCwKIAlpZiAoIWdldF9kYXRhX21lbWJlcl9sb2NhdGlvbihkaWUsIG9mZnNldCkpCiAJCSpv
+ZmZzZXQgPSAwOwogCi0JKm5hbWUgPSBkd2FyZl9kaWVuYW1lKGRpZSk7CisJZGllbmFtZSA9IGR3
+YXJmX2RpZW5hbWUoZGllKTsKIAkvKgogCSAqIER1cGxpY2F0ZSB0aGUgc3RyaW5nIGJlZm9yZSB3
+ZSBwYXNzIGl0IHRvIGVwcGljIGxheWVyLiBUaGUKIAkgKiBvcmlnaW5hbCBzdHJpbmcgcmV0dXJu
+ZWQgYnkgZHdhcmYgbGF5ZXIgd2lsbCBiZWNvbWUgaW52YWxpZAogCSAqIGFmdGVyIGNsZWFuX2R3
+ZmxfaW5mbygpIGNhbGwuCiAJICovCi0JaWYgKCpuYW1lKQotCQkqbmFtZSA9IHN0cmR1cCgqbmFt
+ZSk7CisJaWYgKGRpZW5hbWUpCisJCSpuYW1lID0gc3RyZHVwKGRpZW5hbWUpOwogCSptX2RpZSA9
+IGR3YXJmX2RpZW9mZnNldChkaWUpOwogCiAJZ2V0X2RpZV90eXBlKGRpZSwgJmRpZV9iYXNlKTsK
+QEAgLTE1MDQsNiArMTUwNSw3IEBAIGdldF9kaWVfbmFtZSh1bnNpZ25lZCBsb25nIGxvbmcgZGll
+X29mZikKIHsKIAlEd2FyZl9EaWUgcmVzdWx0OwogCWNoYXIgKm5hbWUgPSBOVUxMOworCWNvbnN0
+IGNoYXIgKmRpZW5hbWU7CiAKIAlpZiAoIWRpZV9vZmYpCiAJCXJldHVybiBOVUxMOwpAQCAtMTUx
+Myw5ICsxNTE1LDkgQEAgZ2V0X2RpZV9uYW1lKHVuc2lnbmVkIGxvbmcgbG9uZyBkaWVfb2ZmKQog
+CQlyZXR1cm4gTlVMTDsKIAl9CiAKLQluYW1lID0gZHdhcmZfZGllbmFtZSgmcmVzdWx0KTsKLQlp
+ZiAobmFtZSkKLQkJbmFtZSA9IHN0cmR1cChuYW1lKTsKKwlkaWVuYW1lID0gZHdhcmZfZGllbmFt
+ZSgmcmVzdWx0KTsKKwlpZiAoZGllbmFtZSkKKwkJbmFtZSA9IHN0cmR1cChkaWVuYW1lKTsKIAlj
+bGVhbl9kd2ZsX2luZm8oKTsKIAlyZXR1cm4gbmFtZTsKIH0KZGlmZiAtLWdpdCBhL3NhZHVtcF9p
+bmZvLmMgYi9zYWR1bXBfaW5mby5jCmluZGV4IGJlNmNmNTUuLjAxY2Y1ZWIgMTAwNjQ0Ci0tLSBh
+L3NhZHVtcF9pbmZvLmMKKysrIGIvc2FkdW1wX2luZm8uYwpAQCAtOTQ4LDcgKzk0OCw2IEBAIGlu
+dAogcmVhZHBhZ2Vfc2FkdW1wKHVuc2lnbmVkIGxvbmcgbG9uZyBwYWRkciwgdm9pZCAqYnVmcHRy
+KQogewogCXVuc2lnbmVkIGxvbmcgbG9uZyBwZm4sIGJsb2NrLCB3aG9sZV9vZmZzZXQsIHBlcmRp
+c2tfb2Zmc2V0OwotCXVsb25nIHBhZ2Vfb2Zmc2V0OwogCWludCBmZF9tZW1vcnk7CiAKIAlpZiAo
+c2ktPmtkdW1wX2JhY2tlZF91cCAmJgpAQCAtOTU3LDcgKzk1Niw2IEBAIHJlYWRwYWdlX3NhZHVt
+cCh1bnNpZ25lZCBsb25nIGxvbmcgcGFkZHIsIHZvaWQgKmJ1ZnB0cikKIAkJcGFkZHIgKz0gc2kt
+PmJhY2t1cF9vZmZzZXQgLSBzaS0+YmFja3VwX3NyY19zdGFydDsKIAogCXBmbiA9IHBhZGRyX3Rv
+X3BmbihwYWRkcik7Ci0JcGFnZV9vZmZzZXQgPSBwYWRkciAlIGluZm8tPnBhZ2Vfc2l6ZTsKIAog
+CWlmIChwZm4gPj0gc2ktPnNoX21lbW9yeS0+bWF4X21hcG5yKQogCQlyZXR1cm4gRkFMU0U7Ci0t
+IAoxLjcuMTAuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
