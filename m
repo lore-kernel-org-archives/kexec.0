@@ -1,37 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uz1kn-0006ey-RL
- for kexec@lists.infradead.org; Tue, 16 Jul 2013 09:41:06 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D72DF3EE0C0
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 18:40:43 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id CA1B845DEB5
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 18:40:43 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id A861845DEC2
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 18:40:43 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9A7661DB8038
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 18:40:43 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0CCF51DB8042
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 18:40:43 +0900 (JST)
-Message-ID: <51E5150C.3000905@jp.fujitsu.com>
-Date: Tue, 16 Jul 2013 18:40:28 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v6 3/5] vmcore: Introduce remap_oldmem_pfn_range()
-References: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <1372707159-10425-4-git-send-email-holzheu@linux.vnet.ibm.com>
- <51DA4ED9.60903@jp.fujitsu.com> <20130708112839.498ccfc6@holzheu>
- <20130708142826.GA9094@redhat.com> <51DBA47C.8090708@jp.fujitsu.com>
- <20130710104252.479a0f92@holzheu> <51DD2E5A.1030200@jp.fujitsu.com>
- <20130710143309.GD5819@redhat.com> <51DFE2FB.2000804@jp.fujitsu.com>
- <20130715142059.GA23772@redhat.com> <51E49383.9030308@jp.fujitsu.com>
-In-Reply-To: <51E49383.9030308@jp.fujitsu.com>
+ id 1Uz4R5-0002uY-B0
+ for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:32:56 +0000
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH v2 2/7] elf: Properly check buf size in get_pt_note_info()
+Date: Tue, 16 Jul 2013 14:32:04 +0200
+Message-Id: <1373977929-4253-3-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
+References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,75 +17,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: andrew.cooper3@citrix.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
+Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-(2013/07/16 9:27), HATAYAMA Daisuke wrote:
-> (2013/07/15 23:20), Vivek Goyal wrote:
->> On Fri, Jul 12, 2013 at 08:05:31PM +0900, HATAYAMA Daisuke wrote:
->>
->> [..]
->>> How about
->>>
->>> static int mmap_vmcore_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
->>> {
->>> ...
->>>          char *buf;
->>>          int rc;
->>>
->>> #ifndef CONFIG_S390
->>>          return VM_FAULT_SIGBUS;
->>> #endif
->>>          page = find_or_create_page(mapping, index, GFP_KERNEL);
->>>
->>> Considering again, I don't think WARN_ONCE() is good now. The fact that fault occurs on
->>> mmap() region indicates some kind of buggy situation occurs on the process. The process
->>> should be killed as soon as possible. If user still wants to get crash dump, he should
->>> try again in another process.
->>
->> I don't understand that. Process should be killed only if there was no
->> mapping created for the region process is trying to access.
->>
->> If there is a mapping but we are trying to fault in the actual contents,
->> then it is not a problem of process. Process is accessing a region of
->> memory which it is supposed to access.
->>
->> Potential problem here is that remap_pfn_range() did not map everything
->> it was expected to so we have to resort on page fault handler to read
->> that in. So it is more of a kernel issue and not process issue and for
->> that WARN_ONCE() sounds better?
->>
->
-> On the current design, there's no page faults on memory mapped by remap_pfn_range().
-> They map a whole range in the current design. If there are page faults, page table of the process
-> is broken in their some page entries. This indicates the process's bahaviour is affected by
-> some software/hardware bugs. In theory, process could result in arbitrary behaviour. We cannot
-> detect the reason and recover the original sane state. The only thing we can do is to kill
-> the process and drop the possibility of the process to affect other system components and of
-> system to result in worse situation.
->
+get_pt_note_info() always ignores VMCOREINFO_XEN note because
+buf size must be smaller than note size including \0 char.
+Usualy this condition is true but when VMCOREINFO_XEN note
+is encountered it does not work due to buf size defined
+as sizeof("VMCOREINFO_XEN"). This patch fixes that bug
+and VMCOREINFO_XEN note living in /proc/vmcore file
+could be properly detected now.
 
-In summary, it seems that you two and I have different implementation
-policy on how to deal with the process that is no longer in healthy state.
+v2 - suggestions/fixes:
+   - properly check buf size instead of increasing buf size
+     (suggested by Andrew Cooper).
 
-You two's idea is try to continue dump in non-healthy state as much as possible
-as long as there is possibility of continuing it, while my idea kill the process
-promptly and to retry crash dump in another new process since the process is no longer
-in healthy state and could behave arbitrarily.
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ elf_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The logic in non-healthy states depends on implementation policy since there
-is no obviously correct logic. I guess this discussion would not end soon.
-I believe it is supposed that maintainer's idea should basically have high
-priority over others. So I don't object anymore, though I don't think it best
-at all.
-
+diff --git a/elf_info.c b/elf_info.c
+index 0c1e36a..e350b99 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -332,7 +332,7 @@ get_pt_note_info(void)
+ 		size_desc   = note_descsz(note);
+ 		offset_desc = offset + offset_note_desc(note);
+ 
+-		if (!size_name || size_name >= sizeof(buf))
++		if (!size_name || size_name > sizeof(buf))
+ 			goto next_note;
+ 
+ 		if (read(fd_memory, &buf, sizeof(buf)) != sizeof(buf)) {
 -- 
-Thanks.
-HATAYAMA, Daisuke
+1.7.10.4
 
 
 _______________________________________________
