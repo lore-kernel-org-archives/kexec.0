@@ -1,37 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UytUh-0004z2-JR
- for kexec@lists.infradead.org; Tue, 16 Jul 2013 00:51:57 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 78BED3EE0BC
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 09:51:29 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 6822D45DE52
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 09:51:29 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4FB6D45DE4D
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 09:51:29 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 40CA11DB803F
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 09:51:29 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id E32A91DB803C
- for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 09:51:28 +0900 (JST)
-Message-ID: <51E498FD.7010905@jp.fujitsu.com>
-Date: Tue, 16 Jul 2013 09:51:09 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
+ id 1Uz1WA-0006IF-76
+ for kexec@lists.infradead.org; Tue, 16 Jul 2013 09:25:59 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Tue, 16 Jul 2013 10:20:35 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3639C219005F
+ for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 10:29:30 +0100 (BST)
+Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
+ [9.149.37.252])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r6G9PJME47382780
+ for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 09:25:19 GMT
+Received: from d06av11.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av11.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r6G9PTWF017236
+ for <kexec@lists.infradead.org>; Tue, 16 Jul 2013 03:25:30 -0600
+Date: Tue, 16 Jul 2013 11:25:27 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Subject: Re: [PATCH v6 3/5] vmcore: Introduce remap_oldmem_pfn_range()
+Message-ID: <20130716112527.35decf17@holzheu>
+In-Reply-To: <20130715142708.GB23772@redhat.com>
 References: <1372707159-10425-1-git-send-email-holzheu@linux.vnet.ibm.com>
  <1372707159-10425-4-git-send-email-holzheu@linux.vnet.ibm.com>
- <51DA4ED9.60903@jp.fujitsu.com> <20130708112839.498ccfc6@holzheu>
- <20130708142826.GA9094@redhat.com> <51DBA47C.8090708@jp.fujitsu.com>
- <20130710104252.479a0f92@holzheu> <51DD2E5A.1030200@jp.fujitsu.com>
- <20130710130017.468e0bdf@holzheu> <51E028AA.7070203@jp.fujitsu.com>
- <20130715112109.5eaa4dd9@mschwide>
-In-Reply-To: <20130715112109.5eaa4dd9@mschwide>
+ <20130702154214.GC22603@redhat.com>
+ <20130715154451.02a3a767@holzheu>
+ <20130715142708.GB23772@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,103 +40,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 
-(2013/07/15 18:21), Martin Schwidefsky wrote:
-> On Sat, 13 Jul 2013 01:02:50 +0900
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->
->> (2013/07/10 20:00), Michael Holzheu wrote:
->>> On Wed, 10 Jul 2013 18:50:18 +0900
->>> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->>>
->>> [snip]
->>>
->>>> (2013/07/10 17:42), Michael Holzheu wrote:
->>>>> My suggestion is to add the WARN_ONCE() for #ifndef CONFIG_S390. This has the same
->>>>> effect as your suggestion for all architectures besides of s390. And for s390 we
->>>>> take the risk that a programming error would result in poor /proc/vmcore
->>>>> performance.
->>>>>
->>>>
->>>> If you want to avoid looking up vmcore_list that takes linear time w.r.t. the number
->>>> of the elements, you can still calculate the range of offsets in /proc/vmcore
->>>> corresponding to HSA during /proc/vmcore initialization.
->>>>
->>>> Also, could you tell me how often and how much the HSA region is during crash dumping?
->>>> I guess the read to HSA is done mainly during early part of crash dumping process only.
->>>> According to the code, it appears at most 64MiB only. Then, I feel performance is not
->>>> a big issue.
->>>
->>> Currently it is 32 MiB and normally it is read only once.
->>>
->>>>
->>>> Also, cost of WARN_ONCE() is one memory access only in the 2nd and later calls. I don't
->>>> think it too much overhead...
->>>
->>> I was more concerned about in_valid_fault_range(). But I was most concerned the additional
->>> interface that introduces more complexity to the code. And that just to implement a
->>> sanity check that in our opinion we don't really need.
->>>
->>> And what makes it even worse:
->>>
->>
->> What you think the sanity check is unnecessary is perfectly wrong. You design page faults
->> always happens on HSA region. If page fault happens on the other parts, i.e. some point
->> of mmap()ed region, it means somehow page table on the address has not been created. This
->> is bug, possibly caused by mmap() itself, page table creation, other components in kernel,
->> bit-flip due to broken hardware, etc. Anyway, program cannot detect what kind of bug occurs
->> now. There's no guarantee that program runs safely, of course for page cache creation, too.
->> We cannot and must expect such buggy process to behave in invalid states just as our design.
->> It results in undefined behaviour. The only thing we can do is to kill the buggy process
->> as soon as possible.
->
-> I don't quite get this point, please bear with me. If you compare the situation before and
-> after the introduction of the fault handler the possible error scenarios are not almost
-> identical:
-> 1) If an access is made outside of the mapped memory region the first level fault handler
->     (do_exception for s390, __do_page_fault for x86) won't find a vma and force a SIGSEGV
->     right away, independent of the existance of a hole and the vmcore fault handler.
-> 2) If there is a hardware bug that corrupts a page table the behaviour depends on how the
->     entries are corrupted. If the outcome is a valid pte an incorrect memory area will be
->     accessed, the same with or without the vmcore fault handler. If the corrupted pte is
->     an invalid pte it can come out as swap pte, file pte, or as empty pte. The behaviour
->     does not change for swap and file ptes, you will get funny results in both cases.
->     For empty ptes the new behaviour will call the vmcore fault handler for the address
->     in question. If the read() function can satisfy the request we will get a page cache
->     copy of the missing page, if the read function can not satisfy the request it returns
->     an error which is translated to a SIGBUS.
->     This new behaviour is IMHO better than the old one, it successfully recovers from at
->     least one type of corruption. For x86 that would be the case if the page table is
->     overwritten with zeroes, for s390 a specific bit pattern in the pte is required.
+On Mon, 15 Jul 2013 10:27:08 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-As you already noticed here, this senario works well only if there's page table corruption
-only. Process could be corrupted more.
+> On Mon, Jul 15, 2013 at 03:44:51PM +0200, Michael Holzheu wrote:
+> > On Tue, 2 Jul 2013 11:42:14 -0400
+> > Vivek Goyal <vgoyal@redhat.com> wrote:
+> > 
+> > > On Mon, Jul 01, 2013 at 09:32:37PM +0200, Michael Holzheu wrote:
+> > > > For zfcpdump we can't map the HSA storage because it is only available
+> > > > via a read interface. Therefore, for the new vmcore mmap feature we have
+> > > > introduce a new mechanism to create mappings on demand.
+> > > > 
+> > > > This patch introduces a new architecture function remap_oldmem_pfn_range()
+> > > > that should be used to create mappings with remap_pfn_range() for oldmem
+> > > > areas that can be directly mapped. For zfcpdump this is everything besides
+> > > > of the HSA memory. For the areas that are not mapped by remap_oldmem_pfn_range()
+> > > > a generic vmcore a new generic vmcore fault handler mmap_vmcore_fault()
+> > > > is called.
+> > > > 
+> > > > This handler works as follows:
+> > > > 
+> > > > * Get already available or new page from page cache (find_or_create_page)
+> > > > * Check if /proc/vmcore page is filled with data (PageUptodate)
+> > > > * If yes:
+> > > >   Return that page
+> > > > * If no:
+> > > >   Fill page using __vmcore_read(), set PageUptodate, and return page
+> > > > 
+> > > > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > > 
+> > > In general vmcore related changes look fine to me. I am not very familiar
+> > > with the logic of finding pages in page cache and using page uptodate
+> > > flag.
+> > > 
+> > > Hatayama, can you please review it.
+> > > 
+> > > Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> > 
+> > Hello Vivek and Andrew,
+> > 
+> > We just realized that Hatayama's mmap patches went into v3.11-rc1. This currently
+> > breaks s390 kdump because of the following two issues:
+> > 
+> > 1) The copy_oldmem_page() is now used for copying to vmalloc memory
+> > 2) The mmap() implementation is not compatible with the current
+> >    s390 crashkernel swap:
+> >    See: http://marc.info/?l=kexec&m=136940802511603&w=2
+> > 
+> > The "kdump: Introduce ELF header in new memory feature" patch series will
+> > fix both issues for s390.
+> > 
+> > There is the one small open discussion left:
+> > 
+> > http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg464856.html
+> > 
+> > But once we have finished that, would it be possible to get the
+> > patches in 3.11?
+> 
+> How about taking mmap() fault handler patches in 3.12. And in 3.11, deny
+> mmap() on s390 forcing makedumpfile to fall back on read() interface. That
+> way there will be no regression and mmap() related speedup will show up
+> in next release on s390.
 
-> 3) In the case of a programming error in regard to remap_pfn_range the new behaviour will
->     provide page cache copies and the dump will technically be correct. The performance
->     might suffer a little bit as the CPU will have to create the page cache copies but
->     compared to the I/O that is involved with writing a dump this is negligible, no?
->
-> It seems to me that the warning message you want to see in the fault handler would be
-> a debugging aid for the developer to see if the mmap() and the remap_pfn_range() calls
-> match up. Something similar to a single VM_WARN_ON() messages would be appropriate, no?
->
+Hello Vivek and Hatayama,
 
-warning message is meaningless, which doesn't stop process. I no longer consider debugging.
-It's valid to kill the process as soon as possible. If there's page fault to the address we
-don't intend, it's buggy, and so we don't guess how the buggy process behave. Please consider
-the cases that system goes into more catastrophic situation after we leave the process running to
-get warning messages for debugging purposes.
+But then we still would have to somehow fix the copy_oldmem_page() issue (1).
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+We would prefer to add the current patch series with "#ifndef CONFIG_S390" in
+the fault handler.
+
+@Vivek:
+
+Since you are the kdump maintainer, could you tell us which of the both
+variants you would like to have?
+
+static int mmap_vmcore_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
+{
+...
+
+#ifndef CONFIG_S390
+	return VM_FAULT_SIGBUS;
+#endif
+
+or 
+
+#ifndef CONFIG_S390
+        WARN_ONCE(1, "vmcore: Unexpected call of mmap_vmcore_fault()");
+#endif
+
+For all architectures besides of s390 this would implement the requested behavior.
+
+Regards,
+Michael
 
 
 _______________________________________________
