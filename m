@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uz4R6-0002ua-TY
- for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:32:59 +0000
+ id 1Uz4R9-0002uc-00
+ for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:33:00 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH v2 3/7] xen: Take into account new frame table address since
- Xen 4.3
-Date: Tue, 16 Jul 2013 14:32:05 +0200
-Message-Id: <1373977929-4253-4-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH v2 5/7] Do not break progress messages
+Date: Tue, 16 Jul 2013 14:32:07 +0200
+Message-Id: <1373977929-4253-6-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,70 +25,35 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: andrew.cooper3@citrix.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-Since Xen commit a8d2b06db7826063df9d04be9d6f928bf2189bd0
-(x86: extend frame table virtual space) frame table has
-new address. Take into account that thing.
+DEBUG_MSG() displaying erase info size breaks progress messages.
+Fix this by moving relevant DEBUG_MSG() to write_elf_eraseinfo().
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- arch/x86_64.c  |   11 +++++++++--
- makedumpfile.h |   21 +++++++++++----------
- 2 files changed, 20 insertions(+), 12 deletions(-)
+ makedumpfile.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index d864a06..771d457 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -401,8 +401,15 @@ int get_xen_basic_info_x86_64(void)
- 			return FALSE;
- 		}
- 		info->frame_table_vaddr = frame_table_vaddr;
--	} else
--		info->frame_table_vaddr = FRAMETABLE_VIRT_START;
-+	} else {
-+		if (info->xen_crash_info.com &&
-+		    ((info->xen_crash_info.com->xen_major_version == 4 &&
-+		      info->xen_crash_info.com->xen_minor_version >= 3) ||
-+		      info->xen_crash_info.com->xen_major_version > 4))
-+			info->frame_table_vaddr = FRAMETABLE_VIRT_START_V4_3;
-+		else
-+			info->frame_table_vaddr = FRAMETABLE_VIRT_START_V3;
-+	}
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b4abbe5..a3bfc80 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -5045,7 +5045,6 @@ write_elf_header(struct cache_data *cd_header)
+ 	 * function.
+ 	 */
+ 	info->size_elf_eraseinfo = size_eraseinfo;
+-	DEBUG_MSG("erase info size: %lu\n", info->size_elf_eraseinfo);
  
- 	if (!info->xen_crash_info.com ||
- 	    info->xen_crash_info.com->xen_major_version < 4) {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 1a87500..1789a11 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1466,16 +1466,17 @@ int get_xen_info_x86(void);
- #define ENTRY_MASK		(~0xfff0000000000fffULL)
- #define MAX_X86_64_FRAMES	(info->page_size / sizeof(unsigned long))
+ 	/*
+ 	 * Write a PT_NOTE header.
+@@ -6326,6 +6325,8 @@ write_elf_eraseinfo(struct cache_data *cd_header)
+ 	off_t offset_eraseinfo;
+ 	unsigned long note_header_size, size_written, size_note;
  
--#define PAGE_OFFSET_XEN_DOM0  (0xffff880000000000) /* different from linux */
--#define HYPERVISOR_VIRT_START (0xffff800000000000)
--#define HYPERVISOR_VIRT_END   (0xffff880000000000)
--#define DIRECTMAP_VIRT_START  (0xffff830000000000)
--#define DIRECTMAP_VIRT_END_V3 (0xffff840000000000)
--#define DIRECTMAP_VIRT_END_V4 (0xffff880000000000)
--#define DIRECTMAP_VIRT_END    (info->directmap_virt_end)
--#define XEN_VIRT_START        (info->xen_virt_start)
--#define XEN_VIRT_END          (XEN_VIRT_START + (1UL << 30))
--#define FRAMETABLE_VIRT_START 0xffff82f600000000
-+#define PAGE_OFFSET_XEN_DOM0		(0xffff880000000000) /* different from linux */
-+#define HYPERVISOR_VIRT_START		(0xffff800000000000)
-+#define HYPERVISOR_VIRT_END		(0xffff880000000000)
-+#define DIRECTMAP_VIRT_START		(0xffff830000000000)
-+#define DIRECTMAP_VIRT_END_V3		(0xffff840000000000)
-+#define DIRECTMAP_VIRT_END_V4		(0xffff880000000000)
-+#define DIRECTMAP_VIRT_END		(info->directmap_virt_end)
-+#define XEN_VIRT_START			(info->xen_virt_start)
-+#define XEN_VIRT_END			(XEN_VIRT_START + (1UL << 30))
-+#define FRAMETABLE_VIRT_START_V3	0xffff82f600000000
-+#define FRAMETABLE_VIRT_START_V4_3	0xffff82e000000000
++	DEBUG_MSG("erase info size: %lu\n", info->size_elf_eraseinfo);
++
+ 	if (!info->size_elf_eraseinfo)
+ 		return TRUE;
  
- #define is_xen_vaddr(x) \
- 	((x) >= HYPERVISOR_VIRT_START && (x) < HYPERVISOR_VIRT_END)
 -- 
 1.7.10.4
 
