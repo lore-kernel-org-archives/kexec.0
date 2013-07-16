@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uz4R9-0002uc-00
- for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:33:00 +0000
+ id 1Uz4R9-0002ue-F3
+ for kexec@lists.infradead.org; Tue, 16 Jul 2013 12:33:01 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH v2 5/7] Do not break progress messages
-Date: Tue, 16 Jul 2013 14:32:07 +0200
-Message-Id: <1373977929-4253-6-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH v2 7/7] Use elf_getshdrstrndx() instead of elf_getshstrndx()
+Date: Tue, 16 Jul 2013 14:32:09 +0200
+Message-Id: <1373977929-4253-8-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,35 +25,27 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: andrew.cooper3@citrix.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-DEBUG_MSG() displaying erase info size breaks progress messages.
-Fix this by moving relevant DEBUG_MSG() to write_elf_eraseinfo().
+Use elf_getshdrstrndx() instead of elf_getshstrndx()
+because later is marked as deprecated.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- makedumpfile.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ dwarf_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b4abbe5..a3bfc80 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5045,7 +5045,6 @@ write_elf_header(struct cache_data *cd_header)
- 	 * function.
- 	 */
- 	info->size_elf_eraseinfo = size_eraseinfo;
--	DEBUG_MSG("erase info size: %lu\n", info->size_elf_eraseinfo);
+diff --git a/dwarf_info.c b/dwarf_info.c
+index 85c116e..c5752c9 100644
+--- a/dwarf_info.c
++++ b/dwarf_info.c
+@@ -944,7 +944,7 @@ get_debug_info(void)
+ 	elfd = dwarf_info.elfd;
+ 	dwarfd = dwarf_info.dwarfd;
  
- 	/*
- 	 * Write a PT_NOTE header.
-@@ -6326,6 +6325,8 @@ write_elf_eraseinfo(struct cache_data *cd_header)
- 	off_t offset_eraseinfo;
- 	unsigned long note_header_size, size_written, size_note;
- 
-+	DEBUG_MSG("erase info size: %lu\n", info->size_elf_eraseinfo);
-+
- 	if (!info->size_elf_eraseinfo)
- 		return TRUE;
- 
+-	if (elf_getshstrndx(elfd, &shstrndx) < 0) {
++	if (elf_getshdrstrndx(elfd, &shstrndx) < 0) {
+ 		ERRMSG("Can't get the section index of the string table.\n");
+ 		goto out;
+ 	}
 -- 
 1.7.10.4
 
