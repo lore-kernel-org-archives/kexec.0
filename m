@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Uzni6-0001Sq-Mt
- for kexec@lists.infradead.org; Thu, 18 Jul 2013 12:53:31 +0000
-Date: Thu, 18 Jul 2013 14:52:58 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2 7/7] Use elf_getshdrstrndx() instead of
- elf_getshstrndx()
-Message-ID: <20130718125258.GB11233@debian70-amd64.local.net-space.pl>
-References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
- <1373977929-4253-8-git-send-email-daniel.kiper@oracle.com>
- <20130718170322.ea01294e20c9cdc810b40eb9@mxc.nes.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UzoG0-00025j-0z
+ for kexec@lists.infradead.org; Thu, 18 Jul 2013 13:28:33 +0000
+Date: Thu, 18 Jul 2013 09:27:57 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v7 0/5] kdump: Allow ELF header creation in new kernel
+Message-ID: <20130718132757.GA785@redhat.com>
+References: <OF6010D9F0.5A45F2CF-ONC1257BAB.002B1F3E-C1257BAB.002B2812@de.ibm.com>
+ <20130717180049.3b9c6ec8@holzheu>
+ <20130717214207.GB27633@redhat.com>
+ <20130718124004.098b85f4@holzheu>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130718170322.ea01294e20c9cdc810b40eb9@mxc.nes.nec.co.jp>
+In-Reply-To: <20130718124004.098b85f4@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,25 +26,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: andrew.cooper3@citrix.com, xen-devel@lists.xensource.com, kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 
-On Thu, Jul 18, 2013 at 05:03:22PM +0900, Atsushi Kumagai wrote:
-> On Tue, 16 Jul 2013 14:32:09 +0200
-> Daniel Kiper <daniel.kiper@oracle.com> wrote:
->
-> > Use elf_getshdrstrndx() instead of elf_getshstrndx()
-> > because later is marked as deprecated.
-> >
-> > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
->
-> Good, I'll merge this patch into v1.5.5.
+On Thu, Jul 18, 2013 at 12:40:04PM +0200, Michael Holzheu wrote:
+> On Wed, 17 Jul 2013 17:42:07 -0400
+> Vivek Goyal <vgoyal@redhat.com> wrote:
+> > On Wed, Jul 17, 2013 at 06:00:49PM +0200, Michael Holzheu wrote:
+> 
+> [snip]
+> 
+> > > But this is all additional effort now and would not be necessary if we
+> > > integrate this patch series in 3.11.
+> > > 
+> > > Perhaps we should let Andrew decide here.
+> > 
+> > Hi Michael,
+> > 
+> > Given the fact that andrew too prefers a fix to get s390 working at this
+> > stage can we modify s390 copy_from_oldmem() to be able to copy to 
+> > vmalloc() memory area.
+> > 
+> > For mmap(), let us disable it on s390. And rest of the cleanups w.r.t
+> > ELF header swap etc, let us now target that for 3.12.
+> > 
+> > Sounds reasonable?
+> 
+> Hi Vivek,
+> 
+> Ok this is not our preferred solution but we can't expect that life is
+> always easy ;-)
+> 
+> Our s390 kernel maintainer Martin Schwidefsky agreed to send the following
+> two patches upstream for 3.11:
+> 
+>  * s390/kdump: Disable mmap for s390
+>  * s390/kdump: Allow copy_oldmem_page() copy to virtual memory
+> 
+> @Andrew:
+> 
+> Would you then take the "ELF header in new memory" patch series for 3.12?
 
-Thanks. What about patches 4, 5 and 6.
-Do you have any comments about them?
-Should I fix something?
+Hi Michael,
 
-Daniel
+Once this patch series gets merged for 3.12, can we first do some cleanup
+of s390 code before we do further development there. Basically there is
+no reason that s390 kdump should be any different than x86. So all the
+logic of OLD base can go away. 
+
+Only thing different about s390 is primarily zfcpdump w.r.t handling of
+HSA region and creating of elf headers in 2nd kernel.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
