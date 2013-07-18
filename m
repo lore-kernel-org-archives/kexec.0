@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UzZUc-0000nc-IM
- for kexec@lists.infradead.org; Wed, 17 Jul 2013 21:42:40 +0000
-Date: Wed, 17 Jul 2013 17:42:07 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v7 0/5] kdump: Allow ELF header creation in new kernel
-Message-ID: <20130717214207.GB27633@redhat.com>
-References: <OF6010D9F0.5A45F2CF-ONC1257BAB.002B1F3E-C1257BAB.002B2812@de.ibm.com>
- <20130717180049.3b9c6ec8@holzheu>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130717180049.3b9c6ec8@holzheu>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UzjG6-0003pr-U1
+ for kexec@lists.infradead.org; Thu, 18 Jul 2013 08:08:21 +0000
+Date: Thu, 18 Jul 2013 17:03:08 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2 1/7] xen: Improve calculation of beginning of virtual
+ address space
+Message-Id: <20130718170308.7c7484cbf12b9b80ae973fcb@mxc.nes.nec.co.jp>
+In-Reply-To: <1373977929-4253-2-git-send-email-daniel.kiper@oracle.com>
+References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
+ <1373977929-4253-2-git-send-email-daniel.kiper@oracle.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,81 +24,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+To: daniel.kiper@oracle.com
+Cc: andrew.cooper3@citrix.com, xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
-On Wed, Jul 17, 2013 at 06:00:49PM +0200, Michael Holzheu wrote:
-> > On Tue, Jul 16, 2013 at 06:18:10PM +0200, Michael Holzheu wrote:
-> > > Hello Andrew,
-> > >
-> > > Here a new kdump patch series that we have discussed with Vivek and
-> > > Hatayama during the last months.
-> > >
-> > > Besides of the feature described below, this patch series also fixes a
-> > > regression on s390 that was introduced with the mmap patches for
-> > > /proc/vmcore (git commit 83086978c63afd7c73e1c).
-> > >
-> > > See also:
-> > > http://lists.infradead.org/pipermail/kexec/2013-July/009287.html
-> > >
-> > > Is it somehow possible to integrate this patch series into 3.11?
-> > 
-> > Hi Andrew,
-> > 
-> > Now /proc/vmcore mmap() patches are in but looks like they will break
-> > s390 kdump. mmap() patches use vmalloc() to allocate memory for elf
-> > notes and then use read_from_oldmem() to copy notes data from old
-> > memory to this newly allocated buffer. read_from_oldmem() in turn
-> > uses arch dependent copy_from_oldmem() function.
-> > 
-> > Look like on s390, copy_from_oldmem() can not copy data to vmalloc()
-> > space as they drop to real mode.
-> > 
-> > As allocating elf notes code is common both for mmap() and read() path,
-> > it will break kdump on s390.
-> > 
-> > Michael has done some cleanups to cope with that but in the process
-> > he has also stuffed in the support for zfcpdump and how to deal with
-> > HSA region etc. (I am not very happy about it though now. s390 seems
-> > to be having so may special case modes and swap logic etc that it
-> > is becoming hard to keep track what they are doing. I wished s390
-> > first did some cleanup w.r.t swap logic and deal with mmap() in pure
-> > kdump mode and then worry about taking care of zfcpdump).
-> > 
-> > Is it possible to push this series in 3.11 now? I suspect it is late now.
-> > Otherwise we might have to revert mmap() patches as in current form
-> > they will break s390 kdump.
-> > 
-> > Michael, Hatayama, in case this series can't go in 3.11, do you have other
-> > ideas where a small hack fix will allow kdump to work on s390 and we
-> > don't have to revert the mmap() patches.
+On Tue, 16 Jul 2013 14:32:03 +0200
+Daniel Kiper <daniel.kiper@oracle.com> wrote:
+
+> Xen commit 4b28bf6ae90bd83fd1113d8bdc53c3266ffeb328 (x86: re-introduce
+> map_domain_page() et al) once again altered virtual address space.
+> Current algorithm calculating its start could not cope with that change.
+> New version establishes this value on the base of domain_list placement
+> and is more generic.
 > 
-> Sure, we can somehow change the copy_from_oldmem() function that it
-> can copy to virtual memory. We have already discussed some options
-> on how to do that. Not nice but probably doable.
+> Similar patch was applied to crash tool.
 > 
-> And we could either disable mmap for s390 by removing mmap_vmcore()
-> from the proc_vmcore_operations or push the also already discussed
-> ELF header swap trick in 3.11.
-> 
-> But this is all additional effort now and would not be necessary if we
-> integrate this patch series in 3.11.
-> 
-> Perhaps we should let Andrew decide here.
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
-Hi Michael,
+OK, I'll merge this patch into v1.5.5.
 
-Given the fact that andrew too prefers a fix to get s390 working at this
-stage can we modify s390 copy_from_oldmem() to be able to copy to 
-vmalloc() memory area.
-
-For mmap(), let us disable it on s390. And rest of the cleanups w.r.t
-ELF header swap etc, let us now target that for 3.12.
-
-Sounds reasonable?
 
 Thanks
-Vivek
+Atsushi Kumagai
+
+> ---
+>  arch/x86_64.c  |   16 +++++++++++-----
+>  makedumpfile.h |    2 --
+>  2 files changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86_64.c b/arch/x86_64.c
+> index 8e61b20..d864a06 100644
+> --- a/arch/x86_64.c
+> +++ b/arch/x86_64.c
+> @@ -372,14 +372,20 @@ int get_xen_basic_info_x86_64(void)
+>  		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
+>  	}
+>  
+> +	info->xen_virt_start = SYMBOL(domain_list);
+> +
+> +	/*
+> +	 * Xen virtual mapping is aligned to 1 GiB boundary.
+> +	 * domain_list lives in bss which sits no more than
+> +	 * 1 GiB below beginning of virtual address space.
+> +	 */
+> +	info->xen_virt_start &= 0xffffffffc0000000;
+> +
+>  	if (info->xen_crash_info.com &&
+> -	    info->xen_crash_info.com->xen_major_version >= 4) {
+> -		info->xen_virt_start = XEN_VIRT_START_V4;
+> +	    info->xen_crash_info.com->xen_major_version >= 4)
+>  		info->directmap_virt_end = DIRECTMAP_VIRT_END_V4;
+> -	} else {
+> -		info->xen_virt_start = XEN_VIRT_START_V3;
+> +	else
+>  		info->directmap_virt_end = DIRECTMAP_VIRT_END_V3;
+> -	}
+>  
+>  	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
+>  		ERRMSG("Can't get pml4.\n");
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index a5826e0..1a87500 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1473,8 +1473,6 @@ int get_xen_info_x86(void);
+>  #define DIRECTMAP_VIRT_END_V3 (0xffff840000000000)
+>  #define DIRECTMAP_VIRT_END_V4 (0xffff880000000000)
+>  #define DIRECTMAP_VIRT_END    (info->directmap_virt_end)
+> -#define XEN_VIRT_START_V3     (0xffff828c80000000)
+> -#define XEN_VIRT_START_V4     (0xffff82c480000000)
+>  #define XEN_VIRT_START        (info->xen_virt_start)
+>  #define XEN_VIRT_END          (XEN_VIRT_START + (1UL << 30))
+>  #define FRAMETABLE_VIRT_START 0xffff82f600000000
+> -- 
+> 1.7.10.4
 
 _______________________________________________
 kexec mailing list
