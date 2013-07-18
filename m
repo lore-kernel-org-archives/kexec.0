@@ -1,20 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1UzoNP-0002GJ-NS
- for kexec@lists.infradead.org; Thu, 18 Jul 2013 13:36:12 +0000
-Date: Thu, 18 Jul 2013 09:35:41 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1UzpFG-0003cL-4M
+ for kexec@lists.infradead.org; Thu, 18 Jul 2013 14:31:50 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Thu, 18 Jul 2013 15:26:25 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com
+ (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1EFCF1B0805F
+ for <kexec@lists.infradead.org>; Thu, 18 Jul 2013 15:31:25 +0100 (BST)
+Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
+ [9.149.37.216])
+ by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r6IEVDxl52363386
+ for <kexec@lists.infradead.org>; Thu, 18 Jul 2013 14:31:13 GMT
+Received: from d06av04.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av04.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r6IEVN46029113
+ for <kexec@lists.infradead.org>; Thu, 18 Jul 2013 08:31:24 -0600
+Date: Thu, 18 Jul 2013 16:31:21 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Subject: Re: [PATCH v7 0/5] kdump: Allow ELF header creation in new kernel
-Message-ID: <20130718133541.GB785@redhat.com>
+Message-ID: <20130718163121.0b7fdcba@holzheu>
+In-Reply-To: <20130718132757.GA785@redhat.com>
 References: <OF6010D9F0.5A45F2CF-ONC1257BAB.002B1F3E-C1257BAB.002B2812@de.ibm.com>
  <20130717180049.3b9c6ec8@holzheu>
  <20130717214207.GB27633@redhat.com>
- <20130718124004.098b85f4@holzheu>
- <20130718124754.7453756e@mschwide>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130718124754.7453756e@mschwide>
+ <20130718124004.098b85f4@holzheu> <20130718132757.GA785@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,13 +43,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Andrew Morton <akpm@linux-foundation.org>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 
-On Thu, Jul 18, 2013 at 12:47:54PM +0200, Martin Schwidefsky wrote:
-> On Thu, 18 Jul 2013 12:40:04 +0200
-> Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-> 
+On Thu, 18 Jul 2013 09:27:57 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
+
+> On Thu, Jul 18, 2013 at 12:40:04PM +0200, Michael Holzheu wrote:
 > > On Wed, 17 Jul 2013 17:42:07 -0400
 > > Vivek Goyal <vgoyal@redhat.com> wrote:
 > > > On Wed, Jul 17, 2013 at 06:00:49PM +0200, Michael Holzheu wrote:
@@ -66,22 +82,26 @@ On Thu, Jul 18, 2013 at 12:47:54PM +0200, Martin Schwidefsky wrote:
 > > 
 > >  * s390/kdump: Disable mmap for s390
 > >  * s390/kdump: Allow copy_oldmem_page() copy to virtual memory
+> > 
+> > @Andrew:
+> > 
+> > Would you then take the "ELF header in new memory" patch series for 3.12?
 > 
-> Patches have been added to 
->   git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
+> Hi Michael,
 > 
-> They will go upstream with my next pull request.
-> 
+> Once this patch series gets merged for 3.12, can we first do some cleanup
+> of s390 code before we do further development there. Basically there is
+> no reason that s390 kdump should be any different than x86. So all the
+> logic of OLD base can go away. 
 
-If everything related to crash dump is going through Andrew, wouldn't
-it make sense that even these fixes go through him?
+Hello Vivek,
 
-https://git.kernel.org/cgit/linux/kernel/git/s390/linux.git/commit/?h=features&id=5a74953ff56aa870d6913ef4d81934f5c620c59d
+You mean that we first integrate the agreed "ELF header in new memory"
+patch series, then do the cleanup, and after that we discuss the further
+development (storage keys)?
 
-https://git.kernel.org/cgit/linux/kernel/git/s390/linux.git/commit/?h=features&id=191a2fa0a8d2bbb64c98f9b1976fcb37ee5eae6b
+Michael
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
