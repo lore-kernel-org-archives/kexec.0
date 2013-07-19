@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V0Aqb-0008Ez-9O
- for kexec@lists.infradead.org; Fri, 19 Jul 2013 13:35:49 +0000
-Date: Fri, 19 Jul 2013 09:35:18 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v7 0/5] kdump: Allow ELF header creation in new kernel
-Message-ID: <20130719133518.GB19997@redhat.com>
-References: <OF6010D9F0.5A45F2CF-ONC1257BAB.002B1F3E-C1257BAB.002B2812@de.ibm.com>
- <20130717180049.3b9c6ec8@holzheu>
- <20130717214207.GB27633@redhat.com>
- <20130718124004.098b85f4@holzheu>
- <20130718124754.7453756e@mschwide>
- <20130718133541.GB785@redhat.com>
- <20130719085020.28daef68@mschwide>
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V0Azz-0008VF-9A
+ for kexec@lists.infradead.org; Fri, 19 Jul 2013 13:45:32 +0000
+Date: Fri, 19 Jul 2013 15:44:51 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v2 4/7] xen: Enforce page size only when xen-syms file is
+ used
+Message-ID: <20130719134451.GF11233@debian70-amd64.local.net-space.pl>
+References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
+ <1373977929-4253-5-git-send-email-daniel.kiper@oracle.com>
+ <20130719182024.7695f88a6e4fe1160a10c74c@mxc.nes.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130719085020.28daef68@mschwide>
+In-Reply-To: <20130719182024.7695f88a6e4fe1160a10c74c@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,82 +26,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: kexec@lists.infradead.org, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Andrew Morton <akpm@linux-foundation.org>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: andrew.cooper3@citrix.com, xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
-On Fri, Jul 19, 2013 at 08:50:20AM +0200, Martin Schwidefsky wrote:
-> On Thu, 18 Jul 2013 09:35:41 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Thu, Jul 18, 2013 at 12:47:54PM +0200, Martin Schwidefsky wrote:
-> > > On Thu, 18 Jul 2013 12:40:04 +0200
-> > > Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-> > > 
-> > > > On Wed, 17 Jul 2013 17:42:07 -0400
-> > > > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > > > On Wed, Jul 17, 2013 at 06:00:49PM +0200, Michael Holzheu wrote:
-> > > > 
-> > > > [snip]
-> > > > 
-> > > > > > But this is all additional effort now and would not be necessary if we
-> > > > > > integrate this patch series in 3.11.
-> > > > > > 
-> > > > > > Perhaps we should let Andrew decide here.
-> > > > > 
-> > > > > Hi Michael,
-> > > > > 
-> > > > > Given the fact that andrew too prefers a fix to get s390 working at this
-> > > > > stage can we modify s390 copy_from_oldmem() to be able to copy to 
-> > > > > vmalloc() memory area.
-> > > > > 
-> > > > > For mmap(), let us disable it on s390. And rest of the cleanups w.r.t
-> > > > > ELF header swap etc, let us now target that for 3.12.
-> > > > > 
-> > > > > Sounds reasonable?
-> > > > 
-> > > > Hi Vivek,
-> > > > 
-> > > > Ok this is not our preferred solution but we can't expect that life is
-> > > > always easy ;-)
-> > > > 
-> > > > Our s390 kernel maintainer Martin Schwidefsky agreed to send the following
-> > > > two patches upstream for 3.11:
-> > > > 
-> > > >  * s390/kdump: Disable mmap for s390
-> > > >  * s390/kdump: Allow copy_oldmem_page() copy to virtual memory
-> > > 
-> > > Patches have been added to 
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
-> > > 
-> > > They will go upstream with my next pull request.
-> > > 
-> > 
-> > If everything related to crash dump is going through Andrew, wouldn't
-> > it make sense that even these fixes go through him?
-> > 
-> > https://git.kernel.org/cgit/linux/kernel/git/s390/linux.git/commit/?h=features&id=5a74953ff56aa870d6913ef4d81934f5c620c59d
-> > 
-> > https://git.kernel.org/cgit/linux/kernel/git/s390/linux.git/commit/?h=features&id=191a2fa0a8d2bbb64c98f9b1976fcb37ee5eae6b
-> 
-> Most of the architecture specific kdump patches for s390 have gone through me,
-> and these two fall into that category. If you insist we can route them over
-> Andrew, it just seems easier to me via the s390 tree.
-> 
+On Fri, Jul 19, 2013 at 06:20:24PM +0900, Atsushi Kumagai wrote:
+> On Tue, 16 Jul 2013 14:32:06 +0200
+> Daniel Kiper <daniel.kiper@oracle.com> wrote:
+>
+> > Enforce page size only when xen-syms file is used.
+> > Otherwise its size could be read from VMCOREINFO
+> > file or /proc/vmcore file.
+> >
+> > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> > ---
+> >  makedumpfile.c |    4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/makedumpfile.c b/makedumpfile.c
+> > index b42565c..b4abbe5 100644
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -7324,8 +7324,6 @@ initial_xen(void)
+> >  #endif
+> >  	if (!init_xen_crash_info())
+> >  		return FALSE;
+> > -	if (!fallback_to_current_page_size())
+> > -		return FALSE;
+> >  	/*
+> >  	 * Get the debug information for analysis from the vmcoreinfo file
+> >  	 */
+> > @@ -7340,6 +7338,8 @@ initial_xen(void)
+> >  		set_dwarf_debuginfo("xen-syms", NULL,
+> >  				    info->name_xen_syms, info->fd_xen_syms);
+> >
+> > +		if (!fallback_to_current_page_size())
+> > +			return FALSE;
+> >  		if (!get_symbol_info_xen())
+> >  			return FALSE;
+> >  		if (!get_structure_info_xen())
+>
+> This patch has no problem, but I would like to fix a bit for readability.
+> So could you move the position of fallback_to_current_page_size() to after
+> this block like initial() ?
+>
+> makedumpfile.c::initial()
+>
+>    2972         if (!info->page_size) {
+>    2973                 /*
+>    2974                  * If we cannot get page_size from a vmcoreinfo file,
+>    2975                  * fall back to the current kernel page size.
+>    2976                  */
+>    2977                 if (!fallback_to_current_page_size())
+>    2978                         return FALSE;
+>    2979         }
 
-In this case one patch is modifying proc/vmcore.c and that's not arch
-specific change only.
+Sure. Should I repost whole series or just only this patch?
 
-Secondly, in this specific instance, these changes are in the context
-of mmap() related changes which just were pushed. I find it easier
-if fixes flow through same channel where previous big set of patches
-flowed through.
-
-Hence, I was expecting that Michael will route these fixes through
-Andrew. But I am not too particular about it, so go ahead and
-push it to Linus.
-
-Thanks
-Vivek
+Daniel
 
 _______________________________________________
 kexec mailing list
