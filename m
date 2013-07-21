@@ -1,11 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <51E958CC.5070906@wwwdotorg.org>
-Date: Fri, 19 Jul 2013 09:18:36 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1373582931-11956-1-git-send-email-swarren@wwwdotorg.org>
+Date: Sat, 20 Jul 2013 18:40:14 -0700
+In-Reply-To: <1373582931-11956-1-git-send-email-swarren@wwwdotorg.org>
+ (Stephen Warren's message of "Thu, 11 Jul 2013 16:48:51 -0600")
+Message-ID: <87ehas7ksh.fsf@xmission.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH] ARM: kexec: validate CPU hotplug support
-References: <1373582931-11956-1-git-send-email-swarren@wwwdotorg.org>
-In-Reply-To: <1373582931-11956-1-git-send-email-swarren@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,24 +19,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Russell King <linux@arm.linux.org.uk>
-Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 
-On 07/11/2013 04:48 PM, Stephen Warren wrote:
+Stephen Warren <swarren@wwwdotorg.org> writes:
+
 > From: Stephen Warren <swarren@nvidia.com>
-> 
+>
 > Architectures should fully validate whether kexec is possible as part of
 > machine_kexec_prepare(), so that user-space's kexec_load() operation can
 > report any problems. Performing validation in machine_kexec() itself is
 > too late, since it is not allowed to return.
-> 
+>
 > Prior to this patch, ARM's machine_kexec() was testing after-the-fact
 > whether machine_kexec_prepare() was able to disable all but one CPU.
 > Instead, modify machine_kexec_prepare() to validate all conditions
 > necessary for machine_kexec_prepare()'s to succeed. BUG if the validation
 > succeeded, yet disabling the CPUs didn't actually work.
+>
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
 
-Russell, does this look good to put into the ARM patch tracker?
+At a quick skim this looks good to me.
+
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+> ---
+> Russell, does it make sense for this to be cc: stable as a follow-up to
+> 19ab428 "ARM: 7759/1: decouple CPU offlining from reboot/shutdown"?
+>
+>  arch/arm/include/asm/smp_plat.h |  3 +++
+>  arch/arm/kernel/machine_kexec.c | 20 ++++++++++++++++----
+>  arch/arm/kernel/smp.c           |  8 ++++++++
+>  3 files changed, 27 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
+> index 6462a72..a252c0b 100644
+> --- a/arch/arm/include/asm/smp_plat.h
+> +++ b/arch/arm/include/asm/smp_plat.h
+> @@ -88,4 +88,7 @@ static inline u32 mpidr_hash_size(void)
+>  {
+>  	return 1 << mpidr_hash.bits;
+>  }
+> +
+> +extern int platform_can_cpu_hotplug(void);
+> +
+>  #endif
+> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+> index 4fb074c..d7c82df 100644
+> --- a/arch/arm/kernel/machine_kexec.c
+> +++ b/arch/arm/kernel/machine_kexec.c
+> @@ -15,6 +15,7 @@
+>  #include <asm/mmu_context.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/mach-types.h>
+> +#include <asm/smp_plat.h>
+>  #include <asm/system_misc.h>
+>  
+>  extern const unsigned char relocate_new_kernel[];
+> @@ -39,6 +40,14 @@ int machine_kexec_prepare(struct kimage *image)
+>  	int i, err;
+>  
+>  	/*
+> +	 * Validate that if the current HW supports SMP, then the SW supports
+> +	 * and implements CPU hotplug for the current HW. If not, we won't be
+> +	 * able to kexec reliably, so fail the prepare operation.
+> +	 */
+> +	if (num_possible_cpus() > 1 && !platform_can_cpu_hotplug())
+> +		return -EINVAL;
+> +
+> +	/*
+>  	 * No segment at default ATAGs address. try to locate
+>  	 * a dtb using magic.
+>  	 */
+> @@ -134,10 +143,13 @@ void machine_kexec(struct kimage *image)
+>  	unsigned long reboot_code_buffer_phys;
+>  	void *reboot_code_buffer;
+>  
+> -	if (num_online_cpus() > 1) {
+> -		pr_err("kexec: error: multiple CPUs still online\n");
+> -		return;
+> -	}
+> +	/*
+> +	 * This can only happen if machine_shutdown() failed to disable some
+> +	 * CPU, and that can only happen if the checks in
+> +	 * machine_kexec_prepare() were not correct. If this fails, we can't
+> +	 * reliably kexec anyway, so BUG_ON is appropriate.
+> +	 */
+> +	BUG_ON(num_online_cpus() > 1);
+>  
+>  	page_list = image->head & PAGE_MASK;
+>  
+> diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+> index c2b4f8f..5b9e501 100644
+> --- a/arch/arm/kernel/smp.c
+> +++ b/arch/arm/kernel/smp.c
+> @@ -145,6 +145,14 @@ int boot_secondary(unsigned int cpu, struct task_struct *idle)
+>  	return -ENOSYS;
+>  }
+>  
+> +int platform_can_cpu_hotplug(void)
+> +{
+> +	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU) || !smp_ops.cpu_kill)
+> +		return 0;
+> +
+> +	return 1;
+> +}
+> +
+>  #ifdef CONFIG_HOTPLUG_CPU
+>  static void percpu_timer_stop(void);
 
 _______________________________________________
 kexec mailing list
