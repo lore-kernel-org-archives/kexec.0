@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V1AhU-0008Qx-BL
- for kexec@lists.infradead.org; Mon, 22 Jul 2013 07:38:35 +0000
-Date: Mon, 22 Jul 2013 16:35:29 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v2 4/7] xen: Enforce page size only when xen-syms file
- is used
-Message-Id: <20130722163529.39ce6b1903324f8c3a0e7a44@mxc.nes.nec.co.jp>
-In-Reply-To: <20130719134451.GF11233@debian70-amd64.local.net-space.pl>
-References: <1373977929-4253-1-git-send-email-daniel.kiper@oracle.com>
- <1373977929-4253-5-git-send-email-daniel.kiper@oracle.com>
- <20130719182024.7695f88a6e4fe1160a10c74c@mxc.nes.nec.co.jp>
- <20130719134451.GF11233@debian70-amd64.local.net-space.pl>
-Mime-Version: 1.0
+ id 1V1NXA-0006gu-3W
+ for kexec@lists.infradead.org; Mon, 22 Jul 2013 21:20:44 +0000
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH v3] xen: Enforce page size when it could not be established by
+ other means
+Date: Mon, 22 Jul 2013 23:19:15 +0200
+Message-Id: <1374527955-14968-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,76 +16,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: daniel.kiper@oracle.com
-Cc: andrew.cooper3@citrix.com, xen-devel@lists.xensource.com, kexec@lists.infradead.org
+To: andrew.cooper3@citrix.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xensource.com
+Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-On Fri, 19 Jul 2013 15:44:51 +0200
-Daniel Kiper <daniel.kiper@oracle.com> wrote:
+Enforce page size when it could not be established by other means.
 
-> On Fri, Jul 19, 2013 at 06:20:24PM +0900, Atsushi Kumagai wrote:
-> > On Tue, 16 Jul 2013 14:32:06 +0200
-> > Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> >
-> > > Enforce page size only when xen-syms file is used.
-> > > Otherwise its size could be read from VMCOREINFO
-> > > file or /proc/vmcore file.
-> > >
-> > > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> > > ---
-> > >  makedumpfile.c |    4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/makedumpfile.c b/makedumpfile.c
-> > > index b42565c..b4abbe5 100644
-> > > --- a/makedumpfile.c
-> > > +++ b/makedumpfile.c
-> > > @@ -7324,8 +7324,6 @@ initial_xen(void)
-> > >  #endif
-> > >  	if (!init_xen_crash_info())
-> > >  		return FALSE;
-> > > -	if (!fallback_to_current_page_size())
-> > > -		return FALSE;
-> > >  	/*
-> > >  	 * Get the debug information for analysis from the vmcoreinfo file
-> > >  	 */
-> > > @@ -7340,6 +7338,8 @@ initial_xen(void)
-> > >  		set_dwarf_debuginfo("xen-syms", NULL,
-> > >  				    info->name_xen_syms, info->fd_xen_syms);
-> > >
-> > > +		if (!fallback_to_current_page_size())
-> > > +			return FALSE;
-> > >  		if (!get_symbol_info_xen())
-> > >  			return FALSE;
-> > >  		if (!get_structure_info_xen())
-> >
-> > This patch has no problem, but I would like to fix a bit for readability.
-> > So could you move the position of fallback_to_current_page_size() to after
-> > this block like initial() ?
-> >
-> > makedumpfile.c::initial()
-> >
-> >    2972         if (!info->page_size) {
-> >    2973                 /*
-> >    2974                  * If we cannot get page_size from a vmcoreinfo file,
-> >    2975                  * fall back to the current kernel page size.
-> >    2976                  */
-> >    2977                 if (!fallback_to_current_page_size())
-> >    2978                         return FALSE;
-> >    2979         }
-> 
-> Sure. Should I repost whole series or just only this patch?
-> 
-> Daniel
+v3 - suggestions/fixes:
+   - rearrange code for readability
+     (suggested by Atsushi Kumagai).
 
-Please repost only this patch.
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ makedumpfile.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b42565c..20a547b 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -7324,8 +7324,6 @@ initial_xen(void)
+ #endif
+ 	if (!init_xen_crash_info())
+ 		return FALSE;
+-	if (!fallback_to_current_page_size())
+-		return FALSE;
+ 	/*
+ 	 * Get the debug information for analysis from the vmcoreinfo file
+ 	 */
+@@ -7370,6 +7368,16 @@ initial_xen(void)
+ 		if (!read_vmcoreinfo_from_vmcore(offset, size, TRUE))
+ 			return FALSE;
+ 	}
++
++	if (!info->page_size) {
++		/*
++		 * If we cannot get page_size from a vmcoreinfo file,
++		 * fall back to the current kernel page size.
++		 */
++		if (!fallback_to_current_page_size())
++			return FALSE;
++	}
++
+ 	if (!get_xen_info())
+ 		return FALSE;
+ 
+-- 
+1.7.10.4
 
-Thanks
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
