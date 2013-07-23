@@ -1,32 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
+Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V1ep8-0007AP-F4
+ id 1V1epA-0007AU-GA
  for kexec@lists.infradead.org; Tue, 23 Jul 2013 15:48:34 +0000
 Received: from /spool/local
- by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Tue, 23 Jul 2013 16:43:36 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id A3A2D219005A
- for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 16:52:08 +0100 (BST)
-Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
- [9.149.37.217])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r6NFlnDL59506798
- for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 15:47:49 GMT
-Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r6NFm0A8023568
- for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 09:48:00 -0600
+ Tue, 23 Jul 2013 16:42:09 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7BBC12190019
+ for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 16:52:09 +0100 (BST)
+Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
+ [9.149.37.213])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r6NFlo8V53477386
+ for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 15:47:50 GMT
+Received: from d06av03.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av03.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r6NFm0q3013097
+ for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 09:48:01 -0600
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH v8 3/6] vmcore: Introduce remap_oldmem_pfn_range()
-Date: Tue, 23 Jul 2013 17:47:56 +0200
-Message-Id: <1374594479-64671-4-git-send-email-holzheu@linux.vnet.ibm.com>
-In-Reply-To: <1374594479-64671-1-git-send-email-holzheu@linux.vnet.ibm.com>
-References: <1374594479-64671-1-git-send-email-holzheu@linux.vnet.ibm.com>
+Subject: [PATCH v8 0/6] kdump: Allow ELF header creation in new kernel
+Date: Tue, 23 Jul 2013 17:47:53 +0200
+Message-Id: <1374594479-64671-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,202 +41,125 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-For zfcpdump we can't map the HSA storage because it is only available
-via a read interface. Therefore, for the new vmcore mmap feature we have
-introduce a new mechanism to create mappings on demand.
+Hello Andrew,
 
-This patch introduces a new architecture function remap_oldmem_pfn_range()
-that should be used to create mappings with remap_pfn_range() for oldmem
-areas that can be directly mapped. For zfcpdump this is everything besides
-of the HSA memory. For the areas that are not mapped by remap_oldmem_pfn_range()
-a generic vmcore a new generic vmcore fault handler mmap_vmcore_fault()
-is called.
+Here the new kdump patch series as discussed with Vivek and Hatayama
+during the last months.
 
-This handler works as follows:
+I adjusted the code to v3.11-rc2 where the following patches have been
+integrated:
 
-* Get already available or new page from page cache (find_or_create_page)
-* Check if /proc/vmcore page is filled with data (PageUptodate)
-* If yes:
-  Return that page
-* If no:
-  Fill page using __vmcore_read(), set PageUptodate, and return page
+https://git.kernel.org/cgit/linux/kernel/git/s390/linux.git/commit/?h=features&id=5a74953ff56aa870d6913ef4d81934f5c620c59d
+https://git.kernel.org/cgit/linux/kernel/git/s390/linux.git/commit/?h=features&id=191a2fa0a8d2bbb64c98f9b1976fcb37ee5eae6b 
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- fs/proc/vmcore.c           | 91 ++++++++++++++++++++++++++++++++++++++++++----
- include/linux/crash_dump.h |  3 ++
- 2 files changed, 86 insertions(+), 8 deletions(-)
+Vivek has accepted the patch series. So would you integrate it into 3.12?
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 02cb3ff..3f6cf0e 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -21,6 +21,7 @@
- #include <linux/crash_dump.h>
- #include <linux/list.h>
- #include <linux/vmalloc.h>
-+#include <linux/pagemap.h>
- #include <asm/uaccess.h>
- #include <asm/io.h>
- #include "internal.h"
-@@ -153,11 +154,35 @@ ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- 	return read_from_oldmem(buf, count, ppos, 0);
- }
- 
-+/*
-+ * Architectures may override this function to map oldmem
-+ */
-+int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
-+				  unsigned long from, unsigned long pfn,
-+				  unsigned long size, pgprot_t prot)
-+{
-+	return remap_pfn_range(vma, from, pfn, size, prot);
-+}
-+
-+/*
-+ * Copy to either kernel or user space
-+ */
-+static int copy_to(void *target, void *src, size_t size, int userbuf)
-+{
-+	if (userbuf) {
-+		if (copy_to_user(target, src, size))
-+			return -EFAULT;
-+	} else {
-+		memcpy(target, src, size);
-+	}
-+	return 0;
-+}
-+
- /* Read from the ELF header and then the crash dump. On error, negative value is
-  * returned otherwise number of bytes read are returned.
-  */
--static ssize_t read_vmcore(struct file *file, char __user *buffer,
--				size_t buflen, loff_t *fpos)
-+static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
-+			     int userbuf)
- {
- 	ssize_t acc = 0, tmp;
- 	size_t tsz;
-@@ -174,7 +199,7 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- 	/* Read ELF core header */
- 	if (*fpos < elfcorebuf_sz) {
- 		tsz = min(elfcorebuf_sz - (size_t)*fpos, buflen);
--		if (copy_to_user(buffer, elfcorebuf + *fpos, tsz))
-+		if (copy_to(buffer, elfcorebuf + *fpos, tsz, userbuf))
- 			return -EFAULT;
- 		buflen -= tsz;
- 		*fpos += tsz;
-@@ -192,7 +217,7 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- 
- 		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, buflen);
- 		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz;
--		if (copy_to_user(buffer, kaddr, tsz))
-+		if (copy_to(buffer, kaddr, tsz, userbuf))
- 			return -EFAULT;
- 		buflen -= tsz;
- 		*fpos += tsz;
-@@ -208,7 +233,7 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- 		if (*fpos < m->offset + m->size) {
- 			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem(buffer, tsz, &start, 1);
-+			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
-@@ -225,6 +250,55 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- 	return acc;
- }
- 
-+static ssize_t read_vmcore(struct file *file, char __user *buffer,
-+			   size_t buflen, loff_t *fpos)
-+{
-+	return __read_vmcore(buffer, buflen, fpos, 1);
-+}
-+
-+/*
-+ * The vmcore fault handler uses the page cache and fills data using the
-+ * standard __vmcore_read() function.
-+ *
-+ * On s390 the fault handler is used for memory regions that can't be mapped
-+ * directly with remap_pfn_range().
-+ */
-+static int mmap_vmcore_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
-+{
-+#ifdef CONFIG_S390
-+	struct address_space *mapping = vma->vm_file->f_mapping;
-+	pgoff_t index = vmf->pgoff;
-+	struct page *page;
-+	loff_t offset;
-+	char *buf;
-+	int rc;
-+
-+	page = find_or_create_page(mapping, index, GFP_KERNEL);
-+	if (!page)
-+		return VM_FAULT_OOM;
-+	if (!PageUptodate(page)) {
-+		offset = (loff_t) index << PAGE_CACHE_SHIFT;
-+		buf = __va((page_to_pfn(page) << PAGE_SHIFT));
-+		rc = __read_vmcore(buf, PAGE_SIZE, &offset, 0);
-+		if (rc < 0) {
-+			unlock_page(page);
-+			page_cache_release(page);
-+			return (rc == -ENOMEM) ? VM_FAULT_OOM : VM_FAULT_SIGBUS;
-+		}
-+		SetPageUptodate(page);
-+	}
-+	unlock_page(page);
-+	vmf->page = page;
-+	return 0;
-+#else
-+	return VM_FAULT_SIGBUS;
-+#endif
-+}
-+
-+static const struct vm_operations_struct vmcore_mmap_ops = {
-+	.fault = mmap_vmcore_fault,
-+};
-+
- /**
-  * alloc_elfnotes_buf - allocate buffer for ELF note segment in
-  *                      vmalloc memory
-@@ -271,6 +345,7 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
- 
- 	vma->vm_flags &= ~(VM_MAYWRITE | VM_MAYEXEC);
- 	vma->vm_flags |= VM_MIXEDMAP;
-+	vma->vm_ops = &vmcore_mmap_ops;
- 
- 	len = 0;
- 
-@@ -312,9 +387,9 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
- 
- 			tsz = min_t(size_t, m->offset + m->size - start, size);
- 			paddr = m->paddr + start - m->offset;
--			if (remap_pfn_range(vma, vma->vm_start + len,
--					    paddr >> PAGE_SHIFT, tsz,
--					    vma->vm_page_prot))
-+			if (remap_oldmem_pfn_range(vma, vma->vm_start + len,
-+						   paddr >> PAGE_SHIFT, tsz,
-+						   vma->vm_page_prot))
- 				goto fail;
- 			size -= tsz;
- 			start += tsz;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 6571f82..fe68a5a 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -17,6 +17,9 @@ extern int __weak elfcorehdr_alloc(unsigned long long *addr,
- extern void __weak elfcorehdr_free(unsigned long long addr);
- extern ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos);
- extern ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos);
-+extern int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
-+					 unsigned long from, unsigned long pfn,
-+					 unsigned long size, pgprot_t prot);
- 
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
- 						unsigned long, int);
+Best Regards,
+Michael
+
+ChangeLog
+=========
+v7 => v8)
+
+- Rebase to v3.11-rc2
+- Add patch 5/6: vmcore: Enable /proc/vmcore mmap for s390
+
+v6 => v7)
+
+- Rebase to v3.11-rc1
+- Return VM_FAULT_SIGBUS in fault handler for non s390
+- Use __va() for buffer in fault handler
+
+v5 => v6)
+
+- Set elfcorehdr_addr to ELFCORE_ADDR_ERR after elfcorehdr_free()
+- Fix OLDMEM_SIZE/ZFCPDUMP_HSA_SIZE confusion
+- Remove return VM_FAULT_MAJOR/MINOR
+- Use find_or_create_page() in mmap_vmcore_fault()
+- Use kfree instead of vfree in elfcorehdr_free()
+
+v4 => v5)
+
+- Add weak function elfcorehdr_read_notes() to read ELF notes
+- Rename weak functions for ELF header access and use "vmcorehdr_" prefix
+- Generic vmcore code calls elfcorehdr_alloc() if elfcorehdr= is not specified
+- Add vmcore fault handler for mmap of non-resident memory regions
+- Add weak function remap_oldmem_pfn_range() to be used by zfcpdump for mmap
+
+v3 => v4)
+
+- Rebase to 3.10-rc2 + vmcore mmap patches v8
+
+v2 => v3)
+
+- Get rid of ELFCORE_ADDR_NEWMEM
+- Make read_from_crash_header() only read from kernel
+- Move read_from_crash_header() to weak function arch_read_from_crash_header()
+- Implement read_from_crash_header() strong function for s390
+- Set elfcorehdr_addr to address of new ELF header
+
+v1 => v2)
+
+- Rebase 3.10-rc2 + vmcore mmap patches
+- Introduced arch_get/free_crash_header() and ELFCORE_ADDR_NEWMEM
+
+Feature Description
+===================
+For s390 we want to use /proc/vmcore for our SCSI stand-alone
+dump (zfcpdump). We have support where the first HSA_SIZE bytes are
+saved into a hypervisor owned memory area (HSA) before the kdump
+kernel is booted. When the kdump kernel starts, it is restricted
+to use only HSA_SIZE bytes.
+
+The advantages of this mechanism are:
+
+* No crashkernel memory has to be defined in the old kernel.
+* Early boot problems (before kexec_load has been done) can be dumped 
+* Non-Linux systems can be dumped.
+
+We modify the s390 copy_oldmem_page() function to read from the HSA memory
+if memory below HSA_SIZE bytes is requested.
+
+Since we cannot use the kexec tool to load the kernel in this scenario,
+we have to build the ELF header in the 2nd (kdump/new) kernel.
+
+So with the following patch set we would like to introduce the new
+function that the ELF header for /proc/vmcore can be created in the 2nd
+kernel memory.
+
+The following steps are done during zfcpdump execution:
+
+1.  Production system crashes
+2.  User boots a SCSI disk that has been prepared with the zfcpdump tool
+3.  Hypervisor saves CPU state of boot CPU and HSA_SIZE bytes of memory into HSA
+4.  Boot loader loads kernel into low memory area
+5.  Kernel boots and uses only HSA_SIZE bytes of memory
+6.  Kernel saves registers of non-boot CPUs
+7.  Kernel does memory detection for dump memory map
+8.  Kernel creates ELF header for /proc/vmcore
+9.  /proc/vmcore uses this header for initialization
+10. The zfcpdump user space reads /proc/vmcore to write dump to SCSI disk
+    - copy_oldmem_page() copies from HSA for memory below HSA_SIZE
+    - copy_oldmem_page() copies from real memory for memory above HSA_SIZE
+
+Jan Willeke (1):
+  s390/vmcore: Implement remap_oldmem_pfn_range for s390
+
+Michael Holzheu (5):
+  vmcore: Introduce ELF header in new memory feature
+  s390/vmcore: Use ELF header in new memory feature
+  vmcore: Introduce remap_oldmem_pfn_range()
+  vmcore: Enable /proc/vmcore mmap for s390
+  s390/vmcore: Use vmcore for zfcpdump
+
+ arch/s390/Kconfig             |   3 +-
+ arch/s390/include/asm/sclp.h  |   1 +
+ arch/s390/kernel/crash_dump.c | 219 ++++++++++++++++++++++++++++++++++--------
+ drivers/s390/char/zcore.c     |   6 +-
+ fs/proc/vmcore.c              | 154 +++++++++++++++++++++++++----
+ include/linux/crash_dump.h    |   9 ++
+ 6 files changed, 329 insertions(+), 63 deletions(-)
+
 -- 
 1.8.2.3
 
