@@ -1,30 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V1ep8-0007AN-DQ
- for kexec@lists.infradead.org; Tue, 23 Jul 2013 15:48:33 +0000
+ id 1V1ep8-0007AO-DM
+ for kexec@lists.infradead.org; Tue, 23 Jul 2013 15:48:27 +0000
 Received: from /spool/local
  by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Tue, 23 Jul 2013 16:45:18 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com
- (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5FE2017D8059
- for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 16:49:41 +0100 (BST)
-Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
- [9.149.37.217])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r6NFlnW649807386
+ Tue, 23 Jul 2013 16:45:20 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com
+ (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 211111B0806B
+ for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 16:48:01 +0100 (BST)
+Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
+ [9.149.37.250])
+ by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r6NFln2x59965574
  for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 15:47:49 GMT
-Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r6NFm0Xq023571
+Received: from d06av09.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av09.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r6NFm0k0016232
  for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 09:48:00 -0600
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH v8 1/6] vmcore: Introduce ELF header in new memory feature
-Date: Tue, 23 Jul 2013 17:47:54 +0200
-Message-Id: <1374594479-64671-2-git-send-email-holzheu@linux.vnet.ibm.com>
+Subject: [PATCH v8 4/6] s390/vmcore: Implement remap_oldmem_pfn_range for s390
+Date: Tue, 23 Jul 2013 17:47:57 +0200
+Message-Id: <1374594479-64671-5-git-send-email-holzheu@linux.vnet.ibm.com>
 In-Reply-To: <1374594479-64671-1-git-send-email-holzheu@linux.vnet.ibm.com>
 References: <1374594479-64671-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -43,198 +43,55 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-Currently for s390 we create the ELF core header in the 2nd kernel
-with a small trick. We relocate the addresses in the ELF header in
-a way that for the /proc/vmcore code it seems to be in the 1st kernel
-(old) memory and the read_from_oldmem() returns the correct data.
-This allows the /proc/vmcore code to use the ELF header in the
-2nd kernel.
+From: Jan Willeke <willeke@de.ibm.com>
 
-This patch now exchanges the old mechanism with the new and much
-cleaner function call override feature that now offcially allows to
-create the ELF core header in the 2nd kernel.
+This patch introduces the s390 specific way to map pages from oldmem.
+The memory area below OLDMEM_SIZE is mapped with offset OLDMEM_BASE.
+The other old memory is mapped directly.
 
-To use the new feature the following function have to be defined
-by the architecture backend code to read from new memory:
-
- * elfcorehdr_alloc: Allocate ELF header
- * elfcorehdr_free: Free the memory of the ELF header
- * elfcorehdr_read: Read from ELF header
- * elfcorehdr_read_notes: Read from ELF notes
-
+Signed-off-by: Jan Willeke <willeke@de.ibm.com>
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/proc/vmcore.c           | 61 ++++++++++++++++++++++++++++++++++++++--------
- include/linux/crash_dump.h |  6 +++++
- 2 files changed, 57 insertions(+), 10 deletions(-)
+ arch/s390/kernel/crash_dump.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index a1a16eb..02cb3ff 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -123,6 +123,36 @@ static ssize_t read_from_oldmem(char *buf, size_t count,
- 	return read;
+diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
+index 0c9a897..3e77615 100644
+--- a/arch/s390/kernel/crash_dump.c
++++ b/arch/s390/kernel/crash_dump.c
+@@ -99,6 +99,32 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
  }
  
-+/*
-+ * Architectures may override this function to allocate ELF header in 2nd kernel
+ /*
++ * Remap "oldmem"
++ *
++ * For the kdump reserved memory this functions performs a swap operation:
++ * [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
 + */
-+int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
++int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
++			   unsigned long pfn, unsigned long size, pgprot_t prot)
 +{
-+	return 0;
++	unsigned long size_old;
++	int rc;
++
++	if (pfn < OLDMEM_SIZE >> PAGE_SHIFT) {
++		size_old = min(size, OLDMEM_SIZE - (pfn << PAGE_SHIFT));
++		rc = remap_pfn_range(vma, from,
++				     pfn + (OLDMEM_BASE >> PAGE_SHIFT),
++				     size_old, prot);
++		if (rc || size == size_old)
++			return rc;
++		size -= size_old;
++		from += size_old;
++		pfn += size_old >> PAGE_SHIFT;
++	}
++	return remap_pfn_range(vma, from, pfn, size, prot);
 +}
 +
 +/*
-+ * Architectures may override this function to free header
-+ */
-+void __weak elfcorehdr_free(unsigned long long addr)
-+{}
-+
-+/*
-+ * Architectures may override this function to read from ELF header
-+ */
-+ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-+{
-+	return read_from_oldmem(buf, count, ppos, 0);
-+}
-+
-+/*
-+ * Architectures may override this function to read from notes sections
-+ */
-+ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
-+{
-+	return read_from_oldmem(buf, count, ppos, 0);
-+}
-+
- /* Read from the ELF header and then the crash dump. On error, negative value is
-  * returned otherwise number of bytes read are returned.
+  * Copy memory from old kernel
   */
-@@ -357,7 +387,7 @@ static int __init update_note_header_size_elf64(const Elf64_Ehdr *ehdr_ptr)
- 		notes_section = kmalloc(max_sz, GFP_KERNEL);
- 		if (!notes_section)
- 			return -ENOMEM;
--		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
- 		if (rc < 0) {
- 			kfree(notes_section);
- 			return rc;
-@@ -444,7 +474,8 @@ static int __init copy_notes_elf64(const Elf64_Ehdr *ehdr_ptr, char *notes_buf)
- 		if (phdr_ptr->p_type != PT_NOTE)
- 			continue;
- 		offset = phdr_ptr->p_offset;
--		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
-+					   &offset);
- 		if (rc < 0)
- 			return rc;
- 		notes_buf += phdr_ptr->p_memsz;
-@@ -536,7 +567,7 @@ static int __init update_note_header_size_elf32(const Elf32_Ehdr *ehdr_ptr)
- 		notes_section = kmalloc(max_sz, GFP_KERNEL);
- 		if (!notes_section)
- 			return -ENOMEM;
--		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_section, max_sz, &offset);
- 		if (rc < 0) {
- 			kfree(notes_section);
- 			return rc;
-@@ -623,7 +654,8 @@ static int __init copy_notes_elf32(const Elf32_Ehdr *ehdr_ptr, char *notes_buf)
- 		if (phdr_ptr->p_type != PT_NOTE)
- 			continue;
- 		offset = phdr_ptr->p_offset;
--		rc = read_from_oldmem(notes_buf, phdr_ptr->p_memsz, &offset, 0);
-+		rc = elfcorehdr_read_notes(notes_buf, phdr_ptr->p_memsz,
-+					   &offset);
- 		if (rc < 0)
- 			return rc;
- 		notes_buf += phdr_ptr->p_memsz;
-@@ -810,7 +842,7 @@ static int __init parse_crash_elf64_headers(void)
- 	addr = elfcorehdr_addr;
- 
- 	/* Read Elf header */
--	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf64_Ehdr), &addr, 0);
-+	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf64_Ehdr), &addr);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -837,7 +869,7 @@ static int __init parse_crash_elf64_headers(void)
- 	if (!elfcorebuf)
- 		return -ENOMEM;
- 	addr = elfcorehdr_addr;
--	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
-+	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
- 	if (rc < 0)
- 		goto fail;
- 
-@@ -866,7 +898,7 @@ static int __init parse_crash_elf32_headers(void)
- 	addr = elfcorehdr_addr;
- 
- 	/* Read Elf header */
--	rc = read_from_oldmem((char*)&ehdr, sizeof(Elf32_Ehdr), &addr, 0);
-+	rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf32_Ehdr), &addr);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -892,7 +924,7 @@ static int __init parse_crash_elf32_headers(void)
- 	if (!elfcorebuf)
- 		return -ENOMEM;
- 	addr = elfcorehdr_addr;
--	rc = read_from_oldmem(elfcorebuf, elfcorebuf_sz_orig, &addr, 0);
-+	rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
- 	if (rc < 0)
- 		goto fail;
- 
-@@ -919,7 +951,7 @@ static int __init parse_crash_elf_headers(void)
- 	int rc=0;
- 
- 	addr = elfcorehdr_addr;
--	rc = read_from_oldmem(e_ident, EI_NIDENT, &addr, 0);
-+	rc = elfcorehdr_read(e_ident, EI_NIDENT, &addr);
- 	if (rc < 0)
- 		return rc;
- 	if (memcmp(e_ident, ELFMAG, SELFMAG) != 0) {
-@@ -952,7 +984,14 @@ static int __init vmcore_init(void)
- {
- 	int rc = 0;
- 
--	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
-+	/* Allow architectures to allocate ELF header in 2nd kernel */
-+	rc = elfcorehdr_alloc(&elfcorehdr_addr, &elfcorehdr_size);
-+	if (rc)
-+		return rc;
-+	/*
-+	 * If elfcorehdr= has been passed in cmdline or created in 2nd kernel,
-+	 * then capture the dump.
-+	 */
- 	if (!(is_vmcore_usable()))
- 		return rc;
- 	rc = parse_crash_elf_headers();
-@@ -960,6 +999,8 @@ static int __init vmcore_init(void)
- 		pr_warn("Kdump: vmcore not initialized\n");
- 		return rc;
- 	}
-+	elfcorehdr_free(elfcorehdr_addr);
-+	elfcorehdr_addr = ELFCORE_ADDR_ERR;
- 
- 	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &proc_vmcore_operations);
- 	if (proc_vmcore)
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 37e4f8d..6571f82 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -12,6 +12,12 @@
- extern unsigned long long elfcorehdr_addr;
- extern unsigned long long elfcorehdr_size;
- 
-+extern int __weak elfcorehdr_alloc(unsigned long long *addr,
-+				   unsigned long long *size);
-+extern void __weak elfcorehdr_free(unsigned long long addr);
-+extern ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos);
-+extern ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos);
-+
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
- 						unsigned long, int);
- 
+ int copy_from_oldmem(void *dest, void *src, size_t count)
 -- 
 1.8.2.3
 
