@@ -1,32 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp11.uk.ibm.com ([195.75.94.107])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V1ep8-0007AQ-HH
- for kexec@lists.infradead.org; Tue, 23 Jul 2013 15:48:35 +0000
-Received: from /spool/local
- by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Tue, 23 Jul 2013 16:42:04 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com
- (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9169217D8069
- for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 16:49:41 +0100 (BST)
-Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
- [9.149.37.217])
- by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r6NFlngj28901540
- for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 15:47:49 GMT
-Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r6NFm09P023579
- for <kexec@lists.infradead.org>; Tue, 23 Jul 2013 09:48:00 -0600
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH v8 6/6] s390/vmcore: Use vmcore for zfcpdump
-Date: Tue, 23 Jul 2013 17:47:59 +0200
-Message-Id: <1374594479-64671-7-git-send-email-holzheu@linux.vnet.ibm.com>
-In-Reply-To: <1374594479-64671-1-git-send-email-holzheu@linux.vnet.ibm.com>
-References: <1374594479-64671-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ id 1V1sbg-000283-Cs
+ for kexec@lists.infradead.org; Wed, 24 Jul 2013 06:31:30 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id DD0353EE0BD
+ for <kexec@lists.infradead.org>; Wed, 24 Jul 2013 15:30:54 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id CC5F545DE58
+ for <kexec@lists.infradead.org>; Wed, 24 Jul 2013 15:30:54 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id ADC5D45DE4D
+ for <kexec@lists.infradead.org>; Wed, 24 Jul 2013 15:30:54 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id A157AE3800A
+ for <kexec@lists.infradead.org>; Wed, 24 Jul 2013 15:30:54 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 3B6FE1DB8044
+ for <kexec@lists.infradead.org>; Wed, 24 Jul 2013 15:30:54 +0900 (JST)
+Message-ID: <51EF7466.20703@jp.fujitsu.com>
+Date: Wed, 24 Jul 2013 15:29:58 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
+References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
+ <51B19DF3.2070009@jp.fujitsu.com>
+ <CAErSpo6dfEnzriHD_aWZB_3E-kSzauhNRHPd+VuFX5HONVKgqw@mail.gmail.com>
+ <51B6BEDB.3000509@jp.fujitsu.com>
+ <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
+ <51B93221.2040505@jp.fujitsu.com>
+ <CAErSpo5tVK-Z3aOdMTzab-S8o5zLVtDOFQ8-LSYpUgbrJSsxuw@mail.gmail.com>
+ <51BA7BB6.1080104@jp.fujitsu.com>
+In-Reply-To: <51BA7BB6.1080104@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,267 +42,153 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, Jan Willeke <willeke@de.ibm.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
+To: bhelgaas@google.com
+Cc: alex.williamson@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, vgoyal@redhat.com, ishii.hironobu@jp.fujitsu.com, bill.sumner@hp.com
 
-This patch modifies the s390 copy_oldmem_page() and remap_oldmem_pfn_range()
-function for zfcpdump to read from the HSA memory if memory below HSA_SIZE
-bytes is requested. Otherwise real memory is used.
+Sorry for letting this discussion slide, I was busy on other works:-(
+Anyway, the summary of previous discussion is:
+- My patch adds new initcall(fs_initcall) to reset all PCIe endpoints on
+  boot. This expects PCI enumeration is done before IOMMU
+  initialization as follows.
+    (1) PCI enumeration
+    (2) fs_initcall ---> device reset
+    (3) IOMMU initialization
+- This works on x86, but does not work on other architecture because
+  IOMMU is initialized before PCI enumeration on some architectures. So,
+  device reset should be done where IOMMU is initialized instead of
+  initcall.
+- Or, as another idea, we can reset devices in first kernel(panic kernel)
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- arch/s390/Kconfig             |   3 +-
- arch/s390/include/asm/sclp.h  |   1 +
- arch/s390/kernel/crash_dump.c | 122 +++++++++++++++++++++++++++++++++++-------
- drivers/s390/char/zcore.c     |   6 +--
- 4 files changed, 110 insertions(+), 22 deletions(-)
+Resetting devices in panic kernel is against kdump policy and seems not to
+be good idea. So I think adding reset code into iommu initialization is
+better. I'll post patches for that.
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 22f75b5..f88bdac 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -514,6 +514,7 @@ config CRASH_DUMP
- 	bool "kernel crash dumps"
- 	depends on 64BIT && SMP
- 	select KEXEC
-+	select ZFCPDUMP
- 	help
- 	  Generate crash dump after being started by kexec.
- 	  Crash dump kernels are loaded in the main kernel with kexec-tools
-@@ -524,7 +525,7 @@ config CRASH_DUMP
- config ZFCPDUMP
- 	def_bool n
- 	prompt "zfcpdump support"
--	select SMP
-+	depends on SMP
- 	help
- 	  Select this option if you want to build an zfcpdump enabled kernel.
- 	  Refer to <file:Documentation/s390/zfcpdump.txt> for more details on this.
-diff --git a/arch/s390/include/asm/sclp.h b/arch/s390/include/asm/sclp.h
-index 06a1361..7dc7f9c 100644
---- a/arch/s390/include/asm/sclp.h
-+++ b/arch/s390/include/asm/sclp.h
-@@ -56,5 +56,6 @@ bool sclp_has_linemode(void);
- bool sclp_has_vt220(void);
- int sclp_pci_configure(u32 fid);
- int sclp_pci_deconfigure(u32 fid);
-+int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode);
- 
- #endif /* _ASM_S390_SCLP_H */
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index 3e77615..c84f33d 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -16,6 +16,7 @@
- #include <asm/os_info.h>
- #include <asm/elf.h>
- #include <asm/ipl.h>
-+#include <asm/sclp.h>
- 
- #define PTR_ADD(x, y) (((char *) (x)) + ((unsigned long) (y)))
- #define PTR_SUB(x, y) (((char *) (x)) - ((unsigned long) (y)))
-@@ -69,22 +70,41 @@ static ssize_t copy_page_real(void *buf, void *src, size_t csize)
- static void *elfcorehdr_newmem;
- 
- /*
-- * Copy one page from "oldmem"
-+ * Copy one page from zfcpdump "oldmem"
-+ *
-+ * For pages below ZFCPDUMP_HSA_SIZE memory from the HSA is copied. Otherwise
-+ * real memory copy is used.
-+ */
-+static ssize_t copy_oldmem_page_zfcpdump(char *buf, size_t csize,
-+					 unsigned long src, int userbuf)
-+{
-+	int rc;
-+
-+	if (src < ZFCPDUMP_HSA_SIZE) {
-+		rc = memcpy_hsa(buf, src, csize, userbuf);
-+	} else {
-+		if (userbuf)
-+			rc = copy_to_user_real((void __force __user *) buf,
-+					       (void *) src, csize);
-+		else
-+			rc = memcpy_real(buf, (void *) src, csize);
-+	}
-+	return rc ? rc : csize;
-+}
-+
-+/*
-+ * Copy one page from kdump "oldmem"
-  *
-  * For the kdump reserved memory this functions performs a swap operation:
-  *  - [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE] is mapped to [0 - OLDMEM_SIZE].
-  *  - [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
-  */
--ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
--			 size_t csize, unsigned long offset, int userbuf)
-+static ssize_t copy_oldmem_page_kdump(char *buf, size_t csize,
-+				      unsigned long src, int userbuf)
-+
- {
--	unsigned long src;
- 	int rc;
- 
--	if (!csize)
--		return 0;
--
--	src = (pfn << PAGE_SHIFT) + offset;
- 	if (src < OLDMEM_SIZE)
- 		src += OLDMEM_BASE;
- 	else if (src > OLDMEM_BASE &&
-@@ -95,17 +115,35 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 				       (void *) src, csize);
- 	else
- 		rc = copy_page_real(buf, (void *) src, csize);
--	return (rc == 0) ? csize : rc;
-+	return (rc == 0) ? rc : csize;
- }
- 
- /*
-- * Remap "oldmem"
-+ * Copy one page from "oldmem"
-+ */
-+ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
-+			 unsigned long offset, int userbuf)
-+{
-+	unsigned long src;
-+
-+	if (!csize)
-+		return 0;
-+	src = (pfn << PAGE_SHIFT) + offset;
-+	if (OLDMEM_BASE)
-+		return copy_oldmem_page_kdump(buf, csize, src, userbuf);
-+	else
-+		return copy_oldmem_page_zfcpdump(buf, csize, src, userbuf);
-+}
-+
-+/*
-+ * Remap "oldmem" for kdump
-  *
-  * For the kdump reserved memory this functions performs a swap operation:
-  * [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
-  */
--int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
--			   unsigned long pfn, unsigned long size, pgprot_t prot)
-+static int remap_oldmem_pfn_range_kdump(struct vm_area_struct *vma,
-+					unsigned long from, unsigned long pfn,
-+					unsigned long size, pgprot_t prot)
- {
- 	unsigned long size_old;
- 	int rc;
-@@ -125,6 +163,43 @@ int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
- }
- 
- /*
-+ * Remap "oldmem" for zfcpdump
-+ *
-+ * We only map available memory above ZFCPDUMP_HSA_SIZE. Memory below
-+ * ZFCPDUMP_HSA_SIZE is read on demand using the copy_oldmem_page() function.
-+ */
-+static int remap_oldmem_pfn_range_zfcpdump(struct vm_area_struct *vma,
-+					   unsigned long from,
-+					   unsigned long pfn,
-+					   unsigned long size, pgprot_t prot)
-+{
-+	unsigned long size_hsa;
-+
-+	if (pfn < ZFCPDUMP_HSA_SIZE >> PAGE_SHIFT) {
-+		size_hsa = min(size, ZFCPDUMP_HSA_SIZE - (pfn << PAGE_SHIFT));
-+		if (size == size_hsa)
-+			return 0;
-+		size -= size_hsa;
-+		from += size_hsa;
-+		pfn += size_hsa >> PAGE_SHIFT;
-+	}
-+	return remap_pfn_range(vma, from, pfn, size, prot);
-+}
-+
-+/*
-+ * Remap "oldmem" for kdump or zfcpdump
-+ */
-+int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
-+			   unsigned long pfn, unsigned long size, pgprot_t prot)
-+{
-+	if (OLDMEM_BASE)
-+		return remap_oldmem_pfn_range_kdump(vma, from, pfn, size, prot);
-+	else
-+		return remap_oldmem_pfn_range_zfcpdump(vma, from, pfn, size,
-+						       prot);
-+}
-+
-+/*
-  * Copy memory from old kernel
-  */
- int copy_from_oldmem(void *dest, void *src, size_t count)
-@@ -132,11 +207,21 @@ int copy_from_oldmem(void *dest, void *src, size_t count)
- 	unsigned long copied = 0;
- 	int rc;
- 
--	if ((unsigned long) src < OLDMEM_SIZE) {
--		copied = min(count, OLDMEM_SIZE - (unsigned long) src);
--		rc = memcpy_real(dest, src + OLDMEM_BASE, copied);
--		if (rc)
--			return rc;
-+	if (OLDMEM_BASE) {
-+		if ((unsigned long) src < OLDMEM_SIZE) {
-+			copied = min(count, OLDMEM_SIZE - (unsigned long) src);
-+			rc = memcpy_real(dest, src + OLDMEM_BASE, copied);
-+			if (rc)
-+				return rc;
-+		}
-+	} else {
-+		if ((unsigned long) src < ZFCPDUMP_HSA_SIZE) {
-+			copied = min(count,
-+				     ZFCPDUMP_HSA_SIZE - (unsigned long) src);
-+			rc = memcpy_hsa(dest, (unsigned long) src, copied, 0);
-+			if (rc)
-+				return rc;
-+		}
- 	}
- 	return memcpy_real(dest + copied, src + copied, count - copied);
- }
-@@ -466,7 +551,8 @@ int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
- 	u32 alloc_size;
- 	u64 hdr_off;
- 
--	if (!OLDMEM_BASE)
-+	/* If we are not in kdump or zfcpdump mode return */
-+	if (!OLDMEM_BASE && ipl_info.type != IPL_TYPE_FCP_DUMP)
- 		return 0;
- 	/* If elfcorehdr= has been passed via cmdline, we use that one */
- 	if (elfcorehdr_addr != ELFCORE_ADDR_MAX)
-diff --git a/drivers/s390/char/zcore.c b/drivers/s390/char/zcore.c
-index 9e5e146..794820a 100644
---- a/drivers/s390/char/zcore.c
-+++ b/drivers/s390/char/zcore.c
-@@ -30,8 +30,8 @@
- 
- #define TRACE(x...) debug_sprintf_event(zcore_dbf, 1, x)
- 
--#define TO_USER		0
--#define TO_KERNEL	1
-+#define TO_USER		1
-+#define TO_KERNEL	0
- #define CHUNK_INFO_SIZE	34 /* 2 16-byte char, each followed by blank */
- 
- enum arch_id {
-@@ -73,7 +73,7 @@ static struct ipl_parameter_block *ipl_block;
-  * @count: Size of buffer, which should be copied
-  * @mode:  Either TO_KERNEL or TO_USER
-  */
--static int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode)
-+int memcpy_hsa(void *dest, unsigned long src, size_t count, int mode)
- {
- 	int offs, blk_num;
- 	static char buf[PAGE_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
--- 
-1.8.2.3
+Another discussion point is how to handle buggy devices. Resetting buggy
+devices makes system more unstable. One of ideas is using boot parameter
+so that user can choose to reset devices or not. An existed parameter
+"reset_devices" is not helpful for this purpose because it is always
+necessary for kdump and user cannot get rid of it. Introducing new boot
+parameter seems to be unpopular for maintainers. Any ideas?
+
+Thanks,
+Takao Indoh
+
+(2013/06/14 11:11), Takao Indoh wrote:
+> (2013/06/13 12:41), Bjorn Helgaas wrote:
+>> On Wed, Jun 12, 2013 at 8:44 PM, Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
+>>> (2013/06/12 13:45), Bjorn Helgaas wrote:
+>>>> [+cc Vivek, Haren; sorry I didn't think to add you earlier]
+>>>>
+>>>> On Tue, Jun 11, 2013 at 12:08 AM, Takao Indoh
+>>>> <indou.takao@jp.fujitsu.com> wrote:
+>>>>> (2013/06/11 11:20), Bjorn Helgaas wrote:
+>>>>
+>>>>>> I'm not sure you need to reset legacy devices (or non-PCI devices)
+>>>>>> yet, but the current hook isn't anchored anywhere -- it's just an
+>>>>>> fs_initcall() that doesn't give the reader any clue about the
+>>>>>> connection between the reset and the problem it's solving.
+>>>>>>
+>>>>>> If we do something like this patch, I think it needs to be done at the
+>>>>>> point where we enable or disable the IOMMU.  That way, it's connected
+>>>>>> to the important event, and there's a clue about how to make
+>>>>>> corresponding fixes for other IOMMUs.
+>>>>>
+>>>>> Ok. pci_iommu_init() is appropriate place to add this hook?
+>>>>
+>>>> I looked at various IOMMU init places today, and it's far more
+>>>> complicated and varied than I had hoped.
+>>>>
+>>>> This reset scheme depends on enumerating PCI devices before we
+>>>> initialize the IOMMU used by those devices.  x86 works that way today,
+>>>> but not all architectures do (see the sparc pci_fire_pbm_init(), for
+>>>
+>>> Sorry, could you tell me which part depends on architecture?
+>>
+>> Your patch works if PCIe devices are reset before the kdump kernel
+>> enables the IOMMU.  On x86, this is possible because PCI enumeration
+>> happens before the IOMMU initialization.  On sparc, the IOMMU is
+>> initialized before PCI devices are enumerated, so there would still be
+>> a window where ongoing DMA could cause an IOMMU error.
+> 
+> Ok, understood, thanks.
+> 
+> Hmmm, it seems to be difficult to find out method which is common to
+> all architectures. So, what I can do for now is introducing reset scheme
+> which is only for x86.
+> 
+> 1) Change this patch so that it work only on x86 platform. For example
+>     call this reset code from x86_init.iommu.iommu_init() instead of
+>     fs_initcall.
+> 
+> Or another idea is:
+> 
+> 2) Enumerate PCI devices in IOMMU layer. That is:
+>     PCI layer
+>       Just provide interface to reset given strcut pci_dev. Maybe
+>       pci_reset_function() looks good for this purpose.
+>     IOMMU layer
+>       Determine which devices should be reset. On kernel boot, check if
+>       IOMMU is already active or not, and if active, check IOMMU page
+>       table and reset devices whose entry exists there.
+> 
+>> Of course, it might be possible to reorganize the sparc code to to the
+>> IOMMU init *after* it enumerates PCI devices.  But I think that change
+>> would be hard to justify.
+>>
+>> And I think even on x86, it would be better if we did the IOMMU init
+>> before PCI enumeration -- the PCI devices depend on the IOMMU, so
+>> logically the IOMMU should be initialized first so the PCI devices can
+>> be associated with it as they are enumerated.
+> 
+> So third idea is:
+> 
+> 3) Do reset before PCI enumeration(arch_initcall_sync or somewhere). We
+>     need to implement new code to enumerate PCI devices and reset them
+>     for this purpose.
+> 
+> Idea 2 is not difficult to implement, but one problem is that this
+> method may be dangerous. We need to scan IOMMU page table which is used
+> in previous kernel, but it may be broken. Idea 3 seems to be difficult
+> to implement...
+> 
+> 
+>>
+>>>> example).  And I think conceptually, the IOMMU should be enumerated
+>>>> and initialized *before* the devices that use it.
+>>>>
+>>>> So I'm uncomfortable with that aspect of this scheme.
+>>>>
+>>>> It would be at least conceivable to reset the devices in the system
+>>>> kernel, before the kexec.  I know we want to do as little as possible
+>>>> in the crashing kernel, but it's at least a possibility, and it might
+>>>> be cleaner.
+>>>
+>>> I bet this will be not accepted by kdump maintainer. Everything in panic
+>>> kernel is unreliable.
+>>
+>> kdump is inherently unreliable.  The kdump kernel doesn't start from
+>> an arbitrary machine state.  We don't expect it to tolerate all CPUs
+>> running, for example.  Maybe it should be expected to tolerate PCI
+>> devices running, either.
+> 
+> What I wanted to say is that any resources of first kernel are
+> unreliable. Under panic situation, struct pci_dev tree may be broken, or
+> pci_lock may be already hold by someone, etc. So, if we do this in first
+> kernel, maybe kdump needs its own code to enumerate PCI devices and
+> reset them.
+> 
+> Vivek?
+> 
+> Thanks,
+> Takao Indoh
+> 
+> 
+> 
+
 
 
 _______________________________________________
