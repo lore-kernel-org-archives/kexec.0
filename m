@@ -1,25 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ob0-x233.google.com ([2607:f8b0:4003:c01::233])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V2Oux-0007Wh-Ee
- for kexec@lists.infradead.org; Thu, 25 Jul 2013 17:01:32 +0000
-Received: by mail-ob0-f179.google.com with SMTP id xk17so2010890obc.24
- for <kexec@lists.infradead.org>; Thu, 25 Jul 2013 10:01:09 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <51EF7466.20703@jp.fujitsu.com>
-References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
- <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
- <51B19DF3.2070009@jp.fujitsu.com>
- <CAErSpo6dfEnzriHD_aWZB_3E-kSzauhNRHPd+VuFX5HONVKgqw@mail.gmail.com>
- <51B6BEDB.3000509@jp.fujitsu.com>
- <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
- <51B93221.2040505@jp.fujitsu.com>
- <CAErSpo5tVK-Z3aOdMTzab-S8o5zLVtDOFQ8-LSYpUgbrJSsxuw@mail.gmail.com>
- <51BA7BB6.1080104@jp.fujitsu.com> <51EF7466.20703@jp.fujitsu.com>
-From: Bjorn Helgaas <bhelgaas@google.com>
-Date: Thu, 25 Jul 2013 11:00:46 -0600
-Message-ID: <CAErSpo5B7NzVfxwW3bQnfK+iK+DrRsWQd2Cm14z5PWNnRHWL5w@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
+Received: from qmta07.emeryville.ca.mail.comcast.net
+ ([2001:558:fe2d:43:76:96:30:64])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V2TvF-0007bR-Ju
+ for kexec@lists.infradead.org; Thu, 25 Jul 2013 22:22:10 +0000
+From: Khalid Aziz <khalid@gonehiking.org>
+Subject: [PATCH] kexec -p fails on kernel versions of form x.y
+Date: Thu, 25 Jul 2013 16:21:09 -0600
+Message-Id: <1374790869-14661-1-git-send-email-khalid@gonehiking.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +16,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, Don Dutile <ddutile@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "Sumner,
- William" <bill.sumner@hp.com>
+To: horms@verge.net.au, ebiederman@xmission.com
+Cc: kexec@lists.infradead.org, Khalid Aziz <khalid@gonehiking.org>
 
-On Wed, Jul 24, 2013 at 12:29 AM, Takao Indoh
-<indou.takao@jp.fujitsu.com> wrote:
-> Sorry for letting this discussion slide, I was busy on other works:-(
-> Anyway, the summary of previous discussion is:
-> - My patch adds new initcall(fs_initcall) to reset all PCIe endpoints on
->   boot. This expects PCI enumeration is done before IOMMU
->   initialization as follows.
->     (1) PCI enumeration
->     (2) fs_initcall ---> device reset
->     (3) IOMMU initialization
-> - This works on x86, but does not work on other architecture because
->   IOMMU is initialized before PCI enumeration on some architectures. So,
->   device reset should be done where IOMMU is initialized instead of
->   initcall.
-> - Or, as another idea, we can reset devices in first kernel(panic kernel)
->
-> Resetting devices in panic kernel is against kdump policy and seems not to
-> be good idea. So I think adding reset code into iommu initialization is
-> better. I'll post patches for that.
+"kexec -p" fails to load kernels with version of the form x.y instead of
+x.y.z with an error message similar to "Unsupported utsname.release:
+3.10-1-amd64". Code in kernel_version() also checks the wrong variable
+name for error return value from strtoul() for "minor" and "patch", and
+hence possibly missing a real error.
 
-Of course nobody *wants* to do anything in the panic kernel.  But
-simply saying "it's against kdump policy and seems not to be a good
-idea" is not a technical argument.  There are things that are
-impractical to do in the kdump kernel, so they have to be done in the
-panic kernel even though we know the kernel is unreliable and the
-attempt may fail.
+These changes fix both of these problems.
 
-My point about IOMMU and PCI initialization order doesn't go away just
-because it doesn't fit "kdump policy."  Having system initialization
-occur in a logical order is far more important than making kdump work.
+Signed-off-by: Khalid Aziz <khalid@gonehiking.org>
+---
+ kexec/kernel_version.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-Bjorn
+diff --git a/kexec/kernel_version.c b/kexec/kernel_version.c
+index 079312b..21fb13a 100644
+--- a/kexec/kernel_version.c
++++ b/kexec/kernel_version.c
+@@ -31,21 +31,20 @@ long kernel_version(void)
+ 	}
+ 
+ 	minor = strtoul(p, &p, 10);
+-	if (major == ULONG_MAX) {
++	if (minor == ULONG_MAX) {
+ 		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
+ 		return -1;
+ 	}
+ 
+-	if (*p++ != '.') {
+-		fprintf(stderr, "Unsupported utsname.release: %s\n",
+-			utsname.release);
+-		return -1;
+-	}
+-
+-	patch = strtoul(p, &p, 10);
+-	if (major == ULONG_MAX) {
+-		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
+-		return -1;
++	/* There may or may not be a patch level for this kernel */
++	if (*p++ == '.') {
++		patch = strtoul(p, &p, 10);
++		if (patch == ULONG_MAX) {
++			fprintf(stderr, "strtoul failed: %s\n",strerror(errno));
++			return -1;
++		}
++	} else {
++		patch = 0;
+ 	}
+ 
+ 	if (major >= 256 || minor >= 256 || patch >= 256) {
+-- 
+1.8.3.2
+
 
 _______________________________________________
 kexec mailing list
