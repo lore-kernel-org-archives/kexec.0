@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V2MTp-00033J-JF
- for kexec@lists.infradead.org; Thu, 25 Jul 2013 14:25:22 +0000
-Date: Thu, 25 Jul 2013 10:24:46 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
-Message-ID: <20130725142446.GK11993@redhat.com>
+Received: from mail-ob0-x233.google.com ([2607:f8b0:4003:c01::233])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V2Oux-0007Wh-Ee
+ for kexec@lists.infradead.org; Thu, 25 Jul 2013 17:01:32 +0000
+Received: by mail-ob0-f179.google.com with SMTP id xk17so2010890obc.24
+ for <kexec@lists.infradead.org>; Thu, 25 Jul 2013 10:01:09 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <51EF7466.20703@jp.fujitsu.com>
 References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
  <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
  <51B19DF3.2070009@jp.fujitsu.com>
@@ -16,9 +16,10 @@ References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
  <51B93221.2040505@jp.fujitsu.com>
  <CAErSpo5tVK-Z3aOdMTzab-S8o5zLVtDOFQ8-LSYpUgbrJSsxuw@mail.gmail.com>
  <51BA7BB6.1080104@jp.fujitsu.com> <51EF7466.20703@jp.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51EF7466.20703@jp.fujitsu.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Date: Thu, 25 Jul 2013 11:00:46 -0600
+Message-ID: <CAErSpo5B7NzVfxwW3bQnfK+iK+DrRsWQd2Cm14z5PWNnRHWL5w@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,9 +33,11 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: alex.williamson@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, bill.sumner@hp.com
+Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, Don Dutile <ddutile@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "Sumner,
+ William" <bill.sumner@hp.com>
 
-On Wed, Jul 24, 2013 at 03:29:58PM +0900, Takao Indoh wrote:
+On Wed, Jul 24, 2013 at 12:29 AM, Takao Indoh
+<indou.takao@jp.fujitsu.com> wrote:
 > Sorry for letting this discussion slide, I was busy on other works:-(
 > Anyway, the summary of previous discussion is:
 > - My patch adds new initcall(fs_initcall) to reset all PCIe endpoints on
@@ -48,27 +51,23 @@ On Wed, Jul 24, 2013 at 03:29:58PM +0900, Takao Indoh wrote:
 >   device reset should be done where IOMMU is initialized instead of
 >   initcall.
 > - Or, as another idea, we can reset devices in first kernel(panic kernel)
-> 
+>
 > Resetting devices in panic kernel is against kdump policy and seems not to
 > be good idea. So I think adding reset code into iommu initialization is
 > better. I'll post patches for that.
 
-I don't understand all the details but I agree that idea of trying to
-reset IOMMU in crashed kernel might not fly.
+Of course nobody *wants* to do anything in the panic kernel.  But
+simply saying "it's against kdump policy and seems not to be a good
+idea" is not a technical argument.  There are things that are
+impractical to do in the kdump kernel, so they have to be done in the
+panic kernel even though we know the kernel is unreliable and the
+attempt may fail.
 
-> 
-> Another discussion point is how to handle buggy devices. Resetting buggy
-> devices makes system more unstable. One of ideas is using boot parameter
-> so that user can choose to reset devices or not.
+My point about IOMMU and PCI initialization order doesn't go away just
+because it doesn't fit "kdump policy."  Having system initialization
+occur in a logical order is far more important than making kdump work.
 
-So who would decide which device is buggy and don't reset it. Give
-some details here.
-
-Can't we simply blacklist associated module, so that it never loads
-and then it never tries to reset the devices?
-
-Thanks
-Vivek
+Bjorn
 
 _______________________________________________
 kexec mailing list
