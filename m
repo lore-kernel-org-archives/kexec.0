@@ -1,15 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V1tBD-0002si-IO
- for kexec@lists.infradead.org; Wed, 24 Jul 2013 07:08:13 +0000
-Date: Wed, 24 Jul 2013 16:06:40 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makefumpfile tool to estimate vmcore file size
-Message-Id: <20130724160640.84e00a3a2e4d811fbdfaa34e@mxc.nes.nec.co.jp>
-In-Reply-To: <51E64EA6.9040209@redhat.com>
-References: <51E64EA6.9040209@redhat.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V2MTp-00033J-JF
+ for kexec@lists.infradead.org; Thu, 25 Jul 2013 14:25:22 +0000
+Date: Thu, 25 Jul 2013 10:24:46 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
+Message-ID: <20130725142446.GK11993@redhat.com>
+References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
+ <51B19DF3.2070009@jp.fujitsu.com>
+ <CAErSpo6dfEnzriHD_aWZB_3E-kSzauhNRHPd+VuFX5HONVKgqw@mail.gmail.com>
+ <51B6BEDB.3000509@jp.fujitsu.com>
+ <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
+ <51B93221.2040505@jp.fujitsu.com>
+ <CAErSpo5tVK-Z3aOdMTzab-S8o5zLVtDOFQ8-LSYpUgbrJSsxuw@mail.gmail.com>
+ <51BA7BB6.1080104@jp.fujitsu.com> <51EF7466.20703@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51EF7466.20703@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,66 +31,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: bhe@redhat.com
-Cc: kexec@lists.infradead.org
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: alex.williamson@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, bill.sumner@hp.com
 
-Hello Baoquan,
+On Wed, Jul 24, 2013 at 03:29:58PM +0900, Takao Indoh wrote:
+> Sorry for letting this discussion slide, I was busy on other works:-(
+> Anyway, the summary of previous discussion is:
+> - My patch adds new initcall(fs_initcall) to reset all PCIe endpoints on
+>   boot. This expects PCI enumeration is done before IOMMU
+>   initialization as follows.
+>     (1) PCI enumeration
+>     (2) fs_initcall ---> device reset
+>     (3) IOMMU initialization
+> - This works on x86, but does not work on other architecture because
+>   IOMMU is initialized before PCI enumeration on some architectures. So,
+>   device reset should be done where IOMMU is initialized instead of
+>   initcall.
+> - Or, as another idea, we can reset devices in first kernel(panic kernel)
+> 
+> Resetting devices in panic kernel is against kdump policy and seems not to
+> be good idea. So I think adding reset code into iommu initialization is
+> better. I'll post patches for that.
 
-On Wed, 17 Jul 2013 15:58:30 +0800
-Baoquan <bhe@redhat.com> wrote:
+I don't understand all the details but I agree that idea of trying to
+reset IOMMU in crashed kernel might not fly.
 
 > 
-> Hi Atsushi,
-> 
-> Our customer want us to provide a tool to estimate the required dump
-> file size based on the current system memory footprint. The following is
-> detailed requirement I tried to conclude, what's your opinion?
-> 
-> In customer's place there are thousands of machines and they don't want
-> to budget for significant increases in storage if unnecessary. This
-> becomes particularly expensive with large memory (1tb+) systems booting
-> off san disk.
-> 
-> Customer would like to achieve this by below example:
-> ##########################################################
-> #makedumpfile -d31 -c/-l/-p
-> 
-> TYPE			PAGES		INCLUDED
-> 
-> Zero Page		x		no
-> Cache Without Private	x           	no
-> Cache With Private	x		no
-> User Data		x		no
-> Free Page		x		no
-> Kernel Code		x		yes
-> Kernel Data		x		yes
-> 
-> Total Pages on system:			311000  (Just for example)
-> Total Pages included in kdump:		160000  (Just for example)
-> Estimated vmcore file size:		48000  (30% compression ratio)
-> ##########################################################
+> Another discussion point is how to handle buggy devices. Resetting buggy
+> devices makes system more unstable. One of ideas is using boot parameter
+> so that user can choose to reset devices or not.
 
-Does this image mean that you want to run makedumpfile in 1st
-kernel without generating a actual dumpfile ?
-Unfortunately, makedumpfile can't work in 1st kernel because it
-only supports /proc/vmcore as input data. 
+So who would decide which device is buggy and don't reset it. Give
+some details here.
 
-If you don't persist in doing in 1st kernel, your desire can be
-achieved by modifying print_report() and discarding a output
-data to /dev/null, and running makedumpfile via kdump as usual.
-
-> By configured dump level, total pages included in kdump can be computed.
-> Then with option which specify a compression algorithm, an estimated
-> vmcore file size can be given. Though the estimated value is changed
-> dynamically with time, it does give user a valuable reference.
-
-Compression ratio is very dependent on the memory usage.
-So I think it's difficult to estimate the size when any compression
-algorithm is specified.
- 
+Can't we simply blacklist associated module, so that it never loads
+and then it never tries to reset the devices?
 
 Thanks
-Atsushi Kumagai
+Vivek
 
 _______________________________________________
 kexec mailing list
