@@ -1,11 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <51F2AC53.3070607@wwwdotorg.org>
-Date: Fri, 26 Jul 2013 11:05:23 -0600
+Message-ID: <51F2ACF7.9000008@wwwdotorg.org>
+Date: Fri, 26 Jul 2013 11:08:07 -0600
 From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
 References: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
-In-Reply-To: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
+ <20130726104908.GC17886@mudshark.cambridge.arm.com>
+In-Reply-To: <20130726104908.GC17886@mudshark.cambridge.arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,51 +19,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: vijay.kilari@gmail.com
-Cc: linux@arm.linux.org.uk, Prasun.Kapoor@caviumnetworks.com, will.deacon@arm.com, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "vijay.kilari@gmail.com" <vijay.kilari@gmail.com>, "Prasun.Kapoor@caviumnetworks.com" <Prasun.Kapoor@caviumnetworks.com>, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 07/25/2013 11:41 PM, vijay.kilari@gmail.com wrote:
-> From: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
+On 07/26/2013 04:49 AM, Will Deacon wrote:
+> [Adding Stephen Warren since he has been working in this area]
 > 
-> In case of normal kexec kernel load, all cpu's are offlined
-> before calling machine_kexec() under kernel_kexec() function.
+> On Fri, Jul 26, 2013 at 06:41:27AM +0100, vijay.kilari@gmail.com wrote:
+>> From: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
+>>
+>> In case of normal kexec kernel load, all cpu's are offlined
+>> before calling machine_kexec() under kernel_kexec() function.
+>> But in case crash panic cpus are relaxed in
+>> machine_crash_nonpanic_core() SMP function but not offlined.
+>>
+>> When crash kernel is loaded with kexec and on panic trigger
+>> machine_kexec() checks for number of cpus online.
+>> If more than one cpu is online machine_kexec() fails to load
+>> with below error
+>>
+>> kexec: error: multiple CPUs still online
+>>
+>> In machine_crash_nonpanic_core() SMP function, offline CPU
+>> before cpu_relax
 
-I'm not sure that's true, unless perhaps you have CONFIG_KEXEC_JUMP enabled?
+>> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
 
-> But in case crash panic cpus are relaxed in
-> machine_crash_nonpanic_core() SMP function but not offlined.
+>> @@ -73,6 +73,7 @@ void machine_crash_nonpanic_core(void *unused)
+>>  	crash_save_cpu(&regs, smp_processor_id());
+>>  	flush_cache_all();
+>>  
+>> +	set_cpu_online(smp_processor_id(), false);
+>>  	atomic_dec(&waiting_for_crash_ipi);
+>>  	while (1)
+>>  		cpu_relax();
 > 
-> When crash kernel is loaded with kexec and on panic trigger
-> machine_kexec() checks for number of cpus online.
-> If more than one cpu is online machine_kexec() fails to load
-> with below error
-> 
-> kexec: error: multiple CPUs still online
-> 
-> In machine_crash_nonpanic_core() SMP function, offline CPU
-> before cpu_relax
+> Ok, I guess this will work since the new kernel is loaded somewhere higher
+> in memory and the crashed kernel will stick around, so the non-crashing CPUs
+> can sit around spinning.
 
-> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+Does a kernel that's used as the crash kernel guarantee:
 
-> @@ -73,6 +73,7 @@ void machine_crash_nonpanic_core(void *unused)
->  	crash_save_cpu(&regs, smp_processor_id());
->  	flush_cache_all();
->  
-> +	set_cpu_online(smp_processor_id(), false);
+* Never to re-use the memory that was used by the previous kernel, so
+that the spin loop code/data won't be corrupted, ever, no matter how
+long the crash recovery kernel runs.
 
-I'm not familiar with that API, but it looks like it's just setting the
-*current* CPU offline. That sounds problematic for two reasons:
-
-1) Setting the current CPU offline sounds like a bad idea; after all,
-code is still running on it. Presumably you want to offline all other CPUs.
-
-2) On a dual-CPU system, I guess this will leave a single CPU marked
-online, and hence satisfy the test in machine_kexec(). However, on a
-quad-core system, won't this just reduce the online CPU count from 4 to
-3 and hence the test in machine_kexec() will still fail?
-
-Can't you call disable_nonboot_cpus() from machine_crash_nonpanic_core()
-just like machine_shutdown() does?
+* Not use SMP, so there's never a need to re-activate the non-boot CPUs,
+which might not work if they aren't truly disabled but rather just
+running a pin loop?
 
 _______________________________________________
 kexec mailing list
