@@ -1,8 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-From: vijay.kilari@gmail.com
-Subject: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
-Date: Fri, 26 Jul 2013 11:11:27 +0530
-Message-Id: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
+Date: Fri, 26 Jul 2013 11:49:08 +0100
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
+Message-ID: <20130726104908.GC17886@mudshark.cambridge.arm.com>
+References: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -11,51 +15,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Prasun.Kapoor@caviumnetworks.com, linux@arm.linux.org.uk, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org
+To: "vijay.kilari@gmail.com" <vijay.kilari@gmail.com>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, swarren@wwwdotorg.org, "Prasun.Kapoor@caviumnetworks.com" <Prasun.Kapoor@caviumnetworks.com>, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-From: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
+[Adding Stephen Warren since he has been working in this area]
 
-In case of normal kexec kernel load, all cpu's are offlined
-before calling machine_kexec() under kernel_kexec() function.
-But in case crash panic cpus are relaxed in
-machine_crash_nonpanic_core() SMP function but not offlined.
+On Fri, Jul 26, 2013 at 06:41:27AM +0100, vijay.kilari@gmail.com wrote:
+> From: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
+> 
+> In case of normal kexec kernel load, all cpu's are offlined
+> before calling machine_kexec() under kernel_kexec() function.
+> But in case crash panic cpus are relaxed in
+> machine_crash_nonpanic_core() SMP function but not offlined.
+> 
+> When crash kernel is loaded with kexec and on panic trigger
+> machine_kexec() checks for number of cpus online.
+> If more than one cpu is online machine_kexec() fails to load
+> with below error
+> 
+> kexec: error: multiple CPUs still online
+> 
+> In machine_crash_nonpanic_core() SMP function, offline CPU
+> before cpu_relax
+> 
+> Signed-off-by: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
+> ---
+>  arch/arm/kernel/machine_kexec.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+> index 4fb074c..163b160 100644
+> --- a/arch/arm/kernel/machine_kexec.c
+> +++ b/arch/arm/kernel/machine_kexec.c
+> @@ -73,6 +73,7 @@ void machine_crash_nonpanic_core(void *unused)
+>  	crash_save_cpu(&regs, smp_processor_id());
+>  	flush_cache_all();
+>  
+> +	set_cpu_online(smp_processor_id(), false);
+>  	atomic_dec(&waiting_for_crash_ipi);
+>  	while (1)
+>  		cpu_relax();
 
-When crash kernel is loaded with kexec and on panic trigger
-machine_kexec() checks for number of cpus online.
-If more than one cpu is online machine_kexec() fails to load
-with below error
+Ok, I guess this will work since the new kernel is loaded somewhere higher
+in memory and the crashed kernel will stick around, so the non-crashing CPUs
+can sit around spinning.
 
-kexec: error: multiple CPUs still online
-
-In machine_crash_nonpanic_core() SMP function, offline CPU
-before cpu_relax
-
-Signed-off-by: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
----
- arch/arm/kernel/machine_kexec.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index 4fb074c..163b160 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -73,6 +73,7 @@ void machine_crash_nonpanic_core(void *unused)
- 	crash_save_cpu(&regs, smp_processor_id());
- 	flush_cache_all();
- 
-+	set_cpu_online(smp_processor_id(), false);
- 	atomic_dec(&waiting_for_crash_ipi);
- 	while (1)
- 		cpu_relax();
--- 
-1.7.9.5
-
+Will
 
 _______________________________________________
 kexec mailing list
