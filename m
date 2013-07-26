@@ -1,16 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V2i07-0002eK-0F
- for kexec@lists.infradead.org; Fri, 26 Jul 2013 13:24:08 +0000
-Date: Fri, 26 Jul 2013 09:23:35 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: makedumpfile 1.5.4 + kernel 3.11-rc2+ 4TB tests
-Message-ID: <20130726132335.GA27529@redhat.com>
-References: <51F260AF.7010409@hp.com>
+Message-ID: <51F2AC53.3070607@wwwdotorg.org>
+Date: Fri, 26 Jul 2013 11:05:23 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <51F260AF.7010409@hp.com>
+Subject: Re: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
+References: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
+In-Reply-To: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +18,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Jingbai Ma <jingbai.ma@hp.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Wang,
- Jin (Steven)" <jin.wang@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mitchell,
- Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "Eric W. Biederman" <ebiederm@xmission.com>, "Croxon,
- Nigel" <nigel.croxon@hp.com>, cpw@sgi.com
+To: vijay.kilari@gmail.com
+Cc: linux@arm.linux.org.uk, Prasun.Kapoor@caviumnetworks.com, will.deacon@arm.com, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, Jul 26, 2013 at 07:42:39PM +0800, Jingbai Ma wrote:
-> Hi,
+On 07/25/2013 11:41 PM, vijay.kilari@gmail.com wrote:
+> From: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
 > 
-> I have run some tests with makedumpfile 1.5.4 and upstream kernel
-> 3.11-rc2+ on a machine with 4TB memory, here is testing results:
-> 
-> Test environment:
-> Machine: HP ProLiant DL980 G7 with 4TB RAM.
-> CPU: Intel(R) Xeon(R) CPU E7- 2860  @ 2.27GHz (8 sockets, 10 cores)
-> (Only 1 CPU was enabled the 2nd kernel)
-> Kernel: 3.11.0-rc2+ (at patch b3a3a9c441e2c8f6b6760de9331023a7906a4ac6)
-> crashkernel=384MB
-> vmcore size: 4.0TB
-> Dump file size: 15GB
-> All measured time from debug message of makedumpfile.
-> As a comparison, I also have tested makedumpfile 1.5.3.
-> 
-> (all time in seconds)
->                      Excluding pages   Copy data   Total
-> makedumpfile 1.5.3          468         1182       1650
-> makedumpfile 1.5.4           93          518        611
-> 
-> 
-> So it seems there is a great performance improvement by the mmap mechanism.
+> In case of normal kexec kernel load, all cpu's are offlined
+> before calling machine_kexec() under kernel_kexec() function.
 
-[CC Andrew].
+I'm not sure that's true, unless perhaps you have CONFIG_KEXEC_JUMP enabled?
 
-Thanks Jingbai for testing results. Good to see that vmcore mmap() patches
-are helping.
+> But in case crash panic cpus are relaxed in
+> machine_crash_nonpanic_core() SMP function but not offlined.
+> 
+> When crash kernel is loaded with kexec and on panic trigger
+> machine_kexec() checks for number of cpus online.
+> If more than one cpu is online machine_kexec() fails to load
+> with below error
+> 
+> kexec: error: multiple CPUs still online
+> 
+> In machine_crash_nonpanic_core() SMP function, offline CPU
+> before cpu_relax
 
-Thanks
-Vivek
+> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+
+> @@ -73,6 +73,7 @@ void machine_crash_nonpanic_core(void *unused)
+>  	crash_save_cpu(&regs, smp_processor_id());
+>  	flush_cache_all();
+>  
+> +	set_cpu_online(smp_processor_id(), false);
+
+I'm not familiar with that API, but it looks like it's just setting the
+*current* CPU offline. That sounds problematic for two reasons:
+
+1) Setting the current CPU offline sounds like a bad idea; after all,
+code is still running on it. Presumably you want to offline all other CPUs.
+
+2) On a dual-CPU system, I guess this will leave a single CPU marked
+online, and hence satisfy the test in machine_kexec(). However, on a
+quad-core system, won't this just reduce the online CPU count from 4 to
+3 and hence the test in machine_kexec() will still fail?
+
+Can't you call disable_nonboot_cpus() from machine_crash_nonpanic_core()
+just like machine_shutdown() does?
 
 _______________________________________________
 kexec mailing list
