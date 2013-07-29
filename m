@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25])
+Received: from co9ehsobe005.messaging.microsoft.com ([207.46.163.28]
+ helo=co9outboundpool.messaging.microsoft.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V3vFU-0000KO-Dz
- for kexec@lists.infradead.org; Mon, 29 Jul 2013 21:45:00 +0000
-Date: Mon, 29 Jul 2013 14:44:19 -0700
-From: Matt Wilson <msw@amazon.com>
-Subject: Re: [PATCH] kexec/kdump implementation for Xen PV domU
-Message-ID: <20130729214419.GA4239@u109add4315675089e695.ant.amazon.com>
-References: <20130729171543.GA2600@router-fw-old.local.net-space.pl>
+ id 1V3way-0002kw-J9
+ for kexec@lists.infradead.org; Mon, 29 Jul 2013 23:11:17 +0000
+Date: Mon, 29 Jul 2013 18:10:36 -0500
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: visible memory seems wrong in kexec crash dump kernel
+In-Reply-To: <51E0F41A.20904@mail.usask.ca> (from cbf123@mail.usask.ca on
+ Sat Jul 13 01:30:50 2013)
+Message-ID: <1375139436.30721.63@snotra>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130729171543.GA2600@router-fw-old.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,32 +20,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <dkiper@net-space.pl>
-Cc: xen-devel@lists.xensource.com, konrad.wilk@oracle.com, gregkh@linuxfoundation.org, daniel.kiper@oracle.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, abyde@acunu.com, tim@acunu.com, ebiederm@xmission.com, brandon@ifup.org, grzegorz.milos@gmail.com, virtualization@lists.linux-foundation.org
+To: Chris Friesen <cbf123@mail.usask.ca>
+Cc: Michael Ellerman <michael@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Jul 29, 2013 at 07:15:43PM +0200, Daniel Kiper wrote:
-> Hi all,
+On 07/13/2013 01:30:50 AM, Chris Friesen wrote:
+> On 07/12/2013 04:59 PM, Chris Friesen wrote:
+>> On 07/12/2013 03:08 PM, Chris Friesen wrote:
+>> 
+>>> I turned on the instrumentation in early_init_dt_scan_memory() and  
+>>> got
+>>> the following when jumping to the capture kernel:
+>>> 
+>>> memory scan node memory, reg size 16, data: 0 0 2 0,
+>>> - 0 , 200000000
+>>> 
+>>> That 0x200000000 matches the fact that I'm seeing 8GB of memory
+>>> available in the recovery kernel.
+>>> 
+>>> If I boot the original kernel with "crashkernel=224M@32M", should I
+>>> expect that only 224MB is marked as "linux,usable-memory" in the
+>>> recovery kernel?
+>> 
+>> I started looking at the kexec side of things, and I noticed  
+>> something a
+>> bit odd. In most places dealing with the device tree in kexec it  
+>> accepts
+>> either "memory" or "memory@" for the memory node name. In
+>> add_usable_mem_property() in arch/ppc64/fs2dt.c it seems to only  
+>> accept
+>> "memory@".
+>> 
+>> Is this expected behaviour? It seems to be the same in current git
+>> versions of kexec-tools.
+>> 
+>> On my system I see "/proc/device-tree/memory".
+>> 
+>> If I modify add_usable_mem_property() to also accept "/memory" then  
+>> my
+>> recovery kernel boots up with
+>> 
+>> physicalMemorySize = 0x10000000
+>> 
+>> which is 256MB (which is still a bit odd since I specified 224MB for  
+>> the
+>> crashkernel).
+>> 
+>> However, it then hits the BUG() call at the end of mark_bootmem() in
+>> mm/bootmem.c.
 > 
-> Here I am sending as attachments patches enabling kexec/kdump
-> support in Xen PV domU. Only x84_64 architecture is supported.
-> There is no support for i386 but some code could be easily reused.
-> Here is a description of patches:
+> One final thing and I'll stop replying to myself. :)
+> 
+> It looks like the problem is that some board-specific freescale code  
+> was calling lmb_reserve() with a base address in the 4GB range.  It  
+> seems odd that lmb_reserve() didn't throw some kind of error when the  
+> recovery kernel was supposed to be limited to 224MB.
+> 
+> Rather than try and fix the bug, I turned off the (unneeded) config  
+> options related to the above lmb_reserve() calls and was able to  
+> successfully access the information I needed via /dev/oldmem.
+> 
+> The upshot is that there seems to be a number of things that could be  
+> improved:
+> 
+> 1) kexec should accept "/memory" and not just "/memory@"
+> 2) lmb_reserve() should really respect the crashkernel memory limit
+> 3) the freescale stuff really shouldn't assume it can map things  
+> wherever it feels like
 
-[...]
+What "board-specific freescale code" are you referring to?
 
->   - kexec-kernel-only_20121203.patch: this patch fixes timer
->     issue on Amazon EC2 machines.
-
-Hi Daniel,
-
-Do you know the cause of this issue? Does it have something to do with
-singleshot timer migration when offlining/onlining SMP CPUs?
-
---msw
+-Scott
 
 _______________________________________________
 kexec mailing list
