@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V48nw-0004al-VQ
+ for kexec@lists.infradead.org; Tue, 30 Jul 2013 12:13:31 +0000
+Date: Tue, 30 Jul 2013 14:12:32 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH] kexec/kdump implementation for Xen PV domU
+Message-ID: <20130730121232.GB3712@debian70-amd64.local.net-space.pl>
+References: <20130729171543.GA2600@router-fw-old.local.net-space.pl>
+ <20130729214419.GA4239@u109add4315675089e695.ant.amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <51F2ACF7.9000008@wwwdotorg.org>
-References: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
- <20130726104908.GC17886@mudshark.cambridge.arm.com>
- <51F2ACF7.9000008@wwwdotorg.org>
-Date: Tue, 30 Jul 2013 16:07:12 +0530
-Message-ID: <CALicx6ugumPG__rSAsTS95SH=6fTGqhpPFsQ8bLG-u-fbk0=pQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
-From: Vijay Kilari <vijay.kilari@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20130729214419.GA4239@u109add4315675089e695.ant.amazon.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,70 +24,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Prasun.Kapoor@caviumnetworks.com" <Prasun.Kapoor@caviumnetworks.com>, Will Deacon <will.deacon@arm.com>, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Matt Wilson <msw@amazon.com>
+Cc: xen-devel@lists.xensource.com, konrad.wilk@oracle.com, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, abyde@acunu.com, tim@acunu.com, ebiederm@xmission.com, brandon@ifup.org, grzegorz.milos@gmail.com, virtualization@lists.linux-foundation.org, Daniel Kiper <dkiper@net-space.pl>
 
-On Fri, Jul 26, 2013 at 10:38 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 07/26/2013 04:49 AM, Will Deacon wrote:
->> [Adding Stephen Warren since he has been working in this area]
->>
->> On Fri, Jul 26, 2013 at 06:41:27AM +0100, vijay.kilari@gmail.com wrote:
->>> From: Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>
->>>
->>> In case of normal kexec kernel load, all cpu's are offlined
->>> before calling machine_kexec() under kernel_kexec() function.
->>> But in case crash panic cpus are relaxed in
->>> machine_crash_nonpanic_core() SMP function but not offlined.
->>>
->>> When crash kernel is loaded with kexec and on panic trigger
->>> machine_kexec() checks for number of cpus online.
->>> If more than one cpu is online machine_kexec() fails to load
->>> with below error
->>>
->>> kexec: error: multiple CPUs still online
->>>
->>> In machine_crash_nonpanic_core() SMP function, offline CPU
->>> before cpu_relax
+On Mon, Jul 29, 2013 at 02:44:19PM -0700, Matt Wilson wrote:
+> On Mon, Jul 29, 2013 at 07:15:43PM +0200, Daniel Kiper wrote:
+> > Hi all,
+> >
+> > Here I am sending as attachments patches enabling kexec/kdump
+> > support in Xen PV domU. Only x84_64 architecture is supported.
+> > There is no support for i386 but some code could be easily reused.
+> > Here is a description of patches:
 >
->>> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+> [...]
 >
->>> @@ -73,6 +73,7 @@ void machine_crash_nonpanic_core(void *unused)
->>>      crash_save_cpu(&regs, smp_processor_id());
->>>      flush_cache_all();
->>>
->>> +    set_cpu_online(smp_processor_id(), false);
->>>      atomic_dec(&waiting_for_crash_ipi);
->>>      while (1)
->>>              cpu_relax();
->>
->> Ok, I guess this will work since the new kernel is loaded somewhere higher
->> in memory and the crashed kernel will stick around, so the non-crashing CPUs
->> can sit around spinning.
+> >   - kexec-kernel-only_20121203.patch: this patch fixes timer
+> >     issue on Amazon EC2 machines.
 >
-> Does a kernel that's used as the crash kernel guarantee:
+> Hi Daniel,
 >
-> * Never to re-use the memory that was used by the previous kernel, so
-> that the spin loop code/data won't be corrupted, ever, no matter how
-> long the crash recovery kernel runs.
->
-> * Not use SMP, so there's never a need to re-activate the non-boot CPUs,
-> which might not work if they aren't truly disabled but rather just
-> running a pin loop?
+> Do you know the cause of this issue? Does it have something to do with
+> singleshot timer migration when offlining/onlining SMP CPUs?
 
-From cat /proc/iomem, normal kernel is executed from (0x80xxxxxx) with crash
-kernel reserved 64M@0xa0000000
+Sadly, no. I was not able to replicate this on my machines (I did test
+on Xen 4.1). However, as I saw this issue appears on Xen 3.4 and 4.0
+(IIRC version numbers used on your machines). Additionally, it does not
+depend on CPU models. And it appears quite often but not always.
+Maybe it is linked with singleshot timer migration.
 
-80000000-bfffffff : System RAM
-  80008000-805aeddf : Kernel code
-  805e2000-8063e427 : Kernel data
-  a0000000-a3ffffff : Crash kernel
-
-crash kernel is loaded to reserved memory location and is executed from there.
-I could confirm this from /proc/iomem when crash kernel is running
-
-a0000000-a3efffff : System RAM
-  a0008000-a05aeddf : Kernel code
-  a05e2000-a063e427 : Kernel data
+Daniel
 
 _______________________________________________
 kexec mailing list
