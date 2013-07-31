@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V4cVu-000167-CN
- for kexec@lists.infradead.org; Wed, 31 Jul 2013 19:56:51 +0000
-Date: Wed, 31 Jul 2013 15:56:23 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
-Message-ID: <20130731195622.GC1577@redhat.com>
-References: <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
+Received: from mail-oa0-x22d.google.com ([2607:f8b0:4003:c02::22d])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V4ddY-0003cd-EW
+ for kexec@lists.infradead.org; Wed, 31 Jul 2013 21:08:49 +0000
+Received: by mail-oa0-f45.google.com with SMTP id m1so2597077oag.4
+ for <kexec@lists.infradead.org>; Wed, 31 Jul 2013 14:08:25 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <51F85BCC.2070103@jp.fujitsu.com>
+References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
+ <51B19DF3.2070009@jp.fujitsu.com>
+ <CAErSpo6dfEnzriHD_aWZB_3E-kSzauhNRHPd+VuFX5HONVKgqw@mail.gmail.com>
+ <51B6BEDB.3000509@jp.fujitsu.com>
+ <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
  <51B93221.2040505@jp.fujitsu.com>
  <CAErSpo5tVK-Z3aOdMTzab-S8o5zLVtDOFQ8-LSYpUgbrJSsxuw@mail.gmail.com>
  <51BA7BB6.1080104@jp.fujitsu.com> <51EF7466.20703@jp.fujitsu.com>
@@ -16,9 +21,11 @@ References: <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
  <CAErSpo4JtG5qVJb-nCywe3vkft=-cDeRDKn_V92RCZ-sGXpwbg@mail.gmail.com>
  <51F758B6.9090204@jp.fujitsu.com>
  <CAErSpo7TNhQO0dx_xZvF=dU2fSWTFf8x=xUJcEsbadJkv8ktuQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAErSpo7TNhQO0dx_xZvF=dU2fSWTFf8x=xUJcEsbadJkv8ktuQ@mail.gmail.com>
+ <51F85BCC.2070103@jp.fujitsu.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Date: Wed, 31 Jul 2013 15:08:03 -0600
+Message-ID: <CAErSpo4yJ2yqCWv7GT7jWSVd_8SktU=xJXT78m8Vxp_wLA4Fow@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,69 +38,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, Don Dutile <ddutile@redhat.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "Sumner,
- William" <bill.sumner@hp.com>
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, Don Dutile <ddutile@redhat.com>, "Sumner, William" <bill.sumner@hp.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, Jul 30, 2013 at 09:59:16AM -0600, Bjorn Helgaas wrote:
-> On Tue, Jul 30, 2013 at 12:09 AM, Takao Indoh
-> <indou.takao@jp.fujitsu.com> wrote:
-> > (2013/07/29 23:17), Bjorn Helgaas wrote:
-> >> On Sun, Jul 28, 2013 at 6:37 PM, Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
-> >>> (2013/07/26 2:00), Bjorn Helgaas wrote:
-> 
-> >>>> My point about IOMMU and PCI initialization order doesn't go away just
-> >>>> because it doesn't fit "kdump policy."  Having system initialization
-> >>>> occur in a logical order is far more important than making kdump work.
-> >>>
-> >>> My next plan is as follows. I think this is matched to logical order
-> >>> on boot.
-> >>>
-> >>> drivers/pci/pci.c
-> >>> - Add function to reset bus, for example, pci_reset_bus(struct pci_bus *bus)
-> >>>
-> >>> drivers/iommu/intel-iommu.c
-> >>> - On initialization, if IOMMU is already enabled, call this bus reset
-> >>>    function before disabling and re-enabling IOMMU.
-> >>
-> >> I raised this issue because of arches like sparc that enumerate the
-> >> IOMMU before the PCI devices that use it.  In that situation, I think
-> >> you're proposing this:
-> >>
-> >>    panic kernel
-> >>      enable IOMMU
-> >>      panic
-> >>    kdump kernel
-> >>      initialize IOMMU (already enabled)
-> >>        pci_reset_bus
-> >>        disable IOMMU
-> >>        enable IOMMU
-> >>      enumerate PCI devices
-> >>
-> >> But the problem is that when you call pci_reset_bus(), you haven't
-> >> enumerated the PCI devices, so you don't know what to reset.
-> >
-> > Right, so my idea is adding reset code into "intel-iommu.c". intel-iommu
-> > initialization is based on the assumption that enumeration of PCI devices
-> > is already done. We can find target device from IOMMU page table instead
-> > of scanning all devices in pci tree.
-> >
-> > Therefore, this idea is only for intel-iommu. Other architectures need
-> > to implement their own reset code.
-> 
-> That's my point.  I'm opposed to adding code to PCI when it only
-> benefits x86 and we know other arches will need a fundamentally
-> different design.  I would rather have a design that can work for all
-> arches.
+[+cc Rafael, linux-acpi]
 
-I agree. It makes sense to work on a design which works for all
-arches.
+On Tue, Jul 30, 2013 at 6:35 PM, Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
 
-And that's when I feel that handling this problem at IOMMU level
-makes more sense, if we can.
+> On x86, currently IOMMU initialization run *after* PCI enumeration, but
+> what you are talking about is that it should be changed so that x86
+> IOMMU initialization is done *before* PCI enumeration like sparc, right?
 
-Thanks
-Vivek
+Yes.  I don't know whether or when that initialization order will ever
+be changed, but I do think we should avoid building more
+infrastructure that depends on the current order.
+
+Changing the order is a pretty big deal because it's a lot more than
+just the IOMMU.  Basically I think we should be enumerating ACPI
+devices, including the IOMMU, before PCI devices, but there's a lot of
+legacy involved in that area.  Added Rafael in case he has any
+thoughts.
+
+> Hmm, ok, I think I need to post attached patch to iommu list and
+> discuss it including current order of x86 IOMMU initialization.
 
 _______________________________________________
 kexec mailing list
