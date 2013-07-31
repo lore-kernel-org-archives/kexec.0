@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <51F945F9.3050906@wwwdotorg.org>
-Date: Wed, 31 Jul 2013 11:14:33 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V4cVu-000167-CN
+ for kexec@lists.infradead.org; Wed, 31 Jul 2013 19:56:51 +0000
+Date: Wed, 31 Jul 2013 15:56:23 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
+Message-ID: <20130731195622.GC1577@redhat.com>
+References: <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
+ <51B93221.2040505@jp.fujitsu.com>
+ <CAErSpo5tVK-Z3aOdMTzab-S8o5zLVtDOFQ8-LSYpUgbrJSsxuw@mail.gmail.com>
+ <51BA7BB6.1080104@jp.fujitsu.com> <51EF7466.20703@jp.fujitsu.com>
+ <CAErSpo5B7NzVfxwW3bQnfK+iK+DrRsWQd2Cm14z5PWNnRHWL5w@mail.gmail.com>
+ <51F5B966.9080405@jp.fujitsu.com>
+ <CAErSpo4JtG5qVJb-nCywe3vkft=-cDeRDKn_V92RCZ-sGXpwbg@mail.gmail.com>
+ <51F758B6.9090204@jp.fujitsu.com>
+ <CAErSpo7TNhQO0dx_xZvF=dU2fSWTFf8x=xUJcEsbadJkv8ktuQ@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
-References: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
- <20130726104908.GC17886@mudshark.cambridge.arm.com>
- <51F2ACF7.9000008@wwwdotorg.org>
- <CALicx6ugumPG__rSAsTS95SH=6fTGqhpPFsQ8bLG-u-fbk0=pQ@mail.gmail.com>
- <51F7F0E1.5030200@wwwdotorg.org>
- <CALicx6tJFkGbvKO+-XZixj+8RSh1awFnXK91Pdew1+5Oa+dDqg@mail.gmail.com>
-In-Reply-To: <CALicx6tJFkGbvKO+-XZixj+8RSh1awFnXK91Pdew1+5Oa+dDqg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAErSpo7TNhQO0dx_xZvF=dU2fSWTFf8x=xUJcEsbadJkv8ktuQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +31,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vijay Kilari <vijay.kilari@gmail.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Prasun.Kapoor@caviumnetworks.com" <Prasun.Kapoor@caviumnetworks.com>, Will Deacon <will.deacon@arm.com>, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, Don Dutile <ddutile@redhat.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "Sumner,
+ William" <bill.sumner@hp.com>
 
-On 07/31/2013 05:37 AM, Vijay Kilari wrote:
-> On Tue, Jul 30, 2013 at 10:29 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 07/30/2013 04:37 AM, Vijay Kilari wrote:
->>> On Fri, Jul 26, 2013 at 10:38 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> ...
->>>> Does a kernel that's used as the crash kernel guarantee:
->>>>
->>>> * Never to re-use the memory that was used by the previous kernel, so
->>>> that the spin loop code/data won't be corrupted, ever, no matter how
->>>> long the crash recovery kernel runs.
->>>>
->>>> * Not use SMP, so there's never a need to re-activate the non-boot CPUs,
->>>> which might not work if they aren't truly disabled but rather just
->>>> running a pin loop?
->>>
->>> From cat /proc/iomem, normal kernel is executed from (0x80xxxxxx) with crash
->>> kernel reserved 64M@0xa0000000
->>>
->>> 80000000-bfffffff : System RAM
->>>   80008000-805aeddf : Kernel code
->>>   805e2000-8063e427 : Kernel data
->>>   a0000000-a3ffffff : Crash kernel
->>>
->>> crash kernel is loaded to reserved memory location and is executed from there.
->>> I could confirm this from /proc/iomem when crash kernel is running
->>>
->>> a0000000-a3efffff : System RAM
->>>   a0008000-a05aeddf : Kernel code
->>>   a05e2000-a063e427 : Kernel data
->>
->> OK, but in the crash dump kernel, is 80008000..8063e427 reserved as
->> well, which would guarantee that the spin loop being executed by the
->> non-crash CPUs won't be corrupted?
+On Tue, Jul 30, 2013 at 09:59:16AM -0600, Bjorn Helgaas wrote:
+> On Tue, Jul 30, 2013 at 12:09 AM, Takao Indoh
+> <indou.takao@jp.fujitsu.com> wrote:
+> > (2013/07/29 23:17), Bjorn Helgaas wrote:
+> >> On Sun, Jul 28, 2013 at 6:37 PM, Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
+> >>> (2013/07/26 2:00), Bjorn Helgaas wrote:
 > 
-> The crash dump kernel runs from reserved memory area (0xa0000000 - 0xa3effffff).
->  So it should not corrupt the memory area of original kernel that was running
->  at 0x80000000,where other CPU's are in spin loop.
+> >>>> My point about IOMMU and PCI initialization order doesn't go away just
+> >>>> because it doesn't fit "kdump policy."  Having system initialization
+> >>>> occur in a logical order is far more important than making kdump work.
+> >>>
+> >>> My next plan is as follows. I think this is matched to logical order
+> >>> on boot.
+> >>>
+> >>> drivers/pci/pci.c
+> >>> - Add function to reset bus, for example, pci_reset_bus(struct pci_bus *bus)
+> >>>
+> >>> drivers/iommu/intel-iommu.c
+> >>> - On initialization, if IOMMU is already enabled, call this bus reset
+> >>>    function before disabling and re-enabling IOMMU.
+> >>
+> >> I raised this issue because of arches like sparc that enumerate the
+> >> IOMMU before the PCI devices that use it.  In that situation, I think
+> >> you're proposing this:
+> >>
+> >>    panic kernel
+> >>      enable IOMMU
+> >>      panic
+> >>    kdump kernel
+> >>      initialize IOMMU (already enabled)
+> >>        pci_reset_bus
+> >>        disable IOMMU
+> >>        enable IOMMU
+> >>      enumerate PCI devices
+> >>
+> >> But the problem is that when you call pci_reset_bus(), you haven't
+> >> enumerated the PCI devices, so you don't know what to reset.
+> >
+> > Right, so my idea is adding reset code into "intel-iommu.c". intel-iommu
+> > initialization is based on the assumption that enumeration of PCI devices
+> > is already done. We can find target device from IOMMU page table instead
+> > of scanning all devices in pci tree.
+> >
+> > Therefore, this idea is only for intel-iommu. Other architectures need
+> > to implement their own reset code.
+> 
+> That's my point.  I'm opposed to adding code to PCI when it only
+> benefits x86 and we know other arches will need a fundamentally
+> different design.  I would rather have a design that can work for all
+> arches.
 
-What about dynamic allocations?
+I agree. It makes sense to work on a design which works for all
+arches.
 
+And that's when I feel that handling this problem at IOMMU level
+makes more sense, if we can.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
