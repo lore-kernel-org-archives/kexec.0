@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V4Yye-0003gX-KH
- for kexec@lists.infradead.org; Wed, 31 Jul 2013 16:10:17 +0000
-Date: Wed, 31 Jul 2013 12:09:45 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
-Message-ID: <20130731160944.GA1577@redhat.com>
-References: <CAErSpo4t_2Xw76p3Z9FVzyyK-MBovavDu9D=pYoPMjESSxgT=w@mail.gmail.com>
- <51B19DF3.2070009@jp.fujitsu.com>
- <CAErSpo6dfEnzriHD_aWZB_3E-kSzauhNRHPd+VuFX5HONVKgqw@mail.gmail.com>
- <51B6BEDB.3000509@jp.fujitsu.com>
- <CAErSpo5u8qGALt6C+tuPYXdd2YgyMH6fnPnA+afUteEZ7kY0iw@mail.gmail.com>
- <51B93221.2040505@jp.fujitsu.com>
- <CAErSpo5tVK-Z3aOdMTzab-S8o5zLVtDOFQ8-LSYpUgbrJSsxuw@mail.gmail.com>
- <51BA7BB6.1080104@jp.fujitsu.com> <51EF7466.20703@jp.fujitsu.com>
- <CAErSpo5B7NzVfxwW3bQnfK+iK+DrRsWQd2Cm14z5PWNnRHWL5w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAErSpo5B7NzVfxwW3bQnfK+iK+DrRsWQd2Cm14z5PWNnRHWL5w@mail.gmail.com>
+Received: from smtp.usask.ca ([128.233.192.40])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V4ZRx-0004Lf-Mg
+ for kexec@lists.infradead.org; Wed, 31 Jul 2013 16:40:34 +0000
+Received: from conversion-daemon.usask.ca by usask.ca
+ (Sun Java(tm) System Messaging Server 7.3-11.01 64bit (built Sep  1 2009))
+ id <0MQT000007HJ6I00@usask.ca> for kexec@lists.infradead.org; Wed,
+ 31 Jul 2013 10:40:05 -0600 (CST)
+Date: Wed, 31 Jul 2013 16:40:05 +0000
+From: "Friesen, Christopher" <cbf123@mail.usask.ca>
+Subject: RE: visible memory seems wrong in kexec crash dump kernel
+In-reply-to: <1375139436.30721.63@snotra>
+Message-id: <CFBB0F4944BCD94BAC0398D7DB81D705EAF91D@CAMPUSMB5.usask.ca>
+MIME-version: 1.0
+Content-language: en-US
+References: <51E0F41A.20904@mail.usask.ca> <1375139436.30721.63@snotra>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,81 +27,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, Don Dutile <ddutile@redhat.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "Sumner,
- William" <bill.sumner@hp.com>
+To: Scott Wood <scottwood@freescale.com>
+Cc: Michael Ellerman <michael@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Jul 25, 2013 at 11:00:46AM -0600, Bjorn Helgaas wrote:
-> On Wed, Jul 24, 2013 at 12:29 AM, Takao Indoh
-> <indou.takao@jp.fujitsu.com> wrote:
-> > Sorry for letting this discussion slide, I was busy on other works:-(
-> > Anyway, the summary of previous discussion is:
-> > - My patch adds new initcall(fs_initcall) to reset all PCIe endpoints on
-> >   boot. This expects PCI enumeration is done before IOMMU
-> >   initialization as follows.
-> >     (1) PCI enumeration
-> >     (2) fs_initcall ---> device reset
-> >     (3) IOMMU initialization
-> > - This works on x86, but does not work on other architecture because
-> >   IOMMU is initialized before PCI enumeration on some architectures. So,
-> >   device reset should be done where IOMMU is initialized instead of
-> >   initcall.
-> > - Or, as another idea, we can reset devices in first kernel(panic kernel)
-> >
-> > Resetting devices in panic kernel is against kdump policy and seems not to
-> > be good idea. So I think adding reset code into iommu initialization is
-> > better. I'll post patches for that.
-> 
-> Of course nobody *wants* to do anything in the panic kernel.  But
-> simply saying "it's against kdump policy and seems not to be a good
-> idea" is not a technical argument.  There are things that are
-> impractical to do in the kdump kernel, so they have to be done in the
-> panic kernel even though we know the kernel is unreliable and the
-> attempt may fail.
 
-I think resetting all devices in crashed kernel is really a lot of
-code. If there is a small piece of code, it can still be considered.
+From: Scott Wood [scottwood@freescale.com]
+Sent: Monday, July 29, 2013 5:10 PM
+To: Friesen, Christopher
+Cc: Michael Ellerman; kexec@lists.infradead.org; Paul Mackerras; linuxppc-dev@lists.ozlabs.org; Vivek Goyal
+Subject: Re: visible memory seems wrong in kexec crash dump kernel
 
-I don't know much about IOMMU or PCI or PCIE. But I am taking one step
-back and discuss again the idea of not resetting the IOMMU in second
-kernel.
+On 07/13/2013 01:30:50 AM, Chris Friesen wrote:
+> The upshot is that there seems to be a number of things that could be
+> improved:
+>
+> 1) kexec should accept "/memory" and not just "/memory@"
+> 2) lmb_reserve() should really respect the crashkernel memory limit
+> 3) the freescale stuff really shouldn't assume it can map things
+> wherever it feels like
 
-I think resetting the bus is a good idea but just resetting PCIE
-will solve only part of the problem and we will same issues with
-devices on other buses.
+What "board-specific freescale code" are you referring to?
 
-So what sounds more appealing if we could fix this particular
-problem at IOMMU level first (and continue to develp patches for
-resetting various buses).
+-Scott
 
-In the past also these ideas have been proposed that continue to
-use translation table from first kernel. Retain those mappings and
-don't reset IOMMU. Reserve some space for kdump mappings in first
-kernel and use that reserved mapping space in second kernel. It
-never got implemented though.
 
-Bjorn, so what's the fundamental problem with this idea?
+Sorry for the crappy quoting, I'm using a web outlook portal.
 
-Also, what's wrong with DMAR error. If some device tried to do DMA,
-and DMA was blocked because IOMMU got reset and mappings are no more
-there, why does it lead to failure. Shouldn't we just reate limit 
-error messages in such case and if device is needed, anyway driver
-will reset it.
+I've switched employers so I don't have access to the exact details any more.  The system in question was a Kontron AM4150 which uses the P5020.  As I recall, one of the Freescale drivers (I think it was the buffer or queue manager that the network driver makes use of) was attempting to call lmb_reserve() with a base address in the 4GB range even though the recovery kernel was limited to 224MB of memory.
 
-Other problem mentioned in this thread is PCI SERR. What is it? Is
-it some kind of error device reports if it can't do DMA successfully.
-Can these errors be simply ignored kdump kernel? This problem sounds
-similar to a device keeping interrupt asserted in second kernel and
-kernel simply disables the interrupt line if nobody claims the
-interrupt.
+While I've got your attention, the other thing that I found was that the "dpa" network driver didn't properly work in a kexec'd kernel even when given lots of memory.  It would work for a little bit and then hang.
 
-IOW, it feels to me that we should handle the issue (DMAR error) at
-IOMMU level first (instead of trying to make sure that by the time
-we get to initialize IOMMU(), all devices in system have been quiesced
-and nobody is doing DMA).
+This was all on a Wind River Linux 4.3 system, which is based on 2.6.34.  It's possible it's been fixed in more recent kernels.  The testcase to see if current kernels are still affected should be fairly simple:
 
-Thanks
-Vivek
+1) Take a P5020 board and boot it with NFS rootfs, reserving 224MB for crashkernel.
+2) Load a crashkernel into it, configured to use NFS rootfs.
+3) Trigger a panic on the main kernel.
+4) Ensure it loads the recovery kernel properly, that it is limited to the correct amount of memory, that it has visibility of the original kernel's memory,  that it has network connectivity and is stable when copying a few gigs of data over the network.
+
+Chris
 
 _______________________________________________
 kexec mailing list
