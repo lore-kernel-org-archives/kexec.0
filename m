@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from caramon.arm.linux.org.uk ([78.32.30.218])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V4tCE-0000qb-2p
- for kexec@lists.infradead.org; Thu, 01 Aug 2013 13:45:38 +0000
-Date: Thu, 1 Aug 2013 14:41:19 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ARM: kexec: validate CPU hotplug support
-Message-ID: <20130801134119.GG24642@n2100.arm.linux.org.uk>
-References: <1373582931-11956-1-git-send-email-swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1373582931-11956-1-git-send-email-swarren@wwwdotorg.org>
+In-Reply-To: <51F945F9.3050906@wwwdotorg.org>
+References: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
+ <20130726104908.GC17886@mudshark.cambridge.arm.com>
+ <51F2ACF7.9000008@wwwdotorg.org>
+ <CALicx6ugumPG__rSAsTS95SH=6fTGqhpPFsQ8bLG-u-fbk0=pQ@mail.gmail.com>
+ <51F7F0E1.5030200@wwwdotorg.org>
+ <CALicx6tJFkGbvKO+-XZixj+8RSh1awFnXK91Pdew1+5Oa+dDqg@mail.gmail.com>
+ <51F945F9.3050906@wwwdotorg.org>
+Date: Thu, 1 Aug 2013 19:19:13 +0530
+Message-ID: <CALicx6u5tkf_wvX8ZcVwbhUOkt3=Zz7214yR9pVce0TJ82Vt4A@mail.gmail.com>
+Subject: Re: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
+From: Vijay Kilari <vijay.kilari@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,19 +25,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Prasun.Kapoor@caviumnetworks.com" <Prasun.Kapoor@caviumnetworks.com>, Will Deacon <will.deacon@arm.com>, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Thu, Jul 11, 2013 at 04:48:51PM -0600, Stephen Warren wrote:
-> +int platform_can_cpu_hotplug(void)
-> +{
-> +	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU) || !smp_ops.cpu_kill)
-> +		return 0;
-
-This is an inappropriate usage of IS_ENABLED().  When hotplug CPU is
-disabled, there is no cpu_kill member in smp_ops, so this leads to
-build failure.
-
-Dropping your patch.
+On Wed, Jul 31, 2013 at 10:44 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 07/31/2013 05:37 AM, Vijay Kilari wrote:
+>> On Tue, Jul 30, 2013 at 10:29 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> On 07/30/2013 04:37 AM, Vijay Kilari wrote:
+>>>> On Fri, Jul 26, 2013 at 10:38 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> ...
+>>>>> Does a kernel that's used as the crash kernel guarantee:
+>>>>>
+>>>>> * Never to re-use the memory that was used by the previous kernel, so
+>>>>> that the spin loop code/data won't be corrupted, ever, no matter how
+>>>>> long the crash recovery kernel runs.
+>>>>>
+>>>>> * Not use SMP, so there's never a need to re-activate the non-boot CPUs,
+>>>>> which might not work if they aren't truly disabled but rather just
+>>>>> running a pin loop?
+>>>>
+>>>> From cat /proc/iomem, normal kernel is executed from (0x80xxxxxx) with crash
+>>>> kernel reserved 64M@0xa0000000
+>>>>
+>>>> 80000000-bfffffff : System RAM
+>>>>   80008000-805aeddf : Kernel code
+>>>>   805e2000-8063e427 : Kernel data
+>>>>   a0000000-a3ffffff : Crash kernel
+>>>>
+>>>> crash kernel is loaded to reserved memory location and is executed from there.
+>>>> I could confirm this from /proc/iomem when crash kernel is running
+>>>>
+>>>> a0000000-a3efffff : System RAM
+>>>>   a0008000-a05aeddf : Kernel code
+>>>>   a05e2000-a063e427 : Kernel data
+>>>
+>>> OK, but in the crash dump kernel, is 80008000..8063e427 reserved as
+>>> well, which would guarantee that the spin loop being executed by the
+>>> non-crash CPUs won't be corrupted?
+>>
+>> The crash dump kernel runs from reserved memory area (0xa0000000 - 0xa3effffff).
+>>  So it should not corrupt the memory area of original kernel that was running
+>>  at 0x80000000,where other CPU's are in spin loop.
+>
+> What about dynamic allocations?
+>
+IMHO, it is the kdump functionality to ensure that it won't corrupt
+original kernel's dynamic allocations
 
 _______________________________________________
 kexec mailing list
