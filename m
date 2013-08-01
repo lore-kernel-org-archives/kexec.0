@@ -1,18 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <51FA8C13.2060807@wwwdotorg.org>
-Date: Thu, 01 Aug 2013 10:25:55 -0600
 From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH] ARM: kexec: offline non panic CPUs on Kdump panic
-References: <1374817287-27952-1-git-send-email-vijay.kilari@gmail.com>
- <20130726104908.GC17886@mudshark.cambridge.arm.com>
- <51F2ACF7.9000008@wwwdotorg.org>
- <CALicx6ugumPG__rSAsTS95SH=6fTGqhpPFsQ8bLG-u-fbk0=pQ@mail.gmail.com>
- <51F7F0E1.5030200@wwwdotorg.org>
- <CALicx6tJFkGbvKO+-XZixj+8RSh1awFnXK91Pdew1+5Oa+dDqg@mail.gmail.com>
- <51F945F9.3050906@wwwdotorg.org>
- <CALicx6u5tkf_wvX8ZcVwbhUOkt3=Zz7214yR9pVce0TJ82Vt4A@mail.gmail.com>
-In-Reply-To: <CALicx6u5tkf_wvX8ZcVwbhUOkt3=Zz7214yR9pVce0TJ82Vt4A@mail.gmail.com>
+Subject: [PATCH V2] ARM: kexec: validate CPU hotplug support
+Date: Thu,  1 Aug 2013 11:31:54 -0600
+Message-Id: <1375378314-26372-1-git-send-email-swarren@wwwdotorg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,60 +11,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vijay Kilari <vijay.kilari@gmail.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Prasun.Kapoor@caviumnetworks.com" <Prasun.Kapoor@caviumnetworks.com>, Will Deacon <will.deacon@arm.com>, Vijaya Kumar K <Vijaya.Kumar@caviumnetworks.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Russell King <linux@arm.linux.org.uk>
+Cc: Stephen Warren <swarren@nvidia.com>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org
 
-On 08/01/2013 07:49 AM, Vijay Kilari wrote:
-> On Wed, Jul 31, 2013 at 10:44 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 07/31/2013 05:37 AM, Vijay Kilari wrote:
->>> On Tue, Jul 30, 2013 at 10:29 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>>> On 07/30/2013 04:37 AM, Vijay Kilari wrote:
->>>>> On Fri, Jul 26, 2013 at 10:38 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>>> ...
->>>>>> Does a kernel that's used as the crash kernel guarantee:
->>>>>>
->>>>>> * Never to re-use the memory that was used by the previous kernel, so
->>>>>> that the spin loop code/data won't be corrupted, ever, no matter how
->>>>>> long the crash recovery kernel runs.
->>>>>>
->>>>>> * Not use SMP, so there's never a need to re-activate the non-boot CPUs,
->>>>>> which might not work if they aren't truly disabled but rather just
->>>>>> running a pin loop?
->>>>>
->>>>> From cat /proc/iomem, normal kernel is executed from (0x80xxxxxx) with crash
->>>>> kernel reserved 64M@0xa0000000
->>>>>
->>>>> 80000000-bfffffff : System RAM
->>>>>   80008000-805aeddf : Kernel code
->>>>>   805e2000-8063e427 : Kernel data
->>>>>   a0000000-a3ffffff : Crash kernel
->>>>>
->>>>> crash kernel is loaded to reserved memory location and is executed from there.
->>>>> I could confirm this from /proc/iomem when crash kernel is running
->>>>>
->>>>> a0000000-a3efffff : System RAM
->>>>>   a0008000-a05aeddf : Kernel code
->>>>>   a05e2000-a063e427 : Kernel data
->>>>
->>>> OK, but in the crash dump kernel, is 80008000..8063e427 reserved as
->>>> well, which would guarantee that the spin loop being executed by the
->>>> non-crash CPUs won't be corrupted?
->>>
->>> The crash dump kernel runs from reserved memory area (0xa0000000 - 0xa3effffff).
->>>  So it should not corrupt the memory area of original kernel that was running
->>>  at 0x80000000,where other CPU's are in spin loop.
->>
->> What about dynamic allocations?
->
-> IMHO, it is the kdump functionality to ensure that it won't corrupt
-> original kernel's dynamic allocations
+From: Stephen Warren <swarren@nvidia.com>
 
-OK, if there are explicit measure to assure this already, then there's
-no issue.
+Architectures should fully validate whether kexec is possible as part of
+machine_kexec_prepare(), so that user-space's kexec_load() operation can
+report any problems. Performing validation in machine_kexec() itself is
+too late, since it is not allowed to return.
+
+Prior to this patch, ARM's machine_kexec() was testing after-the-fact
+whether machine_kexec_prepare() was able to disable all but one CPU.
+Instead, modify machine_kexec_prepare() to validate all conditions
+necessary for machine_kexec_prepare()'s to succeed. BUG if the validation
+succeeded, yet disabling the CPUs didn't actually work.
+
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+v2: Fix compilation issue when !CONFIG_HOTPLUG_CPU
+
+I assume I should add this to the ARM patch tracker immediately, since
+it's basically been OK'd except for the compilation issue which this
+version fixes.
+---
+ arch/arm/include/asm/smp_plat.h |  3 +++
+ arch/arm/kernel/machine_kexec.c | 20 ++++++++++++++++----
+ arch/arm/kernel/smp.c           | 10 ++++++++++
+ 3 files changed, 29 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
+index 6462a72..a252c0b 100644
+--- a/arch/arm/include/asm/smp_plat.h
++++ b/arch/arm/include/asm/smp_plat.h
+@@ -88,4 +88,7 @@ static inline u32 mpidr_hash_size(void)
+ {
+ 	return 1 << mpidr_hash.bits;
+ }
++
++extern int platform_can_cpu_hotplug(void);
++
+ #endif
+diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+index 4fb074c..d7c82df 100644
+--- a/arch/arm/kernel/machine_kexec.c
++++ b/arch/arm/kernel/machine_kexec.c
+@@ -15,6 +15,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/cacheflush.h>
+ #include <asm/mach-types.h>
++#include <asm/smp_plat.h>
+ #include <asm/system_misc.h>
+ 
+ extern const unsigned char relocate_new_kernel[];
+@@ -39,6 +40,14 @@ int machine_kexec_prepare(struct kimage *image)
+ 	int i, err;
+ 
+ 	/*
++	 * Validate that if the current HW supports SMP, then the SW supports
++	 * and implements CPU hotplug for the current HW. If not, we won't be
++	 * able to kexec reliably, so fail the prepare operation.
++	 */
++	if (num_possible_cpus() > 1 && !platform_can_cpu_hotplug())
++		return -EINVAL;
++
++	/*
+ 	 * No segment at default ATAGs address. try to locate
+ 	 * a dtb using magic.
+ 	 */
+@@ -134,10 +143,13 @@ void machine_kexec(struct kimage *image)
+ 	unsigned long reboot_code_buffer_phys;
+ 	void *reboot_code_buffer;
+ 
+-	if (num_online_cpus() > 1) {
+-		pr_err("kexec: error: multiple CPUs still online\n");
+-		return;
+-	}
++	/*
++	 * This can only happen if machine_shutdown() failed to disable some
++	 * CPU, and that can only happen if the checks in
++	 * machine_kexec_prepare() were not correct. If this fails, we can't
++	 * reliably kexec anyway, so BUG_ON is appropriate.
++	 */
++	BUG_ON(num_online_cpus() > 1);
+ 
+ 	page_list = image->head & PAGE_MASK;
+ 
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 3a98192..bd1b9e6 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -144,6 +144,16 @@ int boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 	return -ENOSYS;
+ }
+ 
++int platform_can_cpu_hotplug(void)
++{
++#ifdef CONFIG_HOTPLUG_CPU
++	if (smp_ops.cpu_kill)
++		return 1;
++#endif
++
++	return 0;
++}
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ static int platform_cpu_kill(unsigned int cpu)
+ {
+-- 
+1.8.1.5
+
 
 _______________________________________________
 kexec mailing list
