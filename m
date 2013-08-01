@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V4sDM-0006Uc-99
- for kexec@lists.infradead.org; Thu, 01 Aug 2013 12:42:45 +0000
-Message-ID: <1375360934.31262.156.camel@ul30vt.home>
+ id 1V4so9-0007ze-KG
+ for kexec@lists.infradead.org; Thu, 01 Aug 2013 13:20:46 +0000
+Date: Thu, 1 Aug 2013 09:20:17 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH v2] PCI: Reset PCIe devices to stop ongoing DMA
-From: Alex Williamson <alex.williamson@redhat.com>
-Date: Thu, 01 Aug 2013 06:42:14 -0600
-In-Reply-To: <51FA015E.10901@jp.fujitsu.com>
+Message-ID: <20130801132017.GA15235@redhat.com>
 References: <1368509365-2260-1-git-send-email-indou.takao@jp.fujitsu.com>
  <51F85BCC.2070103@jp.fujitsu.com>
  <CAErSpo4yJ2yqCWv7GT7jWSVd_8SktU=xJXT78m8Vxp_wLA4Fow@mail.gmail.com>
  <1699397.FXoFYIGzbk@vostro.rjw.lan> <51FA015E.10901@jp.fujitsu.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <51FA015E.10901@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,9 +27,9 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, bill.sumner@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, vgoyal@redhat.com
+Cc: alex.williamson@redhat.com, linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, bill.sumner@hp.com
 
-On Thu, 2013-08-01 at 15:34 +0900, Takao Indoh wrote:
+On Thu, Aug 01, 2013 at 03:34:06PM +0900, Takao Indoh wrote:
 > (2013/08/01 6:23), Rafael J. Wysocki wrote:
 > > On Wednesday, July 31, 2013 03:08:03 PM Bjorn Helgaas wrote:
 > >> [+cc Rafael, linux-acpi]
@@ -58,17 +59,21 @@ On Thu, 2013-08-01 at 15:34 +0900, Takao Indoh wrote:
 > Ok guys. If x86 IOMMU maintainer also thinks changing order is
 > necessary, maybe I need to give up device reset in kdump kernel and
 > consider doing it in panic kernel.
-> 
-> Either way, I need bus reset interface to reset devices. Bjorn, could
-> you review the bus reset patches Alex posted yesterday?
 
-I'll post a non-RFC version today, I've made a couple cleanups, tuned
-the delays and rolled in the AER version of secondary bus reset.
-Thanks,
+I don't think trying to reset all the devices in panic kernel is
+a good idea.
 
-Alex
+We need to handle the problem at IOMMU level first which is 
+independent of whether devices have been reset or not.
 
+IOW, we should have the capability to initialize IOMMU first
+and be able to deal with devices which are doing DMA.
 
+I am not against doing device reset and it most likely is a good thing
+but it should happen in second kernel and not in crashed kernel.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
