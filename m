@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V563j-0004Oh-49
- for kexec@lists.infradead.org; Fri, 02 Aug 2013 03:29:44 +0000
-Date: Fri, 2 Aug 2013 11:29:06 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: makefumpfile tool to estimate vmcore file size
-Message-ID: <20130802032906.GB7653@dhcp-16-252.nay.redhat.com>
-References: <51E64EA6.9040209@redhat.com>
- <20130724160640.84e00a3a2e4d811fbdfaa34e@mxc.nes.nec.co.jp>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="5G06lTa6Jq83wMTw"
-Content-Disposition: inline
-In-Reply-To: <20130724160640.84e00a3a2e4d811fbdfaa34e@mxc.nes.nec.co.jp>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1V6Yhq-0000rQ-1j
+ for kexec@lists.infradead.org; Tue, 06 Aug 2013 04:17:12 +0000
+Date: Tue, 6 Aug 2013 13:15:10 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile-1.5.4 dump dmesg may not work due to
+ improper sprintf usage
+Message-Id: <20130806131510.b0c734ed451a6ad109914611@mxc.nes.nec.co.jp>
+In-Reply-To: <CAPud5_4qP0CRhP_6YzPgV5WeGgcKFg-vyGXa4AUezaPjUxeDsQ@mail.gmail.com>
+References: <CAPud5_4qP0CRhP_6YzPgV5WeGgcKFg-vyGXa4AUezaPjUxeDsQ@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,141 +19,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: nick@pistoncloud.com
+Cc: nishimura@mxp.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, kexec@lists.infradead.org
 
+Hello Nick,
 
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, 29 Jul 2013 09:27:57 -0700
+Nick Bartos <nick@pistoncloud.com> wrote:
 
-Hi Atsushi,
-
-Sorry to reply so late.
-By discussing with customer, their idea is below:
-
-*******************************
-The idea about a tool like this is that it works in the 1st kernel and
-that it will tell you how big the vmcore will be based on what filtering
-level and/or compression selected in kdump.conf. Our customer wrote a perl
-script to demonstrate this, I have attached it as attachment. This perl
-script only looks at uncompressed and dumplevel 31 - in the 1st kernel.
-Being told about the dump size when in the 2nd (kdump/kexec kernel) is
-somewhat pointless as you are not then in a position to adjust the
-destination filesystem to accommodate the vmcore size should you need to.
-This is proactively looking at what size is required for a vmcore.
-
-If the kdump.conf says "filter level 11, compress", a tool to estimate
-the vmcore size should take that into account, gauge what pages would
-be included in that, and roughly what size that would equate to
-compressed. The problem is that this is quite dynamic, so the perl
-script deliberately only looks at filter level 31 (trying to work the
-rest out was too hard for me to do).
-**********************************
-
-Per discussion with customer, I think the tool is expected to work in
-1st kernel. With configuration file which specify the fileter level and
-compression algorithm, a rough vmcore size can be given. Since they
-maybe have thousands of servers, an estimated vmcore size can be very
-helpful to refer to.
-
-Baoquan
-Thanks a lot
-
-On 07/24/13 at 04:06pm, Atsushi Kumagai wrote:
-> On Wed, 17 Jul 2013 15:58:30 +0800
-> Baoquan <bhe@redhat.com> wrote:
+> I am reporting this bug as requested in the "BUG REPORT" of
+> the makedumpfile README.
 > 
-> > #makedumpfile -d31 -c/-l/-p
-> > 
-> > TYPE			PAGES		INCLUDED
-> > 
-> > Zero Page		x		no
-> > Cache Without Private	x           	no
-> > Cache With Private	x		no
-> > User Data		x		no
-> > Free Page		x		no
-> > Kernel Code		x		yes
-> > Kernel Data		x		yes
-> > 
-> > Total Pages on system:			311000  (Just for example)
-> > Total Pages included in kdump:		160000  (Just for example)
-> > Estimated vmcore file size:		48000  (30% compression ratio)
-> > ##########################################################
+> There are several times when sprintf is used to append to a buffer like so:
+> sprintf(buf, "%s.", buf);
 > 
-> Does this image mean that you want to run makedumpfile in 1st
-> kernel without generating a actual dumpfile ?
-> Unfortunately, makedumpfile can't work in 1st kernel because it
-> only supports /proc/vmcore as input data. 
+> In the sprintf manpage, it describes that behavior is not consistent.  I
+> first noticed this as my hardned system would make all dmesg output lines
+> empty.  Here is the excerpt from the man page:
 > 
-> If you don't persist in doing in 1st kernel, your desire can be
-> achieved by modifying print_report() and discarding a output
-> data to /dev/null, and running makedumpfile via kdump as usual.
+>     C99 and POSIX.1-2001 specify that the results  are  undefined if a call
+> to sprintf(), snprintf(),  vsprintf(),  or vsnprintf() would cause copying
+> to take place between objects that overlap (e.g., if the target string
+> array and one of the supplied input  arguments refer to the same buffer).
+>  See NOTES.
 > 
-> > By configured dump level, total pages included in kdump can be computed.
-> > Then with option which specify a compression algorithm, an estimated
-> > vmcore file size can be given. Though the estimated value is changed
-> > dynamically with time, it does give user a valuable reference.
+> NOTES
+>        Some programs imprudently rely on code such as the following
 > 
-> Compression ratio is very dependent on the memory usage.
-> So I think it's difficult to estimate the size when any compression
-> algorithm is specified.
+>            sprintf(buf, "%s some further text", buf);
+> 
+>        to  append text to buf.  However, the standards explicitly note that
+> the results are undefined if source and  destination  buffers  overlap
+>  when  calling  sprintf(),  snprintf(), vsprintf(),  and  vsnprintf().
+> Depending on the version of gcc(1) used, and the compiler options employed,
+> calls such as the above will not produce the expected results.
+> 
+>        The glibc implementation of the functions snprintf() and vsnprintf()
+> conforms to  the  C99 standard, that is, behaves as described above, since
+> glibc version 2.1.  Until glibc 2.0.6 they would return -1 when the output
+> was truncated.
+> 
+> 
+> In addition to using sprintf improperly, it appears that there may be
+> buffer overflow potential in the current code, since the loop does not stop
+> if the size of buf is exhausted.
+> 
+> I have attached a patch which modifies this behavior.
+
+I have some comments on this patch, please see below.
+
+> diff -U3 -r makedumpfile-1.5.4.orig/makedumpfile.c makedumpfile-1.5.4/makedumpfile.c
+> --- makedumpfile-1.5.4.orig/makedumpfile.c	2013-07-01 08:08:49.000000000 +0000
+> +++ makedumpfile-1.5.4/makedumpfile.c	2013-07-22 22:47:34.195721706 +0000
+> @@ -3701,6 +3701,7 @@
+>  	char *msg, *p;
+>  	unsigned int i, text_len;
+>  	unsigned long long ts_nsec;
+> +	int buf_s;
+>  	char buf[BUFSIZE];
+>  	ulonglong nanos;
+>  	ulong rem;
+> @@ -3713,21 +3714,49 @@
 >  
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+>  	msg = logptr + SIZE(log);
+>  
+> -	sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+> +	buf_s = snprintf(buf, BUFSIZE, "[%5lld.%06ld] ", nanos, rem/1000);
+> +	if (buf_s < 0) {
+> +		DEBUG_MSG("snprintf returned an error in dump_log_entry.\n");
+> +		return FALSE;
+> +	}
 
---5G06lTa6Jq83wMTw
-Content-Type: application/x-perl
-Content-Disposition: attachment; filename="vmcore-size-guess.pl"
-Content-Transfer-Encoding: quoted-printable
+This is the error case, so you should use ERRMSG instead of DEBUG_MSG.
+The same can be said about all other messages.
 
-#!perl -w=0A#=0A# Quickly put together by Anders Rayner-Karlsson <tak@redha=
-t.com>=0A# after discussion with Neil Horman in Red Hat Engineering=0A# =0A=
-# GPL - Red Hat =C2=A9 2009=0A# =0A# The script simply gives you an estimat=
-e of what size your vmcore=0A# would be if you ran "makedumpfile -d31" as y=
-our core collector.=0A# If you change *anything* on your running system, th=
-e size will=0A# likely have changed. Compression can reduce your vmcore siz=
-e even=0A# further, but it depends on what you have in your RAM.=0A#=0A# I =
-make no warranties as to the scripts correctness, and it should=0A# simply =
-be seen as an educationary tool, nothing more.=0A=0Ause strict;=0Ause warni=
-ngs;=0A=0Amy @iomem;=0Amy @slabinfo;=0Amy $memusage=3D0;=0A=0A### grab iome=
-m=0Aopen(FH, "< /proc/iomem") or die $!;=0A@iomem =3D <FH>;=0Aclose(FH);=0A=
-=0A### grab slabinfo=0Aopen(FH, "< /proc/slabinfo") or die $!;=0A@slabinfo =
-=3D <FH>;=0Aclose(FH);=0A=0A### iomem calculation=0A### values are in HEX, =
-at least on F11=0A### look for Kernel code/data/bss=0A### todo: work out ho=
-w to do this on Xen=0A=0Aforeach ( @iomem ) {=0A	m/ (\w+)-(\w+) : Kernel co=
-de/ && do {=0A		my $start =3D hex($1);=0A		my $end   =3D hex($2);=0A		my $d=
-iff  =3D $end - $start;=0A		$memusage +=3D $diff;=0A	};=0A	m/ (\w+)-(\w+) :=
- Kernel data/ && do {=0A		my $start =3D hex($1);=0A		my $end   =3D hex($2);=
-=0A		my $diff  =3D $end - $start;=0A		$memusage +=3D $diff;=0A	};=0A	m/ (\w=
-+)-(\w+) : Kernel bss/ && do {=0A		my $start =3D hex($1);=0A		my $end   =3D=
- hex($2);=0A		my $diff  =3D $end - $start;=0A		$memusage +=3D $diff;=0A	};=
-=0A};=0A### iomem done=0A=0A### slabinfo calculation=0A### for now, assume =
-column 2 & 3 (index from 0)=0A### todo: check the "header" line and decide =
-column there=0A=0Aforeach ( @slabinfo ) {=0A	my @row =3D split(' ', $_);=0A=
-=0A	if( $row[2] =3D~ /^(\d+\.?\d*|\.\d+)$/ and $row[3] =3D~ /^(\d+\.?\d*|\.=
-\d+)$/ ) {=0A		my $diff =3D $row[2] * $row[3];=0A		$memusage +=3D $diff;=0A=
-	};=0A};=0A### slabinfo done=0A=0A### print how many MB (bytes) we use=0Apr=
-int "vmcore likely to be " . sprintf("%0.2f", $memusage / 1024**2) . " MB (=
-" . $memusage . " bytes)\n";=0A=0A### EOF=0A
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +	if (buf_s >= BUFSIZE) {
+> +		DEBUG_MSG("snprintf truncated output in dump_log_entry.\n");
+> +		DEBUG_MSG("  increase BUFSIZE and recompile.\n");
+> +		/* No point in continuing, we can't append anything useful */
+> +		return FALSE;
+> +	}
+> +
+> +	/* It's unlikely but possible we may not have enough to terminate the
+> +	   string */
+> +	if (buf_s >= BUFSIZE - 1) {
+> +		DEBUG_MSG("not enough buffer space in dump_log_entry.\n");
+> +		DEBUG_MSG("  increase BUFSIZE and recompile.\n");
+> +		return FALSE;
+> +	}
+> +
+> +	for (i = 0, p = msg; i < text_len; i++, p++, buf_s++) {
+> +		if (buf_s >= BUFSIZE - 2) {
+> +			DEBUG_MSG("output truncated in dump_log_entry.\n");
+> +			DEBUG_MSG("  increase BUFSIZE and recompile.\n");
+> +			break;
+> +		}
+
+I don't think to check the remaining buffer space 3 times is meaningful,
+they indicate just "lack of buffer space".
+Is the last one enough to check the remaining buffer space ?
+
+>  
+> -	for (i = 0, p = msg; i < text_len; i++, p++) {
+>  		if (*p == '\n')
+> -			sprintf(buf, "%s.", buf);
+> +			buf[buf_s] = '.';
+>  		else if (isprint(*p) || isspace(*p))
+> -			sprintf(buf, "%s%c", buf, *p);
+> +			buf[buf_s] = *p;
+>  		else
+> -			sprintf(buf, "%s.", buf);
+> +			buf[buf_s] = '.';
+>  	}
+>  
+> -	sprintf(buf, "%s\n", buf);
+> +	buf[buf_s] = '\n';
+> +	buf_s++;
+> +	buf[buf_s] = NULL;
+
+Null character(\0) should be used to terminate strings instead of
+null pointer.
+
+>  
+> -	if (write(info->fd_dumpfile, buf, strlen(buf)) < 0)
+> +	if (write(info->fd_dumpfile, buf, strlen(buf)) < 0) {
+> +		DEBUG_MSG("Problem writing to dump file.\n");
+>  		return FALSE;
+> +        }
+>  	else
+>  		return TRUE;
+>  }
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---5G06lTa6Jq83wMTw--
-
