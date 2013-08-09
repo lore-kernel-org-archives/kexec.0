@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V7oYT-0000b2-Bv
- for kexec@lists.infradead.org; Fri, 09 Aug 2013 15:24:42 +0000
-Date: Fri, 9 Aug 2013 11:24:19 -0400
+ id 1V7ogK-0000qZ-3r
+ for kexec@lists.infradead.org; Fri, 09 Aug 2013 15:32:48 +0000
+Date: Fri, 9 Aug 2013 11:32:26 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kexec: Disable at runtime if the kernel enforces module
  signing
-Message-ID: <20130809152419.GG12688@redhat.com>
+Message-ID: <20130809153225.GH12688@redhat.com>
 References: <1376033797-24970-1-git-send-email-matthew.garrett@nebula.com>
  <20130809110200.GA9631@redhat.com> <1376060830.2021.12.camel@x230>
 MIME-Version: 1.0
@@ -48,11 +48,22 @@ On Fri, Aug 09, 2013 at 03:07:13PM +0000, Matthew Garrett wrote:
 > payload that simply flips that back and returns to the original kernel -
 > it's not like kexec limits you to booting Linux.
 > 
+> > Also it would be nice if we introduce new features, then we make other
+> > features work with those new features instead of disabling existing
+> > features and leave it to other people to make them work.
+> 
+> Sure, it'd be nice if security features got introduced with
+> consideration to other kernel features that allow them to be
+> circumvented, but this approach seems better than making them
+> incompatible at the Kconfig level.
 
-Yes, wiping out part is not right. We do some preparation to get ready
-to jump to root specified code. Never paid too much of attnetion to
-how much work it is to undo what kexec syscall did and reconstruct
-the original state.
+So how would one go about making kexec work when module signature
+enforcement is on?
+
+I guess same solution which is required to make it work with secureboot.
+Sign /sbin/kexec and let /sbin/kexec very signature of kernel. IOW, any
+code which runs at priviliged level should be signature verified with
+keys in system_keyring.
 
 Thanks
 Vivek
