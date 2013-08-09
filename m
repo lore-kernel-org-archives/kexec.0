@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V7ogK-0000qZ-3r
- for kexec@lists.infradead.org; Fri, 09 Aug 2013 15:32:48 +0000
-Date: Fri, 9 Aug 2013 11:32:26 -0400
+ id 1V7oj7-0000xp-9Q
+ for kexec@lists.infradead.org; Fri, 09 Aug 2013 15:35:42 +0000
+Date: Fri, 9 Aug 2013 11:35:19 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kexec: Disable at runtime if the kernel enforces module
  signing
-Message-ID: <20130809153225.GH12688@redhat.com>
+Message-ID: <20130809153519.GI12688@redhat.com>
 References: <1376033797-24970-1-git-send-email-matthew.garrett@nebula.com>
  <20130809110200.GA9631@redhat.com> <1376060830.2021.12.camel@x230>
 MIME-Version: 1.0
@@ -47,23 +47,11 @@ On Fri, Aug 09, 2013 at 03:07:13PM +0000, Matthew Garrett wrote:
 > address of the sig_enforce boolean, and then they launch a simple kexec
 > payload that simply flips that back and returns to the original kernel -
 > it's not like kexec limits you to booting Linux.
-> 
-> > Also it would be nice if we introduce new features, then we make other
-> > features work with those new features instead of disabling existing
-> > features and leave it to other people to make them work.
-> 
-> Sure, it'd be nice if security features got introduced with
-> consideration to other kernel features that allow them to be
-> circumvented, but this approach seems better than making them
-> incompatible at the Kconfig level.
 
-So how would one go about making kexec work when module signature
-enforcement is on?
-
-I guess same solution which is required to make it work with secureboot.
-Sign /sbin/kexec and let /sbin/kexec very signature of kernel. IOW, any
-code which runs at priviliged level should be signature verified with
-keys in system_keyring.
+Also what about all the other patches you had for secureboot where you
+closed down all the paths where root could write to kernel memory. So
+if you want to protect sig_enforce boolean, then you need to close down
+all these paths irrespective of secureboot?
 
 Thanks
 Vivek
