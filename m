@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0027.austin.hp.com ([15.216.28.34])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V9X95-0001lt-KW
- for kexec@lists.infradead.org; Wed, 14 Aug 2013 09:13:37 +0000
-Message-ID: <520B4A22.2030800@hp.com>
-Date: Wed, 14 Aug 2013 17:13:06 +0800
-From: Jingbai Ma <jingbai.ma@hp.com>
-MIME-Version: 1.0
-Subject: Re: [Help Test] kdump, x86, acpi: Reproduce CPU0 SMI corruption issue
- after unsetting BSP flag
+ id 1V9h21-00049L-0A
+ for kexec@lists.infradead.org; Wed, 14 Aug 2013 19:46:57 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <5200BFB3.2050202@jp.fujitsu.com> <520A10A3.5080303@hp.com>
-In-Reply-To: <520A10A3.5080303@hp.com>
+ <520B4A22.2030800@hp.com>
+Date: Wed, 14 Aug 2013 12:45:54 -0700
+In-Reply-To: <520B4A22.2030800@hp.com> (Jingbai Ma's message of "Wed, 14 Aug
+ 2013 17:13:06 +0800")
+Message-ID: <87ob90839p.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [Help Test] kdump, x86,
+ acpi: Reproduce CPU0 SMI corruption issue after unsetting BSP flag
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,131 +27,40 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Jingbai Ma <jingbai.ma@hp.com>
 Cc: Fenghua Yu <fenghua.yu@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Mitchell,
- Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, Vivek Goyal <vgoyal@redhat.com>
+ Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, Vivek Goyal <vgoyal@redhat.com>
 
-On 08/13/2013 06:55 PM, Jingbai Ma wrote:
-> On 08/06/2013 05:19 PM, HATAYAMA Daisuke wrote:
->> Hello,
->>
->> I've addressing kdump restriction that there's only one cpu available
->> on the kdump 2nd kernel. Now I need to check if the following CPU0 SMI
->> corruption issue fixed in the following commit can again be reproduced
->> by unsetting BSP flag of the boot cpu:
->>
->> commit 74b5820808215f65b70b05a099d6d3c969b82689
->> Author: Bjorn Helgaas<bjorn.helgaas@hp.com>
->> Date:   Wed Jul 29 15:54:25 2009 -0600
->>
->>       ACPI: bind workqueues to CPU 0 to avoid SMI corruption
->>
->>       On some machines, a software-initiated SMI causes corruption unless the
->>       SMI runs on CPU 0.  An SMI can be initiated by any AML, but typically it's
->>       done in GPE-related methods that are run via workqueues, so we can avoid
->>       the known corruption cases by binding the workqueues to CPU 0.
->>
->>       References:
->>           http://bugzilla.kernel.org/show_bug.cgi?id=13751
->>           https://bugs.launchpad.net/bugs/157171
->>           https://bugs.launchpad.net/bugs/157691
->>
->>       Signed-off-by: Bjorn Helgaas<bjorn.helgaas@hp.com>
->>       Signed-off-by: Len Brown<len.brown@intel.com>
->>
->> The reason is that in the current situation, I have two ideas to deal
->> with the avove kdump restriction:
->>
->>     1) Disable BSP at the 2nd kernel, posted at:
->>       [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
->>       https://lkml.org/lkml/2012/10/16/15
->>
->>     2) Unset BSP flag at the 1st kernel, suggested by Eric Biederman
->>        during the discussion of the idea 1).
->>
->> On the idea 1), BSP is disabled on the kdump 2nd kernel. My conclusion
->> is that we have no method to reset BSP, i.e. recover BPS's healthy
->> state, while we can recover AP by means of INIT as described in MP
->> specification.
->>
->> The idea 2) is simpler. We unset BSP flag of the boot cpu at 1st
->> kernel. The behaviour when receiving INIT depends on whether or not
->> BSP flag is set or not on its MSR; we can set and unset BSP flag of
->> MSR freely at runtime. (I don't mean we should).
->>
->> So, next thing I should do is to evalute risk of the idea 2). In fact,
->> during the discussion of the idea 1), HPA pointed out that some kind
->> of firmware affects if BSP flag is unset. Also, maybe from the same
->> reason, recently introduced cpu0 hot-plugging feature by Fenghua Yu
->> doesn't appear to unset BSP flag.
->>
->> The biggest problem next is that I don't have any machines reported in
->> the bugzilla articles; this issue inherently depends on firmware.
->>
->> So, could anyone help testing the idea 2) above if you have which of
->> the following machines? (or other ones that can lead to the same bug)
->>
->> - HP Compaq 6910p
->> - HP Compaq 6710b
->> - HP Compaq 6710s
->> - HP Compaq 6510b
->> - HP Compaq 2510p
->>
->> I prepared a small programs for this test. See the attached file.
->> The steps to try to reproduce the bug is as follows:
->>
->>     1. $ tar xf bsp_flag_modules.tar.gz; cd bsp_flag_modules
->>     2. $ make # to build these programs
->>     3. $ insmod unsetbspflag.ko # to unset BSP flag of the boot cpu
->>     4. $ insmod getcpuinfo.ko # to confirm if BSP flag of the boot cpu has
->>                               # been unset.
->>        $ dmesg | tail
->>     5. Close the lid of the machine.
->>     6. Wait some minutes if necessary.
->>     7. Open the lid and you can see oops on the screen if bug has
->>       successfully been reproduced.
->>
-> 
-> I couldn't find any model list above, but found one HP EliteBook 6930p.
-> I tested this machine with kernel 2.6.30 first. After resuming from
-> suspend, system hang.
-> 
-> Then, I tested with kernel 3.11.0-rc5, it worked well, could resume from
-> suspend without any problem.
-> 
-> Next, I tested your program to clear BSP flag, I found the
-> unsetbspflag.ko didn't work everytime, sometimes I have to execute
-> insmod/rmmod several times to clear the BSP flag. (I used your
-> getcpuinfo.ko to check the BSP flag)
-> 
-> cpu: 0 bios_apic: 0 apic: 0 AP
-> cpu: 1 bios_apic: 1 apic: 1 AP
-> 
-> I suspended it, and them resumed it. This machine resumed from suspend
-> successfully, but the BSP flag has been set back:
-> 
-> cpu: 0 bios_apic: 0 apic: 0 BSP
-> cpu: 1 bios_apic: 1 apic: 1 AP
-> 
-> That's all my observation. Hope it's helpful.
-> 
+Jingbai Ma <jingbai.ma@hp.com> writes:
 
-I found a side effect of unsetting BSP flag.
-It affected system rebooting, once the BSP flags been removed, and issue
-reboot command, system will hang after message:
-Restarting system.
-And have to do a hardware reset to recover it.
+> I found a side effect of unsetting BSP flag.
+> It affected system rebooting, once the BSP flags been removed, and issue
+> reboot command, system will hang after message:
+> Restarting system.
+> And have to do a hardware reset to recover it.
+>
+> I have reproduced this problem on the following systems:
+> HP EliteBook 6930p
+> HP Compaq DC7700
+> HP ProLiant DL980 (4 sockets, 40 cores)
+>
+> I have an idea: To avoid such kind of issue, we can unset BSP flag in
+> the first kernel during crash processing, and restore it in the second
+> kernel in the APs initializing.
 
-I have reproduced this problem on the following systems:
-HP EliteBook 6930p
-HP Compaq DC7700
-HP ProLiant DL980 (4 sockets, 40 cores)
+The premise was clearing BSP would not be an issue.  If we could
+reliably count on unsetting the BSP during crash processing we could
+just switch to the BSP and be done totally avoid this problem.
 
-I have an idea: To avoid such kind of issue, we can unset BSP flag in
-the first kernel during crash processing, and restore it in the second
-kernel in the APs initializing.
+Given that there are reald world issues with clearing the BSP flag,
+I believe the alternate suggestion was to simply never attempt to start
+the bootstrap processor during processor bring up.
 
--- 
-Thanks,
-Jingbai Ma
+If as normal we are running on the bootstrap processor everything will
+work the same, but if we are in the kdump scenario we will be short one
+core.  Being short one core seems like a reasonable tradeoff between
+reliability and performance.
+
+Eric
+
 
 _______________________________________________
 kexec mailing list
