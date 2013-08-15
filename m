@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V9h21-00049L-0A
- for kexec@lists.infradead.org; Wed, 14 Aug 2013 19:46:57 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <5200BFB3.2050202@jp.fujitsu.com> <520A10A3.5080303@hp.com>
- <520B4A22.2030800@hp.com>
-Date: Wed, 14 Aug 2013 12:45:54 -0700
-In-Reply-To: <520B4A22.2030800@hp.com> (Jingbai Ma's message of "Wed, 14 Aug
- 2013 17:13:06 +0800")
-Message-ID: <87ob90839p.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [Help Test] kdump, x86,
- acpi: Reproduce CPU0 SMI corruption issue after unsetting BSP flag
+ id 1V9sRm-00014H-GU
+ for kexec@lists.infradead.org; Thu, 15 Aug 2013 07:58:20 +0000
+Date: Thu, 15 Aug 2013 16:56:02 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile-1.5.4 "make install" assumes directories
+ exist
+Message-Id: <20130815165602.8de8627b6b1151629c821aa4@mxc.nes.nec.co.jp>
+In-Reply-To: <CAPud5_6-DCqaUoHOBi9wTibv9ENEiPaJTD5aPKrR92QB_wtURw@mail.gmail.com>
+References: <CAPud5_4aDH32GR=sZbUQQ46Sz0OAPgRnUDWZk8BZEt5wf+0W3A@mail.gmail.com>
+ <20130806131516.e241735b96b329741535d271@mxc.nes.nec.co.jp>
+ <CAPud5_6-DCqaUoHOBi9wTibv9ENEiPaJTD5aPKrR92QB_wtURw@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,42 +25,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Jingbai Ma <jingbai.ma@hp.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Mitchell,
- Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, Vivek Goyal <vgoyal@redhat.com>
+To: nick@pistoncloud.com
+Cc: nishimura@mxp.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, kexec@lists.infradead.org
 
-Jingbai Ma <jingbai.ma@hp.com> writes:
+On Tue, 6 Aug 2013 08:36:28 -0700
+Nick Bartos <nick@pistoncloud.com> wrote:
 
-> I found a side effect of unsetting BSP flag.
-> It affected system rebooting, once the BSP flags been removed, and issue
-> reboot command, system will hang after message:
-> Restarting system.
-> And have to do a hardware reset to recover it.
->
-> I have reproduced this problem on the following systems:
-> HP EliteBook 6930p
-> HP Compaq DC7700
-> HP ProLiant DL980 (4 sockets, 40 cores)
->
-> I have an idea: To avoid such kind of issue, we can unset BSP flag in
-> the first kernel during crash processing, and restore it in the second
-> kernel in the APs initializing.
+> Yes that makes sense, /usr/sbin sounds good.
 
-The premise was clearing BSP would not be an issue.  If we could
-reliably count on unsetting the BSP during crash processing we could
-just switch to the BSP and be done totally avoid this problem.
+Thanks for your reply.
+The fixed patch will be merged into v1.5.5.
 
-Given that there are reald world issues with clearing the BSP flag,
-I believe the alternate suggestion was to simply never attempt to start
-the bootstrap processor during processor bring up.
 
-If as normal we are running on the bootstrap processor everything will
-work the same, but if we are in the kdump scenario we will be short one
-core.  Being short one core seems like a reasonable tradeoff between
-reliability and performance.
-
-Eric
-
+Atsushi Kumagai
+ 
+> 
+> On Mon, Aug 5, 2013 at 9:15 PM, Atsushi Kumagai <
+> kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+> 
+> > Hello Nick,
+> >
+> > On Mon, 29 Jul 2013 09:31:55 -0700
+> > Nick Bartos <nick@pistoncloud.com> wrote:
+> >
+> > > The make install of makedumpfile-1.5.4 uses cp instead of the usual
+> > > "install" command, which has some side effects of not pre-creating
+> > > directories.  This results in installs to an alternate DESTDIR fail
+> > because
+> > > the parent directories do not exist.
+> > >
+> > > I have attached a patch which modifies make install to use the install
+> > > utility.
+> > >
+> > > ---
+> > > diff -U3 -r makedumpfile-1.5.4.orig/Makefile makedumpfile-1.5.4/Makefile
+> > > --- makedumpfile-1.5.4.orig/Makefile  2013-07-01 08:08:49.000000000 +0000
+> > > +++ makedumpfile-1.5.4/Makefile       2013-07-18 17:15:01.109058204 +0000
+> > > @@ -86,8 +86,8 @@
+> > >       rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile
+> > makedumpfile.8.gz makedumpfile.conf.5.gz
+> > >
+> > >  install:
+> > > -     cp makedumpfile ${DESTDIR}/bin
+> > > -     cp makedumpfile-R.pl ${DESTDIR}/bin
+> > > -     cp makedumpfile.8.gz ${DESTDIR}/usr/share/man/man8
+> > > -     cp makedumpfile.conf.5.gz ${DESTDIR}/usr/share/man/man5
+> > > -     cp makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
+> > > +     install -m 755 -d ${DESTDIR}/usr/bin ${DESTDIR}/usr/share/man/man5
+> > ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
+> > > +     install -m 755 -t ${DESTDIR}/usr/bin makedumpfile makedumpfile-R.pl
+> > > +     install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8.gz
+> > > +     install -m 644 -t ${DESTDIR}/usr/share/man/man5
+> > makedumpfile.conf.5.gz
+> > > +     install -m 644 -D makedumpfile.conf
+> > ${DESTDIR}/etc/makedumpfile.conf.sample
+> >
+> > I think /usr/sbin is better than /usr/bin as installation directory
+> > according to Filesystem Hierarchy Standard.
+> >
+> >   4.10. /usr/sbin : Non-essential standard system binaries
+> >   4.10.1. Purpose
+> >
+> >     This directory contains any non-essential binaries used exclusively
+> >     by the system administrator. System administration programs that are
+> >     required for system repair, system recovery, mounting /usr, or other
+> >     essential functions must be placed in /sbin instead.
+> >
+> > So may I fix that when I merge this patch ?
+> >
+> >
+> > Thanks
+> > Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
