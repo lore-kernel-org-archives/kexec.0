@@ -1,18 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1V9sSw-00018D-EO
- for kexec@lists.infradead.org; Thu, 15 Aug 2013 07:59:31 +0000
-Date: Thu, 15 Aug 2013 16:56:34 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile-1.5.4 dump dmesg may not work due to
- improper sprintf usage
-Message-Id: <20130815165634.258f31248220719535d09e42@mxc.nes.nec.co.jp>
-In-Reply-To: <CAPud5_5OhOna27qfXcQbgbx_=PAs=xo5E7=hv207GkPgSmnBCA@mail.gmail.com>
-References: <CAPud5_4qP0CRhP_6YzPgV5WeGgcKFg-vyGXa4AUezaPjUxeDsQ@mail.gmail.com>
- <20130806131510.b0c734ed451a6ad109914611@mxc.nes.nec.co.jp>
- <CAPud5_5OhOna27qfXcQbgbx_=PAs=xo5E7=hv207GkPgSmnBCA@mail.gmail.com>
-Mime-Version: 1.0
+ id 1VBEkQ-0003Bs-H4
+ for kexec@lists.infradead.org; Mon, 19 Aug 2013 01:59:12 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 431C23EE1D9
+ for <kexec@lists.infradead.org>; Mon, 19 Aug 2013 10:58:41 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 31E9445DE54
+ for <kexec@lists.infradead.org>; Mon, 19 Aug 2013 10:58:41 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 0670B45DE56
+ for <kexec@lists.infradead.org>; Mon, 19 Aug 2013 10:58:41 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id EBE17E08002
+ for <kexec@lists.infradead.org>; Mon, 19 Aug 2013 10:58:40 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8EFE91DB8045
+ for <kexec@lists.infradead.org>; Mon, 19 Aug 2013 10:58:40 +0900 (JST)
+Message-ID: <52117B9A.4050202@jp.fujitsu.com>
+Date: Mon, 19 Aug 2013 10:57:46 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [Help Test] kdump, x86, acpi: Reproduce CPU0 SMI corruption issue
+ after unsetting BSP flag
+References: <5200BFB3.2050202@jp.fujitsu.com> <520A10A3.5080303@hp.com>
+ <520B4A22.2030800@hp.com>
+In-Reply-To: <520B4A22.2030800@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,206 +35,156 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: nick@pistoncloud.com
-Cc: nishimura@mxp.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, kexec@lists.infradead.org
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Mitchell,
+ Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, Vivek Goyal <vgoyal@redhat.com>
 
-Sorry for late reply.
+(2013/08/14 18:13), Jingbai Ma wrote:
+> On 08/13/2013 06:55 PM, Jingbai Ma wrote:
+>> On 08/06/2013 05:19 PM, HATAYAMA Daisuke wrote:
+>>> Hello,
+>>>
+>>> I've addressing kdump restriction that there's only one cpu available
+>>> on the kdump 2nd kernel. Now I need to check if the following CPU0 SMI
+>>> corruption issue fixed in the following commit can again be reproduced
+>>> by unsetting BSP flag of the boot cpu:
+>>>
+>>> commit 74b5820808215f65b70b05a099d6d3c969b82689
+>>> Author: Bjorn Helgaas<bjorn.helgaas@hp.com>
+>>> Date:   Wed Jul 29 15:54:25 2009 -0600
+>>>
+>>>        ACPI: bind workqueues to CPU 0 to avoid SMI corruption
+>>>
+>>>        On some machines, a software-initiated SMI causes corruption unless the
+>>>        SMI runs on CPU 0.  An SMI can be initiated by any AML, but typically it's
+>>>        done in GPE-related methods that are run via workqueues, so we can avoid
+>>>        the known corruption cases by binding the workqueues to CPU 0.
+>>>
+>>>        References:
+>>>            http://bugzilla.kernel.org/show_bug.cgi?id=13751
+>>>            https://bugs.launchpad.net/bugs/157171
+>>>            https://bugs.launchpad.net/bugs/157691
+>>>
+>>>        Signed-off-by: Bjorn Helgaas<bjorn.helgaas@hp.com>
+>>>        Signed-off-by: Len Brown<len.brown@intel.com>
+>>>
+>>> The reason is that in the current situation, I have two ideas to deal
+>>> with the avove kdump restriction:
+>>>
+>>>      1) Disable BSP at the 2nd kernel, posted at:
+>>>        [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
+>>>        https://lkml.org/lkml/2012/10/16/15
+>>>
+>>>      2) Unset BSP flag at the 1st kernel, suggested by Eric Biederman
+>>>         during the discussion of the idea 1).
+>>>
+>>> On the idea 1), BSP is disabled on the kdump 2nd kernel. My conclusion
+>>> is that we have no method to reset BSP, i.e. recover BPS's healthy
+>>> state, while we can recover AP by means of INIT as described in MP
+>>> specification.
+>>>
+>>> The idea 2) is simpler. We unset BSP flag of the boot cpu at 1st
+>>> kernel. The behaviour when receiving INIT depends on whether or not
+>>> BSP flag is set or not on its MSR; we can set and unset BSP flag of
+>>> MSR freely at runtime. (I don't mean we should).
+>>>
+>>> So, next thing I should do is to evalute risk of the idea 2). In fact,
+>>> during the discussion of the idea 1), HPA pointed out that some kind
+>>> of firmware affects if BSP flag is unset. Also, maybe from the same
+>>> reason, recently introduced cpu0 hot-plugging feature by Fenghua Yu
+>>> doesn't appear to unset BSP flag.
+>>>
+>>> The biggest problem next is that I don't have any machines reported in
+>>> the bugzilla articles; this issue inherently depends on firmware.
+>>>
+>>> So, could anyone help testing the idea 2) above if you have which of
+>>> the following machines? (or other ones that can lead to the same bug)
+>>>
+>>> - HP Compaq 6910p
+>>> - HP Compaq 6710b
+>>> - HP Compaq 6710s
+>>> - HP Compaq 6510b
+>>> - HP Compaq 2510p
+>>>
+>>> I prepared a small programs for this test. See the attached file.
+>>> The steps to try to reproduce the bug is as follows:
+>>>
+>>>      1. $ tar xf bsp_flag_modules.tar.gz; cd bsp_flag_modules
+>>>      2. $ make # to build these programs
+>>>      3. $ insmod unsetbspflag.ko # to unset BSP flag of the boot cpu
+>>>      4. $ insmod getcpuinfo.ko # to confirm if BSP flag of the boot cpu has
+>>>                                # been unset.
+>>>         $ dmesg | tail
+>>>      5. Close the lid of the machine.
+>>>      6. Wait some minutes if necessary.
+>>>      7. Open the lid and you can see oops on the screen if bug has
+>>>        successfully been reproduced.
+>>>
+>>
+>> I couldn't find any model list above, but found one HP EliteBook 6930p.
+>> I tested this machine with kernel 2.6.30 first. After resuming from
+>> suspend, system hang.
+>>
+>> Then, I tested with kernel 3.11.0-rc5, it worked well, could resume from
+>> suspend without any problem.
+>>
+>> Next, I tested your program to clear BSP flag, I found the
+>> unsetbspflag.ko didn't work everytime, sometimes I have to execute
+>> insmod/rmmod several times to clear the BSP flag. (I used your
+>> getcpuinfo.ko to check the BSP flag)
+>>
+>> cpu: 0 bios_apic: 0 apic: 0 AP
+>> cpu: 1 bios_apic: 1 apic: 1 AP
+>>
+>> I suspended it, and them resumed it. This machine resumed from suspend
+>> successfully, but the BSP flag has been set back:
+>>
+>> cpu: 0 bios_apic: 0 apic: 0 BSP
+>> cpu: 1 bios_apic: 1 apic: 1 AP
+>>
+>> That's all my observation. Hope it's helpful.
+>>
+>
+> I found a side effect of unsetting BSP flag.
+> It affected system rebooting, once the BSP flags been removed, and issue
+> reboot command, system will hang after message:
+> Restarting system.
+> And have to do a hardware reset to recover it.
+>
+> I have reproduced this problem on the following systems:
+> HP EliteBook 6930p
+> HP Compaq DC7700
+> HP ProLiant DL980 (4 sockets, 40 cores)
+>
 
-On Tue, 6 Aug 2013 08:56:56 -0700
-Nick Bartos <nick@pistoncloud.com> wrote:
+# Sorry for the delayed response. I was in vacation last week.
 
-> Yes you are correct on changing DEBUG_MSG to ERRMSG.  I didn't read enough
-> of the code to see that was an option.
-> 
-> Each buffer size check does something specific, which was intended to
-> handle all failure cases.  While it's probably possible to do the same
-> checks in less actual code, simply removing any of the checks will make it
-> fail in some cases.  Also, if someone sets BUFSIZE to a very small number
-> when nothing will work, it makes sense to exit with failure without trying
-> to read anything.  However if only a few lines are going to be truncated
-> because they are too long, it makes sense to continue on and get as much
-> debug output as possible (but with printing the error message about
-> truncation).
+Thanks for your help, Ma. This result is enough to indicate risk of unsetting
+BSP flag in the 1st kernel.
 
-I also think it's good to output messages as much as possible even if they
-are truncated.
+BTW, I have question that does normal kdump work well if crash happens on some
+AP? I wonder the same issue could happen on the 2nd kernel.
 
-Now, I hit upon another idea. How about dividing the read and write processing
-in multiple parts like below? This way can treat any length message with
-fixed BUFSIZE without truncation.
+> I have an idea: To avoid such kind of issue, we can unset BSP flag in
+> the first kernel during crash processing, and restore it in the second
+> kernel in the APs initializing.
+>
 
+As Eric has already suggested, we cannot rely on kdump crash path. There are
+certainly several codes that try to disable/reset a variety of CPU features
+in the kdump crash path. However, they are just best effort. On worst
+catastrophic case, even the reset codes can be broken. It was the same reason
+why the first patch of mine that switches CPUes to BSP if crash happens on AP
+was nacked.
 
-message      [  112.919861] sd 2:1:2:0: [sdf] Unhandled error code\n\0
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-             |---- BUFSIZE -----|---- BUFSIZE -----|---- BUFSIZE -----|
-read/write            1                  2                  3
-times     
-
-
-If that is OK with you, could you post your v2 patch ?
-
-
-Thanks
-Atsushi Kumagai
- 
-> Good catch on using a null character, that makes more sense as the former
-> would likely result in a compiler warning.
-> 
-> 
-> On Mon, Aug 5, 2013 at 9:15 PM, Atsushi Kumagai <
-> kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-> 
-> > Hello Nick,
-> >
-> > On Mon, 29 Jul 2013 09:27:57 -0700
-> > Nick Bartos <nick@pistoncloud.com> wrote:
-> >
-> > > I am reporting this bug as requested in the "BUG REPORT" of
-> > > the makedumpfile README.
-> > >
-> > > There are several times when sprintf is used to append to a buffer like
-> > so:
-> > > sprintf(buf, "%s.", buf);
-> > >
-> > > In the sprintf manpage, it describes that behavior is not consistent.  I
-> > > first noticed this as my hardned system would make all dmesg output lines
-> > > empty.  Here is the excerpt from the man page:
-> > >
-> > >     C99 and POSIX.1-2001 specify that the results  are  undefined if a
-> > call
-> > > to sprintf(), snprintf(),  vsprintf(),  or vsnprintf() would cause
-> > copying
-> > > to take place between objects that overlap (e.g., if the target string
-> > > array and one of the supplied input  arguments refer to the same buffer).
-> > >  See NOTES.
-> > >
-> > > NOTES
-> > >        Some programs imprudently rely on code such as the following
-> > >
-> > >            sprintf(buf, "%s some further text", buf);
-> > >
-> > >        to  append text to buf.  However, the standards explicitly note
-> > that
-> > > the results are undefined if source and  destination  buffers  overlap
-> > >  when  calling  sprintf(),  snprintf(), vsprintf(),  and  vsnprintf().
-> > > Depending on the version of gcc(1) used, and the compiler options
-> > employed,
-> > > calls such as the above will not produce the expected results.
-> > >
-> > >        The glibc implementation of the functions snprintf() and
-> > vsnprintf()
-> > > conforms to  the  C99 standard, that is, behaves as described above,
-> > since
-> > > glibc version 2.1.  Until glibc 2.0.6 they would return -1 when the
-> > output
-> > > was truncated.
-> > >
-> > >
-> > > In addition to using sprintf improperly, it appears that there may be
-> > > buffer overflow potential in the current code, since the loop does not
-> > stop
-> > > if the size of buf is exhausted.
-> > >
-> > > I have attached a patch which modifies this behavior.
-> >
-> > I have some comments on this patch, please see below.
-> >
-> > > diff -U3 -r makedumpfile-1.5.4.orig/makedumpfile.c
-> > makedumpfile-1.5.4/makedumpfile.c
-> > > --- makedumpfile-1.5.4.orig/makedumpfile.c    2013-07-01
-> > 08:08:49.000000000 +0000
-> > > +++ makedumpfile-1.5.4/makedumpfile.c 2013-07-22 22:47:34.195721706 +0000
-> > > @@ -3701,6 +3701,7 @@
-> > >       char *msg, *p;
-> > >       unsigned int i, text_len;
-> > >       unsigned long long ts_nsec;
-> > > +     int buf_s;
-> > >       char buf[BUFSIZE];
-> > >       ulonglong nanos;
-> > >       ulong rem;
-> > > @@ -3713,21 +3714,49 @@
-> > >
-> > >       msg = logptr + SIZE(log);
-> > >
-> > > -     sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
-> > > +     buf_s = snprintf(buf, BUFSIZE, "[%5lld.%06ld] ", nanos, rem/1000);
-> > > +     if (buf_s < 0) {
-> > > +             DEBUG_MSG("snprintf returned an error in
-> > dump_log_entry.\n");
-> > > +             return FALSE;
-> > > +     }
-> >
-> > This is the error case, so you should use ERRMSG instead of DEBUG_MSG.
-> > The same can be said about all other messages.
-> >
-> > > +     if (buf_s >= BUFSIZE) {
-> > > +             DEBUG_MSG("snprintf truncated output in
-> > dump_log_entry.\n");
-> > > +             DEBUG_MSG("  increase BUFSIZE and recompile.\n");
-> > > +             /* No point in continuing, we can't append anything useful
-> > */
-> > > +             return FALSE;
-> > > +     }
-> > > +
-> > > +     /* It's unlikely but possible we may not have enough to terminate
-> > the
-> > > +        string */
-> > > +     if (buf_s >= BUFSIZE - 1) {
-> > > +             DEBUG_MSG("not enough buffer space in dump_log_entry.\n");
-> > > +             DEBUG_MSG("  increase BUFSIZE and recompile.\n");
-> > > +             return FALSE;
-> > > +     }
-> > > +
-> > > +     for (i = 0, p = msg; i < text_len; i++, p++, buf_s++) {
-> > > +             if (buf_s >= BUFSIZE - 2) {
-> > > +                     DEBUG_MSG("output truncated in dump_log_entry.\n");
-> > > +                     DEBUG_MSG("  increase BUFSIZE and recompile.\n");
-> > > +                     break;
-> > > +             }
-> >
-> > I don't think to check the remaining buffer space 3 times is meaningful,
-> > they indicate just "lack of buffer space".
-> > Is the last one enough to check the remaining buffer space ?
-> >
-> > >
-> > > -     for (i = 0, p = msg; i < text_len; i++, p++) {
-> > >               if (*p == '\n')
-> > > -                     sprintf(buf, "%s.", buf);
-> > > +                     buf[buf_s] = '.';
-> > >               else if (isprint(*p) || isspace(*p))
-> > > -                     sprintf(buf, "%s%c", buf, *p);
-> > > +                     buf[buf_s] = *p;
-> > >               else
-> > > -                     sprintf(buf, "%s.", buf);
-> > > +                     buf[buf_s] = '.';
-> > >       }
-> > >
-> > > -     sprintf(buf, "%s\n", buf);
-> > > +     buf[buf_s] = '\n';
-> > > +     buf_s++;
-> > > +     buf[buf_s] = NULL;
-> >
-> > Null character(\0) should be used to terminate strings instead of
-> > null pointer.
-> >
-> > >
-> > > -     if (write(info->fd_dumpfile, buf, strlen(buf)) < 0)
-> > > +     if (write(info->fd_dumpfile, buf, strlen(buf)) < 0) {
-> > > +             DEBUG_MSG("Problem writing to dump file.\n");
-> > >               return FALSE;
-> > > +        }
-> > >       else
-> > >               return TRUE;
-> > >  }
-> >
-> >
-> > Thanks
-> > Atsushi Kumagai
-> >
 
 _______________________________________________
 kexec mailing list
