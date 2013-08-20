@@ -1,36 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VBcP2-0000EG-TP
- for kexec@lists.infradead.org; Tue, 20 Aug 2013 03:14:42 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D3A243EE1DB
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2013 12:14:09 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C4BC345DE5A
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2013 12:14:09 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 90E6B45DE56
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2013 12:14:09 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 7E967E08009
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2013 12:14:09 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 24A5BE08004
- for <kexec@lists.infradead.org>; Tue, 20 Aug 2013 12:14:09 +0900 (JST)
-Message-ID: <5212DEC8.9000609@jp.fujitsu.com>
-Date: Tue, 20 Aug 2013 12:13:12 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+ id 1VBgpq-0004qE-CL
+ for kexec@lists.infradead.org; Tue, 20 Aug 2013 07:58:41 +0000
+Message-ID: <521320B9.3090301@mxc.nes.nec.co.jp>
+Date: Tue, 20 Aug 2013 16:54:33 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: [Help Test] kdump, x86, acpi: Reproduce CPU0 SMI corruption issue
- after unsetting BSP flag
-References: <5200BFB3.2050202@jp.fujitsu.com> <520A10A3.5080303@hp.com>
- <520B4A22.2030800@hp.com> <87ob90839p.fsf@xmission.com>
- <5211831B.6090704@jp.fujitsu.com>
- <a2ff8170-41ad-42f6-9015-850dbe14983d@email.android.com>
- <20130819154626.39403f5b@hananiah.suse.cz>
-In-Reply-To: <20130819154626.39403f5b@hananiah.suse.cz>
+Subject: Re: [PATCH] makedumpfile-1.5.4 dump dmesg may not work due to improper
+ sprintf usage
+References: <CAPud5_4qP0CRhP_6YzPgV5WeGgcKFg-vyGXa4AUezaPjUxeDsQ@mail.gmail.com>
+ <20130806131510.b0c734ed451a6ad109914611@mxc.nes.nec.co.jp>
+ <CAPud5_5OhOna27qfXcQbgbx_=PAs=xo5E7=hv207GkPgSmnBCA@mail.gmail.com>
+ <20130815165634.258f31248220719535d09e42@mxc.nes.nec.co.jp>
+ <CAPud5_74R4rH=d4PW+HRtemB1-+vDKhPUopSyVmkZgiy21g07A@mail.gmail.com>
+In-Reply-To: <CAPud5_74R4rH=d4PW+HRtemB1-+vDKhPUopSyVmkZgiy21g07A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,81 +27,227 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Jingbai Ma <jingbai.ma@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Mitchell,
- Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, bhelgaas@google.com, Vivek Goyal <vgoyal@redhat.com>
+To: nick@pistoncloud.com
+Cc: nishimura@mxp.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, kexec@lists.infradead.org
 
-(2013/08/19 22:46), Petr Tesarik wrote:
-> On Sun, 18 Aug 2013 19:59:53 -0700
-> "Eric W. Biederman" <ebiederm@xmission.com> wrote:
+Hello Nick,
+
+(2013/08/16 1:29), Nick Bartos wrote:
+> You do bring up an interesting point.  What do you think about just using
+> the buffer to handle writing the timestamp (which could actually be a smaller
+>  buffer than is used now), then writing the rest of the message 1 character
+>  at a time as it is read?  That will make the process take a little bit longer
+>  due to inefficient use of i/o, however in this case I do not believe it will
+> take much longer since dmesg is not that big.  Additionally this would fix the
+> problem of possible message truncation (and of make the code simpler),
+>  which I think is worth the small speed penalty.
+
+I prefer to use the buffer to reduce the system call count.
+Additionally, the current buffer size is only 1k bytes, so I don't think
+to reduce memory consumption smaller than now is meaningful.
+
+
+Thanks
+Atsushi Kumagai
+
 >
->>
->>
->>
->>>
->>> Sorry Eric, I'm not clear to what you mean by ``short one core''...
->>> Which are you suggesting? Disabling BSP if crash happens on AP is
->>> reasonable?
->>> Or restricting cpus to a single one only just as the current kdump
->>> configuration is reasonable?
->>
->> I am suggesting we start every cpu except the BSP from the AP we started on.
->>
->> N-1 cpus seems like a good tradeoff between performance and reliability for those who need it.
+> On Thu, Aug 15, 2013 at 12:56 AM, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp <mailto:kumagai-atsushi@mxc.nes.nec.co.jp>> wrote:
 >
-> FWIW a large customers of ours is fine with such a limitation. And I
-> have already tested this approach manually (starting the kdump kernel
-> with maxcpus=1 and hot-plugging the remaining APs from user-space).
+>     Sorry for late reply.
 >
-
-This is a workaround I suggested previously on this mailing list?
-The additional merits of disabling BSP in kernel-side on the 2nd kernel is:
-
-- We can assign memory for BSP to another CPU that is available. It's more
-   efficient in memory consumption. It's the same reason why distro uses nr_cpus=1
-   instead of maxcpus=1. If we don't disable BSP, we allocate some amount of memory
-   for BSP in kernel-space although we never use it. 2nd kernel should have as small
-   amount of memory as possible.
-
-- Remove BSP from hot-plugging target CPUes. Keeping BSP after crash happens on AP
-   means keeping a potential risk of triggering system hang from user-space.
-   Can remove awkward configuration to hot-add APs from user-space while avoiding BSP.
-   This seems less important than the above.
-
-On practical configuraiton, it's necessary to decide how many cpus we should use
-on the 2nd kernel for trade-off of performance and acceptable amount of memory
-for additional CPUes. I think it would simply be the number of disks and the number
-of threads of makedumpfile in most cases.
-
-> Now that this approach is in line with upstream efforts, I'm going to
-> test it on some more machines and see if there are any troubles.
+>     On Tue, 6 Aug 2013 08:56:56 -0700
+>     Nick Bartos <nick@pistoncloud.com <mailto:nick@pistoncloud.com>> wrote:
 >
-> @Hatayama-san:
->> BTW, I have question that does normal kdump work well if crash happens
->> on some AP? I wonder the same issue could happen on the 2nd kernel.
+>      > Yes you are correct on changing DEBUG_MSG to ERRMSG.  I didn't read enough
+>      > of the code to see that was an option.
+>      >
+>      > Each buffer size check does something specific, which was intended to
+>      > handle all failure cases.  While it's probably possible to do the same
+>      > checks in less actual code, simply removing any of the checks will make it
+>      > fail in some cases.  Also, if someone sets BUFSIZE to a very small number
+>      > when nothing will work, it makes sense to exit with failure without trying
+>      > to read anything.  However if only a few lines are going to be truncated
+>      > because they are too long, it makes sense to continue on and get as much
+>      > debug output as possible (but with printing the error message about
+>      > truncation).
 >
-> I'm not sure what you mean. Normal kdump starts with "maxcpus=1", and
-> yes, that works even if the secondary kernel is booted from an AP. OTOH
-> I suspect that not having any BSP in the system may be the cause of some
-> mysterious random reboots and/or hangs experienced by some customers.
+>     I also think it's good to output messages as much as possible even if they
+>     are truncated.
 >
-> I'll try setting the BSP flag on the boot CPU unconditionally and see
-> if it makes any difference.
+>     Now, I hit upon another idea. How about dividing the read and write processing
+>     in multiple parts like below? This way can treat any length message with
+>     fixed BUFSIZE without truncation.
 >
-> Petr Tesarik
 >
-
-Ma saw a hang when he tried to reboot his HP systems on the 1st kernel
-under the condition that BSP flag was unset on any existing CPUs. I
-thought the condition is similar to the 2nd kernel after crash happens
-on AP in the sense that there is no BSP in online CPUs. If the hang he saw
-was caused by running reboot on the CPU without BSP flag, I guess the same
-situation could already happen on only-1-cpu configuration now.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+>     message      [  112.919861] sd 2:1:2:0: [sdf] Unhandled error code\n\0
+>
+>                   |---- BUFSIZE -----|---- BUFSIZE -----|---- BUFSIZE -----|
+>     read/write            1                  2                  3
+>     times
+>
+>
+>     If that is OK with you, could you post your v2 patch ?
+>
+>
+>     Thanks
+>     Atsushi Kumagai
+>
+>      > Good catch on using a null character, that makes more sense as the former
+>      > would likely result in a compiler warning.
+>      >
+>      >
+>      > On Mon, Aug 5, 2013 at 9:15 PM, Atsushi Kumagai <
+>      > kumagai-atsushi@mxc.nes.nec.co.jp <mailto:kumagai-atsushi@mxc.nes.nec.co.jp>> wrote:
+>      >
+>      > > Hello Nick,
+>      > >
+>      > > On Mon, 29 Jul 2013 09:27:57 -0700
+>      > > Nick Bartos <nick@pistoncloud.com <mailto:nick@pistoncloud.com>> wrote:
+>      > >
+>      > > > I am reporting this bug as requested in the "BUG REPORT" of
+>      > > > the makedumpfile README.
+>      > > >
+>      > > > There are several times when sprintf is used to append to a buffer like
+>      > > so:
+>      > > > sprintf(buf, "%s.", buf);
+>      > > >
+>      > > > In the sprintf manpage, it describes that behavior is not consistent.  I
+>      > > > first noticed this as my hardned system would make all dmesg output lines
+>      > > > empty.  Here is the excerpt from the man page:
+>      > > >
+>      > > >     C99 and POSIX.1-2001 specify that the results  are  undefined if a
+>      > > call
+>      > > > to sprintf(), snprintf(),  vsprintf(),  or vsnprintf() would cause
+>      > > copying
+>      > > > to take place between objects that overlap (e.g., if the target string
+>      > > > array and one of the supplied input  arguments refer to the same buffer).
+>      > > >  See NOTES.
+>      > > >
+>      > > > NOTES
+>      > > >        Some programs imprudently rely on code such as the following
+>      > > >
+>      > > >            sprintf(buf, "%s some further text", buf);
+>      > > >
+>      > > >        to  append text to buf.  However, the standards explicitly note
+>      > > that
+>      > > > the results are undefined if source and  destination  buffers  overlap
+>      > > >  when  calling  sprintf(),  snprintf(), vsprintf(),  and  vsnprintf().
+>      > > > Depending on the version of gcc(1) used, and the compiler options
+>      > > employed,
+>      > > > calls such as the above will not produce the expected results.
+>      > > >
+>      > > >        The glibc implementation of the functions snprintf() and
+>      > > vsnprintf()
+>      > > > conforms to  the  C99 standard, that is, behaves as described above,
+>      > > since
+>      > > > glibc version 2.1.  Until glibc 2.0.6 they would return -1 when the
+>      > > output
+>      > > > was truncated.
+>      > > >
+>      > > >
+>      > > > In addition to using sprintf improperly, it appears that there may be
+>      > > > buffer overflow potential in the current code, since the loop does not
+>      > > stop
+>      > > > if the size of buf is exhausted.
+>      > > >
+>      > > > I have attached a patch which modifies this behavior.
+>      > >
+>      > > I have some comments on this patch, please see below.
+>      > >
+>      > > > diff -U3 -r makedumpfile-1.5.4.orig/makedumpfile.c
+>      > > makedumpfile-1.5.4/makedumpfile.c
+>      > > > --- makedumpfile-1.5.4.orig/makedumpfile.c    2013-07-01
+>      > > 08:08:49.000000000 +0000
+>      > > > +++ makedumpfile-1.5.4/makedumpfile.c 2013-07-22 22:47:34.195721706 +0000
+>      > > > @@ -3701,6 +3701,7 @@
+>      > > >       char *msg, *p;
+>      > > >       unsigned int i, text_len;
+>      > > >       unsigned long long ts_nsec;
+>      > > > +     int buf_s;
+>      > > >       char buf[BUFSIZE];
+>      > > >       ulonglong nanos;
+>      > > >       ulong rem;
+>      > > > @@ -3713,21 +3714,49 @@
+>      > > >
+>      > > >       msg = logptr + SIZE(log);
+>      > > >
+>      > > > -     sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+>      > > > +     buf_s = snprintf(buf, BUFSIZE, "[%5lld.%06ld] ", nanos, rem/1000);
+>      > > > +     if (buf_s < 0) {
+>      > > > +             DEBUG_MSG("snprintf returned an error in
+>      > > dump_log_entry.\n");
+>      > > > +             return FALSE;
+>      > > > +     }
+>      > >
+>      > > This is the error case, so you should use ERRMSG instead of DEBUG_MSG.
+>      > > The same can be said about all other messages.
+>      > >
+>      > > > +     if (buf_s >= BUFSIZE) {
+>      > > > +             DEBUG_MSG("snprintf truncated output in
+>      > > dump_log_entry.\n");
+>      > > > +             DEBUG_MSG("  increase BUFSIZE and recompile.\n");
+>      > > > +             /* No point in continuing, we can't append anything useful
+>      > > */
+>      > > > +             return FALSE;
+>      > > > +     }
+>      > > > +
+>      > > > +     /* It's unlikely but possible we may not have enough to terminate
+>      > > the
+>      > > > +        string */
+>      > > > +     if (buf_s >= BUFSIZE - 1) {
+>      > > > +             DEBUG_MSG("not enough buffer space in dump_log_entry.\n");
+>      > > > +             DEBUG_MSG("  increase BUFSIZE and recompile.\n");
+>      > > > +             return FALSE;
+>      > > > +     }
+>      > > > +
+>      > > > +     for (i = 0, p = msg; i < text_len; i++, p++, buf_s++) {
+>      > > > +             if (buf_s >= BUFSIZE - 2) {
+>      > > > +                     DEBUG_MSG("output truncated in dump_log_entry.\n");
+>      > > > +                     DEBUG_MSG("  increase BUFSIZE and recompile.\n");
+>      > > > +                     break;
+>      > > > +             }
+>      > >
+>      > > I don't think to check the remaining buffer space 3 times is meaningful,
+>      > > they indicate just "lack of buffer space".
+>      > > Is the last one enough to check the remaining buffer space ?
+>      > >
+>      > > >
+>      > > > -     for (i = 0, p = msg; i < text_len; i++, p++) {
+>      > > >               if (*p == '\n')
+>      > > > -                     sprintf(buf, "%s.", buf);
+>      > > > +                     buf[buf_s] = '.';
+>      > > >               else if (isprint(*p) || isspace(*p))
+>      > > > -                     sprintf(buf, "%s%c", buf, *p);
+>      > > > +                     buf[buf_s] = *p;
+>      > > >               else
+>      > > > -                     sprintf(buf, "%s.", buf);
+>      > > > +                     buf[buf_s] = '.';
+>      > > >       }
+>      > > >
+>      > > > -     sprintf(buf, "%s\n", buf);
+>      > > > +     buf[buf_s] = '\n';
+>      > > > +     buf_s++;
+>      > > > +     buf[buf_s] = NULL;
+>      > >
+>      > > Null character(\0) should be used to terminate strings instead of
+>      > > null pointer.
+>      > >
+>      > > >
+>      > > > -     if (write(info->fd_dumpfile, buf, strlen(buf)) < 0)
+>      > > > +     if (write(info->fd_dumpfile, buf, strlen(buf)) < 0) {
+>      > > > +             DEBUG_MSG("Problem writing to dump file.\n");
+>      > > >               return FALSE;
+>      > > > +        }
+>      > > >       else
+>      > > >               return TRUE;
+>      > > >  }
+>      > >
+>      > >
+>      > > Thanks
+>      > > Atsushi Kumagai
+>      > >
+>
+>
 
 _______________________________________________
 kexec mailing list
