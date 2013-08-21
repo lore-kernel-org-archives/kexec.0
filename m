@@ -1,20 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VBgpq-0004qE-CL
- for kexec@lists.infradead.org; Tue, 20 Aug 2013 07:58:41 +0000
-Message-ID: <521320B9.3090301@mxc.nes.nec.co.jp>
-Date: Tue, 20 Aug 2013 16:54:33 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile-1.5.4 dump dmesg may not work due to improper
- sprintf usage
-References: <CAPud5_4qP0CRhP_6YzPgV5WeGgcKFg-vyGXa4AUezaPjUxeDsQ@mail.gmail.com>
- <20130806131510.b0c734ed451a6ad109914611@mxc.nes.nec.co.jp>
- <CAPud5_5OhOna27qfXcQbgbx_=PAs=xo5E7=hv207GkPgSmnBCA@mail.gmail.com>
- <20130815165634.258f31248220719535d09e42@mxc.nes.nec.co.jp>
- <CAPud5_74R4rH=d4PW+HRtemB1-+vDKhPUopSyVmkZgiy21g07A@mail.gmail.com>
-In-Reply-To: <CAPud5_74R4rH=d4PW+HRtemB1-+vDKhPUopSyVmkZgiy21g07A@mail.gmail.com>
+ id 1VC2ey-0001Cz-Dj
+ for kexec@lists.infradead.org; Wed, 21 Aug 2013 07:16:54 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 00C5E3EE1D9
+ for <kexec@lists.infradead.org>; Wed, 21 Aug 2013 16:16:23 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id E087D45DEBA
+ for <kexec@lists.infradead.org>; Wed, 21 Aug 2013 16:16:22 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id BF4CF45DEB5
+ for <kexec@lists.infradead.org>; Wed, 21 Aug 2013 16:16:22 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id B202C1DB803E
+ for <kexec@lists.infradead.org>; Wed, 21 Aug 2013 16:16:22 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C34A1DB8038
+ for <kexec@lists.infradead.org>; Wed, 21 Aug 2013 16:16:22 +0900 (JST)
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Subject: [PATCH] intel-iommu: Quiesce devices before disabling IOMMU
+Date: Wed, 21 Aug 2013 16:15:54 +0900
+Message-Id: <1377069354-5056-1-git-send-email-indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,231 +30,125 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: nick@pistoncloud.com
-Cc: nishimura@mxp.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, dwmw2@infradead.org, joro@8bytes.org
+Cc: alex.williamson@redhat.com, kexec@lists.infradead.org
 
-Hello Nick,
+This patch quiesces devices before disabling IOMMU on boot to stop
+ongoing DMA. In intel_iommu_init(), check context entries and if there
+is entry whose present bit is set then reset corresponding device.
 
-(2013/08/16 1:29), Nick Bartos wrote:
-> You do bring up an interesting point.  What do you think about just using
-> the buffer to handle writing the timestamp (which could actually be a smaller
->  buffer than is used now), then writing the rest of the message 1 character
->  at a time as it is read?  That will make the process take a little bit longer
->  due to inefficient use of i/o, however in this case I do not believe it will
-> take much longer since dmesg is not that big.  Additionally this would fix the
-> problem of possible message truncation (and of make the code simpler),
->  which I think is worth the small speed penalty.
+When IOMMU is already enabled on boot, it is disabled and new DMAR table
+is created and then re-enabled in intel_iommu_init(). This causes DMAR
+faults if there are in-flight DMAs.
 
-I prefer to use the buffer to reduce the system call count.
-Additionally, the current buffer size is only 1k bytes, so I don't think
-to reduce memory consumption smaller than now is meaningful.
+This causes problem on kdump. Devices are working in first kernel, and
+after switching to second kernel and initializing IOMMU, many DMAR faults
+occur and it causes problems like driver error or PCI SERR, at last
+kdump fails. This patch fixes this problem.
+
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
 
 
-Thanks
-Atsushi Kumagai
+NOTE:
+To reset devices this patch uses bus reset interface introduced by
+following commits in PCI "next" branch.
 
->
-> On Thu, Aug 15, 2013 at 12:56 AM, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp <mailto:kumagai-atsushi@mxc.nes.nec.co.jp>> wrote:
->
->     Sorry for late reply.
->
->     On Tue, 6 Aug 2013 08:56:56 -0700
->     Nick Bartos <nick@pistoncloud.com <mailto:nick@pistoncloud.com>> wrote:
->
->      > Yes you are correct on changing DEBUG_MSG to ERRMSG.  I didn't read enough
->      > of the code to see that was an option.
->      >
->      > Each buffer size check does something specific, which was intended to
->      > handle all failure cases.  While it's probably possible to do the same
->      > checks in less actual code, simply removing any of the checks will make it
->      > fail in some cases.  Also, if someone sets BUFSIZE to a very small number
->      > when nothing will work, it makes sense to exit with failure without trying
->      > to read anything.  However if only a few lines are going to be truncated
->      > because they are too long, it makes sense to continue on and get as much
->      > debug output as possible (but with printing the error message about
->      > truncation).
->
->     I also think it's good to output messages as much as possible even if they
->     are truncated.
->
->     Now, I hit upon another idea. How about dividing the read and write processing
->     in multiple parts like below? This way can treat any length message with
->     fixed BUFSIZE without truncation.
->
->
->     message      [  112.919861] sd 2:1:2:0: [sdf] Unhandled error code\n\0
->
->                   |---- BUFSIZE -----|---- BUFSIZE -----|---- BUFSIZE -----|
->     read/write            1                  2                  3
->     times
->
->
->     If that is OK with you, could you post your v2 patch ?
->
->
->     Thanks
->     Atsushi Kumagai
->
->      > Good catch on using a null character, that makes more sense as the former
->      > would likely result in a compiler warning.
->      >
->      >
->      > On Mon, Aug 5, 2013 at 9:15 PM, Atsushi Kumagai <
->      > kumagai-atsushi@mxc.nes.nec.co.jp <mailto:kumagai-atsushi@mxc.nes.nec.co.jp>> wrote:
->      >
->      > > Hello Nick,
->      > >
->      > > On Mon, 29 Jul 2013 09:27:57 -0700
->      > > Nick Bartos <nick@pistoncloud.com <mailto:nick@pistoncloud.com>> wrote:
->      > >
->      > > > I am reporting this bug as requested in the "BUG REPORT" of
->      > > > the makedumpfile README.
->      > > >
->      > > > There are several times when sprintf is used to append to a buffer like
->      > > so:
->      > > > sprintf(buf, "%s.", buf);
->      > > >
->      > > > In the sprintf manpage, it describes that behavior is not consistent.  I
->      > > > first noticed this as my hardned system would make all dmesg output lines
->      > > > empty.  Here is the excerpt from the man page:
->      > > >
->      > > >     C99 and POSIX.1-2001 specify that the results  are  undefined if a
->      > > call
->      > > > to sprintf(), snprintf(),  vsprintf(),  or vsnprintf() would cause
->      > > copying
->      > > > to take place between objects that overlap (e.g., if the target string
->      > > > array and one of the supplied input  arguments refer to the same buffer).
->      > > >  See NOTES.
->      > > >
->      > > > NOTES
->      > > >        Some programs imprudently rely on code such as the following
->      > > >
->      > > >            sprintf(buf, "%s some further text", buf);
->      > > >
->      > > >        to  append text to buf.  However, the standards explicitly note
->      > > that
->      > > > the results are undefined if source and  destination  buffers  overlap
->      > > >  when  calling  sprintf(),  snprintf(), vsprintf(),  and  vsnprintf().
->      > > > Depending on the version of gcc(1) used, and the compiler options
->      > > employed,
->      > > > calls such as the above will not produce the expected results.
->      > > >
->      > > >        The glibc implementation of the functions snprintf() and
->      > > vsnprintf()
->      > > > conforms to  the  C99 standard, that is, behaves as described above,
->      > > since
->      > > > glibc version 2.1.  Until glibc 2.0.6 they would return -1 when the
->      > > output
->      > > > was truncated.
->      > > >
->      > > >
->      > > > In addition to using sprintf improperly, it appears that there may be
->      > > > buffer overflow potential in the current code, since the loop does not
->      > > stop
->      > > > if the size of buf is exhausted.
->      > > >
->      > > > I have attached a patch which modifies this behavior.
->      > >
->      > > I have some comments on this patch, please see below.
->      > >
->      > > > diff -U3 -r makedumpfile-1.5.4.orig/makedumpfile.c
->      > > makedumpfile-1.5.4/makedumpfile.c
->      > > > --- makedumpfile-1.5.4.orig/makedumpfile.c    2013-07-01
->      > > 08:08:49.000000000 +0000
->      > > > +++ makedumpfile-1.5.4/makedumpfile.c 2013-07-22 22:47:34.195721706 +0000
->      > > > @@ -3701,6 +3701,7 @@
->      > > >       char *msg, *p;
->      > > >       unsigned int i, text_len;
->      > > >       unsigned long long ts_nsec;
->      > > > +     int buf_s;
->      > > >       char buf[BUFSIZE];
->      > > >       ulonglong nanos;
->      > > >       ulong rem;
->      > > > @@ -3713,21 +3714,49 @@
->      > > >
->      > > >       msg = logptr + SIZE(log);
->      > > >
->      > > > -     sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
->      > > > +     buf_s = snprintf(buf, BUFSIZE, "[%5lld.%06ld] ", nanos, rem/1000);
->      > > > +     if (buf_s < 0) {
->      > > > +             DEBUG_MSG("snprintf returned an error in
->      > > dump_log_entry.\n");
->      > > > +             return FALSE;
->      > > > +     }
->      > >
->      > > This is the error case, so you should use ERRMSG instead of DEBUG_MSG.
->      > > The same can be said about all other messages.
->      > >
->      > > > +     if (buf_s >= BUFSIZE) {
->      > > > +             DEBUG_MSG("snprintf truncated output in
->      > > dump_log_entry.\n");
->      > > > +             DEBUG_MSG("  increase BUFSIZE and recompile.\n");
->      > > > +             /* No point in continuing, we can't append anything useful
->      > > */
->      > > > +             return FALSE;
->      > > > +     }
->      > > > +
->      > > > +     /* It's unlikely but possible we may not have enough to terminate
->      > > the
->      > > > +        string */
->      > > > +     if (buf_s >= BUFSIZE - 1) {
->      > > > +             DEBUG_MSG("not enough buffer space in dump_log_entry.\n");
->      > > > +             DEBUG_MSG("  increase BUFSIZE and recompile.\n");
->      > > > +             return FALSE;
->      > > > +     }
->      > > > +
->      > > > +     for (i = 0, p = msg; i < text_len; i++, p++, buf_s++) {
->      > > > +             if (buf_s >= BUFSIZE - 2) {
->      > > > +                     DEBUG_MSG("output truncated in dump_log_entry.\n");
->      > > > +                     DEBUG_MSG("  increase BUFSIZE and recompile.\n");
->      > > > +                     break;
->      > > > +             }
->      > >
->      > > I don't think to check the remaining buffer space 3 times is meaningful,
->      > > they indicate just "lack of buffer space".
->      > > Is the last one enough to check the remaining buffer space ?
->      > >
->      > > >
->      > > > -     for (i = 0, p = msg; i < text_len; i++, p++) {
->      > > >               if (*p == '\n')
->      > > > -                     sprintf(buf, "%s.", buf);
->      > > > +                     buf[buf_s] = '.';
->      > > >               else if (isprint(*p) || isspace(*p))
->      > > > -                     sprintf(buf, "%s%c", buf, *p);
->      > > > +                     buf[buf_s] = *p;
->      > > >               else
->      > > > -                     sprintf(buf, "%s.", buf);
->      > > > +                     buf[buf_s] = '.';
->      > > >       }
->      > > >
->      > > > -     sprintf(buf, "%s\n", buf);
->      > > > +     buf[buf_s] = '\n';
->      > > > +     buf_s++;
->      > > > +     buf[buf_s] = NULL;
->      > >
->      > > Null character(\0) should be used to terminate strings instead of
->      > > null pointer.
->      > >
->      > > >
->      > > > -     if (write(info->fd_dumpfile, buf, strlen(buf)) < 0)
->      > > > +     if (write(info->fd_dumpfile, buf, strlen(buf)) < 0) {
->      > > > +             DEBUG_MSG("Problem writing to dump file.\n");
->      > > >               return FALSE;
->      > > > +        }
->      > > >       else
->      > > >               return TRUE;
->      > > >  }
->      > >
->      > >
->      > > Thanks
->      > > Atsushi Kumagai
->      > >
->
->
+64e8674fbe6bc848333a9b7e19f8cc019dde9eab
+5c32b35b004f5ef70dcf62bbc42b8bed1e50b471
+2e35afaefe64946caaecfacaf7fb568e46185e88
+608c388122c72e1bf11ba8113434eb3d0c40c32d
+77cb985ad4acbe66a92ead1bb826deffa47dd33f
+090a3c5322e900f468b3205b76d0837003ad57b2
+a6cbaadea0af9b4aa6eee2882f2aa761ab91a4f8
+de0c548c33429cc78fd47a3c190c6d00b0e4e441
+1b95ce8fc9c12fdb60047f2f9950f29e76e7c66d
+---
+ drivers/iommu/intel-iommu.c |   55 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 54 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index eec0d3e..efb98eb 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3663,6 +3663,56 @@ static struct notifier_block device_nb = {
+ 	.notifier_call = device_notifier,
+ };
+ 
++/* Reset PCI devices if its entry exists in DMAR table */
++static void __init iommu_reset_devices(struct intel_iommu *iommu, u16 segment)
++{
++	u64 addr;
++	struct root_entry *root;
++	struct context_entry *context;
++	int bus, devfn;
++	struct pci_dev *dev;
++
++	addr = dmar_readq(iommu->reg + DMAR_RTADDR_REG);
++	if (!addr)
++		return;
++
++	/*
++	 *  In the case of kdump, ioremap is needed because root-entry table
++	 *  exists in first kernel's memory area which is not mapped in second
++	 *  kernel
++	 */
++	root = (struct root_entry *)ioremap(addr, PAGE_SIZE);
++	if (!root)
++		return;
++
++	for (bus = 0; bus < ROOT_ENTRY_NR; bus++) {
++		if (!root_present(&root[bus]))
++			continue;
++
++		context = (struct context_entry *)ioremap(
++			root[bus].val & VTD_PAGE_MASK, PAGE_SIZE);
++		if (!context)
++			continue;
++
++		for (devfn = 0; devfn < ROOT_ENTRY_NR; devfn++) {
++			if (!context_present(&context[devfn]))
++				continue;
++
++			dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
++			if (!dev)
++				continue;
++
++			if (!pci_reset_bus(dev->bus)) /* go to next bus */
++				break;
++			else /* Try per-function reset */
++				pci_reset_function(dev);
++
++		}
++		iounmap(context);
++	}
++	iounmap(root);
++}
++
+ int __init intel_iommu_init(void)
+ {
+ 	int ret = 0;
+@@ -3687,8 +3737,11 @@ int __init intel_iommu_init(void)
+ 			continue;
+ 
+ 		iommu = drhd->iommu;
+-		if (iommu->gcmd & DMA_GCMD_TE)
++		if (iommu->gcmd & DMA_GCMD_TE) {
++			if (reset_devices)
++				iommu_reset_devices(iommu, drhd->segment);
+ 			iommu_disable_translation(iommu);
++		}
+ 	}
+ 
+ 	if (dmar_dev_scope_init() < 0) {
+-- 
+1.7.1
+
+
 
 _______________________________________________
 kexec mailing list
