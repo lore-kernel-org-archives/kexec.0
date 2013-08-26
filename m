@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from g4t0015.houston.hp.com ([15.201.24.18])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VCnlN-0006Cz-6D
- for kexec@lists.infradead.org; Fri, 23 Aug 2013 09:34:39 +0000
-Message-ID: <52172AB3.7080809@mxc.nes.nec.co.jp>
-Date: Fri, 23 Aug 2013 18:26:11 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+ id 1VE1jo-0006cA-QQ
+ for kexec@lists.infradead.org; Mon, 26 Aug 2013 18:42:05 +0000
+From: "Sumner, William" <bill.sumner@hp.com>
+Subject: "crashdump accepting active iommu" prototype successful
+Date: Mon, 26 Aug 2013 18:41:07 +0000
+Message-ID: <875D89B79D1D86448A583A7302C022A055A3BA47@G4W3299.americas.hpqcorp.net>
+Content-Language: en-US
 MIME-Version: 1.0
-Subject: Re: makefumpfile tool to estimate vmcore file size
-References: <51E64EA6.9040209@redhat.com>
- <20130724160640.84e00a3a2e4d811fbdfaa34e@mxc.nes.nec.co.jp>
- <20130802032906.GB7653@dhcp-16-252.nay.redhat.com>
-In-Reply-To: <20130802032906.GB7653@dhcp-16-252.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,110 +17,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: bhe@redhat.com
-Cc: kexec@lists.infradead.org
+To: "bhelgaas@google.com" <bhelgaas@google.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "ddutile@redhat.com" <ddutile@redhat.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>
 
-Hello Baoquan,
+A while ago we discussed the concept of the crashdump kernel dealing with the legacy DMA from the (old) panic'd kernel by allowing the (new) crashdump kernel: to accept the iommu hardware in an active state, to leave the current translations in-place so that legacy DMA will continue using its current buffers until the device drivers in the crashdump kernel initialize, and to use different portions of the iova address ranges for the device drivers in the crashdump kernel.   
 
-(2013/08/02 12:29), Baoquan He wrote:
-> Hi Atsushi,
->
-> Sorry to reply so late.
-> By discussing with customer, their idea is below:
->
-> *******************************
-> The idea about a tool like this is that it works in the 1st kernel and
-> that it will tell you how big the vmcore will be based on what filtering
-> level and/or compression selected in kdump.conf. Our customer wrote a perl
-> script to demonstrate this, I have attached it as attachment. This perl
-> script only looks at uncompressed and dumplevel 31 - in the 1st kernel.
-> Being told about the dump size when in the 2nd (kdump/kexec kernel) is
-> somewhat pointless as you are not then in a position to adjust the
-> destination filesystem to accommodate the vmcore size should you need to.
-> This is proactively looking at what size is required for a vmcore.
->
-> If the kdump.conf says "filter level 11, compress", a tool to estimate
-> the vmcore size should take that into account, gauge what pages would
-> be included in that, and roughly what size that would equate to
-> compressed. The problem is that this is quite dynamic, so the perl
-> script deliberately only looks at filter level 31 (trying to work the
-> rest out was too hard for me to do).
-> **********************************
->
-> Per discussion with customer, I think the tool is expected to work in
-> 1st kernel. With configuration file which specify the fileter level and
-> compression algorithm, a rough vmcore size can be given. Since they
-> maybe have thousands of servers, an estimated vmcore size can be very
-> helpful to refer to.
+As time permitted I have created prototype code to explore this concept.
 
-I understand your customer's idea, I also think it's useful for
-such situation.
-I'm afraid that I can't take time for developing new feature now,
-but I'll accept the estimation feature if anyone makes that.
-
-IMHO, I think /proc/kcore is better interface for analyzing live
-system while it's ELF format. This is because that the logic for
-/proc/vmcore might can be reused with small fix.
+The "crashdump accepting active iommu" prototype/proof-of-concept code has successfully completed its first crashdump and rebooted the machine.  The latest version of the 'crash' utility reads the vmcore dump file that was created.
 
 
-Thanks
-Atsushi Kumagai.
+At a high-level, here are the changes I made:
+The code is entirely within intel-iommu.c 
+A key concept is that the active translation tables are mapped into kernel virtual addresses in the new kernel. This allows most of the existing iommu code to operate without change.
 
->
-> Baoquan
-> Thanks a lot
->
-> On 07/24/13 at 04:06pm, Atsushi Kumagai wrote:
->> On Wed, 17 Jul 2013 15:58:30 +0800
->> Baoquan <bhe@redhat.com> wrote:
->>
->>> #makedumpfile -d31 -c/-l/-p
->>>
->>> TYPE			PAGES		INCLUDED
->>>
->>> Zero Page		x		no
->>> Cache Without Private	x           	no
->>> Cache With Private	x		no
->>> User Data		x		no
->>> Free Page		x		no
->>> Kernel Code		x		yes
->>> Kernel Data		x		yes
->>>
->>> Total Pages on system:			311000  (Just for example)
->>> Total Pages included in kdump:		160000  (Just for example)
->>> Estimated vmcore file size:		48000  (30% compression ratio)
->>> ##########################################################
->>
->> Does this image mean that you want to run makedumpfile in 1st
->> kernel without generating a actual dumpfile ?
->> Unfortunately, makedumpfile can't work in 1st kernel because it
->> only supports /proc/vmcore as input data.
->>
->> If you don't persist in doing in 1st kernel, your desire can be
->> achieved by modifying print_report() and discarding a output
->> data to /dev/null, and running makedumpfile via kdump as usual.
->>
->>> By configured dump level, total pages included in kdump can be computed.
->>> Then with option which specify a compression algorithm, an estimated
->>> vmcore file size can be given. Though the estimated value is changed
->>> dynamically with time, it does give user a valuable reference.
->>
->> Compression ratio is very dependent on the memory usage.
->> So I think it's difficult to estimate the size when any compression
->> algorithm is specified.
->>
->>
->> Thanks
->> Atsushi Kumagai
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+Hardware initialization:
+------------------------
+In intel_iommu_init(void)
+* If (This is the crash kernel)
+  .  Set flag: crashdump_accepting_active_iommu (all changes below check this)
+  .  Skip disabling the iommu hardware translations
+
+In init_dmars()
+* Copy the intel iommu translation tables from the old kernel into the new kernel
+  . The root-entry table, all context-entry tables, and all page-translation-entry tables
+  . The copied tables contain updated physical addresses to link them together.
+  . The copied tables are also mapped into kernel virtual addresses in the new kernel 
+    which allows most of the existing iommu code to operate without change.
+  . Do some minimal sanity-checks during the copy
+  . Place the address of the new root-entry structure into "struct intel_iommu"
+
+* Skip setting-up new domains for 'si', 'rmrr', 'isa' 
+  . Translations for 'rmrr' and 'isa' ranges have been copied from the old kernel
+  . This prototype does not yet handle pass-through
+
+* Existing (unchanged) code near the end of dmar_init:
+  . Loads the address of the (now new) root-entry structure from "struct intel_iommu"
+    into the iommu hardware and does the proper iommu hardware flushes. This changes the 
+    active translation tables from the ones in the old kernel to the copies in the new kernel.
+  . This is legal because the translations in the two sets of tables are currently identical:
+    - Intel(r) Virtualization Technology for Directed I/O. Architecture Specification,
+      February 2011, Rev. 1.3  (section 11.2, paragraph 2) 
+
+In iommu_init_domains()
+* Mark as in-use all domain-id's from the old kernel
+  . In case the new kernel contains a device that was not in the old kernel
+    and a new, unused domain-id is actually needed, the bitmap will give us one.
+
+
+When a new domain is created for a device:
+------------------------------------------
+* If (this device has a context in the old kernel)
+  . Get domain-id, address-width, and IOVA ranges from the old kernel context;
+  . Get adr(page-entry-tables) from the copy in the new kernel;
+  . And apply all of the above values to the new domain structure.
+* Else
+  . Create a new domain as normal
+
+Most of the code to implement the new functionality was added at the end of intel-iommu.c
+Bill
+
+
 
 _______________________________________________
 kexec mailing list
