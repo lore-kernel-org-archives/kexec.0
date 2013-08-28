@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VEnuh-0002Ay-LY
- for kexec@lists.infradead.org; Wed, 28 Aug 2013 22:08:33 +0000
-Subject: [PATCH] makedumpfile: use non-cyclic when possible
-Message-Id: <E1VEnuJ-0000Jz-JI@eag09.americas.sgi.com>
+ id 1VEnui-0002Aw-90
+ for kexec@lists.infradead.org; Wed, 28 Aug 2013 22:08:34 +0000
+Subject: A few patches to consider
+Message-Id: <E1VEnuJ-0000Jl-CC@eag09.americas.sgi.com>
 From: Cliff Wickman <cpw@sgi.com>
 Date: Wed, 28 Aug 2013 17:08:07 -0500
 List-Id: <kexec.lists.infradead.org>
@@ -25,57 +25,26 @@ Cc: kexec@lists.infradead.org
 
 From: Cliff Wickman <cpw@sgi.com>
 
-If there is plenty of memory use non-cyclic mode.
+I am submitting 6 patches that I have found helpful in speeding the dump
+process or clarifying the progress report.
+They are not a series, and should not be interdependent.  But if you
+find any dependencies I apply them in this order:
+[PATCH] makedumpfile: reverse -c and -p if using snappy compression
+[PATCH] makedumpfile: use non-cyclic when possible
+[PATCH] makedumpfile: shorten cyclic exclude-unnecessary passes
+[PATCH] makedumpfile: shorten cyclic unnecessary-page scans
+[PATCH] makedumpfile: show needed memory
+[PATCH] makedumpfile: search for a debug vmlinux
 
-Diffed against makedumpfile-1.5.4
-Signed-off-by: Cliff Wickman <cpw@sgi.com>
----
- makedumpfile.c |   26 ++++++++++++++++++++++++++
+The last one (search for a debug vmlinux) is useful in identifying huge
+pages with the PG_head/PG-tail flags.  There was a patch from Petr Tesarik
+that enables that huge page filtering. I don't think you are taking that one
+as-is, but are reworking it. Seems like Hatayama-san was doing that work.
+That one is very important and I need to include Petr's version in any
+makedumpfile that we use in a very large system.  I hope that one is coming
+along for inclusion in the next release.
 
-Index: makedumpfile-1.5.4/makedumpfile.c
-===================================================================
---- makedumpfile-1.5.4.orig/makedumpfile.c
-+++ makedumpfile-1.5.4/makedumpfile.c
-@@ -7638,6 +7638,23 @@ writeout_multiple_dumpfiles(void)
- 	return ret;
- }
- 
-+/*
-+ * Plenty of memory to do a non-cyclic dump.
-+ * Default to non-cyclic in this case.
-+ */
-+static int
-+plenty_of_memory(void)
-+{
-+	unsigned long free_size;
-+	unsigned long needed_size;
-+
-+	free_size = get_free_memory_size();
-+	needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-+	if (free_size > (needed_size + (10*1024*1024)))
-+		return 1;
-+	return 0;
-+}
-+
- int
- create_dumpfile(void)
- {
-@@ -7655,6 +7672,15 @@ create_dumpfile(void)
- 
- 	print_vtop();
- 
-+	if (plenty_of_memory()) {
-+		if (info->flag_cyclic == TRUE)
-+			MSG("Plenty of memory; using non-cyclic mode.\n");
-+		info->flag_cyclic = FALSE;
-+	} else {
-+		if (info->flag_cyclic == TRUE)
-+			MSG("Restricted memory; staying in cyclic mode.\n");
-+	}
-+
- 	num_retry = 0;
- retry:
- 	if (info->flag_refiltering) {
+-Cliff Wickman
 
 _______________________________________________
 kexec mailing list
