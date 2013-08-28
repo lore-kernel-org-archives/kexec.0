@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VEnui-0002Aw-90
- for kexec@lists.infradead.org; Wed, 28 Aug 2013 22:08:34 +0000
-Subject: A few patches to consider
-Message-Id: <E1VEnuJ-0000Jl-CC@eag09.americas.sgi.com>
+ id 1VEnuh-0002Az-P4
+ for kexec@lists.infradead.org; Wed, 28 Aug 2013 22:08:35 +0000
+Subject: [PATCH] makedumpfile: reverse -c and -p if using snappy compression
+Message-Id: <E1VEnuJ-0000Js-Gl@eag09.americas.sgi.com>
 From: Cliff Wickman <cpw@sgi.com>
 Date: Wed, 28 Aug 2013 17:08:07 -0500
 List-Id: <kexec.lists.infradead.org>
@@ -25,26 +25,81 @@ Cc: kexec@lists.infradead.org
 
 From: Cliff Wickman <cpw@sgi.com>
 
-I am submitting 6 patches that I have found helpful in speeding the dump
-process or clarifying the progress report.
-They are not a series, and should not be interdependent.  But if you
-find any dependencies I apply them in this order:
-[PATCH] makedumpfile: reverse -c and -p if using snappy compression
-[PATCH] makedumpfile: use non-cyclic when possible
-[PATCH] makedumpfile: shorten cyclic exclude-unnecessary passes
-[PATCH] makedumpfile: shorten cyclic unnecessary-page scans
-[PATCH] makedumpfile: show needed memory
-[PATCH] makedumpfile: search for a debug vmlinux
+Reverse the meanings of -c (compression) and -p (snappy compression) if
+USESNAPPY is defined.
 
-The last one (search for a debug vmlinux) is useful in identifying huge
-pages with the PG_head/PG-tail flags.  There was a patch from Petr Tesarik
-that enables that huge page filtering. I don't think you are taking that one
-as-is, but are reworking it. Seems like Hatayama-san was doing that work.
-That one is very important and I need to include Petr's version in any
-makedumpfile that we use in a very large system.  I hope that one is coming
-along for inclusion in the next release.
+The distro kdump scripts seem to only support -c for compression.
+So make -c mean snappy compression if it is supported.
 
--Cliff Wickman
+Diffed against makedumpfile-1.5.4
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
+---
+ makedumpfile.c |   10 ++++++++++
+ print_info.c   |   13 +++++++++----
+ 2 files changed, 19 insertions(+), 4 deletions(-)
+
+Index: makedumpfile-1.5.4/makedumpfile.c
+===================================================================
+--- makedumpfile-1.5.4.orig/makedumpfile.c
++++ makedumpfile-1.5.4/makedumpfile.c
+@@ -8607,7 +8607,12 @@ main(int argc, char *argv[])
+ 			info->name_filterconfig = optarg;
+ 			break;
+ 		case 'c':
++#ifdef USESNAPPY
++			/* if snappy is available make it the default */
++			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
++#else
+ 			info->flag_compress = DUMP_DH_COMPRESSED_ZLIB;
++#endif
+ 			break;
+ 		case 'D':
+ 			flag_debug = TRUE;
+@@ -8656,7 +8661,12 @@ main(int argc, char *argv[])
+ 			info->flag_dmesg = 1;
+ 			break;
+ 		case 'p':
++#ifdef USESNAPPY
++			/* is snappy is available only use zlib with -p */
++			info->flag_compress = DUMP_DH_COMPRESSED_ZLIB;
++#else
+ 			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
++#endif
+ 			break;
+ 		case 'P':
+ 			info->xen_phys_start = strtoul(optarg, NULL, 0);
+Index: makedumpfile-1.5.4/print_info.c
+===================================================================
+--- makedumpfile-1.5.4.orig/print_info.c
++++ makedumpfile-1.5.4/print_info.c
+@@ -41,9 +41,9 @@ print_usage(void)
+ #endif
+ 	MSG("snappy support:\n");
+ #ifdef USESNAPPY
+-	MSG("  enabled\n");
++	MSG("  enabled using -c\n");
+ #else
+-	MSG("  disabled ('-p' option will be ignored.)\n");
++	MSG("  disabled\n");
+ #endif
+ 	MSG("\n");
+ 	MSG("Usage:\n");
+@@ -90,8 +90,13 @@ print_usage(void)
+ 	MSG("\n");
+ 	MSG("Available options:\n");
+ 	MSG("  [-c|-l|-p]:\n");
+-	MSG("      Compress dump data by each page using zlib for -c option, lzo for -l option\n");
+-	MSG("      or snappy for -p option. A user cannot specify either of these options with\n");
++#ifdef USESNAPPY
++	MSG("      Compress dump data by each page using zlib for -p option, lzo for -l option\n");
++	MSG("      or snappy for -c option. A user cannot specify any of these options with\n");
++#else
++	MSG("      Compress dump data by each page using zlib for -c option or lzo for -l option\n");
++	MSG("      A user cannot specify either of these options with\n");
++#endif
+ 	MSG("      -E option, because the ELF format does not support compressed data.\n");
+ 	MSG("      THIS IS ONLY FOR THE CRASH UTILITY.\n");
+ 	MSG("\n");
 
 _______________________________________________
 kexec mailing list
