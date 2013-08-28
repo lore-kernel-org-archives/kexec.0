@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0015.houston.hp.com ([15.201.24.18])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VE1jo-0006cA-QQ
- for kexec@lists.infradead.org; Mon, 26 Aug 2013 18:42:05 +0000
-From: "Sumner, William" <bill.sumner@hp.com>
-Subject: "crashdump accepting active iommu" prototype successful
-Date: Mon, 26 Aug 2013 18:41:07 +0000
-Message-ID: <875D89B79D1D86448A583A7302C022A055A3BA47@G4W3299.americas.hpqcorp.net>
-Content-Language: en-US
-MIME-Version: 1.0
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VEnuh-0002Av-Eu
+ for kexec@lists.infradead.org; Wed, 28 Aug 2013 22:08:32 +0000
+Subject: [PATCH] makedumpfile: show needed memory
+Message-Id: <E1VEnuJ-0000KK-Qu@eag09.americas.sgi.com>
+From: Cliff Wickman <cpw@sgi.com>
+Date: Wed, 28 Aug 2013 17:08:07 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,71 +15,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "bhelgaas@google.com" <bhelgaas@google.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "ddutile@redhat.com" <ddutile@redhat.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>
+To: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-A while ago we discussed the concept of the crashdump kernel dealing with the legacy DMA from the (old) panic'd kernel by allowing the (new) crashdump kernel: to accept the iommu hardware in an active state, to leave the current translations in-place so that legacy DMA will continue using its current buffers until the device drivers in the crashdump kernel initialize, and to use different portions of the iova address ranges for the device drivers in the crashdump kernel.   
+From: Cliff Wickman <cpw@sgi.com>
 
-As time permitted I have created prototype code to explore this concept.
+If there is not enough memory available to run in cyclic mode display
+how much more would be needed to do so.
 
-The "crashdump accepting active iommu" prototype/proof-of-concept code has successfully completed its first crashdump and rebooted the machine.  The latest version of the 'crash' utility reads the vmcore dump file that was created.
+Diffed against makedumpfile-1.5.4
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
+---
+ makedumpfile.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-
-At a high-level, here are the changes I made:
-The code is entirely within intel-iommu.c 
-A key concept is that the active translation tables are mapped into kernel virtual addresses in the new kernel. This allows most of the existing iommu code to operate without change.
-
-Hardware initialization:
-------------------------
-In intel_iommu_init(void)
-* If (This is the crash kernel)
-  .  Set flag: crashdump_accepting_active_iommu (all changes below check this)
-  .  Skip disabling the iommu hardware translations
-
-In init_dmars()
-* Copy the intel iommu translation tables from the old kernel into the new kernel
-  . The root-entry table, all context-entry tables, and all page-translation-entry tables
-  . The copied tables contain updated physical addresses to link them together.
-  . The copied tables are also mapped into kernel virtual addresses in the new kernel 
-    which allows most of the existing iommu code to operate without change.
-  . Do some minimal sanity-checks during the copy
-  . Place the address of the new root-entry structure into "struct intel_iommu"
-
-* Skip setting-up new domains for 'si', 'rmrr', 'isa' 
-  . Translations for 'rmrr' and 'isa' ranges have been copied from the old kernel
-  . This prototype does not yet handle pass-through
-
-* Existing (unchanged) code near the end of dmar_init:
-  . Loads the address of the (now new) root-entry structure from "struct intel_iommu"
-    into the iommu hardware and does the proper iommu hardware flushes. This changes the 
-    active translation tables from the ones in the old kernel to the copies in the new kernel.
-  . This is legal because the translations in the two sets of tables are currently identical:
-    - Intel(r) Virtualization Technology for Directed I/O. Architecture Specification,
-      February 2011, Rev. 1.3  (section 11.2, paragraph 2) 
-
-In iommu_init_domains()
-* Mark as in-use all domain-id's from the old kernel
-  . In case the new kernel contains a device that was not in the old kernel
-    and a new, unused domain-id is actually needed, the bitmap will give us one.
-
-
-When a new domain is created for a device:
-------------------------------------------
-* If (this device has a context in the old kernel)
-  . Get domain-id, address-width, and IOVA ranges from the old kernel context;
-  . Get adr(page-entry-tables) from the copy in the new kernel;
-  . And apply all of the above values to the new domain structure.
-* Else
-  . Create a new domain as normal
-
-Most of the code to implement the new functionality was added at the end of intel-iommu.c
-Bill
-
-
+Index: makedumpfile-1.5.4/makedumpfile.c
+===================================================================
+--- makedumpfile-1.5.4.orig/makedumpfile.c
++++ makedumpfile-1.5.4/makedumpfile.c
+@@ -7778,11 +7778,15 @@ plenty_of_memory(void)
+ {
+ 	unsigned long free_size;
+ 	unsigned long needed_size;
++	long slack = 10; /* 10M extra */
++	long meg = 1024*1024;
+ 
+ 	free_size = get_free_memory_size();
+-	needed_size = (info->max_mapnr * 2) / BITPERBYTE;
+-	if (free_size > (needed_size + (10*1024*1024)))
++	needed_size = ((info->max_mapnr * 2) / BITPERBYTE) + (slack * meg);
++	if (free_size > needed_size)
+ 		return 1;
++	PROGRESS_MSG("Need %ldM more memory to use noncyclic mode.\n",
++		(needed_size - free_size)/meg);
+ 	return 0;
+ }
+ 
 
 _______________________________________________
 kexec mailing list
