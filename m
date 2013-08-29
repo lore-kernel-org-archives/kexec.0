@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VFC1o-00063I-2f
- for kexec@lists.infradead.org; Thu, 29 Aug 2013 23:53:29 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 278BA3EE0BC
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 08:53:01 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1730245DE52
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 08:53:01 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id F273045DE50
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 08:53:00 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id E5B8D1DB8041
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 08:53:00 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9A6D31DB803F
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 08:53:00 +0900 (JST)
-Message-ID: <521FDE8D.4040807@jp.fujitsu.com>
-Date: Fri, 30 Aug 2013 08:51:41 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] x86, apic: Disable BSP if boot cpu is AP
+ id 1VFBnM-0005NV-Mi
+ for kexec@lists.infradead.org; Thu, 29 Aug 2013 23:38:33 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20130829092458.5476.10277.stgit@localhost6.localdomain6>
  <521F5297.4070906@linux.intel.com>
-In-Reply-To: <521F5297.4070906@linux.intel.com>
+Date: Thu, 29 Aug 2013 16:37:44 -0700
+In-Reply-To: <521F5297.4070906@linux.intel.com> (H. Peter Anvin's message of
+ "Thu, 29 Aug 2013 06:54:31 -0700")
+Message-ID: <8738ps131z.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/2] x86, apic: Disable BSP if boot cpu is AP
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,34 +20,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "H. Peter Anvin" <hpa@linux.intel.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ebiederm@xmission.com, akpm@linux-foundation.org, jingbai.ma@hp.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, vgoyal@redhat.com, akpm@linux-foundation.org, jingbai.ma@hp.com
 
-(2013/08/29 22:54), H. Peter Anvin wrote:
+"H. Peter Anvin" <hpa@linux.intel.com> writes:
+
 > On 08/29/2013 02:27 AM, HATAYAMA Daisuke wrote:
 >> This is the patch series to address the issue that kdump 2nd kernel
 >> now fails to wake up multiple CPUs.
 >
 > Please explain the "now" in the above sentence.  Is this a regression?
-> If so, what is its impact?  Is this something that needs to go into 3.11
+> If so, what is its fimpact?
+
+This is not a regression.
+
+>  Is this something that needs to go into 3.11
 > as a post-rc7 change, which means it better be hyper-critical?
->
-> 	-hpa
->
->
 
-This is not a regression just as Eric explains.
+No.  This is something that does not need to go into 3.11.
 
-There is also my explanation in the description of the 2nd patch. I should have described so here explicitly.
+This situation is people who run machines of unreasonable size really
+would like to use multiple cpus when generating crash dumps.  A
+practical problem with that desire is that sending a (startup? init? I
+forget which) IPI to a processor with the BSP flag sent triggers that
+processor to load code from 0xfffffff0 instead of the vector specified
+in the IPI.  At which point the processor which jumped to 0xfffffff0 and
+is running BIOS code does not call into the kernel so never comes up
+which is unfortunate, and worse almost always triggers a soft reset by
+writing hardware registers.
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+Which means the practical way to avoid this sort of thing is not to send
+init/startup IPIs to processors with the BSP bit set.  Which MPtables
+and ACPI tables should denote as the boot processor.
 
+In a previous attack on this problem we explored if it was possible to
+clear the BSP bit and be able to use all processors but that does not
+work.  I think it was actually your suggestion that we just skip the
+BSP.
+
+Anyway this long simmering issue has raised it's head again and we have
+iron-clad evidence that the only thing people can do is avoid the
+problem so this is a patchset to allow people who wind up in a
+situtation where they are not booting on the bootstrap processor to to
+avoid problems, and use as many of their other processors as possible.
+
+Which should make people with boxes of unusual size happy.
+
+Eric
 
 _______________________________________________
 kexec mailing list
