@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mga11.intel.com ([192.55.52.93])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VFO8i-00060x-UY
- for kexec@lists.infradead.org; Fri, 30 Aug 2013 12:49:26 +0000
-Date: Fri, 30 Aug 2013 08:48:54 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/2] x86, apic: Disable BSP if boot cpu is AP
-Message-ID: <20130830124854.GA18156@redhat.com>
-References: <20130829092458.5476.10277.stgit@localhost6.localdomain6>
- <521F5297.4070906@linux.intel.com> <8738ps131z.fsf@xmission.com>
+ id 1VFQry-0003GB-Me
+ for kexec@lists.infradead.org; Fri, 30 Aug 2013 15:44:19 +0000
+Message-ID: <5220BDBC.2060807@linux.intel.com>
+Date: Fri, 30 Aug 2013 08:43:56 -0700
+From: "H. Peter Anvin" <hpa@linux.intel.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <8738ps131z.fsf@xmission.com>
+Subject: Re: [PATCH 0/2] x86, apic: Disable BSP if boot cpu is AP
+References: <20130829092458.5476.10277.stgit@localhost6.localdomain6>
+ <521F5297.4070906@linux.intel.com> <521FDE8D.4040807@jp.fujitsu.com>
+In-Reply-To: <521FDE8D.4040807@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,26 +23,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, akpm@linux-foundation.org, "H. Peter Anvin" <hpa@linux.intel.com>, jingbai.ma@hp.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ebiederm@xmission.com, akpm@linux-foundation.org, jingbai.ma@hp.com
 
-On Thu, Aug 29, 2013 at 04:37:44PM -0700, Eric W. Biederman wrote:
+On 08/29/2013 04:51 PM, HATAYAMA Daisuke wrote:
+> 
+> This is not a regression just as Eric explains.
+> 
+> There is also my explanation in the description of the 2nd patch. I
+> should have described so here explicitly.
+> 
 
-[..]
-> This situation is people who run machines of unreasonable size really
-> would like to use multiple cpus when generating crash dumps.
+OK.  We're probably days away from a merge window, so I would like to
+put this in the queue for 3.13.
 
-Yes. Now kdump is in a phase where people are doing scalability work. And
-one of the problems is that on mutli tera byte machines, filtering is
-taking long time. With-in filtering it is especially the compression which
-takes the longest (hatayama and cliff wickman have done some study here).
+	-hpa
 
-So Idea seems to be that bring up more cpus in the second kernel and try
-to parallelize compression work and try to save dump time of multi tera
-byte machines.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
