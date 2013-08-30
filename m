@@ -1,31 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VFClo-0007SV-3V
- for kexec@lists.infradead.org; Fri, 30 Aug 2013 00:41:00 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 4A0C93EE0BB
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:40:38 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3B36A45DE51
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:40:38 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 219F745DE50
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:40:38 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id C21C51DB8042
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:40:37 +0900 (JST)
+ id 1VFD4C-0007vP-GB
+ for kexec@lists.infradead.org; Fri, 30 Aug 2013 01:00:01 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 9DDF63EE0AE
+ for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:59:36 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 910FA45DEB7
+ for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:59:36 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7BAEE45DEB2
+ for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:59:36 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 703A3E08003
+ for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:59:36 +0900 (JST)
 Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
  [10.240.81.136])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1B4181DB803F
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:40:37 +0900 (JST)
-Message-ID: <521FE9BC.1090109@jp.fujitsu.com>
-Date: Fri, 30 Aug 2013 09:39:24 +0900
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id F2DC41DB803B
+ for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 09:59:35 +0900 (JST)
+Message-ID: <521FEE6C.6090700@jp.fujitsu.com>
+Date: Fri, 30 Aug 2013 09:59:24 +0900
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: use non-cyclic when possible
-References: <E1VEnuJ-0000Jz-JI@eag09.americas.sgi.com>
-In-Reply-To: <E1VEnuJ-0000Jz-JI@eag09.americas.sgi.com>
+Subject: Re: [PATCH] makedumpfile: shorten cyclic exclude-unnecessary passes
+References: <E1VEnuJ-0000K6-Lo@eag09.americas.sgi.com>
+In-Reply-To: <E1VEnuJ-0000K6-Lo@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,14 +44,40 @@ Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 (2013/08/29 7:08), Cliff Wickman wrote:
 > From: Cliff Wickman <cpw@sgi.com>
 > 
-> If there is plenty of memory use non-cyclic mode.
+> - get_mm_sparsemem(): reduce the number of entries in the mem_map[] by
+>    recording only those sections which actually exist in memory
+
+I have missed this point. How much does this change speed up?
+
+In general, if you want to say your patch improves performance, it's better to
+demonstrate it in a measurable way such as benchmark.
+
+> - shorten the executions of __exclude_unnecessary_pages() by passing it only
+>    the pfn's of the current cyclic area
 > 
 
-If there is enough memory to use, the number of cycle is 1.
-Cyclic mode in 1-cycle is the same as non-cyclic mode in theory.
-If slow, it's better to improve cyclic mode implementation.
+I did try to similar kind of effort some months ago locally to figure out where
+to improve cyclic-mode. In case of me, I noticed possibility of unnecessary processing
+being performed out side the area of current cycle from the sanity check below:
 
-To be honest, I think the current non-cyclic mode should be implemented as 1-cycle case. Then, makedumpfile can reduce amount of code at the same time.
+int
+set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val)
+{
+        int byte, bit;
+
+        if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
+                return FALSE;
+<cut>
+
+However, I didn't get distinguishable difference at that time. I ran the program
+relatively ordinary class of system with some gigabyte memory so I might not got
+distinguishable improvement.
+
+Anyway, I thought it was permissible at that time and I didn't continue that work more.
+
+But these days I have a machine with huge physical memory holes and on that system
+this improvement sounds work well. So I much want to try to benchmark this direction
+of your improvement patch set.
 
 -- 
 Thanks.
