@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-we0-x22a.google.com ([2a00:1450:400c:c03::22a])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VFLV3-0001De-GE
- for kexec@lists.infradead.org; Fri, 30 Aug 2013 10:00:19 +0000
-Received: by mail-we0-f170.google.com with SMTP id w60so1276344wes.15
- for <kexec@lists.infradead.org>; Fri, 30 Aug 2013 02:59:55 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20130830033450.GA12036@dhcp-16-252.nay.redhat.com>
-References: <E1VEnuJ-0000Js-Gl@eag09.americas.sgi.com>
- <20130830033450.GA12036@dhcp-16-252.nay.redhat.com>
-Date: Fri, 30 Aug 2013 13:52:28 +0400
-Message-ID: <CAJGZr0+fo-PhF7vbhR3qky_ab+jSLMF6JorAv+1+H2CBkijSMQ@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VFM1j-0002Ba-JJ
+ for kexec@lists.infradead.org; Fri, 30 Aug 2013 10:34:04 +0000
+Date: Fri, 30 Aug 2013 18:33:37 +0800
+From: WANG Chao <chaowang@redhat.com>
 Subject: Re: [PATCH] makedumpfile: reverse -c and -p if using snappy
  compression
-From: Maxim Uvarov <muvarov@gmail.com>
+Message-ID: <20130830103337.GA6405@dhcp12-158.nay.redhat.com>
+References: <E1VEnuJ-0000Js-Gl@eag09.americas.sgi.com>
+ <20130829025837.GA2298@dhcp12-158.nay.redhat.com>
+ <20130829184652.GA17137@sgi.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130829184652.GA17137@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,130 +26,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Cliff Wickman <cpw@sgi.com>
+To: Cliff Wickman <cpw@sgi.com>
+Cc: kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
-I think that better is to have:
+On 08/29/13 at 01:46pm, Cliff Wickman wrote:
+> On Thu, Aug 29, 2013 at 10:58:37AM +0800, WANG Chao wrote:
+> > Hi, Cliff
+> > 
+> > On 08/28/13 at 05:08pm, Cliff Wickman wrote:
+> > > From: Cliff Wickman <cpw@sgi.com>
+> > > 
+> > > Reverse the meanings of -c (compression) and -p (snappy compression) if
+> > > USESNAPPY is defined.
+> > > 
+> > > The distro kdump scripts seem to only support -c for compression.
+> > > So make -c mean snappy compression if it is supported.
+> > 
+> > It looks like more a distro issue to me. I'm wondering if that script
+> > only support -c, why do that distro compile makedumpfile with USESNAPPY?
+> > 
+> > I don't think other distros would like to see this change. IMHO, the
+> > right thing to do is fix that kdump script on that particular distro,
+> > not reverse -c and -p.
+> > 
+> > Thanks
+> > WANG Chao
+> 
+> I agree that some distros could easily change their default compression
+> choice, for example -c to -p in RHEL's /etc/kdump.conf.
+> 
+> But on the other hand SLES11 just uses KDUMP_DUMPFORMAT="compressed"
+> in /etc/sysconfig/kdump.  Translation to -c occurs somewhere under the
+> covers.
 
--cz zlib
--cs snappy
--cl zlo
--ca - automatic selection of compression. Snappy if compiled in, then
-lzo. And if no snappy and lzo then zlib.
+Instead, it's reasonable to patch SLES11 kdump utility, not upstream.
 
-this will make options more readable.
+-c means using zlib and -p means using snappy. That's already established
+and has been widely used.
 
-Best regards.
-Maxim.
+> Makedumpfile could change the default meaning of "compressed" to snappy
+> compression on the grounds that we know snappy to be much faster than
+> zlib compression.  And so we default to it if available.
 
+IMO, makedumpfile doesn't have default compression format. c/p/l means
+zlib/snappy/lzo by each. If you don't specify one of them, makedumpfile
+wouldn't do compression work.
 
-2013/8/30 Baoquan He <bhe@redhat.com>:
-> USESNAPPY is a switch which the snappy support has been built into.
-> With this flag, it means snappy compression algorithm is available.
-> Which compression algorithm is taken need be decided by -c/-l/-p.
->
-> If I make a build with USELZO and USESNAPPY, then I want to test
-> zlib/lzo/snappy separately, then this patch will confuse me very
-> much. Current action and configuration are enough for me. So it's
-> better to leave the current action alone.
->
-> Baoquan
-> Thanks
->
-> On 08/28/13 at 05:08pm, Cliff Wickman wrote:
->> From: Cliff Wickman <cpw@sgi.com>
->>
->> Reverse the meanings of -c (compression) and -p (snappy compression) if
->> USESNAPPY is defined.
->>
->> The distro kdump scripts seem to only support -c for compression.
->> So make -c mean snappy compression if it is supported.
->>
->> Diffed against makedumpfile-1.5.4
->> Signed-off-by: Cliff Wickman <cpw@sgi.com>
->> ---
->>  makedumpfile.c |   10 ++++++++++
->>  print_info.c   |   13 +++++++++----
->>  2 files changed, 19 insertions(+), 4 deletions(-)
->>
->> Index: makedumpfile-1.5.4/makedumpfile.c
->> ===================================================================
->> --- makedumpfile-1.5.4.orig/makedumpfile.c
->> +++ makedumpfile-1.5.4/makedumpfile.c
->> @@ -8607,7 +8607,12 @@ main(int argc, char *argv[])
->>                       info->name_filterconfig = optarg;
->>                       break;
->>               case 'c':
->> +#ifdef USESNAPPY
->> +                     /* if snappy is available make it the default */
->> +                     info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
->> +#else
->>                       info->flag_compress = DUMP_DH_COMPRESSED_ZLIB;
->> +#endif
->>                       break;
->>               case 'D':
->>                       flag_debug = TRUE;
->> @@ -8656,7 +8661,12 @@ main(int argc, char *argv[])
->>                       info->flag_dmesg = 1;
->>                       break;
->>               case 'p':
->> +#ifdef USESNAPPY
->> +                     /* is snappy is available only use zlib with -p */
->> +                     info->flag_compress = DUMP_DH_COMPRESSED_ZLIB;
->> +#else
->>                       info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
->> +#endif
->>                       break;
->>               case 'P':
->>                       info->xen_phys_start = strtoul(optarg, NULL, 0);
->> Index: makedumpfile-1.5.4/print_info.c
->> ===================================================================
->> --- makedumpfile-1.5.4.orig/print_info.c
->> +++ makedumpfile-1.5.4/print_info.c
->> @@ -41,9 +41,9 @@ print_usage(void)
->>  #endif
->>       MSG("snappy support:\n");
->>  #ifdef USESNAPPY
->> -     MSG("  enabled\n");
->> +     MSG("  enabled using -c\n");
->>  #else
->> -     MSG("  disabled ('-p' option will be ignored.)\n");
->> +     MSG("  disabled\n");
->>  #endif
->>       MSG("\n");
->>       MSG("Usage:\n");
->> @@ -90,8 +90,13 @@ print_usage(void)
->>       MSG("\n");
->>       MSG("Available options:\n");
->>       MSG("  [-c|-l|-p]:\n");
->> -     MSG("      Compress dump data by each page using zlib for -c option, lzo for -l option\n");
->> -     MSG("      or snappy for -p option. A user cannot specify either of these options with\n");
->> +#ifdef USESNAPPY
->> +     MSG("      Compress dump data by each page using zlib for -p option, lzo for -l option\n");
->> +     MSG("      or snappy for -c option. A user cannot specify any of these options with\n");
->> +#else
->> +     MSG("      Compress dump data by each page using zlib for -c option or lzo for -l option\n");
->> +     MSG("      A user cannot specify either of these options with\n");
->> +#endif
->>       MSG("      -E option, because the ELF format does not support compressed data.\n");
->>       MSG("      THIS IS ONLY FOR THE CRASH UTILITY.\n");
->>       MSG("\n");
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+You could assume -c means default compression format, but I see it means
+compress with zlib.
 
+> You would in that way make the intelligent choice without administrative
+> intervention.
 
+The intelligent choice can be made within distro specific kdump script
+rather than makedumpfile.
 
--- 
-Best regards,
-Maxim Uvarov
+> (You would also have to assume that crash is also be built snappy-capable
+> for a system that supports snappy compression.)
+> 
+> I could see it either way.
+> I find this patch a convenient way to make the choice.
+
+This patch could cause regression and break current existing kdump
+scripts. I wouldn't worry much about the -c (zlib) user though.
+
+As for the people using -p to snappy compression, after upgrading their
+makedumpfile, they would get zlib format dump if their kdump conf remain
+untouched.
+
+Thanks
+WANG Chao
 
 _______________________________________________
 kexec mailing list
