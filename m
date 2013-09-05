@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ob0-x233.google.com ([2607:f8b0:4003:c01::233])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VHJT6-0007L3-Fc
- for kexec@lists.infradead.org; Wed, 04 Sep 2013 20:14:25 +0000
-Received: by mail-ob0-f179.google.com with SMTP id fb19so946671obc.38
- for <kexec@lists.infradead.org>; Wed, 04 Sep 2013 13:14:00 -0700 (PDT)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VHVF7-0003fO-Ms
+ for kexec@lists.infradead.org; Thu, 05 Sep 2013 08:48:46 +0000
+Date: Thu, 5 Sep 2013 16:48:20 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH] kexec: x86: struct x86_linux_param_header should be packed
+Message-ID: <20130905084820.GB11609@dhcp12-158.nay.redhat.com>
+References: <20130805173510.GD2274@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20130904200959.GE8540@anatevka.fc.hp.com>
-References: <1378252218-18798-1-git-send-email-matthew.garrett@nebula.com>
- <1378252218-18798-9-git-send-email-matthew.garrett@nebula.com>
- <20130904200959.GE8540@anatevka.fc.hp.com>
-Date: Wed, 4 Sep 2013 16:14:00 -0400
-Message-ID: <CA+5PVA6HayQJEDFisvXYJKyoKDbJh53fWki=Arbn_9t=NppGrw@mail.gmail.com>
-Subject: Re: [PATCH V3 08/11] kexec: Disable at runtime if the kernel enforces
- module loading restrictions
-From: Josh Boyer <jwboyer@fedoraproject.org>
+Content-Disposition: inline
+In-Reply-To: <20130805173510.GD2274@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,33 +23,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: jerry.hoemann@hp.com
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Kees Cook <keescook@chromium.org>, kexec <kexec@lists.infradead.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Wed, Sep 4, 2013 at 4:09 PM,  <jerry.hoemann@hp.com> wrote:
-> On Tue, Sep 03, 2013 at 07:50:15PM -0400, Matthew Garrett wrote:
->> kexec permits the loading and execution of arbitrary code in ring 0, which
->> is something that module signing enforcement is meant to prevent. It makes
->> sense to disable kexec in this situation.
->>
->> Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
->
->
-> Matthew,
->
-> Disabling kexec will disable kdump, correct?
+On 08/05/13 at 01:35pm, Vivek Goyal wrote:
+> I think struct x86_linux_param_header should be packed. Strange that we
+> did not do it so far. 
+> 
+> Without packing struct size was 3824 (decimal) on my x86_64 machine. With
+> packing it is 3820. I think there was a padding of 4 bytes at the end. So
+> it should be harmless.
+> 
+> I tried to introduce more fields and that introduced padding in the
+> middle of structure and kexec stopped working and that's how I got to
+> know that bootparam is not packed.
 
-Yes.
+In this case that's true and x86_linux_param_header should be packed.
 
-> Are there plans to enable kdump on a system where secure
-> boot is enabled?
+One more thing is,
+in include/x86/x86-linux.h, we already define PACKED macro:
+ #define PACKED __attribute__((packed))
+But within x86-linux.h, both PACKED_and __attribute__((packed)) are used.
 
-Vivek Goyal has been working on this.  I've not seen the code yet, but
-I believe it should be posted somewhere relatively soon.  We're also
-planning on talking about it at the Secure Boot microconference at
-Linux Plumbers in two weeks.
+PACKED isn't used much time and __attribute__((packed)) is quite simple
+and straightforward. Maybe it's time we can remove the macro and use
+__attribute__((packed)) directly.
 
-josh
+I can send another patch to address this if anyone thinks it's a good
+idea.
+
+Thanks
+WANG Chao
+
+> ---
+>  include/x86/x86-linux.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Index: kexec-tools/include/x86/x86-linux.h
+> ===================================================================
+> --- kexec-tools.orig/include/x86/x86-linux.h	2013-08-05 13:28:33.999338740 -0400
+> +++ kexec-tools/include/x86/x86-linux.h	2013-08-05 13:28:46.616475104 -0400
+> @@ -198,7 +198,7 @@ struct x86_linux_param_header {
+>  	struct 	edd_info eddbuf[EDDMAXNR];	/* 0xd00 */
+>  						/* 0xeec */
+>  #define COMMAND_LINE_SIZE 2048
+> -};
+> +} __attribute__ ((packed));
+>  
+>  struct x86_linux_faked_param_header {
+>  	struct x86_linux_param_header hdr;	/* 0x00 */
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
