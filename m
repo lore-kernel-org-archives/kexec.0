@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from ud10.udmedia.de ([194.117.254.50] helo=mail.ud10.udmedia.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VIdoq-0001ya-3q
- for kexec@lists.infradead.org; Sun, 08 Sep 2013 12:10:21 +0000
-Date: Sun, 8 Sep 2013 14:09:47 +0200
+ id 1VIdpK-00020P-5k
+ for kexec@lists.infradead.org; Sun, 08 Sep 2013 12:10:50 +0000
+Date: Sun, 8 Sep 2013 14:10:27 +0200
 From: Markus Trippelsdorf <markus@trippelsdorf.de>
-Subject: [PATCH 0/3] drm/radeon kexec fixes
-Message-ID: <20130908120947.GA360@x4>
+Subject: [PATCH 1/3] kexec: get rid of late printk
+Message-ID: <20130908121027.GB360@x4>
+References: <20130908120947.GA360@x4>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20130908120947.GA360@x4>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,29 +26,30 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: dri-devel@lists.freedesktop.org
 Cc: Alex Deucher <alexdeucher@gmail.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-Here are a couple of patches that get kexec working with radeon devices.
-I've tested this on my RS780. 
-Comments or flames are welcome.
-Thanks.
+kexec calls:
+ printk(KERN_EMERG "Starting new kernel\n");
+late before calling machine_shutdown().
+However at this point the underlying fb device may have already been
+shutdown. This causes the kernel to hang.
+Fix by simply getting rid of the printk call.
 
-Markus Trippelsdorf (3):
-  kexec: get rid of late printk
-  drm/radeon: Implement radeon_pci_shutdown
-  drm/radeon: get rid of r100_restore_sanity hack
+Signed-off-by: Markus Trippelsdorf <markus@trippelsdorf.de>
+---
+ kernel/kexec.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- drivers/gpu/drm/radeon/r100.c        | 27 ---------------------------
- drivers/gpu/drm/radeon/r300.c        |  2 --
- drivers/gpu/drm/radeon/r420.c        |  2 --
- drivers/gpu/drm/radeon/r520.c        |  2 --
- drivers/gpu/drm/radeon/radeon_asic.h |  1 -
- drivers/gpu/drm/radeon/radeon_drv.c  | 10 ++++++++++
- drivers/gpu/drm/radeon/rs400.c       |  2 --
- drivers/gpu/drm/radeon/rs600.c       |  2 --
- drivers/gpu/drm/radeon/rs690.c       |  2 --
- drivers/gpu/drm/radeon/rv515.c       |  2 --
- kernel/kexec.c                       |  1 -
- 11 files changed, 10 insertions(+), 43 deletions(-)
-
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 59f7b55..f33fa9f 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1679,7 +1679,6 @@ int kernel_kexec(void)
+ #endif
+ 	{
+ 		kernel_restart_prepare(NULL);
+-		printk(KERN_EMERG "Starting new kernel\n");
+ 		machine_shutdown();
+ 	}
+ 
 -- 
 Markus
 
