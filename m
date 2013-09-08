@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from ud10.udmedia.de ([194.117.254.50] helo=mail.ud10.udmedia.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VIdpK-00020P-5k
- for kexec@lists.infradead.org; Sun, 08 Sep 2013 12:10:50 +0000
-Date: Sun, 8 Sep 2013 14:10:27 +0200
+ id 1VIdpp-00021H-3x
+ for kexec@lists.infradead.org; Sun, 08 Sep 2013 12:11:21 +0000
+Date: Sun, 8 Sep 2013 14:10:58 +0200
 From: Markus Trippelsdorf <markus@trippelsdorf.de>
-Subject: [PATCH 1/3] kexec: get rid of late printk
-Message-ID: <20130908121027.GB360@x4>
+Subject: [PATCH 2/3] drm/radeon: Implement radeon_pci_shutdown
+Message-ID: <20130908121058.GC360@x4>
 References: <20130908120947.GA360@x4>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -26,30 +26,44 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: dri-devel@lists.freedesktop.org
 Cc: Alex Deucher <alexdeucher@gmail.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-kexec calls:
- printk(KERN_EMERG "Starting new kernel\n");
-late before calling machine_shutdown().
-However at this point the underlying fb device may have already been
-shutdown. This causes the kernel to hang.
-Fix by simply getting rid of the printk call.
+Currently radeon devices are not properbly shutdown during kexec. This
+cases a varity of issues, e.g. dpm initialization failures.
+Fix this by implementing a radeon_pci_shutdown function, that unloads
+the driver cleanly.
 
 Signed-off-by: Markus Trippelsdorf <markus@trippelsdorf.de>
 ---
- kernel/kexec.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 59f7b55..f33fa9f 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1679,7 +1679,6 @@ int kernel_kexec(void)
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index cb4445f..d71edee 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -380,6 +380,15 @@ static const struct file_operations radeon_driver_kms_fops = {
  #endif
- 	{
- 		kernel_restart_prepare(NULL);
--		printk(KERN_EMERG "Starting new kernel\n");
- 		machine_shutdown();
- 	}
+ };
  
++
++static void
++radeon_pci_shutdown(struct pci_dev *pdev)
++{
++	struct drm_device *dev = pci_get_drvdata(pdev);
++
++	radeon_driver_unload_kms(dev);
++}
++
+ static struct drm_driver kms_driver = {
+ 	.driver_features =
+ 	    DRIVER_USE_AGP |
+@@ -453,6 +462,7 @@ static struct pci_driver radeon_kms_pci_driver = {
+ 	.remove = radeon_pci_remove,
+ 	.suspend = radeon_pci_suspend,
+ 	.resume = radeon_pci_resume,
++	.shutdown = radeon_pci_shutdown,
+ };
+ 
+ static int __init radeon_init(void)
 -- 
 Markus
 
