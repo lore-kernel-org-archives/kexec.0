@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VHpp6-0008QO-Jb
- for kexec@lists.infradead.org; Fri, 06 Sep 2013 06:47:19 +0000
-Message-ID: <522979FA.7090409@mxc.nes.nec.co.jp>
-Date: Fri, 06 Sep 2013 15:45:14 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VIdU0-0001fQ-8Y
+ for kexec@lists.infradead.org; Sun, 08 Sep 2013 11:48:49 +0000
+Date: Sun, 8 Sep 2013 19:47:52 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] intel-iommu: Quiesce devices before disabling IOMMU
+Message-ID: <20130908114752.GA24572@dhcp-16-252.nay.redhat.com>
+References: <1377069354-5056-1-git-send-email-indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] dump-dmesg: Understand >= v3.11-rc4 dmesg
-References: <1378065900-20513-1-git-send-email-lkundrak@v3.sk>
-In-Reply-To: <1378065900-20513-1-git-send-email-lkundrak@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <1377069354-5056-1-git-send-email-indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,195 +19,158 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: lkundrak@v3.sk
-Cc: usui@mxm.nes.nec.co.jp, nishimura@mxp.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, louis.bouchard@canonical.com, kexec@lists.infradead.org
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, dwmw2@infradead.org
 
-HelloLubomir,
+Hi,
+Patch is great and works on my HP-z420.
+There are several small concerns, please see inline comments.
 
-(2013/09/02 5:04), Lubomir Rintel wrote:
-> Symbol name changed with the following commit:
-> 62e32ac printk: rename struct log to struct printk_log
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Cc: Louis Bouchard <louis.bouchard@canonical.com>
-> Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>
-> Cc: Minoru Usui <usui@mxm.nes.nec.co.jp>
-> Cc: Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
-> Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+On 08/21/13 at 04:15pm, Takao Indoh wrote:
+> This patch quiesces devices before disabling IOMMU on boot to stop
+> ongoing DMA. In intel_iommu_init(), check context entries and if there
+> is entry whose present bit is set then reset corresponding device.
+> 
+> When IOMMU is already enabled on boot, it is disabled and new DMAR table
+> is created and then re-enabled in intel_iommu_init(). This causes DMAR
+> faults if there are in-flight DMAs.
+> 
+> This causes problem on kdump. Devices are working in first kernel, and
+> after switching to second kernel and initializing IOMMU, many DMAR faults
+> occur and it causes problems like driver error or PCI SERR, at last
+> kdump fails. This patch fixes this problem.
+> 
+> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+> 
+> 
+> NOTE:
+> To reset devices this patch uses bus reset interface introduced by
+> following commits in PCI "next" branch.
+> 
+> 64e8674fbe6bc848333a9b7e19f8cc019dde9eab
+> 5c32b35b004f5ef70dcf62bbc42b8bed1e50b471
+> 2e35afaefe64946caaecfacaf7fb568e46185e88
+> 608c388122c72e1bf11ba8113434eb3d0c40c32d
+> 77cb985ad4acbe66a92ead1bb826deffa47dd33f
+> 090a3c5322e900f468b3205b76d0837003ad57b2
+> a6cbaadea0af9b4aa6eee2882f2aa761ab91a4f8
+> de0c548c33429cc78fd47a3c190c6d00b0e4e441
+> 1b95ce8fc9c12fdb60047f2f9950f29e76e7c66d
 > ---
->   makedumpfile.c |   56 ++++++++++++++++++++++++++++++++++++++------------------
->   makedumpfile.h |    6 +++---
->   2 files changed, 41 insertions(+), 21 deletions(-)
->
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index b42565c..5b04048 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -1389,10 +1389,17 @@ get_structure_info(void)
->   	OFFSET_INIT(elf64_phdr.p_paddr, "elf64_phdr", "p_paddr");
->   	OFFSET_INIT(elf64_phdr.p_memsz, "elf64_phdr", "p_memsz");
->
-> -	SIZE_INIT(log, "log");
-> -	OFFSET_INIT(log.ts_nsec, "log", "ts_nsec");
-> -	OFFSET_INIT(log.len, "log", "len");
-> -	OFFSET_INIT(log.text_len, "log", "text_len");
-> +	SIZE_INIT(printk_log, "printk_log");
-> +	if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
-> +		OFFSET_INIT(printk_log.ts_nsec, "printk_log", "ts_nsec");
-> +		OFFSET_INIT(printk_log.len, "printk_log", "len");
-> +		OFFSET_INIT(printk_log.text_len, "printk_log", "text_len");
-> +	} else {
-> +		SIZE_INIT(printk_log, "log");
-> +		OFFSET_INIT(printk_log.ts_nsec, "log", "ts_nsec");
-> +		OFFSET_INIT(printk_log.len, "log", "len");
-> +		OFFSET_INIT(printk_log.text_len, "log", "text_len");
-> +	}
->
->   	return TRUE;
->   }
-> @@ -1593,7 +1600,8 @@ write_vmcoreinfo_data(void)
->   	WRITE_STRUCTURE_SIZE("node_memblk_s", node_memblk_s);
->   	WRITE_STRUCTURE_SIZE("nodemask_t", nodemask_t);
->   	WRITE_STRUCTURE_SIZE("pageflags", pageflags);
-> -	WRITE_STRUCTURE_SIZE("log", log);
-> +	WRITE_STRUCTURE_SIZE("printk_log", printk_log);
-> +	WRITE_STRUCTURE_SIZE("log", printk_log); /* compat */
-
-To export the size of struct printk_log as the size of struct log
-for old makedumpfile doesn't provide compatibility, because old
-makedumpfile can't extract dmesg after all since the variable-length
-record format isn't supported. (except makedumpfile-1.5.2, 1.5.3 and 1.5.4)
-The compatibility you said is only for those versions, so that's
-incomplete and not acceptable.
-
-I think ether log or printk_log should be written based on the original
-symbol name, to write both is redundant and confusing in many cases.
-
->   	/*
->   	 * write the member offset of 1st kernel
-> @@ -1628,9 +1636,13 @@ write_vmcoreinfo_data(void)
->   	WRITE_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
->   	WRITE_MEMBER_OFFSET("vmap_area.va_start", vmap_area.va_start);
->   	WRITE_MEMBER_OFFSET("vmap_area.list", vmap_area.list);
-> -	WRITE_MEMBER_OFFSET("log.ts_nsec", log.ts_nsec);
-> -	WRITE_MEMBER_OFFSET("log.len", log.len);
-> -	WRITE_MEMBER_OFFSET("log.text_len", log.text_len);
-> +	WRITE_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
-> +	WRITE_MEMBER_OFFSET("printk_log.len", printk_log.len);
-> +	WRITE_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
-> +	/* Compatibility with pre-3.11-rc4 */
-> +	WRITE_MEMBER_OFFSET("log.ts_nsec", printk_log.ts_nsec);
-> +	WRITE_MEMBER_OFFSET("log.len", printk_log.len);
-> +	WRITE_MEMBER_OFFSET("log.text_len", printk_log.text_len);
-
-The same as above can be said.
-
-
-Thanks
-Atsushi Kumagai
-
->   	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
->   		WRITE_ARRAY_LENGTH("node_data", node_data);
-> @@ -1909,7 +1921,6 @@ read_vmcoreinfo(void)
->   	READ_STRUCTURE_SIZE("node_memblk_s", node_memblk_s);
->   	READ_STRUCTURE_SIZE("nodemask_t", nodemask_t);
->   	READ_STRUCTURE_SIZE("pageflags", pageflags);
-> -	READ_STRUCTURE_SIZE("log", log);
->
->   	READ_MEMBER_OFFSET("page.flags", page.flags);
->   	READ_MEMBER_OFFSET("page._count", page._count);
-> @@ -1940,9 +1951,18 @@ read_vmcoreinfo(void)
->   	READ_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
->   	READ_MEMBER_OFFSET("vmap_area.va_start", vmap_area.va_start);
->   	READ_MEMBER_OFFSET("vmap_area.list", vmap_area.list);
-> -	READ_MEMBER_OFFSET("log.ts_nsec", log.ts_nsec);
-> -	READ_MEMBER_OFFSET("log.len", log.len);
-> -	READ_MEMBER_OFFSET("log.text_len", log.text_len);
+>  drivers/iommu/intel-iommu.c |   55 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 files changed, 54 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index eec0d3e..efb98eb 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -3663,6 +3663,56 @@ static struct notifier_block device_nb = {
+>  	.notifier_call = device_notifier,
+>  };
+>  
+> +/* Reset PCI devices if its entry exists in DMAR table */
+> +static void __init iommu_reset_devices(struct intel_iommu *iommu, u16 segment)
+> +{
+> +	u64 addr;
+> +	struct root_entry *root;
+> +	struct context_entry *context;
+> +	int bus, devfn;
+> +	struct pci_dev *dev;
 > +
-> +	READ_STRUCTURE_SIZE("printk_log", printk_log);
-> +	if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
-> +		READ_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
-> +		READ_MEMBER_OFFSET("printk_log.len", printk_log.len);
-> +		READ_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
-> +	} else {
-> +		READ_STRUCTURE_SIZE("log", printk_log);
-> +		READ_MEMBER_OFFSET("log.ts_nsec", printk_log.ts_nsec);
-> +		READ_MEMBER_OFFSET("log.len", printk_log.len);
-> +		READ_MEMBER_OFFSET("log.text_len", printk_log.text_len);
+> +	addr = dmar_readq(iommu->reg + DMAR_RTADDR_REG);
+> +	if (!addr)
+> +		return;
+> +
+> +	/*
+> +	 *  In the case of kdump, ioremap is needed because root-entry table
+> +	 *  exists in first kernel's memory area which is not mapped in second
+> +	 *  kernel
+> +	 */
+> +	root = (struct root_entry *)ioremap(addr, PAGE_SIZE);
+> +	if (!root)
+> +		return;
+> +
+> +	for (bus = 0; bus < ROOT_ENTRY_NR; bus++) {
+> +		if (!root_present(&root[bus]))
+> +			continue;
+> +
+> +		context = (struct context_entry *)ioremap(
+> +			root[bus].val & VTD_PAGE_MASK, PAGE_SIZE);
+> +		if (!context)
+> +			continue;
+> +
+> +		for (devfn = 0; devfn < ROOT_ENTRY_NR; devfn++) {
+For context_entry table, the context_entry has the same size as
+root_entry currently, so it's also correct to use ROOT_ENTRY_NR. But for
+future extention and removing confusion, can we define a new MACRO on
+calculating the size of context_entry table, e.g CONTEXT_ENTRY_NR?
+
+> +			if (!context_present(&context[devfn]))
+> +				continue;
+> +
+> +			dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
+> +			if (!dev)
+> +				continue;
+> +
+> +			if (!pci_reset_bus(dev->bus)) /* go to next bus */
+
+Here, we have got the specific dev, why don't we just call
+pci_reset_function? If call pci_reset_bus here, will it repeat resetting
+devices on the same bus many times?
+
+> +				break;
+> +			else /* Try per-function reset */
+> +				pci_reset_function(dev);
+> +
+> +		}
+> +		iounmap(context);
 > +	}
->
->   	READ_ARRAY_LENGTH("node_data", node_data);
->   	READ_ARRAY_LENGTH("pgdat_list", pgdat_list);
-> @@ -3705,13 +3725,13 @@ dump_log_entry(char *logptr, int fp)
->   	ulonglong nanos;
->   	ulong rem;
->
-> -	text_len = USHORT(logptr + OFFSET(log.text_len));
-> -	ts_nsec = ULONGLONG(logptr + OFFSET(log.ts_nsec));
-> +	text_len = USHORT(logptr + OFFSET(printk_log.text_len));
-> +	ts_nsec = ULONGLONG(logptr + OFFSET(printk_log.ts_nsec));
->
->   	nanos = (ulonglong)ts_nsec / (ulonglong)1000000000;
->   	rem = (ulonglong)ts_nsec % (ulonglong)1000000000;
->
-> -	msg = logptr + SIZE(log);
-> +	msg = logptr + SIZE(printk_log);
->
->   	sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
->
-> @@ -3749,7 +3769,7 @@ log_from_idx(unsigned int idx, char *logbuf)
->   	 * the buffer.
->   	 */
->
-> -	msglen = USHORT(logptr + OFFSET(log.len));
-> +	msglen = USHORT(logptr + OFFSET(printk_log.len));
->   	if (!msglen)
->   		logptr = logbuf;
->
-> @@ -3770,9 +3790,9 @@ log_next(unsigned int idx, char *logbuf)
->   	 * return the one after that.
->   	 */
->
-> -	msglen = USHORT(logptr + OFFSET(log.len));
-> +	msglen = USHORT(logptr + OFFSET(printk_log.len));
->   	if (!msglen) {
-> -		msglen = USHORT(logbuf + OFFSET(log.len));
-> +		msglen = USHORT(logbuf + OFFSET(printk_log.len));
->   		return msglen;
->   	}
->
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index a5826e0..5b96c11 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1198,7 +1198,7 @@ struct size_table {
->   	long	cpumask_t;
->   	long	kexec_segment;
->   	long	elf64_hdr;
-> -	long	log;
-> +	long	printk_log;
->
->   	long	pageflags;
->   };
-> @@ -1337,11 +1337,11 @@ struct offset_table {
->   		long	p_memsz;
->   	} elf64_phdr;
->
-> -	struct log_s {
-> +	struct printk_log_s {
->   		long ts_nsec;
->   		long len;
->   		long text_len;
-> -	} log;
-> +	} printk_log;
->
->   };
->
->
+> +	iounmap(root);
+> +}
+> +
+>  int __init intel_iommu_init(void)
+>  {
+>  	int ret = 0;
+> @@ -3687,8 +3737,11 @@ int __init intel_iommu_init(void)
+>  			continue;
+>  
+>  		iommu = drhd->iommu;
+> -		if (iommu->gcmd & DMA_GCMD_TE)
+> +		if (iommu->gcmd & DMA_GCMD_TE) {
+> +			if (reset_devices)
+> +				iommu_reset_devices(iommu, drhd->segment);
+
+I remember the double reset issue vivek concerned in the old patch. Here
+the iommu reset is done at the very beginning of pci_iommu_init, it's
+after the bus subsystem init, it means here only iommu reset, am I
+right?
+
+If yes, I think this patch is clear and logic is simple.
+
+BTW, what's the status of Alex's PCI patchset which this patch depends
+on?
+
+Baoquan
+Thanks
+
+>  			iommu_disable_translation(iommu);
+> +		}
+>  	}
+>  
+>  	if (dmar_dev_scope_init() < 0) {
+> -- 
+> 1.7.1
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
