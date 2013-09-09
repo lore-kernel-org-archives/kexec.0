@@ -1,16 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VIpQ4-0001Em-Tc
- for kexec@lists.infradead.org; Mon, 09 Sep 2013 00:33:33 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20130908120947.GA360@x4>
-Date: Sun, 08 Sep 2013 17:32:45 -0700
-In-Reply-To: <20130908120947.GA360@x4> (Markus Trippelsdorf's message of "Sun, 
- 8 Sep 2013 14:09:47 +0200")
-Message-ID: <87bo42eswi.fsf@xmission.com>
+ id 1VIt6f-00041T-Be
+ for kexec@lists.infradead.org; Mon, 09 Sep 2013 04:29:47 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 1A7503EE0BD
+ for <kexec@lists.infradead.org>; Mon,  9 Sep 2013 13:29:14 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 094B045DEBA
+ for <kexec@lists.infradead.org>; Mon,  9 Sep 2013 13:29:14 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id E5BDF45DEB5
+ for <kexec@lists.infradead.org>; Mon,  9 Sep 2013 13:29:13 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id D89801DB803B
+ for <kexec@lists.infradead.org>; Mon,  9 Sep 2013 13:29:13 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 879041DB803E
+ for <kexec@lists.infradead.org>; Mon,  9 Sep 2013 13:29:13 +0900 (JST)
+Message-ID: <522D4E8A.8010507@jp.fujitsu.com>
+Date: Mon, 09 Sep 2013 13:28:58 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] drm/radeon kexec fixes
+Subject: Re: [PATCH] intel-iommu: Quiesce devices before disabling IOMMU
+References: <1377069354-5056-1-git-send-email-indou.takao@jp.fujitsu.com>
+ <20130908114752.GA24572@dhcp-16-252.nay.redhat.com>
+In-Reply-To: <20130908114752.GA24572@dhcp-16-252.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,57 +39,184 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Markus Trippelsdorf <markus@trippelsdorf.de>
-Cc: Alex Deucher <alexdeucher@gmail.com>, kexec@lists.infradead.org, dri-devel@lists.freedesktop.org
+To: bhe@redhat.com
+Cc: joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, dwmw2@infradead.org
 
-Markus Trippelsdorf <markus@trippelsdorf.de> writes:
+(2013/09/08 20:47), Baoquan He wrote:
+> Hi,
+> Patch is great and works on my HP-z420.
 
-> Here are a couple of patches that get kexec working with radeon devices.
-> I've tested this on my RS780. 
-> Comments or flames are welcome.
-> Thanks.
+Thank you for your test!
 
-A couple of high level comments.
+> There are several small concerns, please see inline comments.
+> 
+> On 08/21/13 at 04:15pm, Takao Indoh wrote:
+>> This patch quiesces devices before disabling IOMMU on boot to stop
+>> ongoing DMA. In intel_iommu_init(), check context entries and if there
+>> is entry whose present bit is set then reset corresponding device.
+>>
+>> When IOMMU is already enabled on boot, it is disabled and new DMAR table
+>> is created and then re-enabled in intel_iommu_init(). This causes DMAR
+>> faults if there are in-flight DMAs.
+>>
+>> This causes problem on kdump. Devices are working in first kernel, and
+>> after switching to second kernel and initializing IOMMU, many DMAR faults
+>> occur and it causes problems like driver error or PCI SERR, at last
+>> kdump fails. This patch fixes this problem.
+>>
+>> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+>>
+>>
+>> NOTE:
+>> To reset devices this patch uses bus reset interface introduced by
+>> following commits in PCI "next" branch.
+>>
+>> 64e8674fbe6bc848333a9b7e19f8cc019dde9eab
+>> 5c32b35b004f5ef70dcf62bbc42b8bed1e50b471
+>> 2e35afaefe64946caaecfacaf7fb568e46185e88
+>> 608c388122c72e1bf11ba8113434eb3d0c40c32d
+>> 77cb985ad4acbe66a92ead1bb826deffa47dd33f
+>> 090a3c5322e900f468b3205b76d0837003ad57b2
+>> a6cbaadea0af9b4aa6eee2882f2aa761ab91a4f8
+>> de0c548c33429cc78fd47a3c190c6d00b0e4e441
+>> 1b95ce8fc9c12fdb60047f2f9950f29e76e7c66d
+>> ---
+>>   drivers/iommu/intel-iommu.c |   55 ++++++++++++++++++++++++++++++++++++++++++-
+>>   1 files changed, 54 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index eec0d3e..efb98eb 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -3663,6 +3663,56 @@ static struct notifier_block device_nb = {
+>>   	.notifier_call = device_notifier,
+>>   };
+>>   
+>> +/* Reset PCI devices if its entry exists in DMAR table */
+>> +static void __init iommu_reset_devices(struct intel_iommu *iommu, u16 segment)
+>> +{
+>> +	u64 addr;
+>> +	struct root_entry *root;
+>> +	struct context_entry *context;
+>> +	int bus, devfn;
+>> +	struct pci_dev *dev;
+>> +
+>> +	addr = dmar_readq(iommu->reg + DMAR_RTADDR_REG);
+>> +	if (!addr)
+>> +		return;
+>> +
+>> +	/*
+>> +	 *  In the case of kdump, ioremap is needed because root-entry table
+>> +	 *  exists in first kernel's memory area which is not mapped in second
+>> +	 *  kernel
+>> +	 */
+>> +	root = (struct root_entry *)ioremap(addr, PAGE_SIZE);
+>> +	if (!root)
+>> +		return;
+>> +
+>> +	for (bus = 0; bus < ROOT_ENTRY_NR; bus++) {
+>> +		if (!root_present(&root[bus]))
+>> +			continue;
+>> +
+>> +		context = (struct context_entry *)ioremap(
+>> +			root[bus].val & VTD_PAGE_MASK, PAGE_SIZE);
+>> +		if (!context)
+>> +			continue;
+>> +
+>> +		for (devfn = 0; devfn < ROOT_ENTRY_NR; devfn++) {
+> For context_entry table, the context_entry has the same size as
+> root_entry currently, so it's also correct to use ROOT_ENTRY_NR. But for
+> future extention and removing confusion, can we define a new MACRO on
+> calculating the size of context_entry table, e.g CONTEXT_ENTRY_NR?
 
-This looks promising for the usual case.
+That makes sense, will do in next version.
 
-Removing the printk at the end of the kexec path seems a little dubious,
-what of other cpus, interrupt handlers, etc.  Basically estabilishing a
-new rule on when printk is allowed seems a little dubious at this point,
-even if it is a useful debugging trick.
 
-Having a clean shutdown of the radeon definitely seems worth doing,
-because the cases where we care abouty video are when a person is in
-front of the system.
+> 
+>> +			if (!context_present(&context[devfn]))
+>> +				continue;
+>> +
+>> +			dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
+>> +			if (!dev)
+>> +				continue;
+>> +
+>> +			if (!pci_reset_bus(dev->bus)) /* go to next bus */
+> 
+> Here, we have got the specific dev, why don't we just call
+> pci_reset_function? If call pci_reset_bus here, will it repeat resetting
+> devices on the same bus many times?
 
-I don't know if you want to remove the sanity checks.  They seem cheap
-and safe regardless.  Are they expensive or ineffective?  Moreover if
-they work a reasonable amount of the time that means that the kexec on
-panic case (where we don't shut anything down) can actually use the
-video, and that in general the driver will be more robust.  I don't
-expect anyone much cares as kexec on panic is mostly used to just write
-a core file to the network, or the local disk.  But if it is easy to
-keep that case working most of the time, why not.
+pci_reset_bus() can reset all devices on the same bus at the same time.
+I think it is better than calling pci_reset_function() many times for
+each device/function.
 
-Eric
+When pci_reset_bus() returns 0 (reset succeeded), we can immediately go
+out of devfn loop by "break" and go to next bus loop.
 
-> Markus Trippelsdorf (3):
->   kexec: get rid of late printk
->   drm/radeon: Implement radeon_pci_shutdown
->   drm/radeon: get rid of r100_restore_sanity hack
->
->  drivers/gpu/drm/radeon/r100.c        | 27 ---------------------------
->  drivers/gpu/drm/radeon/r300.c        |  2 --
->  drivers/gpu/drm/radeon/r420.c        |  2 --
->  drivers/gpu/drm/radeon/r520.c        |  2 --
->  drivers/gpu/drm/radeon/radeon_asic.h |  1 -
->  drivers/gpu/drm/radeon/radeon_drv.c  | 10 ++++++++++
->  drivers/gpu/drm/radeon/rs400.c       |  2 --
->  drivers/gpu/drm/radeon/rs600.c       |  2 --
->  drivers/gpu/drm/radeon/rs690.c       |  2 --
->  drivers/gpu/drm/radeon/rv515.c       |  2 --
->  kernel/kexec.c                       |  1 -
->  11 files changed, 10 insertions(+), 43 deletions(-)
+> 
+>> +				break;
+>> +			else /* Try per-function reset */
+>> +				pci_reset_function(dev);
+>> +
+>> +		}
+>> +		iounmap(context);
+>> +	}
+>> +	iounmap(root);
+>> +}
+>> +
+>>   int __init intel_iommu_init(void)
+>>   {
+>>   	int ret = 0;
+>> @@ -3687,8 +3737,11 @@ int __init intel_iommu_init(void)
+>>   			continue;
+>>   
+>>   		iommu = drhd->iommu;
+>> -		if (iommu->gcmd & DMA_GCMD_TE)
+>> +		if (iommu->gcmd & DMA_GCMD_TE) {
+>> +			if (reset_devices)
+>> +				iommu_reset_devices(iommu, drhd->segment);
+> 
+> I remember the double reset issue vivek concerned in the old patch. Here
+> the iommu reset is done at the very beginning of pci_iommu_init, it's
+> after the bus subsystem init, it means here only iommu reset, am I
+> right?
+
+Yes, exactly.
+
+> 
+> If yes, I think this patch is clear and logic is simple.
+> 
+> BTW, what's the status of Alex's PCI patchset which this patch depends
+> on?
+
+It is merged to Bjorn's tree, will be in v3.12.
+
+Thanks,
+Takao Indoh
+
+
+> 
+> Baoquan
+> Thanks
+> 
+>>   			iommu_disable_translation(iommu);
+>> +		}
+>>   	}
+>>   
+>>   	if (dmar_dev_scope_init() < 0) {
+>> -- 
+>> 1.7.1
+>>
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
+
+
 
 _______________________________________________
 kexec mailing list
