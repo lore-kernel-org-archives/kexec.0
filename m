@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from mail-ye0-x22f.google.com ([2607:f8b0:4002:c04::22f])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VJ1ag-00062L-EF
- for kexec@lists.infradead.org; Mon, 09 Sep 2013 13:33:19 +0000
-Date: Mon, 9 Sep 2013 09:32:48 -0400
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [PATCH 2/3] drm/radeon: Implement radeon_pci_shutdown
-Message-ID: <20130909133248.GH21435@phenom.dumpdata.com>
-References: <20130908120947.GA360@x4>
- <20130908121058.GC360@x4>
+ id 1VJAXx-0004F9-QG
+ for kexec@lists.infradead.org; Mon, 09 Sep 2013 23:07:06 +0000
+Received: by mail-ye0-f175.google.com with SMTP id q8so2259001yen.34
+ for <kexec@lists.infradead.org>; Mon, 09 Sep 2013 16:06:43 -0700 (PDT)
+Message-ID: <522E547F.5030001@codyps.com>
+Date: Mon, 09 Sep 2013 16:06:39 -0700
+From: Cody P Schafer <devel-lists@codyps.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130908121058.GC360@x4>
+Subject: given a makedumpfile processed coredump, generate a symbolic backtrace
+ containing the same info as a standard gdb backtrace
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,61 +19,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Markus Trippelsdorf <markus@trippelsdorf.de>
-Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, dri-devel@lists.freedesktop.org
+To: crash-utility@redhat.com, kexec@lists.infradead.org
 
-On Sun, Sep 08, 2013 at 02:10:58PM +0200, Markus Trippelsdorf wrote:
-> Currently radeon devices are not properbly shutdown during kexec. This
 
-properly
+Hi all,
 
-> cases a varity of issues, e.g. dpm initialization failures.
-> Fix this by implementing a radeon_pci_shutdown function, that unloads
-> the driver cleanly.
-> 
-> Signed-off-by: Markus Trippelsdorf <markus@trippelsdorf.de>
-> ---
->  drivers/gpu/drm/radeon/radeon_drv.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-> index cb4445f..d71edee 100644
-> --- a/drivers/gpu/drm/radeon/radeon_drv.c
-> +++ b/drivers/gpu/drm/radeon/radeon_drv.c
-> @@ -380,6 +380,15 @@ static const struct file_operations radeon_driver_kms_fops = {
->  #endif
->  };
->  
-> +
-> +static void
-> +radeon_pci_shutdown(struct pci_dev *pdev)
-> +{
-> +	struct drm_device *dev = pci_get_drvdata(pdev);
-> +
-> +	radeon_driver_unload_kms(dev);
-> +}
-> +
->  static struct drm_driver kms_driver = {
->  	.driver_features =
->  	    DRIVER_USE_AGP |
-> @@ -453,6 +462,7 @@ static struct pci_driver radeon_kms_pci_driver = {
->  	.remove = radeon_pci_remove,
->  	.suspend = radeon_pci_suspend,
->  	.resume = radeon_pci_resume,
-> +	.shutdown = radeon_pci_shutdown,
->  };
->  
->  static int __init radeon_init(void)
-> -- 
-> Markus
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+I've got a coredump file processed by makedumpfile (non-elf) and am 
+trying to get a backtrace with all the line numbers, argument values, 
+and argument types like a normal gdb backtrace with debug info (yes, I 
+have a vmlinux built with debuginfo).
+
+gdb refuses to load the core dump (no big supprise there). crash loads 
+it but it's builtin backtrace doesn't appear to use debug info, and as a 
+result doesn't give me arguments + types. Doing "gdb bt" complains about 
+not having a stack.
+
+Any advise? I see a few paths forward:
+
+  - somehow get crash's gdb to understand where the stack is
+  - hack gdb to load the non-elf coredump
+  - modify makedumpfile to allow it to convert the non-elf coredump back 
+to elf.
+
+Thanks.
 
 _______________________________________________
 kexec mailing list
