@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VJVk0-0002CR-RD
- for kexec@lists.infradead.org; Tue, 10 Sep 2013 21:45:05 +0000
+ id 1VJVk0-0002CN-R2
+ for kexec@lists.infradead.org; Tue, 10 Sep 2013 21:45:07 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 07/16] mm: Define a task flag MMF_VM_LOCKED for memlocked
- tasks and don't allow munlock
-Date: Tue, 10 Sep 2013 17:44:22 -0400
-Message-Id: <1378849471-10521-8-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 04/16] integrity: Allow digital signature verification with a
+ given keyring ptr
+Date: Tue, 10 Sep 2013 17:44:19 -0400
+Message-Id: <1378849471-10521-5-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,70 +26,94 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kexec@lists.infradead.org
 Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, vgoyal@redhat.com
 
-Define a flag to mark tasks which are running locked in memory. And use it
-to deny munlock/munlockall operation.
+Currently digital signature verification code assumes that it can be
+used only with 3 keyrings. IMA, EVM and MODULE keyring. Provide another
+variant where one can pass in a pointer to keyring (struct key *), and
+integrity code can try to find key in that keyring and verify signature.
 
-We want to lock down a task in memory so that it is not swapped out.
-Otherwise it is susceptible to attack on swap disk and then modified
-code/data will be swapped back.
+This will be useful at two places.
 
-I am not sure what exactly a memory locked task should mean. Should
-we lock down selected vmas of a task or all the vmas of a task.
-
-In this patch series, I am locking down everything by setting VM_LOCKED
-bit in mm->def_flags at exec() time. A task who is running memlocked,
-can not unlock any of the vmas. munlock() call will fail. So one need
-to be careful while signing a task and designating it to run as memlocked.
-
-If feedback is to lock down only selected vmas, then we can probably
-define a flag VM_LOCKED_PERM per vma which signifies that a particuar
-vma is permanently locked by kernel and can not be unlocked if user calls
-munlock[all]. This will allow to not memlock whole of the address space
-of process.
+- elf binary loader can use system keyring and call into integrity
+  subsystem for signature verification.
+- In later patches I am extending keyctl() to allow signature of
+  a user buffer against specified keyring. That logic can make use
+  of this code too.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- include/linux/sched.h | 2 ++
- mm/mlock.c            | 6 ++++++
- 2 files changed, 8 insertions(+)
+ security/integrity/digsig.c    | 26 ++++++++++++++++----------
+ security/integrity/integrity.h |  9 +++++++++
+ 2 files changed, 25 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 50d04b9..0f7e8c0 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -367,6 +367,8 @@ extern int get_dumpable(struct mm_struct *mm);
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index 160fec7..f1259bd 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -44,6 +44,20 @@ int integrity_get_digsig_size(char *sig)
+ 	return -EBADMSG;
+ }
  
- #define MMF_HAS_UPROBES		19	/* has uprobes */
- #define MMF_RECALC_UPROBES	20	/* MMF_HAS_UPROBES can be wrong */
-+#define MMF_VM_LOCKED		21	/* Task needs to run with some VMAs
-+					   locked permanently */
- 
- #define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK)
- 
-diff --git a/mm/mlock.c b/mm/mlock.c
-index 79b7cf7..50ab11a 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -478,6 +478,9 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size_t, len)
- {
- 	int ret;
- 
-+	if (test_bit(MMF_VM_LOCKED, &current->mm->flags))
-+		return -EINVAL;
++int integrity_digsig_verify_keyring(struct key *keyring, const char *sig,
++			int siglen, const char *digest, int digestlen)
++{
++	switch (sig[0]) {
++	case 1:
++		return digsig_verify(keyring, sig, siglen,
++				     digest, digestlen);
++	case 2:
++		return asymmetric_verify(keyring, sig, siglen,
++					 digest, digestlen);
++	}
++	return -EOPNOTSUPP;
++}
 +
- 	down_write(&current->mm->mmap_sem);
- 	len = PAGE_ALIGN(len + (start & ~PAGE_MASK));
- 	start &= PAGE_MASK;
-@@ -546,6 +549,9 @@ SYSCALL_DEFINE0(munlockall)
+ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
+ 					const char *digest, int digestlen)
  {
- 	int ret;
+@@ -61,14 +75,6 @@ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
+ 		}
+ 	}
  
-+	if (test_bit(MMF_VM_LOCKED, &current->mm->flags))
-+		return -EINVAL;
+-	switch (sig[0]) {
+-	case 1:
+-		return digsig_verify(keyring[id], sig, siglen,
+-				     digest, digestlen);
+-	case 2:
+-		return asymmetric_verify(keyring[id], sig, siglen,
+-					 digest, digestlen);
+-	}
+-
+-	return -EOPNOTSUPP;
++	return integrity_digsig_verify_keyring(keyring[id], sig, siglen,
++						digest, digestlen);
+ }
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index 4246417..130eb3b 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -101,6 +101,8 @@ struct integrity_iint_cache *integrity_iint_find(struct inode *inode);
+ 
+ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
+ 					const char *digest, int digestlen);
++int integrity_digsig_verify_keyring(struct key *keyring, const char *sig,
++			int siglen, const char *digest, int digestlen);
+ extern int integrity_get_digsig_size(char *sig);
+ 
+ #else
+@@ -112,6 +114,13 @@ static inline int integrity_digsig_verify(const unsigned int id,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static inline int integrity_digsig_verify_keyring(struct key *keyring,
++			const char *sig, int siglen, const char *digest,
++			int digestlen)
++{
++	return -EOPNOTSUPP;
++}
 +
- 	down_write(&current->mm->mmap_sem);
- 	ret = do_mlockall(0);
- 	up_write(&current->mm->mmap_sem);
+ static inline int integrity_get_digsig_size(char *sig) { return -EOPNOTSUPP; }
+ 
+ #endif /* CONFIG_INTEGRITY_SIGNATURE */
 -- 
 1.8.3.1
 
