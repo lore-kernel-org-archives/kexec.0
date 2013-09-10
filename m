@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VJVk1-0002CP-53
+ id 1VJVk0-0002CQ-Qz
  for kexec@lists.infradead.org; Tue, 10 Sep 2013 21:45:02 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 03/16] ima: Allow adding more memory locking metadata after
- digital signature v2
-Date: Tue, 10 Sep 2013 17:44:18 -0400
-Message-Id: <1378849471-10521-4-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 05/16] integrity: Export a function to retrieve hash algo used
+ in digital signature
+Date: Tue, 10 Sep 2013 17:44:20 -0400
+Message-Id: <1378849471-10521-6-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,113 +26,85 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kexec@lists.infradead.org
 Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, vgoyal@redhat.com
 
-Now user space tools should be able to append more metadata after digital
-signature in security.ima attribute. I intend to add an structure which
-tells whether to memory lock a file or not during execution.
-
-This will allow only selected files to be memory locked while signing
-all user space. This will make sure that current IMA installations are
-not broken as we don't want to lock down every executable in memory.
-
-I intend to add following structure after digital signature.
-
-struct memlock_hdr {
-	uint8_t magic_str[8];   /* magic to detect memlock hdr presence */
-	uint8_t version;        /* memlock info hdr version */
-	uint8_t memlock_file;   /* If set, run executable locked in memory */
-} __attribute__ ((packed));
-
-Will use magic string "MEMLOCK" to identify memlock_hdr. This will allow
-to append more metadata in future.
-
-version will allow adding more fields to to this structure.
-
-This patch exports a function which tells whether IMA signature tells
-to memlock a file or not. This can be used by executable loader to
-lock a file.
-
-Unfortunately, adding more metadata is not forward compatible. That
-is if we sign a file with new ima/evm tools with memlock_hdr attached,
-old kernel version will not recognize that and will consider whole thing
-as digital signature and signature verification will fail. So one will
-need to operate with new kernel if signing happens with new tools and
-some file is signed for memory locking. Not sure how can I add more metadata
-in fully forward compatible manner.
+A function to retrieve hash algo used in digital signature.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- include/linux/ima.h              |  6 ++++++
- security/integrity/ima/ima_api.c | 36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
+ security/integrity/digsig.c    | 26 ++++++++++++++++++++++++++
+ security/integrity/integrity.h |  7 +++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 1b7f268..3c40b5e 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -19,6 +19,7 @@ extern int ima_file_check(struct file *file, int mask);
- extern void ima_file_free(struct file *file);
- extern int ima_file_mmap(struct file *file, unsigned long prot);
- extern int ima_module_check(struct file *file);
-+extern bool ima_memlock_file(char *sig, unsigned int siglen);
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index f1259bd..153cff4 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -16,6 +16,8 @@
+ #include <linux/rbtree.h>
+ #include <linux/key-type.h>
+ #include <linux/digsig.h>
++#include <crypto/hash.h>
++#include <crypto/public_key.h>
  
+ #include "integrity.h"
+ 
+@@ -27,6 +29,30 @@ static const char *keyring_name[INTEGRITY_KEYRING_MAX] = {
+ 	"_ima",
+ };
+ 
++int integrity_digsig_get_hash_algo(char *sig)
++{
++	uint8_t hash_algo;
++
++	if (sig[0] == 1) {
++		hash_algo = ((struct signature_hdr *)sig)->hash;
++		switch (hash_algo) {
++		case 0:
++			return PKEY_HASH_SHA1;
++		case 1:
++			return PKEY_HASH_SHA256;
++		default:
++			return -ENOPKG;
++		}
++	} else if (sig[0] == 2 ) {
++		hash_algo = ((struct signature_v2_hdr *)sig)->hash_algo;
++		if (hash_algo >= PKEY_HASH__LAST)
++			return -ENOPKG;
++		return hash_algo;
++	}
++
++	return -EBADMSG;
++}
++
+ /* Get size of digital signature */
+ int integrity_get_digsig_size(char *sig)
+ {
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index 130eb3b..284bb8d 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -15,6 +15,7 @@
+ #include <linux/integrity.h>
+ #include <crypto/sha.h>
+ #include <linux/key.h>
++#include <crypto/public_key.h>
+ 
+ /* iint action cache flags */
+ #define IMA_MEASURE		0x00000001
+@@ -105,8 +106,14 @@ int integrity_digsig_verify_keyring(struct key *keyring, const char *sig,
+ 			int siglen, const char *digest, int digestlen);
+ extern int integrity_get_digsig_size(char *sig);
+ 
++extern int integrity_digsig_get_hash_algo(char *sig);
  #else
- static inline int ima_bprm_check(struct linux_binprm *bprm)
-@@ -46,6 +47,11 @@ static inline int ima_module_check(struct file *file)
- 	return 0;
- }
  
-+static inline bool ima_memlock_file(char *sig, unsigned int siglen)
++static inline int integrity_digsig_get_hash_algo(char *sig)
 +{
-+	return false;
++	return -EOPNOTSUPP;
 +}
 +
- #endif /* CONFIG_IMA */
- 
- #ifdef CONFIG_IMA_APPRAISE
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index 1c03e8f1..0f30cf1 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -254,3 +254,39 @@ const char *ima_d_path(struct path *path, char **pathbuf)
- 	}
- 	return pathname;
- }
-+
-+/* Given the signature check whether file should be memlocked or not */
-+bool ima_memlock_file(char *sig, unsigned int siglen)
-+{
-+	struct evm_ima_xattr_data *ima_xattr = (struct evm_ima_xattr_data *)sig;
-+	char *sptr;
-+	unsigned int dsiglen;
-+	uint8_t version;
-+
-+	dsiglen = integrity_get_digsig_size((char *)ima_xattr->digest);
-+
-+	if (siglen <= dsiglen)
-+		return false;
-+
-+	/*
-+	 * Make sure atleast 9 more bytes are there to scan for magic string
-+	 * and version info
-+	 */
-+	if (siglen <= dsiglen + 9)
-+		return false;
-+
-+	sptr = (char *)ima_xattr->digest + dsiglen;
-+
-+	if (strncmp(sptr, "MEMLOCK", 7))
-+		return false;
-+
-+	sptr += 8;
-+	version = sptr[0];
-+	if (version != 1)
-+		return false;
-+	sptr++;
-+	if (sptr[0] != 1)
-+		return false;
-+
-+	return true;
-+}
+ static inline int integrity_digsig_verify(const unsigned int id,
+ 					  const char *sig, int siglen,
+ 					  const char *digest, int digestlen)
 -- 
 1.8.3.1
 
