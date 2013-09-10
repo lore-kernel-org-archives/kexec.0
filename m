@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VJVk1-0002CT-50
- for kexec@lists.infradead.org; Tue, 10 Sep 2013 21:45:04 +0000
+ id 1VJVk0-0002CR-RD
+ for kexec@lists.infradead.org; Tue, 10 Sep 2013 21:45:05 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 09/16] ima: define functions to appraise memory buffer contents
-Date: Tue, 10 Sep 2013 17:44:24 -0400
-Message-Id: <1378849471-10521-10-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 07/16] mm: Define a task flag MMF_VM_LOCKED for memlocked
+ tasks and don't allow munlock
+Date: Tue, 10 Sep 2013 17:44:22 -0400
+Message-Id: <1378849471-10521-8-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,199 +26,70 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kexec@lists.infradead.org
 Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, vgoyal@redhat.com
 
-I need to provide user space with facility that it can call into kernel
-for signature verification of a file. Trying to rely on file based appraisal
-has the downside that somebody might write to file after appraisal and it
-is racy.
+Define a flag to mark tasks which are running locked in memory. And use it
+to deny munlock/munlockall operation.
 
-Alternative is that one can copy file contents in memory buffer and pass
-buffer and signature to kernel and ask whether signatures are valid.
+We want to lock down a task in memory so that it is not swapped out.
+Otherwise it is susceptible to attack on swap disk and then modified
+code/data will be swapped back.
 
-Hence introduce an IMA function to be able verify signature of meory
-buffer. This will in turn be called the keyctl() which will provide
-this facility to user space.
+I am not sure what exactly a memory locked task should mean. Should
+we lock down selected vmas of a task or all the vmas of a task.
 
-This can be used by kexec to verify signature of bzImage being loaded.
+In this patch series, I am locking down everything by setting VM_LOCKED
+bit in mm->def_flags at exec() time. A task who is running memlocked,
+can not unlock any of the vmas. munlock() call will fail. So one need
+to be careful while signing a task and designating it to run as memlocked.
+
+If feedback is to lock down only selected vmas, then we can probably
+define a flag VM_LOCKED_PERM per vma which signifies that a particuar
+vma is permanently locked by kernel and can not be unlocked if user calls
+munlock[all]. This will allow to not memlock whole of the address space
+of process.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- include/linux/integrity.h   |  19 +++++++-
- security/integrity/digsig.c | 115 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 133 insertions(+), 1 deletion(-)
+ include/linux/sched.h | 2 ++
+ mm/mlock.c            | 6 ++++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/include/linux/integrity.h b/include/linux/integrity.h
-index b26bd7d..36c9a6d 100644
---- a/include/linux/integrity.h
-+++ b/include/linux/integrity.h
-@@ -11,6 +11,7 @@
- #define _LINUX_INTEGRITY_H
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 50d04b9..0f7e8c0 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -367,6 +367,8 @@ extern int get_dumpable(struct mm_struct *mm);
  
- #include <linux/fs.h>
-+#include <linux/key.h>
+ #define MMF_HAS_UPROBES		19	/* has uprobes */
+ #define MMF_RECALC_UPROBES	20	/* MMF_HAS_UPROBES can be wrong */
++#define MMF_VM_LOCKED		21	/* Task needs to run with some VMAs
++					   locked permanently */
  
- enum integrity_status {
- 	INTEGRITY_PASS = 0,
-@@ -30,7 +31,6 @@ enum evm_ima_xattr_type {
- #ifdef CONFIG_INTEGRITY
- extern struct integrity_iint_cache *integrity_inode_get(struct inode *inode);
- extern void integrity_inode_free(struct inode *inode);
--
- #else
- static inline struct integrity_iint_cache *
- 				integrity_inode_get(struct inode *inode)
-@@ -42,5 +42,22 @@ static inline void integrity_inode_free(struct inode *inode)
+ #define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK)
+ 
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 79b7cf7..50ab11a 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -478,6 +478,9 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size_t, len)
  {
- 	return;
- }
-+
- #endif /* CONFIG_INTEGRITY */
-+
-+#ifdef CONFIG_INTEGRITY_SIGNATURE
-+extern int integrity_verify_user_buffer_digsig(struct key *keyring,
-+				const char __user *data,
-+				unsigned long data_len,
-+				char *sig, unsigned int siglen);
-+#else
-+static inline int integrity_verify_user_buffer_digsig(struct key *keyring,
-+				const char __user *data,
-+				unsigned long data_len,
-+				char *sig, unsigned int siglen)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif /* CONFIG_INTEGRITY_SIGNATURE */
-+
- #endif /* _LINUX_INTEGRITY_H */
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index 153cff4..166a7dd 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -16,6 +16,7 @@
- #include <linux/rbtree.h>
- #include <linux/key-type.h>
- #include <linux/digsig.h>
-+#include <linux/sched.h>
- #include <crypto/hash.h>
- #include <crypto/public_key.h>
+ 	int ret;
  
-@@ -104,3 +105,117 @@ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
- 	return integrity_digsig_verify_keyring(keyring[id], sig, siglen,
- 						digest, digestlen);
- }
++	if (test_bit(MMF_VM_LOCKED, &current->mm->flags))
++		return -EINVAL;
 +
-+static int integrity_calc_user_buffer_hash(enum pkey_hash_algo hash_algo,
-+					const char __user *data,
-+					unsigned long data_len, char **_digest,
-+					unsigned int *digest_len)
-+{
-+	char *buffer, *digest;
-+	unsigned long len;
-+	struct crypto_shash *tfm;
-+	size_t desc_size, digest_size;
-+	struct shash_desc *desc;
-+	int ret;
+ 	down_write(&current->mm->mmap_sem);
+ 	len = PAGE_ALIGN(len + (start & ~PAGE_MASK));
+ 	start &= PAGE_MASK;
+@@ -546,6 +549,9 @@ SYSCALL_DEFINE0(munlockall)
+ {
+ 	int ret;
+ 
++	if (test_bit(MMF_VM_LOCKED, &current->mm->flags))
++		return -EINVAL;
 +
-+	buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	/* TODO: allow different kind of hash */
-+	tfm = crypto_alloc_shash(pkey_hash_algo_name[hash_algo], 0, 0);
-+	if (IS_ERR(tfm)) {
-+		ret = PTR_ERR(tfm);
-+		goto out;
-+	}
-+	desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
-+	desc = kzalloc(desc_size, GFP_KERNEL);
-+	if (!desc) {
-+		ret = -ENOMEM;
-+		goto out_free_tfm;
-+	}
-+
-+	desc->tfm   = tfm;
-+	desc->flags = 0;
-+
-+	ret = crypto_shash_init(desc);
-+	if (ret < 0)
-+		goto out_free_desc;
-+
-+	digest_size = crypto_shash_digestsize(tfm);
-+	digest = kzalloc(digest_size, GFP_KERNEL);
-+	if (!digest) {
-+		ret = -ENOMEM;
-+		goto out_free_desc;
-+	}
-+
-+	do {
-+		len = min(data_len, PAGE_SIZE - ((size_t)data & ~PAGE_MASK));
-+		ret = -EFAULT;
-+		if (copy_from_user(buffer, data, len) != 0)
-+			goto out_free_digest;
-+
-+		ret = crypto_shash_update(desc, buffer, len);
-+                if (ret)
-+                        break;
-+
-+		data_len -= len;
-+		data += len;
-+
-+		if (fatal_signal_pending(current)) {
-+			ret = -EINTR;
-+			break;
-+		}
-+	} while (data_len > 0);
-+
-+	if (!ret) {
-+		ret = crypto_shash_final(desc, digest);
-+		*_digest = digest;
-+		*digest_len = digest_size;
-+		digest = NULL;
-+	}
-+
-+out_free_digest:
-+	if (digest)
-+		kfree(digest);
-+out_free_desc:
-+	kfree(desc);
-+out_free_tfm:
-+	kfree(tfm);
-+out:
-+	kfree(buffer);
-+	return ret;
-+}
-+
-+/*
-+ * Appraise a user buffer with a given digital signature
-+ * keyring: keyring to use for appraisal
-+ * sig: signature
-+ * siglen: length of signature
-+ *
-+ * Returns 0 on successful appraisal, error otherwise.
-+ */
-+int integrity_verify_user_buffer_digsig(struct key *keyring,
-+				const char __user *data,
-+				unsigned long data_len,
-+				char *sig, unsigned int siglen)
-+{
-+	int ret = 0;
-+	enum pkey_hash_algo hash_algo;
-+	char *digest = NULL;
-+	unsigned int digest_len = 0;
-+
-+	hash_algo = integrity_digsig_get_hash_algo(sig);
-+	if (hash_algo < 0)
-+		return hash_algo;
-+
-+	ret = integrity_calc_user_buffer_hash(hash_algo, data, data_len,
-+						&digest, &digest_len);
-+	if (ret)
-+		return ret;
-+
-+	ret = integrity_digsig_verify_keyring(keyring, sig, siglen, digest,
-+					digest_len);
-+	kfree(digest);
-+	return ret;
-+}
+ 	down_write(&current->mm->mmap_sem);
+ 	ret = do_mlockall(0);
+ 	up_write(&current->mm->mmap_sem);
 -- 
 1.8.3.1
 
