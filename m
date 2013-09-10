@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VJVk0-0002CS-Qw
- for kexec@lists.infradead.org; Tue, 10 Sep 2013 21:45:11 +0000
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 08/16] binfmt_elf: Elf executable signature verification
-Date: Tue, 10 Sep 2013 17:44:23 -0400
-Message-Id: <1378849471-10521-9-git-send-email-vgoyal@redhat.com>
-In-Reply-To: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
+Received: from out3-smtp.messagingengine.com ([66.111.4.27])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VJWc1-000482-DM
+ for kexec@lists.infradead.org; Tue, 10 Sep 2013 22:40:46 +0000
+Date: Tue, 10 Sep 2013 15:40:09 -0700
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH 14/16] kexec: Export sysfs attributes for secureboot and
+ secure modules to user space
+Message-ID: <20130910224009.GA23727@kroah.com>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
+ <1378849471-10521-15-git-send-email-vgoyal@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1378849471-10521-15-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,186 +21,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kexec@lists.infradead.org
-Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com
 
-Do elf executable signature verification (if one is present). If signature
-is present, it should be valid. Validly signed executables are locked in
-memory and a flag cred->proc_signed gets set to signify this process
-executable contents are signed.
+On Tue, Sep 10, 2013 at 05:44:29PM -0400, Vivek Goyal wrote:
+> User space kexec-tools need to know whether to verify signature of kernel
+> image being loaded. This patch exports two knobs to user space. One is
+> for knowing if  secureboot is enabled, this knob will be set to 1 if secure
+> boot is enabled. Other knob is secure_module_enabled. This knob will be set
+> to 1 if secure modules is one.
+> 
+> kexec-tools will verify signature of kernel image if either secureboot is
+> enabled or secure modules is enabled. The only difference between two is
+> that kexec-tools will set secureboot on in bootparams being passed to
+> second kernel if secureboot is on in first kernel.
+> 
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  kernel/ksysfs.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 
-If file is unsigned, it can execute but it does not have the cred->proc_signed
-set.
+Minor nit, if you add/modify/delete sysfs files, you also have to update
+Documentation/ABI/ with the information about those files.
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- fs/Kconfig.binfmt    | 10 +++++++++
- fs/binfmt_elf.c      | 63 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/cred.h |  2 ++
- kernel/cred.c        |  2 ++
- 4 files changed, 76 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index 370b24c..25ae6d3 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -23,6 +23,16 @@ config BINFMT_ELF
- 	  ld.so (check the file <file:Documentation/Changes> for location and
- 	  latest version).
- 
-+config BINFMT_ELF_SIG
-+	bool "ELF binary signature verification"
-+	depends on BINFMT_ELF
-+	depends on INTEGRITY_ASYMMETRIC_KEYS
-+	depends on IMA_APPRAISE
-+	depends on SYSTEM_TRUSTED_KEYRING
-+	default n
-+	---help---
-+	  Check ELF binary signature verfication.
-+
- config COMPAT_BINFMT_ELF
- 	bool
- 	depends on COMPAT && BINFMT_ELF
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 100edcc..22a8272 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -34,6 +34,8 @@
- #include <linux/utsname.h>
- #include <linux/coredump.h>
- #include <linux/sched.h>
-+#include <linux/ima.h>
-+#include <keys/system_keyring.h>
- #include <asm/uaccess.h>
- #include <asm/param.h>
- #include <asm/page.h>
-@@ -584,6 +586,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	int executable_stack = EXSTACK_DEFAULT;
- 	unsigned long def_flags = 0;
- 	struct pt_regs *regs = current_pt_regs();
-+	char *signature = NULL;
-+#ifdef CONFIG_BINFMT_ELF_SIG
-+	unsigned int siglen = 0;
-+	bool mlock_mappings = false;
-+#endif
- 	struct {
- 		struct elfhdr elf_ex;
- 		struct elfhdr interp_elf_ex;
-@@ -725,6 +732,43 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	/* OK, This is the point of no return */
- 	current->mm->def_flags = def_flags;
- 
-+#ifdef CONFIG_BINFMT_ELF_SIG
-+	/*
-+	 * If executable is digitally signed and ima memlock info present,
-+	 * Lock down in memory
-+	 */
-+	retval = ima_file_signature_alloc(bprm->file, &signature);
-+
-+	/*
-+	 * If there is an error getting signature, bail out. Having
-+	 * no signature is fine though.
-+	 */
-+	if (retval < 0 && retval != -ENODATA && retval != -EOPNOTSUPP)
-+		goto out_free_dentry;
-+
-+	if (signature != NULL) {
-+		siglen = retval;
-+		retval = ima_signature_type(signature);
-+		if (retval == EVM_IMA_XATTR_DIGSIG &&
-+		    ima_memlock_file(signature, siglen)) {
-+			/*
-+			 * Verify signature before locking down file. We don't
-+			 * want to memlock executables with fake signatures
-+			 */
-+			retval = ima_appraise_file_digsig(
-+					system_trusted_keyring,
-+					bprm->file, signature, siglen);
-+			if (retval) {
-+				send_sig(SIGKILL, current, 0);
-+				goto out_free_dentry;
-+			}
-+
-+			mlock_mappings = true;
-+			current->mm->def_flags |= VM_LOCKED;
-+			set_bit(MMF_VM_LOCKED, &current->mm->flags);
-+		}
-+	}
-+#endif
- 	/* Do this immediately, since STACK_TOP as used in setup_arg_pages
- 	   may depend on the personality.  */
- 	SET_PERSONALITY(loc->elf_ex);
-@@ -895,6 +939,23 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		goto out_free_dentry;
- 	}
- 
-+#ifdef CONFIG_BINFMT_ELF_SIG
-+	if (mlock_mappings) {
-+		/*
-+		 * File locked down in memory. Now it is safe against any
-+		 * modifications on disk by raw disk writes. Verify signature.
-+		 */
-+		retval = ima_appraise_file_digsig(system_trusted_keyring,
-+					bprm->file, signature, siglen);
-+		if (retval) {
-+			send_sig(SIGKILL, current, 0);
-+			goto out_free_dentry;
-+		}
-+		/* Signature verification successful */
-+		bprm->cred->proc_signed = true;
-+	}
-+#endif
-+
- 	if (elf_interpreter) {
- 		unsigned long interp_map_addr = 0;
- 
-@@ -988,11 +1049,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	 */
- 	ELF_PLAT_INIT(regs, reloc_func_desc);
- #endif
--
- 	start_thread(regs, elf_entry, bprm->p);
- 	retval = 0;
- out:
- 	kfree(loc);
-+	kfree(signature);
- out_ret:
- 	return retval;
- 
-diff --git a/include/linux/cred.h b/include/linux/cred.h
-index 04421e8..1f5f418 100644
---- a/include/linux/cred.h
-+++ b/include/linux/cred.h
-@@ -136,6 +136,8 @@ struct cred {
- 	struct user_namespace *user_ns; /* user_ns the caps and keyrings are relative to. */
- 	struct group_info *group_info;	/* supplementary groups for euid/fsgid */
- 	struct rcu_head	rcu;		/* RCU deletion hook */
-+	bool	proc_signed;		/* Executable signature have been
-+					 * verified post load */
- };
- 
- extern void __put_cred(struct cred *);
-diff --git a/kernel/cred.c b/kernel/cred.c
-index e0573a4..589f1fa 100644
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -299,6 +299,8 @@ struct cred *prepare_exec_creds(void)
- 	new->process_keyring = NULL;
- #endif
- 
-+	/* proc_signed status will be evaluated again from executable file */
-+	new->proc_signed = false;
- 	return new;
- }
- 
--- 
-1.8.3.1
-
+greg k-h
 
 _______________________________________________
 kexec mailing list
