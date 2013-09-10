@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mail-oa0-x22b.google.com ([2607:f8b0:4003:c02::22b])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VJWoR-0004Vl-69
- for kexec@lists.infradead.org; Tue, 10 Sep 2013 22:53:35 +0000
-Message-ID: <522FA2A8.8080703@zytor.com>
-Date: Tue, 10 Sep 2013 15:52:24 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1VJWt0-0004c2-S3
+ for kexec@lists.infradead.org; Tue, 10 Sep 2013 22:58:19 +0000
+Received: by mail-oa0-f43.google.com with SMTP id i10so8566749oag.2
+ for <kexec@lists.infradead.org>; Tue, 10 Sep 2013 15:57:55 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH 15/16] bootparam: Pass acpi_rsdp pointer in bootparam
+In-Reply-To: <1378849471-10521-15-git-send-email-vgoyal@redhat.com>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
- <1378849471-10521-16-git-send-email-vgoyal@redhat.com>
-In-Reply-To: <1378849471-10521-16-git-send-email-vgoyal@redhat.com>
+ <1378849471-10521-15-git-send-email-vgoyal@redhat.com>
+Date: Tue, 10 Sep 2013 18:57:55 -0400
+Message-ID: <CA+5PVA7seT-Au6Qsr-svbG38-ohCUrw2=W6CoO5XWqy2Avjg6A@mail.gmail.com>
+Subject: Re: [PATCH 14/16] kexec: Export sysfs attributes for secureboot and
+ secure modules to user space
+From: Josh Boyer <jwboyer@fedoraproject.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +27,73 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, d.kasatkin@samsung.com, kexec <kexec@lists.infradead.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-On 09/10/2013 02:44 PM, Vivek Goyal wrote:
-> Currently kexec does not enables EFI and its tables in second kernel. Hence
-> acpi rsdp root pointer is passed on command line. But secureboot does not trust
-> acpi_rsdp on command line as kernel can execute some of the code as retrieved
-> by following acpi_rsdp and root can modify command line. So in secureboot
-> mode we ignore acpi_rsdp on command line.
-> 
-> Start passing it in bootparams for the time being. kexec-tools will prepare
-> the bootparams and put acpi_rsdp pointer there.
-> 
-> Peter Jones suggested that scan all ACPI memory for acpi_rsdp if EFI is
-> not enabled. This probably is a better fix and most likely this patch will
-> change and adopt that approach down the line.
-> 
-> In fact if we figure out how to make UEFI run time calls in second kernel,
-> we will not need acpi_rsdp at all.
-> 
+On Tue, Sep 10, 2013 at 5:44 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> User space kexec-tools need to know whether to verify signature of kernel
+> image being loaded. This patch exports two knobs to user space. One is
+> for knowing if  secureboot is enabled, this knob will be set to 1 if secure
+> boot is enabled. Other knob is secure_module_enabled. This knob will be set
+> to 1 if secure modules is one.
+>
+> kexec-tools will verify signature of kernel image if either secureboot is
+> enabled or secure modules is enabled. The only difference between two is
+> that kexec-tools will set secureboot on in bootparams being passed to
+> second kernel if secureboot is on in first kernel.
+>
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  kernel/ksysfs.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+> index 6ada93c..7262245 100644
+> --- a/kernel/ksysfs.c
+> +++ b/kernel/ksysfs.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/stat.h>
+>  #include <linux/sched.h>
+>  #include <linux/capability.h>
+> +#include <linux/efi.h>
+> +#include <linux/module.h>
+>
+>  #define KERNEL_ATTR_RO(_name) \
+>  static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+> @@ -101,6 +103,25 @@ static ssize_t kexec_crash_loaded_show(struct kobject *kobj,
+>  }
+>  KERNEL_ATTR_RO(kexec_crash_loaded);
+>
+> +static ssize_t secureboot_enabled_show(struct kobject *kobj,
+> +                                      struct kobj_attribute *attr, char *buf)
+> +{
+> +       /* TODO: Change it once secureboot patches are in */
+> +       return sprintf(buf, "%d\n", 1);
+> +}
+> +KERNEL_ATTR_RO(secureboot_enabled);
 
-Borislav Petkov has been working on a fixed mapping of UEFI memory,
-which should allow UEFI runtime calls across kexec.
+You're defaulting this to enabled, even on machines where SB isn't
+possible.  I realize there are TODOs there, but you might want to
+default it to off if you really intend this on going upstream before
+any of the other secure_* infrastructure does.
 
-	-hpa
+> +
+> +static ssize_t secure_modules_enabled_show(struct kobject *kobj,
+> +                                      struct kobj_attribute *attr, char *buf)
+> +{
+> +       /*
+> +        * TODO: Change it once secure_modules() or secure_level() patches
+> +        * are in
+> +        */
+> +       return sprintf(buf, "%d\n", 1);
+> +}
+> +KERNEL_ATTR_RO(secure_modules_enabled);
+> +
 
+Similarly, this should either default to off, or just return the value
+of sig_enforce.  You can replace the open coded sig_enforce with
+secure_modules if/when it goes upstream.
 
+josh
 
 _______________________________________________
 kexec mailing list
