@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-vb0-x22d.google.com ([2607:f8b0:400c:c02::22d])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VJkfo-00061R-6u
- for kexec@lists.infradead.org; Wed, 11 Sep 2013 13:41:37 +0000
-Received: by mail-vb0-f45.google.com with SMTP id e15so6025339vbg.18
- for <kexec@lists.infradead.org>; Wed, 11 Sep 2013 06:41:14 -0700 (PDT)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VJkia-00067H-OK
+ for kexec@lists.infradead.org; Wed, 11 Sep 2013 13:44:31 +0000
+Date: Wed, 11 Sep 2013 09:44:01 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 14/16] kexec: Export sysfs attributes for secureboot and
+ secure modules to user space
+Message-ID: <20130911134401.GA15364@redhat.com>
+References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
+ <1378849471-10521-15-git-send-email-vgoyal@redhat.com>
+ <20130910224009.GA23727@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20130911085306.GA359@x4>
-References: <20130908120947.GA360@x4> <87bo42eswi.fsf@xmission.com>
- <20130909092140.GA359@x4>
- <CADnq5_Oyd0hyr+WFYuA=a9Pa3i2e_ZY+Oc7LPawn8gSz3KPHUA@mail.gmail.com>
- <87ppsg8rbk.fsf@xmission.com>
- <CADnq5_MH3+VeLZzpRmHtU-BZzL680e_0577wk0honT002+3GZQ@mail.gmail.com>
- <20130911085306.GA359@x4>
-Date: Wed, 11 Sep 2013 09:40:15 -0400
-Message-ID: <CADnq5_ORENk890kPDxhjYyu_URdJSxtMWzqEfsg0cwCRZfZx6w@mail.gmail.com>
-Subject: Re: [PATCH 0/3] drm/radeon kexec fixes
-From: Alex Deucher <alexdeucher@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20130910224009.GA23727@kroah.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,79 +22,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Markus Trippelsdorf <markus@trippelsdorf.de>
-Cc: =?ISO-8859-1?Q?Christian_K=F6nig?= <deathsimple@vodafone.de>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>
+To: Greg KH <greg@kroah.com>
+Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com
 
-On Wed, Sep 11, 2013 at 4:53 AM, Markus Trippelsdorf
-<markus@trippelsdorf.de> wrote:
-> On 2013.09.10 at 16:40 -0400, Alex Deucher wrote:
->> On Tue, Sep 10, 2013 at 2:27 PM, Eric W. Biederman
->> <ebiederm@xmission.com> wrote:
->> > Alex Deucher <alexdeucher@gmail.com> writes:
->> >
->> >> On Mon, Sep 9, 2013 at 5:21 AM, Markus Trippelsdorf
->> >> <markus@trippelsdorf.de> wrote:
->> >>
->> >>> IIRC Alex said the sanity checks are expensive and boot-time could be
->> >>> improved by dropping them. Maybe he can chime in?
->> >>
->> >> They shouldn't be necessary with a proper shutdown, but in this
->> >> particular case, they are not very expensive.  What is expensive is
->> >> having a separate sanity check functions for all the various hw blocks
->> >> to teardown everything on startup prior to starting it up in case
->> >> kexec, etc. left the system in a bad state.  It ends up amounting to a
->> >> full tear down sequence followed by a full start up sequence every
->> >> time you load the driver.
->> >>
->> >> I can't really comment on the first patch, but the rest seem fine.
->> >
->> > Let me reask the question just a little bit.
->> >
->> > Is it the sanity checks that are expensive?  Or is it the
->> > reinitialization that is triggered by the sanity checks that is
->> > expensive?
->> >
->> > From what Christian said in the other reply it sounds like this is a
->> > game we will never completely win, but it would be nice to have half a
->> > chance in the kexec on panic case to have video.  So I am curious to
->> > know if the checks are expensive when we are coming at hardware in a
->> > clean state.
->>
->> The particular sanity checks from this patch set are not expensive,
->> but we had previously discussed more extensive sanity checks for other
->> aspects of the chips in prior conversations.  Prior to this patch set,
->> the hw is not torn down properly (might have been in the middle of DMA
->> for example) when kexec happens.  That's why the sanity checks were
->> added in the first place.  With this patch set, the sanity checks
->> shouldn't be necessary.
->
-> I think you're talking past each other.
-> What Eric worries about is the =BBkexec on panic=AB case, where the shutd=
-own
-> method *isn't* called. In this case the sanity checks, that are only
-> superfluous when the hardware was shutdown normally during kexec (the
-> default case), may actually help. And because the checks aren't
-> expensive, it wouldn't hurt to just leave them in place.
+On Tue, Sep 10, 2013 at 03:40:09PM -0700, Greg KH wrote:
+> On Tue, Sep 10, 2013 at 05:44:29PM -0400, Vivek Goyal wrote:
+> > User space kexec-tools need to know whether to verify signature of kernel
+> > image being loaded. This patch exports two knobs to user space. One is
+> > for knowing if  secureboot is enabled, this knob will be set to 1 if secure
+> > boot is enabled. Other knob is secure_module_enabled. This knob will be set
+> > to 1 if secure modules is one.
+> > 
+> > kexec-tools will verify signature of kernel image if either secureboot is
+> > enabled or secure modules is enabled. The only difference between two is
+> > that kexec-tools will set secureboot on in bootparams being passed to
+> > second kernel if secureboot is on in first kernel.
+> > 
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > ---
+> >  kernel/ksysfs.c | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> 
+> Minor nit, if you add/modify/delete sysfs files, you also have to update
+> Documentation/ABI/ with the information about those files.
+> 
 
-For the particular sanity check in this patch set, that's fine.  Even
-with that in place, it only covers a small subset of GPUs and it
-doesn't cover all possible problematic areas.  In general kexec on
-panic seems like a recipe for trouble.  You may end up in the middle
-of several dma transactions across multiple engines on the GPU.  We
-could add code to tear down every block on the chip on start up in
-case such an event happened, but like Christian said, some blocks
-can't really be recovered depending on how things were ended, and then
-we've doubled the start up time for the driver.  Additionally,  most
-of the tear down is dependent on various driver state which we
-wouldn't have at start up, so most of code would need to
-re-architected so that it could be called independently of the
-relevant driver state.
+Sure. Will update Documentation/ABI/ in next version.
 
-Alex
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
