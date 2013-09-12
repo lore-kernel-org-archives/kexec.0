@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VK6Ou-0007Aj-Vw
- for kexec@lists.infradead.org; Thu, 12 Sep 2013 12:53:39 +0000
-Date: Thu, 12 Sep 2013 14:53:50 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1VK6oX-0007s3-Bm
+ for kexec@lists.infradead.org; Thu, 12 Sep 2013 13:20:07 +0000
+Date: Thu, 12 Sep 2013 09:19:30 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 15/16] bootparam: Pass acpi_rsdp pointer in bootparam
-Message-ID: <20130912125350.GB9280@x1.alien8.de>
+Message-ID: <20130912131930.GC28500@redhat.com>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
  <1378849471-10521-16-git-send-email-vgoyal@redhat.com>
  <522FA2A8.8080703@zytor.com> <20130911114419.GB31551@x1.alien8.de>
  <20130911134534.GB15364@redhat.com>
  <20130911143216.GA933@x1.alien8.de>
  <20130912064930.GA5288@dhcp-16-126.nay.redhat.com>
+ <20130912125350.GB9280@x1.alien8.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130912064930.GA5288@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20130912125350.GB9280@x1.alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,51 +29,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: matthew.garrett@nebula.com, zohar@linux.vnet.ibm.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-On Thu, Sep 12, 2013 at 03:34:15PM +0800, Dave Young wrote:
-> I'm playing with skipping SetVirtualAddressMap in kexec kernel, for
-> same kernel the test result is ok for me both for kexec and kdump.
-> Takao Indoh sent a patch with this approatch, but his V2 switched to
-> use physical mapping. During my test, additional data of config table
+On Thu, Sep 12, 2013 at 02:53:50PM +0200, Borislav Petkov wrote:
 
-Physical mapping won't work because of some very brilliant Apple UEFI
-implementations, as I came to realize. My previous version did that :)
+[..]
+> > Are you also working on kexec userspace part? Already have a patch?
+> 
+> Why userspace part -
 
-> elems need to be saved besides of fw_vendor, runtime and tables or
-> dereference taglep->guid will panic.
->
-> Also kexec userspace need to fill efi_info in bootparams and pass the
-> previous saved efi data to 2nd kernel.
+I think Dave is referring to passing efi related tables to second kernel
+in bootparams.
 
-Hmm, yes, we need to tell the kexec kernel the EFI regions.
+> I'm thinking the kexec'ed kernel would simply add
+> the mappings made by SetVirtualAddressMap without calling it. And it
+> will know which mappings go to which virtual addresses because we start
+> at the -4G virtual address and go downwards and the mappings will have
+> the same addresses per UEFI implementation.
 
-> I'm worrying just skiping enter virt mode have risk though it's an
-> easy solution. Your 1:1 mapping approatch looks better. I look forward
-> to test your new patchset.
+Ok, so virtual addresses for EFI mappings are fixed and that's why first
+kernel need not pass it to second kernel. Second kernel will again map
+EFI regions using those fixed virtual addresses and *not* call
+SetVirtualAddressMap() and hence it should be able to make run time calls.
+Sounds good.
 
-Yeah, we had a discussion at the SUSE Labs conf about whether we could
-really skip SetVirtualAddressMap in the first kernel and do it in the
-kexec kernel but the first kernel might want to call runtime services
-for whatever reason and for that we need the runtime services. So we
-opted for the stable VA mappings.
+I was going through previous conversations in your postings. I kind of
+liked James Bottomley's suggestion of calling SetVirtualAdddressMap()
+with 1:1 mapping.
 
-> Are you also working on kexec userspace part? Already have a patch?
+I did not understand this argument that we need to use high virtual
+addresses because windows is using it and now we end up creating
+fixed EFI addresses and that becomes an ABI. If EFI implementations
+are dependent on high addresses being passed, shouldn't it be those
+implementations which need to be fixed instead of kernel fixing EFI
+addresses in higher region.
 
-Why userspace part - I'm thinking the kexec'ed kernel would simply add
-the mappings made by SetVirtualAddressMap without calling it. And it
-will know which mappings go to which virtual addresses because we start
-at the -4G virtual address and go downwards and the mappings will have
-the same addresses per UEFI implementation.
+Anyway, I am not an EFI expert. I just need a working solution. How to
+do it, I will leave it to experts.
 
-It'll make more sense when you see the code, I hope :)
-
-Thanks.
-
--- 
-Regards/Gruss,
-Boris.
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
