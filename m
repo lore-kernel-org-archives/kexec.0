@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VK5Jb-0004lV-Dh
- for kexec@lists.infradead.org; Thu, 12 Sep 2013 11:44:04 +0000
-Date: Thu, 12 Sep 2013 07:43:36 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 00/16] [RFC PATCH] Signed kexec support
-Message-ID: <20130912114336.GA28500@redhat.com>
+ id 1VK6Ou-0007Aj-Vw
+ for kexec@lists.infradead.org; Thu, 12 Sep 2013 12:53:39 +0000
+Date: Thu, 12 Sep 2013 14:53:50 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 15/16] bootparam: Pass acpi_rsdp pointer in bootparam
+Message-ID: <20130912125350.GB9280@x1.alien8.de>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
- <20130912034023.GA10877@kroah.com>
+ <1378849471-10521-16-git-send-email-vgoyal@redhat.com>
+ <522FA2A8.8080703@zytor.com> <20130911114419.GB31551@x1.alien8.de>
+ <20130911134534.GB15364@redhat.com>
+ <20130911143216.GA933@x1.alien8.de>
+ <20130912064930.GA5288@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130912034023.GA10877@kroah.com>
+In-Reply-To: <20130912064930.GA5288@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,99 +28,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Greg KH <greg@kroah.com>
-Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com
+To: Dave Young <dyoung@redhat.com>
+Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Sep 11, 2013 at 08:40:23PM -0700, Greg KH wrote:
-> On Tue, Sep 10, 2013 at 05:44:15PM -0400, Vivek Goyal wrote:
-> > Hi,
-> > 
-> > Matthew has been posting patches to lock down kernel either due to
-> > secureboot requirements or because of signed modules with signing
-> > enforced. In kernel lock down mode, kexec will be disabled and that
-> > means kdump will not work either.
-> > 
-> > These patches sign /sbin/kexec and kernel verifies the signature
-> > and allows loading a kernel if signature verification is successful.
-> > IOW, trust is extended to validly signed user space.
-> > 
-> > Currently it works only for statically linked applications.
-> 
-> That's a really big restriction, pretty much making it not workable for
-> distros at the moment to use.
+On Thu, Sep 12, 2013 at 03:34:15PM +0800, Dave Young wrote:
+> I'm playing with skipping SetVirtualAddressMap in kexec kernel, for
+> same kernel the test result is ok for me both for kexec and kdump.
+> Takao Indoh sent a patch with this approatch, but his V2 switched to
+> use physical mapping. During my test, additional data of config table
 
-It is a big restriction for general use case of signed user space but in
-this case I am planning to build /sbin/kexec statically and solve the
-kexec/kdump issue.
+Physical mapping won't work because of some very brilliant Apple UEFI
+implementations, as I came to realize. My previous version did that :)
 
-I have posted kexec-tools patches here.
+> elems need to be saved besides of fw_vendor, runtime and tables or
+> dereference taglep->guid will panic.
+>
+> Also kexec userspace need to fill efi_info in bootparams and pass the
+> previous saved efi data to 2nd kernel.
 
-https://lists.fedoraproject.org/pipermail/kernel/2013-September/004469.html
+Hmm, yes, we need to tell the kexec kernel the EFI regions.
 
-Once kernel patches get in, I plan to upstream kexec-tools patches too
-and then distros should be able to build /sbin/kexec statically and
-this should work.
+> I'm worrying just skiping enter virt mode have risk though it's an
+> easy solution. Your 1:1 mapping approatch looks better. I look forward
+> to test your new patchset.
 
-Do you forsee a problem with that?
+Yeah, we had a discussion at the SUSE Labs conf about whether we could
+really skip SetVirtualAddressMap in the first kernel and do it in the
+kexec kernel but the first kernel might want to call runtime services
+for whatever reason and for that we need the runtime services. So we
+opted for the stable VA mappings.
 
-> 
-> Any chance to change this in the future?
+> Are you also working on kexec userspace part? Already have a patch?
 
-It might but currently I don't have any plans. I see atleast two issues
-with that.
+Why userspace part - I'm thinking the kexec'ed kernel would simply add
+the mappings made by SetVirtualAddressMap without calling it. And it
+will know which mappings go to which virtual addresses because we start
+at the -4G virtual address and go downwards and the mappings will have
+the same addresses per UEFI implementation.
 
-- If we allow dynamic linking for signed binaries, then dynamic libraries
-  will have to be signed too. I suspect in that case pretty much whole of
-  the user space will have to be signed. I am not sure if distros are
-  willing to do that.
+It'll make more sense when you see the code, I hope :)
 
-- Currently a shared library can be written on disk (unlike executables)
-  while it is mapped. That means after signature verification a root just
-  has to open and write to shared library and modify code and defeat the
-  purpose of signature verfication.
+Thanks.
 
-Probably these issues can be addressed if there is a need. Just that I
-have not looked into it.
-
-> Or just rely on the existing
-> "signed binaries" functionality we have in the kernel today for the
-> kexec binary as well?  Wouldn't that be simpler?
-
-Which signed binary mechanism are you referring to? Are you referring to
-using IMA for signature verification? If yes, there are some issues with
-that.
-
-- IMA does not lock down signed binaries in memory. That means after
-  signature verification files can potentially be swapped out and be
-  attacked there and modified code then can be swapped back in.
-
-- IMA caches the signature appraisal resutls and reappraises the things
-  based on if file has been modified or not. But this does not detect any
-  raw writes to disk. So after signature verification root should be able
-  to do some raw writes to disk and IMA will think file signature are
-  just fine.
-
-- IMA does not have mechanism to keep track of signed applications and
-  a mechanism to disallow ptrace() by unsigned applications. That means
-  after signature verification root can just ptrace() signed binary and
-  modify its code/data.
-
-- IMA provides mechanism for file based signature verificaiton.
-  kexec-tools also needs to verify signature of new kernel being loaded.
-  Using IMA on bzImage file has same pitfalls where a file can be modified
-  after signature verification.
-
-  That's why I have extended keyctl() so that signature verification can
-  be done on user space buffer. An application can first read a file in
-  buffer and then ask kernel to verify signature. And now root should not
-  be able to attack it.
-
-So existing IMA does not seem to have been written for an environment
-where all the user space is not signed we don't trust root and root can
-attack a signed binary. And my patches try to fill that gap. 
-
-Thanks
-Vivek
+-- 
+Regards/Gruss,
+Boris.
 
 _______________________________________________
 kexec mailing list
