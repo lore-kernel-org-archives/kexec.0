@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VK6oX-0007s3-Bm
- for kexec@lists.infradead.org; Thu, 12 Sep 2013 13:20:07 +0000
-Date: Thu, 12 Sep 2013 09:19:30 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+ id 1VK7pm-0001bL-I0
+ for kexec@lists.infradead.org; Thu, 12 Sep 2013 14:25:29 +0000
+Date: Thu, 12 Sep 2013 16:25:37 +0200
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCH 15/16] bootparam: Pass acpi_rsdp pointer in bootparam
-Message-ID: <20130912131930.GC28500@redhat.com>
+Message-ID: <20130912142537.GA10143@x1.alien8.de>
 References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
  <1378849471-10521-16-git-send-email-vgoyal@redhat.com>
  <522FA2A8.8080703@zytor.com> <20130911114419.GB31551@x1.alien8.de>
@@ -14,9 +14,10 @@ References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
  <20130911143216.GA933@x1.alien8.de>
  <20130912064930.GA5288@dhcp-16-126.nay.redhat.com>
  <20130912125350.GB9280@x1.alien8.de>
+ <20130912131930.GC28500@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20130912125350.GB9280@x1.alien8.de>
+In-Reply-To: <20130912131930.GC28500@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,47 +30,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: matthew.garrett@nebula.com, zohar@linux.vnet.ibm.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-On Thu, Sep 12, 2013 at 02:53:50PM +0200, Borislav Petkov wrote:
+On Thu, Sep 12, 2013 at 09:19:30AM -0400, Vivek Goyal wrote:
+> I did not understand this argument that we need to use high virtual
+> addresses because windows is using it and now we end up creating
+> fixed EFI addresses and that becomes an ABI. If EFI implementations
 
-[..]
-> > Are you also working on kexec userspace part? Already have a patch?
-> 
-> Why userspace part -
+The only thing that becomes sort-of ABI is that we start the mappings at
+-4G virtual.
 
-I think Dave is referring to passing efi related tables to second kernel
-in bootparams.
+> are dependent on high addresses being passed, shouldn't it be those
+> implementations which need to be fixed instead of kernel fixing EFI
 
-> I'm thinking the kexec'ed kernel would simply add
-> the mappings made by SetVirtualAddressMap without calling it. And it
-> will know which mappings go to which virtual addresses because we start
-> at the -4G virtual address and go downwards and the mappings will have
-> the same addresses per UEFI implementation.
+Right, this is the biggest issue with firmware - vendors like to declare
+those as End-of-Life platforms and for them there are no fixes. This is
+the reason why we don't do the 1:1 mappings.
 
-Ok, so virtual addresses for EFI mappings are fixed and that's why first
-kernel need not pass it to second kernel. Second kernel will again map
-EFI regions using those fixed virtual addresses and *not* call
-SetVirtualAddressMap() and hence it should be able to make run time calls.
-Sounds good.
+> addresses in higher region.
 
-I was going through previous conversations in your postings. I kind of
-liked James Bottomley's suggestion of calling SetVirtualAdddressMap()
-with 1:1 mapping.
+The thing is, reportedly some Apple UEFI implementations cannot stomach
+1:1 SetVirtualAddressMap mappings. Also, the high addresses mappings is
+the only thing that vendors test on windoze so in that field we want
+to do what windoze does as this is the only thing that gets reliable
+testing.
 
-I did not understand this argument that we need to use high virtual
-addresses because windows is using it and now we end up creating
-fixed EFI addresses and that becomes an ABI. If EFI implementations
-are dependent on high addresses being passed, shouldn't it be those
-implementations which need to be fixed instead of kernel fixing EFI
-addresses in higher region.
+But I get the feeling we're feeling up stuff in the dark as firmware is
+closed crap which we cannot look at.
 
-Anyway, I am not an EFI expert. I just need a working solution. How to
-do it, I will leave it to experts.
+HTH.
 
-Thanks
-Vivek
+-- 
+Regards/Gruss,
+Boris.
 
 _______________________________________________
 kexec mailing list
