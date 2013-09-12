@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VKCtc-0004ru-4b
- for kexec@lists.infradead.org; Thu, 12 Sep 2013 19:49:46 +0000
+ id 1VKCte-0004ru-Ii
+ for kexec@lists.infradead.org; Thu, 12 Sep 2013 19:49:49 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 7/9] libxc: add API for kexec hypercall
-Date: Thu, 12 Sep 2013 20:49:05 +0100
-Message-ID: <1379015347-21653-8-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 2/9] kexec: add public interface for improved load/unload
+ sub-ops
+Date: Thu, 12 Sep 2013 20:49:00 +0100
+Message-ID: <1379015347-21653-3-git-send-email-david.vrabel@citrix.com>
 In-Reply-To: <1379015347-21653-1-git-send-email-david.vrabel@citrix.com>
 References: <1379015347-21653-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
@@ -27,250 +28,181 @@ Cc: kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>, Keir Fras
 
 From: David Vrabel <david.vrabel@citrix.com>
 
-Add xc_kexec_exec(), xc_kexec_get_ranges(), xc_kexec_load(), and
-xc_kexec_unload().  The load and unload calls require the v2 load and
-unload ops.
+Add replacement KEXEC_CMD_load and KEXEC_CMD_unload sub-ops to the
+kexec hypercall.  These new sub-ops allow a priviledged guest to
+provide the image data to be loaded into Xen memory or the crash
+region instead of guests loading the image data themselves and
+providing the relocation code and metadata.
 
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
-Acked-by: Ian Campbell <ian.campbell@citrix.com>
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
+The old interface is provided to guests requesting an interface
+version prior to 4.3.
+
+Bump __XEN_LATEST_INTERFACE_VERSION__ to 0x00040400.
+
+Signed-off: David Vrabel <david.vrabel@citrix.com>
 ---
- tools/libxc/Makefile   |    1 +
- tools/libxc/xc_kexec.c |  140 ++++++++++++++++++++++++++++++++++++++++++++++++
- tools/libxc/xenctrl.h  |   55 +++++++++++++++++++
- 3 files changed, 196 insertions(+), 0 deletions(-)
- create mode 100644 tools/libxc/xc_kexec.c
+ xen/common/kexec.c              |   12 +++---
+ xen/include/public/kexec.h      |   80 +++++++++++++++++++++++++++++++++++++--
+ xen/include/public/xen-compat.h |    2 +-
+ 3 files changed, 83 insertions(+), 11 deletions(-)
 
-diff --git a/tools/libxc/Makefile b/tools/libxc/Makefile
-index 512a994..528198e 100644
---- a/tools/libxc/Makefile
-+++ b/tools/libxc/Makefile
-@@ -31,6 +31,7 @@ CTRL_SRCS-y       += xc_mem_access.c
- CTRL_SRCS-y       += xc_memshr.c
- CTRL_SRCS-y       += xc_hcall_buf.c
- CTRL_SRCS-y       += xc_foreign_memory.c
-+CTRL_SRCS-y       += xc_kexec.c
- CTRL_SRCS-y       += xtl_core.c
- CTRL_SRCS-y       += xtl_logger_stdio.c
- CTRL_SRCS-$(CONFIG_X86) += xc_pagetab.c
-diff --git a/tools/libxc/xc_kexec.c b/tools/libxc/xc_kexec.c
-new file mode 100644
-index 0000000..a49cffb
---- /dev/null
-+++ b/tools/libxc/xc_kexec.c
-@@ -0,0 +1,140 @@
-+/******************************************************************************
-+ * xc_kexec.c
-+ *
-+ * API for loading and executing kexec images.
-+ *
-+ * This library is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public
-+ * License as published by the Free Software Foundation;
-+ * version 2.1 of the License.
-+ *
-+ * Copyright (C) 2013 Citrix Systems R&D Ltd.
-+ */
-+#include "xc_private.h"
-+
-+int xc_kexec_exec(xc_interface *xch, int type)
-+{
-+    DECLARE_HYPERCALL;
-+    DECLARE_HYPERCALL_BUFFER(xen_kexec_exec_t, exec);
-+    int ret = -1;
-+
-+    exec = xc_hypercall_buffer_alloc(xch, exec, sizeof(*exec));
-+    if ( exec == NULL )
-+    {
-+        PERROR("Count not alloc bounce buffer for kexec_exec hypercall");
-+        goto out;
-+    }
-+
-+    exec->type = type;
-+
-+    hypercall.op = __HYPERVISOR_kexec_op;
-+    hypercall.arg[0] = KEXEC_CMD_kexec;
-+    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(exec);
-+
-+    ret = do_xen_hypercall(xch, &hypercall);
-+
-+out:
-+    xc_hypercall_buffer_free(xch, exec);
-+
-+    return ret;
-+}
-+
-+int xc_kexec_get_range(xc_interface *xch, int range,  int nr,
-+                       uint64_t *size, uint64_t *start)
-+{
-+    DECLARE_HYPERCALL;
-+    DECLARE_HYPERCALL_BUFFER(xen_kexec_range_t, get_range);
-+    int ret = -1;
-+
-+    get_range = xc_hypercall_buffer_alloc(xch, get_range, sizeof(*get_range));
-+    if ( get_range == NULL )
-+    {
-+        PERROR("Could not alloc bounce buffer for kexec_get_range hypercall");
-+        goto out;
-+    }
-+
-+    get_range->range = range;
-+    get_range->nr = nr;
-+
-+    hypercall.op = __HYPERVISOR_kexec_op;
-+    hypercall.arg[0] = KEXEC_CMD_kexec_get_range;
-+    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(get_range);
-+
-+    ret = do_xen_hypercall(xch, &hypercall);
-+
-+    *size = get_range->size;
-+    *start = get_range->start;
-+
-+out:
-+    xc_hypercall_buffer_free(xch, get_range);
-+
-+    return ret;
-+}
-+
-+int xc_kexec_load(xc_interface *xch, uint8_t type, uint16_t arch,
-+                  uint64_t entry_maddr,
-+                  uint32_t nr_segments, xen_kexec_segment_t *segments)
-+{
-+    int ret = -1;
-+    DECLARE_HYPERCALL;
-+    DECLARE_HYPERCALL_BOUNCE(segments, sizeof(*segments) * nr_segments,
-+                             XC_HYPERCALL_BUFFER_BOUNCE_IN);
-+    DECLARE_HYPERCALL_BUFFER(xen_kexec_load_t, load);
-+
-+    if ( xc_hypercall_bounce_pre(xch, segments) )
-+    {
-+        PERROR("Could not allocate bounce buffer for kexec load hypercall");
-+        goto out;
-+    }
-+    load = xc_hypercall_buffer_alloc(xch, load, sizeof(*load));
-+    if ( load == NULL )
-+    {
-+        PERROR("Could not allocate buffer for kexec load hypercall");
-+        goto out;
-+    }
-+
-+    load->type = type;
-+    load->arch = arch;
-+    load->entry_maddr = entry_maddr;
-+    load->nr_segments = nr_segments;
-+    set_xen_guest_handle(load->segments.h, segments);
-+
-+    hypercall.op = __HYPERVISOR_kexec_op;
-+    hypercall.arg[0] = KEXEC_CMD_kexec_load;
-+    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(load);
-+
-+    ret = do_xen_hypercall(xch, &hypercall);
-+
-+out:
-+    xc_hypercall_buffer_free(xch, load);
-+    xc_hypercall_bounce_post(xch, segments);
-+
-+    return ret;
-+}
-+
-+int xc_kexec_unload(xc_interface *xch, int type)
-+{
-+    DECLARE_HYPERCALL;
-+    DECLARE_HYPERCALL_BUFFER(xen_kexec_unload_t, unload);
-+    int ret = -1;
-+
-+    unload = xc_hypercall_buffer_alloc(xch, unload, sizeof(*unload));
-+    if ( unload == NULL )
-+    {
-+        PERROR("Count not alloc buffer for kexec unload hypercall");
-+        goto out;
-+    }
-+
-+    unload->type = type;
-+
-+    hypercall.op = __HYPERVISOR_kexec_op;
-+    hypercall.arg[0] = KEXEC_CMD_kexec_unload;
-+    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(unload);
-+
-+    ret = do_xen_hypercall(xch, &hypercall);
-+
-+out:
-+    xc_hypercall_buffer_free(xch, unload);
-+
-+    return ret;
-+}
-diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
-index e0eb220..6e711aa 100644
---- a/tools/libxc/xenctrl.h
-+++ b/tools/libxc/xenctrl.h
-@@ -46,6 +46,7 @@
- #include <xen/hvm/params.h>
- #include <xen/xsm/flask_op.h>
- #include <xen/tmem.h>
-+#include <xen/kexec.h>
+diff --git a/xen/common/kexec.c b/xen/common/kexec.c
+index 7cd151f..7b23df0 100644
+--- a/xen/common/kexec.c
++++ b/xen/common/kexec.c
+@@ -734,7 +734,7 @@ static void crash_save_vmcoreinfo(void)
+ #endif
+ }
  
- #include "xentoollog.h"
+-static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_t *load)
++static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_v1_t *load)
+ {
+     xen_kexec_image_t *image;
+     int base, bit, pos;
+@@ -781,7 +781,7 @@ static int kexec_load_unload_internal(unsigned long op, xen_kexec_load_t *load)
  
-@@ -2315,4 +2316,58 @@ int xc_compression_uncompress_page(xc_interface *xch, char *compbuf,
- 				   unsigned long compbuf_size,
- 				   unsigned long *compbuf_pos, char *dest);
+ static int kexec_load_unload(unsigned long op, XEN_GUEST_HANDLE_PARAM(void) uarg)
+ {
+-    xen_kexec_load_t load;
++    xen_kexec_load_v1_t load;
  
+     if ( unlikely(copy_from_guest(&load, uarg, 1)) )
+         return -EFAULT;
+@@ -793,8 +793,8 @@ static int kexec_load_unload_compat(unsigned long op,
+                                     XEN_GUEST_HANDLE_PARAM(void) uarg)
+ {
+ #ifdef CONFIG_COMPAT
+-    compat_kexec_load_t compat_load;
+-    xen_kexec_load_t load;
++    compat_kexec_load_v1_t compat_load;
++    xen_kexec_load_v1_t load;
+ 
+     if ( unlikely(copy_from_guest(&compat_load, uarg, 1)) )
+         return -EFAULT;
+@@ -866,8 +866,8 @@ static int do_kexec_op_internal(unsigned long op,
+         else
+                 ret = kexec_get_range(uarg);
+         break;
+-    case KEXEC_CMD_kexec_load:
+-    case KEXEC_CMD_kexec_unload:
++    case KEXEC_CMD_kexec_load_v1:
++    case KEXEC_CMD_kexec_unload_v1:
+         spin_lock_irqsave(&kexec_lock, flags);
+         if (!test_bit(KEXEC_FLAG_IN_PROGRESS, &kexec_flags))
+         {
+diff --git a/xen/include/public/kexec.h b/xen/include/public/kexec.h
+index 36409ff..0e5bb22 100644
+--- a/xen/include/public/kexec.h
++++ b/xen/include/public/kexec.h
+@@ -116,12 +116,12 @@ typedef struct xen_kexec_exec {
+  * type  == KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH [in]
+  * image == relocation information for kexec (ignored for unload) [in]
+  */
+-#define KEXEC_CMD_kexec_load            1
+-#define KEXEC_CMD_kexec_unload          2
+-typedef struct xen_kexec_load {
++#define KEXEC_CMD_kexec_load_v1         1 /* obsolete since 0x00040300 */
++#define KEXEC_CMD_kexec_unload_v1       2 /* obsolete since 0x00040300 */
++typedef struct xen_kexec_load_v1 {
+     int type;
+     xen_kexec_image_t image;
+-} xen_kexec_load_t;
++} xen_kexec_load_v1_t;
+ 
+ #define KEXEC_RANGE_MA_CRASH      0 /* machine address and size of crash area */
+ #define KEXEC_RANGE_MA_XEN        1 /* machine address and size of Xen itself */
+@@ -152,6 +152,78 @@ typedef struct xen_kexec_range {
+     unsigned long start;
+ } xen_kexec_range_t;
+ 
++#if __XEN_INTERFACE_VERSION__ >= 0x00040400
 +/*
-+ * Execute an image previously loaded with xc_kexec_load().
-+ *
-+ * Does not return on success.
-+ *
-+ * Fails with:
-+ *   ENOENT if the specified image has not been loaded.
++ * A contiguous chunk of a kexec image and it's destination machine
++ * address.
 + */
-+int xc_kexec_exec(xc_interface *xch, int type);
-+
-+/*
-+ * Find the machine address and size of certain memory areas.
-+ *
-+ *   KEXEC_RANGE_MA_CRASH       crash area
-+ *   KEXEC_RANGE_MA_XEN         Xen itself
-+ *   KEXEC_RANGE_MA_CPU         CPU note for CPU number 'nr'
-+ *   KEXEC_RANGE_MA_XENHEAP     xenheap
-+ *   KEXEC_RANGE_MA_EFI_MEMMAP  EFI Memory Map
-+ *   KEXEC_RANGE_MA_VMCOREINFO  vmcoreinfo
-+ *
-+ * Fails with:
-+ *   EINVAL if the range or CPU number isn't valid.
-+ */
-+int xc_kexec_get_range(xc_interface *xch, int range,  int nr,
-+                       uint64_t *size, uint64_t *start);
++typedef struct xen_kexec_segment {
++    union {
++        XEN_GUEST_HANDLE(const_void) h;
++        uint64_t _pad;
++    } buf;
++    uint64_t buf_size;
++    uint64_t dest_maddr;
++    uint64_t dest_size;
++} xen_kexec_segment_t;
++DEFINE_XEN_GUEST_HANDLE(xen_kexec_segment_t);
 +
 +/*
 + * Load a kexec image into memory.
 + *
-+ * The image may be of type KEXEC_TYPE_DEFAULT (executed on request)
-+ * or KEXEC_TYPE_CRASH (executed on a crash).
++ * For KEXEC_TYPE_DEFAULT images, the segments may be anywhere in RAM.
++ * The image is relocated prior to being executed.
 + *
-+ * The image architecture may be a 32-bit variant of the hypervisor
-+ * architecture (e.g, EM_386 on a x86-64 hypervisor).
++ * For KEXEC_TYPE_CRASH images, each segment of the image must reside
++ * in the memory region reserved for kexec (KEXEC_RANGE_MA_CRASH) and
++ * the entry point must be within the image. The caller is responsible
++ * for ensuring that multiple images do not overlap.
 + *
-+ * Fails with:
-+ *   ENOMEM if there is insufficient memory for the new image.
-+ *   EINVAL if the image does not fit into the crash area or the entry
-+ *          point isn't within one of segments.
-+ *   EBUSY  if another image is being executed.
++ * All image segments will be loaded to their destination machine
++ * addresses prior to being executed.  The trailing portion of any
++ * segments with a source buffer (from dest_maddr + buf_size to
++ * dest_maddr + dest_size) will be zeroed.
++ *
++ * Segments with no source buffer will be accessible to the image when
++ * it is executed.
 + */
-+int xc_kexec_load(xc_interface *xch, uint8_t type, uint16_t arch,
-+                  uint64_t entry_maddr,
-+                  uint32_t nr_segments, xen_kexec_segment_t *segments);
++
++#define KEXEC_CMD_kexec_load 4
++typedef struct xen_kexec_load {
++    uint8_t  type;        /* One of KEXEC_TYPE_* */
++    uint8_t  _pad;
++    uint16_t arch;        /* ELF machine type (EM_*). */
++    uint32_t nr_segments;
++    union {
++        XEN_GUEST_HANDLE(xen_kexec_segment_t) h;
++        uint64_t _pad;
++    } segments;
++    uint64_t entry_maddr; /* image entry point machine address. */
++} xen_kexec_load_t;
++DEFINE_XEN_GUEST_HANDLE(xen_kexec_load_t);
 +
 +/*
 + * Unload a kexec image.
 + *
-+ * This prevents a KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH image from
-+ * being executed.  The crash images are not cleared from the crash
-+ * region.
++ * Type must be one of KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
 + */
-+int xc_kexec_unload(xc_interface *xch, int type);
++#define KEXEC_CMD_kexec_unload 5
++typedef struct xen_kexec_unload {
++    uint8_t type;
++} xen_kexec_unload_t;
++DEFINE_XEN_GUEST_HANDLE(xen_kexec_unload_t);
 +
- #endif /* XENCTRL_H */
++#else /* __XEN_INTERFACE_VERSION__ < 0x00040400 */
++
++#define KEXEC_CMD_kexec_load KEXEC_CMD_kexec_load_v1
++#define KEXEC_CMD_kexec_unload KEXEC_CMD_kexec_unload_v1
++typedef struct xen_kexec_load {
++    int type;
++    xen_kexec_image_t image;
++} xen_kexec_load_t;
++
++#endif
++
+ #endif /* _XEN_PUBLIC_KEXEC_H */
+ 
+ /*
+diff --git a/xen/include/public/xen-compat.h b/xen/include/public/xen-compat.h
+index 69141c4..3eb80a0 100644
+--- a/xen/include/public/xen-compat.h
++++ b/xen/include/public/xen-compat.h
+@@ -27,7 +27,7 @@
+ #ifndef __XEN_PUBLIC_XEN_COMPAT_H__
+ #define __XEN_PUBLIC_XEN_COMPAT_H__
+ 
+-#define __XEN_LATEST_INTERFACE_VERSION__ 0x00040300
++#define __XEN_LATEST_INTERFACE_VERSION__ 0x00040400
+ 
+ #if defined(__XEN__) || defined(__XEN_TOOLS__)
+ /* Xen is built with matching headers and implements the latest interface. */
 -- 
 1.7.2.5
 
