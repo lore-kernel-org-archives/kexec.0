@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VKCtw-0004tE-NZ
- for kexec@lists.infradead.org; Thu, 12 Sep 2013 19:50:06 +0000
+ id 1VKD4h-0005Hx-3a
+ for kexec@lists.infradead.org; Thu, 12 Sep 2013 20:01:11 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 5/9] xen: kexec crash image when dom0 crashes
-Date: Thu, 12 Sep 2013 20:49:03 +0100
-Message-ID: <1379015347-21653-6-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1379015347-21653-1-git-send-email-david.vrabel@citrix.com>
-References: <1379015347-21653-1-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCHv4 0/5] kexec-tools: add support for Xen 4.3
+Date: Thu, 12 Sep 2013 21:00:37 +0100
+Message-ID: <1379016042-22510-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,47 +21,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: xen-devel@lists.xen.org
-Cc: kexec@lists.infradead.org, Daniel Kiper <daniel.kiper@oracle.com>, Keir Fraser <keir@xen.org>, David Vrabel <david.vrabel@citrix.com>, Jan Beulich <jbeulich@suse.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>
 
-From: David Vrabel <david.vrabel@citrix.com>
+The series adds support for the new hypercall ABI which should be
+provided by Xen 4.4.  Images are loaded into Xen directly with no
+kernel involvement.
 
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
----
- xen/common/kexec.c    |    2 ++
- xen/common/shutdown.c |    3 +++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+Please do not apply until the hypervisor side patches are applied to
+Xen.
 
-diff --git a/xen/common/kexec.c b/xen/common/kexec.c
-index 5548c37..fe0424e 100644
---- a/xen/common/kexec.c
-+++ b/xen/common/kexec.c
-@@ -307,6 +307,8 @@ void kexec_crash(void)
-     if ( !test_bit(KEXEC_IMAGE_CRASH_BASE + pos, &kexec_flags) )
-         return;
- 
-+    printk("Executing crash image\n");
-+
-     kexecing = TRUE;
- 
-     kexec_common_shutdown();
-diff --git a/xen/common/shutdown.c b/xen/common/shutdown.c
-index 20f04b0..9bccd34 100644
---- a/xen/common/shutdown.c
-+++ b/xen/common/shutdown.c
-@@ -47,6 +47,9 @@ void dom0_shutdown(u8 reason)
-     {
-         debugger_trap_immediate();
-         printk("Domain 0 crashed: ");
-+#ifdef CONFIG_KEXEC
-+        kexec_crash();
-+#endif
-         maybe_reboot();
-         break; /* not reached */
-     }
--- 
-1.7.2.5
+Patch 1 is unrelated but kexec wouldn't work for me without it. Not
+sure why I had problems, perhaps a toolstack specific issue?
+
+Patch 2 makes libxc 4.4 mandatory for Xen support.
+
+Patch 3-4 removes a use of /proc/iomem in favour of libxc.
+
+Patch 5 adds the support for loading, unloading, and exec'ing an image
+in Xen.
+
+This series explicitly drops support for older version of libxc/Xen as
+supporting kexec on these hypervisors requires kernel support that
+will never be available upstream.
+
+Changes in v4:
+- KEXEC_ARCH_DEFAULT => EM_386
+- add segment in the crash case for the backup src.
+
+Changes in v3 (not posted):
+- Rebased
+
+Changes in v2:
+- Patch from Don Sultz: use libxc for vmcoreinfo.
+- Use xc_get_max_cpus() to get number of PCPUs.
+- Enable unload and exec of images.
+
+David
 
 
 _______________________________________________
