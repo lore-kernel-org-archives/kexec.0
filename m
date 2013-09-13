@@ -1,31 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VKR0c-0001Ls-2u
- for kexec@lists.infradead.org; Fri, 13 Sep 2013 10:53:56 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 0BB853EE0AE
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:34 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id F1E5B45DE4D
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id DC26245DD78
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id D02021DB803A
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 89B4B1DB802C
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
-Subject: [PATCH 2/2] sadump: convert the first three fields of EFI GUID from
- little-endian into big-endian
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Fri, 13 Sep 2013 19:53:32 +0900
-Message-ID: <20130913105332.2332.34743.stgit@localhost6.localdomain6>
-In-Reply-To: <20130913105216.2332.8060.stgit@localhost6.localdomain6>
-References: <20130913105216.2332.8060.stgit@localhost6.localdomain6>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VKRWK-0002D0-0G
+ for kexec@lists.infradead.org; Fri, 13 Sep 2013 11:26:41 +0000
+Date: Fri, 13 Sep 2013 13:26:54 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 15/16] bootparam: Pass acpi_rsdp pointer in bootparam
+Message-ID: <20130913112654.GA12095@x1.alien8.de>
+References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
+ <1378849471-10521-16-git-send-email-vgoyal@redhat.com>
+ <522FA2A8.8080703@zytor.com> <20130911114419.GB31551@x1.alien8.de>
+ <20130911134534.GB15364@redhat.com>
+ <20130911143216.GA933@x1.alien8.de>
+ <20130912064930.GA5288@dhcp-16-126.nay.redhat.com>
+ <20130912125350.GB9280@x1.alien8.de>
+ <20130913071240.GF13561@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130913071240.GF13561@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,43 +30,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, Vivek Goyal <vgoyal@redhat.com>
 
-Although RFC 4122 recommends network byte order for all fields of
-UUID, EFI GUID uses little-endian for the first three fields TimeLow,
-TimeMid and TimeHighAndVersion. Thus, in text representation of the
-GUID, converting the three fields from little-endian into big-endian
-is needed.
+On Fri, Sep 13, 2013 at 03:12:40PM +0800, Dave Young wrote:
+> Also the fw_vendor, runtime, tables elements will be fixed up to use
+> virtual address after 1st kernel call SetVirtualAddress, so even with
+> 1:1 mapping we still need save them and use in kexec kernel.
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- sadump_info.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+As I said a couple of times already, 1:1 mapping is a no go.
 
-diff --git a/sadump_info.c b/sadump_info.c
-index e563180..84126b1 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -23,6 +23,8 @@
- #include "print_info.h"
- #include "sadump_mod.h"
- 
-+#include <arpa/inet.h> /* htonl, htons */
-+
- #define SADUMP_EFI_GUID_TEXT_REPR_LEN 36
- 
- #ifdef __x86__
-@@ -334,7 +336,7 @@ guid_to_str(efi_guid_t *guid, char *buf, size_t buflen)
- {
- 	snprintf(buf, buflen,
- 		 "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
--		 guid->data1, guid->data2, guid->data3,
-+		 htonl(guid->data1), htons(guid->data2), htons(guid->data3),
- 		 guid->data4[0], guid->data4[1], guid->data4[2],
- 		 guid->data4[3], guid->data4[4], guid->data4[5],
- 		 guid->data4[6], guid->data4[7]);
+Concerning the runtime services, we need to pass the UEFI memory map to
+the kexec'ed kernel because it needs to know those to start mapping them
+from -4G virtual downwards.
 
+-- 
+Regards/Gruss,
+Boris.
 
 _______________________________________________
 kexec mailing list
