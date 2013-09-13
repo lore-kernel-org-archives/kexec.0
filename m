@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g6t0185.atlanta.hp.com ([15.193.32.62])
+Received: from nat28.tlf.novell.com ([130.57.49.28])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VKPY1-0006aa-DH
- for kexec@lists.infradead.org; Fri, 13 Sep 2013 09:20:20 +0000
-Received: from g5t0030.atlanta.hp.com (g5t0030.atlanta.hp.com [16.228.8.142])
- by g6t0185.atlanta.hp.com (Postfix) with ESMTP id BF8B0241FE
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 09:19:52 +0000 (UTC)
-Received: from [16.51.181.81] (swa01lbdc1025-026-vl250-snat3.atlanta.hp.com
- [16.228.13.93])
- by g5t0030.atlanta.hp.com (Postfix) with ESMTP id 64DAB140B3
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 09:19:52 +0000 (UTC)
-Message-ID: <5232D8AC.5080704@hp.com>
-Date: Fri, 13 Sep 2013 12:19:40 +0300
-From: Bogdan <bogdan.oprea@hp.com>
-MIME-Version: 1.0
-Subject: Hardware state when jumping
+ id 1VKQam-0000bA-JN
+ for kexec@lists.infradead.org; Fri, 13 Sep 2013 10:27:13 +0000
+Message-Id: <5233048802000078000F3075@nat28.tlf.novell.com>
+Date: Fri, 13 Sep 2013 11:26:48 +0100
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [PATCH 2/9] kexec: add public interface for improved
+ load/unload sub-ops
+References: <1379015347-21653-1-git-send-email-david.vrabel@citrix.com>
+ <1379015347-21653-3-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1379015347-21653-3-git-send-email-david.vrabel@citrix.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +21,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: xen-devel <xen-devel@lists.xenproject.org>, Daniel Kiper <daniel.kiper@oracle.com>, Keir Fraser <keir@xen.org>, kexec@lists.infradead.org
 
-Hello,
+>>> On 12.09.13 at 21:49, David Vrabel <david.vrabel@citrix.com> wrote:
+> +#else /* __XEN_INTERFACE_VERSION__ < 0x00040400 */
+> +
+> +#define KEXEC_CMD_kexec_load KEXEC_CMD_kexec_load_v1
+> +#define KEXEC_CMD_kexec_unload KEXEC_CMD_kexec_unload_v1
+> +typedef struct xen_kexec_load {
+> +    int type;
+> +    xen_kexec_image_t image;
+> +} xen_kexec_load_t;
 
-I am provisioning servers with linux using kexec on Proliant servers 
-usualy gen 8). The basic steps are as folow:
-     1. Boot in a Service OS (Rhel or Sles)
-     2. Make some configurations
-     3. Jump to OS Installer kernel and install specific OS
-     4. Reboot (after reboot the server is ready for production)
+Is there anything preventing the use of two #define-s here
+instead of repeating the declaration (which results in these and
+the ones with the _v1 tags not being interchangeable)?
 
-My question is regarding hardware state of the server when jumping.
+Jan
 
-     - Is there any version of kexec that handles hardware state 
-especialy for Proliant hardware, and if not, are there any alternatives?
-
-Thank you for you time,
-Bogdan
 
 _______________________________________________
 kexec mailing list
