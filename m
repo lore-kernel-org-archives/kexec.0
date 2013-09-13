@@ -1,18 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VKQam-0000bA-JN
- for kexec@lists.infradead.org; Fri, 13 Sep 2013 10:27:13 +0000
-Message-Id: <5233048802000078000F3075@nat28.tlf.novell.com>
-Date: Fri, 13 Sep 2013 11:26:48 +0100
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [PATCH 2/9] kexec: add public interface for improved
- load/unload sub-ops
-References: <1379015347-21653-1-git-send-email-david.vrabel@citrix.com>
- <1379015347-21653-3-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1379015347-21653-3-git-send-email-david.vrabel@citrix.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+ id 1VKR0a-0001LQ-B1
+ for kexec@lists.infradead.org; Fri, 13 Sep 2013 10:53:53 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 7B7753EE102
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:23 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6D2F145DE50
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:23 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5700545DE4F
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:23 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 47B431DB8037
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:23 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id F3D691DB8032
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:22 +0900 (JST)
+Subject: [PATCH 0/2] makedumpfile, sadump: fix two GUID print bugs
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Fri, 13 Sep 2013 19:53:22 +0900
+Message-ID: <20130913105216.2332.8060.stgit@localhost6.localdomain6>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,25 +35,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: xen-devel <xen-devel@lists.xenproject.org>, Daniel Kiper <daniel.kiper@oracle.com>, Keir Fraser <keir@xen.org>, kexec@lists.infradead.org
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
->>> On 12.09.13 at 21:49, David Vrabel <david.vrabel@citrix.com> wrote:
-> +#else /* __XEN_INTERFACE_VERSION__ < 0x00040400 */
-> +
-> +#define KEXEC_CMD_kexec_load KEXEC_CMD_kexec_load_v1
-> +#define KEXEC_CMD_kexec_unload KEXEC_CMD_kexec_unload_v1
-> +typedef struct xen_kexec_load {
-> +    int type;
-> +    xen_kexec_image_t image;
-> +} xen_kexec_load_t;
+Hello Kumagai-san,
 
-Is there anything preventing the use of two #define-s here
-instead of repeating the declaration (which results in these and
-the ones with the _v1 tags not being interchangeable)?
+These are fixing the two bugs in printing GUID on sadump format.
+Could you apply these?
 
-Jan
+These patchs are built on top of v1.5.4.
 
+---
+
+HATAYAMA Daisuke (2):
+      sadump: correct buffer size for GUID EFI text representation
+      sadump: convert the first three fields of EFI GUID from little-endian into big-endian
+
+
+ sadump_info.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+-- 
+
+Thanks.
+HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
