@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VKR0c-0001LT-2t
+ id 1VKR0c-0001Ls-2u
  for kexec@lists.infradead.org; Fri, 13 Sep 2013 10:53:56 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A2A2D3EE0B6
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:28 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 95C4E45DE51
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:28 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7F00145DE50
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:28 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7273D1DB8037
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:28 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 29D701DB8032
- for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:28 +0900 (JST)
-Subject: [PATCH 1/2] sadump: correct buffer size for GUID EFI text
- representation
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 0BB853EE0AE
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:34 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id F1E5B45DE4D
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id DC26245DD78
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id D02021DB803A
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 89B4B1DB802C
+ for <kexec@lists.infradead.org>; Fri, 13 Sep 2013 19:53:33 +0900 (JST)
+Subject: [PATCH 2/2] sadump: convert the first three fields of EFI GUID from
+ little-endian into big-endian
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Fri, 13 Sep 2013 19:53:27 +0900
-Message-ID: <20130913105327.2332.70627.stgit@localhost6.localdomain6>
+Date: Fri, 13 Sep 2013 19:53:32 +0900
+Message-ID: <20130913105332.2332.34743.stgit@localhost6.localdomain6>
 In-Reply-To: <20130913105216.2332.8060.stgit@localhost6.localdomain6>
 References: <20130913105216.2332.8060.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -42,49 +41,39 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
-While GUID EFI text representaion needs 36 bytes, all the buffers for
-GUID EFI passed to guid_to_str() are of 33 bytes, due to which last
-three characters in GUID are not displayed now.
-
-This patch increases buffer size from 33 bytes to 36 bytes and make
-GUID fully visible.
+Although RFC 4122 recommends network byte order for all fields of
+UUID, EFI GUID uses little-endian for the first three fields TimeLow,
+TimeMid and TimeHighAndVersion. Thus, in text representation of the
+GUID, converting the three fields from little-endian into big-endian
+is needed.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- sadump_info.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sadump_info.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/sadump_info.c b/sadump_info.c
-index be6cf55..e563180 100644
+index e563180..84126b1 100644
 --- a/sadump_info.c
 +++ b/sadump_info.c
 @@ -23,6 +23,8 @@
  #include "print_info.h"
  #include "sadump_mod.h"
  
-+#define SADUMP_EFI_GUID_TEXT_REPR_LEN 36
++#include <arpa/inet.h> /* htonl, htons */
 +
+ #define SADUMP_EFI_GUID_TEXT_REPR_LEN 36
+ 
  #ifdef __x86__
- 
- #define KEXEC_NOTE_HEAD_BYTES roundup(sizeof(Elf32_Nhdr), 4)
-@@ -427,7 +429,7 @@ read_sadump_header(char *filename)
- 	unsigned long bitmap_len, dumpable_bitmap_len;
- 	enum sadump_format_type flag_sadump;
- 	uint32_t smram_cpu_state_size = 0;
--	char guid[33];
-+	char guid[SADUMP_EFI_GUID_TEXT_REPR_LEN+1];
- 
- 	if ((si->sph_memory = malloc(SADUMP_DEFAULT_BLOCK_SIZE)) == NULL) {
- 		ERRMSG("Can't allocate memory for partition header buffer: "
-@@ -664,7 +666,7 @@ read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sdi)
+@@ -334,7 +336,7 @@ guid_to_str(efi_guid_t *guid, char *buf, size_t buflen)
  {
- 	struct sadump_part_header *sph = NULL;
- 	unsigned long offset = 0;
--	char guid[33];
-+	char guid[SADUMP_EFI_GUID_TEXT_REPR_LEN+1];
- 
- 	if ((sph = malloc(si->sh_memory->block_size)) == NULL) {
- 		ERRMSG("Can't allocate memory for partition header buffer. "
+ 	snprintf(buf, buflen,
+ 		 "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+-		 guid->data1, guid->data2, guid->data3,
++		 htonl(guid->data1), htons(guid->data2), htons(guid->data3),
+ 		 guid->data4[0], guid->data4[1], guid->data4[2],
+ 		 guid->data4[3], guid->data4[4], guid->data4[5],
+ 		 guid->data4[6], guid->data4[7]);
 
 
 _______________________________________________
