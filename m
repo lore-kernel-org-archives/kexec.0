@@ -1,15 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VKJf9-0007j0-Pd
- for kexec@lists.infradead.org; Fri, 13 Sep 2013 03:03:18 +0000
-Message-ID: <52327FB8.4010208@mxc.nes.nec.co.jp>
-Date: Fri, 13 Sep 2013 12:00:08 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VKNZI-0003LZ-Qi
+ for kexec@lists.infradead.org; Fri, 13 Sep 2013 07:13:29 +0000
+Date: Fri, 13 Sep 2013 15:12:40 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 15/16] bootparam: Pass acpi_rsdp pointer in bootparam
+Message-ID: <20130913071240.GF13561@dhcp-16-126.nay.redhat.com>
+References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
+ <1378849471-10521-16-git-send-email-vgoyal@redhat.com>
+ <522FA2A8.8080703@zytor.com> <20130911114419.GB31551@x1.alien8.de>
+ <20130911134534.GB15364@redhat.com>
+ <20130911143216.GA933@x1.alien8.de>
+ <20130912064930.GA5288@dhcp-16-126.nay.redhat.com>
+ <20130912125350.GB9280@x1.alien8.de>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: show needed memory
-References: <E1VEnuJ-0000KK-Qu@eag09.americas.sgi.com>
-In-Reply-To: <E1VEnuJ-0000KK-Qu@eag09.americas.sgi.com>
+Content-Disposition: inline
+In-Reply-To: <20130912125350.GB9280@x1.alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +29,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: cpw@sgi.com
-Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: matthew.garrett@nebula.com, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, zohar@linux.vnet.ibm.com, Vivek Goyal <vgoyal@redhat.com>
 
-Hello Cliff,
-
-(2013/08/29 7:08), Cliff Wickman wrote:
-> From: Cliff Wickman <cpw@sgi.com>
+On 09/12/13 at 02:53pm, Borislav Petkov wrote:
+> On Thu, Sep 12, 2013 at 03:34:15PM +0800, Dave Young wrote:
+> > I'm playing with skipping SetVirtualAddressMap in kexec kernel, for
+> > same kernel the test result is ok for me both for kexec and kdump.
+> > Takao Indoh sent a patch with this approatch, but his V2 switched to
+> > use physical mapping. During my test, additional data of config table
 > 
-> If there is not enough memory available to run in cyclic mode display
-> how much more would be needed to do so.
+> Physical mapping won't work because of some very brilliant Apple UEFI
+> implementations, as I came to realize. My previous version did that :)
 > 
-> Diffed against makedumpfile-1.5.4
-> Signed-off-by: Cliff Wickman <cpw@sgi.com>
-
-This patch depends on your "use non-cyclic when possible"
-and it was rejected, I'll reject this patch too.
-
-
-Thanks
-Atsushi Kumagai
-
-> ---
->   makedumpfile.c |    8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
+> > elems need to be saved besides of fw_vendor, runtime and tables or
+> > dereference taglep->guid will panic.
+> >
+> > Also kexec userspace need to fill efi_info in bootparams and pass the
+> > previous saved efi data to 2nd kernel.
 > 
-> Index: makedumpfile-1.5.4/makedumpfile.c
-> ===================================================================
-> --- makedumpfile-1.5.4.orig/makedumpfile.c
-> +++ makedumpfile-1.5.4/makedumpfile.c
-> @@ -7778,11 +7778,15 @@ plenty_of_memory(void)
->   {
->   	unsigned long free_size;
->   	unsigned long needed_size;
-> +	long slack = 10; /* 10M extra */
-> +	long meg = 1024*1024;
->   
->   	free_size = get_free_memory_size();
-> -	needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-> -	if (free_size > (needed_size + (10*1024*1024)))
-> +	needed_size = ((info->max_mapnr * 2) / BITPERBYTE) + (slack * meg);
-> +	if (free_size > needed_size)
->   		return 1;
-> +	PROGRESS_MSG("Need %ldM more memory to use noncyclic mode.\n",
-> +		(needed_size - free_size)/meg);
->   	return 0;
->   }
+> Hmm, yes, we need to tell the kexec kernel the EFI regions.
+> 
+> > I'm worrying just skiping enter virt mode have risk though it's an
+> > easy solution. Your 1:1 mapping approatch looks better. I look forward
+> > to test your new patchset.
+> 
+> Yeah, we had a discussion at the SUSE Labs conf about whether we could
+> really skip SetVirtualAddressMap in the first kernel and do it in the
+> kexec kernel but the first kernel might want to call runtime services
+> for whatever reason and for that we need the runtime services. So we
+> opted for the stable VA mappings.
+
+I means only skipping SetVirtualAddressMap in kexec kernel, ioremap result 
+should be same with 1st kernel, but I'm not sure, it's what I worried about.
+With 1:1 mapping, even we do not call SetVirtualAddressMap in kexec kernel
+the mapping will be same in theory.
+
+> 
+> > Are you also working on kexec userspace part? Already have a patch?
+> 
+> Why userspace part - I'm thinking the kexec'ed kernel would simply add
+> the mappings made by SetVirtualAddressMap without calling it. And it
+> will know which mappings go to which virtual addresses because we start
+> at the -4G virtual address and go downwards and the mappings will have
+> the same addresses per UEFI implementation.
+> 
+> It'll make more sense when you see the code, I hope :)
+
+For user space part, we need at least fill efi_info in kexec boot loader.
+I have a test patch for this.
+
+Also the fw_vendor, runtime, tables elements will be fixed up to use
+virtual address after 1st kernel call SetVirtualAddress, so even with
+1:1 mapping we still need save them and use in kexec kernel.
+Such as below code assume fw_vendor is physical address:
+c16 = tmp = early_ioremap(efi.systab->fw_vendor, 2);
+
+So as what Takao has done we need to save them and use the saved value
+in kexeced kernel. Previously he used is_kdump_kernel() to check if it's
+a kdump kernel. But this is not enough because we'd better to also
+consider kexec. I'm thinking below two approatches:
+
+1. use bootloader_type as below
+#define LOADER_TYPE_KEXEC	0x0D
+int is_kexec_boot()
+{
+	if (bootloader_type == LOADER_TYPE_KEXEC)
+		return 1;
+	return 0;
+}
+
+2. 1) is specific to X86, if consider other futuer arch, maybe add a
+kernel cmdline like kexecboot=X [X=0|1|2], 0:not kexec 1:kexec 2:kdump
+
+> 
+> Thanks.
+> 
+> -- 
+> Regards/Gruss,
+> Boris.
 
 _______________________________________________
 kexec mailing list
