@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VLZoR-00070X-Km
- for kexec@lists.infradead.org; Mon, 16 Sep 2013 14:30:04 +0000
-Date: Mon, 16 Sep 2013 10:28:52 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 00/16] [RFC PATCH] Signed kexec support
-Message-ID: <20130916142852.GB20753@redhat.com>
-References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
- <20130912034023.GA10877@kroah.com>
- <20130912114336.GA28500@redhat.com>
- <20130912161705.GA2650@kroah.com>
- <1379010250.9796.118.camel@dhcp-9-2-203-236.watson.ibm.com>
+ id 1VLejk-0006y5-LS
+ for kexec@lists.infradead.org; Mon, 16 Sep 2013 19:45:34 +0000
+Date: Mon, 16 Sep 2013 15:45:04 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <131560856.13730586.1379360704169.JavaMail.root@redhat.com>
+In-Reply-To: <50924626.13720007.1379359322944.JavaMail.root@redhat.com>
+Subject: [BUG] [compressed kdump / SADUMP] makedumpfile header truncation error
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1379010250.9796.118.camel@dhcp-9-2-203-236.watson.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,36 +21,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: matthew.garrett@nebula.com, Greg KH <greg@kroah.com>, d.kasatkin@samsung.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org
+To: kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, usui@mxm.nes.nec.co.jp, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, lisa mitchell <lisa.mitchell@hp.com>, RuiRui Yang <ruyang@redhat.com>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kumagai-atsushi <kumagai-atsushi@mxc.nes.nec.co.jp>, WANG Chao <chaowang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-On Thu, Sep 12, 2013 at 02:24:10PM -0400, Mimi Zohar wrote:
 
-[..]
-> > > So existing IMA does not seem to have been written for an environment
-> > > where all the user space is not signed we don't trust root and root can
-> > > attack a signed binary. And my patches try to fill that gap. 
-> > 
-> > It sounds like your changes should go into the IMA core code to resolve
-> > the issues there, as I'm sure they want to also protect from the issues
-> > you have pointed out here.  Have you talked to those developers about
-> > this?
-> 
-> IMA assumes a different threat model and performance tradeoffs.  The
-> solutions suggested for the kexec, single userspace application threat
-> model, presumably wouldn't scale very well.
+Recent testing on very large memory systems dictates that an
+update is required for the compressed kdump header generated
+by makedumpfile.
 
-Hi Mimi,
+The dumpfile header has this field, which was inherited from 
+the old "diskdump" facility:
 
-Does IMA trust root or not? I got a feeling that IMA is assuming that
-root is trusted. Otherwise root can do raw writes to disk and bypass
-all the logic related to appraisal result caching.
+ struct disk_dump_header {
+ ...
+        unsigned int            max_mapnr;      /* = max_mapnr */
+ ...
 
-In fact on my system root disk belongs to group "disk". So any user in
-"disk" group seems to be a trusted user for IMA to work.
+and which, among other things, is used by the crash utility as a
+delimiter to determine whether a physical address read request is
+legitimate.  And obviously the field cannot handle PFN values greater
+than 32-bits.
 
-Thanks
-Vivek
+The makedumpfile source code does have its own max_mapnr representation
+in its DumpInfo structure in "makedumpfile.h":
+
+ struct DumpInfo {
+ ...
+        unsigned long long      max_mapnr;   /* number of page descriptor */
+ ...
+
+But in its "diskdump_mod.h" file, it carries forward the old diskdump 
+header format, which has the 32-bit field:
+
+ struct disk_dump_header {
+ ...
+        unsigned int            max_mapnr;      /* = max_mapnr */
+ ...
+
+And here in "makedumpfile.c", the inadvertent truncation occurs
+when the PFN is greater than 32-bits:
+
+ int
+ write_kdump_header(void)
+ {
+ ...
+        dh->max_mapnr      = info->max_mapnr;
+ ...
+
+The 32-bit field has also been carried forward into the SADUMP header
+as well, which has this in "sadump_mod.h":
+
+ struct sadump_header {
+	...
+        uint32_t max_mapnr;     /* = max_mapnr */	
+	...
+
+And when these header structures change, the crash utility will need 
+to be changed accordingly.
+
+Preferably for backwards-compatibility, a new header_version can be 
+created, with the new expanded field located in the kdump_sub_header
+so that the original base structure can remain as-is.  But I leave that
+up to the maintainers.
+
+Thanks,
+  Dave
 
 _______________________________________________
 kexec mailing list
