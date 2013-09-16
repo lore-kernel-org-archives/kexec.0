@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VLFG5-00085Z-L0
- for kexec@lists.infradead.org; Sun, 15 Sep 2013 16:33:17 +0000
-Date: Sun, 15 Sep 2013 17:32:49 +0100
-From: Hedi Berriche <hedi@sgi.com>
-Subject: Re: [PATCH TRIVIAL] kexec: Typo s/the/then/
-Message-ID: <20130915163249.GG8742@dangermouse.emea.sgi.com>
-References: <1379237737-3070-1-git-send-email-geert@linux-m68k.org>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VLY1O-0002tC-O3
+ for kexec@lists.infradead.org; Mon, 16 Sep 2013 12:35:20 +0000
+Date: Mon, 16 Sep 2013 14:34:34 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH 8/9] x86: check kexec relocation code fits in a page
+Message-ID: <20130916123434.GA14630@debian70-amd64.local.net-space.pl>
+References: <1379015347-21653-1-git-send-email-david.vrabel@citrix.com>
+ <1379015347-21653-9-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1379237737-3070-1-git-send-email-geert@linux-m68k.org>
+In-Reply-To: <1379015347-21653-9-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,35 +24,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: kexec@lists.infradead.org, Jiri Kosina <trivial@kernel.org>, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: kexec@lists.infradead.org, Keir Fraser <keir@xen.org>, Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xen.org
 
-On Sun, Sep 15, 2013 at 10:36 Geert Uytterhoeven wrote:
-| Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-| ---
-|  kernel/kexec.c |    2 +-
-|  1 file changed, 1 insertion(+), 1 deletion(-)
-| 
-| diff --git a/kernel/kexec.c b/kernel/kexec.c
-| index 2a74f30..490afc0 100644
-| --- a/kernel/kexec.c
-| +++ b/kernel/kexec.c
-| @@ -921,7 +921,7 @@ static int kimage_load_segment(struct kimage *image,
-|   *   reinitialize them.
-|   *
-|   * - A machine specific part that includes the syscall number
-| - *   and the copies the image to it's final destination.  And
-| + *   and then copies the image to it's final destination.  And
-|   *   jumps into the image at entry.
+On Thu, Sep 12, 2013 at 08:49:06PM +0100, David Vrabel wrote:
+> From: David Vrabel <david.vrabel@citrix.com>
+>
+> The kexec relocation (control) code must fit in a single page so add a
+> link time check for this.
+>
+> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+> ---
+>  xen/arch/x86/xen.lds.S |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+>
+> diff --git a/xen/arch/x86/xen.lds.S b/xen/arch/x86/xen.lds.S
+> index 9600cdf..078bac6 100644
+> --- a/xen/arch/x86/xen.lds.S
+> +++ b/xen/arch/x86/xen.lds.S
+> @@ -198,3 +198,5 @@ SECTIONS
+>    .stab.indexstr 0 : { *(.stab.indexstr) }
+>    .comment 0 : { *(.comment) }
+>  }
+> +
+> +ASSERT(__kexec_reloc_size <= PAGE_SIZE, "kexec control code is too large")
 
-Well, if you're fixing typos, might as well get rid of the wrong "it's"
-and turn into "its".
+ASSERT(kexec_reloc_size - kexec_reloc <= PAGE_SIZE, "kexec control code is too large")
 
-Cheers,
-Hedi.
--- 
-Be careful of reading health books, you might die of a misprint.
-	-- Mark Twain
+This way you could remove this crazy __kexec_reloc_size variable.
+Last time I sent broken solution for that issue. This one works.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
