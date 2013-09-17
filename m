@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from ocelot.phlegethon.org ([81.29.64.94] helo=mail.phlegethon.org)
+Received: from g6t0184.atlanta.hp.com ([15.193.32.61])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VLqTY-0006ls-Ly
- for kexec@lists.infradead.org; Tue, 17 Sep 2013 08:17:37 +0000
-Date: Tue, 17 Sep 2013 09:17:04 +0100
-From: Tim Deegan <tim@xen.org>
-Subject: Re: [Xen-devel] [PATCH 1/5] purgatory: put variables altered by kexec
- in .data not .bss
-Message-ID: <20130917081704.GA25707@ocelot.phlegethon.org>
-References: <1379016042-22510-1-git-send-email-david.vrabel@citrix.com>
- <1379016042-22510-2-git-send-email-david.vrabel@citrix.com>
- <20130916124302.GC14630@debian70-amd64.local.net-space.pl>
- <5236FE07.2010405@citrix.com>
- <20130917013309.GA301@debian70-amd64.local.net-space.pl>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20130917013309.GA301@debian70-amd64.local.net-space.pl>
+ id 1VLqXr-0006pe-A6
+ for kexec@lists.infradead.org; Tue, 17 Sep 2013 08:22:03 +0000
+Message-ID: <5238110F.9030408@hp.com>
+Date: Tue, 17 Sep 2013 16:21:35 +0800
+From: Jingbai Ma <jingbai.ma@hp.com>
+MIME-Version: 1.0
+Subject: Re: [BUG] [compressed kdump / SADUMP] makedumpfile header truncation
+ error
+References: <131560856.13730586.1379360704169.JavaMail.root@redhat.com>
+ <5237DC38.5020505@hp.com> <5237FCEC.8000608@jp.fujitsu.com>
+ <523800C4.6070809@hp.com> <523805C3.5030803@jp.fujitsu.com>
+In-Reply-To: <523805C3.5030803@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +21,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, xen-devel@lists.xen.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: Baoquan He <bhe@redhat.com>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, usui@mxm.nes.nec.co.jp, WANG Chao <chaowang@redhat.com>, lisa mitchell <lisa.mitchell@hp.com>, RuiRui Yang <ruyang@redhat.com>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kumagai-atsushi <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec@lists.infradead.org, Jingbai Ma <jingbai.ma@hp.com>, "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-At 03:33 +0200 on 17 Sep (1379388789), Daniel Kiper wrote:
-> On Mon, Sep 16, 2013 at 01:48:07PM +0100, David Vrabel wrote:
-> > On 16/09/13 13:43, Daniel Kiper wrote:
-> > > On Thu, Sep 12, 2013 at 09:00:38PM +0100, David Vrabel wrote:
-> > >> From: David Vrabel <david.vrabel@citrix.com>
-> > >>
-> > >> elf_rel_set_symbol() fails if the symbol is in the .bss section.
-> > >>
-> > >> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
-> > >> ---
-> > >>  purgatory/arch/i386/console-x86.c        |    6 +++---
-> > >>  purgatory/arch/i386/crashdump_backup.c   |    8 +++++---
-> > >>  purgatory/arch/x86_64/purgatory-x86_64.c |    6 +++---
-> > >>  purgatory/include/purgatory.h            |    4 ++++
-> > >>  purgatory/purgatory.c                    |    4 ++--
-> > >>  5 files changed, 17 insertions(+), 11 deletions(-)
-> > >>
-> > >> diff --git a/purgatory/arch/i386/console-x86.c b/purgatory/arch/i386/console-x86.c
-> > >> index 9773573..40a734b 100644
-> > >> --- a/purgatory/arch/i386/console-x86.c
-> > >> +++ b/purgatory/arch/i386/console-x86.c
-> > >> @@ -55,9 +55,9 @@ static void putchar_vga(int ch)
-> > >>   */
-> > >>
-> > >>  /* Base Address */
-> > >> -uint8_t console_serial = 0;
-> > >> -uint16_t serial_base = 0x3f8; /* TTYS0 */
-> > >> -uint32_t serial_baud = 0;
-> > >> +uint8_t console_serial __data = 0;
-> > >> +uint16_t serial_base __data = 0x3f8; /* TTYS0 */
-> > >> +uint32_t serial_baud __data = 0;
-> > >
-> > > Hmmm... I do not know why we need this patch. I can build kexec-tools
-> > > in my env without it. I suppose that most of people can too.
-> > > Could you check what is wrong with your build system?
-> >
-> > Regardless of whether it works with some tools, it doesn't make a whole
-> > lot of sense to try and set the value of symbols in the .bss section.
-> > .bss is only for symbols with a value of zero.
-> 
-> To be precise .bss is only for uninitialized symbols. Anyway, probably
-> your compiler is screwed. In my case it sees that a given symbol is
-> initialized and places it in .data section itself.
+On 09/17/2013 03:33 PM, HATAYAMA Daisuke wrote:
+> (2013/09/17 16:12), Jingbai Ma wrote:
+>> On 09/17/2013 02:55 PM, HATAYAMA Daisuke wrote:
+>>
+>> int32_t, int64_t, uint64_t, etc ... are parts of C99 standard:
+>> http://en.wikipedia.org/wiki/C_data_types
+>> All there types have been supported by GCC, so them should work on all
+>> the architectures.
+>>
+>> Although change these persistent data structure will affect both
+>> makedumpfile and crash utility, but we will benefit from the
+>> consistent data structures independent from architectures. We can
+>> analyze a dumpfile on a OS with different architecture than the
+>> crashed OS.
+>>
+>>
+>
+> I know stdint.h things and usefulness if we can use crash and makedumpfile
+> for a multiple architectures on single arch. In fact, crash already
+> supports
+> cross platform build among some architectures thanks to Dave.
+>
+> My question came from the fact that it looks like you introduced a single
+> modified kdump_sub_header structure for all the architectures. They might
+> have different combination of length between int and long and maybe
+> also have other each architecture specific incompatibility. It wouldn't
+> work well.
+>
+> But from your reply, I think you mean a fully new header for
+> kdump-compressed
+> format, right? If so, it must work well. But of course you need to modify
+> both of makedumpfile and crash utility to support it.
+>
 
-David, are you using a compiler that doesn't support
--fno-zero-initialized-in-bss?  If that's a supported optoin, then the
-__data markers are indeed necessary.
+Yes, I would like to have a new header for kdump-compressed format. But 
+I'm not sure how much code will be affected in makedumpfile and crash 
+utility.
+I'm still under investigating, any ideas would be appreciated.
 
-Tim.
+
+-- 
+Thanks,
+Jingbai Ma
 
 _______________________________________________
 kexec mailing list
