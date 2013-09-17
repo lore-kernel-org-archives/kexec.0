@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VLejk-0006y5-LS
- for kexec@lists.infradead.org; Mon, 16 Sep 2013 19:45:34 +0000
-Date: Mon, 16 Sep 2013 15:45:04 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <131560856.13730586.1379360704169.JavaMail.root@redhat.com>
-In-Reply-To: <50924626.13720007.1379359322944.JavaMail.root@redhat.com>
-Subject: [BUG] [compressed kdump / SADUMP] makedumpfile header truncation error
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VLkAo-0006T6-OE
+ for kexec@lists.infradead.org; Tue, 17 Sep 2013 01:33:51 +0000
+Date: Tue, 17 Sep 2013 03:33:09 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH 1/5] purgatory: put variables altered by kexec in .data
+ not .bss
+Message-ID: <20130917013309.GA301@debian70-amd64.local.net-space.pl>
+References: <1379016042-22510-1-git-send-email-david.vrabel@citrix.com>
+ <1379016042-22510-2-git-send-email-david.vrabel@citrix.com>
+ <20130916124302.GC14630@debian70-amd64.local.net-space.pl>
+ <5236FE07.2010405@citrix.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5236FE07.2010405@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,72 +27,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Baoquan He <bhe@redhat.com>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, usui@mxm.nes.nec.co.jp, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, lisa mitchell <lisa.mitchell@hp.com>, RuiRui Yang <ruyang@redhat.com>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kumagai-atsushi <kumagai-atsushi@mxc.nes.nec.co.jp>, WANG Chao <chaowang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
+On Mon, Sep 16, 2013 at 01:48:07PM +0100, David Vrabel wrote:
+> On 16/09/13 13:43, Daniel Kiper wrote:
+> > On Thu, Sep 12, 2013 at 09:00:38PM +0100, David Vrabel wrote:
+> >> From: David Vrabel <david.vrabel@citrix.com>
+> >>
+> >> elf_rel_set_symbol() fails if the symbol is in the .bss section.
+> >>
+> >> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+> >> ---
+> >>  purgatory/arch/i386/console-x86.c        |    6 +++---
+> >>  purgatory/arch/i386/crashdump_backup.c   |    8 +++++---
+> >>  purgatory/arch/x86_64/purgatory-x86_64.c |    6 +++---
+> >>  purgatory/include/purgatory.h            |    4 ++++
+> >>  purgatory/purgatory.c                    |    4 ++--
+> >>  5 files changed, 17 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/purgatory/arch/i386/console-x86.c b/purgatory/arch/i386/console-x86.c
+> >> index 9773573..40a734b 100644
+> >> --- a/purgatory/arch/i386/console-x86.c
+> >> +++ b/purgatory/arch/i386/console-x86.c
+> >> @@ -55,9 +55,9 @@ static void putchar_vga(int ch)
+> >>   */
+> >>
+> >>  /* Base Address */
+> >> -uint8_t console_serial = 0;
+> >> -uint16_t serial_base = 0x3f8; /* TTYS0 */
+> >> -uint32_t serial_baud = 0;
+> >> +uint8_t console_serial __data = 0;
+> >> +uint16_t serial_base __data = 0x3f8; /* TTYS0 */
+> >> +uint32_t serial_baud __data = 0;
+> >
+> > Hmmm... I do not know why we need this patch. I can build kexec-tools
+> > in my env without it. I suppose that most of people can too.
+> > Could you check what is wrong with your build system?
+>
+> Regardless of whether it works with some tools, it doesn't make a whole
+> lot of sense to try and set the value of symbols in the .bss section.
+> .bss is only for symbols with a value of zero.
 
-Recent testing on very large memory systems dictates that an
-update is required for the compressed kdump header generated
-by makedumpfile.
+To be precise .bss is only for uninitialized symbols. Anyway, probably
+your compiler is screwed. In my case it sees that a given symbol is
+initialized and places it in .data section itself.
 
-The dumpfile header has this field, which was inherited from 
-the old "diskdump" facility:
-
- struct disk_dump_header {
- ...
-        unsigned int            max_mapnr;      /* = max_mapnr */
- ...
-
-and which, among other things, is used by the crash utility as a
-delimiter to determine whether a physical address read request is
-legitimate.  And obviously the field cannot handle PFN values greater
-than 32-bits.
-
-The makedumpfile source code does have its own max_mapnr representation
-in its DumpInfo structure in "makedumpfile.h":
-
- struct DumpInfo {
- ...
-        unsigned long long      max_mapnr;   /* number of page descriptor */
- ...
-
-But in its "diskdump_mod.h" file, it carries forward the old diskdump 
-header format, which has the 32-bit field:
-
- struct disk_dump_header {
- ...
-        unsigned int            max_mapnr;      /* = max_mapnr */
- ...
-
-And here in "makedumpfile.c", the inadvertent truncation occurs
-when the PFN is greater than 32-bits:
-
- int
- write_kdump_header(void)
- {
- ...
-        dh->max_mapnr      = info->max_mapnr;
- ...
-
-The 32-bit field has also been carried forward into the SADUMP header
-as well, which has this in "sadump_mod.h":
-
- struct sadump_header {
-	...
-        uint32_t max_mapnr;     /* = max_mapnr */	
-	...
-
-And when these header structures change, the crash utility will need 
-to be changed accordingly.
-
-Preferably for backwards-compatibility, a new header_version can be 
-created, with the new expanded field located in the kdump_sub_header
-so that the original base structure can remain as-is.  But I leave that
-up to the maintainers.
-
-Thanks,
-  Dave
+Daniel
 
 _______________________________________________
 kexec mailing list
