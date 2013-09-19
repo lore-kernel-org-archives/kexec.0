@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from shell.v3.sk ([195.168.3.45])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VMfYq-0008B4-8Q
- for kexec@lists.infradead.org; Thu, 19 Sep 2013 14:50:29 +0000
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2] vmcore-dmesg: Understand >= v3.11-rc4 dmesg
-Date: Thu, 19 Sep 2013 16:49:46 +0200
-Message-Id: <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
-In-Reply-To: <20130919143815.GA4487@dhcp-16-126.nay.redhat.com>
-References: <20130919143815.GA4487@dhcp-16-126.nay.redhat.com>
+ id 1VMo1Y-0003j3-K0
+ for kexec@lists.infradead.org; Thu, 19 Sep 2013 23:52:42 +0000
+Date: Thu, 19 Sep 2013 13:56:40 -0700
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/4] kexec/kexec.c: Prefix hex numbers by 0x
+Message-ID: <20130919205640.GF2918@verge.net.au>
+References: <1379407031-5466-1-git-send-email-geert@linux-m68k.org>
+ <1379407031-5466-4-git-send-email-geert@linux-m68k.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1379407031-5466-4-git-send-email-geert@linux-m68k.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,80 +20,20 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Joe Perches <joe@perches.com>, Lubomir Rintel <lkundrak@v3.sk>, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: kexec@lists.infradead.org
 
-Symbol name changed with the following commit:
-62e32ac printk: rename struct log to struct printk_log
+On Tue, Sep 17, 2013 at 10:37:11AM +0200, Geert Uytterhoeven wrote:
+> It's confusing that some pointers are printed as hex numbers prefixed with
+> 0x, while some other values are printed as hex numbers without prefixes.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Dave Young <dyoung@redhat.com>
----
-
-Changes for v2:
-  * Clarified printk_log vs. log in some comments.
-
- vmcore-dmesg/vmcore-dmesg.c |   16 ++++++++++++----
- 1 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index 0f477c0..dd222cd 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -34,10 +34,10 @@ static loff_t logged_chars_vaddr;
- static loff_t log_first_idx_vaddr;
- static loff_t log_next_idx_vaddr;
- 
--/* struct log size */
-+/* struct printk_log (or older log) size */
- static uint64_t log_sz;
- 
--/* struct log field offsets */
-+/* struct printk_log (or older log) field offsets */
- static uint64_t log_offset_ts_nsec = UINT64_MAX;
- static uint16_t log_offset_len = UINT16_MAX;
- static uint16_t log_offset_text_len = UINT16_MAX;
-@@ -324,19 +324,27 @@ static void scan_vmcoreinfo(char *start, size_t size)
- 			*symbol[i].vaddr = vaddr;
- 		}
- 
--		/* Check for "SIZE(log)=" */
-+		/* Check for "SIZE(printk_log)" or older "SIZE(log)=" */
- 		if (memcmp("SIZE(log)=", pos, 10) == 0)
- 			log_sz = strtoull(pos + 10, NULL, 10);
-+		if (memcmp("SIZE(printk_log)=", pos, 17) == 0)
-+			log_sz = strtoull(pos + 17, NULL, 10);
- 
--		/* Check for struct log field offsets */
-+		/* Check for struct printk_log (or older log) field offsets */
- 		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
- 			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
-+		if (memcmp("OFFSET(printk_log.ts_nsec)=", pos, 27) == 0)
-+			log_offset_ts_nsec = strtoull(pos + 27, NULL, 10);
- 
- 		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
- 			log_offset_len = strtoul(pos + 16, NULL, 10);
-+		if (memcmp("OFFSET(printk_log.len)=", pos, 23) == 0)
-+			log_offset_len = strtoul(pos + 23, NULL, 10);
- 
- 		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
- 			log_offset_text_len = strtoul(pos + 21, NULL, 10);
-+		if (memcmp("OFFSET(printk_log.text_len)=", pos, 28) == 0)
-+			log_offset_text_len = strtoul(pos + 28, NULL, 10);
- 
- 		if (last_line)
- 			break;
--- 
-1.7.1
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
