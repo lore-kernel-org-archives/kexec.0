@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
+Received: from g4t0016.houston.hp.com ([15.201.24.19])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VMdnQ-00053E-GR
- for kexec@lists.infradead.org; Thu, 19 Sep 2013 12:57:25 +0000
+ id 1VMdyH-0005Un-8e
+ for kexec@lists.infradead.org; Thu, 19 Sep 2013 13:08:38 +0000
 From: "Ma, Jingbai (Kingboard)" <kingboard.ma@hp.com>
 Subject: Re: [BUG] [compressed kdump / SADUMP] makedumpfile header
  truncation error
-Date: Thu, 19 Sep 2013 12:55:54 +0000
-Message-ID: <CE611534.20C2C%jingbai.ma@hp.com>
+Date: Thu, 19 Sep 2013 13:07:22 +0000
+Message-ID: <CE611563.20C6D%jingbai.ma@hp.com>
 In-Reply-To: <68576174.14759428.1379513870200.JavaMail.root@redhat.com>
 Content-Language: en-US
-Content-ID: <B07A6EA0F781704DA11CA8D6454DCC87@Compaq.com>
+Content-ID: <7B5892DD3388EE4294808B411387DBC4@Compaq.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,8 +32,6 @@ Cc: Baoquan He <bhe@redhat.com>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
 On 9/18/13 10:17 PM, "Dave Anderson" <anderson@redhat.com> wrote:
 
 
->
->
 >----- Original Message -----
 >> On 09/17/2013 09:23 PM, Dave Anderson wrote:
 >> >
@@ -214,6 +212,11 @@ On 9/18/13 10:17 PM, "Dave Anderson" <anderson@redhat.com> wrote:
 >fields 
 >from the kdump_sub_header_v5 to the new kdump_sub_header before
 >referencing them?
+
+Yes, I was want to do this, but now I would make it easier, just like you
+said,
+add a new 64-bit max_mapnr into the kdump_sub_header.
+
 > 
 >> > But if -- as has been done so far -- an increment of the
 >>header_version in the
@@ -230,12 +233,17 @@ On 9/18/13 10:17 PM, "Dave Anderson" <anderson@redhat.com> wrote:
 >Note that I suggested above that the 64-bit max_mapnr be added to
 >the kdump_sub_header, so that the disk_dump_header itself can remain
 >backwards-compatible.
+
+OK, this approach seems better and less risks. I will prepare patches for
+makedumpfile and crash utility soon.
+Thanks!
+
 >
 >Dave
->
->
->
->
+
+--
+Thanks,
+Jingbai Ma
 
 
 _______________________________________________
