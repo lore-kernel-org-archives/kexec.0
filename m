@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VN0cI-0001vP-QL
- for kexec@lists.infradead.org; Fri, 20 Sep 2013 13:19:28 +0000
+ id 1VN0cI-0001vQ-Rl
+ for kexec@lists.infradead.org; Fri, 20 Sep 2013 13:19:27 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 3/4] kexec/xen: switch to use xc_kexec_get_range for
- get_xen_vmcoreinfo.
-Date: Fri, 20 Sep 2013 14:18:46 +0100
-Message-ID: <1379683127-14349-4-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1379683127-14349-1-git-send-email-david.vrabel@citrix.com>
-References: <1379683127-14349-1-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCHv5 0/4] kexec-tools: add support for Xen 4.4
+Date: Fri, 20 Sep 2013 14:18:43 +0100
+Message-ID: <1379683127-14349-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,75 +21,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: xen-devel@lists.xen.org
-Cc: Don Slutz <Don@CloudSwitch.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>
+Cc: kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>
 
-From: Don Slutz <Don@CloudSwitch.com>
+The series adds support for the new hypercall ABI which should be
+provided by Xen 4.4.  Images are loaded into Xen directly with no
+kernel involvement.
 
-Signed-off-by: Don Slutz <Don@CloudSwitch.com>
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
----
- kexec/crashdump-xen.c |   25 +++++++++++++++++++++++++
- kexec/crashdump.c     |    5 -----
- 2 files changed, 25 insertions(+), 5 deletions(-)
+Please do not apply until the hypervisor side patches are applied to
+Xen.
 
-diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-index 4a5cd8a..b08220e 100644
---- a/kexec/crashdump-xen.c
-+++ b/kexec/crashdump-xen.c
-@@ -164,6 +164,26 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
- }
- 
- #ifdef HAVE_LIBXENCTRL
-+int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
-+{
-+	xc_interface *xc;
-+	int ret = 0;
-+
-+	xc = xc_interface_open(NULL, NULL, 0);
-+	if (!xc) {
-+	        fprintf(stderr, "failed to open xen control interface.\n");
-+	        return -1;
-+	}
-+
-+	ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_VMCOREINFO, 0, len, addr);
-+
-+	xc_interface_close(xc);
-+
-+	if (ret < 0)
-+	        return -1;
-+	return 0;
-+}
-+
- int xen_get_nr_phys_cpus(void)
- {
- 	xc_interface *xc;
-@@ -206,6 +226,11 @@ int xen_get_nr_phys_cpus(void)
- 	return cpu;
- }
- #else
-+int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
-+{
-+	return -1;
-+}
-+
- int xen_get_nr_phys_cpus(void)
- {
- 	return -1;
-diff --git a/kexec/crashdump.c b/kexec/crashdump.c
-index 8d88fdf..131e624 100644
---- a/kexec/crashdump.c
-+++ b/kexec/crashdump.c
-@@ -157,8 +157,3 @@ int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
- {
- 	return get_vmcoreinfo("/sys/kernel/vmcoreinfo", addr, len);
- }
--
--int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len)
--{
--	return get_vmcoreinfo("/sys/hypervisor/vmcoreinfo", addr, len);
--}
--- 
-1.7.2.5
+Patch 1 makes libxc 4.4 mandatory for Xen support.
+
+Patch 2-3 remove uses of /proc/iomem in favour of libxc.
+
+Patch 4 adds the support for loading, unloading, and exec'ing an image
+in Xen.
+
+This series explicitly drops support for older version of libxc/Xen as
+supporting kexec on these hypervisors requires kernel support that
+will never be available upstream.
+
+Changes in v5:
+- Dropped the purgatory patch.
+
+Changes in v4:
+- KEXEC_ARCH_DEFAULT => EM_386
+- add segment in the crash case for the backup src.
+
+Changes in v3 (not posted):
+- Rebased
+
+Changes in v2:
+- Patch from Don Sultz: use libxc for vmcoreinfo.
+- Use xc_get_max_cpus() to get number of PCPUs.
+- Enable unload and exec of images.
+
+David
 
 
 _______________________________________________
