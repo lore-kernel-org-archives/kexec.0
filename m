@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VN6EY-0002lW-Cv
- for kexec@lists.infradead.org; Fri, 20 Sep 2013 19:19:19 +0000
-Date: Fri, 20 Sep 2013 12:18:50 -0700
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: Preliminary kexec support for Linux/m68k
-Message-ID: <20130920191850.GA23335@verge.net.au>
-References: <1379412095-7213-1-git-send-email-geert@linux-m68k.org>
- <20130919210750.GH2918@verge.net.au>
- <CAMuHMdVx3KmL9cK-_g3qcrkHxxCAno+3z4O=kVTOGCYhD_WmWw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVx3KmL9cK-_g3qcrkHxxCAno+3z4O=kVTOGCYhD_WmWw@mail.gmail.com>
+ id 1VN7h8-0005Gi-Ug
+ for kexec@lists.infradead.org; Fri, 20 Sep 2013 20:52:56 +0000
+Date: Fri, 20 Sep 2013 22:52:26 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: A few patches to consider
+Message-ID: <20130920225226.0c3f8439@hananiah.suse.cz>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971B21A4@BPXM01GP.gisp.nec.co.jp>
+References: <E1VEnuJ-0000Jl-CC@eag09.americas.sgi.com>
+ <521FF655.8000909@jp.fujitsu.com>
+ <52391760.9000106@mxc.nes.nec.co.jp>
+ <523A5D9A.7040509@jp.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971B21A4@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,71 +26,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k <linux-m68k@lists.linux-m68k.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "cpw@sgi.com" <cpw@sgi.com>
 
-On Fri, Sep 20, 2013 at 09:15:02AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> Thanks for your comments!
-> 
-> On Thu, Sep 19, 2013 at 11:07 PM, Simon Horman <horms@verge.net.au> wrote:
-> > Pasting two series in one was a bit confusing for me at first.
-> > Perhaps you could consider posting two separate series in future.
-> 
-> Sorry, I wanted to have all information in one series for the first posting, to
-> avoid people having to look around too much if they want to give it a try.
-> 
-> I'll post seperate series in the future.
+On Thu, 19 Sep 2013 05:00:02 +0000
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-Thanks.
-
-> >> Patches:
-> >>   - [PATCH 1/2] kexec: Let slurp_file_len() return the number of bytes
-> >>   - [PATCH 2/2] kexec: Add preliminary m68k support
+> (2013/09/19 11:13), HATAYAMA Daisuke wrote:
+> > (2013/09/18 12:00), Atsushi Kumagai wrote:
+> >> (2013/08/30 10:33), HATAYAMA Daisuke wrote:
+> >>> (2013/08/29 7:08), Cliff Wickman wrote:
+> >>>> From: Cliff Wickman <cpw@sgi.com>
+> >>>>
+> >>>> I am submitting 6 patches that I have found helpful in speeding the dump
+> >>>> process or clarifying the progress report.
+> >>>> They are not a series, and should not be interdependent.  But if you
+> >>>> find any dependencies I apply them in this order:
+> >>>> [PATCH] makedumpfile: reverse -c and -p if using snappy compression
+> >>>> [PATCH] makedumpfile: use non-cyclic when possible
+> >>>> [PATCH] makedumpfile: shorten cyclic exclude-unnecessary passes
+> >>>> [PATCH] makedumpfile: shorten cyclic unnecessary-page scans
+> >>>> [PATCH] makedumpfile: show needed memory
+> >>>> [PATCH] makedumpfile: search for a debug vmlinux
+> >>>>
+> >>>> The last one (search for a debug vmlinux) is useful in identifying huge
+> >>>> pages with the PG_head/PG-tail flags.  There was a patch from Petr Tesarik
+> >>>> that enables that huge page filtering. I don't think you are taking that one
+> >>>> as-is, but are reworking it. Seems like Hatayama-san was doing that work.
+> >>>
+> >>> No. If I have good memory, Kumagai-san was investigating how to integrate
+> >>> huge page filtering into current memory types currently supported by
+> >>> makedumpfile.
 > >>
-> >> Notes:
-> >>   - Based on git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> >> Yes, I was investigating it but I'm not working for it now.
+> >>
+> >> I think main features should work without vmlinux,
+> >> but it was impossible about his patch as said by himself:
+> >>
+> >>> This patch depends on exporting the relevant PG_* flags from the
+> >>> kernel (in VMCOREINFO), and that's where I got stuck, because depending
+> >>> on the number of available bits for the page flags, the kernel either
+> >>> has PG_head and PG_tail, or only PG_compound, so I needed a #ifdef, and
+> >>> the kernel maintainers didn't like the conditional.
+> >>> I can restart the discussion with kernel maintainers and see what I can do
+> >>
+> >> Therefore, I waited that his work is finished and I was going to continue
+> >> my work, but I didn't say my thinking definitely, sorry.
+> >>
+> >> Anyway, I should cooperate with Petr to develop huge page filtering,
+> >> so could you let me know the status of your work ?
+> >>
 > >
-> > A good choice.
+> > To whom do you make this question? It seems Cliff according to content of this question.
+> > If so you should resend. If to me, I have not done huge page filtering work at all so far
+> > as I already said in the previous mail in this thread.
 > 
-> Is it normal I don't see much activity there?
-
-Yes, that is normal.
-
+> Sorry for confusing you, I asked Petr.
+> According to Cliff's 1st mail:
 > 
-> >>   - The ramdisk is loaded at the top of memory minus 4096, unlike with
-> >>     m68boot (ataboot/amiboot), as locate_hole() seems to have a bug that it
-> >>     cannot reserve a block at the real top of memory.
+> > From: Cliff Wickman <cpw@sgi.com>
 > >
-> > Is this a bug that could be fixed?
+> > This fix comes from Petr Tesarik <ptesarik@suse.cz>, and was applied
+> > to the SuSE version of makedumpfile.
+> > I don't see it in the mmap version.
+> > It is important to filtering out a great deal of user memory.
+> >
+> > But this from Petr on 5/15:
+> >> This patch depends on exporting the relevant PG_* flags from the
+> >> kernel (in VMCOREINFO), and that's where I got stuck, because depending
+> >> on the number of available bits for the page flags, the kernel either
+> >> has PG_head and PG_tail, or only PG_compound, so I needed a #ifdef, and
+> >> the kernel maintainers didn't like the conditional.
+> >> I can restart the discussion with kernel maintainers and see what I can do
+> > So I'm not sending to the kexec list until he's ready.
 > 
-> Possibly. I suspect an off-by-one bug somewhere, but I haven't looked deeply
-> into it.
+> I understood Petr tried to add PG_* flags into VMCOREINFO,
+> but it seems not completed in linux-next at this time.
+> To prepare the flags is important to huge page filtering,
+> I want to know the status of Petr's work.
 
-My feeling is that if possible it would be better to fix the bug than add a
-work-around.
+This got blocked when the maintainer of that subsystem didn't answer me
+what he considered a clean solution. And then it got sidetracked by
+other issues. I can resume from there, because I also need these flags
+properly exported in VMCOREINFO.
 
-> >>   - Do we want to check the struct bootversion at the start of the kernel,
-> >>     like m68kboot does?
-> >>     Kexec may be used to load ELF files that are not Linux kernel images,
-> >>     and thus don't have a Linux-specific struct bootversion.
-> >
-> > If the check can sanely be skipped for non Linux kernel images then
-> > this sounds like a reasonable idea to me. Otherwise I would lean towards
-> > omitting it. Either way, I don't feel strongly about this.
-> >
-> >>   - Do we want to check the size of the kernel image + bootinfo, and warn the
-> >>     user if it's larger than 4 MiB?
-> >>     This is a limitation of the current Linux/m68k kernel only.
-> >
-> > I think that sounds like a good idea but I don't feel strongly about it.
-> 
-> Currently I'm leaning towards just printing a warning for both
-> (missing/incompatible
-> bootversion and image-too-large).
+OK, time to ask again.
 
-That sounds fine to me.
+Petr T
 
 _______________________________________________
 kexec mailing list
