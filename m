@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VO9YW-0004iv-PO
- for kexec@lists.infradead.org; Mon, 23 Sep 2013 17:04:18 +0000
-Date: Mon, 23 Sep 2013 13:03:53 -0400
+ id 1VO9kb-00052y-Lq
+ for kexec@lists.infradead.org; Mon, 23 Sep 2013 17:16:47 +0000
+Date: Mon, 23 Sep 2013 13:15:15 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] vmcore-dmesg: Understand >= v3.11-rc4 dmesg
-Message-ID: <20130923170353.GC10812@redhat.com>
-References: <20130919143815.GA4487@dhcp-16-126.nay.redhat.com>
- <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
+Subject: Re: [PATCH 00/16] [RFC PATCH] Signed kexec support
+Message-ID: <20130923171515.GD10812@redhat.com>
+References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
+ <20130912034023.GA10877@kroah.com>
+ <20130912114336.GA28500@redhat.com>
+ <20130912161705.GA2650@kroah.com>
+ <1379010250.9796.118.camel@dhcp-9-2-203-236.watson.ibm.com>
+ <20130916142852.GB20753@redhat.com>
+ <CAAQYJAuXy2up+XTE1AAgOg2u7t=LqOFyPv96RP+1avLC45UDJA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
+In-Reply-To: <CAAQYJAuXy2up+XTE1AAgOg2u7t=LqOFyPv96RP+1avLC45UDJA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,83 +29,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Joe Perches <joe@perches.com>, Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Andrea Adami <andrea.adami@gmail.com>
+Cc: matthew.garrett@nebula.com, Greg KH <greg@kroah.com>, d.kasatkin@samsung.com, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-On Thu, Sep 19, 2013 at 04:49:46PM +0200, Lubomir Rintel wrote:
-> Symbol name changed with the following commit:
-> 62e32ac printk: rename struct log to struct printk_log
+On Wed, Sep 18, 2013 at 04:51:21PM +0200, Andrea Adami wrote:
+> Hello,
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> ---
+> as one of the developers of kexecboot, a kexec-based
+> linux-as-bootloader, I'm following with interest this thread.
+> FWIW since the beginning we are compiling kexec-tools statically
+> against klibc for size constraints.
 
-Looks good to me. Agreed that let us put kernel verion number in
-changelog since this change became effective.
+Hi Andrea,
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Good to know about kexecboot.
 
+FWIW, recently we discussed the kexec/kdump with secureboot issue
+at Linux Plumbers and Greg KH suggested that it will be simpler if
+we implement a new system call which does the job of loading new
+kernel. Effectively that means reimplementing /sbin/kexec in kernel.
+This will also mean maintaining two code bases for some time and
+slowly deprecating one over a period of time.
+
+I will probably start with something  small and post proof of concept
+patches for review and see how does that go. This is just heads up 
+on what I am planning to do.
+
+Thanks
 Vivek
-
-> 
-> Changes for v2:
->   * Clarified printk_log vs. log in some comments.
-> 
->  vmcore-dmesg/vmcore-dmesg.c |   16 ++++++++++++----
->  1 files changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-> index 0f477c0..dd222cd 100644
-> --- a/vmcore-dmesg/vmcore-dmesg.c
-> +++ b/vmcore-dmesg/vmcore-dmesg.c
-> @@ -34,10 +34,10 @@ static loff_t logged_chars_vaddr;
->  static loff_t log_first_idx_vaddr;
->  static loff_t log_next_idx_vaddr;
->  
-> -/* struct log size */
-> +/* struct printk_log (or older log) size */
->  static uint64_t log_sz;
->  
-> -/* struct log field offsets */
-> +/* struct printk_log (or older log) field offsets */
->  static uint64_t log_offset_ts_nsec = UINT64_MAX;
->  static uint16_t log_offset_len = UINT16_MAX;
->  static uint16_t log_offset_text_len = UINT16_MAX;
-> @@ -324,19 +324,27 @@ static void scan_vmcoreinfo(char *start, size_t size)
->  			*symbol[i].vaddr = vaddr;
->  		}
->  
-> -		/* Check for "SIZE(log)=" */
-> +		/* Check for "SIZE(printk_log)" or older "SIZE(log)=" */
->  		if (memcmp("SIZE(log)=", pos, 10) == 0)
->  			log_sz = strtoull(pos + 10, NULL, 10);
-> +		if (memcmp("SIZE(printk_log)=", pos, 17) == 0)
-> +			log_sz = strtoull(pos + 17, NULL, 10);
->  
-> -		/* Check for struct log field offsets */
-> +		/* Check for struct printk_log (or older log) field offsets */
->  		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
->  			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
-> +		if (memcmp("OFFSET(printk_log.ts_nsec)=", pos, 27) == 0)
-> +			log_offset_ts_nsec = strtoull(pos + 27, NULL, 10);
->  
->  		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
->  			log_offset_len = strtoul(pos + 16, NULL, 10);
-> +		if (memcmp("OFFSET(printk_log.len)=", pos, 23) == 0)
-> +			log_offset_len = strtoul(pos + 23, NULL, 10);
->  
->  		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
->  			log_offset_text_len = strtoul(pos + 21, NULL, 10);
-> +		if (memcmp("OFFSET(printk_log.text_len)=", pos, 28) == 0)
-> +			log_offset_text_len = strtoul(pos + 28, NULL, 10);
->  
->  		if (last_line)
->  			break;
-> -- 
-> 1.7.1
 
 _______________________________________________
 kexec mailing list
