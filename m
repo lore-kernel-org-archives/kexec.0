@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VO6mH-0007Jb-OC
- for kexec@lists.infradead.org; Mon, 23 Sep 2013 14:06:18 +0000
-Date: Mon, 23 Sep 2013 10:05:50 -0400
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [Xen-devel] [PATCH 3/5] kexec/xen: use libxc to get location of
- crash notes
-Message-ID: <20130923140550.GJ3175@phenom.dumpdata.com>
-References: <1379016042-22510-1-git-send-email-david.vrabel@citrix.com>
- <1379016042-22510-4-git-send-email-david.vrabel@citrix.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VO9YW-0004iv-PO
+ for kexec@lists.infradead.org; Mon, 23 Sep 2013 17:04:18 +0000
+Date: Mon, 23 Sep 2013 13:03:53 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] vmcore-dmesg: Understand >= v3.11-rc4 dmesg
+Message-ID: <20130923170353.GC10812@redhat.com>
+References: <20130919143815.GA4487@dhcp-16-126.nay.redhat.com>
+ <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1379016042-22510-4-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,122 +24,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, xen-devel@lists.xen.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Joe Perches <joe@perches.com>, Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On Thu, Sep 12, 2013 at 09:00:40PM +0100, David Vrabel wrote:
-> From: David Vrabel <david.vrabel@citrix.com>
+On Thu, Sep 19, 2013 at 04:49:46PM +0200, Lubomir Rintel wrote:
+> Symbol name changed with the following commit:
+> 62e32ac printk: rename struct log to struct printk_log
 > 
-> Use xc_kexec_get_range(KEXEC_RANGE_MA_CPU) instead of parsing
-> /proc/iomem (which is only populated by non-upstream ("classic") Xen
-> kernels).
-> 
-> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Dave Young <dyoung@redhat.com>
 > ---
->  kexec/crashdump-xen.c |   67 +++++++++++++++++++++++++++++-------------------
->  1 files changed, 40 insertions(+), 27 deletions(-)
+
+Looks good to me. Agreed that let us put kernel verion number in
+changelog since this change became effective.
+
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+
+Vivek
+
 > 
-> diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-> index ff4706c..4a5cd8a 100644
-> --- a/kexec/crashdump-xen.c
-> +++ b/kexec/crashdump-xen.c
-> @@ -163,42 +163,55 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
->  	return machine;
->  }
+> Changes for v2:
+>   * Clarified printk_log vs. log in some comments.
+> 
+>  vmcore-dmesg/vmcore-dmesg.c |   16 ++++++++++++----
+>  1 files changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+> index 0f477c0..dd222cd 100644
+> --- a/vmcore-dmesg/vmcore-dmesg.c
+> +++ b/vmcore-dmesg/vmcore-dmesg.c
+> @@ -34,10 +34,10 @@ static loff_t logged_chars_vaddr;
+>  static loff_t log_first_idx_vaddr;
+>  static loff_t log_next_idx_vaddr;
 >  
-> -static int xen_crash_note_callback(void *UNUSED(data), int nr,
-> -				   char *UNUSED(str),
-> -				   unsigned long base,
-> -				   unsigned long length)
-> -{
-> -	struct crash_note_info *note = xen_phys_notes + nr;
-> -
-> -	note->base = base;
-> -	note->length = length;
-> -
-> -	return 0;
-> -}
-> -
-> +#ifdef HAVE_LIBXENCTRL
->  int xen_get_nr_phys_cpus(void)
->  {
-> -	char *match = "Crash note\n";
-> -	int cpus, n;
-> +	xc_interface *xc;
-> +	int max_cpus;
-> +	int cpu;
+> -/* struct log size */
+> +/* struct printk_log (or older log) size */
+>  static uint64_t log_sz;
 >  
->  	if (xen_phys_cpus)
->  		return xen_phys_cpus;
+> -/* struct log field offsets */
+> +/* struct printk_log (or older log) field offsets */
+>  static uint64_t log_offset_ts_nsec = UINT64_MAX;
+>  static uint16_t log_offset_len = UINT16_MAX;
+>  static uint16_t log_offset_text_len = UINT16_MAX;
+> @@ -324,19 +324,27 @@ static void scan_vmcoreinfo(char *start, size_t size)
+>  			*symbol[i].vaddr = vaddr;
+>  		}
 >  
-> -	if ((cpus = kexec_iomem_for_each_line(match, NULL, NULL))) {
-> -		n = sizeof(struct crash_note_info) * cpus;
-> -		xen_phys_notes = malloc(n);
-> -		if (!xen_phys_notes) {
-> -			fprintf(stderr, "failed to allocate xen_phys_notes.\n");
-> -			return -1;
-> -		}
-> -		memset(xen_phys_notes, 0, n);
-> -		kexec_iomem_for_each_line(match,
-> -					  xen_crash_note_callback, NULL);
-> -		xen_phys_cpus = cpus;
-> +	xc = xc_interface_open(NULL, NULL, 0);
-> +	if (!xc) {
-> +		fprintf(stderr, "failed to open xen control interface.\n");
-> +		return -1;
-> +	}
-> +
-> +	max_cpus = xc_get_max_cpus(xc);
-> +	if (max_cpus <= 0)
-
-Shouldn't you also call xc_interface_close ?
-
-> +		return -1;
-> +
-> +	xen_phys_notes = calloc(max_cpus, sizeof(*xen_phys_notes));
-> +	if (xen_phys_notes == NULL)
-> +		return -1;
-
-Ditto - call xc_interface_close?
-
-> +
-> +	for (cpu = 0; cpu < max_cpus; cpu++) {
-> +		uint64_t size, start;
-> +		int ret;
-> +
-> +		ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_CPU, cpu, &size, &start);
-> +		if (ret < 0)
-> +			break;
-> +
-> +		xen_phys_notes[cpu].base = start;
-> +		xen_phys_notes[cpu].length = size;
->  	}
+> -		/* Check for "SIZE(log)=" */
+> +		/* Check for "SIZE(printk_log)" or older "SIZE(log)=" */
+>  		if (memcmp("SIZE(log)=", pos, 10) == 0)
+>  			log_sz = strtoull(pos + 10, NULL, 10);
+> +		if (memcmp("SIZE(printk_log)=", pos, 17) == 0)
+> +			log_sz = strtoull(pos + 17, NULL, 10);
 >  
-> -	return cpus;
-> +	xc_interface_close(xc);
-> +
-> +	xen_phys_cpus = cpu;
-> +
-> +	return cpu;
->  }
-> +#else
-> +int xen_get_nr_phys_cpus(void)
-> +{
-> +	return -1;
-> +}
-> +#endif
-> +
+> -		/* Check for struct log field offsets */
+> +		/* Check for struct printk_log (or older log) field offsets */
+>  		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
+>  			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
+> +		if (memcmp("OFFSET(printk_log.ts_nsec)=", pos, 27) == 0)
+> +			log_offset_ts_nsec = strtoull(pos + 27, NULL, 10);
 >  
->  int xen_get_note(int cpu, uint64_t *addr, uint64_t *len)
->  {
+>  		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
+>  			log_offset_len = strtoul(pos + 16, NULL, 10);
+> +		if (memcmp("OFFSET(printk_log.len)=", pos, 23) == 0)
+> +			log_offset_len = strtoul(pos + 23, NULL, 10);
+>  
+>  		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
+>  			log_offset_text_len = strtoul(pos + 21, NULL, 10);
+> +		if (memcmp("OFFSET(printk_log.text_len)=", pos, 28) == 0)
+> +			log_offset_text_len = strtoul(pos + 28, NULL, 10);
+>  
+>  		if (last_line)
+>  			break;
 > -- 
-> 1.7.2.5
-> 
-> 
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel@lists.xen.org
-> http://lists.xen.org/xen-devel
+> 1.7.1
 
 _______________________________________________
 kexec mailing list
