@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from jacques.telenet-ops.be ([195.130.132.50])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VO1M0-0006zZ-DJ
- for kexec@lists.infradead.org; Mon, 23 Sep 2013 08:18:49 +0000
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] [RFC] kexec: Fix off-by-one errors in locate_hole()
-Date: Mon, 23 Sep 2013 10:18:12 +0200
-Message-Id: <1379924292-1712-1-git-send-email-geert@linux-m68k.org>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VO6mH-0007Jb-OC
+ for kexec@lists.infradead.org; Mon, 23 Sep 2013 14:06:18 +0000
+Date: Mon, 23 Sep 2013 10:05:50 -0400
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: [Xen-devel] [PATCH 3/5] kexec/xen: use libxc to get location of
+ crash notes
+Message-ID: <20130923140550.GJ3175@phenom.dumpdata.com>
+References: <1379016042-22510-1-git-send-email-david.vrabel@citrix.com>
+ <1379016042-22510-4-git-send-email-david.vrabel@citrix.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1379016042-22510-4-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,59 +21,126 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, kexec@lists.infradead.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, xen-devel@lists.xen.org
 
-When calling locate_hole() with "hole_size" equal to the size of an
-available memory block, it fails to use that memory block.
+On Thu, Sep 12, 2013 at 09:00:40PM +0100, David Vrabel wrote:
+> From: David Vrabel <david.vrabel@citrix.com>
+> 
+> Use xc_kexec_get_range(KEXEC_RANGE_MA_CPU) instead of parsing
+> /proc/iomem (which is only populated by non-upstream ("classic") Xen
+> kernels).
+> 
+> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+> ---
+>  kexec/crashdump-xen.c |   67 +++++++++++++++++++++++++++++-------------------
+>  1 files changed, 40 insertions(+), 27 deletions(-)
+> 
+> diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
+> index ff4706c..4a5cd8a 100644
+> --- a/kexec/crashdump-xen.c
+> +++ b/kexec/crashdump-xen.c
+> @@ -163,42 +163,55 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
+>  	return machine;
+>  }
+>  
+> -static int xen_crash_note_callback(void *UNUSED(data), int nr,
+> -				   char *UNUSED(str),
+> -				   unsigned long base,
+> -				   unsigned long length)
+> -{
+> -	struct crash_note_info *note = xen_phys_notes + nr;
+> -
+> -	note->base = base;
+> -	note->length = length;
+> -
+> -	return 0;
+> -}
+> -
+> +#ifdef HAVE_LIBXENCTRL
+>  int xen_get_nr_phys_cpus(void)
+>  {
+> -	char *match = "Crash note\n";
+> -	int cpus, n;
+> +	xc_interface *xc;
+> +	int max_cpus;
+> +	int cpu;
+>  
+>  	if (xen_phys_cpus)
+>  		return xen_phys_cpus;
+>  
+> -	if ((cpus = kexec_iomem_for_each_line(match, NULL, NULL))) {
+> -		n = sizeof(struct crash_note_info) * cpus;
+> -		xen_phys_notes = malloc(n);
+> -		if (!xen_phys_notes) {
+> -			fprintf(stderr, "failed to allocate xen_phys_notes.\n");
+> -			return -1;
+> -		}
+> -		memset(xen_phys_notes, 0, n);
+> -		kexec_iomem_for_each_line(match,
+> -					  xen_crash_note_callback, NULL);
+> -		xen_phys_cpus = cpus;
+> +	xc = xc_interface_open(NULL, NULL, 0);
+> +	if (!xc) {
+> +		fprintf(stderr, "failed to open xen control interface.\n");
+> +		return -1;
+> +	}
+> +
+> +	max_cpus = xc_get_max_cpus(xc);
+> +	if (max_cpus <= 0)
 
-"end" and "hole_max" point to the last byte within the range, hence
-  - "size = end - start" is one less than "hole_size",
-  - "hole_base + hole_size" is one more than "hole_max".
+Shouldn't you also call xc_interface_close ?
 
-Subtract one from "hole_size" when doing the comparison (adding 1 to "size"
-could overflow in case of one big range covering the whole address space).
+> +		return -1;
+> +
+> +	xen_phys_notes = calloc(max_cpus, sizeof(*xen_phys_notes));
+> +	if (xen_phys_notes == NULL)
+> +		return -1;
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-Question:
-    The code no longer handles the case where "hole_size" is zero.
-    Should this be rejected (like is done for a zero "hole_end" at the top
-    of the function), or accepted?
+Ditto - call xc_interface_close?
 
- kexec/kexec.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 2b98ef0..eafd6c2 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -270,7 +270,7 @@ unsigned long locate_hole(struct kexec_info *info,
- 		}
- 		/* Is there enough space left so we can use it? */
- 		size = end - start;
--		if (size >= hole_size) {
-+		if (size >= hole_size - 1) {
- 			if (hole_end > 0) {
- 				hole_base = start;
- 				break;
-@@ -286,7 +286,7 @@ unsigned long locate_hole(struct kexec_info *info,
- 			"0x%lx bytes...\n", hole_size);
- 		return ULONG_MAX;
- 	}
--	if ((hole_base + hole_size)  > hole_max) {
-+	if ((hole_base + hole_size - 1)  > hole_max) {
- 		fprintf(stderr, "Could not find a free area of memory below: "
- 			"0x%lx...\n", hole_max);
- 		return ULONG_MAX;
--- 
-1.7.9.5
-
+> +
+> +	for (cpu = 0; cpu < max_cpus; cpu++) {
+> +		uint64_t size, start;
+> +		int ret;
+> +
+> +		ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_CPU, cpu, &size, &start);
+> +		if (ret < 0)
+> +			break;
+> +
+> +		xen_phys_notes[cpu].base = start;
+> +		xen_phys_notes[cpu].length = size;
+>  	}
+>  
+> -	return cpus;
+> +	xc_interface_close(xc);
+> +
+> +	xen_phys_cpus = cpu;
+> +
+> +	return cpu;
+>  }
+> +#else
+> +int xen_get_nr_phys_cpus(void)
+> +{
+> +	return -1;
+> +}
+> +#endif
+> +
+>  
+>  int xen_get_note(int cpu, uint64_t *addr, uint64_t *len)
+>  {
+> -- 
+> 1.7.2.5
+> 
+> 
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xen.org
+> http://lists.xen.org/xen-devel
 
 _______________________________________________
 kexec mailing list
