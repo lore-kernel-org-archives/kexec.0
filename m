@@ -1,22 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VO9kb-00052y-Lq
- for kexec@lists.infradead.org; Mon, 23 Sep 2013 17:16:47 +0000
-Date: Mon, 23 Sep 2013 13:15:15 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 00/16] [RFC PATCH] Signed kexec support
-Message-ID: <20130923171515.GD10812@redhat.com>
-References: <1378849471-10521-1-git-send-email-vgoyal@redhat.com>
- <20130912034023.GA10877@kroah.com>
- <20130912114336.GA28500@redhat.com>
- <20130912161705.GA2650@kroah.com>
- <1379010250.9796.118.camel@dhcp-9-2-203-236.watson.ibm.com>
- <20130916142852.GB20753@redhat.com>
- <CAAQYJAuXy2up+XTE1AAgOg2u7t=LqOFyPv96RP+1avLC45UDJA@mail.gmail.com>
+Received: from e39.co.us.ibm.com ([32.97.110.160])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VOPmh-0002Hz-5Q
+ for kexec@lists.infradead.org; Tue, 24 Sep 2013 10:23:59 +0000
+Received: from /spool/local
+ by e39.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Tue, 24 Sep 2013 04:23:33 -0600
+Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
+ [9.17.195.228])
+ by d03dlp01.boulder.ibm.com (Postfix) with ESMTP id 5D9991FF001A
+ for <kexec@lists.infradead.org>; Tue, 24 Sep 2013 04:23:24 -0600 (MDT)
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+ by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r8OANTYh294974
+ for <kexec@lists.infradead.org>; Tue, 24 Sep 2013 04:23:29 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+ by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ r8OANT4H015956
+ for <kexec@lists.infradead.org>; Tue, 24 Sep 2013 04:23:29 -0600
+Message-ID: <524167F4.6030709@in.ibm.com>
+Date: Tue, 24 Sep 2013 15:52:44 +0530
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAAQYJAuXy2up+XTE1AAgOg2u7t=LqOFyPv96RP+1avLC45UDJA@mail.gmail.com>
+Subject: Re: [PATCH] kexec/ppc: Add nodes for initrd in dtb
+References: <20130924052240.4517.85639.stgit@localhost.localdomain>
+In-Reply-To: <20130924052240.4517.85639.stgit@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,34 +39,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrea Adami <andrea.adami@gmail.com>
-Cc: matthew.garrett@nebula.com, Greg KH <greg@kroah.com>, d.kasatkin@samsung.com, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-security-module@vger.kernel.org, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Mimi Zohar <zohar@linux.vnet.ibm.com>
+To: Athira Rajeev <atrajeev@in.ibm.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-On Wed, Sep 18, 2013 at 04:51:21PM +0200, Andrea Adami wrote:
-> Hello,
+On 09/24/2013 10:52 AM, Athira Rajeev wrote:
+> From: Suzuki K. Poulose <suzuki@in.ibm.com>
 > 
-> as one of the developers of kexecboot, a kexec-based
-> linux-as-bootloader, I'm following with interest this thread.
-> FWIW since the beginning we are compiling kexec-tools statically
-> against klibc for size constraints.
+> If the primary kernel doesn't use an initrd,
+> we may not have linux,initrd-* entries in the
+> device-tree, and hence the initial flat tree
+> may not contain them.
+> 
+> Make sure we add the entries in the dtb if the
+> second kernel needs an initrd.
+Simon,
 
-Hi Andrea,
+Without this patch, one cannot use an initrd with kexec on a machine
+which is booted without an initrd. (e.g, network booted boards.)
 
-Good to know about kexecboot.
-
-FWIW, recently we discussed the kexec/kdump with secureboot issue
-at Linux Plumbers and Greg KH suggested that it will be simpler if
-we implement a new system call which does the job of loading new
-kernel. Effectively that means reimplementing /sbin/kexec in kernel.
-This will also mean maintaining two code bases for some time and
-slowly deprecating one over a period of time.
-
-I will probably start with something  small and post proof of concept
-patches for review and see how does that go. This is just heads up 
-on what I am planning to do.
+Please pull this one.
 
 Thanks
-Vivek
+Suzuki
+
+> 
+> Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+> Signed-off-by: Athira Rajeev<atrajeev@in.ibm.com>
+> ---
+> 
+>  kexec/arch/ppc/fs2dt.c |   18 ++++++++++++++----
+>  1 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+> index a49f85e..4121c7d 100644
+> --- a/kexec/arch/ppc/fs2dt.c
+> +++ b/kexec/arch/ppc/fs2dt.c
+> @@ -342,8 +342,17 @@ static void putnode(void)
+> 
+>  	putprops(dn, namelist, numlist);
+> 
+> -	/* Add initrd entries to the second kernel */
+> -	if (initrd_base && !strcmp(basename, "chosen/")) {
+> +	/* 
+> +	 * Add initrd entries to the second kernel
+> +	 * if
+> +	 * 	a) a ramdisk is specified in cmdline
+> +	 * 	 OR
+> +	 * 	b) reuseinitrd is specified and a initrd is
+> +	 * 	   used by the kernel.
+> +	 *
+> +	 */
+> +	if ((ramdisk || (initrd_base && reuse_initrd))
+> +		&& !strcmp(basename, "chosen/")) {
+>  		int len = 8;
+>  		unsigned long long initrd_end;
+>  		*dt++ = 3;
+> @@ -362,8 +371,9 @@ static void putnode(void)
+> 
+>  		memcpy(dt, &initrd_end, len);
+>  		dt += (len + 3)/4;
+> -
+> -		reserve(initrd_base, initrd_size);
+> +		/* reserve the existing initrd image in case of reuse_initrd */
+> +		if (initrd_base && initrd_size && reuse_initrd)
+> +			reserve(initrd_base, initrd_size);
+>  	}
+> 
+>  	for (i = 0; i < numlist; i++) {
+> 
+
 
 _______________________________________________
 kexec mailing list
