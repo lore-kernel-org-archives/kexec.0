@@ -1,9 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-Id: <ed987a299e11958861deb96beec0f02eebcaa646.1380746425.git.geoff@infradead.org>
+Message-Id: <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
 In-Reply-To: <cover.1380746425.git.geoff@infradead.org>
 References: <cover.1380746425.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 1/6] kexec: Fix the -? option
+Subject: [PATCH 5/6] kexec: Fix return value build warnings
+MIME-Version: 1.0
 Date: Wed, 02 Oct 2013 20:49:46 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -13,43 +14,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-Add '?' to the short option string.  Fixes runtime errors like
-these:
-
-  kexec: invalid option -- '?'
-
-Signed-off-by: Geoff Levand <geoff@infradead.org> for Huawei, Linaro
----
- kexec/kexec.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 715b568..2904e03 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -230,7 +230,7 @@ extern int file_types;
- 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
- 	{ "debug",		0, 0, OPT_DEBUG }, \
- 
--#define KEXEC_OPT_STR "hvdfxluet:p"
-+#define KEXEC_OPT_STR "h?vdfxluet:p"
- 
- extern void die(const char *fmt, ...)
- 	__attribute__ ((format (printf, 1, 2)));
--- 
-1.8.1.2
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+QWRkIGEgbG9jYWwgdmFyaWFibGUgYW5kIGNoZWNrIHJldHVybiB2YWx1ZXMuCgpGaXhlcyBidWls
+ZCB3YXJuaW5ncyBsaWtlIHRoZXNlOgoKICBrZXhlYy9mczJkdC5jOiB3YXJuaW5nOiBpZ25vcmlu
+ZyByZXR1cm4gdmFsdWUgb2Yg4oCYcmVhZOKAmQoKU2lnbmVkLW9mZi1ieTogR2VvZmYgTGV2YW5k
+IDxnZW9mZkBpbmZyYWRlYWQub3JnPiBmb3IgSHVhd2VpLCBMaW5hcm8KLS0tCiBrZXhlYy9mczJk
+dC5jIHwgMTIgKysrKysrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAz
+IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2ZzMmR0LmMgYi9rZXhlYy9mczJkdC5j
+CmluZGV4IDFmNWIwY2YuLjUwZTE3M2UgMTAwNjQ0Ci0tLSBhL2tleGVjL2ZzMmR0LmMKKysrIGIv
+a2V4ZWMvZnMyZHQuYwpAQCAtNTU1LDYgKzU1NSw3IEBAIHN0YXRpYyB2b2lkIHB1dG5vZGUodm9p
+ZCkKIAkvKiBBZGQgY21kbGluZSB0byB0aGUgc2Vjb25kIGtlcm5lbC4gIENoZWNrIHRvIHNlZSBp
+ZiB0aGUgbmV3CiAJICogY21kbGluZSBoYXMgYSByb290PS4gIElmIG5vdCwgdXNlIHRoZSBvbGQg
+cm9vdD0gY21kbGluZS4gICovCiAJaWYgKCFzdHJjbXAoYmFzZW5hbWUsImNob3Nlbi8iKSkgewor
+CQlzaXplX3QgcmVzdWx0OwogCQlzaXplX3QgY21kX2xlbiA9IDA7CiAJCWNoYXIgKnBhcmFtID0g
+TlVMTDsKIAkJY2hhciBmaWxlbmFtZVtNQVhQQVRIXTsKQEAgLTYzNiw4ICs2MzcsMTMgQEAgc3Rh
+dGljIHZvaWQgcHV0bm9kZSh2b2lkKQogCQkJY2xvc2UoZmQpOwogCQkJZ290byBub19kZWJ1ZzsK
+IAkJfQotCQlyZWFkKGZkLCBidWZmLCBzdGF0YnVmLnN0X3NpemUpOworCQlyZXN1bHQgPSByZWFk
+KGZkLCBidWZmLCBzdGF0YnVmLnN0X3NpemUpOwogCQljbG9zZShmZCk7CisJCWlmIChyZXN1bHQg
+PD0gMCkgeworCQkJcHJpbnRmKCJVbmFibGUgdG8gc3RhdCAlcywgcHJpbnRpbmcgZnJvbSBwdXJn
+YXRvcnkgaXMgZGlhYmxlZFxuIiwKKwkJCQkJCQkJCQkJCQkJZmlsZW5hbWUpOworCQkJZ290byBu
+b19kZWJ1ZzsKKwkJfQogCQlzdHJuY3B5KGZpbGVuYW1lLCAiL3Byb2MvZGV2aWNlLXRyZWUvIiwg
+TUFYUEFUSCk7CiAJCXN0cm5jYXQoZmlsZW5hbWUsIGJ1ZmYsIE1BWFBBVEgpOwogCQlzdHJuY2F0
+KGZpbGVuYW1lLCAiL2NvbXBhdGlibGUiLCBNQVhQQVRIKTsKQEAgLTY1OSw4ICs2NjUsOCBAQCBz
+dGF0aWMgdm9pZCBwdXRub2RlKHZvaWQpCiAJCQljbG9zZShmZCk7CiAJCQlnb3RvIG5vX2RlYnVn
+OwogCQl9Ci0JCXJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6ZSk7Ci0JCWlmICghc3RyY21w
+KGJ1ZmYsICJodnRlcm0xIikgfHwgIXN0cmNtcChidWZmLCAiaHZ0ZXJtLXByb3RvY29sIikpCisJ
+CXJlc3VsdCA9IHJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6ZSk7CisJCWlmIChyZXN1bHQg
+JiYgKCFzdHJjbXAoYnVmZiwgImh2dGVybTEiKSB8fCAhc3RyY21wKGJ1ZmYsICJodnRlcm0tcHJv
+dG9jb2wiKSkpCiAJCQlteV9kZWJ1ZyA9IDE7CiAJCWNsb3NlKGZkKTsKIAkJZnJlZShidWZmKTsK
+LS0gCjEuOC4xLjIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
