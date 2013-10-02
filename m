@@ -1,11 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-Id: <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
-In-Reply-To: <cover.1380746425.git.geoff@infradead.org>
-References: <cover.1380746425.git.geoff@infradead.org>
+Message-Id: <cover.1380746425.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 5/6] kexec: Fix return value build warnings
+Subject: [PATCH 0/6] kexec-tools fixes
 MIME-Version: 1.0
-Date: Wed, 02 Oct 2013 20:49:46 +0000
+Date: Wed, 02 Oct 2013 20:54:13 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,40 +12,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-QWRkIGEgbG9jYWwgdmFyaWFibGUgYW5kIGNoZWNrIHJldHVybiB2YWx1ZXMuCgpGaXhlcyBidWls
-ZCB3YXJuaW5ncyBsaWtlIHRoZXNlOgoKICBrZXhlYy9mczJkdC5jOiB3YXJuaW5nOiBpZ25vcmlu
-ZyByZXR1cm4gdmFsdWUgb2Yg4oCYcmVhZOKAmQoKU2lnbmVkLW9mZi1ieTogR2VvZmYgTGV2YW5k
-IDxnZW9mZkBpbmZyYWRlYWQub3JnPiBmb3IgSHVhd2VpLCBMaW5hcm8KLS0tCiBrZXhlYy9mczJk
-dC5jIHwgMTIgKysrKysrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAz
-IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2ZzMmR0LmMgYi9rZXhlYy9mczJkdC5j
-CmluZGV4IDFmNWIwY2YuLjUwZTE3M2UgMTAwNjQ0Ci0tLSBhL2tleGVjL2ZzMmR0LmMKKysrIGIv
-a2V4ZWMvZnMyZHQuYwpAQCAtNTU1LDYgKzU1NSw3IEBAIHN0YXRpYyB2b2lkIHB1dG5vZGUodm9p
-ZCkKIAkvKiBBZGQgY21kbGluZSB0byB0aGUgc2Vjb25kIGtlcm5lbC4gIENoZWNrIHRvIHNlZSBp
-ZiB0aGUgbmV3CiAJICogY21kbGluZSBoYXMgYSByb290PS4gIElmIG5vdCwgdXNlIHRoZSBvbGQg
-cm9vdD0gY21kbGluZS4gICovCiAJaWYgKCFzdHJjbXAoYmFzZW5hbWUsImNob3Nlbi8iKSkgewor
-CQlzaXplX3QgcmVzdWx0OwogCQlzaXplX3QgY21kX2xlbiA9IDA7CiAJCWNoYXIgKnBhcmFtID0g
-TlVMTDsKIAkJY2hhciBmaWxlbmFtZVtNQVhQQVRIXTsKQEAgLTYzNiw4ICs2MzcsMTMgQEAgc3Rh
-dGljIHZvaWQgcHV0bm9kZSh2b2lkKQogCQkJY2xvc2UoZmQpOwogCQkJZ290byBub19kZWJ1ZzsK
-IAkJfQotCQlyZWFkKGZkLCBidWZmLCBzdGF0YnVmLnN0X3NpemUpOworCQlyZXN1bHQgPSByZWFk
-KGZkLCBidWZmLCBzdGF0YnVmLnN0X3NpemUpOwogCQljbG9zZShmZCk7CisJCWlmIChyZXN1bHQg
-PD0gMCkgeworCQkJcHJpbnRmKCJVbmFibGUgdG8gc3RhdCAlcywgcHJpbnRpbmcgZnJvbSBwdXJn
-YXRvcnkgaXMgZGlhYmxlZFxuIiwKKwkJCQkJCQkJCQkJCQkJZmlsZW5hbWUpOworCQkJZ290byBu
-b19kZWJ1ZzsKKwkJfQogCQlzdHJuY3B5KGZpbGVuYW1lLCAiL3Byb2MvZGV2aWNlLXRyZWUvIiwg
-TUFYUEFUSCk7CiAJCXN0cm5jYXQoZmlsZW5hbWUsIGJ1ZmYsIE1BWFBBVEgpOwogCQlzdHJuY2F0
-KGZpbGVuYW1lLCAiL2NvbXBhdGlibGUiLCBNQVhQQVRIKTsKQEAgLTY1OSw4ICs2NjUsOCBAQCBz
-dGF0aWMgdm9pZCBwdXRub2RlKHZvaWQpCiAJCQljbG9zZShmZCk7CiAJCQlnb3RvIG5vX2RlYnVn
-OwogCQl9Ci0JCXJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6ZSk7Ci0JCWlmICghc3RyY21w
-KGJ1ZmYsICJodnRlcm0xIikgfHwgIXN0cmNtcChidWZmLCAiaHZ0ZXJtLXByb3RvY29sIikpCisJ
-CXJlc3VsdCA9IHJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6ZSk7CisJCWlmIChyZXN1bHQg
-JiYgKCFzdHJjbXAoYnVmZiwgImh2dGVybTEiKSB8fCAhc3RyY21wKGJ1ZmYsICJodnRlcm0tcHJv
-dG9jb2wiKSkpCiAJCQlteV9kZWJ1ZyA9IDE7CiAJCWNsb3NlKGZkKTsKIAkJZnJlZShidWZmKTsK
-LS0gCjEuOC4xLjIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Simon,
+
+Here are a few generic kexec-tools fixups I have.  The last one, 'Update to
+automake-1.11', is in preparation for the arm64 support I am working on, but I
+don't think it a bad idea to update to newer config files regardless.
+
+Please consider for merge.
+
+-Geoff
+
+The following changes since commit 86b8bf44d27579bc3c90be053f19df17253c69d7:
+
+  kexec/ppc: Check for a uImage initrd with ELF kernel (2013-09-25 16:11:18 +0900)
+
+are available in the git repository at:
+
+  git.linaro.org:public_git/kexec-tools.git for-merge
+
+for you to fetch changes up to 06b9eb7404516d8ec6a97068fef952dd0a27bd11:
+
+  config: Update to automake-1.11 (2013-10-02 12:44:36 -0700)
+
+Geoff Levand (6):
+      kexec: Fix the -? option
+      kexec: Remove unused -? option handling
+      purgatory: Fix out-of-source build error
+      kexec: Fix uninitialized build warning
+      kexec: Fix return value build warnings
+      config: Update to automake-1.11
+
+ config/config.guess                   | 987 ++++++++++++++++++----------------
+ config/config.sub                     | 424 +++++++++++----
+ config/install-sh                     | 680 ++++++++++++++++-------
+ kexec/arch/arm/kexec-zImage-arm.c     |   3 -
+ kexec/arch/cris/kexec-elf-cris.c      |   3 -
+ kexec/arch/i386/kexec-beoboot-x86.c   |   3 -
+ kexec/arch/i386/kexec-bzImage.c       |   4 -
+ kexec/arch/i386/kexec-elf-x86.c       |   3 -
+ kexec/arch/i386/kexec-multiboot-x86.c |   3 -
+ kexec/arch/i386/kexec-nbi.c           |   4 -
+ kexec/arch/ia64/kexec-elf-ia64.c      |   3 -
+ kexec/arch/mips/kexec-elf-mips.c      |   3 -
+ kexec/arch/ppc/kexec-dol-ppc.c        |   3 -
+ kexec/arch/ppc/kexec-elf-ppc.c        |   3 -
+ kexec/arch/ppc/kexec-uImage-ppc.c     |   3 -
+ kexec/arch/ppc64/kexec-elf-ppc64.c    |   3 -
+ kexec/arch/s390/kexec-image.c         |   4 -
+ kexec/arch/sh/kexec-elf-sh.c          |   3 -
+ kexec/arch/sh/kexec-netbsd-sh.c       |   3 -
+ kexec/arch/sh/kexec-sh.c              |   3 -
+ kexec/arch/sh/kexec-zImage-sh.c       |   3 -
+ kexec/arch/x86_64/kexec-bzImage64.c   |   4 -
+ kexec/arch/x86_64/kexec-elf-x86_64.c  |   3 -
+ kexec/fs2dt.c                         |  12 +-
+ kexec/kexec-elf-rel.c                 |   2 +-
+ kexec/kexec.h                         |   2 +-
+ purgatory/Makefile                    |   1 +
+ 27 files changed, 1355 insertions(+), 817 deletions(-)
+
+-- 
+1.8.1.2
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
