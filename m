@@ -1,12 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from juliette.telenet-ops.be ([195.130.137.74])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VRI1L-0000n5-Uj
- for kexec@lists.infradead.org; Wed, 02 Oct 2013 08:43:00 +0000
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] kexec: Fix off-by-one errors in locate_hole()
-Date: Wed,  2 Oct 2013 10:42:27 +0200
-Message-Id: <1380703348-5877-1-git-send-email-geert@linux-m68k.org>
+Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VRLAI-00069F-03
+ for kexec@lists.infradead.org; Wed, 02 Oct 2013 12:04:26 +0000
+Received: from /spool/local
+ by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Wed, 2 Oct 2013 13:04:02 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com
+ (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id A00D51B08070
+ for <kexec@lists.infradead.org>; Wed,  2 Oct 2013 13:04:01 +0100 (BST)
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+ [9.149.37.212])
+ by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ r92C3lVg40697976
+ for <kexec@lists.infradead.org>; Wed, 2 Oct 2013 12:03:47 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ r92C3wwu014871
+ for <kexec@lists.infradead.org>; Wed, 2 Oct 2013 06:03:59 -0600
+Date: Wed, 2 Oct 2013 14:03:56 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: mmap for /proc/vmcore broken since 3.12-rc1
+Message-ID: <20131002140356.63706540@holzheu>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,57 +34,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, kexec@lists.infradead.org
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
 
-When calling locate_hole() with "hole_size" equal to the size of an
-available memory block, it fails to use that memory block.
+Hello Alexey,
 
-"end" and "hole_max" point to the last byte within the range, hence
-  - "size = end - start" is one less than "hole_size",
-  - "hole_base + hole_size" is one more than "hole_max".
+Looks like the following commit broke mmap for /proc/vmcore:
 
-Subtract one from "hole_size" when doing the comparison (adding 1 to "size"
-could overflow in case of one big range covering the whole address space).
-But explicitly check if "hole_size" is zero first, to handle this case
-without causing underflows.
+commit c4fe24485729fc2cbff324c111e67a1cc2f9adea
+Author: Alexey Dobriyan <adobriyan@gmail.com>
+Date:   Tue Aug 20 22:17:24 2013 +0300
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-v2: Accept hole_size == zero.
+    sparc: fix PCI device proc file mmap(2)
 
- kexec/kexec.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Because /proc/vmcore (fs/proc/vmcore.c) does not implement the
+get_unmapped_area() fops function mmap now always returns EIO.
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 2b98ef055a15..185c85bef342 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -270,7 +270,7 @@ unsigned long locate_hole(struct kexec_info *info,
- 		}
- 		/* Is there enough space left so we can use it? */
- 		size = end - start;
--		if (size >= hole_size) {
-+		if (!hole_size || size >= hole_size - 1) {
- 			if (hole_end > 0) {
- 				hole_base = start;
- 				break;
-@@ -286,7 +286,7 @@ unsigned long locate_hole(struct kexec_info *info,
- 			"0x%lx bytes...\n", hole_size);
- 		return ULONG_MAX;
- 	}
--	if ((hole_base + hole_size)  > hole_max) {
-+	if (hole_size && (hole_base + hole_size - 1)  > hole_max) {
- 		fprintf(stderr, "Could not find a free area of memory below: "
- 			"0x%lx...\n", hole_max);
- 		return ULONG_MAX;
--- 
-1.7.9.5
+Michael
 
 
 _______________________________________________
