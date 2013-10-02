@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VRFqn-0006et-3g
- for kexec@lists.infradead.org; Wed, 02 Oct 2013 06:23:58 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: fix max_mapnr issue on system has over
- 44-bit addressing
-Date: Wed, 2 Oct 2013 06:20:33 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971B4921@BPXM01GP.gisp.nec.co.jp>
-References: <20130924124931.14715.24507.stgit@k.asiapacific.hpqcorp.net>
- <52422FCF.1030206@jp.fujitsu.com> <52429BF1.3050303@hp.com>
- <5242A13B.6000907@jp.fujitsu.com> <5242A4BF.5090903@hp.com>
-Content-Language: ja-JP
-MIME-Version: 1.0
+Received: from juliette.telenet-ops.be ([195.130.137.74])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VRI1L-0000n5-Uj
+ for kexec@lists.infradead.org; Wed, 02 Oct 2013 08:43:00 +0000
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2] kexec: Fix off-by-one errors in locate_hole()
+Date: Wed,  2 Oct 2013 10:42:27 +0200
+Message-Id: <1380703348-5877-1-git-send-email-geert@linux-m68k.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +15,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, Minoru Usui <usui@mxm.nes.nec.co.jp>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "ruyang@redhat.com" <ruyang@redhat.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "anderson@redhat.com" <anderson@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "crash-utility@redhat.com" <crash-utility@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, kexec@lists.infradead.org
 
-Hello Jingbai,
+When calling locate_hole() with "hole_size" equal to the size of an
+available memory block, it fails to use that memory block.
 
-I have a additional comment.
+"end" and "hole_max" point to the last byte within the range, hence
+  - "size = end - start" is one less than "hole_size",
+  - "hole_base + hole_size" is one more than "hole_max".
 
-(2013/09/25 17:54), Jingbai Ma wrote:
-> On 09/25/2013 04:39 PM, HATAYAMA Daisuke wrote:
->> (2013/09/25 17:16), Jingbai Ma wrote:
->> <cut>
-> @@ -790,7 +794,7 @@ get_kdump_compressed_header_info(char *filename)
->       DEBUG_MSG("  block_size       : %d\n", dh.block_size);
->       DEBUG_MSG("  sub_hdr_size     : %d\n", dh.sub_hdr_size);
->       DEBUG_MSG("  bitmap_blocks    : %d\n", dh.bitmap_blocks);
-> -     DEBUG_MSG("  max_mapnr        : 0x%x\n", dh.max_mapnr);
-> +     DEBUG_MSG("  max_mapnr(32bit) : 0x%x\n", dh.max_mapnr);
->       DEBUG_MSG("  total_ram_blocks : %d\n", dh.total_ram_blocks);
->       DEBUG_MSG("  device_blocks    : %d\n", dh.device_blocks);
->       DEBUG_MSG("  written_blocks   : %d\n", dh.written_blocks);
-> @@ -802,6 +806,7 @@ get_kdump_compressed_header_info(char *filename)
->       DEBUG_MSG("  split            : %d\n", kh.split);
->       DEBUG_MSG("  start_pfn        : 0x%lx\n", kh.start_pfn);
->       DEBUG_MSG("  end_pfn          : 0x%lx\n", kh.end_pfn);
-> +     DEBUG_MSG("  max_mapnr(64bit) : 0x%lx\n", kh.max_mapnr);
+Subtract one from "hole_size" when doing the comparison (adding 1 to "size"
+could overflow in case of one big range covering the whole address space).
+But explicitly check if "hole_size" is zero first, to handle this case
+without causing underflows.
 
-max_mapnr(64bit) will be included only in header_version 6 and later,
-but your code shows that in any version.
-I think it's better to change the code like below:
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+v2: Accept hole_size == zero.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 069a903..6c20e88 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -847,6 +847,10 @@ get_kdump_compressed_header_info(char *filename)
-  				(unsigned long long)kh.offset_eraseinfo);
-  		DEBUG_MSG("  size_eraseinfo   : 0x%ld\n", kh.size_eraseinfo);
-  	}
-+	if (dh.header_version >= 6) {
-+		/* A dumpfile contains full 64bit max_mapnr. */
-+		DEBUG_MSG("  max_mapnr(64bit) : 0x%llx\n", kh.max_mapnr);
-+	}
-  	return TRUE;
-  error:
-  	free(info->dh_memory);
+ kexec/kexec.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 2b98ef055a15..185c85bef342 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -270,7 +270,7 @@ unsigned long locate_hole(struct kexec_info *info,
+ 		}
+ 		/* Is there enough space left so we can use it? */
+ 		size = end - start;
+-		if (size >= hole_size) {
++		if (!hole_size || size >= hole_size - 1) {
+ 			if (hole_end > 0) {
+ 				hole_base = start;
+ 				break;
+@@ -286,7 +286,7 @@ unsigned long locate_hole(struct kexec_info *info,
+ 			"0x%lx bytes...\n", hole_size);
+ 		return ULONG_MAX;
+ 	}
+-	if ((hole_base + hole_size)  > hole_max) {
++	if (hole_size && (hole_base + hole_size - 1)  > hole_max) {
+ 		fprintf(stderr, "Could not find a free area of memory below: "
+ 			"0x%lx...\n", hole_max);
+ 		return ULONG_MAX;
+-- 
+1.7.9.5
 
-Thanks
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
