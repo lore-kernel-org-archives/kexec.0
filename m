@@ -1,31 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VRLAI-00069F-03
- for kexec@lists.infradead.org; Wed, 02 Oct 2013 12:04:26 +0000
-Received: from /spool/local
- by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 2 Oct 2013 13:04:02 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com
- (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id A00D51B08070
- for <kexec@lists.infradead.org>; Wed,  2 Oct 2013 13:04:01 +0100 (BST)
-Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
- [9.149.37.212])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- r92C3lVg40697976
- for <kexec@lists.infradead.org>; Wed, 2 Oct 2013 12:03:47 GMT
-Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- r92C3wwu014871
- for <kexec@lists.infradead.org>; Wed, 2 Oct 2013 06:03:59 -0600
-Date: Wed, 2 Oct 2013 14:03:56 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: mmap for /proc/vmcore broken since 3.12-rc1
-Message-ID: <20131002140356.63706540@holzheu>
-Mime-Version: 1.0
+Message-Id: <06fe76674ef56e9ea89d499f13b9fb742bdd0e0e.1380746425.git.geoff@infradead.org>
+In-Reply-To: <cover.1380746425.git.geoff@infradead.org>
+References: <cover.1380746425.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH 4/6] kexec: Fix uninitialized build warning
+MIME-Version: 1.0
+Date: Wed, 02 Oct 2013 20:49:46 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,30 +14,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jan Willeke <willeke@de.ibm.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-Hello Alexey,
-
-Looks like the following commit broke mmap for /proc/vmcore:
-
-commit c4fe24485729fc2cbff324c111e67a1cc2f9adea
-Author: Alexey Dobriyan <adobriyan@gmail.com>
-Date:   Tue Aug 20 22:17:24 2013 +0300
-
-    sparc: fix PCI device proc file mmap(2)
-
-Because /proc/vmcore (fs/proc/vmcore.c) does not implement the
-get_unmapped_area() fops function mmap now always returns EIO.
-
-Michael
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SW5pdGlhbGl6ZSBhIGxvY2FsIHZhcmlhYmxlIHRvIHplcm8uCgpGaXhlcyBidWlsZCB3YXJuaW5n
+cyBsaWtlIHRoZXNlOgoKICBrZXhlYy9rZXhlYy1lbGYtcmVsLmM6IHdhcm5pbmc6IOKAmHJlbC5y
+X29mZnNldOKAmSBtYXkgYmUgdXNlZCB1bmluaXRpYWxpemVkIGluIHRoaXMgZnVuY3Rpb24KClNp
+Z25lZC1vZmYtYnk6IEdlb2ZmIExldmFuZCA8Z2VvZmZAaW5mcmFkZWFkLm9yZz4gZm9yIEh1YXdl
+aSwgTGluYXJvCi0tLQoga2V4ZWMva2V4ZWMtZWxmLXJlbC5jIHwgMiArLQogMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEva2V4ZWMva2V4
+ZWMtZWxmLXJlbC5jIGIva2V4ZWMva2V4ZWMtZWxmLXJlbC5jCmluZGV4IGY1OTE0MGYuLjAyMGNh
+YjAgMTAwNjQ0Ci0tLSBhL2tleGVjL2tleGVjLWVsZi1yZWwuYworKysgYi9rZXhlYy9rZXhlYy1l
+bGYtcmVsLmMKQEAgLTMzNiw3ICszMzYsNyBAQCBpbnQgZWxmX3JlbF9sb2FkKHN0cnVjdCBtZW1f
+ZWhkciAqZWhkciwgc3RydWN0IGtleGVjX2luZm8gKmluZm8sCiAJCX0KIAkJcmVsX2VuZCA9IHNo
+ZHItPnNoX2RhdGEgKyBzaGRyLT5zaF9zaXplOwogCQlmb3IocHRyID0gc2hkci0+c2hfZGF0YTsg
+cHRyIDwgcmVsX2VuZDsgcHRyICs9IHJlbF9zaXplKSB7Ci0JCQlzdHJ1Y3QgbWVtX3JlbGEgcmVs
+OworCQkJc3RydWN0IG1lbV9yZWxhIHJlbCA9IHswfTsKIAkJCXN0cnVjdCBtZW1fc3ltIHN5bTsK
+IAkJCWNvbnN0IHZvaWQgKmxvY2F0aW9uOwogCQkJY29uc3QgdW5zaWduZWQgY2hhciAqbmFtZTsK
+LS0gCjEuOC4xLjIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
