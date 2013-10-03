@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VRXN4-0003kb-EB
- for kexec@lists.infradead.org; Thu, 03 Oct 2013 01:06:28 +0000
-Date: Thu, 3 Oct 2013 10:06:01 +0900
+ id 1VRXOB-0003nA-7t
+ for kexec@lists.infradead.org; Thu, 03 Oct 2013 01:07:35 +0000
+Date: Thu, 3 Oct 2013 10:07:12 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 5/6] kexec: Fix return value build warnings
-Message-ID: <20131003010600.GC13111@verge.net.au>
+Subject: Re: [PATCH 0/6] kexec-tools fixes
+Message-ID: <20131003010712.GD13111@verge.net.au>
 References: <cover.1380746425.git.geoff@infradead.org>
- <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
+In-Reply-To: <cover.1380746425.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,46 +19,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
 Cc: kexec@lists.infradead.org
 
-T24gV2VkLCBPY3QgMDIsIDIwMTMgYXQgMDg6NDk6NDZQTSArMDAwMCwgR2VvZmYgTGV2YW5kIHdy
-b3RlOgo+IEFkZCBhIGxvY2FsIHZhcmlhYmxlIGFuZCBjaGVjayByZXR1cm4gdmFsdWVzLgoKVGhl
-IHBhdGNoIHNlZW1zIHRvIGRvIGEgYml0IG1vcmUgdGhhbiB0aGF0LgpDb3VsZCB5b3UgZWl0aGVy
-IHNwbGl0IHRoZSBwYXRjaCB1cCBvciBlbmhhbmNlIHRoZSBjaGFuZ2Vsb2c/Cgo+IAo+IEZpeGVz
-IGJ1aWxkIHdhcm5pbmdzIGxpa2UgdGhlc2U6Cj4gCj4gICBrZXhlYy9mczJkdC5jOiB3YXJuaW5n
-OiBpZ25vcmluZyByZXR1cm4gdmFsdWUgb2Yg4oCYcmVhZOKAmQo+IAo+IFNpZ25lZC1vZmYtYnk6
-IEdlb2ZmIExldmFuZCA8Z2VvZmZAaW5mcmFkZWFkLm9yZz4gZm9yIEh1YXdlaSwgTGluYXJvCj4g
-LS0tCj4gIGtleGVjL2ZzMmR0LmMgfCAxMiArKysrKysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDkgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2V4ZWMv
-ZnMyZHQuYyBiL2tleGVjL2ZzMmR0LmMKPiBpbmRleCAxZjViMGNmLi41MGUxNzNlIDEwMDY0NAo+
-IC0tLSBhL2tleGVjL2ZzMmR0LmMKPiArKysgYi9rZXhlYy9mczJkdC5jCj4gQEAgLTU1NSw2ICs1
-NTUsNyBAQCBzdGF0aWMgdm9pZCBwdXRub2RlKHZvaWQpCj4gIAkvKiBBZGQgY21kbGluZSB0byB0
-aGUgc2Vjb25kIGtlcm5lbC4gIENoZWNrIHRvIHNlZSBpZiB0aGUgbmV3Cj4gIAkgKiBjbWRsaW5l
-IGhhcyBhIHJvb3Q9LiAgSWYgbm90LCB1c2UgdGhlIG9sZCByb290PSBjbWRsaW5lLiAgKi8KPiAg
-CWlmICghc3RyY21wKGJhc2VuYW1lLCJjaG9zZW4vIikpIHsKPiArCQlzaXplX3QgcmVzdWx0Owo+
-ICAJCXNpemVfdCBjbWRfbGVuID0gMDsKPiAgCQljaGFyICpwYXJhbSA9IE5VTEw7Cj4gIAkJY2hh
-ciBmaWxlbmFtZVtNQVhQQVRIXTsKPiBAQCAtNjM2LDggKzYzNywxMyBAQCBzdGF0aWMgdm9pZCBw
-dXRub2RlKHZvaWQpCj4gIAkJCWNsb3NlKGZkKTsKPiAgCQkJZ290byBub19kZWJ1ZzsKPiAgCQl9
-Cj4gLQkJcmVhZChmZCwgYnVmZiwgc3RhdGJ1Zi5zdF9zaXplKTsKPiArCQlyZXN1bHQgPSByZWFk
-KGZkLCBidWZmLCBzdGF0YnVmLnN0X3NpemUpOwo+ICAJCWNsb3NlKGZkKTsKPiArCQlpZiAocmVz
-dWx0IDw9IDApIHsKPiArCQkJcHJpbnRmKCJVbmFibGUgdG8gc3RhdCAlcywgcHJpbnRpbmcgZnJv
-bSBwdXJnYXRvcnkgaXMgZGlhYmxlZFxuIiwKCgpJdCBzZWVtcyB0byBtZSB0aGlzIHNob3VsZCBi
-ZSAiVW5hYmxlIHRvIHJlYWQuLi4iCgo+ICsJCQkJCQkJCQkJCQkJCWZpbGVuYW1lKTsKPiArCQkJ
-Z290byBub19kZWJ1ZzsKPiArCQl9Cj4gIAkJc3RybmNweShmaWxlbmFtZSwgIi9wcm9jL2Rldmlj
-ZS10cmVlLyIsIE1BWFBBVEgpOwo+ICAJCXN0cm5jYXQoZmlsZW5hbWUsIGJ1ZmYsIE1BWFBBVEgp
-Owo+ICAJCXN0cm5jYXQoZmlsZW5hbWUsICIvY29tcGF0aWJsZSIsIE1BWFBBVEgpOwo+IEBAIC02
-NTksOCArNjY1LDggQEAgc3RhdGljIHZvaWQgcHV0bm9kZSh2b2lkKQo+ICAJCQljbG9zZShmZCk7
-Cj4gIAkJCWdvdG8gbm9fZGVidWc7Cj4gIAkJfQo+IC0JCXJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYu
-c3Rfc2l6ZSk7Cj4gLQkJaWYgKCFzdHJjbXAoYnVmZiwgImh2dGVybTEiKSB8fCAhc3RyY21wKGJ1
-ZmYsICJodnRlcm0tcHJvdG9jb2wiKSkKPiArCQlyZXN1bHQgPSByZWFkKGZkLCBidWZmLCBzdGF0
-YnVmLnN0X3NpemUpOwo+ICsJCWlmIChyZXN1bHQgJiYgKCFzdHJjbXAoYnVmZiwgImh2dGVybTEi
-KSB8fCAhc3RyY21wKGJ1ZmYsICJodnRlcm0tcHJvdG9jb2wiKSkpCj4gIAkJCW15X2RlYnVnID0g
-MTsKPiAgCQljbG9zZShmZCk7Cj4gIAkJZnJlZShidWZmKTsKPiAtLSAKPiAxLjguMS4yCj4gCj4g
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, Oct 02, 2013 at 08:54:13PM +0000, Geoff Levand wrote:
+> Hi Simon,
+> 
+> Here are a few generic kexec-tools fixups I have.  The last one, 'Update to
+> automake-1.11', is in preparation for the arm64 support I am working on, but I
+> don't think it a bad idea to update to newer config files regardless.
+> 
+> Please consider for merge.
+
+Hi Geoff,
+
+thanks for this. I have pushed patches 1-4 and 6.
+I have made some comments on patch 5 as a reply to that patch.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
