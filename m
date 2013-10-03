@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-Id: <de03f66db26d0fb6b6dc90e80cfbfac0eec14122.1380830946.git.geoff@infradead.org>
-In-Reply-To: <cover.1380830946.git.geoff@infradead.org>
-References: <cover.1380830946.git.geoff@infradead.org>
+Message-Id: <cover.1380830946.git.geoff@infradead.org>
+In-Reply-To: <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
+References: <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 1/2] kexec: Fix return value build warnings
+Subject: [PATCH 0/2] V2 kexec: Fix return value build warnings
 MIME-Version: 1.0
 Date: Thu, 03 Oct 2013 20:19:34 +0000
 List-Id: <kexec.lists.infradead.org>
@@ -14,36 +14,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-QWRkIGEgbG9jYWwgdmFyaWFibGUgJ3Jlc3VsdCcgdG8gdGhlIHB1dG5vZGUoKSByb3V0aW5lIG9m
-CmRzMmR0IGFuZCB1c2UgaXQgdG8gaG9sZCByZXR1cm4gdmFsdWVzIG9mIGNhbGxzIHRvIHJlYWQo
-KS4KCkZpeGVzIGJ1aWxkIHdhcm5pbmdzIGxpa2UgdGhlc2U6CgogIGtleGVjL2ZzMmR0LmM6IHdh
-cm5pbmc6IGlnbm9yaW5nIHJldHVybiB2YWx1ZSBvZiDigJhyZWFk4oCZCgpTaWduZWQtb2ZmLWJ5
-OiBHZW9mZiBMZXZhbmQgPGdlb2ZmQGluZnJhZGVhZC5vcmc+IGZvciBIdWF3ZWksIExpbmFybwot
-LS0KIGtleGVjL2ZzMmR0LmMgfCA1ICsrKy0tCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2ZzMmR0LmMgYi9rZXhlYy9m
-czJkdC5jCmluZGV4IDFmNWIwY2YuLjk4ZDZjYjQgMTAwNjQ0Ci0tLSBhL2tleGVjL2ZzMmR0LmMK
-KysrIGIva2V4ZWMvZnMyZHQuYwpAQCAtNTU1LDYgKzU1NSw3IEBAIHN0YXRpYyB2b2lkIHB1dG5v
-ZGUodm9pZCkKIAkvKiBBZGQgY21kbGluZSB0byB0aGUgc2Vjb25kIGtlcm5lbC4gIENoZWNrIHRv
-IHNlZSBpZiB0aGUgbmV3CiAJICogY21kbGluZSBoYXMgYSByb290PS4gIElmIG5vdCwgdXNlIHRo
-ZSBvbGQgcm9vdD0gY21kbGluZS4gICovCiAJaWYgKCFzdHJjbXAoYmFzZW5hbWUsImNob3Nlbi8i
-KSkgeworCQlzaXplX3QgcmVzdWx0OwogCQlzaXplX3QgY21kX2xlbiA9IDA7CiAJCWNoYXIgKnBh
-cmFtID0gTlVMTDsKIAkJY2hhciBmaWxlbmFtZVtNQVhQQVRIXTsKQEAgLTYzNiw3ICs2MzcsNyBA
-QCBzdGF0aWMgdm9pZCBwdXRub2RlKHZvaWQpCiAJCQljbG9zZShmZCk7CiAJCQlnb3RvIG5vX2Rl
-YnVnOwogCQl9Ci0JCXJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6ZSk7CisJCXJlc3VsdCA9
-IHJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6ZSk7CiAJCWNsb3NlKGZkKTsKIAkJc3RybmNw
-eShmaWxlbmFtZSwgIi9wcm9jL2RldmljZS10cmVlLyIsIE1BWFBBVEgpOwogCQlzdHJuY2F0KGZp
-bGVuYW1lLCBidWZmLCBNQVhQQVRIKTsKQEAgLTY1OSw3ICs2NjAsNyBAQCBzdGF0aWMgdm9pZCBw
-dXRub2RlKHZvaWQpCiAJCQljbG9zZShmZCk7CiAJCQlnb3RvIG5vX2RlYnVnOwogCQl9Ci0JCXJl
-YWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6ZSk7CisJCXJlc3VsdCA9IHJlYWQoZmQsIGJ1ZmYs
-IHN0YXRidWYuc3Rfc2l6ZSk7CiAJCWlmICghc3RyY21wKGJ1ZmYsICJodnRlcm0xIikgfHwgIXN0
-cmNtcChidWZmLCAiaHZ0ZXJtLXByb3RvY29sIikpCiAJCQlteV9kZWJ1ZyA9IDE7CiAJCWNsb3Nl
-KGZkKTsKLS0gCjEuOC4xLjIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Simon,
+
+I split patch 5 into two as you suggested.  The first just adds the result
+variable, and the second adds the error handling.  I also changed the printed
+message as suggested.
+
+Please consider.
+
+-Geoff
+
+
+The following changes since commit 83911ebb61053b3536a7be20793ec76405c23389:
+
+  kexec: Fix off-by-one errors in locate_hole() (2013-10-03 10:15:23 +0900)
+
+are available in the git repository at:
+
+  git.linaro.org:public_git/kexec-tools.git for-merge
+
+for you to fetch changes up to 08231e47adbe1031fb2e919cce3c7f75b3edfa55:
+
+  kexec: Handle read errors in fs2dt setup (2013-10-03 13:03:12 -0700)
+
+----------------------------------------------------------------
+Geoff Levand (2):
+      kexec: Fix return value build warnings
+      kexec: Handle read errors in fs2dt setup
+
+ kexec/fs2dt.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+-- 
+1.8.1.2
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
