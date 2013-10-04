@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-lb0-f169.google.com ([209.85.217.169])
+Received: from mail-la0-f41.google.com ([209.85.215.41])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VS5GC-0003Wa-Ef
- for kexec@lists.infradead.org; Fri, 04 Oct 2013 13:17:36 +0000
-Received: by mail-lb0-f169.google.com with SMTP id z5so3325319lbh.0
- for <kexec@lists.infradead.org>; Fri, 04 Oct 2013 06:17:13 -0700 (PDT)
+ id 1VS5Ju-0003dT-5W
+ for kexec@lists.infradead.org; Fri, 04 Oct 2013 13:21:26 +0000
+Received: by mail-la0-f41.google.com with SMTP id ec20so3286398lab.28
+ for <kexec@lists.infradead.org>; Fri, 04 Oct 2013 06:21:04 -0700 (PDT)
 From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
-Subject: [PATCH] kexec: arm: Fix endianness in crashdump header
-Date: Fri,  4 Oct 2013 16:17:07 +0300
-Message-Id: <1380892627-25525-1-git-send-email-taras.kondratiuk@linaro.org>
+Subject: [PATCH] vmcore-dmesg: Read renamed printk_log parameters
+Date: Fri,  4 Oct 2013 16:20:59 +0300
+Message-Id: <1380892859-25699-1-git-send-email-taras.kondratiuk@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,43 +25,59 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: Linaro Networking <linaro-networking@linaro.org>, kexec@lists.infradead.org
 
-Currently little-endian ELFDATA is hard-coded in crashdump header.
-This lead to a wrong header format if crashdump is generated on BE system.
+printk log structure name was changed in v3.11-rc4 by commit
+62e32ac printk: rename struct log to struct printk_log
 
-Set native endianness into ELFDATA field.
+Add macros to remove hardcoded lengths and read both log name variants.
 
 Signed-off-by: Taras Kondratiuk <taras.kondratiuk@linaro.org>
 ---
- kexec/arch/arm/crashdump-arm.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ vmcore-dmesg/vmcore-dmesg.c |   25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 01973b1..0cd6935 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -31,6 +31,13 @@
- #include "../../crashdump.h"
- #include "crashdump-arm.h"
+diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+index 0f477c0..022708d 100644
+--- a/vmcore-dmesg/vmcore-dmesg.c
++++ b/vmcore-dmesg/vmcore-dmesg.c
+@@ -255,6 +255,16 @@ static void scan_vmcoreinfo(char *start, size_t size)
+ 	char temp_buf[1024];
+ 	bool last_line = false;
  
-+#if __BYTE_ORDER == __LITTLE_ENDIAN
-+#define ELFDATANATIVE ELFDATA2LSB
-+#elif __BYTE_ORDER == __BIG_ENDIAN
-+#define ELFDATANATIVE ELFDATA2MSB
-+#else
-+#error "Unknown machine endian"
-+#endif
++#define READ_INT_PARAM(name, var, converter) {				\
++	if (!memcmp(name, pos, sizeof(name) - 1))			\
++		var = converter(pos + sizeof(name) - 1, NULL, 10); }
++
++#define READ_LOG_PARAMETERS(log_name) {							  \
++	READ_INT_PARAM("SIZE("   #log_name          ")=", log_sz,              strtoull); \
++	READ_INT_PARAM("OFFSET(" #log_name  ".ts_nsec)=", log_offset_ts_nsec,  strtoull); \
++	READ_INT_PARAM("OFFSET(" #log_name      ".len)=", log_offset_len,      strtoul);  \
++	READ_INT_PARAM("OFFSET(" #log_name ".text_len)=", log_offset_text_len, strtoul); }
++
+ #define SYMBOL(sym) {					\
+ 	.str = "SYMBOL(" #sym  ")=",			\
+ 	.name = #sym,					\
+@@ -324,19 +334,8 @@ static void scan_vmcoreinfo(char *start, size_t size)
+ 			*symbol[i].vaddr = vaddr;
+ 		}
  
- /*
-  * Used to save various memory ranges/regions needed for the captured
-@@ -47,7 +54,7 @@ static struct memory_range crash_reserved_mem;
+-		/* Check for "SIZE(log)=" */
+-		if (memcmp("SIZE(log)=", pos, 10) == 0)
+-			log_sz = strtoull(pos + 10, NULL, 10);
+-
+-		/* Check for struct log field offsets */
+-		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
+-			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
+-
+-		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
+-			log_offset_len = strtoul(pos + 16, NULL, 10);
+-
+-		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
+-			log_offset_text_len = strtoul(pos + 21, NULL, 10);
++		READ_LOG_PARAMETERS(log);
++		READ_LOG_PARAMETERS(printk_log);
  
- static struct crash_elf_info elf_info = {
- 	.class		= ELFCLASS32,
--	.data		= ELFDATA2LSB,
-+	.data		= ELFDATANATIVE,
- 	.machine	= EM_ARM,
- 	.page_offset	= PAGE_OFFSET,
- };
+ 		if (last_line)
+ 			break;
 -- 
 1.7.9.5
 
