@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VRsrT-0004sa-UX
- for kexec@lists.infradead.org; Fri, 04 Oct 2013 00:03:16 +0000
-Date: Fri, 4 Oct 2013 09:02:53 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] kexec: Fix return value build warnings
-Message-ID: <20131004000253.GH29457@verge.net.au>
-References: <cover.1380830946.git.geoff@infradead.org>
- <de03f66db26d0fb6b6dc90e80cfbfac0eec14122.1380830946.git.geoff@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <de03f66db26d0fb6b6dc90e80cfbfac0eec14122.1380830946.git.geoff@infradead.org>
+Received: from mail-lb0-f169.google.com ([209.85.217.169])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VS5GC-0003Wa-Ef
+ for kexec@lists.infradead.org; Fri, 04 Oct 2013 13:17:36 +0000
+Received: by mail-lb0-f169.google.com with SMTP id z5so3325319lbh.0
+ for <kexec@lists.infradead.org>; Fri, 04 Oct 2013 06:17:13 -0700 (PDT)
+From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+Subject: [PATCH] kexec: arm: Fix endianness in crashdump header
+Date: Fri,  4 Oct 2013 16:17:07 +0300
+Message-Id: <1380892627-25525-1-git-send-email-taras.kondratiuk@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,39 +17,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org
+To: horms@verge.net.au
+Cc: Linaro Networking <linaro-networking@linaro.org>, kexec@lists.infradead.org
 
-T24gVGh1LCBPY3QgMDMsIDIwMTMgYXQgMDg6MTk6MzRQTSArMDAwMCwgR2VvZmYgTGV2YW5kIHdy
-b3RlOgo+IEFkZCBhIGxvY2FsIHZhcmlhYmxlICdyZXN1bHQnIHRvIHRoZSBwdXRub2RlKCkgcm91
-dGluZSBvZgo+IGRzMmR0IGFuZCB1c2UgaXQgdG8gaG9sZCByZXR1cm4gdmFsdWVzIG9mIGNhbGxz
-IHRvIHJlYWQoKS4KPiAKPiBGaXhlcyBidWlsZCB3YXJuaW5ncyBsaWtlIHRoZXNlOgo+IAo+ICAg
-a2V4ZWMvZnMyZHQuYzogd2FybmluZzogaWdub3JpbmcgcmV0dXJuIHZhbHVlIG9mIOKAmHJlYWTi
-gJkKClRoYW5rcywgYXBwbGllZC4KCj4gCj4gU2lnbmVkLW9mZi1ieTogR2VvZmYgTGV2YW5kIDxn
-ZW9mZkBpbmZyYWRlYWQub3JnPiBmb3IgSHVhd2VpLCBMaW5hcm8KPiAtLS0KPiAga2V4ZWMvZnMy
-ZHQuYyB8IDUgKysrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
-dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvZnMyZHQuYyBiL2tleGVjL2ZzMmR0LmMK
-PiBpbmRleCAxZjViMGNmLi45OGQ2Y2I0IDEwMDY0NAo+IC0tLSBhL2tleGVjL2ZzMmR0LmMKPiAr
-KysgYi9rZXhlYy9mczJkdC5jCj4gQEAgLTU1NSw2ICs1NTUsNyBAQCBzdGF0aWMgdm9pZCBwdXRu
-b2RlKHZvaWQpCj4gIAkvKiBBZGQgY21kbGluZSB0byB0aGUgc2Vjb25kIGtlcm5lbC4gIENoZWNr
-IHRvIHNlZSBpZiB0aGUgbmV3Cj4gIAkgKiBjbWRsaW5lIGhhcyBhIHJvb3Q9LiAgSWYgbm90LCB1
-c2UgdGhlIG9sZCByb290PSBjbWRsaW5lLiAgKi8KPiAgCWlmICghc3RyY21wKGJhc2VuYW1lLCJj
-aG9zZW4vIikpIHsKPiArCQlzaXplX3QgcmVzdWx0Owo+ICAJCXNpemVfdCBjbWRfbGVuID0gMDsK
-PiAgCQljaGFyICpwYXJhbSA9IE5VTEw7Cj4gIAkJY2hhciBmaWxlbmFtZVtNQVhQQVRIXTsKPiBA
-QCAtNjM2LDcgKzYzNyw3IEBAIHN0YXRpYyB2b2lkIHB1dG5vZGUodm9pZCkKPiAgCQkJY2xvc2Uo
-ZmQpOwo+ICAJCQlnb3RvIG5vX2RlYnVnOwo+ICAJCX0KPiAtCQlyZWFkKGZkLCBidWZmLCBzdGF0
-YnVmLnN0X3NpemUpOwo+ICsJCXJlc3VsdCA9IHJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rfc2l6
-ZSk7Cj4gIAkJY2xvc2UoZmQpOwo+ICAJCXN0cm5jcHkoZmlsZW5hbWUsICIvcHJvYy9kZXZpY2Ut
-dHJlZS8iLCBNQVhQQVRIKTsKPiAgCQlzdHJuY2F0KGZpbGVuYW1lLCBidWZmLCBNQVhQQVRIKTsK
-PiBAQCAtNjU5LDcgKzY2MCw3IEBAIHN0YXRpYyB2b2lkIHB1dG5vZGUodm9pZCkKPiAgCQkJY2xv
-c2UoZmQpOwo+ICAJCQlnb3RvIG5vX2RlYnVnOwo+ICAJCX0KPiAtCQlyZWFkKGZkLCBidWZmLCBz
-dGF0YnVmLnN0X3NpemUpOwo+ICsJCXJlc3VsdCA9IHJlYWQoZmQsIGJ1ZmYsIHN0YXRidWYuc3Rf
-c2l6ZSk7Cj4gIAkJaWYgKCFzdHJjbXAoYnVmZiwgImh2dGVybTEiKSB8fCAhc3RyY21wKGJ1ZmYs
-ICJodnRlcm0tcHJvdG9jb2wiKSkKPiAgCQkJbXlfZGVidWcgPSAxOwo+ICAJCWNsb3NlKGZkKTsK
-PiAtLSAKPiAxLjguMS4yCj4gCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Currently little-endian ELFDATA is hard-coded in crashdump header.
+This lead to a wrong header format if crashdump is generated on BE system.
+
+Set native endianness into ELFDATA field.
+
+Signed-off-by: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+---
+ kexec/arch/arm/crashdump-arm.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index 01973b1..0cd6935 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -31,6 +31,13 @@
+ #include "../../crashdump.h"
+ #include "crashdump-arm.h"
+ 
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++#define ELFDATANATIVE ELFDATA2LSB
++#elif __BYTE_ORDER == __BIG_ENDIAN
++#define ELFDATANATIVE ELFDATA2MSB
++#else
++#error "Unknown machine endian"
++#endif
+ 
+ /*
+  * Used to save various memory ranges/regions needed for the captured
+@@ -47,7 +54,7 @@ static struct memory_range crash_reserved_mem;
+ 
+ static struct crash_elf_info elf_info = {
+ 	.class		= ELFCLASS32,
+-	.data		= ELFDATA2LSB,
++	.data		= ELFDATANATIVE,
+ 	.machine	= EM_ARM,
+ 	.page_offset	= PAGE_OFFSET,
+ };
+-- 
+1.7.9.5
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
