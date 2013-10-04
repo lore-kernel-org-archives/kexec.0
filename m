@@ -1,11 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-Id: <cover.1380830946.git.geoff@infradead.org>
-In-Reply-To: <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
-References: <46065cda6087e6c9699f2e06f00d914235740c6c.1380746425.git.geoff@infradead.org>
-From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 0/2] V2 kexec: Fix return value build warnings
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VRsrJ-0004sG-VX
+ for kexec@lists.infradead.org; Fri, 04 Oct 2013 00:03:06 +0000
+Date: Fri, 4 Oct 2013 09:02:44 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] kexec: Handle read errors in fs2dt setup
+Message-ID: <20131004000244.GG29457@verge.net.au>
+References: <cover.1380830946.git.geoff@infradead.org>
+ <08231e47adbe1031fb2e919cce3c7f75b3edfa55.1380830946.git.geoff@infradead.org>
 MIME-Version: 1.0
-Date: Thu, 03 Oct 2013 20:19:34 +0000
+Content-Disposition: inline
+In-Reply-To: <08231e47adbe1031fb2e919cce3c7f75b3edfa55.1380830946.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,43 +24,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: Geoff Levand <geoff@infradead.org>
 Cc: kexec@lists.infradead.org
 
-Hi Simon,
+On Thu, Oct 03, 2013 at 08:19:34PM +0000, Geoff Levand wrote:
+> The putnode() routine in fs2dt.c was not checking for errors
+> returned from calls to read().  Add checks for these errors
+> and abort the setup of printing from purgatory if the checks
+> fail.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  kexec/fs2dt.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 
-I split patch 5 into two as you suggested.  The first just adds the result
-variable, and the second adds the error handling.  I also changed the printed
-message as suggested.
+Thanks, applied.
 
-Please consider.
-
--Geoff
-
-
-The following changes since commit 83911ebb61053b3536a7be20793ec76405c23389:
-
-  kexec: Fix off-by-one errors in locate_hole() (2013-10-03 10:15:23 +0900)
-
-are available in the git repository at:
-
-  git.linaro.org:public_git/kexec-tools.git for-merge
-
-for you to fetch changes up to 08231e47adbe1031fb2e919cce3c7f75b3edfa55:
-
-  kexec: Handle read errors in fs2dt setup (2013-10-03 13:03:12 -0700)
-
-----------------------------------------------------------------
-Geoff Levand (2):
-      kexec: Fix return value build warnings
-      kexec: Handle read errors in fs2dt setup
-
- kexec/fs2dt.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
--- 
-1.8.1.2
-
+> 
+> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+> index 98d6cb4..242a15e 100644
+> --- a/kexec/fs2dt.c
+> +++ b/kexec/fs2dt.c
+> @@ -639,6 +639,11 @@ static void putnode(void)
+>  		}
+>  		result = read(fd, buff, statbuf.st_size);
+>  		close(fd);
+> +		if (result <= 0) {
+> +			printf("Unable to read %s, printing from purgatory is diabled\n",
+> +														filename);
+> +			goto no_debug;
+> +		}
+>  		strncpy(filename, "/proc/device-tree/", MAXPATH);
+>  		strncat(filename, buff, MAXPATH);
+>  		strncat(filename, "/compatible", MAXPATH);
+> @@ -661,7 +666,8 @@ static void putnode(void)
+>  			goto no_debug;
+>  		}
+>  		result = read(fd, buff, statbuf.st_size);
+> -		if (!strcmp(buff, "hvterm1") || !strcmp(buff, "hvterm-protocol"))
+> +		if (result && (!strcmp(buff, "hvterm1")
+> +			|| !strcmp(buff, "hvterm-protocol")))
+>  			my_debug = 1;
+>  		close(fd);
+>  		free(buff);
+> -- 
+> 1.8.1.2
+> 
 
 _______________________________________________
 kexec mailing list
