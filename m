@@ -1,14 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-la0-f41.google.com ([209.85.215.41])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VS5Ju-0003dT-5W
- for kexec@lists.infradead.org; Fri, 04 Oct 2013 13:21:26 +0000
-Received: by mail-la0-f41.google.com with SMTP id ec20so3286398lab.28
- for <kexec@lists.infradead.org>; Fri, 04 Oct 2013 06:21:04 -0700 (PDT)
-From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
-Subject: [PATCH] vmcore-dmesg: Read renamed printk_log parameters
-Date: Fri,  4 Oct 2013 16:20:59 +0300
-Message-Id: <1380892859-25699-1-git-send-email-taras.kondratiuk@linaro.org>
+ id 1VT0pf-0007hc-WC
+ for kexec@lists.infradead.org; Mon, 07 Oct 2013 02:46:05 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A49743EE1D9
+ for <kexec@lists.infradead.org>; Mon,  7 Oct 2013 11:45:34 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 93DF545DEBB
+ for <kexec@lists.infradead.org>; Mon,  7 Oct 2013 11:45:34 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7A09E45DEB6
+ for <kexec@lists.infradead.org>; Mon,  7 Oct 2013 11:45:34 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 6B11C1DB8041
+ for <kexec@lists.infradead.org>; Mon,  7 Oct 2013 11:45:34 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 192261DB803E
+ for <kexec@lists.infradead.org>; Mon,  7 Oct 2013 11:45:34 +0900 (JST)
+Message-ID: <52521FA5.3040101@jp.fujitsu.com>
+Date: Mon, 07 Oct 2013 11:42:45 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: mmap for /proc/vmcore broken since 3.12-rc1
+References: <20131002140356.63706540@holzheu> <524D0ADF.2010507@jp.fujitsu.com>
+In-Reply-To: <524D0ADF.2010507@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,69 +34,178 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: Linaro Networking <linaro-networking@linaro.org>, kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>, Alexey Dobriyan <adobriyan@gmail.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>, Jan Willeke <willeke@de.ibm.com>
 
-printk log structure name was changed in v3.11-rc4 by commit
-62e32ac printk: rename struct log to struct printk_log
+(2013/10/03 15:12), HATAYAMA Daisuke wrote:
+> (2013/10/02 21:03), Michael Holzheu wrote:
+>> Hello Alexey,
+>>
+>> Looks like the following commit broke mmap for /proc/vmcore:
+>>
+>> commit c4fe24485729fc2cbff324c111e67a1cc2f9adea
+>> Author: Alexey Dobriyan <adobriyan@gmail.com>
+>> Date:   Tue Aug 20 22:17:24 2013 +0300
+>>
+>>      sparc: fix PCI device proc file mmap(2)
+>>
+>> Because /proc/vmcore (fs/proc/vmcore.c) does not implement the
+>> get_unmapped_area() fops function mmap now always returns EIO.
+>>
+>> Michael
+>>
+>
+> I confirmed the bug on v3.12-rc3. According to makedumpfile's log,
+> mmap failed on /proc/vmcore.
+>
+> mem_map (271)
+>    mem_map    : ffffea001da40000
+>    pfn_start  : 878000
+>    pfn_end    : 880000
+> Kernel can't mmap vmcore, using reads.
+> STEP [Excluding unnecessary pages] : 1.268799 seconds
+> STEP [Excluding unnecessary pages] : 1.268756 seconds
+> STEP [Copying data               ] : 44.847924 seconds
+> Writing erase info...
+>
+> I'll post a patch later.
+>
 
-Add macros to remove hardcoded lengths and read both log name variants.
+I've not completed this. I thought it was short task but after I
+tried to fix, makedumpfile became frequently failing with -ENOMEM and
+I'm not sure why even now.
 
-Signed-off-by: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+Here's current progress.
+
+First, on v3.12-rc3 mmap() on /proc/vmcore fails while returning -EIO.
+This is due to the commit c4fe24485729fc2cbff324c111e67a1cc2f9adea,
+just as reported by Holzheu, where proc_reg_get_unmapped_area was
+newly added to proc_reg_file_ops_no_compat file operations as
+get_unmapped_area method. Looking at get_unmapped_area function,
+it calls current->mm->get_unmapped_area at default, but calls
+f_ops->get_unmapped_area_function if it's assigned.
+
+         get_area = current->mm->get_unmapped_area;
+         if (file && file->f_op && file->f_op->get_unmapped_area)
+                 get_area = file->f_op->get_unmapped_area;
+         addr = get_area(file, addr, len, pgoff, flags);
+         if (IS_ERR_VALUE(addr))
+                 return addr;
+
+For regular files in procfs, proc_reg_file_ops_no_compat is used
+first and then this behaves as wrapper.
+
+static unsigned long proc_reg_get_unmapped_area(struct file *file, unsigned long orig_addr, unsigned long len, unsigned long pgoff, unsigned long flags)
+{
+         struct proc_dir_entry *pde = PDE(file_inode(file));
+         int rv = -EIO;
+         unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+         if (use_pde(pde)) {
+                 get_unmapped_area = pde->proc_fops->get_unmapped_area;
+                 if (get_unmapped_area)
+                         rv = get_unmapped_area(file, orig_addr, len, pgoff, flags);
+                 unuse_pde(pde);
+         }
+         return rv;
+}
+
+Since this was added in proc_reg_file_ops_no_compat, proc_reg_get_unmapped_area
+is used in get_unmapped_area now and it always returns -EIO since proc_vmcore_operations
+has no get_unmapped_area method now.
+
+So, immediate fix idea is to define get_unmapped_area method in proc_vmcore_operations
+and to design it so that it just calls current->mm->get_unmapped_area.
+
 ---
- vmcore-dmesg/vmcore-dmesg.c |   25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+  fs/proc/vmcore.c | 13 +++++++++++++
+  1 file changed, 13 insertions(+)
 
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index 0f477c0..022708d 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -255,6 +255,16 @@ static void scan_vmcoreinfo(char *start, size_t size)
- 	char temp_buf[1024];
- 	bool last_line = false;
- 
-+#define READ_INT_PARAM(name, var, converter) {				\
-+	if (!memcmp(name, pos, sizeof(name) - 1))			\
-+		var = converter(pos + sizeof(name) - 1, NULL, 10); }
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 9100d69..9583419 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -412,10 +412,23 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
+  }
+  #endif
+
++static unsigned long
++get_unmapped_area_vmcore(struct file *filp, unsigned long addr,
++                        unsigned long len, unsigned long pgoff,
++                        unsigned long flags)
++{
++#ifdef CONFIG_MMU
++       return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
++#else
++       return -EIO;
++#endif
++}
 +
-+#define READ_LOG_PARAMETERS(log_name) {							  \
-+	READ_INT_PARAM("SIZE("   #log_name          ")=", log_sz,              strtoull); \
-+	READ_INT_PARAM("OFFSET(" #log_name  ".ts_nsec)=", log_offset_ts_nsec,  strtoull); \
-+	READ_INT_PARAM("OFFSET(" #log_name      ".len)=", log_offset_len,      strtoul);  \
-+	READ_INT_PARAM("OFFSET(" #log_name ".text_len)=", log_offset_text_len, strtoul); }
-+
- #define SYMBOL(sym) {					\
- 	.str = "SYMBOL(" #sym  ")=",			\
- 	.name = #sym,					\
-@@ -324,19 +334,8 @@ static void scan_vmcoreinfo(char *start, size_t size)
- 			*symbol[i].vaddr = vaddr;
- 		}
- 
--		/* Check for "SIZE(log)=" */
--		if (memcmp("SIZE(log)=", pos, 10) == 0)
--			log_sz = strtoull(pos + 10, NULL, 10);
--
--		/* Check for struct log field offsets */
--		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
--			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
--
--		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
--			log_offset_len = strtoul(pos + 16, NULL, 10);
--
--		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
--			log_offset_text_len = strtoul(pos + 21, NULL, 10);
-+		READ_LOG_PARAMETERS(log);
-+		READ_LOG_PARAMETERS(printk_log);
- 
- 		if (last_line)
- 			break;
+  static const struct file_operations proc_vmcore_operations = {
+         .read           = read_vmcore,
+         .llseek         = default_llseek,
+         .mmap           = mmap_vmcore,
++       .get_unmapped_area = get_unmapped_area_vmcore,
+  };
+
+  static struct vmcore* __init get_new_element(void)
+--
+1.8.3.1
+
+However, after applying this patch, makedumpfile now somehow fails returning -ENOMEM
+frequently. It's about 50/128 on my box.
+
+Searching for where to return -ENOMEM in mmap path by printk debug, I found instance
+of get_unmapped_area returns kernel-space address:
+
+         get_area = current->mm->get_unmapped_area;
+         if (file && file->f_op && file->f_op->get_unmapped_area)
+                 get_area = file->f_op->get_unmapped_area;
+         addr = get_area(file, addr, len, pgoff, flags);
+         if (IS_ERR_VALUE(addr))
+                 return addr;
+
+         if (addr > TASK_SIZE - len)   <---- Here
+                 return -ENOMEM;
+
+The log is:
+
+kdump:/# cd /mnt/
+kdump:/mnt# for ((i=0; i<128; ++i)) ; do
+> makedumpfile -f -p -d 31 /proc/vmcore vmcore-pd31
+> done
+The kernel version is not supported.
+The created dumpfile may be incomplete.
+cyclic buffer size has been changed: 65535 => 64512
+[   49.462536] addr: 0xffffffff8ef28000
+[   49.463686] TASK_SIZE: 0x007ffffffff000
+[   49.464952] len: 0x00000000400000
+
+Note that makedumpfile tries to mmap some area in 4MiB size here,
+get_unmapped_area tries to find some area to cover such requested 4MiB size
+within user-space address space limit but it returns somehow kernel-space
+address.
+
+The actual instance of current->mm->get_unmapped_area on my environment
+is arch_get_unmapped_area_topdown.
+
+Finally, note: I tried to run makedumpfile using mmap on /proc/vmcore 128-times. Then,
+- v3.12-rc3 returns -EIO in every case (trivial),
+- v3.12-rc3 with the above patch applied returns -ENOMEM at 50/128,
+- v3.12-rc3 with commit c4fe24485729fc2cbff324c111e67a1cc2f9adea reverted
+   works well in every case, and
+- v3.11.1-201.fc19.x86_64 works well in every case.
+
+So, I suspect procfs wrapper affects arch_get_unmapped_region_topdown?
+
+Any comments are helpful.
+
 -- 
-1.7.9.5
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
