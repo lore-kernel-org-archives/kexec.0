@@ -1,32 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VTqnu-0006UC-Ey
- for kexec@lists.infradead.org; Wed, 09 Oct 2013 10:15:43 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 6DABB3EE1D6
- for <kexec@lists.infradead.org>; Wed,  9 Oct 2013 19:15:13 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4303545DE60
- for <kexec@lists.infradead.org>; Wed,  9 Oct 2013 19:15:13 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 204AA45DE6F
- for <kexec@lists.infradead.org>; Wed,  9 Oct 2013 19:15:13 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 119781DB8051
- for <kexec@lists.infradead.org>; Wed,  9 Oct 2013 19:15:13 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B60421DB804D
- for <kexec@lists.infradead.org>; Wed,  9 Oct 2013 19:15:12 +0900 (JST)
-Message-ID: <52552C9F.2030404@jp.fujitsu.com>
-Date: Wed, 09 Oct 2013 19:14:55 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VU0FP-0007oI-MA
+ for kexec@lists.infradead.org; Wed, 09 Oct 2013 20:20:45 +0000
+Date: Wed, 9 Oct 2013 16:20:12 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 0/2] x86, apic: Disable BSP if boot cpu is AP
+Message-ID: <20131009202012.GO6383@redhat.com>
+References: <20130829092458.5476.10277.stgit@localhost6.localdomain6>
+ <521F5297.4070906@linux.intel.com>
+ <521FDE8D.4040807@jp.fujitsu.com>
+ <5220BDBC.2060807@linux.intel.com>
 MIME-Version: 1.0
-Subject: Re: mmap for /proc/vmcore broken since 3.12-rc1
-References: <20131002140356.63706540@holzheu>	<524D0ADF.2010507@jp.fujitsu.com>	<52521FA5.3040101@jp.fujitsu.com>
- <CACVxJT8S7kA92=80DWVmVJJvbnaQ6WkyvsiFq4wP37WHV=tfuA@mail.gmail.com>
-In-Reply-To: <CACVxJT8S7kA92=80DWVmVJJvbnaQ6WkyvsiFq4wP37WHV=tfuA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <5220BDBC.2060807@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,55 +22,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: kexec@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Jan Willeke <willeke@de.ibm.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>, "David S. Miller" <davem@davemloft.net>, Vivek Goyal <vgoyal@redhat.com>
+To: "H. Peter Anvin" <hpa@linux.intel.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, ebiederm@xmission.com, akpm@linux-foundation.org, jingbai.ma@hp.com
 
-Hello,
+On Fri, Aug 30, 2013 at 08:43:56AM -0700, H. Peter Anvin wrote:
+> On 08/29/2013 04:51 PM, HATAYAMA Daisuke wrote:
+> > 
+> > This is not a regression just as Eric explains.
+> > 
+> > There is also my explanation in the description of the 2nd patch. I
+> > should have described so here explicitly.
+> > 
+> 
+> OK.  We're probably days away from a merge window, so I would like to
+> put this in the queue for 3.13.
 
-(2013/10/08 21:49), Alexey Dobriyan wrote:
-> On Mon, Oct 7, 2013 at 5:42 AM, HATAYAMA Daisuke
-> <d.hatayama@jp.fujitsu.com> wrote:
->
->> +static unsigned long
->> +get_unmapped_area_vmcore(struct file *filp, unsigned long addr,
->> +                        unsigned long len, unsigned long pgoff,
->> +                        unsigned long flags)
->> +{
->> +#ifdef CONFIG_MMU
->> +       return current->mm->get_unmapped_area(filp, addr, len, pgoff,
->> flags);
->> +#else
->> +       return -EIO;
->> +#endif
->> +}
->> +
->>   static const struct file_operations proc_vmcore_operations = {
->>          .read           = read_vmcore,
->>          .llseek         = default_llseek,
->>          .mmap           = mmap_vmcore,
->> +       .get_unmapped_area = get_unmapped_area_vmcore,
->
-> I think current->mm->get_unmapped_area should be used by core proc code.
+Hi hpa,
 
-What do you actually suggest here? You mean moving this code in proc code?
-I don't think you suggest so.
+Have you queued up these patches for 3.13?
 
-> ENOMEM bug looks unrelated though.
->
-
-Next step I'll do is to look into vm_unmapped_region() that looks for
-for a region fit to a given mmap request and returns its address.
-In particular, I'll focus on when vm_unmapped_region() could return
-kernel-space address.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
