@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from g1t0029.austin.hp.com ([15.216.28.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VUl0K-00018X-00
- for kexec@lists.infradead.org; Fri, 11 Oct 2013 22:16:16 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20131011092837.GZ3626@debian70-amd64.local.net-space.pl>
- <877gdkce6s.fsf@tw-ebiederman.twitter.com>
- <20131011110455.GA3626@debian70-amd64.local.net-space.pl>
-Date: Fri, 11 Oct 2013 15:15:38 -0700
-In-Reply-To: <20131011110455.GA3626@debian70-amd64.local.net-space.pl> (Daniel
- Kiper's message of "Fri, 11 Oct 2013 13:04:55 +0200")
-Message-ID: <877gdjbgj9.fsf@xmission.com>
+ id 1VUoS4-0004ot-Tc
+ for kexec@lists.infradead.org; Sat, 12 Oct 2013 01:57:09 +0000
+Message-ID: <5258AC58.4060308@hp.com>
+Date: Sat, 12 Oct 2013 09:56:40 +0800
+From: Jingbai Ma <jingbai.ma@hp.com>
 MIME-Version: 1.0
-Subject: Re: kexec: Clearing registers just before jumping into purgatory
+Subject: Re: [PATCH v2] crash utility: fix max_mapnr issue on system has over
+ 44-bit addressing
+References: <20131011094700.13571.24033.stgit@k.asiapacific.hpqcorp.net>
+ <1398853173.5067799.1381517552627.JavaMail.root@redhat.com>
+In-Reply-To: <1398853173.5067799.1381517552627.JavaMail.root@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,82 +20,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: keir@xen.org, keescook@chromium.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, hbabu@us.ibm.com, david.vrabel@citrix.com, jbeulich@suse.com, hpa@linux.intel.com, vgoyal@redhat.com
+To: Dave Anderson <anderson@redhat.com>
+Cc: bhe@redhat.com, nishimura@mxp.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, d hatayama <d.hatayama@jp.fujitsu.com>, lisa mitchell <lisa.mitchell@hp.com>, vgoyal@redhat.com, ruyang@redhat.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, chaowang@redhat.com, kexec@lists.infradead.org, Jingbai Ma <jingbai.ma@hp.com>, crash-utility@redhat.com
 
-Daniel Kiper <daniel.kiper@oracle.com> writes:
-
-> On Fri, Oct 11, 2013 at 03:08:43AM -0700, ebiederm@xmission.com wrote:
->> Daniel Kiper <daniel.kiper@oracle.com> writes:
->>
->> > Hi,
->> >
->> > Could you explain why do you clear all registers just before jumping
->> > into purgatory (please look into arch/x86/kernel/relocate_kernel_64.S
->> > for more details)? There is no any single word about that. I do not
->> > count comment which states what is going on. purgatory on entry does
->> > not assume any value in registers. Are you going to use that feature
->> > for something in the future (e.g. to differentiate between callers
->> > and/or Linux versions if it be needed)?
->>
->> It has been a long time now, but as I recall the reason was to just
->> have things well defined and to make certain that we were not
->> accidentially exporting anything except the stack pointer for
->> applications to depend upon.
->>
->> 0/NULL is a good choice because if you are expecting pointer for some
->> strange reason interesting things happen.
+On 10/12/2013 02:52 AM, Dave Anderson wrote:
 >
-> This covers more or less with my expectations.
+> Hello Jingbai,
 >
->> purgatory is definitely not the only target and the C version of
->> purgatory was actually written well after kexec came into existence.
->>
->> Is there any particular reason why you are asking?
+> The old diskdump-compatibility issue has been addressed by this second
+> patch, but it fails to work with "split" kdumps.
 >
-> Yes, we (Xen guys) are discussing is it worth to do it or not in our
-> kexec implementation. I think that yes because we used Linux Kernel
-> kexec implementation as a base for our work and we use kexec-tools too.
-> So we should be aligined to what currently is in the wild. David do not
-> agree with me. You could find more here:
+> I only have two sample split compressed kdumps.  Despite the dumpfile
+> names, both of them were compressed and filtered with "-c -d31".
 >
-> http://lists.xen.org/archives/html/xen-devel/2013-10/msg00710.html
-> http://lists.xen.org/archives/html/xen-devel/2013-10/msg00296.html
 >
-> What is your opinion in that case?
-
-I can see documenting the registers other than the stack pointer
-as undefined.  (A stack pointer is needed to implement PIC code).
-
-For the implementation I recommend setting these registers to known
-values.  The issue is that your implementation will not change much and
-if you don't set the registers to known values someone may develop a
-dependency on what you happen to have those registers set to.
-
-It is easier to force a fixed value into a register that isn't hard to
-maintain into your registers than to discover when you make a change
-that there is some odd client that depends on some value that just
-happened to be in your register, and that your necessary change is now
-made 10x harder by a client you can't afford to break that depends on a
-bug in the previous implementation.
-
-So yes I strongly recommend setting the registers to a 0 in this case.
-
->> Something different is done, and all of the registers should be
->> preserved from the when the return to Linux.
 >
-> I expected that but purgatory does nothing with them.
-> However, maybe I missed something.
+> I have temporarily placed the sample split dumpfiles above here for you
+> to download and test with:
+>
+>    http://people.redhat.com/anderson/kdump_split
+>
+> Let me know when you have copied them so I can clear up the disk space.
+>
+> Thanks,
+>    Dave
 
-Yes.  I think I am mostly in the document that you can't depend on them,
-but keep them fixed to prevent problematic dependencies creeping in
-because something just works...
+I have downloaded the dumpfiles, and have reproduced this issue.
+I'm working on this issue now, and will send you a new version soon.
 
-Eric
+--
+Thanks,
+Jingbai Ma
 
 _______________________________________________
 kexec mailing list
