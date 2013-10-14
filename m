@@ -1,14 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0029.austin.hp.com ([15.216.28.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VVhpd-0005LV-4v
- for kexec@lists.infradead.org; Mon, 14 Oct 2013 13:05:10 +0000
-Subject: [PATCH] makedumpfile: enhance bitmap writting function in
- reassemble mode
-From: Jingbai Ma <jingbai.ma@hp.com>
-Date: Mon, 14 Oct 2013 21:04:40 +0800
-Message-ID: <20131014130440.2430.60450.stgit@k.asiapacific.hpqcorp.net>
-MIME-Version: 1.0
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH RFC 0/1] ARM: boot: make atags area relocatable
+Date: Mon, 14 Oct 2013 15:44:21 +0200
+Message-Id: <1381758262-31159-1-git-send-email-zonque@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,98 +11,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: bhe@redhat.com, jingbai.ma@hp.com, kexec@lists.infradead.org, lisa.mitchell@hp.com, d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com, chaowang@redhat.com
+To: linux@arm.linux.org.uk
+Cc: kexec@lists.infradead.org, neumann@teufel.de, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>
 
-This patch Enhance bitmap writting function in reassemble_kdump_header().
-Prevent bitmap writting failure if the size of bitmap is too large to fit a
-sigle write.
+I've been hunting an effect of failed ARM kernel boots when kexec is
+used, and here's a RFC for a solution of what I figured out.
 
-Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
----
- makedumpfile.c |   45 +++++++++++++++++++++++++++++++--------------
- 1 files changed, 31 insertions(+), 14 deletions(-)
+kexec currently assumes that the kernel image compression rate is 1:4,
+and stuffs the dtb image after what is assumed the end of the kernel
+image. However, it does not read in the kernel's symbol table or
+anything alike and hence can't know about the size of the bss
+section. In my case, it turns out that upon __vet_atags is executed,
+the dtb image lies inside the bss area and is hence overridden with
+zeros later on.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 130cf9f..f43454a 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -7990,6 +7990,7 @@ reassemble_kdump_header(void)
- 	struct disk_dump_header dh;
- 	struct kdump_sub_header kh;
- 	char *buf_bitmap = NULL;
-+	ssize_t status, read_size, written_size;
- 
- 	/*
- 	 * Write common header.
-@@ -8068,10 +8069,16 @@ reassemble_kdump_header(void)
- 		    SPLITTING_DUMPFILE(0), strerror(errno));
- 		goto out;
- 	}
--	if (read(fd, buf_bitmap, info->len_bitmap) != info->len_bitmap) {
--		ERRMSG("Can't read a file(%s). %s\n",
--		    SPLITTING_DUMPFILE(0), strerror(errno));
--		goto out;
-+	read_size = 0;
-+	while (read_size < info->len_bitmap) {
-+		status = read(fd, buf_bitmap + read_size, info->len_bitmap
-+			- read_size);
-+		if (status < 0) {
-+			ERRMSG("Can't read a file(%s). %s\n",
-+				SPLITTING_DUMPFILE(0), strerror(errno));
-+			goto out;
-+		}
-+		read_size += status;
- 	}
- 
- 	if (lseek(info->fd_dumpfile, offset, SEEK_SET) < 0) {
-@@ -8079,11 +8086,16 @@ reassemble_kdump_header(void)
- 		    info->name_dumpfile, strerror(errno));
- 		goto out;
- 	}
--	if (write(info->fd_dumpfile, buf_bitmap, info->len_bitmap)
--	    != info->len_bitmap) {
--		ERRMSG("Can't write a file(%s). %s\n",
--		    info->name_dumpfile, strerror(errno));
--		goto out;
-+	written_size = 0;
-+	while (written_size < info->len_bitmap) {
-+		status = write(info->fd_dumpfile, buf_bitmap + written_size,
-+			info->len_bitmap - written_size);
-+		if (status < 0) {
-+			ERRMSG("Can't write a file(%s). %s\n",
-+			    info->name_dumpfile, strerror(errno));
-+			goto out;
-+		}
-+		written_size += status;
- 	}
- 
- 	if (lseek(info->fd_bitmap, 0x0, SEEK_SET) < 0) {
-@@ -8091,11 +8103,16 @@ reassemble_kdump_header(void)
- 		    info->name_bitmap, strerror(errno));
- 		goto out;
- 	}
--	if (write(info->fd_bitmap, buf_bitmap, info->len_bitmap)
--	    != info->len_bitmap) {
--		ERRMSG("Can't write a file(%s). %s\n",
--		    info->name_bitmap, strerror(errno));
--		goto out;
-+	written_size = 0;
-+	while (written_size < info->len_bitmap) {
-+		status = write(info->fd_bitmap, buf_bitmap + written_size,
-+			info->len_bitmap - written_size);
-+		if (status < 0) {
-+			ERRMSG("Can't write a file(%s). %s\n",
-+			    info->name_bitmap, strerror(errno));
-+			goto out;
-+		}
-+		written_size += status;
- 	}
- 
- 	ret = TRUE;
+This patch makes an attempt to fix this problem by detecting the
+described condition and relocating the atags/bss section to where
+the '_end' symbol is stored.
+
+Disclaimer: I'm really not sure whether my virt_to_phys() approach
+and other asm details are fully correct. I'm open to suggestions :)
+
+Successfully tested on a AM335x platform that fails to kexec without
+the patch.
+
+
+Thanks,
+Daniel
+
+
+Daniel Mack (1):
+  ARM: head-common.S: relocate atags area if necessary
+
+ arch/arm/kernel/head-common.S | 58 ++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 52 insertions(+), 6 deletions(-)
+
+-- 
+1.8.3.1
 
 
 _______________________________________________
