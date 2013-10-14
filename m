@@ -1,32 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VVeZw-0000Wk-A3
- for kexec@lists.infradead.org; Mon, 14 Oct 2013 09:36:45 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 145E43EE1D6
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2013 18:36:24 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 03A2945DE50
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2013 18:36:24 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id DE98545DE4E
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2013 18:36:23 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id D29061DB803C
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2013 18:36:23 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 873491DB8038
- for <kexec@lists.infradead.org>; Mon, 14 Oct 2013 18:36:23 +0900 (JST)
-Subject: [PATCH 3/3] procfs: clean up proc_reg_get_unmapped_area for
- 80-column limit
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Mon, 14 Oct 2013 18:36:22 +0900
-Message-ID: <20131014093622.9801.75614.stgit@localhost6.localdomain6>
-In-Reply-To: <20131014093606.9801.11175.stgit@localhost6.localdomain6>
-References: <20131014093606.9801.11175.stgit@localhost6.localdomain6>
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VVgcG-0003Gk-3o
+ for kexec@lists.infradead.org; Mon, 14 Oct 2013 11:47:17 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M first,
+ then try below 4G, then MAXMEM
+Date: Mon, 14 Oct 2013 19:46:40 +0800
+Message-Id: <1381751200-27376-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,55 +16,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, davem@davemloft.net, ebiederm@xmission.com, holzheu@linux.vnet.ibm.com, adobriyan@gmail.com, vgoyal@redhat.com
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Yinghai Lu <yinghai@kernel.org>, Pekka Enberg <penberg@kernel.org>, Jacob Shin <jacob.shin@amd.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Clean up proc_reg_get_unmapped_area due to its 80-column limit
-violation.
+Now crashkernel=X will fail out if there's not enough memory at
+low (below 896M). What makes sense for crashkernel=X would be:
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+ - First try to reserve X below 896M (for being compatible with old
+   kexec-tools).
+ - If fails, try to reserve X below 4G (swiotlb need to stay below 4G).
+ - If fails, try to reserve X from MAXMEM top down.
+
+So that user can easily reserve large memory with crashkernel=X instead
+of crashkernel=X,high. It's more transparent and user-friendly.
+
+If crashkernel is large and the reserved is beyond 896M, old kexec-tools
+won't be compatible with new kernel for most of time.
+
+kexec will fail out immediately in this case. But the failure could be
+expected, because old kexec users should not try to reserve that large
+amount of memory at the first place.
+
+On the other hand, old kexec also will fail on old kernel when there's
+not enough low memory to reserve a large crash kernel area. So the
+failure of old kexec is consistent between old kernel and new kernel.
+
+Signed-off-by: WANG Chao <chaowang@redhat.com>
 ---
- fs/proc/inode.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/x86/kernel/setup.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index 8eaa1ba..28955d4 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -285,19 +285,23 @@ static int proc_reg_mmap(struct file *file, struct vm_area_struct *vma)
- 	return rv;
- }
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index f0de629..38e6c1f 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -593,6 +593,20 @@ static void __init reserve_crashkernel(void)
+ 					high ? CRASH_KERNEL_ADDR_HIGH_MAX :
+ 					       CRASH_KERNEL_ADDR_LOW_MAX,
+ 					crash_size, alignment);
++		/*
++		 * crashkernel=X reserve below 896M fails? Try below 4G
++		 */
++		if (!high && !crash_base)
++			crash_base = memblock_find_in_range(alignment,
++						(1ULL << 32),
++						crash_size, alignment);
++		/*
++		 * crashkernel=X reserve below 4G fails? Try MAXMEM
++		 */
++		if (!high && !crash_base)
++			crash_base = memblock_find_in_range(alignment,
++						CRASH_KERNEL_ADDR_HIGH_MAX,
++						crash_size, alignment);
  
--static unsigned long proc_reg_get_unmapped_area(struct file *file, unsigned long orig_addr, unsigned long len, unsigned long pgoff, unsigned long flags)
-+static unsigned long
-+proc_reg_get_unmapped_area(struct file *file, unsigned long orig_addr,
-+			   unsigned long len, unsigned long pgoff,
-+			   unsigned long flags)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	unsigned long rv = -EIO;
--	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long) = NULL;
-+	unsigned long (*get_area)(struct file *, unsigned long, unsigned long,
-+				  unsigned long, unsigned long) = NULL;
- 	if (use_pde(pde)) {
- #ifdef CONFIG_MMU
--		get_unmapped_area = current->mm->get_unmapped_area;
-+		get_area = current->mm->get_unmapped_area;
- #endif
- 		if (pde->proc_fops->get_unmapped_area)
--			get_unmapped_area = pde->proc_fops->get_unmapped_area;
--		if (get_unmapped_area)
--			rv = get_unmapped_area(file, orig_addr, len, pgoff, flags);
-+			get_area = pde->proc_fops->get_unmapped_area;
-+		if (get_area)
-+			rv = get_area(file, orig_addr, len, pgoff, flags);
- 		unuse_pde(pde);
- 	}
- 	return rv;
+ 		if (!crash_base) {
+ 			pr_info("crashkernel reservation failed - No suitable area found.\n");
+-- 
+1.8.3.1
 
 
 _______________________________________________
