@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VVgcG-0003Gk-3o
- for kexec@lists.infradead.org; Mon, 14 Oct 2013 11:47:17 +0000
-From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M first,
- then try below 4G, then MAXMEM
-Date: Mon, 14 Oct 2013 19:46:40 +0800
-Message-Id: <1381751200-27376-1-git-send-email-chaowang@redhat.com>
+Received: from g4t0014.houston.hp.com ([15.201.24.17])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VVh5J-0003tv-MM
+ for kexec@lists.infradead.org; Mon, 14 Oct 2013 12:17:18 +0000
+Subject: [PATCH v3] makedumpfile: fix max_mapnr issue on system has over
+ 44-bit addressing
+From: Jingbai Ma <jingbai.ma@hp.com>
+Date: Mon, 14 Oct 2013 20:16:48 +0800
+Message-ID: <20131014121648.1409.58312.stgit@k.asiapacific.hpqcorp.net>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,68 +17,334 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Yinghai Lu <yinghai@kernel.org>, Pekka Enberg <penberg@kernel.org>, Jacob Shin <jacob.shin@amd.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: bhe@redhat.com, nishimura@mxp.nes.nec.co.jp, jingbai.ma@hp.com, usui@mxm.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, lisa.mitchell@hp.com, ruyang@redhat.com, d.hatayama@jp.fujitsu.com, anderson@redhat.com, chaowang@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, vgoyal@redhat.com, crash-utility@redhat.com
 
-Now crashkernel=X will fail out if there's not enough memory at
-low (below 896M). What makes sense for crashkernel=X would be:
+This patch will fix a bug of makedumpfile doesn't work correctly on system
+has over 44-bit addressing in compression dump mode.
+This bug was posted here:
+http://lists.infradead.org/pipermail/kexec/2013-September/009587.html
 
- - First try to reserve X below 896M (for being compatible with old
-   kexec-tools).
- - If fails, try to reserve X below 4G (swiotlb need to stay below 4G).
- - If fails, try to reserve X from MAXMEM top down.
+This patch will add 3 new fields in struct kdump_sub_header.
+unsigned long long start_pfn_64;  /* header_version 6 and later */
+unsigned long long end_pfn_64;    /* header_version 6 and later */
+unsigned long long max_mapnr_64;  /* header_version 6 and later */
 
-So that user can easily reserve large memory with crashkernel=X instead
-of crashkernel=X,high. It's more transparent and user-friendly.
+And the old "unsigned int max_mapnr" in struct disk_dump_header will
+not be used anymore, but still be there for compatibility purpose.
 
-If crashkernel is large and the reserved is beyond 896M, old kexec-tools
-won't be compatible with new kernel for most of time.
+The max_mapnr_64 only exists in strcut kdump_sub_header, and that only
+for compressed kdump format, so for ELF format kdump files (non-compressed),
+only the max_mapnr is available, so it still may be truncated for addresses
+exceed 44bit (above 16TB).
 
-kexec will fail out immediately in this case. But the failure could be
-expected, because old kexec users should not try to reserve that large
-amount of memory at the first place.
+This patch will change the header_version to 6.
 
-On the other hand, old kexec also will fail on old kernel when there's
-not enough low memory to reserve a large crash kernel area. So the
-failure of old kexec is consistent between old kernel and new kernel.
+The corresponding patch for crash utility will be sent out separately.
 
-Signed-off-by: WANG Chao <chaowang@redhat.com>
+This patch doesn't change sadump_header.
+
+Changelog:
+v3:
+- Change notes for max_mapnr, start_pfn and end_pfn as obsolete.
+- Remove "(32bit)" from debug messages of max_mapnr, start_pfn and end_pfn.
+- Set the 32bit start_pfn and end_pfn to UINT_MAX.
+- Remove bitmap writting enhancement to another seperate patch.
+- Change type of len_bitmap in struct DumpInfo back to unsigned long.
+
+v2:
+- Rename max_mapnr in struct kdump_sub_header to max_mapnr_64.
+- Change type of max_mapnr_64 from unsigned long to unsigned long long.
+  In x86 PAE mode on x86_32 kernel, the address may exceeds 44bit limit.
+- Add start_pfn_64, end_pfn_64 for struct kdump_sub_header.
+- Only print 64bit start_pfn_64, end_pfn_64 and max_mapnr_64
+  debug messages for disk dump header version >= 6.
+- Change type of bitmap_len in struct DumpInfo, from unsigned long to
+  unsigned long long.
+- Enhance bitmap writting function in reassemble_kdump_header().
+  Prevent bitmap writting failure if the size of bitmap is too large to
+  fit a sigle write.
+
+v1:
+- http://lists.infradead.org/pipermail/kexec/2013-September/009662.html
+
+
+Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+Tested-by: Lisa Mitchell <lisa.mitchell@hp.com>
 ---
- arch/x86/kernel/setup.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ IMPLEMENTATION |   15 ++++++++++---
+ diskdump_mod.h |   15 ++++++++++---
+ makedumpfile.c |   66 ++++++++++++++++++++++++++++++++++++++++++++------------
+ 3 files changed, 76 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index f0de629..38e6c1f 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -593,6 +593,20 @@ static void __init reserve_crashkernel(void)
- 					high ? CRASH_KERNEL_ADDR_HIGH_MAX :
- 					       CRASH_KERNEL_ADDR_LOW_MAX,
- 					crash_size, alignment);
-+		/*
-+		 * crashkernel=X reserve below 896M fails? Try below 4G
-+		 */
-+		if (!high && !crash_base)
-+			crash_base = memblock_find_in_range(alignment,
-+						(1ULL << 32),
-+						crash_size, alignment);
-+		/*
-+		 * crashkernel=X reserve below 4G fails? Try MAXMEM
-+		 */
-+		if (!high && !crash_base)
-+			crash_base = memblock_find_in_range(alignment,
-+						CRASH_KERNEL_ADDR_HIGH_MAX,
-+						crash_size, alignment);
+diff --git a/IMPLEMENTATION b/IMPLEMENTATION
+index f0f3135..2f4cfd6 100644
+--- a/IMPLEMENTATION
++++ b/IMPLEMENTATION
+@@ -48,7 +48,9 @@
+                                                    header in blocks */
+         unsigned int            bitmap_blocks;  /* Size of Memory bitmap in
+                                                    block */
+-        unsigned int            max_mapnr;      /* = max_mapnr */
++        unsigned int            max_mapnr;      /* = max_mapnr, OBSOLETE!
++						   32bit only, full 64bit
++						   in sub header. */
+         unsigned int            total_ram_blocks;/* Number of blocks should be
+                                                    written */
+         unsigned int            device_blocks;  /* Number of total blocks in
+@@ -69,14 +71,21 @@
+         unsigned long   phys_base;
+         int             dump_level;     /* header_version 1 and later */
+ 	int		split;		/* header_version 2 and later */
+-	unsigned long	start_pfn;	/* header_version 2 and later */
+-	unsigned long	end_pfn;	/* header_version 2 and later */
++	unsigned long	start_pfn;	/* header_version 2 and later,
++					   OBSOLETE! 32bit only, full
++					   64bit in start_pfn_64. */
++	unsigned long	end_pfn;	/* header_version 2 and later,
++					   OBSOLETE! 32bit only, full
++					   64bit in end_pfn_64. */
+ 	off_t		offset_vmcoreinfo;/* header_version 3 and later */
+ 	unsigned long	size_vmcoreinfo;  /* header_version 3 and later */
+ 	off_t		offset_note;      /* header_version 4 and later */
+ 	unsigned long	size_note;        /* header_version 4 and later */
+ 	off_t		offset_eraseinfo; /* header_version 5 and later */
+ 	unsigned long	size_eraseinfo;   /* header_version 5 and later */
++	unsigned long long start_pfn_64;  /* header_version 6 and later */
++	unsigned long long end_pfn_64;	  /* header_version 6 and later */
++	unsigned long long max_mapnr_64;  /* header_version 6 and later */
+     };
  
- 		if (!crash_base) {
- 			pr_info("crashkernel reservation failed - No suitable area found.\n");
--- 
-1.8.3.1
+   - 1st-bitmap
+diff --git a/diskdump_mod.h b/diskdump_mod.h
+index af060b6..7306867 100644
+--- a/diskdump_mod.h
++++ b/diskdump_mod.h
+@@ -48,7 +48,9 @@ struct disk_dump_header {
+ 						   header in blocks */
+ 	unsigned int		bitmap_blocks;	/* Size of Memory bitmap in
+ 						   block */
+-	unsigned int		max_mapnr;	/* = max_mapnr */
++	unsigned int		max_mapnr;	/* = max_mapnr, OBSOLETE!
++						   32bit only, full 64bit
++						   in sub header. */
+ 	unsigned int		total_ram_blocks;/* Number of blocks should be
+ 						   written */
+ 	unsigned int		device_blocks;	/* Number of total blocks in
+@@ -67,14 +69,21 @@ struct kdump_sub_header {
+ 	unsigned long	phys_base;
+ 	int		dump_level;	/* header_version 1 and later */
+ 	int		split;		/* header_version 2 and later */
+-	unsigned long	start_pfn;	/* header_version 2 and later */
+-	unsigned long	end_pfn;	/* header_version 2 and later */
++	unsigned long	start_pfn;	/* header_version 2 and later,
++					   OBSOLETE! 32bit only, full
++					   64bit in start_pfn_64. */
++	unsigned long	end_pfn;	/* header_version 2 and later,
++					   OBSOLETE! 32bit only, full
++					   64bit in end_pfn_64. */
+ 	off_t		offset_vmcoreinfo;/* header_version 3 and later */
+ 	unsigned long	size_vmcoreinfo;  /* header_version 3 and later */
+ 	off_t		offset_note;      /* header_version 4 and later */
+ 	unsigned long	size_note;        /* header_version 4 and later */
+ 	off_t		offset_eraseinfo; /* header_version 5 and later */
+ 	unsigned long	size_eraseinfo;   /* header_version 5 and later */
++	unsigned long long start_pfn_64;  /* header_version 6 and later */
++	unsigned long long end_pfn_64;	  /* header_version 6 and later */
++	unsigned long long max_mapnr_64;  /* header_version 6 and later */
+ };
+ 
+ /* page flags */
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b42565c..130cf9f 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -23,6 +23,7 @@
+ #include <stddef.h>
+ #include <ctype.h>
+ #include <sys/time.h>
++#include <limits.h>
+ 
+ struct symbol_table	symbol_table;
+ struct size_table	size_table;
+@@ -125,7 +126,7 @@ get_max_mapnr(void)
+ 	unsigned long long max_paddr;
+ 
+ 	if (info->flag_refiltering) {
+-		info->max_mapnr = info->dh_memory->max_mapnr;
++		info->max_mapnr = info->kh_memory->max_mapnr_64;
+ 		return TRUE;
+ 	}
+ 
+@@ -783,6 +784,10 @@ get_kdump_compressed_header_info(char *filename)
+ 		ERRMSG("header does not have dump_level member\n");
+ 		return FALSE;
+ 	}
++
++	if (dh.header_version < 6)
++		kh.max_mapnr_64 = dh.max_mapnr;
++
+ 	DEBUG_MSG("diskdump main header\n");
+ 	DEBUG_MSG("  signature        : %s\n", dh.signature);
+ 	DEBUG_MSG("  header_version   : %d\n", dh.header_version);
+@@ -802,6 +807,12 @@ get_kdump_compressed_header_info(char *filename)
+ 	DEBUG_MSG("  split            : %d\n", kh.split);
+ 	DEBUG_MSG("  start_pfn        : 0x%lx\n", kh.start_pfn);
+ 	DEBUG_MSG("  end_pfn          : 0x%lx\n", kh.end_pfn);
++	if (dh.header_version >= 6) {
++		/* A dumpfile contains full 64bit values. */
++		DEBUG_MSG("  start_pfn_64 : 0x%llx\n", kh.start_pfn_64);
++		DEBUG_MSG("  end_pfn_64 : 0x%llx\n", kh.end_pfn_64);
++		DEBUG_MSG("  max_mapnr_64 : 0x%llx\n", kh.max_mapnr_64);
++	}
+ 
+ 	info->dh_memory = malloc(sizeof(dh));
+ 	if (info->dh_memory == NULL) {
+@@ -2766,14 +2777,16 @@ int
+ initialize_bitmap_memory(void)
+ {
+ 	struct disk_dump_header	*dh;
++	struct kdump_sub_header *kh;
+ 	struct dump_bitmap *bmp;
+ 	off_t bitmap_offset;
+-	int bitmap_len, max_sect_len;
++	off_t bitmap_len, max_sect_len;
+ 	unsigned long pfn;
+ 	int i, j;
+ 	long block_size;
+ 
+ 	dh = info->dh_memory;
++	kh = info->kh_memory;
+ 	block_size = dh->block_size;
+ 
+ 	bitmap_offset
+@@ -2793,7 +2806,7 @@ initialize_bitmap_memory(void)
+ 	bmp->offset = bitmap_offset + bitmap_len / 2;
+ 	info->bitmap_memory = bmp;
+ 
+-	max_sect_len = divideup(dh->max_mapnr, BITMAP_SECT_LEN);
++	max_sect_len = divideup(kh->max_mapnr_64, BITMAP_SECT_LEN);
+ 	info->valid_pages = calloc(sizeof(ulong), max_sect_len);
+ 	if (info->valid_pages == NULL) {
+ 		ERRMSG("Can't allocate memory for the valid_pages. %s\n",
+@@ -4705,7 +4718,7 @@ create_2nd_bitmap(void)
+ int
+ prepare_bitmap_buffer(void)
+ {
+-	unsigned long tmp;
++	unsigned long long tmp;
+ 
+ 	/*
+ 	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size boundary.
+@@ -4737,7 +4750,7 @@ prepare_bitmap_buffer(void)
+ int
+ prepare_bitmap_buffer_cyclic(void)
+ {
+-	unsigned long tmp;
++	unsigned long long tmp;
+ 
+ 	/*
+ 	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size boundary.
+@@ -5153,11 +5166,12 @@ write_kdump_header(void)
+ 	 * Write common header
+ 	 */
+ 	strncpy(dh->signature, KDUMP_SIGNATURE, strlen(KDUMP_SIGNATURE));
+-	dh->header_version = 5;
++	dh->header_version = 6;
+ 	dh->block_size     = info->page_size;
+ 	dh->sub_hdr_size   = sizeof(kh) + size_note;
+ 	dh->sub_hdr_size   = divideup(dh->sub_hdr_size, dh->block_size);
+-	dh->max_mapnr      = info->max_mapnr;
++	/* dh->max_mapnr may be truncated, full 64bit in kh.max_mapnr_64 */
++	dh->max_mapnr      = MIN(info->max_mapnr, UINT_MAX);
+ 	dh->nr_cpus        = get_nr_cpus();
+ 	dh->bitmap_blocks  = divideup(info->len_bitmap, dh->block_size);
+ 	memcpy(&dh->timestamp, &info->timestamp, sizeof(dh->timestamp));
+@@ -5172,12 +5186,21 @@ write_kdump_header(void)
+ 	 */
+ 	size = sizeof(struct kdump_sub_header);
+ 	memset(&kh, 0, size);
++	/* 64bit max_mapnr_64 */
++	kh.max_mapnr_64 = info->max_mapnr;
+ 	kh.phys_base  = info->phys_base;
+ 	kh.dump_level = info->dump_level;
+ 	if (info->flag_split) {
+ 		kh.split = 1;
+-		kh.start_pfn = info->split_start_pfn;
+-		kh.end_pfn   = info->split_end_pfn;
++		/* start_pfn and end_pfn may be truncated,
++		 * only for compatibility purpose
++		 */
++		kh.start_pfn = MIN(info->split_start_pfn, UINT_MAX);
++		kh.end_pfn   = MIN(info->split_end_pfn, UINT_MAX);
++
++		/* 64bit start_pfn_64 and end_pfn_64 */
++		kh.start_pfn_64 = info->split_start_pfn;
++		kh.end_pfn_64   = info->split_end_pfn;
+ 	}
+ 	if (has_pt_note()) {
+ 		/*
+@@ -6421,7 +6444,7 @@ int
+ write_kdump_bitmap(void)
+ {
+ 	struct cache_data bm;
+-	long buf_size;
++	long long buf_size;
+ 	off_t offset;
+ 
+ 	int ret = FALSE;
+@@ -7796,10 +7819,8 @@ store_splitting_info(void)
+ 
+ 		if (i == 0) {
+ 			memcpy(&dh, &tmp_dh, sizeof(tmp_dh));
+-			info->max_mapnr = dh.max_mapnr;
+ 			if (!set_page_size(dh.block_size))
+ 				return FALSE;
+-			DEBUG_MSG("max_mapnr    : %llx\n", info->max_mapnr);
+ 			DEBUG_MSG("page_size    : %ld\n", info->page_size);
+ 		}
+ 
+@@ -7816,11 +7837,26 @@ store_splitting_info(void)
+ 			return FALSE;
+ 
+ 		if (i == 0) {
++			if (dh.header_version >= 6)
++				info->max_mapnr = kh.max_mapnr_64;
++			else
++				info->max_mapnr = dh.max_mapnr;
++
++			DEBUG_MSG("max_mapnr    : %llx\n", info->max_mapnr);
++		}
++
++		if (i == 0) {
+ 			info->dump_level = kh.dump_level;
+ 			DEBUG_MSG("dump_level   : %d\n", info->dump_level);
+ 		}
+-		SPLITTING_START_PFN(i) = kh.start_pfn;
+-		SPLITTING_END_PFN(i)   = kh.end_pfn;
++
++		if (dh.header_version >= 6) {
++			SPLITTING_START_PFN(i) = kh.start_pfn_64;
++			SPLITTING_END_PFN(i)   = kh.end_pfn_64;
++		} else {
++			SPLITTING_START_PFN(i) = kh.start_pfn;
++			SPLITTING_END_PFN(i)   = kh.end_pfn;
++		}
+ 		SPLITTING_OFFSET_EI(i) = kh.offset_eraseinfo;
+ 		SPLITTING_SIZE_EI(i)   = kh.size_eraseinfo;
+ 	}
+@@ -7981,6 +8017,8 @@ reassemble_kdump_header(void)
+ 	kh.split = 0;
+ 	kh.start_pfn = 0;
+ 	kh.end_pfn   = 0;
++	kh.start_pfn_64 = 0;
++	kh.end_pfn_64 = 0;
+ 
+ 	if (lseek(info->fd_dumpfile, info->page_size, SEEK_SET) < 0) {
+ 		ERRMSG("Can't seek a file(%s). %s\n",
 
 
 _______________________________________________
