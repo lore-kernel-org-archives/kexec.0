@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VWAFj-0002QZ-RW
- for kexec@lists.infradead.org; Tue, 15 Oct 2013 19:26:01 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1381859307-11932-1-git-send-email-geert@linux-m68k.org>
- <1381859307-11932-2-git-send-email-geert@linux-m68k.org>
-Date: Tue, 15 Oct 2013 12:25:16 -0700
-In-Reply-To: <1381859307-11932-2-git-send-email-geert@linux-m68k.org> (Geert
- Uytterhoeven's message of "Tue, 15 Oct 2013 19:48:25 +0200")
-Message-ID: <8761sy1gmb.fsf@xmission.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VWAL7-0002jA-4I
+ for kexec@lists.infradead.org; Tue, 15 Oct 2013 19:31:34 +0000
+Date: Tue, 15 Oct 2013 15:30:49 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2 2/2] x86, apic: Disable BSP if boot cpu is AP
+Message-ID: <20131015193049.GO31215@redhat.com>
+References: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
+ <20131015054327.13666.1689.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] kexec: Add debug printing of kimage table entries
+Content-Disposition: inline
+In-Reply-To: <20131015054327.13666.1689.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,126 +24,94 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
+On Tue, Oct 15, 2013 at 02:43:27PM +0900, HATAYAMA Daisuke wrote:
+> Currently, on x86 architecture, if crash happens on AP in the kdump
+> 1st kernel, the 2nd kernel fails to wake up multiple CPUs. The typical
+> behaviour we actually see is immediate system reset or hang.
+> 
+> This comes from the hardware specification that the processor with BSP
+> flag is jumped at BIOS init code when receiving INIT; the behaviour we
+> then see depends on the init code.
+> 
+> This never happens if we use only one cpu in the 2nd kernel. So, we
+> have avoided the issue by the workaround that specifying maxcpus=1 or
+> nr_cpus=1 in kernel parameter of the 2nd kernel.
+> 
+> In order to address the issue, this patch disables BSP if boot cpu is
+> an AP, and thus we don't try to wake up the BSP by sending INIT.
+> 
+> Before this idea we discussed the following two ideas but we cannot
+> adopt them in each reasons:
+> 
+> 1. Switch CPU from AP to BSP via IPI NMI at crash in the 1st kernel
+> 
+>    This is done in the kdump crash path where logic is in inconsistent
+>    state. Any part of memory can be corrupted, including
+>    hardware-related table being accessed for example when paging is
+>    performed or interruption is performed.
+> 
+> 2. Unset BSP flag of the boot cpu in the 1st kernel
+> 
+>    Unsetting BSP flag can affect some real world firmware badly. For
+>    example, Ma verified that some HP systems fail to reboot under this
+>    configuration. See:
+> 
+>    http://lkml.indiana.edu/hypermail/linux/kernel/1308.1/03574.html
+> 
+> Due to the idea 1, we have to address the issue in the 2nd kernel on
+> AP. Then, it's impossible to know which CPU is BSP by rdmsr
+> instruction because the CPU is the one we are now trying to wake
+> up. From the same reason, it's also impossible to unset BSP flag of
+> the BSP by wrmsr instruction.
+> 
+> Next, due to the idea 2, BSP is halting in the 1st kernel while
+> keeping BSP flag set (or possibly could be running somewhere in
+> catastrophic state.) In generall, CPUs except for the boot cpu in the
+> 2nd kernel -- the cpu under which crash happened --- can be thought of
+> as remaining in any inconsistent state in the 1st kernel. For APs,
+> it's possible to recover sane state by initiating INIT to them; see
+> 3.7.3 Processor-specific INIT in MultiProcessor
+> specification. However, there's no way for BSP. Therefore, there's no
+> other way to disable BSP.
+> 
+> My motivation is to generate crash dump quickly on the system with
+> huge memory. We can assume such system also has a lot of N-cpus and
+> (N-1)-cpus are still available.
+> 
+> To identify which CPU is BSP, we lookup ACPI table or MP table. One
+> concern is that ACPI guidlines BIOS *should* list the BSP in the first
+> MADT LAPIC entry; not *must*. In this sense, this logic relis on BIOS
+> following ACPI's guideline. On the other hand, we don't need to worry
+> about this in MP table case because it has explit BSP flag.
+> 
+> To avoid any undesirable bahaviour caused by any broken BIOS that
+> doesn't conform to the guideline, it's enough to limit the number of
+> cpus to 1 by specifying maxcpu=1 or nr_cpus=1, as is currently done in
+> default kdump configuration. (But of course, it's problematic in
+> maxcpu=1 case if trying to wake up other cpus later in user space.)
+> 
+> SFI and devicetree doesn't provide BSP information, so there's no
+> functionality change in their codes, only assigning false for all the
+> entries, keeping interface uniform.
 
-> Print a list of pages to be copied if debugging is enabled.
-> Consecutive entries are merged to reduce screen clutter.
+Hi Hatayama,
 
-Why is this desirable?
+So we rely on ACPI reporting BSP properly. And SFI and device tree does
+not provide BSP info. So for those cases situations where BSP is not
+reported, situaiton is little dicy. We might try to bring up those cpus
+and bring down the system.
 
-I can understand this as debugging code to understand what is happening,
-but why would we want to maintain this print statement long term?
+I am wondering if there is any attribute of cpu which we can pass to
+second kernel on command line. And tell second kernel not to bring up
+that specific cpu. (Say exclude_cpu=<cpu_attr>)? If this works, then
+if ACPI or other mechanism don't report BSP, we could possibly assume
+that cpu 0 is BSP and ask second kernel to not try to boot it.
 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> ---
->  kernel/kexec.c |   76 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 490afc03627e..e25022ac229e 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1073,6 +1073,80 @@ asmlinkage long compat_sys_kexec_load(unsigned long entry,
->  }
->  #endif
->  
-> +#ifdef DEBUG
-> +struct kimage_block {
-> +	unsigned long dst, src, len;
-> +};
-> +
-> +static void kimage_print_block(const struct kimage_block *block)
-> +{
-> +	pr_info("Copy from 0x%lx-0x%lx to 0x%lx-0x%lx (0x%lx bytes)\n",
-> +		block->src, block->src + block->len - 1, block->dst,
-> +		block->dst + block->len - 1, block->len);
-> +}
-> +
-> +static void kimage_print(const struct kimage *image)
-> +{
-> +	void *control_code_page;
-> +	const kimage_entry_t *ptr;
-> +	kimage_entry_t entry;
-> +	struct kimage_block block;
-> +	unsigned long dnext = KIMAGE_NO_DEST, snext = KIMAGE_NO_DEST;
-> +	unsigned long total = 0;
-> +
-> +	control_code_page = page_address(image->control_code_page);
-> +	pr_info("Control code page 0x%p (phys 0x%lx)\n",
-> +		control_code_page, virt_to_phys(control_code_page));
-> +
-> +	ptr = &image->head;
-> +	block.dst = KIMAGE_NO_DEST;
-> +	block.src = KIMAGE_NO_DEST;
-> +	block.len = 0;
-> +	while ((entry = *ptr)) {
-> +		if (entry & IND_DONE)
-> +			break;
-> +
-> +		if (entry & IND_DESTINATION) {
-> +			if (block.len > 0) {
-> +				kimage_print_block(&block);
-> +				total += block.len;
-> +			}
-> +			dnext = block.dst = entry & PAGE_MASK;
-> +			block.src = KIMAGE_NO_DEST;
-> +			block.len = 0;
-> +		}
-> +
-> +		if (entry & IND_SOURCE) {
-> +			if (!block.len) {
-> +				snext = block.src = entry & PAGE_MASK;
-> +			} else if ((entry & PAGE_MASK) != snext) {
-> +				kimage_print_block(&block);
-> +				total += block.len;
-> +				block.dst = dnext;
-> +				snext = block.src = entry & PAGE_MASK;
-> +				block.len = 0;
-> +			}
-> +			dnext += PAGE_SIZE;
-> +			snext += PAGE_SIZE;
-> +			block.len += PAGE_SIZE;
-> +		}
-> +
-> +		if (entry & IND_INDIRECTION) {
-> +			pr_info("Indirection page 0x%lx\n", entry & PAGE_MASK);
-> +			ptr = phys_to_virt(entry & PAGE_MASK);
-> +		} else
-> +			ptr++;
-> +	}
-> +	if (block.len) {
-> +		kimage_print_block(&block);
-> +		total += block.len;
-> +	}
-> +	pr_info("Total: 0x%lx/%ld bytes\n", total, total);
-> +}
-> +#else
-> +static inline void kimage_print(const struct kimage *image) {}
-> +#endif
-> +
->  void crash_kexec(struct pt_regs *regs)
->  {
->  	/* Take the kexec_mutex here to prevent sys_kexec_load
-> @@ -1090,6 +1164,7 @@ void crash_kexec(struct pt_regs *regs)
->  			crash_setup_regs(&fixed_regs, regs);
->  			crash_save_vmcoreinfo();
->  			machine_crash_shutdown(&fixed_regs);
-> +			kimage_print(kexec_crash_image);
->  			machine_kexec(kexec_crash_image);
->  		}
->  		mutex_unlock(&kexec_mutex);
-> @@ -1680,6 +1755,7 @@ int kernel_kexec(void)
->  		machine_shutdown();
->  	}
->  
-> +	kimage_print(kexec_image);
->  	machine_kexec(kexec_image);
->  
->  #ifdef CONFIG_KEXEC_JUMP
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
