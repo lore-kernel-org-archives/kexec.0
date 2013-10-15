@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VVusX-0002H6-QJ
- for kexec@lists.infradead.org; Tue, 15 Oct 2013 03:01:03 +0000
-Date: Tue, 15 Oct 2013 11:00:18 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
- first, then try below 4G, then MAXMEM
-Message-ID: <20131015030018.GO18969@dhcp16-109.nay.redhat.com>
-References: <1381751200-27376-1-git-send-email-chaowang@redhat.com>
- <CAE9FiQUNMDuVZtqud3LBbAmE0SL8ZWLFnc+CSYZm4UfTvNUaOA@mail.gmail.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VVxQ4-0005EH-ES
+ for kexec@lists.infradead.org; Tue, 15 Oct 2013 05:43:50 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id E1C263EE1DE
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:28 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id CD75045DE55
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:28 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id B3A2945DE50
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:28 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id A6AED1DB8041
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:28 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4E8D91DB803C
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:28 +0900 (JST)
+Subject: [PATCH v2 2/2] x86, apic: Disable BSP if boot cpu is AP
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Tue, 15 Oct 2013 14:43:27 +0900
+Message-ID: <20131015054327.13666.1689.stgit@localhost6.localdomain6>
+In-Reply-To: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
+References: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAE9FiQUNMDuVZtqud3LBbAmE0SL8ZWLFnc+CSYZm4UfTvNUaOA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,78 +37,222 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
 
-On 10/14/13 at 11:54am, Yinghai Lu wrote:
-> On Mon, Oct 14, 2013 at 4:46 AM, WANG Chao <chaowang@redhat.com> wrote:
-> > Now crashkernel=X will fail out if there's not enough memory at
-> > low (below 896M). What makes sense for crashkernel=X would be:
-> >
-> >  - First try to reserve X below 896M (for being compatible with old
-> >    kexec-tools).
-> >  - If fails, try to reserve X below 4G (swiotlb need to stay below 4G).
-> >  - If fails, try to reserve X from MAXMEM top down.
-> >
-> > So that user can easily reserve large memory with crashkernel=X instead
-> > of crashkernel=X,high. It's more transparent and user-friendly.
-> >
-> > If crashkernel is large and the reserved is beyond 896M, old kexec-tools
-> > won't be compatible with new kernel for most of time.
-> >
-> > kexec will fail out immediately in this case. But the failure could be
-> > expected, because old kexec users should not try to reserve that large
-> > amount of memory at the first place.
-> >
-> > On the other hand, old kexec also will fail on old kernel when there's
-> > not enough low memory to reserve a large crash kernel area. So the
-> > failure of old kexec is consistent between old kernel and new kernel.
-> >
-> > Signed-off-by: WANG Chao <chaowang@redhat.com>
-> > ---
-> >  arch/x86/kernel/setup.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index f0de629..38e6c1f 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -593,6 +593,20 @@ static void __init reserve_crashkernel(void)
-> >                                         high ? CRASH_KERNEL_ADDR_HIGH_MAX :
-> >                                                CRASH_KERNEL_ADDR_LOW_MAX,
-> >                                         crash_size, alignment);
-> > +               /*
-> > +                * crashkernel=X reserve below 896M fails? Try below 4G
-> > +                */
-> > +               if (!high && !crash_base)
-> > +                       crash_base = memblock_find_in_range(alignment,
-> > +                                               (1ULL << 32),
-> > +                                               crash_size, alignment);
-> > +               /*
-> > +                * crashkernel=X reserve below 4G fails? Try MAXMEM
-> > +                */
-> > +               if (!high && !crash_base)
-> > +                       crash_base = memblock_find_in_range(alignment,
-> > +                                               CRASH_KERNEL_ADDR_HIGH_MAX,
-> > +                                               crash_size, alignment);
-> >
-> >                 if (!crash_base) {
-> >                         pr_info("crashkernel reservation failed - No suitable area found.\n");
-> > --
-> 
-> User should change crashkernel=X to crashkernel=X,high.
+Currently, on x86 architecture, if crash happens on AP in the kdump
+1st kernel, the 2nd kernel fails to wake up multiple CPUs. The typical
+behaviour we actually see is immediate system reset or hang.
 
-crashkernel=X is more straightforward. IMHO, It should be a more general
-crash kernel reservation parameter and it shouldn't reserve at low only.
+This comes from the hardware specification that the processor with BSP
+flag is jumped at BIOS init code when receiving INIT; the behaviour we
+then see depends on the init code.
 
-> 
-> As user could forget to update kexec-tools to utilize ",high" feature, and get
-> kdump later fail later.
+This never happens if we use only one cpu in the 2nd kernel. So, we
+have avoided the issue by the workaround that specifying maxcpus=1 or
+nr_cpus=1 in kernel parameter of the 2nd kernel.
 
-old kexec-tools should fail to load kernel high anyway, right?
+In order to address the issue, this patch disables BSP if boot cpu is
+an AP, and thus we don't try to wake up the BSP by sending INIT.
 
-Thanks
-WANG Chao
+Before this idea we discussed the following two ideas but we cannot
+adopt them in each reasons:
+
+1. Switch CPU from AP to BSP via IPI NMI at crash in the 1st kernel
+
+   This is done in the kdump crash path where logic is in inconsistent
+   state. Any part of memory can be corrupted, including
+   hardware-related table being accessed for example when paging is
+   performed or interruption is performed.
+
+2. Unset BSP flag of the boot cpu in the 1st kernel
+
+   Unsetting BSP flag can affect some real world firmware badly. For
+   example, Ma verified that some HP systems fail to reboot under this
+   configuration. See:
+
+   http://lkml.indiana.edu/hypermail/linux/kernel/1308.1/03574.html
+
+Due to the idea 1, we have to address the issue in the 2nd kernel on
+AP. Then, it's impossible to know which CPU is BSP by rdmsr
+instruction because the CPU is the one we are now trying to wake
+up. From the same reason, it's also impossible to unset BSP flag of
+the BSP by wrmsr instruction.
+
+Next, due to the idea 2, BSP is halting in the 1st kernel while
+keeping BSP flag set (or possibly could be running somewhere in
+catastrophic state.) In generall, CPUs except for the boot cpu in the
+2nd kernel -- the cpu under which crash happened --- can be thought of
+as remaining in any inconsistent state in the 1st kernel. For APs,
+it's possible to recover sane state by initiating INIT to them; see
+3.7.3 Processor-specific INIT in MultiProcessor
+specification. However, there's no way for BSP. Therefore, there's no
+other way to disable BSP.
+
+My motivation is to generate crash dump quickly on the system with
+huge memory. We can assume such system also has a lot of N-cpus and
+(N-1)-cpus are still available.
+
+To identify which CPU is BSP, we lookup ACPI table or MP table. One
+concern is that ACPI guidlines BIOS *should* list the BSP in the first
+MADT LAPIC entry; not *must*. In this sense, this logic relis on BIOS
+following ACPI's guideline. On the other hand, we don't need to worry
+about this in MP table case because it has explit BSP flag.
+
+To avoid any undesirable bahaviour caused by any broken BIOS that
+doesn't conform to the guideline, it's enough to limit the number of
+cpus to 1 by specifying maxcpu=1 or nr_cpus=1, as is currently done in
+default kdump configuration. (But of course, it's problematic in
+maxcpu=1 case if trying to wake up other cpus later in user space.)
+
+SFI and devicetree doesn't provide BSP information, so there's no
+functionality change in their codes, only assigning false for all the
+entries, keeping interface uniform.
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ arch/x86/include/asm/mpspec.h |    2 +-
+ arch/x86/kernel/acpi/boot.c   |    6 +++++-
+ arch/x86/kernel/apic/apic.c   |   18 +++++++++++++++++-
+ arch/x86/kernel/devicetree.c  |    1 +
+ arch/x86/kernel/mpparse.c     |   15 +++++++++++++--
+ arch/x86/platform/sfi/sfi.c   |    2 +-
+ 6 files changed, 38 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/include/asm/mpspec.h b/arch/x86/include/asm/mpspec.h
+index 54d5f98..b5014cd 100644
+--- a/arch/x86/include/asm/mpspec.h
++++ b/arch/x86/include/asm/mpspec.h
+@@ -101,7 +101,7 @@ static inline void early_reserve_e820_mpc_new(void) { }
+ #define default_get_smp_config x86_init_uint_noop
+ #endif
+ 
+-void generic_processor_info(int apicid, int version);
++void generic_processor_info(int apicid, bool isbsp, int version);
+ #ifdef CONFIG_ACPI
+ extern void mp_register_ioapic(int id, u32 address, u32 gsi_base);
+ extern void mp_override_legacy_irq(u8 bus_irq, u8 polarity, u8 trigger,
+diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+index 40c7660..7944d3f 100644
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -192,6 +192,7 @@ static int __init acpi_parse_madt(struct acpi_table_header *table)
+ static void acpi_register_lapic(int id, u8 enabled)
+ {
+ 	unsigned int ver = 0;
++	bool isbsp = false;
+ 
+ 	if (id >= MAX_LOCAL_APIC) {
+ 		printk(KERN_INFO PREFIX "skipped apicid that is too big\n");
+@@ -206,7 +207,10 @@ static void acpi_register_lapic(int id, u8 enabled)
+ 	if (boot_cpu_physical_apicid != -1U)
+ 		ver = apic_version[boot_cpu_physical_apicid];
+ 
+-	generic_processor_info(id, ver);
++	if (!num_processors && !disabled_cpus)
++		isbsp = true;
++
++	generic_processor_info(id, isbsp, ver);
+ }
+ 
+ static int __init
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 62ee365..2e4e036 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2113,13 +2113,29 @@ void disconnect_bsp_APIC(int virt_wire_setup)
+ 	apic_write(APIC_LVT1, value);
+ }
+ 
+-void generic_processor_info(int apicid, int version)
++void generic_processor_info(int apicid, bool isbsp, int version)
+ {
+ 	int cpu, max = nr_cpu_ids;
+ 	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
+ 				phys_cpu_present_map);
+ 
+ 	/*
++	 * If boot cpu is AP, we now don't have any way to initialize
++	 * BSP. To save memory consumed, we disable BSP this case and
++	 * use (N - 1)-cpus.
++	 */
++	if (isbsp && !boot_cpu_is_bsp) {
++		int thiscpu = num_processors + disabled_cpus;
++
++		pr_warning("ACPI: The boot cpu is not BSP. "
++			   "The BSP Processor %d/0x%x ignored.\n",
++			   thiscpu, apicid);
++
++		disabled_cpus++;
++		return;
++	}
++
++	/*
+ 	 * If boot cpu has not been detected yet, then only allow upto
+ 	 * nr_cpu_ids - 1 processors and keep one slot free for boot cpu
+ 	 */
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index 376dc78..0ed2da8 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -182,6 +182,7 @@ static void __init dtb_lapic_setup(void)
+ 	pic_mode = 1;
+ 	register_lapic_address(r.start);
+ 	generic_processor_info(boot_cpu_physical_apicid,
++			       false,
+ 			       GET_APIC_VERSION(apic_read(APIC_LVR)));
+ #endif
+ }
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index d2b5648..003b07fe 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -54,6 +54,7 @@ static void __init MP_processor_info(struct mpc_cpu *m)
+ {
+ 	int apicid;
+ 	char *bootup_cpu = "";
++	bool isbsp = false;
+ 
+ 	if (!(m->cpuflag & CPU_ENABLED)) {
+ 		disabled_cpus++;
+@@ -64,11 +65,21 @@ static void __init MP_processor_info(struct mpc_cpu *m)
+ 
+ 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
+ 		bootup_cpu = " (Bootup-CPU)";
+-		boot_cpu_physical_apicid = m->apicid;
++		/*
++		 * boot cpu cannot be BSP if any crash happens on AP
++		 * and kexec enters the 2nd kernel.
++		 *
++		 * Also, boot_cpu_physical_apicid can be initialized
++		 * before reaching here; for example, in
++		 * register_lapic_address().
++		 */
++		if (boot_cpu_is_bsp && boot_cpu_physical_apicid == -1U)
++			boot_cpu_physical_apicid = m->apicid;
++		isbsp = true;
+ 	}
+ 
+ 	printk(KERN_INFO "Processor #%d%s\n", m->apicid, bootup_cpu);
+-	generic_processor_info(apicid, m->apicver);
++	generic_processor_info(apicid, isbsp, m->apicver);
+ }
+ 
+ #ifdef CONFIG_X86_IO_APIC
+diff --git a/arch/x86/platform/sfi/sfi.c b/arch/x86/platform/sfi/sfi.c
+index bcd1a70..4f111c7 100644
+--- a/arch/x86/platform/sfi/sfi.c
++++ b/arch/x86/platform/sfi/sfi.c
+@@ -45,7 +45,7 @@ static void __init mp_sfi_register_lapic(u8 id)
+ 
+ 	pr_info("registering lapic[%d]\n", id);
+ 
+-	generic_processor_info(id, GET_APIC_VERSION(apic_read(APIC_LVR)));
++	generic_processor_info(id, false, GET_APIC_VERSION(apic_read(APIC_LVR)));
+ }
+ 
+ static int __init sfi_parse_cpus(struct sfi_table_header *table)
+
 
 _______________________________________________
 kexec mailing list
