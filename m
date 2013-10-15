@@ -1,32 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VVzAE-0007nK-RM
- for kexec@lists.infradead.org; Tue, 15 Oct 2013 07:35:36 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 0CADD3EE1D9
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:09 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id F207245DD78
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id D5E1845DE50
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id C9B9A1DB8041
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 76A111DB803C
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
-Message-ID: <525CEFAB.1000303@jp.fujitsu.com>
-Date: Tue, 15 Oct 2013 16:32:59 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+ id 1VVzTP-0008J5-78
+ for kexec@lists.infradead.org; Tue, 15 Oct 2013 07:55:25 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: enhance bitmap writting function in
+ reassemble mode
+Date: Tue, 15 Oct 2013 07:52:36 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971B6815@BPXM01GP.gisp.nec.co.jp>
+References: <20131014130440.2430.60450.stgit@k.asiapacific.hpqcorp.net>
+ <20131014141110.GA9023@dhcp16-109.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH v3] makedumpfile: fix max_mapnr issue on system has over
- 44-bit addressing
-References: <20131014121648.1409.58312.stgit@k.asiapacific.hpqcorp.net>
- <525CD97B.3070209@jp.fujitsu.com>
-In-Reply-To: <525CD97B.3070209@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,35 +20,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Jingbai Ma <jingbai.ma@hp.com>
-Cc: bhe@redhat.com, nishimura@mxp.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, lisa.mitchell@hp.com, ruyang@redhat.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, chaowang@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, vgoyal@redhat.com, crash-utility@redhat.com
+To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-(2013/10/15 14:58), HATAYAMA Daisuke wrote:
-> (2013/10/14 21:16), Jingbai Ma wrote:
-> <cut>
+(2013/10/14 23:11), WANG Chao wrote:
+> On 10/14/13 at 09:04pm, Jingbai Ma wrote:
+>> This patch Enhance bitmap writting function in reassemble_kdump_header().
+>> Prevent bitmap writting failure if the size of bitmap is too large to fit a
+>> sigle write.
+>
+> This patch looks good to me.
+>
+> Acked-by: WANG Chao <chaowang@redhat.com>
 
->> @@ -2793,7 +2806,7 @@ initialize_bitmap_memory(void)
->>       bmp->offset = bitmap_offset + bitmap_len / 2;
->>       info->bitmap_memory = bmp;
+Thanks, I'll merge this patch into v1.5.5.
+
+
+Atsushi Kumagai
+
 >>
->> -    max_sect_len = divideup(dh->max_mapnr, BITMAP_SECT_LEN);
->> +    max_sect_len = divideup(kh->max_mapnr_64, BITMAP_SECT_LEN);
->>       info->valid_pages = calloc(sizeof(ulong), max_sect_len);
+>> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+>> ---
+>>   makedumpfile.c |   45 +++++++++++++++++++++++++++++++--------------
+>>   1 files changed, 31 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/makedumpfile.c b/makedumpfile.c
+>> index 130cf9f..f43454a 100644
+>> --- a/makedumpfile.c
+>> +++ b/makedumpfile.c
+>> @@ -7990,6 +7990,7 @@ reassemble_kdump_header(void)
+>>   	struct disk_dump_header dh;
+>>   	struct kdump_sub_header kh;
+>>   	char *buf_bitmap = NULL;
+>> +	ssize_t status, read_size, written_size;
+>>
+>>   	/*
+>>   	 * Write common header.
+>> @@ -8068,10 +8069,16 @@ reassemble_kdump_header(void)
+>>   		    SPLITTING_DUMPFILE(0), strerror(errno));
+>>   		goto out;
+>>   	}
+>> -	if (read(fd, buf_bitmap, info->len_bitmap) != info->len_bitmap) {
+>> -		ERRMSG("Can't read a file(%s). %s\n",
+>> -		    SPLITTING_DUMPFILE(0), strerror(errno));
+>> -		goto out;
+>> +	read_size = 0;
+>> +	while (read_size < info->len_bitmap) {
+>> +		status = read(fd, buf_bitmap + read_size, info->len_bitmap
+>> +			- read_size);
+>> +		if (status < 0) {
+>> +			ERRMSG("Can't read a file(%s). %s\n",
+>> +				SPLITTING_DUMPFILE(0), strerror(errno));
+>> +			goto out;
+>> +		}
+>> +		read_size += status;
+>>   	}
+>>
+>>   	if (lseek(info->fd_dumpfile, offset, SEEK_SET) < 0) {
+>> @@ -8079,11 +8086,16 @@ reassemble_kdump_header(void)
+>>   		    info->name_dumpfile, strerror(errno));
+>>   		goto out;
+>>   	}
+>> -	if (write(info->fd_dumpfile, buf_bitmap, info->len_bitmap)
+>> -	    != info->len_bitmap) {
+>> -		ERRMSG("Can't write a file(%s). %s\n",
+>> -		    info->name_dumpfile, strerror(errno));
+>> -		goto out;
+>> +	written_size = 0;
+>> +	while (written_size < info->len_bitmap) {
+>> +		status = write(info->fd_dumpfile, buf_bitmap + written_size,
+>> +			info->len_bitmap - written_size);
+>> +		if (status < 0) {
+>> +			ERRMSG("Can't write a file(%s). %s\n",
+>> +			    info->name_dumpfile, strerror(errno));
+>> +			goto out;
+>> +		}
+>> +		written_size += status;
+>>   	}
+>>
+>>   	if (lseek(info->fd_bitmap, 0x0, SEEK_SET) < 0) {
+>> @@ -8091,11 +8103,16 @@ reassemble_kdump_header(void)
+>>   		    info->name_bitmap, strerror(errno));
+>>   		goto out;
+>>   	}
+>> -	if (write(info->fd_bitmap, buf_bitmap, info->len_bitmap)
+>> -	    != info->len_bitmap) {
+>> -		ERRMSG("Can't write a file(%s). %s\n",
+>> -		    info->name_bitmap, strerror(errno));
+>> -		goto out;
+>> +	written_size = 0;
+>> +	while (written_size < info->len_bitmap) {
+>> +		status = write(info->fd_bitmap, buf_bitmap + written_size,
+>> +			info->len_bitmap - written_size);
+>> +		if (status < 0) {
+>> +			ERRMSG("Can't write a file(%s). %s\n",
+>> +			    info->name_bitmap, strerror(errno));
+>> +			goto out;
+>> +		}
+>> +		written_size += status;
+>>   	}
+>>
+>>   	ret = TRUE;
+>>
 >
-> Ah, please here needs to be fixed, too. Here should have been
-> used sizeof(int) but now sizeof(off_t) should be used.
 >
-
-This is wrong. Please ignore.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
 
 _______________________________________________
 kexec mailing list
