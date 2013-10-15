@@ -1,28 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VVxQ2-0005Dn-N8
- for kexec@lists.infradead.org; Tue, 15 Oct 2013 05:43:47 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id DE8123EE0BC
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:17 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id CEE0545DE5A
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:17 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id B713445DE54
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:17 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id A55581DB8044
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:17 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5BBB81DB804C
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 14:43:17 +0900 (JST)
-Subject: [PATCH v2 0/2] x86, apic, kdump: Disable BSP if boot cpu is AP
+ id 1VVxgq-0005oT-9z
+ for kexec@lists.infradead.org; Tue, 15 Oct 2013 06:01:09 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 8A3C83EE0B6
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 15:00:45 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 787D045DEC1
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 15:00:45 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 03C8645DEBB
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 15:00:45 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id AF80F1DB8042
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 15:00:44 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5F28AE18002
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 15:00:44 +0900 (JST)
+Message-ID: <525CD97B.3070209@jp.fujitsu.com>
+Date: Tue, 15 Oct 2013 14:58:19 +0900
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Tue, 15 Oct 2013 14:43:16 +0900
-Message-ID: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
+Subject: Re: [PATCH v3] makedumpfile: fix max_mapnr issue on system has over
+ 44-bit addressing
+References: <20131014121648.1409.58312.stgit@k.asiapacific.hpqcorp.net>
+In-Reply-To: <20131014121648.1409.58312.stgit@k.asiapacific.hpqcorp.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,67 +35,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: bhe@redhat.com, nishimura@mxp.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, lisa.mitchell@hp.com, ruyang@redhat.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, vgoyal@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, chaowang@redhat.com, crash-utility@redhat.com
 
-This patch set is to allow kdump 2nd kernel to wake up multiple CPUs
-even if 1st kernel crashs on some AP.
+(2013/10/14 21:16), Jingbai Ma wrote:
+<cut>
+> @@ -125,7 +126,7 @@ get_max_mapnr(void)
+>   	unsigned long long max_paddr;
+>
+>   	if (info->flag_refiltering) {
+> -		info->max_mapnr = info->dh_memory->max_mapnr;
+> +		info->max_mapnr = info->kh_memory->max_mapnr_64;
+>   		return TRUE;
+>   	}
+>
 
-This version is for fixing building failure of tip tree reported by
-some bot and also adding the other fixes I missed out from previous
-experimental version I posted last year; see ChangeLog.
+Please:
 
-Sorry, this patch set have not include in-source documentation
-requested by Borislav Petkov yet, but I'll post it later separately,
-which would be better to focus on documentation reviewing.
+if (dh.header_version < 6)
+   info->max_mapnr = info->dh_memmory->max_mapnr;
+else
+   info->max_mapnr = info->kh_memory->max_mapnr_64;
 
-ChangeLog
+> @@ -783,6 +784,10 @@ get_kdump_compressed_header_info(char *filename)
+>   		ERRMSG("header does not have dump_level member\n");
+>   		return FALSE;
+>   	}
+> +
+> +	if (dh.header_version < 6)
+> +		kh.max_mapnr_64 = dh.max_mapnr;
+> +
 
-v1 => v2)
+Again, please don't do this. It's confusing if in-memory header data
+is not identical to in-disk one.
 
-- Rebased on top of v3.12-rc5.
+>   	DEBUG_MSG("diskdump main header\n");
+>   	DEBUG_MSG("  signature        : %s\n", dh.signature);
+>   	DEBUG_MSG("  header_version   : %d\n", dh.header_version);
+> @@ -802,6 +807,12 @@ get_kdump_compressed_header_info(char *filename)
+>   	DEBUG_MSG("  split            : %d\n", kh.split);
+>   	DEBUG_MSG("  start_pfn        : 0x%lx\n", kh.start_pfn);
+>   	DEBUG_MSG("  end_pfn          : 0x%lx\n", kh.end_pfn);
+> +	if (dh.header_version >= 6) {
+> +		/* A dumpfile contains full 64bit values. */
+> +		DEBUG_MSG("  start_pfn_64 : 0x%llx\n", kh.start_pfn_64);
+> +		DEBUG_MSG("  end_pfn_64 : 0x%llx\n", kh.end_pfn_64);
+> +		DEBUG_MSG("  max_mapnr_64 : 0x%llx\n", kh.max_mapnr_64);
+> +	}
+>
+>   	info->dh_memory = malloc(sizeof(dh));
+>   	if (info->dh_memory == NULL) {
+> @@ -2766,14 +2777,16 @@ int
+>   initialize_bitmap_memory(void)
+>   {
+>   	struct disk_dump_header	*dh;
+> +	struct kdump_sub_header *kh;
+>   	struct dump_bitmap *bmp;
+>   	off_t bitmap_offset;
+> -	int bitmap_len, max_sect_len;
+> +	off_t bitmap_len, max_sect_len;
+>   	unsigned long pfn;
+>   	int i, j;
+>   	long block_size;
+>
+>   	dh = info->dh_memory;
+> +	kh = info->kh_memory;
+>   	block_size = dh->block_size;
+>
+>   	bitmap_offset
+> @@ -2793,7 +2806,7 @@ initialize_bitmap_memory(void)
+>   	bmp->offset = bitmap_offset + bitmap_len / 2;
+>   	info->bitmap_memory = bmp;
+>
+> -	max_sect_len = divideup(dh->max_mapnr, BITMAP_SECT_LEN);
+> +	max_sect_len = divideup(kh->max_mapnr_64, BITMAP_SECT_LEN);
+>   	info->valid_pages = calloc(sizeof(ulong), max_sect_len);
 
-- Fix linking time error of boot_cpu_is_bsp_init() in case of
-  CONFIG_LOCAL_APIC disabled by adding empty static inline function
-  instead.
-
-- Fix missing feature check by means of cpu_has_apic macro in
-  boot_cpu_is_bsp_init() before calling rdmsr_safe(MSR_IA32_APICBASE).
-
-  NOTE: I've checked local apic-present case only; I don't have any
-  x86 processor without local apic.
-
-- Add __init annotation to boot_cpu_is_bsp_init().
-
-Test
-
-- built with and without CONFIG_LOCAL_APIC
-- tested x86_64 in case of acpi and MP table
-
----
-
-HATAYAMA Daisuke (2):
-      x86, apic: Add boot_cpu_is_bsp() to check if boot cpu is BSP
-      x86, apic: Disable BSP if boot cpu is AP
+Ah, please here needs to be fixed, too. Here should have been
+used sizeof(int) but now sizeof(off_t) should be used.
 
 
- arch/x86/include/asm/mpspec.h |    9 ++++++++-
- arch/x86/kernel/acpi/boot.c   |    6 +++++-
- arch/x86/kernel/apic/apic.c   |   34 +++++++++++++++++++++++++++++++++-
- arch/x86/kernel/devicetree.c  |    1 +
- arch/x86/kernel/mpparse.c     |   15 +++++++++++++--
- arch/x86/kernel/setup.c       |    2 ++
- arch/x86/platform/sfi/sfi.c   |    2 +-
- 7 files changed, 63 insertions(+), 6 deletions(-)
 
 -- 
-
 Thanks.
 HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
