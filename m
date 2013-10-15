@@ -1,15 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ie0-x22c.google.com ([2607:f8b0:4001:c03::22c])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VVz67-0007gI-Qd
- for kexec@lists.infradead.org; Tue, 15 Oct 2013 07:31:20 +0000
-Received: by mail-ie0-f172.google.com with SMTP id tp5so109110ieb.31
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 00:30:55 -0700 (PDT)
+ id 1VVzAE-0007nK-RM
+ for kexec@lists.infradead.org; Tue, 15 Oct 2013 07:35:36 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 0CADD3EE1D9
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:09 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id F207245DD78
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id D5E1845DE50
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id C9B9A1DB8041
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 76A111DB803C
+ for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 16:35:08 +0900 (JST)
+Message-ID: <525CEFAB.1000303@jp.fujitsu.com>
+Date: Tue, 15 Oct 2013 16:32:59 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Date: Tue, 15 Oct 2013 13:00:53 +0530
-Message-ID: <CALicx6t6FA3U7_WLWaWj011CVxZjv_pe3aAbTnqbkF+ka-DiBA@mail.gmail.com>
-Subject: ARM: Exynos: DTB too large error
-From: Vijay Kilari <vijay.kilari@gmail.com>
+Subject: Re: [PATCH v3] makedumpfile: fix max_mapnr issue on system has over
+ 44-bit addressing
+References: <20131014121648.1409.58312.stgit@k.asiapacific.hpqcorp.net>
+ <525CD97B.3070209@jp.fujitsu.com>
+In-Reply-To: <525CD97B.3070209@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,51 +35,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: bhe@redhat.com, nishimura@mxp.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, lisa.mitchell@hp.com, ruyang@redhat.com, tachibana@mxm.nes.nec.co.jp, anderson@redhat.com, chaowang@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, vgoyal@redhat.com, crash-utility@redhat.com
 
-Hi,
+(2013/10/15 14:58), HATAYAMA Daisuke wrote:
+> (2013/10/14 21:16), Jingbai Ma wrote:
+> <cut>
 
-  While loading kexec kernel, with the below command,
+>> @@ -2793,7 +2806,7 @@ initialize_bitmap_memory(void)
+>>       bmp->offset = bitmap_offset + bitmap_len / 2;
+>>       info->bitmap_memory = bmp;
+>>
+>> -    max_sect_len = divideup(dh->max_mapnr, BITMAP_SECT_LEN);
+>> +    max_sect_len = divideup(kh->max_mapnr_64, BITMAP_SECT_LEN);
+>>       info->valid_pages = calloc(sizeof(ulong), max_sect_len);
+>
+> Ah, please here needs to be fixed, too. Here should have been
+> used sizeof(int) but now sizeof(off_t) should be used.
+>
 
-kexec -l vmlinux --command-line="console=ttySAC2,115200n8 root=
-/dev/nfs rw ip=dhcp nfsroot=xxxx...."
+This is wrong. Please ignore.
 
-Error reported is:
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-DTB too large!
-Cannot load /opt/vmlinux
-
-The error is reported from below piece of code
-
-int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
-        struct kexec_info *info)
-{
-        unsigned long base;
-        unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
-        unsigned int offset = 0x8000;      /* 32k offset from memory start */
-
-           .......
-                if (base + atag_offset + dtb_length > base + offset) {
-                        fprintf(stderr, "DTB too large!\n");
-                        return -1;
-                }
-
-         ............
-}
-
-From zImage_arm_load() function as shown above in
-kexec/arch/arm/kexec-zImage-arm.c file,
-offset is hard-coded to 32K. However the dtb file of Exynos is more than
-32K
-
-Please let me reason behind 32K limit?
-
-Thanks & Regards
-Vijay
 
 _______________________________________________
 kexec mailing list
