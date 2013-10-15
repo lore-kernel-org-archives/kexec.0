@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from juliette.telenet-ops.be ([195.130.137.74])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VW8mD-0008Ci-RC
+ id 1VW8mD-0008Ck-R8
  for kexec@lists.infradead.org; Tue, 15 Oct 2013 17:51:26 +0000
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 0/3] kexec support for Linux/m68k (tools part)
-Date: Tue, 15 Oct 2013 19:50:57 +0200
-Message-Id: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH 1/3] kexec: Let slurp_file_len() return the number of bytes
+ read
+Date: Tue, 15 Oct 2013 19:50:58 +0200
+Message-Id: <1381859460-13645-2-git-send-email-geert@linux-m68k.org>
+In-Reply-To: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
+References: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +24,79 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: linux-m68k@lists.linux-m68k.org, kexec@lists.infradead.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, kexec@lists.infradead.org
 
-kexec support for Linux/m68k (tools part)
+Add an optional output parameter to slurp_file_len() so it can return the
+actual number of bytes read.
 
-This is a set of patches to add kexec support for m68k to kexec-tools.
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Dave Young <dyoung@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c |    5 ++---
+ kexec/kexec.c                   |    4 +++-
+ kexec/kexec.h                   |    2 +-
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-  - Kexec only, no kdump support yet (do you have enough RAM to keep a
-    crashdump kernel in memory at all times? ;-)
-
-Patches:
-  - [PATCH 1/3] kexec: Let slurp_file_len() return the number of bytes
-      - v2: no changes
-  - [PATCH 2/3] kexec: Extract slurp_fd()
-      - v2: new patch
-  - [PATCH 3/3] kexec: Add m68k support
-      - v2:
-	  - Fix handling of virtual and physical addresses, for machines where
-	    memory doesn't start at zero,
-	  - Print a warning if the kernel size exceeds 4 MiB, as current kernels
-	    cannot handle that,
-	  - Check struct bootversion at the start of the kernel, and print a
-	    warning if it cannot be found or doesn't match,
-	  - Replace literal 4096 by PAGE_SIZE,
-	  - Handle removal of page zero at the ELF program segment level, as
-	    m68kboot does,
-	  - Remove -PAGE_SIZE for the ramdisk location now the bug in
-            locate_hole() is fixed,
-	  - Use endian-correct types for bootinfo,
-	  - Remove unused -? option handling, cfr. commit
-	    bf9d0f055c791a26b2237b5a12b48ae1b7e0d550 ("kexec: Remove unused -?
-	    option handling"),
-	  - Use <asm/bootinfo.h> instead of our own definitions.
-
-Notes:
-  - Based on git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-  - Tagged bootinfo is read from /proc/bootinfo by default, but this can be
-    overridden using --bootinfo. No bootinfo editor is provided.
-    The kexec command will replace/delete command line and ramdisk tags in the
-    bootinfo.
-
-Have fun!
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index e44fcebbd32b..e2da50b54c91 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -121,7 +121,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 	struct mem_ehdr ehdr;
+ 	struct mem_phdr *phdr, *end_phdr;
+ 	int align;
+-	unsigned long size;
++	off_t size;
+ 	uint32_t elf_flags = 0;
+ 
+ 	if (elf_info->machine != EM_X86_64)
+@@ -131,8 +131,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 		return 0;
+ 
+ 	align = getpagesize();
+-	size = KCORE_ELF_HEADERS_SIZE;
+-	buf = slurp_file_len(kcore, size);
++	buf = slurp_file_len(kcore, KCORE_ELF_HEADERS_SIZE, &size);
+ 	if (!buf) {
+ 		fprintf(stderr, "Cannot read %s: %s\n", kcore, strerror(errno));
+ 		return -1;
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 2ce570f7bb43..185c85bef342 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -537,7 +537,7 @@ char *slurp_file(const char *filename, off_t *r_size)
+ /* This functions reads either specified number of bytes from the file or
+    lesser if EOF is met. */
+ 
+-char *slurp_file_len(const char *filename, off_t size)
++char *slurp_file_len(const char *filename, off_t size, off_t *nread)
+ {
+ 	int fd;
+ 	char *buf;
+@@ -575,6 +575,8 @@ char *slurp_file_len(const char *filename, off_t size)
+ 		die("Close of %s failed: %s\n",
+ 			filename, strerror(errno));
+ 	}
++	if (nread)
++		*nread = progress;
+ 	return buf;
+ }
+ 
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 2904e03c79b8..8d5b512e365f 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -237,7 +237,7 @@ extern void die(const char *fmt, ...)
+ extern void *xmalloc(size_t size);
+ extern void *xrealloc(void *ptr, size_t size);
+ extern char *slurp_file(const char *filename, off_t *r_size);
+-extern char *slurp_file_len(const char *filename, off_t size);
++extern char *slurp_file_len(const char *filename, off_t size, off_t *nread);
+ extern char *slurp_decompress_file(const char *filename, off_t *r_size);
+ extern unsigned long virt_to_phys(unsigned long addr);
+ extern void add_segment(struct kexec_info *info,
+-- 
+1.7.9.5
 
 
 _______________________________________________
