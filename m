@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx4-phx2.redhat.com ([209.132.183.25])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VWA3L-00022v-Cu
- for kexec@lists.infradead.org; Tue, 15 Oct 2013 19:13:12 +0000
-Date: Tue, 15 Oct 2013 15:12:17 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2 1/2] x86, apic: Add boot_cpu_is_bsp() to check if boot
- cpu is BSP
-Message-ID: <20131015191217.GN31215@redhat.com>
-References: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
- <20131015054322.13666.31465.stgit@localhost6.localdomain6>
+ id 1VWADC-0002LY-Ic
+ for kexec@lists.infradead.org; Tue, 15 Oct 2013 19:23:24 +0000
+Date: Tue, 15 Oct 2013 15:22:55 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1833552181.6547764.1381864975415.JavaMail.root@redhat.com>
+In-Reply-To: <20131012081815.20039.28569.stgit@k.asiapacific.hpqcorp.net>
+References: <20131012081815.20039.28569.stgit@k.asiapacific.hpqcorp.net>
+Subject: Re: [PATCH v3] crash utility: fix max_mapnr issue on system has
+ over 44-bit addressing
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131015054322.13666.31465.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,89 +23,424 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: bhe@redhat.com, nishimura@mxp.nes.nec.co.jp, usui@mxm.nes.nec.co.jp, d hatayama <d.hatayama@jp.fujitsu.com>, lisa mitchell <lisa.mitchell@hp.com>, ruyang@redhat.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com, kexec@lists.infradead.org, chaowang@redhat.com, crash-utility@redhat.com
 
-On Tue, Oct 15, 2013 at 02:43:22PM +0900, HATAYAMA Daisuke wrote:
-> Kexec can enter the kdump 2nd kernel on AP if crash happens on AP. To
-> check if boot cpu is BSP, introduce a helper function
-> boot_cpu_is_bsp().
+
+Hello Jingbai,
+
+I have a few additional comments below:
+
+----- Original Message -----
+> The patch will add support for new compressed dumpfile header_version 6.
 > 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> This bug was posted here:
+> http://lists.infradead.org/pipermail/kexec/2013-September/009587.html
+> 
+> This patch will add 3 new fields in struct kdump_sub_header.
+> unsigned long long start_pfn_64;  /* header_version 6 and later */
+> unsigned long long end_pfn_64;    /* header_version 6 and later */
+> unsigned long long max_mapnr_64;  /* header_version 6 and later */
+> 
+> And the old "unsigned int max_mapnr" in struct disk_dump_header will
+> not be used anymore. But still be there for compatibility purpose.
+> 
+> The corresponding patch for makedumpfile can be found here:
+> http://lists.infradead.org/pipermail/kexec/2013-October/009727.html
+> 
+> Changelog:
+> v3:
+> - Fix a bug that failed to work with old split format kdumps.
+> 
+> v2:
+> - Rename max_mapnr in struct kdump_sub_header to max_mapnr_64.
+> - Change type of max_mapnr_64 from unsigned long to unsigned long long.
+>   In x86 PAE mode on x86_32 kernel, the address may exceeds 44bit limit.
+> - Add start_pfn_64, end_pfn_64 for struct kdump_sub_header.
+> - Add a 64bit max_mapnr in struct diskdump_data. The max_mapnr_64 in
+>   the sub-header only exists in compressed kdump file format, so can't
+>   be used in diskdump file format.
+> - Merge a patch from Dave Anderson that fixed bitmap_len issue.
+> 
+> v1:
+> - http://lists.infradead.org/pipermail/kexec/2013-September/009663.html
+> 
+> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+> Tested-by: Lisa Mitchell <lisa.mitchell@hp.com>
 > ---
->  arch/x86/include/asm/mpspec.h |    7 +++++++
->  arch/x86/kernel/apic/apic.c   |   16 ++++++++++++++++
->  arch/x86/kernel/setup.c       |    2 ++
->  3 files changed, 25 insertions(+)
+>  diskdump.c |  122
+>  ++++++++++++++++++++++++++++++++++++++++++++++++------------
+>  diskdump.h |   17 +++++++-
+>  2 files changed, 112 insertions(+), 27 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/mpspec.h b/arch/x86/include/asm/mpspec.h
-> index 626cf70..54d5f98 100644
-> --- a/arch/x86/include/asm/mpspec.h
-> +++ b/arch/x86/include/asm/mpspec.h
-> @@ -47,11 +47,18 @@ extern int mp_bus_id_to_type[MAX_MP_BUSSES];
->  extern DECLARE_BITMAP(mp_bus_not_pci, MAX_MP_BUSSES);
+> diff --git a/diskdump.c b/diskdump.c
+> index 0819a3f..bb7a33e 100644
+> --- a/diskdump.c
+> +++ b/diskdump.c
+> @@ -40,11 +40,13 @@ struct diskdump_data {
+>  	struct disk_dump_sub_header	*sub_header;
+>  	struct kdump_sub_header		*sub_header_kdump;
 >  
->  extern unsigned int boot_cpu_physical_apicid;
-> +extern bool boot_cpu_is_bsp;
->  extern unsigned int max_physical_apicid;
->  extern int mpc_default_type;
->  extern unsigned long mp_lapic_addr;
+> +	unsigned long long	max_mapnr;	/* 64bit max_mapnr */
+> +
+>  	size_t	data_offset;
+>  	int	block_size;
+>  	int	block_shift;
+>  	char	*bitmap;
+> -	int	bitmap_len;
+> +	off_t	bitmap_len;
+>  	char	*dumpable_bitmap;
+>  	int	byte, bit;
+>  	char	*compressed_page;	/* copy of compressed page data */
+> @@ -170,9 +172,9 @@ add_diskdump_data(char* name)
+>  	dd->filename = name;
 >  
->  #ifdef CONFIG_X86_LOCAL_APIC
-> +extern void boot_cpu_is_bsp_init(void);
+>  	if (CRASHDEBUG(1))
+> -		fprintf(fp, "%s: start_pfn=%lu, end_pfn=%lu\n", name,
+> -			dd->sub_header_kdump->start_pfn,
+> -			dd->sub_header_kdump->end_pfn);
+> +		fprintf(fp, "%s: start_pfn=%llu, end_pfn=%llu\n", name,
+> +			dd->sub_header_kdump->start_pfn_64,
+> +			dd->sub_header_kdump->end_pfn_64);
+>  }
+>  
+>  static void
+> @@ -199,13 +201,13 @@ get_bit(char *map, int byte, int bit)
+>  }
+>  
+>  static inline int
+> -page_is_ram(unsigned int nr)
+> +page_is_ram(unsigned long nr)
+>  {
+>  	return get_bit(dd->bitmap, nr >> 3, nr & 7);
+>  }
+>  
+>  static inline int
+> -page_is_dumpable(unsigned int nr)
+> +page_is_dumpable(unsigned long nr)
+>  {
+>  	return dd->dumpable_bitmap[nr>>3] & (1 << (nr & 7));
+>  }
+> @@ -214,7 +216,7 @@ static inline int
+>  dump_is_partial(const struct disk_dump_header *header)
+>  {
+>  	return header->bitmap_blocks >=
+> -	    divideup(divideup(header->max_mapnr, 8), dd->block_size) * 2;
+> +	    divideup(divideup(dd->max_mapnr, 8), dd->block_size) * 2;
+>  }
+>  
+>  static int
+> @@ -321,6 +323,9 @@ x86_process_elf_notes(void *note_ptr, unsigned long
+> size_note)
+>   * [40]    unsigned long   size_note;          /  header_version 4 and later
+>   /
+>   * [44]    off_t           offset_eraseinfo;   /  header_version 5 and later
+>   /
+>   * [52]    unsigned long   size_eraseinfo;     /  header_version 5 and later
+>   /
+> + * [56]    unsigned long long   start_pfn_64;  /  header_version 6 and later
+> /
+> + * [64]    unsigned long long   end_pfn_64;    /  header_version 6 and later
+> /
+> + * [72]    unsigned long long   max_mapnr_64;  /  header_version 6 and later
+> /
+>   * };
+>   *
+>   * But when compiled on an ARM processor, each 64-bit "off_t" would be
+>   pushed
+> @@ -337,7 +342,10 @@ x86_process_elf_notes(void *note_ptr, unsigned long
+> size_note)
+>   * [40]    off_t           offset_note;        /  header_version 4 and later
+>   /
+>   * [48]    unsigned long   size_note;          /  header_version 4 and later
+>   /
+>   * [56]    off_t           offset_eraseinfo;   /  header_version 5 and later
+>   /
+> - * [62]    unsigned long   size_eraseinfo;     /  header_version 5 and later
+> /
+> + * [64]    unsigned long   size_eraseinfo;     /  header_version 5 and later
+> /
+> + * [72]    unsigned long long   start_pfn_64;  /  header_version 6 and later
+> /
+> + * [80]    unsigned long long   end_pfn_64;    /  header_version 6 and later
+> /
+> + * [88]    unsigned long long   max_mapnr_64;  /  header_version 6 and later
+> /
+>   * };
+>   *
+>   */
+> @@ -357,6 +365,10 @@ struct kdump_sub_header_ARM_target {
+>  	int 		pad3;
+>          off_t           offset_eraseinfo;   /* header_version 5 and later */
+>          unsigned long   size_eraseinfo;     /* header_version 5 and later */
+> +	int		pad4;
+> +	unsigned long long start_pfn_64;    /* header_version 6 and later */
+> +	unsigned long long end_pfn_64;      /* header_version 6 and later */
+> +	unsigned long long max_mapnr_64;    /* header_version 6 and later */
+>  };
+>  
+>  static void
+> @@ -380,6 +392,15 @@ arm_kdump_header_adjust(int header_version)
+>  		kdsh->offset_eraseinfo = kdsh_ARM_target->offset_eraseinfo;
+>  		kdsh->size_eraseinfo = kdsh_ARM_target->size_eraseinfo;
+>  	}
+> +	if (header_version >= 6) {
+> +		kdsh->start_pfn_64 = kdsh_ARM_target->start_pfn_64;
+> +		kdsh->end_pfn_64 = kdsh_ARM_target->end_pfn_64;
+> +		kdsh->max_mapnr_64 = kdsh_ARM_target->map_mapnr_64;
+> +	} else {
+> +		kdsh->start_pfn_64 = kdsh_ARM_target->start_pfn;
+> +		kdsh->end_pfn_64 = kdsh_ARM_target->end_pfn;
+> +		kdsh->max_mapnr_64 = dd->map_mapnr;
+> +	}
+>  }
+>  #endif  /* __i386__ && ARM */
+>  
+> @@ -390,7 +411,10 @@ read_dump_header(char *file)
+>  	struct disk_dump_sub_header *sub_header = NULL;
+>  	struct kdump_sub_header *sub_header_kdump = NULL;
+>  	size_t size;
+> -	int bitmap_len;
+> +	off_t bitmap_len;
+> +	char *bufptr;
+> +	size_t len;
+> +	size_t bytes_read;
+>  	int block_size = (int)sysconf(_SC_PAGESIZE);
+>  	off_t offset;
+>  	const off_t failed = (off_t)-1;
+> @@ -540,8 +564,27 @@ restart:
+>  #if defined(__i386__) && defined(ARM)
+>  		arm_kdump_header_adjust(header->header_version);
+>  #endif
+> +		/* use 64bit max_mapnr in compressed kdump file sub-header */
+> +		if (header->header_version >= 6)
+> +			dd->max_mapnr = dd->sub_header_kdump->max_mapnr_64;
+> +		else {
+> +			dd->sub_header_kdump->start_pfn_64
+> +				= dd->sub_header_kdump->start_pfn;
+> +			dd->sub_header_kdump->end_pfn_64
+> +				= dd->sub_header_kdump->end_pfn;
+> +		}
+> +	} else {
+> +		/* the 64bit max_mapnr only exists in sub-header of compressed
+> +		 * kdump file, if it's not a compressed kdump file, we have to
+> +		 * use the old 32bit max_mapnr in dumpfile header.
+> +		 * max_mapnr may be truncated here.
+> +		 */
+> +		 dd->max_mapnr = header->max_mapnr;
+>  	}
+
+The additional "} else {" segment above doesn't make sense because either 
+DISKDUMP_VALID() or KDUMP_CMPRS_VALID() are true, so the "else" part will
+never be executed.  
+
+The patch works because you follow the above section with this piece:
+  
+> +	if (header->header_version < 6)
+> +		dd->max_mapnr = header->max_mapnr;
+> +
+>  	/* read memory bitmap */
+>  	bitmap_len = block_size * header->bitmap_blocks;
+>  	dd->bitmap_len = bitmap_len;
+> @@ -571,11 +614,27 @@ restart:
+>  				DISKDUMP_VALID() ? "diskdump" : "compressed kdump");
+>  			goto err;
+>  		}
+> +#ifdef OLDWAY
+>  		if (read(dd->dfd, dd->bitmap, bitmap_len) < bitmap_len) {
+>  			error(INFO, "%s: cannot read memory bitmap\n",
+>  				DISKDUMP_VALID() ? "diskdump" : "compressed kdump");
+>  			goto err;
+>  		}
 > +#else
-> +static inline void boot_cpu_is_bsp_init(void) { };
+> +		bufptr = dd->bitmap;
+> +		len = bitmap_len;
+> +		while (len) {
+> +			bytes_read = read(dd->dfd, bufptr, len);
+> +			if (bytes_read  < 0) {
+> +				error(INFO, "%s: cannot read memory bitmap\n",
+> +					DISKDUMP_VALID() ? "diskdump"
+> +					: "compressed kdump");
+> +				goto err;
+> +			}
+> +			len -= bytes_read;
+> +			bufptr += bytes_read;
+> +		}
 > +#endif
-> +
-> +#ifdef CONFIG_X86_LOCAL_APIC
->  extern int smp_found_config;
->  #else
->  # define smp_found_config 0
-> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> index a7eb82d..62ee365 100644
-> --- a/arch/x86/kernel/apic/apic.c
-> +++ b/arch/x86/kernel/apic/apic.c
-> @@ -64,6 +64,12 @@ unsigned disabled_cpus;
->  unsigned int boot_cpu_physical_apicid = -1U;
+
+You can get rid of the "#ifdef OLDWAY" section -- I left that there when
+I gave Lisa my debug version of the function so that the difference would
+be obvious. 
+
+>  	}
 >  
->  /*
+>  	if (dump_is_partial(header))
+> @@ -679,13 +738,13 @@ restart:
+>  	}
+>  
+>  	if (!is_split) {
+> -		max_sect_len = divideup(header->max_mapnr, BITMAP_SECT_LEN);
+> +		max_sect_len = divideup(dd->max_mapnr, BITMAP_SECT_LEN);
+>  		pfn = 0;
+>  		dd->filename = file;
+>  	}
+>  	else {
+> -		ulong start = sub_header_kdump->start_pfn;
+> -		ulong end = sub_header_kdump->end_pfn;
+> +		unsigned long long start = sub_header_kdump->start_pfn_64;
+> +		unsigned long long end = sub_header_kdump->end_pfn_64;
+>  		max_sect_len = divideup(end - start + 1, BITMAP_SECT_LEN);
+>  		pfn = start;
+>  	}
+> @@ -727,8 +786,9 @@ pfn_to_pos(ulong pfn)
+>  	ulong p1, p2;
+>  
+>  	if (KDUMP_SPLIT()) {
+> -		p1 = pfn - dd->sub_header_kdump->start_pfn;
+> -		p2 = round(p1, BITMAP_SECT_LEN) + dd->sub_header_kdump->start_pfn;
+> +		p1 = pfn - dd->sub_header_kdump->start_pfn_64;
+> +		p2 = round(p1, BITMAP_SECT_LEN)
+> +			+ dd->sub_header_kdump->start_pfn_64;
+>  	}
+>  	else {
+>  		p1 = pfn;
+> @@ -1034,12 +1094,12 @@ read_diskdump(int fd, void *bufptr, int cnt, ulong
+> addr, physaddr_t paddr)
+>  	if (KDUMP_SPLIT()) {
+>  		/* Find proper dd */
+>  		int i;
+> -		unsigned long start_pfn;
+> -		unsigned long end_pfn;
+> +		unsigned long long start_pfn;
+> +		unsigned long long end_pfn;
+>  
+>  		for (i=0; i<num_dumpfiles; i++) {
+> -			start_pfn = dd_list[i]->sub_header_kdump->start_pfn;
+> -			end_pfn = dd_list[i]->sub_header_kdump->end_pfn;
+> +			start_pfn = dd_list[i]->sub_header_kdump->start_pfn_64;
+> +			end_pfn = dd_list[i]->sub_header_kdump->end_pfn_64;
+>  			if ((pfn >= start_pfn) && (pfn <= end_pfn))	{
+>  				dd = dd_list[i];
+>  				break;
+> @@ -1058,14 +1118,14 @@ read_diskdump(int fd, void *bufptr, int cnt, ulong
+> addr, physaddr_t paddr)
+>  	curpaddr = paddr & ~((physaddr_t)(dd->block_size-1));
+>  	page_offset = paddr & ((physaddr_t)(dd->block_size-1));
+>  
+> -	if ((pfn >= dd->header->max_mapnr) || !page_is_ram(pfn)) {
+> +	if ((pfn >= dd->max_mapnr) || !page_is_ram(pfn)) {
+>  		if (CRASHDEBUG(8)) {
+>  			fprintf(fp, "read_diskdump: SEEK_ERROR: "
+>  			    "paddr/pfn: %llx/%lx ",
+>  				(ulonglong)paddr, pfn);
+> -			if (pfn >= dd->header->max_mapnr)
+> -				fprintf(fp, "max_mapnr: %x\n",
+> -					dd->header->max_mapnr);
+> +			if (pfn >= dd->max_mapnr)
+> +				fprintf(fp, "max_mapnr: %llx\n",
+> +					dd->max_mapnr);
+>  			else
+>  				fprintf(fp, "!page_is_ram\n");
+>  		}
+> @@ -1517,7 +1577,7 @@ __diskdump_memory_dump(FILE *fp)
+>  	fprintf(fp, "          block_size: %d\n", dh->block_size);
+>  	fprintf(fp, "        sub_hdr_size: %d\n", dh->sub_hdr_size);
+>  	fprintf(fp, "       bitmap_blocks: %u\n", dh->bitmap_blocks);
+> -	fprintf(fp, "           max_mapnr: %u\n", dh->max_mapnr);
+> +	fprintf(fp, "           max_mapnr: %llu\n", dd->max_mapnr);
 
-[..]
-> + * Indicates whether the processor that is doing the boot up, is BSP
-> + * processor or not.
-> + */
-> +bool boot_cpu_is_bsp;
+Please display the original dh->max_mapnr as it exists in the dumpfile
+header, regardless whether it is the obsolete version or not.
 
-Should we set it to true by default? I think in most of the cases boot cpu
-is going to be bsp too?
+Your new "dd->max_mapnr" should be displayed further down in the function
+where the other diskdump_data fields are shown.
 
-> +
-> +/*
->   * The highest APIC ID seen during enumeration.
->   */
->  unsigned int max_physical_apicid;
-> @@ -2589,3 +2595,13 @@ static int __init lapic_insert_resource(void)
->   * that is using request_resource
->   */
->  late_initcall(lapic_insert_resource);
-> +
-> +void __init boot_cpu_is_bsp_init(void)
-> +{
-> +	if (cpu_has_apic) {
-> +		u32 l, h;
-> +
-> +		rdmsr_safe(MSR_IA32_APICBASE, &l, &h);
-> +		boot_cpu_is_bsp = (l & MSR_IA32_APICBASE_BSP) ? true : false;
+>  	fprintf(fp, "    total_ram_blocks: %u\n", dh->total_ram_blocks);
+>  	fprintf(fp, "       device_blocks: %u\n", dh->device_blocks);
+>  	fprintf(fp, "      written_blocks: %u\n", dh->written_blocks);
+> @@ -1662,6 +1722,20 @@ __diskdump_memory_dump(FILE *fp)
+>  				dump_eraseinfo(fp);
+>  			}
+>  		}
+> +		if (dh->header_version >= 6) {
+> +			fprintf(fp, "           start_pfn_64: ");
+> +			if (KDUMP_SPLIT())
+> +				fprintf(fp, "%lld (0x%llx)\n",
+> +					kdsh->start_pfn_64, kdsh->start_pfn_64);
+> +			else
+> +				fprintf(fp, "(unused)\n");
+> +			fprintf(fp, "             end_pfn_64: ");
+> +			if (KDUMP_SPLIT())
+> +				fprintf(fp, "%lld (0x%llx)\n",
+> +					kdsh->end_pfn_64, kdsh->end_pfn_64);
+> +			else
+> +				fprintf(fp, "(unused)\n");
+> +		}
+>  		fprintf(fp, "\n");
+>  	} else
+>          	fprintf(fp, "(n/a)\n\n");
+> @@ -1670,7 +1744,7 @@ __diskdump_memory_dump(FILE *fp)
+>  	fprintf(fp, "        block_size: %d\n", dd->block_size);
+>  	fprintf(fp, "       block_shift: %d\n", dd->block_shift);
+>  	fprintf(fp, "            bitmap: %lx\n", (ulong)dd->bitmap);
+> -	fprintf(fp, "        bitmap_len: %d\n", dd->bitmap_len);
+> +	fprintf(fp, "        bitmap_len: %ld\n", dd->bitmap_len);
+>  	fprintf(fp, "   dumpable_bitmap: %lx\n", (ulong)dd->dumpable_bitmap);
+>  	fprintf(fp, "              byte: %d\n", dd->byte);
+>  	fprintf(fp, "               bit: %d\n", dd->bit);
+> diff --git a/diskdump.h b/diskdump.h
+> index 9ab10b6..0492351 100644
+> --- a/diskdump.h
+> +++ b/diskdump.h
+> @@ -42,7 +42,9 @@ struct disk_dump_header {
+>  						   header in blocks */
+>  	unsigned int		bitmap_blocks;	/* Size of Memory bitmap in
+>  						   block */
+> -	unsigned int		max_mapnr;	/* = max_mapnr */
+> +	unsigned int		max_mapnr;	/* = max_mapnr, 32bit only,
+> +						   full 64bit in sub header.
+> +						   Do NOT use this anymore! */
 
-I came across following thread.
+You can change this comment to read "obsolete" so that it is similar to Daisuke's
+suggestion for makedumpfile.
 
-https://lkml.org/lkml/2012/4/18/370
+>  	unsigned int		total_ram_blocks;/* Number of blocks should be
+>  						   written */
+>  	unsigned int		device_blocks;	/* Number of total blocks in
+> @@ -61,14 +63,23 @@ struct kdump_sub_header {
+>  	unsigned long	phys_base;
+>  	int		dump_level;         /* header_version 1 and later */
+>  	int		split;              /* header_version 2 and later */
+> -	unsigned long	start_pfn;          /* header_version 2 and later */
+> -	unsigned long	end_pfn;            /* header_version 2 and later */
+> +	unsigned long	start_pfn;          /* header_version 2 and later,
+> +					       32bit only, full 64bit in
+> +					       start_pfn_64.
+> +					       Do not use this anymore! */
+> +	unsigned long	end_pfn;            /* header_version 2 and later,
+> +					       32bit only, full 64bit in
+> +					       end_pfn_64.
 
-Can we hit above read msr on old P5 class machines? Or is it safe to
-call unconditionally.
+Same here...
 
-Thanks
-Vivek
+> +					       Do not use this anymore! */
+>  	off_t		offset_vmcoreinfo;  /* header_version 3 and later */
+>  	unsigned long	size_vmcoreinfo;    /* header_version 3 and later */
+>  	off_t		offset_note;        /* header_version 4 and later */
+>  	unsigned long	size_note;          /* header_version 4 and later */
+>  	off_t		offset_eraseinfo;   /* header_version 5 and later */
+>  	unsigned long	size_eraseinfo;     /* header_version 5 and later */
+> +	unsigned long long start_pfn_64;    /* header_version 6 and later */
+> +	unsigned long long end_pfn_64;      /* header_version 6 and later */
+> +	unsigned long long max_mapnr_64;    /* header_version 6 and later */
+>  };
+>  
+>  /* page flags */
+
+Thanks,
+  Dave
+ 
+
 
 _______________________________________________
 kexec mailing list
