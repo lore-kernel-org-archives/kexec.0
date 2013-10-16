@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VWKYJ-0007BR-HL
- for kexec@lists.infradead.org; Wed, 16 Oct 2013 06:25:52 +0000
-From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH] kexec, x86: Fix x86 build warnings
-Date: Wed, 16 Oct 2013 14:25:22 +0800
-Message-Id: <1381904722-5289-1-git-send-email-chaowang@redhat.com>
+ id 1VWLHO-0008E4-Ca
+ for kexec@lists.infradead.org; Wed, 16 Oct 2013 07:12:27 +0000
+Date: Wed, 16 Oct 2013 16:12:03 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Remove PACKED macro and use __attribute__((packed))
+ directly
+Message-ID: <20131016071203.GA27801@verge.net.au>
+References: <20130905092121.GA8560@dhcp12-158.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20130905092121.GA8560@dhcp12-158.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,70 +20,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
+To: WANG Chao <chaowang@redhat.com>
+Cc: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, kexec@lists.infradead.org
 
-R2NjIHRocm93IG91dCB0aHJlZSB3YXJuaW5nczoKCmtleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYt
-eDg2LmM6IEluIGZ1bmN0aW9uIOKAmGVsZl94ODZfbG9hZOKAmToKa2V4ZWMvYXJjaC9pMzg2L2tl
-eGVjLWVsZi14ODYuYzo5Nzo2OiB3YXJuaW5nOiB2YXJpYWJsZSDigJhtb2RpZmllZF9jbWRsaW5l
-X2xlbuKAmSBzZXQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC1idXQtc2V0LXZhcmlhYmxlXQogIGlu
-dCBtb2RpZmllZF9jbWRsaW5lX2xlbjsKICAgICAgXgprZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJ
-bWFnZS5jOiBJbiBmdW5jdGlvbiDigJhkb19iekltYWdlX2xvYWTigJk6CmtleGVjL2FyY2gvaTM4
-Ni9rZXhlYy1iekltYWdlLmM6MTEwOjg6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmGtlcm5lbF92ZXJz
-aW9u4oCZIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdCiAgY2hh
-ciAqa2VybmVsX3ZlcnNpb247CiAgICAgICAgXgprZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNv
-bW1vbi5jOiBJbiBmdW5jdGlvbiDigJhlZmlfbWFwX2FkZGVk4oCZOgprZXhlYy9hcmNoL2kzODYv
-a2V4ZWMteDg2LWNvbW1vbi5jOjQwMDoxODogd2FybmluZzogdmFyaWFibGUg4oCYcmVz4oCZIHNl
-dCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdCiAgY2hhciBidWZbNTEy
-XSwgKnJlczsKICAgICAgICAgICAgICAgICAgXgpGaXggdGhlc2Ugd2FybmluZ3MgYnkgcmVtb3Zl
-IHRoZSB1bnVzZWQgdmFyaWFibGVzIGZvciBnb29kLgoKU2lnbmVkLW9mZi1ieTogV0FORyBDaGFv
-IDxjaGFvd2FuZ0ByZWRoYXQuY29tPgotLS0KIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdl
-LmMgICAgfCAyIC0tCiBrZXhlYy9hcmNoL2kzODYva2V4ZWMtZWxmLXg4Ni5jICAgIHwgMyAtLS0K
-IGtleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9uLmMgfCA0ICsrLS0KIDMgZmlsZXMgY2hh
-bmdlZCwgMiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVj
-L2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFn
-ZS5jCmluZGV4IGZjMWE1NGYuLjE1YzFiMzQgMTAwNjQ0Ci0tLSBhL2tleGVjL2FyY2gvaTM4Ni9r
-ZXhlYy1iekltYWdlLmMKKysrIGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYwpAQCAt
-MTA3LDcgKzEwNyw2IEBAIGludCBkb19iekltYWdlX2xvYWQoc3RydWN0IGtleGVjX2luZm8gKmlu
-Zm8sCiAJc3RydWN0IHg4Nl9saW51eF9oZWFkZXIgc2V0dXBfaGVhZGVyOwogCXN0cnVjdCB4ODZf
-bGludXhfcGFyYW1faGVhZGVyICpyZWFsX21vZGU7CiAJaW50IHNldHVwX3NlY3RzOwotCWNoYXIg
-Kmtlcm5lbF92ZXJzaW9uOwogCXNpemVfdCBzaXplOwogCWludCBrZXJuMTZfc2l6ZTsKIAl1bnNp
-Z25lZCBsb25nIHNldHVwX2Jhc2UsIHNldHVwX3NpemU7CkBAIC0xMzMsNyArMTMyLDYgQEAgaW50
-IGRvX2J6SW1hZ2VfbG9hZChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywKIAl9CiAKIAlrZXJuMTZf
-c2l6ZSA9IChzZXR1cF9zZWN0cyArMSkgKjUxMjsKLQlrZXJuZWxfdmVyc2lvbiA9ICgoY2hhciAq
-KSZzZXR1cF9oZWFkZXIpICsgNTEyICsgc2V0dXBfaGVhZGVyLmt2ZXJfYWRkcjsKIAlpZiAoa2Vy
-bmVsX2xlbiA8IGtlcm4xNl9zaXplKSB7CiAJCWZwcmludGYoc3RkZXJyLCAiQnpJbWFnZSB0cnVu
-Y2F0ZWQ/XG4iKTsKIAkJcmV0dXJuIC0xOwpkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L2tl
-eGVjLWVsZi14ODYuYyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYteDg2LmMKaW5kZXggZDBm
-OTgzOC4uZGUwMGRjYiAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYu
-YworKysgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMtZWxmLXg4Ni5jCkBAIC05NCw3ICs5NCw2IEBA
-IGludCBlbGZfeDg2X2xvYWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYs
-IG9mZl90IGxlbiwKIAljaGFyICplcnJvcl9tc2cgPSBOVUxMOwogCWludCByZXN1bHQ7CiAJaW50
-IGNvbW1hbmRfbGluZV9sZW47Ci0JaW50IG1vZGlmaWVkX2NtZGxpbmVfbGVuOwogCWNvbnN0IGNo
-YXIgKnJhbWRpc2s7CiAJdW5zaWduZWQgbG9uZyBlbnRyeSwgbWF4X2FkZHI7CiAJaW50IGFyZ19z
-dHlsZTsKQEAgLTEyMyw3ICsxMjIsNiBAQCBpbnQgZWxmX3g4Nl9sb2FkKGludCBhcmdjLCBjaGFy
-ICoqYXJndiwgY29uc3QgY2hhciAqYnVmLCBvZmZfdCBsZW4sCiAJICogUGFyc2UgdGhlIGNvbW1h
-bmQgbGluZSBhcmd1bWVudHMKIAkgKi8KIAlhcmdfc3R5bGUgPSBBUkdfU1RZTEVfRUxGOwotCW1v
-ZGlmaWVkX2NtZGxpbmVfbGVuID0gMDsKIAlyYW1kaXNrID0gMDsKIAlyZXN1bHQgPSAwOwogCXdo
-aWxlKChvcHQgPSBnZXRvcHRfbG9uZyhhcmdjLCBhcmd2LCBzaG9ydF9vcHRpb25zLCBvcHRpb25z
-LCAwKSkgIT0gLTEpIHsKQEAgLTE4MCw3ICsxNzgsNiBAQCBpbnQgZWxmX3g4Nl9sb2FkKGludCBh
-cmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hhciAqYnVmLCBvZmZfdCBsZW4sCiAJCQkJCQlDT01N
-QU5EX0xJTkVfU0laRSk7CiAJCQltb2RpZmllZF9jbWRsaW5lW0NPTU1BTkRfTElORV9TSVpFIC0g
-MV0gPSAnXDAnOwogCQl9Ci0JCW1vZGlmaWVkX2NtZGxpbmVfbGVuID0gc3RybGVuKG1vZGlmaWVk
-X2NtZGxpbmUpOwogCX0KIAogCS8qIExvYWQgdGhlIEVMRiBleGVjdXRhYmxlICovCmRpZmYgLS1n
-aXQgYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jIGIva2V4ZWMvYXJjaC9pMzg2
-L2tleGVjLXg4Ni1jb21tb24uYwppbmRleCBlZDZjOTUwLi5lNWFhMmE0IDEwMDY0NAotLS0gYS9r
-ZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jCisrKyBiL2tleGVjL2FyY2gvaTM4Ni9r
-ZXhlYy14ODYtY29tbW9uLmMKQEAgLTM5NywxMCArMzk3LDEwIEBAIGFnYWluOgogICogQHJldHVy
-biAxIGlmIHBhcmFtZXRlciBpcyBwcmVzZW50LCAwIGlmIG5vdCBvciBpZiBhbiBlcnJvciBvY2N1
-cnMuCiAgKi8KIGludCBlZmlfbWFwX2FkZGVkKCB2b2lkICkgewotCWNoYXIgYnVmWzUxMl0sICpy
-ZXM7CisJY2hhciBidWZbNTEyXTsKIAlGSUxFICpmcCA9IGZvcGVuKCAiL3Byb2MvY21kbGluZSIs
-ICJyIiApOwogCWlmKCBmcCApIHsKLQkJcmVzID0gZmdldHMoIGJ1ZiwgNTEyLCBmcCApOworCQlm
-Z2V0cyggYnVmLCA1MTIsIGZwICk7CiAJCWZjbG9zZSggZnAgKTsKIAkJcmV0dXJuIHN0cnN0cigg
-YnVmLCAiYWRkX2VmaV9tZW1tYXAiICkgIT0gTlVMTDsKIAl9IGVsc2UgewotLSAKMS44LjMuMQoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Sep 05, 2013 at 05:21:21PM +0800, WANG Chao wrote:
+> People are not always aware of PACKED macro and tend to
+> __attribute__((packed)) more directly. So let's remove PACKED to unify
+> things.
+> 
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
+
+Thanks, this looks good to me.
+
+Reviewed-by: Simon Horman <horms@verge.net.au>
+
+I suggest re-posting with Andre Morton CCed to see
+if he will pick it up.
+
+> ---
+>  include/x86/x86-linux.h | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
+> index 0949dc2..c41e5f2 100644
+> --- a/include/x86/x86-linux.h
+> +++ b/include/x86/x86-linux.h
+> @@ -12,8 +12,6 @@
+>  
+>  #ifndef ASSEMBLY
+>  
+> -#define PACKED __attribute__((packed))
+> -
+>  #ifndef E820_RAM
+>  struct e820entry {
+>  	uint64_t addr;	/* start of memory segment */
+> @@ -23,7 +21,7 @@ struct e820entry {
+>  #define E820_RESERVED	2
+>  #define E820_ACPI	3 /* usable as RAM once ACPI tables have been read */
+>  #define E820_NVS	4
+> -} PACKED;
+> +} __attribute__((packed));
+>  #endif
+>  
+>  /* FIXME expand on drive_info_)struct... */
+> @@ -255,7 +253,7 @@ struct x86_linux_header {
+>  	uint64_t pref_address;			/* 0x258 */
+>  	uint32_t init_size;			/* 0x260 */
+>  	uint32_t handover_offset;		/* 0x264 */
+> -} PACKED;
+> +} __attribute__((packed));
+>  
+>  #endif /* ASSEMBLY */
+>  
+> -- 
+> 1.8.3.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
