@@ -1,19 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-x22a.google.com ([2607:f8b0:400e:c02::22a])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VWAqt-0003lT-0Z
- for kexec@lists.infradead.org; Tue, 15 Oct 2013 20:04:24 +0000
-Received: by mail-pd0-f170.google.com with SMTP id x10so9403762pdj.15
- for <kexec@lists.infradead.org>; Tue, 15 Oct 2013 13:03:58 -0700 (PDT)
+ id 1VWFOT-0002li-Qy
+ for kexec@lists.infradead.org; Wed, 16 Oct 2013 00:55:23 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 7C6C13EE0BB
+ for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 09:54:52 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6CD9B45DE6A
+ for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 09:54:52 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 45A5A45DE5A
+ for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 09:54:52 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 38717E08004
+ for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 09:54:52 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id D10F31DB8048
+ for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 09:54:51 +0900 (JST)
+Message-ID: <525DE35A.7040205@jp.fujitsu.com>
+Date: Wed, 16 Oct 2013 09:52:42 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <8761sy1gmb.fsf@xmission.com>
-References: <1381859307-11932-1-git-send-email-geert@linux-m68k.org>
- <1381859307-11932-2-git-send-email-geert@linux-m68k.org>
- <8761sy1gmb.fsf@xmission.com>
-Date: Tue, 15 Oct 2013 22:03:58 +0200
-Message-ID: <CAMuHMdWfk5awf3ycuY0ULyzk-8gc209p0DGDXwYEM2si6KpCuw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] kexec: Add debug printing of kimage table entries
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/2] x86, apic: Add boot_cpu_is_bsp() to check if boot
+ cpu is BSP
+References: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
+ <20131015054322.13666.31465.stgit@localhost6.localdomain6>
+ <20131015191217.GN31215@redhat.com>
+In-Reply-To: <20131015191217.GN31215@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,41 +36,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-m68k <linux-m68k@lists.linux-m68k.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
 
-On Tue, Oct 15, 2013 at 9:25 PM, Eric W. Biederman
-<ebiederm@xmission.com> wrote:
-> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->> Print a list of pages to be copied if debugging is enabled.
->> Consecutive entries are merged to reduce screen clutter.
+(2013/10/16 4:12), Vivek Goyal wrote:
+> On Tue, Oct 15, 2013 at 02:43:22PM +0900, HATAYAMA Daisuke wrote:
+>> Kexec can enter the kdump 2nd kernel on AP if crash happens on AP. To
+>> check if boot cpu is BSP, introduce a helper function
+>> boot_cpu_is_bsp().
+>>
+>> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+>> ---
+>>   arch/x86/include/asm/mpspec.h |    7 +++++++
+>>   arch/x86/kernel/apic/apic.c   |   16 ++++++++++++++++
+>>   arch/x86/kernel/setup.c       |    2 ++
+>>   3 files changed, 25 insertions(+)
+>>
+>> diff --git a/arch/x86/include/asm/mpspec.h b/arch/x86/include/asm/mpspec.h
+>> index 626cf70..54d5f98 100644
+>> --- a/arch/x86/include/asm/mpspec.h
+>> +++ b/arch/x86/include/asm/mpspec.h
+>> @@ -47,11 +47,18 @@ extern int mp_bus_id_to_type[MAX_MP_BUSSES];
+>>   extern DECLARE_BITMAP(mp_bus_not_pci, MAX_MP_BUSSES);
+>>
+>>   extern unsigned int boot_cpu_physical_apicid;
+>> +extern bool boot_cpu_is_bsp;
+>>   extern unsigned int max_physical_apicid;
+>>   extern int mpc_default_type;
+>>   extern unsigned long mp_lapic_addr;
+>>
+>>   #ifdef CONFIG_X86_LOCAL_APIC
+>> +extern void boot_cpu_is_bsp_init(void);
+>> +#else
+>> +static inline void boot_cpu_is_bsp_init(void) { };
+>> +#endif
+>> +
+>> +#ifdef CONFIG_X86_LOCAL_APIC
+>>   extern int smp_found_config;
+>>   #else
+>>   # define smp_found_config 0
+>> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+>> index a7eb82d..62ee365 100644
+>> --- a/arch/x86/kernel/apic/apic.c
+>> +++ b/arch/x86/kernel/apic/apic.c
+>> @@ -64,6 +64,12 @@ unsigned disabled_cpus;
+>>   unsigned int boot_cpu_physical_apicid = -1U;
+>>
+>>   /*
 >
-> Why is this desirable?
+> [..]
+>> + * Indicates whether the processor that is doing the boot up, is BSP
+>> + * processor or not.
+>> + */
+>> +bool boot_cpu_is_bsp;
 >
-> I can understand this as debugging code to understand what is happening,
-> but why would we want to maintain this print statement long term?
+> Should we set it to true by default? I think in most of the cases boot cpu
+> is going to be bsp too?
+>
 
-Because the next person who ports kexec to a new platform may need it,
-so he doesn't have to reimplement the wheel?
+Agreed. Most likely value should be default.
 
-It's disabled by default.
+The reason why I wrote so would be that -- if there's reason -- I wanted to
+write it uniform to other variables around it and wanted to avoid to let it
+have static storage in binary file.
 
-It also serves as documentation for the indirection page.
+>> +
+>> +/*
+>>    * The highest APIC ID seen during enumeration.
+>>    */
+>>   unsigned int max_physical_apicid;
+>> @@ -2589,3 +2595,13 @@ static int __init lapic_insert_resource(void)
+>>    * that is using request_resource
+>>    */
+>>   late_initcall(lapic_insert_resource);
+>> +
+>> +void __init boot_cpu_is_bsp_init(void)
+>> +{
+>> +	if (cpu_has_apic) {
+>> +		u32 l, h;
+>> +
+>> +		rdmsr_safe(MSR_IA32_APICBASE, &l, &h);
+>> +		boot_cpu_is_bsp = (l & MSR_IA32_APICBASE_BSP) ? true : false;
+>
+> I came across following thread.
+>
+> https://lkml.org/lkml/2012/4/18/370
+>
+> Can we hit above read msr on old P5 class machines? Or is it safe to
+> call unconditionally.
+>
 
-Gr{oetje,eeting}s,
+No, it's dangerous to cause #UD, and current implementation doesn't check
+exception value returned by rdmsr_safe. It's meaningless to call rdmsr_safe.
 
-                        Geert
+At least, checking boot_cpu_data.x86 >= 6 satisfies support of IA32_APIC_BASE
+MSR and this at the same time satisfies support of rdmsr instruction since the
+instruction was introduced at Pentium processor. So,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+if (boot_cpu_data.x86 >= 6 && cpu_has_apic()) {
+     u32 l, h;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+     rdmsr(MSR_IA32_APICBASE, &l, &h);
+     boot_cpu_is_bsp = (l & MSR_IA32_APICBASE_BSP) ? true : false;  
+}
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
