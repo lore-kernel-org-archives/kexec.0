@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VWdpo-0007VR-Q4
- for kexec@lists.infradead.org; Thu, 17 Oct 2013 03:01:15 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v4] makedumpfile: fix max_mapnr issue on system has over
- 44-bit addressing
-Date: Thu, 17 Oct 2013 02:59:14 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971B6D6C@BPXM01GP.gisp.nec.co.jp>
-References: <20131015100521.7868.62437.stgit@k.asiapacific.hpqcorp.net>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VWg9g-0001Jf-Mu
+ for kexec@lists.infradead.org; Thu, 17 Oct 2013 05:29:54 +0000
+Date: Thu, 17 Oct 2013 13:29:27 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH] kexec, x86: Fix x86 build warnings
+Message-ID: <20131017052927.GA9024@dhcp16-109.nay.redhat.com>
+References: <1381904722-5289-1-git-send-email-chaowang@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1381904722-5289-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,347 +19,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, Minoru Usui <usui@mxm.nes.nec.co.jp>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "ruyang@redhat.com" <ruyang@redhat.com>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, "anderson@redhat.com" <anderson@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "chaowang@redhat.com" <chaowang@redhat.com>, "crash-utility@redhat.com" <crash-utility@redhat.com>
+To: kexec@lists.infradead.org, horms@verge.net.au
 
-Hello Jingbai,
-
-(2013/10/15 19:05), Jingbai Ma wrote:
-> This patch will fix a bug of makedumpfile doesn't work correctly on system
-> has over 44-bit addressing in compression dump mode.
-> This bug was posted here:
-> http://lists.infradead.org/pipermail/kexec/2013-September/009587.html
->
-> This patch will add 3 new fields in struct kdump_sub_header.
-> unsigned long long start_pfn_64;  /* header_version 6 and later */
-> unsigned long long end_pfn_64;    /* header_version 6 and later */
-> unsigned long long max_mapnr_64;  /* header_version 6 and later */
->
-> And the old "unsigned int max_mapnr" in struct disk_dump_header will
-> not be used anymore, but still be there for compatibility purpose.
->
-> The max_mapnr_64 only exists in strcut kdump_sub_header, and that only
-> for compressed kdump format, so for ELF format kdump files (non-compressed),
-> only the max_mapnr is available, so it still may be truncated for addresses
-> exceed 44bit (above 16TB).
->
-> This patch will change the header_version to 6.
->
-> The corresponding patch for crash utility can be found here:
-> http://lists.infradead.org/pipermail/kexec/2013-October/009750.html
->
-> This patch doesn't change sadump_header.
->
-> Changelog:
-> v4:
-> - Do not change max_mapnr_64 in kdump_sub_header in memory for old kernel.
-
-Thanks! I will merge this patch into v1.5.5.
-
-
-Atsushi Kumagai
-  
-> v3:
-> - Change notes for max_mapnr, start_pfn and end_pfn as obsolete.
-> - Remove "(32bit)" from debug messages of max_mapnr, start_pfn and end_pfn.
-> - Set the 32bit start_pfn and end_pfn to UINT_MAX.
-> - Remove bitmap writting enhancement to another seperate patch.
-> - Change type of len_bitmap in struct DumpInfo back to unsigned long.
->
-> v2:
-> - Rename max_mapnr in struct kdump_sub_header to max_mapnr_64.
-> - Change type of max_mapnr_64 from unsigned long to unsigned long long.
->    In x86 PAE mode on x86_32 kernel, the address may exceeds 44bit limit.
-> - Add start_pfn_64, end_pfn_64 for struct kdump_sub_header.
-> - Only print 64bit start_pfn_64, end_pfn_64 and max_mapnr_64
->    debug messages for disk dump header version >= 6.
-> - Change type of bitmap_len in struct DumpInfo, from unsigned long to
->    unsigned long long.
-> - Enhance bitmap writting function in reassemble_kdump_header().
->    Prevent bitmap writting failure if the size of bitmap is too large to
->    fit a sigle write.
->
-> v1:
-> - http://lists.infradead.org/pipermail/kexec/2013-September/009662.html
->
->
-> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
-> Tested-by: Lisa Mitchell <lisa.mitchell@hp.com>
-> ---
->   IMPLEMENTATION |   15 ++++++++++--
->   diskdump_mod.h |   15 ++++++++++--
->   makedumpfile.c |   68 ++++++++++++++++++++++++++++++++++++++++++++------------
->   3 files changed, 78 insertions(+), 20 deletions(-)
->
-> diff --git a/IMPLEMENTATION b/IMPLEMENTATION
-> index f0f3135..2f4cfd6 100644
-> --- a/IMPLEMENTATION
-> +++ b/IMPLEMENTATION
-> @@ -48,7 +48,9 @@
->                                                      header in blocks */
->           unsigned int            bitmap_blocks;  /* Size of Memory bitmap in
->                                                      block */
-> -        unsigned int            max_mapnr;      /* = max_mapnr */
-> +        unsigned int            max_mapnr;      /* = max_mapnr, OBSOLETE!
-> +						   32bit only, full 64bit
-> +						   in sub header. */
->           unsigned int            total_ram_blocks;/* Number of blocks should be
->                                                      written */
->           unsigned int            device_blocks;  /* Number of total blocks in
-> @@ -69,14 +71,21 @@
->           unsigned long   phys_base;
->           int             dump_level;     /* header_version 1 and later */
->   	int		split;		/* header_version 2 and later */
-> -	unsigned long	start_pfn;	/* header_version 2 and later */
-> -	unsigned long	end_pfn;	/* header_version 2 and later */
-> +	unsigned long	start_pfn;	/* header_version 2 and later,
-> +					   OBSOLETE! 32bit only, full
-> +					   64bit in start_pfn_64. */
-> +	unsigned long	end_pfn;	/* header_version 2 and later,
-> +					   OBSOLETE! 32bit only, full
-> +					   64bit in end_pfn_64. */
->   	off_t		offset_vmcoreinfo;/* header_version 3 and later */
->   	unsigned long	size_vmcoreinfo;  /* header_version 3 and later */
->   	off_t		offset_note;      /* header_version 4 and later */
->   	unsigned long	size_note;        /* header_version 4 and later */
->   	off_t		offset_eraseinfo; /* header_version 5 and later */
->   	unsigned long	size_eraseinfo;   /* header_version 5 and later */
-> +	unsigned long long start_pfn_64;  /* header_version 6 and later */
-> +	unsigned long long end_pfn_64;	  /* header_version 6 and later */
-> +	unsigned long long max_mapnr_64;  /* header_version 6 and later */
->       };
->
->     - 1st-bitmap
-> diff --git a/diskdump_mod.h b/diskdump_mod.h
-> index af060b6..7306867 100644
-> --- a/diskdump_mod.h
-> +++ b/diskdump_mod.h
-> @@ -48,7 +48,9 @@ struct disk_dump_header {
->   						   header in blocks */
->   	unsigned int		bitmap_blocks;	/* Size of Memory bitmap in
->   						   block */
-> -	unsigned int		max_mapnr;	/* = max_mapnr */
-> +	unsigned int		max_mapnr;	/* = max_mapnr, OBSOLETE!
-> +						   32bit only, full 64bit
-> +						   in sub header. */
->   	unsigned int		total_ram_blocks;/* Number of blocks should be
->   						   written */
->   	unsigned int		device_blocks;	/* Number of total blocks in
-> @@ -67,14 +69,21 @@ struct kdump_sub_header {
->   	unsigned long	phys_base;
->   	int		dump_level;	/* header_version 1 and later */
->   	int		split;		/* header_version 2 and later */
-> -	unsigned long	start_pfn;	/* header_version 2 and later */
-> -	unsigned long	end_pfn;	/* header_version 2 and later */
-> +	unsigned long	start_pfn;	/* header_version 2 and later,
-> +					   OBSOLETE! 32bit only, full
-> +					   64bit in start_pfn_64. */
-> +	unsigned long	end_pfn;	/* header_version 2 and later,
-> +					   OBSOLETE! 32bit only, full
-> +					   64bit in end_pfn_64. */
->   	off_t		offset_vmcoreinfo;/* header_version 3 and later */
->   	unsigned long	size_vmcoreinfo;  /* header_version 3 and later */
->   	off_t		offset_note;      /* header_version 4 and later */
->   	unsigned long	size_note;        /* header_version 4 and later */
->   	off_t		offset_eraseinfo; /* header_version 5 and later */
->   	unsigned long	size_eraseinfo;   /* header_version 5 and later */
-> +	unsigned long long start_pfn_64;  /* header_version 6 and later */
-> +	unsigned long long end_pfn_64;	  /* header_version 6 and later */
-> +	unsigned long long max_mapnr_64;  /* header_version 6 and later */
->   };
->
->   /* page flags */
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index b42565c..b41b1ad 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -23,6 +23,7 @@
->   #include <stddef.h>
->   #include <ctype.h>
->   #include <sys/time.h>
-> +#include <limits.h>
->
->   struct symbol_table	symbol_table;
->   struct size_table	size_table;
-> @@ -125,7 +126,10 @@ get_max_mapnr(void)
->   	unsigned long long max_paddr;
->
->   	if (info->flag_refiltering) {
-> -		info->max_mapnr = info->dh_memory->max_mapnr;
-> +		if (info->dh_memory->header_version >= 6)
-> +			info->max_mapnr = info->kh_memory->max_mapnr_64;
-> +		else
-> +			info->max_mapnr = info->dh_memory->max_mapnr;
->   		return TRUE;
->   	}
->
-> @@ -802,6 +806,12 @@ get_kdump_compressed_header_info(char *filename)
->   	DEBUG_MSG("  split            : %d\n", kh.split);
->   	DEBUG_MSG("  start_pfn        : 0x%lx\n", kh.start_pfn);
->   	DEBUG_MSG("  end_pfn          : 0x%lx\n", kh.end_pfn);
-> +	if (dh.header_version >= 6) {
-> +		/* A dumpfile contains full 64bit values. */
-> +		DEBUG_MSG("  start_pfn_64 : 0x%llx\n", kh.start_pfn_64);
-> +		DEBUG_MSG("  end_pfn_64 : 0x%llx\n", kh.end_pfn_64);
-> +		DEBUG_MSG("  max_mapnr_64 : 0x%llx\n", kh.max_mapnr_64);
-> +	}
->
->   	info->dh_memory = malloc(sizeof(dh));
->   	if (info->dh_memory == NULL) {
-> @@ -2766,14 +2776,16 @@ int
->   initialize_bitmap_memory(void)
->   {
->   	struct disk_dump_header	*dh;
-> +	struct kdump_sub_header *kh;
->   	struct dump_bitmap *bmp;
->   	off_t bitmap_offset;
-> -	int bitmap_len, max_sect_len;
-> +	off_t bitmap_len, max_sect_len;
->   	unsigned long pfn;
->   	int i, j;
->   	long block_size;
->
->   	dh = info->dh_memory;
-> +	kh = info->kh_memory;
->   	block_size = dh->block_size;
->
->   	bitmap_offset
-> @@ -2793,7 +2805,10 @@ initialize_bitmap_memory(void)
->   	bmp->offset = bitmap_offset + bitmap_len / 2;
->   	info->bitmap_memory = bmp;
->
-> -	max_sect_len = divideup(dh->max_mapnr, BITMAP_SECT_LEN);
-> +	if (dh->header_version >= 6)
-> +		max_sect_len = divideup(kh->max_mapnr_64, BITMAP_SECT_LEN);
-> +	else
-> +		max_sect_len = divideup(dh->max_mapnr, BITMAP_SECT_LEN);
->   	info->valid_pages = calloc(sizeof(ulong), max_sect_len);
->   	if (info->valid_pages == NULL) {
->   		ERRMSG("Can't allocate memory for the valid_pages. %s\n",
-> @@ -4705,7 +4720,7 @@ create_2nd_bitmap(void)
->   int
->   prepare_bitmap_buffer(void)
->   {
-> -	unsigned long tmp;
-> +	unsigned long long tmp;
->
->   	/*
->   	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size boundary.
-> @@ -4737,7 +4752,7 @@ prepare_bitmap_buffer(void)
->   int
->   prepare_bitmap_buffer_cyclic(void)
->   {
-> -	unsigned long tmp;
-> +	unsigned long long tmp;
->
->   	/*
->   	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size boundary.
-> @@ -5153,11 +5168,12 @@ write_kdump_header(void)
->   	 * Write common header
->   	 */
->   	strncpy(dh->signature, KDUMP_SIGNATURE, strlen(KDUMP_SIGNATURE));
-> -	dh->header_version = 5;
-> +	dh->header_version = 6;
->   	dh->block_size     = info->page_size;
->   	dh->sub_hdr_size   = sizeof(kh) + size_note;
->   	dh->sub_hdr_size   = divideup(dh->sub_hdr_size, dh->block_size);
-> -	dh->max_mapnr      = info->max_mapnr;
-> +	/* dh->max_mapnr may be truncated, full 64bit in kh.max_mapnr_64 */
-> +	dh->max_mapnr      = MIN(info->max_mapnr, UINT_MAX);
->   	dh->nr_cpus        = get_nr_cpus();
->   	dh->bitmap_blocks  = divideup(info->len_bitmap, dh->block_size);
->   	memcpy(&dh->timestamp, &info->timestamp, sizeof(dh->timestamp));
-> @@ -5172,12 +5188,21 @@ write_kdump_header(void)
->   	 */
->   	size = sizeof(struct kdump_sub_header);
->   	memset(&kh, 0, size);
-> +	/* 64bit max_mapnr_64 */
-> +	kh.max_mapnr_64 = info->max_mapnr;
->   	kh.phys_base  = info->phys_base;
->   	kh.dump_level = info->dump_level;
->   	if (info->flag_split) {
->   		kh.split = 1;
-> -		kh.start_pfn = info->split_start_pfn;
-> -		kh.end_pfn   = info->split_end_pfn;
-> +		/* start_pfn and end_pfn may be truncated,
-> +		 * only for compatibility purpose
-> +		 */
-> +		kh.start_pfn = MIN(info->split_start_pfn, UINT_MAX);
-> +		kh.end_pfn   = MIN(info->split_end_pfn, UINT_MAX);
-> +
-> +		/* 64bit start_pfn_64 and end_pfn_64 */
-> +		kh.start_pfn_64 = info->split_start_pfn;
-> +		kh.end_pfn_64   = info->split_end_pfn;
->   	}
->   	if (has_pt_note()) {
->   		/*
-> @@ -6421,7 +6446,7 @@ int
->   write_kdump_bitmap(void)
->   {
->   	struct cache_data bm;
-> -	long buf_size;
-> +	long long buf_size;
->   	off_t offset;
->
->   	int ret = FALSE;
-> @@ -7796,10 +7821,8 @@ store_splitting_info(void)
->
->   		if (i == 0) {
->   			memcpy(&dh, &tmp_dh, sizeof(tmp_dh));
-> -			info->max_mapnr = dh.max_mapnr;
->   			if (!set_page_size(dh.block_size))
->   				return FALSE;
-> -			DEBUG_MSG("max_mapnr    : %llx\n", info->max_mapnr);
->   			DEBUG_MSG("page_size    : %ld\n", info->page_size);
->   		}
->
-> @@ -7816,11 +7839,26 @@ store_splitting_info(void)
->   			return FALSE;
->
->   		if (i == 0) {
-> +			if (dh.header_version >= 6)
-> +				info->max_mapnr = kh.max_mapnr_64;
-> +			else
-> +				info->max_mapnr = dh.max_mapnr;
-> +
-> +			DEBUG_MSG("max_mapnr    : %llx\n", info->max_mapnr);
-> +		}
-> +
-> +		if (i == 0) {
->   			info->dump_level = kh.dump_level;
->   			DEBUG_MSG("dump_level   : %d\n", info->dump_level);
->   		}
-> -		SPLITTING_START_PFN(i) = kh.start_pfn;
-> -		SPLITTING_END_PFN(i)   = kh.end_pfn;
-> +
-> +		if (dh.header_version >= 6) {
-> +			SPLITTING_START_PFN(i) = kh.start_pfn_64;
-> +			SPLITTING_END_PFN(i)   = kh.end_pfn_64;
-> +		} else {
-> +			SPLITTING_START_PFN(i) = kh.start_pfn;
-> +			SPLITTING_END_PFN(i)   = kh.end_pfn;
-> +		}
->   		SPLITTING_OFFSET_EI(i) = kh.offset_eraseinfo;
->   		SPLITTING_SIZE_EI(i)   = kh.size_eraseinfo;
->   	}
-> @@ -7981,6 +8019,8 @@ reassemble_kdump_header(void)
->   	kh.split = 0;
->   	kh.start_pfn = 0;
->   	kh.end_pfn   = 0;
-> +	kh.start_pfn_64 = 0;
-> +	kh.end_pfn_64 = 0;
->
->   	if (lseek(info->fd_dumpfile, info->page_size, SEEK_SET) < 0) {
->   		ERRMSG("Can't seek a file(%s). %s\n",
->
->
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMTAvMTYvMTMgYXQgMDI6MjVwbSwgV0FORyBDaGFvIHdyb3RlOgo+IEdjYyB0aHJvdyBvdXQg
+dGhyZWUgd2FybmluZ3M6Cj4gCj4ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYzogSW4g
+ZnVuY3Rpb24g4oCYZWxmX3g4Nl9sb2Fk4oCZOgo+IGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYt
+eDg2LmM6OTc6Njogd2FybmluZzogdmFyaWFibGUg4oCYbW9kaWZpZWRfY21kbGluZV9sZW7igJkg
+c2V0IGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KPiAgIGludCBtb2Rp
+ZmllZF9jbWRsaW5lX2xlbjsKPiAgICAgICBeCj4ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1h
+Z2UuYzogSW4gZnVuY3Rpb24g4oCYZG9fYnpJbWFnZV9sb2Fk4oCZOgo+IGtleGVjL2FyY2gvaTM4
+Ni9rZXhlYy1iekltYWdlLmM6MTEwOjg6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmGtlcm5lbF92ZXJz
+aW9u4oCZIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdCj4gICBj
+aGFyICprZXJuZWxfdmVyc2lvbjsKPiAgICAgICAgIF4KPiBrZXhlYy9hcmNoL2kzODYva2V4ZWMt
+eDg2LWNvbW1vbi5jOiBJbiBmdW5jdGlvbiDigJhlZmlfbWFwX2FkZGVk4oCZOgo+IGtleGVjL2Fy
+Y2gvaTM4Ni9rZXhlYy14ODYtY29tbW9uLmM6NDAwOjE4OiB3YXJuaW5nOiB2YXJpYWJsZSDigJhy
+ZXPigJkgc2V0IGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KPiAgIGNo
+YXIgYnVmWzUxMl0sICpyZXM7Cj4gICAgICAgICAgICAgICAgICAgXgo+IEZpeCB0aGVzZSB3YXJu
+aW5ncyBieSByZW1vdmUgdGhlIHVudXNlZCB2YXJpYWJsZXMgZm9yIGdvb2QuCj4gCj4gU2lnbmVk
+LW9mZi1ieTogV0FORyBDaGFvIDxjaGFvd2FuZ0ByZWRoYXQuY29tPgoKSGksIFNpbW9uCgpUaGlz
+IGlzIGZvciBrZXhlYy10b29scywgd2lsbCB5b3UgcGljayB1cCB0aGlzIG9uZT8KClRoYW5rcwpX
+QU5HIENoYW8KCj4gLS0tCj4gIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMgICAgfCAy
+IC0tCj4gIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYteDg2LmMgICAgfCAzIC0tLQo+ICBrZXhl
+Yy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jIHwgNCArKy0tCj4gIDMgZmlsZXMgY2hhbmdl
+ZCwgMiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9rZXhl
+Yy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jIGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1h
+Z2UuYwo+IGluZGV4IGZjMWE1NGYuLjE1YzFiMzQgMTAwNjQ0Cj4gLS0tIGEva2V4ZWMvYXJjaC9p
+Mzg2L2tleGVjLWJ6SW1hZ2UuYwo+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdl
+LmMKPiBAQCAtMTA3LDcgKzEwNyw2IEBAIGludCBkb19iekltYWdlX2xvYWQoc3RydWN0IGtleGVj
+X2luZm8gKmluZm8sCj4gIAlzdHJ1Y3QgeDg2X2xpbnV4X2hlYWRlciBzZXR1cF9oZWFkZXI7Cj4g
+IAlzdHJ1Y3QgeDg2X2xpbnV4X3BhcmFtX2hlYWRlciAqcmVhbF9tb2RlOwo+ICAJaW50IHNldHVw
+X3NlY3RzOwo+IC0JY2hhciAqa2VybmVsX3ZlcnNpb247Cj4gIAlzaXplX3Qgc2l6ZTsKPiAgCWlu
+dCBrZXJuMTZfc2l6ZTsKPiAgCXVuc2lnbmVkIGxvbmcgc2V0dXBfYmFzZSwgc2V0dXBfc2l6ZTsK
+PiBAQCAtMTMzLDcgKzEzMiw2IEBAIGludCBkb19iekltYWdlX2xvYWQoc3RydWN0IGtleGVjX2lu
+Zm8gKmluZm8sCj4gIAl9Cj4gIAo+ICAJa2VybjE2X3NpemUgPSAoc2V0dXBfc2VjdHMgKzEpICo1
+MTI7Cj4gLQlrZXJuZWxfdmVyc2lvbiA9ICgoY2hhciAqKSZzZXR1cF9oZWFkZXIpICsgNTEyICsg
+c2V0dXBfaGVhZGVyLmt2ZXJfYWRkcjsKPiAgCWlmIChrZXJuZWxfbGVuIDwga2VybjE2X3NpemUp
+IHsKPiAgCQlmcHJpbnRmKHN0ZGVyciwgIkJ6SW1hZ2UgdHJ1bmNhdGVkP1xuIik7Cj4gIAkJcmV0
+dXJuIC0xOwo+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2kzODYva2V4ZWMtZWxmLXg4Ni5jIGIv
+a2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYwo+IGluZGV4IGQwZjk4MzguLmRlMDBkY2Ig
+MTAwNjQ0Cj4gLS0tIGEva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYwo+ICsrKyBiL2tl
+eGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYteDg2LmMKPiBAQCAtOTQsNyArOTQsNiBAQCBpbnQgZWxm
+X3g4Nl9sb2FkKGludCBhcmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hhciAqYnVmLCBvZmZfdCBs
+ZW4sCj4gIAljaGFyICplcnJvcl9tc2cgPSBOVUxMOwo+ICAJaW50IHJlc3VsdDsKPiAgCWludCBj
+b21tYW5kX2xpbmVfbGVuOwo+IC0JaW50IG1vZGlmaWVkX2NtZGxpbmVfbGVuOwo+ICAJY29uc3Qg
+Y2hhciAqcmFtZGlzazsKPiAgCXVuc2lnbmVkIGxvbmcgZW50cnksIG1heF9hZGRyOwo+ICAJaW50
+IGFyZ19zdHlsZTsKPiBAQCAtMTIzLDcgKzEyMiw2IEBAIGludCBlbGZfeDg2X2xvYWQoaW50IGFy
+Z2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKPiAgCSAqIFBhcnNl
+IHRoZSBjb21tYW5kIGxpbmUgYXJndW1lbnRzCj4gIAkgKi8KPiAgCWFyZ19zdHlsZSA9IEFSR19T
+VFlMRV9FTEY7Cj4gLQltb2RpZmllZF9jbWRsaW5lX2xlbiA9IDA7Cj4gIAlyYW1kaXNrID0gMDsK
+PiAgCXJlc3VsdCA9IDA7Cj4gIAl3aGlsZSgob3B0ID0gZ2V0b3B0X2xvbmcoYXJnYywgYXJndiwg
+c2hvcnRfb3B0aW9ucywgb3B0aW9ucywgMCkpICE9IC0xKSB7Cj4gQEAgLTE4MCw3ICsxNzgsNiBA
+QCBpbnQgZWxmX3g4Nl9sb2FkKGludCBhcmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hhciAqYnVm
+LCBvZmZfdCBsZW4sCj4gIAkJCQkJCUNPTU1BTkRfTElORV9TSVpFKTsKPiAgCQkJbW9kaWZpZWRf
+Y21kbGluZVtDT01NQU5EX0xJTkVfU0laRSAtIDFdID0gJ1wwJzsKPiAgCQl9Cj4gLQkJbW9kaWZp
+ZWRfY21kbGluZV9sZW4gPSBzdHJsZW4obW9kaWZpZWRfY21kbGluZSk7Cj4gIAl9Cj4gIAo+ICAJ
+LyogTG9hZCB0aGUgRUxGIGV4ZWN1dGFibGUgKi8KPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9p
+Mzg2L2tleGVjLXg4Ni1jb21tb24uYyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9u
+LmMKPiBpbmRleCBlZDZjOTUwLi5lNWFhMmE0IDEwMDY0NAo+IC0tLSBhL2tleGVjL2FyY2gvaTM4
+Ni9rZXhlYy14ODYtY29tbW9uLmMKPiArKysgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNv
+bW1vbi5jCj4gQEAgLTM5NywxMCArMzk3LDEwIEBAIGFnYWluOgo+ICAgKiBAcmV0dXJuIDEgaWYg
+cGFyYW1ldGVyIGlzIHByZXNlbnQsIDAgaWYgbm90IG9yIGlmIGFuIGVycm9yIG9jY3Vycy4KPiAg
+ICovCj4gIGludCBlZmlfbWFwX2FkZGVkKCB2b2lkICkgewo+IC0JY2hhciBidWZbNTEyXSwgKnJl
+czsKPiArCWNoYXIgYnVmWzUxMl07Cj4gIAlGSUxFICpmcCA9IGZvcGVuKCAiL3Byb2MvY21kbGlu
+ZSIsICJyIiApOwo+ICAJaWYoIGZwICkgewo+IC0JCXJlcyA9IGZnZXRzKCBidWYsIDUxMiwgZnAg
+KTsKPiArCQlmZ2V0cyggYnVmLCA1MTIsIGZwICk7Cj4gIAkJZmNsb3NlKCBmcCApOwo+ICAJCXJl
+dHVybiBzdHJzdHIoIGJ1ZiwgImFkZF9lZmlfbWVtbWFwIiApICE9IE5VTEw7Cj4gIAl9IGVsc2Ug
+ewo+IC0tIAo+IDEuOC4zLjEKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
