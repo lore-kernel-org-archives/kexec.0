@@ -1,30 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VWQar-0007Wn-5q
- for kexec@lists.infradead.org; Wed, 16 Oct 2013 12:52:56 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 544293EE1A4
- for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 21:52:27 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3C3E645DEB7
- for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 21:52:27 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 22AB245DEB6
- for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 21:52:27 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 12D7C1DB803C
- for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 21:52:27 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id B0E0B1DB8040
- for <kexec@lists.infradead.org>; Wed, 16 Oct 2013 21:52:26 +0900 (JST)
-Subject: [PATCH v3 2/2] x86, apic: Disable BSP if boot cpu is AP
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Wed, 16 Oct 2013 21:52:25 +0900
-Message-ID: <20131016125225.15573.80.stgit@localhost6.localdomain6>
-In-Reply-To: <20131016125104.15573.90313.stgit@localhost6.localdomain6>
-References: <20131016125104.15573.90313.stgit@localhost6.localdomain6>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VWccU-000628-16
+ for kexec@lists.infradead.org; Thu, 17 Oct 2013 01:43:23 +0000
+Date: Thu, 17 Oct 2013 10:42:53 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec/fs2dt: fix endianess conversion
+Message-ID: <20131017014253.GL21728@verge.net.au>
+References: <20131015170528.10192.71185.stgit@nimbus>
+ <20131016072826.GC29696@verge.net.au>
+ <525E5D77.8090109@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <525E5D77.8090109@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,222 +25,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
+To: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org
 
-Currently, on x86 architecture, if crash happens on AP in the kdump
-1st kernel, the 2nd kernel fails to wake up multiple CPUs. The typical
-behaviour we actually see is immediate system reset or hang.
+On Wed, Oct 16, 2013 at 11:33:43AM +0200, Laurent Dufour wrote:
+> On 16/10/2013 09:28, Simon Horman wrote:
+> > On Tue, Oct 15, 2013 at 07:05:28PM +0200, Laurent Dufour wrote:
+> >> While reviewing fs2dt.c in the common kexec directory, in order to use it to
+> >> support little endian ppc64 architecture, I found some endianess
+> >> conversion's issues.
+> >>
+> >> In dt_reserve, dt_base is a pointer and thus should not be converted.
+> >>
+> >> In checkprop, values read from the device tree are big endian encoded and
+> >> should be converted if CPU is running in little endian mode.
+> >>
+> >> In add_dyn_reconf_usable_mem_property__, fix extraneous endianess conversion
+> >> of rlen which should be natively used to increase the dt pointer.
+> > 
+> > These changes seem logical to me.
+> > 
+> > However, I'm unsure how the code might have worked as-is.
+> > In particular I'm pretty sure ARM was running in little endian
+> > mode when I worked on DT support for it. Perhaps these code
+> > paths were not executed. Or the errors cancelled themselves out somehow?
+> 
+> I've to admit that I don't know how this has worked for ARM.
+> I run this patch with a set of change I'm working on to support PPC64
+> little endian architecture. My tests were done with kexec-tools built in
+> little endian mode, using this fs2dt.c file and I need this fix to build
+> a valid device tree.
+> 
+> The fix is dt_reserve is hit unless the device tree is large enough. I
+> had to reduce INIT_TREE_WORDS to hit it.
+> 
+> I think the ones in checkprop, add_dyn_reconf_usable_mem_property__  are
+> Power specific since RTAS and 'ibm,dynamic-memory' are required to hit them.
+> 
+> This may explain why this issue are not seen in ARM mode.
 
-This comes from the hardware specification that the processor with BSP
-flag is jumped at BIOS init code when receiving INIT; the behaviour we
-then see depends on the init code.
+Perhaps, its a bit of a mystery.
+I think that I will apply your change as it does seem to be correct.
 
-This never happens if we use only one cpu in the 2nd kernel. So, we
-have avoided the issue by the workaround that specifying maxcpus=1 or
-nr_cpus=1 in kernel parameter of the 2nd kernel.
+> 
+> This being said, I wondering if the files fs2dt.c defined in the
+> arch/ppc64 and arch/ppc directories need to be kept. What do you think
+> about removing those files and belong on the common kexec/fs2dt.c file
+> for all the supported architecture ?
 
-In order to address the issue, this patch disables BSP if boot cpu is
-an AP, and thus we don't try to wake up the BSP by sending INIT.
+I haven't examined the details but that sounds like a good idea to me.
 
-Before this idea we discussed the following two ideas but we cannot
-adopt them in each reasons:
-
-1. Switch CPU from AP to BSP via IPI NMI at crash in the 1st kernel
-
-   This is done in the kdump crash path where logic is in inconsistent
-   state. Any part of memory can be corrupted, including
-   hardware-related table being accessed for example when paging is
-   performed or interruption is performed.
-
-2. Unset BSP flag of the boot cpu in the 1st kernel
-
-   Unsetting BSP flag can affect some real world firmware badly. For
-   example, Ma verified that some HP systems fail to reboot under this
-   configuration. See:
-
-   http://lkml.indiana.edu/hypermail/linux/kernel/1308.1/03574.html
-
-Due to the idea 1, we have to address the issue in the 2nd kernel on
-AP. Then, it's impossible to know which CPU is BSP by rdmsr
-instruction because the CPU is the one we are now trying to wake
-up. From the same reason, it's also impossible to unset BSP flag of
-the BSP by wrmsr instruction.
-
-Next, due to the idea 2, BSP is halting in the 1st kernel while
-keeping BSP flag set (or possibly could be running somewhere in
-catastrophic state.) In generall, CPUs except for the boot cpu in the
-2nd kernel -- the cpu under which crash happened --- can be thought of
-as remaining in any inconsistent state in the 1st kernel. For APs,
-it's possible to recover sane state by initiating INIT to them; see
-3.7.3 Processor-specific INIT in MultiProcessor
-specification. However, there's no way for BSP. Therefore, there's no
-other way to disable BSP.
-
-My motivation is to generate crash dump quickly on the system with
-huge memory. We can assume such system also has a lot of N-cpus and
-(N-1)-cpus are still available.
-
-To identify which CPU is BSP, we lookup ACPI table or MP table. One
-concern is that ACPI guidlines BIOS *should* list the BSP in the first
-MADT LAPIC entry; not *must*. In this sense, this logic relis on BIOS
-following ACPI's guideline. On the other hand, we don't need to worry
-about this in MP table case because it has explit BSP flag.
-
-To avoid any undesirable bahaviour caused by any broken BIOS that
-doesn't conform to the guideline, it's enough to limit the number of
-cpus to 1 by specifying maxcpu=1 or nr_cpus=1, as is currently done in
-default kdump configuration. (But of course, it's problematic in
-maxcpu=1 case if trying to wake up other cpus later in user space.)
-
-SFI and devicetree doesn't provide BSP information, so there's no
-functionality change in their codes, only assigning false for all the
-entries, keeping interface uniform.
-
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- arch/x86/include/asm/mpspec.h |    2 +-
- arch/x86/kernel/acpi/boot.c   |    6 +++++-
- arch/x86/kernel/apic/apic.c   |   18 +++++++++++++++++-
- arch/x86/kernel/devicetree.c  |    1 +
- arch/x86/kernel/mpparse.c     |   15 +++++++++++++--
- arch/x86/platform/sfi/sfi.c   |    2 +-
- 6 files changed, 38 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/mpspec.h b/arch/x86/include/asm/mpspec.h
-index 54d5f98..b5014cd 100644
---- a/arch/x86/include/asm/mpspec.h
-+++ b/arch/x86/include/asm/mpspec.h
-@@ -101,7 +101,7 @@ static inline void early_reserve_e820_mpc_new(void) { }
- #define default_get_smp_config x86_init_uint_noop
- #endif
- 
--void generic_processor_info(int apicid, int version);
-+void generic_processor_info(int apicid, bool isbsp, int version);
- #ifdef CONFIG_ACPI
- extern void mp_register_ioapic(int id, u32 address, u32 gsi_base);
- extern void mp_override_legacy_irq(u8 bus_irq, u8 polarity, u8 trigger,
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 40c7660..7944d3f 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -192,6 +192,7 @@ static int __init acpi_parse_madt(struct acpi_table_header *table)
- static void acpi_register_lapic(int id, u8 enabled)
- {
- 	unsigned int ver = 0;
-+	bool isbsp = false;
- 
- 	if (id >= MAX_LOCAL_APIC) {
- 		printk(KERN_INFO PREFIX "skipped apicid that is too big\n");
-@@ -206,7 +207,10 @@ static void acpi_register_lapic(int id, u8 enabled)
- 	if (boot_cpu_physical_apicid != -1U)
- 		ver = apic_version[boot_cpu_physical_apicid];
- 
--	generic_processor_info(id, ver);
-+	if (!num_processors && !disabled_cpus)
-+		isbsp = true;
-+
-+	generic_processor_info(id, isbsp, ver);
- }
- 
- static int __init
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 1433ade..ce7594d 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2113,13 +2113,29 @@ void disconnect_bsp_APIC(int virt_wire_setup)
- 	apic_write(APIC_LVT1, value);
- }
- 
--void generic_processor_info(int apicid, int version)
-+void generic_processor_info(int apicid, bool isbsp, int version)
- {
- 	int cpu, max = nr_cpu_ids;
- 	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
- 				phys_cpu_present_map);
- 
- 	/*
-+	 * If boot cpu is AP, we now don't have any way to initialize
-+	 * BSP. To save memory consumed, we disable BSP this case and
-+	 * use (N - 1)-cpus.
-+	 */
-+	if (isbsp && !boot_cpu_is_bsp) {
-+		int thiscpu = num_processors + disabled_cpus;
-+
-+		pr_warning("ACPI: The boot cpu is not BSP. "
-+			   "The BSP Processor %d/0x%x ignored.\n",
-+			   thiscpu, apicid);
-+
-+		disabled_cpus++;
-+		return;
-+	}
-+
-+	/*
- 	 * If boot cpu has not been detected yet, then only allow upto
- 	 * nr_cpu_ids - 1 processors and keep one slot free for boot cpu
- 	 */
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index 376dc78..0ed2da8 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -182,6 +182,7 @@ static void __init dtb_lapic_setup(void)
- 	pic_mode = 1;
- 	register_lapic_address(r.start);
- 	generic_processor_info(boot_cpu_physical_apicid,
-+			       false,
- 			       GET_APIC_VERSION(apic_read(APIC_LVR)));
- #endif
- }
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index d2b5648..003b07fe 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -54,6 +54,7 @@ static void __init MP_processor_info(struct mpc_cpu *m)
- {
- 	int apicid;
- 	char *bootup_cpu = "";
-+	bool isbsp = false;
- 
- 	if (!(m->cpuflag & CPU_ENABLED)) {
- 		disabled_cpus++;
-@@ -64,11 +65,21 @@ static void __init MP_processor_info(struct mpc_cpu *m)
- 
- 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
- 		bootup_cpu = " (Bootup-CPU)";
--		boot_cpu_physical_apicid = m->apicid;
-+		/*
-+		 * boot cpu cannot be BSP if any crash happens on AP
-+		 * and kexec enters the 2nd kernel.
-+		 *
-+		 * Also, boot_cpu_physical_apicid can be initialized
-+		 * before reaching here; for example, in
-+		 * register_lapic_address().
-+		 */
-+		if (boot_cpu_is_bsp && boot_cpu_physical_apicid == -1U)
-+			boot_cpu_physical_apicid = m->apicid;
-+		isbsp = true;
- 	}
- 
- 	printk(KERN_INFO "Processor #%d%s\n", m->apicid, bootup_cpu);
--	generic_processor_info(apicid, m->apicver);
-+	generic_processor_info(apicid, isbsp, m->apicver);
- }
- 
- #ifdef CONFIG_X86_IO_APIC
-diff --git a/arch/x86/platform/sfi/sfi.c b/arch/x86/platform/sfi/sfi.c
-index bcd1a70..4f111c7 100644
---- a/arch/x86/platform/sfi/sfi.c
-+++ b/arch/x86/platform/sfi/sfi.c
-@@ -45,7 +45,7 @@ static void __init mp_sfi_register_lapic(u8 id)
- 
- 	pr_info("registering lapic[%d]\n", id);
- 
--	generic_processor_info(id, GET_APIC_VERSION(apic_read(APIC_LVR)));
-+	generic_processor_info(id, false, GET_APIC_VERSION(apic_read(APIC_LVR)));
- }
- 
- static int __init sfi_parse_cpus(struct sfi_table_header *table)
-
+> 
+> Cheers,
+> Laurent.
+> 
+> >>
+> >> Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+> >> ---
+> >>  kexec/fs2dt.c |   19 +++++++++++--------
+> >>  1 file changed, 11 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+> >> index 242a15e..5d774ae 100644
+> >> --- a/kexec/fs2dt.c
+> >> +++ b/kexec/fs2dt.c
+> >> @@ -84,7 +84,7 @@ static void dt_reserve(unsigned **dt_ptr, unsigned words)
+> >>  		offset = *dt_ptr - dt_base;
+> >>  		dt_base = new_dt;
+> >>  		dt_cur_size = new_size;
+> >> -		*dt_ptr = cpu_to_be32((unsigned)dt_base + offset);
+> >> +		*dt_ptr = dt_base + offset;
+> >>  		memset(*dt_ptr, 0, (new_size - offset)*4);
+> >>  	}
+> >>  }
+> >> @@ -112,19 +112,22 @@ static void checkprop(char *name, unsigned *data, int len)
+> >>  	if ((data == NULL) && (base || size || end))
+> >>  		die("unrecoverable error: no property data");
+> >>  	else if (!strcmp(name, "linux,rtas-base"))
+> >> -		base = *data;
+> >> +		base = be32_to_cpu(*data);
+> >>  	else if (!strcmp(name, "linux,tce-base"))
+> >> -		base = *(unsigned long long *) data;
+> >> +		base = be64_to_cpu(*(unsigned long long *) data);
+> >>  	else if (!strcmp(name, "rtas-size") ||
+> >>  			!strcmp(name, "linux,tce-size"))
+> >> -		size = *data;
+> >> +		size = be32_to_cpu(*data);
+> >>  	else if (reuse_initrd && !strcmp(name, "linux,initrd-start"))
+> >>  		if (len == 8)
+> >> -			base = *(unsigned long long *) data;
+> >> +			base = be64_to_cpu(*(unsigned long long *) data);
+> >>  		else
+> >> -			base = *data;
+> >> +			base = be32_to_cpu(*data);
+> >>  	else if (reuse_initrd && !strcmp(name, "linux,initrd-end"))
+> >> -		end = *(unsigned long long *) data;
+> >> +		if (len == 8)
+> >> +			end = be64_to_cpu(*(unsigned long long *) data);
+> >> +		else
+> >> +			end = be32_to_cpu(*data);
+> >>  
+> >>  	if (size && end)
+> >>  		die("unrecoverable error: size and end set at same time\n");
+> >> @@ -267,7 +270,7 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
+> >>  	pad_structure_block(rlen);
+> >>  	memcpy(dt, ranges, rlen);
+> >>  	free(ranges);
+> >> -	dt += cpu_to_be32((rlen + 3)/4);
+> >> +	dt += (rlen + 3)/4;
+> >>  }
+> >>  
+> >>  static void add_dyn_reconf_usable_mem_property(struct dirent *dp, int fd)
+> >>
+> > 
+> 
 
 _______________________________________________
 kexec mailing list
