@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VWghM-00021Z-Vw
- for kexec@lists.infradead.org; Thu, 17 Oct 2013 06:04:42 +0000
-Date: Thu, 17 Oct 2013 14:03:16 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kexec, x86: Fix x86 build warnings
-Message-ID: <20131017060316.GA7086@dhcp-16-105.nay.redhat.com>
-References: <1381904722-5289-1-git-send-email-chaowang@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VWjSJ-0005K7-MF
+ for kexec@lists.infradead.org; Thu, 17 Oct 2013 09:01:21 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id E79993EE0BC
+ for <kexec@lists.infradead.org>; Thu, 17 Oct 2013 18:00:52 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id D702B45DE6C
+ for <kexec@lists.infradead.org>; Thu, 17 Oct 2013 18:00:52 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id B4E9B45DE69
+ for <kexec@lists.infradead.org>; Thu, 17 Oct 2013 18:00:52 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id A53191DB8050
+ for <kexec@lists.infradead.org>; Thu, 17 Oct 2013 18:00:52 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5165A1DB804D
+ for <kexec@lists.infradead.org>; Thu, 17 Oct 2013 18:00:52 +0900 (JST)
+Message-ID: <525FA702.5070805@jp.fujitsu.com>
+Date: Thu, 17 Oct 2013 17:59:46 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1381904722-5289-1-git-send-email-chaowang@redhat.com>
+Subject: kexec cannot find text map area if kaslr is enabled
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,80 +32,142 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: ahonig@google.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Dave Anderson <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, keescook@google.com, Vivek Goyal <vgoyal@redhat.com>
 
-T24gMTAvMTYvMTMgYXQgMDI6MjVwbSwgV0FORyBDaGFvIHdyb3RlOgo+IEdjYyB0aHJvdyBvdXQg
-dGhyZWUgd2FybmluZ3M6Cj4gCj4ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYzogSW4g
-ZnVuY3Rpb24g4oCYZWxmX3g4Nl9sb2Fk4oCZOgo+IGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYt
-eDg2LmM6OTc6Njogd2FybmluZzogdmFyaWFibGUg4oCYbW9kaWZpZWRfY21kbGluZV9sZW7igJkg
-c2V0IGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KPiAgIGludCBtb2Rp
-ZmllZF9jbWRsaW5lX2xlbjsKPiAgICAgICBeCj4ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1h
-Z2UuYzogSW4gZnVuY3Rpb24g4oCYZG9fYnpJbWFnZV9sb2Fk4oCZOgo+IGtleGVjL2FyY2gvaTM4
-Ni9rZXhlYy1iekltYWdlLmM6MTEwOjg6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmGtlcm5lbF92ZXJz
-aW9u4oCZIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdCj4gICBj
-aGFyICprZXJuZWxfdmVyc2lvbjsKPiAgICAgICAgIF4KPiBrZXhlYy9hcmNoL2kzODYva2V4ZWMt
-eDg2LWNvbW1vbi5jOiBJbiBmdW5jdGlvbiDigJhlZmlfbWFwX2FkZGVk4oCZOgo+IGtleGVjL2Fy
-Y2gvaTM4Ni9rZXhlYy14ODYtY29tbW9uLmM6NDAwOjE4OiB3YXJuaW5nOiB2YXJpYWJsZSDigJhy
-ZXPigJkgc2V0IGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KPiAgIGNo
-YXIgYnVmWzUxMl0sICpyZXM7Cj4gICAgICAgICAgICAgICAgICAgXgo+IEZpeCB0aGVzZSB3YXJu
-aW5ncyBieSByZW1vdmUgdGhlIHVudXNlZCB2YXJpYWJsZXMgZm9yIGdvb2QuCj4gCj4gU2lnbmVk
-LW9mZi1ieTogV0FORyBDaGFvIDxjaGFvd2FuZ0ByZWRoYXQuY29tPgo+IC0tLQo+ICBrZXhlYy9h
-cmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jICAgIHwgMiAtLQo+ICBrZXhlYy9hcmNoL2kzODYva2V4
-ZWMtZWxmLXg4Ni5jICAgIHwgMyAtLS0KPiAga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21t
-b24uYyB8IDQgKystLQo+ICAzIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgNyBkZWxl
-dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2Uu
-YyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMKPiBpbmRleCBmYzFhNTRmLi4xNWMx
-YjM0IDEwMDY0NAo+IC0tLSBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMKPiArKysg
-Yi9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jCj4gQEAgLTEwNyw3ICsxMDcsNiBAQCBp
-bnQgZG9fYnpJbWFnZV9sb2FkKHN0cnVjdCBrZXhlY19pbmZvICppbmZvLAo+ICAJc3RydWN0IHg4
-Nl9saW51eF9oZWFkZXIgc2V0dXBfaGVhZGVyOwo+ICAJc3RydWN0IHg4Nl9saW51eF9wYXJhbV9o
-ZWFkZXIgKnJlYWxfbW9kZTsKPiAgCWludCBzZXR1cF9zZWN0czsKPiAtCWNoYXIgKmtlcm5lbF92
-ZXJzaW9uOwo+ICAJc2l6ZV90IHNpemU7Cj4gIAlpbnQga2VybjE2X3NpemU7Cj4gIAl1bnNpZ25l
-ZCBsb25nIHNldHVwX2Jhc2UsIHNldHVwX3NpemU7Cj4gQEAgLTEzMyw3ICsxMzIsNiBAQCBpbnQg
-ZG9fYnpJbWFnZV9sb2FkKHN0cnVjdCBrZXhlY19pbmZvICppbmZvLAo+ICAJfQo+ICAKPiAgCWtl
-cm4xNl9zaXplID0gKHNldHVwX3NlY3RzICsxKSAqNTEyOwo+IC0Ja2VybmVsX3ZlcnNpb24gPSAo
-KGNoYXIgKikmc2V0dXBfaGVhZGVyKSArIDUxMiArIHNldHVwX2hlYWRlci5rdmVyX2FkZHI7Cj4g
-IAlpZiAoa2VybmVsX2xlbiA8IGtlcm4xNl9zaXplKSB7Cj4gIAkJZnByaW50ZihzdGRlcnIsICJC
-ekltYWdlIHRydW5jYXRlZD9cbiIpOwo+ICAJCXJldHVybiAtMTsKPiBkaWZmIC0tZ2l0IGEva2V4
-ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi14ODYuYyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYt
-eDg2LmMKPiBpbmRleCBkMGY5ODM4Li5kZTAwZGNiIDEwMDY0NAo+IC0tLSBhL2tleGVjL2FyY2gv
-aTM4Ni9rZXhlYy1lbGYteDg2LmMKPiArKysgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMtZWxmLXg4
-Ni5jCj4gQEAgLTk0LDcgKzk0LDYgQEAgaW50IGVsZl94ODZfbG9hZChpbnQgYXJnYywgY2hhciAq
-KmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAo+ICAJY2hhciAqZXJyb3JfbXNnID0g
-TlVMTDsKPiAgCWludCByZXN1bHQ7Cj4gIAlpbnQgY29tbWFuZF9saW5lX2xlbjsKPiAtCWludCBt
-b2RpZmllZF9jbWRsaW5lX2xlbjsKCkkgZ3JlcCB0aGlzIHZhcmlhbGJlIGFuZCBmb3VuZCBwcGM2
-NCBwb3J0ZWQgdGhpcyBjb2RlIGJsb2NrLCB0aGVuIHRoaXMKdmFyaWFsYmUgaXNuJ3QgdXNlZCBl
-aXRoZXIuIENvdWxkIHlvdSBwbGVhc2UgcmVtb3ZlIGl0IHRvbz8KCgo+ICAJY29uc3QgY2hhciAq
-cmFtZGlzazsKPiAgCXVuc2lnbmVkIGxvbmcgZW50cnksIG1heF9hZGRyOwo+ICAJaW50IGFyZ19z
-dHlsZTsKPiBAQCAtMTIzLDcgKzEyMiw2IEBAIGludCBlbGZfeDg2X2xvYWQoaW50IGFyZ2MsIGNo
-YXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKPiAgCSAqIFBhcnNlIHRoZSBj
-b21tYW5kIGxpbmUgYXJndW1lbnRzCj4gIAkgKi8KPiAgCWFyZ19zdHlsZSA9IEFSR19TVFlMRV9F
-TEY7Cj4gLQltb2RpZmllZF9jbWRsaW5lX2xlbiA9IDA7Cj4gIAlyYW1kaXNrID0gMDsKPiAgCXJl
-c3VsdCA9IDA7Cj4gIAl3aGlsZSgob3B0ID0gZ2V0b3B0X2xvbmcoYXJnYywgYXJndiwgc2hvcnRf
-b3B0aW9ucywgb3B0aW9ucywgMCkpICE9IC0xKSB7Cj4gQEAgLTE4MCw3ICsxNzgsNiBAQCBpbnQg
-ZWxmX3g4Nl9sb2FkKGludCBhcmdjLCBjaGFyICoqYXJndiwgY29uc3QgY2hhciAqYnVmLCBvZmZf
-dCBsZW4sCj4gIAkJCQkJCUNPTU1BTkRfTElORV9TSVpFKTsKPiAgCQkJbW9kaWZpZWRfY21kbGlu
-ZVtDT01NQU5EX0xJTkVfU0laRSAtIDFdID0gJ1wwJzsKPiAgCQl9Cj4gLQkJbW9kaWZpZWRfY21k
-bGluZV9sZW4gPSBzdHJsZW4obW9kaWZpZWRfY21kbGluZSk7Cj4gIAl9Cj4gIAo+ICAJLyogTG9h
-ZCB0aGUgRUxGIGV4ZWN1dGFibGUgKi8KPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L2tl
-eGVjLXg4Ni1jb21tb24uYyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9uLmMKPiBp
-bmRleCBlZDZjOTUwLi5lNWFhMmE0IDEwMDY0NAo+IC0tLSBhL2tleGVjL2FyY2gvaTM4Ni9rZXhl
-Yy14ODYtY29tbW9uLmMKPiArKysgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5j
-Cj4gQEAgLTM5NywxMCArMzk3LDEwIEBAIGFnYWluOgo+ICAgKiBAcmV0dXJuIDEgaWYgcGFyYW1l
-dGVyIGlzIHByZXNlbnQsIDAgaWYgbm90IG9yIGlmIGFuIGVycm9yIG9jY3Vycy4KPiAgICovCj4g
-IGludCBlZmlfbWFwX2FkZGVkKCB2b2lkICkgewo+IC0JY2hhciBidWZbNTEyXSwgKnJlczsKPiAr
-CWNoYXIgYnVmWzUxMl07Cj4gIAlGSUxFICpmcCA9IGZvcGVuKCAiL3Byb2MvY21kbGluZSIsICJy
-IiApOwo+ICAJaWYoIGZwICkgewo+IC0JCXJlcyA9IGZnZXRzKCBidWYsIDUxMiwgZnAgKTsKPiAr
-CQlmZ2V0cyggYnVmLCA1MTIsIGZwICk7Cj4gIAkJZmNsb3NlKCBmcCApOwo+ICAJCXJldHVybiBz
-dHJzdHIoIGJ1ZiwgImFkZF9lZmlfbWVtbWFwIiApICE9IE5VTEw7Cj4gIAl9IGVsc2Ugewo+IC0t
-IAo+IDEuOC4zLjEKPiAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5v
-cmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello,
+
+I tried to use x86/kaslr branch to check if how it works with kdump framework.
+
+I found kexec doesn't work. According to the message, it looks like kexec failing
+to find kernel text map area from kcore.
+
+$ sudo /sbin/kexec  -p --command-line="ro root=UUID=cdd5e357-d223-47ee-9d6e-d1fa78b3f8a4 rd_NO_LUKS nodmraid rd_NO_MD KEYBOARDTYPE=pc KEYTABLE=jp106 LANG=ja_JP.UTF-8 rd_NO_LVM rd_NO_DM consol\
+e=ttyS0,19200n8r trace_event=block:*,irq:*,mce:*,sched:*,signal:*,workqueue:*,scsi:* trace_buf_size=25165824 irqpoll nr_cpus=2 reset_devices cgroup_disable=memory mce=off enable_lazy_purge " --initrd=/boot/initrd-3.12.0-rc4-k\
+aslrkdump.img /boot/vmlinuz-3.12.0-rc4-kaslr
+Can't find kernel text map area from kcore
+Cannot load /boot/vmlinuz-3.12.0-rc4-kaslr
+
+From source code, it looks like kexec trying to find text map area by hard-coded
+__START_KERNEL_map address. But this is being altered by kaslr.
+
+static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+                                     struct crash_elf_info *elf_info)
+<cut>
+        /* Traverse through the Elf headers and find the region where
+         * kernel is mapped. */
+        end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
+        for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+                if (phdr->p_type == PT_LOAD) {
+                        unsigned long long saddr = phdr->p_vaddr;
+                        unsigned long long eaddr = phdr->p_vaddr + phdr->p_memsz;
+                        unsigned long long size;
+
+                        /* Look for kernel text mapping header. */
+                        if ((saddr >= X86_64__START_KERNEL_map) &&
+                            (eaddr <= X86_64__START_KERNEL_map + X86_64_KERNEL_TEXT_SIZE)) {
+                                saddr = _ALIGN_DOWN(saddr, X86_64_KERN_VADDR_ALIGN);
+                                elf_info->kern_vaddr_start = saddr;
+                                size = eaddr - saddr;
+                                /* Align size to page size boundary. */
+                                size = _ALIGN(size, align);
+                                elf_info->kern_size = size;
+                                dbgprintf("kernel vaddr = 0x%llx size = 0x%llx\n",
+                                        saddr, size);
+                                return 0;
+                        }
+                }
+        }
+        fprintf(stderr, "Can't find kernel text map area from kcore\n");
+        return -1;
+
+It seems to me that kexec needs to get runtime relocation information for example
+from /proc/kallsyms.
+
+I think there would be other part that doesn't work well due to this kind of hard coded address.
+
+FYI, here are also part of /proc/iomem and /proc/kcore information on my environment:
+
+$ readelf -l /proc/kcore
+Elf file type is CORE (Core file)
+Entry point 0x0
+There are 11 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NOTE           0x00000000000002a8 0x0000000000000000 0x0000000000000000
+                 0x0000000000000c74 0x0000000000000000         0
+  LOAD           0x00007fffff601000 0xffffffffff600000 0x0000000000000000
+                 0x0000000000800000 0x0000000000800000  RWE    1000
+  LOAD           0x00007fffa3001000 0xffffffffa3000000 0x0000000000000000
+                 0x0000000000ed4000 0x0000000000ed4000  RWE    1000
+  LOAD           0x0000490000001000 0xffffc90000000000 0x0000000000000000
+                 0x00001fffffffffff 0x00001fffffffffff  RWE    1000
+  LOAD           0x00007fffc0001000 0xffffffffc0000000 0x0000000000000000
+                 0x000000003f000000 0x000000003f000000  RWE    1000
+  LOAD           0x0000080000002000 0xffff880000001000 0x0000000000000000
+                 0x000000000009a000 0x000000000009a000  RWE    1000
+  LOAD           0x00006a0000001000 0xffffea0000000000 0x0000000000000000
+                 0x0000000000003000 0x0000000000003000  RWE    1000
+  LOAD           0x0000080000101000 0xffff880000100000 0x0000000000000000
+                 0x000000007af0d000 0x000000007af0d000  RWE    1000
+  LOAD           0x00006a0000004000 0xffffea0000003000 0x0000000000000000
+                 0x0000000001ae6000 0x0000000001ae6000  RWE    1000
+  LOAD           0x0000080100001000 0xffff880100000000 0x0000000000000000
+                 0x0000000780000000 0x0000000780000000  RWE    1000
+  LOAD           0x00006a0003801000 0xffffea0003800000 0x0000000000000000
+                 0x000000001a400000 0x000000001a400000  RWE    1000
+
+00000000-00000fff : reserved
+00001000-0009afff : System RAM
+0009b000-0009ffff : reserved
+000a0000-000bffff : PCI Bus 0000:00
+000c0000-000c7fff : Video ROM
+000c8000-000c8fff : Adapter ROM
+000c9000-000cefff : Adapter ROM
+000e0000-000fffff : reserved
+  000f0000-000fffff : System ROM
+00100000-7b00cfff : System RAM
+  03000000-22ffffff : Crash kernel
+  23000000-2355118e : Kernel code
+  2355118f-23af95ff : Kernel data
+  23cb2000-23eadfff : Kernel bss
+7b00d000-7b00ffff : reserved
+7b010000-7b65efff : ACPI Non-volatile Storage
+7b65f000-7b681fff : ACPI Tables
+7b682000-7b7bffff : reserved
+7b7c0000-7ba3ffff : ACPI Non-volatile Storage
+7ba40000-7baaafff : reserved
+7baab000-7bcfffff : ACPI Tables
+7bd00000-7bd12fff : reserved
+7bd13000-7bd15fff : ACPI Tables
+7bd16000-7bd45fff : reserved
+7bd46000-7bd5efff : ACPI Tables
+7bd5f000-7bdfefff : reserved
+7bdff000-7bdfffff : ACPI Tables
+7be00000-7be4efff : reserved
+  7be1b018-7be1b067 : APEI ERST
+  7be1b070-7be1b077 : APEI ERST
+  7be1b078-7be1d017 : APEI ERST
+7be4f000-7bf83fff : ACPI Tables
+7bf84000-7bfcefff : ACPI Non-volatile Storage
+7bfcf000-7bffefff : ACPI Tables
+7bfff000-8fffffff : reserved
+  80000000-8fffffff : PCI MMCONFIG 0000 [bus 00-ff]
+90000000-afffffff : PCI Bus 0000:00
+<cut>
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
