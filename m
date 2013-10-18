@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VXDyz-0003C1-EV
- for kexec@lists.infradead.org; Fri, 18 Oct 2013 17:37:06 +0000
-Date: Fri, 18 Oct 2013 13:36:25 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2 2/2] x86, apic: Disable BSP if boot cpu is AP
-Message-ID: <20131018173625.GE2277@redhat.com>
-References: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
- <20131015054327.13666.1689.stgit@localhost6.localdomain6>
- <20131015193049.GO31215@redhat.com>
- <525DEB54.4030401@jp.fujitsu.com>
+Date: Fri, 18 Oct 2013 18:54:14 +0100
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2] ARM: head-common.S: relocate atags area if necessary
+Message-ID: <20131018175414.GF25034@n2100.arm.linux.org.uk>
+References: <1382112776-20300-1-git-send-email-zonque@gmail.com>
+ <20131018162956.GE25034@n2100.arm.linux.org.uk> <52616B56.10407@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <525DEB54.4030401@jp.fujitsu.com>
+In-Reply-To: <52616B56.10407@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,71 +20,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
+To: Daniel Mack <zonque@gmail.com>
+Cc: kexec@lists.infradead.org, neumann@teufel.de, linux-arm-kernel@lists.infradead.org
 
-On Wed, Oct 16, 2013 at 10:26:44AM +0900, HATAYAMA Daisuke wrote:
-
-[..]
-> >I am wondering if there is any attribute of cpu which we can pass to
-> >second kernel on command line. And tell second kernel not to bring up
-> >that specific cpu. (Say exclude_cpu=<cpu_attr>)? If this works, then
-> >if ACPI or other mechanism don't report BSP, we could possibly assume
-> >that cpu 0 is BSP and ask second kernel to not try to boot it.
-> >
+On Fri, Oct 18, 2013 at 07:09:42PM +0200, Daniel Mack wrote:
+> On 10/18/2013 06:29 PM, Russell King - ARM Linux wrote:
+> > On Fri, Oct 18, 2013 at 06:12:56PM +0200, Daniel Mack wrote:
+> >> If the supplied atags/dtb pointer is located at memory inside the bss
+> >> section, it will be erased by __mmap_switched. The problem is that the
+> >> code that sets up the pointer can't know about a safe value unless it
+> >> examines the kernel's symbol tables, so we should care about that case
+> >> and relocate the area if necessary.
+> >>
+> >> This patch does that from inside __vet_atags. In order to determine the
+> >> size of the section in dtb cases, it reads the next word after the dtb
+> >> binary magic, and also has to convert that value from big to CPU
+> >> endianess. For the atags case, a total size of up to 4k is assumed for
+> >> now.
+> > 
+> > I'm not convinced that this is a good solution.  If this oerlaps the
+> > BSS region, it could well end up being overlapped by something else
+> > more serious, like the data segment
 > 
-> I've come up with similar idea. If there's such kernel option, rest of
-> the processing can be implemented in user-land, i.e., get apicid of
-> BSP from /proc/cpuid and set it in kernel command line of 2nd kernel.
-> What kexec-tools should do on fedora/RHEL? Also, this idea covers SFI
-> and device tree.
+> My v1 had a cover letter, don't know if you've seen it. In that, I
+> describe that the setup I see that faulty condition is caused by kexec,
+> which currently assumes that the decompressed kernel size is max. 4
+> times bigger than the zImage it executes. While that is naive, it seems
+> to be an assumption that reflects reality in my tests.
+>  
+> Correct me if I'm wrong, but AFAIK the .bss section is the only thing
+> that can grow to arbitrary size at runtime without accounting to the
+> compressed image size; so in order to fix kernels executed by kexec that
+> way, my fixup seems reasonable, doesn't it?
+
+The BSS is actually fixed at compile time (which is how arm-linux-size
+vmlinux can report this.)  Userspace is slightly different, because
+after the BSS is a heap whose upper limit is controlled by brk().  The
+kernel doesn't have that facility though.
+
+> > - at which point doing the fixup
+> > here means we've already lost.
 > 
-> The reason why I didn't choose such idea was first passing the value
-> via command-line seems rather ad-hoc.
+> The question is whether it does any harm to at least try to fix up
+> things in that situation.
 
-We do so many things using command line. So telling kernel not to boot
-certain cpus seems ok to me.
+That's not really the question.  The real question is whether we will
+end up having to revert this later because we've ended up with the
+kernels .data section overlapping the DTB.
 
-> The second reason is that in any
-> case it's compromised design. Rigorously, we cannot get correct mapping
-> of apicid to {BSP, APIC} at the 1st kernel.  That is, there's a class of
-> the bugs that affect BSP flag of each processor. For example, on
-> catastrophic state, all the cpus can have BSP flag on the 2nd kernel due
-> to wrmsr instructions generated by the bug causing crash. In this sense,
-> current implementation is less reliable than max_cpus=1 case.
+That's why I think this is the wrong place to be doing it - by the
+time we get anywhere near to this place, we could have already lost
+the game and overwritten the DTB.
+
+> > We already give the decompressor the size of the kernel's BSS and take
+> > action if we believe that the kernel's BSS will overlap the DTB/ATAGs
+> > there.
 > 
-> If addressing this rigorously, for example, we need to check status of
-> BSP flag between 1st kernel and 2nd kernel to keep processor with BSP
-> flag unique, exclude cpus in catastrophic state that are not checked,
-> and to tell the 2nd kernel which cpu can be wake up.
+> Only for CONFIG_ARM_ATAG_DTB_COMPAT (which is unset in my config),
+> right? I've read through the sources relevant for my system (AM33xx),
+> and couldn't find any other place where my case is covered. The
+> relocation I propose does fix it, though.
 
-Ok, for the time being let us not do any comparision with maxcpus=1 or
-nr_cpus=1 because we know that's the most robust thing to do.
+When things were at a fixed location, they were always placed at
+around 256 bytes into the memory, below the kernel.  I guess now people
+are placing them at some random location elsewhere.
 
-For the case where we want to bring up more than one cpu in second kernel,
-there seems to be two problems.
+This is becoming more a more of a pain.  We have all sorts of randomly
+placed objects in memory now that its only a matter of time before we
+hit something.  We keep on dreaming up these "well, let's move it"
+solutions but does that really help?  Move it to where?  Another place
+where we think there isn't going to be anything?  What if there is?
 
-- ACPI tables or other tables might not report which is BSP. In that
-  case we might try to bring up BSP and crash the system.
+Back in the old days it was a lot more simple.  ATAGs started at +0x100
+bytes.  The decompressor and kernel placed their initial page tables
+at +0x4000, and the decompressed kernel started at +0x8000.  You could
+then load the compressed kernel at a very high address, and place the
+init ramdisk at an address sufficiently out of the way of all of that.
+Yes, we made the compressed kernel care about whether it was going to
+be overwritten by the decompressed image - that was more to cope with
+the compressed image executing from the same location as the
+decompressed image should be.
 
-- Due to malicious wrmsr, more than one cpu might claim being BSP. In that
-  case the cpu we are crashing on will think it is BSP and it can safely
-  bring up other cpus.
+But now we have the situation where the DTB is located at some random
+address, we have an initrd also at some unknown address, and we end
+up hoping that we can move the compressed kernel to some other address
+which doesn't trample over these, decompress it, and hope that the
+decompressed image doesn't overwrite anything...
 
-If we start sending a mask of cpus which should not be brought up in
-second kernel, then it would not matter whether BSP flag in MSR is set
-or not. Isn't it? And that will solve the second issue.
+It's all extremely fragile and full of a hell of a lot of unknowns.
 
-And if ACPI tables don't report which one is BSP, user space can first
-try to look at BSP flags of processors (may be this can be reported
-in /proc/cpuinfo?) and if no one has BSP flag set, then assume cpu 0
-is BSP.
-
-So to me it looks like passing which cpus to not bring up to second kernel
-is more resilient approach. Isn't it?
-
-Thanks
-Vivek
+Should we continue sticking plasters over this by shifting objects
+to other unknown locations in memory (which, incidentally, we don't
+really know where or how much memory there is in early boot) ?
 
 _______________________________________________
 kexec mailing list
