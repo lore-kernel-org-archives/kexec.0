@@ -1,13 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Date: Fri, 18 Oct 2013 18:54:14 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2] ARM: head-common.S: relocate atags area if necessary
-Message-ID: <20131018175414.GF25034@n2100.arm.linux.org.uk>
-References: <1382112776-20300-1-git-send-email-zonque@gmail.com>
- <20131018162956.GE25034@n2100.arm.linux.org.uk> <52616B56.10407@gmail.com>
+Received: from mail-ie0-x22b.google.com ([2607:f8b0:4001:c03::22b])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VXPMX-0007OU-9f
+ for kexec@lists.infradead.org; Sat, 19 Oct 2013 05:46:10 +0000
+Received: by mail-ie0-f171.google.com with SMTP id tp5so8108505ieb.16
+ for <kexec@lists.infradead.org>; Fri, 18 Oct 2013 22:45:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <52616B56.10407@gmail.com>
+In-Reply-To: <20131018123837.GB2277@redhat.com>
+References: <1381751200-27376-1-git-send-email-chaowang@redhat.com>
+ <CAE9FiQUNMDuVZtqud3LBbAmE0SL8ZWLFnc+CSYZm4UfTvNUaOA@mail.gmail.com>
+ <20131015144810.GI31215@redhat.com>
+ <CAE9FiQXVCx__SuhAdO9_CNaRncW2HB2tv3UjZrQcbsTV35QWow@mail.gmail.com>
+ <20131018123837.GB2277@redhat.com>
+Date: Fri, 18 Oct 2013 22:45:43 -0700
+Message-ID: <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
+Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
+ first, then try below 4G, then MAXMEM
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,98 +29,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: kexec@lists.infradead.org, neumann@teufel.de, linux-arm-kernel@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, WANG Chao <chaowang@redhat.com>
 
-On Fri, Oct 18, 2013 at 07:09:42PM +0200, Daniel Mack wrote:
-> On 10/18/2013 06:29 PM, Russell King - ARM Linux wrote:
-> > On Fri, Oct 18, 2013 at 06:12:56PM +0200, Daniel Mack wrote:
-> >> If the supplied atags/dtb pointer is located at memory inside the bss
-> >> section, it will be erased by __mmap_switched. The problem is that the
-> >> code that sets up the pointer can't know about a safe value unless it
-> >> examines the kernel's symbol tables, so we should care about that case
-> >> and relocate the area if necessary.
-> >>
-> >> This patch does that from inside __vet_atags. In order to determine the
-> >> size of the section in dtb cases, it reads the next word after the dtb
-> >> binary magic, and also has to convert that value from big to CPU
-> >> endianess. For the atags case, a total size of up to 4k is assumed for
-> >> now.
-> > 
-> > I'm not convinced that this is a good solution.  If this oerlaps the
-> > BSS region, it could well end up being overlapped by something else
-> > more serious, like the data segment
-> 
-> My v1 had a cover letter, don't know if you've seen it. In that, I
-> describe that the setup I see that faulty condition is caused by kexec,
-> which currently assumes that the decompressed kernel size is max. 4
-> times bigger than the zImage it executes. While that is naive, it seems
-> to be an assumption that reflects reality in my tests.
->  
-> Correct me if I'm wrong, but AFAIK the .bss section is the only thing
-> that can grow to arbitrary size at runtime without accounting to the
-> compressed image size; so in order to fix kernels executed by kexec that
-> way, my fixup seems reasonable, doesn't it?
+On Fri, Oct 18, 2013 at 5:38 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> On Thu, Oct 17, 2013 at 08:50:07PM -0700, Yinghai Lu wrote:
+>
+> [..]
+>> > Previously high reservation (reservation above 896M) will anyway fail. So
+>> > instead of failing, if we try reservation in higher memory areas why that
+>> > would break old kexec-tools?
+>>
+>> If thel old kexec-tools would fail, we should let them fail early as possible,
+>> do not reserve at first point.
+>
+> A user does not care if they get the message "memory nor reserved" or if
+> they get the message that "could not find a suitable memory hole at
+> address X".
 
-The BSS is actually fixed at compile time (which is how arm-linux-size
-vmlinux can report this.)  Userspace is slightly different, because
-after the BSS is a heap whose upper limit is controlled by brk().  The
-kernel doesn't have that facility though.
+you are asking for trouble.
 
-> > - at which point doing the fixup
-> > here means we've already lost.
-> 
-> The question is whether it does any harm to at least try to fix up
-> things in that situation.
+Now we have two paths:
+1. old kernel with old kexec tools. crashkernel=XM, work,
+the new kernel with old kexec tools still working with crashkernel=XM
+2. old kernel with old kernel tools, crashkernel=XM, not working.
+as X is too big.
+then user update to new kernel AND new kexec-tools, and crashkernel=XM,high
 
-That's not really the question.  The real question is whether we will
-end up having to revert this later because we've ended up with the
-kernels .data section overlapping the DTB.
+with this patch, you will need to test new kernel all old kexec tools
+to make sure
+it will fail later instead of fail early to remind them to update kexec tools.
+Also would make user to guess and try to make new kernel to work with old
+kexec-tools
 
-That's why I think this is the wrong place to be doing it - by the
-time we get anywhere near to this place, we could have already lost
-the game and overwritten the DTB.
+>
+>>
+>> >
+>> > IOW, previously anyway kexec-tools will not work as no memory will be
+>> > reserved in higher memory area. Now memory will be reserved but old
+>> > kexec-tools should fail as it can't load in that area.
+>> >
+>> > If that works, then one would use crashkernel=X,high only if he is
+>> > particualr that memory reservation comes from area above 4G (despite
+>> > the fact that same memory could have been reserved below 4G too).
+>>
+>> My point:
+>> Push user to use ",high" as more as possible, so we only to handle one
+>> path eventually.
+>> for old kernel, leave them to use old grammer. do not need to change it.
+>
+> I don't understand this. Why we should push users to use ",high" syntax.
+> That is an option. Those who want to use it, should use it.
+>
+> We have been using crashkernel=XM for a long time now. And it makes sense
+> to extend this option to be able to reserve memory at higher addresses
+> if asked memory is not available at lower addresses.
+>
+> You are not thinking about ease of use here for existing users.
 
-> > We already give the decompressor the size of the kernel's BSS and take
-> > action if we believe that the kernel's BSS will overlap the DTB/ATAGs
-> > there.
-> 
-> Only for CONFIG_ARM_ATAG_DTB_COMPAT (which is unset in my config),
-> right? I've read through the sources relevant for my system (AM33xx),
-> and couldn't find any other place where my case is covered. The
-> relocation I propose does fix it, though.
+most existing user don't need to do anything. just with new kernel and
+old kexec tools.
 
-When things were at a fixed location, they were always placed at
-around 256 bytes into the memory, below the kernel.  I guess now people
-are placing them at some random location elsewhere.
+those system that did not work kexec before because XM is too big, they have to
+update kexec tools, and use ",high"
 
-This is becoming more a more of a pain.  We have all sorts of randomly
-placed objects in memory now that its only a matter of time before we
-hit something.  We keep on dreaming up these "well, let's move it"
-solutions but does that really help?  Move it to where?  Another place
-where we think there isn't going to be anything?  What if there is?
+Make it simple, less error.
 
-Back in the old days it was a lot more simple.  ATAGs started at +0x100
-bytes.  The decompressor and kernel placed their initial page tables
-at +0x4000, and the decompressed kernel started at +0x8000.  You could
-then load the compressed kernel at a very high address, and place the
-init ramdisk at an address sufficiently out of the way of all of that.
-Yes, we made the compressed kernel care about whether it was going to
-be overwritten by the decompressed image - that was more to cope with
-the compressed image executing from the same location as the
-decompressed image should be.
+>
+>>
+>> Also boot loader should always have different entry for old kernel and
+>> new kernel.
+>
+> What does memory reservation location has to do with kernel entry point?
+> If it is a 64bit bzImage, we will use 64bit entry point by default, isn't
+> it? Does not matter whether memory is reserved above 4G or not.
+>
+> I think it makes sense that existing crashkernel=XM usres be able to
+> reserve memory in higher memory area if sufficient memory is not available
+> below 896M or below 4G. Those who always want memory reservation above 4G
+> they should use ",high" syntax and enforce memory allocation above 4G.
 
-But now we have the situation where the DTB is located at some random
-address, we have an initrd also at some unknown address, and we end
-up hoping that we can move the compressed kernel to some other address
-which doesn't trample over these, decompress it, and hope that the
-decompressed image doesn't overwrite anything...
+We already support above 4G, what is point for trying below 4G?
 
-It's all extremely fragile and full of a hell of a lot of unknowns.
+You could get more bug report about new kernel with old kexec-tools, as
+old kexec-tools could work with range between 896M and 4G in some case,
+but not all.
 
-Should we continue sticking plasters over this by shifting objects
-to other unknown locations in memory (which, incidentally, we don't
-really know where or how much memory there is in early boot) ?
+Thanks
+
+Yinghai
 
 _______________________________________________
 kexec mailing list
