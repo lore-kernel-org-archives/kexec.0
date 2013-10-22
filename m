@@ -1,34 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VYZl3-0008Sn-6s
- for kexec@lists.infradead.org; Tue, 22 Oct 2013 11:04:18 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id B1AE73EE0AE
- for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id A098345DEBE
- for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 85DD345DEB6
- for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7182FE18002
- for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 1CDFA1DB8042
- for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
-Message-ID: <52665B4E.9040100@jp.fujitsu.com>
-Date: Tue, 22 Oct 2013 20:02:38 +0900
+ id 1VYdSz-0005Zr-AA
+ for kexec@lists.infradead.org; Tue, 22 Oct 2013 15:01:55 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id D6D623EE0BD
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:26 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id B1A4B45DE55
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:26 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 775BE45DE65
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:26 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5BA211DB803F
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:26 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2DACB1DB8073
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:22 +0900 (JST)
+Subject: [PATCH v4 0/3] x86, apic, kexec: Add disable_cpu_apic kernel parameter
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Wed, 23 Oct 2013 00:01:18 +0900
+Message-ID: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/2] x86, apic: Disable BSP if boot cpu is AP
-References: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
- <20131015054327.13666.1689.stgit@localhost6.localdomain6>
- <20131015193049.GO31215@redhat.com> <525DEB54.4030401@jp.fujitsu.com>
- <20131018173625.GE2277@redhat.com>
-In-Reply-To: <20131018173625.GE2277@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,103 +31,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: hpa@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
+To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
 
-(2013/10/19 2:36), Vivek Goyal wrote:
-> On Wed, Oct 16, 2013 at 10:26:44AM +0900, HATAYAMA Daisuke wrote:
->
-> [..]
->>> I am wondering if there is any attribute of cpu which we can pass to
->>> second kernel on command line. And tell second kernel not to bring up
->>> that specific cpu. (Say exclude_cpu=<cpu_attr>)? If this works, then
->>> if ACPI or other mechanism don't report BSP, we could possibly assume
->>> that cpu 0 is BSP and ask second kernel to not try to boot it.
->>>
->>
->> I've come up with similar idea. If there's such kernel option, rest of
->> the processing can be implemented in user-land, i.e., get apicid of
->> BSP from /proc/cpuid and set it in kernel command line of 2nd kernel.
->> What kexec-tools should do on fedora/RHEL? Also, this idea covers SFI
->> and device tree.
->>
->> The reason why I didn't choose such idea was first passing the value
->> via command-line seems rather ad-hoc.
->
-> We do so many things using command line. So telling kernel not to boot
-> certain cpus seems ok to me.
->
->> The second reason is that in any
->> case it's compromised design. Rigorously, we cannot get correct mapping
->> of apicid to {BSP, APIC} at the 1st kernel.  That is, there's a class of
->> the bugs that affect BSP flag of each processor. For example, on
->> catastrophic state, all the cpus can have BSP flag on the 2nd kernel due
->> to wrmsr instructions generated by the bug causing crash. In this sense,
->> current implementation is less reliable than max_cpus=1 case.
->>
->> If addressing this rigorously, for example, we need to check status of
->> BSP flag between 1st kernel and 2nd kernel to keep processor with BSP
->> flag unique, exclude cpus in catastrophic state that are not checked,
->> and to tell the 2nd kernel which cpu can be wake up.
->
-> Ok, for the time being let us not do any comparision with maxcpus=1 or
-> nr_cpus=1 because we know that's the most robust thing to do.
->
-> For the case where we want to bring up more than one cpu in second kernel,
-> there seems to be two problems.
->
-> - ACPI tables or other tables might not report which is BSP. In that
->    case we might try to bring up BSP and crash the system.
->
-> - Due to malicious wrmsr, more than one cpu might claim being BSP. In that
->    case the cpu we are crashing on will think it is BSP and it can safely
->    bring up other cpus.
->
-> If we start sending a mask of cpus which should not be brought up in
-> second kernel, then it would not matter whether BSP flag in MSR is set
-> or not. Isn't it? And that will solve the second issue.
->
+This patch set is to allow kdump 2nd kernel to wake up multiple CPUs
+even if 1st kernel crashs on some AP, a continueing work from:
 
-No. As long as the mask is created in the 1st kernel, mapping between CPUs
-and {BSP, AP} could get changed at crash. So, the ``mask'' idea never
-improves reliability.
+  [PATCH v3 0/2] x86, apic, kdump: Disable BSP if boot cpu is AP
+  https://lkml.org/lkml/2013/10/16/300.
 
-To obtain complete reliability without any hardware support to get mapping
-between all the CPUS and {BSP, AP}, we must create such mask after crash,
-i.e., between the 1st and 2nd kernel such as purgatory or other new phase.
-The idea is, for example, that let crashing AP wait for other CPUs in purgatory
-until specified number of CPUs reach there or until a certain limit time passes
-in case no other CPUs reach there in catastrophic state, and let even the other
-CPUs except for the crashing AP go into purgatory, not halt just as the current
-implementation, to let them check the mask to represent they can be safely
-woken up in the 2nd kernel and then let them halt in the purgatory until they
-or part of them are woken up from the 2nd kernel.
+In this version, basic design has changed. Now users need to figure
+out initial APIC ID of BSP in the 1st kernel and configures kernel
+parameter for the 2nd kernel manually using disable_cpu_apic kernel
+parameter to be newly introduced in this patch set. This design is
+more flexible than the previous version in that we no longer have to
+rely on ACPI/MP table to get initial APIC ID of BSP.
 
-> And if ACPI tables don't report which one is BSP, user space can first
-> try to look at BSP flags of processors (may be this can be reported
-> in /proc/cpuinfo?) and if no one has BSP flag set, then assume cpu 0
-> is BSP.
->
-> So to me it looks like passing which cpus to not bring up to second kernel
-> is more resilient approach. Isn't it?
->
+Sorry, this patch set have not include in-source documentation
+requested by Borislav Petkov yet, but I'll post it later separately,
+which would be better to focus on documentation reviewing.
 
-Yes. Though reliability is similar to the current approach, user-space approach
-is better in that it doesn't depend on what kind of  BIOS tables are present
-in the system. Also, the idea is more general and could be applied to other
-purposes, I don't know exactly what it is; disabling some part of CPUs might
-be useful for the purpose of some kind of debugging?
+ChangeLog
 
-I'll post new version later.
+v3 => v4)
+
+- Rebased on top of v3.12-rc6
+
+- Basic design has been changed. Now users need to figure out initial
+  APIC ID of BSP in the 1st kernel and configures kernel parameter for
+  the 2nd kernel manually using disable_cpu_apic kernel parameter to
+  be newly introduced in this patch set. This design is more flexible
+  than the previous version in that we no longer have to rely on
+  ACPI/MP table to get initial APIC ID of BSP.
+
+v2 => v3)
+
+- Change default value of boot_cpu_is_bsp to true.
+
+- Before executing rdmsr(MSR_IA32_APICBASE), check if the number of
+  processor family is larger than or equal to 6 in order to avoid
+  invalid opcode exception on processors where MSR_IA32_APICBASE is
+  not supported.
+
+v1 => v2)
+
+- Rebased on top of v3.12-rc5.
+
+- Fix linking time error of boot_cpu_is_bsp_init() in case of
+  CONFIG_LOCAL_APIC disabled by adding empty static inline function
+  instead.
+
+- Fix missing feature check by means of cpu_has_apic macro in
+  boot_cpu_is_bsp_init() before calling rdmsr_safe(MSR_IA32_APICBASE).
+
+  NOTE: I've checked local apic-present case only; I don't have any
+  x86 processor without local apic.
+
+- Add __init annotation to boot_cpu_is_bsp_init().
+
+Test
+
+- built with and without CONFIG_LOCAL_APIC
+- tested x86_64 in case of acpi and MP table
+
+---
+
+HATAYAMA Daisuke (3):
+      x86, apic: Don't count the CPU with BP flag from MP table as booting-up CPU
+      x86, apic: Add disable_cpu_apicid kernel parameter
+      Documentation, x86, apic, kexec: Add disable_cpu_apicid kernel parameter
+
+
+ Documentation/kernel-parameters.txt |    9 +++++++++
+ arch/x86/kernel/apic/apic.c         |   29 +++++++++++++++++++++++++++++
+ arch/x86/kernel/mpparse.c           |    1 -
+ 3 files changed, 38 insertions(+), 1 deletion(-)
 
 -- 
+
 Thanks.
 HATAYAMA, Daisuke
-
 
 _______________________________________________
 kexec mailing list
