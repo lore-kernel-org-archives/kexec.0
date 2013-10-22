@@ -1,22 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VYHEW-0006BG-Qx
- for kexec@lists.infradead.org; Mon, 21 Oct 2013 15:17:30 +0000
-Date: Mon, 21 Oct 2013 11:16:43 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
- first, then try below 4G, then MAXMEM
-Message-ID: <20131021151643.GA20669@redhat.com>
-References: <1381751200-27376-1-git-send-email-chaowang@redhat.com>
- <CAE9FiQUNMDuVZtqud3LBbAmE0SL8ZWLFnc+CSYZm4UfTvNUaOA@mail.gmail.com>
- <20131015144810.GI31215@redhat.com>
- <CAE9FiQXVCx__SuhAdO9_CNaRncW2HB2tv3UjZrQcbsTV35QWow@mail.gmail.com>
- <20131018123837.GB2277@redhat.com>
- <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VYZl3-0008Sn-6s
+ for kexec@lists.infradead.org; Tue, 22 Oct 2013 11:04:18 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id B1AE73EE0AE
+ for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id A098345DEBE
+ for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 85DD345DEB6
+ for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7182FE18002
+ for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 1CDFA1DB8042
+ for <kexec@lists.infradead.org>; Tue, 22 Oct 2013 20:03:47 +0900 (JST)
+Message-ID: <52665B4E.9040100@jp.fujitsu.com>
+Date: Tue, 22 Oct 2013 20:02:38 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] x86, apic: Disable BSP if boot cpu is AP
+References: <20131015054214.13666.11737.stgit@localhost6.localdomain6>
+ <20131015054327.13666.1689.stgit@localhost6.localdomain6>
+ <20131015193049.GO31215@redhat.com> <525DEB54.4030401@jp.fujitsu.com>
+ <20131018173625.GE2277@redhat.com>
+In-Reply-To: <20131018173625.GE2277@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,102 +37,103 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, WANG Chao <chaowang@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: hpa@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
 
-On Fri, Oct 18, 2013 at 10:45:43PM -0700, Yinghai Lu wrote:
+(2013/10/19 2:36), Vivek Goyal wrote:
+> On Wed, Oct 16, 2013 at 10:26:44AM +0900, HATAYAMA Daisuke wrote:
+>
+> [..]
+>>> I am wondering if there is any attribute of cpu which we can pass to
+>>> second kernel on command line. And tell second kernel not to bring up
+>>> that specific cpu. (Say exclude_cpu=<cpu_attr>)? If this works, then
+>>> if ACPI or other mechanism don't report BSP, we could possibly assume
+>>> that cpu 0 is BSP and ask second kernel to not try to boot it.
+>>>
+>>
+>> I've come up with similar idea. If there's such kernel option, rest of
+>> the processing can be implemented in user-land, i.e., get apicid of
+>> BSP from /proc/cpuid and set it in kernel command line of 2nd kernel.
+>> What kexec-tools should do on fedora/RHEL? Also, this idea covers SFI
+>> and device tree.
+>>
+>> The reason why I didn't choose such idea was first passing the value
+>> via command-line seems rather ad-hoc.
+>
+> We do so many things using command line. So telling kernel not to boot
+> certain cpus seems ok to me.
+>
+>> The second reason is that in any
+>> case it's compromised design. Rigorously, we cannot get correct mapping
+>> of apicid to {BSP, APIC} at the 1st kernel.  That is, there's a class of
+>> the bugs that affect BSP flag of each processor. For example, on
+>> catastrophic state, all the cpus can have BSP flag on the 2nd kernel due
+>> to wrmsr instructions generated by the bug causing crash. In this sense,
+>> current implementation is less reliable than max_cpus=1 case.
+>>
+>> If addressing this rigorously, for example, we need to check status of
+>> BSP flag between 1st kernel and 2nd kernel to keep processor with BSP
+>> flag unique, exclude cpus in catastrophic state that are not checked,
+>> and to tell the 2nd kernel which cpu can be wake up.
+>
+> Ok, for the time being let us not do any comparision with maxcpus=1 or
+> nr_cpus=1 because we know that's the most robust thing to do.
+>
+> For the case where we want to bring up more than one cpu in second kernel,
+> there seems to be two problems.
+>
+> - ACPI tables or other tables might not report which is BSP. In that
+>    case we might try to bring up BSP and crash the system.
+>
+> - Due to malicious wrmsr, more than one cpu might claim being BSP. In that
+>    case the cpu we are crashing on will think it is BSP and it can safely
+>    bring up other cpus.
+>
+> If we start sending a mask of cpus which should not be brought up in
+> second kernel, then it would not matter whether BSP flag in MSR is set
+> or not. Isn't it? And that will solve the second issue.
+>
 
-[..]
-> > A user does not care if they get the message "memory nor reserved" or if
-> > they get the message that "could not find a suitable memory hole at
-> > address X".
-> 
-> you are asking for trouble.
-> 
-> Now we have two paths:
-> 1. old kernel with old kexec tools. crashkernel=XM, work,
-> the new kernel with old kexec tools still working with crashkernel=XM
-> 2. old kernel with old kernel tools, crashkernel=XM, not working.
-> as X is too big.
-> then user update to new kernel AND new kexec-tools, and crashkernel=XM,high
-> 
-> with this patch, you will need to test new kernel all old kexec tools
-> to make sure
-> it will fail later instead of fail early to remind them to update kexec tools.
-> Also would make user to guess and try to make new kernel to work with old
-> kexec-tools
+No. As long as the mask is created in the 1st kernel, mapping between CPUs
+and {BSP, AP} could get changed at crash. So, the ``mask'' idea never
+improves reliability.
 
-Seriously, I don't understand what are you trying to say above. You will
-need to explain your concern more clearly.
+To obtain complete reliability without any hardware support to get mapping
+between all the CPUS and {BSP, AP}, we must create such mask after crash,
+i.e., between the 1st and 2nd kernel such as purgatory or other new phase.
+The idea is, for example, that let crashing AP wait for other CPUs in purgatory
+until specified number of CPUs reach there or until a certain limit time passes
+in case no other CPUs reach there in catastrophic state, and let even the other
+CPUs except for the crashing AP go into purgatory, not halt just as the current
+implementation, to let them check the mask to represent they can be safely
+woken up in the 2nd kernel and then let them halt in the purgatory until they
+or part of them are woken up from the 2nd kernel.
 
-IIUC, you are trying to say that with new kernel old kexec-tools will fail
-at a different failure point. I don't see why that is a problem. It still
-fails. 
+> And if ACPI tables don't report which one is BSP, user space can first
+> try to look at BSP flags of processors (may be this can be reported
+> in /proc/cpuinfo?) and if no one has BSP flag set, then assume cpu 0
+> is BSP.
+>
+> So to me it looks like passing which cpus to not bring up to second kernel
+> is more resilient approach. Isn't it?
+>
 
-[..]
-> > You are not thinking about ease of use here for existing users.
-> 
-> most existing user don't need to do anything. just with new kernel and
-> old kexec tools.
-> 
-> those system that did not work kexec before because XM is too big, they have to
-> update kexec tools, and use ",high"
-> 
-> Make it simple, less error.
+Yes. Though reliability is similar to the current approach, user-space approach
+is better in that it doesn't depend on what kind of  BIOS tables are present
+in the system. Also, the idea is more general and could be applied to other
+purposes, I don't know exactly what it is; disabling some part of CPUs might
+be useful for the purpose of some kind of debugging?
 
-No, it is not that simple. Think from a distribution's perspective also.
-We have the logic to scale reserved memory based on physical memory
-present in the system. Now we are seeing bigger memory systems (which
-would not have worked in the past). We still want to retain the existing
-logic and not switch to crashkernel=x,high. One does not have to. It
-makes life simpler.
+I'll post new version later.
 
-Same logic working both with smaller memory systems as well as large memory
-systems. One should not have to choose a different command line because
-there is more physical RAM present in the system.
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-> 
-> >
-> >>
-> >> Also boot loader should always have different entry for old kernel and
-> >> new kernel.
-> >
-> > What does memory reservation location has to do with kernel entry point?
-> > If it is a 64bit bzImage, we will use 64bit entry point by default, isn't
-> > it? Does not matter whether memory is reserved above 4G or not.
-> >
-> > I think it makes sense that existing crashkernel=XM usres be able to
-> > reserve memory in higher memory area if sufficient memory is not available
-> > below 896M or below 4G. Those who always want memory reservation above 4G
-> > they should use ",high" syntax and enforce memory allocation above 4G.
-> 
-> We already support above 4G, what is point for trying below 4G?
-
-Because it is not *required* to reserve memory above 4G. Because we want
-same command line to work with both small memory systems as well as
-large memory systems and we don't care whether memory is reserved below
-4G or above 4G. What does matter though that we don't have to worry about
-switching command line option if it is large memory system.
-
-> 
-> You could get more bug report about new kernel with old kexec-tools, as
-> old kexec-tools could work with range between 896M and 4G in some case,
-> but not all.
-
-So you are worried that if we lift the artificial cap, and old kexec-tools
-start working that will be a problem. I don't think that is an issue.
-People worry about something existing broken. It does not break existing
-kexec-tools. If in some cases they work with memory reserved at higher
-addresses, where is the problem. Even in the past one could do
-crashkernel=X@Y and if Y is above 896M and if kexec-tools works with that
-what's wrong. I have not seen people complaining about it.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
