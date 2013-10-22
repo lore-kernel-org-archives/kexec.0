@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VYdT4-0005aI-OO
+ id 1VYdT4-0005aL-ON
  for kexec@lists.infradead.org; Tue, 22 Oct 2013 15:02:00 +0000
 Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id C0A0B3EE1DA
- for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:32 +0900 (JST)
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 0C0DB3EE1E2
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:40 +0900 (JST)
 Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 974C145DE4D
- for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:32 +0900 (JST)
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id E955145DE58
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:39 +0900 (JST)
 Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 74CBB45DE50
- for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:32 +0900 (JST)
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id D0D5545DE52
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:39 +0900 (JST)
 Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 43C4CE0801B
- for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:32 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8FF0AE08030
- for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:27 +0900 (JST)
-Subject: [PATCH v4 1/3] x86,
- apic: Don't count the CPU with BP flag from MP table as booting-up CPU
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id BC3C21DB803C
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:39 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id C7BF21DB8038
+ for <kexec@lists.infradead.org>; Wed, 23 Oct 2013 00:01:38 +0900 (JST)
+Subject: [PATCH v4 3/3] Documentation, x86, apic,
+ kexec: Add disable_cpu_apicid kernel parameter
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Wed, 23 Oct 2013 00:01:24 +0900
-Message-ID: <20131022150124.24240.20741.stgit@localhost6.localdomain6>
+Date: Wed, 23 Oct 2013 00:01:35 +0900
+Message-ID: <20131022150135.24240.40322.stgit@localhost6.localdomain6>
 In-Reply-To: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
 References: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -42,36 +41,36 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
 
-If crash occurs on some AP, then kdump 2nd kernel is booted up on the
-AP. Therefore, it is not always correct that the CPU that is currently
-booting up the kernel is BSP. It's wrong to reflect BSP information in
-MP table as for the current booting up CPU.
-
-Also, boot_cpu_physical_apicid has already been initialized before
-reaching here, for example, in register_lapic_address().
-
-This is a preparation for next patch that will introduce a new kernel
-parameter to disabls specified CPU where boot_cpu_physical_apicid
-needs to have apicid for the currently booting up CPU to identify it
-to avoid falsely disabling it.
+Add disable_cpu_apicid kernel parameter to disable the CPU with the
+specified number of initial APIC ID, mostly used for the kdump 2nd
+kernel to disable BSP to wake up multiple CPUs without causing system
+reset or hang due to sending INIT from AP to BSP.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- arch/x86/kernel/mpparse.c |    1 -
- 1 file changed, 1 deletion(-)
+ Documentation/kernel-parameters.txt |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index d2b5648..969bb9f 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -64,7 +64,6 @@ static void __init MP_processor_info(struct mpc_cpu *m)
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index fcbb736..0ca0902 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -774,6 +774,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 	disable=	[IPV6]
+ 			See Documentation/networking/ipv6.txt.
  
- 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
- 		bootup_cpu = " (Bootup-CPU)";
--		boot_cpu_physical_apicid = m->apicid;
- 	}
- 
- 	printk(KERN_INFO "Processor #%d%s\n", m->apicid, bootup_cpu);
++	disable_cpu_apicid= [X86,APIC,KEXEC,SMP]
++			Format: <int>
++			The number of initial APIC ID for the
++			corresponding CPU to be disabled at boot,
++			mostly used for the kdump 2nd kernel to
++			disable BSP to wake up multiple CPUs without
++			causing system reset or hang due to sending
++			INIT from AP to BSP.
++
+ 	disable_ddw     [PPC/PSERIES]
+ 			Disable Dynamic DMA Window support. Use this if
+ 			to workaround buggy firmware.
 
 
 _______________________________________________
