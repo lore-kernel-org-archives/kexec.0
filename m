@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VZIft-0005K2-I3
- for kexec@lists.infradead.org; Thu, 24 Oct 2013 11:01:58 +0000
-Date: Thu, 24 Oct 2013 19:01:17 +0800
-From: WANG Chao <chaowang@redhat.com>
+ id 1VZLVP-0001UT-Op
+ for kexec@lists.infradead.org; Thu, 24 Oct 2013 14:03:20 +0000
+Date: Thu, 24 Oct 2013 10:02:41 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
  first, then try below 4G, then MAXMEM
-Message-ID: <20131024110117.GB3033@dhcp16-109.nay.redhat.com>
+Message-ID: <20131024140241.GA2322@redhat.com>
 References: <1381751200-27376-1-git-send-email-chaowang@redhat.com>
  <CAE9FiQUNMDuVZtqud3LBbAmE0SL8ZWLFnc+CSYZm4UfTvNUaOA@mail.gmail.com>
  <20131015144810.GI31215@redhat.com>
@@ -32,9 +32,9 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Yinghai Lu <yinghai@kernel.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, WANG Chao <chaowang@redhat.com>
 
-On 10/23/13 at 11:11pm, Yinghai Lu wrote:
+On Wed, Oct 23, 2013 at 11:11:51PM -0700, Yinghai Lu wrote:
 > On Mon, Oct 21, 2013 at 8:16 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
 > > On Fri, Oct 18, 2013 at 10:45:43PM -0700, Yinghai Lu wrote:
 > >
@@ -48,65 +48,14 @@ On 10/23/13 at 11:11pm, Yinghai Lu wrote:
 > We already knew it would fail possible at most later, we should make
 > it skip allocation during first kernel booting.
 
-It's said:
+One could upgrade kexec-tools later. So Kernel does not know whether
+user space is able to handle higher memory regions or not. So forcing
+kernel to skip memory allocation does not sound right to me.
 
-	crashkernel=size[KMG][@offset[KMG]]
-			[KNL] Using kexec, Linux can switch to a 'crash kernel'
-			upon panic. This parameter reserves the physical
-			memory region [offset, offset + size] for that kernel
-			image. If '@offset' is omitted, then a suitable offset
-			is selected automatically. Check
-			Documentation/kdump/kdump.txt for further details.
+Also even with memory reserved high, old kexec-tools which can't deal
+with it will fail anyway. So I don't agree that it is a problem.
 
-Nothing mentions that crashkernel=X is restricted to reserve at low.
-
-It could be more confusing that crashkernel=X (say 1G) can not find a
-suitable area while actually there's enough memory out there.
-
-Current situation is the combination of crashkernel X/high/low is quite
-complicated, it's more like supposed to be used by the pros.
-
-Truth is, most user, after upgrading to new kernel, would want reserve
-large by just changing to crashkernel=1G, not be forced to use a new
-format craskernel=1G,high.
-
-I think crashkernel=XM,high is really supposed to be used when user indeed
-want to reserve from high.
-
-Like Vivek said, failing at different point shouldn't be a problem.
-That's an incorrect configuration. When crashkernel=1G,high, old
-kexec-tools still fails the same way. That could cause confusion, in
-your word.
-
-Let me put it in an example, a user want to utilize this new kernel
-feature to reserve 1G for crash kernel but not upgrade kexec-tools,
-
-- W/o this patch:
- First he would try crashkernel=1G, but failed to reserve. Second time,
- he goes with crashkernel=1G,high, reservation is fine but kexec fails
- to load. Upgrading kexec-tools is essential to him.
-
-- W/ this patch:
-  First he would try crashkernel=1G, reservation is ok but kexec fails
-  to load the same way as the case of crashkernel=1G,high. Upgrading
-  kexec-tools is essential to him.
-
-The point is old kexec-tools can't load high, no matter by what kind of
-crashkernel cmdline to reserve at high.
-
-> 
-> >
-> > [..]
-> >> > You are not thinking about ease of use here for existing users.
-> >>
-> >> most existing user don't need to do anything. just with new kernel and
-> >> old kexec tools.
-> >>
-> >> those system that did not work kexec before because XM is too big, they have to
-> >> update kexec tools, and use ",high"
-> >>
-> >> Make it simple, less error.
-> >
+[..]
 > > No, it is not that simple. Think from a distribution's perspective also.
 > > We have the logic to scale reserved memory based on physical memory
 > > present in the system. Now we are seeing bigger memory systems (which
@@ -117,52 +66,36 @@ crashkernel cmdline to reserve at high.
 > distribution should go with ",high" for 64 bit kernel and new kexec-tools.
 > for 32bit kernel, you still can have ",high" or not, as ",high" is ignored.
 
-Why ",high" is becoming a default one instead of "XM"?
+Just because we have the facility to allocate memory starting from top, does
+not mean that we should kill other options and force user to use this
+option.
 
-Isn't that the kernel's job to find a most suitable area at best guess
-in this case? By this case, I mean kernel have no idea kexec-tools is
-new or old.
+With crashkernel=X,high, a low memory will be reserved for swiotlb. And
+I don't want that extra memory reservation. I am more than happy to
+reserve memory below 4G and not do low memory reservation.
 
-> 
-> 
-> >
-> > Same logic working both with smaller memory systems as well as large memory
-> > systems. One should not have to choose a different command line because
-> > there is more physical RAM present in the system.
-> 
-> ",high" is working even on smaller memory sytem.
 
-Yeah, you're right.
-
-> 
-> >
-> >>
-> >> We already support above 4G, what is point for trying below 4G?
-> >
-> > Because it is not *required* to reserve memory above 4G. Because we want
-> > same command line to work with both small memory systems as well as
-> > large memory systems and we don't care whether memory is reserved below
-> > 4G or above 4G. What does matter though that we don't have to worry about
-> > switching command line option if it is large memory system.
-> 
-> ",high" will work smaller or large memory system after you install new
-> kexec tools.
-> 
-> Again, for distribution, when new kernel is added, new kernel will all
-> have ",high"
-> and new kexec-tools get installed.
-> 
+[..]
 > Even we want to extend crashkernel=XM, then i would like to have
 > it identical to crashkernel=XM,high instead.
 
-Why would you like crashkernel=XM is identical to crashkernel=XM,high?
+You are assuming that crashkernel=xM,high is always good. I am arguing
+that because it requires low memory reservation for swiotlb, when IOMMU
+is not around, it will end up reserving more memory. So it is not
+necessarily better than reserving memory below 4G.
 
-That's not an option if you want new kernel to be compatible with old
-kexec-tools.
+Hence both crashkernel=xM and crashkernel=XM,high have their own usage.
+We have been using crashkernel=xM and we know it works. So extending it
+to be able to allocate memory from higher regions, if sufficient memory
+is not available in lower regions makes sense. Memory reservation below
+4G is more efficient due to not requiring swiotlb. And crashkernel=xM
+has been working for us and users are familiar with it.
 
+So I don't see a point that why would you try to block any move to
+extend crashkernel=xM semantics.
 
 Thanks
-WANG Chao
+Vivek
 
 _______________________________________________
 kexec mailing list
