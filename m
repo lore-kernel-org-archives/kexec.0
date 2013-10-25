@@ -1,26 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VZQjI-0003Iv-8x
- for kexec@lists.infradead.org; Thu, 24 Oct 2013 19:38:00 +0000
-Date: Thu, 24 Oct 2013 15:37:30 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
- first, then try below 4G, then MAXMEM
-Message-ID: <20131024193730.GH2322@redhat.com>
-References: <CAE9FiQXVCx__SuhAdO9_CNaRncW2HB2tv3UjZrQcbsTV35QWow@mail.gmail.com>
- <20131018123837.GB2277@redhat.com>
- <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
- <20131021151643.GA20669@redhat.com>
- <CAE9FiQVfeUdugFRMt1DGjtqW2FAb2gfnGjXENHjoJ=JVAYbYgw@mail.gmail.com>
- <20131024140241.GA2322@redhat.com>
- <CAE9FiQUu0WwMgNpog4TKch+MT2i7_DsNvqZxbyQusS4AFxdhQQ@mail.gmail.com>
- <20131024191821.GE2322@redhat.com>
- <CAE9FiQU7+FRY=3ETdGZJJfcS0vjRht4ZT8MHTQ66kpjD2MmrcA@mail.gmail.com>
- <20131024192752.GG2322@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VZWU6-0000rF-Jm
+ for kexec@lists.infradead.org; Fri, 25 Oct 2013 01:46:43 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id C3D913EE0C1
+ for <kexec@lists.infradead.org>; Fri, 25 Oct 2013 10:46:16 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id B666C45DE5A
+ for <kexec@lists.infradead.org>; Fri, 25 Oct 2013 10:46:16 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A13FC45DE55
+ for <kexec@lists.infradead.org>; Fri, 25 Oct 2013 10:46:16 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 93E461DB804A
+ for <kexec@lists.infradead.org>; Fri, 25 Oct 2013 10:46:16 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 551921DB803F
+ for <kexec@lists.infradead.org>; Fri, 25 Oct 2013 10:46:16 +0900 (JST)
+Message-ID: <5269CD32.200@jp.fujitsu.com>
+Date: Fri, 25 Oct 2013 10:45:22 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131024192752.GG2322@redhat.com>
+Subject: [PATCH] makedumpfile: print spinner in progress information
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,41 +36,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, WANG Chao <chaowang@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, Oct 24, 2013 at 03:27:52PM -0400, Vivek Goyal wrote:
-> On Thu, Oct 24, 2013 at 12:24:57PM -0700, Yinghai Lu wrote:
-> > On Thu, Oct 24, 2013 at 12:18 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > On Thu, Oct 24, 2013 at 12:15:25PM -0700, Yinghai Lu wrote:
-> > >
-> > > Also keeping things simple by not trying to *impose* a new crashkernel=
-> > > syntax on existing crashkernel=xM users.
-> > 
-> > Existing user that have crashkernel=xM working with their old kernel
-> > and old kexec-tools, they still could keep their old command line and
-> > old kexec-tools
-> > with new updated kernel.
-> > We should not change semantics to surprise them.
-> 
-> Old users will get reservation still below 896MB.
-> 
-> It will go above 896MB only if memory could not be allocated below 896MB.
-> 
-> In the past reservation will fail and kexec-tools will fail.
-> Now reservation will succeed but kexec-tools will fail.
+On system with huge memory, percentage in progress information is
+updated at very slow interval, because 1 percent on 1 TiB memory is
+about 10 GiB, which looks like as if system has freezed. Then,
+confused users might get tempted to push a reset button to recover the
+system. We want to avoid such situation as much as possible.
 
-Only corner case I can see is where memory is reserved higher, old kexec-tools
-is not smart enough to figure out in advance that kernel will not boot
-at this high address and still goes ahead and loads the kernel and crash
-dump fails at run time.
+To address the issue, this patch adds spinner that rotates in the
+order of /, |, \ and - next to the progress indicator in percentage,
+which helps users to get aware that system is still active and crash
+dump process is still in progress now.
 
-But this will happen only if memory reservation below 896MB fails. And
-in most of the cases after kernel upgrade, memory should still come
-from memory region below 896MB.
+This code is borrowed from diskdump code.
 
-Thanks
-Vivek
+The example is like this:
+
+Copying data                       : [  0 %] /
+Copying data                       : [  8 %] |
+Copying data                       : [ 11 %] \
+Copying data                       : [ 14 %] -
+Copying data                       : [ 16 %] /
+...
+Copying data                       : [ 99 %] /
+Copying data                       : [100 %] |
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ print_info.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/print_info.c b/print_info.c
+index 3527970..879fa4b 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -286,6 +286,8 @@ print_progress(const char *msg, unsigned long current, unsigned long end)
+ 	int progress;
+ 	time_t tm;
+ 	static time_t last_time = 0;
++	static unsigned int lapse = 0;
++	const char *spinner = "/|\\-";
+ 
+ 	if (current < end) {
+ 		tm = time(NULL);
+@@ -297,13 +299,14 @@ print_progress(const char *msg, unsigned long current, unsigned long end)
+ 		progress = 100;
+ 
+ 	if (flag_ignore_r_char) {
+-		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%]\n",
+-			     msg, progress);
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] %c\n",
++			     msg, progress, spinner[lapse & 3]);
+ 	} else {
+ 		PROGRESS_MSG("\r");
+-		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ",
+-			     msg, progress);
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] %c",
++			     msg, progress, spinner[lapse & 3]);
+ 	}
++	lapse++;
+ }
+ 
+ void
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
