@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VaHiv-00020K-SG
- for kexec@lists.infradead.org; Sun, 27 Oct 2013 04:13:11 +0000
-Message-Id: <20131027041231.350640917@dhcp-16-126.nay.redhat.com>
-Date: Sun, 27 Oct 2013 12:04:41 +0800
+ id 1VaHj0-00020L-S9
+ for kexec@lists.infradead.org; Sun, 27 Oct 2013 04:13:15 +0000
+Message-Id: <20131027041231.024036396@dhcp-16-126.nay.redhat.com>
+Date: Sun, 27 Oct 2013 12:04:39 +0800
 From: dyoung@redhat.com
-Subject: [patch 4/4] Passing efi related data via setup_data
+Subject: [patch 2/4] remove extra acpi_rsdp command line for efi
 References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline; filename=05-kexec-add-efi-setup-data.patch
+Content-Disposition: inline; filename=02-kexec-remove-cmdline-add-efi.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,169 +25,69 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, bp@alien8.de, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-For supporting efi runtime, several efi physical addresses
-fw_vendor, runtime, config tables, smbios and the whole runtime
-mapping info need to be used in kexec kernel. Thus introduce
-setup_data struct for passing these data.
-
-collect the varialbes from /sys/firmware/efi/systab and
-/sys/firmware/efi/efi-runtime-map
-
-Tested on qemu+ovmf, dell laptop, lenovo laptop and HP workstation.
+Removing code to pass acpi_rsdp because this
+patch series will support efi runtime, it's not
+necessary any more. EFI initialization code will
+take the functionality.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- include/x86/x86-linux.h           |    2 
- kexec/arch/i386/x86-linux-setup.c |  120 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 120 insertions(+), 2 deletions(-)
+ include/x86/x86-linux.h           |    3 ++-
+ kexec/arch/i386/crashdump-x86.c   |   35 -----------------------------------
+ kexec/arch/i386/x86-linux-setup.c |    8 ++++++++
+ 3 files changed, 10 insertions(+), 36 deletions(-)
 
---- kexec-tools.orig/include/x86/x86-linux.h
-+++ kexec-tools/include/x86/x86-linux.h
-@@ -115,7 +115,7 @@ struct x86_linux_param_header {
- 	uint32_t ext_ramdisk_image;		/* 0xc0 */
- 	uint32_t ext_ramdisk_size;		/* 0xc4 */
- 	uint32_t ext_cmd_line_ptr;		/* 0xc8 */
--	uint8_t reserved4_1[0x1c0 - 0xcc];	/* 0xcc */
-+	uint8_t reserved4_1[0x1c0 - 0xcc];	/* 0xe4 */
- 	uint8_t efi_info[32];			/* 0x1c0 */
- 	uint32_t alt_mem_k;			/* 0x1e0 */
- 	uint8_t  reserved5[4];			/* 0x1e4 */
---- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
-+++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
-@@ -473,6 +473,124 @@ void setup_efi_info(struct x86_linux_par
- 	get_bootparam(&real_mode->efi_info, offset, 32);
+--- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
++++ kexec-tools/kexec/arch/i386/crashdump-x86.c
+@@ -848,40 +848,6 @@ static int cmdline_add_memmap_acpi(char
+ 	return 0;
  }
  
-+struct efi_mem_descriptor {
-+        uint32_t type;
-+        uint32_t pad;
-+        uint64_t phys_addr;
-+        uint64_t virt_addr;
-+        uint64_t num_pages;
-+        uint64_t attribute;
-+};
-+
-+struct efi_setup_data {
-+        uint64_t fw_vendor;
-+        uint64_t runtime;
-+        uint64_t tables;
-+        uint64_t smbios;
-+        uint64_t reserved[8];
-+        struct efi_mem_descriptor map[0];
-+};
-+
-+struct setup_data {
-+        __uint64_t next;
-+        __u32 type;
-+        __u32 len;
-+        __u8 data[0];
-+}__attribute__ ((packed));
-+
-+static void _get_efi_value(char *line, const char *pattern, __uint64_t *val)
-+{
-+	char *s, *end;
-+	s = strstr(line, pattern);
-+	if (s)
-+		*val = strtoull(s + strlen(pattern), &end, 16);
-+}
-+
-+static void get_efi_value(struct efi_setup_data *esd)
-+{
-+	FILE *fp;
-+	char line[1024];
-+
-+	fp = fopen("/sys/firmware/efi/systab", "r");
-+	if (!fp)
-+		return;
-+
-+	while(fgets(line, sizeof(line), fp) != 0) {
-+		_get_efi_value(line, "fw_vendor=0x", &esd->fw_vendor);
-+		_get_efi_value(line, "runtime=0x", &esd->runtime);
-+		_get_efi_value(line, "config_tables=0x", &esd->tables);
-+		_get_efi_value(line, "SMBIOS=0x", &esd->smbios);
-+	}
-+
-+	fclose(fp);
-+}
-+
-+static int get_efi_runtime_map(struct efi_setup_data **esd)
-+{
-+	DIR * dirp;
-+	struct dirent * entry;
-+	char filename[1024];
-+	struct efi_mem_descriptor md;
-+	int nr_maps = 0;
-+
-+	dirp = opendir("/sys/firmware/efi/efi-runtime-map");
-+	while ((entry = readdir(dirp)) != NULL) {
-+		sprintf(filename, "/sys/firmware/efi/efi-runtime-map/%s", (char *)entry->d_name);
-+		if (*entry->d_name == '.' )
-+			continue;
-+		file_scanf(filename, "type", "0x%x", (unsigned int *)&md.type);
-+		file_scanf(filename, "phys_addr", "0x%llx", (unsigned long long *)&md.phys_addr);
-+		file_scanf(filename, "virt_addr", "0x%llx", (unsigned long long *)&md.virt_addr);
-+		file_scanf(filename, "num_pages", "0x%llx", (unsigned long long *)&md.num_pages);
-+		file_scanf(filename, "attribute", "0x%llx", (unsigned long long *)&md.attribute);
-+		*esd = realloc(*esd, sizeof(struct efi_setup_data) + (nr_maps + 1) * sizeof(struct efi_mem_descriptor));
-+		*((*esd)->map + nr_maps) = md;
-+		nr_maps++;
-+	}
-+
-+	closedir(dirp);
-+	return nr_maps;
-+}
-+
-+static void setup_efi_setup_data(struct kexec_info *info,
-+			struct x86_linux_param_header *real_mode)
-+{
-+	int nr_maps;
-+	int64_t setup_data_paddr;
-+	struct setup_data *sd;
-+	struct efi_setup_data *esd;
-+	int size, sdsize;
-+	int has_efi = 0;
-+
-+        has_efi = access("/sys/firmware/efi/systab", F_OK);
-+        if (has_efi < 0)
-+                return;
-+
-+	esd = malloc(sizeof(struct efi_setup_data));
-+	if (!esd)
-+		return;
-+	memset(esd, 0, sizeof(struct efi_setup_data));
-+	get_efi_value(esd);
-+	nr_maps = get_efi_runtime_map(&esd);
-+	size = nr_maps * sizeof(struct efi_mem_descriptor) + sizeof(struct efi_setup_data);
-+	sd = malloc(sizeof(struct setup_data) + size);
-+	if (!sd) {
-+		free(esd);
-+		return;
-+	}
-+
-+	memset(sd, 0, sizeof(struct setup_data) + size);
-+	sd->next = 0;
-+	sd->type = 4;
-+	sd->len = size;
-+	memcpy(sd->data, esd, size);
-+	sdsize = sd->len + sizeof(struct setup_data);
-+	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(), 0x100000, ULONG_MAX, INT_MAX);
-+
-+	real_mode->setup_data = setup_data_paddr;
-+}
-+
-+
- void setup_linux_system_parameters(struct kexec_info *info,
- 				   struct x86_linux_param_header *real_mode)
+-/* Appends 'acpi_rsdp=' commandline for efi boot crash dump */
+-static void cmdline_add_efi(char *cmdline)
+-{
+-	FILE *fp;
+-	int cmdlen, len;
+-	char line[MAX_LINE], *s;
+-	const char *acpis = " acpi_rsdp=";
+-
+-	fp = fopen("/sys/firmware/efi/systab", "r");
+-	if (!fp)
+-		return;
+-
+-	while(fgets(line, sizeof(line), fp) != 0) {
+-		/* ACPI20= always goes before ACPI= */
+-		if ((strstr(line, "ACPI20=")) || (strstr(line, "ACPI="))) {
+-		        line[strlen(line) - 1] = '\0';
+-			s = strchr(line, '=');
+-			s += 1;
+-			len = strlen(s) + strlen(acpis);
+-			cmdlen = strlen(cmdline) + len;
+-			if (cmdlen > (COMMAND_LINE_SIZE - 1))
+-				die("Command line overflow\n");
+-			strcat(cmdline, acpis);
+-			strcat(cmdline, s);
+-			dbgprintf("Command line after adding efi\n");
+-			dbgprintf("%s\n", cmdline);
+-
+-			break;
+-		}
+-	}
+-
+-	fclose(fp);
+-}
+-
+ static void get_backup_area(struct kexec_info *info,
+ 				struct memory_range *range, int ranges)
  {
-@@ -483,7 +601,7 @@ void setup_linux_system_parameters(struc
- 	/* get subarch from running kernel */
- 	setup_subarch(real_mode);
- 	setup_efi_info(real_mode);
--	
-+	setup_efi_setup_data(info, real_mode);
- 	/* Default screen size */
- 	real_mode->orig_x = 0;
- 	real_mode->orig_y = 0;
+@@ -1046,7 +1012,6 @@ int load_crashdump_segments(struct kexec
+ 	if (delete_memmap(memmap_p, elfcorehdr, memsz) < 0)
+ 		return -1;
+ 	cmdline_add_memmap(mod_cmdline, memmap_p);
+-	cmdline_add_efi(mod_cmdline);
+ 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+ 
+ 	/* Inform second kernel about the presence of ACPI tables. */
 
 
 _______________________________________________
