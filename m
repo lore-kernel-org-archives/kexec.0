@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VaHWI-0001o7-77
- for kexec@lists.infradead.org; Sun, 27 Oct 2013 04:00:07 +0000
-Message-Id: <20131027035923.233598770@dhcp-16-126.nay.redhat.com>
-Date: Sun, 27 Oct 2013 11:47:17 +0800
+ id 1VaHWJ-0001oA-Mn
+ for kexec@lists.infradead.org; Sun, 27 Oct 2013 04:00:08 +0000
+Message-Id: <20131027035922.776610726@dhcp-16-126.nay.redhat.com>
+Date: Sun, 27 Oct 2013 11:47:14 +0800
 From: dyoung@redhat.com
-Subject: [patch 4/6] export more efi table variable to sysfs
+Subject: [patch 1/6] Add function efi_remap_region for remapping to saved virt
+ address
 References: <20131027034713.481920209@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline; filename=03-export-more-efi-sysfs-vars.patch
+Content-Disposition: inline; filename=04-efi-map-fixed-addr.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,71 +26,65 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, bp@alien8.de, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-Export fw_vendor, runtime and config tables physical
-addresses to /sys/firmware/efi/systab becaue kexec
-kernel will need them.
+Kexec kernel will use saved runtime virtual mapping, so add a
+new function efi_remap_region to remapping it directly without
+calculate the virt addr from efi_va.
 
-From EFI spec these 3 variables will be updated to
-virtual address after entering virtual mode. But
-kernel startup code will need the physical address.
+The md is passed in from 1st kernel, the virtual addr is
+saved in md->virt_addr.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- arch/x86/platform/efi/efi.c |    4 ++++
- drivers/firmware/efi/efi.c  |    9 +++++++++
- include/linux/efi.h         |    3 +++
- 3 files changed, 16 insertions(+)
+ arch/x86/include/asm/efi.h     |    1 +
+ arch/x86/platform/efi/efi_32.c |    4 ++++
+ arch/x86/platform/efi/efi_64.c |   13 +++++++++++++
+ 3 files changed, 18 insertions(+)
 
---- efi.orig/drivers/firmware/efi/efi.c
-+++ efi/drivers/firmware/efi/efi.c
-@@ -32,6 +32,9 @@ struct efi __read_mostly efi = {
- 	.hcdp       = EFI_INVALID_TABLE_ADDR,
- 	.uga        = EFI_INVALID_TABLE_ADDR,
- 	.uv_systab  = EFI_INVALID_TABLE_ADDR,
-+	.fw_vendor  = EFI_INVALID_TABLE_ADDR,
-+	.runtime    = EFI_INVALID_TABLE_ADDR,
-+	.config_tables  = EFI_INVALID_TABLE_ADDR,
- };
- EXPORT_SYMBOL(efi);
+--- linux-2.6.orig/arch/x86/include/asm/efi.h
++++ linux-2.6/arch/x86/include/asm/efi.h
+@@ -112,6 +112,7 @@ extern void efi_call_phys_epilog(void);
+ extern void efi_unmap_memmap(void);
+ extern void efi_memory_uc(u64 addr, unsigned long size);
+ extern void __init efi_map_region(efi_memory_desc_t *md);
++extern void __init efi_remap_region(efi_memory_desc_t *md);
+ extern void efi_sync_low_kernel_mappings(void);
+ extern void __init old_map_region(efi_memory_desc_t *md);
  
-@@ -64,6 +67,12 @@ static ssize_t systab_show(struct kobjec
- 		str += sprintf(str, "BOOTINFO=0x%lx\n", efi.boot_info);
- 	if (efi.uga != EFI_INVALID_TABLE_ADDR)
- 		str += sprintf(str, "UGA=0x%lx\n", efi.uga);
-+	if (efi.fw_vendor!= EFI_INVALID_TABLE_ADDR)
-+		str += sprintf(str, "fw_vendor=0x%lx\n", efi.fw_vendor);
-+	if (efi.runtime!= EFI_INVALID_TABLE_ADDR)
-+		str += sprintf(str, "runtime=0x%lx\n", efi.runtime);
-+	if (efi.config_tables != EFI_INVALID_TABLE_ADDR)
-+		str += sprintf(str, "config_tables=0x%lx\n", efi.config_tables);
- 
- 	return str - buf;
+--- linux-2.6.orig/arch/x86/platform/efi/efi_64.c
++++ linux-2.6/arch/x86/platform/efi/efi_64.c
+@@ -177,6 +177,19 @@ void __init efi_map_region(efi_memory_de
+ 	md->virt_addr = efi_va;
  }
---- efi.orig/include/linux/efi.h
-+++ efi/include/linux/efi.h
-@@ -556,6 +556,9 @@ extern struct efi {
- 	unsigned long hcdp;		/* HCDP table */
- 	unsigned long uga;		/* UGA table */
- 	unsigned long uv_systab;	/* UV system table */
-+	unsigned long fw_vendor;
-+	unsigned long runtime;
-+	unsigned long config_tables;
- 	efi_get_time_t *get_time;
- 	efi_set_time_t *set_time;
- 	efi_get_wakeup_time_t *get_wakeup_time;
---- efi.orig/arch/x86/platform/efi/efi.c
-+++ efi/arch/x86/platform/efi/efi.c
-@@ -670,6 +670,10 @@ void __init efi_init(void)
  
- 	set_bit(EFI_SYSTEM_TABLES, &x86_efi_facility);
- 
-+	efi.fw_vendor = (unsigned long)efi.systab->fw_vendor;
-+	efi.runtime = (unsigned long)efi.systab->runtime;
-+	efi.config_tables = (unsigned long)efi.systab->tables;
++void __init efi_remap_region(efi_memory_desc_t *md)
++{
++	pgd_t *pgd = (pgd_t *)__va(real_mode_header->trampoline_pgd);
++	unsigned long pf = 0;
 +
- 	/*
- 	 * Show what we know for posterity
- 	 */
++	if (!(md->attribute & EFI_MEMORY_WB))
++		pf |= _PAGE_PCD;
++
++	if(kernel_map_pages_in_pgd(pgd, md->phys_addr, md->virt_addr, md->num_pages, pf))
++		pr_warning("Error mapping PA 0x%llx -> VA 0x%llx!\n",
++			   md->phys_addr, md->virt_addr);
++}
++
+ void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
+ 				 u32 type, u64 attribute)
+ {
+--- linux-2.6.orig/arch/x86/platform/efi/efi_32.c
++++ linux-2.6/arch/x86/platform/efi/efi_32.c
+@@ -46,6 +46,10 @@ void __init efi_map_region(efi_memory_de
+ 	old_map_region(md);
+ }
+ 
++void __init efi_remap_region(efi_memory_desc_t *md)
++{
++}
++
+ void efi_call_phys_prelog(void)
+ {
+ 	struct desc_ptr gdt_descr;
 
 
 _______________________________________________
