@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([78.46.96.112])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VaIDp-0002Ho-MI
- for kexec@lists.infradead.org; Sun, 27 Oct 2013 04:45:06 +0000
-Date: Sun, 27 Oct 2013 12:44:33 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: query for idea about a kexec regression
-Message-ID: <20131027044433.GB18689@dhcp-16-126.nay.redhat.com>
-References: <20131027043023.GA18689@dhcp-16-126.nay.redhat.com>
+ id 1VaNxf-0005KE-Ls
+ for kexec@lists.infradead.org; Sun, 27 Oct 2013 10:52:48 +0000
+Date: Sun, 27 Oct 2013 11:50:09 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [patch 2/6] x86 efi: reserve boot service fix
+Message-ID: <20131027105009.GA21868@pd.tnic>
+References: <20131027034713.481920209@dhcp-16-126.nay.redhat.com>
+ <20131027035922.924386710@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131027043023.GA18689@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20131027035922.924386710@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,31 +24,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, kexec@lists.infradead.org
+To: dyoung@redhat.com, Matt Fleming <matt@console-pimps.org>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-typo: mail address of x86@kernel.org
+On Sun, Oct 27, 2013 at 11:47:15AM +0800, dyoung@redhat.com wrote:
+> Current code check boot service region with kernel text region by: 
+> start+size >= __pa_symbol(_text)
+> The end of the above region should be start + size - 1 instead.
+> 
+> I see this problem in ovmf + Fedora 19 grub boot:
+> text start: 1000000 md start: 800000 md size: 800000
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 
-On 10/27/13 at 12:30pm, Dave Young wrote:
-> Hi
-> 
-> While I testing efi runtime patches for kexec kernel, there's
-> 2 machines kexec fails on them. It can be reproduced with
-> non-efi kernel, so it's not related to the patchset.
-> 
-> Problem is kexec kernel will immediatly reboot after below
-> kernel message:
-> smpboot: Booting Node   0, Processors  #   1
-> 
-> The latter CPUs were not printed.
-> 
-> nr_cpus=1 works, so there might be some bug on smp code.
-> 
-> Any idea or suspection acout some patches? This is not 100%
-> reproducible, to me it's about 30% thus it's hard to bisect.
-> 
-> Thanks
-> Dave
+Acked-by: Borislav Petkov <bp@suse.de>
+
+Btw, Matt, this being a bugfix and all, shouldn't it be tagged for
+stable?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
