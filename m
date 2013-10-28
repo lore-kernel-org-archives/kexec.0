@@ -1,21 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vaf3B-00035Z-Ar
- for kexec@lists.infradead.org; Mon, 28 Oct 2013 05:07:38 +0000
-Date: Mon, 28 Oct 2013 13:06:45 +0800
+ id 1Vafge-0003bA-3t
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 05:48:25 +0000
+Date: Mon, 28 Oct 2013 13:47:39 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 1/4] Add function get_bootparam
-Message-ID: <20131028050645.GB15827@dhcp-16-126.nay.redhat.com>
-References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
- <20131027041230.864225266@dhcp-16-126.nay.redhat.com>
- <20131028003800.GG849@verge.net.au>
- <20131028011355.GC4397@dhcp-16-126.nay.redhat.com>
- <20131028023032.GB11692@dhcp-16-126.nay.redhat.com>
- <20131028042056.GB19517@verge.net.au>
+Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
+ first, then try below 4G, then MAXMEM
+Message-ID: <20131028054739.GA20741@dhcp-16-126.nay.redhat.com>
+References: <1381751200-27376-1-git-send-email-chaowang@redhat.com>
+ <CAE9FiQUNMDuVZtqud3LBbAmE0SL8ZWLFnc+CSYZm4UfTvNUaOA@mail.gmail.com>
+ <20131015144810.GI31215@redhat.com>
+ <CAE9FiQXVCx__SuhAdO9_CNaRncW2HB2tv3UjZrQcbsTV35QWow@mail.gmail.com>
+ <20131018123837.GB2277@redhat.com>
+ <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
+ <20131021151643.GA20669@redhat.com>
+ <CAE9FiQVfeUdugFRMt1DGjtqW2FAb2gfnGjXENHjoJ=JVAYbYgw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131028042056.GB19517@verge.net.au>
+In-Reply-To: <CAE9FiQVfeUdugFRMt1DGjtqW2FAb2gfnGjXENHjoJ=JVAYbYgw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,37 +31,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, vgoyal@redhat.com, James.Bottomley@HansenPartnership.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, kexec@lists.fedoraproject.org
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, WANG Chao <chaowang@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On 10/28/13 at 01:20pm, Simon Horman wrote:
-> On Mon, Oct 28, 2013 at 10:30:32AM +0800, Dave Young wrote:
-> > On 10/28/13 at 09:13am, Dave Young wrote:
-> > > > > @@ -447,7 +446,7 @@ void setup_subarch(struct x86_linux_para
-> > > > >  	if (!debugfs_mnt)
-> > > > >  		return;
-> > > > >  	snprintf(filename, PATH_MAX, "%s/%s", debugfs_mnt, "boot_params/data");
-> > > > > -	filename[PATH_MAX-1] = 0;
-> > > > > +	filename[PATH_MAX - 1] = 0;
-> > > > >  	free(debugfs_mnt);
-> > > > 
-> > > > This change appears to be unrelated to the rest of the patch.
-> > > > 
-> > > 
-> > > Will remove the change from the patch.
-> > 
-> > Relooking it, with this patch the line "filename[PATH_MAX - 1] = 0;"
-> > is in the share function get_bootparam, it's not in setup_subarch
-> > any more so I think it's ok, what do you think?
+> Again, for distribution, when new kernel is added, new kernel will all
+> have ",high"
+> and new kexec-tools get installed.
 > 
-> I'm a bit confused.
-> 
-> My reading of the hunk above is that it is a whitespace-only change.
-> If so it is not a change that I object to but also not one that
-> I feel belongs in this patch. If not I am somehow mistaken.
+> Even we want to extend crashkernel=XM, then i would like to have
+> it identical to crashkernel=XM,high instead.
 
-The diff context is cheating us, it might because of the context (+- 3 lines)
-is same with original setup_arch, but it is really moving to a new function.
+My points: I can accept the approach of extending crashkernel=XM to
+use high mem firstly if we could remove the extra 72M in low mem, but
+apparently it's not doable now. So I would vote for Chao's patch.
+
+Also newer kernel use more complex ",high" then older kernel looks not good.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
