@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VakEz-0001Ku-5c
- for kexec@lists.infradead.org; Mon, 28 Oct 2013 10:40:09 +0000
-Date: Mon, 28 Oct 2013 18:39:18 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 3/6] Cleanup efi_enter_virtual_mode function
-Message-ID: <20131028103918.GH25527@dhcp-16-126.nay.redhat.com>
-References: <20131027034713.481920209@dhcp-16-126.nay.redhat.com>
- <20131027035923.081819853@dhcp-16-126.nay.redhat.com>
- <20131028093206.GB4314@pd.tnic>
- <20131028094049.GC25527@dhcp-16-126.nay.redhat.com>
- <20131028095117.GD25527@dhcp-16-126.nay.redhat.com>
- <20131028100402.GC4314@pd.tnic>
- <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
+Received: from cavan.codon.org.uk ([2a00:1098:0:80:1000:c:0:1])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VakEj-0001Ki-Ap
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 10:39:54 +0000
+Date: Mon, 28 Oct 2013 10:39:29 +0000
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [patch 2/4] remove extra acpi_rsdp command line for efi
+Message-ID: <20131028103929.GA4407@srcf.ucam.org>
+References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
+ <20131027041231.024036396@dhcp-16-126.nay.redhat.com>
+ <20131028094223.GA2335@srcf.ucam.org>
+ <20131028095459.GE25527@dhcp-16-126.nay.redhat.com>
+ <20131028101256.GA3226@srcf.ucam.org>
+ <20131028103412.GG25527@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20131028103412.GG25527@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,26 +28,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, bp@alien8.de, vgoyal@redhat.com
 
-On 10/28/13 at 06:10pm, Dave Young wrote:
-> On 10/28/13 at 11:04am, Borislav Petkov wrote:
-> > On Mon, Oct 28, 2013 at 05:51:17PM +0800, Dave Young wrote:
-> > > It does have a warning, but it applied successfully, no idea though: 
-> > > patches/02-efi-enter-virtual-mode-cleanup.patch
-> > > Applying: Cleanup efi_enter_virtual_mode function
-> > > /home/dave/git/efi/.git/rebase-apply/patch:42: space before tab in indent.
-> > >  	efi_memory_desc_t *md, *prev_md = NULL;
-> > > warning: 1 line adds whitespace errors.
-> > 
-> > Hmm, ok, can you upload the patches somewhere so that I can pull them?
+On Mon, Oct 28, 2013 at 06:34:12PM +0800, Dave Young wrote:
+> On 10/28/13 at 10:12am, Matthew Garrett wrote:
+> > Right, but previously acpi_rsdp was passed automatically and now it 
+> > won't be?
 > 
-> Sorry, I have not any public git account. Attached the patch I applied with git
+> Yes, it was. I'm removing them in kexec-tools patches for efi runtime support.
 
-Here is the kernel patche files if you would like to try,
-I have not got time to update them based on comments.
-https://people.redhat.com/ruyang/kexec-efi/for-bp/kernel-patches/
+If I upgrade kexec-tools and try to launch an old kernel, I now need to 
+add an extra parameter?
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
 
 _______________________________________________
 kexec mailing list
