@@ -1,25 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail.skyhub.de ([78.46.96.112])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vayg0-0006u7-Gy
- for kexec@lists.infradead.org; Tue, 29 Oct 2013 02:05:01 +0000
-Date: Tue, 29 Oct 2013 11:04:28 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch 2/4] remove extra acpi_rsdp command line for efi
-Message-ID: <20131029020428.GC21262@verge.net.au>
-References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
- <20131027041231.024036396@dhcp-16-126.nay.redhat.com>
- <20131028094223.GA2335@srcf.ucam.org>
- <20131028095459.GE25527@dhcp-16-126.nay.redhat.com>
- <20131028101256.GA3226@srcf.ucam.org>
- <20131028103412.GG25527@dhcp-16-126.nay.redhat.com>
- <20131028103929.GA4407@srcf.ucam.org>
- <20131028104532.GA29133@dhcp-16-126.nay.redhat.com>
- <20131028105119.GA4822@srcf.ucam.org>
- <20131028161040.GE1659@redhat.com>
+ id 1Vakui-0002KX-SC
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 11:23:17 +0000
+Date: Mon, 28 Oct 2013 12:20:45 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [patch 3/6] Cleanup efi_enter_virtual_mode function
+Message-ID: <20131028112045.GH4314@pd.tnic>
+References: <20131027034713.481920209@dhcp-16-126.nay.redhat.com>
+ <20131027035923.081819853@dhcp-16-126.nay.redhat.com>
+ <20131028093206.GB4314@pd.tnic>
+ <20131028094049.GC25527@dhcp-16-126.nay.redhat.com>
+ <20131028095117.GD25527@dhcp-16-126.nay.redhat.com>
+ <20131028100402.GC4314@pd.tnic>
+ <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131028161040.GE1659@redhat.com>
+In-Reply-To: <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,43 +29,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, kexec@lists.fedoraproject.org
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Mon, Oct 28, 2013 at 12:10:40PM -0400, Vivek Goyal wrote:
-> On Mon, Oct 28, 2013 at 10:51:19AM +0000, Matthew Garrett wrote:
-> > On Mon, Oct 28, 2013 at 06:45:32PM +0800, Dave Young wrote:
-> > > On 10/28/13 at 10:39am, Matthew Garrett wrote:
-> > > > On Mon, Oct 28, 2013 at 06:34:12PM +0800, Dave Young wrote:
-> > > > > On 10/28/13 at 10:12am, Matthew Garrett wrote:
-> > > > > > Right, but previously acpi_rsdp was passed automatically and now it 
-> > > > > > won't be?
-> > > > > 
-> > > > > Yes, it was. I'm removing them in kexec-tools patches for efi runtime support.
-> > > > 
-> > > > If I upgrade kexec-tools and try to launch an old kernel, I now need to 
-> > > > add an extra parameter?
-> > > 
-> > > Yes, it should work by passing the acpi_rsdp= via --append
-> > 
-> > Yes, that's my point. You're breaking old configurations by requiring 
-> > the user to pass an additional argument.
-> 
-> Yes this is a problem. Of course solution is easy by always passing
-> acpi_rsdp on command line. But in long term this is a problem. In the
-> sense, I am not sure how to cleanup the kexec-tools code as things improve.
-> Now we will support the EFI properly and still pass acpi_rsdp always in
-> an effort to matain backward compatibility.
-> 
-> For a very long time kexec-tools were not automatically appending
-> acpi_rsdp and user were supposed to add it on command line. We were
-> carrying this change in kdump scripts and pushed this change into
-> kexec-tools. In hindsight, it looks like that hardcoding parameters
-> in kexec-tools is a bad idea. It is hard to get rid of them in future.
+On Mon, Oct 28, 2013 at 06:10:11PM +0800, Dave Young wrote:
+> Sorry, I have not any public git account. Attached the patch I applied
+> with git
 
-I tend to agree.  However, if the parameters end up being hard coded
-elsewhere, for example in widely used wrapper scripts, then I think that
-the same problem still exists. Just outside of kexec-tools itself.
+Still doesn't work:
+
+$ patch -p1 --dry-run -i /tmp/02-efi-enter-virtual-mode-cleanup-1.patch.new 
+checking file arch/x86/platform/efi/efi.c
+Hunk #1 succeeded at 788 (offset -1 lines).
+Hunk #2 succeeded at 821 (offset -1 lines).
+Hunk #3 FAILED at 853.
+1 out of 3 hunks FAILED
+
+I'm using Matt's next branch + my efi runtime branch. What are you
+basing your stuff ontop?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
