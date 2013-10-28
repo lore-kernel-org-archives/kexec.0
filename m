@@ -1,25 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VbL96-0006CI-5s
- for kexec@lists.infradead.org; Wed, 30 Oct 2013 02:04:33 +0000
-Date: Wed, 30 Oct 2013 10:03:49 +0800
+ id 1Vakx5-0002R9-7h
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 11:25:43 +0000
+Date: Mon, 28 Oct 2013 19:24:58 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [patch 3/6] Cleanup efi_enter_virtual_mode function
-Message-ID: <20131030020348.GA4332@dhcp-16-126.nay.redhat.com>
-References: <20131028094049.GC25527@dhcp-16-126.nay.redhat.com>
+Message-ID: <20131028112458.GD29133@dhcp-16-126.nay.redhat.com>
+References: <20131027034713.481920209@dhcp-16-126.nay.redhat.com>
+ <20131027035923.081819853@dhcp-16-126.nay.redhat.com>
+ <20131028093206.GB4314@pd.tnic>
+ <20131028094049.GC25527@dhcp-16-126.nay.redhat.com>
  <20131028095117.GD25527@dhcp-16-126.nay.redhat.com>
  <20131028100402.GC4314@pd.tnic>
  <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
  <20131028112045.GH4314@pd.tnic>
- <20131028112458.GD29133@dhcp-16-126.nay.redhat.com>
- <20131028145801.GM4314@pd.tnic>
- <20131028151048.GA14984@dhcp-16-126.nay.redhat.com>
- <20131029023203.GB5185@dhcp-16-126.nay.redhat.com>
- <20131029134302.GI10972@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131029134302.GI10972@pd.tnic>
+In-Reply-To: <20131028112045.GH4314@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,20 +33,27 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On 10/29/13 at 02:43pm, Borislav Petkov wrote:
-> On Tue, Oct 29, 2013 at 10:32:03AM +0800, Dave Young wrote:
-> > I remember I tried your efi branch, but the code is different from
-> > what you sent to list, thus I turned to use the mbox patches.
+On 10/28/13 at 12:20pm, Borislav Petkov wrote:
+> On Mon, Oct 28, 2013 at 06:10:11PM +0800, Dave Young wrote:
+> > Sorry, I have not any public git account. Attached the patch I applied
+> > with git
 > 
-> Yeah, please use the #efi branch as I keep refreshing it with the newest
-> changes. They're hopefully not serious changes but minor stuff here and
-> there so basing stuff ontop should be ok.
+> Still doesn't work:
+> 
+> $ patch -p1 --dry-run -i /tmp/02-efi-enter-virtual-mode-cleanup-1.patch.new 
+> checking file arch/x86/platform/efi/efi.c
+> Hunk #1 succeeded at 788 (offset -1 lines).
+> Hunk #2 succeeded at 821 (offset -1 lines).
+> Hunk #3 FAILED at 853.
+> 1 out of 3 hunks FAILED
+> 
+> I'm using Matt's next branch + my efi runtime branch. What are you
+> basing your stuff ontop?
 
-Will try, but please keep the posted patches in mailing list up-to-date,
-I'm an old-fashioned person, do not tend to depend on git.
-
-Thanks in advance.
-Dave
+I use linus tree, git pull Matt's efi-next tree, then apply your 12 patches
+and my patches. I applied your previous 11 patches + the last update patch
+12/12, but the last one does not apply, I manually shift a hunk to make it
+apply.
 
 _______________________________________________
 kexec mailing list
