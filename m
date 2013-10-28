@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VabdU-0000Lw-UA
- for kexec@lists.infradead.org; Mon, 28 Oct 2013 01:28:53 +0000
-Date: Mon, 28 Oct 2013 09:28:16 +0800
+ id 1Vaboo-0000RD-Gv
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 01:40:35 +0000
+Date: Mon, 28 Oct 2013 09:39:49 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 4/4] Passing efi related data via setup_data
-Message-ID: <20131028012816.GF4397@dhcp-16-126.nay.redhat.com>
+Subject: Re: [patch 2/4] remove extra acpi_rsdp command line for efi
+Message-ID: <20131028013949.GA10444@dhcp-16-126.nay.redhat.com>
 References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
- <20131027041231.350640917@dhcp-16-126.nay.redhat.com>
+ <20131027041231.024036396@dhcp-16-126.nay.redhat.com>
+ <20131028003908.GH849@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131027041231.350640917@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20131028003908.GH849@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,36 +25,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, bp@alien8.de, vgoyal@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, bp@alien8.de, vgoyal@redhat.com
 
-On 10/27/13 at 12:04pm, Dave Young wrote:
-> For supporting efi runtime, several efi physical addresses
-> fw_vendor, runtime, config tables, smbios and the whole runtime
-> mapping info need to be used in kexec kernel. Thus introduce
-> setup_data struct for passing these data.
+On 10/28/13 at 09:39am, Simon Horman wrote:
+> On Sun, Oct 27, 2013 at 12:04:39PM +0800, dyoung@redhat.com wrote:
+> > Removing code to pass acpi_rsdp because this
+> > patch series will support efi runtime, it's not
+> > necessary any more. EFI initialization code will
+> > take the functionality.
 > 
-> collect the varialbes from /sys/firmware/efi/systab and
-> /sys/firmware/efi/efi-runtime-map
+> I wonder if it would make more sense to make this the
+> last patch in the series or squash it into the last patch
+> of the series.
 > 
-> Tested on qemu+ovmf, dell laptop, lenovo laptop and HP workstation.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  include/x86/x86-linux.h           |    2 
->  kexec/arch/i386/x86-linux-setup.c |  120 +++++++++++++++++++++++++++++++++++++-
->  2 files changed, 120 insertions(+), 2 deletions(-)
-> 
-> --- kexec-tools.orig/include/x86/x86-linux.h
-> +++ kexec-tools/include/x86/x86-linux.h
-> @@ -115,7 +115,7 @@ struct x86_linux_param_header {
->  	uint32_t ext_ramdisk_image;		/* 0xc0 */
->  	uint32_t ext_ramdisk_size;		/* 0xc4 */
->  	uint32_t ext_cmd_line_ptr;		/* 0xc8 */
-> -	uint8_t reserved4_1[0x1c0 - 0xcc];	/* 0xcc */
-> +	uint8_t reserved4_1[0x1c0 - 0xcc];	/* 0xe4 */
 
-Above change should be in previous patch. Will update in next version. 
+Sure, logiclly it should be the last one.
+
+--
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
