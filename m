@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([78.46.96.112])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vakui-0002KX-SC
- for kexec@lists.infradead.org; Mon, 28 Oct 2013 11:23:17 +0000
-Date: Mon, 28 Oct 2013 12:20:45 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [patch 3/6] Cleanup efi_enter_virtual_mode function
-Message-ID: <20131028112045.GH4314@pd.tnic>
-References: <20131027034713.481920209@dhcp-16-126.nay.redhat.com>
- <20131027035923.081819853@dhcp-16-126.nay.redhat.com>
- <20131028093206.GB4314@pd.tnic>
- <20131028094049.GC25527@dhcp-16-126.nay.redhat.com>
- <20131028095117.GD25527@dhcp-16-126.nay.redhat.com>
- <20131028100402.GC4314@pd.tnic>
- <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
+ id 1VaktT-0002LV-O6
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 11:22:00 +0000
+Date: Mon, 28 Oct 2013 19:21:21 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [patch 4/4] Passing efi related data via setup_data
+Message-ID: <20131028112121.GC29133@dhcp-16-126.nay.redhat.com>
+References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
+ <20131027041231.350640917@dhcp-16-126.nay.redhat.com>
+ <526E3F43.8050408@zytor.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <526E3F43.8050408@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,31 +25,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, bp@alien8.de, vgoyal@redhat.com
 
-On Mon, Oct 28, 2013 at 06:10:11PM +0800, Dave Young wrote:
-> Sorry, I have not any public git account. Attached the patch I applied
-> with git
+On 10/28/13 at 03:41am, H. Peter Anvin wrote:
+> On 10/26/2013 09:04 PM, dyoung@redhat.com wrote:
+> 
+> > +        __uint64_t next;
+> 
+> WTF is __uint64_t?
 
-Still doesn't work:
+bits/types.h:typedef unsigned long int __uint64_t;
 
-$ patch -p1 --dry-run -i /tmp/02-efi-enter-virtual-mode-cleanup-1.patch.new 
-checking file arch/x86/platform/efi/efi.c
-Hunk #1 succeeded at 788 (offset -1 lines).
-Hunk #2 succeeded at 821 (offset -1 lines).
-Hunk #3 FAILED at 853.
-1 out of 3 hunks FAILED
+I meant to use uint64_t instead of __unit64_t
 
-I'm using Matt's next branch + my efi runtime branch. What are you
-basing your stuff ontop?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Will fix.
 
 _______________________________________________
 kexec mailing list
