@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cavan.codon.org.uk ([2a00:1098:0:80:1000:c:0:1])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vajp4-0000e3-8Z
- for kexec@lists.infradead.org; Mon, 28 Oct 2013 10:13:23 +0000
-Date: Mon, 28 Oct 2013 10:12:56 +0000
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [patch 2/4] remove extra acpi_rsdp command line for efi
-Message-ID: <20131028101256.GA3226@srcf.ucam.org>
-References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
- <20131027041231.024036396@dhcp-16-126.nay.redhat.com>
- <20131028094223.GA2335@srcf.ucam.org>
- <20131028095459.GE25527@dhcp-16-126.nay.redhat.com>
+Received: from arkanian.console-pimps.org ([212.110.184.194])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vak2n-0000uo-Qf
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 10:27:34 +0000
+Date: Mon, 28 Oct 2013 10:27:05 +0000
+From: Matt Fleming <matt@console-pimps.org>
+Subject: Re: [patch 2/6] x86 efi: reserve boot service fix
+Message-ID: <20131028102705.GI1982@console-pimps.org>
+References: <20131027034713.481920209@dhcp-16-126.nay.redhat.com>
+ <20131027035922.924386710@dhcp-16-126.nay.redhat.com>
+ <20131027105009.GA21868@pd.tnic>
+ <20131027203058.GE1982@console-pimps.org>
+ <20131028011824.GD4397@dhcp-16-126.nay.redhat.com>
+ <20131028084440.GA4314@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131028095459.GE25527@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20131028084440.GA4314@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,31 +28,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, bp@alien8.de, vgoyal@redhat.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On Mon, Oct 28, 2013 at 05:54:59PM +0800, Dave Young wrote:
-> Hi,
-> Thanks for review.
+On Mon, 28 Oct, at 09:44:41AM, Borislav Petkov wrote:
+> On Mon, Oct 28, 2013 at 09:18:24AM +0800, Dave Young wrote:
+> > There should be some people see below message with non-kexec kernel:
+> > "Could not reserve boot range ..."
 > 
-> On 10/28/13 at 09:42am, Matthew Garrett wrote:
-> > On Sun, Oct 27, 2013 at 12:04:39PM +0800, dyoung@redhat.com wrote:
-> > > Removing code to pass acpi_rsdp because this
-> > > patch series will support efi runtime, it's not
-> > > necessary any more. EFI initialization code will
-> > > take the functionality.
-> > 
-> > Won't this break kexec of old kernels that don't have the new UEFI setup 
-> > code?
+> I can find one other report like that: https://lkml.org/lkml/2013/7/16/309
 > 
-> For old kernels the efi setup_data esdata will be NULL, it wil switch to
-> old logic. Also for old kernel user need to pass acpi_rsdp in cmdline
+> [    0.000000] efi: Could not reserve boot range [0x0000000000-0x0000000fff]
+> 
+> for
+> 
+> efi: mem00: type=3, attr=0xf, range=[0x0000000000000000-0x0000000000001000) (0MB)
+> 
+> which is EFI_BOOT_SERVICES_CODE and
+> 
+> efi: Could not reserve boot range [0x000005f000-0x000009ffff]
+> 
+> for
+> 
+> efi: mem06: type=3, attr=0xf, range=[0x000000000005f000-0x00000000000a0000) (0MB)
+> 
+> which is of the same type.
+ 
+But that doesn't look like the issue that the user was complaining
+about. Rather, it's that the higher EFI regions are unable to be mapped
+because of the user's mem= kernel parameter setting.
 
-Right, but previously acpi_rsdp was passed automatically and now it 
-won't be?
+However, even though this bug isn't the main focus of the above report,
+since people are hitting it (and since the fix is trivial), I agree it's
+worth tagging for stable.
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Matt Fleming, Intel Open Source Technology Center
 
 _______________________________________________
 kexec mailing list
