@@ -1,22 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vag0r-0003zU-Q5
- for kexec@lists.infradead.org; Mon, 28 Oct 2013 06:09:18 +0000
-Date: Mon, 28 Oct 2013 15:08:52 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch 1/4] Add function get_bootparam
-Message-ID: <20131028060848.GA23660@verge.net.au>
-References: <20131027040437.600278368@dhcp-16-126.nay.redhat.com>
- <20131027041230.864225266@dhcp-16-126.nay.redhat.com>
- <20131028003800.GG849@verge.net.au>
- <20131028011355.GC4397@dhcp-16-126.nay.redhat.com>
- <20131028023032.GB11692@dhcp-16-126.nay.redhat.com>
- <20131028042056.GB19517@verge.net.au>
- <20131028050645.GB15827@dhcp-16-126.nay.redhat.com>
+ id 1VagJc-0004Mz-9K
+ for kexec@lists.infradead.org; Mon, 28 Oct 2013 06:28:41 +0000
+Date: Mon, 28 Oct 2013 13:49:50 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
+ first, then try below 4G, then MAXMEM
+Message-ID: <20131028054950.GB20741@dhcp-16-126.nay.redhat.com>
+References: <20131018123837.GB2277@redhat.com>
+ <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
+ <20131021151643.GA20669@redhat.com>
+ <CAE9FiQVfeUdugFRMt1DGjtqW2FAb2gfnGjXENHjoJ=JVAYbYgw@mail.gmail.com>
+ <20131024140241.GA2322@redhat.com>
+ <CAE9FiQUu0WwMgNpog4TKch+MT2i7_DsNvqZxbyQusS4AFxdhQQ@mail.gmail.com>
+ <20131024191821.GE2322@redhat.com>
+ <CAE9FiQU7+FRY=3ETdGZJJfcS0vjRht4ZT8MHTQ66kpjD2MmrcA@mail.gmail.com>
+ <20131024192752.GG2322@redhat.com>
+ <CAE9FiQUw6REg2TXnSXtNZK8XY9vnorvi8oDbUn_5WdNZ6yiRtQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131028050645.GB15827@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <CAE9FiQUw6REg2TXnSXtNZK8XY9vnorvi8oDbUn_5WdNZ6yiRtQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,40 +33,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, kexec@lists.fedoraproject.org, vgoyal@redhat.com
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, WANG Chao <chaowang@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Mon, Oct 28, 2013 at 01:06:45PM +0800, Dave Young wrote:
-> On 10/28/13 at 01:20pm, Simon Horman wrote:
-> > On Mon, Oct 28, 2013 at 10:30:32AM +0800, Dave Young wrote:
-> > > On 10/28/13 at 09:13am, Dave Young wrote:
-> > > > > > @@ -447,7 +446,7 @@ void setup_subarch(struct x86_linux_para
-> > > > > >  	if (!debugfs_mnt)
-> > > > > >  		return;
-> > > > > >  	snprintf(filename, PATH_MAX, "%s/%s", debugfs_mnt, "boot_params/data");
-> > > > > > -	filename[PATH_MAX-1] = 0;
-> > > > > > +	filename[PATH_MAX - 1] = 0;
-> > > > > >  	free(debugfs_mnt);
-> > > > > 
-> > > > > This change appears to be unrelated to the rest of the patch.
-> > > > > 
-> > > > 
-> > > > Will remove the change from the patch.
-> > > 
-> > > Relooking it, with this patch the line "filename[PATH_MAX - 1] = 0;"
-> > > is in the share function get_bootparam, it's not in setup_subarch
-> > > any more so I think it's ok, what do you think?
-> > 
-> > I'm a bit confused.
-> > 
-> > My reading of the hunk above is that it is a whitespace-only change.
-> > If so it is not a change that I object to but also not one that
-> > I feel belongs in this patch. If not I am somehow mistaken.
-> 
-> The diff context is cheating us, it might because of the context (+- 3 lines)
-> is same with original setup_arch, but it is really moving to a new function.
+> without Cong's patch, kernel will fail to reserve, and user would dig
 
-Ok, in that case I have no objections.
+s/Chao/Cong ;)
 
 _______________________________________________
 kexec mailing list
