@@ -1,33 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VazHf-0007dy-Qi
- for kexec@lists.infradead.org; Tue, 29 Oct 2013 02:43:57 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 12F053EE15B
- for <kexec@lists.infradead.org>; Tue, 29 Oct 2013 11:43:28 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 0492145DE56
- for <kexec@lists.infradead.org>; Tue, 29 Oct 2013 11:43:28 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id D850745DE54
- for <kexec@lists.infradead.org>; Tue, 29 Oct 2013 11:43:27 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id C82101DB8038
- for <kexec@lists.infradead.org>; Tue, 29 Oct 2013 11:43:27 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8123F1DB802C
- for <kexec@lists.infradead.org>; Tue, 29 Oct 2013 11:43:27 +0900 (JST)
-Message-ID: <526F20A4.3080302@jp.fujitsu.com>
-Date: Tue, 29 Oct 2013 11:42:44 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VazBW-0007Xq-0V
+ for kexec@lists.infradead.org; Tue, 29 Oct 2013 02:37:35 +0000
+Date: Tue, 29 Oct 2013 10:36:36 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [patch 2/4] remove extra acpi_rsdp command line for efi
+Message-ID: <20131029023636.GC5185@dhcp-16-126.nay.redhat.com>
+References: <20131027041231.024036396@dhcp-16-126.nay.redhat.com>
+ <20131028094223.GA2335@srcf.ucam.org>
+ <20131028095459.GE25527@dhcp-16-126.nay.redhat.com>
+ <20131028101256.GA3226@srcf.ucam.org>
+ <20131028103412.GG25527@dhcp-16-126.nay.redhat.com>
+ <20131028103929.GA4407@srcf.ucam.org>
+ <20131028104532.GA29133@dhcp-16-126.nay.redhat.com>
+ <20131028105119.GA4822@srcf.ucam.org>
+ <20131028161040.GE1659@redhat.com>
+ <20131029020428.GC21262@verge.net.au>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: print spinner in progress information
-References: <5269CD32.200@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971B8EE2@BPXM01GP.gisp.nec.co.jp>
- <526F0EB0.20600@jp.fujitsu.com>
-In-Reply-To: <526F0EB0.20600@jp.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20131029020428.GC21262@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,86 +28,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, bp@alien8.de, Vivek Goyal <vgoyal@redhat.com>
 
-(2013/10/29 10:26), HATAYAMA Daisuke wrote:
-> (2013/10/25 13:07), Atsushi Kumagai wrote:
->> Hello HATAYAMA-san,
->>
->> (2013/10/25 9:55), HATAYAMA Daisuke wrote:
->>> On system with huge memory, percentage in progress information is
->>> updated at very slow interval, because 1 percent on 1 TiB memory is
->>> about 10 GiB, which looks like as if system has freezed. Then,
->>> confused users might get tempted to push a reset button to recover the
->>> system. We want to avoid such situation as much as possible.
->>>
->>> To address the issue, this patch adds spinner that rotates in the
->>> order of /, |, \ and - next to the progress indicator in percentage,
->>> which helps users to get aware that system is still active and crash
->>> dump process is still in progress now.
->>>
->>> This code is borrowed from diskdump code.
->>>
->>> The example is like this:
->>>
->>> Copying data                       : [  0 %] /
->>> Copying data                       : [  8 %] |
->>> Copying data                       : [ 11 %] \
->>> Copying data                       : [ 14 %] -
->>> Copying data                       : [ 16 %] /
->>> ...
->>> Copying data                       : [ 99 %] /
->>> Copying data                       : [100 %] |
->>
->> I like it, but have a comment.
->>
->>       6109 int
->>       6110 write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
->>       6111                          struct page_desc *pd_zero, off_t *offset_data)
->>       6112 {
->>       ...
->>       6156         per = info->num_dumpable / 100;
->>       ...
->>       6178         for (pfn = start_pfn; pfn < end_pfn; pfn++) {
->>       6179
->>       6180                 if ((num_dumped % per) == 0)
->>       6181                         print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
->>
->> The interval of calling print_progress() looks still long if
->> num_dumpable is huge.
->> So how about fix this, e.g., by changing the interval to time based ?
->>
->
-> I wrote simple bench for time-based interval as below, which measures
-> total time consumed for calling time system call with/without vDSO.
-> It seems to me that both results are acceptable.
-> I'll reflect this change in next version.
->
-> $ ./bench
-> total: 21.059131
-> average: 0.000000
-> total: 65.558263
-> average: 0.000000
->
+On 10/29/13 at 11:04am, Simon Horman wrote:
+> On Mon, Oct 28, 2013 at 12:10:40PM -0400, Vivek Goyal wrote:
+> > On Mon, Oct 28, 2013 at 10:51:19AM +0000, Matthew Garrett wrote:
+> > > On Mon, Oct 28, 2013 at 06:45:32PM +0800, Dave Young wrote:
+> > > > On 10/28/13 at 10:39am, Matthew Garrett wrote:
+> > > > > On Mon, Oct 28, 2013 at 06:34:12PM +0800, Dave Young wrote:
+> > > > > > On 10/28/13 at 10:12am, Matthew Garrett wrote:
+> > > > > > > Right, but previously acpi_rsdp was passed automatically and now it 
+> > > > > > > won't be?
+> > > > > > 
+> > > > > > Yes, it was. I'm removing them in kexec-tools patches for efi runtime support.
+> > > > > 
+> > > > > If I upgrade kexec-tools and try to launch an old kernel, I now need to 
+> > > > > add an extra parameter?
+> > > > 
+> > > > Yes, it should work by passing the acpi_rsdp= via --append
+> > > 
+> > > Yes, that's my point. You're breaking old configurations by requiring 
+> > > the user to pass an additional argument.
+> > 
+> > Yes this is a problem. Of course solution is easy by always passing
+> > acpi_rsdp on command line. But in long term this is a problem. In the
+> > sense, I am not sure how to cleanup the kexec-tools code as things improve.
+> > Now we will support the EFI properly and still pass acpi_rsdp always in
+> > an effort to matain backward compatibility.
+> > 
+> > For a very long time kexec-tools were not automatically appending
+> > acpi_rsdp and user were supposed to add it on command line. We were
+> > carrying this change in kdump scripts and pushed this change into
+> > kexec-tools. In hindsight, it looks like that hardcoding parameters
+> > in kexec-tools is a bad idea. It is hard to get rid of them in future.
+> 
+> I tend to agree.  However, if the parameters end up being hard coded
+> elsewhere, for example in widely used wrapper scripts, then I think that
+> the same problem still exists. Just outside of kexec-tools itself.
 
-This conclusion was wrong. Sorry. For example on our FJ 12 TiB system we collected about 300 GiB
-crash dump in about 40 minutes. If removing "if ((num_dumped % per) == 0)" and calling time()
-in each loop in print_progress(), total time for invoking time() system call is about 65 * 12
-= 780 sec = 13 min. This is about 20 % of a whole crash dump time. Obviously problematic.
-
-Instead, I think it better to increase the number of calling print_progress() like:
-
-   per = info->num_dumpable / 10000
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+Kernel has a rule of not breaking userspace, does kexec-tools also have the
+policy? Maybe user or distribution carry that will be slight better so upstream
+kexec code will be cleaner..
 
 _______________________________________________
 kexec mailing list
