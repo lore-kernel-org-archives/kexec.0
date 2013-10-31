@@ -1,20 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-oa0-f49.google.com ([209.85.219.49])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VbgEI-0003Hc-EY
- for kexec@lists.infradead.org; Thu, 31 Oct 2013 00:35:19 +0000
-Received: by mail-oa0-f49.google.com with SMTP id j10so2301428oah.22
- for <kexec@lists.infradead.org>; Wed, 30 Oct 2013 17:34:55 -0700 (PDT)
-Message-ID: <5271A5AA.3050904@linaro.org>
-Date: Wed, 30 Oct 2013 17:34:50 -0700
-From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vbhdo-0004py-0u
+ for kexec@lists.infradead.org; Thu, 31 Oct 2013 02:05:45 +0000
+Date: Thu, 31 Oct 2013 10:04:05 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [patch 3/6] Cleanup efi_enter_virtual_mode function
+Message-ID: <20131031020405.GA4377@dhcp-16-126.nay.redhat.com>
+References: <20131028100402.GC4314@pd.tnic>
+ <20131028101011.GF25527@dhcp-16-126.nay.redhat.com>
+ <20131028112045.GH4314@pd.tnic>
+ <20131028112458.GD29133@dhcp-16-126.nay.redhat.com>
+ <20131028145801.GM4314@pd.tnic>
+ <20131028151048.GA14984@dhcp-16-126.nay.redhat.com>
+ <20131029023203.GB5185@dhcp-16-126.nay.redhat.com>
+ <20131029134302.GI10972@pd.tnic>
+ <20131030020348.GA4332@dhcp-16-126.nay.redhat.com>
+ <20131030104718.GB13290@pd.tnic>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] vmcore-dmesg: Understand >= v3.11-rc4 dmesg
-References: <20130919143815.GA4487@dhcp-16-126.nay.redhat.com>
- <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
- <20131030031253.GD20932@dhcp16-109.nay.redhat.com>
- <1383152798.31813.2.camel@odvarok>
-In-Reply-To: <1383152798.31813.2.camel@odvarok>
+Content-Disposition: inline
+In-Reply-To: <20131030104718.GB13290@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,35 +32,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Lubomir Rintel <lkundrak@v3.sk>, WANG Chao <chaowang@redhat.com>
-Cc: Joe Perches <joe@perches.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On 10/30/2013 10:06 AM, Lubomir Rintel wrote:
-> Hi,
+On 10/30/13 at 11:47am, Borislav Petkov wrote:
+> On Wed, Oct 30, 2013 at 10:03:49AM +0800, Dave Young wrote:
+> > Will try, but please keep the posted patches in mailing list up-to-date,
 > 
-> On Wed, 2013-10-30 at 11:12 +0800, WANG Chao wrote:
->> On 09/19/13 at 04:49pm, Lubomir Rintel wrote:
->>> Symbol name changed with the following commit:
->>> 62e32ac printk: rename struct log to struct printk_log
-> ...
->> vmcore-dmesg is really broken here since 3.11 kernel is released. Are
->> you going to send an update v3 to address the comments to v2 from Vivek,
->> Joe and Dave
-> 
-> I'm not really sure. I thought the suggestions were concerning the Linux
-> kernel tree, not kexec-tools tree. I might be wrong though, but I'd need
-> the suggestions to be a bit more specific for me to understand.
-> 
+> Would you like me to send them to you privately?
 
-Hi
+Thanks, do not bother to send me privately I can get it from your git tree.
 
-I've posted a bit different version of fix [1].
-Could you please check out that approach?
+But Frankly I'd like to see them in list instead even with only small fixes
+beacuse in this way there might be more people to review it carefully.
 
-[1] http://permalink.gmane.org/gmane.linux.kernel.kexec/9522
-
--- 
-Taras Kondratiuk
+--
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
