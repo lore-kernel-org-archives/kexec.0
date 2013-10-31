@@ -1,34 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VbjvE-0006Yk-N1
- for kexec@lists.infradead.org; Thu, 31 Oct 2013 04:31:54 +0000
+ id 1Vbk93-0006hS-Fh
+ for kexec@lists.infradead.org; Thu, 31 Oct 2013 04:46:10 +0000
 Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 24C293EE0BB
- for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:31:22 +0900 (JST)
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id B45A33EE1DD
+ for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:45:42 +0900 (JST)
 Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 13E8E45DEBA
- for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:31:22 +0900 (JST)
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 671F045DEBA
+ for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:45:42 +0900 (JST)
 Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id F049945DEB7
- for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:31:21 +0900 (JST)
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4DBB445DEB7
+ for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:45:42 +0900 (JST)
 Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id E43F11DB8038
- for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:31:21 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 973DEE18001
- for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:31:21 +0900 (JST)
-Message-ID: <5271DC51.6040200@jp.fujitsu.com>
-Date: Thu, 31 Oct 2013 13:28:01 +0900
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 353711DB8044
+ for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:45:42 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id DC3981DB803F
+ for <kexec@lists.infradead.org>; Thu, 31 Oct 2013 13:45:41 +0900 (JST)
+Message-ID: <5271DFEC.7070802@jp.fujitsu.com>
+Date: Thu, 31 Oct 2013 13:43:24 +0900
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] Write out a whole part of the 1st bitmap before
- entering cyclic process
-References: <20131024065015.5291.51864.stgit@localhost6.localdomain6>
- <20131024065205.5291.37035.stgit@localhost6.localdomain6>
- <0910DD04CBD6DE4193FCF86B9C00BE971BA5FD@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971BA5FD@BPXM01GP.gisp.nec.co.jp>
+Subject: Re: [PATCH v4 0/3] x86, apic, kexec: Add disable_cpu_apic kernel
+ parameter
+References: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
+ <20131022220803.GA32387@anatevka.fc.hp.com> <526712B2.7070108@jp.fujitsu.com>
+ <20131031005812.GA15459@anatevka.fc.hp.com>
+In-Reply-To: <20131031005812.GA15459@anatevka.fc.hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,51 +36,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: jerry.hoemann@hp.com
+Cc: fengguang.wu@intel.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, vgoyal@redhat.com
 
-(2013/10/30 19:52), Atsushi Kumagai wrote:
-> (2013/10/24 15:52), HATAYAMA Daisuke wrote:
->> Currently, 1st bitmap is created during cyclic process, but the
->> information represented by the 1st bitmap, originally present memory,
->> is still available from ELF program header table, so we don't need to
->> keep the 1st bitmap even in cyclic process.
+(2013/10/31 9:58), jerry.hoemann@hp.com wrote:
+> On Wed, Oct 23, 2013 at 09:05:06AM +0900, HATAYAMA Daisuke wrote:
+>>>>
+>>>> - Rebased on top of v3.12-rc6
+>>>>
+>>>> - Basic design has been changed. Now users need to figure out initial
+>>>>    APIC ID of BSP in the 1st kernel and configures kernel parameter for
+>>>>    the 2nd kernel manually using disable_cpu_apic kernel parameter to
+>>>>    be newly introduced in this patch set. This design is more flexible
+>>>>    than the previous version in that we no longer have to rely on
+>>>>    ACPI/MP table to get initial APIC ID of BSP.
+>>>
+>>>
+>>> Do you literally mean a human at each boot will have to configure
+>>> the kdump configuration files for passing disable_cpu_apic?
+>>> Or do you envision the setting of disable_cpu_apic being put into
+>>> the kdump initialization scripts?
+>>>
+>>> thanks
+>>>
+>>> Jerry
 >>
->> Supported is a conversion from ELF to kdump-compressed format only,
->> not from ELF to ELF.
+>> Nearer to the former case, but this is not what a human should do. It's
+>> a cumbersome task. I think, on fedora/RHEL system for example, kdump
+>> service should check at each boot automatically.
 >>
->> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
->> ---
->>    makedumpfile.c |  224 +++++++++++++++++++++++++++++++++++++++++++++++++++-----
->>    1 file changed, 202 insertions(+), 22 deletions(-)
->>
->> diff --git a/makedumpfile.c b/makedumpfile.c
->> index 4b6c0ed..7440c97 100644
->> --- a/makedumpfile.c
->> +++ b/makedumpfile.c
->> @@ -3055,7 +3055,8 @@ out:
->>    				 * bufsize_cyclic is used to allocate 1st and 2nd bitmap,
->>    				 * so it should be truncated to the half of free_memory.
->>    				 */
->> -				info->bufsize_cyclic = free_memory / 2;
->> +				if (info->flag_elf_dumpfile)
->> +					info->bufsize_cyclic = free_memory / 2;
->>    			}
->>    		}
-> 
-> I think here should be changed like below:
-> 
-> 		if (info->flag_elf_dumpfile)
-> 			info->bufsize_cyclic = free_memory / 2;
-> 		else
-> 			info->bufsize_cyclic = free_memory;
-> 
+>> HATAYAMA, Daisuke
+>
+>
+> Daisuke,
+>
+> Are you planning on making changes to the kexec tools to automate
+> the setting of disable_cpu_apic to the capture kernel? Or do you
+> know someone who is planning this?
+>
+> I back ported the kernel side changes to a 4.2.32 based kernel.
+> I tested the patch on a prototype system which exhibits a stable
+> initial_apic_id for CPU 0.  While not something that would be suitable
+> for customers, it does allow me to test the kernel portion of the patch.
+>
+> I will report the results of the testing later this week.
+>
 
-Thanks. I'll fix this.
+I'll do that after this patch is merged in kernel. But it is still under
+reviewing.
 
 -- 
 Thanks.
