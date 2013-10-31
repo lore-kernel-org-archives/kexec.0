@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VblaQ-00083k-Co
- for kexec@lists.infradead.org; Thu, 31 Oct 2013 06:18:31 +0000
-Date: Thu, 31 Oct 2013 14:18:01 +0800
-From: WANG Chao <chaowang@redhat.com>
+ id 1Vblcf-000868-7J
+ for kexec@lists.infradead.org; Thu, 31 Oct 2013 06:20:49 +0000
+Date: Thu, 31 Oct 2013 15:20:26 +0900
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH v2] vmcore-dmesg: Understand >= v3.11-rc4 dmesg
-Message-ID: <20131031061801.GC7611@dhcp16-109.nay.redhat.com>
+Message-ID: <20131031062026.GX1603@verge.net.au>
 References: <20130919143815.GA4487@dhcp-16-126.nay.redhat.com>
  <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
  <20131030031253.GD20932@dhcp16-109.nay.redhat.com>
@@ -27,10 +27,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Lubomir Rintel <lkundrak@v3.sk>, Simon Horman <horms@verge.net.au>
-Cc: Joe Perches <joe@perches.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
+To: WANG Chao <chaowang@redhat.com>
+Cc: Joe Perches <joe@perches.com>, Lubomir Rintel <lkundrak@v3.sk>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-On 10/31/13 at 01:38pm, WANG Chao wrote:
+On Thu, Oct 31, 2013 at 01:38:08PM +0800, WANG Chao wrote:
 > On 10/30/13 at 06:06pm, Lubomir Rintel wrote:
 > > Hi,
 > > 
@@ -47,19 +47,15 @@ On 10/31/13 at 01:38pm, WANG Chao wrote:
 > > kernel tree, not kexec-tools tree. I might be wrong though, but I'd need
 > > the suggestions to be a bit more specific for me to understand.
 > 
-> That wouldn't be your concern any more.
+> That wouldn't be your concern any more. I think your patch is fine.
+> Thank you for fix.
+> 
+> Hi Simon,
+> 
+> Will you pick up this patch? Vivek and Dave has acked this patch.
+> And also this patch works for me.
 
-Hi, Lubomir,
-
-I'm sorry. I was told that this phrase is not friendly and nearly rude.
-By that I realy mean I think your patch has no problem and you don't
-need to concern what I brought up in my first email.
-
-I'm not a native speaker and that was not my intention. I should have
-choosed my words more carefully. Sorry again.
-
-Thanks
-WANG Chao
+Sure. Please repost it with the Acks.
 
 _______________________________________________
 kexec mailing list
