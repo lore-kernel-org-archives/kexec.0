@@ -1,20 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vblcf-000868-7J
- for kexec@lists.infradead.org; Thu, 31 Oct 2013 06:20:49 +0000
-Date: Thu, 31 Oct 2013 15:20:26 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] vmcore-dmesg: Understand >= v3.11-rc4 dmesg
-Message-ID: <20131031062026.GX1603@verge.net.au>
-References: <20130919143815.GA4487@dhcp-16-126.nay.redhat.com>
- <1379602186-13617-1-git-send-email-lkundrak@v3.sk>
- <20131030031253.GD20932@dhcp16-109.nay.redhat.com>
- <1383152798.31813.2.camel@odvarok>
- <20131031053808.GA7611@dhcp16-109.nay.redhat.com>
+ id 1VbpkN-0004yf-T0
+ for kexec@lists.infradead.org; Thu, 31 Oct 2013 10:45:04 +0000
+Date: Thu, 31 Oct 2013 11:44:26 +0100
+From: Borislav Petkov <bp@suse.de>
+Subject: Re: [patch 3/6] Cleanup efi_enter_virtual_mode function
+Message-ID: <20131031104426.GA10544@pd.tnic>
+References: <20131028112045.GH4314@pd.tnic>
+ <20131028112458.GD29133@dhcp-16-126.nay.redhat.com>
+ <20131028145801.GM4314@pd.tnic>
+ <20131028151048.GA14984@dhcp-16-126.nay.redhat.com>
+ <20131029023203.GB5185@dhcp-16-126.nay.redhat.com>
+ <20131029134302.GI10972@pd.tnic>
+ <20131030020348.GA4332@dhcp-16-126.nay.redhat.com>
+ <20131030104718.GB13290@pd.tnic>
+ <20131031020405.GA4377@dhcp-16-126.nay.redhat.com>
+ <20131031020714.GB4377@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131031053808.GA7611@dhcp16-109.nay.redhat.com>
+In-Reply-To: <20131031020714.GB4377@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,35 +32,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: Joe Perches <joe@perches.com>, Lubomir Rintel <lkundrak@v3.sk>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, kexec@lists.fedoraproject.org, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Thu, Oct 31, 2013 at 01:38:08PM +0800, WANG Chao wrote:
-> On 10/30/13 at 06:06pm, Lubomir Rintel wrote:
-> > Hi,
-> > 
-> > On Wed, 2013-10-30 at 11:12 +0800, WANG Chao wrote:
-> > > On 09/19/13 at 04:49pm, Lubomir Rintel wrote:
-> > > > Symbol name changed with the following commit:
-> > > > 62e32ac printk: rename struct log to struct printk_log
-> > ...
-> > > vmcore-dmesg is really broken here since 3.11 kernel is released. Are
-> > > you going to send an update v3 to address the comments to v2 from Vivek,
-> > > Joe and Dave
-> > 
-> > I'm not really sure. I thought the suggestions were concerning the Linux
-> > kernel tree, not kexec-tools tree. I might be wrong though, but I'd need
-> > the suggestions to be a bit more specific for me to understand.
-> 
-> That wouldn't be your concern any more. I think your patch is fine.
-> Thank you for fix.
-> 
-> Hi Simon,
-> 
-> Will you pick up this patch? Vivek and Dave has acked this patch.
-> And also this patch works for me.
+Dear Mr. Young,
 
-Sure. Please repost it with the Acks.
+On Thu, Oct 31, 2013 at 10:07:14AM +0800, Dave Young wrote:
+> > But Frankly I'd like to see them in list instead even with only small fixes
+> > beacuse in this way there might be more people to review it carefully.
+> 
+> There's another shorcoming for keeping new patches in git is that nobody know
+> when you push it and when is the proper date to pull from your git. I think
+> it's better to use git only for the patches which have already been accepted
+> and is waiting for maintainer to pull.
+
+thank you for teaching me how to do kernel development!
+
+The actual and real reason why I didn't send them yet is because I
+didn't want to be that kaffeine-inflated dork who spams the lists every
+other day with a new version of his patches.
+
+I am running build smoketests now and will send the latest version of
+the patchset later today so don't worry, the world will see them :)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
