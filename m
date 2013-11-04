@@ -1,35 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdEIj-0003X7-My
- for kexec@lists.infradead.org; Mon, 04 Nov 2013 07:10:19 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id E785D3EE0BD
- for <kexec@lists.infradead.org>; Mon,  4 Nov 2013 16:09:48 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id D7D5445DE4E
- for <kexec@lists.infradead.org>; Mon,  4 Nov 2013 16:09:48 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id C27C045DD77
- for <kexec@lists.infradead.org>; Mon,  4 Nov 2013 16:09:48 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id B582C1DB803E
- for <kexec@lists.infradead.org>; Mon,  4 Nov 2013 16:09:48 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 692891DB8037
- for <kexec@lists.infradead.org>; Mon,  4 Nov 2013 16:09:48 +0900 (JST)
-Message-ID: <527747E2.3070405@jp.fujitsu.com>
-Date: Mon, 04 Nov 2013 16:08:18 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VdLJR-0005PC-66
+ for kexec@lists.infradead.org; Mon, 04 Nov 2013 14:39:30 +0000
+Date: Mon, 4 Nov 2013 22:38:50 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
+ first, then try below 4G, then MAXMEM
+Message-ID: <20131104143850.GA10446@dhcp16-109.nay.redhat.com>
+References: <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
+ <20131021151643.GA20669@redhat.com>
+ <CAE9FiQVfeUdugFRMt1DGjtqW2FAb2gfnGjXENHjoJ=JVAYbYgw@mail.gmail.com>
+ <20131024140241.GA2322@redhat.com>
+ <CAE9FiQUu0WwMgNpog4TKch+MT2i7_DsNvqZxbyQusS4AFxdhQQ@mail.gmail.com>
+ <20131024191821.GE2322@redhat.com>
+ <CAE9FiQU7+FRY=3ETdGZJJfcS0vjRht4ZT8MHTQ66kpjD2MmrcA@mail.gmail.com>
+ <20131024192752.GG2322@redhat.com>
+ <CAE9FiQUw6REg2TXnSXtNZK8XY9vnorvi8oDbUn_5WdNZ6yiRtQ@mail.gmail.com>
+ <20131028151224.GB1659@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/3] x86, apic, kexec: Add disable_cpu_apic kernel
- parameter
-References: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
- <20131022220803.GA32387@anatevka.fc.hp.com> <526712B2.7070108@jp.fujitsu.com>
- <20131031005812.GA15459@anatevka.fc.hp.com>
- <20131031132744.GB3392@redhat.com>
-In-Reply-To: <20131031132744.GB3392@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20131028151224.GB1659@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,50 +29,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jerry.hoemann@hp.com, bp@alien8.de, "Eric W. Biederman" <ebiederm@xmission.com>, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
+To: "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 
-(2013/10/31 22:27), Vivek Goyal wrote:
-> On Wed, Oct 30, 2013 at 06:58:13PM -0600, jerry.hoemann@hp.com wrote:
->
-> [..]
->> Daisuke,
->>
->> Are you planning on making changes to the kexec tools to automate
->> the setting of disable_cpu_apic to the capture kernel? Or do you
->> know someone who is planning this?
->
-> I think we should not make this change in kexec-tools and should leave
-> it to distro scripts to append disable_cpu_apic.
->
-> Who knows in future this restriction is not there at all and kexec-tools
-> will be stuck with always passing disable_cpu_apic. Getting rid of
-> this parameter in distro scripts will be much easier.
->
+On 10/28/13 at 11:12am, Vivek Goyal wrote:
+> On Thu, Oct 24, 2013 at 10:48:29PM -0700, Yinghai Lu wrote:
+> > On Thu, Oct 24, 2013 at 12:27 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> > > On Thu, Oct 24, 2013 at 12:24:57PM -0700, Yinghai Lu wrote:
+> > >> On Thu, Oct 24, 2013 at 12:18 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> > >> > On Thu, Oct 24, 2013 at 12:15:25PM -0700, Yinghai Lu wrote:
+> > >> >
+> > >> > Also keeping things simple by not trying to *impose* a new crashkernel=
+> > >> > syntax on existing crashkernel=xM users.
+> > >>
+> > >> Existing user that have crashkernel=xM working with their old kernel
+> > >> and old kexec-tools, they still could keep their old command line and
+> > >> old kexec-tools
+> > >> with new updated kernel.
+> > >> We should not change semantics to surprise them.
+> > >
+> > > Old users will get reservation still below 896MB.
+> > >
+> > > It will go above 896MB only if memory could not be allocated below 896MB.
+> > >
+> > > In the past reservation will fail and kexec-tools will fail.
+> > > Now reservation will succeed but kexec-tools will fail.
+> > >
+> > > So end result a user sees is that kexec-tools fails. So I don't see how
+> > > we are breaking existing installations or user setups.
+> > 
+> > case could be: if user add more memory and put more pcie cards, and
+> > second kernel will need more ram and OOM there.
+> 
+> Now makedumpfile supports cyclic mode by default. So one does not have
+> to necessarily linearly scale reserved memory based on physical memory
+> present in the box.
+> 
+> > so user could just increase crashkernel=512M to crashkernel=1G.
+> 
+> If user has new makedumpfile, OOM should not happen and one should not
+> have to increase memory reservation.
+> 
+> > 
+> > without Cong's patch, kernel will fail to reserve, and user would dig
+> > to change it
+> > to crashkernel=1G,high, and update kexec-tools.
+> > 
+> > with Cong's patch, kernel will reserve other range like between 896
+> > and 4G, old kexec-tools either
+> > fail to load second kernel or hang in purgatory or early stage of
+> > second kernel, or other unknown behavior.
+> 
+> I understand your concern about memory being reserved high and kexec
+> just hanging. Only thing I am arguing is that the number of cases where
+> it will happen is small.
+> 
+> - First of all for all old existing kexec-tools memory will stil come
+>   from 896MB.
+> - Old kexec-tools enforced that purgatory is loaded below 2G. So if 
+>   memory is reserved above 2G, kexec-tools will fail.
+> 
+> So only problematic case seems to be that if user increased crashkernel=X
+> value and memory got reserved between 896M and 2G. But this is not same
+> as breaking old setups as old setups anyway never worked with this 
+> configuration.
+> 
+> You argument that user will research and upgrade kexec-tools and use
+> crashkernel=X,high, then it holds true for the case where memory is
+> reserved between 896M and 2G.
+> 
+> I personally think that it is easier for a user to not change any
+> kernel parameters with kernel and kexec-tools upgrade and still be
+> able to work with large memory systems. So the benefit of extending
+> the semantics of existing parameter seems to be outweighing the downside
+> of side, IMHO.
+> 
+> > 
+> > I would think first path is much clear and predicted.
+> > 
+> > If my memory is right, HPA did not like idea that we try below 896M,
+> > and then under 4G and then above 4G.
+> 
+> hpa, I know you did not like the idea in the past. Is it still the case.
+
+Hi, hpa
+
+Do you still not like this idea? Could you make it more clear to us
+please?
+
+Thanks
+Chao
+
+> 
+> IMHO, I like the fact that existing users still be able to work with
+> crashkernel=X and not forced to switch to crashkernel=x,high and also incur
+> the penalty of reserving extra memory for software iotlb.
+> 
 > Thanks
 > Vivek
->
-
-Yes, I'll post the patch to distribution's kexec-tools. ``kexec-tools''
-seems a little ambiguous; the users scripts on fedora are contained
-in the same package.
-
-I don't know things on other distributions mostly at all; I've read
-Ubuntu's scripts really a little bit only. I'd like anyone to post patches
-if necessary...
-
-BTW, what's the status of this patch set? I've redesigned this so as to
-be done with kernel parameter in order not to depend on platform specific
-BIOS table. Due to the redesign, I think now ACK is needed again.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
 
 _______________________________________________
 kexec mailing list
