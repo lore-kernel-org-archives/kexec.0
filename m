@@ -1,26 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdLJR-0005PC-66
- for kexec@lists.infradead.org; Mon, 04 Nov 2013 14:39:30 +0000
-Date: Mon, 4 Nov 2013 22:38:50 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH] x86, kdump: crashkernel=X try to reserve below 896M
- first, then try below 4G, then MAXMEM
-Message-ID: <20131104143850.GA10446@dhcp16-109.nay.redhat.com>
-References: <CAE9FiQWdMmSseDk6J=TOXT9ZahJUBf2BOU+VHJRXeeMofgH=EQ@mail.gmail.com>
- <20131021151643.GA20669@redhat.com>
- <CAE9FiQVfeUdugFRMt1DGjtqW2FAb2gfnGjXENHjoJ=JVAYbYgw@mail.gmail.com>
- <20131024140241.GA2322@redhat.com>
- <CAE9FiQUu0WwMgNpog4TKch+MT2i7_DsNvqZxbyQusS4AFxdhQQ@mail.gmail.com>
- <20131024191821.GE2322@redhat.com>
- <CAE9FiQU7+FRY=3ETdGZJJfcS0vjRht4ZT8MHTQ66kpjD2MmrcA@mail.gmail.com>
- <20131024192752.GG2322@redhat.com>
- <CAE9FiQUw6REg2TXnSXtNZK8XY9vnorvi8oDbUn_5WdNZ6yiRtQ@mail.gmail.com>
- <20131028151224.GB1659@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VdLzd-0006aC-N3
+ for kexec@lists.infradead.org; Mon, 04 Nov 2013 15:23:06 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 23A313EE0AE
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:39 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1349045DE55
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:39 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id F0E0245DE54
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:38 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id E4E3BE08001
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:38 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9C90E1DB8045
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:38 +0900 (JST)
+Subject: [PATCH v2 0/2] makedumpfile: write out a whole part of the 1st
+ bitmap before entering cyclic process
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Tue, 05 Nov 2013 00:22:37 +0900
+Message-ID: <20131104152202.2556.83382.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131028151224.GB1659@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,104 +36,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jacob Shin <jacob.shin@amd.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, vgoyal@redhat.com
 
-On 10/28/13 at 11:12am, Vivek Goyal wrote:
-> On Thu, Oct 24, 2013 at 10:48:29PM -0700, Yinghai Lu wrote:
-> > On Thu, Oct 24, 2013 at 12:27 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > On Thu, Oct 24, 2013 at 12:24:57PM -0700, Yinghai Lu wrote:
-> > >> On Thu, Oct 24, 2013 at 12:18 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
-> > >> > On Thu, Oct 24, 2013 at 12:15:25PM -0700, Yinghai Lu wrote:
-> > >> >
-> > >> > Also keeping things simple by not trying to *impose* a new crashkernel=
-> > >> > syntax on existing crashkernel=xM users.
-> > >>
-> > >> Existing user that have crashkernel=xM working with their old kernel
-> > >> and old kexec-tools, they still could keep their old command line and
-> > >> old kexec-tools
-> > >> with new updated kernel.
-> > >> We should not change semantics to surprise them.
-> > >
-> > > Old users will get reservation still below 896MB.
-> > >
-> > > It will go above 896MB only if memory could not be allocated below 896MB.
-> > >
-> > > In the past reservation will fail and kexec-tools will fail.
-> > > Now reservation will succeed but kexec-tools will fail.
-> > >
-> > > So end result a user sees is that kexec-tools fails. So I don't see how
-> > > we are breaking existing installations or user setups.
-> > 
-> > case could be: if user add more memory and put more pcie cards, and
-> > second kernel will need more ram and OOM there.
-> 
-> Now makedumpfile supports cyclic mode by default. So one does not have
-> to necessarily linearly scale reserved memory based on physical memory
-> present in the box.
-> 
-> > so user could just increase crashkernel=512M to crashkernel=1G.
-> 
-> If user has new makedumpfile, OOM should not happen and one should not
-> have to increase memory reservation.
-> 
-> > 
-> > without Cong's patch, kernel will fail to reserve, and user would dig
-> > to change it
-> > to crashkernel=1G,high, and update kexec-tools.
-> > 
-> > with Cong's patch, kernel will reserve other range like between 896
-> > and 4G, old kexec-tools either
-> > fail to load second kernel or hang in purgatory or early stage of
-> > second kernel, or other unknown behavior.
-> 
-> I understand your concern about memory being reserved high and kexec
-> just hanging. Only thing I am arguing is that the number of cases where
-> it will happen is small.
-> 
-> - First of all for all old existing kexec-tools memory will stil come
->   from 896MB.
-> - Old kexec-tools enforced that purgatory is loaded below 2G. So if 
->   memory is reserved above 2G, kexec-tools will fail.
-> 
-> So only problematic case seems to be that if user increased crashkernel=X
-> value and memory got reserved between 896M and 2G. But this is not same
-> as breaking old setups as old setups anyway never worked with this 
-> configuration.
-> 
-> You argument that user will research and upgrade kexec-tools and use
-> crashkernel=X,high, then it holds true for the case where memory is
-> reserved between 896M and 2G.
-> 
-> I personally think that it is easier for a user to not change any
-> kernel parameters with kernel and kexec-tools upgrade and still be
-> able to work with large memory systems. So the benefit of extending
-> the semantics of existing parameter seems to be outweighing the downside
-> of side, IMHO.
-> 
-> > 
-> > I would think first path is much clear and predicted.
-> > 
-> > If my memory is right, HPA did not like idea that we try below 896M,
-> > and then under 4G and then above 4G.
-> 
-> hpa, I know you did not like the idea in the past. Is it still the case.
+This patch set changes the implementation so that a whole part of the
+1st bitmap is written out before entering cyclic process. By this:
 
-Hi, hpa
+- we no longer need to keep buffer for the 1st bitmap during cyclic
+  process, and
 
-Do you still not like this idea? Could you make it more clear to us
-please?
+- it's possible for incomplete crash dump, for example, generated in
+  case of ENOSPC, to avoid the case that we don't know where memory is
+  present.
 
-Thanks
-Chao
+Note that this patch only deal with a conversion from ELF to
+kdump-compressed format only, not from ELF to ELF.
 
-> 
-> IMHO, I like the fact that existing users still be able to work with
-> crashkernel=X and not forced to switch to crashkernel=x,high and also incur
-> the penalty of reserving extra memory for software iotlb.
-> 
-> Thanks
-> Vivek
+ChangeLog
+
+v1 => v2)
+
+- Fix a bug of assigning wrong cyclic buffer size from free memory
+  size.
+
+---
+
+HATAYAMA Daisuke (2):
+      Use memset() to improve the 1st bitmap initialization performance
+      Write out a whole part of the 1st bitmap before entering cyclic process
+
+
+ makedumpfile.c |  268 ++++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 241 insertions(+), 27 deletions(-)
+
+-- 
+
+Thanks.
+HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
