@@ -1,32 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdLzi-0006aE-9z
- for kexec@lists.infradead.org; Mon, 04 Nov 2013 15:23:12 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id B1E033EE0B6
- for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:49 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id A4B6F45DE4E
- for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:49 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.nic.fujitsu.com [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8F4F345DDCF
- for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:49 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 7DAF21DB802C
- for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:49 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 2D2301DB8038
- for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:22:49 +0900 (JST)
-Subject: [PATCH v2 2/2] Write out a whole part of the 1st bitmap before
- entering cyclic process
+ id 1VdM70-0006ia-Ps
+ for kexec@lists.infradead.org; Mon, 04 Nov 2013 15:30:43 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 195063EE0B6
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:30:21 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 08E4E45DE54
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:30:21 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id D447645DE55
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:30:20 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id C8B38E08002
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:30:20 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 77EA91DB8046
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 00:30:20 +0900 (JST)
+Message-ID: <5277BD5F.6030207@jp.fujitsu.com>
+Date: Tue, 05 Nov 2013 00:29:35 +0900
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Tue, 05 Nov 2013 00:22:48 +0900
-Message-ID: <20131104152248.2556.62771.stgit@localhost6.localdomain6>
-In-Reply-To: <20131104152202.2556.83382.stgit@localhost6.localdomain6>
-References: <20131104152202.2556.83382.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
+Subject: [PATCH v2] makedumpfile: improve progress information for huge memory
+ system
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,378 +36,206 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, vgoyal@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Jingbai Ma <jingbai.ma@hp.com>
 
-Currently, 1st bitmap is created during cyclic process, but the
-information represented by the 1st bitmap, originally present memory,
-is still available from ELF program header table, so:
+On system with huge memory, percentage in progress information is
+updated at very slow interval, because 1 percent on 1 TiB memory is
+about 10 GiB, which looks like as if system has freezed. Then,
+confused users might get tempted to push a reset button to recover the
+system. We want to avoid such situation as much as possible.
 
-- we don't need to keep the 1st bitmap even in cyclic process, and
+To address the issue, this patch:
 
-- it's possible to avoid the case where for incomplete crash dump
-  generated in failure case due to for example ENOSPC, we don't know
-  where memory is present.
+- increases the number of calling print_progress() from once in
+  (written pages / 100)-pages to once in (written pages /
+  10000)-pages,
 
-Supported is a conversion from ELF to kdump-compressed format only,
-not from ELF to ELF.
+- extends precision in progress information by adding 1 digit to its
+  fractional part, and
+
+- adds spinner that rotates in the order of /, |, \ and - in next to
+  the progress indicator in percentage,
+
+which help users to get aware that system is still active and crash
+dump process is still in progress now.
+
+The spinner code is borrowed from diskdump code.
+
+The ouput is changed from:
+
+Copying data                       : [  0 %] /
+Copying data                       : [  8 %] |
+Copying data                       : [ 11 %] \
+Copying data                       : [ 14 %] -
+Copying data                       : [ 16 %] /
+...
+Copying data                       : [ 99 %] /
+Copying data                       : [100 %] |
+
+to:
+
+Copying data                       : [  0.1 %] /
+Copying data                       : [  8.9 %] |
+Copying data                       : [ 11.6 %] \
+Copying data                       : [ 14.3 %] -
+Copying data                       : [ 16.4 %] /
+...
+Copying data                       : [ 99.2 %] /
+Copying data                       : [100.0 %] |
+
+This patch doesn't adopt purely time-based approach that records the
+time when print_progress() is called at each invocation and print the
+recorded time if it is strictly larger than the previous time value.
+
+The problem is that calling time() system call amounts to
+considertably long time in total on huge memory system. For example,
+here is a simple bench that measures total execution time of time()
+system call for (1TiB / 4KiB)-times:
+
+$ ./bench
+total: 18.360503
+total: 34.910297
+
+the result of which reveals that it amounts to about 20 seconds with
+vDSO optimization and about 35 seconds without.
+
+BTW, on our 12 TiB memory system, we collect about 300 GiB crash dump
+in about 40 minutes with dump level 31. On 12TiB, the benchmark result
+corresponds to about 4 minutes and 7 minutes respectively, both of which
+affects a whole performance.
+
+==bench.c
+static inline double getdtime(void)
+{
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        return (double)tv.tv_sec + (double)tv.tv_usec * 1.0e-6;
+}
+
+int main(int argc, char **argv)
+{
+        unsigned long i;
+        time_t t;
+        double t1, t2, total;
+        const int NR_time = 201;
+        const unsigned long nr_repeat = (1UL << 40) / 4096;
+
+        total = 0;
+        for (i = 0; i < nr_repeat; ++i) {
+                t1 = getdtime();
+                time(&t);
+                t2 = getdtime();
+                total += t2 - t1;
+        }
+        printf("total: %lf\n", total);
+
+        total = 0;
+        for (i = 0; i < nr_repeat; ++i) {
+                t1 = getdtime();
+                syscall(NR_time, &t);
+                t2 = getdtime();
+                total += t2 - t1;
+        }
+        printf("total: %lf\n", total);
+
+        return 0;
+}
+==
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- makedumpfile.c |  240 ++++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 216 insertions(+), 24 deletions(-)
+ makedumpfile.c |  8 ++++----
+ print_info.c   | 15 +++++++++------
+ 2 files changed, 13 insertions(+), 10 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 4b6c0ed..dafe83b 100644
+index 428c53e..d00cf38 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -3052,10 +3052,23 @@ out:
- 				MSG("The buffer size for the cyclic mode will ");
- 				MSG("be truncated to %lld byte.\n", free_memory);
- 				/*
--				 * bufsize_cyclic is used to allocate 1st and 2nd bitmap, 
--				 * so it should be truncated to the half of free_memory.
-+				 * On conversion from ELF to ELF,
-+				 * bufsize_cyclic is used to allocate
-+				 * 1st and 2nd bitmap, so it should be
-+				 * truncated to the half of
-+				 * free_memory.
-+				 *
-+				 * On conversion from ELF to
-+				 * kdump-compressed format, a whole
-+				 * part of the 1st bitmap is created
-+				 * first, so a whole part of
-+				 * free_memory is used for the 2nd
-+				 * bitmap.
- 				 */
--				info->bufsize_cyclic = free_memory / 2;
-+				if (info->flag_elf_dumpfile)
-+					info->bufsize_cyclic = free_memory / 2;
-+				else
-+					info->bufsize_cyclic = free_memory;
- 			}
- 		}
+@@ -5409,7 +5409,7 @@ write_elf_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	initialize_2nd_bitmap(&bitmap2);
  
-@@ -3328,6 +3341,33 @@ clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
- 	return clear_bit_on_2nd_bitmap(pfn);
- }
+ 	num_dumpable = get_num_dumpable();
+-	per = num_dumpable / 100;
++	per = num_dumpable / 10000;
  
-+int
-+set_bit_on_2nd_bitmap(unsigned long long pfn)
-+{
-+	if (info->flag_cyclic) {
-+		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 1);
-+	} else {
-+		return set_bitmap(info->bitmap2, pfn, 1);
-+	}
-+}
-+
-+int
-+set_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
-+{
-+	unsigned long long maddr;
-+
-+	if (is_xen_memory()) {
-+		maddr = ptom_xen(pfn_to_paddr(pfn));
-+		if (maddr == NOT_PADDR) {
-+			ERRMSG("Can't convert a physical address(%llx) to machine address.\n",
-+			    pfn_to_paddr(pfn));
-+			return FALSE;
-+		}
-+		pfn = paddr_to_pfn(maddr);
-+	}
-+	return set_bit_on_2nd_bitmap(pfn);
-+}
-+
- static inline int
- is_in_segs(unsigned long long paddr)
- {
-@@ -4418,6 +4458,53 @@ exclude_zero_pages(void)
- 	return TRUE;
- }
- 
-+static int
-+initialize_2nd_bitmap_cyclic(void)
-+{
-+	int i;
-+	unsigned long long pfn;
-+	unsigned long long phys_start, phys_end;
-+	unsigned long long pfn_start, pfn_end;
-+	unsigned long long pfn_start_roundup, pfn_end_round;
-+	unsigned long pfn_start_byte, pfn_end_byte;
-+
-+	/*
-+	 * At first, clear all the bits on the 2nd-bitmap.
-+	 */
-+	initialize_bitmap_cyclic(info->partial_bitmap2);
-+
-+	/*
-+	 * If page is on memory hole, set bit on the 2nd-bitmap.
-+	 */
-+	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
-+		pfn_start = MAX(paddr_to_pfn(phys_start), info->cyclic_start_pfn);
-+		pfn_end = MIN(paddr_to_pfn(phys_end), info->cyclic_end_pfn);
-+
-+		if (pfn_start >= pfn_end)
-+			continue;
-+
-+		pfn_start_roundup = roundup(pfn_start, BITPERBYTE);
-+		pfn_end_round = round(pfn_end, BITPERBYTE);
-+
-+		for (pfn = pfn_start; pfn < pfn_start_roundup; ++pfn)
-+			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
-+				return FALSE;
-+
-+		pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
-+		pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
-+
-+		memset(info->partial_bitmap2 + pfn_start_byte,
-+		       0xff,
-+		       pfn_end_byte - pfn_start_byte);
-+
-+		for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
-+			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
-+				return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
- int
- __exclude_unnecessary_pages(unsigned long mem_map,
-     unsigned long long pfn_start, unsigned long long pfn_end)
-@@ -4584,12 +4671,6 @@ exclude_unnecessary_pages(void)
- 	return TRUE;
- }
- 
--void
--copy_bitmap_cyclic(void)
--{
--	memcpy(info->partial_bitmap2, info->partial_bitmap1, info->bufsize_cyclic);
--}
--
- int
- exclude_unnecessary_pages_cyclic(void)
- {
-@@ -4597,10 +4678,8 @@ exclude_unnecessary_pages_cyclic(void)
- 	struct mem_map_data *mmd;
- 	struct timeval tv_start;
- 
--	/*
--	 * Copy 1st-bitmap to 2nd-bitmap.
--	 */
--	copy_bitmap_cyclic();
-+	if (!initialize_2nd_bitmap_cyclic())
-+		return FALSE;
- 
- 	if ((info->dump_level & DL_EXCLUDE_FREE) && !info->page_is_buddy)
- 		if (!exclude_free_page())
-@@ -4657,7 +4736,7 @@ update_cyclic_region(unsigned long long pfn)
- 	if (info->cyclic_end_pfn > info->max_mapnr)
- 		info->cyclic_end_pfn = info->max_mapnr;
- 
--	if (!create_1st_bitmap_cyclic())
-+	if (info->flag_elf_dumpfile && !create_1st_bitmap_cyclic())
+ 	off_seg_load    = info->offset_load_dumpfile;
+ 	cd_page->offset = info->offset_load_dumpfile;
+@@ -5694,7 +5694,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
  		return FALSE;
  
- 	if (!exclude_unnecessary_pages_cyclic())
-@@ -4841,19 +4920,71 @@ prepare_bitmap_buffer_cyclic(void)
- 	return TRUE;
- }
+ 	num_dumpable = info->num_dumpable;
+-	per = num_dumpable / 100;
++	per = num_dumpable / 10000;
  
-+int
-+prepare_bitmap1_buffer_cyclic(void)
-+{
-+	/*
-+	 * Prepare partial bitmap buffers for cyclic processing.
-+	 */
-+	if ((info->partial_bitmap1 = (char *)malloc(info->bufsize_cyclic)) == NULL) {
-+		ERRMSG("Can't allocate memory for the 1st bitmaps. %s\n",
-+		       strerror(errno));
-+		return FALSE;
-+	}
-+	initialize_bitmap_cyclic(info->partial_bitmap1);
-+
-+	return TRUE;
-+}
-+
-+int
-+prepare_bitmap2_buffer_cyclic(void)
-+{
-+	unsigned long tmp;
-+
-+	/*
-+	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size
-+	 * boundary. The crash utility requires both of them to be
-+	 * aligned to block_size boundary.
-+	 */
-+	tmp = divideup(divideup(info->max_mapnr, BITPERBYTE), info->page_size);
-+	info->len_bitmap = tmp * info->page_size * 2;
-+
-+	/*
-+	 * Prepare partial bitmap buffers for cyclic processing.
-+	 */
-+	if ((info->partial_bitmap2 = (char *)malloc(info->bufsize_cyclic)) == NULL) {
-+		ERRMSG("Can't allocate memory for the 2nd bitmaps. %s\n",
-+		       strerror(errno));
-+		return FALSE;
-+	}
-+	initialize_bitmap_cyclic(info->partial_bitmap2);
-+
-+	return TRUE;
-+}
-+
- void
--free_bitmap_buffer(void)
-+free_bitmap1_buffer(void)
- {
- 	if (info->bitmap1) {
- 		free(info->bitmap1);
- 		info->bitmap1 = NULL;
+ 	off_seg_load   = info->offset_load_dumpfile;
+ 	cd_page->offset = info->offset_load_dumpfile;
+@@ -5952,7 +5952,7 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
  	}
-+}
-+
-+void
-+free_bitmap2_buffer(void)
-+{
- 	if (info->bitmap2) {
- 		free(info->bitmap2);
- 		info->bitmap2 = NULL;
- 	}
-+}
  
--	return;
-+void
-+free_bitmap_buffer(void)
-+{
-+	free_bitmap1_buffer();
-+	free_bitmap2_buffer();
- }
- 
- int
-@@ -4862,10 +4993,21 @@ create_dump_bitmap(void)
- 	int ret = FALSE;
- 
- 	if (info->flag_cyclic) {
--		if (!prepare_bitmap_buffer_cyclic())
--			goto out;
- 
--		info->num_dumpable = get_num_dumpable_cyclic();
-+		if (info->flag_elf_dumpfile) {
-+			if (!prepare_bitmap_buffer_cyclic())
-+				goto out;
-+
-+			info->num_dumpable = get_num_dumpable_cyclic();
-+		} else {
-+			if (!prepare_bitmap2_buffer_cyclic())
-+				goto out;
-+
-+			info->num_dumpable = get_num_dumpable_cyclic();
-+
-+			free_bitmap2_buffer();
-+		}
-+
- 	} else {
- 		if (!prepare_bitmap_buffer())
- 			goto out;
-@@ -6564,7 +6706,7 @@ out:
- }
- 
- int
--write_kdump_bitmap_cyclic(void)
-+write_kdump_bitmap1_cyclic(void)
- {
- 	off_t offset;
-         int increment;
-@@ -6576,10 +6718,30 @@ write_kdump_bitmap_cyclic(void)
- 		return FALSE;
- 
- 	offset = info->offset_bitmap1;
--	if (!write_buffer(info->fd_dumpfile, offset,
-+	if (!write_buffer(info->fd_dumpfile, offset + info->bufsize_cyclic *
-+			  (info->cyclic_start_pfn / info->pfn_cyclic),
- 			  info->partial_bitmap1, increment, info->name_dumpfile))
- 		goto out;
- 
-+	ret = TRUE;
-+out:
-+	return ret;
-+}
-+
-+int
-+write_kdump_bitmap2_cyclic(void)
-+{
-+	off_t offset;
-+	int increment;
-+	int ret = FALSE;
-+
-+	increment = divideup(info->cyclic_end_pfn - info->cyclic_start_pfn,
-+			     BITPERBYTE);
-+
-+	if (info->flag_elf_dumpfile)
-+		return FALSE;
-+
-+	offset = info->offset_bitmap1;
- 	offset += info->len_bitmap / 2;
- 	if (!write_buffer(info->fd_dumpfile, offset,
- 			  info->partial_bitmap2, increment, info->name_dumpfile))
-@@ -6633,6 +6795,30 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 	}
+ 	num_dumpable = get_num_dumpable();
+-	per = num_dumpable / 100;
++	per = num_dumpable / 10000;
  
  	/*
-+	 * Write the 1st bitmap
-+	 */
-+	if (!prepare_bitmap1_buffer_cyclic())
-+		return FALSE;
-+
-+	info->cyclic_start_pfn = 0;
-+	info->cyclic_end_pfn = 0;
-+	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
-+		if (is_cyclic_region(pfn))
-+			continue;
-+		if (!update_cyclic_region(pfn))
-+			return FALSE;
-+		if (!create_1st_bitmap_cyclic())
-+			return FALSE;
-+		if (!write_kdump_bitmap1_cyclic())
-+			return FALSE;
-+	}
-+
-+	free_bitmap1_buffer();
-+
-+	if (!prepare_bitmap2_buffer_cyclic())
-+		return FALSE;
-+
-+	/*
- 	 * Write pages and bitmap cyclically.
- 	 */
- 	info->cyclic_start_pfn = 0;
-@@ -6647,7 +6833,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero, &offset_data))
- 			return FALSE;
+ 	 * Calculate the offset of the page data.
+@@ -6153,7 +6153,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 		goto out;
+ 	}
  
--		if (!write_kdump_bitmap_cyclic())
-+		if (!write_kdump_bitmap2_cyclic())
- 			return FALSE;
-         }
+-	per = info->num_dumpable / 100;
++	per = info->num_dumpable / 10000;
  
-@@ -8681,8 +8867,14 @@ calculate_cyclic_buffer_size(void) {
- 	 * should be 40% of free memory to keep the size of cyclic buffer
- 	 * within 80% of free memory.
- 	 */
--	free_size = get_free_memory_size() * 0.4;
--	needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-+	if (info->flag_elf_dumpfile) {
-+		free_size = get_free_memory_size() * 0.4;
-+		needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-+	} else {
-+		free_size = get_free_memory_size() * 0.8;
-+		needed_size = info->max_mapnr / BITPERBYTE;
-+	}
-+
- 	/* if --split was specified cyclic buffer allocated per dump file */
- 	if (info->num_dumpfile > 1)
- 		needed_size /= info->num_dumpfile;
+ 	/*
+ 	 * Set a fileoffset of Physical Address 0x0.
+diff --git a/print_info.c b/print_info.c
+index 3527970..d7a8600 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -283,27 +283,30 @@ print_usage(void)
+ void
+ print_progress(const char *msg, unsigned long current, unsigned long end)
+ {
+-	int progress;
++	float progress;
+ 	time_t tm;
+ 	static time_t last_time = 0;
++	static unsigned int lapse = 0;
++	static const char *spinner = "/|\\-";
+ 
+ 	if (current < end) {
+ 		tm = time(NULL);
+ 		if (tm - last_time < 1)
+ 			return;
+ 		last_time = tm;
+-		progress = current * 100 / end;
++		progress = (float)current * 100 / end;
+ 	} else
+ 		progress = 100;
+ 
+ 	if (flag_ignore_r_char) {
+-		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%]\n",
+-			     msg, progress);
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c\n",
++			     msg, progress, spinner[lapse % 4]);
+ 	} else {
+ 		PROGRESS_MSG("\r");
+-		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ",
+-			     msg, progress);
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%5.1f %%] %c",
++			     msg, progress, spinner[lapse % 4]);
+ 	}
++	lapse++;
+ }
+ 
+ void
+-- 
+1.8.3.1
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
