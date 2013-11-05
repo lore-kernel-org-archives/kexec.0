@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdcAx-0002c5-Jv
- for kexec@lists.infradead.org; Tue, 05 Nov 2013 08:39:52 +0000
-Message-Id: <20131105083428.411624560@dhcp-16-126.nay.redhat.com>
-Date: Tue, 05 Nov 2013 16:29:48 +0800
-From: dyoung@redhat.com
-Subject: [patch 1/3 v2] Add function get_bootparam
-References: <20131105082947.500512312@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline;
- filename=01-kexec-add-function-get-boot-param.patch
+ id 1VdclY-0003e3-GG
+ for kexec@lists.infradead.org; Tue, 05 Nov 2013 09:17:41 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH] x86: make reboot task only run on the appropriate processor
+Date: Tue,  5 Nov 2013 17:16:07 +0800
+Message-Id: <1383642967-12595-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,64 +20,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: linux-kernel@vger.kernel.org
+Cc: Baoquan He <bhe@redhat.com>, mwhitehe@redhat.com, x86@kernel.org, chaowang@redhat.com, kexec@lists.infradead.org, davej@fedoraproject.org, mingo@redhat.com, holt@sgi.com, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, vgoyal@redhat.com
 
-Not only setup_subarch will get data from debugfs file
-boot_params/data, later code for adding efi_info will
-also need do same thing. Thus add a common function here
-for later use.
+Currently system always reboot after below message when execute "kexec -e".
 
-v1->v2: make get_bootparam() static
+[    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
+In commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f, reboot= handling was
+moved to kerne/reboot.c. However, the code to migrate current thread to
+reboot cpu was removed. That cause this incorrect kexec behavior.
+
+Now add that code block back.
+
+Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
+Reported-by: Dave Young <dyoung@redhat.com>
+Tested-by: WANG Chao <chaowang@redhat.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- kexec/arch/i386/x86-linux-setup.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/x86/kernel/reboot.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
-+++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
-@@ -436,10 +436,9 @@ char *find_mnt_by_fsname(char *fsname)
- 	return mntdir;
- }
- 
--void setup_subarch(struct x86_linux_param_header *real_mode)
-+static void get_bootparam(void *buf, off_t offset, size_t size)
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 7e920bf..3049de9 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -551,6 +551,21 @@ void native_machine_shutdown(void)
  {
- 	int data_file;
--	const off_t offset = offsetof(typeof(*real_mode), hardware_subarch);
- 	char *debugfs_mnt;
- 	char filename[PATH_MAX];
- 
-@@ -447,7 +446,7 @@ void setup_subarch(struct x86_linux_para
- 	if (!debugfs_mnt)
- 		return;
- 	snprintf(filename, PATH_MAX, "%s/%s", debugfs_mnt, "boot_params/data");
--	filename[PATH_MAX-1] = 0;
-+	filename[PATH_MAX - 1] = 0;
- 	free(debugfs_mnt);
- 
- 	data_file = open(filename, O_RDONLY);
-@@ -455,11 +454,18 @@ void setup_subarch(struct x86_linux_para
- 		return;
- 	if (lseek(data_file, offset, SEEK_SET) < 0)
- 		goto close;
--	read(data_file, &real_mode->hardware_subarch, sizeof(uint32_t));
-+	read(data_file, buf, size);
- close:
- 	close(data_file);
- }
- 
-+void setup_subarch(struct x86_linux_param_header *real_mode)
-+{
-+	off_t offset = offsetof(typeof(*real_mode), hardware_subarch);
+ 	/* Stop the cpus and apics */
+ #ifdef CONFIG_SMP
++       /* The boot cpu is always logical cpu 0 */
++       int reboot_cpu_id = 0;
 +
-+	get_bootparam(&real_mode->hardware_subarch, offset, sizeof(uint32_t));
-+}
++       /* See if there has been given a command line override */
++       if ((reboot_cpu != -1) && (reboot_cpu < nr_cpu_ids) &&
++               cpu_online(reboot_cpu))
++               reboot_cpu_id = reboot_cpu;
 +
- void setup_linux_system_parameters(struct kexec_info *info,
- 				   struct x86_linux_param_header *real_mode)
- {
++       /* Make certain the cpu I'm about to reboot on is online */
++       if (!cpu_online(reboot_cpu_id))
++               reboot_cpu_id = smp_processor_id();
++
++       /* Make certain I only run on the appropriate processor */
++       set_cpus_allowed_ptr(current, cpumask_of(reboot_cpu_id));
++
+ 	/*
+ 	 * Stop all of the others. Also disable the local irq to
+ 	 * not receive the per-cpu timer interrupt which may trigger
+-- 
+1.8.3.1
 
 
 _______________________________________________
