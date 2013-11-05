@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vdfv3-0007vL-Lg
- for kexec@lists.infradead.org; Tue, 05 Nov 2013 12:39:42 +0000
-Received: from relay1.suse.de (unknown [195.135.220.254])
- by mx2.suse.de (Postfix) with ESMTP id 60FABA5B27
- for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 13:39:19 +0100 (CET)
-Date: Tue, 5 Nov 2013 13:39:15 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: building makedumpfile 1.5.4 for sles11sp2?
-Message-ID: <20131105133915.5fe7bc9f@hananiah.suse.cz>
-In-Reply-To: <52783DB9.7050000@gmail.com>
-References: <52783DB9.7050000@gmail.com>
-Mime-Version: 1.0
+Received: from g4t0017.houston.hp.com ([15.201.24.20])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VdgrL-000291-MV
+ for kexec@lists.infradead.org; Tue, 05 Nov 2013 13:39:56 +0000
+Subject: [PATCH] kexec: export hugepage data structure into vmcoreinfo
+From: Jingbai Ma <jingbai.ma@hp.com>
+Date: Tue, 05 Nov 2013 21:39:28 +0800
+Message-ID: <20131105133928.31933.37076.stgit@k.asiapacific.hpqcorp.net>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,25 +16,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: ptesarik@suse.cz, d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, vgoyal@redhat.com
+Cc: bhe@redhat.com, tom.vaden@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, anderson@redhat.com
 
-ViBNb24sIDA0IE5vdiAyMDEzIDE2OjM3OjEzIC0wODAwCkpheSBMYW4gPGpheS56ZW4ubGFuQGdt
-YWlsLmNvbT4gbmFwc8Ohbm86Cgo+IEhpLAo+IAo+IEl0IHNlZW1zIHRoZSBtYWtlZHVtcGZpbGUu
-c3BlYyB3YXMgd3JpdHRlbiBmb3IgZmVkb3JhLiBJdAo+IHByb2JhYmx5IHdvdWxkIHdvcmsgaW4g
-cmhlbCwgYnV0IEkgd2FzIG5vdCBhYmxlIHRvIGJ1aWxkIGl0Cj4gaW4gYW4gc2xlczExc3AyIGJ1
-aWxkIGVudmlyb25tZW50Li4uCj4gCj4gVGhlIHNwZWMgZmlsZSBjb21wbGFpbmVkIGl0IG5lZWRl
-ZCBlbGZ1dGlscy1kZXZlbC1zdGF0aWMuCj4gSSB0cmllZCB0byBpbnN0YWxsIGVsZnV0aWxzLWRl
-dmVsLXN0YXRpYy0wLjE1Ni01LmZjMTkueDg2XzY0LnJwbQo+IHRvIGFuIHNsZXMxMXNwMiwgaXQg
-dGhlbiBjb21wbGFpbmVkIG1vcmUgZmFpbGVkIGRlcGVuZGVuY3kuCj4gCj4gSG93IGRvIEkgYnVp
-bGQgbWFrZWR1bXBmaWxlIHdpdGggY29tbXVuaXR5IHRhcmJhbGwgaW4gYW4KPiBzbGVzMTFzcDIg
-ZW52aXJvbm1lbnQ/IFRoYW5rcyBpbiBhZHZhbmNlIQoKV2hhdCBwcmV2ZW50cyB5b3UgZnJvbSB1
-c2luZyB0aGUgc291cmNlcyAob3IgZXZlbiB0aGUgYmluYXJ5IFJQTXMgZm9yCnlvdXIgZmF2b3Vy
-aXRlIFNMRVMgdmVyc2lvbikgZnJvbQoKaHR0cHM6Ly9idWlsZC5vcGVuc3VzZS5vcmcvcGFja2Fn
-ZS9zaG93L0tlcm5lbCUzQWtkdW1wL21ha2VkdW1wZmlsZQoKPwoKUGV0ciBUCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+This patch exports hstates data structure into vmcoreinfo when
+CONFIG_HUGETLB_PAGE is defined. makedumpfile needs to read information of
+hugepage related data structure.
+
+We introduce a function into "makedumpfile" to exclude hugepage from vmcore
+dump.  In order to introduce this function, the hstates data structure has
+to export into vmcoreinfo.
+
+This patch based on Linux 3.12.
+
+The patch set for makedumpfile to filter hugepage will be sent separately.
+
+Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+---
+ kernel/kexec.c |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 2a74f30..766c7c8 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -38,6 +38,9 @@
+ #include <asm/io.h>
+ #include <asm/sections.h>
+ 
++#include <linux/hugetlb.h>
++
++
+ /* Per cpu memory for storing cpu states in case of system crash. */
+ note_buf_t __percpu *crash_notes;
+ 
+@@ -1578,11 +1581,17 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_STRUCT_SIZE(mem_section);
+ 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+ #endif
++#ifdef CONFIG_HUGETLB_PAGE
++	VMCOREINFO_SYMBOL(hstates);
++#endif
+ 	VMCOREINFO_STRUCT_SIZE(page);
+ 	VMCOREINFO_STRUCT_SIZE(pglist_data);
+ 	VMCOREINFO_STRUCT_SIZE(zone);
+ 	VMCOREINFO_STRUCT_SIZE(free_area);
+ 	VMCOREINFO_STRUCT_SIZE(list_head);
++#ifdef CONFIG_HUGETLB_PAGE
++	VMCOREINFO_STRUCT_SIZE(hstate);
++#endif
+ 	VMCOREINFO_SIZE(nodemask_t);
+ 	VMCOREINFO_OFFSET(page, flags);
+ 	VMCOREINFO_OFFSET(page, _count);
+@@ -1606,9 +1615,19 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_OFFSET(list_head, prev);
+ 	VMCOREINFO_OFFSET(vmap_area, va_start);
+ 	VMCOREINFO_OFFSET(vmap_area, list);
++#ifdef CONFIG_HUGETLB_PAGE
++	VMCOREINFO_OFFSET(hstate, order);
++	VMCOREINFO_OFFSET(hstate, nr_huge_pages);
++	VMCOREINFO_OFFSET(hstate, free_huge_pages);
++	VMCOREINFO_OFFSET(hstate, hugepage_activelist);
++	VMCOREINFO_OFFSET(hstate, hugepage_freelists);
++#endif
+ 	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER);
+ 	log_buf_kexec_setup();
+ 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
++#ifdef CONFIG_HUGETLB_PAGE
++	VMCOREINFO_LENGTH(hstate.hugepage_freelists, MAX_NUMNODES);
++#endif
+ 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
+ 	VMCOREINFO_NUMBER(PG_lru);
+ 	VMCOREINFO_NUMBER(PG_private);
+@@ -1618,6 +1637,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_NUMBER(PG_hwpoison);
+ #endif
+ 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
++#ifdef CONFIG_HUGETLB_PAGE
++	VMCOREINFO_NUMBER(HUGE_MAX_HSTATE);
++#endif
+ 
+ 	arch_crash_save_vmcoreinfo();
+ 	update_vmcoreinfo_note();
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
