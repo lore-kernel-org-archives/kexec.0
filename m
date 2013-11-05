@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
+Received: from g6t0185.atlanta.hp.com ([15.193.32.62])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdgrL-000291-MV
- for kexec@lists.infradead.org; Tue, 05 Nov 2013 13:39:56 +0000
-Subject: [PATCH] kexec: export hugepage data structure into vmcoreinfo
+ id 1VdgxD-0002ME-Pa
+ for kexec@lists.infradead.org; Tue, 05 Nov 2013 13:46:00 +0000
+Subject: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
 From: Jingbai Ma <jingbai.ma@hp.com>
-Date: Tue, 05 Nov 2013 21:39:28 +0800
-Message-ID: <20131105133928.31933.37076.stgit@k.asiapacific.hpqcorp.net>
+Date: Tue, 05 Nov 2013 21:45:32 +0800
+Message-ID: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,88 +20,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: ptesarik@suse.cz, d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, vgoyal@redhat.com
-Cc: bhe@redhat.com, tom.vaden@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, anderson@redhat.com
+To: ptesarik@suse.cz, d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: bhe@redhat.com, tom.vaden@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, anderson@redhat.com, ebiederm@xmission.com, vgoyal@redhat.com
 
-This patch exports hstates data structure into vmcoreinfo when
-CONFIG_HUGETLB_PAGE is defined. makedumpfile needs to read information of
-hugepage related data structure.
+This patch set intend to exclude unnecessary hugepages from vmcore dump file.
 
-We introduce a function into "makedumpfile" to exclude hugepage from vmcore
-dump.  In order to introduce this function, the hstates data structure has
-to export into vmcoreinfo.
+This patch requires the kernel patch to export necessary data structures into
+vmcore: "kexec: export hugepage data structure into vmcoreinfo"
+http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
 
-This patch based on Linux 3.12.
+This patch introduce two new dump levels 32 and 64 to exclude all unused and
+active hugepages. The level to exclude all unnecessary pages will be 127 now.
 
-The patch set for makedumpfile to filter hugepage will be sent separately.
+            |         cache    cache                    free    active
+      Dump  |  zero   without  with     user    free    huge    huge
+      Level |  page   private  private  data    page    page    page
+     -------+----------------------------------------------------------
+         0  |
+         1  |   X
+         2  |           X
+         4  |           X        X
+         8  |                            X
+        16  |                                    X
+        32  |                                            X
+        64  |                                            X       X
+       127  |   X       X        X       X       X       X       X
 
-Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+example:
+To exclude all unnecessary pages:
+makedumpfile -c --message-level 23 -d 127 /proc/vmcore /var/crash/kdump
+
+To exclude all unnecessary pages but keep active hugepages:
+makedumpfile -c --message-level 23 -d 63 /proc/vmcore /var/crash/kdump
+
 ---
- kernel/kexec.c |   22 ++++++++++++++++++++++
- 1 files changed, 22 insertions(+), 0 deletions(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 2a74f30..766c7c8 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -38,6 +38,9 @@
- #include <asm/io.h>
- #include <asm/sections.h>
- 
-+#include <linux/hugetlb.h>
-+
-+
- /* Per cpu memory for storing cpu states in case of system crash. */
- note_buf_t __percpu *crash_notes;
- 
-@@ -1578,11 +1581,17 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_STRUCT_SIZE(mem_section);
- 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
- #endif
-+#ifdef CONFIG_HUGETLB_PAGE
-+	VMCOREINFO_SYMBOL(hstates);
-+#endif
- 	VMCOREINFO_STRUCT_SIZE(page);
- 	VMCOREINFO_STRUCT_SIZE(pglist_data);
- 	VMCOREINFO_STRUCT_SIZE(zone);
- 	VMCOREINFO_STRUCT_SIZE(free_area);
- 	VMCOREINFO_STRUCT_SIZE(list_head);
-+#ifdef CONFIG_HUGETLB_PAGE
-+	VMCOREINFO_STRUCT_SIZE(hstate);
-+#endif
- 	VMCOREINFO_SIZE(nodemask_t);
- 	VMCOREINFO_OFFSET(page, flags);
- 	VMCOREINFO_OFFSET(page, _count);
-@@ -1606,9 +1615,19 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_OFFSET(list_head, prev);
- 	VMCOREINFO_OFFSET(vmap_area, va_start);
- 	VMCOREINFO_OFFSET(vmap_area, list);
-+#ifdef CONFIG_HUGETLB_PAGE
-+	VMCOREINFO_OFFSET(hstate, order);
-+	VMCOREINFO_OFFSET(hstate, nr_huge_pages);
-+	VMCOREINFO_OFFSET(hstate, free_huge_pages);
-+	VMCOREINFO_OFFSET(hstate, hugepage_activelist);
-+	VMCOREINFO_OFFSET(hstate, hugepage_freelists);
-+#endif
- 	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER);
- 	log_buf_kexec_setup();
- 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
-+#ifdef CONFIG_HUGETLB_PAGE
-+	VMCOREINFO_LENGTH(hstate.hugepage_freelists, MAX_NUMNODES);
-+#endif
- 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
- 	VMCOREINFO_NUMBER(PG_lru);
- 	VMCOREINFO_NUMBER(PG_private);
-@@ -1618,6 +1637,9 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_NUMBER(PG_hwpoison);
- #endif
- 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-+#ifdef CONFIG_HUGETLB_PAGE
-+	VMCOREINFO_NUMBER(HUGE_MAX_HSTATE);
-+#endif
- 
- 	arch_crash_save_vmcoreinfo();
- 	update_vmcoreinfo_note();
+Jingbai Ma (3):
+      makedumpfile: hugepage filtering: add hugepage filtering functions
+      makedumpfile: hugepage filtering: add excluding hugepage messages
+      makedumpfile: hugepage filtering: add new dump levels for manual page
+
+
+ makedumpfile.8 |  170 +++++++++++++++++++++++++++--------
+ makedumpfile.c |  272 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |   19 ++++
+ print_info.c   |   12 +-
+ print_info.h   |    2 
+ 5 files changed, 431 insertions(+), 44 deletions(-)
+
+--
 
 
 _______________________________________________
