@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdclY-0003e3-GG
- for kexec@lists.infradead.org; Tue, 05 Nov 2013 09:17:41 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH] x86: make reboot task only run on the appropriate processor
-Date: Tue,  5 Nov 2013 17:16:07 +0800
-Message-Id: <1383642967-12595-1-git-send-email-bhe@redhat.com>
+ id 1Vdfv3-0007vL-Lg
+ for kexec@lists.infradead.org; Tue, 05 Nov 2013 12:39:42 +0000
+Received: from relay1.suse.de (unknown [195.135.220.254])
+ by mx2.suse.de (Postfix) with ESMTP id 60FABA5B27
+ for <kexec@lists.infradead.org>; Tue,  5 Nov 2013 13:39:19 +0100 (CET)
+Date: Tue, 5 Nov 2013 13:39:15 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: building makedumpfile 1.5.4 for sles11sp2?
+Message-ID: <20131105133915.5fe7bc9f@hananiah.suse.cz>
+In-Reply-To: <52783DB9.7050000@gmail.com>
+References: <52783DB9.7050000@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,63 +21,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Baoquan He <bhe@redhat.com>, mwhitehe@redhat.com, x86@kernel.org, chaowang@redhat.com, kexec@lists.infradead.org, davej@fedoraproject.org, mingo@redhat.com, holt@sgi.com, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, vgoyal@redhat.com
+To: kexec@lists.infradead.org
 
-Currently system always reboot after below message when execute "kexec -e".
-
-[    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
-
-In commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f, reboot= handling was
-moved to kerne/reboot.c. However, the code to migrate current thread to
-reboot cpu was removed. That cause this incorrect kexec behavior.
-
-Now add that code block back.
-
-Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
-Reported-by: Dave Young <dyoung@redhat.com>
-Tested-by: WANG Chao <chaowang@redhat.com>
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/x86/kernel/reboot.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 7e920bf..3049de9 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -551,6 +551,21 @@ void native_machine_shutdown(void)
- {
- 	/* Stop the cpus and apics */
- #ifdef CONFIG_SMP
-+       /* The boot cpu is always logical cpu 0 */
-+       int reboot_cpu_id = 0;
-+
-+       /* See if there has been given a command line override */
-+       if ((reboot_cpu != -1) && (reboot_cpu < nr_cpu_ids) &&
-+               cpu_online(reboot_cpu))
-+               reboot_cpu_id = reboot_cpu;
-+
-+       /* Make certain the cpu I'm about to reboot on is online */
-+       if (!cpu_online(reboot_cpu_id))
-+               reboot_cpu_id = smp_processor_id();
-+
-+       /* Make certain I only run on the appropriate processor */
-+       set_cpus_allowed_ptr(current, cpumask_of(reboot_cpu_id));
-+
- 	/*
- 	 * Stop all of the others. Also disable the local irq to
- 	 * not receive the per-cpu timer interrupt which may trigger
--- 
-1.8.3.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ViBNb24sIDA0IE5vdiAyMDEzIDE2OjM3OjEzIC0wODAwCkpheSBMYW4gPGpheS56ZW4ubGFuQGdt
+YWlsLmNvbT4gbmFwc8Ohbm86Cgo+IEhpLAo+IAo+IEl0IHNlZW1zIHRoZSBtYWtlZHVtcGZpbGUu
+c3BlYyB3YXMgd3JpdHRlbiBmb3IgZmVkb3JhLiBJdAo+IHByb2JhYmx5IHdvdWxkIHdvcmsgaW4g
+cmhlbCwgYnV0IEkgd2FzIG5vdCBhYmxlIHRvIGJ1aWxkIGl0Cj4gaW4gYW4gc2xlczExc3AyIGJ1
+aWxkIGVudmlyb25tZW50Li4uCj4gCj4gVGhlIHNwZWMgZmlsZSBjb21wbGFpbmVkIGl0IG5lZWRl
+ZCBlbGZ1dGlscy1kZXZlbC1zdGF0aWMuCj4gSSB0cmllZCB0byBpbnN0YWxsIGVsZnV0aWxzLWRl
+dmVsLXN0YXRpYy0wLjE1Ni01LmZjMTkueDg2XzY0LnJwbQo+IHRvIGFuIHNsZXMxMXNwMiwgaXQg
+dGhlbiBjb21wbGFpbmVkIG1vcmUgZmFpbGVkIGRlcGVuZGVuY3kuCj4gCj4gSG93IGRvIEkgYnVp
+bGQgbWFrZWR1bXBmaWxlIHdpdGggY29tbXVuaXR5IHRhcmJhbGwgaW4gYW4KPiBzbGVzMTFzcDIg
+ZW52aXJvbm1lbnQ/IFRoYW5rcyBpbiBhZHZhbmNlIQoKV2hhdCBwcmV2ZW50cyB5b3UgZnJvbSB1
+c2luZyB0aGUgc291cmNlcyAob3IgZXZlbiB0aGUgYmluYXJ5IFJQTXMgZm9yCnlvdXIgZmF2b3Vy
+aXRlIFNMRVMgdmVyc2lvbikgZnJvbQoKaHR0cHM6Ly9idWlsZC5vcGVuc3VzZS5vcmcvcGFja2Fn
+ZS9zaG93L0tlcm5lbCUzQWtkdW1wL21ha2VkdW1wZmlsZQoKPwoKUGV0ciBUCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
