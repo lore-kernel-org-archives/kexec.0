@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0014.houston.hp.com ([15.201.24.17])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdWLY-0004zg-HM
- for kexec@lists.infradead.org; Tue, 05 Nov 2013 02:26:25 +0000
-Message-ID: <52785730.4030002@hp.com>
-Date: Tue, 05 Nov 2013 10:25:52 +0800
-From: Jingbai Ma <jingbai.ma@hp.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vdahm-0000T6-3I
+ for kexec@lists.infradead.org; Tue, 05 Nov 2013 07:05:38 +0000
+Date: Tue, 5 Nov 2013 16:05:13 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/3] kexec support for Linux/m68k (tools part)
+Message-ID: <20131105070513.GB16448@verge.net.au>
+References: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
+ <20131016072236.GB29696@verge.net.au>
+ <CAMuHMdVsKLBt8MiZ-dpX7expx+37XfO2kUjbRA_h5eMcsWJ1VQ@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: building makedumpfile 1.5.4 for sles11sp2?
-References: <52783DB9.7050000@gmail.com>
-In-Reply-To: <52783DB9.7050000@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVsKLBt8MiZ-dpX7expx+37XfO2kUjbRA_h5eMcsWJ1VQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,44 +21,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Jay Lan <jay.zen.lan@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-m68k <linux-m68k@lists.linux-m68k.org>, kexec@lists.infradead.org
 
-On 11/05/2013 08:37 AM, Jay Lan wrote:
-> Hi,
->
-> It seems the makedumpfile.spec was written for fedora. It
-> probably would work in rhel, but I was not able to build it
-> in an sles11sp2 build environment...
->
-> The spec file complained it needed elfutils-devel-static.
-> I tried to install elfutils-devel-static-0.156-5.fc19.x86_64.rpm
-> to an sles11sp2, it then complained more failed dependency.
->
-> How do I build makedumpfile with community tarball in an
-> sles11sp2 environment? Thanks in advance!
->
+On Sun, Nov 03, 2013 at 03:08:50PM +0100, Geert Uytterhoeven wrote:
+> On Wed, Oct 16, 2013 at 9:22 AM, Simon Horman <horms@verge.net.au> wrote:
+> > I've taken a quick look over this and it seems reasonable to me.
+> 
+> Thanks!
+> 
+> > However, I wonder if I should wait for review of the kernel-side
+> > to be completed before applying the kexec-tools patches.
+> >
+> > Let me know what you think.
+> 
+> The kexec-tools part seems to be stable. The issues to be sorted out are on
+> the kernel side.
+> 
+> However, it doesn't hurt to wait a little bit more to apply this. We m68k
+> people are patient and used to multi-year development ;-)
 
-You can try to link it dynamically by this command:
-make LINKTYPE=dynamic
+It is said that patience is a virtue :^)
 
-
-> Jay
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
--- 
-Thanks,
-Jingbai Ma
+As the kexec-tools portion of this change isn't useful without the
+kernel portion I think I would like to wait before applying this series.
+Please repost once the kernel changes have been merged or if you
+would like them re-considered for any other reason.
 
 _______________________________________________
 kexec mailing list
