@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ie0-x22e.google.com ([2607:f8b0:4001:c03::22e])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdlbI-0002Hb-4c
- for kexec@lists.infradead.org; Tue, 05 Nov 2013 18:43:41 +0000
-Received: by mail-ie0-f174.google.com with SMTP id qd12so15640480ieb.33
- for <kexec@lists.infradead.org>; Tue, 05 Nov 2013 10:43:18 -0800 (PST)
-Message-ID: <52793C44.80006@gmail.com>
-Date: Tue, 05 Nov 2013 10:43:16 -0800
-From: Jay Lan <jay.zen.lan@gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VdnDG-0004aB-Pf
+ for kexec@lists.infradead.org; Tue, 05 Nov 2013 20:27:00 +0000
+Date: Tue, 5 Nov 2013 15:26:31 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
+Message-ID: <20131105202631.GC4598@redhat.com>
+References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
 MIME-Version: 1.0
-Subject: Re: building makedumpfile 1.5.4 for sles11sp2?
-References: <52783DB9.7050000@gmail.com>
- <20131105133915.5fe7bc9f@hananiah.suse.cz>
-In-Reply-To: <20131105133915.5fe7bc9f@hananiah.suse.cz>
+Content-Disposition: inline
+In-Reply-To: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,34 +19,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec@lists.infradead.org
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: bhe@redhat.com, tom.vaden@hp.com, kexec@lists.infradead.org, ptesarik@suse.cz, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com
 
-T24gMTEvMDUvMjAxMyAwNDozOSBBTSwgUGV0ciBUZXNhcmlrIHdyb3RlOgo+IFYgTW9uLCAwNCBO
-b3YgMjAxMyAxNjozNzoxMyAtMDgwMAo+IEpheSBMYW4gPGpheS56ZW4ubGFuQGdtYWlsLmNvbT4g
-bmFwc8Ohbm86Cj4KPj4gSGksCj4+Cj4+IEl0IHNlZW1zIHRoZSBtYWtlZHVtcGZpbGUuc3BlYyB3
-YXMgd3JpdHRlbiBmb3IgZmVkb3JhLiBJdAo+PiBwcm9iYWJseSB3b3VsZCB3b3JrIGluIHJoZWws
-IGJ1dCBJIHdhcyBub3QgYWJsZSB0byBidWlsZCBpdAo+PiBpbiBhbiBzbGVzMTFzcDIgYnVpbGQg
-ZW52aXJvbm1lbnQuLi4KPj4KPj4gVGhlIHNwZWMgZmlsZSBjb21wbGFpbmVkIGl0IG5lZWRlZCBl
-bGZ1dGlscy1kZXZlbC1zdGF0aWMuCj4+IEkgdHJpZWQgdG8gaW5zdGFsbCBlbGZ1dGlscy1kZXZl
-bC1zdGF0aWMtMC4xNTYtNS5mYzE5Lng4Nl82NC5ycG0KPj4gdG8gYW4gc2xlczExc3AyLCBpdCB0
-aGVuIGNvbXBsYWluZWQgbW9yZSBmYWlsZWQgZGVwZW5kZW5jeS4KPj4KPj4gSG93IGRvIEkgYnVp
-bGQgbWFrZWR1bXBmaWxlIHdpdGggY29tbXVuaXR5IHRhcmJhbGwgaW4gYW4KPj4gc2xlczExc3Ay
-IGVudmlyb25tZW50PyBUaGFua3MgaW4gYWR2YW5jZSEKPiBXaGF0IHByZXZlbnRzIHlvdSBmcm9t
-IHVzaW5nIHRoZSBzb3VyY2VzIChvciBldmVuIHRoZSBiaW5hcnkgUlBNcyBmb3IKPiB5b3VyIGZh
-dm91cml0ZSBTTEVTIHZlcnNpb24pIGZyb20KPgo+IGh0dHBzOi8vYnVpbGQub3BlbnN1c2Uub3Jn
-L3BhY2thZ2Uvc2hvdy9LZXJuZWwlM0FrZHVtcC9tYWtlZHVtcGZpbGUKCkhpIFBldHIsCgpMYWNr
-IG9mIGtub3dsZWRnZSBvZiBleGlzdGVuY2Ugb2YgdGhpcyBzaXRlPyA7LSkKClRoYW5rcyEgVGhl
-IG9mZmljaWFsIHJlbGVhc2UgZm9yIHNsZXMxMXNwMiBpcyAxLjQuMCwgYW5kIEkgYW0Kd29ya2lu
-ZyBvbiAgcG9ydGluZyAxLjUuNCB0YXJiYWxsIGJhc2VkIG9uIHRoZSBzcGVjIGZpbGUgb2YgMS40
-LjAuLi4KQmVhdXRpZnVsISBUaGFua3MgZm9yIHlvdXIgcG9pbnRlciEKCkpheQoKPgo+ID8KPgo+
-IFBldHIgVAo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
+> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
+> 
+> This patch requires the kernel patch to export necessary data structures into
+> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
+> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
+> 
+> This patch introduce two new dump levels 32 and 64 to exclude all unused and
+> active hugepages. The level to exclude all unnecessary pages will be 127 now.
+
+Interesting. Why hugepages should be treated any differentely than normal
+pages?
+
+If user asked to filter out free page, then it should be filtered and
+it should not matter whether it is a huge page or not?
+
+Thanks
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
