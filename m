@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ve4RL-0002Ip-Ai
- for kexec@lists.infradead.org; Wed, 06 Nov 2013 14:50:40 +0000
+ id 1Ve4RM-0002Ip-Mi
+ for kexec@lists.infradead.org; Wed, 06 Nov 2013 14:50:41 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH 6/9] libxc: add hypercall buffer arrays
-Date: Wed, 6 Nov 2013 14:49:43 +0000
-Message-ID: <1383749386-11891-7-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 8/9] x86: check kexec relocation code fits in a page
+Date: Wed, 6 Nov 2013 14:49:45 +0000
+Message-ID: <1383749386-11891-9-git-send-email-david.vrabel@citrix.com>
 In-Reply-To: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
 References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
@@ -27,141 +27,25 @@ Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vra
 
 From: David Vrabel <david.vrabel@citrix.com>
 
-Hypercall buffer arrays are used when a hypercall takes a variable
-length array of buffers.
+The kexec relocation (control) code must fit in a single page so add a
+link time check for this.
 
 Signed-off-by: David Vrabel <david.vrabel@citrix.com>
-Acked-by: Ian Campbell <ian.campbell@citrix.com>
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
 Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
 ---
- tools/libxc/xc_hcall_buf.c |   73 ++++++++++++++++++++++++++++++++++++++++++++
- tools/libxc/xenctrl.h      |   27 ++++++++++++++++
- 2 files changed, 100 insertions(+), 0 deletions(-)
+ xen/arch/x86/xen.lds.S |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/tools/libxc/xc_hcall_buf.c b/tools/libxc/xc_hcall_buf.c
-index c354677..e762a93 100644
---- a/tools/libxc/xc_hcall_buf.c
-+++ b/tools/libxc/xc_hcall_buf.c
-@@ -228,6 +228,79 @@ void xc__hypercall_bounce_post(xc_interface *xch, xc_hypercall_buffer_t *b)
-     xc__hypercall_buffer_free(xch, b);
+diff --git a/xen/arch/x86/xen.lds.S b/xen/arch/x86/xen.lds.S
+index 9600cdf..17db361 100644
+--- a/xen/arch/x86/xen.lds.S
++++ b/xen/arch/x86/xen.lds.S
+@@ -198,3 +198,5 @@ SECTIONS
+   .stab.indexstr 0 : { *(.stab.indexstr) }
+   .comment 0 : { *(.comment) }
  }
- 
-+struct xc_hypercall_buffer_array {
-+    unsigned max_bufs;
-+    xc_hypercall_buffer_t *bufs;
-+};
 +
-+xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch,
-+                                                              unsigned n)
-+{
-+    xc_hypercall_buffer_array_t *array;
-+    xc_hypercall_buffer_t *bufs = NULL;
-+
-+    array = malloc(sizeof(*array));
-+    if ( array == NULL )
-+        goto error;
-+
-+    bufs = calloc(n, sizeof(*bufs));
-+    if ( bufs == NULL )
-+        goto error;
-+
-+    array->max_bufs = n;
-+    array->bufs     = bufs;
-+
-+    return array;
-+
-+error:
-+    free(bufs);
-+    free(array);
-+    return NULL;
-+}
-+
-+void *xc__hypercall_buffer_array_alloc(xc_interface *xch,
-+                                       xc_hypercall_buffer_array_t *array,
-+                                       unsigned index,
-+                                       xc_hypercall_buffer_t *hbuf,
-+                                       size_t size)
-+{
-+    void *buf;
-+
-+    if ( index >= array->max_bufs || array->bufs[index].hbuf )
-+        abort();
-+
-+    buf = xc__hypercall_buffer_alloc(xch, hbuf, size);
-+    if ( buf )
-+        array->bufs[index] = *hbuf;
-+    return buf;
-+}
-+
-+void *xc__hypercall_buffer_array_get(xc_interface *xch,
-+                                     xc_hypercall_buffer_array_t *array,
-+                                     unsigned index,
-+                                     xc_hypercall_buffer_t *hbuf)
-+{
-+    if ( index >= array->max_bufs || array->bufs[index].hbuf == NULL )
-+        abort();
-+
-+    *hbuf = array->bufs[index];
-+    return array->bufs[index].hbuf;
-+}
-+
-+void xc_hypercall_buffer_array_destroy(xc_interface *xc,
-+                                       xc_hypercall_buffer_array_t *array)
-+{
-+    unsigned i;
-+
-+    if ( array == NULL )
-+        return;
-+
-+    for (i = 0; i < array->max_bufs; i++ )
-+        xc__hypercall_buffer_free(xc, &array->bufs[i]);
-+    free(array->bufs);
-+    free(array);
-+}
-+
- /*
-  * Local variables:
-  * mode: C
-diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
-index 8cf3f3b..a7e8c31 100644
---- a/tools/libxc/xenctrl.h
-+++ b/tools/libxc/xenctrl.h
-@@ -321,6 +321,33 @@ void xc__hypercall_buffer_free_pages(xc_interface *xch, xc_hypercall_buffer_t *b
- #define xc_hypercall_buffer_free_pages(_xch, _name, _nr) xc__hypercall_buffer_free_pages(_xch, HYPERCALL_BUFFER(_name), _nr)
- 
- /*
-+ * Array of hypercall buffers.
-+ *
-+ * Create an array with xc_hypercall_buffer_array_create() and
-+ * populate it by declaring one hypercall buffer in a loop and
-+ * allocating the buffer with xc_hypercall_buffer_array_alloc().
-+ *
-+ * To access a previously allocated buffers, declare a new hypercall
-+ * buffer and call xc_hypercall_buffer_array_get().
-+ *
-+ * Destroy the array with xc_hypercall_buffer_array_destroy() to free
-+ * the array and all its alocated hypercall buffers.
-+ */
-+struct xc_hypercall_buffer_array;
-+typedef struct xc_hypercall_buffer_array xc_hypercall_buffer_array_t;
-+
-+xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch, unsigned n);
-+void *xc__hypercall_buffer_array_alloc(xc_interface *xch, xc_hypercall_buffer_array_t *array,
-+                                       unsigned index, xc_hypercall_buffer_t *hbuf, size_t size);
-+#define xc_hypercall_buffer_array_alloc(_xch, _array, _index, _name, _size) \
-+    xc__hypercall_buffer_array_alloc(_xch, _array, _index, HYPERCALL_BUFFER(_name), _size)
-+void *xc__hypercall_buffer_array_get(xc_interface *xch, xc_hypercall_buffer_array_t *array,
-+                                     unsigned index, xc_hypercall_buffer_t *hbuf);
-+#define xc_hypercall_buffer_array_get(_xch, _array, _index, _name, _size) \
-+    xc__hypercall_buffer_array_get(_xch, _array, _index, HYPERCALL_BUFFER(_name))
-+void xc_hypercall_buffer_array_destroy(xc_interface *xc, xc_hypercall_buffer_array_t *array);
-+
-+/*
-  * CPUMAP handling
-  */
- typedef uint8_t *xc_cpumap_t;
++ASSERT(kexec_reloc_size - kexec_reloc <= PAGE_SIZE, "kexec_reloc is too large")
 -- 
 1.7.2.5
 
