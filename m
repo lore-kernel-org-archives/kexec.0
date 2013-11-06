@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ve4WU-0002bQ-9i
- for kexec@lists.infradead.org; Wed, 06 Nov 2013 14:55:59 +0000
+ id 1Ve4WV-0002bQ-Nk
+ for kexec@lists.infradead.org; Wed, 06 Nov 2013 14:56:00 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCHv7 0/4] kexec-tools: add support for Xen 4.4
-Date: Wed, 6 Nov 2013 14:55:18 +0000
-Message-ID: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 2/4] kexec/xen: use libxc to get location of crash notes
+Date: Wed, 6 Nov 2013 14:55:20 +0000
+Message-ID: <1383749722-12091-3-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
+References: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,48 +25,107 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: xen-devel@lists.xen.org
 Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>
 
-The series adds support for the new hypercall ABI which should be
-provided by Xen 4.4.  Images are loaded into Xen directly with no
-kernel involvement.
+From: David Vrabel <david.vrabel@citrix.com>
 
-Please do not apply until the hypervisor side patches are applied to
-Xen.
+Use xc_kexec_get_range(KEXEC_RANGE_MA_CPU) instead of parsing
+/proc/iomem (which is only populated by non-upstream ("classic") Xen
+kernels).
 
-Patch 1 makes libxc 4.4 mandatory for Xen support.
+Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ kexec/crashdump-xen.c |   67 +++++++++++++++++++++++++++++-------------------
+ 1 files changed, 40 insertions(+), 27 deletions(-)
 
-Patch 2-3 remove uses of /proc/iomem in favour of libxc.
-
-Patch 4 adds the support for loading, unloading, and exec'ing an image
-in Xen.
-
-This series explicitly drops support for older version of libxc/Xen as
-supporting kexec on these hypervisors requires kernel support that
-will never be available upstream.
-
-Changes in v7:
-- extend extra segment to 0-1 MiB so the VGA memory is accesible by
-  the image.
-
-Changes in v6:
-- Close libxc handle a few error paths.
-
-Changes in v5:
-- Dropped the purgatory patch.
-
-Changes in v4:
-- KEXEC_ARCH_DEFAULT => EM_386
-- add segment in the crash case for the backup src.
-
-Changes in v3 (not posted):
-- Rebased
-
-Changes in v2:
-- Patch from Don Sultz: use libxc for vmcoreinfo.
-- Use xc_get_max_cpus() to get number of PCPUs.
-- Enable unload and exec of images.
-
-David
-
+diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
+index ff4706c..8185423 100644
+--- a/kexec/crashdump-xen.c
++++ b/kexec/crashdump-xen.c
+@@ -163,42 +163,55 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
+ 	return machine;
+ }
+ 
+-static int xen_crash_note_callback(void *UNUSED(data), int nr,
+-				   char *UNUSED(str),
+-				   unsigned long base,
+-				   unsigned long length)
+-{
+-	struct crash_note_info *note = xen_phys_notes + nr;
+-
+-	note->base = base;
+-	note->length = length;
+-
+-	return 0;
+-}
+-
++#ifdef HAVE_LIBXENCTRL
+ int xen_get_nr_phys_cpus(void)
+ {
+-	char *match = "Crash note\n";
+-	int cpus, n;
++	xc_interface *xc;
++	int max_cpus;
++	int cpu = -1;
+ 
+ 	if (xen_phys_cpus)
+ 		return xen_phys_cpus;
+ 
+-	if ((cpus = kexec_iomem_for_each_line(match, NULL, NULL))) {
+-		n = sizeof(struct crash_note_info) * cpus;
+-		xen_phys_notes = malloc(n);
+-		if (!xen_phys_notes) {
+-			fprintf(stderr, "failed to allocate xen_phys_notes.\n");
+-			return -1;
+-		}
+-		memset(xen_phys_notes, 0, n);
+-		kexec_iomem_for_each_line(match,
+-					  xen_crash_note_callback, NULL);
+-		xen_phys_cpus = cpus;
++	xc = xc_interface_open(NULL, NULL, 0);
++	if (!xc) {
++		fprintf(stderr, "failed to open xen control interface.\n");
++		return -1;
+ 	}
+ 
+-	return cpus;
++	max_cpus = xc_get_max_cpus(xc);
++	if (max_cpus <= 0)
++		goto out;
++
++	xen_phys_notes = calloc(max_cpus, sizeof(*xen_phys_notes));
++	if (xen_phys_notes == NULL)
++		goto out;
++
++	for (cpu = 0; cpu < max_cpus; cpu++) {
++		uint64_t size, start;
++		int ret;
++
++		ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_CPU, cpu, &size, &start);
++		if (ret < 0)
++			break;
++
++		xen_phys_notes[cpu].base = start;
++		xen_phys_notes[cpu].length = size;
++	}
++
++	xen_phys_cpus = cpu;
++
++out:
++	xc_interface_close(xc);
++	return cpu;
+ }
++#else
++int xen_get_nr_phys_cpus(void)
++{
++	return -1;
++}
++#endif
++
+ 
+ int xen_get_note(int cpu, uint64_t *addr, uint64_t *len)
+ {
+-- 
+1.7.2.5
 
 
 _______________________________________________
