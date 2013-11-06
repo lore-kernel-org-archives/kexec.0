@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from g5t0009.atlanta.hp.com ([15.192.0.46])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VdoMw-00061J-Mm
- for kexec@lists.infradead.org; Tue, 05 Nov 2013 21:41:03 +0000
-In-Reply-To: <20131105202855.GD4598@redhat.com>
-References: <1383642967-12595-1-git-send-email-bhe@redhat.com>
- <20131105202855.GD4598@redhat.com>
+ id 1VdsED-0002HY-7T
+ for kexec@lists.infradead.org; Wed, 06 Nov 2013 01:48:17 +0000
+Message-ID: <52799FC5.5040408@hp.com>
+Date: Wed, 06 Nov 2013 09:47:49 +0800
+From: Jingbai Ma <jingbai.ma@hp.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] x86: make reboot task only run on the appropriate
- processor
-From: "H. Peter Anvin" <hpa@zytor.com>
-Date: Tue, 05 Nov 2013 13:39:49 -0800
-Message-ID: <6b2e54d6-effa-4884-b674-2692a67e5cbc@email.android.com>
+Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
+References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
+ <20131105202631.GC4598@redhat.com>
+In-Reply-To: <20131105202631.GC4598@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,78 +19,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Baoquan He <bhe@redhat.com>
-Cc: mwhitehe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, davej@fedoraproject.org, mingo@redhat.com, holt@sgi.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, chaowang@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: bhe@redhat.com, tom.vaden@hp.com, kexec@lists.infradead.org, ptesarik@suse.cz, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com, Jingbai Ma <jingbai.ma@hp.com>
 
-We should, yes, if cpu 0 is available.
+On 11/06/2013 04:26 AM, Vivek Goyal wrote:
+> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
+>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
+>>
+>> This patch requires the kernel patch to export necessary data structures into
+>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
+>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
+>>
+>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
+>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
+>
+> Interesting. Why hugepages should be treated any differentely than normal
+> pages?
+>
+> If user asked to filter out free page, then it should be filtered and
+> it should not matter whether it is a huge page or not?
 
-Vivek Goyal <vgoyal@redhat.com> wrote:
->On Tue, Nov 05, 2013 at 05:16:07PM +0800, Baoquan He wrote:
->> Currently system always reboot after below message when execute
->"kexec -e".
->> 
->> [    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
->> 
+Yes, free hugepages should be filtered out with other free pages. It 
+sounds reasonable.
+
+But for active hugepages, I would offer user more choices/flexibility. 
+(maybe bad).
+I'm OK to filter active hugepages with other user data page.
+
+Any other comments?
+
+
 >
->So is it same problem were we reboot on non-boot cpu and sending INIT
->to boot cpu in second kernel brings down the machine?
->
->I think for x86, it makes sense to reboot on boot cpu.
->
->Thanks
->Vivek
->
->> In commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f, reboot= handling
->was
->> moved to kerne/reboot.c. However, the code to migrate current thread
->to
->> reboot cpu was removed. That cause this incorrect kexec behavior.
->> 
->> Now add that code block back.
->> 
->> Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
->> Reported-by: Dave Young <dyoung@redhat.com>
->> Tested-by: WANG Chao <chaowang@redhat.com>
->> Signed-off-by: Baoquan He <bhe@redhat.com>
->> ---
->>  arch/x86/kernel/reboot.c | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->> 
->> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
->> index 7e920bf..3049de9 100644
->> --- a/arch/x86/kernel/reboot.c
->> +++ b/arch/x86/kernel/reboot.c
->> @@ -551,6 +551,21 @@ void native_machine_shutdown(void)
->>  {
->>  	/* Stop the cpus and apics */
->>  #ifdef CONFIG_SMP
->> +       /* The boot cpu is always logical cpu 0 */
->> +       int reboot_cpu_id = 0;
->> +
->> +       /* See if there has been given a command line override */
->> +       if ((reboot_cpu != -1) && (reboot_cpu < nr_cpu_ids) &&
->> +               cpu_online(reboot_cpu))
->> +               reboot_cpu_id = reboot_cpu;
->> +
->> +       /* Make certain the cpu I'm about to reboot on is online */
->> +       if (!cpu_online(reboot_cpu_id))
->> +               reboot_cpu_id = smp_processor_id();
->> +
->> +       /* Make certain I only run on the appropriate processor */
->> +       set_cpus_allowed_ptr(current, cpumask_of(reboot_cpu_id));
->> +
->>  	/*
->>  	 * Stop all of the others. Also disable the local irq to
->>  	 * not receive the per-cpu timer interrupt which may trigger
->> -- 
->> 1.8.3.1
+> Thanks
+> Vivek
+
 
 -- 
-Sent from my mobile phone.  Please pardon brevity and lack of formatting.
+Thanks,
+Jingbai Ma
 
 _______________________________________________
 kexec mailing list
