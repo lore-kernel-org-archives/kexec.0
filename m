@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from smtp.citrix.com ([66.165.176.89])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ve4RK-0002Ip-9j
- for kexec@lists.infradead.org; Wed, 06 Nov 2013 14:50:39 +0000
+ id 1Ve4RL-0002Ip-Ai
+ for kexec@lists.infradead.org; Wed, 06 Nov 2013 14:50:40 +0000
 From: David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCHv10 0/9] Xen: extend kexec hypercall for use with pv-ops kernels
-Date: Wed, 6 Nov 2013 14:49:37 +0000
-Message-ID: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
+Subject: [PATCH 6/9] libxc: add hypercall buffer arrays
+Date: Wed, 6 Nov 2013 14:49:43 +0000
+Message-ID: <1383749386-11891-7-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
+References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,78 +25,145 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: xen-devel@lists.xen.org
 Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Jan Beulich <jbeulich@suse.com>
 
-The series (for Xen 4.4) improves the kexec hypercall by making Xen
-responsible for loading and relocating the image.  This allows kexec
-to be usable by pv-ops kernels and should allow kexec to be usable
-from a HVM or PVH privileged domain.
+From: David Vrabel <david.vrabel@citrix.com>
 
-I have now tested this with a Linux kernel image using the VGA console
-which was what was causing problems in v9 (this turned out to be a
-kexec-tools bug).
+Hypercall buffer arrays are used when a hypercall takes a variable
+length array of buffers.
 
-The required patch series for kexec-tools will be posted shortly and
-are available from the xen-v7 branch of:
+Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+Acked-by: Ian Campbell <ian.campbell@citrix.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
+Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
+---
+ tools/libxc/xc_hcall_buf.c |   73 ++++++++++++++++++++++++++++++++++++++++++++
+ tools/libxc/xenctrl.h      |   27 ++++++++++++++++
+ 2 files changed, 100 insertions(+), 0 deletions(-)
 
-http://xenbits.xen.org/gitweb/?p=people/dvrabel/kexec-tools.git;a=summary
-
-Changes in v10:
-
-- Document host state on exec.
-- Fix kimage_alloc() error path (double free, crash on zero kimage->head).
-- Check for segment before expanding it in load_v1.
-- Move kexec_lock define into kexec_swap_images().
-
-Changes in v9:
-
-- Update comments to correctly say 4.4.
-- Minor updates the kexec_reloc assembly to improve maintainability a
-  bit.
-
-Changes in v8:
-
-- Use #defines for compat ABI structures.
-- Tweak link time check for kexec_reloc.
-
-Changes in v7:
-
-- No longer use GUEST_HANDLE_64(), get a uniform ABI by using unions
-  and explicit padding.
-- Only map the segments and not all of RAM.
-- Add a mechanism to create mappings for use by the exec'd image (a
-  segment with a NULL buf handle).
-- Fix a bug where a crash image's code page would by placed at machine
-  address 0 (instead of inside the crash region).
-
-Changes in v6:
-
-- Fix double free in KEXEC_load_v1 failure path.
-- Only copy the relocation code and not the whole page.
-- Add myself as the kexec maintainer.
-
-Changes in v5 (not posted to the list):
-
-- _rsvd -> _pad in one of the public ABI structures.
-- Fix bug where trailing pages were not zeroed. This fixes loading a
-  64-bit Linux kernel using a more recent version of kexec-tools.
-- Check the relocation code fits into a page at link time.
-
-Changes in v4:
-
-- Use paddr_t and page_to_maddr() etc. for portability.
-- Add explicit padding to hypercall structures where required.
-- Minor cleanup of the kexec_reloc assembly.
-- Print a message before exec'ing a crash image.
-- Style fixes (tabs, trailing whitespace) and typos.
-- Fix a bug where using the V1 interface and unloading a image may crash.
-
-Changes in v3:
-
-- Provide old struct xen_kexec_load if __XEN_INTERFACE_VERSION__ < 4.3
-- Adjust new struct xen_kexec_load to avoid unnecessary padding.
-- Use domheap pages for the image and control pages.
-- Remove the DBG() macros from the reloc code.
-
-David
+diff --git a/tools/libxc/xc_hcall_buf.c b/tools/libxc/xc_hcall_buf.c
+index c354677..e762a93 100644
+--- a/tools/libxc/xc_hcall_buf.c
++++ b/tools/libxc/xc_hcall_buf.c
+@@ -228,6 +228,79 @@ void xc__hypercall_bounce_post(xc_interface *xch, xc_hypercall_buffer_t *b)
+     xc__hypercall_buffer_free(xch, b);
+ }
+ 
++struct xc_hypercall_buffer_array {
++    unsigned max_bufs;
++    xc_hypercall_buffer_t *bufs;
++};
++
++xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch,
++                                                              unsigned n)
++{
++    xc_hypercall_buffer_array_t *array;
++    xc_hypercall_buffer_t *bufs = NULL;
++
++    array = malloc(sizeof(*array));
++    if ( array == NULL )
++        goto error;
++
++    bufs = calloc(n, sizeof(*bufs));
++    if ( bufs == NULL )
++        goto error;
++
++    array->max_bufs = n;
++    array->bufs     = bufs;
++
++    return array;
++
++error:
++    free(bufs);
++    free(array);
++    return NULL;
++}
++
++void *xc__hypercall_buffer_array_alloc(xc_interface *xch,
++                                       xc_hypercall_buffer_array_t *array,
++                                       unsigned index,
++                                       xc_hypercall_buffer_t *hbuf,
++                                       size_t size)
++{
++    void *buf;
++
++    if ( index >= array->max_bufs || array->bufs[index].hbuf )
++        abort();
++
++    buf = xc__hypercall_buffer_alloc(xch, hbuf, size);
++    if ( buf )
++        array->bufs[index] = *hbuf;
++    return buf;
++}
++
++void *xc__hypercall_buffer_array_get(xc_interface *xch,
++                                     xc_hypercall_buffer_array_t *array,
++                                     unsigned index,
++                                     xc_hypercall_buffer_t *hbuf)
++{
++    if ( index >= array->max_bufs || array->bufs[index].hbuf == NULL )
++        abort();
++
++    *hbuf = array->bufs[index];
++    return array->bufs[index].hbuf;
++}
++
++void xc_hypercall_buffer_array_destroy(xc_interface *xc,
++                                       xc_hypercall_buffer_array_t *array)
++{
++    unsigned i;
++
++    if ( array == NULL )
++        return;
++
++    for (i = 0; i < array->max_bufs; i++ )
++        xc__hypercall_buffer_free(xc, &array->bufs[i]);
++    free(array->bufs);
++    free(array);
++}
++
+ /*
+  * Local variables:
+  * mode: C
+diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
+index 8cf3f3b..a7e8c31 100644
+--- a/tools/libxc/xenctrl.h
++++ b/tools/libxc/xenctrl.h
+@@ -321,6 +321,33 @@ void xc__hypercall_buffer_free_pages(xc_interface *xch, xc_hypercall_buffer_t *b
+ #define xc_hypercall_buffer_free_pages(_xch, _name, _nr) xc__hypercall_buffer_free_pages(_xch, HYPERCALL_BUFFER(_name), _nr)
+ 
+ /*
++ * Array of hypercall buffers.
++ *
++ * Create an array with xc_hypercall_buffer_array_create() and
++ * populate it by declaring one hypercall buffer in a loop and
++ * allocating the buffer with xc_hypercall_buffer_array_alloc().
++ *
++ * To access a previously allocated buffers, declare a new hypercall
++ * buffer and call xc_hypercall_buffer_array_get().
++ *
++ * Destroy the array with xc_hypercall_buffer_array_destroy() to free
++ * the array and all its alocated hypercall buffers.
++ */
++struct xc_hypercall_buffer_array;
++typedef struct xc_hypercall_buffer_array xc_hypercall_buffer_array_t;
++
++xc_hypercall_buffer_array_t *xc_hypercall_buffer_array_create(xc_interface *xch, unsigned n);
++void *xc__hypercall_buffer_array_alloc(xc_interface *xch, xc_hypercall_buffer_array_t *array,
++                                       unsigned index, xc_hypercall_buffer_t *hbuf, size_t size);
++#define xc_hypercall_buffer_array_alloc(_xch, _array, _index, _name, _size) \
++    xc__hypercall_buffer_array_alloc(_xch, _array, _index, HYPERCALL_BUFFER(_name), _size)
++void *xc__hypercall_buffer_array_get(xc_interface *xch, xc_hypercall_buffer_array_t *array,
++                                     unsigned index, xc_hypercall_buffer_t *hbuf);
++#define xc_hypercall_buffer_array_get(_xch, _array, _index, _name, _size) \
++    xc__hypercall_buffer_array_get(_xch, _array, _index, HYPERCALL_BUFFER(_name))
++void xc_hypercall_buffer_array_destroy(xc_interface *xc, xc_hypercall_buffer_array_t *array);
++
++/*
+  * CPUMAP handling
+  */
+ typedef uint8_t *xc_cpumap_t;
+-- 
+1.7.2.5
 
 
 _______________________________________________
