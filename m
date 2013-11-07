@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from omzsmtpe01.verizonbusiness.com ([199.249.25.210])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VeWYM-0002CA-Jh
- for kexec@lists.infradead.org; Thu, 07 Nov 2013 20:51:47 +0000
-From: Don Slutz <dslutz@verizon.com>
-Message-ID: <527BFC86.8020704@terremark.com>
-Date: Thu, 7 Nov 2013 15:48:06 -0500
-MIME-Version: 1.0
-Subject: Re: [PATCH 7/9] libxc: add API for kexec hypercall
+ id 1VeWxB-0002qE-7f
+ for kexec@lists.infradead.org; Thu, 07 Nov 2013 21:17:25 +0000
+Date: Thu, 7 Nov 2013 22:16:51 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCHv10 0/9] Xen: extend kexec hypercall for use with pv-ops
+ kernels
+Message-ID: <20131107211651.GC11159@olila.local.net-space.pl>
 References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
- <1383749386-11891-8-git-send-email-david.vrabel@citrix.com>
-In-Reply-To: <1383749386-11891-8-git-send-email-david.vrabel@citrix.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,267 +20,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>, xen-devel@lists.xen.org
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, Jan Beulich <jbeulich@suse.com>
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: kexec@lists.infradead.org, Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xen.org
 
-For what it is worth.
-
-Reviewed-by: Don Slutz <dslutz@verizon.com>
-     -Don Slutz
-
-On 11/06/13 09:49, David Vrabel wrote:
-> From: David Vrabel <david.vrabel@citrix.com>
+On Wed, Nov 06, 2013 at 02:49:37PM +0000, David Vrabel wrote:
+> The series (for Xen 4.4) improves the kexec hypercall by making Xen
+> responsible for loading and relocating the image.  This allows kexec
+> to be usable by pv-ops kernels and should allow kexec to be usable
+> from a HVM or PVH privileged domain.
 >
-> Add xc_kexec_exec(), xc_kexec_get_ranges(), xc_kexec_load(), and
-> xc_kexec_unload().  The load and unload calls require the v2 load and
-> unload ops.
+> I have now tested this with a Linux kernel image using the VGA console
+> which was what was causing problems in v9 (this turned out to be a
+> kexec-tools bug).
 >
-> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
-> Acked-by: Ian Campbell <ian.campbell@citrix.com>
-> Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-> Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
-> Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com>
-> ---
->   tools/libxc/Makefile   |    1 +
->   tools/libxc/xc_kexec.c |  140 ++++++++++++++++++++++++++++++++++++++++++++++++
->   tools/libxc/xenctrl.h  |   55 +++++++++++++++++++
->   3 files changed, 196 insertions(+), 0 deletions(-)
->   create mode 100644 tools/libxc/xc_kexec.c
->
-> diff --git a/tools/libxc/Makefile b/tools/libxc/Makefile
-> index 4c64c15..f2d6e56 100644
-> --- a/tools/libxc/Makefile
-> +++ b/tools/libxc/Makefile
-> @@ -31,6 +31,7 @@ CTRL_SRCS-y       += xc_mem_access.c
->   CTRL_SRCS-y       += xc_memshr.c
->   CTRL_SRCS-y       += xc_hcall_buf.c
->   CTRL_SRCS-y       += xc_foreign_memory.c
-> +CTRL_SRCS-y       += xc_kexec.c
->   CTRL_SRCS-y       += xtl_core.c
->   CTRL_SRCS-y       += xtl_logger_stdio.c
->   CTRL_SRCS-$(CONFIG_X86) += xc_pagetab.c
-> diff --git a/tools/libxc/xc_kexec.c b/tools/libxc/xc_kexec.c
-> new file mode 100644
-> index 0000000..a49cffb
-> --- /dev/null
-> +++ b/tools/libxc/xc_kexec.c
-> @@ -0,0 +1,140 @@
-> +/******************************************************************************
-> + * xc_kexec.c
-> + *
-> + * API for loading and executing kexec images.
-> + *
-> + * This library is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU Lesser General Public
-> + * License as published by the Free Software Foundation;
-> + * version 2.1 of the License.
-> + *
-> + * Copyright (C) 2013 Citrix Systems R&D Ltd.
-> + */
-> +#include "xc_private.h"
-> +
-> +int xc_kexec_exec(xc_interface *xch, int type)
-> +{
-> +    DECLARE_HYPERCALL;
-> +    DECLARE_HYPERCALL_BUFFER(xen_kexec_exec_t, exec);
-> +    int ret = -1;
-> +
-> +    exec = xc_hypercall_buffer_alloc(xch, exec, sizeof(*exec));
-> +    if ( exec == NULL )
-> +    {
-> +        PERROR("Count not alloc bounce buffer for kexec_exec hypercall");
-> +        goto out;
-> +    }
-> +
-> +    exec->type = type;
-> +
-> +    hypercall.op = __HYPERVISOR_kexec_op;
-> +    hypercall.arg[0] = KEXEC_CMD_kexec;
-> +    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(exec);
-> +
-> +    ret = do_xen_hypercall(xch, &hypercall);
-> +
-> +out:
-> +    xc_hypercall_buffer_free(xch, exec);
-> +
-> +    return ret;
-> +}
-> +
-> +int xc_kexec_get_range(xc_interface *xch, int range,  int nr,
-> +                       uint64_t *size, uint64_t *start)
-> +{
-> +    DECLARE_HYPERCALL;
-> +    DECLARE_HYPERCALL_BUFFER(xen_kexec_range_t, get_range);
-> +    int ret = -1;
-> +
-> +    get_range = xc_hypercall_buffer_alloc(xch, get_range, sizeof(*get_range));
-> +    if ( get_range == NULL )
-> +    {
-> +        PERROR("Could not alloc bounce buffer for kexec_get_range hypercall");
-> +        goto out;
-> +    }
-> +
-> +    get_range->range = range;
-> +    get_range->nr = nr;
-> +
-> +    hypercall.op = __HYPERVISOR_kexec_op;
-> +    hypercall.arg[0] = KEXEC_CMD_kexec_get_range;
-> +    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(get_range);
-> +
-> +    ret = do_xen_hypercall(xch, &hypercall);
-> +
-> +    *size = get_range->size;
-> +    *start = get_range->start;
-> +
-> +out:
-> +    xc_hypercall_buffer_free(xch, get_range);
-> +
-> +    return ret;
-> +}
-> +
-> +int xc_kexec_load(xc_interface *xch, uint8_t type, uint16_t arch,
-> +                  uint64_t entry_maddr,
-> +                  uint32_t nr_segments, xen_kexec_segment_t *segments)
-> +{
-> +    int ret = -1;
-> +    DECLARE_HYPERCALL;
-> +    DECLARE_HYPERCALL_BOUNCE(segments, sizeof(*segments) * nr_segments,
-> +                             XC_HYPERCALL_BUFFER_BOUNCE_IN);
-> +    DECLARE_HYPERCALL_BUFFER(xen_kexec_load_t, load);
-> +
-> +    if ( xc_hypercall_bounce_pre(xch, segments) )
-> +    {
-> +        PERROR("Could not allocate bounce buffer for kexec load hypercall");
-> +        goto out;
-> +    }
-> +    load = xc_hypercall_buffer_alloc(xch, load, sizeof(*load));
-> +    if ( load == NULL )
-> +    {
-> +        PERROR("Could not allocate buffer for kexec load hypercall");
-> +        goto out;
-> +    }
-> +
-> +    load->type = type;
-> +    load->arch = arch;
-> +    load->entry_maddr = entry_maddr;
-> +    load->nr_segments = nr_segments;
-> +    set_xen_guest_handle(load->segments.h, segments);
-> +
-> +    hypercall.op = __HYPERVISOR_kexec_op;
-> +    hypercall.arg[0] = KEXEC_CMD_kexec_load;
-> +    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(load);
-> +
-> +    ret = do_xen_hypercall(xch, &hypercall);
-> +
-> +out:
-> +    xc_hypercall_buffer_free(xch, load);
-> +    xc_hypercall_bounce_post(xch, segments);
-> +
-> +    return ret;
-> +}
-> +
-> +int xc_kexec_unload(xc_interface *xch, int type)
-> +{
-> +    DECLARE_HYPERCALL;
-> +    DECLARE_HYPERCALL_BUFFER(xen_kexec_unload_t, unload);
-> +    int ret = -1;
-> +
-> +    unload = xc_hypercall_buffer_alloc(xch, unload, sizeof(*unload));
-> +    if ( unload == NULL )
-> +    {
-> +        PERROR("Count not alloc buffer for kexec unload hypercall");
-> +        goto out;
-> +    }
-> +
-> +    unload->type = type;
-> +
-> +    hypercall.op = __HYPERVISOR_kexec_op;
-> +    hypercall.arg[0] = KEXEC_CMD_kexec_unload;
-> +    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(unload);
-> +
-> +    ret = do_xen_hypercall(xch, &hypercall);
-> +
-> +out:
-> +    xc_hypercall_buffer_free(xch, unload);
-> +
-> +    return ret;
-> +}
-> diff --git a/tools/libxc/xenctrl.h b/tools/libxc/xenctrl.h
-> index a7e8c31..4ac6b8a 100644
-> --- a/tools/libxc/xenctrl.h
-> +++ b/tools/libxc/xenctrl.h
-> @@ -46,6 +46,7 @@
->   #include <xen/hvm/params.h>
->   #include <xen/xsm/flask_op.h>
->   #include <xen/tmem.h>
-> +#include <xen/kexec.h>
->   
->   #include "xentoollog.h"
->   
-> @@ -2340,4 +2341,58 @@ int xc_compression_uncompress_page(xc_interface *xch, char *compbuf,
->   				   unsigned long compbuf_size,
->   				   unsigned long *compbuf_pos, char *dest);
->   
-> +/*
-> + * Execute an image previously loaded with xc_kexec_load().
-> + *
-> + * Does not return on success.
-> + *
-> + * Fails with:
-> + *   ENOENT if the specified image has not been loaded.
-> + */
-> +int xc_kexec_exec(xc_interface *xch, int type);
-> +
-> +/*
-> + * Find the machine address and size of certain memory areas.
-> + *
-> + *   KEXEC_RANGE_MA_CRASH       crash area
-> + *   KEXEC_RANGE_MA_XEN         Xen itself
-> + *   KEXEC_RANGE_MA_CPU         CPU note for CPU number 'nr'
-> + *   KEXEC_RANGE_MA_XENHEAP     xenheap
-> + *   KEXEC_RANGE_MA_EFI_MEMMAP  EFI Memory Map
-> + *   KEXEC_RANGE_MA_VMCOREINFO  vmcoreinfo
-> + *
-> + * Fails with:
-> + *   EINVAL if the range or CPU number isn't valid.
-> + */
-> +int xc_kexec_get_range(xc_interface *xch, int range,  int nr,
-> +                       uint64_t *size, uint64_t *start);
-> +
-> +/*
-> + * Load a kexec image into memory.
-> + *
-> + * The image may be of type KEXEC_TYPE_DEFAULT (executed on request)
-> + * or KEXEC_TYPE_CRASH (executed on a crash).
-> + *
-> + * The image architecture may be a 32-bit variant of the hypervisor
-> + * architecture (e.g, EM_386 on a x86-64 hypervisor).
-> + *
-> + * Fails with:
-> + *   ENOMEM if there is insufficient memory for the new image.
-> + *   EINVAL if the image does not fit into the crash area or the entry
-> + *          point isn't within one of segments.
-> + *   EBUSY  if another image is being executed.
-> + */
-> +int xc_kexec_load(xc_interface *xch, uint8_t type, uint16_t arch,
-> +                  uint64_t entry_maddr,
-> +                  uint32_t nr_segments, xen_kexec_segment_t *segments);
-> +
-> +/*
-> + * Unload a kexec image.
-> + *
-> + * This prevents a KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH image from
-> + * being executed.  The crash images are not cleared from the crash
-> + * region.
-> + */
-> +int xc_kexec_unload(xc_interface *xch, int type);
-> +
->   #endif /* XENCTRL_H */
+> The required patch series for kexec-tools will be posted shortly and
+> are available from the xen-v7 branch of:
 
+In general it works. However, quite often I am not able to execute panic
+kernel. Machine hangs with following message:
+
+(XEN) Domain 0 crashed: Executing crash image
+
+gdb shows:
+
+(gdb) bt
+#0  0xffff82d0801a0092 in do_nmi_crash (regs=<optimized out>) at crash.c:113
+#1  0xffff82d0802281d9 in nmi_crash () at entry.S:666
+#2  0x0000000000000000 in ?? ()
+(gdb)
+
+Especially second bt line scares me... ;-)))
+
+I have not been able to identify why NMI was activated because
+stack is completely cleared. I tried to record execution in gdb
+but it stops with following message:
+
+cpumask_clear_cpu (dstp=0xffff82d0802f7f78 <call_data+24>, cpu=0)
+    at /srv/dev/xen/xen_20130413_20131107.kexec/xen/include/xen/cpumask.h:108
+108             clear_bit(cpumask_check(cpu), dstp->bits);
+Process record: failed to record execution log.
+
+Do you know how to find out why NMI was activated?
+
+I am able almost always reproduce this issue doing this:
+  - boot Xen,
+  - load panic kernel,
+  - echo c > /proc/sysrq-trigger,
+  - reboot from command line,
+  - boot Xen,
+  - load panic kernel,
+  - echo c > /proc/sysrq-trigger.
+
+Additionally, my compiler fails because it detects unused result
+variable in xen/common/kimage.c:kimage_crash_alloc().
+
+Daniel
 
 _______________________________________________
 kexec mailing list
