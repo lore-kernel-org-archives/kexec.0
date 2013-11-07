@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0026.austin.hp.com ([15.216.28.33])
+Received: from omzsmtpe01.verizonbusiness.com ([199.249.25.210])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VeLPV-0001Ll-FQ
- for kexec@lists.infradead.org; Thu, 07 Nov 2013 08:57:54 +0000
-Message-ID: <527B55F0.4000301@hp.com>
-Date: Thu, 07 Nov 2013 16:57:20 +0800
-From: Jingbai Ma <jingbai.ma@hp.com>
+ id 1VeWMg-0001pi-70
+ for kexec@lists.infradead.org; Thu, 07 Nov 2013 20:39:43 +0000
+From: Don Slutz <dslutz@verizon.com>
+Message-ID: <527BF9BC.6070901@terremark.com>
+Date: Thu, 7 Nov 2013 15:36:12 -0500
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
-References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
- <20131105202631.GC4598@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
- <20131106142350.GB23357@redhat.com>
-In-Reply-To: <20131106142350.GB23357@redhat.com>
+Subject: Re: [Xen-devel] [PATCH 2/4] kexec/xen: use libxc to get location
+ of crash notes
+References: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
+ <1383749722-12091-3-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <1383749722-12091-3-git-send-email-david.vrabel@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +24,115 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>
+To: David Vrabel <david.vrabel@citrix.com>, xen-devel@lists.xen.org
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On 11/06/2013 10:23 PM, Vivek Goyal wrote:
-> On Wed, Nov 06, 2013 at 02:21:39AM +0000, Atsushi Kumagai wrote:
->> (2013/11/06 5:27), Vivek Goyal wrote:
->>> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
->>>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
->>>>
->>>> This patch requires the kernel patch to export necessary data structures into
->>>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
->>>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
->>>>
->>>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
->>>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
->>>
->>> Interesting. Why hugepages should be treated any differentely than normal
->>> pages?
->>>
->>> If user asked to filter out free page, then it should be filtered and
->>> it should not matter whether it is a huge page or not?
->>
->> I'm making a RFC patch of hugepages filtering based on such policy.
->>
->> I attach the prototype version.
->> It's able to filter out also THPs, and suitable for cyclic processing
->> because it depends on mem_map and looking up it can be divided into
->> cycles. This is the same idea as page_is_buddy().
->>
->> So I think it's better.
+For what it is worth.
+
+Reviewed-by: Don Slutz <dslutz@verizon.com>
+     -Don Slutz
+
+On 11/06/13 09:55, David Vrabel wrote:
+> From: David Vrabel <david.vrabel@citrix.com>
 >
-> Agreed. Being able to treat hugepages in same manner as other pages
-> sounds good.
+> Use xc_kexec_get_range(KEXEC_RANGE_MA_CPU) instead of parsing
+> /proc/iomem (which is only populated by non-upstream ("classic") Xen
+> kernels).
 >
-> Jingbai, looks good to you?
-
-It looks good to me.
-
-My only concern is by this way, we only can exclude all hugepage 
-together, but can't exclude the free hugepages only. I'm not sure if 
-user need to dump out the activated hugepage only.
-
-Kumagai-san, please correct me, if I'm wrong.
-
-
-
+> Signed-off-by: David Vrabel <david.vrabel@citrix.com>
+> Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+> ---
+>   kexec/crashdump-xen.c |   67 +++++++++++++++++++++++++++++-------------------
+>   1 files changed, 40 insertions(+), 27 deletions(-)
 >
-> Thanks
-> Vivek
->
->>
->> --
->> Thanks
->> Atsushi Kumagai
->>
+> diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
+> index ff4706c..8185423 100644
+> --- a/kexec/crashdump-xen.c
+> +++ b/kexec/crashdump-xen.c
+> @@ -163,42 +163,55 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
+>   	return machine;
+>   }
+>   
+> -static int xen_crash_note_callback(void *UNUSED(data), int nr,
+> -				   char *UNUSED(str),
+> -				   unsigned long base,
+> -				   unsigned long length)
+> -{
+> -	struct crash_note_info *note = xen_phys_notes + nr;
+> -
+> -	note->base = base;
+> -	note->length = length;
+> -
+> -	return 0;
+> -}
+> -
+> +#ifdef HAVE_LIBXENCTRL
+>   int xen_get_nr_phys_cpus(void)
+>   {
+> -	char *match = "Crash note\n";
+> -	int cpus, n;
+> +	xc_interface *xc;
+> +	int max_cpus;
+> +	int cpu = -1;
+>   
+>   	if (xen_phys_cpus)
+>   		return xen_phys_cpus;
+>   
+> -	if ((cpus = kexec_iomem_for_each_line(match, NULL, NULL))) {
+> -		n = sizeof(struct crash_note_info) * cpus;
+> -		xen_phys_notes = malloc(n);
+> -		if (!xen_phys_notes) {
+> -			fprintf(stderr, "failed to allocate xen_phys_notes.\n");
+> -			return -1;
+> -		}
+> -		memset(xen_phys_notes, 0, n);
+> -		kexec_iomem_for_each_line(match,
+> -					  xen_crash_note_callback, NULL);
+> -		xen_phys_cpus = cpus;
+> +	xc = xc_interface_open(NULL, NULL, 0);
+> +	if (!xc) {
+> +		fprintf(stderr, "failed to open xen control interface.\n");
+> +		return -1;
+>   	}
+>   
+> -	return cpus;
+> +	max_cpus = xc_get_max_cpus(xc);
+> +	if (max_cpus <= 0)
+> +		goto out;
+> +
+> +	xen_phys_notes = calloc(max_cpus, sizeof(*xen_phys_notes));
+> +	if (xen_phys_notes == NULL)
+> +		goto out;
+> +
+> +	for (cpu = 0; cpu < max_cpus; cpu++) {
+> +		uint64_t size, start;
+> +		int ret;
+> +
+> +		ret = xc_kexec_get_range(xc, KEXEC_RANGE_MA_CPU, cpu, &size, &start);
+> +		if (ret < 0)
+> +			break;
+> +
+> +		xen_phys_notes[cpu].base = start;
+> +		xen_phys_notes[cpu].length = size;
+> +	}
+> +
+> +	xen_phys_cpus = cpu;
+> +
+> +out:
+> +	xc_interface_close(xc);
+> +	return cpu;
+>   }
+> +#else
+> +int xen_get_nr_phys_cpus(void)
+> +{
+> +	return -1;
+> +}
+> +#endif
+> +
+>   
+>   int xen_get_note(int cpu, uint64_t *addr, uint64_t *len)
+>   {
 
--- 
-Thanks,
-Jingbai Ma
 
 _______________________________________________
 kexec mailing list
