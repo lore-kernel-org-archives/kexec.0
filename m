@@ -1,33 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VeDtV-00089S-Qm
- for kexec@lists.infradead.org; Thu, 07 Nov 2013 00:56:23 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 146903EE0B6
- for <kexec@lists.infradead.org>; Thu,  7 Nov 2013 09:55:51 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id F205945DEBC
- for <kexec@lists.infradead.org>; Thu,  7 Nov 2013 09:55:50 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.nic.fujitsu.com [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id C14B245DD76
- for <kexec@lists.infradead.org>; Thu,  7 Nov 2013 09:55:50 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id B57581DB8038
- for <kexec@lists.infradead.org>; Thu,  7 Nov 2013 09:55:50 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 57D911DB803C
- for <kexec@lists.infradead.org>; Thu,  7 Nov 2013 09:55:50 +0900 (JST)
-Message-ID: <527AE4DE.3050209@jp.fujitsu.com>
-Date: Thu, 07 Nov 2013 09:54:54 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VeFE2-0001R8-Oe
+ for kexec@lists.infradead.org; Thu, 07 Nov 2013 02:21:40 +0000
+Date: Thu, 7 Nov 2013 10:20:15 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86: make reboot task only run on the appropriate
+ processor
+Message-ID: <20131107022015.GA2491@dhcp-16-105.nay.redhat.com>
+References: <1383642967-12595-1-git-send-email-bhe@redhat.com>
+ <20131105202855.GD4598@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
-References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
- <20131105202631.GC4598@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <20131105202855.GD4598@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,108 +21,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mwhitehe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, davej@fedoraproject.org, mingo@redhat.com, holt@sgi.com, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, chaowang@redhat.com
 
-(2013/11/06 11:21), Atsushi Kumagai wrote:
-> (2013/11/06 5:27), Vivek Goyal wrote:
->> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
->>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
->>>
->>> This patch requires the kernel patch to export necessary data structures into
->>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
->>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
->>>
->>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
->>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
->>
->> Interesting. Why hugepages should be treated any differentely than normal
->> pages?
->>
->> If user asked to filter out free page, then it should be filtered and
->> it should not matter whether it is a huge page or not?
->
-> I'm making a RFC patch of hugepages filtering based on such policy.
->
-> I attach the prototype version.
-> It's able to filter out also THPs, and suitable for cyclic processing
-> because it depends on mem_map and looking up it can be divided into
-> cycles. This is the same idea as page_is_buddy().
->
-> So I think it's better.
->
+On 11/05/13 at 03:28pm, Vivek Goyal wrote:
+> On Tue, Nov 05, 2013 at 05:16:07PM +0800, Baoquan He wrote:
+> > Currently system always reboot after below message when execute "kexec -e".
+> > 
+> > [    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
+> > 
+> 
+> So is it same problem were we reboot on non-boot cpu and sending INIT
+> to boot cpu in second kernel brings down the machine?
 
-> @@ -4506,14 +4583,49 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->    		    && !isAnon(mapping)) {
->    			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
->    				pfn_cache_private++;
-> +			/*
-> +			 * NOTE: If THP for cache is introduced, the check for
-> +			 *       compound pages is needed here.
-> +			 */
->    		}
->    		/*
->    		 * Exclude the data page of the user process.
->    		 */
-> -		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
-> -		    && isAnon(mapping)) {
-> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-> -				pfn_user++;
-> +		else if (info->dump_level & DL_EXCLUDE_USER_DATA) {
-> +			/*
-> +			 * Exclude the anonnymous pages as user pages.
-> +			 */
-> +			if (isAnon(mapping)) {
-> +				if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-> +					pfn_user++;
-> +
-> +				/*
-> +				 * Check the compound page
-> +				 */
-> +				if (page_is_hugepage(flags) && compound_order > 0) {
-> +					int i, nr_pages = 1 << compound_order;
-> +
-> +					for (i = 1; i < nr_pages; ++i) {
-> +						if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
-> +							pfn_user++;
-> +					}
-> +					pfn += nr_pages - 2;
-> +					mem_map += (nr_pages - 1) * SIZE(page);
-> +				}
-> +			}
-> +			/*
-> +			 * Exclude the hugetlbfs pages as user pages.
-> +			 */
-> +			else if (hugetlb_dtor == SYMBOL(free_huge_page)) {
-> +				int i, nr_pages = 1 << compound_order;
-> +
-> +				for (i = 0; i < nr_pages; ++i) {
-> +					if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
-> +						pfn_user++;
-> +				}
-> +				pfn += nr_pages - 1;
-> +				mem_map += (nr_pages - 1) * SIZE(page);
-> +			}
->    		}
->    		/*
->    		 * Exclude the hwpoison page.
+I was wrong, they are the same problem. With multiple CPUs, by setting
+affinity to execute crash or kexec on CPUn(n!==0), they all reboot after
+the same message as below and then reboot through BIOS. It should be the
+BSP got a INIT IPI message and make system hang.
 
-I'm concerned about the case that filtering is not performed to part of mem_map
-entries not belonging to the current cyclic range.
+[    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
 
-If maximum value of compound_order is larger than maximum value of
-CONFIG_FORCE_MAX_ZONEORDER, which makedumpfile obtains by ARRAY_LENGTH(zone.free_area),
-it's necessary to align info->bufsize_cyclic with larger one in
-check_cyclic_buffer_overrun().
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+> 
+> I think for x86, it makes sense to reboot on boot cpu.
+> 
+> Thanks
+> Vivek
+> 
+> > In commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f, reboot= handling was
+> > moved to kerne/reboot.c. However, the code to migrate current thread to
+> > reboot cpu was removed. That cause this incorrect kexec behavior.
+> > 
+> > Now add that code block back.
+> > 
+> > Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
+> > Reported-by: Dave Young <dyoung@redhat.com>
+> > Tested-by: WANG Chao <chaowang@redhat.com>
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  arch/x86/kernel/reboot.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> > index 7e920bf..3049de9 100644
+> > --- a/arch/x86/kernel/reboot.c
+> > +++ b/arch/x86/kernel/reboot.c
+> > @@ -551,6 +551,21 @@ void native_machine_shutdown(void)
+> >  {
+> >  	/* Stop the cpus and apics */
+> >  #ifdef CONFIG_SMP
+> > +       /* The boot cpu is always logical cpu 0 */
+> > +       int reboot_cpu_id = 0;
+> > +
+> > +       /* See if there has been given a command line override */
+> > +       if ((reboot_cpu != -1) && (reboot_cpu < nr_cpu_ids) &&
+> > +               cpu_online(reboot_cpu))
+> > +               reboot_cpu_id = reboot_cpu;
+> > +
+> > +       /* Make certain the cpu I'm about to reboot on is online */
+> > +       if (!cpu_online(reboot_cpu_id))
+> > +               reboot_cpu_id = smp_processor_id();
+> > +
+> > +       /* Make certain I only run on the appropriate processor */
+> > +       set_cpus_allowed_ptr(current, cpumask_of(reboot_cpu_id));
+> > +
+> >  	/*
+> >  	 * Stop all of the others. Also disable the local irq to
+> >  	 * not receive the per-cpu timer interrupt which may trigger
+> > -- 
+> > 1.8.3.1
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
