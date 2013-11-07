@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from g1t0026.austin.hp.com ([15.216.28.33])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VeFlM-00026L-Dt
- for kexec@lists.infradead.org; Thu, 07 Nov 2013 02:56:05 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v2 0/2] makedumpfile: write out a whole part of the 1st
- bitmap before entering cyclic process
-Date: Thu, 7 Nov 2013 02:52:57 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971BBEC2@BPXM01GP.gisp.nec.co.jp>
-References: <20131104152202.2556.83382.stgit@localhost6.localdomain6>
-Content-Language: ja-JP
+ id 1VeLPV-0001Ll-FQ
+ for kexec@lists.infradead.org; Thu, 07 Nov 2013 08:57:54 +0000
+Message-ID: <527B55F0.4000301@hp.com>
+Date: Thu, 07 Nov 2013 16:57:20 +0800
+From: Jingbai Ma <jingbai.ma@hp.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
+References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
+ <20131105202631.GC4598@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
+ <20131106142350.GB23357@redhat.com>
+In-Reply-To: <20131106142350.GB23357@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,50 +21,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>
 
-(2013/11/05 0:23), HATAYAMA Daisuke wrote:
-> This patch set changes the implementation so that a whole part of the
-> 1st bitmap is written out before entering cyclic process. By this:
+On 11/06/2013 10:23 PM, Vivek Goyal wrote:
+> On Wed, Nov 06, 2013 at 02:21:39AM +0000, Atsushi Kumagai wrote:
+>> (2013/11/06 5:27), Vivek Goyal wrote:
+>>> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
+>>>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
+>>>>
+>>>> This patch requires the kernel patch to export necessary data structures into
+>>>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
+>>>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
+>>>>
+>>>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
+>>>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
+>>>
+>>> Interesting. Why hugepages should be treated any differentely than normal
+>>> pages?
+>>>
+>>> If user asked to filter out free page, then it should be filtered and
+>>> it should not matter whether it is a huge page or not?
+>>
+>> I'm making a RFC patch of hugepages filtering based on such policy.
+>>
+>> I attach the prototype version.
+>> It's able to filter out also THPs, and suitable for cyclic processing
+>> because it depends on mem_map and looking up it can be divided into
+>> cycles. This is the same idea as page_is_buddy().
+>>
+>> So I think it's better.
 >
-> - we no longer need to keep buffer for the 1st bitmap during cyclic
->    process, and
+> Agreed. Being able to treat hugepages in same manner as other pages
+> sounds good.
 >
-> - it's possible for incomplete crash dump, for example, generated in
->    case of ENOSPC, to avoid the case that we don't know where memory is
->    present.
->
-> Note that this patch only deal with a conversion from ELF to
-> kdump-compressed format only, not from ELF to ELF.
->
-> ChangeLog
->
-> v1 => v2)
->
-> - Fix a bug of assigning wrong cyclic buffer size from free memory
->    size.
+> Jingbai, looks good to you?
 
-Thanks for fixing, I'll merge this into v1.5.5.
+It looks good to me.
+
+My only concern is by this way, we only can exclude all hugepage 
+together, but can't exclude the free hugepages only. I'm not sure if 
+user need to dump out the activated hugepage only.
+
+Kumagai-san, please correct me, if I'm wrong.
 
 
-Atsushi Kumagai
 
 >
-> ---
+> Thanks
+> Vivek
 >
-> HATAYAMA Daisuke (2):
->        Use memset() to improve the 1st bitmap initialization performance
->        Write out a whole part of the 1st bitmap before entering cyclic process
->
->
->   makedumpfile.c |  268 ++++++++++++++++++++++++++++++++++++++++++++++++++------
->   1 file changed, 241 insertions(+), 27 deletions(-)
->
+>>
+>> --
+>> Thanks
+>> Atsushi Kumagai
+>>
+
+-- 
+Thanks,
+Jingbai Ma
 
 _______________________________________________
 kexec mailing list
