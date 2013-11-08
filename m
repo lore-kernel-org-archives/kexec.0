@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Veaxn-00084o-FC
- for kexec@lists.infradead.org; Fri, 08 Nov 2013 01:34:21 +0000
-Date: Fri, 8 Nov 2013 09:33:30 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86: make reboot task only run on the appropriate
- processor
-Message-ID: <20131108013330.GA4684@dhcp-16-126.nay.redhat.com>
-References: <1383642967-12595-1-git-send-email-bhe@redhat.com>
+ id 1Veco0-0001fd-9b
+ for kexec@lists.infradead.org; Fri, 08 Nov 2013 03:32:21 +0000
+Date: Fri, 8 Nov 2013 11:30:43 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v4 0/3] x86, apic, kexec: Add disable_cpu_apic kernel
+ parameter
+Message-ID: <20131108033043.GA3133@dhcp-16-105.nay.redhat.com>
+References: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1383642967-12595-1-git-send-email-bhe@redhat.com>
+In-Reply-To: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,50 +24,150 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: mwhitehe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, vgoyal@redhat.com, davej@fedoraproject.org, mingo@redhat.com, holt@sgi.com, trenn@suse.de, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, chaowang@redhat.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: fengguang.wu@intel.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, vgoyal@redhat.com
 
-On 11/05/13 at 05:16pm, Baoquan He wrote:
-> Currently system always reboot after below message when execute "kexec -e".
+Hi,
+
+Reccently people reported kexec didn't work correctly. After check, it's
+a regression. Since a code block which migrate current thread to cpu0
+when executing "kexec -e", this can be reproduced by setting affinity to
+CPUn(n!=0). You can find this patch in this link:
+https://lkml.org/lkml/2013/11/5/88
+
+Then I thought why we don't do this in kdump. I tried migrating current
+thread to cpu0 when crash happened, it works very well. Set affinity to
+make crash happened on CPUn(n!=0), then all cpus can be brought up and
+dump is successful. I pasted the patch as below.
+
+Only one thing worried me, whether the context related to crash cpu will
+be different, and do we care which cpu crashed. If it need be cared, or
+it doesn't involve difference, That will be great. Multiple CPUs can be
+supported easily in this simpler way. Meanwhile, this patch just try to
+migrate, if it's failed, we can avoid to bring up bsp.
+
+Watch do you think about it?
+
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index e0e0841..9e6cf4b 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -102,6 +102,22 @@ static void kdump_nmi_shootdown_cpus(void)
+ 
+ void native_machine_crash_shutdown(struct pt_regs *regs)
+ {
++#ifdef CONFIG_SMP
++       /* The boot cpu is always logical cpu 0 */
++       int reboot_cpu_id = 0;
++
++       /* See if there has been given a command line override */
++       if ((reboot_cpu != -1) && (reboot_cpu < nr_cpu_ids) &&
++               cpu_online(reboot_cpu))
++               reboot_cpu_id = reboot_cpu;
++
++       /* Make certain the cpu I'm about to reboot on is online */
++       if (!cpu_online(reboot_cpu_id))
++               reboot_cpu_id = smp_processor_id();
++
++       /* Make certain I only run on the appropriate processor */
++       set_cpus_allowed_ptr(current, cpumask_of(reboot_cpu_id));
++
+        /* This function is only called after the system
+         * has panicked or is otherwise in a critical state.
+         * The minimum amount of code to allow a kexec'd kernel
+@@ -114,6 +130,7 @@ void native_machine_crash_shutdown(struct pt_regs
+*regs)
+        local_irq_disable();
+ 
+        kdump_nmi_shootdown_cpus();
++#endif
+
+
+
+
+On 10/23/13 at 12:01am, HATAYAMA Daisuke wrote:
+> This patch set is to allow kdump 2nd kernel to wake up multiple CPUs
+> even if 1st kernel crashs on some AP, a continueing work from:
 > 
-> [    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
+>   [PATCH v3 0/2] x86, apic, kdump: Disable BSP if boot cpu is AP
+>   https://lkml.org/lkml/2013/10/16/300.
 > 
-> In commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f, reboot= handling was
-> moved to kerne/reboot.c. However, the code to migrate current thread to
-> reboot cpu was removed. That cause this incorrect kexec behavior.
+> In this version, basic design has changed. Now users need to figure
+> out initial APIC ID of BSP in the 1st kernel and configures kernel
+> parameter for the 2nd kernel manually using disable_cpu_apic kernel
+> parameter to be newly introduced in this patch set. This design is
+> more flexible than the previous version in that we no longer have to
+> rely on ACPI/MP table to get initial APIC ID of BSP.
 > 
-> Now add that code block back.
-
-quote a mail from Thomas Renninger <trenn@suse.de>:
-Answer his questions here.
-
-> > For the smp boot issue I think there's nothing to do with dracut.
-> >
-> > Can you try below patch?
-> > https://lkml.org/lkml/2013/11/5/88
->
-> That seem to have helped, thanks!
->
-> Feel free to add:
->
-> Tested-by: trenn@suse.de
->
-> The problem existed in 3.11 already?
-> I had the problem with a 3.11 kernel and tried a
-> 3.12 kernel with this patch now.
-
-It's a regression between 3.10 ~ 3.11
-
->
-> It would be great if:
-> Cc: stable@vger.kernel.org
-> is added as well then.
->
-
-I also like it to be in stable.
-
-Thanks
-Dave
+> Sorry, this patch set have not include in-source documentation
+> requested by Borislav Petkov yet, but I'll post it later separately,
+> which would be better to focus on documentation reviewing.
+> 
+> ChangeLog
+> 
+> v3 => v4)
+> 
+> - Rebased on top of v3.12-rc6
+> 
+> - Basic design has been changed. Now users need to figure out initial
+>   APIC ID of BSP in the 1st kernel and configures kernel parameter for
+>   the 2nd kernel manually using disable_cpu_apic kernel parameter to
+>   be newly introduced in this patch set. This design is more flexible
+>   than the previous version in that we no longer have to rely on
+>   ACPI/MP table to get initial APIC ID of BSP.
+> 
+> v2 => v3)
+> 
+> - Change default value of boot_cpu_is_bsp to true.
+> 
+> - Before executing rdmsr(MSR_IA32_APICBASE), check if the number of
+>   processor family is larger than or equal to 6 in order to avoid
+>   invalid opcode exception on processors where MSR_IA32_APICBASE is
+>   not supported.
+> 
+> v1 => v2)
+> 
+> - Rebased on top of v3.12-rc5.
+> 
+> - Fix linking time error of boot_cpu_is_bsp_init() in case of
+>   CONFIG_LOCAL_APIC disabled by adding empty static inline function
+>   instead.
+> 
+> - Fix missing feature check by means of cpu_has_apic macro in
+>   boot_cpu_is_bsp_init() before calling rdmsr_safe(MSR_IA32_APICBASE).
+> 
+>   NOTE: I've checked local apic-present case only; I don't have any
+>   x86 processor without local apic.
+> 
+> - Add __init annotation to boot_cpu_is_bsp_init().
+> 
+> Test
+> 
+> - built with and without CONFIG_LOCAL_APIC
+> - tested x86_64 in case of acpi and MP table
+> 
+> ---
+> 
+> HATAYAMA Daisuke (3):
+>       x86, apic: Don't count the CPU with BP flag from MP table as booting-up CPU
+>       x86, apic: Add disable_cpu_apicid kernel parameter
+>       Documentation, x86, apic, kexec: Add disable_cpu_apicid kernel parameter
+> 
+> 
+>  Documentation/kernel-parameters.txt |    9 +++++++++
+>  arch/x86/kernel/apic/apic.c         |   29 +++++++++++++++++++++++++++++
+>  arch/x86/kernel/mpparse.c           |    1 -
+>  3 files changed, 38 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 
+> Thanks.
+> HATAYAMA, Daisuke
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
