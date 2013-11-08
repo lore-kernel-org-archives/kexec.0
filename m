@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vence-0006KK-48
- for kexec@lists.infradead.org; Fri, 08 Nov 2013 15:05:20 +0000
-Date: Fri, 8 Nov 2013 16:04:36 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCHv10 0/9] Xen: extend kexec hypercall for use with pv-ops
- kernels
-Message-ID: <20131108150436.GA3439@olila.local.net-space.pl>
-References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
- <20131107211651.GC11159@olila.local.net-space.pl>
- <527CE397.10101@citrix.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Venls-0006nT-6F
+ for kexec@lists.infradead.org; Fri, 08 Nov 2013 15:14:53 +0000
+Date: Fri, 8 Nov 2013 10:14:16 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] x86: make reboot task only run on the appropriate
+ processor
+Message-ID: <20131108151416.GA13068@redhat.com>
+References: <1383642967-12595-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <527CE397.10101@citrix.com>
+In-Reply-To: <1383642967-12595-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +24,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Keir Fraser <keir@xen.org>, kexec@lists.infradead.org, Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xen.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Robin Holt <robinmholt@gmail.com>, mwhitehe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Robin Holt <robinmholt@linux.com>, davej@fedoraproject.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, chaowang@redhat.com
 
-On Fri, Nov 08, 2013 at 01:13:59PM +0000, David Vrabel wrote:
+On Tue, Nov 05, 2013 at 05:16:07PM +0800, Baoquan He wrote:
+> Currently system always reboot after below message when execute "kexec -e".
+> 
+> [    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
+> 
+> In commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f, reboot= handling was
+> moved to kerne/reboot.c. However, the code to migrate current thread to
+> reboot cpu was removed. That cause this incorrect kexec behavior.
+> 
+> Now add that code block back.
+> 
+> Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
+> Reported-by: Dave Young <dyoung@redhat.com>
+> Tested-by: WANG Chao <chaowang@redhat.com>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-[...]
+Hi Bao,
 
-> > (XEN) Domain 0 crashed: Executing crash image
-> >
-> > gdb shows:
-> >
-> > (gdb) bt
-> > #0  0xffff82d0801a0092 in do_nmi_crash (regs=<optimized out>) at crash.c:113
-> > #1  0xffff82d0802281d9 in nmi_crash () at entry.S:666
-> > #2  0x0000000000000000 in ?? ()
-> > (gdb)
-> >
-> > Especially second bt line scares me... ;-)))
-> >
-> > I have not been able to identify why NMI was activated because
-> > stack is completely cleared.
->
-> All this you have described here is correct and expected behavior,
-> which, quite frankly, you should have been able to see with even the
-> most cursory look at the code.
+This patch fixes the issue for me too. I noticed that we have generic
+function migrate_to_reboot_cpu() to achieve what we want and rest of
+the reboot paths are using it. So how about using that function. I 
+wrote the new patch below. It works for me. Can you please give it
+a try.
 
-This is more a fun stuff than a real concern. That is why I have added
-smile at the end of my statement. nmi_crash () at entry.S:666 is
-a quite interesting coincidence for me... ;-)))
+Thanks
+Vivek
 
-Anyway, it is interesting why all CPUs were stopped at this stage.
-One should execute kdump code still. I will try to reproduce this
-on real hardware.
+kexec: migrate to reboot cpu
 
-Daniel
+Commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f moved reboot= handling to
+generic code. In the process it also removed the code in
+native_machine_shutdown() which are moving reboot process to reboot_cpu/cpu0.
+
+I guess that thought must have been that all reboot paths are calling
+migrate_to_reboot_cpu(), so we don't need this special handling. But
+kexec reboot path (kernel_kexec()) is not calling migrate_to_reboot_cpu()
+so above change broke kexec. Now reboot can happen on non-boot cpu and when
+INIT is sent in second kerneo to bring up BP, it brings down the machine.
+
+So start calling migrate_to_reboot_cpu() in kexec reboot path to avoid
+this problem.
+
+Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
+Reported-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ include/linux/reboot.h |    1 +
+ kernel/kexec.c         |    1 +
+ kernel/reboot.c        |    2 +-
+ 3 files changed, 3 insertions(+), 1 deletion(-)
+
+Index: linux-2.6/kernel/reboot.c
+===================================================================
+--- linux-2.6.orig/kernel/reboot.c	2013-10-16 00:30:50.000000000 -0400
++++ linux-2.6/kernel/reboot.c	2013-11-08 21:31:03.379064848 -0500
+@@ -104,7 +104,7 @@ int unregister_reboot_notifier(struct no
+ }
+ EXPORT_SYMBOL(unregister_reboot_notifier);
+ 
+-static void migrate_to_reboot_cpu(void)
++void migrate_to_reboot_cpu(void)
+ {
+ 	/* The boot cpu is always logical cpu 0 */
+ 	int cpu = reboot_cpu;
+Index: linux-2.6/include/linux/reboot.h
+===================================================================
+--- linux-2.6.orig/include/linux/reboot.h	2013-11-08 21:33:27.000000000 -0500
++++ linux-2.6/include/linux/reboot.h	2013-11-08 21:34:29.778073522 -0500
+@@ -43,6 +43,7 @@ extern int unregister_reboot_notifier(st
+  * Architecture-specific implementations of sys_reboot commands.
+  */
+ 
++extern void migrate_to_reboot_cpu(void);
+ extern void machine_restart(char *cmd);
+ extern void machine_halt(void);
+ extern void machine_power_off(void);
+Index: linux-2.6/kernel/kexec.c
+===================================================================
+--- linux-2.6.orig/kernel/kexec.c	2013-10-16 00:30:50.000000000 -0400
++++ linux-2.6/kernel/kexec.c	2013-11-08 21:34:02.492072375 -0500
+@@ -1676,6 +1676,7 @@ int kernel_kexec(void)
+ #endif
+ 	{
+ 		kernel_restart_prepare(NULL);
++		migrate_to_reboot_cpu();
+ 		printk(KERN_EMERG "Starting new kernel\n");
+ 		machine_shutdown();
+ 	}
 
 _______________________________________________
 kexec mailing list
