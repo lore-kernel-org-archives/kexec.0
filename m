@@ -1,20 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VeebU-0003Ae-Cn
- for kexec@lists.infradead.org; Fri, 08 Nov 2013 05:27:34 +0000
-Message-ID: <527C7629.1030007@hp.com>
-Date: Fri, 08 Nov 2013 13:27:05 +0800
-From: Jingbai Ma <jingbai.ma@hp.com>
+ id 1Veezp-0003Qm-C1
+ for kexec@lists.infradead.org; Fri, 08 Nov 2013 05:52:42 +0000
+Received: from /spool/local
+ by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <aruna@linux.vnet.ibm.com>;
+ Fri, 8 Nov 2013 15:51:51 +1000
+Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [9.190.235.152])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id D7F202CE8053
+ for <kexec@lists.infradead.org>; Fri,  8 Nov 2013 16:51:48 +1100 (EST)
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+ by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ rA85Y7wh59113606
+ for <kexec@lists.infradead.org>; Fri, 8 Nov 2013 16:34:07 +1100
+Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
+ by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ rA85pmxV004914
+ for <kexec@lists.infradead.org>; Fri, 8 Nov 2013 16:51:48 +1100
+Subject: [PATCH v2] makedumpfile: Add support to module data structures
+From: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
+Date: Fri, 08 Nov 2013 11:21:31 +0530
+Message-ID: <20131108054934.7494.4321.stgit@aruna-ThinkPad-T420>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
-References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
- <20131105202631.GC4598@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
- <20131106142350.GB23357@redhat.com> <527B55F0.4000301@hp.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BD6C0@BPXM01GP.gisp.nec.co.jp>
- <527C74D8.8060006@jp.fujitsu.com>
-In-Reply-To: <527C74D8.8060006@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,72 +36,293 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>, "anderson@redhat.com" <anderson@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>
+To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+Cc: aravinda@linux.vnet.ibm.com
 
-On 11/08/2013 01:21 PM, HATAYAMA Daisuke wrote:
-> (2013/11/08 14:12), Atsushi Kumagai wrote:
->> Hello Jingbai,
->>
->> (2013/11/07 17:58), Jingbai Ma wrote:
->>> On 11/06/2013 10:23 PM, Vivek Goyal wrote:
->>>> On Wed, Nov 06, 2013 at 02:21:39AM +0000, Atsushi Kumagai wrote:
->>>>> (2013/11/06 5:27), Vivek Goyal wrote:
->>>>>> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
->>>>>>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
->>>>>>>
->>>>>>> This patch requires the kernel patch to export necessary data structures into
->>>>>>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
->>>>>>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
->>>>>>>
->>>>>>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
->>>>>>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
->>>>>>
->>>>>> Interesting. Why hugepages should be treated any differentely than normal
->>>>>> pages?
->>>>>>
->>>>>> If user asked to filter out free page, then it should be filtered and
->>>>>> it should not matter whether it is a huge page or not?
->>>>>
->>>>> I'm making a RFC patch of hugepages filtering based on such policy.
->>>>>
->>>>> I attach the prototype version.
->>>>> It's able to filter out also THPs, and suitable for cyclic processing
->>>>> because it depends on mem_map and looking up it can be divided into
->>>>> cycles. This is the same idea as page_is_buddy().
->>>>>
->>>>> So I think it's better.
->>>>
->>>> Agreed. Being able to treat hugepages in same manner as other pages
->>>> sounds good.
->>>>
->>>> Jingbai, looks good to you?
->>>
->>> It looks good to me.
->>>
->>> My only concern is by this way, we only can exclude all hugepage together, but can't exclude the free hugepages only. I'm not sure if user need to dump out the activated hugepage only.
->>>
->>> Kumagai-san, please correct me, if I'm wrong.
->>
->> Yes, my patch treats all allocated hugetlbfs pages as user pages,
->> doesn't distinguish whether the pages are actually used or not.
->> I made so because I guess it's enough for almost all users.
->>
->> We can introduce new dump level after it's needed actually,
->> but I don't think now is the time. To introduce it without
->> demand will make this tool just more complex.
->>
-> 
-> Typically, users would allocate huge pages as much as actually they use only,
-> in order not to waste system memory. So, this design seems reasonable.
-> 
+Current version of makedumpfile/eppic integration patches works only for
+data structures in vmlinux. This patch adds support to module data structures.
 
-OK, It looks reasonable.
-Thanks!
+Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
+---
+Changes from v1:
+	Fix return value when failed to set dwarf_debuginfo
 
--- 
-Thanks,
-Jingbai Ma
+ erase_info.c      |  163 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ erase_info.h      |   10 ++-
+ extension_eppic.c |   11 ++--
+ extension_eppic.h |    4 +
+ 4 files changed, 176 insertions(+), 12 deletions(-)
+
+diff --git a/erase_info.c b/erase_info.c
+index f8f52d6..a789389 100644
+--- a/erase_info.c
++++ b/erase_info.c
+@@ -27,13 +27,13 @@ struct erase_info	*erase_info = NULL;
+ unsigned long		num_erase_info = 1; /* Node 0 is unused. */
+ 
+ struct call_back eppic_cb = {
+-	&get_domain,
++	&get_domain_all,
+ 	&readmem,
+ 	&get_die_attr_type,
+ 	&get_die_name,
+ 	&get_die_offset,
+ 	&get_die_length,
+-	&get_die_member,
++	&get_die_member_all,
+ 	&get_die_nfields,
+ 	&get_symbol_addr_all,
+ 	&update_filter_info_raw
+@@ -1950,6 +1950,165 @@ get_symbol_addr_all(char *name) {
+ }
+ 
+ 
++/*
++ * Search for domain in modules as well as vmlinux
++ */
++long
++get_domain_all(char *symname, int cmd, unsigned long long *die) {
++
++	short vmlinux_searched = 0;
++	long size = 0;
++	unsigned int i, current_mod;
++	struct module_info *modules;
++
++	/* Search in vmlinux if debuginfo is set to vmlinux */
++	if (!strcmp(get_dwarf_module_name(), "vmlinux")) {
++		size = get_domain(symname, cmd, die);
++		if (size > 0 && die)
++			return size;
++
++		vmlinux_searched = 1;
++	}
++
++	/*
++	 * Proceed the search in modules. Try in the module
++	 * which resulted in a hit in the previous search
++	 */
++
++	modules = mod_st.modules;
++	current_mod = mod_st.current_mod;
++
++	if (strcmp(get_dwarf_module_name(), modules[current_mod].name)) {
++		if (!set_dwarf_debuginfo(modules[current_mod].name,
++				info->system_utsname.release, NULL, -1)) {
++			ERRMSG("Cannot set to current module %s\n",
++					modules[current_mod].name);
++			return NOT_FOUND_STRUCTURE;
++		}
++	}
++
++	size = get_domain(symname, cmd, die);
++	if (size > 0 && die)
++		return size;
++
++	/* Search in all modules */
++	for (i = 0; i < mod_st.num_modules; i++) {
++
++		/* Already searched. Skip */
++		if (i == current_mod)
++			continue;
++
++		if (!set_dwarf_debuginfo(modules[i].name,
++				info->system_utsname.release, NULL, -1)) {
++			ERRMSG("Skipping Module section %s\n", modules[i].name);
++			continue;
++		}
++
++		size = get_domain(symname, cmd, die);
++
++		if (size <= 0 || !die)
++			continue;
++
++		/*
++		 * Domain found. Set the current_mod to this module index, a
++		 * minor optimization for fast lookup next time
++		 */
++		mod_st.current_mod = i;
++		return size;
++	}
++
++	/* Domain not found in any module. Set debuginfo back to vmlinux */
++	set_dwarf_debuginfo("vmlinux", NULL, info->name_vmlinux,
++			info->fd_vmlinux);
++
++	if (!vmlinux_searched)
++		return get_domain(symname, cmd, die);
++	else
++		return NOT_FOUND_STRUCTURE;
++}
++
++/*
++ * Search for die member in modules as well as vmlinux
++ */
++int
++get_die_member_all(unsigned long long die_off, int index, long *offset,
++		char **name, int *nbits, int *fbits, unsigned long long *m_die)
++{
++	short vmlinux_searched = 0;
++	long size = -1;
++	unsigned int i, current_mod;
++	struct module_info *modules;
++
++	/* Search in vmlinux if debuginfo is set to vmlinux */
++	if (!strcmp(get_dwarf_module_name(), "vmlinux")) {
++		size = get_die_member(die_off, index, offset, name,
++				nbits, fbits, m_die);
++		if (size >= 0)
++			return size;
++
++		vmlinux_searched = 1;
++	}
++
++	/*
++	 * Proceed the search in modules. Try in the module
++	 * which resulted in a hit in the previous search
++	 */
++
++	modules = mod_st.modules;
++	current_mod = mod_st.current_mod;
++
++	if (strcmp(get_dwarf_module_name(), modules[current_mod].name)) {
++		if (!set_dwarf_debuginfo(modules[current_mod].name,
++				info->system_utsname.release, NULL, -1)) {
++			ERRMSG("Cannot set to current module %s\n",
++					modules[current_mod].name);
++			return -1;
++		}
++	}
++
++	size = get_die_member(die_off, index, offset, name,
++				nbits, fbits, m_die);
++	if (size >= 0)
++		return size;
++
++	/* Search in all modules */
++	for (i = 0; i < mod_st.num_modules; i++) {
++
++		/* Already searched. Skip */
++		if (i == current_mod)
++			continue;
++
++		if (!set_dwarf_debuginfo(modules[i].name,
++				info->system_utsname.release, NULL, -1)) {
++			ERRMSG("Skipping Module section %s\n", modules[i].name);
++			continue;
++		}
++
++		size = get_die_member(die_off, index, offset, name,
++				nbits, fbits, m_die);
++
++		if (size < 0)
++			continue;
++
++		/*
++		 * Die member found. Set the current_mod to this module index,
++		 * a minor optimization for fast lookup next time
++		 */
++		mod_st.current_mod = i;
++		return size;
++	}
++
++	/* Die member not found in any module. Set debuginfo back to vmlinux */
++	set_dwarf_debuginfo("vmlinux", NULL, info->name_vmlinux,
++			info->fd_vmlinux);
++
++	if (!vmlinux_searched)
++		return get_die_member(die_off, index, offset, name,
++				nbits, fbits, m_die);
++	else
++		return -1;
++}
++
+ /* Process the eppic macro using eppic library */
+ static int
+ process_eppic_file(char *name_config)
+diff --git a/erase_info.h b/erase_info.h
+index ae740ce..a90fac0 100644
+--- a/erase_info.h
++++ b/erase_info.h
+@@ -32,9 +32,12 @@ struct erase_info {
+ };
+ 
+ unsigned long long get_symbol_addr_all(char *);
++long get_domain_all(char *, int, unsigned long long *);
++int get_die_member_all(unsigned long long die_off, int index, long *offset,
++		char **name, int *nbits, int *fbits, unsigned long long *m_die);
+ 
+ struct call_back {
+-	long (*get_domain)(char *, int, unsigned long long *);
++	long (*get_domain_all)(char *, int, unsigned long long *);
+ 	int (*readmem)(int type_addr, unsigned long long addr, void *bufptr,
+              size_t size);
+ 	int (*get_die_attr_type)(unsigned long long die_off, int *type_flag,
+@@ -42,8 +45,9 @@ struct call_back {
+ 	char * (*get_die_name)(unsigned long long die_off);
+ 	unsigned long long (*get_die_offset)(char *sysname);
+ 	int (*get_die_length)(unsigned long long die_off, int flag);
+-	int (*get_die_member)(unsigned long long die_off, int index, long *offset,
+-            char **name, int *nbits, int *fbits, unsigned long long *m_die);
++	int (*get_die_member_all)(unsigned long long die_off, int index,
++		long *offset, char **name, int *nbits, int *fbits,
++		unsigned long long *m_die);
+ 	int (*get_die_nfields)(unsigned long long die_off);
+ 	unsigned long long (*get_symbol_addr_all)(char *symname);
+ 	int (*update_filter_info_raw)(unsigned long long, int, int);
+diff --git a/extension_eppic.c b/extension_eppic.c
+index d5e5ad0..7e045c9 100644
+--- a/extension_eppic.c
++++ b/extension_eppic.c
+@@ -236,8 +236,8 @@ apimember(char *mname, ull idx, type_t *tm, member_t *m, ull *last_index)
+ 		index = 0;
+ 
+ 	while (index < nfields) {
+-		size = GET_DIE_MEMBER(die_off, index, &offset, &name, &nbits,
+-				&fbits, &m_die);
++		size = GET_DIE_MEMBER_ALL(die_off, index, &offset, &name,
++					&nbits, &fbits, &m_die);
+ 
+ 		if (size < 0)
+ 			return NULL;
+@@ -272,13 +272,14 @@ apigetctype(int ctype, char *name, type_t *tout)
+ 
+ 	switch (ctype) {
+ 	case V_TYPEDEF:
+-		size = GET_DOMAIN(name, DWARF_INFO_GET_DOMAIN_TYPEDEF, &die);
++		size = GET_DOMAIN_ALL(name, DWARF_INFO_GET_DOMAIN_TYPEDEF,
++									&die);
+ 		break;
+ 	case V_STRUCT:
+-		size = GET_DOMAIN(name, DWARF_INFO_GET_DOMAIN_STRUCT, &die);
++		size = GET_DOMAIN_ALL(name, DWARF_INFO_GET_DOMAIN_STRUCT, &die);
+ 		break;
+ 	case V_UNION:
+-		size = GET_DOMAIN(name, DWARF_INFO_GET_DOMAIN_UNION, &die);
++		size = GET_DOMAIN_ALL(name, DWARF_INFO_GET_DOMAIN_UNION, &die);
+ 		break;
+ 	/* TODO
+ 	 * Implement for all the domains
+diff --git a/extension_eppic.h b/extension_eppic.h
+index caa44dc..42437f2 100644
+--- a/extension_eppic.h
++++ b/extension_eppic.h
+@@ -81,13 +81,13 @@ do { \
+ 
+ struct call_back *cb;
+ 
+-#define GET_DOMAIN cb->get_domain
++#define GET_DOMAIN_ALL cb->get_domain_all
+ #define READMEM cb->readmem
+ #define GET_DIE_ATTR_TYPE cb->get_die_attr_type
+ #define GET_DIE_NAME cb->get_die_name
+ #define GET_DIE_OFFSET cb->get_die_offset
+ #define GET_DIE_LENGTH cb->get_die_length
+-#define GET_DIE_MEMBER cb->get_die_member
++#define GET_DIE_MEMBER_ALL cb->get_die_member_all
+ #define GET_DIE_NFIELDS cb->get_die_nfields
+ #define GET_SYMBOL_ADDR_ALL cb->get_symbol_addr_all
+ #define UPDATE_FILTER_INFO_RAW cb->update_filter_info_raw
+
 
 _______________________________________________
 kexec mailing list
