@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VenB8-000583-AR
- for kexec@lists.infradead.org; Fri, 08 Nov 2013 14:36:55 +0000
-Message-Id: <527D04FE02000078001013F5@nat28.tlf.novell.com>
-Date: Fri, 08 Nov 2013 14:36:30 +0000
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [PATCHv10 0/9] Xen: extend kexec hypercall for
- use with pv-ops kernels
+ id 1Vence-0006KK-48
+ for kexec@lists.infradead.org; Fri, 08 Nov 2013 15:05:20 +0000
+Date: Fri, 8 Nov 2013 16:04:36 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCHv10 0/9] Xen: extend kexec hypercall for use with pv-ops
+ kernels
+Message-ID: <20131108150436.GA3439@olila.local.net-space.pl>
 References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
  <20131107211651.GC11159@olila.local.net-space.pl>
  <527CE397.10101@citrix.com>
- <527CF3050200007800101354@nat28.tlf.novell.com>
- <527CEEB8.4070609@citrix.com>
-In-Reply-To: <527CEEB8.4070609@citrix.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <527CE397.10101@citrix.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +26,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Keir Fraser <keir@xen.org>, DanielKiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, xen-devel@lists.xen.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: Keir Fraser <keir@xen.org>, kexec@lists.infradead.org, Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xen.org
 
->>> On 08.11.13 at 15:01, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
-> On 08/11/13 13:19, Jan Beulich wrote:
->>>>> On 08.11.13 at 14:13, David Vrabel <david.vrabel@citrix.com> wrote:
->>> Keir,
->>>
->>> Sorry, forgot to CC you on this series.
->>>
->>> Can we have your opinion on whether this kexec series can be merged?
->>> And if not, what further work and/or testing is required?
->> Just to clarify - unless I missed something, there was still no
->> review of this from Daniel or someone else known to be
->> familiar with the subject. If Keir gave his ack, formally this
->> could go in, but I wouldn't feel too well with that (the more
->> that apart from not having reviewed it, Daniel seems to also
->> continue to have problems with it).
-> 
-> Can I have myself deemed to be familiar with the subject as far as this
-> is concerned?
-> 
-> A noticeable quantity of my contributions to Xen have been in the kexec
-> / crash areas, and I am the author of the xen-crashdump-analyser.
+On Fri, Nov 08, 2013 at 01:13:59PM +0000, David Vrabel wrote:
 
-I'm sorry, I didn't mean to offend you in any way. In fact David
-and I briefly discussed this situation on the summit, and he sort
-of understood that I consider your review valuable, but ...
+[...]
 
-> I do realise that I certainly not impartial as far as this series is
-> concerned, being a co-developer.
+> > (XEN) Domain 0 crashed: Executing crash image
+> >
+> > gdb shows:
+> >
+> > (gdb) bt
+> > #0  0xffff82d0801a0092 in do_nmi_crash (regs=<optimized out>) at crash.c:113
+> > #1  0xffff82d0802281d9 in nmi_crash () at entry.S:666
+> > #2  0x0000000000000000 in ?? ()
+> > (gdb)
+> >
+> > Especially second bt line scares me... ;-)))
+> >
+> > I have not been able to identify why NMI was activated because
+> > stack is completely cleared.
+>
+> All this you have described here is correct and expected behavior,
+> which, quite frankly, you should have been able to see with even the
+> most cursory look at the code.
 
-... possibly/likely biased. Not the least because both of you work
-for Citrix. I'm therefore rather after a second, really independent
-review.
+This is more a fun stuff than a real concern. That is why I have added
+smile at the end of my statement. nmi_crash () at entry.S:666 is
+a quite interesting coincidence for me... ;-)))
 
-Please forgive me not having expressed myself correctly.
+Anyway, it is interesting why all CPUs were stopped at this stage.
+One should execute kdump code still. I will try to reproduce this
+on real hardware.
 
-Jan
-
+Daniel
 
 _______________________________________________
 kexec mailing list
