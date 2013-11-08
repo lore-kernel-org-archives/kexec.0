@@ -1,29 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Veezp-0003Qm-C1
- for kexec@lists.infradead.org; Fri, 08 Nov 2013 05:52:42 +0000
-Received: from /spool/local
- by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aruna@linux.vnet.ibm.com>;
- Fri, 8 Nov 2013 15:51:51 +1000
-Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [9.190.235.152])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id D7F202CE8053
- for <kexec@lists.infradead.org>; Fri,  8 Nov 2013 16:51:48 +1100 (EST)
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- rA85Y7wh59113606
- for <kexec@lists.infradead.org>; Fri, 8 Nov 2013 16:34:07 +1100
-Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
- by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- rA85pmxV004914
- for <kexec@lists.infradead.org>; Fri, 8 Nov 2013 16:51:48 +1100
-Subject: [PATCH v2] makedumpfile: Add support to module data structures
-From: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
-Date: Fri, 08 Nov 2013 11:21:31 +0530
-Message-ID: <20131108054934.7494.4321.stgit@aruna-ThinkPad-T420>
+ id 1VeltI-0003WU-4A
+ for kexec@lists.infradead.org; Fri, 08 Nov 2013 13:14:25 +0000
+Message-ID: <527CE397.10101@citrix.com>
+Date: Fri, 8 Nov 2013 13:13:59 +0000
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
+Subject: Re: [PATCHv10 0/9] Xen: extend kexec hypercall for use with pv-ops
+ kernels
+References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
+ <20131107211651.GC11159@olila.local.net-space.pl>
+In-Reply-To: <20131107211651.GC11159@olila.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,293 +24,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
-Cc: aravinda@linux.vnet.ibm.com
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: Keir Fraser <keir@xen.org>, kexec@lists.infradead.org, Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xen.org
 
-Current version of makedumpfile/eppic integration patches works only for
-data structures in vmlinux. This patch adds support to module data structures.
+Keir,
 
-Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
----
-Changes from v1:
-	Fix return value when failed to set dwarf_debuginfo
+Sorry, forgot to CC you on this series.
 
- erase_info.c      |  163 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- erase_info.h      |   10 ++-
- extension_eppic.c |   11 ++--
- extension_eppic.h |    4 +
- 4 files changed, 176 insertions(+), 12 deletions(-)
+Can we have your opinion on whether this kexec series can be merged?
+And if not, what further work and/or testing is required?
 
-diff --git a/erase_info.c b/erase_info.c
-index f8f52d6..a789389 100644
---- a/erase_info.c
-+++ b/erase_info.c
-@@ -27,13 +27,13 @@ struct erase_info	*erase_info = NULL;
- unsigned long		num_erase_info = 1; /* Node 0 is unused. */
- 
- struct call_back eppic_cb = {
--	&get_domain,
-+	&get_domain_all,
- 	&readmem,
- 	&get_die_attr_type,
- 	&get_die_name,
- 	&get_die_offset,
- 	&get_die_length,
--	&get_die_member,
-+	&get_die_member_all,
- 	&get_die_nfields,
- 	&get_symbol_addr_all,
- 	&update_filter_info_raw
-@@ -1950,6 +1950,165 @@ get_symbol_addr_all(char *name) {
- }
- 
- 
-+/*
-+ * Search for domain in modules as well as vmlinux
-+ */
-+long
-+get_domain_all(char *symname, int cmd, unsigned long long *die) {
-+
-+	short vmlinux_searched = 0;
-+	long size = 0;
-+	unsigned int i, current_mod;
-+	struct module_info *modules;
-+
-+	/* Search in vmlinux if debuginfo is set to vmlinux */
-+	if (!strcmp(get_dwarf_module_name(), "vmlinux")) {
-+		size = get_domain(symname, cmd, die);
-+		if (size > 0 && die)
-+			return size;
-+
-+		vmlinux_searched = 1;
-+	}
-+
-+	/*
-+	 * Proceed the search in modules. Try in the module
-+	 * which resulted in a hit in the previous search
-+	 */
-+
-+	modules = mod_st.modules;
-+	current_mod = mod_st.current_mod;
-+
-+	if (strcmp(get_dwarf_module_name(), modules[current_mod].name)) {
-+		if (!set_dwarf_debuginfo(modules[current_mod].name,
-+				info->system_utsname.release, NULL, -1)) {
-+			ERRMSG("Cannot set to current module %s\n",
-+					modules[current_mod].name);
-+			return NOT_FOUND_STRUCTURE;
-+		}
-+	}
-+
-+	size = get_domain(symname, cmd, die);
-+	if (size > 0 && die)
-+		return size;
-+
-+	/* Search in all modules */
-+	for (i = 0; i < mod_st.num_modules; i++) {
-+
-+		/* Already searched. Skip */
-+		if (i == current_mod)
-+			continue;
-+
-+		if (!set_dwarf_debuginfo(modules[i].name,
-+				info->system_utsname.release, NULL, -1)) {
-+			ERRMSG("Skipping Module section %s\n", modules[i].name);
-+			continue;
-+		}
-+
-+		size = get_domain(symname, cmd, die);
-+
-+		if (size <= 0 || !die)
-+			continue;
-+
-+		/*
-+		 * Domain found. Set the current_mod to this module index, a
-+		 * minor optimization for fast lookup next time
-+		 */
-+		mod_st.current_mod = i;
-+		return size;
-+	}
-+
-+	/* Domain not found in any module. Set debuginfo back to vmlinux */
-+	set_dwarf_debuginfo("vmlinux", NULL, info->name_vmlinux,
-+			info->fd_vmlinux);
-+
-+	if (!vmlinux_searched)
-+		return get_domain(symname, cmd, die);
-+	else
-+		return NOT_FOUND_STRUCTURE;
-+}
-+
-+/*
-+ * Search for die member in modules as well as vmlinux
-+ */
-+int
-+get_die_member_all(unsigned long long die_off, int index, long *offset,
-+		char **name, int *nbits, int *fbits, unsigned long long *m_die)
-+{
-+	short vmlinux_searched = 0;
-+	long size = -1;
-+	unsigned int i, current_mod;
-+	struct module_info *modules;
-+
-+	/* Search in vmlinux if debuginfo is set to vmlinux */
-+	if (!strcmp(get_dwarf_module_name(), "vmlinux")) {
-+		size = get_die_member(die_off, index, offset, name,
-+				nbits, fbits, m_die);
-+		if (size >= 0)
-+			return size;
-+
-+		vmlinux_searched = 1;
-+	}
-+
-+	/*
-+	 * Proceed the search in modules. Try in the module
-+	 * which resulted in a hit in the previous search
-+	 */
-+
-+	modules = mod_st.modules;
-+	current_mod = mod_st.current_mod;
-+
-+	if (strcmp(get_dwarf_module_name(), modules[current_mod].name)) {
-+		if (!set_dwarf_debuginfo(modules[current_mod].name,
-+				info->system_utsname.release, NULL, -1)) {
-+			ERRMSG("Cannot set to current module %s\n",
-+					modules[current_mod].name);
-+			return -1;
-+		}
-+	}
-+
-+	size = get_die_member(die_off, index, offset, name,
-+				nbits, fbits, m_die);
-+	if (size >= 0)
-+		return size;
-+
-+	/* Search in all modules */
-+	for (i = 0; i < mod_st.num_modules; i++) {
-+
-+		/* Already searched. Skip */
-+		if (i == current_mod)
-+			continue;
-+
-+		if (!set_dwarf_debuginfo(modules[i].name,
-+				info->system_utsname.release, NULL, -1)) {
-+			ERRMSG("Skipping Module section %s\n", modules[i].name);
-+			continue;
-+		}
-+
-+		size = get_die_member(die_off, index, offset, name,
-+				nbits, fbits, m_die);
-+
-+		if (size < 0)
-+			continue;
-+
-+		/*
-+		 * Die member found. Set the current_mod to this module index,
-+		 * a minor optimization for fast lookup next time
-+		 */
-+		mod_st.current_mod = i;
-+		return size;
-+	}
-+
-+	/* Die member not found in any module. Set debuginfo back to vmlinux */
-+	set_dwarf_debuginfo("vmlinux", NULL, info->name_vmlinux,
-+			info->fd_vmlinux);
-+
-+	if (!vmlinux_searched)
-+		return get_die_member(die_off, index, offset, name,
-+				nbits, fbits, m_die);
-+	else
-+		return -1;
-+}
-+
- /* Process the eppic macro using eppic library */
- static int
- process_eppic_file(char *name_config)
-diff --git a/erase_info.h b/erase_info.h
-index ae740ce..a90fac0 100644
---- a/erase_info.h
-+++ b/erase_info.h
-@@ -32,9 +32,12 @@ struct erase_info {
- };
- 
- unsigned long long get_symbol_addr_all(char *);
-+long get_domain_all(char *, int, unsigned long long *);
-+int get_die_member_all(unsigned long long die_off, int index, long *offset,
-+		char **name, int *nbits, int *fbits, unsigned long long *m_die);
- 
- struct call_back {
--	long (*get_domain)(char *, int, unsigned long long *);
-+	long (*get_domain_all)(char *, int, unsigned long long *);
- 	int (*readmem)(int type_addr, unsigned long long addr, void *bufptr,
-              size_t size);
- 	int (*get_die_attr_type)(unsigned long long die_off, int *type_flag,
-@@ -42,8 +45,9 @@ struct call_back {
- 	char * (*get_die_name)(unsigned long long die_off);
- 	unsigned long long (*get_die_offset)(char *sysname);
- 	int (*get_die_length)(unsigned long long die_off, int flag);
--	int (*get_die_member)(unsigned long long die_off, int index, long *offset,
--            char **name, int *nbits, int *fbits, unsigned long long *m_die);
-+	int (*get_die_member_all)(unsigned long long die_off, int index,
-+		long *offset, char **name, int *nbits, int *fbits,
-+		unsigned long long *m_die);
- 	int (*get_die_nfields)(unsigned long long die_off);
- 	unsigned long long (*get_symbol_addr_all)(char *symname);
- 	int (*update_filter_info_raw)(unsigned long long, int, int);
-diff --git a/extension_eppic.c b/extension_eppic.c
-index d5e5ad0..7e045c9 100644
---- a/extension_eppic.c
-+++ b/extension_eppic.c
-@@ -236,8 +236,8 @@ apimember(char *mname, ull idx, type_t *tm, member_t *m, ull *last_index)
- 		index = 0;
- 
- 	while (index < nfields) {
--		size = GET_DIE_MEMBER(die_off, index, &offset, &name, &nbits,
--				&fbits, &m_die);
-+		size = GET_DIE_MEMBER_ALL(die_off, index, &offset, &name,
-+					&nbits, &fbits, &m_die);
- 
- 		if (size < 0)
- 			return NULL;
-@@ -272,13 +272,14 @@ apigetctype(int ctype, char *name, type_t *tout)
- 
- 	switch (ctype) {
- 	case V_TYPEDEF:
--		size = GET_DOMAIN(name, DWARF_INFO_GET_DOMAIN_TYPEDEF, &die);
-+		size = GET_DOMAIN_ALL(name, DWARF_INFO_GET_DOMAIN_TYPEDEF,
-+									&die);
- 		break;
- 	case V_STRUCT:
--		size = GET_DOMAIN(name, DWARF_INFO_GET_DOMAIN_STRUCT, &die);
-+		size = GET_DOMAIN_ALL(name, DWARF_INFO_GET_DOMAIN_STRUCT, &die);
- 		break;
- 	case V_UNION:
--		size = GET_DOMAIN(name, DWARF_INFO_GET_DOMAIN_UNION, &die);
-+		size = GET_DOMAIN_ALL(name, DWARF_INFO_GET_DOMAIN_UNION, &die);
- 		break;
- 	/* TODO
- 	 * Implement for all the domains
-diff --git a/extension_eppic.h b/extension_eppic.h
-index caa44dc..42437f2 100644
---- a/extension_eppic.h
-+++ b/extension_eppic.h
-@@ -81,13 +81,13 @@ do { \
- 
- struct call_back *cb;
- 
--#define GET_DOMAIN cb->get_domain
-+#define GET_DOMAIN_ALL cb->get_domain_all
- #define READMEM cb->readmem
- #define GET_DIE_ATTR_TYPE cb->get_die_attr_type
- #define GET_DIE_NAME cb->get_die_name
- #define GET_DIE_OFFSET cb->get_die_offset
- #define GET_DIE_LENGTH cb->get_die_length
--#define GET_DIE_MEMBER cb->get_die_member
-+#define GET_DIE_MEMBER_ALL cb->get_die_member_all
- #define GET_DIE_NFIELDS cb->get_die_nfields
- #define GET_SYMBOL_ADDR_ALL cb->get_symbol_addr_all
- #define UPDATE_FILTER_INFO_RAW cb->update_filter_info_raw
+On 07/11/13 21:16, Daniel Kiper wrote:
+> On Wed, Nov 06, 2013 at 02:49:37PM +0000, David Vrabel wrote:
+>> The series (for Xen 4.4) improves the kexec hypercall by making Xen
+>> responsible for loading and relocating the image.  This allows kexec
+>> to be usable by pv-ops kernels and should allow kexec to be usable
+>> from a HVM or PVH privileged domain.
+>>
+>> I have now tested this with a Linux kernel image using the VGA console
+>> which was what was causing problems in v9 (this turned out to be a
+>> kexec-tools bug).
+>>
+>> The required patch series for kexec-tools will be posted shortly and
+>> are available from the xen-v7 branch of:
+> 
+> In general it works. However, quite often I am not able to execute panic
+> kernel. Machine hangs with following message:
 
+I cannot reproduce any failures, neither on my dev box nor on any of the
+automated XenServer tests that run on a range of different hardware
+platforms.  I find kexec to be very reliable and an earlier version of
+this series has been in production within XenServer for a while now and
+has seen real use in the field.
+
+None of the issues reported so far have been regressions but failures in
+specific uses of the new support for pv-ops kernels.
+
+I really can't see how I can do anything else to make this series
+acceptable for merging.
+
+In my opinion, the current implementation is so broken[1] and useless[2]
+that anything that even vaguely looks like it might work is significant
+improvement, and something that is deployed usefully in production
+should definitely be merged.
+
+[1] Uses code provided by the guest to jump out of Xen into the image
+which works only through luck. Does not (and has never) worked reliably
+with 32-bit dom0.
+
+[2] Does not work at all (and will never work) with upstream kernels.
+
+> (XEN) Domain 0 crashed: Executing crash image
+> 
+> gdb shows:
+> 
+> (gdb) bt
+> #0  0xffff82d0801a0092 in do_nmi_crash (regs=<optimized out>) at crash.c:113
+> #1  0xffff82d0802281d9 in nmi_crash () at entry.S:666
+> #2  0x0000000000000000 in ?? ()
+> (gdb)
+> 
+> Especially second bt line scares me... ;-)))
+> 
+> I have not been able to identify why NMI was activated because
+> stack is completely cleared.
+
+All this you have described here is correct and expected behavior,
+which, quite frankly, you should have been able to see with even the
+most cursory look at the code.
+
+> Additionally, my compiler fails because it detects unused result
+> variable in xen/common/kimage.c:kimage_crash_alloc().
+
+Yes, sorry about that.  That was fallout from a last minute trivial
+cleanup.  I've posted an updated patch correcting this.
+
+David
 
 _______________________________________________
 kexec mailing list
