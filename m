@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VeovC-00088F-Kq
- for kexec@lists.infradead.org; Fri, 08 Nov 2013 16:28:35 +0000
-Date: Fri, 8 Nov 2013 17:28:02 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [Xen-devel] [PATCHv10 0/9] Xen: extend kexec hypercall for use
- with pv-ops kernels
-Message-ID: <20131108162802.GC3439@olila.local.net-space.pl>
-References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
- <20131107211651.GC11159@olila.local.net-space.pl>
- <527CE397.10101@citrix.com>
- <527CF3050200007800101354@nat28.tlf.novell.com>
- <527CEEB8.4070609@citrix.com>
- <20131108151500.GB3439@olila.local.net-space.pl>
- <20131108154251.GC24755@phenom.dumpdata.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vezgt-0003Lr-GR
+ for kexec@lists.infradead.org; Sat, 09 Nov 2013 03:58:32 +0000
+Date: Sat, 9 Nov 2013 11:57:39 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [patch 0/7 v2] kexec kernel efi runtime support
+Message-ID: <20131109035739.GB4294@dhcp-16-126.nay.redhat.com>
+References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
+ <20131108143118.GA22636@console-pimps.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131108154251.GC24755@phenom.dumpdata.com>
+In-Reply-To: <20131108143118.GA22636@console-pimps.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,81 +24,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Keir Fraser <keir@xen.org>, Andrew Cooper <andrew.cooper3@citrix.com>, kexec@lists.infradead.org, xen-devel@lists.xen.org, David Vrabel <david.vrabel@citrix.com>, Jan Beulich <JBeulich@suse.com>
+To: Matt Fleming <matt@console-pimps.org>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Fri, Nov 08, 2013 at 10:42:51AM -0500, Konrad Rzeszutek Wilk wrote:
-> On Fri, Nov 08, 2013 at 07:15:00AM -0800, Daniel Kiper wrote:
-> > On Fri, Nov 08, 2013 at 02:01:28PM +0000, Andrew Cooper wrote:
-> > > On 08/11/13 13:19, Jan Beulich wrote:
-> > > >>>> On 08.11.13 at 14:13, David Vrabel <david.vrabel@citrix.com> wrote:
-> > > >> Keir,
-> > > >>
-> > > >> Sorry, forgot to CC you on this series.
-> > > >>
-> > > >> Can we have your opinion on whether this kexec series can be merged?
-> > > >> And if not, what further work and/or testing is required?
-> > > > Just to clarify - unless I missed something, there was still no
-> > > > review of this from Daniel or someone else known to be
-> > > > familiar with the subject. If Keir gave his ack, formally this
-> > > > could go in, but I wouldn't feel too well with that (the more
-> > > > that apart from not having reviewed it, Daniel seems to also
-> > > > continue to have problems with it).
-> > > >
-> > > > Jan
-> > >
-> > > Can I have myself deemed to be familiar with the subject as far as this
-> > > is concerned?
-> > >
-> > > A noticeable quantity of my contributions to Xen have been in the kexec
-> > > / crash areas, and I am the author of the xen-crashdump-analyser.
-> > >
-> > > I do realise that I certainly not impartial as far as this series is
-> > > concerned, being a co-developer.
-> > >
-> > > Davids statement of "the current implementation is so broken[1] and
-> > > useless[2] that..." is completely accurate.  It is frankly a miracle
-> > > that the current code ever worked at all (and from XenServers point of
-> > > view, failed far more often than it worked).
-> > >
-> > >
-> > > For reference, XenServer 6.2 shipped with approximately v7 of this
-> > > series, and an appropriate kexec-tools and xen-crashdump-analyser.
-> > > Since we put the code in, we have not had a single failure-to-kexec in
-> > > automated testing (both specific crash tests, and from unexpected host
-> > > crashes), whereas we were seeing reliable failures to crash on most of
-> > > our test infrastructure.
-> > >
-> > > In stark contrast to previous versions of XenServer, we have not had a
-> > > single customer reported host crash where the kexec path has failed.
-> > > There was one systematic failure where the HPSA driver was unhappy with
-> > > the state of the hardware, resulting in no root filesystem to write logs
-> > > to, and a repeated panic and Xen deadlock in the queued invalidation
-> > > codepath.
-> >
-> > Andrew, if it runs on all your hardware it does not mean that it runs
-> > everywhere. I have discovered the problem (I hope the last one) and it
-> > should be taken into consideration. Another question is what is the
-> > source of this problem. Maybe QEMU but it should be checked and not
-> > ignored.
->
-> I think the question is that the feature freeze is the 18th - and whether
-> this single bug should halt the integration of this whole patchset.
->
-> Or that it is OK to put in the patchset in and deal with the bugs
-> and not stall this initial patchset.
+Hi, Matt
+On 11/08/13 at 02:31pm, Matt Fleming wrote:
+> On Tue, 05 Nov, at 04:20:07PM, dyoung@redhat.com wrote:
+> > Hi,
+> > 
+> > Here is the V2 for supporting kexec kernel efi runtime.
+> > Per pervious discussion I pass the 1st kernel efi runtime mapping
+> > via setup_data to 2nd kernel. Besides of the runtime mapping
+> > info I also pass the fw_vendor, runtime, config table, smbios
+> > physical address in setup_data. EFI spec mentioned fw_vendor,
+> > runtime, config table addresses will be converted to virt address
+> > after entering virtual mode, but we will use it as physical address
+> > in efi_init. For smbios EFI spec did not mention about the address
+> > updating, but during my test on a HP workstation, the bios will
+> > convert it to Virt addr, thus pass it in setup_data as well.
+> 
+> I see this in the dmesg,
+> 
+> [    0.000000] efi: skipping setup_data on EFI 32BIT!
+> 
+> despite the fact that this is on an x86-64 box. Turns out it's because
+> CONFIG_DEBUG_BOOT_PARAMS isn't set in my config. You may want to turn
+> that on automatically. After doing that things work on my ASUS box (good
+> work!) but the SATA controller craps out on my Tunnelmountain machine,
+> but that's probably unrelated and I'll debug that separately.
 
-I have never stated that I would like to block this patch series
-indefinitely due to this one bug (I am still not sure that this
-is a bug; Currently, I feel that I am only one person who tries
-to verify that). We have more then one week and I think that we
-are able to discover what is going on. If not I think that we
-can workout reasonable solution for this issue (as we did in other
-cases). Last but not least, I would like to underline that I wish
-that this patch series were included in Xen 4.4 too. However,
-it must be done in sensible way.
+Hmm, if CONFIG_DEBUG_BOOT_PARAMS is not set, then kexec-tools should
+fail getting efi_info, so I will fix kexec-tools patch about this.
 
-Daniel
+Also CONFIG_EFI_RUNTIME_MAP should select CONFIG_DEBUG_BOOT_PARAMS.
+In future will try to move the boot params data out of debugfs. 
+
+> 
+> I see a bunch of section mismatch warnings,
+> 
+> WARNING: arch/x86/platform/efi/built-in.o(.text+0xd1e): Section mismatch in reference from the function efi_map_regions_fixed() to the function .init.text:efi_map_region_fixed()
+> The function efi_map_regions_fixed() references
+> the function __init efi_map_region_fixed().
+> This is often because efi_map_regions_fixed lacks a __init 
+> annotation or the annotation of efi_map_region_fixed is wrong.
+> 
+> WARNING: arch/x86/platform/efi/built-in.o(.text+0xd2a): Section mismatch in reference from the function efi_map_regions_fixed() to the variable .init.data:efi_phys
+> The function efi_map_regions_fixed() references
+> the variable __initdata efi_phys.
+> This is often because efi_map_regions_fixed lacks a __initdata 
+> annotation or the annotation of efi_phys is wrong.
+> 
+> WARNING: arch/x86/platform/built-in.o(.text+0xd1e): Section mismatch in reference from the function efi_map_regions_fixed() to the function .init.text:efi_map_region_fixed()
+> The function efi_map_regions_fixed() references
+> the function __init efi_map_region_fixed().
+> This is often because efi_map_regions_fixed lacks a __init 
+> annotation or the annotation of efi_map_region_fixed is wrong.
+> 
+> WARNING: arch/x86/platform/built-in.o(.text+0xd2a): Section mismatch in reference from the function efi_map_regions_fixed() to the variable .init.data:efi_phys
+> The function efi_map_regions_fixed() references
+> the variable __initdata efi_phys.
+> This is often because efi_map_regions_fixed lacks a __initdata 
+> annotation or the annotation of efi_phys is wrong.
+> 
+> WARNING: arch/x86/built-in.o(.text+0x7c357): Section mismatch in reference from the function parse_efi_setup() to the function .init.text:early_memremap()
+> The function parse_efi_setup() references
+> the function __init early_memremap().
+> This is often because parse_efi_setup lacks a __init 
+> annotation or the annotation of early_memremap is wrong.
+> 
+> WARNING: arch/x86/built-in.o(.text+0x7c390): Section mismatch in reference from the function parse_efi_setup() to the function .init.text:early_iounmap()
+> The function parse_efi_setup() references
+> the function __init early_iounmap().
+> This is often because parse_efi_setup lacks a __init 
+> annotation or the annotation of early_iounmap is wrong.
+> 
+> WARNING: arch/x86/built-in.o(.text+0x7c5ce): Section mismatch in reference from the function efi_map_regions_fixed() to the function .init.text:efi_map_region_fixed()
+> The function efi_map_regions_fixed() references
+> the function __init efi_map_region_fixed().
+> This is often because efi_map_regions_fixed lacks a __init 
+> annotation or the annotation of efi_map_region_fixed is wrong.
+> 
+> WARNING: arch/x86/built-in.o(.text+0x7c5da): Section mismatch in reference from the function efi_map_regions_fixed() to the variable .init.data:vdso32_sysenter_end
+> The function efi_map_regions_fixed() references
+> the variable __initdata vdso32_sysenter_end.
+> This is often because efi_map_regions_fixed lacks a __initdata 
+> annotation or the annotation of vdso32_sysenter_end is wrong.
+
+Will fix, thanks for testing.
+
+> 
+> Also, many of your patch descriptions are missing subsystem tags. Please
+> fix this in your next submission.
+
+Do you means to add "efi:" in subject?
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
