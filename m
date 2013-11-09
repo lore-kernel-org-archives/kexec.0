@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from userp1040.oracle.com ([156.151.31.81])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vf0h9-0003l6-SE
- for kexec@lists.infradead.org; Sat, 09 Nov 2013 05:02:52 +0000
-Message-ID: <527DC1BE.6030107@zytor.com>
-Date: Fri, 08 Nov 2013 21:01:50 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1VfE3m-0004Ab-8L
+ for kexec@lists.infradead.org; Sat, 09 Nov 2013 19:19:07 +0000
+Date: Sat, 9 Nov 2013 20:18:31 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCHv10 0/9] Xen: extend kexec hypercall for use with pv-ops
+ kernels
+Message-ID: <20131109191831.GD3439@olila.local.net-space.pl>
+References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
+ <20131107211651.GC11159@olila.local.net-space.pl>
 MIME-Version: 1.0
-Subject: Re: [patch 0/7 v2] kexec kernel efi runtime support
-References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
- <20131108143118.GA22636@console-pimps.org>
- <20131109035739.GB4294@dhcp-16-126.nay.redhat.com>
-In-Reply-To: <20131109035739.GB4294@dhcp-16-126.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20131107211651.GC11159@olila.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,24 +25,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Matt Fleming <matt@console-pimps.org>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, vgoyal@redhat.com
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: kexec@lists.infradead.org, Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xen.org
 
-On 11/08/2013 07:57 PM, Dave Young wrote:
-> 
-> Hmm, if CONFIG_DEBUG_BOOT_PARAMS is not set, then kexec-tools should
-> fail getting efi_info, so I will fix kexec-tools patch about this.
-> 
-> Also CONFIG_EFI_RUNTIME_MAP should select CONFIG_DEBUG_BOOT_PARAMS.
-> In future will try to move the boot params data out of debugfs. 
-> 
+On Thu, Nov 07, 2013 at 10:16:51PM +0100, Daniel Kiper wrote:
+> On Wed, Nov 06, 2013 at 02:49:37PM +0000, David Vrabel wrote:
+> > The series (for Xen 4.4) improves the kexec hypercall by making Xen
+> > responsible for loading and relocating the image.  This allows kexec
+> > to be usable by pv-ops kernels and should allow kexec to be usable
+> > from a HVM or PVH privileged domain.
+> >
+> > I have now tested this with a Linux kernel image using the VGA console
+> > which was what was causing problems in v9 (this turned out to be a
+> > kexec-tools bug).
+> >
+> > The required patch series for kexec-tools will be posted shortly and
+> > are available from the xen-v7 branch of:
+>
+> In general it works. However, quite often I am not able to execute panic
+> kernel. Machine hangs with following message:
+>
+> (XEN) Domain 0 crashed: Executing crash image
+>
+> gdb shows:
+>
+> (gdb) bt
+> #0  0xffff82d0801a0092 in do_nmi_crash (regs=<optimized out>) at crash.c:113
+> #1  0xffff82d0802281d9 in nmi_crash () at entry.S:666
+> #2  0x0000000000000000 in ?? ()
+> (gdb)
+>
+> Especially second bt line scares me... ;-)))
+>
+> I have not been able to identify why NMI was activated because
+> stack is completely cleared. I tried to record execution in gdb
+> but it stops with following message:
+>
+> cpumask_clear_cpu (dstp=0xffff82d0802f7f78 <call_data+24>, cpu=0)
+>     at /srv/dev/xen/xen_20130413_20131107.kexec/xen/include/xen/cpumask.h:108
+> 108             clear_bit(cpumask_check(cpu), dstp->bits);
+> Process record: failed to record execution log.
+>
+> Do you know how to find out why NMI was activated?
+>
+> I am able almost always reproduce this issue doing this:
+>   - boot Xen,
+>   - load panic kernel,
+>   - echo c > /proc/sysrq-trigger,
+>   - reboot from command line,
+>   - boot Xen,
+>   - load panic kernel,
+>   - echo c > /proc/sysrq-trigger.
 
-Honestly, if we need debugfs to get actual functionality, it shouldn't
-be in sploit^Wdebugfs...
+I am not able to reproduce this on real hardware. Sorry for confusion.
 
-	-hpa
+Hence, for whole Xen kexec/kdump series:
 
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
 
+Daniel
 
 _______________________________________________
 kexec mailing list
