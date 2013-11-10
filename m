@@ -1,16 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VfE6r-0004Di-5O
- for kexec@lists.infradead.org; Sat, 09 Nov 2013 19:22:19 +0000
-Date: Sat, 9 Nov 2013 20:21:43 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCHv7 0/4] kexec-tools: add support for Xen 4.4
-Message-ID: <20131109192143.GE3439@olila.local.net-space.pl>
-References: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VfSNA-0001gm-6L
+ for kexec@lists.infradead.org; Sun, 10 Nov 2013 10:36:05 +0000
+Received: from int-mx11.intmail.prod.int.phx2.redhat.com
+ (int-mx11.intmail.prod.int.phx2.redhat.com [10.5.11.24])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rAAAZgTb000770
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+ for <kexec@lists.infradead.org>; Sun, 10 Nov 2013 05:35:42 -0500
+Date: Sun, 10 Nov 2013 17:44:25 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86: make reboot task only run on the appropriate
+ processor
+Message-ID: <20131110094425.GA17965@dhcp-16-252.nay.redhat.com>
+References: <1383642967-12595-1-git-send-email-bhe@redhat.com>
+ <20131108151416.GA13068@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
+In-Reply-To: <20131108151416.GA13068@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +30,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, xen-devel@lists.xen.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Robin Holt <robinmholt@gmail.com>, mwhitehe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Robin Holt <robinmholt@linux.com>, davej@fedoraproject.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, chaowang@redhat.com
 
-On Wed, Nov 06, 2013 at 02:55:18PM +0000, David Vrabel wrote:
-> The series adds support for the new hypercall ABI which should be
-> provided by Xen 4.4.  Images are loaded into Xen directly with no
-> kernel involvement.
->
-> Please do not apply until the hypervisor side patches are applied to
-> Xen.
->
-> Patch 1 makes libxc 4.4 mandatory for Xen support.
->
-> Patch 2-3 remove uses of /proc/iomem in favour of libxc.
->
-> Patch 4 adds the support for loading, unloading, and exec'ing an image
-> in Xen.
->
-> This series explicitly drops support for older version of libxc/Xen as
-> supporting kexec on these hypervisors requires kernel support that
-> will never be available upstream.
->
-> Changes in v7:
-> - extend extra segment to 0-1 MiB so the VGA memory is accesible by
->   the image.
->
-> Changes in v6:
-> - Close libxc handle a few error paths.
->
-> Changes in v5:
-> - Dropped the purgatory patch.
->
-> Changes in v4:
-> - KEXEC_ARCH_DEFAULT => EM_386
-> - add segment in the crash case for the backup src.
->
-> Changes in v3 (not posted):
-> - Rebased
->
-> Changes in v2:
-> - Patch from Don Sultz: use libxc for vmcoreinfo.
-> - Use xc_get_max_cpus() to get number of PCPUs.
-> - Enable unload and exec of images.
+On 11/08/13 at 10:14am, Vivek Goyal wrote:
+> On Tue, Nov 05, 2013 at 05:16:07PM +0800, Baoquan He wrote:
 
-For whole Xen kexec/kdump kexec-tools series:
+> 
+> Hi Bao,
+> 
+> This patch fixes the issue for me too. I noticed that we have generic
+> function migrate_to_reboot_cpu() to achieve what we want and rest of
+> the reboot paths are using it. So how about using that function. I 
+> wrote the new patch below. It works for me. Can you please give it
+> a try.
 
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
+Seems there's something wrong with this function, that error happened
+when I executed the 2nd "kexec -e". That means executing "kexec -e" in
+kexec-ed kernel.
 
-Daniel
+Tomorrow I will ask people around take more tests. We need set affinity
+to test this. E.g always execute :
+
+taskset -c 1 -sh "kexec -e"
+
+
+> 
+> Thanks
+> Vivek
+> 
+> kexec: migrate to reboot cpu
+> 
+> Commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f moved reboot= handling to
+> generic code. In the process it also removed the code in
+> native_machine_shutdown() which are moving reboot process to reboot_cpu/cpu0.
+> 
+> I guess that thought must have been that all reboot paths are calling
+> migrate_to_reboot_cpu(), so we don't need this special handling. But
+> kexec reboot path (kernel_kexec()) is not calling migrate_to_reboot_cpu()
+> so above change broke kexec. Now reboot can happen on non-boot cpu and when
+> INIT is sent in second kerneo to bring up BP, it brings down the machine.
+> 
+> So start calling migrate_to_reboot_cpu() in kexec reboot path to avoid
+> this problem.
+> 
+> Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
+> Reported-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  include/linux/reboot.h |    1 +
+>  kernel/kexec.c         |    1 +
+>  kernel/reboot.c        |    2 +-
+>  3 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> Index: linux-2.6/kernel/reboot.c
+> ===================================================================
+> --- linux-2.6.orig/kernel/reboot.c	2013-10-16 00:30:50.000000000 -0400
+> +++ linux-2.6/kernel/reboot.c	2013-11-08 21:31:03.379064848 -0500
+> @@ -104,7 +104,7 @@ int unregister_reboot_notifier(struct no
+>  }
+>  EXPORT_SYMBOL(unregister_reboot_notifier);
+>  
+> -static void migrate_to_reboot_cpu(void)
+> +void migrate_to_reboot_cpu(void)
+>  {
+>  	/* The boot cpu is always logical cpu 0 */
+>  	int cpu = reboot_cpu;
+> Index: linux-2.6/include/linux/reboot.h
+> ===================================================================
+> --- linux-2.6.orig/include/linux/reboot.h	2013-11-08 21:33:27.000000000 -0500
+> +++ linux-2.6/include/linux/reboot.h	2013-11-08 21:34:29.778073522 -0500
+> @@ -43,6 +43,7 @@ extern int unregister_reboot_notifier(st
+>   * Architecture-specific implementations of sys_reboot commands.
+>   */
+>  
+> +extern void migrate_to_reboot_cpu(void);
+>  extern void machine_restart(char *cmd);
+>  extern void machine_halt(void);
+>  extern void machine_power_off(void);
+> Index: linux-2.6/kernel/kexec.c
+> ===================================================================
+> --- linux-2.6.orig/kernel/kexec.c	2013-10-16 00:30:50.000000000 -0400
+> +++ linux-2.6/kernel/kexec.c	2013-11-08 21:34:02.492072375 -0500
+> @@ -1676,6 +1676,7 @@ int kernel_kexec(void)
+>  #endif
+>  	{
+>  		kernel_restart_prepare(NULL);
+> +		migrate_to_reboot_cpu();
+>  		printk(KERN_EMERG "Starting new kernel\n");
+>  		machine_shutdown();
+>  	}
 
 _______________________________________________
 kexec mailing list
