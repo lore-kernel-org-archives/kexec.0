@@ -1,33 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VfjTq-0004Yq-O8
- for kexec@lists.infradead.org; Mon, 11 Nov 2013 04:52:09 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 27E583EE15A
- for <kexec@lists.infradead.org>; Mon, 11 Nov 2013 13:51:41 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 14FB645DE6A
- for <kexec@lists.infradead.org>; Mon, 11 Nov 2013 13:51:41 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id E6D1C45DE54
- for <kexec@lists.infradead.org>; Mon, 11 Nov 2013 13:51:40 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id D725A1DB8049
- for <kexec@lists.infradead.org>; Mon, 11 Nov 2013 13:51:40 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 767931DB8044
- for <kexec@lists.infradead.org>; Mon, 11 Nov 2013 13:51:40 +0900 (JST)
-Message-ID: <528061E5.7010903@jp.fujitsu.com>
-Date: Mon, 11 Nov 2013 13:49:41 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VflNf-0006RD-OR
+ for kexec@lists.infradead.org; Mon, 11 Nov 2013 06:53:53 +0000
+Date: Mon, 11 Nov 2013 14:52:50 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86: make reboot task only run on the appropriate
+ processor
+Message-ID: <20131111065250.GA31206@dhcp-16-252.nay.redhat.com>
+References: <1383642967-12595-1-git-send-email-bhe@redhat.com>
+ <20131108151416.GA13068@redhat.com>
+ <20131110094425.GA17965@dhcp-16-252.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/3] x86, apic, kexec: Add disable_cpu_apic kernel
- parameter
-References: <20131022150015.24240.39686.stgit@localhost6.localdomain6>
- <20131106190232.GA28119@anatevka.fc.hp.com>
-In-Reply-To: <20131106190232.GA28119@anatevka.fc.hp.com>
+Content-Disposition: inline
+In-Reply-To: <20131110094425.GA17965@dhcp-16-252.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,96 +22,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: jerry.hoemann@hp.com
-Cc: fengguang.wu@intel.com, jingbai.ma@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Robin Holt <robinmholt@gmail.com>, mwhitehe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Robin Holt <robinmholt@linux.com>, davej@fedoraproject.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org, chaowang@redhat.com
 
-(2013/11/07 4:02), jerry.hoemann@hp.com wrote:
-> On Wed, Oct 23, 2013 at 12:01:18AM +0900, HATAYAMA Daisuke wrote:
->> This patch set is to allow kdump 2nd kernel to wake up multiple CPUs
->> even if 1st kernel crashs on some AP, a continueing work from:
->>
->>    [PATCH v3 0/2] x86, apic, kdump: Disable BSP if boot cpu is AP
->>    https://lkml.org/lkml/2013/10/16/300.
->>
->> In this version, basic design has changed. Now users need to figure
->> out initial APIC ID of BSP in the 1st kernel and configures kernel
->> parameter for the 2nd kernel manually using disable_cpu_apic kernel
->> parameter to be newly introduced in this patch set. This design is
->> more flexible than the previous version in that we no longer have to
->> rely on ACPI/MP table to get initial APIC ID of BSP.
->>
->> Sorry, this patch set have not include in-source documentation
->> requested by Borislav Petkov yet, but I'll post it later separately,
->> which would be better to focus on documentation reviewing.
->>
->> ChangeLog
->>
->> v3 => v4)
->>
->> - Rebased on top of v3.12-rc6
->>
->> - Basic design has been changed. Now users need to figure out initial
->>    APIC ID of BSP in the 1st kernel and configures kernel parameter for
->>    the 2nd kernel manually using disable_cpu_apic kernel parameter to
->>    be newly introduced in this patch set. This design is more flexible
->>    than the previous version in that we no longer have to rely on
->>    ACPI/MP table to get initial APIC ID of BSP.
->>
->
->
-> Daisuke,
->
-> I have back ported version 4 of this patch to both a 2.6.32 and 3.0.80
-> based kernels and distros and tested on a prototype system.  I have
-> previously test version 1 & 3 as well.)
->
-> The systems are configured to boot the capture kernel 8-way parallel.
-> However, I am running makedumpfile single threaded.
->
-> Panic is induced via "echo c > /proc/sysrq-trigger".  This is done
-> under various system loads and on random cpus.  I have done over a
-> thousand dumps total during this testing.
->
+On 11/10/13 at 05:44pm, Baoquan He wrote:
+> On 11/08/13 at 10:14am, Vivek Goyal wrote:
+> > On Tue, Nov 05, 2013 at 05:16:07PM +0800, Baoquan He wrote:
+> 
+> > 
+> > Hi Bao,
+> > 
+> > This patch fixes the issue for me too. I noticed that we have generic
+> > function migrate_to_reboot_cpu() to achieve what we want and rest of
+> > the reboot paths are using it. So how about using that function. I 
+> > wrote the new patch below. It works for me. Can you please give it
+> > a try.
 
-Thanks for your testing.
+Hi Vivek,
 
-> I have seen no issues w/ the 3.0.80 dump testing on our proto.
->
-> On the 2.6.32 testing on our proto, i have hit a low probability (< 5%)
-> chance of the capture suffering a soft lockup hang during
-> "Switching to clocksource hpet."  I have not RCA'd this yet.
-> Note, I have seen this issue on earlier version of the patch, so
-> it is not specific to this version.
->
-> I then tested the 2.6.32 port on a dl380.  This worked without issue.
->
-> Note, I have seen no issues related to this patch on our proto when
-> booting the capture with a single processor.
->
-> While I am still pursuing the issue of the 2.6.32 kernel on our proto,
-> I believe this patch is good and should be accepted.
->
+Your patch works, my test script has wrong typo.
 
-This seems there's something that depends on the system you used. But I
-have never verified my patch set on 2.6.32-based kernel. I'll try to
-do a similar test on some FJ systems.
+Baoquan
+Thanks a lot
 
-The 2.6.32-based kernel you mean is one of the Longterm release kernels,
-right? So, you used on the test the 2.6.32-based Longterm release kernel
-with my v4 patch, right?
-
-The root cause seems to have already been fixed on recent kernel since
-you didn't see the bug on 3.0.80-based kernel, so I think binary search
-would be useful.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+> 
+> Seems there's something wrong with this function, that error happened
+> when I executed the 2nd "kexec -e". That means executing "kexec -e" in
+> kexec-ed kernel.
+> 
+> Tomorrow I will ask people around take more tests. We need set affinity
+> to test this. E.g always execute :
+> 
+> taskset -c 1 -sh "kexec -e"
+> 
+> 
+> > 
+> > Thanks
+> > Vivek
+> > 
+> > kexec: migrate to reboot cpu
+> > 
+> > Commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f moved reboot= handling to
+> > generic code. In the process it also removed the code in
+> > native_machine_shutdown() which are moving reboot process to reboot_cpu/cpu0.
+> > 
+> > I guess that thought must have been that all reboot paths are calling
+> > migrate_to_reboot_cpu(), so we don't need this special handling. But
+> > kexec reboot path (kernel_kexec()) is not calling migrate_to_reboot_cpu()
+> > so above change broke kexec. Now reboot can happen on non-boot cpu and when
+> > INIT is sent in second kerneo to bring up BP, it brings down the machine.
+> > 
+> > So start calling migrate_to_reboot_cpu() in kexec reboot path to avoid
+> > this problem.
+> > 
+> > Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
+> > Reported-by: Dave Young <dyoung@redhat.com>
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > ---
+> >  include/linux/reboot.h |    1 +
+> >  kernel/kexec.c         |    1 +
+> >  kernel/reboot.c        |    2 +-
+> >  3 files changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > Index: linux-2.6/kernel/reboot.c
+> > ===================================================================
+> > --- linux-2.6.orig/kernel/reboot.c	2013-10-16 00:30:50.000000000 -0400
+> > +++ linux-2.6/kernel/reboot.c	2013-11-08 21:31:03.379064848 -0500
+> > @@ -104,7 +104,7 @@ int unregister_reboot_notifier(struct no
+> >  }
+> >  EXPORT_SYMBOL(unregister_reboot_notifier);
+> >  
+> > -static void migrate_to_reboot_cpu(void)
+> > +void migrate_to_reboot_cpu(void)
+> >  {
+> >  	/* The boot cpu is always logical cpu 0 */
+> >  	int cpu = reboot_cpu;
+> > Index: linux-2.6/include/linux/reboot.h
+> > ===================================================================
+> > --- linux-2.6.orig/include/linux/reboot.h	2013-11-08 21:33:27.000000000 -0500
+> > +++ linux-2.6/include/linux/reboot.h	2013-11-08 21:34:29.778073522 -0500
+> > @@ -43,6 +43,7 @@ extern int unregister_reboot_notifier(st
+> >   * Architecture-specific implementations of sys_reboot commands.
+> >   */
+> >  
+> > +extern void migrate_to_reboot_cpu(void);
+> >  extern void machine_restart(char *cmd);
+> >  extern void machine_halt(void);
+> >  extern void machine_power_off(void);
+> > Index: linux-2.6/kernel/kexec.c
+> > ===================================================================
+> > --- linux-2.6.orig/kernel/kexec.c	2013-10-16 00:30:50.000000000 -0400
+> > +++ linux-2.6/kernel/kexec.c	2013-11-08 21:34:02.492072375 -0500
+> > @@ -1676,6 +1676,7 @@ int kernel_kexec(void)
+> >  #endif
+> >  	{
+> >  		kernel_restart_prepare(NULL);
+> > +		migrate_to_reboot_cpu();
+> >  		printk(KERN_EMERG "Starting new kernel\n");
+> >  		machine_shutdown();
+> >  	}
 
 _______________________________________________
 kexec mailing list
