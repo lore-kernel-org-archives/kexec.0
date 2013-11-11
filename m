@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from omzsmtpe03.verizonbusiness.com ([199.249.25.208])
+Received: from omzsmtpe01.verizonbusiness.com ([199.249.25.210])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VfsZh-0008Ns-AX
- for kexec@lists.infradead.org; Mon, 11 Nov 2013 14:34:46 +0000
+ id 1Vfsb4-0008Pb-5C
+ for kexec@lists.infradead.org; Mon, 11 Nov 2013 14:36:10 +0000
 From: Don Slutz <dslutz@verizon.com>
-Message-ID: <5280EAE9.7040008@terremark.com>
-Date: Mon, 11 Nov 2013 09:34:17 -0500
+Message-ID: <5280EB40.7070601@terremark.com>
+Date: Mon, 11 Nov 2013 09:35:44 -0500
 MIME-Version: 1.0
-Subject: Re: [PATCHv10 0/9] Xen: extend kexec hypercall for use with pv-ops
- kernels
-References: <1383749386-11891-1-git-send-email-david.vrabel@citrix.com>
- <20131107211651.GC11159@olila.local.net-space.pl>
- <20131109191831.GD3439@olila.local.net-space.pl>
-In-Reply-To: <20131109191831.GD3439@olila.local.net-space.pl>
+Subject: Re: [PATCHv7 0/4] kexec-tools: add support for Xen 4.4
+References: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
+ <20131109192143.GE3439@olila.local.net-space.pl>
+In-Reply-To: <20131109192143.GE3439@olila.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,59 +24,50 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xen.org
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, xen-devel@lists.xen.org
 
-On 11/09/13 14:18, Daniel Kiper wrote:
-> On Thu, Nov 07, 2013 at 10:16:51PM +0100, Daniel Kiper wrote:
->> On Wed, Nov 06, 2013 at 02:49:37PM +0000, David Vrabel wrote:
->>> The series (for Xen 4.4) improves the kexec hypercall by making Xen
->>> responsible for loading and relocating the image.  This allows kexec
->>> to be usable by pv-ops kernels and should allow kexec to be usable
->>> from a HVM or PVH privileged domain.
->>>
->>> I have now tested this with a Linux kernel image using the VGA console
->>> which was what was causing problems in v9 (this turned out to be a
->>> kexec-tools bug).
->>>
->>> The required patch series for kexec-tools will be posted shortly and
->>> are available from the xen-v7 branch of:
->> In general it works. However, quite often I am not able to execute panic
->> kernel. Machine hangs with following message:
+On 11/09/13 14:21, Daniel Kiper wrote:
+> On Wed, Nov 06, 2013 at 02:55:18PM +0000, David Vrabel wrote:
+>> The series adds support for the new hypercall ABI which should be
+>> provided by Xen 4.4.  Images are loaded into Xen directly with no
+>> kernel involvement.
 >>
->> (XEN) Domain 0 crashed: Executing crash image
+>> Please do not apply until the hypervisor side patches are applied to
+>> Xen.
 >>
->> gdb shows:
+>> Patch 1 makes libxc 4.4 mandatory for Xen support.
 >>
->> (gdb) bt
->> #0  0xffff82d0801a0092 in do_nmi_crash (regs=<optimized out>) at crash.c:113
->> #1  0xffff82d0802281d9 in nmi_crash () at entry.S:666
->> #2  0x0000000000000000 in ?? ()
->> (gdb)
+>> Patch 2-3 remove uses of /proc/iomem in favour of libxc.
 >>
->> Especially second bt line scares me... ;-)))
+>> Patch 4 adds the support for loading, unloading, and exec'ing an image
+>> in Xen.
 >>
->> I have not been able to identify why NMI was activated because
->> stack is completely cleared. I tried to record execution in gdb
->> but it stops with following message:
+>> This series explicitly drops support for older version of libxc/Xen as
+>> supporting kexec on these hypervisors requires kernel support that
+>> will never be available upstream.
 >>
->> cpumask_clear_cpu (dstp=0xffff82d0802f7f78 <call_data+24>, cpu=0)
->>      at /srv/dev/xen/xen_20130413_20131107.kexec/xen/include/xen/cpumask.h:108
->> 108             clear_bit(cpumask_check(cpu), dstp->bits);
->> Process record: failed to record execution log.
+>> Changes in v7:
+>> - extend extra segment to 0-1 MiB so the VGA memory is accesible by
+>>    the image.
 >>
->> Do you know how to find out why NMI was activated?
+>> Changes in v6:
+>> - Close libxc handle a few error paths.
 >>
->> I am able almost always reproduce this issue doing this:
->>    - boot Xen,
->>    - load panic kernel,
->>    - echo c > /proc/sysrq-trigger,
->>    - reboot from command line,
->>    - boot Xen,
->>    - load panic kernel,
->>    - echo c > /proc/sysrq-trigger.
-> I am not able to reproduce this on real hardware. Sorry for confusion.
->
-> Hence, for whole Xen kexec/kdump series:
+>> Changes in v5:
+>> - Dropped the purgatory patch.
+>>
+>> Changes in v4:
+>> - KEXEC_ARCH_DEFAULT => EM_386
+>> - add segment in the crash case for the backup src.
+>>
+>> Changes in v3 (not posted):
+>> - Rebased
+>>
+>> Changes in v2:
+>> - Patch from Don Sultz: use libxc for vmcoreinfo.
+>> - Use xc_get_max_cpus() to get number of PCPUs.
+>> - Enable unload and exec of images.
+> For whole Xen kexec/kdump kexec-tools series:
 >
 > Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
 > Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
@@ -89,6 +78,8 @@ Also
 Tested-by: Don Slutz <dslutz@verizon.com>
 
     -Don Slutz
+
+
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
