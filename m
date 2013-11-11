@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VflPs-0006Ts-RO
- for kexec@lists.infradead.org; Mon, 11 Nov 2013 06:56:09 +0000
-Date: Mon, 11 Nov 2013 14:55:28 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH] x86: make reboot task only run on the appropriate
- processor
-Message-ID: <20131111065528.GA17200@dhcp16-109.nay.redhat.com>
-References: <1383642967-12595-1-git-send-email-bhe@redhat.com>
- <20131108151416.GA13068@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131108151416.GA13068@redhat.com>
+ id 1VfnSM-0001Gw-4k
+ for kexec@lists.infradead.org; Mon, 11 Nov 2013 09:06:51 +0000
+Date: Mon, 11 Nov 2013 10:06:21 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
+Message-ID: <20131111100621.1c26b372@hananiah.suse.cz>
+In-Reply-To: <527C7629.1030007@hp.com>
+References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
+ <20131105202631.GC4598@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
+ <20131106142350.GB23357@redhat.com> <527B55F0.4000301@hp.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BD6C0@BPXM01GP.gisp.nec.co.jp>
+ <527C74D8.8060006@jp.fujitsu.com> <527C7629.1030007@hp.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,110 +27,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Robin Holt <robinmholt@gmail.com>, Baoquan He <bhe@redhat.com>, mwhitehe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Robin Holt <robinmholt@linux.com>, davej@fedoraproject.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, akpm@linux-foundation.org
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "anderson@redhat.com" <anderson@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On 11/08/13 at 10:14am, Vivek Goyal wrote:
-> On Tue, Nov 05, 2013 at 05:16:07PM +0800, Baoquan He wrote:
-> > Currently system always reboot after below message when execute "kexec -e".
+On Fri, 08 Nov 2013 13:27:05 +0800
+Jingbai Ma <jingbai.ma@hp.com> wrote:
+
+> On 11/08/2013 01:21 PM, HATAYAMA Daisuke wrote:
+> > (2013/11/08 14:12), Atsushi Kumagai wrote:
+> >> Hello Jingbai,
+> >>
+> >> (2013/11/07 17:58), Jingbai Ma wrote:
+> >>> On 11/06/2013 10:23 PM, Vivek Goyal wrote:
+> >>>> On Wed, Nov 06, 2013 at 02:21:39AM +0000, Atsushi Kumagai wrote:
+> >>>>> (2013/11/06 5:27), Vivek Goyal wrote:
+> >>>>>> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
+> >>>>>>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
+> >>>>>>>
+> >>>>>>> This patch requires the kernel patch to export necessary data structures into
+> >>>>>>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
+> >>>>>>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
+> >>>>>>>
+> >>>>>>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
+> >>>>>>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
+> >>>>>>
+> >>>>>> Interesting. Why hugepages should be treated any differentely than normal
+> >>>>>> pages?
+> >>>>>>
+> >>>>>> If user asked to filter out free page, then it should be filtered and
+> >>>>>> it should not matter whether it is a huge page or not?
+> >>>>>
+> >>>>> I'm making a RFC patch of hugepages filtering based on such policy.
+> >>>>>
+> >>>>> I attach the prototype version.
+> >>>>> It's able to filter out also THPs, and suitable for cyclic processing
+> >>>>> because it depends on mem_map and looking up it can be divided into
+> >>>>> cycles. This is the same idea as page_is_buddy().
+> >>>>>
+> >>>>> So I think it's better.
+> >>>>
+> >>>> Agreed. Being able to treat hugepages in same manner as other pages
+> >>>> sounds good.
+> >>>>
+> >>>> Jingbai, looks good to you?
+> >>>
+> >>> It looks good to me.
+> >>>
+> >>> My only concern is by this way, we only can exclude all hugepage together, but can't exclude the free hugepages only. I'm not sure if user need to dump out the activated hugepage only.
+> >>>
+> >>> Kumagai-san, please correct me, if I'm wrong.
+> >>
+> >> Yes, my patch treats all allocated hugetlbfs pages as user pages,
+> >> doesn't distinguish whether the pages are actually used or not.
+> >> I made so because I guess it's enough for almost all users.
+> >>
+> >> We can introduce new dump level after it's needed actually,
+> >> but I don't think now is the time. To introduce it without
+> >> demand will make this tool just more complex.
+> >>
 > > 
-> > [    0.572119] smpboot: Booting Node   0, Processors  #   1 OK
+> > Typically, users would allocate huge pages as much as actually they use only,
+> > in order not to waste system memory. So, this design seems reasonable.
 > > 
-> > In commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f, reboot= handling was
-> > moved to kerne/reboot.c. However, the code to migrate current thread to
-> > reboot cpu was removed. That cause this incorrect kexec behavior.
-> > 
-> > Now add that code block back.
-> > 
-> > Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
-> > Reported-by: Dave Young <dyoung@redhat.com>
-> > Tested-by: WANG Chao <chaowang@redhat.com>
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
 > 
-> Hi Bao,
-> 
-> This patch fixes the issue for me too. I noticed that we have generic
-> function migrate_to_reboot_cpu() to achieve what we want and rest of
-> the reboot paths are using it. So how about using that function. I 
-> wrote the new patch below. It works for me. Can you please give it
-> a try.
+> OK, It looks reasonable.
 
-Hi, Vivek
+Agreed. Whether a page is a huge page or not is an implementation
+detail (and with THP even more so). Makedumpfile users should only be
+concerned about the _meaning_ of what gets filtered, not about
+implementation details.
 
-I confirm this patch works for me, even in a nested kexec scenario. Feel
-free to add these:
+If we expose too much of the implementation, it may become hard to
+maintain backward compatibility one day...
 
-Bisected-by: WANG Chao <chaowang@redhat.com>
-Tested-by: WANG Chao <chaowang@redhat.com>
+Thank you very much for all the work!
 
-Thanks
-WANG Chao
-
-> 
-> Thanks
-> Vivek
-> 
-> kexec: migrate to reboot cpu
-> 
-> Commit 1b3a5d02ee070c8f9943333b9b6370f486601e0f moved reboot= handling to
-> generic code. In the process it also removed the code in
-> native_machine_shutdown() which are moving reboot process to reboot_cpu/cpu0.
-> 
-> I guess that thought must have been that all reboot paths are calling
-> migrate_to_reboot_cpu(), so we don't need this special handling. But
-> kexec reboot path (kernel_kexec()) is not calling migrate_to_reboot_cpu()
-> so above change broke kexec. Now reboot can happen on non-boot cpu and when
-> INIT is sent in second kerneo to bring up BP, it brings down the machine.
-> 
-> So start calling migrate_to_reboot_cpu() in kexec reboot path to avoid
-> this problem.
-> 
-> Reported-by: Matthew Whitehead <mwhitehe@redhat.com>
-> Reported-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  include/linux/reboot.h |    1 +
->  kernel/kexec.c         |    1 +
->  kernel/reboot.c        |    2 +-
->  3 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> Index: linux-2.6/kernel/reboot.c
-> ===================================================================
-> --- linux-2.6.orig/kernel/reboot.c	2013-10-16 00:30:50.000000000 -0400
-> +++ linux-2.6/kernel/reboot.c	2013-11-08 21:31:03.379064848 -0500
-> @@ -104,7 +104,7 @@ int unregister_reboot_notifier(struct no
->  }
->  EXPORT_SYMBOL(unregister_reboot_notifier);
->  
-> -static void migrate_to_reboot_cpu(void)
-> +void migrate_to_reboot_cpu(void)
->  {
->  	/* The boot cpu is always logical cpu 0 */
->  	int cpu = reboot_cpu;
-> Index: linux-2.6/include/linux/reboot.h
-> ===================================================================
-> --- linux-2.6.orig/include/linux/reboot.h	2013-11-08 21:33:27.000000000 -0500
-> +++ linux-2.6/include/linux/reboot.h	2013-11-08 21:34:29.778073522 -0500
-> @@ -43,6 +43,7 @@ extern int unregister_reboot_notifier(st
->   * Architecture-specific implementations of sys_reboot commands.
->   */
->  
-> +extern void migrate_to_reboot_cpu(void);
->  extern void machine_restart(char *cmd);
->  extern void machine_halt(void);
->  extern void machine_power_off(void);
-> Index: linux-2.6/kernel/kexec.c
-> ===================================================================
-> --- linux-2.6.orig/kernel/kexec.c	2013-10-16 00:30:50.000000000 -0400
-> +++ linux-2.6/kernel/kexec.c	2013-11-08 21:34:02.492072375 -0500
-> @@ -1676,6 +1676,7 @@ int kernel_kexec(void)
->  #endif
->  	{
->  		kernel_restart_prepare(NULL);
-> +		migrate_to_reboot_cpu();
->  		printk(KERN_EMERG "Starting new kernel\n");
->  		machine_shutdown();
->  	}
+Petr T
 
 _______________________________________________
 kexec mailing list
