@@ -1,27 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VgAdu-0000h0-Vs
- for kexec@lists.infradead.org; Tue, 12 Nov 2013 09:52:20 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id F0DFF3EE0BC
- for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:51:48 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id E071C45DE4D
- for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:51:48 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.nic.fujitsu.com [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id C1DF145DD75
- for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:51:48 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id B5BBD1DB803E
- for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:51:48 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 60F911DB802C
- for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:51:48 +0900 (JST)
-Subject: [PATCH v5 0/3] x86, apic, kexec: Add disable_cpu_apic kernel parameter
+ id 1VgAdw-0000he-Mp
+ for kexec@lists.infradead.org; Tue, 12 Nov 2013 09:52:21 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id EF8FD3EE0C3
+ for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:52:00 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id E037A45DEBB
+ for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:52:00 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.nic.fujitsu.com [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 94D6A45DEBA
+ for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:52:00 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 406D1E08006
+ for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:52:00 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 47DA1E18003
+ for <kexec@lists.infradead.org>; Tue, 12 Nov 2013 18:51:59 +0900 (JST)
+Subject: [PATCH v5 2/3] x86, apic: Add disable_cpu_apicid kernel parameter
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Tue, 12 Nov 2013 18:51:47 +0900
-Message-ID: <20131112094952.4902.72689.stgit@localhost6.localdomain6>
+Date: Tue, 12 Nov 2013 18:51:58 +0900
+Message-ID: <20131112095158.4902.75396.stgit@localhost6.localdomain6>
+In-Reply-To: <20131112094952.4902.72689.stgit@localhost6.localdomain6>
+References: <20131112094952.4902.72689.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -38,101 +41,90 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
 
-This patch set is to allow kdump 2nd kernel to wake up multiple CPUs
-even if 1st kernel crashs on some AP, a continueing work from:
+Add disable_cpu_apicid kernel parameter. To use this kernel parameter,
+specify an initial APIC ID of the corresponding CPU you want to
+disable.
 
-  [PATCH v3 0/2] x86, apic, kdump: Disable BSP if boot cpu is AP
-  https://lkml.org/lkml/2013/10/16/300.
+This is mostly used for the kdump 2nd kernel to disable BSP to wake up
+multiple CPUs without causing system reset or hang due to sending INIT
+from AP to BSP.
 
-At v4, basic design has changed. Now users need to figure out initial
-APIC ID of BSP in the 1st kernel and configures kernel parameter for
-the 2nd kernel manually using disable_cpu_apic kernel parameter to be
-newly introduced in this patch set. This design is more flexible than
-the previous version in that we no longer have to rely on ACPI/MP
-table to get initial APIC ID of BSP.
+Kdump users first figure out initial APIC ID of the BSP, CPU0 in the
+1st kernel, for example from /proc/cpuinfo and then set up this kernel
+parameter for the 2nd kernel using the obtained APIC ID.
 
-Sorry, this patch set have not include in-source documentation
-requested by Borislav Petkov yet, but I'll post it later separately,
-which would be better to focus on documentation reviewing.
+However, doing this procedure at each boot time manually is awkward,
+which should be automatically done by user-land service scripts, for
+example, kexec-tools on fedora/RHEL distributions.
 
-ChangeLog
+This design is more flexible than disabling BSP in kernel boot time
+automatically in that in kernel boot time we have no choice but
+referring to ACPI/MP table to obtain initial APIC ID for BSP, meaning
+that the method is not applicable to the systems without such BIOS
+tables.
 
-v4 => v5)
+One assumption behind this design is that users get initial APIC ID of
+the BSP in still healthy state and so BSP is uniquely kept in
+CPU0. Thus, through the kernel parameter, only one initial APIC ID can
+be specified.
 
-- Rebased on top of v3.12
-
-- Introduce bsp_physical_apicid that has the initial APIC ID for the
-  processor with BSP flag on IA32_APIC_BASE MSR. Without this,
-  boot_cpu_physical_apicid has temporarilly the value around MP table
-  related codes, although it's designed to have the initial APIC ID
-  for the processor that is doing the boot up. Use the
-  bsp_physical_apicid in MP table related codes; no impact on
-  semantics at runtime there.
-
-v3 => v4)
-
-- Rebased on top of v3.12-rc6
-
-- Basic design has been changed. Now users need to figure out initial
-  APIC ID of BSP in the 1st kernel and configures kernel parameter for
-  the 2nd kernel manually using disable_cpu_apic kernel parameter to
-  be newly introduced in this patch set. This design is more flexible
-  than the previous version in that we no longer have to rely on
-  ACPI/MP table to get initial APIC ID of BSP.
-
-v2 => v3)
-
-- Change default value of boot_cpu_is_bsp to true.
-
-- Before executing rdmsr(MSR_IA32_APICBASE), check if the number of
-  processor family is larger than or equal to 6 in order to avoid
-  invalid opcode exception on processors where MSR_IA32_APICBASE is
-  not supported.
-
-v1 => v2)
-
-- Rebased on top of v3.12-rc5.
-
-- Fix linking time error of boot_cpu_is_bsp_init() in case of
-  CONFIG_LOCAL_APIC disabled by adding empty static inline function
-  instead.
-
-- Fix missing feature check by means of cpu_has_apic macro in
-  boot_cpu_is_bsp_init() before calling rdmsr_safe(MSR_IA32_APICBASE).
-
-  NOTE: I've checked local apic-present case only; I don't have any
-  x86 processor without local apic.
-
-- Add __init annotation to boot_cpu_is_bsp_init().
-
-Test
-
-- built with and without CONFIG_LOCAL_APIC, CONFIG_SMP and CONFIG_X86_UP_APIC.
-- tested x86_64 in case of acpi and MP table
-- tested disable_cpu_apicid=<n> to disable both AP and BSP
-
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
+ arch/x86/kernel/apic/apic.c |   29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-HATAYAMA Daisuke (3):
-      x86, apic: add bsp_physical_apicid
-      x86, apic: Add disable_cpu_apicid kernel parameter
-      Documentation, x86, apic, kexec: Add disable_cpu_apicid kernel parameter
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index b60ad92..075bf23 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -78,6 +78,13 @@ unsigned int max_physical_apicid;
+ physid_mask_t phys_cpu_present_map;
+ 
+ /*
++ * Processor to be disabled specified by kernel parameter
++ * disable_cpu_apicid=<int>, mostly used for the kdump 2nd kernel to
++ * avoid undefined behaviour caused by sending INIT from AP to BSP.
++ */
++unsigned int disabled_cpu_apicid = BAD_APICID;
++
++/*
+  * Map cpu index to physical APIC ID
+  */
+ DEFINE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_cpu_to_apicid, BAD_APICID);
+@@ -2117,6 +2124,19 @@ void generic_processor_info(int apicid, int version)
+ 	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
+ 				phys_cpu_present_map);
+ 
++	if (disabled_cpu_apicid != BAD_APICID &&
++	    disabled_cpu_apicid != boot_cpu_physical_apicid &&
++	    disabled_cpu_apicid == apicid) {
++		int thiscpu = num_processors + disabled_cpus;
++
++		pr_warning("ACPI: Disable specified CPU."
++			   " Processor %d/0x%x ignored.\n",
++			   thiscpu, apicid);
++
++		disabled_cpus++;
++		return;
++	}
++
+ 	/*
+ 	 * If boot cpu has not been detected yet, then only allow upto
+ 	 * nr_cpu_ids - 1 processors and keep one slot free for boot cpu
+@@ -2604,3 +2624,12 @@ void __init bsp_physical_apicid_init(void)
+ 			bsp_physical_apicid = boot_cpu_data.initial_apicid;
+ 	}
+ }
++
++static int __init apic_set_disabled_cpu_apicid(char *arg)
++{
++	if (!arg || !get_option(&arg, &disabled_cpu_apicid))
++		return -EINVAL;
++
++	return 0;
++}
++early_param("disable_cpu_apicid", apic_set_disabled_cpu_apicid);
 
-
- Documentation/kernel-parameters.txt    |    9 +++++++
- arch/x86/include/asm/mpspec.h          |    7 +++++
- arch/x86/kernel/apic/apic.c            |   44 ++++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/common.c           |    5 +++-
- arch/x86/kernel/mpparse.c              |    3 +-
- arch/x86/kernel/setup.c                |    2 +
- arch/x86/mm/amdtopology.c              |    6 ++--
- arch/x86/platform/visws/visws_quirks.c |    6 +++-
- 8 files changed, 75 insertions(+), 7 deletions(-)
-
--- 
-
-Thanks.
-HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
