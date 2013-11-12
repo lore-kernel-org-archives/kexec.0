@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VgEwJ-0007Yo-6z
- for kexec@lists.infradead.org; Tue, 12 Nov 2013 14:27:36 +0000
-Date: Tue, 12 Nov 2013 09:26:52 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 1/3 v2] Add function get_bootparam
-Message-ID: <20131112142652.GA24980@redhat.com>
-References: <20131105082947.500512312@dhcp-16-126.nay.redhat.com>
- <20131105083428.411624560@dhcp-16-126.nay.redhat.com>
- <1384219658.1847.84.camel@misato.fc.hp.com>
- <52819E71.70201@zytor.com> <20131112035344.GA28116@gmail.com>
- <aa0ccca4-b27b-41b6-8adb-3c969eb29bf7@email.android.com>
+ id 1VgGko-0003c2-4L
+ for kexec@lists.infradead.org; Tue, 12 Nov 2013 16:23:50 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: The kernel version is not supported
+Date: Tue, 12 Nov 2013 17:23:25 +0100
+Message-ID: <2415548.dh2jmZ1ojx@skinner>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <aa0ccca4-b27b-41b6-8adb-3c969eb29bf7@email.android.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,27 +20,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-efi@vger.kernel.org, Toshi Kani <toshi.kani@hp.com>, Greg KH <greg@kroah.com>, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, dyoung@redhat.com, Ingo Molnar <mingo@kernel.org>
+To: lkundrak@v3.sk, kexec@lists.infradead.org
 
-On Tue, Nov 12, 2013 at 04:58:50PM +1300, Matthew Garrett wrote:
-> Well, there's one alternative - don't export this at all and only support UEFI kernels that have an in-kernel loader, then just pass the data internally. 
+Hi,
 
-Hi Matthew,
+there was a patch recently from Lubomir, title:
+dump-dmesg: Understand >= v3.11-rc4 dmesg
 
-I am still writing that in-kernel support for kexec/kdump. I guess in
-next 2 weeks I might be able to post a basic RFC version. (no EFI support
-in this version though).
+But in makedumpfile.h the latest supported version still is:
+#define LATEST_VERSION          KERNEL_VERSION(3, 9, 6)/* linux-3.9.6 */
 
-Having said that, I think that it is good to export these values to
-user space and make existing code work with UEFI. New code (if it gets
-in at all) will slowly mature over a period of time and transition to it
-will be slow. I think initially it will be used only if secureboot is
-enabled. And in the mean time we need a good solution for kexec/kdump
-with UEFI. 
+resulting in:
+The kernel version is not supported.
+The created dumpfile may be incomplete.
 
-Thanks
-Vivek
+messages.
+
+I wonder whether there are other known issues with latest
+kernels which are the reason LATEST_VERSION did not get increased
+and which are those?
+
+I also wonder what the concept of LATEST_VERSION is.
+One does not know in advance which change in a newer kernel version
+might break things?
+So this one needs to be increased with every new kernel version?
+
+Thanks for any hints,
+
+     Thomas
 
 _______________________________________________
 kexec mailing list
