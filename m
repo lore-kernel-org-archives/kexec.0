@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vg8rN-0006fo-Dx
- for kexec@lists.infradead.org; Tue, 12 Nov 2013 07:58:06 +0000
-Date: Mon, 11 Nov 2013 23:58:31 -0800
-From: Greg KH <greg@kroah.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vg92i-000720-16
+ for kexec@lists.infradead.org; Tue, 12 Nov 2013 08:09:49 +0000
+Date: Tue, 12 Nov 2013 16:08:54 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [patch 1/3 v2] Add function get_bootparam
-Message-ID: <20131112075831.GA6213@kroah.com>
+Message-ID: <20131112080854.GD6999@dhcp-16-126.nay.redhat.com>
 References: <20131105082947.500512312@dhcp-16-126.nay.redhat.com>
  <20131105083428.411624560@dhcp-16-126.nay.redhat.com>
  <1384219658.1847.84.camel@misato.fc.hp.com>
- <52819E71.70201@zytor.com>
+ <52819E71.70201@zytor.com> <20131112075831.GA6213@kroah.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <52819E71.70201@zytor.com>
+In-Reply-To: <20131112075831.GA6213@kroah.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,58 +22,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, Toshi Kani <toshi.kani@hp.com>, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, dyoung@redhat.com, Ingo Molnar <mingo@kernel.org>, vgoyal@redhat.com
+To: Greg KH <greg@kroah.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, Toshi Kani <toshi.kani@hp.com>, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, vgoyal@redhat.com
 
-On Mon, Nov 11, 2013 at 07:20:17PM -0800, H. Peter Anvin wrote:
-> On 11/11/2013 05:27 PM, Toshi Kani wrote:
-> > On Tue, 2013-11-05 at 16:29 +0800, dyoung@redhat.com wrote:
-> >> Not only setup_subarch will get data from debugfs file
-> >> boot_params/data, later code for adding efi_info will
-> >> also need do same thing. Thus add a common function here
-> >> for later use.
-> > 
-> > get_bootparam() calls find_mnt_by_fsname("debugfs"), which assumes that
-> > debugfs is mounted with device name "debugfs".  This function fails
-> > when:
-> >  - debugfs is not mounted, or
-> >  - debugfs is mounted with a different device name, such as nodev [1].
-> > 
-> > This issue is not introduced by this patch.  But the original code,
-> > which sets hardware_subarch, seems to work even if it failed to access
-> > debugfs (which is ignored) since hardware_subarch is zero most of the
-> > cases anyway.  With this change, however, this failure now makes the 2nd
-> > kernel unbootable.  So, it needs to be addressed to make this code path
-> > work reliably (or kexec should fail at least).
-> > 
-> 
-> Greg, Ingo,
-> 
-> Since there is now a legitimate user of this stuff, can we actually
-> export this in sysfs (or something else other than sploit^Wdebugfs)?
-
-Hey, after Tejun is done with the kernelfs work, I'll be porting debugfs
-to it so you can't call it sploitfs anymore :)
-
-> kexec-tools can have a fallback to debugfs if we really need it, but
-> making people mount debugfs to have some essential piece of
-> functionality scares the heck out of me.
-
-I agree, that would not be good.
-
-I'm not sure what exactly the sysfs file is wanting to look like?  The
-efi section variable sysfs file isn't ok (multiple lines with multiple
-values.)  What is this going to look like?
-
-thanks,
-
-greg k-h
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMTEvMTEvMTMgYXQgMTE6NThwbSwgR3JlZyBLSCB3cm90ZToKPiBPbiBNb24sIE5vdiAxMSwg
+MjAxMyBhdCAwNzoyMDoxN1BNIC0wODAwLCBILiBQZXRlciBBbnZpbiB3cm90ZToKPiA+IE9uIDEx
+LzExLzIwMTMgMDU6MjcgUE0sIFRvc2hpIEthbmkgd3JvdGU6Cj4gPiA+IE9uIFR1ZSwgMjAxMy0x
+MS0wNSBhdCAxNjoyOSArMDgwMCwgZHlvdW5nQHJlZGhhdC5jb20gd3JvdGU6Cj4gPiA+PiBOb3Qg
+b25seSBzZXR1cF9zdWJhcmNoIHdpbGwgZ2V0IGRhdGEgZnJvbSBkZWJ1Z2ZzIGZpbGUKPiA+ID4+
+IGJvb3RfcGFyYW1zL2RhdGEsIGxhdGVyIGNvZGUgZm9yIGFkZGluZyBlZmlfaW5mbyB3aWxsCj4g
+PiA+PiBhbHNvIG5lZWQgZG8gc2FtZSB0aGluZy4gVGh1cyBhZGQgYSBjb21tb24gZnVuY3Rpb24g
+aGVyZQo+ID4gPj4gZm9yIGxhdGVyIHVzZS4KPiA+ID4gCj4gPiA+IGdldF9ib290cGFyYW0oKSBj
+YWxscyBmaW5kX21udF9ieV9mc25hbWUoImRlYnVnZnMiKSwgd2hpY2ggYXNzdW1lcyB0aGF0Cj4g
+PiA+IGRlYnVnZnMgaXMgbW91bnRlZCB3aXRoIGRldmljZSBuYW1lICJkZWJ1Z2ZzIi4gIFRoaXMg
+ZnVuY3Rpb24gZmFpbHMKPiA+ID4gd2hlbjoKPiA+ID4gIC0gZGVidWdmcyBpcyBub3QgbW91bnRl
+ZCwgb3IKPiA+ID4gIC0gZGVidWdmcyBpcyBtb3VudGVkIHdpdGggYSBkaWZmZXJlbnQgZGV2aWNl
+IG5hbWUsIHN1Y2ggYXMgbm9kZXYgWzFdLgo+ID4gPiAKPiA+ID4gVGhpcyBpc3N1ZSBpcyBub3Qg
+aW50cm9kdWNlZCBieSB0aGlzIHBhdGNoLiAgQnV0IHRoZSBvcmlnaW5hbCBjb2RlLAo+ID4gPiB3
+aGljaCBzZXRzIGhhcmR3YXJlX3N1YmFyY2gsIHNlZW1zIHRvIHdvcmsgZXZlbiBpZiBpdCBmYWls
+ZWQgdG8gYWNjZXNzCj4gPiA+IGRlYnVnZnMgKHdoaWNoIGlzIGlnbm9yZWQpIHNpbmNlIGhhcmR3
+YXJlX3N1YmFyY2ggaXMgemVybyBtb3N0IG9mIHRoZQo+ID4gPiBjYXNlcyBhbnl3YXkuICBXaXRo
+IHRoaXMgY2hhbmdlLCBob3dldmVyLCB0aGlzIGZhaWx1cmUgbm93IG1ha2VzIHRoZSAybmQKPiA+
+ID4ga2VybmVsIHVuYm9vdGFibGUuICBTbywgaXQgbmVlZHMgdG8gYmUgYWRkcmVzc2VkIHRvIG1h
+a2UgdGhpcyBjb2RlIHBhdGgKPiA+ID4gd29yayByZWxpYWJseSAob3Iga2V4ZWMgc2hvdWxkIGZh
+aWwgYXQgbGVhc3QpLgo+ID4gPiAKPiA+IAo+ID4gR3JlZywgSW5nbywKPiA+IAo+ID4gU2luY2Ug
+dGhlcmUgaXMgbm93IGEgbGVnaXRpbWF0ZSB1c2VyIG9mIHRoaXMgc3R1ZmYsIGNhbiB3ZSBhY3R1
+YWxseQo+ID4gZXhwb3J0IHRoaXMgaW4gc3lzZnMgKG9yIHNvbWV0aGluZyBlbHNlIG90aGVyIHRo
+YW4gc3Bsb2l0XldkZWJ1Z2ZzKT8KPiAKPiBIZXksIGFmdGVyIFRlanVuIGlzIGRvbmUgd2l0aCB0
+aGUga2VybmVsZnMgd29yaywgSSdsbCBiZSBwb3J0aW5nIGRlYnVnZnMKPiB0byBpdCBzbyB5b3Ug
+Y2FuJ3QgY2FsbCBpdCBzcGxvaXRmcyBhbnltb3JlIDopCgpHb29kIG5ld3MuCgo+IAo+ID4ga2V4
+ZWMtdG9vbHMgY2FuIGhhdmUgYSBmYWxsYmFjayB0byBkZWJ1Z2ZzIGlmIHdlIHJlYWxseSBuZWVk
+IGl0LCBidXQKPiA+IG1ha2luZyBwZW9wbGUgbW91bnQgZGVidWdmcyB0byBoYXZlIHNvbWUgZXNz
+ZW50aWFsIHBpZWNlIG9mCj4gPiBmdW5jdGlvbmFsaXR5IHNjYXJlcyB0aGUgaGVjayBvdXQgb2Yg
+bWUuCj4gCj4gSSBhZ3JlZSwgdGhhdCB3b3VsZCBub3QgYmUgZ29vZC4KPiAKPiBJJ20gbm90IHN1
+cmUgd2hhdCBleGFjdGx5IHRoZSBzeXNmcyBmaWxlIGlzIHdhbnRpbmcgdG8gbG9vayBsaWtlPyAg
+VGhlCj4gZWZpIHNlY3Rpb24gdmFyaWFibGUgc3lzZnMgZmlsZSBpc24ndCBvayAobXVsdGlwbGUg
+bGluZXMgd2l0aCBtdWx0aXBsZQo+IHZhbHVlcy4pICBXaGF0IGlzIHRoaXMgZ29pbmcgdG8gbG9v
+ayBsaWtlPwoKVGhlIGN1cnJlbnQgc3RydWN0dXJlIGluIGRlYnVnZnMgaXMgbGlrZSBiZWxvdywg
+ZXhwb3J0IGV2ZXJ5IGZpZWxkIG9mIHNldHVwCmhlYWRlciBhcyBvbmUgZmlsZSB3aWxsIGJlIHRv
+byBtdWNoIElNSE86Cltyb290QGRhcmtzdGFyIGRlYnVnXSMgdHJlZSBib290X3BhcmFtcwpib290
+X3BhcmFtcwrilJzilIDilIAgZGF0YSAvKiBiaW5hcnkgZGF0YSBvZiBzZXR1cCBoZWFkZXIgKi8K
+4pSc4pSA4pSAIHNldHVwX2RhdGEgLyogc2V0dXBfZGF0YSBsaW5rIGxpc3Qgbm9kZXMgKi8K4pSC
+wqDCoCDilJzilIDilIAgMArilILCoMKgIOKUgsKgwqAg4pSc4pSA4pSAIGRhdGEgLyogYmluYXJ5
+IGRhdGEgb2Ygc2V0dXAgZGF0YSAqLwrilILCoMKgIOKUgsKgwqAg4pSU4pSA4pSAIHR5cGUgLyog
+dHlwZSBvZiBzZXR1cCBkYXRhICovCuKUgsKgwqAg4pSU4pSA4pSAIDEK4pSCwqDCoCAgICAg4pSc
+4pSA4pSAIGRhdGEK4pSCwqDCoCAgICAg4pSU4pSA4pSAIHR5cGUK4pSU4pSA4pSAIHZlcnNpb24g
+LyogYm9vdCBwcm90b2NvbCB2ZXJzaW9uICovCgpUaGFua3MKRGF2ZQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9rZXhlYwo=
