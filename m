@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VgciX-0004F0-9h
- for kexec@lists.infradead.org; Wed, 13 Nov 2013 15:50:57 +0000
-Date: Wed, 13 Nov 2013 15:50:37 +0000
-From: Matt Fleming <matt@console-pimps.org>
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VgdCU-0005Ja-5N
+ for kexec@lists.infradead.org; Wed, 13 Nov 2013 16:21:55 +0000
+Message-ID: <5283A6DD.2030808@zytor.com>
+Date: Wed, 13 Nov 2013 08:20:45 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
 Subject: Re: [patch 7/7 v2] x86: add xloadflags bit for efi runtime support
  on kexec
-Message-ID: <20131113155037.GE17248@console-pimps.org>
 References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
  <20131105082719.416282009@dhcp-16-126.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <20131105082719.416282009@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,10 +24,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: dyoung@redhat.com, linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, vgoyal@redhat.com
 
-On Tue, 05 Nov, at 04:20:14PM, dyoung@redhat.com wrote:
+On 11/05/2013 12:20 AM, dyoung@redhat.com wrote:
 > Old kexec-tools can not load new kernel. The reason is previously kexec-tools
 > do not fill efi_info in x86 setup header thus efi init fail and switch
 > to noefi boot. In new kexec-tools it will by default fill efi_info and
@@ -53,17 +52,32 @@ On Tue, 05 Nov, at 04:20:14PM, dyoung@redhat.com wrote:
 > -			.word XLF0 | XLF1 | XLF23
 > +
 > +#if defined(CONFIG_X86_64) && defined(CONFIG_EFI)
-
-&& defined(CONFIG_KEXEC) ?
-
 > +# define XLF4 XLF_EFI_KEXEC
 > +#else
 > +# define XLF4 0
 > +#endif
 > +
+> +			.word XLF0 | XLF1 | XLF23 | XLF4
+>  
+>  cmdline_size:   .long   COMMAND_LINE_SIZE-1     #length of the command line,
+>                                                  #added with boot protocol
+> --- linux-2.6.orig/arch/x86/include/uapi/asm/bootparam.h
+> +++ linux-2.6/arch/x86/include/uapi/asm/bootparam.h
+> @@ -24,6 +24,7 @@
+>  #define XLF_CAN_BE_LOADED_ABOVE_4G	(1<<1)
+>  #define XLF_EFI_HANDOVER_32		(1<<2)
+>  #define XLF_EFI_HANDOVER_64		(1<<3)
+> +#define XLF_EFI_KEXEC			(1<<4)
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> 
 
--- 
-Matt Fleming, Intel Open Source Technology Center
+Also needs to be added to Documentation/x86/boot.txt with the exact
+semantics being exposed.
+
+	-hpa
+
 
 _______________________________________________
 kexec mailing list
