@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VgjYJ-0007fH-UC
- for kexec@lists.infradead.org; Wed, 13 Nov 2013 23:08:52 +0000
-Message-ID: <52840666.5070800@zytor.com>
-Date: Wed, 13 Nov 2013 15:08:22 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VglsH-00027r-HE
+ for kexec@lists.infradead.org; Thu, 14 Nov 2013 01:37:38 +0000
+Date: Thu, 14 Nov 2013 09:36:49 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [patch 7/7 v2] x86: add xloadflags bit for efi runtime support
+ on kexec
+Message-ID: <20131114013649.GA4081@dhcp-16-126.nay.redhat.com>
+References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
+ <20131105082719.416282009@dhcp-16-126.nay.redhat.com>
+ <5283A6DD.2030808@zytor.com>
 MIME-Version: 1.0
-Subject: Re: /proc/vmcore mmap() failure issue
-References: <20131113204130.GD7613@redhat.com>
- <20131113210432.GE7613@redhat.com> <5283EBCD.6070305@zytor.com>
- <20131113224104.GF7613@redhat.com> <528400DD.3040003@zytor.com>
- <20131113230056.GA19663@redhat.com>
-In-Reply-To: <20131113230056.GA19663@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <5283A6DD.2030808@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +26,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux kernel mailing list <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, vgoyal@redhat.com
 
-On 11/13/2013 03:00 PM, Vivek Goyal wrote:
-> I think it should be easy to truncate ELF headers in kexec-tools too when
-> we are preparing elf headers. I am not sure if it is right thing to do or
-> not. If some entry is showing up in /proc/iomem as RAM, then kexec-tools
-> need to believe that it is a possibility that kernel is using that pfn and
-> that pfn needs to be dumped out in vmcore. IMHO, kernel should fix this
-> issue.
+On 11/13/13 at 08:20am, H. Peter Anvin wrote:
+> On 11/05/2013 12:20 AM, dyoung@redhat.com wrote:
+> > Old kexec-tools can not load new kernel. The reason is previously kexec-tools
+> > do not fill efi_info in x86 setup header thus efi init fail and switch
+> > to noefi boot. In new kexec-tools it will by default fill efi_info and
+> > pass other efi required infomation to 2nd kernel so kexec kernel efi
+> > initialization will success finally.
+> > 
+> > To prevent from breaking userspace, add a new xloadflags bit so kexec-tools
+> > will check the flag and switch to old logic.
+> > 
+> > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > ---
+> >  arch/x86/boot/header.S                |    9 ++++++++-
+> >  arch/x86/include/uapi/asm/bootparam.h |    1 +
+> >  2 files changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > --- linux-2.6.orig/arch/x86/boot/header.S
+> > +++ linux-2.6/arch/x86/boot/header.S
+> > @@ -391,7 +391,14 @@ xloadflags:
+> >  #else
+> >  # define XLF23 0
+> >  #endif
+> > -			.word XLF0 | XLF1 | XLF23
+> > +
+> > +#if defined(CONFIG_X86_64) && defined(CONFIG_EFI)
+> > +# define XLF4 XLF_EFI_KEXEC
+> > +#else
+> > +# define XLF4 0
+> > +#endif
+> > +
+> > +			.word XLF0 | XLF1 | XLF23 | XLF4
+> >  
+> >  cmdline_size:   .long   COMMAND_LINE_SIZE-1     #length of the command line,
+> >                                                  #added with boot protocol
+> > --- linux-2.6.orig/arch/x86/include/uapi/asm/bootparam.h
+> > +++ linux-2.6/arch/x86/include/uapi/asm/bootparam.h
+> > @@ -24,6 +24,7 @@
+> >  #define XLF_CAN_BE_LOADED_ABOVE_4G	(1<<1)
+> >  #define XLF_EFI_HANDOVER_32		(1<<2)
+> >  #define XLF_EFI_HANDOVER_64		(1<<3)
+> > +#define XLF_EFI_KEXEC			(1<<4)
+> >  
+> >  #ifndef __ASSEMBLY__
+> >  
+> > 
+> 
+> Also needs to be added to Documentation/x86/boot.txt with the exact
+> semantics being exposed.
 
-The kernel will never use a fractional page, so that is not an issue.
+Will do
 
-> Secondly, I am writing in-kernel kexec support too and I prepare ELF
-> headers there too. And I am facing the same problem there too. So if
-> we truncate partial pages in e820 both kexec-tools and in kernel kexec
-> implementation don't have to do anything.
-
-I'm mostly worried about truncation upon truncation causing problems.
-As long as the trimming is done once and with proper consideration for
-abutting regions, I guess I'm okay with it, although it feels wrong to me.
-
-	-hpa
-
+> 
+> 	-hpa
+> 
 
 _______________________________________________
 kexec mailing list
