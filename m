@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vgm8a-0002eM-JP
- for kexec@lists.infradead.org; Thu, 14 Nov 2013 01:54:29 +0000
-Date: Thu, 14 Nov 2013 09:53:46 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 7/7 v2] x86: add xloadflags bit for efi runtime support
- on kexec
-Message-ID: <20131114015346.GF4081@dhcp-16-126.nay.redhat.com>
-References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
- <20131105082719.416282009@dhcp-16-126.nay.redhat.com>
- <20131113155037.GE17248@console-pimps.org>
+ id 1VgoMA-00055h-Be
+ for kexec@lists.infradead.org; Thu, 14 Nov 2013 04:16:39 +0000
+Date: Thu, 14 Nov 2013 13:16:09 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH RESEND] arm: add command line option for the total image
+ size
+Message-ID: <20131114041609.GC22870@verge.net.au>
+References: <1384355795-20796-1-git-send-email-zonque@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131113155037.GE17248@console-pimps.org>
+In-Reply-To: <1384355795-20796-1-git-send-email-zonque@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,49 +24,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matt Fleming <matt@console-pimps.org>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Daniel Mack <zonque@gmail.com>
+Cc: linux@arm.linux.org.uk, kexec@lists.infradead.org, neumann@teufel.de
 
-On 11/13/13 at 03:50pm, Matt Fleming wrote:
-> On Tue, 05 Nov, at 04:20:14PM, dyoung@redhat.com wrote:
-> > Old kexec-tools can not load new kernel. The reason is previously kexec-tools
-> > do not fill efi_info in x86 setup header thus efi init fail and switch
-> > to noefi boot. In new kexec-tools it will by default fill efi_info and
-> > pass other efi required infomation to 2nd kernel so kexec kernel efi
-> > initialization will success finally.
-> > 
-> > To prevent from breaking userspace, add a new xloadflags bit so kexec-tools
-> > will check the flag and switch to old logic.
-> > 
-> > Signed-off-by: Dave Young <dyoung@redhat.com>
-> > ---
-> >  arch/x86/boot/header.S                |    9 ++++++++-
-> >  arch/x86/include/uapi/asm/bootparam.h |    1 +
-> >  2 files changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > --- linux-2.6.orig/arch/x86/boot/header.S
-> > +++ linux-2.6/arch/x86/boot/header.S
-> > @@ -391,7 +391,14 @@ xloadflags:
-> >  #else
-> >  # define XLF23 0
-> >  #endif
-> > -			.word XLF0 | XLF1 | XLF23
-> > +
-> > +#if defined(CONFIG_X86_64) && defined(CONFIG_EFI)
+On Wed, Nov 13, 2013 at 04:16:35PM +0100, Daniel Mack wrote:
+> Currently, kexec on arm assumes that it's safe to place binary images
+> such as atags, dtb or initrd at an estimated offset after the load
+> address. That estimated offset is set to 4 times the size of the
+> compressed image, hence assuming a minimum compression ratio of 1:4.
 > 
-> && defined(CONFIG_KEXEC) ?
+> While that assumption matches what the in-kernel compressors are able to
+> achive, it doesn't take into account the .bss section the kernel image
+> carries, and which can grow to arbitrary sizes while not accounting to
+> the compressed image size.
+> 
+> After decompression, and before the execution of the compressed kernel,
+> the .bss area is initialized to zeros, trampeling over the binary images
+> in case they happen to live in that piece of memory.
+> 
+> Unfortunately, determining the full image size is not easiliy possible
+> at runtime, as it would include doing all possible ways of
+> decompression and then walk the ELF sections by hand.
+> 
+> For now, allow users to override the static offset with a new, arm
+> specific command line argument. Users are supposed to set this, and
+> determine a sane value by using 'arm-linux-size vmlinux'.
+> 
+> Signed-off-by: Daniel Mack <zonque@gmail.com>
 
-Will add above.
-
-> 
-> > +# define XLF4 XLF_EFI_KEXEC
-> > +#else
-> > +# define XLF4 0
-> > +#endif
-> > +
-> 
-> -- 
-> Matt Fleming, Intel Open Source Technology Center
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
