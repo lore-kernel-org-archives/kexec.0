@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ViEIs-0000ua-9e
- for kexec@lists.infradead.org; Mon, 18 Nov 2013 02:11:06 +0000
-Date: Mon, 18 Nov 2013 10:09:39 +0800
+ id 1ViEP6-00010F-HZ
+ for kexec@lists.infradead.org; Mon, 18 Nov 2013 02:17:32 +0000
+Date: Mon, 18 Nov 2013 10:16:41 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 1/7 v2] Add function efi_remap_region for remapping to
- saved virt address
-Message-ID: <20131118020939.GB4025@dhcp-16-126.nay.redhat.com>
+Subject: Re: [patch 5/7 v2] export efi runtime memory mapping to sysfs
+Message-ID: <20131118021641.GC4025@dhcp-16-126.nay.redhat.com>
 References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
- <20131105082715.502723229@dhcp-16-126.nay.redhat.com>
- <1384556525.1791.4.camel@misato.fc.hp.com>
+ <20131105082718.185728964@dhcp-16-126.nay.redhat.com>
+ <20131113155027.GC17248@console-pimps.org>
+ <20131114015047.GD4081@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1384556525.1791.4.camel@misato.fc.hp.com>
+In-Reply-To: <20131114015047.GD4081@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,35 +26,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Toshi Kani <toshi.kani@hp.com>
+To: Matt Fleming <matt@console-pimps.org>
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On 11/15/13 at 04:02pm, Toshi Kani wrote:
-> On Tue, 2013-11-05 at 16:20 +0800, dyoung@redhat.com wrote:
-> > Kexec kernel will use saved runtime virtual mapping, so add a
-> > new function efi_remap_region to remapping it directly without
-> > calculate the virt addr from efi_va.
+> > > +/*
+> > > + * These are default attributes that are added for every memmap entry.
+> > > + */
+> > > +static struct attribute *def_attrs[] = {
+> > > +	&map_type_attr.attr,
+> > > +	&map_phys_addr_attr.attr,
+> > > +	&map_virt_addr_attr.attr,
+> > > +	&map_num_pages_attr.attr,
+> > > +	&map_attribute_attr.attr,
+> > > +	NULL
+> > > +};
 > > 
-> > The md is passed in from 1st kernel, the virtual addr is
-> > saved in md->virt_addr.
+> > If the UEFI spec ever releases an update for the memory descriptor
+> > structure, and bumps 'memmap.desc_version', how are we going to signal
+> > the incompatibility to legacy versions of kexec tools?
 > 
->  :
+> Hmm, that is a problem. I will consider to export memmap according to
+> what firmware provided with extra desc_version instead of using attrs from kernel
+> data structure efi_memory_desc_t
 > 
-> > +/*
-> > + * kexec kernel will use efi_map_region_fixed to map efi
-> > + * runtime memory ranges. md->virt_addr is the original virtual
-> > + * address which had been mapped in kexec 1st kernel.
-> > + */
-> > +void __init efi_map_region_fixed(efi_memory_desc_t *md)
-> 
-> Can you simply use __map_region() instead of creating this function?
-> Both functions seem to do the same thing.  (In __map_region(), size and
-> end are not used.)
 
-Matt also suggest to reuse __map_region in another apply, will do.
+Matt, desc_version is already in boot_params.efi_info, so kexec-tools can get
+the version from there. I do not need to export it as another file.
+
+I think for now we do not need worry much about the compatibility issue, do you
+think I need add version checking in kexec-tools currently? like below?
+
+if (desc_version != 1) /* current version is 1? */
+	error out it is not supported
 
 --
-Thanks for review
+Thanks
 Dave
 
 _______________________________________________
