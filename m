@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ViLI4-00065x-Qu
- for kexec@lists.infradead.org; Mon, 18 Nov 2013 09:38:46 +0000
-Date: Mon, 18 Nov 2013 17:37:49 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 1/7 v2] Add function efi_remap_region for remapping to
- saved virt address
-Message-ID: <20131118093749.GA16381@dhcp-16-126.nay.redhat.com>
-References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
- <20131105082715.502723229@dhcp-16-126.nay.redhat.com>
- <1384556525.1791.4.camel@misato.fc.hp.com>
- <20131118020939.GB4025@dhcp-16-126.nay.redhat.com>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ViMim-0007nI-59
+ for kexec@lists.infradead.org; Mon, 18 Nov 2013 11:10:24 +0000
+Date: Mon, 18 Nov 2013 12:08:45 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH] xen/kexec: Clear unused registers before jumping into an
+ image
+Message-ID: <20131118110845.GC3506@olila.local.net-space.pl>
+References: <1384530974-26813-1-git-send-email-daniel.kiper@oracle.com>
+ <52867EE6.7080205@citrix.com>
+ <5289EC150200007800103EC2@nat28.tlf.novell.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131118020939.GB4025@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <5289EC150200007800103EC2@nat28.tlf.novell.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,39 +26,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Toshi Kani <toshi.kani@hp.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Jan Beulich <JBeulich@suse.com>
+Cc: keir@xen.org, george.dunlap@eu.citrix.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, xen-devel@lists.xen.org, David Vrabel <david.vrabel@citrix.com>, ebiederm@xmission.com
 
-On 11/18/13 at 10:09am, Dave Young wrote:
-> On 11/15/13 at 04:02pm, Toshi Kani wrote:
-> > On Tue, 2013-11-05 at 16:20 +0800, dyoung@redhat.com wrote:
-> > > Kexec kernel will use saved runtime virtual mapping, so add a
-> > > new function efi_remap_region to remapping it directly without
-> > > calculate the virt addr from efi_va.
-> > > 
-> > > The md is passed in from 1st kernel, the virtual addr is
-> > > saved in md->virt_addr.
-> > 
-> >  :
-> > 
-> > > +/*
-> > > + * kexec kernel will use efi_map_region_fixed to map efi
-> > > + * runtime memory ranges. md->virt_addr is the original virtual
-> > > + * address which had been mapped in kexec 1st kernel.
-> > > + */
-> > > +void __init efi_map_region_fixed(efi_memory_desc_t *md)
-> > 
-> > Can you simply use __map_region() instead of creating this function?
-> > Both functions seem to do the same thing.  (In __map_region(), size and
-> > end are not used.)
-> 
-> Matt also suggest to reuse __map_region in another apply, will do.
+On Mon, Nov 18, 2013 at 09:29:41AM +0000, Jan Beulich wrote:
+> >>> On 15.11.13 at 21:07, David Vrabel <david.vrabel@citrix.com> wrote:
+> > On 15/11/13 15:56, Daniel Kiper wrote:
+> >> Clear unused registers before jumping into an image. This way
+> >> loaded image could not assume that any register has an specific
+> >> info about earlier running Xen hypervisor. However, it also
+> >> does not mean that the image may expect that a given register
+> >> is zeroed. The image MUST assume that every register has a random
+> >> value or in other words it is uninitialized or has undefined state.
+> >
+> > I think this, where the specification (registers undefined) differs from
+> > the implementation (registers zeroed), is the worst option.
+> >
+> > I also think it is more likely for an image to inadvertently rely on a
+> > zero value that whatever junk Xen has left behind.
+>
+> Preventing users to rely on anything would likely make it
+> desirable to put some random value into all unused registers.
 
-Will remove the unused variables in another patch.
+Right, but on the other hand this way we lose completely chance
+to differentiate between old and new implementation of kexec
+if we would like to do that in the future (yes, this is small
+chance but it still exists). Additionally, I think it could be
+quite difficult because at this stage there is no simple reliable
+RNGs. Although there are some CPUs with RNGs but they are not
+very common right now. However, I will do not object if we find
+another simple RNG.
 
---
-Thanks
-Dave
+Daniel
 
 _______________________________________________
 kexec mailing list
