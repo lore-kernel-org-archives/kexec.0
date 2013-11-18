@@ -1,23 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from nat28.tlf.novell.com ([130.57.49.28])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ViHWr-0002gZ-Ht
- for kexec@lists.infradead.org; Mon, 18 Nov 2013 05:37:45 +0000
-In-Reply-To: <20131118052949.GA14532@dhcp-16-126.nay.redhat.com>
-References: <1384219658.1847.84.camel@misato.fc.hp.com>
- <52819E71.70201@zytor.com> <20131112075831.GA6213@kroah.com>
- <20131112080854.GD6999@dhcp-16-126.nay.redhat.com>
- <20131112083012.GB7708@kroah.com> <5281F6D5.4090700@zytor.com>
- <20131112095114.GA20100@kroah.com>
- <20131113005032.GB5069@dhcp-16-126.nay.redhat.com>
- <20131118022234.GD4025@dhcp-16-126.nay.redhat.com>
- <52898982.3020200@zytor.com>
- <20131118052949.GA14532@dhcp-16-126.nay.redhat.com>
-MIME-Version: 1.0
-Subject: Re: [patch 1/3 v2] Add function get_bootparam
-From: "H. Peter Anvin" <hpa@zytor.com>
-Date: Sun, 17 Nov 2013 21:36:26 -0800
-Message-ID: <5e236f94-9337-4cdd-a726-295391e4d305@email.android.com>
+ id 1ViLA6-0005uR-4c
+ for kexec@lists.infradead.org; Mon, 18 Nov 2013 09:30:31 +0000
+Message-Id: <5289EC150200007800103EC2@nat28.tlf.novell.com>
+Date: Mon, 18 Nov 2013 09:29:41 +0000
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [PATCH] xen/kexec: Clear unused registers before jumping
+ into an image
+References: <1384530974-26813-1-git-send-email-daniel.kiper@oracle.com>
+ <52867EE6.7080205@citrix.com>
+In-Reply-To: <52867EE6.7080205@citrix.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,58 +25,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, Toshi Kani <toshi.kani@hp.com>, Greg KH <greg@kroah.com>, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, Ingo Molnar <mingo@kernel.org>, vgoyal@redhat.com
+To: David Vrabel <david.vrabel@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>
+Cc: keir@xen.org, george.dunlap@eu.citrix.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, xen-devel@lists.xen.org, ebiederm@xmission.com
 
-In other words, we didn't catch that one in time.  Oh well.
+>>> On 15.11.13 at 21:07, David Vrabel <david.vrabel@citrix.com> wrote:
+> On 15/11/13 15:56, Daniel Kiper wrote:
+>> Clear unused registers before jumping into an image. This way
+>> loaded image could not assume that any register has an specific
+>> info about earlier running Xen hypervisor. However, it also
+>> does not mean that the image may expect that a given register
+>> is zeroed. The image MUST assume that every register has a random
+>> value or in other words it is uninitialized or has undefined state.
+> 
+> I think this, where the specification (registers undefined) differs from
+> the implementation (registers zeroed), is the worst option.
+> 
+> I also think it is more likely for an image to inadvertently rely on a
+> zero value that whatever junk Xen has left behind.
 
-Dave Young <dyoung@redhat.com> wrote:
->On 11/17/13 at 07:29pm, H. Peter Anvin wrote:
->> On 11/17/2013 06:22 PM, Dave Young wrote:
->> > On 11/13/13 at 08:50am, Dave Young wrote:
->> >> On 11/12/13 at 06:51pm, Greg KH wrote:
->> >>> On Tue, Nov 12, 2013 at 01:37:25AM -0800, H. Peter Anvin wrote:
->> >>>> On 11/12/2013 12:30 AM, Greg KH wrote:
->> >>>>>
->> >>>>> And these binary data blobs are a "standard" somewhere, and
->will not
->> >>>>> change per kernel version change?
->> >>>>>
->> >>>>> If so, that structure is fine with me.
->> >>>>>
->> >>>>
->> >>>> Correct.  The structure is documented in
->Documentation/x86/boot.txt, and
->> >>>> has been largely invariant (but extended) since the beginning of
->Linux.
->> >>>>  It has sometimes taken some serious work to keep it that way.
->> >>>
->> >>> Ok, then use the binary sysfs file interface for these blobs, and
->> >>> everyone will be happy.
->> >>
->> >> Since we got an agreement I will move them to sysfs in next
->version.
->> > 
->> > I have created one patch for the sysfs part this weekend, bug I'm
->hesitating to
->> > remove the debugfs part because currently there's already user, I
->tend to
->> > keep them in debugfs for now.
->> > 
->> > What do you think, Peter?
->> > 
->> 
->> Yes, it makes sense to keep them for compatibility, at least for now.
->> What is the specific user that already exists?
->
->kexec-tools is using it to setup hardware_subarch..
->
->--
->Thanks
->Dave
+Preventing users to rely on anything would likely make it
+desirable to put some random value into all unused registers.
 
--- 
-Sent from my mobile phone.  Please pardon brevity and lack of formatting.
+Jan
+
 
 _______________________________________________
 kexec mailing list
