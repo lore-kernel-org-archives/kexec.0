@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0027.austin.hp.com ([15.216.28.34])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VhSmL-0002UR-0w
- for kexec@lists.infradead.org; Fri, 15 Nov 2013 23:26:22 +0000
-Message-ID: <1384557682.1791.9.camel@misato.fc.hp.com>
-Subject: Re: [patch 3/7 v2] Cleanup efi_enter_virtual_mode function
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Fri, 15 Nov 2013 16:21:22 -0700
-In-Reply-To: <20131105082716.825753041@dhcp-16-126.nay.redhat.com>
-References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
- <20131105082716.825753041@dhcp-16-126.nay.redhat.com>
-Mime-Version: 1.0
+ id 1ViD62-00005R-OW
+ for kexec@lists.infradead.org; Mon, 18 Nov 2013 00:53:48 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: /proc/vmcore mmap() failure issue
+Date: Mon, 18 Nov 2013 00:51:39 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
+References: <20131113204130.GD7613@redhat.com>
+ <5284A689.70903@jp.fujitsu.com> <20131114151359.GA3913@redhat.com>
+ <5285EC60.1060906@jp.fujitsu.com> <20131115142617.GC6637@redhat.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +24,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: "vgoyal@redhat.com" <vgoyal@redhat.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-On Tue, 2013-11-05 at 16:20 +0800, dyoung@redhat.com wrote:
-> Add two small functions:
-> efi_merge_regions and efi_map_regions, efi_enter_virtual_mode
-> calls them instead of embedding two long for loop.
+(2013/11/15 23:26), Vivek Goyal wrote:
+> On Fri, Nov 15, 2013 at 06:41:52PM +0900, HATAYAMA Daisuke wrote:
+>
+> [..]
+>>> Given the fact that hpa does not like fixing it in kernel. We are left
+>>> with option of fixing it in following places.
+>>>
+>>> - Drop partial pages in kexec-tools
+>>> - Drop partial pages in makeudmpfile.
+>>> - Read partial pages using read() interface in makedumpfile
+>>> - Modify /proc/vmcore to copy partial pages in second kernel's memory.
+>>>
+>>> It is not clear to me that partial pages are really useful.  So I want
+>>> to avoid modifying /proc/vmcore to deal with partial pages and increase
+>>> complexity.
+>>>
+>>> So fixing makedumpfile (either option2 or option 3) seems least risky
+>>> to me. In fact I would say let us keep it simple and truncate partial
+>>> pages in makedumpfile to keep it simple. And look at option 3 once we
+>>> have a strong use case for partial pages.
+>>>
+>>> What do you think?
+>>>
+>>
+>> As you say, it's not clear that partial pages are really useful, but on
+>> the other hand, it seems to me not clear that they are really useless.
+>> I think we should get them as long as we have access to them.
+>>
+>> It seems best to me the option 3). Switching between read and mmap would
+>> be not so complex and also it's by far flexible in makedumpfile than in
+>> kernel.
+>
+> Ok, I am fine with option 3. It is more complicated option but safe
+> option.
 
- :
+It sounds reasonable also to me.
 
-> +void __init efi_enter_virtual_mode(void)
-> +{
-> +	efi_status_t status;
-> +	void *p, *new_memmap = NULL;
+> Is there any chance that you could look into fixing this. I have no
+> experience writing code for makedumpfile.
 
-*p is unused.
+I'll send a patch to fix this soon.
 
 
-Thanks,
--Toshi
-
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
