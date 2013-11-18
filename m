@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ViEHY-0000sG-7O
- for kexec@lists.infradead.org; Mon, 18 Nov 2013 02:09:45 +0000
-Date: Mon, 18 Nov 2013 10:08:51 +0800
+ id 1ViEIs-0000ua-9e
+ for kexec@lists.infradead.org; Mon, 18 Nov 2013 02:11:06 +0000
+Date: Mon, 18 Nov 2013 10:09:39 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 3/7 v2] Cleanup efi_enter_virtual_mode function
-Message-ID: <20131118020850.GA4025@dhcp-16-126.nay.redhat.com>
+Subject: Re: [patch 1/7 v2] Add function efi_remap_region for remapping to
+ saved virt address
+Message-ID: <20131118020939.GB4025@dhcp-16-126.nay.redhat.com>
 References: <20131105082007.872550445@dhcp-16-126.nay.redhat.com>
- <20131105082716.825753041@dhcp-16-126.nay.redhat.com>
- <1384557682.1791.9.camel@misato.fc.hp.com>
+ <20131105082715.502723229@dhcp-16-126.nay.redhat.com>
+ <1384556525.1791.4.camel@misato.fc.hp.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1384557682.1791.9.camel@misato.fc.hp.com>
+In-Reply-To: <1384556525.1791.4.camel@misato.fc.hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,24 +29,32 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Toshi Kani <toshi.kani@hp.com>
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On 11/15/13 at 04:21pm, Toshi Kani wrote:
+On 11/15/13 at 04:02pm, Toshi Kani wrote:
 > On Tue, 2013-11-05 at 16:20 +0800, dyoung@redhat.com wrote:
-> > Add two small functions:
-> > efi_merge_regions and efi_map_regions, efi_enter_virtual_mode
-> > calls them instead of embedding two long for loop.
+> > Kexec kernel will use saved runtime virtual mapping, so add a
+> > new function efi_remap_region to remapping it directly without
+> > calculate the virt addr from efi_va.
+> > 
+> > The md is passed in from 1st kernel, the virtual addr is
+> > saved in md->virt_addr.
 > 
 >  :
 > 
-> > +void __init efi_enter_virtual_mode(void)
-> > +{
-> > +	efi_status_t status;
-> > +	void *p, *new_memmap = NULL;
+> > +/*
+> > + * kexec kernel will use efi_map_region_fixed to map efi
+> > + * runtime memory ranges. md->virt_addr is the original virtual
+> > + * address which had been mapped in kexec 1st kernel.
+> > + */
+> > +void __init efi_map_region_fixed(efi_memory_desc_t *md)
 > 
-> *p is unused.
+> Can you simply use __map_region() instead of creating this function?
+> Both functions seem to do the same thing.  (In __map_region(), size and
+> end are not used.)
 
-The *p was removed in later patch, will remove it in this patch.
+Matt also suggest to reuse __map_region in another apply, will do.
 
-Thanks for review.
+--
+Thanks for review
 Dave
 
 _______________________________________________
