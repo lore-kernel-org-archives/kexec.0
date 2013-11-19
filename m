@@ -1,19 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VihTM-0001cE-Er
- for kexec@lists.infradead.org; Tue, 19 Nov 2013 09:19:53 +0000
-Date: Tue, 19 Nov 2013 18:19:27 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 4/4] kexec/xen: directly load images images into Xen
-Message-ID: <20131119091927.GB4659@verge.net.au>
-References: <1383749722-12091-1-git-send-email-david.vrabel@citrix.com>
- <1383749722-12091-5-git-send-email-david.vrabel@citrix.com>
- <20131119012014.GC17628@verge.net.au>
- <20131119082827.GC30799@olila.local.net-space.pl>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vii2Q-0002Wh-7n
+ for kexec@lists.infradead.org; Tue, 19 Nov 2013 09:56:07 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 4C6713EE0AE
+ for <kexec@lists.infradead.org>; Tue, 19 Nov 2013 18:55:35 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3EBBD45DE4E
+ for <kexec@lists.infradead.org>; Tue, 19 Nov 2013 18:55:35 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 20C8445DD76
+ for <kexec@lists.infradead.org>; Tue, 19 Nov 2013 18:55:35 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 14C481DB8032
+ for <kexec@lists.infradead.org>; Tue, 19 Nov 2013 18:55:35 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BF1EE1DB8037
+ for <kexec@lists.infradead.org>; Tue, 19 Nov 2013 18:55:34 +0900 (JST)
+Message-ID: <528B3585.5080606@jp.fujitsu.com>
+Date: Tue, 19 Nov 2013 18:55:17 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131119082827.GC30799@olila.local.net-space.pl>
+Subject: Re: /proc/vmcore mmap() failure issue
+References: <20131113204130.GD7613@redhat.com> <5284A689.70903@jp.fujitsu.com>
+ <20131114151359.GA3913@redhat.com> <5285EC60.1060906@jp.fujitsu.com>
+ <20131115142617.GC6637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,67 +40,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, xen-devel@lists.xen.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On Tue, Nov 19, 2013 at 09:28:27AM +0100, Daniel Kiper wrote:
-> On Tue, Nov 19, 2013 at 10:20:14AM +0900, Simon Horman wrote:
-> > On Wed, Nov 06, 2013 at 02:55:22PM +0000, David Vrabel wrote:
-> > > From: David Vrabel <david.vrabel@citrix.com>
-> > >
-> > > Xen 4.4 has an improvided kexec hypercall ABI that allows images to be
-> > > loaded and executed without any kernel involvement.  Use the API
-> > > provided by libxc to load images when running in a Xen guest.
-> > >
-> > > Support for loading images via the kexec_load syscall in non-upstream
-> > > ("classic") Xen kernels is no longer supported.
-> > >
-> > > Signed-off-by: David Vrabel <david.vrabel@citrix.com>
-> > > Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-> > > ---
-> > >  kexec/Makefile                  |    1 +
-> > >  kexec/arch/i386/crashdump-x86.c |   20 +++++-
-> > >  kexec/crashdump-xen.c           |   34 ++++++++++
-> > >  kexec/crashdump.h               |    3 +-
-> > >  kexec/kexec-xen.c               |  139 +++++++++++++++++++++++++++++++++++++++
-> > >  kexec/kexec.c                   |   24 +++++--
-> > >  kexec/kexec.h                   |    5 ++
-> > >  7 files changed, 218 insertions(+), 8 deletions(-)
-> > >  create mode 100644 kexec/kexec-xen.c
-> > >
+(2013/11/18 9:51), Atsushi Kumagai wrote:
+> (2013/11/15 23:26), Vivek Goyal wrote:
+>> On Fri, Nov 15, 2013 at 06:41:52PM +0900, HATAYAMA Daisuke wrote:
+>>
+>> [..]
+>>>> Given the fact that hpa does not like fixing it in kernel. We are left
+>>>> with option of fixing it in following places.
+>>>>
+>>>> - Drop partial pages in kexec-tools
+>>>> - Drop partial pages in makeudmpfile.
+>>>> - Read partial pages using read() interface in makedumpfile
+>>>> - Modify /proc/vmcore to copy partial pages in second kernel's memory.
+>>>>
+>>>> It is not clear to me that partial pages are really useful.  So I want
+>>>> to avoid modifying /proc/vmcore to deal with partial pages and increase
+>>>> complexity.
+>>>>
+>>>> So fixing makedumpfile (either option2 or option 3) seems least risky
+>>>> to me. In fact I would say let us keep it simple and truncate partial
+>>>> pages in makedumpfile to keep it simple. And look at option 3 once we
+>>>> have a strong use case for partial pages.
+>>>>
+>>>> What do you think?
+>>>>
+>>>
+>>> As you say, it's not clear that partial pages are really useful, but on
+>>> the other hand, it seems to me not clear that they are really useless.
+>>> I think we should get them as long as we have access to them.
+>>>
+>>> It seems best to me the option 3). Switching between read and mmap would
+>>> be not so complex and also it's by far flexible in makedumpfile than in
+>>> kernel.
+>>
+>> Ok, I am fine with option 3. It is more complicated option but safe
+>> option.
 > 
-> [...]
+> It sounds reasonable also to me.
 > 
-> > I have applied the following follow-up patch to resolves some errors.
-> > Let me know if I messed it up.
-> >
-> > From: Simon Horman <horms@verge.net.au>
-> >
-> > [PATCH] kexec/xen: Correct some compile errors
-> >
-> > Correct various problems introduced by
-> > 08cf823704b0fa3b ("kexec/xen: directly load images images into Xen").
-> >
-> > These all relate to the case here HAVE_LIBXENCTRL is not set.
-> >
-> > Signed-off-by: Simon Horman <horms@verge.net.au>
-> > ---
-> >  kexec/kexec-xen.c | 7 +++----
-> >  1 file changed, 3 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-> > index 77f65c0..e885246 100644
-> > --- a/kexec/kexec-xen.c
-> > +++ b/kexec/kexec-xen.c
-> > @@ -2,6 +2,7 @@
-> >  #include <stdio.h>
-> >  #include <string.h>
-> >  #include <stdlib.h>
-> > +#include <stdlib.h>
+>> Is there any chance that you could look into fixing this. I have no
+>> experience writing code for makedumpfile.
 > 
-> Thanks for fixes but why are you including stdlib.h twice?
+> I'll send a patch to fix this soon.
+> 
 
-Sorry, that is an error.
+Thanks.
+
+BTW, now the following patch has been applied on top of makedumpfile in
+kexec-tools package on fedora in order to avoid the issue.
+
+https://lists.fedoraproject.org/pipermail/kexec/2013-November/000254.html
+
+I remember prototype version of mmap patch implemented a kind of --no-mmap option
+and we could use it to disable mmap() use and use read() instead, I think
+which is useful when we face this kind of issue.
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
