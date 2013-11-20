@@ -1,32 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ViyKn-00021t-1M
- for kexec@lists.infradead.org; Wed, 20 Nov 2013 03:20:11 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 4ECE03EE0AE
- for <kexec@lists.infradead.org>; Wed, 20 Nov 2013 12:19:41 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3F36645DE4D
- for <kexec@lists.infradead.org>; Wed, 20 Nov 2013 12:19:41 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 294FF45DD76
- for <kexec@lists.infradead.org>; Wed, 20 Nov 2013 12:19:41 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1C7F7E38001
- for <kexec@lists.infradead.org>; Wed, 20 Nov 2013 12:19:41 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BA36E1DB8032
- for <kexec@lists.infradead.org>; Wed, 20 Nov 2013 12:19:40 +0900 (JST)
-Message-ID: <528C2A2A.5020307@jp.fujitsu.com>
-Date: Wed, 20 Nov 2013 12:19:06 +0900
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
+ id 1Vj0Oy-0003hi-5O
+ for kexec@lists.infradead.org; Wed, 20 Nov 2013 05:32:38 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: /proc/vmcore mmap() failure issue
+Date: Wed, 20 Nov 2013 05:27:59 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971C3845@BPXM01GP.gisp.nec.co.jp>
+References: <20131113204130.GD7613@redhat.com>
+ <5284A689.70903@jp.fujitsu.com> <20131114151359.GA3913@redhat.com>
+ <5285EC60.1060906@jp.fujitsu.com> <20131115142617.GC6637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
+ <528B3585.5080606@jp.fujitsu.com>
+In-Reply-To: <528B3585.5080606@jp.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH] Crashdump Accepting Active IOMMU
-References: <875D89B79D1D86448A583A7302C022A055A67790@G9W0337.americas.hpqcorp.net>
- <5281CE7C.6080105@jp.fujitsu.com>
- <875D89B79D1D86448A583A7302C022A055A8A530@G4W3299.americas.hpqcorp.net>
-In-Reply-To: <875D89B79D1D86448A583A7302C022A055A8A530@G4W3299.americas.hpqcorp.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,152 +27,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: bill.sumner@hp.com
-Cc: alex.williamson@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, dwmw2@infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-(2013/11/19 8:30), Sumner, William wrote:
-> Thank you for testing this RFC patch.  It is great to have confirmation that the code works in a different test environment.
+On 2013/11/19 18:56:21, kexec <kexec-bounces@lists.infradead.org> wrote:
+> (2013/11/18 9:51), Atsushi Kumagai wrote:
+> > (2013/11/15 23:26), Vivek Goyal wrote:
+> >> On Fri, Nov 15, 2013 at 06:41:52PM +0900, HATAYAMA Daisuke wrote:
+> >>
+> >> [..]
+> >>>> Given the fact that hpa does not like fixing it in kernel. We are 
+> >>>> left with option of fixing it in following places.
+> >>>>
+> >>>> - Drop partial pages in kexec-tools
+> >>>> - Drop partial pages in makeudmpfile.
+> >>>> - Read partial pages using read() interface in makedumpfile
+> >>>> - Modify /proc/vmcore to copy partial pages in second kernel's memory.
+> >>>>
+> >>>> It is not clear to me that partial pages are really useful.  So I 
+> >>>> want to avoid modifying /proc/vmcore to deal with partial pages and 
+> >>>> increase complexity.
+> >>>>
+> >>>> So fixing makedumpfile (either option2 or option 3) seems least 
+> >>>> risky to me. In fact I would say let us keep it simple and truncate 
+> >>>> partial pages in makedumpfile to keep it simple. And look at option 
+> >>>> 3 once we have a strong use case for partial pages.
+> >>>>
+> >>>> What do you think?
+> >>>>
+> >>>
+> >>> As you say, it's not clear that partial pages are really useful, but 
+> >>> on the other hand, it seems to me not clear that they are really useless.
+> >>> I think we should get them as long as we have access to them.
+> >>>
+> >>> It seems best to me the option 3). Switching between read and mmap 
+> >>> would be not so complex and also it's by far flexible in 
+> >>> makedumpfile than in kernel.
+> >>
+> >> Ok, I am fine with option 3. It is more complicated option but safe 
+> >> option.
+> > 
+> > It sounds reasonable also to me.
+> > 
+> >> Is there any chance that you could look into fixing this. I have no 
+> >> experience writing code for makedumpfile.
+> > 
+> > I'll send a patch to fix this soon.
+> > 
 > 
-> You asked: "What is the status of this patch?"
-> I have made a few changes since the RFC version of this patch:
+> Thanks.
 > 
-> 1. Consolidated all of the operational code into the "copy..." functions.  The "process..." functions were primarily used for diagnostics and exploration; however, there was a small amount of operational code that used the "process..." functions. This operational code has been moved into the "copy..." functions.
+> BTW, now the following patch has been applied on top of makedumpfile in kexec-tools package on fedora in order to avoid the issue.
 > 
-> 2. Removed the "Process ..." functions and the diagnostic code that ran on that function set.  This removed about 1/4 of the code -- which this operational patch no longer needs.  These portions of the RFC patch could be formatted as a separate patch and submitted independently at a later date.
+> https://lists.fedoraproject.org/pipermail/kexec/2013-November/000254.html
 > 
-> 3. Re-formatted the code to the Linux Coding Standards.  The checkpatch script still finds some lines to complain about; however these lines are either (1) lines that I did not change, or (2) lines that only changed by adding a level of indent which pushed them over 80-characters, or (3) new lines whose intent is far clearer when longer than 80-characters (allowed by the Linux Coding Standards.)
-> 
-> 4. Updated the remaining debug print to be significantly more flexible.  This allows control over the amount of debug print to the console -- which can vary widely.
-> 
-> 5. Fixed a couple of minor bugs found by testing on a machine with a very large IO configuration.
-> 
-> 
-> You asked: " Do you have a plan to post new version?"
-> Yes.  I am in the process of dividing the code into a set of 6 or 7 patches, and completing the due-diligence on these patches before submitting them.
+> I remember prototype version of mmap patch implemented a kind of --no-mmap option and we could use it to disable mmap() use and use read() instead, I think which is useful when we face this kind of issue.
 
-Ok, I'll wait for new patches!
+How about this fail back structure instead of such an extra option ?
 
-Thanks,
-Takao Indoh
+Thanks
+Atsushi Kumagai
 
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Date: Wed, 20 Nov 2013 14:10:19 +0900
+Subject: [PATCH] Fall back to read() when mmap() fails.
 
-> 
-> Bill
-> 
-> -----Original Message-----
-> From: Takao Indoh [mailto:indou.takao@jp.fujitsu.com]
-> Sent: Tuesday, November 12, 2013 12:45 AM
-> To: Sumner, William; bhelgaas@google.com; alex.williamson@redhat.com; ddutile@redhat.com
-> Cc: linux-pci@vger.kernel.org; kexec@lists.infradead.org; linux-kernel@vger.kernel.org; iommu@lists.linux-foundation.org; ishii.hironobu@jp.fujitsu.com; dwmw2@infradead.org
-> Subject: Re: [RFC PATCH] Crashdump Accepting Active IOMMU
-> 
-> Hi Bill,
-> 
-> What is the status of this patch? It works and DMA problems on kdump are
-> solved as far as I tested. Do you have a plan to post new version?
-> 
-> Thanks,
-> Takao Indoh
-> 
-> (2013/09/27 8:25), Sumner, William wrote:
->> This Request For Comment submission is primarily to solicit comments on a concept for how kdump can handle legacy DMA IO leftover from the panicked kernel and comments on early prototype code to implement it.  Some level of interest was noted when I proposed this concept in June; however, for generating serious discussion there is no substitute for a working prototype.
->>
->> This concept modifies the behavior of the iommu in the (new) crashdump kernel:
->> 1. to accept the iommu hardware in an active state,
->> 2. to leave the current translations in-place so that legacy DMA will continue using its current buffers until the device drivers in the crashdump kernel initialize and initialize their devices,
->> 3. to use different portions of the iova address ranges for the device drivers in the crashdump kernel than the iova ranges that were in-use at the time of the panic.
->>
->> Advantages of this concept:
->> 1. All manipulation of the IO-device is done by the Linux device-driver for that device.
->> 2. This concept behaves in a very similar manner to operation without an active iommu.
->> 3. Any activity between the IO-device and its RMRR areas is handled by the device-driver in the same manner as during a non-kdump boot.
->> 4. If an IO-device has no driver in the kdump kernel, it is simply left alone.  This supports the practice of creating a special kdump kernel without drivers for any devices that are not required for taking a crashdump.
->>
->>
->>
->> About the early-prototype code in the patch below:
->> --------------------------------------------------
->> 1. It works on one machine that reproduced the original problem -- still need to test it on a lot of other machines with various IO configurations.
->>
->> 2. Currently implemented for intel-iommu architecture only,
->>
->> 3. It is based near TOT from kernel.org.  The TOT version of 'crash' reads the dump that is produced.
->>
->> 4. It is definitely prototype-only and not yet ready to propose as a patch for inclusion into Linux proper.
->>
->> 5. Although this patch is not yet intended for incorporation into mainstream Linux, it should install and operate for anyone who wants to experiment with it.  Because this patch changes the low-level IO-operation, and because of its very-limited testing, I strongly advise against installing this patch on any system that contains production data.
->>
->> 6. For this RFC, I decided to leave-in all of the debugging, diagnostic, temporary, and test code so that it would be readily available.  In a (future) patch submission, much of this would need to be either eliminated, separated into a diagnostics area, moved under conditional compilation, or something else.  We'll see what the Linux community recommends.
->>
->>
->>
->> At a high level, this code:
->> ===========================
->> * is entirely within intel-iommu.c
->> * operates primarily during iommu initialization and device-driver initialization
->>
->> During intel-iommu hardware initialization:
->> -------------------------------------------
->> In intel_iommu_init(void)
->> * If (This is the crash kernel)
->>     .  Set flag: crashdump_accepting_active_iommu (all changes below check this)
->>     .  Skip disabling the iommu hardware translations
->>
->> In init_dmars()
->> * Duplicate the intel iommu translation tables from the old kernel in the new kernel
->>     . The root-entry table, all context-entry tables, and all page-translation-entry tables
->>     . The duplicate tables contain updated physical addresses to link them together.
->>     . The duplicate tables are mapped into kernel virtual addresses in the new kernel
->>       which allows most of the existing iommu code to operate without change.
->>     . Do some minimal sanity-checks during the copy
->>     . Place the address of the new root-entry structure into "struct intel_iommu"
->>
->> * Skip setting-up new domains for 'si', 'rmrr', 'isa'
->>     . Translations for 'rmrr' and 'isa' ranges have been copied from the old kernel
->>     . This prototype does not yet handle pass-through
->>
->> * Existing (unchanged) code near the end of dmar_init:
->>     . Loads the address of the (now new) root-entry structure from "struct intel_iommu"
->>       into the iommu hardware and does the iommu hardware flushes. This changes the
->>       active translation tables from the ones in the old kernel to the copies in the new kernel.
->>     . This is legal because the translations in the two sets of tables are currently identical:
->>         Intel(r) Virtualization Technology for Directed I/O. Architecture Specification,
->>         February 2011, Rev. 1.3  (section 11.2, paragraph 2)
->>
->> In iommu_init_domains()
->> * Mark as in-use all domain-id's from the old kernel
->>     . In case the new kernel contains a device that was not in the old kernel
->>       and a new, unused domain-id is actually needed, the bitmap will give us one.
->>
->> When a new domain is created for a device:
->> ------------------------------------------
->> * If (this device has a context in the old kernel)
->>     . Get domain-id, address-width, and IOVA ranges from the old kernel context;
->>     . Get address(page-entry-tables) from the copy in the new kernel;
->>     . And apply all of the above values to the new domain structure.
->> * Else
->>     . Create a new domain as normal
->>
->> I would very much like the advice of the Linux community on how to proceed.
->>
->> Signed-off-by: Bill Sumner <bill.sumner@hp.com>
->>
->> Bill
->>
->>
->>
->> >From c1c6102f2a82e9450c6e3ea76f250bb35e6b1992 Mon Sep 17 00:00:00 2001
->> From: Bill <bill.sumner@hp.com>
->> Date: Thu, 26 Sep 2013 15:37:48 -0600
->> Subject: [PATCH] rfc-crashdump-accepting-active-iommu.patch
-> 
-> <<< NOTE: I deleted the code of my RFC patch from this email reply in order to shorten the email thread -- leaving only the original email header to make it easy to find the code in previous posts. -- Bill (Nov. 18, 2013) >>>
-> 
-> 
-> 
-> 
+Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+---
+ makedumpfile.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index ca03440..f583602 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -324,7 +324,15 @@ read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
+ 		if (!read_with_mmap(offset, bufptr, size)) {
+ 			ERRMSG("Can't read the dump memory(%s) with mmap().\n",
+ 			       info->name_memory);
+-			return FALSE;
++
++			ERRMSG("This kernel might have some problems about mmap().\n");
++			ERRMSG("read() will be used instead of mmap() from now.\n");
++
++			/*
++			 * Fall back to read().
++			 */
++			info->flag_usemmap = FALSE;
++			read_from_vmcore(offset, bufptr, size);
+ 		}
+ 	} else {
+ 		if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
+-- 
+1.8.0.2
 
 _______________________________________________
 kexec mailing list
