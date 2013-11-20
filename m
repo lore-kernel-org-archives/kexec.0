@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjBwY-00007h-5o
- for kexec@lists.infradead.org; Wed, 20 Nov 2013 17:52:14 +0000
+ id 1VjBwY-00007g-62
+ for kexec@lists.infradead.org; Wed, 20 Nov 2013 17:52:16 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 5/6] kexec-bzImage: Support for loading bzImage using 64bit
- entry
-Date: Wed, 20 Nov 2013 12:50:50 -0500
-Message-Id: <1384969851-7251-6-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 4/6] kexec: A new system call, kexec_file_load,
+ for in kernel kexec
+Date: Wed, 20 Nov 2013 12:50:49 -0500
+Message-Id: <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,634 +26,798 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, greg@kroah.com, ebiederm@xmission.com, Vivek Goyal <vgoyal@redhat.com>, hpa@zytor.com
 
-This is loader specific code which can load bzImage and set it up for
-64bit entry. This does not take care of 32bit entry or real mode entry
-yet.
+This patch implements the in kernel kexec functionality. It implements a
+new system call kexec_file_load. I think parameter list of this system
+call will change as I have not done the kernel image signature handling
+yet. I have been told that I might have to pass the detached signature
+and size as part of system call.
+
+Previously segment list was prepared in user space. Now user space just
+passes kernel fd, initrd fd and command line and kernel will create a
+segment list internally.
+
+This patch contains generic part of the code. Actual segment preparation
+and loading is done by arch and image specific loader. Which comes in
+next patch.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- arch/x86/include/asm/kexec-bzimage.h |   12 +
- arch/x86/include/asm/kexec.h         |   26 +++
- arch/x86/kernel/Makefile             |    2 +
- arch/x86/kernel/kexec-bzimage.c      |  375 ++++++++++++++++++++++++++++++++++
- arch/x86/kernel/machine_kexec_64.c   |    4 +-
- arch/x86/kernel/purgatory_entry_64.S |  119 +++++++++++
- 6 files changed, 537 insertions(+), 1 deletions(-)
- create mode 100644 arch/x86/include/asm/kexec-bzimage.h
- create mode 100644 arch/x86/kernel/kexec-bzimage.c
- create mode 100644 arch/x86/kernel/purgatory_entry_64.S
+ arch/x86/kernel/machine_kexec_64.c |   57 ++++-
+ arch/x86/syscalls/syscall_64.tbl   |    1 +
+ include/linux/kexec.h              |   57 +++++
+ include/linux/syscalls.h           |    3 +
+ include/uapi/linux/kexec.h         |    4 +
+ kernel/kexec.c                     |  486 +++++++++++++++++++++++++++++++++++-
+ kernel/sys_ni.c                    |    1 +
+ 7 files changed, 607 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec-bzimage.h b/arch/x86/include/asm/kexec-bzimage.h
-new file mode 100644
-index 0000000..d556727
---- /dev/null
-+++ b/arch/x86/include/asm/kexec-bzimage.h
-@@ -0,0 +1,12 @@
-+#ifndef _ASM_BZIMAGE_H
-+#define _ASM_BZIMAGE_H
-+
-+extern int bzImage64_probe(const char *buf, unsigned long len);
-+extern void *bzImage64_load(struct kimage *image, char *kernel,
-+		unsigned long kernel_len, char *initrd,
-+		unsigned long initrd_len, char *cmdline,
-+		unsigned long cmdline_len);
-+extern int bzImage64_prep_entry(struct kimage *image);
-+extern int bzImage64_cleanup(struct kimage *image);
-+
-+#endif  /* _ASM_BZIMAGE_H */
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 17483a4..94f1257 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -15,6 +15,9 @@
- # define PAGES_NR		4
- #endif
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 4eabc16..fb41b73 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -22,6 +22,13 @@
+ #include <asm/mmu_context.h>
+ #include <asm/debugreg.h>
  
-+#define KEXEC_PURGATORY_PAGE_SIZE	4096
-+#define KEXEC_PURGATORY_CODE_MAX_SIZE	2048
-+
- # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
- 
- #ifndef __ASSEMBLY__
-@@ -141,6 +144,9 @@ relocate_kernel(unsigned long indirection_page,
- 		unsigned long page_list,
- 		unsigned long start_address,
- 		unsigned int preserve_context);
-+void purgatory_entry64(void);
-+extern unsigned long purgatory_entry64_regs;
-+extern struct desc_struct entry64_gdt;
- #endif
- 
- #define ARCH_HAS_KIMAGE_ARCH
-@@ -161,6 +167,26 @@ struct kimage_arch {
- 	pmd_t *pmd;
- 	pte_t *pte;
- };
-+
-+struct kexec_entry64_regs {
-+	uint64_t rax;
-+	uint64_t rbx;
-+	uint64_t rcx;
-+	uint64_t rdx;
-+	uint64_t rsi;
-+	uint64_t rdi;
-+	uint64_t rsp;
-+	uint64_t rbp;
-+	uint64_t r8;
-+	uint64_t r9;
-+	uint64_t r10;
-+	uint64_t r11;
-+	uint64_t r12;
-+	uint64_t r13;
-+	uint64_t r14;
-+	uint64_t r15;
-+	uint64_t rip;
-+};
- #endif
- 
- typedef void crash_vmclear_fn(void);
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 9b0a34e..5d074c2 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
- obj-$(CONFIG_X86_TSC)		+= trace_clock.o
- obj-$(CONFIG_KEXEC)		+= machine_kexec_$(BITS).o
- obj-$(CONFIG_KEXEC)		+= relocate_kernel_$(BITS).o crash.o
-+obj-$(CONFIG_KEXEC)		+= kexec-bzimage.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
- obj-y				+= kprobes/
- obj-$(CONFIG_MODULES)		+= module.o
-@@ -122,4 +123,5 @@ ifeq ($(CONFIG_X86_64),y)
- 
- 	obj-$(CONFIG_PCI_MMCONFIG)	+= mmconf-fam10h_64.o
- 	obj-y				+= vsmp_64.o
-+	obj-$(CONFIG_KEXEC)		+= purgatory_entry_64.o
- endif
-diff --git a/arch/x86/kernel/kexec-bzimage.c b/arch/x86/kernel/kexec-bzimage.c
-new file mode 100644
-index 0000000..a1032d4
---- /dev/null
-+++ b/arch/x86/kernel/kexec-bzimage.c
-@@ -0,0 +1,375 @@
-+#include <linux/string.h>
-+#include <linux/printk.h>
-+#include <linux/errno.h>
-+#include <linux/slab.h>
-+#include <linux/kexec.h>
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
-+
-+#include <asm/bootparam.h>
-+#include <asm/setup.h>
-+
-+#ifdef CONFIG_X86_64
-+
-+struct bzimage64_data {
-+	unsigned long kernel_load_addr;
-+	unsigned long bootparams_load_addr;
-+
-+	/*
-+	 * Temporary buffer to hold bootparams buffer. This should be
-+	 * freed once the bootparam segment has been loaded.
-+	 */
-+	void *bootparams_buf;
-+	struct page *purgatory_page;
++/* arch dependent functionality related to kexec file based syscall */
++static struct kexec_file_type kexec_file_type[]={
++	{"", NULL, NULL, NULL, NULL},
 +};
 +
-+int bzImage64_probe(const char *buf, unsigned long len)
++static int nr_file_types = sizeof(kexec_file_type)/sizeof(kexec_file_type[0]);
++
+ static void free_transition_pgtable(struct kimage *image)
+ {
+ 	free_page((unsigned long)image->arch.pud);
+@@ -200,7 +207,7 @@ void machine_kexec(struct kimage *image)
+ {
+ 	unsigned long page_list[PAGES_NR];
+ 	void *control_page;
+-	int save_ftrace_enabled;
++	int save_ftrace_enabled, idx;
+ 
+ #ifdef CONFIG_KEXEC_JUMP
+ 	if (image->preserve_context)
+@@ -226,6 +233,11 @@ void machine_kexec(struct kimage *image)
+ #endif
+ 	}
+ 
++	/* Call image loader to prepare for entry */
++	idx = image->file_handler_idx;
++	if (kexec_file_type[idx].prep_entry)
++		kexec_file_type[idx].prep_entry(image);
++
+ 	control_page = page_address(image->control_code_page) + PAGE_SIZE;
+ 	memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
+ 
+@@ -281,3 +293,46 @@ void arch_crash_save_vmcoreinfo(void)
+ #endif
+ }
+ 
++/* arch dependent functionality related to kexec file based syscall */
++
++int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++					unsigned long buf_len)
 +{
-+	int ret = -ENOEXEC;
-+	struct setup_header *header;
++	int i, ret = -ENOEXEC;
 +
-+	if (len < 2 * 512) {
-+		pr_debug("File is too short to be a bzImage\n");
-+		return ret;
++	for (i = 0; i < nr_file_types; i++) {
++		if (!kexec_file_type[i].probe)
++			continue;
++
++		ret = kexec_file_type[i].probe(buf, buf_len);
++		if (!ret) {
++			image->file_handler_idx = i;
++			return ret;
++		}
 +	}
-+
-+	header = (struct setup_header *)(buf + 0x1F1);
-+	if (memcmp((char *)&header->header, "HdrS", 4) != 0) {
-+		pr_debug("Not a bzImage\n");
-+		return ret;
-+	}
-+
-+	if (header->boot_flag != 0xAA55) {
-+                /* No x86 boot sector present */
-+		pr_debug("No x86 boot sector present\n");
-+		return ret;
-+	}
-+
-+	if (header->version < 0x020C) {
-+                /* Must be at least protocol version 2.12 */
-+		pr_debug("Must be at least protocol version 2.12\n");
-+		return ret;
-+	}
-+
-+	if ((header->loadflags & 1) == 0) {
-+		/* Not a bzImage */
-+		pr_debug("zImage not a bzImage\n");
-+		return ret;
-+	}
-+
-+	if ((header->xloadflags & 3) != 3) {
-+		/* XLF_KERNEL_64 and XLF_CAN_BE_LOADED_ABOVE_4G should be set */
-+		pr_debug("Not a relocatable bzImage64\n");
-+		return ret;
-+	}
-+
-+        /* I've got a bzImage */
-+	pr_debug("It's a relocatable bzImage64\n");
-+	ret = 0;
 +
 +	return ret;
 +}
 +
-+static int setup_memory_map_entries(struct boot_params *params)
++void *arch_kexec_kernel_image_load(struct kimage *image, char *kernel,
++			unsigned long kernel_len, char *initrd,
++			unsigned long initrd_len, char *cmdline,
++			unsigned long cmdline_len)
 +{
-+	unsigned int nr_e820_entries;
++	int idx = image->file_handler_idx;
 +
-+	/* TODO: What about EFI */
-+	nr_e820_entries = e820_saved.nr_map;
-+	if (nr_e820_entries > E820MAX)
-+		nr_e820_entries = E820MAX;
-+
-+	params->e820_entries = nr_e820_entries;
-+	memcpy(&params->e820_map, &e820_saved.map,
-+			nr_e820_entries * sizeof(struct e820entry));
-+
-+	return 0;
-+}
-+
-+static void setup_linux_system_parameters(struct boot_params *params)
-+{
-+	unsigned int nr_e820_entries;
-+	unsigned long long mem_k, start, end;
-+	int i;
-+
-+	/* Get subarch from existing bootparams */
-+	params->hdr.hardware_subarch = boot_params.hdr.hardware_subarch;
-+
-+	/* Copying screen_info will do? */
-+	memcpy(&params->screen_info, &boot_params.screen_info,
-+				sizeof(struct screen_info));
-+
-+	/* Fill in memsize later */
-+	params->screen_info.ext_mem_k = 0;
-+	params->alt_mem_k = 0;
-+
-+	/* Default APM info */
-+	memset(&params->apm_bios_info, 0, sizeof(params->apm_bios_info));
-+
-+	/* Default drive info */
-+	memset(&params->hd0_info, 0, sizeof(params->hd0_info));
-+	memset(&params->hd1_info, 0, sizeof(params->hd1_info));
-+
-+	/* Default sysdesc table */
-+	params->sys_desc_table.length = 0;
-+
-+	setup_memory_map_entries(params);
-+	nr_e820_entries = params->e820_entries;
-+
-+	for(i = 0; i < nr_e820_entries; i++) {
-+		if (params->e820_map[i].type != E820_RAM)
-+			continue;
-+		start = params->e820_map[i].addr;
-+		end = params->e820_map[i].addr + params->e820_map[i].size - 1;
-+
-+		if ((start <= 0x100000) && end > 0x100000) {
-+			mem_k = (end >> 10) - (0x100000 >> 10);
-+			params->screen_info.ext_mem_k = mem_k;
-+			params->alt_mem_k = mem_k;
-+			if (mem_k > 0xfc00)
-+				params->screen_info.ext_mem_k = 0xfc00; /* 64M*/
-+			if (mem_k > 0xffffffff)
-+				params->alt_mem_k = 0xffffffff;
-+		}
-+	}
-+
-+	/* Setup EDD info */
-+	memcpy(params->eddbuf, boot_params.eddbuf,
-+				EDDMAXNR * sizeof(struct edd_info));
-+	params->eddbuf_entries = boot_params.eddbuf_entries;
-+
-+	memcpy(params->edd_mbr_sig_buffer, boot_params.edd_mbr_sig_buffer,
-+			EDD_MBR_SIG_MAX * sizeof(unsigned int));
-+}
-+
-+static void setup_initrd(struct boot_params *boot_params, unsigned long initrd_load_addr, unsigned long initrd_len)
-+{
-+	boot_params->hdr.ramdisk_image = initrd_load_addr & 0xffffffffUL;
-+	boot_params->hdr.ramdisk_size = initrd_len & 0xffffffffUL;
-+
-+	boot_params->ext_ramdisk_image = initrd_load_addr >> 32;
-+	boot_params->ext_ramdisk_size = initrd_len >> 32;
-+}
-+
-+static void setup_cmdline(struct boot_params *boot_params,
-+		unsigned long bootparams_load_addr,
-+		unsigned long cmdline_offset, char *cmdline,
-+		unsigned long cmdline_len)
-+{
-+	char *cmdline_ptr = ((char *)boot_params) + cmdline_offset;
-+	unsigned long cmdline_ptr_phys;
-+	uint32_t cmdline_low_32, cmdline_ext_32;
-+
-+	memcpy(cmdline_ptr, cmdline, cmdline_len);
-+	cmdline_ptr[cmdline_len - 1] = '\0';
-+
-+	cmdline_ptr_phys = bootparams_load_addr + cmdline_offset;
-+	cmdline_low_32 = cmdline_ptr_phys & 0xffffffffUL;
-+	cmdline_ext_32 = cmdline_ptr_phys >> 32;
-+
-+	boot_params->hdr.cmd_line_ptr = cmdline_low_32;
-+	if (cmdline_ext_32)
-+		boot_params->ext_cmd_line_ptr = cmdline_ext_32;
-+}
-+
-+void *bzImage64_load(struct kimage *image, char *kernel,
-+		unsigned long kernel_len,
-+		char *initrd, unsigned long initrd_len,
-+		char *cmdline, unsigned long cmdline_len)
-+{
-+
-+	struct setup_header *header;
-+	int setup_sects, kern16_size_needed, kern16_size, ret = 0;
-+	unsigned long setup_size, setup_header_size;
-+	struct boot_params *params;
-+	unsigned long bootparam_load_addr, kernel_load_addr, initrd_load_addr;
-+	unsigned long kernel_bufsz, kernel_memsz, kernel_align;
-+	char *kernel_buf;
-+	struct bzimage64_data *ldata;
-+
-+	header = (struct setup_header *)(kernel + 0x1F1);
-+	setup_sects = header->setup_sects;
-+	if (setup_sects == 0)
-+		setup_sects = 4;
-+
-+	kern16_size = (setup_sects + 1) * 512;
-+	if (kernel_len < kern16_size) {
-+		pr_debug("bzImage truncated\n");
++	if (idx < 0)
 +		return ERR_PTR(-ENOEXEC);
-+	}
 +
-+	if (cmdline_len > header->cmdline_size) {
-+		pr_debug("Kernel command line too long\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	/* Allocate loader specific data */
-+	ldata = kzalloc(sizeof(struct bzimage64_data), GFP_KERNEL);
-+	if (!ldata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* Argument/parameter segment */
-+	kern16_size_needed = kern16_size;
-+	if (kern16_size_needed < 4096)
-+		kern16_size_needed = 4096;
-+
-+	setup_size = kern16_size_needed + cmdline_len;
-+	params = kzalloc(setup_size, GFP_KERNEL);
-+	if (!params) {
-+		ret = -ENOMEM;
-+		goto out_free_loader_data;
-+	}
-+
-+	/* Copy setup header onto bootparams. */
-+	setup_header_size = 0x0202 + kernel[0x0201] - 0x1F1;
-+
-+	/* Is there a limit on setup header size? */
-+	memcpy(&params->hdr, (kernel + 0x1F1), setup_header_size);
-+	ret = kexec_add_buffer(image, (char *)params, setup_size,
-+			setup_size, 16, 0x3000, -1, 1, &bootparam_load_addr);
-+	if (ret)
-+		goto out_free_params;
-+	pr_debug("Loaded boot_param and command line at 0x%lx\n",
-+			bootparam_load_addr);
-+
-+	/* Load kernel */
-+	kernel_buf = kernel + kern16_size;
-+	kernel_bufsz =  kernel_len - kern16_size;
-+	kernel_memsz = ALIGN(header->init_size, 4096);
-+	kernel_align = header->kernel_alignment;
-+
-+	ret = kexec_add_buffer(image, kernel_buf,
-+			kernel_bufsz, kernel_memsz, kernel_align, 0x100000,
-+			-1, 1, &kernel_load_addr);
-+	if (ret)
-+		goto out_free_params;
-+
-+	pr_debug("Loaded 64bit kernel at 0x%lx sz = 0x%lx\n", kernel_load_addr,
-+				kernel_memsz);
-+
-+	/* Load initrd high */
-+	if (initrd) {
-+		ret = kexec_add_buffer(image, initrd, initrd_len, initrd_len,
-+			4096, 0x10000000, ULONG_MAX, 1, &initrd_load_addr);
-+		if (ret)
-+			goto out_free_params;
-+
-+		pr_debug("Loaded initrd at 0x%lx sz = 0x%lx\n",
-+					initrd_load_addr, initrd_len);
-+		setup_initrd(params, initrd_load_addr, initrd_len);
-+	}
-+
-+	setup_cmdline(params, bootparam_load_addr, kern16_size_needed,
-+			cmdline, cmdline_len);
-+
-+	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
-+	params->hdr.type_of_loader = 0x0D << 4;
-+	params->hdr.loadflags = 0;
-+
-+	setup_linux_system_parameters(params);
-+
-+	/*
-+	 * Allocate a purgatory page. For 64bit entry point, purgatory
-+	 * code can be anywhere.
-+	 *
-+	 * Control page allocation logic goes through segment list to
-+	 * make sure allocated page is not destination page. So allocate
-+	 * control page after all required segment have been prepared.
-+	 */
-+	ldata->purgatory_page = kimage_alloc_control_pages(image,
-+					get_order(KEXEC_PURGATORY_PAGE_SIZE));
-+
-+	if (!ldata->purgatory_page) {
-+		printk(KERN_ERR "Could not allocate purgatory page\n");
-+		ret = -ENOMEM;
-+		goto out_free_params;
-+	}
-+
-+	/*
-+	 * Store pointer to params so that it could be freed after loading
-+	 * params segment has been loaded and contents have been copied
-+	 * somewhere else.
-+	 */
-+	ldata->bootparams_buf = params;
-+	ldata->kernel_load_addr = kernel_load_addr;
-+	ldata->bootparams_load_addr = bootparam_load_addr;
-+	return ldata;
-+
-+out_free_params:
-+	kfree(params);
-+out_free_loader_data:
-+	kfree(ldata);
-+	return ERR_PTR(ret);
++	return kexec_file_type[idx].load(image, kernel, kernel_len, initrd,
++					initrd_len, cmdline, cmdline_len);
 +}
 +
-+int bzImage64_prep_entry(struct kimage *image)
++int arch_image_file_post_load_cleanup(struct kimage *image)
 +{
-+	struct bzimage64_data *ldata;
-+	char *purgatory_page;
-+	unsigned long regs_offset, gdt_offset, purgatory_page_phys;
-+	struct kexec_entry64_regs *regs;
-+	char *gdt_ptr;
-+	unsigned long long *gdt_addr;
++	int idx = image->file_handler_idx;
 +
-+	if (!image->file_mode)
-+		return 0;
-+
-+	ldata = image->image_loader_data;
-+	if (!ldata)
-+		return -EINVAL;
-+
-+	/* Copy purgatory code to its control page */
-+	purgatory_page = page_address(ldata->purgatory_page);
-+
-+	/* Physical address of purgatory page */
-+	purgatory_page_phys = PFN_PHYS(page_to_pfn(ldata->purgatory_page));
-+
-+	memcpy(purgatory_page, purgatory_entry64,
-+			KEXEC_PURGATORY_CODE_MAX_SIZE);
-+
-+	/* Set registers appropriately */
-+	regs_offset =  (unsigned long)&purgatory_entry64_regs -
-+			(unsigned long)purgatory_entry64;
-+	regs = (struct kexec_entry64_regs *) (purgatory_page + regs_offset);
-+
-+	regs->rbx = 0; /* Bootstrap Processor */
-+	regs->rsi = ldata->bootparams_load_addr;
-+	regs->rip = ldata->kernel_load_addr + 0x200;
-+
-+	/* Fix up gdt */
-+	gdt_offset = (unsigned long)&entry64_gdt -
-+			(unsigned long)purgatory_entry64;
-+
-+	gdt_ptr = purgatory_page + gdt_offset;
-+
-+	/* Skip a word which contains size of gdt table */
-+	gdt_addr = (unsigned long long *)(gdt_ptr + 2);
-+
-+	*gdt_addr = (unsigned long long)gdt_ptr;
-+
-+	/*
-+	 * Update the relocated address of gdt. By the time we load gdt
-+	 * in purgatory, we are running using identity mapped tables.
-+	 * Load identity mapped address here.
-+	 */
-+	*gdt_addr = (unsigned long long)(purgatory_page_phys + gdt_offset);
-+
-+	/*
-+	 * Jump to purgatory after control page. By the time we jump to
-+	 * purgatory, we are using itentifiy mapped page tables
-+	 */
-+	kimage_set_start_addr(image, purgatory_page_phys);
++	if (kexec_file_type[idx].cleanup)
++		return kexec_file_type[idx].cleanup(image);
 +	return 0;
 +}
-+
-+/* This cleanup function is called after various segments have been loaded */
-+int bzImage64_cleanup(struct kimage *image)
-+{
-+	struct bzimage64_data *ldata = image->image_loader_data;
-+
-+	kfree(ldata->bootparams_buf);
-+	ldata->bootparams_buf = NULL;
-+	return 0;
-+}
-+
-+#endif /* CONFIG_X86_64 */
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index fb41b73..a66ce1d 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -21,10 +21,12 @@
- #include <asm/tlbflush.h>
- #include <asm/mmu_context.h>
- #include <asm/debugreg.h>
-+#include <asm/kexec-bzimage.h>
+diff --git a/arch/x86/syscalls/syscall_64.tbl b/arch/x86/syscalls/syscall_64.tbl
+index 38ae65d..6f37cc9 100644
+--- a/arch/x86/syscalls/syscall_64.tbl
++++ b/arch/x86/syscalls/syscall_64.tbl
+@@ -320,6 +320,7 @@
+ 311	64	process_vm_writev	sys_process_vm_writev
+ 312	common	kcmp			sys_kcmp
+ 313	common	finit_module		sys_finit_module
++314	common	kexec_file_load		sys_kexec_file_load
  
- /* arch dependent functionality related to kexec file based syscall */
- static struct kexec_file_type kexec_file_type[]={
--	{"", NULL, NULL, NULL, NULL},
-+	{"bzImage64", bzImage64_probe, bzImage64_load, bzImage64_prep_entry,
-+	 bzImage64_cleanup},
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index d78d28a..a2baf96 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -110,13 +110,60 @@ struct kimage {
+ #define KEXEC_TYPE_DEFAULT 0
+ #define KEXEC_TYPE_CRASH   1
+ 	unsigned int preserve_context : 1;
++	/* If set, we are using file mode kexec syscall */
++	unsigned int file_mode : 1;
+ 
+ #ifdef ARCH_HAS_KIMAGE_ARCH
+ 	struct kimage_arch arch;
+ #endif
++
++	/* Additional Fields for file based kexec syscall */
++	void *kernel_buf;
++	unsigned long kernel_buf_len;
++
++	void *initrd_buf;
++	unsigned long initrd_buf_len;
++
++	char *cmdline_buf;
++	unsigned long cmdline_buf_len;
++
++	/* index of file handler in array */
++	int file_handler_idx;
++
++	/* Image loader handling the kernel can store a pointer here */
++	void * image_loader_data;
  };
  
- static int nr_file_types = sizeof(kexec_file_type)/sizeof(kexec_file_type[0]);
-diff --git a/arch/x86/kernel/purgatory_entry_64.S b/arch/x86/kernel/purgatory_entry_64.S
-new file mode 100644
-index 0000000..12a235f
---- /dev/null
-+++ b/arch/x86/kernel/purgatory_entry_64.S
-@@ -0,0 +1,119 @@
 +/*
-+ * Copyright (C) 2013  Red Hat Inc.
-+ *
-+ * Author(s): Vivek Goyal <vgoyal@redhat.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation (version 2 of the License).
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ * Keeps a track of buffer parameters as provided by caller for requesting
++ * memory placement of buffer.
 + */
++struct kexec_buf {
++	struct kimage *image;
++	char *buffer;
++	unsigned long bufsz;
++	unsigned long memsz;
++	unsigned long buf_align;
++	unsigned long buf_min;
++	unsigned long buf_max;
++	int top_down;		/* allocate from top of memory hole */
++};
+ 
++typedef int (kexec_probe_t)(const char *kernel_buf, unsigned long kernel_size);
++typedef void *(kexec_load_t)(struct kimage *image, char *kernel_buf,
++				unsigned long kernel_len, char *initrd,
++				unsigned long initrd_len, char *cmdline,
++				unsigned long cmdline_len);
++typedef int (kexec_prep_entry_t)(struct kimage *image);
++typedef int (kexec_cleanup_t)(struct kimage *image);
 +
++struct kexec_file_type {
++	const char *name;
++	kexec_probe_t *probe;
++	kexec_load_t *load;
++	kexec_prep_entry_t *prep_entry;
++	kexec_cleanup_t *cleanup;
++};
+ 
+ /* kexec interface functions */
+ extern void machine_kexec(struct kimage *image);
+@@ -127,6 +174,11 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
+ 					struct kexec_segment __user *segments,
+ 					unsigned long flags);
+ extern int kernel_kexec(void);
++extern int kexec_add_buffer(struct kimage *image, char *buffer,
++			unsigned long bufsz, unsigned long memsz,
++			unsigned long buf_align, unsigned long buf_min,
++			unsigned long buf_max, int buf_end,
++			unsigned long *load_addr);
+ #ifdef CONFIG_COMPAT
+ extern asmlinkage long compat_sys_kexec_load(unsigned long entry,
+ 				unsigned long nr_segments,
+@@ -135,6 +187,8 @@ extern asmlinkage long compat_sys_kexec_load(unsigned long entry,
+ #endif
+ extern struct page *kimage_alloc_control_pages(struct kimage *image,
+ 						unsigned int order);
++extern void kimage_set_start_addr(struct kimage *image, unsigned long start);
++
+ extern void crash_kexec(struct pt_regs *);
+ int kexec_should_crash(struct task_struct *);
+ void crash_save_cpu(struct pt_regs *regs, int cpu);
+@@ -182,6 +236,9 @@ extern struct kimage *kexec_crash_image;
+ #define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)
+ #endif
+ 
++/* Listof defined/legal kexec file flags */
++#define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH)
++
+ #define VMCOREINFO_BYTES           (4096)
+ #define VMCOREINFO_NOTE_NAME       "VMCOREINFO"
+ #define VMCOREINFO_NOTE_NAME_BYTES ALIGN(sizeof(VMCOREINFO_NOTE_NAME), 4)
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 94273bb..b712ac7 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -301,6 +301,9 @@ asmlinkage long sys_restart_syscall(void);
+ asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 				struct kexec_segment __user *segments,
+ 				unsigned long flags);
++asmlinkage long sys_kexec_file_load(int kernel_fd, int initrd_fd,
++				const char __user * cmdline_ptr,
++				unsigned long cmdline_len, unsigned long flags);
+ 
+ asmlinkage long sys_exit(int error_code);
+ asmlinkage long sys_exit_group(int error_code);
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 104838f..cdd666b 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -13,6 +13,10 @@
+ #define KEXEC_PRESERVE_CONTEXT	0x00000002
+ #define KEXEC_ARCH_MASK		0xffff0000
+ 
++/* Kexec file load interface flags */
++#define KEXEC_FILE_UNLOAD	0x00000001
++#define KEXEC_FILE_ON_CRASH	0x00000002
++
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+  */
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 6238927..50bcaa8 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -120,6 +120,11 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 				       gfp_t gfp_mask,
+ 				       unsigned long dest);
+ 
++void kimage_set_start_addr(struct kimage *image, unsigned long start)
++{
++	image->start = start;
++}
++
+ static int copy_user_segment_list(struct kimage *image,
+ 				unsigned long nr_segments,
+ 				struct kexec_segment __user *segments)
+@@ -256,6 +261,225 @@ static struct kimage *do_kimage_alloc_init(void)
+ 
+ static void kimage_free_page_list(struct list_head *list);
+ 
++static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
++{
++	struct fd f = fdget(fd);
++	int ret = 0;
++	struct kstat stat;
++	loff_t pos;
++	ssize_t bytes = 0;
++
++	if (!f.file)
++		return -EBADF;
++
++	ret = vfs_getattr(&f.file->f_path, &stat);
++	if (ret)
++		goto out;
++
++	if (stat.size > INT_MAX) {
++		ret = -EFBIG;
++		goto out;
++	}
++
++	/* Don't hand 0 to vmalloc, it whines. */
++	if (stat.size == 0) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	*buf = vmalloc(stat.size);
++        if (!*buf) {
++                ret = -ENOMEM;
++                goto out;
++        }
++
++	pos = 0;
++	while (pos < stat.size) {
++		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
++                                    stat.size - pos);
++                if (bytes < 0) {
++                        vfree(*buf);
++                        ret = bytes;
++                        goto out;
++                }
++
++                if (bytes == 0)
++                        break;
++                pos += bytes;
++        }
++
++        *buf_len = pos;
++
++out:
++	fdput(f);
++	return ret;
++}
++
++/* Architectures can provide this probe function */
++int __attribute__ ((weak))
++arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++				unsigned long buf_len)
++{
++	return -ENOEXEC;
++}
++
++void * __attribute__ ((weak))
++arch_kexec_kernel_image_load(struct kimage *image, char *kernel,
++		unsigned long kernel_len, char *initrd,
++		unsigned long initrd_len, char *cmdline,
++		unsigned long cmdline_len)
++{
++	return ERR_PTR(-ENOEXEC);
++}
++
++void __attribute__ ((weak))
++arch_kimage_file_post_load_cleanup(struct kimage *image)
++{
++	return;
++}
 +
 +/*
-+ * One page for purgatory. Code occupies first KEXEC_PURGATORY_CODE_MAX_SIZE
-+ * bytes. Rest is for data/stack etc.
++ * Free up tempory buffers allocated which are not needed after image has
++ * been loaded.
++ *
++ * Free up memory used by kernel, initrd, and comand line. This is temporary
++ * memory allocation which is not needed any more after these buffers have
++ * been loaded into separate segments and have been copied elsewhere
 + */
-+#include <asm/page.h>
++static void kimage_file_post_load_cleanup(struct kimage *image)
++{
++	if (image->kernel_buf) {
++		vfree(image->kernel_buf);
++		image->kernel_buf = NULL;
++	}
 +
-+	.text
-+	.align PAGE_SIZE
-+	.code64
-+	.globl purgatory_entry64, purgatory_entry64_regs, entry64_gdt
++	if (image->initrd_buf) {
++		vfree(image->initrd_buf);
++		image->initrd_buf = NULL;
++	}
 +
++	if (image->cmdline_buf) {
++		vfree(image->cmdline_buf);
++		image->cmdline_buf = NULL;
++	}
 +
-+purgatory_entry64:
-+	/* Setup a gdt that should be preserved */
-+	lgdt entry64_gdt(%rip)
++	/* See if architcture has anything to cleanup post load */
++	arch_kimage_file_post_load_cleanup(image);
++}
 +
-+	/* load the data segments */
-+	movl    $0x18, %eax     /* data segment */
-+	movl    %eax, %ds
-+	movl    %eax, %es
-+	movl    %eax, %ss
-+	movl    %eax, %fs
-+	movl    %eax, %gs
++/*
++ * In file mode list of segments is prepared by kernel. Copy relevant
++ * data from user space, do error checking, prepare segment list
++ */
++static int kimage_file_prepare_segments(struct kimage *image, int kernel_fd,
++		int initrd_fd, const char __user *cmdline_ptr,
++		unsigned long cmdline_len)
++{
++	int ret = 0;
++	void *ldata;
 +
-+	/* Setup new stack */
-+	leaq    stack_init(%rip), %rsp
-+	pushq   $0x10 /* CS */
-+	leaq    new_cs_exit(%rip), %rax
-+	pushq   %rax
-+	lretq
-+new_cs_exit:
++	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
++					&image->kernel_buf_len);
++	if (ret)
++		goto out;
++
++	/* Call arch image probe handlers */
++	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
++						image->kernel_buf_len);
++
++	if (ret)
++		goto out;
++
++	ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
++					&image->initrd_buf_len);
++	if (ret)
++		goto out;
++
++	image->cmdline_buf = vzalloc(cmdline_len);
++	if (!image->cmdline_buf)
++		goto out;
++
++	ret = copy_from_user(image->cmdline_buf, cmdline_ptr, cmdline_len);
++	if (ret) {
++		ret = -EFAULT;
++		goto out;
++	}
++
++	image->cmdline_buf_len = cmdline_len;
++
++	/* command line should be a string with last byte null */
++	if (image->cmdline_buf[cmdline_len - 1] != '\0') {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* Call arch image load handlers */
++	ldata = arch_kexec_kernel_image_load(image,
++			image->kernel_buf, image->kernel_buf_len,
++			image->initrd_buf, image->initrd_buf_len,
++			image->cmdline_buf, image->cmdline_buf_len);
++
++	if (IS_ERR(ldata)) {
++		ret = PTR_ERR(ldata);
++		goto out;
++	}
++
++	image->image_loader_data = ldata;
++out:
++	return ret;
++}
++
++static int kimage_file_normal_alloc(struct kimage **rimage, int kernel_fd,
++		int initrd_fd, const char __user *cmdline_ptr,
++		unsigned long cmdline_len)
++{
++	int result;
++	struct kimage *image;
++
++	/* Allocate and initialize a controlling structure */
++	image = do_kimage_alloc_init();
++	if (!image)
++		return -ENOMEM;
++
++	image->file_mode = 1;
++	image->file_handler_idx = -1;
++
++	result = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
++			cmdline_ptr, cmdline_len);
++	if (result)
++		goto out_free_image;
++
++	result = sanity_check_segment_list(image);
++	if (result)
++		goto out_free_post_load_bufs;
++
++	result = -ENOMEM;
++	image->control_code_page = kimage_alloc_control_pages(image,
++					   get_order(KEXEC_CONTROL_PAGE_SIZE));
++	if (!image->control_code_page) {
++		printk(KERN_ERR "Could not allocate control_code_buffer\n");
++		goto out_free_post_load_bufs;
++	}
++
++	image->swap_page = kimage_alloc_control_pages(image, 0);
++	if (!image->swap_page) {
++		printk(KERN_ERR "Could not allocate swap buffer\n");
++		goto out_free_control_pages;
++	}
++
++	*rimage = image;
++	return 0;
++
++out_free_control_pages:
++	kimage_free_page_list(&image->control_pages);
++out_free_post_load_bufs:
++	kimage_file_post_load_cleanup(image);
++	kfree(image->image_loader_data);
++out_free_image:
++	kfree(image);
++	return result;
++}
++
+ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 				unsigned long nr_segments,
+ 				struct kexec_segment __user *segments)
+@@ -679,6 +903,14 @@ static void kimage_free(struct kimage *image)
+ 
+ 	/* Free the kexec control pages... */
+ 	kimage_free_page_list(&image->control_pages);
++
++	kfree(image->image_loader_data);
 +
 +	/*
-+	 * Load the registers except rsp. rsp is already loaded with stack
-+	 * at the end of this page
++	 * Free up any temporary buffers allocated. This might hit if
++	 * error occurred much later after buffer allocation.
 +	 */
-+	movq	rax(%rip), %rax
-+	movq	rbx(%rip), %rbx
-+	movq	rcx(%rip), %rcx
-+	movq	rdx(%rip), %rdx
-+	movq	rsi(%rip), %rsi
-+	movq	rdi(%rip), %rdi
-+	movq	rbp(%rip), %rbp
-+	movq	r8(%rip), %r8
-+	movq	r9(%rip), %r9
-+	movq	r10(%rip), %r10
-+	movq	r11(%rip), %r11
-+	movq	r12(%rip), %r12
-+	movq	r13(%rip), %r13
-+	movq	r14(%rip), %r14
-+	movq	r15(%rip), %r15
++	kimage_file_post_load_cleanup(image);
+ 	kfree(image);
+ }
+ 
+@@ -843,7 +1075,11 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 				PAGE_SIZE - (maddr & ~PAGE_MASK));
+ 		uchunk = min(ubytes, mchunk);
+ 
+-		result = copy_from_user(ptr, buf, uchunk);
++		/* For file based kexec, source pages are in kernel memory */
++		if (image->file_mode)
++			memcpy(ptr, buf, uchunk);
++		else
++			result = copy_from_user(ptr, buf, uchunk);
+ 		kunmap(page);
+ 		if (result) {
+ 			result = -EFAULT;
+@@ -1093,6 +1329,72 @@ asmlinkage long compat_sys_kexec_load(unsigned long entry,
+ }
+ #endif
+ 
++SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd, const char __user *, cmdline_ptr, unsigned long, cmdline_len, unsigned long, flags)
++{
++	int ret = 0, i;
++	struct kimage **dest_image, *image;
 +
-+	/* Jump to the new code... */
-+	jmpq	*rip(%rip)
++	/* We only trust the superuser with rebooting the system. */
++	if (!capable(CAP_SYS_BOOT))
++		return -EPERM;
 +
-+	.balign 16
-+purgatory_entry64_regs:
-+rax:	.quad 0x00000000
-+rbx:	.quad 0x00000000
-+rcx:	.quad 0x00000000
-+rdx:	.quad 0x00000000
-+rsi:	.quad 0x00000000
-+rdi:	.quad 0x00000000
-+rsp:	.quad 0x00000000
-+rbp:	.quad 0x00000000
-+r8:	.quad 0x00000000
-+r9:	.quad 0x00000000
-+r10:	.quad 0x00000000
-+r11:	.quad 0x00000000
-+r12:	.quad 0x00000000
-+r13:	.quad 0x00000000
-+r14:	.quad 0x00000000
-+r15:	.quad 0x00000000
-+rip:	.quad 0x00000000
++	pr_debug("kexec_file_load: kernel_fd=%d initrd_fd=%d cmdline=0x%p"
++			" cmdline_len=%lu flags=0x%lx\n", kernel_fd, initrd_fd,
++			cmdline_ptr, cmdline_len, flags);
 +
-+	/* GDT */
-+	.balign 16
-+entry64_gdt:
-+	/* 0x00 unusable segment
-+	 * 0x08 unused
-+	 * so use them as gdt ptr
++	/* Make sure we have a legal set of flags */
++	if (flags != (flags & KEXEC_FILE_FLAGS))
++		return -EINVAL;
++
++	image = NULL;
++
++	if (!mutex_trylock(&kexec_mutex))
++		return -EBUSY;
++
++	dest_image = &kexec_image;
++	if (flags & KEXEC_FILE_ON_CRASH)
++		dest_image = &kexec_crash_image;
++
++	if (flags & KEXEC_FILE_UNLOAD)
++		goto exchange;
++
++	ret = kimage_file_normal_alloc(&image, kernel_fd, initrd_fd,
++				cmdline_ptr, cmdline_len);
++	if (ret)
++		goto out;
++
++	ret = machine_kexec_prepare(image);
++	if (ret)
++		goto out;
++
++	for (i = 0; i < image->nr_segments; i++) {
++		struct kexec_segment *ksegment;
++
++		ksegment = &image->segment[i];
++		pr_debug("Loading segment %d: buf=0x%p bufsz=0x%lx mem=0x%lx"
++			" memsz=0x%lx\n", i, ksegment->buf, ksegment->bufsz,
++			ksegment->mem, ksegment->memsz);
++		ret = kimage_load_segment(image, &image->segment[i]);
++		if (ret)
++			goto out;
++		pr_debug("Done loading segment %d\n", i);
++	}
++
++	kimage_terminate(image);
++
++	/*
++	 * Free up any temporary buffers allocated which are not needed
++	 * after image has been loaded
 +	 */
-+	.word gdt_end - entry64_gdt - 1
-+	.quad entry64_gdt
-+	.word 0, 0, 0
++	kimage_file_post_load_cleanup(image);
++exchange:
++	image = xchg(dest_image, image);
++out:
++	mutex_unlock(&kexec_mutex);
++	kimage_free(image);
++	return ret;
++}
 +
-+	/* 0x10 4GB flat code segment */
-+	.word 0xFFFF, 0x0000, 0x9A00, 0x00AF
+ void crash_kexec(struct pt_regs *regs)
+ {
+ 	/* Take the kexec_mutex here to prevent sys_kexec_load
+@@ -1647,6 +1949,188 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 
+ module_init(crash_save_vmcoreinfo_init)
+ 
++static int kexec_add_segment(struct kimage *image, char *buf,
++		unsigned long bufsz, unsigned long mem, unsigned long memsz)
++{
++	struct kexec_segment *ksegment;
 +
-+	/* 0x18 4GB flat data segment */
-+	.word 0xFFFF, 0x0000, 0x9200, 0x00CF
-+gdt_end:
++	ksegment = &image->segment[image->nr_segments];
++	ksegment->buf = buf;
++	ksegment->bufsz = bufsz;
++	ksegment->mem = mem;
++	ksegment->memsz = memsz;
++	image->nr_segments++;
 +
-+	.globl kexec_purgatory_code_size
-+.set kexec_purgatory_code_size, . - purgatory_entry64
++	return 0;
++}
 +
-+/* Fill rest of the page with zeros to be used as stack */
-+stack: .fill purgatory_entry64 + PAGE_SIZE - ., 1, 0
-+stack_init:
++static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
++					struct kexec_buf *kbuf)
++{
++	struct kimage *image = kbuf->image;
++	unsigned long temp_start, temp_end;
++
++	temp_end = min(end, kbuf->buf_max);
++	temp_start = temp_end - kbuf->memsz;
++
++	do {
++		/* align down start */
++		temp_start = temp_start & (~ (kbuf->buf_align - 1));
++
++		if (temp_start < start || temp_start < kbuf->buf_min)
++			return 0;
++
++		temp_end = temp_start + kbuf->memsz - 1;
++
++		/*
++		 * Make sure this does not conflict with any of existing
++		 * segments
++		 */
++		if (kimage_is_destination_range(image, temp_start, temp_end)) {
++			temp_start = temp_start - PAGE_SIZE;
++			continue;
++		}
++
++		/* We found a suitable memory range */
++		break;
++	} while(1);
++
++	/* If we are here, we found a suitable memory range */
++	kexec_add_segment(image, kbuf->buffer, kbuf->bufsz, temp_start,
++				kbuf->memsz);
++
++	/* Stop navigating through remaining System RAM ranges */
++	return 1;
++}
++
++static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
++					struct kexec_buf *kbuf)
++{
++	struct kimage *image = kbuf->image;
++	unsigned long temp_start, temp_end;
++
++	temp_start = max(start, kbuf->buf_min);
++
++	do {
++		temp_start = ALIGN(temp_start, kbuf->buf_align);
++		temp_end = temp_start + kbuf->memsz - 1;
++
++		if (temp_end > end || temp_end > kbuf->buf_max)
++			return 0;
++		/*
++		 * Make sure this does not conflict with any of existing
++		 * segments
++		 */
++		if (kimage_is_destination_range(image, temp_start, temp_end)) {
++			temp_start = temp_start + PAGE_SIZE;
++			continue;
++		}
++
++		/* We found a suitable memory range */
++		break;
++	} while(1);
++
++	/* If we are here, we found a suitable memory range */
++	kexec_add_segment(image, kbuf->buffer, kbuf->bufsz, temp_start,
++				kbuf->memsz);
++
++	/* Stop navigating through remaining System RAM ranges */
++	return 1;
++}
++
++static int walk_ram_range_callback(u64 start, u64 end, void *arg)
++{
++	struct kexec_buf *kbuf = (struct kexec_buf *)arg;
++	unsigned long sz = end - start + 1;
++
++	/* Returning 0 will take to next memory range */
++	if (sz < kbuf->memsz)
++		return 0;
++
++	if (end < kbuf->buf_min || start > kbuf->buf_max)
++		return 0;
++
++	/*
++	 * Allocate memory top down with-in ram range. Otherwise bottom up
++	 * allocation.
++	 */
++	if (kbuf->top_down)
++		return locate_mem_hole_top_down(start, end, kbuf);
++	else
++		return locate_mem_hole_bottom_up(start, end, kbuf);
++}
++
++/*
++ * Helper functions for placing a buffer in a kexec segment. This assumes
++ * that kexec_mutex is held.
++ */
++int kexec_add_buffer(struct kimage *image, char *buffer,
++		unsigned long bufsz, unsigned long memsz,
++		unsigned long buf_align, unsigned long buf_min,
++		unsigned long buf_max, int top_down, unsigned long *load_addr)
++{
++
++	unsigned long nr_segments = image->nr_segments, new_nr_segments;
++	struct kexec_segment *ksegment;
++	struct kexec_buf *kbuf;
++
++	/* Currently adding segment this way is allowed only in file mode */
++	if (!image->file_mode)
++		return -EINVAL;
++
++	if (nr_segments >= KEXEC_SEGMENT_MAX)
++		return -EINVAL;
++
++	/*
++	 * Make sure we are not trying to add buffer after allocating
++	 * control pages. All segments need to be placed first before
++	 * any control pages are allocated. As control page allocation
++	 * logic goes through list of segments to make sure there are
++	 * no destination overlaps.
++	 */
++	WARN_ONCE(!list_empty(&image->control_pages), "Adding kexec buffer"
++			" after allocating control pages\n");
++
++	kbuf = kzalloc(sizeof(struct kexec_buf), GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	kbuf->image = image;
++	kbuf->buffer = buffer;
++	kbuf->bufsz = bufsz;
++	/* Align memsz to next page boundary */
++	kbuf->memsz = ALIGN(memsz, PAGE_SIZE);
++
++	/* Align to atleast page size boundary */
++	kbuf->buf_align = max(buf_align, PAGE_SIZE);
++	kbuf->buf_min = buf_min;
++	kbuf->buf_max = buf_max;
++	kbuf->top_down = top_down;
++
++	/* Walk the RAM ranges and allocate a suitable range for the buffer */
++	walk_system_ram_res(0, -1, kbuf, walk_ram_range_callback);
++
++	kbuf->image = NULL;
++	kfree(kbuf);
++
++	/*
++	 * If range could be found successfully, it would have incremented
++	 * the nr_segments value.
++	 */
++	new_nr_segments = image->nr_segments;
++
++	/* A suitable memory range could not be found for buffer */
++	if (new_nr_segments == nr_segments)
++		return -EADDRNOTAVAIL;
++
++	/* Found a suitable memory range */
++
++	ksegment = &image->segment[new_nr_segments - 1];
++	*load_addr = ksegment->mem;
++	return 0;
++}
++
++
+ /*
+  * Move into place and start executing a preloaded standalone
+  * executable.  If nothing was preloaded return an error.
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 7078052..7e1e13d 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -25,6 +25,7 @@ cond_syscall(sys_swapon);
+ cond_syscall(sys_swapoff);
+ cond_syscall(sys_kexec_load);
+ cond_syscall(compat_sys_kexec_load);
++cond_syscall(sys_kexec_file_load);
+ cond_syscall(sys_init_module);
+ cond_syscall(sys_finit_module);
+ cond_syscall(sys_delete_module);
 -- 
 1.7.7.6
 
