@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjZos-0004rA-5s
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 19:21:43 +0000
-Date: Thu, 21 Nov 2013 14:21:14 -0500
+ id 1VjZsG-0004vO-6a
+ for kexec@lists.infradead.org; Thu, 21 Nov 2013 19:25:12 +0000
+Date: Thu, 21 Nov 2013 14:24:47 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 5/6] kexec-bzImage: Support for loading bzImage using
- 64bit entry
-Message-ID: <20131121192114.GN16208@redhat.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131121192447.GO16208@redhat.com>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <1384969851-7251-6-git-send-email-vgoyal@redhat.com>
- <20131121190710.GD17070@kroah.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131121190350.GC17070@kroah.com>
+ <20131121190620.GA25951@srcf.ucam.org>
+ <20131121191305.GK16208@redhat.com>
+ <20131121191907.GA26366@srcf.ucam.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131121190710.GD17070@kroah.com>
+In-Reply-To: <20131121191907.GA26366@srcf.ucam.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,46 +29,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Greg KH <greg@kroah.com>
-Cc: mjg59@srcf.ucam.org, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, ebiederm@xmission.com, hpa@zytor.com
 
-On Thu, Nov 21, 2013 at 11:07:10AM -0800, Greg KH wrote:
-> On Wed, Nov 20, 2013 at 12:50:50PM -0500, Vivek Goyal wrote:
-> > This is loader specific code which can load bzImage and set it up for
-> > 64bit entry. This does not take care of 32bit entry or real mode entry
-> > yet.
+On Thu, Nov 21, 2013 at 07:19:07PM +0000, Matthew Garrett wrote:
+> On Thu, Nov 21, 2013 at 02:13:05PM -0500, Vivek Goyal wrote:
+> > On Thu, Nov 21, 2013 at 07:06:20PM +0000, Matthew Garrett wrote:
+> > > That would require a certain degree of massaging from userspace if we 
+> > > want to be able to use the existing Authenticode signatures. Otherwise 
+> > > we need to sign kernels twice.
 > > 
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > ---
-> >  arch/x86/include/asm/kexec-bzimage.h |   12 +
-> >  arch/x86/include/asm/kexec.h         |   26 +++
-> >  arch/x86/kernel/Makefile             |    2 +
-> >  arch/x86/kernel/kexec-bzimage.c      |  375 ++++++++++++++++++++++++++++++++++
-> >  arch/x86/kernel/machine_kexec_64.c   |    4 +-
-> >  arch/x86/kernel/purgatory_entry_64.S |  119 +++++++++++
-> >  6 files changed, 537 insertions(+), 1 deletions(-)
-> >  create mode 100644 arch/x86/include/asm/kexec-bzimage.h
-> >  create mode 100644 arch/x86/kernel/kexec-bzimage.c
-> >  create mode 100644 arch/x86/kernel/purgatory_entry_64.S
+> > I was thinking oof signing the same kernel twice. Can I sign authenticode
+> > signed kernel again (using RSA signature as we do for modules) and append
+> > the signature to bzImage. 
 > 
-> Wow, that's surprisingly small, nice job.
-> 
-> What do you mean by the "real mode entry"?  Do we need to care about
-> that because we aren't falling back to real mode when executing this,
-> are we?  Or does that just happen for 32bit kernels?
+> No, you'd need to do it the other way around.
 
-Original kexec offers real mode entry choice too. So we fall back
-to real mode and jump to kernel and kernel makes bunch of BIOS calls. I
-don't think this is a commonly used option.
+Then I can't assume that RSA signatures are appened to bzImage, as we
+do for modules.
 
-For 32bit kernels, currently by default we use 32bit entry point of
-bzImage and we don't drop to real mode. Real mode entry is forced
-by user using command line option --real-mode to kexec-tools.
-
-So this is one of the features of existing kexec-tools I just wanted
-to make it explicitly clear that I have not taken care of that feature
-as it is not a commonly used one. If somebody needs it, they can implement
-it.
+Also I am assuming that authenticode signing will change something in
+PE/COFF header and that would invalidate the bzImage signature.
 
 Thanks
 Vivek
