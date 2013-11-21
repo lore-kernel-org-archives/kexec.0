@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjZic-0004eY-RW
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 19:15:15 +0000
-Date: Thu, 21 Nov 2013 14:14:46 -0500
+ id 1VjZkb-0004k2-Cz
+ for kexec@lists.infradead.org; Thu, 21 Nov 2013 19:17:17 +0000
+Date: Thu, 21 Nov 2013 14:16:53 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
-Message-ID: <20131121191446.GL16208@redhat.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131121191653.GM16208@redhat.com>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <CAMuHMdVoGC3+q2UKvogL=BjkXO3k3Dq9+gGF+7CczG-PJcQPxw@mail.gmail.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131121190350.GC17070@kroah.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVoGC3+q2UKvogL=BjkXO3k3Dq9+gGF+7CczG-PJcQPxw@mail.gmail.com>
+In-Reply-To: <20131121190350.GC17070@kroah.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,24 +26,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: Greg KH <greg@kroah.com>
+Cc: mjg59@srcf.ucam.org, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com
 
-On Thu, Nov 21, 2013 at 08:06:02PM +0100, Geert Uytterhoeven wrote:
-> On Wed, Nov 20, 2013 at 6:50 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
-> > Now a new system call kexec_file_load() is implemented which takes
-> > kernel fd and initrd fd as parameters. Now kernel should be able
-> > to verify signature of newly loaded kernel.
+On Thu, Nov 21, 2013 at 11:03:50AM -0800, Greg KH wrote:
+> On Wed, Nov 20, 2013 at 12:50:49PM -0500, Vivek Goyal wrote:
+> > This patch implements the in kernel kexec functionality. It implements a
+> > new system call kexec_file_load. I think parameter list of this system
+> > call will change as I have not done the kernel image signature handling
+> > yet. I have been told that I might have to pass the detached signature
+> > and size as part of system call.
 > 
-> Only kernel fd and initrd fd?
-> What about other fds (e.g. device tree, bootinfo)?
+> This could be done as we do with modules, and just tack the signature
+> onto the end of the 'blob' of the image.  That way we could use the same
+> tool to sign the binary as we do for modules, and save the need for
+> extra parameters in the syscall.
 
-Now bootparams and any other stuff is prepared by kernel. So like a
-bootloader we just need to know 3 things. Kernel, initrd and command line
-and kernel should do the rest.
+I was hoping to do that. Just that we will have to somehow resolve the
+conflict with PE/COFF authenticode signature of kernel.
 
-In future we can define few flags to alter the loading behavior. Like
-force 32bit or 16bit entry instead of default 64bit for bzImage.
+> 
+> > +/*
+> > + * Free up tempory buffers allocated which are not needed after image has
+> > + * been loaded.
+> > + *
+> > + * Free up memory used by kernel, initrd, and comand line. This is temporary
+> > + * memory allocation which is not needed any more after these buffers have
+> > + * been loaded into separate segments and have been copied elsewhere
+> > + */
+> > +static void kimage_file_post_load_cleanup(struct kimage *image)
+> > +{
+> > +	if (image->kernel_buf) {
+> > +		vfree(image->kernel_buf);
+> > +		image->kernel_buf = NULL;
+> > +	}
+> > +
+> > +	if (image->initrd_buf) {
+> > +		vfree(image->initrd_buf);
+> > +		image->initrd_buf = NULL;
+> > +	}
+> > +
+> > +	if (image->cmdline_buf) {
+> > +		vfree(image->cmdline_buf);
+> > +		image->cmdline_buf = NULL;
+> > +	}
+> 
+> No need to check the buffer before calling vfree(), it can handle NULL
+> just fine.
+
+Ok, I will remove this extra non-null check.
 
 Thanks
 Vivek
