@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjaDC-0005S0-K3
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 19:46:52 +0000
-Date: Thu, 21 Nov 2013 14:46:23 -0500
+ id 1Vjbsg-0007Z2-Eh
+ for kexec@lists.infradead.org; Thu, 21 Nov 2013 21:33:47 +0000
+Date: Thu, 21 Nov 2013 16:33:00 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
-Message-ID: <20131121194623.GP16208@redhat.com>
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <20131121185828.GA17070@kroah.com>
- <20131121190729.GI16208@redhat.com>
+Subject: Re: [PATCH v6 2/3] x86, apic: Add disable_cpu_apicid kernel parameter
+Message-ID: <20131121213300.GR16208@redhat.com>
+References: <20131121015951.2748.47826.stgit@localhost6.localdomain6>
+ <20131121020044.2748.70221.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131121190729.GI16208@redhat.com>
+In-Reply-To: <20131121020044.2748.70221.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,417 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mjg59@srcf.ucam.org, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
 
-On Thu, Nov 21, 2013 at 02:07:29PM -0500, Vivek Goyal wrote:
+On Thu, Nov 21, 2013 at 11:00:44AM +0900, HATAYAMA Daisuke wrote:
 
 [..]
-> > Very good stuff, thanks for working on this.  How have you been testing
-> > this on the userspace side?  Are there patches to kexec, or are you just
-> > using a small test program with the new syscall?
-> 
-> I wrote a patch for kexec-tools. One can choose to use new system call
-> by passing command line option --use-kexec2-syscall. I will post
-> that patch soon in this mail thread.
+> @@ -2122,6 +2129,19 @@ void generic_processor_info(int apicid, int version)
+>  	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
+>  				phys_cpu_present_map);
+>  
+> +	if (disabled_cpu_apicid != BAD_APICID &&
+> +	    disabled_cpu_apicid != boot_cpu_physical_apicid &&
 
-I have been using following kexec-tools patch to test this code.
+Hi Hatayama,
+
+So we are comparing disabled_cpu_apicid with boot_cpu_physical_apicid
+to make sure that one can not disable the cpu we are booting on. Can
+we just read the apic id of booting cpu in local variable and compare
+against that?
+
+Something like as follows.
+
+	if (disabled_cpu_apicid != BAD_APICID &&
+	    disabled_cpu_apicid == apicid &&
+	    disabled_cpu_apicid != read_apic_id()) {
+		/* Disable cpu */	
+	}
+
+If above works, you will not need first patch in the series?
 
 Thanks
 Vivek
-
-
-kexec-tools: Provide an option to make use of new system call
-
-This patch provides and option --use-kexec2-syscall, to force use of
-new system call for kexec. Default is to continue to use old syscall.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- kexec/arch/x86_64/kexec-bzImage64.c |   86 ++++++++++++++++++++++++++
- kexec/kexec-syscall.h               |   24 +++++++
- kexec/kexec.c                       |  118 +++++++++++++++++++++++++++++++++++-
- kexec/kexec.h                       |    9 ++
- 4 files changed, 234 insertions(+), 3 deletions(-)
-
-Index: kexec-tools/kexec/kexec.c
-===================================================================
---- kexec-tools.orig/kexec/kexec.c	2013-11-20 10:28:26.652380051 -0500
-+++ kexec-tools/kexec/kexec.c	2013-11-20 11:31:44.906046486 -0500
-@@ -51,6 +51,7 @@
- unsigned long long mem_min = 0;
- unsigned long long mem_max = ULONG_MAX;
- static unsigned long kexec_flags = 0;
-+static unsigned long kexec2_flags = 0;
- int kexec_debug = 0;
- 
- void die(const char *fmt, ...)
-@@ -781,6 +782,19 @@ static int my_load(const char *type, int
- 	return result;
- }
- 
-+static int kexec2_unload(unsigned long kexec2_flags)
-+{
-+	int ret = 0;
-+
-+	ret = kexec_file_load(-1, -1, NULL, 0, kexec2_flags);
-+	if (ret != 0) {
-+		/* The unload failed, print some debugging information */
-+		fprintf(stderr, "kexec_file_load(unload) failed\n: %s\n",
-+			strerror(errno));
-+	}
-+	return ret;
-+}
-+
- static int k_unload (unsigned long kexec_flags)
- {
- 	int result;
-@@ -919,6 +933,7 @@ void usage(void)
- 	       "                      (0 means it's not jump back or\n"
- 	       "                      preserve context)\n"
- 	       "                      to original kernel.\n"
-+	       " -s --use-kexec2-syscall Use new syscall for kexec operation\n"
- 	       " -d, --debug           Enable debugging to help spot a failure.\n"
- 	       "\n"
- 	       "Supported kernel file types and options: \n");
-@@ -1066,6 +1081,70 @@ char *concat_cmdline(const char *base, c
- 	return cmdline;
- }
- 
-+/* New file based kexec system call related code */
-+static int kexec2_load(int fileind, int argc, char **argv,
-+			unsigned long flags) {
-+
-+	char *kernel;
-+	int kernel_fd, i;
-+	struct kexec_info info;
-+	int ret = 0;
-+	char *kernel_buf;
-+	off_t kernel_size;
-+
-+	memset(&info, 0, sizeof(info));
-+	info.segment = NULL;
-+	info.nr_segments = 0;
-+	info.entry = NULL;
-+	info.backup_start = 0;
-+	info.kexec_flags = flags;
-+
-+	info.file_mode = 1;
-+	info.initrd_fd = -1;
-+
-+	if (argc - fileind <= 0) {
-+		fprintf(stderr, "No kernel specified\n");
-+		usage();
-+		return -1;
-+	}
-+
-+	kernel = argv[fileind];
-+
-+	kernel_fd = open(kernel, O_RDONLY);
-+	if (kernel_fd == -1) {
-+		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
-+				strerror(errno));
-+		return -1;
-+	}
-+
-+	/* slurp in the input kernel */
-+	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
-+
-+	for (i = 0; i < file_types; i++) {
-+		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
-+			break;
-+	}
-+
-+	if (i == file_types) {
-+		fprintf(stderr, "Cannot determine the file type " "of %s\n",
-+				kernel);
-+		return -1;
-+	}
-+
-+	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
-+	if (ret < 0) {
-+		fprintf(stderr, "Cannot load %s\n", kernel);
-+		return ret;
-+	}
-+
-+	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line,
-+			info.command_line_len, info.kexec_flags);
-+	if (ret != 0)
-+		fprintf(stderr, "kexec_file_load failed: %s\n",
-+					strerror(errno));
-+	return ret;
-+}
-+
- 
- int main(int argc, char *argv[])
- {
-@@ -1077,6 +1156,7 @@ int main(int argc, char *argv[])
- 	int do_ifdown = 0;
- 	int do_unload = 0;
- 	int do_reuse_initrd = 0;
-+	int do_use_kexec2_syscall = 0;
- 	void *entry = 0;
- 	char *type = 0;
- 	char *endptr;
-@@ -1089,6 +1169,23 @@ int main(int argc, char *argv[])
- 	};
- 	static const char short_options[] = KEXEC_ALL_OPT_STR;
- 
-+	/*
-+	 * First check if --use-kexec2-syscall is set. That changes lot of
-+	 * things
-+	 */
-+	while ((opt = getopt_long(argc, argv, short_options,
-+				  options, 0)) != -1) {
-+		switch(opt) {
-+		case OPT_USE_KEXEC2_SYSCALL:
-+			do_use_kexec2_syscall = 1;
-+			break;
-+		}
-+	}
-+
-+	/* Reset getopt for the next pass. */
-+	opterr = 1;
-+	optind = 1;
-+
- 	while ((opt = getopt_long(argc, argv, short_options,
- 				  options, 0)) != -1) {
- 		switch(opt) {
-@@ -1121,6 +1218,8 @@ int main(int argc, char *argv[])
- 			do_shutdown = 0;
- 			do_sync = 0;
- 			do_unload = 1;
-+			if (do_use_kexec2_syscall)
-+				kexec2_flags |= KEXEC_FILE_UNLOAD;
- 			break;
- 		case OPT_EXEC:
- 			do_load = 0;
-@@ -1163,7 +1262,10 @@ int main(int argc, char *argv[])
- 			do_exec = 0;
- 			do_shutdown = 0;
- 			do_sync = 0;
--			kexec_flags = KEXEC_ON_CRASH;
-+			if (do_use_kexec2_syscall)
-+				kexec2_flags |= KEXEC_FILE_ON_CRASH;
-+			else
-+				kexec_flags = KEXEC_ON_CRASH;
- 			break;
- 		case OPT_MEM_MIN:
- 			mem_min = strtoul(optarg, &endptr, 0);
-@@ -1188,6 +1290,9 @@ int main(int argc, char *argv[])
- 		case OPT_REUSE_INITRD:
- 			do_reuse_initrd = 1;
- 			break;
-+		case OPT_USE_KEXEC2_SYSCALL:
-+			/* We already parsed it. Nothing to do. */
-+			break;
- 		default:
- 			break;
- 		}
-@@ -1232,10 +1337,17 @@ int main(int argc, char *argv[])
- 	}
- 
- 	if (do_unload) {
--		result = k_unload(kexec_flags);
-+		if (do_use_kexec2_syscall)
-+			result = kexec2_unload(kexec2_flags);
-+		else
-+			result = k_unload(kexec_flags);
- 	}
- 	if (do_load && (result == 0)) {
--		result = my_load(type, fileind, argc, argv, kexec_flags, entry);
-+		if (do_use_kexec2_syscall)
-+			result = kexec2_load(fileind, argc, argv, kexec2_flags);
-+		else
-+			result = my_load(type, fileind, argc, argv,
-+						kexec_flags, entry);
- 	}
- 	/* Don't shutdown unless there is something to reboot to! */
- 	if ((result == 0) && (do_shutdown || do_exec) && !kexec_loaded()) {
-Index: kexec-tools/kexec/kexec.h
-===================================================================
---- kexec-tools.orig/kexec/kexec.h	2013-11-20 10:28:26.652380051 -0500
-+++ kexec-tools/kexec/kexec.h	2013-11-20 10:28:47.806336565 -0500
-@@ -154,6 +154,13 @@ struct kexec_info {
- 	unsigned long kexec_flags;
- 	unsigned long backup_src_start;
- 	unsigned long backup_src_size;
-+	/* Set to 1 if we are using kexec2 syscall */
-+	unsigned long file_mode :1;
-+
-+	/* Filled by kernel image processing code */
-+	int initrd_fd;
-+	char *command_line;
-+	int command_line_len;
- };
- 
- struct arch_map_entry {
-@@ -205,6 +212,7 @@ extern int file_types;
- #define OPT_UNLOAD		'u'
- #define OPT_TYPE		't'
- #define OPT_PANIC		'p'
-+#define OPT_USE_KEXEC2_SYSCALL	's'
- #define OPT_MEM_MIN             256
- #define OPT_MEM_MAX             257
- #define OPT_REUSE_INITRD	258
-@@ -228,6 +236,7 @@ extern int file_types;
- 	{ "mem-min",		1, 0, OPT_MEM_MIN }, \
- 	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
- 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
-+	{ "use-kexec2-syscall",	0, 0, OPT_USE_KEXEC2_SYSCALL }, \
- 	{ "debug",		0, 0, OPT_DEBUG }, \
- 
- #define KEXEC_OPT_STR "h?vdfxluet:p"
-Index: kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c
-===================================================================
---- kexec-tools.orig/kexec/arch/x86_64/kexec-bzImage64.c	2013-11-20 10:28:26.652380051 -0500
-+++ kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c	2013-11-20 10:28:47.807336610 -0500
-@@ -229,6 +229,89 @@ static int do_bzImage64_load(struct kexe
- 	return 0;
- }
- 
-+/* This assumes file is being loaded using file based kexec2 syscall */
-+int bzImage64_load_file(int argc, char **argv, struct kexec_info *info)
-+{
-+	int ret = 0;
-+	char *command_line = NULL, *tmp_cmdline = NULL;
-+	const char *ramdisk = NULL, *append = NULL;
-+	int entry_16bit = 0, entry_32bit = 0;
-+	int opt;
-+	int command_line_len;
-+
-+	/* See options.h -- add any more there, too. */
-+	static const struct option options[] = {
-+		KEXEC_ARCH_OPTIONS
-+		{ "command-line",	1, 0, OPT_APPEND },
-+		{ "append",		1, 0, OPT_APPEND },
-+		{ "reuse-cmdline",	0, 0, OPT_REUSE_CMDLINE },
-+		{ "initrd",		1, 0, OPT_RAMDISK },
-+		{ "ramdisk",		1, 0, OPT_RAMDISK },
-+		{ "real-mode",		0, 0, OPT_REAL_MODE },
-+		{ "entry-32bit",	0, 0, OPT_ENTRY_32BIT },
-+		{ 0,			0, 0, 0 },
-+	};
-+	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
-+
-+	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
-+		switch (opt) {
-+		default:
-+			/* Ignore core options */
-+			if (opt < OPT_ARCH_MAX)
-+				break;
-+		case OPT_APPEND:
-+			append = optarg;
-+			break;
-+		case OPT_REUSE_CMDLINE:
-+			tmp_cmdline = get_command_line();
-+			break;
-+		case OPT_RAMDISK:
-+			ramdisk = optarg;
-+			break;
-+		case OPT_REAL_MODE:
-+			entry_16bit = 1;
-+			break;
-+		case OPT_ENTRY_32BIT:
-+			entry_32bit = 1;
-+			break;
-+		}
-+	}
-+	command_line = concat_cmdline(tmp_cmdline, append);
-+	if (tmp_cmdline)
-+		free(tmp_cmdline);
-+	command_line_len = 0;
-+	if (command_line) {
-+		command_line_len = strlen(command_line) + 1;
-+	} else {
-+		command_line = strdup("\0");
-+		command_line_len = 1;
-+	}
-+
-+	if (entry_16bit || entry_32bit) {
-+		fprintf(stderr, "Kexec2 syscall does not support 16bit"
-+			" or 32bit entry yet\n");
-+		ret = -1;
-+		goto out;
-+	}
-+
-+	if (ramdisk) {
-+		info->initrd_fd = open(ramdisk, O_RDONLY);
-+		if (info->initrd_fd == -1) {
-+			fprintf(stderr, "Could not open initrd file %s:%s\n",
-+					ramdisk, strerror(errno));
-+			ret = -1;
-+			goto out;
-+		}
-+	}
-+
-+	info->command_line = command_line;
-+	info->command_line_len = command_line_len;
-+	return ret;
-+out:
-+	free(command_line);
-+	return ret;
-+}
-+
- int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
-@@ -241,6 +324,9 @@ int bzImage64_load(int argc, char **argv
- 	int opt;
- 	int result;
- 
-+	if (info->file_mode)
-+		return bzImage64_load_file(argc, argv, info);
-+
- 	/* See options.h -- add any more there, too. */
- 	static const struct option options[] = {
- 		KEXEC_ARCH_OPTIONS
-Index: kexec-tools/kexec/kexec-syscall.h
-===================================================================
---- kexec-tools.orig/kexec/kexec-syscall.h	2013-11-20 10:28:26.652380051 -0500
-+++ kexec-tools/kexec/kexec-syscall.h	2013-11-20 10:28:47.808336655 -0500
-@@ -50,6 +50,18 @@
- #endif
- #endif /*ifndef __NR_kexec_load*/
- 
-+#ifndef __NR_kexec_file_load
-+
-+#ifdef __x86_64__
-+#define __NR_kexec_file_load	314
-+#endif
-+
-+#ifndef __NR_kexec_file_load
-+#error Unknown processor architecture.  Needs a kexec_load syscall number.
-+#endif
-+
-+#endif /*ifndef __NR_kexec_file_load*/
-+
- struct kexec_segment;
- 
- static inline long kexec_load(void *entry, unsigned long nr_segments,
-@@ -58,10 +70,22 @@ static inline long kexec_load(void *entr
- 	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
- }
- 
-+static inline long kexec_file_load(int kernel_fd, int initrd_fd,
-+			const char *cmdline_ptr, unsigned long cmdline_len,
-+			unsigned long flags)
-+{
-+	return (long) syscall(__NR_kexec_file_load, kernel_fd, initrd_fd,
-+				cmdline_ptr, cmdline_len, flags);
-+}
-+
- #define KEXEC_ON_CRASH		0x00000001
- #define KEXEC_PRESERVE_CONTEXT	0x00000002
- #define KEXEC_ARCH_MASK		0xffff0000
- 
-+/* Flags for kexec file based system call */
-+#define KEXEC_FILE_UNLOAD	0x00000001
-+#define KEXEC_FILE_ON_CRASH	0x00000002
-+
- /* These values match the ELF architecture values. 
-  * Unless there is a good reason that should continue to be the case.
-  */
 
 _______________________________________________
 kexec mailing list
