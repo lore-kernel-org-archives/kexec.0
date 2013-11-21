@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjJZp-00069R-L3
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 02:01:08 +0000
+ id 1VjJZu-00069V-5a
+ for kexec@lists.infradead.org; Thu, 21 Nov 2013 02:01:11 +0000
 Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 6BAEE3EE0C8
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:40 +0900 (JST)
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 526AC3EE0CE
+ for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
 Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C32345DE51
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:40 +0900 (JST)
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3FC5745DE52
+ for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
 Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 421FB45DE53
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:40 +0900 (JST)
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 277A945DE55
+ for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
 Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3129C1DB8042
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:40 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BB7D9E38002
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:39 +0900 (JST)
-Subject: [PATCH v6 1/3] x86, apic: add bios_bsp_physical_apicid
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 10A6E1DB8045
+ for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id B75551DB8042
+ for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:50 +0900 (JST)
+Subject: [PATCH v6 3/3] Documentation, x86, apic,
+ kexec: Add disable_cpu_apicid kernel parameter
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Thu, 21 Nov 2013 11:00:39 +0900
-Message-ID: <20131121020039.2748.72482.stgit@localhost6.localdomain6>
+Date: Thu, 21 Nov 2013 11:00:50 +0900
+Message-ID: <20131121020050.2748.28393.stgit@localhost6.localdomain6>
 In-Reply-To: <20131121015951.2748.47826.stgit@localhost6.localdomain6>
 References: <20131121015951.2748.47826.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -41,136 +42,36 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
 
-Add bios_bsp_physical_apicid variable. This variable is initialized
-with the value reported by BIOS tables such as ACPI MADT or MP table.
-
-Without this variable, boot_cpu_physical_apicid temporarilly has the
-value around MP table related codes such as kernel/mpparse.c,
-mm/amdtopology.c and platform/visws/visws_quirks.c until it is
-rewritten back in init_apic_mappings() to the initial APIC ID for the
-processor that is doing boot up.
-
-This change is also required by the next commit introducing new
-disable_cpu_apicid kernel parameter, where the value specified via
-disable_cpu_apicid is compared with boot_cpu_physical_apicid in
-generic_processor_info(), but in case of using MP table, the
-boot_cpu_physical_apicid is rewiriten by MP_processor_info() to the
-initial APIC ID of the BSP reported by BIOS, which is problematic if
-some AP is specified in disable_cpu_apic.
-
-There's no functional change intended on kernel/mpparse.c,
-mm/amdtopology.c and platform/visws/visws_quirks.c by the introduction
-of bios_bsp_physical_apicid.
-
-The reason why we don't use cpuid is that we cannot use IA32_APIC_BASE
-MSR to determine if the booting up cpu is BSP since rdmsr() to the MSR
-could not work well even if it exists on some system, e.g. some
-cluster system.
+Add disable_cpu_apicid kernel parameter to disable the CPU with the
+specified number of initial APIC ID, mostly used for the kdump 2nd
+kernel to disable BSP to wake up multiple CPUs without causing system
+reset or hang due to sending INIT from AP to BSP.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- arch/x86/include/asm/mpspec.h          |    1 +
- arch/x86/kernel/acpi/boot.c            |    8 ++++++++
- arch/x86/kernel/apic/apic.c            |    9 +++++++++
- arch/x86/kernel/mpparse.c              |    2 +-
- arch/x86/mm/amdtopology.c              |    6 +++---
- arch/x86/platform/visws/visws_quirks.c |    2 +-
- 6 files changed, 23 insertions(+), 5 deletions(-)
+ Documentation/kernel-parameters.txt |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/include/asm/mpspec.h b/arch/x86/include/asm/mpspec.h
-index 626cf70..3f9f94b 100644
---- a/arch/x86/include/asm/mpspec.h
-+++ b/arch/x86/include/asm/mpspec.h
-@@ -47,6 +47,7 @@ extern int mp_bus_id_to_type[MAX_MP_BUSSES];
- extern DECLARE_BITMAP(mp_bus_not_pci, MAX_MP_BUSSES);
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index fcbb736..0ca0902 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -774,6 +774,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 	disable=	[IPV6]
+ 			See Documentation/networking/ipv6.txt.
  
- extern unsigned int boot_cpu_physical_apicid;
-+extern unsigned int bios_bsp_physical_apicid;
- extern unsigned int max_physical_apicid;
- extern int mpc_default_type;
- extern unsigned long mp_lapic_addr;
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 40c7660..f62226a 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -206,6 +206,14 @@ static void acpi_register_lapic(int id, u8 enabled)
- 	if (boot_cpu_physical_apicid != -1U)
- 		ver = apic_version[boot_cpu_physical_apicid];
- 
-+	/*
-+	 * ACPI specification describes that platform firmware should
-+	 * list the BSP processor as the first LAPIC entry in the
-+	 * MADT.
-+	 */
-+	if (!num_processors && !disabled_cpus)
-+		bios_bsp_physical_apicid = id;
++	disable_cpu_apicid= [X86,APIC,KEXEC,SMP]
++			Format: <int>
++			The number of initial APIC ID for the
++			corresponding CPU to be disabled at boot,
++			mostly used for the kdump 2nd kernel to
++			disable BSP to wake up multiple CPUs without
++			causing system reset or hang due to sending
++			INIT from AP to BSP.
 +
- 	generic_processor_info(id, ver);
- }
- 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index a7eb82d..cff8d71 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -63,6 +63,15 @@ unsigned disabled_cpus;
- /* Processor that is doing the boot up */
- unsigned int boot_cpu_physical_apicid = -1U;
- 
-+/* Processor with BP flag on IA32_APIC_BASE MSR to be initialized with
-+ * the value reported by BIOS tables such as ACPI MADT or MP table,
-+ * not with the value obtained by rdmsr(IA32_APIC_MSR) since it
-+ * possibly doesn't work well on some clustered system.
-+ *
-+ * In case of kexec, this can differ from the processor that is doing
-+ * the boot up. */
-+unsigned int bios_bsp_physical_apicid = BAD_APICID;
-+
- /*
-  * The highest APIC ID seen during enumeration.
-  */
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index d2b5648..5bb5220 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -64,7 +64,7 @@ static void __init MP_processor_info(struct mpc_cpu *m)
- 
- 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
- 		bootup_cpu = " (Bootup-CPU)";
--		boot_cpu_physical_apicid = m->apicid;
-+		bios_bsp_physical_apicid = m->apicid;
- 	}
- 
- 	printk(KERN_INFO "Processor #%d%s\n", m->apicid, bootup_cpu);
-diff --git a/arch/x86/mm/amdtopology.c b/arch/x86/mm/amdtopology.c
-index 2ca15b5..788012e 100644
---- a/arch/x86/mm/amdtopology.c
-+++ b/arch/x86/mm/amdtopology.c
-@@ -183,9 +183,9 @@ int __init amd_numa_init(void)
- 
- 	/* get the APIC ID of the BSP early for systems with apicid lifting */
- 	early_get_boot_cpu_id();
--	if (boot_cpu_physical_apicid > 0) {
--		pr_info("BSP APIC ID: %02x\n", boot_cpu_physical_apicid);
--		apicid_base = boot_cpu_physical_apicid;
-+	if (bios_bsp_physical_apicid > 0) {
-+		pr_info("BSP APIC ID: %02x\n", bios_bsp_physical_apicid);
-+		apicid_base = bios_bsp_physical_apicid;
- 	}
- 
- 	for_each_node_mask(i, numa_nodes_parsed)
-diff --git a/arch/x86/platform/visws/visws_quirks.c b/arch/x86/platform/visws/visws_quirks.c
-index 94d8a39..5a91e50 100644
---- a/arch/x86/platform/visws/visws_quirks.c
-+++ b/arch/x86/platform/visws/visws_quirks.c
-@@ -166,7 +166,7 @@ static void __init MP_processor_info(struct mpc_cpu *m)
- 	       (m->cpufeature & CPU_MODEL_MASK) >> 4, m->apicver);
- 
- 	if (m->cpuflag & CPU_BOOTPROCESSOR)
--		boot_cpu_physical_apicid = m->apicid;
-+		bios_bsp_physical_apicid = m->apicid;
- 
- 	ver = m->apicver;
- 	if ((ver >= 0x14 && m->apicid >= 0xff) || m->apicid >= 0xf) {
+ 	disable_ddw     [PPC/PSERIES]
+ 			Disable Dynamic DMA Window support. Use this if
+ 			to workaround buggy firmware.
 
 
 _______________________________________________
