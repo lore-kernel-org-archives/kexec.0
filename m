@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjNbQ-0001Wt-SM
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 06:19:01 +0000
-Message-Id: <20131121061752.715177297@dhcp-16-126.nay.redhat.com>
-Date: Thu, 21 Nov 2013 14:17:05 +0800
+ id 1VjNbQ-0001Wu-Dz
+ for kexec@lists.infradead.org; Thu, 21 Nov 2013 06:19:00 +0000
+Message-Id: <20131121061753.223578092@dhcp-16-126.nay.redhat.com>
+Date: Thu, 21 Nov 2013 14:17:06 +0800
 From: dyoung@redhat.com
-Subject: [patch 1/9 v3] efi: remove unused variables in __map_region
+Subject: [patch 2/9 v3] efi: add a wrapper function efi_map_region_fixed
 References: <20131121061704.363730447@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline; filename=01-remove-unused-var-in-map-region.patch
+Content-Disposition: inline; filename=02-efi-map-fixed-addr.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,33 +25,63 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-variables size and end is useless in this function, thus remove them.
+Kexec kernel will use saved runtime virtual mapping, so add a
+new function efi_map_region_fixed for directly mapping a md
+to md->virt.
 
-Reported-by: Toshi Kani <toshi.kani@hp.com>
+The md is passed in from 1st kernel, the virtual addr is
+saved in md->virt_addr.
+
+Matt: coding style
+      reuse __map_region
+
 Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- arch/x86/platform/efi/efi_64.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/x86/include/asm/efi.h     |    1 +
+ arch/x86/platform/efi/efi_32.c |    2 ++
+ arch/x86/platform/efi/efi_64.c |   10 ++++++++++
+ 3 files changed, 13 insertions(+)
 
+--- efi.orig/arch/x86/include/asm/efi.h
++++ efi/arch/x86/include/asm/efi.h
+@@ -128,6 +128,7 @@ extern void efi_call_phys_epilog(void);
+ extern void efi_unmap_memmap(void);
+ extern void efi_memory_uc(u64 addr, unsigned long size);
+ extern void __init efi_map_region(efi_memory_desc_t *md);
++extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
+ extern void efi_sync_low_kernel_mappings(void);
+ extern void efi_setup_page_tables(void);
+ extern void __init old_map_region(efi_memory_desc_t *md);
 --- efi.orig/arch/x86/platform/efi/efi_64.c
 +++ efi/arch/x86/platform/efi/efi_64.c
-@@ -148,15 +148,11 @@ void efi_setup_page_tables(void)
- static void __init __map_region(efi_memory_desc_t *md, u64 va)
+@@ -199,6 +199,16 @@ void __init efi_map_region(efi_memory_de
+ 	md->virt_addr = efi_va;
+ }
+ 
++/*
++ * kexec kernel will use efi_map_region_fixed to map efi
++ * runtime memory ranges. md->virt_addr is the original virtual
++ * address which had been mapped in kexec 1st kernel.
++ */
++void __init efi_map_region_fixed(efi_memory_desc_t *md)
++{
++	__map_region(md, md->virt_addr);
++}
++
+ void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
+ 				 u32 type, u64 attribute)
  {
- 	pgd_t *pgd = (pgd_t *)__va(real_mode_header->trampoline_pgd);
--	unsigned long pf = 0, size;
--	u64 end;
-+	unsigned long pf = 0;
+--- efi.orig/arch/x86/platform/efi/efi_32.c
++++ efi/arch/x86/platform/efi/efi_32.c
+@@ -47,6 +47,8 @@ void __init efi_map_region(efi_memory_de
+ 	old_map_region(md);
+ }
  
- 	if (!(md->attribute & EFI_MEMORY_WB))
- 		pf |= _PAGE_PCD;
- 
--	size = md->num_pages << PAGE_SHIFT;
--	end  = va + size;
--
- 	if (kernel_map_pages_in_pgd(pgd, md->phys_addr, va, md->num_pages, pf))
- 		pr_warn("Error mapping PA 0x%llx -> VA 0x%llx!\n",
- 			   md->phys_addr, va);
++void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
++
+ void efi_call_phys_prelog(void)
+ {
+ 	struct desc_ptr gdt_descr;
 
 
 _______________________________________________
