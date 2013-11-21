@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjNxk-0001ym-Er
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 06:42:06 +0000
-Message-Id: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
-Date: Thu, 21 Nov 2013 14:40:43 +0800
+ id 1VjNxp-0001yo-4D
+ for kexec@lists.infradead.org; Thu, 21 Nov 2013 06:42:11 +0000
+Message-Id: <20131121064124.976429787@dhcp-16-126.nay.redhat.com>
+Date: Thu, 21 Nov 2013 14:40:45 +0800
 From: dyoung@redhat.com
-Subject: [patch 0/4 v3] kexec-tools: efi runtime support
+Subject: [patch 2/4 v3] Add function get_bootparam
+References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
+Content-Disposition: inline;
+ filename=01-kexec-add-function-get-boot-param.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +24,88 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-Hi,
+Not only setup_subarch will get data from debugfs file
+boot_params/data, later code for adding efi_info will
+also need do same thing. Thus add a common function here
+for later use.
 
-This is the v3 patchset for adding efi runtime support on kexec kernel
-kernel patches was sent a while ago, not yet updated in archive. 
+v1->v2: make get_bootparam() static
+v2->v3: return error code when get_bootparam fails because
+        later patch to collect efi runtime maps will not
+        necessary if get_bootparam fails.
+	switch to use /sys/kernel/boot_params if possible. 
+	return error code for later use in setup_efi_info.
 
-in kexec-tools, this patchset will do below:
-1. retrieve efi_info from sysfs boot_params, and fill the
-x86 setup header. If kernel does not export sysfs boot_params,
-still try to find them in debugfs.
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ kexec/arch/i386/x86-linux-setup.c |   42 ++++++++++++++++++++++++++++----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
-2. collect data efi runtime needed:
-/sys/firmware/efi/systab: smbios
-/sys/firmware/efi/fw_vendor
-/sys/firmware/efi/runtime
-/sys/firmware/efi/config_table
+--- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
++++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
+@@ -436,28 +436,48 @@ char *find_mnt_by_fsname(char *fsname)
+ 	return mntdir;
+ }
+ 
+-void setup_subarch(struct x86_linux_param_header *real_mode)
++static int get_bootparam(void *buf, off_t offset, size_t size)
+ {
+ 	int data_file;
+-	const off_t offset = offsetof(typeof(*real_mode), hardware_subarch);
+-	char *debugfs_mnt;
++	char *debugfs_mnt, *sysfs_mnt;
+ 	char filename[PATH_MAX];
++	int err, has_sysfs_params = 0;
++
++	sysfs_mnt = find_mnt_by_fsname("sysfs");
++	if (sysfs_mnt) {
++		snprintf(filename, PATH_MAX, "%s/%s", sysfs_mnt,
++			"kernel/boot_params/data");
++		free(sysfs_mnt);
++		err = access(filename, F_OK);
++		if (!err)
++			has_sysfs_params = 1;
++	}
+ 
+-	debugfs_mnt = find_mnt_by_fsname("debugfs");
+-	if (!debugfs_mnt)
+-		return;
+-	snprintf(filename, PATH_MAX, "%s/%s", debugfs_mnt, "boot_params/data");
+-	filename[PATH_MAX-1] = 0;
+-	free(debugfs_mnt);
++	if (!has_sysfs_params) {
++		debugfs_mnt = find_mnt_by_fsname("debugfs");
++		if (!debugfs_mnt)
++			return 1;
++		snprintf(filename, PATH_MAX, "%s/%s", debugfs_mnt,
++				"boot_params/data");
++		free(debugfs_mnt);
++	}
+ 
+ 	data_file = open(filename, O_RDONLY);
+ 	if (data_file < 0)
+-		return;
++		return 1;
+ 	if (lseek(data_file, offset, SEEK_SET) < 0)
+ 		goto close;
+-	read(data_file, &real_mode->hardware_subarch, sizeof(uint32_t));
++	read(data_file, buf, size);
+ close:
+ 	close(data_file);
++	return 0;
++}
++
++void setup_subarch(struct x86_linux_param_header *real_mode)
++{
++	off_t offset = offsetof(typeof(*real_mode), hardware_subarch);
++
++	get_bootparam(&real_mode->hardware_subarch, offset, sizeof(uint32_t));
+ }
+ 
+ void setup_linux_system_parameters(struct kexec_info *info,
 
-/sys/firmware/efi/runtime-map/*, the phys-virt mappings in 1st kernel
-
-3. assemble setup_data based on data get in 2) then pass it to 2nd kernel
-
-Tested on OVMF, dell laptop, lenovo laptop and HP workstation
-
-TODO: add functions for easily adding setup_data, arrange them as link list
-because we probably will add e820 memory ranges as setup_data as well.
-I do not prefer to bloat this patchset anymore, so I'd likt to address this
-issue after the efi runtime issue finished unless people request.
-
-V2 changelog:
-Address comments from
-Simon:
-  coding style, fixed a mem leak
-HPA:
-  use type uint64_t instead of __uint64_t
-mjg:
-  do not cause regression for loading old kernel
-  use xloadflags to check the bzImage support for efi.
-  in case old kernel, do not pass efi_info and setup_data
-  for new kernel, do not pass acpi_rsdp
-Vivek:
-  suggest to export a value in bzImage probe for efi support
-  so it can be used to check if we should pass acpi_rsdp.
-
-V3 changelog:
-01/04: new patch of a building fix
-try sysfs firstly for boot params
-add checking of efi memory range description version, bail out if it's not 1
-error handling improvement and some cleanups
-
---
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
