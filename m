@@ -1,31 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjJZu-00069V-5a
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 02:01:11 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 526AC3EE0CE
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3FC5745DE52
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 277A945DE55
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 10A6E1DB8045
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:51 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id B75551DB8042
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2013 11:00:50 +0900 (JST)
-Subject: [PATCH v6 3/3] Documentation, x86, apic,
- kexec: Add disable_cpu_apicid kernel parameter
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Thu, 21 Nov 2013 11:00:50 +0900
-Message-ID: <20131121020050.2748.28393.stgit@localhost6.localdomain6>
-In-Reply-To: <20131121015951.2748.47826.stgit@localhost6.localdomain6>
-References: <20131121015951.2748.47826.stgit@localhost6.localdomain6>
+ id 1VjMQI-0000PG-Dj
+ for kexec@lists.infradead.org; Thu, 21 Nov 2013 05:03:28 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: /proc/vmcore mmap() failure issue
+Date: Thu, 21 Nov 2013 05:00:09 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971C43E3@BPXM01GP.gisp.nec.co.jp>
+References: <20131113204130.GD7613@redhat.com>
+ <5284A689.70903@jp.fujitsu.com> <20131114151359.GA3913@redhat.com>
+ <5285EC60.1060906@jp.fujitsu.com> <20131115142617.GC6637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
+ <20131118135511.GA30637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C3862@BPXM01GP.gisp.nec.co.jp>
+ <20131120145901.GB27924@redhat.com>
+In-Reply-To: <20131120145901.GB27924@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,40 +29,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-Add disable_cpu_apicid kernel parameter to disable the CPU with the
-specified number of initial APIC ID, mostly used for the kdump 2nd
-kernel to disable BSP to wake up multiple CPUs without causing system
-reset or hang due to sending INIT from AP to BSP.
+Hello Vivek,
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- Documentation/kernel-parameters.txt |    9 +++++++++
- 1 file changed, 9 insertions(+)
+On 2013/11/21 0:00:01, kexec <kexec-bounces@lists.infradead.org> wrote:
+> > > > > Is there any chance that you could look into fixing this. I 
+> > > > > have no experience writing code for makedumpfile.
+> > > > 
+> > > > I'll send a patch to fix this soon.
+> > > 
+> > > Thanks Atsushi.
+> > > 
+> > > Vivek
+> > 
+> > Vivek, could you test this patch ?
+> > 
+> > Thanks
+> > Atsushi Kumagai
+> > 
+> > 
+> > From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> > Date: Wed, 20 Nov 2013 10:05:03 +0900
+> > Subject: [PATCH] Disable mmap() for reading fractional pages.
+> > 
+> > Since mmap() was introduced on /proc/vmcore, it fails for fractional 
+> > pages which don't start or end at page boundary due to kernel issue.
+> > This patch disables mmap() temporarily for fractional pages to avoid 
+> > this issue, so mmap() will be used only for aligned pages.
+> > 
+> > Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> 
+> Hi Atsushi,
+> 
+> Even with this patch applied I see mmap() failure.
+> 
+> mem_map (39)
+>   mem_map    : ffffea0004e00000
+>   pfn_start  : 138000
+>   pfn_end    : 140000
+> read /proc/vmcore with mmap()
+> Excluding unnecessary pages        : [100.0 %] |STEP [Excluding
+> unnecessary pages] : 0.035925 seconds
+> Excluding unnecessary pages        : [100.0 %] \STEP [Excluding
+> unnecessary pages] : 0.035774 seconds
+> Excluding unnecessary pages        : [100.0 %] -STEP [Excluding
+> unnecessary pages] : 0.035229 seconds
+> Copying data                       : [ 40.9 %] -Can't map
+> [b98fd000-b9cfd000] with mmap()
+> read_from_vmcore: Can't read the dump memory(/proc/vmcore) with mmap().
+> readpage_elf: Can't read the dump memory(/proc/vmcore).
+> readmem: type_addr: 1, addr:bffba000, size:4096
+> read_pfn: Can't get the page data.
+>  Resource temporarily unavailable
+> makedumpfile Failed.
+> kdump: saving vmcore failed
+> 
+> Following is part of /proc/iomem on my system.
+> 
+> 00100000-bffc283f : System RAM
+>   01000000-018c551d : Kernel code
+>   018c551e-01ef3f3f : Kernel data
+>   0204a000-02984fff : Kernel bss
+>   2e000000-35ffffff : Crash kernel
+> bffc2840-bfffffff : reserved
+> 
+> This is a different system than what I used last time. So I am not sure if this is same error or something else. But one thing is clear that System RAM last page is partial and we should face mmap() failure.
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index fcbb736..0ca0902 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -774,6 +774,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 	disable=	[IPV6]
- 			See Documentation/networking/ipv6.txt.
- 
-+	disable_cpu_apicid= [X86,APIC,KEXEC,SMP]
-+			Format: <int>
-+			The number of initial APIC ID for the
-+			corresponding CPU to be disabled at boot,
-+			mostly used for the kdump 2nd kernel to
-+			disable BSP to wake up multiple CPUs without
-+			causing system reset or hang due to sending
-+			INIT from AP to BSP.
-+
- 	disable_ddw     [PPC/PSERIES]
- 			Disable Dynamic DMA Window support. Use this if
- 			to workaround buggy firmware.
+Thanks for your testing, I've found my mistake.
 
+My patch tries to disable mmap() when a partial page is found, but
+actually mmap() has already been called because update_mmap_range()
+calls mmap() for every 4MB region in advance.
+If we try to keep using mmap() as much as possible, update_mmap_range()
+has to check whether the target region of mmap() includes the partial
+pages before calling mmap(), but it's too tough as workaround. 
+
+So I think the patch I sent is enough, the policy will be simpler as
+"Don't use mmap() for buggy kernels".
+
+[PATCH] Fall back to read() when mmap() fails.
+http://lists.infradead.org/pipermail/kexec/2013-November/010199.html
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
