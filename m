@@ -1,16 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjdLU-0000ta-HQ
- for kexec@lists.infradead.org; Thu, 21 Nov 2013 23:07:37 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
-Date: Thu, 21 Nov 2013 15:07:04 -0800
-In-Reply-To: <1384969851-7251-1-git-send-email-vgoyal@redhat.com> (Vivek
- Goyal's message of "Wed, 20 Nov 2013 12:50:45 -0500")
-Message-ID: <8761rl73s7.fsf@xmission.com>
+ id 1VjeqS-0002KD-L8
+ for kexec@lists.infradead.org; Fri, 22 Nov 2013 00:43:41 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 1FA253EE0C2
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 09:43:14 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id ED72845DEBF
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 09:43:13 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.nic.fujitsu.com [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id CEF2345DD76
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 09:43:13 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id BDA14E1800A
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 09:43:13 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7045CE18006
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 09:43:13 +0900 (JST)
+Message-ID: <528EA874.9010609@jp.fujitsu.com>
+Date: Fri, 22 Nov 2013 09:42:28 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
+Subject: Re: [PATCH v6 2/3] x86, apic: Add disable_cpu_apicid kernel parameter
+References: <20131121015951.2748.47826.stgit@localhost6.localdomain6>
+ <20131121020044.2748.70221.stgit@localhost6.localdomain6>
+ <20131121213300.GR16208@redhat.com>
+In-Reply-To: <20131121213300.GR16208@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,60 +36,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, greg@kroah.com, hpa@zytor.com
+Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+(2013/11/22 6:33), Vivek Goyal wrote:
+> On Thu, Nov 21, 2013 at 11:00:44AM +0900, HATAYAMA Daisuke wrote:
+>
+> [..]
+>> @@ -2122,6 +2129,19 @@ void generic_processor_info(int apicid, int version)
+>>   	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
+>>   				phys_cpu_present_map);
+>>
+>> +	if (disabled_cpu_apicid != BAD_APICID &&
+>> +	    disabled_cpu_apicid != boot_cpu_physical_apicid &&
+>
+> Hi Hatayama,
+>
+> So we are comparing disabled_cpu_apicid with boot_cpu_physical_apicid
+> to make sure that one can not disable the cpu we are booting on. Can
+> we just read the apic id of booting cpu in local variable and compare
+> against that?
+>
+> Something like as follows.
+>
+> 	if (disabled_cpu_apicid != BAD_APICID &&
+> 	    disabled_cpu_apicid == apicid &&
+> 	    disabled_cpu_apicid != read_apic_id()) {
+> 		/* Disable cpu */	
+> 	}
+>
+> If above works, you will not need first patch in the series?
+>
 
-> Current proposed secureboot implementation disables kexec/kdump because
-> it can allow unsigned kernel to run on a secureboot platform. Intial
-> idea was to sign /sbin/kexec binary and let that binary do the kernel
-> signature verification. I had posted RFC patches for this apparoach
-> here.
->
-> https://lkml.org/lkml/2013/9/10/560
->
-> Later we had discussion at Plumbers and most of the people thought
-> that signing and trusting /sbin/kexec is becoming complex. So a 
-> better idea might be let kernel do the signature verification of
-> new kernel being loaded. This calls for implementing a new system call
-> and moving lot of user space code in kernel.
->
-> kexec_load() system call allows loading a kexec/kdump kernel and jump
-> to that kernel at right time. Though a lot of processing is done in
-> user space which prepares a list of segments/buffers to be loaded and
-> kexec_load() works on that list of segments. It does not know what's
-> contained in those segments.
->
-> Now a new system call kexec_file_load() is implemented which takes
-> kernel fd and initrd fd as parameters. Now kernel should be able
-> to verify signature of newly loaded kernel. 
->
-> This is an early RFC patchset. I have not done signature handling
-> part yet. This is more of a minimal patch to show how new system
-> call and functionality will look like. Right now it can only handle
-> bzImage with 64bit entry point on x86_64. No EFI, no x86_32  or any
-> other architecture. Rest of the things can be added slowly as need
-> arises. In first iteration, I have tried to address most common use case
-> for us.
->
-> Any feedback is welcome.
+Yes, I came up with the idea, too. But doing this means we leave two different
+ways boot_cpu_physical_apicid is used at boot, which seemed incomplete as a
+patch. Also, then we could even lost the reason why boot_cpu_physical_apicid
+exists.
 
-Before you are done we need an ELF loader.  bzImage really is very
-uninteresting.  To the point I am not at all convinced that an in kernel
-loader should support it.
+But, it's true that the 1st patch causes one more reviewing point. I'll
+remove it and fix the 2nd patch just as you suggested here.
 
-There is also a huge missing piece of this in that your purgatory is not
-checking a hash of the loaded image before jumping too it.  Without that
-this is a huge regression at least for the kexec on panic case.  We
-absolutely need to check that the kernel sitting around in memory has
-not been corrupted before we let it run very far.
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-Eric
 
 _______________________________________________
 kexec mailing list
