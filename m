@@ -1,34 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from mail-pd0-x231.google.com ([2607:f8b0:400e:c02::231])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vjl05-0007sb-7J
- for kexec@lists.infradead.org; Fri, 22 Nov 2013 07:18:05 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 8C6BE3EE1D9
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 16:17:31 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 7BB6245DE4C
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 16:17:31 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.nic.fujitsu.com [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 58BB945DE56
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 16:17:31 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 34949E38007
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 16:17:31 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id D465B1DB803A
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 16:17:30 +0900 (JST)
-Message-ID: <528F04EB.4070109@jp.fujitsu.com>
-Date: Fri, 22 Nov 2013 16:16:59 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+ id 1Vjmk8-0001cP-7I
+ for kexec@lists.infradead.org; Fri, 22 Nov 2013 09:09:41 +0000
+Received: by mail-pd0-f177.google.com with SMTP id q10so995183pdj.36
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 01:09:17 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
-References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
- <20131105202631.GC4598@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
- <527AE4DE.3050209@jp.fujitsu.com>
-In-Reply-To: <527AE4DE.3050209@jp.fujitsu.com>
+In-Reply-To: <20131122015518.GA31921@redhat.com>
+References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+ <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
+Date: Fri, 22 Nov 2013 10:09:17 +0100
+Message-ID: <CAMuHMdUVvhKLBfZo2gBf=FoQxMEM42yzBjYS8r5sVfXgp940ng@mail.gmail.com>
+Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,112 +21,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-(2013/11/07 9:54), HATAYAMA Daisuke wrote:
-> (2013/11/06 11:21), Atsushi Kumagai wrote:
->> (2013/11/06 5:27), Vivek Goyal wrote:
->>> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
->>>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
->>>>
->>>> This patch requires the kernel patch to export necessary data structures into
->>>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
->>>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
->>>>
->>>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
->>>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
->>>
->>> Interesting. Why hugepages should be treated any differentely than normal
->>> pages?
->>>
->>> If user asked to filter out free page, then it should be filtered and
->>> it should not matter whether it is a huge page or not?
->>
->> I'm making a RFC patch of hugepages filtering based on such policy.
->>
->> I attach the prototype version.
->> It's able to filter out also THPs, and suitable for cyclic processing
->> because it depends on mem_map and looking up it can be divided into
->> cycles. This is the same idea as page_is_buddy().
->>
->> So I think it's better.
->>
+On Fri, Nov 22, 2013 at 2:55 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
+>> Before you are done we need an ELF loader.  bzImage really is very
+>> uninteresting.  To the point I am not at all convinced that an in kernel
+>> loader should support it.
 >
->> @@ -4506,14 +4583,49 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->>                && !isAnon(mapping)) {
->>                if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
->>                    pfn_cache_private++;
->> +            /*
->> +             * NOTE: If THP for cache is introduced, the check for
->> +             *       compound pages is needed here.
->> +             */
->>            }
->>            /*
->>             * Exclude the data page of the user process.
->>             */
->> -        else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
->> -            && isAnon(mapping)) {
->> -            if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
->> -                pfn_user++;
->> +        else if (info->dump_level & DL_EXCLUDE_USER_DATA) {
->> +            /*
->> +             * Exclude the anonnymous pages as user pages.
->> +             */
->> +            if (isAnon(mapping)) {
->> +                if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
->> +                    pfn_user++;
->> +
->> +                /*
->> +                 * Check the compound page
->> +                 */
->> +                if (page_is_hugepage(flags) && compound_order > 0) {
->> +                    int i, nr_pages = 1 << compound_order;
->> +
->> +                    for (i = 1; i < nr_pages; ++i) {
->> +                        if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
->> +                            pfn_user++;
->> +                    }
->> +                    pfn += nr_pages - 2;
->> +                    mem_map += (nr_pages - 1) * SIZE(page);
->> +                }
->> +            }
->> +            /*
->> +             * Exclude the hugetlbfs pages as user pages.
->> +             */
->> +            else if (hugetlb_dtor == SYMBOL(free_huge_page)) {
->> +                int i, nr_pages = 1 << compound_order;
->> +
->> +                for (i = 0; i < nr_pages; ++i) {
->> +                    if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
->> +                        pfn_user++;
->> +                }
->> +                pfn += nr_pages - 1;
->> +                mem_map += (nr_pages - 1) * SIZE(page);
->> +            }
->>            }
->>            /*
->>             * Exclude the hwpoison page.
+> Hi Eric,
 >
-> I'm concerned about the case that filtering is not performed to part of mem_map
-> entries not belonging to the current cyclic range.
+> Why ELF case is so interesting. I have not use kexec to boot ELF
+> images in years and have not seen others using it too. In fact bzImage
+> seems to be the most common kernel image format for x86, most of the distros
+> ship and use.
 >
-> If maximum value of compound_order is larger than maximum value of
-> CONFIG_FORCE_MAX_ZONEORDER, which makedumpfile obtains by ARRAY_LENGTH(zone.free_area),
-> it's necessary to align info->bufsize_cyclic with larger one in
-> check_cyclic_buffer_overrun().
->
+> So first I did the loader for the common use case. There is no reason
+> that one can't write another loader for ELF images. It just bloats
+> the code. Hence I thought that other image loaders can follow slowly. I am
+> not sure why do you say that bzImage is uninteresting.
 
-ping, in case you overlooked this...
+Welcome to the non-x86-centric world ;-)
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+Looking at kexec-tools, all of arm, cris, i386, ia64, m68k, mips, ppc, ppc64,
+s390, sh, and x86_64 support ELF.
+Only arm, i386, ppc, ppc64, sh, and x86_64 support zImage.
+It's not clear to me what alpha supports (if it supports anything at all?).
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
