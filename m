@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjxZQ-0001mv-2H
- for kexec@lists.infradead.org; Fri, 22 Nov 2013 20:43:20 +0000
-Date: Fri, 22 Nov 2013 21:42:52 +0100 (CET)
-From: Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-In-Reply-To: <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
-Message-ID: <alpine.LRH.2.00.1311222136030.9932@twin.jikos.cz>
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
-MIME-Version: 1.0
+Received: from g4t0017.houston.hp.com ([15.201.24.20])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VjzJW-0003UI-GQ
+ for kexec@lists.infradead.org; Fri, 22 Nov 2013 22:35:03 +0000
+Message-ID: <1385159385.1791.160.camel@misato.fc.hp.com>
+Subject: Re: [patch 0/9 v3] kexec kernel efi runtime support
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Fri, 22 Nov 2013 15:29:45 -0700
+In-Reply-To: <20131121061704.363730447@dhcp-16-126.nay.redhat.com>
+References: <20131121061704.363730447@dhcp-16-126.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,56 +18,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: dyoung@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Wed, 20 Nov 2013, Vivek Goyal wrote:
-
-> This patch implements the in kernel kexec functionality. It implements a
-> new system call kexec_file_load. I think parameter list of this system
-> call will change as I have not done the kernel image signature handling
-> yet. I have been told that I might have to pass the detached signature
-> and size as part of system call.
-> 
-> Previously segment list was prepared in user space. Now user space just
-> passes kernel fd, initrd fd and command line and kernel will create a
-> segment list internally.
-> 
-> This patch contains generic part of the code. Actual segment preparation
-> and loading is done by arch and image specific loader. Which comes in
-> next patch.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-[ ... snip ... ]
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 6238927..50bcaa8 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-[ ... snip ... ]
-> @@ -843,7 +1075,11 @@ static int kimage_load_normal_segment(struct kimage *image,
->  				PAGE_SIZE - (maddr & ~PAGE_MASK));
->  		uchunk = min(ubytes, mchunk);
->  
-> -		result = copy_from_user(ptr, buf, uchunk);
-> +		/* For file based kexec, source pages are in kernel memory */
-> +		if (image->file_mode)
-> +			memcpy(ptr, buf, uchunk);
-
-Very minor nit I came across when going through the patchset -- can't we 
-use some different buffer for the file-based kexec that's not marked 
-__user here? This really causes some eye-pain when looking at the code.
-
-Thanks a lot for pushing this patchset forward,
-
--- 
-Jiri Kosina
-SUSE Labs
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCAyMDEzLTExLTIxIGF0IDE0OjE3ICswODAwLCBkeW91bmdAcmVkaGF0LmNvbSB3cm90
+ZToKPiBIaSwKPiAKPiBIZXJlIGlzIHRoZSBWMyBmb3Igc3VwcG9ydGluZyBrZXhlYyBrZXJuZWwg
+ZWZpIHJ1bnRpbWUuCj4gUGVyIHBlcnZpb3VzIGRpc2N1c3Npb24gSSBwYXNzIHRoZSAxc3Qga2Vy
+bmVsIGVmaSBydW50aW1lIG1hcHBpbmcKPiB2aWEgc2V0dXBfZGF0YSB0byAybmQga2VybmVsLiBC
+ZXNpZGVzIG9mIHRoZSBydW50aW1lIG1hcHBpbmcKPiBpbmZvIEkgYWxzbyBwYXNzIHRoZSBmd192
+ZW5kb3IsIHJ1bnRpbWUsIGNvbmZpZyB0YWJsZSwgc21iaW9zCj4gcGh5c2ljYWwgYWRkcmVzcyBp
+biBzZXR1cF9kYXRhLiBFRkkgc3BlYyBtZW50aW9uZWQgZndfdmVuZG9yLAo+IHJ1bnRpbWUsIGNv
+bmZpZyB0YWJsZSBhZGRyZXNzZXMgd2lsbCBiZSBjb252ZXJ0ZWQgdG8gdmlydCBhZGRyZXNzCj4g
+YWZ0ZXIgZW50ZXJpbmcgdmlydHVhbCBtb2RlLCBidXQgd2Ugd2lsbCB1c2UgaXQgYXMgcGh5c2lj
+YWwgYWRkcmVzcwo+IGluIGVmaV9pbml0LiBGb3Igc21iaW9zIEVGSSBzcGVjIGRpZCBub3QgbWVu
+dGlvbiBhYm91dCB0aGUgYWRkcmVzcwo+IHVwZGF0aW5nLCBidXQgZHVyaW5nIG15IHRlc3Qgb24g
+YSBIUCB3b3Jrc3RhdGlvbiwgdGhlIGJpb3Mgd2lsbAo+IGNvbnZlcnQgaXQgdG8gVmlydCBhZGRy
+LCB0aHVzIHBhc3MgaXQgaW4gc2V0dXBfZGF0YSBhcyB3ZWxsLgo+IAo+IEZvciBmd192ZW5kb3Is
+IHJ1bnRpbWUsIGNvbmZpZyB0YWJsZSwgSSBleHBvcnQgdGhlbSBpbiAvc3lzL2Zpcm13YXJlLwo+
+IGVmaS8sIHNtYmlvcyBpcyBhbHJlYWR5IGluIC9zeXMvZmlybXdhcmUvZWZpL3N5c3RhYi4KPiAK
+PiBGb3IgZWZpIHJ1bnRpbWUgbWFwcGluZyBJIGFkZCBhIG5ldyBkaXJlY3RvcnkgL3N5cy9maXJt
+d2FyZS9lZmkvCj4gcnVudGltZS1tYXAvIGxpa2UgYmVsb3cKPiBbZGF2ZUBkYXJrc3RhciB+XSQg
+dHJlZSAvc3lzL2Zpcm13YXJlL2VmaS9ydW50aW1lLW1hcC8KPiAvc3lzL2Zpcm13YXJlL2VmaS9y
+dW50aW1lLW1hcC8KPiDilJzilIDilIAgMAo+IOKUgiAgIOKUnOKUgOKUgCBhdHRyaWJ1dGUKPiDi
+lIIgICDilJzilIDilIAgbnVtX3BhZ2VzCj4g4pSCICAg4pSc4pSA4pSAIHBoeXNfYWRkcgo+IOKU
+giAgIOKUnOKUgOKUgCB0eXBlCj4g4pSCICAg4pSU4pSA4pSAIHZpcnRfYWRkcgo+IOKUnOKUgOKU
+gCAxCj4g4pSCICAg4pSc4pSA4pSAIGF0dHJpYnV0ZQo+IOKUgiAgIOKUnOKUgOKUgCBudW1fcGFn
+ZXMKPiDilIIgICDilJzilIDilIAgcGh5c19hZGRyCj4g4pSCICAg4pSc4pSA4pSAIHR5cGUKPiDi
+lIIgICDilJTilIDilIAgdmlydF9hZGRyCj4gW3NuaXBdCj4gIAo+IGtleGVjLXRvb2xzIHdpbGwg
+YXNzZW1ibGUgdGhlbSBhcyBzZXR1cF9kYXRhIGFuZCBwYXNzIHRvIDJuZCBrZXJuZWwuCj4gSSB3
+aWxsIHNlbmQgdXNlcnNwYWNlIHBhdGNoZXMgYXMgd2VsbC4KPiAKPiBMaW1pdGF0aW9uIGlzIEkg
+b25seSB3cml0ZSBzdXBwb3J0IGZvciB4ODZfNjQsIHRlc3Qgb24gYmVsb3cgbWFjaGluZXM6Cj4g
+TGVub3ZvIHRoaW5rcGFkIHQ0MjAKPiBEZWxsIGluc3Bpcm9uIDE0IC0gMzQyMQo+IEhQIFo0MjAg
+d29ya3N0YXRpb24KPiBRZW11ICsgT1ZNRgoKVGVzdGVkIG9uIGFuIEhQIEVGSS1iYXNlZCA2MC13
+YXkgc2VydmVyIChwcm90b3R5cGUpLiAgRm9yIHRoZSBzZXJpZXM6CgpUZXN0ZWQtYnk6IFRvc2hp
+IEthbmkgPHRvc2hpLmthbmlAaHAuY29tPgoKVGhhbmtzLAotVG9zaGkKCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
