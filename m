@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-x231.google.com ([2607:f8b0:400e:c02::231])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vjmk8-0001cP-7I
- for kexec@lists.infradead.org; Fri, 22 Nov 2013 09:09:41 +0000
-Received: by mail-pd0-f177.google.com with SMTP id q10so995183pdj.36
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 01:09:17 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <20131122015518.GA31921@redhat.com>
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
-Date: Fri, 22 Nov 2013 10:09:17 +0100
-Message-ID: <CAMuHMdUVvhKLBfZo2gBf=FoQxMEM42yzBjYS8r5sVfXgp940ng@mail.gmail.com>
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VjpXL-0004iV-O9
+ for kexec@lists.infradead.org; Fri, 22 Nov 2013 12:08:40 +0000
+Received: from int-mx01.intmail.prod.int.phx2.redhat.com
+ (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rAMC8GYm024358
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2013 07:08:16 -0500
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH] makedumpfile: add a new function
+ update_cyclic_region_without_exclude for partial_bitmap1 setting
+Date: Fri, 22 Nov 2013 20:07:22 +0800
+Message-Id: <1385122042-22959-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,47 +21,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, chaowang@redhat.com
 
-On Fri, Nov 22, 2013 at 2:55 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
->> Before you are done we need an ELF loader.  bzImage really is very
->> uninteresting.  To the point I am not at all convinced that an in kernel
->> loader should support it.
->
-> Hi Eric,
->
-> Why ELF case is so interesting. I have not use kexec to boot ELF
-> images in years and have not seen others using it too. In fact bzImage
-> seems to be the most common kernel image format for x86, most of the distros
-> ship and use.
->
-> So first I did the loader for the common use case. There is no reason
-> that one can't write another loader for ELF images. It just bloats
-> the code. Hence I thought that other image loaders can follow slowly. I am
-> not sure why do you say that bzImage is uninteresting.
+When use "--message-level 31" to do a kdump compressed dump, printing
+message is not correct any more. Free pages number is doubled as below.
 
-Welcome to the non-x86-centric world ;-)
+Original pages  : 0x000000000007539c
+  Excluded pages   : 0x00000000000d986a
+    Pages filled with zero  : 0x0000000000001196
+    Cache pages             : 0x0000000000025008
+    Cache pages + private   : 0x0000000000004baa
+    User process data pages : 0x00000000000127d0
+    Free pages              : 0x000000000009c352
+    Hwpoison pages          : 0x0000000000000000
+  Remaining pages  : 0xfffffffffff9bb32
+  (The number of pages is reduced to 38418230895101%.)
+Memory Hole     : 0x000000000000ac62
+--------------------------------------------------
+Total pages     : 0x000000000007fffe
 
-Looking at kexec-tools, all of arm, cris, i386, ia64, m68k, mips, ppc, ppc64,
-s390, sh, and x86_64 support ELF.
-Only arm, i386, ppc, ppc64, sh, and x86_64 support zImage.
-It's not clear to me what alpha supports (if it supports anything at all?).
+After review code, it's caused by update_cyclic_region. This function calls
+exclude_unnecessary_pages_cyclic to set partial_bitmap2, then free pages are
+counted. But when write the 1st bitmap, it's also called though it is
+useless, and pfn_free add free pages number. Here add a new function
+update_cyclic_region_without_exclude which is used to set partial_bitmap1
+specifically.
+---
+ makedumpfile.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 3746cf6..367e8cf 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -4745,6 +4745,26 @@ update_cyclic_region(unsigned long long pfn)
+ 	return TRUE;
+ }
+ 
++
++int
++update_cyclic_region_without_exclude(unsigned long long pfn)
++{
++	if (is_cyclic_region(pfn))
++		return TRUE;
++
++	info->cyclic_start_pfn = round(pfn, info->pfn_cyclic);
++	info->cyclic_end_pfn = info->cyclic_start_pfn + info->pfn_cyclic;
++
++	if (info->cyclic_end_pfn > info->max_mapnr)
++		info->cyclic_end_pfn = info->max_mapnr;
++
++	if (info->flag_elf_dumpfile && !create_1st_bitmap_cyclic())
++		return FALSE;
++
++	return TRUE;
++}
++
++
+ int
+ copy_bitmap(void)
+ {
+@@ -6805,7 +6825,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
+ 		if (is_cyclic_region(pfn))
+ 			continue;
+-		if (!update_cyclic_region(pfn))
++		if (!update_cyclic_region_without_exclude(pfn))
+ 			return FALSE;
+ 		if (!create_1st_bitmap_cyclic())
+ 			return FALSE;
+-- 
+1.8.3.1
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
