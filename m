@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjwiY-0000if-GE
- for kexec@lists.infradead.org; Fri, 22 Nov 2013 19:48:43 +0000
-Date: Fri, 22 Nov 2013 11:48:14 -0800
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
-Message-ID: <20131122194814.GC25105@kroah.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VjxZQ-0001mv-2H
+ for kexec@lists.infradead.org; Fri, 22 Nov 2013 20:43:20 +0000
+Date: Fri, 22 Nov 2013 21:42:52 +0100 (CET)
+From: Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+In-Reply-To: <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+Message-ID: <alpine.LRH.2.00.1311222136030.9932@twin.jikos.cz>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
- <87txf4y304.fsf@xmission.com> <20131122141945.GE4046@redhat.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131122141945.GE4046@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,44 +25,49 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, hpa@zytor.com, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Fri, Nov 22, 2013 at 09:19:46AM -0500, Vivek Goyal wrote:
-> On Fri, Nov 22, 2013 at 05:34:03AM -0800, Eric W. Biederman wrote:
+On Wed, 20 Nov 2013, Vivek Goyal wrote:
+
+> This patch implements the in kernel kexec functionality. It implements a
+> new system call kexec_file_load. I think parameter list of this system
+> call will change as I have not done the kernel image signature handling
+> yet. I have been told that I might have to pass the detached signature
+> and size as part of system call.
 > 
-> [..]
-> > > Why ELF case is so interesting. I have not use kexec to boot ELF
-> > > images in years and have not seen others using it too. In fact bzImage
-> > > seems to be the most common kernel image format for x86, most of the distros
-> > > ship and use.
-> > 
-> > ELF is interesting because it is the minimal file format that does
-> > everything you need.   So especially for a proof of concept ELF needs to
-> > come first.  There is an extra virtual address field in the ELF segment
-> > header but otherwise ELF does not have any unnecessary fields.
-> > 
-> > ELF is interesting because it is the native kernel file format on all
-> > architectures linux supports including x86.
-> > 
-> > ELF is interesting because producing an ELF image in practice requires
-> > a trivial amount of tooling so it is a good general purpose format to
-> > support.
+> Previously segment list was prepared in user space. Now user space just
+> passes kernel fd, initrd fd and command line and kernel will create a
+> segment list internally.
 > 
-> Ok. I will have a look at ELF loader too. I was hoping to keep only one
-> loader in initial patch. But looks like that's not acceptable.
+> This patch contains generic part of the code. Actual segment preparation
+> and loading is done by arch and image specific loader. Which comes in
+> next patch.
+> 
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+[ ... snip ... ]
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 6238927..50bcaa8 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+[ ... snip ... ]
+> @@ -843,7 +1075,11 @@ static int kimage_load_normal_segment(struct kimage *image,
+>  				PAGE_SIZE - (maddr & ~PAGE_MASK));
+>  		uchunk = min(ubytes, mchunk);
+>  
+> -		result = copy_from_user(ptr, buf, uchunk);
+> +		/* For file based kexec, source pages are in kernel memory */
+> +		if (image->file_mode)
+> +			memcpy(ptr, buf, uchunk);
 
-I totally disagree.  I think what you have done now is fine.  If it
-works for bzImage, it's a good sense that this is usable as-is.
+Very minor nit I came across when going through the patchset -- can't we 
+use some different buffer for the file-based kexec that's not marked 
+__user here? This really causes some eye-pain when looking at the code.
 
-And, if someone else cares about signed elf images, hey, let them
-implement the loader for it :)
+Thanks a lot for pushing this patchset forward,
 
-Either way, the syscall interface wouldn't change, which is the
-important thing to get right, so you should be fine for now.
-
-thanks,
-
-greg k-h
+-- 
+Jiri Kosina
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
