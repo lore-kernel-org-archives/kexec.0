@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vjvv1-0007mP-Qj
- for kexec@lists.infradead.org; Fri, 22 Nov 2013 18:57:32 +0000
-Date: Fri, 22 Nov 2013 13:57:06 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-Message-ID: <20131122185706.GK4046@redhat.com>
+Received: from out1-smtp.messagingengine.com ([66.111.4.25])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VjwiY-0000if-GE
+ for kexec@lists.infradead.org; Fri, 22 Nov 2013 19:48:43 +0000
+Date: Fri, 22 Nov 2013 11:48:14 -0800
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
+Message-ID: <20131122194814.GC25105@kroah.com>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
- <20131121190350.GC17070@kroah.com>
- <20131121190620.GA25951@srcf.ucam.org>
- <20131121191305.GK16208@redhat.com>
- <20131121191907.GA26366@srcf.ucam.org>
+ <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
+ <87txf4y304.fsf@xmission.com> <20131122141945.GE4046@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131121191907.GA26366@srcf.ucam.org>
+In-Reply-To: <20131122141945.GE4046@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,50 +25,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, ebiederm@xmission.com, hpa@zytor.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, hpa@zytor.com, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 07:19:07PM +0000, Matthew Garrett wrote:
-> On Thu, Nov 21, 2013 at 02:13:05PM -0500, Vivek Goyal wrote:
-> > On Thu, Nov 21, 2013 at 07:06:20PM +0000, Matthew Garrett wrote:
-> > > That would require a certain degree of massaging from userspace if we 
-> > > want to be able to use the existing Authenticode signatures. Otherwise 
-> > > we need to sign kernels twice.
-> > 
-> > I was thinking oof signing the same kernel twice. Can I sign authenticode
-> > signed kernel again (using RSA signature as we do for modules) and append
-> > the signature to bzImage. 
+On Fri, Nov 22, 2013 at 09:19:46AM -0500, Vivek Goyal wrote:
+> On Fri, Nov 22, 2013 at 05:34:03AM -0800, Eric W. Biederman wrote:
 > 
-> No, you'd need to do it the other way around.
+> [..]
+> > > Why ELF case is so interesting. I have not use kexec to boot ELF
+> > > images in years and have not seen others using it too. In fact bzImage
+> > > seems to be the most common kernel image format for x86, most of the distros
+> > > ship and use.
+> > 
+> > ELF is interesting because it is the minimal file format that does
+> > everything you need.   So especially for a proof of concept ELF needs to
+> > come first.  There is an extra virtual address field in the ELF segment
+> > header but otherwise ELF does not have any unnecessary fields.
+> > 
+> > ELF is interesting because it is the native kernel file format on all
+> > architectures linux supports including x86.
+> > 
+> > ELF is interesting because producing an ELF image in practice requires
+> > a trivial amount of tooling so it is a good general purpose format to
+> > support.
+> 
+> Ok. I will have a look at ELF loader too. I was hoping to keep only one
+> loader in initial patch. But looks like that's not acceptable.
 
-Hmm..., I am running out of ideas here. This is what I understand.
+I totally disagree.  I think what you have done now is fine.  If it
+works for bzImage, it's a good sense that this is usable as-is.
 
-- If I sign the bzImage (using PKCS1.5 signature), and later it is signed
-  with authenticode format signatures, then PKCS1.5 signatures will not be
-  valid as PE/COFF signing will do some modification to PE/COFF header in
-  bzImage. And another problem is that then I don't have a way to find
-  PKCS1.5 signature.
+And, if someone else cares about signed elf images, hey, let them
+implement the loader for it :)
 
-- If bzImage is first signed with authenticode format signature and then
-  signed using PKCS1.5 signature, then  authenticode format signature
-  will become invalid as it will also hash the data appened at the end
-  of file.
+Either way, the syscall interface wouldn't change, which is the
+important thing to get right, so you should be fine for now.
 
-So looks like both signatures can't co-exist on same file. That means
-one signature has to be detached.
+thanks,
 
-I am beginning to think that create a kernel option which allows to choose
-between attached and detached signatures. Extend kexec syscall to allow
-a parameter to pass in detached signatures. If detached signatures are
-not passed, then look for signatures at the end of file. That way, those
-who are signing kernels using platform specific format (authenticode) in 
-this case, they can generate detached signature while others can just
-use attached signatures.
-
-Any thoughts on how this should be handled?
-
-Thanks
-Vivek
+greg k-h
 
 _______________________________________________
 kexec mailing list
