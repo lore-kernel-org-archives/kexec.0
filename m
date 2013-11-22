@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vjg6W-0003lJ-Ua
- for kexec@lists.infradead.org; Fri, 22 Nov 2013 02:04:21 +0000
-Date: Thu, 21 Nov 2013 21:03:53 -0500
+ id 1VjgFZ-00044q-JO
+ for kexec@lists.infradead.org; Fri, 22 Nov 2013 02:13:42 +0000
+Date: Thu, 21 Nov 2013 21:13:12 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
-Message-ID: <20131122020353.GC31921@redhat.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131122021312.GD31921@redhat.com>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <528EAB73.9010700@jp.fujitsu.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131121190350.GC17070@kroah.com>
+ <20131122010311.GZ5274@outflux.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <528EAB73.9010700@jp.fujitsu.com>
+In-Reply-To: <20131122010311.GZ5274@outflux.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,58 +27,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: Kees Cook <keescook@chromium.org>
+Cc: mjg59@srcf.ucam.org, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Fri, Nov 22, 2013 at 09:55:15AM +0900, HATAYAMA Daisuke wrote:
-> (2013/11/21 2:50), Vivek Goyal wrote:
-> >Current proposed secureboot implementation disables kexec/kdump because
-> >it can allow unsigned kernel to run on a secureboot platform. Intial
-> >idea was to sign /sbin/kexec binary and let that binary do the kernel
-> >signature verification. I had posted RFC patches for this apparoach
-> >here.
-> >
-> >https://lkml.org/lkml/2013/9/10/560
-> >
-> >Later we had discussion at Plumbers and most of the people thought
-> >that signing and trusting /sbin/kexec is becoming complex. So a
-> >better idea might be let kernel do the signature verification of
-> >new kernel being loaded. This calls for implementing a new system call
-> >and moving lot of user space code in kernel.
-> >
-> >kexec_load() system call allows loading a kexec/kdump kernel and jump
-> >to that kernel at right time. Though a lot of processing is done in
-> >user space which prepares a list of segments/buffers to be loaded and
-> >kexec_load() works on that list of segments. It does not know what's
-> >contained in those segments.
-> >
-> >Now a new system call kexec_file_load() is implemented which takes
-> >kernel fd and initrd fd as parameters. Now kernel should be able
-> >to verify signature of newly loaded kernel.
-> >
-> >This is an early RFC patchset. I have not done signature handling
-> >part yet. This is more of a minimal patch to show how new system
-> >call and functionality will look like. Right now it can only handle
-> >bzImage with 64bit entry point on x86_64. No EFI, no x86_32  or any
-> >other architecture. Rest of the things can be added slowly as need
-> >arises. In first iteration, I have tried to address most common use case
-> >for us.
-> >
-> >Any feedback is welcome.
-> >
+On Thu, Nov 21, 2013 at 05:03:11PM -0800, Kees Cook wrote:
+> Hi,
 > 
-> So, ultimately on this design direction, user-land kexec command someday
-> will no longer be used at all? Or is there any feature you will keep in
-> user-land side?
+> On Thu, Nov 21, 2013 at 11:03:50AM -0800, Greg KH wrote:
+> > On Wed, Nov 20, 2013 at 12:50:49PM -0500, Vivek Goyal wrote:
+> > > This patch implements the in kernel kexec functionality. It implements a
+> > > new system call kexec_file_load. I think parameter list of this system
+> > > call will change as I have not done the kernel image signature handling
+> > > yet. I have been told that I might have to pass the detached signature
+> > > and size as part of system call.
+> > 
+> > This could be done as we do with modules, and just tack the signature
+> > onto the end of the 'blob' of the image.  That way we could use the same
+> > tool to sign the binary as we do for modules, and save the need for
+> > extra parameters in the syscall.
 > 
+> As long as the system call passing in an fd, I'm all good. For those
+> of us that run from verified filesystems, we don't need the additional
+> signing overhead, but we do need the file descriptor to validate the
+> origin of the kernel.
 
-Current user land is huge and implements lots of image formats on
-differnt architectures with tons of options. 
-
-I doubt that kernel implementation will be a complete replacement of
-existing implementation anytime soon.  If kernel implementation works
-well, then may be in future at some point of time we can completely
-move away from user space implementation.
+Yep, Greg had mentioned that keep the interface file descriptor based so
+that it can work well with LSM hooks and that's why I went with it.
 
 Thanks
 Vivek
