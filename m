@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vk3pV-0001Q2-O2
- for kexec@lists.infradead.org; Sat, 23 Nov 2013 03:24:22 +0000
+ id 1Vk44N-0001VH-E8
+ for kexec@lists.infradead.org; Sat, 23 Nov 2013 03:39:43 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
- <87txf4y304.fsf@xmission.com> <20131122141945.GE4046@redhat.com>
-Date: Fri, 22 Nov 2013 19:23:39 -0800
-In-Reply-To: <20131122141945.GE4046@redhat.com> (Vivek Goyal's message of
- "Fri, 22 Nov 2013 09:19:46 -0500")
-Message-ID: <87li0fvm10.fsf@xmission.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131121190350.GC17070@kroah.com>
+ <20131121190620.GA25951@srcf.ucam.org>
+ <20131121191305.GK16208@redhat.com>
+ <20131121191907.GA26366@srcf.ucam.org>
+ <20131122185706.GK4046@redhat.com>
+Date: Fri, 22 Nov 2013 19:39:14 -0800
+In-Reply-To: <20131122185706.GK4046@redhat.com> (Vivek Goyal's message of
+ "Fri, 22 Nov 2013 13:57:06 -0500")
+Message-ID: <87vbzju6ql.fsf@xmission.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load,
+ for in kernel kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,95 +31,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, greg@kroah.com, hpa@zytor.com
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, hpa@zytor.com
 
 Vivek Goyal <vgoyal@redhat.com> writes:
 
-> On Fri, Nov 22, 2013 at 05:34:03AM -0800, Eric W. Biederman wrote:
+> On Thu, Nov 21, 2013 at 07:19:07PM +0000, Matthew Garrett wrote:
+>> On Thu, Nov 21, 2013 at 02:13:05PM -0500, Vivek Goyal wrote:
+>> > On Thu, Nov 21, 2013 at 07:06:20PM +0000, Matthew Garrett wrote:
+>> > > That would require a certain degree of massaging from userspace if we 
+>> > > want to be able to use the existing Authenticode signatures. Otherwise 
+>> > > we need to sign kernels twice.
+>> > 
+>> > I was thinking oof signing the same kernel twice. Can I sign authenticode
+>> > signed kernel again (using RSA signature as we do for modules) and append
+>> > the signature to bzImage. 
+>> 
+>> No, you'd need to do it the other way around.
 >
-> [..]
->> > Why ELF case is so interesting. I have not use kexec to boot ELF
->> > images in years and have not seen others using it too. In fact bzImage
->> > seems to be the most common kernel image format for x86, most of the distros
->> > ship and use.
->> 
->> ELF is interesting because it is the minimal file format that does
->> everything you need.   So especially for a proof of concept ELF needs to
->> come first.  There is an extra virtual address field in the ELF segment
->> header but otherwise ELF does not have any unnecessary fields.
->> 
->> ELF is interesting because it is the native kernel file format on all
->> architectures linux supports including x86.
->> 
->> ELF is interesting because producing an ELF image in practice requires
->> a trivial amount of tooling so it is a good general purpose format to
->> support.
+> Hmm..., I am running out of ideas here. This is what I understand.
 >
-> Ok. I will have a look at ELF loader too. I was hoping to keep only one
-> loader in initial patch. But looks like that's not acceptable.
+> - If I sign the bzImage (using PKCS1.5 signature), and later it is signed
+>   with authenticode format signatures, then PKCS1.5 signatures will not be
+>   valid as PE/COFF signing will do some modification to PE/COFF header in
+>   bzImage. And another problem is that then I don't have a way to find
+>   PKCS1.5 signature.
+>
+> - If bzImage is first signed with authenticode format signature and then
+>   signed using PKCS1.5 signature, then  authenticode format signature
+>   will become invalid as it will also hash the data appened at the end
+>   of file.
+>
+> So looks like both signatures can't co-exist on same file. That means
+> one signature has to be detached.
+>
+> I am beginning to think that create a kernel option which allows to choose
+> between attached and detached signatures. Extend kexec syscall to allow
+> a parameter to pass in detached signatures. If detached signatures are
+> not passed, then look for signatures at the end of file. That way, those
+> who are signing kernels using platform specific format (authenticode) in 
+> this case, they can generate detached signature while others can just
+> use attached signatures.
+>
+> Any thoughts on how this should be handled?
 
-Thank you.  We really need an ELF loader to see that we have handled the
-general case and to see that we have a solution that is portable to
-non-x86.
+Inside of a modern bzImage there is an embedded ELF image.  How about in
+userspace we just strip out the embedded ELF image and write that to a
+file.  Then we can use the same signature checking scheme as we do for
+kernel modules.  And you only have to support one file format.
 
-> [..]
->> >> There is also a huge missing piece of this in that your purgatory is not
->> >> checking a hash of the loaded image before jumping too it.  Without that
->> >> this is a huge regression at least for the kexec on panic case.  We
->> >> absolutely need to check that the kernel sitting around in memory has
->> >> not been corrupted before we let it run very far.
->> >
->> > Agreed. This should not be hard. It is just a matter of calcualting
->> > digest of segments. I will store it in kimge and verify digest again
->> > before passing control to control page. Will fix it in next version.
->> 
->> Nak.  The verification needs to happen in purgatory. 
->> 
->> The verification needs to happen in code whose runtime environment is
->> does not depend on random parts of the kernel.  Anything else is a
->> regression in maintainability and reliability.
->> 
->> It is the wrong direction to add any code to what needs to run in the
->> known broken environment of the kernel when a panic happens.
->> 
->> Which means that you almost certainly need to go to the trouble of
->> supporting the complexity needed to support purgatory code written in C.
->> 
->> (For those just tuning in purgatory is our term for the code that runs
->> between the kernels to do those things that can not happen a priori).
->
-> In general, I agree with not using kernel parts after crash.
->
-> But what protects against that purgatory itself has been scribbled over.
-> IOW, how different purgatory memory is as compared to kernel memory where
-> digest routines are stored. They have got equal probably of being scribbled
-> over and if that's the case one is not better than other?
->
-> And if they both got equal probability to getting corrupted, then there does
-> not seem to be an advantage in moving digest verification inside
-> purgatory.
-
-The primary reason is that maintenance of code in the kernel that is
-safe during a crash dump is hard.  That is why we boot a second kernel
-after all.  If the code to do the signature verification resides in
-machine_kexec on the kexec on panic code path in the kernel that has
-called panic it is almost a given that at some point or other someone
-will add an option that will add a weird dependency that makes the code
-unsafe when the kernel is crashing.  I have seen it happen several times
-on the existing kexec on panic code path.  I have seen it on other code
-paths like netconsole.  Which can currently on some kernels I have
-running cause the kernel go go into an endless printk loop if you call
-printk from interrupt context.  So what we really gain by moving the
-verification into purgatory is protection from inappropriate code reuse.
-
-So having a completely separate piece of code may be a little harder to
-write initially but the code is much simpler and more reliable to
-maintain.  Essentially requiring no maintenance effort.  Further getting
-to the point where purgatory is written in C makes small changes much
-more approachable.
+As I recall there are already some platforms on x86 like Xen that
+already need to strip out the embedded ELF image for their loaders to
+have all of the information they need to load the image.
 
 Eric
-
 
 _______________________________________________
 kexec mailing list
