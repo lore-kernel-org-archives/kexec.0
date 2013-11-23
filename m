@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0027.austin.hp.com ([15.216.28.34])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VjzKZ-0003Wu-7Q
- for kexec@lists.infradead.org; Fri, 22 Nov 2013 22:36:07 +0000
-Message-ID: <1385159448.1791.161.camel@misato.fc.hp.com>
-Subject: Re: [patch 0/4 v3] kexec-tools: efi runtime support
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Fri, 22 Nov 2013 15:30:48 -0700
-In-Reply-To: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
-References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
-Mime-Version: 1.0
+ id 1Vk3pV-0001Q2-O2
+ for kexec@lists.infradead.org; Sat, 23 Nov 2013 03:24:22 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+ <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
+ <87txf4y304.fsf@xmission.com> <20131122141945.GE4046@redhat.com>
+Date: Fri, 22 Nov 2013 19:23:39 -0800
+In-Reply-To: <20131122141945.GE4046@redhat.com> (Vivek Goyal's message of
+ "Fri, 22 Nov 2013 09:19:46 -0500")
+Message-ID: <87li0fvm10.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,39 +25,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, greg@kroah.com, hpa@zytor.com
 
-On Thu, 2013-11-21 at 14:40 +0800, dyoung@redhat.com wrote:
-> Hi,
-> 
-> This is the v3 patchset for adding efi runtime support on kexec kernel
-> kernel patches was sent a while ago, not yet updated in archive. 
-> 
-> in kexec-tools, this patchset will do below:
-> 1. retrieve efi_info from sysfs boot_params, and fill the
-> x86 setup header. If kernel does not export sysfs boot_params,
-> still try to find them in debugfs.
-> 
-> 2. collect data efi runtime needed:
-> /sys/firmware/efi/systab: smbios
-> /sys/firmware/efi/fw_vendor
-> /sys/firmware/efi/runtime
-> /sys/firmware/efi/config_table
-> 
-> /sys/firmware/efi/runtime-map/*, the phys-virt mappings in 1st kernel
-> 
-> 3. assemble setup_data based on data get in 2) then pass it to 2nd kernel
-> 
-> Tested on OVMF, dell laptop, lenovo laptop and HP workstation
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Tested on an HP EFI-based 60-way server (prototype).  For the series:
+> On Fri, Nov 22, 2013 at 05:34:03AM -0800, Eric W. Biederman wrote:
+>
+> [..]
+>> > Why ELF case is so interesting. I have not use kexec to boot ELF
+>> > images in years and have not seen others using it too. In fact bzImage
+>> > seems to be the most common kernel image format for x86, most of the distros
+>> > ship and use.
+>> 
+>> ELF is interesting because it is the minimal file format that does
+>> everything you need.   So especially for a proof of concept ELF needs to
+>> come first.  There is an extra virtual address field in the ELF segment
+>> header but otherwise ELF does not have any unnecessary fields.
+>> 
+>> ELF is interesting because it is the native kernel file format on all
+>> architectures linux supports including x86.
+>> 
+>> ELF is interesting because producing an ELF image in practice requires
+>> a trivial amount of tooling so it is a good general purpose format to
+>> support.
+>
+> Ok. I will have a look at ELF loader too. I was hoping to keep only one
+> loader in initial patch. But looks like that's not acceptable.
 
-Tested-by: Toshi Kani <toshi.kani@hp.com>
+Thank you.  We really need an ELF loader to see that we have handled the
+general case and to see that we have a solution that is portable to
+non-x86.
 
-Thanks,
--Toshi
+> [..]
+>> >> There is also a huge missing piece of this in that your purgatory is not
+>> >> checking a hash of the loaded image before jumping too it.  Without that
+>> >> this is a huge regression at least for the kexec on panic case.  We
+>> >> absolutely need to check that the kernel sitting around in memory has
+>> >> not been corrupted before we let it run very far.
+>> >
+>> > Agreed. This should not be hard. It is just a matter of calcualting
+>> > digest of segments. I will store it in kimge and verify digest again
+>> > before passing control to control page. Will fix it in next version.
+>> 
+>> Nak.  The verification needs to happen in purgatory. 
+>> 
+>> The verification needs to happen in code whose runtime environment is
+>> does not depend on random parts of the kernel.  Anything else is a
+>> regression in maintainability and reliability.
+>> 
+>> It is the wrong direction to add any code to what needs to run in the
+>> known broken environment of the kernel when a panic happens.
+>> 
+>> Which means that you almost certainly need to go to the trouble of
+>> supporting the complexity needed to support purgatory code written in C.
+>> 
+>> (For those just tuning in purgatory is our term for the code that runs
+>> between the kernels to do those things that can not happen a priori).
+>
+> In general, I agree with not using kernel parts after crash.
+>
+> But what protects against that purgatory itself has been scribbled over.
+> IOW, how different purgatory memory is as compared to kernel memory where
+> digest routines are stored. They have got equal probably of being scribbled
+> over and if that's the case one is not better than other?
+>
+> And if they both got equal probability to getting corrupted, then there does
+> not seem to be an advantage in moving digest verification inside
+> purgatory.
 
+The primary reason is that maintenance of code in the kernel that is
+safe during a crash dump is hard.  That is why we boot a second kernel
+after all.  If the code to do the signature verification resides in
+machine_kexec on the kexec on panic code path in the kernel that has
+called panic it is almost a given that at some point or other someone
+will add an option that will add a weird dependency that makes the code
+unsafe when the kernel is crashing.  I have seen it happen several times
+on the existing kexec on panic code path.  I have seen it on other code
+paths like netconsole.  Which can currently on some kernels I have
+running cause the kernel go go into an endless printk loop if you call
+printk from interrupt context.  So what we really gain by moving the
+verification into purgatory is protection from inappropriate code reuse.
+
+So having a completely separate piece of code may be a little harder to
+write initially but the code is much simpler and more reliable to
+maintain.  Essentially requiring no maintenance effort.  Further getting
+to the point where purgatory is written in C makes small changes much
+more approachable.
+
+Eric
 
 
 _______________________________________________
