@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VkAQk-0003y0-5M
- for kexec@lists.infradead.org; Sat, 23 Nov 2013 10:27:15 +0000
-Received: from int-mx10.intmail.prod.int.phx2.redhat.com
- (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id rAN9UAkg008123
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Sat, 23 Nov 2013 04:30:11 -0500
-Date: Sat, 23 Nov 2013 17:29:14 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
-Message-ID: <20131123092914.GA31384@dhcp-16-105.nay.redhat.com>
-References: <1385122042-22959-1-git-send-email-bhe@redhat.com>
+ id 1VkD3m-0005E9-T2
+ for kexec@lists.infradead.org; Sat, 23 Nov 2013 13:15:43 +0000
+Date: Sat, 23 Nov 2013 14:15:18 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [patch 5/9 v3] efi: export more efi table variable to sysfs
+Message-ID: <20131123131518.GC24148@pd.tnic>
+References: <20131121061704.363730447@dhcp-16-126.nay.redhat.com>
+ <20131121061754.887381332@dhcp-16-126.nay.redhat.com>
+ <20131121165742.GN26009@pd.tnic>
+ <20131122024850.GC3874@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1385122042-22959-1-git-send-email-bhe@redhat.com>
+In-Reply-To: <20131122024850.GC3874@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,140 +26,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: chaowang@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Function update_cyclic_region has a name which doesn't match its
-functionality. it does 3 tings: update the cyclic region; if elf
-dump, call create_1st_bitmap_cyclic in this region; call
-exclude_unnecessary_pages_cyclic to exclude pages in this region.
+On Fri, Nov 22, 2013 at 10:48:50AM +0800, Dave Young wrote:
+> > 	efi.config_table = (unsigned long)efi.systab->tables;
+> > 	efi.fw_vendor	 = (unsigned long)efi.systab->fw_vendor;
+> > 	efi.runtime	 = (unsigned long)efi.systab->runtime;
+> 
+> Hmm, UEFI spec mentions the them like below so I use the order:
 
-However not all 3 things are needed to be done everywhere. Somewhere
-unnecessary thing is done with much efforts, e.g when get dumpable
-page numbers for elf cyclic dump 1st bigmap creating is not needed.
-Somewhere thing is done, but it also cause errors, e.g when write
-1st bitmap cyclic for compressed kdump it will add free page numbers
-twice, namely pfn_free is doubled. Then dump information will be wrong
-like below:
+I'm sure by now you know you should not really trust the UEFI spec, or
+any other spec for that matter :)
 
-Original pages  : 0x000000000007539c
-  Excluded pages   : 0x00000000000d986a
-    Pages filled with zero  : 0x0000000000001196
-    Cache pages             : 0x0000000000025008
-    Cache pages + private   : 0x0000000000004baa
-    User process data pages : 0x00000000000127d0
-    Free pages              : 0x000000000009c352
-    Hwpoison pages          : 0x0000000000000000
-  Remaining pages  : 0xfffffffffff9bb32
-  (The number of pages is reduced to 38418230895101%.)
-Memory Hole     : 0x000000000000ac62
---------------------------------------------------
-Total pages     : 0x000000000007fffe
+> Several fields of the EFI System Table must be converted from
+> physical pointers to virtual pointers using the ConvertPointer()
+> service. These fields include FirmwareVendor, RuntimeServices,
+> and ConfigurationTable.
+> 
+> But since you like the reverse I can change it in next version.
 
-So add 2 more parameters for update_cyclic_region. By these adding
-update_cyclic_region can be called in a refined grain. Then effort
-can be saved and above error can be fixed.
+The reverse was simply a suggestion. The vertical alignment was more
+what I aimed at because it makes this chunk much more readable IMO.
 
-And in kdump compressed dump case, prepare_bitmap2_buffer_cyclic is
-called, that means partial_bitmap2 is malloced twice. Here remove
-the 2nd call.
----
- makedumpfile.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 3746cf6..8cfc2a5 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4725,7 +4725,7 @@ exclude_unnecessary_pages_cyclic(void)
- }
- 
- int
--update_cyclic_region(unsigned long long pfn)
-+update_cyclic_region(unsigned long long pfn, int bmp1_set, int exclude)
- {
- 	if (is_cyclic_region(pfn))
- 		return TRUE;
-@@ -4736,10 +4736,10 @@ update_cyclic_region(unsigned long long pfn)
- 	if (info->cyclic_end_pfn > info->max_mapnr)
- 		info->cyclic_end_pfn = info->max_mapnr;
- 
--	if (info->flag_elf_dumpfile && !create_1st_bitmap_cyclic())
-+	if (bmp1_set && info->flag_elf_dumpfile && !create_1st_bitmap_cyclic())
- 		return FALSE;
- 
--	if (!exclude_unnecessary_pages_cyclic())
-+	if (exclude && !exclude_unnecessary_pages_cyclic())
- 		return FALSE;
- 
- 	return TRUE;
-@@ -5502,7 +5502,7 @@ get_num_dumpable_cyclic(void)
- 	unsigned long long pfn, num_dumpable=0;
- 
- 	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
--		if (!update_cyclic_region(pfn))
-+		if (!update_cyclic_region(pfn, 0, 1))
- 			return FALSE;
- 
- 		if (is_dumpable_cyclic(info->partial_bitmap2, pfn))
-@@ -5803,7 +5803,7 @@ get_loads_dumpfile_cyclic(void)
- 			 * Update target region and bitmap
- 			 */
- 			if (!is_cyclic_region(pfn)) {
--				if (!update_cyclic_region(pfn))
-+				if (!update_cyclic_region(pfn, 0, 1))
- 					return FALSE;
- 			}
- 
-@@ -5872,7 +5872,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 
- 	info->cyclic_start_pfn = 0;
- 	info->cyclic_end_pfn = 0;
--	if (!update_cyclic_region(0))
-+	if (!update_cyclic_region(0, 1, 1))
- 		return FALSE;
- 
- 	if (!(phnum = get_phnum_memory()))
-@@ -5910,7 +5910,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 			/*
- 			 * Update target region and partial bitmap if necessary.
- 			 */
--			if (!update_cyclic_region(pfn))
-+			if (!update_cyclic_region(pfn, 1, 1))
- 				return FALSE;
- 
- 			if (!is_dumpable_cyclic(info->partial_bitmap2, pfn)) {
-@@ -6805,7 +6805,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
- 		if (is_cyclic_region(pfn))
- 			continue;
--		if (!update_cyclic_region(pfn))
-+		if (!update_cyclic_region(pfn, 0, 0))
- 			return FALSE;
- 		if (!create_1st_bitmap_cyclic())
- 			return FALSE;
-@@ -6815,9 +6815,6 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 
- 	free_bitmap1_buffer();
- 
--	if (!prepare_bitmap2_buffer_cyclic())
--		return FALSE;
--
- 	/*
- 	 * Write pages and bitmap cyclically.
- 	 */
-@@ -6827,7 +6824,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 		if (is_cyclic_region(pfn))
- 			continue;
- 
--		if (!update_cyclic_region(pfn))
-+		if (!update_cyclic_region(pfn, 0, 1))
-                         return FALSE;
- 
- 		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero, &offset_data))
 -- 
-1.8.3.1
+Regards/Gruss,
+    Boris.
 
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
