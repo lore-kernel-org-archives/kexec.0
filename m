@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vklei-00031M-Km
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 02:12:10 +0000
-Date: Mon, 25 Nov 2013 10:11:17 +0800
+ id 1Vklyd-0003Be-4U
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 02:32:44 +0000
+Date: Mon, 25 Nov 2013 10:31:50 +0800
 From: Baoquan He <bhe@redhat.com>
-Message-ID: <20131125021117.GA13197@dhcp-16-252.nay.redhat.com>
+Subject: Re: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
+Message-ID: <20131125023150.GB13197@dhcp-16-252.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20131123092914.GA31384@dhcp-16-105.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,24 +22,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: d.hatayama@jp.fujitsu.com, chaowang@redhat.com
+To: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp, d.hatayama@jp.fujitsu.com
+Cc: chaowang@redhat.com
 
-kumagai-atsushi@mxc.nes.nec.co.jp
-Bcc: bhe@redhat.com
-Subject: Re: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
-Reply-To: 
-In-Reply-To: <20131123092914.GA31384@dhcp-16-105.nay.redhat.com>
+Hi HATAYAMA and Atsushi,
 
 I think v2 is better than v1, since update_cyclic_region can be used
 with a more flexible calling.
 
-Hi HATAYAMA and Atsushi,
-
 What's your opinion about this?
-
-Baoquan
-Thanks a lot
 
 On 11/23/13 at 05:29pm, Baoquan He wrote:
 > Function update_cyclic_region has a name which doesn't match its
@@ -171,6 +164,11 @@ On 11/23/13 at 05:29pm, Baoquan He wrote:
 > -- 
 > 1.8.3.1
 > 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
