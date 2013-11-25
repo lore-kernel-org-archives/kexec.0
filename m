@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vkrqc-0007Jx-DH
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:48:51 +0000
-Message-Id: <20131125084805.769680812@dhcp-16-126.nay.redhat.com>
-Date: Mon, 25 Nov 2013 16:47:00 +0800
+ id 1VkrrS-0007Q4-3J
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:49:42 +0000
+Message-Id: <20131125084806.830410846@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:47:02 +0800
 From: dyoung@redhat.com
-Subject: efi: remove unused variables in __map_region
+Subject: efi: reserve boot service fix
 References: <20131125084659.182036023@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline; filename=01-remove-unused-var-in-map-region.patch
+Content-Disposition: inline; filename=03-boot-service-fix.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,34 +25,31 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-variables size and end is useless in this function, thus remove them.
+Current code check boot service region with kernel text region by: 
+start+size >= __pa_symbol(_text)
+The end of the above region should be start + size - 1 instead.
 
-Reported-by: Toshi Kani <toshi.kani@hp.com>
+I see this problem in ovmf + Fedora 19 grub boot:
+text start: 1000000 md start: 800000 md size: 800000
+
 Signed-off-by: Dave Young <dyoung@redhat.com>
 Acked-by: Borislav Petkov <bp@suse.de>
+Acked-by: Toshi Kani <toshi.kani@hp.com>
 ---
- arch/x86/platform/efi/efi_64.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/x86/platform/efi/efi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- efi.orig/arch/x86/platform/efi/efi_64.c
-+++ efi/arch/x86/platform/efi/efi_64.c
-@@ -148,15 +148,11 @@ void efi_setup_page_tables(void)
- static void __init __map_region(efi_memory_desc_t *md, u64 va)
- {
- 	pgd_t *pgd = (pgd_t *)__va(real_mode_header->trampoline_pgd);
--	unsigned long pf = 0, size;
--	u64 end;
-+	unsigned long pf = 0;
- 
- 	if (!(md->attribute & EFI_MEMORY_WB))
- 		pf |= _PAGE_PCD;
- 
--	size = md->num_pages << PAGE_SHIFT;
--	end  = va + size;
--
- 	if (kernel_map_pages_in_pgd(pgd, md->phys_addr, va, md->num_pages, pf))
- 		pr_warn("Error mapping PA 0x%llx -> VA 0x%llx!\n",
- 			   md->phys_addr, va);
+--- linux-2.6.orig/arch/x86/platform/efi/efi.c
++++ linux-2.6/arch/x86/platform/efi/efi.c
+@@ -438,7 +438,7 @@ void __init efi_reserve_boot_services(vo
+ 		 * - Not within any part of the kernel
+ 		 * - Not the bios reserved area
+ 		*/
+-		if ((start+size >= __pa_symbol(_text)
++		if ((start + size > __pa_symbol(_text)
+ 				&& start <= __pa_symbol(_end)) ||
+ 			!e820_all_mapped(start, start+size, E820_RAM) ||
+ 			memblock_is_region_reserved(start, size)) {
 
 
 _______________________________________________
