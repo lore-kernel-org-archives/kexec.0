@@ -1,38 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vks4L-00087Q-GZ
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 09:03:02 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 5B7AF3EE0AE
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 18:02:32 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4AFAD45DEB7
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 18:02:32 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.nic.fujitsu.com [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 2624045DD77
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 18:02:32 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 16AFC1DB803B
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 18:02:32 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id A34EA1DB803E
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 18:02:31 +0900 (JST)
-Message-ID: <529311F1.90603@jp.fujitsu.com>
-Date: Mon, 25 Nov 2013 18:01:37 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: /proc/vmcore mmap() failure issue
-References: <5284A689.70903@jp.fujitsu.com> <20131114151359.GA3913@redhat.com>
- <5285EC60.1060906@jp.fujitsu.com> <20131115142617.GC6637@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
- <20131118135511.GA30637@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C3862@BPXM01GP.gisp.nec.co.jp>
- <20131120145901.GB27924@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C43E3@BPXM01GP.gisp.nec.co.jp>
- <528DC4F2.5040000@jp.fujitsu.com> <20131121165237.GG16208@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C5AB3@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971C5AB3@BPXM01GP.gisp.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vks8s-0008Fg-8M
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 09:07:42 +0000
+Message-Id: <20131125090035.723913471@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:56:34 +0800
+From: dyoung@redhat.com
+Subject: [patch 04/12 v4] efi: cleanup efi_enter_virtual_mode function
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,70 +15,183 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-(2013/11/25 17:10), Atsushi Kumagai wrote:
-> On 2013/11/22 1:53:14, kexec <kexec-bounces@lists.infradead.org> wrote:
->> On Thu, Nov 21, 2013 at 05:31:46PM +0900, HATAYAMA Daisuke wrote:
->>
->> [..]
->>>> So I think the patch I sent is enough, the policy will be simpler as
->>>> "Don't use mmap() for buggy kernels".
->>>>
->>>> [PATCH] Fall back to read() when mmap() fails.
->>>> http://lists.infradead.org/pipermail/kexec/2013-November/010199.html
->>>>
->>>
->>> I think logic becomes not so complex. For example, if input vmcore
->>> format is ELF, then:
->>>
->>> o in update_mmap_range():
->>>    - first calculate a range of the corresponding PT_LOAD entry truncated with
->>>      PAGE_SIZE.
->>>    - Then, truncate range of mmap() by the truncated range of the corresponding
->>>      PT_LOAD entry, i.e., exlucde partial pages from mmap() target range.
->>>    - Then determine offsets of two partial pages; the number of partial pages
->>>      are always at most two. The offsets can easily be calculated from the
->>>      original range of the corresponding PT_LOAD entry
->>>
->>> o in read_from_vmcore(), if a given offset belongs to either of two partial
->>>    pages, then go to read() path; if not, go to mmap() path.
->>
->> I agree that we should do mmap() on all non-partial pages and do read()
->> on all partial pages. Otherwise we lose the benefit of faster speed of
->> mmap().
-> 
-> I agree to avoid this issue by fixing makedumpfile as workaround while to
-> fix kernel is so tough and risky. However, it sounds strange to me to fix
-> userspace side elaborately for such definite kernel issue whose cause is
-> known, so we should fix the kernel itself.
-> 
+Hi,
+References: <20131125085630.417850406@dhcp-16-126.nay.redhat.com>
+Content-Disposition: inline; filename=04-efi-enter-virtual-mode-cleanup.patch
 
-> Otherwise, will you continue to add specific fixes into user tools to
-> address kernel issues like this case ?
-> 
+Add two small functions:
+efi_merge_regions and efi_map_regions, efi_enter_virtual_mode
+calls them instead of embedding two long for loop.
 
-makedumpfile supports a wide range of kernel versions and needs to satisfy
-backward compatibility. mmap() on /proc/vmcore might be backported to some of
-the old versions on some distributions if necessary. Then, it's hard to fix
-each old kernel at each back port. The method that can be applied to all the
-kernels in general, is necessary.
+v1->v2:
+refresh; coding style fixes.
 
-Also, looking at ia64 case where there's boot loader data on partial pages,
-there could be other environments where partial pages contain other important
-data other components have. So, the issue depends not only on kernels but also
-other components such as boot loader and firmwares that can put data on
-partial pages. We need to get there as long as there's important data there
-and we have access to there.
+v2->v3:
+Toshi Kani:
+remove unused variable
+Matt: check return value of krealloc.
+v3->v4:
+Boris: Stretch comment to 80 cols
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/platform/efi/efi.c |  109 ++++++++++++++++++++++++++------------------
+ 1 file changed, 66 insertions(+), 43 deletions(-)
+
+--- efi.orig/arch/x86/platform/efi/efi.c
++++ efi/arch/x86/platform/efi/efi.c
+@@ -773,44 +773,12 @@ void __init old_map_region(efi_memory_de
+ 		       (unsigned long long)md->phys_addr);
+ }
+ 
+-/*
+- * This function will switch the EFI runtime services to virtual mode.
+- * Essentially, we look through the EFI memmap and map every region that
+- * has the runtime attribute bit set in its memory descriptor into the
+- * ->trampoline_pgd page table using a top-down VA allocation scheme.
+- *
+- * The old method which used to update that memory descriptor with the
+- * virtual address obtained from ioremap() is still supported when the
+- * kernel is booted with efi=old_map on its command line. Same old
+- * method enabled the runtime services to be called without having to
+- * thunk back into physical mode for every invocation.
+- *
+- * The new method does a pagetable switch in a preemption-safe manner
+- * so that we're in a different address space when calling a runtime
+- * function. For function arguments passing we do copy the PGDs of the
+- * kernel page table into ->trampoline_pgd prior to each call.
+- */
+-void __init efi_enter_virtual_mode(void)
++/* Merge contiguous regions of the same type and attribute */
++static void __init efi_merge_regions(void)
+ {
++	void *p;
+ 	efi_memory_desc_t *md, *prev_md = NULL;
+-	void *p, *new_memmap = NULL;
+-	unsigned long size;
+-	efi_status_t status;
+-	u64 end, systab;
+-	int count = 0;
+-
+-	efi.systab = NULL;
+-
+-	/*
+-	 * We don't do virtual mode, since we don't do runtime services, on
+-	 * non-native EFI
+-	 */
+-	if (!efi_is_native()) {
+-		efi_unmap_memmap();
+-		return;
+-	}
+ 
+-	/* Merge contiguous regions of the same type and attribute */
+ 	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
+ 		u64 prev_size;
+ 		md = p;
+@@ -837,6 +805,18 @@ void __init efi_enter_virtual_mode(void)
+ 		prev_md = md;
+ 
+ 	}
++}
++
++/*
++ * Map efi memory ranges for runtime serivce and update new_memmap with virtual
++ * addresses.
++ */
++static void * __init efi_map_regions(int *count)
++{
++	efi_memory_desc_t *md;
++	void *p, *new_memmap = NULL;
++	unsigned long size;
++	u64 end, systab;
+ 
+ 	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
+ 		md = p;
+@@ -861,14 +841,60 @@ void __init efi_enter_virtual_mode(void)
+ 		}
+ 
+ 		new_memmap = krealloc(new_memmap,
+-				      (count + 1) * memmap.desc_size,
+-				      GFP_KERNEL);
++					(*count + 1) * memmap.desc_size,
++					GFP_KERNEL);
+ 		if (!new_memmap)
+-			goto err_out;
++			goto ret;
+ 
+-		memcpy(new_memmap + (count * memmap.desc_size), md,
++		memcpy(new_memmap + (*count * memmap.desc_size), md,
+ 		       memmap.desc_size);
+-		count++;
++		(*count)++;
++	}
++
++ret:
++	return new_memmap;
++}
++
++/*
++ * This function will switch the EFI runtime services to virtual mode.
++ * Essentially, we look through the EFI memmap and map every region that
++ * has the runtime attribute bit set in its memory descriptor into the
++ * ->trampoline_pgd page table using a top-down VA allocation scheme.
++ *
++ * The old method which used to update that memory descriptor with the
++ * virtual address obtained from ioremap() is still supported when the
++ * kernel is booted with efi=old_map on its command line. Same old
++ * method enabled the runtime services to be called without having to
++ * thunk back into physical mode for every invocation.
++ *
++ * The new method does a pagetable switch in a preemption-safe manner
++ * so that we're in a different address space when calling a runtime
++ * function. For function arguments passing we do copy the PGDs of the
++ * kernel page table into ->trampoline_pgd prior to each call.
++ */
++void __init efi_enter_virtual_mode(void)
++{
++	efi_status_t status;
++	void *new_memmap = NULL;
++	int count = 0;
++
++	efi.systab = NULL;
++
++	/*
++	 * We don't do virtual mode, since we don't do runtime services, on
++	 * non-native EFI
++	 */
++	if (!efi_is_native()) {
++		efi_unmap_memmap();
++		return;
++	}
++
++	efi_merge_regions();
++
++	new_memmap = efi_map_regions(&count);
++	if (!new_memmap) {
++		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
++		return;
+ 	}
+ 
+ 	BUG_ON(!efi.systab);
+@@ -922,9 +948,6 @@ void __init efi_enter_virtual_mode(void)
+ 			 0, NULL);
+ 
+ 	return;
+-
+- err_out:
+-	pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+ }
+ 
+ /*
 
 
 _______________________________________________
