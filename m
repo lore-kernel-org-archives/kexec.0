@@ -1,31 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vkns8-0004FS-Uy
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 04:34:10 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 8C8BA3EE0C1
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 13:33:39 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 801A645DE55
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 13:33:39 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6AD5045DE53
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 13:33:39 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5BDDF1DB804B
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 13:33:39 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 07D77E18002
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 13:33:39 +0900 (JST)
-Message-ID: <5292D30E.5070003@jp.fujitsu.com>
-Date: Mon, 25 Nov 2013 13:33:18 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vkok7-0004mz-1a
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 05:29:56 +0000
+Date: Mon, 25 Nov 2013 13:28:58 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [patch 5/9 v3] efi: export more efi table variable to sysfs
+Message-ID: <20131125052858.GA6330@dhcp-16-126.nay.redhat.com>
+References: <20131121061704.363730447@dhcp-16-126.nay.redhat.com>
+ <20131121061754.887381332@dhcp-16-126.nay.redhat.com>
+ <20131121165742.GN26009@pd.tnic>
+ <20131122024850.GC3874@dhcp-16-126.nay.redhat.com>
+ <20131123131518.GC24148@pd.tnic>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
-References: <20131125023150.GB13197@dhcp-16-252.nay.redhat.com>
-In-Reply-To: <20131125023150.GB13197@dhcp-16-252.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20131123131518.GC24148@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,36 +23,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, chaowang@redhat.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-(2013/11/25 11:31), Baoquan He wrote:
-> Hi HATAYAMA and Atsushi,
->
-> I think v2 is better than v1, since update_cyclic_region can be used
-> with a more flexible calling.
->
-> What's your opinion about this?
->
-> On 11/23/13 at 05:29pm, Baoquan He wrote:
+On 11/23/13 at 02:15pm, Borislav Petkov wrote:
+> On Fri, Nov 22, 2013 at 10:48:50AM +0800, Dave Young wrote:
+> > > 	efi.config_table = (unsigned long)efi.systab->tables;
+> > > 	efi.fw_vendor	 = (unsigned long)efi.systab->fw_vendor;
+> > > 	efi.runtime	 = (unsigned long)efi.systab->runtime;
+> > 
+> > Hmm, UEFI spec mentions the them like below so I use the order:
+> 
+> I'm sure by now you know you should not really trust the UEFI spec, or
+> any other spec for that matter :)
+> 
+> > Several fields of the EFI System Table must be converted from
+> > physical pointers to virtual pointers using the ConvertPointer()
+> > service. These fields include FirmwareVendor, RuntimeServices,
+> > and ConfigurationTable.
+> > 
+> > But since you like the reverse I can change it in next version.
+> 
+> The reverse was simply a suggestion. The vertical alignment was more
+> what I aimed at because it makes this chunk much more readable IMO.
+> 
 
-Thanks for your patch. The bug is caused by my patch set for creating a
-whole part of 1st bitmap before entering cyclic process.
+Got your point about alignment, will update.
 
-I think v1 is better than v2. The update_cyclic_range() call relevant
-to this regression is somewhat special compared to other calls; it is
-the almost only call that doesn't need to perform filtering processing.
-To fix this bug, please make the patch so as not to affect the other calls,
-in order to keep change as small as possible.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+--
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
