@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vks2j-0007xc-JD
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 09:01:23 +0000
-Message-Id: <20131125085630.417850406@dhcp-16-126.nay.redhat.com>
-Date: Mon, 25 Nov 2013 16:56:30 +0800
+ id 1Vks2j-0007xy-JB
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 09:01:24 +0000
+Message-Id: <20131125090036.318512365@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:56:35 +0800
 From: dyoung@redhat.com
-Subject: [patch 00/12 v4] kexec kernel efi runtime support
+Subject: [patch 05/12 v4] efi: export more efi table variable to sysfs
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,118 +16,163 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6761776498221909889=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
-
---===============6761776498221909889==
-Content-Type: text/plain
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
 Hi,
+References: <20131125085630.417850406@dhcp-16-126.nay.redhat.com>
+Content-Disposition: inline; filename=05-export-more-efi-sysfs-vars.patch
 
-Sorry for the spam, the patch subject is not correct in previous
-sending a while ago, send them again..
+Export fw_vendor, runtime and config tables physical
+addresses to /sys/firmware/efi/systab becaue kexec
+kernel will need them.
 
-Here is the V4 for supporting kexec kernel efi runtime.
-Per pervious discussion I pass the 1st kernel efi runtime mapping
-via setup_data to 2nd kernel. Besides of the runtime mapping
-info I also pass the fw_vendor, runtime, config table, smbios
-physical address in setup_data. EFI spec mentioned fw_vendor,
-runtime, config table addresses will be converted to virt address
-after entering virtual mode, but we will use it as physical address
-in efi_init. For smbios EFI spec did not mention about the address
-updating, but during my test on a HP workstation, the bios will
-convert it to Virt addr, thus pass it in setup_data as well.
+From EFI spec these 3 variables will be updated to
+virtual address after entering virtual mode. But
+kernel startup code will need the physical address.
 
-For fw_vendor, runtime, config table, I export them in /sys/firmware/
-efi/, smbios is already in /sys/firmware/efi/systab.
+changelog:
+Greg: add standalone sysfs files instead of add lines to systab
+Document them as testing ABI
+Greg: use group attrs and is_visible
+Boris: align comments lines
 
-For efi runtime mapping I add a new directory /sys/firmware/efi/
-runtime-map/ like below
-[dave@darkstar ~]$ tree /sys/firmware/efi/runtime-map/
-/sys/firmware/efi/runtime-map/
-��������� 0
-���   ��������� attribute
-���   ��������� num_pages
-���   ��������� phys_addr
-���   ��������� type
-���   ��������� virt_addr
-��������� 1
-���   ��������� attribute
-���   ��������� num_pages
-���   ��������� phys_addr
-���   ��������� type
-���   ��������� virt_addr
-[snip]
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ Documentation/ABI/testing/sysfs-firmware-efi |   26 +++++++++++++++
+ arch/x86/platform/efi/efi.c                  |    4 ++
+ drivers/firmware/efi/efi.c                   |   44 +++++++++++++++++++++++++++
+ include/linux/efi.h                          |    3 +
+ 4 files changed, 77 insertions(+)
+
+--- efi.orig/drivers/firmware/efi/efi.c
++++ efi/drivers/firmware/efi/efi.c
+@@ -32,6 +32,9 @@ struct efi __read_mostly efi = {
+ 	.hcdp       = EFI_INVALID_TABLE_ADDR,
+ 	.uga        = EFI_INVALID_TABLE_ADDR,
+ 	.uv_systab  = EFI_INVALID_TABLE_ADDR,
++	.fw_vendor  = EFI_INVALID_TABLE_ADDR,
++	.runtime    = EFI_INVALID_TABLE_ADDR,
++	.config_table  = EFI_INVALID_TABLE_ADDR,
+ };
+ EXPORT_SYMBOL(efi);
  
-kexec-tools will assemble them as setup_data and pass to 2nd kernel.
-I will send userspace patches as well.
+@@ -71,13 +74,54 @@ static ssize_t systab_show(struct kobjec
+ static struct kobj_attribute efi_attr_systab =
+ 			__ATTR(systab, 0400, systab_show, NULL);
+ 
++static ssize_t fw_vendor_show(struct kobject *kobj,
++				struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "0x%lx\n", efi.fw_vendor);
++}
++
++static ssize_t runtime_show(struct kobject *kobj,
++				struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "0x%lx\n", efi.runtime);
++}
++
++static ssize_t config_table_show(struct kobject *kobj,
++				struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "0x%lx\n", efi.config_table);
++}
++
++static struct kobj_attribute efi_attr_fw_vendor = __ATTR_RO(fw_vendor);
++static struct kobj_attribute efi_attr_runtime = __ATTR_RO(runtime);
++static struct kobj_attribute efi_attr_config_table = __ATTR_RO(config_table);
++
+ static struct attribute *efi_subsys_attrs[] = {
+ 	&efi_attr_systab.attr,
++	&efi_attr_fw_vendor.attr,
++	&efi_attr_runtime.attr,
++	&efi_attr_config_table.attr,
+ 	NULL,	/* maybe more in the future? */
+ };
+ 
++static umode_t efi_attr_is_visible(struct kobject *kobj,
++					struct attribute *attr, int n)
++{
++	umode_t mode = attr->mode;
++
++	if (attr == &efi_attr_fw_vendor.attr)
++		return (efi.fw_vendor == EFI_INVALID_TABLE_ADDR) ? 0 : mode;
++	else if (attr == &efi_attr_runtime.attr)
++		return (efi.runtime == EFI_INVALID_TABLE_ADDR) ? 0 : mode;
++	else if (attr == &efi_attr_config_table.attr)
++		return (efi.config_table == EFI_INVALID_TABLE_ADDR) ? 0 : mode;
++
++	return mode;
++}
++
+ static struct attribute_group efi_subsys_attr_group = {
+ 	.attrs = efi_subsys_attrs,
++	.is_visible = efi_attr_is_visible,
+ };
+ 
+ static struct efivars generic_efivars;
+--- efi.orig/include/linux/efi.h
++++ efi/include/linux/efi.h
+@@ -556,6 +556,9 @@ extern struct efi {
+ 	unsigned long hcdp;		/* HCDP table */
+ 	unsigned long uga;		/* UGA table */
+ 	unsigned long uv_systab;	/* UV system table */
++	unsigned long fw_vendor;	/* fw_vendor */
++	unsigned long runtime;		/* runtime table */
++	unsigned long config_table;	/* config tables */
+ 	efi_get_time_t *get_time;
+ 	efi_set_time_t *set_time;
+ 	efi_get_wakeup_time_t *get_wakeup_time;
+--- efi.orig/arch/x86/platform/efi/efi.c
++++ efi/arch/x86/platform/efi/efi.c
+@@ -653,6 +653,10 @@ void __init efi_init(void)
+ 
+ 	set_bit(EFI_SYSTEM_TABLES, &x86_efi_facility);
+ 
++	efi.config_table = (unsigned long)efi.systab->tables;
++	efi.fw_vendor	 = (unsigned long)efi.systab->fw_vendor;
++	efi.runtime	 = (unsigned long)efi.systab->runtime;
++
+ 	/*
+ 	 * Show what we know for posterity
+ 	 */
+--- /dev/null
++++ efi/Documentation/ABI/testing/sysfs-firmware-efi
+@@ -0,0 +1,26 @@
++What:		/sys/firmware/efi/fw_vendor
++Date:		Nov 2013
++Contact:	Dave Young <dyoung@redhat.org>
++Description:
++		Shows the physical address of firmware vendor in the EFI
++		system table.
++Users:
++		Kexec Mailing List <kexec@lists.infradead.org>
++
++What:		/sys/firmware/efi/runtime
++Date:		Nov 2013
++Contact:	Dave Young <dyoung@redhat.org>
++Description:
++		Shows the physical address of runtime service table in the
++		EFI system table.
++Users:
++		Kexec Mailing List <kexec@lists.infradead.org>
++
++What:		/sys/firmware/efi/config_table
++Date:		Nov 2013
++Contact:	Dave Young <dyoung@redhat.org>
++Description:
++		Shows the physical address of config table in the EFI
++		system table.
++Users:
++		Kexec Mailing List <kexec@lists.infradead.org>
 
-Limitation is I only write support for x86_64, test on below machines:
-Lenovo thinkpad t420
-Dell inspiron 14 - 3421
-HP Z420 workstation
-Qemu + OVMF
-
-Please help to review the patches.
-
-The patches are based on matt's efi master tree
-
-Changes from v1:
-add one flag in xloadflags, so kexec-tools can safely load old kernel
-without efi support.
-coding style fixes
-function name for map phys_addr to fixed virt_addr
-Add ABI documentation for sysfs files
-
-Changes from v2:
-01/09: a new patch to remove unused variables in __map_region function
-       catched by Toshi Kani
-09/09: a new patch to export x86 boot_params to sysfs instead of use
-       debugfs files
-Matt: reuse __map_region instead do same thing in another function.
-      add a wrapper function efi_map_region_fixed [02/09]
-      check return value of krealloc
-      sysfs dir name s/efi-runtime-map/runtime-map [06/09]
-      use desc_size in efi_runtime_map
-      for the xloadflags defination: +&& defined(CONFIG_KEXEC)
-Greg: sysfs : one file one value for fw_vendor, runtime, tables. [05/09]
-      Document them in ABI testing
-HPA:  Document the new xloadflag
-Also there's other function cleanup and improvement for error handling.
-
-Changes from v3:
-Greg: sysfs code move to use __ATTR_RO and attr_group
-Boris: comments and code alignment
-
-Added 3 new patches below
-10-print-efi-runtime-memmap.patch
-  - 10/12: print only runtime ranges in case EFI_DEBUG printing
-11-reserve-setup-data-late.patch
-  - fix a bug of kdump kernel, move function for reserving setup data
-    ranges late after parsing memmap= cmdline params because kdump kernel
-    will pass exact memmap late.
-12-x86-kdebugfs-use-ioremap.patch
-  - fix a bug of x86/kernel/kdebugfs.c, use ioremap instead of __va for
-    low mem because __va does not work for exact memmap=
-
---
-Thanks
-Dave
-
-
-
---===============6761776498221909889==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============6761776498221909889==--
