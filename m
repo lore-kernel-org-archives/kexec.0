@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vku9O-0003Qv-KT
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 11:16:25 +0000
-Date: Mon, 25 Nov 2013 12:15:53 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [patch 01/12 v4] efi: remove unused variables in __map_region
-Message-ID: <20131125111553.GE6782@pd.tnic>
-References: <20131125090034.143510822@dhcp-16-126.nay.redhat.com>
- <20131125091957.GA3921@dhcp-16-126.nay.redhat.com>
+ id 1VkxMd-0000sZ-Qo
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 14:42:16 +0000
+Date: Mon, 25 Nov 2013 09:41:50 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: /proc/vmcore mmap() failure issue
+Message-ID: <20131125144150.GC21378@redhat.com>
+References: <20131115142617.GC6637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
+ <20131118135511.GA30637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C3862@BPXM01GP.gisp.nec.co.jp>
+ <20131120145901.GB27924@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C43E3@BPXM01GP.gisp.nec.co.jp>
+ <528DC4F2.5040000@jp.fujitsu.com>
+ <20131121165237.GG16208@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C5AB3@BPXM01GP.gisp.nec.co.jp>
+ <529311F1.90603@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131125091957.GA3921@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <529311F1.90603@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,20 +32,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, Borislav Petkov <bp@suse.de>, vgoyal@redhat.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-On Mon, Nov 25, 2013 at 05:19:57PM +0800, Dave Young wrote:
-> Sigh, looks like I should move to git-send-email for less error prone.
+On Mon, Nov 25, 2013 at 06:01:37PM +0900, HATAYAMA Daisuke wrote:
 
-You won't regret it :-)
+[..]
+> > I agree to avoid this issue by fixing makedumpfile as workaround while to
+> > fix kernel is so tough and risky. However, it sounds strange to me to fix
+> > userspace side elaborately for such definite kernel issue whose cause is
+> > known, so we should fix the kernel itself.
+> > 
+> 
+> > Otherwise, will you continue to add specific fixes into user tools to
+> > address kernel issues like this case ?
+> > 
+> 
+> makedumpfile supports a wide range of kernel versions and needs to satisfy
+> backward compatibility. mmap() on /proc/vmcore might be backported to some of
+> the old versions on some distributions if necessary. Then, it's hard to fix
+> each old kernel at each back port. The method that can be applied to all the
+> kernels in general, is necessary.
+> 
+> Also, looking at ia64 case where there's boot loader data on partial pages,
+> there could be other environments where partial pages contain other important
+> data other components have. So, the issue depends not only on kernels but also
+> other components such as boot loader and firmwares that can put data on
+> partial pages. We need to get there as long as there's important data there
+> and we have access to there.
 
--- 
-Regards/Gruss,
-    Boris.
+Hi Atsushi, Hatayama,
 
-Sent from a fat crate under my desk. Formatting is fine.
---
+So even if we fix the mmap() issue in kernel, looks like it will be a
+good idea to ship the fix in makedumpfile as there have been a kernel
+release where mmap() will cause issues.
+
+Having said that, I think we need to fix it in kernel also. I was not sure
+that what's the right fix. Should we truncate partial pages or should
+we just copy partial pages from old memory to new kernel's memory and fill
+partial page with zeros. And that's why I was hoping that makedumpfile
+can fill the gap.
+
+Copying partial pages to new memory seems like a safer approach. So may
+be we can take a fix in makeudmpfile and another in kernel.
+
+Hatayama, I know that in the past your initial mmap() patches were copying
+partial pages to new kernel's memory. Would you like to resurrect that
+patch again?
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
