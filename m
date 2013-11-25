@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VkrqS-0007JU-Ms
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:48:42 +0000
-Message-Id: <20131125084806.265794765@dhcp-16-126.nay.redhat.com>
-Date: Mon, 25 Nov 2013 16:47:01 +0800
+ id 1VkrqS-0007JQ-Mt
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:48:43 +0000
+Message-Id: <20131125084811.956664794@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:47:11 +0800
 From: dyoung@redhat.com
-Subject: efi: add a wrapper function efi_map_region_fixed
+Subject: do not use __va for getting setup_data virt addr
 References: <20131125084659.182036023@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline; filename=02-efi-map-fixed-addr.patch
+Content-Disposition: inline; filename=12-x86-kdebugfs-use-ioremap.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,67 +23,89 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-Kexec kernel will use saved runtime virtual mapping, so add a
-new function efi_map_region_fixed for directly mapping a md
-to md->virt.
-
-The md is passed in from 1st kernel, the virtual addr is
-saved in md->virt_addr.
-
-Matt: coding style
-      reuse __map_region
-Boris: Strenthen comment lines to 80 cols.
+__va does not work in case memmap=exactmap, so let's always use ioremap_cache.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
-Acked-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/include/asm/efi.h     |    1 +
- arch/x86/platform/efi/efi_32.c |    2 ++
- arch/x86/platform/efi/efi_64.c |   10 ++++++++++
- 3 files changed, 13 insertions(+)
+ arch/x86/kernel/kdebugfs.c |   35 +++++++++++------------------------
+ 1 file changed, 11 insertions(+), 24 deletions(-)
 
---- efi.orig/arch/x86/include/asm/efi.h
-+++ efi/arch/x86/include/asm/efi.h
-@@ -128,6 +128,7 @@ extern void efi_call_phys_epilog(void);
- extern void efi_unmap_memmap(void);
- extern void efi_memory_uc(u64 addr, unsigned long size);
- extern void __init efi_map_region(efi_memory_desc_t *md);
-+extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
- extern void efi_sync_low_kernel_mappings(void);
- extern void efi_setup_page_tables(void);
- extern void __init old_map_region(efi_memory_desc_t *md);
---- efi.orig/arch/x86/platform/efi/efi_64.c
-+++ efi/arch/x86/platform/efi/efi_64.c
-@@ -199,6 +199,16 @@ void __init efi_map_region(efi_memory_de
- 	md->virt_addr = efi_va;
- }
+--- efi.orig/arch/x86/kernel/kdebugfs.c
++++ efi/arch/x86/kernel/kdebugfs.c
+@@ -33,7 +33,6 @@ static ssize_t setup_data_read(struct fi
+ 	struct setup_data_node *node = file->private_data;
+ 	unsigned long remain;
+ 	loff_t pos = *ppos;
+-	struct page *pg;
+ 	void *p;
+ 	u64 pa;
  
-+/*
-+ * kexec kernel will use efi_map_region_fixed to map efi runtime memory ranges.
-+ * md->virt_addr is the original virtual address which had been mapped in kexec
-+ * 1st kernel.
-+ */
-+void __init efi_map_region_fixed(efi_memory_desc_t *md)
-+{
-+	__map_region(md, md->virt_addr);
-+}
-+
- void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
- 				 u32 type, u64 attribute)
- {
---- efi.orig/arch/x86/platform/efi/efi_32.c
-+++ efi/arch/x86/platform/efi/efi_32.c
-@@ -47,6 +47,8 @@ void __init efi_map_region(efi_memory_de
- 	old_map_region(md);
- }
+@@ -47,18 +46,12 @@ static ssize_t setup_data_read(struct fi
+ 		count = node->len - pos;
  
-+void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
-+
- void efi_call_phys_prelog(void)
- {
- 	struct desc_ptr gdt_descr;
+ 	pa = node->paddr + sizeof(struct setup_data) + pos;
+-	pg = pfn_to_page((pa + count - 1) >> PAGE_SHIFT);
+-	if (PageHighMem(pg)) {
+-		p = ioremap_cache(pa, count);
+-		if (!p)
+-			return -ENXIO;
+-	} else
+-		p = __va(pa);
++	p = ioremap_cache(pa, count);
++	if (!p)
++		return -ENXIO;
+ 
+ 	remain = copy_to_user(user_buf, p, count);
+-
+-	if (PageHighMem(pg))
+-		iounmap(p);
++	iounmap(p);
+ 
+ 	if (remain)
+ 		return -EFAULT;
+@@ -109,7 +102,6 @@ static int __init create_setup_data_node
+ 	struct setup_data *data;
+ 	int error;
+ 	struct dentry *d;
+-	struct page *pg;
+ 	u64 pa_data;
+ 	int no = 0;
+ 
+@@ -126,16 +118,12 @@ static int __init create_setup_data_node
+ 			goto err_dir;
+ 		}
+ 
+-		pg = pfn_to_page((pa_data+sizeof(*data)-1) >> PAGE_SHIFT);
+-		if (PageHighMem(pg)) {
+-			data = ioremap_cache(pa_data, sizeof(*data));
+-			if (!data) {
+-				kfree(node);
+-				error = -ENXIO;
+-				goto err_dir;
+-			}
+-		} else
+-			data = __va(pa_data);
++		data = ioremap_cache(pa_data, sizeof(*data));
++		if (!data) {
++			kfree(node);
++			error = -ENXIO;
++			goto err_dir;
++		}
+ 
+ 		node->paddr = pa_data;
+ 		node->type = data->type;
+@@ -143,8 +131,7 @@ static int __init create_setup_data_node
+ 		error = create_setup_data_node(d, no, node);
+ 		pa_data = data->next;
+ 
+-		if (PageHighMem(pg))
+-			iounmap(data);
++		iounmap(data);
+ 		if (error)
+ 			goto err_dir;
+ 		no++;
 
 
 _______________________________________________
