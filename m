@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VkQ8a-00047J-O3
- for kexec@lists.infradead.org; Sun, 24 Nov 2013 03:13:34 +0000
-Date: Sun, 24 Nov 2013 11:12:28 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 0/4 v3] kexec-tools: efi runtime support
-Message-ID: <20131124031228.GA1754@dhcp-16-126.nay.redhat.com>
-References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
- <1385159448.1791.161.camel@misato.fc.hp.com>
+ id 1Vklei-00031M-Km
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 02:12:10 +0000
+Date: Mon, 25 Nov 2013 10:11:17 +0800
+From: Baoquan He <bhe@redhat.com>
+Message-ID: <20131125021117.GA13197@dhcp-16-252.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1385159448.1791.161.camel@misato.fc.hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,99 +20,157 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Toshi Kani <toshi.kani@hp.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: kexec@lists.infradead.org
+Cc: d.hatayama@jp.fujitsu.com, chaowang@redhat.com
 
-On 11/22/13 at 03:30pm, Toshi Kani wrote:
-> On Thu, 2013-11-21 at 14:40 +0800, dyoung@redhat.com wrote:
-> > Hi,
-> > 
-> > This is the v3 patchset for adding efi runtime support on kexec kernel
-> > kernel patches was sent a while ago, not yet updated in archive. 
-> > 
-> > in kexec-tools, this patchset will do below:
-> > 1. retrieve efi_info from sysfs boot_params, and fill the
-> > x86 setup header. If kernel does not export sysfs boot_params,
-> > still try to find them in debugfs.
-> > 
-> > 2. collect data efi runtime needed:
-> > /sys/firmware/efi/systab: smbios
-> > /sys/firmware/efi/fw_vendor
-> > /sys/firmware/efi/runtime
-> > /sys/firmware/efi/config_table
-> > 
-> > /sys/firmware/efi/runtime-map/*, the phys-virt mappings in 1st kernel
-> > 
-> > 3. assemble setup_data based on data get in 2) then pass it to 2nd kernel
-> > 
-> > Tested on OVMF, dell laptop, lenovo laptop and HP workstation
+kumagai-atsushi@mxc.nes.nec.co.jp
+Bcc: bhe@redhat.com
+Subject: Re: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
+Reply-To: 
+In-Reply-To: <20131123092914.GA31384@dhcp-16-105.nay.redhat.com>
+
+I think v2 is better than v1, since update_cyclic_region can be used
+with a more flexible calling.
+
+Hi HATAYAMA and Atsushi,
+
+What's your opinion about this?
+
+Baoquan
+Thanks a lot
+
+On 11/23/13 at 05:29pm, Baoquan He wrote:
+> Function update_cyclic_region has a name which doesn't match its
+> functionality. it does 3 tings: update the cyclic region; if elf
+> dump, call create_1st_bitmap_cyclic in this region; call
+> exclude_unnecessary_pages_cyclic to exclude pages in this region.
 > 
-> Tested on an HP EFI-based 60-way server (prototype).  For the series:
-
-Hi, Toshi
-
-Thanks for the testing, during my own testing this weekend I found two
-issues I need to fix and improve:
-1. print original memmap #ifdef EFI_DEBUG does not make sense, will add
-   a patch to only print runtime maps we saved in case kexec.
-
-2. move e820_reserve_setup_data late after parse early param and setup
-   the runtime mapping, otherwise kdump kernel will complains about
-   ioremap a normal ram region.
-
-3. should change the phys_to_virt to ioremap in parse_efi_setup, also
-   should fix the arch/x86/kernel/kdebugfs.c, move __va to ioremap as
-   well, because kexec does not works for using memmap=exactmap in
-   1st kernel, bug like below:
-
-[    0.153726] BUG: unable to handle kernel paging request at ffff880000100008
-[    0.156666] IP: [<ffffffff817beb54>] arch_kdebugfs_init+0x11a/0x201
-[    0.156666] PGD 7e149067 PUD 7e14a067 PMD 7e14b067 PTE 0
-[    0.156666] Oops: 0000 [#1] PREEMPT SMP 
-[    0.156666] Modules linked in:
-[    0.156666] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0+ #103
-[    0.156666] task: ffff880037032000 ti: ffff88003706a000 task.ti: ffff88003706a000
-[    0.156666] RIP: 0010:[<ffffffff817beb54>]  [<ffffffff817beb54>] arch_kdebugfs_init+0x11a/0x201
-[    0.156666] RSP: 0000:ffff88003706be30  EFLAGS: 00010286
-[    0.156666] RAX: ffff880037002a00 RBX: ffff880037002a00 RCX: 0000000000000b90
-[    0.156666] RDX: 0000000000000000 RSI: ffffffff81673a10 RDI: ffff88003706be50
-[    0.156666] RBP: ffff88003706be90 R08: ffff880037002a00 R09: ffff880037002a10
-[    0.156666] R10: 0000000000000000 R11: ffffffff817beb2a R12: ffff8800364033e0
-[    0.156666] R13: 0000000000100000 R14: ffff880036403000 R15: ffff880000100000
-[    0.156666] FS:  0000000000000000(0000) GS:ffff880037400000(0000) knlGS:0000000000000000
-[    0.156666] CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
-[    0.156666] CR2: ffff880000100008 CR3: 000000007d6fb000 CR4: 00000000000006f0
-[    0.156666] Stack:
-[    0.156666]  ffffffff8176b0b0 ffff8800364030f8 ffff8800364031f0 0000000000000000
-[    0.156666]  ffff88003706be60 ffffffff8148e41d 00000000733b54fc ffffffff817bea3a
-[    0.156666]  ffffffff81868d90 0000000000000000 0000000000000000 0000000000000000
-[    0.156666] Call Trace:
-[    0.156666]  [<ffffffff8148e41d>] ? mutex_unlock+0x9/0xb
-[    0.156666]  [<ffffffff817bea3a>] ? topology_init+0x36/0x36
-[    0.156666]  [<ffffffff81000296>] do_one_initcall+0xae/0x158
-[    0.156666]  [<ffffffff8107750a>] ? parameq+0x1d/0x1f
-[    0.156666]  [<ffffffff81077768>] ? parse_args+0x25c/0x33a
-[    0.156666]  [<ffffffff817b8e96>] kernel_init_freeable+0x115/0x19b
-[    0.156666]  [<ffffffff817b873d>] ? do_early_param+0x88/0x88
-[    0.156666]  [<ffffffff8147bfa9>] ? rest_init+0xbd/0xbd
-[    0.156666]  [<ffffffff8147bfb2>] kernel_init+0x9/0xcc
-[    0.156666]  [<ffffffff81491d8c>] ret_from_fork+0x7c/0xb0
-[    0.156666]  [<ffffffff8147bfa9>] ? rest_init+0xbd/0xbd
-[    0.156666] Code: ff 48 85 c0 48 89 c3 0f 84 b9 00 00 00 49 bf 00 00 00 00 00 88 ff ff 4c 89 28 8b 55 bc 48 8d 7d c0 4d 01 ef 48 c7 c6 10 3a 67 81 <41> 8b 47 08 89 43 08 41 8b 47 0c 89 43 0c 31 c0 e8 2c 50 a7 ff 
-[    0.156666] RIP  [<ffffffff817beb54>] arch_kdebugfs_init+0x11a/0x201
-[    0.156666]  RSP <ffff88003706be30>
-[    0.156666] CR2: ffff880000100008
-[    0.156666] ---[ end trace 2c6f39ce0b3f50b3 ]---
-[    0.156738] swapper/0 (1) used greatest stack depth: 5240 bytes left
-[    0.160061] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    0.160061] 
-	
-
-I think these should be all the remain issue, I will fix them in next version.
-Appreciate your testing.
-
-Thanks
-Dave
+> However not all 3 things are needed to be done everywhere. Somewhere
+> unnecessary thing is done with much efforts, e.g when get dumpable
+> page numbers for elf cyclic dump 1st bigmap creating is not needed.
+> Somewhere thing is done, but it also cause errors, e.g when write
+> 1st bitmap cyclic for compressed kdump it will add free page numbers
+> twice, namely pfn_free is doubled. Then dump information will be wrong
+> like below:
+> 
+> Original pages  : 0x000000000007539c
+>   Excluded pages   : 0x00000000000d986a
+>     Pages filled with zero  : 0x0000000000001196
+>     Cache pages             : 0x0000000000025008
+>     Cache pages + private   : 0x0000000000004baa
+>     User process data pages : 0x00000000000127d0
+>     Free pages              : 0x000000000009c352
+>     Hwpoison pages          : 0x0000000000000000
+>   Remaining pages  : 0xfffffffffff9bb32
+>   (The number of pages is reduced to 38418230895101%.)
+> Memory Hole     : 0x000000000000ac62
+> --------------------------------------------------
+> Total pages     : 0x000000000007fffe
+> 
+> So add 2 more parameters for update_cyclic_region. By these adding
+> update_cyclic_region can be called in a refined grain. Then effort
+> can be saved and above error can be fixed.
+> 
+> And in kdump compressed dump case, prepare_bitmap2_buffer_cyclic is
+> called, that means partial_bitmap2 is malloced twice. Here remove
+> the 2nd call.
+> ---
+>  makedumpfile.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 3746cf6..8cfc2a5 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -4725,7 +4725,7 @@ exclude_unnecessary_pages_cyclic(void)
+>  }
+>  
+>  int
+> -update_cyclic_region(unsigned long long pfn)
+> +update_cyclic_region(unsigned long long pfn, int bmp1_set, int exclude)
+>  {
+>  	if (is_cyclic_region(pfn))
+>  		return TRUE;
+> @@ -4736,10 +4736,10 @@ update_cyclic_region(unsigned long long pfn)
+>  	if (info->cyclic_end_pfn > info->max_mapnr)
+>  		info->cyclic_end_pfn = info->max_mapnr;
+>  
+> -	if (info->flag_elf_dumpfile && !create_1st_bitmap_cyclic())
+> +	if (bmp1_set && info->flag_elf_dumpfile && !create_1st_bitmap_cyclic())
+>  		return FALSE;
+>  
+> -	if (!exclude_unnecessary_pages_cyclic())
+> +	if (exclude && !exclude_unnecessary_pages_cyclic())
+>  		return FALSE;
+>  
+>  	return TRUE;
+> @@ -5502,7 +5502,7 @@ get_num_dumpable_cyclic(void)
+>  	unsigned long long pfn, num_dumpable=0;
+>  
+>  	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
+> -		if (!update_cyclic_region(pfn))
+> +		if (!update_cyclic_region(pfn, 0, 1))
+>  			return FALSE;
+>  
+>  		if (is_dumpable_cyclic(info->partial_bitmap2, pfn))
+> @@ -5803,7 +5803,7 @@ get_loads_dumpfile_cyclic(void)
+>  			 * Update target region and bitmap
+>  			 */
+>  			if (!is_cyclic_region(pfn)) {
+> -				if (!update_cyclic_region(pfn))
+> +				if (!update_cyclic_region(pfn, 0, 1))
+>  					return FALSE;
+>  			}
+>  
+> @@ -5872,7 +5872,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+>  
+>  	info->cyclic_start_pfn = 0;
+>  	info->cyclic_end_pfn = 0;
+> -	if (!update_cyclic_region(0))
+> +	if (!update_cyclic_region(0, 1, 1))
+>  		return FALSE;
+>  
+>  	if (!(phnum = get_phnum_memory()))
+> @@ -5910,7 +5910,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+>  			/*
+>  			 * Update target region and partial bitmap if necessary.
+>  			 */
+> -			if (!update_cyclic_region(pfn))
+> +			if (!update_cyclic_region(pfn, 1, 1))
+>  				return FALSE;
+>  
+>  			if (!is_dumpable_cyclic(info->partial_bitmap2, pfn)) {
+> @@ -6805,7 +6805,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+>  	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
+>  		if (is_cyclic_region(pfn))
+>  			continue;
+> -		if (!update_cyclic_region(pfn))
+> +		if (!update_cyclic_region(pfn, 0, 0))
+>  			return FALSE;
+>  		if (!create_1st_bitmap_cyclic())
+>  			return FALSE;
+> @@ -6815,9 +6815,6 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+>  
+>  	free_bitmap1_buffer();
+>  
+> -	if (!prepare_bitmap2_buffer_cyclic())
+> -		return FALSE;
+> -
+>  	/*
+>  	 * Write pages and bitmap cyclically.
+>  	 */
+> @@ -6827,7 +6824,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+>  		if (is_cyclic_region(pfn))
+>  			continue;
+>  
+> -		if (!update_cyclic_region(pfn))
+> +		if (!update_cyclic_region(pfn, 0, 1))
+>                          return FALSE;
+>  
+>  		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero, &offset_data))
+> -- 
+> 1.8.3.1
+> 
 
 _______________________________________________
 kexec mailing list
