@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VkxMd-0000sZ-Qo
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 14:42:16 +0000
-Date: Mon, 25 Nov 2013 09:41:50 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: /proc/vmcore mmap() failure issue
-Message-ID: <20131125144150.GC21378@redhat.com>
-References: <20131115142617.GC6637@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
- <20131118135511.GA30637@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C3862@BPXM01GP.gisp.nec.co.jp>
- <20131120145901.GB27924@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C43E3@BPXM01GP.gisp.nec.co.jp>
- <528DC4F2.5040000@jp.fujitsu.com>
- <20131121165237.GG16208@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C5AB3@BPXM01GP.gisp.nec.co.jp>
- <529311F1.90603@jp.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <529311F1.90603@jp.fujitsu.com>
+Received: from g6t0185.atlanta.hp.com ([15.193.32.62])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VkyCt-0002UG-FS
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 15:36:16 +0000
+Message-ID: <1385393451.1791.168.camel@misato.fc.hp.com>
+Subject: Re: [patch 0/4 v3] kexec-tools: efi runtime support
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Mon, 25 Nov 2013 08:30:51 -0700
+In-Reply-To: <20131124031228.GA1754@dhcp-16-126.nay.redhat.com>
+References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
+ <1385159448.1791.161.camel@misato.fc.hp.com>
+ <20131124031228.GA1754@dhcp-16-126.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,56 +24,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Mon, Nov 25, 2013 at 06:01:37PM +0900, HATAYAMA Daisuke wrote:
-
-[..]
-> > I agree to avoid this issue by fixing makedumpfile as workaround while to
-> > fix kernel is so tough and risky. However, it sounds strange to me to fix
-> > userspace side elaborately for such definite kernel issue whose cause is
-> > known, so we should fix the kernel itself.
-> > 
+On Sun, 2013-11-24 at 11:12 +0800, Dave Young wrote:
+> Hi, Toshi
 > 
-> > Otherwise, will you continue to add specific fixes into user tools to
-> > address kernel issues like this case ?
-> > 
+> Thanks for the testing, during my own testing this weekend I found two
+> issues I need to fix and improve:
+> 1. print original memmap #ifdef EFI_DEBUG does not make sense, will add
+>    a patch to only print runtime maps we saved in case kexec.
 > 
-> makedumpfile supports a wide range of kernel versions and needs to satisfy
-> backward compatibility. mmap() on /proc/vmcore might be backported to some of
-> the old versions on some distributions if necessary. Then, it's hard to fix
-> each old kernel at each back port. The method that can be applied to all the
-> kernels in general, is necessary.
+> 2. move e820_reserve_setup_data late after parse early param and setup
+>    the runtime mapping, otherwise kdump kernel will complains about
+>    ioremap a normal ram region.
 > 
-> Also, looking at ia64 case where there's boot loader data on partial pages,
-> there could be other environments where partial pages contain other important
-> data other components have. So, the issue depends not only on kernels but also
-> other components such as boot loader and firmwares that can put data on
-> partial pages. We need to get there as long as there's important data there
-> and we have access to there.
+> 3. should change the phys_to_virt to ioremap in parse_efi_setup, also
+>    should fix the arch/x86/kernel/kdebugfs.c, move __va to ioremap as
+>    well, because kexec does not works for using memmap=exactmap in
+>    1st kernel, bug like below:
+> 
+> [    0.153726] BUG: unable to handle kernel paging request at ffff880000100008
+> [    0.156666] IP: [<ffffffff817beb54>] arch_kdebugfs_init+0x11a/0x201
+> [    0.156666] PGD 7e149067 PUD 7e14a067 PMD 7e14b067 PTE 0
+> [    0.156666] Oops: 0000 [#1] PREEMPT SMP 
+> [    0.156666] Modules linked in:
+> [    0.156666] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0+ #103
+> [    0.156666] task: ffff880037032000 ti: ffff88003706a000 task.ti: ffff88003706a000
+> [    0.156666] RIP: 0010:[<ffffffff817beb54>]  [<ffffffff817beb54>] arch_kdebugfs_init+0x11a/0x201
+> [    0.156666] RSP: 0000:ffff88003706be30  EFLAGS: 00010286
+> [    0.156666] RAX: ffff880037002a00 RBX: ffff880037002a00 RCX: 0000000000000b90
+> [    0.156666] RDX: 0000000000000000 RSI: ffffffff81673a10 RDI: ffff88003706be50
+> [    0.156666] RBP: ffff88003706be90 R08: ffff880037002a00 R09: ffff880037002a10
+> [    0.156666] R10: 0000000000000000 R11: ffffffff817beb2a R12: ffff8800364033e0
+> [    0.156666] R13: 0000000000100000 R14: ffff880036403000 R15: ffff880000100000
+> [    0.156666] FS:  0000000000000000(0000) GS:ffff880037400000(0000) knlGS:0000000000000000
+> [    0.156666] CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
+> [    0.156666] CR2: ffff880000100008 CR3: 000000007d6fb000 CR4: 00000000000006f0
+> [    0.156666] Stack:
+> [    0.156666]  ffffffff8176b0b0 ffff8800364030f8 ffff8800364031f0 0000000000000000
+> [    0.156666]  ffff88003706be60 ffffffff8148e41d 00000000733b54fc ffffffff817bea3a
+> [    0.156666]  ffffffff81868d90 0000000000000000 0000000000000000 0000000000000000
+> [    0.156666] Call Trace:
+> [    0.156666]  [<ffffffff8148e41d>] ? mutex_unlock+0x9/0xb
+> [    0.156666]  [<ffffffff817bea3a>] ? topology_init+0x36/0x36
+> [    0.156666]  [<ffffffff81000296>] do_one_initcall+0xae/0x158
+> [    0.156666]  [<ffffffff8107750a>] ? parameq+0x1d/0x1f
+> [    0.156666]  [<ffffffff81077768>] ? parse_args+0x25c/0x33a
+> [    0.156666]  [<ffffffff817b8e96>] kernel_init_freeable+0x115/0x19b
+> [    0.156666]  [<ffffffff817b873d>] ? do_early_param+0x88/0x88
+> [    0.156666]  [<ffffffff8147bfa9>] ? rest_init+0xbd/0xbd
+> [    0.156666]  [<ffffffff8147bfb2>] kernel_init+0x9/0xcc
+> [    0.156666]  [<ffffffff81491d8c>] ret_from_fork+0x7c/0xb0
+> [    0.156666]  [<ffffffff8147bfa9>] ? rest_init+0xbd/0xbd
+> [    0.156666] Code: ff 48 85 c0 48 89 c3 0f 84 b9 00 00 00 49 bf 00 00 00 00 00 88 ff ff 4c 89 28 8b 55 bc 48 8d 7d c0 4d 01 ef 48 c7 c6 10 3a 67 81 <41> 8b 47 08 89 43 08 41 8b 47 0c 89 43 0c 31 c0 e8 2c 50 a7 ff 
+> [    0.156666] RIP  [<ffffffff817beb54>] arch_kdebugfs_init+0x11a/0x201
+> [    0.156666]  RSP <ffff88003706be30>
+> [    0.156666] CR2: ffff880000100008
+> [    0.156666] ---[ end trace 2c6f39ce0b3f50b3 ]---
+> [    0.156738] swapper/0 (1) used greatest stack depth: 5240 bytes left
+> [    0.160061] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+> [    0.160061] 
+> 	
+> 
+> I think these should be all the remain issue, I will fix them in next version.
+> Appreciate your testing.
 
-Hi Atsushi, Hatayama,
+HI Dave,
 
-So even if we fix the mmap() issue in kernel, looks like it will be a
-good idea to ship the fix in makedumpfile as there have been a kernel
-release where mmap() will cause issues.
+I will test v4 again.  This time, I will test "memmap=exactmap" option
+as well.  I have tested the following cases before.  Are there any other
+cases you'd like me to test?
 
-Having said that, I think we need to fix it in kernel also. I was not sure
-that what's the right fix. Should we truncate partial pages or should
-we just copy partial pages from old memory to new kernel's memory and fill
-partial page with zeros. And that's why I was hoping that makedumpfile
-can fill the gap.
+ - kdump
+ - multiple fast reboots and then kdump
+ - old kexec and new kernel w/ noefi & acpi_rsdp option
+ - new kexec and old kernel w/ noefi & acpi_rsdp option
 
-Copying partial pages to new memory seems like a safer approach. So may
-be we can take a fix in makeudmpfile and another in kernel.
+Thanks,
+-Toshi
 
-Hatayama, I know that in the past your initial mmap() patches were copying
-partial pages to new kernel's memory. Would you like to resurrect that
-patch again?
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
