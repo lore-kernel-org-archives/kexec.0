@@ -1,36 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vkyot-0003Zv-1M
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 16:15:32 +0000
-Received: from /spool/local
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 25 Nov 2013 16:15:06 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id E783F2190063
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 16:15:02 +0000 (GMT)
-Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
- [9.149.37.252])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- rAPGEo6f66322450
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 16:14:50 GMT
-Received: from d06av11.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av11.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- rAPGF2BQ000389
- for <kexec@lists.infradead.org>; Mon, 25 Nov 2013 09:15:02 -0700
-Date: Mon, 25 Nov 2013 17:15:00 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
-Message-ID: <20131125171500.418125a7@holzheu>
-In-Reply-To: <20131125153620.GA23094@redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VkzCN-0004Mt-8U
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 16:39:49 +0000
+Date: Mon, 25 Nov 2013 11:39:21 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131125163920.GC23094@redhat.com>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
- <87txf4y304.fsf@xmission.com> <20131125110428.4bae2fe7@holzheu>
- <20131125153620.GA23094@redhat.com>
-Mime-Version: 1.0
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131121190350.GC17070@kroah.com>
+ <20131121190620.GA25951@srcf.ucam.org>
+ <20131121191305.GK16208@redhat.com>
+ <20131121191907.GA26366@srcf.ucam.org>
+ <20131122185706.GK4046@redhat.com> <87vbzju6ql.fsf@xmission.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87vbzju6ql.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,77 +30,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, hpa@zytor.com
 
-On Mon, 25 Nov 2013 10:36:20 -0500
-Vivek Goyal <vgoyal@redhat.com> wrote:
+On Fri, Nov 22, 2013 at 07:39:14PM -0800, Eric W. Biederman wrote:
 
-> On Mon, Nov 25, 2013 at 11:04:28AM +0100, Michael Holzheu wrote:
-> > On Fri, 22 Nov 2013 05:34:03 -0800
-> > ebiederm@xmission.com (Eric W. Biederman) wrote:
-> > 
-> > > Vivek Goyal <vgoyal@redhat.com> writes:
-> > 
-> > > >> There is also a huge missing piece of this in that your purgatory is not
-> > > >> checking a hash of the loaded image before jumping too it.  Without that
-> > > >> this is a huge regression at least for the kexec on panic case.  We
-> > > >> absolutely need to check that the kernel sitting around in memory has
-> > > >> not been corrupted before we let it run very far.
-> > > >
-> > > > Agreed. This should not be hard. It is just a matter of calcualting
-> > > > digest of segments. I will store it in kimge and verify digest again
-> > > > before passing control to control page. Will fix it in next version.
-> > > 
-> > > Nak.  The verification needs to happen in purgatory. 
-> > > 
-> > > The verification needs to happen in code whose runtime environment is
-> > > does not depend on random parts of the kernel.  Anything else is a
-> > > regression in maintainability and reliability.
-> > 
-> > Hello Vivek,
-> > 
-> > Just to be sure that you have not forgotten the following s390 detail:
-> > 
-> > On s390 we first call purgatory with parameter "0" for doing the
-> > checksum test. If this fails, we can have as backup solution our
-> > traditional stand-alone dump. In case tha checksum test was ok,
-> > we call purgatory a second time with parameter "1" which then
-> > starts kdump.
-> > 
-> > Could you please ensure that this mechanism also works after
-> > your rework.
+[..]
+> > Hmm..., I am running out of ideas here. This is what I understand.
+> >
+> > - If I sign the bzImage (using PKCS1.5 signature), and later it is signed
+> >   with authenticode format signatures, then PKCS1.5 signatures will not be
+> >   valid as PE/COFF signing will do some modification to PE/COFF header in
+> >   bzImage. And another problem is that then I don't have a way to find
+> >   PKCS1.5 signature.
+> >
+> > - If bzImage is first signed with authenticode format signature and then
+> >   signed using PKCS1.5 signature, then  authenticode format signature
+> >   will become invalid as it will also hash the data appened at the end
+> >   of file.
+> >
+> > So looks like both signatures can't co-exist on same file. That means
+> > one signature has to be detached.
+> >
+> > I am beginning to think that create a kernel option which allows to choose
+> > between attached and detached signatures. Extend kexec syscall to allow
+> > a parameter to pass in detached signatures. If detached signatures are
+> > not passed, then look for signatures at the end of file. That way, those
+> > who are signing kernels using platform specific format (authenticode) in 
+> > this case, they can generate detached signature while others can just
+> > use attached signatures.
+> >
+> > Any thoughts on how this should be handled?
 > 
-> Hi Michael,
-> 
-> All that logic in in arch dependent portion of s390? If yes, I am not
-> touching any arch dependent part of s390 yet and only doing implementation
-> of x86.
+> Inside of a modern bzImage there is an embedded ELF image.  How about in
+> userspace we just strip out the embedded ELF image and write that to a
+> file.  Then we can use the same signature checking scheme as we do for
+> kernel modules.  And you only have to support one file format.
 
-Yes, part of s390 architecture code (kernel and kexec purgatory).
+I think there is a problem with that. And that we lose the additional
+metadata info present in bzImage which is important.
 
-kernel:
--------
-arch/s390/kernel/machine_kexec.c:
- kdump_csum_valid() -> rc = start_kdump(0);
- __do_machine_kdump() -> start_kdump(1)
+For example, knowing how much memory kernel will consume before it
+sets up its own GDT and page tables (init_size) is very important. That
+gives image loader lot of flexibility in figuring out where to place rest
+of the components safely (initrd, GDT, page tables, ELF header segment, 
+backup region etc).
 
-kexec tools:
-------------
-purgatory/arch/s390/setup-s390.S
-  cghi %r2,0
-  je verify_checksums
-
-> Generic changes should be usable by s390 and you should be able to do
-> same thing there. Though we are still detating whether segment checksum
-> verification logic should be part of purgatory or core kernel.
-
-Yes, that was my concern. If you move the purgatory checksum logic to
-the kernel we probably have to consider our s390 checksum test.
-
-Thanks!
-Michael
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
