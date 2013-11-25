@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VkrqS-0007JQ-Mt
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:48:43 +0000
-Message-Id: <20131125084811.956664794@dhcp-16-126.nay.redhat.com>
-Date: Mon, 25 Nov 2013 16:47:11 +0800
+ id 1Vkrqc-0007Jx-DH
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:48:51 +0000
+Message-Id: <20131125084805.769680812@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:47:00 +0800
 From: dyoung@redhat.com
-Subject: do not use __va for getting setup_data virt addr
+Subject: efi: remove unused variables in __map_region
 References: <20131125084659.182036023@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline; filename=12-x86-kdebugfs-use-ioremap.patch
+Content-Disposition: inline; filename=01-remove-unused-var-in-map-region.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,89 +23,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-__va does not work in case memmap=exactmap, so let's always use ioremap_cache.
+variables size and end is useless in this function, thus remove them.
 
+Reported-by: Toshi Kani <toshi.kani@hp.com>
 Signed-off-by: Dave Young <dyoung@redhat.com>
+Acked-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/kernel/kdebugfs.c |   35 +++++++++++------------------------
- 1 file changed, 11 insertions(+), 24 deletions(-)
+ arch/x86/platform/efi/efi_64.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- efi.orig/arch/x86/kernel/kdebugfs.c
-+++ efi/arch/x86/kernel/kdebugfs.c
-@@ -33,7 +33,6 @@ static ssize_t setup_data_read(struct fi
- 	struct setup_data_node *node = file->private_data;
- 	unsigned long remain;
- 	loff_t pos = *ppos;
--	struct page *pg;
- 	void *p;
- 	u64 pa;
+--- efi.orig/arch/x86/platform/efi/efi_64.c
++++ efi/arch/x86/platform/efi/efi_64.c
+@@ -148,15 +148,11 @@ void efi_setup_page_tables(void)
+ static void __init __map_region(efi_memory_desc_t *md, u64 va)
+ {
+ 	pgd_t *pgd = (pgd_t *)__va(real_mode_header->trampoline_pgd);
+-	unsigned long pf = 0, size;
+-	u64 end;
++	unsigned long pf = 0;
  
-@@ -47,18 +46,12 @@ static ssize_t setup_data_read(struct fi
- 		count = node->len - pos;
+ 	if (!(md->attribute & EFI_MEMORY_WB))
+ 		pf |= _PAGE_PCD;
  
- 	pa = node->paddr + sizeof(struct setup_data) + pos;
--	pg = pfn_to_page((pa + count - 1) >> PAGE_SHIFT);
--	if (PageHighMem(pg)) {
--		p = ioremap_cache(pa, count);
--		if (!p)
--			return -ENXIO;
--	} else
--		p = __va(pa);
-+	p = ioremap_cache(pa, count);
-+	if (!p)
-+		return -ENXIO;
- 
- 	remain = copy_to_user(user_buf, p, count);
+-	size = md->num_pages << PAGE_SHIFT;
+-	end  = va + size;
 -
--	if (PageHighMem(pg))
--		iounmap(p);
-+	iounmap(p);
- 
- 	if (remain)
- 		return -EFAULT;
-@@ -109,7 +102,6 @@ static int __init create_setup_data_node
- 	struct setup_data *data;
- 	int error;
- 	struct dentry *d;
--	struct page *pg;
- 	u64 pa_data;
- 	int no = 0;
- 
-@@ -126,16 +118,12 @@ static int __init create_setup_data_node
- 			goto err_dir;
- 		}
- 
--		pg = pfn_to_page((pa_data+sizeof(*data)-1) >> PAGE_SHIFT);
--		if (PageHighMem(pg)) {
--			data = ioremap_cache(pa_data, sizeof(*data));
--			if (!data) {
--				kfree(node);
--				error = -ENXIO;
--				goto err_dir;
--			}
--		} else
--			data = __va(pa_data);
-+		data = ioremap_cache(pa_data, sizeof(*data));
-+		if (!data) {
-+			kfree(node);
-+			error = -ENXIO;
-+			goto err_dir;
-+		}
- 
- 		node->paddr = pa_data;
- 		node->type = data->type;
-@@ -143,8 +131,7 @@ static int __init create_setup_data_node
- 		error = create_setup_data_node(d, no, node);
- 		pa_data = data->next;
- 
--		if (PageHighMem(pg))
--			iounmap(data);
-+		iounmap(data);
- 		if (error)
- 			goto err_dir;
- 		no++;
+ 	if (kernel_map_pages_in_pgd(pgd, md->phys_addr, va, md->num_pages, pf))
+ 		pr_warn("Error mapping PA 0x%llx -> VA 0x%llx!\n",
+ 			   md->phys_addr, va);
 
 
 _______________________________________________
