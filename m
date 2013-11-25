@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vks2j-0007xy-JB
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 09:01:24 +0000
-Message-Id: <20131125090036.318512365@dhcp-16-126.nay.redhat.com>
-Date: Mon, 25 Nov 2013 16:56:35 +0800
+ id 1Vks2t-0007y6-E8
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 09:01:32 +0000
+Message-Id: <20131125090034.143510822@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:56:31 +0800
 From: dyoung@redhat.com
-Subject: [patch 05/12 v4] efi: export more efi table variable to sysfs
+Subject: [patch 01/12 v4] efi: remove unused variables in __map_region
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,155 +21,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
 Hi,
 References: <20131125085630.417850406@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline; filename=05-export-more-efi-sysfs-vars.patch
+Content-Disposition: inline; filename=01-remove-unused-var-in-map-region.patch
 
-Export fw_vendor, runtime and config tables physical
-addresses to /sys/firmware/efi/systab becaue kexec
-kernel will need them.
+variables size and end is useless in this function, thus remove them.
 
-From EFI spec these 3 variables will be updated to
-virtual address after entering virtual mode. But
-kernel startup code will need the physical address.
-
-changelog:
-Greg: add standalone sysfs files instead of add lines to systab
-Document them as testing ABI
-Greg: use group attrs and is_visible
-Boris: align comments lines
-
+Reported-by: Toshi Kani <toshi.kani@hp.com>
 Signed-off-by: Dave Young <dyoung@redhat.com>
+Acked-by: Borislav Petkov <bp@suse.de>
 ---
- Documentation/ABI/testing/sysfs-firmware-efi |   26 +++++++++++++++
- arch/x86/platform/efi/efi.c                  |    4 ++
- drivers/firmware/efi/efi.c                   |   44 +++++++++++++++++++++++++++
- include/linux/efi.h                          |    3 +
- 4 files changed, 77 insertions(+)
+ arch/x86/platform/efi/efi_64.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- efi.orig/drivers/firmware/efi/efi.c
-+++ efi/drivers/firmware/efi/efi.c
-@@ -32,6 +32,9 @@ struct efi __read_mostly efi = {
- 	.hcdp       = EFI_INVALID_TABLE_ADDR,
- 	.uga        = EFI_INVALID_TABLE_ADDR,
- 	.uv_systab  = EFI_INVALID_TABLE_ADDR,
-+	.fw_vendor  = EFI_INVALID_TABLE_ADDR,
-+	.runtime    = EFI_INVALID_TABLE_ADDR,
-+	.config_table  = EFI_INVALID_TABLE_ADDR,
- };
- EXPORT_SYMBOL(efi);
+--- efi.orig/arch/x86/platform/efi/efi_64.c
++++ efi/arch/x86/platform/efi/efi_64.c
+@@ -148,15 +148,11 @@ void efi_setup_page_tables(void)
+ static void __init __map_region(efi_memory_desc_t *md, u64 va)
+ {
+ 	pgd_t *pgd = (pgd_t *)__va(real_mode_header->trampoline_pgd);
+-	unsigned long pf = 0, size;
+-	u64 end;
++	unsigned long pf = 0;
  
-@@ -71,13 +74,54 @@ static ssize_t systab_show(struct kobjec
- static struct kobj_attribute efi_attr_systab =
- 			__ATTR(systab, 0400, systab_show, NULL);
+ 	if (!(md->attribute & EFI_MEMORY_WB))
+ 		pf |= _PAGE_PCD;
  
-+static ssize_t fw_vendor_show(struct kobject *kobj,
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "0x%lx\n", efi.fw_vendor);
-+}
-+
-+static ssize_t runtime_show(struct kobject *kobj,
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "0x%lx\n", efi.runtime);
-+}
-+
-+static ssize_t config_table_show(struct kobject *kobj,
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "0x%lx\n", efi.config_table);
-+}
-+
-+static struct kobj_attribute efi_attr_fw_vendor = __ATTR_RO(fw_vendor);
-+static struct kobj_attribute efi_attr_runtime = __ATTR_RO(runtime);
-+static struct kobj_attribute efi_attr_config_table = __ATTR_RO(config_table);
-+
- static struct attribute *efi_subsys_attrs[] = {
- 	&efi_attr_systab.attr,
-+	&efi_attr_fw_vendor.attr,
-+	&efi_attr_runtime.attr,
-+	&efi_attr_config_table.attr,
- 	NULL,	/* maybe more in the future? */
- };
- 
-+static umode_t efi_attr_is_visible(struct kobject *kobj,
-+					struct attribute *attr, int n)
-+{
-+	umode_t mode = attr->mode;
-+
-+	if (attr == &efi_attr_fw_vendor.attr)
-+		return (efi.fw_vendor == EFI_INVALID_TABLE_ADDR) ? 0 : mode;
-+	else if (attr == &efi_attr_runtime.attr)
-+		return (efi.runtime == EFI_INVALID_TABLE_ADDR) ? 0 : mode;
-+	else if (attr == &efi_attr_config_table.attr)
-+		return (efi.config_table == EFI_INVALID_TABLE_ADDR) ? 0 : mode;
-+
-+	return mode;
-+}
-+
- static struct attribute_group efi_subsys_attr_group = {
- 	.attrs = efi_subsys_attrs,
-+	.is_visible = efi_attr_is_visible,
- };
- 
- static struct efivars generic_efivars;
---- efi.orig/include/linux/efi.h
-+++ efi/include/linux/efi.h
-@@ -556,6 +556,9 @@ extern struct efi {
- 	unsigned long hcdp;		/* HCDP table */
- 	unsigned long uga;		/* UGA table */
- 	unsigned long uv_systab;	/* UV system table */
-+	unsigned long fw_vendor;	/* fw_vendor */
-+	unsigned long runtime;		/* runtime table */
-+	unsigned long config_table;	/* config tables */
- 	efi_get_time_t *get_time;
- 	efi_set_time_t *set_time;
- 	efi_get_wakeup_time_t *get_wakeup_time;
---- efi.orig/arch/x86/platform/efi/efi.c
-+++ efi/arch/x86/platform/efi/efi.c
-@@ -653,6 +653,10 @@ void __init efi_init(void)
- 
- 	set_bit(EFI_SYSTEM_TABLES, &x86_efi_facility);
- 
-+	efi.config_table = (unsigned long)efi.systab->tables;
-+	efi.fw_vendor	 = (unsigned long)efi.systab->fw_vendor;
-+	efi.runtime	 = (unsigned long)efi.systab->runtime;
-+
- 	/*
- 	 * Show what we know for posterity
- 	 */
---- /dev/null
-+++ efi/Documentation/ABI/testing/sysfs-firmware-efi
-@@ -0,0 +1,26 @@
-+What:		/sys/firmware/efi/fw_vendor
-+Date:		Nov 2013
-+Contact:	Dave Young <dyoung@redhat.org>
-+Description:
-+		Shows the physical address of firmware vendor in the EFI
-+		system table.
-+Users:
-+		Kexec Mailing List <kexec@lists.infradead.org>
-+
-+What:		/sys/firmware/efi/runtime
-+Date:		Nov 2013
-+Contact:	Dave Young <dyoung@redhat.org>
-+Description:
-+		Shows the physical address of runtime service table in the
-+		EFI system table.
-+Users:
-+		Kexec Mailing List <kexec@lists.infradead.org>
-+
-+What:		/sys/firmware/efi/config_table
-+Date:		Nov 2013
-+Contact:	Dave Young <dyoung@redhat.org>
-+Description:
-+		Shows the physical address of config table in the EFI
-+		system table.
-+Users:
-+		Kexec Mailing List <kexec@lists.infradead.org>
+-	size = md->num_pages << PAGE_SHIFT;
+-	end  = va + size;
+-
+ 	if (kernel_map_pages_in_pgd(pgd, md->phys_addr, va, md->num_pages, pf))
+ 		pr_warn("Error mapping PA 0x%llx -> VA 0x%llx!\n",
+ 			   md->phys_addr, va);
 
 
 _______________________________________________
