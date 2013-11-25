@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VkrqX-0007Je-DS
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:48:47 +0000
-Message-Id: <20131125084659.182036023@dhcp-16-126.nay.redhat.com>
-Date: Mon, 25 Nov 2013 16:46:59 +0800
+ id 1VkrqS-0007JU-Ms
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:48:42 +0000
+Message-Id: <20131125084806.265794765@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:47:01 +0800
 From: dyoung@redhat.com
-Subject: kexec kernel efi runtime support
+Subject: efi: add a wrapper function efi_map_region_fixed
+References: <20131125084659.182036023@dhcp-16-126.nay.redhat.com>
+Content-Disposition: inline; filename=02-efi-map-fixed-addr.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,114 +18,75 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0245648289131267836=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
---===============0245648289131267836==
-Content-Type: text/plain
+Kexec kernel will use saved runtime virtual mapping, so add a
+new function efi_map_region_fixed for directly mapping a md
+to md->virt.
 
-Hi,
+The md is passed in from 1st kernel, the virtual addr is
+saved in md->virt_addr.
 
-Here is the V4 for supporting kexec kernel efi runtime.
-Per pervious discussion I pass the 1st kernel efi runtime mapping
-via setup_data to 2nd kernel. Besides of the runtime mapping
-info I also pass the fw_vendor, runtime, config table, smbios
-physical address in setup_data. EFI spec mentioned fw_vendor,
-runtime, config table addresses will be converted to virt address
-after entering virtual mode, but we will use it as physical address
-in efi_init. For smbios EFI spec did not mention about the address
-updating, but during my test on a HP workstation, the bios will
-convert it to Virt addr, thus pass it in setup_data as well.
+Matt: coding style
+      reuse __map_region
+Boris: Strenthen comment lines to 80 cols.
 
-For fw_vendor, runtime, config table, I export them in /sys/firmware/
-efi/, smbios is already in /sys/firmware/efi/systab.
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/efi.h     |    1 +
+ arch/x86/platform/efi/efi_32.c |    2 ++
+ arch/x86/platform/efi/efi_64.c |   10 ++++++++++
+ 3 files changed, 13 insertions(+)
 
-For efi runtime mapping I add a new directory /sys/firmware/efi/
-runtime-map/ like below
-[dave@darkstar ~]$ tree /sys/firmware/efi/runtime-map/
-/sys/firmware/efi/runtime-map/
-��������� 0
-���   ��������� attribute
-���   ��������� num_pages
-���   ��������� phys_addr
-���   ��������� type
-���   ��������� virt_addr
-��������� 1
-���   ��������� attribute
-���   ��������� num_pages
-���   ��������� phys_addr
-���   ��������� type
-���   ��������� virt_addr
-[snip]
+--- efi.orig/arch/x86/include/asm/efi.h
++++ efi/arch/x86/include/asm/efi.h
+@@ -128,6 +128,7 @@ extern void efi_call_phys_epilog(void);
+ extern void efi_unmap_memmap(void);
+ extern void efi_memory_uc(u64 addr, unsigned long size);
+ extern void __init efi_map_region(efi_memory_desc_t *md);
++extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
+ extern void efi_sync_low_kernel_mappings(void);
+ extern void efi_setup_page_tables(void);
+ extern void __init old_map_region(efi_memory_desc_t *md);
+--- efi.orig/arch/x86/platform/efi/efi_64.c
++++ efi/arch/x86/platform/efi/efi_64.c
+@@ -199,6 +199,16 @@ void __init efi_map_region(efi_memory_de
+ 	md->virt_addr = efi_va;
+ }
  
-kexec-tools will assemble them as setup_data and pass to 2nd kernel.
-I will send userspace patches as well.
++/*
++ * kexec kernel will use efi_map_region_fixed to map efi runtime memory ranges.
++ * md->virt_addr is the original virtual address which had been mapped in kexec
++ * 1st kernel.
++ */
++void __init efi_map_region_fixed(efi_memory_desc_t *md)
++{
++	__map_region(md, md->virt_addr);
++}
++
+ void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
+ 				 u32 type, u64 attribute)
+ {
+--- efi.orig/arch/x86/platform/efi/efi_32.c
++++ efi/arch/x86/platform/efi/efi_32.c
+@@ -47,6 +47,8 @@ void __init efi_map_region(efi_memory_de
+ 	old_map_region(md);
+ }
+ 
++void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
++
+ void efi_call_phys_prelog(void)
+ {
+ 	struct desc_ptr gdt_descr;
 
-Limitation is I only write support for x86_64, test on below machines:
-Lenovo thinkpad t420
-Dell inspiron 14 - 3421
-HP Z420 workstation
-Qemu + OVMF
-
-Please help to review the patches.
-
-The patches are based on matt's efi master tree
-
-Changes from v1:
-add one flag in xloadflags, so kexec-tools can safely load old kernel
-without efi support.
-coding style fixes
-function name for map phys_addr to fixed virt_addr
-Add ABI documentation for sysfs files
-
-Changes from v2:
-01/09: a new patch to remove unused variables in __map_region function
-       catched by Toshi Kani
-09/09: a new patch to export x86 boot_params to sysfs instead of use
-       debugfs files
-Matt: reuse __map_region instead do same thing in another function.
-      add a wrapper function efi_map_region_fixed [02/09]
-      check return value of krealloc
-      sysfs dir name s/efi-runtime-map/runtime-map [06/09]
-      use desc_size in efi_runtime_map
-      for the xloadflags defination: +&& defined(CONFIG_KEXEC)
-Greg: sysfs : one file one value for fw_vendor, runtime, tables. [05/09]
-      Document them in ABI testing
-HPA:  Document the new xloadflag
-Also there's other function cleanup and improvement for error handling.
-
-Changes from v3:
-Greg: sysfs code move to use __ATTR_RO and attr_group
-Boris: comments and code alignment
-
-Added 3 new patches below
-10-print-efi-runtime-memmap.patch
-  - 10/12: print only runtime ranges in case EFI_DEBUG printing
-11-reserve-setup-data-late.patch
-  - fix a bug of kdump kernel, move function for reserving setup data
-    ranges late after parsing memmap= cmdline params because kdump kernel
-    will pass exact memmap late.
-12-x86-kdebugfs-use-ioremap.patch
-  - fix a bug of x86/kernel/kdebugfs.c, use ioremap instead of __va for
-    low mem because __va does not work for exact memmap=
-
---
-Thanks
-Dave
-
-
---===============0245648289131267836==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0245648289131267836==--
