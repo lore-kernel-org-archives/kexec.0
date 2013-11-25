@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vkrs1-0007T6-3k
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:50:17 +0000
-Message-Id: <20131125084809.658310459@dhcp-16-126.nay.redhat.com>
-Date: Mon, 25 Nov 2013 16:47:07 +0800
+ id 1VkrsB-0007V0-3g
+ for kexec@lists.infradead.org; Mon, 25 Nov 2013 08:50:27 +0000
+Message-Id: <20131125084811.395808573@dhcp-16-126.nay.redhat.com>
+Date: Mon, 25 Nov 2013 16:47:10 +0800
 From: dyoung@redhat.com
-Subject: x86: add xloadflags bit for efi runtime support on kexec
+Subject: reserve setup_data ranges late after parsing memmap cmdline
 References: <20131125084659.182036023@dhcp-16-126.nay.redhat.com>
-Content-Disposition: inline;
- filename=08-add-xloadflags-for-kexec-efi-runtime-feature.patch
+Content-Disposition: inline; filename=11-reserve-setup-data-late.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,66 +25,35 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-Old kexec-tools can not load new kernel. The reason is previously kexec-tools
-do not fill efi_info in x86 setup header thus efi init fail and switch
-to noefi boot. In new kexec-tools it will by default fill efi_info and
-pass other efi required infomation to 2nd kernel so kexec kernel efi
-initialization will success finally.
-
-To prevent from breaking userspace, add a new xloadflags bit so kexec-tools
-will check the flag and switch to old logic.
-
-changelog:
-Matt: +&& defined(CONFIG_KEXEC)
-HPA: document the flag.
+Kdump kernel using memmap=exactmap, move e820_reserve_setup_data after
+parsing early params so they can be set reserved finally. Or kdump kernel
+will warn about ioremap a normal ram range.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- Documentation/x86/boot.txt            |    3 +++
- arch/x86/boot/header.S                |    9 ++++++++-
- arch/x86/include/uapi/asm/bootparam.h |    1 +
- 3 files changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/kernel/setup.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- efi.orig/arch/x86/boot/header.S
-+++ efi/arch/x86/boot/header.S
-@@ -391,7 +391,14 @@ xloadflags:
- #else
- # define XLF23 0
+--- efi.orig/arch/x86/kernel/setup.c
++++ efi/arch/x86/kernel/setup.c
+@@ -927,8 +927,6 @@ void __init setup_arch(char **cmdline_p)
+ 	iomem_resource.end = (1ULL << boot_cpu_data.x86_phys_bits) - 1;
+ 	setup_memory_map();
+ 	parse_setup_data();
+-	/* update the e820_saved too */
+-	e820_reserve_setup_data();
+ 
+ 	copy_edd();
+ 
+@@ -990,6 +988,8 @@ void __init setup_arch(char **cmdline_p)
+ 		early_dump_pci_devices();
  #endif
--			.word XLF0 | XLF1 | XLF23
-+
-+#if defined(CONFIG_X86_64) && defined(CONFIG_EFI) && defined(CONFIG_KEXEC)
-+# define XLF4 XLF_EFI_KEXEC
-+#else
-+# define XLF4 0
-+#endif
-+
-+			.word XLF0 | XLF1 | XLF23 | XLF4
  
- cmdline_size:   .long   COMMAND_LINE_SIZE-1     #length of the command line,
-                                                 #added with boot protocol
---- efi.orig/arch/x86/include/uapi/asm/bootparam.h
-+++ efi/arch/x86/include/uapi/asm/bootparam.h
-@@ -24,6 +24,7 @@
- #define XLF_CAN_BE_LOADED_ABOVE_4G	(1<<1)
- #define XLF_EFI_HANDOVER_32		(1<<2)
- #define XLF_EFI_HANDOVER_64		(1<<3)
-+#define XLF_EFI_KEXEC			(1<<4)
++	/* update the e820_saved too */
++	e820_reserve_setup_data();
+ 	finish_e820_parsing();
  
- #ifndef __ASSEMBLY__
- 
---- efi.orig/Documentation/x86/boot.txt
-+++ efi/Documentation/x86/boot.txt
-@@ -608,6 +608,9 @@ Protocol:       2.12+
- 	- If 1, the kernel supports the 64-bit EFI handoff entry point
-           given at handover_offset + 0x200.
- 
-+  Bit 4 (read): XLF_EFI_KEXEC
-+	- If 1, the kernel supports kexec EFI boot with EFI runtime support.
-+
- Field name:	cmdline_size
- Type:		read
- Offset/size:	0x238/4
+ 	if (efi_enabled(EFI_BOOT))
 
 
 _______________________________________________
