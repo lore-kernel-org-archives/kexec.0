@@ -1,21 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlHJ4-0001M0-BA
- for kexec@lists.infradead.org; Tue, 26 Nov 2013 11:59:55 +0000
-Date: Tue, 26 Nov 2013 19:59:03 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
-Message-ID: <20131126115903.GD22934@dhcp-16-252.nay.redhat.com>
-References: <20131125023150.GB13197@dhcp-16-252.nay.redhat.com>
- <5292D30E.5070003@jp.fujitsu.com>
- <20131126025221.GA22934@dhcp-16-252.nay.redhat.com>
- <5294368A.8030804@jp.fujitsu.com>
- <20131126075742.GB22934@dhcp-16-252.nay.redhat.com>
- <529460EA.2080006@jp.fujitsu.com>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VlHgg-0001mf-Iu
+ for kexec@lists.infradead.org; Tue, 26 Nov 2013 12:24:19 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131121190350.GC17070@kroah.com>
+ <20131121190620.GA25951@srcf.ucam.org>
+ <20131121191305.GK16208@redhat.com>
+ <20131121191907.GA26366@srcf.ucam.org>
+ <20131122185706.GK4046@redhat.com> <87vbzju6ql.fsf@xmission.com>
+ <20131125163920.GC23094@redhat.com>
+Date: Tue, 26 Nov 2013 04:23:36 -0800
+In-Reply-To: <20131125163920.GC23094@redhat.com> (Vivek Goyal's message of
+ "Mon, 25 Nov 2013 11:39:21 -0500")
+Message-ID: <87fvqj2vxz.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <529460EA.2080006@jp.fujitsu.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load,
+ for in kernel kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,98 +31,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, chaowang@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, hpa@zytor.com
 
-On 11/26/13 at 05:50pm, HATAYAMA Daisuke wrote:
-> (2013/11/26 16:57), Baoquan He wrote:
-> >On 11/26/13 at 02:50pm, HATAYAMA Daisuke wrote:
-> >>(2013/11/26 11:52), Baoquan He wrote:
-> >>>On 11/25/13 at 01:33pm, HATAYAMA Daisuke wrote:
-> >>>>(2013/11/25 11:31), Baoquan He wrote:
-> >
-> >>
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-> 
-> For that, you need to pass a part with the currnet cycle to __exclude_unnecessary_pages(),
-> not a whole (mmd->pfn_start, mmd->pfn_end). There might be similar part that needs fix,
-> but sorry I don't have good memory...
-> 
-> int
-> exclude_unnecessary_pages_cyclic(void)
-> {
-> <cut>
->                         if (mmd->pfn_end >= info->cyclic_start_pfn &&
->                             mmd->pfn_start <= info->cyclic_end_pfn) {
->                                 if (!__exclude_unnecessary_pages(mmd->mem_map,
->                                                                  mmd->pfn_start, mmd->pfn_end))
->                                         return FALSE;
->                         }
-> 
-> For ELF-to-ELF code, unfortunately, I gave up in the middle of source code reading.
-> At lesst, if I remember correctly, I think the code relied on the current
-> update_mmap_range() implementation. It might be hard to clean up there in a natural way.
+> On Fri, Nov 22, 2013 at 07:39:14PM -0800, Eric W. Biederman wrote:
+>
+> [..]
+>> > Hmm..., I am running out of ideas here. This is what I understand.
+>> >
+>> > - If I sign the bzImage (using PKCS1.5 signature), and later it is signed
+>> >   with authenticode format signatures, then PKCS1.5 signatures will not be
+>> >   valid as PE/COFF signing will do some modification to PE/COFF header in
+>> >   bzImage. And another problem is that then I don't have a way to find
+>> >   PKCS1.5 signature.
+>> >
+>> > - If bzImage is first signed with authenticode format signature and then
+>> >   signed using PKCS1.5 signature, then  authenticode format signature
+>> >   will become invalid as it will also hash the data appened at the end
+>> >   of file.
+>> >
+>> > So looks like both signatures can't co-exist on same file. That means
+>> > one signature has to be detached.
+>> >
+>> > I am beginning to think that create a kernel option which allows to choose
+>> > between attached and detached signatures. Extend kexec syscall to allow
+>> > a parameter to pass in detached signatures. If detached signatures are
+>> > not passed, then look for signatures at the end of file. That way, those
+>> > who are signing kernels using platform specific format (authenticode) in 
+>> > this case, they can generate detached signature while others can just
+>> > use attached signatures.
+>> >
+>> > Any thoughts on how this should be handled?
+>> 
+>> Inside of a modern bzImage there is an embedded ELF image.  How about in
+>> userspace we just strip out the embedded ELF image and write that to a
+>> file.  Then we can use the same signature checking scheme as we do for
+>> kernel modules.  And you only have to support one file format.
+>
+> I think there is a problem with that. And that we lose the additional
+> metadata info present in bzImage which is important.
+>
+> For example, knowing how much memory kernel will consume before it
+> sets up its own GDT and page tables (init_size) is very important. That
+> gives image loader lot of flexibility in figuring out where to place rest
+> of the components safely (initrd, GDT, page tables, ELF header segment, 
+> backup region etc).
 
-Hi,
+The init_size should be reflected in the .bss of the ELF segments.  If
+not it is a bug when generating the kernel ELF headers and should be
+fixed.
 
-I reviewed code again, and understand what kind of pain you meant. I
-think the hard part is write_elf_pages_cyclic(), because it is not kind
-of like kdump format which loops from 0 to info->max_mapnr, then you can
-use the loop MACRO.
+For use by kexec I don't see any issues with just signing the embedded
+ELF image.
 
-struct cycle {
-  uint64_t start_pfn;
-  uint64_t end_pfn;
-};
-
-#define for_each_cycle(C, MAX_MAPNR) \
-  for (first_cycle((C), (MAX_MAPNR)); !end_cycle(C); \
-       update_cycle(C))
-
-for_each_cycle(&cycle, info->max_mapnr) {
-  if (!create_1st_bitmap_cyclic(&cycle))
-    return FALSE;
-  if (!exclude_unnecessary_pages_cyclic(&cycle))
-    return FALSE;
-  if (!write_kdump_bitmap1_cyclic(&cycle))
-    return FALSE;
-}
-
-
-In fact, don't worry. Please check create_1st_bitmap_cyclic() again, its
-handling is very similar to write_elf_pages_cyclic(), because both of
-them traverse each PT_LOAD segment, and then do some handling. So you
-can call create_1st_bitmap_cyclic() in the big loop which is from 0 to
-info->max_mapnr, if rethink about write_elf_pages_cyclic(), you will
-find it can also be called like this. Then the cycle loop MACRO can be
-used either for elf format handling.
-
-for_each_cycle(&cycle, info->max_mapnr) {
-  if (!create_1st_bitmap_cyclic(&cycle))
-    return FALSE;
-  if (!exclude_unnecessary_pages_cyclic(&cycle))
-    return FALSE;
-  if (!write_elf_pages_cyclic(&cycle))
-    return FALSE;
-}
-
-As for mmap, I don't think it will be affected by this change, anyway,
-cycle has been passed in, not as a function parameter, but a global
-variable (it's stored in global varible info, should be the same).
-
-Baoquan
-Thanks
-
-> 
-> -- 
-> Thanks.
-> HATAYAMA, Daisuke
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Eric
 
 _______________________________________________
 kexec mailing list
