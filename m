@@ -1,24 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vl9LN-0007Li-D5
- for kexec@lists.infradead.org; Tue, 26 Nov 2013 03:29:46 +0000
-Date: Tue, 26 Nov 2013 11:29:17 +0800
-From: "chaowang@redhat.com" <chaowang@redhat.com>
-Subject: Re: /proc/vmcore mmap() failure issue
-Message-ID: <20131126032917.GA9643@dhcp16-109.nay.redhat.com>
-References: <20131113204130.GD7613@redhat.com> <5284A689.70903@jp.fujitsu.com>
- <20131114151359.GA3913@redhat.com>
- <5285EC60.1060906@jp.fujitsu.com>
- <20131115142617.GC6637@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
- <528B3585.5080606@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C3845@BPXM01GP.gisp.nec.co.jp>
- <20131121071441.GA2207@dhcp16-109.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C5AAC@BPXM01GP.gisp.nec.co.jp>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VlB3H-0008W1-Qp
+ for kexec@lists.infradead.org; Tue, 26 Nov 2013 05:19:13 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A47503EE0B6
+ for <kexec@lists.infradead.org>; Tue, 26 Nov 2013 14:18:41 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 56DF345DFD4
+ for <kexec@lists.infradead.org>; Tue, 26 Nov 2013 14:18:41 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9492845DECC
+ for <kexec@lists.infradead.org>; Tue, 26 Nov 2013 14:18:39 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id E9D95E781CC
+ for <kexec@lists.infradead.org>; Tue, 26 Nov 2013 14:17:44 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8699AE781C6
+ for <kexec@lists.infradead.org>; Tue, 26 Nov 2013 14:17:44 +0900 (JST)
+Message-ID: <52942E9B.2030003@jp.fujitsu.com>
+Date: Tue, 26 Nov 2013 14:16:11 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971C5AAC@BPXM01GP.gisp.nec.co.jp>
+Subject: Re: /proc/vmcore mmap() failure issue
+References: <20131115142617.GC6637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BF592@BPXM01GP.gisp.nec.co.jp>
+ <20131118135511.GA30637@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C3862@BPXM01GP.gisp.nec.co.jp>
+ <20131120145901.GB27924@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C43E3@BPXM01GP.gisp.nec.co.jp>
+ <528DC4F2.5040000@jp.fujitsu.com> <20131121165237.GG16208@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C5AB3@BPXM01GP.gisp.nec.co.jp>
+ <529311F1.90603@jp.fujitsu.com> <20131125144150.GC21378@redhat.com>
+In-Reply-To: <20131125144150.GC21378@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,90 +42,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-On 11/25/13 at 08:09am, Atsushi Kumagai wrote:
-> Hello WANG,
-> 
-> On 2013/11/21 16:15:22, kexec <kexec-bounces@lists.infradead.org> wrote:
-> > > How about this fail back structure instead of such an extra option ?
-> > > 
-> > > Thanks
-> > > Atsushi Kumagai
-> > > 
-> > > From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> > > Date: Wed, 20 Nov 2013 14:10:19 +0900
-> > > Subject: [PATCH] Fall back to read() when mmap() fails.
-> > > 
-> > > Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> > > ---
-> > >  makedumpfile.c | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/makedumpfile.c b/makedumpfile.c
-> > > index ca03440..f583602 100644
-> > > --- a/makedumpfile.c
-> > > +++ b/makedumpfile.c
-> > > @@ -324,7 +324,15 @@ read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
-> > >  		if (!read_with_mmap(offset, bufptr, size)) {
-> > >  			ERRMSG("Can't read the dump memory(%s) with mmap().\n",
-> > >  			       info->name_memory);
-> > > -			return FALSE;
-> > > +
-> > > +			ERRMSG("This kernel might have some problems about mmap().\n");
-> > > +			ERRMSG("read() will be used instead of mmap() from now.\n");
-> > > +
-> > > +			/*
-> > > +			 * Fall back to read().
-> > > +			 */
-> > > +			info->flag_usemmap = FALSE;
-> > > +			read_from_vmcore(offset, bufptr, size);
-> > 
-> > Hi, Atsushi
-> > 
-> > I've got such a workstation too. And I confirm this patch works for me.
-> 
-> Thanks for your testing !
-> 
-> > However, I have a question:
-> > Why not switch to mmap() back after read()?
-> 
-> I made this patch as a general safety net, not only for the partial page
-> issue.
-> When facing unknown issues related mmap(), the kernel may have some bugs
-> and mmap() can fail for every pages. In the worst case, most all mmap()
-> will fail and try read() with error messages after every fail, but this
-> patch will prevent the chattering of the switch and so many error messages.
+(2013/11/25 23:41), Vivek Goyal wrote:
+> On Mon, Nov 25, 2013 at 06:01:37PM +0900, HATAYAMA Daisuke wrote:
+>
+> [..]
+>>> I agree to avoid this issue by fixing makedumpfile as workaround while to
+>>> fix kernel is so tough and risky. However, it sounds strange to me to fix
+>>> userspace side elaborately for such definite kernel issue whose cause is
+>>> known, so we should fix the kernel itself.
+>>>
+>>
+>>> Otherwise, will you continue to add specific fixes into user tools to
+>>> address kernel issues like this case ?
+>>>
+>>
+>> makedumpfile supports a wide range of kernel versions and needs to satisfy
+>> backward compatibility. mmap() on /proc/vmcore might be backported to some of
+>> the old versions on some distributions if necessary. Then, it's hard to fix
+>> each old kernel at each back port. The method that can be applied to all the
+>> kernels in general, is necessary.
+>>
+>> Also, looking at ia64 case where there's boot loader data on partial pages,
+>> there could be other environments where partial pages contain other important
+>> data other components have. So, the issue depends not only on kernels but also
+>> other components such as boot loader and firmwares that can put data on
+>> partial pages. We need to get there as long as there's important data there
+>> and we have access to there.
+>
+> Hi Atsushi, Hatayama,
+>
+> So even if we fix the mmap() issue in kernel, looks like it will be a
+> good idea to ship the fix in makedumpfile as there have been a kernel
+> release where mmap() will cause issues.
+>
+> Having said that, I think we need to fix it in kernel also. I was not sure
+> that what's the right fix. Should we truncate partial pages or should
+> we just copy partial pages from old memory to new kernel's memory and fill
+> partial page with zeros. And that's why I was hoping that makedumpfile
+> can fill the gap.
+>
+> Copying partial pages to new memory seems like a safer approach. So may
+> be we can take a fix in makeudmpfile and another in kernel.
+>
+> Hatayama, I know that in the past your initial mmap() patches were copying
+> partial pages to new kernel's memory. Would you like to resurrect that
+> patch again?
+>
 
-Thanks for you explanation. I agree with you. Since mmap() is error
-prone after first mmap failure, use read() instead as a fail safe makes
-much sense to me.
+(Oh, I yesterday had totally forgotten partial page handling that was dropped
+from mmap() patch set in the middle of development...)
 
-WANG Chao
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> > Thanks
-> > WANG Chao
-> > 
-> > >  		}
-> > >  	} else {
-> > >  		if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
-> > > -- 
-> > > 1.8.0.2
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
+Yes, but wait until next week.
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
