@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlL1R-0007jg-7T
- for kexec@lists.infradead.org; Tue, 26 Nov 2013 15:57:57 +0000
-Date: Tue, 26 Nov 2013 15:57:31 +0000
-From: Matt Fleming <matt@console-pimps.org>
-Subject: Re: [PATCH v4 05/12] efi: export more efi table variable to sysfs
-Message-ID: <20131126155731.GM11521@console-pimps.org>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-6-git-send-email-dyoung@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1385445477-9665-6-git-send-email-dyoung@redhat.com>
+Received: from g1t0029.austin.hp.com ([15.216.28.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VlL7p-0007ul-CP
+ for kexec@lists.infradead.org; Tue, 26 Nov 2013 16:04:33 +0000
+Message-ID: <1385481553.1791.179.camel@misato.fc.hp.com>
+Subject: Re: [patch 0/4 v3] kexec-tools: efi runtime support
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Tue, 26 Nov 2013 08:59:13 -0700
+In-Reply-To: <20131126061124.GB9727@dhcp-16-126.nay.redhat.com>
+References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
+ <1385159448.1791.161.camel@misato.fc.hp.com>
+ <20131124031228.GA1754@dhcp-16-126.nay.redhat.com>
+ <1385393451.1791.168.camel@misato.fc.hp.com>
+ <20131126061124.GB9727@dhcp-16-126.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,60 +27,41 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Tue, 26 Nov, at 01:57:50PM, Dave Young wrote:
-> Export fw_vendor, runtime and config tables physical
-> addresses to /sys/firmware/efi/systab becaue kexec
-> kernel will need them.
- 
-This commit log needs updating.
+On Tue, 2013-11-26 at 14:11 +0800, Dave Young wrote:
+> On 11/25/13 at 08:30am, Toshi Kani wrote:
+> > HI Dave,
+> > 
+> > I will test v4 again.  This time, I will test "memmap=exactmap" option
+> > as well.  I have tested the following cases before.  Are there any other
+> > cases you'd like me to test?
+> > 
+> >  - kdump
+> >  - multiple fast reboots and then kdump
+> >  - old kexec and new kernel w/ noefi & acpi_rsdp option
+> >  - new kexec and old kernel w/ noefi & acpi_rsdp option
 
-> From EFI spec these 3 variables will be updated to
-> virtual address after entering virtual mode. But
-> kernel startup code will need the physical address.
-> 
-> changelog:
-> Greg: add standalone sysfs files instead of add lines to systab
-> Document them as testing ABI
-> Greg: use group attrs and is_visible
-> Boris: align comments lines
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  Documentation/ABI/testing/sysfs-firmware-efi | 26 ++++++++++++++++
->  arch/x86/platform/efi/efi.c                  |  4 +++
->  drivers/firmware/efi/efi.c                   | 44 ++++++++++++++++++++++++++++
->  include/linux/efi.h                          |  3 ++
->  4 files changed, 77 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-firmware-efi
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-firmware-efi b/Documentation/ABI/testing/sysfs-firmware-efi
-> new file mode 100644
-> index 0000000..9252a24
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-firmware-efi
-> @@ -0,0 +1,26 @@
-> +What:		/sys/firmware/efi/fw_vendor
-> +Date:		Nov 2013
-> +Contact:	Dave Young <dyoung@redhat.org>
+Retested the above cases with v4 patchset.
 
-redhat.org eh? Typo or legit?
+> There's one more test case is w/ debugfs mounted in 1st kernel due to the
+> new version exports setup_data to sysfs.
 
-> +Description:
-> +		Shows the physical address of firmware vendor in the EFI
-> +		system table.
+Tested w/ debugfs mounted.
 
-It shows the physical address of the firmware vendor "entry" or "field"
-in the EFI system table.
+> For the exactmap I think it's a corner case, I just tested it in virtual
+> machine I think setup a right cmdline is hard. But feel free to test it if
+> you can.
 
-> +Users:
-> +		Kexec Mailing List <kexec@lists.infradead.org>
+Tested with exactmap for multiple fast reboots.  I was not able to setup
+kdump properly with this case, but it's not related with your changes
+since I was not able to do it without your changes, either.
 
-The "Kexec mailing list" isn't a user, kexec is.
+Feel free to add my tested-by.
 
--- 
-Matt Fleming, Intel Open Source Technology Center
+Thanks,
+-Toshi
+
 
 _______________________________________________
 kexec mailing list
