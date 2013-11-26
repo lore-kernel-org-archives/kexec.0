@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlBfl-0000ep-Uk
- for kexec@lists.infradead.org; Tue, 26 Nov 2013 05:58:59 +0000
+ id 1VlBfv-0000es-Uo
+ for kexec@lists.infradead.org; Tue, 26 Nov 2013 05:59:11 +0000
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v4 03/12] efi: reserve boot service fix
-Date: Tue, 26 Nov 2013 13:57:48 +0800
-Message-Id: <1385445477-9665-4-git-send-email-dyoung@redhat.com>
+Subject: [PATCH v4 04/12] efi: cleanup efi_enter_virtual_mode function
+Date: Tue, 26 Nov 2013 13:57:49 +0800
+Message-Id: <1385445477-9665-5-git-send-email-dyoung@redhat.com>
 In-Reply-To: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
 References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,33 +25,173 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Current code check boot service region with kernel text region by:
-start+size >= __pa_symbol(_text)
-The end of the above region should be start + size - 1 instead.
+Add two small functions:
+efi_merge_regions and efi_map_regions, efi_enter_virtual_mode
+calls them instead of embedding two long for loop.
 
-I see this problem in ovmf + Fedora 19 grub boot:
-text start: 1000000 md start: 800000 md size: 800000
+v1->v2:
+refresh; coding style fixes.
+
+v2->v3:
+Toshi Kani:
+remove unused variable
+Matt: check return value of krealloc.
+v3->v4:
+Boris: Stretch comment to 80 cols
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 Acked-by: Borislav Petkov <bp@suse.de>
-Acked-by: Toshi Kani <toshi.kani@hp.com>
 ---
- arch/x86/platform/efi/efi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/platform/efi/efi.c | 109 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 66 insertions(+), 43 deletions(-)
 
 diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index f8ec4da..15e3b5e 100644
+index 15e3b5e..480529a 100644
 --- a/arch/x86/platform/efi/efi.c
 +++ b/arch/x86/platform/efi/efi.c
-@@ -438,7 +438,7 @@ void __init efi_reserve_boot_services(void)
- 		 * - Not within any part of the kernel
- 		 * - Not the bios reserved area
- 		*/
--		if ((start+size >= __pa_symbol(_text)
-+		if ((start + size > __pa_symbol(_text)
- 				&& start <= __pa_symbol(_end)) ||
- 			!e820_all_mapped(start, start+size, E820_RAM) ||
- 			memblock_is_region_reserved(start, size)) {
+@@ -773,44 +773,12 @@ void __init old_map_region(efi_memory_desc_t *md)
+ 		       (unsigned long long)md->phys_addr);
+ }
+ 
+-/*
+- * This function will switch the EFI runtime services to virtual mode.
+- * Essentially, we look through the EFI memmap and map every region that
+- * has the runtime attribute bit set in its memory descriptor into the
+- * ->trampoline_pgd page table using a top-down VA allocation scheme.
+- *
+- * The old method which used to update that memory descriptor with the
+- * virtual address obtained from ioremap() is still supported when the
+- * kernel is booted with efi=old_map on its command line. Same old
+- * method enabled the runtime services to be called without having to
+- * thunk back into physical mode for every invocation.
+- *
+- * The new method does a pagetable switch in a preemption-safe manner
+- * so that we're in a different address space when calling a runtime
+- * function. For function arguments passing we do copy the PGDs of the
+- * kernel page table into ->trampoline_pgd prior to each call.
+- */
+-void __init efi_enter_virtual_mode(void)
++/* Merge contiguous regions of the same type and attribute */
++static void __init efi_merge_regions(void)
+ {
++	void *p;
+ 	efi_memory_desc_t *md, *prev_md = NULL;
+-	void *p, *new_memmap = NULL;
+-	unsigned long size;
+-	efi_status_t status;
+-	u64 end, systab;
+-	int count = 0;
+ 
+-	efi.systab = NULL;
+-
+-	/*
+-	 * We don't do virtual mode, since we don't do runtime services, on
+-	 * non-native EFI
+-	 */
+-	if (!efi_is_native()) {
+-		efi_unmap_memmap();
+-		return;
+-	}
+-
+-	/* Merge contiguous regions of the same type and attribute */
+ 	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
+ 		u64 prev_size;
+ 		md = p;
+@@ -837,6 +805,18 @@ void __init efi_enter_virtual_mode(void)
+ 		prev_md = md;
+ 
+ 	}
++}
++
++/*
++ * Map efi memory ranges for runtime serivce and update new_memmap with virtual
++ * addresses.
++ */
++static void * __init efi_map_regions(int *count)
++{
++	efi_memory_desc_t *md;
++	void *p, *new_memmap = NULL;
++	unsigned long size;
++	u64 end, systab;
+ 
+ 	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
+ 		md = p;
+@@ -861,14 +841,60 @@ void __init efi_enter_virtual_mode(void)
+ 		}
+ 
+ 		new_memmap = krealloc(new_memmap,
+-				      (count + 1) * memmap.desc_size,
+-				      GFP_KERNEL);
++					(*count + 1) * memmap.desc_size,
++					GFP_KERNEL);
+ 		if (!new_memmap)
+-			goto err_out;
++			goto ret;
+ 
+-		memcpy(new_memmap + (count * memmap.desc_size), md,
++		memcpy(new_memmap + (*count * memmap.desc_size), md,
+ 		       memmap.desc_size);
+-		count++;
++		(*count)++;
++	}
++
++ret:
++	return new_memmap;
++}
++
++/*
++ * This function will switch the EFI runtime services to virtual mode.
++ * Essentially, we look through the EFI memmap and map every region that
++ * has the runtime attribute bit set in its memory descriptor into the
++ * ->trampoline_pgd page table using a top-down VA allocation scheme.
++ *
++ * The old method which used to update that memory descriptor with the
++ * virtual address obtained from ioremap() is still supported when the
++ * kernel is booted with efi=old_map on its command line. Same old
++ * method enabled the runtime services to be called without having to
++ * thunk back into physical mode for every invocation.
++ *
++ * The new method does a pagetable switch in a preemption-safe manner
++ * so that we're in a different address space when calling a runtime
++ * function. For function arguments passing we do copy the PGDs of the
++ * kernel page table into ->trampoline_pgd prior to each call.
++ */
++void __init efi_enter_virtual_mode(void)
++{
++	efi_status_t status;
++	void *new_memmap = NULL;
++	int count = 0;
++
++	efi.systab = NULL;
++
++	/*
++	 * We don't do virtual mode, since we don't do runtime services, on
++	 * non-native EFI
++	 */
++	if (!efi_is_native()) {
++		efi_unmap_memmap();
++		return;
++	}
++
++	efi_merge_regions();
++
++	new_memmap = efi_map_regions(&count);
++	if (!new_memmap) {
++		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
++		return;
+ 	}
+ 
+ 	BUG_ON(!efi.systab);
+@@ -922,9 +948,6 @@ void __init efi_enter_virtual_mode(void)
+ 			 0, NULL);
+ 
+ 	return;
+-
+- err_out:
+-	pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+ }
+ 
+ /*
 -- 
 1.8.3.1
 
