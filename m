@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlMfA-0002FW-Gn
- for kexec@lists.infradead.org; Tue, 26 Nov 2013 17:43:05 +0000
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [PATCH] kexec/xen: Fix typo in __i386__ preprocessor identifier
-Date: Tue, 26 Nov 2013 17:42:37 +0000
-Message-ID: <1385487757-18378-1-git-send-email-andrew.cooper3@citrix.com>
+Received: from arkanian.console-pimps.org ([212.110.184.194])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VlOLJ-0005BV-B3
+ for kexec@lists.infradead.org; Tue, 26 Nov 2013 19:30:42 +0000
+Date: Tue, 26 Nov 2013 19:30:16 +0000
+From: Matt Fleming <matt@console-pimps.org>
+Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
+Message-ID: <20131126193016.GA18170@console-pimps.org>
+References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
+ <1385445477-9665-7-git-send-email-dyoung@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1385445477-9665-7-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,39 +24,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Xen-devel <xen-devel@lists.xen.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-This typo was introduced in c/s c0b4a3f95dd80256cc6d7084436235e69b4933fb
+On Tue, 26 Nov, at 01:57:51PM, Dave Young wrote:
+> kexec kernel will need exactly same mapping for
+> efi runtime memory ranges. Thus here export the
+> runtime ranges mapping to sysfs, kexec-tools
+> will assemble them and pass to 2nd kernel via
+> setup_data.
+> 
+> Introducing a new directly /sys/firmware/efi/runtime-map
 
-It prevents a 32bit build of kexec from loading a 32bit crash image.
+I'm not sure why the word "directly" is used here?
 
-Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
-CC: David Vrabel <david.vrabel@citrix.com>
-CC: Daniel Kiper <daniel.kiper@oracle.com>
-CC: Simon Horman <horms@verge.net.au>
-CC: kexec@lists.infradead.org
-
----
- kexec/kexec-xen.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-index e885246..d2bd7bf 100644
---- a/kexec/kexec-xen.c
-+++ b/kexec/kexec-xen.c
-@@ -70,7 +70,7 @@ int xen_kexec_load(struct kexec_info *info)
- 		: KEXEC_TYPE_DEFAULT;
+> Just like /sys/firmware/memmap. Containing below attribute
+> in each file of that directory:
+> attribute  num_pages  phys_addr  type  virt_addr
+> 
+> It will not work for efi 32bit. Only x86_64 currently.
  
- 	arch = (info->kexec_flags & KEXEC_ARCH_MASK) >> 16;
--#if defined(_i386__) || defined(__x86_64__)
-+#if defined(__i386__) || defined(__x86_64__)
- 	if (!arch)
- 		arch = EM_386;
- #endif
--- 
-1.7.10.4
+Actually, exporting the tables does work for 32-bit, right? It's just
+that kexec doesn't work for 32-bit EFI?
 
+> Matt: s/efi-runtime-map.c/runtime-map.c
+>       change dir name to runtime-map
+> update to use desc_size in efi_runtime_map
+> cleaup the code, add function efi_save_runtime_map
+> improve err handling
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  .../ABI/testing/sysfs-firmware-efi-runtime-map     |  45 +++++
+>  arch/x86/platform/efi/efi.c                        |  26 +++
+>  drivers/firmware/efi/Kconfig                       |  10 ++
+>  drivers/firmware/efi/Makefile                      |   1 +
+>  drivers/firmware/efi/efi.c                         |   3 +-
+>  drivers/firmware/efi/runtime-map.c                 | 199 +++++++++++++++++++++
+>  include/linux/efi.h                                |   6 +
+>  7 files changed, 289 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-firmware-efi-runtime-map
+>  create mode 100644 drivers/firmware/efi/runtime-map.c
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-firmware-efi-runtime-map b/Documentation/ABI/testing/sysfs-firmware-efi-runtime-map
+> new file mode 100644
+> index 0000000..dab8d41
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-firmware-efi-runtime-map
+> @@ -0,0 +1,45 @@
+> +What:		/sys/firmware/efi/runtime-map/
+> +Date:		Oct 2013
+> +Contact:	Dave Young <dyoung@redhat.com>
+> +Description:
+> +		Switching efi runtime services to virtual mode requires
+> +		that all efi memory ranges which has the runtime attribute
+> +		bit set to be mapped to virtual addresses.
+> +
+> +		In kexec kernel kernel can not entering virtual mode again
+> +		because there's a limitation that SetVirtualAddressMap can
+> +		only be called once for entering virtual mode. But kexec
+> +		kernel still need maintain same physical address to virtual
+> +		address mapping as the 1st kernel. The mappings are exported
+> +		to sysfs so userspace tools can reassemble them and pass them
+> +		into kexec kernel.
+
+How about,
+
+		"The efi runtime services can only be switched to virtual
+		 mode once without rebooting. The kexec kernel must maintain
+		 the same physical to virtual address mappings as the first
+		 kernel. The mappings are exported to sysfs so userspace tools
+		 can reassemble them and pass them into the kexec kernel."
+
+?
+
+> +		/sys/firmware/efi/runtim-map/ is what kernel export for
+
+				^^ runtime-map/
+
+-- 
+Matt Fleming, Intel Open Source Technology Center
 
 _______________________________________________
 kexec mailing list
