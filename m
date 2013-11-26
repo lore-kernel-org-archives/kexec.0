@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0029.austin.hp.com ([15.216.28.36])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlL7p-0007ul-CP
- for kexec@lists.infradead.org; Tue, 26 Nov 2013 16:04:33 +0000
-Message-ID: <1385481553.1791.179.camel@misato.fc.hp.com>
-Subject: Re: [patch 0/4 v3] kexec-tools: efi runtime support
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Tue, 26 Nov 2013 08:59:13 -0700
-In-Reply-To: <20131126061124.GB9727@dhcp-16-126.nay.redhat.com>
-References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
- <1385159448.1791.161.camel@misato.fc.hp.com>
- <20131124031228.GA1754@dhcp-16-126.nay.redhat.com>
- <1385393451.1791.168.camel@misato.fc.hp.com>
- <20131126061124.GB9727@dhcp-16-126.nay.redhat.com>
-Mime-Version: 1.0
+ id 1VlMfA-0002FW-Gn
+ for kexec@lists.infradead.org; Tue, 26 Nov 2013 17:43:05 +0000
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH] kexec/xen: Fix typo in __i386__ preprocessor identifier
+Date: Tue, 26 Nov 2013 17:42:37 +0000
+Message-ID: <1385487757-18378-1-git-send-email-andrew.cooper3@citrix.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +20,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Xen-devel <xen-devel@lists.xen.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>
 
-On Tue, 2013-11-26 at 14:11 +0800, Dave Young wrote:
-> On 11/25/13 at 08:30am, Toshi Kani wrote:
-> > HI Dave,
-> > 
-> > I will test v4 again.  This time, I will test "memmap=exactmap" option
-> > as well.  I have tested the following cases before.  Are there any other
-> > cases you'd like me to test?
-> > 
-> >  - kdump
-> >  - multiple fast reboots and then kdump
-> >  - old kexec and new kernel w/ noefi & acpi_rsdp option
-> >  - new kexec and old kernel w/ noefi & acpi_rsdp option
+This typo was introduced in c/s c0b4a3f95dd80256cc6d7084436235e69b4933fb
 
-Retested the above cases with v4 patchset.
+It prevents a 32bit build of kexec from loading a 32bit crash image.
 
-> There's one more test case is w/ debugfs mounted in 1st kernel due to the
-> new version exports setup_data to sysfs.
+Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+CC: David Vrabel <david.vrabel@citrix.com>
+CC: Daniel Kiper <daniel.kiper@oracle.com>
+CC: Simon Horman <horms@verge.net.au>
+CC: kexec@lists.infradead.org
 
-Tested w/ debugfs mounted.
+---
+ kexec/kexec-xen.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> For the exactmap I think it's a corner case, I just tested it in virtual
-> machine I think setup a right cmdline is hard. But feel free to test it if
-> you can.
-
-Tested with exactmap for multiple fast reboots.  I was not able to setup
-kdump properly with this case, but it's not related with your changes
-since I was not able to do it without your changes, either.
-
-Feel free to add my tested-by.
-
-Thanks,
--Toshi
+diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
+index e885246..d2bd7bf 100644
+--- a/kexec/kexec-xen.c
++++ b/kexec/kexec-xen.c
+@@ -70,7 +70,7 @@ int xen_kexec_load(struct kexec_info *info)
+ 		: KEXEC_TYPE_DEFAULT;
+ 
+ 	arch = (info->kexec_flags & KEXEC_ARCH_MASK) >> 16;
+-#if defined(_i386__) || defined(__x86_64__)
++#if defined(__i386__) || defined(__x86_64__)
+ 	if (!arch)
+ 		arch = EM_386;
+ #endif
+-- 
+1.7.10.4
 
 
 _______________________________________________
