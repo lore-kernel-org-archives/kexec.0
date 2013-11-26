@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vl3cp-0006y3-Vs
- for kexec@lists.infradead.org; Mon, 25 Nov 2013 21:23:24 +0000
-Message-ID: <5293BF8B.20203@zytor.com>
-Date: Mon, 25 Nov 2013 13:22:19 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-MIME-Version: 1.0
-Subject: Re: [patch 00/12 v4] kexec kernel efi runtime support v	v4] efi:
- export more efi table variable to sysfs
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vl7ZV-0005do-6o
+ for kexec@lists.infradead.org; Tue, 26 Nov 2013 01:36:14 +0000
+Date: Tue, 26 Nov 2013 09:35:20 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [patch 00/12 v4] kexec kernel efi runtime support v	v4]
+ efi: export more efi table variable to sysfs
+Message-ID: <20131126013520.GA3706@dhcp-16-126.nay.redhat.com>
 References: <20131125085630.417850406@dhcp-16-126.nay.redhat.com>
-In-Reply-To: <20131125085630.417850406@dhcp-16-126.nay.redhat.com>
+ <5293BF8B.20203@zytor.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5293BF8B.20203@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +25,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: dyoung@redhat.com, linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, vgoyal@redhat.com
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, vgoyal@redhat.com
 
-T24gMTEvMjUvMjAxMyAxMjo1NiBBTSwgZHlvdW5nQHJlZGhhdC5jb20gd3JvdGU6Cj4gCj4gRm9y
-IGVmaSBydW50aW1lIG1hcHBpbmcgSSBhZGQgYSBuZXcgZGlyZWN0b3J5IC9zeXMvZmlybXdhcmUv
-ZWZpLwo+IHJ1bnRpbWUtbWFwLyBsaWtlIGJlbG93Cj4gW2RhdmVAZGFya3N0YXIgfl0kIHRyZWUg
-L3N5cy9maXJtd2FyZS9lZmkvcnVudGltZS1tYXAvCj4gL3N5cy9maXJtd2FyZS9lZmkvcnVudGlt
-ZS1tYXAvCj4gw6LigJ3Fk8Oi4oCd4oKsw6LigJ3igqwgMAo+IMOi4oCd4oCaICAgw6LigJ3Fk8Oi
-4oCd4oKsw6LigJ3igqwgYXR0cmlidXRlCj4gw6LigJ3igJogICDDouKAncWTw6LigJ3igqzDouKA
-neKCrCBudW1fcGFnZXMKPiDDouKAneKAmiAgIMOi4oCdxZPDouKAneKCrMOi4oCd4oKsIHBoeXNf
-YWRkcgo+IMOi4oCd4oCaICAgw6LigJ3Fk8Oi4oCd4oKsw6LigJ3igqwgdHlwZQo+IMOi4oCd4oCa
-ICAgw6LigJ3igJ3DouKAneKCrMOi4oCd4oKsIHZpcnRfYWRkcgo+IMOi4oCdxZPDouKAneKCrMOi
-4oCd4oKsIDEKPiDDouKAneKAmiAgIMOi4oCdxZPDouKAneKCrMOi4oCd4oKsIGF0dHJpYnV0ZQo+
-IMOi4oCd4oCaICAgw6LigJ3Fk8Oi4oCd4oKsw6LigJ3igqwgbnVtX3BhZ2VzCj4gw6LigJ3igJog
-ICDDouKAncWTw6LigJ3igqzDouKAneKCrCBwaHlzX2FkZHIKPiDDouKAneKAmiAgIMOi4oCdxZPD
-ouKAneKCrMOi4oCd4oKsIHR5cGUKPiDDouKAneKAmiAgIMOi4oCd4oCdw6LigJ3igqzDouKAneKC
-rCB2aXJ0X2FkZHIKPiBbc25pcF0KPiAgCgpUaGVzZSBwYXRjaGVzIGNhbWUgdGhyb3VnaCBzZXZl
-cmVseSBjb3JydXB0ZWQsIHRoZSBhYm92ZSBpcyB0eXBpY2FsLi4uCgkKCS1ocGEKCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+T24gMTEvMjUvMTMgYXQgMDE6MjJwbSwgSC4gUGV0ZXIgQW52aW4gd3JvdGU6Cj4gT24gMTEvMjUv
+MjAxMyAxMjo1NiBBTSwgZHlvdW5nQHJlZGhhdC5jb20gd3JvdGU6Cj4gPiAKPiA+IEZvciBlZmkg
+cnVudGltZSBtYXBwaW5nIEkgYWRkIGEgbmV3IGRpcmVjdG9yeSAvc3lzL2Zpcm13YXJlL2VmaS8K
+PiA+IHJ1bnRpbWUtbWFwLyBsaWtlIGJlbG93Cj4gPiBbZGF2ZUBkYXJrc3RhciB+XSQgdHJlZSAv
+c3lzL2Zpcm13YXJlL2VmaS9ydW50aW1lLW1hcC8KPiA+IC9zeXMvZmlybXdhcmUvZWZpL3J1bnRp
+bWUtbWFwLwo+ID4gw6LigJ3Fk8Oi4oCd4oKsw6LigJ3igqwgMAo+ID4gw6LigJ3igJogICDDouKA
+ncWTw6LigJ3igqzDouKAneKCrCBhdHRyaWJ1dGUKPiA+IMOi4oCd4oCaICAgw6LigJ3Fk8Oi4oCd
+4oKsw6LigJ3igqwgbnVtX3BhZ2VzCj4gPiDDouKAneKAmiAgIMOi4oCdxZPDouKAneKCrMOi4oCd
+4oKsIHBoeXNfYWRkcgo+ID4gw6LigJ3igJogICDDouKAncWTw6LigJ3igqzDouKAneKCrCB0eXBl
+Cj4gPiDDouKAneKAmiAgIMOi4oCd4oCdw6LigJ3igqzDouKAneKCrCB2aXJ0X2FkZHIKPiA+IMOi
+4oCdxZPDouKAneKCrMOi4oCd4oKsIDEKPiA+IMOi4oCd4oCaICAgw6LigJ3Fk8Oi4oCd4oKsw6Li
+gJ3igqwgYXR0cmlidXRlCj4gPiDDouKAneKAmiAgIMOi4oCdxZPDouKAneKCrMOi4oCd4oKsIG51
+bV9wYWdlcwo+ID4gw6LigJ3igJogICDDouKAncWTw6LigJ3igqzDouKAneKCrCBwaHlzX2FkZHIK
+PiA+IMOi4oCd4oCaICAgw6LigJ3Fk8Oi4oCd4oKsw6LigJ3igqwgdHlwZQo+ID4gw6LigJ3igJog
+ICDDouKAneKAncOi4oCd4oKsw6LigJ3igqwgdmlydF9hZGRyCj4gPiBbc25pcF0KPiA+ICAKPiAK
+PiBUaGVzZSBwYXRjaGVzIGNhbWUgdGhyb3VnaCBzZXZlcmVseSBjb3JydXB0ZWQsIHRoZSBhYm92
+ZSBpcyB0eXBpY2FsLi4uCgpIaSwgUGV0ZXIKCldpbGwgcmVzZW5kIHRoZW0gdG9kYXkgYWdhaW4u
+CgotLQpUaGFua3MKRGF2ZQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
