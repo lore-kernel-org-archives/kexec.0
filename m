@@ -1,31 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlURI-00065P-1e
- for kexec@lists.infradead.org; Wed, 27 Nov 2013 02:01:17 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 3D92F3EE1E1
- for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:55 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 2942345DD76
- for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:55 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.nic.fujitsu.com [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0685A45DEB7
- for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:55 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id E1A8A1DB803C
- for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:54 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 8EA36E18003
- for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:54 +0900 (JST)
-Subject: [PATCH v7 2/2] Documentation, x86, apic,
- kexec: Add disable_cpu_apicid kernel parameter
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Wed, 27 Nov 2013 11:00:53 +0900
-Message-ID: <20131127020053.1493.54092.stgit@localhost6.localdomain6>
-In-Reply-To: <20131127020006.1493.86091.stgit@localhost6.localdomain6>
-References: <20131127020006.1493.86091.stgit@localhost6.localdomain6>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VlVTk-0007fl-C6
+ for kexec@lists.infradead.org; Wed, 27 Nov 2013 03:07:54 +0000
+Date: Wed, 27 Nov 2013 11:07:06 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
+Message-ID: <20131127030706.GB11852@dhcp-16-126.nay.redhat.com>
+References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
+ <1385445477-9665-7-git-send-email-dyoung@redhat.com>
+ <20131126193016.GA18170@console-pimps.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20131126193016.GA18170@console-pimps.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,40 +25,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
+To: Matt Fleming <matt@console-pimps.org>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Add disable_cpu_apicid kernel parameter to disable the CPU with the
-specified number of initial APIC ID, mostly used for the kdump 2nd
-kernel to disable BSP to wake up multiple CPUs without causing system
-reset or hang due to sending INIT from AP to BSP.
+On 11/26/13 at 07:30pm, Matt Fleming wrote:
+> On Tue, 26 Nov, at 01:57:51PM, Dave Young wrote:
+> > kexec kernel will need exactly same mapping for
+> > efi runtime memory ranges. Thus here export the
+> > runtime ranges mapping to sysfs, kexec-tools
+> > will assemble them and pass to 2nd kernel via
+> > setup_data.
+> > 
+> > Introducing a new directly /sys/firmware/efi/runtime-map
+> 
+> I'm not sure why the word "directly" is used here?
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- Documentation/kernel-parameters.txt |    9 +++++++++
- 1 file changed, 9 insertions(+)
+should be directory, will fix.
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index 50680a5..dd77bec 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -774,6 +774,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 	disable=	[IPV6]
- 			See Documentation/networking/ipv6.txt.
- 
-+	disable_cpu_apicid= [X86,APIC,KEXEC,SMP]
-+			Format: <int>
-+			The number of initial APIC ID for the
-+			corresponding CPU to be disabled at boot,
-+			mostly used for the kdump 2nd kernel to
-+			disable BSP to wake up multiple CPUs without
-+			causing system reset or hang due to sending
-+			INIT from AP to BSP.
-+
- 	disable_ddw     [PPC/PSERIES]
- 			Disable Dynamic DMA Window support. Use this if
- 			to workaround buggy firmware.
+> 
+> > Just like /sys/firmware/memmap. Containing below attribute
+> > in each file of that directory:
+> > attribute  num_pages  phys_addr  type  virt_addr
+> > 
+> > It will not work for efi 32bit. Only x86_64 currently.
+>  
+> Actually, exporting the tables does work for 32-bit, right? It's just
+> that kexec doesn't work for 32-bit EFI?
 
+It does not make sense to export them for 32-bit because we do not
+support kexec efi on 32-bit. Will change the description to below:
+
+"kexec efi boot on 32-bit is not supported so I only export the tables
+for 64-bit efi system."
+
+> 
+> > Matt: s/efi-runtime-map.c/runtime-map.c
+> >       change dir name to runtime-map
+> > update to use desc_size in efi_runtime_map
+> > cleaup the code, add function efi_save_runtime_map
+> > improve err handling
+> > 
+> > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > ---
+> >  .../ABI/testing/sysfs-firmware-efi-runtime-map     |  45 +++++
+> >  arch/x86/platform/efi/efi.c                        |  26 +++
+> >  drivers/firmware/efi/Kconfig                       |  10 ++
+> >  drivers/firmware/efi/Makefile                      |   1 +
+> >  drivers/firmware/efi/efi.c                         |   3 +-
+> >  drivers/firmware/efi/runtime-map.c                 | 199 +++++++++++++++++++++
+> >  include/linux/efi.h                                |   6 +
+> >  7 files changed, 289 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-firmware-efi-runtime-map
+> >  create mode 100644 drivers/firmware/efi/runtime-map.c
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-firmware-efi-runtime-map b/Documentation/ABI/testing/sysfs-firmware-efi-runtime-map
+> > new file mode 100644
+> > index 0000000..dab8d41
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-firmware-efi-runtime-map
+> > @@ -0,0 +1,45 @@
+> > +What:		/sys/firmware/efi/runtime-map/
+> > +Date:		Oct 2013
+> > +Contact:	Dave Young <dyoung@redhat.com>
+> > +Description:
+> > +		Switching efi runtime services to virtual mode requires
+> > +		that all efi memory ranges which has the runtime attribute
+> > +		bit set to be mapped to virtual addresses.
+> > +
+> > +		In kexec kernel kernel can not entering virtual mode again
+> > +		because there's a limitation that SetVirtualAddressMap can
+> > +		only be called once for entering virtual mode. But kexec
+> > +		kernel still need maintain same physical address to virtual
+> > +		address mapping as the 1st kernel. The mappings are exported
+> > +		to sysfs so userspace tools can reassemble them and pass them
+> > +		into kexec kernel.
+> 
+> How about,
+> 
+> 		"The efi runtime services can only be switched to virtual
+> 		 mode once without rebooting. The kexec kernel must maintain
+> 		 the same physical to virtual address mappings as the first
+> 		 kernel. The mappings are exported to sysfs so userspace tools
+> 		 can reassemble them and pass them into the kexec kernel."
+> 
+> ?
+
+Excellent, will above.
+
+> 
+> > +		/sys/firmware/efi/runtim-map/ is what kernel export for
+> 
+> 				^^ runtime-map/
+
+Will fix the typo.
+
+Thanks for review
+Dave
 
 _______________________________________________
 kexec mailing list
