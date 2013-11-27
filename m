@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlX8y-0000oQ-O8
- for kexec@lists.infradead.org; Wed, 27 Nov 2013 04:54:37 +0000
-Date: Wed, 27 Nov 2013 12:52:37 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131127045237.GC11852@dhcp-16-126.nay.redhat.com>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131126220448.GB18170@console-pimps.org>
+ id 1VlXpQ-0001Iu-Gt
+ for kexec@lists.infradead.org; Wed, 27 Nov 2013 05:38:25 +0000
+Date: Wed, 27 Nov 2013 13:37:31 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
+Message-ID: <20131127053731.GA4318@dhcp-16-252.nay.redhat.com>
+References: <20131125023150.GB13197@dhcp-16-252.nay.redhat.com>
+ <5292D30E.5070003@jp.fujitsu.com>
+ <20131126025221.GA22934@dhcp-16-252.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C60A8@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131126220448.GB18170@console-pimps.org>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971C60A8@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,294 +26,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matt Fleming <matt@console-pimps.org>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-On 11/26/13 at 10:04pm, Matt Fleming wrote:
-> On Tue, 26 Nov, at 01:57:52PM, Dave Young wrote:
-> > Add a new setup_data type SETUP_EFI for kexec use.
-> > Passing the saved fw_vendor, runtime, config tables and
-> > efi runtime mappings.
+On 11/26/13 at 03:12am, Atsushi Kumagai wrote:
+> Hello Baoquan,
+> 
+> On 2013/11/26 11:53:34, kexec <kexec-bounces@lists.infradead.org> wrote:
+> > On 11/25/13 at 01:33pm, HATAYAMA Daisuke wrote:
+> > > (2013/11/25 11:31), Baoquan He wrote:
+> > > >Hi HATAYAMA and Atsushi,
+> > > >
+> > > >I think v2 is better than v1, since update_cyclic_region can be used
+> > > >with a more flexible calling.
+> > > >
+> > > >What's your opinion about this?
+> > > >
+> > > >On 11/23/13 at 05:29pm, Baoquan He wrote:
+> > > 
+> > > Thanks for your patch. The bug is caused by my patch set for creating a
+> > > whole part of 1st bitmap before entering cyclic process.
+> > > 
+> > > I think v1 is better than v2. The update_cyclic_range() call relevant
+> > > to this regression is somewhat special compared to other calls; it is
+> > > the almost only call that doesn't need to perform filtering processing.
+> > > To fix this bug, please make the patch so as not to affect the other calls,
+> > > in order to keep change as small as possible.
 > > 
-> > When entering virtual mode, directly mapping the efi
-> > runtime ragions which we passed in previously. And skip
-> > the step to call SetVirtualAddressMap.
+> > OK, if you think so. But I still think update_cyclic_region is a little
+> > weird, its name doesn't match its functionality, this confuses code
+> > reviewers. And it does something unnecessary somewhere. If it's
+> > possible, I would rather take out the create_1st_bitmap_cyclic and
+> > exclude_unnecessary_pages_cyclic, and call them explicitly where they
+> > are really needed. Surely we can make a little change in both of them,
+> > E.g add a parameter pfn to them, then we can also judge like
+> > update_cyclic_region has done:
 > > 
-> > Specially for HP z420 workstation it need another variable
-> > saving, it's the smbios physical address, the HP bios
-> > also update the SMBIOS address after entering virtual mode
-> > besides of the standard fw_vendor,runtime and config table.
+> >         if (is_cyclic_region(pfn))
+> >                 return TRUE;
 > > 
-> > Tested on ovmf+qemu, lenovo thinkpad, a dell laptop and an
-> > HP z420 workstation.
+> > If you insist on v1 is a better idea, I will repost based on it, but keep
+> > my personal opinion.
+> 
+> I also prefer v1 because the usage of update_cyclic_region_without_exclude() is
+> definite and understandable while v2's update_cyclic_region() is complicated.
+> 
+> On the other hand, I agree with your opinion, so could you post a cleanup patch
+> separately from v1 patch ?
+
+Hi Atsushi,
+
+Yeah, you are right, v1 is better. Then we can wait for HATAYAMA's cleanup
+patch. I know you are goint to release v1.5.5.
+
+Baoquan
+Thanks
+
+
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+> > Baoquan
+> > Thanks
 > > 
-> > v2: refresh based on previous patch changes, code cleanup.
-> > v3: use ioremap instead of phys_to_virt for esdata
+> > > 
+> > > -- 
+> > > Thanks.
+> > > HATAYAMA, Daisuke
+> > > 
+> > > 
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec
 > > 
-> > Signed-off-by: Dave Young <dyoung@redhat.com>
-> > ---
-> >  arch/x86/include/asm/efi.h            |  12 +++
-> >  arch/x86/include/uapi/asm/bootparam.h |   1 +
-> >  arch/x86/kernel/setup.c               |   3 +
-> >  arch/x86/platform/efi/efi.c           | 161 ++++++++++++++++++++++++++++++----
-> >  4 files changed, 160 insertions(+), 17 deletions(-)
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> > 
 > 
-> [...]
-> 
-> > +void __init parse_efi_setup(u64 phys_addr, u32 data_len)
-> > +{
-> > +	int size;
-> > +	struct setup_data *sdata;
-> > +	u64 esdata_phys;
-> > +
-> > +	if (!efi_enabled(EFI_64BIT)) {
-> > +		pr_warn("skipping setup_data on EFI 32BIT!");
-> > +		return;
-> > +	}
-> 
-> Hmm... this warning could be more informative. Perhaps something along
-> the lines of,
-> 
-> 	"SETUP_EFI not supported on 32-bit\n"
-
-Will do
-
-> 
-> because the reason we skip is because it isn't supported.
-> 
-> > +
-> > +	sdata = early_memremap(phys_addr, data_len);
-> > +	if (!sdata)
-> > +		return;
-> > +
-> > +	size = data_len - sizeof(struct setup_data);
-> > +
-> > +	esdata_phys = phys_addr + sizeof(struct setup_data);
-> > +
-> > +	nr_efi_runtime_map = (size - sizeof(struct efi_setup_data)) /
-> > +			sizeof(efi_memory_desc_t);
-> > +	early_iounmap(sdata, data_len);
-> > +
-> > +	/* iounmap esdata in function efi_enter_virtual_mode */
-> > +	esdata = early_memremap(esdata_phys, size);
-> > +}
-> >  
-> >  static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
-> >  {
-> > @@ -504,8 +531,12 @@ static int __init efi_systab_init(void *phys)
-> >  		}
-> >  
-> >  		efi_systab.hdr = systab64->hdr;
-> > -		efi_systab.fw_vendor = systab64->fw_vendor;
-> > -		tmp |= systab64->fw_vendor;
-> > +
-> > +		if (esdata)
-> 
-> Could we name this something more explicit? 'efi_setup' perhaps?
-
-Sure, just efi_setup_data is a bit long, will use efi_setup in next version.
-
-> 
-> > @@ -631,6 +670,41 @@ static int __init efi_memmap_init(void)
-> >  	return 0;
-> >  }
-> >  
-> > +static int __init efi_reuse_config(u64 tables, int nr_tables)
-> > +{
-> > +	void *p, *tablep;
-> > +	int i, sz;
-> > +
-> > +	if (!efi_enabled(EFI_64BIT))
-> > +		return 0;
-> > +
-> > +	sz = sizeof(efi_config_table_64_t);
-> > +
-> > +	p = tablep = early_memremap(tables, nr_tables * sz);
-> > +	if (!p) {
-> > +		pr_err("Could not map Configuration table!\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	for (i = 0; i < efi.systab->nr_tables; i++) {
-> > +		efi_guid_t guid;
-> > +
-> > +		guid = ((efi_config_table_64_t *)p)->guid;
-> > +
-> > +		/*
-> > +		HP z420 workstation smbios will be convert to
-> > +		virtual address after enter virtual mode.
-> > +		Thus in case kexec/kdump the physical address
-> > +		will be passed in setup_data.
-> > +		*/
-> 
-> This isn't the correct multi-line comment format,
-
-Will update
-
-> 
-> 		/*
-> 		 * This is the preferred way to to write a multi-line
-> 		 * comment.
-> 		 */
-> 
-> > +		if (!efi_guidcmp(guid, SMBIOS_TABLE_GUID))
-> > +			((efi_config_table_64_t *)p)->table = esdata->smbios;
-> > +		p += sz;
-> > +	}
-> > +	early_iounmap(tablep, nr_tables * sz);
-> > +	return 0;
-> > +}
-> > +
-> >  void __init efi_init(void)
-> >  {
-> >  	efi_char16_t *c16;
-> > @@ -676,6 +750,9 @@ void __init efi_init(void)
-> >  		efi.systab->hdr.revision >> 16,
-> >  		efi.systab->hdr.revision & 0xffff, vendor);
-> >  
-> > +	if (esdata && esdata->smbios)
-> > +		efi_reuse_config(efi.systab->tables, efi.systab->nr_tables);
-> > +
-> 
-> Would it make sense to move the ->smbios check inside efi_reuse_config()
-> in case we need to extend the number of tables in the future?
-
-Good suggestion, will do.
-
-> 
-> >  	if (efi_config_init(arch_tables))
-> >  		return;
-> >  
-> > @@ -886,6 +963,43 @@ ret:
-> >  }
-> >  
-> >  /*
-> > + * map efi regions which was passed via setup_data
-> > + * the virt_addr is a fixed addr which was used in
-> > + * 1st kernel of kexec boot.
-> > + */
-> > +static void __init efi_map_regions_fixed(void)
-> > +{
-> > +	int i;
-> > +	unsigned long size;
-> > +	efi_memory_desc_t *md;
-> > +	u64 end, systab;
-> > +	void *p;
-> > +
-> > +	efi_runtime_map = kzalloc(nr_efi_runtime_map * memmap.desc_size,
-> > +				GFP_KERNEL);
-> > +	if (!efi_runtime_map)
-> > +		pr_err("Out of memory, EFI runtime on nested kexec non-functional!\n");
-> > +
-> > +	for (i = 0, p = efi_runtime_map; i < nr_efi_runtime_map; i++) {
-> > +		md = esdata->map + i;
-> 
-> Heh, I read that as 'esdata->map + 1' the first few times.
-
-To make it more readable, I will change them like below:
-
-p = efi_runtime_map;
-md = efi_setup->map;
-for (i = 0; i < nr_efi_runtime_map; i++) {
-	[...]
-	md += 1;
-}
-
-> 
-> > +		efi_map_region_fixed(md);
-> > +		size = md->num_pages << PAGE_SHIFT;
-> > +		end = md->phys_addr + size;
-> > +
-> > +		systab = (u64) (unsigned long) efi_phys.systab;
-> > +		if (md->phys_addr <= systab && systab < end) {
-> > +			systab += md->virt_addr - md->phys_addr;
-> > +			efi.systab =
-> > +				(efi_system_table_t *) (unsigned long) systab;
-> > +		}
-> > +		if (efi_runtime_map) {
-> > +			memcpy(p, md, memmap.desc_size);
-> > +			p += memmap.desc_size;
-> > +		}
-> 
-> Is this if () needed? Is it possible to enter the loop and have
-> 'efi_runtime_map' be NULL?
-
-Yes, it is needed. if efi_runtime_map kmalloc fails I only print error, do not
-return so kernel can still boot, just kexec on efi will not work that has been
-put in the error message.
-
-> 
-> > +	}
-> > +}
-> > +
-> > +/*
-> >   * This function will switch the EFI runtime services to virtual mode.
-> >   * Essentially, we look through the EFI memmap and map every region that
-> >   * has the runtime attribute bit set in its memory descriptor into the
-> > @@ -901,6 +1015,10 @@ ret:
-> >   * so that we're in a different address space when calling a runtime
-> >   * function. For function arguments passing we do copy the PGDs of the
-> >   * kernel page table into ->trampoline_pgd prior to each call.
-> > + *
-> > + * Specially for kexec boot efi runtime maps in previous kernel should
-> > + * be passed in via setup_data. In that case runtime ranges will be mapped
-> > + * to fixed virtual addresses exactly same as the ones in previous kernel.
-> >   */
-> >  void __init efi_enter_virtual_mode(void)
-> >  {
-> > @@ -919,12 +1037,15 @@ void __init efi_enter_virtual_mode(void)
-> >  		return;
-> >  	}
-> >  
-> > -	efi_merge_regions();
-> > -
-> > -	new_memmap = efi_map_regions(&count);
-> > -	if (!new_memmap) {
-> > -		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
-> > -		return;
-> > +	if (esdata)
-> > +		efi_map_regions_fixed();
-> > +	else {
-> > +		efi_merge_regions();
-> > +		new_memmap = efi_map_regions(&count);
-> > +		if (!new_memmap) {
-> > +			pr_err("Error reallocating memory, EFI runtime non-functional!\n");
-> > +			return;
-> > +		}
-> >  	}
-> >  
-> >  	BUG_ON(!efi.systab);
-> > @@ -932,11 +1053,17 @@ void __init efi_enter_virtual_mode(void)
-> >  	efi_setup_page_tables();
-> >  	efi_sync_low_kernel_mappings();
-> >  
-> > -	status = phys_efi_set_virtual_address_map(
-> > -		memmap.desc_size * count,
-> > -		memmap.desc_size,
-> > -		memmap.desc_version,
-> > -		(efi_memory_desc_t *)__pa(new_memmap));
-> > +	if (esdata) {
-> > +		status = EFI_SUCCESS;
-> > +		early_iounmap(esdata, sizeof(struct efi_setup_data) +
-> > +			      nr_efi_runtime_map *
-> > +			      sizeof(efi_memory_desc_t));
-> > +	} else
-> > +		status = phys_efi_set_virtual_address_map(
-> > +			memmap.desc_size * count,
-> > +			memmap.desc_size,
-> > +			memmap.desc_version,
-> > +			(efi_memory_desc_t *)__pa(new_memmap));
-> >  
-> >  	if (status != EFI_SUCCESS) {
-> >  		pr_alert("Unable to switch EFI into virtual mode "
-> 
-> Please fold the pr_alert() into the else branch so that you don't have
-> to do the 'status = EFI_SUCCESS' dance.
-
-Good suggestion, will do.
-
-Thanks for review
-Dave
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
