@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+Received: from arkanian.console-pimps.org ([212.110.184.194])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VldjR-0000dJ-KU
- for kexec@lists.infradead.org; Wed, 27 Nov 2013 11:56:38 +0000
-Date: Wed, 27 Nov 2013 12:56:09 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [patch 0/4 v3] kexec-tools: efi runtime support
-Message-ID: <20131127115609.GC32267@pd.tnic>
-References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
- <1385159448.1791.161.camel@misato.fc.hp.com>
- <20131124031228.GA1754@dhcp-16-126.nay.redhat.com>
- <1385393451.1791.168.camel@misato.fc.hp.com>
- <20131126061124.GB9727@dhcp-16-126.nay.redhat.com>
- <1385481553.1791.179.camel@misato.fc.hp.com>
- <20131127092946.GB19809@dhcp-16-126.nay.redhat.com>
+ id 1VleZZ-0001fQ-V8
+ for kexec@lists.infradead.org; Wed, 27 Nov 2013 12:50:31 +0000
+Date: Wed, 27 Nov 2013 12:50:03 +0000
+From: Matt Fleming <matt@console-pimps.org>
+Subject: Re: [PATCH v4 00/12] kexec kernel efi runtime support
+Message-ID: <20131127125003.GG18170@console-pimps.org>
+References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131127092946.GB19809@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,28 +24,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, Toshi Kani <toshi.kani@hp.com>, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Wed, Nov 27, 2013 at 05:29:46PM +0800, Dave Young wrote:
-> I would like to send a new version which addressing several issues for
-> code structure improvement and changelog etc.
->
-> If there's no further comments I will send them tommorrow.
+On Tue, 26 Nov, at 01:57:45PM, Dave Young wrote:
+> Hi,
+> 
+> Here is the V4 resend for supporting kexec kernel efi runtime.
+> Per pervious discussion I pass the 1st kernel efi runtime mapping
+> via setup_data to 2nd kernel. Besides of the runtime mapping
+> info I also pass the fw_vendor, runtime, config table, smbios
+> physical address in setup_data. EFI spec mentioned fw_vendor,
+> runtime, config table addresses will be converted to virt address
+> after entering virtual mode, but we will use it as physical address
+> in efi_init. For smbios EFI spec did not mention about the address
+> updating, but during my test on a HP workstation, the bios will
+> convert it to Virt addr, thus pass it in setup_data as well.
+ 
+Dave, your commits introduce a bunch of new sparse warnings,
 
-As a rule of thumb you should wait ~week and give chance to people to
-review your stuff completely before spamming them again with the whole
-patchset. :)
+/home/build/git/efi/arch/x86/platform/efi/efi.c:130:15: warning: incorrect type in assignment (different address spaces)
+/home/build/git/efi/arch/x86/platform/efi/efi.c:130:15:    expected struct setup_data *sdata
+/home/build/git/efi/arch/x86/platform/efi/efi.c:130:15:    got void [noderef] <asn:2>*
+/home/build/git/efi/arch/x86/platform/efi/efi.c:140:23: warning: incorrect type in argument 1 (different address spaces)
+/home/build/git/efi/arch/x86/platform/efi/efi.c:140:23:    expected void [noderef] <asn:2>*addr
+/home/build/git/efi/arch/x86/platform/efi/efi.c:140:23:    got struct setup_data *sdata
+/home/build/git/efi/arch/x86/platform/efi/efi.c:143:16: warning: incorrect type in assignment (different address spaces)
+/home/build/git/efi/arch/x86/platform/efi/efi.c:143:16:    expected struct efi_setup_data *[addressable] [toplevel] esdata
+/home/build/git/efi/arch/x86/platform/efi/efi.c:143:16:    got void [noderef] <asn:2>*
 
-So please be patient until we've finished going through v4.
+/home/build/git/efi/arch/x86/platform/efi/efi.c:701:20: warning: incorrect type in assignment (different address spaces)
+/home/build/git/efi/arch/x86/platform/efi/efi.c:701:20:    expected void *tablep
+/home/build/git/efi/arch/x86/platform/efi/efi.c:701:20:    got void [noderef] <asn:2>*
+/home/build/git/efi/arch/x86/platform/efi/efi.c:722:23: warning: incorrect type in argument 1 (different address spaces)
+/home/build/git/efi/arch/x86/platform/efi/efi.c:722:23:    expected void [noderef] <asn:2>*addr
+/home/build/git/efi/arch/x86/platform/efi/efi.c:722:23:    got void *tablep
 
-Thanks.
+/home/build/git/efi/arch/x86/platform/efi/efi.c:1079:31: warning: incorrect type in argument 1 (different address spaces)
+/home/build/git/efi/arch/x86/platform/efi/efi.c:1079:31:    expected void [noderef] <asn:2>*addr
+/home/build/git/efi/arch/x86/platform/efi/efi.c:1079:31:    got struct efi_setup_data *[addressable] [toplevel] esdata
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Matt Fleming, Intel Open Source Technology Center
 
 _______________________________________________
 kexec mailing list
