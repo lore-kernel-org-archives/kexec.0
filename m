@@ -1,18 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VlQl0-00086D-18
- for kexec@lists.infradead.org; Tue, 26 Nov 2013 22:05:23 +0000
-Date: Tue, 26 Nov 2013 22:04:48 +0000
-From: Matt Fleming <matt@console-pimps.org>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131126220448.GB18170@console-pimps.org>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VlURE-00065H-C1
+ for kexec@lists.infradead.org; Wed, 27 Nov 2013 02:01:14 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A68BF3EE1DC
+ for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:44 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 21C3E45DE4D
+ for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:44 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id D6F6745DD77
+ for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:43 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id C36BF1DB8046
+ for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:43 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5F7131DB8040
+ for <kexec@lists.infradead.org>; Wed, 27 Nov 2013 11:00:43 +0900 (JST)
+Subject: [PATCH v7 0/3] x86, apic, kexec: Add disable_cpu_apic kernel parameter
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Wed, 27 Nov 2013 11:00:42 +0900
+Message-ID: <20131127020006.1493.86091.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1385445477-9665-8-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,264 +36,127 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: hpa@linux.intel.com, ebiederm@xmission.com, vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
 
-On Tue, 26 Nov, at 01:57:52PM, Dave Young wrote:
-> Add a new setup_data type SETUP_EFI for kexec use.
-> Passing the saved fw_vendor, runtime, config tables and
-> efi runtime mappings.
-> 
-> When entering virtual mode, directly mapping the efi
-> runtime ragions which we passed in previously. And skip
-> the step to call SetVirtualAddressMap.
-> 
-> Specially for HP z420 workstation it need another variable
-> saving, it's the smbios physical address, the HP bios
-> also update the SMBIOS address after entering virtual mode
-> besides of the standard fw_vendor,runtime and config table.
-> 
-> Tested on ovmf+qemu, lenovo thinkpad, a dell laptop and an
-> HP z420 workstation.
-> 
-> v2: refresh based on previous patch changes, code cleanup.
-> v3: use ioremap instead of phys_to_virt for esdata
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  arch/x86/include/asm/efi.h            |  12 +++
->  arch/x86/include/uapi/asm/bootparam.h |   1 +
->  arch/x86/kernel/setup.c               |   3 +
->  arch/x86/platform/efi/efi.c           | 161 ++++++++++++++++++++++++++++++----
->  4 files changed, 160 insertions(+), 17 deletions(-)
+This patch set is to allow kdump 2nd kernel to wake up multiple CPUs,
+a continueing work from:
 
-[...]
+  [PATCH v3 0/2] x86, apic, kdump: Disable BSP if boot cpu is AP
+  https://lkml.org/lkml/2013/10/16/300.
 
-> +void __init parse_efi_setup(u64 phys_addr, u32 data_len)
-> +{
-> +	int size;
-> +	struct setup_data *sdata;
-> +	u64 esdata_phys;
-> +
-> +	if (!efi_enabled(EFI_64BIT)) {
-> +		pr_warn("skipping setup_data on EFI 32BIT!");
-> +		return;
-> +	}
+At v4, basic design has changed. Now users need to figure out initial
+APIC ID of BSP in the 1st kernel and configures kernel parameter for
+the 2nd kernel manually using disable_cpu_apicid kernel parameter,
+which is newly introduced by this patch set. This design is more
+flexible than the previous version in that we no longer have to rely
+on ACPI/MP table to get initial APIC ID of BSP.
 
-Hmm... this warning could be more informative. Perhaps something along
-the lines of,
+Sorry, this patch set have not include in-source documentation
+requested by Borislav Petkov yet, but I'll post it later separately,
+which would be better to focus on documentation reviewing.
 
-	"SETUP_EFI not supported on 32-bit\n"
+ChangeLog
 
-because the reason we skip is because it isn't supported.
+v6 => v7)
 
-> +
-> +	sdata = early_memremap(phys_addr, data_len);
-> +	if (!sdata)
-> +		return;
-> +
-> +	size = data_len - sizeof(struct setup_data);
-> +
-> +	esdata_phys = phys_addr + sizeof(struct setup_data);
-> +
-> +	nr_efi_runtime_map = (size - sizeof(struct efi_setup_data)) /
-> +			sizeof(efi_memory_desc_t);
-> +	early_iounmap(sdata, data_len);
-> +
-> +	/* iounmap esdata in function efi_enter_virtual_mode */
-> +	esdata = early_memremap(esdata_phys, size);
-> +}
->  
->  static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
->  {
-> @@ -504,8 +531,12 @@ static int __init efi_systab_init(void *phys)
->  		}
->  
->  		efi_systab.hdr = systab64->hdr;
-> -		efi_systab.fw_vendor = systab64->fw_vendor;
-> -		tmp |= systab64->fw_vendor;
-> +
-> +		if (esdata)
+- Rebased on top of v3.13-rc1
 
-Could we name this something more explicit? 'efi_setup' perhaps?
+- Remove a patch that cleans up the code around
+  x86_cpu_physical_apicid. Instead, use read_apic_id() directly in
+  generic_processor_info(). The clean up removed here will be done in
+  different patch set.
 
-> @@ -631,6 +670,41 @@ static int __init efi_memmap_init(void)
->  	return 0;
->  }
->  
-> +static int __init efi_reuse_config(u64 tables, int nr_tables)
-> +{
-> +	void *p, *tablep;
-> +	int i, sz;
-> +
-> +	if (!efi_enabled(EFI_64BIT))
-> +		return 0;
-> +
-> +	sz = sizeof(efi_config_table_64_t);
-> +
-> +	p = tablep = early_memremap(tables, nr_tables * sz);
-> +	if (!p) {
-> +		pr_err("Could not map Configuration table!\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	for (i = 0; i < efi.systab->nr_tables; i++) {
-> +		efi_guid_t guid;
-> +
-> +		guid = ((efi_config_table_64_t *)p)->guid;
-> +
-> +		/*
-> +		HP z420 workstation smbios will be convert to
-> +		virtual address after enter virtual mode.
-> +		Thus in case kexec/kdump the physical address
-> +		will be passed in setup_data.
-> +		*/
+v5 => v6)
 
-This isn't the correct multi-line comment format,
+- Remove use of rdmsr(IA32_APIC_BASE) to initialize
+  bsp_physical_apicid since the MSR doesn't work well on some cluster
+  systems, suggested by HPA. Also, current users of the variable
+  expects the initial apicid reported through MP table only; removing
+  the use of the MSR is not problematic.
 
-		/*
-		 * This is the preferred way to to write a multi-line
-		 * comment.
-		 */
+- Rename bsp_physical_apicid as bios_bsp_physical_apicid to make it
+  clear that the apidid contained there is the one reported from some
+  BIOS table. Also, initialize it not only by MP table but also by
+  ACPI MADT.
 
-> +		if (!efi_guidcmp(guid, SMBIOS_TABLE_GUID))
-> +			((efi_config_table_64_t *)p)->table = esdata->smbios;
-> +		p += sz;
-> +	}
-> +	early_iounmap(tablep, nr_tables * sz);
-> +	return 0;
-> +}
-> +
->  void __init efi_init(void)
->  {
->  	efi_char16_t *c16;
-> @@ -676,6 +750,9 @@ void __init efi_init(void)
->  		efi.systab->hdr.revision >> 16,
->  		efi.systab->hdr.revision & 0xffff, vendor);
->  
-> +	if (esdata && esdata->smbios)
-> +		efi_reuse_config(efi.systab->tables, efi.systab->nr_tables);
-> +
+- Change message displayed when specified cpu is disabled from:
 
-Would it make sense to move the ->smbios check inside efi_reuse_config()
-in case we need to extend the number of tables in the future?
+  ACPI: Disable specified CPU. Processor 0/0x0 ignored.
 
->  	if (efi_config_init(arch_tables))
->  		return;
->  
-> @@ -886,6 +963,43 @@ ret:
->  }
->  
->  /*
-> + * map efi regions which was passed via setup_data
-> + * the virt_addr is a fixed addr which was used in
-> + * 1st kernel of kexec boot.
-> + */
-> +static void __init efi_map_regions_fixed(void)
-> +{
-> +	int i;
-> +	unsigned long size;
-> +	efi_memory_desc_t *md;
-> +	u64 end, systab;
-> +	void *p;
-> +
-> +	efi_runtime_map = kzalloc(nr_efi_runtime_map * memmap.desc_size,
-> +				GFP_KERNEL);
-> +	if (!efi_runtime_map)
-> +		pr_err("Out of memory, EFI runtime on nested kexec non-functional!\n");
-> +
-> +	for (i = 0, p = efi_runtime_map; i < nr_efi_runtime_map; i++) {
-> +		md = esdata->map + i;
+  to:
 
-Heh, I read that as 'esdata->map + 1' the first few times.
+  ACPI: Disabling requested cpu. Processor 0/0x0 ignored.
 
-> +		efi_map_region_fixed(md);
-> +		size = md->num_pages << PAGE_SHIFT;
-> +		end = md->phys_addr + size;
-> +
-> +		systab = (u64) (unsigned long) efi_phys.systab;
-> +		if (md->phys_addr <= systab && systab < end) {
-> +			systab += md->virt_addr - md->phys_addr;
-> +			efi.systab =
-> +				(efi_system_table_t *) (unsigned long) systab;
-> +		}
-> +		if (efi_runtime_map) {
-> +			memcpy(p, md, memmap.desc_size);
-> +			p += memmap.desc_size;
-> +		}
+v4 => v5)
 
-Is this if () needed? Is it possible to enter the loop and have
-'efi_runtime_map' be NULL?
+- Rebased on top of v3.12
 
-> +	}
-> +}
-> +
-> +/*
->   * This function will switch the EFI runtime services to virtual mode.
->   * Essentially, we look through the EFI memmap and map every region that
->   * has the runtime attribute bit set in its memory descriptor into the
-> @@ -901,6 +1015,10 @@ ret:
->   * so that we're in a different address space when calling a runtime
->   * function. For function arguments passing we do copy the PGDs of the
->   * kernel page table into ->trampoline_pgd prior to each call.
-> + *
-> + * Specially for kexec boot efi runtime maps in previous kernel should
-> + * be passed in via setup_data. In that case runtime ranges will be mapped
-> + * to fixed virtual addresses exactly same as the ones in previous kernel.
->   */
->  void __init efi_enter_virtual_mode(void)
->  {
-> @@ -919,12 +1037,15 @@ void __init efi_enter_virtual_mode(void)
->  		return;
->  	}
->  
-> -	efi_merge_regions();
-> -
-> -	new_memmap = efi_map_regions(&count);
-> -	if (!new_memmap) {
-> -		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
-> -		return;
-> +	if (esdata)
-> +		efi_map_regions_fixed();
-> +	else {
-> +		efi_merge_regions();
-> +		new_memmap = efi_map_regions(&count);
-> +		if (!new_memmap) {
-> +			pr_err("Error reallocating memory, EFI runtime non-functional!\n");
-> +			return;
-> +		}
->  	}
->  
->  	BUG_ON(!efi.systab);
-> @@ -932,11 +1053,17 @@ void __init efi_enter_virtual_mode(void)
->  	efi_setup_page_tables();
->  	efi_sync_low_kernel_mappings();
->  
-> -	status = phys_efi_set_virtual_address_map(
-> -		memmap.desc_size * count,
-> -		memmap.desc_size,
-> -		memmap.desc_version,
-> -		(efi_memory_desc_t *)__pa(new_memmap));
-> +	if (esdata) {
-> +		status = EFI_SUCCESS;
-> +		early_iounmap(esdata, sizeof(struct efi_setup_data) +
-> +			      nr_efi_runtime_map *
-> +			      sizeof(efi_memory_desc_t));
-> +	} else
-> +		status = phys_efi_set_virtual_address_map(
-> +			memmap.desc_size * count,
-> +			memmap.desc_size,
-> +			memmap.desc_version,
-> +			(efi_memory_desc_t *)__pa(new_memmap));
->  
->  	if (status != EFI_SUCCESS) {
->  		pr_alert("Unable to switch EFI into virtual mode "
+- Introduce bsp_physical_apicid that has the initial APIC ID for the
+  processor with BSP flag on IA32_APIC_BASE MSR. Without this,
+  boot_cpu_physical_apicid has temporarilly the value around MP table
+  related codes, although it's designed to have the initial APIC ID
+  for the processor that is doing the boot up. Use the
+  bsp_physical_apicid in MP table related codes; no impact on
+  semantics at runtime there.
 
-Please fold the pr_alert() into the else branch so that you don't have
-to do the 'status = EFI_SUCCESS' dance.
+v3 => v4)
+
+- Rebased on top of v3.12-rc6
+
+- Basic design has been changed. Now users need to figure out initial
+  APIC ID of BSP in the 1st kernel and configures kernel parameter for
+  the 2nd kernel manually using disable_cpu_apic kernel parameter to
+  be newly introduced in this patch set. This design is more flexible
+  than the previous version in that we no longer have to rely on
+  ACPI/MP table to get initial APIC ID of BSP.
+
+v2 => v3)
+
+- Change default value of boot_cpu_is_bsp to true.
+
+- Before executing rdmsr(MSR_IA32_APICBASE), check if the number of
+  processor family is larger than or equal to 6 in order to avoid
+  invalid opcode exception on processors where MSR_IA32_APICBASE is
+  not supported.
+
+v1 => v2)
+
+- Rebased on top of v3.12-rc5.
+
+- Fix linking time error of boot_cpu_is_bsp_init() in case of
+  CONFIG_LOCAL_APIC disabled by adding empty static inline function
+  instead.
+
+- Fix missing feature check by means of cpu_has_apic macro in
+  boot_cpu_is_bsp_init() before calling rdmsr_safe(MSR_IA32_APICBASE).
+
+  NOTE: I've checked local apic-present case only; I don't have any
+  x86 processor without local apic.
+
+- Add __init annotation to boot_cpu_is_bsp_init().
+
+Test
+
+- built with and without CONFIG_LOCAL_APIC
+- tested x86_64 in case of acpi and MP table
+- tested disable_cpu_apicid=<n> to disable both AP and BSP
+
+---
+
+HATAYAMA Daisuke (2):
+      x86, apic: Add disable_cpu_apicid kernel parameter
+      Documentation, x86, apic, kexec: Add disable_cpu_apicid kernel parameter
+
+
+ Documentation/kernel-parameters.txt |    9 ++++++
+ arch/x86/kernel/apic/apic.c         |   49 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
 
 -- 
-Matt Fleming, Intel Open Source Technology Center
+
+Thanks.
+HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
