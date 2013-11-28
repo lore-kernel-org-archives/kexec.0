@@ -1,23 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vlr7H-0006mW-LU
- for kexec@lists.infradead.org; Thu, 28 Nov 2013 02:14:08 +0000
-Date: Thu, 28 Nov 2013 10:13:22 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 0/4 v3] kexec-tools: efi runtime support
-Message-ID: <20131128021322.GC4282@dhcp-16-126.nay.redhat.com>
-References: <20131121064043.969000753@dhcp-16-126.nay.redhat.com>
- <1385159448.1791.161.camel@misato.fc.hp.com>
- <20131124031228.GA1754@dhcp-16-126.nay.redhat.com>
- <1385393451.1791.168.camel@misato.fc.hp.com>
- <20131126061124.GB9727@dhcp-16-126.nay.redhat.com>
- <1385481553.1791.179.camel@misato.fc.hp.com>
- <20131127092946.GB19809@dhcp-16-126.nay.redhat.com>
- <20131127115609.GC32267@pd.tnic>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vlr8o-0006pn-Mc
+ for kexec@lists.infradead.org; Thu, 28 Nov 2013 02:15:44 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 3/3] makedumpfile/xen: Fail immediately if dump level is
+ invalid
+Date: Thu, 28 Nov 2013 02:12:23 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971C7B5E@BPXM01GP.gisp.nec.co.jp>
+References: <1385497129-19501-1-git-send-email-daniel.kiper@oracle.com>
+ <1385497129-19501-4-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <1385497129-19501-4-git-send-email-daniel.kiper@oracle.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131127115609.GC32267@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,28 +25,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, Toshi Kani <toshi.kani@hp.com>, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "david.vrabel@citrix.com" <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-On 11/27/13 at 12:56pm, Borislav Petkov wrote:
-> On Wed, Nov 27, 2013 at 05:29:46PM +0800, Dave Young wrote:
-> > I would like to send a new version which addressing several issues for
-> > code structure improvement and changelog etc.
-> >
-> > If there's no further comments I will send them tommorrow.
+Hello Daniel,
+
+On 2013/11/27 5:19:56, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> Do not try to process Xen crash dump if dump level is invalid.
+> Fail immediately and print relevant error message.
 > 
-> As a rule of thumb you should wait ~week and give chance to people to
-> review your stuff completely before spamming them again with the whole
-> patchset. :)
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> ---
+>  makedumpfile.c |   18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
-> So please be patient until we've finished going through v4.
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index b160cea..389efc5 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -64,6 +64,8 @@ do { \
+>  static void check_cyclic_buffer_overrun(void);
+>  static void setup_page_is_buddy(void);
+>  
+> +int get_next_dump_level(int index);
+> +
+>  void
+>  initialize_tables(void)
+>  {
+> @@ -2903,7 +2905,7 @@ initial(void)
+>  {
+>  	off_t offset;
+>  	unsigned long size;
+> -	int debug_info = FALSE;
+> +	int debug_info = FALSE, dump_level, i;
+>  
+>  #ifdef USELZO
+>  	if (lzo_init() == LZO_E_OK)
+> @@ -2926,6 +2928,20 @@ initial(void)
+>  #endif
+>  
+>  	if (is_xen_memory()) {
+> +		for (i = 0; ; ++i) {
+> +			dump_level = get_next_dump_level(i);
+> +
+> +			if (dump_level < 0)
+> +				break;
+> +
+> +			if (dump_level <= 1)
+> +				continue;
+> +
+> +			MSG("Allowed Dump_Level for Xen dump filtering is 0 or 1\n");
+> +
+> +			return FALSE;
+> +		}
+> +
 
-Sure, thanks. 
+This check is already exist in initial_xen():
 
-I will be away from computer today so I will reply other emails tomorrow
-and post fixes next week.
+#ifndef __x86_64__
+        if (DL_EXCLUDE_ZERO < info->max_dump_level) {
+                MSG("Dump_level is invalid. It should be 0 or 1.\n");
+                MSG("Commandline parameter is invalid.\n");
+                MSG("Try `makedumpfile --help' for more information.\n");
+                return FALSE;
+        }
+#endif
 
-Dave
+So if you want to check the dump level early, you should extract the code
+above from initial_xen() and insert it into here instead.
+
+
+Thanks
+Atsushi Kumagai
+
+>  		if(info->flag_cyclic) {
+>  			info->flag_cyclic = FALSE;
+>  			MSG("Switched running mode from cyclic to non-cyclic,\n");
+> -- 
+> 1.7.10.4
+> 
+> 
 
 _______________________________________________
 kexec mailing list
