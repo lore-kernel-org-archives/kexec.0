@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vlr8o-0006pn-Mc
- for kexec@lists.infradead.org; Thu, 28 Nov 2013 02:15:44 +0000
+ id 1Vlvky-0003FH-OG
+ for kexec@lists.infradead.org; Thu, 28 Nov 2013 07:11:26 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 3/3] makedumpfile/xen: Fail immediately if dump level is
- invalid
-Date: Thu, 28 Nov 2013 02:12:23 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971C7B5E@BPXM01GP.gisp.nec.co.jp>
-References: <1385497129-19501-1-git-send-email-daniel.kiper@oracle.com>
- <1385497129-19501-4-git-send-email-daniel.kiper@oracle.com>
-In-Reply-To: <1385497129-19501-4-git-send-email-daniel.kiper@oracle.com>
+Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
+Date: Thu, 28 Nov 2013 07:08:26 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971C7EC5@BPXM01GP.gisp.nec.co.jp>
+References: <20131105134532.32112.78008.stgit@k.asiapacific.hpqcorp.net>
+ <20131105202631.GC4598@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971BB7A9@BPXM01GP.gisp.nec.co.jp>
+ <527AE4DE.3050209@jp.fujitsu.com> <528F04EB.4070109@jp.fujitsu.com>
+In-Reply-To: <528F04EB.4070109@jp.fujitsu.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -25,85 +26,146 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "david.vrabel@citrix.com" <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-Hello Daniel,
-
-On 2013/11/27 5:19:56, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> Do not try to process Xen crash dump if dump level is invalid.
-> Fail immediately and print relevant error message.
+On 2013/11/22 16:18:20, kexec <kexec-bounces@lists.infradead.org> wrote:
+> (2013/11/07 9:54), HATAYAMA Daisuke wrote:
+> > (2013/11/06 11:21), Atsushi Kumagai wrote:
+> >> (2013/11/06 5:27), Vivek Goyal wrote:
+> >>> On Tue, Nov 05, 2013 at 09:45:32PM +0800, Jingbai Ma wrote:
+> >>>> This patch set intend to exclude unnecessary hugepages from vmcore dump file.
+> >>>>
+> >>>> This patch requires the kernel patch to export necessary data structures into
+> >>>> vmcore: "kexec: export hugepage data structure into vmcoreinfo"
+> >>>> http://lists.infradead.org/pipermail/kexec/2013-November/009997.html
+> >>>>
+> >>>> This patch introduce two new dump levels 32 and 64 to exclude all unused and
+> >>>> active hugepages. The level to exclude all unnecessary pages will be 127 now.
+> >>>
+> >>> Interesting. Why hugepages should be treated any differentely than normal
+> >>> pages?
+> >>>
+> >>> If user asked to filter out free page, then it should be filtered and
+> >>> it should not matter whether it is a huge page or not?
+> >>
+> >> I'm making a RFC patch of hugepages filtering based on such policy.
+> >>
+> >> I attach the prototype version.
+> >> It's able to filter out also THPs, and suitable for cyclic processing
+> >> because it depends on mem_map and looking up it can be divided into
+> >> cycles. This is the same idea as page_is_buddy().
+> >>
+> >> So I think it's better.
+> >>
+> >
+> >> @@ -4506,14 +4583,49 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+> >>                && !isAnon(mapping)) {
+> >>                if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
+> >>                    pfn_cache_private++;
+> >> +            /*
+> >> +             * NOTE: If THP for cache is introduced, the check for
+> >> +             *       compound pages is needed here.
+> >> +             */
+> >>            }
+> >>            /*
+> >>             * Exclude the data page of the user process.
+> >>             */
+> >> -        else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
+> >> -            && isAnon(mapping)) {
+> >> -            if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
+> >> -                pfn_user++;
+> >> +        else if (info->dump_level & DL_EXCLUDE_USER_DATA) {
+> >> +            /*
+> >> +             * Exclude the anonnymous pages as user pages.
+> >> +             */
+> >> +            if (isAnon(mapping)) {
+> >> +                if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
+> >> +                    pfn_user++;
+> >> +
+> >> +                /*
+> >> +                 * Check the compound page
+> >> +                 */
+> >> +                if (page_is_hugepage(flags) && compound_order > 0) {
+> >> +                    int i, nr_pages = 1 << compound_order;
+> >> +
+> >> +                    for (i = 1; i < nr_pages; ++i) {
+> >> +                        if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
+> >> +                            pfn_user++;
+> >> +                    }
+> >> +                    pfn += nr_pages - 2;
+> >> +                    mem_map += (nr_pages - 1) * SIZE(page);
+> >> +                }
+> >> +            }
+> >> +            /*
+> >> +             * Exclude the hugetlbfs pages as user pages.
+> >> +             */
+> >> +            else if (hugetlb_dtor == SYMBOL(free_huge_page)) {
+> >> +                int i, nr_pages = 1 << compound_order;
+> >> +
+> >> +                for (i = 0; i < nr_pages; ++i) {
+> >> +                    if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
+> >> +                        pfn_user++;
+> >> +                }
+> >> +                pfn += nr_pages - 1;
+> >> +                mem_map += (nr_pages - 1) * SIZE(page);
+> >> +            }
+> >>            }
+> >>            /*
+> >>             * Exclude the hwpoison page.
+> >
+> > I'm concerned about the case that filtering is not performed to part of mem_map
+> > entries not belonging to the current cyclic range.
+> >
+> > If maximum value of compound_order is larger than maximum value of
+> > CONFIG_FORCE_MAX_ZONEORDER, which makedumpfile obtains by ARRAY_LENGTH(zone.free_area),
+> > it's necessary to align info->bufsize_cyclic with larger one in
+> > check_cyclic_buffer_overrun().
+> >
 > 
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> ---
->  makedumpfile.c |   18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index b160cea..389efc5 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -64,6 +64,8 @@ do { \
->  static void check_cyclic_buffer_overrun(void);
->  static void setup_page_is_buddy(void);
->  
-> +int get_next_dump_level(int index);
-> +
->  void
->  initialize_tables(void)
->  {
-> @@ -2903,7 +2905,7 @@ initial(void)
->  {
->  	off_t offset;
->  	unsigned long size;
-> -	int debug_info = FALSE;
-> +	int debug_info = FALSE, dump_level, i;
->  
->  #ifdef USELZO
->  	if (lzo_init() == LZO_E_OK)
-> @@ -2926,6 +2928,20 @@ initial(void)
->  #endif
->  
->  	if (is_xen_memory()) {
-> +		for (i = 0; ; ++i) {
-> +			dump_level = get_next_dump_level(i);
-> +
-> +			if (dump_level < 0)
-> +				break;
-> +
-> +			if (dump_level <= 1)
-> +				continue;
-> +
-> +			MSG("Allowed Dump_Level for Xen dump filtering is 0 or 1\n");
-> +
-> +			return FALSE;
-> +		}
-> +
+> ping, in case you overlooked this...
 
-This check is already exist in initial_xen():
+Sorry for the delayed response, I prioritize the release of v1.5.5 now.
 
-#ifndef __x86_64__
-        if (DL_EXCLUDE_ZERO < info->max_dump_level) {
-                MSG("Dump_level is invalid. It should be 0 or 1.\n");
-                MSG("Commandline parameter is invalid.\n");
-                MSG("Try `makedumpfile --help' for more information.\n");
-                return FALSE;
-        }
-#endif
+Thanks for your advice, check_cyclic_buffer_overrun() should be fixed
+as you said. In addition, I'm considering other way to address such case,
+that is to bring the number of "overflowed pages" to the next cycle and
+exclude them at the top of __exclude_unnecessary_pages() like below:
 
-So if you want to check the dump level early, you should extract the code
-above from initial_xen() and insert it into here instead.
+               /*
+                * The pages which should be excluded still remain.
+                */
+               if (remainder >= 1) {
+                       int i;
+                       unsigned long tmp;
+                       for (i = 0; i < remainder; ++i) {
+                               if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i)) {
+                                       pfn_user++;
+                                       tmp++;
+                               }
+                       }
+                       pfn += tmp;
+                       remainder -= tmp;
+                       mem_map += (tmp - 1) * SIZE(page);
+                       continue;
+               }
+
+If this way works well, then aligning info->buf_size_cyclic will be
+unnecessary.
 
 
 Thanks
 Atsushi Kumagai
 
->  		if(info->flag_cyclic) {
->  			info->flag_cyclic = FALSE;
->  			MSG("Switched running mode from cyclic to non-cyclic,\n");
 > -- 
-> 1.7.10.4
+> Thanks.
+> HATAYAMA, Daisuke
 > 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
 
 _______________________________________________
