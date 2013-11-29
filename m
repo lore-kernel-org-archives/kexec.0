@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VmKdF-00030j-AH
- for kexec@lists.infradead.org; Fri, 29 Nov 2013 09:45:05 +0000
-Date: Fri, 29 Nov 2013 17:44:19 +0800
+ id 1VmKfc-00036a-9a
+ for kexec@lists.infradead.org; Fri, 29 Nov 2013 09:47:32 +0000
+Date: Fri, 29 Nov 2013 17:46:52 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 10/12] x86: export x86 boot_params to sysfs
-Message-ID: <20131129094419.GJ4186@dhcp-16-126.nay.redhat.com>
+Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
+ setup_data
+Message-ID: <20131129094652.GK4186@dhcp-16-126.nay.redhat.com>
 References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-11-git-send-email-dyoung@redhat.com>
- <20131127112022.GE18170@console-pimps.org>
+ <1385445477-9665-8-git-send-email-dyoung@redhat.com>
+ <20131126220448.GB18170@console-pimps.org>
+ <20131127045237.GC11852@dhcp-16-126.nay.redhat.com>
+ <20131127101747.GC18170@console-pimps.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131127112022.GE18170@console-pimps.org>
+In-Reply-To: <20131127101747.GC18170@console-pimps.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,63 +31,53 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Matt Fleming <matt@console-pimps.org>
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On 11/27/13 at 11:20am, Matt Fleming wrote:
-> On Tue, 26 Nov, at 01:57:55PM, Dave Young wrote:
-> > +Users:
-> > +		Kexec Mailing List <kexec@lists.infradead.org>
-> 
-> "Kexec" please.
-
-Will change
-
-> 
-> > +static ssize_t version_show(struct kobject *kobj,
-> > +					struct kobj_attribute *attr, char *buf)
-> 
-> This is pretty strange indentation. Usually we prefer to line up the
-> arguments like you've done elsewhere in this file.
+On 11/27/13 at 10:17am, Matt Fleming wrote:
+> On Wed, 27 Nov, at 12:52:37PM, Dave Young wrote:
+> > To make it more readable, I will change them like below:
+> > 
+> > p = efi_runtime_map;
+> > md = efi_setup->map;
+> > for (i = 0; i < nr_efi_runtime_map; i++) {
+> > 	[...]
+> > 	md += 1;
+> > }
+>  
+> Actually, md++ is the canonical way to write this.
 
 Ok.
 
 > 
-> > +{
-> > +	return sprintf(buf, "0x%04x\n", boot_params.hdr.version);
-> > +}
-> > +
-> > +static struct kobj_attribute boot_params_version_attr = __ATTR_RO(version);
-> > +
-> > +static ssize_t boot_params_data_read(struct file *fp, struct kobject *kobj,
-> > +				     struct bin_attribute *bin_attr,
-> > +				     char *buf, loff_t off, size_t count)
-> > +{
-> > +	memcpy(buf, (void *)&boot_params + off, count);
-> > +	return count;
-> > +}
-> 
-> Don't we need some checks here to ensure we don't read past the end of
-> boot_params?
+> > > 
+> > > > +		efi_map_region_fixed(md);
+> > > > +		size = md->num_pages << PAGE_SHIFT;
+> > > > +		end = md->phys_addr + size;
+> > > > +
+> > > > +		systab = (u64) (unsigned long) efi_phys.systab;
+> > > > +		if (md->phys_addr <= systab && systab < end) {
+> > > > +			systab += md->virt_addr - md->phys_addr;
+> > > > +			efi.systab =
+> > > > +				(efi_system_table_t *) (unsigned long) systab;
+> > > > +		}
+> > > > +		if (efi_runtime_map) {
+> > > > +			memcpy(p, md, memmap.desc_size);
+> > > > +			p += memmap.desc_size;
+> > > > +		}
+> > > 
+> > > Is this if () needed? Is it possible to enter the loop and have
+> > > 'efi_runtime_map' be NULL?
+> > 
+> > Yes, it is needed. if efi_runtime_map kmalloc fails I only print error, do not
+> > return so kernel can still boot, just kexec on efi will not work that has been
+> > put in the error message.
+>  
+> OK. On second thought, is there any way to turn the above code into a
+> call to efi_save_runtime_map()? Because you've basically duplicated that
+> code and I can definitely envisage the two code paths fragmenting over
+> time, e.g. when someone makes changes to one but not the other.
 
-The size was added below, so I would assume file read will not beyond the
-file size:
-.size = sizeof(boot_params),
+OK, will consider to reuse the function.
 
-> 
-> > +static ssize_t type_show(struct kobject *kobj,
-> > +					struct kobj_attribute *attr, char *buf)
-> 
-> More whacky indentation.
-
-Will fix
-
-> 
-> > +static int __init create_setup_data_node(struct kobject *parent,
-> > +					struct kobject **kobjp, int nr)
-> 
-> Funky indentation.
-
-Will fix
-
-Thanks for review
+Thanks
 Dave
 
 _______________________________________________
