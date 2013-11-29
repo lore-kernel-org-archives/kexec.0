@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+Received: from arkanian.console-pimps.org ([212.110.184.194])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VmMb8-0005vY-Fo
- for kexec@lists.infradead.org; Fri, 29 Nov 2013 11:51:04 +0000
-Date: Fri, 29 Nov 2013 12:50:29 +0100
-From: Borislav Petkov <bp@alien8.de>
+ id 1VmMkG-0006Er-G4
+ for kexec@lists.infradead.org; Fri, 29 Nov 2013 12:00:28 +0000
+Date: Fri, 29 Nov 2013 11:59:53 +0000
+From: Matt Fleming <matt@console-pimps.org>
 Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
-Message-ID: <20131129115029.GB4266@pd.tnic>
+Message-ID: <20131129115953.GD11775@console-pimps.org>
 References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
  <1385445477-9665-7-git-send-email-dyoung@redhat.com>
  <20131127114402.GB32267@pd.tnic>
  <20131129094034.GI4186@dhcp-16-126.nay.redhat.com>
+ <20131129115029.GB4266@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131129094034.GI4186@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20131129115029.GB4266@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,85 +27,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On Fri, Nov 29, 2013 at 05:40:35PM +0800, Dave Young wrote:
-> Matt are suggesting to below one, is it ok to you? I'm fine with both.
->
-> The efi runtime services can only be switched to virtual mode once
-> without rebooting. The kexec kernel must maintain the same physical
-> to virtual address mappings as the first kernel. The mappings are
-> exported to sysfs so userspace tools can reassemble them and pass them
-> into the kexec kernel.
-
-His is explaining it better so take his :)
-
-> Is it always 4K, how about "in pages"?
-
-Actually no, so "in pages" is better.
-
-> Since we do not know the exact number of ranges, introducing a list
-> or count the totoal range numbers before will add more code. Do you
-> really think it's necessary?
->
-> I tend to not fix every warnings from checkpatch if it's not a
-> must-fix one.
-
-No need for the list - I actually meant you simply use a tmp pointer for
-each krealloc invocation - just look around the tree for examples.
-
-Also think about what happens to the pointed-to memory when krealloc
-returns NULL.
-
-> suppose kexec runtime map preparing fails we still can get 1st kernel
-> boot ok.
-
-Yeah, nothing stops that - especially if you iterate over the mapped
-regions a second time separately, for kexec.
-
-Which reminds me, all that save_runtime_map code needs to be behind
-CONFIG_KEXEC. We don't want to be doing this if KEXEC is not enabled.
-
-> > What would be much cleaner IMO would be if you let efi_map_regions()
-> > finish, *and*, *only* if it was successful iterate again over the
-> > regions and do efi_save_runtime_map() on the runtime ones. This will
-> > make the code much more readable too.
+On Fri, 29 Nov, at 12:50:29PM, Borislav Petkov wrote:
+> > I did not add KEXEC because I thought it can be used for debugging
+> > purpose.
 > 
-> For simplifying the code, will do.
-
-Right, and hide it behind CONFIG_KEXEC too, while you're at it.
-
-> I did not add KEXEC because I thought it can be used for debugging
-> purpose.
-
-mfleming is thinking about it :)
-
-> Will check and update, what tree are you using?
-
-Always current Linus tree and tip/master. This helps catch issues like
-that.
-
-> Hmm, it's created in efi.c so I think we can not move it..
-
-Ok, so we apparently export naked kobjects like that. All right, fair
-enough.
-
-...
-
-> Thanks for catching, actually I have changed it in my local tree since
-> your last comment about other file.
-
-:)
-
-Thanks.
+> mfleming is thinking about it :)
+ 
+I finally finished my thought. The sysfs code should be automatically
+enabled only if CONFIG_KEXEC is enabled, and not on my default because
+it is a debug interface. While it's true that the code may be useful for
+debugging the memory mappings of EFI systems, it doesn't make sense to
+always turn it on just for CONFIG_X86 and CONFIG_EFI.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Matt Fleming, Intel Open Source Technology Center
 
 _______________________________________________
 kexec mailing list
