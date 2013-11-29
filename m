@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VmKfc-00036a-9a
- for kexec@lists.infradead.org; Fri, 29 Nov 2013 09:47:32 +0000
-Date: Fri, 29 Nov 2013 17:46:52 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131129094652.GK4186@dhcp-16-126.nay.redhat.com>
+ id 1VmMb8-0005vY-Fo
+ for kexec@lists.infradead.org; Fri, 29 Nov 2013 11:51:04 +0000
+Date: Fri, 29 Nov 2013 12:50:29 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
+Message-ID: <20131129115029.GB4266@pd.tnic>
 References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131126220448.GB18170@console-pimps.org>
- <20131127045237.GC11852@dhcp-16-126.nay.redhat.com>
- <20131127101747.GC18170@console-pimps.org>
+ <1385445477-9665-7-git-send-email-dyoung@redhat.com>
+ <20131127114402.GB32267@pd.tnic>
+ <20131129094034.GI4186@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131127101747.GC18170@console-pimps.org>
+In-Reply-To: <20131129094034.GI4186@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,57 +26,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matt Fleming <matt@console-pimps.org>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On 11/27/13 at 10:17am, Matt Fleming wrote:
-> On Wed, 27 Nov, at 12:52:37PM, Dave Young wrote:
-> > To make it more readable, I will change them like below:
-> > 
-> > p = efi_runtime_map;
-> > md = efi_setup->map;
-> > for (i = 0; i < nr_efi_runtime_map; i++) {
-> > 	[...]
-> > 	md += 1;
-> > }
->  
-> Actually, md++ is the canonical way to write this.
+On Fri, Nov 29, 2013 at 05:40:35PM +0800, Dave Young wrote:
+> Matt are suggesting to below one, is it ok to you? I'm fine with both.
+>
+> The efi runtime services can only be switched to virtual mode once
+> without rebooting. The kexec kernel must maintain the same physical
+> to virtual address mappings as the first kernel. The mappings are
+> exported to sysfs so userspace tools can reassemble them and pass them
+> into the kexec kernel.
 
-Ok.
+His is explaining it better so take his :)
 
+> Is it always 4K, how about "in pages"?
+
+Actually no, so "in pages" is better.
+
+> Since we do not know the exact number of ranges, introducing a list
+> or count the totoal range numbers before will add more code. Do you
+> really think it's necessary?
+>
+> I tend to not fix every warnings from checkpatch if it's not a
+> must-fix one.
+
+No need for the list - I actually meant you simply use a tmp pointer for
+each krealloc invocation - just look around the tree for examples.
+
+Also think about what happens to the pointed-to memory when krealloc
+returns NULL.
+
+> suppose kexec runtime map preparing fails we still can get 1st kernel
+> boot ok.
+
+Yeah, nothing stops that - especially if you iterate over the mapped
+regions a second time separately, for kexec.
+
+Which reminds me, all that save_runtime_map code needs to be behind
+CONFIG_KEXEC. We don't want to be doing this if KEXEC is not enabled.
+
+> > What would be much cleaner IMO would be if you let efi_map_regions()
+> > finish, *and*, *only* if it was successful iterate again over the
+> > regions and do efi_save_runtime_map() on the runtime ones. This will
+> > make the code much more readable too.
 > 
-> > > 
-> > > > +		efi_map_region_fixed(md);
-> > > > +		size = md->num_pages << PAGE_SHIFT;
-> > > > +		end = md->phys_addr + size;
-> > > > +
-> > > > +		systab = (u64) (unsigned long) efi_phys.systab;
-> > > > +		if (md->phys_addr <= systab && systab < end) {
-> > > > +			systab += md->virt_addr - md->phys_addr;
-> > > > +			efi.systab =
-> > > > +				(efi_system_table_t *) (unsigned long) systab;
-> > > > +		}
-> > > > +		if (efi_runtime_map) {
-> > > > +			memcpy(p, md, memmap.desc_size);
-> > > > +			p += memmap.desc_size;
-> > > > +		}
-> > > 
-> > > Is this if () needed? Is it possible to enter the loop and have
-> > > 'efi_runtime_map' be NULL?
-> > 
-> > Yes, it is needed. if efi_runtime_map kmalloc fails I only print error, do not
-> > return so kernel can still boot, just kexec on efi will not work that has been
-> > put in the error message.
->  
-> OK. On second thought, is there any way to turn the above code into a
-> call to efi_save_runtime_map()? Because you've basically duplicated that
-> code and I can definitely envisage the two code paths fragmenting over
-> time, e.g. when someone makes changes to one but not the other.
+> For simplifying the code, will do.
 
-OK, will consider to reuse the function.
+Right, and hide it behind CONFIG_KEXEC too, while you're at it.
 
-Thanks
-Dave
+> I did not add KEXEC because I thought it can be used for debugging
+> purpose.
+
+mfleming is thinking about it :)
+
+> Will check and update, what tree are you using?
+
+Always current Linus tree and tip/master. This helps catch issues like
+that.
+
+> Hmm, it's created in efi.c so I think we can not move it..
+
+Ok, so we apparently export naked kobjects like that. All right, fair
+enough.
+
+...
+
+> Thanks for catching, actually I have changed it in my local tree since
+> your last comment about other file.
+
+:)
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
