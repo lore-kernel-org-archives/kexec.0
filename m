@@ -1,32 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VmG8S-0007jD-SC
- for kexec@lists.infradead.org; Fri, 29 Nov 2013 04:57:02 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 0B8443EE0AE
- for <kexec@lists.infradead.org>; Fri, 29 Nov 2013 13:56:35 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id EF06545DE51
- for <kexec@lists.infradead.org>; Fri, 29 Nov 2013 13:56:34 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id CCE0B45DE4D
- for <kexec@lists.infradead.org>; Fri, 29 Nov 2013 13:56:34 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id B9E721DB803B
- for <kexec@lists.infradead.org>; Fri, 29 Nov 2013 13:56:34 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5D8741DB803F
- for <kexec@lists.infradead.org>; Fri, 29 Nov 2013 13:56:34 +0900 (JST)
-Message-ID: <52981E75.2050007@jp.fujitsu.com>
-Date: Fri, 29 Nov 2013 13:56:21 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VmJRw-0001Ms-Ku
+ for kexec@lists.infradead.org; Fri, 29 Nov 2013 08:29:22 +0000
+Date: Fri, 29 Nov 2013 16:28:22 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4 00/12] kexec kernel efi runtime support
+Message-ID: <20131129082822.GA4186@dhcp-16-126.nay.redhat.com>
+References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
+ <20131127125003.GG18170@console-pimps.org>
+ <20131128020840.GB4282@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
-References: <0910DD04CBD6DE4193FCF86B9C00BE971C855E@BPXM01GP.gisp.nec.co.jp>
- <5298084B.7060603@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C86DC@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971C86DC@BPXM01GP.gisp.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <20131128020840.GB4282@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,82 +25,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Matt Fleming <matt@console-pimps.org>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-(2013/11/29 13:23), Atsushi Kumagai wrote:
-> On 2013/11/29 12:24:45, kexec <kexec-bounces@lists.infradead.org> wrote:
->> (2013/11/29 12:02), Atsushi Kumagai wrote:
->>> On 2013/11/28 16:50:21, kexec <kexec-bounces@lists.infradead.org> wrote:
->>>>>> ping, in case you overlooked this...
->>>>>
->>>>> Sorry for the delayed response, I prioritize the release of v1.5.5 now.
->>>>>
->>>>> Thanks for your advice, check_cyclic_buffer_overrun() should be fixed
->>>>> as you said. In addition, I'm considering other way to address such case,
->>>>> that is to bring the number of "overflowed pages" to the next cycle and
->>>>> exclude them at the top of __exclude_unnecessary_pages() like below:
->>>>>
->>>>>                   /*
->>>>>                    * The pages which should be excluded still remain.
->>>>>                    */
->>>>>                   if (remainder >= 1) {
->>>>>                           int i;
->>>>>                           unsigned long tmp;
->>>>>                           for (i = 0; i < remainder; ++i) {
->>>>>                                   if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i)) {
->>>>>                                           pfn_user++;
->>>>>                                           tmp++;
->>>>>                                   }
->>>>>                           }
->>>>>                           pfn += tmp;
->>>>>                           remainder -= tmp;
->>>>>                           mem_map += (tmp - 1) * SIZE(page);
->>>>>                           continue;
->>>>>                   }
->>>>>
->>>>> If this way works well, then aligning info->buf_size_cyclic will be
->>>>> unnecessary.
->>>>>
->>>>
->>>> I selected the current implementation of changing cyclic buffer size becuase
->>>> I thought it was simpler than carrying over remaining filtered pages to next cycle
->>>> in that there was no need to add extra code in filtering processing.
->>>>
->>>> I guess the reason why you think this is better now is how to detect maximum order of
->>>> huge page is hard in some way, right?
->>>
->>> The maximum order will be gotten from HUGETLB_PAGE_ORDER or HPAGE_PMD_ORDER,
->>> so I don't say it's hard. However, the carrying over method doesn't depend on
->>> such kernel symbols, so I think it's robuster.
->>>
->>
->> Then, it's better to remove check_cyclic_buffer_overrun() and rewrite part of free page
->> filtering in __exclude_unnecessary_pages(). Could you do that too?
+On 11/28/13 at 10:08am, Dave Young wrote:
+> On 11/27/13 at 12:50pm, Matt Fleming wrote:
+> > On Tue, 26 Nov, at 01:57:45PM, Dave Young wrote:
+> > > Hi,
+> > > 
+> > > Here is the V4 resend for supporting kexec kernel efi runtime.
+> > > Per pervious discussion I pass the 1st kernel efi runtime mapping
+> > > via setup_data to 2nd kernel. Besides of the runtime mapping
+> > > info I also pass the fw_vendor, runtime, config table, smbios
+> > > physical address in setup_data. EFI spec mentioned fw_vendor,
+> > > runtime, config table addresses will be converted to virt address
+> > > after entering virtual mode, but we will use it as physical address
+> > > in efi_init. For smbios EFI spec did not mention about the address
+> > > updating, but during my test on a HP workstation, the bios will
+> > > convert it to Virt addr, thus pass it in setup_data as well.
+> >  
+> > Dave, your commits introduce a bunch of new sparse warnings,
 > 
-> Sure, I'll modify it too.
+> Hi, Matt
 > 
+> Will fix them, thanks.
+> 
+> > 
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:130:15: warning: incorrect type in assignment (different address spaces)
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:130:15:    expected struct setup_data *sdata
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:130:15:    got void [noderef] <asn:2>*
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:140:23: warning: incorrect type in argument 1 (different address spaces)
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:140:23:    expected void [noderef] <asn:2>*addr
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:140:23:    got struct setup_data *sdata
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:143:16: warning: incorrect type in assignment (different address spaces)
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:143:16:    expected struct efi_setup_data *[addressable] [toplevel] esdata
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:143:16:    got void [noderef] <asn:2>*
+> > 
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:701:20: warning: incorrect type in assignment (different address spaces)
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:701:20:    expected void *tablep
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:701:20:    got void [noderef] <asn:2>*
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:722:23: warning: incorrect type in argument 1 (different address spaces)
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:722:23:    expected void [noderef] <asn:2>*addr
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:722:23:    got void *tablep
+> > 
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:1079:31: warning: incorrect type in argument 1 (different address spaces)
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:1079:31:    expected void [noderef] <asn:2>*addr
+> > /home/build/git/efi/arch/x86/platform/efi/efi.c:1079:31:    got struct efi_setup_data *[addressable] [toplevel] esdata
 
-This is a suggestion from different point of view...
+For the early_memremap, these warnings are safe, but it create a lot of
+warnings and looks anoise.
 
-In general, data on crash dump can be corrupted. Thus, order contained in a page
-descriptor can also be corrupted. For example, if the corrupted value were a huge
-number, wide range of pages after buddy page would be filtered falsely.
+I think for anyone who are using early_memremap should know this is a normal
+kernel memory instead of real __iomem, so I'd prefer below fix, it will suppress
+most of original and new warnings:
 
-So, actually we should sanity check data in crash dump before using them for application
-level feature. I've picked up order contained in page descriptor, so there would be other
-data used in makedumpfile that are not checked.
-
-Unlike diskdump, we no longer need to care about kernel/hardware level data integrity
-outside of user-land, but we still care about data its own integrity.
-
-On the other hand, if we do it, we might face some difficulty, for example, hardness of
-maintenance or performance bottleneck; it might be the reason why we don't see sanity
-check in makedumpfile now.
-
--- 
-Thanks.
-HATAYAMA, Daisuke
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 34f69cb..1db414f 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -325,9 +325,10 @@ extern void early_ioremap_init(void);
+ extern void early_ioremap_reset(void);
+ extern void __iomem *early_ioremap(resource_size_t phys_addr,
+ 				   unsigned long size);
+-extern void __iomem *early_memremap(resource_size_t phys_addr,
++extern void *early_memremap(resource_size_t phys_addr,
+ 				    unsigned long size);
+ extern void early_iounmap(void __iomem *addr, unsigned long size);
++extern void early_memunmap(void *addr, unsigned long size);
+ extern void fixup_early_ioremap(void);
+ extern bool is_early_ioremap_ptep(pte_t *ptep);
+ 
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 799580c..92a896652 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -562,10 +562,10 @@ early_ioremap(resource_size_t phys_addr, unsigned long size)
+ }
+ 
+ /* Remap memory */
+-void __init __iomem *
++void __init *
+ early_memremap(resource_size_t phys_addr, unsigned long size)
+ {
+-	return __early_ioremap(phys_addr, size, PAGE_KERNEL);
++	return (__force void __kernel *) __early_ioremap(phys_addr, size, PAGE_KERNEL);
+ }
+ 
+ void __init early_iounmap(void __iomem *addr, unsigned long size)
+@@ -620,3 +620,8 @@ void __init early_iounmap(void __iomem *addr, unsigned long size)
+ 	}
+ 	prev_map[slot] = NULL;
+ }
++
++void __init early_memunmap(void *addr, unsigned long size)
++{
++	early_iounmap((__force void __iomem *)addr, size);
++}
 
 
 _______________________________________________
