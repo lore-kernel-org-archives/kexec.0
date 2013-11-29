@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from lxorguk.ukuu.org.uk ([81.2.110.251])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vm2O7-0004Ej-IZ
- for kexec@lists.infradead.org; Thu, 28 Nov 2013 14:16:18 +0000
-Date: Thu, 28 Nov 2013 14:15:13 +0000
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH] PCI: Clear Bus Master bit only on kexec reboot
-Message-ID: <20131128141513.3de95d04@alan.etchedpixels.co.uk>
-In-Reply-To: <20131127220106.GA21887@kroah.com>
-References: <1385579908-24608-1-git-send-email-khalid.aziz@oracle.com>
- <87ob55my8z.fsf@xmission.com> <52964F2C.1020803@oracle.com>
- <20131127212227.GA31237@kroah.com>
- <20131127215309.GA15320@srcf.ucam.org>
- <20131127220106.GA21887@kroah.com>
-Mime-Version: 1.0
+ id 1VmEO5-0006Vu-Vl
+ for kexec@lists.infradead.org; Fri, 29 Nov 2013 03:05:03 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
+Date: Fri, 29 Nov 2013 03:02:09 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971C855E@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,39 +21,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: cl91tp@gmail.com, Matthew Garrett <mjg59@srcf.ucam.org>, indou.takao@jp.fujitsu.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, f.otti@gmx.at, Khalid Aziz <khalid.aziz@oracle.com>, khlebnikov@openvz.org, "Eric W. Biederman" <ebiederm@xmission.com>, jility09@gmail.com, bhelgaas@google.com, tianyu.lan@intel.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>
 
-> Anyway, I really don't care either way, but this seems like something
-> that the drivers should be doing.  What suddenly changed that caused
-> this problem to occur that hasn't happened in the years prior to now
-> that drives this to be a stable-kernel issue?
+On 2013/11/28 16:50:21, kexec <kexec-bounces@lists.infradead.org> wrote:
+> >> ping, in case you overlooked this...
+> >
+> > Sorry for the delayed response, I prioritize the release of v1.5.5 now.
+> >
+> > Thanks for your advice, check_cyclic_buffer_overrun() should be fixed
+> > as you said. In addition, I'm considering other way to address such case,
+> > that is to bring the number of "overflowed pages" to the next cycle and
+> > exclude them at the top of __exclude_unnecessary_pages() like below:
+> >
+> >                 /*
+> >                  * The pages which should be excluded still remain.
+> >                  */
+> >                 if (remainder >= 1) {
+> >                         int i;
+> >                         unsigned long tmp;
+> >                         for (i = 0; i < remainder; ++i) {
+> >                                 if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i)) {
+> >                                         pfn_user++;
+> >                                         tmp++;
+> >                                 }
+> >                         }
+> >                         pfn += tmp;
+> >                         remainder -= tmp;
+> >                         mem_map += (tmp - 1) * SIZE(page);
+> >                         continue;
+> >                 }
+> >
+> > If this way works well, then aligning info->buf_size_cyclic will be
+> > unnecessary.
+> >
+>
+> I selected the current implementation of changing cyclic buffer size becuase
+> I thought it was simpler than carrying over remaining filtered pages to next cycle
+> in that there was no need to add extra code in filtering processing.
+>
+> I guess the reason why you think this is better now is how to detect maximum order of
+> huge page is hard in some way, right?
 
-When this first went in I pointed out it was an utterly stupid idea.
-Since it went in lots of machines haven't rebooted properly or powered
-off right.
+The maximum order will be gotten from HUGETLB_PAGE_ORDER or HPAGE_PMD_ORDER,
+so I don't say it's hard. However, the carrying over method doesn't depend on
+such kernel symbols, so I think it's robuster.
 
-There are two problems
 
-1. Clearing the busmaster bit is not well defined behaviour. It even
-freezes some hardware.
+Thanks
+Atsushi Kumagai
 
-2. Lots of PC class hardware has firmware which believes that it can
-access the hardware as it goes to reboot or poweroff and that someone
-won't have shut it down.
-
-Like it or not the firmware expected behaviour for such things is "what
-Windows did". The expected PC behaviour is subtle and magic - eg the fact
-D3 on some IDE disk controllers is terminal until power cycled because
-Windows didn't do that or that the BIOS goes off and chats to the disks
-in reboot without assuming the disk controller is completely
-uninitialized.
-
-kexec is a special cornercase and handling is as such (knowing it will
-bother to re-init appropriate devices) is very different to the current
-broken behaviour for PC systems.
-
-Alan
+> --
+> Thanks.
+> HATAYAMA, Daisuke
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
 _______________________________________________
 kexec mailing list
