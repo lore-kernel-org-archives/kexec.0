@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from georges.telenet-ops.be ([195.130.137.68])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vn5F5-0002q0-W7
- for kexec@lists.infradead.org; Sun, 01 Dec 2013 11:31:17 +0000
+Received: from mail-pd0-x22a.google.com ([2607:f8b0:400e:c02::22a])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vn5OM-0002vD-2K
+ for kexec@lists.infradead.org; Sun, 01 Dec 2013 11:40:51 +0000
+Received: by mail-pd0-f170.google.com with SMTP id g10so16299386pdj.15
+ for <kexec@lists.infradead.org>; Sun, 01 Dec 2013 03:40:27 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <20131105070513.GB16448@verge.net.au>
+References: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
+ <20131016072236.GB29696@verge.net.au>
+ <CAMuHMdVsKLBt8MiZ-dpX7expx+37XfO2kUjbRA_h5eMcsWJ1VQ@mail.gmail.com>
+ <20131105070513.GB16448@verge.net.au>
+Date: Sun, 1 Dec 2013 12:40:27 +0100
+Message-ID: <CAMuHMdUVwYGemL=V3+C=JsR0QOqtASvc6Xte57EdPhPPLDFWXg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] kexec support for Linux/m68k (tools part)
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v3 2/2] m68k: Add support to export bootinfo in procfs
-Date: Sun,  1 Dec 2013 12:30:35 +0100
-Message-Id: <1385897435-18618-3-git-send-email-geert@linux-m68k.org>
-In-Reply-To: <1385897435-18618-1-git-send-email-geert@linux-m68k.org>
-References: <1385897435-18618-1-git-send-email-geert@linux-m68k.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,185 +23,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-m68k@lists.linux-m68k.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-m68k <linux-m68k@lists.linux-m68k.org>, kexec@lists.infradead.org
 
-Add optional support to export the bootinfo used to boot the kernel in a
-"bootinfo" file in procfs.  This is useful with kexec.
+Hi Simon,
 
-This is based on the similar feature for ATAGS on ARM.
+On Tue, Nov 5, 2013 at 8:05 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Sun, Nov 03, 2013 at 03:08:50PM +0100, Geert Uytterhoeven wrote:
+>> On Wed, Oct 16, 2013 at 9:22 AM, Simon Horman <horms@verge.net.au> wrote:
+>> > I've taken a quick look over this and it seems reasonable to me.
+>>
+>> Thanks!
+>>
+>> > However, I wonder if I should wait for review of the kernel-side
+>> > to be completed before applying the kexec-tools patches.
+>> >
+>> > Let me know what you think.
+>>
+>> The kexec-tools part seems to be stable. The issues to be sorted out are on
+>> the kernel side.
+>
+> As the kexec-tools portion of this change isn't useful without the
+> kernel portion I think I would like to wait before applying this series.
+> Please repost once the kernel changes have been merged or if you
+> would like them re-considered for any other reason.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-v2:
-  - No changes
-v3:
-  - Rebased on top of current m68k tree
+The kernel part is working now.
 
- arch/m68k/Kconfig                |    7 ++++
- arch/m68k/include/asm/bootinfo.h |   12 ++++++
- arch/m68k/kernel/Makefile        |    1 +
- arch/m68k/kernel/bootinfo_proc.c |   80 ++++++++++++++++++++++++++++++++++++++
- arch/m68k/kernel/setup_mm.c      |    2 +
- 5 files changed, 102 insertions(+)
- create mode 100644 arch/m68k/kernel/bootinfo_proc.c
+I didn't make any changes to kexec-tools for v3.
+Do you want me to resend them anyway, or can you just take v2?
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index 178dffa9de80..dbdd2231c75d 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -104,6 +104,13 @@ config KEXEC
- 	  interface is strongly in flux, so no good recommendation can be
- 	  made.
- 
-+config BOOTINFO_PROC
-+	bool "Export bootinfo in procfs"
-+	depends on KEXEC && M68KCLASSIC
-+	help
-+	  Say Y to export the bootinfo used to boot the kernel in a
-+	  "bootinfo" file in procfs.  This is useful with kexec.
-+
- menu "Platform setup"
- 
- source arch/m68k/Kconfig.cpu
-diff --git a/arch/m68k/include/asm/bootinfo.h b/arch/m68k/include/asm/bootinfo.h
-index 9edc31893fb8..8e213267f8e7 100644
---- a/arch/m68k/include/asm/bootinfo.h
-+++ b/arch/m68k/include/asm/bootinfo.h
-@@ -13,4 +13,16 @@
- 
- #include <uapi/asm/bootinfo.h>
- 
-+
-+#ifndef __ASSEMBLY__
-+
-+#ifdef CONFIG_BOOTINFO_PROC
-+extern void save_bootinfo(const struct bi_record *bi);
-+#else
-+static inline void save_bootinfo(const struct bi_record *bi) {}
-+#endif
-+
-+#endif /* __ASSEMBLY__ */
-+
-+
- #endif /* _M68K_BOOTINFO_H */
-diff --git a/arch/m68k/kernel/Makefile b/arch/m68k/kernel/Makefile
-index 7ee5f00a9abb..2d5d9be16273 100644
---- a/arch/m68k/kernel/Makefile
-+++ b/arch/m68k/kernel/Makefile
-@@ -23,4 +23,5 @@ obj-$(CONFIG_PCI) += pcibios.o
- obj-$(CONFIG_HAS_DMA)	+= dma.o
- 
- obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
-+obj-$(CONFIG_BOOTINFO_PROC)	+= bootinfo_proc.o
- 
-diff --git a/arch/m68k/kernel/bootinfo_proc.c b/arch/m68k/kernel/bootinfo_proc.c
-new file mode 100644
-index 000000000000..7ee853e1432b
---- /dev/null
-+++ b/arch/m68k/kernel/bootinfo_proc.c
-@@ -0,0 +1,80 @@
-+/*
-+ * Based on arch/arm/kernel/atags_proc.c
-+ */
-+
-+#include <linux/fs.h>
-+#include <linux/init.h>
-+#include <linux/printk.h>
-+#include <linux/proc_fs.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+
-+#include <asm/bootinfo.h>
-+#include <asm/byteorder.h>
-+
-+
-+static char bootinfo_tmp[1536] __initdata;
-+
-+static void *bootinfo_copy;
-+static size_t bootinfo_size;
-+
-+static ssize_t bootinfo_read(struct file *file, char __user *buf,
-+			  size_t count, loff_t *ppos)
-+{
-+	return simple_read_from_buffer(buf, count, ppos, bootinfo_copy,
-+				       bootinfo_size);
-+}
-+
-+static const struct file_operations bootinfo_fops = {
-+	.read = bootinfo_read,
-+	.llseek = default_llseek,
-+};
-+
-+void __init save_bootinfo(const struct bi_record *bi)
-+{
-+	const void *start = bi;
-+	size_t size = sizeof(bi->tag);
-+
-+	while (be16_to_cpu(bi->tag) != BI_LAST) {
-+		uint16_t n = be16_to_cpu(bi->size);
-+		size += n;
-+		bi = (struct bi_record *)((unsigned long)bi + n);
-+	}
-+
-+	if (size > sizeof(bootinfo_tmp)) {
-+		pr_err("Cannot save %zu bytes of bootinfo\n", size);
-+		return;
-+	}
-+
-+	pr_info("Saving %zu bytes of bootinfo\n", size);
-+	memcpy(bootinfo_tmp, start, size);
-+	bootinfo_size = size;
-+}
-+
-+static int __init init_bootinfo_procfs(void)
-+{
-+	/*
-+	 * This cannot go into save_bootinfo() because kmalloc and proc don't
-+	 * work yet when it is called.
-+	 */
-+	struct proc_dir_entry *pde;
-+
-+	if (!bootinfo_size)
-+		return -EINVAL;
-+
-+	bootinfo_copy = kmalloc(bootinfo_size, GFP_KERNEL);
-+	if (!bootinfo_copy)
-+		return -ENOMEM;
-+
-+	memcpy(bootinfo_copy, bootinfo_tmp, bootinfo_size);
-+
-+	pde = proc_create_data("bootinfo", 0400, NULL, &bootinfo_fops, NULL);
-+	if (!pde) {
-+		kfree(bootinfo_copy);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+arch_initcall(init_bootinfo_procfs);
-diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
-index 28abca421974..5b8ec4d5f8e8 100644
---- a/arch/m68k/kernel/setup_mm.c
-+++ b/arch/m68k/kernel/setup_mm.c
-@@ -146,6 +146,8 @@ static void __init m68k_parse_bootinfo(const struct bi_record *record)
- {
- 	uint16_t tag;
- 
-+	save_bootinfo(record);
-+
- 	while ((tag = be16_to_cpu(record->tag)) != BI_LAST) {
- 		int unknown = 0;
- 		const void *data = record->data;
--- 
-1.7.9.5
+Thanks again!
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
