@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VnTTB-0004zg-M9
- for kexec@lists.infradead.org; Mon, 02 Dec 2013 13:23:26 +0000
-Date: Tue, 3 Dec 2013 21:23:03 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
-Message-ID: <20131203132303.GA3826@localhost.localdomain>
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VnUJU-0006Wt-My
+ for kexec@lists.infradead.org; Mon, 02 Dec 2013 14:17:29 +0000
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH v2 1/4] makedumpfile/xen: Add cache_init() call to
+ initial_xen()
+Date: Mon,  2 Dec 2013 15:16:41 +0100
+Message-Id: <1385993804-27721-2-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
+References: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,91 +18,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: andrew.cooper3@citrix.com, david.vrabel@citrix.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, xen-devel@lists.xen.org
+Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-Tested kdump and kexec using --use-kexec2-syscall on kenrel 3.13.0-rc2+,
-they work very well.
+Commit 92563d7a7a5175ef78c4a94ee269b1b455331b4c (cache: Allocate buffers
+at initialization to detect malloc() failure) split cache_alloc() to
+cache_init() and cache_alloc(). cache_init() is called in initial().
+However, sadly initial_xen() is called before cache_init() and it uses
+cache_alloc() indirectly which refers to uninitialized structures.
+Hence, makedumfile run on Xen crash dumps finally fails. This patch adds
+cache_init() call to initial_xen() and fixes above mentioned issue.
+cache_init() is called in initial() if crash dump is not Xen one.
 
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ makedumpfile.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-On 11/20/13 at 12:50pm, Vivek Goyal wrote:
-> Current proposed secureboot implementation disables kexec/kdump because
-> it can allow unsigned kernel to run on a secureboot platform. Intial
-> idea was to sign /sbin/kexec binary and let that binary do the kernel
-> signature verification. I had posted RFC patches for this apparoach
-> here.
-> 
-> https://lkml.org/lkml/2013/9/10/560
-> 
-> Later we had discussion at Plumbers and most of the people thought
-> that signing and trusting /sbin/kexec is becoming complex. So a 
-> better idea might be let kernel do the signature verification of
-> new kernel being loaded. This calls for implementing a new system call
-> and moving lot of user space code in kernel.
-> 
-> kexec_load() system call allows loading a kexec/kdump kernel and jump
-> to that kernel at right time. Though a lot of processing is done in
-> user space which prepares a list of segments/buffers to be loaded and
-> kexec_load() works on that list of segments. It does not know what's
-> contained in those segments.
-> 
-> Now a new system call kexec_file_load() is implemented which takes
-> kernel fd and initrd fd as parameters. Now kernel should be able
-> to verify signature of newly loaded kernel. 
-> 
-> This is an early RFC patchset. I have not done signature handling
-> part yet. This is more of a minimal patch to show how new system
-> call and functionality will look like. Right now it can only handle
-> bzImage with 64bit entry point on x86_64. No EFI, no x86_32  or any
-> other architecture. Rest of the things can be added slowly as need
-> arises. In first iteration, I have tried to address most common use case
-> for us.
-> 
-> Any feedback is welcome.
-> 
-> Vivek Goyal (6):
->   kexec: Export vmcoreinfo note size properly
->   kexec: Move segment verification code in a separate function
->   resource: Provide new functions to walk through resources
->   kexec: A new system call, kexec_file_load, for in kernel kexec
->   kexec-bzImage: Support for loading bzImage using 64bit entry
->   kexec: Support for Kexec on panic using new system call
-> 
->  arch/x86/include/asm/crash.h         |    9 +
->  arch/x86/include/asm/kexec-bzimage.h |   12 +
->  arch/x86/include/asm/kexec.h         |   43 ++
->  arch/x86/kernel/Makefile             |    2 +
->  arch/x86/kernel/crash.c              |  585 +++++++++++++++++++++++++++
->  arch/x86/kernel/kexec-bzimage.c      |  420 +++++++++++++++++++
->  arch/x86/kernel/machine_kexec_64.c   |   60 +++-
->  arch/x86/kernel/purgatory_entry_64.S |  119 ++++++
->  arch/x86/syscalls/syscall_64.tbl     |    1 +
->  include/linux/ioport.h               |    6 +
->  include/linux/kexec.h                |   57 +++
->  include/linux/syscalls.h             |    3 +
->  include/uapi/linux/kexec.h           |    4 +
->  kernel/kexec.c                       |  731 ++++++++++++++++++++++++++++++----
->  kernel/ksysfs.c                      |    2 +-
->  kernel/resource.c                    |  108 +++++-
->  kernel/sys_ni.c                      |    1 +
->  17 files changed, 2074 insertions(+), 89 deletions(-)
->  create mode 100644 arch/x86/include/asm/crash.h
->  create mode 100644 arch/x86/include/asm/kexec-bzimage.h
->  create mode 100644 arch/x86/kernel/kexec-bzimage.c
->  create mode 100644 arch/x86/kernel/purgatory_entry_64.S
-> 
-> -- 
-> 1.7.7.6
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 0c68f32..55e53b7 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3117,7 +3117,7 @@ out:
+ 		DEBUG_MSG("Buffer size for the cyclic mode: %ld\n", info->bufsize_cyclic);
+ 	}
+ 
+-	if (!cache_init())
++	if (!is_xen_memory() && !cache_init())
+ 		return FALSE;
+ 
+ 	if (debug_info) {
+@@ -7622,6 +7622,7 @@ exclude_xen_user_domain(void)
+ int
+ initial_xen(void)
+ {
++	int xen_info_required = TRUE;
+ 	off_t offset;
+ 	unsigned long size;
+ 
+@@ -7673,8 +7674,10 @@ initial_xen(void)
+ 		 * and get both the offset and the size.
+ 		 */
+ 		if (!has_vmcoreinfo_xen()){
+-			if (!info->flag_exclude_xen_dom)
++			if (!info->flag_exclude_xen_dom) {
++				xen_info_required = FALSE;
+ 				goto out;
++			}
+ 
+ 			MSG("%s doesn't contain a vmcoreinfo for Xen.\n",
+ 			    info->name_memory);
+@@ -7691,6 +7694,7 @@ initial_xen(void)
+ 			return FALSE;
+ 	}
+ 
++out:
+ 	if (!info->page_size) {
+ 		/*
+ 		 * If we cannot get page_size from a vmcoreinfo file,
+@@ -7700,12 +7704,17 @@ initial_xen(void)
+ 			return FALSE;
+ 	}
+ 
+-	if (!get_xen_info())
++	if (!cache_init())
+ 		return FALSE;
+ 
+-	if (message_level & ML_PRINT_DEBUG_MSG)
+-		show_data_xen();
+-out:
++	if (xen_info_required == TRUE) {
++		if (!get_xen_info())
++			return FALSE;
++
++		if (message_level & ML_PRINT_DEBUG_MSG)
++			show_data_xen();
++	}
++
+ 	if (!get_max_mapnr())
+ 		return FALSE;
+ 
+-- 
+1.7.10.4
+
 
 _______________________________________________
 kexec mailing list
