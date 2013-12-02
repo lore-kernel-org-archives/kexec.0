@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VnVgD-0000Qq-W1
- for kexec@lists.infradead.org; Mon, 02 Dec 2013 15:45:03 +0000
-Date: Mon, 2 Dec 2013 10:44:37 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-Message-ID: <20131202154437.GF18642@redhat.com>
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
- <20131129031048.GE4318@dhcp-16-252.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131129031048.GE4318@dhcp-16-252.nay.redhat.com>
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VnYpt-0005Bv-9d
+ for kexec@lists.infradead.org; Mon, 02 Dec 2013 19:07:14 +0000
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH 2/2] kexec-tools/xen: Remove redundant include
+Date: Mon,  2 Dec 2013 20:06:25 +0100
+Message-Id: <1386011185-29350-3-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <1386011185-29350-1-git-send-email-daniel.kiper@oracle.com>
+References: <1386011185-29350-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +17,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: andrew.cooper3@citrix.com, david.vrabel@citrix.com, horms@verge.net.au, kexec@lists.infradead.org, xen-devel@lists.xen.org
+Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-On Fri, Nov 29, 2013 at 11:10:48AM +0800, Baoquan He wrote:
+Remove redundant include of stdlib.h introduced by
+commit d01680c28ba7bf1e02f74aa5841247a45738f5d4
+(kexec/xen: Correct some compile errors).
 
-[..]
-> > +void *arch_kexec_kernel_image_load(struct kimage *image, char *kernel,
-> > +			unsigned long kernel_len, char *initrd,
-> > +			unsigned long initrd_len, char *cmdline,
-> > +			unsigned long cmdline_len)
-> > +{
-> > +	int idx = image->file_handler_idx;
-> > +
-> > +	if (idx < 0)
-> > +		return ERR_PTR(-ENOEXEC);
-> > +
-> > +	return kexec_file_type[idx].load(image, kernel, kernel_len, initrd,
-> > +					initrd_len, cmdline, cmdline_len);
-> > +}
-> > +
-> > +int arch_image_file_post_load_cleanup(struct kimage *image)
-> > +{
-> 
-> Hi Vivek,
-> 
-> This function is defined as one of arch specific fucntion set, why don't
-> we name it in a unified prefix as others.
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ kexec/kexec-xen.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-I am using "arch_" prefix. What else to use?
+diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
+index e885246..cac313d 100644
+--- a/kexec/kexec-xen.c
++++ b/kexec/kexec-xen.c
+@@ -2,7 +2,6 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
+-#include <stdlib.h>
+ #include <elf.h>
+ #include "kexec.h"
+ #include "kexec-syscall.h"
+-- 
+1.7.10.4
 
-> 
-> And name of the default dummy function in kernel/kexec.c is not consistent
-> with the arch specific one, so currently
-> arch_image_file_post_load_cleanup of x86 arch is not called. Please
-> consider wihch one need be changed.
-
-Good catch Bao. I should change arch_image_file_post_load_cleanup() to
-arch_kimage_file_post_load_cleanup(), otherwise it never gets called and
-memory leaks.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
