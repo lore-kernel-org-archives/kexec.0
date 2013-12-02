@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VnP7M-0006iV-St
- for kexec@lists.infradead.org; Mon, 02 Dec 2013 08:44:37 +0000
-Date: Mon, 2 Dec 2013 16:43:23 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] makedumpfile: add parameters to update_cyclic_region
-Message-ID: <20131202084323.GA2462@dhcp-16-105.nay.redhat.com>
-References: <20131125023150.GB13197@dhcp-16-252.nay.redhat.com>
- <5292D30E.5070003@jp.fujitsu.com>
- <20131126025221.GA22934@dhcp-16-252.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C60A8@BPXM01GP.gisp.nec.co.jp>
- <20131127053731.GA4318@dhcp-16-252.nay.redhat.com>
- <5295A153.8080400@jp.fujitsu.com>
+ id 1VnPzm-00082C-3r
+ for kexec@lists.infradead.org; Mon, 02 Dec 2013 09:40:51 +0000
+Date: Mon, 2 Dec 2013 10:40:20 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
+Message-ID: <20131202094020.GA7380@pd.tnic>
+References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
+ <1385445477-9665-7-git-send-email-dyoung@redhat.com>
+ <20131127114402.GB32267@pd.tnic>
+ <20131129094034.GI4186@dhcp-16-126.nay.redhat.com>
+ <20131129115029.GB4266@pd.tnic>
+ <20131202025942.GF3999@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5295A153.8080400@jp.fujitsu.com>
+In-Reply-To: <20131202025942.GF3999@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,42 +28,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "chaowang@redhat.com" <chaowang@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On 11/27/13 at 04:37pm, HATAYAMA Daisuke wrote:
-> (2013/11/27 14:37), Baoquan He wrote:
-> >On 11/26/13 at 03:12am, Atsushi Kumagai wrote:
-> >>Hello Baoquan,
-> >>
+On Mon, Dec 02, 2013 at 10:59:42AM +0800, Dave Young wrote:
+> They are only called if there's setup_data SETUP_EFI passed in. Yes, I
+> think only kexec need that part of code. But I hesitated to mess the
+> code with a lot of #if. Will think about it.
 
-> >>I also prefer v1 because the usage of update_cyclic_region_without_exclude() is
-> >>definite and understandable while v2's update_cyclic_region() is complicated.
-> >>
-> >>On the other hand, I agree with your opinion, so could you post a cleanup patch
-> >>separately from v1 patch ?
-> >
-> >Hi Atsushi,
-> >
-> >Yeah, you are right, v1 is better. Then we can wait for HATAYAMA's cleanup
-> >patch. I know you are goint to release v1.5.5.
-> >
-> 
-> I don't have a time to make a clean-up patch now, at least within this year.
+Well, the accepted strategy with the efi code is to have function calls
+in efi.c and then have different versions of those functions defined for
+32 and 64-bit, i.e. efi_32.c and efi_64.c.
 
-OK, I will try to post a clean-up patch based on your cycle loop method.
-But I can not guarantee the completion date.
+I can imagine adding an efi_kexec.c could make the whole deal very
+clearly arranged without ifdeffery.
 
-> 
-> -- 
-> Thanks.
-> HATAYAMA, Daisuke
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
