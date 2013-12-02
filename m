@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-x22a.google.com ([2607:f8b0:400e:c02::22a])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vn5OM-0002vD-2K
- for kexec@lists.infradead.org; Sun, 01 Dec 2013 11:40:51 +0000
-Received: by mail-pd0-f170.google.com with SMTP id g10so16299386pdj.15
- for <kexec@lists.infradead.org>; Sun, 01 Dec 2013 03:40:27 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VnJKV-00036a-DH
+ for kexec@lists.infradead.org; Mon, 02 Dec 2013 02:33:48 +0000
+Date: Mon, 2 Dec 2013 10:32:52 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4 00/12] kexec kernel efi runtime support
+Message-ID: <20131202023252.GB3999@dhcp-16-126.nay.redhat.com>
+References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
+ <20131127125003.GG18170@console-pimps.org>
+ <20131128020840.GB4282@dhcp-16-126.nay.redhat.com>
+ <20131129082822.GA4186@dhcp-16-126.nay.redhat.com>
+ <20131129170235.GG4266@pd.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20131105070513.GB16448@verge.net.au>
-References: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
- <20131016072236.GB29696@verge.net.au>
- <CAMuHMdVsKLBt8MiZ-dpX7expx+37XfO2kUjbRA_h5eMcsWJ1VQ@mail.gmail.com>
- <20131105070513.GB16448@verge.net.au>
-Date: Sun, 1 Dec 2013 12:40:27 +0100
-Message-ID: <CAMuHMdUVwYGemL=V3+C=JsR0QOqtASvc6Xte57EdPhPPLDFWXg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] kexec support for Linux/m68k (tools part)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Disposition: inline
+In-Reply-To: <20131129170235.GG4266@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,48 +27,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-m68k <linux-m68k@lists.linux-m68k.org>, kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Matt Fleming <matt@console-pimps.org>, linux-efi@vger.kernel.org, toshi.kani@hp.com, mjg59@srcf.ucam.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Hi Simon,
+On 11/29/13 at 06:02pm, Borislav Petkov wrote:
+> On Fri, Nov 29, 2013 at 04:28:22PM +0800, Dave Young wrote:
+> > I think for anyone who are using early_memremap should know this is a
+> > normal kernel memory instead of real __iomem
+> 
+> You can never ever assume that people are using kernel interfaces
+> correctly.
 
-On Tue, Nov 5, 2013 at 8:05 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Sun, Nov 03, 2013 at 03:08:50PM +0100, Geert Uytterhoeven wrote:
->> On Wed, Oct 16, 2013 at 9:22 AM, Simon Horman <horms@verge.net.au> wrote:
->> > I've taken a quick look over this and it seems reasonable to me.
->>
->> Thanks!
->>
->> > However, I wonder if I should wait for review of the kernel-side
->> > to be completed before applying the kexec-tools patches.
->> >
->> > Let me know what you think.
->>
->> The kexec-tools part seems to be stable. The issues to be sorted out are on
->> the kernel side.
->
-> As the kexec-tools portion of this change isn't useful without the
-> kernel portion I think I would like to wait before applying this series.
-> Please repost once the kernel changes have been merged or if you
-> would like them re-considered for any other reason.
+But the semantic of early_memreamp should be that it will just return
+a normal memory pointer instead of iomem so the fix to convert the internal
+implementation to return a __force __kernel make sense to me.
 
-The kernel part is working now.
+For iounmap I think since we have early_memremap, we have reason to add
+early_memunmap() so sparse will be happy.
 
-I didn't make any changes to kexec-tools for v3.
-Do you want me to resend them anyway, or can you just take v2?
-
-Thanks again!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
