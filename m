@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VnUw7-0007ao-VZ
- for kexec@lists.infradead.org; Mon, 02 Dec 2013 14:57:24 +0000
-Date: Mon, 2 Dec 2013 09:56:41 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v8] x86, apic, kexec, Documentation: Add disable_cpu_apic
- kernel parameter
-Message-ID: <20131202145641.GB18642@redhat.com>
-References: <52969DA3.5070000@jp.fujitsu.com>
+ id 1VnVPV-0008PS-JU
+ for kexec@lists.infradead.org; Mon, 02 Dec 2013 15:27:46 +0000
+Date: Mon, 2 Dec 2013 23:27:17 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131202152717.GC8340@dhcp12-158.nay.redhat.com>
+References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131129031048.GE4318@dhcp-16-252.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <52969DA3.5070000@jp.fujitsu.com>
+In-Reply-To: <20131129031048.GE4318@dhcp-16-252.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,71 +26,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: "H. Peter Anvin" <hpa@linux.intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Fengguang Wu <fengguang.wu@intel.com>, Jingbai Ma <jingbai.ma@hp.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Nov 28, 2013 at 10:34:27AM +0900, HATAYAMA Daisuke wrote:
+On 11/29/13 at 11:10am, Baoquan He wrote:
+> On 11/20/13 at 12:50pm, Vivek Goyal wrote:
+> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> > index 4eabc16..fb41b73 100644
+> > --- a/arch/x86/kernel/machine_kexec_64.c
+> > +++ b/arch/x86/kernel/machine_kexec_64.c
+> > @@ -22,6 +22,13 @@
+> >  #include <asm/mmu_context.h>
+> >  #include <asm/debugreg.h>
+> >  
+> > +/* arch dependent functionality related to kexec file based syscall */
+> > +static struct kexec_file_type kexec_file_type[]={
+> > +	{"", NULL, NULL, NULL, NULL},
+> > +};
+> > +
+> > +
+> > +void *arch_kexec_kernel_image_load(struct kimage *image, char *kernel,
+> > +			unsigned long kernel_len, char *initrd,
+> > +			unsigned long initrd_len, char *cmdline,
+> > +			unsigned long cmdline_len)
+> > +{
+> > +	int idx = image->file_handler_idx;
+> > +
+> > +	if (idx < 0)
+> > +		return ERR_PTR(-ENOEXEC);
+> > +
+> > +	return kexec_file_type[idx].load(image, kernel, kernel_len, initrd,
+> > +					initrd_len, cmdline, cmdline_len);
+> > +}
+> > +
+> > +int arch_image_file_post_load_cleanup(struct kimage *image)
+> > +{
+> 
+> Hi Vivek,
+> 
+> This function is defined as one of arch specific fucntion set, why don't
+> we name it in a unified prefix as others.
+> 
+> And name of the default dummy function in kernel/kexec.c is not consistent
+> with the arch specific one, so currently
+> arch_image_file_post_load_cleanup of x86 arch is not called. Please
+> consider wihch one need be changed.
 
-[..]
->  int generic_processor_info(int apicid, int version)
->  {
->  	int cpu, max = nr_cpu_ids;
-> -	bool boot_cpu_detected = physid_isset(boot_cpu_physical_apicid,
-> +	/*
-> +	 * boot_cpu_physical_apicid is designed to have the apicid
-> +	 * returned by read_apic_id(), i.e, the apicid of the
-> +	 * currently booting-up processor. However, on some platforms,
-> +	 * it is temporarilly modified by the apicid reported as BSP
-> +	 * through MP table. Concretely:
-> +	 *
-> +	 * - arch/x86/kernel/mpparse.c: MP_processor_info()
-> +	 * - arch/x86/mm/amdtopology.c: amd_numa_init()
-> +	 * - arch/x86/platform/visws/visws_quirks.c: MP_processor_info()
-> +	 *
-> +	 * This function is executed with the modified
-> +	 * boot_cpu_physical_apicid. So, disabled_cpu_apicid kernel
-> +	 * parameter doesn't work to disable APs on kdump 2nd kernel.
-> +	 *
-> +	 * Since fixing handling of boot_cpu_physical_apicid requires
-> +	 * another discussion and tests on each platform, we leave it
-> +	 * for now and here we use read_apic_id() directly in this
-> +	 * function, generic_processor_info().
-> +	 */
-> +	bool boot_cpu_detected = physid_isset(read_apic_id(),
->  				phys_cpu_present_map);
->  
-> +	if (disabled_cpu_apicid != BAD_APICID &&
-> +	    disabled_cpu_apicid != read_apic_id() &&
-> +	    disabled_cpu_apicid == apicid) {
-> +		int thiscpu = num_processors + disabled_cpus;
-> +
-> +		pr_warning("ACPI: Disabling requested cpu."
-> +			   " Processor %d/0x%x ignored.\n",
-> +			   thiscpu, apicid);
-> +
-> +		disabled_cpus++;
-> +		return -ENODEV;
-> +	}
-> +
->  	/*
->  	 * If boot cpu has not been detected yet, then only allow upto
->  	 * nr_cpu_ids - 1 processors and keep one slot free for boot cpu
->  	 */
->  	if (!boot_cpu_detected && num_processors >= nr_cpu_ids - 1 &&
-> -	    apicid != boot_cpu_physical_apicid) {
-> +	    apicid != read_apic_id()) {
+I think arch_kimage_file_post_load_cleanup should be used here.
 
-I thought of using read_apic_id() only for disabled_cpu_apicid case.
-Existing code seems to be working fine with boot_cpu_physical_apicid.
-Instead of converting rest of the code to read_apic_id() we should fix
-notion of boot_cpu_physical_id in a separate cleanup patch series.
-
-IOW, can we please use read_apic_id() only for the case of
-disabled_cpu_apicid and leave rest of the code untouched. And handle all
-the cleanup in separate patch series.
+And Good catch!
 
 Thanks
-Vivek
+WANG Chao
+
+> 
+> > +
+> > +void __attribute__ ((weak))
+> > +arch_kimage_file_post_load_cleanup(struct kimage *image)
+> > +{
+> > +	return;
+> > +}
+> > +
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
