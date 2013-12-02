@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VnYpt-0005Bv-9d
- for kexec@lists.infradead.org; Mon, 02 Dec 2013 19:07:14 +0000
+ id 1VnYps-0005Bt-S6
+ for kexec@lists.infradead.org; Mon, 02 Dec 2013 19:07:13 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 2/2] kexec-tools/xen: Remove redundant include
-Date: Mon,  2 Dec 2013 20:06:25 +0100
-Message-Id: <1386011185-29350-3-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH 1/2] kexec-tools/xen: Do not call xc_interface_close() if
+ xc_interface_open() failed
+Date: Mon,  2 Dec 2013 20:06:24 +0100
+Message-Id: <1386011185-29350-2-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1386011185-29350-1-git-send-email-daniel.kiper@oracle.com>
 References: <1386011185-29350-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,27 +26,43 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: andrew.cooper3@citrix.com, david.vrabel@citrix.com, horms@verge.net.au, kexec@lists.infradead.org, xen-devel@lists.xen.org
 Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-Remove redundant include of stdlib.h introduced by
-commit d01680c28ba7bf1e02f74aa5841247a45738f5d4
-(kexec/xen: Correct some compile errors).
+Do not call xc_interface_close() if xc_interface_open() failed.
+xc_interface_close() crashes if it gets NULL as an argument.
+Relevant fix for libxenctrl will be posted too but kexec-tools
+should also behave properly.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- kexec/kexec-xen.c |    1 -
- 1 file changed, 1 deletion(-)
+ kexec/arch/i386/crashdump-x86.c    |    2 +-
+ kexec/arch/i386/kexec-x86-common.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-index e885246..cac313d 100644
---- a/kexec/kexec-xen.c
-+++ b/kexec/kexec-xen.c
-@@ -2,7 +2,6 @@
- #include <stdio.h>
- #include <string.h>
- #include <stdlib.h>
--#include <stdlib.h>
- #include <elf.h>
- #include "kexec.h"
- #include "kexec-syscall.h"
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 85f3a87..a3eb5ae 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -305,7 +305,7 @@ static int get_crash_memory_ranges_xen(struct memory_range **range,
+ 
+ 	if (!xc) {
+ 		fprintf(stderr, "%s: Failed to open Xen control interface\n", __func__);
+-		goto err;
++		return -1;
+ 	}
+ 
+ 	rc = xc_get_machine_memory_map(xc, e820entries, CRASH_MAX_MEMORY_RANGES);
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index bf58f53..f55e2c2 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -176,7 +176,7 @@ static int get_memory_ranges_xen(struct memory_range **range, int *ranges)
+ 
+ 	if (!xc) {
+ 		fprintf(stderr, "%s: Failed to open Xen control interface\n", __func__);
+-		goto err;
++		return -1;
+ 	}
+ 
+ 	rc = xc_get_machine_memory_map(xc, e820entries, MAX_MEMORY_RANGES);
 -- 
 1.7.10.4
 
