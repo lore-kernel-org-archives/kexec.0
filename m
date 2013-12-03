@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0028.austin.hp.com ([15.216.28.35])
+Received: from g1t0027.austin.hp.com ([15.216.28.34])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vns95-0007sC-Pm
- for kexec@lists.infradead.org; Tue, 03 Dec 2013 15:44:20 +0000
-Message-ID: <1386085140.1791.218.camel@misato.fc.hp.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Tue, 03 Dec 2013 08:39:00 -0700
-In-Reply-To: <20131203015613.GB3980@dhcp-16-126.nay.redhat.com>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131127140732.GD32267@pd.tnic>
- <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
- <1386023600.1791.201.camel@misato.fc.hp.com>
- <1386034289.1791.210.camel@misato.fc.hp.com>
- <20131203015613.GB3980@dhcp-16-126.nay.redhat.com>
-Mime-Version: 1.0
+ id 1VnvsG-0006SI-44
+ for kexec@lists.infradead.org; Tue, 03 Dec 2013 19:43:13 +0000
+From: Bill Sumner <bill.sumner@hp.com>
+Subject: [PATCH 5/6] Crashdump-Accepting-Active-IOMMU-Debug-Print-IOMMU
+Date: Tue,  3 Dec 2013 12:41:33 -0700
+Message-Id: <1386099694-4190-6-git-send-email-bill.sumner@hp.com>
+In-Reply-To: <1386099694-4190-1-git-send-email-bill.sumner@hp.com>
+References: <Crashdump-Accepting-Active-IOMMU>
+ <1386099694-4190-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,61 +18,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com
+Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, bill.sumner@hp.com
 
-On Tue, 2013-12-03 at 09:56 +0800, Dave Young wrote:
-> On 12/02/13 at 06:31pm, Toshi Kani wrote:
-> > On Mon, 2013-12-02 at 15:33 -0700, Toshi Kani wrote:
-> > > On Fri, 2013-11-29 at 17:14 +0800, Dave Young wrote:
-> > > > On 11/27/13 at 03:07pm, Borislav Petkov wrote:
-> > > > > On Tue, Nov 26, 2013 at 01:57:52PM +0800, Dave Young wrote:
-> > > > > > Add a new setup_data type SETUP_EFI for kexec use.
-> > > > > > Passing the saved fw_vendor, runtime, config tables and
-> > > > > > efi runtime mappings.
-> > > > > > 
-> > > > > > When entering virtual mode, directly mapping the efi
-> > > > > > runtime ragions which we passed in previously. And skip
-> > > > > > the step to call SetVirtualAddressMap.
-> > > > > > 
-> > > > > > Specially for HP z420 workstation it need another variable
-> > > > > > saving,
-> > > > > 
-> > > > > Why the special handling? Does that mean, this is going to be the case
-> > > > > for other HP UEFI implementations too?
-> > > > 
-> > > > I have only one HP machine for testing, Maybe Toshi can help to verify
-> > > > on other machines. Just comment out the function efi_reuse_config to see
-> > > > if kexec kernel panic.
-> > > 
-> > > My system (HP prototype server) did not need the special handling in
-> > > efi_reuse_config().  I will check with firmware team to get more
-> > > information on this.
-> > 
-> > I have one question.  I think this special handling assumes that
-> > efi.smbios contains a virtual address on HP z420.  So, how does the 1st
-> > kernel set a virtual address to efi.smbios in the first place?
-> 
-> Hi, Toshi,
-> 
-> It's originally a physical address, I think kernel does not change it.
-> As the fw_vendor, runtime etc. are changed to virt addr by firmware, so I
-> assume smbios on Hp z420 is also changed by firmware after becoming virtual mode.
 
-Hi Dave,
+Signed-off-by: Bill Sumner <bill.sumner@hp.com>
+---
+ drivers/iommu/intel-iommu.c | 76 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-Oh, I think I now understand what the issue was.  The z420 firmware
-updates the SMBIOS table address in the EFI system table to a virtual
-address after calling EFI SetVirtualAddressMap.  So, you are passing the
-original physical address of the SMBIOS table from the 1st kernel to the
-2nd kernel to put it back to physical.  Is that right? 
-
-Thanks,
--Toshi
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index d9a49ad..19c1370 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5322,3 +5322,79 @@ static int copy_intel_iommu_translation_tables(struct dmar_drhd_unit *drhd,
+ 	return 0;
+ }
+ #endif /* CONFIG_CRASH_DUMP */
++#ifdef CONFIG_CRASH_DUMP
++
++
++/* =========================================================================
++ * Diagnostic print
++ * ------------------------------------------------------------------------
++ */
++
++static struct intel_iommu_register_print {
++	int	len;		/* Length of register */
++	int	idx;		/* Index to read register */
++	char	reg[20];	/* Linux name of register */
++	char	txt[40];	/* Description */
++} intel_iommu_register_print_v[] = {
++	{1, DMAR_VER_REG,	"DMAR_VER_REG",		"Arch version supported by this IOMMU"},
++	{2, DMAR_CAP_REG,	"DMAR_CAP_REG",		"Hardware supported capabilities"},
++	{2, DMAR_ECAP_REG,	"DMAR_ECAP_REG",	"Extended capabilities supported"},
++	{1, DMAR_GCMD_REG,	"DMAR_GCMD_REG",	"Global command register"},
++	{1, DMAR_GSTS_REG,	"DMAR_GSTS_REG",	"Global status register "},
++	{2, DMAR_RTADDR_REG,	"DMAR_RTADDR_REG",	"Root entry table"},
++	{2, DMAR_CCMD_REG,	"DMAR_CCMD_REG",	"Context command reg"},
++	{1, DMAR_FSTS_REG,	"DMAR_FSTS_REG",	"Fault Status register"},
++	{1, DMAR_FECTL_REG,	"DMAR_FECTL_REG",	"Fault control register"},
++	{1, DMAR_FEDATA_REG,	"DMAR_FEDATA_REG",	"Fault event interrupt data register"},
++	{1, DMAR_FEADDR_REG,	"DMAR_FEADDR_REG",	"Fault event interrupt addr register"},
++	{1, DMAR_FEUADDR_REG,	"DMAR_FEUADDR_REG",	"Upper address register"},
++	{2, DMAR_AFLOG_REG,	"DMAR_AFLOG_REG",	"Advanced Fault control"},
++	{1, DMAR_PMEN_REG,	"DMAR_PMEN_REG",	"Enable Protected Memory Region"},
++	{1, DMAR_PLMBASE_REG,	"DMAR_PLMBASE_REG",	"PMRR Low addr"},
++	{1, DMAR_PLMLIMIT_REG,	"DMAR_PLMLIMIT_REG",	"PMRR low limit"},
++	{2, DMAR_PHMBASE_REG,	"DMAR_PHMBASE_REG",	"pmrr high base addr"},
++	{2, DMAR_PHMLIMIT_REG,	"DMAR_PHMLIMIT_REG",	"pmrr high limit"},
++	{2, DMAR_IQH_REG,	"DMAR_IQH_REG",		"Invalidation queue head register"},
++	{2, DMAR_IQT_REG,	"DMAR_IQT_REG",		"Invalidation queue tail register"},
++	{2, DMAR_IQA_REG,	"DMAR_IQA_REG",		"Invalidation queue addr register"},
++	{1, DMAR_ICS_REG,	"DMAR_ICS_REG",		"Invalidation complete status register"},
++	{2, DMAR_IRTA_REG,	"DMAR_IRTA_REG",	"Interrupt remapping table addr register"},
++};
++
++static void print_intel_iommu_registers(struct dmar_drhd_unit *drhd)
++{
++	struct intel_iommu *iommu;	/* Virt adr(iommu hardware registers) */
++	unsigned long long q;		/* quadword scratch */
++	u32 ver;			/* DMAR_VER_REG */
++
++	int m = sizeof(intel_iommu_register_print_v) /
++		sizeof(intel_iommu_register_print_v[0]);
++	struct intel_iommu_register_print *p = &intel_iommu_register_print_v[0];
++
++	iommu = drhd->iommu;
++
++	pr_debug("ENTER %s\n", __func__);
++	ver = readl(iommu->reg + DMAR_VER_REG);
++	pr_debug("IOMMU %d: reg_base_addr %llx ver %d:%d cap %llx ecap %llx\n",
++		iommu->seq_id,
++		(unsigned long long)drhd->reg_base_addr,
++		DMAR_VER_MAJOR(ver), DMAR_VER_MINOR(ver),
++		(unsigned long long)iommu->cap,
++		(unsigned long long)iommu->ecap);
++
++	q = readq(iommu->reg + DMAR_RTADDR_REG);
++	pr_debug("IOMMU %d: DMAR_RTADDR_REG:0x%16.16llx\n", iommu->seq_id, q);
++
++	for (; p < &intel_iommu_register_print_v[m]; p++)
++		if (p->len == 2)
++			pr_debug("0x%16.16llx %-20s %-40s\n",
++				(u64)readq(iommu->reg + p->idx), p->reg,
++						p->txt);
++		else
++			pr_debug("        0x%8.8x %-20s %-40s\n",
++				(u32)readl(iommu->reg + p->idx), p->reg,
++						p->txt);
++
++	pr_debug("LEAVE %s\n", __func__);
++}
++#endif /* CONFIG_CRASH_DUMP */
+-- 
+Bill Sumner <bill.sumner@hp.com>
 
 
 _______________________________________________
