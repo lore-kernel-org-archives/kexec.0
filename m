@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VnfEb-0006Qd-9f
- for kexec@lists.infradead.org; Tue, 03 Dec 2013 01:57:10 +0000
-Date: Tue, 3 Dec 2013 09:56:13 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131203015613.GB3980@dhcp-16-126.nay.redhat.com>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131127140732.GD32267@pd.tnic>
- <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
- <1386023600.1791.201.camel@misato.fc.hp.com>
- <1386034289.1791.210.camel@misato.fc.hp.com>
+ id 1VnhN8-0000lW-8A
+ for kexec@lists.infradead.org; Tue, 03 Dec 2013 04:14:07 +0000
+Date: Tue, 3 Dec 2013 13:13:40 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] kexec-tools: Minor Xen fixes and cleanups
+Message-ID: <20131203041340.GE1864@verge.net.au>
+References: <1386011185-29350-1-git-send-email-daniel.kiper@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1386034289.1791.210.camel@misato.fc.hp.com>
+In-Reply-To: <1386011185-29350-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,48 +23,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Toshi Kani <toshi.kani@hp.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: andrew.cooper3@citrix.com, kexec@lists.infradead.org, david.vrabel@citrix.com, xen-devel@lists.xen.org
 
-On 12/02/13 at 06:31pm, Toshi Kani wrote:
-> On Mon, 2013-12-02 at 15:33 -0700, Toshi Kani wrote:
-> > On Fri, 2013-11-29 at 17:14 +0800, Dave Young wrote:
-> > > On 11/27/13 at 03:07pm, Borislav Petkov wrote:
-> > > > On Tue, Nov 26, 2013 at 01:57:52PM +0800, Dave Young wrote:
-> > > > > Add a new setup_data type SETUP_EFI for kexec use.
-> > > > > Passing the saved fw_vendor, runtime, config tables and
-> > > > > efi runtime mappings.
-> > > > > 
-> > > > > When entering virtual mode, directly mapping the efi
-> > > > > runtime ragions which we passed in previously. And skip
-> > > > > the step to call SetVirtualAddressMap.
-> > > > > 
-> > > > > Specially for HP z420 workstation it need another variable
-> > > > > saving,
-> > > > 
-> > > > Why the special handling? Does that mean, this is going to be the case
-> > > > for other HP UEFI implementations too?
-> > > 
-> > > I have only one HP machine for testing, Maybe Toshi can help to verify
-> > > on other machines. Just comment out the function efi_reuse_config to see
-> > > if kexec kernel panic.
-> > 
-> > My system (HP prototype server) did not need the special handling in
-> > efi_reuse_config().  I will check with firmware team to get more
-> > information on this.
+On Mon, Dec 02, 2013 at 08:06:23PM +0100, Daniel Kiper wrote:
+> Hi,
 > 
-> I have one question.  I think this special handling assumes that
-> efi.smbios contains a virtual address on HP z420.  So, how does the 1st
-> kernel set a virtual address to efi.smbios in the first place?
+> This patch series contains following minor Xen fixes and cleanups for kexec-tools:
+>   - kexec-tools/xen: Do not call xc_interface_close() if xc_interface_open() failed,
+>   - kexec-tools/xen: Remove redundant include.
+> 
+> Please apply.
 
-Hi, Toshi,
-
-It's originally a physical address, I think kernel does not change it.
-As the fw_vendor, runtime etc. are changed to virt addr by firmware, so I
-assume smbios on Hp z420 is also changed by firmware after becoming virtual mode.
-
-Thanks
-Dave
+Thanks, both applied.
 
 _______________________________________________
 kexec mailing list
