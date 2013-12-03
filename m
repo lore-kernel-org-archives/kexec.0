@@ -1,19 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g5t0007.atlanta.hp.com ([15.192.0.44])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vnc8c-0003wZ-Al
- for kexec@lists.infradead.org; Mon, 02 Dec 2013 22:38:46 +0000
-Message-ID: <1386023600.1791.201.camel@misato.fc.hp.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Mon, 02 Dec 2013 15:33:20 -0700
-In-Reply-To: <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131127140732.GD32267@pd.tnic>
- <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
-Mime-Version: 1.0
+ id 1Vnedg-00066n-FF
+ for kexec@lists.infradead.org; Tue, 03 Dec 2013 01:19:01 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 235283EE0BB
+ for <kexec@lists.infradead.org>; Tue,  3 Dec 2013 10:18:31 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 137AC45DE5A
+ for <kexec@lists.infradead.org>; Tue,  3 Dec 2013 10:18:31 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id F128B45DE54
+ for <kexec@lists.infradead.org>; Tue,  3 Dec 2013 10:18:30 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id DF858E08002
+ for <kexec@lists.infradead.org>; Tue,  3 Dec 2013 10:18:30 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 910031DB803C
+ for <kexec@lists.infradead.org>; Tue,  3 Dec 2013 10:18:30 +0900 (JST)
+Message-ID: <529D3158.2080603@jp.fujitsu.com>
+Date: Tue, 03 Dec 2013 10:18:16 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] vmcore: call remap_pfn_range() separately for respective
+ partial pages
+References: <52970342.8090302@jp.fujitsu.com>
+ <20131202152754.GC18642@redhat.com>
+In-Reply-To: <20131202152754.GC18642@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,41 +36,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "Eric W. Biederman" <ebiederm@xmission.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Fri, 2013-11-29 at 17:14 +0800, Dave Young wrote:
-> On 11/27/13 at 03:07pm, Borislav Petkov wrote:
-> > On Tue, Nov 26, 2013 at 01:57:52PM +0800, Dave Young wrote:
-> > > Add a new setup_data type SETUP_EFI for kexec use.
-> > > Passing the saved fw_vendor, runtime, config tables and
-> > > efi runtime mappings.
-> > > 
-> > > When entering virtual mode, directly mapping the efi
-> > > runtime ragions which we passed in previously. And skip
-> > > the step to call SetVirtualAddressMap.
-> > > 
-> > > Specially for HP z420 workstation it need another variable
-> > > saving,
-> > 
-> > Why the special handling? Does that mean, this is going to be the case
-> > for other HP UEFI implementations too?
-> 
-> I have only one HP machine for testing, Maybe Toshi can help to verify
-> on other machines. Just comment out the function efi_reuse_config to see
-> if kexec kernel panic.
+(2013/12/03 0:27), Vivek Goyal wrote:
+> On Thu, Nov 28, 2013 at 05:48:02PM +0900, HATAYAMA Daisuke wrote:
+>> Hello Vivek,
+>>
+>> Here is a patch set for mmap failure for /proc/vmcore.
+>> Could you try to use this on the problematic system?
+>>
+>> This patch doesn't copy partial pages to the 2nd kernel, only prepares
+>> vmcore objects for respective partial pages to invoke remap_pfn_range()
+>> for individual partial pages.
+>
+> Hi Hatayama,
+>
+> Thanks for the patch. Ok, I see that partial pages will be put in a separate
+> call to remap_oldmem_pfn_range() and this time it should succeed.
+>
+> I am wondering what do you think about your old approach of copying
+> only relevant old memory to a new kernel page in new kernel. I kind
+> of feel little uncomfortable with the idea of rounding down start
+> and roudning up end to page size boundaries and then accessing the
+> full page using oldmem interface. A safer approach might be to allocate
+> page in new kernel, read *only* those bytes as reported by elf header
+> and fill rest of the page with zeros.
+>
+> Thanks
+> Vivek
+>
 
-My system (HP prototype server) did not need the special handling in
-efi_reuse_config().  I will check with firmware team to get more
-information on this.
+Even if copying partial pages into the 2nd kernel, we need to use ioremap()
+once on them, and I think the ioremap() is exactly similar to
+remap_pfn_range() for a single page. There seems no difference on safeness
+between them.
 
-Thanks,
--Toshi
+Also, current /proc/vmcore shows user-land tools a shape with holes not
+filled with zeros both in case of read() and in case of mmap(). If we adapt
+copying one without reading data in holes, shape of /proc/vmcore gets
+changed again.
 
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
