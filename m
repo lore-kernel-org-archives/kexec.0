@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VnvuW-0006fd-Gc
- for kexec@lists.infradead.org; Tue, 03 Dec 2013 19:45:33 +0000
-Date: Tue, 3 Dec 2013 20:45:01 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2 3/4] makedumpfile/xen: Fail immediately on every
- architecture if dump level is invalid
-Message-ID: <20131203194501.GD21544@olila.local.net-space.pl>
-References: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
- <1385993804-27721-4-git-send-email-daniel.kiper@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C9FF0@BPXM01GP.gisp.nec.co.jp>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971C9FF0@BPXM01GP.gisp.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vnw9q-0007PJ-UD
+ for kexec@lists.infradead.org; Tue, 03 Dec 2013 20:01:23 +0000
+Message-ID: <1386100843.25738.284.camel@ul30vt.home>
+Subject: Re: [PATCH 0/6] Crashdump Accepting Active IOMMU
+From: Alex Williamson <alex.williamson@redhat.com>
+Date: Tue, 03 Dec 2013 13:00:43 -0700
+In-Reply-To: <1386099694-4190-1-git-send-email-bill.sumner@hp.com>
+References: <Crashdump-Accepting-Active-IOMMU>
+ <1386099694-4190-1-git-send-email-bill.sumner@hp.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,70 +23,139 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, oomichi@mxs.nes.nec.co.jp
-Cc: "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "david.vrabel@citrix.com" <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Bill Sumner <bill.sumner@hp.com>
+Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, dwmw2@infradead.org
 
-On Tue, Dec 03, 2013 at 05:27:03AM +0000, Atsushi Kumagai wrote:
-> On 2013/12/02 23:17:59, kexec <kexec-bounces@lists.infradead.org> wrote:
-> > Do not try to process Xen crash dump on every architecture if dump level
-> > is invalid. Fail immediately and print relevant error message.
-> >
-> > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> > ---
-> >  makedumpfile.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index 5a378d1..45f96aa 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -7637,14 +7637,14 @@ initial_xen(void)
-> >  		MSG("Try `makedumpfile --help' for more information.\n");
-> >  		return FALSE;
-> >  	}
-> > -#ifndef __x86_64__
-> > +
-> >  	if (DL_EXCLUDE_ZERO < info->max_dump_level) {
-> >  		MSG("Dump_level is invalid. It should be 0 or 1.\n");
-> >  		MSG("Commandline parameter is invalid.\n");
-> >  		MSG("Try `makedumpfile --help' for more information.\n");
-> >  		return FALSE;
-> >  	}
-> > -#endif
-> > +
->
-> Did you say that dump level 2 or larger are no longer effective even for x86_64 ?
-> I thought it works by the patch below, but I'm not sure about Xen.
-> So I would like to know why you sent this patch.
->
->
-> commit ec5b5835a113cf62a168d4a7354564a38de6b52c
-> Author: ken1_ohmichi <ken1_ohmichi>
-> Date:   Fri Oct 9 03:05:41 2009 +0000
->
->     [v1.3.4-10] Add dump filtering on an x86_64 xen domain-0.
->
->     This patch adds the dump filtering for excluding unnecessary pages (cache
->     pages, user process data pages, and free pages) on on x86_64 xen domain-0.
->
->     On the existing makedumpfile (v1.3.3 or former), a user could specify 0
->     or 1 only as a dump_level. By this patch, he/she can specify 2 or larger
->     also as a dump_level.
->
->     Now, this feature is effective on x86_64 machine only.
+On Tue, 2013-12-03 at 12:41 -0700, Bill Sumner wrote:
+> The following series implements a fix for:
+> A kdump problem about DMA that has been discussed for a long time. That is,
+> when a kernel panics and boots into the kdump kernel, DMA started by the 
+> panicked kernel is not stopped before the kdump kernel is booted and the 
+> kdump kernel disables the IOMMU while this DMA continues.  This causes the
+> IOMMU to stop translating the DMA addresses as IOVAs and begin to treat them 
+> as physical memory addresses -- which causes the DMA to either:
+> (1) generate DMAR errors or (2) generate PCI SERR errors or (3) transfer  
+> data to or from incorrect areas of memory. Often this causes the dump to fail.
 
-Hmmm... Thanks for this. I missed this patch. However, it looks that I
-do not understand something. AIUI, from Xen point of view we are not able
-to use dump level higher than 1 because there is no e.g. cache pages (it
-looks that we could also skip free pages but this stuff is not implemented).
-Above mentioned patch suggest that there is a way to extract just only Dom0
-stuff taking into account Linux internals only. If my reasoning is true
-then dump level higher than 1 is possible only if we look at Dom0 from Linux
-point of view. However, I can not find any description how to do that.
-So I am CC-ing Ken'ichi as author of this patch but I do not know that
-he works for NEC still.
+I didn't review the content, but please add commit logs per patch.  You
+have a very thorough description here in the cover letter, but the cover
+letter doesn't get stored in the code base.  Thanks,
 
-Daniel
+Alex
+
+> 
+> This patch set modifies the behavior of the iommu in the (new) crashdump kernel: 
+> 1. to accept the iommu hardware in an active state, 
+> 2. to leave the current translations in-place so that legacy DMA will continue
+>    using its current buffers until the device drivers in the crashdump kernel
+>    initialize and initialize their devices,
+> 3. to use different portions of the iova address ranges for the device drivers
+>    in the crashdump kernel than the iova ranges that were in-use at the time
+>    of the panic.  
+> 
+> Advantages of this approach:
+> 1. All manipulation of the IO-device is done by the Linux device-driver
+>    for that device.
+> 2. This approach behaves in a manner very similar to operation without an
+>    active iommu.
+> 3. Any activity between the IO-device and its RMRR areas is handled by the
+>    device-driver in the same manner as during a non-kdump boot.
+> 4. If an IO-device has no driver in the kdump kernel, it is simply left alone.
+>    This supports the practice of creating a special kdump kernel without
+>    drivers for any devices that are not required for taking a crashdump. 
+> 
+> Changes since the RFC version of this patch:
+> 1. Consolidated all of the operational code into the "copy..." functions.
+>    The "process..." functions were primarily used for diagnostics and
+>    exploration; however, there was a small amount of operational code that
+>    used the "process..." functions.
+>    This operational code has been moved into the "copy..." functions.
+> 
+> 2. Removed the "Process ..." functions and the diagnostic code that ran
+>    on that function set.  This removed about 1/4 of the code -- which this
+>    operational patch set no longer needs.  These portions of the RFC patch
+>    could be formatted as a separate patch and submitted independently
+>    at a later date. 
+> 
+> 3. Re-formatted the code to the Linux Coding Standards.
+>    The checkpatch script still finds some lines to complain about;
+>    however most of these lines are either (1) lines that I did not change,
+>    or (2) lines that only changed by adding a level of indent which pushed
+>    them over 80-characters, or (3) new lines whose intent is far clearer when
+>    longer than 80-characters.
+> 
+> 4. Updated the remaining debug print to be significantly more flexible.
+>    This allows control over the amount of debug print to the console --
+>    which can vary widely.
+> 
+> 5. Fixed a couple of minor bugs found by testing on a machine with a
+>    very large IO configuration.
+> 
+> At a high level, this code operates primarily during iommu initialization
+> and device-driver initialization
+> 
+> During intel-iommu hardware initialization:
+> In intel_iommu_init(void)
+> * If (This is the crash kernel)
+>   .  Set flag: crashdump_accepting_active_iommu (all changes below check this)
+>   .  Skip disabling the iommu hardware translations
+> 
+> In init_dmars()
+> * Duplicate the intel iommu translation tables from the old kernel
+>   in the new kernel
+>   . The root-entry table, all context-entry tables,
+>     and all page-translation-entry tables
+>   . The duplicate tables contain updated physical addresses to link them together.
+>   . The duplicate tables are mapped into kernel virtual addresses
+>     in the new kernel which allows most of the existing iommu code
+>     to operate without change.
+>   . Do some minimal sanity-checks during the copy
+>   . Place the address of the new root-entry structure into "struct intel_iommu"
+> 
+> * Skip setting-up new domains for 'si', 'rmrr', 'isa' 
+>   . Translations for 'rmrr' and 'isa' ranges have been copied from the old kernel
+>   . This patch has not yet been tested with iommu pass-through enabled
+> 
+> * Existing (unchanged) code near the end of dmar_init:
+>   . Loads the address of the (now new) root-entry structure from
+>     "struct intel_iommu" into the iommu hardware and does the hardware flushes.
+>     This changes the active translation tables from the ones in the old kernel
+>     to the copies in the new kernel.
+>   . This is legal because the translations in the two sets of tables are
+>     currently identical:
+>       Virtualization Technology for Directed I/O. Architecture Specification,
+>       February 2011, Rev. 1.3  (section 11.2, paragraph 2) 
+> 
+> In iommu_init_domains()
+> * Mark as in-use all domain-id's from the old kernel
+>   . In case the new kernel contains a device that was not in the old kernel
+>     and a new, unused domain-id is actually needed, the bitmap will give us one.
+> 
+> When a new domain is created for a device:
+> * If (this device has a context in the old kernel)
+>   . Get domain-id, address-width, and IOVA ranges from the old kernel context;
+>   . Get address(page-entry-tables) from the copy in the new kernel;
+>   . And apply all of the above values to the new domain structure.
+> * Else
+>   . Create a new domain as normal
+> 
+> --- 
+> Signed-off-by: Bill Sumner <bill.sumner@hp.com>
+> 
+> Bill Sumner (6):
+>   Crashdump-Accepting-Active-IOMMU-Flags-and-Prototypes
+>   Crashdump-Accepting-Active-IOMMU-Utility-functions
+>   Crashdump-Accepting-Active-IOMMU-Domain-Interfaces
+>   Crashdump-Accepting-Active-IOMMU-Copy-Translations
+>   Crashdump-Accepting-Active-IOMMU-Debug-Print-IOMMU
+>   Crashdump-Accepting-Active-IOMMU-Call-From-Mainline
+> 
+>  drivers/iommu/intel-iommu.c | 1292 ++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 1224 insertions(+), 68 deletions(-)
+> 
+
+
+
 
 _______________________________________________
 kexec mailing list
