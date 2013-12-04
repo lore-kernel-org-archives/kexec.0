@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VoGJu-0003M0-1i
- for kexec@lists.infradead.org; Wed, 04 Dec 2013 17:33:07 +0000
-Date: Wed, 4 Dec 2013 12:32:39 -0500
+ id 1VoGNw-0003R2-Uf
+ for kexec@lists.infradead.org; Wed, 04 Dec 2013 17:37:19 +0000
+Date: Wed, 4 Dec 2013 12:36:36 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-Message-ID: <20131204173238.GD19087@redhat.com>
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
- <20131204015657.GD3298@localhost.localdomain>
+Subject: Re: [PATCH v9] x86, apic, kexec, Documentation: Add disable_cpu_apic
+ kernel parameter
+Message-ID: <20131204173635.GE19087@redhat.com>
+References: <529D34AA.1000809@jp.fujitsu.com>
+ <20131203152536.GE4251@redhat.com>
+ <529E9CA6.5040200@jp.fujitsu.com> <529ECAAB.8040309@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131204015657.GD3298@localhost.localdomain>
+In-Reply-To: <529ECAAB.8040309@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,33 +26,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "H. Peter Anvin" <hpa@linux.intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jerry Hoemann <jerry.hoemann@hp.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Fengguang Wu <fengguang.wu@intel.com>, Jingbai Ma <jingbai.ma@hp.com>
 
-On Wed, Dec 04, 2013 at 09:56:57AM +0800, Baoquan He wrote:
-> On 11/20/13 at 12:50pm, Vivek Goyal wrote:
-> > + * that kexec_mutex is held.
-> > + */
+On Wed, Dec 04, 2013 at 03:24:43PM +0900, HATAYAMA Daisuke wrote:
+> (2013/12/04 12:08), HATAYAMA Daisuke wrote:
+> >(2013/12/04 0:25), Vivek Goyal wrote:
+> >>On Tue, Dec 03, 2013 at 10:32:26AM +0900, HATAYAMA Daisuke wrote:
+> >>
+> >>[..]
+> >>>
+> >>>diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> >>>index 50680a5..dd77bec 100644
+> >>>--- a/Documentation/kernel-parameters.txt
+> >>>+++ b/Documentation/kernel-parameters.txt
+> >>>@@ -774,6 +774,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+> >>>      disable=    [IPV6]
+> >>>              See Documentation/networking/ipv6.txt.
+> >>>
+> >>>+    disable_cpu_apicid= [X86,APIC,KEXEC,SMP]
+> >>
+> >>Hi Hatayama,
+> >>
+> >>We are almost there. A minor nit. Why have we specified KEXEC here. This
+> >>parameter disabled_cpu_apicid does not seem to dependon CONFIG_KEXEC?
+> >>
+> >>Jerry, this patch looks good to me. Does it work on your system?
+> >>
+> >
+> >Because primary user for the option is currently kexec/kdump only.
+> >
+> >I referred to acpi_rsdp description:
+> >
+> >         acpi_rsdp=      [ACPI,EFI,KEXEC]
+> >                         Pass the RSDP address to the kernel, mostly used
+> >                         on machines running EFI runtime service to boot the
+> >                         second kernel for kdump.
+> >
 > 
-> I think kexec_add_buffer is guaranteed to be called before allocating
-> control pages, why not updating image->control_page after each time
-> kexec_add_buffer is called. Then when control page is needed, effective
-> address in crash_kernel region can be given. This can be a little more
-> efficient.
+> Indo-san, who introduced acpi_rsdp and KEXEC tag, told me that historical reason
+> why KEXEC tag was introduced. disable_cpu_apicid is generic at least in the
+> current version, so the tag doesn't need to be specified here.
 
-image->control_page controls the lowest address available for control
-pages in crash kernel region. When we do kexec_add_buffer, we don't
-necessarily know whether there is an empty page available between
-segments or not.
+Also Documentation/kernel-parameters.txt says following.
 
-Also, existing logic for kexec does not update the image->control_page
-when segments are being copied.
+"The parameters listed below are only valid if certain kernel build options
+ were enabled and if respective hardware is present. The text in square
+ brackets at the beginning of each description states the restrictions within
+ which a parameter is applicable:"
 
-So I think this does not offer any huge benefits and it is not performance
-critical path. I will just leave it as it is.
+As above parameter is not dependent on CONFIG_KEXEC, we should remove
+KEXEC from the brackets.
+
+acpi_rsdp is defined only if CONFIG_KEXEC is present, so there specifying
+kexec makes sense.
+
+#ifdef CONFIG_KEXEC
+static unsigned long acpi_rsdp;
+static int __init setup_acpi_rsdp(char *arg)
+{
+        acpi_rsdp = simple_strtoul(arg, NULL, 16);
+        return 0;
+}
+early_param("acpi_rsdp", setup_acpi_rsdp);
+#endif
 
 Thanks
 Vivek
+
+
+> 
+> I'll post a new version soon.
+> 
+> -- 
+> Thanks.
+> HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
