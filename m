@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VoGNw-0003R2-Uf
- for kexec@lists.infradead.org; Wed, 04 Dec 2013 17:37:19 +0000
-Date: Wed, 4 Dec 2013 12:36:36 -0500
+ id 1VoIDp-0006Yh-8g
+ for kexec@lists.infradead.org; Wed, 04 Dec 2013 19:34:58 +0000
+Date: Wed, 4 Dec 2013 14:34:31 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v9] x86, apic, kexec, Documentation: Add disable_cpu_apic
- kernel parameter
-Message-ID: <20131204173635.GE19087@redhat.com>
-References: <529D34AA.1000809@jp.fujitsu.com>
- <20131203152536.GE4251@redhat.com>
- <529E9CA6.5040200@jp.fujitsu.com> <529ECAAB.8040309@jp.fujitsu.com>
+Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
+Message-ID: <20131204193430.GF19087@redhat.com>
+References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+ <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
+ <87txf4y304.fsf@xmission.com> <20131122141945.GE4046@redhat.com>
+ <87li0fvm10.fsf@xmission.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <529ECAAB.8040309@jp.fujitsu.com>
+In-Reply-To: <87li0fvm10.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,81 +26,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: "H. Peter Anvin" <hpa@linux.intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jerry Hoemann <jerry.hoemann@hp.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Fengguang Wu <fengguang.wu@intel.com>, Jingbai Ma <jingbai.ma@hp.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, greg@kroah.com, hpa@zytor.com
 
-On Wed, Dec 04, 2013 at 03:24:43PM +0900, HATAYAMA Daisuke wrote:
-> (2013/12/04 12:08), HATAYAMA Daisuke wrote:
-> >(2013/12/04 0:25), Vivek Goyal wrote:
-> >>On Tue, Dec 03, 2013 at 10:32:26AM +0900, HATAYAMA Daisuke wrote:
-> >>
-> >>[..]
-> >>>
-> >>>diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> >>>index 50680a5..dd77bec 100644
-> >>>--- a/Documentation/kernel-parameters.txt
-> >>>+++ b/Documentation/kernel-parameters.txt
-> >>>@@ -774,6 +774,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
-> >>>      disable=    [IPV6]
-> >>>              See Documentation/networking/ipv6.txt.
-> >>>
-> >>>+    disable_cpu_apicid= [X86,APIC,KEXEC,SMP]
-> >>
-> >>Hi Hatayama,
-> >>
-> >>We are almost there. A minor nit. Why have we specified KEXEC here. This
-> >>parameter disabled_cpu_apicid does not seem to dependon CONFIG_KEXEC?
-> >>
-> >>Jerry, this patch looks good to me. Does it work on your system?
-> >>
-> >
-> >Because primary user for the option is currently kexec/kdump only.
-> >
-> >I referred to acpi_rsdp description:
-> >
-> >         acpi_rsdp=      [ACPI,EFI,KEXEC]
-> >                         Pass the RSDP address to the kernel, mostly used
-> >                         on machines running EFI runtime service to boot the
-> >                         second kernel for kdump.
-> >
+On Fri, Nov 22, 2013 at 07:23:39PM -0800, Eric W. Biederman wrote:
 > 
-> Indo-san, who introduced acpi_rsdp and KEXEC tag, told me that historical reason
-> why KEXEC tag was introduced. disable_cpu_apicid is generic at least in the
-> current version, so the tag doesn't need to be specified here.
+> > [..]
+> >> >> There is also a huge missing piece of this in that your purgatory is not
+> >> >> checking a hash of the loaded image before jumping too it.  Without that
+> >> >> this is a huge regression at least for the kexec on panic case.  We
+> >> >> absolutely need to check that the kernel sitting around in memory has
+> >> >> not been corrupted before we let it run very far.
+> >> >
+> >> > Agreed. This should not be hard. It is just a matter of calcualting
+> >> > digest of segments. I will store it in kimge and verify digest again
+> >> > before passing control to control page. Will fix it in next version.
+> >> 
+> >> Nak.  The verification needs to happen in purgatory. 
+> >> 
+> >> The verification needs to happen in code whose runtime environment is
+> >> does not depend on random parts of the kernel.  Anything else is a
+> >> regression in maintainability and reliability.
+> >> 
+> >> It is the wrong direction to add any code to what needs to run in the
+> >> known broken environment of the kernel when a panic happens.
+> >> 
+> >> Which means that you almost certainly need to go to the trouble of
+> >> supporting the complexity needed to support purgatory code written in C.
+> >> 
+> >> (For those just tuning in purgatory is our term for the code that runs
+> >> between the kernels to do those things that can not happen a priori).
+> >
+> > In general, I agree with not using kernel parts after crash.
+> >
+> > But what protects against that purgatory itself has been scribbled over.
+> > IOW, how different purgatory memory is as compared to kernel memory where
+> > digest routines are stored. They have got equal probably of being scribbled
+> > over and if that's the case one is not better than other?
+> >
+> > And if they both got equal probability to getting corrupted, then there does
+> > not seem to be an advantage in moving digest verification inside
+> > purgatory.
+> 
+> The primary reason is that maintenance of code in the kernel that is
+> safe during a crash dump is hard.  That is why we boot a second kernel
+> after all.  If the code to do the signature verification resides in
+> machine_kexec on the kexec on panic code path in the kernel that has
+> called panic it is almost a given that at some point or other someone
+> will add an option that will add a weird dependency that makes the code
+> unsafe when the kernel is crashing.  I have seen it happen several times
+> on the existing kexec on panic code path.  I have seen it on other code
+> paths like netconsole.  Which can currently on some kernels I have
+> running cause the kernel go go into an endless printk loop if you call
+> printk from interrupt context.  So what we really gain by moving the
+> verification into purgatory is protection from inappropriate code reuse.
+> 
+> So having a completely separate piece of code may be a little harder to
+> write initially but the code is much simpler and more reliable to
+> maintain.  Essentially requiring no maintenance effort.  Further getting
+> to the point where purgatory is written in C makes small changes much
+> more approachable.
 
-Also Documentation/kernel-parameters.txt says following.
+Hi Eric,
 
-"The parameters listed below are only valid if certain kernel build options
- were enabled and if respective hardware is present. The text in square
- brackets at the beginning of each description states the restrictions within
- which a parameter is applicable:"
+So you want a separate purgatory code and that purgatory should be self
+contained and should not share any code with rest of the kernel. No
+inclusion of header files, no linking against kernel libraries? That means
+even re-implementing sha256 functions separately (like user space)?
 
-As above parameter is not dependent on CONFIG_KEXEC, we should remove
-KEXEC from the brackets.
+If code maintenance is a concern, then I think I can reimplement some
+of the functions to calculate sha256 in separate crash files and invoke
+those to reduce code sharing with rest of the kernel. And we should be
+able to link against the kernel and not have to create separate
+relocatable purgatory object and relocate it.
 
-acpi_rsdp is defined only if CONFIG_KEXEC is present, so there specifying
-kexec makes sense.
-
-#ifdef CONFIG_KEXEC
-static unsigned long acpi_rsdp;
-static int __init setup_acpi_rsdp(char *arg)
-{
-        acpi_rsdp = simple_strtoul(arg, NULL, 16);
-        return 0;
-}
-early_param("acpi_rsdp", setup_acpi_rsdp);
-#endif
+IOW, does purgatory still have to be a relocatable object? I think
+user space had no choice but given the fact that we are implementing
+thing in kernel, I should be able to implement my own hash calculation
+and segment verification code and link it to existing kernel and invoke
+these outside purgatory. Anyway, we call so many other functions after
+crash to stop cpus, save registers, etc.
 
 Thanks
 Vivek
-
-
-> 
-> I'll post a new version soon.
-> 
-> -- 
-> Thanks.
-> HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
