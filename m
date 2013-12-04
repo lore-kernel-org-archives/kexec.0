@@ -1,17 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vo5hD-0003Fn-93
- for kexec@lists.infradead.org; Wed, 04 Dec 2013 06:12:29 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 0/3] makedumpfile: hugepage filtering for vmcore dump
-Date: Wed, 4 Dec 2013 06:08:54 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971CAC5D@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE971CA130@BPXM01GP.gisp.nec.co.jp>
- <529D9ECB.1060402@jp.fujitsu.com>
-In-Reply-To: <529D9ECB.1060402@jp.fujitsu.com>
-Content-Language: ja-JP
+ id 1Vo5uV-0003Q3-MG
+ for kexec@lists.infradead.org; Wed, 04 Dec 2013 06:26:13 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id E1A323EE0BC
+ for <kexec@lists.infradead.org>; Wed,  4 Dec 2013 15:25:44 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id D21AA45DE52
+ for <kexec@lists.infradead.org>; Wed,  4 Dec 2013 15:25:44 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.nic.fujitsu.com [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id B75EE45DE4D
+ for <kexec@lists.infradead.org>; Wed,  4 Dec 2013 15:25:44 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id AA78CE38001
+ for <kexec@lists.infradead.org>; Wed,  4 Dec 2013 15:25:44 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 5E1E51DB803A
+ for <kexec@lists.infradead.org>; Wed,  4 Dec 2013 15:25:44 +0900 (JST)
+Message-ID: <529ECAAB.8040309@jp.fujitsu.com>
+Date: Wed, 04 Dec 2013 15:24:43 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v9] x86, apic, kexec, Documentation: Add disable_cpu_apic
+ kernel parameter
+References: <529D34AA.1000809@jp.fujitsu.com>
+ <20131203152536.GE4251@redhat.com> <529E9CA6.5040200@jp.fujitsu.com>
+In-Reply-To: <529E9CA6.5040200@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,72 +36,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "tom.vaden@hp.com" <tom.vaden@hp.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "jingbai.ma@hp.com" <jingbai.ma@hp.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "H. Peter Anvin" <hpa@linux.intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jerry Hoemann <jerry.hoemann@hp.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Fengguang Wu <fengguang.wu@intel.com>, Jingbai Ma <jingbai.ma@hp.com>
 
-On 2013/12/03 18:06:13, kexec <kexec-bounces@lists.infradead.org> wrote:
-> >> This is a suggestion from different point of view...
-> >>
-> >> In general, data on crash dump can be corrupted. Thus, order contained in a page
-> >> descriptor can also be corrupted. For example, if the corrupted value were a huge
-> >> number, wide range of pages after buddy page would be filtered falsely.
-> >>
-> >> So, actually we should sanity check data in crash dump before using them for application
-> >> level feature. I've picked up order contained in page descriptor, so there would be other
-> >> data used in makedumpfile that are not checked.
-> > 
-> > What you said is reasonable, but how will you do such sanity check ?
-> > Certain standard values are necessary for sanity check, how will
-> > you prepare such values ?
-> > (Get them from kernel source and hard-code them in makedumpfile ?)
-> > 
-> >> Unlike diskdump, we no longer need to care about kernel/hardware level data integrity
-> >> outside of user-land, but we still care about data its own integrity.
-> >>
-> >> On the other hand, if we do it, we might face some difficulty, for example, hardness of
-> >> maintenance or performance bottleneck; it might be the reason why we don't see sanity
-> >> check in makedumpfile now.
-> > 
-> > There are many values which should be checked, e.g. page.flags, page._count,
-> > page.mapping, list_head.next and so on.
-> > If we introduce sanity check for them, the issues you mentioned will be appear
-> > distinctly.
-> > 
-> > So I think makedumpfile has to trust crash dump in practice.
-> > 
-> 
-> Yes, I don't mean such very drastic checking; I understand hardness because I often
-> handle/write this kind of code; I don't want to fight tremendously many dependencies...
-> 
-> So we need to concentrate on things that can affect makedumpfile's behavior significantly,
-> e.g. infinite loop caused by broken linked list objects, buffer overrun cauesd by large values
-> from broken data, etc. We should be able to deal with them by carefully handling
-> dump data against makedumpfile's runtime data structure, e.g., buffer size.
-> 
-> Is it OK to consider this is a policy of makedumpfile for data corruption?
+(2013/12/04 12:08), HATAYAMA Daisuke wrote:
+> (2013/12/04 0:25), Vivek Goyal wrote:
+>> On Tue, Dec 03, 2013 at 10:32:26AM +0900, HATAYAMA Daisuke wrote:
+>>
+>> [..]
+>>>
+>>> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+>>> index 50680a5..dd77bec 100644
+>>> --- a/Documentation/kernel-parameters.txt
+>>> +++ b/Documentation/kernel-parameters.txt
+>>> @@ -774,6 +774,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>>>       disable=    [IPV6]
+>>>               See Documentation/networking/ipv6.txt.
+>>>
+>>> +    disable_cpu_apicid= [X86,APIC,KEXEC,SMP]
+>>
+>> Hi Hatayama,
+>>
+>> We are almost there. A minor nit. Why have we specified KEXEC here. This
+>> parameter disabled_cpu_apicid does not seem to dependon CONFIG_KEXEC?
+>>
+>> Jerry, this patch looks good to me. Does it work on your system?
+>>
+>
+> Because primary user for the option is currently kexec/kdump only.
+>
+> I referred to acpi_rsdp description:
+>
+>          acpi_rsdp=      [ACPI,EFI,KEXEC]
+>                          Pass the RSDP address to the kernel, mostly used
+>                          on machines running EFI runtime service to boot the
+>                          second kernel for kdump.
+>
 
-Right. 
-Of course, if there is a very simple and effective check for a dump data, 
-then we can take it.
+Indo-san, who introduced acpi_rsdp and KEXEC tag, told me that historical reason
+why KEXEC tag was introduced. disable_cpu_apicid is generic at least in the
+current version, so the tag doesn't need to be specified here.
 
+I'll post a new version soon.
 
-Thanks
-Atsushi Kumagai
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-> -- 
-> Thanks.
-> HATAYAMA, Daisuke
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
 
 _______________________________________________
 kexec mailing list
