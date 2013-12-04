@@ -1,24 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0015.houston.hp.com ([15.201.24.18])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VoFdR-0001wE-Ie
- for kexec@lists.infradead.org; Wed, 04 Dec 2013 16:49:14 +0000
-Message-ID: <1386175428.1791.225.camel@misato.fc.hp.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Wed, 04 Dec 2013 09:43:48 -0700
-In-Reply-To: <20131204024610.GA3764@dhcp-16-126.nay.redhat.com>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131127140732.GD32267@pd.tnic>
- <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
- <1386023600.1791.201.camel@misato.fc.hp.com>
- <1386034289.1791.210.camel@misato.fc.hp.com>
- <20131203015613.GB3980@dhcp-16-126.nay.redhat.com>
- <1386085140.1791.218.camel@misato.fc.hp.com>
- <20131204024610.GA3764@dhcp-16-126.nay.redhat.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VoG6j-00031Q-0D
+ for kexec@lists.infradead.org; Wed, 04 Dec 2013 17:19:29 +0000
+Date: Wed, 4 Dec 2013 12:19:04 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131204171904.GA19087@redhat.com>
+References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131129031048.GE4318@dhcp-16-252.nay.redhat.com>
+ <20131202154437.GF18642@redhat.com>
+ <20131204013529.GA3298@localhost.localdomain>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20131204013529.GA3298@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,29 +28,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Wed, 2013-12-04 at 10:46 +0800, Dave Young wrote:
-> Hi, Toshi
+On Wed, Dec 04, 2013 at 09:35:29AM +0800, Baoquan He wrote:
+> On 12/02/13 at 10:44am, Vivek Goyal wrote:
+> > On Fri, Nov 29, 2013 at 11:10:48AM +0800, Baoquan He wrote:
+> > 
+> > [..]
+> > > > +void *arch_kexec_kernel_image_load(struct kimage *image, char *kernel,
+> > > > +			unsigned long kernel_len, char *initrd,
+> > > > +			unsigned long initrd_len, char *cmdline,
+> > > > +			unsigned long cmdline_len)
+> > > > +{
+> > > > +	int idx = image->file_handler_idx;
+> > > > +
+> > > > +	if (idx < 0)
+> > > > +		return ERR_PTR(-ENOEXEC);
+> > > > +
+> > > > +	return kexec_file_type[idx].load(image, kernel, kernel_len, initrd,
+> > > > +					initrd_len, cmdline, cmdline_len);
+> > > > +}
+> > > > +
+> > > > +int arch_image_file_post_load_cleanup(struct kimage *image)
+> > > > +{
+> > > 
+> > > Hi Vivek,
+> > > 
+> > > This function is defined as one of arch specific fucntion set, why don't
+> > > we name it in a unified prefix as others.
+> > 
+> > I am using "arch_" prefix. What else to use?
 > 
-> > Oh, I think I now understand what the issue was.  The z420 firmware
-> > updates the SMBIOS table address in the EFI system table to a virtual
-> > address after calling EFI SetVirtualAddressMap.  So, you are passing the
-> > original physical address of the SMBIOS table from the 1st kernel to the
-> > 2nd kernel to put it back to physical.  Is that right? 
-> 
-> Right.
+> I mean in this function series, other functions have name like
+> arch_kexec_kernel_image_xxx, why this function is lonely, and is named
+> as arch_kimage_xxx. And here what does the 'k' mean in "kimage", kexec
+> image or kernel image, I am confused.
 
-Hi Dave,
+kimage is name is structure which is containing all the data relevant
+to loading of file. 
 
-The z420 firmware is based on some UEFI core that may be used by other
-vendors as well.  Since this handling is totally harmless (just
-redundant), I'd suggest not to have a platform check on this handling.
+I guess I can use arch_kimage_file_post_load_cleanup().
 
-Thanks,
--Toshi
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
