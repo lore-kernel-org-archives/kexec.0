@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VoG8A-00034L-Rw
- for kexec@lists.infradead.org; Wed, 04 Dec 2013 17:20:59 +0000
-Date: Wed, 4 Dec 2013 12:20:34 -0500
+ id 1VoGJu-0003M0-1i
+ for kexec@lists.infradead.org; Wed, 04 Dec 2013 17:33:07 +0000
+Date: Wed, 4 Dec 2013 12:32:39 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 6/6] kexec: Support for Kexec on panic using new system
- call
-Message-ID: <20131204172034.GC19087@redhat.com>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131204173238.GD19087@redhat.com>
 References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <1384969851-7251-7-git-send-email-vgoyal@redhat.com>
- <20131128112816.GC4318@dhcp-16-252.nay.redhat.com>
- <20131202153037.GD18642@redhat.com>
- <20131204015127.GC3298@localhost.localdomain>
+ <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131204015657.GD3298@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131204015127.GC3298@localhost.localdomain>
+In-Reply-To: <20131204015657.GD3298@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,33 +29,27 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Baoquan He <bhe@redhat.com>
 Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Wed, Dec 04, 2013 at 09:51:27AM +0800, Baoquan He wrote:
-> On 12/02/13 at 10:30am, Vivek Goyal wrote:
-> > On Thu, Nov 28, 2013 at 07:28:16PM +0800, Baoquan He wrote:
-> > 
-> > [..]
-> > > > +int crash_copy_backup_region(struct kimage *image)
-> > > > +{
-> > > 
-> > > Why need this func be called, backup region has been added into crash
-> > > segment by kexec_add_buffer, and then buffer copy is done in
-> > > kimage_load_crash_segment. I think this copy is handled twice. Please
-> > > correct me if I am wrong.
-> > > 
-> > 
-> > Hi Bao,
-> > 
-> > kexec_add_buffer() will copy the backup region but it will happen when
-> > crash kernel is loaded. We want snapshot of backup region at the time
-> > of crash and that's why this second call to copy backup region and it
-> > is executed after the crash.
+On Wed, Dec 04, 2013 at 09:56:57AM +0800, Baoquan He wrote:
+> On 11/20/13 at 12:50pm, Vivek Goyal wrote:
+> > + * that kexec_mutex is held.
+> > + */
 > 
-> Did we do this before? And will this region  be changed after 1st kernel
-> boot
+> I think kexec_add_buffer is guaranteed to be called before allocating
+> control pages, why not updating image->control_page after each time
+> kexec_add_buffer is called. Then when control page is needed, effective
+> address in crash_kernel region can be given. This can be a little more
+> efficient.
 
-Backup region is first 640K and it can change after load. Some memory
-allocation might come from there and kernel might write to that memory.
-So copying of backup region needs to take place as late as possible.
+image->control_page controls the lowest address available for control
+pages in crash kernel region. When we do kexec_add_buffer, we don't
+necessarily know whether there is an empty page available between
+segments or not.
+
+Also, existing logic for kexec does not update the image->control_page
+when segments are being copied.
+
+So I think this does not offer any huge benefits and it is not performance
+critical path. I will just leave it as it is.
 
 Thanks
 Vivek
