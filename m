@@ -1,26 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0027.austin.hp.com ([15.216.28.34])
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VobMf-0004wv-RP
- for kexec@lists.infradead.org; Thu, 05 Dec 2013 16:01:22 +0000
-Message-ID: <1386258962.1791.268.camel@misato.fc.hp.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Thu, 05 Dec 2013 08:56:02 -0700
-In-Reply-To: <20131205115124.GC14407@pd.tnic>
-References: <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131127140732.GD32267@pd.tnic>
- <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
- <1386023600.1791.201.camel@misato.fc.hp.com>
- <1386034289.1791.210.camel@misato.fc.hp.com>
- <20131203015613.GB3980@dhcp-16-126.nay.redhat.com>
- <1386085140.1791.218.camel@misato.fc.hp.com>
- <20131204024610.GA3764@dhcp-16-126.nay.redhat.com>
- <1386175428.1791.225.camel@misato.fc.hp.com>
- <20131205015615.GC3736@dhcp-16-126.nay.redhat.com>
- <20131205115124.GC14407@pd.tnic>
-Mime-Version: 1.0
+ id 1VoeZc-0003AG-EI
+ for kexec@lists.infradead.org; Thu, 05 Dec 2013 19:26:57 +0000
+Received: from /spool/local
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Fri, 6 Dec 2013 05:26:25 +1000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 9405C3578054
+ for <kexec@lists.infradead.org>; Fri,  6 Dec 2013 06:25:38 +1100 (EST)
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ rB5JPPsC6881722
+ for <kexec@lists.infradead.org>; Fri, 6 Dec 2013 06:25:26 +1100
+Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
+ by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ rB5JPbQt002820
+ for <kexec@lists.infradead.org>; Fri, 6 Dec 2013 06:25:37 +1100
+Subject: [PATCH] kexec: Fix add_usable_memory to use buf of type uint64_t.
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Fri, 06 Dec 2013 00:55:30 +0530
+Message-ID: <20131205192530.1961.78838.stgit@mars>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,39 +36,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>
 
-On Thu, 2013-12-05 at 12:51 +0100, Borislav Petkov wrote:
-> On Thu, Dec 05, 2013 at 09:56:15AM +0800, Dave Young wrote:
-> > > The z420 firmware is based on some UEFI core that may be used by other
-> > > vendors as well.  Since this handling is totally harmless (just
-> > > redundant), I'd suggest not to have a platform check on this handling.
-> > 
-> > I have same worry as well, so I agree with you.
-> 
-> Btw, why does kexec need the ->smbios table at all? I see it being
-> passed in efi_setup_data.
+From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-Hi Boris,
+A switchover from /kexec/arch/ppc64/fs2dt.c to common code under
+/kexec/fs2dt.c broke the kdump on ppc64. The function add_usable_memory()
+assumes that 'memory@*' node exports two 32bit values and fails
+to populate mem ranges correctly. On ppc64, 'memory@*' exports two 64bit
+values as below:
 
-The smbios in efi_setup_data is necessary for kexec to pass the physical
-address of the SMBIOS table from the 1st kernel to the 2nd kernel.
+# hexdump /proc/device-tree/memory\@0/reg
+0000000 0000 0000 0000 0000 0000 0000 0800 0000
+0000010
+#
 
-The kernel boot sequence proceeds in the following order.  Step 2
-requires efi.smbios to be the physical address.  However, Dave found
-that EFI system table has a virtual address of SMBIOS in step 1.  Hence,
-he sets it back to the physical address with the smbios in
-efi_setup_data.  (When it is still the physical address, it simply sets
-the same value.)
+This patch fixes add_usable_memory() to use buf[2] of type uint64_t.
 
-1. efi_init() - Set efi.smbios from EFI system table
-2. dmi_scan_machine() - Temporary map efi.smbios to access SMBIOS table
-3. efi_enter_virtual_mode() - Map EFI ranges
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+---
+ kexec/fs2dt.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
--Toshi
-
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 5d774ae..7202dc1 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -285,8 +285,8 @@ static void add_dyn_reconf_usable_mem_property(struct dirent *dp, int fd) {}
+ static void add_usable_mem_property(int fd, size_t len)
+ {
+ 	char fname[MAXPATH], *bname;
+-	uint32_t buf[2];
+-	uint32_t *ranges;
++	uint64_t buf[2];
++	uint64_t *ranges;
+ 	int ranges_size = MEM_RANGE_CHUNK_SZ;
+ 	uint64_t base, end, loc_base, loc_end;
+ 	size_t range;
+@@ -311,8 +311,8 @@ static void add_usable_mem_property(int fd, size_t len)
+ 
+ 	if (~0ULL - buf[0] < buf[1])
+ 		die("unrecoverable error: mem property overflow\n");
+-	base = be32_to_cpu(buf[0]);
+-	end = base + be32_to_cpu(buf[1]);
++	base = be64_to_cpu(buf[0]);
++	end = base + be64_to_cpu(buf[1]);
+ 
+ 	ranges = malloc(ranges_size * sizeof(*ranges));
+ 	if (!ranges)
 
 
 _______________________________________________
