@@ -1,26 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VofvA-0005HE-Js
- for kexec@lists.infradead.org; Thu, 05 Dec 2013 20:53:20 +0000
-Date: Thu, 5 Dec 2013 21:52:50 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131205205250.GF14407@pd.tnic>
-References: <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
- <1386023600.1791.201.camel@misato.fc.hp.com>
- <1386034289.1791.210.camel@misato.fc.hp.com>
- <20131203015613.GB3980@dhcp-16-126.nay.redhat.com>
- <1386085140.1791.218.camel@misato.fc.hp.com>
- <20131204024610.GA3764@dhcp-16-126.nay.redhat.com>
- <1386175428.1791.225.camel@misato.fc.hp.com>
- <20131205015615.GC3736@dhcp-16-126.nay.redhat.com>
- <20131205115124.GC14407@pd.tnic>
- <1386258962.1791.268.camel@misato.fc.hp.com>
+Received: from g4t0017.houston.hp.com ([15.201.24.20])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vogwh-0006es-Hm
+ for kexec@lists.infradead.org; Thu, 05 Dec 2013 21:58:56 +0000
+Received: from g9t2301.houston.hp.com (g9t2301.houston.hp.com [16.216.185.78])
+ by g4t0017.houston.hp.com (Postfix) with ESMTP id 51E083800C
+ for <kexec@lists.infradead.org>; Thu,  5 Dec 2013 21:58:25 +0000 (UTC)
+Received: from anatevka.fc.hp.com (anatevka.fc.hp.com [16.71.12.60])
+ by g9t2301.houston.hp.com (Postfix) with ESMTP id 47CFB64
+ for <kexec@lists.infradead.org>; Thu,  5 Dec 2013 21:58:25 +0000 (UTC)
+Received: from anatevka.fc.hp.com (localhost [127.0.0.1])
+ by anatevka.fc.hp.com (Postfix) with ESMTP id E497748115C
+ for <kexec@lists.infradead.org>; Thu,  5 Dec 2013 14:58:24 -0700 (MST)
+Received: (from hoemann@localhost)
+ by anatevka.fc.hp.com (8.14.7/8.14.7/Submit) id rB5LwOJb029736
+ for kexec@lists.infradead.org; Thu, 5 Dec 2013 14:58:24 -0700
+Date: Thu, 5 Dec 2013 14:58:24 -0700
+From: jerry.hoemann@hp.com
+Subject: Re: [PATCH v9] x86, apic, kexec, Documentation: Add disable_cpu_apic
+ kernel parameter
+Message-ID: <20131205215824.GA29585@anatevka.fc.hp.com>
+References: <529D34AA.1000809@jp.fujitsu.com>
+ <20131203152536.GE4251@redhat.com>
+ <20131205190949.GA23528@anatevka.fc.hp.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1386258962.1791.268.camel@misato.fc.hp.com>
+In-Reply-To: <20131205190949.GA23528@anatevka.fc.hp.com>
+Reply-To: jerry.hoemann@hp.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,37 +39,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Toshi Kani <toshi.kani@hp.com>, Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: kexec <kexec@lists.infradead.org>
 
-On Thu, Dec 05, 2013 at 08:56:02AM -0700, Toshi Kani wrote:
-> The smbios in efi_setup_data is necessary for kexec to pass the physical
-> address of the SMBIOS table from the 1st kernel to the 2nd kernel.
-> 
-> The kernel boot sequence proceeds in the following order.  Step 2
-> requires efi.smbios to be the physical address.  However, Dave found
-> that EFI system table has a virtual address of SMBIOS in step 1.  Hence,
-> he sets it back to the physical address with the smbios in
-> efi_setup_data.  (When it is still the physical address, it simply sets
-> the same value.)
-> 
-> 1. efi_init() - Set efi.smbios from EFI system table
-> 2. dmi_scan_machine() - Temporary map efi.smbios to access SMBIOS table
-> 3. efi_enter_virtual_mode() - Map EFI ranges
 
-Thanks Toshi, it is all clear now.
 
-@Dave: you might want to put Toshi's explanation in the commit message
-of your patch so that we know *why* the change is needed.
+Sorry if you're getting multiple copies, but i have had problems with
+my subscription to the kexec mailing list and am resending.
 
-Thanks.
+
+
+On Tue, Dec 03, 2013 at 10:25:36AM -0500, Vivek Goyal wrote:
+>
+> Hi Hatayama,
+>
+> We are almost there. A minor nit. Why have we specified KEXEC here. This
+> parameter disabled_cpu_apicid does not seem to dependon CONFIG_KEXEC?
+>
+> Jerry, this patch looks good to me. Does it work on your system?
+>
+> Thanks
+> Vivek
+
+
+Vivek,  Hatayama,
+
+I've back ported v9 of this patch to 2.6.32 and 3.0.80 based kernels to
+test with existing distros.
+
+I've tested on our smaller prototype server specifying nr_cpus=8/maxcpus=8
+to the capture kernel.  One hundred iterations (echo c > /proc/sysrq-trigger)
+varying target cpu and system load to each kernel.
+
+The 2.6.32 based distro kernel showed the < 5% soft lockup
+(still unresolved) during boot of capture kernel.  This is
+something i've seen on all versions of the patch that i've tested.
+
+The 3.0.80 based distro kernel has had zero failures.
+
+I have not had a chance to test upstream kernels or on
+our larger prototype configuration.
+
+We still plan to test on our larger prototype.  Testing of
+prior versions of the patch on the larger systems didn't show
+problems w/ this functionality and I don't anticipate we'll
+find anything this time either.
+
+I am okay with this patch being accepted upstream and working
+the intermittent 2.6.32 failures separately.
+
+
+Jerry
 
 -- 
-Regards/Gruss,
-    Boris.
 
-Sent from a fat crate under my desk. Formatting is fine.
---
+----------------------------------------------------------------------------
+Jerry Hoemann            Software Engineer              Hewlett-Packard
+
+3404 E Harmony Rd. MS 57                        phone:  (970) 898-1022
+Ft. Collins, CO 80528                           FAX:    (970) 898-XXXX
+                                                email:  jerry.hoemann@hp.com
+----------------------------------------------------------------------------
+
+
 
 _______________________________________________
 kexec mailing list
