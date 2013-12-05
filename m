@@ -1,26 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VoOBb-0006z7-4G
- for kexec@lists.infradead.org; Thu, 05 Dec 2013 01:57:04 +0000
-Date: Thu, 5 Dec 2013 09:56:15 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 07/12] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131205015615.GC3736@dhcp-16-126.nay.redhat.com>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-8-git-send-email-dyoung@redhat.com>
- <20131127140732.GD32267@pd.tnic>
- <20131129091415.GH4186@dhcp-16-126.nay.redhat.com>
- <1386023600.1791.201.camel@misato.fc.hp.com>
- <1386034289.1791.210.camel@misato.fc.hp.com>
- <20131203015613.GB3980@dhcp-16-126.nay.redhat.com>
- <1386085140.1791.218.camel@misato.fc.hp.com>
- <20131204024610.GA3764@dhcp-16-126.nay.redhat.com>
- <1386175428.1791.225.camel@misato.fc.hp.com>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VoQHV-0000UM-5M
+ for kexec@lists.infradead.org; Thu, 05 Dec 2013 04:11:18 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
+ <8761rl73s7.fsf@xmission.com> <20131122015518.GA31921@redhat.com>
+ <87txf4y304.fsf@xmission.com> <20131122141945.GE4046@redhat.com>
+ <87li0fvm10.fsf@xmission.com> <20131204193430.GF19087@redhat.com>
+Date: Wed, 04 Dec 2013 20:10:22 -0800
+In-Reply-To: <20131204193430.GF19087@redhat.com> (Vivek Goyal's message of
+ "Wed, 4 Dec 2013 14:34:31 -0500")
+Message-ID: <87siu8545t.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1386175428.1791.225.camel@misato.fc.hp.com>
+Subject: Re: [PATCH 0/6] kexec: A new system call to allow in kernel loading
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,31 +26,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Toshi Kani <toshi.kani@hp.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, greg@kroah.com, hpa@zytor.com
 
-On 12/04/13 at 09:43am, Toshi Kani wrote:
-> On Wed, 2013-12-04 at 10:46 +0800, Dave Young wrote:
-> > Hi, Toshi
-> > 
-> > > Oh, I think I now understand what the issue was.  The z420 firmware
-> > > updates the SMBIOS table address in the EFI system table to a virtual
-> > > address after calling EFI SetVirtualAddressMap.  So, you are passing the
-> > > original physical address of the SMBIOS table from the 1st kernel to the
-> > > 2nd kernel to put it back to physical.  Is that right? 
-> > 
-> > Right.
-> 
-> Hi Dave,
-> 
-> The z420 firmware is based on some UEFI core that may be used by other
-> vendors as well.  Since this handling is totally harmless (just
-> redundant), I'd suggest not to have a platform check on this handling.
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-I have same worry as well, so I agree with you.
+> Hi Eric,
+>
+> So you want a separate purgatory code and that purgatory should be self
+> contained and should not share any code with rest of the kernel. No
+> inclusion of header files, no linking against kernel libraries? That means
+> even re-implementing sha256 functions separately (like user space)?
 
-Thanks
-Dave
+Call only trivial sharing of code with the rest of the kernel.   But only
+as much as say the kernel decompressor has.  
+
+> If code maintenance is a concern, then I think I can reimplement some
+> of the functions to calculate sha256 in separate crash files and invoke
+> those to reduce code sharing with rest of the kernel. And we should be
+> able to link against the kernel and not have to create separate
+> relocatable purgatory object and relocate it.
+
+It is both code maintenance and the fact that we have a strong
+expectation that where purgatory lives should not be corrupted.
+Plus what I have seen there maintenance becomes much simpler if there is
+a little bit of C code that lives between the two kernels.  At that
+point people don't have to grok assembly to be able to touch anything,
+and by simply living their it enforces separation of concerns
+from the kernel in a way that is trivial and obvious.
+
+Plus we already have all of the code in userspace to do all of this work
+so it is not something you would need to write from scrach merely
+something that you would need to adapt.
+
+> IOW, does purgatory still have to be a relocatable object?
+
+Fundamentally purgatory does need to be a relocatable object.
+
+> I think
+> user space had no choice but given the fact that we are implementing
+> thing in kernel, I should be able to implement my own hash calculation
+> and segment verification code and link it to existing kernel and invoke
+> these outside purgatory. 
+
+Doing this outside of purgatory and linking to the rest of the kernel is
+almost certainly enough to get someone to perform an obvious cleanup
+that will undermine the purpose of the code.  Or perhaps it will be
+merely a reference to the GOT table behind our backs in the C code
+generated by the compiler that will undermine this checking.
+
+Linking to our sanity checks to the rest of the kernel leaves me
+profoundly uncomfortable.
+
+> Anyway, we call so many other functions after
+> crash to stop cpus, save registers, etc.
+
+There is no other possible place to stop cpus, and save the cpu
+registers.  As much as possible that should be the only justification
+for the code we run on the kexec on panic code path.
+
+Honestly calling so many other functions on that code path is a good
+reason to see about removing them.  In addition to my other reasons
+adding the hash calculation on that path will likely confuse issues
+more than helping them.
+
+Eric
+
 
 _______________________________________________
 kexec mailing list
