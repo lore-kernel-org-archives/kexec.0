@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VoylD-00038J-IR
- for kexec@lists.infradead.org; Fri, 06 Dec 2013 17:00:16 +0000
-Received: from g9t2301.houston.hp.com (g9t2301.houston.hp.com [16.216.185.78])
- by g4t0017.houston.hp.com (Postfix) with ESMTP id 0D26538007
- for <kexec@lists.infradead.org>; Fri,  6 Dec 2013 16:59:46 +0000 (UTC)
-Subject: Re: [PATCH v9] x86, apic, kexec, Documentation: Add
- disable_cpu_apic kernel parameter
-From: Lisa Mitchell <lisa.mitchell@hp.com>
-In-Reply-To: <20131205215824.GA29585@anatevka.fc.hp.com>
-References: <529D34AA.1000809@jp.fujitsu.com>
- <20131203152536.GE4251@redhat.com>
- <20131205190949.GA23528@anatevka.fc.hp.com>
- <20131205215824.GA29585@anatevka.fc.hp.com>
-Date: Fri, 06 Dec 2013 05:34:59 -0700
-Message-ID: <1386333299.17054.29.camel@lisamlinux.fc.hp.com>
-Mime-Version: 1.0
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VpDlz-0004Nm-B7
+ for kexec@lists.infradead.org; Sat, 07 Dec 2013 09:02:05 +0000
+Date: Sat, 7 Dec 2013 04:01:02 -0500 (EST)
+From: Dave Young <dyoung@redhat.com>
+Message-ID: <2141297830.13051543.1386406862068.JavaMail.root@redhat.com>
+In-Reply-To: <20131202094020.GA7380@pd.tnic>
+References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
+ <1385445477-9665-7-git-send-email-dyoung@redhat.com>
+ <20131127114402.GB32267@pd.tnic>
+ <20131129094034.GI4186@dhcp-16-126.nay.redhat.com>
+ <20131129115029.GB4266@pd.tnic>
+ <20131202025942.GF3999@dhcp-16-126.nay.redhat.com>
+ <20131202094020.GA7380@pd.tnic>
+Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,78 +28,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Hoemann, Jerry" <jerry.hoemann@hp.com>
-Cc: kexec <kexec@lists.infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi kani <toshi.kani@hp.com>, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Bottomley <James.Bottomley@HansenPartnership.com>, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Thu, 2013-12-05 at 21:58 +0000, Hoemann, Jerry wrote:
-> 
-> Sorry if you're getting multiple copies, but i have had problems with
-> my subscription to the kexec mailing list and am resending.
-> 
-> 
-> 
-> On Tue, Dec 03, 2013 at 10:25:36AM -0500, Vivek Goyal wrote:
-> >
-> > Hi Hatayama,
-> >
-> > We are almost there. A minor nit. Why have we specified KEXEC here. This
-> > parameter disabled_cpu_apicid does not seem to dependon CONFIG_KEXEC?
-> >
-> > Jerry, this patch looks good to me. Does it work on your system?
-> >
-> > Thanks
-> > Vivek
-> 
-> 
-> Vivek,  Hatayama,
-> 
-> I've back ported v9 of this patch to 2.6.32 and 3.0.80 based kernels to
-> test with existing distros.
-> 
-> I've tested on our smaller prototype server specifying nr_cpus=8/maxcpus=8
-> to the capture kernel.  One hundred iterations (echo c > /proc/sysrq-trigger)
-> varying target cpu and system load to each kernel.
-> 
-> The 2.6.32 based distro kernel showed the < 5% soft lockup
-> (still unresolved) during boot of capture kernel.  This is
-> something i've seen on all versions of the patch that i've tested.
-> 
-> The 3.0.80 based distro kernel has had zero failures.
-> 
-> I have not had a chance to test upstream kernels or on
-> our larger prototype configuration.
-> 
-> We still plan to test on our larger prototype.  Testing of
-> prior versions of the patch on the larger systems didn't show
-> problems w/ this functionality and I don't anticipate we'll
-> find anything this time either.
-> 
-> I am okay with this patch being accepted upstream and working
-> the intermittent 2.6.32 failures separately.
-> 
-> 
-> Jerry
-> 
+Hi, all
 
-Another update, I have tested our max cpu configuration prototype, with
-a fairly large IO config with the backported 3.0.80 kernel Jerry
-mentions above with the v9 patch backported, and this system got 7 out
-of 7 successful dumps, with max_cpus=8, so far in testing. This system
-has a a fairly large IO configuration too, such that intermittently
-booting the crashkernel with 1 cpu  the crashkernel boot would hang due
-to IRQ for system disk not getting assigned.   So this is early
-indication that this patch is working well on larger IO configurations.
+Update my status:
 
-I plan to test with the 2.6.32 base with v9 patch over the weekend on
-this large configuration.   The system takes much longer to dump than
-the minimum config, so it is harder to build up as many iterations over
-a short time, plus I have to share the system with others.  
+I have finished most of thecode related changes including the krealloc
+fixes (both for original code and my new code). And I'm slowly
+moving the kexec related stuff to efi_kexec.c, this involves
+some other cleanups, such as:
+efi_systab_init:
+ -> move 64bit code to efi_64.c, move 32bit code to efi_32.c
 
-Thanks,
+efi_setup global variable is changing to physical address, ioremapping
+it when necessary instead of directly using the virt addr because
+previously the virt addr will be freed until entering virtual mode,
+it's possible a leak in case something is wrong in the middle also it
+occupies the ioremap slot a little bit long.
 
-Lisa Mitchell
+There's also other problems, so I still need a few days probably
+a week to carefully restructure the code.
 
+Thanks
+Dave
 
+Sending from web interface so sorry for the email format.
+----- Original Message -----
+From: "Borislav Petkov" <bp@alien8.de>
+To: "Dave Young" <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, "toshi kani" <toshi.kani@hp.com>, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "James Bottomley" <James.Bottomley@HansenPartnership.com>, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+Sent: Monday, December 2, 2013 5:40:20 PM
+Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
+
+On Mon, Dec 02, 2013 at 10:59:42AM +0800, Dave Young wrote:
+> They are only called if there's setup_data SETUP_EFI passed in. Yes, I
+> think only kexec need that part of code. But I hesitated to mess the
+> code with a lot of #if. Will think about it.
+
+Well, the accepted strategy with the efi code is to have function calls
+in efi.c and then have different versions of those functions defined for
+32 and 64-bit, i.e. efi_32.c and efi_64.c.
+
+I can imagine adding an efi_kexec.c could make the whole deal very
+clearly arranged without ifdeffery.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
