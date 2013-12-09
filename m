@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VpqWO-0001Rh-MO
- for kexec@lists.infradead.org; Mon, 09 Dec 2013 02:24:34 +0000
-Date: Mon, 9 Dec 2013 10:23:36 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 06/12] efi: export efi runtime memory mapping to sysfs
-Message-ID: <20131209022335.GA3761@dhcp-16-126.nay.redhat.com>
-References: <1385445477-9665-1-git-send-email-dyoung@redhat.com>
- <1385445477-9665-7-git-send-email-dyoung@redhat.com>
- <20131127114402.GB32267@pd.tnic>
- <20131129094034.GI4186@dhcp-16-126.nay.redhat.com>
- <20131129115029.GB4266@pd.tnic>
- <20131202025942.GF3999@dhcp-16-126.nay.redhat.com>
- <20131202094020.GA7380@pd.tnic>
- <2141297830.13051543.1386406862068.JavaMail.root@redhat.com>
- <20131207133048.GA4183@pd.tnic>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VpqsI-0001gF-EP
+ for kexec@lists.infradead.org; Mon, 09 Dec 2013 02:47:12 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2 3/4] makedumpfile/xen: Fail immediately on every
+ architecture if dump level is invalid
+Date: Mon, 9 Dec 2013 02:45:21 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971CCA93@BPXM01GP.gisp.nec.co.jp>
+References: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
+ <1385993804-27721-4-git-send-email-daniel.kiper@oracle.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971C9FF0@BPXM01GP.gisp.nec.co.jp>
+ <20131203194501.GD21544@olila.local.net-space.pl>
+In-Reply-To: <20131203194501.GD21544@olila.local.net-space.pl>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131207133048.GA4183@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,51 +27,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi kani <toshi.kani@hp.com>, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Bottomley <James.Bottomley@HansenPartnership.com>, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Daniel Kiper <daniel.kiper@oracle.com>, Kenichi Oomichi <oomichi@mxs.nes.nec.co.jp>
+Cc: "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "david.vrabel@citrix.com" <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
 
-On 12/07/13 at 02:30pm, Borislav Petkov wrote:
-> On Sat, Dec 07, 2013 at 04:01:02AM -0500, Dave Young wrote:
-> > Hi, all
-> > 
-> > Update my status:
-> > 
-> > I have finished most of thecode related changes including the krealloc
-> > fixes (both for original code and my new code). And I'm slowly
-> > moving the kexec related stuff to efi_kexec.c, this involves
-> > some other cleanups, such as:
-> > efi_systab_init:
-> >  -> move 64bit code to efi_64.c, move 32bit code to efi_32.c
-> > 
-> > efi_setup global variable is changing to physical address, ioremapping
-> > it when necessary instead of directly using the virt addr because
-> > previously the virt addr will be freed until entering virtual mode,
-> > it's possible a leak in case something is wrong in the middle also it
-> > occupies the ioremap slot a little bit long.
-> > 
-> > There's also other problems, so I still need a few days probably
-> > a week to carefully restructure the code.
+On 2013/12/04 4:45:42, kexec <kexec-bounces@lists.infradead.org> wrote:
+> On Tue, Dec 03, 2013 at 05:27:03AM +0000, Atsushi Kumagai wrote:
+> > On 2013/12/02 23:17:59, kexec <kexec-bounces@lists.infradead.org> wrote:
+> > > Do not try to process Xen crash dump on every architecture if dump level
+> > > is invalid. Fail immediately and print relevant error message.
+> > >
+> > > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> > > ---
+> > >  makedumpfile.c |    4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/makedumpfile.c b/makedumpfile.c
+> > > index 5a378d1..45f96aa 100644
+> > > --- a/makedumpfile.c
+> > > +++ b/makedumpfile.c
+> > > @@ -7637,14 +7637,14 @@ initial_xen(void)
+> > >  		MSG("Try `makedumpfile --help' for more information.\n");
+> > >  		return FALSE;
+> > >  	}
+> > > -#ifndef __x86_64__
+> > > +
+> > >  	if (DL_EXCLUDE_ZERO < info->max_dump_level) {
+> > >  		MSG("Dump_level is invalid. It should be 0 or 1.\n");
+> > >  		MSG("Commandline parameter is invalid.\n");
+> > >  		MSG("Try `makedumpfile --help' for more information.\n");
+> > >  		return FALSE;
+> > >  	}
+> > > -#endif
+> > > +
+> >
+> > Did you say that dump level 2 or larger are no longer effective even for x86_64 ?
+> > I thought it works by the patch below, but I'm not sure about Xen.
+> > So I would like to know why you sent this patch.
+> >
+> >
+> > commit ec5b5835a113cf62a168d4a7354564a38de6b52c
+> > Author: ken1_ohmichi <ken1_ohmichi>
+> > Date:   Fri Oct 9 03:05:41 2009 +0000
+> >
+> >     [v1.3.4-10] Add dump filtering on an x86_64 xen domain-0.
+> >
+> >     This patch adds the dump filtering for excluding unnecessary pages (cache
+> >     pages, user process data pages, and free pages) on on x86_64 xen domain-0.
+> >
+> >     On the existing makedumpfile (v1.3.3 or former), a user could specify 0
+> >     or 1 only as a dump_level. By this patch, he/she can specify 2 or larger
+> >     also as a dump_level.
+> >
+> >     Now, this feature is effective on x86_64 machine only.
 > 
-> Those are all lofty goals but beware that trying to solve it all at
-> once can be very painful and can cause unnecessary work for both coders
-> and reviewers. Especially if the patchset grows out of proportion which
-> makes it much harder to review and deal with.
-> 
-> So, from my experience and if I were you, I'd try to address the most
-> important issue I'm trying to fix, have 10ish nice clean patches and put
-> the rest on the TODO list. This is much easier to deal with for everyone
-> involved than trying to solve it all at once.
-> 
-> Besides, if you solve it all at once, what are you going to work on
-> afterwards? :-)
-> 
+> Hmmm... Thanks for this. I missed this patch. However, it looks that I
+> do not understand something. AIUI, from Xen point of view we are not able
+> to use dump level higher than 1 because there is no e.g. cache pages (it
+> looks that we could also skip free pages but this stuff is not implemented).
+> Above mentioned patch suggest that there is a way to extract just only Dom0
+> stuff taking into account Linux internals only. If my reasoning is true
+> then dump level higher than 1 is possible only if we look at Dom0 from Linux
+> point of view. 
 
-I like your suggestion for splitting kexec stuff to another file efi_kexec.c.
-but yes it needs more work and is bloating the patchset, I'm fine to leave
-it in TODO list.
+I've reviewed the code for Xen, my understanding is the same as yours.
+The memory regions corresponding to hypervisor and DomU will remain even if
+specifying the dump level higher than 1.
+
+> However, I can not find any description how to do that.
+> So I am CC-ing Ken'ichi as author of this patch but I do not know that
+> he works for NEC still.
+
+I'm sorry but I missed your point. Did you mention a lack of description
+in man page about an effect when specifying the dump level higher than 1
+for Xen's memory ?
+At least, I still think this patch is wrong because any dump level is
+effective for x86_64.
+
+BTW, Ken'ichi still work for NEC but he is busy on other projects.
+
 
 Thanks
-Dave
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
