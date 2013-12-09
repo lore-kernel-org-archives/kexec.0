@@ -1,20 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VpqsI-0001gF-EP
- for kexec@lists.infradead.org; Mon, 09 Dec 2013 02:47:12 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v2 3/4] makedumpfile/xen: Fail immediately on every
- architecture if dump level is invalid
-Date: Mon, 9 Dec 2013 02:45:21 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971CCA93@BPXM01GP.gisp.nec.co.jp>
-References: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
- <1385993804-27721-4-git-send-email-daniel.kiper@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C9FF0@BPXM01GP.gisp.nec.co.jp>
- <20131203194501.GD21544@olila.local.net-space.pl>
-In-Reply-To: <20131203194501.GD21544@olila.local.net-space.pl>
-Content-Language: ja-JP
+ id 1VpvrZ-0006Fp-AF
+ for kexec@lists.infradead.org; Mon, 09 Dec 2013 08:06:48 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 005933EE15A
+ for <kexec@lists.infradead.org>; Mon,  9 Dec 2013 17:06:16 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id E4DEA45DE65
+ for <kexec@lists.infradead.org>; Mon,  9 Dec 2013 17:06:15 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C7BA545DE53
+ for <kexec@lists.infradead.org>; Mon,  9 Dec 2013 17:06:15 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B85FA1DB8053
+ for <kexec@lists.infradead.org>; Mon,  9 Dec 2013 17:06:15 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 658021DB804B
+ for <kexec@lists.infradead.org>; Mon,  9 Dec 2013 17:06:15 +0900 (JST)
+Message-ID: <52A579EE.6090107@jp.fujitsu.com>
+Date: Mon, 09 Dec 2013 17:06:06 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
+Subject: [PATCH v2] vmcore: copy fractional pages into buffers in the kdump
+ 2nd kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,87 +37,481 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>, Kenichi Oomichi <oomichi@mxs.nes.nec.co.jp>
-Cc: "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "david.vrabel@citrix.com" <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On 2013/12/04 4:45:42, kexec <kexec-bounces@lists.infradead.org> wrote:
-> On Tue, Dec 03, 2013 at 05:27:03AM +0000, Atsushi Kumagai wrote:
-> > On 2013/12/02 23:17:59, kexec <kexec-bounces@lists.infradead.org> wrote:
-> > > Do not try to process Xen crash dump on every architecture if dump level
-> > > is invalid. Fail immediately and print relevant error message.
-> > >
-> > > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> > > ---
-> > >  makedumpfile.c |    4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/makedumpfile.c b/makedumpfile.c
-> > > index 5a378d1..45f96aa 100644
-> > > --- a/makedumpfile.c
-> > > +++ b/makedumpfile.c
-> > > @@ -7637,14 +7637,14 @@ initial_xen(void)
-> > >  		MSG("Try `makedumpfile --help' for more information.\n");
-> > >  		return FALSE;
-> > >  	}
-> > > -#ifndef __x86_64__
-> > > +
-> > >  	if (DL_EXCLUDE_ZERO < info->max_dump_level) {
-> > >  		MSG("Dump_level is invalid. It should be 0 or 1.\n");
-> > >  		MSG("Commandline parameter is invalid.\n");
-> > >  		MSG("Try `makedumpfile --help' for more information.\n");
-> > >  		return FALSE;
-> > >  	}
-> > > -#endif
-> > > +
-> >
-> > Did you say that dump level 2 or larger are no longer effective even for x86_64 ?
-> > I thought it works by the patch below, but I'm not sure about Xen.
-> > So I would like to know why you sent this patch.
-> >
-> >
-> > commit ec5b5835a113cf62a168d4a7354564a38de6b52c
-> > Author: ken1_ohmichi <ken1_ohmichi>
-> > Date:   Fri Oct 9 03:05:41 2009 +0000
-> >
-> >     [v1.3.4-10] Add dump filtering on an x86_64 xen domain-0.
-> >
-> >     This patch adds the dump filtering for excluding unnecessary pages (cache
-> >     pages, user process data pages, and free pages) on on x86_64 xen domain-0.
-> >
-> >     On the existing makedumpfile (v1.3.3 or former), a user could specify 0
-> >     or 1 only as a dump_level. By this patch, he/she can specify 2 or larger
-> >     also as a dump_level.
-> >
-> >     Now, this feature is effective on x86_64 machine only.
-> 
-> Hmmm... Thanks for this. I missed this patch. However, it looks that I
-> do not understand something. AIUI, from Xen point of view we are not able
-> to use dump level higher than 1 because there is no e.g. cache pages (it
-> looks that we could also skip free pages but this stuff is not implemented).
-> Above mentioned patch suggest that there is a way to extract just only Dom0
-> stuff taking into account Linux internals only. If my reasoning is true
-> then dump level higher than 1 is possible only if we look at Dom0 from Linux
-> point of view. 
+This is a patch for fixing mmap failure due to fractional page issue.
 
-I've reviewed the code for Xen, my understanding is the same as yours.
-The memory regions corresponding to hypervisor and DomU will remain even if
-specifying the dump level higher than 1.
+This patch might be still a bit too large as a single patch and might need to split.
+If you think patch refactoring is needed, please suggest.
 
-> However, I can not find any description how to do that.
-> So I am CC-ing Ken'ichi as author of this patch but I do not know that
-> he works for NEC still.
+Change Log:
 
-I'm sorry but I missed your point. Did you mention a lack of description
-in man page about an effect when specifying the dump level higher than 1
-for Xen's memory ?
-At least, I still think this patch is wrong because any dump level is
-effective for x86_64.
+v1 => v2)
 
-BTW, Ken'ichi still work for NEC but he is busy on other projects.
+- Copy fractional pages from 1st kernel to 2nd kernel to reduce read
+  to the fractional pages for reliability.
 
+- Deal with the case where multiple System RAM areas are contained in
+  a single fractional page.
 
-Thanks
-Atsushi Kumagai
+Test:
+
+Tested on X86_64. Fractional pages are created using memmap= kernel
+parameter on the kdump 1st kernel.
+
+From fd6b0aca54caf7f0b5fd3841ef9e5ff081121ab8 Mon Sep 17 00:00:00 2001
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Mon, 9 Dec 2013 09:12:32 +0900
+Subject: [PATCH] vmcore: copy fractional pages into buffers in the kdump 2nd kernel
+
+As Vivek reported in https://lkml.org/lkml/2013/11/13/439, in real
+world there's platform that allocates System RAM area and Reserved
+area in a single same page. As a result, mmap fails at sanity check
+that comapres memory cache types in a given range, causing user-land
+tools to exit abnormally in the middle of crash dumping.
+
+Although in the current case the data in Reserved area is ACPI data,
+in general, arbitrary data can possibly be located in a single page
+together with System RAM area. If they are, for example, mmio, read or
+write to the area could affect the corresponding devices and so a
+whole system. We should avoid doing such operations as much as
+possible in order to keep reliability.
+
+To address this issue, we copy fractional pages into buffers in the
+kdump 2nd kernel, and then read data on the fractional pages from the
+buffers in the kdump 2nd kernel, not from the fractional pages on the
+kdump 1st kernel. Similarly, we mmap data on the buffers on the 2nd
+kernel, not on the 1st kernel. These are done just as we've already
+done for ELF note segments.
+
+Rigorously, we should avoid even mapping pages containing non-System
+RAM area since mapping could cause some platform specific optimization
+that could then lead to some kind of prefetch to the page. However, as
+long as trying to read the System RAM area in the page, we cannot
+avoid mapping the page. Therefore, reliable possible way is to supress
+the number of times of reading the fractional pages to just once by
+buffering System RAM part of the fractional page in the 2nd kerenel.
+
+To implement this, extend vmcore structure to represent object in
+buffer on the 2nd kernel, i.e., introducing VMCORE_2ND_KERNEL flag;
+for a vmcore object, if it has VMCORE_2ND_KERNEL set, then its data is
+on the buffer on the 2nd kernel that is pointed to by ->buf member.
+
+Only non-trivial case is where multiple System RAM areas are contained
+in a single page. I want to think there's unlikely to be such system,
+but the issue addressed here is already odd enough, so we should
+consider there would be likely enough to be.
+
+Reported-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ fs/proc/vmcore.c      | 271 +++++++++++++++++++++++++++++++++++++++++---------
+ include/linux/kcore.h |   4 +
+ 2 files changed, 229 insertions(+), 46 deletions(-)
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 9100d69..ca79120 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -231,11 +231,20 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+ 
+ 	list_for_each_entry(m, &vmcore_list, list) {
+ 		if (*fpos < m->offset + m->size) {
+-			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
+-			start = m->paddr + *fpos - m->offset;
+-			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
+-			if (tmp < 0)
+-				return tmp;
++			tsz = min_t(size_t, m->offset+m->size-*fpos, buflen);
++			if ((m->flags & VMCORE_2ND_KERNEL)) {
++				void *kaddr;
++
++				kaddr = m->buf + *fpos - m->offset;
++				if (copy_to(buffer, kaddr, tsz, userbuf))
++					return -EFAULT;
++			} else {
++				start = m->paddr + *fpos - m->offset;
++				tmp = read_from_oldmem(buffer, tsz, &start,
++						       userbuf);
++				if (tmp < 0)
++					return tmp;
++			}
+ 			buflen -= tsz;
+ 			*fpos += tsz;
+ 			buffer += tsz;
+@@ -300,10 +309,10 @@ static const struct vm_operations_struct vmcore_mmap_ops = {
+ };
+ 
+ /**
+- * alloc_elfnotes_buf - allocate buffer for ELF note segment in
+- *                      vmalloc memory
++ * alloc_copy_buf - allocate buffer to copy ELF note segment or
++ *                      fractional pages in vmalloc memory
+  *
+- * @notes_sz: size of buffer
++ * @sz: size of buffer
+  *
+  * If CONFIG_MMU is defined, use vmalloc_user() to allow users to mmap
+  * the buffer to user-space by means of remap_vmalloc_range().
+@@ -311,12 +320,12 @@ static const struct vm_operations_struct vmcore_mmap_ops = {
+  * If CONFIG_MMU is not defined, use vzalloc() since mmap_vmcore() is
+  * disabled and there's no need to allow users to mmap the buffer.
+  */
+-static inline char *alloc_elfnotes_buf(size_t notes_sz)
++static inline char *alloc_copy_buf(size_t sz)
+ {
+ #ifdef CONFIG_MMU
+-	return vmalloc_user(notes_sz);
++	return vmalloc_user(sz);
+ #else
+-	return vzalloc(notes_sz);
++	return vzalloc(sz);
+ #endif
+ }
+ 
+@@ -383,14 +392,24 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
+ 
+ 	list_for_each_entry(m, &vmcore_list, list) {
+ 		if (start < m->offset + m->size) {
+-			u64 paddr = 0;
+-
+ 			tsz = min_t(size_t, m->offset + m->size - start, size);
+-			paddr = m->paddr + start - m->offset;
+-			if (remap_oldmem_pfn_range(vma, vma->vm_start + len,
+-						   paddr >> PAGE_SHIFT, tsz,
+-						   vma->vm_page_prot))
+-				goto fail;
++			if ((m->flags & VMCORE_2ND_KERNEL)) {
++				unsigned long uaddr = vma->vm_start + len;
++				void *kaddr = m->buf + start - m->offset;
++
++				if (remap_vmalloc_range_partial(vma, uaddr,
++								kaddr, tsz))
++					goto fail;
++			} else {
++				u64 paddr = paddr = m->paddr+start-m->offset;
++
++				if (remap_oldmem_pfn_range(vma,
++							   vma->vm_start + len,
++							   paddr >> PAGE_SHIFT,
++							   tsz,
++							   vma->vm_page_prot))
++					goto fail;
++			}
+ 			size -= tsz;
+ 			start += tsz;
+ 			len += tsz;
+@@ -580,7 +599,7 @@ static int __init merge_note_headers_elf64(char *elfptr, size_t *elfsz,
+ 		return rc;
+ 
+ 	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
+-	*notes_buf = alloc_elfnotes_buf(*notes_sz);
++	*notes_buf = alloc_copy_buf(*notes_sz);
+ 	if (!*notes_buf)
+ 		return -ENOMEM;
+ 
+@@ -760,7 +779,7 @@ static int __init merge_note_headers_elf32(char *elfptr, size_t *elfsz,
+ 		return rc;
+ 
+ 	*notes_sz = roundup(phdr_sz, PAGE_SIZE);
+-	*notes_buf = alloc_elfnotes_buf(*notes_sz);
++	*notes_buf = alloc_copy_buf(*notes_sz);
+ 	if (!*notes_buf)
+ 		return -ENOMEM;
+ 
+@@ -807,7 +826,7 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
+ 	Elf64_Ehdr *ehdr_ptr;
+ 	Elf64_Phdr *phdr_ptr;
+ 	loff_t vmcore_off;
+-	struct vmcore *new;
++	struct vmcore *m, *new;
+ 
+ 	ehdr_ptr = (Elf64_Ehdr *)elfptr;
+ 	phdr_ptr = (Elf64_Phdr*)(elfptr + sizeof(Elf64_Ehdr)); /* PT_NOTE hdr */
+@@ -816,27 +835,106 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
+ 	vmcore_off = elfsz + elfnotes_sz;
+ 
+ 	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
+-		u64 paddr, start, end, size;
++		u64 start, end, size, rest;
++		u64 start_up, start_down, end_up, end_down;
++		loff_t offset;
++		int rc, reuse = 0;
+ 
+ 		if (phdr_ptr->p_type != PT_LOAD)
+ 			continue;
+ 
+-		paddr = phdr_ptr->p_offset;
+-		start = rounddown(paddr, PAGE_SIZE);
+-		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
+-		size = end - start;
++		start = phdr_ptr->p_offset;
++		start_up = roundup(start, PAGE_SIZE);
++		start_down = rounddown(start, PAGE_SIZE);
++
++		end = phdr_ptr->p_offset + phdr_ptr->p_memsz;
++		end_up = roundup(end, PAGE_SIZE);
++		end_down = rounddown(end, PAGE_SIZE);
++
++		size = end_up - start_down;
++		rest = phdr_ptr->p_memsz;
++
++		/* Add a head fractional page to vmcore list. */
++		if (!PAGE_ALIGNED(start)) {
++			/* Reuse the same buffer if multiple System
++			 * RAM entries show up in the same page. */
++			list_for_each_entry(m, vc_list, list) {
++				if (m->paddr == start_down &&
++				    m->flags == VMCORE_2ND_KERNEL) {
++					new = m;
++					reuse = 1;
++					goto skip;
++				}
++			}
++
++			new = get_new_element();
++			if (!new)
++				return -ENOMEM;
++			new->buf = alloc_copy_buf(PAGE_SIZE);
++			if (!new->buf) {
++				kfree(new);
++				return -ENOMEM;
++			}
++			new->flags = VMCORE_2ND_KERNEL;
++			new->size = PAGE_SIZE;
++			new->paddr = start_down;
++			list_add_tail(&new->list, vc_list);
++		skip:
++
++			offset = start;
++			rc = __read_vmcore(new->buf + (start - start_down),
++					   min(start_up, end) - start,
++					   &offset, 0);
++			if (rc < 0)
++				return rc;
++
++			rest -= min(start_up, end) - start;
++		}
+ 
+ 		/* Add this contiguous chunk of memory to vmcore list.*/
+-		new = get_new_element();
+-		if (!new)
+-			return -ENOMEM;
+-		new->paddr = start;
+-		new->size = size;
+-		list_add_tail(&new->list, vc_list);
++		if (rest > 0 && start_up < end_down) {
++			new = get_new_element();
++			if (!new)
++				return -ENOMEM;
++			new->size = end_down - start_up;
++			new->paddr = start_up;
++			list_add_tail(&new->list, vc_list);
++			rest -= end_down - start_up;
++		}
++
++		/* Add a tail fractional page to vmcore list. */
++		if (rest > 0) {
++			new = get_new_element();
++			if (!new)
++				return -ENOMEM;
++			new->buf = alloc_copy_buf(PAGE_SIZE);
++			if (!new->buf) {
++				kfree(new);
++				return -ENOMEM;
++			}
++			new->flags = VMCORE_2ND_KERNEL;
++			new->size = PAGE_SIZE;
++			new->paddr = end_down;
++			list_add_tail(&new->list, vc_list);
++
++			offset = end_down;
++			rc = __read_vmcore(new->buf, end - end_down, &offset,
++					   0);
++			if (rc < 0)
++				return rc;
++
++			rest -= end - end_down;
++		}
++
++		WARN_ON(rest > 0);
+ 
+ 		/* Update the program header offset. */
+-		phdr_ptr->p_offset = vmcore_off + (paddr - start);
++		phdr_ptr->p_offset = vmcore_off + (start - start_down);
+ 		vmcore_off = vmcore_off + size;
++		if (reuse) {
++			phdr_ptr->p_offset -= PAGE_SIZE;
++			vmcore_off -= PAGE_SIZE;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -850,7 +948,7 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+ 	Elf32_Ehdr *ehdr_ptr;
+ 	Elf32_Phdr *phdr_ptr;
+ 	loff_t vmcore_off;
+-	struct vmcore *new;
++	struct vmcore *m, *new;
+ 
+ 	ehdr_ptr = (Elf32_Ehdr *)elfptr;
+ 	phdr_ptr = (Elf32_Phdr*)(elfptr + sizeof(Elf32_Ehdr)); /* PT_NOTE hdr */
+@@ -859,27 +957,106 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
+ 	vmcore_off = elfsz + elfnotes_sz;
+ 
+ 	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
+-		u64 paddr, start, end, size;
++		u64 start, end, size, rest;
++		u64 start_up, start_down, end_up, end_down;
++		loff_t offset;
++		int rc, reuse = 0;
+ 
+ 		if (phdr_ptr->p_type != PT_LOAD)
+ 			continue;
+ 
+-		paddr = phdr_ptr->p_offset;
+-		start = rounddown(paddr, PAGE_SIZE);
+-		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
+-		size = end - start;
++		start = phdr_ptr->p_offset;
++		start_up = roundup(start, PAGE_SIZE);
++		start_down = rounddown(start, PAGE_SIZE);
++
++		end = phdr_ptr->p_offset + phdr_ptr->p_memsz;
++		end_up = roundup(end, PAGE_SIZE);
++		end_down = rounddown(end, PAGE_SIZE);
++
++		size = end_up - start_down;
++		rest = phdr_ptr->p_memsz;
++
++		/* Add a head fractional page to vmcore list. */
++		if (!PAGE_ALIGNED(start)) {
++			/* Reuse the same buffer if multiple System
++			 * RAM entries show up in the same page. */
++			list_for_each_entry(m, vc_list, list) {
++				if (m->paddr == start_down &&
++				    m->flags == VMCORE_2ND_KERNEL) {
++					new = m;
++					reuse = 1;
++					goto skip;
++				}
++			}
++
++			new = get_new_element();
++			if (!new)
++				return -ENOMEM;
++			new->buf = alloc_copy_buf(PAGE_SIZE);
++			if (!new->buf) {
++				kfree(new);
++				return -ENOMEM;
++			}
++			new->flags = VMCORE_2ND_KERNEL;
++			new->paddr = start_down;
++			new->size = PAGE_SIZE;
++			list_add_tail(&new->list, vc_list);
++		skip:
++
++			offset = start;
++			rc = __read_vmcore(new->buf + (start - start_down),
++					   min(start_up, end) - start,
++					   &offset, 0);
++			if (rc < 0)
++				return rc;
++
++			rest -= min(start_up, end) - start;
++		}
+ 
+ 		/* Add this contiguous chunk of memory to vmcore list.*/
+-		new = get_new_element();
+-		if (!new)
+-			return -ENOMEM;
+-		new->paddr = start;
+-		new->size = size;
+-		list_add_tail(&new->list, vc_list);
++		if (rest > 0 && start_up < end_down) {
++			new = get_new_element();
++			if (!new)
++				return -ENOMEM;
++			new->size = end_down - start_up;
++			new->paddr = start_up;
++			list_add_tail(&new->list, vc_list);
++			rest -= end_down - start_up;
++		}
++
++		/* Add a tail fractional page to vmcore list. */
++		if (rest > 0) {
++			new = get_new_element();
++			if (!new)
++				return -ENOMEM;
++			new->buf = (void *)get_zeroed_page(GFP_KERNEL);
++			if (!new->buf) {
++				kfree(new);
++				return -ENOMEM;
++			}
++			new->flags = VMCORE_2ND_KERNEL;
++			new->size = PAGE_SIZE;
++			new->paddr = end_down;
++			list_add_tail(&new->list, vc_list);
++
++			offset = end_down;
++			rc = __read_vmcore(new->buf, end - end_down, &offset,
++					   0);
++			if (rc < 0)
++				return rc;
++
++			rest -= end - end_down;
++		}
++
++		WARN_ON(rest > 0);
+ 
+ 		/* Update the program header offset */
+-		phdr_ptr->p_offset = vmcore_off + (paddr - start);
++		phdr_ptr->p_offset = vmcore_off + (start - start_down);
+ 		vmcore_off = vmcore_off + size;
++		if (reuse) {
++			phdr_ptr->p_offset -= PAGE_SIZE;
++			vmcore_off -= PAGE_SIZE;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -1100,6 +1277,8 @@ void vmcore_cleanup(void)
+ 
+ 		m = list_entry(pos, struct vmcore, list);
+ 		list_del(&m->list);
++		if ((m->flags & VMCORE_2ND_KERNEL))
++			vfree(m->buf);
+ 		kfree(m);
+ 	}
+ 	free_elfcorebuf();
+diff --git a/include/linux/kcore.h b/include/linux/kcore.h
+index d927622..3a86423 100644
+--- a/include/linux/kcore.h
++++ b/include/linux/kcore.h
+@@ -19,11 +19,15 @@ struct kcore_list {
+ 	int type;
+ };
+ 
++#define VMCORE_2ND_KERNEL 0x1
++
+ struct vmcore {
+ 	struct list_head list;
+ 	unsigned long long paddr;
+ 	unsigned long long size;
+ 	loff_t offset;
++	char *buf;
++	unsigned long flags;
+ };
+ 
+ #ifdef CONFIG_PROC_KCORE
+-- 
+1.8.3.1
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
