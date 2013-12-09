@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VpxNS-0000Me-Lu
- for kexec@lists.infradead.org; Mon, 09 Dec 2013 09:43:47 +0000
+ id 1VpxNX-0000NS-Pr
+ for kexec@lists.infradead.org; Mon, 09 Dec 2013 09:43:52 +0000
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v5 04/14] efi: add a wrapper function efi_map_region_fixed
-Date: Mon,  9 Dec 2013 17:42:17 +0800
-Message-Id: <1386582147-9802-5-git-send-email-dyoung@redhat.com>
+Subject: [PATCH v5 05/14] efi: reserve boot service fix
+Date: Mon,  9 Dec 2013 17:42:18 +0800
+Message-Id: <1386582147-9802-6-git-send-email-dyoung@redhat.com>
 In-Reply-To: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
 References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,71 +25,33 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Kexec kernel will use saved runtime virtual mapping, so add a
-new function efi_map_region_fixed for directly mapping a md
-to md->virt.
+Current code check boot service region with kernel text region by:
+start+size >= __pa_symbol(_text)
+The end of the above region should be start + size - 1 instead.
 
-The md is passed in from 1st kernel, the virtual addr is
-saved in md->virt_addr.
-
-Matt: coding style
-      reuse __map_region
-Boris: Strenthen comment lines to 80 cols.
+I see this problem in ovmf + Fedora 19 grub boot:
+text start: 1000000 md start: 800000 md size: 800000
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 Acked-by: Borislav Petkov <bp@suse.de>
+Acked-by: Toshi Kani <toshi.kani@hp.com>
 ---
- arch/x86/include/asm/efi.h     |  1 +
- arch/x86/platform/efi/efi_32.c |  2 ++
- arch/x86/platform/efi/efi_64.c | 10 ++++++++++
- 3 files changed, 13 insertions(+)
+ arch/x86/platform/efi/efi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 89a05b0..9fbaeb2 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -128,6 +128,7 @@ extern void efi_call_phys_epilog(void);
- extern void efi_unmap_memmap(void);
- extern void efi_memory_uc(u64 addr, unsigned long size);
- extern void __init efi_map_region(efi_memory_desc_t *md);
-+extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
- extern void efi_sync_low_kernel_mappings(void);
- extern void efi_setup_page_tables(void);
- extern void __init old_map_region(efi_memory_desc_t *md);
-diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
-index e94557c..7b3ec6e 100644
---- a/arch/x86/platform/efi/efi_32.c
-+++ b/arch/x86/platform/efi/efi_32.c
-@@ -47,6 +47,8 @@ void __init efi_map_region(efi_memory_desc_t *md)
- 	old_map_region(md);
- }
- 
-+void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
-+
- void efi_call_phys_prelog(void)
- {
- 	struct desc_ptr gdt_descr;
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index c5a6491..ff08cb1 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -199,6 +199,16 @@ void __init efi_map_region(efi_memory_desc_t *md)
- 	md->virt_addr = efi_va;
- }
- 
-+/*
-+ * kexec kernel will use efi_map_region_fixed to map efi runtime memory ranges.
-+ * md->virt_addr is the original virtual address which had been mapped in kexec
-+ * 1st kernel.
-+ */
-+void __init efi_map_region_fixed(efi_memory_desc_t *md)
-+{
-+	__map_region(md, md->virt_addr);
-+}
-+
- void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
- 				 u32 type, u64 attribute)
- {
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index ef471d5..8a88c68 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -438,7 +438,7 @@ void __init efi_reserve_boot_services(void)
+ 		 * - Not within any part of the kernel
+ 		 * - Not the bios reserved area
+ 		*/
+-		if ((start+size >= __pa_symbol(_text)
++		if ((start + size > __pa_symbol(_text)
+ 				&& start <= __pa_symbol(_end)) ||
+ 			!e820_all_mapped(start, start+size, E820_RAM) ||
+ 			memblock_is_region_reserved(start, size)) {
 -- 
 1.8.3.1
 
