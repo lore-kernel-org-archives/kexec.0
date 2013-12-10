@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-oa0-x22e.google.com ([2607:f8b0:4003:c02::22e])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VqBmT-0000Ms-BT
- for kexec@lists.infradead.org; Tue, 10 Dec 2013 01:06:34 +0000
-Received: by mail-oa0-f46.google.com with SMTP id o6so4785041oag.19
- for <kexec@lists.infradead.org>; Mon, 09 Dec 2013 17:06:11 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VqCov-0001Xj-NI
+ for kexec@lists.infradead.org; Tue, 10 Dec 2013 02:13:11 +0000
+Date: Tue, 10 Dec 2013 10:12:21 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 01/14] x86/mm: sparse warning fix for early_memremap
+Message-ID: <20131210021221.GA3800@dhcp-16-126.nay.redhat.com>
+References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
+ <1386582147-9802-2-git-send-email-dyoung@redhat.com>
+ <20131209150521.GE31650@pd.tnic>
 MIME-Version: 1.0
-In-Reply-To: <52A66190.9060907@zytor.com>
-References: <20131210001620.GA7938@www.outflux.net>
- <52A66190.9060907@zytor.com>
-Date: Mon, 9 Dec 2013 17:06:10 -0800
-Message-ID: <CAGXu5jKkCNWQKH-Ozm72C3aY_NBzRdNo2GmqKbVVJds5xs=SXg@mail.gmail.com>
-Subject: Re: [PATCH v2] kexec: add sysctl to disable kexec
-From: Kees Cook <keescook@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20131209150521.GE31650@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,31 +25,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Mel Gorman <mgorman@suse.de>
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, vgoyal@redhat.com
 
-On Mon, Dec 9, 2013 at 4:34 PM, H. Peter Anvin <hpa@zytor.com> wrote:
-> On 12/09/2013 04:16 PM, Kees Cook wrote:
->> For general-purpose (i.e. distro) kernel builds it makes sense to build with
->> CONFIG_KEXEC to allow end users to choose what kind of things they want to do
->> with kexec. However, in the face of trying to lock down a system with such
->> a kernel, there needs to be a way to disable kexec (much like module loading
->> can be disabled). Without this, it is too easy for the root user to modify
->> kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are set.
->>
->> Signed-off-by: Kees Cook <keescook@chromium.org>
->> Acked-by: Rik van Riel <riel@redhat.com>
->
-> So the logic is to load a crashkernel and then lock down the machine
-> before services, networking etc. are enabled?
+On 12/09/13 at 04:05pm, Borislav Petkov wrote:
+> On Mon, Dec 09, 2013 at 05:42:14PM +0800, Dave Young wrote:
+> > There's a lot of sparse warnings for code like below:
+> > void *a = early_memremap(phys_addr, size);
+> > 
+> > early_memremap intend to map kernel memory with ioremap facility, the return
+> > pointer should be a kernel ram pointer instead of iomem one.
+> > 
+> > For making the function clearer and supressing sparse warnings this patch
+> > do below two things:
+> > 1. cast to (__force void *) for the return value of early_memremap
+> 
+> I'd guess this is to shut up the __iomem thing? And we're getting that
+> because we're using ioremap, ... hohum...
 
-Right, or to just turn it off at boot time if kexec will not be used at all.
+Yes, IMHO early_memremap really should not return __iomem pointer since it's
+*memremap*... 
 
--Kees
-
--- 
-Kees Cook
-Chrome OS Security
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
