@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VqKjo-0003tO-SN
- for kexec@lists.infradead.org; Tue, 10 Dec 2013 10:40:25 +0000
-Date: Tue, 10 Dec 2013 11:39:49 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2 3/4] makedumpfile/xen: Fail immediately on every
- architecture if dump level is invalid
-Message-ID: <20131210103949.GJ3916@olila.local.net-space.pl>
-References: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
- <1385993804-27721-4-git-send-email-daniel.kiper@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C9FF0@BPXM01GP.gisp.nec.co.jp>
- <20131203194501.GD21544@olila.local.net-space.pl>
- <0910DD04CBD6DE4193FCF86B9C00BE971CCA93@BPXM01GP.gisp.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VqOQL-0000os-Jd
+ for kexec@lists.infradead.org; Tue, 10 Dec 2013 14:36:34 +0000
+Date: Tue, 10 Dec 2013 09:35:40 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] kexec: add sysctl to disable kexec
+Message-ID: <20131210143540.GA13909@redhat.com>
+References: <20131210001620.GA7938@www.outflux.net>
+ <52A66190.9060907@zytor.com>
+ <CAGXu5jKkCNWQKH-Ozm72C3aY_NBzRdNo2GmqKbVVJds5xs=SXg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971CCA93@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <CAGXu5jKkCNWQKH-Ozm72C3aY_NBzRdNo2GmqKbVVJds5xs=SXg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,109 +25,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: Kenichi Oomichi <oomichi@mxs.nes.nec.co.jp>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "david.vrabel@citrix.com" <david.vrabel@citrix.com>, "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Rob Landley <rob@landley.net>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Mel Gorman <mgorman@suse.de>
 
-On Mon, Dec 09, 2013 at 02:45:21AM +0000, Atsushi Kumagai wrote:
-> On 2013/12/04 4:45:42, kexec <kexec-bounces@lists.infradead.org> wrote:
-> > On Tue, Dec 03, 2013 at 05:27:03AM +0000, Atsushi Kumagai wrote:
-> > > On 2013/12/02 23:17:59, kexec <kexec-bounces@lists.infradead.org> wrote:
-> > > > Do not try to process Xen crash dump on every architecture if dump level
-> > > > is invalid. Fail immediately and print relevant error message.
-> > > >
-> > > > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> > > > ---
-> > > >  makedumpfile.c |    4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/makedumpfile.c b/makedumpfile.c
-> > > > index 5a378d1..45f96aa 100644
-> > > > --- a/makedumpfile.c
-> > > > +++ b/makedumpfile.c
-> > > > @@ -7637,14 +7637,14 @@ initial_xen(void)
-> > > >  		MSG("Try `makedumpfile --help' for more information.\n");
-> > > >  		return FALSE;
-> > > >  	}
-> > > > -#ifndef __x86_64__
-> > > > +
-> > > >  	if (DL_EXCLUDE_ZERO < info->max_dump_level) {
-> > > >  		MSG("Dump_level is invalid. It should be 0 or 1.\n");
-> > > >  		MSG("Commandline parameter is invalid.\n");
-> > > >  		MSG("Try `makedumpfile --help' for more information.\n");
-> > > >  		return FALSE;
-> > > >  	}
-> > > > -#endif
-> > > > +
-> > >
-> > > Did you say that dump level 2 or larger are no longer effective even for x86_64 ?
-> > > I thought it works by the patch below, but I'm not sure about Xen.
-> > > So I would like to know why you sent this patch.
-> > >
-> > >
-> > > commit ec5b5835a113cf62a168d4a7354564a38de6b52c
-> > > Author: ken1_ohmichi <ken1_ohmichi>
-> > > Date:   Fri Oct 9 03:05:41 2009 +0000
-> > >
-> > >     [v1.3.4-10] Add dump filtering on an x86_64 xen domain-0.
-> > >
-> > >     This patch adds the dump filtering for excluding unnecessary pages (cache
-> > >     pages, user process data pages, and free pages) on on x86_64 xen domain-0.
-> > >
-> > >     On the existing makedumpfile (v1.3.3 or former), a user could specify 0
-> > >     or 1 only as a dump_level. By this patch, he/she can specify 2 or larger
-> > >     also as a dump_level.
-> > >
-> > >     Now, this feature is effective on x86_64 machine only.
+On Mon, Dec 09, 2013 at 05:06:10PM -0800, Kees Cook wrote:
+> On Mon, Dec 9, 2013 at 4:34 PM, H. Peter Anvin <hpa@zytor.com> wrote:
+> > On 12/09/2013 04:16 PM, Kees Cook wrote:
+> >> For general-purpose (i.e. distro) kernel builds it makes sense to build with
+> >> CONFIG_KEXEC to allow end users to choose what kind of things they want to do
+> >> with kexec. However, in the face of trying to lock down a system with such
+> >> a kernel, there needs to be a way to disable kexec (much like module loading
+> >> can be disabled). Without this, it is too easy for the root user to modify
+> >> kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are set.
+> >>
+> >> Signed-off-by: Kees Cook <keescook@chromium.org>
+> >> Acked-by: Rik van Riel <riel@redhat.com>
 > >
-> > Hmmm... Thanks for this. I missed this patch. However, it looks that I
-> > do not understand something. AIUI, from Xen point of view we are not able
-> > to use dump level higher than 1 because there is no e.g. cache pages (it
-> > looks that we could also skip free pages but this stuff is not implemented).
-> > Above mentioned patch suggest that there is a way to extract just only Dom0
-> > stuff taking into account Linux internals only. If my reasoning is true
-> > then dump level higher than 1 is possible only if we look at Dom0 from Linux
-> > point of view.
->
-> I've reviewed the code for Xen, my understanding is the same as yours.
-> The memory regions corresponding to hypervisor and DomU will remain even if
-> specifying the dump level higher than 1.
->
-> > However, I can not find any description how to do that.
-> > So I am CC-ing Ken'ichi as author of this patch but I do not know that
-> > he works for NEC still.
->
-> I'm sorry but I missed your point. Did you mention a lack of description
-> in man page about an effect when specifying the dump level higher than 1
-> for Xen's memory ?
-> At least, I still think this patch is wrong because any dump level is
-> effective for x86_64.
+> > So the logic is to load a crashkernel and then lock down the machine
+> > before services, networking etc. are enabled?
+> 
+> Right, or to just turn it off at boot time if kexec will not be used at all.
 
-Docs are not consistent because man and help displayed from makedumpfile
-are different. Additionally, even man says nothing how to use this feature
-on Xen vmcore file. If you use makedumpfile e.g.
+kdump kernel is loaded with the help of kdump service. Different distro's
+might have different dependencies for that serivce. But recently in fedora
+we wait network to come up before starting that service. (So that nfs
+targets can be mounted and checked for valid dump destinations).
 
-makedumpfile -Ed 2 /proc/vmcore vmcore
+IOW, crash kernel is loaded quite late in the game (quite a few services
+have run and possibly networking is up too). To me, practically one will
+disable kdump also if you change state of this knob early.
 
-it will not work because it uses VMCOREINFO_XEN instead of VMCOREINFO.
-I discovered that if you would like to use feature from above mentioned
-patch you must run makedumpfile in following way:
-
-makedumpfile -Ed 2 -x vmlinux /proc/vmcore vmcore
-
-Then makedumpfile will get info about dom0 directly from vmlinux.
-However, It looks that there is another bug which prevents usage
-of this feature. It looks it is related to change in P2M tree Linux
-code. Once P2M levels where changed from 2 to 3. I fixed similar
-issue in crash tool once.
-
-When are you going to make a new makedumpfile release? I am going
-to fix this issue before next release but now I am quite busy
-with other stuff.
-
-Could you apply patches 1, 2 and 4 from this patch series?
-It looks that they are not controversial.
-
-Daniel
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
