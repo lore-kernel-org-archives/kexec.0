@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ob0-x22e.google.com ([2607:f8b0:4003:c01::22e])
+Received: from smtp.outflux.net ([2001:19d0:2:6:c0de:0:736d:7470])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vqt73-00045w-Ss
- for kexec@lists.infradead.org; Wed, 11 Dec 2013 23:22:43 +0000
-Received: by mail-ob0-f174.google.com with SMTP id wn1so7722259obc.19
- for <kexec@lists.infradead.org>; Wed, 11 Dec 2013 15:22:18 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <87k3fbuggk.fsf@xmission.com>
-References: <20131210001620.GA7938@www.outflux.net>
- <87vbyvxojs.fsf@xmission.com>
- <CAGXu5j+hCf8zkO3FEJ=ZO++unnpzL8GLivSNqy=dYFzJah0WCg@mail.gmail.com>
- <87k3fbuggk.fsf@xmission.com>
-Date: Wed, 11 Dec 2013 15:22:18 -0800
-Message-ID: <CAGXu5j+i1CfUqrFtwQUHC92n=qvFjKaqJeLh7Bn7aEFBE1cixw@mail.gmail.com>
-Subject: Re: [PATCH v2] kexec: add sysctl to disable kexec
+ id 1Vqtcl-0004en-8V
+ for kexec@lists.infradead.org; Wed, 11 Dec 2013 23:55:27 +0000
+Date: Wed, 11 Dec 2013 15:54:27 -0800
 From: Kees Cook <keescook@chromium.org>
+Subject: [PATCH v3] kexec: add sysctl to disable kexec_load
+Message-ID: <20131211235427.GA23999@www.outflux.net>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,85 +21,139 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Mel Gorman <mgorman@suse.de>, Rob Landley <rob@landley.net>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Mel Gorman <mgorman@suse.de>
 
-On Wed, Dec 11, 2013 at 3:15 PM, Eric W. Biederman
-<ebiederm@xmission.com> wrote:
-> Kees Cook <keescook@chromium.org> writes:
->
->> On Wed, Dec 11, 2013 at 9:52 AM, Eric W. Biederman
->> <ebiederm@xmission.com> wrote:
->>> Kees Cook <keescook@chromium.org> writes:
->>>
->>>> For general-purpose (i.e. distro) kernel builds it makes sense to build with
->>>> CONFIG_KEXEC to allow end users to choose what kind of things they want to do
->>>> with kexec. However, in the face of trying to lock down a system with such
->>>> a kernel, there needs to be a way to disable kexec (much like module loading
->>>> can be disabled). Without this, it is too easy for the root user to modify
->>>> kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are
->>>> set.
->>>
->>> So let me get this straight.  You object to what happens in sys_reboot
->>> so you patch sys_kexec_load?
->>
->> Yes; it's the entry point for loading the image used for crashes and
->> LINUX_REBOOT_CMD_KEXEC.
->>
->>> You give someone the privilege to boot whatever they want and yet you
->>> don't want to support them booting whatever they want?
->>>
->>> I'm sorry my brain is hurting trying to understand the logic of this
->>> patch.
->>
->> I'm not trying to claim this fixes all attack vectors from a root
->> user. That is exceedingly hard. :) However, kexec gives the root user
->> a trivial (and undetectable) way to modify the running kernel.
->> Providing an option to block sys_kexec_load for systems that will
->> never use it (or will use it once at startup) is valuable in several
->> situations. There's no reason to make an attacker's job easier, and
->> this doesn't get in any one else's way.
->
-> I am simply trying to point out your patch is incomplete and silly as
-> presented.
->
-> LINUX_REBOOT_CMD_KEXEC should be disabled if you are calling the sysctl
-> kexec_disable.  If you want to it to be kexec_load_disable please call
-> it that.  A kexec_load_disable is a different thing than a
-> kexec_disable.
->
-> A kexec_disable would block both sys_kexec_load and
-> sys_reboot(LINUX_REBOOT_CMD_KEXEC) and would remove any staged kexec
-> images.  Allowing you to stop considering kexec past that point from a
-> security analysis perspective.  That is what it sounds like you want.
->
-> What I am asking for is an problem description and an implementation
-> that are in sync, and a problem description that people can look at and
-> say was this a complete implementation.
->
-> Right now I can not tell what was intended so I can not truly tell if
-> the patch is correct.  Code with that property does not serve anyone any
-> good, especially as the kernel evolves.
->
-> So please decide if you want kexec_disable or kexec_load_disable, or if
-> you want something a little more nuanced.
->
-> Right now I think a full and complete kexec_disable makes sense.  I
-> probably won't use it but I think it makes sense.  Your patch
-> implementiong kexec_load_disable seems to be a half solution that tries
-> to please everyone and does not serve anyone well.  So I don't see the
-> point.
+For general-purpose (i.e. distro) kernel builds it makes sense to build with
+CONFIG_KEXEC to allow end users to choose what kind of things they want to do
+with kexec. However, in the face of trying to lock down a system with such
+a kernel, there needs to be a way to disable kexec_load (much like module
+loading can be disabled). Without this, it is too easy for the root user to
+modify kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are
+set. With this change, it is still possible to load an image for use later,
+then disable kexec_load so the image (or lack of image) can't be altered.
 
-Sure, it seems reasonable to clarify it's purpose. I would like block
-_changes_ to the kexec image. In the case of systems not using kexec,
-this freezes it to "no kexec image", for those with a crash kernel, it
-freezes it to just that image, and makes sure it can't change until
-reboot. Blocking LINUX_REBOOT_CMD_KEXEC doesn't make sense in the
-latter sense, so it seems like changing the sysctl to
-"kexec_load_disable" is the sensible direction. I can send a v3 that
-changes the name and clarifies the purpose and potential uses.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Rik van Riel <riel@redhat.com>
+---
+v3:
+ - renamed and clarified to kexec_load_disabled; Eric W. Biederman
+v2:
+ - updated sysctl documentation; akpm
+---
+ Documentation/sysctl/kernel.txt |   15 ++++++++++++++-
+ include/linux/kexec.h           |    1 +
+ kernel/kexec.c                  |    3 ++-
+ kernel/sysctl.c                 |   13 +++++++++++++
+ 4 files changed, 30 insertions(+), 2 deletions(-)
 
--Kees
+diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
+index 26b7ee491df8..3e1846427eda 100644
+--- a/Documentation/sysctl/kernel.txt
++++ b/Documentation/sysctl/kernel.txt
+@@ -33,6 +33,7 @@ show up in /proc/sys/kernel:
+ - domainname
+ - hostname
+ - hotplug
++- kexec_load_disabled
+ - kptr_restrict
+ - kstack_depth_to_print       [ X86 only ]
+ - l2cr                        [ PPC only ]
+@@ -287,6 +288,18 @@ Default value is "/sbin/hotplug".
+ 
+ ==============================================================
+ 
++kexec_load_disabled:
++
++A toggle indicating if the kexec_load syscall has been disabled. This
++value defaults to 0 (false: kexec_load enabled), but can be set to 1
++(true: kexec_load disabled). Once true, kexec can no longer be used, and
++the toggle cannot be set back to false. This allows a kexec image to be
++loaded before disabling the syscall, allowing a system to set up (and
++later use) an image without it being altered. Generally used together
++with the "modules_disabled" sysctl.
++
++==============================================================
++
+ kptr_restrict:
+ 
+ This toggle indicates whether restrictions are placed on
+@@ -331,7 +344,7 @@ A toggle value indicating if modules are allowed to be loaded
+ in an otherwise modular kernel.  This toggle defaults to off
+ (0), but can be set true (1).  Once true, modules can be
+ neither loaded nor unloaded, and the toggle cannot be set back
+-to false.
++to false.  Generally used with the "kexec_load_disabled" toggle.
+ 
+ ==============================================================
+ 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index d78d28a733b1..a3e842f6867e 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -170,6 +170,7 @@ unsigned long paddr_vmcoreinfo_note(void);
+ 
+ extern struct kimage *kexec_image;
+ extern struct kimage *kexec_crash_image;
++extern int kexec_load_disabled;
+ 
+ #ifndef kexec_flush_icache_page
+ #define kexec_flush_icache_page(page)
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 490afc03627e..9405ae68feb4 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -929,6 +929,7 @@ static int kimage_load_segment(struct kimage *image,
+  */
+ struct kimage *kexec_image;
+ struct kimage *kexec_crash_image;
++int kexec_load_disabled;
+ 
+ static DEFINE_MUTEX(kexec_mutex);
+ 
+@@ -939,7 +940,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	int result;
+ 
+ 	/* We only trust the superuser with rebooting the system. */
+-	if (!capable(CAP_SYS_BOOT))
++	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+ 		return -EPERM;
+ 
+ 	/*
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 34a604726d0b..ea4bb8152a34 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -62,6 +62,7 @@
+ #include <linux/capability.h>
+ #include <linux/binfmts.h>
+ #include <linux/sched/sysctl.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/uaccess.h>
+ #include <asm/processor.h>
+@@ -614,6 +615,18 @@ static struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dointvec,
+ 	},
+ #endif
++#ifdef CONFIG_KEXEC
++	{
++		.procname	= "kexec_load_disabled",
++		.data		= &kexec_load_disabled,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		/* only handle a transition from default "0" to "1" */
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= &one,
++		.extra2		= &one,
++	},
++#endif
+ #ifdef CONFIG_MODULES
+ 	{
+ 		.procname	= "modprobe",
+-- 
+1.7.9.5
+
 
 -- 
 Kees Cook
