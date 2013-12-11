@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vqs9q-0002Ym-CI
- for kexec@lists.infradead.org; Wed, 11 Dec 2013 22:21:33 +0000
-Date: Wed, 11 Dec 2013 23:20:57 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 09/14] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131211222057.GB8863@pd.tnic>
-References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
- <1386582147-9802-10-git-send-email-dyoung@redhat.com>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vqt12-0003xK-3Z
+ for kexec@lists.infradead.org; Wed, 11 Dec 2013 23:16:29 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20131210001620.GA7938@www.outflux.net>
+ <87vbyvxojs.fsf@xmission.com>
+ <CAGXu5j+hCf8zkO3FEJ=ZO++unnpzL8GLivSNqy=dYFzJah0WCg@mail.gmail.com>
+Date: Wed, 11 Dec 2013 15:15:55 -0800
+In-Reply-To: <CAGXu5j+hCf8zkO3FEJ=ZO++unnpzL8GLivSNqy=dYFzJah0WCg@mail.gmail.com>
+ (Kees Cook's message of "Wed, 11 Dec 2013 13:13:32 -0800")
+Message-ID: <87k3fbuggk.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1386582147-9802-10-git-send-email-dyoung@redhat.com>
+Subject: Re: [PATCH v2] kexec: add sysctl to disable kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,309 +25,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Mel Gorman <mgorman@suse.de>, Rob Landley <rob@landley.net>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Dec 09, 2013 at 05:42:22PM +0800, Dave Young wrote:
-> Add a new setup_data type SETUP_EFI for kexec use.
-> Passing the saved fw_vendor, runtime, config tables and efi runtime mappings.
-> 
-> When entering virtual mode, directly mapping the efi runtime ragions which
-> we passed in previously. And skip the step to call SetVirtualAddressMap.
-> 
-> Specially for HP z420 workstation we need save the smbios physical address.
-> The kernel boot sequence proceeds in the following order.  Step 2
-> requires efi.smbios to be the physical address.  However, I found that on
-> HP z420 EFI system table has a virtual address of SMBIOS in step 1.  Hence,
-> we need set it back to the physical address with the smbios in
-> efi_setup_data.  (When it is still the physical address, it simply sets
-> the same value.)
-> 
-> 1. efi_init() - Set efi.smbios from EFI system table
-> 2. dmi_scan_machine() - Temporary map efi.smbios to access SMBIOS table
-> 3. efi_enter_virtual_mode() - Map EFI ranges
-> 
-> Tested on ovmf+qemu, lenovo thinkpad, a dell laptop and an
-> HP z420 workstation.
-> 
-> v2: refresh based on previous patch changes, code cleanup.
-> v3: use ioremap instead of phys_to_virt for efi_setup
-> v5: improve some code structure per comments from Matt
->     Boris: improve code structure, spell fix, etc.
->     Improve changelog from Toshi.
->     change the variable efi_setup to the physical address of efi setup_data
->     instead of the ioremapped virt address
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  arch/x86/include/asm/efi.h            |  11 ++
->  arch/x86/include/uapi/asm/bootparam.h |   1 +
->  arch/x86/kernel/setup.c               |   3 +
->  arch/x86/platform/efi/efi.c           | 195 ++++++++++++++++++++++++++++++----
->  4 files changed, 187 insertions(+), 23 deletions(-)
+Kees Cook <keescook@chromium.org> writes:
 
-...
+> On Wed, Dec 11, 2013 at 9:52 AM, Eric W. Biederman
+> <ebiederm@xmission.com> wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>>
+>>> For general-purpose (i.e. distro) kernel builds it makes sense to build with
+>>> CONFIG_KEXEC to allow end users to choose what kind of things they want to do
+>>> with kexec. However, in the face of trying to lock down a system with such
+>>> a kernel, there needs to be a way to disable kexec (much like module loading
+>>> can be disabled). Without this, it is too easy for the root user to modify
+>>> kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are
+>>> set.
+>>
+>> So let me get this straight.  You object to what happens in sys_reboot
+>> so you patch sys_kexec_load?
+>
+> Yes; it's the entry point for loading the image used for crashes and
+> LINUX_REBOOT_CMD_KEXEC.
+>
+>> You give someone the privilege to boot whatever they want and yet you
+>> don't want to support them booting whatever they want?
+>>
+>> I'm sorry my brain is hurting trying to understand the logic of this
+>> patch.
+>
+> I'm not trying to claim this fixes all attack vectors from a root
+> user. That is exceedingly hard. :) However, kexec gives the root user
+> a trivial (and undetectable) way to modify the running kernel.
+> Providing an option to block sys_kexec_load for systems that will
+> never use it (or will use it once at startup) is valuable in several
+> situations. There's no reason to make an attacker's job easier, and
+> this doesn't get in any one else's way.
 
-> @@ -115,6 +116,25 @@ static int __init setup_storage_paranoia(char *arg)
->  }
->  early_param("efi_no_storage_paranoia", setup_storage_paranoia);
->  
-> +void __init parse_efi_setup(u64 phys_addr)
-> +{
-> +	struct setup_data *sd;
-> +
-> +	if (!efi_enabled(EFI_64BIT)) {
-> +		pr_warn("SETUP_EFI not supported on 32-bit\n");
-> +		return;
-> +	}
+I am simply trying to point out your patch is incomplete and silly as
+presented.
 
-Shouldn't this function be in two versions in efi_64.c and efi_32.c?
-This way you don't need this check with cryptic printk message.
+LINUX_REBOOT_CMD_KEXEC should be disabled if you are calling the sysctl
+kexec_disable.  If you want to it to be kexec_load_disable please call
+it that.  A kexec_load_disable is a different thing than a
+kexec_disable.
 
-> +
-> +	sd = early_memremap(phys_addr, sizeof(struct setup_data));
-> +	if (!sd) {
-> +		pr_warn("efi: early_memremap setup_data failed\n");
-> +		return;
-> +	}
-> +	efi_setup = phys_addr + sizeof(struct setup_data);
-> +	nr_efi_runtime_map = (sd->len - sizeof(struct efi_setup_data)) /
-> +			     sizeof(efi_memory_desc_t);
-> +	early_memunmap(sd, sizeof(struct setup_data));
-> +}
->  
->  static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
->  {
-> @@ -494,18 +514,28 @@ static int __init efi_systab_init(void *phys)
->  {
->  	if (efi_enabled(EFI_64BIT)) {
->  		efi_system_table_64_t *systab64;
-> +		struct efi_setup_data *data = NULL;
->  		u64 tmp = 0;
->  
-> +		if (efi_setup) {
-> +			data = early_memremap(efi_setup, sizeof(*data));
-> +			if (!data)
-> +				return -ENOMEM;
-> +		}
->  		systab64 = early_memremap((unsigned long)phys,
->  					 sizeof(*systab64));
->  		if (systab64 == NULL) {
->  			pr_err("Couldn't map the system table!\n");
-> +			if (data)
-> +				early_memunmap(data, sizeof(*data));
->  			return -ENOMEM;
->  		}
->  
->  		efi_systab.hdr = systab64->hdr;
-> -		efi_systab.fw_vendor = systab64->fw_vendor;
-> -		tmp |= systab64->fw_vendor;
-> +
-> +		efi_systab.fw_vendor = data ? (unsigned long)data->fw_vendor :
-> +					      systab64->fw_vendor;
-> +		tmp |= efi_systab.fw_vendor;
->  		efi_systab.fw_revision = systab64->fw_revision;
->  		efi_systab.con_in_handle = systab64->con_in_handle;
->  		tmp |= systab64->con_in_handle;
-> @@ -519,15 +549,20 @@ static int __init efi_systab_init(void *phys)
->  		tmp |= systab64->stderr_handle;
->  		efi_systab.stderr = systab64->stderr;
->  		tmp |= systab64->stderr;
-> -		efi_systab.runtime = (void *)(unsigned long)systab64->runtime;
-> -		tmp |= systab64->runtime;
-> +		efi_systab.runtime = data ?
-> +				     (void *)(unsigned long)data->runtime :
-> +				     (void *)(unsigned long)systab64->runtime;
-> +		tmp |= (unsigned long)efi_systab.runtime;
->  		efi_systab.boottime = (void *)(unsigned long)systab64->boottime;
->  		tmp |= systab64->boottime;
->  		efi_systab.nr_tables = systab64->nr_tables;
-> -		efi_systab.tables = systab64->tables;
-> -		tmp |= systab64->tables;
-> +		efi_systab.tables = data ? (unsigned long)data->tables :
-> +					   systab64->tables;
-> +		tmp |= efi_systab.tables;
->  
->  		early_memunmap(systab64, sizeof(*systab64));
-> +		if (data)
-> +			early_memunmap(data, sizeof(*data));
->  #ifdef CONFIG_X86_32
->  		if (tmp >> 32) {
->  			pr_err("EFI data located above 4GB, disabling EFI.\n");
-> @@ -631,6 +666,61 @@ static int __init efi_memmap_init(void)
->  	return 0;
->  }
->  
-> +/*
-> + * For kexec kernel there's some special config table entries which could be
-> + * converted to virtual addresses after entering virtual mode. In kexec kernel
-> + * we need the physical addresses instead, thus passing them via setup_data
-> + * and update the entries to physical addresses in this function.
+A kexec_disable would block both sys_kexec_load and
+sys_reboot(LINUX_REBOOT_CMD_KEXEC) and would remove any staged kexec
+images.  Allowing you to stop considering kexec past that point from a
+security analysis perspective.  That is what it sounds like you want.
 
-Rewrite:
+What I am asking for is an problem description and an implementation
+that are in sync, and a problem description that people can look at and
+say was this a complete implementation.
 
-"A number of config table entries get remapped to virtual addresses
-after entering EFI virtual mode. However, the kexec kernel requires
-their physical addresses therefore we pass them via setup_data and
-correct those entries to their respective physical addresses here."
+Right now I can not tell what was intended so I can not truly tell if
+the patch is correct.  Code with that property does not serve anyone any
+good, especially as the kernel evolves.
 
-> + *
-> + * Currently only handles smbios which is necessary for HP z420.
+So please decide if you want kexec_disable or kexec_load_disable, or if
+you want something a little more nuanced.
 
-Didn't we say that this behavior is coming from a generic UEFI fw
-implementation and if so, no need to mention z420?
+Right now I think a full and complete kexec_disable makes sense.  I
+probably won't use it but I think it makes sense.  Your patch
+implementiong kexec_load_disable seems to be a half solution that tries
+to please everyone and does not serve anyone well.  So I don't see the
+point.
 
-> + */
-> +static int __init efi_reuse_config(u64 tables, int nr_tables)
-> +{
-> +	int i, sz, ret = 0;
-> +	void *p, *tablep;
-> +	struct efi_setup_data *data;
-> +
-> +	if (!efi_setup)
-> +		return 0;
-> +
-> +	if (!efi_enabled(EFI_64BIT))
-> +		return 0;
-> +
-> +	data = early_memremap(efi_setup, sizeof(*data));
-> +	if (!data) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	if (!data->smbios)
-> +		goto out_memremap;
-> +
-> +	sz = sizeof(efi_config_table_64_t);
-> +
-> +	p = tablep = early_memremap(tables, nr_tables * sz);
-> +	if (!p) {
-> +		pr_err("Could not map Configuration table!\n");
-> +		ret = -ENOMEM;
-> +		goto out_memremap;
-> +	}
-> +
-> +	for (i = 0; i < efi.systab->nr_tables; i++) {
-> +		efi_guid_t guid;
-> +
-> +		guid = ((efi_config_table_64_t *)p)->guid;
-> +
-> +		if (!efi_guidcmp(guid, SMBIOS_TABLE_GUID))
-> +			((efi_config_table_64_t *)p)->table = data->smbios;
-> +		p += sz;
-> +	}
-> +	early_memunmap(tablep, nr_tables * sz);
-> +
-> +out_memremap:
-> +	early_memunmap(data, sizeof(*data));
-> +out:
-> +	return ret;
-> +}
-> +
->  void __init efi_init(void)
->  {
->  	efi_char16_t *c16;
-> @@ -676,6 +766,8 @@ void __init efi_init(void)
->  		efi.systab->hdr.revision >> 16,
->  		efi.systab->hdr.revision & 0xffff, vendor);
->  
-> +	efi_reuse_config(efi.systab->tables, efi.systab->nr_tables);
-> +
->  	if (efi_config_init(arch_tables))
->  		return;
->  
-> @@ -886,6 +978,50 @@ out_krealloc:
->  }
->  
->  /*
-> + * Map efi regions which was passed via setup_data. The virt_addr is a fixed
-
-			   were
-
-> + * addr which was used in first kernel in case kexec boot.
-						 ^
-						of a
-
-> + */
-> +static int __init map_regions_fixed(void)
-> +{
-> +	int i, s, ret = 0;
-> +	u64 end, systab;
-> +	unsigned long size;
-> +	efi_memory_desc_t *md;
-> +	struct efi_setup_data *data;
-> +
-> +	s = sizeof(*data) + nr_efi_runtime_map * sizeof(data->map[0]);
-> +	data = early_memremap(efi_setup, s);
-> +	if (!data) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-
-newline.
-
-> +	for (i = 0, md = data->map; i < nr_efi_runtime_map; i++, md++) {
-> +		efi_map_region_fixed(md); /* FIXME: add error handling */
-> +		size = md->num_pages << PAGE_SHIFT;
-> +		end = md->phys_addr + size;
-> +
-> +		systab = (u64) (unsigned long) efi_phys.systab;
-> +		if (md->phys_addr <= systab && systab < end) {
-> +			systab += md->virt_addr - md->phys_addr;
-> +			efi.systab = (efi_system_table_t *)(unsigned long)systab;
-> +		}
-> +		ret = save_runtime_map(md, i);
-
-Wait a minute, this is executed in the second, kexec-ed kernel, right?
-Why do we need to save the map there too?
-
-> +		if (ret)
-> +			goto out_save_runtime;
-> +	}
-> +
-> +	early_memunmap(data, s);
-> +	return 0;
-> +
-> +out_save_runtime:
-> +	kfree(efi_runtime_map);
-> +	nr_efi_runtime_map = 0;
-> +	early_memunmap(data, s);
-> +out:
-> +	return ret;
-> +}
-> +
-> +/*
->   * This function will switch the EFI runtime services to virtual mode.
->   * Essentially, we look through the EFI memmap and map every region that
->   * has the runtime attribute bit set in its memory descriptor into the
-> @@ -901,12 +1037,16 @@ out_krealloc:
->   * so that we're in a different address space when calling a runtime
->   * function. For function arguments passing we do copy the PGDs of the
->   * kernel page table into ->trampoline_pgd prior to each call.
-> + *
-> + * Specially for kexec boot, efi runtime maps in previous kernel should
-> + * be passed in via setup_data. In that case runtime ranges will be mapped
-> + * to the same virtual addresses exactly same as the ones in previous kernel.
-
-"... to the same ..exactly same as ... " sounds funny. What's wrong with
-
-"... to the same virtual addresses as the first kernel."
-
-or if you really insist on "exact":
-
-"... to the same exact virtual addresses as the first kernel."
-
->   */
->  void __init efi_enter_virtual_mode(void)
->  {
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Eric
 
 _______________________________________________
 kexec mailing list
