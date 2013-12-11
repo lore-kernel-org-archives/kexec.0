@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vqnku-0002ir-K4
- for kexec@lists.infradead.org; Wed, 11 Dec 2013 17:39:29 +0000
-Date: Wed, 11 Dec 2013 18:38:58 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 02/14] efi: use early_memremap and early_memunmap
-Message-ID: <20131211173857.GE23793@pd.tnic>
-References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
- <1386582147-9802-3-git-send-email-dyoung@redhat.com>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vqnyb-00039J-9b
+ for kexec@lists.infradead.org; Wed, 11 Dec 2013 17:53:38 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20131210001620.GA7938@www.outflux.net>
+Date: Wed, 11 Dec 2013 09:52:55 -0800
+In-Reply-To: <20131210001620.GA7938@www.outflux.net> (Kees Cook's message of
+ "Mon, 9 Dec 2013 16:16:20 -0800")
+Message-ID: <87vbyvxojs.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1386582147-9802-3-git-send-email-dyoung@redhat.com>
+Subject: Re: [PATCH v2] kexec: add sysctl to disable kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,24 +23,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Dec 09, 2013 at 05:42:15PM +0800, Dave Young wrote:
-> In arch/x86/platform/efi/efi.c and drivers/firmware/efi/efi.c turn to use
-> early_memremap/early_memunmap instead of early_ioremap/early_iounmap so sparse
-> will be happy.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
+Kees Cook <keescook@chromium.org> writes:
 
-Acked-by: Borislav Petkov <bp@suse.de>
+> For general-purpose (i.e. distro) kernel builds it makes sense to build with
+> CONFIG_KEXEC to allow end users to choose what kind of things they want to do
+> with kexec. However, in the face of trying to lock down a system with such
+> a kernel, there needs to be a way to disable kexec (much like module loading
+> can be disabled). Without this, it is too easy for the root user to modify
+> kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are
+> set.
 
--- 
-Regards/Gruss,
-    Boris.
+So let me get this straight.  You object to what happens in sys_reboot
+so you patch sys_kexec_load?
 
-Sent from a fat crate under my desk. Formatting is fine.
---
+You give someone the privilege to boot whatever they want and yet you
+don't want to support them booting whatever they want?
+
+I'm sorry my brain is hurting trying to understand the logic of this
+patch.
+
+Eric
 
 _______________________________________________
 kexec mailing list
