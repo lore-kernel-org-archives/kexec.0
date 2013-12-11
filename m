@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VqmPd-0000lV-6o
- for kexec@lists.infradead.org; Wed, 11 Dec 2013 16:13:25 +0000
-Message-ID: <1386775078.1979.98.camel@deneb.redhat.com>
+ id 1Vqnku-0002ir-K4
+ for kexec@lists.infradead.org; Wed, 11 Dec 2013 17:39:29 +0000
+Date: Wed, 11 Dec 2013 18:38:58 +0100
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCH v5 02/14] efi: use early_memremap and early_memunmap
-From: Mark Salter <msalter@redhat.com>
-Date: Wed, 11 Dec 2013 10:17:58 -0500
-In-Reply-To: <20131211113207.GA29980@console-pimps.org>
+Message-ID: <20131211173857.GE23793@pd.tnic>
 References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
  <1386582147-9802-3-git-send-email-dyoung@redhat.com>
- <20131211103903.GC19196@console-pimps.org>
- <20131211110227.GK22356@rocoto.smurfnet.nu>
- <20131211113207.GA29980@console-pimps.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1386582147-9802-3-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,44 +24,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matt Fleming <matt@console-pimps.org>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, Tony Luck <tony.luck@gmail.com>, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Wed, 2013-12-11 at 11:32 +0000, Matt Fleming wrote:
-> On Wed, 11 Dec, at 12:02:27PM, Leif Lindholm wrote:
-> > On Wed, Dec 11, 2013 at 10:39:03AM +0000, Matt Fleming wrote:
-> > > Leif, Mark, does this patch look OK for ARM? We'd need to introduce a
-> > > new early_memunmap() function so that things still build, but that
-> > > should be straight forward. You'd even be able to get rid of the
-> > > asymmetry in uefi_init() where you map efi.systab with early_memremap()
-> > > but unmap it with early_iounmap().
-> > 
-> > This patch looks splendid for ARM. As long as Mark can get the new
-> > function into an update to the early_*remap() set, I can include this
-> > in my next version - which is coming this week.
+On Mon, Dec 09, 2013 at 05:42:15PM +0800, Dave Young wrote:
+> In arch/x86/platform/efi/efi.c and drivers/firmware/efi/efi.c turn to use
+> early_memremap/early_memunmap instead of early_ioremap/early_iounmap so sparse
+> will be happy.
 > 
-> Great!
-> 
-> Oh and ia64 would also need early_memunmap(). Tony, the original patch
-> is here,
-> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 
-Couldn't ia64 just do:
+Acked-by: Borislav Petkov <bp@suse.de>
 
-  #define early_memremap(phys_addr, size) __va(phys_addr)
-  #define early_memunmap(addr, size)
+-- 
+Regards/Gruss,
+    Boris.
 
-Anyway, I posted a patch to create a generic early_ioremap
-implementation using generic bits of the x86 code:
-
-  https://lkml.org/lkml/2013/11/27/621
-
-So maybe Dave's patch 1/14 should be part of that series or
-get rebased on top of it.
-
---Mark
-
-
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
