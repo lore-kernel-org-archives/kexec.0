@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VqyYh-0001sb-Mq
- for kexec@lists.infradead.org; Thu, 12 Dec 2013 05:11:41 +0000
-Date: Thu, 12 Dec 2013 14:11:02 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/4] Minor fixes and improvements for kexec
-Message-ID: <20131212051102.GC497@verge.net.au>
-References: <cover.1386807069.git.geoff@infradead.org>
+ id 1Vqzig-0002kn-JI
+ for kexec@lists.infradead.org; Thu, 12 Dec 2013 06:25:59 +0000
+Date: Thu, 12 Dec 2013 14:25:06 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 09/14] efi: passing kexec necessary efi data via
+ setup_data
+Message-ID: <20131212062506.GH3751@dhcp-16-126.nay.redhat.com>
+References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
+ <1386582147-9802-10-git-send-email-dyoung@redhat.com>
+ <20131211222057.GB8863@pd.tnic>
+ <20131212030619.GG3751@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <cover.1386807069.git.geoff@infradead.org>
+In-Reply-To: <20131212030619.GG3751@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +27,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: linux-sh@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Paul Mundt <lethal@linux-sh.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, linuxppc-dev@lists.ozlabs.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Thu, Dec 12, 2013 at 12:18:56AM +0000, Geoff Levand wrote:
-> Hi Eric,
+> > > + */
+> > > +static int __init map_regions_fixed(void)
+> > > +{
+> > > +	int i, s, ret = 0;
+> > > +	u64 end, systab;
+> > > +	unsigned long size;
+> > > +	efi_memory_desc_t *md;
+> > > +	struct efi_setup_data *data;
+> > > +
+> > > +	s = sizeof(*data) + nr_efi_runtime_map * sizeof(data->map[0]);
+> > > +	data = early_memremap(efi_setup, s);
+> > > +	if (!data) {
+> > > +		ret = -ENOMEM;
+> > > +		goto out;
+> > > +	}
+> > 
+> > newline.
 > 
-> Here are a few minor fixes and improvements for kexec.  Please consider.
+> Will remove
 
-FWIW,
+misread the comment, there's no new line here. Looks like you want a
+new blank line here, ok..
 
-Reviewed-by: Simon Horman <horms@verge.net.au>
-
 > 
-> -Geoff
-> 
-> The following changes since commit 374b105797c3d4f29c685f3be535c35f5689b30e:
-> 
->   Linux 3.13-rc3 (2013-12-06 09:34:04 -0800)
-> 
-> are available in the git repository at:
-> 
->   git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
-> 
-> for you to fetch changes up to 594a3d26aac66e9668edc81d7bfb4e801575514f:
-> 
->   sh/kexec: Fix kexec build warning (2013-12-11 16:03:27 -0800)
-> 
-> ----------------------------------------------------------------
-> Geoff Levand (4):
->       kexec: Simplify conditional
->       kexec: Add IND_FLAGS macro
->       powerpc/kexec: Use global IND_FLAGS macro
->       sh/kexec: Fix kexec build warning
-> 
->  arch/powerpc/kernel/machine_kexec_64.c |  2 --
->  arch/sh/kernel/machine_kexec.c         |  2 +-
->  include/linux/kexec.h                  |  1 +
->  kernel/kexec.c                         | 17 ++++++++++-------
->  4 files changed, 12 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 1.8.1.2
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+> > 
+> > > +	for (i = 0, md = data->map; i < nr_efi_runtime_map; i++, md++) {
+> > > +		efi_map_region_fixed(md); /* FIXME: add error handling */
+> > > +		size = md->num_pages << PAGE_SHIFT;
+> > > +		end = md->phys_addr + size;
+> > > +
+> > > +		systab = (u64) (unsigned long) efi_phys.systab;
+> > > +		if (md->phys_addr <= systab && systab < end) {
+> > > +			systab += md->virt_addr - md->phys_addr;
+> > > +			efi.systab = (efi_system_table_t *)(unsigned long)systab;
+> > > +		}
+> > > +		ret = save_runtime_map(md, i);
+> > 
 
 _______________________________________________
 kexec mailing list
