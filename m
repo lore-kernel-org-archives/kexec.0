@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pd0-x22d.google.com ([2607:f8b0:400e:c02::22d])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vr7Yv-00078m-Ik
- for kexec@lists.infradead.org; Thu, 12 Dec 2013 14:48:28 +0000
-Received: by mail-pd0-f173.google.com with SMTP id p10so618441pdj.32
- for <kexec@lists.infradead.org>; Thu, 12 Dec 2013 06:48:04 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vr7gA-0007Nq-A8
+ for kexec@lists.infradead.org; Thu, 12 Dec 2013 14:55:55 +0000
+Date: Thu, 12 Dec 2013 09:54:58 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3] kexec: add sysctl to disable kexec_load
+Message-ID: <20131212145458.GB31540@redhat.com>
+References: <20131211235427.GA23999@www.outflux.net>
 MIME-Version: 1.0
-In-Reply-To: <594a3d26aac66e9668edc81d7bfb4e801575514f.1386807069.git.geoff@infradead.org>
-References: <cover.1386807069.git.geoff@infradead.org>
- <594a3d26aac66e9668edc81d7bfb4e801575514f.1386807069.git.geoff@infradead.org>
-Date: Thu, 12 Dec 2013 15:48:01 +0100
-Message-ID: <CAMuHMdUVfY5UO2tZEzSML9Bhx64VobDdyJQwOgfQ5=2wzxbONQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] sh/kexec: Fix kexec build warning
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Disposition: inline
+In-Reply-To: <20131211235427.GA23999@www.outflux.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +23,179 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Paul Mundt <lethal@linux-sh.org>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Linux-sh list <linux-sh@vger.kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Mel Gorman <mgorman@suse.de>
 
-Hi Geoff,
+On Wed, Dec 11, 2013 at 03:54:27PM -0800, Kees Cook wrote:
+> For general-purpose (i.e. distro) kernel builds it makes sense to build with
+> CONFIG_KEXEC to allow end users to choose what kind of things they want to do
+> with kexec. However, in the face of trying to lock down a system with such
+> a kernel, there needs to be a way to disable kexec_load (much like module
+> loading can be disabled). Without this, it is too easy for the root user to
+> modify kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are
+> set. With this change, it is still possible to load an image for use later,
+> then disable kexec_load so the image (or lack of image) can't be altered.
+> 
 
-On Thu, Dec 12, 2013 at 1:18 AM, Geoff Levand <geoff@infradead.org> wrote:
-> Add a cast to a printk argument to suppress a type mismatch compiler warning.
->
-> Signed-off-by: Geoff Levand <geoff@infradead.org> for Huawei, Linaro
+Hi Kees,
+
+I am still not able to wrap my head around that how it will be used in 
+practice.
+
+So you seem to be planning that user space will load a kdump kernel early
+and then disable further load of any kexec/kdump images.
+
+We are doing all this to protect against root loading a image we don't
+want and it is root who will load an image to begin with. Your argument
+is that if root changes the init scripts, then those changes will take
+affect only during next reboot and will be detected.
+
+I don't understand that how would you enforce it. What if root changes it
+and just waits for next scheduled maintenance reboot. So this does not
+sound very convincing to me. If there was a way to disable kexec
+completely using command line, then I could understand that in some
+cases hypervisor will control how virtual machines are launched with
+hypervisor determined command line paramaters and hypervisor could
+enforce that kexec/kdump are disabled and root in virtual machine can't
+do anything about it.
+
+But we seem to be first trusting root to disable kexec/kdump and then 
+little later not trusting same root and expecting that if that root
+changes something it will take affect only after a reboot and we will
+notice it. I am not convinced about the *noticing a reboot* part.
+
+So while patch is simple and seems to be making sense, what's the
+exact use case and how it will be enforced is still unclear to me.
+
+Thanks
+Vivek
+
+
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Rik van Riel <riel@redhat.com>
 > ---
->  arch/sh/kernel/machine_kexec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/sh/kernel/machine_kexec.c b/arch/sh/kernel/machine_kexec.c
-> index 9fea49f..b7e65a8 100644
-> --- a/arch/sh/kernel/machine_kexec.c
-> +++ b/arch/sh/kernel/machine_kexec.c
-> @@ -60,7 +60,7 @@ static void kexec_info(struct kimage *image)
->                        i,
->                        (unsigned int)image->segment[i].mem,
->                        (unsigned int)image->segment[i].mem +
-> -                                    image->segment[i].memsz,
-> +                      (unsigned int)image->segment[i].memsz,
->                        (unsigned int)image->segment[i].memsz);
->         }
->         printk("  start     : 0x%08x\n\n", (unsigned int)image->start);
-
-Wouldn't it be better to remove all casts and correct the printf-style
-format specifiers instead?
-
-  - mem and start are unsigned long, hence use "0x%08lx",
-  - memsz is size_t, hence use "0x%08zx".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> v3:
+>  - renamed and clarified to kexec_load_disabled; Eric W. Biederman
+> v2:
+>  - updated sysctl documentation; akpm
+> ---
+>  Documentation/sysctl/kernel.txt |   15 ++++++++++++++-
+>  include/linux/kexec.h           |    1 +
+>  kernel/kexec.c                  |    3 ++-
+>  kernel/sysctl.c                 |   13 +++++++++++++
+>  4 files changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
+> index 26b7ee491df8..3e1846427eda 100644
+> --- a/Documentation/sysctl/kernel.txt
+> +++ b/Documentation/sysctl/kernel.txt
+> @@ -33,6 +33,7 @@ show up in /proc/sys/kernel:
+>  - domainname
+>  - hostname
+>  - hotplug
+> +- kexec_load_disabled
+>  - kptr_restrict
+>  - kstack_depth_to_print       [ X86 only ]
+>  - l2cr                        [ PPC only ]
+> @@ -287,6 +288,18 @@ Default value is "/sbin/hotplug".
+>  
+>  ==============================================================
+>  
+> +kexec_load_disabled:
+> +
+> +A toggle indicating if the kexec_load syscall has been disabled. This
+> +value defaults to 0 (false: kexec_load enabled), but can be set to 1
+> +(true: kexec_load disabled). Once true, kexec can no longer be used, and
+> +the toggle cannot be set back to false. This allows a kexec image to be
+> +loaded before disabling the syscall, allowing a system to set up (and
+> +later use) an image without it being altered. Generally used together
+> +with the "modules_disabled" sysctl.
+> +
+> +==============================================================
+> +
+>  kptr_restrict:
+>  
+>  This toggle indicates whether restrictions are placed on
+> @@ -331,7 +344,7 @@ A toggle value indicating if modules are allowed to be loaded
+>  in an otherwise modular kernel.  This toggle defaults to off
+>  (0), but can be set true (1).  Once true, modules can be
+>  neither loaded nor unloaded, and the toggle cannot be set back
+> -to false.
+> +to false.  Generally used with the "kexec_load_disabled" toggle.
+>  
+>  ==============================================================
+>  
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index d78d28a733b1..a3e842f6867e 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -170,6 +170,7 @@ unsigned long paddr_vmcoreinfo_note(void);
+>  
+>  extern struct kimage *kexec_image;
+>  extern struct kimage *kexec_crash_image;
+> +extern int kexec_load_disabled;
+>  
+>  #ifndef kexec_flush_icache_page
+>  #define kexec_flush_icache_page(page)
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 490afc03627e..9405ae68feb4 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -929,6 +929,7 @@ static int kimage_load_segment(struct kimage *image,
+>   */
+>  struct kimage *kexec_image;
+>  struct kimage *kexec_crash_image;
+> +int kexec_load_disabled;
+>  
+>  static DEFINE_MUTEX(kexec_mutex);
+>  
+> @@ -939,7 +940,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+>  	int result;
+>  
+>  	/* We only trust the superuser with rebooting the system. */
+> -	if (!capable(CAP_SYS_BOOT))
+> +	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+>  		return -EPERM;
+>  
+>  	/*
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 34a604726d0b..ea4bb8152a34 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -62,6 +62,7 @@
+>  #include <linux/capability.h>
+>  #include <linux/binfmts.h>
+>  #include <linux/sched/sysctl.h>
+> +#include <linux/kexec.h>
+>  
+>  #include <asm/uaccess.h>
+>  #include <asm/processor.h>
+> @@ -614,6 +615,18 @@ static struct ctl_table kern_table[] = {
+>  		.proc_handler	= proc_dointvec,
+>  	},
+>  #endif
+> +#ifdef CONFIG_KEXEC
+> +	{
+> +		.procname	= "kexec_load_disabled",
+> +		.data		= &kexec_load_disabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &one,
+> +		.extra2		= &one,
+> +	},
+> +#endif
+>  #ifdef CONFIG_MODULES
+>  	{
+>  		.procname	= "modprobe",
+> -- 
+> 1.7.9.5
+> 
+> 
+> -- 
+> Kees Cook
+> Chrome OS Security
 
 _______________________________________________
 kexec mailing list
