@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VqveN-0007RM-9E
- for kexec@lists.infradead.org; Thu, 12 Dec 2013 02:05:16 +0000
-Date: Thu, 12 Dec 2013 10:04:26 +0800
+ id 1VqvgV-0007Ut-7K
+ for kexec@lists.infradead.org; Thu, 12 Dec 2013 02:07:27 +0000
+Date: Thu, 12 Dec 2013 10:06:42 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v5 02/14] efi: use early_memremap and early_memunmap
-Message-ID: <20131212020426.GA3751@dhcp-16-126.nay.redhat.com>
+Subject: Re: [PATCH v5 01/14] x86/mm: sparse warning fix for early_memremap
+Message-ID: <20131212020642.GB3751@dhcp-16-126.nay.redhat.com>
 References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
- <1386582147-9802-3-git-send-email-dyoung@redhat.com>
- <20131211103903.GC19196@console-pimps.org>
+ <1386582147-9802-2-git-send-email-dyoung@redhat.com>
+ <20131209150521.GE31650@pd.tnic>
+ <20131210021221.GA3800@dhcp-16-126.nay.redhat.com>
+ <20131211102025.GB19196@console-pimps.org>
+ <20131211111240.GE21683@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131211103903.GC19196@console-pimps.org>
+In-Reply-To: <20131211111240.GE21683@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,42 +28,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matt Fleming <matt@console-pimps.org>
-Cc: mjg59@srcf.ucam.org, Mark Salter <msalter@redhat.com>, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: Matt Fleming <matt@console-pimps.org>, linux-efi@vger.kernel.org, toshi.kani@hp.com, mjg59@srcf.ucam.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, vgoyal@redhat.com
 
-On 12/11/13 at 10:39am, Matt Fleming wrote:
-> (Cc'ing Leif and Mark for the ARM-side of things)
+On 12/11/13 at 12:12pm, Borislav Petkov wrote:
+> On Wed, Dec 11, 2013 at 10:20:25AM +0000, Matt Fleming wrote:
+> > This needs reviewing by at least one of the x86 folks, but it
+> > certainly makes sense to me.
 > 
-> On Mon, 09 Dec, at 05:42:15PM, Dave Young wrote:
-> > In arch/x86/platform/efi/efi.c and drivers/firmware/efi/efi.c turn to use
-> > early_memremap/early_memunmap instead of early_ioremap/early_iounmap so sparse
-> > will be happy.
-> > 
-> > Signed-off-by: Dave Young <dyoung@redhat.com>
-> > ---
-> >  arch/x86/platform/efi/efi.c | 20 ++++++++++----------
-> >  drivers/firmware/efi/efi.c  |  4 ++--
-> >  2 files changed, 12 insertions(+), 12 deletions(-)
->  
-> This looks like a rather nice cleanup but the commit log could use a
-> little bit of tweaking...
+> Ingo told me yesterday, it makes sense too. I'd guess we can try it.
+> FWIW, all callers of early_memremap use the memory they get remapped as
+> normal memory so we should be safe.
 > 
->   - Please start your commit title (the part after the subsystem tag)
->     with a capital letter, e.g.
-> 
->       efi: Use early_memremap...
-> 
->   - You need to explain in the commit title that you're fixing a sparse
->     warning. Anyone reading the patch subject will have no idea _why_
->     you're using early_memremap() and early_memunmap().
-> 
->   - In the commit message body explain why sparse is currently unhappy.
+> Maybe this whole discussion should be noted down in the commit message
+> so that people know.
 
-Sure, will do.
-
---
-Thanks for review
-Dave
+Thanks for the info. will add.
 
 _______________________________________________
 kexec mailing list
