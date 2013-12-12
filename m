@@ -1,9 +1,7 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-Id: <3d9d024551c3c0e560d77f81926cb5774dda7067.1386807069.git.geoff@infradead.org>
-In-Reply-To: <cover.1386807069.git.geoff@infradead.org>
-References: <cover.1386807069.git.geoff@infradead.org>
+Message-Id: <cover.1386807069.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 2/4] kexec: Add IND_FLAGS macro
+Subject: [PATCH 0/4] Minor fixes and improvements for kexec
 Date: Thu, 12 Dec 2013 00:18:56 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,34 +17,41 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Eric Biederman <ebiederm@xmission.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>
+Cc: linux-sh@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Paul Mundt <lethal@linux-sh.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 
-Add a new kexec preprocessor macro IND_FLAGS, which is the bitwise OR of
-all the possible kexec IND_ kimage_entry indirection flags.
+Hi Eric,
 
-Having this macro allows for simplified code in the prosessing of the
-kexec kimage_entry items.
+Here are a few minor fixes and improvements for kexec.  Please consider.
 
-Signed-off-by: Geoff Levand <geoff@infradead.org> for Huawei, Linaro
----
- include/linux/kexec.h | 1 +
- 1 file changed, 1 insertion(+)
+-Geoff
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index d78d28a..f755ec3 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -67,6 +67,7 @@ typedef unsigned long kimage_entry_t;
- #define IND_INDIRECTION  0x2
- #define IND_DONE         0x4
- #define IND_SOURCE       0x8
-+#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
- 
- struct kexec_segment {
- 	void __user *buf;
+The following changes since commit 374b105797c3d4f29c685f3be535c35f5689b30e:
+
+  Linux 3.13-rc3 (2013-12-06 09:34:04 -0800)
+
+are available in the git repository at:
+
+  git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
+
+for you to fetch changes up to 594a3d26aac66e9668edc81d7bfb4e801575514f:
+
+  sh/kexec: Fix kexec build warning (2013-12-11 16:03:27 -0800)
+
+----------------------------------------------------------------
+Geoff Levand (4):
+      kexec: Simplify conditional
+      kexec: Add IND_FLAGS macro
+      powerpc/kexec: Use global IND_FLAGS macro
+      sh/kexec: Fix kexec build warning
+
+ arch/powerpc/kernel/machine_kexec_64.c |  2 --
+ arch/sh/kernel/machine_kexec.c         |  2 +-
+ include/linux/kexec.h                  |  1 +
+ kernel/kexec.c                         | 17 ++++++++++-------
+ 4 files changed, 12 insertions(+), 10 deletions(-)
+
 -- 
 1.8.1.2
-
 
 
 _______________________________________________
