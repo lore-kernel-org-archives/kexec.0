@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VrDGy-0001Th-SU
- for kexec@lists.infradead.org; Thu, 12 Dec 2013 20:54:18 +0000
-Date: Thu, 12 Dec 2013 21:53:46 +0100
+ id 1VrDRd-0001hc-Hs
+ for kexec@lists.infradead.org; Thu, 12 Dec 2013 21:05:19 +0000
+Date: Thu, 12 Dec 2013 22:04:39 +0100
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 08/14] efi: export efi runtime memory mapping to sysfs
-Message-ID: <20131212205346.GA30162@pd.tnic>
+Subject: Re: [PATCH v5 09/14] efi: passing kexec necessary efi data via
+ setup_data
+Message-ID: <20131212210439.GB30162@pd.tnic>
 References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
- <1386582147-9802-9-git-send-email-dyoung@redhat.com>
- <20131211185520.GG23793@pd.tnic>
- <20131212023617.GF3751@dhcp-16-126.nay.redhat.com>
+ <1386582147-9802-10-git-send-email-dyoung@redhat.com>
+ <20131211222057.GB8863@pd.tnic>
+ <20131212030619.GG3751@dhcp-16-126.nay.redhat.com>
+ <20131212071743.GJ3751@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20131212023617.GF3751@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20131212071743.GJ3751@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,25 +31,15 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Thu, Dec 12, 2013 at 10:36:17AM +0800, Dave Young wrote:
-> Sorry that I forgot to explain this in changelog, should ask you before.
-> 
-> I did try moving it to efisubsys_init but it need add extern declaration
+On Thu, Dec 12, 2013 at 03:17:43PM +0800, Dave Young wrote:
+> Rethink about this issue, moving them to efi_$(BITS).c I need move the
+> efi_setup from a static variable to an extern, It looks not worth.
 
-So what? Add it.
-
-> for efi_runtime_map_init. Since link order will ensure it being called after
-> efisubsys_init I think it's fine with this static function.
-
-This is actually exactly the reason why it shouldn't be another
-subsys_initcall() if it can be helped. People would need to go have a
-look at drivers/firmware/efi/Makefile to realize that the link order is
-ok.
-
-And, this is prone to future breakage if people go and move code around
-and thereby change the link order.
-
-Please call efi_runtime_map_init from efisubsys_init.
+Dave, would you please do what is suggested to you? A big part of
+the efi code is split into 32-bit and 64-bit functionality. If you
+have a serious argument why it shouldn't be done so then sure, by all
+means, but stop coming up with silly arguments like having an extern
+declaration is a bad thing. Please.
 
 -- 
 Regards/Gruss,
