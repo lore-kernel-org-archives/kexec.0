@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <1386876601.1002.0.camel@smoke>
-Subject: Re: [PATCH 4/4] sh/kexec: Fix kexec build warning
+Message-ID: <1386876830.1002.4.camel@smoke>
+Subject: Re: [PATCH 2/4] kexec: Add IND_FLAGS macro
 From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 12 Dec 2013 11:30:01 -0800
-In-Reply-To: <CAMuHMdUVfY5UO2tZEzSML9Bhx64VobDdyJQwOgfQ5=2wzxbONQ@mail.gmail.com>
+Date: Thu, 12 Dec 2013 11:33:50 -0800
+In-Reply-To: <52A912E3.1060802@cn.fujitsu.com>
 References: <cover.1386807069.git.geoff@infradead.org>
- <594a3d26aac66e9668edc81d7bfb4e801575514f.1386807069.git.geoff@infradead.org>
- <CAMuHMdUVfY5UO2tZEzSML9Bhx64VobDdyJQwOgfQ5=2wzxbONQ@mail.gmail.com>
+ <3d9d024551c3c0e560d77f81926cb5774dda7067.1386807069.git.geoff@infradead.org>
+ <52A912E3.1060802@cn.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,23 +20,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Paul Mundt <lethal@linux-sh.org>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Linux-sh list <linux-sh@vger.kernel.org>
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Paul Mackerras <paulus@samba.org>
 
-Hi,
+Hi Zhang,
 
-On Thu, 2013-12-12 at 15:48 +0100, Geert Uytterhoeven wrote:
-> On Thu, Dec 12, 2013 at 1:18 AM, Geoff Levand <geoff@infradead.org> wrote:
-> > -                                    image->segment[i].memsz,
-> > +                      (unsigned int)image->segment[i].memsz,e->start);
+On Thu, 2013-12-12 at 09:35 +0800, Zhang Yanfei wrote:
+> On 12/12/2013 08:18 AM, Geoff Levand wrote:
+> > Add a new kexec preprocessor macro IND_FLAGS, which is the bitwise OR of
+> > all the possible kexec IND_ kimage_entry indirection flags.
+> > 
+> > Having this macro allows for simplified code in the prosessing of the
+> > kexec kimage_entry items.
 > 
-> Wouldn't it be better to remove all casts and correct the printf-style
-> format specifiers instead?
+> Where? I didn't see any place you use this macro to help simplification.
 
-That would be better, I'll make a new patch.
+As in powerpc, it allows constructions like this:
 
-Thanks Geert!
+  switch (entry & IND_FLAGS) {
+  case IND_DESTINATION:
+  ...
+  case IND_INDIRECTION:
+  ...
+  }
 
+-Geoff
 
 
 _______________________________________________
