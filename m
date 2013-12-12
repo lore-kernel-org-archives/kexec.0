@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-Id: <839896bb375c8b694473b0ea6a6db009c1128fc5.1386807069.git.geoff@infradead.org>
+Message-Id: <594a3d26aac66e9668edc81d7bfb4e801575514f.1386807069.git.geoff@infradead.org>
 In-Reply-To: <cover.1386807069.git.geoff@infradead.org>
 References: <cover.1386807069.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 1/4] kexec: Simplify conditional
+Subject: [PATCH 4/4] sh/kexec: Fix kexec build warning
 Date: Thu, 12 Dec 2013 00:18:56 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,58 +19,30 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Eric Biederman <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
+Cc: Paul Mundt <lethal@linux-sh.org>, kexec@lists.infradead.org, linux-sh@vger.kernel.org
 
-Simplify the code around one of the conditionals in the kexec_load
-syscall routine.
-
-The original code was confusing with a redundant check on KEXEC_ON_CRASH
-and comments outside of the conditional block.  This change switches the
-order of the conditional check, and cleans up the comments for the
-conditional.  There is no functional change to the code.
+Add a cast to a printk argument to suppress a type mismatch compiler warning.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org> for Huawei, Linaro
 ---
- kernel/kexec.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/sh/kernel/machine_kexec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 490afc0..89a6fa3 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -980,19 +980,22 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 	if (nr_segments > 0) {
- 		unsigned long i;
- 
--		/* Loading another kernel to reboot into */
--		if ((flags & KEXEC_ON_CRASH) == 0)
--			result = kimage_normal_alloc(&image, entry,
--							nr_segments, segments);
--		/* Loading another kernel to switch to if this one crashes */
--		else if (flags & KEXEC_ON_CRASH) {
--			/* Free any current crash dump kernel before
-+		if (flags & KEXEC_ON_CRASH) {
-+			/*
-+			 * Loading another kernel to switch to if this one
-+			 * crashes.  Free any current crash dump kernel before
- 			 * we corrupt it.
- 			 */
-+
- 			kimage_free(xchg(&kexec_crash_image, NULL));
- 			result = kimage_crash_alloc(&image, entry,
- 						     nr_segments, segments);
- 			crash_map_reserved_pages();
-+		} else {
-+			/* Loading another kernel to reboot into. */
-+
-+			result = kimage_normal_alloc(&image, entry,
-+							nr_segments, segments);
- 		}
- 		if (result)
- 			goto out;
+diff --git a/arch/sh/kernel/machine_kexec.c b/arch/sh/kernel/machine_kexec.c
+index 9fea49f..b7e65a8 100644
+--- a/arch/sh/kernel/machine_kexec.c
++++ b/arch/sh/kernel/machine_kexec.c
+@@ -60,7 +60,7 @@ static void kexec_info(struct kimage *image)
+ 		       i,
+ 		       (unsigned int)image->segment[i].mem,
+ 		       (unsigned int)image->segment[i].mem +
+-				     image->segment[i].memsz,
++		       (unsigned int)image->segment[i].memsz,
+ 		       (unsigned int)image->segment[i].memsz);
+ 	}
+ 	printk("  start     : 0x%08x\n\n", (unsigned int)image->start);
 -- 
 1.8.1.2
-
 
 
 _______________________________________________
