@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VrN99-00073j-Qg
- for kexec@lists.infradead.org; Fri, 13 Dec 2013 07:26:52 +0000
-Date: Fri, 13 Dec 2013 15:26:00 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v5 08/14] efi: export efi runtime memory mapping to sysfs
-Message-ID: <20131213072600.GB11164@dhcp-16-126.nay.redhat.com>
-References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
- <1386582147-9802-9-git-send-email-dyoung@redhat.com>
- <20131211185520.GG23793@pd.tnic>
- <20131212023617.GF3751@dhcp-16-126.nay.redhat.com>
- <20131212205346.GA30162@pd.tnic>
+Received: from mail-pb0-x22d.google.com ([2607:f8b0:400e:c01::22d])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VrNjC-0007iw-OH
+ for kexec@lists.infradead.org; Fri, 13 Dec 2013 08:04:07 +0000
+Received: by mail-pb0-f45.google.com with SMTP id rp16so2110345pbb.18
+ for <kexec@lists.infradead.org>; Fri, 13 Dec 2013 00:03:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131212205346.GA30162@pd.tnic>
+In-Reply-To: <20131213005322.GJ32101@verge.net.au>
+References: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
+ <20131213005322.GJ32101@verge.net.au>
+Date: Fri, 13 Dec 2013 09:03:45 +0100
+Message-ID: <CAMuHMdW8cSLXy36fD1QaSjHoFsM5B4ZK4JVwLY-OefX+wFOtiQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] kexec support for Linux/m68k (tools part)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,92 +25,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-m68k <linux-m68k@lists.linux-m68k.org>, kexec@lists.infradead.org
 
-On 12/12/13 at 09:53pm, Borislav Petkov wrote:
-> On Thu, Dec 12, 2013 at 10:36:17AM +0800, Dave Young wrote:
-> > Sorry that I forgot to explain this in changelog, should ask you before.
-> > 
-> > I did try moving it to efisubsys_init but it need add extern declaration
-> 
-> So what? Add it.
-> 
-> > for efi_runtime_map_init. Since link order will ensure it being called after
-> > efisubsys_init I think it's fine with this static function.
-> 
-> This is actually exactly the reason why it shouldn't be another
-> subsys_initcall() if it can be helped. People would need to go have a
-> look at drivers/firmware/efi/Makefile to realize that the link order is
-> ok.
-> 
-> And, this is prone to future breakage if people go and move code around
-> and thereby change the link order.
-> 
-> Please call efi_runtime_map_init from efisubsys_init.
+Hi Simon,
 
-After moving to efisubsys_init, the code will looks like below, because
-the funtion only is used in drivers/firmware/efi/efi.c thus I can not
-add a blank function in #else section in the efi.h header file. Creating
-another header file for this one function looks bad to me.
+On Fri, Dec 13, 2013 at 1:53 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Tue, Oct 15, 2013 at 07:50:57PM +0200, Geert Uytterhoeven wrote:
+>> kexec support for Linux/m68k (tools part)
+>>
+>> This is a set of patches to add kexec support for m68k to kexec-tools.
+>>
+>>   - Kexec only, no kdump support yet (do you have enough RAM to keep a
+>>     crashdump kernel in memory at all times? ;-)
+>
+> Thanks, applied.
 
-Is below changes fine to you? I can add it to next version if you like it.
+Thanks, I have queued the kernel counterpart for 3.14.
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 9fbaeb2..2db7ea5 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -133,6 +133,10 @@ extern void efi_sync_low_kernel_mappings(void);
- extern void efi_setup_page_tables(void);
- extern void __init old_map_region(efi_memory_desc_t *md);
- 
-+#ifdef CONFIG_EFI_RUNTIME_MAP
-+extern int __init efi_runtime_map_init(void);
-+#endif
-+
- #ifdef CONFIG_EFI
- 
- static inline bool efi_is_native(void)
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index afd0b49..85fd904 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -168,6 +168,12 @@ static int __init efisubsys_init(void)
- 		goto err_unregister;
- 	}
- 
-+#ifdef CONFIG_EFI_RUNTIME_MAP
-+	error = efi_runtime_map_init();
-+	if (error)
-+		goto err_remove_group;
-+#endif
-+
- 	/* and the standard mountpoint for efivarfs */
- 	efivars_kobj = kobject_create_and_add("efivars", efi_kobj);
- 	if (!efivars_kobj) {
-diff --git a/drivers/firmware/efi/runtime-map.c b/drivers/firmware/efi/runtime-map.c
-index e5e9984..5af06ad 100644
---- a/drivers/firmware/efi/runtime-map.c
-+++ b/drivers/firmware/efi/runtime-map.c
-@@ -135,7 +135,7 @@ static struct efi_runtime_map_entry *add_sysfs_runtime_map_entry(int nr)
- 	return entry;
- }
- 
--static int __init efi_runtime_map_init(void)
-+int __init efi_runtime_map_init(void)
- {
- 	int i, j, ret = 0;
- 	struct efi_runtime_map_entry *entry;
-@@ -172,5 +172,3 @@ out_add_entry:
- out:
- 	return ret;
- }
--
--subsys_initcall(efi_runtime_map_init);
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-Thanks
-Dave
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
