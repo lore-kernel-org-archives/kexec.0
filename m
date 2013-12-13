@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pb0-x22d.google.com ([2607:f8b0:400e:c01::22d])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VrNjC-0007iw-OH
- for kexec@lists.infradead.org; Fri, 13 Dec 2013 08:04:07 +0000
-Received: by mail-pb0-f45.google.com with SMTP id rp16so2110345pbb.18
- for <kexec@lists.infradead.org>; Fri, 13 Dec 2013 00:03:45 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VrQjF-0003DA-Qt
+ for kexec@lists.infradead.org; Fri, 13 Dec 2013 11:16:23 +0000
+Date: Fri, 13 Dec 2013 15:20:30 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 08/14] efi: export efi runtime memory mapping to sysfs
+Message-ID: <20131213072030.GA11164@dhcp-16-126.nay.redhat.com>
+References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
+ <1386582147-9802-9-git-send-email-dyoung@redhat.com>
+ <20131211185520.GG23793@pd.tnic>
+ <20131212023617.GF3751@dhcp-16-126.nay.redhat.com>
+ <20131212071337.GI3751@dhcp-16-126.nay.redhat.com>
+ <20131212203656.GC26927@pd.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20131213005322.GJ32101@verge.net.au>
-References: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
- <20131213005322.GJ32101@verge.net.au>
-Date: Fri, 13 Dec 2013 09:03:45 +0100
-Message-ID: <CAMuHMdW8cSLXy36fD1QaSjHoFsM5B4ZK4JVwLY-OefX+wFOtiQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] kexec support for Linux/m68k (tools part)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Disposition: inline
+In-Reply-To: <20131212203656.GC26927@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,34 +28,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-m68k <linux-m68k@lists.linux-m68k.org>, kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Hi Simon,
+On 12/12/13 at 09:36pm, Borislav Petkov wrote:
+> On Thu, Dec 12, 2013 at 03:13:37PM +0800, Dave Young wrote:
+> > BTW, I will restructure the whole code when I move them to
+> > efi_kexec.c, so no worry about it? If you have strong opinion I can
+> > move them though.
+> 
+> Well, if it were me, I'd do it now so that it'll see more testing.
+> Later, it will be only a mechanical move of those functions which belong
+> to efi_kexec.c and won't need a second testing.
 
-On Fri, Dec 13, 2013 at 1:53 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Oct 15, 2013 at 07:50:57PM +0200, Geert Uytterhoeven wrote:
->> kexec support for Linux/m68k (tools part)
->>
->> This is a set of patches to add kexec support for m68k to kexec-tools.
->>
->>   - Kexec only, no kdump support yet (do you have enough RAM to keep a
->>     crashdump kernel in memory at all times? ;-)
->
-> Thanks, applied.
-
-Thanks, I have queued the kernel counterpart for 3.14.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Will do, thanks.
 
 _______________________________________________
 kexec mailing list
