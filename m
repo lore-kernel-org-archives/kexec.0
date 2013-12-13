@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VrVC3-0001yL-MK
- for kexec@lists.infradead.org; Fri, 13 Dec 2013 16:02:25 +0000
-Date: Fri, 13 Dec 2013 17:01:50 +0100
+ id 1VrYyb-0007qL-Rz
+ for kexec@lists.infradead.org; Fri, 13 Dec 2013 20:04:48 +0000
+Date: Fri, 13 Dec 2013 21:04:12 +0100
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 10/14] efi: only print saved efi runtime maps instead
- of all memmap ranges for kexec
-Message-ID: <20131213160150.GE32329@pd.tnic>
+Subject: Re: [PATCH v5 12/14] x86: export x86 boot_params to sysfs
+Message-ID: <20131213200412.GA12466@pd.tnic>
 References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
- <1386582147-9802-11-git-send-email-dyoung@redhat.com>
+ <1386582147-9802-13-git-send-email-dyoung@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1386582147-9802-11-git-send-email-dyoung@redhat.com>
+In-Reply-To: <1386582147-9802-13-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,66 +27,34 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
 Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Mon, Dec 09, 2013 at 05:42:23PM +0800, Dave Young wrote:
-> For kexec/kdump kernel efi runtime mappings are saved, printing original whole
-> memmap ranges does not make sense anymore. So introduce a new function to only
-> print runtime maps in case kexec/kdump kernel is used.
+On Mon, Dec 09, 2013 at 05:42:25PM +0800, Dave Young wrote:
+> kexec-tools use boot_params for getting the 1st kernel hardware_subarch,
+> the kexec kernel efi runtime support also need read the old efi_info from
+> boot_params. Currently it exists in debugfs which is not a good place for
+> such infomation. Per HPA, we should avoid of "sploit debugfs".
 > 
-> changelog:
-> Matt: use efi_setup instead of esdata
->       share function print_efi_memmap for both normal and kexec boot.
+> In this patch /sys/kernel/boot_params are exported, also the setup_data is
+> exported as a subdirectory. kexec-tools is using debugfs for hardware_subarch
+> for a long time now so we're not removing it yet.
+> 
+> Structure is like below:
+> 
+> /sys/kernel/boot_params
+> |__ data                /* boot_params in binary*/
+> |__ setup_data
+> |   |__ 0               /* the first setup_data node */
+> |   |   |__ data        /* setup_data node 0 in binary*/
+> |   |   |__ type        /* setup_data type of setup_data node 0, hex string */
+> [snip]
+> |__ version             /* boot protocal version (in hex, "0x" prefixed)*/
+> 
+> Changelog:
+> Greg: use __ATTR_RO() and group attr.
+> Matt and Boris: Documentation improvement, code indentation.
 > 
 > Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  arch/x86/platform/efi/efi.c | 24 +++++++++++++++++-------
->  1 file changed, 17 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 69a6ec2..94a1cbc 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -423,19 +423,16 @@ int __init efi_memblock_x86_reserve_range(void)
->  	return 0;
->  }
->  
-> -static void __init print_efi_memmap(void)
-> +static void __init print_efi_memmap(void *map, int nr_map, int md_size)
->  {
->  #ifdef EFI_DEBUG
->  	efi_memory_desc_t *md;
->  	void *p;
->  	int i;
->  
-> -	for (p = memmap.map, i = 0;
-> -	     p < memmap.map_end;
-> -	     p += memmap.desc_size, i++) {
-> +	for (p = map, i = 0; i < nr_map; p += md_size, i++) {
->  		md = p;
-> -		pr_info("mem%02u: type=%u, attr=0x%llx, "
-> -			"range=[0x%016llx-0x%016llx) (%lluMB)\n",
-> +		pr_info("mem%02u: type=%u, attr=0x%llx, range=[0x%016llx-0x%016llx) (%lluMB)\n",
->  			i, md->type, md->attribute, md->phys_addr,
->  			md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT),
->  			(md->num_pages >> (20 - EFI_PAGE_SHIFT)));
-> @@ -797,7 +794,20 @@ void __init efi_init(void)
->  		x86_platform.set_wallclock = efi_set_rtc_mmss;
->  	}
->  #endif
-> -	print_efi_memmap();
-> +	if (efi_setup) {
-> +		int s;
-> +		struct efi_setup_data *data;
-> +
-> +		s = sizeof(*data) + nr_efi_runtime_map * sizeof(data->map[0]);
-> +		data = early_memremap(efi_setup, s);
-> +		if (!data)
-> +			return;
-> +		print_efi_memmap(data->map, nr_efi_runtime_map,
-> +				 sizeof(data->map[0]));
-> +		early_memunmap(data, s);
 
-Well, if you call print_efi_memmap() in parse_efi_setup() you can save
-yourself that map/unmaping no?
+Acked-by: Borislav Petkov <bp@suse.de>
 
 -- 
 Regards/Gruss,
