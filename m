@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VsRMO-0001C4-DQ
- for kexec@lists.infradead.org; Mon, 16 Dec 2013 06:08:58 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH] makedumpfile: Add a existence check of symbols for
- --dump-dmesg
-Date: Mon, 16 Dec 2013 06:07:05 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D2896@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VsUY0-000519-Mz
+ for kexec@lists.infradead.org; Mon, 16 Dec 2013 09:33:09 +0000
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH v6 06/14] efi: cleanup efi_enter_virtual_mode function
+Date: Mon, 16 Dec 2013 17:30:27 +0800
+Message-Id: <1387186235-15972-7-git-send-email-dyoung@redhat.com>
+In-Reply-To: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
+References: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,60 +17,202 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "louis.bouchard@canonical.com" <louis.bouchard@canonical.com>
+To: linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
 
-Hello,
+Add two small functions:
+efi_merge_regions and efi_map_regions, efi_enter_virtual_mode
+calls them instead of embedding two long for loop.
 
-I found a bug while testing for makedumpfile-1.5.5.
-I'll release v1.5.5 after retesting with this patch, it will be
-a few days later.
+v1->v2:
+refresh; coding style fixes.
 
+v2->v3:
+Toshi Kani:
+remove unused variable
+Matt: check return value of krealloc.
+v3->v4:
+Boris: Stretch comment to 80 cols
+fix krealloc bug.
 
-Thanks
-Atsushi Kumagai
-
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Mon, 16 Dec 2013 14:00:51 +0900
-Subject: [PATCH] Add a existence check of symbols for --dump-dmesg.
-
-Since the format of the kernel log buffer was changed in kernel 3.5,
-some symbols related to the format have been needed for --dump-dmesg
-option. However, the functions for it use the symbols without
-existence check, so makedumpfile can run into unexpected error.
-In practice, this is a definite issue since kernel 3.5 doesn't
-export SIZE(log) to VMCOREINFO.
-
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Acked-by: Borislav Petkov <bp@suse.de>
 ---
- makedumpfile.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/platform/efi/efi.c | 123 ++++++++++++++++++++++++++------------------
+ 1 file changed, 72 insertions(+), 51 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 20f107e..23251a1 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4036,6 +4036,14 @@ dump_dmesg()
- 		if (!close_files_for_creating_dumpfile())
- 			goto out;
- 	} else {
-+		if (SIZE(printk_log) == NOT_FOUND_STRUCTURE ||
-+		    OFFSET(printk_log.len) == NOT_FOUND_STRUCTURE ||
-+		    OFFSET(printk_log.text_len) == NOT_FOUND_STRUCTURE ||
-+		    OFFSET(printk_log.ts_nsec) == NOT_FOUND_STRUCTURE) {
-+			ERRMSG("Can't get necessary structures for extracting dmesg log.\n");
-+			goto out;
-+		}
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 8a88c68..7778b5f 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -773,44 +773,12 @@ void __init old_map_region(efi_memory_desc_t *md)
+ 		       (unsigned long long)md->phys_addr);
+ }
+ 
+-/*
+- * This function will switch the EFI runtime services to virtual mode.
+- * Essentially, we look through the EFI memmap and map every region that
+- * has the runtime attribute bit set in its memory descriptor into the
+- * ->trampoline_pgd page table using a top-down VA allocation scheme.
+- *
+- * The old method which used to update that memory descriptor with the
+- * virtual address obtained from ioremap() is still supported when the
+- * kernel is booted with efi=old_map on its command line. Same old
+- * method enabled the runtime services to be called without having to
+- * thunk back into physical mode for every invocation.
+- *
+- * The new method does a pagetable switch in a preemption-safe manner
+- * so that we're in a different address space when calling a runtime
+- * function. For function arguments passing we do copy the PGDs of the
+- * kernel page table into ->trampoline_pgd prior to each call.
+- */
+-void __init efi_enter_virtual_mode(void)
++/* Merge contiguous regions of the same type and attribute */
++static void __init efi_merge_regions(void)
+ {
++	void *p;
+ 	efi_memory_desc_t *md, *prev_md = NULL;
+-	void *p, *new_memmap = NULL;
+-	unsigned long size;
+-	efi_status_t status;
+-	u64 end, systab;
+-	int count = 0;
+-
+-	efi.systab = NULL;
+-
+-	/*
+-	 * We don't do virtual mode, since we don't do runtime services, on
+-	 * non-native EFI
+-	 */
+-	if (!efi_is_native()) {
+-		efi_unmap_memmap();
+-		return;
+-	}
+ 
+-	/* Merge contiguous regions of the same type and attribute */
+ 	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
+ 		u64 prev_size;
+ 		md = p;
+@@ -835,8 +803,19 @@ void __init efi_enter_virtual_mode(void)
+ 			continue;
+ 		}
+ 		prev_md = md;
+-
+ 	}
++}
 +
- 		if (!readmem(VADDR, log_buf, log_buffer, log_buf_len)) {
- 			ERRMSG("Can't read indexed dmesg log.\n");
- 			goto out;
++/*
++ * Map efi memory ranges for runtime serivce and update new_memmap with virtual
++ * addresses.
++ */
++static void * __init efi_map_regions(int *count)
++{
++	efi_memory_desc_t *md;
++	void *p, *tmp, *new_memmap = NULL;
++	unsigned long size;
++	u64 end, systab;
+ 
+ 	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
+ 		md = p;
+@@ -852,23 +831,68 @@ void __init efi_enter_virtual_mode(void)
+ 
+ 		size = md->num_pages << EFI_PAGE_SHIFT;
+ 		end = md->phys_addr + size;
+-
+-		systab = (u64) (unsigned long) efi_phys.systab;
++		systab = (u64)(unsigned long)efi_phys.systab;
+ 		if (md->phys_addr <= systab && systab < end) {
+ 			systab += md->virt_addr - md->phys_addr;
+-
+-			efi.systab = (efi_system_table_t *) (unsigned long) systab;
++			efi.systab = (efi_system_table_t *)(unsigned long)systab;
+ 		}
+ 
+-		new_memmap = krealloc(new_memmap,
+-				      (count + 1) * memmap.desc_size,
+-				      GFP_KERNEL);
+-		if (!new_memmap)
+-			goto err_out;
+-
+-		memcpy(new_memmap + (count * memmap.desc_size), md,
++		tmp = krealloc(new_memmap, (*count + 1) * memmap.desc_size,
++			       GFP_KERNEL);
++		if (!tmp)
++			goto out_krealloc;
++		new_memmap = tmp;
++		memcpy(new_memmap + (*count * memmap.desc_size), md,
+ 		       memmap.desc_size);
+-		count++;
++		(*count)++;
++	}
++
++	return new_memmap;
++out_krealloc:
++	kfree(new_memmap);
++	return NULL;
++}
++
++/*
++ * This function will switch the EFI runtime services to virtual mode.
++ * Essentially, we look through the EFI memmap and map every region that
++ * has the runtime attribute bit set in its memory descriptor into the
++ * ->trampoline_pgd page table using a top-down VA allocation scheme.
++ *
++ * The old method which used to update that memory descriptor with the
++ * virtual address obtained from ioremap() is still supported when the
++ * kernel is booted with efi=old_map on its command line. Same old
++ * method enabled the runtime services to be called without having to
++ * thunk back into physical mode for every invocation.
++ *
++ * The new method does a pagetable switch in a preemption-safe manner
++ * so that we're in a different address space when calling a runtime
++ * function. For function arguments passing we do copy the PGDs of the
++ * kernel page table into ->trampoline_pgd prior to each call.
++ */
++void __init efi_enter_virtual_mode(void)
++{
++	efi_status_t status;
++	void *new_memmap = NULL;
++	int count = 0;
++
++	efi.systab = NULL;
++
++	/*
++	 * We don't do virtual mode, since we don't do runtime services, on
++	 * non-native EFI
++	 */
++	if (!efi_is_native()) {
++		efi_unmap_memmap();
++		return;
++	}
++
++	efi_merge_regions();
++
++	new_memmap = efi_map_regions(&count);
++	if (!new_memmap) {
++		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
++		return;
+ 	}
+ 
+ 	BUG_ON(!efi.systab);
+@@ -922,9 +946,6 @@ void __init efi_enter_virtual_mode(void)
+ 			 0, NULL);
+ 
+ 	return;
+-
+- err_out:
+-	pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+ }
+ 
+ /*
 -- 
-1.8.0.2
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
