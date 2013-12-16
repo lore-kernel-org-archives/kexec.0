@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VsUWn-0004vE-P9
- for kexec@lists.infradead.org; Mon, 16 Dec 2013 09:31:54 +0000
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v6 04/14] efi: add a wrapper function efi_map_region_fixed
-Date: Mon, 16 Dec 2013 17:30:25 +0800
-Message-Id: <1387186235-15972-5-git-send-email-dyoung@redhat.com>
-In-Reply-To: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
-References: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
+ id 1VsWQq-00006T-Os
+ for kexec@lists.infradead.org; Mon, 16 Dec 2013 11:33:55 +0000
+Date: Mon, 16 Dec 2013 12:33:24 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 10/14] efi: only print saved efi runtime maps instead
+ of all memmap ranges for kexec
+Message-ID: <20131216113324.GB4922@pd.tnic>
+References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
+ <1386582147-9802-11-git-send-email-dyoung@redhat.com>
+ <20131213160150.GE32329@pd.tnic>
+ <20131216020010.GC3754@dhcp-16-126.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20131216020010.GC3754@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,82 +23,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Kexec kernel will use saved runtime virtual mapping, so add a
-new function efi_map_region_fixed for directly mapping a md
-to md->virt.
+On Mon, Dec 16, 2013 at 10:00:10AM +0800, Dave Young wrote:
+> > > -	print_efi_memmap();
+> > > +	if (efi_setup) {
+> > > +		int s;
+> > > +		struct efi_setup_data *data;
+> > > +
+> > > +		s = sizeof(*data) + nr_efi_runtime_map * sizeof(data->map[0]);
+> > > +		data = early_memremap(efi_setup, s);
+> > > +		if (!data)
+> > > +			return;
+> > > +		print_efi_memmap(data->map, nr_efi_runtime_map,
+> > > +				 sizeof(data->map[0]));
+> > > +		early_memunmap(data, s);
+> > 
+> > Well, if you call print_efi_memmap() in parse_efi_setup() you can save
+> > yourself that map/unmaping no?
+> 
+> In parse_efi_setup, I need map twice as well:
 
-The md is passed in from 1st kernel, the virtual addr is
-saved in md->virt_addr.
+Well, your v6 has a something completely different:
 
-Matt: coding style
-      reuse __map_region
-Boris: Strenthen comment lines to 80 cols.
+void __init parse_efi_setup(u64 phys_addr)
+{
+        efi_setup = phys_addr;
+}
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Acked-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/efi.h     |  1 +
- arch/x86/platform/efi/efi_32.c |  2 ++
- arch/x86/platform/efi/efi_64.c | 10 ++++++++++
- 3 files changed, 13 insertions(+)
+There's no mapping at all anymore. So please redo your reply against v6.
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 89a05b0..9fbaeb2 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -128,6 +128,7 @@ extern void efi_call_phys_epilog(void);
- extern void efi_unmap_memmap(void);
- extern void efi_memory_uc(u64 addr, unsigned long size);
- extern void __init efi_map_region(efi_memory_desc_t *md);
-+extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
- extern void efi_sync_low_kernel_mappings(void);
- extern void efi_setup_page_tables(void);
- extern void __init old_map_region(efi_memory_desc_t *md);
-diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
-index e94557c..7b3ec6e 100644
---- a/arch/x86/platform/efi/efi_32.c
-+++ b/arch/x86/platform/efi/efi_32.c
-@@ -47,6 +47,8 @@ void __init efi_map_region(efi_memory_desc_t *md)
- 	old_map_region(md);
- }
- 
-+void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
-+
- void efi_call_phys_prelog(void)
- {
- 	struct desc_ptr gdt_descr;
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index c5a6491..ff08cb1 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -199,6 +199,16 @@ void __init efi_map_region(efi_memory_desc_t *md)
- 	md->virt_addr = efi_va;
- }
- 
-+/*
-+ * kexec kernel will use efi_map_region_fixed to map efi runtime memory ranges.
-+ * md->virt_addr is the original virtual address which had been mapped in kexec
-+ * 1st kernel.
-+ */
-+void __init efi_map_region_fixed(efi_memory_desc_t *md)
-+{
-+	__map_region(md, md->virt_addr);
-+}
-+
- void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
- 				 u32 type, u64 attribute)
- {
+> Another where what I print in this patch is same position what
+> non-kexec kernel does, it looks better that print them only if earlier
+> init is ok.
+
+-ENOPARSE.
+
+All I'm saying is, if you're going to memremap/memunmap efi_setup,
+then do it once in efi_setup_init() as you do already and call
+print_efi_memmap from there - no need to do work twice for no reason.
+
 -- 
-1.8.3.1
+Regards/Gruss,
+    Boris.
 
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
