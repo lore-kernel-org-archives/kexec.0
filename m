@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VsUYP-00053U-NA
- for kexec@lists.infradead.org; Mon, 16 Dec 2013 09:33:34 +0000
+ id 1VsUYU-00053g-N2
+ for kexec@lists.infradead.org; Mon, 16 Dec 2013 09:33:39 +0000
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v6 10/14] efi: only print saved efi runtime maps instead of
- all memmap ranges for kexec
-Date: Mon, 16 Dec 2013 17:30:31 +0800
-Message-Id: <1387186235-15972-11-git-send-email-dyoung@redhat.com>
+Subject: [PATCH v6 11/14] x86: add xloadflags bit for efi runtime support on
+ kexec
+Date: Mon, 16 Dec 2013 17:30:32 +0800
+Message-Id: <1387186235-15972-12-git-send-email-dyoung@redhat.com>
 In-Reply-To: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
 References: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,68 +26,73 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
 
-For kexec/kdump kernel efi runtime mappings are saved, printing original whole
-memmap ranges does not make sense anymore. So introduce a new function to only
-print runtime maps in case kexec/kdump kernel is used.
+Old kexec-tools can not load new kernel. The reason is kexec-tools do not fill
+efi_info in x86 setup header previously, thus efi failed to initialize.
+In new kexec-tools it will by default fill efi_info and pass other efi required
+infomation to 2nd kernel so kexec kernel efi initialization can succeed finally.
+
+To prevent from breaking userspace, add a new xloadflags bit so kexec-tools
+can check the flag and switch to old logic.
 
 changelog:
-Matt: use efi_setup instead of esdata
-      share function print_efi_memmap for both normal and kexec boot.
+Matt: +&& defined(CONFIG_KEXEC)
+      improve patch description.
+HPA: document the flag.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
+Acked-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/platform/efi/efi.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ Documentation/x86/boot.txt            | 3 +++
+ arch/x86/boot/header.S                | 9 ++++++++-
+ arch/x86/include/uapi/asm/bootparam.h | 1 +
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index e8739aa..62bfb57 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -403,19 +403,16 @@ int __init efi_memblock_x86_reserve_range(void)
- 	return 0;
- }
+diff --git a/Documentation/x86/boot.txt b/Documentation/x86/boot.txt
+index f4f268c..cb81741d 100644
+--- a/Documentation/x86/boot.txt
++++ b/Documentation/x86/boot.txt
+@@ -608,6 +608,9 @@ Protocol:       2.12+
+ 	- If 1, the kernel supports the 64-bit EFI handoff entry point
+           given at handover_offset + 0x200.
  
--static void __init print_efi_memmap(void)
-+static void __init print_efi_memmap(void *map, int nr_map, int md_size)
- {
- #ifdef EFI_DEBUG
- 	efi_memory_desc_t *md;
- 	void *p;
- 	int i;
- 
--	for (p = memmap.map, i = 0;
--	     p < memmap.map_end;
--	     p += memmap.desc_size, i++) {
-+	for (p = map, i = 0; i < nr_map; p += md_size, i++) {
- 		md = p;
--		pr_info("mem%02u: type=%u, attr=0x%llx, "
--			"range=[0x%016llx-0x%016llx) (%lluMB)\n",
-+		pr_info("mem%02u: type=%u, attr=0x%llx, range=[0x%016llx-0x%016llx) (%lluMB)\n",
- 			i, md->type, md->attribute, md->phys_addr,
- 			md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT),
- 			(md->num_pages >> (20 - EFI_PAGE_SHIFT)));
-@@ -799,7 +796,20 @@ void __init efi_init(void)
- 		x86_platform.set_wallclock = efi_set_rtc_mmss;
- 	}
- #endif
--	print_efi_memmap();
-+	if (efi_setup) {
-+		int s;
-+		struct efi_setup_data *data;
++  Bit 4 (read): XLF_EFI_KEXEC
++	- If 1, the kernel supports kexec EFI boot with EFI runtime support.
 +
-+		s = sizeof(*data) + nr_efi_runtime_map * sizeof(data->map[0]);
-+		data = early_memremap(efi_setup, s);
-+		if (!data)
-+			return;
-+		print_efi_memmap(data->map, nr_efi_runtime_map,
-+				 sizeof(data->map[0]));
-+		early_memunmap(data, s);
-+	} else {
-+		print_efi_memmap(memmap.map, memmap.nr_map, memmap.desc_size);
-+	}
- }
+ Field name:	cmdline_size
+ Type:		read
+ Offset/size:	0x238/4
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index 9ec06a1..ec3b8ba 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -391,7 +391,14 @@ xloadflags:
+ #else
+ # define XLF23 0
+ #endif
+-			.word XLF0 | XLF1 | XLF23
++
++#if defined(CONFIG_X86_64) && defined(CONFIG_EFI) && defined(CONFIG_KEXEC)
++# define XLF4 XLF_EFI_KEXEC
++#else
++# define XLF4 0
++#endif
++
++			.word XLF0 | XLF1 | XLF23 | XLF4
  
- void __init efi_late_init(void)
+ cmdline_size:   .long   COMMAND_LINE_SIZE-1     #length of the command line,
+                                                 #added with boot protocol
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index 64fe421..225b098 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -24,6 +24,7 @@
+ #define XLF_CAN_BE_LOADED_ABOVE_4G	(1<<1)
+ #define XLF_EFI_HANDOVER_32		(1<<2)
+ #define XLF_EFI_HANDOVER_64		(1<<3)
++#define XLF_EFI_KEXEC			(1<<4)
+ 
+ #ifndef __ASSEMBLY__
+ 
 -- 
 1.8.3.1
 
