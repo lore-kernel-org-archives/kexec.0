@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VsinE-00035D-Nj
- for kexec@lists.infradead.org; Tue, 17 Dec 2013 00:45:49 +0000
-Date: Mon, 16 Dec 2013 16:45:23 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/4] kexec: Simplify conditional
-Message-Id: <20131216164523.91cf29d974ca7424491adb8d@linux-foundation.org>
-In-Reply-To: <52A91212.9080501@cn.fujitsu.com>
+ id 1VsnMU-0001Jr-50
+ for kexec@lists.infradead.org; Tue, 17 Dec 2013 05:38:31 +0000
+Date: Tue, 17 Dec 2013 13:37:30 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH 0/4] Minor fixes and improvements for kexec
+Message-ID: <20131217053730.GA13848@dhcp-17-89.nay.redhat.com>
 References: <cover.1386807069.git.geoff@infradead.org>
- <839896bb375c8b694473b0ea6a6db009c1128fc5.1386807069.git.geoff@infradead.org>
- <52A91212.9080501@cn.fujitsu.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <cover.1386807069.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,31 +23,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: linux-sh@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Paul Mundt <lethal@linux-sh.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, linuxppc-dev@lists.ozlabs.org
 
-On Thu, 12 Dec 2013 09:32:02 +0800 Zhang Yanfei <zhangyanfei@cn.fujitsu.com> wrote:
-
-> Add CCing Andrew Morton
-
-I'm not on kexec@lists.infradead.org.  (Well, I am now!).
-
-> On 12/12/2013 08:18 AM, Geoff Levand wrote:
-> > Simplify the code around one of the conditionals in the kexec_load
-> > syscall routine.
-> > 
-> > The original code was confusing with a redundant check on KEXEC_ON_CRASH
-> > and comments outside of the conditional block.  This change switches the
-> > order of the conditional check, and cleans up the comments for the
-> > conditional.  There is no functional change to the code.
+On 12/12/13 at 12:18am, Geoff Levand wrote:
+> Hi Eric,
 > 
-> This looks good.
+> Here are a few minor fixes and improvements for kexec.  Please consider.
 > 
-> Reviewed-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
->
-> minor comments below.
+> -Geoff
+> 
+> The following changes since commit 374b105797c3d4f29c685f3be535c35f5689b30e:
+> 
+>   Linux 3.13-rc3 (2013-12-06 09:34:04 -0800)
+> 
+> are available in the git repository at:
+> 
+>   git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
+> 
+> for you to fetch changes up to 594a3d26aac66e9668edc81d7bfb4e801575514f:
+> 
+>   sh/kexec: Fix kexec build warning (2013-12-11 16:03:27 -0800)
+> 
+> ----------------------------------------------------------------
+> Geoff Levand (4):
+>       kexec: Simplify conditional
+>       kexec: Add IND_FLAGS macro
+>       powerpc/kexec: Use global IND_FLAGS macro
+>       sh/kexec: Fix kexec build warning
 
-Please cc me on the resend?
+For this series (besides 4/4 v2):
+
+Acked-by: WANG Chao <chaowang@redhat.com>
+
+> 
+>  arch/powerpc/kernel/machine_kexec_64.c |  2 --
+>  arch/sh/kernel/machine_kexec.c         |  2 +-
+>  include/linux/kexec.h                  |  1 +
+>  kernel/kexec.c                         | 17 ++++++++++-------
+>  4 files changed, 12 insertions(+), 10 deletions(-)
+> 
+> -- 
+> 1.8.1.2
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
