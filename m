@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vsb8i-00085H-1u
- for kexec@lists.infradead.org; Mon, 16 Dec 2013 16:35:28 +0000
-Date: Mon, 16 Dec 2013 16:35:01 +0000
-From: Matt Fleming <matt@console-pimps.org>
-Subject: Re: [PATCH v6 14/14] x86: kdebugfs do not use __va for getting
- setup_data virt addr
-Message-ID: <20131216163501.GB3873@console-pimps.org>
-References: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
- <1387186235-15972-15-git-send-email-dyoung@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1387186235-15972-15-git-send-email-dyoung@redhat.com>
+ id 1VsinE-00035D-Nj
+ for kexec@lists.infradead.org; Tue, 17 Dec 2013 00:45:49 +0000
+Date: Mon, 16 Dec 2013 16:45:23 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/4] kexec: Simplify conditional
+Message-Id: <20131216164523.91cf29d974ca7424491adb8d@linux-foundation.org>
+In-Reply-To: <52A91212.9080501@cn.fujitsu.com>
+References: <cover.1386807069.git.geoff@infradead.org>
+ <839896bb375c8b694473b0ea6a6db009c1128fc5.1386807069.git.geoff@infradead.org>
+ <52A91212.9080501@cn.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +24,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-On Mon, 16 Dec, at 05:30:35PM, Dave Young wrote:
-> kdump kernel will use memmap=exactmap kernel cmdline, but __va does not
-> work in case memmap=exactmap, so let's always use ioremap_cache.
+On Thu, 12 Dec 2013 09:32:02 +0800 Zhang Yanfei <zhangyanfei@cn.fujitsu.com> wrote:
+
+> Add CCing Andrew Morton
+
+I'm not on kexec@lists.infradead.org.  (Well, I am now!).
+
+> On 12/12/2013 08:18 AM, Geoff Levand wrote:
+> > Simplify the code around one of the conditionals in the kexec_load
+> > syscall routine.
+> > 
+> > The original code was confusing with a redundant check on KEXEC_ON_CRASH
+> > and comments outside of the conditional block.  This change switches the
+> > order of the conditional check, and cleans up the comments for the
+> > conditional.  There is no functional change to the code.
 > 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  arch/x86/kernel/kdebugfs.c | 35 +++++++++++------------------------
->  1 file changed, 11 insertions(+), 24 deletions(-)
+> This looks good.
+> 
+> Reviewed-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+>
+> minor comments below.
 
-Dave, I've no idea why this change is necessary from the commit log. Is
-it required for kexec to function on EFI? Why does __va() not work in
-the memmap=exactmap case?
-
--- 
-Matt Fleming, Intel Open Source Technology Center
+Please cc me on the resend?
 
 _______________________________________________
 kexec mailing list
