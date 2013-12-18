@@ -1,23 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vt1Fu-0001LC-VO
- for kexec@lists.infradead.org; Tue, 17 Dec 2013 20:28:39 +0000
-Date: Tue, 17 Dec 2013 21:28:07 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2 3/4] makedumpfile/xen: Fail immediately on every
- architecture if dump level is invalid
-Message-ID: <20131217202807.GJ3401@olila.local.net-space.pl>
-References: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
- <1385993804-27721-4-git-send-email-daniel.kiper@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C9FF0@BPXM01GP.gisp.nec.co.jp>
- <20131203194501.GD21544@olila.local.net-space.pl>
- <0910DD04CBD6DE4193FCF86B9C00BE971CCA93@BPXM01GP.gisp.nec.co.jp>
- <20131210103949.GJ3916@olila.local.net-space.pl>
- <0910DD04CBD6DE4193FCF86B9C00BE971D10DF@BPXM01GP.gisp.nec.co.jp>
+ id 1Vt52h-0007YH-9i
+ for kexec@lists.infradead.org; Wed, 18 Dec 2013 00:31:17 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.195])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id rBI0UmNf012867
+ for <kexec@lists.infradead.org>; Wed, 18 Dec 2013 09:30:48 +0900 (JST)
+Received: from mailsv3.nec.co.jp (imss62.nec.co.jp [10.7.69.157]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id rBI0UmZ02838 for <kexec@lists.infradead.org>;
+ Wed, 18 Dec 2013 09:30:48 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id rBI0Um3s006081
+ for <kexec@lists.infradead.org>; Wed, 18 Dec 2013 09:30:48 +0900 (JST)
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: makedumpfile-1.5.5: --dump-dmesg is available also for kernel 3.11.
+Date: Wed, 18 Dec 2013 00:29:26 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D3673@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971D10DF@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,64 +31,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: Kenichi Oomichi <oomichi@mxs.nes.nec.co.jp>, "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "david.vrabel@citrix.com" <david.vrabel@citrix.com>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Fri, Dec 13, 2013 at 06:59:06AM +0000, Atsushi Kumagai wrote:
-> On 2013/12/10 19:41:54, kexec <kexec-bounces@lists.infradead.org> wrote:
+Hello,
 
-[...]
+makedumpfile version 1.5.5 is released.
+Your comments/patches are welcome.
 
-> > Docs are not consistent because man and help displayed from makedumpfile
-> > are different. Additionally, even man says nothing how to use this feature
-> > on Xen vmcore file. If you use makedumpfile e.g.
-> >
-> > makedumpfile -Ed 2 /proc/vmcore vmcore
-> >
-> > it will not work because it uses VMCOREINFO_XEN instead of VMCOREINFO.
-> > I discovered that if you would like to use feature from above mentioned
-> > patch you must run makedumpfile in following way:
-> >
-> > makedumpfile -Ed 2 -x vmlinux /proc/vmcore vmcore
-> >
-> > Then makedumpfile will get info about dom0 directly from vmlinux.
->
-> Certainly the documents should be fixed as you said, I'll do it.
+NOTE:
+1. I was going to merge the patch set below to address mmap() issues
+   as I said in this thread:
+   http://lists.infradead.org/pipermail/kexec/2013-November/010354.html
 
-Thanks.
+    1. Fix the fractional page issue
+    2. Introduce fall back path
+    3. Add --non-mmap option
 
-> > However, It looks that there is another bug which prevents usage
-> > of this feature. It looks it is related to change in P2M tree Linux
-> > code. Once P2M levels where changed from 2 to 3. I fixed similar
-> > issue in crash tool once.
->
-> Thanks for your pointing out, I hope that you will fix that issue
-> also in makedumpfile.
+  However, the first one is under testing now and more time is needed,
+  so I decided to postpone it to v1.5.6. I think it's OK because
+  v1.5.5 can avoid the fractional page issue with the second patch.
 
-Yes, I am going to do that but not now. I am just very busy. Additionally,
-I have discovered that this feature code is broken in more places because
-it was not maintained more than four years. So, to be honest, it is simply
-unusable right now.
+2. At first, the supported kernel will be updated to 3.12, but I
+   found an issue while testing for v1.5.5, which seems that the page
+   filtering works wrongly on kernel 3.12. I couldn't investigate this
+   yet and it will take some time to finish it.
+   Therefore, the latest supported kernel version is 3.11 in v1.5.5.
 
-> > When are you going to make a new makedumpfile release? I am going
-> > to fix this issue before next release but now I am quite busy
-> > with other stuff.
->
-> I must release the new version(v1.5.5) in the next week at the latest
-> because I announced the release date will be the beginning of December
-> and there are already many patches for v1.5.5.
-> So I would like to slip that fix you mentioned to v1.5.6.
+Changelog:
+o New feature
+    - [PATCH v2] Add support to module data structures. (by Aruna Balakrishnaiah) 7dc6cb6
+    - [PATCH] makedumpfile header to show LZO/snappy/zlib. (by Dave Anderson) 3205967
+    - [PATCH] Add --non-mmap option to disable mmap() manually. (by Atsushi Kumagai) a895dc8
 
-OK.
+o Bugfix
+    - [PATCH v3 1/7] xen: Improve calculation of beginning of virtual address space. 
+      (by Daniel Kiper) 8c7c55e
+    - [PATCH v3 2/7] elf: Properly check buf size in get_pt_note_info(). (by Daniel Kiper) fea1406
+    - [PATCH v3 3/7] xen: Take into account new frame table address since Xen 4.3. 
+      (by Daniel Kiper) f20f281
+    - [PATCH v3 4/7] xen: Enforce page size when it could not be established by other means.
+      (by Daniel Kiper) f40c0fe
+    - [PATCH v2] calculate cyclic buffer size according to info->num_dumpfile. (by Maxim Uvarov) 3f1ec1e
+    - [PATCH] Add vmap_area_list definition for ppc/ppc64. (by Baoquan He) 150b58e
+    - [PATCH v2] dump-dmesg: Understand >= v3.11-rc4 dmesg. (by Lubomir Rintel) a01b663
+    - [PATCH v5] Support to filter dump for kernels that use CONFIG_SPARSEMEM_VMEMMAP. 
+      (by Hari Bathini) bcdba92
+    - [PATCH v2 1/3] Add cache_init() call to initial_xen(). (by Daniel Kiper) 4225ee8
+    - [PATCH v2 2/3] Disable cyclic mode for every Xen crash dump. (by Daniel Kiper) 587cc88
+    - [PATCH v2 3/3] Move cyclic mode check from initial() to initial_xen(). (by Daniel Kiper) 00ec61f
+    - [PATCH] Update pfn_cyclic when the cyclic buffer size is corrected. (by Atsushi Kumagai) a785fa7
+    - [PATCH] Use divideup() to calculate maximum required bitmap size. (by HATAYAMA Daisuke) f8c8218
+    - [PATCH 1/2] sadump: correct buffer size for GUID EFI text representation. 
+      (by HATAYAMA Daisuke) 1437b20
+    - [PATCH 2/2] sadump: convert the first three fields of EFI GUID from little-endian into big-endian.
+      (by HATAYAMA Daisuke) 6f9b722
+    - [PATCH 1/2] cache: Allocate buffers at initialization to detect malloc() failure. 
+      (by HATAYAMA Daisuke) 92563d7
+    - [PATCH 2/2] cache: Reuse entry in pending list. (by HATAYAMA Daisuke) e23dc0a
+    - [PATCH] Fall back to read() when mmap() fails. (by Atsushi Kumagai) 7c770ed
+    - [PATCH] Add a existence check of symbols for --dump-dmesg. (by Atsushi Kumagai) e1b2913
+    - [PATCH] Fix the installation directory in spec file. (by Atsushi Kumagai) 9ccac12
 
-> > Could you apply patches 1, 2 and 4 from this patch series?
-> > It looks that they are not controversial.
->
-> Sure, the three patches will be merged into v1.5.5.
+o Cleanup
+    - [PATCH v3 5/7] Do not break progress messages. (by Daniel Kiper) 74da476
+    - [PATCH v3 6/7] Mute some compiler warnings. (by Daniel Kiper) c16532e
+    - [PATCH v3 7/7] Use elf_getshdrstrndx() instead of elf_getshstrndx(). (by Daniel Kiper) 16ae98a
+    - [PATCH 1/2] Assign non-printable value as short options. (by Baoquan He) bd67c1d
+    - [PATCH 2/2] Add help and man message for '--help'. (by Baoquan He) eb708ce
+    - [PATCH v2] "make install" assumes directories exist. (by Nick Bartos) b0e1f0e
+    - [PATCH] Cleanup: Mute some warnings about snappy. (by Atsushi Kumagai) f7a5099
+    - [PATCH] Cleanup: Add a comment for unused diskdump flag. (by Atsushi Kumagai) 1623a05
+    - [PATCH v2] Improve progress information for huge memory system. (by HATAYAMA Daisuke) 20ecc08
+    - [PATCH v2 1/2] Use memset() to improve the 1st bitmap initialization performance.
+      (by HATAYAMA Daisuke) 72d9d06
+    - [PATCH v2 2/2] Write out a whole part of the 1st bitmap before entering cyclic process. 
+      (by HATAYAMA Daisuke) 363d5
+    - [PATCH] Enhance bitmap writting function in reassemble mode. (by Jingbai Ma) 6f6eb40
 
-Thanks.
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
 
-Daniel
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the git page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 /proc/vmcore dumpfile
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
