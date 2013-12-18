@@ -1,24 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vt52h-0007YH-9i
- for kexec@lists.infradead.org; Wed, 18 Dec 2013 00:31:17 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.195])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id rBI0UmNf012867
- for <kexec@lists.infradead.org>; Wed, 18 Dec 2013 09:30:48 +0900 (JST)
-Received: from mailsv3.nec.co.jp (imss62.nec.co.jp [10.7.69.157]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id rBI0UmZ02838 for <kexec@lists.infradead.org>;
- Wed, 18 Dec 2013 09:30:48 +0900 (JST)
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id rBI0Um3s006081
- for <kexec@lists.infradead.org>; Wed, 18 Dec 2013 09:30:48 +0900 (JST)
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: makedumpfile-1.5.5: --dump-dmesg is available also for kernel 3.11.
-Date: Wed, 18 Dec 2013 00:29:26 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D3673@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vt6Xa-0000o5-AU
+ for kexec@lists.infradead.org; Wed, 18 Dec 2013 02:07:16 +0000
+Date: Wed, 18 Dec 2013 10:06:27 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 10/14] efi: only print saved efi runtime maps instead
+ of all memmap ranges for kexec
+Message-ID: <20131218020627.GA3917@dhcp-16-126.nay.redhat.com>
+References: <1386582147-9802-1-git-send-email-dyoung@redhat.com>
+ <1386582147-9802-11-git-send-email-dyoung@redhat.com>
+ <20131213160150.GE32329@pd.tnic>
+ <20131216020010.GC3754@dhcp-16-126.nay.redhat.com>
+ <20131216113324.GB4922@pd.tnic>
+ <20131217063436.GF6751@dhcp-16-126.nay.redhat.com>
+ <20131217155844.GG30592@pd.tnic>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20131217155844.GG30592@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,114 +30,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Hello,
+On 12/17/13 at 04:58pm, Borislav Petkov wrote:
+> On Tue, Dec 17, 2013 at 02:34:36PM +0800, Dave Young wrote:
+> > They are moved to efi.c efi_setup_init(), I'm not sure if I expained
+> > clear enough, in current code parse_efi_setup only accept one argument
+> > phys_addr so I will mapping it with sizeof(struct setup_data) to
+> > get the payload size then get the nr_efi_runtime_map. This is a
+> > simplification from the old implementation.
+> >
+> > Based on current implementation, yes, I can add back another argument
+> > data_len to avoid the 1st mapping thus I can print efi memmap as you
+> > said.
+> >
+> > In this way I need export another extern for the data_len though.
+> 
+> Well, think about it: do you want to do the memremap/unmap a second time
+> *just* to print the memmap in the efi kernel or do you want to do the
+> memremap/unmap only once and do the work once?
+> 
+> If you say you don't care about speed and wasting cycles then I'm
+> certainly fine with that as I've spent more time hinting at the
+> performance aspect than I'd like to.
 
-makedumpfile version 1.5.5 is released.
-Your comments/patches are welcome.
+For these non critical path I would prefer the code which should be easier to 
+be understood. But yes I have managed to work out what you want in latest
+version. Of course I appreciate your time for reviewing those patches.
+Thanks.
 
-NOTE:
-1. I was going to merge the patch set below to address mmap() issues
-   as I said in this thread:
-   http://lists.infradead.org/pipermail/kexec/2013-November/010354.html
+> 
+> > What do you mean about NOPARSE, do you want another function name like
+> > save_efi_setup()?
+> 
+> -ENOPARSE means I cannot parse what you said above.
 
-    1. Fix the fractional page issue
-    2. Introduce fall back path
-    3. Add --non-mmap option
-
-  However, the first one is under testing now and more time is needed,
-  so I decided to postpone it to v1.5.6. I think it's OK because
-  v1.5.5 can avoid the fractional page issue with the second patch.
-
-2. At first, the supported kernel will be updated to 3.12, but I
-   found an issue while testing for v1.5.5, which seems that the page
-   filtering works wrongly on kernel 3.12. I couldn't investigate this
-   yet and it will take some time to finish it.
-   Therefore, the latest supported kernel version is 3.11 in v1.5.5.
-
-Changelog:
-o New feature
-    - [PATCH v2] Add support to module data structures. (by Aruna Balakrishnaiah) 7dc6cb6
-    - [PATCH] makedumpfile header to show LZO/snappy/zlib. (by Dave Anderson) 3205967
-    - [PATCH] Add --non-mmap option to disable mmap() manually. (by Atsushi Kumagai) a895dc8
-
-o Bugfix
-    - [PATCH v3 1/7] xen: Improve calculation of beginning of virtual address space. 
-      (by Daniel Kiper) 8c7c55e
-    - [PATCH v3 2/7] elf: Properly check buf size in get_pt_note_info(). (by Daniel Kiper) fea1406
-    - [PATCH v3 3/7] xen: Take into account new frame table address since Xen 4.3. 
-      (by Daniel Kiper) f20f281
-    - [PATCH v3 4/7] xen: Enforce page size when it could not be established by other means.
-      (by Daniel Kiper) f40c0fe
-    - [PATCH v2] calculate cyclic buffer size according to info->num_dumpfile. (by Maxim Uvarov) 3f1ec1e
-    - [PATCH] Add vmap_area_list definition for ppc/ppc64. (by Baoquan He) 150b58e
-    - [PATCH v2] dump-dmesg: Understand >= v3.11-rc4 dmesg. (by Lubomir Rintel) a01b663
-    - [PATCH v5] Support to filter dump for kernels that use CONFIG_SPARSEMEM_VMEMMAP. 
-      (by Hari Bathini) bcdba92
-    - [PATCH v2 1/3] Add cache_init() call to initial_xen(). (by Daniel Kiper) 4225ee8
-    - [PATCH v2 2/3] Disable cyclic mode for every Xen crash dump. (by Daniel Kiper) 587cc88
-    - [PATCH v2 3/3] Move cyclic mode check from initial() to initial_xen(). (by Daniel Kiper) 00ec61f
-    - [PATCH] Update pfn_cyclic when the cyclic buffer size is corrected. (by Atsushi Kumagai) a785fa7
-    - [PATCH] Use divideup() to calculate maximum required bitmap size. (by HATAYAMA Daisuke) f8c8218
-    - [PATCH 1/2] sadump: correct buffer size for GUID EFI text representation. 
-      (by HATAYAMA Daisuke) 1437b20
-    - [PATCH 2/2] sadump: convert the first three fields of EFI GUID from little-endian into big-endian.
-      (by HATAYAMA Daisuke) 6f9b722
-    - [PATCH 1/2] cache: Allocate buffers at initialization to detect malloc() failure. 
-      (by HATAYAMA Daisuke) 92563d7
-    - [PATCH 2/2] cache: Reuse entry in pending list. (by HATAYAMA Daisuke) e23dc0a
-    - [PATCH] Fall back to read() when mmap() fails. (by Atsushi Kumagai) 7c770ed
-    - [PATCH] Add a existence check of symbols for --dump-dmesg. (by Atsushi Kumagai) e1b2913
-    - [PATCH] Fix the installation directory in spec file. (by Atsushi Kumagai) 9ccac12
-
-o Cleanup
-    - [PATCH v3 5/7] Do not break progress messages. (by Daniel Kiper) 74da476
-    - [PATCH v3 6/7] Mute some compiler warnings. (by Daniel Kiper) c16532e
-    - [PATCH v3 7/7] Use elf_getshdrstrndx() instead of elf_getshstrndx(). (by Daniel Kiper) 16ae98a
-    - [PATCH 1/2] Assign non-printable value as short options. (by Baoquan He) bd67c1d
-    - [PATCH 2/2] Add help and man message for '--help'. (by Baoquan He) eb708ce
-    - [PATCH v2] "make install" assumes directories exist. (by Nick Bartos) b0e1f0e
-    - [PATCH] Cleanup: Mute some warnings about snappy. (by Atsushi Kumagai) f7a5099
-    - [PATCH] Cleanup: Add a comment for unused diskdump flag. (by Atsushi Kumagai) 1623a05
-    - [PATCH v2] Improve progress information for huge memory system. (by HATAYAMA Daisuke) 20ecc08
-    - [PATCH v2 1/2] Use memset() to improve the 1st bitmap initialization performance.
-      (by HATAYAMA Daisuke) 72d9d06
-    - [PATCH v2 2/2] Write out a whole part of the 1st bitmap before entering cyclic process. 
-      (by HATAYAMA Daisuke) 363d5
-    - [PATCH] Enhance bitmap writting function in reassemble mode. (by Jingbai Ma) 6f6eb40
-
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Download:
-  You can download the latest makedumpfile from the following URL.
-  Details of the change are written on the git page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
-
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
-  2. "cd makedumpfile-x.y.z"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
-
-  # makedumpfile -c -d 31 /proc/vmcore dumpfile
-
+Ok.
 
 Thanks
-Atsushi Kumagai
+Dave
 
 _______________________________________________
 kexec mailing list
