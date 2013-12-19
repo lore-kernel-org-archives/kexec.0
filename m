@@ -1,15 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VtHGf-0006Mn-8E
- for kexec@lists.infradead.org; Wed, 18 Dec 2013 13:34:30 +0000
-Date: Wed, 18 Dec 2013 21:34:02 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH] makedumpfile: memset() in cyclic bitmap initialization
- introduce segment fault
-Message-ID: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>
+Received: from verein.lst.de ([213.95.11.211] helo=newverein.lst.de)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vtd87-0007q1-4b
+ for kexec@lists.infradead.org; Thu, 19 Dec 2013 12:55:08 +0000
+Date: Thu, 19 Dec 2013 13:54:39 +0100
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20131219125439.GA6379@lst.de>
+References: <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
+ <20131121190350.GC17070@kroah.com> <20131121190620.GA25951@srcf.ucam.org>
+ <20131121191305.GK16208@redhat.com> <20131121191907.GA26366@srcf.ucam.org>
+ <20131122185706.GK4046@redhat.com> <87vbzju6ql.fsf@xmission.com>
+ <20131125163920.GC23094@redhat.com> <87fvqj2vxz.fsf@xmission.com>
+ <20131126142759.GA5473@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20131126142759.GA5473@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,113 +29,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kees Cook <keescook@chromium.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com
 
-We are using memset() to improve performance when creating 1st and 2nd
-bitmap. After doing round up the pfn_start and round down pfn_end, it's
-possible that pfn_start_roundup is greater than pfn_end_round. A segment
-fault could happen in that case because memset is taking roughly the
-value of (pfn_end_round << 3 - pfn_start_roundup << 3 ), which is
-negative, as its third argument.
+On Tue, Nov 26, 2013 at 09:27:59AM -0500, Vivek Goyal wrote:
+> On Tue, Nov 26, 2013 at 04:23:36AM -0800, Eric W. Biederman wrote:
+> > Vivek Goyal <vgoyal@redhat.com> writes:
+> > 
+> > > On Fri, Nov 22, 2013 at 07:39:14PM -0800, Eric W. Biederman wrote:
+> > >
+> > 
+> > The init_size should be reflected in the .bss of the ELF segments.  If
+> > not it is a bug when generating the kernel ELF headers and should be
+> > fixed.
+> > 
+> > For use by kexec I don't see any issues with just signing the embedded
+> > ELF image.
+> 
+> Being able to write kernel to a file and then load it feels little odd to
+> me. Though this should be allowed but this should not be mandatory.
+> 
+> I think if we allow passing detached signature in kexec system call, then
+> it makes it much more flexible. We should be able to do what you are
+> suggesting at the same time it will also keep the possibility open for what
+> chromeOS developers are looking for.
+> 
+Support for detached signatures would be a big plus for kexec_file_load.
 
-So we can skip the memset if start is greater than end. It's safe
-because we will set bit for the round up part and also round down part.
+First I thought, some vendors are already shipping signed bzImages, why not
+verify these? But as it turns out, parsing MS-DOS, PE/COFF headers just to
+find the gaps is a lot of bloat for this little functionality. And David Howells
+got flamed quite badly when he suggested to add pkcs#7 to the kernel.
+IMO it's up to user land to search lists of certificates, and present
+only the final chain of trust to the kernel for checking.
 
-Actually this happens on my EFI virtual machine:
+ELF is the preferred format for most sane OSes and firmware, and a detached
+signature would probably be simplest to check. If we have the choice,
+without restrictions from braindead boot loaders, ELF should be first.
+And if the pesigning isn't usable and another sig is needed anyway,
+why not apply that to vmlinux(.gz) ?
 
-cat /proc/iomem:
-00000000-00000fff : reserved
-00001000-0009ffff : System RAM
-000a0000-000bffff : PCI Bus 0000:00
-000f0000-000fffff : System ROM
-00100000-3d162017 : System RAM
-  01000000-015cab9b : Kernel code
-  015cab9c-019beb3f : Kernel data
-  01b4f000-01da9fff : Kernel bss
-  30000000-37ffffff : Crash kernel
-3d162018-3d171e57 : System RAM
-3d171e58-3d172017 : System RAM
-3d172018-3d17ae57 : System RAM
-3d17ae58-3dc10fff : System RAM
-3dc11000-3dc18fff : reserved
-3dc19000-3dc41fff : System RAM
-3dc42000-3ddcefff : reserved
-3ddcf000-3f7fefff : System RAM
-3f7ff000-3f856fff : reserved
-[..]
+Another remaining issue is the root of trust. Should the kernel solely depend
+on UeFI to check certificates? I'd rather vote for a compile-time fallback key.
 
-gdb ./makedumpfile core
-(gdb) bt full
-[..]
- #1  0x000000000042775d in create_1st_bitmap_cyclic () at makedumpfile.c:4543
-        i = 0x5
-        pfn = 0x3d190
-        phys_start = 0x3d18ee58
-        phys_end = 0x3d18f018
-        pfn_start = 0x3d18e
-        pfn_end = 0x3d18f
-        pfn_start_roundup = 0x3d190
-        pfn_end_round = 0x3d188
-        pfn_start_byte = 0x7a32
-        pfn_end_byte = 0x7a31
-[..]
-(gdb) list makedumpfile.c:4543
-4538					return FALSE;
-4539
-4540			pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
-4541			pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
-4542
-4543			memset(info->partial_bitmap2 + pfn_start_byte,
-4544			       0xff,
-4545			       pfn_end_byte - pfn_start_byte);
-4546
-4547			for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
-
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- makedumpfile.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 23251a1..ef08d91 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4435,11 +4435,13 @@ create_1st_bitmap_cyclic()
- 		pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
- 		pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
- 
--		memset(info->partial_bitmap1 + pfn_start_byte,
--		       0xff,
--		       pfn_end_byte - pfn_start_byte);
-+		if (pfn_start_byte < pfn_end_byte) {
-+			memset(info->partial_bitmap1 + pfn_start_byte,
-+			       0xff,
-+			       pfn_end_byte - pfn_start_byte);
- 
--		pfn_bitmap1 += (pfn_end_byte - pfn_start_byte) * BITPERBYTE;
-+			pfn_bitmap1 += (pfn_end_byte - pfn_start_byte) * BITPERBYTE;
-+		}
- 
- 		for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
- 			if (set_bit_on_1st_bitmap(pfn))
-@@ -4540,9 +4542,11 @@ initialize_2nd_bitmap_cyclic(void)
- 		pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
- 		pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
- 
--		memset(info->partial_bitmap2 + pfn_start_byte,
--		       0xff,
--		       pfn_end_byte - pfn_start_byte);
-+		if (pfn_start_byte < pfn_end_byte) {
-+			memset(info->partial_bitmap2 + pfn_start_byte,
-+			       0xff,
-+			       pfn_end_byte - pfn_start_byte);
-+		}
- 
- 		for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
- 			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
--- 
-1.8.4.2
+	Torsten
 
 
 _______________________________________________
