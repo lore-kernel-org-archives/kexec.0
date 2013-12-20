@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VtwJ8-000431-4k
- for kexec@lists.infradead.org; Fri, 20 Dec 2013 09:23:47 +0000
-Date: Fri, 20 Dec 2013 17:00:34 +0800
+ id 1VtwvN-0005Ka-0c
+ for kexec@lists.infradead.org; Fri, 20 Dec 2013 10:03:18 +0000
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] makedumpfile: memset() in cyclic bitmap initialization
- introduce segment fault
-Message-ID: <20131220090034.GA16537@dhcp-16-126.nay.redhat.com>
-References: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>
- <52B39878.3030403@jp.fujitsu.com>
- <20131220021750.GA7962@dhcp-16-126.nay.redhat.com>
- <52B404A4.3000702@jp.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <52B404A4.3000702@jp.fujitsu.com>
+Subject: [PATCH v7 00/12] kexec kernel efi runtime support
+Date: Fri, 20 Dec 2013 18:02:10 +0800
+Message-Id: <1387533742-18018-1-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,104 +15,171 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, WANG Chao <chaowang@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
 
-On 12/20/13 at 05:49pm, HATAYAMA Daisuke wrote:
-> (2013/12/20 11:17), Dave Young wrote:
-> >>Also, I'm interested in the memory map passed to from EFI in that
-> >>
-> >>>cat /proc/iomem:
-> >>>00000000-00000fff : reserved
-> >>>00001000-0009ffff : System RAM
-> >>>000a0000-000bffff : PCI Bus 0000:00
-> >>>000f0000-000fffff : System ROM
-> >>>00100000-3d162017 : System RAM
-> >>>   01000000-015cab9b : Kernel code
-> >>>   015cab9c-019beb3f : Kernel data
-> >>>   01b4f000-01da9fff : Kernel bss
-> >>>   30000000-37ffffff : Crash kernel
-> >>>3d162018-3d171e57 : System RAM
-> >>>3d171e58-3d172017 : System RAM
-> >>>3d172018-3d17ae57 : System RAM
-> >>>3d17ae58-3dc10fff : System RAM
-> >>
-> >>this part is consecutive but somehow is divided into 4 entries.
-> >>You called your environment as ``EFI virtual machine'', could you tell
-> >>me precisely what it mean? qemu/KVM or VMware guest system? I do want
-> >>to understand how this kind of memory map was created. I think this
-> >>kind of memory mapping is odd and I guess this is caused by the fact
-> >>that the system is a virtual environment.
-> >
-> >This is not specific to EFI machine, it's the reserved setup_data regions
-> >They happened to be continous but they do not have to be continuous.
-> >
-> 
-> Thanks for pointing out that. I've just read Documentation/x86/boot.txt
-> and parse_setup_data().
-> 
-> But I don't understand well why these regions are divided as these.
-> I guess kernel divides the System RAM this way and the memory map first
-> passed to by EFI is all page aligned, right?
+Here is the V7 patchset for supporting kexec kernel efi runtime.
+Per pervious discussion I pass the 1st kernel efi runtime mapping
+via setup_data to 2nd kernel. Besides of the runtime mapping
+info I also pass the fw_vendor, runtime, config table, smbios
+physical address in setup_data. EFI spec mentioned fw_vendor,
+runtime, config table addresses will be converted to virt address
+after entering virtual mode, but we will use it as physical address
+in efi_init. For smbios EFI spec did not mention about the address
+updating, but during my test on a HP workstation, the bios will
+convert it to Virt addr, thus pass it in setup_data as well.
 
-setup_data are passed as a link list by boot loader, each node is a block
-of memory, there could be many different setup_data type.
+For fw_vendor, runtime, config table, I export them in /sys/firmware/
+efi/, smbios is already in /sys/firmware/efi/systab.
 
-> 
-> Also, looking at parse_setup_data(), currently handled data in setup_data
-> interface is extended e820 entries and dtb case only.
-> 
->                 switch (data_type) {
->                 case SETUP_E820_EXT:
->                         parse_e820_ext(pa_data, data_len);
->                         break;
->                 case SETUP_DTB:
->                         add_dtb(pa_data);
->                         break;
->                 default:
->                         break;
->                 }
-> 
-> Is it right that this kind of memory map doesn't occur as long as either
-> of information is passed to via setup_data? IOW, is this necessary
-> information?
+For efi runtime mapping I add a new directory /sys/firmware/efi/
+runtime-map/ like below
+[dave@darkstar ~]$ tree /sys/firmware/efi/runtime-map/
+/sys/firmware/efi/runtime-map/
+|__ 0
+|   |__ attribute
+|   |__ num_pages
+|   |__ phys_addr
+|   |__ type
+|   |__ virt_addr
+|__ 1
+[snip]
 
-If bootloader does not pass it, there will be no such mem ranges in /proc/iomem.
+kexec-tools will assemble them as setup_data and pass to 2nd kernel.
+I will send userspace patches as well.
 
-> 
-> >>
-> >>And for Vivek, this case is a concrete example of multiple RAM entries
-> >>appearing in a single page I suspected in the mmap failure patch,
-> >>although these entries are consecutive in physical address and can be
-> >>represented by a single entry by merging them in a single entry. But
-> >>then it seems to me that there could be more odd case that multiple
-> >>RAM entries but not consecutive. I again think this should be addressed
-> >>in the patch for the mmap failure issue. How do you think?
-> >
-> >They are different problems, the previous mmap bug is for cross page regions
-> >with different page flags.
-> >
-> 
-> I understand that. What I think problem here is the case where multiple
-> System RAM entries appear in a single page. In the above memory map, they
-> are 3d171000, 3d172000 and 3d17a000. My fixing patch is to copy fractional
-> pages in the 2nd kernel in order to make it possible to mmap without affecting
-> non-System RAM area as much as possible, and then if there is this kind of
-> System RAM entries, we need to use the same page in the 2nd kernel for
-> different System RAM entries that shares the same page in the 1st kernel. This
-> needs a little additional processing and we want to keep implementation as
-> simple as possible as long as there's no such system in real world. However,
-> I'm surprised to see the memory mapping above.
+Limitation is I only write support for x86_64, test on below machines:
+Lenovo thinkpad t420
+Dell inspiron 14 - 3421
+HP Z420 workstation
+Qemu + OVMF
 
-These ranges are "system ram" of type E820_RESERVED_KERN, please see below:
-arch/x86/kernel/setup.c: e820_reserve_setup_data()
+The patches are based on linus tree + tip master + matt's efi master tree
 
-Thanks
-Dave
+Changes from v1:
+ - add one flag in xloadflags, so kexec-tools can safely load old kernel
+   without efi support.
+ - coding style fixes
+ - function name for map phys_addr to fixed virt_addr
+ - Add ABI documentation for sysfs files
+
+Changes from v2:
+ - 01/09: a new patch to remove unused variables in __map_region function
+       catched by Toshi Kani
+ - 09/09: a new patch to export x86 boot_params to sysfs instead of use
+       debugfs files
+ - Matt: reuse __map_region instead do same thing in another function.
+      add a wrapper function efi_map_region_fixed [02/09]
+      check return value of krealloc
+      sysfs dir name s/efi-runtime-map/runtime-map [06/09]
+      use desc_size in efi_runtime_map
+      for the xloadflags defination: +&& defined(CONFIG_KEXEC)
+ - Greg: sysfs : one file one value for fw_vendor, runtime, tables. [05/09]
+      Document them in ABI testing
+ - HPA:  Document the new xloadflag
+ - Also there's other function cleanup and improvement for error handling.
+
+Changes from v3:
+ - Greg: sysfs code move to use __ATTR_RO and attr_group
+ - Boris: comments and code alignment
+
+ - Added 3 new patches below
+ 10-print-efi-runtime-memmap.patch
+  - 10/12: print only runtime ranges in case EFI_DEBUG printing
+ 11-reserve-setup-data-late.patch
+  - fix a bug of kdump kernel, move function for reserving setup data
+    ranges late after parsing memmap= cmdline params because kdump kernel
+    will pass exact memmap late.
+ 12-x86-kdebugfs-use-ioremap.patch
+  - fix a bug of x86/kernel/kdebugfs.c, use ioremap instead of __va for
+    low mem because __va does not work for exact memmap=
+
+Changes from V4:
+ - variable efi_setup in 09/14 is changed to the physical address instead
+   of the virtual address because it will be not iounmapped until entering
+   virtual mode, it's too long and could cause leak.
+ - sparse warnings fixes (Matt):
+   Added 2 new patches to addressing sparse warnings:
+   01/14: x86-mm-sparse-warning-fix-for-early_memremap.patch
+   02/14: efi-use-early_memremap-and-early_memunmap.patch
+ - krealloc fixes (Boris)
+ - rebase on top of Linus tree + Matt's efi master tree (Boris)
+ - a lot of documention/spelling fixes (Boris)
+ - share function save_runtime_map in 1st/2nd kernel code (Matt)
+ - style and other fixes detail see the patch changelog themselves.
+
+Changes from V5:
+ - add efi_runtime_map_setup() and remove the extern variables thus other
+   arches can reuse the runtime_map exporting code. (Matt)
+ - check efi_reuse_config return value. (Matt)
+ - move parse_efi_setup to efi_$(BITS).c (Boris)
+ - call efi_runtime_map_init in efisubsys_init (Boris)
+ - save_runtime_map cleanup. (Boris)
+
+Changes from V6:
+ - update memmap in userspace to the saved runtime map, thus kernel code
+   become cleaner.
+   - patch 08: simplify save_runtime_map.
+   - patch 09: simplify efi_map_regions and efi_map_regions_fixed.
+ - remove the patch to handle print_efi_memmap for kexec kernel 
+ - remove the last patch for fixing __va usage in kdebugfs since I can not
+   reproduce it in kdump kernel, it should be addressed seperately.
+ - patch 06 (efi: cleanup efi_enter_virtual_mode function):
+   add a share function get_systab_virt_addr()
+ - rebase to latest mainline tree
+
+The patches stay in kexec-efi-testing branch of below repo for testing:
+https://github.com/daveyoung/linux.git
+
+Dave Young (12):
+  x86/mm: sparse warning fix for early_memremap
+  efi: Use early_memremap and early_memunmap to fix sparse warnings
+  efi: remove unused variables in __map_region
+  efi: add a wrapper function efi_map_region_fixed
+  efi: reserve boot service fix
+  efi: cleanup efi_enter_virtual_mode function
+  efi: export more efi table variable to sysfs
+  efi: export efi runtime memory mapping to sysfs
+  efi: passing kexec necessary efi data via setup_data
+  x86: add xloadflags bit for efi runtime support on kexec
+  x86: export x86 boot_params to sysfs
+  x86: reserve setup_data ranges late after parsing memmap cmdline
+
+ Documentation/ABI/testing/sysfs-firmware-efi       |  20 ++
+ .../ABI/testing/sysfs-firmware-efi-runtime-map     |  34 ++
+ Documentation/ABI/testing/sysfs-kernel-boot_params |  38 +++
+ Documentation/x86/boot.txt                         |   3 +
+ arch/x86/boot/header.S                             |   9 +-
+ arch/x86/include/asm/efi.h                         |  14 +
+ arch/x86/include/asm/io.h                          |   3 +-
+ arch/x86/include/uapi/asm/bootparam.h              |   2 +
+ arch/x86/kernel/Makefile                           |   1 +
+ arch/x86/kernel/ksysfs.c                           | 339 ++++++++++++++++++++
+ arch/x86/kernel/setup.c                            |   7 +-
+ arch/x86/mm/ioremap.c                              |  10 +-
+ arch/x86/platform/efi/efi.c                        | 345 ++++++++++++++++-----
+ arch/x86/platform/efi/efi_32.c                     |   3 +
+ arch/x86/platform/efi/efi_64.c                     |  22 +-
+ drivers/firmware/efi/Kconfig                       |  11 +
+ drivers/firmware/efi/Makefile                      |   1 +
+ drivers/firmware/efi/efi.c                         |  49 ++-
+ drivers/firmware/efi/runtime-map.c                 | 181 +++++++++++
+ include/linux/efi.h                                |  16 +
+ 20 files changed, 1010 insertions(+), 98 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-firmware-efi
+ create mode 100644 Documentation/ABI/testing/sysfs-firmware-efi-runtime-map
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-boot_params
+ create mode 100644 arch/x86/kernel/ksysfs.c
+ create mode 100644 drivers/firmware/efi/runtime-map.c
+
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
