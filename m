@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vtwzp-0005ja-Gm
- for kexec@lists.infradead.org; Fri, 20 Dec 2013 10:07:54 +0000
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v4 4/4] Passing efi related data via setup_data
-Date: Fri, 20 Dec 2013 18:05:47 +0800
-Message-Id: <1387533947-18210-5-git-send-email-dyoung@redhat.com>
-In-Reply-To: <1387533947-18210-1-git-send-email-dyoung@redhat.com>
-References: <1387533947-18210-1-git-send-email-dyoung@redhat.com>
+ id 1Vu0pl-0004eB-6S
+ for kexec@lists.infradead.org; Fri, 20 Dec 2013 14:13:45 +0000
+Date: Fri, 20 Dec 2013 09:13:21 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] makedumpfile: memset() in cyclic bitmap initialization
+ introduce segment fault
+Message-ID: <20131220141321.GA27063@redhat.com>
+References: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>
+ <52B39878.3030403@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <52B39878.3030403@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,281 +21,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>
 
-For supporting efi runtime, several efi physical addresses
-fw_vendor, runtime, config tables, smbios and the whole runtime
-mapping info need to be used in kexec kernel. Thus introduce
-setup_data struct for passing these data.
+On Fri, Dec 20, 2013 at 10:08:08AM +0900, HATAYAMA Daisuke wrote:
 
-collect the varialbes from /sys/firmware/efi/systab and
-/sys/firmware/efi/runtime-map
+[..]
+> 
+> >cat /proc/iomem:
+> >00000000-00000fff : reserved
+> >00001000-0009ffff : System RAM
+> >000a0000-000bffff : PCI Bus 0000:00
+> >000f0000-000fffff : System ROM
+> >00100000-3d162017 : System RAM
+> >   01000000-015cab9b : Kernel code
+> >   015cab9c-019beb3f : Kernel data
+> >   01b4f000-01da9fff : Kernel bss
+> >   30000000-37ffffff : Crash kernel
+> >3d162018-3d171e57 : System RAM
+> >3d171e58-3d172017 : System RAM
+> >3d172018-3d17ae57 : System RAM
+> >3d17ae58-3dc10fff : System RAM
+> 
+> this part is consecutive but somehow is divided into 4 entries.
+> You called your environment as ``EFI virtual machine'', could you tell
+> me precisely what it mean? qemu/KVM or VMware guest system? I do want
+> to understand how this kind of memory map was created. I think this
+> kind of memory mapping is odd and I guess this is caused by the fact
+> that the system is a virtual environment.
+> 
+> And for Vivek, this case is a concrete example of multiple RAM entries
+> appearing in a single page I suspected in the mmap failure patch,
+> although these entries are consecutive in physical address and can be
+> represented by a single entry by merging them in a single entry. But
+> then it seems to me that there could be more odd case that multiple
+> RAM entries but not consecutive. I again think this should be addressed
+> in the patch for the mmap failure issue. How do you think?
 
-Tested on qemu+ovmf, dell laptop, lenovo laptop and HP workstation.
+Hi Hatayama,
 
-v1->v2:
-HPA: use uint*_t instead of __uint*_t
-Simon: indention fix; fix a memory leak
-move offset change update to previous patch in setup header
-only passing setup_data when the bzImage support efi boot
-Vivek: export a value in bzImage probe so it can be used
-      to check if we should pass acpi_rsdp.
-coding style
+This indeed looks very odd. See if a very small number of systems have it,
+the only thing we will do is allocate extra page in second kernel for
+a memory range. It will not make mmap() fail. So it is just a matter of
+optimization.
 
-v2->v3:
-code cleanup
-bail out if efi mm desc_version != 1
-bhe: define macro for SETUP_EFI
-     break loop if find matched string in systab.
+Given the fact I have not seen many systems with this anomaly, I am not
+too worried about it even if you don't this optimization in your patch
+series. We can always take care of it later if need be.
 
-v3->v4:
-patch04:
-  update memmap in efi_info to the saved runtime map
-  So kernel side can iterate them as normal boot.
+At the same time, if you feel strongly about it and want to fix it in
+same patch series, I don't mind.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/arch/i386/x86-linux-setup.c | 201 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 198 insertions(+), 3 deletions(-)
-
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 38bd9dd..b8000b2 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -36,6 +36,8 @@
- #include "x86-linux-setup.h"
- #include "../../kexec/kexec-syscall.h"
- 
-+#define SETUP_EFI	4
-+
- void init_linux_parameters(struct x86_linux_param_header *real_mode)
- {
- 	/* Fill in the values that are usually provided by the kernel. */
-@@ -480,11 +482,204 @@ void setup_subarch(struct x86_linux_param_header *real_mode)
- 	get_bootparam(&real_mode->hardware_subarch, offset, sizeof(uint32_t));
- }
- 
--static void setup_efi_info(struct x86_linux_param_header *real_mode)
-+struct efi_mem_descriptor {
-+	uint32_t type;
-+	uint32_t pad;
-+	uint64_t phys_addr;
-+	uint64_t virt_addr;
-+	uint64_t num_pages;
-+	uint64_t attribute;
-+};
-+
-+struct efi_setup_data {
-+	uint64_t fw_vendor;
-+	uint64_t runtime;
-+	uint64_t tables;
-+	uint64_t smbios;
-+	uint64_t reserved[8];
-+	struct efi_mem_descriptor map[0];
-+};
-+
-+struct setup_data {
-+	uint64_t next;
-+	uint32_t type;
-+	uint32_t len;
-+	uint8_t data[0];
-+} __attribute__((packed));
-+
-+static int __get_efi_value(char *line, const char *pattern, uint64_t *val)
-+{
-+	char *s, *end;
-+	s = strstr(line, pattern);
-+	if (s)
-+		*val = strtoull(s + strlen(pattern), &end, 16);
-+
-+	if (!s || *val == ULONG_MAX)
-+		return 1;
-+	return 0;
-+}
-+
-+static void _get_efi_value(const char *filename,
-+			const char *pattern, uint64_t *val)
- {
-+	FILE *fp;
-+	char line[1024];
-+	int ret;
-+
-+	fp = fopen(filename, "r");
-+	if (!fp)
-+		return;
-+
-+	while (fgets(line, sizeof(line), fp) != 0) {
-+		ret = __get_efi_value(line, pattern, val);
-+		if (!ret)
-+			break;
-+	}
-+
-+	fclose(fp);
-+}
-+
-+static void get_efi_values(struct efi_setup_data *esd)
-+{
-+	_get_efi_value("/sys/firmware/efi/systab", "SMBIOS=0x",
-+			&esd->smbios);
-+	_get_efi_value("/sys/firmware/efi/fw_vendor", "0x",
-+			&esd->fw_vendor);
-+	_get_efi_value("/sys/firmware/efi/runtime", "0x",
-+			&esd->runtime);
-+	_get_efi_value("/sys/firmware/efi/config_table", "0x",
-+			&esd->tables);
-+}
-+
-+static int get_efi_runtime_map(struct efi_setup_data **esd)
-+{
-+	DIR *dirp;
-+	struct dirent *entry;
-+	char filename[1024];
-+	struct efi_mem_descriptor md;
-+	int nr_maps = 0;
-+
-+	dirp = opendir("/sys/firmware/efi/runtime-map");
-+	if (!dirp)
-+		return 0;
-+	while ((entry = readdir(dirp)) != NULL) {
-+		sprintf(filename,
-+			"/sys/firmware/efi/runtime-map/%s",
-+			(char *)entry->d_name);
-+		if (*entry->d_name == '.')
-+			continue;
-+		file_scanf(filename, "type", "0x%x", (unsigned int *)&md.type);
-+		file_scanf(filename, "phys_addr", "0x%llx",
-+			   (unsigned long long *)&md.phys_addr);
-+		file_scanf(filename, "virt_addr", "0x%llx",
-+			   (unsigned long long *)&md.virt_addr);
-+		file_scanf(filename, "num_pages", "0x%llx",
-+			   (unsigned long long *)&md.num_pages);
-+		file_scanf(filename, "attribute", "0x%llx",
-+			   (unsigned long long *)&md.attribute);
-+		*esd = realloc(*esd, sizeof(struct efi_setup_data) +
-+			   (nr_maps + 1) * sizeof(struct efi_mem_descriptor));
-+		*((*esd)->map + nr_maps) = md;
-+		nr_maps++;
-+	}
-+
-+	closedir(dirp);
-+	return nr_maps;
-+}
-+
-+struct efi_info {
-+	uint32_t efi_loader_signature;
-+	uint32_t efi_systab;
-+	uint32_t efi_memdesc_size;
-+	uint32_t efi_memdesc_version;
-+	uint32_t efi_memmap;
-+	uint32_t efi_memmap_size;
-+	uint32_t efi_systab_hi;
-+	uint32_t efi_memmap_hi;
-+};
-+
-+
-+static int setup_efi_setup_data(struct kexec_info *info,
-+			struct x86_linux_param_header *real_mode)
-+{
-+	int nr_maps;
-+	int64_t setup_data_paddr;
-+	struct setup_data *sd;
-+	struct efi_setup_data *esd;
-+	int size, sdsize;
-+	int has_efi = 0;
-+	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
-+
-+	has_efi = access("/sys/firmware/efi/systab", F_OK);
-+	if (has_efi < 0)
-+		return 1;
-+
-+	esd = malloc(sizeof(struct efi_setup_data));
-+	if (!esd)
-+		return 1;
-+	memset(esd, 0, sizeof(struct efi_setup_data));
-+	get_efi_values(esd);
-+	nr_maps = get_efi_runtime_map(&esd);
-+	if (!nr_maps) {
-+		free(esd);
-+		return 1;
-+	}
-+	size = nr_maps * sizeof(struct efi_mem_descriptor) +
-+		sizeof(struct efi_setup_data);
-+	sd = malloc(sizeof(struct setup_data) + size);
-+	if (!sd) {
-+		free(esd);
-+		return 1;
-+	}
-+
-+	memset(sd, 0, sizeof(struct setup_data) + size);
-+	sd->next = 0;
-+	sd->type = SETUP_EFI;
-+	sd->len = size;
-+	memcpy(sd->data, esd, size);
-+	free(esd);
-+	sdsize = sd->len + sizeof(struct setup_data);
-+	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
-+					0x100000, ULONG_MAX, INT_MAX);
-+
-+	real_mode->setup_data = setup_data_paddr;
-+
-+	ei->efi_memmap = real_mode->setup_data + sizeof(struct setup_data) +
-+			 sizeof(struct efi_setup_data);
-+	ei->efi_memmap_size = nr_maps * sizeof(struct efi_mem_descriptor);
-+	ei->efi_memdesc_size = sizeof(struct efi_mem_descriptor);
-+
-+	return 0;
-+}
-+
-+static int
-+get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
-+{
-+	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
-+
-+	return ei->efi_memdesc_version;
-+}
-+
-+static void setup_efi_info(struct kexec_info *info,
-+			   struct x86_linux_param_header *real_mode)
-+{
-+	int ret, desc_version;
- 	off_t offset = offsetof(typeof(*real_mode), efi_info);
- 
--	get_bootparam(&real_mode->efi_info, offset, 32);
-+	ret = get_bootparam(&real_mode->efi_info, offset, 32);
-+	if (ret)
-+		return;
-+	desc_version = get_efi_mem_desc_version(real_mode);
-+	if (desc_version != 1) {
-+		fprintf(stderr,
-+			"efi memory descriptor version %d is not supported!\n",
-+			desc_version);
-+		memset(&real_mode->efi_info, 0, 32);
-+		return;
-+	}
-+	ret = setup_efi_setup_data(info, real_mode);
-+	if (ret)
-+		memset(&real_mode->efi_info, 0, 32);
- }
- 
- void setup_linux_system_parameters(struct kexec_info *info,
-@@ -497,7 +692,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
- 	/* get subarch from running kernel */
- 	setup_subarch(real_mode);
- 	if (bzImage_support_efi_boot)
--		setup_efi_info(real_mode);
-+		setup_efi_info(info, real_mode);
- 	
- 	/* Default screen size */
- 	real_mode->orig_x = 0;
--- 
-1.8.3.1
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
