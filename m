@@ -1,31 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VtoaS-0002Vd-1G
- for kexec@lists.infradead.org; Fri, 20 Dec 2013 01:09:09 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 712B33EE1E2
- for <kexec@lists.infradead.org>; Fri, 20 Dec 2013 10:08:38 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 63CBF45DD76
- for <kexec@lists.infradead.org>; Fri, 20 Dec 2013 10:08:38 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 454DC45DE4E
- for <kexec@lists.infradead.org>; Fri, 20 Dec 2013 10:08:38 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 0AB5BE3800B
- for <kexec@lists.infradead.org>; Fri, 20 Dec 2013 10:08:38 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7B6AC1DB8037
- for <kexec@lists.infradead.org>; Fri, 20 Dec 2013 10:08:37 +0900 (JST)
-Message-ID: <52B39878.3030403@jp.fujitsu.com>
-Date: Fri, 20 Dec 2013 10:08:08 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vtp0H-0002y3-Gu
+ for kexec@lists.infradead.org; Fri, 20 Dec 2013 01:35:50 +0000
+Date: Fri, 20 Dec 2013 09:35:08 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v6 10/14] efi: only print saved efi runtime maps instead
+ of all memmap ranges for kexec
+Message-ID: <20131220013508.GA3795@dhcp-16-126.nay.redhat.com>
+References: <1387186235-15972-1-git-send-email-dyoung@redhat.com>
+ <1387186235-15972-11-git-send-email-dyoung@redhat.com>
+ <20131219164144.GG3145@console-pimps.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: memset() in cyclic bitmap initialization
- introduce segment fault
-References: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>
-In-Reply-To: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20131219164144.GG3145@console-pimps.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,163 +22,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Matt Fleming <matt@console-pimps.org>
+Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
 
-(2013/12/18 22:34), WANG Chao wrote:
-> We are using memset() to improve performance when creating 1st and 2nd
-> bitmap. After doing round up the pfn_start and round down pfn_end, it's
-> possible that pfn_start_roundup is greater than pfn_end_round. A segment
-> fault could happen in that case because memset is taking roughly the
-> value of (pfn_end_round << 3 - pfn_start_roundup << 3 ), which is
-> negative, as its third argument.
->
-> So we can skip the memset if start is greater than end. It's safe
-> because we will set bit for the round up part and also round down part.
->
-> Actually this happens on my EFI virtual machine:
->
-> cat /proc/iomem:
-> 00000000-00000fff : reserved
-> 00001000-0009ffff : System RAM
-> 000a0000-000bffff : PCI Bus 0000:00
-> 000f0000-000fffff : System ROM
-> 00100000-3d162017 : System RAM
->    01000000-015cab9b : Kernel code
->    015cab9c-019beb3f : Kernel data
->    01b4f000-01da9fff : Kernel bss
->    30000000-37ffffff : Crash kernel
-> 3d162018-3d171e57 : System RAM
-> 3d171e58-3d172017 : System RAM
-> 3d172018-3d17ae57 : System RAM
-> 3d17ae58-3dc10fff : System RAM
-> 3dc11000-3dc18fff : reserved
-> 3dc19000-3dc41fff : System RAM
-> 3dc42000-3ddcefff : reserved
-> 3ddcf000-3f7fefff : System RAM
-> 3f7ff000-3f856fff : reserved
-> [..]
->
-> gdb ./makedumpfile core
-> (gdb) bt full
-> [..]
->   #1  0x000000000042775d in create_1st_bitmap_cyclic () at makedumpfile.c:4543
->          i = 0x5
->          pfn = 0x3d190
->          phys_start = 0x3d18ee58
->          phys_end = 0x3d18f018
->          pfn_start = 0x3d18e
->          pfn_end = 0x3d18f
->          pfn_start_roundup = 0x3d190
->          pfn_end_round = 0x3d188
->          pfn_start_byte = 0x7a32
->          pfn_end_byte = 0x7a31
-> [..]
-> (gdb) list makedumpfile.c:4543
-> 4538					return FALSE;
-> 4539
-> 4540			pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
-> 4541			pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
-> 4542
-> 4543			memset(info->partial_bitmap2 + pfn_start_byte,
-> 4544			       0xff,
-> 4545			       pfn_end_byte - pfn_start_byte);
-> 4546
-> 4547			for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
->
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
-> ---
->   makedumpfile.c | 18 +++++++++++-------
->   1 file changed, 11 insertions(+), 7 deletions(-)
->
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 23251a1..ef08d91 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -4435,11 +4435,13 @@ create_1st_bitmap_cyclic()
->   		pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
->   		pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
->
-> -		memset(info->partial_bitmap1 + pfn_start_byte,
-> -		       0xff,
-> -		       pfn_end_byte - pfn_start_byte);
-> +		if (pfn_start_byte < pfn_end_byte) {
-> +			memset(info->partial_bitmap1 + pfn_start_byte,
-> +			       0xff,
-> +			       pfn_end_byte - pfn_start_byte);
->
-> -		pfn_bitmap1 += (pfn_end_byte - pfn_start_byte) * BITPERBYTE;
-> +			pfn_bitmap1 += (pfn_end_byte - pfn_start_byte) * BITPERBYTE;
-> +		}
->
->   		for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
->   			if (set_bit_on_1st_bitmap(pfn))
-> @@ -4540,9 +4542,11 @@ initialize_2nd_bitmap_cyclic(void)
->   		pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
->   		pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
->
-> -		memset(info->partial_bitmap2 + pfn_start_byte,
-> -		       0xff,
-> -		       pfn_end_byte - pfn_start_byte);
-> +		if (pfn_start_byte < pfn_end_byte) {
-> +			memset(info->partial_bitmap2 + pfn_start_byte,
-> +			       0xff,
-> +			       pfn_end_byte - pfn_start_byte);
-> +		}
->
->   		for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
->   			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
->
+On 12/19/13 at 04:41pm, Matt Fleming wrote:
+> On Mon, 16 Dec, at 05:30:31PM, Dave Young wrote:
+> > For kexec/kdump kernel efi runtime mappings are saved, printing original whole
+> > memmap ranges does not make sense anymore. So introduce a new function to only
+> > print runtime maps in case kexec/kdump kernel is used.
+> > 
+> > changelog:
+> > Matt: use efi_setup instead of esdata
+> >       share function print_efi_memmap for both normal and kexec boot.
+> > 
+> > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > ---
+> >  arch/x86/platform/efi/efi.c | 24 +++++++++++++++++-------
+> >  1 file changed, 17 insertions(+), 7 deletions(-)
+> 
+> Thinking about this a bit more, I'm not at all sure why this patch
+> exists.
+> 
+> Why do we not want to print the entire memory map range like we did in
+> the first kernel? The e820 map is printed exactly like it was in the
+> first kernel, why should the EFI memmap be special?
 
-Acked-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Hi, Matt
 
-Also, I'm interested in the memory map passed to from EFI in that
+Here is the memmap.map print result in kexec kernel (qemu + ovmf).
+I think the memmap.map is not valid any more in kexec kernel, thus we
+should print the saved runtime map.
 
-> cat /proc/iomem:
-> 00000000-00000fff : reserved
-> 00001000-0009ffff : System RAM
-> 000a0000-000bffff : PCI Bus 0000:00
-> 000f0000-000fffff : System ROM
-> 00100000-3d162017 : System RAM
->    01000000-015cab9b : Kernel code
->    015cab9c-019beb3f : Kernel data
->    01b4f000-01da9fff : Kernel bss
->    30000000-37ffffff : Crash kernel
-> 3d162018-3d171e57 : System RAM
-> 3d171e58-3d172017 : System RAM
-> 3d172018-3d17ae57 : System RAM
-> 3d17ae58-3dc10fff : System RAM
+[    0.000000] efi: EFI v2.31 by EDK II
+[    0.000000] efi:  ACPI=0x1f9e0000  ACPI 2.0=0x1f9e0014 
+[    0.000000] efi: mem00: type=33490747, attr=0x1ff073c, range=[0xffffffff8105542e-0xfffff80fd649d42e) (72057594029606228MB)
+[    0.000000] efi: mem01: type=33490747, attr=0x10756, range=[0xffffffff8105548e-0xfffff80fd650d48e) (72057594029606228MB)
+[    0.000000] efi: mem02: type=67410, attr=0x10758, range=[0xffffffff81055548-0xfffff80fd6630548) (72057594029606229MB)
+[    0.000000] efi: mem03: type=67416, attr=0x1ff0749, range=[0xffffffff810556c2-0xfffff80fd67246c2) (72057594029606230MB)
+[    0.000000] efi: mem04: type=67416, attr=0x10756, range=[0xffffffff810557d1-0xfffff80fd685d7d1) (72057594029606232MB)
+[    0.000000] efi: mem05: type=67410, attr=0x10756, range=[0xffffffff8105584a-0xfffff80fd68b684a) (72057594029606232MB)
+[    0.000000] efi: mem06: type=67415, attr=0x10758, range=[0xffffffff810558b7-0xfffff80fd69168b7) (72057594029606232MB)
+[    0.000000] efi: mem07: type=67417, attr=0x10758, range=[0xffffffff810558fa-0xfffff80fd697c8fa) (72057594029606233MB)
+[    0.000000] efi: mem08: type=67415, attr=0x10758, range=[0xffffffff810559c2-0xfffff80fd6a6b9c2) (72057594029606234MB)
+[    0.000000] efi: mem09: type=67417, attr=0x10754, range=[0xffffffff81055a4f-0xfffff80fd6b2fa4f) (72057594029606234MB)
+[    0.000000] efi: mem10: type=33490778, attr=0x10753, range=[0xffffffff81055b66-0xfffff80fd6c49b66) (72057594029606235MB)
+[    0.000000] efi: mem11: type=67417, attr=0x10753, range=[0xffffffff81055c75-0xfffff80fd6d0dc75) (72057594029606236MB)
+[    0.000000] efi: mem12: type=67411, attr=0x10759, range=[0xffffffff81055dc2-0xfffff80fd6e38dc2) (72057594029606237MB)
+[    0.000000] efi: mem13: type=33490773, attr=0x1ff075a, range=[0xffffffff81055e3e-0xfffff80fd6ea1e3e) (72057594029606238MB)
+[    0.000000] efi: mem14: type=67409, attr=0x10752, range=[0xffffffff81056053-0xfffff80fd7163053) (72057594029606241MB)
+[    0.000000] efi: mem15: type=67409, attr=0x1ff0747, range=[0xffffffff8105612b-0xfffff80fd719012b) (72057594029606241MB)
+[    0.000000] efi: mem16: type=67409, attr=0x10751, range=[0xffffffff8105628c-0xfffff80fd73a828c) (72057594029606243MB)
+[    0.000000] efi: mem17: type=67410, attr=0x10751, range=[0xffffffff81056441-0xfffff80fd74ff441) (72057594029606244MB)
+[    0.000000] efi: mem18: type=67410, attr=0x10752, range=[0xffffffff8105652a-0xfffff80fd761152a) (72057594029606245MB)
+[    0.000000] efi: mem19: type=33490748, attr=0x1072c, range=[0xffffffff810565e6-0xfffff80fd79dc5e6) (72057594029606249MB)
+[    0.000000] efi: mem20: type=67409, attr=0x10751, range=[0xffffffff81056a25-0xfffff80fd7ae0a25) (72057594029606250MB)
+[    0.000000] efi: mem21: type=67372, attr=0x1ff073b, range=[0xffffffff8105745c-0xfffff80fd84bc45c) (72057594029606260MB)
+[    0.000000] efi: mem22: type=33490720, attr=0x1ff0744, range=[0xffffffff81057a3a-0xfffff80fd95d8a3a) (72057594029606277MB)
+[    0.000000] efi: mem23: type=33490757, attr=0x1ff073f, range=[0xffffffff81058659-0xfffff80fd9734659) (72057594029606278MB)
+[    0.000000] efi: mem24: type=33490752, attr=0x1ff074b, range=[0xffffffff81058867-0xfffff80fd98e1867) (72057594029606280MB)
+[    0.000000] efi: mem25: type=67410, attr=0x10751, range=[0xffffffff810589d9-0xfffff80fd9ac79d9) (72057594029606282MB)
+[    0.000000] efi: mem26: type=67414, attr=0x10753, range=[0xffffffff81058b4c-0xfffff80fd9c42b4c) (72057594029606283MB)
+[    0.000000] efi: mem27: type=67416, attr=0x1072c, range=[0xffffffff81058c85-0xfffff80fd9dffc85) (72057594029606285MB)
+[    0.000000] efi: mem28: type=67374, attr=0x1072d, range=[0xffffffff81058e41-0xfffff80fd9eb0e41) (72057594029606286MB)
 
-this part is consecutive but somehow is divided into 4 entries.
-You called your environment as ``EFI virtual machine'', could you tell
-me precisely what it mean? qemu/KVM or VMware guest system? I do want
-to understand how this kind of memory map was created. I think this
-kind of memory mapping is odd and I guess this is caused by the fact
-that the system is a virtual environment.
 
-And for Vivek, this case is a concrete example of multiple RAM entries
-appearing in a single page I suspected in the mmap failure patch,
-although these entries are consecutive in physical address and can be
-represented by a single entry by merging them in a single entry. But
-then it seems to me that there could be more odd case that multiple
-RAM entries but not consecutive. I again think this should be addressed
-in the patch for the mmap failure issue. How do you think?
-
-> 3dc11000-3dc18fff : reserved
-> 3dc19000-3dc41fff : System RAM
-> 3dc42000-3ddcefff : reserved
-> 3ddcf000-3f7fefff : System RAM
-> 3f7ff000-3f856fff : reserved
-> [..]
-
--- 
-Thanks.
-HATAYAMA, Daisuke
-
+> 
+> -- 
+> Matt Fleming, Intel Open Source Technology Center
 
 _______________________________________________
 kexec mailing list
