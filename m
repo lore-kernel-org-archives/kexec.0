@@ -1,15 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g1t0027.austin.hp.com ([15.216.28.34])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Vu4TG-0003TZ-07
- for kexec@lists.infradead.org; Fri, 20 Dec 2013 18:06:46 +0000
-Message-ID: <1387562470.21140.57.camel@misato.fc.hp.com>
-Subject: Re: [PATCH v7 00/12] kexec kernel efi runtime support
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Fri, 20 Dec 2013 11:01:10 -0700
-In-Reply-To: <1387533742-18018-1-git-send-email-dyoung@redhat.com>
-References: <1387533742-18018-1-git-send-email-dyoung@redhat.com>
-Mime-Version: 1.0
+ id 1Vu9Ev-0002bw-Mg
+ for kexec@lists.infradead.org; Fri, 20 Dec 2013 23:12:18 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20131121190350.GC17070@kroah.com>
+ <20131121190620.GA25951@srcf.ucam.org>
+ <20131121191305.GK16208@redhat.com>
+ <20131121191907.GA26366@srcf.ucam.org>
+ <20131122185706.GK4046@redhat.com> <87vbzju6ql.fsf@xmission.com>
+ <20131125163920.GC23094@redhat.com> <87fvqj2vxz.fsf@xmission.com>
+ <20131126142759.GA5473@redhat.com> <20131219125439.GA6379@lst.de>
+ <20131220141917.GB27063@redhat.com>
+Date: Fri, 20 Dec 2013 15:11:23 -0800
+In-Reply-To: <20131220141917.GB27063@redhat.com> (Vivek Goyal's message of
+ "Fri, 20 Dec 2013 09:19:17 -0500")
+Message-ID: <87a9fvqfs4.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load,
+ for in kernel kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,54 +31,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, msalter@redhat.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kees Cook <keescook@chromium.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Torsten Duwe <duwe@lst.de>, hpa@zytor.com
 
-On Fri, 2013-12-20 at 18:02 +0800, Dave Young wrote:
-> Here is the V7 patchset for supporting kexec kernel efi runtime.
-> Per pervious discussion I pass the 1st kernel efi runtime mapping
-> via setup_data to 2nd kernel. Besides of the runtime mapping
-> info I also pass the fw_vendor, runtime, config table, smbios
-> physical address in setup_data. EFI spec mentioned fw_vendor,
-> runtime, config table addresses will be converted to virt address
-> after entering virtual mode, but we will use it as physical address
-> in efi_init. For smbios EFI spec did not mention about the address
-> updating, but during my test on a HP workstation, the bios will
-> convert it to Virt addr, thus pass it in setup_data as well.
-> 
-> For fw_vendor, runtime, config table, I export them in /sys/firmware/
-> efi/, smbios is already in /sys/firmware/efi/systab.
-> 
-> For efi runtime mapping I add a new directory /sys/firmware/efi/
-> runtime-map/ like below
-> [dave@darkstar ~]$ tree /sys/firmware/efi/runtime-map/
-> /sys/firmware/efi/runtime-map/
-> |__ 0
-> |   |__ attribute
-> |   |__ num_pages
-> |   |__ phys_addr
-> |   |__ type
-> |   |__ virt_addr
-> |__ 1
-> [snip]
-> 
-> kexec-tools will assemble them as setup_data and pass to 2nd kernel.
-> I will send userspace patches as well.
-> 
-> Limitation is I only write support for x86_64, test on below machines:
-> Lenovo thinkpad t420
-> Dell inspiron 14 - 3421
-> HP Z420 workstation
-> Qemu + OVMF
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Tested on an HP 60-way UEFI platform (proto).  For the series:
+> On Thu, Dec 19, 2013 at 01:54:39PM +0100, Torsten Duwe wrote:
+>> On Tue, Nov 26, 2013 at 09:27:59AM -0500, Vivek Goyal wrote:
 
-Tested-by: Toshi Kani <toshi.kani@hp.com>
+>> IMO it's up to user land to search lists of certificates, and present
+>> only the final chain of trust to the kernel for checking.
+>> 
+>> ELF is the preferred format for most sane OSes and firmware, and a detached
+>> signature would probably be simplest to check. If we have the choice,
+>> without restrictions from braindead boot loaders, ELF should be first.
+>> And if the pesigning isn't usable and another sig is needed anyway,
+>> why not apply that to vmlinux(.gz) ?
+>
+> I have yet to look deeper into it that if we can sign elf images and
+> just use elf loader. And can use space extract the elf image out of 
+> a bzImage and pass it to kernel.
+>
+> Even if it is doable, one disadvantage seemed to be that extracted 
+> elf images will have to be written to a file so thta it's file descriptor
+> can be passed to kernel. And that assumed writable root and we chrome
+> folks seems to have setups where root is not writable.
 
-Thanks,
--Toshi
+In that case the chrome folks would simply have to use an ELF format
+kernel and not a bzImage.
 
-
+Eric
 
 _______________________________________________
 kexec mailing list
