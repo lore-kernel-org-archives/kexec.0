@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VtwwO-0005Qw-0h
+ id 1VtwwO-0005QT-0k
  for kexec@lists.infradead.org; Fri, 20 Dec 2013 10:04:20 +0000
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v7 03/12] efi: remove unused variables in __map_region
-Date: Fri, 20 Dec 2013 18:02:13 +0800
-Message-Id: <1387533742-18018-4-git-send-email-dyoung@redhat.com>
+Subject: [PATCH v7 04/12] efi: add a wrapper function efi_map_region_fixed
+Date: Fri, 20 Dec 2013 18:02:14 +0800
+Message-Id: <1387533742-18018-5-git-send-email-dyoung@redhat.com>
 In-Reply-To: <1387533742-18018-1-git-send-email-dyoung@redhat.com>
 References: <1387533742-18018-1-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,36 +25,71 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
 
-variables size and end is useless in this function, thus remove them.
+Kexec kernel will use saved runtime virtual mapping, so add a
+new function efi_map_region_fixed for directly mapping a md
+to md->virt.
 
-Reported-by: Toshi Kani <toshi.kani@hp.com>
+The md is passed in from 1st kernel, the virtual addr is
+saved in md->virt_addr.
+
+Matt: coding style
+      reuse __map_region
+Boris: Strenthen comment lines to 80 cols.
+
 Signed-off-by: Dave Young <dyoung@redhat.com>
 Acked-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/platform/efi/efi_64.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/x86/include/asm/efi.h     |  1 +
+ arch/x86/platform/efi/efi_32.c |  2 ++
+ arch/x86/platform/efi/efi_64.c | 10 ++++++++++
+ 3 files changed, 13 insertions(+)
 
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index 89a05b0..9fbaeb2 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -128,6 +128,7 @@ extern void efi_call_phys_epilog(void);
+ extern void efi_unmap_memmap(void);
+ extern void efi_memory_uc(u64 addr, unsigned long size);
+ extern void __init efi_map_region(efi_memory_desc_t *md);
++extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
+ extern void efi_sync_low_kernel_mappings(void);
+ extern void efi_setup_page_tables(void);
+ extern void __init old_map_region(efi_memory_desc_t *md);
+diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
+index e94557c..7b3ec6e 100644
+--- a/arch/x86/platform/efi/efi_32.c
++++ b/arch/x86/platform/efi/efi_32.c
+@@ -47,6 +47,8 @@ void __init efi_map_region(efi_memory_desc_t *md)
+ 	old_map_region(md);
+ }
+ 
++void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
++
+ void efi_call_phys_prelog(void)
+ {
+ 	struct desc_ptr gdt_descr;
 diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index bf286c3..c5a6491 100644
+index c5a6491..ff08cb1 100644
 --- a/arch/x86/platform/efi/efi_64.c
 +++ b/arch/x86/platform/efi/efi_64.c
-@@ -148,15 +148,11 @@ void efi_setup_page_tables(void)
- static void __init __map_region(efi_memory_desc_t *md, u64 va)
+@@ -199,6 +199,16 @@ void __init efi_map_region(efi_memory_desc_t *md)
+ 	md->virt_addr = efi_va;
+ }
+ 
++/*
++ * kexec kernel will use efi_map_region_fixed to map efi runtime memory ranges.
++ * md->virt_addr is the original virtual address which had been mapped in kexec
++ * 1st kernel.
++ */
++void __init efi_map_region_fixed(efi_memory_desc_t *md)
++{
++	__map_region(md, md->virt_addr);
++}
++
+ void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
+ 				 u32 type, u64 attribute)
  {
- 	pgd_t *pgd = (pgd_t *)__va(real_mode_header->trampoline_pgd);
--	unsigned long pf = 0, size;
--	u64 end;
-+	unsigned long pf = 0;
- 
- 	if (!(md->attribute & EFI_MEMORY_WB))
- 		pf |= _PAGE_PCD;
- 
--	size = md->num_pages << PAGE_SHIFT;
--	end  = va + size;
--
- 	if (kernel_map_pages_in_pgd(pgd, md->phys_addr, va, md->num_pages, pf))
- 		pr_warn("Error mapping PA 0x%llx -> VA 0x%llx!\n",
- 			   md->phys_addr, va);
 -- 
 1.8.3.1
 
