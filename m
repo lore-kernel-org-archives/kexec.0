@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from verein.lst.de ([213.95.11.211] helo=newverein.lst.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VuDJ0-0005WG-5u
- for kexec@lists.infradead.org; Sat, 21 Dec 2013 03:32:47 +0000
-Message-ID: <52B50BBB.9070806@zytor.com>
-Date: Fri, 20 Dec 2013 19:32:11 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-MIME-Version: 1.0
+ id 1VuKtj-0001SC-6h
+ for kexec@lists.infradead.org; Sat, 21 Dec 2013 11:39:12 +0000
+Date: Sat, 21 Dec 2013 12:38:45 +0100
+From: Torsten Duwe <duwe@lst.de>
 Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
  kernel kexec
-References: <20131121190350.GC17070@kroah.com>	<20131121190620.GA25951@srcf.ucam.org>	<20131121191305.GK16208@redhat.com>	<20131121191907.GA26366@srcf.ucam.org>	<20131122185706.GK4046@redhat.com>
- <87vbzju6ql.fsf@xmission.com>	<20131125163920.GC23094@redhat.com>
- <87fvqj2vxz.fsf@xmission.com>	<20131126142759.GA5473@redhat.com>
- <20131219125439.GA6379@lst.de>	<20131220141917.GB27063@redhat.com>
- <87a9fvqfs4.fsf@xmission.com>	<52B4D0C6.2000505@zytor.com>
- <87ioujf0ox.fsf@xmission.com>
-In-Reply-To: <87ioujf0ox.fsf@xmission.com>
+Message-ID: <20131221113845.GA9002@lst.de>
+References: <20131121191907.GA26366@srcf.ucam.org>
+ <20131122185706.GK4046@redhat.com> <87vbzju6ql.fsf@xmission.com>
+ <20131125163920.GC23094@redhat.com> <87fvqj2vxz.fsf@xmission.com>
+ <20131126142759.GA5473@redhat.com> <20131219125439.GA6379@lst.de>
+ <20131220141917.GB27063@redhat.com> <87a9fvqfs4.fsf@xmission.com>
+ <CAGXu5jKJ88J-++nvkPVvghkXbN+_mB=T1siSDF7yoXQ-d-ONxg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAGXu5jKJ88J-++nvkPVvghkXbN+_mB=T1siSDF7yoXQ-d-ONxg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,25 +29,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kees Cook <keescook@chromium.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Torsten Duwe <duwe@lst.de>, Vivek Goyal <vgoyal@redhat.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Peter Jones <pjones@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 12/20/2013 05:32 PM, Eric W. Biederman wrote:
+On Fri, Dec 20, 2013 at 03:20:16PM -0800, Kees Cook wrote:
 > 
-> Stuff and nonsense.  bzImage is just an ugly wrapper around an ELF
-> image.
-> 
+> If we're doing fd origin verification (not signatures), can't we
+> continue to use a regular bzImage?
 
-Not really.  We put the ELF image in there to help Xen and presumably
-kexec, but there are actually quite a few issues with it... for one
-thing, as currently built there are megabytes of zeroes in it for no
-good reason.
+I imagine the verification function is separated from the new kexec.
+It gets passed the proposed new kernel file*, an optional signature
+file*, and maybe hints about the kernel format and system security state.
 
-Even if you don't need the entry code, the additional metadata is
-meaningful.
+With that function, you can do whatever you want. If you want to take
+an early positive exit due to the location of the new kernel, you're fine.
 
-	-hpa
-
+	Torsten
 
 
 _______________________________________________
