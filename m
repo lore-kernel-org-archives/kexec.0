@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from verein.lst.de ([213.95.11.211] helo=newverein.lst.de)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VuLTI-0001wU-Pg
- for kexec@lists.infradead.org; Sat, 21 Dec 2013 12:15:57 +0000
-Date: Sat, 21 Dec 2013 13:15:34 +0100
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-Message-ID: <20131221121534.GB9002@lst.de>
-References: <87vbzju6ql.fsf@xmission.com> <20131125163920.GC23094@redhat.com>
- <87fvqj2vxz.fsf@xmission.com> <20131126142759.GA5473@redhat.com>
- <20131219125439.GA6379@lst.de> <20131220141917.GB27063@redhat.com>
- <87a9fvqfs4.fsf@xmission.com> <52B4D0C6.2000505@zytor.com>
- <87ioujf0ox.fsf@xmission.com> <52B50BBB.9070806@zytor.com>
+Received: from arkanian.console-pimps.org ([212.110.184.194])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VuNwo-0003jX-6R
+ for kexec@lists.infradead.org; Sat, 21 Dec 2013 14:54:35 +0000
+Date: Sat, 21 Dec 2013 14:53:48 +0000
+From: Matt Fleming <matt@console-pimps.org>
+Subject: Re: [PATCH v7 09/12] efi: passing kexec necessary efi data via
+ setup_data
+Message-ID: <20131221145348.GC29501@console-pimps.org>
+References: <1387533742-18018-1-git-send-email-dyoung@redhat.com>
+ <1387533742-18018-10-git-send-email-dyoung@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <52B50BBB.9070806@zytor.com>
+In-Reply-To: <1387533742-18018-10-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,36 +25,158 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kees Cook <keescook@chromium.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
 
-On Fri, Dec 20, 2013 at 07:32:11PM -0800, H. Peter Anvin wrote:
-> thing, as currently built there are megabytes of zeroes in it for no
-> good reason.
-
-Then remove them ;) AFAICS, that's x86 only? What a waste!
-
-What's the reason? ALIGN_RODATA? Even if so, vmlinux.gz might be
-a fair trade-off.
-
+On Fri, 20 Dec, at 06:02:19PM, Dave Young wrote:
+> Add a new setup_data type SETUP_EFI for kexec use.
+> Passing the saved fw_vendor, runtime, config tables and efi runtime mappings.
 > 
-> Even if you don't need the entry code, the additional metadata is
-> meaningful.
+> When entering virtual mode, directly mapping the efi runtime ragions which
+> we passed in previously. And skip the step to call SetVirtualAddressMap.
+> 
+> Specially for HP z420 workstation we need save the smbios physical address.
+> The kernel boot sequence proceeds in the following order.  Step 2
+> requires efi.smbios to be the physical address.  However, I found that on
+> HP z420 EFI system table has a virtual address of SMBIOS in step 1.  Hence,
+> we need set it back to the physical address with the smbios in
+> efi_setup_data.  (When it is still the physical address, it simply sets
+> the same value.)
+> 
+> 1. efi_init() - Set efi.smbios from EFI system table
+> 2. dmi_scan_machine() - Temporary map efi.smbios to access SMBIOS table
+> 3. efi_enter_virtual_mode() - Map EFI ranges
+> 
+> Tested on ovmf+qemu, lenovo thinkpad, a dell laptop and an
+> HP z420 workstation.
+> 
+> v2: refresh based on previous patch changes, code cleanup.
+> v3: use ioremap instead of phys_to_virt for efi_setup
+> v5: improve some code structure per comments from Matt
+>     Boris: improve code structure, spell fix, etc.
+>     Improve changelog from Toshi.
+>     change the variable efi_setup to the physical address of efi setup_data
+>     instead of the ioremapped virt address
+> v6: Boris: Documentation fixes
+>            move parse_efi_setup to efi_$(BITS).c
+>            simplify parse_efi_setup logic
+>     Matt: check return value of efi_reuse_config
+> v7: cleanup efi_map_regions and efi_map_regions_fixed
+>     remove useless return at the end of efi_enter_virtual_mode
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  arch/x86/include/asm/efi.h            |  13 +++
+>  arch/x86/include/uapi/asm/bootparam.h |   1 +
+>  arch/x86/kernel/setup.c               |   3 +
+>  arch/x86/platform/efi/efi.c           | 159 ++++++++++++++++++++++++++++------
+>  arch/x86/platform/efi/efi_32.c        |   1 +
+>  arch/x86/platform/efi/efi_64.c        |   6 ++
+>  6 files changed, 158 insertions(+), 25 deletions(-)
 
-Any idea, or maybe even a list of features that would get lost?
-What are the blossoms of this organically grown structure?
-Many architectures, even embedded x86, boot happily any ELF kernel.
+[...]
 
-I'm with Eric here: this is not about _not_ supporting bzImage, it's
-about _do_ support ELF first. As I wrote: if the existing signature 
-is, let's say, impractical, and a new one is needed anyway, why not 
-(detached-) sign vmlinux or vmlinux.gz?
+>  		efi_systab.hdr = systab64->hdr;
+> -		efi_systab.fw_vendor = systab64->fw_vendor;
+> -		tmp |= systab64->fw_vendor;
+> +
+> +		efi_systab.fw_vendor = data ? (unsigned long)data->fw_vendor :
+> +					      systab64->fw_vendor;
+> +		tmp |= efi_systab.fw_vendor;
 
-Every architecture can benefit from a secure boot or secure kexec
-that is done right.
+[... snip ...]
 
-	Torsten
+> @@ -519,15 +530,20 @@ static int __init efi_systab_init(void *phys)
+>  		tmp |= systab64->stderr_handle;
+>  		efi_systab.stderr = systab64->stderr;
+>  		tmp |= systab64->stderr;
+> -		efi_systab.runtime = (void *)(unsigned long)systab64->runtime;
+> -		tmp |= systab64->runtime;
+> +		efi_systab.runtime = data ?
+> +				     (void *)(unsigned long)data->runtime :
+> +				     (void *)(unsigned long)systab64->runtime;
+> +		tmp |= (unsigned long)efi_systab.runtime;
+>  		efi_systab.boottime = (void *)(unsigned long)systab64->boottime;
+>  		tmp |= systab64->boottime;
+>  		efi_systab.nr_tables = systab64->nr_tables;
+> -		efi_systab.tables = systab64->tables;
+> -		tmp |= systab64->tables;
+> +		efi_systab.tables = data ? (unsigned long)data->tables :
+> +					   systab64->tables;
+> +		tmp |= efi_systab.tables;
+>  
+>  		early_memunmap(systab64, sizeof(*systab64));
+> +		if (data)
+> +			early_memunmap(data, sizeof(*data));
+>  #ifdef CONFIG_X86_32
+>  		if (tmp >> 32) {
+>  			pr_err("EFI data located above 4GB, disabling EFI.\n");
 
+This isn't correct, and means we now won't trigger this pr_err() if
+booting a CONFIG_X86_32 kernel with EFI_64BIT and where the ->fw_vendor,
+->runtime or ->tables pointer is above 4GB - you've mixed up systab and
+systab64. I've fixed this up like so when applying this patch,
+
+---
+
+@@ -494,18 +495,27 @@ static int __init efi_systab_init(void *phys)
+ {
+ 	if (efi_enabled(EFI_64BIT)) {
+ 		efi_system_table_64_t *systab64;
++		struct efi_setup_data *data = NULL;
+ 		u64 tmp = 0;
+ 
++		if (efi_setup) {
++			data = early_memremap(efi_setup, sizeof(*data));
++			if (!data)
++				return -ENOMEM;
++		}
+ 		systab64 = early_ioremap((unsigned long)phys,
+ 					 sizeof(*systab64));
+ 		if (systab64 == NULL) {
+ 			pr_err("Couldn't map the system table!\n");
++			if (data)
++				early_iounmap(data, sizeof(*data));
+ 			return -ENOMEM;
+ 		}
+ 
+ 		efi_systab.hdr = systab64->hdr;
+-		efi_systab.fw_vendor = systab64->fw_vendor;
+-		tmp |= systab64->fw_vendor;
++		efi_systab.fw_vendor = data ? (unsigned long)data->fw_vendor :
++					      systab64->fw_vendor;
++		tmp |= data ? data->fw_vendor : systab64->fw_vendor;
+ 		efi_systab.fw_revision = systab64->fw_revision;
+ 		efi_systab.con_in_handle = systab64->con_in_handle;
+ 		tmp |= systab64->con_in_handle;
+@@ -519,15 +529,20 @@ static int __init efi_systab_init(void *phys)
+ 		tmp |= systab64->stderr_handle;
+ 		efi_systab.stderr = systab64->stderr;
+ 		tmp |= systab64->stderr;
+-		efi_systab.runtime = (void *)(unsigned long)systab64->runtime;
+-		tmp |= systab64->runtime;
++		efi_systab.runtime = data ?
++				     (void *)(unsigned long)data->runtime :
++				     (void *)(unsigned long)systab64->runtime;
++		tmp |= data ? data->runtime : systab64->runtime;
+ 		efi_systab.boottime = (void *)(unsigned long)systab64->boottime;
+ 		tmp |= systab64->boottime;
+ 		efi_systab.nr_tables = systab64->nr_tables;
+-		efi_systab.tables = systab64->tables;
+-		tmp |= systab64->tables;
++		efi_systab.tables = data ? (unsigned long)data->tables :
++					   systab64->tables;
++		tmp |= data ? data->tables : systab64->tables;
+ 
+ 		early_iounmap(systab64, sizeof(*systab64));
++		if (data)
++			early_iounmap(data, sizeof(*data));
+ #ifdef CONFIG_X86_32
+ 		if (tmp >> 32) {
+ 			pr_err("EFI data located above 4GB, disabling EFI.\n");
+
+-- 
+Matt Fleming, Intel Open Source Technology Center
 
 _______________________________________________
 kexec mailing list
