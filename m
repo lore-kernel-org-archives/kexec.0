@@ -1,22 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VvfDD-0000GE-By
- for kexec@lists.infradead.org; Wed, 25 Dec 2013 03:32:48 +0000
-Date: Wed, 25 Dec 2013 11:32:05 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v7 09/12] efi: passing kexec necessary efi data via
- setup_data
-Message-ID: <20131225033205.GC6333@dhcp-16-126.nay.redhat.com>
-References: <1387533742-18018-1-git-send-email-dyoung@redhat.com>
- <1387533742-18018-10-git-send-email-dyoung@redhat.com>
- <20131221160416.GD29501@console-pimps.org>
- <20131223020958.GB3760@dhcp-16-126.nay.redhat.com>
- <20131223080741.GB28919@console-pimps.org>
- <20131225031259.GB6333@dhcp-16-126.nay.redhat.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VvyKV-0001Vl-OA
+ for kexec@lists.infradead.org; Wed, 25 Dec 2013 23:57:37 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 9FB5D3EE1CA
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 90EFC45DE55
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 7A4FE45DE5A
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 527A61DB8047
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id E11421DB804A
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:04 +0900 (JST)
+Message-ID: <52BB709D.6050205@jp.fujitsu.com>
+Date: Thu, 26 Dec 2013 08:56:13 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20131225031259.GB6333@dhcp-16-126.nay.redhat.com>
+Subject: Re: [PATCH] makedumpfile: memset() in cyclic bitmap initialization
+ introduce segment fault
+References: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>
+ <52B39878.3030403@jp.fujitsu.com>
+ <20131220021750.GA7962@dhcp-16-126.nay.redhat.com>
+ <52B404A4.3000702@jp.fujitsu.com>
+ <20131220090034.GA16537@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20131220090034.GA16537@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,75 +38,111 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matt Fleming <matt@console-pimps.org>
-Cc: mjg59@srcf.ucam.org, msalter@redhat.com, linux-efi@vger.kernel.org, toshi.kani@hp.com, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, leif.lindholm@linaro.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, mingo@kernel.org, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, WANG Chao <chaowang@redhat.com>
 
-On 12/25/13 at 11:12am, Dave Young wrote:
-> On 12/23/13 at 08:07am, Matt Fleming wrote:
-> > On Mon, 23 Dec, at 10:09:58AM, Dave Young wrote:
-> > > On 12/21/13 at 04:06pm, Matt Fleming wrote:
-> > > > On Fri, 20 Dec, at 06:02:19PM, Dave Young wrote:
-> > > > > @@ -133,6 +133,19 @@ extern void efi_sync_low_kernel_mappings(void);
-> > > > >  extern void efi_setup_page_tables(void);
-> > > > >  extern void __init old_map_region(efi_memory_desc_t *md);
-> > > > >  
-> > > > > +struct efi_setup_data {
-> > > > > +	u64 fw_vendor;
-> > > > > +	u64 runtime;
-> > > > > +	u64 tables;
-> > > > > +	u64 smbios;
-> > > > > +	u64 reserved[8];
-> > > > > +	efi_memory_desc_t map[0];
-> > > > > +};
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > +static void get_nr_runtime_map(void)
-> > > > > +{
-> > > > > +	if (!efi_setup)
-> > > > > +		return;
-> > > > > +
-> > > > > +	nr_efi_runtime_map = (efi_data_len - sizeof(struct efi_setup_data)) /
-> > > > > +			     sizeof(efi_memory_desc_t);
-> > > > > +}
-> > > > 
-> > > > Do we actually need the 'map' entry in efi_setup_data now that you're
-> > > > passing it via efi_info (which is much better approach!)? Also, we don't
-> > > > need the global nr_efi_runtime_map or efi_runtime_map variables now,
-> > > > right?
-> > > 
-> > > The map is still necessary because we need store the map somewhere and pass
-> > > the physicall address to kexec kernel. Passing them in setup_data is the
-> > > only better way currently...
-> > > 
-> > > In efi_info there's only an entry for the map physical address, the original
-> > > map area is not valid any more.
-> > 
-> > Where do you dereference efi_setup_data.map* in the kexec kernel?
-> 
-> The field itself is not dereferenced in kernel but it's still used in userspace
-> code for collecting and saving runtime maps. Since I still append the map at the
-> end of efi_setup_data so I think keep the map[0] is ok. What's your opinion?
+(2013/12/20 18:00), Dave Young wrote:
+> On 12/20/13 at 05:49pm, HATAYAMA Daisuke wrote:
+>> (2013/12/20 11:17), Dave Young wrote:
+>>>> Also, I'm interested in the memory map passed to from EFI in that
+>>>>
+>>>>> cat /proc/iomem:
+>>>>> 00000000-00000fff : reserved
+>>>>> 00001000-0009ffff : System RAM
+>>>>> 000a0000-000bffff : PCI Bus 0000:00
+>>>>> 000f0000-000fffff : System ROM
+>>>>> 00100000-3d162017 : System RAM
+>>>>>    01000000-015cab9b : Kernel code
+>>>>>    015cab9c-019beb3f : Kernel data
+>>>>>    01b4f000-01da9fff : Kernel bss
+>>>>>    30000000-37ffffff : Crash kernel
+>>>>> 3d162018-3d171e57 : System RAM
+>>>>> 3d171e58-3d172017 : System RAM
+>>>>> 3d172018-3d17ae57 : System RAM
+>>>>> 3d17ae58-3dc10fff : System RAM
+>>>>
+>>>> this part is consecutive but somehow is divided into 4 entries.
+>>>> You called your environment as ``EFI virtual machine'', could you tell
+>>>> me precisely what it mean? qemu/KVM or VMware guest system? I do want
+>>>> to understand how this kind of memory map was created. I think this
+>>>> kind of memory mapping is odd and I guess this is caused by the fact
+>>>> that the system is a virtual environment.
+>>>
+>>> This is not specific to EFI machine, it's the reserved setup_data regions
+>>> They happened to be continous but they do not have to be continuous.
+>>>
+>>
+>> Thanks for pointing out that. I've just read Documentation/x86/boot.txt
+>> and parse_setup_data().
+>>
+>> But I don't understand well why these regions are divided as these.
+>> I guess kernel divides the System RAM this way and the memory map first
+>> passed to by EFI is all page aligned, right?
+>
+> setup_data are passed as a link list by boot loader, each node is a block
+> of memory, there could be many different setup_data type.
+>
+>>
+>> Also, looking at parse_setup_data(), currently handled data in setup_data
+>> interface is extended e820 entries and dtb case only.
+>>
+>>                  switch (data_type) {
+>>                  case SETUP_E820_EXT:
+>>                          parse_e820_ext(pa_data, data_len);
+>>                          break;
+>>                  case SETUP_DTB:
+>>                          add_dtb(pa_data);
+>>                          break;
+>>                  default:
+>>                          break;
+>>                  }
+>>
+>> Is it right that this kind of memory map doesn't occur as long as either
+>> of information is passed to via setup_data? IOW, is this necessary
+>> information?
+>
+> If bootloader does not pass it, there will be no such mem ranges in /proc/iomem.
+>
+>>
+>>>>
+>>>> And for Vivek, this case is a concrete example of multiple RAM entries
+>>>> appearing in a single page I suspected in the mmap failure patch,
+>>>> although these entries are consecutive in physical address and can be
+>>>> represented by a single entry by merging them in a single entry. But
+>>>> then it seems to me that there could be more odd case that multiple
+>>>> RAM entries but not consecutive. I again think this should be addressed
+>>>> in the patch for the mmap failure issue. How do you think?
+>>>
+>>> They are different problems, the previous mmap bug is for cross page regions
+>>> with different page flags.
+>>>
+>>
+>> I understand that. What I think problem here is the case where multiple
+>> System RAM entries appear in a single page. In the above memory map, they
+>> are 3d171000, 3d172000 and 3d17a000. My fixing patch is to copy fractional
+>> pages in the 2nd kernel in order to make it possible to mmap without affecting
+>> non-System RAM area as much as possible, and then if there is this kind of
+>> System RAM entries, we need to use the same page in the 2nd kernel for
+>> different System RAM entries that shares the same page in the 1st kernel. This
+>> needs a little additional processing and we want to keep implementation as
+>> simple as possible as long as there's no such system in real world. However,
+>> I'm surprised to see the memory mapping above.
+>
+> These ranges are "system ram" of type E820_RESERVED_KERN, please see below:
+> arch/x86/kernel/setup.c: e820_reserve_setup_data()
+>
 
-Matt, if you want to remove the map[0] please fold below one line patch? I have no
-strong opinion.
+Thanks for explaining this. I was confused E820_RESERVED_KERN appeared in
+/proc/iomem as Reserved...
 
-Index: linux/arch/x86/include/asm/efi.h
-===================================================================
---- linux.orig/arch/x86/include/asm/efi.h
-+++ linux/arch/x86/include/asm/efi.h
-@@ -139,7 +139,6 @@ struct efi_setup_data {
- 	u64 tables;
- 	u64 smbios;
- 	u64 reserved[8];
--	efi_memory_desc_t map[0];
- };
- 
- extern u64 efi_setup;
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
