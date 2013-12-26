@@ -1,35 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VvyKV-0001Vl-OA
- for kexec@lists.infradead.org; Wed, 25 Dec 2013 23:57:37 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 9FB5D3EE1CA
- for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 90EFC45DE55
- for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 7A4FE45DE5A
- for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 527A61DB8047
- for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:05 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id E11421DB804A
- for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 08:57:04 +0900 (JST)
-Message-ID: <52BB709D.6050205@jp.fujitsu.com>
-Date: Thu, 26 Dec 2013 08:56:13 +0900
+ id 1VvyYU-0001Zn-M1
+ for kexec@lists.infradead.org; Thu, 26 Dec 2013 00:12:04 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id C508D3EE1C9
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 09:11:40 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id B0B0B45DEBA
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 09:11:40 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.nic.fujitsu.com [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9B05545DEB5
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 09:11:40 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 89BEBE38001
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 09:11:40 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 336C51DB803C
+ for <kexec@lists.infradead.org>; Thu, 26 Dec 2013 09:11:40 +0900 (JST)
+Message-ID: <52BB7401.4050500@jp.fujitsu.com>
+Date: Thu, 26 Dec 2013 09:10:41 +0900
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH] makedumpfile: memset() in cyclic bitmap initialization
  introduce segment fault
-References: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>
- <52B39878.3030403@jp.fujitsu.com>
- <20131220021750.GA7962@dhcp-16-126.nay.redhat.com>
- <52B404A4.3000702@jp.fujitsu.com>
- <20131220090034.GA16537@dhcp-16-126.nay.redhat.com>
-In-Reply-To: <20131220090034.GA16537@dhcp-16-126.nay.redhat.com>
+References: <20131218133402.GA23617@dhcp-17-89.nay.redhat.com>	
+ <52B39878.3030403@jp.fujitsu.com> <20131220141321.GA27063@redhat.com>
+ <1387544282.17054.80.camel@lisamlinux.fc.hp.com>
+In-Reply-To: <1387544282.17054.80.camel@lisamlinux.fc.hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,102 +41,316 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, WANG Chao <chaowang@redhat.com>
+To: Lisa Mitchell <lisa.mitchell@hp.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-(2013/12/20 18:00), Dave Young wrote:
-> On 12/20/13 at 05:49pm, HATAYAMA Daisuke wrote:
->> (2013/12/20 11:17), Dave Young wrote:
->>>> Also, I'm interested in the memory map passed to from EFI in that
->>>>
->>>>> cat /proc/iomem:
->>>>> 00000000-00000fff : reserved
->>>>> 00001000-0009ffff : System RAM
->>>>> 000a0000-000bffff : PCI Bus 0000:00
->>>>> 000f0000-000fffff : System ROM
->>>>> 00100000-3d162017 : System RAM
->>>>>    01000000-015cab9b : Kernel code
->>>>>    015cab9c-019beb3f : Kernel data
->>>>>    01b4f000-01da9fff : Kernel bss
->>>>>    30000000-37ffffff : Crash kernel
->>>>> 3d162018-3d171e57 : System RAM
->>>>> 3d171e58-3d172017 : System RAM
->>>>> 3d172018-3d17ae57 : System RAM
->>>>> 3d17ae58-3dc10fff : System RAM
->>>>
->>>> this part is consecutive but somehow is divided into 4 entries.
->>>> You called your environment as ``EFI virtual machine'', could you tell
->>>> me precisely what it mean? qemu/KVM or VMware guest system? I do want
->>>> to understand how this kind of memory map was created. I think this
->>>> kind of memory mapping is odd and I guess this is caused by the fact
->>>> that the system is a virtual environment.
+(2013/12/20 21:58), Lisa Mitchell wrote:
+> On Fri, 2013-12-20 at 14:13 +0000, Vivek Goyal wrote:
+>> On Fri, Dec 20, 2013 at 10:08:08AM +0900, HATAYAMA Daisuke wrote:
+>>
+>> [..]
 >>>
->>> This is not specific to EFI machine, it's the reserved setup_data regions
->>> They happened to be continous but they do not have to be continuous.
+>>>> cat /proc/iomem:
+>>>> 00000000-00000fff : reserved
+>>>> 00001000-0009ffff : System RAM
+>>>> 000a0000-000bffff : PCI Bus 0000:00
+>>>> 000f0000-000fffff : System ROM
+>>>> 00100000-3d162017 : System RAM
+>>>>    01000000-015cab9b : Kernel code
+>>>>    015cab9c-019beb3f : Kernel data
+>>>>    01b4f000-01da9fff : Kernel bss
+>>>>    30000000-37ffffff : Crash kernel
+>>>> 3d162018-3d171e57 : System RAM
+>>>> 3d171e58-3d172017 : System RAM
+>>>> 3d172018-3d17ae57 : System RAM
+>>>> 3d17ae58-3dc10fff : System RAM
 >>>
->>
->> Thanks for pointing out that. I've just read Documentation/x86/boot.txt
->> and parse_setup_data().
->>
->> But I don't understand well why these regions are divided as these.
->> I guess kernel divides the System RAM this way and the memory map first
->> passed to by EFI is all page aligned, right?
->
-> setup_data are passed as a link list by boot loader, each node is a block
-> of memory, there could be many different setup_data type.
->
->>
->> Also, looking at parse_setup_data(), currently handled data in setup_data
->> interface is extended e820 entries and dtb case only.
->>
->>                  switch (data_type) {
->>                  case SETUP_E820_EXT:
->>                          parse_e820_ext(pa_data, data_len);
->>                          break;
->>                  case SETUP_DTB:
->>                          add_dtb(pa_data);
->>                          break;
->>                  default:
->>                          break;
->>                  }
->>
->> Is it right that this kind of memory map doesn't occur as long as either
->> of information is passed to via setup_data? IOW, is this necessary
->> information?
->
-> If bootloader does not pass it, there will be no such mem ranges in /proc/iomem.
->
->>
->>>>
->>>> And for Vivek, this case is a concrete example of multiple RAM entries
->>>> appearing in a single page I suspected in the mmap failure patch,
->>>> although these entries are consecutive in physical address and can be
->>>> represented by a single entry by merging them in a single entry. But
->>>> then it seems to me that there could be more odd case that multiple
->>>> RAM entries but not consecutive. I again think this should be addressed
->>>> in the patch for the mmap failure issue. How do you think?
+>>> this part is consecutive but somehow is divided into 4 entries.
+>>> You called your environment as ``EFI virtual machine'', could you tell
+>>> me precisely what it mean? qemu/KVM or VMware guest system? I do want
+>>> to understand how this kind of memory map was created. I think this
+>>> kind of memory mapping is odd and I guess this is caused by the fact
+>>> that the system is a virtual environment.
 >>>
->>> They are different problems, the previous mmap bug is for cross page regions
->>> with different page flags.
->>>
+>>> And for Vivek, this case is a concrete example of multiple RAM entries
+>>> appearing in a single page I suspected in the mmap failure patch,
+>>> although these entries are consecutive in physical address and can be
+>>> represented by a single entry by merging them in a single entry. But
+>>> then it seems to me that there could be more odd case that multiple
+>>> RAM entries but not consecutive. I again think this should be addressed
+>>> in the patch for the mmap failure issue. How do you think?
 >>
->> I understand that. What I think problem here is the case where multiple
->> System RAM entries appear in a single page. In the above memory map, they
->> are 3d171000, 3d172000 and 3d17a000. My fixing patch is to copy fractional
->> pages in the 2nd kernel in order to make it possible to mmap without affecting
->> non-System RAM area as much as possible, and then if there is this kind of
->> System RAM entries, we need to use the same page in the 2nd kernel for
->> different System RAM entries that shares the same page in the 1st kernel. This
->> needs a little additional processing and we want to keep implementation as
->> simple as possible as long as there's no such system in real world. However,
->> I'm surprised to see the memory mapping above.
+>> Hi Hatayama,
+>>
+>> This indeed looks very odd. See if a very small number of systems have it,
+>> the only thing we will do is allocate extra page in second kernel for
+>> a memory range. It will not make mmap() fail. So it is just a matter of
+>> optimization.
+>>
+>> Given the fact I have not seen many systems with this anomaly, I am not
+>> too worried about it even if you don't this optimization in your patch
+>> series. We can always take care of it later if need be.
+>>
+>> At the same time, if you feel strongly about it and want to fix it in
+>> same patch series, I don't mind.
+>>
+>> Thanks
+>> Vivek
 >
-> These ranges are "system ram" of type E820_RESERVED_KERN, please see below:
-> arch/x86/kernel/setup.c: e820_reserve_setup_data()
+> Did I get this same segmentation fault?   It happened a few times on a
+> 3.10 based kernel on a large EFI based system , but then hasn't repeated
+> in further testing on this machine. This machine had no virtualization
+> active. Here is partial console log of dump process:
+>
+> =============================================================================
+>
+> kdump: dump target is /dev/mapper/mpathc3
+> kdump: saving to /sysroot//var/crash/127.0.0.1-2013.11.11-09:58:20/
+> kdump: saving vmcore-dmesg.txt
+> kdump: saving vmcore-dmesg.txt complete
+> kdump: saving vmcore
+> [   46.017827] scsi 20:0:0:0: Direct-Access              Geek Squad
+> 8192 PQ: 0 ANSI: 0 CCS
+> [   46.027849] scsi 20:0:0:0: alua: supports implicit and explicit TPGS
+> [   46.035641] scsi 20:0:0:0: alua: No target port descriptors found
+> [   46.042491] scsi 20:0:0:0: alua: not attached
+> [   46.048152] sd 20:0:0:0: [sdak] 15663104 512-byte logical blocks:
+> (8.01 GB/7.46 GiB)
+> [   46.057892] sd 20:0:0:0: [sdak] Write Protect is off
+> [   46.064516] sd 20:0:0:0: [sdak] No Caching mode page present
+> [   46.070877] sd 20:0:0:0: [sdak] Assuming drive cache: write through
+> [   46.081639] sd 20:0:0:0: [sdak] No Caching mode page present
+> [   46.088035] sd 20:0:0:0: [sdak] Assuming drive cache: write through
+> [   46.107070]  sdak: sdak1 sdak2 sdak3
+> [   46.114636] sd 20:0:0:0: [sdak] No Caching mode page present
+> [   46.121021] sd 20:0:0:0: [sdak] Assuming drive cache: write through
+> [   46.128060] sd 20:0:0:0: [sdak] Attached SCSI removable disk
+>
+> Excluding unnecessary pages        : [  0 %]
+> Excluding unnecessary
+> sary pages        : [  0 %]
+> Excluding unnecessary pages        : [  0
+> %]
+> Excluding unnecessary pages        : [  8 %]
+> Excluding unnecessary
+> pages        : [ 15 %]
+> Excluding unnecessary pages        : [ 21 %] [
+> 53.800116] usb 4-1.6: device descriptor read/64, error -110
+>
+> Excluding unnecessary pages        : [ 28 %]
+> Excluding unnecessary
+> pages        : [ 34 %]
+> Excluding unnecessary pages        : [ 41 %]
+> Excluding unnecessary pages        : [100 %] [   59.174433] scsi
+> 18:0:0:0: Enclosure         HP       P2000 G3 FC      T240 PQ: 0 ANSI: 5
+> [   59.183866] scsi 18:0:0:0: alua: supports implicit TPGS
+> [   59.190190] scsi 18:0:0:0: alua: port group 01 rel port 05
+> [   59.197694] scsi 18:0:0:0: alua: transition timeout set to 60 seconds
+>
+> ......
+>
+> [   76.968265] makedumpfile[1291]: segfault at 7f5ac0c39010 ip
+> 00000000004297fd sp 00007fff691683a0 error 4 in makedumpfile[400000
+> +46000]
+> //lib/dracut/hooks/pre-pivot/9999-kdump.sh: line 88:  1291 Segmentation
+> fault   [   76.996926] sd 18:0:1:51: [sdao] Synchronizing SCSI cache
+>     $CORE_COLLECT[   77.003416] sd 18:0:1:50: [sdan] Synchronizing SCSI
+> cache
+> OR /proc/vmcore [   77.010991] sd 18:0:0:51: [sdam] Synchronizing SCSI
+> cache
+> $_mp/$KDUMP_PATH[   77.018590] sd 18:0:0:50: [sdal] Synchronizing SCSI
+> cache
+> /$HOST_IP-$DATED[   77.026611] sd 14:0:1:71: [sdaj] Synchronizing SCSI
+> cache
+> IR/vmcore-incomp[   77.033849] sd 14:0:1:70: [sdai] Synchronizing SCSI
+> cache
+> lete
+> kdump: sav[   77.041467] sd 14:0:0:71: [sdah] Synchronizing SCSI cache
+> ing vmcore faile[   77.049146] sd 14:0:0:70: [sdag] Synchronizing SCSI
+> cached
+> Rebooting.
+>
+>
+> =======================================================================
+>
+> I do not have a current /proc/iomem output to go with the above.
+> However this dump was nr_cpus=8 during crashkernel boot, with a 3.10
+> kernel with Daisuke's version 4 of Daisuke Hatayama's patch to allow
+> multi-cpu crashkernel boot.
+>
+> I have the efi memory map displayed as Linux booted, before this dump if
+> that helps
+>
+> 0.000000] efi:  ACPI=0x73ffe000  ACPI 2.0=0x73ffe014  SMBIOS=0x72ef8000
+> [    0.000000] efi: mem00: type=3, attr=0xf,
+> range=[0x0000000000000000-0x0000000000001000) (0MB)
+> [    0.000000] efi: mem01: type=2, attr=0xf,
+> range=[0x0000000000001000-0x0000000000004000) (0MB)
+> [    0.000000] efi: mem02: type=7, attr=0xf,
+> range=[0x0000000000004000-0x000000000008e000) (0MB)
+> [    0.000000] efi: mem03: type=0, attr=0xf,
+> range=[0x000000000008e000-0x0000000000090000) (0MB)
+> [    0.000000] efi: mem04: type=7, attr=0xf,
+> range=[0x0000000000090000-0x00000000000a0000) (0MB)
+> [    0.000000] efi: mem05: type=7, attr=0xf,
+> range=[0x0000000000100000-0x0000000001000000) (15MB)
+> [    0.000000] efi: mem06: type=2, attr=0xf,
+> range=[0x0000000001000000-0x0000000002268000) (18MB)
+> [    0.000000] efi: mem07: type=7, attr=0xf,
+> range=[0x0000000002268000-0x0000000010000000) (221MB)
+> [    0.000000] efi: mem08: type=3, attr=0xf,
+> range=[0x0000000010000000-0x0000000010066000) (0MB)
+> [    0.000000] efi: mem09: type=7, attr=0xf,
+> range=[0x0000000010066000-0x0000000029dfb000) (413MB)
+> [    0.000000] efi: mem10: type=2, attr=0xf,
+> range=[0x0000000029dfb000-0x0000000039ba0000) (253MB)
+> [    0.000000] efi: mem11: type=4, attr=0xf,
+> range=[0x0000000039ba0000-0x000000003e179000) (69MB)
+> [    0.000000] efi: mem12: type=3, attr=0xf,
+> range=[0x000000003e179000-0x000000003e55c000) (3MB)
+> [    0.000000] efi: mem13: type=4, attr=0xf,
+> range=[0x000000003e55c000-0x000000003e567000) (0MB)
+> [    0.000000] efi: mem14: type=3, attr=0xf,
+> range=[0x000000003e567000-0x000000003e6e9000) (1MB)
+> [    0.000000] efi: mem15: type=4, attr=0xf,
+> range=[0x000000003e6e9000-0x000000003e6f4000) (0MB)
+> [    0.000000] efi: mem16: type=3, attr=0xf,
+> range=[0x000000003e6f4000-0x000000003e88f000) (1MB)
+> [    0.000000] efi: mem17: type=4, attr=0xf,
+> range=[0x000000003e88f000-0x000000003e8f4000) (0MB)
+> [    0.000000] efi: mem18: type=3, attr=0xf,
+> range=[0x000000003e8f4000-0x000000003e9cf000) (0MB)
+> [    0.000000] efi: mem19: type=4, attr=0xf,
+> range=[0x000000003e9cf000-0x000000003e9d0000) (0MB)
+> [    0.000000] efi: mem20: type=3, attr=0xf,
+> range=[0x000000003e9d0000-0x000000003ee9d000) (4MB)
+> [    0.000000] efi: mem21: type=4, attr=0xf,
+> range=[0x000000003ee9d000-0x000000003ef9b000) (0MB)
+> [    0.000000] efi: mem22: type=0, attr=0xf,
+> range=[0x000000003ef9b000-0x000000003efab000) (0MB)
+> [    0.000000] efi: mem23: type=4, attr=0xf,
+> range=[0x000000003efab000-0x000000006ba1b000) (714MB)
+> [    0.000000] efi: mem24: type=10, attr=0xf,
+> range=[0x000000006ba1b000-0x000000006ca1b000) (16MB)
+> [    0.000000] efi: mem25: type=4, attr=0xf,
+> range=[0x000000006ca1b000-0x00000000709ff000) (63MB)
+> [    0.000000] efi: mem26: type=7, attr=0xf,
+> range=[0x00000000709ff000-0x0000000070a10000) (0MB)
+> [    0.000000] efi: mem27: type=2, attr=0xf,
+> range=[0x0000000070a10000-0x0000000070c34000) (2MB)
+> [    0.000000] efi: mem28: type=7, attr=0xf,
+> range=[0x0000000070c34000-0x0000000070c35000) (0MB)
+> [    0.000000] efi: mem29: type=2, attr=0xf,
+> range=[0x0000000070c35000-0x0000000070dff000) (1MB)
+> [    0.000000] efi: mem30: type=7, attr=0xf,
+> range=[0x0000000070dff000-0x0000000070fa9000) (1MB)
+> [    0.000000] efi: mem31: type=1, attr=0xf,
+> range=[0x0000000070fa9000-0x00000000711ff000) (2MB)
+> [    0.000000] efi: mem32: type=7, attr=0xf,
+> range=[0x00000000711ff000-0x000000007120e000) (0MB)
+> [    0.000000] efi: mem33: type=3, attr=0xf,
+> range=[0x000000007120e000-0x00000000721ff000) (15MB)
+> [    0.000000] efi: mem34: type=6, attr=0x800000000000000f,
+> range=[0x00000000721ff000-0x00000000725ff000) (4MB)
+> [    0.000000] efi: mem35: type=5, attr=0x800000000000000f,
+> range=[0x00000000725ff000-0x0000000072dff000) (8MB)
+> [    0.000000] efi: mem36: type=0, attr=0xf,
+> range=[0x0000000072dff000-0x0000000072eff000) (1MB)
+> [    0.000000] efi: mem37: type=10, attr=0xf,
+> range=[0x0000000072eff000-0x0000000073eff000) (16MB)
+> [    0.000000] efi: mem38: type=9, attr=0xf,
+> range=[0x0000000073eff000-0x0000000073fff000) (1MB)
+> [    0.000000] efi: mem39: type=4, attr=0xf,
+> range=[0x0000000073fff000-0x000000007c000000) (128MB)
+> [    0.000000] efi: mem40: type=7, attr=0xf,
+> range=[0x0000000100000000-0x0000001080000000) (63488MB)
+> [    0.000000] efi: mem41: type=7, attr=0xf,
+> range=[0x0000020000000000-0x0000021000000000) (65536MB)
+> [    0.000000] efi: mem42: type=7, attr=0xf,
+> range=[0x0000038000000000-0x0000039000000000) (65536MB)
+> [    0.000000] efi: mem43: type=7, attr=0xf,
+> range=[0x0000050000000000-0x0000051000000000) (65536MB)
+> [    0.000000] efi: mem44: type=7, attr=0xf,
+> range=[0x0000068000000000-0x0000069000000000) (65536MB)
+> [    0.000000] efi: mem45: type=7, attr=0xf,
+> range=[0x0000080000000000-0x0000081000000000) (65536MB)
+> [    0.000000] efi: mem46: type=7, attr=0xf,
+> range=[0x0000098000000000-0x0000099000000000) (65536MB)
+> [    0.000000] efi: mem47: type=7, attr=0xf,
+> range=[0x00000b0000000000-0x00000b1000000000) (65536MB)
+> [    0.000000] efi: mem48: type=7, attr=0xf,
+> range=[0x00000c8000000000-0x00000c9000000000) (65536MB)
+> [    0.000000] efi: mem49: type=7, attr=0xf,
+> range=[0x00000e0000000000-0x00000e1000000000) (65536MB)
+> [    0.000000] efi: mem50: type=7, attr=0xf,
+> range=[0x00000f8000000000-0x00000f9000000000) (65536MB)
+> [    0.000000] efi: mem51: type=7, attr=0xf,
+> range=[0x0000110000000000-0x0000111000000000) (65536MB)
+> [    0.000000] efi: mem52: type=7, attr=0xf,
+> range=[0x0000128000000000-0x0000129000000000) (65536MB)
+> [    0.000000] efi: mem53: type=7, attr=0xf,
+> range=[0x0000140000000000-0x0000141000000000) (65536MB)
+> [    0.000000] efi: mem54: type=7, attr=0xf,
+> range=[0x0000158000000000-0x0000159000000000) (65536MB)
+> [    0.000000] efi: mem55: type=7, attr=0xf,
+> range=[0x0000170000000000-0x0000171000000000) (65536MB)
+> [    0.000000] efi: mem56: type=11, attr=0x8000000000000001,
+> range=[0x0000000080000000-0x0000000090000000) (256MB)
+> [    0.000000] efi: mem57: type=11, attr=0x8000000000000001,
+> range=[0x00000000fed1c000-0x00000000fed20000) (0MB)
+> [    0.000000] efi: mem58: type=11, attr=0x8000000000000001,
+> range=[0x00000000ff000000-0x00000000ff200000) (2MB)
+> [    0.000000] efi: mem59: type=11, attr=0x8000000000000001,
+> range=[0x00003fdfe0000000-0x00003fdff4000000) (320MB)
+> [    0.000000] efi: mem60: type=11, attr=0x8000000000000001,
+> range=[0x00003fe060000000-0x00003fe074000000) (320MB)
+> [    0.000000] efi: mem61: type=11, attr=0x8000000000000001,
+> range=[0x00003fe0e0000000-0x00003fe0f4000000) (320MB)
+> [    0.000000] efi: mem62: type=11, attr=0x8000000000000001,
+> range=[0x00003fe160000000-0x00003fe174000000) (320MB)
+> [    0.000000] efi: mem63: type=11, attr=0x8000000000000001,
+> range=[0x00003fe1e0000000-0x00003fe1f4000000) (320MB)
+> [    0.000000] efi: mem64: type=11, attr=0x8000000000000001,
+> range=[0x00003fe260000000-0x00003fe274000000) (320MB)
+> [    0.000000] efi: mem65: type=11, attr=0x8000000000000001,
+> range=[0x00003fe2e0000000-0x00003fe2f4000000) (320MB)
+> [    0.000000] efi: mem66: type=11, attr=0x8000000000000001,
+> range=[0x00003fe360000000-0x00003fe374000000) (320MB)
+> [    0.000000] efi: mem67: type=11, attr=0x8000000000000001,
+> range=[0x00003fe3e0000000-0x00003fe3f4000000) (320MB)
+> [    0.000000] efi: mem68: type=11, attr=0x8000000000000001,
+> range=[0x00003fe460000000-0x00003fe474000000) (320MB)
+> [    0.000000] efi: mem69: type=11, attr=0x8000000000000001,
+> range=[0x00003fe4e0000000-0x00003fe4f4000000) (320MB)
+> [    0.000000] efi: mem70: type=11, attr=0x8000000000000001,
+> range=[0x00003fe560000000-0x00003fe574000000) (320MB)
+> [    0.000000] efi: mem71: type=11, attr=0x8000000000000001,
+> range=[0x00003fe5e0000000-0x00003fe5f4000000) (320MB)
+> [    0.000000] efi: mem72: type=11, attr=0x8000000000000001,
+> range=[0x00003fe660000000-0x00003fe674000000) (320MB)
+> [    0.000000] efi: mem73: type=11, attr=0x8000000000000001,
+> range=[0x00003fe6e0000000-0x00003fe6f4000000) (320MB)
+> [    0.000000] efi: mem74: type=11, attr=0x8000000000000001,
+> range=[0x00003fe760000000-0x00003fe774000000) (320MB)
+> [    0.000000] efi: mem75: type=11, attr=0x8000000000000001,
+> range=[0x00003fe7e0000000-0x00003fe7f4000000) (320MB)
 >
 
-Thanks for explaining this. I was confused E820_RESERVED_KERN appeared in
-/proc/iomem as Reserved...
+This is an original memory map passed to by UEFI. kexec tool
+uses /proc/iomem, which can be modified during boot by kernel.
+Although the above EFI memory map is all page-size aligned,
+the one in /proc/iomem might be not so.
+
+The best way to check the bug here is to see a full back trace
+of makedumpfile to see where and how it resulted in
+segmentation fault, just as Wang did.
+
+If you feel awkward to get process core dump of makedumpfile
+in the 2nd kernel, it's simpler to first get crash dump by
+cp command to keep shape of /proc/vmcore and then use makedumpfile
+to the generated crash dump. If makedumpfile crashes in the 2nd
+kernel, it also crashes in the 1st kernel, since the crash dump
+collected by cp command is the same as /proc/vmcore.
 
 -- 
 Thanks.
