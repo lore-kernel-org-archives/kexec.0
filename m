@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VxX6P-0001Wm-UX
- for kexec@lists.infradead.org; Mon, 30 Dec 2013 07:17:31 +0000
-Date: Mon, 30 Dec 2013 15:16:56 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v4 4/4 update] Passing efi related data via setup_data
-Message-ID: <20131230071656.GB3827@dhcp-16-126.nay.redhat.com>
-References: <1387533947-18210-1-git-send-email-dyoung@redhat.com>
- <1387533947-18210-5-git-send-email-dyoung@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1387533947-18210-5-git-send-email-dyoung@redhat.com>
+ id 1Vy8lV-0008JN-Ll
+ for kexec@lists.infradead.org; Tue, 31 Dec 2013 23:30:26 +0000
+Subject: [PATCH 0/2] makedumpfile: for large memories
+Message-Id: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+From: cpw <cpw@sgi.com>
+Date: Tue, 31 Dec 2013 17:30:01 -0600
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,302 +15,128 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, toshi.kani@hp.com, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
+Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
+
+From: Cliff Wickman <cpw@sgi.com>
+
+Gentlemen of kexec,
+
+I have been working on enabling kdump on some very large systems, and
+have found some solutions that I hope you will consider.
+
+The first issue is to work within the restricted size of crashkernel memory
+under 2.6.32-based kernels, such as sles11 and rhel6.
+
+The second issue is to reduce the very large size of a dump of a big memory
+system, even on an idle system.
+
+These are my propositions:
+
+Size of crashkernel memory
+  1) raw i/o for writing the dump
+  2) use root device for the bitmap file (not tmpfs)
+  3) raw i/o for reading/writing the bitmaps
+  
+Size of dump (and hence the duration of dumping)
+  4) exclude page structures for unused pages
 
 
-For supporting efi runtime, several efi physical addresses
-fw_vendor, runtime, config tables, smbios and the whole runtime
-mapping info need to be used in kexec kernel. Thus introduce
-setup_data struct for passing these data.
+1) Is quite easy.  The cache of pages needs to be aligned on a block
+  boundary and written in block multiples, as required by O_DIRECT files.
 
-collect the varialbes from /sys/firmware/efi/systab and
-/sys/firmware/efi/runtime-map
+  The use of raw i/o prevents the growing of the crash kernel's page
+  cache.
 
-Tested on qemu+ovmf, dell laptop, lenovo laptop and HP workstation.
+2) Is also quite easy.  My patch finds the path to the crash
+  kernel's root device by examining the dump pathname. Storing the bitmaps
+  to a file is otherwise not conserving memory, as they are being written
+  to tmpfs.
 
-v1->v2:
-HPA: use uint*_t instead of __uint*_t
-Simon: indention fix; fix a memory leak
-move offset change update to previous patch in setup header
-only passing setup_data when the bzImage support efi boot
-Vivek: export a value in bzImage probe so it can be used
-      to check if we should pass acpi_rsdp.
-coding style
+3) Raw i/o for the bitmaps, is accomplished by caching the
+  bitmap file in a similar way to that of the dump file.
 
-v2->v3:
-code cleanup
-bail out if efi mm desc_version != 1
-bhe: define macro for SETUP_EFI
-     break loop if find matched string in systab.
+  I find that the use of direct i/o is not significantly slower than
+  writing through the kernel's page cache.
 
-v3->v4:
-update memmap in efi_info to the saved runtime map
-So kernel side can iterate them as normal boot.
+4) The excluding of unused kernel page structures is very
+  important for a large memory system.  The kernel otherwise includes
+  3.67 million pages of page structures per TB of memory. By contrast
+  the rest of the kernel is only about 1 million pages.
 
-v4->v5:
-simplify function get_efi_value(), add error handling
-realloc error handling
-move map[0] out of efi_setup_data since memmap addr is set in efi_info
+Test results are below, for systems of 1TB, 2TB, 8.8TB and 16TB.
+(There are no 'old' numbers for 16TB as time and space requirements
+ made those effectively useless.)
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/arch/i386/x86-linux-setup.c | 218 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 215 insertions(+), 3 deletions(-)
+Run times were generally reduced 2-3x, and dump size reduced about 8x.
 
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 38bd9dd..5884f4d 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -36,6 +36,8 @@
- #include "x86-linux-setup.h"
- #include "../../kexec/kexec-syscall.h"
- 
-+#define SETUP_EFI	4
-+
- void init_linux_parameters(struct x86_linux_param_header *real_mode)
- {
- 	/* Fill in the values that are usually provided by the kernel. */
-@@ -480,11 +482,221 @@ void setup_subarch(struct x86_linux_param_header *real_mode)
- 	get_bootparam(&real_mode->hardware_subarch, offset, sizeof(uint32_t));
- }
- 
--static void setup_efi_info(struct x86_linux_param_header *real_mode)
-+struct efi_mem_descriptor {
-+	uint32_t type;
-+	uint32_t pad;
-+	uint64_t phys_addr;
-+	uint64_t virt_addr;
-+	uint64_t num_pages;
-+	uint64_t attribute;
-+};
-+
-+struct efi_setup_data {
-+	uint64_t fw_vendor;
-+	uint64_t runtime;
-+	uint64_t tables;
-+	uint64_t smbios;
-+	uint64_t reserved[8];
-+};
-+
-+struct setup_data {
-+	uint64_t next;
-+	uint32_t type;
-+	uint32_t len;
-+	uint8_t data[0];
-+} __attribute__((packed));
-+
-+static int get_efi_value(const char *filename,
-+			const char *pattern, uint64_t *val)
-+{
-+	FILE *fp;
-+	char line[1024], *s, *end;
-+
-+	fp = fopen(filename, "r");
-+	if (!fp)
-+		return 1;
-+
-+	while (fgets(line, sizeof(line), fp) != 0) {
-+		s = strstr(line, pattern);
-+		if (!s)
-+			continue;
-+		*val = strtoull(s + strlen(pattern), &end, 16);
-+		if (*val == ULLONG_MAX) {
-+			fclose(fp);
-+			return 2;
-+		}
-+		break;
-+	}
-+
-+	fclose(fp);
-+	return 0;
-+}
-+
-+static int get_efi_values(struct efi_setup_data *esd)
-+{
-+	int ret = 0;
-+
-+	ret = get_efi_value("/sys/firmware/efi/systab", "SMBIOS=0x",
-+			    &esd->smbios);
-+	ret |= get_efi_value("/sys/firmware/efi/fw_vendor", "0x",
-+			     &esd->fw_vendor);
-+	ret |= get_efi_value("/sys/firmware/efi/runtime", "0x",
-+			     &esd->runtime);
-+	ret |= get_efi_value("/sys/firmware/efi/config_table", "0x",
-+			     &esd->tables);
-+	return ret;
-+}
-+
-+static int get_efi_runtime_map(struct efi_mem_descriptor **map)
-+{
-+	DIR *dirp;
-+	struct dirent *entry;
-+	char filename[1024];
-+	struct efi_mem_descriptor md, *p = NULL;
-+	int nr_maps = 0;
-+
-+	dirp = opendir("/sys/firmware/efi/runtime-map");
-+	if (!dirp)
-+		return 0;
-+	while ((entry = readdir(dirp)) != NULL) {
-+		sprintf(filename,
-+			"/sys/firmware/efi/runtime-map/%s",
-+			(char *)entry->d_name);
-+		if (*entry->d_name == '.')
-+			continue;
-+		file_scanf(filename, "type", "0x%x", (unsigned int *)&md.type);
-+		file_scanf(filename, "phys_addr", "0x%llx",
-+			   (unsigned long long *)&md.phys_addr);
-+		file_scanf(filename, "virt_addr", "0x%llx",
-+			   (unsigned long long *)&md.virt_addr);
-+		file_scanf(filename, "num_pages", "0x%llx",
-+			   (unsigned long long *)&md.num_pages);
-+		file_scanf(filename, "attribute", "0x%llx",
-+			   (unsigned long long *)&md.attribute);
-+		p = realloc(p, (nr_maps + 1) * sizeof(md));
-+		if (!p)
-+			goto err_out;
-+
-+		*(p + nr_maps) = md;
-+		*map = p;
-+		nr_maps++;
-+	}
-+
-+	closedir(dirp);
-+	return nr_maps;
-+err_out:
-+	if (map)
-+		free(map);
-+	closedir(dirp);
-+	return 0;
-+}
-+
-+struct efi_info {
-+	uint32_t efi_loader_signature;
-+	uint32_t efi_systab;
-+	uint32_t efi_memdesc_size;
-+	uint32_t efi_memdesc_version;
-+	uint32_t efi_memmap;
-+	uint32_t efi_memmap_size;
-+	uint32_t efi_systab_hi;
-+	uint32_t efi_memmap_hi;
-+};
-+
-+/*
-+ * setup_efi_data will collect below data and pass them to 2nd kernel.
-+ * 1) SMBIOS, fw_vendor, runtime, config_table, they are passed via x86
-+ *    setup_data.
-+ * 2) runtime memory regions, set the memmap related fields in efi_info.
-+ */
-+static int setup_efi_data(struct kexec_info *info,
-+			  struct x86_linux_param_header *real_mode)
-+{
-+	int64_t setup_data_paddr, memmap_paddr;
-+	struct setup_data *sd;
-+	struct efi_setup_data *esd;
-+	struct efi_mem_descriptor *maps;
-+	int nr_maps, size, sdsize, ret = 0;
-+	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
-+
-+	ret = access("/sys/firmware/efi/systab", F_OK);
-+	if (ret < 0)
-+		goto out;
-+
-+	esd = malloc(sizeof(struct efi_setup_data));
-+	if (!esd) {
-+		ret = 1;
-+		goto out;
-+	}
-+	memset(esd, 0, sizeof(struct efi_setup_data));
-+	ret = get_efi_values(esd);
-+	if (ret)
-+		goto free_esd;
-+	nr_maps = get_efi_runtime_map(&maps);
-+	if (!nr_maps) {
-+		ret = 2;
-+		goto free_esd;
-+	}
-+	sd = malloc(sizeof(struct setup_data) + sizeof(*esd));
-+	if (!sd) {
-+		ret = 3;
-+		goto free_maps;
-+	}
-+
-+	memset(sd, 0, sizeof(struct setup_data) + sizeof(*esd));
-+	sd->next = 0;
-+	sd->type = SETUP_EFI;
-+	sd->len = sizeof(*esd);
-+	memcpy(sd->data, esd, sizeof(*esd));
-+	free(esd);
-+	sdsize = sd->len + sizeof(struct setup_data);
-+	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
-+					0x100000, ULONG_MAX, INT_MAX);
-+	real_mode->setup_data = setup_data_paddr;
-+
-+	size = nr_maps * sizeof(struct efi_mem_descriptor);
-+	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
-+					0x100000, ULONG_MAX, INT_MAX);
-+	ei->efi_memmap = memmap_paddr;
-+	ei->efi_memmap_size = size;
-+	ei->efi_memdesc_size = sizeof(struct efi_mem_descriptor);
-+
-+	return 0;
-+free_maps:
-+	free(maps);
-+free_esd:
-+	free(esd);
-+out:
-+	return ret;
-+}
-+
-+static int
-+get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
-+{
-+	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
-+
-+	return ei->efi_memdesc_version;
-+}
-+
-+static void setup_efi_info(struct kexec_info *info,
-+			   struct x86_linux_param_header *real_mode)
- {
-+	int ret, desc_version;
- 	off_t offset = offsetof(typeof(*real_mode), efi_info);
- 
--	get_bootparam(&real_mode->efi_info, offset, 32);
-+	ret = get_bootparam(&real_mode->efi_info, offset, 32);
-+	if (ret)
-+		return;
-+	desc_version = get_efi_mem_desc_version(real_mode);
-+	if (desc_version != 1) {
-+		fprintf(stderr,
-+			"efi memory descriptor version %d is not supported!\n",
-+			desc_version);
-+		memset(&real_mode->efi_info, 0, 32);
-+		return;
-+	}
-+	ret = setup_efi_data(info, real_mode);
-+	if (ret)
-+		memset(&real_mode->efi_info, 0, 32);
- }
- 
- void setup_linux_system_parameters(struct kexec_info *info,
-@@ -497,7 +709,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
- 	/* get subarch from running kernel */
- 	setup_subarch(real_mode);
- 	if (bzImage_support_efi_boot)
--		setup_efi_info(real_mode);
-+		setup_efi_info(info, real_mode);
- 	
- 	/* Default screen size */
- 	real_mode->orig_x = 0;
--- 
-1.8.3.1
+All timings were done using 512M of crashkernel memory.
 
+   System memory size
+   1TB                     unpatched    patched
+     OS: rhel6.4 (does a free pages pass)
+     page scan time           1.6min    1.6min
+     dump copy time           2.4min     .4min
+     total time               4.1min    2.0min
+     dump size                 3014M      364M
+
+     OS: rhel6.5
+     page scan time            .6min     .6min
+     dump copy time           2.3min     .5min
+     total time               2.9min    1.1min
+     dump size                 3011M      423M
+
+     OS: sles11sp3 (3.0.93)
+     page scan time            .5min     .5min
+     dump copy time           2.3min     .5min
+     total time               2.8min    1.0min
+     dump size                 2950M      350M
+
+   2TB
+     OS: rhel6.5           (cyclicx3)
+     page scan time           2.0min    1.8min
+     dump copy time           8.0min    1.5min
+     total time              10.0min    3.3min
+     dump size                 6141M      835M
+
+   8.8TB
+     OS: rhel6.5           (cyclicx5)
+     page scan time           6.6min    5.5min
+     dump copy time          67.8min    6.2min
+     total time              74.4min   11.7min
+     dump size                 15.8G      2.7G
+
+   16TB
+     OS: rhel6.4
+     page scan time                   125.3min
+     dump copy time                    13.2min
+     total time                       138.5min
+     dump size                            4.0G
+
+     OS: rhel6.5
+     page scan time                    27.8min
+     dump copy time                    13.3min
+     total time                        41.1min
+     dump size                            4.1G
+
+Page scan time is greatly affected by whether or not the
+kernel supports mmap of /proc/vmcore.
+
+The choice of snappy vs. zlib compression becomes fairly irrelevant
+when we can shrink the dump size dramatically.  The above
+were done with snappy compression.
+
+I am sending my 2 working patches.  
+They are kludgy in the sense that they ignore all forms of
+kdump except the creation of a disk dump, and all architectures
+except x86_64.
+But I think they are sufficient to demonstrate the sizable
+time, crashkernel space and disk space savings that are possible.
 
 _______________________________________________
 kexec mailing list
