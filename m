@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VypKo-0004jG-8q
- for kexec@lists.infradead.org; Thu, 02 Jan 2014 20:57:43 +0000
-Message-ID: <52C5D28F.6030008@zytor.com>
-Date: Thu, 02 Jan 2014 12:56:47 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Vyvqx-0006tf-BB
+ for kexec@lists.infradead.org; Fri, 03 Jan 2014 03:55:20 +0000
+Date: Fri, 3 Jan 2014 11:54:31 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH tip/efi-kexec] x86: ksysfs.c build fix
+Message-ID: <20140103035431.GA5259@darkstar.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-References: <20131121191907.GA26366@srcf.ucam.org>
- <20131122185706.GK4046@redhat.com> <87vbzju6ql.fsf@xmission.com>
- <20131125163920.GC23094@redhat.com> <87fvqj2vxz.fsf@xmission.com>
- <20131126142759.GA5473@redhat.com> <20131219125439.GA6379@lst.de>
- <20131220141917.GB27063@redhat.com> <87a9fvqfs4.fsf@xmission.com>
- <CAGXu5jKJ88J-++nvkPVvghkXbN+_mB=T1siSDF7yoXQ-d-ONxg@mail.gmail.com>
- <20140102203912.GB22822@redhat.com>
-In-Reply-To: <20140102203912.GB22822@redhat.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,33 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Greg KH <greg@kroah.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Peter Jones <pjones@redhat.com>, Torsten Duwe <duwe@lst.de>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: matt@console-pimps.org, hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org
 
-On 01/02/2014 12:39 PM, Vivek Goyal wrote:
-> 
-> If secureboot is enabled, it enforces module signature verification. I 
-> think similar will happen for kexec too. How would kernel know that on
-> a secureboot platform fd original verification will happen and it is
-> sufficient.
-> 
-> I personally want to support bzImage as well (apart from ELF) because
-> distributions has been shipping bzImage for a long time and I don't
-> want to enforce a change there because of secureboot. It is not necessary.
-> Right now I am thinking more about storing detached bzImage signatures
-> and passing those signatures to kexec system call.
-> 
+kbuild test robot report below error for randconfig:
 
-Since the secureboot scenario probably means people will be signing
-those kernels, and those kernels are going to be EFI images, that in
-order to have "one kernel, one signature" there will be a desire to
-support signed PE images.  Yes, PE is ugly but it shouldn't be too bad.
- However, it is probably one of those things that can be dealt with one
-bit at a time.
+   arch/x86/kernel/ksysfs.c: In function 'get_setup_data_paddr':
+>> arch/x86/kernel/ksysfs.c:81:3: error: implicit declaration of function 'ioremap_cache' [-Werror=implicit-function-declaration]
+      data = ioremap_cache(pa_data, sizeof(*data));
+      ^
+>> arch/x86/kernel/ksysfs.c:86:3: error: implicit declaration of function 'iounmap' [-Werror=implicit-function-declaration]
+      iounmap(data);
+      ^
+Fix it by including <asm/io.h> in ksysfs.c
 
-	-hpa
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ arch/x86/kernel/ksysfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-
+Index: linux/arch/x86/kernel/ksysfs.c
+===================================================================
+--- linux.orig/arch/x86/kernel/ksysfs.c
++++ linux/arch/x86/kernel/ksysfs.c
+@@ -16,6 +16,7 @@
+ #include <linux/stat.h>
+ #include <linux/slab.h>
+ #include <linux/mm.h>
++#include <asm/io.h>
+ 
+ #include <asm/setup.h>
+ 
 
 _______________________________________________
 kexec mailing list
