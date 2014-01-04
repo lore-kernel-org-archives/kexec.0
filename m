@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VzDDV-0000ke-QK
- for kexec@lists.infradead.org; Fri, 03 Jan 2014 22:27:46 +0000
-Date: Fri, 3 Jan 2014 22:27:21 +0000
-From: Matt Fleming <matt@console-pimps.org>
-Subject: Re: [PATCH tip/efi-kexec] x86: setup.c build fix
-Message-ID: <20140103222721.GA18441@console-pimps.org>
-References: <20140103035648.GA5291@darkstar.nay.redhat.com>
- <20140103144044.GD2618@console-pimps.org>
- <52C7389C.6000902@zytor.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <52C7389C.6000902@zytor.com>
+Received: from fldsmtpe04.verizon.com ([140.108.26.143])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1VzWdY-0004gs-Bz
+ for kexec@lists.infradead.org; Sat, 04 Jan 2014 19:11:57 +0000
+From: Don Slutz <dslutz@verizon.com>
+Subject: [PATCH 0/4] Enable use of crash on xen 4.4.0 vmcore
+Date: Sat,  4 Jan 2014 14:11:22 -0500
+Message-Id: <1388862686-1832-1-git-send-email-dslutz@verizon.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,21 +15,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: kexec@lists.infradead.org, x86@kernel.org, Dave Young <dyoung@redhat.com>, mingo@kernel.org, linux-kernel@vger.kernel.org
+To: crash-utility@redhat.com
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, Don Slutz <dslutz@verizon.com>, xen-devel@lists.xen.org
 
-On Fri, 03 Jan, at 02:24:28PM, H. Peter Anvin wrote:
-> 
-> Something I should be pulling?
- 
-Yep, I'll be sending the pull request momentarily.
+With the addition on PVH code to xen 4.4, domain.is_hvm no longer
+exists.  This prevents crash from using a xen 4.4.0 vmcore.
+
+Patch 1 "fixes" this.
+
+Patch 2 is a minor fix in that outputing the offset in hex for
+domain_domain_flags is different.
+
+Patch 3 is a bug fix to get all "domain_flags" set, not just the 1st
+one found.
+
+Patch 4 is a quick way to add domain.guest_type support.
+
+Don Slutz (4):
+  Make domian.is_hvm optional
+  xen: Fix offset output to be decimal.
+  xen: set all domain_flags, not just the 1st.
+  Add basic domain.guest_type support.
+
+ xen_hyper.c             | 32 ++++++++++++++++++++++++--------
+ xen_hyper_defs.h        |  1 +
+ xen_hyper_dump_tables.c |  4 +++-
+ 3 files changed, 28 insertions(+), 9 deletions(-)
 
 -- 
-Matt Fleming, Intel Open Source Technology Center
+1.8.4
+
 
 _______________________________________________
 kexec mailing list
