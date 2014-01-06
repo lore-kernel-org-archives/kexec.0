@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ob0-x22e.google.com ([2607:f8b0:4003:c01::22e])
+Received: from g4t0016.houston.hp.com ([15.201.24.19])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W0HoO-0005fi-Hp
- for kexec@lists.infradead.org; Mon, 06 Jan 2014 21:34:18 +0000
-Received: by mail-ob0-f174.google.com with SMTP id wn1so19029061obc.33
- for <kexec@lists.infradead.org>; Mon, 06 Jan 2014 13:33:54 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <52C5D28F.6030008@zytor.com>
-References: <20131121191907.GA26366@srcf.ucam.org>
- <20131122185706.GK4046@redhat.com> <87vbzju6ql.fsf@xmission.com>
- <20131125163920.GC23094@redhat.com> <87fvqj2vxz.fsf@xmission.com>
- <20131126142759.GA5473@redhat.com> <20131219125439.GA6379@lst.de>
- <20131220141917.GB27063@redhat.com> <87a9fvqfs4.fsf@xmission.com>
- <CAGXu5jKJ88J-++nvkPVvghkXbN+_mB=T1siSDF7yoXQ-d-ONxg@mail.gmail.com>
- <20140102203912.GB22822@redhat.com> <52C5D28F.6030008@zytor.com>
-Date: Mon, 6 Jan 2014 16:33:52 -0500
-Message-ID: <CA+5PVA60FLTXZxf1hVuzD=_vUdg10Y7sYG9iZCs4voxurV_t0g@mail.gmail.com>
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-From: Josh Boyer <jwboyer@fedoraproject.org>
+ id 1W0IIC-0006N5-DE
+ for kexec@lists.infradead.org; Mon, 06 Jan 2014 22:05:06 +0000
+Message-ID: <1389045513.1792.0.camel@misato.fc.hp.com>
+Subject: Re: [PATCH v4 4/4 update] Passing efi related data via setup_data
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Mon, 06 Jan 2014 14:58:33 -0700
+In-Reply-To: <20131230071656.GB3827@dhcp-16-126.nay.redhat.com>
+References: <1387533947-18210-1-git-send-email-dyoung@redhat.com>
+ <1387533947-18210-5-git-send-email-dyoung@redhat.com>
+ <20131230071656.GB3827@dhcp-16-126.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,40 +24,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kees Cook <keescook@chromium.org>, Greg KH <greg@kroah.com>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Peter Jones <pjones@redhat.com>, Torsten Duwe <duwe@lst.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, matt@console-pimps.org, greg@kroah.com, x86@kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-On Thu, Jan 2, 2014 at 3:56 PM, H. Peter Anvin <hpa@zytor.com> wrote:
-> On 01/02/2014 12:39 PM, Vivek Goyal wrote:
->>
->> If secureboot is enabled, it enforces module signature verification. I
->> think similar will happen for kexec too. How would kernel know that on
->> a secureboot platform fd original verification will happen and it is
->> sufficient.
->>
->> I personally want to support bzImage as well (apart from ELF) because
->> distributions has been shipping bzImage for a long time and I don't
->> want to enforce a change there because of secureboot. It is not necessary.
->> Right now I am thinking more about storing detached bzImage signatures
->> and passing those signatures to kexec system call.
->>
->
-> Since the secureboot scenario probably means people will be signing
-> those kernels, and those kernels are going to be EFI images, that in
-> order to have "one kernel, one signature" there will be a desire to
-> support signed PE images.  Yes, PE is ugly but it shouldn't be too bad.
->  However, it is probably one of those things that can be dealt with one
-> bit at a time.
+On Mon, 2013-12-30 at 15:16 +0800, Dave Young wrote:
+> For supporting efi runtime, several efi physical addresses
+> fw_vendor, runtime, config tables, smbios and the whole runtime
+> mapping info need to be used in kexec kernel. Thus introduce
+> setup_data struct for passing these data.
+> 
+> collect the varialbes from /sys/firmware/efi/systab and
+> /sys/firmware/efi/runtime-map
+> 
+> Tested on qemu+ovmf, dell laptop, lenovo laptop and HP workstation.
+> 
+> v1->v2:
+> HPA: use uint*_t instead of __uint*_t
+> Simon: indention fix; fix a memory leak
+> move offset change update to previous patch in setup header
+> only passing setup_data when the bzImage support efi boot
+> Vivek: export a value in bzImage probe so it can be used
+>       to check if we should pass acpi_rsdp.
+> coding style
+> 
+> v2->v3:
+> code cleanup
+> bail out if efi mm desc_version != 1
+> bhe: define macro for SETUP_EFI
+>      break loop if find matched string in systab.
+> 
+> v3->v4:
+> update memmap in efi_info to the saved runtime map
+> So kernel side can iterate them as normal boot.
+> 
+> v4->v5:
+> simplify function get_efi_value(), add error handling
+> realloc error handling
+> move map[0] out of efi_setup_data since memmap addr is set in efi_info
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 
-David Howells posted patches to support signed PE binaries early last
-year.  They were rejected rather quickly.
+Tested-by: Toshi Kani <toshi.kani@hp.com>
 
-https://lkml.org/lkml/2013/2/21/196
+Thanks,
+Toshi
 
-That was for loading keys via PE binaries, but the parser is needed
-either way.  Unless I'm misunderstanding what you're suggesting?
-
-josh
 
 _______________________________________________
 kexec mailing list
