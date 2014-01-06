@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from omzsmtpe04.verizonbusiness.com ([199.249.25.207])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1VzYkA-0005kY-Cx
- for kexec@lists.infradead.org; Sat, 04 Jan 2014 21:26:55 +0000
-From: Don Slutz <dslutz@verizon.com>
-Message-ID: <52C87C86.1070901@terremark.com>
-Date: Sat, 04 Jan 2014 16:26:30 -0500
+ id 1W06Vh-00052D-7S
+ for kexec@lists.infradead.org; Mon, 06 Jan 2014 09:30:15 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 0/2] makedumpfile: for large memories
+Date: Mon, 6 Jan 2014 09:27:34 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D878F@BPXM01GP.gisp.nec.co.jp>
+References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+In-Reply-To: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [Xen-devel] [PATCH 1/4] Make domian.is_hvm optional
-References: <1388862686-1832-1-git-send-email-dslutz@verizon.com>
- <1388862686-1832-2-git-send-email-dslutz@verizon.com>
- <20140104211347.GD9395@phenom.dumpdata.com>
-In-Reply-To: <20140104211347.GD9395@phenom.dumpdata.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,47 +19,155 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, Don Slutz <dslutz@verizon.com>, xen-devel@lists.xen.org, crash-utility@redhat.com
+To: cpw <cpw@sgi.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 01/04/14 16:13, Konrad Rzeszutek Wilk wrote:
-> On Sat, Jan 04, 2014 at 02:11:23PM -0500, Don Slutz wrote:
->
-> You title should say 'domain'.
->
-Will fix.
-     -Don Slutz
->> ---
->>   xen_hyper.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/xen_hyper.c b/xen_hyper.c
->> index 7c7d3e1..3d56516 100644
->> --- a/xen_hyper.c
->> +++ b/xen_hyper.c
->> @@ -1247,7 +1247,8 @@ xen_hyper_store_domain_context(struct xen_hyper_domain_context *dc,
->>   		dc->domain_flags = ULONG(dp + XEN_HYPER_OFFSET(domain_domain_flags));
->>   	else if (XEN_HYPER_VALID_MEMBER(domain_is_shut_down)) {
->>   		dc->domain_flags = 0;
->> -		if (*(dp + XEN_HYPER_OFFSET(domain_is_hvm))) {
->> +                if (XEN_HYPER_VALID_MEMBER(domain_is_hvm) &&
->> +                    *(dp + XEN_HYPER_OFFSET(domain_is_hvm))) {
->>   			dc->domain_flags |= XEN_HYPER_DOMS_HVM;
->>   		} else if (*(dp + XEN_HYPER_OFFSET(domain_is_privileged))) {
->>   			dc->domain_flags |= XEN_HYPER_DOMS_privileged;
->> -- 
->> 1.8.4
->>
->>
->> _______________________________________________
->> Xen-devel mailing list
->> Xen-devel@lists.xen.org
->> http://lists.xen.org/xen-devel
+Hello Cliff,
 
+On 2014/01/01 8:30:47, kexec <kexec-bounces@lists.infradead.org> wrote:
+> From: Cliff Wickman <cpw@sgi.com>
+> 
+> Gentlemen of kexec,
+> 
+> I have been working on enabling kdump on some very large systems, and
+> have found some solutions that I hope you will consider.
+> 
+> The first issue is to work within the restricted size of crashkernel memory
+> under 2.6.32-based kernels, such as sles11 and rhel6.
+> 
+> The second issue is to reduce the very large size of a dump of a big memory
+> system, even on an idle system.
+> 
+> These are my propositions:
+> 
+> Size of crashkernel memory
+>   1) raw i/o for writing the dump
+>   2) use root device for the bitmap file (not tmpfs)
+>   3) raw i/o for reading/writing the bitmaps
+>   
+> Size of dump (and hence the duration of dumping)
+>   4) exclude page structures for unused pages
+> 
+> 
+> 1) Is quite easy.  The cache of pages needs to be aligned on a block
+>   boundary and written in block multiples, as required by O_DIRECT files.
+> 
+>   The use of raw i/o prevents the growing of the crash kernel's page
+>   cache.
+
+There is no reason to reject this idea, please re-post it as a formal patch.
+If possible, I would like to know the benefit of only this.
+
+> 2) Is also quite easy.  My patch finds the path to the crash
+>   kernel's root device by examining the dump pathname. Storing the bitmaps
+>   to a file is otherwise not conserving memory, as they are being written
+>   to tmpfs.
+
+Users will expect that the size of dump file is the same as the size of
+RAM at most, they will prepare a disk which fit to save that.
+But 2) breaks this estimation, I worry about it a little.
+
+Of course, I don't reject this idea just only for that reason,
+but I would like to know the definite advantage of this.
+I suppose that the improvement showed in your benchmarks may be came
+from 1) and 4) mostly, so could you let me know that only 2) and 3)
+can perform much faster than the current cyclic mode ?
+
+> 3) Raw i/o for the bitmaps, is accomplished by caching the
+>   bitmap file in a similar way to that of the dump file.
+> 
+>   I find that the use of direct i/o is not significantly slower than
+>   writing through the kernel's page cache.
+>
+> 4) The excluding of unused kernel page structures is very
+>   important for a large memory system.  The kernel otherwise includes
+>   3.67 million pages of page structures per TB of memory. By contrast
+>   the rest of the kernel is only about 1 million pages.
+
+According to your and Dave's mails, 4) seems risky and unacceptable
+for now. I think we need more investigation for this.
+
+
+Thanks
+Atsushi Kumagai
+
+> Test results are below, for systems of 1TB, 2TB, 8.8TB and 16TB.
+> (There are no 'old' numbers for 16TB as time and space requirements
+>  made those effectively useless.)
+> 
+> Run times were generally reduced 2-3x, and dump size reduced about 8x.
+> 
+> All timings were done using 512M of crashkernel memory.
+> 
+>    System memory size
+>    1TB                     unpatched    patched
+>      OS: rhel6.4 (does a free pages pass)
+>      page scan time           1.6min    1.6min
+>      dump copy time           2.4min     .4min
+>      total time               4.1min    2.0min
+>      dump size                 3014M      364M
+> 
+>      OS: rhel6.5
+>      page scan time            .6min     .6min
+>      dump copy time           2.3min     .5min
+>      total time               2.9min    1.1min
+>      dump size                 3011M      423M
+> 
+>      OS: sles11sp3 (3.0.93)
+>      page scan time            .5min     .5min
+>      dump copy time           2.3min     .5min
+>      total time               2.8min    1.0min
+>      dump size                 2950M      350M
+> 
+>    2TB
+>      OS: rhel6.5           (cyclicx3)
+>      page scan time           2.0min    1.8min
+>      dump copy time           8.0min    1.5min
+>      total time              10.0min    3.3min
+>      dump size                 6141M      835M
+> 
+>    8.8TB
+>      OS: rhel6.5           (cyclicx5)
+>      page scan time           6.6min    5.5min
+>      dump copy time          67.8min    6.2min
+>      total time              74.4min   11.7min
+>      dump size                 15.8G      2.7G
+> 
+>    16TB
+>      OS: rhel6.4
+>      page scan time                   125.3min
+>      dump copy time                    13.2min
+>      total time                       138.5min
+>      dump size                            4.0G
+> 
+>      OS: rhel6.5
+>      page scan time                    27.8min
+>      dump copy time                    13.3min
+>      total time                        41.1min
+>      dump size                            4.1G
+> 
+> Page scan time is greatly affected by whether or not the
+> kernel supports mmap of /proc/vmcore.
+> 
+> The choice of snappy vs. zlib compression becomes fairly irrelevant
+> when we can shrink the dump size dramatically.  The above
+> were done with snappy compression.
+> 
+> I am sending my 2 working patches.  
+> They are kludgy in the sense that they ignore all forms of
+> kdump except the creation of a disk dump, and all architectures
+> except x86_64.
+> But I think they are sufficient to demonstrate the sizable
+> time, crashkernel space and disk space savings that are possible.
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
