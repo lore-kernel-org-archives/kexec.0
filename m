@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W0Loz-0003TC-Sg
- for kexec@lists.infradead.org; Tue, 07 Jan 2014 01:51:11 +0000
-Date: Tue, 7 Jan 2014 09:49:48 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] makedumpfile: clean up draft patch
-Message-ID: <20140107014948.GA32590@dhcp-16-105.nay.redhat.com>
-References: <1388146378-25419-1-git-send-email-bhe@redhat.com>
+ id 1W0MUS-00048w-T8
+ for kexec@lists.infradead.org; Tue, 07 Jan 2014 02:34:01 +0000
+Date: Tue, 7 Jan 2014 10:34:06 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: kexec: reuse 1st kernel as kexec/kdump kernel?
+Message-ID: <20140107023405.GC3967@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1388146378-25419-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +21,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: ebiederm@xmission.com, vgoyal@redhat.com, hpa@zytor.com
 
-Hi Atsushi,
+Hi, all
 
-Could you please review this draft patch? As we discussed before,
-function update_cyclic_region not only update the cyclic region, but
-also handle the 1st bitmap and 2nd bitmap. For better understanding and
-process, it need be cleaned up. In this patch, struct cycle is
-introduced and can be passed down into functions, but not global. I
-think this clean up is helpful, and no risk.
+I have a question in mind: can we copy and prepare kexec kernel while
+normal booting?
 
-What'a your opinion?
+Just like below wild idea:
 
-Baoquan
+Kernel uncompress itself (assume kernel is relocatable)
+-> copy the kernel image somewhere for backup
+  -> reserver crashkernel memory
+    -> copy the backuped kernel image/initrd image to reserved memory
+      -> copy the purgatory which can be embedded in elf section?
+        -> prepare the e820 memory ranges which is for kdump kernel
+
+So userspace only need to call kexec reboot, kexec_load is not necessary.
+The initrd for kdump should be different, but we can add some different logic
+which will be only for kdump and it can be skipped in normal boot.
+
+Is it doable?
+
 Thanks
-
-
-On 12/27/13 at 08:12pm, Baoquan He wrote:
-> Introduce the struct cycle as below just as Hatamaya expected.
-> struct cycle {
->         uint64_t start_pfn;
->         uint64_t end_pfn;
-> };
-> 
->   for (first_cycle(start, max, C); !end_cycle(max, C); \
->        update_cycle(max, C))
-> 
-> Hi Atsushi and HATAYAMA,
-> 
-> Please help review this draft patch and check if there's any potentia
-> risk. If you think this is in the right way, I can post a formal
-> patchset. I just test the normal operation on kdump and elf format,
-> it works well.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
+Dave
 
 _______________________________________________
 kexec mailing list
