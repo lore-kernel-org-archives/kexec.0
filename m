@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W0mgw-0004WR-1B
- for kexec@lists.infradead.org; Wed, 08 Jan 2014 06:32:39 +0000
-Date: Wed, 8 Jan 2014 14:32:09 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH] makedumpfile: -v shows if lzo or snappy support enabled
- or not
-Message-ID: <20140108063209.GA14589@dhcp-17-89.nay.redhat.com>
-References: <20140108054033.GA6109@dhcp-17-89.nay.redhat.com>
- <52CCE8B9.8060008@cn.fujitsu.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W0oYY-0006JG-MZ
+ for kexec@lists.infradead.org; Wed, 08 Jan 2014 08:32:08 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: clean up draft patch
+Date: Wed, 8 Jan 2014 08:29:42 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D9605@BPXM01GP.gisp.nec.co.jp>
+References: <1388146378-25419-1-git-send-email-bhe@redhat.com>
+ <20140107014948.GA32590@dhcp-16-105.nay.redhat.com>
+In-Reply-To: <20140107014948.GA32590@dhcp-16-105.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <52CCE8B9.8060008@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,97 +24,105 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: kexec@lists.infradead.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Baoquan He <bhe@redhat.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 01/08/14 at 01:57pm, Zhang Yanfei wrote:
-> Hello chao
+Hello Baoquan,
+
+Sorry for delay response, I entered a vacation just before
+you posted this.
+
+On 2014/01/07 10:51:29, kexec <kexec-bounces@lists.infradead.org> wrote:
+> Hi Atsushi,
 > 
-> On 01/08/2014 01:40 PM, WANG Chao wrote:
-> > It would be great to have makedumpfile -v to show if lzo or snappy
-> > support is enabled or not, since --help prints too much and we have to
-> > scroll back three screens to check it out.
-> > 
-> > Using "+lzo" to indicate lzo is enabled and vice versa "-lzo" for lzo is
-> > disabled. Same for snappy.
-> > 
-> > For exmaple, If lzo and snappy support are enabled,
-> > 
-> >     $ ./makedumpfile -v
-> >     makedumpfile: version 1.5.5 (released on 18 Dec 2013)
-> >     +lzo +snappy
-> > 
-> > If both of them are disabled,
-> > 
-> >     $ ./makedumpfile -v
-> >     makedumpfile: version 1.5.5 (released on 18 Dec 2013)
-> >     -lzo -snappy
+> Could you please review this draft patch? As we discussed before,
+> function update_cyclic_region not only update the cyclic region, but
+> also handle the 1st bitmap and 2nd bitmap. For better understanding and
+> process, it need be cleaned up. In this patch, struct cycle is
+> introduced and can be passed down into functions, but not global. I
+> think this clean up is helpful, and no risk.
 > 
-> This is weird... we may even think we have lzo/snappy enabled
-> since an option is always specified with '-'.
+> What'a your opinion?
 
-I took this idea from `vim --version`. But it seems like vim has too
-many features that there's always +xxx out there to distinguish them
-from -xxx. I think you make a good point.
+Thanks for your work, this idea looks good to me.
+However, I found a mistake:
 
-> 
-> My idea is to have "with lzo/snappy enabled" directly appended
-> when lzo/snappy enabled.
+> +static void update_cycle(unsigned long long max, struct cycle *cycle)
+> +{
+> +	cycle->start_pfn= cycle->end_pfn + 1;
+> +	cycle->end_pfn=  cycle->start_pfn + info->pfn_cyclic;
+> +
+> +	if (cycle->end_pfn > max)
+> +		cycle->end_pfn = max;
+> +}
 
-That works for me either as long as -v has the information about
-lzo/snappy is enabled or not. But to simplify the code, I prefer
-something like this:
-" lzo    enabled
-  snappy enabled"
-and also display "lzo disabled" explicitly.
+According to this function, you must treat a range of a cycle
+as below:
 
-> 
-> And is it ok to add such info to the version ? I don't know.
-> kumagai may give the answer.
+   |<----------------- a cycle ------------------->|
+---+-----------+-----------+-----------+-----------+----
+   |   pfn:N   |  pfn:N+1  |  pfn:N+2  |  pfn:N+3  | ...
+---+-----------+-----------+-----------+-----------+----
+         A                                   A
+         |                                   |
+     start_pfn                            end_pfn
 
-Yeah, let's wait.
+However, the existing code treat it as:
+
+   |<------------ a cycle ------------>|
+---+-----------+-----------+-----------+-----------+----
+   |   pfn:N   |  pfn:N+1  |  pfn:N+2  |  pfn:N+3  | ...
+---+-----------+-----------+-----------+-----------+----
+         A                                   A
+         |                                   |
+     start_pfn                            end_pfn
+
+This can be implied from the current iterator like below:
+
+     for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+                           ^^^^^^^^^^^^^^
+In short, the existing code will not work correctly.
+
+You may feel this design is strange.
+This came from the fact that the end of the region's *address*
+is the head of pfn:N+1 while it can also be said the tail of pfn:N.
+(And this came from the initial version.)
+
+BTW, info->cyclic_start_pfn and info->cyclic_end_pfn are no longer
+used, we can get rid of those from makedumpfile.h.
+
 
 Thanks
-WANG Chao
+Atsushi Kumagai
 
+> Baoquan
+> Thanks
 > 
-> Thanks.
 > 
+> On 12/27/13 at 08:12pm, Baoquan He wrote:
+> > Introduce the struct cycle as below just as Hatamaya expected.
+> > struct cycle {
+> >         uint64_t start_pfn;
+> >         uint64_t end_pfn;
+> > };
 > > 
-> > Signed-off-by: WANG Chao <chaowang@redhat.com>
+> >   for (first_cycle(start, max, C); !end_cycle(max, C); \
+> >        update_cycle(max, C))
+> > 
+> > Hi Atsushi and HATAYAMA,
+> > 
+> > Please help review this draft patch and check if there's any potentia
+> > risk. If you think this is in the right way, I can post a formal
+> > patchset. I just test the normal operation on kdump and elf format,
+> > it works well.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
 > > ---
-> >  print_info.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/print_info.c b/print_info.c
-> > index 90b6cee..242b42c 100644
-> > --- a/print_info.c
-> > +++ b/print_info.c
-> > @@ -26,7 +26,17 @@ void
-> >  show_version(void)
-> >  {
-> >  	MSG("makedumpfile: version " VERSION " (released on " RELEASE_DATE ")\n");
-> > -	MSG("\n");
-> > +#ifdef USELZO
-> > +	MSG("+lzo ");
-> > +#else
-> > +	MSG("-lzo ");
-> > +#endif
-> > +#ifdef USESNAPPY
-> > +	MSG("+snappy ");
-> > +#else
-> > +	MSG("-snappy ");
-> > +#endif
-> > +	MSG("\n\n");
-> >  }
-> >  
-> >  void
-> > 
 > 
-> 
-> -- 
-> Thanks.
-> Zhang Yanfei
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
