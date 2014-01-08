@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W0zZG-0000q5-LG
- for kexec@lists.infradead.org; Wed, 08 Jan 2014 20:17:35 +0000
-Date: Wed, 8 Jan 2014 21:16:59 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 0/4] Enable use of crash on xen 4.4.0 vmcore
-Message-ID: <20140108201659.GB3633@olila.local.net-space.pl>
-References: <1388862686-1832-1-git-send-email-dslutz@verizon.com>
+Received: from v094114.home.net.pl ([79.96.170.134])
+ by merlin.infradead.org with smtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W120Y-0004o6-Kr
+ for kexec@lists.infradead.org; Wed, 08 Jan 2014 22:53:55 +0000
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
+Date: Thu, 09 Jan 2014 00:07:17 +0100
+Message-ID: <8500545.JVNPnKcyD1@vostro.rjw.lan>
+In-Reply-To: <20140108155829.GC13649@redhat.com>
+References: <52CD6E33.400@redhat.com> <20140108155829.GC13649@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1388862686-1832-1-git-send-email-dslutz@verizon.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,33 +22,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Don Slutz <dslutz@verizon.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, xen-devel@lists.xen.org, kexec@lists.infradead.org, crash-utility@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Baoquan <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com
 
-On Sat, Jan 04, 2014 at 02:11:22PM -0500, Don Slutz wrote:
-> With the addition on PVH code to xen 4.4, domain.is_hvm no longer
-> exists.  This prevents crash from using a xen 4.4.0 vmcore.
->
-> Patch 1 "fixes" this.
->
-> Patch 2 is a minor fix in that outputing the offset in hex for
-> domain_domain_flags is different.
->
-> Patch 3 is a bug fix to get all "domain_flags" set, not just the 1st
-> one found.
->
-> Patch 4 is a quick way to add domain.guest_type support.
+On Wednesday, January 08, 2014 10:58:29 AM Vivek Goyal wrote:
+> On Wed, Jan 08, 2014 at 11:26:43PM +0800, Baoquan wrote:
+> 
+> [..]
+> > [    1.592222] acpi PNP0A03:03: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+> > [    1.605045] PCI host bridge to bus 0000:ff
+> > [    1.609615] pci_bus 0000:ff: root bus resource [bus ff]
+> > [    1.632117] System RAM resource [mem 0x01000000-0x7bffffff] cannot be added
+> > [    1.639892] init_memory_mapping: [mem 0x100000000-0x87fffffff]
+> > [    1.717793] swapper/0: page allocation failure: order:9, mode:0x84d0
+> > [    1.724884] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.10.0-59.el7.x86_64 #1
+> > [    1.732842] Hardware name: QCI QSSC-S4R/QSSC-S4R, BIOS QSSC-S4R.QCI.01.00.S001.032520101647 03/25/2010
+> > [    1.743224]  0000000000000000 ffff8800339878c8 ffffffff815b64ad ffff880033987950
+> > [    1.751513]  ffffffff8113a980 ffff88003673ab28 00000000000001fe 0000000000000001
+> > [    1.759804]  ffff880000000040 ffffffff810bc28a 0000000000000000 0000000000000200
+> > [    1.768096] Call Trace:                                                                                                                                            [348/1928]
+> > [    1.770834]  [<ffffffff815b64ad>] dump_stack+0x19/0x1b
+> > [    1.776561]  [<ffffffff8113a980>] warn_alloc_failed+0xf0/0x160
+> > [    1.783076]  [<ffffffff810bc28a>] ? on_each_cpu_mask+0x2a/0x60
+> > [    1.789581]  [<ffffffff8113e92f>] __alloc_pages_nodemask+0x7ff/0xa00
+> > [    1.796672]  [<ffffffff815ada2c>] vmemmap_alloc_block+0x62/0xba
+> > [    1.803274]  [<ffffffff815ada99>] vmemmap_alloc_block_buf+0x15/0x3b
+> > [    1.810263]  [<ffffffff815ab8a6>] vmemmap_populate+0xb4/0x21b
+> > [    1.816673]  [<ffffffff815adecd>] sparse_mem_map_populate+0x27/0x35
+> > [    1.823665]  [<ffffffff815ad8bf>] sparse_add_one_section+0x7a/0x185
+> > [    1.830659]  [<ffffffff8159b74f>] __add_pages+0xaf/0x240
+> > [    1.836588]  [<ffffffff81047359>] arch_add_memory+0x59/0xd0
+> > [    1.842804]  [<ffffffff8159ba89>] add_memory+0xb9/0x1b0
+> > [    1.848638]  [<ffffffff8132dd2c>] acpi_memory_device_add+0x18d/0x26d
+> > [    1.855728]  [<ffffffff81303b91>] acpi_bus_device_attach+0x7d/0xcd
+> > [    1.862625]  [<ffffffff8131d92d>] acpi_ns_walk_namespace+0xc8/0x17f
+> > [    1.869616]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
+> > [    1.876896]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
+> > [    1.884177]  [<ffffffff8131de1c>] acpi_walk_namespace+0x95/0xc5
+> > [    1.890780]  [<ffffffff81304866>] acpi_bus_scan+0x8b/0x9d
+> > [    1.896805]  [<ffffffff81a14a15>] acpi_scan_init+0x63/0x160
+> > [    1.903021]  [<ffffffff81a14830>] acpi_init+0x25d/0x2a6
+> 
+> So basically acpi thinks that some memory block is a hot plug memory
+> and tries to add it. And that consumes lots of memory and we don't have
+> that memory in second kernel.
 
-Sorry for late reply but I was on holiday.
+That's not exactly the case.  What seems to happen is that there is an ACPI
+memory object in the ACPI namespace and the ACPI memory hotplug driver
+attempts to bind to it.  That driver attempts to find removable memory blocks
+associated with that object and to add them to the memory map.
 
-Nice work. Thanks. I have done some tests with old
-and new Xen versions and it looks that it works
-without any issue.
+Why don't you simply append acpi=off to the kexec command line?  That should
+make the problem go away.
 
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-Tested-by: Daniel Kiper <daniel.kiper@oracle.com>
+Thanks!
 
-Daniel
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
 
 _______________________________________________
 kexec mailing list
