@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W1H07-0008JL-8S
- for kexec@lists.infradead.org; Thu, 09 Jan 2014 14:54:27 +0000
-Date: Thu, 9 Jan 2014 09:53:59 -0500
+ id 1W1H6k-0008WU-UR
+ for kexec@lists.infradead.org; Thu, 09 Jan 2014 15:01:20 +0000
+Date: Thu, 9 Jan 2014 10:00:53 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
-Message-ID: <20140109145359.GC25897@redhat.com>
-References: <52CD6E33.400@redhat.com> <8500545.JVNPnKcyD1@vostro.rjw.lan>
- <1389226308.1792.39.camel@misato.fc.hp.com>
- <1607377.rjs1kRTsnc@vostro.rjw.lan>
+Subject: Re: [PATCH] acpi memory hotplug, add parameter to disable memory
+ hotplug for kexec
+Message-ID: <20140109150053.GD25897@redhat.com>
+References: <1389220181-14474-1-git-send-email-prarit@redhat.com>
+ <3476878.EqQiEtA2Ag@vostro.rjw.lan>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1607377.rjs1kRTsnc@vostro.rjw.lan>
+In-Reply-To: <3476878.EqQiEtA2Ag@vostro.rjw.lan>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,84 +26,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Toshi Kani <toshi.kani@hp.com>, Baoquan <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com
+Cc: Prarit Bhargava <prarit@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux kernel mailing list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, Dave Young <dyoung@redhat.com>, Len Brown <lenb@kernel.org>
 
-On Thu, Jan 09, 2014 at 02:10:26PM +0100, Rafael J. Wysocki wrote:
-> On Wednesday, January 08, 2014 05:11:48 PM Toshi Kani wrote:
-> > On Thu, 2014-01-09 at 00:07 +0100, Rafael J. Wysocki wrote:
-> > > On Wednesday, January 08, 2014 10:58:29 AM Vivek Goyal wrote:
-> > > > On Wed, Jan 08, 2014 at 11:26:43PM +0800, Baoquan wrote:
-> > > > 
-> > > > [..]
-> > > > > [    1.592222] acpi PNP0A03:03: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
-> > > > > [    1.605045] PCI host bridge to bus 0000:ff
-> > > > > [    1.609615] pci_bus 0000:ff: root bus resource [bus ff]
-> > > > > [    1.632117] System RAM resource [mem 0x01000000-0x7bffffff] cannot be added
-> > > > > [    1.639892] init_memory_mapping: [mem 0x100000000-0x87fffffff]
-> > > > > [    1.717793] swapper/0: page allocation failure: order:9, mode:0x84d0
-> > > > > [    1.724884] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.10.0-59.el7.x86_64 #1
-> > > > > [    1.732842] Hardware name: QCI QSSC-S4R/QSSC-S4R, BIOS QSSC-S4R.QCI.01.00.S001.032520101647 03/25/2010
-> > > > > [    1.743224]  0000000000000000 ffff8800339878c8 ffffffff815b64ad ffff880033987950
-> > > > > [    1.751513]  ffffffff8113a980 ffff88003673ab28 00000000000001fe 0000000000000001
-> > > > > [    1.759804]  ffff880000000040 ffffffff810bc28a 0000000000000000 0000000000000200
-> > > > > [    1.768096] Call Trace:                                                                                                                                            [348/1928]
-> > > > > [    1.770834]  [<ffffffff815b64ad>] dump_stack+0x19/0x1b
-> > > > > [    1.776561]  [<ffffffff8113a980>] warn_alloc_failed+0xf0/0x160
-> > > > > [    1.783076]  [<ffffffff810bc28a>] ? on_each_cpu_mask+0x2a/0x60
-> > > > > [    1.789581]  [<ffffffff8113e92f>] __alloc_pages_nodemask+0x7ff/0xa00
-> > > > > [    1.796672]  [<ffffffff815ada2c>] vmemmap_alloc_block+0x62/0xba
-> > > > > [    1.803274]  [<ffffffff815ada99>] vmemmap_alloc_block_buf+0x15/0x3b
-> > > > > [    1.810263]  [<ffffffff815ab8a6>] vmemmap_populate+0xb4/0x21b
-> > > > > [    1.816673]  [<ffffffff815adecd>] sparse_mem_map_populate+0x27/0x35
-> > > > > [    1.823665]  [<ffffffff815ad8bf>] sparse_add_one_section+0x7a/0x185
-> > > > > [    1.830659]  [<ffffffff8159b74f>] __add_pages+0xaf/0x240
-> > > > > [    1.836588]  [<ffffffff81047359>] arch_add_memory+0x59/0xd0
-> > > > > [    1.842804]  [<ffffffff8159ba89>] add_memory+0xb9/0x1b0
-> > > > > [    1.848638]  [<ffffffff8132dd2c>] acpi_memory_device_add+0x18d/0x26d
-> > > > > [    1.855728]  [<ffffffff81303b91>] acpi_bus_device_attach+0x7d/0xcd
-> > > > > [    1.862625]  [<ffffffff8131d92d>] acpi_ns_walk_namespace+0xc8/0x17f
-> > > > > [    1.869616]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
-> > > > > [    1.876896]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
-> > > > > [    1.884177]  [<ffffffff8131de1c>] acpi_walk_namespace+0x95/0xc5
-> > > > > [    1.890780]  [<ffffffff81304866>] acpi_bus_scan+0x8b/0x9d
-> > > > > [    1.896805]  [<ffffffff81a14a15>] acpi_scan_init+0x63/0x160
-> > > > > [    1.903021]  [<ffffffff81a14830>] acpi_init+0x25d/0x2a6
-> > > > 
-> > > > So basically acpi thinks that some memory block is a hot plug memory
-> > > > and tries to add it. And that consumes lots of memory and we don't have
-> > > > that memory in second kernel.
-> > > 
-> > > That's not exactly the case.  What seems to happen is that there is an ACPI
-> > > memory object in the ACPI namespace and the ACPI memory hotplug driver
-> > > attempts to bind to it.  That driver attempts to find removable memory blocks
-> > > associated with that object and to add them to the memory map.
-> > > 
-> > > Why don't you simply append acpi=off to the kexec command line?  That should
-> > > make the problem go away.
-> > 
-> > Yes, that should work, but Baoquan's approach makes sense to me.  When
-> > memmap=exactmap is specified, the kernel should ignore any memory
-> > information from the firmware.
+On Thu, Jan 09, 2014 at 12:00:29AM +0100, Rafael J. Wysocki wrote:
+
+[..]
+> > The system then panics and the kdump/kexec kernel boots.  During this boot
+> > ACPi is initialized and the kernel (as can be seen above)
 > 
-> OK
+> Which is a bug.  You're not supposed to initialize ACPI twice in a row.
+
+[CC lkml, kexec mailing list, dave young]
+
+It is a fresh instance of kernel booting and it is initializing its data
+structures fresh. It is *not* re-initializing ACPI in same kernel.
+
+> > This patchset resolves the problem by adding a kernel parameter,
+> > no_memory_hotplug, to disable ACPI memory hotplug.  It can be added by default
+> > as a parameter to the kexec/kdump kernel so the kernel boots correctly.
 > 
-> Baoquan, please modify your patch to get rid of the #ifdef CONFIG_X86 in
-> acpi_memory_hotplug_init().  For example, you can add a function returning true
-> if use_exactmap is set and false otherwise and make acpi_memory_hotplug_init()
-> call that function.  Alternatively, you can define arch-independent
-> no_memory_hotplug (instead of use_exactmap) and set if for memmap=exactmap.
+> This problem is specific to kexec/kdump, so please don't add *generic* command
+> line parameters to address this.
 > 
 
-Prarit sent a patch to introduce no_memory_hotplug command line. I still
-think that memmap=exactmap does not necessarily mean that memory hotplug
-is disabled.
+There are other command line options to solve kdump problems. In general
+one might want to disable memory hogplug on the fly even if it is compiled
+in the kernel. So it can act as a good debugging aid.
 
-What about mem= parameter. If somebody specifies mem=1G, should that mean
-there can not be any hotplugged memory.
+Secondly, it can be specified with memmap=exactmap and mem=X paramters to
+make sure no memory is hot added in the system.
 
-I think we should atleast define a new command line parameter to disable
-memory hotplug. After that users can specify both memmap=exactmap and
-"no_mem_hotplug" on command line and control the behavior of kernel.
+So I can see other usages of this parameter. To me it makes sense to have
+a separate command line option to disable memory hotplug feature on the
+fly.
 
 Thanks
 Vivek
