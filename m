@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp.outflux.net ([2001:19d0:2:6:c0de:0:736d:7470])
+Received: from g4t0017.houston.hp.com ([15.201.24.20])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W12ai-0005be-L9
- for kexec@lists.infradead.org; Wed, 08 Jan 2014 23:31:17 +0000
-Date: Wed, 8 Jan 2014 15:30:15 -0800
-From: Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3] kexec: add sysctl to disable kexec_load
-Message-ID: <20140108233015.GA11428@www.outflux.net>
-MIME-Version: 1.0
-Content-Disposition: inline
+ id 1W13K5-0006Q4-Cv
+ for kexec@lists.infradead.org; Thu, 09 Jan 2014 00:18:10 +0000
+Message-ID: <1389226308.1792.39.camel@misato.fc.hp.com>
+Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Wed, 08 Jan 2014 17:11:48 -0700
+In-Reply-To: <8500545.JVNPnKcyD1@vostro.rjw.lan>
+References: <52CD6E33.400@redhat.com> <20140108155829.GC13649@redhat.com>
+ <8500545.JVNPnKcyD1@vostro.rjw.lan>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,164 +23,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Rik van Riel <riel@redhat.com>, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Mel Gorman <mgorman@suse.de>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Baoquan <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-For general-purpose (i.e. distro) kernel builds it makes sense to build with
-CONFIG_KEXEC to allow end users to choose what kind of things they want to do
-with kexec. However, in the face of trying to lock down a system with such
-a kernel, there needs to be a way to disable kexec_load (much like module
-loading can be disabled). Without this, it is too easy for the root user to
-modify kernel memory even when CONFIG_STRICT_DEVMEM and modules_disabled are
-set. With this change, it is still possible to load an image for use later,
-then disable kexec_load so the image (or lack of image) can't be altered.
+On Thu, 2014-01-09 at 00:07 +0100, Rafael J. Wysocki wrote:
+> On Wednesday, January 08, 2014 10:58:29 AM Vivek Goyal wrote:
+> > On Wed, Jan 08, 2014 at 11:26:43PM +0800, Baoquan wrote:
+> > 
+> > [..]
+> > > [    1.592222] acpi PNP0A03:03: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+> > > [    1.605045] PCI host bridge to bus 0000:ff
+> > > [    1.609615] pci_bus 0000:ff: root bus resource [bus ff]
+> > > [    1.632117] System RAM resource [mem 0x01000000-0x7bffffff] cannot be added
+> > > [    1.639892] init_memory_mapping: [mem 0x100000000-0x87fffffff]
+> > > [    1.717793] swapper/0: page allocation failure: order:9, mode:0x84d0
+> > > [    1.724884] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.10.0-59.el7.x86_64 #1
+> > > [    1.732842] Hardware name: QCI QSSC-S4R/QSSC-S4R, BIOS QSSC-S4R.QCI.01.00.S001.032520101647 03/25/2010
+> > > [    1.743224]  0000000000000000 ffff8800339878c8 ffffffff815b64ad ffff880033987950
+> > > [    1.751513]  ffffffff8113a980 ffff88003673ab28 00000000000001fe 0000000000000001
+> > > [    1.759804]  ffff880000000040 ffffffff810bc28a 0000000000000000 0000000000000200
+> > > [    1.768096] Call Trace:                                                                                                                                            [348/1928]
+> > > [    1.770834]  [<ffffffff815b64ad>] dump_stack+0x19/0x1b
+> > > [    1.776561]  [<ffffffff8113a980>] warn_alloc_failed+0xf0/0x160
+> > > [    1.783076]  [<ffffffff810bc28a>] ? on_each_cpu_mask+0x2a/0x60
+> > > [    1.789581]  [<ffffffff8113e92f>] __alloc_pages_nodemask+0x7ff/0xa00
+> > > [    1.796672]  [<ffffffff815ada2c>] vmemmap_alloc_block+0x62/0xba
+> > > [    1.803274]  [<ffffffff815ada99>] vmemmap_alloc_block_buf+0x15/0x3b
+> > > [    1.810263]  [<ffffffff815ab8a6>] vmemmap_populate+0xb4/0x21b
+> > > [    1.816673]  [<ffffffff815adecd>] sparse_mem_map_populate+0x27/0x35
+> > > [    1.823665]  [<ffffffff815ad8bf>] sparse_add_one_section+0x7a/0x185
+> > > [    1.830659]  [<ffffffff8159b74f>] __add_pages+0xaf/0x240
+> > > [    1.836588]  [<ffffffff81047359>] arch_add_memory+0x59/0xd0
+> > > [    1.842804]  [<ffffffff8159ba89>] add_memory+0xb9/0x1b0
+> > > [    1.848638]  [<ffffffff8132dd2c>] acpi_memory_device_add+0x18d/0x26d
+> > > [    1.855728]  [<ffffffff81303b91>] acpi_bus_device_attach+0x7d/0xcd
+> > > [    1.862625]  [<ffffffff8131d92d>] acpi_ns_walk_namespace+0xc8/0x17f
+> > > [    1.869616]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
+> > > [    1.876896]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
+> > > [    1.884177]  [<ffffffff8131de1c>] acpi_walk_namespace+0x95/0xc5
+> > > [    1.890780]  [<ffffffff81304866>] acpi_bus_scan+0x8b/0x9d
+> > > [    1.896805]  [<ffffffff81a14a15>] acpi_scan_init+0x63/0x160
+> > > [    1.903021]  [<ffffffff81a14830>] acpi_init+0x25d/0x2a6
+> > 
+> > So basically acpi thinks that some memory block is a hot plug memory
+> > and tries to add it. And that consumes lots of memory and we don't have
+> > that memory in second kernel.
+> 
+> That's not exactly the case.  What seems to happen is that there is an ACPI
+> memory object in the ACPI namespace and the ACPI memory hotplug driver
+> attempts to bind to it.  That driver attempts to find removable memory blocks
+> associated with that object and to add them to the memory map.
+> 
+> Why don't you simply append acpi=off to the kexec command line?  That should
+> make the problem go away.
 
-The intention is for using this in environments where "perfect"
-enforcement is hard. Without a verified boot, along with verified modules,
-and along with verified kexec, this is trying to give a system a better
-chance to defend itself (or at least grow the window of discoverability)
-against attack in the face of a privilege escalation.
+Yes, that should work, but Baoquan's approach makes sense to me.  When
+memmap=exactmap is specified, the kernel should ignore any memory
+information from the firmware.
 
-In my mind, I consider several boot scenarios:
-
-1) Verified boot of read-only verified root fs loading fd-based
-   verification of kexec images.
-2) Secure boot of writable root fs loading signed kexec images.
-3) Regular boot loading kexec (e.g. kcrash) image early and locking it.
-4) Regular boot with no control of kexec image at all.
-
-1 and 2 don't exist yet, but will soon once the verified kexec series
-has landed. 4 is the state of things now. The gap between 2 and 4 is
-too large, so this change creates scenario 3, a middle-ground above 4
-when 2 and 1 are not possible for a system.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Rik van Riel <riel@redhat.com>
----
-v4:
- - improved commit message; akpm
-v3:
- - renamed and clarified to kexec_load_disabled; Eric W. Biederman
-v2:
- - updated sysctl documentation; akpm
----
- Documentation/sysctl/kernel.txt |   15 ++++++++++++++-
- include/linux/kexec.h           |    1 +
- kernel/kexec.c                  |    3 ++-
- kernel/sysctl.c                 |   13 +++++++++++++
- 4 files changed, 30 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-index 26b7ee491df8..3e1846427eda 100644
---- a/Documentation/sysctl/kernel.txt
-+++ b/Documentation/sysctl/kernel.txt
-@@ -33,6 +33,7 @@ show up in /proc/sys/kernel:
- - domainname
- - hostname
- - hotplug
-+- kexec_load_disabled
- - kptr_restrict
- - kstack_depth_to_print       [ X86 only ]
- - l2cr                        [ PPC only ]
-@@ -287,6 +288,18 @@ Default value is "/sbin/hotplug".
- 
- ==============================================================
- 
-+kexec_load_disabled:
-+
-+A toggle indicating if the kexec_load syscall has been disabled. This
-+value defaults to 0 (false: kexec_load enabled), but can be set to 1
-+(true: kexec_load disabled). Once true, kexec can no longer be used, and
-+the toggle cannot be set back to false. This allows a kexec image to be
-+loaded before disabling the syscall, allowing a system to set up (and
-+later use) an image without it being altered. Generally used together
-+with the "modules_disabled" sysctl.
-+
-+==============================================================
-+
- kptr_restrict:
- 
- This toggle indicates whether restrictions are placed on
-@@ -331,7 +344,7 @@ A toggle value indicating if modules are allowed to be loaded
- in an otherwise modular kernel.  This toggle defaults to off
- (0), but can be set true (1).  Once true, modules can be
- neither loaded nor unloaded, and the toggle cannot be set back
--to false.
-+to false.  Generally used with the "kexec_load_disabled" toggle.
- 
- ==============================================================
- 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 5fd33dc1fe3a..6d4066cdb5b5 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -170,6 +170,7 @@ unsigned long paddr_vmcoreinfo_note(void);
- 
- extern struct kimage *kexec_image;
- extern struct kimage *kexec_crash_image;
-+extern int kexec_load_disabled;
- 
- #ifndef kexec_flush_icache_page
- #define kexec_flush_icache_page(page)
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 9c970167e402..ac738781d356 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -932,6 +932,7 @@ static int kimage_load_segment(struct kimage *image,
-  */
- struct kimage *kexec_image;
- struct kimage *kexec_crash_image;
-+int kexec_load_disabled;
- 
- static DEFINE_MUTEX(kexec_mutex);
- 
-@@ -942,7 +943,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 	int result;
- 
- 	/* We only trust the superuser with rebooting the system. */
--	if (!capable(CAP_SYS_BOOT))
-+	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
- 		return -EPERM;
- 
- 	/*
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 34a604726d0b..ea4bb8152a34 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -62,6 +62,7 @@
- #include <linux/capability.h>
- #include <linux/binfmts.h>
- #include <linux/sched/sysctl.h>
-+#include <linux/kexec.h>
- 
- #include <asm/uaccess.h>
- #include <asm/processor.h>
-@@ -614,6 +615,18 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif
-+#ifdef CONFIG_KEXEC
-+	{
-+		.procname	= "kexec_load_disabled",
-+		.data		= &kexec_load_disabled,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		/* only handle a transition from default "0" to "1" */
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= &one,
-+		.extra2		= &one,
-+	},
-+#endif
- #ifdef CONFIG_MODULES
- 	{
- 		.procname	= "modprobe",
--- 
-1.7.9.5
+Thanks,
+-Toshi
 
 
--- 
-Kees Cook
-Chrome OS Security
 
 _______________________________________________
 kexec mailing list
