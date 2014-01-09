@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W13K5-0006Q4-Cv
- for kexec@lists.infradead.org; Thu, 09 Jan 2014 00:18:10 +0000
-Message-ID: <1389226308.1792.39.camel@misato.fc.hp.com>
-Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Wed, 08 Jan 2014 17:11:48 -0700
-In-Reply-To: <8500545.JVNPnKcyD1@vostro.rjw.lan>
-References: <52CD6E33.400@redhat.com> <20140108155829.GC13649@redhat.com>
- <8500545.JVNPnKcyD1@vostro.rjw.lan>
-Mime-Version: 1.0
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W13RY-0006XB-AQ
+ for kexec@lists.infradead.org; Thu, 09 Jan 2014 00:25:53 +0000
+Date: Wed, 8 Jan 2014 18:25:23 -0600
+From: Cliff Wickman <cpw@sgi.com>
+Subject: Re: [PATCH 0/2] makedumpfile: for large memories
+Message-ID: <20140109002523.GA30797@sgi.com>
+References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971D878F@BPXM01GP.gisp.nec.co.jp>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971D878F@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,68 +24,203 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Baoquan <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, 2014-01-09 at 00:07 +0100, Rafael J. Wysocki wrote:
-> On Wednesday, January 08, 2014 10:58:29 AM Vivek Goyal wrote:
-> > On Wed, Jan 08, 2014 at 11:26:43PM +0800, Baoquan wrote:
-> > 
-> > [..]
-> > > [    1.592222] acpi PNP0A03:03: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
-> > > [    1.605045] PCI host bridge to bus 0000:ff
-> > > [    1.609615] pci_bus 0000:ff: root bus resource [bus ff]
-> > > [    1.632117] System RAM resource [mem 0x01000000-0x7bffffff] cannot be added
-> > > [    1.639892] init_memory_mapping: [mem 0x100000000-0x87fffffff]
-> > > [    1.717793] swapper/0: page allocation failure: order:9, mode:0x84d0
-> > > [    1.724884] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.10.0-59.el7.x86_64 #1
-> > > [    1.732842] Hardware name: QCI QSSC-S4R/QSSC-S4R, BIOS QSSC-S4R.QCI.01.00.S001.032520101647 03/25/2010
-> > > [    1.743224]  0000000000000000 ffff8800339878c8 ffffffff815b64ad ffff880033987950
-> > > [    1.751513]  ffffffff8113a980 ffff88003673ab28 00000000000001fe 0000000000000001
-> > > [    1.759804]  ffff880000000040 ffffffff810bc28a 0000000000000000 0000000000000200
-> > > [    1.768096] Call Trace:                                                                                                                                            [348/1928]
-> > > [    1.770834]  [<ffffffff815b64ad>] dump_stack+0x19/0x1b
-> > > [    1.776561]  [<ffffffff8113a980>] warn_alloc_failed+0xf0/0x160
-> > > [    1.783076]  [<ffffffff810bc28a>] ? on_each_cpu_mask+0x2a/0x60
-> > > [    1.789581]  [<ffffffff8113e92f>] __alloc_pages_nodemask+0x7ff/0xa00
-> > > [    1.796672]  [<ffffffff815ada2c>] vmemmap_alloc_block+0x62/0xba
-> > > [    1.803274]  [<ffffffff815ada99>] vmemmap_alloc_block_buf+0x15/0x3b
-> > > [    1.810263]  [<ffffffff815ab8a6>] vmemmap_populate+0xb4/0x21b
-> > > [    1.816673]  [<ffffffff815adecd>] sparse_mem_map_populate+0x27/0x35
-> > > [    1.823665]  [<ffffffff815ad8bf>] sparse_add_one_section+0x7a/0x185
-> > > [    1.830659]  [<ffffffff8159b74f>] __add_pages+0xaf/0x240
-> > > [    1.836588]  [<ffffffff81047359>] arch_add_memory+0x59/0xd0
-> > > [    1.842804]  [<ffffffff8159ba89>] add_memory+0xb9/0x1b0
-> > > [    1.848638]  [<ffffffff8132dd2c>] acpi_memory_device_add+0x18d/0x26d
-> > > [    1.855728]  [<ffffffff81303b91>] acpi_bus_device_attach+0x7d/0xcd
-> > > [    1.862625]  [<ffffffff8131d92d>] acpi_ns_walk_namespace+0xc8/0x17f
-> > > [    1.869616]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
-> > > [    1.876896]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
-> > > [    1.884177]  [<ffffffff8131de1c>] acpi_walk_namespace+0x95/0xc5
-> > > [    1.890780]  [<ffffffff81304866>] acpi_bus_scan+0x8b/0x9d
-> > > [    1.896805]  [<ffffffff81a14a15>] acpi_scan_init+0x63/0x160
-> > > [    1.903021]  [<ffffffff81a14830>] acpi_init+0x25d/0x2a6
-> > 
-> > So basically acpi thinks that some memory block is a hot plug memory
-> > and tries to add it. And that consumes lots of memory and we don't have
-> > that memory in second kernel.
+On Mon, Jan 06, 2014 at 09:27:34AM +0000, Atsushi Kumagai wrote:
+> Hello Cliff,
 > 
-> That's not exactly the case.  What seems to happen is that there is an ACPI
-> memory object in the ACPI namespace and the ACPI memory hotplug driver
-> attempts to bind to it.  That driver attempts to find removable memory blocks
-> associated with that object and to add them to the memory map.
+> On 2014/01/01 8:30:47, kexec <kexec-bounces@lists.infradead.org> wrote:
+> > From: Cliff Wickman <cpw@sgi.com>
+> > 
+> > Gentlemen of kexec,
+> > 
+> > I have been working on enabling kdump on some very large systems, and
+> > have found some solutions that I hope you will consider.
+> > 
+> > The first issue is to work within the restricted size of crashkernel memory
+> > under 2.6.32-based kernels, such as sles11 and rhel6.
+> > 
+> > The second issue is to reduce the very large size of a dump of a big memory
+> > system, even on an idle system.
+> > 
+> > These are my propositions:
+> > 
+> > Size of crashkernel memory
+> >   1) raw i/o for writing the dump
+> >   2) use root device for the bitmap file (not tmpfs)
+> >   3) raw i/o for reading/writing the bitmaps
+> >   
+> > Size of dump (and hence the duration of dumping)
+> >   4) exclude page structures for unused pages
+> > 
+> > 
+> > 1) Is quite easy.  The cache of pages needs to be aligned on a block
+> >   boundary and written in block multiples, as required by O_DIRECT files.
+> > 
+> >   The use of raw i/o prevents the growing of the crash kernel's page
+> >   cache.
 > 
-> Why don't you simply append acpi=off to the kexec command line?  That should
-> make the problem go away.
+> There is no reason to reject this idea, please re-post it as a formal patch.
+> If possible, I would like to know the benefit of only this.
 
-Yes, that should work, but Baoquan's approach makes sense to me.  When
-memmap=exactmap is specified, the kernel should ignore any memory
-information from the firmware.
+The motivation for using raw i/o was purely to be able to conserve memory,
+not for speed.
+However, I haven't noticed any significant degradation in speed.
+Memory is in 'very' short supply on a large machine (ironically) and a 2.6 or 
+3.0 kernel.  We're constrained to the low 4GB, and the kernel is putting other
+things in that memory that are related to memory size.
+The obvious solution is cyclic mode, but that requires at least 2x the page
+scans.  Once for the scan of unnecessary pages and several partial 
+scans for the copy phase.
+But it is tmpfs and kernel page cache that are using up available memory.
+If we avoid those, a single page scan can work in about 350M of crashkernel
+memory.
+This is not a problem with 3.10+ kernels as we're not constrained to low 4G.
+ 
+> > 2) Is also quite easy.  My patch finds the path to the crash
+> >   kernel's root device by examining the dump pathname. Storing the bitmaps
+> >   to a file is otherwise not conserving memory, as they are being written
+> >   to tmpfs.
+> 
+> Users will expect that the size of dump file is the same as the size of
+> RAM at most, they will prepare a disk which fit to save that.
+> But 2) breaks this estimation, I worry about it a little.
 
-Thanks,
--Toshi
+The bit map file is very small compared to the dump. And the dump should be
+much smaller than RAM.  Particularly with 4), the excluding of unused page structures.
+> 
+> Of course, I don't reject this idea just only for that reason,
+> but I would like to know the definite advantage of this.
+> I suppose that the improvement showed in your benchmarks may be came
+> from 1) and 4) mostly, so could you let me know that only 2) and 3)
+> can perform much faster than the current cyclic mode ?
 
+2) and 3), the handling of the bitmap, are small contributors to the
+memory shortage issue.  They are a bigger issue the bigger the system.
+It's just that if we consistently avoid enlarging page cache and
+tmpfs we can avoid the 2nd page scan altogether.
+True, my benchmarks show only .2 min. and 1.1 min. improvements
+for 2TB and 8TB (2.0 vs 1.8, and 6.6 vs 5.5).
+But that's an improvement, not a loss.  And we're absolutely
+not going to run out of memory as the scan and copies proceed.
+This is important on these old kernels with minimal memory available.
+ 
+> > 3) Raw i/o for the bitmaps, is accomplished by caching the
+> >   bitmap file in a similar way to that of the dump file.
+> > 
+> >   I find that the use of direct i/o is not significantly slower than
+> >   writing through the kernel's page cache.
+> >
+> > 4) The excluding of unused kernel page structures is very
+> >   important for a large memory system.  The kernel otherwise includes
+> >   3.67 million pages of page structures per TB of memory. By contrast
+> >   the rest of the kernel is only about 1 million pages.
+> 
+> According to your and Dave's mails, 4) seems risky and unacceptable
+> for now. I think we need more investigation for this.
 
+I've been working with Dave on a patch for crash.  It will warn the
+user that certain kmem command options will fail.  But that is
+only relevant to examinations of free memory and user memory, the
+contents of which we're not capturing anyway.
+
+Number 4), the exclusion of page structures for non-captured
+pages is really the crux of the improvement.
+A linux kernel should not be hugely bigger on a big machine than
+on a small one.  Slightly bigger, yes, because of bigger slab
+caches. 
+But in practice the dumps of big memories are huge, and all
+because of page structures.
+To find the unneeded ones only takes a few seconds, but cuts
+hours off the dumping process.  Without this a customer is just
+not going to allow his very big system to be dumped.
+
+-Cliff
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+> > Test results are below, for systems of 1TB, 2TB, 8.8TB and 16TB.
+> > (There are no 'old' numbers for 16TB as time and space requirements
+> >  made those effectively useless.)
+> > 
+> > Run times were generally reduced 2-3x, and dump size reduced about 8x.
+> > 
+> > All timings were done using 512M of crashkernel memory.
+> > 
+> >    System memory size
+> >    1TB                     unpatched    patched
+> >      OS: rhel6.4 (does a free pages pass)
+> >      page scan time           1.6min    1.6min
+> >      dump copy time           2.4min     .4min
+> >      total time               4.1min    2.0min
+> >      dump size                 3014M      364M
+> > 
+> >      OS: rhel6.5
+> >      page scan time            .6min     .6min
+> >      dump copy time           2.3min     .5min
+> >      total time               2.9min    1.1min
+> >      dump size                 3011M      423M
+> > 
+> >      OS: sles11sp3 (3.0.93)
+> >      page scan time            .5min     .5min
+> >      dump copy time           2.3min     .5min
+> >      total time               2.8min    1.0min
+> >      dump size                 2950M      350M
+> > 
+> >    2TB
+> >      OS: rhel6.5           (cyclicx3)
+> >      page scan time           2.0min    1.8min
+> >      dump copy time           8.0min    1.5min
+> >      total time              10.0min    3.3min
+> >      dump size                 6141M      835M
+> > 
+> >    8.8TB
+> >      OS: rhel6.5           (cyclicx5)
+> >      page scan time           6.6min    5.5min
+> >      dump copy time          67.8min    6.2min
+> >      total time              74.4min   11.7min
+> >      dump size                 15.8G      2.7G
+> > 
+> >    16TB
+> >      OS: rhel6.4
+> >      page scan time                   125.3min
+> >      dump copy time                    13.2min
+> >      total time                       138.5min
+> >      dump size                            4.0G
+> > 
+> >      OS: rhel6.5
+> >      page scan time                    27.8min
+> >      dump copy time                    13.3min
+> >      total time                        41.1min
+> >      dump size                            4.1G
+> > 
+> > Page scan time is greatly affected by whether or not the
+> > kernel supports mmap of /proc/vmcore.
+> > 
+> > The choice of snappy vs. zlib compression becomes fairly irrelevant
+> > when we can shrink the dump size dramatically.  The above
+> > were done with snappy compression.
+> > 
+> > I am sending my 2 working patches.  
+> > They are kludgy in the sense that they ignore all forms of
+> > kdump except the creation of a disk dump, and all architectures
+> > except x86_64.
+> > But I think they are sufficient to demonstrate the sizable
+> > time, crashkernel space and disk space savings that are possible.
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+
+-- 
+Cliff Wickman
+SGI
+cpw@sgi.com
+(651) 683-3824
 
 _______________________________________________
 kexec mailing list
