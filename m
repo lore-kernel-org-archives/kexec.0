@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W14OM-0007O4-R1
- for kexec@lists.infradead.org; Thu, 09 Jan 2014 01:26:40 +0000
+ id 1W14QN-0007Qa-UJ
+ for kexec@lists.infradead.org; Thu, 09 Jan 2014 01:28:44 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: -v shows if lzo or snappy support enabled
- or not
-Date: Thu, 9 Jan 2014 01:24:03 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D9AFD@BPXM01GP.gisp.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: add -p references where appropriate in
+ "--help" output
+Date: Thu, 9 Jan 2014 01:23:06 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D9AF7@BPXM01GP.gisp.nec.co.jp>
+References: <1389110701-10870-1-git-send-email-anderson@redhat.com>
+In-Reply-To: <1389110701-10870-1-git-send-email-anderson@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -22,113 +24,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+To: Dave Anderson <anderson@redhat.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 2014/01/08 15:32:51, kexec <kexec-bounces@lists.infradead.org> wrote:
-> On 01/08/14 at 01:57pm, Zhang Yanfei wrote:
-> > Hello chao
-> >
-> > On 01/08/2014 01:40 PM, WANG Chao wrote:
-> > > It would be great to have makedumpfile -v to show if lzo or snappy
-> > > support is enabled or not, since --help prints too much and we have to
-> > > scroll back three screens to check it out.
-> > >
-> > > Using "+lzo" to indicate lzo is enabled and vice versa "-lzo" for lzo is
-> > > disabled. Same for snappy.
-> > >
-> > > For exmaple, If lzo and snappy support are enabled,
-> > >
-> > >     $ ./makedumpfile -v
-> > >     makedumpfile: version 1.5.5 (released on 18 Dec 2013)
-> > >     +lzo +snappy
-> > >
-> > > If both of them are disabled,
-> > >
-> > >     $ ./makedumpfile -v
-> > >     makedumpfile: version 1.5.5 (released on 18 Dec 2013)
-> > >     -lzo -snappy
-> >
-> > This is weird... we may even think we have lzo/snappy enabled
-> > since an option is always specified with '-'.
->
-> I took this idea from `vim --version`. But it seems like vim has too
-> many features that there's always +xxx out there to distinguish them
-> from -xxx. I think you make a good point.
->
-> >
-> > My idea is to have "with lzo/snappy enabled" directly appended
-> > when lzo/snappy enabled.
->
-> That works for me either as long as -v has the information about
-> lzo/snappy is enabled or not. But to simplify the code, I prefer
-> something like this:
-> " lzo    enabled
->   snappy enabled"
-> and also display "lzo disabled" explicitly.
+Hello Dave,
 
-I agree with this idea.
+On 2014/01/08 1:06:18, kexec <kexec-bounces@lists.infradead.org> wrote:
+> While the "makedumpfile --help" does have a couple references to 
+> snappy compression support, the output neglects to show the -p option 
+> in several examples.
 
-> >
-> > And is it ok to add such info to the version ? I don't know.
-> > kumagai may give the answer.
->
-> Yeah, let's wait.
+Thanks, I'll merge this into v1.5.6.
 
-I think it's good, I'm tired of that scroll back :-(
-Could you post a v2 patch ?
-
-
-Thanks
 Atsushi Kumagai
 
->
-> Thanks
-> WANG Chao
->
-> >
-> > Thanks.
-> >
-> > >
-> > > Signed-off-by: WANG Chao <chaowang@redhat.com>
-> > > ---
-> > >  print_info.c | 12 +++++++++++-
-> > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/print_info.c b/print_info.c
-> > > index 90b6cee..242b42c 100644
-> > > --- a/print_info.c
-> > > +++ b/print_info.c
-> > > @@ -26,7 +26,17 @@ void
-> > >  show_version(void)
-> > >  {
-> > >   MSG("makedumpfile: version " VERSION " (released on " RELEASE_DATE ")\n");
-> > > - MSG("\n");
-> > > +#ifdef USELZO
-> > > + MSG("+lzo ");
-> > > +#else
-> > > + MSG("-lzo ");
-> > > +#endif
-> > > +#ifdef USESNAPPY
-> > > + MSG("+snappy ");
-> > > +#else
-> > > + MSG("-snappy ");
-> > > +#endif
-> > > + MSG("\n\n");
-> > >  }
-> > >
-> > >  void
-> > >
-> >
-> >
-> > --
-> > Thanks.
-> > Zhang Yanfei
->
+> ---
+>  print_info.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/print_info.c b/print_info.c
+> index 90b6cee..a56a6a7 100644
+> --- a/print_info.c
+> +++ b/print_info.c
+> @@ -48,16 +48,16 @@ print_usage(void)
+>  	MSG("\n");
+>  	MSG("Usage:\n");
+>  	MSG("  Creating DUMPFILE:\n");
+> -	MSG("  # makedumpfile    [-c|-l|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
+> +	MSG("  # makedumpfile    [-c|-l|-p|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
+>  	MSG("    DUMPFILE\n");
+>  	MSG("\n");
+>  	MSG("  Creating DUMPFILE with filtered kernel data specified through filter config\n");
+>  	MSG("  file or eppic macro:\n");
+> -	MSG("  # makedumpfile    [-c|-l|-E] [-d DL] -x VMLINUX [--config FILTERCONFIGFILE]\n");
+> +	MSG("  # makedumpfile    [-c|-l|-p|-E] [-d DL] -x VMLINUX [--config FILTERCONFIGFILE]\n");
+>  	MSG("    [--eppic EPPICMACRO] VMCORE DUMPFILE\n");
+>  	MSG("\n");
+>  	MSG("  Outputting the dump data in the flattened format to the standard output:\n");
+> -	MSG("  # makedumpfile -F [-c|-l|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
+> +	MSG("  # makedumpfile -F [-c|-l|-p|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
+>  	MSG("\n");
+>  	MSG("  Rearranging the dump data in the flattened format to a readable DUMPFILE:\n");
+>  	MSG("  # makedumpfile -R DUMPFILE\n");
+> @@ -84,7 +84,7 @@ print_usage(void)
+>  	MSG("\n");
+>  	MSG("\n");
+>  	MSG("  Creating DUMPFILE from multiple VMCOREs generated on sadump diskset configuration:\n");
+> -	MSG("  # makedumpfile [-c|-l] [-d DL] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2\n");
+> +	MSG("  # makedumpfile [-c|-l|-p] [-d DL] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2\n");
+>  	MSG("    [--diskset=VMCORE3 ..] DUMPFILE\n");
+>  	MSG("\n");
+>  	MSG("\n");
+> @@ -117,7 +117,7 @@ print_usage(void)
+>  	MSG("\n");
+>  	MSG("  [-E]:\n");
+>  	MSG("      Create DUMPFILE in the ELF format.\n");
+> -	MSG("      This option cannot be specified with either of -c option or -l option,\n");
+> +	MSG("      This option cannot be specified with the -c, -l or -p options,\n");
+>  	MSG("      because the ELF format does not support compressed data.\n");
+>  	MSG("\n");
+>  	MSG("  [-x VMLINUX]:\n");
+> -- 
+> 1.7.11.7
+> 
+> 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
