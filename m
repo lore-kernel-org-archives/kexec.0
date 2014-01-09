@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W14QN-0007Qa-UJ
- for kexec@lists.infradead.org; Thu, 09 Jan 2014 01:28:44 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: add -p references where appropriate in
- "--help" output
-Date: Thu, 9 Jan 2014 01:23:06 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971D9AF7@BPXM01GP.gisp.nec.co.jp>
-References: <1389110701-10870-1-git-send-email-anderson@redhat.com>
-In-Reply-To: <1389110701-10870-1-git-send-email-anderson@redhat.com>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W16CZ-0000cb-J7
+ for kexec@lists.infradead.org; Thu, 09 Jan 2014 03:22:36 +0000
+Date: Thu, 9 Jan 2014 11:22:02 +0800
+From: Baoquan <bhe@redhat.com>
+Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
+Message-ID: <20140109032202.GA29272@dhcp-16-116.nay.redhat.com>
+References: <52CD6E33.400@redhat.com> <20140108155829.GC13649@redhat.com>
+ <8500545.JVNPnKcyD1@vostro.rjw.lan>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <8500545.JVNPnKcyD1@vostro.rjw.lan>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,75 +24,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-Hello Dave,
-
-On 2014/01/08 1:06:18, kexec <kexec-bounces@lists.infradead.org> wrote:
-> While the "makedumpfile --help" does have a couple references to 
-> snappy compression support, the output neglects to show the -p option 
-> in several examples.
-
-Thanks, I'll merge this into v1.5.6.
-
-Atsushi Kumagai
-
-> ---
->  print_info.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+On 01/09/14 at 12:07am, Rafael J. Wysocki wrote:
+> On Wednesday, January 08, 2014 10:58:29 AM Vivek Goyal wrote:
+> > On Wed, Jan 08, 2014 at 11:26:43PM +0800, Baoquan wrote:
+> > 
+> > [..]
+> > > [    1.592222] acpi PNP0A03:03: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+> > > [    1.605045] PCI host bridge to bus 0000:ff
+> > > [    1.609615] pci_bus 0000:ff: root bus resource [bus ff]
+> > > [    1.632117] System RAM resource [mem 0x01000000-0x7bffffff] cannot be added
+> > > [    1.639892] init_memory_mapping: [mem 0x100000000-0x87fffffff]
+> > > [    1.717793] swapper/0: page allocation failure: order:9, mode:0x84d0
+> > > [    1.724884] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.10.0-59.el7.x86_64 #1
+> > > [    1.732842] Hardware name: QCI QSSC-S4R/QSSC-S4R, BIOS QSSC-S4R.QCI.01.00.S001.032520101647 03/25/2010
+> > > [    1.743224]  0000000000000000 ffff8800339878c8 ffffffff815b64ad ffff880033987950
+> > > [    1.751513]  ffffffff8113a980 ffff88003673ab28 00000000000001fe 0000000000000001
+> > > [    1.759804]  ffff880000000040 ffffffff810bc28a 0000000000000000 0000000000000200
+> > > [    1.768096] Call Trace:                                                                                                                                            [348/1928]
+> > > [    1.770834]  [<ffffffff815b64ad>] dump_stack+0x19/0x1b
+> > > [    1.776561]  [<ffffffff8113a980>] warn_alloc_failed+0xf0/0x160
+> > > [    1.783076]  [<ffffffff810bc28a>] ? on_each_cpu_mask+0x2a/0x60
+> > > [    1.789581]  [<ffffffff8113e92f>] __alloc_pages_nodemask+0x7ff/0xa00
+> > > [    1.796672]  [<ffffffff815ada2c>] vmemmap_alloc_block+0x62/0xba
+> > > [    1.803274]  [<ffffffff815ada99>] vmemmap_alloc_block_buf+0x15/0x3b
+> > > [    1.810263]  [<ffffffff815ab8a6>] vmemmap_populate+0xb4/0x21b
+> > > [    1.816673]  [<ffffffff815adecd>] sparse_mem_map_populate+0x27/0x35
+> > > [    1.823665]  [<ffffffff815ad8bf>] sparse_add_one_section+0x7a/0x185
+> > > [    1.830659]  [<ffffffff8159b74f>] __add_pages+0xaf/0x240
+> > > [    1.836588]  [<ffffffff81047359>] arch_add_memory+0x59/0xd0
+> > > [    1.842804]  [<ffffffff8159ba89>] add_memory+0xb9/0x1b0
+> > > [    1.848638]  [<ffffffff8132dd2c>] acpi_memory_device_add+0x18d/0x26d
+> > > [    1.855728]  [<ffffffff81303b91>] acpi_bus_device_attach+0x7d/0xcd
+> > > [    1.862625]  [<ffffffff8131d92d>] acpi_ns_walk_namespace+0xc8/0x17f
+> > > [    1.869616]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
+> > > [    1.876896]  [<ffffffff81303b14>] ? acpi_bus_type_and_status+0x90/0x90
+> > > [    1.884177]  [<ffffffff8131de1c>] acpi_walk_namespace+0x95/0xc5
+> > > [    1.890780]  [<ffffffff81304866>] acpi_bus_scan+0x8b/0x9d
+> > > [    1.896805]  [<ffffffff81a14a15>] acpi_scan_init+0x63/0x160
+> > > [    1.903021]  [<ffffffff81a14830>] acpi_init+0x25d/0x2a6
+> > 
+> > So basically acpi thinks that some memory block is a hot plug memory
+> > and tries to add it. And that consumes lots of memory and we don't have
+> > that memory in second kernel.
 > 
-> diff --git a/print_info.c b/print_info.c
-> index 90b6cee..a56a6a7 100644
-> --- a/print_info.c
-> +++ b/print_info.c
-> @@ -48,16 +48,16 @@ print_usage(void)
->  	MSG("\n");
->  	MSG("Usage:\n");
->  	MSG("  Creating DUMPFILE:\n");
-> -	MSG("  # makedumpfile    [-c|-l|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
-> +	MSG("  # makedumpfile    [-c|-l|-p|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
->  	MSG("    DUMPFILE\n");
->  	MSG("\n");
->  	MSG("  Creating DUMPFILE with filtered kernel data specified through filter config\n");
->  	MSG("  file or eppic macro:\n");
-> -	MSG("  # makedumpfile    [-c|-l|-E] [-d DL] -x VMLINUX [--config FILTERCONFIGFILE]\n");
-> +	MSG("  # makedumpfile    [-c|-l|-p|-E] [-d DL] -x VMLINUX [--config FILTERCONFIGFILE]\n");
->  	MSG("    [--eppic EPPICMACRO] VMCORE DUMPFILE\n");
->  	MSG("\n");
->  	MSG("  Outputting the dump data in the flattened format to the standard output:\n");
-> -	MSG("  # makedumpfile -F [-c|-l|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
-> +	MSG("  # makedumpfile -F [-c|-l|-p|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
->  	MSG("\n");
->  	MSG("  Rearranging the dump data in the flattened format to a readable DUMPFILE:\n");
->  	MSG("  # makedumpfile -R DUMPFILE\n");
-> @@ -84,7 +84,7 @@ print_usage(void)
->  	MSG("\n");
->  	MSG("\n");
->  	MSG("  Creating DUMPFILE from multiple VMCOREs generated on sadump diskset configuration:\n");
-> -	MSG("  # makedumpfile [-c|-l] [-d DL] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2\n");
-> +	MSG("  # makedumpfile [-c|-l|-p] [-d DL] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2\n");
->  	MSG("    [--diskset=VMCORE3 ..] DUMPFILE\n");
->  	MSG("\n");
->  	MSG("\n");
-> @@ -117,7 +117,7 @@ print_usage(void)
->  	MSG("\n");
->  	MSG("  [-E]:\n");
->  	MSG("      Create DUMPFILE in the ELF format.\n");
-> -	MSG("      This option cannot be specified with either of -c option or -l option,\n");
-> +	MSG("      This option cannot be specified with the -c, -l or -p options,\n");
->  	MSG("      because the ELF format does not support compressed data.\n");
->  	MSG("\n");
->  	MSG("  [-x VMLINUX]:\n");
-> -- 
-> 1.7.11.7
+> That's not exactly the case.  What seems to happen is that there is an ACPI
+> memory object in the ACPI namespace and the ACPI memory hotplug driver
+> attempts to bind to it.  That driver attempts to find removable memory blocks
+> associated with that object and to add them to the memory map.
+
+Yeah, since kdump kernel will detect rsdp for legacy machine in the
+first 1K of the EBDA or between E0000 and FFFFF. 
+
 > 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+> Why don't you simply append acpi=off to the kexec command line?  That should
+> make the problem go away.
+
+acpi=off doesn't work, kdump kernel hang immediately after crash is
+triggered. Because acpi information is needed by kdump kernel, we can't
+disable it.
+
 
 _______________________________________________
 kexec mailing list
