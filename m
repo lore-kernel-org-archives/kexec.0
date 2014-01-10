@@ -1,18 +1,41 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W1WrO-0002Oq-Ke
- for kexec@lists.infradead.org; Fri, 10 Jan 2014 07:50:33 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 0/2] makedumpfile: for large memories
-Date: Fri, 10 Jan 2014 07:48:27 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971DA820@BPXM01GP.gisp.nec.co.jp>
-References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971D878F@BPXM01GP.gisp.nec.co.jp>
- <20140109002523.GA30797@sgi.com>
-In-Reply-To: <20140109002523.GA30797@sgi.com>
-Content-Language: ja-JP
+ id 1W1X8T-0002hV-RD
+ for kexec@lists.infradead.org; Fri, 10 Jan 2014 08:08:11 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id CFE573EE0B6
+ for <kexec@lists.infradead.org>; Fri, 10 Jan 2014 17:07:42 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id BD34345DD77
+ for <kexec@lists.infradead.org>; Fri, 10 Jan 2014 17:07:42 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id A453245DD76
+ for <kexec@lists.infradead.org>; Fri, 10 Jan 2014 17:07:42 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 815981DB8040
+ for <kexec@lists.infradead.org>; Fri, 10 Jan 2014 17:07:42 +0900 (JST)
+Received: from g01jpfmpwkw03.exch.g01.fujitsu.local
+ (g01jpfmpwkw03.exch.g01.fujitsu.local [10.0.193.57])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 332721DB803E
+ for <kexec@lists.infradead.org>; Fri, 10 Jan 2014 17:07:42 +0900 (JST)
+Message-ID: <52CFAA20.2010109@jp.fujitsu.com>
+Date: Fri, 10 Jan 2014 17:06:56 +0900
+From: Yasuaki Ishimatsu <isimatu.yasuaki@jp.fujitsu.com>
 MIME-Version: 1.0
+Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
+References: <8500545.JVNPnKcyD1@vostro.rjw.lan>
+ <1389226308.1792.39.camel@misato.fc.hp.com>
+ <20140109145035.GB25897@redhat.com>
+ <1389283439.1792.66.camel@misato.fc.hp.com>
+ <20140109162427.GF25897@redhat.com>
+ <1389288265.1792.108.camel@misato.fc.hp.com>
+ <20140109182310.GG25897@redhat.com>
+ <1389292470.1792.109.camel@misato.fc.hp.com>
+ <20140109212705.GC12111@redhat.com>
+ <1389304583.1792.139.camel@misato.fc.hp.com>
+ <20140110071124.GA6464@dhcp-16-105.nay.redhat.com>
+In-Reply-To: <20140110071124.GA6464@dhcp-16-105.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,237 +44,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Baoquan <bhe@redhat.com>
+Cc: Toshi Kani <toshi.kani@hp.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On 2014/01/09 9:26:20, kexec <kexec-bounces@lists.infradead.org> wrote:
-> On Mon, Jan 06, 2014 at 09:27:34AM +0000, Atsushi Kumagai wrote:
-> > Hello Cliff,
-> > 
-> > On 2014/01/01 8:30:47, kexec <kexec-bounces@lists.infradead.org> wrote:
-> > > From: Cliff Wickman <cpw@sgi.com>
-> > > 
-> > > Gentlemen of kexec,
-> > > 
-> > > I have been working on enabling kdump on some very large systems, and
-> > > have found some solutions that I hope you will consider.
-> > > 
-> > > The first issue is to work within the restricted size of crashkernel memory
-> > > under 2.6.32-based kernels, such as sles11 and rhel6.
-> > > 
-> > > The second issue is to reduce the very large size of a dump of a big memory
-> > > system, even on an idle system.
-> > > 
-> > > These are my propositions:
-> > > 
-> > > Size of crashkernel memory
-> > >   1) raw i/o for writing the dump
-> > >   2) use root device for the bitmap file (not tmpfs)
-> > >   3) raw i/o for reading/writing the bitmaps
-> > >   
-> > > Size of dump (and hence the duration of dumping)
-> > >   4) exclude page structures for unused pages
-> > > 
-> > > 
-> > > 1) Is quite easy.  The cache of pages needs to be aligned on a block
-> > >   boundary and written in block multiples, as required by O_DIRECT files.
-> > > 
-> > >   The use of raw i/o prevents the growing of the crash kernel's page
-> > >   cache.
-> > 
-> > There is no reason to reject this idea, please re-post it as a formal patch.
-> > If possible, I would like to know the benefit of only this.
-> 
-> The motivation for using raw i/o was purely to be able to conserve memory,
-> not for speed.
+(2014/01/10 16:11), Baoquan wrote:
+> On 01/09/14 at 02:56pm, Toshi Kani wrote:
+>> On Thu, 2014-01-09 at 16:27 -0500, Vivek Goyal wrote:
+>>> On Thu, Jan 09, 2014 at 11:34:30AM -0700, Toshi Kani wrote:
+>>>> On Thu, 2014-01-09 at 13:23 -0500, Vivek Goyal wrote:
+>>>>> On Thu, Jan 09, 2014 at 10:24:25AM -0700, Toshi Kani wrote:
+>>>>>
+>>>>> [..]
+>>>>>>> I think creating a new command line option is simpler as compared to
+>>>>>>> creating a new flag in bootparam which in turn disables memory hotplug.
+>>>>>>> More users can use that option. For example, if for some reason hotplug
+>>>>>>> code is crashing, one can just disable it on command line as work around
+>>>>>>> and move on.
+>>>>>>
+>>>>>> I do not have a strong opinion about having such option.  However, I
+>>>>>> think it is more user friendly to keep the exactmap option works alone
+>>>>>> on any platforms.
+>>>>>
+>>>>> I think we should create internally a variable which will disable memory
+>>>>> hotplug. And set that variable based on memmap=exactmap, mem=X and also
+>>>>> provide a way to disable memory hotplug directly using command line
+>>>>> option.
+>>>>>
+>>>>> Current kexec-tools can use memmap=exactmap and be happy. I am writing
+>>>>> a new kexec syscall and will not be using memmap=exactmap and would need
+>>>>> to use that command line option to disable memory hotplug behavior.
+>>>>
+>>>> Sounds good to me.
+>>>
+>>> Nobody responded to my other question, so I would ask it again.
+>>>
+>>> Assume we have disabled hotplug memory in second kernel. First kernel
+>>> saw hotplug memory and assume crash kernel reserved region came from
+>>> there. We will pass this memory in bootparams to second kernel and it
+>>> will show up in E820 map. It should still be accessible in second kernel,
+>>> is that right?
+>>
+>> Yes.
+>>
+>>> Or there is some dependency on ACPI doing some magic before this memory
+>>> range is available in second kernel?
+>>
+>> No.  The 1st kernel reserves the crash kernel region, which cannot be
+>> hot-deleted.  So, this region continues to be accessible by the 2nd
+>> kernel without any operation.
+>
 
-OK, 1) is also for removing cyclic mode, right ?
-I think there is no need to conserve memory with 1) since 2) is enough to
-remove cyclic mode.
-(To be exact, there are some cases that we have to use cyclic mode as
- Hatayama-san said, but I don't mention that in this mail.)
+If my understanding is correct:
 
-> However, I haven't noticed any significant degradation in speed.
-> Memory is in 'very' short supply on a large machine (ironically) and a 2.6 or 
-> 3.0 kernel.  We're constrained to the low 4GB, and the kernel is putting other
-> things in that memory that are related to memory size.
-> The obvious solution is cyclic mode, but that requires at least 2x the page
-> scans.  Once for the scan of unnecessary pages and several partial 
-> scans for the copy phase.
-> But it is tmpfs and kernel page cache that are using up available memory.
-> If we avoid those, a single page scan can work in about 350M of crashkernel
-> memory.
-> This is not a problem with 3.10+ kernels as we're not constrained to low 4G.
+> Now what I understand is if a several memsection is reserved for
+> crashkernel, then in 2nd kernel, they are just like normal memory.
 
-Even if we can use 350M fully, 5TB is the limit system memory size
-in non-cyclic mode unless 2), since the bitmap file requires 64MB
-per 1TB RAM. So, I can't find an importance of 1).
+correct.
 
-> > > 2) Is also quite easy.  My patch finds the path to the crash
-> > >   kernel's root device by examining the dump pathname. Storing the bitmaps
-> > >   to a file is otherwise not conserving memory, as they are being written
-> > >   to tmpfs.
-> > 
-> > Users will expect that the size of dump file is the same as the size of
-> > RAM at most, they will prepare a disk which fit to save that.
-> > But 2) breaks this estimation, I worry about it a little.
-> 
-> The bit map file is very small compared to the dump. And the dump should be
-> much smaller than RAM.  Particularly with 4), the excluding of unused page structures.
-> > 
-> > Of course, I don't reject this idea just only for that reason,
-> > but I would like to know the definite advantage of this.
-> > I suppose that the improvement showed in your benchmarks may be came
-> > from 1) and 4) mostly, so could you let me know that only 2) and 3)
-> > can perform much faster than the current cyclic mode ?
-> 
-> 2) and 3), the handling of the bitmap, are small contributors to the
-> memory shortage issue.  They are a bigger issue the bigger the system.
-> It's just that if we consistently avoid enlarging page cache and
-> tmpfs we can avoid the 2nd page scan altogether.
-> True, my benchmarks show only .2 min. and 1.1 min. improvements
-> for 2TB and 8TB (2.0 vs 1.8, and 6.6 vs 5.5).
-> But that's an improvement, not a loss.  And we're absolutely
-> not going to run out of memory as the scan and copies proceed.
-> This is important on these old kernels with minimal memory available.
+> In ns
+> object tree, they are not treated as hotplug memory.
 
-Does just changing TMPDIR to a disk meet that purpose ?
-Is it necessary to add new codes ?
+wrong.
+They are treated as hotplug memory. But the memory cannot hot removed
+because the memory has kernel memory.
 
-> > > 3) Raw i/o for the bitmaps, is accomplished by caching the
-> > >   bitmap file in a similar way to that of the dump file.
-> > > 
-> > >   I find that the use of direct i/o is not significantly slower than
-> > >   writing through the kernel's page cache.
-> > >
-> > > 4) The excluding of unused kernel page structures is very
-> > >   important for a large memory system.  The kernel otherwise includes
-> > >   3.67 million pages of page structures per TB of memory. By contrast
-> > >   the rest of the kernel is only about 1 million pages.
-> > 
-> > According to your and Dave's mails, 4) seems risky and unacceptable
-> > for now. I think we need more investigation for this.
-> 
-> I've been working with Dave on a patch for crash.  It will warn the
-> user that certain kmem command options will fail.  But that is
-> only relevant to examinations of free memory and user memory, the
-> contents of which we're not capturing anyway.
-> 
-> Number 4), the exclusion of page structures for non-captured
-> pages is really the crux of the improvement.
-> A linux kernel should not be hugely bigger on a big machine than
-> on a small one.  Slightly bigger, yes, because of bigger slab
-> caches. 
-> But in practice the dumps of big memories are huge, and all
-> because of page structures.
-> To find the unneeded ones only takes a few seconds, but cuts
-> hours off the dumping process.  Without this a customer is just
-> not going to allow his very big system to be dumped.
+> Otherwise, any hotplug memory which is not reserved for 2nd kernel can
+> be parsed and need be added as hotplug memory, and add them into movable
+> zone.
 
-I understand the benefit of this, but I still suspect that this
-feature is really required from users, it sounds too progressive
-to me.
-This is a big patch, so I want to make sure that this feature will
-be used in practice, any comments are welcome.
+wrong.
+The memory is allocated as normal zone and it is offline.
+
+>
+> Am I right?
+>
+
+> The other question, e820 reserve is done earlier than acpi
+> initialization, because acpi_early_init() invocation is very late in
+> start_kernel(). Does that means at the very beginning all memorys are in
+> e820, later when acpi_early_init is called, hotplug memory is detected,
+> they will be moved to different place or need be marked with a specific
+> flag?
+
+No.
+
+Thanks,
+Yasuaki Ishimatsu
+
+>
+>
+>
+>>
+>> I am more curious to know how makedumpfile decides what memory ranges to
+>> dump.  The 1st kernel may have performed memory hot-add / delete
+>> operations before a crash, so it needs to know the valid physical
+>> address range at the time of crash, and may not rely on the E820 map
+>> from BIOS (which is stale).  Am I right to assume that makedumpfile gets
+>> it from the page tables of the 1st kernel?
+>
+> makedumpfile just do the dump, what memory ranges to dump is decided in
+> 1st kernel by kexec-tools. In 1st kernel, if kexec-tools executed, it
+> will find all System Ram memorys which exclude the reserved regions for
+> kdump kernel, then build a logical elf file, each load segment is one of
+> these System Ram memory regions, its addr and length is written into the
+> program header.
+>
+> Then makedumpfile just read this elf file, and read all of them and
+> dump.
+>
+> If after kexec-tools execution and before crash, a hotplug memory is
+> removed, udev will check this and trigger a kdump restart, kexec-tools
+> is executed again, System Ram region information are stored. The logical
+> file header will be passed to 2nd kernel.
+>
+>
+>>
+>> Thanks,
+>> -Toshi
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
 
-Thanks
-Atsushi Kumagai
-
-> -Cliff
-> > 
-> > 
-> > Thanks
-> > Atsushi Kumagai
-> > 
-> > > Test results are below, for systems of 1TB, 2TB, 8.8TB and 16TB.
-> > > (There are no 'old' numbers for 16TB as time and space requirements
-> > >  made those effectively useless.)
-> > > 
-> > > Run times were generally reduced 2-3x, and dump size reduced about 8x.
-> > > 
-> > > All timings were done using 512M of crashkernel memory.
-> > > 
-> > >    System memory size
-> > >    1TB                     unpatched    patched
-> > >      OS: rhel6.4 (does a free pages pass)
-> > >      page scan time           1.6min    1.6min
-> > >      dump copy time           2.4min     .4min
-> > >      total time               4.1min    2.0min
-> > >      dump size                 3014M      364M
-> > > 
-> > >      OS: rhel6.5
-> > >      page scan time            .6min     .6min
-> > >      dump copy time           2.3min     .5min
-> > >      total time               2.9min    1.1min
-> > >      dump size                 3011M      423M
-> > > 
-> > >      OS: sles11sp3 (3.0.93)
-> > >      page scan time            .5min     .5min
-> > >      dump copy time           2.3min     .5min
-> > >      total time               2.8min    1.0min
-> > >      dump size                 2950M      350M
-> > > 
-> > >    2TB
-> > >      OS: rhel6.5           (cyclicx3)
-> > >      page scan time           2.0min    1.8min
-> > >      dump copy time           8.0min    1.5min
-> > >      total time              10.0min    3.3min
-> > >      dump size                 6141M      835M
-> > > 
-> > >    8.8TB
-> > >      OS: rhel6.5           (cyclicx5)
-> > >      page scan time           6.6min    5.5min
-> > >      dump copy time          67.8min    6.2min
-> > >      total time              74.4min   11.7min
-> > >      dump size                 15.8G      2.7G
-> > > 
-> > >    16TB
-> > >      OS: rhel6.4
-> > >      page scan time                   125.3min
-> > >      dump copy time                    13.2min
-> > >      total time                       138.5min
-> > >      dump size                            4.0G
-> > > 
-> > >      OS: rhel6.5
-> > >      page scan time                    27.8min
-> > >      dump copy time                    13.3min
-> > >      total time                        41.1min
-> > >      dump size                            4.1G
-> > > 
-> > > Page scan time is greatly affected by whether or not the
-> > > kernel supports mmap of /proc/vmcore.
-> > > 
-> > > The choice of snappy vs. zlib compression becomes fairly irrelevant
-> > > when we can shrink the dump size dramatically.  The above
-> > > were done with snappy compression.
-> > > 
-> > > I am sending my 2 working patches.  
-> > > They are kludgy in the sense that they ignore all forms of
-> > > kdump except the creation of a disk dump, and all architectures
-> > > except x86_64.
-> > > But I think they are sufficient to demonstrate the sizable
-> > > time, crashkernel space and disk space savings that are possible.
-> > > 
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> -- 
-> Cliff Wickman
-> SGI
-> cpw@sgi.com
-> (651) 683-3824
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
