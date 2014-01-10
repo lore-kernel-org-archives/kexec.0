@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W1gNz-0007k6-2t
- for kexec@lists.infradead.org; Fri, 10 Jan 2014 18:00:49 +0000
-Date: Fri, 10 Jan 2014 12:00:26 -0600
+ id 1W1gkj-0008O4-Np
+ for kexec@lists.infradead.org; Fri, 10 Jan 2014 18:24:18 +0000
+Date: Fri, 10 Jan 2014 12:23:55 -0600
 From: Cliff Wickman <cpw@sgi.com>
-Subject: [PATCH 2/2 V2] exclude unused vmemmap pages
-Message-ID: <20140110180026.GB7498@sgi.com>
+Subject: Re: [PATCH 0/2] makedumpfile: for large memories
+Message-ID: <20140110182355.GC7498@sgi.com>
 References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971D878F@BPXM01GP.gisp.nec.co.jp>
+ <20140109002523.GA30797@sgi.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971DA820@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971DA820@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,970 +26,272 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: Cliff Wickman <cpw@sgi.com>
+On Fri, Jan 10, 2014 at 07:48:27AM +0000, Atsushi Kumagai wrote:
+> On 2014/01/09 9:26:20, kexec <kexec-bounces@lists.infradead.org> wrote:
+> > On Mon, Jan 06, 2014 at 09:27:34AM +0000, Atsushi Kumagai wrote:
+> > > Hello Cliff,
+> > > 
+> > > On 2014/01/01 8:30:47, kexec <kexec-bounces@lists.infradead.org> wrote:
+> > > > From: Cliff Wickman <cpw@sgi.com>
+> > > > 
+> > > > Gentlemen of kexec,
+> > > > 
+> > > > I have been working on enabling kdump on some very large systems, and
+> > > > have found some solutions that I hope you will consider.
+> > > > 
+> > > > The first issue is to work within the restricted size of crashkernel memory
+> > > > under 2.6.32-based kernels, such as sles11 and rhel6.
+> > > > 
+> > > > The second issue is to reduce the very large size of a dump of a big memory
+> > > > system, even on an idle system.
+> > > > 
+> > > > These are my propositions:
+> > > > 
+> > > > Size of crashkernel memory
+> > > >   1) raw i/o for writing the dump
+> > > >   2) use root device for the bitmap file (not tmpfs)
+> > > >   3) raw i/o for reading/writing the bitmaps
+> > > >   
+> > > > Size of dump (and hence the duration of dumping)
+> > > >   4) exclude page structures for unused pages
+> > > > 
+> > > > 
+> > > > 1) Is quite easy.  The cache of pages needs to be aligned on a block
+> > > >   boundary and written in block multiples, as required by O_DIRECT files.
+> > > > 
+> > > >   The use of raw i/o prevents the growing of the crash kernel's page
+> > > >   cache.
 
-Version 2:
-provides some requested changes:
-- remove the automatic exclusion of page structures for memories over 1TB; it
-  will only be done by explicit request (-e)
-- remove the -N option; no need to explicitly include unused vmemmap pages
-  as they will be included by default
-- add DUMP_DH_EXCLUDED_VMEMMAP to the dump header; to warn crash users that
-  these page structures are excluded
-- fix the making of the filename for pfn file (in init_save_control())
-but still is only tested on a disk dump of an x86_64 system.
+Today I posted V2 of both patches.  V2 of the first patch fixes a bug.
+V2 of the second patch make some of the changes that you and Hatayama-san
+requested.  But these updates don't address all of your points.
 
-Exclude kernel pages that contain nothing but page structures for pages
-that are not being included in the dump.
-These can amount to 3.67 million pages per terabyte of system memory!
+ 
+> > > There is no reason to reject this idea, please re-post it as a formal patch.
+> > > If possible, I would like to know the benefit of only this.
+> > 
+> > The motivation for using raw i/o was purely to be able to conserve memory,
+> > not for speed.
 
-The kernel's page table, starting at virtual address 0xffffea0000000000, is 
-searched to find the actual pages containing the vmemmap page structures.
+> OK, 1) is also for removing cyclic mode, right ?
 
-Bitmap1 is a map of dumpable (i.e existing) pages. Bitmap2 is a map
-of pages not to be excluded.
-To speed the search of bitmaps only whole 64-bit words of 1's in 
-bitmap1 and 0's in bitmap2 are tested to see if they are vmemmap pages.
+I did disable cyclic mode for my testing.  I wanted to prove that makedumpfile
+can work in a small memory without cyclic mode. 
+I think this is an alternative to cyclic mode, but I don't know all the
+issues.  This is a proof of concept only -- I hope that you guys who have
+the big picture of all the dump-capture issues can fit it in properly.
 
-The list of vmemmap pfn's to be excluded is written to a small file in order
-to conserve crash kernel memory.
+> I think there is no need to conserve memory with 1) since 2) is enough to
+> remove cyclic mode.
+> (To be exact, there are some cases that we have to use cyclic mode as
+>  Hatayama-san said, but I don't mention that in this mail.)
+> 
+> > However, I haven't noticed any significant degradation in speed.
+> > Memory is in 'very' short supply on a large machine (ironically) and a 2.6 or 
+> > 3.0 kernel.  We're constrained to the low 4GB, and the kernel is putting other
+> > things in that memory that are related to memory size.
+> > The obvious solution is cyclic mode, but that requires at least 2x the page
+> > scans.  Once for the scan of unnecessary pages and several partial 
+> > scans for the copy phase.
+> > But it is tmpfs and kernel page cache that are using up available memory.
+> > If we avoid those, a single page scan can work in about 350M of crashkernel
+> > memory.
+> > This is not a problem with 3.10+ kernels as we're not constrained to low 4G.
+> 
+> Even if we can use 350M fully, 5TB is the limit system memory size
+> in non-cyclic mode unless 2), since the bitmap file requires 64MB
+> per 1TB RAM. So, I can't find an importance of 1).
 
-In practice, this whole procedure only takes about 10 seconds on a
-16TB machine.
+1) raw i/o for writing the dump
+2) use root device for the bitmap file (not tmpfs)
+3) raw i/o for reading/writing the bitmaps
+Non-raw i/o for either of theses files is going to enlarge kernel page
+cache.  There doesn't seem to be any way to ask the kernel to limit
+that growth.  And writing to tmpfs is consuming memory.  The one file
+is much larger than the other, but to be consistent and not let i/o
+consume memory I think we have to do all three.
+ 
+> > > > 2) Is also quite easy.  My patch finds the path to the crash
+> > > >   kernel's root device by examining the dump pathname. Storing the bitmaps
+> > > >   to a file is otherwise not conserving memory, as they are being written
+> > > >   to tmpfs.
+> > > 
+> > > Users will expect that the size of dump file is the same as the size of
+> > > RAM at most, they will prepare a disk which fit to save that.
+> > > But 2) breaks this estimation, I worry about it a little.
+> > 
+> > The bit map file is very small compared to the dump. And the dump should be
+> > much smaller than RAM.  Particularly with 4), the excluding of unused page structures.
+> > > 
+> > > Of course, I don't reject this idea just only for that reason,
+> > > but I would like to know the definite advantage of this.
+> > > I suppose that the improvement showed in your benchmarks may be came
+> > > from 1) and 4) mostly, so could you let me know that only 2) and 3)
+> > > can perform much faster than the current cyclic mode ?
+> > 
+> > 2) and 3), the handling of the bitmap, are small contributors to the
+> > memory shortage issue.  They are a bigger issue the bigger the system.
+> > It's just that if we consistently avoid enlarging page cache and
+> > tmpfs we can avoid the 2nd page scan altogether.
+> > True, my benchmarks show only .2 min. and 1.1 min. improvements
+> > for 2TB and 8TB (2.0 vs 1.8, and 6.6 vs 5.5).
+> > But that's an improvement, not a loss.  And we're absolutely
+> > not going to run out of memory as the scan and copies proceed.
+> > This is important on these old kernels with minimal memory available.
+> 
+> Does just changing TMPDIR to a disk meet that purpose ?
+> Is it necessary to add new codes ?
+Perhaps.  But page cache is going to grow.
+> 
+> > > > 3) Raw i/o for the bitmaps, is accomplished by caching the
+> > > >   bitmap file in a similar way to that of the dump file.
+> > > > 
+> > > >   I find that the use of direct i/o is not significantly slower than
+> > > >   writing through the kernel's page cache.
+> > > >
+> > > > 4) The excluding of unused kernel page structures is very
+> > > >   important for a large memory system.  The kernel otherwise includes
+> > > >   3.67 million pages of page structures per TB of memory. By contrast
+> > > >   the rest of the kernel is only about 1 million pages.
+> > > 
+> > > According to your and Dave's mails, 4) seems risky and unacceptable
+> > > for now. I think we need more investigation for this.
+I think we have addressed that with Dave and a patch to crash.
+> > 
+> > I've been working with Dave on a patch for crash.  It will warn the
+> > user that certain kmem command options will fail.  But that is
+> > only relevant to examinations of free memory and user memory, the
+> > contents of which we're not capturing anyway.
+> > 
+> > Number 4), the exclusion of page structures for non-captured
+> > pages is really the crux of the improvement.
+> > A linux kernel should not be hugely bigger on a big machine than
+> > on a small one.  Slightly bigger, yes, because of bigger slab
+> > caches. 
+> > But in practice the dumps of big memories are huge, and all
+> > because of page structures.
+> > To find the unneeded ones only takes a few seconds, but cuts
+> > hours off the dumping process.  Without this a customer is just
+> > not going to allow his very big system to be dumped.
+> 
+> I understand the benefit of this, but I still suspect that this
+> feature is really required from users, it sounds too progressive
+> to me.
+> This is a big patch, so I want to make sure that this feature will
+> be used in practice, any comments are welcome.
 
-Signed-off-by: Cliff Wickman <cpw@sgi.com>
+Agreed. Comments from developers of systems with big memories especially.
+The second patch, regarding elimination of millions of pages of page
+structures representing excluded pages is particularly important to being
+able to dump a large system at all.
+But shortening the scan of free and user pages is also helpful as the
+memory size increases.
 
----
- diskdump_mod.h |    1 
- makedumpfile.c |  679 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- makedumpfile.h |   60 ++++-
- print_info.c   |    6 
- 4 files changed, 742 insertions(+), 4 deletions(-)
+-Cliff
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+> > -Cliff
+> > > 
+> > > 
+> > > Thanks
+> > > Atsushi Kumagai
+> > > 
+> > > > Test results are below, for systems of 1TB, 2TB, 8.8TB and 16TB.
+> > > > (There are no 'old' numbers for 16TB as time and space requirements
+> > > >  made those effectively useless.)
+> > > > 
+> > > > Run times were generally reduced 2-3x, and dump size reduced about 8x.
+> > > > 
+> > > > All timings were done using 512M of crashkernel memory.
+> > > > 
+> > > >    System memory size
+> > > >    1TB                     unpatched    patched
+> > > >      OS: rhel6.4 (does a free pages pass)
+> > > >      page scan time           1.6min    1.6min
+> > > >      dump copy time           2.4min     .4min
+> > > >      total time               4.1min    2.0min
+> > > >      dump size                 3014M      364M
+> > > > 
+> > > >      OS: rhel6.5
+> > > >      page scan time            .6min     .6min
+> > > >      dump copy time           2.3min     .5min
+> > > >      total time               2.9min    1.1min
+> > > >      dump size                 3011M      423M
+> > > > 
+> > > >      OS: sles11sp3 (3.0.93)
+> > > >      page scan time            .5min     .5min
+> > > >      dump copy time           2.3min     .5min
+> > > >      total time               2.8min    1.0min
+> > > >      dump size                 2950M      350M
+> > > > 
+> > > >    2TB
+> > > >      OS: rhel6.5           (cyclicx3)
+> > > >      page scan time           2.0min    1.8min
+> > > >      dump copy time           8.0min    1.5min
+> > > >      total time              10.0min    3.3min
+> > > >      dump size                 6141M      835M
+> > > > 
+> > > >    8.8TB
+> > > >      OS: rhel6.5           (cyclicx5)
+> > > >      page scan time           6.6min    5.5min
+> > > >      dump copy time          67.8min    6.2min
+> > > >      total time              74.4min   11.7min
+> > > >      dump size                 15.8G      2.7G
+> > > > 
+> > > >    16TB
+> > > >      OS: rhel6.4
+> > > >      page scan time                   125.3min
+> > > >      dump copy time                    13.2min
+> > > >      total time                       138.5min
+> > > >      dump size                            4.0G
+> > > > 
+> > > >      OS: rhel6.5
+> > > >      page scan time                    27.8min
+> > > >      dump copy time                    13.3min
+> > > >      total time                        41.1min
+> > > >      dump size                            4.1G
+> > > > 
+> > > > Page scan time is greatly affected by whether or not the
+> > > > kernel supports mmap of /proc/vmcore.
+> > > > 
+> > > > The choice of snappy vs. zlib compression becomes fairly irrelevant
+> > > > when we can shrink the dump size dramatically.  The above
+> > > > were done with snappy compression.
+> > > > 
+> > > > I am sending my 2 working patches.  
+> > > > They are kludgy in the sense that they ignore all forms of
+> > > > kdump except the creation of a disk dump, and all architectures
+> > > > except x86_64.
+> > > > But I think they are sufficient to demonstrate the sizable
+> > > > time, crashkernel space and disk space savings that are possible.
+> > > > 
+> > > > _______________________________________________
+> > > > kexec mailing list
+> > > > kexec@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/kexec
+> > 
+> > -- 
+> > Cliff Wickman
+> > SGI
+> > cpw@sgi.com
+> > (651) 683-3824
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 
-Index: makedumpfile-1.5.5/makedumpfile.c
-===================================================================
---- makedumpfile-1.5.5.orig/makedumpfile.c
-+++ makedumpfile-1.5.5/makedumpfile.c
-@@ -31,9 +31,12 @@ struct offset_table	offset_table;
- struct array_table	array_table;
- struct number_table	number_table;
- struct srcfile_table	srcfile_table;
-+struct save_control	sc;
- 
- struct vm_table		vt = { 0 };
- struct DumpInfo		*info = NULL;
-+struct vmap_pfns	*gvmem_pfns;
-+int nr_gvmem_pfns;
- 
- char filename_stdout[] = FILENAME_STDOUT;
- 
-@@ -3111,6 +3114,10 @@ out:
- 	if (!get_max_mapnr())
- 		return FALSE;
- 
-+	if (info->flag_excludevm) {
-+		PROGRESS_MSG("Excluding unused vmemmap page structures.\n");
-+	}
-+
- 	if (info->flag_cyclic) {
- 		if (info->bufsize_cyclic == 0) {
- 			if (!calculate_cyclic_buffer_size())
-@@ -4959,6 +4966,345 @@ copy_bitmap(void)
- 	return TRUE;
- }
- 
-+/*
-+ * Given a range of unused pfn's, check whether we can drop the vmemmap pages
-+ * that represent them.
-+ *  (pfn ranges are literally start and end, not start and end+1)
-+ *   see the array of vmemmap pfns and the pfns then represent: gvmem_pfns
-+ * Return 1 for delete, 0 for not to delete.
-+ */
-+int
-+find_vmemmap_pages(unsigned long startpfn, unsigned long endpfn, unsigned long *vmappfn,
-+									unsigned long *nmapnpfns)
-+{
-+	int i;
-+	long npfns_offset, vmemmap_offset, vmemmap_pfns, start_vmemmap_pfn;
-+	long npages, end_vmemmap_pfn;
-+	struct vmap_pfns *vmapp;
-+	int pagesize = info->page_size;
-+
-+	for (i = 0; i < nr_gvmem_pfns; i++) {
-+		vmapp = gvmem_pfns + i;
-+		if ((startpfn >= vmapp->rep_pfn_start) &&
-+		    (endpfn <= vmapp->rep_pfn_end)) {
-+			npfns_offset = startpfn - vmapp->rep_pfn_start;
-+			vmemmap_offset = npfns_offset * size_table.page;
-+			// round up to a page boundary
-+			if (vmemmap_offset % pagesize)
-+				vmemmap_offset += (pagesize - (vmemmap_offset % pagesize));
-+			vmemmap_pfns = vmemmap_offset / pagesize;
-+			start_vmemmap_pfn = vmapp->vmap_pfn_start + vmemmap_pfns;
-+			*vmappfn = start_vmemmap_pfn;
-+
-+			npfns_offset = endpfn - vmapp->rep_pfn_start;
-+			vmemmap_offset = npfns_offset * size_table.page;
-+			// round down to page boundary
-+			vmemmap_offset -= (vmemmap_offset % pagesize);
-+			vmemmap_pfns = vmemmap_offset / pagesize;
-+			end_vmemmap_pfn = vmapp->vmap_pfn_start + vmemmap_pfns;
-+			npages = end_vmemmap_pfn - start_vmemmap_pfn;
-+			if (npages == 0)
-+				return 0;
-+			*nmapnpfns = npages;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * Finalize the structure for saving pfn's to be deleted.
-+ */
-+void
-+finalize_save_control()
-+{
-+	free(sc.sc_buf_malloced);
-+	close(sc.sc_fd);
-+	return;
-+}
-+
-+/*
-+ * Reset the structure for saving pfn's to be deleted so that it can be read
-+ */
-+void
-+reset_save_control()
-+{
-+	int i;
-+	if (sc.sc_bufposition == 0)
-+		return;
-+
-+	/* direct i/o, so have to write the whole buffer */
-+	i = write(sc.sc_fd, sc.sc_buf, sc.sc_buflen);
-+	if (i != sc.sc_buflen) {
-+		fprintf(stderr, "reset: Can't write a page to %s\n",
-+			sc.sc_filename);
-+		exit(1);
-+	}
-+	sc.sc_filelen += sc.sc_bufposition;
-+
-+	if (lseek(sc.sc_fd, 0, SEEK_SET) < 0) {
-+		fprintf(stderr, "Can't seek the pfn file %s).", sc.sc_filename);
-+		exit(1);
-+	}
-+	sc.sc_fileposition = 0;
-+	sc.sc_bufposition = sc.sc_buflen; /* trigger 1st read */
-+	return;
-+}
-+
-+/*
-+ * Initialize the structure for saving pfn's to be deleted.
-+ */
-+void
-+init_save_control()
-+{
-+	int flags, len;
-+	char *filename, *tmpname, *cp;
-+
-+	filename = malloc(50);
-+	*filename = '\0';
-+	tmpname = getenv("TMPDIR");
-+	if (!tmpname) {
-+		/* use the prefix of the dump name   e.g. /mnt//var/.... */
-+		if (!strchr(info->name_dumpfile,'v')) {
-+			printf("no /var found in name_dumpfile %s\n", info->name_dumpfile);
-+			exit(1);
-+		} else {
-+			cp = strchr(info->name_dumpfile,'v');
-+			if (strncmp(cp-1, "/var", 4)) {
-+				printf("no /var found in name_dumpfile %s\n",
-+					info->name_dumpfile);
-+				exit(1);
-+			}
-+		}
-+		len = cp - info->name_dumpfile - 1;
-+		strncpy(filename, info->name_dumpfile, len);
-+		if (*(filename + len - 1) == '/')
-+			len -= 1;
-+		*(filename + len) = '\0';
-+	} else {
-+		strcpy(filename, tmpname);
-+	}
-+
-+	strcat(filename, "/makedumpfilepfns");
-+	sc.sc_filename = filename;
-+	flags = O_RDWR|O_CREAT|O_TRUNC|O_DIRECT;
-+	if ((sc.sc_fd = open(sc.sc_filename, flags,
-+							S_IRUSR|S_IWUSR)) < 0) {
-+		fprintf(stderr, "Can't open the pfn file %s.\n",
-+			sc.sc_filename);
-+		exit(1);
-+	}
-+	unlink(sc.sc_filename);
-+
-+	sc.sc_buf_malloced = malloc(blocksize + DIRECT_ALIGN);
-+	if (!sc.sc_buf_malloced) {
-+		fprintf(stderr, "Can't allocate a page for pfn buf.\n");
-+		exit(1);
-+	}
-+	/* round down to a block boundary */
-+	sc.sc_buf = sc.sc_buf_malloced -
-+	   ((unsigned long)sc.sc_buf_malloced % DIRECT_ALIGN) + DIRECT_ALIGN;
-+	sc.sc_buflen = blocksize;
-+	sc.sc_bufposition = 0;
-+	sc.sc_fileposition = 0;
-+	sc.sc_filelen = 0;
-+}
-+
-+/*
-+ * Save a starting pfn and number of pfns for later delete from bitmap.
-+ */
-+void
-+save_deletes(unsigned long startpfn, unsigned long numpfns)
-+{
-+	int i;
-+	struct sc_entry *scp;
-+
-+	if (sc.sc_bufposition == sc.sc_buflen) {
-+		i = write(sc.sc_fd, sc.sc_buf, sc.sc_buflen);
-+		if (i != sc.sc_buflen) {
-+			fprintf(stderr, "save: Can't write a page to %s\n",
-+				sc.sc_filename);
-+			exit(1);
-+		}
-+		sc.sc_filelen += sc.sc_buflen;
-+		sc.sc_bufposition = 0;
-+	}
-+	scp = (struct sc_entry *)(sc.sc_buf + sc.sc_bufposition);
-+	scp->startpfn = startpfn;
-+	scp->numpfns = numpfns;
-+	sc.sc_bufposition += sizeof(struct sc_entry);
-+}
-+
-+/*
-+ * Get a starting pfn and number of pfns for delete from bitmap.
-+ * Return 0 for success, 1 for 'no more'
-+ */
-+int
-+get_deletes(unsigned long *startpfn, unsigned long *numpfns)
-+{
-+	int i;
-+	struct sc_entry *scp;
-+
-+	if (sc.sc_fileposition >= sc.sc_filelen) {
-+		return 1;
-+	}
-+
-+	if (sc.sc_bufposition == sc.sc_buflen) {
-+		i = read(sc.sc_fd, sc.sc_buf, sc.sc_buflen);
-+		if (i <= 0) {
-+			fprintf(stderr, "Can't read a page from %s.\n", sc.sc_filename);
-+			exit(1);
-+		}
-+		sc.sc_bufposition = 0;
-+	}
-+	scp = (struct sc_entry *)(sc.sc_buf + sc.sc_bufposition);
-+	*startpfn = scp->startpfn;
-+	*numpfns = scp->numpfns;
-+	sc.sc_bufposition += sizeof(struct sc_entry);
-+	sc.sc_fileposition += sizeof(struct sc_entry);
-+	return 0;
-+}
-+
-+/*
-+ * Find the big holes in bitmap2; they represent ranges for which
-+ * we do not need page structures.
-+ * Bitmap1 is a map of dumpable (i.e existing) pages.
-+ * They must only be pages that exist, so they will be 0 bits
-+ * in the 2nd bitmap but 1 bits in the 1st bitmap.
-+ * For speed, only worry about whole word full of bits.
-+ */
-+void
-+find_unused_vmemmap_pages(void)
-+{
-+	struct dump_bitmap *bitmap1 = info->bitmap1;
-+	struct dump_bitmap *bitmap2 = info->bitmap2;
-+	unsigned long long pfn;
-+	unsigned long *lp1, *lp2, startpfn, endpfn;
-+	unsigned long vmapstartpfn, vmapnumpfns;
-+	int i, sz, numpages=0, did_deletes;
-+	int startword, numwords, do_break=0;
-+	long deleted_pages = 0;
-+	off_t new_offset1, new_offset2;
-+
-+	/* read each block of both bitmaps */
-+	for (pfn = 0; pfn < info->max_mapnr; pfn += PFN_BUFBITMAP) { /* size in bits */
-+		numpages++;
-+		did_deletes = 0;
-+		new_offset1 = bitmap1->offset + BUFSIZE_BITMAP * (pfn / PFN_BUFBITMAP);
-+		if (lseek(bitmap1->fd, new_offset1, SEEK_SET) < 0 ) {
-+			ERRMSG("Can't seek the bitmap(%s). %s\n",
-+				bitmap1->file_name, strerror(errno));
-+			return;
-+		}
-+		if (read(bitmap1->fd, bitmap1->buf, BUFSIZE_BITMAP) != BUFSIZE_BITMAP) {
-+			ERRMSG("Can't read the bitmap(%s). %s\n",
-+				bitmap1->file_name, strerror(errno));
-+			return;
-+		}
-+		bitmap1->no_block = pfn / PFN_BUFBITMAP;
-+
-+		new_offset2 = bitmap2->offset + BUFSIZE_BITMAP * (pfn / PFN_BUFBITMAP);
-+		if (lseek(bitmap2->fd, new_offset2, SEEK_SET) < 0 ) {
-+			ERRMSG("Can't seek the bitmap(%s). %s\n",
-+				bitmap2->file_name, strerror(errno));
-+			return;
-+		}
-+		if (read(bitmap2->fd, bitmap2->buf, BUFSIZE_BITMAP) != BUFSIZE_BITMAP) {
-+			ERRMSG("Can't read the bitmap(%s). %s\n",
-+				bitmap2->file_name, strerror(errno));
-+			return;
-+		}
-+		bitmap2->no_block = pfn / PFN_BUFBITMAP;
-+
-+		/* process this one page of both bitmaps at a time */
-+		lp1 = (unsigned long *)bitmap1->buf;
-+		lp2 = (unsigned long *)bitmap2->buf;
-+		/* sz is words in the block */
-+		sz = BUFSIZE_BITMAP / sizeof(unsigned long);
-+		startword = -1;
-+		for (i = 0; i < sz; i++, lp1++, lp2++) {
-+			/* for each whole word in the block */
-+			/* deal in full 64-page chunks only */
-+			if (*lp1 == 0xffffffffffffffffUL) {
-+				if (*lp2 == 0) {
-+					/* we are in a series we want */
-+					if (startword == -1) {
-+						/* starting a new group */
-+						startword = i;
-+					}
-+				} else {
-+					/* we hit a used page */
-+					if (startword >= 0)
-+						do_break = 1;
-+				}
-+			} else {
-+				/* we hit a hole in real memory, or part of one */
-+				if (startword >= 0)
-+					do_break = 1;
-+			}
-+			if (do_break) {
-+				do_break = 0;
-+				if (startword >= 0) {
-+					numwords = i - startword;
-+					/* 64 bits represents 64 page structs, which
-+ 					   are not even one page of them (takes
-+					   at least 73) */
-+					if (numwords > 1) {
-+						startpfn = pfn +
-+							(startword * BITS_PER_WORD);
-+						/* pfn ranges are literally start and end,
-+						   not start and end + 1 */
-+						endpfn = startpfn +
-+							(numwords * BITS_PER_WORD) - 1;
-+						if (find_vmemmap_pages(startpfn, endpfn,
-+							&vmapstartpfn, &vmapnumpfns)) {
-+							save_deletes(vmapstartpfn,
-+								vmapnumpfns);
-+							deleted_pages += vmapnumpfns;
-+							did_deletes = 1;
-+						}
-+					}
-+				}
-+				startword = -1;
-+			}
-+		}
-+		if (startword >= 0) {
-+			numwords = i - startword;
-+			if (numwords > 1) {
-+				startpfn = pfn + (startword * BITS_PER_WORD);
-+				/* pfn ranges are literally start and end,
-+				   not start and end + 1 */
-+				endpfn = startpfn + (numwords * BITS_PER_WORD) - 1;
-+				if (find_vmemmap_pages(startpfn, endpfn,
-+							&vmapstartpfn, &vmapnumpfns)) {
-+					save_deletes(vmapstartpfn, vmapnumpfns);
-+					deleted_pages += vmapnumpfns;
-+					did_deletes = 1;
-+				}
-+			}
-+		}
-+	}
-+	PROGRESS_MSG("\nExcluded %ld unused vmemmap pages\n", deleted_pages);
-+
-+	return;
-+}
-+
-+/*
-+ * Retrieve the list of pfn's and delete them from bitmap2;
-+ */
-+void
-+delete_unused_vmemmap_pages(void)
-+{
-+	unsigned long startpfn, numpfns, pfn, i;
-+
-+	while (!get_deletes(&startpfn, &numpfns)) {
-+		for (i = 0, pfn = startpfn; i < numpfns; i++, pfn++) {
-+			clear_bit_on_2nd_bitmap_for_kernel(pfn);
-+		}
-+	}
-+	return;
-+}
-+
- int
- create_2nd_bitmap(void)
- {
-@@ -5030,6 +5376,15 @@ create_2nd_bitmap(void)
- 	if (!sync_2nd_bitmap())
- 		return FALSE;
- 
-+	/* -e means exclude vmemmap page structures for unused pages */
-+	if (info->flag_excludevm) {
-+		init_save_control();
-+		find_unused_vmemmap_pages();
-+		reset_save_control();
-+		delete_unused_vmemmap_pages();
-+		finalize_save_control();
-+	}
-+
- 	return TRUE;
- }
- 
-@@ -5236,7 +5591,7 @@ get_loads_dumpfile(void)
- 			continue;
- 
- 		pfn_start = paddr_to_pfn(load.p_paddr);
--		pfn_end   = paddr_to_pfn(load.p_paddr + load.p_memsz);
-+		pfn_end = paddr_to_pfn(load.p_paddr + load.p_memsz);
- 		frac_head = page_size - (load.p_paddr % page_size);
- 		frac_tail = (load.p_paddr + load.p_memsz) % page_size;
- 
-@@ -5586,6 +5941,9 @@ write_kdump_header(struct cache_data *cd
- 	else if (info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
- 		dh->status |= DUMP_DH_COMPRESSED_SNAPPY;
- #endif
-+	if (info->flag_excludevm) {
-+		dh->status |= DUMP_DH_EXCLUDED_VMEMMAP;
-+	}
- 
- 	size = sizeof(struct disk_dump_header);
- 	if (!write_cache(cd, dh, blocksize))
-@@ -8282,6 +8640,315 @@ writeout_multiple_dumpfiles(void)
- 	return ret;
- }
- 
-+/*
-+ * Scan the kernel page table for the pfn's of the page structs
-+ * Place them in array gvmem_pfns[nr_gvmem_pfns]
-+ */
-+void
-+find_vmemmap()
-+{
-+	int i, verbose = 0;
-+	int pgd_index, pud_index;
-+	int start_range = 1;
-+	int num_pmds=0, num_pmds_valid=0;
-+	int break_in_valids, break_after_invalids;
-+	int do_break, done = 0;
-+	int last_valid=0, last_invalid=0;
-+	int pagestructsize, structsperhpage, hugepagesize;
-+	long page_structs_per_pud;
-+	long num_puds, groups = 0;
-+	long pgdindex, pudindex, pmdindex;
-+	long vaddr, vaddr_base;
-+	long rep_pfn_start = 0, rep_pfn_end = 0;
-+	unsigned long init_level4_pgt;
-+	unsigned long max_paddr, high_pfn;
-+	unsigned long pgd_addr, pud_addr, pmd_addr;
-+	unsigned long *pgdp, *pudp, *pmdp;
-+	unsigned long pud_page[PTRS_PER_PUD];
-+	unsigned long pmd_page[PTRS_PER_PMD];
-+	unsigned long vmap_offset_start = 0, vmap_offset_end = 0;
-+	unsigned long pmd, tpfn;
-+	unsigned long pvaddr = 0;
-+	unsigned long data_addr = 0, last_data_addr = 0, start_data_addr = 0;
-+	/*
-+	 * data_addr is the paddr of the page holding the page structs.
-+	 * We keep lists of contiguous pages and the pfn's that their
-+	 * page structs represent.
-+	 *  start_data_addr and last_data_addr mark start/end of those
-+	 *  contiguous areas.
-+	 * An area descriptor is vmap start/end pfn and rep start/end
-+	 *  of the pfn's represented by the vmap start/end.
-+	 */
-+	struct vmap_pfns *vmapp, *vmaphead = NULL, *cur, *tail;
-+
-+	init_level4_pgt = SYMBOL(init_level4_pgt);
-+	if (init_level4_pgt == NOT_FOUND_SYMBOL) {
-+		fprintf(stderr, "init_level4_pgt not found\n");
-+		return;
-+	}
-+	pagestructsize = size_table.page;
-+	hugepagesize = PTRS_PER_PMD * info->page_size;
-+	vaddr_base = info->vmemmap_start;
-+	vaddr = vaddr_base;
-+	max_paddr = get_max_paddr();
-+	/*
-+	 * the page structures are mapped at VMEMMAP_START (info->vmemmap_start)
-+	 * for max_paddr >> 12 page structures
-+	 */
-+	high_pfn = max_paddr >> 12;
-+	pgd_index = pgd4_index(vaddr_base);
-+	pud_index = pud_index(vaddr_base);
-+	pgd_addr = vaddr_to_paddr(init_level4_pgt); /* address of pgd */
-+	pgd_addr += pgd_index * sizeof(unsigned long);
-+	page_structs_per_pud = (PTRS_PER_PUD * PTRS_PER_PMD * info->page_size) /
-+									pagestructsize;
-+	num_puds = (high_pfn + page_structs_per_pud - 1) / page_structs_per_pud;
-+	pvaddr = VMEMMAP_START;
-+	structsperhpage = hugepagesize / pagestructsize;
-+
-+	/* outer loop is for pud entries in the pgd */
-+	for (pgdindex = 0, pgdp = (unsigned long *)pgd_addr; pgdindex < num_puds;
-+								pgdindex++, pgdp++) {
-+		/* read the pgd one word at a time, into pud_addr */
-+		if (!readmem(PADDR, (unsigned long long)pgdp, (void *)&pud_addr,
-+								sizeof(unsigned long))) {
-+			ERRMSG("Can't get pgd entry for slot %d.\n", pgd_index);
-+			return;
-+		}
-+		/* mask the pgd entry for the address of the pud page */
-+		pud_addr &= PMASK;
-+		/* read the entire pud page */
-+		if (!readmem(PADDR, (unsigned long long)pud_addr, (void *)pud_page,
-+					PTRS_PER_PUD * sizeof(unsigned long))) {
-+			ERRMSG("Can't get pud entry for pgd slot %ld.\n", pgdindex);
-+			return;
-+		}
-+		/* step thru each pmd address in the pud page */
-+		/* pudp points to an entry in the pud page */
-+		for (pudp = (unsigned long *)pud_page, pudindex = 0;
-+					pudindex < PTRS_PER_PUD; pudindex++, pudp++) {
-+			pmd_addr = *pudp & PMASK;
-+			/* read the entire pmd page */
-+			if (!readmem(PADDR, pmd_addr, (void *)pmd_page,
-+					PTRS_PER_PMD * sizeof(unsigned long))) {
-+				ERRMSG("Can't get pud entry for slot %ld.\n", pudindex);
-+				return;
-+			}
-+			/* pmdp points to an entry in the pmd */
-+			for (pmdp = (unsigned long *)pmd_page, pmdindex = 0;
-+					pmdindex < PTRS_PER_PMD; pmdindex++, pmdp++) {
-+				/* linear page position in this page table: */
-+				pmd = *pmdp;
-+				num_pmds++;
-+				tpfn = (pvaddr - VMEMMAP_START) /
-+							pagestructsize;
-+				if (tpfn >= high_pfn) {
-+					done = 1;
-+					break;
-+				}
-+				/*
-+				 * vmap_offset_start:
-+				 * Starting logical position in the
-+				 * vmemmap array for the group stays
-+				 * constant until a hole in the table
-+				 * or a break in contiguousness.
-+				 */
-+
-+				/*
-+				 * Ending logical position in the
-+				 * vmemmap array:
-+				 */
-+				vmap_offset_end += hugepagesize;
-+				do_break = 0;
-+				break_in_valids = 0;
-+				break_after_invalids = 0;
-+				/*
-+				 * We want breaks either when:
-+				 * - we hit a hole (invalid)
-+				 * - we discontiguous page is a string of valids
-+				 */
-+				if (pmd) {
-+					data_addr = (pmd & PMASK);
-+					if (start_range) {
-+						/* first-time kludge */
-+						start_data_addr = data_addr;
-+						last_data_addr = start_data_addr
-+							 - hugepagesize;
-+						start_range = 0;
-+					}
-+					if (last_invalid) {
-+						/* end of a hole */
-+						start_data_addr = data_addr;
-+						last_data_addr = start_data_addr
-+							 - hugepagesize;
-+						/* trigger update of offset */
-+						do_break = 1;
-+					}
-+					last_valid = 1;
-+					last_invalid = 0;
-+					/*
-+					 * we have it a gap in physical
-+					 * contiguousness in the table.
-+					 */
-+					/* ?? consecutive holes will have
-+					   same data_addr */
-+					if (data_addr !=
-+						last_data_addr + hugepagesize) {
-+						do_break = 1;
-+						break_in_valids = 1;
-+					}
-+					if (verbose)
-+						printf("valid: pud %ld pmd %ld pfn %#lx"
-+							" pvaddr %#lx pfns %#lx-%lx"
-+							" start %#lx end %#lx\n",
-+							pudindex, pmdindex,
-+							data_addr >> 12,
-+							pvaddr, tpfn,
-+					tpfn + structsperhpage - 1,
-+					vmap_offset_start,
-+					vmap_offset_end);
-+					num_pmds_valid++;
-+					if (!(pmd & PSE)) {
-+						printf("vmemmap pmd not huge, abort\n");
-+						exit(1);
-+					}
-+				} else {
-+					if (last_valid) {
-+						/* this a hole after some valids */
-+						do_break = 1;
-+						break_in_valids = 1;
-+						break_after_invalids = 0;
-+					}
-+					last_valid = 0;
-+					last_invalid = 1;
-+					/*
-+					 * There are holes in this sparsely
-+					 * populated table; they are 2MB gaps
-+					 * represented by null pmd entries.
-+					 */
-+					if (verbose)
-+						printf("invalid: pud %ld pmd %ld %#lx"
-+							" pfns %#lx-%lx start %#lx end"
-+							" %#lx\n", pudindex, pmdindex,
-+							pvaddr, tpfn,
-+							tpfn + structsperhpage - 1,
-+							vmap_offset_start,
-+							vmap_offset_end);
-+				}
-+				if (do_break) {
-+					/* The end of a hole is not summarized.
-+					 * It must be the start of a hole or
-+					 * hitting a discontiguous series.
-+					 */
-+					if (break_in_valids || break_after_invalids) {
-+						/*
-+						 * calculate that pfns
-+						 * represented by the current
-+						 * offset in the vmemmap.
-+						 */
-+						/* page struct even partly on this page */
-+						rep_pfn_start = vmap_offset_start /
-+							pagestructsize;
-+						/* ending page struct entirely on
-+ 						   this page */
-+						rep_pfn_end = ((vmap_offset_end -
-+							hugepagesize) / pagestructsize);
-+ 						if (verbose)
-+							printf("vmap pfns %#lx-%lx "
-+							"represent pfns %#lx-%lx\n\n",
-+							start_data_addr >> PAGESHFT,
-+							last_data_addr >> PAGESHFT,
-+							rep_pfn_start, rep_pfn_end);
-+						groups++;
-+						vmapp = (struct vmap_pfns *)malloc(
-+								sizeof(struct vmap_pfns));
-+						/* pfn of this 2MB page of page structs */
-+						vmapp->vmap_pfn_start = start_data_addr
-+									>> PTE_SHIFT;
-+						vmapp->vmap_pfn_end = last_data_addr
-+									>> PTE_SHIFT;
-+						/* these (start/end) are literal pfns
-+ 						 * on this page, not start and end+1 */
-+						vmapp->rep_pfn_start = rep_pfn_start;
-+						vmapp->rep_pfn_end = rep_pfn_end;
-+
-+						if (!vmaphead) {
-+							vmaphead = vmapp;
-+							vmapp->next = vmapp;
-+							vmapp->prev = vmapp;
-+						} else {
-+							tail = vmaphead->prev;
-+							vmaphead->prev = vmapp;
-+							tail->next = vmapp;
-+							vmapp->next = vmaphead;
-+							vmapp->prev = tail;
-+						}
-+					}
-+
-+					/* update logical position at every break */
-+					vmap_offset_start =
-+						vmap_offset_end - hugepagesize;
-+					start_data_addr = data_addr;
-+				}
-+
-+				last_data_addr = data_addr;
-+				pvaddr += hugepagesize;
-+				/*
-+				 * pvaddr is current virtual address
-+				 *   eg 0xffffea0004200000 if
-+				 *    vmap_offset_start is 4200000
-+				 */
-+			}
-+		}
-+		tpfn = (pvaddr - VMEMMAP_START) / pagestructsize;
-+		if (tpfn >= high_pfn) {
-+			done = 1;
-+			break;
-+		}
-+	}
-+	rep_pfn_start = vmap_offset_start / pagestructsize;
-+	rep_pfn_end = (vmap_offset_end - hugepagesize) / pagestructsize;
-+ 	if (verbose)
-+		printf("vmap pfns %#lx-%lx represent pfns %#lx-%lx\n\n",
-+			start_data_addr >> PAGESHFT, last_data_addr >> PAGESHFT,
-+			rep_pfn_start, rep_pfn_end);
-+	groups++;
-+	vmapp = (struct vmap_pfns *)malloc(sizeof(struct vmap_pfns));
-+	vmapp->vmap_pfn_start = start_data_addr >> PTE_SHIFT;
-+	vmapp->vmap_pfn_end = last_data_addr >> PTE_SHIFT;
-+	vmapp->rep_pfn_start = rep_pfn_start;
-+	vmapp->rep_pfn_end = rep_pfn_end;
-+	if (!vmaphead) {
-+		vmaphead = vmapp;
-+		vmapp->next = vmapp;
-+		vmapp->prev = vmapp;
-+	} else {
-+		tail = vmaphead->prev;
-+		vmaphead->prev = vmapp;
-+		tail->next = vmapp;
-+		vmapp->next = vmaphead;
-+		vmapp->prev = tail;
-+	}
-+	if (verbose)
-+		printf("num_pmds: %d num_pmds_valid %d\n", num_pmds, num_pmds_valid);
-+
-+	/* transfer the linked list to an array */
-+	cur = vmaphead;
-+	gvmem_pfns = (struct vmap_pfns *)malloc(sizeof(struct vmap_pfns) * groups);
-+	i = 0;
-+	do {
-+		vmapp = gvmem_pfns + i;
-+		vmapp->vmap_pfn_start = cur->vmap_pfn_start;
-+		vmapp->vmap_pfn_end = cur->vmap_pfn_end;
-+		vmapp->rep_pfn_start = cur->rep_pfn_start;
-+		vmapp->rep_pfn_end = cur->rep_pfn_end;
-+		cur = cur->next;
-+		free(cur->prev);
-+		i++;
-+	} while (cur != vmaphead);
-+	nr_gvmem_pfns = i;
-+}
-+
- int
- create_dumpfile(void)
- {
-@@ -8302,6 +8969,10 @@ create_dumpfile(void)
- 
- 	print_vtop();
- 
-+	/* create an array of translations from pfn to vmemmap pages */
-+	if (info->flag_excludevm)
-+		find_vmemmap();
-+
- 	if (info->flag_rawdump)
- 		PROGRESS_MSG("Using O_DIRECT i/o for dump.\n");
- 	if (info->flag_rawbitmaps)
-@@ -9334,7 +10005,7 @@ main(int argc, char *argv[])
- 
- 	info->block_order = DEFAULT_ORDER;
- 	message_level = DEFAULT_MSG_LEVEL;
--	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:jJlpRvXx:", longopts,
-+	while ((opt = getopt_long(argc, argv, "b:cDd:eEFfg:hi:jJlpRvXx:", longopts,
- 	    NULL)) != -1) {
- 		switch (opt) {
- 		case OPT_BLOCK_ORDER:
-@@ -9349,6 +10020,10 @@ main(int argc, char *argv[])
- 		case OPT_DEBUG:
- 			flag_debug = TRUE;
- 			break;
-+		case OPT_EXCLUDEVM:
-+			info->flag_excludevm = 1;
-+			/* exclude unused vmemmap pages */
-+			break;
- 		case OPT_DUMP_LEVEL:
- 			if (!parse_dump_level(optarg))
- 				goto out;
-Index: makedumpfile-1.5.5/makedumpfile.h
-===================================================================
---- makedumpfile-1.5.5.orig/makedumpfile.h
-+++ makedumpfile-1.5.5/makedumpfile.h
-@@ -44,6 +44,9 @@
- #include "diskdump_mod.h"
- #include "sadump_mod.h"
- 
-+#define VMEMMAPSTART 0xffffea0000000000UL
-+#define BITS_PER_WORD 64
-+
- /*
-  * Result of command
-  */
-@@ -477,6 +480,7 @@ do { \
- #define VMALLOC_END		(info->vmalloc_end)
- #define VMEMMAP_START		(info->vmemmap_start)
- #define VMEMMAP_END		(info->vmemmap_end)
-+#define PMASK			(0x7ffffffffffff000UL)
- 
- #ifdef __arm__
- #define KVBASE_MASK		(0xffff)
-@@ -561,15 +565,20 @@ do { \
- #define PGDIR_SIZE		(1UL << PGDIR_SHIFT)
- #define PGDIR_MASK		(~(PGDIR_SIZE - 1))
- #define PTRS_PER_PGD		(512)
-+#define PGD_SHIFT		(39)
-+#define PUD_SHIFT		(30)
- #define PMD_SHIFT		(21)
- #define PMD_SIZE		(1UL << PMD_SHIFT)
- #define PMD_MASK		(~(PMD_SIZE - 1))
-+#define PTRS_PER_PUD		(512)
- #define PTRS_PER_PMD		(512)
- #define PTRS_PER_PTE		(512)
- #define PTE_SHIFT		(12)
- 
- #define pml4_index(address) (((address) >> PML4_SHIFT) & (PTRS_PER_PML4 - 1))
- #define pgd_index(address)  (((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
-+#define pgd4_index(address)  (((address) >> PGD_SHIFT) & (PTRS_PER_PGD - 1))
-+#define pud_index(address)  (((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
- #define pmd_index(address)  (((address) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
- #define pte_index(address)  (((address) >> PTE_SHIFT) & (PTRS_PER_PTE - 1))
- 
-@@ -683,7 +692,6 @@ do { \
- /*
-  * 4 Levels paging
-  */
--#define PUD_SHIFT		(PMD_SHIFT + PTRS_PER_PTD_SHIFT)
- #define PGDIR_SHIFT_4L		(PUD_SHIFT + PTRS_PER_PTD_SHIFT)
- 
- #define MASK_PUD   	((1UL << REGION_SHIFT) - 1) & (~((1UL << PUD_SHIFT) - 1))
-@@ -917,6 +925,7 @@ struct DumpInfo {
- 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
- 	int		flag_rawdump;        /* use raw i/o for the dump file */
- 	int		flag_rawbitmaps;     /* use raw i/o for the bitmaps file */
-+	int		flag_excludevm;      /* exclude unused vmemmap pages */
- 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
- 	long		page_size;           /* size of page */
- 	long		page_shift;
-@@ -1449,6 +1458,52 @@ struct srcfile_table {
- 	char	pud_t[LEN_SRCFILE];
- };
- 
-+/*
-+ * This structure records where the vmemmap page structures reside, and which
-+ * pfn's are represented by those page structures.
-+ * The actual pages containing the page structures are 2MB pages, so their pfn's
-+ * will all be multiples of 0x200.
-+ * The page structures are 7 64-bit words in length (0x38) so they overlap the
-+ * 2MB boundaries. Each page structure represents a 4k page.
-+ * A 4k page is here defined to be represented on a 2MB page if its page structure
-+ * 'ends' on that page (even if it began on the page before).
-+ */
-+struct vmap_pfns {
-+	struct vmap_pfns *next;
-+	struct vmap_pfns *prev;
-+	/*
-+	 * These (start/end) are literal pfns of 2MB pages on which the page
-+	 * structures reside, not start and end+1.
-+	 */
-+	unsigned long vmap_pfn_start;
-+	unsigned long vmap_pfn_end;
-+	/*
-+	 * These (start/end) are literal pfns represented on these pages, not
-+	 * start and end+1.
-+	 * The starting page struct is at least partly on the first page; the
-+ 	 * ending page struct is entirely on the last page.
-+ 	 */
-+	unsigned long rep_pfn_start;
-+	unsigned long rep_pfn_end;
-+};
-+
-+/* for saving a list of pfns to a buffer, and then to a file if necessary */
-+struct save_control {
-+	int sc_fd;
-+	char *sc_filename;
-+	char *sc_buf_malloced;
-+	char *sc_buf;
-+	long sc_buflen; /* length of buffer never changes */
-+	long sc_bufposition; /* offset of next slot for write, or next to be read */
-+	long sc_filelen; /* length of valid data written */
-+	long sc_fileposition; /* offset in file of next entry to be read */
-+};
-+/* one entry in the buffer and file */
-+struct sc_entry {
-+	unsigned long startpfn;
-+	unsigned long numpfns;
-+};
-+
- extern struct symbol_table	symbol_table;
- extern struct size_table	size_table;
- extern struct offset_table	offset_table;
-@@ -1595,6 +1650,8 @@ int get_xen_info_ia64(void);
- #define get_xen_basic_info_arch(X) FALSE
- #define get_xen_info_arch(X) FALSE
- #endif	/* s390x */
-+#define PAGESHFT	12 /* assuming a 4k page */
-+#define PSE		128 /* bit 7 */
- 
- static inline int
- is_on(char *bitmap, int i)
-@@ -1729,6 +1786,7 @@ struct elf_prstatus {
- #define OPT_COMPRESS_ZLIB       'c'
- #define OPT_DEBUG               'D'
- #define OPT_DUMP_LEVEL          'd'
-+#define OPT_EXCLUDEVM           'e'
- #define OPT_ELF_DUMPFILE        'E'
- #define OPT_FLATTEN             'F'
- #define OPT_FORCE               'f'
-Index: makedumpfile-1.5.5/print_info.c
-===================================================================
---- makedumpfile-1.5.5.orig/print_info.c
-+++ makedumpfile-1.5.5/print_info.c
-@@ -48,7 +48,7 @@ print_usage(void)
- 	MSG("\n");
- 	MSG("Usage:\n");
- 	MSG("  Creating DUMPFILE:\n");
--	MSG("  # makedumpfile    [-c|-l|-E] [-d DL] [-j] [-J] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
-+	MSG("  # makedumpfile    [-c|-l|-E|-j|-J|-e|-N] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
- 	MSG("    DUMPFILE\n");
- 	MSG("\n");
- 	MSG("  Creating DUMPFILE with filtered kernel data specified through filter config\n");
-@@ -101,6 +101,10 @@ print_usage(void)
- 	MSG("  [-J]:\n");
- 	MSG("      Use raw (O_DIRECT) i/o on bitmap file to avoid expanding kernel pagecache.\n");
- 	MSG("\n");
-+	MSG("  [-e]:\n");
-+	MSG("      Exclude page structures (vmemmap) for unused pages.\n");
-+	MSG("      (the default is to capture them all, which amounts to 3.67M pages per terabyte)\n");
-+	MSG("\n");
- 	MSG("  [-d DL]:\n");
- 	MSG("      Specify the type of unnecessary page for analysis.\n");
- 	MSG("      Pages of the specified type are not copied to DUMPFILE. The page type\n");
-Index: makedumpfile-1.5.5/diskdump_mod.h
-===================================================================
---- makedumpfile-1.5.5.orig/diskdump_mod.h
-+++ makedumpfile-1.5.5/diskdump_mod.h
-@@ -95,6 +95,7 @@ struct kdump_sub_header {
- #define DUMP_DH_COMPRESSED_LZO	0x2	/* paged is compressed with lzo */
- #define DUMP_DH_COMPRESSED_SNAPPY	0x4
- 					/* paged is compressed with snappy */
-+#define DUMP_DH_EXCLUDED_VMEMMAP 0x8	/* unused vmemmap pages are excluded */
- 
- /* descriptor of each page for vmcore */
- typedef struct page_desc {
+-- 
+Cliff Wickman
+SGI
+cpw@sgi.com
+(651) 683-3824
 
 _______________________________________________
 kexec mailing list
