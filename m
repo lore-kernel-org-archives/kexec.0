@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W1YCE-0003wd-Ld
- for kexec@lists.infradead.org; Fri, 10 Jan 2014 09:16:07 +0000
-Date: Fri, 10 Jan 2014 17:14:33 +0800
-From: Baoquan <bhe@redhat.com>
-Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
-Message-ID: <20140110091433.GA14074@dhcp-16-105.nay.redhat.com>
-References: <20140109145035.GB25897@redhat.com>
- <1389283439.1792.66.camel@misato.fc.hp.com>
- <20140109162427.GF25897@redhat.com>
- <1389288265.1792.108.camel@misato.fc.hp.com>
- <20140109182310.GG25897@redhat.com>
- <1389292470.1792.109.camel@misato.fc.hp.com>
- <20140109212705.GC12111@redhat.com>
- <1389304583.1792.139.camel@misato.fc.hp.com>
- <20140110071124.GA6464@dhcp-16-105.nay.redhat.com>
- <52CFAA20.2010109@jp.fujitsu.com>
+ id 1W1YT3-0004Lk-S6
+ for kexec@lists.infradead.org; Fri, 10 Jan 2014 09:33:30 +0000
+Date: Fri, 10 Jan 2014 17:32:09 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] makedumpfile: clean up draft patch
+Message-ID: <20140110093209.GB14074@dhcp-16-105.nay.redhat.com>
+References: <1388146378-25419-1-git-send-email-bhe@redhat.com>
+ <20140107014948.GA32590@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971D9605@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <52CFAA20.2010109@jp.fujitsu.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971D9605@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,52 +25,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Yasuaki Ishimatsu <isimatu.yasuaki@jp.fujitsu.com>
-Cc: Toshi Kani <toshi.kani@hp.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+
+ 
+> > +static void update_cycle(unsigned long long max, struct cycle *cycle)
+> > +{
+> > +	cycle->start_pfn= cycle->end_pfn + 1;
+> > +	cycle->end_pfn=  cycle->start_pfn + info->pfn_cyclic;
+> > +
+> > +	if (cycle->end_pfn > max)
+> > +		cycle->end_pfn = max;
+> > +}
+> 
+> According to this function, you must treat a range of a cycle
+> as below:
+> 
+>    |<----------------- a cycle ------------------->|
+> ---+-----------+-----------+-----------+-----------+----
+>    |   pfn:N   |  pfn:N+1  |  pfn:N+2  |  pfn:N+3  | ...
+> ---+-----------+-----------+-----------+-----------+----
+>          A                                   A
+>          |                                   |
+>      start_pfn                            end_pfn
+> 
+> However, the existing code treat it as:
+> 
+>    |<------------ a cycle ------------>|
+> ---+-----------+-----------+-----------+-----------+----
+>    |   pfn:N   |  pfn:N+1  |  pfn:N+2  |  pfn:N+3  | ...
+> ---+-----------+-----------+-----------+-----------+----
+>          A                                   A
+>          |                                   |
+>      start_pfn                            end_pfn
+> 
+> This can be implied from the current iterator like below:
+> 
+>      for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+>                            ^^^^^^^^^^^^^^
+> In short, the existing code will not work correctly.
+
+Yeah, you are quite right. This need be corrected. Will change in formal
+patch.
+
+> 
+> You may feel this design is strange.
+> This came from the fact that the end of the region's *address*
+> is the head of pfn:N+1 while it can also be said the tail of pfn:N.
+> (And this came from the initial version.)
+> 
+> BTW, info->cyclic_start_pfn and info->cyclic_end_pfn are no longer
+> used, we can get rid of those from makedumpfile.h.
+
+Ok, will change.
 
 
- >In ns
-> >object tree, they are not treated as hotplug memory.
-> 
-> wrong.
-> They are treated as hotplug memory. But the memory cannot hot removed
-> because the memory has kernel memory.
-> 
-> >Otherwise, any hotplug memory which is not reserved for 2nd kernel can
-> >be parsed and need be added as hotplug memory, and add them into movable
-> >zone.
-> 
-> wrong.
-> The memory is allocated as normal zone and it is offline.
-
-Hi,
-
-Thanks for answering.
-
-I am confused. Now the fact is in 1st kernel memory is reserved for
-crashkernel and passed to 2nd kernel by exactmap. Then in 2nd kernel,
-reserved memory regions are added into e820. Later hotplug memory still
-trigger add_memory, and cause bug I reported.
-
 
 > 
-> >
-> >Am I right?
-> >
 > 
-> >The other question, e820 reserve is done earlier than acpi
-> >initialization, because acpi_early_init() invocation is very late in
-> >start_kernel(). Does that means at the very beginning all memorys are in
-> >e820, later when acpi_early_init is called, hotplug memory is detected,
-> >they will be moved to different place or need be marked with a specific
-> >flag?
-> 
-> No.
-> 
-> Thanks,
-> Yasuaki Ishimatsu
-> 
-
 
 _______________________________________________
 kexec mailing list
