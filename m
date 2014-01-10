@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W1haj-0001Jr-ET
- for kexec@lists.infradead.org; Fri, 10 Jan 2014 19:18:02 +0000
-Received: from zmail15.collab.prod.int.phx2.redhat.com
- (zmail15.collab.prod.int.phx2.redhat.com [10.5.83.17])
- by mx3-phx2.redhat.com (8.13.8/8.13.8) with ESMTP id s0AJHdde015939
- for <kexec@lists.infradead.org>; Fri, 10 Jan 2014 14:17:39 -0500
-Date: Fri, 10 Jan 2014 14:17:39 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <54378028.659399.1389381459082.JavaMail.root@redhat.com>
-In-Reply-To: <mailman.19254.1389376849.1059.kexec@lists.infradead.org>
-References: <mailman.19254.1389376849.1059.kexec@lists.infradead.org>
-Subject: Re: [PATCH 2/2 V2] exclude unused vmemmap pages
-MIME-Version: 1.0
+Received: from g5t0006.atlanta.hp.com ([15.192.0.43])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W1kFL-0004gZ-E8
+ for kexec@lists.infradead.org; Fri, 10 Jan 2014 22:08:09 +0000
+From: Bill Sumner <bill.sumner@hp.com>
+Subject: [PATCHv3 2/6] Crashdump-Accepting-Active-IOMMU-Utility-functions
+Date: Fri, 10 Jan 2014 15:07:28 -0700
+Message-Id: <1389391652-52422-3-git-send-email-bill.sumner@hp.com>
+In-Reply-To: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,92 +17,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org
+Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, bill.sumner@hp.com
 
+---------.---------.---------.---------.---------.---------.---------.
+Most of the code for Crashdump Accepting Active IOMMU is contained
+in a large section at the end of intel-iommu.c -- beginning here.
 
+This patch contains small utility functions used to access the
+bit fields of the context entry, plus one to copy from a physically-
+addressed area of memory (primarily pages from the panicked kernel)
+into a virtually-addressed area within the crashdump kernel.
 
------ Original Message -----
->
-> provides some requested changes:
-> - remove the automatic exclusion of page structures for memories over 1TB; it
->   will only be done by explicit request (-e)
-> - remove the -N option; no need to explicitly include unused vmemmap pages
->   as they will be included by default
-> - add DUMP_DH_EXCLUDED_VMEMMAP to the dump header; to warn crash users that
->   these page structures are excluded
-> - fix the making of the filename for pfn file (in init_save_control())
-> but still is only tested on a disk dump of an x86_64 system.
-> 
-> Exclude kernel pages that contain nothing but page structures for pages
-> that are not being included in the dump.
-> These can amount to 3.67 million pages per terabyte of system memory!
-> 
-> The kernel's page table, starting at virtual address 0xffffea0000000000, is
-> searched to find the actual pages containing the vmemmap page structures.
-> 
-> Bitmap1 is a map of dumpable (i.e existing) pages. Bitmap2 is a map
-> of pages not to be excluded.
-> To speed the search of bitmaps only whole 64-bit words of 1's in
-> bitmap1 and 0's in bitmap2 are tested to see if they are vmemmap pages.
-> 
-> The list of vmemmap pfn's to be excluded is written to a small file in order
-> to conserve crash kernel memory.
-> 
-> In practice, this whole procedure only takes about 10 seconds on a
-> 16TB machine.
-> 
-> Signed-off-by: Cliff Wickman <cpw@sgi.com>
+v1->v2:
+Updated patch description
 
-... [ cut ] ...
+v2->v3:
+No change
 
-> +#define OPT_EXCLUDEVM           'e'
->  #define OPT_ELF_DUMPFILE        'E'
->  #define OPT_FLATTEN             'F'
->  #define OPT_FORCE               'f'
-> Index: makedumpfile-1.5.5/print_info.c
-> ===================================================================
-> --- makedumpfile-1.5.5.orig/print_info.c
-> +++ makedumpfile-1.5.5/print_info.c
-> @@ -48,7 +48,7 @@ print_usage(void)
->  	MSG("\n");
->  	MSG("Usage:\n");
->  	MSG("  Creating DUMPFILE:\n");
-> -	MSG("  # makedumpfile    [-c|-l|-E] [-d DL] [-j] [-J] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
-> +	MSG("  # makedumpfile    [-c|-l|-E|-j|-J|-e|-N] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
->  	MSG("    DUMPFILE\n");
->  	MSG("\n");
->  	MSG("  Creating DUMPFILE with filtered kernel data specified through filter config\n");
-> @@ -101,6 +101,10 @@ print_usage(void)
->  	MSG("  [-J]:\n");
->  	MSG("      Use raw (O_DIRECT) i/o on bitmap file to avoid expanding kernel pagecache.\n");
->  	MSG("\n");
-> +	MSG("  [-e]:\n");
-> +	MSG("      Exclude page structures (vmemmap) for unused pages.\n");
-> +	MSG("      (the default is to capture them all, which amounts to 3.67M pages per terabyte)\n");
-> +	MSG("\n");
->  	MSG("  [-d DL]:\n");
->  	MSG("      Specify the type of unnecessary page for analysis.\n");
->  	MSG("      Pages of the specified type are not copied to DUMPFILE. The page
->  	type\n");
+Signed-off-by: Bill Sumner <bill.sumner@hp.com>
+---
+ drivers/iommu/intel-iommu.c | 74 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-Perhaps there should be a warning above concerning the potential for crash analysis
-problems?  The description above makes it sound like -e is similar in nature (and
-therefore as harmless) as the -d <level> option.
-
-It could be argued that there's no such warning for eppic/erasures, but with eppic
-it's far less likely to result in crash analysis failures.  With -e, the user is
-virtually guaranteed to have issues.
-
-I realize that this is beating a dead horse, but again, this is an option
-that should very rarely be used -- and if applied, the user/administrator should
-be well aware of the ramifications. 
-
-Dave
-
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 17c4537..4172a2b 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4455,3 +4455,77 @@ static void __init check_tylersburg_isoch(void)
+ 	printk(KERN_WARNING "DMAR: Recommended TLB entries for ISOCH unit is 16; your BIOS set %d\n",
+ 	       vtisochctrl);
+ }
++#ifdef CONFIG_CRASH_DUMP
++
++/* ========================================================================
++ * Utility functions for accessing the iommu Translation Tables
++ * ------------------------------------------------------------------------
++ */
++static inline struct context_entry *
++get_context_phys_from_root(struct root_entry *root)
++{
++	return (struct context_entry *)
++		(root_present(root) ? (void *) (root->val & VTD_PAGE_MASK)
++				    : NULL);
++}
++
++static int
++context_get_p(struct context_entry *c)    {return((c->lo >> 0) & 0x1); }
++
++static int
++context_get_fpdi(struct context_entry *c) {return((c->lo >> 1) & 0x1); }
++
++static int
++context_get_t(struct context_entry *c)    {return((c->lo >> 2) & 0x3); }
++
++static u64
++context_get_asr(struct context_entry *c)  {return((c->lo >> 12));      }
++
++static int
++context_get_aw(struct context_entry *c)   {return((c->hi >> 0) & 0x7); }
++
++static int
++context_get_aval(struct context_entry *c) {return((c->hi >> 3) & 0xf); }
++
++static int
++context_get_did(struct context_entry *c)  {return((c->hi >> 8) & 0xffff); }
++
++static void context_put_asr(struct context_entry *c, unsigned long asr)
++{
++	c->lo &= (~VTD_PAGE_MASK);
++	c->lo |= (asr << VTD_PAGE_SHIFT);
++}
++
++
++/*
++ * Copy memory from a physically-addressed area into a virtually-addressed area
++ */
++static int oldcopy(void *to, void *from, int size)
++{
++	size_t ret = 0;			/* Length copied */
++	unsigned long pfn;		/* Page Frame Number */
++	char *buf = to;			/* Adr(Output buffer) */
++	size_t csize = (size_t)size;	/* Num(bytes to copy) */
++	unsigned long offset;		/* Lower 12 bits of from */
++	int userbuf = 0;		/* to is in kernel space */
++
++	if (pr_dbg.enter_oldcopy)
++		pr_debug("ENTER %s to=%16.16llx, from = %16.16llx, size = %d\n",
++			__func__,
++			(unsigned long long) to,
++			(unsigned long long) from, size);
++
++	if (intel_iommu_translation_tables_are_mapped)
++		memcpy(to, phys_to_virt((phys_addr_t)from), csize);
++	else {
++		pfn = ((unsigned long) from) >> VTD_PAGE_SHIFT;
++		offset = ((unsigned long) from) & (~VTD_PAGE_MASK);
++		ret = copy_oldmem_page(pfn, buf, csize, offset, userbuf);
++	}
++
++	if (pr_dbg.leave_oldcopy)
++		pr_debug("LEAVE %s ret=%d\n", __func__, (int) ret);
++
++	return (int) ret;
++}
++#endif /* CONFIG_CRASH_DUMP */
+-- 
+Bill Sumner <bill.sumner@hp.com>
 
 
 _______________________________________________
