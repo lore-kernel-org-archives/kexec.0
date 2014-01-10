@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W1dUx-0003AC-8A
- for kexec@lists.infradead.org; Fri, 10 Jan 2014 14:55:47 +0000
-Message-ID: <52D009D7.1010600@redhat.com>
-Date: Fri, 10 Jan 2014 09:55:19 -0500
-From: Prarit Bhargava <prarit@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] acpi memory hotplug, add parameter to disable memory
- hotplug [v2]
-References: <1389364615-13320-1-git-send-email-prarit@redhat.com>
- <20140110144910.GB19115@redhat.com>
-In-Reply-To: <20140110144910.GB19115@redhat.com>
+Received: from g1t0027.austin.hp.com ([15.216.28.34])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W1dy0-0003wn-LM
+ for kexec@lists.infradead.org; Fri, 10 Jan 2014 15:25:49 +0000
+Message-ID: <1389367167.1792.148.camel@misato.fc.hp.com>
+Subject: Re: kdump failed because of hotplug memory adding in kdump kernel
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Fri, 10 Jan 2014 08:19:27 -0700
+In-Reply-To: <20140110091433.GA14074@dhcp-16-105.nay.redhat.com>
+References: <20140109145035.GB25897@redhat.com>
+ <1389283439.1792.66.camel@misato.fc.hp.com>
+ <20140109162427.GF25897@redhat.com>
+ <1389288265.1792.108.camel@misato.fc.hp.com>
+ <20140109182310.GG25897@redhat.com>
+ <1389292470.1792.109.camel@misato.fc.hp.com>
+ <20140109212705.GC12111@redhat.com>
+ <1389304583.1792.139.camel@misato.fc.hp.com>
+ <20140110071124.GA6464@dhcp-16-105.nay.redhat.com>
+ <52CFAA20.2010109@jp.fujitsu.com>
+ <20140110091433.GA14074@dhcp-16-105.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,35 +32,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, kosaki.motohiro@gmail.com, dyoung@redhat.com, Len Brown <lenb@kernel.org>
+To: Baoquan <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, tangchen@cn.fujitsu.com, linux-acpi@vger.kernel.org, Yasuaki Ishimatsu <isimatu.yasuaki@jp.fujitsu.com>, zhangyanfei@cn.fujitsu.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
+On Fri, 2014-01-10 at 17:14 +0800, Baoquan wrote:
+ :
+> > 
+> > >Otherwise, any hotplug memory which is not reserved for 2nd kernel can
+> > >be parsed and need be added as hotplug memory, and add them into movable
+> > >zone.
+> > 
+> > wrong.
+> > The memory is allocated as normal zone and it is offline.
 
+This is "logical" offline, which means that the memory is accessible,
+but the 1st kernel does not use it.
 
-On 01/10/2014 09:49 AM, Vivek Goyal wrote:
-> On Fri, Jan 10, 2014 at 09:36:55AM -0500, Prarit Bhargava wrote:
+> Hi,
 > 
-> [..]
->> This can also be reproduced by using the memmap=exactmap and mem=X
->> parameters on the main kernel and booting.
->>
->> This patchset resolves the problem by adding a kernel parameter,
->> acpi_no_memhotplug, to disable ACPI memory hotplug.
+> Thanks for answering.
 > 
-> Hi Prarit,
-> 
-> People seem to like the idea of disabling hotplug automatically if
-> memmap=exactmap or mem=X is passed on command line. Can you please take
-> care of that too. That way we would not have to modify kexec-tools and
-> kernel update will fix this issue.
+> I am confused. Now the fact is in 1st kernel memory is reserved for
+> crashkernel and passed to 2nd kernel by exactmap. Then in 2nd kernel,
+> reserved memory regions are added into e820.
 
-Oh, okay.  I'll do that right now.
+Right.  And this memory is accessible.  
 
-P.
+>  Later hotplug memory still
+> trigger add_memory, and cause bug I reported.
 
-> 
-> Thanks
-> Vivek
+This is because the 2nd kernel gets all memory ranges from ACPI without
+your change.  This is bad, not only it causes the panic you reported but
+also it can overwrite the 1st kernel's memory.
+
+Thanks,
+-Toshi
+
 
 _______________________________________________
 kexec mailing list
