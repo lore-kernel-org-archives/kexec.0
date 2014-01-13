@@ -1,35 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp13.uk.ibm.com ([195.75.94.109])
+Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W2j2C-0001b9-Va
- for kexec@lists.infradead.org; Mon, 13 Jan 2014 15:02:37 +0000
+ id 1W2lkA-00088F-B3
+ for kexec@lists.infradead.org; Mon, 13 Jan 2014 17:56:10 +0000
 Received: from /spool/local
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 13 Jan 2014 15:02:11 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 88FE117D8059
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 15:02:19 +0000 (GMT)
-Received: from d06av10.portsmouth.uk.ibm.com (d06av10.portsmouth.uk.ibm.com
- [9.149.37.251])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s0DF1t9p56688750
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 15:01:55 GMT
-Received: from d06av10.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av10.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s0DF27R5014190
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 08:02:07 -0700
-Date: Mon, 13 Jan 2014 16:02:05 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH 1/2 V2] raw i/o and root device to use less memory
-Message-ID: <20140113160205.6e631a5e@holzheu>
-In-Reply-To: <20140113133033.GA917@sgi.com>
-References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
- <20140110175830.GA7498@sgi.com> <20140113105831.57412728@holzheu>
- <20140113133033.GA917@sgi.com>
-Mime-Version: 1.0
+ for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
+ Mon, 13 Jan 2014 17:55:40 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2E6AE1B0805F
+ for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 17:54:59 +0000 (GMT)
+Received: from d06av07.portsmouth.uk.ibm.com (d06av07.portsmouth.uk.ibm.com
+ [9.149.37.248])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s0DHtPWv57278716
+ for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 17:55:25 GMT
+Received: from d06av07.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av07.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s0DHtba1016292
+ for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 12:55:37 -0500
+Subject: [PATCH] ppc64/kexec/purgatory Fix RTAS calls in Little Endian mode.
+From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Date: Mon, 13 Jan 2014 18:55:36 +0100
+Message-ID: <20140113175536.14913.16060.stgit@nimbus>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,39 +38,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: horms@verge.net.au, kexec@lists.infradead.org
 
-On Mon, 13 Jan 2014 07:30:33 -0600
-Cliff Wickman <cpw@sgi.com> wrote:
+RTAS is expecting parameters in Big Endian order so we have to byte swap
+them in LE mode.
 
-> On Mon, Jan 13, 2014 at 10:58:31AM +0100, Michael Holzheu wrote:
-> > On Fri, 10 Jan 2014 11:58:30 -0600
-> > Cliff Wickman <cpw@sgi.com> wrote:
-> > 
-> > [snip]
-> > 
-> > > Use O_DIRECT (raw) i/o for the dump and for the bitmaps file, so that writing
-> > > to those files does not allocate kernel memory for page cache.
-> > 
-> > Hello Cliff,
-> > 
-> > Have you tested O_DIRECT together with the new vmcore mmap interface?
-> > IIRC when we tried O_DIRECT together with mmap for some reason it did
-> > not work.
-> > 
-> > Michael
-> 
-> Hi Michael,
-> 
->   How new of a kernel do I need?  i.e. how 'new' of an mmap interface?
->   The latest kernel I used was 3.0.93 (sle11sp3).
->   And makedumpfile was 1.5.5.
+In the purgatory RTAS calls are only made for debug output.
 
-I think sles11 SP3 does not support mmap for /proc/vmcore. Upstream you
-need at least kernel 3.11. For makedumpfile version 1.5.5 should be ok.
+Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+---
+ purgatory/arch/ppc64/console-ppc64.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Michael
+diff --git a/purgatory/arch/ppc64/console-ppc64.c b/purgatory/arch/ppc64/console-ppc64.c
+index 78a233b..b80183c 100644
+--- a/purgatory/arch/ppc64/console-ppc64.c
++++ b/purgatory/arch/ppc64/console-ppc64.c
+@@ -21,6 +21,9 @@
+ 
+ #include <purgatory.h>
+ #include "hvCall.h"
++#include <byteswap.h>
++#include <endian.h>
++#include <asm/byteorder.h>
+ 
+ extern int debug;
+ 
+@@ -36,6 +39,7 @@ void putchar(int c)
+ 		putchar('\r');
+ 
+ 	buff[0] = c;
+-	plpar_hcall_norets(H_PUT_TERM_CHAR, 0, 1, lbuf[0], lbuf[1]);
++	plpar_hcall_norets(H_PUT_TERM_CHAR, 0, 1,
++			   __cpu_to_be64(lbuf[0]), __cpu_to_be64(lbuf[1]));
+ 	return;
+ }
 
 
 _______________________________________________
