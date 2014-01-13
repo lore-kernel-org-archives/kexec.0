@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-ea0-f180.google.com ([209.85.215.180])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W2f3o-0002wn-ID
- for kexec@lists.infradead.org; Mon, 13 Jan 2014 10:48:01 +0000
-Received: by mail-ea0-f180.google.com with SMTP id f15so3225564eak.11
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 02:47:37 -0800 (PST)
-From: Taras Kondratyuk <taras.kondratiuk@linaro.org>
-Subject: [RESEND PATCH] kexec: arm: Fix endianness in crashdump header
-Date: Mon, 13 Jan 2014 12:47:25 +0200
-Message-Id: <1389610045-5372-1-git-send-email-kondratyuk.taras@gmail.com>
+Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W2hbV-000792-4W
+ for kexec@lists.infradead.org; Mon, 13 Jan 2014 13:30:58 +0000
+Date: Mon, 13 Jan 2014 07:30:33 -0600
+From: Cliff Wickman <cpw@sgi.com>
+Subject: Re: [PATCH 1/2 V2] raw i/o and root device to use less memory
+Message-ID: <20140113133033.GA917@sgi.com>
+References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+ <20140110175830.GA7498@sgi.com> <20140113105831.57412728@holzheu>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140113105831.57412728@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,58 +20,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Taras Kondratiuk <taras.kondratiuk@linaro.org>, kexec@lists.infradead.org, patches@linaro.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
 
-From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+On Mon, Jan 13, 2014 at 10:58:31AM +0100, Michael Holzheu wrote:
+> On Fri, 10 Jan 2014 11:58:30 -0600
+> Cliff Wickman <cpw@sgi.com> wrote:
+> 
+> [snip]
+> 
+> > Use O_DIRECT (raw) i/o for the dump and for the bitmaps file, so that writing
+> > to those files does not allocate kernel memory for page cache.
+> 
+> Hello Cliff,
+> 
+> Have you tested O_DIRECT together with the new vmcore mmap interface?
+> IIRC when we tried O_DIRECT together with mmap for some reason it did
+> not work.
+> 
+> Michael
 
-Currently little-endian ELFDATA is hard-coded in crashdump header.
-This lead to a wrong header format if crashdump is generated on BE system.
+Hi Michael,
 
-Set native endianness into ELFDATA field.
+  How new of a kernel do I need?  i.e. how 'new' of an mmap interface?
+  The latest kernel I used was 3.0.93 (sle11sp3).
+  And makedumpfile was 1.5.5.
 
-Signed-off-by: Taras Kondratiuk <taras.kondratiuk@linaro.org>
----
-Based on commit 027413d "kexec: Add m68k support"
-
- kexec/arch/arm/crashdump-arm.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 01973b1..0cd6935 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -31,6 +31,13 @@
- #include "../../crashdump.h"
- #include "crashdump-arm.h"
- 
-+#if __BYTE_ORDER == __LITTLE_ENDIAN
-+#define ELFDATANATIVE ELFDATA2LSB
-+#elif __BYTE_ORDER == __BIG_ENDIAN
-+#define ELFDATANATIVE ELFDATA2MSB
-+#else
-+#error "Unknown machine endian"
-+#endif
- 
- /*
-  * Used to save various memory ranges/regions needed for the captured
-@@ -47,7 +54,7 @@ static struct memory_range crash_reserved_mem;
- 
- static struct crash_elf_info elf_info = {
- 	.class		= ELFCLASS32,
--	.data		= ELFDATA2LSB,
-+	.data		= ELFDATANATIVE,
- 	.machine	= EM_ARM,
- 	.page_offset	= PAGE_OFFSET,
- };
+-Cliff
 -- 
-1.7.9.5
-
+Cliff Wickman
+SGI
+cpw@sgi.com
+(651) 683-3824
 
 _______________________________________________
 kexec mailing list
