@@ -1,34 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
+Received: from mail-ea0-f180.google.com ([209.85.215.180])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W2eIQ-0001BB-MA
- for kexec@lists.infradead.org; Mon, 13 Jan 2014 09:59:03 +0000
-Received: from /spool/local
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 13 Jan 2014 09:58:37 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 49D011B0806E
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 09:57:56 +0000 (GMT)
-Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
- [9.149.37.217])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s0D9wMO560489864
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 09:58:22 GMT
-Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s0D9wYuW029484
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 02:58:34 -0700
-Date: Mon, 13 Jan 2014 10:58:31 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH 1/2 V2] raw i/o and root device to use less memory
-Message-ID: <20140113105831.57412728@holzheu>
-In-Reply-To: <20140110175830.GA7498@sgi.com>
-References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
- <20140110175830.GA7498@sgi.com>
-Mime-Version: 1.0
+ id 1W2f3o-0002wn-ID
+ for kexec@lists.infradead.org; Mon, 13 Jan 2014 10:48:01 +0000
+Received: by mail-ea0-f180.google.com with SMTP id f15so3225564eak.11
+ for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 02:47:37 -0800 (PST)
+From: Taras Kondratyuk <taras.kondratiuk@linaro.org>
+Subject: [RESEND PATCH] kexec: arm: Fix endianness in crashdump header
+Date: Mon, 13 Jan 2014 12:47:25 +0200
+Message-Id: <1389610045-5372-1-git-send-email-kondratyuk.taras@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,29 +17,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Taras Kondratiuk <taras.kondratiuk@linaro.org>, kexec@lists.infradead.org, patches@linaro.org
 
-On Fri, 10 Jan 2014 11:58:30 -0600
-Cliff Wickman <cpw@sgi.com> wrote:
+From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
 
-[snip]
+Currently little-endian ELFDATA is hard-coded in crashdump header.
+This lead to a wrong header format if crashdump is generated on BE system.
 
-> Use O_DIRECT (raw) i/o for the dump and for the bitmaps file, so that writing
-> to those files does not allocate kernel memory for page cache.
+Set native endianness into ELFDATA field.
 
-Hello Cliff,
+Signed-off-by: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+---
+Based on commit 027413d "kexec: Add m68k support"
 
-Have you tested O_DIRECT together with the new vmcore mmap interface?
-IIRC when we tried O_DIRECT together with mmap for some reason it did
-not work.
+ kexec/arch/arm/crashdump-arm.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Michael
-
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index 01973b1..0cd6935 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -31,6 +31,13 @@
+ #include "../../crashdump.h"
+ #include "crashdump-arm.h"
+ 
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++#define ELFDATANATIVE ELFDATA2LSB
++#elif __BYTE_ORDER == __BIG_ENDIAN
++#define ELFDATANATIVE ELFDATA2MSB
++#else
++#error "Unknown machine endian"
++#endif
+ 
+ /*
+  * Used to save various memory ranges/regions needed for the captured
+@@ -47,7 +54,7 @@ static struct memory_range crash_reserved_mem;
+ 
+ static struct crash_elf_info elf_info = {
+ 	.class		= ELFCLASS32,
+-	.data		= ELFDATA2LSB,
++	.data		= ELFDATANATIVE,
+ 	.machine	= EM_ARM,
+ 	.page_offset	= PAGE_OFFSET,
+ };
+-- 
+1.7.9.5
 
 
 _______________________________________________
