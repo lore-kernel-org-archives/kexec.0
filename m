@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W2zKk-0004AB-K0
- for kexec@lists.infradead.org; Tue, 14 Jan 2014 08:26:51 +0000
-Date: Tue, 14 Jan 2014 16:26:24 +0800
+ id 1W2zpQ-0004xp-Ef
+ for kexec@lists.infradead.org; Tue, 14 Jan 2014 08:58:33 +0000
+Date: Tue, 14 Jan 2014 16:58:06 +0800
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH] vmcore-dmesg: print white-space characters
-Message-ID: <20140114082624.GA2351@dhcp-17-89.nay.redhat.com>
+Subject: [PATCH] makedumpfile: --dump-dmesg characters printing fix
+Message-ID: <20140114085806.GA8523@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -21,39 +21,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
 
-Some sort of space like "\t" "\n" are used in kernel log. But we treat
-them as non-printables and output "\x20%x" for each non-printable. So
-let's fix it.
+To keep the output of makedumpfile --dump-dmesg being consistent with
+dmesg utility, this patch introduces two changes:
+
+1. If a character is non-printable, print its hex value ("\\x%02x")
+2. No special handling for "\n" ("\n" -> ".")
 
 Signed-off-by: WANG Chao <chaowang@redhat.com>
 ---
- vmcore-dmesg/vmcore-dmesg.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ makedumpfile.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index df14c89..0345660 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -16,6 +16,7 @@
- #include <elf.h>
- #include <stdbool.h>
- #include <inttypes.h>
-+#include <ctype.h>
+diff --git a/makedumpfile.c b/makedumpfile.c
+index ef08d91..73467ab 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3848,12 +3848,10 @@ dump_log_entry(char *logptr, int fp)
+ 	sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
  
- /* The 32bit and 64bit note headers make it clear we don't care */
- typedef Elf32_Nhdr Elf_Nhdr;
-@@ -668,7 +669,7 @@ static void dump_dmesg_structured(int fd)
- 		for (i = 0; i < text_len; i++) {
- 			unsigned char c = log_text(msg)[i];
+ 	for (i = 0, p = msg; i < text_len; i++, p++) {
+-		if (*p == '\n')
+-			sprintf(buf, "%s.", buf);
+-		else if (isprint(*p) || isspace(*p))
++		if (isprint(*p) || isspace(*p))
+ 			sprintf(buf, "%s%c", buf, *p);
+ 		else
+-			sprintf(buf, "%s.", buf);
++			sprintf(buf, "%s\\x%02x", buf, *p);
+ 	}
  
--			if (c < ' ' || c >= 128)
-+			if (!isprint(c) && !isspace(c))
- 				len += sprintf(out_buf + len, "\\x%02x", c);
- 			else
- 				out_buf[len++] = c;
+ 	sprintf(buf, "%s\n", buf);
 -- 
 1.8.4.2
 
