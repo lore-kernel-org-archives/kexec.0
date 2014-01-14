@@ -1,31 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W2lkA-00088F-B3
- for kexec@lists.infradead.org; Mon, 13 Jan 2014 17:56:10 +0000
-Received: from /spool/local
- by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
- Mon, 13 Jan 2014 17:55:40 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2E6AE1B0805F
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 17:54:59 +0000 (GMT)
-Received: from d06av07.portsmouth.uk.ibm.com (d06av07.portsmouth.uk.ibm.com
- [9.149.37.248])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s0DHtPWv57278716
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 17:55:25 GMT
-Received: from d06av07.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av07.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s0DHtba1016292
- for <kexec@lists.infradead.org>; Mon, 13 Jan 2014 12:55:37 -0500
-Subject: [PATCH] ppc64/kexec/purgatory Fix RTAS calls in Little Endian mode.
-From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Date: Mon, 13 Jan 2014 18:55:36 +0100
-Message-ID: <20140113175536.14913.16060.stgit@nimbus>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W2rpw-0001vz-CK
+ for kexec@lists.infradead.org; Tue, 14 Jan 2014 00:26:33 +0000
+Date: Tue, 14 Jan 2014 09:26:05 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RESEND PATCH] kexec: arm: Fix endianness in crashdump header
+Message-ID: <20140114002605.GA18217@verge.net.au>
+References: <1389610045-5372-1-git-send-email-kondratyuk.taras@gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1389610045-5372-1-git-send-email-kondratyuk.taras@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,42 +23,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org
+To: Taras Kondratyuk <taras.kondratiuk@linaro.org>
+Cc: kexec@lists.infradead.org, patches@linaro.org
 
-RTAS is expecting parameters in Big Endian order so we have to byte swap
-them in LE mode.
+On Mon, Jan 13, 2014 at 12:47:25PM +0200, Taras Kondratyuk wrote:
+> From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+> 
+> Currently little-endian ELFDATA is hard-coded in crashdump header.
+> This lead to a wrong header format if crashdump is generated on BE system.
+> 
+> Set native endianness into ELFDATA field.
+> 
+> Signed-off-by: Taras Kondratiuk <taras.kondratiuk@linaro.org>
 
-In the purgatory RTAS calls are only made for debug output.
-
-Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
----
- purgatory/arch/ppc64/console-ppc64.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/purgatory/arch/ppc64/console-ppc64.c b/purgatory/arch/ppc64/console-ppc64.c
-index 78a233b..b80183c 100644
---- a/purgatory/arch/ppc64/console-ppc64.c
-+++ b/purgatory/arch/ppc64/console-ppc64.c
-@@ -21,6 +21,9 @@
- 
- #include <purgatory.h>
- #include "hvCall.h"
-+#include <byteswap.h>
-+#include <endian.h>
-+#include <asm/byteorder.h>
- 
- extern int debug;
- 
-@@ -36,6 +39,7 @@ void putchar(int c)
- 		putchar('\r');
- 
- 	buff[0] = c;
--	plpar_hcall_norets(H_PUT_TERM_CHAR, 0, 1, lbuf[0], lbuf[1]);
-+	plpar_hcall_norets(H_PUT_TERM_CHAR, 0, 1,
-+			   __cpu_to_be64(lbuf[0]), __cpu_to_be64(lbuf[1]));
- 	return;
- }
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
