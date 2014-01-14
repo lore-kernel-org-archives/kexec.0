@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-yh0-x231.google.com ([2607:f8b0:4002:c01::231])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W3EZG-0006LM-JI
- for kexec@lists.infradead.org; Wed, 15 Jan 2014 00:42:51 +0000
-Received: by mail-yh0-f49.google.com with SMTP id b6so343667yha.22
- for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 16:42:28 -0800 (PST)
-Date: Tue, 14 Jan 2014 16:42:24 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH] acpi memory hotplug, add parameter to disable memory
- hotplug [v3]
-In-Reply-To: <1389727273-27817-1-git-send-email-prarit@redhat.com>
-Message-ID: <alpine.DEB.2.02.1401141642020.3375@chino.kir.corp.google.com>
-References: <1389727273-27817-1-git-send-email-prarit@redhat.com>
-MIME-Version: 1.0
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W3DWs-0004Hm-Ve
+ for kexec@lists.infradead.org; Tue, 14 Jan 2014 23:36:19 +0000
+Date: Tue, 14 Jan 2014 15:35:54 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] kdump: Fix exported size of vmcoreinfo note
+Message-Id: <20140114153554.88b4a8c193b88df9492f6973@linux-foundation.org>
+In-Reply-To: <20140114193311.GL3096@redhat.com>
+References: <20140114193311.GL3096@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,52 +22,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Prarit Bhargava <prarit@redhat.com>
-Cc: toshi.kani@hp.com, kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, isimatu.yasuaki@jp.fujitsu.com, kosaki.motohiro@gmail.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, Len Brown <lenb@kernel.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Greg KH <gregkh@suse.de>, Kexec Mailing List <kexec@lists.infradead.org>, linux kernel mailing list <linux-kernel@vger.kernel.org>, Dan Aloni <da-x@monatomic.org>
 
-On Tue, 14 Jan 2014, Prarit Bhargava wrote:
+On Tue, 14 Jan 2014 14:33:11 -0500 Vivek Goyal <vgoyal@redhat.com> wrote:
 
-> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> index b9e9bd8..ea93f75 100644
-> --- a/Documentation/kernel-parameters.txt
-> +++ b/Documentation/kernel-parameters.txt
-> @@ -343,6 +343,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
->  			no: ACPI OperationRegions are not marked as reserved,
->  			no further checks are performed.
->  
-> +	acpi_no_memhotplug [ACPI] Disable memory hotplug.  Useful for kexec
-> +			   and kdump kernels.
-> +
->  	add_efi_memmap	[EFI; X86] Include EFI memory map in
->  			kernel's map of available physical RAM.
->  
-> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-> index 551dad7..4a0fa94 100644
-> --- a/drivers/acpi/acpi_memhotplug.c
-> +++ b/drivers/acpi/acpi_memhotplug.c
-> @@ -361,7 +361,19 @@ static void acpi_memory_device_remove(struct acpi_device *device)
->  	acpi_memory_device_free(mem_device);
->  }
->  
-> +static bool acpi_no_memhotplug;
-> +
+> Right now we seem to be exporting the max data size contained inside
+> vmcoreinfo note. But this does not include the size of meta data around
+> vmcore info data. Like name of the note and starting and ending elf_note.
+> 
+> I think user space expects total size and that size is put in PT_NOTE
+> elf header. Things seem to be fine so far because we are not using
+> vmcoreinfo note to the maximum capacity. But as it starts filling up,
+> to capacity, at some point of time, problem will be visible.
 
-I think this should be annotated with __initdata.
+urgh.  This is what we get for adding undocumented interfaces.
 
->  void __init acpi_memory_hotplug_init(void)
+Looking through the fd59d231f81cb0287 changelog and the various email
+threads it points to I can find no mention of what vmcoreinfo is
+*supposed* to contain.  It was just kinda silently tossed in there.
+
+So as a remedial step, could we please get this and any associated
+interfaces written down in a way which people can very belatedly
+review?
+
+Phrases like "I think user space expects" and "Things seem to be fine
+so far" don't inspire a ton of confidence.  What are the chances of
+userspace breakage here?  Would it be safer/saner to leave vmcoreinfo
+alone and add a new vmcoreinfo2 with the altered behaviour?
+
+> --- linux-2.6.orig/kernel/ksysfs.c	2014-01-14 14:09:42.107767503 -0500
+> +++ linux-2.6/kernel/ksysfs.c	2014-01-14 14:15:24.385510314 -0500
+> @@ -126,7 +126,7 @@ static ssize_t vmcoreinfo_show(struct ko
 >  {
-> +	if (acpi_no_memhotplug)
-> +		return;
-> +
->  	acpi_scan_add_handler_with_hotplug(&memory_device_handler, "memory");
+>  	return sprintf(buf, "%lx %x\n",
+>  		       paddr_vmcoreinfo_note(),
+> -		       (unsigned int)vmcoreinfo_max_size);
+> +		       (unsigned int)sizeof(vmcoreinfo_note));
 >  }
-> +
-> +static int __init disable_acpi_memory_hotplug(char *str)
-> +{
-> +	acpi_no_memhotplug = true;
-> +	return 1;
-> +}
-> +__setup("acpi_no_memhotplug", disable_acpi_memory_hotplug);
+>  KERNEL_ATTR_RO(vmcoreinfo);
+>  
 
 _______________________________________________
 kexec mailing list
