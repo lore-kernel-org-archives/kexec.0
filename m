@@ -1,29 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W31aj-0007oE-2X
- for kexec@lists.infradead.org; Tue, 14 Jan 2014 10:51:30 +0000
+ id 1W32Gu-0000zq-QK
+ for kexec@lists.infradead.org; Tue, 14 Jan 2014 11:35:06 +0000
 Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 2636D3EE1D1
- for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 19:50:59 +0900 (JST)
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A445B3EE0AE
+ for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 20:34:39 +0900 (JST)
 Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1681845DE4E
- for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 19:50:59 +0900 (JST)
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 932CC45DE52
+ for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 20:34:39 +0900 (JST)
 Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 007F745DD77
- for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 19:50:59 +0900 (JST)
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7838745DE4D
+ for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 20:34:39 +0900 (JST)
 Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id E6F401DB803E
- for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 19:50:58 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 920711DB8032
- for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 19:50:58 +0900 (JST)
-Message-ID: <52D51655.2020700@jp.fujitsu.com>
-Date: Tue, 14 Jan 2014 19:49:57 +0900
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 691F31DB803B
+ for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 20:34:39 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 0A7DF1DB8037
+ for <kexec@lists.infradead.org>; Tue, 14 Jan 2014 20:34:39 +0900 (JST)
+Message-ID: <52D52094.3050301@jp.fujitsu.com>
+Date: Tue, 14 Jan 2014 20:33:40 +0900
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH] makedumpfile: fix wrong report time for copying data
+Subject: Re: [PATCH 0/2] makedumpfile: for large memories
+References: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
+In-Reply-To: <E1Vy8l7-0004oL-7v@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,115 +38,121 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Cliff Wickman <cpw@sgi.com>
+To: cpw <cpw@sgi.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
-From 81c669484d6e38856f931af025e0d391abcdd168 Mon Sep 17 00:00:00 2001
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Fri, 10 Jan 2014 12:29:03 +0900
-Subject: [PATCH] fix wrong report time for copying data
+(2014/01/01 8:30), cpw wrote:
+> From: Cliff Wickman <cpw@sgi.com>
+> 
+> Gentlemen of kexec,
+> 
+> I have been working on enabling kdump on some very large systems, and
+> have found some solutions that I hope you will consider.
+> 
+> The first issue is to work within the restricted size of crashkernel memory
+> under 2.6.32-based kernels, such as sles11 and rhel6.
+> 
+> The second issue is to reduce the very large size of a dump of a big memory
+> system, even on an idle system.
+> 
+> These are my propositions:
+> 
+> Size of crashkernel memory
+>    1) raw i/o for writing the dump
+>    2) use root device for the bitmap file (not tmpfs)
+>    3) raw i/o for reading/writing the bitmaps
+>    
+> Size of dump (and hence the duration of dumping)
+>    4) exclude page structures for unused pages
+> 
+> 
+> 1) Is quite easy.  The cache of pages needs to be aligned on a block
+>    boundary and written in block multiples, as required by O_DIRECT files.
+> 
+>    The use of raw i/o prevents the growing of the crash kernel's page
+>    cache.
+> 
+> 2) Is also quite easy.  My patch finds the path to the crash
+>    kernel's root device by examining the dump pathname. Storing the bitmaps
+>    to a file is otherwise not conserving memory, as they are being written
+>    to tmpfs.
+> 
+> 3) Raw i/o for the bitmaps, is accomplished by caching the
+>    bitmap file in a similar way to that of the dump file.
+> 
+>    I find that the use of direct i/o is not significantly slower than
+>    writing through the kernel's page cache.
+> 
+> 4) The excluding of unused kernel page structures is very
+>    important for a large memory system.  The kernel otherwise includes
+>    3.67 million pages of page structures per TB of memory. By contrast
+>    the rest of the kernel is only about 1 million pages.
+> 
+> Test results are below, for systems of 1TB, 2TB, 8.8TB and 16TB.
+> (There are no 'old' numbers for 16TB as time and space requirements
+>   made those effectively useless.)
+> 
+> Run times were generally reduced 2-3x, and dump size reduced about 8x.
+> 
+> All timings were done using 512M of crashkernel memory.
+> 
+>     System memory size
+>     1TB                     unpatched    patched
+>       OS: rhel6.4 (does a free pages pass)
+>       page scan time           1.6min    1.6min
+>       dump copy time           2.4min     .4min
+>       total time               4.1min    2.0min
+>       dump size                 3014M      364M
+> 
+>       OS: rhel6.5
+>       page scan time            .6min     .6min
+>       dump copy time           2.3min     .5min
+>       total time               2.9min    1.1min
+>       dump size                 3011M      423M
+> 
+>       OS: sles11sp3 (3.0.93)
+>       page scan time            .5min     .5min
+>       dump copy time           2.3min     .5min
+>       total time               2.8min    1.0min
+>       dump size                 2950M      350M
+> 
+>     2TB
+>       OS: rhel6.5           (cyclicx3)
+>       page scan time           2.0min    1.8min
+>       dump copy time           8.0min    1.5min
+>       total time              10.0min    3.3min
+>       dump size                 6141M      835M
+> 
+>     8.8TB
+>       OS: rhel6.5           (cyclicx5)
+>       page scan time           6.6min    5.5min
+>       dump copy time          67.8min    6.2min
+>       total time              74.4min   11.7min
+>       dump size                 15.8G      2.7G
+> 
+>     16TB
+>       OS: rhel6.4
+>       page scan time                   125.3min
+>       dump copy time                    13.2min
+>       total time                       138.5min
+>       dump size                            4.0G
+> 
+>       OS: rhel6.5
+>       page scan time                    27.8min
+>       dump copy time                    13.3min
+>       total time                        41.1min
+>       dump size                            4.1G
+> 
 
-Currently, in cyclic mode, reported time for copying pages includes
-the time consumed for 1) update cycles, 2) filtering memory, 3)
-writing pages and 4) other things among the three. This is wrong. The
-``copying pages'' should be ``3) writing pages'' only.
+Also, could you please show us results in more detail?
+That is, this benchmark is relevant to 3 parameters below
 
-On the system with terabyte-scale memory, it requires several minutes
-to process memory filtering. As a result, on such system, copying data
-in cyclic mode looks several minutes slower than the actual.
+- cyclic mode or non-cyclic mode
+- cached I/O or direct I/O
+- with or without page structure object array
 
-This patch fixes this by counting times for ``3) writing pages'' only
-as a time for ``copying pages.''
-
-The output changes like below:
-
-[before]
-
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.124988 seconds
-Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.142915 seconds
-Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.024244 seconds
-Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.118873 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.142979 seconds
-Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.024361 seconds
-Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.118428 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.143258 seconds
-Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.024470 seconds
-Copying data                       : [100.0 %] -STEP [Copying data               ] : 19.807846 seconds
-
-[after]
-
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.118851 seconds
-Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.142766 seconds
-Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.024204 seconds
-Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.118849 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.142812 seconds
-Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.024394 seconds
-Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.118293 seconds
-Copying data                       : [ 25.6 %] |STEP [Copying data               ] : 4.343230 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.143136 seconds
-Copying data                       : [ 73.4 %] /STEP [Copying data               ] : 9.939977 seconds
-Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.024642 seconds
-Copying data                       : [100.0 %] -STEP [Copying data               ] : 4.844130 seconds
-Copying data                       : [100.0 %] /STEP [Copying data               ] : 0.000093 seconds
-
-So, you need to calculate a total time for copying data by yourself.
-
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- makedumpfile.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index ef08d91..32ad513 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -6331,6 +6331,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 	struct page_desc pd;
- 	unsigned char buf[info->page_size], *buf_out = NULL;
- 	unsigned long len_buf_out;
-+	struct timeval tv_start;
- 	const off_t failed = (off_t)-1;
- 	unsigned long len_buf_out_zlib, len_buf_out_lzo, len_buf_out_snappy;
- 
-@@ -6390,6 +6391,8 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 			end_pfn = info->split_end_pfn;
- 	}
- 
-+	gettimeofday(&tv_start, NULL);
-+
- 	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
- 
- 		if ((num_dumped % per) == 0)
-@@ -6482,6 +6485,9 @@ out:
- 		free(wrkmem);
- #endif
- 
-+	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
-+	print_execution_time(PROGRESS_COPY, &tv_start);
-+
- 	return ret;
- }
- 
-@@ -6816,8 +6822,6 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 	unsigned long long pfn;
- 	struct timeval tv_start;
- 
--	gettimeofday(&tv_start, NULL);
--
- 	/*
- 	 * Reset counter for debug message.
- 	 */
-@@ -6888,6 +6892,8 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 			return FALSE;
-         }
- 
-+	gettimeofday(&tv_start, NULL);
-+
- 	/*
- 	 * Write the remainder.
- 	 */
--- 
-1.8.4.2
+Please describe results of each parameter separately, and we can easily
+understand how each parameter affects without confusion.
 
 -- 
 Thanks.
