@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mail-yk0-x232.google.com ([2607:f8b0:4002:c07::232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W3V5b-0007z0-MT
- for kexec@lists.infradead.org; Wed, 15 Jan 2014 18:21:20 +0000
-Message-ID: <52D6D16C.8060207@zytor.com>
-Date: Wed, 15 Jan 2014 10:20:28 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1W3XOD-00032L-Ay
+ for kexec@lists.infradead.org; Wed, 15 Jan 2014 20:48:42 +0000
+Received: by mail-yk0-f178.google.com with SMTP id 79so697575ykr.9
+ for <kexec@lists.infradead.org>; Wed, 15 Jan 2014 12:48:18 -0800 (PST)
+Date: Wed, 15 Jan 2014 12:48:14 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH] acpi memory hotplug, add parameter to disable memory
+ hotplug [v4]
+In-Reply-To: <1389789284-10622-1-git-send-email-prarit@redhat.com>
+Message-ID: <alpine.DEB.2.02.1401151247500.10727@chino.kir.corp.google.com>
+References: <alpine.DEB.2.02.1401141642020.3375@chino.kir.corp.google.com>
+ <1389789284-10622-1-git-send-email-prarit@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [RESEND PATCH v10] x86, apic, kexec,
- Documentation: Add disable_cpu_apicid kernel parameter
-References: <20140115064458.1545.38775.stgit@localhost6.localdomain6>
- <20140115170525.GF3180@redhat.com> <52D6C4B6.8010804@zytor.com>
- <20140115174714.GG3180@redhat.com> <52D6CB57.8030804@zytor.com>
- <20140115181426.GC29244@redhat.com>
-In-Reply-To: <20140115181426.GC29244@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,46 +26,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: fengguang.wu@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, hpa@linux.intel.com, jingbai.ma@hp.com
+To: Prarit Bhargava <prarit@redhat.com>
+Cc: kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, kosaki.motohiro@gmail.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, Len Brown <lenb@kernel.org>
 
-On 01/15/2014 10:14 AM, Vivek Goyal wrote:
-> 
-> For large amount of info like memory map, I agree that passing on command
-> line is not a good idea. (/me taks the blame for doing that). That's why
-> in new patches I want to move to pass new map on bootparams and pass
-> saved_max_pfn on command line instead. This is a fresh start so we
-> probably can ignore compatibility with older kernels for this new
-> interface and set things right.
-> 
-> But for smaller options, command line seems to be good that they don't
-> consume precious space in bootparams. If we introduce an option today,
-> we are not sure if kdump will continue to use that option down the line
-> or not. For example, few years down the line, we might be able to send
-> INIT IPI to boot cpu too and not need disable_cpu_apicid. Same is the case
-> with max_cpus vs nr_cpus. We used to use max_cpus=1 and now use nr_cpus=1.
-> If we put all this informatoin in bootparams, they might soon become
-> obsolete and keep on sitting there for eternity with no users.
-> 
-> Also by creating a command line, a user can use these knobs as debugging
-> options and can easily test first kernel's behavior to make sure knob
-> works well in first kernel before it is tested in second kernel. By making
-> it part of bootparams, we have no idea whether knob works fine in first
-> kernel or not.
-> 
-> For above reasons, I am not averse to the idea of commingling.
-> 
+On Wed, 15 Jan 2014, Prarit Bhargava wrote:
 
-bootparams is not a precious resource, and even if it was, you could
-create your own (kexec) structure and put it in the boot_info linked
-list.  bootparams is not a precious resource because is is actually
-rather straightforward to extend past 4K should it become necessary; all
-we really would need to do there is to include a length field in the
-structure.  An auxiliary bootparams structure is also a possibility.
+> When booting a kexec/kdump kernel on a system that has specific memory hotplug
+> regions the boot will fail with warnings like:
+> 
+> [    2.939467] swapper/0: page allocation failure: order:9, mode:0x84d0
+> [    2.946564] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> 3.10.0-65.el7.x86_64 #1
+> [    2.954532] Hardware name: QCI QSSC-S4R/QSSC-S4R, BIOS
+> QSSC-S4R.QCI.01.00.S013.032920111005 03/29/2011
+> [    2.964926]  0000000000000000 ffff8800341bd8c8 ffffffff815bcc67
+> ffff8800341bd950
+> [    2.973224]  ffffffff8113b1a0 ffff880036339b00 0000000000000009
+> 00000000000084d0
+> [    2.981523]  ffff8800341bd950 ffffffff815b87ee 0000000000000000
+> 0000000000000200
+> [    2.989821] Call Trace:
+> [    2.992560]  [<ffffffff815bcc67>] dump_stack+0x19/0x1b
+> [    2.998300]  [<ffffffff8113b1a0>] warn_alloc_failed+0xf0/0x160
+> [    3.004817]  [<ffffffff815b87ee>] ?
+> __alloc_pages_direct_compact+0xac/0x196
+> [    3.012594]  [<ffffffff8113f14f>] __alloc_pages_nodemask+0x7ff/0xa00
+> [    3.019692]  [<ffffffff815b417c>] vmemmap_alloc_block+0x62/0xba
+> [    3.026303]  [<ffffffff815b41e9>] vmemmap_alloc_block_buf+0x15/0x3b
+> [    3.033302]  [<ffffffff815b1ff6>] vmemmap_populate+0xb4/0x21b
+> [    3.039718]  [<ffffffff815b461d>] sparse_mem_map_populate+0x27/0x35
+> [    3.046717]  [<ffffffff815b400f>] sparse_add_one_section+0x7a/0x185
+> [    3.053720]  [<ffffffff815a1e9f>] __add_pages+0xaf/0x240
+> [    3.059656]  [<ffffffff81047359>] arch_add_memory+0x59/0xd0
+> [    3.065877]  [<ffffffff815a21d9>] add_memory+0xb9/0x1b0
+> [    3.071713]  [<ffffffff81333b9c>] acpi_memory_device_add+0x18d/0x26d
+> [    3.078813]  [<ffffffff81309a01>] acpi_bus_device_attach+0x7d/0xcd
+> [    3.085719]  [<ffffffff8132379d>] acpi_ns_walk_namespace+0xc8/0x17f
+> [    3.092716]  [<ffffffff81309984>] ? acpi_bus_type_and_status+0x90/0x90
+> [    3.100004]  [<ffffffff81309984>] ? acpi_bus_type_and_status+0x90/0x90
+> [    3.107293]  [<ffffffff81323c8c>] acpi_walk_namespace+0x95/0xc5
+> [    3.113904]  [<ffffffff8130a6d6>] acpi_bus_scan+0x8b/0x9d
+> [    3.119933]  [<ffffffff81a2019a>] acpi_scan_init+0x63/0x160
+> [    3.126153]  [<ffffffff81a1ffb5>] acpi_init+0x25d/0x2a6
+> [    3.131987]  [<ffffffff81a1fd58>] ? acpi_sleep_proc_init+0x2a/0x2a
+> [    3.138889]  [<ffffffff810020e2>] do_one_initcall+0xe2/0x190
+> [    3.145210]  [<ffffffff819e20c4>] kernel_init_freeable+0x17c/0x207
+> [    3.152111]  [<ffffffff819e18d0>] ? do_early_param+0x88/0x88
+> [    3.158430]  [<ffffffff8159fea0>] ? rest_init+0x80/0x80
+> [    3.164264]  [<ffffffff8159feae>] kernel_init+0xe/0x180
+> [    3.170097]  [<ffffffff815cca2c>] ret_from_fork+0x7c/0xb0
+> [    3.176123]  [<ffffffff8159fea0>] ? rest_init+0x80/0x80
+> [    3.181956] Mem-Info:
+> [    3.184490] Node 0 DMA per-cpu:
+> [    3.188007] CPU    0: hi:    0, btch:   1 usd:   0
+> [    3.193353] Node 0 DMA32 per-cpu:
+> [    3.197060] CPU    0: hi:   42, btch:   7 usd:   0
+> [    3.202410] active_anon:0 inactive_anon:0 isolated_anon:0
+> [    3.202410]  active_file:0 inactive_file:0 isolated_file:0
+> [    3.202410]  unevictable:0 dirty:0 writeback:0 unstable:0
+> [    3.202410]  free:872 slab_reclaimable:13 slab_unreclaimable:1880
+> [    3.202410]  mapped:0 shmem:0 pagetables:0 bounce:0
+> [    3.202410]  free_cma:0
+> 
+> because the system has run out of memory at boot time.  This occurs
+> because of the following sequence in the boot:
+> 
+> Main kernel boots and sets E820 map.  The second kernel is booted with a
+> map generated by the kdump service using memmap= and memmap=exactmap.
+> These parameters are added to the kernel parameters of the kexec/kdump
+> kernel.   The kexec/kdump kernel has limited memory resources so as not
+> to severely impact the main kernel.
+> 
+> The system then panics and the kdump/kexec kernel boots (which is a
+> completely new kernel boot).  During this boot ACPI is initialized and the
+> kernel (as can be seen above) traverses the ACPI namespace and finds an
+> entry for a memory device to be hotadded.
+> 
+> ie)
+> 
+> [    3.053720]  [<ffffffff815a1e9f>] __add_pages+0xaf/0x240
+> [    3.059656]  [<ffffffff81047359>] arch_add_memory+0x59/0xd0
+> [    3.065877]  [<ffffffff815a21d9>] add_memory+0xb9/0x1b0
+> [    3.071713]  [<ffffffff81333b9c>] acpi_memory_device_add+0x18d/0x26d
+> [    3.078813]  [<ffffffff81309a01>] acpi_bus_device_attach+0x7d/0xcd
+> [    3.085719]  [<ffffffff8132379d>] acpi_ns_walk_namespace+0xc8/0x17f
+> [    3.092716]  [<ffffffff81309984>] ? acpi_bus_type_and_status+0x90/0x90
+> [    3.100004]  [<ffffffff81309984>] ? acpi_bus_type_and_status+0x90/0x90
+> [    3.107293]  [<ffffffff81323c8c>] acpi_walk_namespace+0x95/0xc5
+> [    3.113904]  [<ffffffff8130a6d6>] acpi_bus_scan+0x8b/0x9d
+> [    3.119933]  [<ffffffff81a2019a>] acpi_scan_init+0x63/0x160
+> [    3.126153]  [<ffffffff81a1ffb5>] acpi_init+0x25d/0x2a6
+> 
+> At this point the kernel adds page table information and the the kexec/kdump
+> kernel runs out of memory.
+> 
+> This can also be reproduced by using the memmap=exactmap and mem=X
+> parameters on the main kernel and booting.
+> 
+> This patchset resolves the problem by adding a kernel parameter,
+> acpi_no_memhotplug, to disable ACPI memory hotplug.
+> 
+> [v2]: changed acpi_no_memhotplug to bool
+> [v3]: cleaned up Documentation/kernel-parameters.txt
+> [v4]: add __initdata to acpi_no_memhotplug
+> 
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 
-	-hpa
-
-
+Acked-by: David Rientjes <rientjes@google.com>
 
 _______________________________________________
 kexec mailing list
