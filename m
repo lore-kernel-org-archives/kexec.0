@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W3SPI-0002jm-Tt
- for kexec@lists.infradead.org; Wed, 15 Jan 2014 15:29:30 +0000
-In-Reply-To: <20140115133838.GD8101@stro.at>
-References: <1389791824.17407.9.camel@x220> <20140115133838.GD8101@stro.at>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W3TQn-0004oW-6b
+ for kexec@lists.infradead.org; Wed, 15 Jan 2014 16:35:06 +0000
+Date: Wed, 15 Jan 2014 11:34:27 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: [PATCH] Add /sys/kernel/vmcoreinfo ABI documentation
+Message-ID: <20140115163427.GA3180@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec.h: stop exporting kexec_load() to userspace
-From: "H. Peter Anvin" <hpa@zytor.com>
-Date: Wed, 15 Jan 2014 07:28:32 -0800
-Message-ID: <9bb7c8e9-95e7-4819-b295-3ee24c9e9b3b@email.android.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,48 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Maximilian Attems <max@stro.at>, Paul Bolle <pebolle@tiscali.nl>
-Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: linux kernel mailing list <linux-kernel@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Greg KH <greg@kroah.com>
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 
-We shouldn't put prototypes of user-space functions in the kernel, at least not until we actually export all the signatures.  The prototype should instead be in a userspace <sys/kexec.h> header.
+/sys/kernel/vmcoreinfo was introduced long back but there is no ABI
+documentation. This patch adds the documentation.
 
-Maximilian Attems <max@stro.at> wrote:
->
->On Wed, Jan 15, 2014 at 02:17:04PM +0100, Paul Bolle wrote:
->> Since v3.5 kexec.h is exported to userspace. That includes its
->> declaration of kexec_load():
->>     extern int kexec_load(void *, size_t, struct kexec_segment *,
->>                    unsigned long int);
->> 
->> This declaration isn't very useful to userspace programs on itself.
->They
->> still have to define a matching function (which basically wraps the
->> kexec_load syscall). I'm not aware of programs or libraries that
->actually
->> do that.
->> 
->> It can be removed. The programs that actually use it, if there
->> are any, should then provide their own declaration to keep compiling.
->> Already compiled binaries will not be affected.
->
->nack, klibc uses the header and there was some discussion that glibc
->could/should use it too. I didn't follow kexec git, but there is/was
->a version that just uses the kexec_load() if the c library provides it.
->Until Santa Claus materialises in form of a direct kernel user-space
->API,
->see follow ups on http://lwn.net/Articles/534682/ and proposal by hpa
-> 
->> This gets rid of the headers_check warning that can be seen ever
->since
->> this header was exported:
->>     [...]/usr/include/linux/kexec.h:49: userspace cannot reference
->function or variable defined in the kernel
->> 
->
->this is the wrong  way of fix.
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ Documentation/ABI/testing/sysfs-kernel-vmcoreinfo |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
--- 
-Sent from my mobile phone.  Please pardon brevity and lack of formatting.
+Index: linux-2.6/Documentation/ABI/testing/sysfs-kernel-vmcoreinfo
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ linux-2.6/Documentation/ABI/testing/sysfs-kernel-vmcoreinfo	2014-01-15 11:30:22.402206445 -0500
+@@ -0,0 +1,14 @@
++What:		/sys/kernel/vmcoreinfo
++Date:		October 2007
++KernelVersion:	2.6.24
++Contact:	Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
++		Kexec Mailing List <kexec@lists.infradead.org>
++		Vivek Goyal <vgoyal@redhat.com>
++Description
++		Shows physical address and size of vmcoreinfo ELF note.
++		First value contains physical address of note in hex and
++		second value contains the size of note in hex. This ELF
++		note info is parsed by second kernel and exported to user
++		space as part of ELF note in /proc/vmcore file. This note
++		contains various information like struct size, symbol
++		values, page size etc.
 
 _______________________________________________
 kexec mailing list
