@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W3S99-0002Ii-Kc
- for kexec@lists.infradead.org; Wed, 15 Jan 2014 15:12:48 +0000
-Date: Wed, 15 Jan 2014 10:12:23 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kdump: Fix exported size of vmcoreinfo note
-Message-ID: <20140115151223.GB29244@redhat.com>
-References: <20140114193311.GL3096@redhat.com>
- <20140114153554.88b4a8c193b88df9492f6973@linux-foundation.org>
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W3SPI-0002jm-Tt
+ for kexec@lists.infradead.org; Wed, 15 Jan 2014 15:29:30 +0000
+In-Reply-To: <20140115133838.GD8101@stro.at>
+References: <1389791824.17407.9.camel@x220> <20140115133838.GD8101@stro.at>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140114153554.88b4a8c193b88df9492f6973@linux-foundation.org>
+Subject: Re: [PATCH] kexec.h: stop exporting kexec_load() to userspace
+From: "H. Peter Anvin" <hpa@zytor.com>
+Date: Wed, 15 Jan 2014 07:28:32 -0800
+Message-ID: <9bb7c8e9-95e7-4819-b295-3ee24c9e9b3b@email.android.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,65 +22,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Greg KH <gregkh@suse.de>, Kexec Mailing List <kexec@lists.infradead.org>, linux kernel mailing list <linux-kernel@vger.kernel.org>, Dan Aloni <da-x@monatomic.org>
+To: Maximilian Attems <max@stro.at>, Paul Bolle <pebolle@tiscali.nl>
+Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 03:35:54PM -0800, Andrew Morton wrote:
-> On Tue, 14 Jan 2014 14:33:11 -0500 Vivek Goyal <vgoyal@redhat.com> wrote:
+We shouldn't put prototypes of user-space functions in the kernel, at least not until we actually export all the signatures.  The prototype should instead be in a userspace <sys/kexec.h> header.
+
+Maximilian Attems <max@stro.at> wrote:
+>
+>On Wed, Jan 15, 2014 at 02:17:04PM +0100, Paul Bolle wrote:
+>> Since v3.5 kexec.h is exported to userspace. That includes its
+>> declaration of kexec_load():
+>>     extern int kexec_load(void *, size_t, struct kexec_segment *,
+>>                    unsigned long int);
+>> 
+>> This declaration isn't very useful to userspace programs on itself.
+>They
+>> still have to define a matching function (which basically wraps the
+>> kexec_load syscall). I'm not aware of programs or libraries that
+>actually
+>> do that.
+>> 
+>> It can be removed. The programs that actually use it, if there
+>> are any, should then provide their own declaration to keep compiling.
+>> Already compiled binaries will not be affected.
+>
+>nack, klibc uses the header and there was some discussion that glibc
+>could/should use it too. I didn't follow kexec git, but there is/was
+>a version that just uses the kexec_load() if the c library provides it.
+>Until Santa Claus materialises in form of a direct kernel user-space
+>API,
+>see follow ups on http://lwn.net/Articles/534682/ and proposal by hpa
 > 
-> > Right now we seem to be exporting the max data size contained inside
-> > vmcoreinfo note. But this does not include the size of meta data around
-> > vmcore info data. Like name of the note and starting and ending elf_note.
-> > 
-> > I think user space expects total size and that size is put in PT_NOTE
-> > elf header. Things seem to be fine so far because we are not using
-> > vmcoreinfo note to the maximum capacity. But as it starts filling up,
-> > to capacity, at some point of time, problem will be visible.
-> 
-> urgh.  This is what we get for adding undocumented interfaces.
-> 
-> Looking through the fd59d231f81cb0287 changelog and the various email
-> threads it points to I can find no mention of what vmcoreinfo is
-> *supposed* to contain.  It was just kinda silently tossed in there.
-> 
-> So as a remedial step, could we please get this and any associated
-> interfaces written down in a way which people can very belatedly
-> review?
+>> This gets rid of the headers_check warning that can be seen ever
+>since
+>> this header was exported:
+>>     [...]/usr/include/linux/kexec.h:49: userspace cannot reference
+>function or variable defined in the kernel
+>> 
+>
+>this is the wrong  way of fix.
 
-Sure. I will send another patch to add some documentation for vmcoreinfo
-in Documentation/ABI/testing/* in a separate patch.
-
-> 
-> Phrases like "I think user space expects" and "Things seem to be fine
-> so far" don't inspire a ton of confidence.  What are the chances of
-> userspace breakage here?  Would it be safer/saner to leave vmcoreinfo
-> alone and add a new vmcoreinfo2 with the altered behaviour?
-
-I don't think user space will be broken with this change. So there is
-no need to introduce vmcoreinfo2. This change is safe and backward 
-compatible. More explanation on why this change is safe is below.
-
-vmcoreinfo contains information about kernel which user space needs to
-know to do things like filtering. For example, various kernel config
-options or information about size or offset of some data structures etc.
-All this information is commmunicated to user space with an ELF note
-present in ELF /proc/vmcore file.
-
-Currently vmcoreinfo data size is 4096. With some elf note meta data
-around it, actual size is 4132 bytes. But we are using barely 25% of
-that size. Rest is empty. So even if we tell user space that size of
-ELf note is 4096 and not 4132, nothing will be broken becase after
-around 1000 bytes, everything is zero anyway.
-
-But once we start filling up the note to the capacity, and not report
-the full size of note, bad things will start happening. Either some data
-will be lost or tools will be confused that they did not fine the zero
-note at the end.
-
-So I think this change is safe and should not break existing tools.
-
-Thanks
-Vivek
+-- 
+Sent from my mobile phone.  Please pardon brevity and lack of formatting.
 
 _______________________________________________
 kexec mailing list
