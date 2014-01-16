@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W3aja-0008Bc-Su
- for kexec@lists.infradead.org; Thu, 16 Jan 2014 00:22:59 +0000
-Date: Thu, 16 Jan 2014 09:22:34 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Fix value of mbi->mem_lower for multiboot-x86
-Message-ID: <20140116002234.GC12550@verge.net.au>
-References: <84k3e2lyde.wl%peter.chubb@nicta.com.au>
- <20140115034833.GA30883@verge.net.au>
- <84ppntsz5x.wl%peter.chubb@nicta.com.au>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W3i2m-0007P5-7H
+ for kexec@lists.infradead.org; Thu, 16 Jan 2014 08:11:21 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: --dump-dmesg characters printing fix
+Date: Thu, 16 Jan 2014 08:08:06 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971DBED3@BPXM01GP.gisp.nec.co.jp>
+References: <20140114085806.GA8523@dhcp-17-89.nay.redhat.com>
+In-Reply-To: <20140114085806.GA8523@dhcp-17-89.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <84ppntsz5x.wl%peter.chubb@nicta.com.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +23,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Peter Chubb <peter.chubb@nicta.com.au>
-Cc: kexec@lists.infradead.org
+To: WANG Chao <chaowang@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, Jan 16, 2014 at 08:39:06AM +1100, Peter Chubb wrote:
+On 2014/01/14 17:58:35, WANG Chao <chaowang@redhat.com> wrote:
+> To keep the output of makedumpfile --dump-dmesg being consistent with
+> dmesg utility, this patch introduces two changes:
 > 
-> In the multiboot header, there is a field, `mem_lower' that is meant to
-> contain the size of memory starting at zero and ending below 640k.
-> If your kernel is compiled with CONFIG_X86_RESERVE_LOW non zero
-> (the usual case), then a hole is inserted into kernel's physical
-> memory map at zero, so the test to find the size of this region in
-> kexec/arch/i386/kexec-multiboot-x86.c never succeeds, so the value is
-> always zero.
+> 1. If a character is non-printable, print its hex value ("\\x%02x")
+> 2. No special handling for "\n" ("\n" -> ".")
 > 
-> On a PC99 architecture, there is always memory at physycal address zero;
-> assume that a region that starts below 64k actually starts at zero,
-> and use it for the mem_lower variable.
-> 
-> Signed-off-by: Peter Chubb <peter.chubb@nicta.com.au>
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
 
-Thanks Peter, I have applied this.
+Thanks, I was just about to fix it !
+I'll merge this patch into v1.5.6.
 
-> 
+
+Atsushi Kumagai
+
 > ---
->  kexec/arch/i386/kexec-multiboot-x86.c |   14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
+>  makedumpfile.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> Index: kexec-tools-2.0.4/kexec/arch/i386/kexec-multiboot-x86.c
-> ===================================================================
-> --- kexec-tools-2.0.4.orig/kexec/arch/i386/kexec-multiboot-x86.c	2013-03-14 18:45:16.000000000 +1000
-> +++ kexec-tools-2.0.4/kexec/arch/i386/kexec-multiboot-x86.c	2014-01-15 10:21:02.138172304 +1000
-> @@ -261,10 +261,18 @@ int multiboot_x86_load(int argc, char **
->  		mmap[i].length_high    = length >> 32;
->  		if (range[i].type == RANGE_RAM) {
->  			mmap[i].Type = 1; /* RAM */
-> -			/* Is this the "low" memory? */
-> -			if ((range[i].start == 0)
-> -			    && (range[i].end > mem_lower))
-> +			/*
-> +                         * Is this the "low" memory?  Can't just test
-> +                         * against zero, because Linux protects (and
-> +                         * hides) the first few pages of physical
-> +                         * memory.
-> +                         */
-> +
-> +			if ((range[i].start <= 64*1024)
-> +			    && (range[i].end > mem_lower)) {
-> +                                range[i].start = 0;
->  				mem_lower = range[i].end;
-> +                        }
->  			/* Is this the "high" memory? */
->  			if ((range[i].start <= 0x100000)
->  			    && (range[i].end > mem_upper + 0x100000))
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index ef08d91..73467ab 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -3848,12 +3848,10 @@ dump_log_entry(char *logptr, int fp)
+>  	sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+>  
+>  	for (i = 0, p = msg; i < text_len; i++, p++) {
+> -		if (*p == '\n')
+> -			sprintf(buf, "%s.", buf);
+> -		else if (isprint(*p) || isspace(*p))
+> +		if (isprint(*p) || isspace(*p))
+>  			sprintf(buf, "%s%c", buf, *p);
+>  		else
+> -			sprintf(buf, "%s.", buf);
+> +			sprintf(buf, "%s\\x%02x", buf, *p);
+>  	}
+>  
+>  	sprintf(buf, "%s\n", buf);
+> -- 
+> 1.8.4.2
 > 
-> --
-> Dr Peter Chubb				        peter.chubb AT nicta.com.au
-> http://www.ssrg.nicta.com.au          Software Systems Research Group/NICTA
 > 
 
 _______________________________________________
