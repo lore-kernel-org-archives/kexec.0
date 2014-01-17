@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-yh0-x234.google.com ([2607:f8b0:4002:c01::234])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W3wQ1-0002Oc-KN
- for kexec@lists.infradead.org; Thu, 16 Jan 2014 23:32:14 +0000
-Received: by mail-yh0-f52.google.com with SMTP id v1so1174420yhn.39
- for <kexec@lists.infradead.org>; Thu, 16 Jan 2014 15:31:48 -0800 (PST)
-Date: Thu, 16 Jan 2014 15:24:16 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH] acpi memory hotplug, add parameter to disable memory
- hotplug [v5]
+Received: from v094114.home.net.pl ([79.96.170.134])
+ by merlin.infradead.org with smtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W3xz4-00045C-Rh
+ for kexec@lists.infradead.org; Fri, 17 Jan 2014 01:12:31 +0000
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] acpi memory hotplug,
+ add parameter to disable memory hotplug [v5]
+Date: Fri, 17 Jan 2014 02:26:12 +0100
+Message-ID: <2048690.9OePJDLjDY@vostro.rjw.lan>
 In-Reply-To: <1389886551-32647-1-git-send-email-prarit@redhat.com>
-Message-ID: <alpine.DEB.2.02.1401161523420.4182@chino.kir.corp.google.com>
 References: <1389822660.1792.349.camel@misato.fc.hp.com>
  <1389886551-32647-1-git-send-email-prarit@redhat.com>
 MIME-Version: 1.0
@@ -27,13 +25,22 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Prarit Bhargava <prarit@redhat.com>
-Cc: kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, kosaki.motohiro@gmail.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, Len Brown <lenb@kernel.org>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, rientjes@google.com, kosaki.motohiro@gmail.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, Len Brown <lenb@kernel.org>
 
-On Thu, 16 Jan 2014, Prarit Bhargava wrote:
-
+On Thursday, January 16, 2014 10:35:51 AM Prarit Bhargava wrote:
 > When booting a kdump kernel on a system that has specific memory hotplug
 > regions the boot will fail with warnings like:
-> 
+
+The timestamps are still present, sigh.
+
+OK, please see
+
+http://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git/commit/?h=bleeding-edge&id=00159a2013269bc0a617de885e4b921349192bd0
+
+and tell me if it looks good to you.
+
+Thanks!
+
 > [    2.939467] swapper/0: page allocation failure: order:9, mode:0x84d0
 > [    2.946564] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
 > 3.10.0-65.el7.x86_64 #1
@@ -142,8 +149,54 @@ On Thu, 16 Jan 2014, Prarit Bhargava wrote:
 > Cc: rientjes@google.com
 > Cc: linux-acpi@vger.kernel.org
 > Cc: kexec@lists.infradead.org
+> ---
+>  Documentation/kernel-parameters.txt |    3 +++
+>  drivers/acpi/acpi_memhotplug.c      |   12 ++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index b9e9bd8..6201229 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -343,6 +343,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>  			no: ACPI OperationRegions are not marked as reserved,
+>  			no further checks are performed.
+>  
+> +	acpi_no_memhotplug [ACPI] Disable memory hotplug.  Useful for kdump
+> +			   kernels.
+> +
+>  	add_efi_memmap	[EFI; X86] Include EFI memory map in
+>  			kernel's map of available physical RAM.
+>  
+> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
+> index 551dad7..383cd80 100644
+> --- a/drivers/acpi/acpi_memhotplug.c
+> +++ b/drivers/acpi/acpi_memhotplug.c
+> @@ -361,7 +361,19 @@ static void acpi_memory_device_remove(struct acpi_device *device)
+>  	acpi_memory_device_free(mem_device);
+>  }
+>  
+> +static bool __initdata acpi_no_memhotplug;
+> +
+>  void __init acpi_memory_hotplug_init(void)
+>  {
+> +	if (acpi_no_memhotplug)
+> +		return;
+> +
+>  	acpi_scan_add_handler_with_hotplug(&memory_device_handler, "memory");
+>  }
+> +
+> +static int __init disable_acpi_memory_hotplug(char *str)
+> +{
+> +	acpi_no_memhotplug = true;
+> +	return 1;
+> +}
+> +__setup("acpi_no_memhotplug", disable_acpi_memory_hotplug);
+> 
 
-Acked-by: David Rientjes <rientjes@google.com>
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
 
 _______________________________________________
 kexec mailing list
