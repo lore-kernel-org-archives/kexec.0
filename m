@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W4EvF-0002ya-HJ
- for kexec@lists.infradead.org; Fri, 17 Jan 2014 19:17:42 +0000
-Date: Fri, 17 Jan 2014 14:17:14 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 4/6] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-Message-ID: <20140117191714.GH24394@redhat.com>
-References: <1384969851-7251-1-git-send-email-vgoyal@redhat.com>
- <1384969851-7251-5-git-send-email-vgoyal@redhat.com>
- <alpine.LRH.2.00.1311222136030.9932@twin.jikos.cz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.00.1311222136030.9932@twin.jikos.cz>
+Received: from gate.crashing.org ([63.228.1.57])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W4GXh-0005gt-6z
+ for kexec@lists.infradead.org; Fri, 17 Jan 2014 21:01:30 +0000
+Message-ID: <1389992443.7406.35.camel@pasglop>
+Subject: Re: [Q] Why does kexec use device_shutdown rather than ubind them
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date: Sat, 18 Jan 2014 08:00:43 +1100
+In-Reply-To: <20140117141327.GC24394@redhat.com>
+References: <1389929988.7406.18.camel@pasglop> <871u07fbvl.fsf@xmission.com>
+ <1389938353.7406.22.camel@pasglop> <20140117141327.GC24394@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,43 +23,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Jiri Kosina <jkosina@suse.cz>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Fri, Nov 22, 2013 at 09:42:52PM +0100, Jiri Kosina wrote:
-
-[..]
-> > @@ -843,7 +1075,11 @@ static int kimage_load_normal_segment(struct kimage *image,
-> >  				PAGE_SIZE - (maddr & ~PAGE_MASK));
-> >  		uchunk = min(ubytes, mchunk);
-> >  
-> > -		result = copy_from_user(ptr, buf, uchunk);
-> > +		/* For file based kexec, source pages are in kernel memory */
-> > +		if (image->file_mode)
-> > +			memcpy(ptr, buf, uchunk);
+On Fri, 2014-01-17 at 09:13 -0500, Vivek Goyal wrote:
+> On Fri, Jan 17, 2014 at 04:59:13PM +1100, Benjamin Herrenschmidt wrote:
+> > On Thu, 2014-01-16 at 20:52 -0800, Eric W. Biederman wrote:
+> > > 
+> > > I think we have largely survied until now because kdump is so popular
+> > > and kdump winds up having to reinitialize devices from any random
+> > > state.
+> > 
+> > kdump also doesn't care too much if the device is still DMA'ing to the
+> > old kernel memory :-)
 > 
-> Very minor nit I came across when going through the patchset -- can't we 
-> use some different buffer for the file-based kexec that's not marked 
-> __user here? This really causes some eye-pain when looking at the code.
+> In principle kdump does not care about ongoing DMAs but in practice it
+> is giving us some headaches with IOMMU. Various kind of issues crop up
+> during IOMMU intialization in second kernel while DMA is ongoing and
+> unfortunately no good solution has made into upstream yet.
+> 
+> Well, ongoing DMA and IOMMU seems to be orthogonal to using ->remove()
+> in kexec. So I will stop here. :-)
 
-Hi Jiri,
+Right, it's an orthogonal problem. I think hot resetting the bus might
+solve it too though. It's even worse on ppc because the resulting iommu
+errors trigger those "EEH freeze" that we have here blocking the devices
+out etc...
 
-Sorry, responding to your comment after a very long time.
+Ben.
 
-Now I have made buf field a union as it can either be a user pointer or
-a kernel pointer depending on which kexec syscall has been used. Now
-caller needs to either use segment->buf or segment->kbuf based on the
-context of code.
+> Thanks
+> Vivek
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-	kexec_segment {
-		union {
-			void __user *buf;
-			void *kbuf;
-		};
-	}
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
