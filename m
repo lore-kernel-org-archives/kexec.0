@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from gate.crashing.org ([63.228.1.57])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W42T9-0007qA-7e
- for kexec@lists.infradead.org; Fri, 17 Jan 2014 05:59:52 +0000
-Message-ID: <1389938353.7406.22.camel@pasglop>
-Subject: Re: [Q] Why does kexec use device_shutdown rather than ubind them
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Date: Fri, 17 Jan 2014 16:59:13 +1100
-In-Reply-To: <871u07fbvl.fsf@xmission.com>
-References: <1389929988.7406.18.camel@pasglop> <871u07fbvl.fsf@xmission.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W4A1p-0001Db-M6
+ for kexec@lists.infradead.org; Fri, 17 Jan 2014 14:04:10 +0000
+Date: Fri, 17 Jan 2014 09:03:47 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Query regarding ELF loader arg style
+Message-ID: <20140117140347.GB24394@redhat.com>
+References: <20140109153703.GE25897@redhat.com> <87a9eyaumi.fsf@xmission.com>
+ <20140116151301.GB6156@redhat.com> <87fvonwlri.fsf@xmission.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87fvonwlri.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +25,44 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-On Thu, 2014-01-16 at 20:52 -0800, Eric W. Biederman wrote:
+On Thu, Jan 16, 2014 at 03:27:13PM -0800, Eric W. Biederman wrote:
+
+[..]
+> > - ELF does not tell anything whether it is self relocating or not. So we
+> >   are forced to load it at a address it has been compiled for (In case of
+> >   kdump). And that address is already occupied by current running kernel
+> >   so it does not work.
 > 
-> I think we have largely survied until now because kdump is so popular
-> and kdump winds up having to reinitialize devices from any random
-> state.
+> ELF does tell you if it is relocatable in the e_type field of the main
+> elf header.  In particular ET_DYN vs ET_EXEC.  ET_DYN can be loaded
+> anywhere, and ET_EXEC must be loaded at the specified address.  It would
+> not surprise me if the kernel build process is using ET_EXEC in error.
+> 
+> ET_DYN is also what is used for PIE executables and shared libraires.
+> 
+> The rule with ET_DYN without a dynamic linker is that a constant offset
+> must be added to the load address of all of the program segments but
+> otherwise nothing changes.  I thought I had support for that form in
+> kexec-tools.
+> 
+> Perhaps not.
 
-kdump also doesn't care too much if the device is still DMA'ing to the
-old kernel memory :-)
+Hi Eric,
 
-> But like I said I am all for reducing the burden on device driver
-> developers.
+Kexec-tools supports ET_DYN. I saw code for that. Current kernel vmlinux
+is ET_EXEC though and expects to be loaded at the address for it has been
+compiled for.
 
-Right. I'm experimenting with a variant of device_shutdown() that tries
-remove() first and if it doesn't exist and shutdown() does, call that
-(is that ever the case ?). I'm keeping this kexec-specific for now.
+I think in intial version of patches I will just support ET_EXEC and then
+support for ET_DYN can be added later. It should really be simple as  all
+the core structure to find a memory hole and load buffers there will
+already be present. And at that time one can look into converting vmlinux
+to a ET_DYN instead of ET_EXEC.
 
-I'll try to hammer that on some of our machines see if it breaks
-anything, I think it's a much better approach for kexec.
-
-As for actual machine shutdown, we *might* have some corner cases where
-shutdown is actually different from remove for good reasons, so that
-will have to be investigated a bit more in depth.
-
-I'll post my results when I have them.
-
-Cheers,
-Ben.
-
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
