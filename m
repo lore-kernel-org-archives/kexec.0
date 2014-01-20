@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from gate.crashing.org ([63.228.1.57])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W4GXh-0005gt-6z
- for kexec@lists.infradead.org; Fri, 17 Jan 2014 21:01:30 +0000
-Message-ID: <1389992443.7406.35.camel@pasglop>
-Subject: Re: [Q] Why does kexec use device_shutdown rather than ubind them
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Date: Sat, 18 Jan 2014 08:00:43 +1100
-In-Reply-To: <20140117141327.GC24394@redhat.com>
-References: <1389929988.7406.18.camel@pasglop> <871u07fbvl.fsf@xmission.com>
- <1389938353.7406.22.camel@pasglop> <20140117141327.GC24394@redhat.com>
-Mime-Version: 1.0
+ id 1W59ef-0005V8-OL
+ for kexec@lists.infradead.org; Mon, 20 Jan 2014 07:52:23 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: fix wrong report time for copying data
+Date: Mon, 20 Jan 2014 07:50:13 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971DE1E1@BPXM01GP.gisp.nec.co.jp>
+References: <52D51655.2020700@jp.fujitsu.com>
+In-Reply-To: <52D51655.2020700@jp.fujitsu.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +23,136 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Cliff Wickman <cpw@sgi.com>
 
-On Fri, 2014-01-17 at 09:13 -0500, Vivek Goyal wrote:
-> On Fri, Jan 17, 2014 at 04:59:13PM +1100, Benjamin Herrenschmidt wrote:
-> > On Thu, 2014-01-16 at 20:52 -0800, Eric W. Biederman wrote:
-> > > 
-> > > I think we have largely survied until now because kdump is so popular
-> > > and kdump winds up having to reinitialize devices from any random
-> > > state.
-> > 
-> > kdump also doesn't care too much if the device is still DMA'ing to the
-> > old kernel memory :-)
+On 2014/01/14 19:53:24, kexec <kexec-bounces@lists.infradead.org> wrote:
+> From 81c669484d6e38856f931af025e0d391abcdd168 Mon Sep 17 00:00:00 2001
+> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> Date: Fri, 10 Jan 2014 12:29:03 +0900
+> Subject: [PATCH] fix wrong report time for copying data
+>
+> Currently, in cyclic mode, reported time for copying pages includes
+> the time consumed for 1) update cycles, 2) filtering memory, 3)
+> writing pages and 4) other things among the three. This is wrong. The
+> ``copying pages'' should be ``3) writing pages'' only.
+>
+> On the system with terabyte-scale memory, it requires several minutes
+> to process memory filtering. As a result, on such system, copying data
+> in cyclic mode looks several minutes slower than the actual.
+>
+> This patch fixes this by counting times for ``3) writing pages'' only
+> as a time for ``copying pages.''
+
+write_elf_pages_cyclic() should be fixed too, but it's difficult to fix
+it neatly because the ``3) writing pages'' sections are separated in it.
+So I think I should clean it up before fix the report time issue if possible.
+
+Anyway, I accept this patch as it is, thanks.
+
+
+Atsushi Kumagai
+
+> The output changes like below:
+>
+> [before]
+>
+> Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.124988 seconds
+> Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.142915 seconds
+> Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.024244 seconds
+> Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.118873 seconds
+> Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.142979 seconds
+> Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.024361 seconds
+> Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.118428 seconds
+> Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.143258 seconds
+> Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.024470 seconds
+> Copying data                       : [100.0 %] -STEP [Copying data               ] : 19.807846 seconds
+>
+> [after]
 > 
-> In principle kdump does not care about ongoing DMAs but in practice it
-> is giving us some headaches with IOMMU. Various kind of issues crop up
-> during IOMMU intialization in second kernel while DMA is ongoing and
-> unfortunately no good solution has made into upstream yet.
+> Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.118851 seconds
+> Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.142766 seconds
+> Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.024204 seconds
+> Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.118849 seconds
+> Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.142812 seconds
+> Excluding unnecessary pages        : [100.0 %] -STEP [Excluding unnecessary pages] : 0.024394 seconds
+> Excluding unnecessary pages        : [100.0 %] /STEP [Excluding unnecessary pages] : 0.118293 seconds
+> Copying data                       : [ 25.6 %] |STEP [Copying data               ] : 4.343230 seconds
+> Excluding unnecessary pages        : [100.0 %] \STEP [Excluding unnecessary pages] : 0.143136 seconds
+> Copying data                       : [ 73.4 %] /STEP [Copying data               ] : 9.939977 seconds
+> Excluding unnecessary pages        : [100.0 %] |STEP [Excluding unnecessary pages] : 0.024642 seconds
+> Copying data                       : [100.0 %] -STEP [Copying data               ] : 4.844130 seconds
+> Copying data                       : [100.0 %] /STEP [Copying data               ] : 0.000093 seconds
 > 
-> Well, ongoing DMA and IOMMU seems to be orthogonal to using ->remove()
-> in kexec. So I will stop here. :-)
-
-Right, it's an orthogonal problem. I think hot resetting the bus might
-solve it too though. It's even worse on ppc because the resulting iommu
-errors trigger those "EEH freeze" that we have here blocking the devices
-out etc...
-
-Ben.
-
-> Thanks
-> Vivek
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
-
+> So, you need to calculate a total time for copying data by yourself.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+>  makedumpfile.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index ef08d91..32ad513 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -6331,6 +6331,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>  	struct page_desc pd;
+>  	unsigned char buf[info->page_size], *buf_out = NULL;
+>  	unsigned long len_buf_out;
+> +	struct timeval tv_start;
+>  	const off_t failed = (off_t)-1;
+>  	unsigned long len_buf_out_zlib, len_buf_out_lzo, len_buf_out_snappy;
+>  
+> @@ -6390,6 +6391,8 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>  			end_pfn = info->split_end_pfn;
+>  	}
+>  
+> +	gettimeofday(&tv_start, NULL);
+> +
+>  	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+>  
+>  		if ((num_dumped % per) == 0)
+> @@ -6482,6 +6485,9 @@ out:
+>  		free(wrkmem);
+>  #endif
+>  
+> +	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> +	print_execution_time(PROGRESS_COPY, &tv_start);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -6816,8 +6822,6 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+>  	unsigned long long pfn;
+>  	struct timeval tv_start;
+>  
+> -	gettimeofday(&tv_start, NULL);
+> -
+>  	/*
+>  	 * Reset counter for debug message.
+>  	 */
+> @@ -6888,6 +6892,8 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+>  			return FALSE;
+>          }
+>  
+> +	gettimeofday(&tv_start, NULL);
+> +
+>  	/*
+>  	 * Write the remainder.
+>  	 */
+> -- 
+> 1.8.4.2
+> 
+> -- 
+> Thanks.
+> HATAYAMA, Daisuke
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
