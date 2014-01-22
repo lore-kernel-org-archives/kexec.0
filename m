@@ -1,14 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W5vUq-0001td-V4
- for kexec@lists.infradead.org; Wed, 22 Jan 2014 10:57:27 +0000
 From: Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH 3/3] kexec: increase zImage compression ratio from 4 to 5
-Date: Wed, 22 Jan 2014 18:52:04 +0800
-Message-ID: <1390387924-73946-4-git-send-email-wangnan0@huawei.com>
-In-Reply-To: <1390387924-73946-1-git-send-email-wangnan0@huawei.com>
-References: <1390387924-73946-1-git-send-email-wangnan0@huawei.com>
+Subject: [PATCH 1/3] ARM: Premit ioremap() to map reserved pages
+Date: Wed, 22 Jan 2014 19:25:14 +0800
+Message-ID: <1390389916-8711-2-git-send-email-wangnan0@huawei.com>
+In-Reply-To: <1390389916-8711-1-git-send-email-wangnan0@huawei.com>
+References: <1390389916-8711-1-git-send-email-wangnan0@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,32 +19,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Wang Nan <wangnan0@huawei.com>, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Geng Hui <hui.geng@huawei.com>
+Cc: Wang Nan <wangnan0@huawei.com>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, Geng Hui <hui.geng@huawei.com>, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
 
-Old code assume the zImage compression ration is 4, it is not enough, 5 shall be
-better.
+This patch relaxes the restriction set by commit 309caa9cc, which
+prohibit ioremap() on all kernel managed pages.
+
+Other architectures, such as x86 and (some specific platforms of) powerpc,
+allow such mapping.
+
+ioremap() pages is an efficient way to avoid arm's mysterious cache control.
+This feature will be used for arm kexec support to ensure copied data goes into
+RAM even without cache flushing, because we found that flush_cache_xxx can't
+reliably flush code to memory.
 
 Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Dave Young <dyoung@redhat.com>
+Cc: <stable@vger.kernel.org> # 3.4+
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Geng Hui <hui.geng@huawei.com>
 ---
- kexec/arch/arm/kexec-zImage-arm.c | 2 +-
+ arch/arm/mm/ioremap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 6d6b239..6e5e12b 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -351,7 +351,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	} else {
- 		/* Otherwise, assume the maximum kernel compression ratio
- 		 * is 4, and just to be safe, place ramdisk after that */
--		initrd_base =  base + _ALIGN(len * 4, 4096);
-+		initrd_base =  base + _ALIGN(len * 5, 4096);
- 	}
+diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
+index f123d6e..98b1c10 100644
+--- a/arch/arm/mm/ioremap.c
++++ b/arch/arm/mm/ioremap.c
+@@ -298,7 +298,7 @@ void __iomem * __arm_ioremap_pfn_caller(unsigned long pfn,
+ 	/*
+ 	 * Don't allow RAM to be mapped - this causes problems with ARMv6+
+ 	 */
+-	if (WARN_ON(pfn_valid(pfn)))
++	if (WARN_ON(pfn_valid(pfn) && !PageReserved(pfn_to_page(pfn))))
+ 		return NULL;
  
- 	if (use_atags) {
+ 	area = get_vm_area_caller(size, VM_IOREMAP, caller);
 -- 
 1.8.4
 
