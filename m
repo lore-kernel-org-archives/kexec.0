@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <52E07B85.6030709@huawei.com>
-Date: Thu, 23 Jan 2014 10:16:37 +0800
-From: Wang Nan <wangnan0@huawei.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W6AJr-0003kS-5S
+ for kexec@lists.infradead.org; Thu, 23 Jan 2014 02:47:04 +0000
+Date: Thu, 23 Jan 2014 10:47:16 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 0/3] kexec-tools: fix bugs and pass initrd position for arm
+Message-ID: <20140123024716.GF3768@dhcp-16-126.nay.redhat.com>
+References: <1390387924-73946-1-git-send-email-wangnan0@huawei.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] ARM: kexec: copying code to ioremapped area
-References: <1390389916-8711-1-git-send-email-wangnan0@huawei.com>
- <1390389916-8711-3-git-send-email-wangnan0@huawei.com>
- <20140122132734.GB15937@n2100.arm.linux.org.uk>
-In-Reply-To: <20140122132734.GB15937@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1390387924-73946-1-git-send-email-wangnan0@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,46 +23,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Geng Hui <hui.geng@huawei.com>, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
+To: Wang Nan <wangnan0@huawei.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On 2014/1/22 21:27, Russell King - ARM Linux wrote:
-> On Wed, Jan 22, 2014 at 07:25:15PM +0800, Wang Nan wrote:
->> ARM's kdump is actually corrupted (at least for omap4460), mainly because of
->> cache problem: flush_icache_range can't reliably ensure the copied data
->> correctly goes into RAM.
+On 01/22/14 at 06:52pm, Wang Nan wrote:
+> Hi,
 > 
-> Quite right too.  You're mistake here is thinking that flush_icache_range()
-> should push it to RAM.  That's incorrect.
+> This patch series contains following bug fixes and cleanups for
+> kexec-tools on arm platform:
 > 
-> flush_icache_range() is there to deal with such things as loadable modules
-> and self modifying code, where the MMU is not being turned off.  Hence, it
-> only flushes to the point of coherency between the I and D caches, and
-> any further levels of cache between that point and memory are not touched.
-> Why should it touch any more levels - it's not the function's purpose.
-> 
->> After mmu turned off and jump to the trampoline, kexec always failed due
->> to random undef instructions.
-> 
-> We already have code in the kernel which deals with shutting the MMU off.
-> An instance of how this can be done is illustrated in the soft_restart()
-> code path, and kexec already uses this.
-> 
-> One of the first things soft_restart() does is turn off the outer cache -
-> which OMAP4 does have, but this can only be done if there is a single CPU
-> running.  If there's multiple CPUs running, then the outer cache can't be
-> disabled, and that's the most likely cause of the problem you're seeing.
-> 
+> Wang Nan (3):
+>   kexec: align initrd when no --image-size
+>   kexec: pass initrd position in dtb
+>   kexec: increase zImage compress ratio from 4 to 5
 
-You are right, commit b25f3e1c (OMAP4/highbank: Flush L2 cache before disabling)
-solves my problem, it flushes outer cache before disabling. I have tested it in
-UP and SMP situations and it works (actually, omap4 has not ready to support kexec
-in SMP case, I insert an empty cpu_kill() to make it work), so the first 2
-patches are unneeded.
+One question:
+Is these kexec-tools patches enough for kexec work or still need the
+kernel patches you sent?
 
-What about the 3rd one (ARM: allow kernel to be loaded in middle of phymem)?
-
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
