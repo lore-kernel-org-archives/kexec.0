@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W6AJr-0003kS-5S
- for kexec@lists.infradead.org; Thu, 23 Jan 2014 02:47:04 +0000
-Date: Thu, 23 Jan 2014 10:47:16 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 0/3] kexec-tools: fix bugs and pass initrd position for arm
-Message-ID: <20140123024716.GF3768@dhcp-16-126.nay.redhat.com>
-References: <1390387924-73946-1-git-send-email-wangnan0@huawei.com>
+Received: from szxga01-in.huawei.com ([119.145.14.64])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W6AUV-00040b-2G
+ for kexec@lists.infradead.org; Thu, 23 Jan 2014 02:58:04 +0000
+Message-ID: <52E084DA.1000507@huawei.com>
+Date: Thu, 23 Jan 2014 10:56:26 +0800
+From: Wang Nan <wangnan0@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1390387924-73946-1-git-send-email-wangnan0@huawei.com>
+Subject: Re: [PATCH 0/3] kexec-tools: fix bugs and pass initrd position for arm
+References: <1390387924-73946-1-git-send-email-wangnan0@huawei.com>
+ <20140123024716.GF3768@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20140123024716.GF3768@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,26 +23,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wang Nan <wangnan0@huawei.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On 01/22/14 at 06:52pm, Wang Nan wrote:
-> Hi,
+On 2014/1/23 10:47, Dave Young wrote:
+> On 01/22/14 at 06:52pm, Wang Nan wrote:
+>> Hi,
+>>
+>> This patch series contains following bug fixes and cleanups for
+>> kexec-tools on arm platform:
+>>
+>> Wang Nan (3):
+>>   kexec: align initrd when no --image-size
+>>   kexec: pass initrd position in dtb
+>>   kexec: increase zImage compress ratio from 4 to 5
 > 
-> This patch series contains following bug fixes and cleanups for
-> kexec-tools on arm platform:
+> One question:
+> Is these kexec-tools patches enough for kexec work or still need the
+> kernel patches you sent?
 > 
-> Wang Nan (3):
->   kexec: align initrd when no --image-size
->   kexec: pass initrd position in dtb
->   kexec: increase zImage compress ratio from 4 to 5
+> Thanks
+> Dave
+> 
 
-One question:
-Is these kexec-tools patches enough for kexec work or still need the
-kernel patches you sent?
+kexec will work without the kernel side patches, but the atag, kernel
+cmdline, dtb information and kernel configuration must be carefully
+adjusted.
 
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
