@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W6Gu7-00026Z-TR
- for kexec@lists.infradead.org; Thu, 23 Jan 2014 09:48:57 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [v2 3/3] makedumpfile: remove member variables representing cyclic
- pfn region in struct DumpInfo
-Date: Thu, 23 Jan 2014 17:47:34 +0800
-Message-Id: <1390470454-14272-4-git-send-email-bhe@redhat.com>
-In-Reply-To: <1390470454-14272-1-git-send-email-bhe@redhat.com>
-References: <1390470454-14272-1-git-send-email-bhe@redhat.com>
+MIME-version: 1.0
+Date: Thu, 23 Jan 2014 14:15:07 -0500 (EST)
+From: Nicolas Pitre <nico@fluxnic.net>
+Subject: Re: [PATCH 3/3] ARM: allow kernel to be loaded in middle of phymem
+In-reply-to: <1390389916-8711-4-git-send-email-wangnan0@huawei.com>
+Message-id: <alpine.LFD.2.11.1401231357520.1652@knanqh.ubzr>
+References: <1390389916-8711-1-git-send-email-wangnan0@huawei.com>
+ <1390389916-8711-4-git-send-email-wangnan0@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,38 +15,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>
+To: Wang Nan <wangnan0@huawei.com>
+Cc: stable@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Geng Hui <hui.geng@huawei.com>, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
 
-Now member variables to store cyclic pfn region in struct DumpInfo
-is not needed any more, remove them.
+On Wed, 22 Jan 2014, Wang Nan wrote:
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- makedumpfile.h | 2 --
- 1 file changed, 2 deletions(-)
+> This patch allows the kernel to be loaded at the middle of kernel awared
+> physical memory. Before this patch, users must use mem= or device tree to cheat
+> kernel about the start address of physical memory.
+> 
+> This feature is useful in some special cases, for example, building a crash
+> dump kernel. Without it, kernel command line, atag and devicetree must be
+> adjusted carefully, sometimes is impossible.
 
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 38df2b3..0d5b086 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1056,8 +1056,6 @@ struct DumpInfo {
- 	 */
- 	char               *partial_bitmap1;
- 	char               *partial_bitmap2;
--	unsigned long long cyclic_start_pfn;
--	unsigned long long cyclic_end_pfn;  
- 	unsigned long long num_dumpable;
- 	unsigned long      bufsize_cyclic;
- 	unsigned long      pfn_cyclic;
--- 
-1.8.3.1
+With CONFIG_PATCH_PHYS_VIRT the value for PHYS_OFFSET is determined 
+dynamically by rounding down the kernel image start address to the 
+previous 16MB boundary.  In the case of a crash kernel, this might be 
+cleaner to simply readjust __pv_phys_offset during early boot and call 
+fixup_pv_table(), and then reserve away the memory from the previous 
+kernel.  That will let you access that memory directly (with gdb for 
+example) and no pointer address translation will be required.
 
+
+> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+> Cc: <stable@vger.kernel.org> # 3.4+
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Geng Hui <hui.geng@huawei.com>
+> ---
+>  arch/arm/mm/init.c | 21 ++++++++++++++++++++-
+>  arch/arm/mm/mmu.c  | 13 +++++++++++++
+>  mm/page_alloc.c    |  7 +++++--
+>  3 files changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index 3e8f106..4952726 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -334,9 +334,28 @@ void __init arm_memblock_init(struct meminfo *mi,
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < mi->nr_banks; i++)
+> +	for (i = 0; i < mi->nr_banks; i++) {
+>  		memblock_add(mi->bank[i].start, mi->bank[i].size);
+>  
+> +		/*
+> +		 * In some special case, for example, building a crushdump
+> +		 * kernel, we want the kernel to be loaded in the middle of
+> +		 * physical memory. In such case, the physical memory before
+> +		 * PHYS_OFFSET is awkward: it can't get directly mapped
+> +		 * (because its address will be smaller than PAGE_OFFSET,
+> +		 * disturbs user address space) also can't be mapped as
+> +		 * HighMem. We reserve such pages here. The only way to access
+> +		 * those pages is ioremap.
+> +		 */
+> +		if (mi->bank[i].start < PHYS_OFFSET) {
+> +			unsigned long reserv_size = PHYS_OFFSET -
+> +						    mi->bank[i].start;
+> +			if (reserv_size > mi->bank[i].size)
+> +				reserv_size = mi->bank[i].size;
+> +			memblock_reserve(mi->bank[i].start, reserv_size);
+> +		}
+> +	}
+> +
+>  	/* Register the kernel text, kernel data and initrd with memblock. */
+>  #ifdef CONFIG_XIP_KERNEL
+>  	memblock_reserve(__pa(_sdata), _end - _sdata);
+> diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+> index 580ef2d..2a17c24 100644
+> --- a/arch/arm/mm/mmu.c
+> +++ b/arch/arm/mm/mmu.c
+> @@ -1308,6 +1308,19 @@ static void __init map_lowmem(void)
+>  		if (start >= end)
+>  			break;
+>  
+> +		/*
+> +		 * If this memblock contain memory before PAGE_OFFSET, memory
+> +		 * before PAGE_OFFSET should't get directly mapped, see code
+> +		 * in create_mapping(). However, memory after PAGE_OFFSET is
+> +		 * occupyed by kernel and still need to be mapped.
+> +		 */
+> +		if (__phys_to_virt(start) < PAGE_OFFSET) {
+> +			if (__phys_to_virt(end) > PAGE_OFFSET)
+> +				start = __virt_to_phys(PAGE_OFFSET);
+> +			else
+> +				break;
+> +		}
+> +
+>  		map.pfn = __phys_to_pfn(start);
+>  		map.virtual = __phys_to_virt(start);
+>  		map.length = end - start;
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 5248fe0..d2959e3 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4840,10 +4840,13 @@ static void __init_refok alloc_node_mem_map(struct pglist_data *pgdat)
+>  	 */
+>  	if (pgdat == NODE_DATA(0)) {
+>  		mem_map = NODE_DATA(0)->node_mem_map;
+> -#ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+> +		/*
+> +		 * In case of CONFIG_HAVE_MEMBLOCK_NODE_MAP or when kernel
+> +		 * loaded at the middle of physical memory, mem_map should
+> +		 * be adjusted.
+> +		 */
+>  		if (page_to_pfn(mem_map) != pgdat->node_start_pfn)
+>  			mem_map -= (pgdat->node_start_pfn - ARCH_PFN_OFFSET);
+> -#endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
+>  	}
+>  #endif
+>  #endif /* CONFIG_FLAT_NODE_MEM_MAP */
+> -- 
+> 1.8.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
 
 _______________________________________________
 kexec mailing list
