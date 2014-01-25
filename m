@@ -1,31 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W6hYu-0000eS-I7
- for kexec@lists.infradead.org; Fri, 24 Jan 2014 14:16:51 +0000
-Received: from /spool/local
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
- Fri, 24 Jan 2014 14:16:25 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com
- (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 33A7517D8059
- for <kexec@lists.infradead.org>; Fri, 24 Jan 2014 14:16:40 +0000 (GMT)
-Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
- [9.149.37.212])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s0OEGAW861079572
- for <kexec@lists.infradead.org>; Fri, 24 Jan 2014 14:16:10 GMT
-Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s0OEGLOB022803
- for <kexec@lists.infradead.org>; Fri, 24 Jan 2014 07:16:22 -0700
-Subject: [PATCH] kexec/ppc64 Enable early kernel's OPAL calls
-From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Date: Fri, 24 Jan 2014 15:16:14 +0100
-Message-ID: <20140124141614.6404.37733.stgit@nimbus>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W6tEv-0004fv-0N
+ for kexec@lists.infradead.org; Sat, 25 Jan 2014 02:44:57 +0000
+Date: Sat, 25 Jan 2014 10:44:18 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCHv3 0/6] Crashdump Accepting Active IOMMU
+Message-ID: <20140125024418.GA1549@dhcp-17-102.nay.redhat.com>
+References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,135 +23,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To: Bill Sumner <bill.sumner@hp.com>
+Cc: indou.takao@jp.fujitsu.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, dwmw2@infradead.org
 
-When the kernel is built with CONFIG_PPC_EARLY_DEBUG_OPAL set, it is
-expecting to get r8 and r9 filled respectively with OPAL base address and
-OPAL entry address (arc/power/head_64.S).
+Tested this patchset on my local HP Z420 workstation, and it works very
+well.
 
-On the new powernv platform, having these 2 registers set allows the kernel
-to perform OPAL calls before it parse the device tree.
+Hi Bill,
 
-Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
----
- kexec/arch/ppc64/kexec-elf-ppc64.c     |   43 ++++++++++++++++++++++++++++++++
- purgatory/arch/ppc64/purgatory-ppc64.c |    2 +
- purgatory/arch/ppc64/v2wrap.S          |    4 +++
- 3 files changed, 49 insertions(+)
+Thanks for your effort.
 
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index 7d49d8a..ce10367 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -71,6 +71,26 @@ void arch_reuse_initrd(void)
- 	reuse_initrd = 1;
- }
- 
-+static int read_prop(char *name, void *value, size_t len)
-+{
-+	int fd;
-+	size_t rlen;
-+
-+	fd = open(name, O_RDONLY);
-+	if (fd == -1)
-+		return -1;
-+
-+	rlen = read(fd, value, len);
-+	if (rlen < 0)
-+		fprintf(stderr, "Warning : Can't read %s : %s",
-+			name, strerror(errno));
-+	else if (rlen != len)
-+		fprintf(stderr, "Warning : short read from %s", name);
-+
-+	close(fd);
-+	return 0;
-+}
-+
- int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 			struct kexec_info *info)
- {
-@@ -90,6 +110,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	int i;
- 	int result, opt;
- 	uint64_t my_kernel, my_dt_offset;
-+	uint64_t my_opal_base = 0, my_opal_entry = 0;
- 	unsigned int my_panic_kernel;
- 	uint64_t my_stack, my_backup_start;
- 	uint64_t toc_addr;
-@@ -246,6 +267,20 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	*rsvmap_ptr = cpu_to_be64((uint64_t)be32_to_cpu(bb_ptr->totalsize));
- #endif
- 
-+	if (read_prop("/proc/device-tree/ibm,opal/opal-base-address",
-+		      &my_opal_base, sizeof(my_opal_base)) == 0) {
-+		my_opal_base = be64_to_cpu(my_opal_base);
-+		elf_rel_set_symbol(&info->rhdr, "opal_base",
-+				   &my_opal_base, sizeof(my_opal_base));
-+	}
-+
-+	if (read_prop("/proc/device-tree/ibm,opal/opal-entry-address",
-+		      &my_opal_entry, sizeof(my_opal_entry)) == 0) {
-+		my_opal_entry = be64_to_cpu(my_opal_entry);
-+		elf_rel_set_symbol(&info->rhdr, "opal_entry",
-+				   &my_opal_entry, sizeof(my_opal_entry));
-+	}
-+
- 	/* Set kernel */
- 	elf_rel_set_symbol(&info->rhdr, "kernel", &my_kernel, sizeof(my_kernel));
- 
-@@ -306,7 +341,13 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	toc_addr = 0;
- 	my_run_at_load = 0;
- 	my_debug = 0;
-+	my_opal_base = 0;
-+	my_opal_entry = 0;
- 
-+	elf_rel_get_symbol(&info->rhdr, "opal_base", &my_opal_base,
-+			   sizeof(my_opal_base));
-+	elf_rel_get_symbol(&info->rhdr, "opal_entry", &my_opal_entry,
-+			   sizeof(my_opal_entry));
- 	elf_rel_get_symbol(&info->rhdr, "kernel", &my_kernel, sizeof(my_kernel));
- 	elf_rel_get_symbol(&info->rhdr, "dt_offset", &my_dt_offset,
- 				sizeof(my_dt_offset));
-@@ -333,6 +374,8 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	dbgprintf("toc_addr is %llx\n", (unsigned long long)toc_addr);
- 	dbgprintf("purgatory size is %zu\n", purgatory_size);
- 	dbgprintf("debug is %d\n", my_debug);
-+	dbgprintf("opal_base is %llx\n", (unsigned long long) my_opal_base);
-+	dbgprintf("opal_entry is %llx\n", (unsigned long long) my_opal_entry);
- 
- 	for (i = 0; i < info->nr_segments; i++)
- 		fprintf(stderr, "segment[%d].mem:%p memsz:%zu\n", i,
-diff --git a/purgatory/arch/ppc64/purgatory-ppc64.c b/purgatory/arch/ppc64/purgatory-ppc64.c
-index 0b6d326..7248ac8 100644
---- a/purgatory/arch/ppc64/purgatory-ppc64.c
-+++ b/purgatory/arch/ppc64/purgatory-ppc64.c
-@@ -29,6 +29,8 @@ unsigned long dt_offset = 0;
- unsigned long my_toc = 0;
- unsigned long kernel = 0;
- unsigned int debug = 0;
-+unsigned long opal_base = 0;
-+unsigned long opal_entry = 0;
- 
- void setup_arch(void)
- {
-diff --git a/purgatory/arch/ppc64/v2wrap.S b/purgatory/arch/ppc64/v2wrap.S
-index 2761c14..6fc62e3 100644
---- a/purgatory/arch/ppc64/v2wrap.S
-+++ b/purgatory/arch/ppc64/v2wrap.S
-@@ -95,6 +95,10 @@ master:
- 	blt     80f
- 	stw     17,28(3)        # save my cpu number as boot_cpu_phys
- 80:
-+	LOADADDR(6,opal_base)	# For OPAL early debug
-+	ld      8,0(6)          # load the OPAL base address in r8
-+	LOADADDR(6,opal_entry)	# For OPAL early debug
-+	ld      9,0(6)          # load the OPAL entry address in r9
- 	LOADADDR(6,kernel)
- 	ld      4,0(6)          # load the kernel address
- 	LOADADDR(6,run_at_load) # the load flag
+There are several concerns from me.
 
+Firstly, I think the patch log need be rearanged. Patchset cover letter
+can contain information to express why, how briefly. If you think this
+is very useful, it can be split and put into patch log.
+
+Then for each patch, patch log should be accurate and summary to
+describe why and how this patch really does. If you feel several patches
+have the corelation, they may need to be merged.
+
+Secondly, each patch could get a seperate subject which tells what this
+patch really does. Even they are merged to kernel git tree, each of them
+is a independent commit. People can take to use or depend only one of
+them. Actually, I don't like current patch subject.
+
+Thirdly, this patchset will be part of intel-iommu, though they only
+works for kdump kernel. As a subsystem, the style need be consistent. I
+like the debug method which introduces a struct pr_debug, however
+maintainers may not like it. Because a debug utility may bloat code and
+affect people's review. Personally I like refined code, the less the
+easier to review. Or put it as a independent patch at the end of the
+patchset, let maintainer decide whether it's OK to pull in.
+
+Sorry to say so much, I think this solution is truly the right way. As
+you know, it's a big problem for kdump when intel-iommu is active in 1st
+kernel. Because of this bug, many machines with intel-iommu have to be
+set intel-iommu=off, the performance is affected very much.
+
+Baoquan
+Thanks
+
+On 01/10/14 at 03:07pm, Bill Sumner wrote:
+> v2->v3:
+> 1. Commented-out "#define DEBUG 1" to eliminate debug messages
+> 2. Updated the comments about changes in each version in all patches in the set.
+> 3. Fixed: one-line added to Copy-Translations" patch to initialize the iovad
+>           struct as recommended by Baoquan He [bhe@redhat.com]
+>           init_iova_domain(&domain->iovad, DMA_32BIT_PFN);
+> 
+> v1->v2:
+> The following series implements a fix for:
+> A kdump problem about DMA that has been discussed for a long time. That is,
+> when a kernel panics and boots into the kdump kernel, DMA started by the 
+> panicked kernel is not stopped before the kdump kernel is booted and the 
+> kdump kernel disables the IOMMU while this DMA continues.  This causes the
+> IOMMU to stop translating the DMA addresses as IOVAs and begin to treat them 
+> as physical memory addresses -- which causes the DMA to either:
+> (1) generate DMAR errors or (2) generate PCI SERR errors or (3) transfer  
+> data to or from incorrect areas of memory. Often this causes the dump to fail.
+> 
+ 
 
 _______________________________________________
 kexec mailing list
