@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W6tEv-0004fv-0N
- for kexec@lists.infradead.org; Sat, 25 Jan 2014 02:44:57 +0000
-Date: Sat, 25 Jan 2014 10:44:18 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCHv3 0/6] Crashdump Accepting Active IOMMU
-Message-ID: <20140125024418.GA1549@dhcp-17-102.nay.redhat.com>
-References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+Received: from mail-db3ln0101.outbound.protection.outlook.com
+ ([2a01:111:f400:7e04::101]
+ helo=emea01-db3-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W7KiM-0007UR-97
+ for kexec@lists.infradead.org; Sun, 26 Jan 2014 08:05:14 +0000
+Message-ID: <52E4C198.9010505@kaminario.com>
+Date: Sun, 26 Jan 2014 10:04:40 +0200
+From: "shahar.salzman@kaminario.com" <shahar.salzman@kaminario.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+Subject: Crash kernel to dump specific pages
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,71 +18,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Bill Sumner <bill.sumner@hp.com>
-Cc: indou.takao@jp.fujitsu.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, dwmw2@infradead.org
+To: kexec@lists.infradead.org, Eran Mann <eran.mann@kaminario.com>, open-source-contrib@kaminario.com
 
-Tested this patchset on my local HP Z420 workstation, and it works very
-well.
+Hi all,
 
-Hi Bill,
+We have been using the CentOS kexec (currently 2.0.0) as our recovery 
+plan for kernel panic, up to now only dumping the dmesg.
+Since we are using a server with a large amount of RAM, we are reluctant 
+to perform a full memory dump, both in terms of the time it will take to 
+return from the crash kernel, and in terms of disk space reservation.
 
-Thanks for your effort.
+Recently we where in need of a tweak to kexec so that one of our 
+journals will be able to be saved when there is a kernel panic.
+I implemented what I call a "raw PFN dump" which receives as input a 
+file containing physical frames, and their contiguous length, and will 
+dump this "scatter gather" as raw data.
 
-There are several concerns from me.
+This allows us to perform the following cycle:
+1. Setup the journal
+2. Get the physical memory mappings (using /proc/<self ot PID>/maps and 
+/proc/<self or PID>/pagemap).
+3. Format the physical memory mappings to a list of "PFN range" file
+4. Add the file to the kdump.conf in the extra_bins
+5. restart the kdump service
+6. Activate the journal
 
-Firstly, I think the patch log need be rearanged. Patchset cover letter
-can contain information to express why, how briefly. If you think this
-is very useful, it can be split and put into patch log.
+I have tested this numerous times with CentOS6.4 and kexec-tools2.0.0 
+(with makedumpfile 1.3.5).
 
-Then for each patch, patch log should be accurate and summary to
-describe why and how this patch really does. If you feel several patches
-have the corelation, they may need to be merged.
+Would you be interested in this feature for kdump?
+If so, over which version should I rebase the patch?
 
-Secondly, each patch could get a seperate subject which tells what this
-patch really does. Even they are merged to kernel git tree, each of them
-is a independent commit. People can take to use or depend only one of
-them. Actually, I don't like current patch subject.
-
-Thirdly, this patchset will be part of intel-iommu, though they only
-works for kdump kernel. As a subsystem, the style need be consistent. I
-like the debug method which introduces a struct pr_debug, however
-maintainers may not like it. Because a debug utility may bloat code and
-affect people's review. Personally I like refined code, the less the
-easier to review. Or put it as a independent patch at the end of the
-patchset, let maintainer decide whether it's OK to pull in.
-
-Sorry to say so much, I think this solution is truly the right way. As
-you know, it's a big problem for kdump when intel-iommu is active in 1st
-kernel. Because of this bug, many machines with intel-iommu have to be
-set intel-iommu=off, the performance is affected very much.
-
-Baoquan
-Thanks
-
-On 01/10/14 at 03:07pm, Bill Sumner wrote:
-> v2->v3:
-> 1. Commented-out "#define DEBUG 1" to eliminate debug messages
-> 2. Updated the comments about changes in each version in all patches in the set.
-> 3. Fixed: one-line added to Copy-Translations" patch to initialize the iovad
->           struct as recommended by Baoquan He [bhe@redhat.com]
->           init_iova_domain(&domain->iovad, DMA_32BIT_PFN);
-> 
-> v1->v2:
-> The following series implements a fix for:
-> A kdump problem about DMA that has been discussed for a long time. That is,
-> when a kernel panics and boots into the kdump kernel, DMA started by the 
-> panicked kernel is not stopped before the kdump kernel is booted and the 
-> kdump kernel disables the IOMMU while this DMA continues.  This causes the
-> IOMMU to stop translating the DMA addresses as IOVAs and begin to treat them 
-> as physical memory addresses -- which causes the DMA to either:
-> (1) generate DMAR errors or (2) generate PCI SERR errors or (3) transfer  
-> data to or from incorrect areas of memory. Often this causes the dump to fail.
-> 
- 
+Shahar
 
 _______________________________________________
 kexec mailing list
