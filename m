@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W7rOE-00079V-RQ
- for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:42 +0000
+ id 1W7rOE-00079a-RS
+ for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:45 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [RFC PATCH 00/11][V2] kexec: A new system call to allow in kernel
- loading 
-Date: Mon, 27 Jan 2014 13:57:40 -0500
-Message-Id: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 02/11] resource: Provide new functions to walk through
+ resources
+Date: Mon, 27 Jan 2014 13:57:42 -0500
+Message-Id: <1390849071-21989-3-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,115 +24,191 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, hpa@zytor.com, ebiederm@xmission.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, hpa@zytor.com, ebiederm@xmission.com, greg@kroah.com, Yinghai Lu <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi
+I have added two more functions to walk through resources.
+Current walk_system_ram_range() deals with pfn and /proc/iomem can contain
+partial pages. By dealing in pfn, callback function loses the info that
+last page of a memory range is a partial page and not the full page. So
+I implemented walk_system_ran_res() which returns u64 values to callback
+functions and now it properly return start and end address.
 
-This is V2 of new system call patches. Previous version was posted here.
+walk_system_ram_range() uses find_next_system_ram() to find the next
+ram resource. This in turn only travels through siblings of top level
+child and does not travers through all the nodes of the resoruce tree. I
+also need another function where I can walk through all the resources,
+for example figure out where "GART" aperture is. Figure out where
+ACPI memory is.
 
-https://lkml.org/lkml/2013/11/20/540
+So I wrote another function walk_ram_res() which walks through all
+/proc/iomem resources and returns matches as asked by caller. Caller
+can specify "name" of resource, start and end.
 
-V2 primarily does following changes
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Cc: Yinghai Lu <yinghai@kernel.org>
+---
+ include/linux/ioport.h |   6 +++
+ kernel/resource.c      | 108 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 110 insertions(+), 4 deletions(-)
 
-- Creates a binary object (called purgatory) which runs between two kernels.
-  This is a stand alone relocatable object (it is not linked with kernel) and
-  it is loaded and relocated by kexec syscall.
-
-- Provided kexec support for loading ELF of type ET_EXEC. This only works for
-  kexec case and not kexec on panic case. More about it patch changelog.
-
-- Took care of feedback received during first round.
-
-Primary goal of this patchset is to prepare groundwork so that kernel
-image can be signed and signatures be verified during kexec load. This
-should help with two things.
-
-- It should allow kexec/kdump on secureboot enabled machines.
-
-- In general it can help even without secureboot. By being able to verify
-  kernel image signature in kexec, it should help with avoiding module
-  signing restrictions. Matthew Garret showed how to boot into a custom
-  kernel, modify first kernel's memory and then jump back to old kernel and
-  bypass any policy one wants to. 
-
-I have not taken care of signing part yet. First I want to get to a stage
-where all the required pieces of kexec are re-implemented in kernel. And
-then I want to look into signing part. Also only 64bit bzImage entry is
-supported, no EFI/UEFI support, no x86_32 support. Trying to first come
-up with minimum functionality which matters most.
-
-Posting patches for early reiew. Your feedback and comments are welcome.
-
-Thanks
-Vivek
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 89b7c24..0ebf8b0 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -227,6 +227,12 @@ extern int iomem_is_exclusive(u64 addr);
+ extern int
+ walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+ 		void *arg, int (*func)(unsigned long, unsigned long, void *));
++extern int
++walk_system_ram_res(u64 start, u64 end, void *arg,
++				int (*func)(u64, u64, void *));
++extern int
++walk_ram_res(char *name, unsigned long flags, u64 start, u64 end, void *arg,
++				int (*func)(u64, u64, void *));
  
-
-Vivek Goyal (11):
-  kexec: Move segment verification code in a separate function
-  resource: Provide new functions to walk through resources
-  bin2c: Move bin2c in scripts/basic
-  kernel: Build bin2c based on config option CONFIG_BUILD_BIN2C
-  kexec: Make kexec_segment user buffer pointer a union
-  kexec: A new system call, kexec_file_load, for in kernel kexec
-  kexec: Create a relocatable object called purgatory
-  kexec-bzImage: Support for loading bzImage using 64bit entry
-  kexec: Provide a function to add a segment at fixed address
-  kexec: Support for loading ELF x86_64 images
-  kexec: Support for Kexec on panic using new system call
-
- arch/x86/Kbuild                      |    1 +
- arch/x86/Kconfig                     |    2 +
- arch/x86/Makefile                    |    6 +
- arch/x86/include/asm/crash.h         |    9 +
- arch/x86/include/asm/kexec-bzimage.h |   11 +
- arch/x86/include/asm/kexec-elf.h     |   11 +
- arch/x86/include/asm/kexec.h         |   51 ++
- arch/x86/kernel/Makefile             |    3 +
- arch/x86/kernel/crash.c              |  574 ++++++++++++++
- arch/x86/kernel/kexec-bzimage.c      |  255 +++++++
- arch/x86/kernel/kexec-elf.c          |  231 ++++++
- arch/x86/kernel/machine_kexec.c      |  149 ++++
- arch/x86/kernel/machine_kexec_64.c   |  173 +++++
- arch/x86/purgatory/Makefile          |   35 +
- arch/x86/purgatory/entry64.S         |  111 +++
- arch/x86/purgatory/purgatory.c       |  103 +++
- arch/x86/purgatory/setup-x86_32.S    |   29 +
- arch/x86/purgatory/setup-x86_64.S    |   68 ++
- arch/x86/purgatory/sha256.c          |  315 ++++++++
- arch/x86/purgatory/sha256.h          |   33 +
- arch/x86/purgatory/stack.S           |   29 +
- arch/x86/syscalls/syscall_64.tbl     |    1 +
- include/linux/ioport.h               |    6 +
- include/linux/kexec.h                |  102 ++-
- include/linux/syscalls.h             |    3 +
- include/uapi/linux/kexec.h           |    4 +
- init/Kconfig                         |    5 +
- kernel/Makefile                      |    2 +-
- kernel/kexec.c                       | 1356 +++++++++++++++++++++++++++++++---
- kernel/resource.c                    |  108 ++-
- kernel/sys_ni.c                      |    1 +
- scripts/Makefile                     |    1 -
- scripts/basic/Makefile               |    1 +
- scripts/basic/bin2c.c                |   36 +
- scripts/bin2c.c                      |   36 -
- 35 files changed, 3701 insertions(+), 160 deletions(-)
- create mode 100644 arch/x86/include/asm/crash.h
- create mode 100644 arch/x86/include/asm/kexec-bzimage.h
- create mode 100644 arch/x86/include/asm/kexec-elf.h
- create mode 100644 arch/x86/kernel/kexec-bzimage.c
- create mode 100644 arch/x86/kernel/kexec-elf.c
- create mode 100644 arch/x86/kernel/machine_kexec.c
- create mode 100644 arch/x86/purgatory/Makefile
- create mode 100644 arch/x86/purgatory/entry64.S
- create mode 100644 arch/x86/purgatory/purgatory.c
- create mode 100644 arch/x86/purgatory/setup-x86_32.S
- create mode 100644 arch/x86/purgatory/setup-x86_64.S
- create mode 100644 arch/x86/purgatory/sha256.c
- create mode 100644 arch/x86/purgatory/sha256.h
- create mode 100644 arch/x86/purgatory/stack.S
- create mode 100644 scripts/basic/bin2c.c
- delete mode 100644 scripts/bin2c.c
-
+ /* True if any part of r1 overlaps r2 */
+ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 3f285dc..5e575e8 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -59,10 +59,8 @@ static DEFINE_RWLOCK(resource_lock);
+ static struct resource *bootmem_resource_free;
+ static DEFINE_SPINLOCK(bootmem_resource_lock);
+ 
+-static void *r_next(struct seq_file *m, void *v, loff_t *pos)
++static struct resource *next_resource(struct resource *p)
+ {
+-	struct resource *p = v;
+-	(*pos)++;
+ 	if (p->child)
+ 		return p->child;
+ 	while (!p->sibling && p->parent)
+@@ -70,6 +68,13 @@ static void *r_next(struct seq_file *m, void *v, loff_t *pos)
+ 	return p->sibling;
+ }
+ 
++static void *r_next(struct seq_file *m, void *v, loff_t *pos)
++{
++	struct resource *p = v;
++	(*pos)++;
++	return (void *)next_resource(p);
++}
++
+ #ifdef CONFIG_PROC_FS
+ 
+ enum { MAX_IORES_LEVEL = 5 };
+@@ -322,7 +327,71 @@ int release_resource(struct resource *old)
+ 
+ EXPORT_SYMBOL(release_resource);
+ 
+-#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
++/*
++ * Finds the lowest iomem reosurce exists with-in [res->start.res->end)
++ * the caller must specify res->start, res->end, res->flags and "name".
++ * If found, returns 0, res is overwritten, if not found, returns -1.
++ * This walks through whole tree and not just first level children.
++ */
++static int find_next_iomem_res(struct resource *res, char *name)
++{
++	resource_size_t start, end;
++	struct resource *p;
++
++	BUG_ON(!res);
++
++	start = res->start;
++	end = res->end;
++	BUG_ON(start >= end);
++
++	read_lock(&resource_lock);
++	p = &iomem_resource;
++	while ((p = next_resource(p))) {
++		if (p->flags != res->flags)
++			continue;
++		if (name && strcmp(p->name, name))
++			continue;
++		if (p->start > end) {
++			p = NULL;
++			break;
++		}
++		if ((p->end >= start) && (p->start < end))
++			break;
++	}
++
++	read_unlock(&resource_lock);
++	if (!p)
++		return -1;
++	/* copy data */
++	if (res->start < p->start)
++		res->start = p->start;
++	if (res->end > p->end)
++		res->end = p->end;
++	return 0;
++}
++
++int walk_ram_res(char *name, unsigned long flags, u64 start, u64 end,
++		void *arg, int (*func)(u64, u64, void *))
++{
++	struct resource res;
++	u64 orig_end;
++	int ret = -1;
++
++	res.start = start;
++	res.end = end;
++	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
++	orig_end = res.end;
++	while ((res.start < res.end) &&
++		(find_next_iomem_res(&res, name) >= 0)) {
++		ret = (*func)(res.start, res.end, arg);
++		if (ret)
++			break;
++		res.start = res.end + 1;
++		res.end = orig_end;
++	}
++	return ret;
++}
++
+ /*
+  * Finds the lowest memory reosurce exists within [res->start.res->end)
+  * the caller must specify res->start, res->end, res->flags and "name".
+@@ -367,6 +436,37 @@ static int find_next_system_ram(struct resource *res, char *name)
+ /*
+  * This function calls callback against all memory range of "System RAM"
+  * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
++ * Now, this function is only for "System RAM". This function deals with
++ * full ranges and not pfn. If resources are not pfn aligned, dealing
++ * with pfn can truncate ranges.
++ */
++int walk_system_ram_res(u64 start, u64 end, void *arg,
++				int (*func)(u64, u64, void *))
++{
++	struct resource res;
++	u64 orig_end;
++	int ret = -1;
++
++	res.start = start;
++	res.end = end;
++	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
++	orig_end = res.end;
++	while ((res.start < res.end) &&
++		(find_next_system_ram(&res, "System RAM") >= 0)) {
++		ret = (*func)(res.start, res.end, arg);
++		if (ret)
++			break;
++		res.start = res.end + 1;
++		res.end = orig_end;
++	}
++	return ret;
++}
++
++#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
++
++/*
++ * This function calls callback against all memory range of "System RAM"
++ * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
+  * Now, this function is only for "System RAM".
+  */
+ int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
 -- 
 1.8.4.2
 
