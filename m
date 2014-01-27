@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W7rOE-00079X-Pr
- for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:48 +0000
+ id 1W7rOE-00079Z-Qs
+ for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:49 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 01/11] kexec: Move segment verification code in a separate
- function
-Date: Mon, 27 Jan 2014 13:57:41 -0500
-Message-Id: <1390849071-21989-2-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 10/11] kexec: Support for loading ELF x86_64 images
+Date: Mon, 27 Jan 2014 13:57:50 -0500
+Message-Id: <1390849071-21989-11-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,308 +25,302 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, hpa@zytor.com, ebiederm@xmission.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>
 
-Previously do_kimage_alloc() will allocate a kimage structure, copy
-segment list from user space and then do the segment list sanity verification.
-
-Break down this function in 3 parts. do_kimage_alloc_init() to do actual
-allocation and basic initialization of kimage structure.
-copy_user_segment_list() to copy segment list from user space and
-sanity_check_segment_list() to verify the sanity of segment list as passed
-by user space.
-
-In later patches, I need to only allocate kimage and not copy segment
-list from user space. So breaking down in smaller functions enables
-re-use of code at other places.
+This patch provides support for kexec for loading ELF x86_64 images. I have
+tested it with loading vmlinux and it worked.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- kernel/kexec.c | 182 ++++++++++++++++++++++++++++++++-------------------------
- 1 file changed, 101 insertions(+), 81 deletions(-)
+ arch/x86/include/asm/kexec-elf.h   |  11 ++
+ arch/x86/kernel/Makefile           |   1 +
+ arch/x86/kernel/kexec-elf.c        | 231 +++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_64.c |   2 +
+ 4 files changed, 245 insertions(+)
+ create mode 100644 arch/x86/include/asm/kexec-elf.h
+ create mode 100644 arch/x86/kernel/kexec-elf.c
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index ac73878..c0944b2 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -123,45 +123,27 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 				       gfp_t gfp_mask,
- 				       unsigned long dest);
- 
--static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
--	                    unsigned long nr_segments,
--                            struct kexec_segment __user *segments)
-+static int copy_user_segment_list(struct kimage *image,
-+				unsigned long nr_segments,
-+				struct kexec_segment __user *segments)
- {
-+	int ret;
- 	size_t segment_bytes;
--	struct kimage *image;
--	unsigned long i;
--	int result;
--
--	/* Allocate a controlling structure */
--	result = -ENOMEM;
--	image = kzalloc(sizeof(*image), GFP_KERNEL);
--	if (!image)
--		goto out;
--
--	image->head = 0;
--	image->entry = &image->head;
--	image->last_entry = &image->head;
--	image->control_page = ~0; /* By default this does not apply */
--	image->start = entry;
--	image->type = KEXEC_TYPE_DEFAULT;
--
--	/* Initialize the list of control pages */
--	INIT_LIST_HEAD(&image->control_pages);
--
--	/* Initialize the list of destination pages */
--	INIT_LIST_HEAD(&image->dest_pages);
--
--	/* Initialize the list of unusable pages */
--	INIT_LIST_HEAD(&image->unuseable_pages);
- 
- 	/* Read in the segments */
- 	image->nr_segments = nr_segments;
- 	segment_bytes = nr_segments * sizeof(*segments);
--	result = copy_from_user(image->segment, segments, segment_bytes);
--	if (result) {
--		result = -EFAULT;
--		goto out;
--	}
-+	ret = copy_from_user(image->segment, segments, segment_bytes);
-+	if (ret)
-+		ret = -EFAULT;
+diff --git a/arch/x86/include/asm/kexec-elf.h b/arch/x86/include/asm/kexec-elf.h
+new file mode 100644
+index 0000000..afef382
+--- /dev/null
++++ b/arch/x86/include/asm/kexec-elf.h
+@@ -0,0 +1,11 @@
++#ifndef _ASM_KEXEC_ELF_H
++#define _ASM_KEXEC_ELF_H
++
++extern int elf_x86_64_probe(const char *buf, unsigned long len);
++extern void *elf_x86_64_load(struct kimage *image, char *kernel,
++		unsigned long kernel_len, char *initrd,
++		unsigned long initrd_len, char *cmdline,
++		unsigned long cmdline_len);
++extern int elf_x86_64_cleanup(struct kimage *image);
++
++#endif  /* _ASM_KEXEC_ELF_H */
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index fa9981d..2d77de7 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -71,6 +71,7 @@ obj-$(CONFIG_KEXEC)		+= machine_kexec.o
+ obj-$(CONFIG_KEXEC)		+= machine_kexec_$(BITS).o
+ obj-$(CONFIG_KEXEC)		+= relocate_kernel_$(BITS).o crash.o
+ obj-$(CONFIG_KEXEC)		+= kexec-bzimage.o
++obj-$(CONFIG_KEXEC)		+= kexec-elf.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
+ obj-y				+= kprobes/
+ obj-$(CONFIG_MODULES)		+= module.o
+diff --git a/arch/x86/kernel/kexec-elf.c b/arch/x86/kernel/kexec-elf.c
+new file mode 100644
+index 0000000..ff1017c
+--- /dev/null
++++ b/arch/x86/kernel/kexec-elf.c
+@@ -0,0 +1,231 @@
++#include <linux/string.h>
++#include <linux/printk.h>
++#include <linux/errno.h>
++#include <linux/slab.h>
++#include <linux/kexec.h>
++#include <linux/kernel.h>
++#include <linux/mm.h>
++
++#include <asm/bootparam.h>
++#include <asm/setup.h>
++
++#ifdef CONFIG_X86_64
++
++struct elf_x86_64_data {
++	/*
++	 * Temporary buffer to hold bootparams buffer. This should be
++	 * freed once the bootparam segment has been loaded.
++	 */
++	void *bootparams_buf;
++};
++
++int elf_x86_64_probe(const char *buf, unsigned long len)
++{
++	int ret = -ENOEXEC;
++	Elf_Ehdr *ehdr;
++
++	if (len < sizeof(Elf_Ehdr)) {
++		pr_debug("File is too short to be an ELF executable.\n");
++		return ret;
++	}
++
++	ehdr = (Elf_Ehdr *)buf;
++
++	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0
++	    || ehdr->e_type != ET_EXEC || !elf_check_arch(ehdr)
++	    || ehdr->e_phentsize != sizeof(Elf_Phdr))
++		return -ENOEXEC;
++
++	if (ehdr->e_phoff >= len
++	    || (ehdr->e_phnum * sizeof(Elf_Phdr) > len - ehdr->e_phoff))
++		return -ENOEXEC;
++
++        /* I've got a bzImage */
++	pr_debug("It's an elf_x86_64 image.\n");
++	ret = 0;
 +
 +	return ret;
 +}
 +
-+static int sanity_check_segment_list(struct kimage *image)
++static int elf_exec_load(struct kimage *image, char *kernel)
 +{
-+	int result, i;
-+	unsigned long nr_segments = image->nr_segments;
- 
- 	/*
- 	 * Verify we have good destination addresses.  The caller is
-@@ -183,9 +165,9 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
- 		mstart = image->segment[i].mem;
- 		mend   = mstart + image->segment[i].memsz;
- 		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
--			goto out;
-+			return result;
- 		if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
--			goto out;
-+			return result;
- 	}
- 
- 	/* Verify our destination addresses do not overlap.
-@@ -206,7 +188,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
- 			pend   = pstart + image->segment[j].memsz;
- 			/* Do the segments overlap ? */
- 			if ((mend > pstart) && (mstart < pend))
--				goto out;
-+				return result;
- 		}
- 	}
- 
-@@ -218,18 +200,61 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
- 	result = -EINVAL;
- 	for (i = 0; i < nr_segments; i++) {
- 		if (image->segment[i].bufsz > image->segment[i].memsz)
--			goto out;
-+			return result;
- 	}
- 
--	result = 0;
--out:
--	if (result == 0)
--		*rimage = image;
--	else
--		kfree(image);
-+	/*
-+	 * Verify we have good destination addresses.  Normally
-+	 * the caller is responsible for making certain we don't
-+	 * attempt to load the new image into invalid or reserved
-+	 * areas of RAM.  But crash kernels are preloaded into a
-+	 * reserved area of ram.  We must ensure the addresses
-+	 * are in the reserved area otherwise preloading the
-+	 * kernel could corrupt things.
-+	 */
- 
--	return result;
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		result = -EADDRNOTAVAIL;
-+		for (i = 0; i < nr_segments; i++) {
-+			unsigned long mstart, mend;
- 
-+			mstart = image->segment[i].mem;
-+			mend = mstart + image->segment[i].memsz - 1;
-+			/* Ensure we are within the crash kernel limits */
-+			if ((mstart < crashk_res.start) ||
-+			    (mend > crashk_res.end))
-+				return result;
-+		}
++	Elf_Ehdr *ehdr;
++	Elf_Phdr *phdrs;
++	int i, ret;
++	size_t filesz;
++	char *buffer;
++
++	ehdr = (Elf_Ehdr *)kernel;
++	phdrs = (void *)ehdr + ehdr->e_phoff;
++
++	for (i = 0; i < ehdr->e_phnum; i++) {
++		if (phdrs[i].p_type != PT_LOAD)
++			continue;
++		filesz = phdrs[i].p_filesz;
++		if (filesz > phdrs[i].p_memsz)
++			filesz = phdrs[i].p_memsz;
++
++		buffer = (char *)ehdr + phdrs[i].p_offset;
++		ret = kexec_add_segment(image, buffer, filesz, phdrs[i].p_memsz,
++						phdrs[i].p_paddr);
++		if (ret)
++			break;
 +	}
++
++	return ret;
++}
++
++/* Fill in fields which are usually present in bzImage */
++static int init_linux_parameters(struct boot_params *params)
++{
++	/*
++	 * FIXME: It is odd that the information which comes from kernel
++	 * has to be faked by loading kernel. I guess it is limitation of
++	 * ELF format. Right now keeping it same as kexec-tools
++	 * implementation. But this most likely needs fixing.
++	 */
++	memcpy(&params->hdr.header, "HdrS", 4);
++	params->hdr.version = 0x0206;
++	params->hdr.initrd_addr_max = 0x37FFFFFF;
++	params->hdr.cmdline_size = 2048;
++	return 0;
++}
++
++void *elf_x86_64_load(struct kimage *image, char *kernel,
++		unsigned long kernel_len,
++		char *initrd, unsigned long initrd_len,
++		char *cmdline, unsigned long cmdline_len)
++{
++
++	int ret = 0;
++	unsigned long params_cmdline_sz;
++	struct boot_params *params;
++	unsigned long bootparam_load_addr, initrd_load_addr;
++	unsigned long purgatory_load_addr;
++	struct elf_x86_64_data *ldata;
++	struct kexec_entry64_regs regs64;
++	void *stack;
++	Elf_Ehdr *ehdr;
++
++	ehdr = (Elf_Ehdr *)kernel;
++
++	/* Allocate loader specific data */
++	ldata = kzalloc(sizeof(struct elf_x86_64_data), GFP_KERNEL);
++	if (!ldata)
++		return ERR_PTR(-ENOMEM);
++
++	/* Load the ELF executable */
++	ret = elf_exec_load(image, kernel);
++	if (ret) {
++		pr_debug("Loading ELF executable failed\n");
++		goto out_free_loader_data;
++	}
++
++	/*
++	 * Load purgatory. For 64bit entry point, purgatory  code can be
++	 * anywhere.
++	 */
++	ret = kexec_load_purgatory(image, 0, ULONG_MAX, 0,
++				&purgatory_load_addr);
++	if (ret) {
++		pr_debug("Loading purgatory failed\n");
++		goto out_free_loader_data;
++	}
++
++	pr_debug("Loaded purgatory at 0x%lx\n", purgatory_load_addr);
++
++	/* Argument/parameter segment */
++	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len;
++	params = kzalloc(params_cmdline_sz, GFP_KERNEL);
++	if (!params) {
++		ret = -ENOMEM;
++		goto out_free_loader_data;
++	}
++
++	init_linux_parameters(params);
++	ret = kexec_add_buffer(image, (char *)params, params_cmdline_sz,
++			params_cmdline_sz, 16, 0, -1, 0, &bootparam_load_addr);
++	if (ret)
++		goto out_free_params;
++	pr_debug("Loaded boot_param and command line at 0x%lx sz=0x%lx\n",
++			bootparam_load_addr, params_cmdline_sz);
++
++	/* Load initrd high */
++	if (initrd) {
++		ret = kexec_add_buffer(image, initrd, initrd_len, initrd_len,
++			4096, 0x1000000, ULONG_MAX, 1, &initrd_load_addr);
++		if (ret)
++			goto out_free_params;
++
++		pr_debug("Loaded initrd at 0x%lx sz = 0x%lx\n",
++					initrd_load_addr, initrd_len);
++		ret = kexec_setup_initrd(params, initrd_load_addr, initrd_len);
++		if (ret)
++			goto out_free_params;
++	}
++
++	ret = kexec_setup_cmdline(params, bootparam_load_addr,
++			sizeof(struct boot_params), cmdline, cmdline_len);
++	if (ret)
++		goto out_free_params;
++
++	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
++	params->hdr.type_of_loader = 0x0D << 4;
++	params->hdr.loadflags = 0;
++
++	/* Setup purgatory regs for entry */
++	ret = kexec_purgatory_get_set_symbol(image, "entry64_regs", &regs64,
++					sizeof(regs64), 1);
++	if (ret)
++		goto out_free_params;
++
++	regs64.rbx = 0; /* Bootstrap Processor */
++	regs64.rsi = bootparam_load_addr;
++	regs64.rip = ehdr->e_entry;
++	stack = kexec_purgatory_get_symbol_addr(image, "stack_end");
++	if (IS_ERR(stack)) {
++		pr_debug("Could not find address of symbol stack_end\n");
++		ret = -EINVAL;
++		goto out_free_params;
++	}
++
++	regs64.rsp = (unsigned long)stack;
++	ret = kexec_purgatory_get_set_symbol(image, "entry64_regs", &regs64,
++					sizeof(regs64), 0);
++	if (ret)
++		goto out_free_params;
++
++	ret = kexec_setup_boot_parameters(params);
++	if (ret)
++		goto out_free_params;
++
++	/*
++	 * Store pointer to params so that it could be freed after loading
++	 * params segment has been loaded and contents have been copied
++	 * somewhere else.
++	 */
++	ldata->bootparams_buf = params;
++	return ldata;
++
++out_free_params:
++	kfree(params);
++out_free_loader_data:
++	kfree(ldata);
++	return ERR_PTR(ret);
++}
++
++/* This cleanup function is called after various segments have been loaded */
++int elf_x86_64_cleanup(struct kimage *image)
++{
++	struct elf_x86_64_data *ldata = image->image_loader_data;
++
++	if (!ldata)
++		return 0;
++
++	kfree(ldata->bootparams_buf);
++	ldata->bootparams_buf = NULL;
 +
 +	return 0;
 +}
 +
-+static struct kimage *do_kimage_alloc_init(void)
-+{
-+	struct kimage *image;
-+
-+	/* Allocate a controlling structure */
-+	image = kzalloc(sizeof(*image), GFP_KERNEL);
-+	if (!image)
-+		return NULL;
-+
-+	image->head = 0;
-+	image->entry = &image->head;
-+	image->last_entry = &image->head;
-+	image->control_page = ~0; /* By default this does not apply */
-+	image->type = KEXEC_TYPE_DEFAULT;
-+
-+	/* Initialize the list of control pages */
-+	INIT_LIST_HEAD(&image->control_pages);
-+
-+	/* Initialize the list of destination pages */
-+	INIT_LIST_HEAD(&image->dest_pages);
-+
-+	/* Initialize the list of unusable pages */
-+	INIT_LIST_HEAD(&image->unuseable_pages);
-+
-+	return image;
- }
++#endif /* CONFIG_X86_64 */
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 37df7d3..e35bcaf 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -22,10 +22,12 @@
+ #include <asm/mmu_context.h>
+ #include <asm/debugreg.h>
+ #include <asm/kexec-bzimage.h>
++#include <asm/kexec-elf.h>
  
- static void kimage_free_page_list(struct list_head *list);
-@@ -242,10 +267,19 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
- 	struct kimage *image;
+ /* arch dependent functionality related to kexec file based syscall */
+ static struct kexec_file_type kexec_file_type[]={
+ 	{"bzImage64", bzImage64_probe, bzImage64_load, bzImage64_cleanup},
++	{"elf-x86_64", elf_x86_64_probe, elf_x86_64_load, elf_x86_64_cleanup},
+ };
  
- 	/* Allocate and initialize a controlling structure */
--	image = NULL;
--	result = do_kimage_alloc(&image, entry, nr_segments, segments);
-+	image = do_kimage_alloc_init();
-+	if (!image)
-+		return -ENOMEM;
-+
-+	image->start = entry;
-+
-+	result = copy_user_segment_list(image, nr_segments, segments);
- 	if (result)
--		goto out;
-+		goto out_free_image;
-+
-+	result = sanity_check_segment_list(image);
-+	if (result)
-+		goto out_free_image;
- 
- 	/*
- 	 * Find a location for the control code buffer, and add it
-@@ -257,22 +291,23 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
- 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
- 	if (!image->control_code_page) {
- 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
--		goto out_free;
-+		goto out_free_image;
- 	}
- 
- 	image->swap_page = kimage_alloc_control_pages(image, 0);
- 	if (!image->swap_page) {
- 		printk(KERN_ERR "Could not allocate swap buffer\n");
--		goto out_free;
-+		goto out_free_control_pages;
- 	}
- 
- 	*rimage = image;
- 	return 0;
- 
--out_free:
-+
-+out_free_control_pages:
- 	kimage_free_page_list(&image->control_pages);
-+out_free_image:
- 	kfree(image);
--out:
- 	return result;
- }
- 
-@@ -282,19 +317,17 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
- {
- 	int result;
- 	struct kimage *image;
--	unsigned long i;
- 
--	image = NULL;
- 	/* Verify we have a valid entry point */
--	if ((entry < crashk_res.start) || (entry > crashk_res.end)) {
--		result = -EADDRNOTAVAIL;
--		goto out;
--	}
-+	if ((entry < crashk_res.start) || (entry > crashk_res.end))
-+		return -EADDRNOTAVAIL;
- 
- 	/* Allocate and initialize a controlling structure */
--	result = do_kimage_alloc(&image, entry, nr_segments, segments);
--	if (result)
--		goto out;
-+	image = do_kimage_alloc_init();
-+	if (!image)
-+		return -ENOMEM;
-+
-+	image->start = entry;
- 
- 	/* Enable the special crash kernel control page
- 	 * allocation policy.
-@@ -302,25 +335,13 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
- 	image->control_page = crashk_res.start;
- 	image->type = KEXEC_TYPE_CRASH;
- 
--	/*
--	 * Verify we have good destination addresses.  Normally
--	 * the caller is responsible for making certain we don't
--	 * attempt to load the new image into invalid or reserved
--	 * areas of RAM.  But crash kernels are preloaded into a
--	 * reserved area of ram.  We must ensure the addresses
--	 * are in the reserved area otherwise preloading the
--	 * kernel could corrupt things.
--	 */
--	result = -EADDRNOTAVAIL;
--	for (i = 0; i < nr_segments; i++) {
--		unsigned long mstart, mend;
-+	result = copy_user_segment_list(image, nr_segments, segments);
-+	if (result)
-+		goto out_free_image;
- 
--		mstart = image->segment[i].mem;
--		mend = mstart + image->segment[i].memsz - 1;
--		/* Ensure we are within the crash kernel limits */
--		if ((mstart < crashk_res.start) || (mend > crashk_res.end))
--			goto out_free;
--	}
-+	result = sanity_check_segment_list(image);
-+	if (result)
-+		goto out_free_image;
- 
- 	/*
- 	 * Find a location for the control code buffer, and add
-@@ -332,15 +353,14 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
- 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
- 	if (!image->control_code_page) {
- 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
--		goto out_free;
-+		goto out_free_image;
- 	}
- 
- 	*rimage = image;
- 	return 0;
- 
--out_free:
-+out_free_image:
- 	kfree(image);
--out:
- 	return result;
- }
- 
+ static int nr_file_types = sizeof(kexec_file_type)/sizeof(kexec_file_type[0]);
 -- 
 1.8.4.2
 
