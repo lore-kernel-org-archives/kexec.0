@@ -1,15 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W7bDX-0001Hi-Da
- for kexec@lists.infradead.org; Mon, 27 Jan 2014 01:42:29 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [v2 0/3] Introduce struct cycle to store cyclic region and
- clean up
-Date: Mon, 27 Jan 2014 01:39:56 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971E2BFF@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1W7dRA-0002e9-Kq
+ for kexec@lists.infradead.org; Mon, 27 Jan 2014 04:04:41 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D1C593EE19D
+ for <kexec@lists.infradead.org>; Mon, 27 Jan 2014 13:04:10 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C17B345DE5A
+ for <kexec@lists.infradead.org>; Mon, 27 Jan 2014 13:04:10 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A8A8F45DE53
+ for <kexec@lists.infradead.org>; Mon, 27 Jan 2014 13:04:10 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9A372E18004
+ for <kexec@lists.infradead.org>; Mon, 27 Jan 2014 13:04:10 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4BA3AE18001
+ for <kexec@lists.infradead.org>; Mon, 27 Jan 2014 13:04:10 +0900 (JST)
+Message-ID: <52E5DA76.7070702@jp.fujitsu.com>
+Date: Mon, 27 Jan 2014 13:03:02 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
+Subject: Re: [v2 2/3] makedumpfile: use struct cycle to update cyclic region
+ and clean up
+References: <1390470454-14272-1-git-send-email-bhe@redhat.com>
+ <1390470454-14272-3-git-send-email-bhe@redhat.com>
+In-Reply-To: <1390470454-14272-3-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,61 +40,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
-Hello Baoquan,
+(2014/01/23 18:47), Baoquan He wrote:
 
-On 2014/01/23 18:49:09, kexec <kexec-bounces@lists.infradead.org> wrote:
-> v1->v2:
->     In first_cycle(), start_pfn assignation is not aligned to info->pfn_cyclic.
->     Now in v2 change this. Accordingly the pfn in write_elf_header() and
->     write_elf_pages_cyclic() need be adjusted to the real beginning of a
->     load segment, but not the cycle->start_pfn which may be lower after alignment.
+> @@ -3301,18 +3301,15 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+>   }
+>   
+>   int
+> -set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val)
+> +set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *cycle)
+>   {
+>   	int byte, bit;
+>   
+> -	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
+> -		return FALSE;
+> -
 
-Thanks for the self-correction, and I have another comment.
+Removing this check changes behaviour, not just clean up, so should be separated into another patch.
 
-In [v2 2/3], a pfn range check is removed as below:
+Further, this change seems buggy because, in addition to Kumaga-san's comment, memory outside of
+cycle region can be passed to here. Please look at the below.
 
-int
--set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val)
-+set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *cycle)
- {
-        int byte, bit;
+> @@ -4782,10 +4780,10 @@ exclude_unnecessary_pages_cyclic(void)
+>   			if (mmd->mem_map == NOT_MEMMAP_ADDR)
+>   				continue;
+>   
+> -			if (mmd->pfn_end >= info->cyclic_start_pfn &&
+> -			    mmd->pfn_start <= info->cyclic_end_pfn) {
+> +			if (mmd->pfn_end >= cycle->start_pfn &&
+> +			    mmd->pfn_start <= cycle->end_pfn) {
+>   				if (!__exclude_unnecessary_pages(mmd->mem_map,
+> -								 mmd->pfn_start, mmd->pfn_end))
+> +								 mmd->pfn_start, mmd->pfn_end, cycle))
+>   					return FALSE;
+>   			}
+>   		}
 
--       if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
--               return FALSE;
--
+After this clean up, __exclude_unnecessary_pages() processes memory within cycle region only.
+So, it's necessary to pass adjusted range, like:
 
-However, "pfn" can be out of the range of cycles in the case of filtering
-free pages with free_list, because we have to look up whole free_list every
-cycle since free_list isn't sorted.
+if (MAX(mmd->pfn_start, cycle->start_pfn) < MIN(mmd->pfn_end, cycle->end_pfn))
+  __exclude_unnecessary_pages(mmd->mem_map, MAX(mmd->pfn_start, cycle->start_pfn), MIN(mmd->pfn_end, cycle->end_pfn))
 
-So this range check should be moved to reset_bitmap_of_free_pages().
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
-
-Thanks
-Atsushi Kumagai
-
-> Baoquan He (3):
->   makedumpfile: introduce struct cycle to store the cyclic region
->   makedumpfile: use struct cycle to update cyclic region and clean up
->   makedumpfile: remove member variables representing cyclic pfn region
->     in struct DumpInfo
->
->  makedumpfile.c | 497 ++++++++++++++++++++++++++++-----------------------------
->  makedumpfile.h |  21 +--
->  sadump_info.c  |   4 +-
->  3 files changed, 259 insertions(+), 263 deletions(-)
->
-> --
-> 1.8.3.1
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
