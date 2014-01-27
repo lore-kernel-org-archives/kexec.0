@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W7rOE-00079U-QK
- for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:38 +0000
+ id 1W7rOE-00079T-Pf
+ for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:36 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 04/11] kernel: Build bin2c based on config option
- CONFIG_BUILD_BIN2C
-Date: Mon, 27 Jan 2014 13:57:44 -0500
-Message-Id: <1390849071-21989-5-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 03/11] bin2c: Move bin2c in scripts/basic
+Date: Mon, 27 Jan 2014 13:57:43 -0500
+Message-Id: <1390849071-21989-4-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,60 +25,144 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, hpa@zytor.com, ebiederm@xmission.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>
 
-currently bin2c builds only if CONFIG_IKCONFIG=y. But bin2c will now be
-used by kexec too.  So make it compilation dependent on CONFIG_BUILD_BIN2C
-and this config option can be selected by CONFIG_KEXEC and CONFIG_IKCONFIG.
+Kexec wants to use bin2c and it wants to use it really early in the build
+process. See arch/x86/purgatory/ code in later patches.
+
+So move bin2c in scripts/basic so that it can be built very early and
+be usable by arch/x86/purgatory/
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- arch/x86/Kconfig       | 1 +
- init/Kconfig           | 5 +++++
- scripts/basic/Makefile | 2 +-
- 3 files changed, 7 insertions(+), 1 deletion(-)
+ kernel/Makefile        |  2 +-
+ scripts/Makefile       |  1 -
+ scripts/basic/Makefile |  1 +
+ scripts/basic/bin2c.c  | 36 ++++++++++++++++++++++++++++++++++++
+ scripts/bin2c.c        | 36 ------------------------------------
+ 5 files changed, 38 insertions(+), 38 deletions(-)
+ create mode 100644 scripts/basic/bin2c.c
+ delete mode 100644 scripts/bin2c.c
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 940e50e..aa5aeed 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1604,6 +1604,7 @@ source kernel/Kconfig.hz
+diff --git a/kernel/Makefile b/kernel/Makefile
+index bc010ee..dff602a 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -102,7 +102,7 @@ targets += config_data.gz
+ $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
+ 	$(call if_changed,gzip)
  
- config KEXEC
- 	bool "kexec system call"
-+	select BUILD_BIN2C
- 	---help---
- 	  kexec is a system call that implements the ability to shutdown your
- 	  current kernel, and to start another kernel.  It is like a reboot
-diff --git a/init/Kconfig b/init/Kconfig
-index 34a0a3b..32a1adb 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -760,8 +760,13 @@ endchoice
- 
- endmenu # "RCU Subsystem"
- 
-+config BUILD_BIN2C
-+	bool
-+	default n
-+
- config IKCONFIG
- 	tristate "Kernel .config support"
-+	select BUILD_BIN2C
- 	---help---
- 	  This option enables the complete Linux kernel ".config" file
- 	  contents to be saved in the kernel. It provides documentation
+-      filechk_ikconfiggz = (echo "static const char kernel_config_data[] __used = MAGIC_START"; cat $< | scripts/bin2c; echo "MAGIC_END;")
++      filechk_ikconfiggz = (echo "static const char kernel_config_data[] __used = MAGIC_START"; cat $< | scripts/basic/bin2c; echo "MAGIC_END;")
+ targets += config_data.h
+ $(obj)/config_data.h: $(obj)/config_data.gz FORCE
+ 	$(call filechk,ikconfiggz)
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 01e7adb..62e6cc2 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -13,7 +13,6 @@ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+ hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
+ hostprogs-$(CONFIG_LOGO)         += pnmtologo
+ hostprogs-$(CONFIG_VT)           += conmakehash
+-hostprogs-$(CONFIG_IKCONFIG)     += bin2c
+ hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
+ hostprogs-$(CONFIG_BUILDTIME_EXTABLE_SORT) += sortextable
+ hostprogs-$(CONFIG_ASN1)	 += asn1_compiler
 diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
-index afbc1cd..ec10d93 100644
+index 4fcef87..afbc1cd 100644
 --- a/scripts/basic/Makefile
 +++ b/scripts/basic/Makefile
-@@ -9,7 +9,7 @@
+@@ -9,6 +9,7 @@
  # fixdep: 	 Used to generate dependency information during build process
  
  hostprogs-y	:= fixdep
--hostprogs-$(CONFIG_IKCONFIG)     += bin2c
-+hostprogs-$(CONFIG_BUILD_BIN2C)     += bin2c
++hostprogs-$(CONFIG_IKCONFIG)     += bin2c
  always		:= $(hostprogs-y)
  
  # fixdep is needed to compile other host programs
+diff --git a/scripts/basic/bin2c.c b/scripts/basic/bin2c.c
+new file mode 100644
+index 0000000..96dd2bc
+--- /dev/null
++++ b/scripts/basic/bin2c.c
+@@ -0,0 +1,36 @@
++/*
++ * Unloved program to convert a binary on stdin to a C include on stdout
++ *
++ * Jan 1999 Matt Mackall <mpm@selenic.com>
++ *
++ * This software may be used and distributed according to the terms
++ * of the GNU General Public License, incorporated herein by reference.
++ */
++
++#include <stdio.h>
++
++int main(int argc, char *argv[])
++{
++	int ch, total=0;
++
++	if (argc > 1)
++		printf("const char %s[] %s=\n",
++			argv[1], argc > 2 ? argv[2] : "");
++
++	do {
++		printf("\t\"");
++		while ((ch = getchar()) != EOF)
++		{
++			total++;
++			printf("\\x%02x",ch);
++			if (total % 16 == 0)
++				break;
++		}
++		printf("\"\n");
++	} while (ch != EOF);
++
++	if (argc > 1)
++		printf("\t;\n\nconst int %s_size = %d;\n", argv[1], total);
++
++	return 0;
++}
+diff --git a/scripts/bin2c.c b/scripts/bin2c.c
+deleted file mode 100644
+index 96dd2bc..0000000
+--- a/scripts/bin2c.c
++++ /dev/null
+@@ -1,36 +0,0 @@
+-/*
+- * Unloved program to convert a binary on stdin to a C include on stdout
+- *
+- * Jan 1999 Matt Mackall <mpm@selenic.com>
+- *
+- * This software may be used and distributed according to the terms
+- * of the GNU General Public License, incorporated herein by reference.
+- */
+-
+-#include <stdio.h>
+-
+-int main(int argc, char *argv[])
+-{
+-	int ch, total=0;
+-
+-	if (argc > 1)
+-		printf("const char %s[] %s=\n",
+-			argv[1], argc > 2 ? argv[2] : "");
+-
+-	do {
+-		printf("\t\"");
+-		while ((ch = getchar()) != EOF)
+-		{
+-			total++;
+-			printf("\\x%02x",ch);
+-			if (total % 16 == 0)
+-				break;
+-		}
+-		printf("\"\n");
+-	} while (ch != EOF);
+-
+-	if (argc > 1)
+-		printf("\t;\n\nconst int %s_size = %d;\n", argv[1], total);
+-
+-	return 0;
+-}
 -- 
 1.8.4.2
 
