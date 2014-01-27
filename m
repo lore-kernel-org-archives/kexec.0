@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W7rOE-00079a-RS
- for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:45 +0000
+ id 1W7rOE-00079X-Pr
+ for kexec@lists.infradead.org; Mon, 27 Jan 2014 18:58:48 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 02/11] resource: Provide new functions to walk through
- resources
-Date: Mon, 27 Jan 2014 13:57:42 -0500
-Message-Id: <1390849071-21989-3-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 01/11] kexec: Move segment verification code in a separate
+ function
+Date: Mon, 27 Jan 2014 13:57:41 -0500
+Message-Id: <1390849071-21989-2-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -24,191 +24,310 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, hpa@zytor.com, ebiederm@xmission.com, greg@kroah.com, Yinghai Lu <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, hpa@zytor.com, ebiederm@xmission.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>
 
-I have added two more functions to walk through resources.
-Current walk_system_ram_range() deals with pfn and /proc/iomem can contain
-partial pages. By dealing in pfn, callback function loses the info that
-last page of a memory range is a partial page and not the full page. So
-I implemented walk_system_ran_res() which returns u64 values to callback
-functions and now it properly return start and end address.
+Previously do_kimage_alloc() will allocate a kimage structure, copy
+segment list from user space and then do the segment list sanity verification.
 
-walk_system_ram_range() uses find_next_system_ram() to find the next
-ram resource. This in turn only travels through siblings of top level
-child and does not travers through all the nodes of the resoruce tree. I
-also need another function where I can walk through all the resources,
-for example figure out where "GART" aperture is. Figure out where
-ACPI memory is.
+Break down this function in 3 parts. do_kimage_alloc_init() to do actual
+allocation and basic initialization of kimage structure.
+copy_user_segment_list() to copy segment list from user space and
+sanity_check_segment_list() to verify the sanity of segment list as passed
+by user space.
 
-So I wrote another function walk_ram_res() which walks through all
-/proc/iomem resources and returns matches as asked by caller. Caller
-can specify "name" of resource, start and end.
+In later patches, I need to only allocate kimage and not copy segment
+list from user space. So breaking down in smaller functions enables
+re-use of code at other places.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Cc: Yinghai Lu <yinghai@kernel.org>
 ---
- include/linux/ioport.h |   6 +++
- kernel/resource.c      | 108 +++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 110 insertions(+), 4 deletions(-)
+ kernel/kexec.c | 182 ++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 101 insertions(+), 81 deletions(-)
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 89b7c24..0ebf8b0 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -227,6 +227,12 @@ extern int iomem_is_exclusive(u64 addr);
- extern int
- walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
- 		void *arg, int (*func)(unsigned long, unsigned long, void *));
-+extern int
-+walk_system_ram_res(u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *));
-+extern int
-+walk_ram_res(char *name, unsigned long flags, u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *));
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index ac73878..c0944b2 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -123,45 +123,27 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 				       gfp_t gfp_mask,
+ 				       unsigned long dest);
  
- /* True if any part of r1 overlaps r2 */
- static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 3f285dc..5e575e8 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -59,10 +59,8 @@ static DEFINE_RWLOCK(resource_lock);
- static struct resource *bootmem_resource_free;
- static DEFINE_SPINLOCK(bootmem_resource_lock);
- 
--static void *r_next(struct seq_file *m, void *v, loff_t *pos)
-+static struct resource *next_resource(struct resource *p)
+-static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+-	                    unsigned long nr_segments,
+-                            struct kexec_segment __user *segments)
++static int copy_user_segment_list(struct kimage *image,
++				unsigned long nr_segments,
++				struct kexec_segment __user *segments)
  {
--	struct resource *p = v;
--	(*pos)++;
- 	if (p->child)
- 		return p->child;
- 	while (!p->sibling && p->parent)
-@@ -70,6 +68,13 @@ static void *r_next(struct seq_file *m, void *v, loff_t *pos)
- 	return p->sibling;
- }
++	int ret;
+ 	size_t segment_bytes;
+-	struct kimage *image;
+-	unsigned long i;
+-	int result;
+-
+-	/* Allocate a controlling structure */
+-	result = -ENOMEM;
+-	image = kzalloc(sizeof(*image), GFP_KERNEL);
+-	if (!image)
+-		goto out;
+-
+-	image->head = 0;
+-	image->entry = &image->head;
+-	image->last_entry = &image->head;
+-	image->control_page = ~0; /* By default this does not apply */
+-	image->start = entry;
+-	image->type = KEXEC_TYPE_DEFAULT;
+-
+-	/* Initialize the list of control pages */
+-	INIT_LIST_HEAD(&image->control_pages);
+-
+-	/* Initialize the list of destination pages */
+-	INIT_LIST_HEAD(&image->dest_pages);
+-
+-	/* Initialize the list of unusable pages */
+-	INIT_LIST_HEAD(&image->unuseable_pages);
  
-+static void *r_next(struct seq_file *m, void *v, loff_t *pos)
-+{
-+	struct resource *p = v;
-+	(*pos)++;
-+	return (void *)next_resource(p);
+ 	/* Read in the segments */
+ 	image->nr_segments = nr_segments;
+ 	segment_bytes = nr_segments * sizeof(*segments);
+-	result = copy_from_user(image->segment, segments, segment_bytes);
+-	if (result) {
+-		result = -EFAULT;
+-		goto out;
+-	}
++	ret = copy_from_user(image->segment, segments, segment_bytes);
++	if (ret)
++		ret = -EFAULT;
++
++	return ret;
 +}
 +
- #ifdef CONFIG_PROC_FS
- 
- enum { MAX_IORES_LEVEL = 5 };
-@@ -322,7 +327,71 @@ int release_resource(struct resource *old)
- 
- EXPORT_SYMBOL(release_resource);
- 
--#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
-+/*
-+ * Finds the lowest iomem reosurce exists with-in [res->start.res->end)
-+ * the caller must specify res->start, res->end, res->flags and "name".
-+ * If found, returns 0, res is overwritten, if not found, returns -1.
-+ * This walks through whole tree and not just first level children.
-+ */
-+static int find_next_iomem_res(struct resource *res, char *name)
++static int sanity_check_segment_list(struct kimage *image)
 +{
-+	resource_size_t start, end;
-+	struct resource *p;
-+
-+	BUG_ON(!res);
-+
-+	start = res->start;
-+	end = res->end;
-+	BUG_ON(start >= end);
-+
-+	read_lock(&resource_lock);
-+	p = &iomem_resource;
-+	while ((p = next_resource(p))) {
-+		if (p->flags != res->flags)
-+			continue;
-+		if (name && strcmp(p->name, name))
-+			continue;
-+		if (p->start > end) {
-+			p = NULL;
-+			break;
++	int result, i;
++	unsigned long nr_segments = image->nr_segments;
+ 
+ 	/*
+ 	 * Verify we have good destination addresses.  The caller is
+@@ -183,9 +165,9 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 		mstart = image->segment[i].mem;
+ 		mend   = mstart + image->segment[i].memsz;
+ 		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+-			goto out;
++			return result;
+ 		if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
+-			goto out;
++			return result;
+ 	}
+ 
+ 	/* Verify our destination addresses do not overlap.
+@@ -206,7 +188,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 			pend   = pstart + image->segment[j].memsz;
+ 			/* Do the segments overlap ? */
+ 			if ((mend > pstart) && (mstart < pend))
+-				goto out;
++				return result;
+ 		}
+ 	}
+ 
+@@ -218,18 +200,61 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 	result = -EINVAL;
+ 	for (i = 0; i < nr_segments; i++) {
+ 		if (image->segment[i].bufsz > image->segment[i].memsz)
+-			goto out;
++			return result;
+ 	}
+ 
+-	result = 0;
+-out:
+-	if (result == 0)
+-		*rimage = image;
+-	else
+-		kfree(image);
++	/*
++	 * Verify we have good destination addresses.  Normally
++	 * the caller is responsible for making certain we don't
++	 * attempt to load the new image into invalid or reserved
++	 * areas of RAM.  But crash kernels are preloaded into a
++	 * reserved area of ram.  We must ensure the addresses
++	 * are in the reserved area otherwise preloading the
++	 * kernel could corrupt things.
++	 */
+ 
+-	return result;
++	if (image->type == KEXEC_TYPE_CRASH) {
++		result = -EADDRNOTAVAIL;
++		for (i = 0; i < nr_segments; i++) {
++			unsigned long mstart, mend;
+ 
++			mstart = image->segment[i].mem;
++			mend = mstart + image->segment[i].memsz - 1;
++			/* Ensure we are within the crash kernel limits */
++			if ((mstart < crashk_res.start) ||
++			    (mend > crashk_res.end))
++				return result;
 +		}
-+		if ((p->end >= start) && (p->start < end))
-+			break;
 +	}
 +
-+	read_unlock(&resource_lock);
-+	if (!p)
-+		return -1;
-+	/* copy data */
-+	if (res->start < p->start)
-+		res->start = p->start;
-+	if (res->end > p->end)
-+		res->end = p->end;
 +	return 0;
 +}
 +
-+int walk_ram_res(char *name, unsigned long flags, u64 start, u64 end,
-+		void *arg, int (*func)(u64, u64, void *))
++static struct kimage *do_kimage_alloc_init(void)
 +{
-+	struct resource res;
-+	u64 orig_end;
-+	int ret = -1;
++	struct kimage *image;
 +
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	orig_end = res.end;
-+	while ((res.start < res.end) &&
-+		(find_next_iomem_res(&res, name) >= 0)) {
-+		ret = (*func)(res.start, res.end, arg);
-+		if (ret)
-+			break;
-+		res.start = res.end + 1;
-+		res.end = orig_end;
-+	}
-+	return ret;
-+}
++	/* Allocate a controlling structure */
++	image = kzalloc(sizeof(*image), GFP_KERNEL);
++	if (!image)
++		return NULL;
 +
- /*
-  * Finds the lowest memory reosurce exists within [res->start.res->end)
-  * the caller must specify res->start, res->end, res->flags and "name".
-@@ -367,6 +436,37 @@ static int find_next_system_ram(struct resource *res, char *name)
- /*
-  * This function calls callback against all memory range of "System RAM"
-  * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
-+ * Now, this function is only for "System RAM". This function deals with
-+ * full ranges and not pfn. If resources are not pfn aligned, dealing
-+ * with pfn can truncate ranges.
-+ */
-+int walk_system_ram_res(u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *))
-+{
-+	struct resource res;
-+	u64 orig_end;
-+	int ret = -1;
++	image->head = 0;
++	image->entry = &image->head;
++	image->last_entry = &image->head;
++	image->control_page = ~0; /* By default this does not apply */
++	image->type = KEXEC_TYPE_DEFAULT;
 +
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	orig_end = res.end;
-+	while ((res.start < res.end) &&
-+		(find_next_system_ram(&res, "System RAM") >= 0)) {
-+		ret = (*func)(res.start, res.end, arg);
-+		if (ret)
-+			break;
-+		res.start = res.end + 1;
-+		res.end = orig_end;
-+	}
-+	return ret;
-+}
++	/* Initialize the list of control pages */
++	INIT_LIST_HEAD(&image->control_pages);
 +
-+#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
++	/* Initialize the list of destination pages */
++	INIT_LIST_HEAD(&image->dest_pages);
 +
-+/*
-+ * This function calls callback against all memory range of "System RAM"
-+ * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
-  * Now, this function is only for "System RAM".
-  */
- int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
++	/* Initialize the list of unusable pages */
++	INIT_LIST_HEAD(&image->unuseable_pages);
++
++	return image;
+ }
+ 
+ static void kimage_free_page_list(struct list_head *list);
+@@ -242,10 +267,19 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 	struct kimage *image;
+ 
+ 	/* Allocate and initialize a controlling structure */
+-	image = NULL;
+-	result = do_kimage_alloc(&image, entry, nr_segments, segments);
++	image = do_kimage_alloc_init();
++	if (!image)
++		return -ENOMEM;
++
++	image->start = entry;
++
++	result = copy_user_segment_list(image, nr_segments, segments);
+ 	if (result)
+-		goto out;
++		goto out_free_image;
++
++	result = sanity_check_segment_list(image);
++	if (result)
++		goto out_free_image;
+ 
+ 	/*
+ 	 * Find a location for the control code buffer, and add it
+@@ -257,22 +291,23 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+ 	if (!image->control_code_page) {
+ 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+-		goto out_free;
++		goto out_free_image;
+ 	}
+ 
+ 	image->swap_page = kimage_alloc_control_pages(image, 0);
+ 	if (!image->swap_page) {
+ 		printk(KERN_ERR "Could not allocate swap buffer\n");
+-		goto out_free;
++		goto out_free_control_pages;
+ 	}
+ 
+ 	*rimage = image;
+ 	return 0;
+ 
+-out_free:
++
++out_free_control_pages:
+ 	kimage_free_page_list(&image->control_pages);
++out_free_image:
+ 	kfree(image);
+-out:
+ 	return result;
+ }
+ 
+@@ -282,19 +317,17 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ {
+ 	int result;
+ 	struct kimage *image;
+-	unsigned long i;
+ 
+-	image = NULL;
+ 	/* Verify we have a valid entry point */
+-	if ((entry < crashk_res.start) || (entry > crashk_res.end)) {
+-		result = -EADDRNOTAVAIL;
+-		goto out;
+-	}
++	if ((entry < crashk_res.start) || (entry > crashk_res.end))
++		return -EADDRNOTAVAIL;
+ 
+ 	/* Allocate and initialize a controlling structure */
+-	result = do_kimage_alloc(&image, entry, nr_segments, segments);
+-	if (result)
+-		goto out;
++	image = do_kimage_alloc_init();
++	if (!image)
++		return -ENOMEM;
++
++	image->start = entry;
+ 
+ 	/* Enable the special crash kernel control page
+ 	 * allocation policy.
+@@ -302,25 +335,13 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ 	image->control_page = crashk_res.start;
+ 	image->type = KEXEC_TYPE_CRASH;
+ 
+-	/*
+-	 * Verify we have good destination addresses.  Normally
+-	 * the caller is responsible for making certain we don't
+-	 * attempt to load the new image into invalid or reserved
+-	 * areas of RAM.  But crash kernels are preloaded into a
+-	 * reserved area of ram.  We must ensure the addresses
+-	 * are in the reserved area otherwise preloading the
+-	 * kernel could corrupt things.
+-	 */
+-	result = -EADDRNOTAVAIL;
+-	for (i = 0; i < nr_segments; i++) {
+-		unsigned long mstart, mend;
++	result = copy_user_segment_list(image, nr_segments, segments);
++	if (result)
++		goto out_free_image;
+ 
+-		mstart = image->segment[i].mem;
+-		mend = mstart + image->segment[i].memsz - 1;
+-		/* Ensure we are within the crash kernel limits */
+-		if ((mstart < crashk_res.start) || (mend > crashk_res.end))
+-			goto out_free;
+-	}
++	result = sanity_check_segment_list(image);
++	if (result)
++		goto out_free_image;
+ 
+ 	/*
+ 	 * Find a location for the control code buffer, and add
+@@ -332,15 +353,14 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+ 	if (!image->control_code_page) {
+ 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+-		goto out_free;
++		goto out_free_image;
+ 	}
+ 
+ 	*rimage = image;
+ 	return 0;
+ 
+-out_free:
++out_free_image:
+ 	kfree(image);
+-out:
+ 	return result;
+ }
+ 
 -- 
 1.8.4.2
 
