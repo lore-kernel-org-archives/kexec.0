@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W7u8V-0002vQ-1y
- for kexec@lists.infradead.org; Mon, 27 Jan 2014 21:54:31 +0000
-Message-ID: <52E6D579.7020303@suse.cz>
-Date: Mon, 27 Jan 2014 22:54:01 +0100
-From: Michal Marek <mmarek@suse.cz>
+ id 1W83St-0006Ag-Kc
+ for kexec@lists.infradead.org; Tue, 28 Jan 2014 07:52:13 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [v2 2/3] makedumpfile: use struct cycle to update cyclic region
+ and clean up
+Date: Tue, 28 Jan 2014 07:49:32 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971E376F@BPXM01GP.gisp.nec.co.jp>
+References: <1390470454-14272-1-git-send-email-bhe@redhat.com>
+ <1390470454-14272-3-git-send-email-bhe@redhat.com>
+ <52E5DA76.7070702@jp.fujitsu.com>
+ <20140127085526.GB1481@dhcp-16-105.nay.redhat.com>
+In-Reply-To: <20140127085526.GB1481@dhcp-16-105.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH 03/11] bin2c: Move bin2c in scripts/basic
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-4-git-send-email-vgoyal@redhat.com>
- <52E6CBAA.1080405@suse.cz> <20140127211845.GD22256@redhat.com>
-In-Reply-To: <20140127211845.GD22256@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,41 +27,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: Baoquan He <bhe@redhat.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Dne 27.1.2014 22:18, Vivek Goyal napsal(a):
-> On Mon, Jan 27, 2014 at 10:12:10PM +0100, Michal Marek wrote:
->> Dne 27.1.2014 19:57, Vivek Goyal napsal(a):
->>> Kexec wants to use bin2c and it wants to use it really early in the build
->>> process. See arch/x86/purgatory/ code in later patches.
->>>
->>> So move bin2c in scripts/basic so that it can be built very early and
->>> be usable by arch/x86/purgatory/
->>>
->>> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
->>> ---
->> [...]
->>> diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
->>> index 4fcef87..afbc1cd 100644
->>> --- a/scripts/basic/Makefile
->>> +++ b/scripts/basic/Makefile
->>> @@ -9,6 +9,7 @@
->>>  # fixdep: 	 Used to generate dependency information during build process
->>>  
->>>  hostprogs-y	:= fixdep
->>> +hostprogs-$(CONFIG_IKCONFIG)     += bin2c
->>
->> Is the CONFIG_IKCONFIG dependency still correct, now that you found
->> another use of bin2c?
+On 2014/01/27 17:56:56, kexec <kexec-bounces@lists.infradead.org> wrote:
+> On 01/27/14 at 01:03pm, HATAYAMA Daisuke wrote:
+> > (2014/01/23 18:47), Baoquan He wrote:
+> > 
+> > > @@ -3301,18 +3301,15 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+> > >   }
+> > >   
+> > >   int
+> > > -set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val)
+> > > +set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *cycle)
+> > >   {
+> > >   	int byte, bit;
+> > >   
+> > > -	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
+> > > -		return FALSE;
+> > > -
+> > 
+> > Removing this check changes behaviour, not just clean up, so should be separated into another patch.
+> > 
+> > Further, this change seems buggy because, in addition to Kumaga-san's comment, memory outside of
+> > cycle region can be passed to here. Please look at the below.
 > 
-> In the next patch I changed depedency too. (CONFIG_BUILD_BIN2C). And
-> now CONFIG_IKCONFIG and CONFIG_KEXEC will select CONFIG_BUILD_BIN2C.
+> Hi Both,
+> 
+> I understand your finding. How about put the pfn checking back to
+> set_bitmap_cyclic(). Maybe this is simpler and safer. Otherwise each
+> case need be taken care and adding the pfn checking.
 
-OK, then it's all fine. I only saw patch 03/11.
+Agreed, and this simple check may have a small influence on the
+performance, so I think it's OK to do it.
 
-Thanks,
-Michal
+
+Thanks
+Atsushi Kumagai
+
+> 
+> > 
+> > > @@ -4782,10 +4780,10 @@ exclude_unnecessary_pages_cyclic(void)
+> > >   			if (mmd->mem_map == NOT_MEMMAP_ADDR)
+> > >   				continue;
+> > >   
+> > > -			if (mmd->pfn_end >= info->cyclic_start_pfn &&
+> > > -			    mmd->pfn_start <= info->cyclic_end_pfn) {
+> > > +			if (mmd->pfn_end >= cycle->start_pfn &&
+> > > +			    mmd->pfn_start <= cycle->end_pfn) {
+> > >   				if (!__exclude_unnecessary_pages(mmd->mem_map,
+> > > -								 mmd->pfn_start, mmd->pfn_end))
+> > > +								 mmd->pfn_start, mmd->pfn_end, cycle))
+> > >   					return FALSE;
+> > >   			}
+> > >   		}
+> > 
+> > After this clean up, __exclude_unnecessary_pages() processes memory within cycle region only.
+> > So, it's necessary to pass adjusted range, like:
+> > 
+> > if (MAX(mmd->pfn_start, cycle->start_pfn) < MIN(mmd->pfn_end, cycle->end_pfn))
+> >   __exclude_unnecessary_pages(mmd->mem_map, MAX(mmd->pfn_start, cycle->start_pfn), MIN(mmd->pfn_end, cycle->end_pfn))
+> > 
+> > -- 
+> > Thanks.
+> > HATAYAMA, Daisuke
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
