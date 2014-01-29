@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W8Das-00053b-3D
- for kexec@lists.infradead.org; Tue, 28 Jan 2014 18:41:07 +0000
-Date: Tue, 28 Jan 2014 13:40:42 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: More frequent kexec-tools releases
-Message-ID: <20140128184042.GA7098@redhat.com>
+ id 1W8K6E-0004rA-J4
+ for kexec@lists.infradead.org; Wed, 29 Jan 2014 01:37:55 +0000
+Message-ID: <52E85B26.2080203@cn.fujitsu.com>
+Date: Wed, 29 Jan 2014 09:36:38 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: More frequent kexec-tools releases
+References: <20140128184042.GA7098@redhat.com>
+In-Reply-To: <20140128184042.GA7098@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,46 +22,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Kexec Mailing List <kexec@lists.infradead.org>
-Cc: Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>, Simon Horman <horms@verge.net.au>
+Cc: Dave Young <dyoung@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
 
-Hi All,
+Hello
 
-Just now we were discussing that fedora kexec-tools should rebase to
-upstream kexec-tools every release so that we can test the latest code
-sooner.
+On 01/29/2014 02:40 AM, Vivek Goyal wrote:
+> Hi All,
+> 
+> Just now we were discussing that fedora kexec-tools should rebase to
+> upstream kexec-tools every release so that we can test the latest code
+> sooner.
+> 
+> Then Dave Young pulled in some data about the kexec-tools release
+> duration.
+> 
+> Date:   Tue Mar 19 10:46:46 2013 +0900
+>     kexec-tools 2.0.4 ~100 commits
+> 
+> Date:   Mon Jan 16 09:15:25 2012 +1100
+>     kexec-tools 2.0.3 ~100 commits
+> 
+> Date:   Thu Jul 29 13:40:00 2010 +0900
+>     kexec-tools 2.0.2 ~80 commits
+> 
+> Date:   Thu Aug 13 09:28:08 2009 +1000
+>     kexec-tools 2.0.1 ~60 commits
+> 
+> Date:   Sat Jul 19 10:31:30 2008 +1000
+>     kexec-tools 2.0.0
+> 
+> So that is 5 release in 5.5 years. It is roughly 1 release per year.
+> 
+> I am wondering if there is any interest in more frequent releases of
+> kexec-tools. Say every 3 months or every 6 months.
+> 
+> IMHO, it might be better if there are more frequent release of kexec-tools
+> (say a release every 6 months) and then every 6 months distributions
+> should be able to rebase to that new release.
+> 
+> Thoughts?
 
-Then Dave Young pulled in some data about the kexec-tools release
-duration.
+Agreed. Sometimes, important changes in the kernel side will lead to the change
+in the kexec-tools, so especially in this case, I think it might be better
+to release a new version asap.
 
-Date:   Tue Mar 19 10:46:46 2013 +0900
-    kexec-tools 2.0.4 ~100 commits
+> 
+> Thanks
+> Vivek
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
-Date:   Mon Jan 16 09:15:25 2012 +1100
-    kexec-tools 2.0.3 ~100 commits
 
-Date:   Thu Jul 29 13:40:00 2010 +0900
-    kexec-tools 2.0.2 ~80 commits
-
-Date:   Thu Aug 13 09:28:08 2009 +1000
-    kexec-tools 2.0.1 ~60 commits
-
-Date:   Sat Jul 19 10:31:30 2008 +1000
-    kexec-tools 2.0.0
-
-So that is 5 release in 5.5 years. It is roughly 1 release per year.
-
-I am wondering if there is any interest in more frequent releases of
-kexec-tools. Say every 3 months or every 6 months.
-
-IMHO, it might be better if there are more frequent release of kexec-tools
-(say a release every 6 months) and then every 6 months distributions
-should be able to rebase to that new release.
-
-Thoughts?
-
-Thanks
-Vivek
+-- 
+Thanks.
+Zhang Yanfei
 
 _______________________________________________
 kexec mailing list
