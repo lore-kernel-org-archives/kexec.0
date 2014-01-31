@@ -1,18 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1W96Zb-0006eH-CY
- for kexec@lists.infradead.org; Fri, 31 Jan 2014 05:23:28 +0000
-Date: Fri, 31 Jan 2014 14:23:04 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: More frequent kexec-tools releases
-Message-ID: <20140131052304.GC25099@verge.net.au>
-References: <20140128184042.GA7098@redhat.com>
- <52E85B26.2080203@cn.fujitsu.com>
- <20140129142311.GA15077@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1W9Arr-0002nw-4M
+ for kexec@lists.infradead.org; Fri, 31 Jan 2014 09:58:36 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A754D3EE0BB
+ for <kexec@lists.infradead.org>; Fri, 31 Jan 2014 18:58:08 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9225545DE55
+ for <kexec@lists.infradead.org>; Fri, 31 Jan 2014 18:58:08 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9178A45DE6B
+ for <kexec@lists.infradead.org>; Fri, 31 Jan 2014 18:58:06 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 847C4E08007
+ for <kexec@lists.infradead.org>; Fri, 31 Jan 2014 18:58:06 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2639AE08003
+ for <kexec@lists.infradead.org>; Fri, 31 Jan 2014 18:58:06 +0900 (JST)
+Message-ID: <52EB73A1.3080409@jp.fujitsu.com>
+Date: Fri, 31 Jan 2014 18:57:53 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140129142311.GA15077@redhat.com>
+Subject: Re: [PATCH v2] vmcore: copy fractional pages into buffers in the
+ kdump 2nd kernel
+References: <52A579EE.6090107@jp.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971E47E1@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971E47E1@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,64 +36,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, WANG Chao <chaowang@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Wed, Jan 29, 2014 at 09:23:11AM -0500, Vivek Goyal wrote:
-> On Wed, Jan 29, 2014 at 09:36:38AM +0800, Zhang Yanfei wrote:
-> > Hello
-> > 
-> > On 01/29/2014 02:40 AM, Vivek Goyal wrote:
-> > > Hi All,
-> > > 
-> > > Just now we were discussing that fedora kexec-tools should rebase to
-> > > upstream kexec-tools every release so that we can test the latest code
-> > > sooner.
-> > > 
-> > > Then Dave Young pulled in some data about the kexec-tools release
-> > > duration.
-> > > 
-> > > Date:   Tue Mar 19 10:46:46 2013 +0900
-> > >     kexec-tools 2.0.4 ~100 commits
-> > > 
-> > > Date:   Mon Jan 16 09:15:25 2012 +1100
-> > >     kexec-tools 2.0.3 ~100 commits
-> > > 
-> > > Date:   Thu Jul 29 13:40:00 2010 +0900
-> > >     kexec-tools 2.0.2 ~80 commits
-> > > 
-> > > Date:   Thu Aug 13 09:28:08 2009 +1000
-> > >     kexec-tools 2.0.1 ~60 commits
-> > > 
-> > > Date:   Sat Jul 19 10:31:30 2008 +1000
-> > >     kexec-tools 2.0.0
-> > > 
-> > > So that is 5 release in 5.5 years. It is roughly 1 release per year.
-> > > 
-> > > I am wondering if there is any interest in more frequent releases of
-> > > kexec-tools. Say every 3 months or every 6 months.
-> > > 
-> > > IMHO, it might be better if there are more frequent release of kexec-tools
-> > > (say a release every 6 months) and then every 6 months distributions
-> > > should be able to rebase to that new release.
-> > > 
-> > > Thoughts?
-> > 
-> > Agreed. Sometimes, important changes in the kernel side will lead to the change
-> > in the kexec-tools, so especially in this case, I think it might be better
-> > to release a new version asap.
-> 
-> One example is recent support of kexec on EFI systems. These changes went
-> into 3.13 kernel as well as kexec-tools.
-> 
-> Simon what do you think? A kexec-tools release every 4 months or every
-> 6 months. Does it make sense to you? 
+(2014/01/31 11:36), Atsushi Kumagai wrote:
+> Hello HATAYAMA-san,
+>
+> On 2013/12/09 17:06:18, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+>> This is a patch for fixing mmap failure due to fractional page issue.
+>>
+>> This patch might be still a bit too large as a single patch and might need to split.
+>> If you think patch refactoring is needed, please suggest.
+>>
+>> Change Log:
+>>
+>> v1 => v2)
+>>
+>> - Copy fractional pages from 1st kernel to 2nd kernel to reduce read
+>>    to the fractional pages for reliability.
+>>
+>> - Deal with the case where multiple System RAM areas are contained in
+>>    a single fractional page.
+>>
+>> Test:
+>>
+>> Tested on X86_64. Fractional pages are created using memmap= kernel
+>> parameter on the kdump 1st kernel.
+>
+> Could you tell me more details about how to reproduce this ?
+> I tried to create such fractional pages to test the patch at
+> the end of this mail, by using memmap= kernel parameter as you said
+> like below:
+>
+>    # cat /proc/iomem
+>    ...
+>    100000000-10fff57ff : System RAM
+>    10fff5800-1100057ff : reserved
+>    110005800-11fffffff : System RAM
+>
+> However, I couldn't face the mmap() failure and makedumpfile worked
+> normally even using mmap() on linux-3.12.1. What am I missing here ?
+>
 
-Perhaps we could aim for every second kernel release and see how that goes?
+This patch set tries to reduce potential risk on accessing i.e. creating
+page tables reading memory outside System RAM regions. The potential risk
+I intend here is for example effect of accessing mmio region.
+
+If you didn't see any failure except for mmap() failure on fractional pages,
+there's no potential risk on your system in the sense of what I mean above.
+Or you could probably see different behavior by choosing other System RAM
+region that resides in the memory that is used for something special.
+
+Also, in early phase, our design didn't care about this kind of fractional pages
+because we don't think there were many such systems on real world. But the
+bug report came earlier than we expected. So, I think we should design
+carefully here around at least as long as they can be done relatively simply.
+# Sorry for delaying my work...
+
+Of course, I think both kernel and makedumpfile address the issue together
+to reduce potential risk as much as possible.
+
+-- 
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
