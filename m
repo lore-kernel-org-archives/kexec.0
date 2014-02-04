@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-lb0-x22e.google.com ([2a00:1450:4010:c04::22e])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WAX1H-0002tr-8m
- for kexec@lists.infradead.org; Tue, 04 Feb 2014 03:49:56 +0000
-Received: by mail-lb0-f174.google.com with SMTP id l4so6032030lbv.33
- for <kexec@lists.infradead.org>; Mon, 03 Feb 2014 19:49:31 -0800 (PST)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WAbPZ-00082d-1T
+ for kexec@lists.infradead.org; Tue, 04 Feb 2014 08:31:17 +0000
+Date: Tue, 4 Feb 2014 17:30:53 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Avoid buffer overflow on strncat usage
+Message-ID: <20140204083053.GC30621@verge.net.au>
+References: <CAL5wTH6B-QYbY9bcC+HuBJkk=rEEZhQsggi921YtbGNS4xUfxQ@mail.gmail.com>
 MIME-Version: 1.0
-From: "Luis R. Rodriguez" <mcgrof@do-not-panic.com>
-Date: Mon, 3 Feb 2014 19:49:11 -0800
-Message-ID: <CAB=NE6WzCjtsq0hCUt=H62V7y2wd3dTeE-q0=R282kdobbXjcA@mail.gmail.com>
-Subject: Next kexec release
+Content-Disposition: inline
+In-Reply-To: <CAL5wTH6B-QYbY9bcC+HuBJkk=rEEZhQsggi921YtbGNS4xUfxQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,23 +19,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Tony Jones <tonyj@suse.com>, Olaf Hering <ohering@suse.de>, Jan Beulich <JBeulich@suse.com>
+To: Dirk =?utf-8?Q?M=C3=BCller?= <dirk@dmllr.de>
+Cc: kexec@lists.infradead.org
 
-Hey folks, I see recent discussions about desire for a new recent
-release of kexec, one of such reasons is kexec support on EFI systems.
-SUSE is also interested in this, and it'd be great if we can all synch
-up on supporting the same recent release.
-
-Thanks!
-
-  Luis
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBGZWIgMDMsIDIwMTQgYXQgMDY6NTQ6NTJQTSArMDEwMCwgRGlyayBNw7xsbGVyIHdy
+b3RlOgo+IHN0cm5jYXQoKSBkb2VzIG5vdCB3YW50IHRoZSB0b3RhbCBzaXplIGJ1dCB0aGUgbWF4
+aW11bSBsZW5ndGguCj4gCj4gU2lnbmVkLW9mZi1ieTogRGlyayBNdWVsbGVyIDxkbXVlbGxlckBz
+dXNlLmNvbT4KPiAtLS0KPiAga2V4ZWMvZnMyZHQuYyB8IDQgKystLQo+ICAxIGZpbGUgY2hhbmdl
+ZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9rZXhl
+Yy9mczJkdC5jIGIva2V4ZWMvZnMyZHQuYwo+IGluZGV4IDczYzFmYjkuLjY1YThiNjYgMTAwNjQ0
+Cj4gLS0tIGEva2V4ZWMvZnMyZHQuYwo+ICsrKyBiL2tleGVjL2ZzMmR0LmMKPiBAQCAtNjQ5LDgg
+KzY0OSw4IEBAIHN0YXRpYyB2b2lkIHB1dG5vZGUodm9pZCkKPiAgICAgICAgICAgICAgICAgICAg
+ICAgICBnb3RvIG5vX2RlYnVnOwo+ICAgICAgICAgICAgICAgICB9Cj4gICAgICAgICAgICAgICAg
+IHN0cm5jcHkoZmlsZW5hbWUsICIvcHJvYy9kZXZpY2UtdHJlZS8iLCBNQVhQQVRIKTsKPiAtICAg
+ICAgICAgICAgICAgc3RybmNhdChmaWxlbmFtZSwgYnVmZiwgTUFYUEFUSCk7Cj4gLSAgICAgICAg
+ICAgICAgIHN0cm5jYXQoZmlsZW5hbWUsICIvY29tcGF0aWJsZSIsIE1BWFBBVEgpOwo+ICsgICAg
+ICAgICAgICAgICBzdHJuY2F0KGZpbGVuYW1lLCBidWZmLCBNQVhQQVRILXN0cmxlbihmaWxlbmFt
+ZSktMSk7Cj4gKyAgICAgICAgICAgICAgIHN0cm5jYXQoZmlsZW5hbWUsICIvY29tcGF0aWJsZSIs
+IE1BWFBBVEgtc3RybGVuKGZpbGVuYW1lKS0xKTsKCkkgZG9uJ3QgdGhpbmsgeW91IG5lZWQgdGhl
+IC0xIGFzIGZpbGVuYW1lIHdpbGwgaGF2ZSBhIHRyYWlsaW5nICdcMCcKd2hpY2ggaXMgbm90IGNv
+dW50ZWQgaW4gdGhlIHJldHVybiB2YWx1ZSBvZiBzdHJsZW4oKQoKQWxzbywgY291bGQgeW91IHBs
+ZWFzZSBwdXQgYSBzcGFjZSBvbiBlYWNoIHNpZGUgb2YgZWFjaCAnLSc/CgpUaGFua3MKCj4gICAg
+ICAgICAgICAgICAgIGZkID0gb3BlbihmaWxlbmFtZSwgT19SRE9OTFkpOwo+ICAgICAgICAgICAg
+ICAgICBpZiAoZmQgPT0gLTEpIHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBwcmludGYoIlVu
+YWJsZSB0byBmaW5kICVzIHByaW50aW5nIGZyb20KPiBwdXJnYXRvcnkgaXMgZGlhYmxlZFxuIiwK
+PiAtLSAKPiAxLjguNC4xCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+
+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
+bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
