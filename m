@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WB6Yn-0003dy-6j
- for kexec@lists.infradead.org; Wed, 05 Feb 2014 17:46:53 +0000
-Message-ID: <52F278EF.4050407@suse.de>
-Date: Wed, 05 Feb 2014 09:46:23 -0800
+ id 1WBB1S-0004qK-8z
+ for kexec@lists.infradead.org; Wed, 05 Feb 2014 22:32:46 +0000
+Message-ID: <52F2BBF2.8080907@suse.de>
+Date: Wed, 05 Feb 2014 14:32:18 -0800
 From: Tony Jones <tonyj@suse.de>
 MIME-Version: 1.0
-Subject: Re: [ANNOUNCE] kexec-tools 2.0.5
-References: <20140205020333.GB13630@verge.net.au>
-In-Reply-To: <20140205020333.GB13630@verge.net.au>
+Subject: PATCH: kexec/i386 fix build failure (bzImage_support_efi_boot)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,16 +23,24 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>
 
-On 02/04/2014 06:03 PM, Simon Horman wrote:
+Commit 9c200a85de2245a850546fded96a1977b84ad24d referenced 
+'bzImage_support_efi_boot' without matching 32-bit definition.
 
-> I have also tagged it in git:
-> 
-> 	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+Signed-off-by: Tony Jones <tonyj@suse.de>
+---
+ kexec/arch/i386/kexec-bzImage.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-I think you forgot to push the tag.
-
-Tony
-
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -40,6 +40,7 @@
+ #include <arch/options.h>
+ 
+ static const int probe_debug = 0;
++int bzImage_support_efi_boot = 0;
+ 
+ int bzImage_probe(const char *buf, off_t len)
+ {
 
 _______________________________________________
 kexec mailing list
