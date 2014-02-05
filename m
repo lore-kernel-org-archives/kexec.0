@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WB2PE-000206-5y
- for kexec@lists.infradead.org; Wed, 05 Feb 2014 13:20:44 +0000
-Date: Wed, 5 Feb 2014 08:20:15 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: More frequent kexec-tools releases
-Message-ID: <20140205132015.GA6042@redhat.com>
-References: <20140128184042.GA7098@redhat.com>
- <52E85B26.2080203@cn.fujitsu.com>
- <20140129142311.GA15077@redhat.com>
- <20140131052304.GC25099@verge.net.au>
- <20140131143047.GA10594@redhat.com>
- <20140204083151.GE30621@verge.net.au>
- <20140204124148.GH17028@verge.net.au>
- <52F18FFA.5060103@cn.fujitsu.com>
- <20140205064906.GB29499@verge.net.au>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WB6Yn-0003dy-6j
+ for kexec@lists.infradead.org; Wed, 05 Feb 2014 17:46:53 +0000
+Message-ID: <52F278EF.4050407@suse.de>
+Date: Wed, 05 Feb 2014 09:46:23 -0800
+From: Tony Jones <tonyj@suse.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140205064906.GB29499@verge.net.au>
+Subject: Re: [ANNOUNCE] kexec-tools 2.0.5
+References: <20140205020333.GB13630@verge.net.au>
+In-Reply-To: <20140205020333.GB13630@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,45 +22,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, WANG Chao <chaowang@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-On Wed, Feb 05, 2014 at 03:49:06PM +0900, Simon Horman wrote:
-> On Wed, Feb 05, 2014 at 09:12:26AM +0800, Zhang Yanfei wrote:
-> > On 02/04/2014 08:41 PM, Simon Horman wrote:
-> > > On Tue, Feb 04, 2014 at 05:31:51PM +0900, Simon Horman wrote:
-> > >> On Fri, Jan 31, 2014 at 09:30:47AM -0500, Vivek Goyal wrote:
-> > >>> On Fri, Jan 31, 2014 at 02:23:04PM +0900, Simon Horman wrote:
-> > >>>
-> > >>> [..]
-> > >>>>> Simon what do you think? A kexec-tools release every 4 months or every
-> > >>>>> 6 months. Does it make sense to you? 
-> > >>>>
-> > >>>> Perhaps we could aim for every second kernel release and see how that goes?
-> > >>>
-> > >>> Sounds Good. Kernel releases are roughly 3 months apart. So that would
-> > >>> mean a kexec-tools release roughly around 6 months. This sounds like
-> > >>> a good start.
-> > >>>
-> > >>> So 3.13 was release recently. And last kexec-tools release was in march
-> > >>> 2013. May be it is a good idea to do one release now and then next one
-> > >>> can be after release of kernel 3.15, 3.17 and so on.
-> > >>
-> > >> Yes, I think so too.
-> > > 
-> > > Would any of you object to me doing this with the current state of the
-> > > tree as of fe2c38cc0fc32573 ("Avoid buffer overflow on strncat usage").
-> > > 
-> > 
-> > NO objection.
+On 02/04/2014 06:03 PM, Simon Horman wrote:
+
+> I have also tagged it in git:
 > 
-> Done :)
+> 	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
 
-Thanks Simon. I did git pull but I don't see new tag in my tree. Not sure
-why. 
+I think you forgot to push the tag.
 
-Thanks
-Vivek
+Tony
+
 
 _______________________________________________
 kexec mailing list
