@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WBITa-0004xj-By
- for kexec@lists.infradead.org; Thu, 06 Feb 2014 06:30:20 +0000
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH 0/2] kernel probe function fixes
-Date: Thu,  6 Feb 2014 14:30:42 +0800
-Message-Id: <1391668244-13631-1-git-send-email-dyoung@redhat.com>
+ id 1WBJQI-0006Dj-7Q
+ for kexec@lists.infradead.org; Thu, 06 Feb 2014 07:30:58 +0000
+Date: Thu, 6 Feb 2014 16:30:33 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: PATCH: kexec/i386 fix build failure (bzImage_support_efi_boot)
+Message-ID: <20140206073033.GC24865@verge.net.au>
+References: <52F2BBF2.8080907@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <52F2BBF2.8080907@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,48 +19,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: horms@verge.net.au
+To: Tony Jones <tonyj@suse.de>
 Cc: kexec@lists.infradead.org
 
-During my testing for arm zImage, in 2nd kernel the atags pointer and the
-machine_id are not valid, I did a lot of debugging in kernel, finally I found
-this is caused by a kexec tools bug instead.
+On Wed, Feb 05, 2014 at 02:32:18PM -0800, Tony Jones wrote:
+> Commit 9c200a85de2245a850546fded96a1977b84ad24d referenced 
+> 'bzImage_support_efi_boot' without matching 32-bit definition.
+> 
+> Signed-off-by: Tony Jones <tonyj@suse.de>
 
-It is a regression since bf06cf2095. It changes uImage probe return values as
-below:
- *  0		- valid uImage type
- * -1           - If the image is corrupted.
- *  1           - If the image is not a uImage.
+Thanks, applied.
 
-Because uImage will be probed before zImage, but the uImage probe return 1 for
-a zImage thus kexec will mistakenly think it is ok to use as uImage.
-
-IMHO, return -1 in case it's not an uImage is better instead of 1 like before
-It's not really necessary to introduce a new return value. It might be better
-for a new patch to return either 0 or -1 for uImage probe.
-
-But I did not fix the uImage return value yet. In this patchset I did below:
- - ppc64 zImage: return 0 instead of 1 in case of success
- - strictly checking if probe return 0 in kexec.c
-
-Tested arm zImage with use_atags only.
-
-Dave Young (2):
-  zImage_ppc64_probe: return 0 instead of 1 in case of success
-  kernel image probe function return value checking fix
-
- kexec/arch/ppc64/kexec-zImage-ppc64.c | 5 ++++-
- kexec/kexec.c                         | 2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
--- 
-1.8.3.1
-
+> ---
+>  kexec/arch/i386/kexec-bzImage.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- a/kexec/arch/i386/kexec-bzImage.c
+> +++ b/kexec/arch/i386/kexec-bzImage.c
+> @@ -40,6 +40,7 @@
+>  #include <arch/options.h>
+>  
+>  static const int probe_debug = 0;
+> +int bzImage_support_efi_boot = 0;
+>  
+>  int bzImage_probe(const char *buf, off_t len)
+>  {
+> 
 
 _______________________________________________
 kexec mailing list
