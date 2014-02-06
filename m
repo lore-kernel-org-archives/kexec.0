@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WBB74-0004vp-8Y
- for kexec@lists.infradead.org; Wed, 05 Feb 2014 22:38:34 +0000
-Message-ID: <52F2BD4F.10707@suse.com>
-Date: Wed, 05 Feb 2014 14:38:07 -0800
-From: Tony Jones <tonyj@suse.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WBCyn-0007Iz-5f
+ for kexec@lists.infradead.org; Thu, 06 Feb 2014 00:38:09 +0000
+Date: Thu, 6 Feb 2014 09:37:44 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [ANNOUNCE] kexec-tools 2.0.5
+Message-ID: <20140206003744.GS5125@verge.net.au>
+References: <20140205020333.GB13630@verge.net.au>
+ <52F278EF.4050407@suse.de>
 MIME-Version: 1.0
-Subject: PATCH: fix redefinition error for e820entry
+Content-Disposition: inline
+In-Reply-To: <52F278EF.4050407@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,34 +24,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>
+To: Tony Jones <tonyj@suse.de>
+Cc: kexec@lists.infradead.org
 
-At least on our systems, xenctrl.h defines (unguarded) struct e820entry
-Move the (guarded) definition in include/x86/x86-linux.h to below.
+On Wed, Feb 05, 2014 at 09:46:23AM -0800, Tony Jones wrote:
+> On 02/04/2014 06:03 PM, Simon Horman wrote:
+> 
+> > I have also tagged it in git:
+> > 
+> > 	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> 
+> I think you forgot to push the tag.
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
----
- kexec/arch/i386/crashdump-x86.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -41,12 +41,13 @@
- #include "../../crashdump.h"
- #include "kexec-x86.h"
- #include "crashdump-x86.h"
--#include "x86-linux-setup.h"
-
- #ifdef HAVE_LIBXENCTRL
- #include <xenctrl.h>
- #endif /* HAVE_LIBXENCTRL */
-
-+#include "x86-linux-setup.h"
-+
- #include <x86/x86-linux.h>
-
- extern struct arch_options_t arch_options;
+Sorry about that, it should be there now.
 
 _______________________________________________
 kexec mailing list
