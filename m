@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WBJQb-0006EU-Sn
- for kexec@lists.infradead.org; Thu, 06 Feb 2014 07:31:18 +0000
-Date: Thu, 6 Feb 2014 16:30:49 +0900
+ id 1WBJQg-0006F6-Sy
+ for kexec@lists.infradead.org; Thu, 06 Feb 2014 07:31:23 +0000
+Date: Thu, 6 Feb 2014 16:30:56 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] zImage_ppc64_probe: return 0 instead of 1 in case of
- success
-Message-ID: <20140206073049.GE24865@verge.net.au>
+Subject: Re: [PATCH 2/2] kernel image probe function return value checking fix
+Message-ID: <20140206073056.GF24865@verge.net.au>
 References: <1391668244-13631-1-git-send-email-dyoung@redhat.com>
- <1391668244-13631-2-git-send-email-dyoung@redhat.com>
+ <1391668244-13631-3-git-send-email-dyoung@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1391668244-13631-2-git-send-email-dyoung@redhat.com>
+In-Reply-To: <1391668244-13631-3-git-send-email-dyoung@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,50 +27,41 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
 Cc: kexec@lists.infradead.org
 
-On Thu, Feb 06, 2014 at 02:30:43PM +0800, Dave Young wrote:
-> All other _probe functions return 0 for probing the kernel
-> image successfully, so there's no reason to return 1 here.
+On Thu, Feb 06, 2014 at 02:30:44PM +0800, Dave Young wrote:
+> Currently kexec will use the kernel image type when probe function return
+> value >=0. It looks odd, but previously it works. Since commit bf06cf2095
+> it does not work anymore.
 > 
-> Fix it to return 0 instead.
+> During my testing for arm zImage, in 2nd kernel the atags pointer and the
+> machine_id are not valid, I did a lot of debugging in kernel, finally I found
+> this is caused by a kexec tools bug instead.
+> 
+> Because uImage will be probed before zImage, also the uImage probe return 1
+> instead of -1 since bf06cf2095, thus kexec will mistakenly think it is uImage.
+> 
+> Fix this issue by regarding it's valid only when probe return 0.
 > 
 > Signed-off-by: Dave Young <dyoung@redhat.com>
 
 Thanks, applied.
 
 > ---
->  kexec/arch/ppc64/kexec-zImage-ppc64.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  kexec/kexec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kexec/arch/ppc64/kexec-zImage-ppc64.c b/kexec/arch/ppc64/kexec-zImage-ppc64.c
-> index 24a87c6..d084ee5 100644
-> --- a/kexec/arch/ppc64/kexec-zImage-ppc64.c
-> +++ b/kexec/arch/ppc64/kexec-zImage-ppc64.c
-> @@ -36,6 +36,7 @@
->  int zImage_ppc64_probe(FILE *file)
->  {
->  	Elf32_Ehdr elf;
-> +	int valid;
->  
->  	if (fseek(file, 0, SEEK_SET) < 0) {
->  		fprintf(stderr, "seek error: %s\n",
-> @@ -53,7 +54,7 @@ int zImage_ppc64_probe(FILE *file)
->  		return -1;
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index f13e512..703d524 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -691,7 +691,7 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
 >  	}
->  
-> -	return (elf.e_ident[EI_MAG0]  == ELFMAG0        &&
-> +	valid = (elf.e_ident[EI_MAG0]  == ELFMAG0        &&
->  		elf.e_ident[EI_MAG1]  == ELFMAG1        &&
->  		elf.e_ident[EI_MAG2]  == ELFMAG2        &&
->  		elf.e_ident[EI_MAG3]  == ELFMAG3        &&
-> @@ -61,6 +62,8 @@ int zImage_ppc64_probe(FILE *file)
->  		elf.e_ident[EI_DATA]  == ELFDATA2MSB &&
->  		elf.e_type            == ET_EXEC        &&
->  		elf.e_machine         == EM_PPC);
-> +
-> +	return valid ? 0 : -1;
->  }
->  
->  int zImage_ppc64_load(FILE *file, int UNUSED(argc), char **UNUSED(argv),
+>  	if (!type || guess_only) {
+>  		for (i = 0; i < file_types; i++) {
+> -			if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
+> +			if (file_type[i].probe(kernel_buf, kernel_size) == 0)
+>  				break;
+>  		}
+>  		if (i == file_types) {
 > -- 
 > 1.8.3.1
 > 
