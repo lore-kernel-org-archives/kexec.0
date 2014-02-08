@@ -1,24 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WBuqj-00033y-36
- for kexec@lists.infradead.org; Fri, 07 Feb 2014 23:28:45 +0000
-Date: Sat, 8 Feb 2014 07:28:15 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [GIT PULL] x86/kaslr for v3.14
-Message-ID: <20140207232815.GD3840@dhcp-16-126.nay.redhat.com>
-References: <52E5EFAF.3060609@linux.intel.com>
- <CAFLxGvxJ0A6hZ52RWffkg_zXXScyPn10P4HcKvdAXfE43h32Eg@mail.gmail.com>
- <52E601DA.7010605@zytor.com> <20140130220708.GP9951@redhat.com>
- <CAGXu5jKp0j71ucE7uOWRa+gQM1Wzp=_KdByJK4XnACTwiCW4ow@mail.gmail.com>
- <20140207144914.GA5949@redhat.com>
- <52F503FD.8080607@linux.intel.com>
- <20140207162408.GD6967@redhat.com>
- <20140207231626.GA3840@dhcp-16-126.nay.redhat.com>
- <52F56A40.60707@zytor.com>
+ id 1WC3wV-0001kE-Kh
+ for kexec@lists.infradead.org; Sat, 08 Feb 2014 09:11:24 +0000
+Date: Sat, 8 Feb 2014 17:09:47 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [v2 2/3] makedumpfile: use struct cycle to update cyclic region
+ and clean up
+Message-ID: <20140208090947.GC25133@dhcp-16-105.nay.redhat.com>
+References: <1390470454-14272-1-git-send-email-bhe@redhat.com>
+ <1390470454-14272-3-git-send-email-bhe@redhat.com>
+ <52E5DA76.7070702@jp.fujitsu.com>
+ <20140127085526.GB1481@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971E376F@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <52F56A40.60707@zytor.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971E376F@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,27 +28,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>, Cong Ding <dinggnu@gmail.com>, Richard Weinberger <richard.weinberger@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@elte.hu>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Michael Davidson <md@google.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@linux.intel.com>, Yinghai Lu <yinghai@kernel.org>, Mathias Krause <minipli@googlemail.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 02/07/14 at 03:20pm, H. Peter Anvin wrote:
-> On 02/07/2014 03:16 PM, Dave Young wrote:
+ 
+> > > Removing this check changes behaviour, not just clean up, so should be separated into another patch.
+> > > 
+> > > Further, this change seems buggy because, in addition to Kumaga-san's comment, memory outside of
+> > > cycle region can be passed to here. Please look at the below.
 > > 
-> > Hi Vivek,
+> > Hi Both,
 > > 
-> > Chaowang <chaowang@redhat.com> is looking into passing setup_data SETUP_E820_EXT
-> > instead of using exactmap. Previously Thomas Renninger tried passing them in e820.
-> > I did not find the old thread, but I remember it's not enough because of the
-> > 128 entries limitation. 
-> > 
+> > I understand your finding. How about put the pfn checking back to
+> > set_bitmap_cyclic(). Maybe this is simpler and safer. Otherwise each
+> > case need be taken care and adding the pfn checking.
 > 
-> THERE IS NO SUCH LIMITATION.
+> Agreed, and this simple check may have a small influence on the
+> performance, so I think it's OK to do it.
 > 
-> Only 128 slots fit in struct boot_params, but additional entries can be
-> added to the setup_data linked list.
 
-Ok, I did not describe it right, I actually means the space limit. Thanks for
-clarifying. 
+Sorry to responsed so late. Will post v3 to adding back the pfn checking
+in set_bitmap_cyclic. 
+
+Thanks for your suggestion.
+
+Baoquan
+Thanks
+
+
 
 _______________________________________________
 kexec mailing list
