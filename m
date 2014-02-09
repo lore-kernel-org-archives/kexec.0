@@ -1,15 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WC45s-0001qH-O0
- for kexec@lists.infradead.org; Sat, 08 Feb 2014 09:21:05 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [v3 2/3] makedumpfile: use struct cycle to update cyclic region and
- clean up
-Date: Sat,  8 Feb 2014 17:19:27 +0800
-Message-Id: <1391851168-6431-3-git-send-email-bhe@redhat.com>
-In-Reply-To: <1391851168-6431-1-git-send-email-bhe@redhat.com>
-References: <1391851168-6431-1-git-send-email-bhe@redhat.com>
+Received: from e23smtp02.au.ibm.com ([202.81.31.144])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WCXfL-0006cP-63
+ for kexec@lists.infradead.org; Sun, 09 Feb 2014 16:55:36 +0000
+Received: from /spool/local
+ by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Mon, 10 Feb 2014 02:55:08 +1000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id A4E462BB0052
+ for <kexec@lists.infradead.org>; Mon, 10 Feb 2014 03:55:04 +1100 (EST)
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s19Gsnjn8061260
+ for <kexec@lists.infradead.org>; Mon, 10 Feb 2014 03:54:51 +1100
+Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
+ by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s19Gt25a025853
+ for <kexec@lists.infradead.org>; Mon, 10 Feb 2014 03:55:02 +1100
+Subject: [PATCH] kexec/ppc64: Fix up ELF header and dt for PowerNV platform.
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Sun, 09 Feb 2014 22:24:59 +0530
+Message-ID: <20140209165459.29541.26032.stgit@mars>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,1050 +32,177 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: d.hatayama@jp.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>
+To: Simon Horman <horms@verge.net.au>, Kexec-ml <kexec@lists.infradead.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Laurent Dufour <ldufour@linux.vnet.ibm.com>
 
-Per struct cycle and the relevant helper functions, it's simple to
-update cyclic region only. update_cyclic_region() is broken and not
-needed any more. cycle containing the cyclic region is passed down,
-and not global.
+From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-Related clean up is also done in this patch.
+On PowerNV platform, OPAL region is overlapped with crashkernel, need to
+create ELF Program header for the overlapped memory. The changes are
+similar to the way RTAS region was handled.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 ---
- makedumpfile.c | 471 +++++++++++++++++++++++++++------------------------------
- makedumpfile.h |  14 +-
- sadump_info.c  |   4 +-
- 3 files changed, 229 insertions(+), 260 deletions(-)
+ kexec/arch/ppc/crashdump-powerpc.h |    2 ++
+ kexec/arch/ppc64/crashdump-ppc64.c |   28 +++++++++++++++++++++++
+ kexec/arch/ppc64/crashdump-ppc64.h |    2 ++
+ kexec/arch/ppc64/kexec-ppc64.c     |   44 +++++++++++++++++++++++++++++++++++-
+ kexec/fs2dt.c                      |    4 +++
+ 5 files changed, 79 insertions(+), 1 deletion(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 01c6443..daef109 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -206,7 +206,7 @@ is_in_same_page(unsigned long vaddr1, unsigned long vaddr2)
+diff --git a/kexec/arch/ppc/crashdump-powerpc.h b/kexec/arch/ppc/crashdump-powerpc.h
+index efdc7e3..9b9b01e 100644
+--- a/kexec/arch/ppc/crashdump-powerpc.h
++++ b/kexec/arch/ppc/crashdump-powerpc.h
+@@ -40,6 +40,8 @@ extern unsigned long long crash_base;
+ extern unsigned long long crash_size;
+ extern unsigned int rtas_base;
+ extern unsigned int rtas_size;
++extern uint64_t opal_base;
++extern uint64_t opal_size;
+ extern uint64_t memory_limit;
  
- #define BITMAP_SECT_LEN 4096
- static inline int is_dumpable(struct dump_bitmap *, unsigned long long);
--static inline int is_dumpable_cyclic(char *bitmap, unsigned long long);
-+static inline int is_dumpable_cyclic(char *bitmap, unsigned long long, struct cycle *cycle);
- unsigned long
- pfn_to_pos(unsigned long long pfn)
- {
-@@ -3301,18 +3301,18 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
- }
- 
- int
--set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val)
-+set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *cycle)
- {
- 	int byte, bit;
- 
--	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
--		return FALSE;
-+        if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
-+                return FALSE;
- 
- 	/*
- 	 * If val is 0, clear bit on the bitmap.
- 	 */
--	byte = (pfn - info->cyclic_start_pfn)>>3;
--	bit  = (pfn - info->cyclic_start_pfn) & 7;
-+	byte = (pfn - cycle->start_pfn)>>3;
-+	bit  = (pfn - cycle->start_pfn) & 7;
- 	if (val)
- 		bitmap[byte] |= 1<<bit;
- 	else
-@@ -3361,37 +3361,37 @@ sync_2nd_bitmap(void)
- }
- 
- int
--set_bit_on_1st_bitmap(unsigned long long pfn)
-+set_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle)
- {
- 	if (info->flag_cyclic) {
--		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 1);
-+		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 1, cycle);
- 	} else {
- 		return set_bitmap(info->bitmap1, pfn, 1);
+ #endif /* CRASHDUMP_POWERPC_H */
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index c0d575d..00a0e63 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -294,6 +294,34 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
+ 		crash_memory_range[memory_ranges++].end = cend;
  	}
- }
  
- int
--clear_bit_on_1st_bitmap(unsigned long long pfn)
-+clear_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle)
- {
- 	if (info->flag_cyclic) {
--		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 0);
-+		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 0, cycle);
- 	} else {
- 		return set_bitmap(info->bitmap1, pfn, 0);
- 	}
- }
- 
- int
--clear_bit_on_2nd_bitmap(unsigned long long pfn)
-+clear_bit_on_2nd_bitmap(unsigned long long pfn, struct cycle *cycle)
- {
- 	if (info->flag_cyclic) {
--		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 0);
-+		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 0, cycle);
- 	} else {
- 		return set_bitmap(info->bitmap2, pfn, 0);
- 	}
- }
- 
- int
--clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
-+clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn, struct cycle *cycle)
- {
- 	unsigned long long maddr;
- 
-@@ -3404,21 +3404,21 @@ clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
- 		}
- 		pfn = paddr_to_pfn(maddr);
- 	}
--	return clear_bit_on_2nd_bitmap(pfn);
-+	return clear_bit_on_2nd_bitmap(pfn, cycle);
- }
- 
- int
--set_bit_on_2nd_bitmap(unsigned long long pfn)
-+set_bit_on_2nd_bitmap(unsigned long long pfn, struct cycle *cycle)
- {
- 	if (info->flag_cyclic) {
--		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 1);
-+		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 1, cycle);
- 	} else {
- 		return set_bitmap(info->bitmap2, pfn, 1);
- 	}
- }
- 
- int
--set_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
-+set_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn, struct cycle *cycle)
- {
- 	unsigned long long maddr;
- 
-@@ -3431,7 +3431,7 @@ set_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
- 		}
- 		pfn = paddr_to_pfn(maddr);
- 	}
--	return set_bit_on_2nd_bitmap(pfn);
-+	return set_bit_on_2nd_bitmap(pfn, cycle);
- }
- 
- static inline int
-@@ -3757,7 +3757,7 @@ page_to_pfn(unsigned long page)
- }
- 
- int
--reset_bitmap_of_free_pages(unsigned long node_zones)
-+reset_bitmap_of_free_pages(unsigned long node_zones, struct cycle *cycle)
- {
- 
- 	int order, i, migrate_type, migrate_types;
-@@ -3803,7 +3803,7 @@ reset_bitmap_of_free_pages(unsigned long node_zones)
- 				}
- 				for (i = 0; i < (1<<order); i++) {
- 					pfn = start_pfn + i;
--					if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+					if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 						found_free_pages++;
- 				}
- 
-@@ -4098,7 +4098,7 @@ out:
- 
- 
- int
--_exclude_free_page(void)
-+_exclude_free_page(struct cycle *cycle)
- {
- 	int i, nr_zones, num_nodes, node;
- 	unsigned long node_zones, zone, spanned_pages, pgdat;
-@@ -4139,7 +4139,7 @@ _exclude_free_page(void)
- 			}
- 			if (!spanned_pages)
- 				continue;
--			if (!reset_bitmap_of_free_pages(zone))
-+			if (!reset_bitmap_of_free_pages(zone, cycle))
- 				return FALSE;
- 		}
- 		if (num_nodes < vt.numnodes) {
-@@ -4164,7 +4164,7 @@ _exclude_free_page(void)
- }
- 
- int
--exclude_free_page(void)
-+exclude_free_page(struct cycle *cycle)
- {
- 	/*
- 	 * Check having necessary information.
-@@ -4199,7 +4199,7 @@ exclude_free_page(void)
- 	/*
- 	 * Detect free pages and update 2nd-bitmap.
- 	 */
--	if (!_exclude_free_page())
-+	if (!_exclude_free_page(cycle))
- 		return FALSE;
- 
- 	return TRUE;
-@@ -4404,7 +4404,7 @@ create_1st_bitmap(void)
- 		pfn_end   = paddr_to_pfn(phys_end);
- 
- 		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
--			set_bit_on_1st_bitmap(pfn);
-+			set_bit_on_1st_bitmap(pfn, NULL);
- 			pfn_bitmap1++;
- 		}
- 	}
-@@ -4422,8 +4422,9 @@ create_1st_bitmap(void)
- 	return TRUE;
- }
- 
++	/*
++	 * If OPAL region is overlapped with crashkernel, need to create ELF
++	 * Program header for the overlapped memory.
++	 */
++	if (crash_base < opal_base + opal_size &&
++		opal_base < crash_base + crash_size) {
++		page_size = getpagesize();
++		cstart = opal_base;
++		cend = opal_base + opal_size;
++		if (cstart < crash_base)
++			cstart = crash_base;
++		if (cend > crash_base + crash_size)
++			cend = crash_base + crash_size;
++		/*
++		 * The opal section created here is formed by reading opal-base
++		 * and opal-size from /proc/device-tree/ibm,opal.  Unfortunately
++		 * opal-size is not required to be a multiple of PAGE_SIZE
++		 * The remainder of the page it ends on is just garbage, and is
++		 * safe to read, its just not accounted in opal-size.  Since
++		 * we're creating an elf section here though, lets round it up
++		 * to the next page size boundary though, so makedumpfile can
++		 * read it safely without going south on us.
++		 */
++		cend = _ALIGN(cend, page_size);
 +
- int
--create_1st_bitmap_cyclic()
-+create_1st_bitmap_cyclic(struct cycle *cycle)
- {
- 	int i;
- 	unsigned long long pfn, pfn_bitmap1;
-@@ -4443,8 +4444,8 @@ create_1st_bitmap_cyclic()
- 	 */
- 	pfn_bitmap1 = 0;
- 	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
--		pfn_start = MAX(paddr_to_pfn(phys_start), info->cyclic_start_pfn);
--		pfn_end   = MIN(paddr_to_pfn(phys_end), info->cyclic_end_pfn);
-+		pfn_start = MAX(paddr_to_pfn(phys_start), cycle->start_pfn);
-+		pfn_end   = MIN(paddr_to_pfn(phys_end), cycle->end_pfn);
- 
- 		if (pfn_start >= pfn_end)
- 			continue;
-@@ -4453,12 +4454,12 @@ create_1st_bitmap_cyclic()
- 		pfn_end_round = round(pfn_end, BITPERBYTE);
- 
- 		for (pfn = pfn_start; pfn < pfn_start_roundup; pfn++) {
--			if (set_bit_on_1st_bitmap(pfn))
-+			if (set_bit_on_1st_bitmap(pfn, cycle))
- 				pfn_bitmap1++;
- 		}
- 
--		pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
--		pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
-+		pfn_start_byte = (pfn_start_roundup - cycle->start_pfn) >> 3;
-+		pfn_end_byte = (pfn_end_round - cycle->start_pfn) >> 3;
- 
- 		if (pfn_start_byte < pfn_end_byte) {
- 			memset(info->partial_bitmap1 + pfn_start_byte,
-@@ -4469,7 +4470,7 @@ create_1st_bitmap_cyclic()
- 		}
- 
- 		for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
--			if (set_bit_on_1st_bitmap(pfn))
-+			if (set_bit_on_1st_bitmap(pfn, cycle))
- 				pfn_bitmap1++;
- 		}
- 	}
-@@ -4518,7 +4519,7 @@ exclude_zero_pages(void)
- 			}
- 		}
- 		if (is_zero_page(buf, info->page_size)) {
--			if (clear_bit_on_2nd_bitmap(pfn))
-+			if (clear_bit_on_2nd_bitmap(pfn, NULL))
- 				pfn_zero++;
- 		}
- 	}
-@@ -4533,7 +4534,7 @@ exclude_zero_pages(void)
- }
- 
- static int
--initialize_2nd_bitmap_cyclic(void)
-+initialize_2nd_bitmap_cyclic(struct cycle *cycle)
- {
- 	int i;
- 	unsigned long long pfn;
-@@ -4551,8 +4552,8 @@ initialize_2nd_bitmap_cyclic(void)
- 	 * If page is on memory hole, set bit on the 2nd-bitmap.
- 	 */
- 	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
--		pfn_start = MAX(paddr_to_pfn(phys_start), info->cyclic_start_pfn);
--		pfn_end = MIN(paddr_to_pfn(phys_end), info->cyclic_end_pfn);
-+		pfn_start = MAX(paddr_to_pfn(phys_start), cycle->start_pfn);
-+		pfn_end = MIN(paddr_to_pfn(phys_end), cycle->end_pfn);
- 
- 		if (pfn_start >= pfn_end)
- 			continue;
-@@ -4561,11 +4562,11 @@ initialize_2nd_bitmap_cyclic(void)
- 		pfn_end_round = round(pfn_end, BITPERBYTE);
- 
- 		for (pfn = pfn_start; pfn < pfn_start_roundup; ++pfn)
--			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
-+			if (!set_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 				return FALSE;
- 
--		pfn_start_byte = (pfn_start_roundup - info->cyclic_start_pfn) >> 3;
--		pfn_end_byte = (pfn_end_round - info->cyclic_start_pfn) >> 3;
-+		pfn_start_byte = (pfn_start_roundup - cycle->start_pfn) >> 3;
-+		pfn_end_byte = (pfn_end_round - cycle->start_pfn) >> 3;
- 
- 		if (pfn_start_byte < pfn_end_byte) {
- 			memset(info->partial_bitmap2 + pfn_start_byte,
-@@ -4574,7 +4575,7 @@ initialize_2nd_bitmap_cyclic(void)
- 		}
- 
- 		for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
--			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
-+			if (!set_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 				return FALSE;
- 	}
- 
-@@ -4583,7 +4584,7 @@ initialize_2nd_bitmap_cyclic(void)
- 
- int
- __exclude_unnecessary_pages(unsigned long mem_map,
--    unsigned long long pfn_start, unsigned long long pfn_end)
-+    unsigned long long pfn_start, unsigned long long pfn_end, struct cycle *cycle)
- {
- 	unsigned long long pfn, pfn_mm, maddr;
- 	unsigned long long pfn_read_start, pfn_read_end, index_pg;
-@@ -4603,7 +4604,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		/*
- 		 * If this pfn doesn't belong to target region, skip this pfn.
- 		 */
--		if (info->flag_cyclic && !is_cyclic_region(pfn))
-+		if (info->flag_cyclic && !is_cyclic_region(pfn, cycle))
- 			continue;
- 
- 		/*
-@@ -4668,7 +4669,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 				 * See check_cyclic_buffer_overrun()
- 				 * for the detail.
- 				 */
--				if (clear_bit_on_2nd_bitmap_for_kernel(pfn + i))
-+				if (clear_bit_on_2nd_bitmap_for_kernel((pfn + i), cycle))
- 					pfn_free++;
- 			}
- 			pfn += nr_pages - 1;
-@@ -4680,7 +4681,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE)
- 		    && (isLRU(flags) || isSwapCache(flags))
- 		    && !isPrivate(flags) && !isAnon(mapping)) {
--			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 				pfn_cache++;
- 		}
- 		/*
-@@ -4689,7 +4690,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
- 		    && (isLRU(flags) || isSwapCache(flags))
- 		    && !isAnon(mapping)) {
--			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 				pfn_cache_private++;
- 		}
- 		/*
-@@ -4697,14 +4698,14 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		 */
- 		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
- 		    && isAnon(mapping)) {
--			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 				pfn_user++;
- 		}
- 		/*
- 		 * Exclude the hwpoison page.
- 		 */
- 		else if (isHWPOISON(flags)) {
--			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 				pfn_hwpoison++;
- 		}
- 	}
-@@ -4734,7 +4735,7 @@ exclude_unnecessary_pages(void)
- 			continue;
- 
- 		if (!__exclude_unnecessary_pages(mmd->mem_map,
--						 mmd->pfn_start, mmd->pfn_end))
-+						 mmd->pfn_start, mmd->pfn_end, NULL))
- 			return FALSE;
- 	}
- 
-@@ -4748,17 +4749,17 @@ exclude_unnecessary_pages(void)
- }
- 
- int
--exclude_unnecessary_pages_cyclic(void)
-+exclude_unnecessary_pages_cyclic(struct cycle *cycle)
- {
- 	unsigned int mm;
- 	struct mem_map_data *mmd;
- 	struct timeval tv_start;
- 
--	if (!initialize_2nd_bitmap_cyclic())
-+	if (!initialize_2nd_bitmap_cyclic(cycle))
- 		return FALSE;
- 
- 	if ((info->dump_level & DL_EXCLUDE_FREE) && !info->page_is_buddy)
--		if (!exclude_free_page())
-+		if (!exclude_free_page(cycle))
- 			return FALSE;
- 
- 	/*
-@@ -4782,10 +4783,10 @@ exclude_unnecessary_pages_cyclic(void)
- 			if (mmd->mem_map == NOT_MEMMAP_ADDR)
- 				continue;
- 
--			if (mmd->pfn_end >= info->cyclic_start_pfn &&
--			    mmd->pfn_start <= info->cyclic_end_pfn) {
-+			if (mmd->pfn_end >= cycle->start_pfn &&
-+			    mmd->pfn_start <= cycle->end_pfn) {
- 				if (!__exclude_unnecessary_pages(mmd->mem_map,
--								 mmd->pfn_start, mmd->pfn_end))
-+								 mmd->pfn_start, mmd->pfn_end, cycle))
- 					return FALSE;
- 			}
- 		}
-@@ -4801,27 +4802,6 @@ exclude_unnecessary_pages_cyclic(void)
- }
- 
- int
--update_cyclic_region(unsigned long long pfn)
--{
--	if (is_cyclic_region(pfn))
--		return TRUE;
--
--	info->cyclic_start_pfn = round(pfn, info->pfn_cyclic);
--	info->cyclic_end_pfn = info->cyclic_start_pfn + info->pfn_cyclic;
--
--	if (info->cyclic_end_pfn > info->max_mapnr)
--		info->cyclic_end_pfn = info->max_mapnr;
--
--	if (info->flag_elf_dumpfile && !create_1st_bitmap_cyclic())
--		return FALSE;
--
--	if (!exclude_unnecessary_pages_cyclic())
--		return FALSE;
--
--	return TRUE;
--}
--
--int
- copy_bitmap(void)
- {
- 	off_t offset;
-@@ -4887,7 +4867,7 @@ create_2nd_bitmap(void)
- 	 * Exclude free pages.
- 	 */
- 	if ((info->dump_level & DL_EXCLUDE_FREE) && !info->page_is_buddy)
--		if (!exclude_free_page())
-+		if (!exclude_free_page(NULL))
- 			return FALSE;
- 
- 	/*
-@@ -5576,13 +5556,16 @@ unsigned long long
- get_num_dumpable_cyclic(void)
- {
- 	unsigned long long pfn, num_dumpable=0;
-+	struct cycle cycle = {0};
- 
--	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
--		if (!update_cyclic_region(pfn))
-+	for_each_cycle(0, info->max_mapnr, &cycle)
-+	{
-+		if (!exclude_unnecessary_pages_cyclic(&cycle))
- 			return FALSE;
- 
--		if (is_dumpable_cyclic(info->partial_bitmap2, pfn))
--			num_dumpable++;
-+		for(pfn=cycle.start_pfn; pfn<cycle.end_pfn; pfn++)
-+			if (is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle))
-+				num_dumpable++;
- 	}
- 
- 	return num_dumpable;
-@@ -5841,16 +5824,7 @@ get_loads_dumpfile_cyclic(void)
- 	unsigned long long pfn, pfn_start, pfn_end, num_excluded;
- 	unsigned long frac_head, frac_tail;
- 	Elf64_Phdr load;
--
--	/*
--	 * Initialize target region and bitmap.
--	 */
--	info->cyclic_start_pfn = 0;
--	info->cyclic_end_pfn = info->pfn_cyclic;
--	if (!create_1st_bitmap_cyclic())
--		return FALSE;
--	if (!exclude_unnecessary_pages_cyclic())
--		return FALSE;
-+	struct cycle cycle = {0};
- 
- 	if (!(phnum = get_phnum_memory()))
- 		return FALSE;
-@@ -5874,44 +5848,41 @@ get_loads_dumpfile_cyclic(void)
- 		if (frac_tail)
- 			pfn_end++;
- 
--		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
--			/*
--			 * Update target region and bitmap
--			 */
--			if (!is_cyclic_region(pfn)) {
--				if (!update_cyclic_region(pfn))
--					return FALSE;
--			}
--
--			if (!is_dumpable_cyclic(info->partial_bitmap2, pfn)) {
--				num_excluded++;
--				continue;
--			}
--
--			/*
--			 * Exclude zero pages.
--			 */
--			if (info->dump_level & DL_EXCLUDE_ZERO) {
--				if (!read_pfn(pfn, buf))
--					return FALSE;
--				if (is_zero_page(buf, page_size)) {
-+		for_each_cycle(pfn_start, pfn_end, &cycle) {
-+			if (!exclude_unnecessary_pages_cyclic(&cycle))
-+				return FALSE;
-+			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
-+				if (!is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle)) {
- 					num_excluded++;
- 					continue;
- 				}
--			}
- 
--			info->num_dumpable++;
-+				/*
-+				 * Exclude zero pages.
-+				 */
-+				if (info->dump_level & DL_EXCLUDE_ZERO) {
-+					if (!read_pfn(pfn, buf))
-+						return FALSE;
-+					if (is_zero_page(buf, page_size)) {
-+						num_excluded++;
-+						continue;
-+					}
-+				}
- 
--			/*
--			 * If the number of the contiguous pages to be excluded
--			 * is 256 or more, those pages are excluded really.
--			 * And a new PT_LOAD segment is created.
--			 */
--			if (num_excluded >= PFN_EXCLUDED) {
--				num_new_load++;
-+				info->num_dumpable++;
-+
-+				/*
-+				 * If the number of the contiguous pages to be excluded
-+				 * is 256 or more, those pages are excluded really.
-+				 * And a new PT_LOAD segment is created.
-+				 */
-+				if (num_excluded >= PFN_EXCLUDED) {
-+					num_new_load++;
-+				}
-+				num_excluded = 0;
- 			}
--			num_excluded = 0;
- 		}
-+
- 	}
- 	return num_new_load;
- }
-@@ -5929,6 +5900,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	off_t off_seg_load, off_memory;
- 	Elf64_Phdr load;
- 	struct timeval tv_start;
-+	struct cycle cycle = {0};
- 
- 	if (!info->flag_elf_dumpfile)
- 		return FALSE;
-@@ -5946,11 +5918,6 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	pfn_user = pfn_free = pfn_hwpoison = 0;
- 	pfn_memhole = info->max_mapnr;
- 
--	info->cyclic_start_pfn = 0;
--	info->cyclic_end_pfn = 0;
--	if (!update_cyclic_region(0))
--		return FALSE;
--
- 	if (!(phnum = get_phnum_memory()))
- 		return FALSE;
- 
-@@ -5982,30 +5949,17 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 		if (frac_tail)
- 			pfn_end++;
- 
--		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
-+		for_each_cycle(pfn_start, pfn_end, &cycle) {
- 			/*
- 			 * Update target region and partial bitmap if necessary.
- 			 */
--			if (!update_cyclic_region(pfn))
-+			if (!create_1st_bitmap_cyclic(&cycle))
-+				return FALSE;
-+			if (!exclude_unnecessary_pages_cyclic(&cycle))
- 				return FALSE;
- 
--			if (!is_dumpable_cyclic(info->partial_bitmap2, pfn)) {
--				num_excluded++;
--				if ((pfn == pfn_end - 1) && frac_tail)
--					memsz += frac_tail;
--				else
--					memsz += page_size;
--				continue;
--			}
--
--			/*
--			 * Exclude zero pages.
--			 */
--			if (info->dump_level & DL_EXCLUDE_ZERO) {
--				if (!read_pfn(pfn, buf))
--					return FALSE;
--				if (is_zero_page(buf, page_size)) {
--					pfn_zero++;
-+			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
-+				if (!is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle)) {
- 					num_excluded++;
- 					if ((pfn == pfn_end - 1) && frac_tail)
- 						memsz += frac_tail;
-@@ -6013,93 +5967,111 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 						memsz += page_size;
- 					continue;
- 				}
--			}
- 
--			if ((num_dumped % per) == 0)
--				print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
-+				/*
-+				 * Exclude zero pages.
-+				 */
-+				if (info->dump_level & DL_EXCLUDE_ZERO) {
-+					if (!read_pfn(pfn, buf))
-+						return FALSE;
-+					if (is_zero_page(buf, page_size)) {
-+						pfn_zero++;
-+						num_excluded++;
-+						if ((pfn == pfn_end - 1) && frac_tail)
-+							memsz += frac_tail;
-+						else
-+							memsz += page_size;
-+						continue;
-+					}
-+				}
- 
--			num_dumped++;
-+				if ((num_dumped % per) == 0)
-+					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
-+
-+				num_dumped++;
- 
--			/*
--			 * The dumpable pages are continuous.
--			 */
--			if (!num_excluded) {
--				if ((pfn == pfn_end - 1) && frac_tail) {
--					memsz  += frac_tail;
--					filesz += frac_tail;
--				} else {
--					memsz  += page_size;
--					filesz += page_size;
--				}
--				continue;
- 				/*
--				 * If the number of the contiguous pages to be excluded
--				 * is 255 or less, those pages are not excluded.
-+				 * The dumpable pages are continuous.
- 				 */
--			} else if (num_excluded < PFN_EXCLUDED) {
--				if ((pfn == pfn_end - 1) && frac_tail) {
--					memsz  += frac_tail;
--					filesz += (page_size*num_excluded
--						   + frac_tail);
--				}else {
--					memsz  += page_size;
--					filesz += (page_size*num_excluded
--						   + page_size);
-+				if (!num_excluded) {
-+					if ((pfn == pfn_end - 1) && frac_tail) {
-+						memsz  += frac_tail;
-+						filesz += frac_tail;
-+					} else {
-+						memsz  += page_size;
-+						filesz += page_size;
-+					}
-+					continue;
-+					/*
-+					 * If the number of the contiguous pages to be excluded
-+					 * is 255 or less, those pages are not excluded.
-+					 */
-+				} else if (num_excluded < PFN_EXCLUDED) {
-+					if ((pfn == pfn_end - 1) && frac_tail) {
-+						memsz  += frac_tail;
-+						filesz += (page_size*num_excluded
-+							   + frac_tail);
-+					}else {
-+						memsz  += page_size;
-+						filesz += (page_size*num_excluded
-+							   + page_size);
-+					}
-+					num_excluded = 0;
-+					continue;
- 				}
--				num_excluded = 0;
--				continue;
--			}
- 
--			/*
--			 * If the number of the contiguous pages to be excluded
--			 * is 256 or more, those pages are excluded really.
--			 * And a new PT_LOAD segment is created.
--			 */
--			load.p_memsz = memsz;
--			load.p_filesz = filesz;
--			if (load.p_filesz)
--				load.p_offset = off_seg_load;
--			else
- 				/*
--				 * If PT_LOAD segment does not have real data
--				 * due to the all excluded pages, the file
--				 * offset is not effective and it should be 0.
-+				 * If the number of the contiguous pages to be excluded
-+				 * is 256 or more, those pages are excluded really.
-+				 * And a new PT_LOAD segment is created.
- 				 */
--				load.p_offset = 0;
--
--			/*
--			 * Write a PT_LOAD header.
--			 */
--			if (!write_elf_phdr(cd_header, &load))
--				return FALSE;
-+				load.p_memsz = memsz;
-+				load.p_filesz = filesz;
-+				if (load.p_filesz)
-+					load.p_offset = off_seg_load;
-+				else
-+					/*
-+					 * If PT_LOAD segment does not have real data
-+					 * due to the all excluded pages, the file
-+					 * offset is not effective and it should be 0.
-+					 */
-+					load.p_offset = 0;
- 
--			/*
--			 * Write a PT_LOAD segment.
--			 */
--			if (load.p_filesz)
--				if (!write_elf_load_segment(cd_page, paddr,
--							    off_memory, load.p_filesz))
-+				/*
-+				 * Write a PT_LOAD header.
-+				 */
-+				if (!write_elf_phdr(cd_header, &load))
- 					return FALSE;
- 
--			load.p_paddr += load.p_memsz;
-+				/*
-+				 * Write a PT_LOAD segment.
-+				 */
-+				if (load.p_filesz)
-+					if (!write_elf_load_segment(cd_page, paddr,
-+								    off_memory, load.p_filesz))
-+						return FALSE;
-+
-+				load.p_paddr += load.p_memsz;
- #ifdef __x86__
--			/*
--			 * FIXME:
--			 *  (x86) Fill PT_LOAD headers with appropriate
--			 * virtual addresses.
--			 */
--			if (load.p_paddr < MAXMEM)
--				load.p_vaddr += load.p_memsz;
-+				/*
-+				 * FIXME:
-+				 *  (x86) Fill PT_LOAD headers with appropriate
-+				 * virtual addresses.
-+				 */
-+				if (load.p_paddr < MAXMEM)
-+					load.p_vaddr += load.p_memsz;
- #else
--			load.p_vaddr += load.p_memsz;
-+				load.p_vaddr += load.p_memsz;
- #endif /* x86 */
--			paddr  = load.p_paddr;
--			off_seg_load += load.p_filesz;
-+				paddr  = load.p_paddr;
-+				off_seg_load += load.p_filesz;
- 
--			num_excluded = 0;
--			memsz  = page_size;
--			filesz = page_size;
-+				num_excluded = 0;
-+				memsz  = page_size;
-+				filesz = page_size;
-+			}
- 		}
-+
- 		/*
- 		 * Write the last PT_LOAD.
- 		 */
-@@ -6348,7 +6320,7 @@ out:
- 
- int
- write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
--			 struct page_desc *pd_zero, off_t *offset_data)
-+			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
- {
- 	unsigned long long pfn, per;
- 	unsigned long long start_pfn, end_pfn;
-@@ -6406,8 +6378,8 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 		goto out;
- 	}
- 
--	start_pfn = info->cyclic_start_pfn;
--	end_pfn   = info->cyclic_end_pfn;
-+	start_pfn = cycle->start_pfn;
-+	end_pfn   = cycle->end_pfn;
- 
- 	if (info->flag_split) {
- 		if (start_pfn < info->split_start_pfn)
-@@ -6426,7 +6398,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 		/*
- 		 * Check the excluded page.
- 		 */
--		if (!is_dumpable_cyclic(info->partial_bitmap2, pfn))
-+		if (!is_on(info->partial_bitmap2, pfn - cycle->start_pfn))
- 			continue;
- 
- 		num_dumped++;
-@@ -6788,20 +6760,20 @@ out:
- }
- 
- int
--write_kdump_bitmap1_cyclic(void)
-+write_kdump_bitmap1_cyclic(struct cycle *cycle)
- {
- 	off_t offset;
-         int increment;
- 	int ret = FALSE;
- 
--	increment = divideup(info->cyclic_end_pfn - info->cyclic_start_pfn, BITPERBYTE);
-+	increment = divideup(cycle->end_pfn - cycle->start_pfn, BITPERBYTE);
- 
- 	if (info->flag_elf_dumpfile)
- 		return FALSE;
- 
- 	offset = info->offset_bitmap1;
- 	if (!write_buffer(info->fd_dumpfile, offset + info->bufsize_cyclic *
--			  (info->cyclic_start_pfn / info->pfn_cyclic),
-+			  (cycle->start_pfn / info->pfn_cyclic),
- 			  info->partial_bitmap1, increment, info->name_dumpfile))
- 		goto out;
- 
-@@ -6811,13 +6783,13 @@ out:
- }
- 
- int
--write_kdump_bitmap2_cyclic(void)
-+write_kdump_bitmap2_cyclic(struct cycle *cycle)
- {
- 	off_t offset;
- 	int increment;
- 	int ret = FALSE;
- 
--	increment = divideup(info->cyclic_end_pfn - info->cyclic_start_pfn,
-+	increment = divideup(cycle->end_pfn - cycle->start_pfn,
- 			     BITPERBYTE);
- 
- 	if (info->flag_elf_dumpfile)
-@@ -6844,7 +6816,6 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 	off_t offset_data=0;
- 	struct disk_dump_header *dh = info->dump_header;
- 	unsigned char buf[info->page_size];
--	unsigned long long pfn;
- 	struct timeval tv_start;
- 
- 	/*
-@@ -6880,19 +6851,16 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 	if (!prepare_bitmap1_buffer_cyclic())
- 		return FALSE;
- 
--	info->cyclic_start_pfn = 0;
--	info->cyclic_end_pfn = 0;
--	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
--		if (is_cyclic_region(pfn))
--			continue;
--		if (!update_cyclic_region(pfn))
--			return FALSE;
--		if (!create_1st_bitmap_cyclic())
-+	struct cycle cycle = {0};
-+	for_each_cycle(0, info->max_mapnr, &cycle)
-+	{
-+		if (!create_1st_bitmap_cyclic(&cycle))
- 			return FALSE;
--		if (!write_kdump_bitmap1_cyclic())
-+		if (!write_kdump_bitmap1_cyclic(&cycle))
- 			return FALSE;
- 	}
- 
-+
- 	free_bitmap1_buffer();
- 
- 	if (!prepare_bitmap2_buffer_cyclic())
-@@ -6901,21 +6869,22 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 	/*
- 	 * Write pages and bitmap cyclically.
- 	 */
--	info->cyclic_start_pfn = 0;
--	info->cyclic_end_pfn = 0;
--	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
--		if (is_cyclic_region(pfn))
--			continue;
--
--		if (!update_cyclic_region(pfn))
--                        return FALSE;
-+	//cycle = {0, 0};
-+	memset(&cycle, 0, sizeof(struct cycle));
-+	for_each_cycle(0, info->max_mapnr, &cycle)
-+	{
-+		if (!exclude_unnecessary_pages_cyclic(&cycle))
-+			return FALSE;
- 
--		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero, &offset_data))
-+		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
-+					&offset_data, &cycle))
- 			return FALSE;
- 
--		if (!write_kdump_bitmap2_cyclic())
-+		if (!write_kdump_bitmap2_cyclic(&cycle))
- 			return FALSE;
--        }
++		crash_memory_range[memory_ranges].start = cstart;
++		crash_memory_range[memory_ranges++].end = cend;
 +	}
+ 	*range = crash_memory_range;
+ 	*ranges = memory_ranges;
+ 
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.h b/kexec/arch/ppc64/crashdump-ppc64.h
+index 001be3a..d654c6b 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.h
++++ b/kexec/arch/ppc64/crashdump-ppc64.h
+@@ -31,6 +31,8 @@ extern uint64_t crash_size;
+ extern uint64_t memory_limit;
+ extern unsigned int rtas_base;
+ extern unsigned int rtas_size;
++extern uint64_t opal_base;
++extern uint64_t opal_size;
+ 
+ uint64_t lmb_size;
+ unsigned int num_of_lmbs;
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index 49b291d..5956836 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -43,6 +43,7 @@ uint64_t memory_limit;
+ static int nr_memory_ranges, nr_exclude_ranges;
+ uint64_t crash_base, crash_size;
+ unsigned int rtas_base, rtas_size;
++uint64_t opal_base, opal_size;
+ int max_memory_ranges;
+ 
+ static void cleanup_memory_ranges(void)
+@@ -343,7 +344,8 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 			strncmp(dentry->d_name, "memory@", 7) &&
+ 			strcmp(dentry->d_name, "memory") &&
+ 			strncmp(dentry->d_name, "pci@", 4) &&
+-			strncmp(dentry->d_name, "rtas", 4)) 
++			strncmp(dentry->d_name, "rtas", 4) &&
++			strncmp(dentry->d_name, "ibm,opal", 8))
+ 			continue;
+ 		strcpy(fname, device_tree);
+ 		strcat(fname, dentry->d_name);
+@@ -575,6 +577,46 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				add_usable_mem_rgns(rtas_base, rtas_size);
+ 		} /* rtas */
+ 
++		if (strncmp(dentry->d_name, "ibm,opal", 8) == 0) {
++			strcat(fname, "/opal-base-address");
++			file = fopen(fname, "r");
++			if (file == NULL) {
++				perror(fname);
++				goto error_opencdir;
++			}
++			if (fread(&opal_base, sizeof(uint64_t), 1, file) != 1) {
++				perror(fname);
++				goto error_openfile;
++			}
++			opal_base = be64_to_cpu(opal_base);
++			fclose(file);
 +
++			memset(fname, 0, sizeof(fname));
++			strcpy(fname, device_tree);
++			strcat(fname, dentry->d_name);
++			strcat(fname, "/opal-runtime-size");
++			file = fopen(fname, "r");
++			if (file == NULL) {
++				perror(fname);
++				goto error_opencdir;
++			}
++			if (fread(&opal_size, sizeof(uint64_t), 1, file) != 1) {
++				perror(fname);
++				goto error_openfile;
++			}
++			fclose(file);
++			closedir(cdir);
++			opal_size = be64_to_cpu(opal_size);
++			/* Add OPAL to exclude_range */
++			exclude_range[i].start = opal_base;
++			exclude_range[i].end = opal_base + opal_size;
++			i++;
++			if (i >= max_memory_ranges)
++				realloc_memory_ranges();
++			if (kexec_flags & KEXEC_ON_CRASH)
++				add_usable_mem_rgns(opal_base, opal_size);
++		} /* ibm,opal */
 +
- 
- 	gettimeofday(&tv_start, NULL);
- 
-@@ -7527,7 +7496,7 @@ exclude_xen3_user_domain(void)
- 					size * num_pt_loads);
- 
- 			if (!allocated_in_map(pfn)) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, NULL);
- 				continue;
- 			}
- 
-@@ -7535,7 +7504,7 @@ exclude_xen3_user_domain(void)
- 			if (!readmem(VADDR_XEN,
- 			      page_info_addr + OFFSET(page_info.count_info),
- 		 	      &count_info, sizeof(count_info))) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, NULL);
- 				continue;	/* page_info may not exist */
- 			}
- 			if (!readmem(VADDR_XEN,
-@@ -7556,7 +7525,7 @@ exclude_xen3_user_domain(void)
- 				continue;
- 			if ((count_info & 0xffff) && is_select_domain(_domain))
- 				continue;
--			clear_bit_on_2nd_bitmap(pfn);
-+			clear_bit_on_2nd_bitmap(pfn, NULL);
- 		}
- 	}
- 
-@@ -7594,7 +7563,7 @@ exclude_xen4_user_domain(void)
- 			if (!readmem(VADDR_XEN,
- 			      page_info_addr + OFFSET(page_info.count_info),
- 		 	      &count_info, sizeof(count_info))) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, NULL);
- 				continue;	/* page_info may not exist */
- 			}
- 
-@@ -7606,7 +7575,7 @@ exclude_xen4_user_domain(void)
- 			if (page_state_is(count_info, free) ||
- 			    page_state_is(count_info, offlined) ||
- 			    count_info & PGC_broken) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, NULL);
- 				continue;
- 			}
- 
-@@ -7632,7 +7601,7 @@ exclude_xen4_user_domain(void)
- 				continue;
- 			if (is_select_domain(_domain))
- 				continue;
--			clear_bit_on_2nd_bitmap(pfn);
-+			clear_bit_on_2nd_bitmap(pfn, NULL);
- 		}
- 	}
- 
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 4cf8102..38df2b3 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1618,18 +1618,18 @@ is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
- }
- 
- static inline int
--is_dumpable_cyclic(char *bitmap, unsigned long long pfn)
-+is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
- {
--	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
-+	if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
- 		return FALSE;
- 	else
--		return is_on(bitmap, pfn - info->cyclic_start_pfn);
-+		return is_on(bitmap, pfn - cycle->start_pfn);
- }
- 
- static inline int
--is_cyclic_region(unsigned long long pfn)
-+is_cyclic_region(unsigned long long pfn, struct cycle *cycle)
- {
--	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
-+	if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
- 		return FALSE;
- 	else
- 		return TRUE;
-@@ -1647,8 +1647,8 @@ is_zero_page(unsigned char *buf, long page_size)
- }
- 
- void write_vmcoreinfo_data(void);
--int set_bit_on_1st_bitmap(unsigned long long pfn);
--int clear_bit_on_1st_bitmap(unsigned long long pfn);
-+int set_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle);
-+int clear_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle);
- 
- #ifdef __x86__
- 
-diff --git a/sadump_info.c b/sadump_info.c
-index 7822e82..f14ffc9 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -214,9 +214,9 @@ sadump_copy_1st_bitmap_from_memory(void)
- 						      si->backup_src_start);
- 
- 			if (is_dumpable(info->bitmap_memory, backup_src_pfn))
--				set_bit_on_1st_bitmap(pfn);
-+				set_bit_on_1st_bitmap(pfn, NULL);
- 			else
--				clear_bit_on_1st_bitmap(pfn);
-+				clear_bit_on_1st_bitmap(pfn, NULL);
- 		}
- 	}
- 
--- 
-1.8.3.1
+ 		if (!strncmp(dentry->d_name, "memory@", 7) ||
+ 			!strcmp(dentry->d_name, "memory")) {
+ 			strcat(fname, "/reg");
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 5e6b98d..44510cb 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -113,6 +113,10 @@ static void checkprop(char *name, unsigned *data, int len)
+ 		die("unrecoverable error: no property data");
+ 	else if (!strcmp(name, "linux,rtas-base"))
+ 		base = be32_to_cpu(*data);
++	else if (!strcmp(name, "opal-base-address"))
++		base = be64_to_cpu(*(unsigned long long *)data);
++	else if (!strcmp(name, "opal-runtime-size"))
++		size = be64_to_cpu(*(unsigned long long *)data);
+ 	else if (!strcmp(name, "linux,tce-base"))
+ 		base = be64_to_cpu(*(unsigned long long *) data);
+ 	else if (!strcmp(name, "rtas-size") ||
 
 
 _______________________________________________
