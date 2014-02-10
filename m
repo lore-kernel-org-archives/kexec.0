@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WClpF-0002FS-3u
- for kexec@lists.infradead.org; Mon, 10 Feb 2014 08:02:46 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [v3 0/3] Introduce struct cycle to store cyclic region and
- clean up
-Date: Mon, 10 Feb 2014 07:58:04 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971E7E29@BPXM01GP.gisp.nec.co.jp>
-References: <1391851168-6431-1-git-send-email-bhe@redhat.com>
-In-Reply-To: <1391851168-6431-1-git-send-email-bhe@redhat.com>
-Content-Language: ja-JP
+Received: from youngberry.canonical.com ([91.189.89.112])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WCo1o-0006Qm-Ss
+ for kexec@lists.infradead.org; Mon, 10 Feb 2014 10:23:53 +0000
+Received: from 40.77.194.77.rev.sfr.net ([77.194.77.40] helo=[192.168.1.80])
+ by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
+ (Exim 4.71) (envelope-from <louis.bouchard@ubuntu.com>)
+ id 1WCo1S-0006IX-Cg
+ for kexec@lists.infradead.org; Mon, 10 Feb 2014 10:23:30 +0000
+Message-ID: <52F8A896.1050205@ubuntu.com>
+Date: Mon, 10 Feb 2014 11:23:18 +0100
+From: Louis Bouchard <louis.bouchard@ubuntu.com>
 MIME-Version: 1.0
+Subject: Reserved memory estimation for crashkernel=
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,40 +25,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 2014/02/08 18:21:05, Baoquan He <bhe@redhat.com> wrote:
-> v1->v2:
->     In first_cycle(), start_pfn assignation is not aligned to info->pfn_cyclic.
->     Now in v2 change this. Accordingly the pfn in write_elf_header() and
->     write_elf_pages_cyclic() need be adjusted to the real beginning of a
->     load segment, but not the cycle->start_pfn which may be lower after alignment.
-> 
-> v2->v3:
->     Astushi and HATAYAMA found removing the pfn check in set_bitmap_cyclic will
-> introduce bugs. So it's better to add the pfn checking back, though there's
-> a little influence on perforcemance.
+Hello,
 
-Thanks, I'll merge this version into v1.5.6.
+I would be interested to know if there is a semi-accurate way to evaluate the
+amount of memory that needs to be reserved and passed to the crashkernel=
+parameter ?
 
-Atsushi Kumagai
+I understand that it is very specific to the environment (system configuration,
+kernel options, etc) but if we could at least know how much memory will be
+required by makedumpfile it would be a good start.
 
-> Baoquan He (3):
->   makedumpfile: introduce struct cycle to store the cyclic region
->   makedumpfile: use struct cycle to update cyclic region and clean up
->   makedumpfile: remove member variables representing cyclic pfn region
->     in struct DumpInfo
-> 
->  makedumpfile.c | 498 ++++++++++++++++++++++++++++-----------------------------
->  makedumpfile.h |  21 +--
->  sadump_info.c  |   4 +-
->  3 files changed, 261 insertions(+), 262 deletions(-)
-> 
-> -- 
-> 1.8.3.1
-> 
-> 
+Maybe we can imagine an enhancement to makedumpfile to have it evaluate a value
+that could provide some kind of estimate.
+
+TIA,
+
+Kind regards,
+
+...Louis
+-- 
+Louis Bouchard
+Software engineer,
+Ubuntu
 
 _______________________________________________
 kexec mailing list
