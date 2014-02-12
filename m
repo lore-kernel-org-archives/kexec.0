@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WCufb-0004ZY-Sn
- for kexec@lists.infradead.org; Mon, 10 Feb 2014 17:29:24 +0000
-Date: Mon, 10 Feb 2014 18:28:53 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [RESEND PATCH v10] x86, apic, kexec, Documentation: Add
- disable_cpu_apicid kernel parameter
-Message-ID: <20140210182853.15fccd8e@hananiah.suse.cz>
-In-Reply-To: <20140115181426.GC29244@redhat.com>
-References: <20140115064458.1545.38775.stgit@localhost6.localdomain6>
- <20140115170525.GF3180@redhat.com> <52D6C4B6.8010804@zytor.com>
- <20140115174714.GG3180@redhat.com> <52D6CB57.8030804@zytor.com>
- <20140115181426.GC29244@redhat.com>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WDORg-0001lX-Jy
+ for kexec@lists.infradead.org; Wed, 12 Feb 2014 01:17:01 +0000
+Date: Wed, 12 Feb 2014 10:16:33 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: More frequent kexec-tools releases
+Message-ID: <20140212011632.GB17104@verge.net.au>
+References: <20140131143047.GA10594@redhat.com>
+ <20140204083151.GE30621@verge.net.au>
+ <20140204124148.GH17028@verge.net.au>
+ <52F18FFA.5060103@cn.fujitsu.com>
+ <20140205064906.GB29499@verge.net.au>
+ <20140205132015.GA6042@redhat.com>
+ <20140206015513.GX5125@verge.net.au>
+ <20140206142332.GA3674@redhat.com>
+ <20140206235851.GB19799@verge.net.au>
+ <20140207143409.GA4262@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140207143409.GA4262@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,77 +33,37 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: hpa@linux.intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, bp@alien8.de, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, fengguang.wu@intel.com, jingbai.ma@hp.com
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Zhang Yanfei <zhangyanfei@cn.fujitsu.com>, WANG Chao <chaowang@redhat.com>
 
-On Wed, 15 Jan 2014 13:14:26 -0500
-Vivek Goyal <vgoyal@redhat.com> wrote:
-
-> On Wed, Jan 15, 2014 at 09:54:31AM -0800, H. Peter Anvin wrote:
-> > On 01/15/2014 09:47 AM, Vivek Goyal wrote:
-> > > On Wed, Jan 15, 2014 at 09:26:14AM -0800, H. Peter Anvin wrote:
-> > >> On 01/15/2014 09:05 AM, Vivek Goyal wrote:
-> > >>>
-> > >>> I think this is a reasonable approach to solve the issue. Use a command
-> > >>> line to not bring up specific cpu in second kernel which can create
-> > >>> problems.
-> > >>>
-> > >>> Acked-by: Vivek Goyal <vgoyal@redhat.com>
-> > >>>
-> > >>> hpa, I know you are not excited about this approach. If you made up your
-> > >>> mind that this appoarch is not worth pursuing, please do suggest what
-> > >>> would you like to see and we can give that a try.
-> > >>>
-> > >>> We want to solve this problem as on large memory machines saving dump can
-> > >>> take lot of time and we want to bring up multiple cpus and speed up
-> > >>> compression and save on dump time.
-> > >>>
-> > >>
-> > >> I'm not excited about kdump's reliance on the command line, since it
-> > >> seems to be a neverending source of trouble, simply because the command
-> > >> line is fundamentally intended as a human interface.
+On Fri, Feb 07, 2014 at 09:34:09AM -0500, Vivek Goyal wrote:
+> On Fri, Feb 07, 2014 at 08:58:52AM +0900, Simon Horman wrote:
+> > On Thu, Feb 06, 2014 at 09:23:32AM -0500, Vivek Goyal wrote:
+> > > On Thu, Feb 06, 2014 at 10:55:13AM +0900, Simon Horman wrote:
 > > > 
-> > > So in general, what are the alternatives? Either we figure out that kernel
-> > > is booting as kdump kernel and do things differently. That seems even
-> > > worse as what do we want in kdump kernel will change over a period of
-> > > time.
+> > > [..]
+> > > > > Thanks Simon. I did git pull but I don't see new tag in my tree. Not sure
+> > > > > why. 
+> > > > 
+> > > > Could you try again? I messed up the push.
 > > > 
-> > > Other thing is that pass more information in bootparams. But that does
-> > > not seem much different than command line to me.
-> > > 
+> > > It works now. Thanks.
 > > 
-> > It is the commingling of semantics that is the problem.  Command line
-> > options are generally imperative, "do this".  What you want in the kdump
-> > situation, as you yourself state above, is get a description of the
-> > current situation and let the kdump side choose the action to take.
-> > 
-> > As a transport mechanism the command line suffers from limited size and
-> > that you have to share it with an arbitrary amount of user-provided
-> > options that may or may not be essential.
+> > It seems that a few bugs showed up in 2.0.5, fixes for which
+> > are now in the git repository. I am thinking it would be a good
+> > idea to release these as 2.0.6 unless people would rather that I held off.
 > 
-> For large amount of info like memory map, I agree that passing on command
-> line is not a good idea. (/me taks the blame for doing that). That's why
-> in new patches I want to move to pass new map on bootparams and pass
-> saved_max_pfn on command line instead. This is a fresh start so we
-> probably can ignore compatibility with older kernels for this new
-> interface and set things right.
+> I am fine with new release.
 > 
-> But for smaller options, command line seems to be good that they don't
-> consume precious space in bootparams. If we introduce an option today,
-> we are not sure if kdump will continue to use that option down the line
-> or not. For example, few years down the line, we might be able to send
-> INIT IPI to boot cpu too and not need disable_cpu_apicid.
+> In future you might have to come up with a process where you merge
+> only important fixes so that you can do a stable release.
+> 
+> May be create a development branch 2-3 weeks before final release. Master
+> branch slowly will get ready for release and will get only important
+> fixes committed. Devel branch will have everything. And after release,
+> devel will be rebased on top of master and merged or some other better
+> process.
 
-Yes, that was my thinking. We really only need all this, because
-current BIOS implementations do not offer a way to override the default
-initialization routine on a BSP. In fact, I disassembled the INIT
-vector of a few BIOSes to see if the old 286 way of leaving protected
-mode (via a CMOS location) is still supported and might be used at
-least on some hardware. It is not, but that doesn't mean future BIOSes
-may not re-implement something like that.
-
-Sorry for coming late to the party...
-
-Petr Tesarik
+I think something like that should work quite well.
 
 _______________________________________________
 kexec mailing list
