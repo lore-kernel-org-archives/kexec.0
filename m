@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WDw4k-0006Zw-CA
- for kexec@lists.infradead.org; Thu, 13 Feb 2014 13:11:39 +0000
+ id 1WDw4k-0006ad-DB
+ for kexec@lists.infradead.org; Thu, 13 Feb 2014 13:11:44 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH 1/4] add macro dbgprint_mem_range
-Date: Thu, 13 Feb 2014 21:10:52 +0800
-Message-Id: <1392297055-31934-2-git-send-email-chaowang@redhat.com>
+Subject: [PATCH 3/4] x86: add --pass-memmap-cmdline option
+Date: Thu, 13 Feb 2014 21:10:54 +0800
+Message-Id: <1392297055-31934-4-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1392297055-31934-1-git-send-email-chaowang@redhat.com>
 References: <1392297055-31934-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,53 +25,121 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com
 Cc: kexec@lists.infradead.org
 
-dbgprint_mem_range is used for printing the given memory range under
-debugging mode.
+--pass-memmap-cmdline is used for pass memmap=exactmap cmdline for 2nd
+kernel. Later we will use this option to disable passing E820 memmap
+method but use the old exactmap method.
 
 Signed-off-by: WANG Chao <chaowang@redhat.com>
 ---
- kexec/arch/i386/kexec-x86-common.c |  6 +-----
- kexec/kexec.h                      | 10 ++++++++++
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ kexec/arch/i386/include/arch/options.h | 2 ++
+ kexec/arch/i386/kexec-x86.c            | 4 ++++
+ kexec/arch/i386/kexec-x86.h            | 1 +
+ kexec/arch/i386/x86-linux-setup.h      | 1 +
+ kexec/arch/x86_64/kexec-x86_64.c       | 5 +++++
+ 5 files changed, 13 insertions(+)
 
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index f55e2c2..e416177 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -374,11 +374,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 			mem_max = end;
- 	}
+diff --git a/kexec/arch/i386/include/arch/options.h b/kexec/arch/i386/include/arch/options.h
+index aaac731..e5300b5 100644
+--- a/kexec/arch/i386/include/arch/options.h
++++ b/kexec/arch/i386/include/arch/options.h
+@@ -30,6 +30,7 @@
+ #define OPT_VGA 		(OPT_ARCH_MAX+8)
+ #define OPT_REAL_MODE		(OPT_ARCH_MAX+9)
+ #define OPT_ENTRY_32BIT		(OPT_ARCH_MAX+10)
++#define OPT_PASS_MEMMAP_CMDLINE	(OPT_ARCH_MAX+11)
  
--	dbgprintf("MEMORY RANGES\n");
--	for (i = 0; i < *ranges; i++) {
--		dbgprintf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
--			  (*range)[i].end, (*range)[i].type);
--	}
-+	dbgprint_mem_range("MEMORY RANGES", *range, *ranges);
+ /* Options relevant to the architecture (excluding loader-specific ones): */
+ #define KEXEC_ARCH_OPTIONS \
+@@ -41,6 +42,7 @@
+ 	{ "console-serial", 0, 0, OPT_CONSOLE_SERIAL }, \
+ 	{ "elf32-core-headers", 0, 0, OPT_ELF32_CORE }, \
+ 	{ "elf64-core-headers", 0, 0, OPT_ELF64_CORE }, \
++	{ "pass-memmap-cmdline", 0, 0, OPT_PASS_MEMMAP_CMDLINE }, \
  
- 	return ret;
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
+diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
+index 014ecd5..0b58dff 100644
+--- a/kexec/arch/i386/kexec-x86.c
++++ b/kexec/arch/i386/kexec-x86.c
+@@ -54,6 +54,7 @@ void arch_usage(void)
+ 		"     --console-serial          Enable the serial console\n"
+ 		"     --elf32-core-headers      Prepare core headers in ELF32 format\n"
+ 		"     --elf64-core-headers      Prepare core headers in ELF64 format\n"
++		"     --pass--memmap-cmdline    Pass memory map via command line in kexec on panic case\n"
+ 		);
  }
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 2bd6e96..753acc5 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -121,6 +121,16 @@ do { \
- 		fprintf(stderr, __VA_ARGS__); \
- } while(0)
  
-+#define dbgprint_mem_range(prefix, mr, nr_mr) \
-+do { \
-+	int i; \
-+	dbgprintf(prefix "\n"); \
-+	for (i = 0; i < nr_mr; i++) { \
-+		dbgprintf("%016llx-%016llx (%d)\n", (mr)[i].start, \
-+			  (mr)[i].end, (mr)[i].type);                \
-+	} \
-+} while (0)
-+
- struct kexec_segment {
- 	const void *buf;
- 	size_t bufsz;
+@@ -64,6 +65,7 @@ struct arch_options_t arch_options = {
+ 	.console_vga = 0,
+ 	.console_serial = 0,
+ 	.core_header_type = CORE_TYPE_UNDEF,
++	.pass_memmap_cmdline = 0,
+ };
+ 
+ int arch_process_options(int argc, char **argv)
+@@ -133,6 +135,8 @@ int arch_process_options(int argc, char **argv)
+ 		case OPT_ELF64_CORE:
+ 			arch_options.core_header_type = CORE_TYPE_ELF64;
+ 			break;
++		case OPT_PASS_MEMMAP_CMDLINE:
++			arch_options.pass_memmap_cmdline = 1;
+ 		}
+ 	}
+ 	/* Reset getopt for the next pass; called in other source modules */
+diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+index 5aa2a46..e8c9188 100644
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -50,6 +50,7 @@ struct arch_options_t {
+ 	uint8_t  	console_vga;
+ 	uint8_t  	console_serial;
+ 	enum coretype	core_header_type;
++	uint8_t  	pass_memmap_cmdline;
+ };
+ 
+ int multiboot_x86_probe(const char *buf, off_t len);
+diff --git a/kexec/arch/i386/x86-linux-setup.h b/kexec/arch/i386/x86-linux-setup.h
+index 6fb84b4..b0ccd26 100644
+--- a/kexec/arch/i386/x86-linux-setup.h
++++ b/kexec/arch/i386/x86-linux-setup.h
+@@ -30,5 +30,6 @@ void setup_linux_system_parameters(struct kexec_info *info,
+ /* command line parameter may be appended by purgatory */
+ #define PURGATORY_CMDLINE_SIZE 64
+ extern int bzImage_support_efi_boot;
++extern int pass_memmap_cmdline;
+ 
+ #endif /* X86_LINUX_SETUP_H */
+diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+index 5c23e01..f70851d 100644
+--- a/kexec/arch/x86_64/kexec-x86_64.c
++++ b/kexec/arch/x86_64/kexec-x86_64.c
+@@ -53,6 +53,7 @@ void arch_usage(void)
+ 		"     --serial-baud=<baud_rate> Specify the serial port baud rate\n"
+ 		"     --console-vga             Enable the vga console\n"
+ 		"     --console-serial          Enable the serial console\n"
++		"     --pass-memmap-cmdline     Pass memory map via command line in kexec on panic case\n"
+ 		);
+ }
+ 
+@@ -63,6 +64,7 @@ struct arch_options_t arch_options = {
+ 	.console_vga = 0,
+ 	.console_serial = 0,
+ 	.core_header_type = CORE_TYPE_ELF64,
++	.pass_memmap_cmdline = 0,
+ };
+ 
+ int arch_process_options(int argc, char **argv)
+@@ -126,6 +128,9 @@ int arch_process_options(int argc, char **argv)
+ 			}
+ 			arch_options.serial_baud = value;
+ 			break;
++		case OPT_PASS_MEMMAP_CMDLINE:
++			arch_options.pass_memmap_cmdline = 1;
++			break;
+ 		}
+ 	}
+ 	/* Reset getopt for the next pass; called in other source modules */
 -- 
 1.8.5.3
 
