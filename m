@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WDw4k-0006Zo-CC
- for kexec@lists.infradead.org; Thu, 13 Feb 2014 13:11:42 +0000
+ id 1WDw4k-0006Zw-CA
+ for kexec@lists.infradead.org; Thu, 13 Feb 2014 13:11:39 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH 0/4] kexec-tools, x86: E820 memmap pass for kdump
-Date: Thu, 13 Feb 2014 21:10:51 +0800
-Message-Id: <1392297055-31934-1-git-send-email-chaowang@redhat.com>
+Subject: [PATCH 1/4] add macro dbgprint_mem_range
+Date: Thu, 13 Feb 2014 21:10:52 +0800
+Message-Id: <1392297055-31934-2-git-send-email-chaowang@redhat.com>
+In-Reply-To: <1392297055-31934-1-git-send-email-chaowang@redhat.com>
+References: <1392297055-31934-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +25,53 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com
 Cc: kexec@lists.infradead.org
 
-Hi, All
+dbgprint_mem_range is used for printing the given memory range under
+debugging mode.
 
-When kaslr comes in and kdump is broken, it seems about the right time to use
-E820 instead of memmap=exactmap to pass memmap for kdump for the default memmap
-passing mechanism:
-http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ kexec/arch/i386/kexec-x86-common.c |  6 +-----
+ kexec/kexec.h                      | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
-like the only one). So for backward compatibility, I'm introducing a new option
---pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
-
-Any comment is appreciate!
-
-WANG Chao (4):
-  add macro dbgprint_mem_range
-  x86: Store memory ranges globally used for crash kernel to boot into
-  x86: add --pass-memmap-cmdline option
-  x86: Pass memory range via E820 for kdump
-
- kexec/arch/i386/crashdump-x86.c        | 159 +++++++++++++++------------
- kexec/arch/i386/crashdump-x86.h        |   6 +-
- kexec/arch/i386/include/arch/options.h |   2 +
- kexec/arch/i386/kexec-x86-common.c     |   6 +-
- kexec/arch/i386/kexec-x86.c            |   4 +
- kexec/arch/i386/kexec-x86.h            |   1 +
- kexec/arch/i386/x86-linux-setup.c      | 195 ++++++++++++++++++++++++---------
- kexec/arch/i386/x86-linux-setup.h      |   1 +
- kexec/arch/x86_64/kexec-x86_64.c       |   5 +
- kexec/kexec.h                          |  10 ++
- 10 files changed, 260 insertions(+), 129 deletions(-)
-
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index f55e2c2..e416177 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -374,11 +374,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 			mem_max = end;
+ 	}
+ 
+-	dbgprintf("MEMORY RANGES\n");
+-	for (i = 0; i < *ranges; i++) {
+-		dbgprintf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
+-			  (*range)[i].end, (*range)[i].type);
+-	}
++	dbgprint_mem_range("MEMORY RANGES", *range, *ranges);
+ 
+ 	return ret;
+ }
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 2bd6e96..753acc5 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -121,6 +121,16 @@ do { \
+ 		fprintf(stderr, __VA_ARGS__); \
+ } while(0)
+ 
++#define dbgprint_mem_range(prefix, mr, nr_mr) \
++do { \
++	int i; \
++	dbgprintf(prefix "\n"); \
++	for (i = 0; i < nr_mr; i++) { \
++		dbgprintf("%016llx-%016llx (%d)\n", (mr)[i].start, \
++			  (mr)[i].end, (mr)[i].type);                \
++	} \
++} while (0)
++
+ struct kexec_segment {
+ 	const void *buf;
+ 	size_t bufsz;
 -- 
 1.8.5.3
 
