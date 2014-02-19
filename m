@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mailserver.viasat.uk.com ([85.159.88.52])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WG0Up-0004iE-2G
- for kexec@lists.infradead.org; Wed, 19 Feb 2014 06:19:04 +0000
-Date: Wed, 19 Feb 2014 14:18:24 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: How could we get rid of saved_max_pfn for calgary iommu?
-Message-ID: <20140219061824.GA29703@dhcp-17-89.nay.redhat.com>
+ id 1WG6XU-0007AF-Ib
+ for kexec@lists.infradead.org; Wed, 19 Feb 2014 12:46:13 +0000
+From: "Caswell, Paul" <Paul.Caswell@viasat.uk.com>
+Subject: Kexec question
+Date: Wed, 19 Feb 2014 12:46:16 +0000
+Message-ID: <55CE1574BF3FA346B57696AC64BF23611703DE95@VS-WHM-S04.Stonewood.local>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +21,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Muli Ben-Yehuda <muli@il.ibm.com>, "Jon D. Mason" <jdmason@kudzu.us>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Yinghai Lu <yinghai@kernel.org>
-Cc: discuss@x86-64.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi, All
+Hello List,
 
-arch/x86/kernel/pci-calgary.c is the only user of saved_max_pfn today:
+I have a project requirement and I was wondering whether it would be possible to solve it using kexec.
+I want to run a minimalist Linux OS on a x86 processor based system, I will supply a fixed memory range to
+the kernel on boot to limit the physical RAM used.
+On shutdown I want to completely overwrite all RAM used by the previously running image.
+I thought I could use kexec to load a REALLY simple image whose sole purpose is to overwrite the RAM
+used by the previous kernel and then shut the system down.
+We have a number of 16bit real mode applications (they utilise flat real mode) that could possibly be
+used to realise this feature.  They are normally loaded to 09E0:0000.
+Can kexec load non-linux images? Do you think it could load one of our applications and execute it?
+I see there's a kexec_test program in the 2.0.5 tarball but was wondering what that does?
+Can kexec load and execute that?
 
-int __init detect_calgary(void)
-{
-	[..]
-	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
-					saved_max_pfn : max_pfn) * PAGE_SIZE);
-	[..]
-}
+Any help really appreciated.
 
-saved_max_pfn is the real mem size and is calculated by 1st kernel E820
-memmap which is passed in by 2nd kernel's boot_params (done by kexec):
+Regards,
+Paul
 
-	saved_max_pfn = e820_end_of_ram_pfn();
 
-After saved_max_pfn has been set, memmap=exactmap will reset the E820
-provided by boot_params and use the user defined E820 instead.
 
-Now we want to get rid of memmap=exactmap and directly pass the E820
-memmap by boot_params for some reason (eg. exactmap may exceed the cmdline
-size and also isn't compatible with kaslr).
+This email and any files transmitted with it may be confidential, legally privileged and protected in law and are intended solely for the use of the individual to whom it is addressed. Any view or opinions presented are solely those of the author and do not necessarily represent those of ViaSat.   If you have received this Email in error please contact the sender by return and confirm that its contents have been destroyed without further distribution or disclosure. Please email admin@viasat.uk.com<mailto:admin@viasat.uk.com> with any questions relating to this disclaimer.
 
-However saved_max_pfn becomes the obstacle for obsoleting exactmap.
-Because it needs two conditions: first kernel's E820 map and
-memmap=exactmap cmdline.
-
-So I'm wondering if it's possible to get rid of saved_max_pfn totally in
-calgary code. Or we can get saved_max_pfn using a different way, for
-example calculated in 1st kernel and passed in to 2nd kernel by cmdline.
-
-Thanks
-WANG Chao
+ViaSat has Registered Offices at Sandford Lane, Wareham, Dorset BH20 4DY. The company is registered in England and Wales under no: 3007498.
 
 _______________________________________________
 kexec mailing list
