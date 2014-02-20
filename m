@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WGJVN-0007vE-OV
- for kexec@lists.infradead.org; Thu, 20 Feb 2014 02:36:55 +0000
-Date: Wed, 19 Feb 2014 21:36:22 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: How could we get rid of saved_max_pfn for calgary iommu?
-Message-ID: <20140220023622.GD2970@redhat.com>
-References: <20140219061824.GA29703@dhcp-17-89.nay.redhat.com>
- <CAPoiz9yuLg4exX58bh5=XumgAmYNq-9kPjc+f1wa8kMU3-dBbg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAPoiz9yuLg4exX58bh5=XumgAmYNq-9kPjc+f1wa8kMU3-dBbg@mail.gmail.com>
+ id 1WGPwQ-000791-Vc
+ for kexec@lists.infradead.org; Thu, 20 Feb 2014 09:29:17 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH v2 1/4] cleanup: add dbgprint_mem_range function
+Date: Thu, 20 Feb 2014 17:28:29 +0800
+Message-Id: <1392888512-4473-2-git-send-email-chaowang@redhat.com>
+In-Reply-To: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
+References: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,42 +17,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Jon Mason <jdmason@kudzu.us>
-Cc: Muli Ben-Yehuda <muli@il.ibm.com>, discuss@x86-64.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, WANG Chao <chaowang@redhat.com>
+To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com
+Cc: kexec@lists.infradead.org
 
-On Wed, Feb 19, 2014 at 05:04:22PM -0700, Jon Mason wrote:
-> On Tue, Feb 18, 2014 at 11:18 PM, WANG Chao <chaowang@redhat.com> wrote:
-> > Hi, All
-> >
-> > arch/x86/kernel/pci-calgary.c is the only user of saved_max_pfn today:
-> >
-> > int __init detect_calgary(void)
-> > {
-> >         [..]
-> >         specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
-> >                                         saved_max_pfn : max_pfn) * PAGE_SIZE);
-> >         [..]
-> > }
-> 
-> IIUC, the purpose of this code is to reuse the TCE table from the
-> previous kernel.  Thus, it needs to be of the same size as the
-> pre-kdump kernel.  It is using the max_pfn to determine the TCE table
-> size in the non-kdump case.  If there is another way to determine the
-> size it used before, then I am fine making the change to use that way.
+dbgprint_mem_range is used for printing the given memory range under
+debugging mode.
 
-How about passing old tce table size on command line to second kernel.
-Given the fact that it is specific to calgary only, we can it very
-specific. Say calgary_iommu_old_tce_table_sz=<size>.
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ kexec/arch/i386/kexec-x86-common.c |  6 +-----
+ kexec/kexec.c                      | 10 ++++++++++
+ kexec/kexec.h                      |  1 +
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
-But we will then need to know the size of TCE table in first kernel. Is
-this information exported to user space somewhere?
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index f55e2c2..e416177 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -374,11 +374,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 			mem_max = end;
+ 	}
+ 
+-	dbgprintf("MEMORY RANGES\n");
+-	for (i = 0; i < *ranges; i++) {
+-		dbgprintf("%016Lx-%016Lx (%d)\n", (*range)[i].start,
+-			  (*range)[i].end, (*range)[i].type);
+-	}
++	dbgprint_mem_range("MEMORY RANGES", *range, *ranges);
+ 
+ 	return ret;
+ }
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 703d524..2d5a2e1 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -53,6 +53,16 @@ unsigned long long mem_max = ULONG_MAX;
+ static unsigned long kexec_flags = 0;
+ int kexec_debug = 0;
+ 
++void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
++{
++	int i;
++	dbgprintf(prefix, "\n");
++	for (i = 0; i < nr_mr; i++) {
++		dbgprintf("%016llx-%016llx (%d)\n", mr[i].start,
++			  mr[i].end, mr[i].type);
++	}
++}
++
+ void die(const char *fmt, ...)
+ {
+ 	va_list args;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 2bd6e96..d69bba2 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -232,6 +232,7 @@ extern int file_types;
+ 
+ #define KEXEC_OPT_STR "h?vdfxluet:p"
+ 
++extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
+ 	__attribute__ ((format (printf, 1, 2)));
+ extern void *xmalloc(size_t size);
+-- 
+1.8.5.3
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
