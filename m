@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WGPwj-0007A3-Nz
- for kexec@lists.infradead.org; Thu, 20 Feb 2014 09:29:37 +0000
+ id 1WGQ1A-0007LI-MW
+ for kexec@lists.infradead.org; Thu, 20 Feb 2014 09:34:09 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v2 4/4] x86: Pass memory range via E820 for kdump
-Date: Thu, 20 Feb 2014 17:28:32 +0800
-Message-Id: <1392888512-4473-5-git-send-email-chaowang@redhat.com>
-In-Reply-To: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
-References: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
+Subject: [PATCH v2 0/4] kexec-tools, x86: E820 memmap pass for kdump
+Date: Thu, 20 Feb 2014 17:28:28 +0800
+Message-Id: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,346 +23,45 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com
 Cc: kexec@lists.infradead.org
 
-command line size is restricted by kernel, sometimes memmap=exactmap has
-too many memory ranges to pass to cmdline. A better approach, to pass the
-memory ranges for crash kernel to boot into, is filling the memory
-ranges into E820.
+Hi, All
 
-boot_params only got 128 slots for E820 map to fit in, when the number of
-memory map exceeds 128, use setup_data to pass the rest as extended E820
-memory map.
+When kaslr comes in and kdump is broken, it seems about the right time to use
+E820 instead of memmap=exactmap to pass memmap for kdump for the default memmap
+passing mechanism:
+http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
 
-kexec boot could also benefit from setup_data in case E820 memory map
-exceeds 128.
+Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
+like the only one). So for backward compatibility, I'm introducing a new option
+--pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
 
-Now this new approach becomes default instead of memmap=exactmap.
-saved_max_pfn users can specify --pass-memmap-cmdline to use the
-exactmap approach.
+Any comment is appreciate!
 
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c   |  25 +++--
- kexec/arch/i386/crashdump-x86.h   |   1 +
- kexec/arch/i386/x86-linux-setup.c | 195 +++++++++++++++++++++++++++-----------
- 3 files changed, 158 insertions(+), 63 deletions(-)
+v1->v2:
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index c55a6b1..cb19e7d 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -182,6 +182,8 @@ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end);
- struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
- int crash_memory_ranges;
- 
-+int pass_memmap_cmdline;
-+
- /* Memory region reserved for storing panic kernel and other data. */
- #define CRASH_RESERVED_MEM_NR	8
- static struct memory_range crash_reserved_mem[CRASH_RESERVED_MEM_NR];
-@@ -947,20 +949,23 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
- 	if (delete_memmap(crash_memory_range, &crash_memory_ranges, elfcorehdr, memsz) < 0)
- 		return -1;
--	cmdline_add_memmap(mod_cmdline, crash_memory_range);
- 	if (!bzImage_support_efi_boot)
- 		cmdline_add_efi(mod_cmdline);
- 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
- 
--	/* Inform second kernel about the presence of ACPI tables. */
--	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
--		unsigned long start, end;
--		if ( !( mem_range[i].type == RANGE_ACPI
--			|| mem_range[i].type == RANGE_ACPI_NVS) )
--			continue;
--		start = mem_range[i].start;
--		end = mem_range[i].end;
--		cmdline_add_memmap_acpi(mod_cmdline, start, end);
-+	pass_memmap_cmdline = arch_options.pass_memmap_cmdline;
-+	if (pass_memmap_cmdline) {
-+		cmdline_add_memmap(mod_cmdline, crash_memory_range);
-+		/* Inform second kernel about the presence of ACPI tables. */
-+		for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
-+			unsigned long start, end;
-+			if ( !( mem_range[i].type == RANGE_ACPI
-+						|| mem_range[i].type == RANGE_ACPI_NVS) )
-+				continue;
-+			start = mem_range[i].start;
-+			end = mem_range[i].end;
-+			cmdline_add_memmap_acpi(mod_cmdline, start, end);
-+		}
- 	}
- 
- 	return 0;
-diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
-index 633ee0e..e68b626 100644
---- a/kexec/arch/i386/crashdump-x86.h
-+++ b/kexec/arch/i386/crashdump-x86.h
-@@ -30,5 +30,6 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
- 
- extern struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
- extern int crash_memory_ranges;
-+extern int pass_memmap_cmdline;
- 
- #endif /* CRASHDUMP_X86_H */
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 5884f4d..209652c 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -35,8 +35,7 @@
- #include "kexec-x86.h"
- #include "x86-linux-setup.h"
- #include "../../kexec/kexec-syscall.h"
--
--#define SETUP_EFI	4
-+#include "crashdump-x86.h"
- 
- void init_linux_parameters(struct x86_linux_param_header *real_mode)
- {
-@@ -502,6 +501,11 @@ struct efi_setup_data {
- struct setup_data {
- 	uint64_t next;
- 	uint32_t type;
-+#define SETUP_NONE	0
-+#define SETUP_E820_EXT	1
-+#define SETUP_DTB	2
-+#define SETUP_PCI	3
-+#define SETUP_EFI	4
- 	uint32_t len;
- 	uint8_t data[0];
- } __attribute__((packed));
-@@ -602,6 +606,17 @@ struct efi_info {
- 	uint32_t efi_memmap_hi;
- };
- 
-+static void add_setup_data(struct kexec_info *info,
-+			   struct x86_linux_param_header *real_mode,
-+			   struct setup_data *sd)
-+{
-+	int sdsize = sizeof(struct setup_data) + sd->len;
-+
-+	sd->next = real_mode->setup_data;
-+	real_mode->setup_data = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
-+			    0x100000, ULONG_MAX, INT_MAX);
-+}
-+
- /*
-  * setup_efi_data will collect below data and pass them to 2nd kernel.
-  * 1) SMBIOS, fw_vendor, runtime, config_table, they are passed via x86
-@@ -611,11 +626,11 @@ struct efi_info {
- static int setup_efi_data(struct kexec_info *info,
- 			  struct x86_linux_param_header *real_mode)
- {
--	int64_t setup_data_paddr, memmap_paddr;
-+	int64_t memmap_paddr;
- 	struct setup_data *sd;
- 	struct efi_setup_data *esd;
- 	struct efi_mem_descriptor *maps;
--	int nr_maps, size, sdsize, ret = 0;
-+	int nr_maps, size, ret = 0;
- 	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
- 
- 	ret = access("/sys/firmware/efi/systab", F_OK);
-@@ -648,10 +663,8 @@ static int setup_efi_data(struct kexec_info *info,
- 	sd->len = sizeof(*esd);
- 	memcpy(sd->data, esd, sizeof(*esd));
- 	free(esd);
--	sdsize = sd->len + sizeof(struct setup_data);
--	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
--					0x100000, ULONG_MAX, INT_MAX);
--	real_mode->setup_data = setup_data_paddr;
-+
-+	add_setup_data(info, real_mode, sd);
- 
- 	size = nr_maps * sizeof(struct efi_mem_descriptor);
- 	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
-@@ -669,6 +682,119 @@ out:
- 	return ret;
- }
- 
-+static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-+			   struct memory_range *range, int nr_range)
-+{
-+	struct setup_data *sd;
-+	struct e820entry *e820;
-+	int i, j, nr_range_ext;
-+
-+	nr_range_ext = nr_range - E820MAX;
-+	sd = malloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
-+	sd->next = 0;
-+	sd->len = nr_range_ext * sizeof(struct e820entry);
-+	sd->type = SETUP_E820_EXT;
-+
-+	e820 = (struct e820entry *) sd->data;
-+	dbgprintf("Extended E820 via setup_data:\n");
-+	for(i = 0, j = E820MAX; i < nr_range_ext; i++, j++) {
-+		e820[i].addr = range[j].start;
-+		e820[i].size = range[j].end - range[j].start;
-+		switch (range[j].type) {
-+		case RANGE_RAM:
-+			e820[i].type = E820_RAM;
-+			break;
-+		case RANGE_ACPI:
-+			e820[i].type = E820_ACPI;
-+			break;
-+		case RANGE_ACPI_NVS:
-+			e820[i].type = E820_NVS;
-+			break;
-+		default:
-+		case RANGE_RESERVED:
-+			e820[i].type = E820_RESERVED;
-+			break;
-+		}
-+		dbgprintf("%016lx-%016lx (%d)\n",
-+				e820[i].addr,
-+				e820[i].addr + e820[i].size - 1,
-+				e820[i].type);
-+
-+		if (range[j].type != RANGE_RAM)
-+			continue;
-+		if ((range[j].start <= 0x100000) && range[j].end > 0x100000) {
-+			unsigned long long mem_k = (range[j].end >> 10) - (0x100000 >> 10);
-+			real_mode->ext_mem_k = mem_k;
-+			real_mode->alt_mem_k = mem_k;
-+			if (mem_k > 0xfc00) {
-+				real_mode->ext_mem_k = 0xfc00; /* 64M */
-+			}
-+			if (mem_k > 0xffffffff) {
-+				real_mode->alt_mem_k = 0xffffffff;
-+			}
-+		}
-+	}
-+	add_setup_data(info, real_mode, sd);
-+	free(sd);
-+}
-+
-+static void setup_e820(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-+		       struct memory_range *range, int nr_range)
-+{
-+
-+	int nr_range_saved = nr_range;
-+	int i;
-+
-+	if (nr_range > E820MAX) {
-+		nr_range = E820MAX;
-+	}
-+
-+	real_mode->e820_map_nr = nr_range;
-+	dbgprintf("E820 memmap:\n");
-+	for(i = 0; i < nr_range; i++) {
-+		real_mode->e820_map[i].addr = range[i].start;
-+		real_mode->e820_map[i].size = range[i].end - range[i].start;
-+		switch (range[i].type) {
-+			case RANGE_RAM:
-+				real_mode->e820_map[i].type = E820_RAM;
-+				break;
-+			case RANGE_ACPI:
-+				real_mode->e820_map[i].type = E820_ACPI;
-+				break;
-+			case RANGE_ACPI_NVS:
-+				real_mode->e820_map[i].type = E820_NVS;
-+				break;
-+			default:
-+			case RANGE_RESERVED:
-+				real_mode->e820_map[i].type = E820_RESERVED;
-+				break;
-+		}
-+		dbgprintf("%016lx-%016lx (%d)\n",
-+				real_mode->e820_map[i].addr,
-+				real_mode->e820_map[i].addr + real_mode->e820_map[i].size - 1,
-+				real_mode->e820_map[i].type);
-+
-+		if (range[i].type != RANGE_RAM)
-+			continue;
-+		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
-+			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
-+			real_mode->ext_mem_k = mem_k;
-+			real_mode->alt_mem_k = mem_k;
-+			if (mem_k > 0xfc00) {
-+				real_mode->ext_mem_k = 0xfc00; /* 64M */
-+			}
-+			if (mem_k > 0xffffffff) {
-+				real_mode->alt_mem_k = 0xffffffff;
-+			}
-+		}
-+	}
-+
-+	if (nr_range_saved > E820MAX) {
-+		dbgprintf("extra E820 memmap are passed via setup_data\n");
-+		setup_e820_ext(info, real_mode, range, nr_range_saved);
-+	}
-+}
-+
- static int
- get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
- {
-@@ -704,7 +830,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
- {
- 	/* Fill in information the BIOS would usually provide */
- 	struct memory_range *range;
--	int i, ranges;
-+	int ranges;
- 
- 	/* get subarch from running kernel */
- 	setup_subarch(real_mode);
-@@ -746,51 +872,14 @@ void setup_linux_system_parameters(struct kexec_info *info,
- 	/* another safe default */
- 	real_mode->aux_device_info = 0;
- 
--	range = info->memory_range;
--	ranges = info->memory_ranges;
--	if (ranges > E820MAX) {
--		if (!(info->kexec_flags & KEXEC_ON_CRASH))
--			/*
--			 * this e820 not used for capture kernel, see
--			 * do_bzImage_load()
--			 */
--			fprintf(stderr,
--				"Too many memory ranges, truncating...\n");
--		ranges = E820MAX;
--	}
--	real_mode->e820_map_nr = ranges;
--	for(i = 0; i < ranges; i++) {
--		real_mode->e820_map[i].addr = range[i].start;
--		real_mode->e820_map[i].size = range[i].end - range[i].start;
--		switch (range[i].type) {
--		case RANGE_RAM:
--			real_mode->e820_map[i].type = E820_RAM; 
--			break;
--		case RANGE_ACPI:
--			real_mode->e820_map[i].type = E820_ACPI; 
--			break;
--		case RANGE_ACPI_NVS:
--			real_mode->e820_map[i].type = E820_NVS;
--			break;
--		default:
--		case RANGE_RESERVED:
--			real_mode->e820_map[i].type = E820_RESERVED; 
--			break;
--		}
--		if (range[i].type != RANGE_RAM)
--			continue;
--		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
--			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
--			real_mode->ext_mem_k = mem_k;
--			real_mode->alt_mem_k = mem_k;
--			if (mem_k > 0xfc00) {
--				real_mode->ext_mem_k = 0xfc00; /* 64M */
--			}
--			if (mem_k > 0xffffffff) {
--				real_mode->alt_mem_k = 0xffffffff;
--			}
--		}
-+	if (info->kexec_flags & KEXEC_ON_CRASH && !pass_memmap_cmdline) {
-+		range = crash_memory_range;
-+		ranges = crash_memory_ranges;
-+	} else {
-+		range = info->memory_range;
-+		ranges = info->memory_ranges;
- 	}
-+	setup_e820(info, real_mode, range, ranges);
- 
- 	/* fill the EDD information */
- 	setup_edd_info(real_mode);
+Vivek:
+ - Use function instead of macro for dbgprint_mem_range
+ - Do not pass reserved memory range for kdump. It could addressed later
+   separately.
+
+WANG Chao (4):
+  cleanup: add dbgprint_mem_range function
+  x86: Store memory ranges globally used for crash kernel to boot into
+  x86: add --pass-memmap-cmdline option
+  x86: Pass memory range via E820 for kdump
+
+ kexec/arch/i386/crashdump-x86.c        | 157 ++++++++++++++------------
+ kexec/arch/i386/crashdump-x86.h        |   6 +-
+ kexec/arch/i386/include/arch/options.h |   2 +
+ kexec/arch/i386/kexec-x86-common.c     |   6 +-
+ kexec/arch/i386/kexec-x86.c            |   4 +
+ kexec/arch/i386/kexec-x86.h            |   1 +
+ kexec/arch/i386/x86-linux-setup.c      | 195 ++++++++++++++++++++++++---------
+ kexec/arch/i386/x86-linux-setup.h      |   1 +
+ kexec/arch/x86_64/kexec-x86_64.c       |   5 +
+ kexec/kexec.c                          |  10 ++
+ kexec/kexec.h                          |   1 +
+ 11 files changed, 259 insertions(+), 129 deletions(-)
+
 -- 
 1.8.5.3
 
