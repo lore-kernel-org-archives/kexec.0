@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WHxOl-0008Nv-HC
- for kexec@lists.infradead.org; Mon, 24 Feb 2014 15:24:52 +0000
-Date: Mon, 24 Feb 2014 10:24:27 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2 0/4] kexec-tools, x86: E820 memmap pass for kdump
-Message-ID: <20140224152427.GD4631@redhat.com>
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WHxRm-0008So-0U
+ for kexec@lists.infradead.org; Mon, 24 Feb 2014 15:27:58 +0000
+In-Reply-To: <20140224152205.GC4631@redhat.com>
 References: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
  <2680313.u921kQOFS9@skinner>
  <20140224145841.GE1262@dhcp-17-89.nay.redhat.com>
- <7125bd4c-b394-4180-b564-f2002c9d9a2e@email.android.com>
- <20140224151103.GB4631@redhat.com>
+ <20140224152205.GC4631@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140224151103.GB4631@redhat.com>
+Subject: Re: [PATCH v2 0/4] kexec-tools, x86: E820 memmap pass for kdump
+From: "H. Peter Anvin" <hpa@zytor.com>
+Date: Mon, 24 Feb 2014 07:27:15 -0800
+Message-ID: <5458fa7d-ca13-4c2a-bd76-344ceb7679cb@email.android.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,36 +25,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: jdmason@kudzu.us
-Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, dyoung@redhat.com, Thomas Renninger <trenn@suse.de>, WANG Chao <chaowang@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>, WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, jdmason@kudzu.us, dyoung@redhat.com, Thomas Renninger <trenn@suse.de>
 
-On Mon, Feb 24, 2014 at 10:11:03AM -0500, Vivek Goyal wrote:
-> On Mon, Feb 24, 2014 at 07:03:07AM -0800, H. Peter Anvin wrote:
-> > First question is if Calgary even exists anymore and if so if someone actually cares about it enough to maintain it.
-> 
-> Atleast MAINTAINERS file says it is maintained.
-> 
-> CALGARY x86-64 IOMMU
-> M:      Muli Ben-Yehuda <muli@il.ibm.com>
-> M:      "Jon D. Mason" <jdmason@kudzu.us>
-> L:      discuss@x86-64.org
-> S:      Maintained
-> F:      arch/x86/kernel/pci-calgary_64.c
-> F:      arch/x86/kernel/tce_64.c
-> F:      arch/x86/include/asm/calgary.h
-> F:      arch/x86/include/asm/tce.h
-> 
-> 
-> I am add maintainers to CC list and they can shed more light on if
-> calgary still exists and if somebody actually cares about it.
+I would like to see if there is any actual use for it before doing anything else.  The Calgary code may just be off.
 
-Jon,
+On February 24, 2014 7:22:05 AM PST, Vivek Goyal <vgoyal@redhat.com> wrote:
+>On Mon, Feb 24, 2014 at 10:58:41PM +0800, WANG Chao wrote:
+>[..]
+>> > Approaches to avoid saved_max_pfn in calgary case:
+>> >   1) If done correctly from the beginning, the TCE table size would
+>have
+>> >      been exposed via /sys and kexec-tools could simply add:
+>> >      calgary="128k|512K...|8M" which is already caught by
+>pci-calgary and
+>> >      saved_max_pfn is not needed/touched anymore.
+>> >      -> Disadvantage: needs a new sysfs entry
+>> >   2) When finding max_pfn for calgary table size usage, we could
+>try in 
+>> >      kdump case to use the highest memory (RAM or RESERVED) showing
+>up
+>> >      in e820 map.
+>> 
+>> How could this replace saved_max_pfn? The highest memory in kdump
+>can't
+>> necessarily be the real ram size. In kdump, RAM range is just part of
+>the real
+>> ram, not mentioning we don't pass RESERVED range to kdump E820.
+>
+>I vaguely remember there was some discussion about passing first
+>kerne's
+>RAM as special reserved ranges. Say E820_RESERVED_KDUMP. And use that
+>to figure out saved_max_pfn.
+>
+>I personally feel that just create a new command line parameter
+>"saved_max_pfn" and pass it to second kernel and be done with it.
+>Modify
+>calgary code to first look for saved_max_pfn and if not present,
+>calculate
+>saved_max_pfn from e820.
+>
+>saved_max_pfn command line option is pretty ugly, not sure what are the
+>better options here.
+>
+>Thanks
+>Vivek
 
-Muli's mail is bouncing. Is he still maintaining calgary and is his
-mail id still valid as mentioned in MAINTAINERS entry above.
-
-Thanks
-Vivek
+-- 
+Sent from my mobile phone.  Please pardon brevity and lack of formatting.
 
 _______________________________________________
 kexec mailing list
