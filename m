@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WHnpn-0007E8-Fh
- for kexec@lists.infradead.org; Mon, 24 Feb 2014 05:12:09 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: crash: struct command can read irrelevant pages.
-Date: Mon, 24 Feb 2014 05:00:56 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971EC432@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE971EAF68@BPXM01GP.gisp.nec.co.jp>
- <1347294540.11438228.1392821415316.JavaMail.zimbra@redhat.com>
- <1598236100.13279715.1392929150735.JavaMail.zimbra@redhat.com>
-In-Reply-To: <1598236100.13279715.1392929150735.JavaMail.zimbra@redhat.com>
-Content-Language: ja-JP
+ id 1WHswF-0007pX-Nd
+ for kexec@lists.infradead.org; Mon, 24 Feb 2014 10:39:08 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH v2 0/4] kexec-tools, x86: E820 memmap pass for kdump
+Date: Mon, 24 Feb 2014 11:38:38 +0100
+Message-ID: <2680313.u921kQOFS9@skinner>
+In-Reply-To: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
+References: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,232 +22,169 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "crash-utility@redhat.com" <crash-utility@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, vgoyal@redhat.com
 
->Hello Atsushi,
->
->I've committed a SLAB/SLUB kmem_cache-specific fix for this issue:
->
->  https://github.com/crash-utility/crash/commit/c0b7a74fc13121203810d06d163550436b2d5476
->
->which is queued for crash-7.0.6.
+On Thursday, February 20, 2014 05:28:28 PM WANG Chao wrote:
+> Hi, All
+> 
+> When kaslr comes in and kdump is broken, it seems about the right time to
+> use E820 instead of memmap=exactmap to pass memmap for kdump for the
+> default memmap passing mechanism:
+> http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
+> 
+> Unfortunately, saved_max_pfn still got its user out there (calgry pci, it
+> looks like the only one). So for backward compatibility, I'm introducing a
+> new option --pass-memmap-cmdline to force kexec-tools to pass
+> memmap=exactmap, the old way.
+The saved_max_pfn usage is calgary pci looks bad/wrong and I wonder:
+  - whether this is still worth touching, so that the old mechanism:
+    --pass-memmap-cmdline could vanish in the one or other year and need
+    not to be carried forever
+I tried to find such a machine, but couldn't find anything mentioning calgary
+in quite some machines' dmesg.
 
-Thanks Dave, I made sure that this patch solved my problem.
+Approaches to avoid saved_max_pfn in calgary case:
+  1) If done correctly from the beginning, the TCE table size would have
+     been exposed via /sys and kexec-tools could simply add:
+     calgary="128k|512K...|8M" which is already caught by pci-calgary and
+     saved_max_pfn is not needed/touched anymore.
+     -> Disadvantage: needs a new sysfs entry
+  2) When finding max_pfn for calgary table size usage, we could try in 
+     kdump case to use the highest memory (RAM or RESERVED) showing up
+     in e820 map.
 
->> This is a "known" issue has been discussed on the crash-utility list in the
->> past, at least with respect to the kmem_cache data structure.  But for any random
->> data structure that has such a construct, I'm not sure what can be done.
+Please find below a patch which would eleminate the last saved_max_pfn
+user. Unfortunately I could not find a calgary system to test this on.
 
-I also have no ideas how to solve it, but it seems that it hasn't been a
-practical problem yet. So I think your patch is enough for now.
+Be aware: I could not test this.
+If someone tells me for what kind of machine (and BIOS stuff enabled?)
+I should look for, I can try to search for such a platform.
 
->> By any chance can you make the 32-bit vmlinux/vmcore pair available for
->> me to download?  Reply to me off-list if you can.
+Something else: There is quite some duplicate code in kexec-tools when it
+is about retrieving the e820 table info (normal kexec vs kdump).
+Did you see my cleanups I posted long ago? Do you plan to still clean up
+a bit after this series?
 
-Sure, I'll send another mail.
+        Thomas
 
 
-Thanks
-Atsushi Kumagai
 
->>
->>
->> ----- Original Message -----
->> > Hello,
->> >
->> > Finally, I've found the cause of the issue I mentioned as below
->> > when makedumpfile v1.5.5 was released:
->> >
->> > > 2. At first, the supported kernel will be updated to 3.12, but I
->> > > found an issue while testing for v1.5.5, which seems that the page
->> > > filtering works wrongly on kernel 3.12. I couldn't investigate this
->> > > yet and it will take some time to finish it.
->> > > Therefore, the latest supported kernel version is 3.11 in v1.5.5.
->> >
->> > This is neither a kernel issue nor a makedumpfile issue, it's a crash's bug.
->> > It can happen when a slab cache is stored at almost end of a page.
->> >
->> > == Description ==
->> >
->> > At the beginning, I found the error message below when I used crash for
->> > a dumpfile generated by makedumpfile -d2:
->> >
->> >     please wait... (gathering kmem slab cache data)
->> >     crash: page excluded: kernel virtual address: f4e87000  type:
->> >     "kmem_cache
->> >     buffer"
->> >
->> >     crash: unable to initialize kmem slab cache subsystem
->> >
->> > This message indicated that crash failed to get a slab cache during
->> > kmem_cache_init(), and according to the below, crash failed to get
->> > the slab cache stored at f4e86f40:
->> >
->> >     crash> p kmem_cache
->> >     kmem_cache = $1 = (struct kmem_cache *) 0xc0b1cbc0 <kmem_cache_boot>
->> >     crash>
->> >     crash> list kmem_cache.list -s kmem_cache.name -h 0xc0b1cbc0
->> >     ...
->> >     f4d37840
->> >       name = 0xf4edf540 "uid_cache"
->> >     f4e86f40
->> >     list: page excluded: kernel virtual address: f4e87000  type:
->> >     "gdb_readmem_callback"
->> >
->> > It seems that the slab cache covered two pages, [f4e86000- f4e87000] and
->> > [f4e87000- f4e88000]. Well, let's confirm the *real* size of it.
->> >
->> > Since slab caches except kmem_cache_boot are allocated as slab objects,
->> > we can confirm the size like below:
->> >
->> >   crash> p kmem_cache
->> >   kmem_cache = $2 = (struct kmem_cache *) 0xc0b1cbc0 <kmem_cache_boot>
->> >   crash> struct kmem_cache.object_size 0xc0b1cbc0
->> >     object_size = 104
->> >   crash>
->> >
->> > In my environment, the size was 104 bytes. Therefore, the slab cache
->> > stored at f4e86f40 fits in the single page([f4e86000- f4e87000]) and
->> > the excluded page([f4e87000- f4e88000]) isn't a related page.
->> >
->> > On the other hand, crash get the size from vmlinux by using gdb,
->> > it was 216 bytes:
->> >
->> >     crash> struct kmem_cache
->> >     struct kmem_cache {
->> >         unsigned int batchcount;
->> >         unsigned int limit;
->> >         ...
->> >         struct kmem_cache_node **node;
->> >         struct array_cache *array[33];
->> >     }
->> >     SIZE: 216
->> >     crash>
->> >
->> > So crash mistook the correlative pages of the slab cache as
->> > [f4e86000- f4e87000] and [f4e87000- f4e88000] even though the latter
->> > was a irrelevant page.
->> >
->> > This gap came from the fact that the size of slab cache is variable.
->> >
->> >     struct kmem_cache {
->> >     ...
->> >             struct kmem_cache_node **node;
->> >             struct array_cache *array[NR_CPUS + MAX_NUMNODES];
->> >             /*
->> >              * Do not add fields after array[]
->> >              */
->> >     };
->> >
->> > The size of "array" is the variable factor of kmem_cache.
->> > When building vmlinux, the size of kmem_cache will be calculated with
->> > NR_CPUS and MAX_NUMNODES, and put it into vmlinux as a debug information.
->> > (Sorry, I don't know gcc well. I may misunderstand this.)
->> > However, the actual size will be smaller than the defined size because
->> > the actual size will be decided based on the actual number of CPUs and
->> > NODEs.
->> >
->> > void __init kmem_cache_init(void)::
->> > ...
->> >         /*
->> >          * struct kmem_cache size depends on nr_node_ids & nr_cpu_ids
->> >          */
->> >         create_boot_cache(kmem_cache, "kmem_cache",
->> >                 offsetof(struct kmem_cache, array[nr_cpu_ids]) +
->> >                                   nr_node_ids * sizeof(struct
->> >                                   kmem_cache_node
->> >                                   *),  // object_size
->> >                                   SLAB_HWCACHE_ALIGN);
->> >         list_add(&kmem_cache->list, &slab_caches);
->> >
->> >
->> > As for kmem_cache, we can get the actual size of it from kmem_cache_boot,
->> > but I suppose that kmem_cache is not the only struct in kernel whose size
->> > is variable. So I think we should discuss how to address such issues like
->> > this.
->> >
->> > By the way, I mentioned the case of *SLAB* in this mail,
->> > but SLUB seems have the same issue.
->> >
->> >
->> > Thanks
->> > Atsushi Kumagai
->>
->>
->> This is a "known" issue has been discussed on the crash-utility list in the
->> past,
->> at least with respect to the kmem_cache data structure.  But for any random
->> data
->> structure that has such a construct, I'm not sure what can be done.
->>
->> In the case of the CONFIG_SLAB kmem_cache data structure, there is a function
->> that is supposed to "downsize" the size value of the kmem_cache data
->> structure
->> that is returned by gdb.  It is called here in kmem_cache_init(), just
->> prior to cycling through all of the kmem_cache structures, where the
->> page excluded error shown above occurred:
->>
->>    8561         if (!(pc->flags & RUNTIME))
->>    8562                 kmem_cache_downsize();
->>    8563
->>    8564         cache_buf = GETBUF(SIZE(kmem_cache_s));
->>    8565         hq_open();
->>    8566
->>    8567         do {
->>    8568                 cache_count++;
->>    8569
->>    8570                 if (!readmem(cache, KVADDR, cache_buf,
->>    SIZE(kmem_cache_s),
->>    8571                         "kmem_cache buffer", RETURN_ON_ERROR)) {
->>    8572                         FREEBUF(cache_buf);
->>    8573                         vt->flags |= KMEM_CACHE_UNAVAIL;
->>    8574                         error(INFO,
->>    8575                           "%sunable to initialize kmem slab cache
->>    subsystem\n\n",
->>    8576                                 DUMPFILE() ? "\n" : "");
->>    8577                         hq_close();
->>    8578                         return;
->>    8579                 }
->>
->> The SIZE(kmem_cache_s) value should have been downsized by that function,
->> but presumably it did not work.  If CRASHDEBUG(1) was turned on during
->> initialization,
->> you would have seen either of these two messages from kmem_cache_downsize():
->>
->>                 if (CRASHDEBUG(1))
->>                         fprintf(fp, "kmem_cache_downsize: %ld to %ld\n",
->>                                 STRUCT_SIZE("kmem_cache"),
->>                                 SIZE(kmem_cache_s));
->>
->> or:
->>
->>                 if (CRASHDEBUG(1)) {
->>                         fprintf(fp,
->>                             "\nkmem_cache_downsize: SIZE(kmem_cache_s): %ld "
->>                             "cache_cache.buffer_size: %d\n",
->>                                 STRUCT_SIZE("kmem_cache"), buffer_size);
->>                         fprintf(fp,
->>                             "kmem_cache_downsize: nr_node_ids: %ld\n",
->>                                 vt->kmem_cache_len_nodes);
->>                 }
->>
->> The function failed probably failed due to some kernel change.  In fact,
->> I just checked a 3.13 CONFIG_SLAB kernel, and I see that
->> kmem_cache_downsize()
->> no longer works for that kernel.
->>
->> I see that kmem_cache_boot would be a good alternative for determining
->> the size on CONFIG_SLAB kernels, at least on 3.7 and later kernels where
->> it was introduced.  And for CONFIG_SLUB, which doesn't currently have a
->> "downsize" function, it looks like its "kmem_cache" cache also has size
->> fields that could be used.
->>
->> By any chance can you make the 32-bit vmlinux/vmcore pair available for
->> me to download?  Reply to me off-list if you can.
->>
->> Thanks,
->>   Dave
+X86: Eliminate saved_max_pfn user in pci-calgary and remove the unused variable
+
+Searching for the highest value of RAM and RESERVED memory in kdump case
+should be the same as max_pfn of the original kernel.
+At least this is always the case as long as type usable RAM is the highest
+entry in original e820 map.
+
+Signed-off-by: Thomas Renninger <trenn@suse.de>
+
+diff --git a/arch/x86/include/asm/e820.h b/arch/x86/include/asm/e820.h
+index 779c2ef..712173e 100644
+--- a/arch/x86/include/asm/e820.h
++++ b/arch/x86/include/asm/e820.h
+@@ -49,6 +49,7 @@ static inline void early_memtest(unsigned long start, unsigned long end)
+ #endif
+ 
+ extern unsigned long e820_end_of_ram_pfn(void);
++extern unsigned long e820_end_of_e820_pfn(void);
+ extern unsigned long e820_end_of_low_ram_pfn(void);
+ extern u64 early_reserve_e820(u64 sizet, u64 align);
+ 
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 988c00a..699e8fe 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -757,7 +757,7 @@ u64 __init early_reserve_e820(u64 size, u64 align)
+ /*
+  * Find the highest page frame number we have available
+  */
+-static unsigned long __init e820_end_pfn(unsigned long limit_pfn, unsigned type)
++unsigned long __init e820_end_pfn(unsigned long limit_pfn, unsigned type)
+ {
+ 	int i;
+ 	unsigned long last_pfn = 0;
+@@ -796,6 +796,12 @@ unsigned long __init e820_end_of_ram_pfn(void)
+ 	return e820_end_pfn(MAX_ARCH_PFN, E820_RAM);
+ }
+ 
++unsigned long __init e820_end_of_e820_pfn(void)
++{
++	return max(e820_end_pfn(MAX_ARCH_PFN, E820_RAM),
++		   e820_end_pfn(MAX_ARCH_PFN, E820_RESERVED);
++}
++
+ unsigned long __init e820_end_of_low_ram_pfn(void)
+ {
+ 	return e820_end_pfn(1UL<<(32 - PAGE_SHIFT), E820_RAM);
+@@ -847,14 +853,6 @@ static int __init parse_memmap_one(char *p)
+ 		return -EINVAL;
+ 
+ 	if (!strncmp(p, "exactmap", 8)) {
+-#ifdef CONFIG_CRASH_DUMP
+-		/*
+-		 * If we are doing a crash dump, we still need to know
+-		 * the real mem size before original memory map is
+-		 * reset.
+-		 */
+-		saved_max_pfn = e820_end_of_ram_pfn();
+-#endif
+ 		e820.nr_map = 0;
+ 		userdef = 1;
+ 		return 0;
+diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
+index 299d493..89ae766 100644
+--- a/arch/x86/kernel/pci-calgary_64.c
++++ b/arch/x86/kernel/pci-calgary_64.c
+@@ -1371,6 +1371,7 @@ int __init detect_calgary(void)
+ 	unsigned long ptr;
+ 	unsigned int offset, prev_offset;
+ 	int ret;
++	unsigned long orig_max_pfn = max_pfn;
+ 
+ 	/*
+ 	 * if the user specified iommu=off or iommu=soft or we found
+@@ -1418,8 +1419,10 @@ int __init detect_calgary(void)
+ 		return -ENOMEM;
+ 	}
+ 
+-	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
+-					saved_max_pfn : max_pfn) * PAGE_SIZE);
++	if (is_kdump_kernel())
++		orig_max_pfn = e820_end_of_e820_pfn();
++	specified_table_size = determine_tce_table_size(orig_max_pfn
++							* PAGE_SIZE);
+ 
+ 	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
+ 		struct calgary_bus_info *info = &bus_info[bus];
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index 7032518..bce4d97 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -87,5 +87,4 @@ extern void unregister_oldmem_pfn_is_ram(void);
+ static inline int is_kdump_kernel(void) { return 0; }
+ #endif /* CONFIG_CRASH_DUMP */
+ 
+-extern unsigned long saved_max_pfn;
+ #endif /* LINUX_CRASHDUMP_H */
+diff --git a/kernel/crash_dump.c b/kernel/crash_dump.c
+index c766ee5..9d50486 100644
+--- a/kernel/crash_dump.c
++++ b/kernel/crash_dump.c
+@@ -5,12 +5,6 @@
+ #include <linux/export.h>
+ 
+ /*
+- * If we have booted due to a crash, max_pfn will be a very low value. We need
+- * to know the amount of memory that the previous kernel used.
+- */
+-unsigned long saved_max_pfn;
+-
+-/*
+  * stores the physical address of elf header of crash image
+  *
+  * Note: elfcorehdr_addr is not just limited to vmcore. It is also used by
+
 
 _______________________________________________
 kexec mailing list
