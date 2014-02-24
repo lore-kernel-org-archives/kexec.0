@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WHm72-0005x1-46
- for kexec@lists.infradead.org; Mon, 24 Feb 2014 03:21:49 +0000
-Date: Mon, 24 Feb 2014 11:22:05 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec: Fix ->unuseable_pages typo
-Message-ID: <20140224032204.GC4043@dhcp-16-126.nay.redhat.com>
-References: <1392819695-24116-1-git-send-email-bp@alien8.de>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WHnpn-0007E8-Fh
+ for kexec@lists.infradead.org; Mon, 24 Feb 2014 05:12:09 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: crash: struct command can read irrelevant pages.
+Date: Mon, 24 Feb 2014 05:00:56 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971EC432@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE971EAF68@BPXM01GP.gisp.nec.co.jp>
+ <1347294540.11438228.1392821415316.JavaMail.zimbra@redhat.com>
+ <1598236100.13279715.1392929150735.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1598236100.13279715.1392929150735.JavaMail.zimbra@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1392819695-24116-1-git-send-email-bp@alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,72 +25,232 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Borislav Petkov <bp@suse.de>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>
+To: "crash-utility@redhat.com" <crash-utility@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 02/19/14 at 03:21pm, Borislav Petkov wrote:
-> From: Borislav Petkov <bp@suse.de>
-> 
-> Let's use the more common "unusable".
-> 
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> ---
->  include/linux/kexec.h | 2 +-
->  kernel/kexec.c        | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 6d4066cdb5b5..969237e338d1 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -100,7 +100,7 @@ struct kimage {
->  
->  	struct list_head control_pages;
->  	struct list_head dest_pages;
-> -	struct list_head unuseable_pages;
-> +	struct list_head unusable_pages;
->  
->  	/* Address of next control page to allocate for crash kernels. */
->  	unsigned long control_page;
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 60bafbed06ab..a2d0c5f80bf2 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -152,7 +152,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
->  	INIT_LIST_HEAD(&image->dest_pages);
->  
->  	/* Initialize the list of unusable pages */
-> -	INIT_LIST_HEAD(&image->unuseable_pages);
-> +	INIT_LIST_HEAD(&image->unusable_pages);
->  
->  	/* Read in the segments */
->  	image->nr_segments = nr_segments;
-> @@ -607,7 +607,7 @@ static void kimage_free_extra_pages(struct kimage *image)
->  	kimage_free_page_list(&image->dest_pages);
->  
->  	/* Walk through and free any unusable pages I have cached */
-> -	kimage_free_page_list(&image->unuseable_pages);
-> +	kimage_free_page_list(&image->unusable_pages);
->  
->  }
->  static void kimage_terminate(struct kimage *image)
-> @@ -731,7 +731,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
->  		/* If the page cannot be used file it away */
->  		if (page_to_pfn(page) >
->  				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
-> -			list_add(&page->lru, &image->unuseable_pages);
-> +			list_add(&page->lru, &image->unusable_pages);
->  			continue;
->  		}
->  		addr = page_to_pfn(page) << PAGE_SHIFT;
+>Hello Atsushi,
+>
+>I've committed a SLAB/SLUB kmem_cache-specific fix for this issue:
+>
+>  https://github.com/crash-utility/crash/commit/c0b7a74fc13121203810d06d163550436b2d5476
+>
+>which is queued for crash-7.0.6.
 
-Acked-by: Dave Young <dyoung@redhat.com>
+Thanks Dave, I made sure that this patch solved my problem.
 
---
+>> This is a "known" issue has been discussed on the crash-utility list in the
+>> past, at least with respect to the kmem_cache data structure.  But for any random
+>> data structure that has such a construct, I'm not sure what can be done.
+
+I also have no ideas how to solve it, but it seems that it hasn't been a
+practical problem yet. So I think your patch is enough for now.
+
+>> By any chance can you make the 32-bit vmlinux/vmcore pair available for
+>> me to download?  Reply to me off-list if you can.
+
+Sure, I'll send another mail.
+
+
 Thanks
-Dave
+Atsushi Kumagai
+
+>>
+>>
+>> ----- Original Message -----
+>> > Hello,
+>> >
+>> > Finally, I've found the cause of the issue I mentioned as below
+>> > when makedumpfile v1.5.5 was released:
+>> >
+>> > > 2. At first, the supported kernel will be updated to 3.12, but I
+>> > > found an issue while testing for v1.5.5, which seems that the page
+>> > > filtering works wrongly on kernel 3.12. I couldn't investigate this
+>> > > yet and it will take some time to finish it.
+>> > > Therefore, the latest supported kernel version is 3.11 in v1.5.5.
+>> >
+>> > This is neither a kernel issue nor a makedumpfile issue, it's a crash's bug.
+>> > It can happen when a slab cache is stored at almost end of a page.
+>> >
+>> > == Description ==
+>> >
+>> > At the beginning, I found the error message below when I used crash for
+>> > a dumpfile generated by makedumpfile -d2:
+>> >
+>> >     please wait... (gathering kmem slab cache data)
+>> >     crash: page excluded: kernel virtual address: f4e87000  type:
+>> >     "kmem_cache
+>> >     buffer"
+>> >
+>> >     crash: unable to initialize kmem slab cache subsystem
+>> >
+>> > This message indicated that crash failed to get a slab cache during
+>> > kmem_cache_init(), and according to the below, crash failed to get
+>> > the slab cache stored at f4e86f40:
+>> >
+>> >     crash> p kmem_cache
+>> >     kmem_cache = $1 = (struct kmem_cache *) 0xc0b1cbc0 <kmem_cache_boot>
+>> >     crash>
+>> >     crash> list kmem_cache.list -s kmem_cache.name -h 0xc0b1cbc0
+>> >     ...
+>> >     f4d37840
+>> >       name = 0xf4edf540 "uid_cache"
+>> >     f4e86f40
+>> >     list: page excluded: kernel virtual address: f4e87000  type:
+>> >     "gdb_readmem_callback"
+>> >
+>> > It seems that the slab cache covered two pages, [f4e86000- f4e87000] and
+>> > [f4e87000- f4e88000]. Well, let's confirm the *real* size of it.
+>> >
+>> > Since slab caches except kmem_cache_boot are allocated as slab objects,
+>> > we can confirm the size like below:
+>> >
+>> >   crash> p kmem_cache
+>> >   kmem_cache = $2 = (struct kmem_cache *) 0xc0b1cbc0 <kmem_cache_boot>
+>> >   crash> struct kmem_cache.object_size 0xc0b1cbc0
+>> >     object_size = 104
+>> >   crash>
+>> >
+>> > In my environment, the size was 104 bytes. Therefore, the slab cache
+>> > stored at f4e86f40 fits in the single page([f4e86000- f4e87000]) and
+>> > the excluded page([f4e87000- f4e88000]) isn't a related page.
+>> >
+>> > On the other hand, crash get the size from vmlinux by using gdb,
+>> > it was 216 bytes:
+>> >
+>> >     crash> struct kmem_cache
+>> >     struct kmem_cache {
+>> >         unsigned int batchcount;
+>> >         unsigned int limit;
+>> >         ...
+>> >         struct kmem_cache_node **node;
+>> >         struct array_cache *array[33];
+>> >     }
+>> >     SIZE: 216
+>> >     crash>
+>> >
+>> > So crash mistook the correlative pages of the slab cache as
+>> > [f4e86000- f4e87000] and [f4e87000- f4e88000] even though the latter
+>> > was a irrelevant page.
+>> >
+>> > This gap came from the fact that the size of slab cache is variable.
+>> >
+>> >     struct kmem_cache {
+>> >     ...
+>> >             struct kmem_cache_node **node;
+>> >             struct array_cache *array[NR_CPUS + MAX_NUMNODES];
+>> >             /*
+>> >              * Do not add fields after array[]
+>> >              */
+>> >     };
+>> >
+>> > The size of "array" is the variable factor of kmem_cache.
+>> > When building vmlinux, the size of kmem_cache will be calculated with
+>> > NR_CPUS and MAX_NUMNODES, and put it into vmlinux as a debug information.
+>> > (Sorry, I don't know gcc well. I may misunderstand this.)
+>> > However, the actual size will be smaller than the defined size because
+>> > the actual size will be decided based on the actual number of CPUs and
+>> > NODEs.
+>> >
+>> > void __init kmem_cache_init(void)::
+>> > ...
+>> >         /*
+>> >          * struct kmem_cache size depends on nr_node_ids & nr_cpu_ids
+>> >          */
+>> >         create_boot_cache(kmem_cache, "kmem_cache",
+>> >                 offsetof(struct kmem_cache, array[nr_cpu_ids]) +
+>> >                                   nr_node_ids * sizeof(struct
+>> >                                   kmem_cache_node
+>> >                                   *),  // object_size
+>> >                                   SLAB_HWCACHE_ALIGN);
+>> >         list_add(&kmem_cache->list, &slab_caches);
+>> >
+>> >
+>> > As for kmem_cache, we can get the actual size of it from kmem_cache_boot,
+>> > but I suppose that kmem_cache is not the only struct in kernel whose size
+>> > is variable. So I think we should discuss how to address such issues like
+>> > this.
+>> >
+>> > By the way, I mentioned the case of *SLAB* in this mail,
+>> > but SLUB seems have the same issue.
+>> >
+>> >
+>> > Thanks
+>> > Atsushi Kumagai
+>>
+>>
+>> This is a "known" issue has been discussed on the crash-utility list in the
+>> past,
+>> at least with respect to the kmem_cache data structure.  But for any random
+>> data
+>> structure that has such a construct, I'm not sure what can be done.
+>>
+>> In the case of the CONFIG_SLAB kmem_cache data structure, there is a function
+>> that is supposed to "downsize" the size value of the kmem_cache data
+>> structure
+>> that is returned by gdb.  It is called here in kmem_cache_init(), just
+>> prior to cycling through all of the kmem_cache structures, where the
+>> page excluded error shown above occurred:
+>>
+>>    8561         if (!(pc->flags & RUNTIME))
+>>    8562                 kmem_cache_downsize();
+>>    8563
+>>    8564         cache_buf = GETBUF(SIZE(kmem_cache_s));
+>>    8565         hq_open();
+>>    8566
+>>    8567         do {
+>>    8568                 cache_count++;
+>>    8569
+>>    8570                 if (!readmem(cache, KVADDR, cache_buf,
+>>    SIZE(kmem_cache_s),
+>>    8571                         "kmem_cache buffer", RETURN_ON_ERROR)) {
+>>    8572                         FREEBUF(cache_buf);
+>>    8573                         vt->flags |= KMEM_CACHE_UNAVAIL;
+>>    8574                         error(INFO,
+>>    8575                           "%sunable to initialize kmem slab cache
+>>    subsystem\n\n",
+>>    8576                                 DUMPFILE() ? "\n" : "");
+>>    8577                         hq_close();
+>>    8578                         return;
+>>    8579                 }
+>>
+>> The SIZE(kmem_cache_s) value should have been downsized by that function,
+>> but presumably it did not work.  If CRASHDEBUG(1) was turned on during
+>> initialization,
+>> you would have seen either of these two messages from kmem_cache_downsize():
+>>
+>>                 if (CRASHDEBUG(1))
+>>                         fprintf(fp, "kmem_cache_downsize: %ld to %ld\n",
+>>                                 STRUCT_SIZE("kmem_cache"),
+>>                                 SIZE(kmem_cache_s));
+>>
+>> or:
+>>
+>>                 if (CRASHDEBUG(1)) {
+>>                         fprintf(fp,
+>>                             "\nkmem_cache_downsize: SIZE(kmem_cache_s): %ld "
+>>                             "cache_cache.buffer_size: %d\n",
+>>                                 STRUCT_SIZE("kmem_cache"), buffer_size);
+>>                         fprintf(fp,
+>>                             "kmem_cache_downsize: nr_node_ids: %ld\n",
+>>                                 vt->kmem_cache_len_nodes);
+>>                 }
+>>
+>> The function failed probably failed due to some kernel change.  In fact,
+>> I just checked a 3.13 CONFIG_SLAB kernel, and I see that
+>> kmem_cache_downsize()
+>> no longer works for that kernel.
+>>
+>> I see that kmem_cache_boot would be a good alternative for determining
+>> the size on CONFIG_SLAB kernels, at least on 3.7 and later kernels where
+>> it was introduced.  And for CONFIG_SLUB, which doesn't currently have a
+>> "downsize" function, it looks like its "kmem_cache" cache also has size
+>> fields that could be used.
+>>
+>> By any chance can you make the 32-bit vmlinux/vmcore pair available for
+>> me to download?  Reply to me off-list if you can.
+>>
+>> Thanks,
+>>   Dave
 
 _______________________________________________
 kexec mailing list
