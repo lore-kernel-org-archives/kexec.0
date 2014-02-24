@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WGrZm-00066e-2e
- for kexec@lists.infradead.org; Fri, 21 Feb 2014 14:59:44 +0000
-Date: Fri, 21 Feb 2014 15:59:10 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 06/11] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-Message-ID: <20140221145910.GE11531@pd.tnic>
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-7-git-send-email-vgoyal@redhat.com>
+ id 1WHm72-0005x1-46
+ for kexec@lists.infradead.org; Mon, 24 Feb 2014 03:21:49 +0000
+Date: Mon, 24 Feb 2014 11:22:05 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec: Fix ->unuseable_pages typo
+Message-ID: <20140224032204.GC4043@dhcp-16-126.nay.redhat.com>
+References: <1392819695-24116-1-git-send-email-bp@alien8.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1390849071-21989-7-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <1392819695-24116-1-git-send-email-bp@alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,278 +23,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: Borislav Petkov <bp@suse.de>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>
 
-On Mon, Jan 27, 2014 at 01:57:46PM -0500, Vivek Goyal wrote:
-> This patch implements the in kernel kexec functionality. It implements a
-> new system call kexec_file_load. I think parameter list of this system
-> call will change as I have not done the kernel image signature handling
-> yet. I have been told that I might have to pass the detached signature
-> and size as part of system call.
+On 02/19/14 at 03:21pm, Borislav Petkov wrote:
+> From: Borislav Petkov <bp@suse.de>
 > 
-> Previously segment list was prepared in user space. Now user space just
-> passes kernel fd, initrd fd and command line and kernel will create a
-> segment list internally.
+> Let's use the more common "unusable".
 > 
-> This patch contains generic part of the code. Actual segment preparation
-> and loading is done by arch and image specific loader. Which comes in
-> next patch.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-
-You might want to run it through checkpatch - some of them are actually,
-to my surprise, legitimate :)
-
-Just some minor nitpicks below...
-
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Borislav Petkov <bp@suse.de>
 > ---
->  arch/x86/kernel/machine_kexec_64.c |  50 ++++
->  arch/x86/syscalls/syscall_64.tbl   |   1 +
->  include/linux/kexec.h              |  55 +++++
->  include/linux/syscalls.h           |   3 +
->  include/uapi/linux/kexec.h         |   4 +
->  kernel/kexec.c                     | 495 ++++++++++++++++++++++++++++++++++++-
->  kernel/sys_ni.c                    |   1 +
->  7 files changed, 605 insertions(+), 4 deletions(-)
-
-...
-
+>  include/linux/kexec.h | 2 +-
+>  kernel/kexec.c        | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
 > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index d8188b3..51b56cd 100644
+> index 6d4066cdb5b5..969237e338d1 100644
 > --- a/include/linux/kexec.h
 > +++ b/include/linux/kexec.h
-> @@ -121,13 +121,58 @@ struct kimage {
->  #define KEXEC_TYPE_DEFAULT 0
->  #define KEXEC_TYPE_CRASH   1
->  	unsigned int preserve_context : 1;
-> +	/* If set, we are using file mode kexec syscall */
-> +	unsigned int file_mode : 1;
+> @@ -100,7 +100,7 @@ struct kimage {
 >  
->  #ifdef ARCH_HAS_KIMAGE_ARCH
->  	struct kimage_arch arch;
->  #endif
-> +
-> +	/* Additional Fields for file based kexec syscall */
-> +	void *kernel_buf;
-> +	unsigned long kernel_buf_len;
-> +
-> +	void *initrd_buf;
-> +	unsigned long initrd_buf_len;
-> +
-> +	char *cmdline_buf;
-> +	unsigned long cmdline_buf_len;
-> +
-> +	/* index of file handler in array */
-> +	int file_handler_idx;
-> +
-> +	/* Image loader handling the kernel can store a pointer here */
-> +	void * image_loader_data;
->  };
+>  	struct list_head control_pages;
+>  	struct list_head dest_pages;
+> -	struct list_head unuseable_pages;
+> +	struct list_head unusable_pages;
 >  
-> +/*
-> + * Keeps a track of buffer parameters as provided by caller for requesting
-> + * memory placement of buffer.
-> + */
-> +struct kexec_buf {
-> +	struct kimage *image;
-> +	char *buffer;
-> +	unsigned long bufsz;
-> +	unsigned long memsz;
-> +	unsigned long buf_align;
-> +	unsigned long buf_min;
-> +	unsigned long buf_max;
-> +	int top_down;		/* allocate from top of memory hole */
-
-Looks like this wants to be a bool.
-
-...
-
-> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> index d6629d4..5fddb1b 100644
-> --- a/include/uapi/linux/kexec.h
-> +++ b/include/uapi/linux/kexec.h
-> @@ -13,6 +13,10 @@
->  #define KEXEC_PRESERVE_CONTEXT	0x00000002
->  #define KEXEC_ARCH_MASK		0xffff0000
->  
-> +/* Kexec file load interface flags */
-> +#define KEXEC_FILE_UNLOAD	0x00000001
-> +#define KEXEC_FILE_ON_CRASH	0x00000002
-
-BIT()
-
-> +
->  /* These values match the ELF architecture values.
->   * Unless there is a good reason that should continue to be the case.
->   */
+>  	/* Address of next control page to allocate for crash kernels. */
+>  	unsigned long control_page;
 > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index c0944b2..b28578a 100644
+> index 60bafbed06ab..a2d0c5f80bf2 100644
 > --- a/kernel/kexec.c
 > +++ b/kernel/kexec.c
-> @@ -123,6 +123,11 @@ static struct page *kimage_alloc_page(struct kimage *image,
->  				       gfp_t gfp_mask,
->  				       unsigned long dest);
+> @@ -152,7 +152,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+>  	INIT_LIST_HEAD(&image->dest_pages);
 >  
-> +void kimage_set_start_addr(struct kimage *image, unsigned long start)
-> +{
-> +	image->start = start;
-> +}
+>  	/* Initialize the list of unusable pages */
+> -	INIT_LIST_HEAD(&image->unuseable_pages);
+> +	INIT_LIST_HEAD(&image->unusable_pages);
+>  
+>  	/* Read in the segments */
+>  	image->nr_segments = nr_segments;
+> @@ -607,7 +607,7 @@ static void kimage_free_extra_pages(struct kimage *image)
+>  	kimage_free_page_list(&image->dest_pages);
+>  
+>  	/* Walk through and free any unusable pages I have cached */
+> -	kimage_free_page_list(&image->unuseable_pages);
+> +	kimage_free_page_list(&image->unusable_pages);
+>  
+>  }
+>  static void kimage_terminate(struct kimage *image)
+> @@ -731,7 +731,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
+>  		/* If the page cannot be used file it away */
+>  		if (page_to_pfn(page) >
+>  				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
+> -			list_add(&page->lru, &image->unuseable_pages);
+> +			list_add(&page->lru, &image->unusable_pages);
+>  			continue;
+>  		}
+>  		addr = page_to_pfn(page) << PAGE_SHIFT;
 
-Why a separate function? It is used only once in the next patch.
+Acked-by: Dave Young <dyoung@redhat.com>
 
-...
-
-> +static int kimage_file_prepare_segments(struct kimage *image, int kernel_fd,
-> +		int initrd_fd, const char __user *cmdline_ptr,
-> +		unsigned long cmdline_len)
-> +{
-> +	int ret = 0;
-> +	void *ldata;
-> +
-> +	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
-> +					&image->kernel_buf_len);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* Call arch image probe handlers */
-> +	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
-> +						image->kernel_buf_len);
-> +
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
-> +					&image->initrd_buf_len);
-> +	if (ret)
-> +		goto out;
-> +
-> +	image->cmdline_buf = vzalloc(cmdline_len);
-> +	if (!image->cmdline_buf)
-> +		goto out;
-> +
-> +	ret = copy_from_user(image->cmdline_buf, cmdline_ptr, cmdline_len);
-> +	if (ret) {
-> +		ret = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	image->cmdline_buf_len = cmdline_len;
-> +
-> +	/* command line should be a string with last byte null */
-> +	if (image->cmdline_buf[cmdline_len - 1] != '\0') {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	/* Call arch image load handlers */
-> +	ldata = arch_kexec_kernel_image_load(image,
-> +			image->kernel_buf, image->kernel_buf_len,
-> +			image->initrd_buf, image->initrd_buf_len,
-> +			image->cmdline_buf, image->cmdline_buf_len);
-> +
-> +	if (IS_ERR(ldata)) {
-> +		ret = PTR_ERR(ldata);
-> +		goto out;
-> +	}
-> +
-> +	image->image_loader_data = ldata;
-> +out:
-> +	return ret;
-
-You probably want to drop this "out:" label and simply return the error
-value directly in each error path above for simplicity.
-
-> +static int kimage_file_normal_alloc(struct kimage **rimage, int kernel_fd,
-> +		int initrd_fd, const char __user *cmdline_ptr,
-> +		unsigned long cmdline_len)
-> +{
-> +	int result;
-> +	struct kimage *image;
-> +
-> +	/* Allocate and initialize a controlling structure */
-> +	image = do_kimage_alloc_init();
-> +	if (!image)
-> +		return -ENOMEM;
-> +
-> +	image->file_mode = 1;
-> +	image->file_handler_idx = -1;
-> +
-> +	result = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
-> +			cmdline_ptr, cmdline_len);
-> +	if (result)
-> +		goto out_free_image;
-> +
-> +	result = sanity_check_segment_list(image);
-> +	if (result)
-> +		goto out_free_post_load_bufs;
-
-Dunno, it could probably be a larger restructuring effort but if you
-do load a segment and sanity-check it right after loading, instead of
-loading all of them first and then iterating over them, you could save
-yourself some work in the error case when a segment fails the check.
-
-...
-
-> +int kexec_add_buffer(struct kimage *image, char *buffer,
-> +		unsigned long bufsz, unsigned long memsz,
-> +		unsigned long buf_align, unsigned long buf_min,
-> +		unsigned long buf_max, int top_down, unsigned long *load_addr)
-> +{
-> +
-> +	unsigned long nr_segments = image->nr_segments, new_nr_segments;
-> +	struct kexec_segment *ksegment;
-> +	struct kexec_buf *kbuf;
-> +
-> +	/* Currently adding segment this way is allowed only in file mode */
-> +	if (!image->file_mode)
-> +		return -EINVAL;
-> +
-> +	if (nr_segments >= KEXEC_SEGMENT_MAX)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Make sure we are not trying to add buffer after allocating
-> +	 * control pages. All segments need to be placed first before
-> +	 * any control pages are allocated. As control page allocation
-> +	 * logic goes through list of segments to make sure there are
-> +	 * no destination overlaps.
-> +	 */
-> +	WARN_ONCE(!list_empty(&image->control_pages), "Adding kexec buffer"
-> +			" after allocating control pages\n");
-> +
-> +	kbuf = kzalloc(sizeof(struct kexec_buf), GFP_KERNEL);
-> +	if (!kbuf)
-> +		return -ENOMEM;
-> +
-> +	kbuf->image = image;
-> +	kbuf->buffer = buffer;
-> +	kbuf->bufsz = bufsz;
-> +	/* Align memsz to next page boundary */
-> +	kbuf->memsz = ALIGN(memsz, PAGE_SIZE);
-> +
-> +	/* Align to atleast page size boundary */
-> +	kbuf->buf_align = max(buf_align, PAGE_SIZE);
-> +	kbuf->buf_min = buf_min;
-> +	kbuf->buf_max = buf_max;
-> +	kbuf->top_down = top_down;
-> +
-> +	/* Walk the RAM ranges and allocate a suitable range for the buffer */
-> +	walk_system_ram_res(0, -1, kbuf, walk_ram_range_callback);
-> +
-> +	kbuf->image = NULL;
-> +	kfree(kbuf);
-
-This is freed after kzalloc'ing it a bit earlier, why not make it a
-stack variable for simplicity? struct kexec_buf doesn't seem that
-large...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
 --
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
