@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WINc3-0004sn-25
- for kexec@lists.infradead.org; Tue, 25 Feb 2014 19:24:20 +0000
-Date: Tue, 25 Feb 2014 13:20:02 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 07/11] kexec: Create a relocatable object called purgatory
-Message-ID: <20140225182002.GD2701@redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WINn9-0005EW-9p
+ for kexec@lists.infradead.org; Tue, 25 Feb 2014 19:35:48 +0000
+Date: Tue, 25 Feb 2014 20:35:19 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH 06/11] kexec: A new system call, kexec_file_load, for in
+ kernel kexec
+Message-ID: <20140225203519.77abfa8d@hananiah.suse.cz>
+In-Reply-To: <20140224164131.GJ4631@redhat.com>
 References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-8-git-send-email-vgoyal@redhat.com>
- <530B989B.8010507@zytor.com> <20140225164342.GC2701@redhat.com>
- <530CCB0E.3060009@zytor.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <530CCB0E.3060009@zytor.com>
+ <1390849071-21989-7-git-send-email-vgoyal@redhat.com>
+ <20140221145910.GE11531@pd.tnic> <20140224164131.GJ4631@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,40 +25,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, greg@kroah.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, greg@kroah.com, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, jkosina@suse.cz
 
-On Tue, Feb 25, 2014 at 08:55:42AM -0800, H. Peter Anvin wrote:
-> On 02/25/2014 08:43 AM, Vivek Goyal wrote:
-> > 
-> > W.r.t sharing the code with arch/x86/boot/, I am not sure how to do it.
-> > 
+On Mon, 24 Feb 2014 11:41:31 -0500
+Vivek Goyal <vgoyal@redhat.com> wrote:
+
+> On Fri, Feb 21, 2014 at 03:59:10PM +0100, Borislav Petkov wrote:
 > 
-> Pretty much we have been doing #includes (a bit sad, I know)... there
-> are already a lot of them between arch/x86/boot,
-> arch/x86/boot/compressed, and arch/x86/realmode.  In that sense
-> collecting these "limited environments" together and have these kinds of
-> stuff together in one place seems like a good idea.
+>[...]
+> > 
+> > ...
+> > 
+> > > diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+> > > index d6629d4..5fddb1b 100644
+> > > --- a/include/uapi/linux/kexec.h
+> > > +++ b/include/uapi/linux/kexec.h
+> > > @@ -13,6 +13,10 @@
+> > >  #define KEXEC_PRESERVE_CONTEXT	0x00000002
+> > >  #define KEXEC_ARCH_MASK		0xffff0000
+> > >  
+> > > +/* Kexec file load interface flags */
+> > > +#define KEXEC_FILE_UNLOAD	0x00000001
+> > > +#define KEXEC_FILE_ON_CRASH	0x00000002
+> > 
+> > BIT()
 > 
-> Does purgatory move large amounts of data around?  If so, we probably
-> *do* want to use rep movsl, but otherwise you're definitely right, using
-> C code makes more sense.
+> What's that?
 
-No, I don't move lots of data around in purgatory. We just copy backup
-region and that's 640KB of data. 
+#define BIT(nr)                 (1UL << (nr))
 
-So we don't copy a lot and it is not a performance sensitive path. 
+For my part I'm not convinced it's a better way to do it, unless
+Borislav also wanted to suggest adding an enum for the bit number
+values...
 
-Hence I would like to keep it simple. That is have C version of memcpy()
-in purgatory() which works both for 32bit and 64bit and reuse that across
-purgatory code.
-
-Please let me know if you don't like the idea and you still think there
-should be a shared implementation between arch/x86/boot/ and
-arch/x86/purgatory/.
-
-Thanks
-Vivek
+Petr T
 
 _______________________________________________
 kexec mailing list
