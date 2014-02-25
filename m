@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WINn9-0005EW-9p
- for kexec@lists.infradead.org; Tue, 25 Feb 2014 19:35:48 +0000
-Date: Tue, 25 Feb 2014 20:35:19 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH 06/11] kexec: A new system call, kexec_file_load, for in
- kernel kexec
-Message-ID: <20140225203519.77abfa8d@hananiah.suse.cz>
-In-Reply-To: <20140224164131.GJ4631@redhat.com>
+ id 1WIPGR-0007Wf-Uv
+ for kexec@lists.infradead.org; Tue, 25 Feb 2014 21:10:08 +0000
+Message-ID: <530D068E.4040700@zytor.com>
+Date: Tue, 25 Feb 2014 13:09:34 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 07/11] kexec: Create a relocatable object called purgatory
 References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-7-git-send-email-vgoyal@redhat.com>
- <20140221145910.GE11531@pd.tnic> <20140224164131.GJ4631@redhat.com>
-Mime-Version: 1.0
+ <1390849071-21989-8-git-send-email-vgoyal@redhat.com>
+ <530B989B.8010507@zytor.com> <20140225164342.GC2701@redhat.com>
+ <530CCB0E.3060009@zytor.com> <20140225182002.GD2701@redhat.com>
+In-Reply-To: <20140225182002.GD2701@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,40 +26,21 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, greg@kroah.com, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, ebiederm@xmission.com, jkosina@suse.cz
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, greg@kroah.com
 
-On Mon, 24 Feb 2014 11:41:31 -0500
-Vivek Goyal <vgoyal@redhat.com> wrote:
-
-> On Fri, Feb 21, 2014 at 03:59:10PM +0100, Borislav Petkov wrote:
+On 02/25/2014 10:20 AM, Vivek Goyal wrote:
 > 
->[...]
-> > 
-> > ...
-> > 
-> > > diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> > > index d6629d4..5fddb1b 100644
-> > > --- a/include/uapi/linux/kexec.h
-> > > +++ b/include/uapi/linux/kexec.h
-> > > @@ -13,6 +13,10 @@
-> > >  #define KEXEC_PRESERVE_CONTEXT	0x00000002
-> > >  #define KEXEC_ARCH_MASK		0xffff0000
-> > >  
-> > > +/* Kexec file load interface flags */
-> > > +#define KEXEC_FILE_UNLOAD	0x00000001
-> > > +#define KEXEC_FILE_ON_CRASH	0x00000002
-> > 
-> > BIT()
+> Please let me know if you don't like the idea and you still think there
+> should be a shared implementation between arch/x86/boot/ and
+> arch/x86/purgatory/.
 > 
-> What's that?
 
-#define BIT(nr)                 (1UL << (nr))
+That is what I would *prefer*.  There are some other string functions in
+arch/x86/boot/string.c which also ought to be sharable (and are in
+places already.)
 
-For my part I'm not convinced it's a better way to do it, unless
-Borislav also wanted to suggest adding an enum for the bit number
-values...
+	-hpa
 
-Petr T
 
 _______________________________________________
 kexec mailing list
