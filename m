@@ -1,28 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp06.in.ibm.com ([122.248.162.6])
+Received: from e23smtp06.au.ibm.com ([202.81.31.148])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WIuW5-00021H-K2
- for kexec@lists.infradead.org; Thu, 27 Feb 2014 06:32:22 +0000
+ id 1WIuW4-0001yc-14
+ for kexec@lists.infradead.org; Thu, 27 Feb 2014 06:32:28 +0000
 Received: from /spool/local
- by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aruna@linux.vnet.ibm.com>;
- Thu, 27 Feb 2014 12:01:57 +0530
-Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
- by d28dlp01.in.ibm.com (Postfix) with ESMTP id 3626BE0053
- for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 12:05:29 +0530 (IST)
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
- by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s1R6VTmP55574578
- for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 12:01:30 +0530
-Received: from d28av03.in.ibm.com (localhost [127.0.0.1])
- by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s1R6Vkxo002795
- for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 12:01:46 +0530
-Subject: [PATCH 07/10] Scrub data of unix socket buffers
+ Thu, 27 Feb 2014 16:31:26 +1000
+Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [9.190.235.152])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 13E172CE8051
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:31:23 +1100 (EST)
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+ by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s1R6BR8Y7471510
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:11:28 +1100
+Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
+ by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s1R6VMeH007484
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:31:22 +1100
+Subject: [PATCH 04/10] Clear the message data of all ap_bus requests
 From: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
-Date: Thu, 27 Feb 2014 12:01:45 +0530
-Message-ID: <20140227063145.5924.86410.stgit@aruna-ThinkPad-T420>
+Date: Thu, 27 Feb 2014 12:01:20 +0530
+Message-ID: <20140227063120.5924.16540.stgit@aruna-ThinkPad-T420>
 In-Reply-To: <20140227063007.5924.5819.stgit@aruna-ThinkPad-T420>
 References: <20140227063007.5924.5819.stgit@aruna-ThinkPad-T420>
 MIME-Version: 1.0
@@ -41,134 +41,134 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: kumagai-atsushi@mxc.nes.nec.co.jp
 
- Iterate from 0 to UNIX_HASH_SIZE and then walk the hlist in
-     for (i = 0; i < UNIX_HASH_SIZE; i++) {
-         struct list_head *list = &unix_socket_table[i];
-         ...
-     }
-   Walk each non-empty list in unix_socket_table
-     struct sock *sk;
-     sk_for_each(sk, node, &unix_socket_table[i])
+   Walk all devices in the LIST_HEAD(ap_device_list);
 
-
-   For each socket iterate over the socket buffers in
-   sk_receive_queue and sk_write_queue:
-
-   struct sock {
+   struct ap_device {
         ...
-        struct sk_buff_head     sk_receive_queue;
-        ...
-        struct sk_buff_head     sk_write_queue;
+        struct list_head list;          /* private list of all AP devices. */
+       ...
+        struct list_head pendingq;      /* List of message sent to AP queue. */
+        int pendingq_count;             /* # requests on pendingq list. */
+        struct list_head requestq;      /* List of message yet to be sent. */
+        int requestq_count;             /* # requests on requestq list. */
         ...
    };
 
-   struct sk_buff_head {
-        struct sk_buff  *next;
-        struct sk_buff  *prev;
+   struct ap_device *device;
+   list_for_each_entry(device, &ap_device_list, list) {
+        ...
+   }
+
+   For each ap device walk the pendingq and requestq list
+
+   struct ap_message {
+        struct list_head list;          /* Request queueing. */
+        ...
+        void *message;                  /* Pointer to message buffer. */
+        size_t length;                  /* Message length. */
+        ...
    };
 
-   For each struct sk_buff in the two lists clear the memory referenced
-   by skb->data / skb->data_len:
+   struct ap_message *apmsg;
+   list_for_each_entry(apmsg, &device->pendingq, list) {
+        ...
+   }
+   list_for_each_entry(apmsg, &device->requestq, list) {
+        ...
+   }
 
-   struct sk_buff {
-        ...
-        unsigned int            data_len;
-        ...
-        unsigned char           *data;
-        ...
-   };
+   For each message in pendingq and requestq clear the message
+
+   memset(apmsg->message, 0, apmsg->length);
 
 Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
 ---
- eppic_scripts/unix_sk_buff.c |   81 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100644 eppic_scripts/unix_sk_buff.c
+ eppic_scripts/ap_messages.c |   78 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 eppic_scripts/ap_messages.c
 
-diff --git a/eppic_scripts/unix_sk_buff.c b/eppic_scripts/unix_sk_buff.c
+diff --git a/eppic_scripts/ap_messages.c b/eppic_scripts/ap_messages.c
 new file mode 100644
-index 0000000..6ab1e6c
+index 0000000..f0e9f6f
 --- /dev/null
-+++ b/eppic_scripts/unix_sk_buff.c
-@@ -0,0 +1,81 @@
++++ b/eppic_scripts/ap_messages.c
+@@ -0,0 +1,78 @@
 +string
-+sunix_opt()
++ap_device_opt()
 +{
 +	    return "l";
 +}
 +
 +string
-+sunix_usage()
++ap_device_usage()
 +{
 +	    return "\n";
 +}
 +
 +static void
-+sunix_showusage()
++ap_device_showusage()
 +{
-+	    printf("usage : sunix %s", sunix_usage());
++	    printf("usage : ap_device %s", ap_device_usage());
 +}
 +
 +string
-+sunix_help()
++ap_device_help()
 +{
 +	    return "Help";
 +}
 +
 +int
-+sunix()
++ap_device()
 +{
 +	int i;
-+	int size;
-+	struct hlist_head **tab;
-+	struct sock_common *off = 0;
++	struct list_head *next;
++	struct list_head *head;
++	struct ap_device *off = 0;
 +
-+	tab = &unix_socket_table;
++	head = (struct list_head *)&ap_device_list;
++	next = (struct list_head *)head->next;
 +
-+	for (i = 0; i < 256; i++) {
-+		struct hlist_node *pos;
-+		struct hlist_node *node;
-+		struct hlist_head *tmp;
++	if (!next)
++		return 1;
 +
-+		tmp = (struct hlist_head *)(tab + i);
-+		pos = tmp->first;
++	while (next != head)
++	{
++		struct ap_device *device;
++		struct list_head *next1, *head1;
 +
-+		while (pos) {
-+			struct sock *sk;
-+			struct sk_buff *next;
-+			struct sk_buff_head *head;
++		device = (struct ap_device *)((unsigned long)next - ((unsigned long)&(off->list)));
 +
-+			sk = (struct sock *)((unsigned long)pos - (unsigned long)&(off->skc_dontcopy_begin));
++		head1 = (struct list_head *)&(device->pendingq);
++		next1 = (struct list_head *)device->pendingq.next;
 +
-+			head = (struct sk_buff_head *)&(sk->sk_receive_queue);
-+			next = (struct sk_buff *)sk->sk_receive_queue.next;
++		while (next1 != head1)
++		{
++			struct ap_message *apmsg;
++			apmsg = (struct ap_message *)next1;
 +
-+			while (next != head)
-+			{
-+				struct sk_buff *buff = (struct sk_buff *)next;
++			memset((char *)apmsg->message, 'L', apmsg->length);
++			memset((char *)&(apmsg->length), 'L', 0x8);
 +
-+				memset((char *)buff->data, 'L', buff->data_len);
-+				memset((char *)&(buff->data_len), 'L', 0x4);
-+
-+				next = buff->next;
-+			}
-+
-+			head = (struct sk_buff_head *)&(sk->sk_write_queue);
-+			next = (struct sk_buff *)sk->sk_write_queue.next;
-+
-+			while (next != head)
-+			{
-+				struct sk_buff *buff = (struct sk_buff *)next;
-+
-+				memset((char *)buff->data, 'L', buff->data_len);
-+				memset((char *)&(buff->data_len), 'L', 0x4);
-+
-+			        next = buff->next;
-+			}
-+
-+			node = (struct hlist_node *)((unsigned long)sk + (unsigned long)&(off->skc_dontcopy_begin));
-+			pos = node->next;
++			next1 = (struct list_head *)apmsg->list.next;
 +		}
++
++		head1 = (struct list_head *)&(device->requestq);
++		next1 = (struct list_head *)device->requestq.next;
++
++		while (next1 != head1)
++		{
++			struct ap_message *apmsg;
++			apmsg = (struct ap_message *)next1;
++
++			memset((char *)apmsg->message, 'L', apmsg->length);
++			memset((char *)&(apmsg->length), 'L', 0x8);
++
++			next1 = (struct list_head *)apmsg->list.next;
++		}
++
++		next = (struct list_head *)device->list.next;
 +	}
++
 +	return 1;
 +}
 
