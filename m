@@ -1,28 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.31.147])
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WIuWa-00021I-E5
- for kexec@lists.infradead.org; Thu, 27 Feb 2014 06:33:01 +0000
+ id 1WIuWc-00021J-5C
+ for kexec@lists.infradead.org; Thu, 27 Feb 2014 06:33:03 +0000
 Received: from /spool/local
- by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aruna@linux.vnet.ibm.com>;
- Thu, 27 Feb 2014 16:31:56 +1000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id DCD092CE8047
- for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:31:53 +1100 (EST)
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
- by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s1R6VegK11337990
- for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:31:40 +1100
-Received: from d23av03.au.ibm.com (localhost [127.0.0.1])
- by d23av03.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s1R6Vqlp008305
- for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:31:53 +1100
-Subject: [PATCH 08/10] Scrub socket buffers of guest network I/O
+ Thu, 27 Feb 2014 16:32:02 +1000
+Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [9.190.234.120])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id 757ED2BB003F
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:32:00 +1100 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s1R6CDU457344218
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:12:14 +1100
+Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s1R6VxWe007014
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 17:31:59 +1100
+Subject: [PATCH 09/10] Scrub buffers involved in guest block I/O
 From: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
-Date: Thu, 27 Feb 2014 12:01:51 +0530
-Message-ID: <20140227063151.5924.34936.stgit@aruna-ThinkPad-T420>
+Date: Thu, 27 Feb 2014 12:01:58 +0530
+Message-ID: <20140227063158.5924.53814.stgit@aruna-ThinkPad-T420>
 In-Reply-To: <20140227063007.5924.5819.stgit@aruna-ThinkPad-T420>
 References: <20140227063007.5924.5819.stgit@aruna-ThinkPad-T420>
 MIME-Version: 1.0
@@ -41,37 +41,29 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: kumagai-atsushi@mxc.nes.nec.co.jp
 
-vhost_net instance will be attached to the file's private data.
+vhost_scsi instance will be attached to the file's private data.
 To get to the right file check the fdtable for each task, if the file
 has registered its fops with vhost_net_open, if so we can retreive the
 file's private data.
 
-	if (task->files->fdt->fd[i]->f_op->open == &vhost_net_open)
-		struct vhost_net *net = f->private_data;
+if (task->files->fdt->fd[i]->f_op->open == &vhost_scsi_open)
+	vhost_scsi *vs = task->files->fdt->fd[i]->private_data;
 
-	struct vhost_net_virtqueue *nvq = &net->vqs[VHOST_NET_VQ_MAX];
-	struct vhost_virtqueue *vq = &nvq->vq;
-	struct socket *sock = vq->private_data;
-	struct sock *sk = sock->sk;
-
-	struct sk_buff *next = sk->sk_receive_queue.next;
-	struct sk_buff *prev = sk->sk_receive_queue.prev;
-
-	Scrub next->data till the end of the sk_receive_queue and sk_write_queue list
-
+struct vhost_virtqueue *vq = (struct vhost_virtqueue *)vs->vqs[i].vq;
+scrub vq->iov[j].iov_base
 
 Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
 ---
- eppic_scripts/vhost_net_buffers.c |   95 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 eppic_scripts/vhost_net_buffers.c
+ eppic_scripts/vhost_scsi_buffers.c |   71 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 eppic_scripts/vhost_scsi_buffers.c
 
-diff --git a/eppic_scripts/vhost_net_buffers.c b/eppic_scripts/vhost_net_buffers.c
+diff --git a/eppic_scripts/vhost_scsi_buffers.c b/eppic_scripts/vhost_scsi_buffers.c
 new file mode 100644
-index 0000000..6c2b8df
+index 0000000..caa4982
 --- /dev/null
-+++ b/eppic_scripts/vhost_net_buffers.c
-@@ -0,0 +1,95 @@
++++ b/eppic_scripts/vhost_scsi_buffers.c
+@@ -0,0 +1,71 @@
 +string
 +vhost_opt()
 +{
@@ -87,7 +79,7 @@ index 0000000..6c2b8df
 +static void
 +vhost_showusage()
 +{
-+	    printf("usage : net_ %s", vhost_usage());
++	    printf("usage : vhost %s", vhost_usage());
 +}
 +
 +string
@@ -97,42 +89,17 @@ index 0000000..6c2b8df
 +}
 +
 +void
-+vhost_net(struct vhost_net *net)
++vhost_scsi(struct vhost_scsi *vs)
 +{
-+	int i;
++	if (vs == NULL)
++		return;
 +
-+	for (i = 0; i < 2; i++) {
-+		struct vhost_net_virtqueue *nvq = &net->vqs[i];
-+		struct vhost_virtqueue *vq = &nvq->vq;
-+		struct socket *sock = (struct socket *)vq->private_data;
-+		struct sock *sk = sock->sk;
++	for (i = 0; i < 128; i++) {
++		struct vhost_virtqueue *vq = (struct vhost_virtqueue *)vs->vqs[i].vq;
 +
-+		struct sk_buff_head *head = &(sk->sk_receive_queue);
-+		struct sk_buff *next = sk->sk_receive_queue.next;
-+
-+		while (next != head)
-+		{
-+			struct sk_buff *buff = (struct sk_buff *) next;
-+
-+			memset((unsigned char *)buff->data, 'L', buff->data_len);
-+			memset((char *)&(buff->data_len), 'L', 0x4);
-+
-+			next = buff->next;
-+		}
-+
-+		head = (struct sk_buff_head *)&(sk->sk_write_queue);
-+		next = (struct sk_buff *)sk->sk_write_queue.next;
-+
-+		while (next != head)
-+		{
-+			struct sk_buff *buff = (struct sk_buff *) next;
-+
-+			memset((char *)buff->data, 'L', buff->data_len);
-+			memset((char *)&(buff->data_len), 'L', 0x4);
-+
-+			next = buff->next;
-+
-+		}
++		for (j = 0; j < 1024; j++)
++		      memset((char *)vq->iov[j].iov_base, 'L', vq->iov[j].iov_len);
++		      memset((char *)&(vq->iov[j].iov_len), 'L', 0x8);
 +	}
 +}
 +
@@ -157,10 +124,11 @@ index 0000000..6c2b8df
 +		if (task->files && task->files->fdt) {
 +			for (i = 0; i < task->files->fdt->max_fds; i++) {
 +				if (task->files->fdt->fd[i] && task->files->fdt->fd[i]->f_op
-+					&& task->files->fdt->fd[i]->f_op->open == &vhost_net_open)
-+					vhost_net((struct vhost_net *)task->files->fdt->fd[i]->private_data);
++					&& task->files->fdt->fd[i]->f_op->open == &vhost_scsi_open)
++					vhost_scsi((struct vhost_scsi *)task->files->fdt->fd[i]->private_data);
 +			}
 +		}
++
 +
 +		next = (struct list_head *)task->tasks.next;
 +	}
