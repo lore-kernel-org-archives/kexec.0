@@ -1,13 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from e9.ny.us.ibm.com ([32.97.182.139])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WIlgE-0008NY-9i
- for kexec@lists.infradead.org; Wed, 26 Feb 2014 21:06:15 +0000
-Date: Wed, 26 Feb 2014 22:05:46 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH] makedumpfile: Fix string append in dump_log_entry()
-Message-ID: <20140226220546.4030cdbf@hananiah.suse.cz>
-Mime-Version: 1.0
+ id 1WIu3U-0001RD-Tx
+ for kexec@lists.infradead.org; Thu, 27 Feb 2014 06:02:50 +0000
+Received: from /spool/local
+ by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
+ Thu, 27 Feb 2014 01:02:25 -0500
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com
+ [9.57.198.29])
+ by d01dlp02.pok.ibm.com (Postfix) with ESMTP id 1B70F6E803A
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 01:02:18 -0500 (EST)
+Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
+ by b01cxnp23034.gho.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s1R62NNu63635592
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 06:02:23 GMT
+Received: from d01av01.pok.ibm.com (localhost [127.0.0.1])
+ by d01av01.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s1R62MOb024146
+ for <kexec@lists.infradead.org>; Thu, 27 Feb 2014 01:02:22 -0500
+Subject: [PATCH] makedumpfile/eppic: Properly resolve structure members
+From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Date: Thu, 27 Feb 2014 11:32:20 +0530
+Message-ID: <20140227060220.25635.83843.stgit@aravindap>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,71 +37,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+Cc: tachibana@mxm.nes.nec.co.jp
 
-To quote the sprintf(3) man page:
+makedumpfile/eppic was not able to resolve member of the
+structure in cases such as:
 
-    Some programs imprudently rely on code such as the following
+struct abc
+{
+	...
+	...
+	struct xyz
+	...
+}
 
-        sprintf(buf, "%s some further text", buf);
+and eppic script:
 
-    to append text to buf.  However, the standards explicitly note that
-    the results are undefined if source and destination buffers overlap
-    when calling sprintf(), snprintf(), vsprintf(), and vsnprintf().
-    Depending on the version of gcc(1) used, and the compiler options
-    employed, calls such as the above will not produce the expected results.
+sample()
+{
+	struct abc *a;
+	struct xyz *x;
 
-The original code is actually miscompiled on openSUSE 13.1.
+	x->member;
+}
 
-It's also overkill to call sprintf() for something that can be done
-with a simple assignment.
+would fail to resolve "member" of structure xyz. However
+it works if "struct abc *a;" line is removed from eppic
+script. This patch fixes this issue.
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
- makedumpfile.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ dwarf_info.c      |    2 +-
+ extension_eppic.c |   17 +++++++++++------
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 579be61..013fce7 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3866,7 +3866,7 @@ reset_bitmap_of_free_pages(unsigned long node_zones, struct cycle *cycle)
- static int
- dump_log_entry(char *logptr, int fp)
+diff --git a/dwarf_info.c b/dwarf_info.c
+index c5752c9..b7012b2 100644
+--- a/dwarf_info.c
++++ b/dwarf_info.c
+@@ -1468,7 +1468,7 @@ get_die_attr_type(unsigned long long die_off, int *type_flag,
  {
--	char *msg, *p;
-+	char *msg, *p, *bufp;
- 	unsigned int i, text_len;
- 	unsigned long long ts_nsec;
- 	char buf[BUFSIZE];
-@@ -3881,18 +3881,19 @@ dump_log_entry(char *logptr, int fp)
+ 	Dwarf_Die result;
  
- 	msg = logptr + SIZE(printk_log);
+-	if (!die_attr_off)
++	if (!die_attr_off || !die_off)
+ 		return FALSE;
  
--	sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
-+	bufp = buf;
-+	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+ 	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
+diff --git a/extension_eppic.c b/extension_eppic.c
+index 7e045c9..20d996d 100644
+--- a/extension_eppic.c
++++ b/extension_eppic.c
+@@ -24,6 +24,8 @@
+ #include "makedumpfile.h"
+ #include "extension_eppic.h"
  
- 	for (i = 0, p = msg; i < text_len; i++, p++) {
- 		if (isprint(*p) || isspace(*p))
--			sprintf(buf, "%s%c", buf, *p);
-+			*bufp++ = *p;
- 		else
--			sprintf(buf, "%s\\x%02x", buf, *p);
-+			bufp += sprintf(bufp, "\\x%02x", *p);
++static int apigetctype(int, char *, type_t *);
++
+ /*
+  * Most of the functions included in this file performs similar
+  * functionality as in the applications/crash/eppic.c file part of
+@@ -183,7 +185,15 @@ drilldown(ull offset, type_t *t)
+ 			goto label;
+ 		case DW_TAG_structure_type:
+ 			eppic_type_mkstruct(t);
+-			goto label;
++label:
++			eppic_type_setsize(t, GET_DIE_LENGTH(t_die_off, TRUE));
++			eppic_type_setidx(t, (ull)t_die_off);
++			tstr = GET_DIE_NAME(t_die_off);
++			/* Drill down further */
++			if (tstr)
++				apigetctype(V_STRUCT, tstr, t);
++			die_off = 0;
++			break;
+ 		/* Unknown TAG ? */
+ 		default:
+ 			die_off = t_die_off;
+@@ -191,11 +201,6 @@ drilldown(ull offset, type_t *t)
+ 		}
  	}
  
--	sprintf(buf, "%s\n", buf);
-+	*bufp++ = '\n';
- 
--	if (write(info->fd_dumpfile, buf, strlen(buf)) < 0)
-+	if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
- 		return FALSE;
- 	else
- 		return TRUE;
--- 
-1.8.4.5
+-label:
+-	eppic_type_setsize(t, GET_DIE_LENGTH(t_die_off, TRUE));
+-	eppic_type_setidx(t, (ull)t_die_off);
+-	tstr = GET_DIE_NAME(t_die_off);
+-
+ out:
+ 	eppic_setupidx(t, ref, nidx, idxlst);
+ 	if (fctflg)
+
 
 _______________________________________________
 kexec mailing list
