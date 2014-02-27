@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WJ8dZ-00059i-5a
- for kexec@lists.infradead.org; Thu, 27 Feb 2014 21:37:03 +0000
-Date: Thu, 27 Feb 2014 22:36:29 +0100
+ id 1WJ8t2-0005uq-R0
+ for kexec@lists.infradead.org; Thu, 27 Feb 2014 21:53:01 +0000
+Date: Thu, 27 Feb 2014 22:52:32 +0100
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 08/11] kexec-bzImage: Support for loading bzImage using
- 64bit entry
-Message-ID: <20140227213629.GP18191@pd.tnic>
+Subject: Re: [PATCH 09/11] kexec: Provide a function to add a segment at
+ fixed address
+Message-ID: <20140227215232.GQ18191@pd.tnic>
 References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-9-git-send-email-vgoyal@redhat.com>
+ <1390849071-21989-10-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1390849071-21989-9-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <1390849071-21989-10-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,322 +28,125 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
 Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Mon, Jan 27, 2014 at 01:57:48PM -0500, Vivek Goyal wrote:
-> This is loader specific code which can load bzImage and set it up for
-> 64bit entry. This does not take care of 32bit entry or real mode entry
-> yet.
+On Mon, Jan 27, 2014 at 01:57:49PM -0500, Vivek Goyal wrote:
+> kexec_add_buffer() can find a suitable range of memory for user buffer and
+> add it to list of segments. But ELF loader will require that a buffer can
+> be loaded at the address it has been compiled for (ET_EXEC type executables).
+> So we need a helper function which can see if requested memory is valid and
+> available and add a segment accordiingly. This patch provides that helper
+> function. It will be used by elf loader in later patch.
 > 
 > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > ---
-
-checkpatch: total: 4 errors, 2 warnings, 450 lines checked
-
-...
-
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index cb648c8..fa9981d 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -67,8 +67,10 @@ obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o
->  obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
->  obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
->  obj-$(CONFIG_X86_TSC)		+= trace_clock.o
-> +obj-$(CONFIG_KEXEC)		+= machine_kexec.o
->  obj-$(CONFIG_KEXEC)		+= machine_kexec_$(BITS).o
->  obj-$(CONFIG_KEXEC)		+= relocate_kernel_$(BITS).o crash.o
-> +obj-$(CONFIG_KEXEC)		+= kexec-bzimage.o
-
-Maybe use less obj-$(CONFIG_KEXEC) lines here.
-
->  obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
->  obj-y				+= kprobes/
->  obj-$(CONFIG_MODULES)		+= module.o
-> diff --git a/arch/x86/kernel/kexec-bzimage.c b/arch/x86/kernel/kexec-bzimage.c
-> new file mode 100644
-> index 0000000..cbfcd00
-> --- /dev/null
-> +++ b/arch/x86/kernel/kexec-bzimage.c
-> @@ -0,0 +1,234 @@
-> +#include <linux/string.h>
-> +#include <linux/printk.h>
-> +#include <linux/errno.h>
-> +#include <linux/slab.h>
-> +#include <linux/kexec.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mm.h>
-> +
-> +#include <asm/bootparam.h>
-> +#include <asm/setup.h>
-> +
-> +#ifdef CONFIG_X86_64
-> +
-> +struct bzimage64_data {
-> +	/*
-> +	 * Temporary buffer to hold bootparams buffer. This should be
-> +	 * freed once the bootparam segment has been loaded.
-> +	 */
-> +	void *bootparams_buf;
-> +};
-
-Why a struct if it is going to have only one member?
-
-> +
-> +int bzImage64_probe(const char *buf, unsigned long len)
+>  include/linux/kexec.h |  3 +++
+>  kernel/kexec.c        | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 68 insertions(+)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index d391ed7..2fb052c 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -208,6 +208,9 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
+>  					struct kexec_segment __user *segments,
+>  					unsigned long flags);
+>  extern int kernel_kexec(void);
+> +extern int kexec_add_segment(struct kimage *image, char *buffer,
+> +			unsigned long bufsz, unsigned long memsz,
+> +			unsigned long base);
+>  extern int kexec_add_buffer(struct kimage *image, char *buffer,
+>  			unsigned long bufsz, unsigned long memsz,
+>  			unsigned long buf_align, unsigned long buf_min,
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 20169a4..9e4718b 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -2002,6 +2002,71 @@ static int __kexec_add_segment(struct kimage *image, char *buf,
+>  	return 0;
+>  }
+>  
+> +static int validate_ram_range_callback(u64 start, u64 end, void *arg)
 > +{
-> +	int ret = -ENOEXEC;
-> +	struct setup_header *header;
+> +	struct kexec_segment *ksegment = arg;
+> +	u64 mstart = ksegment->mem;
+> +	u64 mend = ksegment->mem + ksegment->memsz - 1;
 > +
-> +	if (len < 2 * 512) {
-
-What's 2*512? Two sectors?
-
-> +		pr_debug("File is too short to be a bzImage\n");
-> +		return ret;
-> +	}
+> +	/* Found a valid range. Stop going through more ranges */
+> +	if (mstart >= start && mend <= end)
+> +		return 1;
 > +
-> +	header = (struct setup_header *)(buf + 0x1F1);
-
-0x1F1 should need at least a comment or "offsetof(struct boot_params, hdr)"
-or both, which would be best. :-)
-
-> +	if (memcmp((char *)&header->header, "HdrS", 4) != 0) {
-> +		pr_debug("Not a bzImage\n");
-
-Actually, I think that means that there is no real mode kernel header
-there, or we're using an old boot protocol version:
-
-Documentation/x86/boot.txt
-
-> +		return ret;
-> +	}
-> +
-> +	if (header->boot_flag != 0xAA55) {
-> +                /* No x86 boot sector present */
-
-Comment is kinda redundant here :)
-
-> +		pr_debug("No x86 boot sector present\n");
-> +		return ret;
-> +	}
-> +
-> +	if (header->version < 0x020C) {
-> +                /* Must be at least protocol version 2.12 */
-
-Ditto.
-
-> +		pr_debug("Must be at least protocol version 2.12\n");
-> +		return ret;
-> +	}
-> +
-> +	if ((header->loadflags & 1) == 0) {
-
-That must be LOADED_HIGH bit. Why does this bit mean it is a bzImage?
-
-Ok, I see it in boot.txt:
-
-"...
-	When loading a zImage kernel ((loadflags & 0x01) == 0).
-"
-
-> +		/* Not a bzImage */
-> +		pr_debug("zImage not a bzImage\n");
-> +		return ret;
-> +	}
-> +
-> +	if ((header->xloadflags & 3) != 3) {
-> +	/* XLF_KERNEL_64 and XLF_CAN_BE_LOADED_ABOVE_4G should be set */
-
-Use those defines in the code please instead of naked numbers.
-
-> +		pr_debug("Not a relocatable bzImage64\n");
-> +		return ret;
-> +	}
-> +
-> +        /* I've got a bzImage */
-> +	pr_debug("It's a relocatable bzImage64\n");
-> +	ret = 0;
-> +
-> +	return ret;
+> +	/* Range did not match. Go to next one */
+> +	return 0;
 > +}
 > +
-> +void *bzImage64_load(struct kimage *image, char *kernel,
-> +		unsigned long kernel_len,
-> +		char *initrd, unsigned long initrd_len,
-> +		char *cmdline, unsigned long cmdline_len)
+> +/* Add a kexec segment at fixed address provided by caller */
+> +int kexec_add_segment(struct kimage *image, char *buffer, unsigned long bufsz,
+> +			unsigned long memsz, unsigned long base)
 > +{
+> +	struct kexec_segment ksegment;
+> +	int ret;
 > +
-> +	struct setup_header *header;
-> +	int setup_sects, kern16_size, ret = 0;
-> +	unsigned long setup_header_size, params_cmdline_sz;
-> +	struct boot_params *params;
-> +	unsigned long bootparam_load_addr, kernel_load_addr, initrd_load_addr;
-> +	unsigned long purgatory_load_addr;
-> +	unsigned long kernel_bufsz, kernel_memsz, kernel_align;
-> +	char *kernel_buf;
-> +	struct bzimage64_data *ldata;
-> +	struct kexec_entry64_regs regs64;
-> +	void *stack;
-> +
-> +	header = (struct setup_header *)(kernel + 0x1F1);
+> +	/* Currently adding segment this way is allowed only in file mode */
+> +	if (!image->file_mode)
+> +		return -EINVAL;
 
-See above.
+Why the guard? On a quick scan, I don't see this function called by
+something else except on the kexec_file_load path...
 
-> +	setup_sects = header->setup_sects;
-> +	if (setup_sects == 0)
-> +		setup_sects = 4;
 > +
-> +	kern16_size = (setup_sects + 1) * 512;
-> +	if (kernel_len < kern16_size) {
-> +		pr_debug("bzImage truncated\n");
-> +		return ERR_PTR(-ENOEXEC);
-> +	}
-> +
-> +	if (cmdline_len > header->cmdline_size) {
-> +		pr_debug("Kernel command line too long\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	/* Allocate loader specific data */
-> +	ldata = kzalloc(sizeof(struct bzimage64_data), GFP_KERNEL);
-> +	if (!ldata)
-> +		return ERR_PTR(-ENOMEM);
+> +	if (image->nr_segments >= KEXEC_SEGMENT_MAX)
+> +		return -EINVAL;
 > +
 > +	/*
-> +	 * Load purgatory. For 64bit entry point, purgatory  code can be
-> +	 * anywhere.
+> +	 * Make sure we are not trying to add segment after allocating
+> +	 * control pages. All segments need to be placed first before
+> +	 * any control pages are allocated. As control page allocation
+> +	 * logic goes through list of segments to make sure there are
+> +	 * no destination overlaps.
 > +	 */
-> +	ret = kexec_load_purgatory(image, 0x3000, -1, 1, &purgatory_load_addr);
+> +	WARN_ONCE(!list_empty(&image->control_pages), "Adding kexec segment"
 
-Some defines like MIN_<something> and MAX_<something> could be more
-readable here.
+Maybe say at which address here:
 
-> +	if (ret) {
-> +		pr_debug("Loading purgatory failed\n");
-> +		goto out_free_loader_data;
-> +	}
-> +
-> +	pr_debug("Loaded purgatory at 0x%lx\n", purgatory_load_addr);
-> +
-> +	/* Load Bootparams and cmdline */
-> +	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len;
-> +	params = kzalloc(params_cmdline_sz, GFP_KERNEL);
-> +	if (!params) {
-> +		ret = -ENOMEM;
-> +		goto out_free_loader_data;
-> +	}
-> +
-> +	/* Copy setup header onto bootparams. */
-> +	setup_header_size = 0x0202 + kernel[0x0201] - 0x1F1;
+... "Adding a kexec segment at address 0x%lx.."
 
-More magic numbers :-\ Ok, I'm not going to comment on the rest of them
-below but you get the idea - it would be much better to have descriptive
-defines here instead of naked numbers.
+for a bit more helpful info.
+
+> +			" after allocating control pages\n");
+> +
+> +	if (bufsz > memsz)
+> +		return -EINVAL;
+> +	if (memsz == 0)
+> +		return -EINVAL;
+> +
+> +	/* Align memsz to next page boundary */
+> +	memsz = ALIGN(memsz, PAGE_SIZE);
+
+We even have PAGE_ALIGN for that.
 
 > +
-> +	/* Is there a limit on setup header size? */
-> +	memcpy(&params->hdr, (kernel + 0x1F1), setup_header_size);
-> +	ret = kexec_add_buffer(image, (char *)params, params_cmdline_sz,
-> +			params_cmdline_sz, 16, 0x3000, -1, 1,
-> +			&bootparam_load_addr);
+> +	/* Make sure base is atleast page size aligned */
+> +	if (base & (PAGE_SIZE - 1))
 
-Normally we do arg alignment below the opening brace of the function.
-Ditto for a bunch of call sites below.
+PAGE_ALIGNED even :)
 
+> +		return -EINVAL;
+> +
+> +	memset(&ksegment, 0, sizeof(struct kexec_segment));
+> +	ksegment.mem = base;
+> +	ksegment.memsz = memsz;
+> +
+> +	/* Validate memory range */
+> +	ret = walk_system_ram_res(base, base + memsz - 1, &ksegment,
+> +				validate_ram_range_callback);
+> +
+> +	/* If a valid range is found, 1 is returned */
+> +	if (ret != 1)
 
-...
+That's the retval of validate_ram_range_callback, right? So
 
-> diff --git a/arch/x86/kernel/machine_kexec.c b/arch/x86/kernel/machine_kexec.c
-> new file mode 100644
-> index 0000000..ac55890
-> --- /dev/null
-> +++ b/arch/x86/kernel/machine_kexec.c
-> @@ -0,0 +1,136 @@
-> +/*
-> + * handle transition of Linux booting another kernel
-> + *
-> + * Copyright (C) 2014 Red Hat Inc.
-> + * Authors:
-> + * 	Vivek Goyal <vgoyal@redhat.com>
-> + *
-> + * This source code is licensed under the GNU General Public License,
-> + * Version 2.  See the file COPYING for more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/string.h>
-> +#include <asm/bootparam.h>
-> +#include <asm/setup.h>
-> +
-> +/*
-> + * Common code for x86 and x86_64 used for kexec.
+	if (!ret)
 
-I think you mean i386 by x86, right?
-
-> + *
-> + * For the time being it compiles only for x86_64 as there are no image
-> + * loaders implemented * for x86. This #ifdef can be removed once somebody
-> + * decides to write an image loader on CONFIG_X86_32.
-> + */
-> +
-> +#ifdef CONFIG_X86_64
-> +
-> +int kexec_setup_initrd(struct boot_params *boot_params,
-> +		unsigned long initrd_load_addr, unsigned long initrd_len)
-> +{
-> +	boot_params->hdr.ramdisk_image = initrd_load_addr & 0xffffffffUL;
-> +	boot_params->hdr.ramdisk_size = initrd_len & 0xffffffffUL;
-> +
-> +	boot_params->ext_ramdisk_image = initrd_load_addr >> 32;
-> +	boot_params->ext_ramdisk_size = initrd_len >> 32;
-> +
-> +	return 0;
-> +}
-> +
-> +int kexec_setup_cmdline(struct boot_params *boot_params,
-> +		unsigned long bootparams_load_addr,
-> +		unsigned long cmdline_offset, char *cmdline,
-> +		unsigned long cmdline_len)
-> +{
-> +	char *cmdline_ptr = ((char *)boot_params) + cmdline_offset;
-> +	unsigned long cmdline_ptr_phys;
-> +	uint32_t cmdline_low_32, cmdline_ext_32;
-> +
-> +	memcpy(cmdline_ptr, cmdline, cmdline_len);
-> +	cmdline_ptr[cmdline_len - 1] = '\0';
-> +
-> +	cmdline_ptr_phys = bootparams_load_addr + cmdline_offset;
-> +	cmdline_low_32 = cmdline_ptr_phys & 0xffffffffUL;
-> +	cmdline_ext_32 = cmdline_ptr_phys >> 32;
-> +
-> +	boot_params->hdr.cmd_line_ptr = cmdline_low_32;
-> +	if (cmdline_ext_32)
-> +		boot_params->ext_cmd_line_ptr = cmdline_ext_32;
-> +
-> +	return 0;
-> +}
-> +
-> +static int setup_memory_map_entries(struct boot_params *params)
-> +{
-> +	unsigned int nr_e820_entries;
-> +
-> +	/* TODO: What about EFI */
-
-Do you mean by that what do_add_efi_memmap() does? We add the efi
-entries only when add_efi_memmap is supplied on the cmdline, see
-200001eb140ea.
-
-> +	nr_e820_entries = e820_saved.nr_map;
-> +	if (nr_e820_entries > E820MAX)
-> +		nr_e820_entries = E820MAX;
-> +
-> +	params->e820_entries = nr_e820_entries;
-> +	memcpy(&params->e820_map, &e820_saved.map,
-> +			nr_e820_entries * sizeof(struct e820entry));
-> +
-> +	return 0;
-> +}
-
-Thanks.
+And shouldn't the convention be the opposite? 0 on success, !0 on error?
 
 -- 
 Regards/Gruss,
