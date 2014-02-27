@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g6t1524.atlanta.hp.com ([15.193.200.67])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WJ7xd-0003G6-IZ
- for kexec@lists.infradead.org; Thu, 27 Feb 2014 20:53:42 +0000
-Date: Thu, 27 Feb 2014 13:53:12 -0700
-From: Linn Crosetto <linn@hp.com>
-Subject: Re: [PATCH v2 4/4] x86: Pass memory range via E820 for kdump
-Message-ID: <20140227205312.GJ30210@oranje.fc.hp.com>
-References: <1392888512-4473-1-git-send-email-chaowang@redhat.com>
- <1392888512-4473-5-git-send-email-chaowang@redhat.com>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WJ8dZ-00059i-5a
+ for kexec@lists.infradead.org; Thu, 27 Feb 2014 21:37:03 +0000
+Date: Thu, 27 Feb 2014 22:36:29 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 08/11] kexec-bzImage: Support for loading bzImage using
+ 64bit entry
+Message-ID: <20140227213629.GP18191@pd.tnic>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+ <1390849071-21989-9-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1392888512-4473-5-git-send-email-chaowang@redhat.com>
+In-Reply-To: <1390849071-21989-9-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,167 +25,332 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "horms@verge.net.au" <horms@verge.net.au>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "trenn@suse.de" <trenn@suse.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-Hi Chao,
-
-On Thu, Feb 20, 2014 at 02:28:32AM -0700, WANG Chao wrote:
-
-[..]
-
-> +static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-> +                          struct memory_range *range, int nr_range)
-> +{
-> +       struct setup_data *sd;
-> +       struct e820entry *e820;
-> +       int i, j, nr_range_ext;
-> +
-> +       nr_range_ext = nr_range - E820MAX;
-> +       sd = malloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
-> +       sd->next = 0;
-> +       sd->len = nr_range_ext * sizeof(struct e820entry);
-> +       sd->type = SETUP_E820_EXT;
-> +
-> +       e820 = (struct e820entry *) sd->data;
-> +       dbgprintf("Extended E820 via setup_data:\n");
-> +       for(i = 0, j = E820MAX; i < nr_range_ext; i++, j++) {
-> +               e820[i].addr = range[j].start;
-> +               e820[i].size = range[j].end - range[j].start;
-> +               switch (range[j].type) {
-> +               case RANGE_RAM:
-> +                       e820[i].type = E820_RAM;
-> +                       break;
-> +               case RANGE_ACPI:
-> +                       e820[i].type = E820_ACPI;
-> +                       break;
-> +               case RANGE_ACPI_NVS:
-> +                       e820[i].type = E820_NVS;
-> +                       break;
-> +               default:
-> +               case RANGE_RESERVED:
-> +                       e820[i].type = E820_RESERVED;
-> +                       break;
-> +               }
-> +               dbgprintf("%016lx-%016lx (%d)\n",
-> +                               e820[i].addr,
-> +                               e820[i].addr + e820[i].size - 1,
-> +                               e820[i].type);
-> +
-> +               if (range[j].type != RANGE_RAM)
-> +                       continue;
-> +               if ((range[j].start <= 0x100000) && range[j].end > 0x100000) {
-> +                       unsigned long long mem_k = (range[j].end >> 10) - (0x100000 >> 10);
-> +                       real_mode->ext_mem_k = mem_k;
-> +                       real_mode->alt_mem_k = mem_k;
-> +                       if (mem_k > 0xfc00) {
-> +                               real_mode->ext_mem_k = 0xfc00; /* 64M */
-> +                       }
-> +                       if (mem_k > 0xffffffff) {
-> +                               real_mode->alt_mem_k = 0xffffffff;
-> +                       }
-> +               }
-> +       }
-> +       add_setup_data(info, real_mode, sd);
-> +       free(sd);
-
-Remove this call to free(sd) or the kernel will not boot if there are more than
-E820MAX entries.
-
-> +}
-> +
-> +static void setup_e820(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-> +                      struct memory_range *range, int nr_range)
-> +{
-> +
-> +       int nr_range_saved = nr_range;
-> +       int i;
-> +
-> +       if (nr_range > E820MAX) {
-> +               nr_range = E820MAX;
-> +       }
-> +
-> +       real_mode->e820_map_nr = nr_range;
-> +       dbgprintf("E820 memmap:\n");
-> +       for(i = 0; i < nr_range; i++) {
-> +               real_mode->e820_map[i].addr = range[i].start;
-> +               real_mode->e820_map[i].size = range[i].end - range[i].start;
-> +               switch (range[i].type) {
-> +                       case RANGE_RAM:
-> +                               real_mode->e820_map[i].type = E820_RAM;
-> +                               break;
-> +                       case RANGE_ACPI:
-> +                               real_mode->e820_map[i].type = E820_ACPI;
-> +                               break;
-> +                       case RANGE_ACPI_NVS:
-> +                               real_mode->e820_map[i].type = E820_NVS;
-> +                               break;
-> +                       default:
-> +                       case RANGE_RESERVED:
-> +                               real_mode->e820_map[i].type = E820_RESERVED;
-> +                               break;
-> +               }
-> +               dbgprintf("%016lx-%016lx (%d)\n",
-> +                               real_mode->e820_map[i].addr,
-> +                               real_mode->e820_map[i].addr + real_mode->e820_map[i].size - 1,
-> +                               real_mode->e820_map[i].type);
-> +
-> +               if (range[i].type != RANGE_RAM)
-> +                       continue;
-> +               if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
-> +                       unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
-> +                       real_mode->ext_mem_k = mem_k;
-> +                       real_mode->alt_mem_k = mem_k;
-> +                       if (mem_k > 0xfc00) {
-> +                               real_mode->ext_mem_k = 0xfc00; /* 64M */
-> +                       }
-> +                       if (mem_k > 0xffffffff) {
-> +                               real_mode->alt_mem_k = 0xffffffff;
-> +                       }
-> +               }
-> +       }
-> +
-> +       if (nr_range_saved > E820MAX) {
-> +               dbgprintf("extra E820 memmap are passed via setup_data\n");
-> +               setup_e820_ext(info, real_mode, range, nr_range_saved);
-> +       }
-> +}
-> +
-
-setup_e820() and setup_e820_ext() contain a lot of duplication. You could
-combine them into a single function, similar to the implementation of
-setup_e820() in the kernel.
-
->  static int
->  get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
->  {
-> @@ -704,7 +830,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
-
-[..]
-
-> +       if (info->kexec_flags & KEXEC_ON_CRASH && !pass_memmap_cmdline) {
-> +               range = crash_memory_range;
-> +               ranges = crash_memory_ranges;
-> +       } else {
-> +               range = info->memory_range;
-> +               ranges = info->memory_ranges;
->         }
-
-You can move this code into setup_e820(), since range and ranges are not used
-elsewhere in setup_linux_system_parameters().
-
-> +       setup_e820(info, real_mode, range, ranges);
+On Mon, Jan 27, 2014 at 01:57:48PM -0500, Vivek Goyal wrote:
+> This is loader specific code which can load bzImage and set it up for
+> 64bit entry. This does not take care of 32bit entry or real mode entry
+> yet.
 > 
->         /* fill the EDD information */
->         setup_edd_info(real_mode);
-> --
-> 1.8.5.3
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
 
-I tested boot (with the above fix) on a system with a large memory map, and can
-easily test changes, if needed.
+checkpatch: total: 4 errors, 2 warnings, 450 lines checked
 
-Thanks,
-Linn
+...
+
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index cb648c8..fa9981d 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -67,8 +67,10 @@ obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o
+>  obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
+>  obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
+>  obj-$(CONFIG_X86_TSC)		+= trace_clock.o
+> +obj-$(CONFIG_KEXEC)		+= machine_kexec.o
+>  obj-$(CONFIG_KEXEC)		+= machine_kexec_$(BITS).o
+>  obj-$(CONFIG_KEXEC)		+= relocate_kernel_$(BITS).o crash.o
+> +obj-$(CONFIG_KEXEC)		+= kexec-bzimage.o
+
+Maybe use less obj-$(CONFIG_KEXEC) lines here.
+
+>  obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
+>  obj-y				+= kprobes/
+>  obj-$(CONFIG_MODULES)		+= module.o
+> diff --git a/arch/x86/kernel/kexec-bzimage.c b/arch/x86/kernel/kexec-bzimage.c
+> new file mode 100644
+> index 0000000..cbfcd00
+> --- /dev/null
+> +++ b/arch/x86/kernel/kexec-bzimage.c
+> @@ -0,0 +1,234 @@
+> +#include <linux/string.h>
+> +#include <linux/printk.h>
+> +#include <linux/errno.h>
+> +#include <linux/slab.h>
+> +#include <linux/kexec.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mm.h>
+> +
+> +#include <asm/bootparam.h>
+> +#include <asm/setup.h>
+> +
+> +#ifdef CONFIG_X86_64
+> +
+> +struct bzimage64_data {
+> +	/*
+> +	 * Temporary buffer to hold bootparams buffer. This should be
+> +	 * freed once the bootparam segment has been loaded.
+> +	 */
+> +	void *bootparams_buf;
+> +};
+
+Why a struct if it is going to have only one member?
+
+> +
+> +int bzImage64_probe(const char *buf, unsigned long len)
+> +{
+> +	int ret = -ENOEXEC;
+> +	struct setup_header *header;
+> +
+> +	if (len < 2 * 512) {
+
+What's 2*512? Two sectors?
+
+> +		pr_debug("File is too short to be a bzImage\n");
+> +		return ret;
+> +	}
+> +
+> +	header = (struct setup_header *)(buf + 0x1F1);
+
+0x1F1 should need at least a comment or "offsetof(struct boot_params, hdr)"
+or both, which would be best. :-)
+
+> +	if (memcmp((char *)&header->header, "HdrS", 4) != 0) {
+> +		pr_debug("Not a bzImage\n");
+
+Actually, I think that means that there is no real mode kernel header
+there, or we're using an old boot protocol version:
+
+Documentation/x86/boot.txt
+
+> +		return ret;
+> +	}
+> +
+> +	if (header->boot_flag != 0xAA55) {
+> +                /* No x86 boot sector present */
+
+Comment is kinda redundant here :)
+
+> +		pr_debug("No x86 boot sector present\n");
+> +		return ret;
+> +	}
+> +
+> +	if (header->version < 0x020C) {
+> +                /* Must be at least protocol version 2.12 */
+
+Ditto.
+
+> +		pr_debug("Must be at least protocol version 2.12\n");
+> +		return ret;
+> +	}
+> +
+> +	if ((header->loadflags & 1) == 0) {
+
+That must be LOADED_HIGH bit. Why does this bit mean it is a bzImage?
+
+Ok, I see it in boot.txt:
+
+"...
+	When loading a zImage kernel ((loadflags & 0x01) == 0).
+"
+
+> +		/* Not a bzImage */
+> +		pr_debug("zImage not a bzImage\n");
+> +		return ret;
+> +	}
+> +
+> +	if ((header->xloadflags & 3) != 3) {
+> +	/* XLF_KERNEL_64 and XLF_CAN_BE_LOADED_ABOVE_4G should be set */
+
+Use those defines in the code please instead of naked numbers.
+
+> +		pr_debug("Not a relocatable bzImage64\n");
+> +		return ret;
+> +	}
+> +
+> +        /* I've got a bzImage */
+> +	pr_debug("It's a relocatable bzImage64\n");
+> +	ret = 0;
+> +
+> +	return ret;
+> +}
+> +
+> +void *bzImage64_load(struct kimage *image, char *kernel,
+> +		unsigned long kernel_len,
+> +		char *initrd, unsigned long initrd_len,
+> +		char *cmdline, unsigned long cmdline_len)
+> +{
+> +
+> +	struct setup_header *header;
+> +	int setup_sects, kern16_size, ret = 0;
+> +	unsigned long setup_header_size, params_cmdline_sz;
+> +	struct boot_params *params;
+> +	unsigned long bootparam_load_addr, kernel_load_addr, initrd_load_addr;
+> +	unsigned long purgatory_load_addr;
+> +	unsigned long kernel_bufsz, kernel_memsz, kernel_align;
+> +	char *kernel_buf;
+> +	struct bzimage64_data *ldata;
+> +	struct kexec_entry64_regs regs64;
+> +	void *stack;
+> +
+> +	header = (struct setup_header *)(kernel + 0x1F1);
+
+See above.
+
+> +	setup_sects = header->setup_sects;
+> +	if (setup_sects == 0)
+> +		setup_sects = 4;
+> +
+> +	kern16_size = (setup_sects + 1) * 512;
+> +	if (kernel_len < kern16_size) {
+> +		pr_debug("bzImage truncated\n");
+> +		return ERR_PTR(-ENOEXEC);
+> +	}
+> +
+> +	if (cmdline_len > header->cmdline_size) {
+> +		pr_debug("Kernel command line too long\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	/* Allocate loader specific data */
+> +	ldata = kzalloc(sizeof(struct bzimage64_data), GFP_KERNEL);
+> +	if (!ldata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	/*
+> +	 * Load purgatory. For 64bit entry point, purgatory  code can be
+> +	 * anywhere.
+> +	 */
+> +	ret = kexec_load_purgatory(image, 0x3000, -1, 1, &purgatory_load_addr);
+
+Some defines like MIN_<something> and MAX_<something> could be more
+readable here.
+
+> +	if (ret) {
+> +		pr_debug("Loading purgatory failed\n");
+> +		goto out_free_loader_data;
+> +	}
+> +
+> +	pr_debug("Loaded purgatory at 0x%lx\n", purgatory_load_addr);
+> +
+> +	/* Load Bootparams and cmdline */
+> +	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len;
+> +	params = kzalloc(params_cmdline_sz, GFP_KERNEL);
+> +	if (!params) {
+> +		ret = -ENOMEM;
+> +		goto out_free_loader_data;
+> +	}
+> +
+> +	/* Copy setup header onto bootparams. */
+> +	setup_header_size = 0x0202 + kernel[0x0201] - 0x1F1;
+
+More magic numbers :-\ Ok, I'm not going to comment on the rest of them
+below but you get the idea - it would be much better to have descriptive
+defines here instead of naked numbers.
+
+> +
+> +	/* Is there a limit on setup header size? */
+> +	memcpy(&params->hdr, (kernel + 0x1F1), setup_header_size);
+> +	ret = kexec_add_buffer(image, (char *)params, params_cmdline_sz,
+> +			params_cmdline_sz, 16, 0x3000, -1, 1,
+> +			&bootparam_load_addr);
+
+Normally we do arg alignment below the opening brace of the function.
+Ditto for a bunch of call sites below.
+
+
+...
+
+> diff --git a/arch/x86/kernel/machine_kexec.c b/arch/x86/kernel/machine_kexec.c
+> new file mode 100644
+> index 0000000..ac55890
+> --- /dev/null
+> +++ b/arch/x86/kernel/machine_kexec.c
+> @@ -0,0 +1,136 @@
+> +/*
+> + * handle transition of Linux booting another kernel
+> + *
+> + * Copyright (C) 2014 Red Hat Inc.
+> + * Authors:
+> + * 	Vivek Goyal <vgoyal@redhat.com>
+> + *
+> + * This source code is licensed under the GNU General Public License,
+> + * Version 2.  See the file COPYING for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/string.h>
+> +#include <asm/bootparam.h>
+> +#include <asm/setup.h>
+> +
+> +/*
+> + * Common code for x86 and x86_64 used for kexec.
+
+I think you mean i386 by x86, right?
+
+> + *
+> + * For the time being it compiles only for x86_64 as there are no image
+> + * loaders implemented * for x86. This #ifdef can be removed once somebody
+> + * decides to write an image loader on CONFIG_X86_32.
+> + */
+> +
+> +#ifdef CONFIG_X86_64
+> +
+> +int kexec_setup_initrd(struct boot_params *boot_params,
+> +		unsigned long initrd_load_addr, unsigned long initrd_len)
+> +{
+> +	boot_params->hdr.ramdisk_image = initrd_load_addr & 0xffffffffUL;
+> +	boot_params->hdr.ramdisk_size = initrd_len & 0xffffffffUL;
+> +
+> +	boot_params->ext_ramdisk_image = initrd_load_addr >> 32;
+> +	boot_params->ext_ramdisk_size = initrd_len >> 32;
+> +
+> +	return 0;
+> +}
+> +
+> +int kexec_setup_cmdline(struct boot_params *boot_params,
+> +		unsigned long bootparams_load_addr,
+> +		unsigned long cmdline_offset, char *cmdline,
+> +		unsigned long cmdline_len)
+> +{
+> +	char *cmdline_ptr = ((char *)boot_params) + cmdline_offset;
+> +	unsigned long cmdline_ptr_phys;
+> +	uint32_t cmdline_low_32, cmdline_ext_32;
+> +
+> +	memcpy(cmdline_ptr, cmdline, cmdline_len);
+> +	cmdline_ptr[cmdline_len - 1] = '\0';
+> +
+> +	cmdline_ptr_phys = bootparams_load_addr + cmdline_offset;
+> +	cmdline_low_32 = cmdline_ptr_phys & 0xffffffffUL;
+> +	cmdline_ext_32 = cmdline_ptr_phys >> 32;
+> +
+> +	boot_params->hdr.cmd_line_ptr = cmdline_low_32;
+> +	if (cmdline_ext_32)
+> +		boot_params->ext_cmd_line_ptr = cmdline_ext_32;
+> +
+> +	return 0;
+> +}
+> +
+> +static int setup_memory_map_entries(struct boot_params *params)
+> +{
+> +	unsigned int nr_e820_entries;
+> +
+> +	/* TODO: What about EFI */
+
+Do you mean by that what do_add_efi_memmap() does? We add the efi
+entries only when add_efi_memmap is supplied on the cmdline, see
+200001eb140ea.
+
+> +	nr_e820_entries = e820_saved.nr_map;
+> +	if (nr_e820_entries > E820MAX)
+> +		nr_e820_entries = E820MAX;
+> +
+> +	params->e820_entries = nr_e820_entries;
+> +	memcpy(&params->e820_map, &e820_saved.map,
+> +			nr_e820_entries * sizeof(struct e820entry));
+> +
+> +	return 0;
+> +}
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
