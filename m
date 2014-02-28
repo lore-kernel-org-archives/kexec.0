@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WJBr5-0001xM-UD
- for kexec@lists.infradead.org; Fri, 28 Feb 2014 01:03:13 +0000
+ id 1WJHKg-0000WQ-1C
+ for kexec@lists.infradead.org; Fri, 28 Feb 2014 06:54:08 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile: Fix string append in dump_log_entry()
-Date: Fri, 28 Feb 2014 01:01:33 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971EF130@BPXM01GP.gisp.nec.co.jp>
-References: <20140226220546.4030cdbf@hananiah.suse.cz>
-In-Reply-To: <20140226220546.4030cdbf@hananiah.suse.cz>
+Subject: RE: [PATCH] makedumpfile: Add support to module data structures
+Date: Fri, 28 Feb 2014 06:51:07 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971EF46E@BPXM01GP.gisp.nec.co.jp>
+References: <20140227061942.2765.37183.stgit@aruna-ThinkPad-T420>
+In-Reply-To: <20140227061942.2765.37183.stgit@aruna-ThinkPad-T420>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -23,89 +23,234 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+To: "aruna@linux.vnet.ibm.com" <aruna@linux.vnet.ibm.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello Petr,
+>diff --git a/dwarf_info.c b/dwarf_info.c
+>index 6e21b8a..268e922 100644
+>--- a/dwarf_info.c
+>+++ b/dwarf_info.c
+>@@ -489,7 +489,6 @@ get_die_from_offset(Dwarf_Off offset, Dwarf_Die *die)
+> 		return FALSE;
+>
+> 	if (!dwarf_offdie(dwarf_info.dwarfd, offset, die)) {
+>-		ERRMSG("Can't find the DIE.\n");
+> 		return FALSE;
+> 	}
+>
+>@@ -1343,14 +1342,12 @@ get_die_nfields(unsigned long long die_off)
+> 	Dwarf_Die result, child, *die;
+>
+> 	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
+>-		ERRMSG("Can't find the DIE.\n");
+> 		return -1;
+> 	}
+>
+> 	die = &result;
+> 	tag = dwarf_tag(die);
+> 	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+>-		ERRMSG("DIE is not of structure or union type.\n");
+> 		clean_dwfl_info();
+> 		return -1;
+> 	}
+>@@ -1388,14 +1385,12 @@ get_die_member(unsigned long long die_off, int index, long *offset,
+> 		return -1;
+>
+> 	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
+>-		ERRMSG("Can't find the DIE.\n");
+> 		return -1;
+> 	}
+>
+> 	die = &result;
+> 	tag = dwarf_tag(die);
+> 	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+>-		ERRMSG("DIE is not of structure or union type.\n");
+> 		clean_dwfl_info();
+> 		return -1;
+> 	}
+>@@ -1471,7 +1466,6 @@ get_die_attr_type(unsigned long long die_off, int *type_flag,
+> 		return FALSE;
+>
+> 	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
+>-		ERRMSG("Can't find the DIE.\n");
+> 		return FALSE;
+> 	}
+>
+>@@ -1509,7 +1503,6 @@ get_die_name(unsigned long long die_off)
+> 		return NULL;
+>
+> 	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
+>-		ERRMSG("Can't find the DIE.\n");
+> 		return NULL;
+> 	}
+>
+>@@ -1554,7 +1547,6 @@ get_die_length(unsigned long long die_off, int flag)
+> 		return FALSE;
+>
+> 	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
+>-		ERRMSG("Can't find the DIE.\n");
+> 		return FALSE;
+> 	}
 
->To quote the sprintf(3) man page:
->
->    Some programs imprudently rely on code such as the following
->
->        sprintf(buf, "%s some further text", buf);
->
->    to append text to buf.  However, the standards explicitly note that
->    the results are undefined if source and destination buffers overlap
->    when calling sprintf(), snprintf(), vsprintf(), and vsnprintf().
->    Depending on the version of gcc(1) used, and the compiler options
->    employed, calls such as the above will not produce the expected results.
->
->The original code is actually miscompiled on openSUSE 13.1.
->
->It's also overkill to call sprintf() for something that can be done
->with a simple assignment.
->
->Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
-
-Thanks, it seems good to me.
-
-Actually, Nick sent the same patch in last July and we tried to
-take care of buffer overflow at the same time as below:
-
-http://lists.infradead.org/pipermail/kexec/2013-August/009430.html
-
-However, this thread has been left open, so I was wondering if you
-could take over this work. Of course you can decline this, then I'll
-do it later as another patch.
+Why did you remove these error messages ?
+This change looks unrelated to the subject, you should at least
+do it separately.
 
 
 Thanks
 Atsushi Kumagai
 
->---
-> makedumpfile.c | 13 +++++++------
-> 1 file changed, 7 insertions(+), 6 deletions(-)
+>diff --git a/erase_info.c b/erase_info.c
+>index a789389..e0e0f71 100644
+>--- a/erase_info.c
+>+++ b/erase_info.c
+>@@ -34,7 +34,7 @@ struct call_back eppic_cb = {
+> 	&get_die_offset,
+> 	&get_die_length,
+> 	&get_die_member_all,
+>-	&get_die_nfields,
+>+	&get_die_nfields_all,
+> 	&get_symbol_addr_all,
+> 	&update_filter_info_raw
+> };
+>@@ -2028,6 +2028,84 @@ get_domain_all(char *symname, int cmd, unsigned long long *die) {
+> }
 >
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 579be61..013fce7 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -3866,7 +3866,7 @@ reset_bitmap_of_free_pages(unsigned long node_zones, struct cycle *cycle)
-> static int
-> dump_log_entry(char *logptr, int fp)
-> {
->-	char *msg, *p;
->+	char *msg, *p, *bufp;
-> 	unsigned int i, text_len;
-> 	unsigned long long ts_nsec;
-> 	char buf[BUFSIZE];
->@@ -3881,18 +3881,19 @@ dump_log_entry(char *logptr, int fp)
+> /*
+>+ * Search for die in modules as well as vmlinux
+>+ */
+>+int
+>+get_die_nfields_all(unsigned long long die_off)
+>+{
+>+	short vmlinux_searched = 0;
+>+	long nfields = -1;
+>+	unsigned int i, current_mod;
+>+	struct module_info *modules;
+>+
+>+	/* Search in vmlinux if debuginfo is set to vmlinux */
+>+	if (!strcmp(get_dwarf_module_name(), "vmlinux")) {
+>+		nfields = get_die_nfields(die_off);
+>+		if (nfields > 0)
+>+			return nfields;
+>+
+>+		vmlinux_searched = 1;
+>+	}
+>+
+>+	/*
+>+	 * Proceed the search in modules. Try in the module
+>+	 * which resulted in a hit in the previous search
+>+	 */
+>+
+>+	modules = mod_st.modules;
+>+	current_mod = mod_st.current_mod;
+>+
+>+	if (strcmp(get_dwarf_module_name(), modules[current_mod].name)) {
+>+		if (!set_dwarf_debuginfo(modules[current_mod].name,
+>+				info->system_utsname.release, NULL, -1)) {
+>+			ERRMSG("Cannot set to current module %s\n",
+>+					modules[current_mod].name);
+>+			return -1;
+>+		}
+>+	}
+>+
+>+	nfields = get_die_nfields(die_off);
+>+	if (nfields > 0)
+>+		return nfields;
+>+
+>+	/* Search in all modules */
+>+	for (i = 0; i < mod_st.num_modules; i++) {
+>+
+>+		/* Already searched. Skip */
+>+		if (i == current_mod)
+>+			continue;
+>+
+>+		if (!set_dwarf_debuginfo(modules[i].name,
+>+				info->system_utsname.release, NULL, -1)) {
+>+			ERRMSG("Skipping Module section %s\n", modules[i].name);
+>+			continue;
+>+		}
+>+
+>+		nfields = get_die_nfields(die_off);
+>+
+>+		if (nfields < 0)
+>+			continue;
+>+
+>+		/*
+>+		 * Die found. Set the current_mod to this module index,
+>+		 * a minor optimization for fast lookup next time
+>+		 */
+>+		mod_st.current_mod = i;
+>+		return nfields;
+>+	}
+>+
+>+	/* Die not found in any module. Set debuginfo back to vmlinux */
+>+	set_dwarf_debuginfo("vmlinux", NULL, info->name_vmlinux,
+>+			info->fd_vmlinux);
+>+
+>+	if (!vmlinux_searched)
+>+		return get_die_nfields(die_off);
+>+	else
+>+		return -1;
+>+
+>+}
+>+
+>+/*
+>  * Search for die member in modules as well as vmlinux
+>  */
+> int
+>diff --git a/erase_info.h b/erase_info.h
+>index a90fac0..4d4957e 100644
+>--- a/erase_info.h
+>+++ b/erase_info.h
+>@@ -35,6 +35,7 @@ unsigned long long get_symbol_addr_all(char *);
+> long get_domain_all(char *, int, unsigned long long *);
+> int get_die_member_all(unsigned long long die_off, int index, long *offset,
+> 		char **name, int *nbits, int *fbits, unsigned long long *m_die);
+>+int get_die_nfields_all(unsigned long long die_off);
 >
-> 	msg = logptr + SIZE(printk_log);
+> struct call_back {
+> 	long (*get_domain_all)(char *, int, unsigned long long *);
+>@@ -48,7 +49,7 @@ struct call_back {
+> 	int (*get_die_member_all)(unsigned long long die_off, int index,
+> 		long *offset, char **name, int *nbits, int *fbits,
+> 		unsigned long long *m_die);
+>-	int (*get_die_nfields)(unsigned long long die_off);
+>+	int (*get_die_nfields_all)(unsigned long long die_off);
+> 	unsigned long long (*get_symbol_addr_all)(char *symname);
+> 	int (*update_filter_info_raw)(unsigned long long, int, int);
+> };
+>diff --git a/extension_eppic.c b/extension_eppic.c
+>index 7e045c9..bb36d5a 100644
+>--- a/extension_eppic.c
+>+++ b/extension_eppic.c
+>@@ -219,7 +219,7 @@ apimember(char *mname, ull idx, type_t *tm, member_t *m, ull *last_index)
+> 	ull m_die, die_off = idx;
+> 	char *name = NULL;
 >
->-	sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
->+	bufp = buf;
->+	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+>-	nfields = GET_DIE_NFIELDS(die_off);
+>+	nfields = GET_DIE_NFIELDS_ALL(die_off);
+> 	/*
+> 	 * GET_DIE_NFIELDS() returns < 0 if the die is not structure type
+> 	 * or union type
+>diff --git a/extension_eppic.h b/extension_eppic.h
+>index 42437f2..24189ba 100644
+>--- a/extension_eppic.h
+>+++ b/extension_eppic.h
+>@@ -88,7 +88,7 @@ struct call_back *cb;
+> #define GET_DIE_OFFSET cb->get_die_offset
+> #define GET_DIE_LENGTH cb->get_die_length
+> #define GET_DIE_MEMBER_ALL cb->get_die_member_all
+>-#define GET_DIE_NFIELDS cb->get_die_nfields
+>+#define GET_DIE_NFIELDS_ALL cb->get_die_nfields_all
+> #define GET_SYMBOL_ADDR_ALL cb->get_symbol_addr_all
+> #define UPDATE_FILTER_INFO_RAW cb->update_filter_info_raw
 >
-> 	for (i = 0, p = msg; i < text_len; i++, p++) {
-> 		if (isprint(*p) || isspace(*p))
->-			sprintf(buf, "%s%c", buf, *p);
->+			*bufp++ = *p;
-> 		else
->-			sprintf(buf, "%s\\x%02x", buf, *p);
->+			bufp += sprintf(bufp, "\\x%02x", *p);
-> 	}
 >
->-	sprintf(buf, "%s\n", buf);
->+	*bufp++ = '\n';
 >
->-	if (write(info->fd_dumpfile, buf, strlen(buf)) < 0)
->+	if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
-> 		return FALSE;
-> 	else
-> 		return TRUE;
->--
->1.8.4.5
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
