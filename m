@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WJQz0-0006DV-J3
- for kexec@lists.infradead.org; Fri, 28 Feb 2014 17:12:23 +0000
-Date: Fri, 28 Feb 2014 12:11:43 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 10/11] kexec: Support for loading ELF x86_64 images
-Message-ID: <20140228171142.GI28744@redhat.com>
+ id 1WJRFU-000713-H4
+ for kexec@lists.infradead.org; Fri, 28 Feb 2014 17:29:29 +0000
+Date: Fri, 28 Feb 2014 18:28:57 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 11/11] kexec: Support for Kexec on panic using new system
+ call
+Message-ID: <20140228172857.GG4326@pd.tnic>
 References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-11-git-send-email-vgoyal@redhat.com>
- <20140228145832.GF4326@pd.tnic>
+ <1390849071-21989-12-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140228145832.GF4326@pd.tnic>
+In-Reply-To: <1390849071-21989-12-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,253 +21,174 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Fri, Feb 28, 2014 at 03:58:32PM +0100, Borislav Petkov wrote:
-> On Mon, Jan 27, 2014 at 01:57:50PM -0500, Vivek Goyal wrote:
-> > This patch provides support for kexec for loading ELF x86_64 images. I have
-> > tested it with loading vmlinux and it worked.
-> 
-> Can you please enlighten me what the use case for ELF kernel images is? bzImage
-> I understand but what produces ELF images?
-
-Before bzImage is generated, we produce an ELF vmlinux (linux-2.6/vmlinux).
-And then this vmlinux is processed further to produce bzImage.
-
-In theory you can load this vmlinux and boot into it using kexec system
-call.
-
-In general, Eric wanted to support ELF images hence I put in this patch.
-
-> 
-> I see that kexec_file_load() can receive ELF segments too but why are we
-> doing that?
-
-So kexec_file_load() does not know what kind of file it is. Whether an
-ELF file or an bzImage file. It will just call all the image loaders and
-see if some loader recognizes the file and claims it.
-
-So idea is what kind of image one should be able to load using this
-new system call and kexec into. 
-
-My primary use case is bzImage. Others think that it should be generic
-enough to be able to handle ELF too.
-
-> 
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > ---
-> >  arch/x86/include/asm/kexec-elf.h   |  11 ++
-> >  arch/x86/kernel/Makefile           |   1 +
-> >  arch/x86/kernel/kexec-elf.c        | 231 +++++++++++++++++++++++++++++++++++++
-> >  arch/x86/kernel/machine_kexec_64.c |   2 +
-> >  4 files changed, 245 insertions(+)
-> >  create mode 100644 arch/x86/include/asm/kexec-elf.h
-> >  create mode 100644 arch/x86/kernel/kexec-elf.c
-> > 
-> > diff --git a/arch/x86/include/asm/kexec-elf.h b/arch/x86/include/asm/kexec-elf.h
-> > new file mode 100644
-> > index 0000000..afef382
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/kexec-elf.h
-> > @@ -0,0 +1,11 @@
-> > +#ifndef _ASM_KEXEC_ELF_H
-> > +#define _ASM_KEXEC_ELF_H
-> > +
-> > +extern int elf_x86_64_probe(const char *buf, unsigned long len);
-> > +extern void *elf_x86_64_load(struct kimage *image, char *kernel,
-> > +		unsigned long kernel_len, char *initrd,
-> > +		unsigned long initrd_len, char *cmdline,
-> > +		unsigned long cmdline_len);
-> > +extern int elf_x86_64_cleanup(struct kimage *image);
-> > +
-> > +#endif  /* _ASM_KEXEC_ELF_H */
-> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> > index fa9981d..2d77de7 100644
-> > --- a/arch/x86/kernel/Makefile
-> > +++ b/arch/x86/kernel/Makefile
-> > @@ -71,6 +71,7 @@ obj-$(CONFIG_KEXEC)		+= machine_kexec.o
-> >  obj-$(CONFIG_KEXEC)		+= machine_kexec_$(BITS).o
-> >  obj-$(CONFIG_KEXEC)		+= relocate_kernel_$(BITS).o crash.o
-> >  obj-$(CONFIG_KEXEC)		+= kexec-bzimage.o
-> > +obj-$(CONFIG_KEXEC)		+= kexec-elf.o
-> 
-> It looks like kexec could slowly grow its own dir now:
-> 
-> arch/x86/kexec/
-
-I was rather thinking of arch/x86/kernel/kexec. But that's for some other
-day. Not part of this patchset. This is alredy too big and I don't want
-to make any changes which are nice to have and bloat the patch size.
-
-> 
-> or so.
-> 
-> >  obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
-> >  obj-y				+= kprobes/
-> >  obj-$(CONFIG_MODULES)		+= module.o
-> > diff --git a/arch/x86/kernel/kexec-elf.c b/arch/x86/kernel/kexec-elf.c
-> > new file mode 100644
-> > index 0000000..ff1017c
-> > --- /dev/null
-> > +++ b/arch/x86/kernel/kexec-elf.c
-> > @@ -0,0 +1,231 @@
-> > +#include <linux/string.h>
-> > +#include <linux/printk.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/kexec.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mm.h>
-> > +
-> > +#include <asm/bootparam.h>
-> > +#include <asm/setup.h>
-> > +
-> > +#ifdef CONFIG_X86_64
-> > +
-> > +struct elf_x86_64_data {
-> > +	/*
-> > +	 * Temporary buffer to hold bootparams buffer. This should be
-> > +	 * freed once the bootparam segment has been loaded.
-> > +	 */
-> > +	void *bootparams_buf;
-> > +};
-> > +
-> > +int elf_x86_64_probe(const char *buf, unsigned long len)
-> > +{
-> > +	int ret = -ENOEXEC;
-> > +	Elf_Ehdr *ehdr;
-> > +
-> > +	if (len < sizeof(Elf_Ehdr)) {
-> > +		pr_debug("File is too short to be an ELF executable.\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ehdr = (Elf_Ehdr *)buf;
-> > +
-> > +	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0
-> > +	    || ehdr->e_type != ET_EXEC || !elf_check_arch(ehdr)
-> > +	    || ehdr->e_phentsize != sizeof(Elf_Phdr))
-> > +		return -ENOEXEC;
-> > +
-> > +	if (ehdr->e_phoff >= len
-> > +	    || (ehdr->e_phnum * sizeof(Elf_Phdr) > len - ehdr->e_phoff))
-> > +		return -ENOEXEC;
-> > +
-> > +        /* I've got a bzImage */
-> > +	pr_debug("It's an elf_x86_64 image.\n");
-> > +	ret = 0;
-> > +
-> > +	return ret;
-> 
-> I think you can drop 'ret' here and return the error vals directly.
-
-Yep, will simplify this one.
-
-> 
-> > +}
-> > +
-> > +static int elf_exec_load(struct kimage *image, char *kernel)
-> > +{
-> > +	Elf_Ehdr *ehdr;
-> > +	Elf_Phdr *phdrs;
-> > +	int i, ret;
-> > +	size_t filesz;
-> > +	char *buffer;
-> > +
-> > +	ehdr = (Elf_Ehdr *)kernel;
-> > +	phdrs = (void *)ehdr + ehdr->e_phoff;
-> > +
-> > +	for (i = 0; i < ehdr->e_phnum; i++) {
-> > +		if (phdrs[i].p_type != PT_LOAD)
-> > +			continue;
-> 
-> newline
-
-What's that?
-
-> 
-> > +		filesz = phdrs[i].p_filesz;
-> > +		if (filesz > phdrs[i].p_memsz)
-> > +			filesz = phdrs[i].p_memsz;
-> > +
-> > +		buffer = (char *)ehdr + phdrs[i].p_offset;
-> > +		ret = kexec_add_segment(image, buffer, filesz, phdrs[i].p_memsz,
-> > +						phdrs[i].p_paddr);
-> > +		if (ret)
-> > +			break;
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/* Fill in fields which are usually present in bzImage */
-> > +static int init_linux_parameters(struct boot_params *params)
-> > +{
-> > +	/*
-> > +	 * FIXME: It is odd that the information which comes from kernel
-> > +	 * has to be faked by loading kernel. I guess it is limitation of
-> > +	 * ELF format. Right now keeping it same as kexec-tools
-> > +	 * implementation. But this most likely needs fixing.
-> > +	 */
-> > +	memcpy(&params->hdr.header, "HdrS", 4);
-> > +	params->hdr.version = 0x0206;
-> > +	params->hdr.initrd_addr_max = 0x37FFFFFF;
-> > +	params->hdr.cmdline_size = 2048;
-> > +	return 0;
-> > +}
-> 
-> Why a separate function? Its body is small enough to be merged into
-> elf_x86_64_load.
-
-Actually this logic shows the limitation of ELF format kernel image.
-This information should be exported by the image so that loader can
-do some verifications. But instead loader is hardcoding this info and
-faking things.
-
-For example, it should be kernel which tells what's the maximum command
-line size it can handle and then loader can return error if user specified
-command line size is greater than what new kernel can handle.
-
-Similarly, what's the max address initrd can be loaded at.
-
-Actually I have copied this code from kexec-tools. And I am wondering
-if some of this is 
-
-I am not sure why we set hdr.version and hdr.header. Are there any
-assumptions in booth path kernel is making. May be some other code
-down the line is parsing it or it is completely redundant. I think
-I will play with removing setting of hdr.version and hdr.header and
-see how does it go.
-
-so I put it in a separate function because user space code had it
-that way. Also because I did not like this part of the code and this
-looks like a limitation of ELF format, I wanted to isolate it in
-a separate function so that it is easy to spot it.
-
-> 
-> > +
-> > +void *elf_x86_64_load(struct kimage *image, char *kernel,
-> > +		unsigned long kernel_len,
-> > +		char *initrd, unsigned long initrd_len,
-> > +		char *cmdline, unsigned long cmdline_len)
-> > +{
-> 
-> Btw, this functionality below looks very similar to the one in
-> bzImage64_load(). Can we share some of it?
-
-It looks similar but values with which some of the functions are called
-are different. I will see if there are some obivious candidate to share
-the code. It is not a lot of code to begin with.
-
-Thanks
-Vivek
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBKYW4gMjcsIDIwMTQgYXQgMDE6NTc6NTFQTSAtMDUwMCwgVml2ZWsgR295YWwgd3Jv
+dGU6Cj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIGxvYWRpbmcgYSBrZXhlYyBvbiBwYW5p
+YyAoa2R1bXApIGtlcm5lbCB1c25pbmcKPiBuZXcgc3lzdGVtIGNhbGwuIFJpZ2h0IG5vdyB0aGlz
+IHByaW1hcmlseSB3b3JrcyB3aXRoIGJ6SW1hZ2UgbG9hZGVyIG9ubHkuCj4gQnV0IGNoYW5nZXMg
+dG8gRUxGIGxvYWRlciBzaG91bGQgYmUgbWluaW1hbCBhcyBhbGwgdGhlIGNvcmUgaW5mcmFzdHJj
+dHVyZQo+IGlzIHRoZXJlLgo+IAo+IE9ubHkgdGhpbmcgcHJldmVudGluZyBtYWtpbmcgRUxGIGxv
+YWQgaW4gY3Jhc2ggcmVzZXZlZCBtZW1vcnkgaXMKPiB0aGF0IGtlcm5lbCB2bWxpbnV4IGlzIG9m
+IHR5cGUgRVRfRVhFQyBhbmQgaXQgZXhwZWN0cyB0byBiZSBsb2FkZWQgYXQKPiBhZGRyZXNzIGl0
+IGhhcyBiZWVuIGNvbXBpbGVkIGZvci4gQXQgdGhhdCBsb2NhdGlvbiBjdXJyZW50IGtlcm5lbCBp
+cwo+IGFscmVhZHkgcnVubmluZy4gT25lIGZpcnN0IG5lZWRzIHRvIG1ha2Ugdm1saW51eCBmdWxs
+eSByZWxvY2F0YWJsZQo+IGFuZCBleHBvcnQgaXQgaXMgdHlwZSBFVF9EWU4gYW5kIHRoZW4gbW9k
+aWZ5IHRoaXMgRUxGIGxvYWRlciB0byBzdXBwb3J0Cj4gaW1hZ2VzIG9mIHR5cGUgRVRfRFlOLgo+
+IAo+IEkgYW0gbGVhdmluZyBpdCBhcyBhIGZ1dHVyZSBUT0RPIGl0ZW0uCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogVml2ZWsgR295YWwgPHZnb3lhbEByZWRoYXQuY29tPgoKY2hlY2twYXRjaDogdG90YWw6
+IDIgZXJyb3JzLCAxMCB3YXJuaW5ncywgOTc3IGxpbmVzIGNoZWNrZWQKCj4gZGlmZiAtLWdpdCBh
+L2FyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhl
+Yy5oCj4gaW5kZXggOWJkNmZlYy4uYTMzMGQ4NSAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4Ni9pbmNs
+dWRlL2FzbS9rZXhlYy5oCj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20va2V4ZWMuaAo+IEBA
+IC0yNSw2ICsyNSw4IEBACj4gICNpbmNsdWRlIDxhc20vcHRyYWNlLmg+Cj4gICNpbmNsdWRlIDxh
+c20vYm9vdHBhcmFtLmg+Cj4gIAo+ICtzdHJ1Y3Qga2ltYWdlOwo+ICsKPiAgLyoKPiAgICogS0VY
+RUNfU09VUkNFX01FTU9SWV9MSU1JVCBtYXhpbXVtIHBhZ2UgZ2V0X2ZyZWVfcGFnZSBjYW4gcmV0
+dXJuLgo+ICAgKiBJLmUuIE1heGltdW0gcGFnZSB0aGF0IGlzIG1hcHBlZCBkaXJlY3RseSBpbnRv
+IGtlcm5lbCBtZW1vcnksCj4gQEAgLTYyLDYgKzY0LDEwIEBACj4gICMgZGVmaW5lIEtFWEVDX0FS
+Q0ggS0VYRUNfQVJDSF9YODZfNjQKPiAgI2VuZGlmCj4gIAo+ICsvKiBNZW1vcnkgdG8gYmFja3Vw
+IGR1cmluZyBjcmFzaCBrZHVtcCAqLwo+ICsjZGVmaW5lIEtFWEVDX0JBQ0tVUF9TUkNfU1RBUlQJ
+KDBVTCkKPiArI2RlZmluZSBLRVhFQ19CQUNLVVBfU1JDX0VORAkoNjU1MzYwVUwpCS8qIDY0MEsg
+Ki8KCkkgZ3Vlc3MKCiNkZWZpbmUgS0VYRUNfQkFDS1VQX1NSQ19FTkQJKDY0MCAqIDEwMjRVTCkK
+CnNob3VsZCBiZSBtb3JlIGNsZWFyLgoKPiAgLyoKPiAgICogQ1BVIGRvZXMgbm90IHNhdmUgc3Mg
+YW5kIHNwIG9uIHN0YWNrIGlmIGV4ZWN1dGlvbiBpcyBhbHJlYWR5Cj4gICAqIHJ1bm5pbmcgaW4g
+a2VybmVsIG1vZGUgYXQgdGhlIHRpbWUgb2YgTk1JIG9jY3VycmVuY2UuIFRoaXMgY29kZQo+IEBA
+IC0xNjEsOCArMTY3LDIxIEBAIHN0cnVjdCBraW1hZ2VfYXJjaCB7Cj4gIAlwdWRfdCAqcHVkOwo+
+ICAJcG1kX3QgKnBtZDsKPiAgCXB0ZV90ICpwdGU7Cj4gKwkvKiBEZXRhaWxzIG9mIGJhY2t1cCBy
+ZWdpb24gKi8KPiArCXVuc2lnbmVkIGxvbmcgYmFja3VwX3NyY19zdGFydDsKPiArCXVuc2lnbmVk
+IGxvbmcgYmFja3VwX3NyY19zejsKPiArCj4gKwkvKiBQaHlzaWNhbCBhZGRyZXNzIG9mIGJhY2t1
+cCBzZWdtZW50ICovCj4gKwl1bnNpZ25lZCBsb25nIGJhY2t1cF9sb2FkX2FkZHI7Cj4gKwo+ICsJ
+LyogQ29yZSBFTEYgaGVhZGVyIGJ1ZmZlciAqLwo+ICsJdW5zaWduZWQgbG9uZyBlbGZfaGVhZGVy
+czsKPiArCXVuc2lnbmVkIGxvbmcgZWxmX2hlYWRlcnNfc3o7Cj4gKwl1bnNpZ25lZCBsb25nIGVs
+Zl9sb2FkX2FkZHI7Cj4gIH07Cj4gKyNlbmRpZiAvKiBDT05GSUdfWDg2XzMyICovCj4gIAo+ICsj
+aWZkZWYgQ09ORklHX1g4Nl82NAo+ICBzdHJ1Y3Qga2V4ZWNfZW50cnk2NF9yZWdzIHsKPiAgCXVp
+bnQ2NF90IHJheDsKPiAgCXVpbnQ2NF90IHJieDsKPiBAQCAtMTg5LDExICsyMDgsMTMgQEAgZXh0
+ZXJuIGNyYXNoX3ZtY2xlYXJfZm4gX19yY3UgKmNyYXNoX3ZtY2xlYXJfbG9hZGVkX3ZtY3NzOwo+
+ICAKPiAgZXh0ZXJuIGludCBrZXhlY19zZXR1cF9pbml0cmQoc3RydWN0IGJvb3RfcGFyYW1zICpi
+b290X3BhcmFtcywKPiAgCQl1bnNpZ25lZCBsb25nIGluaXRyZF9sb2FkX2FkZHIsIHVuc2lnbmVk
+IGxvbmcgaW5pdHJkX2xlbik7Cj4gLWV4dGVybiBpbnQga2V4ZWNfc2V0dXBfY21kbGluZShzdHJ1
+Y3QgYm9vdF9wYXJhbXMgKmJvb3RfcGFyYW1zLAo+ICtleHRlcm4gaW50IGtleGVjX3NldHVwX2Nt
+ZGxpbmUoc3RydWN0IGtpbWFnZSAqaW1hZ2UsCj4gKwkJc3RydWN0IGJvb3RfcGFyYW1zICpib290
+X3BhcmFtcywKPiAgCQl1bnNpZ25lZCBsb25nIGJvb3RwYXJhbXNfbG9hZF9hZGRyLAo+ICAJCXVu
+c2lnbmVkIGxvbmcgY21kbGluZV9vZmZzZXQsIGNoYXIgKmNtZGxpbmUsCj4gIAkJdW5zaWduZWQg
+bG9uZyBjbWRsaW5lX2xlbik7Cj4gLWV4dGVybiBpbnQga2V4ZWNfc2V0dXBfYm9vdF9wYXJhbWV0
+ZXJzKHN0cnVjdCBib290X3BhcmFtcyAqcGFyYW1zKTsKPiArZXh0ZXJuIGludCBrZXhlY19zZXR1
+cF9ib290X3BhcmFtZXRlcnMoc3RydWN0IGtpbWFnZSAqaW1hZ2UsCj4gKwkJCQkJc3RydWN0IGJv
+b3RfcGFyYW1zICpwYXJhbXMpOwo+ICAKPiAgCj4gICNlbmRpZiAvKiBfX0FTU0VNQkxZX18gKi8K
+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NyYXNoLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
+Y3Jhc2guYwo+IGluZGV4IGE1NzkwMmUuLjhlYWJkZTQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYv
+a2VybmVsL2NyYXNoLmMKPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+IEBAIC00LDYg
+KzQsOSBAQAo+ICAgKiBDcmVhdGVkIGJ5OiBIYXJpcHJhc2FkIE5lbGxpdGhlZXJ0aGEgKGhhcmlA
+aW4uaWJtLmNvbSkKPiAgICoKPiAgICogQ29weXJpZ2h0IChDKSBJQk0gQ29ycG9yYXRpb24sIDIw
+MDQuIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4gKyAqIENvcHlyaWdodCAoQykgUmVkIEhhdCBJbmMu
+LCAyMDE0LiBBbGwgcmlnaHRzIHJlc2VydmVkLgo+ICsgKiBBdXRob3JzOgo+ICsgKiAJVml2ZWsg
+R295YWwgPHZnb3lhbEByZWRoYXQuY29tPgo+ICAgKgo+ICAgKi8KPiAgCj4gQEAgLTE2LDYgKzE5
+LDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L2VsZi5oPgo+ICAjaW5jbHVkZSA8bGludXgvZWxmY29y
+ZS5oPgo+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9zbGFi
+Lmg+Cj4gIAo+ICAjaW5jbHVkZSA8YXNtL3Byb2Nlc3Nvci5oPgo+ICAjaW5jbHVkZSA8YXNtL2hh
+cmRpcnEuaD4KPiBAQCAtMjgsNiArMzIsNDUgQEAKPiAgI2luY2x1ZGUgPGFzbS9yZWJvb3QuaD4K
+PiAgI2luY2x1ZGUgPGFzbS92aXJ0ZXh0Lmg+Cj4gIAo+ICsvKiBBbGlnbm1lbnQgcmVxdWlyZWQg
+Zm9yIGVsZiBoZWFkZXIgc2VnbWVudCAqLwo+ICsjZGVmaW5lIEVMRl9DT1JFX0hFQURFUl9BTElH
+TiAgIDQwOTYKPiArCj4gKy8qIFRoaXMgcHJpbWFyaWx5IHJlcHJzZW50cyBudW1iZXIgb2Ygc3Bs
+aXQgcmFuZ2VzIGR1ZSB0byBleGNsdXNpb24gKi8KPiArI2RlZmluZSBDUkFTSF9NQVhfUkFOR0VT
+CTE2Cj4gKwo+ICtzdHJ1Y3QgY3Jhc2hfbWVtX3JhbmdlIHsKPiArCXVuc2lnbmVkIGxvbmcgbG9u
+ZyBzdGFydCwgZW5kOwoKdTY0PwoKPiArfTsKPiArCj4gK3N0cnVjdCBjcmFzaF9tZW0gewo+ICsJ
+dW5zaWduZWQgaW50IG5yX3JhbmdlczsKPiArCXN0cnVjdCBjcmFzaF9tZW1fcmFuZ2UgcmFuZ2Vz
+W0NSQVNIX01BWF9SQU5HRVNdOwo+ICt9Owo+ICsKPiArLyogTWlzYyBkYXRhIGFib3V0IHJhbSBy
+YW5nZXMgbmVlZGVkIHRvIHByZXBhcmUgZWxmIGhlYWRlcnMgKi8KPiArc3RydWN0IGNyYXNoX2Vs
+Zl9kYXRhIHsKPiArCXN0cnVjdCBraW1hZ2UgKmltYWdlOwo+ICsJLyoKPiArCSAqIFRvdGFsIG51
+bWJlciBvZiByYW0gcmFuZ2VzIHdlIGhhdmUgYWZ0ZXIgdmFyaW91cyBhanVzdG1lbnRzIGZvcgo+
+ICsJICogR0FSVCwgY3Jhc2ggcmVzZXJ2ZWQgcmVnaW9uIGV0Yy4KPiArCSAqLwo+ICsJdW5zaWdu
+ZWQgaW50IG1heF9ucl9yYW5nZXM7Cj4gKwl1bnNpZ25lZCBsb25nIGdhcnRfc3RhcnQsIGdhcnRf
+ZW5kOwo+ICsKPiArCS8qIFBvaW50ZXIgdG8gZWxmIGhlYWRlciAqLwo+ICsJdm9pZCAqZWhkcjsK
+PiArCS8qIFBvaW50ZXIgdG8gbmV4dCBwaGRyICovCj4gKwl2b2lkICpidWZwOwo+ICsJc3RydWN0
+IGNyYXNoX21lbSBtZW07Cj4gK307Cj4gKwo+ICsvKiBVc2VkIHdoaWxlIHByZXBhcmVpbmcgbWVt
+b3J5IG1hcCBlbnRyaWVzIGZvciBzZWNvbmQga2VybmVsICovCgpzL3ByZXBhcmVpbmcvcHJlcGFy
+aW5nLwoKPiArc3RydWN0IGNyYXNoX21lbW1hcF9kYXRhIHsKPiArCXN0cnVjdCBib290X3BhcmFt
+cyAqcGFyYW1zOwo+ICsJLyogVHlwZSBvZiBtZW1vcnkgKi8KPiArCXVuc2lnbmVkIGludCB0eXBl
+Owo+ICt9Owo+ICsKPiAgaW50IGluX2NyYXNoX2tleGVjOwo+ICAKPiAgLyoKPiBAQCAtMTM3LDMg
+KzE4MCw1MzQgQEAgdm9pZCBuYXRpdmVfbWFjaGluZV9jcmFzaF9zaHV0ZG93bihzdHJ1Y3QgcHRf
+cmVncyAqcmVncykKPiAgI2VuZGlmCj4gIAljcmFzaF9zYXZlX2NwdShyZWdzLCBzYWZlX3NtcF9w
+cm9jZXNzb3JfaWQoKSk7Cj4gIH0KPiArCj4gKyNpZmRlZiBDT05GSUdfWDg2XzY0Cj4gKwo+ICtz
+dGF0aWMgaW50IGdldF9ucl9yYW1fcmFuZ2VzX2NhbGxiYWNrKHVuc2lnbmVkIGxvbmcgc3RhcnRf
+cGZuLAo+ICsJCQkJdW5zaWduZWQgbG9uZyBucl9wZm4sIHZvaWQgKmFyZykKPiArewo+ICsJaW50
+ICpucl9yYW5nZXMgPSBhcmc7Cj4gKwo+ICsJKCpucl9yYW5nZXMpKys7Cj4gKwlyZXR1cm4gMDsK
+PiArfQo+ICsKPiArc3RhdGljIGludCBnZXRfZ2FydF9yYW5nZXNfY2FsbGJhY2sodTY0IHN0YXJ0
+LCB1NjQgZW5kLCB2b2lkICphcmcpCj4gK3sKPiArCXN0cnVjdCBjcmFzaF9lbGZfZGF0YSAqY2Vk
+ID0gYXJnOwo+ICsKPiArCWNlZC0+Z2FydF9zdGFydCA9IHN0YXJ0Owo+ICsJY2VkLT5nYXJ0X2Vu
+ZCA9IGVuZDsKPiArCj4gKwkvKiBOb3QgZXhwZWN0aW5nIG1vcmUgdGhhbiAxIGdhcnQgYXBlcnR1
+cmUgKi8KPiArCXJldHVybiAxOwo+ICt9Cj4gKwo+ICsKPiArLyogR2F0aGVyIGFsbCB0aGUgcmVx
+dWlyZWQgaW5mb3JtYXRpb24gdG8gcHJlcGFyZSBlbGYgaGVhZGVycyBmb3IgcmFtIHJlZ2lvbnMg
+Ki8KPiArc3RhdGljIGludCBmaWxsX3VwX2NlZChzdHJ1Y3QgY3Jhc2hfZWxmX2RhdGEgKmNlZCwg
+c3RydWN0IGtpbWFnZSAqaW1hZ2UpCgpBbGwgb3RoZXIgZnVuY3Rpb25zIGhhdmUgbmljZSwgc3Bl
+bGxlZCBvdXQgbmFtZXMgYnV0IG5vdCB0aGlzIG9uZSA6KQoKV2h5IG5vdCBmaWxsX3VwX2NyYXNo
+X2VsZl9kYXRhKCk/Cgo+ICt7Cj4gKwl1bnNpZ25lZCBpbnQgbnJfcmFuZ2VzID0gMDsKPiArCj4g
+KwljZWQtPmltYWdlID0gaW1hZ2U7Cj4gKwo+ICsJd2Fsa19zeXN0ZW1fcmFtX3JhbmdlKDAsIC0x
+LCAmbnJfcmFuZ2VzLAo+ICsJCQkJZ2V0X25yX3JhbV9yYW5nZXNfY2FsbGJhY2spOwo+ICsKPiAr
+CWNlZC0+bWF4X25yX3JhbmdlcyA9IG5yX3JhbmdlczsKPiArCj4gKwkvKgo+ICsJICogV2UgZG9u
+J3QgY3JlYXRlIEVMRiBoZWFkZXJzIGZvciBHQVJUIGFwZXJ0dXJlIGFzIGFuIGF0dGVtcHQKPiAr
+CSAqIHRvIGR1bXAgdGhpcyBtZW1vcnkgaW4gc2Vjb25kIGtlcm5lbCBsZWFkcyB0byBoYW5nL2Ny
+YXNoLgo+ICsJICogSWYgZ2FydCBhcGVydHVyZSBpcyBwcmVzZW50LCBvbmUgbmVlZHMgdG8gZXhj
+bHVkZSB0aGF0IHJlZ2lvbgo+ICsJICogYW5kIHRoYXQgY291bGQgbGVhZCB0byBuZWVkIG9mIGV4
+dHJhIHBoZHIuCj4gKwkgKi8KPiArCgpzdXBlcmZsdW91cyBuZXdsaW5lLgoKPiArCXdhbGtfcmFt
+X3JlcygiR0FSVCIsIElPUkVTT1VSQ0VfTUVNLCAwLCAtMSwKPiArCQkJCWNlZCwgZ2V0X2dhcnRf
+cmFuZ2VzX2NhbGxiYWNrKTsKPiArCj4gKwkvKgo+ICsJICogSWYgd2UgaGF2ZSBnYXJ0IHJlZ2lv
+biwgZXhjbHVkaW5nIHRoYXQgY291bGQgcG90ZW50aWFsbHkgc3BsaXQKPiArCSAqIGEgbWVtb3J5
+IHJhbmdlLCByZXN1bHRpbmcgaW4gZXh0cmEgaGVhZGVyLiBBY2NvdW50IGZvciAgdGhhdC4KPiAr
+CSAqLwo+ICsJaWYgKGNlZC0+Z2FydF9lbmQpCj4gKwkJY2VkLT5tYXhfbnJfcmFuZ2VzKys7Cj4g
+Kwo+ICsJLyogRXhjbHVzaW9uIG9mIGNyYXNoIHJlZ2lvbiBjb3VsZCBzcGxpdCBtZW1vcnkgcmFu
+Z2VzICovCj4gKwljZWQtPm1heF9ucl9yYW5nZXMrKzsKPiArCj4gKwkvKiBJZiBjcmFzaGtfbG93
+X3JlcyBpcyB0aGVyZSwgYW5vdGhlciByYW5nZSBzcGxpdCBwb3NzaWJsZSAqLwo+ICsJaWYgKGNy
+YXNoa19sb3dfcmVzLmVuZCAhPSAwKQo+ICsJCWNlZC0+bWF4X25yX3JhbmdlcysrOwo+ICsKPiAr
+CXJldHVybiAwOwo+ICt9CgouLi4KCj4gK2ludCBsb2FkX2NyYXNoZHVtcF9zZWdtZW50cyhzdHJ1
+Y3Qga2ltYWdlICppbWFnZSkKPiArewo+ICsJdW5zaWduZWQgbG9uZyBzcmNfc3RhcnQsIHNyY19z
+ejsKPiArCXVuc2lnbmVkIGxvbmcgZWxmX2FkZHIsIGVsZl9zejsKPiArCWludCByZXQ7Cj4gKwo+
+ICsJLyoKPiArCSAqIERldGVybWluZSBhbmQgbG9hZCBhIHNlZ21lbnQgZm9yIGJhY2t1cCBhcmVh
+LiBGaXJzdCA2NDBLIFJBTQo+ICsJICogcmVnaW9uIGlzIGJhY2t1cCBzb3VyY2UKPiArCSAqLwo+
+ICsKPiArCXJldCA9IHdhbGtfc3lzdGVtX3JhbV9yZXMoS0VYRUNfQkFDS1VQX1NSQ19TVEFSVCwg
+S0VYRUNfQkFDS1VQX1NSQ19FTkQsCj4gKwkJCQlpbWFnZSwgZGV0ZXJtaW5lX2JhY2t1cF9yZWdp
+b24pOwo+ICsKPiArCS8qIFplcm8gb3IgcG9zdGl2ZSByZXR1cm4gdmFsdWVzIGFyZSBvayAqLwo+
+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlzcmNfc3RhcnQgPSBpbWFn
+ZS0+YXJjaC5iYWNrdXBfc3JjX3N0YXJ0Owo+ICsJc3JjX3N6ID0gaW1hZ2UtPmFyY2guYmFja3Vw
+X3NyY19zejsKPiArCj4gKwkvKiBBZGQgYmFja3VwIHNlZ21lbnQuICovCj4gKwlpZiAoc3JjX3N6
+KSB7Cj4gKwkJcmV0ID0ga2V4ZWNfYWRkX2J1ZmZlcihpbWFnZSwgX192YShzcmNfc3RhcnQpLCBz
+cmNfc3osIHNyY19zeiwKPiArCQkJCQlQQUdFX1NJWkUsIDAsIC0xLCAwLAo+ICsJCQkJCSZpbWFn
+ZS0+YXJjaC5iYWNrdXBfbG9hZF9hZGRyKTsKPiArCQlpZiAocmV0KQo+ICsJCQlyZXR1cm4gcmV0
+Owo+ICsJfQo+ICsKPiArCS8qIFByZXBhcmUgZWxmIGhlYWRlcnMgYW5kIGFkZCBhIHNlZ21lbnQg
+Ki8KPiArCXJldCA9IHByZXBhcmVfZWxmX2hlYWRlcnMoaW1hZ2UsICZlbGZfYWRkciwgJmVsZl9z
+eik7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJaW1hZ2UtPmFyY2guZWxm
+X2hlYWRlcnMgPSBlbGZfYWRkcjsKPiArCWltYWdlLT5hcmNoLmVsZl9oZWFkZXJzX3N6ID0gZWxm
+X3N6Owo+ICsKPiArCXJldCA9IGtleGVjX2FkZF9idWZmZXIoaW1hZ2UsIChjaGFyICopZWxmX2Fk
+ZHIsIGVsZl9zeiwgZWxmX3N6LAoKRm9yIHNvbWUgcmVhc29uLCBteSBjb21waWxlciBjb21wbGFp
+bnMgaGVyZToKCmFyY2gveDg2L2tlcm5lbC9jcmFzaC5jOiBJbiBmdW5jdGlvbiDigJhsb2FkX2Ny
+YXNoZHVtcF9zZWdtZW50c+KAmToKYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NzA0OjY6IHdhcm5p
+bmc6IOKAmGVsZl9zeuKAmSBtYXkgYmUgdXNlZCB1bmluaXRpYWxpemVkIGluIHRoaXMgZnVuY3Rp
+b24gWy1XdW5pbml0aWFsaXplZF0KYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NzA0OjI0OiB3YXJu
+aW5nOiDigJhlbGZfYWRkcuKAmSBtYXkgYmUgdXNlZCB1bmluaXRpYWxpemVkIGluIHRoaXMgZnVu
+Y3Rpb24gWy1XdW5pbml0aWFsaXplZF0KCkl0IGlzIGxpa2VseSBib2d1cywgdGhvdWdoLgoKLi4u
+Cgo+IC1pbnQga2V4ZWNfc2V0dXBfY21kbGluZShzdHJ1Y3QgYm9vdF9wYXJhbXMgKmJvb3RfcGFy
+YW1zLAo+ICtpbnQga2V4ZWNfc2V0dXBfY21kbGluZShzdHJ1Y3Qga2ltYWdlICppbWFnZSwgc3Ry
+dWN0IGJvb3RfcGFyYW1zICpib290X3BhcmFtcywKPiAgCQl1bnNpZ25lZCBsb25nIGJvb3RwYXJh
+bXNfbG9hZF9hZGRyLAo+ICAJCXVuc2lnbmVkIGxvbmcgY21kbGluZV9vZmZzZXQsIGNoYXIgKmNt
+ZGxpbmUsCj4gIAkJdW5zaWduZWQgbG9uZyBjbWRsaW5lX2xlbikKPiAgewo+ICAJY2hhciAqY21k
+bGluZV9wdHIgPSAoKGNoYXIgKilib290X3BhcmFtcykgKyBjbWRsaW5lX29mZnNldDsKPiAtCXVu
+c2lnbmVkIGxvbmcgY21kbGluZV9wdHJfcGh5czsKPiArCXVuc2lnbmVkIGxvbmcgY21kbGluZV9w
+dHJfcGh5cywgbGVuOwo+ICAJdWludDMyX3QgY21kbGluZV9sb3dfMzIsIGNtZGxpbmVfZXh0XzMy
+Owo+ICAKPiAgCW1lbWNweShjbWRsaW5lX3B0ciwgY21kbGluZSwgY21kbGluZV9sZW4pOwo+ICsJ
+aWYgKGltYWdlLT50eXBlID09IEtFWEVDX1RZUEVfQ1JBU0gpIHsKPiArCQlsZW4gPSBzcHJpbnRm
+KGNtZGxpbmVfcHRyICsgY21kbGluZV9sZW4gLSAxLAo+ICsJCQkiIGVsZmNvcmVoZHI9MHglbHgi
+LCBpbWFnZS0+YXJjaC5lbGZfbG9hZF9hZGRyKTsKPiArCQljbWRsaW5lX2xlbiArPSBsZW47Cj4g
+Kwl9Cj4gIAljbWRsaW5lX3B0cltjbWRsaW5lX2xlbiAtIDFdID0gJ1wwJzsKPiAgCj4gKwlwcl9k
+ZWJ1ZygiRmluYWwgY29tbWFuZCBsaW5lIGlzOiVzXG4iLCBjbWRsaW5lX3B0cik7CgpvbmUgc3Bh
+Y2UgYWZ0ZXIgIjoiCgpUaGUgcmVzdCBsb29rcyBvayB0byBtZSwgYnV0IHRoYXQgZG9lc24ndCBt
+ZWFuIGEgd2hvbGUgbG90IGNvbnNpZGVyaW5nCm15IHZlcnkgbGltaXRlZCBrZXhlYyBrbm93bGVk
+Z2UuCgpUaGFua3MuCgotLSAKUmVnYXJkcy9HcnVzcywKICAgIEJvcmlzLgoKU2VudCBmcm9tIGEg
+ZmF0IGNyYXRlIHVuZGVyIG15IGRlc2suIEZvcm1hdHRpbmcgaXMgZmluZS4KLS0KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
