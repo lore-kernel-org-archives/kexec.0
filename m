@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WJMle-0001kn-9H
- for kexec@lists.infradead.org; Fri, 28 Feb 2014 12:42:18 +0000
-Received: from /spool/local
- by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 28 Feb 2014 12:41:53 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 20F7C219004D
- for <kexec@lists.infradead.org>; Fri, 28 Feb 2014 12:41:47 +0000 (GMT)
-Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
- [9.149.37.249])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s1SCfcfK49742006
- for <kexec@lists.infradead.org>; Fri, 28 Feb 2014 12:41:38 GMT
-Received: from d06av08.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av08.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s1SCfnSJ021552
- for <kexec@lists.infradead.org>; Fri, 28 Feb 2014 05:41:50 -0700
-Date: Fri, 28 Feb 2014 13:41:48 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: makedumpfile: get_max_mapnr() from ELF header problem
-Message-ID: <20140228134148.15b60ceb@holzheu>
-Mime-Version: 1.0
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WJOtw-0007nX-2w
+ for kexec@lists.infradead.org; Fri, 28 Feb 2014 14:59:01 +0000
+Date: Fri, 28 Feb 2014 15:58:32 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 10/11] kexec: Support for loading ELF x86_64 images
+Message-ID: <20140228145832.GF4326@pd.tnic>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+ <1390849071-21989-11-git-send-email-vgoyal@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1390849071-21989-11-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,49 +24,189 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-Hello Atsushi,
+On Mon, Jan 27, 2014 at 01:57:50PM -0500, Vivek Goyal wrote:
+> This patch provides support for kexec for loading ELF x86_64 images. I have
+> tested it with loading vmlinux and it worked.
 
-On s390 we have the following little problem:
+Can you please enlighten me what the use case for ELF kernel images is? bzImage
+I understand but what produces ELF images?
 
-We use hypervisor or stand-alone dump tools to create Linux system
-dumps. These tools do not know the kernel parameter line and dump the
-full physical memory.
+I see that kexec_file_load() can receive ELF segments too but why are we
+doing that?
 
-We use makedumpfile to filter those dumps.
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  arch/x86/include/asm/kexec-elf.h   |  11 ++
+>  arch/x86/kernel/Makefile           |   1 +
+>  arch/x86/kernel/kexec-elf.c        | 231 +++++++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/machine_kexec_64.c |   2 +
+>  4 files changed, 245 insertions(+)
+>  create mode 100644 arch/x86/include/asm/kexec-elf.h
+>  create mode 100644 arch/x86/kernel/kexec-elf.c
+> 
+> diff --git a/arch/x86/include/asm/kexec-elf.h b/arch/x86/include/asm/kexec-elf.h
+> new file mode 100644
+> index 0000000..afef382
+> --- /dev/null
+> +++ b/arch/x86/include/asm/kexec-elf.h
+> @@ -0,0 +1,11 @@
+> +#ifndef _ASM_KEXEC_ELF_H
+> +#define _ASM_KEXEC_ELF_H
+> +
+> +extern int elf_x86_64_probe(const char *buf, unsigned long len);
+> +extern void *elf_x86_64_load(struct kimage *image, char *kernel,
+> +		unsigned long kernel_len, char *initrd,
+> +		unsigned long initrd_len, char *cmdline,
+> +		unsigned long cmdline_len);
+> +extern int elf_x86_64_cleanup(struct kimage *image);
+> +
+> +#endif  /* _ASM_KEXEC_ELF_H */
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index fa9981d..2d77de7 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -71,6 +71,7 @@ obj-$(CONFIG_KEXEC)		+= machine_kexec.o
+>  obj-$(CONFIG_KEXEC)		+= machine_kexec_$(BITS).o
+>  obj-$(CONFIG_KEXEC)		+= relocate_kernel_$(BITS).o crash.o
+>  obj-$(CONFIG_KEXEC)		+= kexec-bzimage.o
+> +obj-$(CONFIG_KEXEC)		+= kexec-elf.o
 
-If a Linux system has specified the "mem=" parameter, the dump tools
-still dump the whole phypsical memory.
+It looks like kexec could slowly grow its own dir now:
 
-Unfortunately in "get_max_mapnr()" makedumpfile uses the ELF header to
-get the maxmimum page frame number. Since this is not the correct value
-in our case makedumpfile fails to filter the dump.
+arch/x86/kexec/
 
-We get the following error on s390 with makedumpfile version 1.5.3:
+or so.
 
-makedumpfile -c -d 31 vmcore dump.kdump
-cyclic buffer size has been changed: 22156083 => 22156032
-Excluding unnecessary pages        : [ 21 %] vtop_s390x: Address too big for the number of page table levels.
-readmem: Can't convert a virtual address(8000180104670) to physical address.
-readmem: type_addr: 0, addr:8000180104670, size:32768
-__exclude_unnecessary_pages: Can't read the buffer of struct page.
-Excluding unnecessary pages        : [ 23 %] vtop_s390x: Address too big for the number of page table levels. readmem: Can't convert a
-virtual address(8000180104670) to physical address. readmem: type_addr:
-0, addr:8000180104670, size:327681.5.5 __exclude_unnecessary_pages: 
-Can't read the buffer of struct page.
+>  obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
+>  obj-y				+= kprobes/
+>  obj-$(CONFIG_MODULES)		+= module.o
+> diff --git a/arch/x86/kernel/kexec-elf.c b/arch/x86/kernel/kexec-elf.c
+> new file mode 100644
+> index 0000000..ff1017c
+> --- /dev/null
+> +++ b/arch/x86/kernel/kexec-elf.c
+> @@ -0,0 +1,231 @@
+> +#include <linux/string.h>
+> +#include <linux/printk.h>
+> +#include <linux/errno.h>
+> +#include <linux/slab.h>
+> +#include <linux/kexec.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mm.h>
+> +
+> +#include <asm/bootparam.h>
+> +#include <asm/setup.h>
+> +
+> +#ifdef CONFIG_X86_64
+> +
+> +struct elf_x86_64_data {
+> +	/*
+> +	 * Temporary buffer to hold bootparams buffer. This should be
+> +	 * freed once the bootparam segment has been loaded.
+> +	 */
+> +	void *bootparams_buf;
+> +};
+> +
+> +int elf_x86_64_probe(const char *buf, unsigned long len)
+> +{
+> +	int ret = -ENOEXEC;
+> +	Elf_Ehdr *ehdr;
+> +
+> +	if (len < sizeof(Elf_Ehdr)) {
+> +		pr_debug("File is too short to be an ELF executable.\n");
+> +		return ret;
+> +	}
+> +
+> +	ehdr = (Elf_Ehdr *)buf;
+> +
+> +	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0
+> +	    || ehdr->e_type != ET_EXEC || !elf_check_arch(ehdr)
+> +	    || ehdr->e_phentsize != sizeof(Elf_Phdr))
+> +		return -ENOEXEC;
+> +
+> +	if (ehdr->e_phoff >= len
+> +	    || (ehdr->e_phnum * sizeof(Elf_Phdr) > len - ehdr->e_phoff))
+> +		return -ENOEXEC;
+> +
+> +        /* I've got a bzImage */
+> +	pr_debug("It's an elf_x86_64 image.\n");
+> +	ret = 0;
+> +
+> +	return ret;
 
-Since version 1.5.4 makedumpfile seems to loop in __exclude_unnecessary_pages().
+I think you can drop 'ret' here and return the error vals directly.
 
-We thought about several ways to fix this problem but have not found a
-good solution up to now.
+> +}
+> +
+> +static int elf_exec_load(struct kimage *image, char *kernel)
+> +{
+> +	Elf_Ehdr *ehdr;
+> +	Elf_Phdr *phdrs;
+> +	int i, ret;
+> +	size_t filesz;
+> +	char *buffer;
+> +
+> +	ehdr = (Elf_Ehdr *)kernel;
+> +	phdrs = (void *)ehdr + ehdr->e_phoff;
+> +
+> +	for (i = 0; i < ehdr->e_phnum; i++) {
+> +		if (phdrs[i].p_type != PT_LOAD)
+> +			continue;
 
-Do you have an idea how we could fix that?
+newline
 
-Best Regards,
-Michael
+> +		filesz = phdrs[i].p_filesz;
+> +		if (filesz > phdrs[i].p_memsz)
+> +			filesz = phdrs[i].p_memsz;
+> +
+> +		buffer = (char *)ehdr + phdrs[i].p_offset;
+> +		ret = kexec_add_segment(image, buffer, filesz, phdrs[i].p_memsz,
+> +						phdrs[i].p_paddr);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/* Fill in fields which are usually present in bzImage */
+> +static int init_linux_parameters(struct boot_params *params)
+> +{
+> +	/*
+> +	 * FIXME: It is odd that the information which comes from kernel
+> +	 * has to be faked by loading kernel. I guess it is limitation of
+> +	 * ELF format. Right now keeping it same as kexec-tools
+> +	 * implementation. But this most likely needs fixing.
+> +	 */
+> +	memcpy(&params->hdr.header, "HdrS", 4);
+> +	params->hdr.version = 0x0206;
+> +	params->hdr.initrd_addr_max = 0x37FFFFFF;
+> +	params->hdr.cmdline_size = 2048;
+> +	return 0;
+> +}
 
+Why a separate function? Its body is small enough to be merged into
+elf_x86_64_load.
+
+> +
+> +void *elf_x86_64_load(struct kimage *image, char *kernel,
+> +		unsigned long kernel_len,
+> +		char *initrd, unsigned long initrd_len,
+> +		char *cmdline, unsigned long cmdline_len)
+> +{
+
+Btw, this functionality below looks very similar to the one in
+bzImage64_load(). Can we share some of it?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
