@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WJ8t2-0005uq-R0
- for kexec@lists.infradead.org; Thu, 27 Feb 2014 21:53:01 +0000
-Date: Thu, 27 Feb 2014 22:52:32 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 09/11] kexec: Provide a function to add a segment at
- fixed address
-Message-ID: <20140227215232.GQ18191@pd.tnic>
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-10-git-send-email-vgoyal@redhat.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WJBr5-0001xM-UD
+ for kexec@lists.infradead.org; Fri, 28 Feb 2014 01:03:13 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: Fix string append in dump_log_entry()
+Date: Fri, 28 Feb 2014 01:01:33 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971EF130@BPXM01GP.gisp.nec.co.jp>
+References: <20140226220546.4030cdbf@hananiah.suse.cz>
+In-Reply-To: <20140226220546.4030cdbf@hananiah.suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1390849071-21989-10-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,135 +23,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, Jan 27, 2014 at 01:57:49PM -0500, Vivek Goyal wrote:
-> kexec_add_buffer() can find a suitable range of memory for user buffer and
-> add it to list of segments. But ELF loader will require that a buffer can
-> be loaded at the address it has been compiled for (ET_EXEC type executables).
-> So we need a helper function which can see if requested memory is valid and
-> available and add a segment accordiingly. This patch provides that helper
-> function. It will be used by elf loader in later patch.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  include/linux/kexec.h |  3 +++
->  kernel/kexec.c        | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 68 insertions(+)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index d391ed7..2fb052c 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -208,6 +208,9 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
->  					struct kexec_segment __user *segments,
->  					unsigned long flags);
->  extern int kernel_kexec(void);
-> +extern int kexec_add_segment(struct kimage *image, char *buffer,
-> +			unsigned long bufsz, unsigned long memsz,
-> +			unsigned long base);
->  extern int kexec_add_buffer(struct kimage *image, char *buffer,
->  			unsigned long bufsz, unsigned long memsz,
->  			unsigned long buf_align, unsigned long buf_min,
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 20169a4..9e4718b 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -2002,6 +2002,71 @@ static int __kexec_add_segment(struct kimage *image, char *buf,
->  	return 0;
->  }
->  
-> +static int validate_ram_range_callback(u64 start, u64 end, void *arg)
-> +{
-> +	struct kexec_segment *ksegment = arg;
-> +	u64 mstart = ksegment->mem;
-> +	u64 mend = ksegment->mem + ksegment->memsz - 1;
-> +
-> +	/* Found a valid range. Stop going through more ranges */
-> +	if (mstart >= start && mend <= end)
-> +		return 1;
-> +
-> +	/* Range did not match. Go to next one */
-> +	return 0;
-> +}
-> +
-> +/* Add a kexec segment at fixed address provided by caller */
-> +int kexec_add_segment(struct kimage *image, char *buffer, unsigned long bufsz,
-> +			unsigned long memsz, unsigned long base)
-> +{
-> +	struct kexec_segment ksegment;
-> +	int ret;
-> +
-> +	/* Currently adding segment this way is allowed only in file mode */
-> +	if (!image->file_mode)
-> +		return -EINVAL;
+Hello Petr,
 
-Why the guard? On a quick scan, I don't see this function called by
-something else except on the kexec_file_load path...
+>To quote the sprintf(3) man page:
+>
+>    Some programs imprudently rely on code such as the following
+>
+>        sprintf(buf, "%s some further text", buf);
+>
+>    to append text to buf.  However, the standards explicitly note that
+>    the results are undefined if source and destination buffers overlap
+>    when calling sprintf(), snprintf(), vsprintf(), and vsnprintf().
+>    Depending on the version of gcc(1) used, and the compiler options
+>    employed, calls such as the above will not produce the expected results.
+>
+>The original code is actually miscompiled on openSUSE 13.1.
+>
+>It's also overkill to call sprintf() for something that can be done
+>with a simple assignment.
+>
+>Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 
-> +
-> +	if (image->nr_segments >= KEXEC_SEGMENT_MAX)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Make sure we are not trying to add segment after allocating
-> +	 * control pages. All segments need to be placed first before
-> +	 * any control pages are allocated. As control page allocation
-> +	 * logic goes through list of segments to make sure there are
-> +	 * no destination overlaps.
-> +	 */
-> +	WARN_ONCE(!list_empty(&image->control_pages), "Adding kexec segment"
+Thanks, it seems good to me.
 
-Maybe say at which address here:
+Actually, Nick sent the same patch in last July and we tried to
+take care of buffer overflow at the same time as below:
 
-... "Adding a kexec segment at address 0x%lx.."
+http://lists.infradead.org/pipermail/kexec/2013-August/009430.html
 
-for a bit more helpful info.
+However, this thread has been left open, so I was wondering if you
+could take over this work. Of course you can decline this, then I'll
+do it later as another patch.
 
-> +			" after allocating control pages\n");
-> +
-> +	if (bufsz > memsz)
-> +		return -EINVAL;
-> +	if (memsz == 0)
-> +		return -EINVAL;
-> +
-> +	/* Align memsz to next page boundary */
-> +	memsz = ALIGN(memsz, PAGE_SIZE);
 
-We even have PAGE_ALIGN for that.
+Thanks
+Atsushi Kumagai
 
-> +
-> +	/* Make sure base is atleast page size aligned */
-> +	if (base & (PAGE_SIZE - 1))
-
-PAGE_ALIGNED even :)
-
-> +		return -EINVAL;
-> +
-> +	memset(&ksegment, 0, sizeof(struct kexec_segment));
-> +	ksegment.mem = base;
-> +	ksegment.memsz = memsz;
-> +
-> +	/* Validate memory range */
-> +	ret = walk_system_ram_res(base, base + memsz - 1, &ksegment,
-> +				validate_ram_range_callback);
-> +
-> +	/* If a valid range is found, 1 is returned */
-> +	if (ret != 1)
-
-That's the retval of validate_ram_range_callback, right? So
-
-	if (!ret)
-
-And shouldn't the convention be the opposite? 0 on success, !0 on error?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+>---
+> makedumpfile.c | 13 +++++++------
+> 1 file changed, 7 insertions(+), 6 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 579be61..013fce7 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -3866,7 +3866,7 @@ reset_bitmap_of_free_pages(unsigned long node_zones, struct cycle *cycle)
+> static int
+> dump_log_entry(char *logptr, int fp)
+> {
+>-	char *msg, *p;
+>+	char *msg, *p, *bufp;
+> 	unsigned int i, text_len;
+> 	unsigned long long ts_nsec;
+> 	char buf[BUFSIZE];
+>@@ -3881,18 +3881,19 @@ dump_log_entry(char *logptr, int fp)
+>
+> 	msg = logptr + SIZE(printk_log);
+>
+>-	sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+>+	bufp = buf;
+>+	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+>
+> 	for (i = 0, p = msg; i < text_len; i++, p++) {
+> 		if (isprint(*p) || isspace(*p))
+>-			sprintf(buf, "%s%c", buf, *p);
+>+			*bufp++ = *p;
+> 		else
+>-			sprintf(buf, "%s\\x%02x", buf, *p);
+>+			bufp += sprintf(bufp, "\\x%02x", *p);
+> 	}
+>
+>-	sprintf(buf, "%s\n", buf);
+>+	*bufp++ = '\n';
+>
+>-	if (write(info->fd_dumpfile, buf, strlen(buf)) < 0)
+>+	if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
+> 		return FALSE;
+> 	else
+> 		return TRUE;
+>--
+>1.8.4.5
 
 _______________________________________________
 kexec mailing list
