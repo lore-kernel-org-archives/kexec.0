@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from ernst.netinsight.se ([194.16.221.21])
  by merlin.infradead.org with smtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WKRcl-0005Ul-KB
- for kexec@lists.infradead.org; Mon, 03 Mar 2014 12:05:36 +0000
-Date: Mon, 3 Mar 2014 13:04:56 +0100
+ id 1WKRco-0005Ul-0o
+ for kexec@lists.infradead.org; Mon, 03 Mar 2014 12:05:38 +0000
+Date: Mon, 3 Mar 2014 13:05:01 +0100
 From: Simon =?UTF-8?B?S8OlZ3N0csO2bQ==?= <simon.kagstrom@netinsight.net>
-Subject: [PATCH 2/4] build: Use INCLUDES for normal CFLAGS in addition to
- CFLAGS_ARCH
-Message-ID: <20140303130456.03f344f6@marrow.netinsight.se>
+Subject: [PATCH 4/4] build: Rename generic-sounding SRC -> SRC_BASE
+Message-ID: <20140303130501.40f81f22@marrow.netinsight.se>
 In-Reply-To: <20140303130213.1d441d32@marrow.netinsight.se>
 References: <20140303130213.1d441d32@marrow.netinsight.se>
 MIME-Version: 1.0
@@ -27,22 +26,31 @@ To: kexec@lists.infradead.org
 
 Signed-off-by: Simon Kagstrom <simon.kagstrom@netinsight.net>
 ---
- Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index d660951..57e7e44 100644
+index b9121ad..ccf54e1 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -8,7 +8,7 @@ ifeq ($(strip $CC),)
- CC	= gcc
+@@ -39,7 +39,7 @@ CFLAGS += -m32
+ CFLAGS_ARCH += -m32
  endif
  
--CFLAGS = -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
-+CFLAGS = $(INCLUDES) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
- 	  -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
- 	  -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
- CFLAGS_ARCH	= $(INCLUDES) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+-SRC	= makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
++SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
+ SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c
+ OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
+ SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
+@@ -69,7 +69,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
+ 	@mkdir -p $(@D)
+ 	$(CC) $(CFLAGS_ARCH) -c -o ./$@ $(VPATH)$(@:.o=.c)
+ 
+-makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
++makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
+ 	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
+ 	grep -v "^.TH MAKEDUMPFILE 8" $(VPATH)makedumpfile.8 >> temp.8
 -- 
 1.7.9.6
 
