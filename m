@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from ernst.netinsight.se ([194.16.221.21])
  by merlin.infradead.org with smtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WKRco-0005Ul-0o
- for kexec@lists.infradead.org; Mon, 03 Mar 2014 12:05:38 +0000
-Date: Mon, 3 Mar 2014 13:05:01 +0100
+ id 1WKRcm-0005Ul-Sw
+ for kexec@lists.infradead.org; Mon, 03 Mar 2014 12:05:37 +0000
+Date: Mon, 3 Mar 2014 13:04:59 +0100
 From: Simon =?UTF-8?B?S8OlZ3N0csO2bQ==?= <simon.kagstrom@netinsight.net>
-Subject: [PATCH 4/4] build: Rename generic-sounding SRC -> SRC_BASE
-Message-ID: <20140303130501.40f81f22@marrow.netinsight.se>
+Subject: [PATCH 3/4] build: Honor VPATH to support out-of-tree builds
+Message-ID: <20140303130459.0fc230ae@marrow.netinsight.se>
 In-Reply-To: <20140303130213.1d441d32@marrow.netinsight.se>
 References: <20140303130213.1d441d32@marrow.netinsight.se>
 MIME-Version: 1.0
@@ -26,31 +26,48 @@ To: kexec@lists.infradead.org
 
 Signed-off-by: Simon Kagstrom <simon.kagstrom@netinsight.net>
 ---
- Makefile |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Makefile |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index b9121ad..ccf54e1 100644
+index 57e7e44..b9121ad 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -39,7 +39,7 @@ CFLAGS += -m32
- CFLAGS_ARCH += -m32
- endif
+@@ -63,19 +63,20 @@ endif
+ all: makedumpfile
  
--SRC	= makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
-+SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
- SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c
- OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
- SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
-@@ -69,7 +69,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
- 	@mkdir -p $(@D)
- 	$(CC) $(CFLAGS_ARCH) -c -o ./$@ $(VPATH)$(@:.o=.c)
+ $(OBJ_PART): $(SRC_PART)
+-	$(CC) $(CFLAGS) -c -o ./$@ ./$(@:.o=.c) 
++	$(CC) $(CFLAGS) -c -o ./$@ $(VPATH)$(@:.o=.c)
  
--makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
-+makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
+ $(OBJ_ARCH): $(SRC_ARCH)
+-	$(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c) 
++	@mkdir -p $(@D)
++	$(CC) $(CFLAGS_ARCH) -c -o ./$@ $(VPATH)$(@:.o=.c)
+ 
+ makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
  	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
  	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
- 	grep -v "^.TH MAKEDUMPFILE 8" $(VPATH)makedumpfile.8 >> temp.8
+-	grep -v "^.TH MAKEDUMPFILE 8" $(SRC)/makedumpfile.8 >> temp.8
++	grep -v "^.TH MAKEDUMPFILE 8" $(VPATH)makedumpfile.8 >> temp.8
+ 	mv temp.8 makedumpfile.8
+ 	gzip -c ./makedumpfile.8 > ./makedumpfile.8.gz
+ 	echo .TH MAKEDUMPFILE.CONF 5 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.5
+-	grep -v "^.TH MAKEDUMPFILE.CONF 5" makedumpfile.conf.5 >> temp.5
++	grep -v "^.TH MAKEDUMPFILE.CONF 5" $(VPATH)makedumpfile.conf.5 >> temp.5
+ 	mv temp.5 makedumpfile.conf.5
+ 	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
+ 
+@@ -87,7 +88,7 @@ clean:
+ 
+ install:
+ 	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
+-	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile makedumpfile-R.pl
++	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
+ 	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8.gz
+ 	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5.gz
+-	install -m 644 -D makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
++	install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
 -- 
 1.7.9.6
 
