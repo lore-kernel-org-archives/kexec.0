@@ -1,16 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from e06smtp12.uk.ibm.com ([195.75.94.108])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WKMxO-0004pb-SJ
- for kexec@lists.infradead.org; Mon, 03 Mar 2014 07:06:36 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile/eppic: Properly resolve structure members
-Date: Mon, 3 Mar 2014 07:03:13 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971EFC11@BPXM01GP.gisp.nec.co.jp>
-References: <20140227060220.25635.83843.stgit@aravindap>
-In-Reply-To: <20140227060220.25635.83843.stgit@aravindap>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1WKPQM-0000iM-Ad
+ for kexec@lists.infradead.org; Mon, 03 Mar 2014 09:44:39 +0000
+Received: from /spool/local
+ by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Mon, 3 Mar 2014 09:44:13 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com
+ (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id AC40F2190069
+ for <kexec@lists.infradead.org>; Mon,  3 Mar 2014 09:44:07 +0000 (GMT)
+Received: from d06av07.portsmouth.uk.ibm.com (d06av07.portsmouth.uk.ibm.com
+ [9.149.37.248])
+ by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s239hxeN31785042
+ for <kexec@lists.infradead.org>; Mon, 3 Mar 2014 09:43:59 GMT
+Received: from d06av07.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av07.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s239iAhx032766
+ for <kexec@lists.infradead.org>; Mon, 3 Mar 2014 04:44:10 -0500
+Date: Mon, 3 Mar 2014 10:44:08 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
+Message-ID: <20140303104408.7031a457@holzheu>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971EFABE@BPXM01GP.gisp.nec.co.jp>
+References: <20140228134148.15b60ceb@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971EFABE@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,100 +41,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "aravinda@linux.vnet.ibm.com" <aravinda@linux.vnet.ibm.com>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->makedumpfile/eppic was not able to resolve member of the
->structure in cases such as:
->
->struct abc
->{
->	...
->	...
->	struct xyz
->	...
->}
->
->and eppic script:
->
->sample()
->{
->	struct abc *a;
->	struct xyz *x;
->
->	x->member;
->}
->
->would fail to resolve "member" of structure xyz. However
->it works if "struct abc *a;" line is removed from eppic
->script. This patch fixes this issue.
->
->Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+On Mon, 3 Mar 2014 03:11:23 +0000
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-Thanks, I'll merge this patch into makedumpfile-1.5.6.
+> Hello Michael,
+> 
+> >Hello Atsushi,
+> >
+> >On s390 we have the following little problem:
+> >
+> >We use hypervisor or stand-alone dump tools to create Linux system
+> >dumps. These tools do not know the kernel parameter line and dump the
+> >full physical memory.
+> >
+> >We use makedumpfile to filter those dumps.
+> >
+> >If a Linux system has specified the "mem=" parameter, the dump tools
+> >still dump the whole phypsical memory.
+> 
+> I guess this is a problem of the tools, it sounds that the tools ignore
+> the actual memory map and just make wrong ELF headers.
+> How do the tools decide the range of System RAM to create ELF headers ?
 
-Atsushi Kumagai
+The tools do a physical memory detection and that defines the range
+of memory to be dumped and also defines the memory chunks for the
+ELF header.
 
->---
-> dwarf_info.c      |    2 +-
-> extension_eppic.c |   17 +++++++++++------
-> 2 files changed, 12 insertions(+), 7 deletions(-)
->
->diff --git a/dwarf_info.c b/dwarf_info.c
->index c5752c9..b7012b2 100644
->--- a/dwarf_info.c
->+++ b/dwarf_info.c
->@@ -1468,7 +1468,7 @@ get_die_attr_type(unsigned long long die_off, int *type_flag,
-> {
-> 	Dwarf_Die result;
->
->-	if (!die_attr_off)
->+	if (!die_attr_off || !die_off)
-> 		return FALSE;
->
-> 	if (!get_die_from_offset((Dwarf_Off) die_off, &result)) {
->diff --git a/extension_eppic.c b/extension_eppic.c
->index 7e045c9..20d996d 100644
->--- a/extension_eppic.c
->+++ b/extension_eppic.c
->@@ -24,6 +24,8 @@
-> #include "makedumpfile.h"
-> #include "extension_eppic.h"
->
->+static int apigetctype(int, char *, type_t *);
->+
-> /*
->  * Most of the functions included in this file performs similar
->  * functionality as in the applications/crash/eppic.c file part of
->@@ -183,7 +185,15 @@ drilldown(ull offset, type_t *t)
-> 			goto label;
-> 		case DW_TAG_structure_type:
-> 			eppic_type_mkstruct(t);
->-			goto label;
->+label:
->+			eppic_type_setsize(t, GET_DIE_LENGTH(t_die_off, TRUE));
->+			eppic_type_setidx(t, (ull)t_die_off);
->+			tstr = GET_DIE_NAME(t_die_off);
->+			/* Drill down further */
->+			if (tstr)
->+				apigetctype(V_STRUCT, tstr, t);
->+			die_off = 0;
->+			break;
-> 		/* Unknown TAG ? */
-> 		default:
-> 			die_off = t_die_off;
->@@ -191,11 +201,6 @@ drilldown(ull offset, type_t *t)
-> 		}
-> 	}
->
->-label:
->-	eppic_type_setsize(t, GET_DIE_LENGTH(t_die_off, TRUE));
->-	eppic_type_setidx(t, (ull)t_die_off);
->-	tstr = GET_DIE_NAME(t_die_off);
->-
-> out:
-> 	eppic_setupidx(t, ref, nidx, idxlst);
-> 	if (fctflg)
+And I think we are not the only ones that have this problem. For example,
+the KVM virsh dump probably also has that problem.
+
+> 
+> At least, if the tools respect the actual memory map like /proc/vmcore, it
+> can create correct ELF headers and makedumpfile will work normally.
+
+As I said, the tools do not know the Linux memory map. They only know
+the physical available memory.
+
+Michael
+
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
