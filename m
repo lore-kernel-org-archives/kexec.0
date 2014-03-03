@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WJUdt-0005CL-Gx
- for kexec@lists.infradead.org; Fri, 28 Feb 2014 21:06:50 +0000
-Date: Fri, 28 Feb 2014 16:06:11 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 11/11] kexec: Support for Kexec on panic using new system
- call
-Message-ID: <20140228210611.GB17195@redhat.com>
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-12-git-send-email-vgoyal@redhat.com>
- <20140228172857.GG4326@pd.tnic>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WKJJr-0001HF-VJ
+ for kexec@lists.infradead.org; Mon, 03 Mar 2014 03:13:33 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: makedumpfile: get_max_mapnr() from ELF header problem
+Date: Mon, 3 Mar 2014 03:11:23 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971EFABE@BPXM01GP.gisp.nec.co.jp>
+References: <20140228134148.15b60ceb@holzheu>
+In-Reply-To: <20140228134148.15b60ceb@holzheu>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140228172857.GG4326@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,82 +19,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-T24gRnJpLCBGZWIgMjgsIDIwMTQgYXQgMDY6Mjg6NTdQTSArMDEwMCwgQm9yaXNsYXYgUGV0a292
-IHdyb3RlOgoKWy4uXQo+ID4gKy8qIE1lbW9yeSB0byBiYWNrdXAgZHVyaW5nIGNyYXNoIGtkdW1w
-ICovCj4gPiArI2RlZmluZSBLRVhFQ19CQUNLVVBfU1JDX1NUQVJUCSgwVUwpCj4gPiArI2RlZmlu
-ZSBLRVhFQ19CQUNLVVBfU1JDX0VORAkoNjU1MzYwVUwpCS8qIDY0MEsgKi8KPiAKPiBJIGd1ZXNz
-Cj4gCj4gI2RlZmluZSBLRVhFQ19CQUNLVVBfU1JDX0VORAkoNjQwICogMTAyNFVMKQo+IAo+IHNo
-b3VsZCBiZSBtb3JlIGNsZWFyLgoKV2lsbCBDaGFuZ2UuCgpbLi5dCj4gPiArLyogQWxpZ25tZW50
-IHJlcXVpcmVkIGZvciBlbGYgaGVhZGVyIHNlZ21lbnQgKi8KPiA+ICsjZGVmaW5lIEVMRl9DT1JF
-X0hFQURFUl9BTElHTiAgIDQwOTYKPiA+ICsKPiA+ICsvKiBUaGlzIHByaW1hcmlseSByZXByc2Vu
-dHMgbnVtYmVyIG9mIHNwbGl0IHJhbmdlcyBkdWUgdG8gZXhjbHVzaW9uICovCj4gPiArI2RlZmlu
-ZSBDUkFTSF9NQVhfUkFOR0VTCTE2Cj4gPiArCj4gPiArc3RydWN0IGNyYXNoX21lbV9yYW5nZSB7
-Cj4gPiArCXVuc2lnbmVkIGxvbmcgbG9uZyBzdGFydCwgZW5kOwo+IAo+IHU2ND8KCk9rLCB0aGF0
-J3Mgc2hvcnRlci4gQ2FuIHVzZSB0aGF0LgoKWy4uXQo+ID4gKwo+ID4gKy8qIFVzZWQgd2hpbGUg
-cHJlcGFyZWluZyBtZW1vcnkgbWFwIGVudHJpZXMgZm9yIHNlY29uZCBrZXJuZWwgKi8KPiAKPiBz
-L3ByZXBhcmVpbmcvcHJlcGFyaW5nLwoKWWVwIHR5cG8uIFdpbGwgZml4LgoKWy4uXQo+ID4gK3N0
-YXRpYyBpbnQgZ2V0X2dhcnRfcmFuZ2VzX2NhbGxiYWNrKHU2NCBzdGFydCwgdTY0IGVuZCwgdm9p
-ZCAqYXJnKQo+ID4gK3sKPiA+ICsJc3RydWN0IGNyYXNoX2VsZl9kYXRhICpjZWQgPSBhcmc7Cj4g
-PiArCj4gPiArCWNlZC0+Z2FydF9zdGFydCA9IHN0YXJ0Owo+ID4gKwljZWQtPmdhcnRfZW5kID0g
-ZW5kOwo+ID4gKwo+ID4gKwkvKiBOb3QgZXhwZWN0aW5nIG1vcmUgdGhhbiAxIGdhcnQgYXBlcnR1
-cmUgKi8KPiA+ICsJcmV0dXJuIDE7Cj4gPiArfQo+ID4gKwo+ID4gKwo+ID4gKy8qIEdhdGhlciBh
-bGwgdGhlIHJlcXVpcmVkIGluZm9ybWF0aW9uIHRvIHByZXBhcmUgZWxmIGhlYWRlcnMgZm9yIHJh
-bSByZWdpb25zICovCj4gPiArc3RhdGljIGludCBmaWxsX3VwX2NlZChzdHJ1Y3QgY3Jhc2hfZWxm
-X2RhdGEgKmNlZCwgc3RydWN0IGtpbWFnZSAqaW1hZ2UpCj4gCj4gQWxsIG90aGVyIGZ1bmN0aW9u
-cyBoYXZlIG5pY2UsIHNwZWxsZWQgb3V0IG5hbWVzIGJ1dCBub3QgdGhpcyBvbmUgOikKPiAKPiBX
-aHkgbm90IGZpbGxfdXBfY3Jhc2hfZWxmX2RhdGEoKT8KCldpbGwgY2hhbmdlIGl0LgoKPiAKPiA+
-ICt7Cj4gPiArCXVuc2lnbmVkIGludCBucl9yYW5nZXMgPSAwOwo+ID4gKwo+ID4gKwljZWQtPmlt
-YWdlID0gaW1hZ2U7Cj4gPiArCj4gPiArCXdhbGtfc3lzdGVtX3JhbV9yYW5nZSgwLCAtMSwgJm5y
-X3JhbmdlcywKPiA+ICsJCQkJZ2V0X25yX3JhbV9yYW5nZXNfY2FsbGJhY2spOwo+ID4gKwo+ID4g
-KwljZWQtPm1heF9ucl9yYW5nZXMgPSBucl9yYW5nZXM7Cj4gPiArCj4gPiArCS8qCj4gPiArCSAq
-IFdlIGRvbid0IGNyZWF0ZSBFTEYgaGVhZGVycyBmb3IgR0FSVCBhcGVydHVyZSBhcyBhbiBhdHRl
-bXB0Cj4gPiArCSAqIHRvIGR1bXAgdGhpcyBtZW1vcnkgaW4gc2Vjb25kIGtlcm5lbCBsZWFkcyB0
-byBoYW5nL2NyYXNoLgo+ID4gKwkgKiBJZiBnYXJ0IGFwZXJ0dXJlIGlzIHByZXNlbnQsIG9uZSBu
-ZWVkcyB0byBleGNsdWRlIHRoYXQgcmVnaW9uCj4gPiArCSAqIGFuZCB0aGF0IGNvdWxkIGxlYWQg
-dG8gbmVlZCBvZiBleHRyYSBwaGRyLgo+ID4gKwkgKi8KPiA+ICsKPiAKPiBzdXBlcmZsdW91cyBu
-ZXdsaW5lLgoKV2lsbCByZW1vdmUuCgpbLi5dCj4gPiAraW50IGxvYWRfY3Jhc2hkdW1wX3NlZ21l
-bnRzKHN0cnVjdCBraW1hZ2UgKmltYWdlKQo+ID4gK3sKPiA+ICsJdW5zaWduZWQgbG9uZyBzcmNf
-c3RhcnQsIHNyY19zejsKPiA+ICsJdW5zaWduZWQgbG9uZyBlbGZfYWRkciwgZWxmX3N6Owo+ID4g
-KwlpbnQgcmV0Owo+ID4gKwo+ID4gKwkvKgo+ID4gKwkgKiBEZXRlcm1pbmUgYW5kIGxvYWQgYSBz
-ZWdtZW50IGZvciBiYWNrdXAgYXJlYS4gRmlyc3QgNjQwSyBSQU0KPiA+ICsJICogcmVnaW9uIGlz
-IGJhY2t1cCBzb3VyY2UKPiA+ICsJICovCj4gPiArCj4gPiArCXJldCA9IHdhbGtfc3lzdGVtX3Jh
-bV9yZXMoS0VYRUNfQkFDS1VQX1NSQ19TVEFSVCwgS0VYRUNfQkFDS1VQX1NSQ19FTkQsCj4gPiAr
-CQkJCWltYWdlLCBkZXRlcm1pbmVfYmFja3VwX3JlZ2lvbik7Cj4gPiArCj4gPiArCS8qIFplcm8g
-b3IgcG9zdGl2ZSByZXR1cm4gdmFsdWVzIGFyZSBvayAqLwo+ID4gKwlpZiAocmV0IDwgMCkKPiA+
-ICsJCXJldHVybiByZXQ7Cj4gPiArCj4gPiArCXNyY19zdGFydCA9IGltYWdlLT5hcmNoLmJhY2t1
-cF9zcmNfc3RhcnQ7Cj4gPiArCXNyY19zeiA9IGltYWdlLT5hcmNoLmJhY2t1cF9zcmNfc3o7Cj4g
-PiArCj4gPiArCS8qIEFkZCBiYWNrdXAgc2VnbWVudC4gKi8KPiA+ICsJaWYgKHNyY19zeikgewo+
-ID4gKwkJcmV0ID0ga2V4ZWNfYWRkX2J1ZmZlcihpbWFnZSwgX192YShzcmNfc3RhcnQpLCBzcmNf
-c3osIHNyY19zeiwKPiA+ICsJCQkJCVBBR0VfU0laRSwgMCwgLTEsIDAsCj4gPiArCQkJCQkmaW1h
-Z2UtPmFyY2guYmFja3VwX2xvYWRfYWRkcik7Cj4gPiArCQlpZiAocmV0KQo+ID4gKwkJCXJldHVy
-biByZXQ7Cj4gPiArCX0KPiA+ICsKPiA+ICsJLyogUHJlcGFyZSBlbGYgaGVhZGVycyBhbmQgYWRk
-IGEgc2VnbWVudCAqLwo+ID4gKwlyZXQgPSBwcmVwYXJlX2VsZl9oZWFkZXJzKGltYWdlLCAmZWxm
-X2FkZHIsICZlbGZfc3opOwo+ID4gKwlpZiAocmV0KQo+ID4gKwkJcmV0dXJuIHJldDsKPiA+ICsK
-PiA+ICsJaW1hZ2UtPmFyY2guZWxmX2hlYWRlcnMgPSBlbGZfYWRkcjsKPiA+ICsJaW1hZ2UtPmFy
-Y2guZWxmX2hlYWRlcnNfc3ogPSBlbGZfc3o7Cj4gPiArCj4gPiArCXJldCA9IGtleGVjX2FkZF9i
-dWZmZXIoaW1hZ2UsIChjaGFyICopZWxmX2FkZHIsIGVsZl9zeiwgZWxmX3N6LAo+IAo+IEZvciBz
-b21lIHJlYXNvbiwgbXkgY29tcGlsZXIgY29tcGxhaW5zIGhlcmU6Cj4gCj4gYXJjaC94ODYva2Vy
-bmVsL2NyYXNoLmM6IEluIGZ1bmN0aW9uIOKAmGxvYWRfY3Jhc2hkdW1wX3NlZ21lbnRz4oCZOgo+
-IGFyY2gveDg2L2tlcm5lbC9jcmFzaC5jOjcwNDo2OiB3YXJuaW5nOiDigJhlbGZfc3rigJkgbWF5
-IGJlIHVzZWQgdW5pbml0aWFsaXplZCBpbiB0aGlzIGZ1bmN0aW9uIFstV3VuaW5pdGlhbGl6ZWRd
-Cj4gYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NzA0OjI0OiB3YXJuaW5nOiDigJhlbGZfYWRkcuKA
-mSBtYXkgYmUgdXNlZCB1bmluaXRpYWxpemVkIGluIHRoaXMgZnVuY3Rpb24gWy1XdW5pbml0aWFs
-aXplZF0KPiAKPiBJdCBpcyBsaWtlbHkgYm9ndXMsIHRob3VnaC4KCkhtbS4uLiwgSSBkaWQgbm90
-IHNlZSB0aGVzZSB3YXJuaW5ncyB3aXRoIG15IHNldHVwLiBlbGZfYWRkciBhbmQgZWxmX3N6Cndp
-bGwgYmUgaW5pdGlhbGl6ZWQgYnkgcHJlcGFyZV9lbGZfaGVhZGVycygpLiBOb3Qgc3VyZSB3aHkg
-Y29tcGlsZXIgaXMKY29tcGxhaW5pbmcuCgpbLi5dCj4gPiArCXByX2RlYnVnKCJGaW5hbCBjb21t
-YW5kIGxpbmUgaXM6JXNcbiIsIGNtZGxpbmVfcHRyKTsKPiAKPiBvbmUgc3BhY2UgYWZ0ZXIgIjoi
-CgpPay4gd2lsbCBkby4KCj4gCj4gVGhlIHJlc3QgbG9va3Mgb2sgdG8gbWUsIGJ1dCB0aGF0IGRv
-ZXNuJ3QgbWVhbiBhIHdob2xlIGxvdCBjb25zaWRlcmluZwo+IG15IHZlcnkgbGltaXRlZCBrZXhl
-YyBrbm93bGVkZ2UuCgpUaGFua3MgZm9yIHJldmlldy4gV2UgbmVlZCBtYW55IGV5ZXMgb24gdGhp
-cyBwYXRjaCBzZXQuIEkgd2lsbCBtYWtlCmNoYW5nZXMgYW5kIHBvc3QgYW5vdGhlciB2ZXJzaW9u
-IGZvciByZXZpZXcuCgpUaGFua3MKVml2ZWsKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hello Michael,
+
+>Hello Atsushi,
+>
+>On s390 we have the following little problem:
+>
+>We use hypervisor or stand-alone dump tools to create Linux system
+>dumps. These tools do not know the kernel parameter line and dump the
+>full physical memory.
+>
+>We use makedumpfile to filter those dumps.
+>
+>If a Linux system has specified the "mem=" parameter, the dump tools
+>still dump the whole phypsical memory.
+
+I guess this is a problem of the tools, it sounds that the tools ignore
+the actual memory map and just make wrong ELF headers.
+How do the tools decide the range of System RAM to create ELF headers ?
+
+At least, if the tools respect the actual memory map like /proc/vmcore, it
+can create correct ELF headers and makedumpfile will work normally.
+
+>Unfortunately in "get_max_mapnr()" makedumpfile uses the ELF header to
+>get the maxmimum page frame number. Since this is not the correct value
+>in our case makedumpfile fails to filter the dump.
+
+makedumpfile depends on the ELF file format, you know.
+I think you should fix the tools to create correct ELF files.
+
+
+Thanks
+Atsushi Kumagai
+
+>We get the following error on s390 with makedumpfile version 1.5.3:
+>
+>makedumpfile -c -d 31 vmcore dump.kdump
+>cyclic buffer size has been changed: 22156083 => 22156032
+>Excluding unnecessary pages        : [ 21 %] vtop_s390x: Address too big for the number of page table levels.
+>readmem: Can't convert a virtual address(8000180104670) to physical address.
+>readmem: type_addr: 0, addr:8000180104670, size:32768
+>__exclude_unnecessary_pages: Can't read the buffer of struct page.
+>Excluding unnecessary pages        : [ 23 %] vtop_s390x: Address too big for the number of page table levels. readmem:
+>Can't convert a
+>virtual address(8000180104670) to physical address. readmem: type_addr:
+>0, addr:8000180104670, size:327681.5.5 __exclude_unnecessary_pages:
+>Can't read the buffer of struct page.
+>
+>Since version 1.5.4 makedumpfile seems to loop in __exclude_unnecessary_pages().
+>
+>We thought about several ways to fix this problem but have not found a
+>good solution up to now.
+>
+>Do you have an idea how we could fix that?
+>
+>Best Regards,
+>Michael
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
