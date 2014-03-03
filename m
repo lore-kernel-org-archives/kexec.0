@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from ernst.netinsight.se ([194.16.221.21])
- by merlin.infradead.org with smtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WKRcm-0005Ul-Sw
- for kexec@lists.infradead.org; Mon, 03 Mar 2014 12:05:37 +0000
-Date: Mon, 3 Mar 2014 13:04:59 +0100
-From: Simon =?UTF-8?B?S8OlZ3N0csO2bQ==?= <simon.kagstrom@netinsight.net>
-Subject: [PATCH 3/4] build: Honor VPATH to support out-of-tree builds
-Message-ID: <20140303130459.0fc230ae@marrow.netinsight.se>
-In-Reply-To: <20140303130213.1d441d32@marrow.netinsight.se>
-References: <20140303130213.1d441d32@marrow.netinsight.se>
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WKYmw-00036A-U3
+ for kexec@lists.infradead.org; Mon, 03 Mar 2014 19:44:36 +0000
+Received: from int-mx01.intmail.prod.int.phx2.redhat.com
+ (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s23JiC6O000825
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+ for <kexec@lists.infradead.org>; Mon, 3 Mar 2014 14:44:13 -0500
+Date: Mon, 3 Mar 2014 14:44:12 -0500
+From: Marc Milgram <mmilgram@redhat.com>
+Message-Id: <20140303194412.7864.20862.sendpatchset@dhcp-33-231.bos.redhat.com>
+Subject: makedumpfile: optimize is_zero_page
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,59 +20,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: Marc Milgram <mmilgram@redhat.com>
 
-Signed-off-by: Simon Kagstrom <simon.kagstrom@netinsight.net>
+There are local complaints that  filtering out only zero pages is slow.  I
+found that is_zero_page was inefficient.  It checks if the page contains any
+non-zero bytes - one byte at a time.
+
+Improve performance by checking for non-zero data 64 bits at a time.  Also,
+unroll the loop for additional performance.
+
+Did testing in x86_64 mode on an Intel Xeon x5560 system with 18GB RAM.
+Executed:
+  time makedumpfile -d 1 /proc/vmcore <destination>
+
+The amount of time taken in User space was reduced by 75%.  The total time to
+dump memory was reduced by 28%.
+
+is_zero_page 
+Signed-off-by: Marc Milgram <mmilgram at redhat.com>
 ---
- Makefile |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 57e7e44..b9121ad 100644
---- a/Makefile
-+++ b/Makefile
-@@ -63,19 +63,20 @@ endif
- all: makedumpfile
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 3d270c6..0f211c4 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1634,10 +1634,27 @@ static inline int
+ is_zero_page(unsigned char *buf, long page_size)
+ {
+ 	size_t i;
++	unsigned long long *vect = (unsigned long long *) buf;
++	long page_len = page_size / (sizeof(unsigned long long));
  
- $(OBJ_PART): $(SRC_PART)
--	$(CC) $(CFLAGS) -c -o ./$@ ./$(@:.o=.c) 
-+	$(CC) $(CFLAGS) -c -o ./$@ $(VPATH)$(@:.o=.c)
+-	for (i = 0; i < page_size; i++)
+-		if (buf[i])
++	for (i = 0; i < page_len; i+=8) {
++		if (vect[i])
+ 			return FALSE;
++		if (vect[i+1])
++			return FALSE;
++		if (vect[i+2])
++			return FALSE;
++		if (vect[i+3])
++			return FALSE;
++		if (vect[i+4])
++			return FALSE;
++		if (vect[i+5])
++			return FALSE;
++		if (vect[i+6])
++			return FALSE;
++		if (vect[i+7])
++			return FALSE;
++	}
+ 	return TRUE;
+ }
  
- $(OBJ_ARCH): $(SRC_ARCH)
--	$(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c) 
-+	@mkdir -p $(@D)
-+	$(CC) $(CFLAGS_ARCH) -c -o ./$@ $(VPATH)$(@:.o=.c)
- 
- makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
- 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
- 	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
--	grep -v "^.TH MAKEDUMPFILE 8" $(SRC)/makedumpfile.8 >> temp.8
-+	grep -v "^.TH MAKEDUMPFILE 8" $(VPATH)makedumpfile.8 >> temp.8
- 	mv temp.8 makedumpfile.8
- 	gzip -c ./makedumpfile.8 > ./makedumpfile.8.gz
- 	echo .TH MAKEDUMPFILE.CONF 5 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.5
--	grep -v "^.TH MAKEDUMPFILE.CONF 5" makedumpfile.conf.5 >> temp.5
-+	grep -v "^.TH MAKEDUMPFILE.CONF 5" $(VPATH)makedumpfile.conf.5 >> temp.5
- 	mv temp.5 makedumpfile.conf.5
- 	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
- 
-@@ -87,7 +88,7 @@ clean:
- 
- install:
- 	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
--	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile makedumpfile-R.pl
-+	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
- 	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8.gz
- 	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5.gz
--	install -m 644 -D makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
-+	install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
--- 
-1.7.9.6
-
 
 _______________________________________________
 kexec mailing list
