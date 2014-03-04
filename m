@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mail-qg0-x230.google.com ([2607:f8b0:400d:c04::230])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WKqB4-0005uF-H4
- for kexec@lists.infradead.org; Tue, 04 Mar 2014 14:18:39 +0000
-Date: Tue, 4 Mar 2014 15:18:14 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: Fix string append in dump_log_entry()
-Message-ID: <20140304151814.55a3d687@hananiah.suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971EF130@BPXM01GP.gisp.nec.co.jp>
-References: <20140226220546.4030cdbf@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE971EF130@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+ id 1WKqkr-0006tq-OD
+ for kexec@lists.infradead.org; Tue, 04 Mar 2014 14:55:38 +0000
+Received: by mail-qg0-f48.google.com with SMTP id j107so1403440qga.7
+ for <kexec@lists.infradead.org>; Tue, 04 Mar 2014 06:55:13 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <20140304040331.GG18200@verge.net.au>
+References: <CAMBSHm_fvPTjdEwgVdyMGPi=3et+JEP-G5TNV986yXWYw35YYw@mail.gmail.com>
+ <20140304040331.GG18200@verge.net.au>
+Date: Tue, 4 Mar 2014 06:55:13 -0800
+Message-ID: <CAMBSHm_wJw1Ghi6_vRdTF_ZkqQeg=w9zhaNWyhwJ=BNmvrLE_A@mail.gmail.com>
+Subject: Re: PATCH: bug in locate_hole()
+From: Matthew Fleming <mdf356@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,54 +25,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-On Fri, 28 Feb 2014 01:01:33 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+On Mon, Mar 3, 2014 at 8:03 PM, Simon Horman <horms@verge.net.au> wrote:
+> Thanks Matthew.
+>
+> Could you provide a signed-off-by line?
 
-> Hello Petr,
+I'm not sure what that would look like.  Do I sign off on my own patch?
 
-Hello Kumagai-san,
+Thanks,
+matthew
 
-> >To quote the sprintf(3) man page:
-> >
-> >    Some programs imprudently rely on code such as the following
-> >
-> >        sprintf(buf, "%s some further text", buf);
-> >
-> >    to append text to buf.  However, the standards explicitly note that
-> >    the results are undefined if source and destination buffers overlap
-> >    when calling sprintf(), snprintf(), vsprintf(), and vsnprintf().
-> >    Depending on the version of gcc(1) used, and the compiler options
-> >    employed, calls such as the above will not produce the expected results.
-> >
-> >The original code is actually miscompiled on openSUSE 13.1.
-> >
-> >It's also overkill to call sprintf() for something that can be done
-> >with a simple assignment.
-> >
-> >Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
-> 
-> Thanks, it seems good to me.
-> 
-> Actually, Nick sent the same patch in last July and we tried to
-> take care of buffer overflow at the same time as below:
-> 
-> http://lists.infradead.org/pipermail/kexec/2013-August/009430.html
-> 
-> However, this thread has been left open, so I was wondering if you
-> could take over this work. Of course you can decline this, then I'll
-> do it later as another patch.
 
-I don't mind taking over this work, but I don't think it's a good thing
-to combine the buffer overflow fix with the sprintf buffer overlap
-fix.
-
-What is the expected plan? Are you waiting for me to send a two-patch
-series now?
-
-Petr Tesarik
+> On Mon, Mar 03, 2014 at 04:34:35PM -0800, Matthew Fleming wrote:
+>> In upgrading to kexec-tools 2.0.5 I first got the error "Overlapping
+>> memory segments at 0xbeff000"
+>>
+>> Adding some debugging I found locate_hole was returning incorrect
+>> values.  The below is from the debug I added:
+>>
+>> XXXMDF: look for hole size 100000, cur range [52b3000, bffffff] size 6d4cfff
+>> XXXMDF: look for hole memsz=100000, found beff000
+>>
+>> Hmm, if we wanted 0x100000 bytes ending at 0xbffffff, that should be
+>> 0xbf00000, not 0xbef000.  Continuing to the second invocation:
+>>
+>> XXXMDF: look for hole size 1000, cur range [52b3000, befefff] size 6c4bfff
+>> XXXMDF: look for hole size 1000, cur range [bfff000, bffffff] size fff
+>> XXXMDF: look for hole memsz=1000, found bffe000
+>>
+>> Now we die with overlapping ranges, since the 0x100000 bytes at
+>> 0xbeff000 overlaps 0x1000 bytes at 0xbffe000.
+>>
+>> The attached patch fixes the off-by-one that causes the later overlap.
+>>
+>> Thanks,
+>> matthew
+>
+>> --- kexec.c.orig      2014-03-03 16:08:53.289844106 -0800
+>> +++ kexec.c   2014-03-03 16:09:04.960844107 -0800
+>> @@ -272,17 +272,17 @@ unsigned long locate_hole(struct kexec_i
+>>               }
+>>               /* Is there enough space left so we can use it? */
+>>               size = end - start;
+>>               if (!hole_size || size >= hole_size - 1) {
+>>                       if (hole_end > 0) {
+>>                               hole_base = start;
+>>                               break;
+>>                       } else {
+>> -                             hole_base = _ALIGN_DOWN(end - hole_size,
+>> +                             hole_base = _ALIGN_DOWN(end - hole_size + 1,
+>>                                       hole_align);
+>>                       }
+>>               }
+>>       }
+>>       free(mem_range);
+>>       if (hole_base == ULONG_MAX) {
+>>               fprintf(stderr, "Could not find a free area of memory of "
+>>                       "0x%lx bytes...\n", hole_size);
+>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
 _______________________________________________
 kexec mailing list
