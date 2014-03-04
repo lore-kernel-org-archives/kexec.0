@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-qg0-x230.google.com ([2607:f8b0:400d:c04::230])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WKqkr-0006tq-OD
- for kexec@lists.infradead.org; Tue, 04 Mar 2014 14:55:38 +0000
-Received: by mail-qg0-f48.google.com with SMTP id j107so1403440qga.7
- for <kexec@lists.infradead.org>; Tue, 04 Mar 2014 06:55:13 -0800 (PST)
+Received: from 8bytes.org ([85.214.48.195] helo=mail.8bytes.org)
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WKqom-00073r-7m
+ for kexec@lists.infradead.org; Tue, 04 Mar 2014 14:59:40 +0000
+Received: from localhost (localhost [127.0.0.1])
+ by mail.8bytes.org (Postfix) with SMTP id 3321F12B223
+ for <kexec@lists.infradead.org>; Tue,  4 Mar 2014 15:59:18 +0100 (CET)
+Date: Tue, 4 Mar 2014 15:59:15 +0100
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCHv3 3/6] Crashdump-Accepting-Active-IOMMU-Domain-Interfaces
+Message-ID: <20140304145911.GD2799@8bytes.org>
+References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+ <1389391652-52422-4-git-send-email-bill.sumner@hp.com>
 MIME-Version: 1.0
-In-Reply-To: <20140304040331.GG18200@verge.net.au>
-References: <CAMBSHm_fvPTjdEwgVdyMGPi=3et+JEP-G5TNV986yXWYw35YYw@mail.gmail.com>
- <20140304040331.GG18200@verge.net.au>
-Date: Tue, 4 Mar 2014 06:55:13 -0800
-Message-ID: <CAMBSHm_wJw1Ghi6_vRdTF_ZkqQeg=w9zhaNWyhwJ=BNmvrLE_A@mail.gmail.com>
-Subject: Re: PATCH: bug in locate_hole()
-From: Matthew Fleming <mdf356@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1389391652-52422-4-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +27,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Bill Sumner <bill.sumner@hp.com>
+Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, dwmw2@infradead.org
 
-On Mon, Mar 3, 2014 at 8:03 PM, Simon Horman <horms@verge.net.au> wrote:
-> Thanks Matthew.
->
-> Could you provide a signed-off-by line?
+On Fri, Jan 10, 2014 at 03:07:29PM -0700, Bill Sumner wrote:
+> +context_get_entry(struct context_entry *context_addr,
+> +			struct intel_iommu *iommu, u32 bus, int devfn)
+> +{
+> +	unsigned long long q;		/* quadword scratch */
+> +	struct root_entry *root_phys;	/* Phys adr (root table entry) */
+> +	struct root_entry  root_temp;	/* Local copy of root_entry */
+> +	struct context_entry *context_phys;	/* Phys adr */
+> +
+> +	if (pr_dbg.domain_get)
+> +		pr_debug("ENTER %s B:D:F=%2.2x:%2.2x:%1.1x &context_entry:0x%llx &intel_iommu:0x%llx\n",
+> +			__func__, bus, devfn>>3, devfn&7,
+> +			(u64)context_addr, (u64)iommu);
+> +
+> +	if (bus > 255)				/* Sanity check */
+> +		return -5;
+> +	if (devfn > 255 || devfn < 0)		/* Sanity check */
+> +		return -6;
+> +
+> +	q = readq(iommu->reg + DMAR_RTADDR_REG);
+> +	pr_debug("IOMMU %d: DMAR_RTADDR_REG:0x%16.16llx\n", iommu->seq_id, q);
+> +	if (!q)
+> +		return -1;
+> +
+> +	root_phys = (struct root_entry *) q;	/* Adr(base of vector) */
+> +	root_phys += bus;			/* Adr(entry we want) */
+> +
+> +	oldcopy(&root_temp, root_phys, sizeof(root_temp));
+> +
+> +	pr_debug("root_temp.val:0x%llx .rsvd1:0x%llx root_phys:0x%llx\n",
+> +		root_temp.val, root_temp.rsvd1, (u64)root_phys);
+> +
+> +	if (!root_present(&root_temp))
+> +		return -2;
+> +
+> +	pr_debug("B:D:F=%2.2x:%2.2x:%1.1x root_temp.val: %llx .rsvd1: %llx\n",
+> +		bus, devfn >> 3, devfn & 7, root_temp.val, root_temp.rsvd1);
+> +
+> +	if (root_temp.rsvd1)			/* If (root_entry is bad) */
+> +		return -3;
+> +
+> +	context_phys = get_context_phys_from_root(&root_temp);
+> +	if (!context_phys)
+> +		return -4;
 
-I'm not sure what that would look like.  Do I sign off on my own patch?
-
-Thanks,
-matthew
+What do all these magic return values mean? 
 
 
-> On Mon, Mar 03, 2014 at 04:34:35PM -0800, Matthew Fleming wrote:
->> In upgrading to kexec-tools 2.0.5 I first got the error "Overlapping
->> memory segments at 0xbeff000"
->>
->> Adding some debugging I found locate_hole was returning incorrect
->> values.  The below is from the debug I added:
->>
->> XXXMDF: look for hole size 100000, cur range [52b3000, bffffff] size 6d4cfff
->> XXXMDF: look for hole memsz=100000, found beff000
->>
->> Hmm, if we wanted 0x100000 bytes ending at 0xbffffff, that should be
->> 0xbf00000, not 0xbef000.  Continuing to the second invocation:
->>
->> XXXMDF: look for hole size 1000, cur range [52b3000, befefff] size 6c4bfff
->> XXXMDF: look for hole size 1000, cur range [bfff000, bffffff] size fff
->> XXXMDF: look for hole memsz=1000, found bffe000
->>
->> Now we die with overlapping ranges, since the 0x100000 bytes at
->> 0xbeff000 overlaps 0x1000 bytes at 0xbffe000.
->>
->> The attached patch fixes the off-by-one that causes the later overlap.
->>
->> Thanks,
->> matthew
->
->> --- kexec.c.orig      2014-03-03 16:08:53.289844106 -0800
->> +++ kexec.c   2014-03-03 16:09:04.960844107 -0800
->> @@ -272,17 +272,17 @@ unsigned long locate_hole(struct kexec_i
->>               }
->>               /* Is there enough space left so we can use it? */
->>               size = end - start;
->>               if (!hole_size || size >= hole_size - 1) {
->>                       if (hole_end > 0) {
->>                               hole_base = start;
->>                               break;
->>                       } else {
->> -                             hole_base = _ALIGN_DOWN(end - hole_size,
->> +                             hole_base = _ALIGN_DOWN(end - hole_size + 1,
->>                                       hole_align);
->>                       }
->>               }
->>       }
->>       free(mem_range);
->>       if (hole_base == ULONG_MAX) {
->>               fprintf(stderr, "Could not find a free area of memory of "
->>                       "0x%lx bytes...\n", hole_size);
->
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->
 
 _______________________________________________
 kexec mailing list
