@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([2a01:238:4242:f000:64f:6c43:3523:e535]
- helo=mail.8bytes.org)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WKqva-0007DV-LM
- for kexec@lists.infradead.org; Tue, 04 Mar 2014 15:06:43 +0000
-Received: from localhost (localhost [127.0.0.1])
- by mail.8bytes.org (Postfix) with SMTP id 7C64912B223
- for <kexec@lists.infradead.org>; Tue,  4 Mar 2014 16:06:21 +0100 (CET)
-Date: Tue, 4 Mar 2014 16:06:17 +0100
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCHv3 0/6] Crashdump Accepting Active IOMMU
-Message-ID: <20140304150611.GE2799@8bytes.org>
-References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+ id 1WL0aT-0003N3-9e
+ for kexec@lists.infradead.org; Wed, 05 Mar 2014 01:25:34 +0000
+Date: Wed, 5 Mar 2014 09:24:13 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: PATCH: bug in locate_hole()
+Message-ID: <20140305012413.GE27076@dhcp-16-105.nay.redhat.com>
+References: <CAMBSHm_fvPTjdEwgVdyMGPi=3et+JEP-G5TNV986yXWYw35YYw@mail.gmail.com>
+ <20140304040331.GG18200@verge.net.au>
+ <CAMBSHm_wJw1Ghi6_vRdTF_ZkqQeg=w9zhaNWyhwJ=BNmvrLE_A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+In-Reply-To: <CAMBSHm_wJw1Ghi6_vRdTF_ZkqQeg=w9zhaNWyhwJ=BNmvrLE_A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,47 +25,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Bill Sumner <bill.sumner@hp.com>
-Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, dwmw2@infradead.org
+To: Matthew Fleming <mdf356@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Hi Bill,
-
-On Fri, Jan 10, 2014 at 03:07:26PM -0700, Bill Sumner wrote:
-> Bill Sumner (6):
->   Crashdump-Accepting-Active-IOMMU-Flags-and-Prototype
->   Crashdump-Accepting-Active-IOMMU-Utility-functions
->   Crashdump-Accepting-Active-IOMMU-Domain-Interfaces
->   Crashdump-Accepting-Active-IOMMU-Copy-Translations
->   Crashdump-Accepting-Active-IOMMU-Debug-Print-IOMMU
->   Crashdump-Accepting-Active-IOMMU-Call-From-Mainline
+On 03/04/14 at 06:55am, Matthew Fleming wrote:
+> On Mon, Mar 3, 2014 at 8:03 PM, Simon Horman <horms@verge.net.au> wrote:
+> > Thanks Matthew.
+> >
+> > Could you provide a signed-off-by line?
 > 
->  drivers/iommu/intel-iommu.c | 1293 ++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 1225 insertions(+), 68 deletions(-)
+> I'm not sure what that would look like.  Do I sign off on my own patch?
+> 
+> Thanks,
+> matthew
 
-This is a pretty big change, before merging I would like to get more
-eyes on it. Please make sure you get more reviews on the code and the
-general concept. A few things I noticed while looking at it:
+It's a convention for submitting patch, you can refer to this doc:
+https://www.kernel.org/doc/Documentation/SubmittingPatches
 
-* You put a lot of code into #define CONFIG_CRASH_DUMP. Isn't the same
-  approach necessary to for KEXEC?
+Abstract part of them and paste here:
 
-* Please get rid of all the pr_debug stuff.
+12) Sign your work
 
-* I think it makes sense to put the functions to access the IOMMU
-  configuration values of the old kernel into a new file. This is better
-  than adding over 1000 new lines to intel-iommu.c
+To improve tracking of who did what, especially with patches that can
+percolate to their final resting place in the kernel through several
+layers of maintainers, we've introduced a "sign-off" procedure on
+patches that are being emailed around.
 
-* I have seen your new single-patch for this change. A single patch with
-  more than 1200 changed lines is not something anyone is willing to
-  review. Please split the patches again in a meaningful and bisectable
-  way.
-
-
-Thanks,
-
-	Joerg
+The sign-off is a simple line at the end of the explanation for the
+patch, which certifies that you wrote it or otherwise have the right to
+pass it on as an open-source patch.  The rules are pretty simple: if you
+can certify the below:
 
 
+Baoquan
+Thanks
+
+> 
+> 
+> > On Mon, Mar 03, 2014 at 04:34:35PM -0800, Matthew Fleming wrote:
+> >> In upgrading to kexec-tools 2.0.5 I first got the error "Overlapping
+> >> memory segments at 0xbeff000"
+> >>
+> >> Adding some debugging I found locate_hole was returning incorrect
+> >> values.  The below is from the debug I added:
+> >>
+> >> XXXMDF: look for hole size 100000, cur range [52b3000, bffffff] size 6d4cfff
+> >> XXXMDF: look for hole memsz=100000, found beff000
+> >>
+> >> Hmm, if we wanted 0x100000 bytes ending at 0xbffffff, that should be
+> >> 0xbf00000, not 0xbef000.  Continuing to the second invocation:
+> >>
+> >> XXXMDF: look for hole size 1000, cur range [52b3000, befefff] size 6c4bfff
+> >> XXXMDF: look for hole size 1000, cur range [bfff000, bffffff] size fff
+> >> XXXMDF: look for hole memsz=1000, found bffe000
+> >>
+> >> Now we die with overlapping ranges, since the 0x100000 bytes at
+> >> 0xbeff000 overlaps 0x1000 bytes at 0xbffe000.
+> >>
+> >> The attached patch fixes the off-by-one that causes the later overlap.
+> >>
+> >> Thanks,
+> >> matthew
+> >
+> >> --- kexec.c.orig      2014-03-03 16:08:53.289844106 -0800
+> >> +++ kexec.c   2014-03-03 16:09:04.960844107 -0800
+> >> @@ -272,17 +272,17 @@ unsigned long locate_hole(struct kexec_i
+> >>               }
+> >>               /* Is there enough space left so we can use it? */
+> >>               size = end - start;
+> >>               if (!hole_size || size >= hole_size - 1) {
+> >>                       if (hole_end > 0) {
+> >>                               hole_base = start;
+> >>                               break;
+> >>                       } else {
+> >> -                             hole_base = _ALIGN_DOWN(end - hole_size,
+> >> +                             hole_base = _ALIGN_DOWN(end - hole_size + 1,
+> >>                                       hole_align);
+> >>                       }
+> >>               }
+> >>       }
+> >>       free(mem_range);
+> >>       if (hole_base == ULONG_MAX) {
+> >>               fprintf(stderr, "Could not find a free area of memory of "
+> >>                       "0x%lx bytes...\n", hole_size);
+> >
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> >
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
