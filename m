@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WL3t6-000221-Pq
- for kexec@lists.infradead.org; Wed, 05 Mar 2014 04:57:01 +0000
+ id 1WL3u5-000245-45
+ for kexec@lists.infradead.org; Wed, 05 Mar 2014 04:58:05 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH 10/10] Install sample eppic scripts
-Date: Wed, 5 Mar 2014 04:54:36 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F1AC3@BPXM01GP.gisp.nec.co.jp>
-References: <20140227063007.5924.5819.stgit@aruna-ThinkPad-T420>
- <20140227063204.5924.43768.stgit@aruna-ThinkPad-T420>
-In-Reply-To: <20140227063204.5924.43768.stgit@aruna-ThinkPad-T420>
+Subject: RE: makedumpfile: optimize is_zero_page
+Date: Wed, 5 Mar 2014 04:55:00 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F1ACC@BPXM01GP.gisp.nec.co.jp>
+References: <20140303194412.7864.20862.sendpatchset@dhcp-33-231.bos.redhat.com>
+In-Reply-To: <20140303194412.7864.20862.sendpatchset@dhcp-33-231.bos.redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -24,61 +23,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "aruna@linux.vnet.ibm.com" <aruna@linux.vnet.ibm.com>
+To: "mmilgram@redhat.com" <mmilgram@redhat.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->Install sample eppic scripts in the documentation directory
+Hello Marc,
+
+>There are local complaints that  filtering out only zero pages is slow.  I
+>found that is_zero_page was inefficient.  It checks if the page contains any
+>non-zero bytes - one byte at a time.
 >
->Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
+>Improve performance by checking for non-zero data 64 bits at a time.  Also,
+>unroll the loop for additional performance.
+>
+>Did testing in x86_64 mode on an Intel Xeon x5560 system with 18GB RAM.
+>Executed:
+>  time makedumpfile -d 1 /proc/vmcore <destination>
+>
+>The amount of time taken in User space was reduced by 75%.  The total time to
+>dump memory was reduced by 28%.
+
+Thanks for your good work, but...
+
+>is_zero_page
+>Signed-off-by: Marc Milgram <mmilgram at redhat.com>
 >---
-> Makefile          |    1 +
-> makedumpfile.spec |    3 +++
-> 2 files changed, 4 insertions(+)
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 3d270c6..0f211c4 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -1634,10 +1634,27 @@ static inline int
+> is_zero_page(unsigned char *buf, long page_size)
+> {
+> 	size_t i;
+>+	unsigned long long *vect = (unsigned long long *) buf;
+>+	long page_len = page_size / (sizeof(unsigned long long));
 >
->diff --git a/Makefile b/Makefile
->index 10178ba..6e8e9b9 100644
->--- a/Makefile
->+++ b/Makefile
->@@ -91,3 +91,4 @@ install:
-> 	cp makedumpfile.8.gz ${DESTDIR}/usr/share/man/man8
-> 	cp makedumpfile.conf.5.gz ${DESTDIR}/usr/share/man/man5
-> 	cp makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
->+	cp eppic_scripts/* ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts/
+>-	for (i = 0; i < page_size; i++)
+>-		if (buf[i])
+>+	for (i = 0; i < page_len; i+=8) {
+>+		if (vect[i])
+> 			return FALSE;
+>+		if (vect[i+1])
+>+			return FALSE;
+>+		if (vect[i+2])
+>+			return FALSE;
+>+		if (vect[i+3])
+>+			return FALSE;
+>+		if (vect[i+4])
+>+			return FALSE;
+>+		if (vect[i+5])
+>+			return FALSE;
+>+		if (vect[i+6])
+>+			return FALSE;
+>+		if (vect[i+7])
+>+			return FALSE;
+>+	}
+> 	return TRUE;
+> }
 
-Please write a patch for the latest version,
-v1.5.5 uses install command instead of cp:
+It looks messy, I don't like such a manual loop unrolling and it
+seems to affect performance a little according to my small test:
 
-        install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
-        install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile makedumpfile-R.pl
-        install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8.gz
-        install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5.gz
-        install -m 644 -D makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
+(test results for 4k page)
+   8 bits x   1 line  x 4096 loops (current code):      user  0m7.045s
+  64 bits x   1 line  x  512 loops               :      user  0m1.847s
+  64 bits x   8 lines x   64 loops (your patch)  :      user  0m1.546s
+  64 bits x 512 lines x    1 loop                :      user  0m1.642s
+
+(dump information)
+    Original pages  : 0x000000000013073b
+      Excluded pages   : 0x0000000000108b4e
+        Pages filled with zero  : 0x0000000000108b4e
+        Cache pages             : 0x0000000000000000
+        Cache pages + private   : 0x0000000000000000
+        User process data pages : 0x0000000000000000
+        Free pages              : 0x0000000000000000
+        Hwpoison pages          : 0x0000000000000000
+      Remaining pages  : 0x0000000000027bed
+      (The number of pages is reduced to 13%.)
+    Memory Hole     : 0x000000000003f8c5
+    --------------------------------------------------
+    Total pages     : 0x0000000000170000
+
+So I think the loop unrolling is unnecessary.
 
 
 Thanks
 Atsushi Kumagai
 
->diff --git a/makedumpfile.spec b/makedumpfile.spec
->index ea7fba4..7f5d1d4 100644
->--- a/makedumpfile.spec
->+++ b/makedumpfile.spec
->@@ -28,6 +28,8 @@ mkdir -p %{buildroot}/bin
-> mkdir -p %{buildroot}/etc
-> mkdir -p %{buildroot}/usr/share/man/man5
-> mkdir -p %{buildroot}/usr/share/man/man8
->+mkdir -p %{buildroot}/usr/share/%{name}-%{version}/
->+mkdir -p %{buildroot}/usr/share/%{name}-%{version}/eppic-scripts/
-> make install DESTDIR=%{buildroot}
->
-> %clean
->@@ -39,6 +41,7 @@ rm -rf %{buildroot}
-> /bin/makedumpfile-R.pl
-> /usr/share/man/man5/makedumpfile.conf.5.gz
-> /usr/share/man/man8/makedumpfile.8.gz
->+%doc /usr/share/%{name}-%{version}/eppic_scripts/
->
-> %changelog
-> * Fri Aug 21 2008 Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
