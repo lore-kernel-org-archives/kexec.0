@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WL3u5-000245-45
- for kexec@lists.infradead.org; Wed, 05 Mar 2014 04:58:05 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: makedumpfile: optimize is_zero_page
-Date: Wed, 5 Mar 2014 04:55:00 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F1ACC@BPXM01GP.gisp.nec.co.jp>
-References: <20140303194412.7864.20862.sendpatchset@dhcp-33-231.bos.redhat.com>
-In-Reply-To: <20140303194412.7864.20862.sendpatchset@dhcp-33-231.bos.redhat.com>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WL4Vk-00033B-Ui
+ for kexec@lists.infradead.org; Wed, 05 Mar 2014 05:36:57 +0000
+Date: Wed, 5 Mar 2014 13:36:17 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: How could we get rid of saved_max_pfn for calgary iommu?
+Message-ID: <20140305053617.GE26240@dhcp-17-89.nay.redhat.com>
+References: <20140219061824.GA29703@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140219061824.GA29703@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,98 +23,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "mmilgram@redhat.com" <mmilgram@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Yinghai Lu <yinghai@kernel.org>, Baoquan He <bhe@redhat.com>
+Cc: discuss@x86-64.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hello Marc,
+[ Add Muli, I find his new email in git log]
 
->There are local complaints that  filtering out only zero pages is slow.  I
->found that is_zero_page was inefficient.  It checks if the page contains any
->non-zero bytes - one byte at a time.
->
->Improve performance by checking for non-zero data 64 bits at a time.  Also,
->unroll the loop for additional performance.
->
->Did testing in x86_64 mode on an Intel Xeon x5560 system with 18GB RAM.
->Executed:
->  time makedumpfile -d 1 /proc/vmcore <destination>
->
->The amount of time taken in User space was reduced by 75%.  The total time to
->dump memory was reduced by 28%.
+Hi, Muli
 
-Thanks for your good work, but...
+saved_max_pfn is becoming a setback for kexec-tools. Ideally calgary
+could get rid of saved_max_pfn at all. But If this can't work, how about
+exporting a calgary tce table size to user space, so that kexec-tools
+can simply pass calgary=xxx cmdline to 2nd kernel.
 
->is_zero_page
->Signed-off-by: Marc Milgram <mmilgram at redhat.com>
->---
->diff --git a/makedumpfile.h b/makedumpfile.h
->index 3d270c6..0f211c4 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -1634,10 +1634,27 @@ static inline int
-> is_zero_page(unsigned char *buf, long page_size)
-> {
-> 	size_t i;
->+	unsigned long long *vect = (unsigned long long *) buf;
->+	long page_len = page_size / (sizeof(unsigned long long));
->
->-	for (i = 0; i < page_size; i++)
->-		if (buf[i])
->+	for (i = 0; i < page_len; i+=8) {
->+		if (vect[i])
-> 			return FALSE;
->+		if (vect[i+1])
->+			return FALSE;
->+		if (vect[i+2])
->+			return FALSE;
->+		if (vect[i+3])
->+			return FALSE;
->+		if (vect[i+4])
->+			return FALSE;
->+		if (vect[i+5])
->+			return FALSE;
->+		if (vect[i+6])
->+			return FALSE;
->+		if (vect[i+7])
->+			return FALSE;
->+	}
-> 	return TRUE;
-> }
+What do you think of this problem?
 
-It looks messy, I don't like such a manual loop unrolling and it
-seems to affect performance a little according to my small test:
-
-(test results for 4k page)
-   8 bits x   1 line  x 4096 loops (current code):      user  0m7.045s
-  64 bits x   1 line  x  512 loops               :      user  0m1.847s
-  64 bits x   8 lines x   64 loops (your patch)  :      user  0m1.546s
-  64 bits x 512 lines x    1 loop                :      user  0m1.642s
-
-(dump information)
-    Original pages  : 0x000000000013073b
-      Excluded pages   : 0x0000000000108b4e
-        Pages filled with zero  : 0x0000000000108b4e
-        Cache pages             : 0x0000000000000000
-        Cache pages + private   : 0x0000000000000000
-        User process data pages : 0x0000000000000000
-        Free pages              : 0x0000000000000000
-        Hwpoison pages          : 0x0000000000000000
-      Remaining pages  : 0x0000000000027bed
-      (The number of pages is reduced to 13%.)
-    Memory Hole     : 0x000000000003f8c5
-    --------------------------------------------------
-    Total pages     : 0x0000000000170000
-
-So I think the loop unrolling is unnecessary.
-
+BTW MAINTAINERS file still uses your old email, please update
+accordingly.
 
 Thanks
-Atsushi Kumagai
+WANG Chao
 
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+On 02/19/14 at 02:18pm, WANG Chao wrote:
+> Hi, All
+> 
+> arch/x86/kernel/pci-calgary.c is the only user of saved_max_pfn today:
+> 
+> int __init detect_calgary(void)
+> {
+> 	[..]
+> 	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
+> 					saved_max_pfn : max_pfn) * PAGE_SIZE);
+> 	[..]
+> }
+> 
+> saved_max_pfn is the real mem size and is calculated by 1st kernel E820
+> memmap which is passed in by 2nd kernel's boot_params (done by kexec):
+> 
+> 	saved_max_pfn = e820_end_of_ram_pfn();
+> 
+> After saved_max_pfn has been set, memmap=exactmap will reset the E820
+> provided by boot_params and use the user defined E820 instead.
+> 
+> Now we want to get rid of memmap=exactmap and directly pass the E820
+> memmap by boot_params for some reason (eg. exactmap may exceed the cmdline
+> size and also isn't compatible with kaslr).
+> 
+> However saved_max_pfn becomes the obstacle for obsoleting exactmap.
+> Because it needs two conditions: first kernel's E820 map and
+> memmap=exactmap cmdline.
+> 
+> So I'm wondering if it's possible to get rid of saved_max_pfn totally in
+> calgary code. Or we can get saved_max_pfn using a different way, for
+> example calculated in 1st kernel and passed in to 2nd kernel by cmdline.
+> 
+> Thanks
+> WANG Chao
 
 _______________________________________________
 kexec mailing list
