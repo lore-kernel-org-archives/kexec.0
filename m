@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLD9I-00046v-08
- for kexec@lists.infradead.org; Wed, 05 Mar 2014 14:50:20 +0000
-Received: from int-mx12.intmail.prod.int.phx2.redhat.com
- (int-mx12.intmail.prod.int.phx2.redhat.com [10.5.11.25])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s25EnwwP012947
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Wed, 5 Mar 2014 09:49:58 -0500
-Date: Wed, 5 Mar 2014 09:49:57 -0500
-From: Marc Milgram <mmilgram@redhat.com>
-Message-Id: <20140305144957.18703.41199.sendpatchset@dhcp-33-231.bos.redhat.com>
-Subject: makedumpfile: optimize is_zero_page
+ id 1WLEpM-0007me-UG
+ for kexec@lists.infradead.org; Wed, 05 Mar 2014 16:37:54 +0000
+Date: Wed, 5 Mar 2014 17:37:22 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 08/11] kexec-bzImage: Support for loading bzImage using
+ 64bit entry
+Message-ID: <20140305163722.GC28317@pd.tnic>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+ <1390849071-21989-9-git-send-email-vgoyal@redhat.com>
+ <20140227213629.GP18191@pd.tnic>
+ <20140228163134.GG28744@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140228163134.GG28744@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,54 +23,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Marc Milgram <mmilgram@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-There are local complaints that  filtering out only zero pages is slow.  I
-found that is_zero_page was inefficient.  It checks if the page contains any
-non-zero bytes - one byte at a time.
+On Fri, Feb 28, 2014 at 11:31:35AM -0500, Vivek Goyal wrote:
+> Thanks for taking time to review this large patchset.
 
-Improve performance by checking for non-zero data 64 bits at a time.
+Sure, np. Thanks for your patience in explaining stuff which is unclear
+to me.
 
-Did testing in x86_64 mode on an Intel Xeon x5560 system with 18GB RAM.
-Executed:
-  time makedumpfile -d 1 /proc/vmcore <destination>
+> > > +struct bzimage64_data {
+> > > +	/*
+> > > +	 * Temporary buffer to hold bootparams buffer. This should be
+> > > +	 * freed once the bootparam segment has been loaded.
+> > > +	 */
+> > > +	void *bootparams_buf;
+> > > +};
+> > 
+> > Why a struct if it is going to have only one member?
+> 
+> Well, I had started with a generic idea of bootloader being able to store
+> some data in image and retrieve it later. Finally it turned out to be only
+> one field in current implementation.
+> 
+> But I still like it as it allows storing more data down the line. There
+> is no other place where we can store bootloader specific data. So this
+> is the mechanism I created.
 
-The amount of time taken in User space was reduced by 64%.  The total time to
-dump memory was reduced by 27%.
+Right, but people would ask so you probably should hold down this
+intention in a comment somewhere.
 
-Change Log:
+> > What's 2*512? Two sectors?
+> 
+> Yep, two sectors.
 
-v1 => v2)
+Also a comment or a nicely-named define then.
 
-o Eliminate loop unrolling as it is of minimal benefit based on CPU.
+> So Documentation/x86/boot.txt says following.
+> 
+> 
+> If the "HdrS" (0x53726448) magic number is not found at offset 0x202,
+> the boot protocol version is "old".  Loading an old kernel, the
+> following parameters should be assumed:
+> 
+>         Image type = zImage
+>         initrd not supported
+>         Real-mode kernel must be located at 0x90000.
+> 
+> So if it is old version then it is zImage (and not bzImage). So pr_debug()
+> message seems to be correct that image one is trying to load is not
+> bzImage and this loader will not handle this image.
 
-is_zero_page 
-Signed-off-by: Marc Milgram <mmilgram at redhat.com>
----
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 3d270c6..1751e3a 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1634,9 +1634,11 @@ static inline int
- is_zero_page(unsigned char *buf, long page_size)
- {
- 	size_t i;
-+	unsigned long long *vect = (unsigned long long *) buf;
-+	long page_len = page_size / sizeof(unsigned long long);
- 
--	for (i = 0; i < page_size; i++)
--		if (buf[i])
-+	for (i = 0; i < page_len; i++)
-+		if (vect[i])
- 			return FALSE;
- 	return TRUE;
- }
+Ok, old == zImage, got it.
+
+> Yep, that's LOADED_HIGH check. I think if LOADED_HIGH is not set, then
+> that means protected mode code needs to be loaded at 0x10000 and I think
+> that also means that it is zImage and not bzImage.
+
+Yes, hpa confirmed this in IRC just now.
+
+> That's how boot.txt defines it. Look at 64-bit BOOT PROTOCOL.
+> 
+> 0x0202 + byte value at offset 0x0201
+> 
+> Now one can argue that create some new defines to represent those magic
+> numbers and include that file in kexec-bzimage loader. I will see what
+> can I do.
+
+Yeah, I was simply commenting it with the innocent onlooker hat on.
+FWIW, referring to boot.txt in a comment should be helpful enough for
+people who don't have an idea where to look, methinks.
+
+> Hmm.., I have seen all kinds of alignments. But anyway, if you prefer
+> that, I will change atleast some of them.
+
+It is most readable this way, but this is only my opinion so consider it
+only as a suggestion.
+
+> I meant in general I have not done any EFI handling. I am not even
+> sure what needs to be done for EFI. I am just going through memory
+> map and filling up E820 map in bootparams so that second kernel knows
+> what are the memory areas available.
+> 
+> At some point of time we need to start passing EFI memory map to
+> second kernel. (All the new code you and dave young have added to
+> make kexec work on EFI systems).
+
+Right, the efi runtime pieces are already in sysfs but you'd need to put
+them somewhere for the second kernel to find out. Maybe make it part of
+the bzImage or supply it separately...
+
+> I wanted to that in a separate patch. This patch series is alredy very
+> big. bzImage signing and verification also I am planning to post in a
+> separate series.
+
+Right.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
