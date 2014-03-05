@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WL3sc-00021S-Tc
- for kexec@lists.infradead.org; Wed, 05 Mar 2014 04:56:32 +0000
+ id 1WL3t6-000221-Pq
+ for kexec@lists.infradead.org; Wed, 05 Mar 2014 04:57:01 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH 00/10] makedumpfile/eppic: Sample eppic scripts
-Date: Wed, 5 Mar 2014 04:54:24 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F1ABE@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [PATCH 10/10] Install sample eppic scripts
+Date: Wed, 5 Mar 2014 04:54:36 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F1AC3@BPXM01GP.gisp.nec.co.jp>
 References: <20140227063007.5924.5819.stgit@aruna-ThinkPad-T420>
-In-Reply-To: <20140227063007.5924.5819.stgit@aruna-ThinkPad-T420>
+ <20140227063204.5924.43768.stgit@aruna-ThinkPad-T420>
+In-Reply-To: <20140227063204.5924.43768.stgit@aruna-ThinkPad-T420>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -26,69 +27,58 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "aruna@linux.vnet.ibm.com" <aruna@linux.vnet.ibm.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello Aruna,
-
->The series has few sample eppic scripts to scrub the security
->data.
+>Install sample eppic scripts in the documentation directory
 >
->
+>Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
 >---
+> Makefile          |    1 +
+> makedumpfile.spec |    3 +++
+> 2 files changed, 4 insertions(+)
 >
->Aruna Balakrishnaiah (10):
->      Scrub executable name for each user process
->      Scrub filenames of cached dentries
->      Scrub all entries in the keyring
->      Clear the message data of all ap_bus requests
->      Scrub data in tcp socket buffers
->      Scrub data of udp socket buffers
->      Scrub data of unix socket buffers
->      Scrub socket buffers of guest network I/O
->      Scrub buffers involved in guest block I/O
->      Install sample eppic scripts
+>diff --git a/Makefile b/Makefile
+>index 10178ba..6e8e9b9 100644
+>--- a/Makefile
+>+++ b/Makefile
+>@@ -91,3 +91,4 @@ install:
+> 	cp makedumpfile.8.gz ${DESTDIR}/usr/share/man/man8
+> 	cp makedumpfile.conf.5.gz ${DESTDIR}/usr/share/man/man5
+> 	cp makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
+>+	cp eppic_scripts/* ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts/
 
-Great, they would be helpful for someone who want to try to use eppic !
+Please write a patch for the latest version,
+v1.5.5 uses install command instead of cp:
 
-I think it's better to write an abstract for each macro to
-"eppic_scripts/README" since not all of the users refer to the git
-repository.
-
-It would also be helpful if you write the target kernel version of them
-to the README because eppic macros are sensitive to kernel versions.
+        install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
+        install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile makedumpfile-R.pl
+        install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8.gz
+        install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5.gz
+        install -m 644 -D makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
 
 
 Thanks
 Atsushi Kumagai
 
-> Makefile                           |    1
-> eppic_scripts/ap_messages.c        |   78 ++++++++++++++++++++++++++++++
-> eppic_scripts/dir_names.c          |   78 ++++++++++++++++++++++++++++++
-> eppic_scripts/keyring.c            |   57 ++++++++++++++++++++++
-> eppic_scripts/proc_names.c         |   49 +++++++++++++++++++
-> eppic_scripts/tcp_sk_buf.c         |   78 ++++++++++++++++++++++++++++++
-> eppic_scripts/udp_sk_buf.c         |   79 ++++++++++++++++++++++++++++++
-> eppic_scripts/unix_sk_buff.c       |   81 +++++++++++++++++++++++++++++++
-> eppic_scripts/vhost_net_buffers.c  |   95 ++++++++++++++++++++++++++++++++++++
-> eppic_scripts/vhost_scsi_buffers.c |   71 +++++++++++++++++++++++++++
-> makedumpfile.spec                  |    3 +
-> 11 files changed, 670 insertions(+)
-> create mode 100644 eppic_scripts/ap_messages.c
-> create mode 100644 eppic_scripts/dir_names.c
-> create mode 100644 eppic_scripts/keyring.c
-> create mode 100644 eppic_scripts/proc_names.c
-> create mode 100644 eppic_scripts/tcp_sk_buf.c
-> create mode 100644 eppic_scripts/udp_sk_buf.c
-> create mode 100644 eppic_scripts/unix_sk_buff.c
-> create mode 100644 eppic_scripts/vhost_net_buffers.c
-> create mode 100644 eppic_scripts/vhost_scsi_buffers.c
+>diff --git a/makedumpfile.spec b/makedumpfile.spec
+>index ea7fba4..7f5d1d4 100644
+>--- a/makedumpfile.spec
+>+++ b/makedumpfile.spec
+>@@ -28,6 +28,8 @@ mkdir -p %{buildroot}/bin
+> mkdir -p %{buildroot}/etc
+> mkdir -p %{buildroot}/usr/share/man/man5
+> mkdir -p %{buildroot}/usr/share/man/man8
+>+mkdir -p %{buildroot}/usr/share/%{name}-%{version}/
+>+mkdir -p %{buildroot}/usr/share/%{name}-%{version}/eppic-scripts/
+> make install DESTDIR=%{buildroot}
 >
->--
+> %clean
+>@@ -39,6 +41,7 @@ rm -rf %{buildroot}
+> /bin/makedumpfile-R.pl
+> /usr/share/man/man5/makedumpfile.conf.5.gz
+> /usr/share/man/man8/makedumpfile.8.gz
+>+%doc /usr/share/%{name}-%{version}/eppic_scripts/
 >
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
-
+> %changelog
+> * Fri Aug 21 2008 Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
