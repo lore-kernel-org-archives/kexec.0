@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLNsy-0007xa-8n
- for kexec@lists.infradead.org; Thu, 06 Mar 2014 02:18:13 +0000
-Date: Thu, 6 Mar 2014 11:17:47 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: PATCH: bug in locate_hole()
-Message-ID: <20140306021747.GG13581@verge.net.au>
-References: <CAMBSHm_fvPTjdEwgVdyMGPi=3et+JEP-G5TNV986yXWYw35YYw@mail.gmail.com>
- <CAMBSHm89oxceGi=cSwSMLRtaVwQ=oX=BZeBtCg_-trN+1HShkg@mail.gmail.com>
+Received: from mail-ea0-f182.google.com ([209.85.215.182])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WLS6X-0005IE-PL
+ for kexec@lists.infradead.org; Thu, 06 Mar 2014 06:48:30 +0000
+Received: by mail-ea0-f182.google.com with SMTP id b10so1494721eae.27
+ for <kexec@lists.infradead.org>; Wed, 05 Mar 2014 22:48:01 -0800 (PST)
+Date: Thu, 6 Mar 2014 08:47:56 +0200
+From: Muli Ben-Yehuda <muli@cs.technion.ac.il>
+Subject: Re: How could we get rid of saved_max_pfn for calgary iommu?
+Message-ID: <20140306064756.GB16859@needle.mulix.org>
+References: <20140219061824.GA29703@dhcp-17-89.nay.redhat.com>
+ <20140305053617.GE26240@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAMBSHm89oxceGi=cSwSMLRtaVwQ=oX=BZeBtCg_-trN+1HShkg@mail.gmail.com>
+In-Reply-To: <20140305053617.GE26240@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,88 +26,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Matthew Fleming <mdf356@gmail.com>
-Cc: kexec@lists.infradead.org
+To: WANG Chao <chaowang@redhat.com>
+Cc: discuss@x86-64.org, x86@kernel.org, Baoquan He <bhe@redhat.com>, "Jon D. Mason" <jdmason@kudzu.us>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, Mar 04, 2014 at 06:52:17PM -0800, Matthew Fleming wrote:
-> On Mon, Mar 3, 2014 at 4:34 PM, Matthew Fleming <mdf356@gmail.com> wrote:
-> > In upgrading to kexec-tools 2.0.5 I first got the error "Overlapping
-> > memory segments at 0xbeff000"
-> >
-> > Adding some debugging I found locate_hole was returning incorrect
-> > values.  The below is from the debug I added:
-> >
-> > XXXMDF: look for hole size 100000, cur range [52b3000, bffffff] size 6d4cfff
-> > XXXMDF: look for hole memsz=100000, found beff000
-> >
-> > Hmm, if we wanted 0x100000 bytes ending at 0xbffffff, that should be
-> > 0xbf00000, not 0xbef000.  Continuing to the second invocation:
-> >
-> > XXXMDF: look for hole size 1000, cur range [52b3000, befefff] size 6c4bfff
-> > XXXMDF: look for hole size 1000, cur range [bfff000, bffffff] size fff
-> > XXXMDF: look for hole memsz=1000, found bffe000
-> >
-> > Now we die with overlapping ranges, since the 0x100000 bytes at
-> > 0xbeff000 overlaps 0x1000 bytes at 0xbffe000.
-> >
-> > The attached patch fixes the off-by-one that causes the later overlap.
+On Wed, Mar 05, 2014 at 01:36:17PM +0800, WANG Chao wrote:
+
+> Hi, Muli
 > 
-> Fix an off-by-one in locate_hole() that can cause it to return a range
-> that was previously allocated.
-> 
-> Signed-off-by: Matthew Fleming <mdf356@gmail.com>
+> saved_max_pfn is becoming a setback for kexec-tools. Ideally calgary
+> could get rid of saved_max_pfn at all. But If this can't work, how
+> about exporting a calgary tce table size to user space, so that
+> kexec-tools can simply pass calgary=xxx cmdline to 2nd kernel.
 
-Thanks. I have applied the following:
+As Jon noted, this code is used to so that the TCE table remains
+consistent between the original and the kexec'd kernel. I see two
+options: either we hard code the TCE table size to the max so that
+this bit of code becomes redundant, or we explicitly pass the original
+table size (or the original max_pfn) to the kexec'd kernel. The first
+option is more appealing, because I don't think anyone is actually
+using the TCE table size -- we mostly added it for debugging the IOMMU
+TCE code at the time -- but since I don't have a Calgary machine
+anymore, I don't have any way to test it. The second option is uglier
+but would be fully backward-compatible and less likely to break
+things. Given that very few people are likely running the latest
+upstream kernel on Calgary/CalIOC2 machines, I'm inclined towards the
+first option.
 
+> BTW MAINTAINERS file still uses your old email, please update
+> accordingly.
 
-From: Matthew Fleming <mdf356@gmail.com>
+I think you are the first person to actually look up the Calgary
+maintainers in the last few years :-)
 
-Fix an off-by-one in locate_hole()
-
-Fix an off-by-one in locate_hole() that can cause it to return a range
-that was previously allocated.
-
-In upgrading to kexec-tools 2.0.5 I first got the error "Overlapping
-memory segments at 0xbeff000"
-
-Adding some debugging I found locate_hole was returning incorrect
-values.  The below is from the debug I added:
-
-XXXMDF: look for hole size 100000, cur range [52b3000, bffffff] size 6d4cfff
-XXXMDF: look for hole memsz=100000, found beff000
-
-Hmm, if we wanted 0x100000 bytes ending at 0xbffffff, that should be
-0xbf00000, not 0xbef000.  Continuing to the second invocation:
-
-XXXMDF: look for hole size 1000, cur range [52b3000, befefff] size 6c4bfff
-XXXMDF: look for hole size 1000, cur range [bfff000, bffffff] size fff
-XXXMDF: look for hole memsz=1000, found bffe000
-
-Now we die with overlapping ranges, since the 0x100000 bytes at
-0xbeff000 overlaps 0x1000 bytes at 0xbffe000.
-
-Signed-off-by: Matthew Fleming <mdf356@gmail.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
----
- kexec/kexec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 703d524..382f86a 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -275,7 +275,7 @@ unsigned long locate_hole(struct kexec_info *info,
- 				hole_base = start;
- 				break;
- 			} else {
--				hole_base = _ALIGN_DOWN(end - hole_size,
-+				hole_base = _ALIGN_DOWN(end - hole_size + 1,
- 					hole_align);
- 			}
- 		}
--- 
-1.8.5.2
-
+Cheers,
+Muli
 
 _______________________________________________
 kexec mailing list
