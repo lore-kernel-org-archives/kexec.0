@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from lvk-gate.cs.msu.ru ([188.44.42.233] helo=mail.lvk.cs.msu.su)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLZFS-0000fu-Kt
- for kexec@lists.infradead.org; Thu, 06 Mar 2014 14:26:13 +0000
-From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
-Subject: [PATCH] kexec/powerpc: fix exporting memory limit
-Date: Thu,  6 Mar 2014 18:24:14 +0400
-Message-Id: <1394115854-11709-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WLans-0004TM-5y
+ for kexec@lists.infradead.org; Thu, 06 Mar 2014 16:05:49 +0000
+Date: Thu, 6 Mar 2014 11:05:08 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: How could we get rid of saved_max_pfn for calgary iommu?
+Message-ID: <20140306160508.GA23025@redhat.com>
+References: <20140219061824.GA29703@dhcp-17-89.nay.redhat.com>
+ <20140305053617.GE26240@dhcp-17-89.nay.redhat.com>
+ <20140306064756.GB16859@needle.mulix.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140306064756.GB16859@needle.mulix.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,62 +21,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Anton Blanchard <anton@samba.org>, Hari Bathini <hbathini@linux.vnet.ibm.com>, Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: yadviga@dev.rtsoft.ru, nyushchenko@dev.rtsoft.ru, lugovskoy@dev.rtsoft.ru, linux-kernel@vger.kernel.org
+To: Muli Ben-Yehuda <muli@cs.technion.ac.il>
+Cc: discuss@x86-64.org, x86@kernel.org, Baoquan He <bhe@redhat.com>, "Jon D. Mason" <jdmason@kudzu.us>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, WANG Chao <chaowang@redhat.com>
 
-When preparing dump-capturing kernel, kexec userspace tool needs to know
-actual amount of memory used by the running kernel. This may differ from
-extire available DRAM for a couple of reasons. To address this issue,
-kdump kernel support code injects several attributes into device tree that
-are later captured by userspace kexec tool via /proc interface.
+On Thu, Mar 06, 2014 at 08:47:56AM +0200, Muli Ben-Yehuda wrote:
+> On Wed, Mar 05, 2014 at 01:36:17PM +0800, WANG Chao wrote:
+> 
+> > Hi, Muli
+> > 
+> > saved_max_pfn is becoming a setback for kexec-tools. Ideally calgary
+> > could get rid of saved_max_pfn at all. But If this can't work, how
+> > about exporting a calgary tce table size to user space, so that
+> > kexec-tools can simply pass calgary=xxx cmdline to 2nd kernel.
+> 
+> As Jon noted, this code is used to so that the TCE table remains
+> consistent between the original and the kexec'd kernel. I see two
+> options: either we hard code the TCE table size to the max so that
+> this bit of code becomes redundant, or we explicitly pass the original
+> table size (or the original max_pfn) to the kexec'd kernel. The first
+> option is more appealing, because I don't think anyone is actually
+> using the TCE table size -- we mostly added it for debugging the IOMMU
+> TCE code at the time -- but since I don't have a Calgary machine
+> anymore, I don't have any way to test it. The second option is uglier
+> but would be fully backward-compatible and less likely to break
+> things. Given that very few people are likely running the latest
+> upstream kernel on Calgary/CalIOC2 machines, I'm inclined towards the
+> first option.
 
-One such attrubute is 'chosen/linux,memory_limit' that is used to pass
-memory limit of the running kernel.
+I like the first idea too. If we always use the max table size, then
+we don't have to pass table size around.
 
-This was initialized using kernel's 'memory_limit' variable, that is set
-by early init code based on mem= kernel parameter and other reasons.
+This is not fully backward compatible in the sense if people are running
+newer kernel but use an older kernel for dump capture. But that's a real
+corner case. And there will be a workaround for that corner case too.
+One will be able to specify a command line option to kexec-tools to switch
+to old behavior. 
 
-But there are cases when memory_limit variable does not contain proper
-information. One such case is when !CONFIG_HIGHMEM kernel runs on system
-with memory large enough not to fit into lowmem.
+Majority of users use same kernel for dump capture as first kernel and
+they should be just fine with this change.
 
-This patch fixes initialization of 'chosen/linux,memory_limit' to use
-values from memblock subsystem. These are adjusted at kernel memory
-management init and thus always contain values that match reality.
-
-Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
----
- arch/powerpc/kernel/machine_kexec.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
-index 015ae55..372cda5 100644
---- a/arch/powerpc/kernel/machine_kexec.c
-+++ b/arch/powerpc/kernel/machine_kexec.c
-@@ -250,8 +250,14 @@ static void __init export_crashk_values(struct device_node *node)
- 	/*
- 	 * memory_limit is required by the kexec-tools to limit the
- 	 * crash regions to the actual memory used.
-+	 *
-+	 * There are cases when memory_limit variable does not hold actual
-+	 * limit, for example when memory was limited by no kernel support
-+	 * for HIGHMEM. Reliable information is known by memblock because
-+	 * memory management init adjusts it.
- 	 */
--	mem_limit = cpu_to_be_ulong(memory_limit);
-+	mem_limit = cpu_to_be_ulong(memblock_end_of_DRAM() -
-+					memblock_start_of_DRAM());
- 	of_update_property(node, &memory_limit_prop);
- }
- 
--- 
-1.7.10.4
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
