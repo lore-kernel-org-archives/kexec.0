@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from ernst.netinsight.se ([194.16.221.21])
  by merlin.infradead.org with smtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLqJ2-0000Bg-Rb
- for kexec@lists.infradead.org; Fri, 07 Mar 2014 08:39:01 +0000
-Date: Fri, 7 Mar 2014 09:38:34 +0100
+ id 1WLqJQ-0000E4-U8
+ for kexec@lists.infradead.org; Fri, 07 Mar 2014 08:39:25 +0000
+Date: Fri, 7 Mar 2014 09:38:40 +0100
 From: Simon =?UTF-8?B?S8OlZ3N0csO2bQ==?= <simon.kagstrom@netinsight.net>
-Subject: [PATCH v2 1/4] build: Derive objects from source files
-Message-ID: <20140307093834.357a7563@marrow.netinsight.se>
+Subject: [PATCH v2 2/4] build: Use INCLUDES for normal CFLAGS in addition to
+ CFLAGS_ARCH
+Message-ID: <20140307093840.72e71fbe@marrow.netinsight.se>
 In-Reply-To: <20140307093626.09701790@marrow.netinsight.se>
 References: <20140307093626.09701790@marrow.netinsight.se>
 MIME-Version: 1.0
@@ -24,30 +25,26 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-Removes duplicate information, so there is one less line to edit when
-renaming or adding files.
+Useful e.g., when the system headers is in some build directory.
 
 Signed-off-by: Simon Kagstrom <simon.kagstrom@netinsight.net>
 ---
- Makefile |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Makefile b/Makefile
-index f20c118..d660951 100644
+index d660951..57e7e44 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -41,9 +41,9 @@ endif
+@@ -8,7 +8,7 @@ ifeq ($(strip $CC),)
+ CC	= gcc
+ endif
  
- SRC	= makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
- SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c
--OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o cache.o
-+OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
- SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
--OBJ_ARCH = arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o arch/s390x.o arch/ppc.o
-+OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
- 
- LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
- ifneq ($(LINKTYPE), dynamic)
+-CFLAGS = -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
++CFLAGS = $(INCLUDES) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+ 	  -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
+ 	  -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+ CFLAGS_ARCH	= $(INCLUDES) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
 -- 
 1.7.9.6
 
