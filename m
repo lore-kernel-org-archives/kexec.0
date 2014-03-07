@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLprR-0005zU-Op
- for kexec@lists.infradead.org; Fri, 07 Mar 2014 08:10:31 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile: Fix string append in dump_log_entry()
-Date: Fri, 7 Mar 2014 08:08:30 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F3A9A@BPXM01GP.gisp.nec.co.jp>
-References: <20140226220546.4030cdbf@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE971EF130@BPXM01GP.gisp.nec.co.jp>
- <20140304151814.55a3d687@hananiah.suse.cz>
-In-Reply-To: <20140304151814.55a3d687@hananiah.suse.cz>
-Content-Language: ja-JP
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WLprn-000613-7I
+ for kexec@lists.infradead.org; Fri, 07 Mar 2014 08:10:51 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH] x86, calgary: use 8M TCE table size by default
+Date: Fri,  7 Mar 2014 16:10:16 +0800
+Message-Id: <1394179816-15435-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,66 +15,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Baoquan He <bhe@redhat.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
->> Hello Petr,
->
->Hello Kumagai-san,
->
->> >To quote the sprintf(3) man page:
->> >
->> >    Some programs imprudently rely on code such as the following
->> >
->> >        sprintf(buf, "%s some further text", buf);
->> >
->> >    to append text to buf.  However, the standards explicitly note that
->> >    the results are undefined if source and destination buffers overlap
->> >    when calling sprintf(), snprintf(), vsprintf(), and vsnprintf().
->> >    Depending on the version of gcc(1) used, and the compiler options
->> >    employed, calls such as the above will not produce the expected results.
->> >
->> >The original code is actually miscompiled on openSUSE 13.1.
->> >
->> >It's also overkill to call sprintf() for something that can be done
->> >with a simple assignment.
->> >
->> >Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
->>
->> Thanks, it seems good to me.
->>
->> Actually, Nick sent the same patch in last July and we tried to
->> take care of buffer overflow at the same time as below:
->>
->> http://lists.infradead.org/pipermail/kexec/2013-August/009430.html
->>
->> However, this thread has been left open, so I was wondering if you
->> could take over this work. Of course you can decline this, then I'll
->> do it later as another patch.
->
->I don't mind taking over this work, but I don't think it's a good thing
->to combine the buffer overflow fix with the sprintf buffer overlap
->fix.
->
->What is the expected plan? Are you waiting for me to send a two-patch
->series now?
+kexec-tools wants to pass kdump kernel needed memmap via E820 directly,
+instead of memmap=exactmap. That'll make saved_max_pfn totally useless.
 
-Yes, I agree with separating the two fixes.
-Thanks for your help !
+Muli suggest to hard code TCE table size to max (8M) so that kdump
+kernel could use this default size and kexec-tools doesn't need to pass
+saved_max_pfn to kdump kernel in any way.
 
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ arch/x86/kernel/pci-calgary_64.c | 25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
-Atsushi Kumagai
+diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
+index 299d493..b26ab94 100644
+--- a/arch/x86/kernel/pci-calgary_64.c
++++ b/arch/x86/kernel/pci-calgary_64.c
+@@ -1207,25 +1207,17 @@ error:
+ 	return ret;
+ }
+ 
+-static inline int __init determine_tce_table_size(u64 ram)
++static inline int __init determine_tce_table_size(void)
+ {
+-	int ret;
+-
+ 	if (specified_table_size != TCE_TABLE_SIZE_UNSPECIFIED)
+ 		return specified_table_size;
++	else
++		/*
++		 * Use 8M by default to get rid of saved_max_pfn,
++		 * suggested by Muli
++		 */
++		return TCE_TABLE_SIZE_8M;
+ 
+-	/*
+-	 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
+-	 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
+-	 * larger table size has twice as many entries, so shift the
+-	 * max ram address by 13 to divide by 8K and then look at the
+-	 * order of the result to choose between 0-7.
+-	 */
+-	ret = get_order(ram >> 13);
+-	if (ret > TCE_TABLE_SIZE_8M)
+-		ret = TCE_TABLE_SIZE_8M;
+-
+-	return ret;
+ }
+ 
+ static int __init build_detail_arrays(void)
+@@ -1418,8 +1410,7 @@ int __init detect_calgary(void)
+ 		return -ENOMEM;
+ 	}
+ 
+-	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
+-					saved_max_pfn : max_pfn) * PAGE_SIZE);
++	specified_table_size = determine_tce_table_size();
+ 
+ 	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
+ 		struct calgary_bus_info *info = &bus_info[bus];
+-- 
+1.8.5.3
 
->Petr Tesarik
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
