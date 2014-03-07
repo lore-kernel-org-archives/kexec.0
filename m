@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLans-0004TM-5y
- for kexec@lists.infradead.org; Thu, 06 Mar 2014 16:05:49 +0000
-Date: Thu, 6 Mar 2014 11:05:08 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: How could we get rid of saved_max_pfn for calgary iommu?
-Message-ID: <20140306160508.GA23025@redhat.com>
-References: <20140219061824.GA29703@dhcp-17-89.nay.redhat.com>
- <20140305053617.GE26240@dhcp-17-89.nay.redhat.com>
- <20140306064756.GB16859@needle.mulix.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140306064756.GB16859@needle.mulix.org>
+Received: from ozlabs.org ([2402:b800:7003:1:1::1])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WLixN-0001yl-0s
+ for kexec@lists.infradead.org; Fri, 07 Mar 2014 00:48:10 +0000
+Message-ID: <1394153258.21206.1.camel@concordia>
+Subject: Re: [PATCH] kexec/powerpc: fix exporting memory limit
+From: Michael Ellerman <mpe@ellerman.id.au>
+Date: Fri, 07 Mar 2014 11:47:38 +1100
+In-Reply-To: <1394115854-11709-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+References: <1394115854-11709-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,47 +22,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Muli Ben-Yehuda <muli@cs.technion.ac.il>
-Cc: discuss@x86-64.org, x86@kernel.org, Baoquan He <bhe@redhat.com>, "Jon D. Mason" <jdmason@kudzu.us>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, WANG Chao <chaowang@redhat.com>
+To: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+Cc: yadviga@dev.rtsoft.ru, Benjamin Herrenschmidt <benh@kernel.crashing.org>, lugovskoy@dev.rtsoft.ru, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Anton Blanchard <anton@samba.org>, Hari Bathini <hbathini@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 
-On Thu, Mar 06, 2014 at 08:47:56AM +0200, Muli Ben-Yehuda wrote:
-> On Wed, Mar 05, 2014 at 01:36:17PM +0800, WANG Chao wrote:
+On Thu, 2014-03-06 at 18:24 +0400, Nikita Yushchenko wrote:
+> When preparing dump-capturing kernel, kexec userspace tool needs to know
+> actual amount of memory used by the running kernel. This may differ from
+> extire available DRAM for a couple of reasons. To address this issue,
+> kdump kernel support code injects several attributes into device tree that
+> are later captured by userspace kexec tool via /proc interface.
 > 
-> > Hi, Muli
-> > 
-> > saved_max_pfn is becoming a setback for kexec-tools. Ideally calgary
-> > could get rid of saved_max_pfn at all. But If this can't work, how
-> > about exporting a calgary tce table size to user space, so that
-> > kexec-tools can simply pass calgary=xxx cmdline to 2nd kernel.
+> One such attrubute is 'chosen/linux,memory_limit' that is used to pass
+> memory limit of the running kernel.
 > 
-> As Jon noted, this code is used to so that the TCE table remains
-> consistent between the original and the kexec'd kernel. I see two
-> options: either we hard code the TCE table size to the max so that
-> this bit of code becomes redundant, or we explicitly pass the original
-> table size (or the original max_pfn) to the kexec'd kernel. The first
-> option is more appealing, because I don't think anyone is actually
-> using the TCE table size -- we mostly added it for debugging the IOMMU
-> TCE code at the time -- but since I don't have a Calgary machine
-> anymore, I don't have any way to test it. The second option is uglier
-> but would be fully backward-compatible and less likely to break
-> things. Given that very few people are likely running the latest
-> upstream kernel on Calgary/CalIOC2 machines, I'm inclined towards the
-> first option.
+> This was initialized using kernel's 'memory_limit' variable, that is set
+> by early init code based on mem= kernel parameter and other reasons.
+> 
+> But there are cases when memory_limit variable does not contain proper
+> information. One such case is when !CONFIG_HIGHMEM kernel runs on system
+> with memory large enough not to fit into lowmem.
 
-I like the first idea too. If we always use the max table size, then
-we don't have to pass table size around.
+Why doesn't the !CONFIG_HIGHMEM code update memory_limit to reflect reality.
 
-This is not fully backward compatible in the sense if people are running
-newer kernel but use an older kernel for dump capture. But that's a real
-corner case. And there will be a workaround for that corner case too.
-One will be able to specify a command line option to kexec-tools to switch
-to old behavior. 
+cheers
 
-Majority of users use same kernel for dump capture as first kernel and
-they should be just fine with this change.
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
