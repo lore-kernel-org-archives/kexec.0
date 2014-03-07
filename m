@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLps3-00062g-Vy
- for kexec@lists.infradead.org; Fri, 07 Mar 2014 08:11:09 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH 0/4]: makedumpfile: Makefile improvements
-Date: Fri, 7 Mar 2014 08:08:53 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F3AA1@BPXM01GP.gisp.nec.co.jp>
-References: <20140303130213.1d441d32@marrow.netinsight.se>
-In-Reply-To: <20140303130213.1d441d32@marrow.netinsight.se>
-Content-Language: ja-JP
+Received: from ernst.netinsight.se ([194.16.221.21])
+ by merlin.infradead.org with smtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WLqH0-0008MI-V9
+ for kexec@lists.infradead.org; Fri, 07 Mar 2014 08:36:55 +0000
+Date: Fri, 7 Mar 2014 09:36:26 +0100
+From: Simon =?UTF-8?B?S8OlZ3N0csO2bQ==?= <simon.kagstrom@netinsight.net>
+Subject: [PATCH v2 0/4]: makedumpfile: Makefile improvements
+Message-ID: <20140307093626.09701790@marrow.netinsight.se>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,31 +20,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "simon.kagstrom@netinsight.net" <simon.kagstrom@netinsight.net>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-Hello Simon,
+Hi!
 
->Hi!
->
->The following patches improve the top Makefile a bit to allow
->out-of-tree builds and (at some points) simplify the Makefile a bit.
->
->Regards,
->// Simon
+The following patches improve the top Makefile a bit to allow
+out-of-tree builds and (at some points) simplify the Makefile a bit.
 
-Please write a description for each patch even if it's small,
-otherwise I can't know what is the purpose, why it's needed and
-other points. These are important to review.
+* v2: Provide descriptions for each patch.
 
+Regards,
+// Simon
 
-Thanks
-Atsushi Kumagai
-
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
