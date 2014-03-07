@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WLxL5-0005jz-LF
- for kexec@lists.infradead.org; Fri, 07 Mar 2014 16:09:36 +0000
-Date: Fri, 7 Mar 2014 11:09:06 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86, calgary: use 8M TCE table size by default
-Message-ID: <20140307160906.GH1326@redhat.com>
-References: <1394179816-15435-1-git-send-email-chaowang@redhat.com>
- <20140307141413.GF1326@redhat.com>
- <20140307155204.GC30641@dhcp-17-89.nay.redhat.com>
+ id 1WLyKc-00084L-3d
+ for kexec@lists.infradead.org; Fri, 07 Mar 2014 17:13:11 +0000
+Date: Fri, 7 Mar 2014 18:12:33 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 10/11] kexec: Support for loading ELF x86_64 images
+Message-ID: <20140307171233.GD5255@pd.tnic>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+ <1390849071-21989-11-git-send-email-vgoyal@redhat.com>
+ <20140228145832.GF4326@pd.tnic> <20140228171142.GI28744@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140307155204.GC30641@dhcp-17-89.nay.redhat.com>
+In-Reply-To: <20140228171142.GI28744@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,57 +25,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Fri, Mar 07, 2014 at 11:52:04PM +0800, WANG Chao wrote:
-> Hi, Vivek
-> 
-> On 03/07/14 at 09:14am, Vivek Goyal wrote:
-> > On Fri, Mar 07, 2014 at 04:10:16PM +0800, WANG Chao wrote:
+On Fri, Feb 28, 2014 at 12:11:43PM -0500, Vivek Goyal wrote:
+> I was rather thinking of arch/x86/kernel/kexec. But that's for some other
+> day. Not part of this patchset. This is alredy too big and I don't want
+> to make any changes which are nice to have and bloat the patch size.
+
+Ok.
+
+Btw, we were talking about the "kernel" part of the path. And, as Ingo
+said, it is all kernel so arch/x86/kexec should be perfectly fine.
+
+...
+
+> > > +	for (i = 0; i < ehdr->e_phnum; i++) {
+> > > +		if (phdrs[i].p_type != PT_LOAD)
+> > > +			continue;
 > > 
-> > [..]
-> > >  	}
-> > >  
-> > > -	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
-> > > -					saved_max_pfn : max_pfn) * PAGE_SIZE);
-> > > +	specified_table_size = determine_tce_table_size();
-> > 
-> > I don't think you can get rid of saved_max_pfn right away. What if
-> > somebody is using old first kernel and new second kernel. Then old kernel
-> > will still be using a table size which is smaller than 8M.
+> > newline
 > 
-> If TCE table size is hard coded to 8M, the new 1st kernel can never be
-> compatible with the old 2nd kernel.
+> What's that?
 
-I gave example of old first kernel and new second kernel, and not
-vice-versa.
+Ah, that's: "please add an empty line here" for better readability.
 
-So we have two scenarios.
+> > > +/* Fill in fields which are usually present in bzImage */
+> > > +static int init_linux_parameters(struct boot_params *params)
+> > > +{
+> > > +	/*
+> > > +	 * FIXME: It is odd that the information which comes from kernel
+> > > +	 * has to be faked by loading kernel. I guess it is limitation of
+> > > +	 * ELF format. Right now keeping it same as kexec-tools
+> > > +	 * implementation. But this most likely needs fixing.
+> > > +	 */
+> > > +	memcpy(&params->hdr.header, "HdrS", 4);
+> > > +	params->hdr.version = 0x0206;
+> > > +	params->hdr.initrd_addr_max = 0x37FFFFFF;
+> > > +	params->hdr.cmdline_size = 2048;
+> > > +	return 0;
+> > > +}
+> > 
+> > Why a separate function? Its body is small enough to be merged into
+> > elf_x86_64_load.
+> 
+> Actually this logic shows the limitation of ELF format kernel image.
+> This information should be exported by the image so that loader can
+> do some verifications. But instead loader is hardcoding this info and
+> faking things.
+> 
+> For example, it should be kernel which tells what's the maximum command
+> line size it can handle and then loader can return error if user specified
+> command line size is greater than what new kernel can handle.
+> 
+> Similarly, what's the max address initrd can be loaded at.
+> 
+> Actually I have copied this code from kexec-tools. And I am wondering
+> if some of this is 
+> 
+> I am not sure why we set hdr.version and hdr.header. Are there any
+> assumptions in booth path kernel is making. May be some other code
+> down the line is parsing it or it is completely redundant. I think
+> I will play with removing setting of hdr.version and hdr.header and
+> see how does it go.
 
-- Old first kernel and new second kernel.
-- New first kernel and old second kernel.
+Well, this is mandated by the boot protocol, no?
 
-If we want to make these two scenarios work with calgary, we need to
-use kexec-tools with --pass-memmap option. And also in new kernel we
-need to retain saved_max_pfn. Only difference will be, that we will
-set saved_max_pfn only if it is kdump kernel and if user passed a 
-memory map on kernel command line.
+"If the "HdrS" (0x53726448) magic number is not found at offset 0x202,
+the boot protocol version is "old".  Loading an old kernel, the
+following parameters should be assumed:
 
-So it is doable if it want to do it.
+        Image type = zImage
+        initrd not supported
+        Real-mode kernel must be located at 0x90000."
 
-Now the real question is, is it worth introducing all this complication
-and confusion given the fact most of the people use same first and second
-kernel and given the fact that calgary is old hardware. What are the
-chances somebody will run into it.
+About version 0x0206:
 
-I would say it is not very complicated to maintain backward compatibility
-in this case. So let us keep saved_max_pfn for some time and make
-kexec-tools changes. Some time down the line, one can get rid of
-saved_max_pfn completely.
+Field name:     cmdline_size
+Type:           read
+Offset/size:    0x238/4
+Protocol:       2.06+
 
-Thanks
-Vivek
+  The maximum size of the command line without the terminating
+  zero. This means that the command line can contain at most
+  cmdline_size characters. With protocol version 2.05 and earlier, the
+  maximum size was 255.
+
+So according to the protocol, cmdline_size should be set by
+kexec_file_load and not hardcoded to 2K, if we're mandating protocol
+version 2.06.
+
+Maybe hpa can comment on all this.
+
+> so I put it in a separate function because user space code had it that
+> way. Also because I did not like this part of the code and this looks
+> like a limitation of ELF format, I wanted to isolate it in a separate
+> function so that it is easy to spot it.
+
+Right.
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
