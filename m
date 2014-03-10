@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WN1QC-0008JH-M6
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 14:43:18 +0000
-Date: Mon, 10 Mar 2014 10:42:37 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 10/11] kexec: Support for loading ELF x86_64 images
-Message-ID: <20140310144237.GA4352@redhat.com>
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-11-git-send-email-vgoyal@redhat.com>
- <20140228145832.GF4326@pd.tnic> <20140228171142.GI28744@redhat.com>
- <20140307171233.GD5255@pd.tnic> <20140307183959.GE5255@pd.tnic>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140307183959.GE5255@pd.tnic>
+ id 1WN1ZF-0000OP-3Q
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 14:52:37 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH v2] x86, calgary: use 8M TCE table size by default
+Date: Mon, 10 Mar 2014 22:52:00 +0800
+Message-Id: <1394463120-26999-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,75 +15,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>, "H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>, Baoquan He <bhe@redhat.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 07:39:59PM +0100, Borislav Petkov wrote:
+New kexec-tools wants to pass kdump kernel needed memmap via E820
+directly, instead of memmap=exactmap. This makes saved_max_pfn not
+be passed down to 2nd kernel. To keep 1st kernel and 2nd kernel using
+the same TCE table size, Muli suggest to hard code the size to max (8M).
 
-[..]
-> > Well, this is mandated by the boot protocol, no?
-> > 
-> > "If the "HdrS" (0x53726448) magic number is not found at offset 0x202,
-> > the boot protocol version is "old".  Loading an old kernel, the
-> > following parameters should be assumed:
-> > 
-> >         Image type = zImage
-> >         initrd not supported
-> >         Real-mode kernel must be located at 0x90000."
-> > 
-> > About version 0x0206:
-> > 
-> > Field name:     cmdline_size
-> > Type:           read
-> > Offset/size:    0x238/4
-> > Protocol:       2.06+
-> > 
-> >   The maximum size of the command line without the terminating
-> >   zero. This means that the command line can contain at most
-> >   cmdline_size characters. With protocol version 2.05 and earlier, the
-> >   maximum size was 255.
-> > 
-> > So according to the protocol, cmdline_size should be set by
-> > kexec_file_load and not hardcoded to 2K, if we're mandating protocol
-> > version 2.06.
-> 
-> Btw, all those fields above are of type "read", which means,
-> 
-> "For each field, some are information from the kernel to the bootloader
-> ("read"),... "
-> 
-> Now, if we assume that the first kernel is the bootloader and it loads
-> the second kernel, then the first kernel shouldn't be setting all those
-> fields *at* *all* because it violates the boot protocol. And that's a
-> no-no.
+We can't get rid of saved_max_pfn this time, for backward compatibility
+with old first kernel and new second kernel. However new first kernel
+and old second kernel can not work unfortunately.
 
-Yes, that's a read only information for bootloader.
+v2->v1:
+- retain saved_max_pfn so new 2nd kernel can work with old 1st kernel
+  from Vivek
 
-> 
-> Generally, how important is that use case for loading ELF images? If no
-> one is actually using it, why even bother?
-> 
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ arch/x86/kernel/pci-calgary_64.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-Distributions use bzImage for booting. Personally I have not seen anybody
-using ELF vmliux for booting.
+diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
+index 299d493..0497f71 100644
+--- a/arch/x86/kernel/pci-calgary_64.c
++++ b/arch/x86/kernel/pci-calgary_64.c
+@@ -1207,23 +1207,31 @@ error:
+ 	return ret;
+ }
+ 
+-static inline int __init determine_tce_table_size(u64 ram)
++static inline int __init determine_tce_table_size(void)
+ {
+ 	int ret;
+ 
+ 	if (specified_table_size != TCE_TABLE_SIZE_UNSPECIFIED)
+ 		return specified_table_size;
+ 
+-	/*
+-	 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
+-	 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
+-	 * larger table size has twice as many entries, so shift the
+-	 * max ram address by 13 to divide by 8K and then look at the
+-	 * order of the result to choose between 0-7.
+-	 */
+-	ret = get_order(ram >> 13);
+-	if (ret > TCE_TABLE_SIZE_8M)
++	if (is_kdump_kernel() && saved_max_pfn) {
++		/*
++		 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
++		 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
++		 * larger table size has twice as many entries, so shift the
++		 * max ram address by 13 to divide by 8K and then look at the
++		 * order of the result to choose between 0-7.
++		 */
++		ret = get_order((saved_max_pfn * PAGE_SIZE) >> 13);
++		if (ret > TCE_TABLE_SIZE_8M)
++			ret = TCE_TABLE_SIZE_8M;
++	} else {
++		/*
++		 * Use 8M by default (suggested by Muli) if it's not
++		 * kdump kernel and saved_max_pfn isn't set.
++		 */
+ 		ret = TCE_TABLE_SIZE_8M;
++	}
+ 
+ 	return ret;
+ }
+@@ -1418,8 +1426,7 @@ int __init detect_calgary(void)
+ 		return -ENOMEM;
+ 	}
+ 
+-	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
+-					saved_max_pfn : max_pfn) * PAGE_SIZE);
++	specified_table_size = determine_tce_table_size();
+ 
+ 	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
+ 		struct calgary_bus_info *info = &bus_info[bus];
+-- 
+1.8.5.3
 
-When I posted V1 of patches, Eric Biederman had said that without ELF
-loader support this patchset should not go in. He said that ELF is very
-generic and if we are implementing a new system call we should support
-ELF loader.
-
-So I have put a basic ELF loader in patches to show that it can work. Not
-that I am very keen on it.
-
-I will gladly remove it if others are comfortable with the idea that we
-don't need an ELF loader at this point of time.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
