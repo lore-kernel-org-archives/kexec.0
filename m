@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WN2Fb-00027l-1h
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 15:36:24 +0000
-Date: Mon, 10 Mar 2014 11:35:44 -0400
+ id 1WN2Ov-0002S7-2n
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 15:46:01 +0000
+Date: Mon, 10 Mar 2014 11:45:31 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 09/11] kexec: Provide a function to add a segment at
- fixed address
-Message-ID: <20140310153544.GB4352@redhat.com>
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-10-git-send-email-vgoyal@redhat.com>
- <20140227215232.GQ18191@pd.tnic>
- <20140228165628.GH28744@redhat.com>
- <20140310100143.GA14808@pd.tnic>
+Subject: Re: [PATCH v2] x86, calgary: use 8M TCE table size by default
+Message-ID: <20140310154531.GC4352@redhat.com>
+References: <1394463120-26999-1-git-send-email-chaowang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140310100143.GA14808@pd.tnic>
+In-Reply-To: <1394463120-26999-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,160 +23,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: WANG Chao <chaowang@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>
 
-On Mon, Mar 10, 2014 at 11:01:43AM +0100, Borislav Petkov wrote:
-
-[..]
-> > I think address does not matter here. You can't add a segemnt after you
-> > have allocated a control page. So I am not sure how printing address will
-> > help.
+On Mon, Mar 10, 2014 at 10:52:00PM +0800, WANG Chao wrote:
+> New kexec-tools wants to pass kdump kernel needed memmap via E820
+> directly, instead of memmap=exactmap. This makes saved_max_pfn not
+> be passed down to 2nd kernel. To keep 1st kernel and 2nd kernel using
+> the same TCE table size, Muli suggest to hard code the size to max (8M).
 > 
-> Ok, so what's the urgency of that warning? The "can't add a segment"
-> thing sounds kinda final to me and that everything breaks if we do add a
-> segment after all, so maybe it should error out with -EINVAL and caller
-> should stop adding segments if we have allocated the control page..?
+> We can't get rid of saved_max_pfn this time, for backward compatibility
+> with old first kernel and new second kernel. However new first kernel
+> and old second kernel can not work unfortunately.
 > 
-> IOW, how is that error message supposed to help me when I see it as a
-> user?
-
-Actually this message is for kernel developer. It is an error for somebody
-who has written an kernel image loader.
-
-I think returning -EINVAL is also a good idea. Though it will travel all
-the way back to user and user again can't do anything about it. 
-
-I think printing a warning backtrace is still a good idea so that
-we know which loader is doing wrong thing and issue can be reported
-on lkml.
-
-
-[..]
-> > > That's the retval of validate_ram_range_callback, right? So
-> > > 
-> > > 	if (!ret)
-> > > 
-> > > And shouldn't the convention be the opposite? 0 on success, !0 on error?
-> > 
-> > Ok, this one is little twisted.
-> > 
-> > walk_system_ram_res() stops calling callback function if callback
-> > function returned non zero code.
-> > 
-> > So in this case, once we have found the range to be valid, we don't want
-> > to continue to loop and look at any more ranges. So we return "1". If
-> > we return "0" for success, outer loop of walk_system_ram_res() will
-> > continue with next ranges.
+> v2->v1:
+> - retain saved_max_pfn so new 2nd kernel can work with old 1st kernel
+>   from Vivek
 > 
-> Huh, I was only talking about flipping that logic, in walk_system_ram_res():
-> 
-> 	ret = (*func)(res.start, res.end, arg);
-> 	if (!res)
-	    ^^^
-You mean (!ret) ?
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
 
-> 		break;
-> 
-> This way you still can return negative values as errors.
+This patch looks good to me. This will use saved_max_pfn to determine
+table size and retain backward compatibility with old kernel (if user
+uses right kexec cmdline option --pass-memmap).
 
-If I flip the logic in walk_system_ram_res() will outer loop not stop
-after one round.
+For others (majority of the cases), both first kernel and second kernel
+will use 8M of calgary table. 8M does sound a lot in terms of memory but
+assumption here is that there might be only some machines with calgary
+hardware and only these will pay the penalty of this increased memory 
+usage. This sounds better than exporting table size to user space.
 
-walk_system_ram_res() {
-	while ((find_next_system_ram(&res, "System RAM") >= 0) {
-		ret = (*func)(res.start, res.end, arg);
-		if (!ret)
-			break;
-	}
-}
-
-Or are you suggesting that called function should return 0 to break out
-of loop otherwise return negative values to continue the loop? But that's
-counter intutive. If "func" returns error, then we should break out of
-while() loop and not call "func" again with any more qualifiying ranges.
-
-> 
-> > Given the fact that "0" is interpreted as success by walk_system_ram_res()
-> > and it continues with next set of ranges, I could not use 0 as final
-> > measure of success. Negative returns are errors. So I thought of using
-> 
-> And?
-> 
-> When the loop finishes, you will have the last negative error in ret...
-
-Yep, Any non-zero value (negative or positive) will be in "ret" when loop
-finishes and will be returned to caller. If final return value is negative
-caller knows an error occurred. If final return value is positive, caller
-knows that *callback* function succeeded. 
-> 
-> Besides, in load_crashdump_segments() you have:
-> 
->         ret = walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
->                                 image, determine_backup_region);
-> 
->         /* Zero or postive return values are ok */
->         if (ret < 0)
->                 return ret;
-> 
-> So 0 is ok, as you say.
-
-I kept 0 as ok because I am not enforcing that one found a memory range
-with-in 0-640K.
-
-So if return value is 1, we know that we found a RAM memory resource
-in the range of 0-640K.  If return value is 0, we did not find a RAM
-memory resource in the range of 0-640K. I thought may be there are
-systems which don't have memory in that range and system can still
-boot. And that's why I said "0" is ok.
-
-I don't want to enforce that one *has* to have a memory range with-in
-first 640K otherwise kexec will fail. If there is none, that means there
-is no backup region.
-
-> 
-> Also:
-> 
->         /* Validate memory range */
->         ret = walk_system_ram_res(base, base + memsz - 1, &ksegment,
->                                 validate_ram_range_callback);
-> 
->         /* If a valid range is found, 1 is returned */
->         if (ret != 1)
->                 return -EINVAL;
-> 
-> Now this looks a bit fragile - only 1 is ok? Normally we do it like this:
-
-Only "1" is ok here because I want to make sure that memory range I am
-looking for is present and valid. If not, we can't go ahead and it is
-an error. (This is different from backup region case).
-
-I can't use 0 as measure of success because walk_system_ram_res() can
-return 0 even called function did not succeed. For example, assume
-somebody calls walk_system_ram_res() with start=0, end=-1 so that one
-walks through all the memory ranges available in the system. Now callback
-function probably is loking for a certain range say val1-val2. If
-it finds that range in all the ranges, will be return 1, otherwise 
-continue to return 0 till we have gone through all the ranges.
-
-So in above case, if 0 is returned, that does not mean callback
-function found what it was looking for.
-
-Now one can argue that why are you going through all the memory ranges.
-Just search for very narrow area to begin with. Say start=0xval1
-and end=0xval2 and now after first range callback function should
-be able to determine whether it found the value or not.
-
-But this now becomes dependent on what start and end values were passed
-to walk_system_ram_res().
-
-So I am not taking return "0" as measure of success of callback function.
-It could just mean that we went through all the overlapping ranges
-which matched search criterion and still callback function did not find
-what it was looking for.
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
 Thanks
 Vivek
+
+> ---
+>  arch/x86/kernel/pci-calgary_64.c | 31 +++++++++++++++++++------------
+>  1 file changed, 19 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
+> index 299d493..0497f71 100644
+> --- a/arch/x86/kernel/pci-calgary_64.c
+> +++ b/arch/x86/kernel/pci-calgary_64.c
+> @@ -1207,23 +1207,31 @@ error:
+>  	return ret;
+>  }
+>  
+> -static inline int __init determine_tce_table_size(u64 ram)
+> +static inline int __init determine_tce_table_size(void)
+>  {
+>  	int ret;
+>  
+>  	if (specified_table_size != TCE_TABLE_SIZE_UNSPECIFIED)
+>  		return specified_table_size;
+>  
+> -	/*
+> -	 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
+> -	 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
+> -	 * larger table size has twice as many entries, so shift the
+> -	 * max ram address by 13 to divide by 8K and then look at the
+> -	 * order of the result to choose between 0-7.
+> -	 */
+> -	ret = get_order(ram >> 13);
+> -	if (ret > TCE_TABLE_SIZE_8M)
+> +	if (is_kdump_kernel() && saved_max_pfn) {
+> +		/*
+> +		 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
+> +		 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
+> +		 * larger table size has twice as many entries, so shift the
+> +		 * max ram address by 13 to divide by 8K and then look at the
+> +		 * order of the result to choose between 0-7.
+> +		 */
+> +		ret = get_order((saved_max_pfn * PAGE_SIZE) >> 13);
+> +		if (ret > TCE_TABLE_SIZE_8M)
+> +			ret = TCE_TABLE_SIZE_8M;
+> +	} else {
+> +		/*
+> +		 * Use 8M by default (suggested by Muli) if it's not
+> +		 * kdump kernel and saved_max_pfn isn't set.
+> +		 */
+>  		ret = TCE_TABLE_SIZE_8M;
+> +	}
+>  
+>  	return ret;
+>  }
+> @@ -1418,8 +1426,7 @@ int __init detect_calgary(void)
+>  		return -ENOMEM;
+>  	}
+>  
+> -	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
+> -					saved_max_pfn : max_pfn) * PAGE_SIZE);
+> +	specified_table_size = determine_tce_table_size();
+>  
+>  	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
+>  		struct calgary_bus_info *info = &bus_info[bus];
+> -- 
+> 1.8.5.3
 
 _______________________________________________
 kexec mailing list
