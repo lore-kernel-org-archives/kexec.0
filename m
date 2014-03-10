@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WN2Ov-0002S7-2n
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 15:46:01 +0000
-Date: Mon, 10 Mar 2014 11:45:31 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from mail-ea0-f181.google.com ([209.85.215.181])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WN2XF-0002jt-82
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 15:54:38 +0000
+Received: by mail-ea0-f181.google.com with SMTP id k10so3749419eaj.26
+ for <kexec@lists.infradead.org>; Mon, 10 Mar 2014 08:54:12 -0700 (PDT)
+Date: Mon, 10 Mar 2014 17:54:06 +0200
+From: Muli Ben-Yehuda <muli@cs.technion.ac.il>
 Subject: Re: [PATCH v2] x86, calgary: use 8M TCE table size by default
-Message-ID: <20140310154531.GC4352@redhat.com>
+Message-ID: <20140310155406.GA5386@needle.strato>
 References: <1394463120-26999-1-git-send-email-chaowang@redhat.com>
+ <20140310154531.GC4352@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1394463120-26999-1-git-send-email-chaowang@redhat.com>
+In-Reply-To: <20140310154531.GC4352@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,102 +26,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Jon D. Mason" <jdmason@kudzu.us>, WANG Chao <chaowang@redhat.com>
 
-On Mon, Mar 10, 2014 at 10:52:00PM +0800, WANG Chao wrote:
-> New kexec-tools wants to pass kdump kernel needed memmap via E820
-> directly, instead of memmap=exactmap. This makes saved_max_pfn not
-> be passed down to 2nd kernel. To keep 1st kernel and 2nd kernel using
-> the same TCE table size, Muli suggest to hard code the size to max (8M).
-> 
-> We can't get rid of saved_max_pfn this time, for backward compatibility
-> with old first kernel and new second kernel. However new first kernel
-> and old second kernel can not work unfortunately.
-> 
-> v2->v1:
-> - retain saved_max_pfn so new 2nd kernel can work with old 1st kernel
->   from Vivek
-> 
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
+Patch looks good to me.
 
-This patch looks good to me. This will use saved_max_pfn to determine
-table size and retain backward compatibility with old kernel (if user
-uses right kexec cmdline option --pass-memmap).
+Acked-by: Muli Ben-Yehuda <mulix@mulix.org>
 
-For others (majority of the cases), both first kernel and second kernel
-will use 8M of calgary table. 8M does sound a lot in terms of memory but
-assumption here is that there might be only some machines with calgary
-hardware and only these will pay the penalty of this increased memory 
-usage. This sounds better than exporting table size to user space.
-
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Thanks
-Vivek
-
-> ---
->  arch/x86/kernel/pci-calgary_64.c | 31 +++++++++++++++++++------------
->  1 file changed, 19 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
-> index 299d493..0497f71 100644
-> --- a/arch/x86/kernel/pci-calgary_64.c
-> +++ b/arch/x86/kernel/pci-calgary_64.c
-> @@ -1207,23 +1207,31 @@ error:
->  	return ret;
->  }
->  
-> -static inline int __init determine_tce_table_size(u64 ram)
-> +static inline int __init determine_tce_table_size(void)
->  {
->  	int ret;
->  
->  	if (specified_table_size != TCE_TABLE_SIZE_UNSPECIFIED)
->  		return specified_table_size;
->  
-> -	/*
-> -	 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
-> -	 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
-> -	 * larger table size has twice as many entries, so shift the
-> -	 * max ram address by 13 to divide by 8K and then look at the
-> -	 * order of the result to choose between 0-7.
-> -	 */
-> -	ret = get_order(ram >> 13);
-> -	if (ret > TCE_TABLE_SIZE_8M)
-> +	if (is_kdump_kernel() && saved_max_pfn) {
-> +		/*
-> +		 * Table sizes are from 0 to 7 (TCE_TABLE_SIZE_64K to
-> +		 * TCE_TABLE_SIZE_8M). Table size 0 has 8K entries and each
-> +		 * larger table size has twice as many entries, so shift the
-> +		 * max ram address by 13 to divide by 8K and then look at the
-> +		 * order of the result to choose between 0-7.
-> +		 */
-> +		ret = get_order((saved_max_pfn * PAGE_SIZE) >> 13);
-> +		if (ret > TCE_TABLE_SIZE_8M)
-> +			ret = TCE_TABLE_SIZE_8M;
-> +	} else {
-> +		/*
-> +		 * Use 8M by default (suggested by Muli) if it's not
-> +		 * kdump kernel and saved_max_pfn isn't set.
-> +		 */
->  		ret = TCE_TABLE_SIZE_8M;
-> +	}
->  
->  	return ret;
->  }
-> @@ -1418,8 +1426,7 @@ int __init detect_calgary(void)
->  		return -ENOMEM;
->  	}
->  
-> -	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
-> -					saved_max_pfn : max_pfn) * PAGE_SIZE);
-> +	specified_table_size = determine_tce_table_size();
->  
->  	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
->  		struct calgary_bus_info *info = &bus_info[bus];
-> -- 
-> 1.8.5.3
+Cheers,
+Muli
 
 _______________________________________________
 kexec mailing list
