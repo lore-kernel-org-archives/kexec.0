@@ -1,14 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WN1pz-0000zT-G5
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 15:09:56 +0000
-From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v3 4/4] x86: Pass memory range via E820 for kdump
-Date: Mon, 10 Mar 2014 23:09:09 +0800
-Message-Id: <1394464149-30384-5-git-send-email-chaowang@redhat.com>
-In-Reply-To: <1394464149-30384-1-git-send-email-chaowang@redhat.com>
-References: <1394464149-30384-1-git-send-email-chaowang@redhat.com>
+ id 1WN2Fb-00027l-1h
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 15:36:24 +0000
+Date: Mon, 10 Mar 2014 11:35:44 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 09/11] kexec: Provide a function to add a segment at
+ fixed address
+Message-ID: <20140310153544.GB4352@redhat.com>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+ <1390849071-21989-10-git-send-email-vgoyal@redhat.com>
+ <20140227215232.GQ18191@pd.tnic>
+ <20140228165628.GH28744@redhat.com>
+ <20140310100143.GA14808@pd.tnic>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140310100143.GA14808@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,332 +24,164 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com, linn@hp.com
-Cc: kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-command line size is restricted by kernel, sometimes memmap=exactmap has
-too many memory ranges to pass to cmdline. A better approach, to pass the
-memory ranges for crash kernel to boot into, is filling the memory
-ranges into E820.
+On Mon, Mar 10, 2014 at 11:01:43AM +0100, Borislav Petkov wrote:
 
-boot_params only got 128 slots for E820 map to fit in, when the number of
-memory map exceeds 128, use setup_data to pass the rest as extended E820
-memory map.
+[..]
+> > I think address does not matter here. You can't add a segemnt after you
+> > have allocated a control page. So I am not sure how printing address will
+> > help.
+> 
+> Ok, so what's the urgency of that warning? The "can't add a segment"
+> thing sounds kinda final to me and that everything breaks if we do add a
+> segment after all, so maybe it should error out with -EINVAL and caller
+> should stop adding segments if we have allocated the control page..?
+> 
+> IOW, how is that error message supposed to help me when I see it as a
+> user?
 
-kexec boot could also benefit from setup_data in case E820 memory map
-exceeds 128.
+Actually this message is for kernel developer. It is an error for somebody
+who has written an kernel image loader.
 
-Now this new approach becomes default instead of memmap=exactmap.
-saved_max_pfn users can specify --pass-memmap-cmdline to use the
-exactmap approach.
+I think returning -EINVAL is also a good idea. Though it will travel all
+the way back to user and user again can't do anything about it. 
 
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c   |  25 +++---
- kexec/arch/i386/crashdump-x86.h   |   1 +
- kexec/arch/i386/x86-linux-setup.c | 171 +++++++++++++++++++++++++-------------
- 3 files changed, 130 insertions(+), 67 deletions(-)
+I think printing a warning backtrace is still a good idea so that
+we know which loader is doing wrong thing and issue can be reported
+on lkml.
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index c55a6b1..cb19e7d 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -182,6 +182,8 @@ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end);
- struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
- int crash_memory_ranges;
- 
-+int pass_memmap_cmdline;
-+
- /* Memory region reserved for storing panic kernel and other data. */
- #define CRASH_RESERVED_MEM_NR	8
- static struct memory_range crash_reserved_mem[CRASH_RESERVED_MEM_NR];
-@@ -947,20 +949,23 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
- 	if (delete_memmap(crash_memory_range, &crash_memory_ranges, elfcorehdr, memsz) < 0)
- 		return -1;
--	cmdline_add_memmap(mod_cmdline, crash_memory_range);
- 	if (!bzImage_support_efi_boot)
- 		cmdline_add_efi(mod_cmdline);
- 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
- 
--	/* Inform second kernel about the presence of ACPI tables. */
--	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
--		unsigned long start, end;
--		if ( !( mem_range[i].type == RANGE_ACPI
--			|| mem_range[i].type == RANGE_ACPI_NVS) )
--			continue;
--		start = mem_range[i].start;
--		end = mem_range[i].end;
--		cmdline_add_memmap_acpi(mod_cmdline, start, end);
-+	pass_memmap_cmdline = arch_options.pass_memmap_cmdline;
-+	if (pass_memmap_cmdline) {
-+		cmdline_add_memmap(mod_cmdline, crash_memory_range);
-+		/* Inform second kernel about the presence of ACPI tables. */
-+		for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
-+			unsigned long start, end;
-+			if ( !( mem_range[i].type == RANGE_ACPI
-+						|| mem_range[i].type == RANGE_ACPI_NVS) )
-+				continue;
-+			start = mem_range[i].start;
-+			end = mem_range[i].end;
-+			cmdline_add_memmap_acpi(mod_cmdline, start, end);
-+		}
- 	}
- 
- 	return 0;
-diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
-index 633ee0e..e68b626 100644
---- a/kexec/arch/i386/crashdump-x86.h
-+++ b/kexec/arch/i386/crashdump-x86.h
-@@ -30,5 +30,6 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
- 
- extern struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
- extern int crash_memory_ranges;
-+extern int pass_memmap_cmdline;
- 
- #endif /* CRASHDUMP_X86_H */
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 5884f4d..e630366 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -35,8 +35,7 @@
- #include "kexec-x86.h"
- #include "x86-linux-setup.h"
- #include "../../kexec/kexec-syscall.h"
--
--#define SETUP_EFI	4
-+#include "crashdump-x86.h"
- 
- void init_linux_parameters(struct x86_linux_param_header *real_mode)
- {
-@@ -502,6 +501,11 @@ struct efi_setup_data {
- struct setup_data {
- 	uint64_t next;
- 	uint32_t type;
-+#define SETUP_NONE	0
-+#define SETUP_E820_EXT	1
-+#define SETUP_DTB	2
-+#define SETUP_PCI	3
-+#define SETUP_EFI	4
- 	uint32_t len;
- 	uint8_t data[0];
- } __attribute__((packed));
-@@ -602,6 +606,17 @@ struct efi_info {
- 	uint32_t efi_memmap_hi;
- };
- 
-+static void add_setup_data(struct kexec_info *info,
-+			   struct x86_linux_param_header *real_mode,
-+			   struct setup_data *sd)
-+{
-+	int sdsize = sizeof(struct setup_data) + sd->len;
-+
-+	sd->next = real_mode->setup_data;
-+	real_mode->setup_data = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
-+			    0x100000, ULONG_MAX, INT_MAX);
-+}
-+
- /*
-  * setup_efi_data will collect below data and pass them to 2nd kernel.
-  * 1) SMBIOS, fw_vendor, runtime, config_table, they are passed via x86
-@@ -611,11 +626,11 @@ struct efi_info {
- static int setup_efi_data(struct kexec_info *info,
- 			  struct x86_linux_param_header *real_mode)
- {
--	int64_t setup_data_paddr, memmap_paddr;
-+	int64_t memmap_paddr;
- 	struct setup_data *sd;
- 	struct efi_setup_data *esd;
- 	struct efi_mem_descriptor *maps;
--	int nr_maps, size, sdsize, ret = 0;
-+	int nr_maps, size, ret = 0;
- 	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
- 
- 	ret = access("/sys/firmware/efi/systab", F_OK);
-@@ -648,10 +663,8 @@ static int setup_efi_data(struct kexec_info *info,
- 	sd->len = sizeof(*esd);
- 	memcpy(sd->data, esd, sizeof(*esd));
- 	free(esd);
--	sdsize = sd->len + sizeof(struct setup_data);
--	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
--					0x100000, ULONG_MAX, INT_MAX);
--	real_mode->setup_data = setup_data_paddr;
-+
-+	add_setup_data(info, real_mode, sd);
- 
- 	size = nr_maps * sizeof(struct efi_mem_descriptor);
- 	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
-@@ -669,6 +682,98 @@ out:
- 	return ret;
- }
- 
-+static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
-+			struct e820entry *e820, struct memory_range *range, int nr_range)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_range; i++) {
-+		e820[i].addr = range[i].start;
-+		e820[i].size = range[i].end - range[i].start;
-+		switch (range[i].type) {
-+			case RANGE_RAM:
-+				e820[i].type = E820_RAM;
-+				break;
-+			case RANGE_ACPI:
-+				e820[i].type = E820_ACPI;
-+				break;
-+			case RANGE_ACPI_NVS:
-+				e820[i].type = E820_NVS;
-+				break;
-+			default:
-+			case RANGE_RESERVED:
-+				e820[i].type = E820_RESERVED;
-+				break;
-+		}
-+		dbgprintf("%016lx-%016lx (%d)\n",
-+				e820[i].addr,
-+				e820[i].addr + e820[i].size - 1,
-+				e820[i].type);
-+
-+		if (range[i].type != RANGE_RAM)
-+			continue;
-+		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
-+			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
-+			real_mode->ext_mem_k = mem_k;
-+			real_mode->alt_mem_k = mem_k;
-+			if (mem_k > 0xfc00) {
-+				real_mode->ext_mem_k = 0xfc00; /* 64M */
-+			}
-+			if (mem_k > 0xffffffff) {
-+				real_mode->alt_mem_k = 0xffffffff;
-+			}
-+		}
-+	}
-+}
-+
-+static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-+			   struct memory_range *range, int nr_range)
-+{
-+	struct setup_data *sd;
-+	struct e820entry *e820;
-+	int nr_range_ext;
-+
-+	nr_range_ext = nr_range - E820MAX;
-+	sd = malloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
-+	sd->next = 0;
-+	sd->len = nr_range_ext * sizeof(struct e820entry);
-+	sd->type = SETUP_E820_EXT;
-+
-+	e820 = (struct e820entry *) sd->data;
-+	dbgprintf("Extended E820 via setup_data:\n");
-+	add_e820_map_from_mr(real_mode, e820, range + E820MAX, nr_range_ext);
-+	add_setup_data(info, real_mode, sd);
-+}
-+
-+static void setup_e820(struct kexec_info *info, struct x86_linux_param_header *real_mode)
-+{
-+	struct memory_range *range;
-+	int nr_range, nr_range_saved;
-+
-+
-+	if (info->kexec_flags & KEXEC_ON_CRASH && !pass_memmap_cmdline) {
-+		range = crash_memory_range;
-+		nr_range = crash_memory_ranges;
-+	} else {
-+		range = info->memory_range;
-+		nr_range = info->memory_ranges;
-+	}
-+
-+	nr_range_saved = nr_range;
-+	if (nr_range > E820MAX) {
-+		nr_range = E820MAX;
-+	}
-+
-+	real_mode->e820_map_nr = nr_range;
-+	dbgprintf("E820 memmap:\n");
-+	add_e820_map_from_mr(real_mode, real_mode->e820_map, range, nr_range);
-+
-+	if (nr_range_saved > E820MAX) {
-+		dbgprintf("extra E820 memmap are passed via setup_data\n");
-+		setup_e820_ext(info, real_mode, range, nr_range_saved);
-+	}
-+}
-+
- static int
- get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
- {
-@@ -702,10 +807,6 @@ static void setup_efi_info(struct kexec_info *info,
- void setup_linux_system_parameters(struct kexec_info *info,
- 				   struct x86_linux_param_header *real_mode)
- {
--	/* Fill in information the BIOS would usually provide */
--	struct memory_range *range;
--	int i, ranges;
--
- 	/* get subarch from running kernel */
- 	setup_subarch(real_mode);
- 	if (bzImage_support_efi_boot)
-@@ -746,51 +847,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
- 	/* another safe default */
- 	real_mode->aux_device_info = 0;
- 
--	range = info->memory_range;
--	ranges = info->memory_ranges;
--	if (ranges > E820MAX) {
--		if (!(info->kexec_flags & KEXEC_ON_CRASH))
--			/*
--			 * this e820 not used for capture kernel, see
--			 * do_bzImage_load()
--			 */
--			fprintf(stderr,
--				"Too many memory ranges, truncating...\n");
--		ranges = E820MAX;
--	}
--	real_mode->e820_map_nr = ranges;
--	for(i = 0; i < ranges; i++) {
--		real_mode->e820_map[i].addr = range[i].start;
--		real_mode->e820_map[i].size = range[i].end - range[i].start;
--		switch (range[i].type) {
--		case RANGE_RAM:
--			real_mode->e820_map[i].type = E820_RAM; 
--			break;
--		case RANGE_ACPI:
--			real_mode->e820_map[i].type = E820_ACPI; 
--			break;
--		case RANGE_ACPI_NVS:
--			real_mode->e820_map[i].type = E820_NVS;
--			break;
--		default:
--		case RANGE_RESERVED:
--			real_mode->e820_map[i].type = E820_RESERVED; 
--			break;
--		}
--		if (range[i].type != RANGE_RAM)
--			continue;
--		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
--			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
--			real_mode->ext_mem_k = mem_k;
--			real_mode->alt_mem_k = mem_k;
--			if (mem_k > 0xfc00) {
--				real_mode->ext_mem_k = 0xfc00; /* 64M */
--			}
--			if (mem_k > 0xffffffff) {
--				real_mode->alt_mem_k = 0xffffffff;
--			}
--		}
--	}
-+	setup_e820(info, real_mode);
- 
- 	/* fill the EDD information */
- 	setup_edd_info(real_mode);
--- 
-1.8.5.3
 
+[..]
+> > > That's the retval of validate_ram_range_callback, right? So
+> > > 
+> > > 	if (!ret)
+> > > 
+> > > And shouldn't the convention be the opposite? 0 on success, !0 on error?
+> > 
+> > Ok, this one is little twisted.
+> > 
+> > walk_system_ram_res() stops calling callback function if callback
+> > function returned non zero code.
+> > 
+> > So in this case, once we have found the range to be valid, we don't want
+> > to continue to loop and look at any more ranges. So we return "1". If
+> > we return "0" for success, outer loop of walk_system_ram_res() will
+> > continue with next ranges.
+> 
+> Huh, I was only talking about flipping that logic, in walk_system_ram_res():
+> 
+> 	ret = (*func)(res.start, res.end, arg);
+> 	if (!res)
+	    ^^^
+You mean (!ret) ?
+
+> 		break;
+> 
+> This way you still can return negative values as errors.
+
+If I flip the logic in walk_system_ram_res() will outer loop not stop
+after one round.
+
+walk_system_ram_res() {
+	while ((find_next_system_ram(&res, "System RAM") >= 0) {
+		ret = (*func)(res.start, res.end, arg);
+		if (!ret)
+			break;
+	}
+}
+
+Or are you suggesting that called function should return 0 to break out
+of loop otherwise return negative values to continue the loop? But that's
+counter intutive. If "func" returns error, then we should break out of
+while() loop and not call "func" again with any more qualifiying ranges.
+
+> 
+> > Given the fact that "0" is interpreted as success by walk_system_ram_res()
+> > and it continues with next set of ranges, I could not use 0 as final
+> > measure of success. Negative returns are errors. So I thought of using
+> 
+> And?
+> 
+> When the loop finishes, you will have the last negative error in ret...
+
+Yep, Any non-zero value (negative or positive) will be in "ret" when loop
+finishes and will be returned to caller. If final return value is negative
+caller knows an error occurred. If final return value is positive, caller
+knows that *callback* function succeeded. 
+> 
+> Besides, in load_crashdump_segments() you have:
+> 
+>         ret = walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+>                                 image, determine_backup_region);
+> 
+>         /* Zero or postive return values are ok */
+>         if (ret < 0)
+>                 return ret;
+> 
+> So 0 is ok, as you say.
+
+I kept 0 as ok because I am not enforcing that one found a memory range
+with-in 0-640K.
+
+So if return value is 1, we know that we found a RAM memory resource
+in the range of 0-640K.  If return value is 0, we did not find a RAM
+memory resource in the range of 0-640K. I thought may be there are
+systems which don't have memory in that range and system can still
+boot. And that's why I said "0" is ok.
+
+I don't want to enforce that one *has* to have a memory range with-in
+first 640K otherwise kexec will fail. If there is none, that means there
+is no backup region.
+
+> 
+> Also:
+> 
+>         /* Validate memory range */
+>         ret = walk_system_ram_res(base, base + memsz - 1, &ksegment,
+>                                 validate_ram_range_callback);
+> 
+>         /* If a valid range is found, 1 is returned */
+>         if (ret != 1)
+>                 return -EINVAL;
+> 
+> Now this looks a bit fragile - only 1 is ok? Normally we do it like this:
+
+Only "1" is ok here because I want to make sure that memory range I am
+looking for is present and valid. If not, we can't go ahead and it is
+an error. (This is different from backup region case).
+
+I can't use 0 as measure of success because walk_system_ram_res() can
+return 0 even called function did not succeed. For example, assume
+somebody calls walk_system_ram_res() with start=0, end=-1 so that one
+walks through all the memory ranges available in the system. Now callback
+function probably is loking for a certain range say val1-val2. If
+it finds that range in all the ranges, will be return 1, otherwise 
+continue to return 0 till we have gone through all the ranges.
+
+So in above case, if 0 is returned, that does not mean callback
+function found what it was looking for.
+
+Now one can argue that why are you going through all the memory ranges.
+Just search for very narrow area to begin with. Say start=0xval1
+and end=0xval2 and now after first range callback function should
+be able to determine whether it found the value or not.
+
+But this now becomes dependent on what start and end values were passed
+to walk_system_ram_res().
+
+So I am not taking return "0" as measure of success of callback function.
+It could just mean that we went through all the overlapping ranges
+which matched search criterion and still callback function did not find
+what it was looking for.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
