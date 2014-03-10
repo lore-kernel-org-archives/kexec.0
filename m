@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WMx2A-0008Vx-Fr
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 10:02:12 +0000
-Date: Mon, 10 Mar 2014 11:01:43 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 09/11] kexec: Provide a function to add a segment at
- fixed address
-Message-ID: <20140310100143.GA14808@pd.tnic>
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <1390849071-21989-10-git-send-email-vgoyal@redhat.com>
- <20140227215232.GQ18191@pd.tnic>
- <20140228165628.GH28744@redhat.com>
+ id 1WMzUJ-0004lM-4l
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 12:39:24 +0000
+Date: Mon, 10 Mar 2014 08:38:49 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] x86, calgary: use 8M TCE table size by default
+Message-ID: <20140310123848.GA31879@redhat.com>
+References: <1394179816-15435-1-git-send-email-chaowang@redhat.com>
+ <20140307141413.GF1326@redhat.com>
+ <20140307155204.GC30641@dhcp-17-89.nay.redhat.com>
+ <20140307160906.GH1326@redhat.com>
+ <20140310083834.GA32547@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140228165628.GH28744@redhat.com>
+In-Reply-To: <20140310083834.GA32547@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,109 +27,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: WANG Chao <chaowang@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>
 
-On Fri, Feb 28, 2014 at 11:56:28AM -0500, Vivek Goyal wrote:
-> This is more of future proofing it. I have been putting this check to
-> catch any accidental errors if somebody ends up calling this function
-> from old mode.
-> 
-> But I am not very particular about it. If you don't like it, I can get
-> rid of it.
+On Mon, Mar 10, 2014 at 04:38:34PM +0800, WANG Chao wrote:
 
-Yeah, it doesn't hurt to be overly cautious - I guess it can be removed
-later when this code settles.
-
-> I think address does not matter here. You can't add a segemnt after you
-> have allocated a control page. So I am not sure how printing address will
-> help.
-
-Ok, so what's the urgency of that warning? The "can't add a segment"
-thing sounds kinda final to me and that everything breaks if we do add a
-segment after all, so maybe it should error out with -EINVAL and caller
-should stop adding segments if we have allocated the control page..?
-
-IOW, how is that error message supposed to help me when I see it as a
-user?
-
-> Ok, there is not much difference between two, but I can use PAGE_ALIGN().
-
-Yeah, they're the same thing but the name PAGE_ALIGN is more descriptive
-:-)
-
-> > That's the retval of validate_ram_range_callback, right? So
+[..]
+> > So we have two scenarios.
 > > 
-> > 	if (!ret)
+> > - Old first kernel and new second kernel.
+> > - New first kernel and old second kernel.
 > > 
-> > And shouldn't the convention be the opposite? 0 on success, !0 on error?
+> > If we want to make these two scenarios work with calgary, we need to
+> > use kexec-tools with --pass-memmap option. And also in new kernel we
+> > need to retain saved_max_pfn. Only difference will be, that we will
+> > set saved_max_pfn only if it is kdump kernel and if user passed a 
+> > memory map on kernel command line.
 > 
-> Ok, this one is little twisted.
+> Old first kernel and new second kernel is easy to handle. Like you said,
+> we can use exactmap and set saved_max_pfn in kdump kernel, just as the
+> old way.
 > 
-> walk_system_ram_res() stops calling callback function if callback
-> function returned non zero code.
+> But it's still not clear to me how we can handle the case of new first
+> kernel and old second kernel.
 > 
-> So in this case, once we have found the range to be valid, we don't want
-> to continue to loop and look at any more ranges. So we return "1". If
-> we return "0" for success, outer loop of walk_system_ram_res() will
-> continue with next ranges.
+> Let's say, a calgary system has 2G memory. The new first kernel TCE
+> table size are hard coded to 8M. When the old kdump kernel is booting,
+> memmap=exactmap is parsed and saved_max_pfn is set to 2G/PAGE_SIZE. TCE
+> table size is determined by 2G ram size. So the size is 4M. We run into
+> the situation that TCE table is 8M in first kernel and 4M in second
+> kernel. This inconsistency of TCE table size would cause kdump kernel
+> fails somehow, that's why we brought in saved_max_pfn in the first place
+> as you know.
+> 
+> The problem is how to keep TCE table size being consistent between new
+> first kernel and old second kernel.
 
-Huh, I was only talking about flipping that logic, in walk_system_ram_res():
+You are right. I did not think through it. So we can't handle the case
+of new first kernel and second old kernel without exporting size of
+tables to user space. Given the fact that calgary is old hardware,
+exporting table size to user space is not very prudent.
 
-	ret = (*func)(res.start, res.end, arg);
-	if (!res)
-		break;
+I would say let us handle the case of old first kernel and second new
+kernel to maintain backward compatibility.
 
-This way you still can return negative values as errors.
-
-> Given the fact that "0" is interpreted as success by walk_system_ram_res()
-> and it continues with next set of ranges, I could not use 0 as final
-> measure of success. Negative returns are errors. So I thought of using
-
-And?
-
-When the loop finishes, you will have the last negative error in ret...
-
-Besides, in load_crashdump_segments() you have:
-
-        ret = walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                                image, determine_backup_region);
-
-        /* Zero or postive return values are ok */
-        if (ret < 0)
-                return ret;
-
-So 0 is ok, as you say.
-
-Also:
-
-        /* Validate memory range */
-        ret = walk_system_ram_res(base, base + memsz - 1, &ksegment,
-                                validate_ram_range_callback);
-
-        /* If a valid range is found, 1 is returned */
-        if (ret != 1)
-                return -EINVAL;
-
-Now this looks a bit fragile - only 1 is ok? Normally we do it like this:
-
-	if (ret)
-		return ret;
-
-	return __kexec_add_segment(...)
-
-
-and this way you can propagate the error value up without rewriting it
-here.
-
-Am I missing something here?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
