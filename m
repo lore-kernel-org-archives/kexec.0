@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WMzUJ-0004lM-4l
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 12:39:24 +0000
-Date: Mon, 10 Mar 2014 08:38:49 -0400
+ id 1WN1QC-0008JH-M6
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 14:43:18 +0000
+Date: Mon, 10 Mar 2014 10:42:37 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86, calgary: use 8M TCE table size by default
-Message-ID: <20140310123848.GA31879@redhat.com>
-References: <1394179816-15435-1-git-send-email-chaowang@redhat.com>
- <20140307141413.GF1326@redhat.com>
- <20140307155204.GC30641@dhcp-17-89.nay.redhat.com>
- <20140307160906.GH1326@redhat.com>
- <20140310083834.GA32547@dhcp-17-89.nay.redhat.com>
+Subject: Re: [PATCH 10/11] kexec: Support for loading ELF x86_64 images
+Message-ID: <20140310144237.GA4352@redhat.com>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
+ <1390849071-21989-11-git-send-email-vgoyal@redhat.com>
+ <20140228145832.GF4326@pd.tnic> <20140228171142.GI28744@redhat.com>
+ <20140307171233.GD5255@pd.tnic> <20140307183959.GE5255@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140310083834.GA32547@dhcp-17-89.nay.redhat.com>
+In-Reply-To: <20140307183959.GE5255@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,49 +26,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Muli Ben-Yehuda <muli@cs.technion.ac.il>, "Jon D. Mason" <jdmason@kudzu.us>
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Mon, Mar 10, 2014 at 04:38:34PM +0800, WANG Chao wrote:
+On Fri, Mar 07, 2014 at 07:39:59PM +0100, Borislav Petkov wrote:
 
 [..]
-> > So we have two scenarios.
+> > Well, this is mandated by the boot protocol, no?
 > > 
-> > - Old first kernel and new second kernel.
-> > - New first kernel and old second kernel.
+> > "If the "HdrS" (0x53726448) magic number is not found at offset 0x202,
+> > the boot protocol version is "old".  Loading an old kernel, the
+> > following parameters should be assumed:
 > > 
-> > If we want to make these two scenarios work with calgary, we need to
-> > use kexec-tools with --pass-memmap option. And also in new kernel we
-> > need to retain saved_max_pfn. Only difference will be, that we will
-> > set saved_max_pfn only if it is kdump kernel and if user passed a 
-> > memory map on kernel command line.
+> >         Image type = zImage
+> >         initrd not supported
+> >         Real-mode kernel must be located at 0x90000."
+> > 
+> > About version 0x0206:
+> > 
+> > Field name:     cmdline_size
+> > Type:           read
+> > Offset/size:    0x238/4
+> > Protocol:       2.06+
+> > 
+> >   The maximum size of the command line without the terminating
+> >   zero. This means that the command line can contain at most
+> >   cmdline_size characters. With protocol version 2.05 and earlier, the
+> >   maximum size was 255.
+> > 
+> > So according to the protocol, cmdline_size should be set by
+> > kexec_file_load and not hardcoded to 2K, if we're mandating protocol
+> > version 2.06.
 > 
-> Old first kernel and new second kernel is easy to handle. Like you said,
-> we can use exactmap and set saved_max_pfn in kdump kernel, just as the
-> old way.
+> Btw, all those fields above are of type "read", which means,
 > 
-> But it's still not clear to me how we can handle the case of new first
-> kernel and old second kernel.
+> "For each field, some are information from the kernel to the bootloader
+> ("read"),... "
 > 
-> Let's say, a calgary system has 2G memory. The new first kernel TCE
-> table size are hard coded to 8M. When the old kdump kernel is booting,
-> memmap=exactmap is parsed and saved_max_pfn is set to 2G/PAGE_SIZE. TCE
-> table size is determined by 2G ram size. So the size is 4M. We run into
-> the situation that TCE table is 8M in first kernel and 4M in second
-> kernel. This inconsistency of TCE table size would cause kdump kernel
-> fails somehow, that's why we brought in saved_max_pfn in the first place
-> as you know.
-> 
-> The problem is how to keep TCE table size being consistent between new
-> first kernel and old second kernel.
+> Now, if we assume that the first kernel is the bootloader and it loads
+> the second kernel, then the first kernel shouldn't be setting all those
+> fields *at* *all* because it violates the boot protocol. And that's a
+> no-no.
 
-You are right. I did not think through it. So we can't handle the case
-of new first kernel and second old kernel without exporting size of
-tables to user space. Given the fact that calgary is old hardware,
-exporting table size to user space is not very prudent.
+Yes, that's a read only information for bootloader.
 
-I would say let us handle the case of old first kernel and second new
-kernel to maintain backward compatibility.
+> 
+> Generally, how important is that use case for loading ELF images? If no
+> one is actually using it, why even bother?
+> 
+
+Distributions use bzImage for booting. Personally I have not seen anybody
+using ELF vmliux for booting.
+
+When I posted V1 of patches, Eric Biederman had said that without ELF
+loader support this patchset should not go in. He said that ELF is very
+generic and if we are implementing a new system call we should support
+ELF loader.
+
+So I have put a basic ELF loader in patches to show that it can work. Not
+that I am very keen on it.
+
+I will gladly remove it if others are comfortable with the idea that we
+don't need an ELF loader at this point of time.
 
 Thanks
 Vivek
