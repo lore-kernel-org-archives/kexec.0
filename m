@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WN7ZS-0005dh-TJ
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 21:17:16 +0000
-Received: from int-mx02.intmail.prod.int.phx2.redhat.com
- (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s2ALGpwp009521
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Mon, 10 Mar 2014 17:16:52 -0400
-Date: Mon, 10 Mar 2014 17:16:50 -0400
+ id 1WN7zD-0006jf-2B
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 21:43:51 +0000
+Date: Mon, 10 Mar 2014 17:43:18 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] vmcore-dmesg stack smashing happend in extreme case
-Message-ID: <20140310211650.GI4352@redhat.com>
-References: <1394443511-4243-1-git-send-email-zzou@redhat.com>
+Subject: Re: [PATCHv3 0/6] Crashdump Accepting Active IOMMU
+Message-ID: <20140310214318.GJ4352@redhat.com>
+References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1394443511-4243-1-git-send-email-zzou@redhat.com>
+In-Reply-To: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,74 +23,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: arthur <zzou@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Bill Sumner <bill.sumner@hp.com>
+Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, alex.williamson@redhat.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, dwmw2@infradead.org
 
-On Mon, Mar 10, 2014 at 05:25:11PM +0800, arthur wrote:
-> Description
-> in dump_dmesg_structured() the out_buf size is 4096, and if the
-> length is less than 4080( 4096-16 ) it won't really write out.
-> Normally, after writing one or four chars to the out_buf, it will
-> check the length of out_buf. But in extreme cases, 19 chars was
-> written to the out_buf before checking the length. This may cause
-> the stack corruption. If the length was 4079 (won't realy write out),
-> and then write 19 chars to it. the out_buf will overflow.
-> 
-> Solution
-> Change 16 to 32 and always check the lenth of out_buf before move to
-> next record, thus can make sure that at the beginning of a message
-> we always have 32 bytes of buffer.
-> 
-> Signed-off-by: arthur <zzou@redhat.com>
-> ---
->  vmcore-dmesg/vmcore-dmesg.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-> index 0345660..0d323c1 100644
-> --- a/vmcore-dmesg/vmcore-dmesg.c
-> +++ b/vmcore-dmesg/vmcore-dmesg.c
-> @@ -674,7 +674,7 @@ static void dump_dmesg_structured(int fd)
->  			else
->  				out_buf[len++] = c;
->  
-> -			if (len >= OUT_BUF_SIZE - 16) {
-> +			if (len >= OUT_BUF_SIZE - 32) {
+On Fri, Jan 10, 2014 at 03:07:26PM -0700, Bill Sumner wrote:
 
-How do you know 32 is enough and will not overflow?
+[..]
+> This patch set modifies the behavior of the iommu in the (new) crashdump kernel: 
+> 1. to accept the iommu hardware in an active state, 
+> 2. to leave the current translations in-place so that legacy DMA will continue
+>    using its current buffers until the device drivers in the crashdump kernel
+>    initialize and initialize their devices,
+> 3. to use different portions of the iova address ranges for the device drivers
+>    in the crashdump kernel than the iova ranges that were in-use at the time
+>    of the panic.  
 
->  				write_to_stdout(out_buf, len);
->  				len = 0;
->  			}
-> @@ -682,6 +682,11 @@ static void dump_dmesg_structured(int fd)
->  
->  		out_buf[len++] = '\n';
->  
-> +		if (len >= OUT_BUF_SIZE - 32) {
-> +			write_to_stdout(out_buf, len);
-> +			len = 0;
-> +		}
+Conceptually, above makes sense to me. I have few queries.
 
-Why do we need this? After last check only one extra character "\n"
-has been written?
+- Do we need to pass any kind of data from first kernel to second kernel, 
+  like table size etc? Calgary IOMMU was using first kernel's tables
+  also and it was determining previous kernel's table size using saved_max_pfn.
 
-I think that this overflow is coming from following sprintf().
+- I don't know how IOMMU translation tables look like, but are new DMA
+  zones setup by drivers in second kernel part of same table? How do we
+  make sure that sufficient space is available. I am not sure if possible
+  table corruption from crashed kernel is an issue here or not.
 
-                len += sprintf(out_buf + len, "[%5llu.%06llu] ",
-                        (long long unsigned int)imaxdiv_sec.quot,
-                        (long long unsigned int)imaxdiv_usec.quot);
+In general, I think changelogs of these patches need to be little better.
+There seem to be lot of text and still I can't quickly wrap my head around
+what a particular patch is supposed to be doing.
 
-So we are printing 2 long long unsigned int and 3 more chars "[] ". I 
-
-Max long long unsigned int is (2^64 -1) = 18446744073709551615
-
-Above takes 20 bytes. So total max length can be 20 + 20 + 3 = 43.
-
-I think just leave 64bytes of buffer before we enter the next message
-and that should be fine.
-
-And we don't have to do this twice. Just do it once inside innermost
-for loop.
+But we definitely need to fix this issue. IOMMU issues with kdump have
+been troubling us for a very long time.
 
 Thanks
 Vivek
