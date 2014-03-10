@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t3427.houston.hp.com ([15.201.208.55])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WN5oZ-0001Ir-PQ
- for kexec@lists.infradead.org; Mon, 10 Mar 2014 19:24:44 +0000
-From: "Sumner, William" <bill.sumner@hp.com>
-Subject: RE: [PATCHv3 3/6] Crashdump-Accepting-Active-IOMMU-Domain-Interfaces
-Date: Mon, 10 Mar 2014 19:23:11 +0000
-Message-ID: <875D89B79D1D86448A583A7302C022A066E08B1B@G4W3212.americas.hpqcorp.net>
-References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
- <1389391652-52422-4-git-send-email-bill.sumner@hp.com>
- <20140304145911.GD2799@8bytes.org>
-In-Reply-To: <20140304145911.GD2799@8bytes.org>
-Content-Language: en-US
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WN7ZS-0005dh-TJ
+ for kexec@lists.infradead.org; Mon, 10 Mar 2014 21:17:16 +0000
+Received: from int-mx02.intmail.prod.int.phx2.redhat.com
+ (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s2ALGpwp009521
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+ for <kexec@lists.infradead.org>; Mon, 10 Mar 2014 17:16:52 -0400
+Date: Mon, 10 Mar 2014 17:16:50 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] vmcore-dmesg stack smashing happend in extreme case
+Message-ID: <20140310211650.GI4352@redhat.com>
+References: <1394443511-4243-1-git-send-email-zzou@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1394443511-4243-1-git-send-email-zzou@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +28,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: "indou.takao@jp.fujitsu.com" <indou.takao@jp.fujitsu.com>, "bhe@redhat.com" <bhe@redhat.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "Li,
- Zhen-Hua" <zhen-hual@hp.com>, "ddutile@redhat.com" <ddutile@redhat.com>, "Hatch, Douglas B (HPS Linux PM)" <doug.hatch@hp.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+To: arthur <zzou@redhat.com>
+Cc: kexec@lists.infradead.org
 
-On Tue 3/4/2014 8:59 AM, Joerg Roedel wrote
->On Fri, Jan 10, 2014 at 03:07:29PM -0700, Bill Sumner wrote:
->> +context_get_entry(struct context_entry *context_addr,
->> +			struct intel_iommu *iommu, u32 bus, int devfn) {
->> +	unsigned long long q;		/* quadword scratch */
->> +	struct root_entry *root_phys;	/* Phys adr (root table entry) */
->> +	struct root_entry  root_temp;	/* Local copy of root_entry */
->> +	struct context_entry *context_phys;	/* Phys adr */
->> +
->> +	if (pr_dbg.domain_get)
->> +		pr_debug("ENTER %s B:D:F=%2.2x:%2.2x:%1.1x &context_entry:0x%llx &intel_iommu:0x%llx\n",
->> +			__func__, bus, devfn>>3, devfn&7,
->> +			(u64)context_addr, (u64)iommu);
->> +
->> +	if (bus > 255)				/* Sanity check */
->> +		return -5;
->> +	if (devfn > 255 || devfn < 0)		/* Sanity check */
->> +		return -6;
->> +
->> +	q = readq(iommu->reg + DMAR_RTADDR_REG);
->> +	pr_debug("IOMMU %d: DMAR_RTADDR_REG:0x%16.16llx\n", iommu->seq_id, q);
->> +	if (!q)
->> +		return -1;
->> +
->> +	root_phys = (struct root_entry *) q;	/* Adr(base of vector) */
->> +	root_phys += bus;			/* Adr(entry we want) */
->> +
->> +	oldcopy(&root_temp, root_phys, sizeof(root_temp));
->> +
->> +	pr_debug("root_temp.val:0x%llx .rsvd1:0x%llx root_phys:0x%llx\n",
->> +		root_temp.val, root_temp.rsvd1, (u64)root_phys);
->> +
->> +	if (!root_present(&root_temp))
->> +		return -2;
->> +
->> +	pr_debug("B:D:F=%2.2x:%2.2x:%1.1x root_temp.val: %llx .rsvd1: %llx\n",
->> +		bus, devfn >> 3, devfn & 7, root_temp.val, root_temp.rsvd1);
->> +
->> +	if (root_temp.rsvd1)			/* If (root_entry is bad) */
->> +		return -3;
->> +
->> +	context_phys = get_context_phys_from_root(&root_temp);
->> +	if (!context_phys)
->> +		return -4;
->
->What do all these magic return values mean? 
+On Mon, Mar 10, 2014 at 05:25:11PM +0800, arthur wrote:
+> Description
+> in dump_dmesg_structured() the out_buf size is 4096, and if the
+> length is less than 4080( 4096-16 ) it won't really write out.
+> Normally, after writing one or four chars to the out_buf, it will
+> check the length of out_buf. But in extreme cases, 19 chars was
+> written to the out_buf before checking the length. This may cause
+> the stack corruption. If the length was 4079 (won't realy write out),
+> and then write 19 chars to it. the out_buf will overflow.
+> 
+> Solution
+> Change 16 to 32 and always check the lenth of out_buf before move to
+> next record, thus can make sure that at the beginning of a message
+> we always have 32 bytes of buffer.
+> 
+> Signed-off-by: arthur <zzou@redhat.com>
+> ---
+>  vmcore-dmesg/vmcore-dmesg.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+> index 0345660..0d323c1 100644
+> --- a/vmcore-dmesg/vmcore-dmesg.c
+> +++ b/vmcore-dmesg/vmcore-dmesg.c
+> @@ -674,7 +674,7 @@ static void dump_dmesg_structured(int fd)
+>  			else
+>  				out_buf[len++] = c;
+>  
+> -			if (len >= OUT_BUF_SIZE - 16) {
+> +			if (len >= OUT_BUF_SIZE - 32) {
 
-They all mean "No value to return".  The different negative values are an artifact of the development where I wanted to make it easy not only to tell that something went wrong, but also to have enough detail to figure-out what happened without having to add code and repeat the test.  I will clean-up these in the next submission -- along with a few additional places where there are similar "leftovers".  
+How do you know 32 is enough and will not overflow?
 
-Bill
+>  				write_to_stdout(out_buf, len);
+>  				len = 0;
+>  			}
+> @@ -682,6 +682,11 @@ static void dump_dmesg_structured(int fd)
+>  
+>  		out_buf[len++] = '\n';
+>  
+> +		if (len >= OUT_BUF_SIZE - 32) {
+> +			write_to_stdout(out_buf, len);
+> +			len = 0;
+> +		}
 
+Why do we need this? After last check only one extra character "\n"
+has been written?
 
+I think that this overflow is coming from following sprintf().
+
+                len += sprintf(out_buf + len, "[%5llu.%06llu] ",
+                        (long long unsigned int)imaxdiv_sec.quot,
+                        (long long unsigned int)imaxdiv_usec.quot);
+
+So we are printing 2 long long unsigned int and 3 more chars "[] ". I 
+
+Max long long unsigned int is (2^64 -1) = 18446744073709551615
+
+Above takes 20 bytes. So total max length can be 20 + 20 + 3 = 43.
+
+I think just leave 64bytes of buffer before we enter the next message
+and that should be fine.
+
+And we don't have to do this twice. Just do it once inside innermost
+for loop.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
