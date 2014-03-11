@@ -1,20 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WNJ4K-0005ao-Cr
- for kexec@lists.infradead.org; Tue, 11 Mar 2014 09:33:54 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2 2/4] build: Use INCLUDES for normal CFLAGS in
- addition to CFLAGS_ARCH
-Date: Tue, 11 Mar 2014 09:31:49 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F4CDD@BPXM01GP.gisp.nec.co.jp>
-References: <20140307093626.09701790@marrow.netinsight.se>
- <20140307093840.72e71fbe@marrow.netinsight.se>
- <0910DD04CBD6DE4193FCF86B9C00BE971F41D3@BPXM01GP.gisp.nec.co.jp>
- <20140311075730.358bc01f@marrow.netinsight.se>
-In-Reply-To: <20140311075730.358bc01f@marrow.netinsight.se>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1WNKyq-0001pM-Vw
+ for kexec@lists.infradead.org; Tue, 11 Mar 2014 11:36:22 +0000
+Received: from /spool/local
+ by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Tue, 11 Mar 2014 11:35:53 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id C004517D8059
+ for <kexec@lists.infradead.org>; Tue, 11 Mar 2014 11:36:28 +0000 (GMT)
+Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
+ [9.149.37.216])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s2BBZbLP45023456
+ for <kexec@lists.infradead.org>; Tue, 11 Mar 2014 11:35:37 GMT
+Received: from d06av04.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av04.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s2BBZm1k032511
+ for <kexec@lists.infradead.org>; Tue, 11 Mar 2014 05:35:49 -0600
+Date: Tue, 11 Mar 2014 12:35:45 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
+Message-ID: <20140311123545.30bc23cf@holzheu>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971F4AFE@BPXM01GP.gisp.nec.co.jp>
+References: <20140228134148.15b60ceb@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971EFABE@BPXM01GP.gisp.nec.co.jp>
+ <20140303104408.7031a457@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F4AFE@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,31 +43,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "simon.kagstrom@netinsight.net" <simon.kagstrom@netinsight.net>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->On Mon, 10 Mar 2014 05:26:34 +0000
->Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
->
->> >-CFLAGS = -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
->> >+CFLAGS = $(INCLUDES) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
->> > 	  -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
->> > 	  -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
->> > CFLAGS_ARCH	= $(INCLUDES) -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
->>                   ^^^^^^^^^^^
->> CFLAGS_ARCH also doesn't use INCLUDES in the upstream version,
->> so this diff and the subject of this patch are wrong.
->
->Sorry about that! I merged in the new version, but apparently we had
->some local modifications to the Makefile.
->
->So please drop this patch in the series.
+On Tue, 11 Mar 2014 06:22:41 +0000
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-I see, I'll merge the others into v1.5.6.
+> >On Mon, 3 Mar 2014 03:11:23 +0000
+> >Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+> >The tools do a physical memory detection and that defines the range
+> >of memory to be dumped and also defines the memory chunks for the
+> >ELF header.
+> 
+> makedumpfile is designed for kdump, this means it relies on dependable ELF
+> headers. If we support such an incorrect ELF header, makedumpfile has to get
+> the actual memory map from vmcore (but I have no ideas how to do it now) and
+> re-calculate all PT_LOAD regions with it. It sounds too much work for
+> irregular case, I don't plan to take care of it now.
+
+Ok, fair.
+ 
+> >And I think we are not the only ones that have this problem. For example,
+> >the KVM virsh dump probably also has that problem.
+> 
+> virsh dump seems to have the same issue as you said, but I suppose qemu
+> developers don't worry about that because they are developing an original
+> way to dump guest's memory in kdump-compressed format as "dump-guest-memory"
+> command. It seems that they know such case is out of the scope of makedumpfile.
+
+Even if they create a kdump-compressed format dump, they (probably) do not
+filter while dumping. Therefore for large dumps post-processing with
+makedumpfile could still make sense, e.g. for transfering the dumps. 
+
+Because qemu is not aware of kernel parameters this will also fail when "mem="
+has been used.
+
+Michael
 
 
-Thanks
-Atsushi Kumagai
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
