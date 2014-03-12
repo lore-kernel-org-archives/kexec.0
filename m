@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WOT2q-0004oh-Uv
+ id 1WOT2q-0004og-Uy
  for kexec@lists.infradead.org; Fri, 14 Mar 2014 14:25:10 +0000
-Message-Id: <d93ee70631a04cd35cc7c484ec0467406d6f0c46.1394805652.git.petr@tesarici.cz>
+Message-Id: <2786fe8b53311bcf6f4167b0088a7d8a99a000a4.1394805652.git.petr@tesarici.cz>
 In-Reply-To: <cover.1394805652.git.petr@tesarici.cz>
 References: <cover.1394805652.git.petr@tesarici.cz>
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Wed, 12 Mar 2014 16:59:27 +0100
-Subject: [PATCH 2/3] Prevent buffer overflow in dump_log_entry
+Date: Wed, 12 Mar 2014 17:01:13 +0100
+Subject: [PATCH 3/3] Optimize one-character output in dump_log_entry
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,32 +25,32 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
 
-One message may be longer than BUFSIZE. In that case, the output
-buffer overflows, causing stack corruption. Solve it by flushing
-the buffer when it gets full.
+Using sprintf to copy one character to the output buffer is overkill.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- makedumpfile.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ makedumpfile.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index fc4ce19..261e1ad 100644
+index 261e1ad..a98258c 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -3885,6 +3885,12 @@ dump_log_entry(char *logptr, int fp)
- 	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
+@@ -3892,12 +3892,12 @@ dump_log_entry(char *logptr, int fp)
+ 		}
  
- 	for (i = 0, p = msg; i < text_len; i++, p++) {
-+		if (bufp - buf >= sizeof(buf) - 6) {
-+			if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
-+				return FALSE;
-+			bufp = buf;
-+		}
-+
  		if (isprint(*p) || isspace(*p))
- 			bufp =+ sprintf(bufp, "%c", *p);
+-			bufp =+ sprintf(bufp, "%c", *p);
++			*bufp++ = *p;
  		else
+ 			bufp += sprintf(bufp, "\\x%02x", *p);
+ 	}
+ 
+-	bufp += sprintf(bufp, "\n");
++	*bufp++ = '\n';
+ 
+ 	if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
+ 		return FALSE;
 -- 
 1.8.4.5
 
