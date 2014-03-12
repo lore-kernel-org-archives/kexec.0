@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WNMs9-00074r-9T
- for kexec@lists.infradead.org; Tue, 11 Mar 2014 13:37:34 +0000
-Received: from int-mx11.intmail.prod.int.phx2.redhat.com
- (int-mx11.intmail.prod.int.phx2.redhat.com [10.5.11.24])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s2BDbBv5027467
+ id 1WNXxB-00029h-Tq
+ for kexec@lists.infradead.org; Wed, 12 Mar 2014 01:27:30 +0000
+Received: from int-mx02.intmail.prod.int.phx2.redhat.com
+ (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s2C1R8E6019821
  (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Tue, 11 Mar 2014 09:37:11 -0400
-Date: Tue, 11 Mar 2014 09:37:10 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] vmcore-dmesg stack smashing happend in extreme case
-Message-ID: <20140311133710.GA14785@redhat.com>
-References: <1394443511-4243-1-git-send-email-zzou@redhat.com>
- <20140310211650.GI4352@redhat.com>
- <1671814704.13309372.1394502138298.JavaMail.zimbra@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1671814704.13309372.1394502138298.JavaMail.zimbra@redhat.com>
+ for <kexec@lists.infradead.org>; Tue, 11 Mar 2014 21:27:08 -0400
+From: arthur <zzou@redhat.com>
+Subject: [PATCH v2] vmcore-dmesg stack smashing happend in extreme case
+Date: Wed, 12 Mar 2014 09:27:02 +0800
+Message-Id: <1394587622-16872-1-git-send-email-zzou@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,35 +20,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Zhi Zou <zzou@redhat.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: arthur <zzou@redhat.com>
 
-On Mon, Mar 10, 2014 at 09:42:18PM -0400, Zhi Zou wrote:
+Description
+in dump_dmesg_structured() the out_buf size is 4096, and if the
+length is less than 4080( 4096-16 ) it won't really write out.
+Normally, after writing one or four chars to the out_buf, it will
+check the length of out_buf. But in extreme cases, 19 chars was
+written to the out_buf before checking the length. This may cause
+the stack corruption. If the length was 4079 (won't realy write out),
+and then write 19 chars to it. the out_buf will overflow.
 
-[..]
-> > 
-> > And we don't have to do this twice. Just do it once inside innermost
-> > for loop.
-> 
-> At the beginning, I think it is unnecessary to do this twice too. But
-> if the text_len ==0  then the for loop won't be executed and check won't
-> be executed either. May be this situation never come up, considering it's
-> cost, I can accept it because most of time we just do the check instead of
-> write. If it is sure that text_len == 0 never come up, then we should remove
-> it.
+Solution
+Change 16 to 64 thus can make sure that always have 64bytes before
+moving to next records. why using 64 is that a long long int can take
+20 bytes. so the length of timestamp can be 44 ('[','.',']',' ') in
+extreme case.
 
-When do we get text_len=0? If text_len=0, then we are just printing time
-stamp? Does it really happen?
+Signed-off-by: arthur <zzou@redhat.com>
+---
+ vmcore-dmesg/vmcore-dmesg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think do a quick test and if we are not encountering such cases, don't
-worry about it right now. Making logic too complicated does not help.
+diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+index 0345660..e15cd91 100644
+--- a/vmcore-dmesg/vmcore-dmesg.c
++++ b/vmcore-dmesg/vmcore-dmesg.c
+@@ -674,7 +674,7 @@ static void dump_dmesg_structured(int fd)
+ 			else
+ 				out_buf[len++] = c;
+ 
+-			if (len >= OUT_BUF_SIZE - 16) {
++			if (len >= OUT_BUF_SIZE - 64) {
+ 				write_to_stdout(out_buf, len);
+ 				len = 0;
+ 			}
+-- 
+1.8.4.2
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
