@@ -1,19 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WNZbs-0004BT-1J
- for kexec@lists.infradead.org; Wed, 12 Mar 2014 03:13:37 +0000
-Received: from int-mx09.intmail.prod.int.phx2.redhat.com
- (int-mx09.intmail.prod.int.phx2.redhat.com [10.5.11.22])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s2C3DEjL001393
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Tue, 11 Mar 2014 23:13:14 -0400
-Date: Wed, 12 Mar 2014 11:13:09 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: [kexec-tools PATCH] x86: extend kernel text size up to 1GB
-Message-ID: <20140312031309.GA14477@dhcp-17-89.nay.redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WNabQ-0005Gk-6i
+ for kexec@lists.infradead.org; Wed, 12 Mar 2014 04:17:18 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id BDE323EE0BB
+ for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id AE52745DE51
+ for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8FA9045DD76
+ for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 840A61DB8037
+ for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 34C201DB8040
+ for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
+Message-ID: <531FDF6D.5080901@jp.fujitsu.com>
+Date: Wed, 12 Mar 2014 13:15:41 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
+References: <20140228134148.15b60ceb@holzheu>
+In-Reply-To: <20140228134148.15b60ceb@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,39 +34,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec@lists.infradead.org
 
-Currently kexec hard code X86_64_KERNEL_TEXT_SIZE to 512M. With kASLR
-enabled (CONFIG_RANDOMIZED_BASE=y), kernel image base offset could be
-randomized from 0 to 1GB and kexec-tools fails to get kernel virtual
-address from /proc/kcore when the offset is >512M.
+(2014/02/28 21:41), Michael Holzheu wrote:
+> Hello Atsushi,
+>
+> On s390 we have the following little problem:
+>
+> We use hypervisor or stand-alone dump tools to create Linux system
+> dumps. These tools do not know the kernel parameter line and dump the
+> full physical memory.
+>
+> We use makedumpfile to filter those dumps.
+>
+> If a Linux system has specified the "mem=" parameter, the dump tools
+> still dump the whole phypsical memory.
+>
+> Unfortunately in "get_max_mapnr()" makedumpfile uses the ELF header to
+> get the maxmimum page frame number. Since this is not the correct value
+> in our case makedumpfile fails to filter the dump.
+>
+> We get the following error on s390 with makedumpfile version 1.5.3:
+>
+> makedumpfile -c -d 31 vmcore dump.kdump
+> cyclic buffer size has been changed: 22156083 => 22156032
+> Excluding unnecessary pages        : [ 21 %] vtop_s390x: Address too big for the number of page table levels.
+> readmem: Can't convert a virtual address(8000180104670) to physical address.
+> readmem: type_addr: 0, addr:8000180104670, size:32768
+> __exclude_unnecessary_pages: Can't read the buffer of struct page.
+> Excluding unnecessary pages        : [ 23 %] vtop_s390x: Address too big for the number of page table levels. readmem: Can't convert a
+> virtual address(8000180104670) to physical address. readmem: type_addr:
+> 0, addr:8000180104670, size:327681.5.5 __exclude_unnecessary_pages:
+> Can't read the buffer of struct page.
+>
+> Since version 1.5.4 makedumpfile seems to loop in __exclude_unnecessary_pages().
+>
+> We thought about several ways to fix this problem but have not found a
+> good solution up to now.
+>
+> Do you have an idea how we could fix that?
+>
+> Best Regards,
+> Michael
+>
 
-Now extend X86_64_KERNEL_TEXT_SIZE to 1GB to adapt kASLR.
+At least on x86, makedumpfile appears to work well for dumps generated by sadump and virsh dump. In particular, virsh dump --memory-only generates dump in ELF, whose PT_LOAD entries are generated from RAM list managed by qemu, not managed by kernel.
 
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- kexec/arch/i386/crashdump-x86.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looking into source code a little, max_mapnr is used only for calculating a size of two bitmaps. I guess there's any s390-specific issue.
 
-diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
-index e68b626..a5b2dfd 100644
---- a/kexec/arch/i386/crashdump-x86.h
-+++ b/kexec/arch/i386/crashdump-x86.h
-@@ -18,7 +18,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
- #define X86_64_MAXMEM        		0x3fffffffffffUL
- 
- /* Kernel text size */
--#define X86_64_KERNEL_TEXT_SIZE  (512UL*1024*1024)
-+#define X86_64_KERNEL_TEXT_SIZE  (1UL*1024*1024*1024)
- 
- #define CRASH_MAX_MEMMAP_NR	CRASH_MAX_MEMORY_RANGES
- #define CRASH_MAX_MEMORY_RANGES	(MAX_MEMORY_RANGES + 2)
 -- 
-1.8.5.3
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
