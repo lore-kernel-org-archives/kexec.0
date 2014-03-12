@@ -1,31 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WNabQ-0005Gk-6i
- for kexec@lists.infradead.org; Wed, 12 Mar 2014 04:17:18 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id BDE323EE0BB
- for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id AE52745DE51
- for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8FA9045DD76
- for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 840A61DB8037
- for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 34C201DB8040
- for <kexec@lists.infradead.org>; Wed, 12 Mar 2014 13:16:43 +0900 (JST)
-Message-ID: <531FDF6D.5080901@jp.fujitsu.com>
-Date: Wed, 12 Mar 2014 13:15:41 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
-References: <20140228134148.15b60ceb@holzheu>
-In-Reply-To: <20140228134148.15b60ceb@holzheu>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WNbMS-00066G-I3
+ for kexec@lists.infradead.org; Wed, 12 Mar 2014 05:05:49 +0000
+From: Arthur Zou <zzou@redhat.com>
+Subject: [PATCH v3] vmcore-dmesg stack smashing happend in extreme case
+Date: Wed, 12 Mar 2014 13:05:18 +0800
+Message-Id: <1394600718-20718-1-git-send-email-zzou@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,62 +15,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Arthur Zou <zzou@redhat.com>, horms@verge.net.au
 
-(2014/02/28 21:41), Michael Holzheu wrote:
-> Hello Atsushi,
->
-> On s390 we have the following little problem:
->
-> We use hypervisor or stand-alone dump tools to create Linux system
-> dumps. These tools do not know the kernel parameter line and dump the
-> full physical memory.
->
-> We use makedumpfile to filter those dumps.
->
-> If a Linux system has specified the "mem=" parameter, the dump tools
-> still dump the whole phypsical memory.
->
-> Unfortunately in "get_max_mapnr()" makedumpfile uses the ELF header to
-> get the maxmimum page frame number. Since this is not the correct value
-> in our case makedumpfile fails to filter the dump.
->
-> We get the following error on s390 with makedumpfile version 1.5.3:
->
-> makedumpfile -c -d 31 vmcore dump.kdump
-> cyclic buffer size has been changed: 22156083 => 22156032
-> Excluding unnecessary pages        : [ 21 %] vtop_s390x: Address too big for the number of page table levels.
-> readmem: Can't convert a virtual address(8000180104670) to physical address.
-> readmem: type_addr: 0, addr:8000180104670, size:32768
-> __exclude_unnecessary_pages: Can't read the buffer of struct page.
-> Excluding unnecessary pages        : [ 23 %] vtop_s390x: Address too big for the number of page table levels. readmem: Can't convert a
-> virtual address(8000180104670) to physical address. readmem: type_addr:
-> 0, addr:8000180104670, size:327681.5.5 __exclude_unnecessary_pages:
-> Can't read the buffer of struct page.
->
-> Since version 1.5.4 makedumpfile seems to loop in __exclude_unnecessary_pages().
->
-> We thought about several ways to fix this problem but have not found a
-> good solution up to now.
->
-> Do you have an idea how we could fix that?
->
-> Best Regards,
-> Michael
->
+Description
+in dump_dmesg_structured() the out_buf size is 4096, and if the
+length is less than 4080( 4096-16 ) it won't really write out.
+Normally, after writing one or four chars to the out_buf, it will
+check the length of out_buf. But in extreme cases, 19 chars was
+written to the out_buf before checking the length. This may cause
+the stack corruption. If the length was 4079 (won't realy write out),
+and then write 19 chars to it. the out_buf will overflow.
 
-At least on x86, makedumpfile appears to work well for dumps generated by sadump and virsh dump. In particular, virsh dump --memory-only generates dump in ELF, whose PT_LOAD entries are generated from RAM list managed by qemu, not managed by kernel.
+Solution
+Change 16 to 64 thus can make sure that always have 64bytes before
+moving to next records. why using 64 is that a long long int can take
+20 bytes. so the length of timestamp can be 44 ('[','.',']',' ') in
+extreme case.
 
-Looking into source code a little, max_mapnr is used only for calculating a size of two bitmaps. I guess there's any s390-specific issue.
+Signed-off-by: Arthur Zou <zzou@redhat.com>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ vmcore-dmesg/vmcore-dmesg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+index 0345660..e15cd91 100644
+--- a/vmcore-dmesg/vmcore-dmesg.c
++++ b/vmcore-dmesg/vmcore-dmesg.c
+@@ -674,7 +674,7 @@ static void dump_dmesg_structured(int fd)
+ 			else
+ 				out_buf[len++] = c;
+ 
+-			if (len >= OUT_BUF_SIZE - 16) {
++			if (len >= OUT_BUF_SIZE - 64) {
+ 				write_to_stdout(out_buf, len);
+ 				len = 0;
+ 			}
 -- 
-Thanks.
-HATAYAMA, Daisuke
+1.8.4.2
 
 
 _______________________________________________
