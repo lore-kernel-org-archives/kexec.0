@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from g4t3425.houston.hp.com ([15.201.208.53])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WOT2s-0004of-Lc
- for kexec@lists.infradead.org; Fri, 14 Mar 2014 14:25:11 +0000
-Message-Id: <cover.1394805652.git.petr@tesarici.cz>
-From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 14 Mar 2014 15:00:52 +0100
-Subject: [PATCH 0/3] makedumpfile: Bunch of fixes for --dump-dmesg
+ id 1WOYhW-0000IU-Fg
+ for kexec@lists.infradead.org; Fri, 14 Mar 2014 20:27:30 +0000
+Date: Fri, 14 Mar 2014 14:27:06 -0600
+From: Linn Crosetto <linn@hp.com>
+Subject: Re: [PATCH v3 4/4] x86: Pass memory range via E820 for kdump
+Message-ID: <20140314202706.GX7672@oranje.fc.hp.com>
+References: <1394464149-30384-1-git-send-email-chaowang@redhat.com>
+ <1394464149-30384-5-git-send-email-chaowang@redhat.com>
+ <20140313222428.GW7672@oranje.fc.hp.com>
+ <20140314024726.GA2245@dhcp-16-126.nay.redhat.com>
+ <20140314082615.GE5834@console-pimps.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140314082615.GE5834@console-pimps.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,27 +23,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: Matt Fleming <matt@console-pimps.org>
+Cc: toshi.kani@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Dave Young <dyoung@redhat.com>, trenn@suse.de, WANG Chao <chaowang@redhat.com>
 
-This patch series addresses several issues with the dump_log_entry()
-function.
+On Fri, Mar 14, 2014 at 08:26:15AM +0000, Matt Fleming wrote:
+> On Fri, 14 Mar, at 10:47:26AM, Dave Young wrote:
+> > 
+> > Can you test with matt's tree to see if it works?
+> > If it still happens please post the full log.
+> 
+> So that'd be the 'next' branch at,
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/mfleming/efi.git
+> 
+> which contains Borislav's fixes for the EFI memmap code.
 
-Petr Tesarik (3):
-  Fix string append in dump_log_entry()
-  Prevent buffer overflow in dump_log_entry
-  Optimize one-character output in dump_log_entry
+I believe I included those fixes when testing with 3.14 rc6, adding:
 
- makedumpfile.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+https://lkml.org/lkml/2014/3/8/209
+92b71d8
+52d201e
+a52f515
+b660133
+e91925d
 
--- 
-1.8.4.5
+Since this testing was done on a prototype, I will send you the log in a
+separate email. I tried efi.git/next (with the addition of 4ce7a86), and hit the
+same panic.
 
 
 _______________________________________________
