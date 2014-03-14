@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WOJOm-0007Kz-Pv
- for kexec@lists.infradead.org; Fri, 14 Mar 2014 04:07:10 +0000
-Date: Fri, 14 Mar 2014 11:49:59 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v3 4/4] x86: Pass memory range via E820 for kdump
-Message-ID: <20140314034959.GA23116@dhcp-17-89.nay.redhat.com>
-References: <1394464149-30384-1-git-send-email-chaowang@redhat.com>
- <1394464149-30384-5-git-send-email-chaowang@redhat.com>
- <20140313222428.GW7672@oranje.fc.hp.com>
+ id 1WOLLO-0001hf-BH
+ for kexec@lists.infradead.org; Fri, 14 Mar 2014 06:11:47 +0000
+Date: Fri, 14 Mar 2014 14:12:32 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [kexec-tools PATCH] x86: extend kernel text size up to 1GB
+Message-ID: <20140314061232.GA8248@dhcp-16-126.nay.redhat.com>
+References: <20140312031309.GA14477@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140313222428.GW7672@oranje.fc.hp.com>
+In-Reply-To: <20140312031309.GA14477@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,108 +23,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Linn Crosetto <linn@hp.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, ebiederm@xmission.com, vgoyal@redhat.com
 
-On 03/13/14 at 04:24pm, Linn Crosetto wrote:
-> Wang Chao,
+On 03/12/14 at 11:13am, WANG Chao wrote:
+> Currently kexec hard code X86_64_KERNEL_TEXT_SIZE to 512M. With kASLR
+> enabled (CONFIG_RANDOMIZED_BASE=y), kernel image base offset could be
+> randomized from 0 to 1GB and kexec-tools fails to get kernel virtual
+> address from /proc/kcore when the offset is >512M.
 > 
-> On Mon, Mar 10, 2014 at 11:09:09PM +0800, WANG Chao wrote:
-> > command line size is restricted by kernel, sometimes memmap=exactmap has
-> > too many memory ranges to pass to cmdline. A better approach, to pass the
-> > memory ranges for crash kernel to boot into, is filling the memory
-> > ranges into E820.
-> > 
-> > boot_params only got 128 slots for E820 map to fit in, when the number of
-> > memory map exceeds 128, use setup_data to pass the rest as extended E820
-> > memory map.
-> > 
-> > kexec boot could also benefit from setup_data in case E820 memory map
-> > exceeds 128.
-> > 
-> > Now this new approach becomes default instead of memmap=exactmap.
-> > saved_max_pfn users can specify --pass-memmap-cmdline to use the
-> > exactmap approach.
-> > 
-> > Signed-off-by: WANG Chao <chaowang@redhat.com>
-> > ---
-> >  kexec/arch/i386/crashdump-x86.c   |  25 +++---
-> >  kexec/arch/i386/crashdump-x86.h   |   1 +
-> >  kexec/arch/i386/x86-linux-setup.c | 171 +++++++++++++++++++++++++-------------
-> >  3 files changed, 130 insertions(+), 67 deletions(-)
-> > 
+> Now extend X86_64_KERNEL_TEXT_SIZE to 1GB to adapt kASLR.
 > 
-> [..]
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
+> ---
+>  kexec/arch/i386/crashdump-x86.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > +static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-> > +			   struct memory_range *range, int nr_range)
-> > +{
-> > +	struct setup_data *sd;
-> > +	struct e820entry *e820;
-> > +	int nr_range_ext;
-> > +
-> > +	nr_range_ext = nr_range - E820MAX;
-> > +	sd = malloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
-> 
-> You might check the return value from malloc().
+> diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
+> index e68b626..a5b2dfd 100644
+> --- a/kexec/arch/i386/crashdump-x86.h
+> +++ b/kexec/arch/i386/crashdump-x86.h
+> @@ -18,7 +18,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+>  #define X86_64_MAXMEM        		0x3fffffffffffUL
+>  
+>  /* Kernel text size */
+> -#define X86_64_KERNEL_TEXT_SIZE  (512UL*1024*1024)
+> +#define X86_64_KERNEL_TEXT_SIZE  (1UL*1024*1024*1024)
 
-Right.
-I'll use xmalloc(), defined in kexec/kexec.h.
+Should define a new macro such as: X86_KERNEL_TEXT_START_LIMIT (1UL*1024*1024*1024)
+and then check end addr with X86_64_KERNEL_TEXT_SIZE + X86_64_KERNEL_TEXT_SIZE
 
-> 
-> > +	sd->next = 0;
-> > +	sd->len = nr_range_ext * sizeof(struct e820entry);
-> > +	sd->type = SETUP_E820_EXT;
-> > +
-> > +	e820 = (struct e820entry *) sd->data;
-> > +	dbgprintf("Extended E820 via setup_data:\n");
-> > +	add_e820_map_from_mr(real_mode, e820, range + E820MAX, nr_range_ext);
-> > +	add_setup_data(info, real_mode, sd);
-> > +}
-> 
-> [..]
-> 
-> I tested on a prototype system with 231 entries in the map with good results.
-> Everything succeeds when using kexec to initiate a fast reboot. For crash, it
-> works with and without --pass-memmap-cmdline when using noefi. I hit the
-> following panic when initiating a crash leaving EFI enabled in the crash kernel:
+Previously I did not find this problem probably because kernel text happen to randomized
+to a address < 512M..
 
-Good to know!
+BTW since we can get physical start and size from /proc/iomem, why not just get
+vaddr by phys_start + PAGE_OFFSET.
 
+>  
+>  #define CRASH_MAX_MEMMAP_NR	CRASH_MAX_MEMORY_RANGES
+>  #define CRASH_MAX_MEMORY_RANGES	(MAX_MEMORY_RANGES + 2)
+> -- 
+> 1.8.5.3
 > 
->  ? __unmap_pmd_range+0x77/0x190
->  unmap_pmd_range+0xcf/0x1c0
->  populate_pgd+0x16d/0x250
->  __cpa_process_fault+0x15/0xb0
->  __change_page_attr+0x15e/0x2a0
->  __change_page_attr_set_clr+0x59/0xc0
->  kernel_map_pages_in_pgd+0x7a/0xb0
->  __map_region+0x46/0x64
->  ? early_idt_handlers+0x117/0x120
->  efi_map_region_fixed+0xd/0xf
->  efi_enter_virtual_mode+0x4c/0x476
->  ? early_idt_handlers+0x117/0x120
->  ? early_idt_handlers+0x117/0x120
->  start_kernel+0x2e5/0x376
->  ? repair_env_string+0x5b/0x5b
->  ? memblock_reserve+0x49/0x4e
->  x86_64_start_reservations+0x2a/0x2c
->  x86_64_start_kernel+0x19f/0x1ae
 > 
-> However, I was able to reproduce this panic using an earlier version of
-> kexec-tools, so I believe it is unrelated to this patch.
-> 
-> For this patch:
-> 
-> Reviewed-by: Linn Crosetto <linn@hp.com>
-> 
-> For the series:
-> 
-> Tested-by: Linn Crosetto <linn@hp.com>
-
-Thank you for your review and test. I really appreciate it.
-
-WANG Chao
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
