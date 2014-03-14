@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WOI9h-0006QN-Sg
- for kexec@lists.infradead.org; Fri, 14 Mar 2014 02:47:31 +0000
-Date: Fri, 14 Mar 2014 10:47:26 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1WOJOm-0007Kz-Pv
+ for kexec@lists.infradead.org; Fri, 14 Mar 2014 04:07:10 +0000
+Date: Fri, 14 Mar 2014 11:49:59 +0800
+From: WANG Chao <chaowang@redhat.com>
 Subject: Re: [PATCH v3 4/4] x86: Pass memory range via E820 for kdump
-Message-ID: <20140314024726.GA2245@dhcp-16-126.nay.redhat.com>
+Message-ID: <20140314034959.GA23116@dhcp-17-89.nay.redhat.com>
 References: <1394464149-30384-1-git-send-email-chaowang@redhat.com>
  <1394464149-30384-5-git-send-email-chaowang@redhat.com>
  <20140313222428.GW7672@oranje.fc.hp.com>
@@ -26,14 +26,73 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Linn Crosetto <linn@hp.com>
-Cc: matt@console-pimps.org, toshi.kani@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, horms@verge.net.au, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com
 
+On 03/13/14 at 04:24pm, Linn Crosetto wrote:
+> Wang Chao,
+> 
+> On Mon, Mar 10, 2014 at 11:09:09PM +0800, WANG Chao wrote:
+> > command line size is restricted by kernel, sometimes memmap=exactmap has
+> > too many memory ranges to pass to cmdline. A better approach, to pass the
+> > memory ranges for crash kernel to boot into, is filling the memory
+> > ranges into E820.
+> > 
+> > boot_params only got 128 slots for E820 map to fit in, when the number of
+> > memory map exceeds 128, use setup_data to pass the rest as extended E820
+> > memory map.
+> > 
+> > kexec boot could also benefit from setup_data in case E820 memory map
+> > exceeds 128.
+> > 
+> > Now this new approach becomes default instead of memmap=exactmap.
+> > saved_max_pfn users can specify --pass-memmap-cmdline to use the
+> > exactmap approach.
+> > 
+> > Signed-off-by: WANG Chao <chaowang@redhat.com>
+> > ---
+> >  kexec/arch/i386/crashdump-x86.c   |  25 +++---
+> >  kexec/arch/i386/crashdump-x86.h   |   1 +
+> >  kexec/arch/i386/x86-linux-setup.c | 171 +++++++++++++++++++++++++-------------
+> >  3 files changed, 130 insertions(+), 67 deletions(-)
+> > 
+> 
+> [..]
+> 
+> > +static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
+> > +			   struct memory_range *range, int nr_range)
+> > +{
+> > +	struct setup_data *sd;
+> > +	struct e820entry *e820;
+> > +	int nr_range_ext;
+> > +
+> > +	nr_range_ext = nr_range - E820MAX;
+> > +	sd = malloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
+> 
+> You might check the return value from malloc().
+
+Right.
+I'll use xmalloc(), defined in kexec/kexec.h.
+
+> 
+> > +	sd->next = 0;
+> > +	sd->len = nr_range_ext * sizeof(struct e820entry);
+> > +	sd->type = SETUP_E820_EXT;
+> > +
+> > +	e820 = (struct e820entry *) sd->data;
+> > +	dbgprintf("Extended E820 via setup_data:\n");
+> > +	add_e820_map_from_mr(real_mode, e820, range + E820MAX, nr_range_ext);
+> > +	add_setup_data(info, real_mode, sd);
+> > +}
+> 
 > [..]
 > 
 > I tested on a prototype system with 231 entries in the map with good results.
 > Everything succeeds when using kexec to initiate a fast reboot. For crash, it
 > works with and without --pass-memmap-cmdline when using noefi. I hit the
 > following panic when initiating a crash leaving EFI enabled in the crash kernel:
+
+Good to know!
+
 > 
 >  ? __unmap_pmd_range+0x77/0x190
 >  unmap_pmd_range+0xcf/0x1c0
@@ -56,12 +115,18 @@ Cc: matt@console-pimps.org, toshi.kani@hp.com, kexec@lists.infradead.org, linux-
 > 
 > However, I was able to reproduce this panic using an earlier version of
 > kexec-tools, so I believe it is unrelated to this patch.
+> 
+> For this patch:
+> 
+> Reviewed-by: Linn Crosetto <linn@hp.com>
+> 
+> For the series:
+> 
+> Tested-by: Linn Crosetto <linn@hp.com>
 
-Can you test with matt's tree to see if it works?
-If it still happens please post the full log.
+Thank you for your review and test. I really appreciate it.
 
-Thanks
-Dave
+WANG Chao
 
 _______________________________________________
 kexec mailing list
