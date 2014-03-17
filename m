@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WOptu-0006WE-8g
- for kexec@lists.infradead.org; Sat, 15 Mar 2014 14:49:26 +0000
-Date: Sat, 15 Mar 2014 14:48:55 +0000
-From: Matt Fleming <matt@console-pimps.org>
-Subject: Re: [PATCH v3 4/4] x86: Pass memory range via E820 for kdump
-Message-ID: <20140315144855.GG5834@console-pimps.org>
-References: <1394464149-30384-1-git-send-email-chaowang@redhat.com>
- <1394464149-30384-5-git-send-email-chaowang@redhat.com>
- <20140313222428.GW7672@oranje.fc.hp.com>
- <20140314024726.GA2245@dhcp-16-126.nay.redhat.com>
- <20140314082615.GE5834@console-pimps.org>
- <20140314202706.GX7672@oranje.fc.hp.com>
- <20140315142625.GA8735@nazgul.tnic>
+ id 1WPOCV-00063J-NQ
+ for kexec@lists.infradead.org; Mon, 17 Mar 2014 03:26:56 +0000
+Date: Mon, 17 Mar 2014 11:27:47 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2] x86, kaslr: Kernel base can be randomized at 0-1G
+ offset.
+Message-ID: <20140317032747.GA2366@dhcp-16-126.nay.redhat.com>
+References: <1394785218-25168-1-git-send-email-chaowang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140315142625.GA8735@nazgul.tnic>
+In-Reply-To: <1394785218-25168-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,18 +24,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: toshi.kani@hp.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, horms@verge.net.au, Linn Crosetto <linn@hp.com>, hpa@zytor.com, Dave Young <dyoung@redhat.com>, trenn@suse.de, WANG Chao <chaowang@redhat.com>, ebiederm@xmission.com
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, ebiederm@xmission.com, vgoyal@redhat.com
 
-On Sat, 15 Mar, at 03:26:25PM, Borislav Petkov wrote:
+On 03/14/14 at 04:20pm, WANG Chao wrote:
+> With kASLR enabled (CONFIG_RANDOMIZED_BASE=y), kernel virtual address
+> base is PAGE_OFFSET plus a randomized offset from 0 to 1G.
 > 
-> Btw, Matt, your whole efi/next stuff is already in tip, right? Because
-> if so, Linn could simply test latest tip/master.
+> Current kexec-tools gets kernel vaddr and size from /proc/kcore. It
+> assumes kernel vaddr start/end is within the range [0,512M). If kaslr
+> enabled, kernel vaddr start/end will stay at [0+offset, 512M+offset).
+> 
+> To adapt kaslr, introduce a new macro X86_64_RANDOMIZED_BASE_MAX_OFFSET
+> to address the max offset and use this macro to filter out the kernel
+> text PT_LOAD from /proc/kcore.
+> 
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
+> ---
+>  kexec/arch/i386/crashdump-x86.c | 3 ++-
+>  kexec/arch/i386/crashdump-x86.h | 3 +++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index cb19e7d..1e6d3a3 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -156,7 +156,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>  
+>  			/* Look for kernel text mapping header. */
+>  			if ((saddr >= X86_64__START_KERNEL_map) &&
+> -			    (eaddr <= X86_64__START_KERNEL_map + X86_64_KERNEL_TEXT_SIZE)) {
+> +			    (saddr <= X86_64__START_KERNEL_map + X86_64_RANDOMIZE_BASE_MAX_OFFSET) &&
+> +			    (eaddr - saddr  < X86_64_KERNEL_TEXT_SIZE)) {
+>  				saddr = _ALIGN_DOWN(saddr, X86_64_KERN_VADDR_ALIGN);
+>  				elf_info->kern_vaddr_start = saddr;
+>  				size = eaddr - saddr;
+> diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
+> index e68b626..71a09f8 100644
+> --- a/kexec/arch/i386/crashdump-x86.h
+> +++ b/kexec/arch/i386/crashdump-x86.h
+> @@ -15,6 +15,9 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+>  #define X86_64_PAGE_OFFSET_PRE_2_6_27	0xffff810000000000ULL
+>  #define X86_64_PAGE_OFFSET		0xffff880000000000ULL
+>  
+> +/* kASLR - Kernel base offset could be randomized up to 1G */
+> +#define X86_64_RANDOMIZE_BASE_MAX_OFFSET	0x40000000
+> +
+>  #define X86_64_MAXMEM        		0x3fffffffffffUL
+>  
+>  /* Kernel text size */
 
-Yep, everything is in tip/master.
+Acked-by: Dave Young <dyoung@redhat.com>
 
--- 
-Matt Fleming, Intel Open Source Technology Center
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
