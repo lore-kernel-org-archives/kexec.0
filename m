@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQViu-0003Q7-2q
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 05:41:03 +0000
-From: Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH v2] kexec: pass initrd position in dtb
-Date: Thu, 20 Mar 2014 13:35:42 +0800
-Message-ID: <1395293742-56591-1-git-send-email-wangnan0@huawei.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WQVoI-0003XC-QF
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 05:46:35 +0000
+Date: Thu, 20 Mar 2014 13:46:08 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH v2] x86, kaslr: Kernel base can be randomized at 0-1G
+ offset.
+Message-ID: <20140320054608.GA25772@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140319133331.GB21530@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,137 +23,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: Wang Nan <wangnan0@huawei.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: dyoung@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, ebiederm@xmission.com
 
-This patch append the position of initrd to dtb when loading arm kernel
-and initrd without using atag.
+[CC Simon]
 
-Change from v1:
+On 03/19/14 at 09:33am, Vivek Goyal wrote:
+> On Wed, Mar 19, 2014 at 03:05:51PM +0800, WANG Chao wrote:
+> > On 03/17/14 at 08:56am, Vivek Goyal wrote:
+> > > On Fri, Mar 14, 2014 at 04:20:18PM +0800, WANG Chao wrote:
+> > > > With kASLR enabled (CONFIG_RANDOMIZED_BASE=y), kernel virtual address
+> > > > base is PAGE_OFFSET plus a randomized offset from 0 to 1G.
+> > > > 
+> > > > Current kexec-tools gets kernel vaddr and size from /proc/kcore. It
+> > > > assumes kernel vaddr start/end is within the range [0,512M). If kaslr
+> > > > enabled, kernel vaddr start/end will stay at [0+offset, 512M+offset).
+> > 
+> > NACK this patch myself.
+> > 
+> > There are several mistakes I made. I misunderstood some concepts. Then I
+> > realize this kASLR issue is not trivial to fix.
+> > 
+> > I think if kexec-tools needs to get kernel text mapping from kcore in
+> > kALSR case, the max base offset (CONFIG_RANDOMIZE_MAX_BASE_OFFSET) of
+> > the kernel text area must be exposed to userspace some where. We can use
+> > that value to determine which area is for kernel text mapping and which
+> > is for modules text mapping.
+> 
+> How about looking at /proc/kallsyms and look at address of one of the
+> symbols say _text. And search for the ELF header in kcore which contains
+> _text address and that's ELF header representing kernel text mapping.
 
- - Remove #include "libfdt_internal.h" since it is for internal use
-   for libfdt.
+Cool. I'd like to go with _stext. _text presents in /proc/kallsyms only
+when CONFIG_KALLSYMS_ALL=y. What do you think?
 
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Geng Hui <hui.geng@huawei.com>
----
- kexec/arch/arm/kexec-zImage-arm.c | 83 +++++++++++++++++++++++++++------------
- 1 file changed, 58 insertions(+), 25 deletions(-)
-
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 8a35018..1cd4ed0 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -216,6 +216,47 @@ int atag_arm_load(struct kexec_info *info, unsigned long base,
- 	return 0;
- }
- 
-+static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
-+		const char *prop_name, const void *val, int len)
-+{
-+	char *dtb_buf;
-+	int off;
-+
-+	if ((bufp == NULL) || (sizep == NULL) || (*bufp == NULL))
-+		die("Internal error\n");
-+
-+	dtb_buf = *bufp;
-+
-+	*sizep = fdt_totalsize(*bufp) + FDT_TAGSIZE + len +
-+		_ALIGN(strlen(node_name) + 1, FDT_TAGSIZE) +
-+		_ALIGN(strlen(prop_name) + 1, FDT_TAGSIZE) +
-+		sizeof(struct fdt_property);
-+
-+	dtb_buf = xrealloc(dtb_buf, *sizep);
-+	if (dtb_buf == NULL)
-+		die("xrealloc failed\n");
-+	*bufp = dtb_buf;
-+
-+	fdt_set_totalsize(dtb_buf, *sizep);
-+
-+	/* check if the subnode already exists */
-+	off = fdt_path_offset(dtb_buf, node_name);
-+
-+	if (off == -FDT_ERR_NOTFOUND)
-+		off = fdt_add_subnode(dtb_buf, off, node_name);
-+	if (off < 0) {
-+		fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
-+		return -1;
-+	}
-+	if (fdt_setprop(dtb_buf, off, prop_name,
-+				val, len) != 0) {
-+		fprintf(stderr, "FDT: Error setting %s/%s property.\n",
-+				node_name, prop_name);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
-@@ -375,32 +416,11 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 			}
- 
- 			if (command_line) {
--				const char *node_name = "/chosen";
--				const char *prop_name = "bootargs";
--				int off;
--
--				dtb_length = fdt_totalsize(dtb_buf) + 1024 +
--					strlen(command_line);
--				dtb_buf = xrealloc(dtb_buf, dtb_length);
--				fdt_set_totalsize(dtb_buf, dtb_length);
--
--				/* check if a /choosen subnode already exists */
--				off = fdt_path_offset(dtb_buf, node_name);
--
--				if (off == -FDT_ERR_NOTFOUND)
--					off = fdt_add_subnode(dtb_buf, off, node_name);
--
--				if (off < 0) {
--					fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
-+				/* Error should have been reported */
-+				if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
-+						"bootargs", command_line,
-+						strlen(command_line) + 1))
- 					return -1;
--				}
--
--				if (fdt_setprop(dtb_buf, off, prop_name,
--						command_line, strlen(command_line) + 1) != 0) {
--					fprintf(stderr, "FDT: Error setting %s/%s property.\n",
--						node_name, prop_name);
--					return -1;
--				}
- 			}
- 		} else {
- 			/*
-@@ -417,6 +437,19 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		if (ramdisk) {
- 			add_segment(info, ramdisk_buf, initrd_size,
- 			            initrd_base, initrd_size);
-+
-+			unsigned long start, end;
-+			start = cpu_to_be32((unsigned long)(initrd_base));
-+			end = cpu_to_be32((unsigned long)(initrd_base + initrd_size));
-+
-+			if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
-+					"linux,initrd-start", &start,
-+					sizeof(start)))
-+				return -1;
-+			if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
-+					"linux,initrd-end", &end,
-+					sizeof(end)))
-+				return -1;
- 		}
- 
- 		/* Stick the dtb at the end of the initrd and page
--- 
-1.8.4
-
+> 
+> That way you don't have to worry about the value of
+> CONFIG_RANDOMIZE_MAX_BASE_OFFSET.
+> 
+> > 
+> > > 
+> > > Hi Chao,
+> > > 
+> > > Documentation/x86/x86_64/mm.txt still says that kernel text mapping area
+> > > is 512MB.
+> > > 
+> > > ffffffff80000000 - ffffffffa0000000 (=512 MB)  kernel text mapping, from
+> > > phys 0
+> > > 
+> > > So has that changed now due to kASLR.
+> > 
+> > Yes, with kASLR enabled, kernel text mapping is as following
+> > 
+> > ffffffff80000000 - (ffffffff80000000+CONFIG_RANDOMIZE_BASE_MAX_OFFSET)
+> > 
+> > That said, if using CONFIG_RANDOMIZE_BASE_MAX_OFFSET=0x40000000 by
+> > default, the kernel text mapping is as following:
+> > 
+> > ffffffff80000000 - ffffffffc0000000
+> > 
+> 
+> Agreed. help text for CONFIG_RANDOMIZE_BASE_MAX_OFFSET says following.
+> 
+> On 64-bit this is limited by how the kernel fixmap page table is
+> positioned, so this cannot be larger than 1GiB currently.  Without
+> RANDOMIZE_BASE, there is a 512MiB to 1.5GiB split between kernel
+> and modules. When RANDOMIZE_BASE_MAX_OFFSET is above 512MiB, the
+> modules area will shrink to compensate, up to the current maximum
+> 1GiB to 1GiB split. The default is 1GiB.
+> 
+> Thanks
+> Vivek
 
 _______________________________________________
 kexec mailing list
