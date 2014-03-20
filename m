@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQU02-0001jK-SM
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 03:50:35 +0000
-Date: Thu, 20 Mar 2014 12:50:12 +0900
+ id 1WQU0q-0001lh-Kl
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 03:51:25 +0000
+Date: Thu, 20 Mar 2014 12:51:02 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 0/4] kexec-tools, x86: E820 memmap pass for kdump
-Message-ID: <20140320035012.GC10601@verge.net.au>
-References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
- <20140319175757.GC31785@oranje.fc.hp.com>
+Subject: Re: [PATCH 1/2] kexec: align initrd when no --image-size passed
+Message-ID: <20140320035102.GD10601@verge.net.au>
+References: <1395282993-37549-1-git-send-email-wangnan0@huawei.com>
+ <1395282993-37549-2-git-send-email-wangnan0@huawei.com>
+ <20140320032506.GA4722@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140319175757.GC31785@oranje.fc.hp.com>
+In-Reply-To: <20140320032506.GA4722@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,69 +25,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Linn Crosetto <linn@hp.com>
-Cc: kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Wang Nan <wangnan0@huawei.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On Wed, Mar 19, 2014 at 11:57:57AM -0600, Linn Crosetto wrote:
-> On Wed, Mar 19, 2014 at 04:03:57PM +0800, WANG Chao wrote:
-> > Hi, All
+On Thu, Mar 20, 2014 at 11:25:07AM +0800, Dave Young wrote:
+> On 03/20/14 at 10:36am, Wang Nan wrote:
+> > Before this patch, when no --image-size passed, initrd_base is caculated using
+> > base + len * 4, which is unaligned, and unable to pass check in
+> > add_segment_phys_virt():
 > > 
-> > When kaslr comes in and kdump is broken, it seems about the right time to use
-> > E820 instead of memmap=exactmap to pass memmap for kdump for the default memmap
-> > passing mechanism:
-> > http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
+> > 	if (base & (pagesize -1)) {
+> > 		die("Base address: 0x%lx is not page aligned\n", base);
+> > 	}
 > > 
-> > Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
-> > like the only one). So for backward compatibility, I'm introducing a new option
-> > --pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
+> > This patch also uses getpagesize() instead of hard encoded 4096.
 > > 
-> > Any comment is appreciate!
+> > Signed-off-by: Wang Nan <wangnan0@huawei.com>
+> > Cc: Simon Horman <horms@verge.net.au>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Geng Hui <hui.geng@huawei.com>
+> > ---
+> >  kexec/arch/arm/kexec-zImage-arm.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
 > > 
-> > v3->v4:
-> > Linn: check return value of malloc (use xmalloc)
-> > me: fix dbgprintf_mem_range
+> > diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> > index 792187a..8a35018 100644
+> > --- a/kexec/arch/arm/kexec-zImage-arm.c
+> > +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> > @@ -347,11 +347,11 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+> >  		/* If the image size was passed as command line argument,
+> >  		 * use that value for determining the address for initrd,
+> >  		 * atags and dtb images. page-align the given length.*/
+> > -		initrd_base = base + _ALIGN(kexec_arm_image_size, 4096);
+> > +		initrd_base = base + _ALIGN(kexec_arm_image_size, getpagesize());
+> >  	} else {
+> >  		/* Otherwise, assume the maximum kernel compression ratio
+> >  		 * is 4, and just to be safe, place ramdisk after that */
+> > -		initrd_base = base + len * 4;
+> > +		initrd_base = base + _ALIGN(len * 4, getpagesize());
+> >  	}
+> >  
+> >  	if (use_atags) {
+> > -- 
+> > 1.8.4
 > > 
-> > v2->v3:
-> > Linn:
-> >  - do not free sd (setup_data) buffer
-> >  - reuse code in setup_e820 and setup_e820_ext
-> > 
-> > v1->v2:
-> > 
-> > Vivek:
-> >  - Use function instead of macro for dbgprint_mem_range
-> >  - Do not pass reserved memory range for kdump. It could addressed later
-> >    separately.
-> > 
-> > WANG Chao (4):
-> >   cleanup: add dbgprint_mem_range function
-> >   x86: Store memory ranges globally used for crash kernel to boot into
-> >   x86: add --pass-memmap-cmdline option
-> >   x86: Pass memory range via E820 for kdump
-> > 
-> >  kexec/arch/i386/crashdump-x86.c        | 157 ++++++++++++++++--------------
-> >  kexec/arch/i386/crashdump-x86.h        |   6 +-
-> >  kexec/arch/i386/include/arch/options.h |   2 +
-> >  kexec/arch/i386/kexec-x86-common.c     |   6 +-
-> >  kexec/arch/i386/kexec-x86.c            |   4 +
-> >  kexec/arch/i386/kexec-x86.h            |   1 +
-> >  kexec/arch/i386/x86-linux-setup.c      | 171 ++++++++++++++++++++++-----------
-> >  kexec/arch/i386/x86-linux-setup.h      |   1 +
-> >  kexec/arch/x86_64/kexec-x86_64.c       |   5 +
-> >  kexec/kexec.c                          |  10 ++
-> >  kexec/kexec.h                          |   1 +
-> >  11 files changed, 231 insertions(+), 133 deletions(-)
 > 
-> Thanks for the patches. Tested (adding a fix provided by Dave Young for
-> http://lists.infradead.org/pipermail/kexec/2014-March/011262.html) and
-> successful with both kexec and kdump, both with and without
-> --pass-memmap-cmdline.
+> Acked-by: Dave Young <dyoung@redhat.com>
 
-Is the patch a pre-requisite for this series?
-If so, has it been posted formally?
-If so, could you point it out to me?
-
-Thanks
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
