@@ -1,15 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQXZM-0005Th-OZ
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 07:39:19 +0000
-From: Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH v3 1/2] kexec: introduce setup_dtb_prop to make code clear
-Date: Thu, 20 Mar 2014 07:33:56 +0000
-Message-ID: <1395300837-18687-2-git-send-email-wangnan0@huawei.com>
-In-Reply-To: <1395300837-18687-1-git-send-email-wangnan0@huawei.com>
-References: <1395300837-18687-1-git-send-email-wangnan0@huawei.com>
-MIME-Version: 1.0
+ id 1WQa9H-0002JP-2i
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 10:24:31 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Thu, 20 Mar 2014 10:24:05 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id F0C402190046
+ for <kexec@lists.infradead.org>; Thu, 20 Mar 2014 10:23:56 +0000 (GMT)
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+ [9.149.37.212])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s2KANovx53412076
+ for <kexec@lists.infradead.org>; Thu, 20 Mar 2014 10:23:50 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s2KAO1ta004318
+ for <kexec@lists.infradead.org>; Thu, 20 Mar 2014 04:24:01 -0600
+Date: Thu, 20 Mar 2014 11:23:59 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
+Message-ID: <20140320112359.25f0ad54@holzheu>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
+References: <20140228134148.15b60ceb@holzheu> <531FDF6D.5080901@jp.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F512A@BPXM01GP.gisp.nec.co.jp>
+ <20140312171812.02f0bfe1@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F672F@BPXM01GP.gisp.nec.co.jp>
+ <20140314151928.5c49f17f@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,137 +45,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Wang Nan <wangnan0@huawei.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-This patch introduces setup_dtb_prop(), which is used for dtb
-operations. The code is extracted from zImage_arm_load, and this patch
-makes memory grown computation more accurate.
+On Wed, 19 Mar 2014 07:14:25 +0000
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Geng Hui <hui.geng@huawei.com>
+> >Hello Atsushi,
+> >
+> >I debugged my problem a bit further and tried to implement
+> >a function that gets the maximum page frame number from the
+> >Linux kernel memory management structures.
+> >
+> >I am no memory management expert, so the following patch probably
+> >is not complete, but at least for my setup it worked.
+> 
+> The patch looks good for your case, but I don't think it's a proper
+> approach for this problem.
+
+Hello Atsushi,
+
+If you don't like that solution, what about using the mem_map_data[]
+array of makedumpfile to adjust "max_mapnr"?
+
+The patch below also works fine for my dump.
+
+Michael
 ---
- kexec/arch/arm/kexec-zImage-arm.c | 96 ++++++++++++++++++++++++++++-----------
- 1 file changed, 70 insertions(+), 26 deletions(-)
+ makedumpfile.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 8a35018..977254e 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -216,6 +216,68 @@ int atag_arm_load(struct kexec_info *info, unsigned long base,
- 	return 0;
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
+ int
+ get_mem_map(void)
+ {
+-	int ret;
++	unsigned long max_pfn = 0;
++	int ret, i;
+ 
+ 	switch (get_mem_type()) {
+ 	case SPARSEMEM:
+@@ -2861,6 +2862,17 @@ get_mem_map(void)
+ 		ret = FALSE;
+ 		break;
+ 	}
++	/*
++	 * Adjust "max_mapnr" for the case that Linux uses less memory
++	 * than is dumped. For example when "mem=" has been used for the
++	 * dumped system.
++	 */
++	for (i = 0; i < info->num_mem_map; i++) {
++		if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
++			continue;
++		max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
++	}
++	info->max_mapnr = max_pfn;
+ 	return ret;
  }
  
-+static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
-+		const char *prop_name, const void *val, int len)
-+{
-+	char *dtb_buf;
-+	int off;
-+
-+	if ((bufp == NULL) || (sizep == NULL) || (*bufp == NULL))
-+		die("Internal error\n");
-+
-+	dtb_buf = *bufp;
-+
-+	/* 
-+	 * Potential memory usage grown:
-+	 *
-+	 * 1. if fdt_add_subnode is called:
-+	 *    sizeof(struct fdt_node_header) + FDT_TAGALIGN(nodename+1) + FDT_TAGSIZE
-+	 *       // see fdt_add_subnode_namelen()
-+	 *
-+	 * 2. in fdt_setprop, if _fdt_add_property is called:
-+	 *  a) strlen(prop_name) + 1  // see _fdt_find_add_string()
-+	 *  b) sizeof(struct fdt_property) + FDT_TAGALIGN(len) 
-+	 *        // see _fdt_add_property()
-+	 *
-+	 * FDT_TAGALIGN is (FDT_ALIGN((x), FDT_TAGSIZE)), which is same
-+	 * to _ALIGN(x, FDT_TAGSIZE).
-+	 */
-+
-+	*sizep = fdt_totalsize(*bufp) +
-+		/* fdt_add_subnode -> fdt_add_subnode_namelen */
-+		sizeof(struct fdt_node_header) +
-+		_ALIGN(strlen(node_name) + 1, FDT_TAGSIZE) +
-+		FDT_TAGSIZE +
-+		/* fdt_setprop -> _fdt_add_property -> _fdt_find_add_string */
-+		strlen(prop_name) + 1 +
-+		/* fdt_setprop -> _fdt_add_property */
-+		sizeof(struct fdt_property) + _ALIGN(len, FDT_TAGSIZE);
-+
-+	dtb_buf = xrealloc(dtb_buf, *sizep);
-+	if (dtb_buf == NULL)
-+		die("xrealloc failed\n");
-+	*bufp = dtb_buf;
-+
-+	fdt_set_totalsize(dtb_buf, *sizep);
-+
-+	/* check if the subnode already exists */
-+	off = fdt_path_offset(dtb_buf, node_name);
-+
-+	if (off == -FDT_ERR_NOTFOUND)
-+		off = fdt_add_subnode(dtb_buf, off, node_name);
-+	if (off < 0) {
-+		fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
-+		return -1;
-+	}
-+	if (fdt_setprop(dtb_buf, off, prop_name,
-+				val, len) != 0) {
-+		fprintf(stderr, "FDT: Error setting %s/%s property.\n",
-+				node_name, prop_name);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
-@@ -375,32 +437,14 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 			}
- 
- 			if (command_line) {
--				const char *node_name = "/chosen";
--				const char *prop_name = "bootargs";
--				int off;
--
--				dtb_length = fdt_totalsize(dtb_buf) + 1024 +
--					strlen(command_line);
--				dtb_buf = xrealloc(dtb_buf, dtb_length);
--				fdt_set_totalsize(dtb_buf, dtb_length);
--
--				/* check if a /choosen subnode already exists */
--				off = fdt_path_offset(dtb_buf, node_name);
--
--				if (off == -FDT_ERR_NOTFOUND)
--					off = fdt_add_subnode(dtb_buf, off, node_name);
--
--				if (off < 0) {
--					fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
--					return -1;
--				}
--
--				if (fdt_setprop(dtb_buf, off, prop_name,
--						command_line, strlen(command_line) + 1) != 0) {
--					fprintf(stderr, "FDT: Error setting %s/%s property.\n",
--						node_name, prop_name);
--					return -1;
--				}
-+				/*  
-+				 *  Error should have been reported so
-+				 *  directly return -1
-+				 */
-+				if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
-+						"bootargs", command_line,
-+						strlen(command_line) + 1))
-+ 					return -1;
- 			}
- 		} else {
- 			/*
--- 
-1.8.3.4
 
 
 _______________________________________________
