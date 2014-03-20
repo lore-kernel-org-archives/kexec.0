@@ -1,38 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQLFZ-0003vc-Vx
- for kexec@lists.infradead.org; Wed, 19 Mar 2014 18:30:03 +0000
-Received: from /spool/local
- by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 19 Mar 2014 18:29:38 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com
- (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 72E082190041
- for <kexec@lists.infradead.org>; Wed, 19 Mar 2014 18:29:31 +0000 (GMT)
-Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
- [9.149.37.213])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s2JITOPC61866106
- for <kexec@lists.infradead.org>; Wed, 19 Mar 2014 18:29:24 GMT
-Received: from d06av03.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av03.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s2JITZVu028354
- for <kexec@lists.infradead.org>; Wed, 19 Mar 2014 12:29:36 -0600
-Date: Wed, 19 Mar 2014 19:29:32 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
-Message-ID: <20140319192932.40310fac@holzheu>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
-References: <20140228134148.15b60ceb@holzheu> <531FDF6D.5080901@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971F512A@BPXM01GP.gisp.nec.co.jp>
- <20140312171812.02f0bfe1@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971F672F@BPXM01GP.gisp.nec.co.jp>
- <20140314151928.5c49f17f@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WQSEh-00087E-NI
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 01:57:37 +0000
+Date: Thu, 20 Mar 2014 09:58:24 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH] kexec-tools: handle 64bit efi memmap address correctly
+Message-ID: <20140320015824.GA3497@dhcp-16-126.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,133 +21,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: matt.fleming@intel.com, toshi.kani@hp.com, chaowang@redhat.com, horms@verge.net.au, linn@hp.com, bp@suse.de, trenn@suse.de, vgoyal@redhat.com
 
-On Wed, 19 Mar 2014 07:14:25 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+In case using crashkernel=xM,high crashkernel memory will be allocated from top to down
+Thus the usable memory for kdump kernel could be bigger than 4G. The efi memmap value
+is two 32 bit values efi_memmap and efi_memmap_hi, previously I only passed the efi_memmap
+so for the high memory address there will be below kernel panic: 
 
-> >Hello Atsushi,
-> >
-> >I debugged my problem a bit further and tried to implement
-> >a function that gets the maximum page frame number from the
-> >Linux kernel memory management structures.
-> >
-> >I am no memory management expert, so the following patch probably
-> >is not complete, but at least for my setup it worked.
-> 
-> The patch looks good for your case, but I don't think it's a proper
-> approach for this problem.
-> 
-> Now, I think this is a problem of get_mm_sparsemem() in makedumpfile.
-> To say in more detail, the problem is "wrong calculating the address
-> of unused mem_map".
-> 
-> Looking at the log you sent, some addresses of mem_map corresponding
-> to unused pages look invalid like below:
-> 
-> mem_map (256)
->   mem_map    : 80000c0002018
->   pfn_start  : 1000000
->   pfn_end    : 1010000
-> mem_map (257)
->   mem_map    : 800001840400000
->   pfn_start  : 1010000
->   pfn_end    : 1020000
-> ...
-> mem_map (544)
->   mem_map    : a82400012f14fffc
->   pfn_start  : 2200000
->   pfn_end    : 2210000
-> 
-> ...(and more)
-> 
-> However, makedumpfile should calculate such unused mem_map addresses
-> as 0(NOT_MEMMAP_ADDR). Actually it works as expected at least in my
-> environment(x86_64):
-> 
-> ...
-> mem_map (16)
->   mem_map    : 0
->   pfn_start  : 80000
->   pfn_end    : 88000
-> mem_map (17)
->   mem_map    : 0
->   pfn_start  : 88000
->   pfn_end    : 90000
-> ...
-> 
-> makedumpfile get the address from mem_section.section_mem_map,
-> it will be initialized with zero: 
-> 
-> [CONFIG_SPARSEMEM_EXTREAM]
->   paging_init()
->     sparse_memory_present_with_active_regions()
->       memory_present()
->         sparse_index_init()
->           sparse_index_alloc()   // allocate mem_section with kzalloc()
-> 
-> makedumpfile assumes the value of unused mem_section will remain as 0,
-> but I suspect this assumption may be broken in your environment.
-> 
+[    0.000000] efi: EFI v2.31 by American Megatrends
+[    0.000000] efi:  ACPI 2.0=0xdb752000  SMBIOS=0xdbab4b98  ACPI=0xdb752000  MPS=0xf4bd0 
+[    0.000000] efi: mem00: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
+[    0.000000] efi: mem01: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
+[    0.000000] efi: mem02: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
+[    0.000000] efi: mem03: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
+[    0.000000] efi: mem04: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
+[    0.000000] SMBIOS 2.7 present.
 
-Hello Atshushi,
+[snip]
 
-I noticed that my last patch was not complete. It only checked the
-mem_section[] array for zero entries. But as you noticed, we also
-have to check the section array that we get from the mem_section
-entries.
+[    0.082451] BUG: unable to handle kernel paging request at ffffa3d0f0000000
+[    0.089467] IP: [<ffffffff810513d1>] native_set_pte+0x1/0x10
+[    0.095157] PGD 0 
+[    0.097197] Oops: 0002 [#1] SMP 
+[    0.100466] Modules linked in:
+[    0.103554] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.14.0-rc7 #157
+[    0.110001] Hardware name: Hewlett-Packard HP Z420 Workstation/1589, BIOS J61 v03.15 05/09/2013
+[    0.118697] task: ffffffff818e1460 ti: ffffffff818ce000 task.ti: ffffffff818ce000
+[    0.126181] RIP: 0010:[<ffffffff810513d1>]  [<ffffffff810513d1>] native_set_pte+0x1/0x10
+[    0.134296] RSP: 0000:ffffffff818cfc80  EFLAGS: 00010287
+[    0.139609] RAX: 0000000000000000 RBX: ffffa3d0f0000000 RCX: 00003ffffffff000
+[    0.146744] RDX: ffff880000000000 RSI: 0000000000000000 RDI: ffffa3d0f0000000
+[    0.153879] RBP: ffffffff818cfcb8 R08: ffffea0010745d20 R09: 0000000000000000
+[    0.161013] R10: ffff88041f731fc0 R11: 000000000000001e R12: 0000000000200000
+[    0.168148] R13: 0000000000000000 R14: 0000000000400000 R15: ffff880000000008
+[    0.175288] FS:  0000000000000000(0000) GS:ffff88041f200000(0000) knlGS:0000000000000000
+[    0.183377] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.189125] CR2: ffffa3d0f0000000 CR3: 000000041e8da000 CR4: 00000000000406b0
+[    0.196264] Stack:
+[    0.198283]  ffffffff818cfcb8 ffffffff810561d7 ffff880000000008 0000000000400000
+[    0.205746]  ffff880000001000 00000000000001ff ffff88041e8de000 ffffffff818cfd00
+[    0.213210]  ffffffff8105644e 0000000000200000 0000000040000000 00000000ffffffff
+[    0.220676] Call Trace:
+[    0.223130]  [<ffffffff810561d7>] ? unmap_pte_range+0x77/0x110
+[    0.228966]  [<ffffffff8105644e>] unmap_pmd_range+0xde/0x210
+[    0.234630]  [<ffffffff81056c6b>] __cpa_process_fault+0x48b/0x5e0
+[    0.240730]  [<ffffffff81057276>] __change_page_attr_set_clr+0x4b6/0xb10
+[    0.247437]  [<ffffffff810557c7>] ? __ioremap_caller+0x277/0x360
+[    0.253454]  [<ffffffff810589f1>] kernel_map_pages_in_pgd+0x71/0xa0
+[    0.259736]  [<ffffffff81a53361>] __map_region+0x45/0x63
+[    0.265051]  [<ffffffff81a535cc>] efi_map_region_fixed+0xd/0xf
+[    0.270886]  [<ffffffff81a52f19>] efi_enter_virtual_mode+0x5a/0x3d9
+[    0.277162]  [<ffffffff81a77516>] ? acpi_enable_subsystem+0x37/0x90
+[    0.283440]  [<ffffffff81a36eb9>] start_kernel+0x386/0x41c
+[    0.288931]  [<ffffffff81a3693c>] ? repair_env_string+0x5c/0x5c
+[    0.294852]  [<ffffffff81a36120>] ? early_idt_handlers+0x120/0x120
+[    0.301035]  [<ffffffff81a365ee>] x86_64_start_reservations+0x2a/0x2c
+[    0.307479]  [<ffffffff81a3672e>] x86_64_start_kernel+0x13e/0x14d
+[    0.313572] Code: 66 2e 0f 1f 84 00 00 00 00 00 48 8b 46 18 55 48 89 e5 48 89 47 04 5d c3 66 90 55 48 89 e5 0f 01 f8 5d c3 0f 1f 8 
+[    0.333545] RIP  [<ffffffff810513d1>] native_set_pte+0x1/0x10
+[    0.339312]  RSP <ffffffff818cfc80>
+[    0.342807] CR2: ffffa3d0f0000000
+[    0.346141] ---[ end trace 86088f739725b8c6 ]---
+[    0.350760] Kernel panic - not syncing: Fatal exception
 
-So I updated the patch.
+Fix this by passing both efi_memmap and efi_memmap_hi to 2nd kernel.
 
-Michael
+Reported-by: Linn Crosetto <linn@hp.com>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Tested-by: Linn Crosetto <linn@hp.com>
 ---
- makedumpfile.c |   22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ kexec/arch/i386/x86-linux-setup.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2690,11 +2690,14 @@ nr_to_section(unsigned long nr, unsigned
- {
- 	unsigned long addr;
+Index: kexec-tools/kexec/arch/i386/x86-linux-setup.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
++++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
+@@ -656,7 +656,8 @@ static int setup_efi_data(struct kexec_i
+ 	size = nr_maps * sizeof(struct efi_mem_descriptor);
+ 	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
+ 					0x100000, ULONG_MAX, INT_MAX);
+-	ei->efi_memmap = memmap_paddr;
++	ei->efi_memmap = memmap_paddr & 0xffffffff;
++	ei->efi_memmap_hi = memmap_paddr >> 32;
+ 	ei->efi_memmap_size = size;
+ 	ei->efi_memdesc_size = sizeof(struct efi_mem_descriptor);
  
--	if (is_sparsemem_extreme())
-+	if (is_sparsemem_extreme()) {
-+		if (mem_sec[SECTION_NR_TO_ROOT(nr)] == 0)
-+			return NOT_KV_ADDR;
- 		addr = mem_sec[SECTION_NR_TO_ROOT(nr)] +
- 		    (nr & SECTION_ROOT_MASK()) * SIZE(mem_section);
--	else
-+	} else {
- 		addr = SYMBOL(mem_section) + (nr * SIZE(mem_section));
-+	}
- 
- 	if (!is_kvaddr(addr))
- 		return NOT_KV_ADDR;
-@@ -2778,10 +2781,19 @@ get_mm_sparsemem(void)
- 	}
- 	for (section_nr = 0; section_nr < num_section; section_nr++) {
- 		section = nr_to_section(section_nr, mem_sec);
--		mem_map = section_mem_map_addr(section);
--		mem_map = sparse_decode_mem_map(mem_map, section_nr);
--		if (!is_kvaddr(mem_map))
-+		if (section == NOT_KV_ADDR) {
- 			mem_map = NOT_MEMMAP_ADDR;
-+		} else {
-+			mem_map = section_mem_map_addr(section);
-+			if (mem_map == 0) {
-+				mem_map = NOT_MEMMAP_ADDR;
-+			} else {
-+				mem_map = sparse_decode_mem_map(mem_map,
-+								section_nr);
-+				if (!is_kvaddr(mem_map))
-+					mem_map = NOT_MEMMAP_ADDR;
-+			}
-+		}
- 		pfn_start = section_nr * PAGES_PER_SECTION();
- 		pfn_end   = pfn_start + PAGES_PER_SECTION();
- 		if (info->max_mapnr < pfn_end)
-
 
 _______________________________________________
 kexec mailing list
