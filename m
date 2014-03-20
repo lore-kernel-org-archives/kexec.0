@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQU0q-0001lh-Kl
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 03:51:25 +0000
-Date: Thu, 20 Mar 2014 12:51:02 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] kexec: align initrd when no --image-size passed
-Message-ID: <20140320035102.GD10601@verge.net.au>
-References: <1395282993-37549-1-git-send-email-wangnan0@huawei.com>
- <1395282993-37549-2-git-send-email-wangnan0@huawei.com>
- <20140320032506.GA4722@dhcp-16-126.nay.redhat.com>
+Received: from szxga03-in.huawei.com ([119.145.14.66])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WQU8R-0001tL-BQ
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 03:59:17 +0000
+Message-ID: <532A6725.3010903@huawei.com>
+Date: Thu, 20 Mar 2014 11:57:25 +0800
+From: Wang Nan <wangnan0@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140320032506.GA4722@dhcp-16-126.nay.redhat.com>
+Subject: Re: [PATCH 2/2] kexec: pass initrd position in dtb
+References: <1395282993-37549-1-git-send-email-wangnan0@huawei.com>
+ <1395282993-37549-3-git-send-email-wangnan0@huawei.com>
+ <20140320032645.GB4722@dhcp-16-126.nay.redhat.com>
+ <20140320033459.GC4722@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20140320033459.GC4722@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +26,70 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Wang Nan <wangnan0@huawei.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On Thu, Mar 20, 2014 at 11:25:07AM +0800, Dave Young wrote:
-> On 03/20/14 at 10:36am, Wang Nan wrote:
-> > Before this patch, when no --image-size passed, initrd_base is caculated using
-> > base + len * 4, which is unaligned, and unable to pass check in
-> > add_segment_phys_virt():
-> > 
-> > 	if (base & (pagesize -1)) {
-> > 		die("Base address: 0x%lx is not page aligned\n", base);
-> > 	}
-> > 
-> > This patch also uses getpagesize() instead of hard encoded 4096.
-> > 
-> > Signed-off-by: Wang Nan <wangnan0@huawei.com>
-> > Cc: Simon Horman <horms@verge.net.au>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Geng Hui <hui.geng@huawei.com>
-> > ---
-> >  kexec/arch/arm/kexec-zImage-arm.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-> > index 792187a..8a35018 100644
-> > --- a/kexec/arch/arm/kexec-zImage-arm.c
-> > +++ b/kexec/arch/arm/kexec-zImage-arm.c
-> > @@ -347,11 +347,11 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
-> >  		/* If the image size was passed as command line argument,
-> >  		 * use that value for determining the address for initrd,
-> >  		 * atags and dtb images. page-align the given length.*/
-> > -		initrd_base = base + _ALIGN(kexec_arm_image_size, 4096);
-> > +		initrd_base = base + _ALIGN(kexec_arm_image_size, getpagesize());
-> >  	} else {
-> >  		/* Otherwise, assume the maximum kernel compression ratio
-> >  		 * is 4, and just to be safe, place ramdisk after that */
-> > -		initrd_base = base + len * 4;
-> > +		initrd_base = base + _ALIGN(len * 4, getpagesize());
-> >  	}
-> >  
-> >  	if (use_atags) {
-> > -- 
-> > 1.8.4
-> > 
+On 2014/3/20 11:34, Dave Young wrote:
+> On 03/20/14 at 11:26am, Dave Young wrote:
+>> On 03/20/14 at 10:36am, Wang Nan wrote:
+>>> This patch append the position of initrd to dtb when loading arm kernel
+>>> and initrd without using atag.
+>>>
+>>> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+>>> Cc: Simon Horman <horms@verge.net.au>
+>>> Cc: Dave Young <dyoung@redhat.com>
+>>> Cc: Geng Hui <hui.geng@huawei.com>
+>>> ---
+>>>  kexec/arch/arm/kexec-zImage-arm.c | 84 +++++++++++++++++++++++++++------------
+>>>  1 file changed, 59 insertions(+), 25 deletions(-)
+>>>
+>>> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+>>> index 8a35018..15d8829 100644
+>>> --- a/kexec/arch/arm/kexec-zImage-arm.c
+>>> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+>>> @@ -20,6 +20,7 @@
+>>>  #include "kexec-arm.h"
+>>>  #include "../../fs2dt.h"
+>>>  #include "crashdump-arm.h"
+>>> +#include "libfdt_internal.h"
+>>
+>> I guess it's for the FDT_TAGALIGN and FDT_TAGSIZE?
+>> libfdt_internal.h should be used as internal header for libfdt, a better way is
+>> adding another patch which move these 2 macros to fdt.h
 > 
-> Acked-by: Dave Young <dyoung@redhat.com>
+> Or moving your new function setup_dtb_prop to libfdt, I'm not sure if it works on
+> other arch though.
+> 
+>> Thanks
+>> Dave
 
-Thanks, applied.
+
+What about following midification (FDT_TAGSIZE is in fdt.h)?
+I'll send it formally if you agree this one.
+
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index 15d8829..1cd4ed0 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -20,7 +20,6 @@
+ #include "kexec-arm.h"
+ #include "../../fs2dt.h"
+ #include "crashdump-arm.h"
+-#include "libfdt_internal.h"
+
+ #define BOOT_PARAMS_SIZE 1536
+
+@@ -229,8 +228,8 @@ static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
+        dtb_buf = *bufp;
+
+        *sizep = fdt_totalsize(*bufp) + FDT_TAGSIZE + len +
+-               FDT_TAGALIGN(strlen(node_name) + 1) +
+-               FDT_TAGALIGN(strlen(prop_name) + 1) +
++               _ALIGN(strlen(node_name) + 1, FDT_TAGSIZE) +
++               _ALIGN(strlen(prop_name) + 1, FDT_TAGSIZE) +
+                sizeof(struct fdt_property);
+
+        dtb_buf = xrealloc(dtb_buf, *sizep);
+
 
 _______________________________________________
 kexec mailing list
