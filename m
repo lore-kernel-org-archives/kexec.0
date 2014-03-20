@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQV6b-0002z8-Tx
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 05:01:26 +0000
-Date: Thu, 20 Mar 2014 13:00:49 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v4 0/4] kexec-tools, x86: E820 memmap pass for kdump
-Message-ID: <20140320050049.GE24486@dhcp-17-89.nay.redhat.com>
-References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
- <20140319175757.GC31785@oranje.fc.hp.com>
- <20140320035012.GC10601@verge.net.au>
+ id 1WQVeg-0003Kd-BL
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 05:36:40 +0000
+Date: Thu, 20 Mar 2014 13:37:28 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 2/2] kexec: pass initrd position in dtb
+Message-ID: <20140320053728.GD4722@dhcp-16-126.nay.redhat.com>
+References: <1395282993-37549-1-git-send-email-wangnan0@huawei.com>
+ <1395282993-37549-3-git-send-email-wangnan0@huawei.com>
+ <20140320032645.GB4722@dhcp-16-126.nay.redhat.com>
+ <20140320033459.GC4722@dhcp-16-126.nay.redhat.com>
+ <532A6725.3010903@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140320035012.GC10601@verge.net.au>
+In-Reply-To: <532A6725.3010903@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,87 +27,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Linn Crosetto <linn@hp.com>, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: Wang Nan <wangnan0@huawei.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On 03/20/14 at 12:50pm, Simon Horman wrote:
-> On Wed, Mar 19, 2014 at 11:57:57AM -0600, Linn Crosetto wrote:
-> > On Wed, Mar 19, 2014 at 04:03:57PM +0800, WANG Chao wrote:
-> > > Hi, All
-> > > 
-> > > When kaslr comes in and kdump is broken, it seems about the right time to use
-> > > E820 instead of memmap=exactmap to pass memmap for kdump for the default memmap
-> > > passing mechanism:
-> > > http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
-> > > 
-> > > Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
-> > > like the only one). So for backward compatibility, I'm introducing a new option
-> > > --pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
-> > > 
-> > > Any comment is appreciate!
-> > > 
-> > > v3->v4:
-> > > Linn: check return value of malloc (use xmalloc)
-> > > me: fix dbgprintf_mem_range
-> > > 
-> > > v2->v3:
-> > > Linn:
-> > >  - do not free sd (setup_data) buffer
-> > >  - reuse code in setup_e820 and setup_e820_ext
-> > > 
-> > > v1->v2:
-> > > 
-> > > Vivek:
-> > >  - Use function instead of macro for dbgprint_mem_range
-> > >  - Do not pass reserved memory range for kdump. It could addressed later
-> > >    separately.
-> > > 
-> > > WANG Chao (4):
-> > >   cleanup: add dbgprint_mem_range function
-> > >   x86: Store memory ranges globally used for crash kernel to boot into
-> > >   x86: add --pass-memmap-cmdline option
-> > >   x86: Pass memory range via E820 for kdump
-> > > 
-> > >  kexec/arch/i386/crashdump-x86.c        | 157 ++++++++++++++++--------------
-> > >  kexec/arch/i386/crashdump-x86.h        |   6 +-
-> > >  kexec/arch/i386/include/arch/options.h |   2 +
-> > >  kexec/arch/i386/kexec-x86-common.c     |   6 +-
-> > >  kexec/arch/i386/kexec-x86.c            |   4 +
-> > >  kexec/arch/i386/kexec-x86.h            |   1 +
-> > >  kexec/arch/i386/x86-linux-setup.c      | 171 ++++++++++++++++++++++-----------
-> > >  kexec/arch/i386/x86-linux-setup.h      |   1 +
-> > >  kexec/arch/x86_64/kexec-x86_64.c       |   5 +
-> > >  kexec/kexec.c                          |  10 ++
-> > >  kexec/kexec.h                          |   1 +
-> > >  11 files changed, 231 insertions(+), 133 deletions(-)
+On 03/20/14 at 11:57am, Wang Nan wrote:
+> On 2014/3/20 11:34, Dave Young wrote:
+> > On 03/20/14 at 11:26am, Dave Young wrote:
+> >> On 03/20/14 at 10:36am, Wang Nan wrote:
+> >>> This patch append the position of initrd to dtb when loading arm kernel
+> >>> and initrd without using atag.
+> >>>
+> >>> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+> >>> Cc: Simon Horman <horms@verge.net.au>
+> >>> Cc: Dave Young <dyoung@redhat.com>
+> >>> Cc: Geng Hui <hui.geng@huawei.com>
+> >>> ---
+> >>>  kexec/arch/arm/kexec-zImage-arm.c | 84 +++++++++++++++++++++++++++------------
+> >>>  1 file changed, 59 insertions(+), 25 deletions(-)
+> >>>
+> >>> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> >>> index 8a35018..15d8829 100644
+> >>> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> >>> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> >>> @@ -20,6 +20,7 @@
+> >>>  #include "kexec-arm.h"
+> >>>  #include "../../fs2dt.h"
+> >>>  #include "crashdump-arm.h"
+> >>> +#include "libfdt_internal.h"
+> >>
+> >> I guess it's for the FDT_TAGALIGN and FDT_TAGSIZE?
+> >> libfdt_internal.h should be used as internal header for libfdt, a better way is
+> >> adding another patch which move these 2 macros to fdt.h
 > > 
-> > Thanks for the patches. Tested (adding a fix provided by Dave Young for
-> > http://lists.infradead.org/pipermail/kexec/2014-March/011262.html) and
-> > successful with both kexec and kdump, both with and without
-> > --pass-memmap-cmdline.
+> > Or moving your new function setup_dtb_prop to libfdt, I'm not sure if it works on
+> > other arch though.
+> > 
+> >> Thanks
+> >> Dave
+> 
+> 
+> What about following midification (FDT_TAGSIZE is in fdt.h)?
+> I'll send it formally if you agree this one.
+> 
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index 15d8829..1cd4ed0 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -20,7 +20,6 @@
+>  #include "kexec-arm.h"
+>  #include "../../fs2dt.h"
+>  #include "crashdump-arm.h"
+> -#include "libfdt_internal.h"
+> 
+>  #define BOOT_PARAMS_SIZE 1536
+> 
+> @@ -229,8 +228,8 @@ static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
+>         dtb_buf = *bufp;
+> 
+>         *sizep = fdt_totalsize(*bufp) + FDT_TAGSIZE + len +
+> -               FDT_TAGALIGN(strlen(node_name) + 1) +
+> -               FDT_TAGALIGN(strlen(prop_name) + 1) +
+> +               _ALIGN(strlen(node_name) + 1, FDT_TAGSIZE) +
+> +               _ALIGN(strlen(prop_name) + 1, FDT_TAGSIZE) +
+>                 sizeof(struct fdt_property);
+> 
+>         dtb_buf = xrealloc(dtb_buf, *sizep);
 > 
 
-Hi, Simon. I'll answer the questions below.
-
-> Is the patch a pre-requisite for this series?
-
-No. That's a separate problem of EFI. Old kexec-tools also needs the
-patch.
-
-> If so, has it been posted formally?
-
-Dave Young has sent to patch to kexec mail list. The subject is as
-follow:
-
-[PATCH] kexec-tools: handle 64bit efi memmap address correctly
-
-> If so, could you point it out to me?
-
-Dave's patch:
-http://lists.infradead.org/pipermail/kexec/2014-March/011303.html
+Looks good...
 
 Thanks
-WANG Chao
+Dave
 
 _______________________________________________
 kexec mailing list
