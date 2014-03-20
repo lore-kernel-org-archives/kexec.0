@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQTkL-0001Hw-3h
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 03:34:22 +0000
-Date: Thu, 20 Mar 2014 11:34:59 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 2/2] kexec: pass initrd position in dtb
-Message-ID: <20140320033459.GC4722@dhcp-16-126.nay.redhat.com>
-References: <1395282993-37549-1-git-send-email-wangnan0@huawei.com>
- <1395282993-37549-3-git-send-email-wangnan0@huawei.com>
- <20140320032645.GB4722@dhcp-16-126.nay.redhat.com>
+ id 1WQTuZ-0001Zh-Sp
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 03:44:56 +0000
+Date: Thu, 20 Mar 2014 12:44:31 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [kexec-tools PATCH] x86: extend kernel text size up to 1GB
+Message-ID: <20140320034428.GA10601@verge.net.au>
+References: <20140312031309.GA14477@dhcp-17-89.nay.redhat.com>
+ <20140314061232.GA8248@dhcp-16-126.nay.redhat.com>
+ <20140314064757.GB8248@dhcp-16-126.nay.redhat.com>
+ <20140314070357.GA22782@dhcp-17-89.nay.redhat.com>
+ <20140314070852.GC8248@dhcp-16-126.nay.redhat.com>
+ <20140314072929.GB22782@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140320032645.GB4722@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20140314072929.GB22782@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,41 +28,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wang Nan <wangnan0@huawei.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, ebiederm@xmission.com, vgoyal@redhat.com
 
-On 03/20/14 at 11:26am, Dave Young wrote:
-> On 03/20/14 at 10:36am, Wang Nan wrote:
-> > This patch append the position of initrd to dtb when loading arm kernel
-> > and initrd without using atag.
+On Fri, Mar 14, 2014 at 03:29:29PM +0800, WANG Chao wrote:
+> On 03/14/14 at 03:08pm, Dave Young wrote:
+> > On 03/14/14 at 03:03pm, WANG Chao wrote:
+> > > On 03/14/14 at 02:47pm, Dave Young wrote:
+> > > > On 03/14/14 at 02:12pm, Dave Young wrote:
+> > > > > On 03/12/14 at 11:13am, WANG Chao wrote:
+> > > > > > Currently kexec hard code X86_64_KERNEL_TEXT_SIZE to 512M. With kASLR
+> > > > > > enabled (CONFIG_RANDOMIZED_BASE=y), kernel image base offset could be
+> > > > > > randomized from 0 to 1GB and kexec-tools fails to get kernel virtual
+> > > > > > address from /proc/kcore when the offset is >512M.
+> > > > > > 
+> > > > > > Now extend X86_64_KERNEL_TEXT_SIZE to 1GB to adapt kASLR.
+> > > > > > 
+> > > > > > Signed-off-by: WANG Chao <chaowang@redhat.com>
+> > > > > > ---
+> > > > > >  kexec/arch/i386/crashdump-x86.h | 2 +-
+> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > 
+> > > > > > diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
+> > > > > > index e68b626..a5b2dfd 100644
+> > > > > > --- a/kexec/arch/i386/crashdump-x86.h
+> > > > > > +++ b/kexec/arch/i386/crashdump-x86.h
+> > > > > > @@ -18,7 +18,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+> > > > > >  #define X86_64_MAXMEM        		0x3fffffffffffUL
+> > > > > >  
+> > > > > >  /* Kernel text size */
+> > > > > > -#define X86_64_KERNEL_TEXT_SIZE  (512UL*1024*1024)
+> > > > > > +#define X86_64_KERNEL_TEXT_SIZE  (1UL*1024*1024*1024)
+> > > > > 
+> > > > > Should define a new macro such as: X86_KERNEL_TEXT_START_LIMIT (1UL*1024*1024*1024)
+> > > > > and then check end addr with X86_64_KERNEL_TEXT_SIZE + X86_64_KERNEL_TEXT_SIZE
+> > > > 
+> > > > I means check ktext with range <1G - 1.5G>
+> > > 
+> > > You're right.
+> > > 
+> > > I think it's fine adding new macro X86_64_RANDOMIZE_BASE_MAX_OFFSET
+> > > as 0x40000000 (1G) and doing the following check:
+> > > 
+> > > (start >= X86_64__START_KERNEL_map) &&
+> > >  (start <= X86_64__START_KERNEL_map + X86_64_RANDOMIZE_MAX_BASE_OFFSET) &&
+> > >  (end - start <= X86_64_KERNEL_TEXT_SIZE)
 > > 
-> > Signed-off-by: Wang Nan <wangnan0@huawei.com>
-> > Cc: Simon Horman <horms@verge.net.au>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Geng Hui <hui.geng@huawei.com>
-> > ---
-> >  kexec/arch/arm/kexec-zImage-arm.c | 84 +++++++++++++++++++++++++++------------
-> >  1 file changed, 59 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-> > index 8a35018..15d8829 100644
-> > --- a/kexec/arch/arm/kexec-zImage-arm.c
-> > +++ b/kexec/arch/arm/kexec-zImage-arm.c
-> > @@ -20,6 +20,7 @@
-> >  #include "kexec-arm.h"
-> >  #include "../../fs2dt.h"
-> >  #include "crashdump-arm.h"
-> > +#include "libfdt_internal.h"
+> > end - start < X86_64_KERNEL_TEXT_SIZE should be right, other wise I'm fine.
 > 
-> I guess it's for the FDT_TAGALIGN and FDT_TAGSIZE?
-> libfdt_internal.h should be used as internal header for libfdt, a better way is
-> adding another patch which move these 2 macros to fdt.h
+> Right. size = end - start + 1.
+> 
+> I'll post v2.
 
-Or moving your new function setup_dtb_prop to libfdt, I'm not sure if it works on
-other arch though.
+Hi,
 
-> Thanks
-> Dave
+I'd like to enquire about the status of this as I don't see v2 in my inbox.
+
 
 _______________________________________________
 kexec mailing list
