@@ -1,38 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQa9H-0002JP-2i
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 10:24:31 +0000
-Received: from /spool/local
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Thu, 20 Mar 2014 10:24:05 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id F0C402190046
- for <kexec@lists.infradead.org>; Thu, 20 Mar 2014 10:23:56 +0000 (GMT)
-Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
- [9.149.37.212])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s2KANovx53412076
- for <kexec@lists.infradead.org>; Thu, 20 Mar 2014 10:23:50 GMT
-Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s2KAO1ta004318
- for <kexec@lists.infradead.org>; Thu, 20 Mar 2014 04:24:01 -0600
-Date: Thu, 20 Mar 2014 11:23:59 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
-Message-ID: <20140320112359.25f0ad54@holzheu>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
-References: <20140228134148.15b60ceb@holzheu> <531FDF6D.5080901@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971F512A@BPXM01GP.gisp.nec.co.jp>
- <20140312171812.02f0bfe1@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971F672F@BPXM01GP.gisp.nec.co.jp>
- <20140314151928.5c49f17f@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WQek2-0004oX-1I
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 15:18:47 +0000
+Date: Thu, 20 Mar 2014 11:18:22 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] x86, kaslr: Kernel base can be randomized at 0-1G
+ offset.
+Message-ID: <20140320151822.GA29549@redhat.com>
+References: <20140319133331.GB21530@redhat.com>
+ <20140320054608.GA25772@dhcp-17-89.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140320054608.GA25772@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,67 +25,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: WANG Chao <chaowang@redhat.com>
+Cc: dyoung@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, ebiederm@xmission.com
 
-On Wed, 19 Mar 2014 07:14:25 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-
-> >Hello Atsushi,
-> >
-> >I debugged my problem a bit further and tried to implement
-> >a function that gets the maximum page frame number from the
-> >Linux kernel memory management structures.
-> >
-> >I am no memory management expert, so the following patch probably
-> >is not complete, but at least for my setup it worked.
+On Thu, Mar 20, 2014 at 01:46:08PM +0800, WANG Chao wrote:
+> [CC Simon]
 > 
-> The patch looks good for your case, but I don't think it's a proper
-> approach for this problem.
+> On 03/19/14 at 09:33am, Vivek Goyal wrote:
+> > On Wed, Mar 19, 2014 at 03:05:51PM +0800, WANG Chao wrote:
+> > > On 03/17/14 at 08:56am, Vivek Goyal wrote:
+> > > > On Fri, Mar 14, 2014 at 04:20:18PM +0800, WANG Chao wrote:
+> > > > > With kASLR enabled (CONFIG_RANDOMIZED_BASE=y), kernel virtual address
+> > > > > base is PAGE_OFFSET plus a randomized offset from 0 to 1G.
+> > > > > 
+> > > > > Current kexec-tools gets kernel vaddr and size from /proc/kcore. It
+> > > > > assumes kernel vaddr start/end is within the range [0,512M). If kaslr
+> > > > > enabled, kernel vaddr start/end will stay at [0+offset, 512M+offset).
+> > > 
+> > > NACK this patch myself.
+> > > 
+> > > There are several mistakes I made. I misunderstood some concepts. Then I
+> > > realize this kASLR issue is not trivial to fix.
+> > > 
+> > > I think if kexec-tools needs to get kernel text mapping from kcore in
+> > > kALSR case, the max base offset (CONFIG_RANDOMIZE_MAX_BASE_OFFSET) of
+> > > the kernel text area must be exposed to userspace some where. We can use
+> > > that value to determine which area is for kernel text mapping and which
+> > > is for modules text mapping.
+> > 
+> > How about looking at /proc/kallsyms and look at address of one of the
+> > symbols say _text. And search for the ELF header in kcore which contains
+> > _text address and that's ELF header representing kernel text mapping.
+> 
+> Cool. I'd like to go with _stext. _text presents in /proc/kallsyms only
+> when CONFIG_KALLSYMS_ALL=y. What do you think?
 
-Hello Atsushi,
+That's fine. Though looks like _stext will also work only if
+CONFIG_KALLSYMS=y.  So that's not a perfect solution either for those
+who have built kernel using CONFIG_KALLSYMS=n.
 
-If you don't like that solution, what about using the mem_map_data[]
-array of makedumpfile to adjust "max_mapnr"?
-
-The patch below also works fine for my dump.
-
-Michael
----
- makedumpfile.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
- int
- get_mem_map(void)
- {
--	int ret;
-+	unsigned long max_pfn = 0;
-+	int ret, i;
- 
- 	switch (get_mem_type()) {
- 	case SPARSEMEM:
-@@ -2861,6 +2862,17 @@ get_mem_map(void)
- 		ret = FALSE;
- 		break;
- 	}
-+	/*
-+	 * Adjust "max_mapnr" for the case that Linux uses less memory
-+	 * than is dumped. For example when "mem=" has been used for the
-+	 * dumped system.
-+	 */
-+	for (i = 0; i < info->num_mem_map; i++) {
-+		if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
-+			continue;
-+		max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
-+	}
-+	info->max_mapnr = max_pfn;
- 	return ret;
- }
- 
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
