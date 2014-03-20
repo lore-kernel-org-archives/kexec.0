@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WQUzT-0002tq-Ge
- for kexec@lists.infradead.org; Thu, 20 Mar 2014 04:54:05 +0000
-Date: Thu, 20 Mar 2014 12:53:35 +0800
+ id 1WQV6b-0002z8-Tx
+ for kexec@lists.infradead.org; Thu, 20 Mar 2014 05:01:26 +0000
+Date: Thu, 20 Mar 2014 13:00:49 +0800
 From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [kexec-tools PATCH] x86: extend kernel text size up to 1GB
-Message-ID: <20140320045335.GD24486@dhcp-17-89.nay.redhat.com>
-References: <20140312031309.GA14477@dhcp-17-89.nay.redhat.com>
- <20140314061232.GA8248@dhcp-16-126.nay.redhat.com>
- <20140314064757.GB8248@dhcp-16-126.nay.redhat.com>
- <20140314070357.GA22782@dhcp-17-89.nay.redhat.com>
- <20140314070852.GC8248@dhcp-16-126.nay.redhat.com>
- <20140314072929.GB22782@dhcp-17-89.nay.redhat.com>
- <20140320034428.GA10601@verge.net.au>
+Subject: Re: [PATCH v4 0/4] kexec-tools, x86: E820 memmap pass for kdump
+Message-ID: <20140320050049.GE24486@dhcp-17-89.nay.redhat.com>
+References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
+ <20140319175757.GC31785@oranje.fc.hp.com>
+ <20140320035012.GC10601@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140320034428.GA10601@verge.net.au>
+In-Reply-To: <20140320035012.GC10601@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,71 +26,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, ebiederm@xmission.com, vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, Linn Crosetto <linn@hp.com>, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 03/20/14 at 12:44pm, Simon Horman wrote:
-> On Fri, Mar 14, 2014 at 03:29:29PM +0800, WANG Chao wrote:
-> > On 03/14/14 at 03:08pm, Dave Young wrote:
-> > > On 03/14/14 at 03:03pm, WANG Chao wrote:
-> > > > On 03/14/14 at 02:47pm, Dave Young wrote:
-> > > > > On 03/14/14 at 02:12pm, Dave Young wrote:
-> > > > > > On 03/12/14 at 11:13am, WANG Chao wrote:
-> > > > > > > Currently kexec hard code X86_64_KERNEL_TEXT_SIZE to 512M. With kASLR
-> > > > > > > enabled (CONFIG_RANDOMIZED_BASE=y), kernel image base offset could be
-> > > > > > > randomized from 0 to 1GB and kexec-tools fails to get kernel virtual
-> > > > > > > address from /proc/kcore when the offset is >512M.
-> > > > > > > 
-> > > > > > > Now extend X86_64_KERNEL_TEXT_SIZE to 1GB to adapt kASLR.
-> > > > > > > 
-> > > > > > > Signed-off-by: WANG Chao <chaowang@redhat.com>
-> > > > > > > ---
-> > > > > > >  kexec/arch/i386/crashdump-x86.h | 2 +-
-> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > > 
-> > > > > > > diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
-> > > > > > > index e68b626..a5b2dfd 100644
-> > > > > > > --- a/kexec/arch/i386/crashdump-x86.h
-> > > > > > > +++ b/kexec/arch/i386/crashdump-x86.h
-> > > > > > > @@ -18,7 +18,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
-> > > > > > >  #define X86_64_MAXMEM        		0x3fffffffffffUL
-> > > > > > >  
-> > > > > > >  /* Kernel text size */
-> > > > > > > -#define X86_64_KERNEL_TEXT_SIZE  (512UL*1024*1024)
-> > > > > > > +#define X86_64_KERNEL_TEXT_SIZE  (1UL*1024*1024*1024)
-> > > > > > 
-> > > > > > Should define a new macro such as: X86_KERNEL_TEXT_START_LIMIT (1UL*1024*1024*1024)
-> > > > > > and then check end addr with X86_64_KERNEL_TEXT_SIZE + X86_64_KERNEL_TEXT_SIZE
-> > > > > 
-> > > > > I means check ktext with range <1G - 1.5G>
-> > > > 
-> > > > You're right.
-> > > > 
-> > > > I think it's fine adding new macro X86_64_RANDOMIZE_BASE_MAX_OFFSET
-> > > > as 0x40000000 (1G) and doing the following check:
-> > > > 
-> > > > (start >= X86_64__START_KERNEL_map) &&
-> > > >  (start <= X86_64__START_KERNEL_map + X86_64_RANDOMIZE_MAX_BASE_OFFSET) &&
-> > > >  (end - start <= X86_64_KERNEL_TEXT_SIZE)
+On 03/20/14 at 12:50pm, Simon Horman wrote:
+> On Wed, Mar 19, 2014 at 11:57:57AM -0600, Linn Crosetto wrote:
+> > On Wed, Mar 19, 2014 at 04:03:57PM +0800, WANG Chao wrote:
+> > > Hi, All
 > > > 
-> > > end - start < X86_64_KERNEL_TEXT_SIZE should be right, other wise I'm fine.
+> > > When kaslr comes in and kdump is broken, it seems about the right time to use
+> > > E820 instead of memmap=exactmap to pass memmap for kdump for the default memmap
+> > > passing mechanism:
+> > > http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
+> > > 
+> > > Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
+> > > like the only one). So for backward compatibility, I'm introducing a new option
+> > > --pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
+> > > 
+> > > Any comment is appreciate!
+> > > 
+> > > v3->v4:
+> > > Linn: check return value of malloc (use xmalloc)
+> > > me: fix dbgprintf_mem_range
+> > > 
+> > > v2->v3:
+> > > Linn:
+> > >  - do not free sd (setup_data) buffer
+> > >  - reuse code in setup_e820 and setup_e820_ext
+> > > 
+> > > v1->v2:
+> > > 
+> > > Vivek:
+> > >  - Use function instead of macro for dbgprint_mem_range
+> > >  - Do not pass reserved memory range for kdump. It could addressed later
+> > >    separately.
+> > > 
+> > > WANG Chao (4):
+> > >   cleanup: add dbgprint_mem_range function
+> > >   x86: Store memory ranges globally used for crash kernel to boot into
+> > >   x86: add --pass-memmap-cmdline option
+> > >   x86: Pass memory range via E820 for kdump
+> > > 
+> > >  kexec/arch/i386/crashdump-x86.c        | 157 ++++++++++++++++--------------
+> > >  kexec/arch/i386/crashdump-x86.h        |   6 +-
+> > >  kexec/arch/i386/include/arch/options.h |   2 +
+> > >  kexec/arch/i386/kexec-x86-common.c     |   6 +-
+> > >  kexec/arch/i386/kexec-x86.c            |   4 +
+> > >  kexec/arch/i386/kexec-x86.h            |   1 +
+> > >  kexec/arch/i386/x86-linux-setup.c      | 171 ++++++++++++++++++++++-----------
+> > >  kexec/arch/i386/x86-linux-setup.h      |   1 +
+> > >  kexec/arch/x86_64/kexec-x86_64.c       |   5 +
+> > >  kexec/kexec.c                          |  10 ++
+> > >  kexec/kexec.h                          |   1 +
+> > >  11 files changed, 231 insertions(+), 133 deletions(-)
 > > 
-> > Right. size = end - start + 1.
-> > 
-> > I'll post v2.
+> > Thanks for the patches. Tested (adding a fix provided by Dave Young for
+> > http://lists.infradead.org/pipermail/kexec/2014-March/011262.html) and
+> > successful with both kexec and kdump, both with and without
+> > --pass-memmap-cmdline.
 > 
-> Hi,
-> 
-> I'd like to enquire about the status of this as I don't see v2 in my inbox.
 
-Hi, Simon
+Hi, Simon. I'll answer the questions below.
 
-I'd like to hold off for such fix. Fixing kaslr issue is not trivial
-as I thought.
+> Is the patch a pre-requisite for this series?
 
-You can find the discussion on kexec mail list or here:
-http://thread.gmane.org/gmane.linux.kernel.kexec/11103
+No. That's a separate problem of EFI. Old kexec-tools also needs the
+patch.
 
-Sorry. I'll CC you next time.
+> If so, has it been posted formally?
+
+Dave Young has sent to patch to kexec mail list. The subject is as
+follow:
+
+[PATCH] kexec-tools: handle 64bit efi memmap address correctly
+
+> If so, could you point it out to me?
+
+Dave's patch:
+http://lists.infradead.org/pipermail/kexec/2014-March/011303.html
 
 Thanks
 WANG Chao
