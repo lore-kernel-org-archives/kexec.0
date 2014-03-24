@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WRtyG-0001e6-Ef
- for kexec@lists.infradead.org; Mon, 24 Mar 2014 01:46:38 +0000
-Date: Mon, 24 Mar 2014 09:47:20 +0800
+ id 1WRuPY-00024G-1P
+ for kexec@lists.infradead.org; Mon, 24 Mar 2014 02:14:50 +0000
+Date: Mon, 24 Mar 2014 10:15:25 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec-tools: handle 64bit efi memmap address correctly
-Message-ID: <20140324014720.GA2320@dhcp-16-126.nay.redhat.com>
-References: <20140320015824.GA3497@dhcp-16-126.nay.redhat.com>
+Subject: Re: [PATCH v3 1/2] kexec: introduce setup_dtb_prop to make code clear
+Message-ID: <20140324021525.GB2320@dhcp-16-126.nay.redhat.com>
+References: <1395300837-18687-1-git-send-email-wangnan0@huawei.com>
+ <1395300837-18687-2-git-send-email-wangnan0@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140320015824.GA3497@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <1395300837-18687-2-git-send-email-wangnan0@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,102 +24,167 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
-Cc: matt.fleming@intel.com, toshi.kani@hp.com, vgoyal@redhat.com, linn@hp.com, bp@suse.de, trenn@suse.de, chaowang@redhat.com
+To: Wang Nan <wangnan0@huawei.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On 03/20/14 at 09:58am, Dave Young wrote:
-> In case using crashkernel=xM,high crashkernel memory will be allocated from top to down
-> Thus the usable memory for kdump kernel could be bigger than 4G. The efi memmap value
-> is two 32 bit values efi_memmap and efi_memmap_hi, previously I only passed the efi_memmap
-> so for the high memory address there will be below kernel panic: 
+Hi, Wang Nan
+
+Rethinking about this patch, I still have several comments.
+
+On 03/20/14 at 07:33am, Wang Nan wrote:
+> This patch introduces setup_dtb_prop(), which is used for dtb
+> operations. The code is extracted from zImage_arm_load, and this patch
+> makes memory grown computation more accurate.
 > 
-> [    0.000000] efi: EFI v2.31 by American Megatrends
-> [    0.000000] efi:  ACPI 2.0=0xdb752000  SMBIOS=0xdbab4b98  ACPI=0xdb752000  MPS=0xf4bd0 
-> [    0.000000] efi: mem00: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
-> [    0.000000] efi: mem01: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
-> [    0.000000] efi: mem02: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
-> [    0.000000] efi: mem03: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
-> [    0.000000] efi: mem04: type=4294967295, attr=0xffffffffffffffff, range=[0xffffffffffffffff-0xffffffffffffefff) (72057594037927935)
-> [    0.000000] SMBIOS 2.7 present.
-> 
-> [snip]
-> 
-> [    0.082451] BUG: unable to handle kernel paging request at ffffa3d0f0000000
-> [    0.089467] IP: [<ffffffff810513d1>] native_set_pte+0x1/0x10
-> [    0.095157] PGD 0 
-> [    0.097197] Oops: 0002 [#1] SMP 
-> [    0.100466] Modules linked in:
-> [    0.103554] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.14.0-rc7 #157
-> [    0.110001] Hardware name: Hewlett-Packard HP Z420 Workstation/1589, BIOS J61 v03.15 05/09/2013
-> [    0.118697] task: ffffffff818e1460 ti: ffffffff818ce000 task.ti: ffffffff818ce000
-> [    0.126181] RIP: 0010:[<ffffffff810513d1>]  [<ffffffff810513d1>] native_set_pte+0x1/0x10
-> [    0.134296] RSP: 0000:ffffffff818cfc80  EFLAGS: 00010287
-> [    0.139609] RAX: 0000000000000000 RBX: ffffa3d0f0000000 RCX: 00003ffffffff000
-> [    0.146744] RDX: ffff880000000000 RSI: 0000000000000000 RDI: ffffa3d0f0000000
-> [    0.153879] RBP: ffffffff818cfcb8 R08: ffffea0010745d20 R09: 0000000000000000
-> [    0.161013] R10: ffff88041f731fc0 R11: 000000000000001e R12: 0000000000200000
-> [    0.168148] R13: 0000000000000000 R14: 0000000000400000 R15: ffff880000000008
-> [    0.175288] FS:  0000000000000000(0000) GS:ffff88041f200000(0000) knlGS:0000000000000000
-> [    0.183377] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.189125] CR2: ffffa3d0f0000000 CR3: 000000041e8da000 CR4: 00000000000406b0
-> [    0.196264] Stack:
-> [    0.198283]  ffffffff818cfcb8 ffffffff810561d7 ffff880000000008 0000000000400000
-> [    0.205746]  ffff880000001000 00000000000001ff ffff88041e8de000 ffffffff818cfd00
-> [    0.213210]  ffffffff8105644e 0000000000200000 0000000040000000 00000000ffffffff
-> [    0.220676] Call Trace:
-> [    0.223130]  [<ffffffff810561d7>] ? unmap_pte_range+0x77/0x110
-> [    0.228966]  [<ffffffff8105644e>] unmap_pmd_range+0xde/0x210
-> [    0.234630]  [<ffffffff81056c6b>] __cpa_process_fault+0x48b/0x5e0
-> [    0.240730]  [<ffffffff81057276>] __change_page_attr_set_clr+0x4b6/0xb10
-> [    0.247437]  [<ffffffff810557c7>] ? __ioremap_caller+0x277/0x360
-> [    0.253454]  [<ffffffff810589f1>] kernel_map_pages_in_pgd+0x71/0xa0
-> [    0.259736]  [<ffffffff81a53361>] __map_region+0x45/0x63
-> [    0.265051]  [<ffffffff81a535cc>] efi_map_region_fixed+0xd/0xf
-> [    0.270886]  [<ffffffff81a52f19>] efi_enter_virtual_mode+0x5a/0x3d9
-> [    0.277162]  [<ffffffff81a77516>] ? acpi_enable_subsystem+0x37/0x90
-> [    0.283440]  [<ffffffff81a36eb9>] start_kernel+0x386/0x41c
-> [    0.288931]  [<ffffffff81a3693c>] ? repair_env_string+0x5c/0x5c
-> [    0.294852]  [<ffffffff81a36120>] ? early_idt_handlers+0x120/0x120
-> [    0.301035]  [<ffffffff81a365ee>] x86_64_start_reservations+0x2a/0x2c
-> [    0.307479]  [<ffffffff81a3672e>] x86_64_start_kernel+0x13e/0x14d
-> [    0.313572] Code: 66 2e 0f 1f 84 00 00 00 00 00 48 8b 46 18 55 48 89 e5 48 89 47 04 5d c3 66 90 55 48 89 e5 0f 01 f8 5d c3 0f 1f 8 
-> [    0.333545] RIP  [<ffffffff810513d1>] native_set_pte+0x1/0x10
-> [    0.339312]  RSP <ffffffff818cfc80>
-> [    0.342807] CR2: ffffa3d0f0000000
-> [    0.346141] ---[ end trace 86088f739725b8c6 ]---
-> [    0.350760] Kernel panic - not syncing: Fatal exception
-> 
-> Fix this by passing both efi_memmap and efi_memmap_hi to 2nd kernel.
-> 
-> Reported-by: Linn Crosetto <linn@hp.com>
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> Tested-by: Linn Crosetto <linn@hp.com>
+> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Geng Hui <hui.geng@huawei.com>
 > ---
->  kexec/arch/i386/x86-linux-setup.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  kexec/arch/arm/kexec-zImage-arm.c | 96 ++++++++++++++++++++++++++++-----------
+>  1 file changed, 70 insertions(+), 26 deletions(-)
 > 
-> Index: kexec-tools/kexec/arch/i386/x86-linux-setup.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c
-> +++ kexec-tools/kexec/arch/i386/x86-linux-setup.c
-> @@ -656,7 +656,8 @@ static int setup_efi_data(struct kexec_i
->  	size = nr_maps * sizeof(struct efi_mem_descriptor);
->  	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
->  					0x100000, ULONG_MAX, INT_MAX);
-> -	ei->efi_memmap = memmap_paddr;
-> +	ei->efi_memmap = memmap_paddr & 0xffffffff;
-> +	ei->efi_memmap_hi = memmap_paddr >> 32;
->  	ei->efi_memmap_size = size;
->  	ei->efi_memdesc_size = sizeof(struct efi_mem_descriptor);
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index 8a35018..977254e 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -216,6 +216,68 @@ int atag_arm_load(struct kexec_info *info, unsigned long base,
+>  	return 0;
+>  }
 >  
+> +static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
+> +		const char *prop_name, const void *val, int len)
+> +{
+> +	char *dtb_buf;
+> +	int off;
+> +
+> +	if ((bufp == NULL) || (sizep == NULL) || (*bufp == NULL))
+> +		die("Internal error\n");
+> +
+> +	dtb_buf = *bufp;
+> +
+> +	/* 
+> +	 * Potential memory usage grown:
+> +	 *
+> +	 * 1. if fdt_add_subnode is called:
+> +	 *    sizeof(struct fdt_node_header) + FDT_TAGALIGN(nodename+1) + FDT_TAGSIZE
+> +	 *       // see fdt_add_subnode_namelen()
+> +	 *
+> +	 * 2. in fdt_setprop, if _fdt_add_property is called:
+> +	 *  a) strlen(prop_name) + 1  // see _fdt_find_add_string()
+> +	 *  b) sizeof(struct fdt_property) + FDT_TAGALIGN(len) 
+> +	 *        // see _fdt_add_property()
+> +	 *
+> +	 * FDT_TAGALIGN is (FDT_ALIGN((x), FDT_TAGSIZE)), which is same
+> +	 * to _ALIGN(x, FDT_TAGSIZE).
+> +	 */
+
+The comments are not necessary because it's obvious in the code itself.
+Maybe add two functions in libfdt is better, such as node_len() and prop_len()
+
+> +
+> +	*sizep = fdt_totalsize(*bufp) +
+> +		/* fdt_add_subnode -> fdt_add_subnode_namelen */
+
+ditto.
+
+> +		sizeof(struct fdt_node_header) +
+> +		_ALIGN(strlen(node_name) + 1, FDT_TAGSIZE) +
+> +		FDT_TAGSIZE +
+> +		/* fdt_setprop -> _fdt_add_property -> _fdt_find_add_string */
+
+ditto.
+
+> +		strlen(prop_name) + 1 +
+> +		/* fdt_setprop -> _fdt_add_property */
+
+ditto.
+
+OTOH, should not extend the dtb_buf with extra node size if the node exist.
+same for the property
+
+> +		sizeof(struct fdt_property) + _ALIGN(len, FDT_TAGSIZE);
+> +
+> +	dtb_buf = xrealloc(dtb_buf, *sizep);
+> +	if (dtb_buf == NULL)
+> +		die("xrealloc failed\n");
+> +	*bufp = dtb_buf;
+> +
+> +	fdt_set_totalsize(dtb_buf, *sizep);
+> +
+> +	/* check if the subnode already exists */
+
+The comment is not necessary.
+
+> +	off = fdt_path_offset(dtb_buf, node_name);
+> +
+> +	if (off == -FDT_ERR_NOTFOUND)
+> +		off = fdt_add_subnode(dtb_buf, off, node_name);
+> +	if (off < 0) {
+> +		fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
+> +		return -1;
+> +	}
+> +	if (fdt_setprop(dtb_buf, off, prop_name,
+> +				val, len) != 0) {
+> +		fprintf(stderr, "FDT: Error setting %s/%s property.\n",
+> +				node_name, prop_name);
+> +		return -1;
+> +	}
+> +	return 0;
+> +}
+> +
+>  int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  	struct kexec_info *info)
+>  {
+> @@ -375,32 +437,14 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  			}
+>  
+>  			if (command_line) {
+> -				const char *node_name = "/chosen";
+> -				const char *prop_name = "bootargs";
+> -				int off;
+> -
+> -				dtb_length = fdt_totalsize(dtb_buf) + 1024 +
+> -					strlen(command_line);
+> -				dtb_buf = xrealloc(dtb_buf, dtb_length);
+> -				fdt_set_totalsize(dtb_buf, dtb_length);
+> -
+> -				/* check if a /choosen subnode already exists */
+> -				off = fdt_path_offset(dtb_buf, node_name);
+> -
+> -				if (off == -FDT_ERR_NOTFOUND)
+> -					off = fdt_add_subnode(dtb_buf, off, node_name);
+> -
+> -				if (off < 0) {
+> -					fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
+> -					return -1;
+> -				}
+> -
+> -				if (fdt_setprop(dtb_buf, off, prop_name,
+> -						command_line, strlen(command_line) + 1) != 0) {
+> -					fprintf(stderr, "FDT: Error setting %s/%s property.\n",
+> -						node_name, prop_name);
+> -					return -1;
+> -				}
+> +				/*  
+> +				 *  Error should have been reported so
+> +				 *  directly return -1
+> +				 */
+> +				if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
+> +						"bootargs", command_line,
+> +						strlen(command_line) + 1))
+> + 					return -1;
+>  			}
+>  		} else {
+>  			/*
+> -- 
+> 1.8.3.4
 > 
-
-Hi, Simon
-
-Seems there's no objections, it's a obvious code fix, could you review it?
-
-Thanks
-Dave
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
