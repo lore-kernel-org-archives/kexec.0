@@ -1,21 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-qc0-x232.google.com ([2607:f8b0:400d:c01::232])
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WSSNg-0006pq-Fp
- for kexec@lists.infradead.org; Tue, 25 Mar 2014 14:31:09 +0000
-Received: by mail-qc0-f178.google.com with SMTP id i8so628869qcq.23
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 07:30:45 -0700 (PDT)
-Received: from brickies-eth0.mosers.us (d14-69-66-169.try.wideopenwest.com.
- [69.14.169.66])
- by mx.google.com with ESMTPSA id f2sm32709366qaa.28.2014.03.25.07.30.44
- for <kexec@lists.infradead.org>
- (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Tue, 25 Mar 2014 07:30:45 -0700 (PDT)
-Date: Tue, 25 Mar 2014 10:30:43 -0400 (EDT)
-From: Scott Moser <smoser@ubuntu.com>
-Subject: cannot seem to load multiboot images
-Message-ID: <alpine.DEB.2.02.1403251023480.4659@brickies>
-MIME-Version: 1.0
+ id 1WSTE8-0008CS-Qb
+ for kexec@lists.infradead.org; Tue, 25 Mar 2014 15:25:22 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Tue, 25 Mar 2014 15:24:57 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com
+ (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id D11261B08070
+ for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 15:24:47 +0000 (GMT)
+Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
+ [9.149.37.249])
+ by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s2PFOhWp459168
+ for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 15:24:43 GMT
+Received: from d06av08.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av08.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s2PFOsSo029957
+ for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 09:24:54 -0600
+Date: Tue, 25 Mar 2014 16:24:52 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: makedumpfile: get_max_mapnr() from ELF header problem
+Message-ID: <20140325162452.792f5ad4@holzheu>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971F909B@BPXM01GP.gisp.nec.co.jp>
+References: <20140228134148.15b60ceb@holzheu> <531FDF6D.5080901@jp.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F512A@BPXM01GP.gisp.nec.co.jp>
+ <20140312171812.02f0bfe1@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F672F@BPXM01GP.gisp.nec.co.jp>
+ <20140314151928.5c49f17f@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
+ <20140319180903.2c6e2b72@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F909B@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,75 +47,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-kexec explictly (in --help and man page) reports to support multiboot
-format images. That doesn't work for at least some subset of seemingly
-proper multiboot images. For some context, the goal essentially the same
-as discussed at [1].
+On Tue, 25 Mar 2014 01:14:21 +0000
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-Has anyone seen this work?  I've just checked with git at current tip
-(401e037e5e9527134c594b8923342a69ff38b7cb) and see the same problem.
+[snip]
 
-mbchk is from 'multiboot' package (built from source).
+> >But it looks like get_mm_sparsemem() does not check for zero.
+> >The nr_to_section() function just returns an invalid address
+> >(something between 0 and 4096) for section in case we get zero
+> >from the "mem_section" entry. This is address is then used for
+> >calculating "mem_map":
+> 
+> In other architectures, the check by is_kaddr() avoids to
+> read invalid address, but it doesn't do anything in the case
+> of s390 due to the its memory management mechanism:
+> 
+> s390x: Fix KVBASE to correct value for	s390x architecture.
+> http://lists.infradead.org/pipermail/kexec/2011-March/004930.html
 
-Also note that 'qemu-system-x86_64' loads this multiboot image properly
-with 'qemu-system-x86_64 -kernel'
+Right, for s390 the zero page is valid.
+ 
+> Finally I've understood the cause of this issue completely,
+> thanks for your report.
+> 
+> >mem_map = section_mem_map_addr(section);
+> >mem_map = sparse_decode_mem_map(mem_map, section_nr);
+> >
+> >With the patch below I could use makedumpfile (1.5.3) successfully
+> >on the 1TB dump with mem=1G. I attached the -D output that is
+> >created by makedumpfile with the patch.
+> >
+> >But compared to my first patch it takes much longer and the resulting
+> >dump is bigger (version 1.5.3):
+> >
+> >             | Dump time   | Dump size
+> >-------------+-------------+-----------
+> >First patch  |  10 sec     |  124 MB
+> >Second patch |  87 minutes | 6348 MB
+> >
+> >No idea why the dump is bigger with the second patch. I think the time
+> >is consumed in write_kdump_pages_cyclic() by checking for zero pages
+> >for the whole range:
+> 
+> I suppose this difference was resolved with the v2 of the second patch,
+> right?
 
-$ dpkg-query --show kexec-tools
-kexec-tools 1:2.0.4-1ubuntu1
+Right, with the last patch the dump time and size were ok.
 
-$ mbchk /boot/grub/i386-pc/core.img
-/boot/grub/i386-pc/core.img: The Multiboot header is found at the offset
-2416.
-/boot/grub/i386-pc/core.img: Page alignment is turned off.
-/boot/grub/i386-pc/core.img: Memory information is turned off.
-/boot/grub/i386-pc/core.img: Address fields is turned on.
-/boot/grub/i386-pc/core.img: All checks passed.
+[snip]
 
-$ sudo ./build.out/sbin/kexec --debug --type multiboot-x86
-/boot/grub/i386-pc/core.img
-kernel: 0xe19010 kernel_size: 0x6315
-MEMORY RANGES
-0000000000000100-000000000009f000 (0)
-000000000009f000-00000000000a0000 (1)
-00000000000e7000-0000000000100000 (1)
-0000000000100000-00000000bf760000 (0)
-00000000bf76e000-00000000bf770000 (1)
-00000000bf770000-00000000bf77e000 (2)
-00000000bf77e000-00000000bf7d0000 (3)
-00000000bf7d0000-00000000bf7e0000 (1)
-00000000bf7ec000-00000000c0000000 (1)
-00000000e0000000-00000000f0000000 (1)
-00000000fee00000-00000000fee01000 (1)
-00000000ffc00000-0000000100000000 (1)
-0000000100000000-0000000c40000000 (0)
-Cannot determine the file type of /boot/grub/i386-pc/core.img
+> >So the first patch would be better for my scenario. What in particular are your
+> >concerns with that patch?
+> 
+> I think the v2 second patch is a reasonable patch to fix the
+> bug of get_mm_sparsemem().
+> Additionally, the latest patch you posted to adjust max_mapnr
+> (which using mem_map_data[]) is acceptable instead of the first
+> patch.
+> So could you re-post the two as a formal patch set?
+> I mean patch descriptions and your signature are needed.
 
+Ok great! I will resend the patches.
 
-$ kexec --debug --type multiboot-x86 /boot/grub/i386-pc/core.img
-kernel: 0x1767010 kernel_size: 6315
-MEMORY RANGES
-0000000000000100-000000000009f000 (0)
-000000000009f000-00000000000a0000 (1)
-00000000000e7000-0000000000100000 (1)
-0000000000100000-00000000bf760000 (0)
-00000000bf76e000-00000000bf770000 (1)
-00000000bf770000-00000000bf77e000 (2)
-00000000bf77e000-00000000bf7d0000 (3)
-00000000bf7d0000-00000000bf7e0000 (1)
-00000000bf7ec000-00000000c0000000 (1)
-00000000e0000000-00000000f0000000 (1)
-00000000fee00000-00000000fee01000 (1)
-00000000ffc00000-0000000100000000 (1)
-0000000100000000-0000000c40000000 (0)
-Cannot determine the file type of /boot/grub/i386-pc/core.img
-
-
-Note, I also
-  I filed an ubuntu bug at http://pad.lv/1297316 .
-
-https://bugs.launchpad.net/ubuntu/+source/kexec-tools/+bug/1297316
+Michael
 
 
 _______________________________________________
