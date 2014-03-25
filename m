@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WRuPY-00024G-1P
- for kexec@lists.infradead.org; Mon, 24 Mar 2014 02:14:50 +0000
-Date: Mon, 24 Mar 2014 10:15:25 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3 1/2] kexec: introduce setup_dtb_prop to make code clear
-Message-ID: <20140324021525.GB2320@dhcp-16-126.nay.redhat.com>
-References: <1395300837-18687-1-git-send-email-wangnan0@huawei.com>
- <1395300837-18687-2-git-send-email-wangnan0@huawei.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WSFyc-0000T6-1M
+ for kexec@lists.infradead.org; Tue, 25 Mar 2014 01:16:28 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: makedumpfile: get_max_mapnr() from ELF header problem
+Date: Tue, 25 Mar 2014 01:14:21 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F909B@BPXM01GP.gisp.nec.co.jp>
+References: <20140228134148.15b60ceb@holzheu> <531FDF6D.5080901@jp.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F512A@BPXM01GP.gisp.nec.co.jp>
+ <20140312171812.02f0bfe1@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F672F@BPXM01GP.gisp.nec.co.jp>
+ <20140314151928.5c49f17f@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971F7B95@BPXM01GP.gisp.nec.co.jp>
+ <20140319180903.2c6e2b72@holzheu>
+In-Reply-To: <20140319180903.2c6e2b72@holzheu>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1395300837-18687-2-git-send-email-wangnan0@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,167 +29,187 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Wang Nan <wangnan0@huawei.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+To: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi, Wang Nan
+>> Now, I think this is a problem of get_mm_sparsemem() in makedumpfile.
+>> To say in more detail, the problem is "wrong calculating the address
+>> of unused mem_map".
+>>
+>> Looking at the log you sent, some addresses of mem_map corresponding
+>> to unused pages look invalid like below:
+>>
+>> mem_map (256)
+>>   mem_map    : 80000c0002018
+>>   pfn_start  : 1000000
+>>   pfn_end    : 1010000
+>> mem_map (257)
+>>   mem_map    : 800001840400000
+>>   pfn_start  : 1010000
+>>   pfn_end    : 1020000
+>> ...
+>> mem_map (544)
+>>   mem_map    : a82400012f14fffc
+>>   pfn_start  : 2200000
+>>   pfn_end    : 2210000
+>>
+>> ...(and more)
+>>
+>> However, makedumpfile should calculate such unused mem_map addresses
+>> as 0(NOT_MEMMAP_ADDR). Actually it works as expected at least in my
+>> environment(x86_64):
+>>
+>> ...
+>> mem_map (16)
+>>   mem_map    : 0
+>>   pfn_start  : 80000
+>>   pfn_end    : 88000
+>> mem_map (17)
+>>   mem_map    : 0
+>>   pfn_start  : 88000
+>>   pfn_end    : 90000
+>> ...
+>>
+>> makedumpfile get the address from mem_section.section_mem_map,
+>> it will be initialized with zero:
+>>
+>> [CONFIG_SPARSEMEM_EXTREAM]
+>>   paging_init()
+>>     sparse_memory_present_with_active_regions()
+>>       memory_present()
+>>         sparse_index_init()
+>>           sparse_index_alloc()   // allocate mem_section with kzalloc()
+>>
+>> makedumpfile assumes the value of unused mem_section will remain as 0,
+>> but I suspect this assumption may be broken in your environment.
+>
+>No, I think your assumption is true also for my environment. For my
+>dump the "mem_section" array is zero except for the first entry.
+>
+>crash> print/x mem_section
+>$1 = {0x2fe6f800, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, ...}
+>
+>But it looks like get_mm_sparsemem() does not check for zero.
+>The nr_to_section() function just returns an invalid address
+>(something between 0 and 4096) for section in case we get zero
+>from the "mem_section" entry. This is address is then used for
+>calculating "mem_map":
 
-Rethinking about this patch, I still have several comments.
+In other architectures, the check by is_kaddr() avoids to
+read invalid address, but it doesn't do anything in the case
+of s390 due to the its memory management mechanism:
 
-On 03/20/14 at 07:33am, Wang Nan wrote:
-> This patch introduces setup_dtb_prop(), which is used for dtb
-> operations. The code is extracted from zImage_arm_load, and this patch
-> makes memory grown computation more accurate.
-> 
-> Signed-off-by: Wang Nan <wangnan0@huawei.com>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Geng Hui <hui.geng@huawei.com>
-> ---
->  kexec/arch/arm/kexec-zImage-arm.c | 96 ++++++++++++++++++++++++++++-----------
->  1 file changed, 70 insertions(+), 26 deletions(-)
-> 
-> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-> index 8a35018..977254e 100644
-> --- a/kexec/arch/arm/kexec-zImage-arm.c
-> +++ b/kexec/arch/arm/kexec-zImage-arm.c
-> @@ -216,6 +216,68 @@ int atag_arm_load(struct kexec_info *info, unsigned long base,
->  	return 0;
->  }
->  
-> +static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
-> +		const char *prop_name, const void *val, int len)
-> +{
-> +	char *dtb_buf;
-> +	int off;
-> +
-> +	if ((bufp == NULL) || (sizep == NULL) || (*bufp == NULL))
-> +		die("Internal error\n");
-> +
-> +	dtb_buf = *bufp;
-> +
-> +	/* 
-> +	 * Potential memory usage grown:
-> +	 *
-> +	 * 1. if fdt_add_subnode is called:
-> +	 *    sizeof(struct fdt_node_header) + FDT_TAGALIGN(nodename+1) + FDT_TAGSIZE
-> +	 *       // see fdt_add_subnode_namelen()
-> +	 *
-> +	 * 2. in fdt_setprop, if _fdt_add_property is called:
-> +	 *  a) strlen(prop_name) + 1  // see _fdt_find_add_string()
-> +	 *  b) sizeof(struct fdt_property) + FDT_TAGALIGN(len) 
-> +	 *        // see _fdt_add_property()
-> +	 *
-> +	 * FDT_TAGALIGN is (FDT_ALIGN((x), FDT_TAGSIZE)), which is same
-> +	 * to _ALIGN(x, FDT_TAGSIZE).
-> +	 */
+s390x: Fix KVBASE to correct value for	s390x architecture.
+http://lists.infradead.org/pipermail/kexec/2011-March/004930.html
 
-The comments are not necessary because it's obvious in the code itself.
-Maybe add two functions in libfdt is better, such as node_len() and prop_len()
+Finally I've understood the cause of this issue completely,
+thanks for your report.
 
-> +
-> +	*sizep = fdt_totalsize(*bufp) +
-> +		/* fdt_add_subnode -> fdt_add_subnode_namelen */
+>mem_map = section_mem_map_addr(section);
+>mem_map = sparse_decode_mem_map(mem_map, section_nr);
+>
+>With the patch below I could use makedumpfile (1.5.3) successfully
+>on the 1TB dump with mem=1G. I attached the -D output that is
+>created by makedumpfile with the patch.
+>
+>But compared to my first patch it takes much longer and the resulting
+>dump is bigger (version 1.5.3):
+>
+>             | Dump time   | Dump size
+>-------------+-------------+-----------
+>First patch  |  10 sec     |  124 MB
+>Second patch |  87 minutes | 6348 MB
+>
+>No idea why the dump is bigger with the second patch. I think the time
+>is consumed in write_kdump_pages_cyclic() by checking for zero pages
+>for the whole range:
 
-ditto.
+I suppose this difference was resolved with the v2 of the second patch,
+right?
 
-> +		sizeof(struct fdt_node_header) +
-> +		_ALIGN(strlen(node_name) + 1, FDT_TAGSIZE) +
-> +		FDT_TAGSIZE +
-> +		/* fdt_setprop -> _fdt_add_property -> _fdt_find_add_string */
+>
+>5970            for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+>(gdb) n
+>5972                    if ((num_dumped % per) == 0)
+>(gdb) n
+>5978                    if (!is_dumpable_cyclic(info->partial_bitmap2, pfn))
+>(gdb) n
+>5981                    num_dumped++;
+>(gdb) n
+>5983                    if (!read_pfn(pfn, buf))
+>(gdb) n
+>5989                    if ((info->dump_level & DL_EXCLUDE_ZERO)
+>(gdb) n
+>5990                        && is_zero_page(buf, info->page_size)) {
+>(gdb) n
+>5991                            if (!write_cache(cd_header, pd_zero, sizeof(page_desc_t)))
+>(gdb) n
+>5993                            pfn_zero++;
+>(gdb) n
+>5994                            continue;
+>
+>(gdb) print end_pfn
+>$3 = 268435456
+>
+>So the first patch would be better for my scenario. What in particular are your
+>concerns with that patch?
 
-ditto.
+I think the v2 second patch is a reasonable patch to fix the
+bug of get_mm_sparsemem().
+Additionally, the latest patch you posted to adjust max_mapnr
+(which using mem_map_data[]) is acceptable instead of the first
+patch.
+So could you re-post the two as a formal patch set?
+I mean patch descriptions and your signature are needed.
 
-> +		strlen(prop_name) + 1 +
-> +		/* fdt_setprop -> _fdt_add_property */
 
-ditto.
+Thanks
+Atsushi Kumagai
 
-OTOH, should not extend the dtb_buf with extra node size if the node exist.
-same for the property
-
-> +		sizeof(struct fdt_property) + _ALIGN(len, FDT_TAGSIZE);
-> +
-> +	dtb_buf = xrealloc(dtb_buf, *sizep);
-> +	if (dtb_buf == NULL)
-> +		die("xrealloc failed\n");
-> +	*bufp = dtb_buf;
-> +
-> +	fdt_set_totalsize(dtb_buf, *sizep);
-> +
-> +	/* check if the subnode already exists */
-
-The comment is not necessary.
-
-> +	off = fdt_path_offset(dtb_buf, node_name);
-> +
-> +	if (off == -FDT_ERR_NOTFOUND)
-> +		off = fdt_add_subnode(dtb_buf, off, node_name);
-> +	if (off < 0) {
-> +		fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
-> +		return -1;
-> +	}
-> +	if (fdt_setprop(dtb_buf, off, prop_name,
-> +				val, len) != 0) {
-> +		fprintf(stderr, "FDT: Error setting %s/%s property.\n",
-> +				node_name, prop_name);
-> +		return -1;
-> +	}
-> +	return 0;
-> +}
-> +
->  int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  	struct kexec_info *info)
->  {
-> @@ -375,32 +437,14 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
->  			}
->  
->  			if (command_line) {
-> -				const char *node_name = "/chosen";
-> -				const char *prop_name = "bootargs";
-> -				int off;
-> -
-> -				dtb_length = fdt_totalsize(dtb_buf) + 1024 +
-> -					strlen(command_line);
-> -				dtb_buf = xrealloc(dtb_buf, dtb_length);
-> -				fdt_set_totalsize(dtb_buf, dtb_length);
-> -
-> -				/* check if a /choosen subnode already exists */
-> -				off = fdt_path_offset(dtb_buf, node_name);
-> -
-> -				if (off == -FDT_ERR_NOTFOUND)
-> -					off = fdt_add_subnode(dtb_buf, off, node_name);
-> -
-> -				if (off < 0) {
-> -					fprintf(stderr, "FDT: Error adding %s node.\n", node_name);
-> -					return -1;
-> -				}
-> -
-> -				if (fdt_setprop(dtb_buf, off, prop_name,
-> -						command_line, strlen(command_line) + 1) != 0) {
-> -					fprintf(stderr, "FDT: Error setting %s/%s property.\n",
-> -						node_name, prop_name);
-> -					return -1;
-> -				}
-> +				/*  
-> +				 *  Error should have been reported so
-> +				 *  directly return -1
-> +				 */
-> +				if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
-> +						"bootargs", command_line,
-> +						strlen(command_line) + 1))
-> + 					return -1;
->  			}
->  		} else {
->  			/*
-> -- 
-> 1.8.3.4
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+>Michael
+>
+>The following patch adds the zero check for "mem_section" entries
+>---
+> makedumpfile.c |   17 ++++++++++++-----
+> 1 file changed, 12 insertions(+), 5 deletions(-)
+>
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -2402,11 +2402,14 @@ nr_to_section(unsigned long nr, unsigned
+> {
+> 	unsigned long addr;
+>
+>-	if (is_sparsemem_extreme())
+>+	if (is_sparsemem_extreme()) {
+>+		if (mem_sec[SECTION_NR_TO_ROOT(nr)] == 0)
+>+			return NOT_KV_ADDR;
+> 		addr = mem_sec[SECTION_NR_TO_ROOT(nr)] +
+> 		    (nr & SECTION_ROOT_MASK()) * SIZE(mem_section);
+>-	else
+>+	} else {
+> 		addr = SYMBOL(mem_section) + (nr * SIZE(mem_section));
+>+	}
+>
+> 	if (!is_kvaddr(addr))
+> 		return NOT_KV_ADDR;
+>@@ -2490,10 +2493,14 @@ get_mm_sparsemem(void)
+> 	}
+> 	for (section_nr = 0; section_nr < num_section; section_nr++) {
+> 		section = nr_to_section(section_nr, mem_sec);
+>-		mem_map = section_mem_map_addr(section);
+>-		mem_map = sparse_decode_mem_map(mem_map, section_nr);
+>-		if (!is_kvaddr(mem_map))
+>+		if (section == NOT_KV_ADDR) {
+> 			mem_map = NOT_MEMMAP_ADDR;
+>+		} else {
+>+			mem_map = section_mem_map_addr(section);
+>+			mem_map = sparse_decode_mem_map(mem_map, section_nr);
+>+			if (!is_kvaddr(mem_map))
+>+				mem_map = NOT_MEMMAP_ADDR;
+>+		}
+> 		pfn_start = section_nr * PAGES_PER_SECTION();
+> 		pfn_end   = pfn_start + PAGES_PER_SECTION();
+> 		if (info->max_mapnr < pfn_end)
 
 _______________________________________________
 kexec mailing list
