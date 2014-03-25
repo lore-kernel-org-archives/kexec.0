@@ -1,34 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from e06smtp13.uk.ibm.com ([195.75.94.109])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WSKIU-0004HT-Me
- for kexec@lists.infradead.org; Tue, 25 Mar 2014 05:53:16 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 983863EE1B9
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 14:52:48 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8A72B45DE5C
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 14:52:48 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 7089945DE55
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 14:52:48 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 62EC01DB8046
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 14:52:48 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 101A11DB8050
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 14:52:48 +0900 (JST)
-Message-ID: <533119A4.8040900@jp.fujitsu.com>
-Date: Tue, 25 Mar 2014 14:52:36 +0900
-From: =?ISO-2022-JP?B?IkhhdGF5YW1hLCBEYWlzdWtlLxskQkgqOzMbKEIgGyRCQmdKZRsoQg==?=
- =?ISO-2022-JP?B?Ig==?= <d.hatayama@jp.fujitsu.com>
+ id 1WSO5o-0006Kz-1D
+ for kexec@lists.infradead.org; Tue, 25 Mar 2014 09:56:24 +0000
+Received: from /spool/local
+ by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
+ Tue, 25 Mar 2014 09:55:58 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2B3DB1B08040
+ for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 09:55:48 +0000 (GMT)
+Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+ [9.149.37.228])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s2P9thQ749676378
+ for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 09:55:43 GMT
+Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s2P9tsub003166
+ for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 03:55:54 -0600
+Subject: [PATCH] ppc64/purgatory: Disabling GCC's stack protection
+From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Date: Tue, 25 Mar 2014 10:55:53 +0100
+Message-ID: <20140325095553.17118.47384.stgit@nimbus>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: --split: assign fair I/O workloads for
- each process
-References: <20140318.120939.49114730.d.hatayama@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971F90A2@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971F90A2@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,54 +38,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+Cc: dvaleev@suse.com
 
+Some Linux distributions, like Suse, are turning on the GCC's stack
+protection mechanism by default (-fstack-protector). When building the
+purgatory with this option, this leads to link issues that are revealed at
+runtime when the purgatory is loaded because symbols like __stack_chk_fail
+are unresolved.
 
+This patch forces this stack protection mechanism to be turned off when
+building the purgatory on ppc64 BE and LE.
 
-(2014/03/25 10:14), Atsushi Kumagai wrote:
->> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
->>
->> When --split option is specified, fair I/O workloads should be
->> assigned for each process to maximize amount of performance
->> optimization by parallel processing.
->>
->> However, the current implementation of setup_splitting() in cyclic
->> mode doesn't care about filtering at all; I/O workloads for each
->> process could be biased easily.
->>
->> This patch deals with the issue by implementing the fair I/O workload
->> assignment as setup_splitting_cyclic().
->>
->> Note: If --split is specified in cyclic mode, we do filtering three
->> times: in get_dumpable_pages_cyclic(), in setup_splitting_cyclic() and
->> in writeout_dumpfile(). Filtering takes about 10 minutes on system
->> with huge memory according to the benchmark on the past, so it might
->> be necessary to optimize filtering or setup_filtering_cyclic().
-> 
-> Sorry, I lost the result of that benchmark, could you give me the URL?
-> I'd like to confirm that the advantage of fair I/O will exceed the
-> 10 minutes disadvantage.
-> 
+Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+---
+ purgatory/arch/ppc64/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Here are two benchmarks by Jingbai Ma and myself.
-
-http://lists.infradead.org/pipermail/kexec/2013-March/008515.html
-http://lists.infradead.org/pipermail/kexec/2013-March/008517.html
-
-
-Note that Jingbai Ma's results are sum of get_dumpable_cyclic() and writeout_dumpfile(), so apparently it looks twice larger than mine, but actually they show almost same performance.
-
-In summary, each result shows about 40 seconds per 1TiB. So, most of systems is not affected very much. On 12TiB memory, which is the current maximum memory size of Fujitsu system, we needs 480 seconds == 8 minutes more. But this is stable in the sense that time never become long suddenly in some rare worst case, so it seems to me optimistic in this sense.
-
-The other ideas to deal with the issue are:
-
-- paralellize the counting up processes. But it might be difficult to paralellize the 2nd pass, which seems inherently serial processing.
-
-- Insead of doing the 2nd pass, make the terminating proces join to still running process. But it might be combersome to implement this not using pthread.
-
-Thanks.
-HATAYAMA, Daisuke
+diff --git a/purgatory/arch/ppc64/Makefile b/purgatory/arch/ppc64/Makefile
+index 31076e9..712e2b1 100644
+--- a/purgatory/arch/ppc64/Makefile
++++ b/purgatory/arch/ppc64/Makefile
+@@ -9,7 +9,7 @@ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/console-ppc64.c
+ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/crashdump_backup.c
+ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/misc.S
+ 
+-ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float
++ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float -fno-stack-protector
+ ppc64_PURGATORY_EXTRA_ASFLAGS += -m64
+ ifeq ($(SUBARCH),BE)
+ 	ppc64_PURGATORY_EXTRA_LDFLAGS += -melf64ppc
 
 
 _______________________________________________
