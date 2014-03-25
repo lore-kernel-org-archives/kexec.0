@@ -1,30 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp13.uk.ibm.com ([195.75.94.109])
+Received: from mail-qc0-x232.google.com ([2607:f8b0:400d:c01::232])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WSO5o-0006Kz-1D
- for kexec@lists.infradead.org; Tue, 25 Mar 2014 09:56:24 +0000
-Received: from /spool/local
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
- Tue, 25 Mar 2014 09:55:58 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2B3DB1B08040
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 09:55:48 +0000 (GMT)
-Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
- [9.149.37.228])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s2P9thQ749676378
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 09:55:43 GMT
-Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s2P9tsub003166
- for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 03:55:54 -0600
-Subject: [PATCH] ppc64/purgatory: Disabling GCC's stack protection
-From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Date: Tue, 25 Mar 2014 10:55:53 +0100
-Message-ID: <20140325095553.17118.47384.stgit@nimbus>
+ id 1WSSNg-0006pq-Fp
+ for kexec@lists.infradead.org; Tue, 25 Mar 2014 14:31:09 +0000
+Received: by mail-qc0-f178.google.com with SMTP id i8so628869qcq.23
+ for <kexec@lists.infradead.org>; Tue, 25 Mar 2014 07:30:45 -0700 (PDT)
+Received: from brickies-eth0.mosers.us (d14-69-66-169.try.wideopenwest.com.
+ [69.14.169.66])
+ by mx.google.com with ESMTPSA id f2sm32709366qaa.28.2014.03.25.07.30.44
+ for <kexec@lists.infradead.org>
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 25 Mar 2014 07:30:45 -0700 (PDT)
+Date: Tue, 25 Mar 2014 10:30:43 -0400 (EDT)
+From: Scott Moser <smoser@ubuntu.com>
+Subject: cannot seem to load multiboot images
+Message-ID: <alpine.DEB.2.02.1403251023480.4659@brickies>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -38,36 +28,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
-Cc: dvaleev@suse.com
+To: kexec@lists.infradead.org
 
-Some Linux distributions, like Suse, are turning on the GCC's stack
-protection mechanism by default (-fstack-protector). When building the
-purgatory with this option, this leads to link issues that are revealed at
-runtime when the purgatory is loaded because symbols like __stack_chk_fail
-are unresolved.
+kexec explictly (in --help and man page) reports to support multiboot
+format images. That doesn't work for at least some subset of seemingly
+proper multiboot images. For some context, the goal essentially the same
+as discussed at [1].
 
-This patch forces this stack protection mechanism to be turned off when
-building the purgatory on ppc64 BE and LE.
+Has anyone seen this work?  I've just checked with git at current tip
+(401e037e5e9527134c594b8923342a69ff38b7cb) and see the same problem.
 
-Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
----
- purgatory/arch/ppc64/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+mbchk is from 'multiboot' package (built from source).
 
-diff --git a/purgatory/arch/ppc64/Makefile b/purgatory/arch/ppc64/Makefile
-index 31076e9..712e2b1 100644
---- a/purgatory/arch/ppc64/Makefile
-+++ b/purgatory/arch/ppc64/Makefile
-@@ -9,7 +9,7 @@ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/console-ppc64.c
- ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/crashdump_backup.c
- ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/misc.S
- 
--ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float
-+ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float -fno-stack-protector
- ppc64_PURGATORY_EXTRA_ASFLAGS += -m64
- ifeq ($(SUBARCH),BE)
- 	ppc64_PURGATORY_EXTRA_LDFLAGS += -melf64ppc
+Also note that 'qemu-system-x86_64' loads this multiboot image properly
+with 'qemu-system-x86_64 -kernel'
+
+$ dpkg-query --show kexec-tools
+kexec-tools 1:2.0.4-1ubuntu1
+
+$ mbchk /boot/grub/i386-pc/core.img
+/boot/grub/i386-pc/core.img: The Multiboot header is found at the offset
+2416.
+/boot/grub/i386-pc/core.img: Page alignment is turned off.
+/boot/grub/i386-pc/core.img: Memory information is turned off.
+/boot/grub/i386-pc/core.img: Address fields is turned on.
+/boot/grub/i386-pc/core.img: All checks passed.
+
+$ sudo ./build.out/sbin/kexec --debug --type multiboot-x86
+/boot/grub/i386-pc/core.img
+kernel: 0xe19010 kernel_size: 0x6315
+MEMORY RANGES
+0000000000000100-000000000009f000 (0)
+000000000009f000-00000000000a0000 (1)
+00000000000e7000-0000000000100000 (1)
+0000000000100000-00000000bf760000 (0)
+00000000bf76e000-00000000bf770000 (1)
+00000000bf770000-00000000bf77e000 (2)
+00000000bf77e000-00000000bf7d0000 (3)
+00000000bf7d0000-00000000bf7e0000 (1)
+00000000bf7ec000-00000000c0000000 (1)
+00000000e0000000-00000000f0000000 (1)
+00000000fee00000-00000000fee01000 (1)
+00000000ffc00000-0000000100000000 (1)
+0000000100000000-0000000c40000000 (0)
+Cannot determine the file type of /boot/grub/i386-pc/core.img
+
+
+$ kexec --debug --type multiboot-x86 /boot/grub/i386-pc/core.img
+kernel: 0x1767010 kernel_size: 6315
+MEMORY RANGES
+0000000000000100-000000000009f000 (0)
+000000000009f000-00000000000a0000 (1)
+00000000000e7000-0000000000100000 (1)
+0000000000100000-00000000bf760000 (0)
+00000000bf76e000-00000000bf770000 (1)
+00000000bf770000-00000000bf77e000 (2)
+00000000bf77e000-00000000bf7d0000 (3)
+00000000bf7d0000-00000000bf7e0000 (1)
+00000000bf7ec000-00000000c0000000 (1)
+00000000e0000000-00000000f0000000 (1)
+00000000fee00000-00000000fee01000 (1)
+00000000ffc00000-0000000100000000 (1)
+0000000100000000-0000000c40000000 (0)
+Cannot determine the file type of /boot/grub/i386-pc/core.img
+
+
+Note, I also
+  I filed an ubuntu bug at http://pad.lv/1297316 .
+
+https://bugs.launchpad.net/ubuntu/+source/kexec-tools/+bug/1297316
 
 
 _______________________________________________
