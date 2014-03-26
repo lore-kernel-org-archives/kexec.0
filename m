@@ -1,34 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WSgYK-0003tm-JG
- for kexec@lists.infradead.org; Wed, 26 Mar 2014 05:39:06 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 5F4093EE0AE
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 14:38:38 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 5192145DE4E
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 14:38:38 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.nic.fujitsu.com [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 2FAE945DE3E
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 14:38:38 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 229B11DB802C
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 14:38:38 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id B77AE1DB8038
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 14:38:37 +0900 (JST)
-Date: Wed, 26 Mar 2014 06:38:28 +0100 (a/T)
-Message-Id: <20140326.063828.455925185.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH] makedumpfile: --split: assign fair I/O workloads for
- each process
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <533119A4.8040900@jp.fujitsu.com>
-References: <20140318.120939.49114730.d.hatayama@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971F90A2@BPXM01GP.gisp.nec.co.jp>
- <533119A4.8040900@jp.fujitsu.com>
-Mime-Version: 1.0
+ id 1WSiPh-0005ix-Dj
+ for kexec@lists.infradead.org; Wed, 26 Mar 2014 07:38:19 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: reduce unnecessary memory copy
+Date: Wed, 26 Mar 2014 07:35:19 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F9B50@BPXM01GP.gisp.nec.co.jp>
+References: <20140317084318.13494.34955.stgit@k.asiapacific.hpqcorp.net>
+ <20140317.183214.300888078.d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20140317.183214.300888078.d.hatayama@jp.fujitsu.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,93 +20,159 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>
 
-From: "Hatayama, Daisuke/畑山 大輔" <d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH] makedumpfile: --split: assign fair I/O workloads for each process
-Date: Tue, 25 Mar 2014 14:52:36 +0900
+Hello Jingbai,
 
-> 
-> 
-> (2014/03/25 10:14), Atsushi Kumagai wrote:
->>> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
->>>
->>> When --split option is specified, fair I/O workloads should be
->>> assigned for each process to maximize amount of performance
->>> optimization by parallel processing.
->>>
->>> However, the current implementation of setup_splitting() in cyclic
->>> mode doesn't care about filtering at all; I/O workloads for each
->>> process could be biased easily.
->>>
->>> This patch deals with the issue by implementing the fair I/O workload
->>> assignment as setup_splitting_cyclic().
->>>
->>> Note: If --split is specified in cyclic mode, we do filtering three
->>> times: in get_dumpable_pages_cyclic(), in setup_splitting_cyclic() and
->>> in writeout_dumpfile(). Filtering takes about 10 minutes on system
->>> with huge memory according to the benchmark on the past, so it might
->>> be necessary to optimize filtering or setup_filtering_cyclic().
->> 
->> Sorry, I lost the result of that benchmark, could you give me the URL?
->> I'd like to confirm that the advantage of fair I/O will exceed the
->> 10 minutes disadvantage.
->> 
-> 
-> Here are two benchmarks by Jingbai Ma and myself.
-> 
-> http://lists.infradead.org/pipermail/kexec/2013-March/008515.html
-> http://lists.infradead.org/pipermail/kexec/2013-March/008517.html
-> 
-> 
-> Note that Jingbai Ma's results are sum of get_dumpable_cyclic() and writeout_dumpfile(), so apparently it looks twice larger than mine, but actually they show almost same performance.
-> 
-> In summary, each result shows about 40 seconds per 1TiB. So, most of systems is not affected very much. On 12TiB memory, which is the current maximum memory size of Fujitsu system, we needs 480 seconds == 8 minutes more. But this is stable in the sense that time never become long suddenly in some rare worst case, so it seems to me optimistic in this sense.
-> 
-> The other ideas to deal with the issue are:
-> 
-> - paralellize the counting up processes. But it might be difficult to paralellize the 2nd pass, which seems inherently serial processing.
-> 
-> - Insead of doing the 2nd pass, make the terminating proces join to still running process. But it might be combersome to implement this not using pthread.
-> 
+>> This patch intends to reduce unnecessary memory copy in compressing memory
+>> blocks.
+>>
+>> old logic like this:
+>>     compress(buf_out, &size_out, buf, size);
+>>     ...
+>>     memcpy(buf, buf_out, pd.size);
+>>     ...
+>>     write_cache(cd_page, buf, pd.size)
+>>
+>> new logic:
+>>     compress(buf_out, &size_out, buf, size);
+>>     ...
+>>     if (compressed?)
+>>         write_cache(cd_page, buf_out, pd.size)
+>>     else
+>>         write_cache(cd_page, buf, pd.size)
+>>
+>> This occurs for each single page, so by the new logic it can reduce a lot of
+>> unnecessary memcpy() on machines with huge memory.
+>> This patch wasn't expected to improve the kdump performance dramatically due to
+>> the memory copy operations on modern processors are pretty fast.
+>>
+>
+>Now /proc/vmcore has zero copy mechanism with mmap(), but now
+>makedumpfile still uses buffers some places in makedumpfile to keep
+>changes as less as possible for ease of maintainance. I think ease of
+>maintainance is important, so I don't think we should soon totally
+>remove copy in makedumpfile. We should first benchmark where can be
+>improved very much by just removing copy and then should decide where
+>to optimize.
+>
+>OTOH, this patch also seems to be a kind of clean-up patch. Even if
+>amount of improvement is a little, I don't object this patch; of
+>course, then patch description should say it's rather cleanup patch
+>than optimization.
 
-I noticed that it's able to create a table of dumpable pages with a
-relatively small amount of memory by manging a memory as blocks. This
-is just kind of a page table management.
+I have no additional comments, so please send the v2 patch.
 
-For example, define a block 1 GiB boundary region and assume a system
-with 64 TiB physical memory (which is current maximum on x86_64).
 
-Then, 
+Thanks
+Atsushi Kumagai
 
-  64 TiB / 1 GiB = 64 Ki blocks
-
-A table we consdier here have the number of dumpable pages for each 1
-GiB boundary in each entry of 8 bytes. So, total size of the table is:
-
-  8 B * 64 Ki blocks = 512 KiB
-
-Counting up dumpable pages in each GiB boundary can be done by 1 pass
-only; get_dumpable_cyclic() does that too.
-
-Then, it's assign amount of I/O to each process fairly enough. The
-difference is at most 1 GiB. If disk speed is 100 MiB/sec, 1 GiB
-corresponds to about 10 seconds only.
-
-If you think 512 KiB not small enough, it would be able to increase
-block size a little more. If choosing 8 GiB block, table size is 64
-KiB only, and the 8 GiB data corresponds to about 80 seconds on
-typical disks.
-
-How do you think this?
-
-Thanks.
-HATAYAMA, Daisuke
+>>
+>> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+>> ---
+>>  makedumpfile.c |   24 ++++++++++++++----------
+>>  1 files changed, 14 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/makedumpfile.c b/makedumpfile.c
+>> index 23251a1..80f76cf 100644
+>> --- a/makedumpfile.c
+>> +++ b/makedumpfile.c
+>> @@ -6245,7 +6245,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+>>  		    && (size_out < info->page_size)) {
+>>  			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
+>>  			pd.size  = size_out;
+>> -			memcpy(buf, buf_out, pd.size);
+>>  #ifdef USELZO
+>>  		} else if (info->flag_lzo_support
+>>  			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
+>> @@ -6255,7 +6254,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+>>  			   && (size_out < info->page_size)) {
+>>  			pd.flags = DUMP_DH_COMPRESSED_LZO;
+>>  			pd.size  = size_out;
+>> -			memcpy(buf, buf_out, pd.size);
+>>  #endif
+>>  #ifdef USESNAPPY
+>>  		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
+>> @@ -6267,7 +6265,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+>>  			   && (size_out < info->page_size)) {
+>>  			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
+>>  			pd.size  = size_out;
+>> -			memcpy(buf, buf_out, pd.size);
+>>  #endif
+>>  		} else {
+>>  			pd.flags = 0;
+>> @@ -6286,8 +6283,13 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+>>  		/*
+>>  		 * Write the page data.
+>>  		 */
+>> -		if (!write_cache(cd_page, buf, pd.size))
+>> -			goto out;
+>> +		if (pd.flags == 0) {
+>> +			if (!write_cache(cd_page, buf, pd.size))
+>> +				goto out;
+>> +		} else {
+>> +			if (!write_cache(cd_page, buf_out, pd.size))
+>> +				goto out;
+>> +		}
+>>  	}
+>
+>if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
+>    goto out;
+>
+>>
+>>  	/*
+>> @@ -6424,7 +6426,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>>  		    && (size_out < info->page_size)) {
+>>  			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
+>>  			pd.size  = size_out;
+>> -			memcpy(buf, buf_out, pd.size);
+>>  #ifdef USELZO
+>>  		} else if (info->flag_lzo_support
+>>  			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
+>> @@ -6434,7 +6435,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>>  			   && (size_out < info->page_size)) {
+>>  			pd.flags = DUMP_DH_COMPRESSED_LZO;
+>>  			pd.size  = size_out;
+>> -			memcpy(buf, buf_out, pd.size);
+>>  #endif
+>>  #ifdef USESNAPPY
+>>  		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
+>> @@ -6446,7 +6446,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>>  			   && (size_out < info->page_size)) {
+>>  			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
+>>  			pd.size  = size_out;
+>> -			memcpy(buf, buf_out, pd.size);
+>>  #endif
+>>  		} else {
+>>  			pd.flags = 0;
+>> @@ -6465,8 +6464,13 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>>                  /*
+>>                   * Write the page data.
+>>                   */
+>> -                if (!write_cache(cd_page, buf, pd.size))
+>> -                        goto out;
+>> +		if (pd.flags == 0) {
+>> +			if (!write_cache(cd_page, buf, pd.size))
+>> +				goto out;
+>> +		} else {
+>> +			if (!write_cache(cd_page, buf_out, pd.size))
+>> +				goto out;
+>> +		}
+>>          }
+>
+>Similaly.
+>
+>>
+>>  	ret = TRUE;
+>>
+>
+>Thanks.
+>HATAYAMA, Daisuke
 
 
 _______________________________________________
