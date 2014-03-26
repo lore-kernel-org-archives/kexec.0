@@ -1,31 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from g4t3425.houston.hp.com ([15.201.208.53])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WSkYi-0008OM-0u
- for kexec@lists.infradead.org; Wed, 26 Mar 2014 09:55:45 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id EC9013EE0BB
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id DC04F45DE55
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A8E8D45DE60
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9B684E08004
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 43EA5E08001
- for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
-Date: Wed, 26 Mar 2014 10:55:07 +0100 (a/T)
-Message-Id: <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20140325171420.6b558576@holzheu>
-References: <20140325171420.6b558576@holzheu>
-Mime-Version: 1.0
+ id 1WSlj6-00020Y-Ga
+ for kexec@lists.infradead.org; Wed, 26 Mar 2014 11:10:33 +0000
+Message-ID: <5332B587.3030407@hp.com>
+Date: Wed, 26 Mar 2014 19:09:59 +0800
+From: Jingbai Ma <jingbai.ma@hp.com>
+MIME-Version: 1.0
+Subject: [BUG] makedumpfile v1.5.5
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,78 +16,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: holzheu@linux.vnet.ibm.com
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: jingbai.ma@hp.com
 
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Date: Tue, 25 Mar 2014 17:14:20 +0100
+Hi Daisuke,
 
-> There are dump mechansims like s390 stand-alond dump or KVM virsh dump
-> that write the physical memory of a machine and are not aware of the
-> dumped operating system. For those dump mechanisms it can happen
-> that for the Linux kernel of the dumped system the "mem=" kernel
-> parameter has been specified. In this case max_mapnr that makedumpfile
-> gets from the ELF header can be bigger than the maximum page frame number
-> used by the dumped Linux kernel.
-> 
-> With this patch makedumpfile gets the maximum page frame number from
-> the mem_map array and adjusts info->max_mapnr if this value is smaller
-> than the value calculated from the ELF header.
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> ---
->  makedumpfile.c |   14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
->  int
->  get_mem_map(void)
->  {
-> -	int ret;
-> +	unsigned long max_pfn = 0;
-> +	int ret, i;
+I found a problem with the latest makedumpfile v1.5.5.
+I have narrowed down the bug to your patch set:
 
-Please define max_pfn as unsigned long long.
+72d9d063 [PATCH v2 1/2] Use memset() to improve the 1st bitmap 
+initialization performance.
 
-And for i,
+363d53fc [PATCH v2 2/2] Write out a whole part of the 1st bitmap before 
+entering cyclic process.
 
->  
->  	switch (get_mem_type()) {
->  	case SPARSEMEM:
-> @@ -2861,6 +2862,17 @@ get_mem_map(void)
->  		ret = FALSE;
->  		break;
->  	}
-> +	/*
-> +	 * Adjust "max_mapnr" for the case that Linux uses less memory
-> +	 * than is dumped. For example when "mem=" has been used for the
-> +	 * dumped system.
-> +	 */
-> +	for (i = 0; i < info->num_mem_map; i++) {
+After reversed this patch set out, this problem was gone.
+Could you check this problem?
 
-info->num_mem_map is defined as unsigned int. I guess some warning
-about comparison with different signedness occurs.
+I got a segmentation fault during dump kernel. I have copied the vmcore 
+to my system to debug it.
 
-> +		if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
-> +			continue;
-> +		max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
-> +	}
-> +	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
->  	return ret;
->  }
->  
-> 
+makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore /dev/null
+cyclic buffer size has been changed: 1060863 => 1060736
+Excluding unnecessary pages        : [100.0 %] |STEP [Excluding 
+unnecessary pages] : 0.280002 seconds
+Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
+unnecessary pages] : 0.000194 seconds
+Excluding unnecessary pages        : [100.0 %] -STEP [Excluding 
+unnecessary pages] : 0.276371 seconds
+Excluding unnecessary pages        : [100.0 %] /STEP [Excluding 
+unnecessary pages] : 0.000205 seconds
+Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
+unnecessary pages] : 0.279320 seconds
+Segmentation fault (core dumped)
 
-Thanks.
-HATAYAMA, Daisuke
+gdb --args ./makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore 
+/dev/null
 
+(gdb) run
+Starting program: /home/majingb/work/source/makedumpfile/makedumpfile -l 
+--message-level 23 -d 31 -f /vmcores/vmcore /dev/null
+[Thread debugging using libthread_db enabled]
+cyclic buffer size has been changed: 1060863 => 1060736
+Excluding unnecessary pages        : [100.0 %] |STEP [Excluding 
+unnecessary pages] : 0.306783 seconds
+Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
+unnecessary pages] : 0.000197 seconds
+Excluding unnecessary pages        : [100.0 %] /STEP [Excluding 
+unnecessary pages] : 0.274979 seconds
+Excluding unnecessary pages        : [100.0 %] |STEP [Excluding 
+unnecessary pages] : 0.000177 seconds
+Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
+unnecessary pages] : 0.274816 seconds
+Copying data                       : [  7.0 %] -
+Program received signal SIGSEGV, Segmentation fault.
+__memset_sse2 () at ../sysdeps/x86_64/memset.S:65
+65		movswq (%rcx,%r8,2),%rcx
+(gdb) bt
+#0  __memset_sse2 () at ../sysdeps/x86_64/memset.S:65
+#1  0x000000000042ea73 in readpage_elf (type_addr=1, addr=3881992192, 
+bufptr=0x7fffffffbc90, size=4096) at makedumpfile.c:402
+#2  readmem (type_addr=1, addr=3881992192, bufptr=0x7fffffffbc90, 
+size=4096) at makedumpfile.c:594
+#3  0x000000000042fe0f in read_pfn (pfn=<value optimized out>, 
+buf=<value optimized out>) at makedumpfile.c:5798
+#4  0x0000000000430089 in write_kdump_pages_cyclic 
+(cd_header=0x7fffffffde00, cd_page=0x7fffffffddd0, 
+pd_zero=0x7fffffffdd50, offset_data=0x7fffffffdd88) at makedumpfile.c:6402
+#5  0x0000000000437073 in write_kdump_pages_and_bitmap_cyclic 
+(cd_header=0x7fffffffde00, cd_page=0x7fffffffddd0) at makedumpfile.c:6880
+#6  0x000000000043827b in writeout_dumpfile () at makedumpfile.c:7835
+#7  0x00000000004386a5 in create_dumpfile () at makedumpfile.c:8038
+#8  0x000000000043944e in main (argc=<value optimized out>, argv=<value 
+optimized out>) at makedumpfile.c:9214
+
+In makedumpfile line 402:
+                      memset(bufptr, 0, frac_head);
+I have printed out the value of frac_head:
+p	frac_head
+$2 = 18446744069827559424
+It seems something wrong here.
+
+Here is the paddr in this context.
+(gdb) p	paddr
+$3 = 3881992192
+
+I also have printed out the pt_loads for your reference:
+(gdb) p *pt_loads@num_pt_loads
+$3 = {{file_offset = 12288, phys_start = 16777216, phys_end = 33579008, 
+virt_start = 18446744071578845184, virt_end = 18446744071595646976}, 
+{file_offset = 16814080, phys_start = 65536, phys_end = 621568,
+     virt_start = 18446612132314284032, virt_end = 
+18446612132314840064}, {file_offset = 17371136, phys_start = 1048576, 
+phys_end = 637534208, virt_start = 18446612132315267072, virt_end = 
+18446612132951752704}, {
+     file_offset	= 653856768, phys_start = 905969664, phys_end = 
+3881955328, virt_start = 18446612133220188160, virt_end = 
+18446612136196173824}, {file_offset = 3629842432, phys_start = 
+3882008576, phys_end = 3882012672,
+     virt_start = 18446612136196227072, virt_end = 
+18446612136196231168}, {file_offset = 3629846528, phys_start = 
+4294967296, phys_end = 34762387456, virt_start = 18446612136609185792, 
+virt_end = 18446612167076605952}}
+
+
+-- 
+Thanks,
+Jingbai Ma
 
 _______________________________________________
 kexec mailing list
