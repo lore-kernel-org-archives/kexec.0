@@ -1,17 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WSiPh-0005ix-Dj
- for kexec@lists.infradead.org; Wed, 26 Mar 2014 07:38:19 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile: reduce unnecessary memory copy
-Date: Wed, 26 Mar 2014 07:35:19 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971F9B50@BPXM01GP.gisp.nec.co.jp>
-References: <20140317084318.13494.34955.stgit@k.asiapacific.hpqcorp.net>
- <20140317.183214.300888078.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20140317.183214.300888078.d.hatayama@jp.fujitsu.com>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1WSkYi-0008OM-0u
+ for kexec@lists.infradead.org; Wed, 26 Mar 2014 09:55:45 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id EC9013EE0BB
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id DC04F45DE55
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A8E8D45DE60
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9B684E08004
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 43EA5E08001
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 18:55:17 +0900 (JST)
+Date: Wed, 26 Mar 2014 10:55:07 +0100 (a/T)
+Message-Id: <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20140325171420.6b558576@holzheu>
+References: <20140325171420.6b558576@holzheu>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,155 +38,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>
+To: holzheu@linux.vnet.ibm.com
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
-Hello Jingbai,
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
+Date: Tue, 25 Mar 2014 17:14:20 +0100
 
->> This patch intends to reduce unnecessary memory copy in compressing memory
->> blocks.
->>
->> old logic like this:
->>     compress(buf_out, &size_out, buf, size);
->>     ...
->>     memcpy(buf, buf_out, pd.size);
->>     ...
->>     write_cache(cd_page, buf, pd.size)
->>
->> new logic:
->>     compress(buf_out, &size_out, buf, size);
->>     ...
->>     if (compressed?)
->>         write_cache(cd_page, buf_out, pd.size)
->>     else
->>         write_cache(cd_page, buf, pd.size)
->>
->> This occurs for each single page, so by the new logic it can reduce a lot of
->> unnecessary memcpy() on machines with huge memory.
->> This patch wasn't expected to improve the kdump performance dramatically due to
->> the memory copy operations on modern processors are pretty fast.
->>
->
->Now /proc/vmcore has zero copy mechanism with mmap(), but now
->makedumpfile still uses buffers some places in makedumpfile to keep
->changes as less as possible for ease of maintainance. I think ease of
->maintainance is important, so I don't think we should soon totally
->remove copy in makedumpfile. We should first benchmark where can be
->improved very much by just removing copy and then should decide where
->to optimize.
->
->OTOH, this patch also seems to be a kind of clean-up patch. Even if
->amount of improvement is a little, I don't object this patch; of
->course, then patch description should say it's rather cleanup patch
->than optimization.
+> There are dump mechansims like s390 stand-alond dump or KVM virsh dump
+> that write the physical memory of a machine and are not aware of the
+> dumped operating system. For those dump mechanisms it can happen
+> that for the Linux kernel of the dumped system the "mem=" kernel
+> parameter has been specified. In this case max_mapnr that makedumpfile
+> gets from the ELF header can be bigger than the maximum page frame number
+> used by the dumped Linux kernel.
+> 
+> With this patch makedumpfile gets the maximum page frame number from
+> the mem_map array and adjusts info->max_mapnr if this value is smaller
+> than the value calculated from the ELF header.
+> 
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> ---
+>  makedumpfile.c |   14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
+>  int
+>  get_mem_map(void)
+>  {
+> -	int ret;
+> +	unsigned long max_pfn = 0;
+> +	int ret, i;
 
-I have no additional comments, so please send the v2 patch.
+Please define max_pfn as unsigned long long.
 
+And for i,
 
-Thanks
-Atsushi Kumagai
+>  
+>  	switch (get_mem_type()) {
+>  	case SPARSEMEM:
+> @@ -2861,6 +2862,17 @@ get_mem_map(void)
+>  		ret = FALSE;
+>  		break;
+>  	}
+> +	/*
+> +	 * Adjust "max_mapnr" for the case that Linux uses less memory
+> +	 * than is dumped. For example when "mem=" has been used for the
+> +	 * dumped system.
+> +	 */
+> +	for (i = 0; i < info->num_mem_map; i++) {
 
->>
->> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
->> ---
->>  makedumpfile.c |   24 ++++++++++++++----------
->>  1 files changed, 14 insertions(+), 10 deletions(-)
->>
->> diff --git a/makedumpfile.c b/makedumpfile.c
->> index 23251a1..80f76cf 100644
->> --- a/makedumpfile.c
->> +++ b/makedumpfile.c
->> @@ -6245,7 +6245,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
->>  		    && (size_out < info->page_size)) {
->>  			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
->>  			pd.size  = size_out;
->> -			memcpy(buf, buf_out, pd.size);
->>  #ifdef USELZO
->>  		} else if (info->flag_lzo_support
->>  			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
->> @@ -6255,7 +6254,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
->>  			   && (size_out < info->page_size)) {
->>  			pd.flags = DUMP_DH_COMPRESSED_LZO;
->>  			pd.size  = size_out;
->> -			memcpy(buf, buf_out, pd.size);
->>  #endif
->>  #ifdef USESNAPPY
->>  		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
->> @@ -6267,7 +6265,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
->>  			   && (size_out < info->page_size)) {
->>  			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
->>  			pd.size  = size_out;
->> -			memcpy(buf, buf_out, pd.size);
->>  #endif
->>  		} else {
->>  			pd.flags = 0;
->> @@ -6286,8 +6283,13 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
->>  		/*
->>  		 * Write the page data.
->>  		 */
->> -		if (!write_cache(cd_page, buf, pd.size))
->> -			goto out;
->> +		if (pd.flags == 0) {
->> +			if (!write_cache(cd_page, buf, pd.size))
->> +				goto out;
->> +		} else {
->> +			if (!write_cache(cd_page, buf_out, pd.size))
->> +				goto out;
->> +		}
->>  	}
->
->if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
->    goto out;
->
->>
->>  	/*
->> @@ -6424,7 +6426,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
->>  		    && (size_out < info->page_size)) {
->>  			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
->>  			pd.size  = size_out;
->> -			memcpy(buf, buf_out, pd.size);
->>  #ifdef USELZO
->>  		} else if (info->flag_lzo_support
->>  			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
->> @@ -6434,7 +6435,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
->>  			   && (size_out < info->page_size)) {
->>  			pd.flags = DUMP_DH_COMPRESSED_LZO;
->>  			pd.size  = size_out;
->> -			memcpy(buf, buf_out, pd.size);
->>  #endif
->>  #ifdef USESNAPPY
->>  		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
->> @@ -6446,7 +6446,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
->>  			   && (size_out < info->page_size)) {
->>  			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
->>  			pd.size  = size_out;
->> -			memcpy(buf, buf_out, pd.size);
->>  #endif
->>  		} else {
->>  			pd.flags = 0;
->> @@ -6465,8 +6464,13 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
->>                  /*
->>                   * Write the page data.
->>                   */
->> -                if (!write_cache(cd_page, buf, pd.size))
->> -                        goto out;
->> +		if (pd.flags == 0) {
->> +			if (!write_cache(cd_page, buf, pd.size))
->> +				goto out;
->> +		} else {
->> +			if (!write_cache(cd_page, buf_out, pd.size))
->> +				goto out;
->> +		}
->>          }
->
->Similaly.
->
->>
->>  	ret = TRUE;
->>
->
->Thanks.
->HATAYAMA, Daisuke
+info->num_mem_map is defined as unsigned int. I guess some warning
+about comparison with different signedness occurs.
+
+> +		if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
+> +			continue;
+> +		max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
+> +	}
+> +	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
+>  	return ret;
+>  }
+>  
+> 
+
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
