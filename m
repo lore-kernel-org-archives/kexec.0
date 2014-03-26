@@ -1,13 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g4t3425.houston.hp.com ([15.201.208.53])
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WSlj6-00020Y-Ga
- for kexec@lists.infradead.org; Wed, 26 Mar 2014 11:10:33 +0000
-Message-ID: <5332B587.3030407@hp.com>
-Date: Wed, 26 Mar 2014 19:09:59 +0800
-From: Jingbai Ma <jingbai.ma@hp.com>
-MIME-Version: 1.0
-Subject: [BUG] makedumpfile v1.5.5
+ id 1WSs2W-0007au-Pd
+ for kexec@lists.infradead.org; Wed, 26 Mar 2014 17:55:01 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Wed, 26 Mar 2014 17:54:33 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 850FB2190046
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 17:54:23 +0000 (GMT)
+Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
+ [9.149.37.217])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s2QHsHES5112144
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 17:54:17 GMT
+Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s2QIsS82026106
+ for <kexec@lists.infradead.org>; Wed, 26 Mar 2014 12:54:28 -0600
+Date: Wed, 26 Mar 2014 18:54:26 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
+Message-ID: <20140326185426.5e2e5fc4@holzheu>
+In-Reply-To: <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
+References: <20140325171420.6b558576@holzheu>
+ <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,117 +37,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: jingbai.ma@hp.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-Hi Daisuke,
+On Wed, 26 Mar 2014 10:55:07 +0100 (a/T)
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-I found a problem with the latest makedumpfile v1.5.5.
-I have narrowed down the bug to your patch set:
+> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> Subject: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
+> Date: Tue, 25 Mar 2014 17:14:20 +0100
 
-72d9d063 [PATCH v2 1/2] Use memset() to improve the 1st bitmap 
-initialization performance.
+[snip]
 
-363d53fc [PATCH v2 2/2] Write out a whole part of the 1st bitmap before 
-entering cyclic process.
+> > With this patch makedumpfile gets the maximum page frame number from
+> > the mem_map array and adjusts info->max_mapnr if this value is smaller
+> > than the value calculated from the ELF header.
+> > 
+> > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > ---
+> >  makedumpfile.c |   14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
+> >  int
+> >  get_mem_map(void)
+> >  {
+> > -	int ret;
+> > +	unsigned long max_pfn = 0;
+> > +	int ret, i;
+> 
+> Please define max_pfn as unsigned long long.
 
-After reversed this patch set out, this problem was gone.
-Could you check this problem?
+Ok done.
 
-I got a segmentation fault during dump kernel. I have copied the vmcore 
-to my system to debug it.
+> 
+> And for i,
+> 
+> >  
+> >  	switch (get_mem_type()) {
+> >  	case SPARSEMEM:
+> > @@ -2861,6 +2862,17 @@ get_mem_map(void)
+> >  		ret = FALSE;
+> >  		break;
+> >  	}
+> > +	/*
+> > +	 * Adjust "max_mapnr" for the case that Linux uses less memory
+> > +	 * than is dumped. For example when "mem=" has been used for the
+> > +	 * dumped system.
+> > +	 */
+> > +	for (i = 0; i < info->num_mem_map; i++) {
+> 
+> info->num_mem_map is defined as unsigned int. I guess some warning
+> about comparison with different signedness occurs.
 
-makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore /dev/null
-cyclic buffer size has been changed: 1060863 => 1060736
-Excluding unnecessary pages        : [100.0 %] |STEP [Excluding 
-unnecessary pages] : 0.280002 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
-unnecessary pages] : 0.000194 seconds
-Excluding unnecessary pages        : [100.0 %] -STEP [Excluding 
-unnecessary pages] : 0.276371 seconds
-Excluding unnecessary pages        : [100.0 %] /STEP [Excluding 
-unnecessary pages] : 0.000205 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
-unnecessary pages] : 0.279320 seconds
-Segmentation fault (core dumped)
+Ah ok...
 
-gdb --args ./makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore 
-/dev/null
+With the default CFLAGS for makedumpfile-1.5.5 tarball I do not get
+any warning. When I add "-W" to CFLAGS, I get lots of warnings
+including the one you mentioned.
 
-(gdb) run
-Starting program: /home/majingb/work/source/makedumpfile/makedumpfile -l 
---message-level 23 -d 31 -f /vmcores/vmcore /dev/null
-[Thread debugging using libthread_db enabled]
-cyclic buffer size has been changed: 1060863 => 1060736
-Excluding unnecessary pages        : [100.0 %] |STEP [Excluding 
-unnecessary pages] : 0.306783 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
-unnecessary pages] : 0.000197 seconds
-Excluding unnecessary pages        : [100.0 %] /STEP [Excluding 
-unnecessary pages] : 0.274979 seconds
-Excluding unnecessary pages        : [100.0 %] |STEP [Excluding 
-unnecessary pages] : 0.000177 seconds
-Excluding unnecessary pages        : [100.0 %] \STEP [Excluding 
-unnecessary pages] : 0.274816 seconds
-Copying data                       : [  7.0 %] -
-Program received signal SIGSEGV, Segmentation fault.
-__memset_sse2 () at ../sysdeps/x86_64/memset.S:65
-65		movswq (%rcx,%r8,2),%rcx
-(gdb) bt
-#0  __memset_sse2 () at ../sysdeps/x86_64/memset.S:65
-#1  0x000000000042ea73 in readpage_elf (type_addr=1, addr=3881992192, 
-bufptr=0x7fffffffbc90, size=4096) at makedumpfile.c:402
-#2  readmem (type_addr=1, addr=3881992192, bufptr=0x7fffffffbc90, 
-size=4096) at makedumpfile.c:594
-#3  0x000000000042fe0f in read_pfn (pfn=<value optimized out>, 
-buf=<value optimized out>) at makedumpfile.c:5798
-#4  0x0000000000430089 in write_kdump_pages_cyclic 
-(cd_header=0x7fffffffde00, cd_page=0x7fffffffddd0, 
-pd_zero=0x7fffffffdd50, offset_data=0x7fffffffdd88) at makedumpfile.c:6402
-#5  0x0000000000437073 in write_kdump_pages_and_bitmap_cyclic 
-(cd_header=0x7fffffffde00, cd_page=0x7fffffffddd0) at makedumpfile.c:6880
-#6  0x000000000043827b in writeout_dumpfile () at makedumpfile.c:7835
-#7  0x00000000004386a5 in create_dumpfile () at makedumpfile.c:8038
-#8  0x000000000043944e in main (argc=<value optimized out>, argv=<value 
-optimized out>) at makedumpfile.c:9214
+Here the fixed patch:
+---
+[PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
 
-In makedumpfile line 402:
-                      memset(bufptr, 0, frac_head);
-I have printed out the value of frac_head:
-p	frac_head
-$2 = 18446744069827559424
-It seems something wrong here.
+There are dump mechansims like s390 stand-alond dump or KVM virsh dump
+that write the physical memory of a machine and are not aware of the
+dumped operating system. For those dump mechanisms it can happen
+that for the Linux kernel of the dumped system the "mem=" kernel
+parameter has been specified. In this case max_mapnr that makedumpfile
+gets from the ELF header can be bigger than the maximum page frame number
+used by the dumped Linux kernel.
 
-Here is the paddr in this context.
-(gdb) p	paddr
-$3 = 3881992192
+With this patch makedumpfile gets the maximum page frame number from
+the mem_map array and adjusts info->max_mapnr if this value is smaller
+than the value calculated from the ELF header.
 
-I also have printed out the pt_loads for your reference:
-(gdb) p *pt_loads@num_pt_loads
-$3 = {{file_offset = 12288, phys_start = 16777216, phys_end = 33579008, 
-virt_start = 18446744071578845184, virt_end = 18446744071595646976}, 
-{file_offset = 16814080, phys_start = 65536, phys_end = 621568,
-     virt_start = 18446612132314284032, virt_end = 
-18446612132314840064}, {file_offset = 17371136, phys_start = 1048576, 
-phys_end = 637534208, virt_start = 18446612132315267072, virt_end = 
-18446612132951752704}, {
-     file_offset	= 653856768, phys_start = 905969664, phys_end = 
-3881955328, virt_start = 18446612133220188160, virt_end = 
-18446612136196173824}, {file_offset = 3629842432, phys_start = 
-3882008576, phys_end = 3882012672,
-     virt_start = 18446612136196227072, virt_end = 
-18446612136196231168}, {file_offset = 3629846528, phys_start = 
-4294967296, phys_end = 34762387456, virt_start = 18446612136609185792, 
-virt_end = 18446612167076605952}}
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ makedumpfile.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -2829,6 +2829,8 @@ get_mem_map_without_mm(void)
+ int
+ get_mem_map(void)
+ {
++	unsigned long long max_pfn = 0;
++	unsigned int i;
+ 	int ret;
+ 
+ 	switch (get_mem_type()) {
+@@ -2861,6 +2863,17 @@ get_mem_map(void)
+ 		ret = FALSE;
+ 		break;
+ 	}
++	/*
++	 * Adjust "max_mapnr" for the case that Linux uses less memory
++	 * than is dumped. For example when "mem=" has been used for the
++	 * dumped system.
++	 */
++	for (i = 0; i < info->num_mem_map; i++) {
++		if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
++			continue;
++		max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
++	}
++	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
+ 	return ret;
+ }
+ 
 
--- 
-Thanks,
-Jingbai Ma
 
 _______________________________________________
 kexec mailing list
