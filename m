@@ -1,17 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WT7bj-00018G-LL
- for kexec@lists.infradead.org; Thu, 27 Mar 2014 10:32:25 +0000
-Date: Thu, 27 Mar 2014 18:31:54 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v4 0/4] kexec-tools, x86: E820 memmap pass for kdump
-Message-ID: <20140327103154.GA2944@dhcp-17-89.nay.redhat.com>
-References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
- <20140320154228.GB29549@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140320154228.GB29549@redhat.com>
+Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WTAlz-0006bV-RD
+ for kexec@lists.infradead.org; Thu, 27 Mar 2014 13:55:13 +0000
+Received: from /spool/local
+ by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Thu, 27 Mar 2014 13:54:47 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 092641B0806B
+ for <kexec@lists.infradead.org>; Thu, 27 Mar 2014 13:54:38 +0000 (GMT)
+Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+ [9.149.37.228])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s2RDsWbJ59965598
+ for <kexec@lists.infradead.org>; Thu, 27 Mar 2014 13:54:32 GMT
+Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s2RDshCY029213
+ for <kexec@lists.infradead.org>; Thu, 27 Mar 2014 07:54:43 -0600
+Date: Thu, 27 Mar 2014 14:54:41 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
+Message-ID: <20140327145441.4c956989@holzheu>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
+References: <20140325171420.6b558576@holzheu>
+ <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
+ <20140326185426.5e2e5fc4@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,51 +43,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, ebiederm@xmission.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi, Vivek
+On Thu, 27 Mar 2014 05:19:06 +0000
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-Sorry for my late response.
-
-On 03/20/14 at 11:42am, Vivek Goyal wrote:
-> On Wed, Mar 19, 2014 at 04:03:57PM +0800, WANG Chao wrote:
-> > Hi, All
-> > 
-> > When kaslr comes in and kdump is broken, it seems about the right time to use
-> > E820 instead of memmap=exactmap to pass memmap for kdump for the default memmap
-> > passing mechanism:
-> > http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
+> Hello Michael,
 > 
-> What's the connection between kaslr and passing memory mappings in
-> bootparams?
-
-kaslr doesn't work with memmap=exactmap. kaslr happens before parsing
-user defined memmap and it walks through E820 in boot_params to
-determine 2nd kernel text area. And it would override the 1st kernel's
-ram.
-
+> >On Wed, 26 Mar 2014 10:55:07 +0100 (a/T)
+> >HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> >
+> >> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> >> Subject: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
+> >> Date: Tue, 25 Mar 2014 17:14:20 +0100
+> >
+> >[snip]
+> >
+> >> > With this patch makedumpfile gets the maximum page frame number from
+> >> > the mem_map array and adjusts info->max_mapnr if this value is smaller
+> >> > than the value calculated from the ELF header.
+> >> >
+> >> > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> >> > ---
+> >> >  makedumpfile.c |   14 +++++++++++++-
+> >> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> >> >
+> >> > --- a/makedumpfile.c
+> >> > +++ b/makedumpfile.c
+> >> > @@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
+> >> >  int
+> >> >  get_mem_map(void)
+> >> >  {
+> >> > -	int ret;
+> >> > +	unsigned long max_pfn = 0;
+> >> > +	int ret, i;
+> >>
+> >> Please define max_pfn as unsigned long long.
+> >
+> >Ok done.
+> >
+> >>
+> >> And for i,
+> >>
+> >> >
+> >> >  	switch (get_mem_type()) {
+> >> >  	case SPARSEMEM:
+> >> > @@ -2861,6 +2862,17 @@ get_mem_map(void)
+> >> >  		ret = FALSE;
+> >> >  		break;
+> >> >  	}
+> >> > +	/*
+> >> > +	 * Adjust "max_mapnr" for the case that Linux uses less memory
+> >> > +	 * than is dumped. For example when "mem=" has been used for the
+> >> > +	 * dumped system.
+> >> > +	 */
+> >> > +	for (i = 0; i < info->num_mem_map; i++) {
+> >>
+> >> info->num_mem_map is defined as unsigned int. I guess some warning
+> >> about comparison with different signedness occurs.
+> >
+> >Ah ok...
+> >
+> >With the default CFLAGS for makedumpfile-1.5.5 tarball I do not get
+> >any warning. When I add "-W" to CFLAGS, I get lots of warnings
+> >including the one you mentioned.
+> >
+> >Here the fixed patch:
 > 
-> To me this is completely independent of kaslr. This is moving towards
-> a better design to pass memory map to second kernel which in turn will
-> also solve the issue of too many memory ranges on large machines.
+> Thanks, I'll merge the fixed version into v1.5.6.
 
-Yes. You're right. That's what this patchset is mostly for.
-kASLR is just one of the reasons.
+Great!
 
-> 
-> Also, could you get hold of a machine with calgary IOMMU and test that
-> --pass-memmap option makes those calgary machines work?
+Thanks for your support!
 
-I couldn't find any calgary box. I tried to force calgary iommu on some
-IBM-X series, but didn't work out. Those old hardwares are really hard
-to find these days.
+Michael
 
-I think given the fact that the calgary code chage is simple enough and
-hpa has committed to tip tree, this patchset won't risk much.
-
-Thanks
-WANG Chao
 
 _______________________________________________
 kexec mailing list
