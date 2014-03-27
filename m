@@ -1,36 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTAlz-0006bV-RD
- for kexec@lists.infradead.org; Thu, 27 Mar 2014 13:55:13 +0000
-Received: from /spool/local
- by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Thu, 27 Mar 2014 13:54:47 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 092641B0806B
- for <kexec@lists.infradead.org>; Thu, 27 Mar 2014 13:54:38 +0000 (GMT)
-Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
- [9.149.37.228])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s2RDsWbJ59965598
- for <kexec@lists.infradead.org>; Thu, 27 Mar 2014 13:54:32 GMT
-Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s2RDshCY029213
- for <kexec@lists.infradead.org>; Thu, 27 Mar 2014 07:54:43 -0600
-Date: Thu, 27 Mar 2014 14:54:41 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Message-ID: <20140327145441.4c956989@holzheu>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Date: Thu, 27 Mar 2014 10:04:19 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
+In-Reply-To: <mailman.28599.1395907790.1059.kexec@lists.infradead.org>
+References: <mailman.28599.1395907790.1059.kexec@lists.infradead.org>
+Subject: Re: [PATCH 0/3] add LPAE support for kexec and kernel (Liu Hua)
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,82 +18,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, linux-arm-kernel@lists.infradead.org, sdu liu <sdu.liu@huawei.com>, "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-On Thu, 27 Mar 2014 05:19:06 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-> Hello Michael,
+
+----- Original Message -----
+
+> The patch series introduce LPAE support for user space
+> utility kexec(the last) and ARM linux kernel(the others).
 > 
-> >On Wed, 26 Mar 2014 10:55:07 +0100 (a/T)
-> >HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> >
-> >> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> >> Subject: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-> >> Date: Tue, 25 Mar 2014 17:14:20 +0100
-> >
-> >[snip]
-> >
-> >> > With this patch makedumpfile gets the maximum page frame number from
-> >> > the mem_map array and adjusts info->max_mapnr if this value is smaller
-> >> > than the value calculated from the ELF header.
-> >> >
-> >> > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> >> > ---
-> >> >  makedumpfile.c |   14 +++++++++++++-
-> >> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> >> >
-> >> > --- a/makedumpfile.c
-> >> > +++ b/makedumpfile.c
-> >> > @@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
-> >> >  int
-> >> >  get_mem_map(void)
-> >> >  {
-> >> > -	int ret;
-> >> > +	unsigned long max_pfn = 0;
-> >> > +	int ret, i;
-> >>
-> >> Please define max_pfn as unsigned long long.
-> >
-> >Ok done.
-> >
-> >>
-> >> And for i,
-> >>
-> >> >
-> >> >  	switch (get_mem_type()) {
-> >> >  	case SPARSEMEM:
-> >> > @@ -2861,6 +2862,17 @@ get_mem_map(void)
-> >> >  		ret = FALSE;
-> >> >  		break;
-> >> >  	}
-> >> > +	/*
-> >> > +	 * Adjust "max_mapnr" for the case that Linux uses less memory
-> >> > +	 * than is dumped. For example when "mem=" has been used for the
-> >> > +	 * dumped system.
-> >> > +	 */
-> >> > +	for (i = 0; i < info->num_mem_map; i++) {
-> >>
-> >> info->num_mem_map is defined as unsigned int. I guess some warning
-> >> about comparison with different signedness occurs.
-> >
-> >Ah ok...
-> >
-> >With the default CFLAGS for makedumpfile-1.5.5 tarball I do not get
-> >any warning. When I add "-W" to CFLAGS, I get lots of warnings
-> >including the one you mentioned.
-> >
-> >Here the fixed patch:
-> 
-> Thanks, I'll merge the fixed version into v1.5.6.
+> I have tested the patch series in armA15 platform which have
+> more than 4G memory.
 
-Great!
+Hello Liu,
 
-Thanks for your support!
+I'm curious how you tested this?  The crash utility does not have
+any specific support for LPAE on ARM, and a couple years ago I 
+asked on the crash-utility mailing list whether any of the ARM
+developers were working on it.  But at that time none of them were
+working with LPAE.  I see that you are on the crash-utility mailing
+list -- are you planning to post follow-up patches to the crash-utility?
 
-Michael
+Thanks,
+  Dave
 
+ 
 
 _______________________________________________
 kexec mailing list
