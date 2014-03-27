@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTEWc-0005KL-T2
- for kexec@lists.infradead.org; Thu, 27 Mar 2014 17:55:35 +0000
+ id 1WTEWb-0005KK-Jr
+ for kexec@lists.infradead.org; Thu, 27 Mar 2014 17:55:34 +0000
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Thu, 27 Mar 2014 18:43:23 +0100
-Subject: [PATCH 2/2] Get Dom0 max_pfn using pfn_mfn_frame_list if max_pfn
- unavailable
-Message-Id: <20140327175508.86E4B6013E@nathan.suse.cz>
+Date: Thu, 27 Mar 2014 18:40:06 +0100
+Subject: [PATCH 1/2] Earlier initialization of dom0_mapnr
+Message-Id: <20140327175508.C1E8760140@nathan.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,53 +23,55 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
 
-If max_pfn symbol is not exported in the Dom0 kernel's VMCOREINFO, the
-maximum PFN can be determined from the size of the mapping between PFN
-and MFN.
+Xen dumps fail, because the p2m mapping is initialized too late.
+The dependency goes like this:
 
-Using this approach, filtering works for Xen kernels without debuginfo
-(and even without adding more lines to VMCOREINFO).
+- Xen uses FLATMEM
+- get_mm_flatmem() uses info->dom0_mapnr to initialize mm structures
+- get_dom0_mapnr() needs p2m mappings to read from a VADDR
+- the p2m list is initialized in get_machdep_info()
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- makedumpfile.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ makedumpfile.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index d3f5237..92e8a6a 100644
+index e91583d..d3f5237 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -189,9 +189,30 @@ get_dom0_mapnr()
- 		}
+@@ -3128,6 +3128,12 @@ out:
+ 	if (!get_max_mapnr())
+ 		return FALSE;
  
- 		info->dom0_mapnr = max_pfn;
--		DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
-+	} else if (info->p2m_frames) {
-+		unsigned long mfns[MFNS_PER_FRAME];
-+		unsigned long mfn_idx = info->p2m_frames - 1;
-+		unsigned long long maddr;
-+		unsigned i;
++	if (debug_info && !get_machdep_info())
++		return FALSE;
 +
-+		maddr = pfn_to_paddr(info->p2m_mfn_frame_list[mfn_idx]);
-+		if (!readmem(MADDR_XEN, maddr, &mfns, sizeof(mfns))) {
-+			ERRMSG("Can't read %ld domain-0 mfns at 0x%llu\n",
-+				(long)MFNS_PER_FRAME, maddr);
-+			return FALSE;
-+		}
++	if (is_xen_memory() && !get_dom0_mapnr())
++		return FALSE;
 +
-+		for (i = 0; i < MFNS_PER_FRAME; ++i)
-+			if (!mfns[i])
-+				break;
-+
-+		info->dom0_mapnr = mfn_idx * MFNS_PER_FRAME + i;
-+	} else {
-+		/* dom0_mapnr is unavailable, which may be non-critical */
-+		return TRUE;
+ 	if (info->flag_cyclic) {
+ 		if (info->bufsize_cyclic == 0) {
+ 			if (!calculate_cyclic_buffer_size())
+@@ -3185,9 +3191,6 @@ out:
+ 		if (info->flag_sadump)
+ 			(void) sadump_virt_phys_base();
+ 
+-		if (!get_machdep_info())
+-			return FALSE;
+-
+ 		if (info->flag_sadump) {
+ 			int online_cpus;
+ 
+@@ -3233,9 +3236,6 @@ out:
+ 			return FALSE;
  	}
  
-+	DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
- 	return TRUE;
- }
+-	if (is_xen_memory() && !get_dom0_mapnr())
+-		return FALSE;
+-
+ 	if (!get_value_for_old_linux())
+ 		return FALSE;
  
 -- 
 1.8.4.5
