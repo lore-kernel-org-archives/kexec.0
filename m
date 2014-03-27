@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WT7Vm-0000wg-0t
- for kexec@lists.infradead.org; Thu, 27 Mar 2014 10:26:15 +0000
-Date: Thu, 27 Mar 2014 18:25:48 +0800
+ id 1WT7bj-00018G-LL
+ for kexec@lists.infradead.org; Thu, 27 Mar 2014 10:32:25 +0000
+Date: Thu, 27 Mar 2014 18:31:54 +0800
 From: WANG Chao <chaowang@redhat.com>
-Subject: [kexec-tools PATCH] x86, kaslr: add alternative way to locate kernel
- text mapping area
-Message-ID: <20140327102548.GA15941@dhcp-17-89.nay.redhat.com>
+Subject: Re: [PATCH v4 0/4] kexec-tools, x86: E820 memmap pass for kdump
+Message-ID: <20140327103154.GA2944@dhcp-17-89.nay.redhat.com>
+References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
+ <20140320154228.GB29549@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20140320154228.GB29549@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,118 +24,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, ebiederm@xmission.com
 
-When kASLR is enabled (CONFIG_RANDOMIZED_BASE=y), kernel text mapping
-base is randomized. The max base offset of such randomization is
-configured at compile time through CONFIG_RANDOMIZE_MAX_BASE_OFFSET (by
-default 1G).
+Hi, Vivek
 
-Currently kexec-tools is using hard code macro X86_64__START_KERNEL_map
-(0xffffffff80000000) and X86_64_KERNEL_TEXT_SIZE (512M) to determine
-kernel text mapping from kcore's PT_LOAD. With kASLR, the mapping is
-changed as the following:
+Sorry for my late response.
 
-ffffffff80000000 - (ffffffff80000000+CONFIG_RANDOMIZE_BASE_MAX_OFFSET)
+On 03/20/14 at 11:42am, Vivek Goyal wrote:
+> On Wed, Mar 19, 2014 at 04:03:57PM +0800, WANG Chao wrote:
+> > Hi, All
+> > 
+> > When kaslr comes in and kdump is broken, it seems about the right time to use
+> > E820 instead of memmap=exactmap to pass memmap for kdump for the default memmap
+> > passing mechanism:
+> > http://lists.infradead.org/pipermail/kexec/2014-February/011048.html
+> 
+> What's the connection between kaslr and passing memory mappings in
+> bootparams?
 
-As Vivek suggested, we can get _stext kernel symbol address from
-/proc/kallsyms, and search for kcore's PT_LOAD which contains _stext,
-and we can say that this area represents the kernel mapping area.
+kaslr doesn't work with memmap=exactmap. kaslr happens before parsing
+user defined memmap and it walks through E820 in boot_params to
+determine 2nd kernel text area. And it would override the 1st kernel's
+ram.
 
-This patch doesn't remove the original way to get kernel text mapping,
-so it won't break anything on kaslr-disabled kernel.
+> 
+> To me this is completely independent of kaslr. This is moving towards
+> a better design to pass memory map to second kernel which in turn will
+> also solve the issue of too many memory ranges on large machines.
 
-Suggested-by: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c | 56 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+Yes. You're right. That's what this patchset is mostly for.
+kASLR is just one of the reasons.
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index cb19e7d..aac877e 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -100,6 +100,36 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
- 	return -1;
- }
- 
-+/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
-+static unsigned long long get_kernel_stext_sym(void)
-+{
-+	const char *kallsyms = "/proc/kallsyms";
-+	const char *stext = "_stext";
-+	char sym[128];
-+	char line[128];
-+	FILE *fp;
-+	unsigned long long vaddr;
-+	char type;
-+
-+	fp = fopen(kallsyms, "r");
-+	if (!fp) {
-+		fprintf(stderr, "Cannot open %s\n", kallsyms);
-+		return 0;
-+	}
-+
-+	while(fgets(line, sizeof(line), fp) != NULL) {
-+		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
-+			continue;
-+		if (strcmp(sym, stext) == 0) {
-+			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
-+			return vaddr;
-+		}
-+	}
-+
-+	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
-+	return 0;
-+}
-+
- /* Retrieve info regarding virtual address kernel has been compiled for and
-  * size of the kernel from /proc/kcore. Current /proc/kcore parsing from
-  * from kexec-tools fails because of malformed elf notes. A kernel patch has
-@@ -118,6 +148,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 	int align;
- 	off_t size;
- 	uint32_t elf_flags = 0;
-+	uint64_t stext_sym;
- 
- 	if (elf_info->machine != EM_X86_64)
- 		return 0;
-@@ -169,6 +200,31 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 			}
- 		}
- 	}
-+
-+	/* Go through /proc/kcore again. This time we find the region
-+	 * where _stext symbol is located in */
-+	stext_sym = get_kernel_stext_sym();
-+	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
-+		if (phdr->p_type == PT_LOAD) {
-+			unsigned long long saddr = phdr->p_vaddr;
-+			unsigned long long eaddr = phdr->p_vaddr + phdr->p_memsz;
-+			unsigned long long size;
-+
-+			/* Look for kernel text mapping header. */
-+			if (saddr < stext_sym && eaddr > stext_sym) {
-+				saddr = _ALIGN_DOWN(saddr, X86_64_KERN_VADDR_ALIGN);
-+				elf_info->kern_vaddr_start = saddr;
-+				size = eaddr - saddr;
-+				/* Align size to page size boundary. */
-+				size = _ALIGN(size, align);
-+				elf_info->kern_size = size;
-+				dbgprintf("kernel vaddr = 0x%llx size = 0x%llx\n",
-+					saddr, size);
-+				return 0;
-+			}
-+		}
-+	}
-+
- 	fprintf(stderr, "Can't find kernel text map area from kcore\n");
- 	return -1;
- }
--- 
-1.8.5.3
+> 
+> Also, could you get hold of a machine with calgary IOMMU and test that
+> --pass-memmap option makes those calgary machines work?
 
+I couldn't find any calgary box. I tried to force calgary iommu on some
+IBM-X series, but didn't work out. Those old hardwares are really hard
+to find these days.
+
+I think given the fact that the calgary code chage is simple enough and
+hpa has committed to tip tree, this patchset won't risk much.
+
+Thanks
+WANG Chao
 
 _______________________________________________
 kexec mailing list
