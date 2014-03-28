@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <53356590.3030005@huawei.com>
-Date: Fri, 28 Mar 2014 20:05:36 +0800
-From: Liu hua <sdu.liu@huawei.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] add LPAE support for kexec and kernel (Liu Hua)
-References: <mailman.28599.1395907790.1059.kexec@lists.infradead.org>
- <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
-In-Reply-To: <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WTVau-00036y-6c
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 12:09:12 +0000
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: [PATCH v2 1/2] Earlier initialization of dom0_mapnr
+Date: Fri, 28 Mar 2014 13:08:12 +0100
+Message-Id: <1396008496-15151-2-git-send-email-ptesarik@suse.cz>
+In-Reply-To: <1396008496-15151-1-git-send-email-ptesarik@suse.cz>
+References: <0910DD04CBD6DE4193FCF86B9C00BE971FAC57@BPXM01GP.gisp.nec.co.jp>
+ <1396008496-15151-1-git-send-email-ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,57 +18,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org
-Cc: horms@verge.net.au, linux-arm-kernel@lists.infradead.org, "Discussion
- list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: Petr Tesarik <petr@tesarici.cz>, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org
 
-On 2014/3/27 22:04, Dave Anderson wrote:
-> 
-> 
-> ----- Original Message -----
-> 
->> The patch series introduce LPAE support for user space
->> utility kexec(the last) and ARM linux kernel(the others).
->>
->> I have tested the patch series in armA15 platform which have
->> more than 4G memory.
-> 
-> Hello Liu,
-> 
-> I'm curious how you tested this?  The crash utility does not have
-> any specific support for LPAE on ARM, and a couple years ago I 
-> asked on the crash-utility mailing list whether any of the ARM
-> developers were working on it.  But at that time none of them were
-> working with LPAE.  I see that you are on the crash-utility mailing
-> list -- are you planning to post follow-up patches to the crash-utility?
-> 
-> Thanks,
->   Dave
+From: Petr Tesarik <petr@tesarici.cz>
 
-Yes, you are very "sensitive"! our team has worked on it for a while. And
-we went through the whole kdump process for LPAE enabled ARM. Our changes
-include kexec-tools, makedumpfile, crash utility and the kernel.
+Xen dumps fail, because the p2m mapping is initialized too late.
+The dependency goes like this:
 
-But we did that in a rather limited time. So some patches are silly and
-need to be reconstructed before submission. In addition, my job is quit
-full now. So I decide to post the patch series that are clear and
-independent of the others at first.
+- Xen uses FLATMEM
+- get_mm_flatmem() uses info->dom0_mapnr to initialize mm structures
+- get_dom0_mapnr() needs p2m mappings to read from a VADDR
+- the p2m list is initialized in get_machdep_info()
 
-But I got no response from the linux-arm and kexec mailinglist. What about
-your opinion about the feature of LPAE support for kdump related tools
-including crash utility and the kernel?
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+---
+ makedumpfile.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Thanks,
-Liu Hua
-
-
-
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index e91583d..1117598 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3181,13 +3181,16 @@ out:
+ 	if (!is_xen_memory() && !cache_init())
+ 		return FALSE;
+ 
++	if (debug_info && !get_machdep_info())
++		return FALSE;
++
++	if (is_xen_memory() && !get_dom0_mapnr())
++		return FALSE;
++
+ 	if (debug_info) {
+ 		if (info->flag_sadump)
+ 			(void) sadump_virt_phys_base();
+ 
+-		if (!get_machdep_info())
+-			return FALSE;
+-
+ 		if (info->flag_sadump) {
+ 			int online_cpus;
+ 
+@@ -3233,9 +3236,6 @@ out:
+ 			return FALSE;
+ 	}
+ 
+-	if (is_xen_memory() && !get_dom0_mapnr())
+-		return FALSE;
+-
+ 	if (!get_value_for_old_linux())
+ 		return FALSE;
+ 
+-- 
+1.8.4.5
 
 
 _______________________________________________
