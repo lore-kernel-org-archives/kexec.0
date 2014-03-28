@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTPTk-0001h0-TS
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 05:37:22 +0000
-Date: Fri, 28 Mar 2014 13:36:54 +0800
+ id 1WTQ3b-00026r-2T
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 06:14:24 +0000
+Date: Fri, 28 Mar 2014 14:13:53 +0800
 From: WANG Chao <chaowang@redhat.com>
 Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
  kernel to boot into
-Message-ID: <20140328053654.GE2944@dhcp-17-89.nay.redhat.com>
+Message-ID: <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
 References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
  <1395216241-13983-3-git-send-email-chaowang@redhat.com>
- <20140328021913.GC26116@dhcp-16-126.nay.redhat.com>
+ <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140328021913.GC26116@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,114 +29,68 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
 Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 03/28/14 at 10:19am, Dave Young wrote:
-> On 03/19/14 at 04:03pm, WANG Chao wrote:
-> > Use these two variables to store the memory ranges and the number of
-> > memory ranges for crash kernel to boot into:
-> > 
-> > struct memory_range crash_memory_range;
-> > int crash_memory_range;
-> > 
-> > These two variables are not static now, so can be used in other file
-> > later.
-> > 
-> > Signed-off-by: WANG Chao <chaowang@redhat.com>
-> > Tested-by: Linn Crosetto <linn@hp.com>
-> > ---
-> >  kexec/arch/i386/crashdump-x86.c | 134 ++++++++++++++++++++++------------------
-> >  kexec/arch/i386/crashdump-x86.h |   5 +-
-> >  2 files changed, 77 insertions(+), 62 deletions(-)
-> > 
-> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > index 979c2bd..c55a6b1 100644
-> > --- a/kexec/arch/i386/crashdump-x86.c
-> > +++ b/kexec/arch/i386/crashdump-x86.c
-> > @@ -179,7 +179,8 @@ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end);
+On 03/28/14 at 11:24am, Dave Young wrote:
 > >  
-> >  /* Stores a sorted list of RAM memory ranges for which to create elf headers.
-> >   * A separate program header is created for backup region */
-> > -static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
-> > +struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
-> > +int crash_memory_ranges;
-> >  
-> >  /* Memory region reserved for storing panic kernel and other data. */
-> >  #define CRASH_RESERVED_MEM_NR	8
-> > @@ -201,7 +202,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
-> >  				   int kexec_flags, unsigned long lowmem_limit)
+> > +static void exclude_ram(struct memory_range *mr, int *nr_mr)
+> > +{
+> > +	int ranges, i, j, m;
+> > +
+> > +	ranges = *nr_mr;
+> > +	for (i = 0, j = 0; i < ranges; i++) {
+> > +		if (mr[j].type == RANGE_RAM) {
+> > +			dbgprintf("Remove RAM %016llx-%016llxx: (%d)\n", mr[j].start, mr[j].end, mr[j].type);
+> > +			for (m = j; m < *nr_mr; m++)
+> > +				mr[m] = mr[m+1];
+> > +			(*nr_mr)--;
+> > +		} else {
+> > +			j++;
+> > +		}
+> > +	}
+> > +
+> > +	dbgprint_mem_range("After remove RAM", mr, *nr_mr);
+> > +}
 > 
-> It's not necessary to replace every static vars in the function, since there's param
-> *ranges and **range, so how about just replace them in caller function.
+> This is probably not necessary, what I understand you are doing is below:
+> 
+> get_crash_memory_ranges()
+>  -> collect all SYSTEM_RAM, ACPI, ACPI_NVS ranges, exclude crash reserved ranges.
+>  -> the system ram ranges are used to create elf header
+>  -> the ACPI, ACPI_NVS ranges are used by cmdline_add_memmap_acpi etc.
 
-OK. Will do.
+Yes.
 
 > 
-> >  {
-> >  	const char *iomem = proc_iomem();
-> > -	int memory_ranges = 0, gart = 0, i;
-> > +	int gart = 0, i;
-> >  	char line[MAX_LINE];
-> >  	FILE *fp;
-> >  	unsigned long long start, end;
-> > @@ -218,7 +219,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
-> >  		char *str;
-> >  		int type, consumed, count;
-> >  
-> > -		if (memory_ranges >= CRASH_MAX_MEMORY_RANGES)
-> > +		if (crash_memory_ranges >= CRASH_MAX_MEMORY_RANGES)
-> >  			break;
-> >  		count = sscanf(line, "%Lx-%Lx : %n",
-> >  			&start, &end, &consumed);
-> > @@ -250,17 +251,17 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
-> >  			continue;
-> >  		}
-> >  
-> > -		crash_memory_range[memory_ranges].start = start;
-> > -		crash_memory_range[memory_ranges].end = end;
-> > -		crash_memory_range[memory_ranges].type = type;
-> > +		crash_memory_range[crash_memory_ranges].start = start;
-> > +		crash_memory_range[crash_memory_ranges].end = end;
-> > +		crash_memory_range[crash_memory_ranges].type = type;
-> >  
-> > -		segregate_lowmem_region(&memory_ranges, lowmem_limit);
-> > +		segregate_lowmem_region(&crash_memory_ranges, lowmem_limit);
-> >  
-> > -		memory_ranges++;
-> > +		crash_memory_ranges++;
-> >  	}
-> >  	fclose(fp);
-> >  	if (kexec_flags & KEXEC_PRESERVE_CONTEXT) {
-> > -		for (i = 0; i < memory_ranges; i++) {
-> > +		for (i = 0; i < crash_memory_ranges; i++) {
-> >  			if (crash_memory_range[i].end > 0x0009ffff) {
-> >  				crash_reserved_mem[0].start = \
-> >  					crash_memory_range[i].start;
-> > @@ -278,17 +279,17 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
-> >  	}
-> >  
-> >  	for (i = 0; i < crash_reserved_mem_nr; i++)
-> > -		if (exclude_region(&memory_ranges, crash_reserved_mem[i].start,
-> > +		if (exclude_region(&crash_memory_ranges, crash_reserved_mem[i].start,
-> >  				crash_reserved_mem[i].end) < 0)
-> >  			return -1;
-> >  
-> >  	if (gart) {
-> >  		/* exclude GART region if the system has one */
-> > -		if (exclude_region(&memory_ranges, gart_start, gart_end) < 0)
-> > +		if (exclude_region(&crash_memory_ranges, gart_start, gart_end) < 0)
-> >  			return -1;
-> >  	}
-> >  	*range = crash_memory_range;
-> > -	*ranges = memory_ranges;
-> > +	*ranges = crash_memory_ranges;
-> >  
-> >  	return 0;
-> >  }
-> > @@ -324,7 +325,7 @@ static int get_crash_memory_ranges_xen(struct memory_range **range,
-> 
-> Ditto for get_crash_memory_ranges_xen, just fix the caller function instead of use
-> global variable in this function.
+> memmap_p
+>  -> contains all the crash reserved ranges
+>  -> to be used by cmdline_add_memmap
 
-Will do.
+There's no memmap_p. I'll reuse crash_memory_ranges structure to store
+crash reserved ranges, ACPI and ACPI_NVS ranges. So after building ELF
+headers for 1st kernel memory ranges, all I have to do is exclude the
+SYSTEM_RAM and add crash_reserved to crash_memory_ranges. And then
+crash_memory_ranges can be used as 2nd kernel memory ranges.
+
+> 
+> The several memory ranges are twisted and somehow the funcions are duplicate.
+
+These functions look like similar but each does serve for different purpose.
+
+> 
+> So how about just keep one memory ranges array which contains all the ranges which
+> include system_ram, acpi, acpi_nvs, crash_reserved range.
+> 
+> In the crashdump-elf.c the function for creating elf headers will check the
+> range type, it will just skip the range which is not ram.
+
+We don't build EFL headers for crash_reserved ranges. So we can't store
+system ram and crash_reserved together before building EFL header.
+
+> 
+> Ditto for other functions they can also just select what range type they need instead
+> of creating these different arrays which is confusing.
+> 
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
