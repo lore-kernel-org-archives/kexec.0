@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTOnE-0000zl-Cj
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 04:53:26 +0000
-Date: Fri, 28 Mar 2014 12:52:54 +0800
+ id 1WTOny-00010p-QP
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 04:54:11 +0000
+Date: Fri, 28 Mar 2014 12:53:43 +0800
 From: WANG Chao <chaowang@redhat.com>
 Subject: Re: [PATCH v4 4/4] x86: Pass memory range via E820 for kdump
-Message-ID: <20140328045254.GB2944@dhcp-17-89.nay.redhat.com>
+Message-ID: <20140328045343.GC2944@dhcp-17-89.nay.redhat.com>
 References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
  <1395216241-13983-5-git-send-email-chaowang@redhat.com>
- <20140327225014.GR13816@redhat.com>
+ <20140328032819.GE26116@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140327225014.GR13816@redhat.com>
+In-Reply-To: <20140328032819.GE26116@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,11 +25,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, ebiederm@xmission.com
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 03/27/14 at 06:50pm, Vivek Goyal wrote:
-> On Wed, Mar 19, 2014 at 04:04:01PM +0800, WANG Chao wrote:
+On 03/28/14 at 11:28am, Dave Young wrote:
+> On 03/19/14 at 04:04pm, WANG Chao wrote:
 > > command line size is restricted by kernel, sometimes memmap=exactmap has
 > > too many memory ranges to pass to cmdline. A better approach, to pass the
 > > memory ranges for crash kernel to boot into, is filling the memory
@@ -45,15 +45,6 @@ On 03/27/14 at 06:50pm, Vivek Goyal wrote:
 > > Now this new approach becomes default instead of memmap=exactmap.
 > > saved_max_pfn users can specify --pass-memmap-cmdline to use the
 > > exactmap approach.
-> 
-> I think it is worth to also mention that kaslr enabled kernel does not
-> work with memmap=exactmap.
-
-Sure. Will do.
-
-> 
-> This patch in general looks good. Two minor nits below.
-> 
 > > 
 > > Signed-off-by: WANG Chao <chaowang@redhat.com>
 > > Tested-by: Linn Crosetto <linn@hp.com>
@@ -156,57 +147,6 @@ Sure. Will do.
 > > +			   struct x86_linux_param_header *real_mode,
 > > +			   struct setup_data *sd)
 > > +{
-> 
-> What is setup_data? A little comment above function will make it easy
-> to read. Is it that list of elements which contains extra memory map
-> entries?
-
-Not exactly. All extra memory maps (for SETUP_E820_EXT type) are
-sealed into a single setup_data structure. Different types of setup_data
-are linked in a list.
-
-setup_data can be used to pass extra data for boot, for example EFI
-data (SETUP_EFI), extended E820 map (SETUP_E820_EXT), SETUP_PCI and
-SETUP_DTB. These types are defined when defining struct setup_data.
-
-It's offically documented in Documentation/x86/boot.txt.
-
-Field name:	setup_data
-Type:		write (special)
-Offset/size:	0x250/8
-Protocol:	2.09+
-
-  The 64-bit physical pointer to NULL terminated single linked list of
-  struct setup_data. This is used to define a more extensible boot
-  parameters passing mechanism. The definition of struct setup_data
-  is as follow:
-
-  struct setup_data {
-	  u64 next;
-	  u32 type;
-	  u32 len;
-	  u8  data[0];
-  };
-
-  Where, the next is a 64-bit physical pointer to the next node of
-  linked list, the next field of the last node is 0; the type is used
-  to identify the contents of data; the len is the length of data
-  field; the data holds the real payload.
-
-  This list may be modified at a number of points during the bootup
-  process. Therefore, when modifying this list one should always make
-  sure to consider the case where the linked list already contains
-  entries.
-
-I think I would comment add_setup_data as follows:
-
-/*
- * Added another instance to single linked list of struct setup_data.
- * Please refer to kernel Documentation/x86/boot.txt for more details
- * about setup_data structure.
- */
-
-> 
 > > +	int sdsize = sizeof(struct setup_data) + sd->len;
 > > +
 > > +	sd->next = real_mode->setup_data;
@@ -241,191 +181,12 @@ I think I would comment add_setup_data as follows:
 > > -	real_mode->setup_data = setup_data_paddr;
 > > +
 > > +	add_setup_data(info, real_mode, sd);
-> >  
-> >  	size = nr_maps * sizeof(struct efi_mem_descriptor);
-> >  	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
-> > @@ -669,6 +682,98 @@ out:
-> >  	return ret;
-> >  }
-> >  
-> > +static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
-> > +			struct e820entry *e820, struct memory_range *range, int nr_range)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i = 0; i < nr_range; i++) {
-> > +		e820[i].addr = range[i].start;
-> > +		e820[i].size = range[i].end - range[i].start;
-> > +		switch (range[i].type) {
-> > +			case RANGE_RAM:
-> > +				e820[i].type = E820_RAM;
-> > +				break;
-> > +			case RANGE_ACPI:
-> > +				e820[i].type = E820_ACPI;
-> > +				break;
-> > +			case RANGE_ACPI_NVS:
-> > +				e820[i].type = E820_NVS;
-> > +				break;
-> > +			default:
-> > +			case RANGE_RESERVED:
-> > +				e820[i].type = E820_RESERVED;
-> > +				break;
-> > +		}
-> > +		dbgprintf("%016lx-%016lx (%d)\n",
-> > +				e820[i].addr,
-> > +				e820[i].addr + e820[i].size - 1,
-> > +				e820[i].type);
-> > +
-> > +		if (range[i].type != RANGE_RAM)
-> > +			continue;
-> > +		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
-> > +			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
-> > +			real_mode->ext_mem_k = mem_k;
-> > +			real_mode->alt_mem_k = mem_k;
-> > +			if (mem_k > 0xfc00) {
-> > +				real_mode->ext_mem_k = 0xfc00; /* 64M */
-> > +			}
-> > +			if (mem_k > 0xffffffff) {
-> > +				real_mode->alt_mem_k = 0xffffffff;
-> > +			}
-> > +		}
-> > +	}
-> > +}
-> > +
-> > +static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-> > +			   struct memory_range *range, int nr_range)
-> > +{
-> > +	struct setup_data *sd;
-> > +	struct e820entry *e820;
-> > +	int nr_range_ext;
-> > +
-> > +	nr_range_ext = nr_range - E820MAX;
-> > +	sd = xmalloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
-> > +	sd->next = 0;
-> > +	sd->len = nr_range_ext * sizeof(struct e820entry);
-> > +	sd->type = SETUP_E820_EXT;
-> > +
-> > +	e820 = (struct e820entry *) sd->data;
-> > +	dbgprintf("Extended E820 via setup_data:\n");
-> > +	add_e820_map_from_mr(real_mode, e820, range + E820MAX, nr_range_ext);
-> > +	add_setup_data(info, real_mode, sd);
-> > +}
-> > +
-> > +static void setup_e820(struct kexec_info *info, struct x86_linux_param_header *real_mode)
-> > +{
-> > +	struct memory_range *range;
-> > +	int nr_range, nr_range_saved;
-> > +
-> > +
-> > +	if (info->kexec_flags & KEXEC_ON_CRASH && !pass_memmap_cmdline) {
-> > +		range = crash_memory_range;
-> > +		nr_range = crash_memory_ranges;
 > 
-> You know what, it might be a good idea to store the pointer to
-> crash_memory_range in kexec_info too, (like memory_range and
-> memory_ranges).
+> Could you split the above add_setup_data to another patch?
 
-Will do.
+OK. Will do.
 
-Thanks for your review.
-
-WANG Chao
-> 
-> > +	} else {
-> > +		range = info->memory_range;
-> > +		nr_range = info->memory_ranges;
-> > +	}
-> > +
-> > +	nr_range_saved = nr_range;
-> > +	if (nr_range > E820MAX) {
-> > +		nr_range = E820MAX;
-> > +	}
-> > +
-> > +	real_mode->e820_map_nr = nr_range;
-> > +	dbgprintf("E820 memmap:\n");
-> > +	add_e820_map_from_mr(real_mode, real_mode->e820_map, range, nr_range);
-> > +
-> > +	if (nr_range_saved > E820MAX) {
-> > +		dbgprintf("extra E820 memmap are passed via setup_data\n");
-> > +		setup_e820_ext(info, real_mode, range, nr_range_saved);
-> > +	}
-> > +}
-> > +
-> >  static int
-> >  get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
-> >  {
-> > @@ -702,10 +807,6 @@ static void setup_efi_info(struct kexec_info *info,
-> >  void setup_linux_system_parameters(struct kexec_info *info,
-> >  				   struct x86_linux_param_header *real_mode)
-> >  {
-> > -	/* Fill in information the BIOS would usually provide */
-> > -	struct memory_range *range;
-> > -	int i, ranges;
-> > -
-> >  	/* get subarch from running kernel */
-> >  	setup_subarch(real_mode);
-> >  	if (bzImage_support_efi_boot)
-> > @@ -746,51 +847,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
-> >  	/* another safe default */
-> >  	real_mode->aux_device_info = 0;
-> >  
-> > -	range = info->memory_range;
-> > -	ranges = info->memory_ranges;
-> > -	if (ranges > E820MAX) {
-> > -		if (!(info->kexec_flags & KEXEC_ON_CRASH))
-> > -			/*
-> > -			 * this e820 not used for capture kernel, see
-> > -			 * do_bzImage_load()
-> > -			 */
-> > -			fprintf(stderr,
-> > -				"Too many memory ranges, truncating...\n");
-> > -		ranges = E820MAX;
-> > -	}
-> > -	real_mode->e820_map_nr = ranges;
-> > -	for(i = 0; i < ranges; i++) {
-> > -		real_mode->e820_map[i].addr = range[i].start;
-> > -		real_mode->e820_map[i].size = range[i].end - range[i].start;
-> > -		switch (range[i].type) {
-> > -		case RANGE_RAM:
-> > -			real_mode->e820_map[i].type = E820_RAM; 
-> > -			break;
-> > -		case RANGE_ACPI:
-> > -			real_mode->e820_map[i].type = E820_ACPI; 
-> > -			break;
-> > -		case RANGE_ACPI_NVS:
-> > -			real_mode->e820_map[i].type = E820_NVS;
-> > -			break;
-> > -		default:
-> > -		case RANGE_RESERVED:
-> > -			real_mode->e820_map[i].type = E820_RESERVED; 
-> > -			break;
-> > -		}
-> > -		if (range[i].type != RANGE_RAM)
-> > -			continue;
-> > -		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
-> > -			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
-> > -			real_mode->ext_mem_k = mem_k;
-> > -			real_mode->alt_mem_k = mem_k;
-> > -			if (mem_k > 0xfc00) {
-> > -				real_mode->ext_mem_k = 0xfc00; /* 64M */
-> > -			}
-> > -			if (mem_k > 0xffffffff) {
-> > -				real_mode->alt_mem_k = 0xffffffff;
-> > -			}
-> > -		}
-> > -	}
-> > +	setup_e820(info, real_mode);
-> >  
-> >  	/* fill the EDD information */
-> >  	setup_edd_info(real_mode);
-> > -- 
-> > 1.8.5.3
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
+Thanks for review.
 
 _______________________________________________
 kexec mailing list
