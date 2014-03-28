@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTQA7-0002Cu-4K
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 06:21:07 +0000
-Date: Fri, 28 Mar 2014 14:20:43 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [kexec-tools PATCH] x86, kaslr: add alternative way to locate
- kernel text mapping area
-Message-ID: <20140328062043.GG2944@dhcp-17-89.nay.redhat.com>
-References: <20140327102548.GA15941@dhcp-17-89.nay.redhat.com>
- <20140327215717.GO13816@redhat.com>
+ id 1WTQUw-0002Tb-6m
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 06:42:39 +0000
+Date: Fri, 28 Mar 2014 14:43:30 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
+ kernel to boot into
+Message-ID: <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
+References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
+ <1395216241-13983-3-git-send-email-chaowang@redhat.com>
+ <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
+ <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140327215717.GO13816@redhat.com>
+In-Reply-To: <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +27,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 03/27/14 at 05:57pm, Vivek Goyal wrote:
-> On Thu, Mar 27, 2014 at 06:25:48PM +0800, WANG Chao wrote:
+On 03/28/14 at 02:13pm, WANG Chao wrote:
+> On 03/28/14 at 11:24am, Dave Young wrote:
+> > >  
+> > > +static void exclude_ram(struct memory_range *mr, int *nr_mr)
+> > > +{
+> > > +	int ranges, i, j, m;
+> > > +
+> > > +	ranges = *nr_mr;
+> > > +	for (i = 0, j = 0; i < ranges; i++) {
+> > > +		if (mr[j].type == RANGE_RAM) {
+> > > +			dbgprintf("Remove RAM %016llx-%016llxx: (%d)\n", mr[j].start, mr[j].end, mr[j].type);
+> > > +			for (m = j; m < *nr_mr; m++)
+> > > +				mr[m] = mr[m+1];
+> > > +			(*nr_mr)--;
+> > > +		} else {
+> > > +			j++;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	dbgprint_mem_range("After remove RAM", mr, *nr_mr);
+> > > +}
+> > 
+> > This is probably not necessary, what I understand you are doing is below:
+> > 
+> > get_crash_memory_ranges()
+> >  -> collect all SYSTEM_RAM, ACPI, ACPI_NVS ranges, exclude crash reserved ranges.
+> >  -> the system ram ranges are used to create elf header
+> >  -> the ACPI, ACPI_NVS ranges are used by cmdline_add_memmap_acpi etc.
 > 
-> [..]
-> > @@ -169,6 +200,31 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
-> >  			}
-> >  		}
-> >  	}
-> > +
-> > +	/* Go through /proc/kcore again. This time we find the region
-> > +	 * where _stext symbol is located in */
+> Yes.
 > 
-> Hi Chao,
+> > 
+> > memmap_p
+> >  -> contains all the crash reserved ranges
+> >  -> to be used by cmdline_add_memmap
 > 
-> How about doing it reverse. Using _stext seems to be the right thing to
-> do both for kaslr enabled as well as kaslr disabled kernel. Right now
-> assuming that kernel text mapping fall in a certain area is a hack
-> and will break if kernel addresses are shifted again for whatever reason.
-> 
-> So we can first look for kernel mapping using _stext. If /proc/kallsyms
-> is not present, then we can fall back using hardcoded address range
-> between X86_64__START_KERNEL_map and X86_64__START_KERNEL_map +
-> X86_64_KERNEL_TEXT_SIZE.
+> There's no memmap_p. I'll reuse crash_memory_ranges structure to store
+> crash reserved ranges, ACPI and ACPI_NVS ranges. So after building ELF
+> headers for 1st kernel memory ranges, all I have to do is exclude the
+> SYSTEM_RAM and add crash_reserved to crash_memory_ranges. And then
+> crash_memory_ranges can be used as 2nd kernel memory ranges.
 
-Good point. I'll post V2.
+How about do nothing and directly use the mem_ranges:
+ * skip RANGE_RAM, only add the range which is not RANGE_RAM
+ * if the range is RANGE_CRASH_KERNEL (introduce a new type?) then use it as SYSTEM_RAM for 2nd kernel.
+
+> 
+> > 
+> > The several memory ranges are twisted and somehow the funcions are duplicate.
+> 
+> These functions look like similar but each does serve for different purpose.
+> 
+> > 
+> > So how about just keep one memory ranges array which contains all the ranges which
+> > include system_ram, acpi, acpi_nvs, crash_reserved range.
+> > 
+> > In the crashdump-elf.c the function for creating elf headers will check the
+> > range type, it will just skip the range which is not ram.
+> 
+> We don't build EFL headers for crash_reserved ranges. So we can't store
+> system ram and crash_reserved together before building EFL header.
+
+There's already below code which ignore the ram ranges..
+        for (i = 0; i < ranges; i++, range++) {
+		if (range->type != RANGE_RAM)
+			continue;
 
 Thanks
-WANG Chao
+Dave
 
 _______________________________________________
 kexec mailing list
