@@ -1,38 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTZvd-0004qv-Pm
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 16:46:50 +0000
-Received: from /spool/local
- by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 28 Mar 2014 16:46:28 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com
- (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id AF65A17D805C
- for <kexec@lists.infradead.org>; Fri, 28 Mar 2014 16:47:12 +0000 (GMT)
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
- [9.149.37.247])
- by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s2SGkDhe60358810
- for <kexec@lists.infradead.org>; Fri, 28 Mar 2014 16:46:13 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av12.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s2SGkODs008277
- for <kexec@lists.infradead.org>; Fri, 28 Mar 2014 10:46:24 -0600
-Date: Fri, 28 Mar 2014 17:46:22 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Message-ID: <20140328174622.2896296e@holzheu>
-In-Reply-To: <20140328120047.24a056ea@hananiah.suse.cz>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
- <20140327145441.4c956989@holzheu>
- <20140328120047.24a056ea@hananiah.suse.cz>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WTZyZ-0004yR-Lb
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 16:49:52 +0000
+Date: Fri, 28 Mar 2014 09:49:28 -0700
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/3] kexec: pass initrd position in dtb
+Message-ID: <20140328164928.GD3745@verge.net.au>
+References: <1395720585-76135-1-git-send-email-wangnan0@huawei.com>
+ <20140327011434.GA14724@dhcp-16-126.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140327011434.GA14724@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,92 +24,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Dave Young <dyoung@redhat.com>
+Cc: Wang Nan <wangnan0@huawei.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On Fri, 28 Mar 2014 12:00:47 +0100
-Petr Tesarik <ptesarik@suse.cz> wrote:
-
-> On Thu, 27 Mar 2014 14:54:41 +0100
-> Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-
-[snip]
-
-> > > >Here the fixed patch:
-> > > 
-> > > Thanks, I'll merge the fixed version into v1.5.6.
+On Thu, Mar 27, 2014 at 09:14:34AM +0800, Dave Young wrote:
+> On 03/25/14 at 12:09pm, Wang Nan wrote:
+> > The main goal of this patch series is to pass initrd position to
+> > secondary kernel. To makes code clear, patch 2/3 introduce a new
+> > function to handle fdt related operations.
 > > 
-> > Great!
+> > Without these two patches, kexec failed to work on arm.
+> > 
+> > 
+> > Change from v1:
+> > 
+> >  - Remove #include "libfdt_internal.h" since it is for internal use
+> >      for libfdt.
+> > 
+> > Change from v2:
+> > 
+> >  - Split into two logically independent patches.
+> >  - Compute memory consumption more accurate.
+> > 
+> > Change from v3:
+> > 
+> >  - Introduces helpers in libfdt for memory usage computation.
+> > 
+> > 
+> > Wang Nan (3):
+> >   kexec: introduce helpers for computing dtb size
+> >   kexec: introduce setup_dtb_prop to make code clear
+> >   kexec: pass initrd position by dtb
+> > 
+> >  kexec/arch/arm/kexec-zImage-arm.c | 106 +++++++++++++++++++++++++++++---------
+> >  kexec/libfdt/libfdt.h             |  24 +++++++++
+> >  kexec/libfdt/libfdt_internal.h    |   3 --
+> >  3 files changed, 105 insertions(+), 28 deletions(-)
+> > 
 > 
-> I'm sorry to spoil the party, but this patch broke Xen dumps for me.
-> I'm getting an long series of these messages:
+> Thanks for the update.
 > 
-> set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap91pbsO). Invalid argument
-> set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap91pbsO). Invalid argument
-> set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap91pbsO). Invalid argument
-> ...
-> 
-> In fact, it most likely broke all non-cyclic dumps.
-> 
-> That's because the bitmap length is calculated in prepare_bitmap_buffer
-> using info->max_mapnr, but create_1st_bitmap() still loops over all
-> PT_LOAD segments, calling set_bit_on_1st_bitmap() for each PFN. The
-> offset may easily fall beyond the bitmap size.
+> Acked-by: Dave Young <dyoung@redhat.com>
 
-What about the following patch. It works for me when I specify
-the "--non-cyclic" option.
-
-Michael
----
-[PATCH] makedumpfile: Fix bitmap create for adjusted info->max_mapnr
-
-If info->max_mapnr has been adjusted, for example because the dumped
-system has specified the "mem=" kernel parameter, makedumpfile writes
-the following error messages for Xen dumps or when the "--non-cyclic"
-option has been specified:
-
-set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap96s9V8). Success
-
-Fix this and consider "info->max_mapnr" in the create bitmap functions.
-
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- makedumpfile.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4402,6 +4402,9 @@ create_1st_bitmap(void)
- 
- 		pfn_start = paddr_to_pfn(phys_start);
- 		pfn_end   = paddr_to_pfn(phys_end);
-+		if (pfn_start > info->max_mapnr)
-+			continue;
-+		pfn_end = MIN(phys_end, info->max_mapnr);
- 
- 		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
- 			set_bit_on_1st_bitmap(pfn);
-@@ -7511,6 +7514,9 @@ exclude_xen3_user_domain(void)
- 		pfn     = paddr_to_pfn(phys_start);
- 		pfn_end = paddr_to_pfn(phys_end);
- 		size    = pfn_end - pfn;
-+		if (pfn > info->max_mapnr)
-+			continue;
-+		pfn_end = MIN(phys_end, info->max_mapnr);
- 
- 		for (j = 0; pfn < pfn_end; pfn++, j++) {
- 			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
-@@ -7575,6 +7581,9 @@ exclude_xen4_user_domain(void)
- 		pfn     = paddr_to_pfn(phys_start);
- 		pfn_end = paddr_to_pfn(phys_end);
- 		size    = pfn_end - pfn;
-+		if (pfn > info->max_mapnr)
-+			continue;
-+		pfn_end = MIN(phys_end, info->max_mapnr);
- 
- 		for (j = 0; pfn < pfn_end; pfn++, j++) {
- 			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
