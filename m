@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTXPl-0006fY-7Y
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 14:05:46 +0000
-Date: Fri, 28 Mar 2014 10:05:22 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [kexec-tools PATCH v2] x86, kaslr: add alternative way to locate
- kernel text mapping area
-Message-ID: <20140328140522.GF2089@redhat.com>
-References: <1395990300-17830-1-git-send-email-chaowang@redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WTYxn-0002EU-UL
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 15:45:00 +0000
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
+ kernel to boot into
+Date: Fri, 28 Mar 2014 16:44:33 +0100
+Message-ID: <1442762.HKg1LDRF5G@skinner>
+In-Reply-To: <20140328052349.GD2944@dhcp-17-89.nay.redhat.com>
+References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
+ <20140327223233.GQ13816@redhat.com>
+ <20140328052349.GD2944@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1395990300-17830-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,139 +26,30 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, ebiederm@xmission.com
 
-On Fri, Mar 28, 2014 at 03:05:00PM +0800, WANG Chao wrote:
-> When kASLR is enabled (CONFIG_RANDOMIZED_BASE=y), kernel text mapping
-> base is randomized. The max base offset of such randomization is
-> configured at compile time through CONFIG_RANDOMIZE_MAX_BASE_OFFSET (by
-> default 1G).
-> 
-> Currently kexec-tools is using hard code macro X86_64__START_KERNEL_map
-> (0xffffffff80000000) and X86_64_KERNEL_TEXT_SIZE (512M) to determine
-> kernel text mapping from kcore's PT_LOAD. With kASLR, the mapping is
-> changed as the following:
-> 
-> ffffffff80000000 - (ffffffff80000000+CONFIG_RANDOMIZE_BASE_MAX_OFFSET)
-> 
-> As Vivek suggested, we can get _stext kernel symbol address from
-> /proc/kallsyms, and search for kcore's PT_LOAD which contains _stext,
-> and we can say that this area represents the kernel mapping area.
-> 
-> Let's first use this way to find out kernel text mapping. If failed for
-> whatever reason, fall back to use the old way.
-> 
-> Suggested-by: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
+On Friday, March 28, 2014 01:23:49 PM WANG Chao wrote:
+> On 03/27/14 at 06:32pm, Vivek Goyal wrote:
+...
 
-Looks good to me.
+> I was just trying to keep the change as minimal as possible, so that the
+> reviewers can be more clear of what the patch does instead of something
+> looks messed up.
+Sounds very sane. I tried it the other way around:
+clean up and then do the functional change
+and I ended up in a mess changing back and forth and I had to move on
+to other stuff in the end.
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> But if you have no problem review it, I can do some
+> clean up within this patch. However I think it's better to be addressed
+> the cleanup in the future, or at least as a separated patch in this
+> series.
+Seeing some cleanups, especially getting rid of the duplicate code to get 
+memory ranges in kdump and kexec case (which I expect still exists?) on top 
+later would be great.
 
-Vivek
+     Thomas
 
-> ---
->  kexec/arch/i386/crashdump-x86.c | 63 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 61 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index cb19e7d..fb92029 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -100,6 +100,36 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
->  	return -1;
->  }
->  
-> +/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
-> +static unsigned long long get_kernel_stext_sym(void)
-> +{
-> +	const char *kallsyms = "/proc/kallsyms";
-> +	const char *stext = "_stext";
-> +	char sym[128];
-> +	char line[128];
-> +	FILE *fp;
-> +	unsigned long long vaddr;
-> +	char type;
-> +
-> +	fp = fopen(kallsyms, "r");
-> +	if (!fp) {
-> +		fprintf(stderr, "Cannot open %s\n", kallsyms);
-> +		return 0;
-> +	}
-> +
-> +	while(fgets(line, sizeof(line), fp) != NULL) {
-> +		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
-> +			continue;
-> +		if (strcmp(sym, stext) == 0) {
-> +			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
-> +			return vaddr;
-> +		}
-> +	}
-> +
-> +	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
-> +	return 0;
-> +}
-> +
->  /* Retrieve info regarding virtual address kernel has been compiled for and
->   * size of the kernel from /proc/kcore. Current /proc/kcore parsing from
->   * from kexec-tools fails because of malformed elf notes. A kernel patch has
-> @@ -118,6 +148,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  	int align;
->  	off_t size;
->  	uint32_t elf_flags = 0;
-> +	uint64_t stext_sym;
->  
->  	if (elf_info->machine != EM_X86_64)
->  		return 0;
-> @@ -145,9 +176,36 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  		return -1;
->  	}
->  
-> -	/* Traverse through the Elf headers and find the region where
-> -	 * kernel is mapped. */
->  	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
-> +
-> +	/* Traverse through the Elf headers and find the region where
-> +	 * _stext symbol is located in. That's where kernel is mapped */
-> +	stext_sym = get_kernel_stext_sym();
-> +	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
-> +		if (phdr->p_type == PT_LOAD) {
-> +			unsigned long long saddr = phdr->p_vaddr;
-> +			unsigned long long eaddr = phdr->p_vaddr + phdr->p_memsz;
-> +			unsigned long long size;
-> +
-> +			/* Look for kernel text mapping header. */
-> +			if (saddr < stext_sym && eaddr > stext_sym) {
-> +				saddr = _ALIGN_DOWN(saddr, X86_64_KERN_VADDR_ALIGN);
-> +				elf_info->kern_vaddr_start = saddr;
-> +				size = eaddr - saddr;
-> +				/* Align size to page size boundary. */
-> +				size = _ALIGN(size, align);
-> +				elf_info->kern_size = size;
-> +				dbgprintf("kernel vaddr = 0x%llx size = 0x%llx\n",
-> +					saddr, size);
-> +				return 0;
-> +			}
-> +		}
-> +	}
-> +
-> +	/* If failed to retrieve kernel text mapping through
-> +	 * /proc/kallsyms, Traverse through the Elf headers again and
-> +	 * find the region where kernel is mapped using hard-coded
-> +	 * kernel mapping boundries */
->  	for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
->  		if (phdr->p_type == PT_LOAD) {
->  			unsigned long long saddr = phdr->p_vaddr;
-> @@ -169,6 +227,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  			}
->  		}
->  	}
-> +
->  	fprintf(stderr, "Can't find kernel text map area from kcore\n");
->  	return -1;
->  }
-> -- 
-> 1.8.5.3
 
 _______________________________________________
 kexec mailing list
