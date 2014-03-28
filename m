@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTRH8-0003S5-Md
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 07:32:28 +0000
-Date: Fri, 28 Mar 2014 14:51:21 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
- kernel to boot into
-Message-ID: <20140328065121.GH26116@dhcp-16-126.nay.redhat.com>
-References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
- <1395216241-13983-3-git-send-email-chaowang@redhat.com>
- <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
- <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
- <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WTS1N-0004hz-Im
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 08:20:15 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH 1/2] Earlier initialization of dom0_mapnr
+Date: Fri, 28 Mar 2014 08:18:13 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FAC57@BPXM01GP.gisp.nec.co.jp>
+References: <20140327175508.5F86560141@nathan.suse.cz>
+ <1395943576-25362-1-git-send-email-ptesarik@suse.cz>
+ <1395943576-25362-2-git-send-email-ptesarik@suse.cz>
+In-Reply-To: <1395943576-25362-2-git-send-email-ptesarik@suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,79 +25,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 03/28/14 at 02:43pm, Dave Young wrote:
-> On 03/28/14 at 02:13pm, WANG Chao wrote:
-> > On 03/28/14 at 11:24am, Dave Young wrote:
-> > > >  
-> > > > +static void exclude_ram(struct memory_range *mr, int *nr_mr)
-> > > > +{
-> > > > +	int ranges, i, j, m;
-> > > > +
-> > > > +	ranges = *nr_mr;
-> > > > +	for (i = 0, j = 0; i < ranges; i++) {
-> > > > +		if (mr[j].type == RANGE_RAM) {
-> > > > +			dbgprintf("Remove RAM %016llx-%016llxx: (%d)\n", mr[j].start, mr[j].end, mr[j].type);
-> > > > +			for (m = j; m < *nr_mr; m++)
-> > > > +				mr[m] = mr[m+1];
-> > > > +			(*nr_mr)--;
-> > > > +		} else {
-> > > > +			j++;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	dbgprint_mem_range("After remove RAM", mr, *nr_mr);
-> > > > +}
-> > > 
-> > > This is probably not necessary, what I understand you are doing is below:
-> > > 
-> > > get_crash_memory_ranges()
-> > >  -> collect all SYSTEM_RAM, ACPI, ACPI_NVS ranges, exclude crash reserved ranges.
-> > >  -> the system ram ranges are used to create elf header
-> > >  -> the ACPI, ACPI_NVS ranges are used by cmdline_add_memmap_acpi etc.
-> > 
-> > Yes.
-> > 
-> > > 
-> > > memmap_p
-> > >  -> contains all the crash reserved ranges
-> > >  -> to be used by cmdline_add_memmap
-> > 
-> > There's no memmap_p. I'll reuse crash_memory_ranges structure to store
-> > crash reserved ranges, ACPI and ACPI_NVS ranges. So after building ELF
-> > headers for 1st kernel memory ranges, all I have to do is exclude the
-> > SYSTEM_RAM and add crash_reserved to crash_memory_ranges. And then
-> > crash_memory_ranges can be used as 2nd kernel memory ranges.
-> 
-> How about do nothing and directly use the mem_ranges:
->  * skip RANGE_RAM, only add the range which is not RANGE_RAM
->  * if the range is RANGE_CRASH_KERNEL (introduce a new type?) then use it as SYSTEM_RAM for 2nd kernel.
-> 
-> > 
-> > > 
-> > > The several memory ranges are twisted and somehow the funcions are duplicate.
-> > 
-> > These functions look like similar but each does serve for different purpose.
-> > 
-> > > 
-> > > So how about just keep one memory ranges array which contains all the ranges which
-> > > include system_ram, acpi, acpi_nvs, crash_reserved range.
-> > > 
-> > > In the crashdump-elf.c the function for creating elf headers will check the
-> > > range type, it will just skip the range which is not ram.
-> > 
-> > We don't build EFL headers for crash_reserved ranges. So we can't store
-> > system ram and crash_reserved together before building EFL header.
-> 
-> There's already below code which ignore the ram ranges..
->         for (i = 0; i < ranges; i++, range++) {
-> 		if (range->type != RANGE_RAM)
-> 			continue;
+Hello Petr,
 
-Hmm, this RANGE_RAM is converted from Crash Kernel ranges. so for what I suggested it need change
-to != RANGE_CRASH_KERNEL
+>Xen dumps fail, because the p2m mapping is initialized too late.
+>The dependency goes like this:
+>
+>- Xen uses FLATMEM
+>- get_mm_flatmem() uses info->dom0_mapnr to initialize mm structures
+>- get_dom0_mapnr() needs p2m mappings to read from a VADDR
+>- the p2m list is initialized in get_machdep_info()
+>
+>Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+>---
+> makedumpfile.c | 12 ++++++------
+> 1 file changed, 6 insertions(+), 6 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index e91583d..d3f5237 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -3128,6 +3128,12 @@ out:
+> 	if (!get_max_mapnr())
+> 		return FALSE;
+>
+>+	if (debug_info && !get_machdep_info())
+>+		return FALSE;
+
+You have to move get_machdep_info() after cache_init()
+since get_machdep_info() calls readmem() on some architectures.
+Otherwise, readmem() calls cache_alloc() without the cache
+initialization.
+
+
+Thanks
+Atsushi Kumagai
+
+>+
+>+	if (is_xen_memory() && !get_dom0_mapnr())
+>+		return FALSE;
+>+
+> 	if (info->flag_cyclic) {
+> 		if (info->bufsize_cyclic == 0) {
+> 			if (!calculate_cyclic_buffer_size())
+>@@ -3185,9 +3191,6 @@ out:
+> 		if (info->flag_sadump)
+> 			(void) sadump_virt_phys_base();
+>
+>-		if (!get_machdep_info())
+>-			return FALSE;
+>-
+> 		if (info->flag_sadump) {
+> 			int online_cpus;
+>
+>@@ -3233,9 +3236,6 @@ out:
+> 			return FALSE;
+> 	}
+>
+>-	if (is_xen_memory() && !get_dom0_mapnr())
+>-		return FALSE;
+>-
+> 	if (!get_value_for_old_linux())
+> 		return FALSE;
+>
+>--
+>1.8.4.5
 
 _______________________________________________
 kexec mailing list
