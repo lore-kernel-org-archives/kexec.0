@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTUX9-00011h-TA
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 11:01:12 +0000
-Date: Fri, 28 Mar 2014 12:00:47 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Message-ID: <20140328120047.24a056ea@hananiah.suse.cz>
-In-Reply-To: <20140327145441.4c956989@holzheu>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
- <20140327145441.4c956989@holzheu>
-Mime-Version: 1.0
+Message-ID: <53356590.3030005@huawei.com>
+Date: Fri, 28 Mar 2014 20:05:36 +0800
+From: Liu hua <sdu.liu@huawei.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/3] add LPAE support for kexec and kernel (Liu Hua)
+References: <mailman.28599.1395907790.1059.kexec@lists.infradead.org>
+ <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
+In-Reply-To: <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,97 +19,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org
+Cc: horms@verge.net.au, linux-arm-kernel@lists.infradead.org, "Discussion
+ list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-On Thu, 27 Mar 2014 14:54:41 +0100
-Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-
-> On Thu, 27 Mar 2014 05:19:06 +0000
-> Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+On 2014/3/27 22:04, Dave Anderson wrote:
 > 
-> > Hello Michael,
-> > 
-> > >On Wed, 26 Mar 2014 10:55:07 +0100 (a/T)
-> > >HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> > >
-> > >> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> > >> Subject: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-> > >> Date: Tue, 25 Mar 2014 17:14:20 +0100
-> > >
-> > >[snip]
-> > >
-> > >> > With this patch makedumpfile gets the maximum page frame number from
-> > >> > the mem_map array and adjusts info->max_mapnr if this value is smaller
-> > >> > than the value calculated from the ELF header.
-> > >> >
-> > >> > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> > >> > ---
-> > >> >  makedumpfile.c |   14 +++++++++++++-
-> > >> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > >> >
-> > >> > --- a/makedumpfile.c
-> > >> > +++ b/makedumpfile.c
-> > >> > @@ -2829,7 +2829,8 @@ get_mem_map_without_mm(void)
-> > >> >  int
-> > >> >  get_mem_map(void)
-> > >> >  {
-> > >> > -	int ret;
-> > >> > +	unsigned long max_pfn = 0;
-> > >> > +	int ret, i;
-> > >>
-> > >> Please define max_pfn as unsigned long long.
-> > >
-> > >Ok done.
-> > >
-> > >>
-> > >> And for i,
-> > >>
-> > >> >
-> > >> >  	switch (get_mem_type()) {
-> > >> >  	case SPARSEMEM:
-> > >> > @@ -2861,6 +2862,17 @@ get_mem_map(void)
-> > >> >  		ret = FALSE;
-> > >> >  		break;
-> > >> >  	}
-> > >> > +	/*
-> > >> > +	 * Adjust "max_mapnr" for the case that Linux uses less memory
-> > >> > +	 * than is dumped. For example when "mem=" has been used for the
-> > >> > +	 * dumped system.
-> > >> > +	 */
-> > >> > +	for (i = 0; i < info->num_mem_map; i++) {
-> > >>
-> > >> info->num_mem_map is defined as unsigned int. I guess some warning
-> > >> about comparison with different signedness occurs.
-> > >
-> > >Ah ok...
-> > >
-> > >With the default CFLAGS for makedumpfile-1.5.5 tarball I do not get
-> > >any warning. When I add "-W" to CFLAGS, I get lots of warnings
-> > >including the one you mentioned.
-> > >
-> > >Here the fixed patch:
-> > 
-> > Thanks, I'll merge the fixed version into v1.5.6.
 > 
-> Great!
+> ----- Original Message -----
+> 
+>> The patch series introduce LPAE support for user space
+>> utility kexec(the last) and ARM linux kernel(the others).
+>>
+>> I have tested the patch series in armA15 platform which have
+>> more than 4G memory.
+> 
+> Hello Liu,
+> 
+> I'm curious how you tested this?  The crash utility does not have
+> any specific support for LPAE on ARM, and a couple years ago I 
+> asked on the crash-utility mailing list whether any of the ARM
+> developers were working on it.  But at that time none of them were
+> working with LPAE.  I see that you are on the crash-utility mailing
+> list -- are you planning to post follow-up patches to the crash-utility?
+> 
+> Thanks,
+>   Dave
 
-I'm sorry to spoil the party, but this patch broke Xen dumps for me.
-I'm getting an long series of these messages:
+Yes, you are very "sensitive"! our team has worked on it for a while. And
+we went through the whole kdump process for LPAE enabled ARM. Our changes
+include kexec-tools, makedumpfile, crash utility and the kernel.
 
-set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap91pbsO). Invalid argument
-set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap91pbsO). Invalid argument
-set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap91pbsO). Invalid argument
-...
+But we did that in a rather limited time. So some patches are silly and
+need to be reconstructed before submission. In addition, my job is quit
+full now. So I decide to post the patch series that are clear and
+independent of the others at first.
 
-In fact, it most likely broke all non-cyclic dumps.
+But I got no response from the linux-arm and kexec mailinglist. What about
+your opinion about the feature of LPAE support for kdump related tools
+including crash utility and the kernel?
 
-That's because the bitmap length is calculated in prepare_bitmap_buffer
-using info->max_mapnr, but create_1st_bitmap() still loops over all
-PT_LOAD segments, calling set_bit_on_1st_bitmap() for each PFN. The
-offset may easily fall beyond the bitmap size.
+Thanks,
+Liu Hua
 
-Petr T
+
+
+
+
 
 _______________________________________________
 kexec mailing list
