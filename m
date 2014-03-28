@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTVbW-00039n-ED
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 12:09:46 +0000
+ id 1WTVbl-0003Ak-Ec
+ for kexec@lists.infradead.org; Fri, 28 Mar 2014 12:10:03 +0000
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH v2 0/2]  Allow Xen Dom0 page filtering
-Date: Fri, 28 Mar 2014 13:09:19 +0100
-Message-Id: <1396008561-15186-1-git-send-email-ptesarik@suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FAC57@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH v2 2/2] Get Dom0 max_pfn using pfn_mfn_frame_list if max_pfn
+ unavailable
+Date: Fri, 28 Mar 2014 13:09:21 +0100
+Message-Id: <1396008561-15186-3-git-send-email-ptesarik@suse.cz>
+In-Reply-To: <1396008561-15186-1-git-send-email-ptesarik@suse.cz>
 References: <0910DD04CBD6DE4193FCF86B9C00BE971FAC57@BPXM01GP.gisp.nec.co.jp>
+ <1396008561-15186-1-git-send-email-ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +25,58 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
+Cc: Petr Tesarik <petr@tesarici.cz>, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org
 
-Trying to use makedumpfile on a Xen Dom0 ELF file currently fails, but there
-are in fact only a few missing pieces. With the following two patches, I was
-able to produce a dump even with high dump levels (-d17 and -d31).
+From: Petr Tesarik <petr@tesarici.cz>
 
-Needless to say, this can reduce the size of Dom0 dumps considerably.
+If max_pfn symbol is not exported in the Dom0 kernel's VMCOREINFO, the
+maximum PFN can be determined from the size of the mapping between PFN
+and MFN.
 
-Changes in v2:
+Using this approach, filtering works for Xen kernels without debuginfo
+(and even without adding more lines to VMCOREINFO).
 
-* Call get_machdep_info() after cache_init(), so it can use readmem(VADDR, ...)
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+---
+ makedumpfile.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-This now works for me after reverting commit ebe2fa3a.
-
-Petr Tesarik (2):
-  Earlier initialization of dom0_mapnr
-  Get Dom0 max_pfn using pfn_mfn_frame_list if max_pfn unavailable
-
- makedumpfile.c | 35 ++++++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 7 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 1117598..341fbe8 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -189,9 +189,30 @@ get_dom0_mapnr()
+ 		}
+ 
+ 		info->dom0_mapnr = max_pfn;
+-		DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
++	} else if (info->p2m_frames) {
++		unsigned long mfns[MFNS_PER_FRAME];
++		unsigned long mfn_idx = info->p2m_frames - 1;
++		unsigned long long maddr;
++		unsigned i;
++
++		maddr = pfn_to_paddr(info->p2m_mfn_frame_list[mfn_idx]);
++		if (!readmem(MADDR_XEN, maddr, &mfns, sizeof(mfns))) {
++			ERRMSG("Can't read %ld domain-0 mfns at 0x%llu\n",
++				(long)MFNS_PER_FRAME, maddr);
++			return FALSE;
++		}
++
++		for (i = 0; i < MFNS_PER_FRAME; ++i)
++			if (!mfns[i])
++				break;
++
++		info->dom0_mapnr = mfn_idx * MFNS_PER_FRAME + i;
++	} else {
++		/* dom0_mapnr is unavailable, which may be non-critical */
++		return TRUE;
+ 	}
+ 
++	DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
+ 	return TRUE;
+ }
+ 
 -- 
 1.8.4.5
 
