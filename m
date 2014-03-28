@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WTYxn-0002EU-UL
- for kexec@lists.infradead.org; Fri, 28 Mar 2014 15:45:00 +0000
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
- kernel to boot into
-Date: Fri, 28 Mar 2014 16:44:33 +0100
-Message-ID: <1442762.HKg1LDRF5G@skinner>
-In-Reply-To: <20140328052349.GD2944@dhcp-17-89.nay.redhat.com>
-References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
- <20140327223233.GQ13816@redhat.com>
- <20140328052349.GD2944@dhcp-17-89.nay.redhat.com>
+Date: Fri, 28 Mar 2014 11:44:33 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1897155363.7224032.1396021473883.JavaMail.zimbra@redhat.com>
+In-Reply-To: <53356590.3030005@huawei.com>
+References: <mailman.28599.1395907790.1059.kexec@lists.infradead.org>
+ <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
+ <53356590.3030005@huawei.com>
+Subject: Re: [PATCH 0/3] add LPAE support for kexec and kernel (Liu Hua)
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,31 +20,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, ebiederm@xmission.com
+To: Liu hua <sdu.liu@huawei.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-On Friday, March 28, 2014 01:23:49 PM WANG Chao wrote:
-> On 03/27/14 at 06:32pm, Vivek Goyal wrote:
-...
 
-> I was just trying to keep the change as minimal as possible, so that the
-> reviewers can be more clear of what the patch does instead of something
-> looks messed up.
-Sounds very sane. I tried it the other way around:
-clean up and then do the functional change
-and I ended up in a mess changing back and forth and I had to move on
-to other stuff in the end.
 
-> But if you have no problem review it, I can do some
-> clean up within this patch. However I think it's better to be addressed
-> the cleanup in the future, or at least as a separated patch in this
-> series.
-Seeing some cleanups, especially getting rid of the duplicate code to get 
-memory ranges in kdump and kexec case (which I expect still exists?) on top 
-later would be great.
+----- Original Message -----
+> On 2014/3/27 22:04, Dave Anderson wrote:
+> > 
+> > 
+> > ----- Original Message -----
+> > 
+> >> The patch series introduce LPAE support for user space
+> >> utility kexec(the last) and ARM linux kernel(the others).
+> >>
+> >> I have tested the patch series in armA15 platform which have
+> >> more than 4G memory.
+> > 
+> > Hello Liu,
+> > 
+> > I'm curious how you tested this?  The crash utility does not have
+> > any specific support for LPAE on ARM, and a couple years ago I
+> > asked on the crash-utility mailing list whether any of the ARM
+> > developers were working on it.  But at that time none of them were
+> > working with LPAE.  I see that you are on the crash-utility mailing
+> > list -- are you planning to post follow-up patches to the crash-utility?
+> > 
+> > Thanks,
+> >   Dave
+> 
+> Yes, you are very "sensitive"! our team has worked on it for a while. And
+> we went through the whole kdump process for LPAE enabled ARM. Our changes
+> include kexec-tools, makedumpfile, crash utility and the kernel.
+> 
+> But we did that in a rather limited time. So some patches are silly and
+> need to be reconstructed before submission. In addition, my job is quit
+> full now. So I decide to post the patch series that are clear and
+> independent of the others at first.
+> 
+> But I got no response from the linux-arm and kexec mailinglist. What about
+> your opinion about the feature of LPAE support for kdump related tools
+> including crash utility and the kernel?
 
-     Thomas
+I can't speak for the linux-arm and kexec mailing lists, but certainly 
+when you post your crash-related patches on the crash-utility mailing 
+list, I'll review, respond, and get them in place as soon as possible.
 
+Thanks,
+  Dave
 
 _______________________________________________
 kexec mailing list
