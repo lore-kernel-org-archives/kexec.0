@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g6t1524.atlanta.hp.com ([15.193.200.67])
+Received: from g5t1626.atlanta.hp.com ([15.192.137.9])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUX0u-00013m-0I
- for kexec@lists.infradead.org; Mon, 31 Mar 2014 07:52:13 +0000
-Subject: [PATCH v2] makedumpfile: Fix a segment fault in dumping not aligned
+ id 1WUXAN-0001CH-1g
+ for kexec@lists.infradead.org; Mon, 31 Mar 2014 08:01:59 +0000
+Subject: [PATCH v3] makedumpfile: Fix a segment fault in dumping not aligned
  ELF segment
 From: Jingbai Ma <jingbai.ma@hp.com>
-Date: Mon, 31 Mar 2014 15:51:43 +0800
-Message-ID: <20140331075142.24848.97938.stgit@k.asiapacific.hpqcorp.net>
+Date: Mon, 31 Mar 2014 16:01:30 +0800
+Message-ID: <20140331080130.25019.16463.stgit@k.asiapacific.hpqcorp.net>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,9 +25,12 @@ To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, lisa.mitchell@hp.com, chaowang@redhat.com
 
 This patch fixes a bug that will cause segment fault if the starting or ending
-address of the ELF segment is not aligned to 8 bytes boundary.
+address of the ELF segment is not aligned to 8 pages boundary.
 
 Changelog:
+v3:
+- Fix patch description error.
+
 v2:
 - Change subject to describe patch correctly.
 - Some minor code format changes.
