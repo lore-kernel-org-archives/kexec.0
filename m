@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g5t1626.atlanta.hp.com ([15.192.137.9])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUXAN-0001CH-1g
- for kexec@lists.infradead.org; Mon, 31 Mar 2014 08:01:59 +0000
-Subject: [PATCH v3] makedumpfile: Fix a segment fault in dumping not aligned
- ELF segment
-From: Jingbai Ma <jingbai.ma@hp.com>
-Date: Mon, 31 Mar 2014 16:01:30 +0800
-Message-ID: <20140331080130.25019.16463.stgit@k.asiapacific.hpqcorp.net>
+ id 1WUYqt-0003FH-Ba
+ for kexec@lists.infradead.org; Mon, 31 Mar 2014 09:50:01 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
+Date: Mon, 31 Mar 2014 09:48:05 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
+References: <20140325171420.6b558576@holzheu>
+ <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
+ <20140326185426.5e2e5fc4@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
+ <20140327145441.4c956989@holzheu> <20140328120047.24a056ea@hananiah.suse.cz>
+ <20140328174622.2896296e@holzheu> <20140328175303.2ed0232a@holzheu>
+In-Reply-To: <20140328175303.2ed0232a@holzheu>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,112 +28,133 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, lisa.mitchell@hp.com, chaowang@redhat.com
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>, "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-This patch fixes a bug that will cause segment fault if the starting or ending
-address of the ELF segment is not aligned to 8 pages boundary.
+[snip]
 
-Changelog:
-v3:
-- Fix patch description error.
+>> > That's because the bitmap length is calculated in prepare_bitmap_buffer
+>> > using info->max_mapnr, but create_1st_bitmap() still loops over all
+>> > PT_LOAD segments, calling set_bit_on_1st_bitmap() for each PFN. The
+>> > offset may easily fall beyond the bitmap size.
+>>
+>> What about the following patch. It works for me when I specify
+>> the "--non-cyclic" option.
+>>
+>> Michael
+>> ---
+>> [PATCH] makedumpfile: Fix bitmap create for adjusted info->max_mapnr
+>>
+>> If info->max_mapnr has been adjusted, for example because the dumped
+>> system has specified the "mem=" kernel parameter, makedumpfile writes
+>> the following error messages for Xen dumps or when the "--non-cyclic"
+>> option has been specified:
+>>
+>> set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap96s9V8). Success
+                                                               ^^^^^^^^
+This looks confusing, is it an actual message ?
+I suppose it must be "Invalid argument" like Petr's log.
 
-v2:
-- Change subject to describe patch correctly.
-- Some minor code format changes.
+>>
+>> Fix this and consider "info->max_mapnr" in the create bitmap functions.
+>>
+>> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+>> ---
+>
+>[snip]
+>
+>> @@ -7575,6 +7581,9 @@ exclude_xen4_user_domain(void)
+>>  		pfn     = paddr_to_pfn(phys_start);
+>>  		pfn_end = paddr_to_pfn(phys_end);
+>>  		size    = pfn_end - pfn;
+>> +		if (pfn > info->max_mapnr)
+>> +			continue;
+>> +		pfn_end = MIN(phys_end, info->max_mapnr);
+>
+>Hmm, probably time for weekend. Of course this should be:
+>
+>pfn_end = MIN(pfn_end, info->max_mapnr);
+>
+>Here the updated patch:
 
-In function create_1st_bitmap_cyclic() and initialize_2nd_bitmap_cyclic(),
-there are the same code:
+I found another issue of truncating max_mapnr for Xen.
 
-                pfn_start_roundup = roundup(pfn_start, BITPERBYTE);
-                pfn_end_round = round(pfn_end, BITPERBYTE);
+The bitmap manages MFN(machine frame number) for Xen
+while __exclude_unnecessary_pages() treats PFN(guest-physical frame number).
+__exclude_unnecessary_pages() expects that all bits of PFNs
+are mapped in the bitmap even if it was reduced by truncated 
+max_mapnr. However, PtoM mapping isn't linear(probably...),
+there is no guarantee that a set of continuous PFNs is mapped
+in a set of continuous MFNs.
+So the actual I/O offset can exceed the bitmap size when the
+bitmap size is reduced.
 
-                for (pfn = pfn_start; pfn < pfn_start_roundup; pfn++) {
-                        if (set_bit_on_1st_bitmap(pfn))
-                                pfn_bitmap1++;
-                }
+In the first place, we shouldn't truncate max_mapnr
+based on dom0's mem_section since there are some domU's
+memories on Xen dumps. Now, I think a better way for Xen
+is just leaving max_mapnr as it is.
 
-In case:
-pfn_start=0xe762c, pfn_start_roundup=0xe7630
-pfn_end=0xe762d, pfn_end_round=0xe7628
-This code will set incorrect bits in the bitmap.
-In function readpage_elf():
+Do you agree with my view ?
 
-        if (!offset1) {
-                phys_start = page_head_to_phys_start(paddr);
-                offset1 = paddr_to_offset(phys_start);
-                frac_head = phys_start - paddr;
-                memset(bufptr, 0, frac_head);
-        }
 
-The invalid paddr couldn't be found, so phys_start will be zero, and frac_head
-will be negative, then memset will cause a segment fault.
+Thanks
+Atsushi Kumagai
 
-Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
----
- makedumpfile.c |   27 +++++++++++++++++----------
- 1 files changed, 17 insertions(+), 10 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index ef08d91..900d553 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4424,8 +4424,9 @@ create_1st_bitmap_cyclic()
- 		if (pfn_start >= pfn_end)
- 			continue;
- 
--		pfn_start_roundup = roundup(pfn_start, BITPERBYTE);
--		pfn_end_round = round(pfn_end, BITPERBYTE);
-+		pfn_start_roundup = MIN(roundup(pfn_start, BITPERBYTE),
-+					pfn_end);
-+		pfn_end_round = MAX(round(pfn_end, BITPERBYTE), pfn_start);
- 
- 		for (pfn = pfn_start; pfn < pfn_start_roundup; pfn++) {
- 			if (set_bit_on_1st_bitmap(pfn))
-@@ -4443,9 +4444,11 @@ create_1st_bitmap_cyclic()
- 			pfn_bitmap1 += (pfn_end_byte - pfn_start_byte) * BITPERBYTE;
- 		}
- 
--		for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
--			if (set_bit_on_1st_bitmap(pfn))
--				pfn_bitmap1++;
-+		if (pfn_end_round > pfn_start) {
-+			for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
-+				if (set_bit_on_1st_bitmap(pfn))
-+					pfn_bitmap1++;
-+			}
- 		}
- 	}
- 	pfn_memhole -= pfn_bitmap1;
-@@ -4532,8 +4535,9 @@ initialize_2nd_bitmap_cyclic(void)
- 		if (pfn_start >= pfn_end)
- 			continue;
- 
--		pfn_start_roundup = roundup(pfn_start, BITPERBYTE);
--		pfn_end_round = round(pfn_end, BITPERBYTE);
-+		pfn_start_roundup = MIN(roundup(pfn_start, BITPERBYTE),
-+					pfn_end);
-+		pfn_end_round = MAX(round(pfn_end, BITPERBYTE), pfn_start);
- 
- 		for (pfn = pfn_start; pfn < pfn_start_roundup; ++pfn)
- 			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
-@@ -4548,9 +4552,12 @@ initialize_2nd_bitmap_cyclic(void)
- 			       pfn_end_byte - pfn_start_byte);
- 		}
- 
--		for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
--			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
--				return FALSE;
-+		if (pfn_end_round > pfn_start) {
-+			for (pfn = pfn_end_round; pfn < pfn_end; ++pfn) {
-+				if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
-+					return FALSE;
-+			}
-+		}
- 	}
- 
- 	return TRUE;
-
+>---
+>[PATCH] makedumpfile: Fix bitmap create for adjusted info->max_mapnr
+>
+>If info->max_mapnr has been adjusted, for example because the dumped
+>system has specified the "mem=" kernel parameter, makedumpfile writes
+>the following error messages for Xen dumps or when the "--non-cyclic"
+>option has been specified:
+>
+>set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap96s9V8). Success
+>
+>Fix this and consider "info->max_mapnr" in the create bitmap functions.
+>
+>Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+>---
+> makedumpfile.c |    9 +++++++++
+> 1 file changed, 9 insertions(+)
+>
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -4402,6 +4402,9 @@ create_1st_bitmap(void)
+>
+> 		pfn_start = paddr_to_pfn(phys_start);
+> 		pfn_end   = paddr_to_pfn(phys_end);
+>+		if (pfn_start > info->max_mapnr)
+>+			continue;
+>+		pfn_end = MIN(pfn_end, info->max_mapnr);
+>
+> 		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
+> 			set_bit_on_1st_bitmap(pfn);
+>@@ -7511,6 +7514,9 @@ exclude_xen3_user_domain(void)
+> 		pfn     = paddr_to_pfn(phys_start);
+> 		pfn_end = paddr_to_pfn(phys_end);
+> 		size    = pfn_end - pfn;
+>+		if (pfn > info->max_mapnr)
+>+			continue;
+>+		pfn_end = MIN(pfn_end, info->max_mapnr);
+>
+> 		for (j = 0; pfn < pfn_end; pfn++, j++) {
+> 			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
+>@@ -7575,6 +7581,9 @@ exclude_xen4_user_domain(void)
+> 		pfn     = paddr_to_pfn(phys_start);
+> 		pfn_end = paddr_to_pfn(phys_end);
+> 		size    = pfn_end - pfn;
+>+		if (pfn > info->max_mapnr)
+>+			continue;
+>+		pfn_end = MIN(pfn_end, info->max_mapnr);
+>
+> 		for (j = 0; pfn < pfn_end; pfn++, j++) {
+> 			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
