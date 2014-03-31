@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUZbR-0004Kb-5u
- for kexec@lists.infradead.org; Mon, 31 Mar 2014 10:38:06 +0000
-Date: Mon, 31 Mar 2014 12:37:42 +0200
+ id 1WUZnm-0004vv-Vz
+ for kexec@lists.infradead.org; Mon, 31 Mar 2014 10:50:52 +0000
+Date: Mon, 31 Mar 2014 12:50:26 +0200
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Message-ID: <20140331123742.21beb21a@hananiah.suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
- <20140327145441.4c956989@holzheu>
- <20140328120047.24a056ea@hananiah.suse.cz>
- <20140328174622.2896296e@holzheu> <20140328175303.2ed0232a@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
+Subject: Re: [PATCH v2 01/11] kexec: introduce kexec_ops struct
+Message-ID: <20140331125026.0120eef7@hananiah.suse.cz>
+In-Reply-To: <09b41677-c9e7-4cd4-84a0-a1cb483d551d@email.android.com>
+References: <1353423893-23125-1-git-send-email-daniel.kiper@oracle.com>
+ <1353423893-23125-2-git-send-email-daniel.kiper@oracle.com>
+ <87lidwtego.fsf@xmission.com>
+ <20121121105221.GA2925@host-192-168-1-59.local.net-space.pl>
+ <87txshx28b.fsf@xmission.com> <50AE6542.3020302@zytor.com>
+ <50AE69EF.4060909@citrix.com>
+ <09b41677-c9e7-4cd4-84a0-a1cb483d551d@email.android.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,35 +28,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, Andrew Cooper <andrew.cooper3@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "jbeulich@suse.com" <jbeulich@suse.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-On Mon, 31 Mar 2014 09:48:05 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+On Thu, 22 Nov 2012 14:26:10 -0800
+"H. Peter Anvin" <hpa@zytor.com> wrote:
 
->[...]
+> Bullshit.  This should be a separate domain.
+
+Thanks for top-posting, hpa...
+
+> Andrew Cooper <andrew.cooper3@citrix.com> wrote:
 > 
-> In the first place, we shouldn't truncate max_mapnr
-> based on dom0's mem_section since there are some domU's
-> memories on Xen dumps. Now, I think a better way for Xen
-> is just leaving max_mapnr as it is.
-> 
-> Do you agree with my view ?
+> >On 22/11/12 17:47, H. Peter Anvin wrote:
+> >> The other thing that should be considered here is how utterly 
+> >> preposterous the notion of doing in-guest crash dumping is in a
+> >system 
+> >> that contains a hypervisor.  The reason for kdump is that on bare
+> >metal 
+> >> there are no other options, but in a hypervisor system the right
+> >thing 
+> >> should be for the hypervisor to do the dump (possibly spawning a
+> >clean 
+> >> I/O domain if the I/O domain is necessary to access the media.)
+> >>
+> >> There is absolutely no reason to have a crashkernel sitting around in
+> >
+> >> each guest, consuming memory, and possibly get corrupt.
+> >>
+> >> 	-hpa
+> >>
+> >
+> >I agree that regular guests should not be using the kexec/kdump. 
+> >However, this patch series is required for allowing a pvops kernel to
+> >be
+> >a crash kernel for Xen, which is very important from dom0/Xen's point
+> >of
+> >view.
 
-Definitely! For Xen, info->max_mapnr gives the maximum machine PFN
-(ie. it corresponds to total memory installed in the machine).
+In fact, a normal kernel is used for dumping, so it can handle both,
+Dom0 crashes _and_ hypervisor crashes. If you wanted to address
+hypervisor crashes, you'd have to allocate some space for that, too, so
+you may view this "madness" as a way to conserve resources.
 
-The data in mem_section describes Dom0 kernel memory map (and gets
-initialized from info->dom0_mapnr). It may be substantially smaller
-than info->max_mapnr...
+The memory area is reserved by the Xen hypervisor, and only the extents
+are passed down to the Dom0 kernel. In other words, there is indeed no
+physical mapping for this area.
 
-A "clean" solution would be to change info->max_mapnr so that it always
-gives the maximum physical PFN, but that doesn't fly very well in
-practice, because memory bitmaps and other stuff must still be sized
-according to the number of machine PFNs, so I would have to add special
-cases all around the place...
-
-OTOH, Michal's patch is still neded to fix non-Xen non-cyclic dumps.
+Having said that, I see no reason why that physical mapping cannot be
+created if it is needed.
 
 Petr T
 
