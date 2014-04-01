@@ -1,40 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUbor-0008HK-Vo
- for kexec@lists.infradead.org; Mon, 31 Mar 2014 13:00:07 +0000
-Received: from /spool/local
- by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 31 Mar 2014 13:59:42 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id A7262219005F
- for <kexec@lists.infradead.org>; Mon, 31 Mar 2014 13:59:32 +0100 (BST)
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
- [9.149.37.247])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s2VCxQQ849283118
- for <kexec@lists.infradead.org>; Mon, 31 Mar 2014 12:59:26 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av12.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s2VCxbbP024328
- for <kexec@lists.infradead.org>; Mon, 31 Mar 2014 06:59:37 -0600
-Date: Mon, 31 Mar 2014 14:59:33 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Message-ID: <20140331145933.4759ee35@holzheu>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
- <20140327145441.4c956989@holzheu>
- <20140328120047.24a056ea@hananiah.suse.cz>
- <20140328174622.2896296e@holzheu> <20140328175303.2ed0232a@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Message-ID: <533A3281.6080907@huawei.com>
+Date: Tue, 1 Apr 2014 11:29:05 +0800
+From: Liu hua <sdu.liu@huawei.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/3] add LPAE support for kexec and kernel (Liu Hua)
+References: <mailman.28599.1395907790.1059.kexec@lists.infradead.org>
+ <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
+ <53356590.3030005@huawei.com>
+ <1897155363.7224032.1396021473883.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1897155363.7224032.1396021473883.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,79 +17,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>
+To: Dave Anderson <anderson@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, "Discussion list for crash utility
+ usage, maintenance and development" <crash-utility@redhat.com>
 
-On Mon, 31 Mar 2014 09:48:05 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-
-> [snip]
-> 
-> >> > That's because the bitmap length is calculated in prepare_bitmap_buffer
-> >> > using info->max_mapnr, but create_1st_bitmap() still loops over all
-> >> > PT_LOAD segments, calling set_bit_on_1st_bitmap() for each PFN. The
-> >> > offset may easily fall beyond the bitmap size.
-> >>
-> >> What about the following patch. It works for me when I specify
-> >> the "--non-cyclic" option.
-> >>
-> >> Michael
-> >> ---
-> >> [PATCH] makedumpfile: Fix bitmap create for adjusted info->max_mapnr
-> >>
-> >> If info->max_mapnr has been adjusted, for example because the dumped
-> >> system has specified the "mem=" kernel parameter, makedumpfile writes
-> >> the following error messages for Xen dumps or when the "--non-cyclic"
-> >> option has been specified:
-> >>
-> >> set_bitmap: Can't read the bitmap(/tmp/kdump_bitmap96s9V8). Success
->                                                                ^^^^^^^^
-> This looks confusing, is it an actual message ?
-> I suppose it must be "Invalid argument" like Petr's log.
-
-Right, I get "Invalid argument".
-
-No idea from where I pasted "Success" here...
-
-> >>
-> >> Fix this and consider "info->max_mapnr" in the create bitmap functions.
-> >>
-> >> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> >> ---
-> >
-
-[snip]
-
-> I found another issue of truncating max_mapnr for Xen.
-> 
-> The bitmap manages MFN(machine frame number) for Xen
-> while __exclude_unnecessary_pages() treats PFN(guest-physical frame number).
-> __exclude_unnecessary_pages() expects that all bits of PFNs
-> are mapped in the bitmap even if it was reduced by truncated 
-> max_mapnr. However, PtoM mapping isn't linear(probably...),
-> there is no guarantee that a set of continuous PFNs is mapped
-> in a set of continuous MFNs.
-> So the actual I/O offset can exceed the bitmap size when the
-> bitmap size is reduced.
-> 
-> In the first place, we shouldn't truncate max_mapnr
-> based on dom0's mem_section since there are some domU's
-> memories on Xen dumps. Now, I think a better way for Xen
-> is just leaving max_mapnr as it is.
-> 
-> Do you agree with my view ?
-
-I don't know the Xen details so I would leave it to Petr
-to answer this question.
-
-Michael
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTQvMy8yOCAyMzo0NCwgRGF2ZSBBbmRlcnNvbiDlhpnpgZM6Cj4gCj4gCj4gLS0tLS0g
+T3JpZ2luYWwgTWVzc2FnZSAtLS0tLQo+PiBPbiAyMDE0LzMvMjcgMjI6MDQsIERhdmUgQW5kZXJz
+b24gd3JvdGU6Cj4+Pgo+Pj4KPj4+IC0tLS0tIE9yaWdpbmFsIE1lc3NhZ2UgLS0tLS0KPj4+Cj4+
+Pj4gVGhlIHBhdGNoIHNlcmllcyBpbnRyb2R1Y2UgTFBBRSBzdXBwb3J0IGZvciB1c2VyIHNwYWNl
+Cj4+Pj4gdXRpbGl0eSBrZXhlYyh0aGUgbGFzdCkgYW5kIEFSTSBsaW51eCBrZXJuZWwodGhlIG90
+aGVycykuCj4+Pj4KPj4+PiBJIGhhdmUgdGVzdGVkIHRoZSBwYXRjaCBzZXJpZXMgaW4gYXJtQTE1
+IHBsYXRmb3JtIHdoaWNoIGhhdmUKPj4+PiBtb3JlIHRoYW4gNEcgbWVtb3J5Lgo+Pj4KPj4+IEhl
+bGxvIExpdSwKPj4+Cj4+PiBJJ20gY3VyaW91cyBob3cgeW91IHRlc3RlZCB0aGlzPyAgVGhlIGNy
+YXNoIHV0aWxpdHkgZG9lcyBub3QgaGF2ZQo+Pj4gYW55IHNwZWNpZmljIHN1cHBvcnQgZm9yIExQ
+QUUgb24gQVJNLCBhbmQgYSBjb3VwbGUgeWVhcnMgYWdvIEkKPj4+IGFza2VkIG9uIHRoZSBjcmFz
+aC11dGlsaXR5IG1haWxpbmcgbGlzdCB3aGV0aGVyIGFueSBvZiB0aGUgQVJNCj4+PiBkZXZlbG9w
+ZXJzIHdlcmUgd29ya2luZyBvbiBpdC4gIEJ1dCBhdCB0aGF0IHRpbWUgbm9uZSBvZiB0aGVtIHdl
+cmUKPj4+IHdvcmtpbmcgd2l0aCBMUEFFLiAgSSBzZWUgdGhhdCB5b3UgYXJlIG9uIHRoZSBjcmFz
+aC11dGlsaXR5IG1haWxpbmcKPj4+IGxpc3QgLS0gYXJlIHlvdSBwbGFubmluZyB0byBwb3N0IGZv
+bGxvdy11cCBwYXRjaGVzIHRvIHRoZSBjcmFzaC11dGlsaXR5Pwo+Pj4KPj4+IFRoYW5rcywKPj4+
+ICAgRGF2ZQo+Pgo+PiBZZXMsIHlvdSBhcmUgdmVyeSAic2Vuc2l0aXZlIiEgb3VyIHRlYW0gaGFz
+IHdvcmtlZCBvbiBpdCBmb3IgYSB3aGlsZS4gQW5kCj4+IHdlIHdlbnQgdGhyb3VnaCB0aGUgd2hv
+bGUga2R1bXAgcHJvY2VzcyBmb3IgTFBBRSBlbmFibGVkIEFSTS4gT3VyIGNoYW5nZXMKPj4gaW5j
+bHVkZSBrZXhlYy10b29scywgbWFrZWR1bXBmaWxlLCBjcmFzaCB1dGlsaXR5IGFuZCB0aGUga2Vy
+bmVsLgo+Pgo+PiBCdXQgd2UgZGlkIHRoYXQgaW4gYSByYXRoZXIgbGltaXRlZCB0aW1lLiBTbyBz
+b21lIHBhdGNoZXMgYXJlIHNpbGx5IGFuZAo+PiBuZWVkIHRvIGJlIHJlY29uc3RydWN0ZWQgYmVm
+b3JlIHN1Ym1pc3Npb24uIEluIGFkZGl0aW9uLCBteSBqb2IgaXMgcXVpdAo+PiBmdWxsIG5vdy4g
+U28gSSBkZWNpZGUgdG8gcG9zdCB0aGUgcGF0Y2ggc2VyaWVzIHRoYXQgYXJlIGNsZWFyIGFuZAo+
+PiBpbmRlcGVuZGVudCBvZiB0aGUgb3RoZXJzIGF0IGZpcnN0Lgo+Pgo+PiBCdXQgSSBnb3Qgbm8g
+cmVzcG9uc2UgZnJvbSB0aGUgbGludXgtYXJtIGFuZCBrZXhlYyBtYWlsaW5nbGlzdC4gV2hhdCBh
+Ym91dAo+PiB5b3VyIG9waW5pb24gYWJvdXQgdGhlIGZlYXR1cmUgb2YgTFBBRSBzdXBwb3J0IGZv
+ciBrZHVtcCByZWxhdGVkIHRvb2xzCj4+IGluY2x1ZGluZyBjcmFzaCB1dGlsaXR5IGFuZCB0aGUg
+a2VybmVsPwo+IAo+IEkgY2FuJ3Qgc3BlYWsgZm9yIHRoZSBsaW51eC1hcm0gYW5kIGtleGVjIG1h
+aWxpbmcgbGlzdHMsIGJ1dCBjZXJ0YWlubHkgCj4gd2hlbiB5b3UgcG9zdCB5b3VyIGNyYXNoLXJl
+bGF0ZWQgcGF0Y2hlcyBvbiB0aGUgY3Jhc2gtdXRpbGl0eSBtYWlsaW5nIAo+IGxpc3QsIEknbGwg
+cmV2aWV3LCByZXNwb25kLCBhbmQgZ2V0IHRoZW0gaW4gcGxhY2UgYXMgc29vbiBhcyBwb3NzaWJs
+ZS4KPiAKPiBUaGFua3MsCj4gICBEYXZlCgpIaSBEYXZlLAoKVGhhdCdzIGdyZWF0LiBJIHdpbGwg
+cG9zdCBjcmFzaC1yZWxhdGVkIHBhdGNoZXMgYWZ0ZXIgZmluaXNoaW5nIG15Cndvcmsgb24gaGFu
+ZCwgcGVyaGFwcyB0d28gd2Vla3Mgb3IgbG9uZ2VyLiBUaGFua3MgdG8geW91ciBhZHZpY2UuCgpU
+aGFua3MsCkxpdSBIdWEKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
