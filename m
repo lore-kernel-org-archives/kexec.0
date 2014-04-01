@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUqx1-0007JT-JA
- for kexec@lists.infradead.org; Tue, 01 Apr 2014 05:09:33 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Date: Tue, 1 Apr 2014 05:06:33 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FBB75@BPXM01GP.gisp.nec.co.jp>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
- <20140327145441.4c956989@holzheu> <20140328120047.24a056ea@hananiah.suse.cz>
- <20140328174622.2896296e@holzheu> <20140328175303.2ed0232a@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
- <20140331123742.21beb21a@hananiah.suse.cz>
-In-Reply-To: <20140331123742.21beb21a@hananiah.suse.cz>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WUsko-0000b9-7w
+ for kexec@lists.infradead.org; Tue, 01 Apr 2014 07:05:04 +0000
+Date: Tue, 1 Apr 2014 15:04:30 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
+ kernel to boot into
+Message-ID: <20140401070429.GI2944@dhcp-17-89.nay.redhat.com>
+References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
+ <1395216241-13983-3-git-send-email-chaowang@redhat.com>
+ <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
+ <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
+ <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,58 +28,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>, "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-[...]
->>
->> In the first place, we shouldn't truncate max_mapnr
->> based on dom0's mem_section since there are some domU's
->> memories on Xen dumps. Now, I think a better way for Xen
->> is just leaving max_mapnr as it is.
->>
->> Do you agree with my view ?
->
->Definitely! For Xen, info->max_mapnr gives the maximum machine PFN
->(ie. it corresponds to total memory installed in the machine).
->
->The data in mem_section describes Dom0 kernel memory map (and gets
->initialized from info->dom0_mapnr). It may be substantially smaller
->than info->max_mapnr...
+On 03/28/14 at 02:43pm, Dave Young wrote:
+> On 03/28/14 at 02:13pm, WANG Chao wrote:
+> > On 03/28/14 at 11:24am, Dave Young wrote:
+> > > >  
+> > > > +static void exclude_ram(struct memory_range *mr, int *nr_mr)
+> > > > +{
+> > > > +	int ranges, i, j, m;
+> > > > +
+> > > > +	ranges = *nr_mr;
+> > > > +	for (i = 0, j = 0; i < ranges; i++) {
+> > > > +		if (mr[j].type == RANGE_RAM) {
+> > > > +			dbgprintf("Remove RAM %016llx-%016llxx: (%d)\n", mr[j].start, mr[j].end, mr[j].type);
+> > > > +			for (m = j; m < *nr_mr; m++)
+> > > > +				mr[m] = mr[m+1];
+> > > > +			(*nr_mr)--;
+> > > > +		} else {
+> > > > +			j++;
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +	dbgprint_mem_range("After remove RAM", mr, *nr_mr);
+> > > > +}
+> > > 
+> > > This is probably not necessary, what I understand you are doing is below:
+> > > 
+> > > get_crash_memory_ranges()
+> > >  -> collect all SYSTEM_RAM, ACPI, ACPI_NVS ranges, exclude crash reserved ranges.
+> > >  -> the system ram ranges are used to create elf header
+> > >  -> the ACPI, ACPI_NVS ranges are used by cmdline_add_memmap_acpi etc.
+> > 
+> > Yes.
+> > 
+> > > 
+> > > memmap_p
+> > >  -> contains all the crash reserved ranges
+> > >  -> to be used by cmdline_add_memmap
+> > 
+> > There's no memmap_p. I'll reuse crash_memory_ranges structure to store
+> > crash reserved ranges, ACPI and ACPI_NVS ranges. So after building ELF
+> > headers for 1st kernel memory ranges, all I have to do is exclude the
+> > SYSTEM_RAM and add crash_reserved to crash_memory_ranges. And then
+> > crash_memory_ranges can be used as 2nd kernel memory ranges.
+> 
+> How about do nothing and directly use the mem_ranges:
+>  * skip RANGE_RAM, only add the range which is not RANGE_RAM
+>  * if the range is RANGE_CRASH_KERNEL (introduce a new type?) then use it as SYSTEM_RAM for 2nd kernel.
 
-Thanks for your confirming.
-
->A "clean" solution would be to change info->max_mapnr so that it always
->gives the maximum physical PFN, but that doesn't fly very well in
->practice, because memory bitmaps and other stuff must still be sized
->according to the number of machine PFNs, so I would have to add special
->cases all around the place...
-
-I don't know how to capture a dump on Xen well, so do you have any idea
-how to produce the difference between actual memory regions and the ELF
-header like the s390 case ?
-If it isn't possible, we don't need to change info->max_mapnr since the
-value calculated from the ELF header must be correct.
-
->OTOH, Michal's patch is still neded to fix non-Xen non-cyclic dumps.
-
-Yes, the fix for create_1st_bitmap() is still necessary.
-
-Michael, could you fix your patch ? We need to add the conditional
-check for Xen like below:
-
-+	if (!is_xen_memory()) {
-+	       for (i = 0; i < info->num_mem_map; i++) {
-+   	            if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
-+       	                continue;
-+           	    max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
-+       	}
-+       	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
-+	}
-
+I prefer not do this change in this patchset. Since current
+implementation is fine, it looks more like a cleanup to me and we can do
+that later.
 
 Thanks
-Atsushi Kumagai
+WANG Chao
 
 _______________________________________________
 kexec mailing list
