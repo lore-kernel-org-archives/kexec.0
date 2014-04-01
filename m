@@ -1,25 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUvNG-00038Q-3K
- for kexec@lists.infradead.org; Tue, 01 Apr 2014 09:52:55 +0000
-Date: Tue, 1 Apr 2014 17:52:27 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
- kernel to boot into
-Message-ID: <20140401095227.GM2944@dhcp-17-89.nay.redhat.com>
-References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
- <1395216241-13983-3-git-send-email-chaowang@redhat.com>
- <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
- <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
- <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
- <20140401070429.GI2944@dhcp-17-89.nay.redhat.com>
- <20140401084119.GB15841@dhcp-16-126.nay.redhat.com>
- <20140401085414.GL2944@dhcp-17-89.nay.redhat.com>
- <20140401093627.GA22714@dhcp-16-126.nay.redhat.com>
+Received: from g6t1526.atlanta.hp.com ([15.193.200.69])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WUvwC-0003y5-AO
+ for kexec@lists.infradead.org; Tue, 01 Apr 2014 10:29:00 +0000
+Subject: [PATCH v2] makedumpfile: cleanup: reduce unnecessary memory copy
+From: Jingbai Ma <jingbai.ma@hp.com>
+Date: Tue, 01 Apr 2014 18:28:26 +0800
+Message-ID: <20140401102826.31131.85379.stgit@k.asiapacific.hpqcorp.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140401093627.GA22714@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,89 +20,124 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, lisa.mitchell@hp.com
 
-On 04/01/14 at 05:36pm, Dave Young wrote:
-> On 04/01/14 at 04:54pm, WANG Chao wrote:
-> > On 04/01/14 at 04:41pm, Dave Young wrote:
-> > > On 04/01/14 at 03:04pm, WANG Chao wrote:
-> > > > On 03/28/14 at 02:43pm, Dave Young wrote:
-> > > > > On 03/28/14 at 02:13pm, WANG Chao wrote:
-> > > > > > On 03/28/14 at 11:24am, Dave Young wrote:
-> > > > > > > >  
-> > > > > > > > +static void exclude_ram(struct memory_range *mr, int *nr_mr)
-> > > > > > > > +{
-> > > > > > > > +	int ranges, i, j, m;
-> > > > > > > > +
-> > > > > > > > +	ranges = *nr_mr;
-> > > > > > > > +	for (i = 0, j = 0; i < ranges; i++) {
-> > > > > > > > +		if (mr[j].type == RANGE_RAM) {
-> > > > > > > > +			dbgprintf("Remove RAM %016llx-%016llxx: (%d)\n", mr[j].start, mr[j].end, mr[j].type);
-> > > > > > > > +			for (m = j; m < *nr_mr; m++)
-> > > > > > > > +				mr[m] = mr[m+1];
-> > > > > > > > +			(*nr_mr)--;
-> > > > > > > > +		} else {
-> > > > > > > > +			j++;
-> > > > > > > > +		}
-> > > > > > > > +	}
-> > > > > > > > +
-> > > > > > > > +	dbgprint_mem_range("After remove RAM", mr, *nr_mr);
-> > > > > > > > +}
-> > > > > > > 
-> > > > > > > This is probably not necessary, what I understand you are doing is below:
-> > > > > > > 
-> > > > > > > get_crash_memory_ranges()
-> > > > > > >  -> collect all SYSTEM_RAM, ACPI, ACPI_NVS ranges, exclude crash reserved ranges.
-> > > > > > >  -> the system ram ranges are used to create elf header
-> > > > > > >  -> the ACPI, ACPI_NVS ranges are used by cmdline_add_memmap_acpi etc.
-> > > > > > 
-> > > > > > Yes.
-> > > > > > 
-> > > > > > > 
-> > > > > > > memmap_p
-> > > > > > >  -> contains all the crash reserved ranges
-> > > > > > >  -> to be used by cmdline_add_memmap
-> > > > > > 
-> > > > > > There's no memmap_p. I'll reuse crash_memory_ranges structure to store
-> > > > > > crash reserved ranges, ACPI and ACPI_NVS ranges. So after building ELF
-> > > > > > headers for 1st kernel memory ranges, all I have to do is exclude the
-> > > > > > SYSTEM_RAM and add crash_reserved to crash_memory_ranges. And then
-> > > > > > crash_memory_ranges can be used as 2nd kernel memory ranges.
-> > > > > 
-> > > > > How about do nothing and directly use the mem_ranges:
-> > > > >  * skip RANGE_RAM, only add the range which is not RANGE_RAM
-> > > > >  * if the range is RANGE_CRASH_KERNEL (introduce a new type?) then use it as SYSTEM_RAM for 2nd kernel.
-> > > > 
-> > > > I prefer not do this change in this patchset. Since current
-> > > > implementation is fine, it looks more like a cleanup to me and we can do
-> > > > that later.
-> > > 
-> > > Ok, that's fine, but I'm still not keen about exclude_ram. Could you manage
-> > > to drop this function? 
-> > 
-> > exclude_ram() is just a static function that my code would use and I
-> > certainly need a function like that this time. So why are you still keen
-> > about dropping it :(
-> 
-> Just suppose you agree with the future cleanup, you introduce it now and remove it
-> later it looks not good so I wonder if it's possible to drop it now and check the
-> range type instead.
+This patch intends to reduce unnecessary memory copy in compressing memory
+blocks.
 
-The cleanup is another topic. What to clean up and how to clean up is
-yet to be determined.
+Changelog:
+v2:
+- Simplify write buffer out logic.
+- Add benchmark result.
 
-I personally agree with cleanup in the future, but it still depends on
-many things and I can't make any promise that exclude_ram can be removed
-in the future.
+old logic like this:
+    compress(buf_out, &size_out, buf, size);
+    ...
+    memcpy(buf, buf_out, pd.size);
+    ...
+    write_cache(cd_page, buf, pd.size)
 
-> 
-> If it's a *must* then I will not object
+new logic:
+    compress(buf_out, &size_out, buf, size);
+    ...
+    if (compressed?)
+        write_cache(cd_page, buf_out, pd.size)
+    else
+        write_cache(cd_page, buf, pd.size)
 
-OK. I'll use it, unless I figure out something else ...
+This occurs for each single page, so by the new logic it can reduce a lot of
+unnecessary memcpy() on machines with huge memory.
 
-Thanks for your suggestions!
-WANG Chao
+Benchmark:
+Hardware: HP BL280c G6 Blade Server with 32GB RAM
+Test method: Run 10 times test for original and patched makedumpfile, and get
+the average time of the "Copying data" stage.
+makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore /dev/null
+
+Original: 7.089s
+ Patched: 7.092s
+
+Taking into account measurement error, two test results can be regarded as the
+same. That's mean there is no measurable difference on a machine with 32GB RAM.
+
+
+Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+---
+ makedumpfile.c |   10 ++--------
+ 1 files changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 23251a1..c9fa44c 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6245,7 +6245,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ 		    && (size_out < info->page_size)) {
+ 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
+ 			pd.size  = size_out;
+-			memcpy(buf, buf_out, pd.size);
+ #ifdef USELZO
+ 		} else if (info->flag_lzo_support
+ 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
+@@ -6255,7 +6254,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ 			   && (size_out < info->page_size)) {
+ 			pd.flags = DUMP_DH_COMPRESSED_LZO;
+ 			pd.size  = size_out;
+-			memcpy(buf, buf_out, pd.size);
+ #endif
+ #ifdef USESNAPPY
+ 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
+@@ -6267,7 +6265,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ 			   && (size_out < info->page_size)) {
+ 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
+ 			pd.size  = size_out;
+-			memcpy(buf, buf_out, pd.size);
+ #endif
+ 		} else {
+ 			pd.flags = 0;
+@@ -6286,7 +6283,7 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ 		/*
+ 		 * Write the page data.
+ 		 */
+-		if (!write_cache(cd_page, buf, pd.size))
++		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
+ 			goto out;
+ 	}
+ 
+@@ -6424,7 +6421,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 		    && (size_out < info->page_size)) {
+ 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
+ 			pd.size  = size_out;
+-			memcpy(buf, buf_out, pd.size);
+ #ifdef USELZO
+ 		} else if (info->flag_lzo_support
+ 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
+@@ -6434,7 +6430,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 			   && (size_out < info->page_size)) {
+ 			pd.flags = DUMP_DH_COMPRESSED_LZO;
+ 			pd.size  = size_out;
+-			memcpy(buf, buf_out, pd.size);
+ #endif
+ #ifdef USESNAPPY
+ 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
+@@ -6446,7 +6441,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 			   && (size_out < info->page_size)) {
+ 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
+ 			pd.size  = size_out;
+-			memcpy(buf, buf_out, pd.size);
+ #endif
+ 		} else {
+ 			pd.flags = 0;
+@@ -6465,7 +6459,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+                 /*
+                  * Write the page data.
+                  */
+-                if (!write_cache(cd_page, buf, pd.size))
++		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
+                         goto out;
+         }
+ 
+
 
 _______________________________________________
 kexec mailing list
