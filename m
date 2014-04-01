@@ -1,42 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUus7-0002E8-2u
- for kexec@lists.infradead.org; Tue, 01 Apr 2014 09:20:44 +0000
-Received: from /spool/local
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Tue, 1 Apr 2014 10:20:18 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com
- (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9958C219005E
- for <kexec@lists.infradead.org>; Tue,  1 Apr 2014 10:20:09 +0100 (BST)
-Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
- [9.149.37.216])
- by b06cxnps3075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s319K3ZP1114398
- for <kexec@lists.infradead.org>; Tue, 1 Apr 2014 09:20:03 GMT
-Received: from d06av04.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av04.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s319KEJF018685
- for <kexec@lists.infradead.org>; Tue, 1 Apr 2014 03:20:14 -0600
-Date: Tue, 1 Apr 2014 11:20:11 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Message-ID: <20140401112011.63924d6a@holzheu>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FBB75@BPXM01GP.gisp.nec.co.jp>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
- <20140327145441.4c956989@holzheu>
- <20140328120047.24a056ea@hananiah.suse.cz>
- <20140328174622.2896296e@holzheu> <20140328175303.2ed0232a@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
- <20140331123742.21beb21a@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE971FBB75@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WUv3f-0002da-5q
+ for kexec@lists.infradead.org; Tue, 01 Apr 2014 09:32:41 +0000
+Date: Tue, 1 Apr 2014 16:41:19 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
+ kernel to boot into
+Message-ID: <20140401084119.GB15841@dhcp-16-126.nay.redhat.com>
+References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
+ <1395216241-13983-3-git-send-email-chaowang@redhat.com>
+ <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
+ <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
+ <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
+ <20140401070429.GI2944@dhcp-17-89.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140401070429.GI2944@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,93 +29,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On Tue, 1 Apr 2014 05:06:33 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-
-[...]
-
-> >OTOH, Michal's patch is still neded to fix non-Xen non-cyclic dumps.
+On 04/01/14 at 03:04pm, WANG Chao wrote:
+> On 03/28/14 at 02:43pm, Dave Young wrote:
+> > On 03/28/14 at 02:13pm, WANG Chao wrote:
+> > > On 03/28/14 at 11:24am, Dave Young wrote:
+> > > > >  
+> > > > > +static void exclude_ram(struct memory_range *mr, int *nr_mr)
+> > > > > +{
+> > > > > +	int ranges, i, j, m;
+> > > > > +
+> > > > > +	ranges = *nr_mr;
+> > > > > +	for (i = 0, j = 0; i < ranges; i++) {
+> > > > > +		if (mr[j].type == RANGE_RAM) {
+> > > > > +			dbgprintf("Remove RAM %016llx-%016llxx: (%d)\n", mr[j].start, mr[j].end, mr[j].type);
+> > > > > +			for (m = j; m < *nr_mr; m++)
+> > > > > +				mr[m] = mr[m+1];
+> > > > > +			(*nr_mr)--;
+> > > > > +		} else {
+> > > > > +			j++;
+> > > > > +		}
+> > > > > +	}
+> > > > > +
+> > > > > +	dbgprint_mem_range("After remove RAM", mr, *nr_mr);
+> > > > > +}
+> > > > 
+> > > > This is probably not necessary, what I understand you are doing is below:
+> > > > 
+> > > > get_crash_memory_ranges()
+> > > >  -> collect all SYSTEM_RAM, ACPI, ACPI_NVS ranges, exclude crash reserved ranges.
+> > > >  -> the system ram ranges are used to create elf header
+> > > >  -> the ACPI, ACPI_NVS ranges are used by cmdline_add_memmap_acpi etc.
+> > > 
+> > > Yes.
+> > > 
+> > > > 
+> > > > memmap_p
+> > > >  -> contains all the crash reserved ranges
+> > > >  -> to be used by cmdline_add_memmap
+> > > 
+> > > There's no memmap_p. I'll reuse crash_memory_ranges structure to store
+> > > crash reserved ranges, ACPI and ACPI_NVS ranges. So after building ELF
+> > > headers for 1st kernel memory ranges, all I have to do is exclude the
+> > > SYSTEM_RAM and add crash_reserved to crash_memory_ranges. And then
+> > > crash_memory_ranges can be used as 2nd kernel memory ranges.
+> > 
+> > How about do nothing and directly use the mem_ranges:
+> >  * skip RANGE_RAM, only add the range which is not RANGE_RAM
+> >  * if the range is RANGE_CRASH_KERNEL (introduce a new type?) then use it as SYSTEM_RAM for 2nd kernel.
 > 
-> Yes, the fix for create_1st_bitmap() is still necessary.
-> 
-> Michael, could you fix your patch ? We need to add the conditional
-> check for Xen like below:
-> 
-> +	if (!is_xen_memory()) {
-> +	       for (i = 0; i < info->num_mem_map; i++) {
-> +   	            if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
-> +       	                continue;
-> +           	    max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
-> +       	}
-> +       	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
-> +	}
+> I prefer not do this change in this patchset. Since current
+> implementation is fine, it looks more like a cleanup to me and we can do
+> that later.
 
-Hello Atsushi and Petr,
+Ok, that's fine, but I'm still not keen about exclude_ram. Could you manage
+to drop this function? 
 
-Based on the discussion I removed the checks in exclude_xen3_user_domain()
-and exclude_xen4_user_domain() and added the is_xen_memory() check
-int get_mem_map().
-
-Here the updated patch:
----
-[PATCH] makedumpfile: Fix bitmap create for adjusted info->max_mapnr
-
-If info->max_mapnr has been adjusted, for example because the dumped
-system has specified the "mem=" kernel parameter, makedumpfile writes
-the following error messages for Xen dumps or when the "--non-cyclic"
-option has been specified:
-
-set_bitmap: Can't read the bitmap(/tmp/kdump_bitmapBsKAUe). Invalid argument
-
-Fix this and consider "info->max_mapnr" in the create_1st_bitmap() function.
-
-In addition to this, do not adjust max_mapnr for Xen dumps.
-For Xen info->max_mapnr gives the maximum machine PFN and the data
-in mem_section describes the Dom0 kernel memory map that gets
-initialized from info->dom0_mapnr. It may be substantially smaller
-than info->max_mapnr.
-
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- makedumpfile.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2868,12 +2868,14 @@ get_mem_map(void)
- 	 * than is dumped. For example when "mem=" has been used for the
- 	 * dumped system.
- 	 */
--	for (i = 0; i < info->num_mem_map; i++) {
--		if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
--			continue;
--		max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
-+	if (!is_xen_memory()) {
-+		for (i = 0; i < info->num_mem_map; i++) {
-+			if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
-+				continue;
-+			max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
-+		}
-+		info->max_mapnr = MIN(info->max_mapnr, max_pfn);
- 	}
--	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
- 	return ret;
- }
- 
-@@ -4402,6 +4404,9 @@ create_1st_bitmap(void)
- 
- 		pfn_start = paddr_to_pfn(phys_start);
- 		pfn_end   = paddr_to_pfn(phys_end);
-+		if (pfn_start > info->max_mapnr)
-+			continue;
-+		pfn_end = MIN(pfn_end, info->max_mapnr);
- 
- 		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
- 			set_bit_on_1st_bitmap(pfn);
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
