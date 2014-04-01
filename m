@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Message-ID: <533A3281.6080907@huawei.com>
-Date: Tue, 1 Apr 2014 11:29:05 +0800
-From: Liu hua <sdu.liu@huawei.com>
+Received: from szxga01-in.huawei.com ([119.145.14.64])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WUqPF-0006tL-58
+ for kexec@lists.infradead.org; Tue, 01 Apr 2014 04:34:40 +0000
+From: Wang Nan <wangnan0@huawei.com>
+Subject: [PATCH] makedumpfile: inhibit predefined macros when cross building
+Date: Tue, 1 Apr 2014 12:28:40 +0800
+Message-ID: <1396326520-42618-1-git-send-email-wangnan0@huawei.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] add LPAE support for kexec and kernel (Liu Hua)
-References: <mailman.28599.1395907790.1059.kexec@lists.infradead.org>
- <420609342.5318732.1395929059090.JavaMail.zimbra@redhat.com>
- <53356590.3030005@huawei.com>
- <1897155363.7224032.1396021473883.JavaMail.zimbra@redhat.com>
-In-Reply-To: <1897155363.7224032.1396021473883.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,48 +16,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, "Discussion list for crash utility
- usage, maintenance and development" <crash-utility@redhat.com>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: Wang Nan <wangnan0@huawei.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-5LqOIDIwMTQvMy8yOCAyMzo0NCwgRGF2ZSBBbmRlcnNvbiDlhpnpgZM6Cj4gCj4gCj4gLS0tLS0g
-T3JpZ2luYWwgTWVzc2FnZSAtLS0tLQo+PiBPbiAyMDE0LzMvMjcgMjI6MDQsIERhdmUgQW5kZXJz
-b24gd3JvdGU6Cj4+Pgo+Pj4KPj4+IC0tLS0tIE9yaWdpbmFsIE1lc3NhZ2UgLS0tLS0KPj4+Cj4+
-Pj4gVGhlIHBhdGNoIHNlcmllcyBpbnRyb2R1Y2UgTFBBRSBzdXBwb3J0IGZvciB1c2VyIHNwYWNl
-Cj4+Pj4gdXRpbGl0eSBrZXhlYyh0aGUgbGFzdCkgYW5kIEFSTSBsaW51eCBrZXJuZWwodGhlIG90
-aGVycykuCj4+Pj4KPj4+PiBJIGhhdmUgdGVzdGVkIHRoZSBwYXRjaCBzZXJpZXMgaW4gYXJtQTE1
-IHBsYXRmb3JtIHdoaWNoIGhhdmUKPj4+PiBtb3JlIHRoYW4gNEcgbWVtb3J5Lgo+Pj4KPj4+IEhl
-bGxvIExpdSwKPj4+Cj4+PiBJJ20gY3VyaW91cyBob3cgeW91IHRlc3RlZCB0aGlzPyAgVGhlIGNy
-YXNoIHV0aWxpdHkgZG9lcyBub3QgaGF2ZQo+Pj4gYW55IHNwZWNpZmljIHN1cHBvcnQgZm9yIExQ
-QUUgb24gQVJNLCBhbmQgYSBjb3VwbGUgeWVhcnMgYWdvIEkKPj4+IGFza2VkIG9uIHRoZSBjcmFz
-aC11dGlsaXR5IG1haWxpbmcgbGlzdCB3aGV0aGVyIGFueSBvZiB0aGUgQVJNCj4+PiBkZXZlbG9w
-ZXJzIHdlcmUgd29ya2luZyBvbiBpdC4gIEJ1dCBhdCB0aGF0IHRpbWUgbm9uZSBvZiB0aGVtIHdl
-cmUKPj4+IHdvcmtpbmcgd2l0aCBMUEFFLiAgSSBzZWUgdGhhdCB5b3UgYXJlIG9uIHRoZSBjcmFz
-aC11dGlsaXR5IG1haWxpbmcKPj4+IGxpc3QgLS0gYXJlIHlvdSBwbGFubmluZyB0byBwb3N0IGZv
-bGxvdy11cCBwYXRjaGVzIHRvIHRoZSBjcmFzaC11dGlsaXR5Pwo+Pj4KPj4+IFRoYW5rcywKPj4+
-ICAgRGF2ZQo+Pgo+PiBZZXMsIHlvdSBhcmUgdmVyeSAic2Vuc2l0aXZlIiEgb3VyIHRlYW0gaGFz
-IHdvcmtlZCBvbiBpdCBmb3IgYSB3aGlsZS4gQW5kCj4+IHdlIHdlbnQgdGhyb3VnaCB0aGUgd2hv
-bGUga2R1bXAgcHJvY2VzcyBmb3IgTFBBRSBlbmFibGVkIEFSTS4gT3VyIGNoYW5nZXMKPj4gaW5j
-bHVkZSBrZXhlYy10b29scywgbWFrZWR1bXBmaWxlLCBjcmFzaCB1dGlsaXR5IGFuZCB0aGUga2Vy
-bmVsLgo+Pgo+PiBCdXQgd2UgZGlkIHRoYXQgaW4gYSByYXRoZXIgbGltaXRlZCB0aW1lLiBTbyBz
-b21lIHBhdGNoZXMgYXJlIHNpbGx5IGFuZAo+PiBuZWVkIHRvIGJlIHJlY29uc3RydWN0ZWQgYmVm
-b3JlIHN1Ym1pc3Npb24uIEluIGFkZGl0aW9uLCBteSBqb2IgaXMgcXVpdAo+PiBmdWxsIG5vdy4g
-U28gSSBkZWNpZGUgdG8gcG9zdCB0aGUgcGF0Y2ggc2VyaWVzIHRoYXQgYXJlIGNsZWFyIGFuZAo+
-PiBpbmRlcGVuZGVudCBvZiB0aGUgb3RoZXJzIGF0IGZpcnN0Lgo+Pgo+PiBCdXQgSSBnb3Qgbm8g
-cmVzcG9uc2UgZnJvbSB0aGUgbGludXgtYXJtIGFuZCBrZXhlYyBtYWlsaW5nbGlzdC4gV2hhdCBh
-Ym91dAo+PiB5b3VyIG9waW5pb24gYWJvdXQgdGhlIGZlYXR1cmUgb2YgTFBBRSBzdXBwb3J0IGZv
-ciBrZHVtcCByZWxhdGVkIHRvb2xzCj4+IGluY2x1ZGluZyBjcmFzaCB1dGlsaXR5IGFuZCB0aGUg
-a2VybmVsPwo+IAo+IEkgY2FuJ3Qgc3BlYWsgZm9yIHRoZSBsaW51eC1hcm0gYW5kIGtleGVjIG1h
-aWxpbmcgbGlzdHMsIGJ1dCBjZXJ0YWlubHkgCj4gd2hlbiB5b3UgcG9zdCB5b3VyIGNyYXNoLXJl
-bGF0ZWQgcGF0Y2hlcyBvbiB0aGUgY3Jhc2gtdXRpbGl0eSBtYWlsaW5nIAo+IGxpc3QsIEknbGwg
-cmV2aWV3LCByZXNwb25kLCBhbmQgZ2V0IHRoZW0gaW4gcGxhY2UgYXMgc29vbiBhcyBwb3NzaWJs
-ZS4KPiAKPiBUaGFua3MsCj4gICBEYXZlCgpIaSBEYXZlLAoKVGhhdCdzIGdyZWF0LiBJIHdpbGwg
-cG9zdCBjcmFzaC1yZWxhdGVkIHBhdGNoZXMgYWZ0ZXIgZmluaXNoaW5nIG15Cndvcmsgb24gaGFu
-ZCwgcGVyaGFwcyB0d28gd2Vla3Mgb3IgbG9uZ2VyLiBUaGFua3MgdG8geW91ciBhZHZpY2UuCgpU
-aGFua3MsCkxpdSBIdWEKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+When cross building makedumpfile, for example, build x86_64 exec for
+dealing with arm vmcore, makefile passes a "-D__arm__" to gcc, but gcc
+predefined macros still take effect, defines "__x86_64__". Which makes
+definitions for x86_64 and arm mixed together in makedumpfile.h, causes
+many problems.
+
+This patch changes Makefile: if host arch and target arch are different,
+passes "-U__$(HOST_ARCH)__" to gcc.
+
+I have tested by running following command on x86_64 machine:
+
+make ARCH=arm
+
+Signed-off-by: Wang Nan <wangnan0@huawei.com>
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
+Cc: Geng Hui <hui.geng@huawei.com>
+---
+ Makefile | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 2f4845c..f85cc21 100644
+--- a/Makefile
++++ b/Makefile
+@@ -15,10 +15,11 @@ CFLAGS_ARCH	= -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+ 		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+ # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+ 
++HOST_ARCH := $(shell uname -m)
+ # Use TARGET as the target architecture if specified.
+ # Defaults to uname -m
+ ifeq ($(strip($TARGET)),)
+-TARGET := $(shell uname -m)
++TARGET := $(HOST_ARCH)
+ endif
+ 
+ ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+@@ -26,8 +27,13 @@ ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+ 			       -e s/s390x/s390/ -e s/parisc64/parisc/ \
+ 			       -e s/ppc64/powerpc64/ -e s/ppc/powerpc32/)
+ 
+-CFLAGS += -D__$(ARCH)__
+-CFLAGS_ARCH += -D__$(ARCH)__
++CROSS :=
++ifneq ($(TARGET), $(HOST_ARCH))
++CROSS := -U__$(HOST_ARCH)__
++endif
++
++CFLAGS += -D__$(ARCH)__ $(CROSS)
++CFLAGS_ARCH += -D__$(ARCH)__ $(CROSS)
+ 
+ ifeq ($(ARCH), powerpc64)
+ CFLAGS += -m64
+-- 
+1.8.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
