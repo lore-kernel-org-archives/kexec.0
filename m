@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUuSy-0003Cz-4C
- for kexec@lists.infradead.org; Tue, 01 Apr 2014 08:54:45 +0000
-Date: Tue, 1 Apr 2014 16:54:14 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v4 2/4] x86: Store memory ranges globally used for crash
- kernel to boot into
-Message-ID: <20140401085414.GL2944@dhcp-17-89.nay.redhat.com>
-References: <1395216241-13983-1-git-send-email-chaowang@redhat.com>
- <1395216241-13983-3-git-send-email-chaowang@redhat.com>
- <20140328032438.GD26116@dhcp-16-126.nay.redhat.com>
- <20140328061353.GF2944@dhcp-17-89.nay.redhat.com>
- <20140328064330.GG26116@dhcp-16-126.nay.redhat.com>
- <20140401070429.GI2944@dhcp-17-89.nay.redhat.com>
- <20140401084119.GB15841@dhcp-16-126.nay.redhat.com>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WUum1-0001wh-NN
+ for kexec@lists.infradead.org; Tue, 01 Apr 2014 09:14:27 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH v3] makedumpfile: Fix a segment fault in dumping not
+ aligned ELF segment
+Date: Tue, 1 Apr 2014 09:12:59 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FC057@BPXM01GP.gisp.nec.co.jp>
+References: <20140331080130.25019.16463.stgit@k.asiapacific.hpqcorp.net>
+In-Reply-To: <20140331080130.25019.16463.stgit@k.asiapacific.hpqcorp.net>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140401084119.GB15841@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,72 +24,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>, "chaowang@redhat.com" <chaowang@redhat.com>
 
-On 04/01/14 at 04:41pm, Dave Young wrote:
-> On 04/01/14 at 03:04pm, WANG Chao wrote:
-> > On 03/28/14 at 02:43pm, Dave Young wrote:
-> > > On 03/28/14 at 02:13pm, WANG Chao wrote:
-> > > > On 03/28/14 at 11:24am, Dave Young wrote:
-> > > > > >  
-> > > > > > +static void exclude_ram(struct memory_range *mr, int *nr_mr)
-> > > > > > +{
-> > > > > > +	int ranges, i, j, m;
-> > > > > > +
-> > > > > > +	ranges = *nr_mr;
-> > > > > > +	for (i = 0, j = 0; i < ranges; i++) {
-> > > > > > +		if (mr[j].type == RANGE_RAM) {
-> > > > > > +			dbgprintf("Remove RAM %016llx-%016llxx: (%d)\n", mr[j].start, mr[j].end, mr[j].type);
-> > > > > > +			for (m = j; m < *nr_mr; m++)
-> > > > > > +				mr[m] = mr[m+1];
-> > > > > > +			(*nr_mr)--;
-> > > > > > +		} else {
-> > > > > > +			j++;
-> > > > > > +		}
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	dbgprint_mem_range("After remove RAM", mr, *nr_mr);
-> > > > > > +}
-> > > > > 
-> > > > > This is probably not necessary, what I understand you are doing is below:
-> > > > > 
-> > > > > get_crash_memory_ranges()
-> > > > >  -> collect all SYSTEM_RAM, ACPI, ACPI_NVS ranges, exclude crash reserved ranges.
-> > > > >  -> the system ram ranges are used to create elf header
-> > > > >  -> the ACPI, ACPI_NVS ranges are used by cmdline_add_memmap_acpi etc.
-> > > > 
-> > > > Yes.
-> > > > 
-> > > > > 
-> > > > > memmap_p
-> > > > >  -> contains all the crash reserved ranges
-> > > > >  -> to be used by cmdline_add_memmap
-> > > > 
-> > > > There's no memmap_p. I'll reuse crash_memory_ranges structure to store
-> > > > crash reserved ranges, ACPI and ACPI_NVS ranges. So after building ELF
-> > > > headers for 1st kernel memory ranges, all I have to do is exclude the
-> > > > SYSTEM_RAM and add crash_reserved to crash_memory_ranges. And then
-> > > > crash_memory_ranges can be used as 2nd kernel memory ranges.
-> > > 
-> > > How about do nothing and directly use the mem_ranges:
-> > >  * skip RANGE_RAM, only add the range which is not RANGE_RAM
-> > >  * if the range is RANGE_CRASH_KERNEL (introduce a new type?) then use it as SYSTEM_RAM for 2nd kernel.
-> > 
-> > I prefer not do this change in this patchset. Since current
-> > implementation is fine, it looks more like a cleanup to me and we can do
-> > that later.
-> 
-> Ok, that's fine, but I'm still not keen about exclude_ram. Could you manage
-> to drop this function? 
+Hello Jingbai,
 
-exclude_ram() is just a static function that my code would use and I
-certainly need a function like that this time. So why are you still keen
-about dropping it :(
+>This patch fixes a bug that will cause segment fault if the starting or ending
+>address of the ELF segment is not aligned to 8 pages boundary.
+>
+>Changelog:
+>v3:
+>- Fix patch description error.
 
-Thanks
-WANG Chao
+Thanks, applied for v1.5.6.
 
+
+Atsushi Kumagai
+
+>v2:
+>- Change subject to describe patch correctly.
+>- Some minor code format changes.
+>
+>In function create_1st_bitmap_cyclic() and initialize_2nd_bitmap_cyclic(),
+>there are the same code:
+>
+>                pfn_start_roundup = roundup(pfn_start, BITPERBYTE);
+>                pfn_end_round = round(pfn_end, BITPERBYTE);
+>
+>                for (pfn = pfn_start; pfn < pfn_start_roundup; pfn++) {
+>                        if (set_bit_on_1st_bitmap(pfn))
+>                                pfn_bitmap1++;
+>                }
+>
+>In case:
+>pfn_start=0xe762c, pfn_start_roundup=0xe7630
+>pfn_end=0xe762d, pfn_end_round=0xe7628
+>This code will set incorrect bits in the bitmap.
+>In function readpage_elf():
+>
+>        if (!offset1) {
+>                phys_start = page_head_to_phys_start(paddr);
+>                offset1 = paddr_to_offset(phys_start);
+>                frac_head = phys_start - paddr;
+>                memset(bufptr, 0, frac_head);
+>        }
+>
+>The invalid paddr couldn't be found, so phys_start will be zero, and frac_head
+>will be negative, then memset will cause a segment fault.
+>
+>Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+>---
+> makedumpfile.c |   27 +++++++++++++++++----------
+> 1 files changed, 17 insertions(+), 10 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index ef08d91..900d553 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -4424,8 +4424,9 @@ create_1st_bitmap_cyclic()
+> 		if (pfn_start >= pfn_end)
+> 			continue;
+>
+>-		pfn_start_roundup = roundup(pfn_start, BITPERBYTE);
+>-		pfn_end_round = round(pfn_end, BITPERBYTE);
+>+		pfn_start_roundup = MIN(roundup(pfn_start, BITPERBYTE),
+>+					pfn_end);
+>+		pfn_end_round = MAX(round(pfn_end, BITPERBYTE), pfn_start);
+>
+> 		for (pfn = pfn_start; pfn < pfn_start_roundup; pfn++) {
+> 			if (set_bit_on_1st_bitmap(pfn))
+>@@ -4443,9 +4444,11 @@ create_1st_bitmap_cyclic()
+> 			pfn_bitmap1 += (pfn_end_byte - pfn_start_byte) * BITPERBYTE;
+> 		}
+>
+>-		for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
+>-			if (set_bit_on_1st_bitmap(pfn))
+>-				pfn_bitmap1++;
+>+		if (pfn_end_round > pfn_start) {
+>+			for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
+>+				if (set_bit_on_1st_bitmap(pfn))
+>+					pfn_bitmap1++;
+>+			}
+> 		}
+> 	}
+> 	pfn_memhole -= pfn_bitmap1;
+>@@ -4532,8 +4535,9 @@ initialize_2nd_bitmap_cyclic(void)
+> 		if (pfn_start >= pfn_end)
+> 			continue;
+>
+>-		pfn_start_roundup = roundup(pfn_start, BITPERBYTE);
+>-		pfn_end_round = round(pfn_end, BITPERBYTE);
+>+		pfn_start_roundup = MIN(roundup(pfn_start, BITPERBYTE),
+>+					pfn_end);
+>+		pfn_end_round = MAX(round(pfn_end, BITPERBYTE), pfn_start);
+>
+> 		for (pfn = pfn_start; pfn < pfn_start_roundup; ++pfn)
+> 			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
+>@@ -4548,9 +4552,12 @@ initialize_2nd_bitmap_cyclic(void)
+> 			       pfn_end_byte - pfn_start_byte);
+> 		}
+>
+>-		for (pfn = pfn_end_round; pfn < pfn_end; ++pfn)
+>-			if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
+>-				return FALSE;
+>+		if (pfn_end_round > pfn_start) {
+>+			for (pfn = pfn_end_round; pfn < pfn_end; ++pfn) {
+>+				if (!set_bit_on_2nd_bitmap_for_kernel(pfn))
+>+					return FALSE;
+>+			}
+>+		}
+> 	}
+>
+> 	return TRUE;
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
