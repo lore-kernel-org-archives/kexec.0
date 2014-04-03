@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from g6t1526.atlanta.hp.com ([15.193.200.69])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WUvwC-0003y5-AO
- for kexec@lists.infradead.org; Tue, 01 Apr 2014 10:29:00 +0000
-Subject: [PATCH v2] makedumpfile: cleanup: reduce unnecessary memory copy
-From: Jingbai Ma <jingbai.ma@hp.com>
-Date: Tue, 01 Apr 2014 18:28:26 +0800
-Message-ID: <20140401102826.31131.85379.stgit@k.asiapacific.hpqcorp.net>
+ id 1WVXZr-0005gP-50
+ for kexec@lists.infradead.org; Thu, 03 Apr 2014 02:40:29 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH v2 0/2]  Allow Xen Dom0 page filtering
+Date: Thu, 3 Apr 2014 02:38:17 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FCBD1@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE971FAC57@BPXM01GP.gisp.nec.co.jp>
+ <1396008496-15151-1-git-send-email-ptesarik@suse.cz>
+In-Reply-To: <1396008496-15151-1-git-send-email-ptesarik@suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,124 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, lisa.mitchell@hp.com
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-This patch intends to reduce unnecessary memory copy in compressing memory
-blocks.
+Hello Petr,
 
-Changelog:
-v2:
-- Simplify write buffer out logic.
-- Add benchmark result.
-
-old logic like this:
-    compress(buf_out, &size_out, buf, size);
-    ...
-    memcpy(buf, buf_out, pd.size);
-    ...
-    write_cache(cd_page, buf, pd.size)
-
-new logic:
-    compress(buf_out, &size_out, buf, size);
-    ...
-    if (compressed?)
-        write_cache(cd_page, buf_out, pd.size)
-    else
-        write_cache(cd_page, buf, pd.size)
-
-This occurs for each single page, so by the new logic it can reduce a lot of
-unnecessary memcpy() on machines with huge memory.
-
-Benchmark:
-Hardware: HP BL280c G6 Blade Server with 32GB RAM
-Test method: Run 10 times test for original and patched makedumpfile, and get
-the average time of the "Copying data" stage.
-makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore /dev/null
-
-Original: 7.089s
- Patched: 7.092s
-
-Taking into account measurement error, two test results can be regarded as the
-same. That's mean there is no measurable difference on a machine with 32GB RAM.
+This looks good to me, I'll merge it into v1.5.6.
 
 
-Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
----
- makedumpfile.c |   10 ++--------
- 1 files changed, 2 insertions(+), 8 deletions(-)
+Thanks
+Atsushi Kumagai
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 23251a1..c9fa44c 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -6245,7 +6245,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
- 		    && (size_out < info->page_size)) {
- 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
- 			pd.size  = size_out;
--			memcpy(buf, buf_out, pd.size);
- #ifdef USELZO
- 		} else if (info->flag_lzo_support
- 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
-@@ -6255,7 +6254,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
- 			   && (size_out < info->page_size)) {
- 			pd.flags = DUMP_DH_COMPRESSED_LZO;
- 			pd.size  = size_out;
--			memcpy(buf, buf_out, pd.size);
- #endif
- #ifdef USESNAPPY
- 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
-@@ -6267,7 +6265,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
- 			   && (size_out < info->page_size)) {
- 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
- 			pd.size  = size_out;
--			memcpy(buf, buf_out, pd.size);
- #endif
- 		} else {
- 			pd.flags = 0;
-@@ -6286,7 +6283,7 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
- 		/*
- 		 * Write the page data.
- 		 */
--		if (!write_cache(cd_page, buf, pd.size))
-+		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
- 			goto out;
- 	}
- 
-@@ -6424,7 +6421,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 		    && (size_out < info->page_size)) {
- 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
- 			pd.size  = size_out;
--			memcpy(buf, buf_out, pd.size);
- #ifdef USELZO
- 		} else if (info->flag_lzo_support
- 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
-@@ -6434,7 +6430,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 			   && (size_out < info->page_size)) {
- 			pd.flags = DUMP_DH_COMPRESSED_LZO;
- 			pd.size  = size_out;
--			memcpy(buf, buf_out, pd.size);
- #endif
- #ifdef USESNAPPY
- 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
-@@ -6446,7 +6441,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 			   && (size_out < info->page_size)) {
- 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
- 			pd.size  = size_out;
--			memcpy(buf, buf_out, pd.size);
- #endif
- 		} else {
- 			pd.flags = 0;
-@@ -6465,7 +6459,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-                 /*
-                  * Write the page data.
-                  */
--                if (!write_cache(cd_page, buf, pd.size))
-+		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
-                         goto out;
-         }
- 
-
+>Trying to use makedumpfile on a Xen Dom0 ELF file currently fails, but there
+>are in fact only a few missing pieces. With the following two patches, I was
+>able to produce a dump even with high dump levels (-d17 and -d31).
+>
+>Needless to say, this can reduce the size of Dom0 dumps considerably.
+>
+>Changes in v2:
+>
+>* Call get_machdep_info() after cache_init(), so it can use readmem(VADDR, ...)
+>
+>This now works for me after reverting commit ebe2fa3a.
+>
+>Petr Tesarik (2):
+>  Earlier initialization of dom0_mapnr
+>  Get Dom0 max_pfn using pfn_mfn_frame_list if max_pfn unavailable
+>
+> makedumpfile.c | 35 ++++++++++++++++++++++++++++-------
+> 1 file changed, 28 insertions(+), 7 deletions(-)
+>
+>--
+>1.8.4.5
 
 _______________________________________________
 kexec mailing list
