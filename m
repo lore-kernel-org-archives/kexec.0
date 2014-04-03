@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WVXd0-0005km-Te
- for kexec@lists.infradead.org; Thu, 03 Apr 2014 02:43:44 +0000
+ id 1WVdLd-0004st-Tw
+ for kexec@lists.infradead.org; Thu, 03 Apr 2014 08:50:11 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH 2/2] makedumpfile: Use max_pfn from mem_map array
-Date: Thu, 3 Apr 2014 02:38:33 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FCBD6@BPXM01GP.gisp.nec.co.jp>
-References: <20140325171420.6b558576@holzheu>
- <20140326.105507.429853525.d.hatayama@jp.fujitsu.com>
- <20140326185426.5e2e5fc4@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FA0EC@BPXM01GP.gisp.nec.co.jp>
- <20140327145441.4c956989@holzheu>	<20140328120047.24a056ea@hananiah.suse.cz>
- <20140328174622.2896296e@holzheu>	<20140328175303.2ed0232a@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE971FB6BA@BPXM01GP.gisp.nec.co.jp>
- <20140331123742.21beb21a@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE971FBB75@BPXM01GP.gisp.nec.co.jp>
- <20140401112011.63924d6a@holzheu>
-In-Reply-To: <20140401112011.63924d6a@holzheu>
+Subject: RE: [PATCH v2] makedumpfile: cleanup: reduce unnecessary memory copy
+Date: Thu, 3 Apr 2014 08:47:57 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FCF2B@BPXM01GP.gisp.nec.co.jp>
+References: <20140401102826.31131.85379.stgit@k.asiapacific.hpqcorp.net>
+In-Reply-To: <20140401102826.31131.85379.stgit@k.asiapacific.hpqcorp.net>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -32,99 +23,129 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>
+To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>
 
->On Tue, 1 Apr 2014 05:06:33 +0000
->Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+>This patch intends to reduce unnecessary memory copy in compressing memory
+>blocks.
 >
->[...]
->
->> >OTOH, Michal's patch is still neded to fix non-Xen non-cyclic dumps.
->>
->> Yes, the fix for create_1st_bitmap() is still necessary.
->>
->> Michael, could you fix your patch ? We need to add the conditional
->> check for Xen like below:
->>
->> +	if (!is_xen_memory()) {
->> +	       for (i = 0; i < info->num_mem_map; i++) {
->> +   	            if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
->> +       	                continue;
->> +           	    max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
->> +       	}
->> +       	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
->> +	}
->
->Hello Atsushi and Petr,
->
->Based on the discussion I removed the checks in exclude_xen3_user_domain()
->and exclude_xen4_user_domain() and added the is_xen_memory() check
->int get_mem_map().
->
->Here the updated patch:
+>Changelog:
+>v2:
+>- Simplify write buffer out logic.
+>- Add benchmark result.
 
-Good, I'll merge this into v1.5.6.
-Thanks for your work, Michael and Petr !
+Looks good to me, I'll merge this into v1.5.6.
 
 
+Thanks
 Atsushi Kumagai
 
+>old logic like this:
+>    compress(buf_out, &size_out, buf, size);
+>    ...
+>    memcpy(buf, buf_out, pd.size);
+>    ...
+>    write_cache(cd_page, buf, pd.size)
+>
+>new logic:
+>    compress(buf_out, &size_out, buf, size);
+>    ...
+>    if (compressed?)
+>        write_cache(cd_page, buf_out, pd.size)
+>    else
+>        write_cache(cd_page, buf, pd.size)
+>
+>This occurs for each single page, so by the new logic it can reduce a lot of
+>unnecessary memcpy() on machines with huge memory.
+>
+>Benchmark:
+>Hardware: HP BL280c G6 Blade Server with 32GB RAM
+>Test method: Run 10 times test for original and patched makedumpfile, and get
+>the average time of the "Copying data" stage.
+>makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore /dev/null
+>
+>Original: 7.089s
+> Patched: 7.092s
+>
+>Taking into account measurement error, two test results can be regarded as the
+>same. That's mean there is no measurable difference on a machine with 32GB RAM.
+>
+>
+>Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
 >---
->[PATCH] makedumpfile: Fix bitmap create for adjusted info->max_mapnr
+> makedumpfile.c |   10 ++--------
+> 1 files changed, 2 insertions(+), 8 deletions(-)
 >
->If info->max_mapnr has been adjusted, for example because the dumped
->system has specified the "mem=" kernel parameter, makedumpfile writes
->the following error messages for Xen dumps or when the "--non-cyclic"
->option has been specified:
->
->set_bitmap: Can't read the bitmap(/tmp/kdump_bitmapBsKAUe). Invalid argument
->
->Fix this and consider "info->max_mapnr" in the create_1st_bitmap() function.
->
->In addition to this, do not adjust max_mapnr for Xen dumps.
->For Xen info->max_mapnr gives the maximum machine PFN and the data
->in mem_section describes the Dom0 kernel memory map that gets
->initialized from info->dom0_mapnr. It may be substantially smaller
->than info->max_mapnr.
->
->Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
->---
-> makedumpfile.c |   15 ++++++++++-----
-> 1 file changed, 10 insertions(+), 5 deletions(-)
->
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 23251a1..c9fa44c 100644
 >--- a/makedumpfile.c
 >+++ b/makedumpfile.c
->@@ -2868,12 +2868,14 @@ get_mem_map(void)
-> 	 * than is dumped. For example when "mem=" has been used for the
-> 	 * dumped system.
-> 	 */
->-	for (i = 0; i < info->num_mem_map; i++) {
->-		if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
->-			continue;
->-		max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
->+	if (!is_xen_memory()) {
->+		for (i = 0; i < info->num_mem_map; i++) {
->+			if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
->+				continue;
->+			max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
->+		}
->+		info->max_mapnr = MIN(info->max_mapnr, max_pfn);
+>@@ -6245,7 +6245,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+> 		    && (size_out < info->page_size)) {
+> 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
+> 			pd.size  = size_out;
+>-			memcpy(buf, buf_out, pd.size);
+> #ifdef USELZO
+> 		} else if (info->flag_lzo_support
+> 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
+>@@ -6255,7 +6254,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+> 			   && (size_out < info->page_size)) {
+> 			pd.flags = DUMP_DH_COMPRESSED_LZO;
+> 			pd.size  = size_out;
+>-			memcpy(buf, buf_out, pd.size);
+> #endif
+> #ifdef USESNAPPY
+> 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
+>@@ -6267,7 +6265,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+> 			   && (size_out < info->page_size)) {
+> 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
+> 			pd.size  = size_out;
+>-			memcpy(buf, buf_out, pd.size);
+> #endif
+> 		} else {
+> 			pd.flags = 0;
+>@@ -6286,7 +6283,7 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+> 		/*
+> 		 * Write the page data.
+> 		 */
+>-		if (!write_cache(cd_page, buf, pd.size))
+>+		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
+> 			goto out;
 > 	}
->-	info->max_mapnr = MIN(info->max_mapnr, max_pfn);
-> 	return ret;
-> }
 >
->@@ -4402,6 +4404,9 @@ create_1st_bitmap(void)
+>@@ -6424,7 +6421,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+> 		    && (size_out < info->page_size)) {
+> 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
+> 			pd.size  = size_out;
+>-			memcpy(buf, buf_out, pd.size);
+> #ifdef USELZO
+> 		} else if (info->flag_lzo_support
+> 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
+>@@ -6434,7 +6430,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+> 			   && (size_out < info->page_size)) {
+> 			pd.flags = DUMP_DH_COMPRESSED_LZO;
+> 			pd.size  = size_out;
+>-			memcpy(buf, buf_out, pd.size);
+> #endif
+> #ifdef USESNAPPY
+> 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
+>@@ -6446,7 +6441,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+> 			   && (size_out < info->page_size)) {
+> 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
+> 			pd.size  = size_out;
+>-			memcpy(buf, buf_out, pd.size);
+> #endif
+> 		} else {
+> 			pd.flags = 0;
+>@@ -6465,7 +6459,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+>                 /*
+>                  * Write the page data.
+>                  */
+>-                if (!write_cache(cd_page, buf, pd.size))
+>+		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
+>                         goto out;
+>         }
 >
-> 		pfn_start = paddr_to_pfn(phys_start);
-> 		pfn_end   = paddr_to_pfn(phys_end);
->+		if (pfn_start > info->max_mapnr)
->+			continue;
->+		pfn_end = MIN(pfn_end, info->max_mapnr);
->
-> 		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
-> 			set_bit_on_1st_bitmap(pfn);
 
 _______________________________________________
 kexec mailing list
