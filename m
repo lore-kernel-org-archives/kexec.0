@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WW0rq-0004Kt-0R
- for kexec@lists.infradead.org; Fri, 04 Apr 2014 09:56:58 +0000
+ id 1WW0rr-0004L7-RU
+ for kexec@lists.infradead.org; Fri, 04 Apr 2014 09:57:00 +0000
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH 0/2] Generic multi-page exclusion
-Date: Fri,  4 Apr 2014 11:56:07 +0200
-Message-Id: <cover.1396604782.git.ptesarik@suse.cz>
+Subject: [PATCH 1/2] Generic handling of multi-page exclusions
+Date: Fri,  4 Apr 2014 11:56:08 +0200
+Message-Id: <95b0fca0e89f8c7f62533cd299266c45b2351a37.1396604782.git.ptesarik@suse.cz>
+In-Reply-To: <cover.1396604782.git.ptesarik@suse.cz>
+References: <cover.1396604782.git.ptesarik@suse.cz>
+In-Reply-To: <cover.1396604782.git.ptesarik@suse.cz>
+References: <cover.1396604782.git.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,26 +27,90 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org
 
-Kumagai-san,
+When multiple pages are excluded from the dump, store the extents in the
+DumpInfo structure and filter them in the normal loop. By doing it this
+way, there is no need to process the whole region in the same cycle.
 
-this patch was inspired by this post of yours:
+I chose to store the start and end PFN, rather than just the number of
+pages, because this algorithm is more robust in case the memory map does
+not cover the full range.
 
-http://lists.infradead.org/pipermail/kexec/2013-November/010445.html
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+---
+ makedumpfile.c | 33 +++++++++++++++++----------------
+ makedumpfile.h |  7 +++++++
+ 2 files changed, 24 insertions(+), 16 deletions(-)
 
-Unfortunately, this rewrite never happened, so I took the liberty of
-overtaking the job. I hope you don't mind.
-
-This is in fact a preparatory series to add hugepage support without
-having to care about the appropriate size of the cyclic buffer.
-
-Petr Tesarik (2):
-  Generic handling of multi-page exclusions
-  Git rid of overrun adjustments
-
- makedumpfile.c | 92 +++++++++++-----------------------------------------------
- makedumpfile.h |  7 +++++
- 2 files changed, 24 insertions(+), 75 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 5e81cc5..61ee886 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -4683,6 +4683,16 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 			continue;
+ 
+ 		/*
++		 * If this is part of a multi-page exclusion, exclude this pfn.
++		 */
++		if (info->exclude_pfn_start <= pfn && pfn < info->exclude_pfn_end) {
++			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
++				(*info->exclude_pfn_counter)++;
++			info->exclude_pfn_start = pfn + 1;
++			continue;
++		}
++
++		/*
+ 		 * Exclude the memory hole.
+ 		 */
+ 		if (is_xen_memory()) {
+@@ -4732,23 +4742,14 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		if ((info->dump_level & DL_EXCLUDE_FREE)
+ 		    && info->page_is_buddy
+ 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+-			int i, nr_pages = 1 << private;
++			int nr_pages = 1 << private;
+ 
+-			for (i = 0; i < nr_pages; ++i) {
+-				/*
+-				 * According to combination of
+-				 * MAX_ORDER and size of cyclic
+-				 * buffer, this clearing bit operation
+-				 * can overrun the cyclic buffer.
+-				 *
+-				 * See check_cyclic_buffer_overrun()
+-				 * for the detail.
+-				 */
+-				if (clear_bit_on_2nd_bitmap_for_kernel((pfn + i), cycle))
+-					pfn_free++;
+-			}
+-			pfn += nr_pages - 1;
+-			mem_map += (nr_pages - 1) * SIZE(page);
++			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
++				pfn_free++;
++
++			info->exclude_pfn_start = pfn + 1;
++			info->exclude_pfn_end = pfn + nr_pages;
++			info->exclude_pfn_counter = &pfn_free;
+ 		}
+ 		/*
+ 		 * Exclude the cache page without the private page.
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 951ed1b..fc6e89a 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1078,6 +1078,13 @@ struct DumpInfo {
+ 	 */
+ 	int (*page_is_buddy)(unsigned long flags, unsigned int _mapcount,
+ 			     unsigned long private, unsigned int _count);
++
++	/*
++	 * for excluding multi-page regions
++	 */
++	unsigned long		exclude_pfn_start;
++	unsigned long		exclude_pfn_end;
++	unsigned long long	*exclude_pfn_counter;
+ };
+ extern struct DumpInfo		*info;
+ 
 -- 
 1.8.4.5
 
