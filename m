@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WVdLd-0004st-Tw
- for kexec@lists.infradead.org; Thu, 03 Apr 2014 08:50:11 +0000
+ id 1WVvJs-0005YH-Rt
+ for kexec@lists.infradead.org; Fri, 04 Apr 2014 04:01:36 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2] makedumpfile: cleanup: reduce unnecessary memory copy
-Date: Thu, 3 Apr 2014 08:47:57 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FCF2B@BPXM01GP.gisp.nec.co.jp>
-References: <20140401102826.31131.85379.stgit@k.asiapacific.hpqcorp.net>
-In-Reply-To: <20140401102826.31131.85379.stgit@k.asiapacific.hpqcorp.net>
+Subject: RE: [PATCH] makedumpfile: inhibit predefined macros when cross
+ building
+Date: Fri, 4 Apr 2014 03:59:28 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FE492@BPXM01GP.gisp.nec.co.jp>
+References: <1396326520-42618-1-git-send-email-wangnan0@huawei.com>
+ <533A42ED.3070604@huawei.com>
+In-Reply-To: <533A42ED.3070604@huawei.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -23,128 +25,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>
+To: "wangnan0@huawei.com" <wangnan0@huawei.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "hui.geng@huawei.com" <hui.geng@huawei.com>
 
->This patch intends to reduce unnecessary memory copy in compressing memory
->blocks.
->
->Changelog:
->v2:
->- Simplify write buffer out logic.
->- Add benchmark result.
+Hello Wang,
 
-Looks good to me, I'll merge this into v1.5.6.
+>On 2014/4/1 12:28, Wang Nan wrote:
+>> When cross building makedumpfile, for example, build x86_64 exec for
+>> dealing with arm vmcore, makefile passes a "-D__arm__" to gcc, but gcc
+>> predefined macros still take effect, defines "__x86_64__". Which makes
+>> definitions for x86_64 and arm mixed together in makedumpfile.h, causes
+>> many problems.
+
+I'm curious to know is it possible to analyze arm vmcores with
+x86_64 binaries even if using the logic for arm ? 
+In such cases, is it not needed to build an arm binary with a cross
+compiler ? I worry about endian issues.
 
 
 Thanks
 Atsushi Kumagai
 
->old logic like this:
->    compress(buf_out, &size_out, buf, size);
->    ...
->    memcpy(buf, buf_out, pd.size);
->    ...
->    write_cache(cd_page, buf, pd.size)
+>> This patch changes Makefile: if host arch and target arch are different,
+>> passes "-U__$(HOST_ARCH)__" to gcc.
+>>
+>> I have tested by running following command on x86_64 machine:
+>>
+>> make ARCH=arm
 >
->new logic:
->    compress(buf_out, &size_out, buf, size);
->    ...
->    if (compressed?)
->        write_cache(cd_page, buf_out, pd.size)
->    else
->        write_cache(cd_page, buf, pd.size)
->
->This occurs for each single page, so by the new logic it can reduce a lot of
->unnecessary memcpy() on machines with huge memory.
->
->Benchmark:
->Hardware: HP BL280c G6 Blade Server with 32GB RAM
->Test method: Run 10 times test for original and patched makedumpfile, and get
->the average time of the "Copying data" stage.
->makedumpfile -l --message-level 23 -d 31 -f /vmcores/vmcore /dev/null
->
->Original: 7.089s
-> Patched: 7.092s
->
->Taking into account measurement error, two test results can be regarded as the
->same. That's mean there is no measurable difference on a machine with 32GB RAM.
->
->
->Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
->---
-> makedumpfile.c |   10 ++--------
-> 1 files changed, 2 insertions(+), 8 deletions(-)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 23251a1..c9fa44c 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -6245,7 +6245,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
-> 		    && (size_out < info->page_size)) {
-> 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
-> 			pd.size  = size_out;
->-			memcpy(buf, buf_out, pd.size);
-> #ifdef USELZO
-> 		} else if (info->flag_lzo_support
-> 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
->@@ -6255,7 +6254,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
-> 			   && (size_out < info->page_size)) {
-> 			pd.flags = DUMP_DH_COMPRESSED_LZO;
-> 			pd.size  = size_out;
->-			memcpy(buf, buf_out, pd.size);
-> #endif
-> #ifdef USESNAPPY
-> 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
->@@ -6267,7 +6265,6 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
-> 			   && (size_out < info->page_size)) {
-> 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
-> 			pd.size  = size_out;
->-			memcpy(buf, buf_out, pd.size);
-> #endif
-> 		} else {
-> 			pd.flags = 0;
->@@ -6286,7 +6283,7 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
-> 		/*
-> 		 * Write the page data.
-> 		 */
->-		if (!write_cache(cd_page, buf, pd.size))
->+		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
-> 			goto out;
-> 	}
->
->@@ -6424,7 +6421,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-> 		    && (size_out < info->page_size)) {
-> 			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
-> 			pd.size  = size_out;
->-			memcpy(buf, buf_out, pd.size);
-> #ifdef USELZO
-> 		} else if (info->flag_lzo_support
-> 			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
->@@ -6434,7 +6430,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-> 			   && (size_out < info->page_size)) {
-> 			pd.flags = DUMP_DH_COMPRESSED_LZO;
-> 			pd.size  = size_out;
->-			memcpy(buf, buf_out, pd.size);
-> #endif
-> #ifdef USESNAPPY
-> 		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
->@@ -6446,7 +6441,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-> 			   && (size_out < info->page_size)) {
-> 			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
-> 			pd.size  = size_out;
->-			memcpy(buf, buf_out, pd.size);
-> #endif
-> 		} else {
-> 			pd.flags = 0;
->@@ -6465,7 +6459,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
->                 /*
->                  * Write the page data.
->                  */
->-                if (!write_cache(cd_page, buf, pd.size))
->+		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
->                         goto out;
->         }
+>Sorry, should be TARGET=arm. I have tested and build okay.
+>>
+>> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+>> Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>> Cc: kexec@lists.infradead.org
+>> Cc: Geng Hui <hui.geng@huawei.com>
+>> ---
+>>  Makefile | 12 +++++++++---
+>>  1 file changed, 9 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Makefile b/Makefile
+>> index 2f4845c..f85cc21 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -15,10 +15,11 @@ CFLAGS_ARCH	= -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+>>  		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+>>  # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+>>
+>> +HOST_ARCH := $(shell uname -m)
+>>  # Use TARGET as the target architecture if specified.
+>>  # Defaults to uname -m
+>>  ifeq ($(strip($TARGET)),)
+>> -TARGET := $(shell uname -m)
+>> +TARGET := $(HOST_ARCH)
+>>  endif
+>>
+>>  ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+>> @@ -26,8 +27,13 @@ ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+>>  			       -e s/s390x/s390/ -e s/parisc64/parisc/ \
+>>  			       -e s/ppc64/powerpc64/ -e s/ppc/powerpc32/)
+>>
+>> -CFLAGS += -D__$(ARCH)__
+>> -CFLAGS_ARCH += -D__$(ARCH)__
+>> +CROSS :=
+>> +ifneq ($(TARGET), $(HOST_ARCH))
+>> +CROSS := -U__$(HOST_ARCH)__
+>> +endif
+>> +
+>> +CFLAGS += -D__$(ARCH)__ $(CROSS)
+>> +CFLAGS_ARCH += -D__$(ARCH)__ $(CROSS)
+>>
+>>  ifeq ($(ARCH), powerpc64)
+>>  CFLAGS += -m64
+>>
 >
 
 _______________________________________________
