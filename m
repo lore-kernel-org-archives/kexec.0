@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([119.145.14.64])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WVyVt-0008Qp-Ck
- for kexec@lists.infradead.org; Fri, 04 Apr 2014 07:26:11 +0000
-From: Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH] makedumpfile: bugfix: fix a div-by-zero problem
-Date: Fri, 4 Apr 2014 15:19:52 +0800
-Message-ID: <1396595992-65949-1-git-send-email-wangnan0@huawei.com>
+ id 1WVzha-00029b-6y
+ for kexec@lists.infradead.org; Fri, 04 Apr 2014 08:42:20 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: inhibit predefined macros when cross
+ building
+Date: Fri, 4 Apr 2014 08:32:09 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FE66B@BPXM01GP.gisp.nec.co.jp>
+References: <1396326520-42618-1-git-send-email-wangnan0@huawei.com>
+ <533A42ED.3070604@huawei.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971FE492@BPXM01GP.gisp.nec.co.jp>
+ <533E4791.8060405@huawei.com>
+In-Reply-To: <533E4791.8060405@huawei.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,68 +27,127 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: Wang Nan <wangnan0@huawei.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+To: "wangnan0@huawei.com" <wangnan0@huawei.com>
+Cc: "suzuki@in.ibm.com" <suzuki@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "hui.geng@huawei.com" <hui.geng@huawei.com>
 
-In makedumpfile.c, we want the progress printed 10000 times.
-It is tested by:
+>On 2014/4/4 11:59, Atsushi Kumagai wrote:
+>> Hello Wang,
+>>
+>>> On 2014/4/1 12:28, Wang Nan wrote:
+>>>> When cross building makedumpfile, for example, build x86_64 exec for
+>>>> dealing with arm vmcore, makefile passes a "-D__arm__" to gcc, but gcc
+>>>> predefined macros still take effect, defines "__x86_64__". Which makes
+>>>> definitions for x86_64 and arm mixed together in makedumpfile.h, causes
+>>>> many problems.
+>>
+>> I'm curious to know is it possible to analyze arm vmcores with
+>> x86_64 binaries even if using the logic for arm ?
+>> In such cases, is it not needed to build an arm binary with a cross
+>> compiler ? I worry about endian issues.
+>>
+>>
+>> Thanks
+>> Atsushi Kumagai
+>>
+>
+>I'm working on cross analysising arm vmcore on x86. I know that crash support
+>cross analysing (at least for analysing little endian arm vmcore on x86). I also notice
+>that makedumpfile has been designed for cross analysing (see commit 96f24dc77dc48e4c8f4c3527f4f5b4d27845393c
+>by Suzuki K. Poulose <suzuki@in.ibm.com>), but it doesn't work correctly for arm vmcore.
 
-(num_dumped % per) == 0
+You may misunderstand, makedumpfile doesn't support cross analyzing.
+According to the patch, I'm sure that Suzuki sent the patch to enable
+*cross compile* (e.g. building arm binary on x86 machine) by setting
+a cross compiler to CC variable:
 
-where per is num_dumpable / 10000.
+  (README)
+    5.Build for a different architecture than the host :
+      # make TARGET=<arch> ; make install
+      where <arch> is the 'uname -m' of the target architecture.
+      The user has to set the environment variable CC to appropriate
+      compiler for the target architecture.
 
-However, if num_dumpable less than 10000, num_dumped % per causes a
-divide-by-zero problem, triggers a SIGFPE.
+When CC is the appropriate compiler for the target architecture,
+the mismatch predefining macros will not happen.
+So I think there is no problem in the current code.
 
-This patch makes sure per never be 0.
+>What I'm trying to do is to enable the whole kdump analysing stuff crossly (I know it is hard).
+>It is useful in some special cases, for example, for some boards with strictly limited memory
+>and storage space.
 
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
-Cc: Geng Hui <hui.geng@huawei.com>
-Cc: Simon Horman <horms@verge.net.au>
----
- makedumpfile.c | 4 ++++
- 1 file changed, 4 insertions(+)
+It sounds reasonable if you mentioned crash.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 23251a1..d71977a 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5621,6 +5621,7 @@ write_elf_pages(struct cache_data *cd_header, struct cache_data *cd_page)
- 
- 	num_dumpable = get_num_dumpable();
- 	per = num_dumpable / 10000;
-+	per = per ? per : 1;
- 
- 	off_seg_load    = info->offset_load_dumpfile;
- 	cd_page->offset = info->offset_load_dumpfile;
-@@ -5906,6 +5907,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 
- 	num_dumpable = info->num_dumpable;
- 	per = num_dumpable / 10000;
-+	per = per ? per : 1;
- 
- 	off_seg_load   = info->offset_load_dumpfile;
- 	cd_page->offset = info->offset_load_dumpfile;
-@@ -6164,6 +6166,7 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
- 
- 	num_dumpable = get_num_dumpable();
- 	per = num_dumpable / 10000;
-+	per = per ? per : 1;
- 
- 	/*
- 	 * Calculate the offset of the page data.
-@@ -6365,6 +6368,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 	}
- 
- 	per = info->num_dumpable / 10000;
-+	per = per ? per : 1;
- 
- 	/*
- 	 * Set a fileoffset of Physical Address 0x0.
--- 
-1.8.4
+The mission of makedumpfile is reducing dump size, so it's best to work
+during capturing dump. Otherwise, you have to save full dump on the
+*limited storage space*.
+As for makedumpfile, I don't have any ideas about the advantage of the
+cross analyzing you said.
+
+>With this patch, at least makedumpfile can be compiled to x86_64 binary, and can extract
+>symbol information correctly for a vmcore file dumpped from a qemu virtual machine (little
+>endian).
+
+Your patch sounds inconsistent to me since makedumpfile doesn't support
+cross analyzing. The case you said will go well, but that's just a lucky
+situation.
+
+
+Thanks
+Atsushi Kumagai
+
+>>>> This patch changes Makefile: if host arch and target arch are different,
+>>>> passes "-U__$(HOST_ARCH)__" to gcc.
+>>>>
+>>>> I have tested by running following command on x86_64 machine:
+>>>>
+>>>> make ARCH=arm
+>>>
+>>> Sorry, should be TARGET=arm. I have tested and build okay.
+>>>>
+>>>> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+>>>> Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>>>> Cc: kexec@lists.infradead.org
+>>>> Cc: Geng Hui <hui.geng@huawei.com>
+>>>> ---
+>>>>  Makefile | 12 +++++++++---
+>>>>  1 file changed, 9 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/Makefile b/Makefile
+>>>> index 2f4845c..f85cc21 100644
+>>>> --- a/Makefile
+>>>> +++ b/Makefile
+>>>> @@ -15,10 +15,11 @@ CFLAGS_ARCH	= -g -O2 -Wall -D_FILE_OFFSET_BITS=64 \
+>>>>  		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+>>>>  # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+>>>>
+>>>> +HOST_ARCH := $(shell uname -m)
+>>>>  # Use TARGET as the target architecture if specified.
+>>>>  # Defaults to uname -m
+>>>>  ifeq ($(strip($TARGET)),)
+>>>> -TARGET := $(shell uname -m)
+>>>> +TARGET := $(HOST_ARCH)
+>>>>  endif
+>>>>
+>>>>  ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+>>>> @@ -26,8 +27,13 @@ ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+>>>>  			       -e s/s390x/s390/ -e s/parisc64/parisc/ \
+>>>>  			       -e s/ppc64/powerpc64/ -e s/ppc/powerpc32/)
+>>>>
+>>>> -CFLAGS += -D__$(ARCH)__
+>>>> -CFLAGS_ARCH += -D__$(ARCH)__
+>>>> +CROSS :=
+>>>> +ifneq ($(TARGET), $(HOST_ARCH))
+>>>> +CROSS := -U__$(HOST_ARCH)__
+>>>> +endif
+>>>> +
+>>>> +CFLAGS += -D__$(ARCH)__ $(CROSS)
+>>>> +CFLAGS_ARCH += -D__$(ARCH)__ $(CROSS)
+>>>>
+>>>>  ifeq ($(ARCH), powerpc64)
+>>>>  CFLAGS += -m64
+>>>>
+>>>
+>
 
 
 _______________________________________________
