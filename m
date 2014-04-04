@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WW7s5-0001r4-7g
+ id 1WW7s5-0001r6-7g
  for kexec@lists.infradead.org; Fri, 04 Apr 2014 17:25:42 +0000
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH v2 0/3] Generic multi-page exclusion
-Date: Fri,  4 Apr 2014 19:25:06 +0200
-Message-Id: <cover.1396632131.git.ptesarik@suse.cz>
+Subject: [PATCH v2 3/3] Get rid of overrun adjustments
+Date: Fri,  4 Apr 2014 19:25:09 +0200
+Message-Id: <3ddc378b43d94c571ede277f27e7ebb1cf0255b4.1396632131.git.ptesarik@suse.cz>
+In-Reply-To: <cover.1396632131.git.ptesarik@suse.cz>
+References: <cover.1396632131.git.ptesarik@suse.cz>
+In-Reply-To: <cover.1396632131.git.ptesarik@suse.cz>
+References: <cover.1396632131.git.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,32 +27,98 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org
 
-Kumagai-san,
+Thanks to the previous commit, __exclude_unnecessary_pages does not
+require any specific size of the cycle.
 
-this patch was inspired by this post of yours:
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+---
+ makedumpfile.c | 59 ----------------------------------------------------------
+ 1 file changed, 59 deletions(-)
 
-http://lists.infradead.org/pipermail/kexec/2013-November/010445.html
-
-Unfortunately, this rewrite never happened, so I took the liberty of
-overtaking the job. I hope you don't mind.
-
-This is in fact a preparatory series to add hugepage support without
-having to care about the appropriate size of the cyclic buffer.
-
-Changelog:
-* v2:
-  - Keep excluded regions per mem_map_data
-  - Process excluded pages in chunks
-
-Petr Tesarik (3):
-  Pass mmd pointer to __exclude_unnecessary_pages
-  Generic handling of multi-page exclusions
-  Get rid of overrun adjustments
-
- makedumpfile.c | 118 +++++++++++++++++++--------------------------------------
- makedumpfile.h |   7 ++++
- 2 files changed, 46 insertions(+), 79 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 9ffb901..6ebf76f 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -88,7 +88,6 @@ do { \
+ 		*ptr_long_table = value; \
+ } while (0)
+ 
+-static void check_cyclic_buffer_overrun(void);
+ static void setup_page_is_buddy(void);
+ 
+ void
+@@ -3254,9 +3253,6 @@ out:
+ 		    !sadump_generate_elf_note_from_dumpfile())
+ 			return FALSE;
+ 
+-		if (info->flag_cyclic && info->dump_level & DL_EXCLUDE_FREE)
+-			check_cyclic_buffer_overrun();
+-
+ 	} else {
+ 		if (!get_mem_map_without_mm())
+ 			return FALSE;
+@@ -4274,61 +4270,6 @@ exclude_free_page(struct cycle *cycle)
+ }
+ 
+ /*
+- * Let C be a cyclic buffer size and B a bitmap size used for
+- * representing maximum block size managed by buddy allocator.
+- *
+- * For some combinations of C and B, clearing operation can overrun
+- * the cyclic buffer. Let's consider three cases.
+- *
+- *   - If C == B, this is trivially safe.
+- *
+- *   - If B > C, overrun can easily happen.
+- *
+- *   - In case of C > B, if C mod B != 0, then there exist n > m > 0,
+- *     B > b > 0 such that n x C = m x B + b. This means that clearing
+- *     operation overruns cyclic buffer (B - b)-bytes in the
+- *     combination of n-th cycle and m-th block.
+- *
+- *     Note that C mod B != 0 iff (m x C) mod B != 0 for some m.
+- *
+- * If C == B, C mod B == 0 always holds. Again, if B > C, C mod B != 0
+- * always holds. Hence, it's always sufficient to check the condition
+- * C mod B != 0 in order to determine whether overrun can happen or
+- * not.
+- *
+- * The bitmap size used for maximum block size B is calculated from
+- * MAX_ORDER as:
+- *
+- *   B := DIVIDE_UP((1 << (MAX_ORDER - 1)), BITS_PER_BYTE)
+- *
+- * Normally, MAX_ORDER is 11 at default. This is configurable through
+- * CONFIG_FORCE_MAX_ZONEORDER.
+- */
+-static void
+-check_cyclic_buffer_overrun(void)
+-{
+-	int max_order = ARRAY_LENGTH(zone.free_area);
+-	int max_order_nr_pages = 1 << (max_order - 1);
+-	unsigned long max_block_size = divideup(max_order_nr_pages, BITPERBYTE);
+-
+-	if (info->bufsize_cyclic % max_block_size) {
+-		unsigned long bufsize;
+-
+-		if (max_block_size > info->bufsize_cyclic) {
+-			MSG("WARNING: some free pages are not filtered.\n");
+-			return;
+-		}
+-
+-		bufsize = info->bufsize_cyclic;
+-		info->bufsize_cyclic = round(bufsize, max_block_size);
+-		info->pfn_cyclic = info->bufsize_cyclic * BITPERBYTE;
+-
+-		MSG("cyclic buffer size has been changed: %lu => %lu\n",
+-		    bufsize, info->bufsize_cyclic);
+-	}
+-}
+-
+-/*
+  * For the kernel versions from v2.6.17 to v2.6.37.
+  */
+ static int
 -- 
 1.8.4.5
 
