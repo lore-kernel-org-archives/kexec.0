@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WW7s5-0001r6-7g
+ id 1WW7s5-0001r3-7e
  for kexec@lists.infradead.org; Fri, 04 Apr 2014 17:25:42 +0000
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH v2 3/3] Get rid of overrun adjustments
-Date: Fri,  4 Apr 2014 19:25:09 +0200
-Message-Id: <3ddc378b43d94c571ede277f27e7ebb1cf0255b4.1396632131.git.ptesarik@suse.cz>
+Subject: [PATCH v2 1/3] Pass mmd pointer to __exclude_unnecessary_pages
+Date: Fri,  4 Apr 2014 19:25:07 +0200
+Message-Id: <5bf492a576255fe25a1a84d6b8d105cb55c9bcec.1396632131.git.ptesarik@suse.cz>
 In-Reply-To: <cover.1396632131.git.ptesarik@suse.cz>
 References: <cover.1396632131.git.ptesarik@suse.cz>
 In-Reply-To: <cover.1396632131.git.ptesarik@suse.cz>
@@ -27,98 +27,52 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org
 
-Thanks to the previous commit, __exclude_unnecessary_pages does not
-require any specific size of the cycle.
+Pass the mmd pointer itself instead of the individual fields, so additional
+information can be kept in mem_map_data.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- makedumpfile.c | 59 ----------------------------------------------------------
- 1 file changed, 59 deletions(-)
+ makedumpfile.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 9ffb901..6ebf76f 100644
+index 5e81cc5..81c687b 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -88,7 +88,6 @@ do { \
- 		*ptr_long_table = value; \
- } while (0)
- 
--static void check_cyclic_buffer_overrun(void);
- static void setup_page_is_buddy(void);
- 
- void
-@@ -3254,9 +3253,6 @@ out:
- 		    !sadump_generate_elf_note_from_dumpfile())
- 			return FALSE;
- 
--		if (info->flag_cyclic && info->dump_level & DL_EXCLUDE_FREE)
--			check_cyclic_buffer_overrun();
--
- 	} else {
- 		if (!get_mem_map_without_mm())
- 			return FALSE;
-@@ -4274,61 +4270,6 @@ exclude_free_page(struct cycle *cycle)
+@@ -4658,9 +4658,11 @@ initialize_2nd_bitmap_cyclic(struct cycle *cycle)
  }
  
- /*
-- * Let C be a cyclic buffer size and B a bitmap size used for
-- * representing maximum block size managed by buddy allocator.
-- *
-- * For some combinations of C and B, clearing operation can overrun
-- * the cyclic buffer. Let's consider three cases.
-- *
-- *   - If C == B, this is trivially safe.
-- *
-- *   - If B > C, overrun can easily happen.
-- *
-- *   - In case of C > B, if C mod B != 0, then there exist n > m > 0,
-- *     B > b > 0 such that n x C = m x B + b. This means that clearing
-- *     operation overruns cyclic buffer (B - b)-bytes in the
-- *     combination of n-th cycle and m-th block.
-- *
-- *     Note that C mod B != 0 iff (m x C) mod B != 0 for some m.
-- *
-- * If C == B, C mod B == 0 always holds. Again, if B > C, C mod B != 0
-- * always holds. Hence, it's always sufficient to check the condition
-- * C mod B != 0 in order to determine whether overrun can happen or
-- * not.
-- *
-- * The bitmap size used for maximum block size B is calculated from
-- * MAX_ORDER as:
-- *
-- *   B := DIVIDE_UP((1 << (MAX_ORDER - 1)), BITS_PER_BYTE)
-- *
-- * Normally, MAX_ORDER is 11 at default. This is configurable through
-- * CONFIG_FORCE_MAX_ZONEORDER.
-- */
--static void
--check_cyclic_buffer_overrun(void)
--{
--	int max_order = ARRAY_LENGTH(zone.free_area);
--	int max_order_nr_pages = 1 << (max_order - 1);
--	unsigned long max_block_size = divideup(max_order_nr_pages, BITPERBYTE);
--
--	if (info->bufsize_cyclic % max_block_size) {
--		unsigned long bufsize;
--
--		if (max_block_size > info->bufsize_cyclic) {
--			MSG("WARNING: some free pages are not filtered.\n");
--			return;
--		}
--
--		bufsize = info->bufsize_cyclic;
--		info->bufsize_cyclic = round(bufsize, max_block_size);
--		info->pfn_cyclic = info->bufsize_cyclic * BITPERBYTE;
--
--		MSG("cyclic buffer size has been changed: %lu => %lu\n",
--		    bufsize, info->bufsize_cyclic);
--	}
--}
--
--/*
-  * For the kernel versions from v2.6.17 to v2.6.37.
-  */
- static int
+ int
+-__exclude_unnecessary_pages(unsigned long mem_map,
+-    unsigned long long pfn_start, unsigned long long pfn_end, struct cycle *cycle)
++__exclude_unnecessary_pages(struct mem_map_data *mmd, struct cycle *cycle)
+ {
++	unsigned long mem_map = mmd->mem_map;
++	unsigned long long pfn_start = mmd->pfn_start;
++	unsigned long long pfn_end = mmd->pfn_end;
+ 	unsigned long long pfn, pfn_mm, maddr;
+ 	unsigned long long pfn_read_start, pfn_read_end, index_pg;
+ 	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
+@@ -4809,8 +4811,7 @@ exclude_unnecessary_pages(void)
+ 		if (mmd->mem_map == NOT_MEMMAP_ADDR)
+ 			continue;
+ 
+-		if (!__exclude_unnecessary_pages(mmd->mem_map,
+-						 mmd->pfn_start, mmd->pfn_end, NULL))
++		if (!__exclude_unnecessary_pages(mmd, NULL))
+ 			return FALSE;
+ 	}
+ 
+@@ -4860,8 +4861,7 @@ exclude_unnecessary_pages_cyclic(struct cycle *cycle)
+ 
+ 			if (mmd->pfn_end >= cycle->start_pfn &&
+ 			    mmd->pfn_start <= cycle->end_pfn) {
+-				if (!__exclude_unnecessary_pages(mmd->mem_map,
+-								 mmd->pfn_start, mmd->pfn_end, cycle))
++				if (!__exclude_unnecessary_pages(mmd, cycle))
+ 					return FALSE;
+ 			}
+ 		}
 -- 
 1.8.4.5
 
