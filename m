@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-qc0-x231.google.com ([2607:f8b0:400d:c01::231])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WW92v-00045b-5u
- for kexec@lists.infradead.org; Fri, 04 Apr 2014 18:40:58 +0000
-Received: by mail-qc0-f177.google.com with SMTP id w7so3847539qcr.8
- for <kexec@lists.infradead.org>; Fri, 04 Apr 2014 11:40:35 -0700 (PDT)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WXGOg-0002Bu-QS
+ for kexec@lists.infradead.org; Mon, 07 Apr 2014 20:44:03 +0000
+Message-ID: <53430DE9.9080303@redhat.com>
+Date: Mon, 07 Apr 2014 16:43:21 -0400
+From: Don Dutile <ddutile@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20140404111456.GD29058@dhcp-16-105.nay.redhat.com>
-References: <CAGXD9OcJZGPaqy+=p7_gio_vRXVxrK73LjSjteto6iiqo2a=nA@mail.gmail.com>
- <20140404111456.GD29058@dhcp-16-105.nay.redhat.com>
-Date: Fri, 4 Apr 2014 11:40:34 -0700
-Message-ID: <CAGXD9OfhfSEOdjGEnUh1iKsWmC9jT50SvAMWZOeo9-3T0GXgRA@mail.gmail.com>
-Subject: Re: vmcore-dmesg ends with "No program header covering vaddr"
-From: Prasad Koya <prasad.koya@gmail.com>
+Subject: Re: [PATCHv3 0/6] Crashdump Accepting Active IOMMU
+References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+In-Reply-To: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,69 +18,182 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Bill Sumner <bill.sumner@hp.com>
+Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, dwmw2@infradead.org
 
-Thanks for replying Baoquan.
+On 01/10/2014 05:07 PM, Bill Sumner wrote:
+> v2->v3:
+> 1. Commented-out "#define DEBUG 1" to eliminate debug messages
+> 2. Updated the comments about changes in each version in all patches in the set.
+> 3. Fixed: one-line added to Copy-Translations" patch to initialize the iovad
+>            struct as recommended by Baoquan He [bhe@redhat.com]
+>            init_iova_domain(&domain->iovad, DMA_32BIT_PFN);
+>
+> v1->v2:
+> The following series implements a fix for:
+> A kdump problem about DMA that has been discussed for a long time. That is,
+> when a kernel panics and boots into the kdump kernel, DMA started by the
+> panicked kernel is not stopped before the kdump kernel is booted and the
+> kdump kernel disables the IOMMU while this DMA continues.  This causes the
+> IOMMU to stop translating the DMA addresses as IOVAs and begin to treat them
+> as physical memory addresses -- which causes the DMA to either:
+> (1) generate DMAR errors or (2) generate PCI SERR errors or (3) transfer
+> data to or from incorrect areas of memory. Often this causes the dump to fail.
+>
+> This patch set modifies the behavior of the iommu in the (new) crashdump kernel:
+> 1. to accept the iommu hardware in an active state,
+> 2. to leave the current translations in-place so that legacy DMA will continue
+>     using its current buffers until the device drivers in the crashdump kernel
+>     initialize and initialize their devices,
+> 3. to use different portions of the iova address ranges for the device drivers
+>     in the crashdump kernel than the iova ranges that were in-use at the time
+>     of the panic.
+>
+> Advantages of this approach:
+> 1. All manipulation of the IO-device is done by the Linux device-driver
+>     for that device.
+> 2. This approach behaves in a manner very similar to operation without an
+>     active iommu.
 
-Our production kernel is 3.4 and it has legacy dmesg buffer. I was
-able to dump it from oldmem. If this change is of any use for
-community I could try submit the patch.
+Sorry to be late to the game.... finally getting out of a deep hole &
+asked to look at this proposal...
 
-On Fri, Apr 4, 2014 at 4:14 AM, Baoquan He <bhe@redhat.com> wrote:
-> On 03/14/14 at 10:39pm, Prasad Koya wrote:
->> Hi
->>
->> I'm increasing dmesg buffer size at runtime by passing log_buf_len=1M
->> (or 512K) at command line. At compile time, I have LOG_BUF_LEN as
->> 256K. However, when this kernel crashes (crashkernel set at 64M),
->> vmcore-dmesg fails with below error.
->>
->> No program header covering vaddr 0xffff88013ff00000found kexec bug?
->>
->> Am I missing something here?
->>
->> Thank you.
->>
->> Here are some debugs I added to kernel. This is with 3.4 kernel and
->> I've tried with kexec-tools-2.0.4.
->>
->> [    0.000000] log_buf_len_setup: log_buf_len 262144 new 1048576
->> ffffffff8170b140
->> [    0.000000] setup_log_buf: early 1 262144 new_log_buf_len 1048576
->> [    0.000000] log_buf_len: 1048576 ffff880037d58000
->> [    0.000000] early log buf free: 258671(98%)
->> [    0.000000] setup_log_buf: early 0 1048576 new_log_buf_len 0
->> [    0.503752] log_buf_kexec_setup: lbl 1048576 new 0 ffffffff816198c4
->> logbuf ffff880037d58000
->> In kdump, running vmcore_dmesg /proc/vmcore
->> No program header covering vaddr 0xffff88013ff00000found kexec bug?
+Along this concept -- similar to operation without an active iommu --
+have you considered the following:
+a) if (this is crash kernel), turn *off* DMAR faults;
+b) if (this is crash kernel), isolate all device DMA in IOMMU
+b) as second kernel configures each device, have each device to use IOMMU hw-passthrough,
+      i.e., the equivalent of having no IOMMU for the second, kexec'd kernel
+   but, having the benefit of keeping all the other (potentially bad) devices
+   sequestered / isolated, until they are initialized & re-configured in the second kernel,
+    *if at all* -- note: kexec'd kernels may not enable/configure all devices that
+    existed in the first kernel (Bill: I'm sure you know this, but others may not).
+
+RMRR's that were previously setup could continue to work if they are skipped in step (b),
+unless the device has gone mad/bad.  In that case, re-parsing the RMRR may or may not
+clear up the issue.
+
+Additionally, a tidbit of information like "some servers force NMI's on DMAR faults,
+and cause a system reset, thereby, preventing a kdump to occur"
+should have been included as one reason to stop DMAR faults from occurring on kexec-boot,
+in addition to the fact that a flood of them can lock up a system.
+
+Again, just turning off DMAR fault reporting for the 'if (this is crash kernel)',
+short-term workaround sounds a whole lot less expensive to implement, as well as
+'if (this is crash kernel), force hw-passthrough'.
+
+If the IO devices are borked to the point that they won't complete DMA properly,
+with or without IOMMU, the system is dead anyhow, game over.
+
+Finally, copying the previous IOMMU state to the second kernel, and hoping
+that the cause of the kernel crash wasn't an errant DMA (e.g., due to a device going bad,
+or it's DMA-state being corrupted & causing an improper IO), is omitting an important failure
+case/space.
+Keeping the first-kernel DMA isolated (IOMMU on, all translations off, all DMAR faults off),
+and then allowing each device (driver) configuration to sanely reset the device &
+start a new (hw-passthrough) domain seems simpler and cleaner, for this dump-and-run kernel
+effort.
+
+- Don
+
+> 3. Any activity between the IO-device and its RMRR areas is handled by the
+>     device-driver in the same manner as during a non-kdump boot.
+> 4. If an IO-device has no driver in the kdump kernel, it is simply left alone.
+>     This supports the practice of creating a special kdump kernel without
+>     drivers for any devices that are not required for taking a crashdump.
 >
-> Hi Prasad,
+> Changes since the RFC version of this patch:
+> 1. Consolidated all of the operational code into the "copy..." functions.
+>     The "process..." functions were primarily used for diagnostics and
+>     exploration; however, there was a small amount of operational code that
+>     used the "process..." functions.
+>     This operational code has been moved into the "copy..." functions.
 >
-> Did you try the latest kernel and vmcore-dmesg? Mine is OK. Surely you
-> need apply below patch since it's not merged yet.
+> 2. Removed the "Process ..." functions and the diagnostic code that ran
+>     on that function set.  This removed about 1/4 of the code -- which this
+>     operational patch set no longer needs.  These portions of the RFC patch
+>     could be formatted as a separate patch and submitted independently
+>     at a later date.
 >
-> Author: Lubomir Rintel <lkundrak@v3.sk>
-> Date:   Wed Sep 18 14:21:43 2013 +0200
+> 3. Re-formatted the code to the Linux Coding Standards.
+>     The checkpatch script still finds some lines to complain about;
+>     however most of these lines are either (1) lines that I did not change,
+>     or (2) lines that only changed by adding a level of indent which pushed
+>     them over 80-characters, or (3) new lines whose intent is far clearer when
+>     longer than 80-characters.
 >
->     vmcore-dmesg: Understand >= v3.11-rc4 dmesg
+> 4. Updated the remaining debug print to be significantly more flexible.
+>     This allows control over the amount of debug print to the console --
+>     which can vary widely.
 >
->     Symbol name changed with the following commit:
->     62e32ac printk: rename struct log to struct printk_log
+> 5. Fixed a couple of minor bugs found by testing on a machine with a
+>     very large IO configuration.
 >
-> Thanks
-> Baoquan
+> At a high level, this code operates primarily during iommu initialization
+> and device-driver initialization
 >
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+> During intel-iommu hardware initialization:
+> In intel_iommu_init(void)
+> * If (This is the crash kernel)
+>    .  Set flag: crashdump_accepting_active_iommu (all changes below check this)
+>    .  Skip disabling the iommu hardware translations
+>
+> In init_dmars()
+> * Duplicate the intel iommu translation tables from the old kernel
+>    in the new kernel
+>    . The root-entry table, all context-entry tables,
+>      and all page-translation-entry tables
+>    . The duplicate tables contain updated physical addresses to link them together.
+>    . The duplicate tables are mapped into kernel virtual addresses
+>      in the new kernel which allows most of the existing iommu code
+>      to operate without change.
+>    . Do some minimal sanity-checks during the copy
+>    . Place the address of the new root-entry structure into "struct intel_iommu"
+>
+> * Skip setting-up new domains for 'si', 'rmrr', 'isa'
+>    . Translations for 'rmrr' and 'isa' ranges have been copied from the old kernel
+>    . This patch has not yet been tested with iommu pass-through enabled
+>
+> * Existing (unchanged) code near the end of dmar_init:
+>    . Loads the address of the (now new) root-entry structure from
+>      "struct intel_iommu" into the iommu hardware and does the hardware flushes.
+>      This changes the active translation tables from the ones in the old kernel
+>      to the copies in the new kernel.
+>    . This is legal because the translations in the two sets of tables are
+>      currently identical:
+>        Virtualization Technology for Directed I/O. Architecture Specification,
+>        February 2011, Rev. 1.3  (section 11.2, paragraph 2)
+>
+> In iommu_init_domains()
+> * Mark as in-use all domain-id's from the old kernel
+>    . In case the new kernel contains a device that was not in the old kernel
+>      and a new, unused domain-id is actually needed, the bitmap will give us one.
+>
+> When a new domain is created for a device:
+> * If (this device has a context in the old kernel)
+>    . Get domain-id, address-width, and IOVA ranges from the old kernel context;
+>    . Get address(page-entry-tables) from the copy in the new kernel;
+>    . And apply all of the above values to the new domain structure.
+> * Else
+>    . Create a new domain as normal
+>
+>
+> Bill Sumner (6):
+>    Crashdump-Accepting-Active-IOMMU-Flags-and-Prototype
+>    Crashdump-Accepting-Active-IOMMU-Utility-functions
+>    Crashdump-Accepting-Active-IOMMU-Domain-Interfaces
+>    Crashdump-Accepting-Active-IOMMU-Copy-Translations
+>    Crashdump-Accepting-Active-IOMMU-Debug-Print-IOMMU
+>    Crashdump-Accepting-Active-IOMMU-Call-From-Mainline
+>
+>   drivers/iommu/intel-iommu.c | 1293 ++++++++++++++++++++++++++++++++++++++++---
+>   1 file changed, 1225 insertions(+), 68 deletions(-)
+>
+
 
 _______________________________________________
 kexec mailing list
