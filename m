@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
- by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WXQCV-0006aa-8f
- for kexec@lists.infradead.org; Tue, 08 Apr 2014 07:12:08 +0000
-Received: from tyo201.gate.nec.co.jp ([10.7.69.201])
- by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s3879iNv018804
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
- for <kexec@lists.infradead.org>; Tue, 8 Apr 2014 16:09:44 +0900 (JST)
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2 2/3] Generic handling of multi-page exclusions
-Date: Tue, 8 Apr 2014 07:06:34 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FF140@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1396632131.git.ptesarik@suse.cz>
- <25702884512808755449395c1622f2aed7b3be00.1396632131.git.ptesarik@suse.cz>
- <20140408.104907.132144009.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20140408.104907.132144009.d.hatayama@jp.fujitsu.com>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WXb0D-0006LT-TM
+ for kexec@lists.infradead.org; Tue, 08 Apr 2014 18:44:10 +0000
+Message-ID: <53444330.2030606@redhat.com>
+Date: Tue, 08 Apr 2014 14:42:56 -0400
+From: Don Dutile <ddutile@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [PATCHv3 0/6] Crashdump Accepting Active IOMMU
+References: <1389391652-52422-1-git-send-email-bill.sumner@hp.com>
+ <53430DE9.9080303@redhat.com> <1396973686.25235.36.camel@i7.infradead.org>
+In-Reply-To: <1396973686.25235.36.camel@i7.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,58 +19,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, Bill Sumner <bill.sumner@hp.com>
 
-[...]
-> diff --git a/makedumpfile.h b/makedumpfile.h
->> index 951ed1b..dfad569 100644
->> --- a/makedumpfile.h
->> +++ b/makedumpfile.h
->> @@ -816,6 +816,13 @@ struct mem_map_data {
->>  	unsigned long long	pfn_start;
->>  	unsigned long long	pfn_end;
->>  	unsigned long	mem_map;
->> +
->> +	/*
->> +	 * for excluding multi-page regions
->> +	 */
->> +	unsigned long		exclude_pfn_start;
->> +	unsigned long		exclude_pfn_end;
+On 04/08/2014 12:14 PM, David Woodhouse wrote:
+> On Mon, 2014-04-07 at 16:43 -0400, Don Dutile wrote:
+>>
+>> Additionally, a tidbit of information like "some servers force NMI's
+>> on DMAR faults,
+>> and cause a system reset, thereby, preventing a kdump to occur"
+>> should have been included as one reason to stop DMAR faults from
+>> occurring on kexec-boot,
+>> in addition to the fact that a flood of them can lock up a system.
 >
->unsigned long long		exclude_pfn_start;
->unsigned long long		exclude_pfn_end;
+> How about allocating a physical scratch page, and setting up a mapping
+> for each device such that *every* virtual address (apart from those
+> listed in RMRRs, perhaps) is mapped to that same scratch page?
 >
->The integers representing page frame numbers need to be defined as
->unsigned long long for architectures where physical address can have
->64-bit length but unsigned long has 32-bit only, such as x86 PAE.
+> That way you avoid the faults, but you also avoid stray DMA to parts of
+> the system that you don't want to get corrupted.
 >
->Kumagai-san, I saw this sometimes in the past. How about introducing
->specific abstract type for page frame number like below?
->
->typedef unsigned long long pfn_t;
++1... more isolation as second kernel booting sounds good.
 
-Good idea! We should do it.
-
->maybe with some prefix. I think this also helps code readability
->because unsigned long long is too long.
->
->> +	unsigned long long	*exclude_pfn_counter;
->>  };
->
->Also, it seems to me better to introduce a new type for this
->processing rather than extending existing code. struct mem_map_data is
->not specific for the excluding processing.
-
-I agree, too.
-
-
-Thanks
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
