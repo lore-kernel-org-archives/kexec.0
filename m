@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WXOnK-0007TX-SS
- for kexec@lists.infradead.org; Tue, 08 Apr 2014 05:42:03 +0000
-Date: Tue, 8 Apr 2014 13:39:19 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: vmcore-dmesg ends with "No program header covering vaddr"
-Message-ID: <20140408053919.GC11839@dhcp-16-105.nay.redhat.com>
-References: <CAGXD9OcJZGPaqy+=p7_gio_vRXVxrK73LjSjteto6iiqo2a=nA@mail.gmail.com>
- <20140404111456.GD29058@dhcp-16-105.nay.redhat.com>
- <CAGXD9OfhfSEOdjGEnUh1iKsWmC9jT50SvAMWZOeo9-3T0GXgRA@mail.gmail.com>
+Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
+ by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WXLuV-0006Hp-Ts
+ for kexec@lists.infradead.org; Tue, 08 Apr 2014 02:37:18 +0000
+Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
+ by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s382YlW8003815
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+ for <kexec@lists.infradead.org>; Tue, 8 Apr 2014 11:34:47 +0900 (JST)
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: bugfix: fix a div-by-zero problem
+Date: Tue, 8 Apr 2014 02:30:26 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE971FEF4C@BPXM01GP.gisp.nec.co.jp>
+References: <1396595992-65949-1-git-send-email-wangnan0@huawei.com>
+In-Reply-To: <1396595992-65949-1-git-send-email-wangnan0@huawei.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAGXD9OfhfSEOdjGEnUh1iKsWmC9jT50SvAMWZOeo9-3T0GXgRA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,79 +27,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Prasad Koya <prasad.koya@gmail.com>
-Cc: kexec@lists.infradead.org
+To: "wangnan0@huawei.com" <wangnan0@huawei.com>
+Cc: "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "hui.geng@huawei.com" <hui.geng@huawei.com>
 
-On 04/04/14 at 11:40am, Prasad Koya wrote:
-> Thanks for replying Baoquan.
-> 
-> Our production kernel is 3.4 and it has legacy dmesg buffer. I was
-> able to dump it from oldmem. If this change is of any use for
-> community I could try submit the patch.
+>In makedumpfile.c, we want the progress printed 10000 times.
+>It is tested by:
+>
+>(num_dumped % per) == 0
+>
+>where per is num_dumpable / 10000.
+>
+>However, if num_dumpable less than 10000, num_dumped % per causes a
+>divide-by-zero problem, triggers a SIGFPE.
+>
+>This patch makes sure per never be 0.
 
-I think your change makes sense. Since if you have this requirement,
-other people could have too. You can post your patch and let people
-review your patch and discuss.
+Good fix, thanks.
 
-Thanks
-Baoquan
+Acked-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-> 
-> On Fri, Apr 4, 2014 at 4:14 AM, Baoquan He <bhe@redhat.com> wrote:
-> > On 03/14/14 at 10:39pm, Prasad Koya wrote:
-> >> Hi
-> >>
-> >> I'm increasing dmesg buffer size at runtime by passing log_buf_len=1M
-> >> (or 512K) at command line. At compile time, I have LOG_BUF_LEN as
-> >> 256K. However, when this kernel crashes (crashkernel set at 64M),
-> >> vmcore-dmesg fails with below error.
-> >>
-> >> No program header covering vaddr 0xffff88013ff00000found kexec bug?
-> >>
-> >> Am I missing something here?
-> >>
-> >> Thank you.
-> >>
-> >> Here are some debugs I added to kernel. This is with 3.4 kernel and
-> >> I've tried with kexec-tools-2.0.4.
-> >>
-> >> [    0.000000] log_buf_len_setup: log_buf_len 262144 new 1048576
-> >> ffffffff8170b140
-> >> [    0.000000] setup_log_buf: early 1 262144 new_log_buf_len 1048576
-> >> [    0.000000] log_buf_len: 1048576 ffff880037d58000
-> >> [    0.000000] early log buf free: 258671(98%)
-> >> [    0.000000] setup_log_buf: early 0 1048576 new_log_buf_len 0
-> >> [    0.503752] log_buf_kexec_setup: lbl 1048576 new 0 ffffffff816198c4
-> >> logbuf ffff880037d58000
-> >> In kdump, running vmcore_dmesg /proc/vmcore
-> >> No program header covering vaddr 0xffff88013ff00000found kexec bug?
-> >
-> > Hi Prasad,
-> >
-> > Did you try the latest kernel and vmcore-dmesg? Mine is OK. Surely you
-> > need apply below patch since it's not merged yet.
-> >
-> > Author: Lubomir Rintel <lkundrak@v3.sk>
-> > Date:   Wed Sep 18 14:21:43 2013 +0200
-> >
-> >     vmcore-dmesg: Understand >= v3.11-rc4 dmesg
-> >
-> >     Symbol name changed with the following commit:
-> >     62e32ac printk: rename struct log to struct printk_log
-> >
-> > Thanks
-> > Baoquan
-> >
-> >>
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+>Signed-off-by: Wang Nan <wangnan0@huawei.com>
+>Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>Cc: kexec@lists.infradead.org
+>Cc: Geng Hui <hui.geng@huawei.com>
+>Cc: Simon Horman <horms@verge.net.au>
+>---
+> makedumpfile.c | 4 ++++
+> 1 file changed, 4 insertions(+)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 23251a1..d71977a 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -5621,6 +5621,7 @@ write_elf_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+>
+> 	num_dumpable = get_num_dumpable();
+> 	per = num_dumpable / 10000;
+>+	per = per ? per : 1;
+>
+> 	off_seg_load    = info->offset_load_dumpfile;
+> 	cd_page->offset = info->offset_load_dumpfile;
+>@@ -5906,6 +5907,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+>
+> 	num_dumpable = info->num_dumpable;
+> 	per = num_dumpable / 10000;
+>+	per = per ? per : 1;
+>
+> 	off_seg_load   = info->offset_load_dumpfile;
+> 	cd_page->offset = info->offset_load_dumpfile;
+>@@ -6164,6 +6166,7 @@ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+>
+> 	num_dumpable = get_num_dumpable();
+> 	per = num_dumpable / 10000;
+>+	per = per ? per : 1;
+>
+> 	/*
+> 	 * Calculate the offset of the page data.
+>@@ -6365,6 +6368,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+> 	}
+>
+> 	per = info->num_dumpable / 10000;
+>+	per = per ? per : 1;
+>
+> 	/*
+> 	 * Set a fileoffset of Physical Address 0x0.
+>--
+>1.8.4
 
 _______________________________________________
 kexec mailing list
