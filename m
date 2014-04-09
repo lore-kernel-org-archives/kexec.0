@@ -1,33 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WXmv6-0008KH-H3
- for kexec@lists.infradead.org; Wed, 09 Apr 2014 07:27:42 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 6DF393EE189
- for <kexec@lists.infradead.org>; Wed,  9 Apr 2014 16:27:18 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 5DDC545DF49
- for <kexec@lists.infradead.org>; Wed,  9 Apr 2014 16:27:18 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.nic.fujitsu.com [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 445BA45DF42
- for <kexec@lists.infradead.org>; Wed,  9 Apr 2014 16:27:18 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 342CC1DB8038
- for <kexec@lists.infradead.org>; Wed,  9 Apr 2014 16:27:18 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id D6D441DB803E
- for <kexec@lists.infradead.org>; Wed,  9 Apr 2014 16:27:17 +0900 (JST)
-Date: Wed, 09 Apr 2014 16:27:08 +0900 (JST)
-Message-Id: <20140409.162708.93024867.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 2/3] Generic handling of multi-page exclusions
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FF28C@BPXM01GP.gisp.nec.co.jp>
-References: <20140408085436.51340ae2@hananiah.suse.cz>
- <20140408.171903.322808733.d.hatayama@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971FF28C@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WY1au-0005W3-Ei
+ for kexec@lists.infradead.org; Wed, 09 Apr 2014 23:07:49 +0000
+Date: Thu, 10 Apr 2014 08:07:21 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RESEND PATCH] ppc64/purgatory: Disabling GCC's stack protection
+Message-ID: <20140409230721.GA2187@verge.net.au>
+References: <20140325095553.17118.47384.stgit@nimbus>
+ <20140408144445.3929.88414.stgit@nimbus>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140408144445.3929.88414.stgit@nimbus>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,34 +24,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, ptesarik@suse.cz
+To: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Cc: dvaleev@suse.com, kexec@lists.infradead.org
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2 2/3] Generic handling of multi-page exclusions
-Date: Tue, 8 Apr 2014 09:00:19 +0000
-
+On Tue, Apr 08, 2014 at 04:44:45PM +0200, Laurent Dufour wrote:
+> Some Linux distributions, like Suse, are turning on the GCC's stack
+> protection mechanism by default (-fstack-protector). When building the
+> purgatory with this option, this leads to link issues that are revealed at
+> runtime when the purgatory is loaded because symbols like __stack_chk_fail
+> are unresolved.
 > 
-> At that time, I chose the current code since it was simpler and safer.
-> http://www.mail-archive.com/kexec%40lists.infradead.org/msg10207.html
+> This patch forces this stack protection mechanism to be turned off when
+> building the purgatory on ppc64 BE and LE.
 > 
-> Don't you like this ?
-> 
+> Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
 
-Sorry. I had forgotten this. We should keep the sanity check
-there. But in our policy, we should not pass to set_bitmap_cyclic(),
-pfn and cycle where pfn is not in the cycle. We should chceck that in
-the caller side and pass pfn in the cycle only.
-
-Also, on the current implementation, even if pfn outside a current
-cycle is passed to set_bitmap_cyclic(), we don't have any means to
-know that.
-
-So, how about warning that only once at runtime?
-
-Thanks.
-HATAYAMA, Daisuke
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
