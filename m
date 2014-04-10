@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYB3S-0007jz-W5
+ id 1WYB3S-0007kY-W7
  for kexec@lists.infradead.org; Thu, 10 Apr 2014 09:13:55 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v5 04/10] x86,
- cleanup: add_memmap() only do alignment check on RANGE_RAM
-Date: Thu, 10 Apr 2014 17:12:57 +0800
-Message-Id: <1397121186-9353-5-git-send-email-chaowang@redhat.com>
+Subject: [PATCH v5 05/10] x86,
+ cleanup: use dbgprint_mem_range for memory range debugging
+Date: Thu, 10 Apr 2014 17:12:58 +0800
+Message-Id: <1397121186-9353-6-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
 References: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,24 +28,60 @@ Cc: kexec@lists.infradead.org
 
 Signed-off-by: WANG Chao <chaowang@redhat.com>
 ---
- kexec/arch/i386/crashdump-x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kexec/arch/i386/crashdump-x86.c | 26 +++-----------------------
+ 1 file changed, 3 insertions(+), 23 deletions(-)
 
 diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 43eb8f7..4072c10 100644
+index 4072c10..2437c30 100644
 --- a/kexec/arch/i386/crashdump-x86.c
 +++ b/kexec/arch/i386/crashdump-x86.c
-@@ -482,8 +482,8 @@ static int add_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
- 	int i, j, nr_entries = 0, tidx = 0, align = 1024;
- 	unsigned long long mstart, mend;
+@@ -517,15 +517,7 @@ static int add_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
+ 	memmap_p[tidx].type = type;
+ 	*nr_memmap_p = nr_entries + 1;
  
--	/* Do alignment check. */
--	if ((addr%align) || (size%align))
-+	/* Do alignment check if it's RANGE_RAM */
-+	if ((type == RANGE_RAM) && ((addr%align) || (size%align)))
- 		return -1;
+-	dbgprintf("Memmap after adding segment\n");
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
+-		mstart = memmap_p[i].start;
+-		mend = memmap_p[i].end;
+-		if (mstart == 0 && mend == 0)
+-			break;
+-		dbgprintf("%016llx - %016llx\n",
+-			mstart, mend);
+-	}
++	dbgprint_mem_range("Memmap after adding segment", memmap_p, *nr_memmap_p);
  
- 	/* Make sure at least one entry in list is free. */
+ 	return 0;
+ }
+@@ -605,16 +597,7 @@ static int delete_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
+ 		*nr_memmap_p = nr_entries - 1;
+ 	}
+ 
+-	dbgprintf("Memmap after deleting segment\n");
+-	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
+-		mstart = memmap_p[i].start;
+-		mend = memmap_p[i].end;
+-		if (mstart == 0 && mend == 0) {
+-			break;
+-		}
+-		dbgprintf("%016llx - %016llx\n",
+-			mstart, mend);
+-	}
++	dbgprint_mem_range("Memmap after deleting segment", memmap_p, *nr_memmap_p);
+ 
+ 	return 0;
+ }
+@@ -913,10 +896,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 
+ 	get_backup_area(info, mem_range, nr_ranges);
+ 
+-	dbgprintf("CRASH MEMORY RANGES\n");
+-
+-	for(i = 0; i < nr_ranges; ++i)
+-		dbgprintf("%016Lx-%016Lx\n", mem_range[i].start, mem_range[i].end);
++	dbgprint_mem_range("CRASH MEMORY RANGES", mem_range, nr_ranges);
+ 
+ 	/*
+ 	 * if the core type has not been set on command line, set it here
 -- 
 1.8.5.3
 
