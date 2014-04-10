@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYB3i-0007ml-0D
+ id 1WYB3i-0007mn-0F
  for kexec@lists.infradead.org; Thu, 10 Apr 2014 09:14:11 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v5 06/10] x86, cleanup: Store crash memory ranges kexec_info
-Date: Thu, 10 Apr 2014 17:13:00 +0800
-Message-Id: <1397121186-9353-8-git-send-email-chaowang@redhat.com>
+Subject: [PATCH v5 07/10] x86, cleanup: Add a funtion add_setup_data()
+Date: Thu, 10 Apr 2014 17:13:01 +0800
+Message-Id: <1397121186-9353-9-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
 References: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,50 +25,68 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com, linn@hp.com
 Cc: kexec@lists.infradead.org
 
-Add two new members to kexec_info structure:
-
-struct memory_range *crash_range
-int nr_crash_ranges;
-
-crash_range contains the memory ranges used to boot 2nd kernel.
-nr_crash_ranges contains the count of the crash memory ranges.
+add_setup_data() is used to add an instance to the single linked list
+of setup_data structure.
 
 Signed-off-by: WANG Chao <chaowang@redhat.com>
 ---
- kexec/arch/i386/crashdump-x86.c | 6 ++++++
- kexec/kexec.h                   | 2 ++
- 2 files changed, 8 insertions(+)
+ kexec/arch/i386/x86-linux-setup.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 2437c30..2a6871d 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -997,6 +997,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 		add_memmap(memmap_p, &nr_memmap_p, start, size, type);
- 		cmdline_add_memmap_acpi(mod_cmdline, start, end);
- 	}
-+
-+	/* Store 2nd kernel boot memory ranges for later reference in
-+	 * x86-setup-linux.c: setup_linux_system_parameters() */
-+	info->crash_range = memmap_p;
-+	info->nr_crash_ranges = nr_memmap_p;
-+
- 	return 0;
- }
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index e04e45d..8ed36cc 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -603,6 +603,22 @@ struct efi_info {
+ };
  
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index d69bba2..22d4a42 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -148,6 +148,8 @@ struct kexec_info {
- 	int nr_segments;
- 	struct memory_range *memory_range;
- 	int memory_ranges;
-+	struct memory_range *crash_range;
-+	int nr_crash_ranges;
- 	void *entry;
- 	struct mem_ehdr rhdr;
- 	unsigned long backup_start;
+ /*
++ * Add another instance to single linked list of struct setup_data.
++ * Please refer to kernel Documentation/x86/boot.txt for more details
++ * about setup_data structure.
++ */
++static void add_setup_data(struct kexec_info *info,
++			   struct x86_linux_param_header *real_mode,
++			   struct setup_data *sd)
++{
++	int sdsize = sizeof(struct setup_data) + sd->len;
++
++	sd->next = real_mode->setup_data;
++	real_mode->setup_data = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
++			    0x100000, ULONG_MAX, INT_MAX);
++}
++
++/*
+  * setup_efi_data will collect below data and pass them to 2nd kernel.
+  * 1) SMBIOS, fw_vendor, runtime, config_table, they are passed via x86
+  *    setup_data.
+@@ -611,11 +627,11 @@ struct efi_info {
+ static int setup_efi_data(struct kexec_info *info,
+ 			  struct x86_linux_param_header *real_mode)
+ {
+-	int64_t setup_data_paddr, memmap_paddr;
++	int64_t memmap_paddr;
+ 	struct setup_data *sd;
+ 	struct efi_setup_data *esd;
+ 	struct efi_mem_descriptor *maps;
+-	int nr_maps, size, sdsize, ret = 0;
++	int nr_maps, size, ret = 0;
+ 	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
+ 
+ 	ret = access("/sys/firmware/efi/systab", F_OK);
+@@ -648,10 +664,8 @@ static int setup_efi_data(struct kexec_info *info,
+ 	sd->len = sizeof(*esd);
+ 	memcpy(sd->data, esd, sizeof(*esd));
+ 	free(esd);
+-	sdsize = sd->len + sizeof(struct setup_data);
+-	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
+-					0x100000, ULONG_MAX, INT_MAX);
+-	real_mode->setup_data = setup_data_paddr;
++
++	add_setup_data(info, real_mode, sd);
+ 
+ 	size = nr_maps * sizeof(struct efi_mem_descriptor);
+ 	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
 -- 
 1.8.5.3
 
