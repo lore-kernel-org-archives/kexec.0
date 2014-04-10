@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYB39-0007jH-Tl
+ id 1WYB39-0007jV-UD
  for kexec@lists.infradead.org; Thu, 10 Apr 2014 09:13:38 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v5 00/10] kexec-tools, x86: E820 memmap pass for kdump
-Date: Thu, 10 Apr 2014 17:12:53 +0800
-Message-Id: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
+Subject: [PATCH v5 01/10] x86, cleanup: fix indent
+Date: Thu, 10 Apr 2014 17:12:54 +0800
+Message-Id: <1397121186-9353-2-git-send-email-chaowang@redhat.com>
+In-Reply-To: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
+References: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,77 +25,32 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com, linn@hp.com
 Cc: kexec@lists.infradead.org
 
-Hi, all
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-(Sorry for this late update. I was occupied with something else)
-
-This patchset enables passing memory map via E820 map on x86 platform instead
-of memmap=exactmap. It's a better design and will solve the following problem
-so far:
-
-- kernel cmdline is limited resource and large machines tend to have many
-  memory ranges that may excceed kernel cmdline limit size.
-- kASLR doesn't work with memmap=exactmap, because kASLR happens early than
-  user defined memmap=exactmap takes effect.
-
-Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
-like the only one). So for backward compatibility, I'm introducing a new option
---pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
-
-This patchset contains massive updates from the previous one. I take some
-suggestions from reviewers. I try to split the changes into smaller pieces and
-keep the whole change as minimal as I can so it wouldn't be too harsh to review
-the patch.
-
-Any comment is appreciate!
-
-v5->v4:
-Dave:
- - separate add_setup_data() to another patch
-Vivek:
- - adding comments for setup_data
- - store crash memory range info golobally in kexec_info
-
-v3->v4:
-Linn: check return value of malloc (use xmalloc).
-me: fix dbgprintf_mem_range.
-
-v2->v3:
-Linn:
- - do not free sd (setup_data) buffer.
- - reuse code in setup_e820 and setup_e820_ext.
-
-v1->v2:
-Vivek:
- - Use function instead of macro for dbgprint_mem_range
- - Do not pass reserved memory range for kdump. It could addressed later
-   separately.
-
-WANG Chao (10):
-  x86, cleanup: fix indent
-  x86, cleanup: add extra arguments to add_memmap() and delete_memmap()
-  x86, cleanup: add other types of memory range for 2nd kernel boot to
-    memmap_p
-  x86, cleanup: add_memmap() only do alignment check on RANGE_RAM
-  x86, cleanup: use dbgprint_mem_range for memory range debugging
-  x86, cleanup: increase CRASH_MAX_MEMMAP_NR up to
-    CRASH_MAX_MEMORY_RANGES
-  x86, cleanup: Store crash memory ranges kexec_info
-  x86, cleanup: Add a funtion add_setup_data()
-  x86: add --pass-memmap-cmdline option
-  x86: Pass memory range via E820 for kdump
-
- kexec/arch/i386/crashdump-x86.c        |  79 +++++++--------
- kexec/arch/i386/crashdump-x86.h        |   2 +-
- kexec/arch/i386/include/arch/options.h |   2 +
- kexec/arch/i386/kexec-x86.c            |   4 +
- kexec/arch/i386/kexec-x86.h            |   1 +
- kexec/arch/i386/x86-linux-setup.c      | 175 ++++++++++++++++++++++-----------
- kexec/arch/i386/x86-linux-setup.h      |   1 +
- kexec/arch/x86_64/kexec-x86_64.c       |   5 +
- kexec/kexec.h                          |   2 +
- 9 files changed, 171 insertions(+), 100 deletions(-)
-
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 91872ab..72bce0b 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -509,11 +509,11 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
+ 		else if (addr > mend)
+ 			tidx = i+1;
+ 	}
+-		/* Insert the memory region. */
+-		for (j = nr_entries-1; j >= tidx; j--)
+-			memmap_p[j+1] = memmap_p[j];
+-		memmap_p[tidx].start = addr;
+-		memmap_p[tidx].end = addr + size - 1;
++	/* Insert the memory region. */
++	for (j = nr_entries-1; j >= tidx; j--)
++		memmap_p[j+1] = memmap_p[j];
++	memmap_p[tidx].start = addr;
++	memmap_p[tidx].end = addr + size - 1;
+ 
+ 	dbgprintf("Memmap after adding segment\n");
+ 	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
 -- 
 1.8.5.3
 
