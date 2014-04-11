@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYRyp-0006A3-HB
- for kexec@lists.infradead.org; Fri, 11 Apr 2014 03:18:16 +0000
-Date: Fri, 11 Apr 2014 11:17:46 +0800
+ id 1WYSDi-0001Us-LP
+ for kexec@lists.infradead.org; Fri, 11 Apr 2014 03:33:39 +0000
+Date: Fri, 11 Apr 2014 11:33:11 +0800
 From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v5 06/10] x86, cleanup: Store crash memory ranges
- kexec_info
-Message-ID: <20140411031746.GG2944@dhcp-17-89.nay.redhat.com>
+Subject: Re: [PATCH v5 09/10] x86: Pass memory range via E820 for kdump
+Message-ID: <20140411033311.GH2944@dhcp-17-89.nay.redhat.com>
 References: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
- <1397121186-9353-8-git-send-email-chaowang@redhat.com>
- <20140411022010.GD5493@dhcp-16-198.nay.redhat.com>
+ <1397121186-9353-14-git-send-email-chaowang@redhat.com>
+ <20140411022831.GG5493@dhcp-16-198.nay.redhat.com>
+ <5347554A.4080009@zytor.com>
+ <20140411024730.GH5493@dhcp-16-198.nay.redhat.com>
+ <20140411030037.GD2944@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140411022010.GD5493@dhcp-16-198.nay.redhat.com>
+In-Reply-To: <20140411030037.GD2944@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,63 +29,41 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, "H. Peter Anvin" <hpa@zytor.com>, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 04/11/14 at 10:20am, Dave Young wrote:
-> On 04/10/14 at 05:13pm, WANG Chao wrote:
-> > Add two new members to kexec_info structure:
+On 04/11/14 at 11:00am, WANG Chao wrote:
+> On 04/11/14 at 10:47am, Dave Young wrote:
+> > On 04/10/14 at 07:36pm, H. Peter Anvin wrote:
+> > > On 04/10/2014 07:28 PM, Dave Young wrote:
+> > > >>  
+> > > >> +static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
+> > > >> +			struct e820entry *e820, struct memory_range *range, int nr_range)
+> > > >> +{
+> > > >> +	int i;
+> > > >> +
+> > > >> +	for (i = 0; i < nr_range; i++) {
+> > > >> +		e820[i].addr = range[i].start;
+> > > >> +		e820[i].size = range[i].end - range[i].start;
+> > > > 
+> > > > I see it's same as original code but I still feel it should be end - start + 1;
+> > > > 
+> > > 
+> > > I can't see how it could possibly be +1.
+> > > 
+> > > How do you encode range[].end?  If it is inclusive it should be end -
+> > > start - 1, if it is a semiclosed range (the normal thing in computer
+> > > contexts) then the code above is correct.
 > > 
-> > struct memory_range *crash_range
-> > int nr_crash_ranges;
+> > Say the first range from my /proc/iomem:
+> > 00000000-00000fff : reserved
 > > 
-> > crash_range contains the memory ranges used to boot 2nd kernel.
-> > nr_crash_ranges contains the count of the crash memory ranges.
-> > 
-> > Signed-off-by: WANG Chao <chaowang@redhat.com>
-> > ---
-> >  kexec/arch/i386/crashdump-x86.c | 6 ++++++
-> >  kexec/kexec.h                   | 2 ++
-> >  2 files changed, 8 insertions(+)
-> > 
-> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > index 2437c30..2a6871d 100644
-> > --- a/kexec/arch/i386/crashdump-x86.c
-> > +++ b/kexec/arch/i386/crashdump-x86.c
-> > @@ -997,6 +997,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
-> >  		add_memmap(memmap_p, &nr_memmap_p, start, size, type);
-> >  		cmdline_add_memmap_acpi(mod_cmdline, start, end);
-> >  	}
-> > +
-> > +	/* Store 2nd kernel boot memory ranges for later reference in
-> > +	 * x86-setup-linux.c: setup_linux_system_parameters() */
-> > +	info->crash_range = memmap_p;
-> > +	info->nr_crash_ranges = nr_memmap_p;
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/kexec/kexec.h b/kexec/kexec.h
-> > index d69bba2..22d4a42 100644
-> > --- a/kexec/kexec.h
-> > +++ b/kexec/kexec.h
-> > @@ -148,6 +148,8 @@ struct kexec_info {
-> >  	int nr_segments;
-> >  	struct memory_range *memory_range;
-> >  	int memory_ranges;
-> > +	struct memory_range *crash_range;
-> > +	int nr_crash_ranges;
+> > Shouldn't the size be 0x1000? It looks like closed range instead of semiclosed range.
 > 
-> Is the memory_range field used in crash case? If not how about reuse the field for crash ranges.
+> You're right. range[].end is inclusive and size should be (end - start + 1)
 
-We need memory_range field in the --pass-memmap-cmdline case.
-
-> 
-> >  	void *entry;
-> >  	struct mem_ehdr rhdr;
-> >  	unsigned long backup_start;
-> > -- 
-> > 1.8.5.3
-> > 
+In kexec path, memory range .end is exclusive however. I think it should
+also be updated to inclusive to unify the encoding of memory range for
+both kexec and kdump.
 
 _______________________________________________
 kexec mailing list
