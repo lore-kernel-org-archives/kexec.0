@@ -1,16 +1,13 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYYZL-0003ky-H1
- for kexec@lists.infradead.org; Fri, 11 Apr 2014 10:20:24 +0000
-Date: Fri, 11 Apr 2014 06:19:38 -0400 (EDT)
-From: Arthur Zou <zzou@redhat.com>
-Message-ID: <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
-References: <20140410214433.GF18808@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
-Subject: Re: makedumpfile memmory usage seems high with option -E
-MIME-Version: 1.0
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WYdjO-0007y3-0R
+ for kexec@lists.infradead.org; Fri, 11 Apr 2014 15:51:06 +0000
+Date: Fri, 11 Apr 2014 17:50:39 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: [PATCH] Save PG_head_mask in VMCOREINFO
+Message-ID: <20140411175039.00fa75ea@hananiah.suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,138 +19,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: d hatayama <d.hatayama@jp.fujitsu.com>, kexec@lists.infradead.org, vgoyal@redhat.com
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Paul Mackerras <paulus@samba.org>, Fengguang Wu <fengguang.wu@intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Shaohua Li <shli@kernel.org>, Alexey Kardashevskiy <aik@ozlabs.ru>, Sasha Levin <sasha.levin@oracle.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
+To allow filtering of huge pages, makedumpfile must be able to
+identify them in the dump. This can be done by checking the
+appropriate page flag, so communicate its value to makedumpfile
+through the VMCOREINFO interface.
 
+There's only one small catch. Depending on how many page flags
+are available on a given architecture, this bit can be called
+PG_head or PG_compound.
 
------ Original Message -----
-> Hello Vivek,
-> 
-> >Hi Atsushi/Hatayama,
-> >
-> >We noticed in our testing that makedumpfile gets OOM killed if we happen
-> >to use -E option. Saving to compressed kdump format works just fine.
-> >
-> >Also we noticed that with -E if we disable cyclic mode then it works just
-> >fine.
-> >
-> >So looks like something is going on with -E and cyclic mode enabled. I am
-> >not sure what it is.
-> >
-> >Do you suspect something?
-> 
-> At first, I supposed the function to calculate cyclic buffer size may
-> be related to this issue, but I haven't found the answer yet...
-> 
-> int
-> calculate_cyclic_buffer_size() {
-> 
->         if (info->flag_elf_dumpfile) {
->                 free_size = get_free_memory_size() * 0.4;
->                 needed_size = (info->max_mapnr * 2) / BITPERBYTE;
->         } else {
->                 free_size = get_free_memory_size() * 0.8;
->                 needed_size = info->max_mapnr / BITPERBYTE;
->         }
->         [...]
->         info->bufsize_cyclic = (free_size <= needed_size) ? free_size :
->         needed_size;
-> 
-> 
-> I've found this function has an issue about memory allocation.
-> When -E is specified, info->bufsize_cyclic will be the total size of
-> the 1st and 2nd bitmap if free memory is enough. Then,
-> info->bufsize_cyclic will be used to allocate each bitmap in
-> prepare_bitmap_buffer_cyclic() like below:
-> 
->         if ((info->partial_bitmap1 = (char *)malloc(info->bufsize_cyclic)) ==
->         NULL) {
->                 ERRMSG("Can't allocate memory for the 1st-bitmap. %s\n",
->                        strerror(errno));
->                 return FALSE;
->         }
->         if ((info->partial_bitmap2 = (char *)malloc(info->bufsize_cyclic)) ==
->         NULL) {
->                 ERRMSG("Can't allocate memory for the 2nd-bitmap. %s\n",
->                        strerror(errno));
->                 return FALSE;
->         }
-> 
-> It's a too much allocation definitely, but it mustn't exceed 80% of free
-> memory due to the condition check in calculate_cyclic_buffer_size(), so
-> I think the OOM issue will not happen by this issue.
-> I'll fix this too much allocation with the patch below, but it will not
-> resolve your OOM issue...
-> 
-> BTW, what are your version of makedumpfile and crashkernel= size and
-> the system memory size? and does the issue happen even if you specify
-> --cyclic-buffer which is small enough to fit the available memory ?
-> I'm curious to know the details of the condition which cause the issue.
-> 
-> 
+I sent a similar patch back in 2012, but Eric Biederman did not
+like using an #ifdef. So, this time I'm adding a common symbol
+(PG_head_mask) instead.
 
-Hi Atsushi Kumagai
-   The makedumpfile version is 1.5.4. crashkernel=auto which actually is 166M.
-the system memory size is about 96G and the arch is x86_64 which kernel version
-3.10.110. But the same issue happened when using the newest makedumpfile in devel
-branch. After add --cyclic-buffer=100, dump succeed.
+See https://lkml.org/lkml/2012/11/28/91 for the previous version.
 
-Thanks
-arthur 
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+---
+ include/linux/page-flags.h | 3 +++
+ kernel/kexec.c             | 1 +
+ 2 files changed, 4 insertions(+)
 
-> Thanks
-> Atsushi Kumagai
-> 
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 75092a8..ae9e69a 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -8996,7 +8996,7 @@ out:
->   */
->  int
->  calculate_cyclic_buffer_size(void) {
-> -	unsigned long long free_size, needed_size;
-> +	unsigned long long limit_size, bitmap_size;
->  
->  	if (info->max_mapnr <= 0) {
->  		ERRMSG("Invalid max_mapnr(%llu).\n", info->max_mapnr);
-> @@ -9009,18 +9009,17 @@ calculate_cyclic_buffer_size(void) {
->  	 * within 80% of free memory.
->  	 */
->  	if (info->flag_elf_dumpfile) {
-> -		free_size = get_free_memory_size() * 0.4;
-> -		needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-> +		limit_size = get_free_memory_size() * 0.4;
->  	} else {
-> -		free_size = get_free_memory_size() * 0.8;
-> -		needed_size = info->max_mapnr / BITPERBYTE;
-> +		limit_size = get_free_memory_size() * 0.8;
->  	}
-> +	bitmap_size = info->max_mapnr / BITPERBYTE;
->  
->  	/* if --split was specified cyclic buffer allocated per dump file */
->  	if (info->num_dumpfile > 1)
-> -		needed_size /= info->num_dumpfile;
-> +		bitmap_size /= info->num_dumpfile;
->  
-> -	info->bufsize_cyclic = (free_size <= needed_size) ? free_size :
-> needed_size;
-> +	info->bufsize_cyclic = (limit_size <= bitmap_size) ? limit_size :
-> bitmap_size;
->  
->  	return TRUE;
->  }
-> --
-> 1.8.0.2
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index d1fe1a7..bc2007e 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -348,6 +348,9 @@ static inline void ClearPageCompound(struct page
+*page) ClearPageHead(page);
+ }
+ #endif
++
++#define PG_head_mask ((1L << PG_head))
++
+ #else
+ /*
+  * Reduce page flag use as much as possible by overlapping
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index c8380ad..e6f3aec 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1622,6 +1622,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ #ifdef CONFIG_MEMORY_FAILURE
+ 	VMCOREINFO_NUMBER(PG_hwpoison);
+ #endif
++	VMCOREINFO_NUMBER(PG_head_mask);
+ 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+ 
+ 	arch_crash_save_vmcoreinfo();
+-- 
+1.8.4.5
 
 _______________________________________________
 kexec mailing list
