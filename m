@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYR8c-0007ej-HI
- for kexec@lists.infradead.org; Fri, 11 Apr 2014 02:24:19 +0000
+ id 1WYR8m-0007fa-HO
+ for kexec@lists.infradead.org; Fri, 11 Apr 2014 02:24:30 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH RESEND v5 04/10] x86,
- cleanup: add_memmap() only do alignment check on RANGE_RAM
-Date: Fri, 11 Apr 2014 10:23:25 +0800
-Message-Id: <1397183011-1526-5-git-send-email-chaowang@redhat.com>
+Subject: [PATCH RESEND v5 09/10] x86: add --pass-memmap-cmdline option
+Date: Fri, 11 Apr 2014 10:23:30 +0800
+Message-Id: <1397183011-1526-10-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
 References: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,26 +25,110 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com, linn@hp.com
 Cc: kexec@lists.infradead.org
 
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--pass-memmap-cmdline is used for pass memmap=exactmap cmdline for 2nd
+kernel. Later we will use this option to disable passing E820 memmap
+method but use the old exactmap method.
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 43eb8f7..4072c10 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -482,8 +482,8 @@ static int add_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
- 	int i, j, nr_entries = 0, tidx = 0, align = 1024;
- 	unsigned long long mstart, mend;
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+Tested-by: Linn Crosetto <linn@hp.com>
+---
+ kexec/arch/i386/include/arch/options.h | 2 ++
+ kexec/arch/i386/kexec-x86.c            | 4 ++++
+ kexec/arch/i386/kexec-x86.h            | 1 +
+ kexec/arch/x86_64/kexec-x86_64.c       | 5 +++++
+ 4 files changed, 12 insertions(+)
+
+diff --git a/kexec/arch/i386/include/arch/options.h b/kexec/arch/i386/include/arch/options.h
+index aaac731..e5300b5 100644
+--- a/kexec/arch/i386/include/arch/options.h
++++ b/kexec/arch/i386/include/arch/options.h
+@@ -30,6 +30,7 @@
+ #define OPT_VGA 		(OPT_ARCH_MAX+8)
+ #define OPT_REAL_MODE		(OPT_ARCH_MAX+9)
+ #define OPT_ENTRY_32BIT		(OPT_ARCH_MAX+10)
++#define OPT_PASS_MEMMAP_CMDLINE	(OPT_ARCH_MAX+11)
  
--	/* Do alignment check. */
--	if ((addr%align) || (size%align))
-+	/* Do alignment check if it's RANGE_RAM */
-+	if ((type == RANGE_RAM) && ((addr%align) || (size%align)))
- 		return -1;
+ /* Options relevant to the architecture (excluding loader-specific ones): */
+ #define KEXEC_ARCH_OPTIONS \
+@@ -41,6 +42,7 @@
+ 	{ "console-serial", 0, 0, OPT_CONSOLE_SERIAL }, \
+ 	{ "elf32-core-headers", 0, 0, OPT_ELF32_CORE }, \
+ 	{ "elf64-core-headers", 0, 0, OPT_ELF64_CORE }, \
++	{ "pass-memmap-cmdline", 0, 0, OPT_PASS_MEMMAP_CMDLINE }, \
  
- 	/* Make sure at least one entry in list is free. */
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
+diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
+index 014ecd5..0b58dff 100644
+--- a/kexec/arch/i386/kexec-x86.c
++++ b/kexec/arch/i386/kexec-x86.c
+@@ -54,6 +54,7 @@ void arch_usage(void)
+ 		"     --console-serial          Enable the serial console\n"
+ 		"     --elf32-core-headers      Prepare core headers in ELF32 format\n"
+ 		"     --elf64-core-headers      Prepare core headers in ELF64 format\n"
++		"     --pass--memmap-cmdline    Pass memory map via command line in kexec on panic case\n"
+ 		);
+ }
+ 
+@@ -64,6 +65,7 @@ struct arch_options_t arch_options = {
+ 	.console_vga = 0,
+ 	.console_serial = 0,
+ 	.core_header_type = CORE_TYPE_UNDEF,
++	.pass_memmap_cmdline = 0,
+ };
+ 
+ int arch_process_options(int argc, char **argv)
+@@ -133,6 +135,8 @@ int arch_process_options(int argc, char **argv)
+ 		case OPT_ELF64_CORE:
+ 			arch_options.core_header_type = CORE_TYPE_ELF64;
+ 			break;
++		case OPT_PASS_MEMMAP_CMDLINE:
++			arch_options.pass_memmap_cmdline = 1;
+ 		}
+ 	}
+ 	/* Reset getopt for the next pass; called in other source modules */
+diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+index 5aa2a46..e8c9188 100644
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -50,6 +50,7 @@ struct arch_options_t {
+ 	uint8_t  	console_vga;
+ 	uint8_t  	console_serial;
+ 	enum coretype	core_header_type;
++	uint8_t  	pass_memmap_cmdline;
+ };
+ 
+ int multiboot_x86_probe(const char *buf, off_t len);
+diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+index 5c23e01..f70851d 100644
+--- a/kexec/arch/x86_64/kexec-x86_64.c
++++ b/kexec/arch/x86_64/kexec-x86_64.c
+@@ -53,6 +53,7 @@ void arch_usage(void)
+ 		"     --serial-baud=<baud_rate> Specify the serial port baud rate\n"
+ 		"     --console-vga             Enable the vga console\n"
+ 		"     --console-serial          Enable the serial console\n"
++		"     --pass-memmap-cmdline     Pass memory map via command line in kexec on panic case\n"
+ 		);
+ }
+ 
+@@ -63,6 +64,7 @@ struct arch_options_t arch_options = {
+ 	.console_vga = 0,
+ 	.console_serial = 0,
+ 	.core_header_type = CORE_TYPE_ELF64,
++	.pass_memmap_cmdline = 0,
+ };
+ 
+ int arch_process_options(int argc, char **argv)
+@@ -126,6 +128,9 @@ int arch_process_options(int argc, char **argv)
+ 			}
+ 			arch_options.serial_baud = value;
+ 			break;
++		case OPT_PASS_MEMMAP_CMDLINE:
++			arch_options.pass_memmap_cmdline = 1;
++			break;
+ 		}
+ 	}
+ 	/* Reset getopt for the next pass; called in other source modules */
 -- 
 1.8.5.3
 
