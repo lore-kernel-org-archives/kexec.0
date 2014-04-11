@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYRLm-0002rZ-92
- for kexec@lists.infradead.org; Fri, 11 Apr 2014 02:37:55 +0000
-Message-ID: <5347553F.2080907@huawei.com>
-Date: Fri, 11 Apr 2014 10:36:47 +0800
-From: Wang Nan <wangnan0@huawei.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WYRVa-0005l4-LR
+ for kexec@lists.infradead.org; Fri, 11 Apr 2014 02:48:03 +0000
+Date: Fri, 11 Apr 2014 10:47:30 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v5 09/10] x86: Pass memory range via E820 for kdump
+Message-ID: <20140411024730.GH5493@dhcp-16-198.nay.redhat.com>
+References: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
+ <1397121186-9353-14-git-send-email-chaowang@redhat.com>
+ <20140411022831.GG5493@dhcp-16-198.nay.redhat.com>
+ <5347554A.4080009@zytor.com>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH]: merge identical code
-References: <20140408123131.GA10111@kernel-host>
- <0910DD04CBD6DE4193FCF86B9C00BE971FFF3A@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FFF3A@BPXM01GP.gisp.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <5347554A.4080009@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,45 +26,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "hui.geng@huawei.com" <hui.geng@huawei.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>, horms@verge.net.au, linn@hp.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 2014/4/10 15:56, Atsushi Kumagai wrote:
-> Hello Wang,
+On 04/10/14 at 07:36pm, H. Peter Anvin wrote:
+> On 04/10/2014 07:28 PM, Dave Young wrote:
+> >>  
+> >> +static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
+> >> +			struct e820entry *e820, struct memory_range *range, int nr_range)
+> >> +{
+> >> +	int i;
+> >> +
+> >> +	for (i = 0; i < nr_range; i++) {
+> >> +		e820[i].addr = range[i].start;
+> >> +		e820[i].size = range[i].end - range[i].start;
+> > 
+> > I see it's same as original code but I still feel it should be end - start + 1;
+> > 
 > 
->> Hi Kumagai,
->>
->> I found that in makedumpfile.c, there are many code like following:
->>
->>  if (info->flag_cyclic) {
->>      proc_cyclic();
->>  } else {
->>      proc();
->>  }
->>
->> The logical and code of proc_cyclic and proc are nearly identical.
->>
->> Do you want to merge them together?
+> I can't see how it could possibly be +1.
 > 
-> Yes, I think we should do this work.
-> 
-> However, the similarity of them will be reduced since how to update
-> cyclic region is going to be changed in v1.5.6.
-> If you can carry out this work also for v1.5.6, I'll accept it.
-> 
-> You can use the current devel branch because it's almost v1.5.6.
-> (Formally, v1.5.6 will be released next week.)
-> 
-> https://sourceforge.net/p/makedumpfile/code/ci/devel/tree/
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
+> How do you encode range[].end?  If it is inclusive it should be end -
+> start - 1, if it is a semiclosed range (the normal thing in computer
+> contexts) then the code above is correct.
 
-What about totaly remove non-cyclic functions and use a very large cyclic?
+Say the first range from my /proc/iomem:
+00000000-00000fff : reserved
 
+Shouldn't the size be 0x1000? It looks like closed range instead of semiclosed range.
 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
