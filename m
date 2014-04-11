@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from szxga03-in.huawei.com ([119.145.14.66])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYRLb-0002rf-My
- for kexec@lists.infradead.org; Fri, 11 Apr 2014 02:37:43 +0000
-Message-ID: <5347554A.4080009@zytor.com>
-Date: Thu, 10 Apr 2014 19:36:58 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+ id 1WYRLm-0002rZ-92
+ for kexec@lists.infradead.org; Fri, 11 Apr 2014 02:37:55 +0000
+Message-ID: <5347553F.2080907@huawei.com>
+Date: Fri, 11 Apr 2014 10:36:47 +0800
+From: Wang Nan <wangnan0@huawei.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 09/10] x86: Pass memory range via E820 for kdump
-References: <1397121186-9353-1-git-send-email-chaowang@redhat.com>
- <1397121186-9353-14-git-send-email-chaowang@redhat.com>
- <20140411022831.GG5493@dhcp-16-198.nay.redhat.com>
-In-Reply-To: <20140411022831.GG5493@dhcp-16-198.nay.redhat.com>
+Subject: Re: [RFC PATCH]: merge identical code
+References: <20140408123131.GA10111@kernel-host>
+ <0910DD04CBD6DE4193FCF86B9C00BE971FFF3A@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE971FFF3A@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,30 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "hui.geng@huawei.com" <hui.geng@huawei.com>
 
-On 04/10/2014 07:28 PM, Dave Young wrote:
->>  
->> +static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
->> +			struct e820entry *e820, struct memory_range *range, int nr_range)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < nr_range; i++) {
->> +		e820[i].addr = range[i].start;
->> +		e820[i].size = range[i].end - range[i].start;
+On 2014/4/10 15:56, Atsushi Kumagai wrote:
+> Hello Wang,
 > 
-> I see it's same as original code but I still feel it should be end - start + 1;
+>> Hi Kumagai,
+>>
+>> I found that in makedumpfile.c, there are many code like following:
+>>
+>>  if (info->flag_cyclic) {
+>>      proc_cyclic();
+>>  } else {
+>>      proc();
+>>  }
+>>
+>> The logical and code of proc_cyclic and proc are nearly identical.
+>>
+>> Do you want to merge them together?
+> 
+> Yes, I think we should do this work.
+> 
+> However, the similarity of them will be reduced since how to update
+> cyclic region is going to be changed in v1.5.6.
+> If you can carry out this work also for v1.5.6, I'll accept it.
+> 
+> You can use the current devel branch because it's almost v1.5.6.
+> (Formally, v1.5.6 will be released next week.)
+> 
+> https://sourceforge.net/p/makedumpfile/code/ci/devel/tree/
+> 
+> 
+> Thanks
+> Atsushi Kumagai
 > 
 
-I can't see how it could possibly be +1.
-
-How do you encode range[].end?  If it is inclusive it should be end -
-start - 1, if it is a semiclosed range (the normal thing in computer
-contexts) then the code above is correct.
-
-	-hpa
+What about totaly remove non-cyclic functions and use a very large cyclic?
 
 
 
