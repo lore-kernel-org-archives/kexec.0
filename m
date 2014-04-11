@@ -1,15 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYXi8-0005xf-KI
- for kexec@lists.infradead.org; Fri, 11 Apr 2014 09:25:25 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: makedumpfile memmory usage seems high with option -E
-Date: Fri, 11 Apr 2014 09:22:58 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
-References: <20140410214433.GF18808@redhat.com>
-In-Reply-To: <20140410214433.GF18808@redhat.com>
-Content-Language: ja-JP
+ id 1WYYQN-0002BR-05
+ for kexec@lists.infradead.org; Fri, 11 Apr 2014 10:11:08 +0000
+Received: from /spool/local
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
+ Fri, 11 Apr 2014 11:10:36 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com
+ (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3631417D8047
+ for <kexec@lists.infradead.org>; Fri, 11 Apr 2014 11:11:27 +0100 (BST)
+Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
+ [9.149.37.216])
+ by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s3BAAWkL51642378
+ for <kexec@lists.infradead.org>; Fri, 11 Apr 2014 10:10:32 GMT
+Received: from d06av04.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av04.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s3BAAWtt007656
+ for <kexec@lists.infradead.org>; Fri, 11 Apr 2014 04:10:33 -0600
+Subject: [PATCH] kexec/fs2dt : Fix endianess issue with initrd base and size
+From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Date: Fri, 11 Apr 2014 12:10:30 +0200
+Message-ID: <20140411101030.8033.95615.stgit@nimbus>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,113 +38,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "vgoyal@redhat.com" <vgoyal@redhat.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>
+To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Hello Vivek,
+The initrd values exposed in the device tree of the kexeced kernel must be
+encoded in Big Endian format.
 
->Hi Atsushi/Hatayama,
->
->We noticed in our testing that makedumpfile gets OOM killed if we happen
->to use -E option. Saving to compressed kdump format works just fine.
->
->Also we noticed that with -E if we disable cyclic mode then it works just
->fine.
->
->So looks like something is going on with -E and cyclic mode enabled. I am
->not sure what it is.
->
->Do you suspect something?
+Without this patch, kexeced LE kernel are expected to panic when dealing
+with the initrd image.
 
-At first, I supposed the function to calculate cyclic buffer size may
-be related to this issue, but I haven't found the answer yet...
+Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+---
+ kexec/fs2dt.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-int
-calculate_cyclic_buffer_size() {
-
-        if (info->flag_elf_dumpfile) {
-                free_size = get_free_memory_size() * 0.4;
-                needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-        } else {
-                free_size = get_free_memory_size() * 0.8;
-                needed_size = info->max_mapnr / BITPERBYTE;
-        }
-        [...]
-        info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
-
-
-I've found this function has an issue about memory allocation.
-When -E is specified, info->bufsize_cyclic will be the total size of
-the 1st and 2nd bitmap if free memory is enough. Then,
-info->bufsize_cyclic will be used to allocate each bitmap in
-prepare_bitmap_buffer_cyclic() like below:
-
-        if ((info->partial_bitmap1 = (char *)malloc(info->bufsize_cyclic)) == NULL) {
-                ERRMSG("Can't allocate memory for the 1st-bitmap. %s\n",
-                       strerror(errno));
-                return FALSE;
-        }
-        if ((info->partial_bitmap2 = (char *)malloc(info->bufsize_cyclic)) == NULL) {
-                ERRMSG("Can't allocate memory for the 2nd-bitmap. %s\n",
-                       strerror(errno));
-                return FALSE;
-        }
-
-It's a too much allocation definitely, but it mustn't exceed 80% of free
-memory due to the condition check in calculate_cyclic_buffer_size(), so
-I think the OOM issue will not happen by this issue.
-I'll fix this too much allocation with the patch below, but it will not
-resolve your OOM issue... 
-
-BTW, what are your version of makedumpfile and crashkernel= size and
-the system memory size? and does the issue happen even if you specify
---cyclic-buffer which is small enough to fit the available memory ?
-I'm curious to know the details of the condition which cause the issue.
-
-
-Thanks
-Atsushi Kumagai
-
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 75092a8..ae9e69a 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -8996,7 +8996,7 @@ out:
-  */
- int
- calculate_cyclic_buffer_size(void) {
--	unsigned long long free_size, needed_size;
-+	unsigned long long limit_size, bitmap_size;
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 5e6b98d..2a90979 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -531,7 +531,7 @@ static void putnode(void)
+ 	/* Add initrd entries to the second kernel */
+ 	if (initrd_base && initrd_size && !strcmp(basename,"chosen/")) {
+ 		int len = 8;
+-		unsigned long long initrd_end;
++		uint64_t bevalue;
  
- 	if (info->max_mapnr <= 0) {
- 		ERRMSG("Invalid max_mapnr(%llu).\n", info->max_mapnr);
-@@ -9009,18 +9009,17 @@ calculate_cyclic_buffer_size(void) {
- 	 * within 80% of free memory.
- 	 */
- 	if (info->flag_elf_dumpfile) {
--		free_size = get_free_memory_size() * 0.4;
--		needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-+		limit_size = get_free_memory_size() * 0.4;
- 	} else {
--		free_size = get_free_memory_size() * 0.8;
--		needed_size = info->max_mapnr / BITPERBYTE;
-+		limit_size = get_free_memory_size() * 0.8;
- 	}
-+	bitmap_size = info->max_mapnr / BITPERBYTE;
+ 		dt_reserve(&dt, 12); /* both props, of 6 words ea. */
+ 		*dt++ = cpu_to_be32(3);
+@@ -539,7 +539,8 @@ static void putnode(void)
+ 		*dt++ = cpu_to_be32(propnum("linux,initrd-start"));
+ 		pad_structure_block(len);
  
- 	/* if --split was specified cyclic buffer allocated per dump file */
- 	if (info->num_dumpfile > 1)
--		needed_size /= info->num_dumpfile;
-+		bitmap_size /= info->num_dumpfile;
+-		memcpy(dt,&initrd_base,len);
++		bevalue = cpu_to_be64(initrd_base);
++		memcpy(dt, &bevalue, len);
+ 		dt += (len + 3)/4;
  
--	info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
-+	info->bufsize_cyclic = (limit_size <= bitmap_size) ? limit_size : bitmap_size;
+ 		len = 8;
+@@ -547,10 +548,10 @@ static void putnode(void)
+ 		*dt++ = cpu_to_be32(len);
+ 		*dt++ = cpu_to_be32(propnum("linux,initrd-end"));
  
- 	return TRUE;
- }
--- 
-1.8.0.2
+-		initrd_end = initrd_base + initrd_size;
++		bevalue = cpu_to_be64(initrd_base + initrd_size);
+ 		pad_structure_block(len);
+ 
+-		memcpy(dt,&initrd_end,len);
++		memcpy(dt, &bevalue, len);
+ 		dt += (len + 3)/4;
+ 
+ 		reserve(initrd_base, initrd_size);
+
 
 _______________________________________________
 kexec mailing list
