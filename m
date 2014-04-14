@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZWSZ-0001vF-LZ
- for kexec@lists.infradead.org; Mon, 14 Apr 2014 02:17:24 +0000
-Date: Mon, 14 Apr 2014 11:16:59 +0900
+ id 1WZWVM-0002lV-Dq
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 02:20:17 +0000
+Date: Mon, 14 Apr 2014 11:19:51 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH RESEND v5 08/10] x86, cleanup: Add a funtion
- add_setup_data()
-Message-ID: <20140414021659.GL22411@verge.net.au>
-References: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
- <1397183011-1526-9-git-send-email-chaowang@redhat.com>
+Subject: Re: [PATCH] kexec/fs2dt : Fix endianess issue with initrd base and
+ size
+Message-ID: <20140414021951.GM22411@verge.net.au>
+References: <20140411101030.8033.95615.stgit@nimbus>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1397183011-1526-9-git-send-email-chaowang@redhat.com>
+In-Reply-To: <20140411101030.8033.95615.stgit@nimbus>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,77 +24,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org
 
-On Fri, Apr 11, 2014 at 10:23:29AM +0800, WANG Chao wrote:
-> add_setup_data() is used to add an instance to the single linked list
-> of setup_data structure.
+On Fri, Apr 11, 2014 at 12:10:30PM +0200, Laurent Dufour wrote:
+> The initrd values exposed in the device tree of the kexeced kernel must be
+> encoded in Big Endian format.
 > 
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
+> Without this patch, kexeced LE kernel are expected to panic when dealing
+> with the initrd image.
+> 
+> Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
 
 Thanks, applied.
 
 > ---
->  kexec/arch/i386/x86-linux-setup.c | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
+>  kexec/fs2dt.c |    9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> index e04e45d..8ed36cc 100644
-> --- a/kexec/arch/i386/x86-linux-setup.c
-> +++ b/kexec/arch/i386/x86-linux-setup.c
-> @@ -603,6 +603,22 @@ struct efi_info {
->  };
+> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+> index 5e6b98d..2a90979 100644
+> --- a/kexec/fs2dt.c
+> +++ b/kexec/fs2dt.c
+> @@ -531,7 +531,7 @@ static void putnode(void)
+>  	/* Add initrd entries to the second kernel */
+>  	if (initrd_base && initrd_size && !strcmp(basename,"chosen/")) {
+>  		int len = 8;
+> -		unsigned long long initrd_end;
+> +		uint64_t bevalue;
 >  
->  /*
-> + * Add another instance to single linked list of struct setup_data.
-> + * Please refer to kernel Documentation/x86/boot.txt for more details
-> + * about setup_data structure.
-> + */
-> +static void add_setup_data(struct kexec_info *info,
-> +			   struct x86_linux_param_header *real_mode,
-> +			   struct setup_data *sd)
-> +{
-> +	int sdsize = sizeof(struct setup_data) + sd->len;
-> +
-> +	sd->next = real_mode->setup_data;
-> +	real_mode->setup_data = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
-> +			    0x100000, ULONG_MAX, INT_MAX);
-> +}
-> +
-> +/*
->   * setup_efi_data will collect below data and pass them to 2nd kernel.
->   * 1) SMBIOS, fw_vendor, runtime, config_table, they are passed via x86
->   *    setup_data.
-> @@ -611,11 +627,11 @@ struct efi_info {
->  static int setup_efi_data(struct kexec_info *info,
->  			  struct x86_linux_param_header *real_mode)
->  {
-> -	int64_t setup_data_paddr, memmap_paddr;
-> +	int64_t memmap_paddr;
->  	struct setup_data *sd;
->  	struct efi_setup_data *esd;
->  	struct efi_mem_descriptor *maps;
-> -	int nr_maps, size, sdsize, ret = 0;
-> +	int nr_maps, size, ret = 0;
->  	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
+>  		dt_reserve(&dt, 12); /* both props, of 6 words ea. */
+>  		*dt++ = cpu_to_be32(3);
+> @@ -539,7 +539,8 @@ static void putnode(void)
+>  		*dt++ = cpu_to_be32(propnum("linux,initrd-start"));
+>  		pad_structure_block(len);
 >  
->  	ret = access("/sys/firmware/efi/systab", F_OK);
-> @@ -648,10 +664,8 @@ static int setup_efi_data(struct kexec_info *info,
->  	sd->len = sizeof(*esd);
->  	memcpy(sd->data, esd, sizeof(*esd));
->  	free(esd);
-> -	sdsize = sd->len + sizeof(struct setup_data);
-> -	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
-> -					0x100000, ULONG_MAX, INT_MAX);
-> -	real_mode->setup_data = setup_data_paddr;
-> +
-> +	add_setup_data(info, real_mode, sd);
+> -		memcpy(dt,&initrd_base,len);
+> +		bevalue = cpu_to_be64(initrd_base);
+> +		memcpy(dt, &bevalue, len);
+>  		dt += (len + 3)/4;
 >  
->  	size = nr_maps * sizeof(struct efi_mem_descriptor);
->  	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
-> -- 
-> 1.8.5.3
+>  		len = 8;
+> @@ -547,10 +548,10 @@ static void putnode(void)
+>  		*dt++ = cpu_to_be32(len);
+>  		*dt++ = cpu_to_be32(propnum("linux,initrd-end"));
+>  
+> -		initrd_end = initrd_base + initrd_size;
+> +		bevalue = cpu_to_be64(initrd_base + initrd_size);
+>  		pad_structure_block(len);
+>  
+> -		memcpy(dt,&initrd_end,len);
+> +		memcpy(dt, &bevalue, len);
+>  		dt += (len + 3)/4;
+>  
+>  		reserve(initrd_base, initrd_size);
 > 
 
 _______________________________________________
