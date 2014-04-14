@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZiJ8-0001X6-Rj
- for kexec@lists.infradead.org; Mon, 14 Apr 2014 14:56:27 +0000
+ id 1WZiJD-0001Ym-Rs
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 14:56:32 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v6 8/9] x86: add --pass-memmap-cmdline option
-Date: Mon, 14 Apr 2014 22:55:40 +0800
-Message-Id: <1397487341-17287-9-git-send-email-chaowang@redhat.com>
+Subject: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
+Date: Mon, 14 Apr 2014 22:55:41 +0800
+Message-Id: <1397487341-17287-10-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
 References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,110 +25,256 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com, linn@hp.com
 Cc: kexec@lists.infradead.org
 
---pass-memmap-cmdline is used for pass memmap=exactmap cmdline for 2nd
-kernel. Later we will use this option to disable passing E820 memmap
-method but use the old exactmap method.
+command line size is restricted by kernel, sometimes memmap=exactmap has
+too many memory ranges to pass to cmdline. And also memmap=exactmap and
+kASLR doesn't work together.
+
+A better approach, to pass the memory ranges for crash kernel to boot
+into, is filling the memory ranges into E820.
+
+boot_params only got 128 slots for E820 map to fit in, when the number of
+memory map exceeds 128, use setup_data to pass the rest as extended E820
+memory map.
+
+kexec boot could also benefit from setup_data in case E820 memory map
+exceeds 128.
+
+Now this new approach becomes default instead of memmap=exactmap.
+saved_max_pfn users can specify --pass-memmap-cmdline to use the
+exactmap approach.
 
 Signed-off-by: WANG Chao <chaowang@redhat.com>
 Tested-by: Linn Crosetto <linn@hp.com>
+Reviewed-by: Linn Crosetto <linn@hp.com>
 ---
- kexec/arch/i386/include/arch/options.h | 2 ++
- kexec/arch/i386/kexec-x86.c            | 4 ++++
- kexec/arch/i386/kexec-x86.h            | 1 +
- kexec/arch/x86_64/kexec-x86_64.c       | 5 +++++
- 4 files changed, 12 insertions(+)
+ kexec/arch/i386/crashdump-x86.c   |   6 +-
+ kexec/arch/i386/x86-linux-setup.c | 149 +++++++++++++++++++++++++-------------
+ kexec/arch/i386/x86-linux-setup.h |   1 +
+ 3 files changed, 103 insertions(+), 53 deletions(-)
 
-diff --git a/kexec/arch/i386/include/arch/options.h b/kexec/arch/i386/include/arch/options.h
-index aaac731..e5300b5 100644
---- a/kexec/arch/i386/include/arch/options.h
-+++ b/kexec/arch/i386/include/arch/options.h
-@@ -30,6 +30,7 @@
- #define OPT_VGA 		(OPT_ARCH_MAX+8)
- #define OPT_REAL_MODE		(OPT_ARCH_MAX+9)
- #define OPT_ENTRY_32BIT		(OPT_ARCH_MAX+10)
-+#define OPT_PASS_MEMMAP_CMDLINE	(OPT_ARCH_MAX+11)
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 7b618a6..4a1491b 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -979,7 +979,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
+ 	if (delete_memmap(memmap_p, &nr_memmap, elfcorehdr, memsz) < 0)
+ 		return -1;
+-	cmdline_add_memmap(mod_cmdline, memmap_p);
++	if (arch_options.pass_memmap_cmdline)
++		cmdline_add_memmap(mod_cmdline, memmap_p);
+ 	if (!bzImage_support_efi_boot)
+ 		cmdline_add_efi(mod_cmdline);
+ 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+@@ -995,7 +996,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 		type = mem_range[i].type;
+ 		size = end - start + 1;
+ 		add_memmap(memmap_p, &nr_memmap, start, size, type);
+-		cmdline_add_memmap_acpi(mod_cmdline, start, end);
++		if (arch_options.pass_memmap_cmdline)
++			cmdline_add_memmap_acpi(mod_cmdline, start, end);
+ 	}
  
- /* Options relevant to the architecture (excluding loader-specific ones): */
- #define KEXEC_ARCH_OPTIONS \
-@@ -41,6 +42,7 @@
- 	{ "console-serial", 0, 0, OPT_CONSOLE_SERIAL }, \
- 	{ "elf32-core-headers", 0, 0, OPT_ELF32_CORE }, \
- 	{ "elf64-core-headers", 0, 0, OPT_ELF64_CORE }, \
-+	{ "pass-memmap-cmdline", 0, 0, OPT_PASS_MEMMAP_CMDLINE }, \
+ 	/* Store 2nd kernel boot memory ranges for later reference in
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 9f8355f..4437ed7 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -36,8 +36,6 @@
+ #include "x86-linux-setup.h"
+ #include "../../kexec/kexec-syscall.h"
  
- #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
- 
-diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
-index 014ecd5..0b58dff 100644
---- a/kexec/arch/i386/kexec-x86.c
-+++ b/kexec/arch/i386/kexec-x86.c
-@@ -54,6 +54,7 @@ void arch_usage(void)
- 		"     --console-serial          Enable the serial console\n"
- 		"     --elf32-core-headers      Prepare core headers in ELF32 format\n"
- 		"     --elf64-core-headers      Prepare core headers in ELF64 format\n"
-+		"     --pass--memmap-cmdline    Pass memory map via command line in kexec on panic case\n"
- 		);
+-#define SETUP_EFI	4
+-
+ void init_linux_parameters(struct x86_linux_param_header *real_mode)
+ {
+ 	/* Fill in the values that are usually provided by the kernel. */
+@@ -502,6 +500,11 @@ struct efi_setup_data {
+ struct setup_data {
+ 	uint64_t next;
+ 	uint32_t type;
++#define SETUP_NONE	0
++#define SETUP_E820_EXT	1
++#define SETUP_DTB	2
++#define SETUP_PCI	3
++#define SETUP_EFI	4
+ 	uint32_t len;
+ 	uint8_t data[0];
+ } __attribute__((packed));
+@@ -684,6 +687,98 @@ out:
+ 	return ret;
  }
  
-@@ -64,6 +65,7 @@ struct arch_options_t arch_options = {
- 	.console_vga = 0,
- 	.console_serial = 0,
- 	.core_header_type = CORE_TYPE_UNDEF,
-+	.pass_memmap_cmdline = 0,
- };
++static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
++			struct e820entry *e820, struct memory_range *range, int nr_range)
++{
++	int i;
++
++	for (i = 0; i < nr_range; i++) {
++		e820[i].addr = range[i].start;
++		e820[i].size = range[i].end - range[i].start + 1;
++		switch (range[i].type) {
++			case RANGE_RAM:
++				e820[i].type = E820_RAM;
++				break;
++			case RANGE_ACPI:
++				e820[i].type = E820_ACPI;
++				break;
++			case RANGE_ACPI_NVS:
++				e820[i].type = E820_NVS;
++				break;
++			default:
++			case RANGE_RESERVED:
++				e820[i].type = E820_RESERVED;
++				break;
++		}
++		dbgprintf("%016lx-%016lx (%d)\n",
++				e820[i].addr,
++				e820[i].addr + e820[i].size - 1,
++				e820[i].type);
++
++		if (range[i].type != RANGE_RAM)
++			continue;
++		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
++			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
++			real_mode->ext_mem_k = mem_k;
++			real_mode->alt_mem_k = mem_k;
++			if (mem_k > 0xfc00) {
++				real_mode->ext_mem_k = 0xfc00; /* 64M */
++			}
++			if (mem_k > 0xffffffff) {
++				real_mode->alt_mem_k = 0xffffffff;
++			}
++		}
++	}
++}
++
++static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
++			   struct memory_range *range, int nr_range)
++{
++	struct setup_data *sd;
++	struct e820entry *e820;
++	int nr_range_ext;
++
++	nr_range_ext = nr_range - E820MAX;
++	sd = xmalloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
++	sd->next = 0;
++	sd->len = nr_range_ext * sizeof(struct e820entry);
++	sd->type = SETUP_E820_EXT;
++
++	e820 = (struct e820entry *) sd->data;
++	dbgprintf("Extended E820 via setup_data:\n");
++	add_e820_map_from_mr(real_mode, e820, range + E820MAX, nr_range_ext);
++	add_setup_data(info, real_mode, sd);
++}
++
++static void setup_e820(struct kexec_info *info, struct x86_linux_param_header *real_mode)
++{
++	struct memory_range *range;
++	int nr_range, nr_range_saved;
++
++
++	if (info->kexec_flags & KEXEC_ON_CRASH && !arch_options.pass_memmap_cmdline) {
++		range = info->crash_range;
++		nr_range = info->nr_crash_ranges;
++	} else {
++		range = info->memory_range;
++		nr_range = info->memory_ranges;
++	}
++
++	nr_range_saved = nr_range;
++	if (nr_range > E820MAX) {
++		nr_range = E820MAX;
++	}
++
++	real_mode->e820_map_nr = nr_range;
++	dbgprintf("E820 memmap:\n");
++	add_e820_map_from_mr(real_mode, real_mode->e820_map, range, nr_range);
++
++	if (nr_range_saved > E820MAX) {
++		dbgprintf("extra E820 memmap are passed via setup_data\n");
++		setup_e820_ext(info, real_mode, range, nr_range_saved);
++	}
++}
++
+ static int
+ get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
+ {
+@@ -725,10 +820,6 @@ out:
+ void setup_linux_system_parameters(struct kexec_info *info,
+ 				   struct x86_linux_param_header *real_mode)
+ {
+-	/* Fill in information the BIOS would usually provide */
+-	struct memory_range *range;
+-	int i, ranges;
+-
+ 	/* get subarch from running kernel */
+ 	setup_subarch(real_mode);
+ 	if (bzImage_support_efi_boot)
+@@ -769,51 +860,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
+ 	/* another safe default */
+ 	real_mode->aux_device_info = 0;
  
- int arch_process_options(int argc, char **argv)
-@@ -133,6 +135,8 @@ int arch_process_options(int argc, char **argv)
- 		case OPT_ELF64_CORE:
- 			arch_options.core_header_type = CORE_TYPE_ELF64;
- 			break;
-+		case OPT_PASS_MEMMAP_CMDLINE:
-+			arch_options.pass_memmap_cmdline = 1;
- 		}
- 	}
- 	/* Reset getopt for the next pass; called in other source modules */
-diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
-index 5aa2a46..e8c9188 100644
---- a/kexec/arch/i386/kexec-x86.h
-+++ b/kexec/arch/i386/kexec-x86.h
-@@ -50,6 +50,7 @@ struct arch_options_t {
- 	uint8_t  	console_vga;
- 	uint8_t  	console_serial;
- 	enum coretype	core_header_type;
-+	uint8_t  	pass_memmap_cmdline;
- };
+-	range = info->memory_range;
+-	ranges = info->memory_ranges;
+-	if (ranges > E820MAX) {
+-		if (!(info->kexec_flags & KEXEC_ON_CRASH))
+-			/*
+-			 * this e820 not used for capture kernel, see
+-			 * do_bzImage_load()
+-			 */
+-			fprintf(stderr,
+-				"Too many memory ranges, truncating...\n");
+-		ranges = E820MAX;
+-	}
+-	real_mode->e820_map_nr = ranges;
+-	for(i = 0; i < ranges; i++) {
+-		real_mode->e820_map[i].addr = range[i].start;
+-		real_mode->e820_map[i].size = range[i].end - range[i].start + 1;
+-		switch (range[i].type) {
+-		case RANGE_RAM:
+-			real_mode->e820_map[i].type = E820_RAM; 
+-			break;
+-		case RANGE_ACPI:
+-			real_mode->e820_map[i].type = E820_ACPI; 
+-			break;
+-		case RANGE_ACPI_NVS:
+-			real_mode->e820_map[i].type = E820_NVS;
+-			break;
+-		default:
+-		case RANGE_RESERVED:
+-			real_mode->e820_map[i].type = E820_RESERVED; 
+-			break;
+-		}
+-		if (range[i].type != RANGE_RAM)
+-			continue;
+-		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
+-			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
+-			real_mode->ext_mem_k = mem_k;
+-			real_mode->alt_mem_k = mem_k;
+-			if (mem_k > 0xfc00) {
+-				real_mode->ext_mem_k = 0xfc00; /* 64M */
+-			}
+-			if (mem_k > 0xffffffff) {
+-				real_mode->alt_mem_k = 0xffffffff;
+-			}
+-		}
+-	}
++	setup_e820(info, real_mode);
  
- int multiboot_x86_probe(const char *buf, off_t len);
-diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-index 5c23e01..f70851d 100644
---- a/kexec/arch/x86_64/kexec-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-x86_64.c
-@@ -53,6 +53,7 @@ void arch_usage(void)
- 		"     --serial-baud=<baud_rate> Specify the serial port baud rate\n"
- 		"     --console-vga             Enable the vga console\n"
- 		"     --console-serial          Enable the serial console\n"
-+		"     --pass-memmap-cmdline     Pass memory map via command line in kexec on panic case\n"
- 		);
- }
+ 	/* fill the EDD information */
+ 	setup_edd_info(real_mode);
+diff --git a/kexec/arch/i386/x86-linux-setup.h b/kexec/arch/i386/x86-linux-setup.h
+index 6fb84b4..f5d23d3 100644
+--- a/kexec/arch/i386/x86-linux-setup.h
++++ b/kexec/arch/i386/x86-linux-setup.h
+@@ -30,5 +30,6 @@ void setup_linux_system_parameters(struct kexec_info *info,
+ /* command line parameter may be appended by purgatory */
+ #define PURGATORY_CMDLINE_SIZE 64
+ extern int bzImage_support_efi_boot;
++extern struct arch_options_t arch_options;
  
-@@ -63,6 +64,7 @@ struct arch_options_t arch_options = {
- 	.console_vga = 0,
- 	.console_serial = 0,
- 	.core_header_type = CORE_TYPE_ELF64,
-+	.pass_memmap_cmdline = 0,
- };
- 
- int arch_process_options(int argc, char **argv)
-@@ -126,6 +128,9 @@ int arch_process_options(int argc, char **argv)
- 			}
- 			arch_options.serial_baud = value;
- 			break;
-+		case OPT_PASS_MEMMAP_CMDLINE:
-+			arch_options.pass_memmap_cmdline = 1;
-+			break;
- 		}
- 	}
- 	/* Reset getopt for the next pass; called in other source modules */
+ #endif /* X86_LINUX_SETUP_H */
 -- 
 1.9.0
 
