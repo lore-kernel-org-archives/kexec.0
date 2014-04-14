@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZWPW-0000Z1-SB
- for kexec@lists.infradead.org; Mon, 14 Apr 2014 02:14:15 +0000
-Date: Mon, 14 Apr 2014 11:13:51 +0900
+ id 1WZWSZ-0001vF-LZ
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 02:17:24 +0000
+Date: Mon, 14 Apr 2014 11:16:59 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH RESEND v5 04/10] x86, cleanup: add_memmap() only do
- alignment check on RANGE_RAM
-Message-ID: <20140414021351.GK22411@verge.net.au>
+Subject: Re: [PATCH RESEND v5 08/10] x86, cleanup: Add a funtion
+ add_setup_data()
+Message-ID: <20140414021659.GL22411@verge.net.au>
 References: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
- <1397183011-1526-5-git-send-email-chaowang@redhat.com>
+ <1397183011-1526-9-git-send-email-chaowang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1397183011-1526-5-git-send-email-chaowang@redhat.com>
+In-Reply-To: <1397183011-1526-9-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,32 +28,72 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: WANG Chao <chaowang@redhat.com>
 Cc: kexec@lists.infradead.org, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-Could you please explain why this is necessary.
-
-Also, it seems to me that it would make sense to move this
-patch so that is is immediately after patch 2 in the series.
-
-On Fri, Apr 11, 2014 at 10:23:25AM +0800, WANG Chao wrote:
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
-> ---
->  kexec/arch/i386/crashdump-x86.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, Apr 11, 2014 at 10:23:29AM +0800, WANG Chao wrote:
+> add_setup_data() is used to add an instance to the single linked list
+> of setup_data structure.
 > 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 43eb8f7..4072c10 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -482,8 +482,8 @@ static int add_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
->  	int i, j, nr_entries = 0, tidx = 0, align = 1024;
->  	unsigned long long mstart, mend;
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
+
+Thanks, applied.
+
+> ---
+>  kexec/arch/i386/x86-linux-setup.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+> index e04e45d..8ed36cc 100644
+> --- a/kexec/arch/i386/x86-linux-setup.c
+> +++ b/kexec/arch/i386/x86-linux-setup.c
+> @@ -603,6 +603,22 @@ struct efi_info {
+>  };
 >  
-> -	/* Do alignment check. */
-> -	if ((addr%align) || (size%align))
-> +	/* Do alignment check if it's RANGE_RAM */
-> +	if ((type == RANGE_RAM) && ((addr%align) || (size%align)))
->  		return -1;
+>  /*
+> + * Add another instance to single linked list of struct setup_data.
+> + * Please refer to kernel Documentation/x86/boot.txt for more details
+> + * about setup_data structure.
+> + */
+> +static void add_setup_data(struct kexec_info *info,
+> +			   struct x86_linux_param_header *real_mode,
+> +			   struct setup_data *sd)
+> +{
+> +	int sdsize = sizeof(struct setup_data) + sd->len;
+> +
+> +	sd->next = real_mode->setup_data;
+> +	real_mode->setup_data = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
+> +			    0x100000, ULONG_MAX, INT_MAX);
+> +}
+> +
+> +/*
+>   * setup_efi_data will collect below data and pass them to 2nd kernel.
+>   * 1) SMBIOS, fw_vendor, runtime, config_table, they are passed via x86
+>   *    setup_data.
+> @@ -611,11 +627,11 @@ struct efi_info {
+>  static int setup_efi_data(struct kexec_info *info,
+>  			  struct x86_linux_param_header *real_mode)
+>  {
+> -	int64_t setup_data_paddr, memmap_paddr;
+> +	int64_t memmap_paddr;
+>  	struct setup_data *sd;
+>  	struct efi_setup_data *esd;
+>  	struct efi_mem_descriptor *maps;
+> -	int nr_maps, size, sdsize, ret = 0;
+> +	int nr_maps, size, ret = 0;
+>  	struct efi_info *ei = (struct efi_info *)real_mode->efi_info;
 >  
->  	/* Make sure at least one entry in list is free. */
+>  	ret = access("/sys/firmware/efi/systab", F_OK);
+> @@ -648,10 +664,8 @@ static int setup_efi_data(struct kexec_info *info,
+>  	sd->len = sizeof(*esd);
+>  	memcpy(sd->data, esd, sizeof(*esd));
+>  	free(esd);
+> -	sdsize = sd->len + sizeof(struct setup_data);
+> -	setup_data_paddr = add_buffer(info, sd, sdsize, sdsize, getpagesize(),
+> -					0x100000, ULONG_MAX, INT_MAX);
+> -	real_mode->setup_data = setup_data_paddr;
+> +
+> +	add_setup_data(info, real_mode, sd);
+>  
+>  	size = nr_maps * sizeof(struct efi_mem_descriptor);
+>  	memmap_paddr = add_buffer(info, maps, size, size, getpagesize(),
 > -- 
 > 1.8.5.3
 > 
