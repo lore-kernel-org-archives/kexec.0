@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZZHK-00033h-M5
- for kexec@lists.infradead.org; Mon, 14 Apr 2014 05:17:59 +0000
-Date: Mon, 14 Apr 2014 13:17:31 +0800
+ id 1WZZNt-0005U6-6g
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 05:24:45 +0000
+Date: Mon, 14 Apr 2014 13:24:18 +0800
 From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH RESEND v5 04/10] x86, cleanup: add_memmap() only do
- alignment check on RANGE_RAM
-Message-ID: <20140414051731.GA18927@dhcp-17-89.nay.redhat.com>
+Subject: Re: [PATCH RESEND v5 03/10] x86, cleanup: add other types of memory
+ range for 2nd kernel boot to memmap_p
+Message-ID: <20140414052418.GB18927@dhcp-17-89.nay.redhat.com>
 References: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
- <1397183011-1526-5-git-send-email-chaowang@redhat.com>
- <20140414021351.GK22411@verge.net.au>
+ <1397183011-1526-4-git-send-email-chaowang@redhat.com>
+ <20140414021242.GJ22411@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140414021351.GK22411@verge.net.au>
+In-Reply-To: <20140414021242.GJ22411@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,47 +29,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 04/14/14 at 11:13am, Simon Horman wrote:
-> Could you please explain why this is necessary.
+On 04/14/14 at 11:12am, Simon Horman wrote:
+> On Fri, Apr 11, 2014 at 10:23:24AM +0800, WANG Chao wrote:
+> > Now memmap_p contains all the memory range for 2nd kernel boot.
+> 
+> Could you please include a fuller explanation of what this patch
+> achieves and the motivation for it.
 
-add_memmap() will also add memory range with type RANGE_ACPI and
-RANGE_ACPI_NVS (RANGE_RESERVED in the future) besides RANGE_RAM to
+In load_crashdump_segments(), memmap_p used to contain RANGE_RAM memory
+range for booting 2nd kernel. Now adding types of RANGE_ACPI and
+RANGE_ACPI_NVS to memmap_p, so later we can pass all the types of memory
+range to 2nd kernel. These all types of memory ranges are all stored in
 memmap_p.
 
-Among these types of memory range, only RANGE_RAM needs to
-be aligned with certain alignment. RANGE_ACPI, RANGE_ACPI_NVS and
-RANGE_RESERVED doesn't have to be aligned.
+I'll add above comment to patch description.
 
-I'll add above comment to the patch description.
-
-> 
-> Also, it seems to me that it would make sense to move this
-> patch so that is is immediately after patch 2 in the series.
-
-Will do.
+Thanks
+WANG Chao
 
 > 
-> On Fri, Apr 11, 2014 at 10:23:25AM +0800, WANG Chao wrote:
+> > 
 > > Signed-off-by: WANG Chao <chaowang@redhat.com>
 > > ---
-> >  kexec/arch/i386/crashdump-x86.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >  kexec/arch/i386/crashdump-x86.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
 > > 
 > > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > index 43eb8f7..4072c10 100644
+> > index e695eaf..43eb8f7 100644
 > > --- a/kexec/arch/i386/crashdump-x86.c
 > > +++ b/kexec/arch/i386/crashdump-x86.c
-> > @@ -482,8 +482,8 @@ static int add_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
-> >  	int i, j, nr_entries = 0, tidx = 0, align = 1024;
-> >  	unsigned long long mstart, mend;
+> > @@ -1006,12 +1006,15 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
 > >  
-> > -	/* Do alignment check. */
-> > -	if ((addr%align) || (size%align))
-> > +	/* Do alignment check if it's RANGE_RAM */
-> > +	if ((type == RANGE_RAM) && ((addr%align) || (size%align)))
-> >  		return -1;
-> >  
-> >  	/* Make sure at least one entry in list is free. */
+> >  	/* Inform second kernel about the presence of ACPI tables. */
+> >  	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
+> > -		unsigned long start, end;
+> > +		unsigned long start, end, size, type;
+> >  		if ( !( mem_range[i].type == RANGE_ACPI
+> >  			|| mem_range[i].type == RANGE_ACPI_NVS) )
+> >  			continue;
+> >  		start = mem_range[i].start;
+> >  		end = mem_range[i].end;
+> > +		type = mem_range[i].type;
+> > +		size = end - start;
+> > +		add_memmap(memmap_p, &nr_memmap_p, start, size, type);
+> >  		cmdline_add_memmap_acpi(mod_cmdline, start, end);
+> >  	}
+> >  	return 0;
 > > -- 
 > > 1.8.5.3
 > > 
