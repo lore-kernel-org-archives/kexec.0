@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZiIt-0001W7-Rq
- for kexec@lists.infradead.org; Mon, 14 Apr 2014 14:56:12 +0000
+ id 1WZiIy-0001WI-Rk
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 14:56:17 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v6 3/9] x86,
- cleanup: add other types of memory range for 2nd kernel boot to
- memmap_p
-Date: Mon, 14 Apr 2014 22:55:35 +0800
-Message-Id: <1397487341-17287-4-git-send-email-chaowang@redhat.com>
+Subject: [PATCH v6 5/9] x86,
+ cleanup: increase CRASH_MAX_MEMMAP_NR up to CRASH_MAX_MEMORY_RANGES
+Date: Mon, 14 Apr 2014 22:55:37 +0800
+Message-Id: <1397487341-17287-6-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
 References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,38 +26,28 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com, linn@hp.com
 Cc: kexec@lists.infradead.org
 
-In load_crashdump_segments(), memmap_p[] is used to contain RANGE_RAM
-memory range for booting 2nd kernel. Now adding types of RANGE_ACPI and
-RANGE_ACPI_NVS to memmap_p, so later we can pass all the types of memory
-range to 2nd kernel. These all types of memory ranges are all stored in
-memmap_p for later reference.
+CRASH_MAX_MEMMAP_NR now is defined (KEXEC_MAX_SEGMENTS + 2) which is way
+lower than the memmap we can pass to 2nd kernel.
 
 Signed-off-by: WANG Chao <chaowang@redhat.com>
 ---
- kexec/arch/i386/crashdump-x86.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kexec/arch/i386/crashdump-x86.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 6dd2e65..f97d79a 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -1006,12 +1006,15 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+diff --git a/kexec/arch/i386/crashdump-x86.h b/kexec/arch/i386/crashdump-x86.h
+index b61cf0a..0edeb27 100644
+--- a/kexec/arch/i386/crashdump-x86.h
++++ b/kexec/arch/i386/crashdump-x86.h
+@@ -20,8 +20,8 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+ /* Kernel text size */
+ #define X86_64_KERNEL_TEXT_SIZE  (512UL*1024*1024)
  
- 	/* Inform second kernel about the presence of ACPI tables. */
- 	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
--		unsigned long start, end;
-+		unsigned long start, end, size, type;
- 		if ( !( mem_range[i].type == RANGE_ACPI
- 			|| mem_range[i].type == RANGE_ACPI_NVS) )
- 			continue;
- 		start = mem_range[i].start;
- 		end = mem_range[i].end;
-+		type = mem_range[i].type;
-+		size = end - start + 1;
-+		add_memmap(memmap_p, &nr_memmap, start, size, type);
- 		cmdline_add_memmap_acpi(mod_cmdline, start, end);
- 	}
- 	return 0;
+-#define CRASH_MAX_MEMMAP_NR	(KEXEC_MAX_SEGMENTS + 1)
+ #define CRASH_MAX_MEMORY_RANGES	(MAX_MEMORY_RANGES + 2)
++#define CRASH_MAX_MEMMAP_NR	CRASH_MAX_MEMORY_RANGES
+ 
+ /* Backup Region, First 640K of System RAM. */
+ #define BACKUP_SRC_START	0x00000000
 -- 
 1.9.0
 
