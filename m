@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <534BD77E.4020405@huawei.com>
-Date: Mon, 14 Apr 2014 20:41:34 +0800
-From: Liu hua <sdu.liu@huawei.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] ARM : kdump : add arch_crash_save_vmcoreinfo
-References: <1395907240-13308-1-git-send-email-sdu.liu@huawei.com>
- <1395907240-13308-3-git-send-email-sdu.liu@huawei.com>
- <20140414113718.GD3530@arm.com>
-In-Reply-To: <20140414113718.GD3530@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WZiIq-0001Vk-Sm
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 14:56:09 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH v6 0/9] kexec-tools, x86: E820 memmap pass for kdump
+Date: Mon, 14 Apr 2014 22:55:32 +0800
+Message-Id: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,42 +15,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Vijaya Kumar K <vijay.kilari@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "horms@verge.net.au" <horms@verge.net.au>, Stephen Warren <swarren@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: horms@verge.net.au, vgoyal@redhat.com, ebiederm@xmission.com, hpa@zytor.com, trenn@suse.de, dyoung@redhat.com, linn@hp.com
+Cc: kexec@lists.infradead.org
 
-5LqOIDIwMTQvNC8xNCAxOTozNywgV2lsbCBEZWFjb24g5YaZ6YGTOgo+IE9uIFRodSwgTWFyIDI3
-LCAyMDE0IGF0IDA4OjAwOjM5QU0gKzAwMDAsIExpdSBIdWEgd3JvdGU6Cj4+IEZvciB2bWNvcmUg
-Z2VuZXJhdGVkIGJ5IExQQUUgZW5hYmxlZCBrZXJuZWwsIHVzZXIgc3BhY2UKPj4gdXRpbGl0eSBz
-dWNoIGFzIGNyYXNoIG5lZWRzIGFkZGl0aW9uYWwgaW5mb21hdGlvbiB0bwo+PiBwYXJzZS4KPj4K
-Pj4gU28gdGhpcyBwYXRjaCBhZGQgYXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8gYXMgd2hhdCBQ
-QUUgZW5hYmxlZAo+PiBpMzg2IGxpbnV4IGRvZXMuCj4gCj4gTG9va3Mgc2Vuc2libGUgdG8gbWU6
-Cj4gCj4gICBSZXZpZXdlZC1ieTogV2lsbCBEZWFjb24gPHdpbGwuZGVhY29uQGFybS5jb20+Cj4g
-Cj4gV2lsbAoKSGkgV2lsbCwKClRoYW5rcyB0byB5b3UgcmVwbHkuIEhvdyBhYm91dCB0aGUgZmly
-c3Qgb25lIG9mIHRoZSBwYXRjaApzZXJpZXMgbmFtZWQgIltQQVRDSCAxLzNdIEFSTSA6IGtkdW1w
-IDogQWRkIExQQUUgc3VwcG9ydCIuCgpOb3cgdGhlIEFSTSBsaW51eCB3aWxsIHNpbXBseSByZXR1
-cm4gZXJyb3Igd2hlbiBwYXJzZSBhbgpMUEFFIGVuYWJsZWQga2VybmVsLCBiZWNhdXNldGhlIGNv
-bW1pdCA0YjNiZjdhZSBwcm92aWRlCnplcm8gdm1jb3JlX2VsZjY0X2NoZWNrX2FyY2goKS4gU28g
-aWYgd2Ugd2FudCBwYXJzZSBMUEFFCmVuYWJsZWQga2VybmVsLCB3ZSBuZWVkIHRoYXQgb25lLgoK
-VGhhbmtzLApMaXUgSHVhCj4gCj4+IFNpZ25lZC1vZmYtYnk6IExpdSBIdWEgPHNkdS5saXVAaHVh
-d2VpLmNvbT4KPj4gVG86IFJ1c3NlbGwgS2luZyA8bGludXhAYXJtLmxpbnV4Lm9yZy51az4KPj4g
-Q2M6IFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQG52aWRpYS5jb20+IAo+PiBDYzogV2lsbCBEZWFj
-b24gPHdpbGwuZGVhY29uQGFybS5jb20+Cj4+IENjOiBWaWpheWEgS3VtYXIgSyA8dmlqYXkua2ls
-YXJpQGdtYWlsLmNvbT4KPj4gQ2M6IDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc+Cj4+IENjOiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4KPj4gQ2M6IDxrZXhlY0Bs
-aXN0cy5pbmZyYWRlYWQub3JnPgo+PiAtLS0KPj4gIGFyY2gvYXJtL2tlcm5lbC9tYWNoaW5lX2tl
-eGVjLmMgfCA3ICsrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPj4K
-Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2tlcm5lbC9tYWNoaW5lX2tleGVjLmMgYi9hcmNoL2Fy
-bS9rZXJuZWwvbWFjaGluZV9rZXhlYy5jCj4+IGluZGV4IGYwZDE4MGQuLjhjZjA5OTYgMTAwNjQ0
-Cj4+IC0tLSBhL2FyY2gvYXJtL2tlcm5lbC9tYWNoaW5lX2tleGVjLmMKPj4gKysrIGIvYXJjaC9h
-cm0va2VybmVsL21hY2hpbmVfa2V4ZWMuYwo+PiBAQCAtMTg0LDMgKzE4NCwxMCBAQCB2b2lkIG1h
-Y2hpbmVfa2V4ZWMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpCj4+ICAKPj4gIAlzb2Z0X3Jlc3RhcnQo
-cmVib290X2VudHJ5X3BoeXMpOwo+PiAgfQo+PiArCj4+ICt2b2lkIGFyY2hfY3Jhc2hfc2F2ZV92
-bWNvcmVpbmZvKHZvaWQpCj4+ICt7Cj4+ICsjaWZkZWYgQ09ORklHX0FSTV9MUEFFCj4+ICsJVk1D
-T1JFSU5GT19DT05GSUcoQVJNX0xQQUUpOwo+PiArI2VuZGlmCj4+ICt9Cj4+IC0tIAo+PiAxLjku
-MAo+Pgo+Pgo+IAo+IC4KPiAKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi, All
+
+This patchset enables passing memory map via E820 map on x86 platform instead
+of memmap=exactmap. It's a better design and will solve the following problem
+so far:
+
+- kernel cmdline is limited resource and large machines tend to have many
+    memory ranges that may excceed kernel cmdline limit size.
+- kASLR doesn't work with memmap=exactmap, because kASLR happens early than
+    user defined memmap=exactmap takes effect.
+
+Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
+like the only one). So for backward compatibility, I'm introducing a new option
+--pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
+
+This patchset contains massive updates from the previous one. I take some
+suggestions from reviewers. I try to split the changes into smaller pieces and
+keep the whole change as minimal as I can so it wouldn't be too harsh to review
+the patch.
+
+Any comment is appreciate!
+
+v6->v5:
+dyoung:
+ - use nr_memmap instead of nr_memmap_p
+ - .end inclusive
+Simon:
+ - more description on some patches
+
+v5->v4:
+Dave:
+ - separate add_setup_data() to another patch.
+Vivek:
+ - adding comments for setup_data.
+ - store crash memory range info golobally in kexec_info.
+me:
+ -remove dbgprint_mem_range defination, Simon has merged the patch.
+
+v3->v4:
+Linn: check return value of malloc (use xmalloc).
+me: fix dbgprintf_mem_range.
+
+v2->v3:
+Linn:
+ - do not free sd (setup_data) buffer.
+ - reuse code in setup_e820 and setup_e820_ext.
+
+v1->v2:
+Vivek:
+ - Use function instead of macro for dbgprint_mem_range
+ - Do not pass reserved memory range for kdump. It could addressed later
+   separately.
+
+WANG Chao (9):
+  x86, cleanup: add extra arguments to add_memmap() and delete_memmap()
+  x86, cleanup: add_memmap() only do alignment check on RANGE_RAM
+  x86, cleanup: add other types of memory range for 2nd kernel boot to
+    memmap_p
+  x86, cleanup: use dbgprint_mem_range for memory range debugging
+  x86, cleanup: increase CRASH_MAX_MEMMAP_NR up to
+    CRASH_MAX_MEMORY_RANGES
+  x86, cleanup: Store crash memory ranges kexec_info
+  x86, cleanup: kexec memory range .end to be inclusive
+  x86: add --pass-memmap-cmdline option
+  x86: Pass memory range via E820 for kdump
+
+ kexec/arch/i386/crashdump-x86.c        |  69 +++++++--------
+ kexec/arch/i386/crashdump-x86.h        |   2 +-
+ kexec/arch/i386/include/arch/options.h |   2 +
+ kexec/arch/i386/kexec-x86-common.c     |   3 +-
+ kexec/arch/i386/kexec-x86.c            |   4 +
+ kexec/arch/i386/kexec-x86.h            |   1 +
+ kexec/arch/i386/x86-linux-setup.c      | 149 ++++++++++++++++++++++-----------
+ kexec/arch/i386/x86-linux-setup.h      |   1 +
+ kexec/arch/x86_64/kexec-x86_64.c       |   5 ++
+ kexec/firmware_memmap.c                |   1 -
+ kexec/kexec.h                          |   2 +
+ 11 files changed, 147 insertions(+), 92 deletions(-)
+
+-- 
+1.9.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
