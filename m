@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WYdjO-0007y3-0R
- for kexec@lists.infradead.org; Fri, 11 Apr 2014 15:51:06 +0000
-Date: Fri, 11 Apr 2014 17:50:39 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH] Save PG_head_mask in VMCOREINFO
-Message-ID: <20140411175039.00fa75ea@hananiah.suse.cz>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WZWLa-0007ZO-Dp
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 02:10:11 +0000
+Date: Mon, 14 Apr 2014 11:09:46 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH RESEND v5 01/10] x86, cleanup: fix indent
+Message-ID: <20140414020946.GH22411@verge.net.au>
+References: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
+ <1397183011-1526-2-git-send-email-chaowang@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1397183011-1526-2-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,58 +24,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Paul Mackerras <paulus@samba.org>, Fengguang Wu <fengguang.wu@intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Shaohua Li <shli@kernel.org>, Alexey Kardashevskiy <aik@ozlabs.ru>, Sasha Levin <sasha.levin@oracle.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-To allow filtering of huge pages, makedumpfile must be able to
-identify them in the dump. This can be done by checking the
-appropriate page flag, so communicate its value to makedumpfile
-through the VMCOREINFO interface.
+On Fri, Apr 11, 2014 at 10:23:22AM +0800, WANG Chao wrote:
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
 
-There's only one small catch. Depending on how many page flags
-are available on a given architecture, this bit can be called
-PG_head or PG_compound.
+Thanks, Applied.
 
-I sent a similar patch back in 2012, but Eric Biederman did not
-like using an #ifdef. So, this time I'm adding a common symbol
-(PG_head_mask) instead.
-
-See https://lkml.org/lkml/2012/11/28/91 for the previous version.
-
-Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
----
- include/linux/page-flags.h | 3 +++
- kernel/kexec.c             | 1 +
- 2 files changed, 4 insertions(+)
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index d1fe1a7..bc2007e 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -348,6 +348,9 @@ static inline void ClearPageCompound(struct page
-*page) ClearPageHead(page);
- }
- #endif
-+
-+#define PG_head_mask ((1L << PG_head))
-+
- #else
- /*
-  * Reduce page flag use as much as possible by overlapping
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index c8380ad..e6f3aec 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1622,6 +1622,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- #ifdef CONFIG_MEMORY_FAILURE
- 	VMCOREINFO_NUMBER(PG_hwpoison);
- #endif
-+	VMCOREINFO_NUMBER(PG_head_mask);
- 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
- 
- 	arch_crash_save_vmcoreinfo();
--- 
-1.8.4.5
+> ---
+>  kexec/arch/i386/crashdump-x86.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index 91872ab..72bce0b 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -509,11 +509,11 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
+>  		else if (addr > mend)
+>  			tidx = i+1;
+>  	}
+> -		/* Insert the memory region. */
+> -		for (j = nr_entries-1; j >= tidx; j--)
+> -			memmap_p[j+1] = memmap_p[j];
+> -		memmap_p[tidx].start = addr;
+> -		memmap_p[tidx].end = addr + size - 1;
+> +	/* Insert the memory region. */
+> +	for (j = nr_entries-1; j >= tidx; j--)
+> +		memmap_p[j+1] = memmap_p[j];
+> +	memmap_p[tidx].start = addr;
+> +	memmap_p[tidx].end = addr + size - 1;
+>  
+>  	dbgprintf("Memmap after adding segment\n");
+>  	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
+> -- 
+> 1.8.5.3
+> 
 
 _______________________________________________
 kexec mailing list
