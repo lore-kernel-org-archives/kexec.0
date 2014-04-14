@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZZeP-0002on-JG
- for kexec@lists.infradead.org; Mon, 14 Apr 2014 05:41:50 +0000
-Date: Mon, 14 Apr 2014 13:41:23 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH RESEND v5 02/10] x86, cleanup: add extra arguments to
- add_memmap() and delete_memmap()
-Message-ID: <20140414054122.GC18927@dhcp-17-89.nay.redhat.com>
-References: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
- <1397183011-1526-3-git-send-email-chaowang@redhat.com>
- <20140414021149.GI22411@verge.net.au>
+Received: from szxga01-in.huawei.com ([119.145.14.64])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WZaHA-00075n-2t
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 06:21:53 +0000
+From: Wang Nan <wangnan0@huawei.com>
+Subject: [PATCH] makedumpfile: code cleanup: set_bitmap
+Date: Mon, 14 Apr 2014 14:15:26 +0800
+Message-ID: <1397456126-81299-1-git-send-email-wangnan0@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140414021149.GI22411@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,133 +20,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: Wang Nan <wangnan0@huawei.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On 04/14/14 at 11:11am, Simon Horman wrote:
-> On Fri, Apr 11, 2014 at 10:23:23AM +0800, WANG Chao wrote:
-> > This change will be used later:
-> > 
-> > add_memmap(.., int *nr_memmap, .., int type);
-> > delete_memmap(.., int *nr_memmap, ..);
-> 
-> Could you please include an explanation of the motivation for this
-> change in the change log (i.e. here).
+This patch makes set_bitmap() to call sync_bitmap() instead rewrite
+identical code to do same thing.
 
-memmap_p[] is statically allocated for a certain amount. It will be used
-later when mapping these memory maps to e820 map.
+Signed-off-by: Wang Nan <wangnan0@huawei.com>
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
+Cc: Geng Hui <hui.geng@huawei.com>
+---
+ makedumpfile.c | 70 ++++++++++++++++++++++++++--------------------------------
+ 1 file changed, 31 insertions(+), 39 deletions(-)
 
-It's convenient to keep track of the count of memmap_p (nr_memmap) in
-add_memmap and delete_memmap, because the counting has already been
-taken care of in these two functions.
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 75092a8..8e6ddce 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3309,6 +3309,34 @@ initialize_2nd_bitmap(struct dump_bitmap *bitmap)
+ }
+ 
+ int
++sync_bitmap(struct dump_bitmap *bitmap)
++{
++	off_t offset;
++	offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
++
++	/*
++	 * The bitmap buffer is not dirty, and it is not necessary
++	 * to write out it.
++	 */
++	if (bitmap->no_block < 0)
++		return TRUE;
++
++	if (lseek(bitmap->fd, offset, SEEK_SET) < 0 ) {
++		ERRMSG("Can't seek the bitmap(%s). %s\n",
++		    bitmap->file_name, strerror(errno));
++		return FALSE;
++	}
++	if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
++	    != BUFSIZE_BITMAP) {
++		ERRMSG("Can't write the bitmap(%s). %s\n",
++		    bitmap->file_name, strerror(errno));
++		return FALSE;
++	}
++	return TRUE;
++}
++
++
++int
+ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+     int val)
+ {
+@@ -3317,20 +3345,11 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+ 	old_offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
+ 	new_offset = bitmap->offset + BUFSIZE_BITMAP * (pfn / PFN_BUFBITMAP);
+ 
+-	if (0 <= bitmap->no_block && old_offset != new_offset) {
+-		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
+-			ERRMSG("Can't seek the bitmap(%s). %s\n",
+-			    bitmap->file_name, strerror(errno));
+-			return FALSE;
+-		}
+-		if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
+-		    != BUFSIZE_BITMAP) {
+-			ERRMSG("Can't write the bitmap(%s). %s\n",
+-			    bitmap->file_name, strerror(errno));
++	if (old_offset != new_offset) {
++		if (sync_bitmap(bitmap)) {
++			ERRMSG("Can't sync bitmap\n");
+ 			return FALSE;
+ 		}
+-	}
+-	if (old_offset != new_offset) {
+ 		if (lseek(bitmap->fd, new_offset, SEEK_SET) < 0 ) {
+ 			ERRMSG("Can't seek the bitmap(%s). %s\n",
+ 			    bitmap->file_name, strerror(errno));
+@@ -3379,33 +3398,6 @@ set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *c
+ }
+ 
+ int
+-sync_bitmap(struct dump_bitmap *bitmap)
+-{
+-	off_t offset;
+-	offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
+-
+-	/*
+-	 * The bitmap buffer is not dirty, and it is not necessary
+-	 * to write out it.
+-	 */
+-	if (bitmap->no_block < 0)
+-		return TRUE;
+-
+-	if (lseek(bitmap->fd, offset, SEEK_SET) < 0 ) {
+-		ERRMSG("Can't seek the bitmap(%s). %s\n",
+-		    bitmap->file_name, strerror(errno));
+-		return FALSE;
+-	}
+-	if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
+-	    != BUFSIZE_BITMAP) {
+-		ERRMSG("Can't write the bitmap(%s). %s\n",
+-		    bitmap->file_name, strerror(errno));
+-		return FALSE;
+-	}
+-	return TRUE;
+-}
+-
+-int
+ sync_1st_bitmap(void)
+ {
+ 	return sync_bitmap(info->bitmap1);
+-- 
+1.8.5.5
 
-The original add_memmap() can only add memory range of RANGE_RAM type.
-For adding other types of memory range, add another argument for
-indicating the type.
-
-Thanks
-WANG Chao
-
-> 
-> > 
-> > Signed-off-by: WANG Chao <chaowang@redhat.com>
-> > ---
-> >  kexec/arch/i386/crashdump-x86.c | 22 +++++++++++++---------
-> >  1 file changed, 13 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > index 72bce0b..e695eaf 100644
-> > --- a/kexec/arch/i386/crashdump-x86.c
-> > +++ b/kexec/arch/i386/crashdump-x86.c
-> > @@ -476,8 +476,8 @@ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end)
-> >  
-> >  /* Adds a segment from list of memory regions which new kernel can use to
-> >   * boot. Segment start and end should be aligned to 1K boundary. */
-> > -static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
-> > -								size_t size)
-> > +static int add_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
-> > +			unsigned long long addr, size_t size, int type)
-> >  {
-> >  	int i, j, nr_entries = 0, tidx = 0, align = 1024;
-> >  	unsigned long long mstart, mend;
-> > @@ -514,6 +514,8 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
-> >  		memmap_p[j+1] = memmap_p[j];
-> >  	memmap_p[tidx].start = addr;
-> >  	memmap_p[tidx].end = addr + size - 1;
-> > +	memmap_p[tidx].type = type;
-> > +	*nr_memmap_p = nr_entries + 1;
-> >  
-> >  	dbgprintf("Memmap after adding segment\n");
-> >  	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
-> > @@ -530,8 +532,8 @@ static int add_memmap(struct memory_range *memmap_p, unsigned long long addr,
-> >  
-> >  /* Removes a segment from list of memory regions which new kernel can use to
-> >   * boot. Segment start and end should be aligned to 1K boundary. */
-> > -static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
-> > -								size_t size)
-> > +static int delete_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
-> > +				unsigned long long addr, size_t size)
-> >  {
-> >  	int i, j, nr_entries = 0, tidx = -1, operation = 0, align = 1024;
-> >  	unsigned long long mstart, mend;
-> > @@ -593,12 +595,14 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
-> >  		for (j = nr_entries-1; j > tidx; j--)
-> >  			memmap_p[j+1] = memmap_p[j];
-> >  		memmap_p[tidx+1] = temp_region;
-> > +		*nr_memmap_p = nr_entries + 1;
-> >  	}
-> >  	if ((operation == -1) && tidx >=0) {
-> >  		/* Delete the exact match memory region. */
-> >  		for (j = i+1; j < CRASH_MAX_MEMMAP_NR; j++)
-> >  			memmap_p[j-1] = memmap_p[j];
-> >  		memmap_p[j-1].start = memmap_p[j-1].end = 0;
-> > +		*nr_memmap_p = nr_entries - 1;
-> >  	}
-> >  
-> >  	dbgprintf("Memmap after deleting segment\n");
-> > @@ -865,7 +869,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
-> >  {
-> >  	void *tmp;
-> >  	unsigned long sz, bufsz, memsz, elfcorehdr;
-> > -	int nr_ranges = 0, align = 1024, i;
-> > +	int nr_ranges = 0, nr_memmap_p = 0, align = 1024, i;
-> >  	struct memory_range *mem_range, *memmap_p;
-> >  	struct crash_elf_info elf_info;
-> >  	unsigned kexec_arch;
-> > @@ -941,10 +945,10 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
-> >  	sz = (sizeof(struct memory_range) * CRASH_MAX_MEMMAP_NR);
-> >  	memmap_p = xmalloc(sz);
-> >  	memset(memmap_p, 0, sz);
-> > -	add_memmap(memmap_p, info->backup_src_start, info->backup_src_size);
-> > +	add_memmap(memmap_p, &nr_memmap_p, info->backup_src_start, info->backup_src_size, RANGE_RAM);
-> >  	for (i = 0; i < crash_reserved_mem_nr; i++) {
-> >  		sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
-> > -		if (add_memmap(memmap_p, crash_reserved_mem[i].start, sz) < 0)
-> > +		if (add_memmap(memmap_p, &nr_memmap_p, crash_reserved_mem[i].start, sz, RANGE_RAM) < 0)
-> >  			return ENOCRASHKERNEL;
-> >  	}
-> >  
-> > @@ -957,7 +961,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
-> >  						0, max_addr, -1);
-> >  		dbgprintf("Created backup segment at 0x%lx\n",
-> >  			  info->backup_start);
-> > -		if (delete_memmap(memmap_p, info->backup_start, sz) < 0)
-> > +		if (delete_memmap(memmap_p, &nr_memmap_p, info->backup_start, sz) < 0)
-> >  			return EFAILED;
-> >  	}
-> >  
-> > @@ -993,7 +997,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
-> >  	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
-> >  							max_addr, -1);
-> >  	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
-> > -	if (delete_memmap(memmap_p, elfcorehdr, memsz) < 0)
-> > +	if (delete_memmap(memmap_p, &nr_memmap_p, elfcorehdr, memsz) < 0)
-> >  		return -1;
-> >  	cmdline_add_memmap(mod_cmdline, memmap_p);
-> >  	if (!bzImage_support_efi_boot)
-> > -- 
-> > 1.8.5.3
-> > 
 
 _______________________________________________
 kexec mailing list
