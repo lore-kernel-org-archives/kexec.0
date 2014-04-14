@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZWVM-0002lV-Dq
- for kexec@lists.infradead.org; Mon, 14 Apr 2014 02:20:17 +0000
-Date: Mon, 14 Apr 2014 11:19:51 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec/fs2dt : Fix endianess issue with initrd base and
- size
-Message-ID: <20140414021951.GM22411@verge.net.au>
-References: <20140411101030.8033.95615.stgit@nimbus>
+ id 1WZZHK-00033h-M5
+ for kexec@lists.infradead.org; Mon, 14 Apr 2014 05:17:59 +0000
+Date: Mon, 14 Apr 2014 13:17:31 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH RESEND v5 04/10] x86, cleanup: add_memmap() only do
+ alignment check on RANGE_RAM
+Message-ID: <20140414051731.GA18927@dhcp-17-89.nay.redhat.com>
+References: <1397183011-1526-1-git-send-email-chaowang@redhat.com>
+ <1397183011-1526-5-git-send-email-chaowang@redhat.com>
+ <20140414021351.GK22411@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140411101030.8033.95615.stgit@nimbus>
+In-Reply-To: <20140414021351.GK22411@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +26,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On Fri, Apr 11, 2014 at 12:10:30PM +0200, Laurent Dufour wrote:
-> The initrd values exposed in the device tree of the kexeced kernel must be
-> encoded in Big Endian format.
-> 
-> Without this patch, kexeced LE kernel are expected to panic when dealing
-> with the initrd image.
-> 
-> Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+On 04/14/14 at 11:13am, Simon Horman wrote:
+> Could you please explain why this is necessary.
 
-Thanks, applied.
+add_memmap() will also add memory range with type RANGE_ACPI and
+RANGE_ACPI_NVS (RANGE_RESERVED in the future) besides RANGE_RAM to
+memmap_p.
 
-> ---
->  kexec/fs2dt.c |    9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+Among these types of memory range, only RANGE_RAM needs to
+be aligned with certain alignment. RANGE_ACPI, RANGE_ACPI_NVS and
+RANGE_RESERVED doesn't have to be aligned.
+
+I'll add above comment to the patch description.
+
 > 
-> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-> index 5e6b98d..2a90979 100644
-> --- a/kexec/fs2dt.c
-> +++ b/kexec/fs2dt.c
-> @@ -531,7 +531,7 @@ static void putnode(void)
->  	/* Add initrd entries to the second kernel */
->  	if (initrd_base && initrd_size && !strcmp(basename,"chosen/")) {
->  		int len = 8;
-> -		unsigned long long initrd_end;
-> +		uint64_t bevalue;
->  
->  		dt_reserve(&dt, 12); /* both props, of 6 words ea. */
->  		*dt++ = cpu_to_be32(3);
-> @@ -539,7 +539,8 @@ static void putnode(void)
->  		*dt++ = cpu_to_be32(propnum("linux,initrd-start"));
->  		pad_structure_block(len);
->  
-> -		memcpy(dt,&initrd_base,len);
-> +		bevalue = cpu_to_be64(initrd_base);
-> +		memcpy(dt, &bevalue, len);
->  		dt += (len + 3)/4;
->  
->  		len = 8;
-> @@ -547,10 +548,10 @@ static void putnode(void)
->  		*dt++ = cpu_to_be32(len);
->  		*dt++ = cpu_to_be32(propnum("linux,initrd-end"));
->  
-> -		initrd_end = initrd_base + initrd_size;
-> +		bevalue = cpu_to_be64(initrd_base + initrd_size);
->  		pad_structure_block(len);
->  
-> -		memcpy(dt,&initrd_end,len);
-> +		memcpy(dt, &bevalue, len);
->  		dt += (len + 3)/4;
->  
->  		reserve(initrd_base, initrd_size);
+> Also, it seems to me that it would make sense to move this
+> patch so that is is immediately after patch 2 in the series.
+
+Will do.
+
 > 
+> On Fri, Apr 11, 2014 at 10:23:25AM +0800, WANG Chao wrote:
+> > Signed-off-by: WANG Chao <chaowang@redhat.com>
+> > ---
+> >  kexec/arch/i386/crashdump-x86.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> > index 43eb8f7..4072c10 100644
+> > --- a/kexec/arch/i386/crashdump-x86.c
+> > +++ b/kexec/arch/i386/crashdump-x86.c
+> > @@ -482,8 +482,8 @@ static int add_memmap(struct memory_range *memmap_p, int *nr_memmap_p,
+> >  	int i, j, nr_entries = 0, tidx = 0, align = 1024;
+> >  	unsigned long long mstart, mend;
+> >  
+> > -	/* Do alignment check. */
+> > -	if ((addr%align) || (size%align))
+> > +	/* Do alignment check if it's RANGE_RAM */
+> > +	if ((type == RANGE_RAM) && ((addr%align) || (size%align)))
+> >  		return -1;
+> >  
+> >  	/* Make sure at least one entry in list is free. */
+> > -- 
+> > 1.8.5.3
+> > 
 
 _______________________________________________
 kexec mailing list
