@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from g4t3426.houston.hp.com ([15.201.208.54])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaCUH-0005B0-KI
+ id 1WaCUI-0005Au-1d
  for kexec@lists.infradead.org; Tue, 15 Apr 2014 23:09:58 +0000
 From: Bill Sumner <bill.sumner@hp.com>
-Subject: [PATCH 2/8] Consolidate all .h lines at front of intel-iommu.c file
-Date: Tue, 15 Apr 2014 17:09:03 -0600
-Message-Id: <1397603349-30930-3-git-send-email-bill.sumner@hp.com>
-In-Reply-To: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
-References: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
+Subject: [PATCH 0/8] Fix crashdump failure caused by legacy DMA/IO
+Date: Tue, 15 Apr 2014 17:09:01 -0600
+Message-Id: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,124 +23,89 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org
 Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, bill.sumner@hp.com
 
- In intel-iommu.c, move downward the few lines near the
- front that should not move to an intel-iommu-private.h
- file (mostly data-item definitions) This leaves a
- consolidated block of the lines that would move to an
- intel-iommu-private.h file at the front of the file.
+The following series implements a fix for:
+A kdump problem about DMA that has been discussed for a long time.
+That is, when a kernel panics and boots into the kdump kernel, DMA that was
+started by the panicked kernel is not stopped before the kdump kernel is booted;
+and the kdump kernel disables the IOMMU while this DMA continues.
+This causes the IOMMU to stop translating the DMA addresses as IOVAs and
+begin to treat them as physical memory addresses -- which causes the DMA to either:
+1. generate DMAR errors or
+2. generate PCI SERR errors or
+3. transfer data to or from incorrect areas of memory.
+Often this causes the dump to fail.
+
+This patch set modifies the behavior of the Intel iommu in the crashdump kernel: 
+1. to accept the iommu hardware in an active state,
+2. to leave the current translations in-place so that legacy DMA will continue
+   using its current buffers until the device drivers in the crashdump kernel
+   initialize and initialize their devices,
+3. to use different portions of the iova address ranges for the device drivers
+   in the crashdump kernel than the iova ranges that were in-use at the time
+   of the panic.  
+
+Advantages of this approach:
+1. All manipulation of the IO-device is done by the Linux device-driver
+   for that device.
+2. This approach behaves in a manner very similar to operation without an
+   active iommu.
+3. Any activity between the IO-device and its RMRR areas is handled by the
+   device-driver in the same manner as during a non-kdump boot.
+4. If an IO-device has no driver in the kdump kernel, it is simply left alone.
+   This supports the practice of creating a special kdump kernel without
+   drivers for any devices that are not required for taking a crashdump. 
+5. Minimal code-changes among the existing mainline intel-iommu code.
+
+Summary of changes in this patch set since the previous posting:
+1. Returned to the structure of a patch-set
+2. Enabled the intel-iommu driver to consist of multiple *.c files
+   by moving many of the #defines, prototypes, and inline functions
+   into a new file: intel-iommu-private.h (First three patches implement
+   only this enhancement -- could be applied independent of the last 5)
+3. Moved the new "crashdump fix" code into a new file: intel-iommu-kdump.c 
+4. Removed the pr_debug constructs from the new code that implements the
+   "crashdump fix" -- making the code much cleaner and easier to read.
+5. Miscellaneous cleanups such as enum-values for return-codes.
+6. Simplified the code that retrieves the values needed to initialize a new
+   domain by using the linked-list of previously-collected values
+   instead of stepping back into the tree of translation tables.
 
 
-Signed-off-by: Bill Sumner <bill.sumner@hp.com>
----
- drivers/iommu/intel-iommu.c | 74 +++++++++++++++++++++++----------------------
- 1 file changed, 38 insertions(+), 36 deletions(-)
+Bill Sumner (8):
+  Fix a few existing lines that checkpatch.pl will complain about
+    later.     #86: FILE: drivers/iommu/intel-iommu.c:390:     +static
+    int force_on = 0;
+  Consolidate all .h lines at front of intel-iommu.c file     In
+    intel-iommu.c, move downward the few lines near the front that
+    should     not move to an intel-iommu-private.h file (mostly
+    data-item definitions)     This leaves a consolidated block of the
+    lines that would move to an     intel-iommu-private.h file at the
+    front of the file.
+  Create intel-iommu-private.h     Move the single block of #define,
+    static inline ... ; struct definitions     to intel-iommu-private.h
+    from intel-iommu.c     Replace them with #include
+    "intel-iommu-private.h"
+  Update iommu_attach_domain() and its callers     Allow specification
+    of domain-id for the new domain.
+  Add new definitions & prototypes to intel-iommu-private.h     Items
+    needed for fixing crashdump.
+  Create intel-iommu-kdump.c     Populate with "Copy iommu translation
+    tables" function set.     Edit Makefile to add intel-iommu-kdump.o
+  Add domain-id functions to intel-iommu-kdump.c    
+    intel_iommu_did_to_domain_values_entry()    
+    intel_iommu_get_dids_from_old_kernel()
+  Add remaining changes to intel-iommu.c to fix crashdump     Add
+    "#include <linux/crash_dump.h>"     Chg device_to_domain_id     Chg
+    get_domain_for_dev     Chg init_dmars     Chg intel_iommu_init
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 8abcb6c..22298e9 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -165,17 +165,6 @@ static inline unsigned long virt_to_dma_pfn(void *p)
- 	return page_to_dma_pfn(virt_to_page(p));
- }
- 
--/* global iommu list, set NULL for ignored DMAR units */
--static struct intel_iommu **g_iommus;
--
--static void __init check_tylersburg_isoch(void);
--static int rwbf_quirk;
--
--/*
-- * set to 1 to panic kernel if can't successfully enable VT-d
-- * (used when kernel is launched w/ TXT)
-- */
--static int force_on;
- 
- /*
-  * 0: Present
-@@ -314,15 +303,6 @@ static inline int first_pte_in_page(struct dma_pte *pte)
- 	return !((unsigned long)pte & ~VTD_PAGE_MASK);
- }
- 
--/*
-- * This domain is a statically identity mapping domain.
-- *	1. This domain creats a static 1:1 mapping to all usable memory.
-- *	2. It maps to each iommu if successful.
-- *	3. Each iommu mapps to this domain if successful.
-- */
--static struct dmar_domain *si_domain;
--static int hw_pass_through = 1;
--
- /* devices under the same p2p bridge are owned in one domain */
- #define DOMAIN_FLAG_P2P_MULTIPLE_DEVICES (1 << 0)
- 
-@@ -380,6 +360,44 @@ struct device_domain_info {
- 	struct dmar_domain *domain; /* pointer to domain */
- };
- 
-+static inline void *alloc_pgtable_page(int node)
-+{
-+	struct page *page;
-+	void *vaddr = NULL;
-+
-+	page = alloc_pages_node(node, GFP_ATOMIC | __GFP_ZERO, 0);
-+	if (page)
-+		vaddr = page_address(page);
-+	return vaddr;
-+}
-+
-+static inline void free_pgtable_page(void *vaddr)
-+{
-+	free_page((unsigned long)vaddr);
-+}
-+
-+
-+static void __init check_tylersburg_isoch(void);
-+
-+/* global iommu list, set NULL for ignored DMAR units */
-+static struct intel_iommu **g_iommus;
-+static int rwbf_quirk;
-+
-+/*
-+ * set to 1 to panic kernel if can't successfully enable VT-d
-+ * (used when kernel is launched w/ TXT)
-+ */
-+static int force_on;
-+
-+/*
-+ * This domain is a statically identity mapping domain.
-+ *	1. This domain creats a static 1:1 mapping to all usable memory.
-+ *	2. It maps to each iommu if successful.
-+ *	3. Each iommu mapps to this domain if successful.
-+ */
-+static struct dmar_domain *si_domain;
-+static int hw_pass_through = 1;
-+
- static void flush_unmaps_timeout(unsigned long data);
- 
- static DEFINE_TIMER(unmap_timer,  flush_unmaps_timeout, 0, 0);
-@@ -468,22 +486,6 @@ static struct kmem_cache *iommu_domain_cache;
- static struct kmem_cache *iommu_devinfo_cache;
- static struct kmem_cache *iommu_iova_cache;
- 
--static inline void *alloc_pgtable_page(int node)
--{
--	struct page *page;
--	void *vaddr = NULL;
--
--	page = alloc_pages_node(node, GFP_ATOMIC | __GFP_ZERO, 0);
--	if (page)
--		vaddr = page_address(page);
--	return vaddr;
--}
--
--static inline void free_pgtable_page(void *vaddr)
--{
--	free_page((unsigned long)vaddr);
--}
--
- static inline void *alloc_domain_mem(void)
- {
- 	return kmem_cache_alloc(iommu_domain_cache, GFP_ATOMIC);
+ drivers/iommu/Makefile              |   2 +-
+ drivers/iommu/intel-iommu-kdump.c   | 629 ++++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel-iommu-private.h | 443 +++++++++++++++++++++++++
+ drivers/iommu/intel-iommu.c         | 565 ++++++++++----------------------
+ 4 files changed, 1249 insertions(+), 390 deletions(-)
+ create mode 100644 drivers/iommu/intel-iommu-kdump.c
+ create mode 100644 drivers/iommu/intel-iommu-private.h
+
 -- 
 Bill Sumner <bill.sumner@hp.com>
 
