@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from g4t3425.houston.hp.com ([15.201.208.53])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaCUI-0005BK-Br
- for kexec@lists.infradead.org; Tue, 15 Apr 2014 23:09:58 +0000
+ id 1WaCUI-0005Ay-Bh
+ for kexec@lists.infradead.org; Tue, 15 Apr 2014 23:09:59 +0000
 From: Bill Sumner <bill.sumner@hp.com>
-Subject: [PATCH 4/8] Update iommu_attach_domain() and its callers
-Date: Tue, 15 Apr 2014 17:09:05 -0600
-Message-Id: <1397603349-30930-5-git-send-email-bill.sumner@hp.com>
+Subject: [PATCH 1/8] Fix a few existing lines that checkpatch.pl will complain
+ about later.
+Date: Tue, 15 Apr 2014 17:09:02 -0600
+Message-Id: <1397603349-30930-2-git-send-email-bill.sumner@hp.com>
 In-Reply-To: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
 References: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,76 +26,84 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org
 Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, bill.sumner@hp.com
 
- Allow specification of the domain-id for the new domain.
-
+Things like:
+1. no space before tabs
+2. no initialization of static variables to 0 or NULL
+3. no extra parentheses around the value on the 'return' statement
+4. no line over 80-characters
 
 Signed-off-by: Bill Sumner <bill.sumner@hp.com>
 ---
- drivers/iommu/intel-iommu.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/iommu/intel-iommu.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 4352731..0c00c2d 100644
+index a22c86c..8abcb6c 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -1003,7 +1003,8 @@ static struct dmar_domain *alloc_domain(void)
+@@ -72,7 +72,7 @@
+    to match. That way, we can use 'unsigned long' for PFNs with impunity. */
+ #define DOMAIN_MAX_PFN(gaw)	((unsigned long) min_t(uint64_t, \
+ 				__DOMAIN_MAX_PFN(gaw), (unsigned long)-1))
+-#define DOMAIN_MAX_ADDR(gaw)	(((uint64_t)__DOMAIN_MAX_PFN(gaw)) << VTD_PAGE_SHIFT)
++#define DOMAIN_MAX_ADDR(gaw) (((uint64_t)__DOMAIN_MAX_PFN(gaw)) << VTD_PAGE_SHIFT)
+ 
+ #define IOVA_PFN(addr)		((addr) >> PAGE_SHIFT)
+ #define DMA_32BIT_PFN		IOVA_PFN(DMA_BIT_MASK(32))
+@@ -175,7 +175,7 @@ static int rwbf_quirk;
+  * set to 1 to panic kernel if can't successfully enable VT-d
+  * (used when kernel is launched w/ TXT)
+  */
+-static int force_on = 0;
++static int force_on;
+ 
+ /*
+  * 0: Present
+@@ -190,7 +190,7 @@ struct root_entry {
+ #define ROOT_ENTRY_NR (VTD_PAGE_SIZE/sizeof(struct root_entry))
+ static inline bool root_present(struct root_entry *root)
+ {
+-	return (root->val & 1);
++	return root->val & 1;
+ }
+ static inline void set_root_present(struct root_entry *root)
+ {
+@@ -228,7 +228,7 @@ struct context_entry {
+ 
+ static inline bool context_present(struct context_entry *context)
+ {
+-	return (context->lo & 1);
++	return context->lo & 1;
+ }
+ static inline void context_set_present(struct context_entry *context)
+ {
+@@ -306,7 +306,7 @@ static inline bool dma_pte_present(struct dma_pte *pte)
+ 
+ static inline bool dma_pte_superpage(struct dma_pte *pte)
+ {
+-	return (pte->val & (1 << 7));
++	return pte->val & (1 << 7);
  }
  
- static int iommu_attach_domain(struct dmar_domain *domain,
--			       struct intel_iommu *iommu)
-+			       struct intel_iommu *iommu,
-+			       int domain_number)
- {
- 	int num;
- 	unsigned long ndomains;
-@@ -1013,12 +1014,15 @@ static int iommu_attach_domain(struct dmar_domain *domain,
+ static inline int first_pte_in_page(struct dma_pte *pte)
+@@ -317,7 +317,7 @@ static inline int first_pte_in_page(struct dma_pte *pte)
+ /*
+  * This domain is a statically identity mapping domain.
+  *	1. This domain creats a static 1:1 mapping to all usable memory.
+- * 	2. It maps to each iommu if successful.
++ *	2. It maps to each iommu if successful.
+  *	3. Each iommu mapps to this domain if successful.
+  */
+ static struct dmar_domain *si_domain;
+@@ -347,7 +347,7 @@ struct dmar_domain {
+ 	DECLARE_BITMAP(iommu_bmp, IOMMU_UNITS_SUPPORTED);
+ 					/* bitmap of iommus this domain uses*/
  
- 	spin_lock_irqsave(&iommu->lock, flags);
+-	struct list_head devices; 	/* all devices' list */
++	struct list_head devices;	/* all devices' list */
+ 	struct iova_domain iovad;	/* iova's that belong to this domain */
  
--	num = find_first_zero_bit(iommu->domain_ids, ndomains);
--	if (num >= ndomains) {
--		spin_unlock_irqrestore(&iommu->lock, flags);
--		printk(KERN_ERR "IOMMU: no free domain ids\n");
--		return -ENOMEM;
--	}
-+	if (domain_number < 0) {
-+		num = find_first_zero_bit(iommu->domain_ids, ndomains);
-+		if (num >= ndomains) {
-+			spin_unlock_irqrestore(&iommu->lock, flags);
-+			pr_err("IOMMU: no free domain ids\n");
-+			return -ENOMEM;
-+		}
-+	} else
-+		num = domain_number;
- 
- 	domain->id = num;
- 	set_bit(num, iommu->domain_ids);
-@@ -1629,6 +1633,7 @@ static struct dmar_domain *get_domain_for_dev(struct pci_dev *pdev, int gaw)
- 	int bus = 0, devfn = 0;
- 	int segment;
- 	int ret;
-+	int did = -1;   /* Default to "no domain_id supplied" */
- 
- 	domain = find_domain(pdev);
- 	if (domain)
-@@ -1675,7 +1680,7 @@ static struct dmar_domain *get_domain_for_dev(struct pci_dev *pdev, int gaw)
- 	}
- 	iommu = drhd->iommu;
- 
--	ret = iommu_attach_domain(domain, iommu);
-+	ret = iommu_attach_domain(domain, iommu, did);
- 	if (ret) {
- 		free_domain_mem(domain);
- 		goto error;
-@@ -1894,7 +1899,7 @@ static int __init si_domain_init(int hw)
- 		return -EFAULT;
- 
- 	for_each_active_iommu(iommu, drhd) {
--		ret = iommu_attach_domain(si_domain, iommu);
-+		ret = iommu_attach_domain(si_domain, iommu, (int) -1);
- 		if (ret) {
- 			domain_exit(si_domain);
- 			return -EFAULT;
+ 	struct dma_pte	*pgd;		/* virtual address */
 -- 
 Bill Sumner <bill.sumner@hp.com>
 
