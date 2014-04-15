@@ -1,18 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from e28smtp09.in.ibm.com ([122.248.162.9])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZurJ-0005RU-7U
- for kexec@lists.infradead.org; Tue, 15 Apr 2014 04:20:34 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2 2/3] Generic handling of multi-page exclusions
-Date: Tue, 15 Apr 2014 04:18:31 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720389C@BPXM01GP.gisp.nec.co.jp>
-References: <20140408085436.51340ae2@hananiah.suse.cz>
- <20140408.171903.322808733.d.hatayama@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971FF28C@BPXM01GP.gisp.nec.co.jp>
- <20140409.162708.93024867.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20140409.162708.93024867.d.hatayama@jp.fujitsu.com>
-Content-Language: ja-JP
+ id 1WZvU0-0007aT-B7
+ for kexec@lists.infradead.org; Tue, 15 Apr 2014 05:00:33 +0000
+Received: from /spool/local
+ by e28smtp09.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <aruna@linux.vnet.ibm.com>;
+ Tue, 15 Apr 2014 10:30:04 +0530
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+ by d28dlp03.in.ibm.com (Postfix) with ESMTP id 28443125804D
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 10:32:42 +0530 (IST)
+Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
+ by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s3F5082v5570818
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 10:30:08 +0530
+Received: from d28av02.in.ibm.com (localhost [127.0.0.1])
+ by d28av02.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s3F502Mi011738
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 10:30:02 +0530
+Subject: [PATCH] makedumpfile/eppic: Do not scrub buffer length if length is
+ zero
+From: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
+Date: Tue, 15 Apr 2014 10:30:02 +0530
+Message-ID: <20140415045938.15285.65667.stgit@aruna-ThinkPad-T420>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,55 +37,194 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "ptesarik@suse.cz" <ptesarik@suse.cz>
+To: kexec@lists.infradead.org
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp
 
->> At that time, I chose the current code since it was simpler and safer.
->> http://www.mail-archive.com/kexec%40lists.infradead.org/msg10207.html
->>
->> Don't you like this ?
->>
->
->Sorry. I had forgotten this. We should keep the sanity check
->there. But in our policy, we should not pass to set_bitmap_cyclic(),
->pfn and cycle where pfn is not in the cycle. We should chceck that in
->the caller side and pass pfn in the cycle only.
->
->Also, on the current implementation, even if pfn outside a current
->cycle is passed to set_bitmap_cyclic(), we don't have any means to
->know that.
->
->So, how about warning that only once at runtime?
+The patch takes care of scrubbing buffer length only when it is
+non-zero.
 
-Sounds good, it will be helpful to detect bugs in caller side.
-Like this?
+Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
+---
+ eppic_scripts/ap_messages.c        |   12 ++++++++----
+ eppic_scripts/tcp_sk_buf.c         |   12 ++++++++----
+ eppic_scripts/udp_sk_buf.c         |   12 ++++++++----
+ eppic_scripts/unix_sk_buff.c       |   12 ++++++++----
+ eppic_scripts/vhost_net_buffers.c  |   12 ++++++++----
+ eppic_scripts/vhost_scsi_buffers.c |   10 +++++++---
+ 6 files changed, 47 insertions(+), 23 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 75092a8..da960ad 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3361,9 +3361,16 @@ int
- set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *cycle)
- {
- 	int byte, bit;
-+	static int warning = 0;
+diff --git a/eppic_scripts/ap_messages.c b/eppic_scripts/ap_messages.c
+index f0e9f6f..849e9bc 100644
+--- a/eppic_scripts/ap_messages.c
++++ b/eppic_scripts/ap_messages.c
+@@ -51,8 +51,10 @@ ap_device()
+ 			struct ap_message *apmsg;
+ 			apmsg = (struct ap_message *)next1;
  
--        if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
-+        if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn) {
-+		if (!warning) {
-+			MSG("WARNING: PFN out of cycle range. (pfn:%llx, ", pfn);
-+			MSG("cycle:[%llx-%llx])\n", cycle->start_pfn, cycle->end_pfn);
-+			warning = 1;
+-			memset((char *)apmsg->message, 'L', apmsg->length);
+-			memset((char *)&(apmsg->length), 'L', 0x8);
++			if (apmsg->length) {
++				memset((char *)apmsg->message, 'L', apmsg->length);
++				memset((char *)&(apmsg->length), 'L', 0x8);
++			}
+ 
+ 			next1 = (struct list_head *)apmsg->list.next;
+ 		}
+@@ -65,8 +67,10 @@ ap_device()
+ 			struct ap_message *apmsg;
+ 			apmsg = (struct ap_message *)next1;
+ 
+-			memset((char *)apmsg->message, 'L', apmsg->length);
+-			memset((char *)&(apmsg->length), 'L', 0x8);
++			if (apmsg->length) {
++				memset((char *)apmsg->message, 'L', apmsg->length);
++				memset((char *)&(apmsg->length), 'L', 0x8);
++			}
+ 
+ 			next1 = (struct list_head *)apmsg->list.next;
+ 		}
+diff --git a/eppic_scripts/tcp_sk_buf.c b/eppic_scripts/tcp_sk_buf.c
+index 4c3efc3..922f507 100644
+--- a/eppic_scripts/tcp_sk_buf.c
++++ b/eppic_scripts/tcp_sk_buf.c
+@@ -51,8 +51,10 @@ tcp()
+ 			{
+ 				struct sk_buff *buff = (struct sk_buff *) next;
+ 
+-				memset((char *)buff->data, 'L', buff->data_len);
+-				memset((char *)&(buff->data_len), 'L', 0x4);
++				if (buff->data_len) {
++					memset((char *)buff->data, 'L', buff->data_len);
++					memset((char *)&(buff->data_len), 'L', 0x4);
++				}
+ 
+ 				next = buff->next;
+ 			}
+@@ -64,8 +66,10 @@ tcp()
+ 			{
+ 				struct sk_buff *buff = (struct sk_buff *) next;
+ 
+-				memset((char *)buff->data, 'L', buff->data_len);
+-				memset((char *)&(buff->data_len), 'L', 0x4);
++				if (buff->data_len) {
++					memset((char *)buff->data, 'L', buff->data_len);
++					memset((char *)&(buff->data_len), 'L', 0x4);
++				}
+ 
+ 				next = buff->next;
+ 			}
+diff --git a/eppic_scripts/udp_sk_buf.c b/eppic_scripts/udp_sk_buf.c
+index 7e64300..0fa1325 100644
+--- a/eppic_scripts/udp_sk_buf.c
++++ b/eppic_scripts/udp_sk_buf.c
+@@ -52,8 +52,10 @@ udp()
+ 			{
+ 				struct sk_buff *buff = (struct sk_buff *)next;
+ 
+-				memset((char *)buff->data, 'L', buff->data_len);
+-				memset((char *)&(buff->data_len), 'L', 0x4);
++				if (buff->data_len) {
++					memset((char *)buff->data, 'L', buff->data_len);
++					memset((char *)&(buff->data_len), 'L', 0x4);
++				}
+ 
+ 				next = buff->next;
+ 			}
+@@ -65,8 +67,10 @@ udp()
+ 			{
+ 				struct sk_buff *buff = (struct sk_buff *)next;
+ 
+-				memset((char *)buff->data, 'L', buff->data_len);
+-				memset((char *)&(buff->data_len), 'L', 0x4);
++				if (buff->data_len) {
++					memset((char *)buff->data, 'L', buff->data_len);
++					memset((char *)&(buff->data_len), 'L', 0x4);
++				}
+ 
+ 				next = buff->next;
+                         }
+diff --git a/eppic_scripts/unix_sk_buff.c b/eppic_scripts/unix_sk_buff.c
+index 6ab1e6c..12e1e6c 100644
+--- a/eppic_scripts/unix_sk_buff.c
++++ b/eppic_scripts/unix_sk_buff.c
+@@ -54,8 +54,10 @@ sunix()
+ 			{
+ 				struct sk_buff *buff = (struct sk_buff *)next;
+ 
+-				memset((char *)buff->data, 'L', buff->data_len);
+-				memset((char *)&(buff->data_len), 'L', 0x4);
++				if (buff->data_len) {
++					memset((char *)buff->data, 'L', buff->data_len);
++					memset((char *)&(buff->data_len), 'L', 0x4);
++				}
+ 
+ 				next = buff->next;
+ 			}
+@@ -67,8 +69,10 @@ sunix()
+ 			{
+ 				struct sk_buff *buff = (struct sk_buff *)next;
+ 
+-				memset((char *)buff->data, 'L', buff->data_len);
+-				memset((char *)&(buff->data_len), 'L', 0x4);
++				if (buff->data_len) {
++					memset((char *)buff->data, 'L', buff->data_len);
++					memset((char *)&(buff->data_len), 'L', 0x4);
++				}
+ 
+ 			        next = buff->next;
+ 			}
+diff --git a/eppic_scripts/vhost_net_buffers.c b/eppic_scripts/vhost_net_buffers.c
+index 6c2b8df..39ae595 100644
+--- a/eppic_scripts/vhost_net_buffers.c
++++ b/eppic_scripts/vhost_net_buffers.c
+@@ -40,8 +40,10 @@ vhost_net(struct vhost_net *net)
+ 		{
+ 			struct sk_buff *buff = (struct sk_buff *) next;
+ 
+-			memset((unsigned char *)buff->data, 'L', buff->data_len);
+-			memset((char *)&(buff->data_len), 'L', 0x4);
++			if (buff->data_len) {
++				memset((char *)buff->data, 'L', buff->data_len);
++				memset((char *)&(buff->data_len), 'L', 0x4);
++			}
+ 
+ 			next = buff->next;
+ 		}
+@@ -53,8 +55,10 @@ vhost_net(struct vhost_net *net)
+ 		{
+ 			struct sk_buff *buff = (struct sk_buff *) next;
+ 
+-			memset((char *)buff->data, 'L', buff->data_len);
+-			memset((char *)&(buff->data_len), 'L', 0x4);
++			if (buff->data_len) {
++				memset((char *)buff->data, 'L', buff->data_len);
++				memset((char *)&(buff->data_len), 'L', 0x4);
++			}
+ 
+ 			next = buff->next;
+ 
+diff --git a/eppic_scripts/vhost_scsi_buffers.c b/eppic_scripts/vhost_scsi_buffers.c
+index caa4982..840cdd5 100644
+--- a/eppic_scripts/vhost_scsi_buffers.c
++++ b/eppic_scripts/vhost_scsi_buffers.c
+@@ -31,9 +31,13 @@ vhost_scsi(struct vhost_scsi *vs)
+ 	for (i = 0; i < 128; i++) {
+ 		struct vhost_virtqueue *vq = (struct vhost_virtqueue *)vs->vqs[i].vq;
+ 
+-		for (j = 0; j < 1024; j++)
+-		      memset((char *)vq->iov[j].iov_base, 'L', vq->iov[j].iov_len);
+-		      memset((char *)&(vq->iov[j].iov_len), 'L', 0x8);
++		for (j = 0; j < 1024; j++) {
++
++			if (vq->iov[j].iov_len) {
++				memset((char *)vq->iov[j].iov_base, 'L', vq->iov[j].iov_len);
++				memset((char *)&(vq->iov[j].iov_len), 'L', 0x8);
++			}
 +		}
-                 return FALSE;
-+	}
+ 	}
+ }
  
- 	/*
- 	 * If val is 0, clear bit on the bitmap.
 
-
-Thanks
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
