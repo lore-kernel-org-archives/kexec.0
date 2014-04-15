@@ -1,29 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp02.in.ibm.com ([122.248.162.2])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZvVB-0007gB-0D
- for kexec@lists.infradead.org; Tue, 15 Apr 2014 05:01:46 +0000
-Received: from /spool/local
- by e28smtp02.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aruna@linux.vnet.ibm.com>;
- Tue, 15 Apr 2014 10:31:19 +0530
-Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
- by d28dlp03.in.ibm.com (Postfix) with ESMTP id EF2ED125803E
- for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 10:33:54 +0530 (IST)
-Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
- by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s3F51C7O12255590
- for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 10:31:12 +0530
-Received: from d28av02.in.ibm.com (localhost [127.0.0.1])
- by d28av02.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s3F510Ac018251
- for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 10:31:00 +0530
-Subject: [PATCH] eppic: makedumpfile fails to recognise between global
-From: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
-Date: Tue, 15 Apr 2014 10:31:00 +0530
-Message-ID: <20140415050055.15599.6255.stgit@aruna-ThinkPad-T420>
-MIME-Version: 1.0
+ id 1WZwmG-000886-EV
+ for kexec@lists.infradead.org; Tue, 15 Apr 2014 06:23:29 +0000
+Date: Tue, 15 Apr 2014 08:23:03 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v2 2/3] Generic handling of multi-page exclusions
+Message-ID: <20140415082303.5639e58a@hananiah.suse.cz>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972037DB@BPXM01GP.gisp.nec.co.jp>
+References: <20140408.104907.132144009.d.hatayama@jp.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE971FF140@BPXM01GP.gisp.nec.co.jp>
+ <20140410124717.498e0145@hananiah.suse.cz>
+ <20140411.105944.62065753.d.hatayama@jp.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972037DB@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,38 +22,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-    symbol and structure of the same name
-
-    Fix the eppic script to reflect the type
-
-    Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
----
- eppic_scripts/udp_sk_buf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/eppic_scripts/udp_sk_buf.c b/eppic_scripts/udp_sk_buf.c
-index 0fa1325..ca8c77b 100644
---- a/eppic_scripts/udp_sk_buf.c
-+++ b/eppic_scripts/udp_sk_buf.c
-@@ -30,7 +30,7 @@ udp()
- 	struct udp_table *table;
- 	struct sock_common *off = 0;
- 
--	table = &udp_table;
-+	table = (struct udp_table *)&udp_table;
- 
- 	for (i = 0; i < table->mask; i++) {
- 		struct hlist_nulls_node *pos;
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ViBUdWUsIDE1IEFwciAyMDE0IDAxOjIwOjQ2ICswMDAwCkF0c3VzaGkgS3VtYWdhaSA8a3VtYWdh
+aS1hdHN1c2hpQG14Yy5uZXMubmVjLmNvLmpwPiBuYXBzw6FubzoKCj4gPkZyb206IFBldHIgVGVz
+YXJpayA8cHRlc2FyaWtAc3VzZS5jej4KPiA+U3ViamVjdDogUmU6IFtQQVRDSCB2MiAyLzNdIEdl
+bmVyaWMgaGFuZGxpbmcgb2YgbXVsdGktcGFnZSBleGNsdXNpb25zCj4gPkRhdGU6IFRodSwgMTAg
+QXByIDIwMTQgMTI6NDc6MTcgKzAyMDAKPiA+Cj4gPj4gT24gVHVlLCA4IEFwciAyMDE0IDA3OjA2
+OjM0ICswMDAwCj4gPj4gQXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlAbXhjLm5lcy5u
+ZWMuY28uanA+IHdyb3RlOgo+ID4+Cj4gPj4+IFsuLi5dCj4gPj4+ID4gZGlmZiAtLWdpdCBhL21h
+a2VkdW1wZmlsZS5oIGIvbWFrZWR1bXBmaWxlLmgKPiA+Pj4gPj4gaW5kZXggOTUxZWQxYi4uZGZh
+ZDU2OSAxMDA2NDQKPiA+Pj4gPj4gLS0tIGEvbWFrZWR1bXBmaWxlLmgKPiA+Pj4gPj4gKysrIGIv
+bWFrZWR1bXBmaWxlLmgKPiA+Pj4gPj4gQEAgLTgxNiw2ICs4MTYsMTMgQEAgc3RydWN0IG1lbV9t
+YXBfZGF0YSB7Cj4gPj4+ID4+ICAJdW5zaWduZWQgbG9uZyBsb25nCXBmbl9zdGFydDsKPiA+Pj4g
+Pj4gIAl1bnNpZ25lZCBsb25nIGxvbmcJcGZuX2VuZDsKPiA+Pj4gPj4gIAl1bnNpZ25lZCBsb25n
+CW1lbV9tYXA7Cj4gPj4+ID4+ICsKPiA+Pj4gPj4gKwkvKgo+ID4+PiA+PiArCSAqIGZvciBleGNs
+dWRpbmcgbXVsdGktcGFnZSByZWdpb25zCj4gPj4+ID4+ICsJICovCj4gPj4+ID4+ICsJdW5zaWdu
+ZWQgbG9uZwkJZXhjbHVkZV9wZm5fc3RhcnQ7Cj4gPj4+ID4+ICsJdW5zaWduZWQgbG9uZwkJZXhj
+bHVkZV9wZm5fZW5kOwo+ID4+PiA+Cj4gPj4+ID51bnNpZ25lZCBsb25nIGxvbmcJCWV4Y2x1ZGVf
+cGZuX3N0YXJ0Owo+ID4+PiA+dW5zaWduZWQgbG9uZyBsb25nCQlleGNsdWRlX3Bmbl9lbmQ7Cj4g
+Pj4+ID4KPiA+Pj4gPlRoZSBpbnRlZ2VycyByZXByZXNlbnRpbmcgcGFnZSBmcmFtZSBudW1iZXJz
+IG5lZWQgdG8gYmUgZGVmaW5lZCBhcwo+ID4+PiA+dW5zaWduZWQgbG9uZyBsb25nIGZvciBhcmNo
+aXRlY3R1cmVzIHdoZXJlIHBoeXNpY2FsIGFkZHJlc3MgY2FuIGhhdmUKPiA+Pj4gPjY0LWJpdCBs
+ZW5ndGggYnV0IHVuc2lnbmVkIGxvbmcgaGFzIDMyLWJpdCBvbmx5LCBzdWNoIGFzIHg4NiBQQUUu
+Cj4gPj4+ID4KPiA+Pj4gPkt1bWFnYWktc2FuLCBJIHNhdyB0aGlzIHNvbWV0aW1lcyBpbiB0aGUg
+cGFzdC4gSG93IGFib3V0IGludHJvZHVjaW5nCj4gPj4+ID5zcGVjaWZpYyBhYnN0cmFjdCB0eXBl
+IGZvciBwYWdlIGZyYW1lIG51bWJlciBsaWtlIGJlbG93Pwo+ID4+PiA+Cj4gPj4+ID50eXBlZGVm
+IHVuc2lnbmVkIGxvbmcgbG9uZyBwZm5fdDsKPiA+Pj4KPiA+Pj4gR29vZCBpZGVhISBXZSBzaG91
+bGQgZG8gaXQuCj4gPj4KPiA+PiBMaWtlIHRoZSBmb2xsb3dpbmcgcGF0Y2g/Cj4gPj4KPiA+PiBG
+cm9tIDlmM2Y2ODc2YmYxZThjOTM2OTAwOTdjNTEwZGZmOTk4MjY1MWJmYTUgTW9uIFNlcCAxNyAw
+MDowMDowMCAyMDAxCj4gPj4gRnJvbTogUGV0ciBUZXNhcmlrIDxwdGVzYXJpa0BzdXNlLmN6Pgo+
+ID4+IERhdGU6IFRodSwgMTAgQXByIDIwMTQgMTI6NDA6MzEgKzAyMDAKPiA+PiBTdWJqZWN0OiBb
+UEFUQ0hdIEludHJvZHVjZSB0aGUgcGZuX3QgdHlwZQo+ID4+Cj4gPj4gUmVwbGFjZSB1bnNpZ25l
+ZCBsb25nIGxvbmcgd2l0aCBwZm5fdCB3aGVyZToKPiA+Pgo+ID4+ICAgYS4gdGhlIHZhcmlhYmxl
+IGRlbm90ZXMgYSBQRk4KPiA+PiAgIGIuIHRoZSB2YXJpYWJsZSBpcyBhIG51bWJlciBvZiBwYWdl
+cwo+ID4+Cj4gPj4gVGhlIG51bWJlciBvZiBwYWdlcyBpcyBjb252ZXJ0ZWQgdG8gYSBwZm5fdCwg
+YmVjYXVzZSBpdCBpcyBhIHJlc3VsdCBvZgo+ID4+IHN1YnRyYWN0aW5nIHR3byBQRk5zIG9yIGlu
+Y3JlbWVudGVkIGluIGEgbG9vcCBvdmVyIGEgcmFuZ2Ugb2YgUEZOcywgc28KPiA+PiBpdCBjYW4g
+Z2V0IGFzIGxhcmdlIGFzIGEgUEZOLgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogUGV0ciBUZXNh
+cmlrIDxwdGVzYXJpa0BzdXNlLmN6Pgo+ID4KPiA+VGhhbmtzIQo+ID4KPiA+T25seSBjb25jZXJu
+IGlzIHRoYXQgcGZuX3QgY291bGQgYmUgdG9vIGdlbmVyaWM7IGNvdWxkIGNvbGxpZGUgd2l0aAo+
+ID5zeW1ib2xzIGZyb20gYW55IG90aGVyIGxpYnJhcmllcy4gT24ga2VybmVsLCBJIGZvdW5kIHRo
+YXQga3ZtIGFuZCB1bQo+ID5kZWZpbmVzIHBmbl90Lgo+ID4KPiA+U28sIGl0J3MgYmV0dGVyIHRv
+IHByZWZpeCBwZm5fdCB3aXRoIHRoZSBsZXR0ZXJzIGluZGljYXRpbmcgdGhhdCB0aGlzCj4gPmlz
+IHJlbGV2YW50IHRvIG1ha2VkdW1wZmlsZS4KPiA+Cj4gPkJ1dCBJIGRvbid0IGNvbWUgdXAgd2l0
+aCBnb29kIHByZWZpeC4uLgo+IAo+IFdlIGRvbid0IG5lZWQgdG8gYmUgc2VyaW91cywganVzdCBr
+ZWVwaW5nIGlkZW50aXR5IGlzIHRoZSBpbXBvcnRhbnQKPiB0aGluZy4gU28gaG93IGFib3V0IGtk
+dW1wX3Bmbl90IG9yIG1kZl9wZm5fdD8KCkkgdm90ZSBmb3IgbWRmX3Bmbl90LCBiZWNhdXNlIE1E
+RiBpcyBhbHJlYWR5IHVzZWQgYXMgYW4gYWJicmV2aWF0aW9uCmZvciBtYWtlZHVtcGZpbGUgaW4g
+dGhlIGNyYXNoIHV0aWxpdHkgc291cmNlIGZpbGVzLgoKTXkgdHdvIGNlbnRzLApQZXRyIFQKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
+bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
