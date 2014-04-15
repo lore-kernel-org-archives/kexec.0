@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g6t1524.atlanta.hp.com ([15.193.200.67])
+Received: from g4t3426.houston.hp.com ([15.201.208.54])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wa0g7-0007aE-DT
- for kexec@lists.infradead.org; Tue, 15 Apr 2014 10:33:24 +0000
-Message-ID: <534D0ADA.1060906@hp.com>
-Date: Tue, 15 Apr 2014 18:32:58 +0800
-From: Jingbai Ma <jingbai.ma@hp.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: fix a segmentation fault when pfn exceeds
- 2G boundary
-References: <20140414103543.31935.28496.stgit@k.asiapacific.hpqcorp.net>
- <20140415.101521.297971437.d.hatayama@jp.fujitsu.com>
- <20140415.170728.404561140.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20140415.170728.404561140.d.hatayama@jp.fujitsu.com>
+ id 1WaCUH-0005B0-KI
+ for kexec@lists.infradead.org; Tue, 15 Apr 2014 23:09:58 +0000
+From: Bill Sumner <bill.sumner@hp.com>
+Subject: [PATCH 2/8] Consolidate all .h lines at front of intel-iommu.c file
+Date: Tue, 15 Apr 2014 17:09:03 -0600
+Message-Id: <1397603349-30930-3-git-send-email-bill.sumner@hp.com>
+In-Reply-To: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
+References: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,122 +17,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, lisa.mitchell@hp.com, jingbai.ma@hp.com
+To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org
+Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, bill.sumner@hp.com
 
-On 04/15/2014 04:07 PM, HATAYAMA Daisuke wrote:
-> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> Subject: Re: [PATCH] makedumpfile: fix a segmentation fault when pfn exceeds 2G boundary
-> Date: Tue, 15 Apr 2014 10:15:21 +0900
->
->> From: Jingbai Ma <jingbai.ma@hp.com>
->> Subject: [PATCH] makedumpfile: fix a segmentation fault when pfn exceeds 2G boundary
->> Date: Mon, 14 Apr 2014 18:35:44 +0800
->>
->>> This patch intend to fix a segmentation fault when pfn exceeds 2G boundary.
->>>
->>> In function is_on(), if the pfn (i) is greater than 2G, it will be a negative
->>> value and will cause a segmentation fault.
->>> is_on(char *bitmap, int i)
->>> {
->>>          return bitmap[i>>3] & (1 << (i & 7));
->>> }
->>>
->>>
->>> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
->>> ---
->>>   makedumpfile.h |    2 +-
->>>   1 files changed, 1 insertions(+), 1 deletions(-)
->>>
->>> diff --git a/makedumpfile.h b/makedumpfile.h
->>> index 3d270c6..03d35a8 100644
->>> --- a/makedumpfile.h
->>> +++ b/makedumpfile.h
->>> @@ -1591,7 +1591,7 @@ int get_xen_info_ia64(void);
->>>   #endif	/* s390x */
->>>
->>>   static inline int
->>> -is_on(char *bitmap, int i)
->>> +is_on(char *bitmap, unsigned long long i)
->>>   {
->>>   	return bitmap[i>>3] & (1 << (i & 7));
->>>   }
->>>
->>
->> is_on is used at the following two places.
->>
->> static inline int
->> is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
->> {
->>          off_t offset;
->>          if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
->>                  offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
->>                  lseek(bitmap->fd, offset, SEEK_SET);
->>                  read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
->>                  if (pfn == 0)
->>                          bitmap->no_block = 0;
->>                  else
->>                          bitmap->no_block = pfn/PFN_BUFBITMAP;
->>          }
->>          return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
->> }
->>
->> PFN_BUFBTIMAP is constant 32 K. So, it seems that the 4 byte byte
->> length came here.
->>
->> But right shift to signed integer is implementation defined. We should
->> not use right shift to signed integer. it looks gcc performs
->> arithmetic shift and this bahaviour is buggy in case of is_on().
->>
->> static inline int
->> is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
->> {
->>          if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
->>                  return FALSE;
->>          else
->>                  return is_on(bitmap, pfn - cycle->start_pfn);
->> }
->>
->> Simply, (pfn - cycle->start_pfn) could be (info->max_mapnr - 0). It's
->> possible to pass more than 2 Gi by using system with more than 8 TiB
->> physical memory space.
->>
->> So,
->>
->> - i must be unsigned in order to make right shift operation
->>    meaningful, and
->>
->> - i must have 8 byte for systems with more than 8 TiB physical memory
->>    space.
->>
-
-Yes, all your comments are correct. :)
-So would you like I send out a v2 patch with all your comments in it?
-
->> BTW, to make this situation happen in cyclic mode, there needs to be
->> 16 GiB free memory for bitmap to become large enough. I guess you
->> don't see this segmentation in the kdump 2nd kernel. Is this right?
->>
->
-> This is my terrible careless miss... 256 MiB is correct. 16 GiB is
-> obviously too large. Then, the amount seems typical.
->
-
-Correct, 2G >> 3 = 256M.
+ In intel-iommu.c, move downward the few lines near the
+ front that should not move to an intel-iommu-private.h
+ file (mostly data-item definitions) This leaves a
+ consolidated block of the lines that would move to an
+ intel-iommu-private.h file at the front of the file.
 
 
-> Thanks.
-> HATAYAMA, Daisuke
->
+Signed-off-by: Bill Sumner <bill.sumner@hp.com>
+---
+ drivers/iommu/intel-iommu.c | 74 +++++++++++++++++++++++----------------------
+ 1 file changed, 38 insertions(+), 36 deletions(-)
 
-
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 8abcb6c..22298e9 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -165,17 +165,6 @@ static inline unsigned long virt_to_dma_pfn(void *p)
+ 	return page_to_dma_pfn(virt_to_page(p));
+ }
+ 
+-/* global iommu list, set NULL for ignored DMAR units */
+-static struct intel_iommu **g_iommus;
+-
+-static void __init check_tylersburg_isoch(void);
+-static int rwbf_quirk;
+-
+-/*
+- * set to 1 to panic kernel if can't successfully enable VT-d
+- * (used when kernel is launched w/ TXT)
+- */
+-static int force_on;
+ 
+ /*
+  * 0: Present
+@@ -314,15 +303,6 @@ static inline int first_pte_in_page(struct dma_pte *pte)
+ 	return !((unsigned long)pte & ~VTD_PAGE_MASK);
+ }
+ 
+-/*
+- * This domain is a statically identity mapping domain.
+- *	1. This domain creats a static 1:1 mapping to all usable memory.
+- *	2. It maps to each iommu if successful.
+- *	3. Each iommu mapps to this domain if successful.
+- */
+-static struct dmar_domain *si_domain;
+-static int hw_pass_through = 1;
+-
+ /* devices under the same p2p bridge are owned in one domain */
+ #define DOMAIN_FLAG_P2P_MULTIPLE_DEVICES (1 << 0)
+ 
+@@ -380,6 +360,44 @@ struct device_domain_info {
+ 	struct dmar_domain *domain; /* pointer to domain */
+ };
+ 
++static inline void *alloc_pgtable_page(int node)
++{
++	struct page *page;
++	void *vaddr = NULL;
++
++	page = alloc_pages_node(node, GFP_ATOMIC | __GFP_ZERO, 0);
++	if (page)
++		vaddr = page_address(page);
++	return vaddr;
++}
++
++static inline void free_pgtable_page(void *vaddr)
++{
++	free_page((unsigned long)vaddr);
++}
++
++
++static void __init check_tylersburg_isoch(void);
++
++/* global iommu list, set NULL for ignored DMAR units */
++static struct intel_iommu **g_iommus;
++static int rwbf_quirk;
++
++/*
++ * set to 1 to panic kernel if can't successfully enable VT-d
++ * (used when kernel is launched w/ TXT)
++ */
++static int force_on;
++
++/*
++ * This domain is a statically identity mapping domain.
++ *	1. This domain creats a static 1:1 mapping to all usable memory.
++ *	2. It maps to each iommu if successful.
++ *	3. Each iommu mapps to this domain if successful.
++ */
++static struct dmar_domain *si_domain;
++static int hw_pass_through = 1;
++
+ static void flush_unmaps_timeout(unsigned long data);
+ 
+ static DEFINE_TIMER(unmap_timer,  flush_unmaps_timeout, 0, 0);
+@@ -468,22 +486,6 @@ static struct kmem_cache *iommu_domain_cache;
+ static struct kmem_cache *iommu_devinfo_cache;
+ static struct kmem_cache *iommu_iova_cache;
+ 
+-static inline void *alloc_pgtable_page(int node)
+-{
+-	struct page *page;
+-	void *vaddr = NULL;
+-
+-	page = alloc_pages_node(node, GFP_ATOMIC | __GFP_ZERO, 0);
+-	if (page)
+-		vaddr = page_address(page);
+-	return vaddr;
+-}
+-
+-static inline void free_pgtable_page(void *vaddr)
+-{
+-	free_page((unsigned long)vaddr);
+-}
+-
+ static inline void *alloc_domain_mem(void)
+ {
+ 	return kmem_cache_alloc(iommu_domain_cache, GFP_ATOMIC);
 -- 
-Thanks,
-Jingbai Ma
+Bill Sumner <bill.sumner@hp.com>
+
 
 _______________________________________________
 kexec mailing list
