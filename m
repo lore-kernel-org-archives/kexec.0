@@ -1,18 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WZwmG-000886-EV
- for kexec@lists.infradead.org; Tue, 15 Apr 2014 06:23:29 +0000
-Date: Tue, 15 Apr 2014 08:23:03 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v2 2/3] Generic handling of multi-page exclusions
-Message-ID: <20140415082303.5639e58a@hananiah.suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972037DB@BPXM01GP.gisp.nec.co.jp>
-References: <20140408.104907.132144009.d.hatayama@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971FF140@BPXM01GP.gisp.nec.co.jp>
- <20140410124717.498e0145@hananiah.suse.cz>
- <20140411.105944.62065753.d.hatayama@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE972037DB@BPXM01GP.gisp.nec.co.jp>
+ id 1WZyPa-0006DA-PN
+ for kexec@lists.infradead.org; Tue, 15 Apr 2014 08:08:11 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D59863EE1BA
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 17:07:46 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id C806C45DF49
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 17:07:46 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id A9CBA45DF48
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 17:07:46 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9D9141DB8037
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 17:07:46 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3C61B1DB8041
+ for <kexec@lists.infradead.org>; Tue, 15 Apr 2014 17:07:46 +0900 (JST)
+Date: Tue, 15 Apr 2014 17:07:28 +0900 (JST)
+Message-Id: <20140415.170728.404561140.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH] makedumpfile: fix a segmentation fault when pfn
+ exceeds 2G boundary
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20140415.101521.297971437.d.hatayama@jp.fujitsu.com>
+References: <20140414103543.31935.28496.stgit@k.asiapacific.hpqcorp.net>
+ <20140415.101521.297971437.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,60 +36,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: jingbai.ma@hp.com
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, lisa.mitchell@hp.com
 
-ViBUdWUsIDE1IEFwciAyMDE0IDAxOjIwOjQ2ICswMDAwCkF0c3VzaGkgS3VtYWdhaSA8a3VtYWdh
-aS1hdHN1c2hpQG14Yy5uZXMubmVjLmNvLmpwPiBuYXBzw6FubzoKCj4gPkZyb206IFBldHIgVGVz
-YXJpayA8cHRlc2FyaWtAc3VzZS5jej4KPiA+U3ViamVjdDogUmU6IFtQQVRDSCB2MiAyLzNdIEdl
-bmVyaWMgaGFuZGxpbmcgb2YgbXVsdGktcGFnZSBleGNsdXNpb25zCj4gPkRhdGU6IFRodSwgMTAg
-QXByIDIwMTQgMTI6NDc6MTcgKzAyMDAKPiA+Cj4gPj4gT24gVHVlLCA4IEFwciAyMDE0IDA3OjA2
-OjM0ICswMDAwCj4gPj4gQXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlAbXhjLm5lcy5u
-ZWMuY28uanA+IHdyb3RlOgo+ID4+Cj4gPj4+IFsuLi5dCj4gPj4+ID4gZGlmZiAtLWdpdCBhL21h
-a2VkdW1wZmlsZS5oIGIvbWFrZWR1bXBmaWxlLmgKPiA+Pj4gPj4gaW5kZXggOTUxZWQxYi4uZGZh
-ZDU2OSAxMDA2NDQKPiA+Pj4gPj4gLS0tIGEvbWFrZWR1bXBmaWxlLmgKPiA+Pj4gPj4gKysrIGIv
-bWFrZWR1bXBmaWxlLmgKPiA+Pj4gPj4gQEAgLTgxNiw2ICs4MTYsMTMgQEAgc3RydWN0IG1lbV9t
-YXBfZGF0YSB7Cj4gPj4+ID4+ICAJdW5zaWduZWQgbG9uZyBsb25nCXBmbl9zdGFydDsKPiA+Pj4g
-Pj4gIAl1bnNpZ25lZCBsb25nIGxvbmcJcGZuX2VuZDsKPiA+Pj4gPj4gIAl1bnNpZ25lZCBsb25n
-CW1lbV9tYXA7Cj4gPj4+ID4+ICsKPiA+Pj4gPj4gKwkvKgo+ID4+PiA+PiArCSAqIGZvciBleGNs
-dWRpbmcgbXVsdGktcGFnZSByZWdpb25zCj4gPj4+ID4+ICsJICovCj4gPj4+ID4+ICsJdW5zaWdu
-ZWQgbG9uZwkJZXhjbHVkZV9wZm5fc3RhcnQ7Cj4gPj4+ID4+ICsJdW5zaWduZWQgbG9uZwkJZXhj
-bHVkZV9wZm5fZW5kOwo+ID4+PiA+Cj4gPj4+ID51bnNpZ25lZCBsb25nIGxvbmcJCWV4Y2x1ZGVf
-cGZuX3N0YXJ0Owo+ID4+PiA+dW5zaWduZWQgbG9uZyBsb25nCQlleGNsdWRlX3Bmbl9lbmQ7Cj4g
-Pj4+ID4KPiA+Pj4gPlRoZSBpbnRlZ2VycyByZXByZXNlbnRpbmcgcGFnZSBmcmFtZSBudW1iZXJz
-IG5lZWQgdG8gYmUgZGVmaW5lZCBhcwo+ID4+PiA+dW5zaWduZWQgbG9uZyBsb25nIGZvciBhcmNo
-aXRlY3R1cmVzIHdoZXJlIHBoeXNpY2FsIGFkZHJlc3MgY2FuIGhhdmUKPiA+Pj4gPjY0LWJpdCBs
-ZW5ndGggYnV0IHVuc2lnbmVkIGxvbmcgaGFzIDMyLWJpdCBvbmx5LCBzdWNoIGFzIHg4NiBQQUUu
-Cj4gPj4+ID4KPiA+Pj4gPkt1bWFnYWktc2FuLCBJIHNhdyB0aGlzIHNvbWV0aW1lcyBpbiB0aGUg
-cGFzdC4gSG93IGFib3V0IGludHJvZHVjaW5nCj4gPj4+ID5zcGVjaWZpYyBhYnN0cmFjdCB0eXBl
-IGZvciBwYWdlIGZyYW1lIG51bWJlciBsaWtlIGJlbG93Pwo+ID4+PiA+Cj4gPj4+ID50eXBlZGVm
-IHVuc2lnbmVkIGxvbmcgbG9uZyBwZm5fdDsKPiA+Pj4KPiA+Pj4gR29vZCBpZGVhISBXZSBzaG91
-bGQgZG8gaXQuCj4gPj4KPiA+PiBMaWtlIHRoZSBmb2xsb3dpbmcgcGF0Y2g/Cj4gPj4KPiA+PiBG
-cm9tIDlmM2Y2ODc2YmYxZThjOTM2OTAwOTdjNTEwZGZmOTk4MjY1MWJmYTUgTW9uIFNlcCAxNyAw
-MDowMDowMCAyMDAxCj4gPj4gRnJvbTogUGV0ciBUZXNhcmlrIDxwdGVzYXJpa0BzdXNlLmN6Pgo+
-ID4+IERhdGU6IFRodSwgMTAgQXByIDIwMTQgMTI6NDA6MzEgKzAyMDAKPiA+PiBTdWJqZWN0OiBb
-UEFUQ0hdIEludHJvZHVjZSB0aGUgcGZuX3QgdHlwZQo+ID4+Cj4gPj4gUmVwbGFjZSB1bnNpZ25l
-ZCBsb25nIGxvbmcgd2l0aCBwZm5fdCB3aGVyZToKPiA+Pgo+ID4+ICAgYS4gdGhlIHZhcmlhYmxl
-IGRlbm90ZXMgYSBQRk4KPiA+PiAgIGIuIHRoZSB2YXJpYWJsZSBpcyBhIG51bWJlciBvZiBwYWdl
-cwo+ID4+Cj4gPj4gVGhlIG51bWJlciBvZiBwYWdlcyBpcyBjb252ZXJ0ZWQgdG8gYSBwZm5fdCwg
-YmVjYXVzZSBpdCBpcyBhIHJlc3VsdCBvZgo+ID4+IHN1YnRyYWN0aW5nIHR3byBQRk5zIG9yIGlu
-Y3JlbWVudGVkIGluIGEgbG9vcCBvdmVyIGEgcmFuZ2Ugb2YgUEZOcywgc28KPiA+PiBpdCBjYW4g
-Z2V0IGFzIGxhcmdlIGFzIGEgUEZOLgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogUGV0ciBUZXNh
-cmlrIDxwdGVzYXJpa0BzdXNlLmN6Pgo+ID4KPiA+VGhhbmtzIQo+ID4KPiA+T25seSBjb25jZXJu
-IGlzIHRoYXQgcGZuX3QgY291bGQgYmUgdG9vIGdlbmVyaWM7IGNvdWxkIGNvbGxpZGUgd2l0aAo+
-ID5zeW1ib2xzIGZyb20gYW55IG90aGVyIGxpYnJhcmllcy4gT24ga2VybmVsLCBJIGZvdW5kIHRo
-YXQga3ZtIGFuZCB1bQo+ID5kZWZpbmVzIHBmbl90Lgo+ID4KPiA+U28sIGl0J3MgYmV0dGVyIHRv
-IHByZWZpeCBwZm5fdCB3aXRoIHRoZSBsZXR0ZXJzIGluZGljYXRpbmcgdGhhdCB0aGlzCj4gPmlz
-IHJlbGV2YW50IHRvIG1ha2VkdW1wZmlsZS4KPiA+Cj4gPkJ1dCBJIGRvbid0IGNvbWUgdXAgd2l0
-aCBnb29kIHByZWZpeC4uLgo+IAo+IFdlIGRvbid0IG5lZWQgdG8gYmUgc2VyaW91cywganVzdCBr
-ZWVwaW5nIGlkZW50aXR5IGlzIHRoZSBpbXBvcnRhbnQKPiB0aGluZy4gU28gaG93IGFib3V0IGtk
-dW1wX3Bmbl90IG9yIG1kZl9wZm5fdD8KCkkgdm90ZSBmb3IgbWRmX3Bmbl90LCBiZWNhdXNlIE1E
-RiBpcyBhbHJlYWR5IHVzZWQgYXMgYW4gYWJicmV2aWF0aW9uCmZvciBtYWtlZHVtcGZpbGUgaW4g
-dGhlIGNyYXNoIHV0aWxpdHkgc291cmNlIGZpbGVzLgoKTXkgdHdvIGNlbnRzLApQZXRyIFQKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH] makedumpfile: fix a segmentation fault when pfn exceeds 2G boundary
+Date: Tue, 15 Apr 2014 10:15:21 +0900
+
+> From: Jingbai Ma <jingbai.ma@hp.com>
+> Subject: [PATCH] makedumpfile: fix a segmentation fault when pfn exceeds 2G boundary
+> Date: Mon, 14 Apr 2014 18:35:44 +0800
+> 
+>> This patch intend to fix a segmentation fault when pfn exceeds 2G boundary.
+>> 
+>> In function is_on(), if the pfn (i) is greater than 2G, it will be a negative
+>> value and will cause a segmentation fault.
+>> is_on(char *bitmap, int i)
+>> {
+>>         return bitmap[i>>3] & (1 << (i & 7));
+>> }
+>> 
+>> 
+>> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+>> ---
+>>  makedumpfile.h |    2 +-
+>>  1 files changed, 1 insertions(+), 1 deletions(-)
+>> 
+>> diff --git a/makedumpfile.h b/makedumpfile.h
+>> index 3d270c6..03d35a8 100644
+>> --- a/makedumpfile.h
+>> +++ b/makedumpfile.h
+>> @@ -1591,7 +1591,7 @@ int get_xen_info_ia64(void);
+>>  #endif	/* s390x */
+>>  
+>>  static inline int
+>> -is_on(char *bitmap, int i)
+>> +is_on(char *bitmap, unsigned long long i)
+>>  {
+>>  	return bitmap[i>>3] & (1 << (i & 7));
+>>  }
+>> 
+> 
+> is_on is used at the following two places.
+> 
+> static inline int
+> is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
+> {
+>         off_t offset;
+>         if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
+>                 offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+>                 lseek(bitmap->fd, offset, SEEK_SET);
+>                 read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
+>                 if (pfn == 0)
+>                         bitmap->no_block = 0;
+>                 else
+>                         bitmap->no_block = pfn/PFN_BUFBITMAP;
+>         }
+>         return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
+> }
+> 
+> PFN_BUFBTIMAP is constant 32 K. So, it seems that the 4 byte byte
+> length came here.
+> 
+> But right shift to signed integer is implementation defined. We should
+> not use right shift to signed integer. it looks gcc performs
+> arithmetic shift and this bahaviour is buggy in case of is_on().
+> 
+> static inline int
+> is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
+> {
+>         if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
+>                 return FALSE;
+>         else
+>                 return is_on(bitmap, pfn - cycle->start_pfn);
+> }
+> 
+> Simply, (pfn - cycle->start_pfn) could be (info->max_mapnr - 0). It's
+> possible to pass more than 2 Gi by using system with more than 8 TiB
+> physical memory space.
+> 
+> So,
+> 
+> - i must be unsigned in order to make right shift operation
+>   meaningful, and
+> 
+> - i must have 8 byte for systems with more than 8 TiB physical memory
+>   space.
+> 
+> BTW, to make this situation happen in cyclic mode, there needs to be
+> 16 GiB free memory for bitmap to become large enough. I guess you
+> don't see this segmentation in the kdump 2nd kernel. Is this right?
+> 
+
+This is my terrible careless miss... 256 MiB is correct. 16 GiB is
+obviously too large. Then, the amount seems typical.
+
+Thanks.
+HATAYAMA, Daisuke
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
