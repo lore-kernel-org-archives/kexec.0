@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaLYB-0007H4-JT
- for kexec@lists.infradead.org; Wed, 16 Apr 2014 08:50:36 +0000
-Date: Wed, 16 Apr 2014 10:50:09 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: Fix a bug found during regression testing
- for v1.5.6
-Message-ID: <20140416105009.402c94fc@hananiah.suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9720436D@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9720436D@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WaNB7-0001ew-93
+ for kexec@lists.infradead.org; Wed, 16 Apr 2014 10:34:54 +0000
+Date: Wed, 16 Apr 2014 18:33:06 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Fwd: [PATCH] acpi: try to trust cpu_index from x86_cpu_to_apicid
+Message-ID: <20140416103306.GD8084@dhcp-16-105.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,59 +21,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: d.hatayama@jp.fujitsu.com
 
-On Wed, 16 Apr 2014 08:11:27 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+Forward this to kexec mailing list.
 
-> Hello,
+Hi HATAYAMA,
+
+Since you are very familiar with boot_cpu_physical_apicid and its change
+related to kdump, could you help review this patch?
+
+Thanks
+Baoquan
+
+> Date: Tue, 15 Apr 2014 07:55:54 +0800
+> From: Baoquan He <bhe@redhat.com>
+> To: linux-kernel@vger.kernel.org
+> Cc: rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org, jiang.liu@linux.intel.com, vgoyal@redhat.com, Baoquan He <bhe@redhat.com>
+> Subject: [PATCH] acpi: try to trust cpu_index from x86_cpu_to_apicid
 > 
-> I have to do regression testing again for this issue and the OOM
-> issue reported by Vivek, so the release of v1.5.6 will be put off
-> to next week.
+> In smp with multi cpus, when enter into kdump kernel with only 1 cpu,
+> a warning message is printed out:
 > 
-> Thanks for your patience.
+> acpi LNXCPU:0a: BIOS reported wrong ACPI id 0 for the processor
 > 
-> Atsushi Kumagai
+> In this case kdump kernel use the same ACPI tables as 1st kernel,
+> means lapic information is got from MADT. The acpi_id related to
+> this cpu index and lapic_id may not be 0, so the code to assign
+> value to cpu_index is not correct in this case per cpu0_initialized.
+> cpu index stored in x86_cpu_to_apicid need be respected.
 > 
-> --
-> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> Date: Wed, 16 Apr 2014 14:56:01 +0900
-> Subject: [PATCH] Exclude small cycle regions wrongly.
+> Now fix it in this patch per boot_cpu_physical_apicid. When cpu index
+> related to boot_cpu_physical_apicid is not stored in x86_cpu_to_apicid,
+> then we can say this is UP system running SMP kernel with no LAPIC in MADT
 > 
-> In bitmap initialization, if a cycle region is smaller than 8 pages
-> and its start_pfn is aligned to multiple of 8 pages, it will be
-> excluded wrongly.
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  drivers/acpi/acpi_processor.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->   Example case:
->     pfn_start=0x103ff80, pfn_start_roundup=0x103ff80
->     pfn_end=0x103ff84, pfn_end_round=0x103ff80
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+> index c29c2c3..1ae460c 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -267,7 +267,7 @@ static int acpi_processor_get_info(struct acpi_device *device)
+>  	pr->apic_id = apic_id;
+>  
+>  	cpu_index = acpi_map_cpuid(pr->apic_id, pr->acpi_id);
+> -	if (!cpu0_initialized) {
+> +	if (!cpu0_initialized && (boot_cpu_physical_apicid == pr->apic_id)) {
+>  		cpu0_initialized = 1;
+>  		/* Handle UP system running SMP kernel, with no LAPIC in MADT */
+>  		if ((cpu_index == -1) && (num_online_cpus() == 1))
+> -- 
+> 1.8.5.3
 > 
-> This case doesn't meet any conditions to set bits in
-> create_1st_bitmap_cyclic() and initialize_2nd_bitmap_cyclic().
-> We should admit the case where pfn_start is equal to pfn_end_round
-> like above.
 
-Hello Kumagai-san,
-
-FWIW I cleaned up these bit operations in makedumpfile, completely
-removing this code and instead adding functions for efficient setting
-and clearing of a range of bits in a bitmap:
-
-set_bits(char *buf, size_t start, size_t end);
-clear_bits(char *buf, size_t start, size_t end);
-
-The whole branch is still sitting on my disk, because I based it on
-my other patch series (generic handling of multi-page exclusions), and
-there were quite some conflicts when I tried to rebase it on devel.
-
-But if you include it in v1.5.6, I will do the rebase nevertheless,
-so it doesn't have to wait for your decision about the other series.
-
-Can we do it that way?
-
-Petr T
+----- End forwarded message -----
 
 _______________________________________________
 kexec mailing list
