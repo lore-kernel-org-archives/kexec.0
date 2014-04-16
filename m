@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaUYC-0004lV-8K
- for kexec@lists.infradead.org; Wed, 16 Apr 2014 18:27:13 +0000
-Date: Wed, 16 Apr 2014 20:26:45 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] kexec: Fix ->unuseable_pages typo
-Message-ID: <20140416182645.GA5588@pd.tnic>
-References: <1392819695-24116-1-git-send-email-bp@alien8.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1392819695-24116-1-git-send-email-bp@alien8.de>
+Received: from mail-ee0-x22d.google.com ([2a00:1450:4013:c00::22d])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WaXil-0000nX-Jz
+ for kexec@lists.infradead.org; Wed, 16 Apr 2014 21:50:21 +0000
+Received: by mail-ee0-f45.google.com with SMTP id d17so9356432eek.32
+ for <kexec@lists.infradead.org>; Wed, 16 Apr 2014 14:49:55 -0700 (PDT)
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH] zImage-arm: get rid of static offset
+Date: Wed, 16 Apr 2014 23:49:48 +0200
+Message-Id: <1397684988-5353-1-git-send-email-zonque@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,92 +17,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>
+To: horms@verge.net.au, kexec@lists.infradead.org
+Cc: s.neumann@raumfeld.com, Daniel Mack <zonque@gmail.com>
 
-Hey Andrew,
+The code in arch/arm/kexec-zImage-arm.c currently enforces a hard limit
+on the maximum size a dtb blob can occupy. This limit is set to 32k,
+which is quite low for device tree blobs nowadays.
 
-can you pls pick this one up - it seems it fell through the cracks.
+Get rid of this assumption, and calculate the added size dynamically.
+For this, we need to slurp in the dtb file earlier in order to
+determine its size, because the memory hole allocation for 'base'
+takes this size into account.
 
-Thanks.
+For ATAGs, we keep the current value of 32k, which should in fact be
+enough.
 
-On Wed, Feb 19, 2014 at 03:21:35PM +0100, Borislav Petkov wrote:
-> From: Borislav Petkov <bp@suse.de>
-> 
-> Let's use the more common "unusable".
-> 
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> ---
->  include/linux/kexec.h | 2 +-
->  kernel/kexec.c        | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 6d4066cdb5b5..969237e338d1 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -100,7 +100,7 @@ struct kimage {
->  
->  	struct list_head control_pages;
->  	struct list_head dest_pages;
-> -	struct list_head unuseable_pages;
-> +	struct list_head unusable_pages;
->  
->  	/* Address of next control page to allocate for crash kernels. */
->  	unsigned long control_page;
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 60bafbed06ab..a2d0c5f80bf2 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -152,7 +152,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
->  	INIT_LIST_HEAD(&image->dest_pages);
->  
->  	/* Initialize the list of unusable pages */
-> -	INIT_LIST_HEAD(&image->unuseable_pages);
-> +	INIT_LIST_HEAD(&image->unusable_pages);
->  
->  	/* Read in the segments */
->  	image->nr_segments = nr_segments;
-> @@ -607,7 +607,7 @@ static void kimage_free_extra_pages(struct kimage *image)
->  	kimage_free_page_list(&image->dest_pages);
->  
->  	/* Walk through and free any unusable pages I have cached */
-> -	kimage_free_page_list(&image->unuseable_pages);
-> +	kimage_free_page_list(&image->unusable_pages);
->  
->  }
->  static void kimage_terminate(struct kimage *image)
-> @@ -731,7 +731,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
->  		/* If the page cannot be used file it away */
->  		if (page_to_pfn(page) >
->  				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
-> -			list_add(&page->lru, &image->unuseable_pages);
-> +			list_add(&page->lru, &image->unusable_pages);
->  			continue;
->  		}
->  		addr = page_to_pfn(page) << PAGE_SHIFT;
-> -- 
-> 1.8.5.rc3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+With this change in place, the 'DTB too large!' error message can go
+away. Successfully tested on a AM335x board.
 
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+Reported-by: Sven Neumann <s.neumann@raumfeld.com>
+---
+ kexec/arch/arm/kexec-zImage-arm.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index bfbf290..2bf4f62 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -282,7 +282,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ {
+ 	unsigned long base;
+ 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
+-	unsigned int offset = 0x8000;      /* 32k offset from memory start */
++	unsigned int extra_size;
+ 	const char *command_line;
+ 	char *modified_cmdline = NULL;
+ 	off_t command_line_len;
+@@ -360,6 +360,15 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
+ 	}
+ 
++	extra_size = atag_offset;
++
++	if (dtb_file) {
++		dtb_buf = slurp_file(dtb_file, &dtb_length);
++		extra_size += _ALIGN(dtb_length, getpagesize());
++	} else if (use_atags) {
++		extra_size += 0x8000;	/* 32k should be plenty for ATAGs */
++	}
++
+ 	/*
+ 	 * If we are loading a dump capture kernel, we need to update kernel
+ 	 * command line and also add some additional segments.
+@@ -398,7 +407,8 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		}
+ 		base = start;
+ 	} else {
+-		base = locate_hole(info,len+offset,0,0,ULONG_MAX,INT_MAX);
++		base = locate_hole(info, len + extra_size, 0, 0,
++				   ULONG_MAX, INT_MAX);
+ 	}
+ 
+ 	if (base == ULONG_MAX)
+@@ -428,8 +438,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		 * Read a user-specified DTB file.
+ 		 */
+ 		if (dtb_file) {
+-			dtb_buf = slurp_file(dtb_file, &dtb_length);
+-
+ 			if (fdt_check_header(dtb_buf) != 0) {
+ 				fprintf(stderr, "Invalid FDT buffer.\n");
+ 				return -1;
+@@ -452,11 +460,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 			create_flatten_tree(&dtb_buf, &dtb_length, command_line);
+ 		}
+ 
+-		if (base + atag_offset + dtb_length > base + offset) {
+-			fprintf(stderr, "DTB too large!\n");
+-			return -1;
+-		}
+-
+ 		if (ramdisk) {
+ 			add_segment(info, ramdisk_buf, initrd_size,
+ 			            initrd_base, initrd_size);
+@@ -485,9 +488,9 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		            dtb_offset, dtb_length);
+ 	}
+ 
+-	add_segment(info, buf, len, base + offset, len);
++	add_segment(info, buf, len, base + extra_size, len);
+ 
+-	info->entry = (void*)base + offset;
++	info->entry = (void*)base + extra_size;
+ 
+ 	return 0;
+ }
 -- 
-Regards/Gruss,
-    Boris.
+1.9.0
 
-Sent from a fat crate under my desk. Formatting is fine.
---
 
 _______________________________________________
 kexec mailing list
