@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaNB7-0001ew-93
- for kexec@lists.infradead.org; Wed, 16 Apr 2014 10:34:54 +0000
-Date: Wed, 16 Apr 2014 18:33:06 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Fwd: [PATCH] acpi: try to trust cpu_index from x86_cpu_to_apicid
-Message-ID: <20140416103306.GD8084@dhcp-16-105.nay.redhat.com>
+ id 1WaUYC-0004lV-8K
+ for kexec@lists.infradead.org; Wed, 16 Apr 2014 18:27:13 +0000
+Date: Wed, 16 Apr 2014 20:26:45 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] kexec: Fix ->unuseable_pages typo
+Message-ID: <20140416182645.GA5588@pd.tnic>
+References: <1392819695-24116-1-git-send-email-bp@alien8.de>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1392819695-24116-1-git-send-email-bp@alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,63 +23,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: d.hatayama@jp.fujitsu.com
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>
 
-Forward this to kexec mailing list.
+Hey Andrew,
 
-Hi HATAYAMA,
+can you pls pick this one up - it seems it fell through the cracks.
 
-Since you are very familiar with boot_cpu_physical_apicid and its change
-related to kdump, could you help review this patch?
+Thanks.
 
-Thanks
-Baoquan
-
-> Date: Tue, 15 Apr 2014 07:55:54 +0800
-> From: Baoquan He <bhe@redhat.com>
-> To: linux-kernel@vger.kernel.org
-> Cc: rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org, jiang.liu@linux.intel.com, vgoyal@redhat.com, Baoquan He <bhe@redhat.com>
-> Subject: [PATCH] acpi: try to trust cpu_index from x86_cpu_to_apicid
+On Wed, Feb 19, 2014 at 03:21:35PM +0100, Borislav Petkov wrote:
+> From: Borislav Petkov <bp@suse.de>
 > 
-> In smp with multi cpus, when enter into kdump kernel with only 1 cpu,
-> a warning message is printed out:
+> Let's use the more common "unusable".
 > 
-> acpi LNXCPU:0a: BIOS reported wrong ACPI id 0 for the processor
-> 
-> In this case kdump kernel use the same ACPI tables as 1st kernel,
-> means lapic information is got from MADT. The acpi_id related to
-> this cpu index and lapic_id may not be 0, so the code to assign
-> value to cpu_index is not correct in this case per cpu0_initialized.
-> cpu index stored in x86_cpu_to_apicid need be respected.
-> 
-> Now fix it in this patch per boot_cpu_physical_apicid. When cpu index
-> related to boot_cpu_physical_apicid is not stored in x86_cpu_to_apicid,
-> then we can say this is UP system running SMP kernel with no LAPIC in MADT
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Borislav Petkov <bp@suse.de>
 > ---
->  drivers/acpi/acpi_processor.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/kexec.h | 2 +-
+>  kernel/kexec.c        | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> index c29c2c3..1ae460c 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -267,7 +267,7 @@ static int acpi_processor_get_info(struct acpi_device *device)
->  	pr->apic_id = apic_id;
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 6d4066cdb5b5..969237e338d1 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -100,7 +100,7 @@ struct kimage {
 >  
->  	cpu_index = acpi_map_cpuid(pr->apic_id, pr->acpi_id);
-> -	if (!cpu0_initialized) {
-> +	if (!cpu0_initialized && (boot_cpu_physical_apicid == pr->apic_id)) {
->  		cpu0_initialized = 1;
->  		/* Handle UP system running SMP kernel, with no LAPIC in MADT */
->  		if ((cpu_index == -1) && (num_online_cpus() == 1))
+>  	struct list_head control_pages;
+>  	struct list_head dest_pages;
+> -	struct list_head unuseable_pages;
+> +	struct list_head unusable_pages;
+>  
+>  	/* Address of next control page to allocate for crash kernels. */
+>  	unsigned long control_page;
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 60bafbed06ab..a2d0c5f80bf2 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -152,7 +152,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+>  	INIT_LIST_HEAD(&image->dest_pages);
+>  
+>  	/* Initialize the list of unusable pages */
+> -	INIT_LIST_HEAD(&image->unuseable_pages);
+> +	INIT_LIST_HEAD(&image->unusable_pages);
+>  
+>  	/* Read in the segments */
+>  	image->nr_segments = nr_segments;
+> @@ -607,7 +607,7 @@ static void kimage_free_extra_pages(struct kimage *image)
+>  	kimage_free_page_list(&image->dest_pages);
+>  
+>  	/* Walk through and free any unusable pages I have cached */
+> -	kimage_free_page_list(&image->unuseable_pages);
+> +	kimage_free_page_list(&image->unusable_pages);
+>  
+>  }
+>  static void kimage_terminate(struct kimage *image)
+> @@ -731,7 +731,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
+>  		/* If the page cannot be used file it away */
+>  		if (page_to_pfn(page) >
+>  				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
+> -			list_add(&page->lru, &image->unuseable_pages);
+> +			list_add(&page->lru, &image->unusable_pages);
+>  			continue;
+>  		}
+>  		addr = page_to_pfn(page) << PAGE_SHIFT;
 > -- 
-> 1.8.5.3
+> 1.8.5.rc3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 > 
 
------ End forwarded message -----
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
