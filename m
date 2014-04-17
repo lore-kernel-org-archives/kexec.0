@@ -1,25 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wairu-0001XO-Gv
- for kexec@lists.infradead.org; Thu, 17 Apr 2014 09:44:31 +0000
-Date: Thu, 17 Apr 2014 17:45:33 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
-Message-ID: <20140417094533.GD11676@dhcp-16-126.nay.redhat.com>
-References: <1397487341-17287-10-git-send-email-chaowang@redhat.com>
- <20140417052913.GB4889@dhcp-16-126.nay.redhat.com>
- <20140417053541.GC4889@dhcp-16-126.nay.redhat.com>
- <20140417061736.GA1849@dhcp-17-89.nay.redhat.com>
- <20140417063244.GF4889@dhcp-16-126.nay.redhat.com>
- <20140417065749.GC1849@dhcp-17-89.nay.redhat.com>
- <20140417070713.GA11676@dhcp-16-126.nay.redhat.com>
- <20140417071726.GE1849@dhcp-17-89.nay.redhat.com>
- <20140417073045.GB11676@dhcp-16-126.nay.redhat.com>
- <20140417084225.GF1849@dhcp-17-89.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140417084225.GF1849@dhcp-17-89.nay.redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WaiuB-0003Lb-Jd
+ for kexec@lists.infradead.org; Thu, 17 Apr 2014 09:46:52 +0000
+Date: Thu, 17 Apr 2014 11:46:25 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] makedumpfile: Fix a bug found during regression testing
+ for v1.5.6
+Message-ID: <20140417114625.55b3ac41@hananiah.suse.cz>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE97204DC7@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9720436D@BPXM01GP.gisp.nec.co.jp>
+ <20140416105009.402c94fc@hananiah.suse.cz>
+ <0910DD04CBD6DE4193FCF86B9C00BE97204D20@BPXM01GP.gisp.nec.co.jp>
+ <20140417104819.0180bb4c@hananiah.suse.cz>
+ <0910DD04CBD6DE4193FCF86B9C00BE97204DC7@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,40 +23,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-> 
-> It comes to me that in the future there are two places that can be
-> improved or cleaned up. I summarize them as the followings:
-> 
-> - clean up cmdline_add_memmap and cmdline_add_memmap_acpi
-> - Dropping hard limitation memory maps, like CRASH_MAX_MEMMAP_NR
-
-Hmm, kernel E820MAX is 128 in case non EFI like below, likely 1024
-is enough, so keep current limitation is good:
-
-#ifdef CONFIG_EFI
-#include <linux/numa.h>
-#define E820_X_MAX (E820MAX + 3 * MAX_NUMNODES)
-#else   /* ! CONFIG_EFI */
-#define E820_X_MAX E820MAX
-#endif
-
-> 
-> Do you have additional issues needed to be addressed?
-
-Another in mind is using one array for both 1st kernel and 2nd kernel
-if possible.
-
-Thanks
-dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ViBUaHUsIDE3IEFwciAyMDE0IDA5OjI3OjA5ICswMDAwCkF0c3VzaGkgS3VtYWdhaSA8a3VtYWdh
+aS1hdHN1c2hpQG14Yy5uZXMubmVjLmNvLmpwPiBuYXBzw6FubzoKCj4gPk9uIFRodSwgMTcgQXBy
+IDIwMTQgMDg6MzM6MTkgKzAwMDAKPiA+QXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlA
+bXhjLm5lcy5uZWMuY28uanA+IHdyb3RlOgo+ID4KPiA+PiA+PiBGcm9tOiBBdHN1c2hpIEt1bWFn
+YWkgPGt1bWFnYWktYXRzdXNoaUBteGMubmVzLm5lYy5jby5qcD4KPiA+PiA+PiBEYXRlOiBXZWQs
+IDE2IEFwciAyMDE0IDE0OjU2OjAxICswOTAwCj4gPj4gPj4gU3ViamVjdDogW1BBVENIXSBFeGNs
+dWRlIHNtYWxsIGN5Y2xlIHJlZ2lvbnMgd3JvbmdseS4KPiA+PiA+Pgo+ID4+ID4+IEluIGJpdG1h
+cCBpbml0aWFsaXphdGlvbiwgaWYgYSBjeWNsZSByZWdpb24gaXMgc21hbGxlciB0aGFuIDggcGFn
+ZXMKPiA+PiA+PiBhbmQgaXRzIHN0YXJ0X3BmbiBpcyBhbGlnbmVkIHRvIG11bHRpcGxlIG9mIDgg
+cGFnZXMsIGl0IHdpbGwgYmUKPiA+PiA+PiBleGNsdWRlZCB3cm9uZ2x5Lgo+ID4+ID4+Cj4gPj4g
+Pj4gICBFeGFtcGxlIGNhc2U6Cj4gPj4gPj4gICAgIHBmbl9zdGFydD0weDEwM2ZmODAsIHBmbl9z
+dGFydF9yb3VuZHVwPTB4MTAzZmY4MAo+ID4+ID4+ICAgICBwZm5fZW5kPTB4MTAzZmY4NCwgcGZu
+X2VuZF9yb3VuZD0weDEwM2ZmODAKPiA+PiA+Pgo+ID4+ID4+IFRoaXMgY2FzZSBkb2Vzbid0IG1l
+ZXQgYW55IGNvbmRpdGlvbnMgdG8gc2V0IGJpdHMgaW4KPiA+PiA+PiBjcmVhdGVfMXN0X2JpdG1h
+cF9jeWNsaWMoKSBhbmQgaW5pdGlhbGl6ZV8ybmRfYml0bWFwX2N5Y2xpYygpLgo+ID4+ID4+IFdl
+IHNob3VsZCBhZG1pdCB0aGUgY2FzZSB3aGVyZSBwZm5fc3RhcnQgaXMgZXF1YWwgdG8gcGZuX2Vu
+ZF9yb3VuZAo+ID4+ID4+IGxpa2UgYWJvdmUuCj4gPj4gPgo+ID4+ID5IZWxsbyBLdW1hZ2FpLXNh
+biwKPiA+PiA+Cj4gPj4gPkZXSVcgSSBjbGVhbmVkIHVwIHRoZXNlIGJpdCBvcGVyYXRpb25zIGlu
+IG1ha2VkdW1wZmlsZSwgY29tcGxldGVseQo+ID4+ID5yZW1vdmluZyB0aGlzIGNvZGUgYW5kIGlu
+c3RlYWQgYWRkaW5nIGZ1bmN0aW9ucyBmb3IgZWZmaWNpZW50IHNldHRpbmcKPiA+PiA+YW5kIGNs
+ZWFyaW5nIG9mIGEgcmFuZ2Ugb2YgYml0cyBpbiBhIGJpdG1hcDoKPiA+PiA+Cj4gPj4gPnNldF9i
+aXRzKGNoYXIgKmJ1Ziwgc2l6ZV90IHN0YXJ0LCBzaXplX3QgZW5kKTsKPiA+PiA+Y2xlYXJfYml0
+cyhjaGFyICpidWYsIHNpemVfdCBzdGFydCwgc2l6ZV90IGVuZCk7Cj4gPj4gPgo+ID4+ID5UaGUg
+d2hvbGUgYnJhbmNoIGlzIHN0aWxsIHNpdHRpbmcgb24gbXkgZGlzaywgYmVjYXVzZSBJIGJhc2Vk
+IGl0IG9uCj4gPj4gPm15IG90aGVyIHBhdGNoIHNlcmllcyAoZ2VuZXJpYyBoYW5kbGluZyBvZiBt
+dWx0aS1wYWdlIGV4Y2x1c2lvbnMpLCBhbmQKPiA+PiA+dGhlcmUgd2VyZSBxdWl0ZSBzb21lIGNv
+bmZsaWN0cyB3aGVuIEkgdHJpZWQgdG8gcmViYXNlIGl0IG9uIGRldmVsLgo+ID4+ID4KPiA+PiA+
+QnV0IGlmIHlvdSBpbmNsdWRlIGl0IGluIHYxLjUuNiwgSSB3aWxsIGRvIHRoZSByZWJhc2UgbmV2
+ZXJ0aGVsZXNzLAo+ID4+ID5zbyBpdCBkb2Vzbid0IGhhdmUgdG8gd2FpdCBmb3IgeW91ciBkZWNp
+c2lvbiBhYm91dCB0aGUgb3RoZXIgc2VyaWVzLgo+ID4+ID4KPiA+PiA+Q2FuIHdlIGRvIGl0IHRo
+YXQgd2F5Pwo+ID4+Cj4gPj4gWWVzLiBJZiB5b3UgY2FuIHJlYmFzZSB5b3VyIGxvY2FsIGJyYW5j
+aCBvbiB0aGUgY3VycmVudCBkZXZlbCBicmFuY2gsCj4gPj4gcmV2aWV3aW5nIHRoZW0gZm9yIHYx
+LjUuNyB3aWxsIGdvIG9uIHNtb290aGx5Lgo+ID4KPiA+SG0sIEknbSBub3Qgc3VyZSBJIGtub3cg
+d2hhdCB0byBkby4gU28sIGxldCBtZSBtYWtlIGEgc3VtbWFyeSBvZiBteQo+ID5sb2NhbCBtYWtl
+ZHVtcGZpbGUgYnJhbmNoZXM6Cj4gPgo+ID4xLiBwZm5fdDogaW50cm9kdWNlIHRoZSBtZGZfcGZu
+X3QgdHlwZQo+ID4yLiBjeWNsZV9hbGlnbjogbWFrZSBjeWNsZSBhbGlnbm1lbnQgdW5uZWNlc3Nh
+cnkKPiAKPiBJcyB0aGlzICJnZW5lcmljIGhhbmRsaW5nIG9mIG11bHRpLXBhZ2UgZXhjbHVzaW9u
+cyI/CgpZZXMuIFNvcnJ5IGZvciBjb25mdXNpbmcgeW91IGJ5IHVzaW5nIGFuIG9sZGVyIGRlc2Ny
+aXB0aW9uIGhlcmUuCgo+ID4zLiBiaXRtYXBfb3BzOiBoZWxwZXJzIHRvIHNldC9jbGVhciByYW5n
+ZSBvZiBiaXRzIChub3QgeWV0IHNlbnQpCj4gPjQuIGh1Z2VwYWdlOiBoYW5kbGluZyBvZiBjb21w
+b3VuZCBwYWdlcyAobm90IHlldCBzZW50KQo+Wy4uLl0KPiAKPiBBbnl3YXksIHlvdSdyZSByaWdo
+dC4gSSB3YW50IHRvIG1lcmdlIHRoZXNlIDQgc2V0cyBpbnRvIHYxLjUuNy4KCk9LLCBJJ2xsIHdh
+aXQgdW50aWwgdjEuNS42IGlzIHJlYWR5LgoKUGV0ciBUCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
