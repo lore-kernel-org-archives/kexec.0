@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wajit-0000Ym-Sz
- for kexec@lists.infradead.org; Thu, 17 Apr 2014 10:39:16 +0000
-Date: Thu, 17 Apr 2014 18:38:49 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
-Message-ID: <20140417103849.GG1849@dhcp-17-89.nay.redhat.com>
-References: <20140417052913.GB4889@dhcp-16-126.nay.redhat.com>
- <20140417053541.GC4889@dhcp-16-126.nay.redhat.com>
- <20140417061736.GA1849@dhcp-17-89.nay.redhat.com>
- <20140417063244.GF4889@dhcp-16-126.nay.redhat.com>
- <20140417065749.GC1849@dhcp-17-89.nay.redhat.com>
- <20140417070713.GA11676@dhcp-16-126.nay.redhat.com>
- <20140417071726.GE1849@dhcp-17-89.nay.redhat.com>
- <20140417073045.GB11676@dhcp-16-126.nay.redhat.com>
- <20140417084225.GF1849@dhcp-17-89.nay.redhat.com>
- <20140417094533.GD11676@dhcp-16-126.nay.redhat.com>
+Received: from g6t1524.atlanta.hp.com ([15.193.200.67])
+ by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wau2k-0007M9-Gl
+ for kexec@lists.infradead.org; Thu, 17 Apr 2014 21:40:27 +0000
+Date: Thu, 17 Apr 2014 15:38:53 -0600
+From: Linn Crosetto <linn@hp.com>
+Subject: Re: [PATCH v6 0/9] kexec-tools, x86: E820 memmap pass for kdump
+Message-ID: <20140417213853.GG22073@oranje.fc.hp.com>
+References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
+ <20140417062420.GB1849@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140417094533.GD11676@dhcp-16-126.nay.redhat.com>
+In-Reply-To: <20140417062420.GB1849@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,35 +24,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com
 
-On 04/17/14 at 05:45pm, Dave Young wrote:
-> > 
-> > It comes to me that in the future there are two places that can be
-> > improved or cleaned up. I summarize them as the followings:
-> > 
-> > - clean up cmdline_add_memmap and cmdline_add_memmap_acpi
-> > - Dropping hard limitation memory maps, like CRASH_MAX_MEMMAP_NR
+> Hi, Linn
 > 
-> Hmm, kernel E820MAX is 128 in case non EFI like below, likely 1024
-> is enough, so keep current limitation is good:
+> Thanks for testing the patch in the past. Do you have chance to test
+> this update? 
 > 
-> #ifdef CONFIG_EFI
-> #include <linux/numa.h>
-> #define E820_X_MAX (E820MAX + 3 * MAX_NUMNODES)
-> #else   /* ! CONFIG_EFI */
-> #define E820_X_MAX E820MAX
-> #endif
+> This updated patchset changed too much and I want things to work as it's
+> used to be on your prototype machine with large number of memory ranges.
+> 
+> Thanks in advance!
+> WANG Chao
 
-That's ok. I'm also fine with hard code 1024 for now.
+I will try to send you some results by early next week.
 
-> 
-> > 
-> > Do you have additional issues needed to be addressed?
-> 
-> Another in mind is using one array for both 1st kernel and 2nd kernel
-> if possible.
 
 _______________________________________________
 kexec mailing list
