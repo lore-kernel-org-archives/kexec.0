@@ -1,20 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Waid9-0003f0-3Y
- for kexec@lists.infradead.org; Thu, 17 Apr 2014 09:29:15 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile: Fix a bug found during regression testing
- for v1.5.6
-Date: Thu, 17 Apr 2014 09:27:09 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97204DC7@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9720436D@BPXM01GP.gisp.nec.co.jp>
- <20140416105009.402c94fc@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE97204D20@BPXM01GP.gisp.nec.co.jp>
- <20140417104819.0180bb4c@hananiah.suse.cz>
-In-Reply-To: <20140417104819.0180bb4c@hananiah.suse.cz>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wairu-0001XO-Gv
+ for kexec@lists.infradead.org; Thu, 17 Apr 2014 09:44:31 +0000
+Date: Thu, 17 Apr 2014 17:45:33 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
+Message-ID: <20140417094533.GD11676@dhcp-16-126.nay.redhat.com>
+References: <1397487341-17287-10-git-send-email-chaowang@redhat.com>
+ <20140417052913.GB4889@dhcp-16-126.nay.redhat.com>
+ <20140417053541.GC4889@dhcp-16-126.nay.redhat.com>
+ <20140417061736.GA1849@dhcp-17-89.nay.redhat.com>
+ <20140417063244.GF4889@dhcp-16-126.nay.redhat.com>
+ <20140417065749.GC1849@dhcp-17-89.nay.redhat.com>
+ <20140417070713.GA11676@dhcp-16-126.nay.redhat.com>
+ <20140417071726.GE1849@dhcp-17-89.nay.redhat.com>
+ <20140417073045.GB11676@dhcp-16-126.nay.redhat.com>
+ <20140417084225.GF1849@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140417084225.GF1849@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,73 +32,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
->On Thu, 17 Apr 2014 08:33:19 +0000
->Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
->
->> >> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
->> >> Date: Wed, 16 Apr 2014 14:56:01 +0900
->> >> Subject: [PATCH] Exclude small cycle regions wrongly.
->> >>
->> >> In bitmap initialization, if a cycle region is smaller than 8 pages
->> >> and its start_pfn is aligned to multiple of 8 pages, it will be
->> >> excluded wrongly.
->> >>
->> >>   Example case:
->> >>     pfn_start=0x103ff80, pfn_start_roundup=0x103ff80
->> >>     pfn_end=0x103ff84, pfn_end_round=0x103ff80
->> >>
->> >> This case doesn't meet any conditions to set bits in
->> >> create_1st_bitmap_cyclic() and initialize_2nd_bitmap_cyclic().
->> >> We should admit the case where pfn_start is equal to pfn_end_round
->> >> like above.
->> >
->> >Hello Kumagai-san,
->> >
->> >FWIW I cleaned up these bit operations in makedumpfile, completely
->> >removing this code and instead adding functions for efficient setting
->> >and clearing of a range of bits in a bitmap:
->> >
->> >set_bits(char *buf, size_t start, size_t end);
->> >clear_bits(char *buf, size_t start, size_t end);
->> >
->> >The whole branch is still sitting on my disk, because I based it on
->> >my other patch series (generic handling of multi-page exclusions), and
->> >there were quite some conflicts when I tried to rebase it on devel.
->> >
->> >But if you include it in v1.5.6, I will do the rebase nevertheless,
->> >so it doesn't have to wait for your decision about the other series.
->> >
->> >Can we do it that way?
->>
->> Yes. If you can rebase your local branch on the current devel branch,
->> reviewing them for v1.5.7 will go on smoothly.
->
->Hm, I'm not sure I know what to do. So, let me make a summary of my
->local makedumpfile branches:
->
->1. pfn_t: introduce the mdf_pfn_t type
->2. cycle_align: make cycle alignment unnecessary
+> 
+> It comes to me that in the future there are two places that can be
+> improved or cleaned up. I summarize them as the followings:
+> 
+> - clean up cmdline_add_memmap and cmdline_add_memmap_acpi
+> - Dropping hard limitation memory maps, like CRASH_MAX_MEMMAP_NR
 
-Is this "generic handling of multi-page exclusions"?
+Hmm, kernel E820MAX is 128 in case non EFI like below, likely 1024
+is enough, so keep current limitation is good:
 
->3. bitmap_ops: helpers to set/clear range of bits (not yet sent)
->4. hugepage: handling of compound pages (not yet sent)
->
->Most branches are independent, (except hugepage depends on
->cycle_align), but since they often change the same lines of code, I
->must send them in some order, or they won't apply cleanly.
->
->Now, do I understand you correctly that you want me to postpone all of
->them _AFTER_ v1.5.6 is released?
+#ifdef CONFIG_EFI
+#include <linux/numa.h>
+#define E820_X_MAX (E820MAX + 3 * MAX_NUMNODES)
+#else   /* ! CONFIG_EFI */
+#define E820_X_MAX E820MAX
+#endif
 
-Anyway, you're right. I want to merge these 4 sets into v1.5.7.
+> 
+> Do you have additional issues needed to be addressed?
 
+Another in mind is using one array for both 1st kernel and 2nd kernel
+if possible.
 
 Thanks
-Atsushi Kumagai
+dave
 
 _______________________________________________
 kexec mailing list
