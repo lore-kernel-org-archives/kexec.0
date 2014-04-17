@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaeUc-0007T6-Qx
- for kexec@lists.infradead.org; Thu, 17 Apr 2014 05:04:11 +0000
-Date: Thu, 17 Apr 2014 13:02:19 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Message-ID: <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
-References: <20140410214433.GF18808@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
- <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
- <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
- <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
- <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
+ id 1Waern-0007bZ-07
+ for kexec@lists.infradead.org; Thu, 17 Apr 2014 05:28:07 +0000
+Date: Thu, 17 Apr 2014 13:29:13 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
+Message-ID: <20140417052913.GB4889@dhcp-16-126.nay.redhat.com>
+References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
+ <1397487341-17287-10-git-send-email-chaowang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
+In-Reply-To: <1397487341-17287-10-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,58 +24,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 04/17/14 at 12:52pm, Baoquan He wrote:
-> On 04/17/14 at 04:01am, Atsushi Kumagai wrote:
-> > Hello Baoquan,
-> > 
-> > >Hi Atsushi,
-> > >
-> > >I have got the test machine where bug reported and did a test. The
-> > >changed code can make elf dump successful.
-> > 
-> > Great, thanks for your help!
-> > However, I still have questions.
-> > 
-> > First, what is the difference between yours and mine?
-> > 
-> > http://lists.infradead.org/pipermail/kexec/2014-April/011535.html
+On 04/14/14 at 10:55pm, WANG Chao wrote:
+> command line size is restricted by kernel, sometimes memmap=exactmap has
+> too many memory ranges to pass to cmdline. And also memmap=exactmap and
+> kASLR doesn't work together.
 > 
-> Yeah, you are right, it's the same on changing the code bug. I mush
-> haven't read your patch carefully. 
-                                                          must<--
+> A better approach, to pass the memory ranges for crash kernel to boot
+> into, is filling the memory ranges into E820.
 > 
-> > 
-> > My patch includes renaming some values, but the purpose looks
-> > the same as yours.
-> > Further, you described as below, 
-> > 
-> > >On 04/14/14 at 04:02pm, Baoquan He wrote:
-> > but I still don't think this bug causes OOM.
-> > Even if needed_size is calculated as so much size wrongly, bufsize_cyclic
-> > will not exceed 40% of free memory by the check below:
-> > 
-> >     info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
-> > 
-> > So it looks that bitmap1(40%) and bitmap2(40%) will fit in 80% of free
-> > memory in any case.
-> > 
-> > I may misunderstand something since your patch has an effect on this
-> > issue in practice, could you correct me?
+> boot_params only got 128 slots for E820 map to fit in, when the number of
+> memory map exceeds 128, use setup_data to pass the rest as extended E820
+> memory map.
 > 
-> It definitely will cause OOM. On my test machine, it has 100G memory. So
-> per old code, its needed_size is 3200K*2 == 6.4M, if currently free
-> memory is only 15M left, the free_size will be 15M*0.4 which is 6M. So
-> info->bufsize_cyclic is assigned to be 6M. and only 3M is left for other
-> use, e.g page cache, dynamic allocation. OOM will happen.
+> kexec boot could also benefit from setup_data in case E820 memory map
+> exceeds 128.
 > 
+> Now this new approach becomes default instead of memmap=exactmap.
+> saved_max_pfn users can specify --pass-memmap-cmdline to use the
+> exactmap approach.
+> 
+> Signed-off-by: WANG Chao <chaowang@redhat.com>
+> Tested-by: Linn Crosetto <linn@hp.com>
+> Reviewed-by: Linn Crosetto <linn@hp.com>
+> ---
+>  kexec/arch/i386/crashdump-x86.c   |   6 +-
+>  kexec/arch/i386/x86-linux-setup.c | 149 +++++++++++++++++++++++++-------------
+>  kexec/arch/i386/x86-linux-setup.h |   1 +
+>  3 files changed, 103 insertions(+), 53 deletions(-)
+> 
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index 7b618a6..4a1491b 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -979,7 +979,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+>  	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
+>  	if (delete_memmap(memmap_p, &nr_memmap, elfcorehdr, memsz) < 0)
+>  		return -1;
+> -	cmdline_add_memmap(mod_cmdline, memmap_p);
+> +	if (arch_options.pass_memmap_cmdline)
+> +		cmdline_add_memmap(mod_cmdline, memmap_p);
+>  	if (!bzImage_support_efi_boot)
+>  		cmdline_add_efi(mod_cmdline);
+>  	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+> @@ -995,7 +996,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+>  		type = mem_range[i].type;
+>  		size = end - start + 1;
+>  		add_memmap(memmap_p, &nr_memmap, start, size, type);
+> -		cmdline_add_memmap_acpi(mod_cmdline, start, end);
+> +		if (arch_options.pass_memmap_cmdline)
+> +			cmdline_add_memmap_acpi(mod_cmdline, start, end);
 
-BTW, in our case, there's about 30M free memory when we started saving
-dump. It should be caused by my coarse estimation above.
+Seems memmap_p contains the acpi ranges as well, so cmdline_add_memmap_acpi is
+not necessary anymore, just improve cmdline_add_memmap to add both RAM and ACPI
+ranges is enough.
 
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
