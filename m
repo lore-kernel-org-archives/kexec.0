@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WagOe-0002Gb-39
+ id 1WagOe-0002Ga-38
  for kexec@lists.infradead.org; Thu, 17 Apr 2014 07:06:08 +0000
-Date: Thu, 17 Apr 2014 15:07:13 +0800
-From: Dave Young <dyoung@redhat.com>
+Date: Thu, 17 Apr 2014 15:05:39 +0800
+From: WANG Chao <chaowang@redhat.com>
 Subject: Re: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
-Message-ID: <20140417070713.GA11676@dhcp-16-126.nay.redhat.com>
+Message-ID: <20140417070539.GD1849@dhcp-17-89.nay.redhat.com>
 References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
  <1397487341-17287-10-git-send-email-chaowang@redhat.com>
  <20140417052913.GB4889@dhcp-16-126.nay.redhat.com>
  <20140417053541.GC4889@dhcp-16-126.nay.redhat.com>
  <20140417061736.GA1849@dhcp-17-89.nay.redhat.com>
  <20140417063244.GF4889@dhcp-16-126.nay.redhat.com>
- <20140417065749.GC1849@dhcp-17-89.nay.redhat.com>
+ <20140417064423.GA11277@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140417065749.GC1849@dhcp-17-89.nay.redhat.com>
+In-Reply-To: <20140417064423.GA11277@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,10 +29,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: kexec@lists.infradead.org, horms@verge.net.au, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 04/17/14 at 02:57pm, WANG Chao wrote:
+On 04/17/14 at 02:44pm, Dave Young wrote:
 > On 04/17/14 at 02:32pm, Dave Young wrote:
 > > On 04/17/14 at 02:17pm, WANG Chao wrote:
 > > > On 04/17/14 at 01:35pm, Dave Young wrote:
@@ -123,27 +123,14 @@ On 04/17/14 at 02:57pm, WANG Chao wrote:
 > > Hmm, if it's used for allocate mem range array then how about directly use
 > > CRASH_MAX_MEMORY_RANGES which is same in your 5/9.
 > 
-> I did that on purpose for two reasons:
+> I really would like to see a cleaner code, but since this issue is trival
+> I will not object it now.
 > 
-> - I tend to make the changes as minimal as possible to make reviewer's
->   life easier. So that I choose the same value for CRASH_MAX_MEMMAP_NR
->   as CRASH_MAX_MEMORY_RANGES.
+> For the calgary issue I'm curious if there are people who report a bug.
+> At least if that happens we will know that there's actually someone who
+> are using the calgary code.
 
-As long as the patches are logically clear, it does not matter to me :)
-
-> 
-> - CRASH_MAX_MEMORY_RANGES and CRASH_MAX_MEMMAP_NR are used for
->   allocating different memory_range structures, crash_memory_range vs.
->   memmap_p. Those two different variables are used in different places
->   and serve for different purpose (1st kernel's memmap vs. 2nd kernel's
->   memmap). In long term, I think keeping both macros separately is a
->   better choice because one of them could change for whatever reason.
-
-It's unlikely at least now IMO, I think we should even drop the limit
-because we have e820 + setup_data.
-
-Thanks
-Dave
+No, there's not any, as far as I know. But I wouldn't take the chance.
 
 _______________________________________________
 kexec mailing list
