@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ee0-x22d.google.com ([2a00:1450:4013:c00::22d])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaXil-0000nX-Jz
- for kexec@lists.infradead.org; Wed, 16 Apr 2014 21:50:21 +0000
-Received: by mail-ee0-f45.google.com with SMTP id d17so9356432eek.32
- for <kexec@lists.infradead.org>; Wed, 16 Apr 2014 14:49:55 -0700 (PDT)
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH] zImage-arm: get rid of static offset
-Date: Wed, 16 Apr 2014 23:49:48 +0200
-Message-Id: <1397684988-5353-1-git-send-email-zonque@gmail.com>
+ id 1WadZe-0003ra-83
+ for kexec@lists.infradead.org; Thu, 17 Apr 2014 04:05:19 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] eppic: makedumpfile fails to recognise between global
+Date: Thu, 17 Apr 2014 04:00:24 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972048CA@BPXM01GP.gisp.nec.co.jp>
+References: <20140415050055.15599.6255.stgit@aruna-ThinkPad-T420>
+In-Reply-To: <20140415050055.15599.6255.stgit@aruna-ThinkPad-T420>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,110 +19,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org
-Cc: s.neumann@raumfeld.com, Daniel Mack <zonque@gmail.com>
+To: "aruna@linux.vnet.ibm.com" <aruna@linux.vnet.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-The code in arch/arm/kexec-zImage-arm.c currently enforces a hard limit
-on the maximum size a dtb blob can occupy. This limit is set to 32k,
-which is quite low for device tree blobs nowadays.
+>    symbol and structure of the same name
 
-Get rid of this assumption, and calculate the added size dynamically.
-For this, we need to slurp in the dtb file earlier in order to
-determine its size, because the memory hole allocation for 'base'
-takes this size into account.
+This must be a part of the subject :-)
 
-For ATAGs, we keep the current value of 32k, which should in fact be
-enough.
+>    Fix the eppic script to reflect the type
+>
+>    Signed-off-by: Aruna Balakrishnaiah <aruna@linux.vnet.ibm.com>
 
-With this change in place, the 'DTB too large!' error message can go
-away. Successfully tested on a AM335x board.
+Thanks, I'll merge this patch into v1.5.6.
 
-Signed-off-by: Daniel Mack <zonque@gmail.com>
-Reported-by: Sven Neumann <s.neumann@raumfeld.com>
----
- kexec/arch/arm/kexec-zImage-arm.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+Atsushi Kumagai
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index bfbf290..2bf4f62 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -282,7 +282,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- {
- 	unsigned long base;
- 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
--	unsigned int offset = 0x8000;      /* 32k offset from memory start */
-+	unsigned int extra_size;
- 	const char *command_line;
- 	char *modified_cmdline = NULL;
- 	off_t command_line_len;
-@@ -360,6 +360,15 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
- 	}
- 
-+	extra_size = atag_offset;
-+
-+	if (dtb_file) {
-+		dtb_buf = slurp_file(dtb_file, &dtb_length);
-+		extra_size += _ALIGN(dtb_length, getpagesize());
-+	} else if (use_atags) {
-+		extra_size += 0x8000;	/* 32k should be plenty for ATAGs */
-+	}
-+
- 	/*
- 	 * If we are loading a dump capture kernel, we need to update kernel
- 	 * command line and also add some additional segments.
-@@ -398,7 +407,8 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		}
- 		base = start;
- 	} else {
--		base = locate_hole(info,len+offset,0,0,ULONG_MAX,INT_MAX);
-+		base = locate_hole(info, len + extra_size, 0, 0,
-+				   ULONG_MAX, INT_MAX);
- 	}
- 
- 	if (base == ULONG_MAX)
-@@ -428,8 +438,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		 * Read a user-specified DTB file.
- 		 */
- 		if (dtb_file) {
--			dtb_buf = slurp_file(dtb_file, &dtb_length);
--
- 			if (fdt_check_header(dtb_buf) != 0) {
- 				fprintf(stderr, "Invalid FDT buffer.\n");
- 				return -1;
-@@ -452,11 +460,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 			create_flatten_tree(&dtb_buf, &dtb_length, command_line);
- 		}
- 
--		if (base + atag_offset + dtb_length > base + offset) {
--			fprintf(stderr, "DTB too large!\n");
--			return -1;
--		}
--
- 		if (ramdisk) {
- 			add_segment(info, ramdisk_buf, initrd_size,
- 			            initrd_base, initrd_size);
-@@ -485,9 +488,9 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		            dtb_offset, dtb_length);
- 	}
- 
--	add_segment(info, buf, len, base + offset, len);
-+	add_segment(info, buf, len, base + extra_size, len);
- 
--	info->entry = (void*)base + offset;
-+	info->entry = (void*)base + extra_size;
- 
- 	return 0;
- }
--- 
-1.9.0
-
+>---
+> eppic_scripts/udp_sk_buf.c |    2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/eppic_scripts/udp_sk_buf.c b/eppic_scripts/udp_sk_buf.c
+>index 0fa1325..ca8c77b 100644
+>--- a/eppic_scripts/udp_sk_buf.c
+>+++ b/eppic_scripts/udp_sk_buf.c
+>@@ -30,7 +30,7 @@ udp()
+> 	struct udp_table *table;
+> 	struct sock_common *off = 0;
+>
+>-	table = &udp_table;
+>+	table = (struct udp_table *)&udp_table;
+>
+> 	for (i = 0; i < table->mask; i++) {
+> 		struct hlist_nulls_node *pos;
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
