@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WaeKl-0000Tj-LY
- for kexec@lists.infradead.org; Thu, 17 Apr 2014 04:54:00 +0000
-Date: Thu, 17 Apr 2014 12:52:08 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Message-ID: <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
-References: <20140410214433.GF18808@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
- <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
- <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
- <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WaeNa-00049Z-4E
+ for kexec@lists.infradead.org; Thu, 17 Apr 2014 04:56:54 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: fix a segmentation fault when pfn exceeds
+ 2G boundary
+Date: Thu, 17 Apr 2014 04:53:35 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972049D1@BPXM01GP.gisp.nec.co.jp>
+References: <20140414103543.31935.28496.stgit@k.asiapacific.hpqcorp.net>
+ <20140415.101521.297971437.d.hatayama@jp.fujitsu.com>
+ <20140415.170728.404561140.d.hatayama@jp.fujitsu.com>
+ <534D0ADA.1060906@hp.com>
+In-Reply-To: <534D0ADA.1060906@hp.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,91 +27,121 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: "jingbai.ma@hp.com" <jingbai.ma@hp.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "lisa.mitchell@hp.com" <lisa.mitchell@hp.com>
 
-On 04/17/14 at 04:01am, Atsushi Kumagai wrote:
-> Hello Baoquan,
-> 
-> >Hi Atsushi,
-> >
-> >I have got the test machine where bug reported and did a test. The
-> >changed code can make elf dump successful.
-> 
-> Great, thanks for your help!
-> However, I still have questions.
-> 
-> First, what is the difference between yours and mine?
-> 
-> http://lists.infradead.org/pipermail/kexec/2014-April/011535.html
+>>>> This patch intend to fix a segmentation fault when pfn exceeds 2G boundary.
+>>>>
+>>>> In function is_on(), if the pfn (i) is greater than 2G, it will be a negative
+>>>> value and will cause a segmentation fault.
+>>>> is_on(char *bitmap, int i)
+>>>> {
+>>>>          return bitmap[i>>3] & (1 << (i & 7));
+>>>> }
+>>>>
+>>>>
+>>>> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+>>>> ---
+>>>>   makedumpfile.h |    2 +-
+>>>>   1 files changed, 1 insertions(+), 1 deletions(-)
+>>>>
+>>>> diff --git a/makedumpfile.h b/makedumpfile.h
+>>>> index 3d270c6..03d35a8 100644
+>>>> --- a/makedumpfile.h
+>>>> +++ b/makedumpfile.h
+>>>> @@ -1591,7 +1591,7 @@ int get_xen_info_ia64(void);
+>>>>   #endif	/* s390x */
+>>>>
+>>>>   static inline int
+>>>> -is_on(char *bitmap, int i)
+>>>> +is_on(char *bitmap, unsigned long long i)
+>>>>   {
+>>>>   	return bitmap[i>>3] & (1 << (i & 7));
+>>>>   }
+>>>>
+>>>
+>>> is_on is used at the following two places.
+>>>
+>>> static inline int
+>>> is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
+>>> {
+>>>          off_t offset;
+>>>          if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
+>>>                  offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+>>>                  lseek(bitmap->fd, offset, SEEK_SET);
+>>>                  read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
+>>>                  if (pfn == 0)
+>>>                          bitmap->no_block = 0;
+>>>                  else
+>>>                          bitmap->no_block = pfn/PFN_BUFBITMAP;
+>>>          }
+>>>          return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
+>>> }
+>>>
+>>> PFN_BUFBTIMAP is constant 32 K. So, it seems that the 4 byte byte
+>>> length came here.
+>>>
+>>> But right shift to signed integer is implementation defined. We should
+>>> not use right shift to signed integer. it looks gcc performs
+>>> arithmetic shift and this bahaviour is buggy in case of is_on().
+>>>
+>>> static inline int
+>>> is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
+>>> {
+>>>          if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
+>>>                  return FALSE;
+>>>          else
+>>>                  return is_on(bitmap, pfn - cycle->start_pfn);
+>>> }
+>>>
+>>> Simply, (pfn - cycle->start_pfn) could be (info->max_mapnr - 0). It's
+>>> possible to pass more than 2 Gi by using system with more than 8 TiB
+>>> physical memory space.
+>>>
+>>> So,
+>>>
+>>> - i must be unsigned in order to make right shift operation
+>>>    meaningful, and
+>>>
+>>> - i must have 8 byte for systems with more than 8 TiB physical memory
+>>>    space.
+>>>
+>
+>Yes, all your comments are correct. :)
+>So would you like I send out a v2 patch with all your comments in it?
 
-Yeah, you are right, it's the same on changing the code bug. I mush
-haven't read your patch carefully.
+I'd like to merge this patch into v1.5.6 since it's a critical issue,
+so could you send the v2 patch?
 
-> 
-> My patch includes renaming some values, but the purpose looks
-> the same as yours.
-> Further, you described as below, 
-> 
-> >On 04/14/14 at 04:02pm, Baoquan He wrote:
-> >> In case elf dump, the code to calculate the cyclic buffer size is
-> >> not correct. Since elf need bitmap1/2, so the needed memory for
-> >> bufsize_cyclic need be double. Hence free size should be 40% of
-> >> free memory, however the needed_size which free_size is compared
-> >> with should be info->max_mapnr / BITPERBYTE, but not 2 times of it.
-> >>
-> >> Because of this, in case of free memory in 2nd kernel is not too much,
-> >> OOM will happen very often.
-> 
-> but I still don't think this bug causes OOM.
-> Even if needed_size is calculated as so much size wrongly, bufsize_cyclic
-> will not exceed 40% of free memory by the check below:
-> 
->     info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
-> 
-> So it looks that bitmap1(40%) and bitmap2(40%) will fit in 80% of free
-> memory in any case.
-> 
-> I may misunderstand something since your patch has an effect on this
-> issue in practice, could you correct me?
 
-It definitely will cause OOM. On my test machine, it has 100G memory. So
-per old code, its needed_size is 3200K*2 == 6.4M, if currently free
-memory is only 15M left, the free_size will be 15M*0.4 which is 6M. So
-info->bufsize_cyclic is assigned to be 6M. and only 3M is left for other
-use, e.g page cache, dynamic allocation. OOM will happen.
+Thanks
+Atsushi Kumagai
 
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> >> Signed-off-by: Baoquan He <bhe@redhat.com>
-> >> ---
-> >>  makedumpfile.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/makedumpfile.c b/makedumpfile.c
-> >> index 75092a8..01ec516 100644
-> >> --- a/makedumpfile.c
-> >> +++ b/makedumpfile.c
-> >> @@ -9010,7 +9010,7 @@ calculate_cyclic_buffer_size(void) {
-> >>  	 */
-> >>  	if (info->flag_elf_dumpfile) {
-> >>  		free_size = get_free_memory_size() * 0.4;
-> >> -		needed_size = (info->max_mapnr * 2) / BITPERBYTE;
-> >> +		needed_size = info->max_mapnr / BITPERBYTE;
-> >>  	} else {
-> >>  		free_size = get_free_memory_size() * 0.8;
-> >>  		needed_size = info->max_mapnr / BITPERBYTE;
-> >> --
-> >> 1.8.5.3
-> >>
-> >>
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/kexec
+>>> BTW, to make this situation happen in cyclic mode, there needs to be
+>>> 16 GiB free memory for bitmap to become large enough. I guess you
+>>> don't see this segmentation in the kdump 2nd kernel. Is this right?
+>>>
+>>
+>> This is my terrible careless miss... 256 MiB is correct. 16 GiB is
+>> obviously too large. Then, the amount seems typical.
+>>
+>
+>Correct, 2G >> 3 = 256M.
+>
+>
+>> Thanks.
+>> HATAYAMA, Daisuke
+>>
+>
+>
+>--
+>Thanks,
+>Jingbai Ma
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
