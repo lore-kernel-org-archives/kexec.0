@@ -1,16 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wahq2-0007tj-7y
- for kexec@lists.infradead.org; Thu, 17 Apr 2014 08:38:32 +0000
-Date: Thu, 17 Apr 2014 10:38:06 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v2] makedumpfile: Introduce the mdf_pfn_t type
-Message-ID: <20140417103806.1a6d77e5@hananiah.suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972049E8@BPXM01GP.gisp.nec.co.jp>
-References: <20140415105114.4114d30d@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE972049E8@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+ id 1WahuC-0004yX-2j
+ for kexec@lists.infradead.org; Thu, 17 Apr 2014 08:42:48 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D57B33EE19D
+ for <kexec@lists.infradead.org>; Thu, 17 Apr 2014 17:42:23 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id BC74545DF83
+ for <kexec@lists.infradead.org>; Thu, 17 Apr 2014 17:42:23 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9703645DF85
+ for <kexec@lists.infradead.org>; Thu, 17 Apr 2014 17:42:23 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 834C81DB8040
+ for <kexec@lists.infradead.org>; Thu, 17 Apr 2014 17:42:23 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 2D4A21DB8042
+ for <kexec@lists.infradead.org>; Thu, 17 Apr 2014 17:42:23 +0900 (JST)
+Message-ID: <534F93DF.5090606@jp.fujitsu.com>
+Date: Thu, 17 Apr 2014 17:42:07 +0900
+From: "HATAYAMA, Daisuke" <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2] makedumpfile: fix a segmentation fault when physical
+ address exceeds 8TB boundary
+References: <20140417075902.14515.26225.stgit@k.asiapacific.hpqcorp.net>
+In-Reply-To: <20140417075902.14515.26225.stgit@k.asiapacific.hpqcorp.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,765 +35,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Jingbai Ma <jingbai.ma@hp.com>
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp, lisa.mitchell@hp.com
 
-On Thu, 17 Apr 2014 04:54:37 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-> Hello Petr,
-> 
-> Could you repost this later for v1.5.7?
-> In v1.5.6, is_on() will also use "unsigned long long" for pfn.
 
-I guess it's the only option, anyway. ;-)
+(2014/04/17 16:59), Jingbai Ma wrote:
+> This patch intends to fix a segmentation fault when physical address exceeds
+> 8TB boundary.
+>
+> Changelog:
+> v2:
+> - Add more comments from Daisuke HATAYAMA.
+>
+>
+> In function is_on(), if the physical address higher than 8T, pfn (i) will
+> greater than 2G, it will be a negative value and will cause a segmentation
+> fault.
+> is_on(char *bitmap, int i)
+> {
+>          return bitmap[i>>3] & (1 << (i & 7));
+> }
+>
+> Daisuke's detailed analysis:
+> static inline int
+> is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
+> {
+>          off_t offset;
+>          if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
+>                  offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+>                  lseek(bitmap->fd, offset, SEEK_SET);
+>                  read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
+>                  if (pfn == 0)
+>                          bitmap->no_block = 0;
+>                  else
+>                          bitmap->no_block = pfn/PFN_BUFBITMAP;
+>          }
+>          return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
+> }
+>
+> PFN_BUFBTIMAP is constant 32 K. So, it seems that the 4 byte byte
+> length came here.
+>
+> But right shift to signed integer is implementation defined. We should
+> not use right shift to signed integer. it looks gcc performs
+> arithmetic shift and this bahaviour is buggy in case of is_on().
+>
+> static inline int
+> is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
+> {
+>          if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
+>                  return FALSE;
+>          else
+>                  return is_on(bitmap, pfn - cycle->start_pfn);
+> }
+>
+> Simply, (pfn - cycle->start_pfn) could be (info->max_mapnr - 0). It's
 
-Yes, I agree, this is not an urgent patch, and since hugepage support
-will apparently have to wait for v1.5.7, too, I can wait and send my
-patches after v1.5.6 is out.
+More precisely, here should have been ((info->max_mapnr - 1) - 0) since info->max_mapnr doesn't belong to target physical memory space...
 
-Petr T
+> possible to pass more than 2 Gi by using system with more than 8 TiB
+> physical memory space.
+>
+> So, in function is_on()
+>
+> - i must be unsigned in order to make right shift operation
+>    meaningful, and
+>
+> - i must have 8 byte for systems with more than 8 TiB physical memory
+>    space.
+>
+>
+> Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+> ---
+>   makedumpfile.h |    2 +-
+>   1 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 3d270c6..03d35a8 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1591,7 +1591,7 @@ int get_xen_info_ia64(void);
+>   #endif	/* s390x */
+>
+>   static inline int
+> -is_on(char *bitmap, int i)
+> +is_on(char *bitmap, unsigned long long i)
+>   {
+>   	return bitmap[i>>3] & (1 << (i & 7));
+>   }
+>
 
-> Thanks
-> Atsushi Kumagai
-> 
-> >Replace unsigned long long with mdf_pfn_t where:
-> >
-> >  a. the variable denotes a PFN
-> >  b. the variable is a number of pages
-> >
-> >The number of pages is converted to a mdf_pfn_t, because it is a result
-> >of subtracting two PFNs or incremented in a loop over a range of PFNs,
-> >so it can get as large as a PFN.
-> >
-> >Note: The mdf_ (i.e. makedumpfile) prefix is used to prevent possible
-> >conflicts with other software that defines a pfn_t type.
-> >
-> >Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
-> >---
-> > makedumpfile.c | 152 ++++++++++++++++++++++++++++++---------------------------
-> > makedumpfile.h |  46 ++++++++---------
-> > sadump_info.c  |  15 +++---
-> > sadump_info.h  |   4 +-
-> > 4 files changed, 114 insertions(+), 103 deletions(-)
-> >
-> >diff --git a/makedumpfile.c b/makedumpfile.c
-> >index 75092a8..5609430 100644
-> >--- a/makedumpfile.c
-> >+++ b/makedumpfile.c
-> >@@ -37,7 +37,7 @@ struct DumpInfo		*info = NULL;
-> >
-> > char filename_stdout[] = FILENAME_STDOUT;
-> >
-> >-static void first_cycle(unsigned long long start, unsigned long long max, struct cycle *cycle)
-> >+static void first_cycle(mdf_pfn_t start, mdf_pfn_t max, struct cycle *cycle)
-> > {
-> > 	cycle->start_pfn = round(start, info->pfn_cyclic);
-> > 	cycle->end_pfn = cycle->start_pfn + info->pfn_cyclic;
-> >@@ -46,7 +46,7 @@ static void first_cycle(unsigned long long start, unsigned long long max, struct
-> > 		cycle->end_pfn = max;
-> > }
-> >
-> >-static void update_cycle(unsigned long long max, struct cycle *cycle)
-> >+static void update_cycle(mdf_pfn_t max, struct cycle *cycle)
-> > {
-> > 	cycle->start_pfn= cycle->end_pfn;
-> > 	cycle->end_pfn=  cycle->start_pfn + info->pfn_cyclic;
-> >@@ -55,7 +55,7 @@ static void update_cycle(unsigned long long max, struct cycle *cycle)
-> > 		cycle->end_pfn = max;
-> > }
-> >
-> >-static int end_cycle(unsigned long long max, struct cycle *cycle)
-> >+static int end_cycle(mdf_pfn_t max, struct cycle *cycle)
-> > {
-> > 	return (cycle->start_pfn >=  max)?TRUE:FALSE;
-> > }
-> >@@ -67,15 +67,15 @@ static int end_cycle(unsigned long long max, struct cycle *cycle)
-> > /*
-> >  * The numbers of the excluded pages
-> >  */
-> >-unsigned long long pfn_zero;
-> >-unsigned long long pfn_memhole;
-> >-unsigned long long pfn_cache;
-> >-unsigned long long pfn_cache_private;
-> >-unsigned long long pfn_user;
-> >-unsigned long long pfn_free;
-> >-unsigned long long pfn_hwpoison;
-> >+mdf_pfn_t pfn_zero;
-> >+mdf_pfn_t pfn_memhole;
-> >+mdf_pfn_t pfn_cache;
-> >+mdf_pfn_t pfn_cache_private;
-> >+mdf_pfn_t pfn_user;
-> >+mdf_pfn_t pfn_free;
-> >+mdf_pfn_t pfn_hwpoison;
-> >
-> >-unsigned long long num_dumped;
-> >+mdf_pfn_t num_dumped;
-> >
-> > int retcd = FAILED;	/* return code */
-> >
-> >@@ -122,7 +122,9 @@ unsigned long long
-> > ptom_xen(unsigned long long paddr)
-> > {
-> > 	unsigned long mfn;
-> >-	unsigned long long maddr, pfn, mfn_idx, frame_idx;
-> >+	unsigned long long maddr;
-> >+	mdf_pfn_t pfn;
-> >+	unsigned long long mfn_idx, frame_idx;
-> >
-> > 	pfn = paddr_to_pfn(paddr);
-> > 	mfn_idx   = pfn / MFNS_PER_FRAME;
-> >@@ -226,12 +228,13 @@ is_in_same_page(unsigned long vaddr1, unsigned long vaddr2)
-> > }
-> >
-> > #define BITMAP_SECT_LEN 4096
-> >-static inline int is_dumpable(struct dump_bitmap *, unsigned long long);
-> >-static inline int is_dumpable_cyclic(char *bitmap, unsigned long long, struct cycle *cycle);
-> >+static inline int is_dumpable(struct dump_bitmap *, mdf_pfn_t);
-> >+static inline int is_dumpable_cyclic(char *bitmap, mdf_pfn_t, struct cycle *cycle);
-> > unsigned long
-> >-pfn_to_pos(unsigned long long pfn)
-> >+pfn_to_pos(mdf_pfn_t pfn)
-> > {
-> >-	unsigned long desc_pos, i;
-> >+	unsigned long desc_pos;
-> >+	mdf_pfn_t i;
-> >
-> > 	desc_pos = info->valid_pages[pfn / BITMAP_SECT_LEN];
-> > 	for (i = round(pfn, BITMAP_SECT_LEN); i < pfn; i++)
-> >@@ -246,7 +249,7 @@ read_page_desc(unsigned long long paddr, page_desc_t *pd)
-> > {
-> > 	struct disk_dump_header *dh;
-> > 	unsigned long desc_pos;
-> >-	unsigned long long pfn;
-> >+	mdf_pfn_t pfn;
-> > 	off_t offset;
-> >
-> > 	/*
-> >@@ -2375,8 +2378,8 @@ pgdat4:
-> > }
-> >
-> > void
-> >-dump_mem_map(unsigned long long pfn_start,
-> >-    unsigned long long pfn_end, unsigned long mem_map, int num_mm)
-> >+dump_mem_map(mdf_pfn_t pfn_start, mdf_pfn_t pfn_end,
-> >+    unsigned long mem_map, int num_mm)
-> > {
-> > 	struct mem_map_data *mmd;
-> >
-> >@@ -2802,7 +2805,7 @@ int
-> > get_mm_sparsemem(void)
-> > {
-> > 	unsigned int section_nr, mem_section_size, num_section;
-> >-	unsigned long long pfn_start, pfn_end;
-> >+	mdf_pfn_t pfn_start, pfn_end;
-> > 	unsigned long section, mem_map;
-> > 	unsigned long *mem_sec = NULL;
-> >
-> >@@ -2886,7 +2889,7 @@ get_mem_map_without_mm(void)
-> > int
-> > get_mem_map(void)
-> > {
-> >-	unsigned long long max_pfn = 0;
-> >+	mdf_pfn_t max_pfn = 0;
-> > 	unsigned int i;
-> > 	int ret;
-> >
-> >@@ -2944,7 +2947,7 @@ initialize_bitmap_memory(void)
-> > 	struct dump_bitmap *bmp;
-> > 	off_t bitmap_offset;
-> > 	off_t bitmap_len, max_sect_len;
-> >-	unsigned long pfn;
-> >+	mdf_pfn_t pfn;
-> > 	int i, j;
-> > 	long block_size;
-> >
-> >@@ -3309,8 +3312,7 @@ initialize_2nd_bitmap(struct dump_bitmap *bitmap)
-> > }
-> >
-> > int
-> >-set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
-> >-    int val)
-> >+set_bitmap(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val)
-> > {
-> > 	int byte, bit;
-> > 	off_t old_offset, new_offset;
-> >@@ -3358,7 +3360,7 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
-> > }
-> >
-> > int
-> >-set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *cycle)
-> >+set_bitmap_cyclic(char *bitmap, mdf_pfn_t pfn, int val, struct cycle *cycle)
-> > {
-> > 	int byte, bit;
-> >
-> >@@ -3418,7 +3420,7 @@ sync_2nd_bitmap(void)
-> > }
-> >
-> > int
-> >-set_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle)
-> >+set_bit_on_1st_bitmap(mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	if (info->flag_cyclic) {
-> > 		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 1, cycle);
-> >@@ -3428,7 +3430,7 @@ set_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle)
-> > }
-> >
-> > int
-> >-clear_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle)
-> >+clear_bit_on_1st_bitmap(mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	if (info->flag_cyclic) {
-> > 		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 0, cycle);
-> >@@ -3438,7 +3440,7 @@ clear_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle)
-> > }
-> >
-> > int
-> >-clear_bit_on_2nd_bitmap(unsigned long long pfn, struct cycle *cycle)
-> >+clear_bit_on_2nd_bitmap(mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	if (info->flag_cyclic) {
-> > 		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 0, cycle);
-> >@@ -3448,7 +3450,7 @@ clear_bit_on_2nd_bitmap(unsigned long long pfn, struct cycle *cycle)
-> > }
-> >
-> > int
-> >-clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn, struct cycle *cycle)
-> >+clear_bit_on_2nd_bitmap_for_kernel(mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	unsigned long long maddr;
-> >
-> >@@ -3465,7 +3467,7 @@ clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn, struct cycle *cycle)
-> > }
-> >
-> > int
-> >-set_bit_on_2nd_bitmap(unsigned long long pfn, struct cycle *cycle)
-> >+set_bit_on_2nd_bitmap(mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	if (info->flag_cyclic) {
-> > 		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 1, cycle);
-> >@@ -3475,7 +3477,7 @@ set_bit_on_2nd_bitmap(unsigned long long pfn, struct cycle *cycle)
-> > }
-> >
-> > int
-> >-set_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn, struct cycle *cycle)
-> >+set_bit_on_2nd_bitmap_for_kernel(mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	unsigned long long maddr;
-> >
-> >@@ -3786,11 +3788,11 @@ rearrange_dumpdata(void)
-> > 	return TRUE;
-> > }
-> >
-> >-unsigned long long
-> >+mdf_pfn_t
-> > page_to_pfn(unsigned long page)
-> > {
-> > 	unsigned int num;
-> >-	unsigned long long pfn = ULONGLONG_MAX;
-> >+	mdf_pfn_t pfn = ULONGLONG_MAX;
-> > 	unsigned long long index = 0;
-> > 	struct mem_map_data *mmd;
-> >
-> >@@ -3820,7 +3822,7 @@ reset_bitmap_of_free_pages(unsigned long node_zones, struct cycle *cycle)
-> > 	int order, i, migrate_type, migrate_types;
-> > 	unsigned long curr, previous, head, curr_page, curr_prev;
-> > 	unsigned long addr_free_pages, free_pages = 0, found_free_pages = 0;
-> >-	unsigned long long pfn, start_pfn;
-> >+	mdf_pfn_t pfn, start_pfn;
-> >
-> > 	/*
-> > 	 * On linux-2.6.24 or later, free_list is divided into the array.
-> >@@ -4423,7 +4425,7 @@ create_1st_bitmap(void)
-> > 	int i;
-> > 	unsigned int num_pt_loads = get_num_pt_loads();
-> >  	char buf[info->page_size];
-> >-	unsigned long long pfn, pfn_start, pfn_end, pfn_bitmap1;
-> >+	mdf_pfn_t pfn, pfn_start, pfn_end, pfn_bitmap1;
-> > 	unsigned long long phys_start, phys_end;
-> > 	struct timeval tv_start;
-> > 	off_t offset_page;
-> >@@ -4495,10 +4497,10 @@ int
-> > create_1st_bitmap_cyclic(struct cycle *cycle)
-> > {
-> > 	int i;
-> >-	unsigned long long pfn, pfn_bitmap1;
-> >+	mdf_pfn_t pfn, pfn_bitmap1;
-> > 	unsigned long long phys_start, phys_end;
-> >-	unsigned long long pfn_start, pfn_end;
-> >-	unsigned long long pfn_start_roundup, pfn_end_round;
-> >+	mdf_pfn_t pfn_start, pfn_end;
-> >+	mdf_pfn_t pfn_start_roundup, pfn_end_round;
-> > 	unsigned long pfn_start_byte, pfn_end_byte;
-> >
-> > 	/*
-> >@@ -4556,7 +4558,8 @@ create_1st_bitmap_cyclic(struct cycle *cycle)
-> > int
-> > exclude_zero_pages(void)
-> > {
-> >-	unsigned long long pfn, paddr;
-> >+	mdf_pfn_t pfn;
-> >+	unsigned long long paddr;
-> > 	struct dump_bitmap bitmap2;
-> > 	struct timeval tv_start;
-> > 	unsigned char buf[info->page_size];
-> >@@ -4608,10 +4611,10 @@ static int
-> > initialize_2nd_bitmap_cyclic(struct cycle *cycle)
-> > {
-> > 	int i;
-> >-	unsigned long long pfn;
-> >+	mdf_pfn_t pfn;
-> > 	unsigned long long phys_start, phys_end;
-> >-	unsigned long long pfn_start, pfn_end;
-> >-	unsigned long long pfn_start_roundup, pfn_end_round;
-> >+	mdf_pfn_t pfn_start, pfn_end;
-> >+	mdf_pfn_t pfn_start_roundup, pfn_end_round;
-> > 	unsigned long pfn_start_byte, pfn_end_byte;
-> >
-> > 	/*
-> >@@ -4659,10 +4662,12 @@ initialize_2nd_bitmap_cyclic(struct cycle *cycle)
-> >
-> > int
-> > __exclude_unnecessary_pages(unsigned long mem_map,
-> >-    unsigned long long pfn_start, unsigned long long pfn_end, struct cycle *cycle)
-> >+    mdf_pfn_t pfn_start, mdf_pfn_t pfn_end, struct cycle *cycle)
-> > {
-> >-	unsigned long long pfn, pfn_mm, maddr;
-> >-	unsigned long long pfn_read_start, pfn_read_end, index_pg;
-> >+	mdf_pfn_t pfn;
-> >+	unsigned long index_pg, pfn_mm;
-> >+	unsigned long long maddr;
-> >+	mdf_pfn_t pfn_read_start, pfn_read_end;
-> > 	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
-> > 	unsigned char *pcache;
-> > 	unsigned int _count, _mapcount = 0;
-> >@@ -5162,7 +5167,7 @@ get_loads_dumpfile(void)
-> > {
-> > 	int i, phnum, num_new_load = 0;
-> > 	long page_size = info->page_size;
-> >-	unsigned long long pfn, pfn_start, pfn_end, num_excluded;
-> >+	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded;
-> > 	unsigned long frac_head, frac_tail;
-> > 	Elf64_Phdr load;
-> > 	struct dump_bitmap bitmap2;
-> >@@ -5612,10 +5617,10 @@ out:
-> > 	return ret;
-> > }
-> >
-> >-unsigned long long
-> >+mdf_pfn_t
-> > get_num_dumpable(void)
-> > {
-> >-	unsigned long long pfn, num_dumpable;
-> >+	mdf_pfn_t pfn, num_dumpable;
-> > 	struct dump_bitmap bitmap2;
-> >
-> > 	initialize_2nd_bitmap(&bitmap2);
-> >@@ -5627,10 +5632,10 @@ get_num_dumpable(void)
-> > 	return num_dumpable;
-> > }
-> >
-> >-unsigned long long
-> >+mdf_pfn_t
-> > get_num_dumpable_cyclic(void)
-> > {
-> >-	unsigned long long pfn, num_dumpable=0;
-> >+	mdf_pfn_t pfn, num_dumpable=0;
-> > 	struct cycle cycle = {0};
-> >
-> > 	for_each_cycle(0, info->max_mapnr, &cycle)
-> >@@ -5692,8 +5697,9 @@ write_elf_pages(struct cache_data *cd_header, struct cache_data *cd_page)
-> > {
-> > 	int i, phnum;
-> > 	long page_size = info->page_size;
-> >-	unsigned long long pfn, pfn_start, pfn_end, paddr, num_excluded;
-> >-	unsigned long long num_dumpable, per;
-> >+	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded;
-> >+	unsigned long long paddr;
-> >+	mdf_pfn_t num_dumpable, per;
-> > 	unsigned long long memsz, filesz;
-> > 	unsigned long frac_head, frac_tail;
-> > 	off_t off_seg_load, off_memory;
-> >@@ -5878,7 +5884,7 @@ write_elf_pages(struct cache_data *cd_header, struct cache_data *cd_page)
-> > }
-> >
-> > int
-> >-read_pfn(unsigned long long pfn, unsigned char *buf)
-> >+read_pfn(mdf_pfn_t pfn, unsigned char *buf)
-> > {
-> > 	unsigned long long paddr;
-> >
-> >@@ -5897,7 +5903,7 @@ get_loads_dumpfile_cyclic(void)
-> > 	int i, phnum, num_new_load = 0;
-> > 	long page_size = info->page_size;
-> > 	unsigned char buf[info->page_size];
-> >-	unsigned long long pfn, pfn_start, pfn_end, num_excluded;
-> >+	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded;
-> > 	unsigned long frac_head, frac_tail;
-> > 	Elf64_Phdr load;
-> > 	struct cycle cycle = {0};
-> >@@ -5969,8 +5975,8 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
-> > 	int i, phnum;
-> > 	long page_size = info->page_size;
-> > 	unsigned char buf[info->page_size];
-> >-	unsigned long long pfn, pfn_start, pfn_end, paddr, num_excluded;
-> >-	unsigned long long num_dumpable, per;
-> >+	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded, num_dumpable, per;
-> >+	unsigned long long paddr;
-> > 	unsigned long long memsz, filesz;
-> > 	unsigned long frac_head, frac_tail;
-> > 	off_t off_seg_load, off_memory;
-> >@@ -6190,8 +6196,8 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
-> > int
-> > write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
-> > {
-> >- 	unsigned long long pfn, per, num_dumpable;
-> >-	unsigned long long start_pfn, end_pfn;
-> >+	mdf_pfn_t pfn, per, num_dumpable;
-> >+	mdf_pfn_t start_pfn, end_pfn;
-> > 	unsigned long size_out;
-> > 	struct page_desc pd, pd_zero;
-> > 	off_t offset_data = 0;
-> >@@ -6397,8 +6403,8 @@ int
-> > write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
-> > 			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
-> > {
-> >-	unsigned long long pfn, per;
-> >-	unsigned long long start_pfn, end_pfn;
-> >+	mdf_pfn_t pfn, per;
-> >+	mdf_pfn_t start_pfn, end_pfn;
-> > 	unsigned long size_out;
-> > 	struct page_desc pd;
-> > 	unsigned char buf[info->page_size], *buf_out = NULL;
-> >@@ -7504,7 +7510,7 @@ read_vmcoreinfo_xen(void)
-> > }
-> >
-> > int
-> >-allocated_in_map(unsigned long long pfn)
-> >+allocated_in_map(mdf_pfn_t pfn)
-> > {
-> > 	static unsigned long long cur_idx = -1;
-> > 	static unsigned long cur_word;
-> >@@ -7550,8 +7556,8 @@ exclude_xen3_user_domain(void)
-> > 	unsigned int num_pt_loads = get_num_pt_loads();
-> > 	unsigned long page_info_addr;
-> > 	unsigned long long phys_start, phys_end;
-> >-	unsigned long long pfn, pfn_end;
-> >-	unsigned long long j, size;
-> >+	mdf_pfn_t pfn, pfn_end;
-> >+	mdf_pfn_t j, size;
-> >
-> > 	/*
-> > 	 * NOTE: the first half of bitmap is not used for Xen extraction
-> >@@ -7614,8 +7620,8 @@ exclude_xen4_user_domain(void)
-> > 	unsigned int num_pt_loads = get_num_pt_loads();
-> > 	unsigned long page_info_addr;
-> > 	unsigned long long phys_start, phys_end;
-> >-	unsigned long long pfn, pfn_end;
-> >-	unsigned long long j, size;
-> >+	mdf_pfn_t pfn, pfn_end;
-> >+	mdf_pfn_t j, size;
-> >
-> > 	/*
-> > 	 * NOTE: the first half of bitmap is not used for Xen extraction
-> >@@ -7840,7 +7846,7 @@ print_vtop(void)
-> > void
-> > print_report(void)
-> > {
-> >-	unsigned long long pfn_original, pfn_excluded, shrinking;
-> >+	mdf_pfn_t pfn_original, pfn_excluded, shrinking;
-> >
-> > 	/*
-> > 	 * /proc/vmcore doesn't contain the memory hole area.
-> >@@ -7945,9 +7951,9 @@ int
-> > setup_splitting(void)
-> > {
-> > 	int i;
-> >-	unsigned long long j, pfn_per_dumpfile;
-> >-	unsigned long long start_pfn, end_pfn;
-> >-	unsigned long long num_dumpable = get_num_dumpable();
-> >+	mdf_pfn_t j, pfn_per_dumpfile;
-> >+	mdf_pfn_t start_pfn, end_pfn;
-> >+	mdf_pfn_t num_dumpable = get_num_dumpable();
-> > 	struct dump_bitmap bitmap2;
-> >
-> > 	if (info->num_dumpfile <= 1)
-> >@@ -8274,7 +8280,7 @@ void
-> > sort_splitting_info(void)
-> > {
-> > 	int i, j;
-> >-	unsigned long long start_pfn, end_pfn;
-> >+	mdf_pfn_t start_pfn, end_pfn;
-> > 	char *name_dumpfile;
-> >
-> > 	/*
-> >@@ -8310,7 +8316,7 @@ int
-> > check_splitting_info(void)
-> > {
-> > 	int i;
-> >-	unsigned long long end_pfn;
-> >+	mdf_pfn_t end_pfn;
-> >
-> > 	/*
-> > 	 * Check whether there are not lack of /proc/vmcore.
-> >@@ -8537,8 +8543,8 @@ reassemble_kdump_pages(void)
-> > 	int i, fd = 0, ret = FALSE;
-> > 	off_t offset_first_ph, offset_ph_org, offset_eraseinfo;
-> > 	off_t offset_data_new, offset_zero_page = 0;
-> >-	unsigned long long pfn, start_pfn, end_pfn;
-> >-	unsigned long long num_dumpable;
-> >+	mdf_pfn_t pfn, start_pfn, end_pfn;
-> >+	mdf_pfn_t num_dumpable;
-> > 	unsigned long size_eraseinfo;
-> > 	struct dump_bitmap bitmap2;
-> > 	struct disk_dump_header dh;
-> >diff --git a/makedumpfile.h b/makedumpfile.h
-> >index 951ed1b..a6a679b 100644
-> >--- a/makedumpfile.h
-> >+++ b/makedumpfile.h
-> >@@ -767,13 +767,15 @@ unsigned long long vaddr_to_paddr_ia64(unsigned long vaddr);
-> > #define VADDR_REGION(X)		(((unsigned long)(X)) >> REGION_SHIFT)
-> > #endif          /* ia64 */
-> >
-> >+typedef unsigned long long mdf_pfn_t;
-> >+
-> > #ifndef ARCH_PFN_OFFSET
-> > #define ARCH_PFN_OFFSET		0
-> > #endif
-> > #define paddr_to_pfn(X) \
-> > 	(((unsigned long long)(X) >> PAGESHIFT()) - ARCH_PFN_OFFSET)
-> > #define pfn_to_paddr(X) \
-> >-	(((unsigned long long)(X) + ARCH_PFN_OFFSET) << PAGESHIFT())
-> >+	(((mdf_pfn_t)(X) + ARCH_PFN_OFFSET) << PAGESHIFT())
-> >
-> > /* Format of Xen crash info ELF note */
-> > typedef struct {
-> >@@ -813,8 +815,8 @@ typedef struct {
-> > } xen_crash_info_v2_t;
-> >
-> > struct mem_map_data {
-> >-	unsigned long long	pfn_start;
-> >-	unsigned long long	pfn_end;
-> >+	mdf_pfn_t	pfn_start;
-> >+	mdf_pfn_t	pfn_end;
-> > 	unsigned long	mem_map;
-> > };
-> >
-> >@@ -866,8 +868,8 @@ struct makedumpfile_data_header {
-> > struct splitting_info {
-> > 	char			*name_dumpfile;
-> > 	int 			fd_bitmap;
-> >-	unsigned long long	start_pfn;
-> >-	unsigned long long	end_pfn;
-> >+	mdf_pfn_t		start_pfn;
-> >+	mdf_pfn_t		end_pfn;
-> > 	off_t			offset_eraseinfo;
-> > 	unsigned long		size_eraseinfo;
-> > } splitting_info_t;
-> >@@ -914,7 +916,7 @@ struct DumpInfo {
-> > 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
-> > 	long		page_size;           /* size of page */
-> > 	long		page_shift;
-> >-	unsigned long long	max_mapnr;   /* number of page descriptor */
-> >+	mdf_pfn_t	max_mapnr;   /* number of page descriptor */
-> > 	unsigned long   page_offset;
-> > 	unsigned long   section_size_bits;
-> > 	unsigned long   max_physmem_bits;
-> >@@ -1025,10 +1027,10 @@ struct DumpInfo {
-> > 					 *   1 .. xen_crash_info_t
-> > 					 *   2 .. xen_crash_info_v2_t */
-> >
-> >-	unsigned long long	dom0_mapnr;  /* The number of page in domain-0.
-> >-					      * Different from max_mapnr.
-> >-					      * max_mapnr is the number of page
-> >-					      * in system. */
-> >+	mdf_pfn_t	dom0_mapnr;	/* The number of page in domain-0.
-> >+					 * Different from max_mapnr.
-> >+					 * max_mapnr is the number of page
-> >+					 * in system. */
-> > 	unsigned long xen_phys_start;
-> > 	unsigned long xen_heap_start;	/* start mfn of xen heap area */
-> > 	unsigned long xen_heap_end;	/* end mfn(+1) of xen heap area */
-> >@@ -1048,15 +1050,15 @@ struct DumpInfo {
-> > 	/*
-> > 	 * for splitting
-> > 	 */
-> >-	unsigned long long split_start_pfn;
-> >-	unsigned long long split_end_pfn;
-> >+	mdf_pfn_t split_start_pfn;
-> >+	mdf_pfn_t split_end_pfn;
-> >
-> > 	/*
-> > 	 * for cyclic processing
-> > 	 */
-> > 	char               *partial_bitmap1;
-> > 	char               *partial_bitmap2;
-> >-	unsigned long long num_dumpable;
-> >+	mdf_pfn_t          num_dumpable;
-> > 	unsigned long      bufsize_cyclic;
-> > 	unsigned long      pfn_cyclic;
-> >
-> >@@ -1453,7 +1455,7 @@ int readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size);
-> > int get_str_osrelease_from_vmlinux(void);
-> > int read_vmcoreinfo_xen(void);
-> > int exclude_xen_user_domain(void);
-> >-unsigned long long get_num_dumpable(void);
-> >+mdf_pfn_t get_num_dumpable(void);
-> > int __read_disk_dump_header(struct disk_dump_header *dh, char *filename);
-> > int read_disk_dump_header(struct disk_dump_header *dh, char *filename);
-> > int read_kdump_sub_header(struct kdump_sub_header *kh, char *filename);
-> >@@ -1589,8 +1591,8 @@ int get_xen_info_ia64(void);
-> > #endif	/* s390x */
-> >
-> > struct cycle {
-> >-	unsigned long long start_pfn;
-> >-	unsigned long long end_pfn;
-> >+	mdf_pfn_t start_pfn;
-> >+	mdf_pfn_t end_pfn;
-> > };
-> >
-> > static inline int
-> >@@ -1600,7 +1602,7 @@ is_on(char *bitmap, int i)
-> > }
-> >
-> > static inline int
-> >-is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
-> >+is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
-> > {
-> > 	off_t offset;
-> > 	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
-> >@@ -1616,7 +1618,7 @@ is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
-> > }
-> >
-> > static inline int
-> >-is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
-> >+is_dumpable_cyclic(char *bitmap, mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
-> > 		return FALSE;
-> >@@ -1625,7 +1627,7 @@ is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
-> > }
-> >
-> > static inline int
-> >-is_cyclic_region(unsigned long long pfn, struct cycle *cycle)
-> >+is_cyclic_region(mdf_pfn_t pfn, struct cycle *cycle)
-> > {
-> > 	if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
-> > 		return FALSE;
-> >@@ -1647,8 +1649,8 @@ is_zero_page(unsigned char *buf, long page_size)
-> > }
-> >
-> > void write_vmcoreinfo_data(void);
-> >-int set_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle);
-> >-int clear_bit_on_1st_bitmap(unsigned long long pfn, struct cycle *cycle);
-> >+int set_bit_on_1st_bitmap(mdf_pfn_t pfn, struct cycle *cycle);
-> >+int clear_bit_on_1st_bitmap(mdf_pfn_t pfn, struct cycle *cycle);
-> >
-> > #ifdef __x86__
-> >
-> >@@ -1759,7 +1761,7 @@ struct elf_prstatus {
-> > /*
-> >  * Function Prototype.
-> >  */
-> >-unsigned long long get_num_dumpable_cyclic(void);
-> >+mdf_pfn_t get_num_dumpable_cyclic(void);
-> > int get_loads_dumpfile_cyclic(void);
-> > int initial_xen(void);
-> > unsigned long long get_free_memory_size(void);
-> >diff --git a/sadump_info.c b/sadump_info.c
-> >index f14ffc9..9434ff7 100644
-> >--- a/sadump_info.c
-> >+++ b/sadump_info.c
-> >@@ -94,7 +94,7 @@ static int read_device_diskset(struct sadump_diskset_info *sdi, void *buf,
-> > 			       size_t bytes, ulong *offset);
-> > static int read_sadump_header(char *filename);
-> > static int read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sdi);
-> >-static unsigned long long pfn_to_block(unsigned long long pfn);
-> >+static unsigned long long pfn_to_block(mdf_pfn_t pfn);
-> > static int lookup_diskset(unsigned long long whole_offset, int *diskid,
-> > 			  unsigned long long *disk_offset);
-> > static int max_mask_cpu(void);
-> >@@ -202,7 +202,8 @@ sadump_copy_1st_bitmap_from_memory(void)
-> > 	 * modify bitmap accordingly.
-> > 	 */
-> > 	if (si->kdump_backed_up) {
-> >-		unsigned long long paddr, pfn, backup_src_pfn;
-> >+		unsigned long long paddr;
-> >+		mdf_pfn_t pfn, backup_src_pfn;
-> >
-> > 		for (paddr = si->backup_src_start;
-> > 		     paddr < si->backup_src_start + si->backup_src_size;
-> >@@ -754,7 +755,8 @@ sadump_initialize_bitmap_memory(void)
-> > 	struct sadump_header *sh = si->sh_memory;
-> > 	struct dump_bitmap *bmp;
-> > 	unsigned long dumpable_bitmap_offset;
-> >-	unsigned long long section, max_section, pfn;
-> >+	unsigned long long section, max_section;
-> >+	mdf_pfn_t pfn;
-> > 	unsigned long long *block_table;
-> >
-> > 	dumpable_bitmap_offset =
-> >@@ -901,7 +903,7 @@ sadump_set_timestamp(struct timeval *ts)
-> > 	return TRUE;
-> > }
-> >
-> >-unsigned long long
-> >+mdf_pfn_t
-> > sadump_get_max_mapnr(void)
-> > {
-> > 	return si->sh_memory->max_mapnr;
-> >@@ -951,7 +953,8 @@ failed:
-> > int
-> > readpage_sadump(unsigned long long paddr, void *bufptr)
-> > {
-> >-	unsigned long long pfn, block, whole_offset, perdisk_offset;
-> >+	mdf_pfn_t pfn;
-> >+	unsigned long long block, whole_offset, perdisk_offset;
-> > 	int fd_memory;
-> >
-> > 	if (si->kdump_backed_up &&
-> >@@ -1117,7 +1120,7 @@ sadump_check_debug_info(void)
-> > }
-> >
-> > static unsigned long long
-> >-pfn_to_block(unsigned long long pfn)
-> >+pfn_to_block(mdf_pfn_t pfn)
-> > {
-> > 	unsigned long long block, section, p;
-> >
-> >diff --git a/sadump_info.h b/sadump_info.h
-> >index c0175dd..131687a 100644
-> >--- a/sadump_info.h
-> >+++ b/sadump_info.h
-> >@@ -42,7 +42,7 @@ int sadump_copy_1st_bitmap_from_memory(void);
-> > int sadump_initialize_bitmap_memory(void);
-> > int sadump_num_online_cpus(void);
-> > int sadump_set_timestamp(struct timeval *ts);
-> >-unsigned long long sadump_get_max_mapnr(void);
-> >+mdf_pfn_t sadump_get_max_mapnr(void);
-> > int readpage_sadump(unsigned long long paddr, void *bufptr);
-> > int sadump_check_debug_info(void);
-> > int sadump_generate_vmcoreinfo_from_vmlinux(size_t *vmcoreinfo_size);
-> >@@ -92,7 +92,7 @@ static inline int sadump_set_timestamp(struct timeval *ts)
-> > 	return FALSE;
-> > }
-> >
-> >-static inline unsigned long long sadump_get_max_mapnr(void)
-> >+static inline mdf_pfn_t sadump_get_max_mapnr(void)
-> > {
-> > 	return 0;
-> > }
-> >--
-> >1.8.4.5
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+-- 
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
