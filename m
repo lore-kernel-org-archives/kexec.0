@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from g4t3427.houston.hp.com ([15.201.208.55])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WbEfh-0002Uu-IW
- for kexec@lists.infradead.org; Fri, 18 Apr 2014 19:42:02 +0000
-Date: Fri, 18 Apr 2014 21:41:33 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Message-ID: <20140418214133.2668464c@hananiah.suse.cz>
-In-Reply-To: <20140418142912.GA2023@dhcp-17-102.nay.redhat.com>
-References: <20140410214433.GF18808@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
- <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
- <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
- <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
- <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
- <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
- <20140418142912.GA2023@dhcp-17-102.nay.redhat.com>
-Mime-Version: 1.0
+ id 1WbEun-0003jA-Fe
+ for kexec@lists.infradead.org; Fri, 18 Apr 2014 19:57:37 +0000
+Date: Fri, 18 Apr 2014 13:57:06 -0600
+From: Linn Crosetto <linn@hp.com>
+Subject: Re: [PATCH v6 0/9] kexec-tools, x86: E820 memmap pass for kdump
+Message-ID: <20140418195706.GA32105@oranje.fc.hp.com>
+References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
+ <20140417062420.GB1849@dhcp-17-89.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140417062420.GB1849@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,59 +24,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com
 
-On Fri, 18 Apr 2014 22:29:12 +0800
-"bhe@redhat.com" <bhe@redhat.com> wrote:
-
-> 
-> > >> It definitely will cause OOM. On my test machine, it has 100G memory. So
-> > >> per old code, its needed_size is 3200K*2 == 6.4M, if currently free
-> > >> memory is only 15M left, the free_size will be 15M*0.4 which is 6M. So
-> > >> info->bufsize_cyclic is assigned to be 6M. and only 3M is left for other
-> > >> use, e.g page cache, dynamic allocation. OOM will happen.
-> > >>
-> > >
-> > >BTW, in our case, there's about 30M free memory when we started saving
-> > >dump. It should be caused by my coarse estimation above.
+On Thu, Apr 17, 2014 at 02:24:20PM +0800, WANG Chao wrote:
+> On 04/14/14 at 10:55pm, WANG Chao wrote:
+> > Hi, All
 > > 
-> > Thanks for your description, I understand that situation and
-> > the nature of the problem.
+> > This patchset enables passing memory map via E820 map on x86 platform instead
+> > of memmap=exactmap. It's a better design and will solve the following problem
+> > so far:
 > > 
-> > That is, the assumption that 20% of free memory is enough for
-> > makedumpfile can be broken if free memory is too small.
-> > If your machine has 200GB memory, OOM will happen even after fix
-> > the too allocation bug.
+> > - kernel cmdline is limited resource and large machines tend to have many
+> >     memory ranges that may excceed kernel cmdline limit size.
+> > - kASLR doesn't work with memmap=exactmap, because kASLR happens early than
+> >     user defined memmap=exactmap takes effect.
+> > 
+> > Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
+> > like the only one). So for backward compatibility, I'm introducing a new option
+> > --pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
+> > 
+> > This patchset contains massive updates from the previous one. I take some
+> > suggestions from reviewers. I try to split the changes into smaller pieces and
+> > keep the whole change as minimal as I can so it wouldn't be too harsh to review
+> > the patch.
+> > 
+> > Any comment is appreciate!
 > 
-> Well, we have done some experiments to try to get the statistical memory
-> range which kdump really need. Then a final reservation will be
-> calculated automatically as (base_value + linear growth of total memory). 
-> If one machine has 200GB memory, its reservation will grow too. Since
-> except of the bitmap cost, other memory cost is almost fixed. 
+> Hi, Linn
 > 
-> Per this scheme things should be go well, if memory always goes to the
-> edge of OOM, an adjust of base_value is needed. So a constant value as
-> you said may not be needed.
+> Thanks for testing the patch in the past. Do you have chance to test
+> this update? 
 > 
-> Instead, I am wondering how the 80% comes from, and why 20% of free
-> memory must be safe.
+> This updated patchset changed too much and I want things to work as it's
+> used to be on your prototype machine with large number of memory ranges.
+> 
+> Thanks in advance!
+> WANG Chao
 
-I believe these 80% come from the default value of vm.dirty_ratio,
-which is 20%. In other words, the kernel won't block further writes
-until 20% of available RAM is used up by dirty cache. But if you
-fill up all free memory with dirty pages and then touch another (though
-allocated) page, the kernel will go into direct reclaim, and if nothing
-can be written out ATM, it will invoke the OOM Killer.
+Tested the series on a system with 200+ entries in the map; both kexec and kdump
+(with and without --pass-memmap-cmdline). Thanks for the patches.
 
-I figured out that the actual requirements also depend on the target
-device driver, filesystem (e.g. NFS is considerably more memory-hungry
-than ext3) and (not the least) number of online CPUs.
+Tested-by: Linn Crosetto <linn@hp.com>
 
-The calculation is quite complex, and that's probably why nobody has
-done it properly yet.
-
-Petr T
 
 _______________________________________________
 kexec mailing list
