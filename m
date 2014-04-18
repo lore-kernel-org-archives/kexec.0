@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g6t1524.atlanta.hp.com ([15.193.200.67])
- by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wau2k-0007M9-Gl
- for kexec@lists.infradead.org; Thu, 17 Apr 2014 21:40:27 +0000
-Date: Thu, 17 Apr 2014 15:38:53 -0600
-From: Linn Crosetto <linn@hp.com>
-Subject: Re: [PATCH v6 0/9] kexec-tools, x86: E820 memmap pass for kdump
-Message-ID: <20140417213853.GG22073@oranje.fc.hp.com>
-References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
- <20140417062420.GB1849@dhcp-17-89.nay.redhat.com>
+Received: from g4t3427.houston.hp.com ([15.201.208.55])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wb3dn-00030r-4m
+ for kexec@lists.infradead.org; Fri, 18 Apr 2014 07:55:19 +0000
+Subject: [PATCH v3] makedumpfile: fix a segmentation fault when physical
+ address exceeds 8TB boundary
+From: Jingbai Ma <jingbai.ma@hp.com>
+Date: Fri, 18 Apr 2014 15:54:52 +0800
+Message-ID: <20140418075452.21419.34483.stgit@k.asiapacific.hpqcorp.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140417062420.GB1849@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,21 +21,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, lisa.mitchell@hp.com
 
-> Hi, Linn
-> 
-> Thanks for testing the patch in the past. Do you have chance to test
-> this update? 
-> 
-> This updated patchset changed too much and I want things to work as it's
-> used to be on your prototype machine with large number of memory ranges.
-> 
-> Thanks in advance!
-> WANG Chao
+This patch intends to fix a segmentation fault when physical address exceeds
+8TB boundary.
 
-I will try to send you some results by early next week.
+Changelog:
+v3:
+- Revise some comments according to Daisuke and Petr's feedback.
+
+v2:
+- Add more comments from Daisuke HATAYAMA.
+
+
+In function is_on(), if the physical address higher than 8T, pfn (i) will
+greater than 2G, it will be a negative value and will cause a segmentation
+fault.
+is_on(char *bitmap, int i)
+{
+        return bitmap[i>>3] & (1 << (i & 7));
+}
+
+Daisuke's detailed analysis:
+static inline int
+is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
+{
+        off_t offset;
+        if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
+                offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+                lseek(bitmap->fd, offset, SEEK_SET);
+                read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
+                if (pfn == 0)
+                        bitmap->no_block = 0;
+                else
+                        bitmap->no_block = pfn/PFN_BUFBITMAP;
+        }
+        return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
+}
+
+PFN_BUFBTIMAP is constant 32 K. So, it seems that the 4 byte byte
+length came here.
+
+But right shift to signed integer is implementation defined. We should
+not use right shift to signed integer. it looks gcc performs
+arithmetic shift and this bahaviour is buggy in case of is_on().
+
+static inline int
+is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
+{
+        if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
+                return FALSE;
+        else
+                return is_on(bitmap, pfn - cycle->start_pfn);
+}
+
+Simply, (pfn - cycle->start_pfn) could be ((info->max_mapnr - 1) - 0). It's
+possible to pass more than 2 Gi by using system with more than 8 TiB
+physical memory space.
+
+So, in function is_on()
+
+- i must be unsigned in order to make right shift operation
+  meaningful, and
+
+- i must have 8 byte for systems with more than 8 TiB physical memory
+  space.
+
+
+Petr's comments:
+Why an unsigned long for the variable i is not sufficient?
+It would be enough on 64-bit systems, where an unsigned long is just as big as
+an unsigned long long (both 64 bits). But on 32-bit systems, an unsigned long
+is 32-bit, but physical memory can be larger (e.g. 36 bits with PAE).
+
+
+Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
+---
+ makedumpfile.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 3d270c6..03d35a8 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1591,7 +1591,7 @@ int get_xen_info_ia64(void);
+ #endif	/* s390x */
+ 
+ static inline int
+-is_on(char *bitmap, int i)
++is_on(char *bitmap, unsigned long long i)
+ {
+ 	return bitmap[i>>3] & (1 << (i & 7));
+ }
 
 
 _______________________________________________
