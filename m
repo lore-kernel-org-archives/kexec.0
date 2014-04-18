@@ -1,34 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp13.uk.ibm.com ([195.75.94.109])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wb9UM-0004B8-2e
- for kexec@lists.infradead.org; Fri, 18 Apr 2014 14:10:00 +0000
-Received: from /spool/local
- by e06smtp13.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <clg@fr.ibm.com>;
- Fri, 18 Apr 2014 15:09:33 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5DF681B08069
- for <kexec@lists.infradead.org>; Fri, 18 Apr 2014 15:09:35 +0100 (BST)
-Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
- [9.149.37.217])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s3IE9WZa590228
- for <kexec@lists.infradead.org>; Fri, 18 Apr 2014 14:09:32 GMT
-Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s3IF9WuP011427
- for <kexec@lists.infradead.org>; Fri, 18 Apr 2014 09:09:32 -0600
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@fr.ibm.com>
-Subject: [PATCH 2/7] kexec: bypass check on interp program header for ppc64le
- zImage
-Date: Fri, 18 Apr 2014 16:08:35 +0200
-Message-Id: <1397830120-13323-3-git-send-email-clg@fr.ibm.com>
-In-Reply-To: <1397830120-13323-1-git-send-email-clg@fr.ibm.com>
-References: <1397830120-13323-1-git-send-email-clg@fr.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wb9nT-0003fL-8N
+ for kexec@lists.infradead.org; Fri, 18 Apr 2014 14:29:43 +0000
+Date: Fri, 18 Apr 2014 22:29:12 +0800
+From: "bhe@redhat.com" <bhe@redhat.com>
+Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Message-ID: <20140418142912.GA2023@dhcp-17-102.nay.redhat.com>
+References: <20140410214433.GF18808@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
+ <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
+ <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
+ <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
+ <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
+ <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,152 +28,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@fr.ibm.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-V2hlbiB0aGUgZWxmIGluZm9ybWF0aW9uIGlzIGJ1aWx0IGZyb20gdGhlIGV4ZWN1dGFibGUsIGtl
-eGVjIGNoZWNrcwpmb3IgYW4gaW50ZXJwIGVsZiBwcm9ncmFtIGhlYWRlciBhbmQgZmFpbHMgaWYg
-aXQgZXhpc3RzLiBUaGUgZm9sbG93aW5nCnBhdGNoIGFkZHMgYSBuZXcgc2VydmljZSBtYWNoaW5l
-X2NoZWNrX2VsZl9waGRyX2ludGVycCgpIHdoaWNoIGxldHMKcGxhdGZvcm1zIGV2ZW50dWFsbHkg
-YnlwYXNzIHRoaXMgY2hlY2suCgpUaGlzIGlzIG5lZWRlZCBmb3IgdGhlIHpJbWFnZSBib290IHdy
-YXBwZXIgb24gUFBDIDY0Yml0IGxpdHRsZSBlbmRpYW4uClRoZSBleGVjdXRhYmxlIGlzIGxpbmtl
-ZCBhcyBwb3NpdGlvbiBpbmRlcGVuZGVudCBhbmQgaGFzIGEgaW50ZXJwIGVsZgpwcm9ncmFtIGhl
-YWRlci4KCkFuIGFsdGVybmF0aXZlIHRvIHRoaXMgcGF0Y2ggd291bGQgYmUgdG8gcmVtb3ZlIHRo
-ZSB3aG9sZSB0ZXN0IG9uIHRoZQppbnRlcnAgZWxmIHByb2dyYW0gaGVhZGVyIGFzIGtleGVjIHNl
-ZW1zIHRvIGJlIGlnbm9yaW5nIHRoZSBpbmZvcm1hdGlvbgphZnRlciBhbGwuCgpTaWduZWQtb2Zm
-LWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGZyLmlibS5jb20+Ci0tLQoga2V4ZWMvYXJjaC9h
-cm0va2V4ZWMtZWxmLXJlbC1hcm0uYyAgICAgICB8ICAgIDUgKysrKysKIGtleGVjL2FyY2gvY3Jp
-cy9rZXhlYy1lbGYtcmVsLWNyaXMuYyAgICAgfCAgICA1ICsrKysrCiBrZXhlYy9hcmNoL2kzODYv
-a2V4ZWMtZWxmLXJlbC14ODYuYyAgICAgIHwgICAgNSArKysrKwoga2V4ZWMvYXJjaC9pYTY0L2tl
-eGVjLWVsZi1yZWwtaWE2NC5jICAgICB8ICAgIDUgKysrKysKIGtleGVjL2FyY2gvbTY4ay9rZXhl
-Yy1lbGYtcmVsLW02OGsuYyAgICAgfCAgICA1ICsrKysrCiBrZXhlYy9hcmNoL21pcHMva2V4ZWMt
-ZWxmLXJlbC1taXBzLmMgICAgIHwgICAgNSArKysrKwoga2V4ZWMvYXJjaC9wcGMva2V4ZWMtZWxm
-LXJlbC1wcGMuYyAgICAgICB8ICAgIDUgKysrKysKIGtleGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxm
-LXJlbC1wcGM2NC5jICAgfCAgIDE2ICsrKysrKysrKysrKysrKysKIGtleGVjL2FyY2gvczM5MC9r
-ZXhlYy1lbGYtcmVsLXMzOTAuYyAgICAgfCAgICA1ICsrKysrCiBrZXhlYy9hcmNoL3NoL2tleGVj
-LWVsZi1yZWwtc2guYyAgICAgICAgIHwgICAgNSArKysrKwoga2V4ZWMvYXJjaC94ODZfNjQva2V4
-ZWMtZWxmLXJlbC14ODZfNjQuYyB8ICAgIDUgKysrKysKIGtleGVjL2tleGVjLWVsZi1leGVjLmMg
-ICAgICAgICAgICAgICAgICAgfCAgICA0ICsrKysKIGtleGVjL2tleGVjLWVsZi5oICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgICAxICsKIDEzIGZpbGVzIGNoYW5nZWQsIDcxIGluc2VydGlvbnMo
-KykKCmRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2FybS9rZXhlYy1lbGYtcmVsLWFybS5jIGIva2V4
-ZWMvYXJjaC9hcm0va2V4ZWMtZWxmLXJlbC1hcm0uYwppbmRleCAyMTRmMGNjYzJhMzMuLjZmYmU4
-YzQ4NTQ0NyAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9hcm0va2V4ZWMtZWxmLXJlbC1hcm0uYwor
-KysgYi9rZXhlYy9hcmNoL2FybS9rZXhlYy1lbGYtcmVsLWFybS5jCkBAIC0zLDYgKzMsMTEgQEAK
-ICNpbmNsdWRlICIuLi8uLi9rZXhlYy5oIgogI2luY2x1ZGUgIi4uLy4uL2tleGVjLWVsZi5oIgog
-CitpbnQgbWFjaGluZV9jaGVja19lbGZfcGhkcl9pbnRlcnAoY29uc3Qgc3RydWN0IG1lbV9laGRy
-ICplaGRyKQoreworCXJldHVybiAxOworfQorCiBpbnQgbWFjaGluZV92ZXJpZnlfZWxmX3JlbChz
-dHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCiB7CiAJaWYgKGVoZHItPmVpX2RhdGEgIT0gRUxGREFUQTJN
-U0IpIHsKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvY3Jpcy9rZXhlYy1lbGYtcmVsLWNyaXMuYyBi
-L2tleGVjL2FyY2gvY3Jpcy9rZXhlYy1lbGYtcmVsLWNyaXMuYwppbmRleCBjNDQyN2NjMTQ0YmUu
-LmIwYWRkMTY0NDRhZCAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9jcmlzL2tleGVjLWVsZi1yZWwt
-Y3Jpcy5jCisrKyBiL2tleGVjL2FyY2gvY3Jpcy9rZXhlYy1lbGYtcmVsLWNyaXMuYwpAQCAtMTUs
-NiArMTUsMTEgQEAKICNpbmNsdWRlICIuLi8uLi9rZXhlYy5oIgogI2luY2x1ZGUgIi4uLy4uL2tl
-eGVjLWVsZi5oIgogCitpbnQgbWFjaGluZV9jaGVja19lbGZfcGhkcl9pbnRlcnAoY29uc3Qgc3Ry
-dWN0IG1lbV9laGRyICplaGRyKQoreworCXJldHVybiAxOworfQorCiBpbnQgbWFjaGluZV92ZXJp
-ZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCiB7CiAJaWYgKGVoZHItPmVpX2RhdGEg
-IT0gRUxGREFUQTJNU0IpIHsKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYt
-cmVsLXg4Ni5jIGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWVsZi1yZWwteDg2LmMKaW5kZXggZmRj
-M2Q1MmZlZWIyLi5jN2Q3ODNlNzBlY2MgMTAwNjQ0Ci0tLSBhL2tleGVjL2FyY2gvaTM4Ni9rZXhl
-Yy1lbGYtcmVsLXg4Ni5jCisrKyBiL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYtcmVsLXg4Ni5j
-CkBAIC0zLDYgKzMsMTEgQEAKICNpbmNsdWRlICIuLi8uLi9rZXhlYy5oIgogI2luY2x1ZGUgIi4u
-Ly4uL2tleGVjLWVsZi5oIgogCitpbnQgbWFjaGluZV9jaGVja19lbGZfcGhkcl9pbnRlcnAoY29u
-c3Qgc3RydWN0IG1lbV9laGRyICplaGRyKQoreworCXJldHVybiAxOworfQorCiBpbnQgbWFjaGlu
-ZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCiB7CiAJaWYgKGVoZHItPmVp
-X2RhdGEgIT0gRUxGREFUQTJMU0IpIHsKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaWE2NC9rZXhl
-Yy1lbGYtcmVsLWlhNjQuYyBiL2tleGVjL2FyY2gvaWE2NC9rZXhlYy1lbGYtcmVsLWlhNjQuYwpp
-bmRleCBjZmIxMDYxNjk2NDMuLmEyYWVjMGQwM2UzZiAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9p
-YTY0L2tleGVjLWVsZi1yZWwtaWE2NC5jCisrKyBiL2tleGVjL2FyY2gvaWE2NC9rZXhlYy1lbGYt
-cmVsLWlhNjQuYwpAQCAtMzIsNiArMzIsMTEgQEAKIAogI2RlZmluZSBNQVhfTFRPRkYgICAgICAg
-KCh1aW50NjRfdCkgKDEgPDwgMjIpKQogCitpbnQgbWFjaGluZV9jaGVja19lbGZfcGhkcl9pbnRl
-cnAoY29uc3Qgc3RydWN0IG1lbV9laGRyICplaGRyKQoreworCXJldHVybiAxOworfQorCiBpbnQg
-bWFjaGluZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCiB7CiAJaWYgKGVo
-ZHItPmVpX2RhdGEgIT0gRUxGREFUQTJMU0IpIHsKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvbTY4
-ay9rZXhlYy1lbGYtcmVsLW02OGsuYyBiL2tleGVjL2FyY2gvbTY4ay9rZXhlYy1lbGYtcmVsLW02
-OGsuYwppbmRleCBmYTEyYTE2NzAxNDkuLmJjOWZkMWFhOTg5OSAxMDA2NDQKLS0tIGEva2V4ZWMv
-YXJjaC9tNjhrL2tleGVjLWVsZi1yZWwtbTY4ay5jCisrKyBiL2tleGVjL2FyY2gvbTY4ay9rZXhl
-Yy1lbGYtcmVsLW02OGsuYwpAQCAtMTIsNiArMTIsMTEgQEAKICNpbmNsdWRlICIuLi8uLi9rZXhl
-Yy5oIgogI2luY2x1ZGUgIi4uLy4uL2tleGVjLWVsZi5oIgogCitpbnQgbWFjaGluZV9jaGVja19l
-bGZfcGhkcl9pbnRlcnAoY29uc3Qgc3RydWN0IG1lbV9laGRyICplaGRyKQoreworCXJldHVybiAx
-OworfQorCiBpbnQgbWFjaGluZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIp
-CiB7CiAJaWYgKGVoZHItPmVpX2RhdGEgIT0gRUxGREFUQTJNU0IpCmRpZmYgLS1naXQgYS9rZXhl
-Yy9hcmNoL21pcHMva2V4ZWMtZWxmLXJlbC1taXBzLmMgYi9rZXhlYy9hcmNoL21pcHMva2V4ZWMt
-ZWxmLXJlbC1taXBzLmMKaW5kZXggNmY0MzYzOTNhODdhLi44Nzg5ZTMzNjZhYTEgMTAwNjQ0Ci0t
-LSBhL2tleGVjL2FyY2gvbWlwcy9rZXhlYy1lbGYtcmVsLW1pcHMuYworKysgYi9rZXhlYy9hcmNo
-L21pcHMva2V4ZWMtZWxmLXJlbC1taXBzLmMKQEAgLTE1LDYgKzE1LDExIEBACiAjaW5jbHVkZSAi
-Li4vLi4va2V4ZWMuaCIKICNpbmNsdWRlICIuLi8uLi9rZXhlYy1lbGYuaCIKIAoraW50IG1hY2hp
-bmVfY2hlY2tfZWxmX3BoZHJfaW50ZXJwKGNvbnN0IHN0cnVjdCBtZW1fZWhkciAqZWhkcikKK3sK
-KwlyZXR1cm4gMTsKK30KKwogaW50IG1hY2hpbmVfdmVyaWZ5X2VsZl9yZWwoc3RydWN0IG1lbV9l
-aGRyICplaGRyKQogewogCWlmIChlaGRyLT5laV9kYXRhICE9IEVMRkRBVEEyTVNCKSB7CmRpZmYg
-LS1naXQgYS9rZXhlYy9hcmNoL3BwYy9rZXhlYy1lbGYtcmVsLXBwYy5jIGIva2V4ZWMvYXJjaC9w
-cGMva2V4ZWMtZWxmLXJlbC1wcGMuYwppbmRleCA5MGE2NmY0MjA0MDkuLmE4YWI1NGUwYzBjNiAx
-MDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9wcGMva2V4ZWMtZWxmLXJlbC1wcGMuYworKysgYi9rZXhl
-Yy9hcmNoL3BwYy9rZXhlYy1lbGYtcmVsLXBwYy5jCkBAIC0zLDYgKzMsMTEgQEAKICNpbmNsdWRl
-ICIuLi8uLi9rZXhlYy5oIgogI2luY2x1ZGUgIi4uLy4uL2tleGVjLWVsZi5oIgogCitpbnQgbWFj
-aGluZV9jaGVja19lbGZfcGhkcl9pbnRlcnAoY29uc3Qgc3RydWN0IG1lbV9laGRyICplaGRyKQor
-eworCXJldHVybiAxOworfQorCiBpbnQgbWFjaGluZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVt
-X2VoZHIgKmVoZHIpCiB7CiAJaWYgKGVoZHItPmVpX2RhdGEgIT0gRUxGREFUQTJNU0IpIHsKZGlm
-ZiAtLWdpdCBhL2tleGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXJlbC1wcGM2NC5jIGIva2V4ZWMv
-YXJjaC9wcGM2NC9rZXhlYy1lbGYtcmVsLXBwYzY0LmMKaW5kZXggNzA4ZjUwN2E1MGE2Li4zMDBm
-MTUxNDk1NDIgMTAwNjQ0Ci0tLSBhL2tleGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXJlbC1wcGM2
-NC5jCisrKyBiL2tleGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXJlbC1wcGM2NC5jCkBAIC01LDYg
-KzUsMjIgQEAKICNpbmNsdWRlICIuLi8uLi9rZXhlYy1lbGYuaCIKICNpbmNsdWRlICJrZXhlYy1w
-cGM2NC5oIgogCisvKiBUaGUgekltYWdlIGJvb3Qgd3JhcHBlciBvbiA2NGJpdCBsaXR0bGUgZW5k
-aWFuIGlzIGxpbmtlZCBhcyBhCisgKiBwb3NpdGlvbiBpbmRlcGVuZGFudCBleGVjdXRhYmxlIGFu
-ZCBoYXMgYSBpbnRlcnAgcHJvZ3JhbQorICogaGVhZGVyLiBXZSBkb24ndCB3YW50IHRvIGNoZWNr
-IGZvciBpdC4KKyAqLworaW50IG1hY2hpbmVfY2hlY2tfZWxmX3BoZHJfaW50ZXJwKGNvbnN0IHN0
-cnVjdCBtZW1fZWhkciAqZWhkcikKK3sKKwlpZiAoZWhkci0+ZWlfZGF0YSA9PSBFTEZEQVRBMk1T
-QikKKwkJcmV0dXJuIDE7CisKKwkvKiBzZWN0aW9ucyBhcmUgbG9hZGVkIGluIGJ1aWxkX2VsZl9p
-bmZvICovCisJaWYgKGVsZl9yZWxfZmluZF9zZWN0aW9uKGVoZHIsICIua2VybmVsOnZtbGludXgu
-c3RyaXAiKSkKKwkJcmV0dXJuIDA7CisKKwlyZXR1cm4gMTsKK30KKwogaW50IG1hY2hpbmVfdmVy
-aWZ5X2VsZl9yZWwoc3RydWN0IG1lbV9laGRyICplaGRyKQogewogCWlmIChlaGRyLT5laV9jbGFz
-cyAhPSBFTEZDTEFTUzY0KSB7CmRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL3MzOTAva2V4ZWMtZWxm
-LXJlbC1zMzkwLmMgYi9rZXhlYy9hcmNoL3MzOTAva2V4ZWMtZWxmLXJlbC1zMzkwLmMKaW5kZXgg
-ODBiY2QxYmI5MmVmLi5kZjJkMTVhZjg4Y2QgMTAwNjQ0Ci0tLSBhL2tleGVjL2FyY2gvczM5MC9r
-ZXhlYy1lbGYtcmVsLXMzOTAuYworKysgYi9rZXhlYy9hcmNoL3MzOTAva2V4ZWMtZWxmLXJlbC1z
-MzkwLmMKQEAgLTEyLDYgKzEyLDExIEBACiAjaW5jbHVkZSAiLi4vLi4va2V4ZWMuaCIKICNpbmNs
-dWRlICIuLi8uLi9rZXhlYy1lbGYuaCIKIAoraW50IG1hY2hpbmVfY2hlY2tfZWxmX3BoZHJfaW50
-ZXJwKGNvbnN0IHN0cnVjdCBtZW1fZWhkciAqZWhkcikKK3sKKwlyZXR1cm4gMTsKK30KKwogaW50
-IG1hY2hpbmVfdmVyaWZ5X2VsZl9yZWwoc3RydWN0IG1lbV9laGRyICplaGRyKQogewogCWlmIChl
-aGRyLT5laV9kYXRhICE9IEVMRkRBVEEyTVNCKQpkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9zaC9r
-ZXhlYy1lbGYtcmVsLXNoLmMgYi9rZXhlYy9hcmNoL3NoL2tleGVjLWVsZi1yZWwtc2guYwppbmRl
-eCAwYmZjNDVlYzBkNmQuLjVkYjc0ZWE5MTIxMyAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9zaC9r
-ZXhlYy1lbGYtcmVsLXNoLmMKKysrIGIva2V4ZWMvYXJjaC9zaC9rZXhlYy1lbGYtcmVsLXNoLmMK
-QEAgLTE1LDYgKzE1LDExIEBACiAjaW5jbHVkZSAiLi4vLi4va2V4ZWMuaCIKICNpbmNsdWRlICIu
-Li8uLi9rZXhlYy1lbGYuaCIKIAoraW50IG1hY2hpbmVfY2hlY2tfZWxmX3BoZHJfaW50ZXJwKGNv
-bnN0IHN0cnVjdCBtZW1fZWhkciAqZWhkcikKK3sKKwlyZXR1cm4gMTsKK30KKwogaW50IG1hY2hp
-bmVfdmVyaWZ5X2VsZl9yZWwoc3RydWN0IG1lbV9laGRyICplaGRyKQogewogCS8qIEludGVudGlv
-bmFsbHkgZG9uJ3QgYm90aGVyIHdpdGggZW5kaWFubmVzcyB2YWxpZGF0aW9uLCBpdCdzCmRpZmYg
-LS1naXQgYS9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jIGIva2V4ZWMv
-YXJjaC94ODZfNjQva2V4ZWMtZWxmLXJlbC14ODZfNjQuYwppbmRleCBjNzk1MDM3Y2RiMGYuLjZk
-ZGMyODE5ODg4MiAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC94ODZfNjQva2V4ZWMtZWxmLXJlbC14
-ODZfNjQuYworKysgYi9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jCkBA
-IC0zLDYgKzMsMTEgQEAKICNpbmNsdWRlICIuLi8uLi9rZXhlYy5oIgogI2luY2x1ZGUgIi4uLy4u
-L2tleGVjLWVsZi5oIgogCitpbnQgbWFjaGluZV9jaGVja19lbGZfcGhkcl9pbnRlcnAoY29uc3Qg
-c3RydWN0IG1lbV9laGRyICplaGRyKQoreworCXJldHVybiAxOworfQorCiBpbnQgbWFjaGluZV92
-ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCiB7CiAJaWYgKGVoZHItPmVpX2Rh
-dGEgIT0gRUxGREFUQTJMU0IpIHsKZGlmZiAtLWdpdCBhL2tleGVjL2tleGVjLWVsZi1leGVjLmMg
-Yi9rZXhlYy9rZXhlYy1lbGYtZXhlYy5jCmluZGV4IGNiNjJkMDQ4NDllNS4uYWRjNzk0ZDMyNDgx
-IDEwMDY0NAotLS0gYS9rZXhlYy9rZXhlYy1lbGYtZXhlYy5jCisrKyBiL2tleGVjL2tleGVjLWVs
-Zi1leGVjLmMKQEAgLTMzLDYgKzMzLDEwIEBAIGludCBidWlsZF9lbGZfZXhlY19pbmZvKGNvbnN0
-IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLCBzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIsCiAJCWZwcmludGYo
-c3RkZXJyLCAiTm8gRUxGIHByb2dyYW0gaGVhZGVyXG4iKTsKIAkJcmV0dXJuIC0xOyAKIAl9CisK
-KwlpZiAoIW1hY2hpbmVfY2hlY2tfZWxmX3BoZHJfaW50ZXJwKGVoZHIpKQorCQlyZXR1cm4gMDsK
-KwogCWVuZF9waGRyID0gJmVoZHItPmVfcGhkcltlaGRyLT5lX3BobnVtXTsKIAlmb3IocGhkciA9
-IGVoZHItPmVfcGhkcjsgcGhkciAhPSBlbmRfcGhkcjsgcGhkcisrKSB7CiAJCS8qIEtleGVjIGRv
-ZXMgbm90IHN1cHBvcnQgbG9hZGluZyBpbnRlcnByZXRlcnMuCmRpZmYgLS1naXQgYS9rZXhlYy9r
-ZXhlYy1lbGYuaCBiL2tleGVjL2tleGVjLWVsZi5oCmluZGV4IDE5YjU3NjlkMTgzOC4uNzM5NjM5
-NDE4NDI5IDEwMDY0NAotLS0gYS9rZXhlYy9rZXhlYy1lbGYuaAorKysgYi9rZXhlYy9rZXhlYy1l
-bGYuaApAQCAtMTMzLDUgKzEzMyw2IEBAIHVuc2lnbmVkIGxvbmcgZWxmX21heF9hZGRyKGNvbnN0
-IHN0cnVjdCBtZW1fZWhkciAqZWhkcik7CiBleHRlcm4gaW50IG1hY2hpbmVfdmVyaWZ5X2VsZl9y
-ZWwoc3RydWN0IG1lbV9laGRyICplaGRyKTsKIGV4dGVybiB2b2lkIG1hY2hpbmVfYXBwbHlfZWxm
-X3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIsIHVuc2lnbmVkIGxvbmcgcl90eXBlLCAKIAl2b2lk
-ICpsb2NhdGlvbiwgdW5zaWduZWQgbG9uZyBhZGRyZXNzLCB1bnNpZ25lZCBsb25nIHZhbHVlKTsK
-K2V4dGVybiBpbnQgbWFjaGluZV9jaGVja19lbGZfcGhkcl9pbnRlcnAoY29uc3Qgc3RydWN0IG1l
-bV9laGRyICplaGRyKTsKICNlbmRpZiAvKiBLRVhFQ19FTEZfSCAqLwogCi0tIAoxLjcuMTAuNAoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+> >> It definitely will cause OOM. On my test machine, it has 100G memory. So
+> >> per old code, its needed_size is 3200K*2 == 6.4M, if currently free
+> >> memory is only 15M left, the free_size will be 15M*0.4 which is 6M. So
+> >> info->bufsize_cyclic is assigned to be 6M. and only 3M is left for other
+> >> use, e.g page cache, dynamic allocation. OOM will happen.
+> >>
+> >
+> >BTW, in our case, there's about 30M free memory when we started saving
+> >dump. It should be caused by my coarse estimation above.
+> 
+> Thanks for your description, I understand that situation and
+> the nature of the problem.
+> 
+> That is, the assumption that 20% of free memory is enough for
+> makedumpfile can be broken if free memory is too small.
+> If your machine has 200GB memory, OOM will happen even after fix
+> the too allocation bug.
+
+Well, we have done some experiments to try to get the statistical memory
+range which kdump really need. Then a final reservation will be
+calculated automatically as (base_value + linear growth of total memory). 
+If one machine has 200GB memory, its reservation will grow too. Since
+except of the bitmap cost, other memory cost is almost fixed. 
+
+Per this scheme things should be go well, if memory always goes to the
+edge of OOM, an adjust of base_value is needed. So a constant value as
+you said may not be needed.
+
+Instead, I am wondering how the 80% comes from, and why 20% of free
+memory must be safe.
+> 
+> I don't think this is a problem, it's natural that a lack of memory
+> causes OOM. However, there is a thing we can do for improvement. 
+> 
+> What I think is:
+> 
+>   1. Use a constant value as safe limit to calculate bufsize_cyclic
+>      instead of 80% of free memory. This value must be enough for
+>      makedumpfile's work except bitmap.
+> 
+>   2. If free memory is smaller than the value, makedumpfile gives up
+>      to work early.
+> 
+> This change may reduce the possibility of lack of memory, but the
+> required memory size will be changing every version, so maintaining
+> it sounds tough to me.
+> 
+> Any comments are welcome.
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
