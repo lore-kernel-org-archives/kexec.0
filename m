@@ -1,13 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3427.houston.hp.com ([15.201.208.55])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wb3dn-00030r-4m
- for kexec@lists.infradead.org; Fri, 18 Apr 2014 07:55:19 +0000
-Subject: [PATCH v3] makedumpfile: fix a segmentation fault when physical
- address exceeds 8TB boundary
-From: Jingbai Ma <jingbai.ma@hp.com>
-Date: Fri, 18 Apr 2014 15:54:52 +0800
-Message-ID: <20140418075452.21419.34483.stgit@k.asiapacific.hpqcorp.net>
+ id 1Wb51s-0004uI-85
+ for kexec@lists.infradead.org; Fri, 18 Apr 2014 09:24:17 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Date: Fri, 18 Apr 2014 09:22:26 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
+References: <20140410214433.GF18808@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
+ <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
+ <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
+ <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
+ <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
+ <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
+In-Reply-To: <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,100 +31,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, lisa.mitchell@hp.com
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-This patch intends to fix a segmentation fault when physical address exceeds
-8TB boundary.
+>On 04/17/14 at 12:52pm, Baoquan He wrote:
+>> On 04/17/14 at 04:01am, Atsushi Kumagai wrote:
+>> > Hello Baoquan,
+>> >
+>> > >Hi Atsushi,
+>> > >
+>> > >I have got the test machine where bug reported and did a test. The
+>> > >changed code can make elf dump successful.
+>> >
+>> > Great, thanks for your help!
+>> > However, I still have questions.
+>> >
+>> > First, what is the difference between yours and mine?
+>> >
+>> > http://lists.infradead.org/pipermail/kexec/2014-April/011535.html
+>>
+>> Yeah, you are right, it's the same on changing the code bug. I mush
+>> haven't read your patch carefully.
+>                                                          must<--
+>>
+>> >
+>> > My patch includes renaming some values, but the purpose looks
+>> > the same as yours.
+>> > Further, you described as below,
+>> >
+>> > >On 04/14/14 at 04:02pm, Baoquan He wrote:
+>> > but I still don't think this bug causes OOM.
+>> > Even if needed_size is calculated as so much size wrongly, bufsize_cyclic
+>> > will not exceed 40% of free memory by the check below:
+>> >
+>> >     info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
+>> >
+>> > So it looks that bitmap1(40%) and bitmap2(40%) will fit in 80% of free
+>> > memory in any case.
+>> >
+>> > I may misunderstand something since your patch has an effect on this
+>> > issue in practice, could you correct me?
+>>
+>> It definitely will cause OOM. On my test machine, it has 100G memory. So
+>> per old code, its needed_size is 3200K*2 == 6.4M, if currently free
+>> memory is only 15M left, the free_size will be 15M*0.4 which is 6M. So
+>> info->bufsize_cyclic is assigned to be 6M. and only 3M is left for other
+>> use, e.g page cache, dynamic allocation. OOM will happen.
+>>
+>
+>BTW, in our case, there's about 30M free memory when we started saving
+>dump. It should be caused by my coarse estimation above.
 
-Changelog:
-v3:
-- Revise some comments according to Daisuke and Petr's feedback.
+Thanks for your description, I understand that situation and
+the nature of the problem.
 
-v2:
-- Add more comments from Daisuke HATAYAMA.
+That is, the assumption that 20% of free memory is enough for
+makedumpfile can be broken if free memory is too small.
+If your machine has 200GB memory, OOM will happen even after fix
+the too allocation bug.
 
+I don't think this is a problem, it's natural that a lack of memory
+causes OOM. However, there is a thing we can do for improvement. 
 
-In function is_on(), if the physical address higher than 8T, pfn (i) will
-greater than 2G, it will be a negative value and will cause a segmentation
-fault.
-is_on(char *bitmap, int i)
-{
-        return bitmap[i>>3] & (1 << (i & 7));
-}
+What I think is:
 
-Daisuke's detailed analysis:
-static inline int
-is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
-{
-        off_t offset;
-        if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
-                offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
-                lseek(bitmap->fd, offset, SEEK_SET);
-                read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
-                if (pfn == 0)
-                        bitmap->no_block = 0;
-                else
-                        bitmap->no_block = pfn/PFN_BUFBITMAP;
-        }
-        return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
-}
+  1. Use a constant value as safe limit to calculate bufsize_cyclic
+     instead of 80% of free memory. This value must be enough for
+     makedumpfile's work except bitmap.
 
-PFN_BUFBTIMAP is constant 32 K. So, it seems that the 4 byte byte
-length came here.
+  2. If free memory is smaller than the value, makedumpfile gives up
+     to work early.
 
-But right shift to signed integer is implementation defined. We should
-not use right shift to signed integer. it looks gcc performs
-arithmetic shift and this bahaviour is buggy in case of is_on().
+This change may reduce the possibility of lack of memory, but the
+required memory size will be changing every version, so maintaining
+it sounds tough to me.
 
-static inline int
-is_dumpable_cyclic(char *bitmap, unsigned long long pfn, struct cycle *cycle)
-{
-        if (pfn < cycle->start_pfn || cycle->end_pfn <= pfn)
-                return FALSE;
-        else
-                return is_on(bitmap, pfn - cycle->start_pfn);
-}
-
-Simply, (pfn - cycle->start_pfn) could be ((info->max_mapnr - 1) - 0). It's
-possible to pass more than 2 Gi by using system with more than 8 TiB
-physical memory space.
-
-So, in function is_on()
-
-- i must be unsigned in order to make right shift operation
-  meaningful, and
-
-- i must have 8 byte for systems with more than 8 TiB physical memory
-  space.
+Any comments are welcome.
 
 
-Petr's comments:
-Why an unsigned long for the variable i is not sufficient?
-It would be enough on 64-bit systems, where an unsigned long is just as big as
-an unsigned long long (both 64 bits). But on 32-bit systems, an unsigned long
-is 32-bit, but physical memory can be larger (e.g. 36 bits with PAE).
-
-
-Signed-off-by: Jingbai Ma <jingbai.ma@hp.com>
----
- makedumpfile.h |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 3d270c6..03d35a8 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1591,7 +1591,7 @@ int get_xen_info_ia64(void);
- #endif	/* s390x */
- 
- static inline int
--is_on(char *bitmap, int i)
-+is_on(char *bitmap, unsigned long long i)
- {
- 	return bitmap[i>>3] & (1 << (i & 7));
- }
-
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
