@@ -1,26 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WcFvp-0001d8-6M
- for kexec@lists.infradead.org; Mon, 21 Apr 2014 15:14:53 +0000
-Date: Mon, 21 Apr 2014 11:14:30 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Message-ID: <20140421151429.GC4367@redhat.com>
-References: <20140410214433.GF18808@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
- <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
- <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
- <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
- <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
- <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
- <20140418142912.GA2023@dhcp-17-102.nay.redhat.com>
+ id 1WcFwC-0001pK-Tx
+ for kexec@lists.infradead.org; Mon, 21 Apr 2014 15:15:17 +0000
+Date: Mon, 21 Apr 2014 23:16:21 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
+Message-ID: <20140421151621.GA2489@darkstar.redhat.com>
+References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
+ <1397487341-17287-10-git-send-email-chaowang@redhat.com>
+ <20140417052913.GB4889@dhcp-16-126.nay.redhat.com>
+ <20140417054854.GA1940@dhcp-17-89.nay.redhat.com>
+ <20140417055817.GE4889@dhcp-16-126.nay.redhat.com>
+ <20140421000103.GC32087@verge.net.au>
+ <20140421024935.GA4564@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140418142912.GA2023@dhcp-17-102.nay.redhat.com>
+In-Reply-To: <20140421024935.GA4564@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,55 +29,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "zzou@redhat.com" <zzou@redhat.com>
+To: WANG Chao <chaowang@redhat.com>
+Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-On Fri, Apr 18, 2014 at 10:29:12PM +0800, bhe@redhat.com wrote:
+[snip]
+
+> > > > I prefer to first get this patch in if there's no problem in it and then
+> > > > look back and think about how we can clean up the code block which have
+> > > > been there for historical reason.
+> > > 
+> > > I think the cleanup is worth, but if you want to do it later I'm fine.
+> > > So should better leave the patch 5/9 to later cleanup as well.
+> > > 
+> > > Thus except for 5/9, for other patches:
+> > > Acked-by: Dave Young <dyoung@redhat.com>
 > 
-> > >> It definitely will cause OOM. On my test machine, it has 100G memory. So
-> > >> per old code, its needed_size is 3200K*2 == 6.4M, if currently free
-> > >> memory is only 15M left, the free_size will be 15M*0.4 which is 6M. So
-> > >> info->bufsize_cyclic is assigned to be 6M. and only 3M is left for other
-> > >> use, e.g page cache, dynamic allocation. OOM will happen.
-> > >>
-> > >
-> > >BTW, in our case, there's about 30M free memory when we started saving
-> > >dump. It should be caused by my coarse estimation above.
-> > 
-> > Thanks for your description, I understand that situation and
-> > the nature of the problem.
-> > 
-> > That is, the assumption that 20% of free memory is enough for
-> > makedumpfile can be broken if free memory is too small.
-> > If your machine has 200GB memory, OOM will happen even after fix
-> > the too allocation bug.
+> Hi, Simon
 > 
-> Well, we have done some experiments to try to get the statistical memory
-> range which kdump really need. Then a final reservation will be
-> calculated automatically as (base_value + linear growth of total memory). 
-> If one machine has 200GB memory, its reservation will grow too. Since
-> except of the bitmap cost, other memory cost is almost fixed. 
+> Later, after a discussion with Dave Young, he is ok with 5/9. Here's his
+> ACK for the whole patch series:
 > 
-> Per this scheme things should be go well, if memory always goes to the
-> edge of OOM, an adjust of base_value is needed. So a constant value as
-> you said may not be needed.
-
-That logic is old and we probably should get rid of at some point. We
-don't want makedumpfile's memory usage to go up because system has
-more physical RAM. That's why cyclic mode was introduced.
-
+> http://lists.infradead.org/pipermail/kexec/2014-April/011615.html
 > 
-> Instead, I am wondering how the 80% comes from, and why 20% of free
-> memory must be safe.
+> I'll explain why 5/9 is necessary below.
 
-I had come up with this 80% number randomly. So you think that's the
-problem?
+Yes, it's fine to me for the whole series after more discussion as Chao
+mentioned below. In the future if kexec and kdump cases can use just one
+array then this macro can be removed that time. 
 
-I am still scratching my head that why 30MB is not sufficient for
-makdumpfile.
+
+> Patch 5/9 increased memmap_p from a small array to a large one. That
+> patch is necessary.
+> 
+> Originally memmap_p was used to store the RANGE_RAM only for 2nd kernel
+> and that was fine for memmap_p to be small, since we only have several
+> memory range of RANGE_RAM to be passed to 2nd kernel.
+> 
+> However now memmap_p will be used to store all types of memory ranges to
+> pass to 2nd kernel, which means not only RANGE_RAM but also RANGE_ACPI
+> and RANGE_ACPI_NVS (probably RANGE_RESERVED in the future). That small
+> memmap_p is not likely to be enough to contain all the memory ranges. So
+> that's why we should increase CRASH_MAX_MEMMAP_NR to about 1024 to adapt
+> the change of memmap_p will contains all type of memory ranges.
 
 Thanks
-Vivek
+Dave
 
 _______________________________________________
 kexec mailing list
