@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WbVu7-0004v5-0R
- for kexec@lists.infradead.org; Sat, 19 Apr 2014 14:06:03 +0000
-Date: Sat, 19 Apr 2014 22:05:27 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 2/8] Consolidate all .h lines at front of intel-iommu.c
- file
-Message-ID: <20140419140444.GA1565@dhcp-17-102.nay.redhat.com>
-References: <1397603349-30930-1-git-send-email-bill.sumner@hp.com>
- <1397603349-30930-3-git-send-email-bill.sumner@hp.com>
+ id 1Wc1g4-0002Ig-De
+ for kexec@lists.infradead.org; Mon, 21 Apr 2014 00:01:41 +0000
+Date: Mon, 21 Apr 2014 09:01:03 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v6 9/9] x86: Pass memory range via E820 for kdump
+Message-ID: <20140421000103.GC32087@verge.net.au>
+References: <1397487341-17287-1-git-send-email-chaowang@redhat.com>
+ <1397487341-17287-10-git-send-email-chaowang@redhat.com>
+ <20140417052913.GB4889@dhcp-16-126.nay.redhat.com>
+ <20140417054854.GA1940@dhcp-17-89.nay.redhat.com>
+ <20140417055817.GE4889@dhcp-16-126.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1397603349-30930-3-git-send-email-bill.sumner@hp.com>
+In-Reply-To: <20140417055817.GE4889@dhcp-16-126.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,155 +27,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bill Sumner <bill.sumner@hp.com>
-Cc: indou.takao@jp.fujitsu.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, dwmw2@infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>, linn@hp.com, hpa@zytor.com, trenn@suse.de, vgoyal@redhat.com, ebiederm@xmission.com
 
-Hi Bill,
-
-Could you rebase on latest linus's kernel tree, since there are several
-changes in intel-iommu.c. This patch can't be applied because of below
-commits. I think patch need be reabsed on latest linus's tree before
-post, people will apply your patch without conflict.
-
-commit b94e4117f8c4ffb591b1e462364d725e3a1c63c4
-Author: Jiang Liu <jiang.liu@linux.intel.com>
-Date:   Wed Feb 19 14:07:25 2014 +0800
-
-    iommu/vt-d: Move private structures and variables into intel-iommu.c
-    
-    Move private structures and variables into intel-iommu.c, which will
-    help to simplify locking policy for hotplug. Also delete redundant
-    declarations.
-    
-    Signed-off-by: Jiang Liu <jiang.liu@linux.intel.com>
-    Signed-off-by: Joerg Roedel <joro@8bytes.org>
-
-
-Thanks
-Baoquan
-
-On 04/15/14 at 05:09pm, Bill Sumner wrote:
->  In intel-iommu.c, move downward the few lines near the
->  front that should not move to an intel-iommu-private.h
->  file (mostly data-item definitions) This leaves a
->  consolidated block of the lines that would move to an
->  intel-iommu-private.h file at the front of the file.
+On Thu, Apr 17, 2014 at 01:58:17PM +0800, Dave Young wrote:
+> On 04/17/14 at 01:48pm, WANG Chao wrote:
+> > On 04/17/14 at 01:29pm, Dave Young wrote:
+> > > On 04/14/14 at 10:55pm, WANG Chao wrote:
+> > > > command line size is restricted by kernel, sometimes memmap=exactmap has
+> > > > too many memory ranges to pass to cmdline. And also memmap=exactmap and
+> > > > kASLR doesn't work together.
+> > > > 
+> > > > A better approach, to pass the memory ranges for crash kernel to boot
+> > > > into, is filling the memory ranges into E820.
+> > > > 
+> > > > boot_params only got 128 slots for E820 map to fit in, when the number of
+> > > > memory map exceeds 128, use setup_data to pass the rest as extended E820
+> > > > memory map.
+> > > > 
+> > > > kexec boot could also benefit from setup_data in case E820 memory map
+> > > > exceeds 128.
+> > > > 
+> > > > Now this new approach becomes default instead of memmap=exactmap.
+> > > > saved_max_pfn users can specify --pass-memmap-cmdline to use the
+> > > > exactmap approach.
+> > > > 
+> > > > Signed-off-by: WANG Chao <chaowang@redhat.com>
+> > > > Tested-by: Linn Crosetto <linn@hp.com>
+> > > > Reviewed-by: Linn Crosetto <linn@hp.com>
+> > > > ---
+> > > >  kexec/arch/i386/crashdump-x86.c   |   6 +-
+> > > >  kexec/arch/i386/x86-linux-setup.c | 149 +++++++++++++++++++++++++-------------
+> > > >  kexec/arch/i386/x86-linux-setup.h |   1 +
+> > > >  3 files changed, 103 insertions(+), 53 deletions(-)
+> > > > 
+> > > > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> > > > index 7b618a6..4a1491b 100644
+> > > > --- a/kexec/arch/i386/crashdump-x86.c
+> > > > +++ b/kexec/arch/i386/crashdump-x86.c
+> > > > @@ -979,7 +979,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+> > > >  	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
+> > > >  	if (delete_memmap(memmap_p, &nr_memmap, elfcorehdr, memsz) < 0)
+> > > >  		return -1;
+> > > > -	cmdline_add_memmap(mod_cmdline, memmap_p);
+> > > > +	if (arch_options.pass_memmap_cmdline)
+> > > > +		cmdline_add_memmap(mod_cmdline, memmap_p);
+> > > >  	if (!bzImage_support_efi_boot)
+> > > >  		cmdline_add_efi(mod_cmdline);
+> > > >  	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+> > > > @@ -995,7 +996,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+> > > >  		type = mem_range[i].type;
+> > > >  		size = end - start + 1;
+> > > >  		add_memmap(memmap_p, &nr_memmap, start, size, type);
+> > > > -		cmdline_add_memmap_acpi(mod_cmdline, start, end);
+> > > > +		if (arch_options.pass_memmap_cmdline)
+> > > > +			cmdline_add_memmap_acpi(mod_cmdline, start, end);
+> > > 
+> > > Seems memmap_p contains the acpi ranges as well, so cmdline_add_memmap_acpi is
+> > > not necessary anymore, just improve cmdline_add_memmap to add both RAM and ACPI
+> > > ranges is enough.
+> > 
+> > I can do that. But is it what the patchset is really about ...
+> > 
+> > I'm not keen about doing too much cleanup in this series now since it's
+> > already v6. I really want to get this in as early as possible to
+> > cope with calgary iommu change in the kernel.
+> > 
+> > I prefer to first get this patch in if there's no problem in it and then
+> > look back and think about how we can clean up the code block which have
+> > been there for historical reason.
 > 
+> I think the cleanup is worth, but if you want to do it later I'm fine.
+> So should better leave the patch 5/9 to later cleanup as well.
 > 
-> Signed-off-by: Bill Sumner <bill.sumner@hp.com>
-> ---
->  drivers/iommu/intel-iommu.c | 74 +++++++++++++++++++++++----------------------
->  1 file changed, 38 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 8abcb6c..22298e9 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -165,17 +165,6 @@ static inline unsigned long virt_to_dma_pfn(void *p)
->  	return page_to_dma_pfn(virt_to_page(p));
->  }
->  
-> -/* global iommu list, set NULL for ignored DMAR units */
-> -static struct intel_iommu **g_iommus;
-> -
-> -static void __init check_tylersburg_isoch(void);
-> -static int rwbf_quirk;
-> -
-> -/*
-> - * set to 1 to panic kernel if can't successfully enable VT-d
-> - * (used when kernel is launched w/ TXT)
-> - */
-> -static int force_on;
->  
->  /*
->   * 0: Present
-> @@ -314,15 +303,6 @@ static inline int first_pte_in_page(struct dma_pte *pte)
->  	return !((unsigned long)pte & ~VTD_PAGE_MASK);
->  }
->  
-> -/*
-> - * This domain is a statically identity mapping domain.
-> - *	1. This domain creats a static 1:1 mapping to all usable memory.
-> - *	2. It maps to each iommu if successful.
-> - *	3. Each iommu mapps to this domain if successful.
-> - */
-> -static struct dmar_domain *si_domain;
-> -static int hw_pass_through = 1;
-> -
->  /* devices under the same p2p bridge are owned in one domain */
->  #define DOMAIN_FLAG_P2P_MULTIPLE_DEVICES (1 << 0)
->  
-> @@ -380,6 +360,44 @@ struct device_domain_info {
->  	struct dmar_domain *domain; /* pointer to domain */
->  };
->  
-> +static inline void *alloc_pgtable_page(int node)
-> +{
-> +	struct page *page;
-> +	void *vaddr = NULL;
-> +
-> +	page = alloc_pages_node(node, GFP_ATOMIC | __GFP_ZERO, 0);
-> +	if (page)
-> +		vaddr = page_address(page);
-> +	return vaddr;
-> +}
-> +
-> +static inline void free_pgtable_page(void *vaddr)
-> +{
-> +	free_page((unsigned long)vaddr);
-> +}
-> +
-> +
-> +static void __init check_tylersburg_isoch(void);
-> +
-> +/* global iommu list, set NULL for ignored DMAR units */
-> +static struct intel_iommu **g_iommus;
-> +static int rwbf_quirk;
-> +
-> +/*
-> + * set to 1 to panic kernel if can't successfully enable VT-d
-> + * (used when kernel is launched w/ TXT)
-> + */
-> +static int force_on;
-> +
-> +/*
-> + * This domain is a statically identity mapping domain.
-> + *	1. This domain creats a static 1:1 mapping to all usable memory.
-> + *	2. It maps to each iommu if successful.
-> + *	3. Each iommu mapps to this domain if successful.
-> + */
-> +static struct dmar_domain *si_domain;
-> +static int hw_pass_through = 1;
-> +
->  static void flush_unmaps_timeout(unsigned long data);
->  
->  static DEFINE_TIMER(unmap_timer,  flush_unmaps_timeout, 0, 0);
-> @@ -468,22 +486,6 @@ static struct kmem_cache *iommu_domain_cache;
->  static struct kmem_cache *iommu_devinfo_cache;
->  static struct kmem_cache *iommu_iova_cache;
->  
-> -static inline void *alloc_pgtable_page(int node)
-> -{
-> -	struct page *page;
-> -	void *vaddr = NULL;
-> -
-> -	page = alloc_pages_node(node, GFP_ATOMIC | __GFP_ZERO, 0);
-> -	if (page)
-> -		vaddr = page_address(page);
-> -	return vaddr;
-> -}
-> -
-> -static inline void free_pgtable_page(void *vaddr)
-> -{
-> -	free_page((unsigned long)vaddr);
-> -}
-> -
->  static inline void *alloc_domain_mem(void)
->  {
->  	return kmem_cache_alloc(iommu_domain_cache, GFP_ATOMIC);
-> -- 
-> Bill Sumner <bill.sumner@hp.com>
-> 
+> Thus except for 5/9, for other patches:
+> Acked-by: Dave Young <dyoung@redhat.com>
+
+This sounds fine to me.
+
+Chao, would you care to re-post the series without 5/9 ?
 
 _______________________________________________
 kexec mailing list
