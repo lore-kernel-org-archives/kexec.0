@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WcSTM-0004FO-19
- for kexec@lists.infradead.org; Tue, 22 Apr 2014 04:38:21 +0000
-Date: Tue, 22 Apr 2014 12:37:51 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v7 0/9] kexec-tools, x86: E820 memmap pass for kdump
-Message-ID: <20140422043751.GD4564@dhcp-17-89.nay.redhat.com>
-References: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
+ id 1WccI5-0007jE-Ro
+ for kexec@lists.infradead.org; Tue, 22 Apr 2014 15:07:25 +0000
+From: Prarit Bhargava <prarit@redhat.com>
+Subject: [PATCH] kexec, unexport kexec_load()
+Date: Tue, 22 Apr 2014 11:06:56 -0400
+Message-Id: <1398179216-3155-1-git-send-email-prarit@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,47 +15,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, dyoung@redhat.com, linn@hp.com, vgoyal@redhat.com, hpa@zytor.com, trenn@suse.de
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 04/22/14 at 10:56am, WANG Chao wrote:
-> Hi, All
-> 
-> This patchset enables passing memory map via E820 map on x86 platform instead
-> of memmap=exactmap. It's a better design and will solve the following problem
-> so far:
-> 
-> - kernel cmdline is limited resource and large machines tend to have many
->     memory ranges that may excceed kernel cmdline limit size.
-> - kASLR doesn't work with memmap=exactmap, because kASLR happens early than
->     user defined memmap=exactmap takes effect.
-> 
-> Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
-> like the only one). So for backward compatibility, I'm introducing a new option
-> --pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
-> 
-> This patchset contains massive updates from the previous one. I take some
-> suggestions from reviewers. I try to split the changes into smaller pieces and
-> keep the whole change as minimal as I can so it wouldn't be too harsh to review
-> the patch.
-> 
-> Any comment is appreciate!
-> 
-> v7->v6:
-> dyoung/Simon:
->  - more description for CRASH_MAX_MEMMAP_NR to be 1024
+When compiling the kernel the following warning occurs:
 
-Hi, Simon
+/root/linux/usr/include/linux/kexec.h:50: userspace cannot reference
+function or variable defined in the kernel
 
-I've changed 5/9 regarding Dave's comment and yours. Could you please
-pick up this patchset if there's no more problem?
+kexec_load does not have a matching definition in the kernel.
+Userspace will call the syscall for kexec_load.
 
-Thanks
-WANG Chao
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+---
+ include/uapi/linux/kexec.h |    7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index d6629d4..2af61d0 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -43,13 +43,6 @@ struct kexec_segment {
+ 	const void *mem;
+ 	size_t memsz;
+ };
+-
+-/* Load a new kernel image as described by the kexec_segment array
+- * consisting of passed number of segments at the entry-point address.
+- * The flags allow different useage types.
+- */
+-extern int kexec_load(void *, size_t, struct kexec_segment *,
+-		unsigned long int);
+ #endif /* __KERNEL__ */
+ 
+ #endif /* _UAPILINUX_KEXEC_H */
+-- 
+1.7.9.3
+
 
 _______________________________________________
 kexec mailing list
