@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WcQtu-0001Xt-BA
- for kexec@lists.infradead.org; Tue, 22 Apr 2014 02:57:38 +0000
+ id 1WcQtz-0001YC-B1
+ for kexec@lists.infradead.org; Tue, 22 Apr 2014 02:57:43 +0000
 From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v7 6/9] x86, cleanup: Store crash memory ranges kexec_info
-Date: Tue, 22 Apr 2014 10:56:44 +0800
-Message-Id: <1398135407-30142-7-git-send-email-chaowang@redhat.com>
+Subject: [PATCH v7 7/9] x86, cleanup: kexec memory range .end to be inclusive
+Date: Tue, 22 Apr 2014 10:56:45 +0800
+Message-Id: <1398135407-30142-8-git-send-email-chaowang@redhat.com>
 In-Reply-To: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
 References: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,52 +25,70 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au, dyoung@redhat.com, linn@hp.com, vgoyal@redhat.com, hpa@zytor.com, trenn@suse.de
 Cc: kexec@lists.infradead.org
 
-Add two new members to kexec_info structure:
+Later kexec and kdump memory range will be mapped to E820entry. But
+currently kexec memory range .end field is exclusive while crash memory
+range is inclusive.
 
-struct memory_range *crash_range
-int nr_crash_ranges;
-
-crash_range contains the memory ranges used to boot 2nd kernel.
-nr_crash_ranges contains the count of the crash memory ranges.
+Given the fact that the exported proc iomem and sysfs memmap are both
+inclusive, change kexec memory range .end to be inclusive. Later the
+unified memory range of both kexec and kdump can use the same E820
+filling code.
 
 Signed-off-by: WANG Chao <chaowang@redhat.com>
 Acked-by: Dave Young <dyoung@redhat.com>
 Tested-by: Linn Crosetto <linn@hp.com>
 ---
- kexec/arch/i386/crashdump-x86.c | 6 ++++++
- kexec/kexec.h                   | 2 ++
- 2 files changed, 8 insertions(+)
+ kexec/arch/i386/kexec-x86-common.c | 3 +--
+ kexec/arch/i386/x86-linux-setup.c  | 2 +-
+ kexec/firmware_memmap.c            | 1 -
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 39c35ea..7b618a6 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -997,6 +997,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 		add_memmap(memmap_p, &nr_memmap, start, size, type);
- 		cmdline_add_memmap_acpi(mod_cmdline, start, end);
- 	}
-+
-+	/* Store 2nd kernel boot memory ranges for later reference in
-+	 * x86-setup-linux.c: setup_linux_system_parameters() */
-+	info->crash_range = memmap_p;
-+	info->nr_crash_ranges = nr_memmap;
-+
- 	return 0;
- }
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index e416177..bc622e9 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -79,7 +79,6 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
+ 		if (count != 2)
+ 			continue;
+ 		str = line + consumed;
+-		end = end + 1;
  
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index d69bba2..22d4a42 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -148,6 +148,8 @@ struct kexec_info {
- 	int nr_segments;
- 	struct memory_range *memory_range;
- 	int memory_ranges;
-+	struct memory_range *crash_range;
-+	int nr_crash_ranges;
- 	void *entry;
- 	struct mem_ehdr rhdr;
- 	unsigned long backup_start;
+ 		dbgprintf("%016Lx-%016Lx : %s", start, end, str);
+ 
+@@ -188,7 +187,7 @@ static int get_memory_ranges_xen(struct memory_range **range, int *ranges)
+ 
+ 	for (i = 0; i < rc; ++i) {
+ 		memory_range[i].start = e820entries[i].addr;
+-		memory_range[i].end = e820entries[i].addr + e820entries[i].size;
++		memory_range[i].end = e820entries[i].addr + e820entries[i].size - 1;
+ 		memory_range[i].type = xen_e820_to_kexec_type(e820entries[i].type);
+ 	}
+ 
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 8ed36cc..9f8355f 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -784,7 +784,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
+ 	real_mode->e820_map_nr = ranges;
+ 	for(i = 0; i < ranges; i++) {
+ 		real_mode->e820_map[i].addr = range[i].start;
+-		real_mode->e820_map[i].size = range[i].end - range[i].start;
++		real_mode->e820_map[i].size = range[i].end - range[i].start + 1;
+ 		switch (range[i].type) {
+ 		case RANGE_RAM:
+ 			real_mode->e820_map[i].type = E820_RAM; 
+diff --git a/kexec/firmware_memmap.c b/kexec/firmware_memmap.c
+index 9598933..6be3c7c 100644
+--- a/kexec/firmware_memmap.c
++++ b/kexec/firmware_memmap.c
+@@ -145,7 +145,6 @@ static int parse_memmap_entry(const char *entry, struct memory_range *range)
+ 	range->end = parse_numeric_sysfs(filename);
+ 	if (range->end == ULLONG_MAX)
+ 		return -1;
+-	range->end++; /* inclusive vs. exclusive ranges */
+ 
+ 	/*
+ 	 * entry/type
 -- 
 1.9.0
 
