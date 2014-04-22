@@ -1,26 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WcGW3-0005Et-Tp
- for kexec@lists.infradead.org; Mon, 21 Apr 2014 15:52:20 +0000
-Date: Mon, 21 Apr 2014 11:51:56 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Message-ID: <20140421155156.GE4367@redhat.com>
-References: <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
- <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
- <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
- <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
- <20140418142912.GA2023@dhcp-17-102.nay.redhat.com>
- <20140418214133.2668464c@hananiah.suse.cz>
- <20140421151914.GD4367@redhat.com>
- <20140421174630.78565d63@hananiah.suse.cz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140421174630.78565d63@hananiah.suse.cz>
+ id 1WcQtW-00011b-Bc
+ for kexec@lists.infradead.org; Tue, 22 Apr 2014 02:57:14 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH v7 0/9] kexec-tools, x86: E820 memmap pass for kdump
+Date: Tue, 22 Apr 2014 10:56:38 +0800
+Message-Id: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,49 +15,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
+To: horms@verge.net.au, dyoung@redhat.com, linn@hp.com, vgoyal@redhat.com, hpa@zytor.com, trenn@suse.de
+Cc: kexec@lists.infradead.org
 
-On Mon, Apr 21, 2014 at 05:46:30PM +0200, Petr Tesarik wrote:
-> On Mon, 21 Apr 2014 11:19:14 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Fri, Apr 18, 2014 at 09:41:33PM +0200, Petr Tesarik wrote:
-> > > On Fri, 18 Apr 2014 22:29:12 +0800
-> > > "bhe@redhat.com" <bhe@redhat.com> wrote:
-> >[...]
-> > > > Instead, I am wondering how the 80% comes from, and why 20% of free
-> > > > memory must be safe.
-> > > 
-> > > I believe these 80% come from the default value of vm.dirty_ratio,
-> > 
-> > Actually I had suggested this 80% number when --cyclic feature was
-> > implemented. And I did not base it on dirty_ratio. Just a random
-> > suggestion.
-> 
-> Hm. OK, you seem to have very good suggestions, even if they are
-> random. ;-)
-> 
-> > > which is 20%. In other words, the kernel won't block further writes
-> > > until 20% of available RAM is used up by dirty cache. But if you
-> > > fill up all free memory with dirty pages and then touch another (though
-> > > allocated) page, the kernel will go into direct reclaim, and if nothing
-> > > can be written out ATM, it will invoke the OOM Killer.
-> > 
-> > We can start playig with reducing dirty_raio too and see how does it go.
-> 
-> Or use direct I/O... Is it still broken?
+Hi, All
 
-May be if that turns out to be an issue. Or just reduce dirty_ratio to say
-5 instead of default 20. Different things can be tried once we know what's
-the root cause of the issue.
+This patchset enables passing memory map via E820 map on x86 platform instead
+of memmap=exactmap. It's a better design and will solve the following problem
+so far:
 
-Thanks
-Vivek
+- kernel cmdline is limited resource and large machines tend to have many
+    memory ranges that may excceed kernel cmdline limit size.
+- kASLR doesn't work with memmap=exactmap, because kASLR happens early than
+    user defined memmap=exactmap takes effect.
+
+Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
+like the only one). So for backward compatibility, I'm introducing a new option
+--pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
+
+This patchset contains massive updates from the previous one. I take some
+suggestions from reviewers. I try to split the changes into smaller pieces and
+keep the whole change as minimal as I can so it wouldn't be too harsh to review
+the patch.
+
+Any comment is appreciate!
+
+v7->v6:
+dyoung/Simon:
+ - more description for CRASH_MAX_MEMMAP_NR to be 1024
+
+v6->v5:
+dyoung:
+ - use nr_memmap instead of nr_memmap_p
+ - .end inclusive
+Simon:
+ - more description on some patches
+
+v5->v4:
+Dave:
+ - separate add_setup_data() to another patch.
+Vivek:
+ - adding comments for setup_data.
+ - store crash memory range info golobally in kexec_info.
+me:
+ -remove dbgprint_mem_range defination, Simon has merged the patch.
+
+v3->v4:
+Linn: check return value of malloc (use xmalloc).
+me: fix dbgprintf_mem_range.
+
+v2->v3:
+Linn:
+ - do not free sd (setup_data) buffer.
+ - reuse code in setup_e820 and setup_e820_ext.
+
+v1->v2:
+Vivek:
+ - Use function instead of macro for dbgprint_mem_range
+ - Do not pass reserved memory range for kdump. It could addressed later
+   separately.
+
+
+WANG Chao (9):
+  x86, cleanup: add extra arguments to add_memmap() and delete_memmap()
+  x86, cleanup: add_memmap() only do alignment check on RANGE_RAM
+  x86, cleanup: add other types of memory range for 2nd kernel boot to
+    memmap_p
+  x86, cleanup: use dbgprint_mem_range for memory range debugging
+  x86, cleanup: increase CRASH_MAX_MEMMAP_NR up to 1024
+  x86, cleanup: Store crash memory ranges kexec_info
+  x86, cleanup: kexec memory range .end to be inclusive
+  x86: add --pass-memmap-cmdline option
+  x86: Pass memory range via E820 for kdump
+
+ kexec/arch/i386/crashdump-x86.c        |  69 +++++++--------
+ kexec/arch/i386/crashdump-x86.h        |   2 +-
+ kexec/arch/i386/include/arch/options.h |   2 +
+ kexec/arch/i386/kexec-x86-common.c     |   3 +-
+ kexec/arch/i386/kexec-x86.c            |   4 +
+ kexec/arch/i386/kexec-x86.h            |   1 +
+ kexec/arch/i386/x86-linux-setup.c      | 149 ++++++++++++++++++++++-----------
+ kexec/arch/i386/x86-linux-setup.h      |   1 +
+ kexec/arch/x86_64/kexec-x86_64.c       |   5 ++
+ kexec/firmware_memmap.c                |   1 -
+ kexec/kexec.h                          |   2 +
+ 11 files changed, 147 insertions(+), 92 deletions(-)
+
+-- 
+1.9.0
+
 
 _______________________________________________
 kexec mailing list
