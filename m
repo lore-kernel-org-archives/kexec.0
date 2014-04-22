@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WcQuE-0001ZN-B8
- for kexec@lists.infradead.org; Tue, 22 Apr 2014 02:57:58 +0000
-From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH v7 9/9] x86: Pass memory range via E820 for kdump
-Date: Tue, 22 Apr 2014 10:56:47 +0800
-Message-Id: <1398135407-30142-10-git-send-email-chaowang@redhat.com>
-In-Reply-To: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
-References: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
+ id 1WcR07-0003pt-H0
+ for kexec@lists.infradead.org; Tue, 22 Apr 2014 03:04:04 +0000
+Date: Tue, 22 Apr 2014 11:01:58 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] Save PG_head_mask in VMCOREINFO
+Message-ID: <20140422030158.GJ8084@dhcp-16-105.nay.redhat.com>
+References: <20140411175039.00fa75ea@hananiah.suse.cz>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140411175039.00fa75ea@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,268 +19,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, dyoung@redhat.com, linn@hp.com, vgoyal@redhat.com, hpa@zytor.com, trenn@suse.de
-Cc: kexec@lists.infradead.org
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: Alexey Kardashevskiy <aik@ozlabs.ru>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Sasha Levin <sasha.levin@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, Fengguang Wu <fengguang.wu@intel.com>, Shaohua Li <shli@kernel.org>
 
-command line size is restricted by kernel, sometimes memmap=exactmap has
-too many memory ranges to pass to cmdline. And also memmap=exactmap and
-kASLR doesn't work together.
+On 04/11/14 at 05:50pm, Petr Tesarik wrote:
+> To allow filtering of huge pages, makedumpfile must be able to
+> identify them in the dump. This can be done by checking the
+> appropriate page flag, so communicate its value to makedumpfile
+> through the VMCOREINFO interface.
+> 
+> There's only one small catch. Depending on how many page flags
+> are available on a given architecture, this bit can be called
+> PG_head or PG_compound.
+> 
+> I sent a similar patch back in 2012, but Eric Biederman did not
+> like using an #ifdef. So, this time I'm adding a common symbol
+> (PG_head_mask) instead.
+> 
+> See https://lkml.org/lkml/2012/11/28/91 for the previous version.
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+> ---
+>  include/linux/page-flags.h | 3 +++
+>  kernel/kexec.c             | 1 +
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index d1fe1a7..bc2007e 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -348,6 +348,9 @@ static inline void ClearPageCompound(struct page
+> *page) ClearPageHead(page);
+>  }
+>  #endif
+> +
+> +#define PG_head_mask ((1L << PG_head))
 
-A better approach, to pass the memory ranges for crash kernel to boot
-into, is filling the memory ranges into E820.
+Hi Petr,
 
-boot_params only got 128 slots for E820 map to fit in, when the number of
-memory map exceeds 128, use setup_data to pass the rest as extended E820
-memory map.
+I am fine with this trick which define one name PG_head_mask, but can
+stands for both PG_head and PG_compound. 
 
-kexec boot could also benefit from setup_data in case E820 memory map
-exceeds 128.
+I guess Eric may suggest the implementation like it done in
+mm/memory-failure.c . In that file it explicitly defines both of them.
 
-Now this new approach becomes default instead of memmap=exactmap.
-saved_max_pfn users can specify --pass-memmap-cmdline to use the
-exactmap approach.
+Thanks
+Baoquan
 
-Signed-off-by: WANG Chao <chaowang@redhat.com>
-Tested-by: Linn Crosetto <linn@hp.com>
-Reviewed-by: Linn Crosetto <linn@hp.com>
-Acked-by: Dave Young <dyoung@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c   |   6 +-
- kexec/arch/i386/x86-linux-setup.c | 149 +++++++++++++++++++++++++-------------
- kexec/arch/i386/x86-linux-setup.h |   1 +
- 3 files changed, 103 insertions(+), 53 deletions(-)
-
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 7b618a6..4a1491b 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -979,7 +979,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
- 	if (delete_memmap(memmap_p, &nr_memmap, elfcorehdr, memsz) < 0)
- 		return -1;
--	cmdline_add_memmap(mod_cmdline, memmap_p);
-+	if (arch_options.pass_memmap_cmdline)
-+		cmdline_add_memmap(mod_cmdline, memmap_p);
- 	if (!bzImage_support_efi_boot)
- 		cmdline_add_efi(mod_cmdline);
- 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
-@@ -995,7 +996,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 		type = mem_range[i].type;
- 		size = end - start + 1;
- 		add_memmap(memmap_p, &nr_memmap, start, size, type);
--		cmdline_add_memmap_acpi(mod_cmdline, start, end);
-+		if (arch_options.pass_memmap_cmdline)
-+			cmdline_add_memmap_acpi(mod_cmdline, start, end);
- 	}
- 
- 	/* Store 2nd kernel boot memory ranges for later reference in
-diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-index 9f8355f..4437ed7 100644
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -36,8 +36,6 @@
- #include "x86-linux-setup.h"
- #include "../../kexec/kexec-syscall.h"
- 
--#define SETUP_EFI	4
--
- void init_linux_parameters(struct x86_linux_param_header *real_mode)
- {
- 	/* Fill in the values that are usually provided by the kernel. */
-@@ -502,6 +500,11 @@ struct efi_setup_data {
- struct setup_data {
- 	uint64_t next;
- 	uint32_t type;
-+#define SETUP_NONE	0
-+#define SETUP_E820_EXT	1
-+#define SETUP_DTB	2
-+#define SETUP_PCI	3
-+#define SETUP_EFI	4
- 	uint32_t len;
- 	uint8_t data[0];
- } __attribute__((packed));
-@@ -684,6 +687,98 @@ out:
- 	return ret;
- }
- 
-+static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
-+			struct e820entry *e820, struct memory_range *range, int nr_range)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_range; i++) {
-+		e820[i].addr = range[i].start;
-+		e820[i].size = range[i].end - range[i].start + 1;
-+		switch (range[i].type) {
-+			case RANGE_RAM:
-+				e820[i].type = E820_RAM;
-+				break;
-+			case RANGE_ACPI:
-+				e820[i].type = E820_ACPI;
-+				break;
-+			case RANGE_ACPI_NVS:
-+				e820[i].type = E820_NVS;
-+				break;
-+			default:
-+			case RANGE_RESERVED:
-+				e820[i].type = E820_RESERVED;
-+				break;
-+		}
-+		dbgprintf("%016lx-%016lx (%d)\n",
-+				e820[i].addr,
-+				e820[i].addr + e820[i].size - 1,
-+				e820[i].type);
-+
-+		if (range[i].type != RANGE_RAM)
-+			continue;
-+		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
-+			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
-+			real_mode->ext_mem_k = mem_k;
-+			real_mode->alt_mem_k = mem_k;
-+			if (mem_k > 0xfc00) {
-+				real_mode->ext_mem_k = 0xfc00; /* 64M */
-+			}
-+			if (mem_k > 0xffffffff) {
-+				real_mode->alt_mem_k = 0xffffffff;
-+			}
-+		}
-+	}
-+}
-+
-+static void setup_e820_ext(struct kexec_info *info, struct x86_linux_param_header *real_mode,
-+			   struct memory_range *range, int nr_range)
-+{
-+	struct setup_data *sd;
-+	struct e820entry *e820;
-+	int nr_range_ext;
-+
-+	nr_range_ext = nr_range - E820MAX;
-+	sd = xmalloc(sizeof(struct setup_data) + nr_range_ext * sizeof(struct e820entry));
-+	sd->next = 0;
-+	sd->len = nr_range_ext * sizeof(struct e820entry);
-+	sd->type = SETUP_E820_EXT;
-+
-+	e820 = (struct e820entry *) sd->data;
-+	dbgprintf("Extended E820 via setup_data:\n");
-+	add_e820_map_from_mr(real_mode, e820, range + E820MAX, nr_range_ext);
-+	add_setup_data(info, real_mode, sd);
-+}
-+
-+static void setup_e820(struct kexec_info *info, struct x86_linux_param_header *real_mode)
-+{
-+	struct memory_range *range;
-+	int nr_range, nr_range_saved;
-+
-+
-+	if (info->kexec_flags & KEXEC_ON_CRASH && !arch_options.pass_memmap_cmdline) {
-+		range = info->crash_range;
-+		nr_range = info->nr_crash_ranges;
-+	} else {
-+		range = info->memory_range;
-+		nr_range = info->memory_ranges;
-+	}
-+
-+	nr_range_saved = nr_range;
-+	if (nr_range > E820MAX) {
-+		nr_range = E820MAX;
-+	}
-+
-+	real_mode->e820_map_nr = nr_range;
-+	dbgprintf("E820 memmap:\n");
-+	add_e820_map_from_mr(real_mode, real_mode->e820_map, range, nr_range);
-+
-+	if (nr_range_saved > E820MAX) {
-+		dbgprintf("extra E820 memmap are passed via setup_data\n");
-+		setup_e820_ext(info, real_mode, range, nr_range_saved);
-+	}
-+}
-+
- static int
- get_efi_mem_desc_version(struct x86_linux_param_header *real_mode)
- {
-@@ -725,10 +820,6 @@ out:
- void setup_linux_system_parameters(struct kexec_info *info,
- 				   struct x86_linux_param_header *real_mode)
- {
--	/* Fill in information the BIOS would usually provide */
--	struct memory_range *range;
--	int i, ranges;
--
- 	/* get subarch from running kernel */
- 	setup_subarch(real_mode);
- 	if (bzImage_support_efi_boot)
-@@ -769,51 +860,7 @@ void setup_linux_system_parameters(struct kexec_info *info,
- 	/* another safe default */
- 	real_mode->aux_device_info = 0;
- 
--	range = info->memory_range;
--	ranges = info->memory_ranges;
--	if (ranges > E820MAX) {
--		if (!(info->kexec_flags & KEXEC_ON_CRASH))
--			/*
--			 * this e820 not used for capture kernel, see
--			 * do_bzImage_load()
--			 */
--			fprintf(stderr,
--				"Too many memory ranges, truncating...\n");
--		ranges = E820MAX;
--	}
--	real_mode->e820_map_nr = ranges;
--	for(i = 0; i < ranges; i++) {
--		real_mode->e820_map[i].addr = range[i].start;
--		real_mode->e820_map[i].size = range[i].end - range[i].start + 1;
--		switch (range[i].type) {
--		case RANGE_RAM:
--			real_mode->e820_map[i].type = E820_RAM; 
--			break;
--		case RANGE_ACPI:
--			real_mode->e820_map[i].type = E820_ACPI; 
--			break;
--		case RANGE_ACPI_NVS:
--			real_mode->e820_map[i].type = E820_NVS;
--			break;
--		default:
--		case RANGE_RESERVED:
--			real_mode->e820_map[i].type = E820_RESERVED; 
--			break;
--		}
--		if (range[i].type != RANGE_RAM)
--			continue;
--		if ((range[i].start <= 0x100000) && range[i].end > 0x100000) {
--			unsigned long long mem_k = (range[i].end >> 10) - (0x100000 >> 10);
--			real_mode->ext_mem_k = mem_k;
--			real_mode->alt_mem_k = mem_k;
--			if (mem_k > 0xfc00) {
--				real_mode->ext_mem_k = 0xfc00; /* 64M */
--			}
--			if (mem_k > 0xffffffff) {
--				real_mode->alt_mem_k = 0xffffffff;
--			}
--		}
--	}
-+	setup_e820(info, real_mode);
- 
- 	/* fill the EDD information */
- 	setup_edd_info(real_mode);
-diff --git a/kexec/arch/i386/x86-linux-setup.h b/kexec/arch/i386/x86-linux-setup.h
-index 6fb84b4..f5d23d3 100644
---- a/kexec/arch/i386/x86-linux-setup.h
-+++ b/kexec/arch/i386/x86-linux-setup.h
-@@ -30,5 +30,6 @@ void setup_linux_system_parameters(struct kexec_info *info,
- /* command line parameter may be appended by purgatory */
- #define PURGATORY_CMDLINE_SIZE 64
- extern int bzImage_support_efi_boot;
-+extern struct arch_options_t arch_options;
- 
- #endif /* X86_LINUX_SETUP_H */
--- 
-1.9.0
-
+> +
+>  #else
+>  /*
+>   * Reduce page flag use as much as possible by overlapping
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index c8380ad..e6f3aec 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1622,6 +1622,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  #ifdef CONFIG_MEMORY_FAILURE
+>  	VMCOREINFO_NUMBER(PG_hwpoison);
+>  #endif
+> +	VMCOREINFO_NUMBER(PG_head_mask);
+>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+>  
+>  	arch_crash_save_vmcoreinfo();
+> -- 
+> 1.8.4.5
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
