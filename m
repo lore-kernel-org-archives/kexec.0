@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wcnum-0006vy-Qu
- for kexec@lists.infradead.org; Wed, 23 Apr 2014 03:32:05 +0000
-Date: Wed, 23 Apr 2014 11:31:37 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH v7 0/9] kexec-tools, x86: E820 memmap pass for kdump
-Message-ID: <20140423033137.GF4564@dhcp-17-89.nay.redhat.com>
-References: <1398135407-30142-1-git-send-email-chaowang@redhat.com>
- <20140422043751.GD4564@dhcp-17-89.nay.redhat.com>
- <20140423001433.GA5738@verge.net.au>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wcs2j-0001Si-VR
+ for kexec@lists.infradead.org; Wed, 23 Apr 2014 07:56:35 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Date: Wed, 23 Apr 2014 07:55:19 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
+References: <20140410214433.GF18808@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
+ <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
+ <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
+ <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
+ <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
+ <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
+ <20140421151240.GB4367@redhat.com>
+In-Reply-To: <20140421151240.GB4367@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140423001433.GA5738@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,46 +33,136 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, linn@hp.com, hpa@zytor.com, dyoung@redhat.com, trenn@suse.de, vgoyal@redhat.com
+To: "vgoyal@redhat.com" <vgoyal@redhat.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 04/23/14 at 09:14am, Simon Horman wrote:
-> On Tue, Apr 22, 2014 at 12:37:51PM +0800, WANG Chao wrote:
-> > On 04/22/14 at 10:56am, WANG Chao wrote:
-> > > Hi, All
-> > > 
-> > > This patchset enables passing memory map via E820 map on x86 platform instead
-> > > of memmap=exactmap. It's a better design and will solve the following problem
-> > > so far:
-> > > 
-> > > - kernel cmdline is limited resource and large machines tend to have many
-> > >     memory ranges that may excceed kernel cmdline limit size.
-> > > - kASLR doesn't work with memmap=exactmap, because kASLR happens early than
-> > >     user defined memmap=exactmap takes effect.
-> > > 
-> > > Unfortunately, saved_max_pfn still got its user out there (calgry pci, it looks
-> > > like the only one). So for backward compatibility, I'm introducing a new option
-> > > --pass-memmap-cmdline to force kexec-tools to pass memmap=exactmap, the old way.
-> > > 
-> > > This patchset contains massive updates from the previous one. I take some
-> > > suggestions from reviewers. I try to split the changes into smaller pieces and
-> > > keep the whole change as minimal as I can so it wouldn't be too harsh to review
-> > > the patch.
-> > > 
-> > > Any comment is appreciate!
-> > > 
-> > > v7->v6:
-> > > dyoung/Simon:
-> > >  - more description for CRASH_MAX_MEMMAP_NR to be 1024
-> > 
-> > Hi, Simon
-> > 
-> > I've changed 5/9 regarding Dave's comment and yours. Could you please
-> > pick up this patchset if there's no more problem?
-> 
-> Thanks for all the hard work. I have applied the entire series.
+>On Fri, Apr 18, 2014 at 09:22:26AM +0000, Atsushi Kumagai wrote:
+>> >On 04/17/14 at 12:52pm, Baoquan He wrote:
+>> >> On 04/17/14 at 04:01am, Atsushi Kumagai wrote:
+>> >> > Hello Baoquan,
+>> >> >
+>> >> > >Hi Atsushi,
+>> >> > >
+>> >> > >I have got the test machine where bug reported and did a test. The
+>> >> > >changed code can make elf dump successful.
+>> >> >
+>> >> > Great, thanks for your help!
+>> >> > However, I still have questions.
+>> >> >
+>> >> > First, what is the difference between yours and mine?
+>> >> >
+>> >> > http://lists.infradead.org/pipermail/kexec/2014-April/011535.html
+>> >>
+>> >> Yeah, you are right, it's the same on changing the code bug. I mush
+>> >> haven't read your patch carefully.
+>> >                                                          must<--
+>> >>
+>> >> >
+>> >> > My patch includes renaming some values, but the purpose looks
+>> >> > the same as yours.
+>> >> > Further, you described as below,
+>> >> >
+>> >> > >On 04/14/14 at 04:02pm, Baoquan He wrote:
+>> >> > but I still don't think this bug causes OOM.
+>> >> > Even if needed_size is calculated as so much size wrongly, bufsize_cyclic
+>> >> > will not exceed 40% of free memory by the check below:
+>> >> >
+>> >> >     info->bufsize_cyclic = (free_size <= needed_size) ? free_size : needed_size;
+>> >> >
+>> >> > So it looks that bitmap1(40%) and bitmap2(40%) will fit in 80% of free
+>> >> > memory in any case.
+>> >> >
+>> >> > I may misunderstand something since your patch has an effect on this
+>> >> > issue in practice, could you correct me?
+>> >>
+>> >> It definitely will cause OOM. On my test machine, it has 100G memory. So
+>> >> per old code, its needed_size is 3200K*2 == 6.4M, if currently free
+>> >> memory is only 15M left, the free_size will be 15M*0.4 which is 6M. So
+>> >> info->bufsize_cyclic is assigned to be 6M. and only 3M is left for other
+>> >> use, e.g page cache, dynamic allocation. OOM will happen.
+>> >>
+>> >
+>> >BTW, in our case, there's about 30M free memory when we started saving
+>> >dump. It should be caused by my coarse estimation above.
+>>
+>> Thanks for your description, I understand that situation and
+>> the nature of the problem.
+>>
+>> That is, the assumption that 20% of free memory is enough for
+>> makedumpfile can be broken if free memory is too small.
+>> If your machine has 200GB memory, OOM will happen even after fix
+>> the too allocation bug.
+>
+>Why? In cyclic mode, shouldn't makedumpfile's memory usage be fixed
+>and should not be dependent on amount of RAM present in the system?
 
-Thanks!
+Strictly speaking, it's not fixed but just restricted by the safe
+limit(80% of free memory) like below:
+
+ - bitmap size: used for 1st and 2nd bitmaps
+ - remains: can be used for the other works of makedumpfile (e.g. I/O buffer)
+
+                 pattern                      |  bitmap size  |   remains
+----------------------------------------------+---------------+-------------
+  A. 100G memory with the too allocation bug  |    12.8 MB    |   17.2 MB
+  B. 100G memory with fixed makedumpfile      |     6.4 MB    |   23.6 MB
+  C. 200G memory with fixed makedumpfile      |    12.8 MB    |   17.2 MB
+  D. 300G memory with fixed makedumpfile      |    19.2 MB    |   10.8 MB
+  E. 400G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
+  F. 500G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
+  ...
+
+Baoquan got OOM in A pattern and didn't get it in B, so C must also
+fail due to OOM. This is just what I wanted to say.
+
+>Also, so even 30MB is not sufficient to run makedumpfile. That looks
+>like a lot of free memory to me.
+
+According to the table above and Baoquan's report, 23.6MB was enough
+but 17.2 MB was short for the other works, it sounds too much requirement
+also to me.
+
+>> I don't think this is a problem, it's natural that a lack of memory
+>> causes OOM. However, there is a thing we can do for improvement.
+>>
+>> What I think is:
+>>
+>>   1. Use a constant value as safe limit to calculate bufsize_cyclic
+>>      instead of 80% of free memory. This value must be enough for
+>>      makedumpfile's work except bitmap.
+>>
+>>   2. If free memory is smaller than the value, makedumpfile gives up
+>>      to work early.
+>
+>What do we gain by makedumpfile giving up. System will reboot. System
+>will reboot anyway after OOM.
+
+Oh, you got a point. 
+
+>>
+>> This change may reduce the possibility of lack of memory, but the
+>> required memory size will be changing every version, so maintaining
+>> it sounds tough to me.
+>
+>I think we need to dive deeper to figure out why 30MB of free memory
+>is not sufficient. To me something looks wrong here.
+
+I agree. I'm trying to get the peak size of memory footprint except 
+cyclic_buffer with memory cgroup (memory.max_usage_in_bytes), but
+I don't make it yet.
+
+>Secondly, I think using absolute values is not a good idea. It will be
+>very hard to keep track and udpate that value.
+>
+>At max we can warn saying makedumpfile needs X MB of memory and only
+>Y MB of free memory is available.
+
+Yes, I don't want to choose that way, and to maintain the constant value
+just to inform possibility of OOM sounds worthless.
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
