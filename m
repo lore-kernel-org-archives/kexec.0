@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65])
+Received: from ns1.bonedaddy.net ([70.91.141.202])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wetw8-0004No-Sn
- for kexec@lists.infradead.org; Mon, 28 Apr 2014 22:22:11 +0000
-Message-ID: <535ED454.1080902@huawei.com>
-Date: Tue, 29 Apr 2014 06:21:08 +0800
-From: Wang Nan <wangnan0@huawei.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/4] makedumpfile: redefine numerical limitaction macros.
-References: <1398485229-43295-1-git-send-email-wangnan0@huawei.com>	<1398485229-43295-2-git-send-email-wangnan0@huawei.com>
- <20140428162358.2d78f390@hananiah.suse.cz>
-In-Reply-To: <20140428162358.2d78f390@hananiah.suse.cz>
+ id 1WdDMr-0000wM-LE
+ for kexec@lists.infradead.org; Thu, 24 Apr 2014 06:42:46 +0000
+Message-ID: <1398321736.7980.71.camel@chianamo>
+Subject: Re: [kexec-tools] [PATCH] Do not distribute generated files in the
+ release tarball
+From: Paul Wise <pabs3@bonedaddy.net>
+Date: Thu, 24 Apr 2014 14:42:16 +0800
+In-Reply-To: <20140424054209.GI8892@verge.net.au>
+References: <1398313256-20388-1-git-send-email-pabs3@bonedaddy.net>
+ <20140424043255.GC9469@verge.net.au> <1398314768.7980.66.camel@chianamo>
+ <20140424054209.GI8892@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,124 +21,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2208638349539034584=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec@lists.infradead.org, Wang Nan <pi3orama@gmail.com>, kumagai-atsushi@mxc.nes.nec.co.jp, Liu Hua <sdu.liu@huawei.com>, Geng Hui <hui.geng@huawei.com>
-
-On 2014/4/28 22:23, Petr Tesarik wrote:
-> On Sat, 26 Apr 2014 12:07:06 +0800
-> Wang Nan <wangnan0@huawei.com> wrote:
-> 
->> From: Wang Nan <pi3orama@gmail.com>
->>
->> According to C standard, numerical limitations macros such as ULONG_MAX
->> should be defined in <limits.h>, and must be defined as "constant
->> expressions suitable for use in #if preprocessing directives." (see
->> "Numerical limits" section in the standard).
->>
->> Original definition in common.h breaks this rule:
->>
->>  #define LONG_MAX ((long)(~0UL>>1))
->>
->> which causes macros like following failure:
->>
->>  #if LONG_MAX == 2147483647
->>  # define LONG_BIT	32
->>  #else
->>  # define LONG_BIT	64
->>  #endif
->>
->> Unfortunately, the above code piece is taken from real glibc header
->> (/usr/include/bits/xopen_lim.h), which is happen to be included by
->> <limits.h> if _GNU_SOURCE is defined.
->>
->> This patch include <limits.h> in common.h to use C standard numerical
->> macros. For system without such macros defined by C, this patch also
->> defines L(L)ONG_MAX in a standard compatible way. By checking wich
->>
->> gcc -dM -E - <<<''
->>
->> we know that __LONG_MAX__ and __LLONG_MAX__ macros should be defined by
->> gcc by default. Definition of ULONG_MAX and ULLONG_MAX are taken from
->> gcc standard include file (include-fixed/limits.h).
->>
->> In addition, macro ULONGLONG_MAX is nonstandard, the standard way for
->> defining max ulonglong is ULLONG_MAX.
->>
->> Signed-off-by: Wang Nan <wangnan0@huawei.com>
->> Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
->> Cc: Petr Tesarik <ptesarik@suse.cz>
->> Cc: kexec@lists.infradead.org
->> Cc: Geng Hui <hui.geng@huawei.com>
->> Cc: Liu Hua <sdu.liu@huawei.com>
->>
->> ---
->>  common.h | 18 +++++++++++++++---
->>  1 file changed, 15 insertions(+), 3 deletions(-)
->>
->> diff --git a/common.h b/common.h
->> index 6ad3ca7..124f107 100644
->> --- a/common.h
->> +++ b/common.h
->> @@ -16,17 +16,29 @@
->>  #ifndef _COMMON_H
->>  #define _COMMON_H
->>  
->> +#include <limits.h>
->> +
->>  #define TRUE		(1)
->>  #define FALSE		(0)
->>  #define ERROR		(-1)
->>  
->>  #ifndef LONG_MAX
->> -#define LONG_MAX	((long)(~0UL>>1))
->> +# warning LONG_MAX should have been defined in <limits.h>
->> +# define LONG_MAX	__LONG_MAX__
->>  #endif
->>  #ifndef ULONG_MAX
->> -#define ULONG_MAX	(~0UL)
->> +# warning ULONG_MAX should have been defined in <limits.h>
->> +# define ULONG_MAX	(LONG_MAX * 2UL + 1UL)
->> +#endif
->> +#ifndef LLONG_MAX
->> +# warning LLONG_MAX should have been defined in <limits.h>
->> +# define LLONG_MAX __LONG_LONG_MAX__
->> +#endif
->> +#ifndef ULLONG_MAX
->> +# warning ULLONG_MAX should have been defined in <limits.h>
->> +# define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
->>  #endif
->> -#define ULONGLONG_MAX	(~0ULL)
->> +#define ULONGLONG_MAX	ULLONG_MAX
-> 
-> Hi Wang Nan,
-> 
-> is this actually needed on some known platform? If not, then I'd rather
-> remove all these #ifndef stanzas and rely on <limits.h>. I mean, if you
-> can't rely on standard C constants, then why should be the gcc-specific
-> pre-defined macros (__LONG_MAX__ et al.) available?
-> 
-
-These macros exist at the first version (at makedumpfile.h), an enforced by
-commit ab9c60bf (just because they conflict with limits.h ...). But I don't
-think there exists a real platform without <limits.h>.
-
-I agree with you that totally removing these macros should be better.
-
-> It's probably better to put the burden on the person doing the
-> port, because they should know what is appropriate for their compiler
-> and/or libc.
-> 
-> Just my opinion,
-> Petr T
-> 
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
 
+--===============2208638349539034584==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-Fee6oKkzeHhzScxBWDMQ"
+
+
+--=-Fee6oKkzeHhzScxBWDMQ
+Content-Type: multipart/mixed; boundary="=-32l4b2ZOOVspHPjN17qR"
+
+
+--=-32l4b2ZOOVspHPjN17qR
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2014-04-24 at 14:42 +0900, Simon Horman wrote:
+
+> Thanks, an interesting initiative.
+
+One of the parts of that:
+
+http://lintian.debian.org/tags/source-is-missing.html
+
+> Could you add something like that to the changelog and add
+> a signed-off-by line?
+
+Attached a new patch, hope thats OK.
+
+--=20
+bye,
+pabs
+
+http://bonedaddy.net/pabs3/
+
+--=-32l4b2ZOOVspHPjN17qR
+Content-Disposition: attachment;
+	filename*0=0001-Do-not-distribute-generated-files-in-the-release-tar.pat;
+	filename*1=ch
+Content-Type: text/x-patch;
+	name="0001-Do-not-distribute-generated-files-in-the-release-tar.patch";
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+RnJvbSBjMzQzN2IxMDAwOGRiYTQ5MTg0M2FhNDZhYTU0Yjg2MGI1ZTY5Nzg1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQ0KRnJvbTogUGF1bCBXaXNlIDxwYWJzM0Bib25lZGFkZHkubmV0Pg0KRGF0
+ZTogVGh1LCAyNCBBcHIgMjAxNCAxMjoyMDo1NiArMDgwMA0KU3ViamVjdDogW1BBVENIXSBEbyBu
+b3QgZGlzdHJpYnV0ZSBnZW5lcmF0ZWQgZmlsZXMgaW4gdGhlIHJlbGVhc2UgdGFyYmFsbA0KDQpH
+ZW5lcmF0ZWQgZmlsZXMgc2hvdWxkIGFsd2F5cyBiZSBidWlsdCBmcm9tIHNvdXJjZSBhbmQgbmV2
+ZXIgYmUgcHJlc2VudCBpbg0KVkNTIHJlcG9zaXRvcmllcyBhbmQgb25seSBhdXRvdG9vbHMgZ2Vu
+ZXJhdGVkIGZpbGVzIHNob3VsZCBiZSBpbiB0YXJiYWxscy4NClRoaXMgZW5zdXJlcyB0aGF0IHRo
+ZXkgZ2V0IGJ1aWx0IGFzIG9mdGVuIGFzIHBvc3NpYmxlIGFuZCBidWdzIHdpdGggdGhhdA0KcHJv
+Y2VzcyBhcmUgZGlzY292ZXJlZCBlYXJseS4NCg0KU2lnbmVkLW9mZi1ieTogUGF1bCBXaXNlIDxw
+YWJzM0Bib25lZGFkZHkubmV0Pg0KLS0tDQoga2V4ZWMvTWFrZWZpbGUgfCAyICstDQogMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9r
+ZXhlYy9NYWtlZmlsZSBiL2tleGVjL01ha2VmaWxlDQppbmRleCA3ZDMxNzViLi5hNzU4YjRhIDEw
+MDY0NA0KLS0tIGEva2V4ZWMvTWFrZWZpbGUNCisrKyBiL2tleGVjL01ha2VmaWxlDQpAQCAtMjks
+NyArMjksNyBAQCBLRVhFQ19TUkNTX2Jhc2UgKz0ga2V4ZWMva2V4ZWMteGVuLmMNCiANCiBLRVhF
+Q19HRU5FUkFURURfU1JDUyArPSAkKFBVUkdBVE9SWV9IRVhfQykNCiANCi1kaXN0ICs9IGtleGVj
+L01ha2VmaWxlICQoS0VYRUNfR0VORVJBVEVEX1NSQ1MpCQkJXA0KK2Rpc3QgKz0ga2V4ZWMvTWFr
+ZWZpbGUJCQkJCQlcDQogCSQoS0VYRUNfU1JDU19iYXNlKSBrZXhlYy9jcmFzaGR1bXAtZWxmLmMJ
+CVwNCiAJa2V4ZWMvY3Jhc2hkdW1wLmgga2V4ZWMvZmlybXdhcmVfbWVtbWFwLmgJCVwNCiAJa2V4
+ZWMva2V4ZWMtZWxmLWJvb3QuaAkJCQkJXA0KLS0gDQoxLjkuMg0KDQo=
+
+
+--=-32l4b2ZOOVspHPjN17qR--
+
+--=-Fee6oKkzeHhzScxBWDMQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABCgAGBQJTWLJIAAoJEDEWul6f+mmjS9cP/0uTVqcU665VbZGbn0eNR0RL
+VHrwDnJO+9wNjtes3DWzo5490LuZreS2QxsiM0YaiEn5TbUVY2TZVEr5LX8g7HZv
+mk/gSvusyxjRM+v9BFf/eQ4CsU7ejMjVik229nrxw9eA2xBzeuNQhInq0ysNsWmm
+tntF5I/ZUyP5cEzRnc/pxx6twC8GeZ8z2htOv6uZw1Ql+0TyXb9BU3L2jZS5GaX+
+7qLfeU3q6wa/rchmSD/dV1/H1xuJPm7v6NzmAGBhej8Qg/OsqCLhwAIJa7Weyhj6
+0qrh4cIC5KxOAMP3kGSG1xv7WHzn1F4p7Ofx6+v8RvPVFhVgypKxq14PAJGcjD7L
+i9HtvRZn9792Fo+f/k1HjAlF2shswbxRaYR9p18Y0bhwpErtsF/9g2YJLCGnU5UF
+OsBUO23/R9BFVT2TfNAahcWH99u9FBgjApVH1fKof9RhCoWpDu2cOt6PEJHpJ9FI
+3wll5q5TNIkX5ThAho7QpXbnz7+ZwnyAL9+24CG9oXWt+Nd0lOldiQBOeGYEnPRK
+UgTBvjLxxqEWdaWfyO+wLf3OvpGJGpzfuvxRxV8qnxhPrWOWNxiqTD3lzvN8HFnH
+BTPMQFflaTCea4IljqB5UIy6hfluloLJ6aony9GA/KRJ9b3qbEHab7ANQBAxU+Xv
+M/x7ZHHlONc+fxsXaczY
+=AeqZ
+-----END PGP SIGNATURE-----
+
+--=-Fee6oKkzeHhzScxBWDMQ--
+
+
+
+--===============2208638349539034584==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2208638349539034584==--
+
+
