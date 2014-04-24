@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WdBIS-0001yw-N6
- for kexec@lists.infradead.org; Thu, 24 Apr 2014 04:30:05 +0000
-Date: Thu, 24 Apr 2014 13:29:42 +0900
+ id 1WdBLa-0003M8-2A
+ for kexec@lists.infradead.org; Thu, 24 Apr 2014 04:33:18 +0000
+Date: Thu, 24 Apr 2014 13:32:55 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [kexec-tools] [PATCH 1/2] Fix rebuilding the purgatory.c file.
-Message-ID: <20140424042942.GB9469@verge.net.au>
-References: <1398312272-15634-1-git-send-email-pabs3@bonedaddy.net>
+Subject: Re: [kexec-tools] [PATCH] Do not distribute generated files in the
+ release tarball
+Message-ID: <20140424043255.GC9469@verge.net.au>
+References: <1398313256-20388-1-git-send-email-pabs3@bonedaddy.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1398312272-15634-1-git-send-email-pabs3@bonedaddy.net>
+In-Reply-To: <1398313256-20388-1-git-send-email-pabs3@bonedaddy.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,30 +27,27 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Paul Wise <pabs3@bonedaddy.net>
 Cc: kexec@lists.infradead.org
 
-Thanks,
+While I'm not opposed to this off-hand I am curious to know what the
+motivation for it is.
 
-this looks good to me as does the follow up patch.
-Could you flesh out the changelog and add
-signed-off-by line to each patch?
-
-On Thu, Apr 24, 2014 at 12:04:31PM +0800, Paul Wise wrote:
+On Thu, Apr 24, 2014 at 12:20:56PM +0800, Paul Wise wrote:
 > ---
 >  kexec/Makefile | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/kexec/Makefile b/kexec/Makefile
-> index 7d3175b..62fecdb 100644
+> index 7d3175b..a758b4a 100644
 > --- a/kexec/Makefile
 > +++ b/kexec/Makefile
-> @@ -1,7 +1,7 @@
->  #
->  # kexec (linux booting linux)
->  #
-> -PURGATORY_HEX_C = kexec/purgatory.c
-> +PURGATORY_HEX_C = purgatory/purgatory.c
+> @@ -29,7 +29,7 @@ KEXEC_SRCS_base += kexec/kexec-xen.c
 >  
->  $(PURGATORY_HEX_C): $(PURGATORY) $(BIN_TO_HEX)
->  	$(MKDIR) -p $(@D)
+>  KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
+>  
+> -dist += kexec/Makefile $(KEXEC_GENERATED_SRCS)			\
+> +dist += kexec/Makefile						\
+>  	$(KEXEC_SRCS_base) kexec/crashdump-elf.c		\
+>  	kexec/crashdump.h kexec/firmware_memmap.h		\
+>  	kexec/kexec-elf-boot.h					\
 > -- 
 > 1.9.2
 > 
