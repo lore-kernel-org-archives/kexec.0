@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WdCQb-0001oL-Oa
- for kexec@lists.infradead.org; Thu, 24 Apr 2014 05:42:35 +0000
-Date: Thu, 24 Apr 2014 14:42:09 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [kexec-tools] [PATCH] Do not distribute generated files in the
- release tarball
-Message-ID: <20140424054209.GI8892@verge.net.au>
-References: <1398313256-20388-1-git-send-email-pabs3@bonedaddy.net>
- <20140424043255.GC9469@verge.net.au>
- <1398314768.7980.66.camel@chianamo>
+Received: from szxga02-in.huawei.com ([119.145.14.65])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WdFne-00031a-3Z
+ for kexec@lists.infradead.org; Thu, 24 Apr 2014 09:18:35 +0000
+From: Wang Nan <wangnan0@huawei.com>
+Subject: [PATCH v2] makedumpfile: code cleanup: set_bitmap
+Date: Thu, 24 Apr 2014 17:11:13 +0800
+Message-ID: <1398330673-23016-1-git-send-email-wangnan0@huawei.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE97205CAA@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE97205CAA@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1398314768.7980.66.camel@chianamo>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,31 +22,126 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Paul Wise <pabs3@bonedaddy.net>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: Wang Nan <wangnan0@huawei.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+
+This patch makes set_bitmap() to call sync_bitmap() instead rewrite
+identical code to do same thing.
+
+Change from v1:
+
+- fix a simple mistake:
+  sync_bitmap() returns TRUE(1) when it succeeds, so use
+  (!sync_bitmap()) for checking.
+
+Signed-off-by: Wang Nan <wangnan0@huawei.com>
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
+Cc: Geng Hui <hui.geng@huawei.com>
+---
+ makedumpfile.c | 70 ++++++++++++++++++++++++++--------------------------------
+ 1 file changed, 31 insertions(+), 39 deletions(-)
 
-On Thu, Apr 24, 2014 at 12:46:08PM +0800, Paul Wise wrote:
-> On Thu, 2014-04-24 at 13:32 +0900, Simon Horman wrote:
-> 
-> > While I'm not opposed to this off-hand I am curious to know what the
-> > motivation for it is.
-> 
-> Within Debian there has been a renewed focus on finding and removing
-> sourceless files and one Debian contributor mentioned kexec/purgatory.c
-> on IRC and asked for help finding if source was missing. It was
-> concluded that the source was present and this wasn't an issue....
+diff --git a/makedumpfile.c b/makedumpfile.c
+index ce4a866..cea37a2 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3309,6 +3309,34 @@ initialize_2nd_bitmap(struct dump_bitmap *bitmap)
+ }
+ 
+ int
++sync_bitmap(struct dump_bitmap *bitmap)
++{
++	off_t offset;
++	offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
++
++	/*
++	 * The bitmap buffer is not dirty, and it is not necessary
++	 * to write out it.
++	 */
++	if (bitmap->no_block < 0)
++		return TRUE;
++
++	if (lseek(bitmap->fd, offset, SEEK_SET) < 0 ) {
++		ERRMSG("Can't seek the bitmap(%s). %s\n",
++		    bitmap->file_name, strerror(errno));
++		return FALSE;
++	}
++	if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
++	    != BUFSIZE_BITMAP) {
++		ERRMSG("Can't write the bitmap(%s). %s\n",
++		    bitmap->file_name, strerror(errno));
++		return FALSE;
++	}
++	return TRUE;
++}
++
++
++int
+ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+     int val)
+ {
+@@ -3317,20 +3345,11 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+ 	old_offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
+ 	new_offset = bitmap->offset + BUFSIZE_BITMAP * (pfn / PFN_BUFBITMAP);
+ 
+-	if (0 <= bitmap->no_block && old_offset != new_offset) {
+-		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
+-			ERRMSG("Can't seek the bitmap(%s). %s\n",
+-			    bitmap->file_name, strerror(errno));
+-			return FALSE;
+-		}
+-		if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
+-		    != BUFSIZE_BITMAP) {
+-			ERRMSG("Can't write the bitmap(%s). %s\n",
+-			    bitmap->file_name, strerror(errno));
++	if (old_offset != new_offset) {
++		if (!sync_bitmap(bitmap)) {
++			ERRMSG("Can't sync bitmap\n");
+ 			return FALSE;
+ 		}
+-	}
+-	if (old_offset != new_offset) {
+ 		if (lseek(bitmap->fd, new_offset, SEEK_SET) < 0 ) {
+ 			ERRMSG("Can't seek the bitmap(%s). %s\n",
+ 			    bitmap->file_name, strerror(errno));
+@@ -3386,33 +3405,6 @@ set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *c
+ }
+ 
+ int
+-sync_bitmap(struct dump_bitmap *bitmap)
+-{
+-	off_t offset;
+-	offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
+-
+-	/*
+-	 * The bitmap buffer is not dirty, and it is not necessary
+-	 * to write out it.
+-	 */
+-	if (bitmap->no_block < 0)
+-		return TRUE;
+-
+-	if (lseek(bitmap->fd, offset, SEEK_SET) < 0 ) {
+-		ERRMSG("Can't seek the bitmap(%s). %s\n",
+-		    bitmap->file_name, strerror(errno));
+-		return FALSE;
+-	}
+-	if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
+-	    != BUFSIZE_BITMAP) {
+-		ERRMSG("Can't write the bitmap(%s). %s\n",
+-		    bitmap->file_name, strerror(errno));
+-		return FALSE;
+-	}
+-	return TRUE;
+-}
+-
+-int
+ sync_1st_bitmap(void)
+ {
+ 	return sync_bitmap(info->bitmap1);
+-- 
+1.8.4
 
-Thanks, an interesting initiative.
-
-> ..but I tend to think that generated files should always be built from
-> source and never be present in VCS repositories and only autotools
-> generated files should be in tarballs. This ensures that they get built
-> as often as possible and bugs with that process are discovered early.
-
-That seems reasonable to me.
-
-Could you add something like that to the changelog and add
-a signed-off-by line?
 
 _______________________________________________
 kexec mailing list
