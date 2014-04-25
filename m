@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from g5t1626.atlanta.hp.com ([15.192.137.9])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WdFxQ-0001Tp-CD
- for kexec@lists.infradead.org; Thu, 24 Apr 2014 09:28:41 +0000
-Date: Thu, 24 Apr 2014 11:28:15 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v2] makedumpfile: code cleanup: set_bitmap
-Message-ID: <20140424112815.398f9852@hananiah.suse.cz>
-In-Reply-To: <1398330673-23016-1-git-send-email-wangnan0@huawei.com>
-References: <0910DD04CBD6DE4193FCF86B9C00BE97205CAA@BPXM01GP.gisp.nec.co.jp>
- <1398330673-23016-1-git-send-email-wangnan0@huawei.com>
-Mime-Version: 1.0
+ id 1WdU8j-0003qi-Gd
+ for kexec@lists.infradead.org; Fri, 25 Apr 2014 00:37:19 +0000
+From: Bill Sumner <bill.sumner@hp.com>
+Subject: [PATCH 0/8] iommu/vt-d: Fix crash dump failure caused by legacy DMA/IO
+Date: Thu, 24 Apr 2014 18:36:30 -0600
+Message-Id: <1398386198-19304-1-git-send-email-bill.sumner@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,155 +15,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Wang Nan <wangnan0@huawei.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp, Geng Hui <hui.geng@huawei.com>
+To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org
+Cc: jerry.hoemann@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, alex.williamson@redhat.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, bill.sumner@hp.com
 
-On Thu, 24 Apr 2014 17:11:13 +0800
-Wang Nan <wangnan0@huawei.com> wrote:
+The following series implements a fix for:
+A kdump problem about DMA that has been discussed for a long time.
+That is, when a kernel panics and boots into the kdump kernel, DMA that was
+started by the panicked kernel is not stopped before the kdump kernel is booted;
+and the kdump kernel disables the IOMMU while this DMA continues.
+This causes the IOMMU to stop translating the DMA addresses as IOVAs and
+begin to treat them as physical memory addresses -- which causes the DMA to either:
+1. generate DMAR errors or
+2. generate PCI SERR errors or
+3. transfer data to or from incorrect areas of memory.
+Often this causes the dump to fail.
 
-> This patch makes set_bitmap() to call sync_bitmap() instead rewrite
-> identical code to do same thing.
-> 
-> Change from v1:
-> 
-> - fix a simple mistake:
->   sync_bitmap() returns TRUE(1) when it succeeds, so use
->   (!sync_bitmap()) for checking.
+This patch set modifies the behavior of the Intel iommu in the crashdump kernel: 
+1. to accept the iommu hardware in an active state,
+2. to leave the current translations in-place so that legacy DMA will continue
+   using its current buffers until the device drivers in the crashdump kernel
+   initialize and initialize their devices,
+3. to use different portions of the iova address ranges for the device drivers
+   in the crashdump kernel than the iova ranges that were in-use at the time
+   of the panic.  
 
-Hi Wang Nan,
+Advantages of this approach:
+1. All manipulation of the IO-device is done by the Linux device-driver
+   for that device.
+2. This approach behaves in a manner very similar to operation without an
+   active iommu.
+3. Any activity between the IO-device and its RMRR areas is handled by the
+   device-driver in the same manner as during a non-kdump boot.
+4. If an IO-device has no driver in the kdump kernel, it is simply left alone.
+   This supports the practice of creating a special kdump kernel without
+   drivers for any devices that are not required for taking a crashdump. 
+5. Minimal code-changes among the existing mainline intel-iommu code.
 
-I like your change. See my comments below:
+Summary of changes in this patch set:
+1. Updated to a more current top-of-tree and merged the code with the
+   large number of changes that were recently taken-in to intel-iommu.c
+2. Returned to the structure of a patch-set
+3. Enabled the intel-iommu driver to consist of multiple *.c files
+   by moving many of the #defines, prototypes, and inline functions
+   into a new file: intel-iommu-private.h (First three patches implement
+   only this enhancement -- could be applied independent of the last 5)
+4. Moved the new "crashdump fix" code into a new file: intel-iommu-kdump.c 
+5. Removed the pr_debug constructs from the new code that implements the
+   "crashdump fix" -- making the code much cleaner and easier to read.
+6. Miscellaneous cleanups such as enum-values for return-codes.
+7. Simplified the code that retrieves the values needed to initialize a new
+   domain by using the linked-list of previously-collected values
+   instead of stepping back into the tree of translation tables.
 
-> Signed-off-by: Wang Nan <wangnan0@huawei.com>
-> Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> Cc: kexec@lists.infradead.org
-> Cc: Geng Hui <hui.geng@huawei.com>
-> ---
->  makedumpfile.c | 70 ++++++++++++++++++++++++++--------------------------------
->  1 file changed, 31 insertions(+), 39 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index ce4a866..cea37a2 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -3309,6 +3309,34 @@ initialize_2nd_bitmap(struct dump_bitmap *bitmap)
->  }
->  
->  int
-> +sync_bitmap(struct dump_bitmap *bitmap)
-> +{
-> +	off_t offset;
-> +	offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
-> +
-> +	/*
-> +	 * The bitmap buffer is not dirty, and it is not necessary
-> +	 * to write out it.
-> +	 */
-> +	if (bitmap->no_block < 0)
-> +		return TRUE;
-> +
-> +	if (lseek(bitmap->fd, offset, SEEK_SET) < 0 ) {
-> +		ERRMSG("Can't seek the bitmap(%s). %s\n",
-> +		    bitmap->file_name, strerror(errno));
-> +		return FALSE;
-> +	}
-> +	if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
-> +	    != BUFSIZE_BITMAP) {
-> +		ERRMSG("Can't write the bitmap(%s). %s\n",
-> +		    bitmap->file_name, strerror(errno));
-> +		return FALSE;
-> +	}
-> +	return TRUE;
-> +}
-> +
-> +
-> +int
->  set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
->      int val)
->  {
-> @@ -3317,20 +3345,11 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
->  	old_offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
->  	new_offset = bitmap->offset + BUFSIZE_BITMAP * (pfn / PFN_BUFBITMAP);
+Bill Sumner (8):
+  Fix a few existing lines for checkpatch.pl
+  Consolidate lines for a new private header
+  Create intel-iommu-private.h
+  Update iommu_attach_domain() and its callers
+  Add Items needed for fixing crashdump to private header
+  Create intel-iommu-kdump.c
+  Add domain-id functions to intel-iommu-kdump.c
+  Add remaining changes to intel-iommu.c to fix crashdump
 
-After applying this patch, both old_offset and new_offset are
-calculated only to compare for equality. And new_offset is in fact
-computed twice (once in set_bitmap and once in sync_bitmap).
+ drivers/iommu/Makefile              |   2 +-
+ drivers/iommu/intel-iommu-kdump.c   | 629 ++++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel-iommu-private.h | 457 ++++++++++++++++++++++++++
+ drivers/iommu/intel-iommu.c         | 512 ++++++++---------------------
+ 4 files changed, 1229 insertions(+), 371 deletions(-)
+ create mode 100644 drivers/iommu/intel-iommu-kdump.c
+ create mode 100644 drivers/iommu/intel-iommu-private.h
 
-This could be cleaned up by replacing the offsets with:
-
-	int new_no_block = pfn / PFN_BUFBITMAP;
-
-Then change all occurrences of if (old_offset != new_offset) to:
-
-	if (bitmap->no_block != new_no_block)
-
-and finally re-use new_no_block in the assignment to bitmap->no_block
-near the end of the function, like this:
-
--		bitmap->no_block = pfn / PFN_BUFBITMAP;
-+		bitmap->no_block = new_no_block;
-
-Petr T
-
->  
-> -	if (0 <= bitmap->no_block && old_offset != new_offset) {
-> -		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
-> -			ERRMSG("Can't seek the bitmap(%s). %s\n",
-> -			    bitmap->file_name, strerror(errno));
-> -			return FALSE;
-> -		}
-> -		if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
-> -		    != BUFSIZE_BITMAP) {
-> -			ERRMSG("Can't write the bitmap(%s). %s\n",
-> -			    bitmap->file_name, strerror(errno));
-> +	if (old_offset != new_offset) {
-> +		if (!sync_bitmap(bitmap)) {
-> +			ERRMSG("Can't sync bitmap\n");
->  			return FALSE;
->  		}
-> -	}
-> -	if (old_offset != new_offset) {
->  		if (lseek(bitmap->fd, new_offset, SEEK_SET) < 0 ) {
->  			ERRMSG("Can't seek the bitmap(%s). %s\n",
->  			    bitmap->file_name, strerror(errno));
-> @@ -3386,33 +3405,6 @@ set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val, struct cycle *c
->  }
->  
->  int
-> -sync_bitmap(struct dump_bitmap *bitmap)
-> -{
-> -	off_t offset;
-> -	offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
-> -
-> -	/*
-> -	 * The bitmap buffer is not dirty, and it is not necessary
-> -	 * to write out it.
-> -	 */
-> -	if (bitmap->no_block < 0)
-> -		return TRUE;
-> -
-> -	if (lseek(bitmap->fd, offset, SEEK_SET) < 0 ) {
-> -		ERRMSG("Can't seek the bitmap(%s). %s\n",
-> -		    bitmap->file_name, strerror(errno));
-> -		return FALSE;
-> -	}
-> -	if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
-> -	    != BUFSIZE_BITMAP) {
-> -		ERRMSG("Can't write the bitmap(%s). %s\n",
-> -		    bitmap->file_name, strerror(errno));
-> -		return FALSE;
-> -	}
-> -	return TRUE;
-> -}
-> -
-> -int
->  sync_1st_bitmap(void)
->  {
->  	return sync_bitmap(info->bitmap1);
+-- 
+Bill Sumner <bill.sumner@hp.com>
 
 
 _______________________________________________
