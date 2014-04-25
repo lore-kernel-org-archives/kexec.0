@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wdb6a-0004YP-8h
- for kexec@lists.infradead.org; Fri, 25 Apr 2014 08:03:32 +0000
-Date: Fri, 25 Apr 2014 10:03:05 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v2] makedumpfile: code cleanup: set_bitmap
-Message-ID: <20140425100305.501177cb@hananiah.suse.cz>
-In-Reply-To: <5359F1C3.5030100@huawei.com>
-References: <0910DD04CBD6DE4193FCF86B9C00BE97205CAA@BPXM01GP.gisp.nec.co.jp>
- <1398330673-23016-1-git-send-email-wangnan0@huawei.com>
- <20140424112815.398f9852@hananiah.suse.cz>
- <5359F1C3.5030100@huawei.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wdg5O-0006zP-Tp
+ for kexec@lists.infradead.org; Fri, 25 Apr 2014 13:22:39 +0000
+Date: Fri, 25 Apr 2014 09:22:15 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Message-ID: <20140425132214.GB10674@redhat.com>
+References: <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
+ <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
+ <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
+ <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
+ <20140421151240.GB4367@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
+ <20140423170818.GE24651@redhat.com>
+ <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,83 +33,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Wang Nan <wangnan0@huawei.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp, Geng Hui <hui.geng@huawei.com>
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "zzou@redhat.com" <zzou@redhat.com>
 
-On Fri, 25 Apr 2014 13:25:23 +0800
-Wang Nan <wangnan0@huawei.com> wrote:
-
-> On 2014/4/24 17:28, Petr Tesarik wrote:
-> > On Thu, 24 Apr 2014 17:11:13 +0800
-> > Wang Nan <wangnan0@huawei.com> wrote:
->[...]
-> >>  set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
-> >>      int val)
-> >>  {
-> >> @@ -3317,20 +3345,11 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
-> >>  	old_offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
-> >>  	new_offset = bitmap->offset + BUFSIZE_BITMAP * (pfn / PFN_BUFBITMAP);
+On Thu, Apr 24, 2014 at 07:50:41AM +0800, bhe@redhat.com wrote:
+> On 04/23/14 at 01:08pm, Vivek Goyal wrote:
+>  
+> > >  - bitmap size: used for 1st and 2nd bitmaps
+> > >  - remains: can be used for the other works of makedumpfile (e.g. I/O buffer)
+> > > 
+> > >                  pattern                      |  bitmap size  |   remains
+> > > ----------------------------------------------+---------------+-------------
+> > >   A. 100G memory with the too allocation bug  |    12.8 MB    |   17.2 MB
+> > >   B. 100G memory with fixed makedumpfile      |     6.4 MB    |   23.6 MB
+> > >   C. 200G memory with fixed makedumpfile      |    12.8 MB    |   17.2 MB
+> > >   D. 300G memory with fixed makedumpfile      |    19.2 MB    |   10.8 MB
+> > >   E. 400G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
+> > >   F. 500G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
+> > >   ...
+> > > 
+> > > Baoquan got OOM in A pattern and didn't get it in B, so C must also
+> > > fail due to OOM. This is just what I wanted to say.
 > > 
-> > After applying this patch, both old_offset and new_offset are
-> > calculated only to compare for equality. And new_offset is in fact
-> > computed twice (once in set_bitmap and once in sync_bitmap).
+> > ok, So here bitmap size is growing because we have not hit the 80% of 
+> > available memory limit yet. But it gets limited at 24MB once we hit
+> > 80% limit. I think that's fine. That's what I was looking for.
 > > 
-> > This could be cleaned up by replacing the offsets with:
-> > 
-> > 	int new_no_block = pfn / PFN_BUFBITMAP;
-> > 
-> > Then change all occurrences of if (old_offset != new_offset) to:
-> > 
-> > 	if (bitmap->no_block != new_no_block)
-> > 
-> > and finally re-use new_no_block in the assignment to bitmap->no_block
-> > near the end of the function, like this:
-> > 
-> > -		bitmap->no_block = pfn / PFN_BUFBITMAP;
-> > +		bitmap->no_block = new_no_block;
-> > 
-> > Petr T
-> > 
-> >>  
-> >> -	if (0 <= bitmap->no_block && old_offset != new_offset) {
-> >> -		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
-> >> -			ERRMSG("Can't seek the bitmap(%s). %s\n",
-> >> -			    bitmap->file_name, strerror(errno));
-> >> -			return FALSE;
-> >> -		}
-> >> -		if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
-> >> -		    != BUFSIZE_BITMAP) {
-> >> -			ERRMSG("Can't write the bitmap(%s). %s\n",
-> >> -			    bitmap->file_name, strerror(errno));
-> >> +	if (old_offset != new_offset) {
-> >> +		if (!sync_bitmap(bitmap)) {
-> >> +			ERRMSG("Can't sync bitmap\n");
-> >>  			return FALSE;
-> >>  		}
-> >> -	}
-> >> -	if (old_offset != new_offset) {
-> >>  		if (lseek(bitmap->fd, new_offset, SEEK_SET) < 0 ) {
-> >>  			ERRMSG("Can't seek the bitmap(%s). %s\n",
-> >>  			    bitmap->file_name, strerror(errno));
-> [ .. see below .. ]
+> > Now key question will remain is that is using 80% of free memory by
+> > bitmaps too much. Are other things happening in system which consume
+> > memory and because memory is not available OOM hits. If that's the
+> > case we probably need to lower the amount of memory allocated to
+> > bit maps. Say 70% or 60% or may be 50%. But this should be data driven.
 > 
-> Good suggestion, but new_offset is still needed to be calculated for these lseeks.
+> How about add anoter limit, say left memory safety limit, e.g 20M. If
+> the remaining memory which is 20% of free memory is bigger than 20M, 80%
+> can be taken to calculate the bitmap size. If smaller than 20M, we just
+> take (total memory - safety limit) for bitmap size.
 
-True, but it will be calculated only once (in sync_bitmap). OTOH the
-block number is always needed, because it is stored in bitmap->no_block.
+I think doing another internal limit for makedumpfile usage sounds fine.
+So say, if makedumpfile needs 5MB of memory for purposes other than
+bitmap, then remove 5MB from total memory and then take 80% of remaining
+memory to calculate bitmap size. I think that should be reasonable.
 
-Okay, that can be changed, and you can store the offset instead. I
-don't have a strong opinion on this.
+Tricky bit here is to figure out how much memory does makedumpfile need. 
 
-> In addition, I have another idea: what about to replace all lseek .. read/write pattern to pread/pwrite?
+A simpler solution will be to just reserve 60% of total memory for bitmaps
+and leave rest for makedumpfile and kernel and other components.
 
-Definitely! After doing that, we could even reuse the same file descriptor
-for all processes.
-
-Now, since the original patch looks good as it is, let's see if Atsushi
-Kumagai takes it into the tree and post more clean up patches afterwards.
-
-Petr T
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
