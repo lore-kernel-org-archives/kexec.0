@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Weld7-0003pW-Dd
- for kexec@lists.infradead.org; Mon, 28 Apr 2014 13:29:57 +0000
-Date: Mon, 28 Apr 2014 21:29:34 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH] kdump: pass e820 reserved region to 2nd kernel via e820
- table or setup_data
-Message-ID: <20140428132933.GB1400@dhcp-17-89.nay.redhat.com>
-References: <1398669704-31851-1-git-send-email-chaowang@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1398669704-31851-1-git-send-email-chaowang@redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WemTn-00004t-4W
+ for kexec@lists.infradead.org; Mon, 28 Apr 2014 14:24:24 +0000
+Date: Mon, 28 Apr 2014 16:23:58 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH 1/4] makedumpfile: redefine numerical limitaction macros.
+Message-ID: <20140428162358.2d78f390@hananiah.suse.cz>
+In-Reply-To: <1398485229-43295-2-git-send-email-wangnan0@huawei.com>
+References: <1398485229-43295-1-git-send-email-wangnan0@huawei.com>
+ <1398485229-43295-2-git-send-email-wangnan0@huawei.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,48 +23,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org, cpw@sgi.com
+To: Wang Nan <wangnan0@huawei.com>
+Cc: kexec@lists.infradead.org, Wang Nan <pi3orama@gmail.com>, kumagai-atsushi@mxc.nes.nec.co.jp, Liu Hua <sdu.liu@huawei.com>, Geng Hui <hui.geng@huawei.com>
 
-On 04/28/14 at 03:21pm, WANG Chao wrote:
-> e820 reserved region could be useful in 2nd kernel.
+On Sat, 26 Apr 2014 12:07:06 +0800
+Wang Nan <wangnan0@huawei.com> wrote:
+
+> From: Wang Nan <pi3orama@gmail.com>
 > 
-> For example, PCI mmconf (extended mode) requires reserved region
-> otherwise it falls back to legacy mode. The following log is from Cliff
-> Wickman <cpw@sgi.com>:
+> According to C standard, numerical limitations macros such as ULONG_MAX
+> should be defined in <limits.h>, and must be defined as "constant
+> expressions suitable for use in #if preprocessing directives." (see
+> "Numerical limits" section in the standard).
 > 
->  PCI: MMCONFIG for domain 1003 [bus 3f-3f] at [mem 0xff0ff00000-0xff0fffffff] (base 0xff0c000000)
->  [Firmware Bug]: PCI: MMCONFIG at [mem 0x80000000-0x80cfffff] not reserved in ACPI motherboard resources
->  PCI: not using MMCONFIG
+> Original definition in common.h breaks this rule:
 > 
-> PCI devices on segment 1 (>0) can't fall back to legacy mode, thus
-> kernel probing fails and device can't be found.
+>  #define LONG_MAX ((long)(~0UL>>1))
 > 
-> We don't pass reserved region because these regions could be too much
-> and eat up our very limited kernel command line resource in
-> memmap=exactmap case.
+> which causes macros like following failure:
 > 
-> However now we use e820 map and setup_data to pass memory map to 2nd
-> kernel and the number of reserved regions should not be a problem any
-> more.
+>  #if LONG_MAX == 2147483647
+>  # define LONG_BIT	32
+>  #else
+>  # define LONG_BIT	64
+>  #endif
 > 
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
+> Unfortunately, the above code piece is taken from real glibc header
+> (/usr/include/bits/xopen_lim.h), which is happen to be included by
+> <limits.h> if _GNU_SOURCE is defined.
+> 
+> This patch include <limits.h> in common.h to use C standard numerical
+> macros. For system without such macros defined by C, this patch also
+> defines L(L)ONG_MAX in a standard compatible way. By checking wich
+> 
+> gcc -dM -E - <<<''
+> 
+> we know that __LONG_MAX__ and __LLONG_MAX__ macros should be defined by
+> gcc by default. Definition of ULONG_MAX and ULLONG_MAX are taken from
+> gcc standard include file (include-fixed/limits.h).
+> 
+> In addition, macro ULONGLONG_MAX is nonstandard, the standard way for
+> defining max ulonglong is ULLONG_MAX.
+> 
+> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+> Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> Cc: Petr Tesarik <ptesarik@suse.cz>
+> Cc: kexec@lists.infradead.org
+> Cc: Geng Hui <hui.geng@huawei.com>
+> Cc: Liu Hua <sdu.liu@huawei.com>
+> 
 > ---
->  kexec/arch/i386/crashdump-x86.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  common.h | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 4a1491b..321ed3d 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -300,6 +300,9 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
->  			type = RANGE_ACPI;
->  		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
->  			type = RANGE_ACPI_NVS;
-> +		} else if(memcmp(str,"reserved\n",9) == 0 ) {
-> +			type = RANGE_RANGE;
+> diff --git a/common.h b/common.h
+> index 6ad3ca7..124f107 100644
+> --- a/common.h
+> +++ b/common.h
+> @@ -16,17 +16,29 @@
+>  #ifndef _COMMON_H
+>  #define _COMMON_H
+>  
+> +#include <limits.h>
+> +
+>  #define TRUE		(1)
+>  #define FALSE		(0)
+>  #define ERROR		(-1)
+>  
+>  #ifndef LONG_MAX
+> -#define LONG_MAX	((long)(~0UL>>1))
+> +# warning LONG_MAX should have been defined in <limits.h>
+> +# define LONG_MAX	__LONG_MAX__
+>  #endif
+>  #ifndef ULONG_MAX
+> -#define ULONG_MAX	(~0UL)
+> +# warning ULONG_MAX should have been defined in <limits.h>
+> +# define ULONG_MAX	(LONG_MAX * 2UL + 1UL)
+> +#endif
+> +#ifndef LLONG_MAX
+> +# warning LLONG_MAX should have been defined in <limits.h>
+> +# define LLONG_MAX __LONG_LONG_MAX__
+> +#endif
+> +#ifndef ULLONG_MAX
+> +# warning ULLONG_MAX should have been defined in <limits.h>
+> +# define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+>  #endif
+> -#define ULONGLONG_MAX	(~0ULL)
+> +#define ULONGLONG_MAX	ULLONG_MAX
 
-This is wrong. I've resend the correct one.
+Hi Wang Nan,
+
+is this actually needed on some known platform? If not, then I'd rather
+remove all these #ifndef stanzas and rely on <limits.h>. I mean, if you
+can't rely on standard C constants, then why should be the gcc-specific
+pre-defined macros (__LONG_MAX__ et al.) available?
+
+It's probably better to put the burden on the person doing the
+port, because they should know what is appropriate for their compiler
+and/or libc.
+
+Just my opinion,
+Petr T
 
 _______________________________________________
 kexec mailing list
