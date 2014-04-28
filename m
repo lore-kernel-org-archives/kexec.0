@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WehEz-0005zX-U1
- for kexec@lists.infradead.org; Mon, 28 Apr 2014 08:48:46 +0000
-From: Arthur Zou <zzou@redhat.com>
-Subject: [PATCH v2] Fix free bitmap_buffer_cyclic error
-Date: Mon, 28 Apr 2014 16:48:19 +0800
-Message-Id: <1398674899-1308-1-git-send-email-zzou@redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WeihZ-00077u-4I
+ for kexec@lists.infradead.org; Mon, 28 Apr 2014 10:22:21 +0000
+Date: Mon, 28 Apr 2014 12:21:53 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: About the status of hugepage filtering!
+Message-ID: <20140428122153.1563f7d3@hananiah.suse.cz>
+In-Reply-To: <20140428075605.GA9405@dhcp-16-105.nay.redhat.com>
+References: <20140428075605.GA9405@dhcp-16-105.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,101 +18,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Arthur Zou <zzou@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-Description:
-In create_dump_bitmap() and write_kdump_pages_and_bitmap_cyclic(),
-What should be freed is info->partial_bitmap instead of info->bitmap.
+On Mon, 28 Apr 2014 15:56:05 +0800
+Baoquan He <bhe@redhat.com> wrote:
 
-Solution:
-Add two functions to free the bitmap_buffer_cyclic. info->partial_bitmap1
-is freed by free_bitmap1_buffer_cyclic(). info->partial_bitmap2 is
-freed by free_bitmap2_buffer_cyclic(). At the same time, remove
-thoes frees that free partial_bitmap1 or partial_bitmap2 at the end
-of main() because partial_bitmap1 and partial_bitmap2 has been freed
-at the end of write_kdump_pages_and_bitmap_cyclic(), so there is no
-need to free it again at the end of main.
+> Hi Astushi,
+> 
+> I remember earlier Jingbai posted a patchset on hugepage filtering,
+> later you pasted your hugepage filtering prototype patch, and people
+> thought yours is better. So now may I know the status and what's your
+> plan?
+> 
+> Because in makedumpfile 1.5.6, this is not delivered. Your plan can help
+> us much.
 
-Signed-off-by: Arthur Zou <zzou@redhat.com>
----
- makedumpfile.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+Hi Baoquan,
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 0b31932..5ca0021 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5130,6 +5130,22 @@ free_bitmap_buffer(void)
- 	free_bitmap2_buffer();
- }
- 
-+void free_bitmap1_buffer_cyclic()
-+{
-+	if (info->partial_bitmap1 != NULL){
-+		free(info->partial_bitmap1);
-+		info->partial_bitmap1 = NULL;
-+	}
-+}
-+
-+void free_bitmap2_buffer_cyclic()
-+{
-+	if (info->partial_bitmap2 != NULL){
-+		free(info->partial_bitmap2);
-+		info->partial_bitmap2 = NULL;
-+	}
-+}
-+
- int
- create_dump_bitmap(void)
- {
-@@ -5147,8 +5163,7 @@ create_dump_bitmap(void)
- 				goto out;
- 
- 			info->num_dumpable = get_num_dumpable_cyclic();
--
--			free_bitmap2_buffer();
-+			free_bitmap2_buffer_cyclic();
- 		}
- 
- 	} else {
-@@ -6947,7 +6962,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 	}
- 
- 
--	free_bitmap1_buffer();
-+	free_bitmap1_buffer_cyclic();
- 
- 	if (!prepare_bitmap2_buffer_cyclic())
- 		return FALSE;
-@@ -6970,7 +6985,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 			return FALSE;
- 	}
- 
--
-+	free_bitmap2_buffer_cyclic();
- 
- 	gettimeofday(&tv_start, NULL);
- 
-@@ -9349,10 +9364,6 @@ out:
- 			free(info->splitting_info);
- 		if (info->p2m_mfn_frame_list != NULL)
- 			free(info->p2m_mfn_frame_list);
--		if (info->partial_bitmap1 != NULL)
--			free(info->partial_bitmap1);
--		if (info->partial_bitmap2 != NULL)
--			free(info->partial_bitmap2);
- 		free(info);
- 	}
- 	free_elf_info();
--- 
-1.8.4.2
+I followed up on Atsushi's prototype, and there's a patch series
+sitting on my disk which just came too late for 1.5.6, so I held it
+back. It was also suggested that the mdf_pfn cleanup patch be applied
+first. That one is now in, and I'll send an updated series shortly.
 
+The first part of the change is the "Generic handling of multi-page
+exclusions", that is a method which can be used for excluding both free
+pages and compound pages (and without adding even more complexity to
+the calculation of the cycle size).
+
+The second part is handling of hugepages. This simply extends the
+algorithm so that all pages in a compound page are treated as one
+object. To make it work, additional info must be exported from the
+kernel. This is where I got stuck with my previous attempt. For now,
+this patch is already in the mm tree:
+
+http://ozlabs.org/~akpm/mmotm/broken-out/kexec-save-pg_head_mask-in-vmcoreinfo.patch
+
+Petr T
 
 _______________________________________________
 kexec mailing list
