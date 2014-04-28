@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WekxY-0006jN-Ju
- for kexec@lists.infradead.org; Mon, 28 Apr 2014 12:47:01 +0000
-Date: Mon, 28 Apr 2014 20:46:35 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: About the status of hugepage filtering!
-Message-ID: <20140428124635.GA1546@dhcp-17-102.nay.redhat.com>
-References: <20140428075605.GA9405@dhcp-16-105.nay.redhat.com>
- <20140428122153.1563f7d3@hananiah.suse.cz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140428122153.1563f7d3@hananiah.suse.cz>
+ id 1WelZt-00035Q-IM
+ for kexec@lists.infradead.org; Mon, 28 Apr 2014 13:26:37 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH RESEND] kdump: pass e820 reserved region to 2nd kernel via
+ e820 table or setup_data
+Date: Mon, 28 Apr 2014 21:26:11 +0800
+Message-Id: <1398691571-19609-1-git-send-email-chaowang@redhat.com>
+In-Reply-To: <1398669704-31851-1-git-send-email-chaowang@redhat.com>
+References: <1398669704-31851-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,63 +18,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org, cpw@sgi.com
 
-On 04/28/14 at 12:21pm, Petr Tesarik wrote:
-> On Mon, 28 Apr 2014 15:56:05 +0800
-> Baoquan He <bhe@redhat.com> wrote:
-> 
-> > Hi Astushi,
-> > 
-> > I remember earlier Jingbai posted a patchset on hugepage filtering,
-> > later you pasted your hugepage filtering prototype patch, and people
-> > thought yours is better. So now may I know the status and what's your
-> > plan?
-> > 
-> > Because in makedumpfile 1.5.6, this is not delivered. Your plan can help
-> > us much.
-> 
-> Hi Baoquan,
-> 
-> I followed up on Atsushi's prototype, and there's a patch series
-> sitting on my disk which just came too late for 1.5.6, so I held it
-> back. It was also suggested that the mdf_pfn cleanup patch be applied
-> first. That one is now in, and I'll send an updated series shortly.
-> 
-> The first part of the change is the "Generic handling of multi-page
-> exclusions", that is a method which can be used for excluding both free
-> pages and compound pages (and without adding even more complexity to
-> the calculation of the cycle size).
-> 
-> The second part is handling of hugepages. This simply extends the
-> algorithm so that all pages in a compound page are treated as one
-> object. To make it work, additional info must be exported from the
-> kernel. This is where I got stuck with my previous attempt. For now,
-> this patch is already in the mm tree:
-> 
-> http://ozlabs.org/~akpm/mmotm/broken-out/kexec-save-pg_head_mask-in-vmcoreinfo.patch
+e820 reserved region could be useful in 2nd kernel.
 
-Hi Petr,
+For example, PCI mmconf (extended mode) requires reserved region
+otherwise it falls back to legacy mode. The following log is from Cliff
+Wickman <cpw@sgi.com>:
 
-Good to know this progress. And it's awesome that kernel patch exporting
-PG_head_mask has been in mm tree.
+ PCI: MMCONFIG for domain 1003 [bus 3f-3f] at [mem 0xff0ff00000-0xff0fffffff] (base 0xff0c000000)
+ [Firmware Bug]: PCI: MMCONFIG at [mem 0x80000000-0x80cfffff] not reserved in ACPI motherboard resources
+ PCI: not using MMCONFIG
 
-I saw people had discussed heatedly about the generic handling of
-multi-page exclusions. So as long as the first part passes through and
-merged in, hugepage filtering adding will be supported very smoothly, is
-that right? I didn't follow up that thread very closely, if yes, it's a
-great news. And thanks for your effort.
+PCI devices on segment 1 (>0) can't fall back to legacy mode, thus
+kernel probing fails and device can't be found.
 
-Thanks
-Baoquan
+We don't pass reserved region because these regions could be too much
+and eat up our very limited kernel command line resource in
+memmap=exactmap case.
 
-> 
-> Petr T
+However now we use e820 map and setup_data to pass memory map to 2nd
+kernel and the number of reserved regions should not be a problem any
+more.
+
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 4a1491b..cc33347 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -300,6 +300,9 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+ 			type = RANGE_ACPI;
+ 		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
+ 			type = RANGE_ACPI_NVS;
++		} else if(memcmp(str,"reserved\n",9) == 0 ) {
++			type = RANGE_RESERVED;
++		} else if (memcmp(str, "GART\n", 5) == 0) {
+ 		} else if (memcmp(str, "GART\n", 5) == 0) {
+ 			gart_start = start;
+ 			gart_end = end;
+@@ -989,14 +992,15 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
+ 		unsigned long start, end, size, type;
+ 		if ( !( mem_range[i].type == RANGE_ACPI
+-			|| mem_range[i].type == RANGE_ACPI_NVS) )
++			|| mem_range[i].type == RANGE_ACPI_NVS
++			|| mem_range[i].type == RANGE_RESERVED))
+ 			continue;
+ 		start = mem_range[i].start;
+ 		end = mem_range[i].end;
+ 		type = mem_range[i].type;
+ 		size = end - start + 1;
+ 		add_memmap(memmap_p, &nr_memmap, start, size, type);
+-		if (arch_options.pass_memmap_cmdline)
++		if (arch_options.pass_memmap_cmdline || type != RANGE_RESERVED)
+ 			cmdline_add_memmap_acpi(mod_cmdline, start, end);
+ 	}
+ 
+-- 
+1.9.0
+
 
 _______________________________________________
 kexec mailing list
