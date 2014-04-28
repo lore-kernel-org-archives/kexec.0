@@ -1,27 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WedpG-0002Yp-5R
- for kexec@lists.infradead.org; Mon, 28 Apr 2014 05:09:58 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Date: Mon, 28 Apr 2014 05:05:00 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720DE3D@BPXM01GP.gisp.nec.co.jp>
-References: <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
- <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
- <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
- <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
- <20140421151240.GB4367@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
- <20140423170818.GE24651@redhat.com>
- <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
- <20140425132214.GB10674@redhat.com>
-In-Reply-To: <20140425132214.GB10674@redhat.com>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Weey3-0001V6-D7
+ for kexec@lists.infradead.org; Mon, 28 Apr 2014 06:23:07 +0000
+Date: Mon, 28 Apr 2014 14:21:46 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] makedumpfile: fix free partial_bitmap2 error
+Message-ID: <20140428062146.GB1625@dhcp-16-105.nay.redhat.com>
+References: <1398390182-8480-1-git-send-email-zzou@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1398390182-8480-1-git-send-email-zzou@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,69 +23,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "vgoyal@redhat.com" <vgoyal@redhat.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
+To: Arthur Zou <zzou@redhat.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
->On Thu, Apr 24, 2014 at 07:50:41AM +0800, bhe@redhat.com wrote:
->> On 04/23/14 at 01:08pm, Vivek Goyal wrote:
->>
->> > >  - bitmap size: used for 1st and 2nd bitmaps
->> > >  - remains: can be used for the other works of makedumpfile (e.g. I/O buffer)
->> > >
->> > >                  pattern                      |  bitmap size  |   remains
->> > > ----------------------------------------------+---------------+-------------
->> > >   A. 100G memory with the too allocation bug  |    12.8 MB    |   17.2 MB
->> > >   B. 100G memory with fixed makedumpfile      |     6.4 MB    |   23.6 MB
->> > >   C. 200G memory with fixed makedumpfile      |    12.8 MB    |   17.2 MB
->> > >   D. 300G memory with fixed makedumpfile      |    19.2 MB    |   10.8 MB
->> > >   E. 400G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
->> > >   F. 500G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
->> > >   ...
->> > >
->> > > Baoquan got OOM in A pattern and didn't get it in B, so C must also
->> > > fail due to OOM. This is just what I wanted to say.
->> >
->> > ok, So here bitmap size is growing because we have not hit the 80% of
->> > available memory limit yet. But it gets limited at 24MB once we hit
->> > 80% limit. I think that's fine. That's what I was looking for.
->> >
->> > Now key question will remain is that is using 80% of free memory by
->> > bitmaps too much. Are other things happening in system which consume
->> > memory and because memory is not available OOM hits. If that's the
->> > case we probably need to lower the amount of memory allocated to
->> > bit maps. Say 70% or 60% or may be 50%. But this should be data driven.
->>
->> How about add anoter limit, say left memory safety limit, e.g 20M. If
->> the remaining memory which is 20% of free memory is bigger than 20M, 80%
->> can be taken to calculate the bitmap size. If smaller than 20M, we just
->> take (total memory - safety limit) for bitmap size.
->
->I think doing another internal limit for makedumpfile usage sounds fine.
->So say, if makedumpfile needs 5MB of memory for purposes other than
->bitmap, then remove 5MB from total memory and then take 80% of remaining
->memory to calculate bitmap size. I think that should be reasonable.
->
->Tricky bit here is to figure out how much memory does makedumpfile need.
+On 04/25/14 at 09:43am, Arthur Zou wrote:
+> Description:
+> In create_dump_bitmap, after prepare_bitmap2_buffer_cyclic was invoked,
+> info->partial_bitmap2 will pointed to a block of contiguous memory. But
+> free it in a wrong way because what free_bitmap2_buffer() free is
+> info->bitmap2 not info->partial_bitmap2.
+> 
+> Signed-off-by: Arthur Zou <zzou@redhat.com>
+> ---
+>  makedumpfile.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index ce4a866..f0d2997 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -5143,7 +5143,8 @@ create_dump_bitmap(void)
+>  
+>  			info->num_dumpable = get_num_dumpable_cyclic();
+>  
+> -			free_bitmap2_buffer();
+> +			if (info->partial_bitmap2 != NULL)
+> +				free(info->partial_bitmap2);
 
-Did you said using such value is bad idea since it's hard to update it?
-If we got the needed memory size, it would be changing every version.
-At least I think this may be an ideal way but not practical.
+ACK
 
->A simpler solution will be to just reserve 60% of total memory for bitmaps
->and leave rest for makedumpfile and kernel and other components.
+Hi Atsushi,
 
-That's just specific tuning for you and Baoquan.
+Maybe in my case which the lzo dump random failure triggered by this
+one.  Because for elf dump, since the wrong calculation of
+cyclic_bufsize is corrected, OOM never happened. For this bug, it didn't
+happen either after the fix applied in this patch.
 
-Now, I think this case is just lack of free memory caused by
-inappropriate parameter setting for your environment. You should
-increase crashkernel= to get enough free memory, 166M may be too
-small for your environment.
+So I guess the 80% of free memory is a safe value, though it's very
+close to the OOM threshold.
 
-By the way, I'm going on holiday for 8 days, I can't reply
-during that period. Thanks in advance.
+Thanks
+Baoquan
 
 
-Atsushi Kumagai
+>  		}
+>  
+>  	} else {
+> -- 
+> 1.8.4.2
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
