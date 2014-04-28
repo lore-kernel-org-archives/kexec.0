@@ -1,26 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wemaa-0004af-Nv
- for kexec@lists.infradead.org; Mon, 28 Apr 2014 14:31:25 +0000
-Date: Mon, 28 Apr 2014 08:50:25 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Message-ID: <20140428125025.GA4751@redhat.com>
-References: <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
- <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
- <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
- <20140421151240.GB4367@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
- <20140423170818.GE24651@redhat.com>
- <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
- <20140425132214.GB10674@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720DE3D@BPXM01GP.gisp.nec.co.jp>
+Received: from szxga02-in.huawei.com ([119.145.14.65])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wetw8-0004No-Sn
+ for kexec@lists.infradead.org; Mon, 28 Apr 2014 22:22:11 +0000
+Message-ID: <535ED454.1080902@huawei.com>
+Date: Tue, 29 Apr 2014 06:21:08 +0800
+From: Wang Nan <wangnan0@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9720DE3D@BPXM01GP.gisp.nec.co.jp>
+Subject: Re: [PATCH 1/4] makedumpfile: redefine numerical limitaction macros.
+References: <1398485229-43295-1-git-send-email-wangnan0@huawei.com>	<1398485229-43295-2-git-send-email-wangnan0@huawei.com>
+ <20140428162358.2d78f390@hananiah.suse.cz>
+In-Reply-To: <20140428162358.2d78f390@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,82 +23,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec@lists.infradead.org, Wang Nan <pi3orama@gmail.com>, kumagai-atsushi@mxc.nes.nec.co.jp, Liu Hua <sdu.liu@huawei.com>, Geng Hui <hui.geng@huawei.com>
 
-On Mon, Apr 28, 2014 at 05:05:00AM +0000, Atsushi Kumagai wrote:
-> >On Thu, Apr 24, 2014 at 07:50:41AM +0800, bhe@redhat.com wrote:
-> >> On 04/23/14 at 01:08pm, Vivek Goyal wrote:
-> >>
-> >> > >  - bitmap size: used for 1st and 2nd bitmaps
-> >> > >  - remains: can be used for the other works of makedumpfile (e.g. I/O buffer)
-> >> > >
-> >> > >                  pattern                      |  bitmap size  |   remains
-> >> > > ----------------------------------------------+---------------+-------------
-> >> > >   A. 100G memory with the too allocation bug  |    12.8 MB    |   17.2 MB
-> >> > >   B. 100G memory with fixed makedumpfile      |     6.4 MB    |   23.6 MB
-> >> > >   C. 200G memory with fixed makedumpfile      |    12.8 MB    |   17.2 MB
-> >> > >   D. 300G memory with fixed makedumpfile      |    19.2 MB    |   10.8 MB
-> >> > >   E. 400G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
-> >> > >   F. 500G memory with fixed makedumpfile      |    24.0 MB    |    6.0 MB
-> >> > >   ...
-> >> > >
-> >> > > Baoquan got OOM in A pattern and didn't get it in B, so C must also
-> >> > > fail due to OOM. This is just what I wanted to say.
-> >> >
-> >> > ok, So here bitmap size is growing because we have not hit the 80% of
-> >> > available memory limit yet. But it gets limited at 24MB once we hit
-> >> > 80% limit. I think that's fine. That's what I was looking for.
-> >> >
-> >> > Now key question will remain is that is using 80% of free memory by
-> >> > bitmaps too much. Are other things happening in system which consume
-> >> > memory and because memory is not available OOM hits. If that's the
-> >> > case we probably need to lower the amount of memory allocated to
-> >> > bit maps. Say 70% or 60% or may be 50%. But this should be data driven.
-> >>
-> >> How about add anoter limit, say left memory safety limit, e.g 20M. If
-> >> the remaining memory which is 20% of free memory is bigger than 20M, 80%
-> >> can be taken to calculate the bitmap size. If smaller than 20M, we just
-> >> take (total memory - safety limit) for bitmap size.
-> >
-> >I think doing another internal limit for makedumpfile usage sounds fine.
-> >So say, if makedumpfile needs 5MB of memory for purposes other than
-> >bitmap, then remove 5MB from total memory and then take 80% of remaining
-> >memory to calculate bitmap size. I think that should be reasonable.
-> >
-> >Tricky bit here is to figure out how much memory does makedumpfile need.
+On 2014/4/28 22:23, Petr Tesarik wrote:
+> On Sat, 26 Apr 2014 12:07:06 +0800
+> Wang Nan <wangnan0@huawei.com> wrote:
 > 
-> Did you said using such value is bad idea since it's hard to update it?
-> If we got the needed memory size, it would be changing every version.
-> At least I think this may be an ideal way but not practical.
-
-Yep, I am not too convinced about fixing makedumpfile memory usage at
-a particular value.
-
+>> From: Wang Nan <pi3orama@gmail.com>
+>>
+>> According to C standard, numerical limitations macros such as ULONG_MAX
+>> should be defined in <limits.h>, and must be defined as "constant
+>> expressions suitable for use in #if preprocessing directives." (see
+>> "Numerical limits" section in the standard).
+>>
+>> Original definition in common.h breaks this rule:
+>>
+>>  #define LONG_MAX ((long)(~0UL>>1))
+>>
+>> which causes macros like following failure:
+>>
+>>  #if LONG_MAX == 2147483647
+>>  # define LONG_BIT	32
+>>  #else
+>>  # define LONG_BIT	64
+>>  #endif
+>>
+>> Unfortunately, the above code piece is taken from real glibc header
+>> (/usr/include/bits/xopen_lim.h), which is happen to be included by
+>> <limits.h> if _GNU_SOURCE is defined.
+>>
+>> This patch include <limits.h> in common.h to use C standard numerical
+>> macros. For system without such macros defined by C, this patch also
+>> defines L(L)ONG_MAX in a standard compatible way. By checking wich
+>>
+>> gcc -dM -E - <<<''
+>>
+>> we know that __LONG_MAX__ and __LLONG_MAX__ macros should be defined by
+>> gcc by default. Definition of ULONG_MAX and ULLONG_MAX are taken from
+>> gcc standard include file (include-fixed/limits.h).
+>>
+>> In addition, macro ULONGLONG_MAX is nonstandard, the standard way for
+>> defining max ulonglong is ULLONG_MAX.
+>>
+>> Signed-off-by: Wang Nan <wangnan0@huawei.com>
+>> Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>> Cc: Petr Tesarik <ptesarik@suse.cz>
+>> Cc: kexec@lists.infradead.org
+>> Cc: Geng Hui <hui.geng@huawei.com>
+>> Cc: Liu Hua <sdu.liu@huawei.com>
+>>
+>> ---
+>>  common.h | 18 +++++++++++++++---
+>>  1 file changed, 15 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/common.h b/common.h
+>> index 6ad3ca7..124f107 100644
+>> --- a/common.h
+>> +++ b/common.h
+>> @@ -16,17 +16,29 @@
+>>  #ifndef _COMMON_H
+>>  #define _COMMON_H
+>>  
+>> +#include <limits.h>
+>> +
+>>  #define TRUE		(1)
+>>  #define FALSE		(0)
+>>  #define ERROR		(-1)
+>>  
+>>  #ifndef LONG_MAX
+>> -#define LONG_MAX	((long)(~0UL>>1))
+>> +# warning LONG_MAX should have been defined in <limits.h>
+>> +# define LONG_MAX	__LONG_MAX__
+>>  #endif
+>>  #ifndef ULONG_MAX
+>> -#define ULONG_MAX	(~0UL)
+>> +# warning ULONG_MAX should have been defined in <limits.h>
+>> +# define ULONG_MAX	(LONG_MAX * 2UL + 1UL)
+>> +#endif
+>> +#ifndef LLONG_MAX
+>> +# warning LLONG_MAX should have been defined in <limits.h>
+>> +# define LLONG_MAX __LONG_LONG_MAX__
+>> +#endif
+>> +#ifndef ULLONG_MAX
+>> +# warning ULLONG_MAX should have been defined in <limits.h>
+>> +# define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+>>  #endif
+>> -#define ULONGLONG_MAX	(~0ULL)
+>> +#define ULONGLONG_MAX	ULLONG_MAX
 > 
-> >A simpler solution will be to just reserve 60% of total memory for bitmaps
-> >and leave rest for makedumpfile and kernel and other components.
+> Hi Wang Nan,
 > 
-> That's just specific tuning for you and Baoquan.
+> is this actually needed on some known platform? If not, then I'd rather
+> remove all these #ifndef stanzas and rely on <limits.h>. I mean, if you
+> can't rely on standard C constants, then why should be the gcc-specific
+> pre-defined macros (__LONG_MAX__ et al.) available?
 > 
-> Now, I think this case is just lack of free memory caused by
-> inappropriate parameter setting for your environment. You should
-> increase crashkernel= to get enough free memory, 166M may be too
-> small for your environment.
 
-I don't think it is bad tuning from our side. makedumpfile has 30MB free
-memory when it was launched and still OOM happened. 
+These macros exist at the first version (at makedumpfile.h), an enforced by
+commit ab9c60bf (just because they conflict with limits.h ...). But I don't
+think there exists a real platform without <limits.h>.
 
-30MB should be more than enough to save dump. 
+I agree with you that totally removing these macros should be better.
 
+> It's probably better to put the burden on the person doing the
+> port, because they should know what is appropriate for their compiler
+> and/or libc.
 > 
-> By the way, I'm going on holiday for 8 days, I can't reply
-> during that period. Thanks in advance.
+> Just my opinion,
+> Petr T
+> 
 
-Sure, talk to you more about this once you are back.
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
