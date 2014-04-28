@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WeftD-0002Ta-TL
- for kexec@lists.infradead.org; Mon, 28 Apr 2014 07:22:13 +0000
-From: WANG Chao <chaowang@redhat.com>
-Subject: [PATCH] kdump: pass e820 reserved region to 2nd kernel via e820 table
- or setup_data
-Date: Mon, 28 Apr 2014 15:21:44 +0800
-Message-Id: <1398669704-31851-1-git-send-email-chaowang@redhat.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Weg0k-0005JX-Uc
+ for kexec@lists.infradead.org; Mon, 28 Apr 2014 07:29:59 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH v2] makedumpfile: code cleanup: set_bitmap
+Date: Mon, 28 Apr 2014 07:27:32 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720DF19@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE97205CAA@BPXM01GP.gisp.nec.co.jp>
+ <1398330673-23016-1-git-send-email-wangnan0@huawei.com>
+ <20140424112815.398f9852@hananiah.suse.cz>	<5359F1C3.5030100@huawei.com>
+ <20140425100305.501177cb@hananiah.suse.cz> <535B36A9.6000901@huawei.com>
+In-Reply-To: <535B36A9.6000901@huawei.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,74 +22,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org, cpw@sgi.com
+To: "wangnan0@huawei.com" <wangnan0@huawei.com>, "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "hui.geng@huawei.com" <hui.geng@huawei.com>
 
-e820 reserved region could be useful in 2nd kernel.
+>On 2014/4/25 16:03, Petr Tesarik wrote:
+>> On Fri, 25 Apr 2014 13:25:23 +0800
+>> Wang Nan <wangnan0@huawei.com> wrote:
+>>
+>>> On 2014/4/24 17:28, Petr Tesarik wrote:
+>>>> On Thu, 24 Apr 2014 17:11:13 +0800
+>>>> Wang Nan <wangnan0@huawei.com> wrote:
+>>> [...]
+>>>>>  set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+>>>>>      int val)
+>>>>>  {
+>>>>> @@ -3317,20 +3345,11 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+>>>>>  	old_offset = bitmap->offset + BUFSIZE_BITMAP * bitmap->no_block;
+>>>>>  	new_offset = bitmap->offset + BUFSIZE_BITMAP * (pfn / PFN_BUFBITMAP);
+>>>>
+>>>> After applying this patch, both old_offset and new_offset are
+>>>> calculated only to compare for equality. And new_offset is in fact
+>>>> computed twice (once in set_bitmap and once in sync_bitmap).
+>>>>
+>>>> This could be cleaned up by replacing the offsets with:
+>>>>
+>>>> 	int new_no_block = pfn / PFN_BUFBITMAP;
+>>>>
+>>>> Then change all occurrences of if (old_offset != new_offset) to:
+>>>>
+>>>> 	if (bitmap->no_block != new_no_block)
+>>>>
+>>>> and finally re-use new_no_block in the assignment to bitmap->no_block
+>>>> near the end of the function, like this:
+>>>>
+>>>> -		bitmap->no_block = pfn / PFN_BUFBITMAP;
+>>>> +		bitmap->no_block = new_no_block;
+>>>>
+>>>> Petr T
+>>>>
+>>>>>
+>>>>> -	if (0 <= bitmap->no_block && old_offset != new_offset) {
+>>>>> -		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
+>>>>> -			ERRMSG("Can't seek the bitmap(%s). %s\n",
+>>>>> -			    bitmap->file_name, strerror(errno));
+>>>>> -			return FALSE;
+>>>>> -		}
+>>>>> -		if (write(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP)
+>>>>> -		    != BUFSIZE_BITMAP) {
+>>>>> -			ERRMSG("Can't write the bitmap(%s). %s\n",
+>>>>> -			    bitmap->file_name, strerror(errno));
+>>>>> +	if (old_offset != new_offset) {
+>>>>> +		if (!sync_bitmap(bitmap)) {
+>>>>> +			ERRMSG("Can't sync bitmap\n");
+>>>>>  			return FALSE;
+>>>>>  		}
+>>>>> -	}
+>>>>> -	if (old_offset != new_offset) {
+>>>>>  		if (lseek(bitmap->fd, new_offset, SEEK_SET) < 0 ) {
+>>>>>  			ERRMSG("Can't seek the bitmap(%s). %s\n",
+>>>>>  			    bitmap->file_name, strerror(errno));
+>>> [ .. see below .. ]
+>>>
+>>> Good suggestion, but new_offset is still needed to be calculated for these lseeks.
+>>
+>> True, but it will be calculated only once (in sync_bitmap). OTOH the
+>> block number is always needed, because it is stored in bitmap->no_block.
+>>
+>> Okay, that can be changed, and you can store the offset instead. I
+>> don't have a strong opinion on this.
+>>
+>>> In addition, I have another idea: what about to replace all lseek .. read/write pattern to pread/pwrite?
+>>
+>> Definitely! After doing that, we could even reuse the same file descriptor
+>> for all processes.
+>>
+>
+>I posted a series of patches for lseek. If Atsushi Kumagai accept them, I will
+>redo this patch on top of them.
 
-For example, PCI mmconf (extended mode) requires reserved region
-otherwise it falls back to legacy mode. The following log is from Cliff
-Wickman <cpw@sgi.com>:
+I haven't gotten a chance to review them yet, but I accept your idea.
+So please give me a time for reviewing.
 
- PCI: MMCONFIG for domain 1003 [bus 3f-3f] at [mem 0xff0ff00000-0xff0fffffff] (base 0xff0c000000)
- [Firmware Bug]: PCI: MMCONFIG at [mem 0x80000000-0x80cfffff] not reserved in ACPI motherboard resources
- PCI: not using MMCONFIG
 
-PCI devices on segment 1 (>0) can't fall back to legacy mode, thus
-kernel probing fails and device can't be found.
+Thanks
+Atsushi Kumagai
 
-We don't pass reserved region because these regions could be too much
-and eat up our very limited kernel command line resource in
-memmap=exactmap case.
-
-However now we use e820 map and setup_data to pass memory map to 2nd
-kernel and the number of reserved regions should not be a problem any
-more.
-
-Signed-off-by: WANG Chao <chaowang@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 4a1491b..321ed3d 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -300,6 +300,9 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
- 			type = RANGE_ACPI;
- 		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
- 			type = RANGE_ACPI_NVS;
-+		} else if(memcmp(str,"reserved\n",9) == 0 ) {
-+			type = RANGE_RANGE;
-+		} else if (memcmp(str, "GART\n", 5) == 0) {
- 		} else if (memcmp(str, "GART\n", 5) == 0) {
- 			gart_start = start;
- 			gart_end = end;
-@@ -989,14 +992,15 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
- 		unsigned long start, end, size, type;
- 		if ( !( mem_range[i].type == RANGE_ACPI
--			|| mem_range[i].type == RANGE_ACPI_NVS) )
-+			|| mem_range[i].type == RANGE_ACPI_NVS
-+			|| mem_range[i].type == RANGE_RESERVED))
- 			continue;
- 		start = mem_range[i].start;
- 		end = mem_range[i].end;
- 		type = mem_range[i].type;
- 		size = end - start + 1;
- 		add_memmap(memmap_p, &nr_memmap, start, size, type);
--		if (arch_options.pass_memmap_cmdline)
-+		if (arch_options.pass_memmap_cmdline || type != RANGE_RESERVED)
- 			cmdline_add_memmap_acpi(mod_cmdline, start, end);
- 	}
- 
--- 
-1.9.0
+>> Now, since the original patch looks good as it is, let's see if Atsushi
+>> Kumagai takes it into the tree and post more clean up patches afterwards.
+>>
+>> Petr T
+>>
+>
 
 
 _______________________________________________
