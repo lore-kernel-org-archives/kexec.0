@@ -1,31 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WfT74-0002r1-W3
- for kexec@lists.infradead.org; Wed, 30 Apr 2014 11:55:47 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id DC0F53EE0BB
- for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 20:55:21 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id CD10645DE6A
- for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 20:55:21 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.nic.fujitsu.com [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8C11645DE67
- for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 20:55:21 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 779EB1DB8037
- for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 20:55:21 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 244F91DB8032
- for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 20:55:21 +0900 (JST)
-Date: Wed, 30 Apr 2014 20:55:10 +0900 (JST)
-Message-Id: <20140430.205510.528575789.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH 3/4] makedumpfile: add -D_GNU_SOURCE to CFLAGS
+ id 1WfTV1-0005r8-JA
+ for kexec@lists.infradead.org; Wed, 30 Apr 2014 12:20:32 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 12DE03EE0F1
+ for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 21:20:07 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id F3E9245DF55
+ for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 21:20:06 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.nic.fujitsu.com [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id D163345DF56
+ for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 21:20:06 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B90D4E18003
+ for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 21:20:06 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 63319E18002
+ for <kexec@lists.infradead.org>; Wed, 30 Apr 2014 21:20:06 +0900 (JST)
+Date: Wed, 30 Apr 2014 21:19:55 +0900 (JST)
+Message-Id: <20140430.211955.425946268.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH 0/4] Replace lseek..write/read to pwrite/pread
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <1398485229-43295-4-git-send-email-wangnan0@huawei.com>
+In-Reply-To: <20140430135304.3c7e7ed5@hananiah.suse.cz>
 References: <1398485229-43295-1-git-send-email-wangnan0@huawei.com>
- <1398485229-43295-4-git-send-email-wangnan0@huawei.com>
+ <20140430.204138.209328404.d.hatayama@jp.fujitsu.com>
+ <20140430135304.3c7e7ed5@hananiah.suse.cz>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,50 +40,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: wangnan0@huawei.com
-Cc: ptesarik@suse.cz, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, sdu.liu@huawei.com, hui.geng@huawei.com
+To: ptesarik@suse.cz
+Cc: wangnan0@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, sdu.liu@huawei.com, hui.geng@huawei.com
 
-From: Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH 3/4] makedumpfile: add -D_GNU_SOURCE to CFLAGS
-Date: Sat, 26 Apr 2014 12:07:08 +0800
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH 0/4] Replace lseek..write/read to pwrite/pread
+Date: Wed, 30 Apr 2014 13:53:04 +0200
 
-> This patch is preparation for introduce pread/pwrite.
+> On Wed, 30 Apr 2014 20:41:38 +0900 (JST)
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 > 
+>> From: Wang Nan <wangnan0@huawei.com>
+>> Subject: [PATCH 0/4] Replace lseek..write/read to pwrite/pread
+>> Date: Sat, 26 Apr 2014 12:07:05 +0800
+>> 
+>> > In original code there are many operations read from /write to specific
+>> > positions of a file. This series of patches replace such patterns to
+>> > pread/pwrite calls, reduces more than 100 lines of code.
+>> > 
+>> 
+>> I'm now writing pthread support patch set and it will naturally
+>> include pread/pwrite like this patch set.
+>> 
+>> It sounds to me that using pread/pwrite only to reduce lseek code is
+>> weak in motivation. Is there another visible merit? For example, any
+>> kind of performance improvement. I guess it's small even if exists
+>> compared to I/O.
+> 
+> There is no user-visible benefit just from applying the patch, that's
+> right.
+> 
+> The main benefit is that these pread/pwrite operations are atomic and do
+> not move the file offset, so all subprocesses (or threads) can share
+> the same file descriptor. This allows to remove reopen_dump_memory(),
+> for example.
+> 
+> Anyway, is improving code readability really so weak argument?
+> 
+> Petr T
 
-Do you explain more about _GNU_SOURCE? Did you need to define this on
-your environment to build makedumpfile with pread/pwrite?
-
-I tried to build a very simple test program using pread like
-
-int main(void)
-{
-   printf("%p\n", pread);
-}
-
-on RHEL5.4, RHEL6.5 and fc20, and all were done successfully without
-_GNU_SOURCE. They are all on x86_64.
-
-I checked man pread and man pwrite on each environments for
-_GNU_SOURCE but I didn't find it. What I found was _XOPEN_SOURCE
-description only. For example this is man pread on RHEL6.5.
-
-$ LANG=C man pread
-PREAD(2)                   Linux Programmer's Manual                  PREAD(2)
-
-NAME
-       pread, pwrite - read from or write to a file descriptor at a given offset
-
-SYNOPSIS
-       #define _XOPEN_SOURCE 500
-
-       #include <unistd.h>
-
-       ssize_t pread(int fd, void *buf, size_t count, off_t offset);
-
-       ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset);
-
-Note that just as I said the above, building was successfully done on
-this environment.
+In the current code, parallelism occurs only when --split option is
+specified. It seems to me that reopen_dump_memory() is enough. So, it
+appears to me that this patch set just changes lseek(); read(); or
+lseek(); write() lines to pread() or pwrite(), so I don't see so big
+difference...
 
 --
 Thanks.
