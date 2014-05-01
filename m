@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mail-ee0-x22a.google.com ([2a00:1450:4013:c00::22a])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WfUSV-0002TG-TQ
- for kexec@lists.infradead.org; Wed, 30 Apr 2014 13:22:00 +0000
-Date: Wed, 30 Apr 2014 15:21:34 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH 0/4] Replace lseek..write/read to pwrite/pread
-Message-ID: <20140430152134.364000d3@hananiah.suse.cz>
-In-Reply-To: <20140430.211955.425946268.d.hatayama@jp.fujitsu.com>
-References: <1398485229-43295-1-git-send-email-wangnan0@huawei.com>
- <20140430.204138.209328404.d.hatayama@jp.fujitsu.com>
- <20140430135304.3c7e7ed5@hananiah.suse.cz>
- <20140430.211955.425946268.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+ id 1WfoRo-0004Qv-Of
+ for kexec@lists.infradead.org; Thu, 01 May 2014 10:42:37 +0000
+Received: by mail-ee0-f42.google.com with SMTP id d17so2128813eek.15
+ for <kexec@lists.infradead.org>; Thu, 01 May 2014 03:42:13 -0700 (PDT)
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH v2] zImage-arm: get rid of static offset
+Date: Thu,  1 May 2014 12:42:05 +0200
+Message-Id: <1398940925-11769-1-git-send-email-zonque@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,68 +17,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: wangnan0@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, sdu.liu@huawei.com, hui.geng@huawei.com
+To: horms@verge.net.au, kexec@lists.infradead.org
+Cc: s.neumann@raumfeld.com, Daniel Mack <zonque@gmail.com>
 
-On Wed, 30 Apr 2014 21:19:55 +0900 (JST)
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+The code in arch/arm/kexec-zImage-arm.c currently enforces a hard limit
+on the maximum size a dtb blob can occupy. This limit is set to 32k,
+which is quite low for device tree blobs nowadays.
 
-> From: Petr Tesarik <ptesarik@suse.cz>
-> Subject: Re: [PATCH 0/4] Replace lseek..write/read to pwrite/pread
-> Date: Wed, 30 Apr 2014 13:53:04 +0200
-> 
-> > On Wed, 30 Apr 2014 20:41:38 +0900 (JST)
-> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> > 
-> >> From: Wang Nan <wangnan0@huawei.com>
-> >> Subject: [PATCH 0/4] Replace lseek..write/read to pwrite/pread
-> >> Date: Sat, 26 Apr 2014 12:07:05 +0800
-> >> 
-> >> > In original code there are many operations read from /write to specific
-> >> > positions of a file. This series of patches replace such patterns to
-> >> > pread/pwrite calls, reduces more than 100 lines of code.
-> >> > 
-> >> 
-> >> I'm now writing pthread support patch set and it will naturally
-> >> include pread/pwrite like this patch set.
-> >> 
-> >> It sounds to me that using pread/pwrite only to reduce lseek code is
-> >> weak in motivation. Is there another visible merit? For example, any
-> >> kind of performance improvement. I guess it's small even if exists
-> >> compared to I/O.
-> > 
-> > There is no user-visible benefit just from applying the patch, that's
-> > right.
-> > 
-> > The main benefit is that these pread/pwrite operations are atomic and do
-> > not move the file offset, so all subprocesses (or threads) can share
-> > the same file descriptor. This allows to remove reopen_dump_memory(),
-> > for example.
-> > 
-> > Anyway, is improving code readability really so weak argument?
-> > 
-> > Petr T
-> 
-> In the current code, parallelism occurs only when --split option is
-> specified. It seems to me that reopen_dump_memory() is enough. So, it
-> appears to me that this patch set just changes lseek(); read(); or
-> lseek(); write() lines to pread() or pwrite(), so I don't see so big
-> difference...
+Get rid of this assumption, and calculate the added size dynamically.
+For this, we need to slurp in the dtb file earlier in order to
+determine its size, because the memory hole allocation for 'base'
+takes this size into account.
 
-True. But as you can see in patch 4/4, it also allowed to reduce the
-number of error paths.
+For ATAGs, we keep the current value of 32k, which should in fact be
+enough.
 
-But I'm confused. Since you say you plan to replace lseek+read/write
-with pread/pwrite as part of a pthread-enabling patch series anyway,
-what is your point if you argue against replacing it now?
+With this change in place, the 'DTB too large!' error message can go
+away. Successfully tested on a AM335x board.
 
-Just trying to understand...
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+[s.neumann@raumfeld.com: Fix ATAGs case]
+Reported-and-tested-by: Sven Neumann <s.neumann@raumfeld.com>
+---
+v2 includes a fixup from Sven Neumann for ATAGs driven boards.
+The patch is in tested on a larger number of machines by now.
 
-Petr T
+ kexec/arch/arm/kexec-zImage-arm.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index bfbf290..220826e 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -282,7 +282,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ {
+ 	unsigned long base;
+ 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
+-	unsigned int offset = 0x8000;      /* 32k offset from memory start */
++	unsigned int extra_size = 0;
+ 	const char *command_line;
+ 	char *modified_cmdline = NULL;
+ 	off_t command_line_len;
+@@ -360,6 +360,13 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
+ 	}
+ 
++	if (dtb_file) {
++		dtb_buf = slurp_file(dtb_file, &dtb_length);
++		extra_size = _ALIGN(dtb_length, getpagesize());
++	} else if (use_atags) {
++		extra_size = 0x8000;	/* 32k should be plenty for ATAGs */
++	}
++
+ 	/*
+ 	 * If we are loading a dump capture kernel, we need to update kernel
+ 	 * command line and also add some additional segments.
+@@ -398,7 +405,8 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		}
+ 		base = start;
+ 	} else {
+-		base = locate_hole(info,len+offset,0,0,ULONG_MAX,INT_MAX);
++		base = locate_hole(info, len + extra_size, 0, 0,
++				   ULONG_MAX, INT_MAX);
+ 	}
+ 
+ 	if (base == ULONG_MAX)
+@@ -428,8 +436,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		 * Read a user-specified DTB file.
+ 		 */
+ 		if (dtb_file) {
+-			dtb_buf = slurp_file(dtb_file, &dtb_length);
+-
+ 			if (fdt_check_header(dtb_buf) != 0) {
+ 				fprintf(stderr, "Invalid FDT buffer.\n");
+ 				return -1;
+@@ -452,11 +458,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 			create_flatten_tree(&dtb_buf, &dtb_length, command_line);
+ 		}
+ 
+-		if (base + atag_offset + dtb_length > base + offset) {
+-			fprintf(stderr, "DTB too large!\n");
+-			return -1;
+-		}
+-
+ 		if (ramdisk) {
+ 			add_segment(info, ramdisk_buf, initrd_size,
+ 			            initrd_base, initrd_size);
+@@ -485,9 +486,9 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		            dtb_offset, dtb_length);
+ 	}
+ 
+-	add_segment(info, buf, len, base + offset, len);
++	add_segment(info, buf, len, base + extra_size, len);
+ 
+-	info->entry = (void*)base + offset;
++	info->entry = (void*)base + extra_size;
+ 
+ 	return 0;
+ }
+-- 
+1.9.0
+
 
 _______________________________________________
 kexec mailing list
