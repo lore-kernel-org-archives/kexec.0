@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ee0-x22a.google.com ([2a00:1450:4013:c00::22a])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WfoRo-0004Qv-Of
- for kexec@lists.infradead.org; Thu, 01 May 2014 10:42:37 +0000
-Received: by mail-ee0-f42.google.com with SMTP id d17so2128813eek.15
- for <kexec@lists.infradead.org>; Thu, 01 May 2014 03:42:13 -0700 (PDT)
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH v2] zImage-arm: get rid of static offset
-Date: Thu,  1 May 2014 12:42:05 +0200
-Message-Id: <1398940925-11769-1-git-send-email-zonque@gmail.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wg2wk-0007di-Ca
+ for kexec@lists.infradead.org; Fri, 02 May 2014 02:11:31 +0000
+Date: Fri, 2 May 2014 11:11:05 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] zImage-arm: get rid of static offset
+Message-ID: <20140502021105.GF2265@verge.net.au>
+References: <1398940925-11769-1-git-send-email-zonque@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1398940925-11769-1-git-send-email-zonque@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,112 +19,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org
-Cc: s.neumann@raumfeld.com, Daniel Mack <zonque@gmail.com>
+To: Daniel Mack <zonque@gmail.com>
+Cc: s.neumann@raumfeld.com, kexec@lists.infradead.org
 
-The code in arch/arm/kexec-zImage-arm.c currently enforces a hard limit
-on the maximum size a dtb blob can occupy. This limit is set to 32k,
-which is quite low for device tree blobs nowadays.
+On Thu, May 01, 2014 at 12:42:05PM +0200, Daniel Mack wrote:
+> The code in arch/arm/kexec-zImage-arm.c currently enforces a hard limit
+> on the maximum size a dtb blob can occupy. This limit is set to 32k,
+> which is quite low for device tree blobs nowadays.
+> 
+> Get rid of this assumption, and calculate the added size dynamically.
+> For this, we need to slurp in the dtb file earlier in order to
+> determine its size, because the memory hole allocation for 'base'
+> takes this size into account.
+> 
+> For ATAGs, we keep the current value of 32k, which should in fact be
+> enough.
+> 
+> With this change in place, the 'DTB too large!' error message can go
+> away. Successfully tested on a AM335x board.
+> 
+> Signed-off-by: Daniel Mack <zonque@gmail.com>
+> [s.neumann@raumfeld.com: Fix ATAGs case]
+> Reported-and-tested-by: Sven Neumann <s.neumann@raumfeld.com>
+> ---
+> v2 includes a fixup from Sven Neumann for ATAGs driven boards.
+> The patch is in tested on a larger number of machines by now.
 
-Get rid of this assumption, and calculate the added size dynamically.
-For this, we need to slurp in the dtb file earlier in order to
-determine its size, because the memory hole allocation for 'base'
-takes this size into account.
-
-For ATAGs, we keep the current value of 32k, which should in fact be
-enough.
-
-With this change in place, the 'DTB too large!' error message can go
-away. Successfully tested on a AM335x board.
-
-Signed-off-by: Daniel Mack <zonque@gmail.com>
-[s.neumann@raumfeld.com: Fix ATAGs case]
-Reported-and-tested-by: Sven Neumann <s.neumann@raumfeld.com>
----
-v2 includes a fixup from Sven Neumann for ATAGs driven boards.
-The patch is in tested on a larger number of machines by now.
-
- kexec/arch/arm/kexec-zImage-arm.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index bfbf290..220826e 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -282,7 +282,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- {
- 	unsigned long base;
- 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
--	unsigned int offset = 0x8000;      /* 32k offset from memory start */
-+	unsigned int extra_size = 0;
- 	const char *command_line;
- 	char *modified_cmdline = NULL;
- 	off_t command_line_len;
-@@ -360,6 +360,13 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
- 	}
- 
-+	if (dtb_file) {
-+		dtb_buf = slurp_file(dtb_file, &dtb_length);
-+		extra_size = _ALIGN(dtb_length, getpagesize());
-+	} else if (use_atags) {
-+		extra_size = 0x8000;	/* 32k should be plenty for ATAGs */
-+	}
-+
- 	/*
- 	 * If we are loading a dump capture kernel, we need to update kernel
- 	 * command line and also add some additional segments.
-@@ -398,7 +405,8 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		}
- 		base = start;
- 	} else {
--		base = locate_hole(info,len+offset,0,0,ULONG_MAX,INT_MAX);
-+		base = locate_hole(info, len + extra_size, 0, 0,
-+				   ULONG_MAX, INT_MAX);
- 	}
- 
- 	if (base == ULONG_MAX)
-@@ -428,8 +436,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		 * Read a user-specified DTB file.
- 		 */
- 		if (dtb_file) {
--			dtb_buf = slurp_file(dtb_file, &dtb_length);
--
- 			if (fdt_check_header(dtb_buf) != 0) {
- 				fprintf(stderr, "Invalid FDT buffer.\n");
- 				return -1;
-@@ -452,11 +458,6 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 			create_flatten_tree(&dtb_buf, &dtb_length, command_line);
- 		}
- 
--		if (base + atag_offset + dtb_length > base + offset) {
--			fprintf(stderr, "DTB too large!\n");
--			return -1;
--		}
--
- 		if (ramdisk) {
- 			add_segment(info, ramdisk_buf, initrd_size,
- 			            initrd_base, initrd_size);
-@@ -485,9 +486,9 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		            dtb_offset, dtb_length);
- 	}
- 
--	add_segment(info, buf, len, base + offset, len);
-+	add_segment(info, buf, len, base + extra_size, len);
- 
--	info->entry = (void*)base + offset;
-+	info->entry = (void*)base + extra_size;
- 
- 	return 0;
- }
--- 
-1.9.0
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
