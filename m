@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([119.145.14.64])
+Received: from svenfoo.org ([82.94.215.22] helo=mail.zonque.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WhHve-0003IJ-GX
- for kexec@lists.infradead.org; Mon, 05 May 2014 12:23:31 +0000
-Message-ID: <53678261.1000006@huawei.com>
-Date: Mon, 5 May 2014 20:21:53 +0800
-From: Wang Nan <wangnan0@huawei.com>
+ id 1WhIi8-0004fT-Lo
+ for kexec@lists.infradead.org; Mon, 05 May 2014 13:13:37 +0000
+Message-ID: <53678E67.2050508@zonque.org>
+Date: Mon, 05 May 2014 15:13:11 +0200
+From: Daniel Mack <daniel@zonque.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] zImage-arm: get rid of static offset
-References: <1398940925-11769-1-git-send-email-zonque@gmail.com>
- <20140502021105.GF2265@verge.net.au>
-In-Reply-To: <20140502021105.GF2265@verge.net.au>
+Subject: Re: [kexec-tools][PATCH] zImage-arm: bugfix: load kernel at
+ TEXT_OFFSET
+References: <1399290511-53398-1-git-send-email-wangnan0@huawei.com>
+In-Reply-To: <1399290511-53398-1-git-send-email-wangnan0@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,72 +23,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Daniel Mack <zonque@gmail.com>
-Cc: kexec@lists.infradead.org, s.neumann@raumfeld.com
+To: Wang Nan <wangnan0@huawei.com>, Simon Horman <horms@verge.net.au>
+Cc: Sven Neumann <s.neumann@raumfeld.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
 
-On 2014/5/2 10:11, Simon Horman wrote:
-> On Thu, May 01, 2014 at 12:42:05PM +0200, Daniel Mack wrote:
->> The code in arch/arm/kexec-zImage-arm.c currently enforces a hard limit
->> on the maximum size a dtb blob can occupy. This limit is set to 32k,
->> which is quite low for device tree blobs nowadays.
->>
->> Get rid of this assumption, and calculate the added size dynamically.
->> For this, we need to slurp in the dtb file earlier in order to
->> determine its size, because the memory hole allocation for 'base'
->> takes this size into account.
->>
->> For ATAGs, we keep the current value of 32k, which should in fact be
->> enough.
->>
->> With this change in place, the 'DTB too large!' error message can go
->> away. Successfully tested on a AM335x board.
->>
->> Signed-off-by: Daniel Mack <zonque@gmail.com>
->> [s.neumann@raumfeld.com: Fix ATAGs case]
->> Reported-and-tested-by: Sven Neumann <s.neumann@raumfeld.com>
->> ---
->> v2 includes a fixup from Sven Neumann for ATAGs driven boards.
->> The patch is in tested on a larger number of machines by now.
+On 05/05/2014 01:48 PM, Wang Nan wrote:
+> This patch fix a problem introduced by commit e5d6a55 which make ARM
+> kexec fails.
 > 
-> Thanks, applied.
+> Due to that commit, kernel is loaded at a dynamically offset: it computes
+> extra_size using size of dtb, and load zImage at base + extra_size. When
+> dtb size small (for example, 0x3000 bytes), kernel will be loaded at
+> address like 0x60003000. For ARM zImage such address is incorrect.
+
+Ah, ok. Thanks for the heads-up. Your fixup works for me as well, two
+minor style nits commented on inline.
+
+> ---
+>  kexec/arch/arm/kexec-zImage-arm.c | 31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
 > 
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index 4b5d3f4..539192b 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -362,11 +362,10 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  
+>  	if (dtb_file) {
+>  		dtb_buf = slurp_file(dtb_file, &dtb_length);
+> -		extra_size = _ALIGN(dtb_length, getpagesize());
+> -	} else if (use_atags) {
+> -		extra_size = 0x8000;	/* 32k should be plenty for ATAGs */
+>  	}
 
-After applying this patch, the second kernel on qemu never works. I have
-posted a patch on it to solve this problem:
+The curly braces are not needed anymore now.
 
- [kexec-tools][PATCH] zImage-arm: bugfix: load kernel at TEXT_OFFSET
+> +	extra_size = 0x8000;
+> +
 
-I think there must be some misunderstanding about "DTB too large!" problem.
-DTB is pasted after initrd by kexec, not before the kernel. See following figures:
+You can move the initialization to the variable declaration above.
 
-When using DTB:
 
-|<--- TEXT_OFFSET (0x8000) ------->|
-|<-- atags, DTB *is not here* ---->|<-- zImage -->|<-- initrd -->|<-- *DTB is here* -->|
+Thanks,
+Daniel
 
-When using ATAGS:
 
-|<-- TEXT_OFFSET (0x8000) ->|
-|<-- 0x1000 --|<-- atags -->|<-- zImage -->|<-- initrd -->|
 
-It seems the original code is incorrect:
-
-      if (base + atag_offset + dtb_length > base + offset) { // offset is TEXT_OFFSET
-              fprintf(stderr, "DTB too large!\n");
-              return -1;
-      }
-
-This code assumes dtb is loaded between atags_offset and zImage, can use only 28KiB memory,
-same as atags. However, dtb is loaded after initrd, no upper limit is taken place, so simply
-remove the above checking is enough. In my patch, I use locate_holes() to endure there is enough
-space for initrd and dtb.
-
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+>  	/*
+>  	 * If we are loading a dump capture kernel, we need to update kernel
+>  	 * command line and also add some additional segments.
+> @@ -460,6 +459,32 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  			create_flatten_tree(&dtb_buf, &dtb_length, command_line);
+>  		}
+>  
+> +		/*
+> +		 * Search in memory to make sure there is enough memory
+> +		 * to hold initrd and dtb.
+> +		 *
+> +		 * Even if no initrd is used, this check is still
+> +		 * required for dtb.
+> +		 *
+> +		 * Crash kernel use fixed address, no check is ok.
+> +		 */
+> +		if ((info->kexec_flags & KEXEC_ON_CRASH) == 0) {
+> +			unsigned long page_size = getpagesize();
+> +			/*
+> +			 * DTB size may be increase a little
+> +			 * when setup initrd size. Add a full page
+> +			 * for it is enough.
+> +			 */
+> +			unsigned long hole_size = _ALIGN_UP(initrd_size, page_size) +
+> +				_ALIGN(dtb_length + page_size, page_size);
+> +			unsigned long initrd_base_new = locate_hole(info,
+> +					hole_size, page_size,
+> +					initrd_base, ULONG_MAX, INT_MAX);
+> +			if (base == ULONG_MAX)
+> +				return -1;
+> +			initrd_base = initrd_base_new;
+> +		}
+> +
+>  		if (ramdisk) {
+>  			add_segment(info, ramdisk_buf, initrd_size,
+>  			            initrd_base, initrd_size);
 > 
-
 
 
 _______________________________________________
