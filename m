@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wi5JQ-00030e-Bn
- for kexec@lists.infradead.org; Wed, 07 May 2014 17:07:21 +0000
+ id 1Wi5JQ-00030R-CF
+ for kexec@lists.infradead.org; Wed, 07 May 2014 17:07:22 +0000
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH v3 2/2] Get rid of overrun adjustments
-Date: Wed,  7 May 2014 19:06:43 +0200
-Message-Id: <1399482403-3656-3-git-send-email-ptesarik@suse.cz>
+Subject: [PATCH v3 1/2] Generic handling of multi-page exclusions
+Date: Wed,  7 May 2014 19:06:42 +0200
+Message-Id: <1399482403-3656-2-git-send-email-ptesarik@suse.cz>
 In-Reply-To: <1399482403-3656-1-git-send-email-ptesarik@suse.cz>
 References: <1399482403-3656-1-git-send-email-ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
@@ -25,98 +25,134 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org
 
-Thanks to the previous commit, __exclude_unnecessary_pages does not
-require any specific size of the cycle.
+When multiple pages are excluded from the dump, store the extents in
+struct cycle and check if anything is still pending on the next invocation
+of __exclude_unnecessary_pages. This assumes that:
+
+  1. after __exclude_unnecessary_pages is called for a struct mem_map_data
+     that extends beyond the current cycle, it is not called again during
+     that cycle,
+  2. in the next cycle, __exclude_unnecessary_pages is not called before
+     this final struct mem_map_data.
+
+Both assumptions are met if struct mem_map_data segments:
+
+  1. do not overlap,
+  2. are sorted by physical address in ascending order.
+
+These two conditions are true for all supported memory models.
+
+Note that the start PFN of the excluded extent is set to the end of the
+current cycle (which is equal to the start of the next cycle, see
+update_cycle), so only the part of the excluded region which falls beyond
+current cycle buffer is valid. If the excluded region is completely
+processed in the current cycle, the start PFN is bigger than the end PFN
+and no work is done at the beginning of the next cycle.
+
+After processing the leftover from last cycle, pfn_start and mem_map are
+adjusted to skip the excluded pages. There is no check whether the
+adjusted pfn_start is within the current cycle. Nothing bad happens if
+it isn't, because pages outside the current cyclic region are ignored by
+the subsequent loop, and the remainder is postponed to the next cycle by
+exclude_range().
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- makedumpfile.c | 59 ----------------------------------------------------------
- 1 file changed, 59 deletions(-)
+ makedumpfile.c | 49 +++++++++++++++++++++++++++++++++++--------------
+ makedumpfile.h |  5 +++++
+ 2 files changed, 40 insertions(+), 14 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index a3498e4..9a36856 100644
+index 16081a5..a3498e4 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -88,7 +88,6 @@ do { \
- 		*ptr_long_table = value; \
- } while (0)
- 
--static void check_cyclic_buffer_overrun(void);
- static void setup_page_is_buddy(void);
- 
- void
-@@ -3254,9 +3253,6 @@ out:
- 		    !sadump_generate_elf_note_from_dumpfile())
- 			return FALSE;
- 
--		if (info->flag_cyclic && info->dump_level & DL_EXCLUDE_FREE)
--			check_cyclic_buffer_overrun();
--
- 	} else {
- 		if (!get_mem_map_without_mm())
- 			return FALSE;
-@@ -4280,61 +4276,6 @@ exclude_free_page(struct cycle *cycle)
+@@ -4667,6 +4667,26 @@ initialize_2nd_bitmap_cyclic(struct cycle *cycle)
+ 	return TRUE;
  }
  
- /*
-- * Let C be a cyclic buffer size and B a bitmap size used for
-- * representing maximum block size managed by buddy allocator.
-- *
-- * For some combinations of C and B, clearing operation can overrun
-- * the cyclic buffer. Let's consider three cases.
-- *
-- *   - If C == B, this is trivially safe.
-- *
-- *   - If B > C, overrun can easily happen.
-- *
-- *   - In case of C > B, if C mod B != 0, then there exist n > m > 0,
-- *     B > b > 0 such that n x C = m x B + b. This means that clearing
-- *     operation overruns cyclic buffer (B - b)-bytes in the
-- *     combination of n-th cycle and m-th block.
-- *
-- *     Note that C mod B != 0 iff (m x C) mod B != 0 for some m.
-- *
-- * If C == B, C mod B == 0 always holds. Again, if B > C, C mod B != 0
-- * always holds. Hence, it's always sufficient to check the condition
-- * C mod B != 0 in order to determine whether overrun can happen or
-- * not.
-- *
-- * The bitmap size used for maximum block size B is calculated from
-- * MAX_ORDER as:
-- *
-- *   B := DIVIDE_UP((1 << (MAX_ORDER - 1)), BITS_PER_BYTE)
-- *
-- * Normally, MAX_ORDER is 11 at default. This is configurable through
-- * CONFIG_FORCE_MAX_ZONEORDER.
-- */
--static void
--check_cyclic_buffer_overrun(void)
--{
--	int max_order = ARRAY_LENGTH(zone.free_area);
--	int max_order_nr_pages = 1 << (max_order - 1);
--	unsigned long max_block_size = divideup(max_order_nr_pages, BITPERBYTE);
--
--	if (info->bufsize_cyclic % max_block_size) {
--		unsigned long bufsize;
--
--		if (max_block_size > info->bufsize_cyclic) {
--			MSG("WARNING: some free pages are not filtered.\n");
--			return;
--		}
--
--		bufsize = info->bufsize_cyclic;
--		info->bufsize_cyclic = round(bufsize, max_block_size);
--		info->pfn_cyclic = info->bufsize_cyclic * BITPERBYTE;
--
--		MSG("cyclic buffer size has been changed: %lu => %lu\n",
--		    bufsize, info->bufsize_cyclic);
--	}
--}
--
--/*
-  * For the kernel versions from v2.6.17 to v2.6.37.
-  */
- static int
++static void
++exclude_range(mdf_pfn_t *counter, mdf_pfn_t pfn, mdf_pfn_t endpfn,
++    struct cycle *cycle)
++{
++	if (cycle) {
++		cycle->exclude_pfn_start = cycle->end_pfn;
++		cycle->exclude_pfn_end = endpfn;
++		cycle->exclude_pfn_counter = counter;
++
++		if (cycle->end_pfn < endpfn)
++			endpfn = cycle->end_pfn;
++	}
++
++	while (pfn < endpfn) {
++		if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
++			(*counter)++;
++		++pfn;
++	}
++}
++
+ int
+ __exclude_unnecessary_pages(unsigned long mem_map,
+     mdf_pfn_t pfn_start, mdf_pfn_t pfn_end, struct cycle *cycle)
+@@ -4681,6 +4701,18 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 	unsigned long flags, mapping, private = 0;
+ 
+ 	/*
++	 * If a multi-page exclusion is pending, do it first
++	 */
++	if (cycle && cycle->exclude_pfn_start < cycle->exclude_pfn_end) {
++		exclude_range(cycle->exclude_pfn_counter,
++			cycle->exclude_pfn_start, cycle->exclude_pfn_end,
++			cycle);
++
++		mem_map += (cycle->exclude_pfn_end - pfn_start) * SIZE(page);
++		pfn_start = cycle->exclude_pfn_end;
++	}
++
++	/*
+ 	 * Refresh the buffer of struct page, when changing mem_map.
+ 	 */
+ 	pfn_read_start = ULONGLONG_MAX;
+@@ -4744,21 +4776,10 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		if ((info->dump_level & DL_EXCLUDE_FREE)
+ 		    && info->page_is_buddy
+ 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+-			int i, nr_pages = 1 << private;
++			int nr_pages = 1 << private;
++
++			exclude_range(&pfn_free, pfn, pfn + nr_pages, cycle);
+ 
+-			for (i = 0; i < nr_pages; ++i) {
+-				/*
+-				 * According to combination of
+-				 * MAX_ORDER and size of cyclic
+-				 * buffer, this clearing bit operation
+-				 * can overrun the cyclic buffer.
+-				 *
+-				 * See check_cyclic_buffer_overrun()
+-				 * for the detail.
+-				 */
+-				if (clear_bit_on_2nd_bitmap_for_kernel((pfn + i), cycle))
+-					pfn_free++;
+-			}
+ 			pfn += nr_pages - 1;
+ 			mem_map += (nr_pages - 1) * SIZE(page);
+ 		}
+diff --git a/makedumpfile.h b/makedumpfile.h
+index eb03688..43cf91d 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1593,6 +1593,11 @@ int get_xen_info_ia64(void);
+ struct cycle {
+ 	mdf_pfn_t start_pfn;
+ 	mdf_pfn_t end_pfn;
++
++	/* for excluding multi-page regions */
++	mdf_pfn_t exclude_pfn_start;
++	mdf_pfn_t exclude_pfn_end;
++	mdf_pfn_t *exclude_pfn_counter;
+ };
+ 
+ static inline int
 -- 
 1.8.4.5
 
