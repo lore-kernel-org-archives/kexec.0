@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65])
+Received: from szxga01-in.huawei.com ([119.145.14.64])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Whr1Z-0000zD-NB
- for kexec@lists.infradead.org; Wed, 07 May 2014 01:51:58 +0000
+ id 1WhsjY-0005ZO-Nk
+ for kexec@lists.infradead.org; Wed, 07 May 2014 03:41:30 +0000
 From: Liu Hua <sdu.liu@huawei.com>
-Subject: [PATCH] makedumpfile: fix bug on is_sparsemem_extreme
-Date: Wed, 7 May 2014 09:43:36 +0800
-Message-ID: <1399427016-54289-1-git-send-email-sdu.liu@huawei.com>
+Subject: [PATCH] makedumpfile: ARM: fix bug on sparse_decode_mem_map
+Date: Wed, 7 May 2014 11:34:08 +0800
+Message-ID: <1399433648-61724-1-git-send-email-sdu.liu@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,39 +23,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp, chaowang@redhat.com
 Cc: wangnan0@huawei.com, kexec@lists.infradead.org, peifeiyue@huawei.com, Liu Hua <sdu.liu@huawei.com>
 
-The kernel gets the length of mem_section use this
-from: include/linux/mmzone.h:1134
-
- "#define NR_SECTION_ROOTS  DIV_ROUND_UP(NR_MEM_SECTIONS,
-					 SECTIONS_PER_ROOT)"
-
-But when we check the memory model. We forget the
-"DIV_ROUND_UP" method.
-
-So when 32-bit ARM linux is in sparsemem_extreme memory:
- with SECTION_SIZE_BIT=28 and 16 byte-size mem_section.
-The makedumpfile can not  identify the memory correctly.
-
-This patch introduce the "DIV_ROUND_UP" method in this check.
+In sparse_decode_mem_map, makedumpfile checks whether coded_mem_map
+is a valid vaddr. But coded_mem_map is not real vaddr. So this patch
+checks decoded_mem_map instead.
 
 Signed-off-by: Liu Hua <sdu.liu@huawei.com>
 ---
- makedumpfile.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ makedumpfile.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 0b31932..16081a5 100644
+index 16081a5..1f06543 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -1599,7 +1599,7 @@ int
- is_sparsemem_extreme(void)
+@@ -2794,12 +2794,14 @@ section_mem_map_addr(unsigned long addr)
+ unsigned long
+ sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
  {
- 	if (ARRAY_LENGTH(mem_section)
--	     == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-+	     == divideup(NR_MEM_SECTIONS(), _SECTIONS_PER_ROOT_EXTREME()))
- 		return TRUE;
- 	else
- 		return FALSE;
+-	if (!is_kvaddr(coded_mem_map))
+-		return NOT_KV_ADDR;
++	unsigned long mem_map;
+ 
+-	return coded_mem_map +
++	mem_map =  coded_mem_map +
+ 	    (SECTION_NR_TO_PFN(section_nr) * SIZE(page));
+ }
++	if (!is_kvaddr(mem_map))
++		return NOT_KV_ADDR;
++	rerurn mem_map;
+ 
+ int
+ get_mm_sparsemem(void)
 -- 
 1.9.0
 
