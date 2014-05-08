@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WiPR7-0008Al-PE
- for kexec@lists.infradead.org; Thu, 08 May 2014 14:36:38 +0000
-Date: Thu, 8 May 2014 10:36:15 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] cleanup duplicate code
-Message-ID: <20140508143615.GF9224@redhat.com>
-References: <1399559595-6062-1-git-send-email-chaowang@redhat.com>
+ id 1WiPRw-0000jn-VF
+ for kexec@lists.infradead.org; Thu, 08 May 2014 14:37:29 +0000
+Date: Thu, 8 May 2014 22:37:04 +0800
+From: WANG Chao <chaowang@redhat.com>
+Subject: Re: [PATCH RESEND] condition check fix
+Message-ID: <20140508143704.GA6852@dhcp12-158.nay.redhat.com>
+References: <1399548377-10417-1-git-send-email-chaowang@redhat.com>
+ <20140508141429.GD9224@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1399559595-6062-1-git-send-email-chaowang@redhat.com>
+In-Reply-To: <20140508141429.GD9224@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +24,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-On Thu, May 08, 2014 at 10:33:15PM +0800, WANG Chao wrote:
-> I accidentally add one duplicate line. Now remove it.
+On 05/08/14 at 10:14am, Vivek Goyal wrote:
+> On Thu, May 08, 2014 at 07:26:17PM +0800, WANG Chao wrote:
+> > In commit 91f5b9c ("kdump: pass e820 reserved region to 2nd kernel via
+> > e820 table or setup_data"), I made a wrong condition check.
+> > 
+> > We should only add cmdline for a memory range if --pass-memmap-cmdline
+> > and the range type isn't RANGE_RESERVED.
+> > 
+> > Signed-off-by: WANG Chao <chaowang@redhat.com>
 > 
-> Signed-off-by: WANG Chao <chaowang@redhat.com>
-> ---
-
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Vivek
-
->  kexec/arch/i386/crashdump-x86.c | 1 -
->  1 file changed, 1 deletion(-)
+> Ok, this fixes the issue for me. Thanks.
 > 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index cc33347..164ebb2 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -303,7 +303,6 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
->  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
->  			type = RANGE_RESERVED;
->  		} else if (memcmp(str, "GART\n", 5) == 0) {
-> -		} else if (memcmp(str, "GART\n", 5) == 0) {
->  			gart_start = start;
->  			gart_end = end;
->  			gart = 1;
-> -- 
-> 1.8.5.3
+> Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> 
+> BTW, on a related note, I see that we are doing GART check two times.
+> 
+>                 } else if (memcmp(str, "GART\n", 5) == 0) {
+>                 } else if (memcmp(str, "GART\n", 5) == 0) {
+> 
+> I am not sure if it is due to your patches or not.
+
+Right, another stupid carelessness. Already sent a fix.
 
 _______________________________________________
 kexec mailing list
