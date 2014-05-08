@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WiEmi-000373-VM
- for kexec@lists.infradead.org; Thu, 08 May 2014 03:14:14 +0000
-Received: from int-mx01.intmail.prod.int.phx2.redhat.com
- (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s483DpGf023013
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Wed, 7 May 2014 23:13:52 -0400
-Date: Thu, 8 May 2014 10:24:50 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: Why do we pass memory map both in e820 and efi_info
-Message-ID: <20140508022450.GA3320@darkstar.nay.redhat.com>
-References: <20140507175858.GD21048@redhat.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WiI9Q-0002HD-Rf
+ for kexec@lists.infradead.org; Thu, 08 May 2014 06:49:53 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [RESEND PATCH] makedumpfile: ARM: fix bug on sparse_decode_mem_map
+Date: Thu, 8 May 2014 06:47:00 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720F337@BPXM01GP.gisp.nec.co.jp>
+References: <1399440539-31444-1-git-send-email-sdu.liu@huawei.com>
+In-Reply-To: <1399440539-31444-1-git-send-email-sdu.liu@huawei.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140507175858.GD21048@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,39 +23,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
+To: "sdu.liu@huawei.com" <sdu.liu@huawei.com>, "chaowang@redhat.com" <chaowang@redhat.com>
+Cc: "wangnan0@huawei.com" <wangnan0@huawei.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "peifeiyue@huawei.com" <peifeiyue@huawei.com>
 
-On 05/07/14 at 01:58pm, Vivek Goyal wrote:
-> Hi Dave/Chao,
-> 
-> I am going through kexec-tools code and it looks like that for EFI
-> systems, we pass memory map entries both in bootparams e820 memory map
-> as well as efi_info. I am wondering why that's the case?
+>In sparse_decode_mem_map, makedumpfile checks whether coded_mem_map
+>is a vald vaddr. But coded_mem_map is not real vaddr. So this patch
+>checks decoded_mem_map instead.
+>
+>Signed-off-by: Liu Hua <sdu.liu@huawei.com>
 
-Most UEFI firmware have a CSM (Compatibility Support Module) that could
-have provided a suitable E820-style memory map to the kernel. 
-Linux kernel use E820 always either for legacy bios boot or UEFI boot.
+Thanks, I'll merge this patch into v1.5.7.
 
-For the machine firmware which does not provide E820 interface user can
-specify 'add_efi_memmap' kernel cmdline thus kernel can add efi memmaps
-to E820 array.
+Atsushi Kumagai
 
-For the efi memmap in efi_info, it's necessary for efi boot because
-efi initialization will use it. UEFI has a lot of mem types, E820 only
-have several RAM,RESERVED, ACPI, etc.  efi_init need the special UEFI
-specific mem ranges ie. for boot services, runtime services etc. I believe
-the UEFI specific mem ranges could be contained in the RESERVED E820 ranges
-though I did not verify it.
-
-> 
-> IOW, I am also trying to figure out as a bootloader, when should we
-> pass memmap in e820 and when should it be passed in efi_info.
-
-E820 is mandatory usually. efi_info only for UEFI boot.
-
-Thanks
-Dave
+>---
+> makedumpfile.c | 10 ++++++----
+> 1 file changed, 6 insertions(+), 4 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 16081a5..94515f6 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -2794,13 +2794,15 @@ section_mem_map_addr(unsigned long addr)
+> unsigned long
+> sparse_decode_mem_map(unsigned long coded_mem_map, unsigned long section_nr)
+> {
+>-	if (!is_kvaddr(coded_mem_map))
+>-		return NOT_KV_ADDR;
+>+	unsigned long mem_map;
+>
+>-	return coded_mem_map +
+>+	mem_map =  coded_mem_map +
+> 	    (SECTION_NR_TO_PFN(section_nr) * SIZE(page));
+>-}
+>
+>+	if (!is_kvaddr(mem_map))
+>+		return NOT_KV_ADDR;
+>+	return mem_map;
+>+}
+> int
+> get_mm_sparsemem(void)
+> {
+>--
+>1.9.0
 
 _______________________________________________
 kexec mailing list
