@@ -1,9 +1,7 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <3bc3a27893963afadcbb63d5ad8e3ef84b9d74ac.1399594544.git.geoff@infradead.org>
-In-Reply-To: <cover.1399594544.git.geoff@infradead.org>
-References: <cover.1399594544.git.geoff@infradead.org>
+Message-Id: <cover.1399594544.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 4/8] arm64: Add smp_spin_table_set_die
+Subject: [PATCH 0/8] arm64 kexec kernel patches 
 Date: Fri, 09 May 2014 00:48:17 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,56 +19,82 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Deepak Saxena <dsaxena@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Remove the const attribute from the smp_spin_table_ops instance in
-smp_spin_table.c and add the new routine smp_spin_table_set_die() which allows a
-custom cpu die method to be set in the smp_spin_table_ops instance.
+Hi Maintainers,
 
-The ability to set a custom cpu die routine is needed by kexec to allow it to
-manage any secondary CPUs that need to be shut down as described in booting.txt.
+This patchset adds support for kexec re-boots on arm64.  I have tested with the 
+VE fast model using various kernel config options with both spin and psci enable 
+methods.  I'll continue to test in the coming weeks.
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
----
- arch/arm64/include/asm/cpu_ops.h   | 2 ++
- arch/arm64/kernel/smp_spin_table.c | 8 +++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+I tried to re-use the existing hot plug cpu_ops support for the secondary CPU 
+shutdown as much as possible, but needed to do some things specific to kexec 
+that I couldn't do with what was already there.  A significant change is in 
+[PATCH 4/8] (arm64: Add smp_spin_table_set_die) where I add the ability to setup 
+a custom cpu_die handler.
 
-diff --git a/arch/arm64/include/asm/cpu_ops.h b/arch/arm64/include/asm/cpu_ops.h
-index 872f61a..42bcd24 100644
---- a/arch/arm64/include/asm/cpu_ops.h
-+++ b/arch/arm64/include/asm/cpu_ops.h
-@@ -63,4 +63,6 @@ extern int cpu_read_ops(struct device_node *dn, int cpu,
- 	const struct cpu_operations **cpu_ops);
- extern void __init cpu_read_bootcpu_ops(void);
- 
-+void smp_spin_table_set_die(void (*fn)(unsigned int));
-+
- #endif /* ifndef __ASM_CPU_OPS_H */
-diff --git a/arch/arm64/kernel/smp_spin_table.c b/arch/arm64/kernel/smp_spin_table.c
-index 26c780b..ce7d0a3 100644
---- a/arch/arm64/kernel/smp_spin_table.c
-+++ b/arch/arm64/kernel/smp_spin_table.c
-@@ -153,7 +153,7 @@ static void smp_spin_table_cpu_die(unsigned int cpu)
- 		cpu_relax();
- }
- 
--const struct cpu_operations smp_spin_table_ops = {
-+struct cpu_operations smp_spin_table_ops = {
- 	.name		= "spin-table",
- 	.cpu_init	= smp_spin_table_cpu_init,
- 	.cpu_prepare	= smp_spin_table_cpu_prepare,
-@@ -162,3 +162,9 @@ const struct cpu_operations smp_spin_table_ops = {
- 	.cpu_disable	= smp_spin_table_cpu_disable,
- 	.cpu_die	= smp_spin_table_cpu_die,
- };
-+
-+void smp_spin_table_set_die(void (*fn)(unsigned int))
-+{
-+	BUG_ON(!fn);
-+	smp_spin_table_ops.cpu_die = fn;
-+}
+To get the the spin-table secondary CPUs into the proper state described in 
+Documentation/arm64/booting.txt I use a three step spin loop.  First in the 
+kernel's virtual address space, then to the identity mapped address, then jump 
+to the final spin code in the 2nd stage kernel's /memreserve/ area.  To support 
+this three step spin I needed [PATCH 5/8] (arm64: Split soft_restart into two 
+stages).  Please see the patch comments for more info.  If we added the 2nd 
+stage kernel's /memreserve/ area to the identity map we could eliminate the 
+middle step and go from the VA space to the /memreserve/ area directly.
+
+Please consider all patches for inclusion.  Any comments or suggestions on how 
+to improve would be very welcome.
+
+To load a kexec kernel and execute a kexec re-boot on arm64 my patches to
+kexec-tools, which have not yet been merged upstream, are needed:
+
+  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+
+-Geoff
+
+The following changes since commit 89ca3b881987f5a4be4c5dbaa7f0df12bbdde2fd:
+
+  Linux 3.15-rc4 (2014-05-04 18:14:42 -0700)
+
+are available in the git repository at:
+
+  git://git.linaro.org/people/geoff.levand/linux-kexec.git for-arm64-kexec
+
+for you to fetch changes up to 32399380e2249697ca549848ef83e5706eb4d83c:
+
+  arm64: Enable kexec in defconfig (2014-05-08 17:09:27 -0700)
+
+----------------------------------------------------------------
+Geoff Levand (8):
+      arm64: Use cpu_ops for smp_stop
+      arm64: Make cpu_read_ops generic
+      arm64: Add spin-table cpu_die
+      arm64: Add smp_spin_table_set_die
+      arm64: Split soft_restart into two stages
+      arm64/kexec: kexec needs cpu_die
+      arm64/kexec: Add core kexec support
+      arm64: Enable kexec in defconfig
+
+ MAINTAINERS                          |   9 +
+ arch/arm64/Kconfig                   |   8 +
+ arch/arm64/configs/defconfig         |   1 +
+ arch/arm64/include/asm/cpu_ops.h     |   5 +-
+ arch/arm64/include/asm/kexec.h       |  44 +++
+ arch/arm64/include/asm/system_misc.h |   1 +
+ arch/arm64/kernel/Makefile           |   1 +
+ arch/arm64/kernel/cpu_ops.c          |  11 +-
+ arch/arm64/kernel/machine_kexec.c    | 623 +++++++++++++++++++++++++++++++++++
+ arch/arm64/kernel/process.c          |   4 +-
+ arch/arm64/kernel/psci.c             |   4 +-
+ arch/arm64/kernel/relocate_kernel.S  | 239 ++++++++++++++
+ arch/arm64/kernel/smp.c              |  10 +-
+ arch/arm64/kernel/smp_spin_table.c   |  21 +-
+ include/uapi/linux/kexec.h           |   1 +
+ 15 files changed, 969 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kexec.h
+ create mode 100644 arch/arm64/kernel/machine_kexec.c
+ create mode 100644 arch/arm64/kernel/relocate_kernel.S
+
 -- 
 1.9.1
-
 
 
 _______________________________________________
