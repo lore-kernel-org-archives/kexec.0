@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wifmz-0003Lk-9D
- for kexec@lists.infradead.org; Fri, 09 May 2014 08:04:19 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile: ARM: get correct mem_map offset
-Date: Fri, 9 May 2014 08:02:05 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720FA9B@BPXM01GP.gisp.nec.co.jp>
-References: <1399443356-46732-1-git-send-email-sdu.liu@huawei.com>
-In-Reply-To: <1399443356-46732-1-git-send-email-sdu.liu@huawei.com>
-Content-Language: ja-JP
+Date: Fri, 9 May 2014 09:24:40 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 6/8] arm64/kexec: kexec needs cpu_die
+Message-ID: <20140509082439.GC4757@e106331-lin.cambridge.arm.com>
+References: <cover.1399594544.git.geoff@infradead.org>
+ <4408c92fbc8f2f2a81054b9f2ac38331562e658a.1399594544.git.geoff@infradead.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4408c92fbc8f2f2a81054b9f2ac38331562e658a.1399594544.git.geoff@infradead.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,89 +21,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "sdu.liu@huawei.com" <sdu.liu@huawei.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Deepak Saxena <dsaxena@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
->When converting paddr to pfn, makedumpfile firstly minuses the
->offset of physical memory, and then do the right shift. But the
->kernel only does the right shift.
+Hi Geoff,
 
-Did you mean the patch below is wrong?
+On Fri, May 09, 2014 at 01:48:17AM +0100, Geoff Levand wrote:
+> Kexec uses the cpu_die method of struct cpu_operations, so add
+> defined(CONFIG_KEXEC) to the preprocessor conditional that enables cpu_die.
 
-  commit 1e93ee75f9d47c219e833210eb31e4a747cc3a8d
-  Author: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-  Date:   Tue Jun 22 09:59:10 2010 +0300
+Why not make kexec depend on !CONFIG_SMP || CONFIG_HOTPLUG_CPU instead?
 
-      use ARCH_PFN_OFFSET for pfn_to_paddr/paddr_to_pfn translations
+From the POV of the PSCI code in the kernel, it's hotplugging a CPU. Why
+it's performing the hotplug operation shouldn't matter.
 
-Your description sounds we should fix the way to convert paddr to pfn,
-but there is no such fix in your patch.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/kernel/psci.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index ea4828a..0e5fa69 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -253,7 +253,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)
+>  	return err;
+>  }
+>  
+> -#ifdef CONFIG_HOTPLUG_CPU
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_KEXEC)
+>  static int cpu_psci_cpu_disable(unsigned int cpu)
+>  {
+>  	/* Fail early if we don't have CPU_OFF support */
+> @@ -284,7 +284,7 @@ const struct cpu_operations cpu_psci_ops = {
+>  	.cpu_init	= cpu_psci_cpu_init,
+>  	.cpu_prepare	= cpu_psci_cpu_prepare,
+>  	.cpu_boot	= cpu_psci_cpu_boot,
+> -#ifdef CONFIG_HOTPLUG_CPU
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_KEXEC)
+>  	.cpu_disable	= cpu_psci_cpu_disable,
+>  	.cpu_die	= cpu_psci_cpu_die,
+>  #endif
 
->For the cases of ARCH_PFN_OFFSET=0 or non sparse memormy model,
->this introduces no problem.
->
->But for my arma9 platform with ARCH_PFN_OFFSET=0x80000 and sparse
->memory model. Makedumfile can not get the mem_map correctly. It it
->due to there is still offset for mem_map array.
+Doesn't his cause the build to fail when KEXEC && !HOTPLUG_CPU? I didn't
+see cpu_ops.h updated similarly.
 
-Why the other memory models are OK? There is no offset even if ARCH_PFN_OFFSET!=0?
-I need more explanation to understand this issue.
-
-
-Thanks
-Atsushi Kumagai
-
->
->This patch introduces the offset of the mem_map.
->
->But I have no environment to test this patch for other paltfrom.
->So I am not sure this patch works on other platforms.
->
->Signed-off-by: Liu Hua <sdu.liu@huawei.com>
->---
-> makedumpfile.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 94515f6..6cf6e24 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -2807,6 +2807,7 @@ int
-> get_mm_sparsemem(void)
-> {
-> 	unsigned int section_nr, mem_section_size, num_section;
->+	unsigned int section_start;
-> 	mdf_pfn_t pfn_start, pfn_end;
-> 	unsigned long section, mem_map;
-> 	unsigned long *mem_sec = NULL;
->@@ -2817,6 +2818,7 @@ get_mm_sparsemem(void)
-> 	 * Get the address of the symbol "mem_section".
-> 	 */
-> 	num_section = divideup(info->max_mapnr, PAGES_PER_SECTION());
->+	section_start = ARCH_PFN_OFFSET / PAGES_PER_SECTION();
-> 	if (is_sparsemem_extreme()) {
-> 		info->sections_per_root = _SECTIONS_PER_ROOT_EXTREME();
-> 		mem_section_size = sizeof(void *) * NR_SECTION_ROOTS();
->@@ -2842,7 +2844,7 @@ get_mm_sparsemem(void)
-> 		goto out;
-> 	}
-> 	for (section_nr = 0; section_nr < num_section; section_nr++) {
->-		section = nr_to_section(section_nr, mem_sec);
->+		section = nr_to_section(section_nr + section_start, mem_sec);
-> 		if (section == NOT_KV_ADDR) {
-> 			mem_map = NOT_MEMMAP_ADDR;
-> 		} else {
->@@ -2851,7 +2853,7 @@ get_mm_sparsemem(void)
-> 				mem_map = NOT_MEMMAP_ADDR;
-> 			} else {
-> 				mem_map = sparse_decode_mem_map(mem_map,
->-								section_nr);
->+								section_nr + section_start);
-> 				if (!is_kvaddr(mem_map))
-> 					mem_map = NOT_MEMMAP_ADDR;
-> 			}
->--
->1.9.0
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
