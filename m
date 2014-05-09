@@ -1,12 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 9 May 2014 17:22:40 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/8] arm64 kexec kernel patches
-Message-ID: <20140509162240.GC16418@e106331-lin.cambridge.arm.com>
-References: <cover.1399594544.git.geoff@infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wirjo-0004x7-LY
+ for kexec@lists.infradead.org; Fri, 09 May 2014 20:49:49 +0000
+Date: Fri, 9 May 2014 16:49:24 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Message-ID: <20140509204924.GA9918@redhat.com>
+References: <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
+ <20140421151240.GB4367@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
+ <20140423170818.GE24651@redhat.com>
+ <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
+ <20140425132214.GB10674@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720DE3D@BPXM01GP.gisp.nec.co.jp>
+ <20140428125025.GA4751@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720F928@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <cover.1399594544.git.geoff@infradead.org>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9720F928@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,58 +33,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Deepak Saxena <dsaxena@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
 
-On Fri, May 09, 2014 at 01:48:17AM +0100, Geoff Levand wrote:
-> Hi Maintainers,
+On Fri, May 09, 2014 at 05:36:13AM +0000, Atsushi Kumagai wrote:
+
+[..]
+> I tried to reproduce OOM in my environment.
+> Unfortunately, I couldn't get a chance to use a large memory machine,
+> so I controlled the bitmap buffer size with --cyclic-buffer like below:
 > 
-> This patchset adds support for kexec re-boots on arm64.  I have tested with the 
-> VE fast model using various kernel config options with both spin and psci enable 
-> methods.  I'll continue to test in the coming weeks.
+> / # free
+>               total         used         free       shared      buffers
+>   Mem:        37544        19796        17748            0           56
+>  Swap:            0            0            0
+> Total:        37544        19796        17748
+> / # /mnt/usr/sbin/makedumpfile_static -E --cyclic-buffer=8000 /proc/vmcore /mnt/tmp/dumpfile.E
+> Copying data                       : [100.0 %] |
 > 
-> I tried to re-use the existing hot plug cpu_ops support for the secondary CPU 
-> shutdown as much as possible, but needed to do some things specific to kexec 
-> that I couldn't do with what was already there.  A significant change is in 
-> [PATCH 4/8] (arm64: Add smp_spin_table_set_die) where I add the ability to setup 
-> a custom cpu_die handler.
+> The dumpfile is saved to /mnt/tmp/dumpfile.E.
 > 
-> To get the the spin-table secondary CPUs into the proper state described in 
-> Documentation/arm64/booting.txt I use a three step spin loop.  First in the 
-> kernel's virtual address space, then to the identity mapped address, then jump 
-> to the final spin code in the 2nd stage kernel's /memreserve/ area.  To support 
-> this three step spin I needed [PATCH 5/8] (arm64: Split soft_restart into two 
-> stages).  Please see the patch comments for more info.  If we added the 2nd 
-> stage kernel's /memreserve/ area to the identity map we could eliminate the 
-> middle step and go from the VA space to the /memreserve/ area directly.
-
-As I've covered in my reply to patch 7 [1] I don't think this is a good
-approach. I think a vastly better approach is to make kexec depend on
-cpu hotplug support in SMP, and enable a simple hotplug-capable boot
-protocol (e.g. extend spin-table with a cpu-return-addr).
-
-That way the in-kernel portions of kexec can use the existing
-infrastructure without tonnes of point hacks, and we enable a generic
-hotplug capable mechanism for those systems which cannot implement PSCI.
-
+> makedumpfile Completed.
+> VmHWM:     16456 kB
+> / #
 > 
-> Please consider all patches for inclusion.  Any comments or suggestions on how 
-> to improve would be very welcome.
+> As above, OOM didn't happen even when makedumpfile consumed most of the
+> available memory (the remains were only 1MB).
 > 
-> To load a kexec kernel and execute a kexec re-boot on arm64 my patches to
-> kexec-tools, which have not yet been merged upstream, are needed:
-> 
->   https://git.linaro.org/people/geoff.levand/kexec-tools.git
+> Of course, OOM happened when the memory usage exceeded the limit:
 
-Is the master branch up-to-date?  The commit dates on all branches I can
-see imply they haven't been updated in a while, and the code looks like
-it needs some cleanup (there are some unused functions, hard-coded
-values, etc).
+Hi Atsushi,
 
-Cheers,
-Mark.
+I think this is the key point. How did makedumpfile exceed the limit. So
+if you don't specify --cyclic-buffer=X, then makedumpfile will allocate
+80% of available memory. That would be roughly 16MB of cyclic buffer
+(instead of 8MB).
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/254819.html
+In your test case looks like makeudmpfile used 16MB of memory. Out of
+which 8MB must have been used for bitmaps and rest 8MB for other purposes.
+
+So clearly our calculation of using 80% of available memory for bitmaps
+is not right. Rest of the 20% memory might not be enough for fulfilling
+the needs of makeudmpfile.
+
+We don't have a good way to determine how much *non-bitmap* memory
+allocation makedumpfile requires. I am wondering how about making
+some assumtions and modify the formula for bitmap memory.
+
+- Assume makedumpfile requires 16MB of free memory for various purposes.
+- Subtract 16MB from available memory and take 80% of remaining memory
+  to calculate the bitmap memory size.
+- Keep 4MB as minimum for bitmap buffer size.
+
+One more person has reported makedumpfile OOM (even without -E option), 
+on a machine. There also 30MB of memory is free. I think it has the
+same issue that 24MB must have been allocated in bitmaps and remainig
+6MB is not sufficient to satisfy makedumpfile's needs.
+
+What do you think?
+
+Also, does anybody know what's the impact of bitmap buffer size on dump
+speed. Does dump speed change significantly with bitmap buffer size?
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
