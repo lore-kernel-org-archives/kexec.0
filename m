@@ -1,10 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <dfed1c27146457caec8f3c228a499f5e44678fd2.1399594544.git.geoff@infradead.org>
-In-Reply-To: <cover.1399594544.git.geoff@infradead.org>
-References: <cover.1399594544.git.geoff@infradead.org>
-From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 1/8] arm64: Use cpu_ops for smp_stop
-Date: Fri, 09 May 2014 00:48:17 +0000
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WidVO-0005iP-TI
+ for kexec@lists.infradead.org; Fri, 09 May 2014 05:37:59 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Date: Fri, 9 May 2014 05:35:13 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9720F921@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE97201A0F@BPXM01GP.gisp.nec.co.jp>
+ <585335973.3025244.1397211578378.JavaMail.zimbra@redhat.com>
+ <20140414080239.GA8084@dhcp-16-105.nay.redhat.com>
+ <20140416064445.GC8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972048E6@BPXM01GP.gisp.nec.co.jp>
+ <20140417045208.GE8084@dhcp-16-105.nay.redhat.com>
+ <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
+ <20140421151240.GB4367@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
+ <20140423170818.GE24651@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720DE38@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9720DE38@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -13,54 +31,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Deepak Saxena <dsaxena@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "bhe@redhat.com" <bhe@redhat.com>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-The current implementation of ipi_cpu_stop() is just a tight infinite loop
-around cpu_relax().  Add a check for a valid cpu_die method of the appropriate
-cpu_operations structure, and if a valid method is found, transfer control to
-that method.
+>>I am wondering if we are doing anything which requires kernel to allocate
+>>memory and that leads to OOM.
+>
+>max_usage_in_bytes seems to include page cache, so I used simpler way
+>like the patch at the bottom of this mail instead.
+>
+>Here is the result:
+>
+>            parameter                  |      result
+> dump_lv | buffer[KiB] |  mmap (=4MiB) |    VmHWM [KiB]
+> --------+-------------+---------------+------------------
+>    d31  |       1     |       on      |        5872
+>   Ed31  |       1     |       on      |        5804
+>    d31  |       1     |      off      |        1784
+>   Ed31  |       1     |      off      |        1720
+>    d31  |    1000     |       on      |        8884  (*1)
+>   Ed31  |    1000     |       on      |        7812
+>    d31  |    1000     |      off      |        4788  (*1)
+>   Ed31  |    1000     |      off      |        3720
+>
+>  *1. 2nd bitmap is allocated twice by the bug found by Arthur Zou.
+>
+>According to this result and the estimation below produced from the
+>design of makedumpfile,
+>
+>  base size + (buffer size * 2) + (for mmap size) = VmHWM
+>
+>the base size may be about 2 MB, so about 6MB (base + mmap) will
+>be the deadline. If 20% of the available memory is less than 6MB,
+>OOM will happen.
+>As for Baoquan's case, remained 17.2MB sounds enough even if
+>makedumpfile consumes 6MB as for the other works.
+>So I don't know why OOM happened yet, but the current safety
+>limit looks still reasonable to me at least.
+>
+>By the way, I noticed it's better to remove 4MB(for mmap)
+>from the available memory before calculate the bitmap buffer
+>size. I'll do this anyway.
 
-The core kexec code calls the arch specific machine_shutdown() routine to
-shutdown any SMP secondary CPUs.  The current implementation of the arm64
-machine_shutdown() uses smp_send_stop(), which ultimately runs ipi_cpu_stop()
-on the secondary CPUs.  The infinite loop implementation of the current
-ipi_cpu_stop() does not have any mechanism to get the CPU into a state
-compatable with a kexec re-boot.
+Sorry, I did my test on a 1st kernel environment.
+The dump file was on a disk and I used mmap() for it, so __do_fault()
+occurred and the VmHWM (MAX(MM_FILEPAGES + MM_ANONPAGES)) increased
+by 4MB.
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
----
- arch/arm64/kernel/smp.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Here is the result on a 2nd kernel environment:
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index f0a141d..020bbd5 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -508,6 +508,14 @@ static void ipi_cpu_stop(unsigned int cpu)
- 
- 	local_irq_disable();
- 
-+	/* If we have the cup_ops use them. */
-+
-+	if (cpu_ops[cpu]->cpu_disable && cpu_ops[cpu]->cpu_die
-+		&& !cpu_ops[cpu]->cpu_disable(cpu))
-+		cpu_ops[cpu]->cpu_die(cpu);
-+
-+	/* Spin here if the cup_ops fail. */
-+
- 	while (1)
- 		cpu_relax();
- }
--- 
-1.9.1
+             parameter                  |      result
+  dump_lv | buffer[KiB] |  mmap (=4MiB) |    VmHWM [KiB]
+  --------+-------------+---------------+------------------
+     d31  |       1     |       on      |         776
+    Ed31  |       1     |       on      |         712
+     d31  |       1     |      off      |         704
+    Ed31  |       1     |      off      |         708
+     d31  |    1000     |       on      |        1776
+    Ed31  |    1000     |       on      |        2716
+     d31  |    1000     |      off      |        1660
+    Ed31  |    1000     |      off      |        2556
 
 
+According to this, I think there is no need to take care of the memory
+usage of mmap() because the actual memory usage is small enough.
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
