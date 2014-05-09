@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 9 May 2014 09:44:16 +0100
+Date: Fri, 9 May 2014 09:54:41 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/8] arm64: Use cpu_ops for smp_stop
-Message-ID: <20140509084416.GD4757@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH 3/8] arm64: Add spin-table cpu_die
+Message-ID: <20140509085441.GE4757@e106331-lin.cambridge.arm.com>
 References: <cover.1399594544.git.geoff@infradead.org>
- <dfed1c27146457caec8f3c228a499f5e44678fd2.1399594544.git.geoff@infradead.org>
+ <56b0c0f2834cba63db1f75966f2ee756ab347205.1399594544.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <dfed1c27146457caec8f3c228a499f5e44678fd2.1399594544.git.geoff@infradead.org>
+In-Reply-To: <56b0c0f2834cba63db1f75966f2ee756ab347205.1399594544.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +24,75 @@ To: Geoff Levand <geoff@infradead.org>
 Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Deepak Saxena <dsaxena@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
 On Fri, May 09, 2014 at 01:48:17AM +0100, Geoff Levand wrote:
-> The current implementation of ipi_cpu_stop() is just a tight infinite loop
-> around cpu_relax().  Add a check for a valid cpu_die method of the appropriate
-> cpu_operations structure, and if a valid method is found, transfer control to
-> that method.
+> Add two new minimal routines smp_spin_table_cpu_disable() and
+> smp_spin_table_cpu_die() and hook them up to the smp_spin_table_ops instance.
 > 
-> The core kexec code calls the arch specific machine_shutdown() routine to
-> shutdown any SMP secondary CPUs.  The current implementation of the arm64
-> machine_shutdown() uses smp_send_stop(), which ultimately runs ipi_cpu_stop()
-> on the secondary CPUs.  The infinite loop implementation of the current
-> ipi_cpu_stop() does not have any mechanism to get the CPU into a state
-> compatable with a kexec re-boot.
+> Kexec support will use smp_spin_table_cpu_die() for re-boot of spin table CPUs,
+> but also needs a compatible smp_spin_table_cpu_disable() to allow
+> execution to reach smp_spin_table_cpu_die().
 > 
 > Signed-off-by: Geoff Levand <geoff@infradead.org>
 > ---
->  arch/arm64/kernel/smp.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/arm64/kernel/smp_spin_table.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index f0a141d..020bbd5 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -508,6 +508,14 @@ static void ipi_cpu_stop(unsigned int cpu)
+> diff --git a/arch/arm64/kernel/smp_spin_table.c b/arch/arm64/kernel/smp_spin_table.c
+> index 7a530d2..26c780b 100644
+> --- a/arch/arm64/kernel/smp_spin_table.c
+> +++ b/arch/arm64/kernel/smp_spin_table.c
+> @@ -142,10 +142,23 @@ static void smp_spin_table_cpu_postboot(void)
+>  	raw_spin_unlock(&boot_lock);
+>  }
 >  
->  	local_irq_disable();
->  
-> +	/* If we have the cup_ops use them. */
+> +static int smp_spin_table_cpu_disable(unsigned int cpu)
+> +{
+> +	return 0;
+
+If we cannot kill the CPU then we need to fail here. cpu_disable is
+called early enough that the cpu hotplug infrastructure can recover if
+we cannot disable the CPU.
+
+> +}
 > +
-> +	if (cpu_ops[cpu]->cpu_disable && cpu_ops[cpu]->cpu_die
-> +		&& !cpu_ops[cpu]->cpu_disable(cpu))
-> +		cpu_ops[cpu]->cpu_die(cpu);
+> +static void smp_spin_table_cpu_die(unsigned int cpu)
+> +{
+> +	while (1)
+> +		cpu_relax();
 
-For PSCI 0.2 support, we're going to need a cpu_kill callback which we
-can't call from the dying CPU. Specifically, we'll need to poll
-CPU_AFFINITY_INFO to ensure that secondaries have _actually_ left the
-kernel and aren't going to be adversely affected by the kernel text
-getting clobbered.
+This does not kill the CPU -- it's stuck spinning on some instructions
+that might get clobbered upon a kexec. So this is insufficient for
+kexec.
 
-As we're going to wire that up to the cpu hotplug infrastructure it
-would be nice to perform the hotplug for kexec by reusing the generic
-hotplug infrastructure rather than calling portions of the arm64
-implementation directly.
+This also doesn't allow the CPU to be brought back, so it's completely
+useless as-is.
 
-> +
-> +	/* Spin here if the cup_ops fail. */
-> +
->  	while (1)
->  		cpu_relax();
+NAK for pseudo-hotplug. If we cannot place the CPU somewhere out of the
+way of the kernel then we _must_ fail.
 
-This seems very dodgy to me. If a CPU doesn't actually die it's going to
-be spinning in some memory that we may later clobber. At that point the
-CPU will do arbitrarily bad things when it begins executing whatever its
-currently executing instructions (or vectors) were replaced by, and you
-will waste hours trying to figure out what went wrong (See 8121cf312a19
-"ARM: 7766/1: versatile: don't mark pen as __INIT" for a similar mess).
-
-If we fail to hotplug a CPU we at minimum need some acknowledgement that
-we failed. I would rather we failed to kexec entirely in that case.
-
-Cheers,
+Thanks,
 Mark.
+
+> +}
+> +
+>  const struct cpu_operations smp_spin_table_ops = {
+>  	.name		= "spin-table",
+>  	.cpu_init	= smp_spin_table_cpu_init,
+>  	.cpu_prepare	= smp_spin_table_cpu_prepare,
+>  	.cpu_boot	= smp_spin_table_cpu_boot,
+>  	.cpu_postboot	= smp_spin_table_cpu_postboot,
+> +	.cpu_disable	= smp_spin_table_cpu_disable,
+> +	.cpu_die	= smp_spin_table_cpu_die,
+>  };
+> -- 
+> 1.9.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 _______________________________________________
 kexec mailing list
