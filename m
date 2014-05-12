@@ -1,16 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65])
+Received: from e28smtp01.in.ibm.com ([122.248.162.1])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wjf19-0004od-6d
- for kexec@lists.infradead.org; Mon, 12 May 2014 01:27:01 +0000
-Message-ID: <53702313.7090703@huawei.com>
-Date: Mon, 12 May 2014 09:25:39 +0800
-From: Liu hua <sdu.liu@huawei.com>
+ id 1Wjhn6-0007mf-IT
+ for kexec@lists.infradead.org; Mon, 12 May 2014 04:24:41 +0000
+Received: from /spool/local
+ by e28smtp01.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Mon, 12 May 2014 09:54:09 +0530
+Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
+ by d28dlp02.in.ibm.com (Postfix) with ESMTP id 2248C394003E
+ for <kexec@lists.infradead.org>; Mon, 12 May 2014 09:54:06 +0530 (IST)
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+ by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s4C4OID99503134
+ for <kexec@lists.infradead.org>; Mon, 12 May 2014 09:54:18 +0530
+Received: from d28av01.in.ibm.com (localhost [127.0.0.1])
+ by d28av01.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s4C4O5WU025183
+ for <kexec@lists.infradead.org>; Mon, 12 May 2014 09:54:05 +0530
+Message-ID: <53704CE4.1090403@linux.vnet.ibm.com>
+Date: Mon, 12 May 2014 09:54:04 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: ARM: get correct mem_map offset
-References: <1399443356-46732-1-git-send-email-sdu.liu@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720FA9B@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9720FA9B@BPXM01GP.gisp.nec.co.jp>
+Subject: Re: [PATCH] kexec/ppc64: Fix up ELF header and dt for PowerNV
+ platform.
+References: <20140209165459.29541.26032.stgit@mars>
+ <20140510235129.GJ31760@verge.net.au>
+In-Reply-To: <20140510235129.GJ31760@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,103 +36,193 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Laurent Dufour <ldufour@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>
 
-5LqOIDIwMTQvNS85IDE2OjAyLCBBdHN1c2hpIEt1bWFnYWkg5YaZ6YGTOgo+PiBXaGVuIGNvbnZl
-cnRpbmcgcGFkZHIgdG8gcGZuLCBtYWtlZHVtcGZpbGUgZmlyc3RseSBtaW51c2VzIHRoZQo+PiBv
-ZmZzZXQgb2YgcGh5c2ljYWwgbWVtb3J5LCBhbmQgdGhlbiBkbyB0aGUgcmlnaHQgc2hpZnQuIEJ1
-dCB0aGUKPj4ga2VybmVsIG9ubHkgZG9lcyB0aGUgcmlnaHQgc2hpZnQuCj4gCj4gRGlkIHlvdSBt
-ZWFuIHRoZSBwYXRjaCBiZWxvdyBpcyB3cm9uZz8KPiAKPiAgIGNvbW1pdCAxZTkzZWU3NWY5ZDQ3
-YzIxOWU4MzMyMTBlYjMxZTRhNzQ3Y2MzYThkCj4gICBBdXRob3I6IE1pa2EgV2VzdGVyYmVyZyA8
-ZXh0LW1pa2EuMS53ZXN0ZXJiZXJnQG5va2lhLmNvbT4KPiAgIERhdGU6ICAgVHVlIEp1biAyMiAw
-OTo1OToxMCAyMDEwICswMzAwCj4gCj4gICAgICAgdXNlIEFSQ0hfUEZOX09GRlNFVCBmb3IgcGZu
-X3RvX3BhZGRyL3BhZGRyX3RvX3BmbiB0cmFuc2xhdGlvbnMKPiAKPiBZb3VyIGRlc2NyaXB0aW9u
-IHNvdW5kcyB3ZSBzaG91bGQgZml4IHRoZSB3YXkgdG8gY29udmVydCBwYWRkciB0byBwZm4sCj4g
-YnV0IHRoZXJlIGlzIG5vIHN1Y2ggZml4IGluIHlvdXIgcGF0Y2guCgoKWWVzLCBteSBmaXJzdCB2
-ZXJzaW9uIGRvZXMganVzdCBhcyB3aGF0IHlvdSBzYXkuIEJ1dCB0aGUgcGF0Y2ggaXMgaHVnZS4K
-SSB0aGluZyB0aGlzIHBhdGNoIGlzIG11Y2ggYmV0dGVyLgoKVGhvdWdoIGNvbW1pdCAxZTkzZWU3
-NWY5ZDQ3YzIxOWU4MzMyMTBlYjMxZTRhNzQ3Y2MzYThkIGJyaW5ncyBzb21lIHByb2JsZW1zCi4g
-QnV0IHdlIGNhbiBlYXN5IGZpeCB0aGVtLgoKCk1ha2UgbXkgcGxhdGZvcm0gZm9yIGV4YW1wbGU6
-IEFSQ0hfUEZOX09GRlNFVD0weDgwMDAwIHNwYXJzZSBtZW1vcnkgbW9kZWwuCm1lbSAxRyA7IFNF
-Q1RJT05fU0laRV9CSVRTIDI2CgogKGEpIGZvciB0aGUga2VybmVsCgogICAgc2VjdGlvbiBudW1i
-ZXIgfHBoeSBzdGFydCB8ICBzdGFydCBwZm4gICB8IGVuZCBwZm4gIHwgIHZhbGlkICB8IG1lbV9z
-ZWN0aW9uICAJfAoJMAkgICB8MAkgICAgICB8ICAgMCAgICAgICAgICB8ICAzZmZmICAgIHwgICAw
-CSAgfCAgIFswXQl8CiAJMQkgICB8NDAwMDAwMCAgIHwgICA0MDAwICAgICAgIHwgIDdmZmYgICAg
-fCAgIDAJICB8ICAgWzFdCXwKCTIJICAgfDgwMDAwMDAgICB8ICAgODAwMCAgICAgICB8ICBiZmZm
-ICAgIHwgICAwCSAgfCAgIFsyXQl8CgogICAgW2N1dCAuLi5dCgogICAgICAgMzIgCSAgIHw4MDAw
-MDAwMCAgfCAgODAwMDAJICAgICB8IDgzZmZmCXwgICAxCSAgfCAgWzMyXQl8CiAgICAgICAzMyAJ
-ICAgfDg0MDAwMDAwICB8ICA4NDAwMAkgICAgIHwgODdmZmYJfCAgIDEJICB8ICBbMzNdCXwKCiAg
-ICBbY3V0IC4uLl0KCiAgICAgICA0NyAJICAgfGJmYzAwMDAwICB8ICBiZmMwMDAJICAgICB8IGJm
-ZmZmCXwgICAxCSAgfCAgWzQ3XQl8CgoKICAoYikgZm9yIG1ha2VkdW1wZmlsZQoKCQogICAgICAg
-MAkgICB8ODAwMDAwMDAgIHwgICAgMCAgICAgICAgIHwgIDNmZmYgICAgfCAgIDAJICB8ICAgWzBd
-CXwKICAgICAgIDEgCSAgIHw4NDAwMDAwMCAgfCAgNDAwMCAgICAgICAgfCAgN2ZmZiAgICB8ICAg
-MAkgIHwgICBbMV0JfAoKICAgIFtjdXQgLi4uXQoKICAgICAgIDE1IAkgICB8YmZjMDAwMDAgIHwg
-IDNjMDAwICAgICAgIHwgM2ZmZmYJfCAgIDEJICB8ICBbMTVdCXwKCgpTbyBtYWtlZHVtcGZpbGUg
-cmVtb3ZlcyB0aGUgb2Zmc2V0IG9mIHNlY3Rpb24gbnVtYmVyIGFuZCBwZm4uIFRoZSByZWxhdGlv
-bnNoaXAgYmV0d2VlbgpwZm4gYW5kIHNlY3Rpb24gbnVtYmVyIHJlbWFpbnMgYXMgYmVmb3JlLiBT
-byB0aGlzIHdpbGwgbm90IGludHJvZHVjZSBwcm9ibGVtLgoKQnV0IHRoZSBzZWN0aW9uIG5lbWJl
-ciBhbmQgbWVtX3NlY3Rpb24gYXJyYXkgZG8gbm90IG1hdGNoIGVhY2ggb3RoZXIuCgpGb3IgcGFk
-ZHIgODAwMDAwMDAKCWtlcm5lbCAgICAgICAgOiBwZm4gODAwMDogbWVtX3NlY3Rpb246IDMyCglt
-YWtlZHVtcGZpbGUgIDogcGZuIDAgICA6IG1lbV9zZWN0aW9uOiAwCgpBbmQgd2UgZG8gbm90IHJl
-bW92ZSB0aGUgb2Zmc2V0IG9mIGFycmF5IG1lbV9zZWN0aW9uLiBTbyBtYWtlZHVtb2ZpbGUgY2Fu
-IG5vdApnZXQgdGhlIHJpZ2h0IHBhZ2Ugc3RydWN0LiBXaGVuIGZpeCB0aGlzIG9mZnNldCwgZXZl
-cnl0aGluZyBpcyBvay4KCkJ1dCBJZiB3ZSByZXZlcnQgMWU5M2VlNzVmOWQ6CgogIChhKSBjb2Rl
-cyBsaWtlcyAiZm9yKHBmbiA9IDAiICwiZm9yX2VhY2hfY3ljbGUoMCIgYW5kICJmb3IgKHNlY3Rp
-b25fbnIgPSAwIiAgc2hvdWxkIGJlIGNoYW5nZWQ7CiAgKGIpIER1ZSB0byAic2V0X2JpdF9vbl8x
-c3RfYml0bWFwKHBmbiwgY3ljbGUpIiwgd2Ugd2lsbCB3YXN0ZSBzb21lIGJpdHMuCiAgKGMpIGNy
-YXNoIHV0aWxpdHkgc2hvdWxkIGFsc28gYmUgY2hhbmdlZC4KCgoKQlRXLCB3aGVuIEFSQ0hfUEZO
-X09GRlNFVD0wLCBzZWN0aW9uIG5lbWJlciBhbmQgbWVtX3NlY3Rpb24gbWF0Y2hlcyBlYWNoIG90
-aGVyLi4KU28gbm8gcHJvYmxlbSB3YXMgaW50cmR1Y2VkCgo+IAo+PiBGb3IgdGhlIGNhc2VzIG9m
-IEFSQ0hfUEZOX09GRlNFVD0wIG9yIG5vbiBzcGFyc2UgbWVtb3JteSBtb2RlbCwKPj4gdGhpcyBp
-bnRyb2R1Y2VzIG5vIHByb2JsZW0uCj4+Cj4+IEJ1dCBmb3IgbXkgYXJtYTkgcGxhdGZvcm0gd2l0
-aCBBUkNIX1BGTl9PRkZTRVQ9MHg4MDAwMCBhbmQgc3BhcnNlCj4+IG1lbW9yeSBtb2RlbC4gTWFr
-ZWR1bWZpbGUgY2FuIG5vdCBnZXQgdGhlIG1lbV9tYXAgY29ycmVjdGx5LiBJdCBpdAo+PiBkdWUg
-dG8gdGhlcmUgaXMgc3RpbGwgb2Zmc2V0IGZvciBtZW1fbWFwIGFycmF5Lgo+IAo+IFdoeSB0aGUg
-b3RoZXIgbWVtb3J5IG1vZGVscyBhcmUgT0s/IFRoZXJlIGlzIG5vIG9mZnNldCBldmVuIGlmIEFS
-Q0hfUEZOX09GRlNFVCE9MD8KPiBJIG5lZWQgbW9yZSBleHBsYW5hdGlvbiB0byB1bmRlcnN0YW5k
-IHRoaXMgaXNzdWUuCgooMSkgRm9yIGZsYXRtZW0sIHRoZSBtZW1fbWFwIGlzIGNvbnRpbnVvdXMs
-IEFuZCB0aGUgc3RhcnQgYWRkcmVzcyBvZiBtZW1fbWFwIGNvbWVzIGZyb20KdGhlIGtlcm5lbCBz
-eW1ib2wuCgpGb3IgcGFkZHIgODAwMDAwMDAKCWtlcm5lbCAgICAgICAgOiBwZm4gODAwMDogbWVt
-X21hcFswXQoJbWFrZWR1bXBmaWxlICA6IHBmbiAwICAgOiBtZW1fbWFwWzBdCgpUaGlzIHdpbGwg
-bm90IGludHJvZHVjZSBwcm9ibGVtLgoKKDIpIEZvciBkaXNjb250aWdtZW0sIGl0IG1hbmFnZXMg
-dGhlIG1lbV9tYXAgd2l0aCBub2RlX21lbWJsay4gY29tbWl0CjFlOTNlZTc1ZjlkNDdjMjEgYWxz
-byBkb2VzIG5vIGhhcm0uCgpXaGF0IGRvIHlvdSB0aGluaz8KClRoYW5rcywKTGl1IEh1YQoKPiAK
-PiAKPiBUaGFua3MKPiBBdHN1c2hpIEt1bWFnYWkKPiAKPj4KPj4gVGhpcyBwYXRjaCBpbnRyb2R1
-Y2VzIHRoZSBvZmZzZXQgb2YgdGhlIG1lbV9tYXAuCj4+Cj4+IEJ1dCBJIGhhdmUgbm8gZW52aXJv
-bm1lbnQgdG8gdGVzdCB0aGlzIHBhdGNoIGZvciBvdGhlciBwYWx0ZnJvbS4KPj4gU28gSSBhbSBu
-b3Qgc3VyZSB0aGlzIHBhdGNoIHdvcmtzIG9uIG90aGVyIHBsYXRmb3Jtcy4KPj4KPj4gU2lnbmVk
-LW9mZi1ieTogTGl1IEh1YSA8c2R1LmxpdUBodWF3ZWkuY29tPgo+PiAtLS0KPj4gbWFrZWR1bXBm
-aWxlLmMgfCA2ICsrKystLQo+PiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9tYWtlZHVtcGZp
-bGUuYwo+PiBpbmRleCA5NDUxNWY2Li42Y2Y2ZTI0IDEwMDY0NAo+PiAtLS0gYS9tYWtlZHVtcGZp
-bGUuYwo+PiArKysgYi9tYWtlZHVtcGZpbGUuYwo+PiBAQCAtMjgwNyw2ICsyODA3LDcgQEAgaW50
-Cj4+IGdldF9tbV9zcGFyc2VtZW0odm9pZCkKPj4gewo+PiAJdW5zaWduZWQgaW50IHNlY3Rpb25f
-bnIsIG1lbV9zZWN0aW9uX3NpemUsIG51bV9zZWN0aW9uOwo+PiArCXVuc2lnbmVkIGludCBzZWN0
-aW9uX3N0YXJ0Owo+PiAJbWRmX3Bmbl90IHBmbl9zdGFydCwgcGZuX2VuZDsKPj4gCXVuc2lnbmVk
-IGxvbmcgc2VjdGlvbiwgbWVtX21hcDsKPj4gCXVuc2lnbmVkIGxvbmcgKm1lbV9zZWMgPSBOVUxM
-Owo+PiBAQCAtMjgxNyw2ICsyODE4LDcgQEAgZ2V0X21tX3NwYXJzZW1lbSh2b2lkKQo+PiAJICog
-R2V0IHRoZSBhZGRyZXNzIG9mIHRoZSBzeW1ib2wgIm1lbV9zZWN0aW9uIi4KPj4gCSAqLwo+PiAJ
-bnVtX3NlY3Rpb24gPSBkaXZpZGV1cChpbmZvLT5tYXhfbWFwbnIsIFBBR0VTX1BFUl9TRUNUSU9O
-KCkpOwo+PiArCXNlY3Rpb25fc3RhcnQgPSBBUkNIX1BGTl9PRkZTRVQgLyBQQUdFU19QRVJfU0VD
-VElPTigpOwo+PiAJaWYgKGlzX3NwYXJzZW1lbV9leHRyZW1lKCkpIHsKPj4gCQlpbmZvLT5zZWN0
-aW9uc19wZXJfcm9vdCA9IF9TRUNUSU9OU19QRVJfUk9PVF9FWFRSRU1FKCk7Cj4+IAkJbWVtX3Nl
-Y3Rpb25fc2l6ZSA9IHNpemVvZih2b2lkICopICogTlJfU0VDVElPTl9ST09UUygpOwo+PiBAQCAt
-Mjg0Miw3ICsyODQ0LDcgQEAgZ2V0X21tX3NwYXJzZW1lbSh2b2lkKQo+PiAJCWdvdG8gb3V0Owo+
-PiAJfQo+PiAJZm9yIChzZWN0aW9uX25yID0gMDsgc2VjdGlvbl9uciA8IG51bV9zZWN0aW9uOyBz
-ZWN0aW9uX25yKyspIHsKPj4gLQkJc2VjdGlvbiA9IG5yX3RvX3NlY3Rpb24oc2VjdGlvbl9uciwg
-bWVtX3NlYyk7Cj4+ICsJCXNlY3Rpb24gPSBucl90b19zZWN0aW9uKHNlY3Rpb25fbnIgKyBzZWN0
-aW9uX3N0YXJ0LCBtZW1fc2VjKTsKPj4gCQlpZiAoc2VjdGlvbiA9PSBOT1RfS1ZfQUREUikgewo+
-PiAJCQltZW1fbWFwID0gTk9UX01FTU1BUF9BRERSOwo+PiAJCX0gZWxzZSB7Cj4+IEBAIC0yODUx
-LDcgKzI4NTMsNyBAQCBnZXRfbW1fc3BhcnNlbWVtKHZvaWQpCj4+IAkJCQltZW1fbWFwID0gTk9U
-X01FTU1BUF9BRERSOwo+PiAJCQl9IGVsc2Ugewo+PiAJCQkJbWVtX21hcCA9IHNwYXJzZV9kZWNv
-ZGVfbWVtX21hcChtZW1fbWFwLAo+PiAtCQkJCQkJCQlzZWN0aW9uX25yKTsKPj4gKwkJCQkJCQkJ
-c2VjdGlvbl9uciArIHNlY3Rpb25fc3RhcnQpOwo+PiAJCQkJaWYgKCFpc19rdmFkZHIobWVtX21h
-cCkpCj4+IAkJCQkJbWVtX21hcCA9IE5PVF9NRU1NQVBfQUREUjsKPj4gCQkJfQo+PiAtLQo+PiAx
-LjkuMAo+IAo+IAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 05/11/2014 05:21 AM, Simon Horman wrote:
+> On Sun, Feb 09, 2014 at 10:24:59PM +0530, Mahesh J Salgaonkar wrote:
+>> From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+>>
+>> On PowerNV platform, OPAL region is overlapped with crashkernel, need to
+>> create ELF Program header for the overlapped memory. The changes are
+>> similar to the way RTAS region was handled.
+>>
+>> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+> 
+> I apologise that this seems to have slipped through the cracks.
+> Manesh, is this patch still needed?
+
+Yes. We still need this patch.
+
+ If so, is it possible for
+> someone on the power side of things to review it?
+> 
+>> ---
+>>  kexec/arch/ppc/crashdump-powerpc.h |    2 ++
+>>  kexec/arch/ppc64/crashdump-ppc64.c |   28 +++++++++++++++++++++++
+>>  kexec/arch/ppc64/crashdump-ppc64.h |    2 ++
+>>  kexec/arch/ppc64/kexec-ppc64.c     |   44 +++++++++++++++++++++++++++++++++++-
+>>  kexec/fs2dt.c                      |    4 +++
+>>  5 files changed, 79 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kexec/arch/ppc/crashdump-powerpc.h b/kexec/arch/ppc/crashdump-powerpc.h
+>> index efdc7e3..9b9b01e 100644
+>> --- a/kexec/arch/ppc/crashdump-powerpc.h
+>> +++ b/kexec/arch/ppc/crashdump-powerpc.h
+>> @@ -40,6 +40,8 @@ extern unsigned long long crash_base;
+>>  extern unsigned long long crash_size;
+>>  extern unsigned int rtas_base;
+>>  extern unsigned int rtas_size;
+>> +extern uint64_t opal_base;
+>> +extern uint64_t opal_size;
+>>  extern uint64_t memory_limit;
+>>  
+>>  #endif /* CRASHDUMP_POWERPC_H */
+>> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+>> index c0d575d..00a0e63 100644
+>> --- a/kexec/arch/ppc64/crashdump-ppc64.c
+>> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
+>> @@ -294,6 +294,34 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
+>>  		crash_memory_range[memory_ranges++].end = cend;
+>>  	}
+>>  
+>> +	/*
+>> +	 * If OPAL region is overlapped with crashkernel, need to create ELF
+>> +	 * Program header for the overlapped memory.
+>> +	 */
+>> +	if (crash_base < opal_base + opal_size &&
+>> +		opal_base < crash_base + crash_size) {
+>> +		page_size = getpagesize();
+>> +		cstart = opal_base;
+>> +		cend = opal_base + opal_size;
+>> +		if (cstart < crash_base)
+>> +			cstart = crash_base;
+>> +		if (cend > crash_base + crash_size)
+>> +			cend = crash_base + crash_size;
+>> +		/*
+>> +		 * The opal section created here is formed by reading opal-base
+>> +		 * and opal-size from /proc/device-tree/ibm,opal.  Unfortunately
+>> +		 * opal-size is not required to be a multiple of PAGE_SIZE
+>> +		 * The remainder of the page it ends on is just garbage, and is
+>> +		 * safe to read, its just not accounted in opal-size.  Since
+>> +		 * we're creating an elf section here though, lets round it up
+>> +		 * to the next page size boundary though, so makedumpfile can
+>> +		 * read it safely without going south on us.
+>> +		 */
+>> +		cend = _ALIGN(cend, page_size);
+>> +
+>> +		crash_memory_range[memory_ranges].start = cstart;
+>> +		crash_memory_range[memory_ranges++].end = cend;
+>> +	}
+>>  	*range = crash_memory_range;
+>>  	*ranges = memory_ranges;
+>>  
+>> diff --git a/kexec/arch/ppc64/crashdump-ppc64.h b/kexec/arch/ppc64/crashdump-ppc64.h
+>> index 001be3a..d654c6b 100644
+>> --- a/kexec/arch/ppc64/crashdump-ppc64.h
+>> +++ b/kexec/arch/ppc64/crashdump-ppc64.h
+>> @@ -31,6 +31,8 @@ extern uint64_t crash_size;
+>>  extern uint64_t memory_limit;
+>>  extern unsigned int rtas_base;
+>>  extern unsigned int rtas_size;
+>> +extern uint64_t opal_base;
+>> +extern uint64_t opal_size;
+>>  
+>>  uint64_t lmb_size;
+>>  unsigned int num_of_lmbs;
+>> diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+>> index 49b291d..5956836 100644
+>> --- a/kexec/arch/ppc64/kexec-ppc64.c
+>> +++ b/kexec/arch/ppc64/kexec-ppc64.c
+>> @@ -43,6 +43,7 @@ uint64_t memory_limit;
+>>  static int nr_memory_ranges, nr_exclude_ranges;
+>>  uint64_t crash_base, crash_size;
+>>  unsigned int rtas_base, rtas_size;
+>> +uint64_t opal_base, opal_size;
+>>  int max_memory_ranges;
+>>  
+>>  static void cleanup_memory_ranges(void)
+>> @@ -343,7 +344,8 @@ static int get_devtree_details(unsigned long kexec_flags)
+>>  			strncmp(dentry->d_name, "memory@", 7) &&
+>>  			strcmp(dentry->d_name, "memory") &&
+>>  			strncmp(dentry->d_name, "pci@", 4) &&
+>> -			strncmp(dentry->d_name, "rtas", 4)) 
+>> +			strncmp(dentry->d_name, "rtas", 4) &&
+>> +			strncmp(dentry->d_name, "ibm,opal", 8))
+>>  			continue;
+>>  		strcpy(fname, device_tree);
+>>  		strcat(fname, dentry->d_name);
+>> @@ -575,6 +577,46 @@ static int get_devtree_details(unsigned long kexec_flags)
+>>  				add_usable_mem_rgns(rtas_base, rtas_size);
+>>  		} /* rtas */
+>>  
+>> +		if (strncmp(dentry->d_name, "ibm,opal", 8) == 0) {
+>> +			strcat(fname, "/opal-base-address");
+>> +			file = fopen(fname, "r");
+>> +			if (file == NULL) {
+>> +				perror(fname);
+>> +				goto error_opencdir;
+>> +			}
+>> +			if (fread(&opal_base, sizeof(uint64_t), 1, file) != 1) {
+>> +				perror(fname);
+>> +				goto error_openfile;
+>> +			}
+>> +			opal_base = be64_to_cpu(opal_base);
+>> +			fclose(file);
+>> +
+>> +			memset(fname, 0, sizeof(fname));
+>> +			strcpy(fname, device_tree);
+>> +			strcat(fname, dentry->d_name);
+>> +			strcat(fname, "/opal-runtime-size");
+>> +			file = fopen(fname, "r");
+>> +			if (file == NULL) {
+>> +				perror(fname);
+>> +				goto error_opencdir;
+>> +			}
+>> +			if (fread(&opal_size, sizeof(uint64_t), 1, file) != 1) {
+>> +				perror(fname);
+>> +				goto error_openfile;
+>> +			}
+>> +			fclose(file);
+>> +			closedir(cdir);
+>> +			opal_size = be64_to_cpu(opal_size);
+>> +			/* Add OPAL to exclude_range */
+>> +			exclude_range[i].start = opal_base;
+>> +			exclude_range[i].end = opal_base + opal_size;
+>> +			i++;
+>> +			if (i >= max_memory_ranges)
+>> +				realloc_memory_ranges();
+>> +			if (kexec_flags & KEXEC_ON_CRASH)
+>> +				add_usable_mem_rgns(opal_base, opal_size);
+>> +		} /* ibm,opal */
+>> +
+>>  		if (!strncmp(dentry->d_name, "memory@", 7) ||
+>>  			!strcmp(dentry->d_name, "memory")) {
+>>  			strcat(fname, "/reg");
+>> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+>> index 5e6b98d..44510cb 100644
+>> --- a/kexec/fs2dt.c
+>> +++ b/kexec/fs2dt.c
+>> @@ -113,6 +113,10 @@ static void checkprop(char *name, unsigned *data, int len)
+>>  		die("unrecoverable error: no property data");
+>>  	else if (!strcmp(name, "linux,rtas-base"))
+>>  		base = be32_to_cpu(*data);
+>> +	else if (!strcmp(name, "opal-base-address"))
+>> +		base = be64_to_cpu(*(unsigned long long *)data);
+>> +	else if (!strcmp(name, "opal-runtime-size"))
+>> +		size = be64_to_cpu(*(unsigned long long *)data);
+>>  	else if (!strcmp(name, "linux,tce-base"))
+>>  		base = be64_to_cpu(*(unsigned long long *) data);
+>>  	else if (!strcmp(name, "rtas-size") ||
+>>
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
