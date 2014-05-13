@@ -1,36 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wjscg-0007vQ-Qy
- for kexec@lists.infradead.org; Mon, 12 May 2014 15:58:39 +0000
-Received: from /spool/local
- by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <clg@fr.ibm.com>;
- Mon, 12 May 2014 16:58:14 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2BD7A2190046
- for <kexec@lists.infradead.org>; Mon, 12 May 2014 16:58:04 +0100 (BST)
-Received: from d06av05.portsmouth.uk.ibm.com (d06av05.portsmouth.uk.ibm.com
- [9.149.37.229])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s4CFwCGh49283202
- for <kexec@lists.infradead.org>; Mon, 12 May 2014 15:58:12 GMT
-Received: from d06av05.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av05.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s4CFwCpc012986
- for <kexec@lists.infradead.org>; Mon, 12 May 2014 09:58:12 -0600
-Message-ID: <5370EF8D.3040604@fr.ibm.com>
-Date: Mon, 12 May 2014 17:58:05 +0200
-From: Cedric Le Goater <clg@fr.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 3/7] ppc64: detect zImage files and load the uncompressed
- vmlinux
-References: <1397830120-13323-1-git-send-email-clg@fr.ibm.com>
- <1397830120-13323-4-git-send-email-clg@fr.ibm.com>
- <53709ABF.8060707@linux.vnet.ibm.com>
-In-Reply-To: <53709ABF.8060707@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wk4h7-0000nv-Kn
+ for kexec@lists.infradead.org; Tue, 13 May 2014 04:52:02 +0000
+From: WANG Chao <chaowang@redhat.com>
+Subject: [PATCH] x86, cleanup: remove cmdline_add_memmap_acpi
+Date: Tue, 13 May 2014 12:51:34 +0800
+Message-Id: <1399956694-24353-1-git-send-email-chaowang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,32 +15,113 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laurent Dufour <ldufour@linux.vnet.ibm.com>, kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: dyoung@redhat.com, horms@verge.net.au
+Cc: kexec@lists.infradead.org
 
-SGkgTGF1cmVudCwKClsgLi4uIF0KCj4+ICtpbnQgekltYWdlX3BwYzY0X3VuemlwKHN0cnVjdCBt
-ZW1fZWhkciAqZWhkciwgdm9pZCAqKmJ1ZiwgaW50ICpsZW4pCj4+ICt7Cj4+ICsJc3RydWN0IG1l
-bV9zaGRyICpzaGRyOwo+PiArCXZvaWQgKnZtbGludXpfYWRkcjsKPj4gKwl1bnNpZ25lZCBsb25n
-IHZtbGludXpfc2l6ZTsKPj4gKwl1bnNpZ25lZCBpbnQgKnZtbGludXhfc2l6ZXA7Cj4+ICsKPj4g
-Kwl2b2lkICp2bWxpbnV4X2FkZHI7Cj4+ICsJaW50IHZtbGludXhfc2l6ZTsKPj4gKwo+PiArCXNo
-ZHIgPSBlbGZfcmVsX2ZpbmRfc2VjdGlvbihlaGRyLCAiLmtlcm5lbDp2bWxpbnV4LnN0cmlwIik7
-Cj4+ICsJaWYgKCFzaGRyKQo+PiArCQlyZXR1cm4gLTE7Cj4+ICsKPj4gKwl2bWxpbnV6X2FkZHIg
-PSAodm9pZCAqKSBzaGRyLT5zaF9kYXRhOwo+PiArCXZtbGludXpfc2l6ZSA9IHNoZHItPnNoX3Np
-emU7Cj4+ICsKPj4gKwkgLyogVGhlIHNpemUgb2YgdGhlIHVuY29tcHJlc3NlZCBmaWxlIGlzIHN0
-b3JlZCBpbiB0aGUgbGFzdCA0Cj4+ICsJICAqIGJ5dGVzLiBUaGUgdm1saW51eCBzaXplIHNob3Vs
-ZCBiZSBsZXNzIHRoYW4gNEcgLi4uICovCj4+ICsJdm1saW51eF9zaXplcCA9ICh2bWxpbnV6X2Fk
-ZHIgKyB2bWxpbnV6X3NpemUpIC0gNDsKPj4gKwo+PiArCWZwcmludGYoc3RkZXJyLCAiRm91bmQg
-dm1saW51eiBhdCAlcCwgdW56aXBwaW5nICVkIGJ5dGVzXG4iLAo+PiArCQl2bWxpbnV6X2FkZHIs
-ICp2bWxpbnV4X3NpemVwKTsKPiAKPiBIaSBDw6lkcmljLAo+IAo+IEknZCByYXRoZXIgdXNlIGRi
-Z3ByaW50ZiBpbnN0ZWFkIG9mIGRpcmVjdGx5IGNhbGwgZnByaW50ZiBoZXJlLgoKU3VyZS4gVGhh
-bmtzIGZvciB0aGUgcmV2aWV3LiBJIGhhdmUgYSBuZXcgdmVyc2lvbiBvZiB0aGlzIHBhdGNoIHdo
-aWNoIAphbHNvIGZpeGVzIHRoZSB3YXkgdGhlIHVuY29tcHJlc3NlZCBzaXplIGlzIHJlYWQsIGFz
-IGl0IGlzIHN0b3JlZCBhcyAKYSBsaXR0bGUgZW5kaWFuIHVpbnQuCgpTaW1vbiwgZG8geW91IHdh
-bnQgYSByZXNlbmQgb2YgdGhlIHBhdGNoc2V0IG9yIGEgZml4IG9uIHRvcCBvZiBpdCA/IAoKQ2hl
-ZXJzLCAKCkMuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+In kdump path, now we store all the 2nd kernel memory ranges in
+memmap_p. We could use just cmdline_add_memmap() to add all types of
+memory ranges to 2nd kernel cmdline.
+
+So clean up here, merge cmdline_add_memmap_acpi() into
+cmdline_add_memmap().
+
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 41 ++++++++++++-----------------------------
+ 1 file changed, 12 insertions(+), 29 deletions(-)
+
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 15ac4b5..207b031 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -667,18 +667,22 @@ static int cmdline_add_memmap(char *cmdline, struct memory_range *memmap_p)
+ 	strcat(cmdline, str_mmap);
+ 
+ 	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
+-		unsigned long startk, endk;
++		unsigned long startk, endk, type;
+ 		startk = (memmap_p[i].start/1024);
+ 		endk = ((memmap_p[i].end + 1)/1024);
++		type = memmap_p[i].type;
+ 		if (!startk && !endk)
+ 			/* All regions traversed. */
+ 			break;
+ 
+-		/* A region is not worth adding if region size < 100K. It eats
+-		 * up precious command line length. */
+-		if ((endk - startk) < min_sizek)
++		/* A RAM region is not worth adding if region size < 100K.
++		 * It eats up precious command line length. */
++		if (type == RANGE_RAM && (endk - startk) < min_sizek)
+ 			continue;
+-		cmdline_add_memmap_internal(cmdline, startk, endk, RANGE_RAM);
++		/* And do not add e820 reserved region either */
++		if (type == RANGE_RESERVED)
++			continue;
++		cmdline_add_memmap_internal(cmdline, startk, endk, type);
+ 	}
+ 
+ 	dbgprintf("Command line after adding memmap\n");
+@@ -767,26 +771,6 @@ static enum coretype get_core_type(struct crash_elf_info *elf_info,
+ 	}
+ }
+ 
+-/* Appends memmap=X#Y commandline for ACPI to command line*/
+-static int cmdline_add_memmap_acpi(char *cmdline, unsigned long start,
+-					unsigned long end)
+-{
+-	int align = 1024;
+-	unsigned long startk, endk;
+-
+-	if (!(end - start))
+-		return 0;
+-
+-	startk = start/1024;
+-	endk = (end + align - 1)/1024;
+-	cmdline_add_memmap_internal(cmdline, startk, endk, RANGE_ACPI);
+-
+-	dbgprintf("Command line after adding acpi memmap\n");
+-	dbgprintf("%s\n", cmdline);
+-
+-	return 0;
+-}
+-
+ /* Appends 'acpi_rsdp=' commandline for efi boot crash dump */
+ static void cmdline_add_efi(char *cmdline)
+ {
+@@ -981,8 +965,6 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
+ 	if (delete_memmap(memmap_p, &nr_memmap, elfcorehdr, memsz) < 0)
+ 		return -1;
+-	if (arch_options.pass_memmap_cmdline)
+-		cmdline_add_memmap(mod_cmdline, memmap_p);
+ 	if (!bzImage_support_efi_boot)
+ 		cmdline_add_efi(mod_cmdline);
+ 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+@@ -999,10 +981,11 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 		type = mem_range[i].type;
+ 		size = end - start + 1;
+ 		add_memmap(memmap_p, &nr_memmap, start, size, type);
+-		if (arch_options.pass_memmap_cmdline && type != RANGE_RESERVED)
+-			cmdline_add_memmap_acpi(mod_cmdline, start, end);
+ 	}
+ 
++	if (arch_options.pass_memmap_cmdline)
++		cmdline_add_memmap(mod_cmdline, memmap_p);
++
+ 	/* Store 2nd kernel boot memory ranges for later reference in
+ 	 * x86-setup-linux.c: setup_linux_system_parameters() */
+ 	info->crash_range = memmap_p;
+-- 
+1.9.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
