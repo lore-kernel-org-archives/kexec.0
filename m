@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WkYOg-0002zh-98
- for kexec@lists.infradead.org; Wed, 14 May 2014 12:35:00 +0000
-Message-ID: <537362A0.7030803@huawei.com>
-Date: Wed, 14 May 2014 20:33:36 +0800
-From: Liu hua <sdu.liu@huawei.com>
-MIME-Version: 1.0
-Subject: Re: [RFC PATCH 2/2] makedumpfile: get additional information from
- vmcore
-References: <1399469234-54925-1-git-send-email-sdu.liu@huawei.com>
- <1399469234-54925-3-git-send-email-sdu.liu@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97210369@BPXM01GP.gisp.nec.co.jp>
- <5371C8E6.6080700@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97210997@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE97210997@BPXM01GP.gisp.nec.co.jp>
+ id 1WkYSY-0008Hu-3p
+ for kexec@lists.infradead.org; Wed, 14 May 2014 12:38:59 +0000
+Date: Wed, 14 May 2014 14:38:32 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v3 1/2] Generic handling of multi-page exclusions
+Message-ID: <20140514143832.16136269@hananiah.suse.cz>
+In-Reply-To: <20140514.195428.247303438.d.hatayama@jp.fujitsu.com>
+References: <1399482403-3656-2-git-send-email-ptesarik@suse.cz>
+ <0910DD04CBD6DE4193FCF86B9C00BE9721099E@BPXM01GP.gisp.nec.co.jp>
+ <20140514.193723.161348018.d.hatayama@jp.fujitsu.com>
+ <20140514.195428.247303438.d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,96 +21,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
-Cc: "wangnan0@huawei.com" <wangnan0@huawei.com>, "peifeiyue@huawei.com" <peifeiyue@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "liusdu@126.com" <liusdu@126.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-5LqOIDIwMTQvNS8xNCAxNTo1MywgQXRzdXNoaSBLdW1hZ2FpIOWGmemBkzoKPj4gT24gMjAxNC81
-LzEzIDE0OjIxLCBBdHN1c2hpIEt1bWFnYWkgd3JvdGU6Cj4+PiBIZWxsbyBMaXUsCj4+Pgo+Pj4+
-IE5vdyB3ZSBkZWZpbmUgTUFYX1BIWVNNRU1fQklUUyBhbmQgU0VDVElPTl9TSVpFX0JJVFMgYXMK
-Pj4+PiBtYWNyb3MuIFNvIGlmIHdlIGRlYWwgd2l0aCB2bWNvcmVzIHdpdGggZGlmZmVyZW50IHZh
-bHVlcwo+Pj4+IG9mIHRoZXNlIHR3byBtYWNyb3MuIFdlIGhhdmUgdG8gcmVjb21waWxlIG1ha2Vk
-dW1wZmlsZS4KPj4+Cj4+PiBUaGVyZSBhcmUgb3RoZXIgbWFjcm9zIHdoaWNoIGhhdmUgYXJjaGl0
-ZWN0dXJlLXNwZWNpZmljIHZhbHVlcwo+Pj4gKGUuZy4gX19QQUdFX09GRlNFVCksIGFuZCBzb21l
-IGZ1bmN0aW9ucyBhcmUgc3BlY2lmaWMgdG8gZWFjaAo+Pj4gYXJjaGl0ZWN0dXJlIChlLmcuIHZh
-ZGRyX3RvX3BhZGRyKCkpLCBzbyB3ZSBuZWVkIHJlY29tcGlsYXRpb24KPj4+IGV2ZW50dWFsbHku
-Cj4+Pgo+Pj4gT1RPSCwgd2UgYWxyZWFkeSBkb24ndCBuZWVkIHJlY29tcGlsYXRpb24gZm9yIHRo
-ZSBzYW1lIGFyY2hpdGVjdHVyZQo+Pj4gc2luY2UgdGhlIHZhbHVlcyBvZiBzdWNoIG1hY3JvcyBh
-cmUgZGVmaW5lZCBmb3IgZWFjaCBrZXJuZWwgdmVyc2lvbgo+Pj4gbGlrZSBiZWxvdzoKPj4+Cj4+
-PiAjaWZkZWYgX194ODZfNjRfXwo+Pj4gLi4uCj4+PiAjZGVmaW5lIF9NQVhfUEhZU01FTV9CSVRT
-X09SSUcgICAgICAgICAgKDQwKQo+Pj4gI2RlZmluZSBfTUFYX1BIWVNNRU1fQklUU18yXzZfMjYg
-ICAgICAgICg0NCkKPj4+ICNkZWZpbmUgX01BWF9QSFlTTUVNX0JJVFNfMl82XzMxICAgICAgICAo
-NDYpCj4+Pgo+Pj4gU28gSSBkb24ndCB0aGluayB0aGlzIHBhdGNoIGlzIHZhbHVhYmxlLgo+Pgo+
-PiBIaSBBdHN1c2hpLAo+Pgo+PiBGb3IgeDg2LCBpdCBpcyBub3QgbmVjZXNzb3J5LiBCdXQgZm9y
-IGFybSwgZGlmZmVyZW50IHZlbmRlcnMKPj4gbWF5IGRlZmluZSBkaWZmZXJlbnQgU0VDVElPTl9T
-SVpFX0JJVFMuIGZvciBleGFtcGxlOgo+Pgo+PiAgIDEgYXJjaC9hcm0vbWFjaC1jbHBzNzExeC9p
-bmNsdWRlL21hY2gvbWVtb3J5LmgKPj4gICAgICNkZWZpbmUgU0VDVElPTl9TSVpFX0JJVFMgMjQK
-Pj4gICAyIGFyY2gvYXJtL21hY2gtZXh5bm9zL2luY2x1ZGUvbWFjaC9tZW1vcnkuaAo+PiAgICAg
-I2RlZmluZSBTRUNUSU9OX1NJWkVfQklUUyAyOAo+PiAgIDQgYXJjaC9hcm0vbWFjaC1oaXNpL2lu
-Y2x1ZGUvbWFjaC9tZW1vcnkuaAo+PiAgICAgI2RlZmluZSBTRUNUSU9OX1NJWkVfQklUUyAyNgo+
-PiAgIDggYXJjaC9hcm0vbWFjaC1zYTExMDAvaW5jbHVkZS9tYWNoL21lbW9yeS5oCj4+ICAgICAj
-ZGVmaW5lIFNFQ1RJT05fU0laRV9CSVRTIDI3Cj4+Cj4+IFBlcmhhcHMgd2Ugc2hvdWxkIGZpbmQg
-YW5vdGhlciB3YXkgdG8gbGV0IHRoZSB1c2Vyc3BhY2UgdG9vbHMKPj4gdG8gZ2V0IHRoZSBhcmNo
-aXRlY3R1cmUtc3BlY2lmaWMgdmFsdWVzLgo+IAo+IEkgc2VlLCBJIHRoaW5rIHRoaXMgZGVzY3Jp
-cHRpb24gaXMgYmV0dGVyIHRoYW4gdGhlIGZpcnN0IG9uZS4KPiAKPiBOb3csIG1ha2VkdW1wZmls
-ZSBjYW4ndCBnZXQgYW4gYXBwcm9wcmlhdGUgdmFsdWVzIG9mIHRoZSB0d28gbWFjcm9zIHNpbmNl
-IHRoZQo+IHZhbHVlcyBhcmUgdmFyaWFibGUgZXZlbiBpZiB0aGUgYXJjaGl0ZWN0dXJlIGFuZCB0
-aGUga2VybmVsIHZlcnNpb24gYXJlIGZpeGVkCj4gKGF0IGxlYXN0IGZvciBhcm0pLCBhbmQgd2Ug
-Y2FuJ3Qgc29sdmUgdGhpcyB3aXRob3V0ICptYW51YWwgY29kZSBmaXhpbmcqLCByaWdodD8KPiAK
-PiBJbiBwcmFjdGljZSwgdGhlIGN1cnJlbnQgY29kZSBleHBlY3RzIHRoYXQgYWxsIGFybSBtYWNo
-aW5lcyBhZG9wdCBFeHlub3MKPiBwcm9jZXNzb3JzLCB0aGlzIGlzIGFuIHByb2JsZW0gZGVmaW5p
-dGVseS4KPiAKPiAgICNpZmRlZiBfX2FybV9fCj4gICAjZGVmaW5lIEtWQkFTRV9NQVNLICAgICAg
-ICAgICAgICgweGZmZmYpCj4gICAjZGVmaW5lIEtWQkFTRSAgICAgICAgICAgICAgICAgIChTWU1C
-T0woX3N0ZXh0KSAmIH5LVkJBU0VfTUFTSykKPiAgICNkZWZpbmUgX1NFQ1RJT05fU0laRV9CSVRT
-ICAgICAgKDI4KQo+ICAgI2RlZmluZSBfTUFYX1BIWVNNRU1fQklUUyAgICAgICAoMzIpCj4gCj4g
-SSB0aGluayBpdCdzIGJldHRlciB0byBmaXggdGhlIGRlc2NyaXB0aW9ucyB0byBnZXQgYWNjZXB0
-YWJpbGl0eSwKPiBidXQgdGhpcyBwYXRjaCBpcyBuZWNlc3NhcnkgZnJvbSB0aGUgdmlldyBwb2lu
-dCBvZiBtYWtlZHVtcGZpbGUuCj4gU28gSSByZWNvbW1lbmQgeW91IHRvIHJlcG9zdCB0aGlzIHBh
-dGNoIHNldCwgdGhlbiBJJ2xsIGFjY2VwdCBpdC4KPiAKT2ssIFRoYW5rcyBmb3IgeW91IHN1Z2dl
-c3QuIEkgd2lsbCByZXBvc3QgdGhpcyBwYXRjaC4gQnkgbm93IG5vIG9uZQpyZWxweSBteSBrZXJu
-ZWwgcGF0Y2ggcmVsYXRlZCB0byB0aGlzIGlzc3VlLCBuYW1lZCAiW1JGQyBQQVRDSCAxLzJdCmtk
-dW1wOiBhZGQgc3BhcnNlIG1lbW9yeSByZWxhdGVkIHZhbHVlcyB0byB2bWNvcmUiLiBEaWRuJ3Qg
-SSBjYwp0aGUgcmlnaHQgcGVyc29uIG9yIHNvbWV0aGluZyBlbHNlPwoKQlRXLCBGb3IgcGF0Y2gg
-IltQQVRDSF0gbWFrZWR1bXBmaWxlOiBBUk06IGdldCBjb3JyZWN0IG1lbV9tYXAgb2Zmc2V0IiwK
-RGlkIEkgZXhwbGFpbiBteSBpZGVhIGNsZWFybHkgPyBJZiBub3QsIEkgd291bGQgbGlrZSByZXBv
-c3Qgb25lIHdpdGgKbW9yZSBkZXRhaWxzLgoKVGhhbmtzLApMaXUgSHVhCgo+IAo+IFRoYW5rcwo+
-IEF0c3VzaGkgS3VtYWdhaQo+IAo+Pj4KPj4+PiBUaGlzIHBhdGNoIG1ha2VzIG1ha2VkdW1wZmls
-ZSBnZXQgdGhlc2UgdHdvIHZhbHVlcyBmcm9tCj4+Pj4gdm1jb3JlIGluZm8sIGlmIGV4aXN0aW5n
-LiBJdCBtYWtlcyB0aGUgbWFrZWR1bXBmaWxlIG1vcmUKPj4+PiBjb21wYXRpYmxlIHRvIHZtY29y
-ZXMgd2l0aCBkaWZmZXJlbnQgc2VjdGlvbiBzaXplLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTog
-TGl1IEh1YSA8c2R1LmxpdUBodWF3ZWkuY29tPgo+Pj4+IC0tLQo+Pj4+IG1ha2VkdW1wZmlsZS5j
-IHwgMTcgKysrKysrKysrKysrKysrKysKPj4+PiBtYWtlZHVtcGZpbGUuaCB8ICAyICsrCj4+Pj4g
-MiBmaWxlcyBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEv
-bWFrZWR1bXBmaWxlLmMgYi9tYWtlZHVtcGZpbGUuYwo+Pj4+IGluZGV4IDZjZjZlMjQuLjNjZGYz
-MjMgMTAwNjQ0Cj4+Pj4gLS0tIGEvbWFrZWR1bXBmaWxlLmMKPj4+PiArKysgYi9tYWtlZHVtcGZp
-bGUuYwo+Pj4+IEBAIC0yMTExLDYgKzIxMTEsOCBAQCByZWFkX3ZtY29yZWluZm8odm9pZCkKPj4+
-PiAJUkVBRF9OVU1CRVIoIlBHX3NsYWIiLCBQR19zbGFiKTsKPj4+PiAJUkVBRF9OVU1CRVIoIlBH
-X2J1ZGR5IiwgUEdfYnVkZHkpOwo+Pj4+IAlSRUFEX05VTUJFUigiUEdfaHdwb2lzb24iLCBQR19o
-d3BvaXNvbik7Cj4+Pj4gKwlSRUFEX05VTUJFUigiU0VDVElPTl9TSVpFX0JJVFMiLCBTRUNUSU9O
-X1NJWkVfQklUUyk7Cj4+Pj4gKwlSRUFEX05VTUJFUigiTUFYX1BIWVNNRU1fQklUUyIsIE1BWF9Q
-SFlTTUVNX0JJVFMpOwo+Pj4+Cj4+Pj4gCVJFQURfU1JDRklMRSgicHVkX3QiLCBwdWRfdCk7Cj4+
-Pj4KPj4+PiBAQCAtMjk5OCw2ICszMDAwLDE4IEBAIGluaXRpYWxpemVfYml0bWFwX21lbW9yeSh2
-b2lkKQo+Pj4+IH0KPj4+Pgo+Pj4+IGludAo+Pj4+ICtjYWxpYnJhdGVfbWFjaGRlcF9pbmZvKHZv
-aWQpCj4+Pj4gK3sKPj4+PiArCWlmIChOVU1CRVIoTUFYX1BIWVNNRU1fQklUUykgPiAwKQo+Pj4+
-ICsJCWluZm8tPm1heF9waHlzbWVtX2JpdHMgPSBOVU1CRVIoTUFYX1BIWVNNRU1fQklUUyk7Cj4+
-Pj4gKwo+Pj4+ICsJaWYgKE5VTUJFUihTRUNUSU9OX1NJWkVfQklUUykgPiAwKQo+Pj4+ICsJCWlu
-Zm8tPnNlY3Rpb25fc2l6ZV9iaXRzID0gTlVNQkVSKFNFQ1RJT05fU0laRV9CSVRTKTsKPj4+PiAr
-Cj4+Pj4gKwlyZXR1cm4gVFJVRTsKPj4+PiArfQo+Pj4+ICsKPj4+PiAraW50Cj4+Pj4gaW5pdGlh
-bCh2b2lkKQo+Pj4+IHsKPj4+PiAJb2ZmX3Qgb2Zmc2V0Owo+Pj4+IEBAIC0zMjE0LDYgKzMyMjgs
-OSBAQCBvdXQ6Cj4+Pj4gCWlmIChkZWJ1Z19pbmZvICYmICFnZXRfbWFjaGRlcF9pbmZvKCkpCj4+
-Pj4gCQlyZXR1cm4gRkFMU0U7Cj4+Pj4KPj4+PiArCWlmIChkZWJ1Z19pbmZvICYmICFjYWxpYnJh
-dGVfbWFjaGRlcF9pbmZvKCkpCj4+Pj4gKwkJcmV0dXJuIEZBTFNFOwo+Pj4+ICsKPj4+PiAJaWYg
-KGlzX3hlbl9tZW1vcnkoKSAmJiAhZ2V0X2RvbTBfbWFwbnIoKSkKPj4+PiAJCXJldHVybiBGQUxT
-RTsKPj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuaCBiL21ha2VkdW1wZmlsZS5o
-Cj4+Pj4gaW5kZXggZWIwMzY4OC4uN2FjYjIzYSAxMDA2NDQKPj4+PiAtLS0gYS9tYWtlZHVtcGZp
-bGUuaAo+Pj4+ICsrKyBiL21ha2VkdW1wZmlsZS5oCj4+Pj4gQEAgLTE0MzQsNiArMTQzNCw4IEBA
-IHN0cnVjdCBudW1iZXJfdGFibGUgewo+Pj4+IAlsb25nICAgIFBHX2h3cG9pc29uOwo+Pj4+Cj4+
-Pj4gCWxvbmcJUEFHRV9CVUREWV9NQVBDT1VOVF9WQUxVRTsKPj4+PiArCWxvbmcJU0VDVElPTl9T
-SVpFX0JJVFM7Cj4+Pj4gKwlsb25nCU1BWF9QSFlTTUVNX0JJVFM7Cj4+Pj4gfTsKPj4+Pgo+Pj4+
-IHN0cnVjdCBzcmNmaWxlX3RhYmxlIHsKPj4+PiAtLQo+Pj4+IDEuOS4wCj4+Pgo+Pj4gLgo+Pj4K
-Pj4KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Wed, 14 May 2014 19:54:28 +0900 (JST)
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+
+> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> Subject: Re: [PATCH v3 1/2] Generic handling of multi-page exclusions
+> Date: Wed, 14 May 2014 19:37:23 +0900
+> 
+> > From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> > Subject: RE: [PATCH v3 1/2] Generic handling of multi-page exclusions
+> > Date: Wed, 14 May 2014 07:54:17 +0000
+> > 
+> >> Hello Petr,
+> >> 
+> >>>When multiple pages are excluded from the dump, store the extents in
+> >>>struct cycle and check if anything is still pending on the next invocation
+> >>>of __exclude_unnecessary_pages. This assumes that:
+> >>>
+> >>>  1. after __exclude_unnecessary_pages is called for a struct mem_map_data
+> >>>     that extends beyond the current cycle, it is not called again during
+> >>>     that cycle,
+> >>>  2. in the next cycle, __exclude_unnecessary_pages is not called before
+> >>>     this final struct mem_map_data.
+> >>>
+> >>>Both assumptions are met if struct mem_map_data segments:
+> >>>
+> >>>  1. do not overlap,
+> >>>  2. are sorted by physical address in ascending order.
+> >> 
+> >> In ELF case, write_elf_pages_cyclic() processes PT_LOAD entries from
+> >> PT_LOAD(0), this can break both assumptions unluckily.
+> >> Actually this patch doesn't work on my machine:
+> >> 
+> >> LOAD (0)
+> >>   phys_start : 1000000
+> >>   phys_end   : 182f000
+> >>   virt_start : ffffffff81000000
+> >>   virt_end   : ffffffff8182f000
+> >> LOAD (1)
+> >>   phys_start : 1000
+> >>   phys_end   : 9b400
+> >>   virt_start : ffff810000001000
+> >>   virt_end   : ffff81000009b400
+> >> LOAD (2)
+> >>   phys_start : 100000
+> >>   phys_end   : 27000000
+> >>   virt_start : ffff810000100000
+> >>   virt_end   : ffff810027000000
+> >> LOAD (3)
+> >>   phys_start : 37000000
+> >>   phys_end   : cff70000
+> >>   virt_start : ffff810037000000
+> >>   virt_end   : ffff8100cff70000
+> >> LOAD (4)
+> >>   phys_start : 100000000
+> >>   phys_end   : 170000000
+> >>   virt_start : ffff810100000000
+> >>   virt_end   : ffff810170000000
+> >> 
+> >> 
+> >> PT_LOAD(2) includes PT_LOAD(0) and there physical addresses aren't sorted.
+> >> 
+> >> If there is the only "sort issue", it may easy to fix it with a new iterator
+> >> like "for_each_pt_load()", it iterates PT_LOAD entries in ascending order
+> >> by physical address.
+> >> However, I don't have a good idea to solve the overlap issue now...
+> >> 
+> > 
+> > Is it enough to merge them? Prepare a modified version of PTLOAD list
+> > and refer to it in actual processing. I think this also leads to
+> > cleaning up readpage_elf() that addresses some overapping memory map
+> > issue on ia64.
+> > 
+> 
+> I'm saying this because I don't find anywhere virt_start or virt_end
+> is used. We look up page table to convert virtual address to physical
+> address, not PT_LOAD entries.
+
+Oh, you're right! Why does the ordering of PT_LOAD segments matter here?
+If makedumpfile fails on your machine after applying my patches, then
+it's quite likely because of something else.
+
+FWIW I verified on a few dumpfiles that makedumpfile produced exactly
+the same output before and after applying the patches.
+
+OTOH I can see a warning when writing an ELF file. Before the patch:
+
+Excluding unnecessary pages        : [100.0 %] \WARNING: PFN out of cycle range. (pfn:c00, cycle:[3fc00-3ffd0])
+
+After the patch:
+
+Excluding unnecessary pages        : [100.0 %] \WARNING: PFN out of cycle range. (pfn:26c00, cycle:[0-1ff6])
+
+I'm unsure why there are out-of-cycle PFNs. Researching...
+
+Petr T
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
