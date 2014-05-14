@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WkU2z-00089e-3V
- for kexec@lists.infradead.org; Wed, 14 May 2014 07:56:18 +0000
+ id 1WkU3e-0008Oq-0j
+ for kexec@lists.infradead.org; Wed, 14 May 2014 07:56:58 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [RFC PATCH 2/2] makedumpfile: get additional information from
- vmcore
-Date: Wed, 14 May 2014 07:53:38 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97210997@BPXM01GP.gisp.nec.co.jp>
-References: <1399469234-54925-1-git-send-email-sdu.liu@huawei.com>
- <1399469234-54925-3-git-send-email-sdu.liu@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97210369@BPXM01GP.gisp.nec.co.jp>
- <5371C8E6.6080700@huawei.com>
-In-Reply-To: <5371C8E6.6080700@huawei.com>
+Subject: RE: [PATCH v3 1/2] Generic handling of multi-page exclusions
+Date: Wed, 14 May 2014 07:54:17 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9721099E@BPXM01GP.gisp.nec.co.jp>
+References: <1399482403-3656-1-git-send-email-ptesarik@suse.cz>
+ <1399482403-3656-2-git-send-email-ptesarik@suse.cz>
+In-Reply-To: <1399482403-3656-2-git-send-email-ptesarik@suse.cz>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,145 +24,184 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "sdu.liu@huawei.com" <sdu.liu@huawei.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
-Cc: "wangnan0@huawei.com" <wangnan0@huawei.com>, "peifeiyue@huawei.com" <peifeiyue@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "liusdu@126.com" <liusdu@126.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->On 2014/5/13 14:21, Atsushi Kumagai wrote:
->> Hello Liu,
->>
->>> Now we define MAX_PHYSMEM_BITS and SECTION_SIZE_BITS as
->>> macros. So if we deal with vmcores with different values
->>> of these two macros. We have to recompile makedumpfile.
->>
->> There are other macros which have architecture-specific values
->> (e.g. __PAGE_OFFSET), and some functions are specific to each
->> architecture (e.g. vaddr_to_paddr()), so we need recompilation
->> eventually.
->>
->> OTOH, we already don't need recompilation for the same architecture
->> since the values of such macros are defined for each kernel version
->> like below:
->>
->> #ifdef __x86_64__
->> ...
->> #define _MAX_PHYSMEM_BITS_ORIG          (40)
->> #define _MAX_PHYSMEM_BITS_2_6_26        (44)
->> #define _MAX_PHYSMEM_BITS_2_6_31        (46)
->>
->> So I don't think this patch is valuable.
+Hello Petr,
+
+>When multiple pages are excluded from the dump, store the extents in
+>struct cycle and check if anything is still pending on the next invocation
+>of __exclude_unnecessary_pages. This assumes that:
 >
->Hi Atsushi,
+>  1. after __exclude_unnecessary_pages is called for a struct mem_map_data
+>     that extends beyond the current cycle, it is not called again during
+>     that cycle,
+>  2. in the next cycle, __exclude_unnecessary_pages is not called before
+>     this final struct mem_map_data.
 >
->For x86, it is not necessory. But for arm, different venders
->may define different SECTION_SIZE_BITS. for example:
+>Both assumptions are met if struct mem_map_data segments:
 >
->   1 arch/arm/mach-clps711x/include/mach/memory.h
->     #define SECTION_SIZE_BITS 24
->   2 arch/arm/mach-exynos/include/mach/memory.h
->     #define SECTION_SIZE_BITS 28
->   4 arch/arm/mach-hisi/include/mach/memory.h
->     #define SECTION_SIZE_BITS 26
->   8 arch/arm/mach-sa1100/include/mach/memory.h
->     #define SECTION_SIZE_BITS 27
->
->Perhaps we should find another way to let the userspace tools
->to get the architecture-specific values.
+>  1. do not overlap,
+>  2. are sorted by physical address in ascending order.
 
-I see, I think this description is better than the first one.
+In ELF case, write_elf_pages_cyclic() processes PT_LOAD entries from
+PT_LOAD(0), this can break both assumptions unluckily.
+Actually this patch doesn't work on my machine:
 
-Now, makedumpfile can't get an appropriate values of the two macros since the
-values are variable even if the architecture and the kernel version are fixed
-(at least for arm), and we can't solve this without *manual code fixing*, right?
+LOAD (0)
+  phys_start : 1000000
+  phys_end   : 182f000
+  virt_start : ffffffff81000000
+  virt_end   : ffffffff8182f000
+LOAD (1)
+  phys_start : 1000
+  phys_end   : 9b400
+  virt_start : ffff810000001000
+  virt_end   : ffff81000009b400
+LOAD (2)
+  phys_start : 100000
+  phys_end   : 27000000
+  virt_start : ffff810000100000
+  virt_end   : ffff810027000000
+LOAD (3)
+  phys_start : 37000000
+  phys_end   : cff70000
+  virt_start : ffff810037000000
+  virt_end   : ffff8100cff70000
+LOAD (4)
+  phys_start : 100000000
+  phys_end   : 170000000
+  virt_start : ffff810100000000
+  virt_end   : ffff810170000000
 
-In practice, the current code expects that all arm machines adopt Exynos
-processors, this is an problem definitely.
 
-  #ifdef __arm__
-  #define KVBASE_MASK             (0xffff)
-  #define KVBASE                  (SYMBOL(_stext) & ~KVBASE_MASK)
-  #define _SECTION_SIZE_BITS      (28)
-  #define _MAX_PHYSMEM_BITS       (32)
+PT_LOAD(2) includes PT_LOAD(0) and there physical addresses aren't sorted.
 
-I think it's better to fix the descriptions to get acceptability,
-but this patch is necessary from the view point of makedumpfile.
-So I recommend you to repost this patch set, then I'll accept it.
+If there is the only "sort issue", it may easy to fix it with a new iterator
+like "for_each_pt_load()", it iterates PT_LOAD entries in ascending order
+by physical address.
+However, I don't have a good idea to solve the overlap issue now...
 
 
 Thanks
 Atsushi Kumagai
 
->>
->>> This patch makes makedumpfile get these two values from
->>> vmcore info, if existing. It makes the makedumpfile more
->>> compatible to vmcores with different section size.
->>>
->>> Signed-off-by: Liu Hua <sdu.liu@huawei.com>
->>> ---
->>> makedumpfile.c | 17 +++++++++++++++++
->>> makedumpfile.h |  2 ++
->>> 2 files changed, 19 insertions(+)
->>>
->>> diff --git a/makedumpfile.c b/makedumpfile.c
->>> index 6cf6e24..3cdf323 100644
->>> --- a/makedumpfile.c
->>> +++ b/makedumpfile.c
->>> @@ -2111,6 +2111,8 @@ read_vmcoreinfo(void)
->>> 	READ_NUMBER("PG_slab", PG_slab);
->>> 	READ_NUMBER("PG_buddy", PG_buddy);
->>> 	READ_NUMBER("PG_hwpoison", PG_hwpoison);
->>> +	READ_NUMBER("SECTION_SIZE_BITS", SECTION_SIZE_BITS);
->>> +	READ_NUMBER("MAX_PHYSMEM_BITS", MAX_PHYSMEM_BITS);
->>>
->>> 	READ_SRCFILE("pud_t", pud_t);
->>>
->>> @@ -2998,6 +3000,18 @@ initialize_bitmap_memory(void)
->>> }
->>>
->>> int
->>> +calibrate_machdep_info(void)
->>> +{
->>> +	if (NUMBER(MAX_PHYSMEM_BITS) > 0)
->>> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
->>> +
->>> +	if (NUMBER(SECTION_SIZE_BITS) > 0)
->>> +		info->section_size_bits = NUMBER(SECTION_SIZE_BITS);
->>> +
->>> +	return TRUE;
->>> +}
->>> +
->>> +int
->>> initial(void)
->>> {
->>> 	off_t offset;
->>> @@ -3214,6 +3228,9 @@ out:
->>> 	if (debug_info && !get_machdep_info())
->>> 		return FALSE;
->>>
->>> +	if (debug_info && !calibrate_machdep_info())
->>> +		return FALSE;
->>> +
->>> 	if (is_xen_memory() && !get_dom0_mapnr())
->>> 		return FALSE;
->>>
->>> diff --git a/makedumpfile.h b/makedumpfile.h
->>> index eb03688..7acb23a 100644
->>> --- a/makedumpfile.h
->>> +++ b/makedumpfile.h
->>> @@ -1434,6 +1434,8 @@ struct number_table {
->>> 	long    PG_hwpoison;
->>>
->>> 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
->>> +	long	SECTION_SIZE_BITS;
->>> +	long	MAX_PHYSMEM_BITS;
->>> };
->>>
->>> struct srcfile_table {
->>> --
->>> 1.9.0
->>
->> .
->>
+>These two conditions are true for all supported memory models.
 >
+>Note that the start PFN of the excluded extent is set to the end of the
+>current cycle (which is equal to the start of the next cycle, see
+>update_cycle), so only the part of the excluded region which falls beyond
+>current cycle buffer is valid. If the excluded region is completely
+>processed in the current cycle, the start PFN is bigger than the end PFN
+>and no work is done at the beginning of the next cycle.
+>
+>After processing the leftover from last cycle, pfn_start and mem_map are
+>adjusted to skip the excluded pages. There is no check whether the
+>adjusted pfn_start is within the current cycle. Nothing bad happens if
+>it isn't, because pages outside the current cyclic region are ignored by
+>the subsequent loop, and the remainder is postponed to the next cycle by
+>exclude_range().
+>
+>Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+>---
+> makedumpfile.c | 49 +++++++++++++++++++++++++++++++++++--------------
+> makedumpfile.h |  5 +++++
+> 2 files changed, 40 insertions(+), 14 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 16081a5..a3498e4 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -4667,6 +4667,26 @@ initialize_2nd_bitmap_cyclic(struct cycle *cycle)
+> 	return TRUE;
+> }
+>
+>+static void
+>+exclude_range(mdf_pfn_t *counter, mdf_pfn_t pfn, mdf_pfn_t endpfn,
+>+    struct cycle *cycle)
+>+{
+>+	if (cycle) {
+>+		cycle->exclude_pfn_start = cycle->end_pfn;
+>+		cycle->exclude_pfn_end = endpfn;
+>+		cycle->exclude_pfn_counter = counter;
+>+
+>+		if (cycle->end_pfn < endpfn)
+>+			endpfn = cycle->end_pfn;
+>+	}
+>+
+>+	while (pfn < endpfn) {
+>+		if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+>+			(*counter)++;
+>+		++pfn;
+>+	}
+>+}
+>+
+> int
+> __exclude_unnecessary_pages(unsigned long mem_map,
+>     mdf_pfn_t pfn_start, mdf_pfn_t pfn_end, struct cycle *cycle)
+>@@ -4681,6 +4701,18 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+> 	unsigned long flags, mapping, private = 0;
+>
+> 	/*
+>+	 * If a multi-page exclusion is pending, do it first
+>+	 */
+>+	if (cycle && cycle->exclude_pfn_start < cycle->exclude_pfn_end) {
+>+		exclude_range(cycle->exclude_pfn_counter,
+>+			cycle->exclude_pfn_start, cycle->exclude_pfn_end,
+>+			cycle);
+>+
+>+		mem_map += (cycle->exclude_pfn_end - pfn_start) * SIZE(page);
+>+		pfn_start = cycle->exclude_pfn_end;
+>+	}
+>+
+>+	/*
+> 	 * Refresh the buffer of struct page, when changing mem_map.
+> 	 */
+> 	pfn_read_start = ULONGLONG_MAX;
+>@@ -4744,21 +4776,10 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+> 		if ((info->dump_level & DL_EXCLUDE_FREE)
+> 		    && info->page_is_buddy
+> 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+>-			int i, nr_pages = 1 << private;
+>+			int nr_pages = 1 << private;
+>+
+>+			exclude_range(&pfn_free, pfn, pfn + nr_pages, cycle);
+>
+>-			for (i = 0; i < nr_pages; ++i) {
+>-				/*
+>-				 * According to combination of
+>-				 * MAX_ORDER and size of cyclic
+>-				 * buffer, this clearing bit operation
+>-				 * can overrun the cyclic buffer.
+>-				 *
+>-				 * See check_cyclic_buffer_overrun()
+>-				 * for the detail.
+>-				 */
+>-				if (clear_bit_on_2nd_bitmap_for_kernel((pfn + i), cycle))
+>-					pfn_free++;
+>-			}
+> 			pfn += nr_pages - 1;
+> 			mem_map += (nr_pages - 1) * SIZE(page);
+> 		}
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index eb03688..43cf91d 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -1593,6 +1593,11 @@ int get_xen_info_ia64(void);
+> struct cycle {
+> 	mdf_pfn_t start_pfn;
+> 	mdf_pfn_t end_pfn;
+>+
+>+	/* for excluding multi-page regions */
+>+	mdf_pfn_t exclude_pfn_start;
+>+	mdf_pfn_t exclude_pfn_end;
+>+	mdf_pfn_t *exclude_pfn_counter;
+> };
+>
+> static inline int
+>--
+>1.8.4.5
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
