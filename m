@@ -1,26 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WkS19-0007gr-1b
- for kexec@lists.infradead.org; Wed, 14 May 2014 05:46:15 +0000
-Date: Wed, 14 May 2014 13:44:13 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
- bufsize_cyclic for elf dump
-Message-ID: <20140514054413.GC13787@dhcp-16-105.nay.redhat.com>
-References: <20140417050219.GF8084@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720542E@BPXM01GP.gisp.nec.co.jp>
- <20140421151240.GB4367@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
- <20140423170818.GE24651@redhat.com>
- <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
- <20140425132214.GB10674@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720DE3D@BPXM01GP.gisp.nec.co.jp>
- <20140428125025.GA4751@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720F928@BPXM01GP.gisp.nec.co.jp>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WkU2z-00089e-3V
+ for kexec@lists.infradead.org; Wed, 14 May 2014 07:56:18 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [RFC PATCH 2/2] makedumpfile: get additional information from
+ vmcore
+Date: Wed, 14 May 2014 07:53:38 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97210997@BPXM01GP.gisp.nec.co.jp>
+References: <1399469234-54925-1-git-send-email-sdu.liu@huawei.com>
+ <1399469234-54925-3-git-send-email-sdu.liu@huawei.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97210369@BPXM01GP.gisp.nec.co.jp>
+ <5371C8E6.6080700@huawei.com>
+In-Reply-To: <5371C8E6.6080700@huawei.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9720F928@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,85 +27,145 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: "sdu.liu@huawei.com" <sdu.liu@huawei.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
+Cc: "wangnan0@huawei.com" <wangnan0@huawei.com>, "peifeiyue@huawei.com" <peifeiyue@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "liusdu@126.com" <liusdu@126.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On 05/09/14 at 05:36am, Atsushi Kumagai wrote:
- 
-> There were more than 10 MB remain memory in your case (A pattern),
-> and probably they were used as page cache mostly, so it sounds OOM
-> couldn't happen since such pages are reclaimable.
-> 
-> I tried to reproduce OOM in my environment.
-> Unfortunately, I couldn't get a chance to use a large memory machine,
-> so I controlled the bitmap buffer size with --cyclic-buffer like below:
-> 
-> / # free
->               total         used         free       shared      buffers
->   Mem:        37544        19796        17748            0           56
->  Swap:            0            0            0
-> Total:        37544        19796        17748
-> / # /mnt/usr/sbin/makedumpfile_static -E --cyclic-buffer=8000 /proc/vmcore /mnt/tmp/dumpfile.E
-> Copying data                       : [100.0 %] |
-> 
-> The dumpfile is saved to /mnt/tmp/dumpfile.E.
-> 
-> makedumpfile Completed.
-> VmHWM:     16456 kB
+>On 2014/5/13 14:21, Atsushi Kumagai wrote:
+>> Hello Liu,
+>>
+>>> Now we define MAX_PHYSMEM_BITS and SECTION_SIZE_BITS as
+>>> macros. So if we deal with vmcores with different values
+>>> of these two macros. We have to recompile makedumpfile.
+>>
+>> There are other macros which have architecture-specific values
+>> (e.g. __PAGE_OFFSET), and some functions are specific to each
+>> architecture (e.g. vaddr_to_paddr()), so we need recompilation
+>> eventually.
+>>
+>> OTOH, we already don't need recompilation for the same architecture
+>> since the values of such macros are defined for each kernel version
+>> like below:
+>>
+>> #ifdef __x86_64__
+>> ...
+>> #define _MAX_PHYSMEM_BITS_ORIG          (40)
+>> #define _MAX_PHYSMEM_BITS_2_6_26        (44)
+>> #define _MAX_PHYSMEM_BITS_2_6_31        (46)
+>>
+>> So I don't think this patch is valuable.
+>
+>Hi Atsushi,
+>
+>For x86, it is not necessory. But for arm, different venders
+>may define different SECTION_SIZE_BITS. for example:
+>
+>   1 arch/arm/mach-clps711x/include/mach/memory.h
+>     #define SECTION_SIZE_BITS 24
+>   2 arch/arm/mach-exynos/include/mach/memory.h
+>     #define SECTION_SIZE_BITS 28
+>   4 arch/arm/mach-hisi/include/mach/memory.h
+>     #define SECTION_SIZE_BITS 26
+>   8 arch/arm/mach-sa1100/include/mach/memory.h
+>     #define SECTION_SIZE_BITS 27
+>
+>Perhaps we should find another way to let the userspace tools
+>to get the architecture-specific values.
 
-Hi Atsushi,
+I see, I think this description is better than the first one.
 
-What is the dump target in your test? The OOM bugs happened if and only
-if it nfs target. Other dump target including ssh/local fs/ didn't
-happen ever though those cyclic buffer size code bugs existed.
+Now, makedumpfile can't get an appropriate values of the two macros since the
+values are variable even if the architecture and the kernel version are fixed
+(at least for arm), and we can't solve this without *manual code fixing*, right?
 
-We added some debug code and made test, the result shows the OOM
-happened when the left memory is only about 2M. But when we drop page
-caches every 1000 times of write, it's OK to complete the dump. And the
-OOM happened when page cache need allocate page for writing.
+In practice, the current code expects that all arm machines adopt Exynos
+processors, this is an problem definitely.
 
-So could you adjust your test to nfs dump with elf format or lzo
-compression? I think nfs dump have heavy page cache affect which is
-different with others.
+  #ifdef __arm__
+  #define KVBASE_MASK             (0xffff)
+  #define KVBASE                  (SYMBOL(_stext) & ~KVBASE_MASK)
+  #define _SECTION_SIZE_BITS      (28)
+  #define _MAX_PHYSMEM_BITS       (32)
 
-I will take machines with 100G memory and 10G memory to test separately,
-will paste the result with our configuration.
+I think it's better to fix the descriptions to get acceptability,
+but this patch is necessary from the view point of makedumpfile.
+So I recommend you to repost this patch set, then I'll accept it.
+
 
 Thanks
-Baoquan
+Atsushi Kumagai
 
-
-> / #
-> 
-> As above, OOM didn't happen even when makedumpfile consumed most of the
-> available memory (the remains were only 1MB).
-> 
-> Of course, OOM happened when the memory usage exceeded the limit:
-> 
-> / # free
->               total         used         free       shared      buffers
->   Mem:        37544        21608        15936            0          368
->  Swap:            0            0            0
-> Total:        37544        21608        15936
-> / # /mnt/usr/sbin/makedumpfile_static -E --cyclic-buffer=8192 /proc/vmcore /mnt/tmp/dumpfile.E
-> Copying data                       : [  0.0 %] /Out of memory: Kill process 1389 (makedumpfile_st) score 428 or sacrifice child
-> Killed process 1389 (makedumpfile_st) total-vm:22196kB, anon-rss:16524kB, file-rss:8kB
-> KILL
-> / #
-> 
-> 
-> I think we should investigate why OOM happened in your environment,
-> otherwise we can't decide a safety limit of a user process's memory usage.
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> >>
-> >> By the way, I'm going on holiday for 8 days, I can't reply
-> >> during that period. Thanks in advance.
-> >
-
+>>
+>>> This patch makes makedumpfile get these two values from
+>>> vmcore info, if existing. It makes the makedumpfile more
+>>> compatible to vmcores with different section size.
+>>>
+>>> Signed-off-by: Liu Hua <sdu.liu@huawei.com>
+>>> ---
+>>> makedumpfile.c | 17 +++++++++++++++++
+>>> makedumpfile.h |  2 ++
+>>> 2 files changed, 19 insertions(+)
+>>>
+>>> diff --git a/makedumpfile.c b/makedumpfile.c
+>>> index 6cf6e24..3cdf323 100644
+>>> --- a/makedumpfile.c
+>>> +++ b/makedumpfile.c
+>>> @@ -2111,6 +2111,8 @@ read_vmcoreinfo(void)
+>>> 	READ_NUMBER("PG_slab", PG_slab);
+>>> 	READ_NUMBER("PG_buddy", PG_buddy);
+>>> 	READ_NUMBER("PG_hwpoison", PG_hwpoison);
+>>> +	READ_NUMBER("SECTION_SIZE_BITS", SECTION_SIZE_BITS);
+>>> +	READ_NUMBER("MAX_PHYSMEM_BITS", MAX_PHYSMEM_BITS);
+>>>
+>>> 	READ_SRCFILE("pud_t", pud_t);
+>>>
+>>> @@ -2998,6 +3000,18 @@ initialize_bitmap_memory(void)
+>>> }
+>>>
+>>> int
+>>> +calibrate_machdep_info(void)
+>>> +{
+>>> +	if (NUMBER(MAX_PHYSMEM_BITS) > 0)
+>>> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+>>> +
+>>> +	if (NUMBER(SECTION_SIZE_BITS) > 0)
+>>> +		info->section_size_bits = NUMBER(SECTION_SIZE_BITS);
+>>> +
+>>> +	return TRUE;
+>>> +}
+>>> +
+>>> +int
+>>> initial(void)
+>>> {
+>>> 	off_t offset;
+>>> @@ -3214,6 +3228,9 @@ out:
+>>> 	if (debug_info && !get_machdep_info())
+>>> 		return FALSE;
+>>>
+>>> +	if (debug_info && !calibrate_machdep_info())
+>>> +		return FALSE;
+>>> +
+>>> 	if (is_xen_memory() && !get_dom0_mapnr())
+>>> 		return FALSE;
+>>>
+>>> diff --git a/makedumpfile.h b/makedumpfile.h
+>>> index eb03688..7acb23a 100644
+>>> --- a/makedumpfile.h
+>>> +++ b/makedumpfile.h
+>>> @@ -1434,6 +1434,8 @@ struct number_table {
+>>> 	long    PG_hwpoison;
+>>>
+>>> 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
+>>> +	long	SECTION_SIZE_BITS;
+>>> +	long	MAX_PHYSMEM_BITS;
+>>> };
+>>>
+>>> struct srcfile_table {
+>>> --
+>>> 1.9.0
+>>
+>> .
+>>
+>
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
