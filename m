@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WkYSY-0008Hu-3p
- for kexec@lists.infradead.org; Wed, 14 May 2014 12:38:59 +0000
-Date: Wed, 14 May 2014 14:38:32 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v3 1/2] Generic handling of multi-page exclusions
-Message-ID: <20140514143832.16136269@hananiah.suse.cz>
-In-Reply-To: <20140514.195428.247303438.d.hatayama@jp.fujitsu.com>
-References: <1399482403-3656-2-git-send-email-ptesarik@suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE9721099E@BPXM01GP.gisp.nec.co.jp>
- <20140514.193723.161348018.d.hatayama@jp.fujitsu.com>
- <20140514.195428.247303438.d.hatayama@jp.fujitsu.com>
+Message-ID: <1400109651.11178.82.camel@smoke>
+Subject: Re: [PATCH 7/8] arm64/kexec: Add core kexec support
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 14 May 2014 16:20:51 -0700
+In-Reply-To: <20140514105401.GF2848@localhost>
+References: <cover.1399594544.git.geoff@infradead.org>
+ <64ef27888fa70b3e27ddcf4ca594fa71ab7f7777.1399594544.git.geoff@infradead.org>
+ <20140514105401.GF2848@localhost>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,104 +20,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Deepak Saxena <dsaxena@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Wed, 14 May 2014 19:54:28 +0900 (JST)
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+Hi Catalin,
 
-> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> Subject: Re: [PATCH v3 1/2] Generic handling of multi-page exclusions
-> Date: Wed, 14 May 2014 19:37:23 +0900
+On Wed, 2014-05-14 at 11:54 +0100, Catalin Marinas wrote:
+> On Fri, May 09, 2014 at 01:48:17AM +0100, Geoff Levand wrote:
+> > +KEXEC FOR ARM64
+> > +M:     Geoff Levand <geoff@infradead.org>
+> > +W:     http://kernel.org/pub/linux/utils/kernel/kexec/
+> > +L:     kexec@lists.infradead.org
+> > +L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > +S:     Maintained
+> > +F:     arch/arm64/machine_kexec.c
+> > +F:     arch/arm64/relocate_kernel.S
 > 
-> > From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> > Subject: RE: [PATCH v3 1/2] Generic handling of multi-page exclusions
-> > Date: Wed, 14 May 2014 07:54:17 +0000
-> > 
-> >> Hello Petr,
-> >> 
-> >>>When multiple pages are excluded from the dump, store the extents in
-> >>>struct cycle and check if anything is still pending on the next invocation
-> >>>of __exclude_unnecessary_pages. This assumes that:
-> >>>
-> >>>  1. after __exclude_unnecessary_pages is called for a struct mem_map_data
-> >>>     that extends beyond the current cycle, it is not called again during
-> >>>     that cycle,
-> >>>  2. in the next cycle, __exclude_unnecessary_pages is not called before
-> >>>     this final struct mem_map_data.
-> >>>
-> >>>Both assumptions are met if struct mem_map_data segments:
-> >>>
-> >>>  1. do not overlap,
-> >>>  2. are sorted by physical address in ascending order.
-> >> 
-> >> In ELF case, write_elf_pages_cyclic() processes PT_LOAD entries from
-> >> PT_LOAD(0), this can break both assumptions unluckily.
-> >> Actually this patch doesn't work on my machine:
-> >> 
-> >> LOAD (0)
-> >>   phys_start : 1000000
-> >>   phys_end   : 182f000
-> >>   virt_start : ffffffff81000000
-> >>   virt_end   : ffffffff8182f000
-> >> LOAD (1)
-> >>   phys_start : 1000
-> >>   phys_end   : 9b400
-> >>   virt_start : ffff810000001000
-> >>   virt_end   : ffff81000009b400
-> >> LOAD (2)
-> >>   phys_start : 100000
-> >>   phys_end   : 27000000
-> >>   virt_start : ffff810000100000
-> >>   virt_end   : ffff810027000000
-> >> LOAD (3)
-> >>   phys_start : 37000000
-> >>   phys_end   : cff70000
-> >>   virt_start : ffff810037000000
-> >>   virt_end   : ffff8100cff70000
-> >> LOAD (4)
-> >>   phys_start : 100000000
-> >>   phys_end   : 170000000
-> >>   virt_start : ffff810100000000
-> >>   virt_end   : ffff810170000000
-> >> 
-> >> 
-> >> PT_LOAD(2) includes PT_LOAD(0) and there physical addresses aren't sorted.
-> >> 
-> >> If there is the only "sort issue", it may easy to fix it with a new iterator
-> >> like "for_each_pt_load()", it iterates PT_LOAD entries in ascending order
-> >> by physical address.
-> >> However, I don't have a good idea to solve the overlap issue now...
-> >> 
-> > 
-> > Is it enough to merge them? Prepare a modified version of PTLOAD list
-> > and refer to it in actual processing. I think this also leads to
-> > cleaning up readpage_elf() that addresses some overapping memory map
-> > issue on ia64.
-> > 
+> These entries missed the full directory name.
 > 
-> I'm saying this because I don't find anywhere virt_start or virt_end
-> is used. We look up page table to convert virtual address to physical
-> address, not PT_LOAD entries.
+> Anyway, this code already comes under the core arm64 MAINTAINERS entry
+> and it doesn't make sense to have a special kexec case. Please add a
+> proper header to the new files you introduce, including copyright and
+> author information.
 
-Oh, you're right! Why does the ordering of PT_LOAD segments matter here?
-If makedumpfile fails on your machine after applying my patches, then
-it's quite likely because of something else.
+Thanks for the comments.  I'll fix for v2 of the series.
 
-FWIW I verified on a few dumpfiles that makedumpfile produced exactly
-the same output before and after applying the patches.
+-Geoff
 
-OTOH I can see a warning when writing an ELF file. Before the patch:
-
-Excluding unnecessary pages        : [100.0 %] \WARNING: PFN out of cycle range. (pfn:c00, cycle:[3fc00-3ffd0])
-
-After the patch:
-
-Excluding unnecessary pages        : [100.0 %] \WARNING: PFN out of cycle range. (pfn:26c00, cycle:[0-1ff6])
-
-I'm unsure why there are out-of-cycle PFNs. Researching...
-
-Petr T
 
 _______________________________________________
 kexec mailing list
