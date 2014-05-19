@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([119.145.14.64])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WmIvv-00074v-AD
- for kexec@lists.infradead.org; Mon, 19 May 2014 08:28:36 +0000
-Message-ID: <5379C052.50108@huawei.com>
-Date: Mon, 19 May 2014 16:26:58 +0800
-From: Liu hua <sdu.liu@huawei.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WmLY4-00049A-Q0
+ for kexec@lists.infradead.org; Mon, 19 May 2014 11:16:05 +0000
+Date: Mon, 19 May 2014 19:15:38 +0800
+From: "bhe@redhat.com" <bhe@redhat.com>
+Subject: Re: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Message-ID: <20140519111538.GD1661@dhcp-16-116.nay.redhat.com>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
+ <20140423170818.GE24651@redhat.com>
+ <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
+ <20140425132214.GB10674@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720DE3D@BPXM01GP.gisp.nec.co.jp>
+ <20140428125025.GA4751@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720F928@BPXM01GP.gisp.nec.co.jp>
+ <20140509204924.GA9918@redhat.com>
+ <20140515072249.GA2170@dhcp-16-116.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972110ED@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: ARM: get correct mem_map offset
-References: <1399443356-46732-1-git-send-email-sdu.liu@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720FA9B@BPXM01GP.gisp.nec.co.jp>
- <53702313.7090703@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9721103D@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9721103D@BPXM01GP.gisp.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972110ED@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,168 +29,240 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-5LqOIDIwMTQvNS8xNSAxNjoyMSwgQXRzdXNoaSBLdW1hZ2FpIOWGmemBkzoKPj4+PiBXaGVuIGNv
-bnZlcnRpbmcgcGFkZHIgdG8gcGZuLCBtYWtlZHVtcGZpbGUgZmlyc3RseSBtaW51c2VzIHRoZQo+
-Pj4+IG9mZnNldCBvZiBwaHlzaWNhbCBtZW1vcnksIGFuZCB0aGVuIGRvIHRoZSByaWdodCBzaGlm
-dC4gQnV0IHRoZQo+Pj4+IGtlcm5lbCBvbmx5IGRvZXMgdGhlIHJpZ2h0IHNoaWZ0Lgo+IAo+IChU
-aGlzIGlzIGEgdHJpdmlhbCBjb21tZW50KQo+IG1ha2VkdW1wZmlsZSBkbyB0aGUgcmlnaHQgc2hp
-ZnQgZmlyc3QsIHRoaXMgZGVzY3JpcHRpb24gaXNuJ3QgcmlnaHQuCj4gCj4gICAjZGVmaW5lIHBh
-ZGRyX3RvX3BmbihYKSBcCj4gICAgICAgICAgICgoKHVuc2lnbmVkIGxvbmcgbG9uZykoWCkgPj4g
-UEFHRVNISUZUKCkpIC0gQVJDSF9QRk5fT0ZGU0VUKQo+IApTb3JyeSBmb3IgdGhpcyBtaXN0YWtl
-ISBBY3R1YWxseSBtYWtlZHVtcGZpbGUgZG8gdGhlIHJpZ2h0IHNoaWZ0IGZpcnN0LAp0aGVuIG1p
-bnVzIEFSQ0hfUEZOX09GRlNFVC4KPj4+IERpZCB5b3UgbWVhbiB0aGUgcGF0Y2ggYmVsb3cgaXMg
-d3Jvbmc/Cj4+Pgo+Pj4gICBjb21taXQgMWU5M2VlNzVmOWQ0N2MyMTllODMzMjEwZWIzMWU0YTc0
-N2NjM2E4ZAo+Pj4gICBBdXRob3I6IE1pa2EgV2VzdGVyYmVyZyA8ZXh0LW1pa2EuMS53ZXN0ZXJi
-ZXJnQG5va2lhLmNvbT4KPj4+ICAgRGF0ZTogICBUdWUgSnVuIDIyIDA5OjU5OjEwIDIwMTAgKzAz
-MDAKPj4+Cj4+PiAgICAgICB1c2UgQVJDSF9QRk5fT0ZGU0VUIGZvciBwZm5fdG9fcGFkZHIvcGFk
-ZHJfdG9fcGZuIHRyYW5zbGF0aW9ucwo+Pj4KPj4+IFlvdXIgZGVzY3JpcHRpb24gc291bmRzIHdl
-IHNob3VsZCBmaXggdGhlIHdheSB0byBjb252ZXJ0IHBhZGRyIHRvIHBmbiwKPj4+IGJ1dCB0aGVy
-ZSBpcyBubyBzdWNoIGZpeCBpbiB5b3VyIHBhdGNoLgo+Pgo+Pgo+PiBZZXMsIG15IGZpcnN0IHZl
-cnNpb24gZG9lcyBqdXN0IGFzIHdoYXQgeW91IHNheS4gQnV0IHRoZSBwYXRjaCBpcyBodWdlLgo+
-PiBJIHRoaW5nIHRoaXMgcGF0Y2ggaXMgbXVjaCBiZXR0ZXIuCj4+Cj4+IFRob3VnaCBjb21taXQg
-MWU5M2VlNzVmOWQ0N2MyMTllODMzMjEwZWIzMWU0YTc0N2NjM2E4ZCBicmluZ3Mgc29tZSBwcm9i
-bGVtcwo+PiAuIEJ1dCB3ZSBjYW4gZWFzeSBmaXggdGhlbS4KPj4KPj4KPj4gTWFrZSBteSBwbGF0
-Zm9ybSBmb3IgZXhhbXBsZTogQVJDSF9QRk5fT0ZGU0VUPTB4ODAwMDAgc3BhcnNlIG1lbW9yeSBt
-b2RlbC4KPj4gbWVtIDFHIDsgU0VDVElPTl9TSVpFX0JJVFMgMjYKPj4KPj4gKGEpIGZvciB0aGUg
-a2VybmVsCj4+Cj4+ICAgIHNlY3Rpb24gbnVtYmVyIHxwaHkgc3RhcnQgfCAgc3RhcnQgcGZuICAg
-fCBlbmQgcGZuICB8ICB2YWxpZCAgfCBtZW1fc2VjdGlvbiAgCXwKPj4gCTAJICAgfDAJICAgICAg
-fCAgIDAgICAgICAgICAgfCAgM2ZmZiAgICB8ICAgMAkgIHwgICBbMF0JfAo+PiAJMQkgICB8NDAw
-MDAwMCAgIHwgICA0MDAwICAgICAgIHwgIDdmZmYgICAgfCAgIDAJICB8ICAgWzFdCXwKPj4gCTIJ
-ICAgfDgwMDAwMDAgICB8ICAgODAwMCAgICAgICB8ICBiZmZmICAgIHwgICAwCSAgfCAgIFsyXQl8
-Cj4+Cj4+ICAgIFtjdXQgLi4uXQo+Pgo+PiAgICAgICAzMiAJICAgfDgwMDAwMDAwICB8ICA4MDAw
-MAkgICAgIHwgODNmZmYJfCAgIDEJICB8ICBbMzJdCXwKPj4gICAgICAgMzMgCSAgIHw4NDAwMDAw
-MCAgfCAgODQwMDAJICAgICB8IDg3ZmZmCXwgICAxCSAgfCAgWzMzXQl8Cj4+Cj4+ICAgIFtjdXQg
-Li4uXQo+Pgo+PiAgICAgICA0NyAJICAgfGJmYzAwMDAwICB8ICBiZmMwMDAJICAgICB8IGJmZmZm
-CXwgICAxCSAgfCAgWzQ3XQl8Cj4+Cj4+Cj4+ICAoYikgZm9yIG1ha2VkdW1wZmlsZQo+Pgo+Pgo+
-PiAgICAgICAwCSAgIHw4MDAwMDAwMCAgfCAgICAwICAgICAgICAgfCAgM2ZmZiAgICB8ICAgMAkg
-IHwgICBbMF0JfAo+PiAgICAgICAxIAkgICB8ODQwMDAwMDAgIHwgIDQwMDAgICAgICAgIHwgIDdm
-ZmYgICAgfCAgIDAJICB8ICAgWzFdCXwKPj4KPj4gICAgW2N1dCAuLi5dCj4+Cj4+ICAgICAgIDE1
-IAkgICB8YmZjMDAwMDAgIHwgIDNjMDAwICAgICAgIHwgM2ZmZmYJfCAgIDEJICB8ICBbMTVdCXwK
-Pj4KPj4KPj4gU28gbWFrZWR1bXBmaWxlIHJlbW92ZXMgdGhlIG9mZnNldCBvZiBzZWN0aW9uIG51
-bWJlciBhbmQgcGZuLiBUaGUgcmVsYXRpb25zaGlwIGJldHdlZW4KPj4gcGZuIGFuZCBzZWN0aW9u
-IG51bWJlciByZW1haW5zIGFzIGJlZm9yZS4gU28gdGhpcyB3aWxsIG5vdCBpbnRyb2R1Y2UgcHJv
-YmxlbS4KPj4KPj4gQnV0IHRoZSBzZWN0aW9uIG5lbWJlciBhbmQgbWVtX3NlY3Rpb24gYXJyYXkg
-ZG8gbm90IG1hdGNoIGVhY2ggb3RoZXIuCj4+Cj4+IEZvciBwYWRkciA4MDAwMDAwMAo+PiAJa2Vy
-bmVsICAgICAgICA6IHBmbiA4MDAwOiBtZW1fc2VjdGlvbjogMzIKPj4gCW1ha2VkdW1wZmlsZSAg
-OiBwZm4gMCAgIDogbWVtX3NlY3Rpb246IDAKPj4KPj4gQW5kIHdlIGRvIG5vdCByZW1vdmUgdGhl
-IG9mZnNldCBvZiBhcnJheSBtZW1fc2VjdGlvbi4gU28gbWFrZWR1bW9maWxlIGNhbiBub3QKPj4g
-Z2V0IHRoZSByaWdodCBwYWdlIHN0cnVjdC4gV2hlbiBmaXggdGhpcyBvZmZzZXQsIGV2ZXJ5dGhp
-bmcgaXMgb2suCj4gCj4gVGhhbmtzIGZvciB5b3VyIGV4cGxhbmF0aW9uLCBJIHVuZGVyc3RhbmQg
-dGhlIHNwYXJzZV9tZW0gY2FzZS4KPiAKPj4gQnV0IElmIHdlIHJldmVydCAxZTkzZWU3NWY5ZDoK
-Pj4KPj4gIChhKSBjb2RlcyBsaWtlcyAiZm9yKHBmbiA9IDAiICwiZm9yX2VhY2hfY3ljbGUoMCIg
-YW5kICJmb3IgKHNlY3Rpb25fbnIgPSAwIiAgc2hvdWxkIGJlIGNoYW5nZWQ7Cj4+ICAoYikgRHVl
-IHRvICJzZXRfYml0X29uXzFzdF9iaXRtYXAocGZuLCBjeWNsZSkiLCB3ZSB3aWxsIHdhc3RlIHNv
-bWUgYml0cy4KPj4gIChjKSBjcmFzaCB1dGlsaXR5IHNob3VsZCBhbHNvIGJlIGNoYW5nZWQuCj4+
-Cj4+IEJUVywgd2hlbiBBUkNIX1BGTl9PRkZTRVQ9MCwgc2VjdGlvbiBuZW1iZXIgYW5kIG1lbV9z
-ZWN0aW9uIG1hdGNoZXMgZWFjaCBvdGhlci4uCj4+IFNvIG5vIHByb2JsZW0gd2FzIGludHJkdWNl
-ZAo+Pgo+Pj4KPj4+PiBGb3IgdGhlIGNhc2VzIG9mIEFSQ0hfUEZOX09GRlNFVD0wIG9yIG5vbiBz
-cGFyc2UgbWVtb3JteSBtb2RlbCwKPj4+PiB0aGlzIGludHJvZHVjZXMgbm8gcHJvYmxlbS4KPj4+
-Pgo+Pj4+IEJ1dCBmb3IgbXkgYXJtYTkgcGxhdGZvcm0gd2l0aCBBUkNIX1BGTl9PRkZTRVQ9MHg4
-MDAwMCBhbmQgc3BhcnNlCj4+Pj4gbWVtb3J5IG1vZGVsLiBNYWtlZHVtZmlsZSBjYW4gbm90IGdl
-dCB0aGUgbWVtX21hcCBjb3JyZWN0bHkuIEl0IGl0Cj4+Pj4gZHVlIHRvIHRoZXJlIGlzIHN0aWxs
-IG9mZnNldCBmb3IgbWVtX21hcCBhcnJheS4KPj4+Cj4+PiBXaHkgdGhlIG90aGVyIG1lbW9yeSBt
-b2RlbHMgYXJlIE9LPyBUaGVyZSBpcyBubyBvZmZzZXQgZXZlbiBpZiBBUkNIX1BGTl9PRkZTRVQh
-PTA/Cj4+PiBJIG5lZWQgbW9yZSBleHBsYW5hdGlvbiB0byB1bmRlcnN0YW5kIHRoaXMgaXNzdWUu
-Cj4+Cj4+ICgxKSBGb3IgZmxhdG1lbSwgdGhlIG1lbV9tYXAgaXMgY29udGludW91cywgQW5kIHRo
-ZSBzdGFydCBhZGRyZXNzIG9mIG1lbV9tYXAgY29tZXMgZnJvbQo+PiB0aGUga2VybmVsIHN5bWJv
-bC4KPj4KPj4gRm9yIHBhZGRyIDgwMDAwMDAwCj4+IAlrZXJuZWwgICAgICAgIDogcGZuIDgwMDA6
-IG1lbV9tYXBbMF0KPj4gCW1ha2VkdW1wZmlsZSAgOiBwZm4gMCAgIDogbWVtX21hcFswXQo+Pgo+
-PiBUaGlzIHdpbGwgbm90IGludHJvZHVjZSBwcm9ibGVtLgo+IAo+IEkgdW5kZXJzdGFuZCB0aGF0
-IGFsbG9jX25vZGVfbWVtX21hcCgpIGFsbG9jYXRlcyBtZW1fbWFwIGZvciBmbGF0bWVtIGFuZCBp
-dAo+IGNvbnNpZGVycyBBUkNIX1BGTl9PRkZTRVQgbGlrZToKPiAKPiAgICAgICAgIGlmIChwZ2Rh
-dCA9PSBOT0RFX0RBVEEoMCkpIHsKPiAgICAgICAgICAgICAgICAgbWVtX21hcCA9IE5PREVfREFU
-QSgwKS0+bm9kZV9tZW1fbWFwOwo+ICNpZmRlZiBDT05GSUdfSEFWRV9NRU1CTE9DS19OT0RFX01B
-UAo+ICAgICAgICAgICAgICAgICBpZiAocGFnZV90b19wZm4obWVtX21hcCkgIT0gcGdkYXQtPm5v
-ZGVfc3RhcnRfcGZuKQo+ICAgICAgICAgICAgICAgICAgICAgICAgIG1lbV9tYXAgLT0gKHBnZGF0
-LT5ub2RlX3N0YXJ0X3BmbiAtIEFSQ0hfUEZOX09GRlNFVCk7Cj4gI2VuZGlmIC8qIENPTkZJR19I
-QVZFX01FTUJMT0NLX05PREVfTUFQICovCgpJbiBhbGwgY2FzZXMsIG1lbV9tYXAgaW5kaWNhdGVz
-IHRoZSBzdGFydCBhZGRyZXNzIG9mIHRoZSBtZW1fbWFwLgoKSSB0aGluayB0aGlzIGlzIHRoZSBp
-bm5lciBwcm9jZXNzIGZvciB0aGUga2VybmVsLCB3aGljaCB3ZSBzaG91bGQgbm90IGNvbnNpZGVy
-LiBCZWNhdXNlIG9uY2UKd2UgZ2V0IHRoZSBtZW1fbWFwIHN5bWJvbCB2YWx1ZSBhbmQgdGhlIG1h
-eHBmbiBmcm9tIHRoZSB2bWNvcmUuIFdlIGtub3cgdGhlIHN0YXJ0IGFuZCBsZW5ndGgKb2YgbWVt
-X21hcC4gQW5kIHdlIGNhbiBnZXQgZXZlcnkgcGFnZSBzdHJ1Y3QgY29ycmVjdGx5LgoKCkZvciBt
-YWtlZHVtcGZpbGU6CgogZ2V0X21tX2ZsYXRtZW0odm9pZCkKewogIC4uLi4KMjQwOSAgICAgICAg
-IGlmICghcmVhZG1lbShWQUREUiwgU1lNQk9MKG1lbV9tYXApLCAmbWVtX21hcCwgc2l6ZW9mIG1l
-bV9tYXApLy9nZXQgdGhlIG1lbV9tYXAgdmFsdWUKICAuLi4uCjI0MjEgICAgICAgICBpZiAoaXNf
-eGVuX21lbW9yeSgpKQoyNDIyICAgICAgICAgICAgICAgICBkdW1wX21lbV9tYXAoMCwgaW5mby0+
-ZG9tMF9tYXBuciwgbWVtX21hcCwgMCk7CjI0MjMgICAgICAgICBlbHNlCjI0MjQgICAgICAgICAg
-ICAgICAgIGR1bXBfbWVtX21hcCgwLCBpbmZvLT5tYXhfbWFwbnIsIG1lbV9tYXAsIDApOwoKfQoK
-U28gZm9yIGZsYXQgbWVtb3J5IG1vZGVsLCBtYWtlZHVtcGZpbGUgY2FuIGFsd2F5cyBnZXQgdGhl
-IGNvcnJlY3QgbWVtX21hcC4KCj4gICAgICAgICB9Cj4gCj4gU28gdGhlcmUgaXMgbm8gcHJvYmxl
-bSBpbiB0aGlzIG1vZGVsIHNpbmNlIHRoZSB0b3Agb2YgbWVtX21hcCBjb3JyZXNwb25kcyB0bwo+
-IEFSQ0hfUEZOX09GRlNFVCwgcmlnaHQ/CgpJIGRvbid0IHRoaW5rIHNvLiBJcyBpdCBjbGVhciBm
-b3IgbXkgd29yZHMgYWJvdmU/Cj4gCj4+ICgyKSBGb3IgZGlzY29udGlnbWVtLCBpdCBtYW5hZ2Vz
-IHRoZSBtZW1fbWFwIHdpdGggbm9kZV9tZW1ibGsuIGNvbW1pdAo+PiAxZTkzZWU3NWY5ZDQ3YzIx
-IGFsc28gZG9lcyBubyBoYXJtLgo+IAo+IGFsbG9jX25vZGVfbWVtX21hcCgpIGFsbG9jYXRlcyBt
-ZW1fbWFwIGFsc28gZm9yIGRpc2NvbnRpZ21lbSwgYnV0IEkgY2FuJ3QgZmluZAo+IGFueSBjb2Rl
-cyB0byBjb25zaWRlciBBUkNIX1BGTl9PRkZTRVQgZm9yIHRoaXMgbW9kZWwuCj4gU28gSSBzdXNw
-ZWN0IHRoZSBtaXNtYXRjaCBiZXR3ZWVuIHRoZSBwZm4gZm9yIG1ha2VkdW1wZmlsZSBhbmQgdGhl
-IGFjdHVhbCBjb250ZW50Cj4gb2YgbWVtX21hcCBjYW4gZXhpc3QuIENvdWxkIHlvdSBleHBsYWlu
-IHdoeSB0aGlzIGNhc2UgaXMgT0sgaW4gbW9yZSBkZXRhaWw/Cj4gCkFjdHVhbGx5IEkgZGlkIG5v
-dCB0ZXN0IHRoaXMgbWVtb3J5IG1vZGVsLiBJIHJlYWNoIG15IGNvbmNsdXNpb24gdmlhIHRoZSBj
-b2Rlcy4KCmdldF9tbV9kaXNjb250aWdtZW0KewouLi4uCmZvciAoaSA9IDA7IGkgPCB2dC5udW1u
-b2RlczsgaSsrKSB7ICAvL2xvb3AgZm9yIGV2ZXJ5IG5vZGUKMjU5MSAgICAgICAgICAgICAgICAg
-aWYgKCFyZWFkbWVtKFZBRERSLCBwZ2RhdCArIE9GRlNFVChwZ2xpc3RfZGF0YS5ub2RlX3N0YXJ0
-X3BmbiksCjI1OTIgICAgICAgICAgICAgICAgICAgICAmcGZuX3N0YXJ0LCBzaXplb2YgcGZuX3N0
-YXJ0KSkgeyAgICAgICAgICAgLy9nZXQgcGZuX3N0YXJ0IGZvciB0aGlzIG5vZGUKLi4uLgoyNTk2
-ICAgICAgICAgICAgICAgICBpZiAoIXJlYWRtZW0oVkFERFIscGdkYXQrT0ZGU0VUKHBnbGlzdF9k
-YXRhLm5vZGVfc3Bhbm5lZF9wYWdlcyksCjI1OTcgICAgICAgICAgICAgICAgICAgICAmbm9kZV9z
-cGFubmVkX3BhZ2VzLCBzaXplb2Ygbm9kZV9zcGFubmVkX3BhZ2VzKSkgeyAvL2dldCB0aGUgbnVt
-YmVyIG9mIHBhZ2VzIGluIHRoaXMgbm9kZQoKMjYwMyAgICAgICAgICAgICAgICAgaWYgKFNZTUJP
-TCh2bWVtX21hcCkgPT0gTk9UX0ZPVU5EX1NZTUJPTCkgewoyNjA0ICAgICAgICAgICAgICAgICAg
-ICAgICAgIGlmICghcmVhZG1lbShWQUREUiwgcGdkYXQgKyBPRkZTRVQocGdsaXN0X2RhdGEubm9k
-ZV9tZW1fbWFwKSwgIC8vZ2V0IHRoZSBtZW1fbWFwIGZvciB0aGlzIG5vZGUuCjI2MDUgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICZtZW1fbWFwLCBzaXplb2YgbWVtX21hcCkpIHsKMjYwNiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEVSUk1TRygiQ2FuJ3QgZ2V0IG1lbV9tYXAu
-XG4iKTsKMjYwNyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsK
-MjYwOCAgICAgICAgICAgICAgICAgICAgICAgICB9CjI2MDkgICAgICAgICAgICAgICAgIH0gZWxz
-ZQoyNjEwICAgICAgICAgICAgICAgICAgICAgICAgIG1lbV9tYXAgPSB2bWVtX21hcCArIChTSVpF
-KHBhZ2UpICogcGZuX3N0YXJ0KTsKLi4uLgp9CgpTbyBJIHRoaW5rIGZvciBkaXNjb250aWdtZW0s
-IG1ha2VkdW1wZmlsZSBjYW4gZ2V0IHRoZSBzdGFydCBhZGRyZXNzIGFuZCBsZW5ndGggb2YgbWVt
-X21hcCBmcm9tIHZtY29yZSBkaXJlY3RseS4KQW5kIEV2ZXJ5dGhpbmcgY2FuIGdvIHdlbGwgd2l0
-aG91dCBBUkNIX1BGTl9PRkZTRVQuCgpQZXJoYXBzIEkgbmVlZCBzb21lIHRlc3RzIG9uIGRpc2Nv
-bnRpZ21lbS4gRGlkIEkgZXhwbGFuIG15IGlkZWEgY2xlYXJseT8KCgoKPiAKPiBUaGFua3MKPiBB
-dHN1c2hpIEt1bWFnYWkKPiAKPj4gV2hhdCBkbyB5b3UgdGhpbms/Cj4+Cj4+IFRoYW5rcywKPj4g
-TGl1IEh1YQo+Pgo+Pj4KPj4+Cj4+PiBUaGFua3MKPj4+IEF0c3VzaGkgS3VtYWdhaQo+Pj4KPj4+
-Pgo+Pj4+IFRoaXMgcGF0Y2ggaW50cm9kdWNlcyB0aGUgb2Zmc2V0IG9mIHRoZSBtZW1fbWFwLgo+
-Pj4+Cj4+Pj4gQnV0IEkgaGF2ZSBubyBlbnZpcm9ubWVudCB0byB0ZXN0IHRoaXMgcGF0Y2ggZm9y
-IG90aGVyIHBhbHRmcm9tLgo+Pj4+IFNvIEkgYW0gbm90IHN1cmUgdGhpcyBwYXRjaCB3b3JrcyBv
-biBvdGhlciBwbGF0Zm9ybXMuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBMaXUgSHVhIDxzZHUu
-bGl1QGh1YXdlaS5jb20+Cj4+Pj4gLS0tCj4+Pj4gbWFrZWR1bXBmaWxlLmMgfCA2ICsrKystLQo+
-Pj4+IDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+Pj4K
-Pj4+PiBkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9tYWtlZHVtcGZpbGUuYwo+Pj4+IGlu
-ZGV4IDk0NTE1ZjYuLjZjZjZlMjQgMTAwNjQ0Cj4+Pj4gLS0tIGEvbWFrZWR1bXBmaWxlLmMKPj4+
-PiArKysgYi9tYWtlZHVtcGZpbGUuYwo+Pj4+IEBAIC0yODA3LDYgKzI4MDcsNyBAQCBpbnQKPj4+
-PiBnZXRfbW1fc3BhcnNlbWVtKHZvaWQpCj4+Pj4gewo+Pj4+IAl1bnNpZ25lZCBpbnQgc2VjdGlv
-bl9uciwgbWVtX3NlY3Rpb25fc2l6ZSwgbnVtX3NlY3Rpb247Cj4+Pj4gKwl1bnNpZ25lZCBpbnQg
-c2VjdGlvbl9zdGFydDsKPj4+PiAJbWRmX3Bmbl90IHBmbl9zdGFydCwgcGZuX2VuZDsKPj4+PiAJ
-dW5zaWduZWQgbG9uZyBzZWN0aW9uLCBtZW1fbWFwOwo+Pj4+IAl1bnNpZ25lZCBsb25nICptZW1f
-c2VjID0gTlVMTDsKPj4+PiBAQCAtMjgxNyw2ICsyODE4LDcgQEAgZ2V0X21tX3NwYXJzZW1lbSh2
-b2lkKQo+Pj4+IAkgKiBHZXQgdGhlIGFkZHJlc3Mgb2YgdGhlIHN5bWJvbCAibWVtX3NlY3Rpb24i
-Lgo+Pj4+IAkgKi8KPj4+PiAJbnVtX3NlY3Rpb24gPSBkaXZpZGV1cChpbmZvLT5tYXhfbWFwbnIs
-IFBBR0VTX1BFUl9TRUNUSU9OKCkpOwo+Pj4+ICsJc2VjdGlvbl9zdGFydCA9IEFSQ0hfUEZOX09G
-RlNFVCAvIFBBR0VTX1BFUl9TRUNUSU9OKCk7Cj4+Pj4gCWlmIChpc19zcGFyc2VtZW1fZXh0cmVt
-ZSgpKSB7Cj4+Pj4gCQlpbmZvLT5zZWN0aW9uc19wZXJfcm9vdCA9IF9TRUNUSU9OU19QRVJfUk9P
-VF9FWFRSRU1FKCk7Cj4+Pj4gCQltZW1fc2VjdGlvbl9zaXplID0gc2l6ZW9mKHZvaWQgKikgKiBO
-Ul9TRUNUSU9OX1JPT1RTKCk7Cj4+Pj4gQEAgLTI4NDIsNyArMjg0NCw3IEBAIGdldF9tbV9zcGFy
-c2VtZW0odm9pZCkKPj4+PiAJCWdvdG8gb3V0Owo+Pj4+IAl9Cj4+Pj4gCWZvciAoc2VjdGlvbl9u
-ciA9IDA7IHNlY3Rpb25fbnIgPCBudW1fc2VjdGlvbjsgc2VjdGlvbl9ucisrKSB7Cj4+Pj4gLQkJ
-c2VjdGlvbiA9IG5yX3RvX3NlY3Rpb24oc2VjdGlvbl9uciwgbWVtX3NlYyk7Cj4+Pj4gKwkJc2Vj
-dGlvbiA9IG5yX3RvX3NlY3Rpb24oc2VjdGlvbl9uciArIHNlY3Rpb25fc3RhcnQsIG1lbV9zZWMp
-Owo+Pj4+IAkJaWYgKHNlY3Rpb24gPT0gTk9UX0tWX0FERFIpIHsKPj4+PiAJCQltZW1fbWFwID0g
-Tk9UX01FTU1BUF9BRERSOwo+Pj4+IAkJfSBlbHNlIHsKPj4+PiBAQCAtMjg1MSw3ICsyODUzLDcg
-QEAgZ2V0X21tX3NwYXJzZW1lbSh2b2lkKQo+Pj4+IAkJCQltZW1fbWFwID0gTk9UX01FTU1BUF9B
-RERSOwo+Pj4+IAkJCX0gZWxzZSB7Cj4+Pj4gCQkJCW1lbV9tYXAgPSBzcGFyc2VfZGVjb2RlX21l
-bV9tYXAobWVtX21hcCwKPj4+PiAtCQkJCQkJCQlzZWN0aW9uX25yKTsKPj4+PiArCQkJCQkJCQlz
-ZWN0aW9uX25yICsgc2VjdGlvbl9zdGFydCk7Cj4+Pj4gCQkJCWlmICghaXNfa3ZhZGRyKG1lbV9t
-YXApKQo+Pj4+IAkJCQkJbWVtX21hcCA9IE5PVF9NRU1NQVBfQUREUjsKPj4+PiAJCQl9Cj4+Pj4g
-LS0KPj4+PiAxLjkuMAo+Pj4KPj4+Cj4+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Astushi,
+ 
+> No, 16MB was used for bitmaps also in my case.
+> --cyclic-buffer option means specifying each bitmap size, so allocated bitmap
+> size is the double of --cyclic-buffer.
+> (But now, this behavior is only for ELF case, just the specified size is allocated
+> in kdump case. Yes, it's confusing...)
+> 
+>        --cyclic-buffer buffer_size
+>               Specify the buffer size in kilo bytes for analysis in the cyclic
+>               mode.  Actually, the double of buffer_size kilo  bytes  will  be
+>               allocated  in  memory.  In the cyclic mode, the number of cycles
+>               is represented as:
+
+
+Yeah, I was wrong about this. If specified --cyclic-buffer doesn't
+exceed the memory limit, it is equal to info->bufsize_cyclic. But for
+elf dump, it need be double. E.g if free memory is 30M, --cyclic-buffer
+is 16M, it will absolutely fail. But the code check here should be done
+separately. Since it's meaningless for elf dump if 2 x --cyclic-buffer
+exceeds the free memory.
+
+	if (info->bufsize_cyclic > free_memory) {
+	.......
+	{
+
+I think code here need be changed.
+
+> 
+> So only 456KB was the requirement for other purposes, 20% of available
+> memory (3.5MB) was enough, thus the current assumption is safe even
+> when available memory is only 17MB like my test.
+> 
+> According to my test:
+> 
+> http://lists.infradead.org/pipermail/kexec/2014-May/011784.html
+> 
+> > Here is the result on a 2nd kernel environment:
+> >
+> >              parameter                  |      result
+> >   dump_lv | buffer[KiB] |  mmap (=4MiB) |    VmHWM [KiB]
+> >   --------+-------------+---------------+------------------
+> >      d31  |       1     |       on      |         776    // about 700
+> >     Ed31  |       1     |       on      |         712
+> >      d31  |       1     |      off      |         704
+> >     Ed31  |       1     |      off      |         708
+> >      d31  |    1000     |       on      |        1776    // about 700 + 1000
+> >     Ed31  |    1000     |       on      |        2716    // about 700 + 1000 * 2
+> >      d31  |    1000     |      off      |        1660
+> >     Ed31  |    1000     |      off      |        2556
+> 
+> The requirement memory size for other purposes seems about 700KB when the dump
+> level is 31, it's so small that we can ignore it. 
+> The size will increase by KB order based on the system memory size in practice
+> (this assumption comes from my code investigation), but 6MB (20% of 30MB) still
+> sounds much enough as safety limit.
+> This is why I was wondering why OOM happened on your machine.
+> 
+> Now that I heard that OOM happened only on nfs, I guess just nfs requires lots
+> of memory. (I did my test only on local fs.)
+> If we can get the required size, we could reflect it in the safety limit size.
+> 
+> I haven't checked your test result below yet, so I'll mention it later.
+> 
+> BTW, I prepared a temporal branch "oom" to investigate this issue, 
+> let's use this after this:
+> 
+> http://sourceforge.net/p/makedumpfile/code/ci/oom/tree/
+
+About OOM, I don't know why the difference between yours and mine is so
+big. My test machine has 16G memory, and the reserved crashkernel=161M.
+The OOM happened in a very high frequency. You can check the last
+section of kdump failed log, OOM failed when use 80% for
+info->bufsize_buffer though left free memory is 13M. 
+
+I changed the code like below. 
+
+---------------------------------------------------
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 8dc1181..cd710a3 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3157,6 +3157,7 @@ out:
+                return FALSE;
+ 
+        if (info->flag_cyclic) {
++               printf("\ncalculate_cyclic_buffer_size,
+get_free_memory_size: %llu\n", get_free_memory_size());
+                if (info->bufsize_cyclic == 0) {
+                        if (!calculate_cyclic_buffer_size())
+                                return FALSE;
+@@ -3204,6 +3205,7 @@ out:
+ 
+                DEBUG_MSG("\n");
+                DEBUG_MSG("Buffer size for the cyclic mode: %ld\n",
+info->bufsize_cyclic);
++               printf("\n Buffer size for the cyclic mode: %ld\n",
+info->bufsize_cyclic);
+        }
+ 
+        if (!is_xen_memory() && !cache_init())
+@@ -9060,7 +9062,7 @@ calculate_cyclic_buffer_size(void) {
+        if (info->num_dumpfile > 1)
+                bitmap_size /= info->num_dumpfile;
+ 
+-       info->bufsize_cyclic = MIN(limit_size, bitmap_size);
++       info->bufsize_cyclic = limit_size;
+
+-------------------------------------------------
+bhe# cat /etc/kdump.conf
+path /var/crash
+core_collector makedumpfile -E --message-level 1 -d 31
+
+------------------------------------------
+kdump: dump target is /dev/sda2
+kdump: saving [    9.595153] EXT4-fs (sda2): re-mounted. Opts:
+data=ordered
+to /sysroot//var/crash/127.0.0.1-2014.05.19-18:50:18/
+kdump: saving vmcore-dmesg.txt
+kdump: saving vmcore-dmesg.txt complete
+kdump: saving vmcore
+
+calculate_cyclic_buffer_size, get_free_memory_size: 68857856
+
+ Buffer size for the cyclic mode: 27543142
+Copying data                       : [ 15.9 %] -[   14.955468]
+makedumpfile invoked oom-killer: gfp_mask=0x10200da, order=0,
+oom_score_adj=0
+[   14.963876] makedumpfile cpuset=/ mems_allowed=0
+[   14.968723] CPU: 0 PID: 286 Comm: makedumpfile Not tainted
+3.10.0-123.el7.x86_64 #1
+[   14.976606] Hardware name: Hewlett-Packard HP Z420 Workstation/1589,
+BIOS J61 v01.02 03/09/2012
+[   14.985567]  ffff88002fedc440 00000000f650c592 ffff88002fcb57d0
+ffffffff815e19ba
+[   14.993291]  ffff88002fcb5860 ffffffff815dd02d ffffffff810b68f8
+ffff8800359dc0c0
+[   15.001013]  ffffffff00000206 ffffffff00000000 0000000000000000
+ffffffff81102e03
+[   15.008733] Call Trace:
+[   15.011413]  [<ffffffff815e19ba>] dump_stack+0x19/0x1b
+[   15.016778]  [<ffffffff815dd02d>] dump_header+0x8e/0x214
+[   15.022321]  [<ffffffff810b68f8>] ? ktime_get_ts+0x48/0xe0
+[   15.028036]  [<ffffffff81102e03>] ? proc_do_uts_string+0xe3/0x130
+[   15.034383]  [<ffffffff8114520e>] oom_kill_process+0x24e/0x3b0
+[   15.040446]  [<ffffffff8106af3e>] ? has_capability_noaudit+0x1e/0x30
+[   15.047068]  [<ffffffff81145a36>] out_of_memory+0x4b6/0x4f0
+[   15.052864]  [<ffffffff8114b579>] __alloc_pages_nodemask+0xa09/0xb10
+[   15.059482]  [<ffffffff81188779>] alloc_pages_current+0xa9/0x170
+[   15.065711]  [<ffffffff811419f7>] __page_cache_alloc+0x87/0xb0
+[   15.071804]  [<ffffffff81142606>]
+grab_cache_page_write_begin+0x76/0xd0
+[   15.078646]  [<ffffffffa02aa133>] ext4_da_write_begin+0xa3/0x330
+[ext4]
+[   15.085495]  [<ffffffff8114162e>]
+generic_file_buffered_write+0x11e/0x290
+[   15.092504]  [<ffffffff81143785>]
+__generic_file_aio_write+0x1d5/0x3e0
+[   15.099294]  [<ffffffff81050f00>] ?
+rbt_memtype_copy_nth_element+0xa0/0xa0
+[   15.106385]  [<ffffffff811439ed>] generic_file_aio_write+0x5d/0xc0
+[   15.112841]  [<ffffffffa02a0189>] ext4_file_write+0xa9/0x450 [ext4]
+[   15.119321]  [<ffffffff8117997c>] ? free_vmap_area_noflush+0x7c/0x90
+[   15.125884]  [<ffffffff811af36d>] do_sync_write+0x8d/0xd0
+[   15.131492]  [<ffffffff811afb0d>] vfs_write+0xbd/0x1e0
+[   15.136839]  [<ffffffff811b0558>] SyS_write+0x58/0xb0
+[   15.142091]  [<ffffffff815f2119>] system_call_fastpath+0x16/0x1b
+[   15.148293] Mem-Info:
+[   15.150770] Node 0 DMA per-cpu:
+[   15.154138] CPU    0: hi:    0, btch:   1 usd:   0
+[   15.159133] Node 0 DMA32 per-cpu:
+[   15.162741] CPU    0: hi:   42, btch:   7 usd:  12
+[   15.167732] active_anon:14395 inactive_anon:1034 isolated_anon:0
+[   15.167732]  active_file:2406 inactive_file:2533 isolated_file:0
+[   15.167732]  unevictable:7137 dirty:2 writeback:1511 unstable:0
+[   15.167732]  free:488 slab_reclaimable:2371 slab_unreclaimable:3533
+[   15.167732]  mapped:1110 shmem:1065 pagetables:166 bounce:0
+[   15.167732]  free_cma:0
+[   15.203076] Node 0 DMA free:508kB min:4kB low:4kB high:4kB
+active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB
+unevictabs
+[   15.242882] lowmem_reserve[]: 0 128 128 128
+[   15.247447] Node 0 DMA32 free:1444kB min:1444kB low:1804kB
+high:2164kB active_anon:57580kB inactive_anon:4136kB active_file:9624kB
+inacts
+[   15.292683] lowmem_reserve[]: 0 0 0 0
+[   15.296761] Node 0 DMA: 1*4kB (U) 1*8kB (U) 1*16kB (U) 1*32kB (U)
+1*64kB (U) 1*128kB (U) 1*256kB (U) 0*512kB 0*1024kB 0*2048kB 0*4096kB B
+[   15.310372] Node 0 DMA32: 78*4kB (UEM) 52*8kB (UEM) 17*16kB (UM)
+12*32kB (UM) 2*64kB (UM) 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*40B
+[   15.324412] Node 0 hugepages_total=0 hugepages_free=0
+hugepages_surp=0 hugepages_size=2048kB
+[   15.333088] 13144 total pagecache pages
+[   15.337161] 0 pages in swap cache
+[   15.340708] Swap cache stats: add 0, delete 0, find 0/0
+[   15.346165] Free swap  = 0kB
+[   15.349280] Total swap = 0kB
+[   15.353385] 90211 pages RAM
+[   15.356420] 53902 pages reserved
+[   15.359880] 6980 pages shared
+[   15.363088] 29182 pages non-shared
+[   15.366719] [ pid ]   uid  tgid total_vm      rss nr_ptes swapents
+oom_score_adj name
+[   15.374788] [   85]     0    85    13020      553      24        0
+0 systemd-journal
+[   15.383818] [  134]     0   134     8860      547      22        0
+-1000 systemd-udevd
+[   15.392664] [  146]     0   146     5551      245      23        0
+0 plymouthd
+[   15.401167] [  230]     0   230     3106      537      16        0
+0 dracut-pre-pivo
+[   15.410181] [  286]     0   286    19985    13756      55        0
+0 makedumpfile
+[   15.418942] Out of memory: Kill process 286 (makedumpfile) score 368
+or sacrifice child
+[   15.427173] Killed process 286 (makedumpfile) total-vm:79940kB,
+anon-rss:54132kB, file-rss:892kB
+//lib/dracut/hooks/pre-pivot/9999-kdump.sh: line
+Generating "/run/initramfs/rdsosreport.txt"
+
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
