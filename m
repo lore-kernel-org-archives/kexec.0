@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WmjVy-0007Ud-6H
- for kexec@lists.infradead.org; Tue, 20 May 2014 12:51:30 +0000
-Date: Tue, 20 May 2014 08:51:04 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <768772288.14234200.1400590264454.JavaMail.zimbra@redhat.com>
-In-Reply-To: <537AD0FC.1020202@huawei.com>
-References: <mailman.5.1400526001.29113.kexec@lists.infradead.org>
- <1809090930.13449697.1400528518027.JavaMail.zimbra@redhat.com>
- <537AD0FC.1020202@huawei.com>
-Subject: Re: [BUG REPORT] kexec and makedumpfile can't detect PAGE_OFFSET on
- arm (Wang Nan)
+Received: from e9.ny.us.ibm.com ([32.97.182.139])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wmm6A-0003q5-3W
+ for kexec@lists.infradead.org; Tue, 20 May 2014 15:37:02 +0000
+Received: from /spool/local
+ by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <brking@linux.vnet.ibm.com>;
+ Tue, 20 May 2014 11:36:39 -0400
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com
+ [9.57.198.28])
+ by d01dlp03.pok.ibm.com (Postfix) with ESMTP id 02977C90040
+ for <kexec@lists.infradead.org>; Tue, 20 May 2014 11:36:32 -0400 (EDT)
+Received: from d01av05.pok.ibm.com (d01av05.pok.ibm.com [9.56.224.195])
+ by b01cxnp23033.gho.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s4KFaSuM44761320
+ for <kexec@lists.infradead.org>; Tue, 20 May 2014 15:36:37 GMT
+Received: from d01av05.pok.ibm.com (localhost [127.0.0.1])
+ by d01av05.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s4KFa4h1030197
+ for <kexec@lists.infradead.org>; Tue, 20 May 2014 11:36:04 -0400
+Message-ID: <537B764A.7040801@linux.vnet.ibm.com>
+Date: Tue, 20 May 2014 10:35:38 -0500
+From: Brian King <brking@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Subject: [PATCH 2/3] kexec: Export kexec_in_progress
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,67 +37,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Wang Nan <wangnan0@huawei.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: kexec@lists.infradead.org, ebiederm@xmission.com, linux-scsi <linux-scsi@vger.kernel.org>, Wen Xiong <wenxiong@us.ibm.com>
 
 
+Export kexec_in_progress for use by device drivers and other modules
+to optimize kexec boot.
 
------ Original Message -----
-> 
-> On 2014/5/20 3:41, Dave Anderson wrote:
-> > 
-> > 
-> > ----- Original Message -----
-> >>
-> >> Hi Atsushi and Simon,
-> >>
-> >> I find a problem about VMSPLIT on arm plarform, related to kexec and
-> >> makedumpfile.
-> >>
-> >> When CONFIG_VMSPLIT_1G/2G is selected by kernel, PAGE_OFFSET is actually
-> >> 0x40000000 or 0x80000000. However, kexec hard codes PAGE_OFFSET to
-> >> 0xc0000000 (in kexec/arch/arm/crashdump-arm.h), which is incorrect in
-> >> these situations. For example, on realview-pbx board with 1G/3G VMSPLIT,
-> >> PHDRs in generated /proc/vmcore is as follow:
-> >>
-> >>   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
-> >>   NOTE           0x001000 0x00000000 0x00000000 0x00690 0x00690     0
-> >>   LOAD           0x002000 0xc0000000 0x00000000 0x10000000 0x10000000 RWE
-> >>   0
-> >>   LOAD           0x10002000 0xe0000000 0x20000000 0x8000000 0x8000000 RWE
-> >>   0
-> >>   LOAD           0x18002000 0xf0000000 0x30000000 0x10000000 0x10000000
-> >>   RWE 0
-> >>   LOAD           0x28002000 0x40000000 0x80000000 0x10000000 0x10000000
-> >>   RWE 0
-> >>
-> >> Which should be:
-> >>
-> >>   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
-> >>   ...
-> >>   LOAD            ...     0x40000000 0x00000000 0x10000000 0x10000000 RWE
-> >>   0
-> >>   LOAD            ...     0x60000000 0x20000000 0x8000000 0x8000000 RWE 0
-> >>   LOAD            ...     0x70000000 0x30000000 0x10000000 0x10000000 RWE
-> >>   0
-> >>   LOAD            ...     0xc0000000 0x80000000 0x10000000 0x10000000 RWE
-> >>   0
-> >>
-> >> I don't know why crash utility can deal with it without problem,
-> > 
-> > For ARM the crash utility masks the symbol value of "_stext" with 0x1fffffff
-> > to determine the PAGE_OFFSET value, which was basically copied from the way
-> > it was done for i386.
-> > 
-> 
-> kexec-tools can do the same thing by reading /proc/kallsyms (crashdump-x86.c has already done this).
-> However, KALLSYMS and KALLSYMS_ALL are turned off on some embedded systems with memory limitation,
-> which is common on ARM.
+Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+---
 
-But you could use VMCOREINFO_SYMBOL(_stext), right?
+ kernel/kexec.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-Dave
- 
+diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
+--- linux/kernel/kexec.c~kexec_export_in_prog	2014-05-13 16:59:19.000000000 -0500
++++ linux-bjking1/kernel/kexec.c	2014-05-13 16:59:19.000000000 -0500
+@@ -1712,3 +1712,5 @@ int kernel_kexec(void)
+ 	mutex_unlock(&kexec_mutex);
+ 	return error;
+ }
++
++EXPORT_SYMBOL_GPL(kexec_in_progress);
+_
+
 
 _______________________________________________
 kexec mailing list
