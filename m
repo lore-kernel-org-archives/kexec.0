@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-la0-x230.google.com ([2a00:1450:4010:c03::230])
+Received: from szxga03-in.huawei.com ([119.145.14.66])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wn6RT-0000eF-HK
- for kexec@lists.infradead.org; Wed, 21 May 2014 13:20:24 +0000
-Received: by mail-la0-f48.google.com with SMTP id mc6so1584239lab.35
- for <kexec@lists.infradead.org>; Wed, 21 May 2014 06:19:59 -0700 (PDT)
+ id 1WnHXH-0001WL-Dv
+ for kexec@lists.infradead.org; Thu, 22 May 2014 01:11:08 +0000
+Message-ID: <537D4E6E.3060708@huawei.com>
+Date: Thu, 22 May 2014 09:10:06 +0800
+From: Wang Nan <wangnan0@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CAGm1_ksYHbdWLxBUt3QetkmKLF-fegEGgYO=mt3t44ApwEJiMA@mail.gmail.com>
-References: <CAGm1_ksYHbdWLxBUt3QetkmKLF-fegEGgYO=mt3t44ApwEJiMA@mail.gmail.com>
-From: Yegor Yefremov <yegorslists@googlemail.com>
-Date: Wed, 21 May 2014 15:19:39 +0200
-Message-ID: <CAGm1_ks2PCeoNRRcuOStEOMcLBDeVn1mq5QeYF7KfLUKW3KG_g@mail.gmail.com>
-Subject: Re: omap:am335x: unable to start kernel via kexec
+Subject: Re: [BUG REPORT] kexec and makedumpfile can't detect PAGE_OFFSET
+ on arm (Wang Nan)
+References: <mailman.5.1400526001.29113.kexec@lists.infradead.org>
+ <1809090930.13449697.1400528518027.JavaMail.zimbra@redhat.com>
+ <537AD0FC.1020202@huawei.com>
+ <768772288.14234200.1400590264454.JavaMail.zimbra@redhat.com>
+In-Reply-To: <768772288.14234200.1400590264454.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,56 +26,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: wangnan0@huawei.com
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, kexec <kexec@lists.infradead.org>
+To: Dave Anderson <anderson@redhat.com>
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On Wed, May 21, 2014 at 12:26 PM, Yegor Yefremov
-<yegorslists@googlemail.com> wrote:
-> Kernel: vanilla 3.15-rc5
-> kexec: latest git (21.05.2014)
->
-> I can load the zImage + dtb from u-boot, but invoking kexec prints
-> following data and nothing happens after "Bye!":
->
-> # kexec -d -f --dtb=/mnt/boot/am335x-evmsk.dtb /mnt/boot/zImage
-> kernel: 0xb5eab008 kernel_size: 0x2036c
-> kexec_load: entry = 0x80008000 flags = 0x280000
-> nr_segments = 2
-> segment[0].buf   = 0xb5eab008
-> segment[0].bufsz = 0x43d328
-> segment[0].mem   = 0x80008000
-> segment[0].memsz = 0x43e000
-> segment[1].buf   = 0x29008
-> segment[1].bufsz = 0x7e89
-> segment[1].mem   = 0x810f6000
-> segment[1].memsz = 0x8000
-> Starting new kernel
-> Bye!
->
-> u-boot output for the same kernel+dtb:
->
-> SD/MMC found on device 0
-> reading uEnv.txt
-> 582 bytes read in 8 ms (70.3 KiB/s)
-> Loaded environment from uEnv.txt
-> Importing environment from mmc ...
-> Running uenvcmd ...
-> 4444968 bytes read in 466 ms (9.1 MiB/s)
-> 32393 bytes read in 46 ms (687.5 KiB/s)
-> Kernel image @ 0x82000000 [ 0x000000 - 0x43d328 ]
-> ## Flattened Device Tree blob at 80000000
->    Booting using the fdt blob at 0x80000000
->    Loading Device Tree to 8f618000, end 8f622e88 ... OK
->
-> Wang, what hardware do you use?
+On 2014/5/20 20:51, Dave Anderson wrote:
+> 
+> 
+> ----- Original Message -----
+>>
+>> On 2014/5/20 3:41, Dave Anderson wrote:
+>>>
+>>>
+>>> ----- Original Message -----
+>>>>
+>>>> Hi Atsushi and Simon,
+>>>>
+>>>> I find a problem about VMSPLIT on arm plarform, related to kexec and
+>>>> makedumpfile.
+>>>>
+>>>> When CONFIG_VMSPLIT_1G/2G is selected by kernel, PAGE_OFFSET is actually
+>>>> 0x40000000 or 0x80000000. However, kexec hard codes PAGE_OFFSET to
+>>>> 0xc0000000 (in kexec/arch/arm/crashdump-arm.h), which is incorrect in
+>>>> these situations. For example, on realview-pbx board with 1G/3G VMSPLIT,
+>>>> PHDRs in generated /proc/vmcore is as follow:
+>>>>
+>>>>   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+>>>>   NOTE           0x001000 0x00000000 0x00000000 0x00690 0x00690     0
+>>>>   LOAD           0x002000 0xc0000000 0x00000000 0x10000000 0x10000000 RWE
+>>>>   0
+>>>>   LOAD           0x10002000 0xe0000000 0x20000000 0x8000000 0x8000000 RWE
+>>>>   0
+>>>>   LOAD           0x18002000 0xf0000000 0x30000000 0x10000000 0x10000000
+>>>>   RWE 0
+>>>>   LOAD           0x28002000 0x40000000 0x80000000 0x10000000 0x10000000
+>>>>   RWE 0
+>>>>
+>>>> Which should be:
+>>>>
+>>>>   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+>>>>   ...
+>>>>   LOAD            ...     0x40000000 0x00000000 0x10000000 0x10000000 RWE
+>>>>   0
+>>>>   LOAD            ...     0x60000000 0x20000000 0x8000000 0x8000000 RWE 0
+>>>>   LOAD            ...     0x70000000 0x30000000 0x10000000 0x10000000 RWE
+>>>>   0
+>>>>   LOAD            ...     0xc0000000 0x80000000 0x10000000 0x10000000 RWE
+>>>>   0
+>>>>
+>>>> I don't know why crash utility can deal with it without problem,
+>>>
+>>> For ARM the crash utility masks the symbol value of "_stext" with 0x1fffffff
+>>> to determine the PAGE_OFFSET value, which was basically copied from the way
+>>> it was done for i386.
+>>>
+>>
+>> kexec-tools can do the same thing by reading /proc/kallsyms (crashdump-x86.c has already done this).
+>> However, KALLSYMS and KALLSYMS_ALL are turned off on some embedded systems with memory limitation,
+>> which is common on ARM.
+> 
+> But you could use VMCOREINFO_SYMBOL(_stext), right?
+> 
 
-Everything is working now. I think it has something to do with wrong
-kernel parameters. Sorry for the noise.
+makedumpfile can use it, but not for kexec-tools.
 
-FIT support can be undertaken.
+> Dave
+>  
+> 
 
-Regards,
-Yegor
+
 
 _______________________________________________
 kexec mailing list
