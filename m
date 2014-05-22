@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WnHXH-0001WL-Dv
- for kexec@lists.infradead.org; Thu, 22 May 2014 01:11:08 +0000
-Message-ID: <537D4E6E.3060708@huawei.com>
-Date: Thu, 22 May 2014 09:10:06 +0800
+Message-ID: <537D58AF.4080404@huawei.com>
+Date: Thu, 22 May 2014 09:53:51 +0800
 From: Wang Nan <wangnan0@huawei.com>
 MIME-Version: 1.0
-Subject: Re: [BUG REPORT] kexec and makedumpfile can't detect PAGE_OFFSET
- on arm (Wang Nan)
-References: <mailman.5.1400526001.29113.kexec@lists.infradead.org>
- <1809090930.13449697.1400528518027.JavaMail.zimbra@redhat.com>
- <537AD0FC.1020202@huawei.com>
- <768772288.14234200.1400590264454.JavaMail.zimbra@redhat.com>
-In-Reply-To: <768772288.14234200.1400590264454.JavaMail.zimbra@redhat.com>
+Subject: Re: [PATCH Resend] ARM: kdump: makes second kernel use strict
+ pfn_valid
+References: <1400464443-34816-1-git-send-email-wangnan0@huawei.com>
+ <20140519160947.GM15130@arm.com> <537ACA76.3090700@huawei.com>
+In-Reply-To: <537ACA76.3090700@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,71 +20,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Geng Hui <hui.geng@huawei.com>, Simon Horman <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 2014/5/20 20:51, Dave Anderson wrote:
-> 
-> 
-> ----- Original Message -----
+Hi Will,
+
+What's your opinion about my explanation?
+
+Thanks!
+
+On 2014/5/20 11:22, Wang Nan wrote:
+> On 2014/5/20 0:09, Will Deacon wrote:
+>> On Mon, May 19, 2014 at 02:54:03AM +0100, Wang Nan wrote:
+>>> When SPARSEMEM and CRASH_DUMP both selected, simple pfn_valid prevents
+>>> the second kernel ioremap first kernel's memory if the address falls
+>>> into second kernel section. This limitation requires the second kernel
+>>> occupies a full section, and elfcorehdr must resides in another section.
+>>>
+>>> This patch makes crash dump kernel use strict pfn_valid, removes such
+>>> limitation.
+>>>
+>>> For example:
+>>>
+>>>   For a platform with SECTION_SIZE_BITS == 28 (256MiB) and
+>>>   crashkernel=128M@0x28000000 in kernel cmdline, the second
+>>>   kernel is loaded at 0x28000000. Kexec puts elfcorehdr at
+>>>   0x2ff00000, and passes 'elfcorehdr=0x2ff00000 mem=130048K' to
+>>>   second kernel. When second kernel start, it tries to use
+>>>   ioremap to retrive its elfcorehrd. In this case, elfcodehdr is at the
+>>>   same section of the second kernel, pfn_valid will recongnize
+>>>   the page as valid, so ioremap will refuse to map it.
 >>
->> On 2014/5/20 3:41, Dave Anderson wrote:
->>>
->>>
->>> ----- Original Message -----
->>>>
->>>> Hi Atsushi and Simon,
->>>>
->>>> I find a problem about VMSPLIT on arm plarform, related to kexec and
->>>> makedumpfile.
->>>>
->>>> When CONFIG_VMSPLIT_1G/2G is selected by kernel, PAGE_OFFSET is actually
->>>> 0x40000000 or 0x80000000. However, kexec hard codes PAGE_OFFSET to
->>>> 0xc0000000 (in kexec/arch/arm/crashdump-arm.h), which is incorrect in
->>>> these situations. For example, on realview-pbx board with 1G/3G VMSPLIT,
->>>> PHDRs in generated /proc/vmcore is as follow:
->>>>
->>>>   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
->>>>   NOTE           0x001000 0x00000000 0x00000000 0x00690 0x00690     0
->>>>   LOAD           0x002000 0xc0000000 0x00000000 0x10000000 0x10000000 RWE
->>>>   0
->>>>   LOAD           0x10002000 0xe0000000 0x20000000 0x8000000 0x8000000 RWE
->>>>   0
->>>>   LOAD           0x18002000 0xf0000000 0x30000000 0x10000000 0x10000000
->>>>   RWE 0
->>>>   LOAD           0x28002000 0x40000000 0x80000000 0x10000000 0x10000000
->>>>   RWE 0
->>>>
->>>> Which should be:
->>>>
->>>>   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
->>>>   ...
->>>>   LOAD            ...     0x40000000 0x00000000 0x10000000 0x10000000 RWE
->>>>   0
->>>>   LOAD            ...     0x60000000 0x20000000 0x8000000 0x8000000 RWE 0
->>>>   LOAD            ...     0x70000000 0x30000000 0x10000000 0x10000000 RWE
->>>>   0
->>>>   LOAD            ...     0xc0000000 0x80000000 0x10000000 0x10000000 RWE
->>>>   0
->>>>
->>>> I don't know why crash utility can deal with it without problem,
->>>
->>> For ARM the crash utility masks the symbol value of "_stext" with 0x1fffffff
->>> to determine the PAGE_OFFSET value, which was basically copied from the way
->>> it was done for i386.
->>>
+>> So isn't the issue here that you're passing an incorrect mem= parameter
+>> to the crash kernel?
 >>
->> kexec-tools can do the same thing by reading /proc/kallsyms (crashdump-x86.c has already done this).
->> However, KALLSYMS and KALLSYMS_ALL are turned off on some embedded systems with memory limitation,
->> which is common on ARM.
 > 
-> But you could use VMCOREINFO_SYMBOL(_stext), right?
+> mem= parameter is generated by kexec-tools according to /proc/iomem, it is the size
+> of reserved memory minus 1MiB. So I think what you mean is I passing an incorrect
+> crashkernel= parameter?
 > 
-
-makedumpfile can use it, but not for kexec-tools.
-
-> Dave
->  
+> I'll explain limitations on crash kernel reserved memory in the case of SPARSEMEM
+> enabled, and show how *impractical* the 'correct' crashkernel will be.
+> 
+> Use realview board for example.
+> 
+> Limitation 1: crash kernel reservation kernel must be aligned with 0x08000000 (128MiB).
+> 
+>   This is because zImage determine final kernel address by (pc & 0xf8000000). If,
+>   for example, set crashkernel=64M@0x29000000, then the second kernel itself
+>   overwrites first kernel's memory. We'll lost some memory in /proc/vmcore.
+> 
+> Limitation 2: crash kernel must resides in different section with the first kernel.
+> 
+>   This is because the second kernel use ioremap for accessing first kernel's memory,
+>   and arm prevent a valid pfn be ioremapped. Which means a whole section must be reserved
+>   for the secton kernel. On realview, which is 256MiB.
+> 
+> Limitation 3: the last 1MiB of reserved memory must be ioremappable.
+> 
+>   This is because the second kernel depeneds kexec-tools passing an elfheader as
+>   'elfcorehdr' to instructs it generating /proc/vmcore. See fs/proc/vmcore.c. Kexec-tools
+>   simply uses the last 1MiB for it. The second kernel use ioremap to access it, force
+>   the header be put in another section.
+> 
+> In realview board, the only possible correct setting should be 'crashkernel=257M@0x20000000'.
+> However, realview has only 1GiB memory, crash kernel consumes a quarter plus 1MiB. In addition, even
+> set this parameter, crash kernel is still unusable because:
+> 
+>   crashkernel reservation failed - memory is in use (0x20000000)
+> 
+>> Will
+>>
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
 
 
