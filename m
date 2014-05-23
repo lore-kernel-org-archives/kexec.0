@@ -1,14 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WnUDc-00048u-IX
- for kexec@lists.infradead.org; Thu, 22 May 2014 14:43:42 +0000
-Date: Thu, 22 May 2014 10:43:14 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH] vmcore-dmesg: Handle struct log to struct printk_log renaming
-Message-ID: <20140522144314.GE13647@redhat.com>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wnjmw-0006gr-Rh
+ for kexec@lists.infradead.org; Fri, 23 May 2014 07:21:11 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: change the wrong code to calculate
+ bufsize_cyclic for elf dump
+Date: Fri, 23 May 2014 07:18:01 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97213537@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9720CBBE@BPXM01GP.gisp.nec.co.jp>
+ <20140423170818.GE24651@redhat.com>
+ <20140423235041.GB1530@dhcp-17-102.nay.redhat.com>
+ <20140425132214.GB10674@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720DE3D@BPXM01GP.gisp.nec.co.jp>
+ <20140428125025.GA4751@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720F928@BPXM01GP.gisp.nec.co.jp>
+ <20140509204924.GA9918@redhat.com>
+ <20140515072249.GA2170@dhcp-16-116.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE972110ED@BPXM01GP.gisp.nec.co.jp>
+ <20140519111538.GD1661@dhcp-16-116.nay.redhat.com>
+In-Reply-To: <20140519111538.GD1661@dhcp-16-116.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,110 +34,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
-Cc: Taras Kondratiuk <taras.kondratiuk@linaro.org>, WANG Chao <chaowang@redhat.com>, Lubomir Rintel <lkundrak@v3.sk>
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zzou@redhat.com" <zzou@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-vmcore-dmesg has been failing for me for quite some time as struct log
-was renamed to struct printk_log.
+Hello Bao,
 
-62e32ac printk: rename struct log to struct printk_log
+>Hi Astushi,
+>
+>> No, 16MB was used for bitmaps also in my case.
+>> --cyclic-buffer option means specifying each bitmap size, so allocated bitmap
+>> size is the double of --cyclic-buffer.
+>> (But now, this behavior is only for ELF case, just the specified size is allocated
+>> in kdump case. Yes, it's confusing...)
+>>
+>>        --cyclic-buffer buffer_size
+>>               Specify the buffer size in kilo bytes for analysis in the cyclic
+>>               mode.  Actually, the double of buffer_size kilo  bytes  will  be
+>>               allocated  in  memory.  In the cyclic mode, the number of cycles
+>>               is represented as:
+>
+>
+>Yeah, I was wrong about this. If specified --cyclic-buffer doesn't
+>exceed the memory limit, it is equal to info->bufsize_cyclic. But for
+>elf dump, it need be double. E.g if free memory is 30M, --cyclic-buffer
+>is 16M, it will absolutely fail. But the code check here should be done
+>separately. Since it's meaningless for elf dump if 2 x --cyclic-buffer
+>exceeds the free memory.
+>
+>	if (info->bufsize_cyclic > free_memory) {
+>	.......
+>	{
+>
+>I think code here need be changed.
 
-This patch has been sitting in mailing list for quite some time. It
-is time to repost the patch.
+Exactly, this is a bug.
+I can fix it simply by modification to the check above, but I think it's
+better to change the ELF path to get rid of the 1st bitmap buffer since it's
+unused. Then the required buffer size will be just <--cyclic-buffer> in both
+cases, so I'll post the patch to do it later.
 
-I took original patch of Lubomir and modified a bit to take care of
-concern of hardcoded string length.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
-
-Changes for v2:
-  * Clarified printk_log vs. log in some comments.
-
- vmcore-dmesg/vmcore-dmesg.c |   53 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 38 insertions(+), 15 deletions(-)
-
-Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
-===================================================================
---- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2014-05-22 10:38:50.792356739 -0400
-+++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2014-05-22 10:39:12.463355316 -0400
-@@ -35,10 +35,10 @@ static loff_t logged_chars_vaddr;
- static loff_t log_first_idx_vaddr;
- static loff_t log_next_idx_vaddr;
- 
--/* struct log size */
-+/* struct printk_log (or older log) size */
- static uint64_t log_sz;
- 
--/* struct log field offsets */
-+/* struct printk_log (or older log) field offsets */
- static uint64_t log_offset_ts_nsec = UINT64_MAX;
- static uint16_t log_offset_len = UINT16_MAX;
- static uint16_t log_offset_text_len = UINT16_MAX;
-@@ -255,6 +255,7 @@ static void scan_vmcoreinfo(char *start,
- 	char *pos, *eol;
- 	char temp_buf[1024];
- 	bool last_line = false;
-+	char *str;
- 
- #define SYMBOL(sym) {					\
- 	.str = "SYMBOL(" #sym  ")=",			\
-@@ -325,19 +326,41 @@ static void scan_vmcoreinfo(char *start,
- 			*symbol[i].vaddr = vaddr;
- 		}
- 
--		/* Check for "SIZE(log)=" */
--		if (memcmp("SIZE(log)=", pos, 10) == 0)
--			log_sz = strtoull(pos + 10, NULL, 10);
--
--		/* Check for struct log field offsets */
--		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
--			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
--
--		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
--			log_offset_len = strtoul(pos + 16, NULL, 10);
--
--		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
--			log_offset_text_len = strtoul(pos + 21, NULL, 10);
-+		/* Check for "SIZE(printk_log)" or older "SIZE(log)=" */
-+		str = "SIZE(log)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_sz = strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "SIZE(printk_log)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_sz = strtoull(pos + strlen(str), NULL, 10);
-+
-+		/* Check for struct printk_log (or older log) field offsets */
-+		str = "OFFSET(log.ts_nsec)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_offset_ts_nsec = strtoull(pos + strlen(str), NULL,
-+							10);
-+		str = "OFFSET(printk_log.ts_nsec)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_offset_ts_nsec = strtoull(pos + strlen(str), NULL,
-+							10);
-+
-+		str = "OFFSET(log.len)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_offset_len = strtoul(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_log.len)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_offset_len = strtoul(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(log.text_len)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_offset_text_len = strtoul(pos + strlen(str), NULL,
-+							10);
-+		str = "OFFSET(printk_log.text_len)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			log_offset_text_len = strtoul(pos + strlen(str), NULL,
-+							10);
- 
- 		if (last_line)
- 			break;
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
