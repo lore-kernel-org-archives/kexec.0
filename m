@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx5-phx2.redhat.com ([209.132.183.37])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WnpWp-0007i3-QT
- for kexec@lists.infradead.org; Fri, 23 May 2014 13:28:56 +0000
-Date: Fri, 23 May 2014 09:28:34 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86: do not enable efi boot for sgi uv machine
-Message-ID: <20140523132834.GB2126@redhat.com>
+ id 1Wnpoo-0003Nc-Ut
+ for kexec@lists.infradead.org; Fri, 23 May 2014 13:47:31 +0000
+Date: Fri, 23 May 2014 09:47:08 -0400 (EDT)
+From: Dave Young <dyoung@redhat.com>
+Message-ID: <640284398.17653158.1400852828081.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20140523132834.GB2126@redhat.com>
 References: <20140523101454.GA8608@darkstar.nay.redhat.com>
+ <20140523132834.GB2126@redhat.com>
+Subject: Re: [PATCH] x86: do not enable efi boot for sgi uv machine
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140523101454.GA8608@darkstar.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,8 +23,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, Borislav Petkov <bp@suse.de>, matt.fleming@intel.com
+
+Hi,
+
+Vivek, replying with webmail, sorry for the formatting issue.
+
+Another way is export the mapping scheme in sysfs. So if kernel boot
+with efi=old_map we can detect it as well. OTOH in future there's probably
+other quirk system.
+
+So kexec-tools can switch to use old way if kernel use ioremap.
+
+Adding Matt and Boris to cc, to see if they have idea.
+
+Thanks
+Dave
+
+----- Original Message -----
+From: "Vivek Goyal" <vgoyal@redhat.com>
+To: "Dave Young" <dyoung@redhat.com>
 Cc: horms@verge.net.au, kexec@lists.infradead.org
+Sent: Friday, May 23, 2014 9:28:34 PM
+Subject: Re: [PATCH] x86: do not enable efi boot for sgi uv machine
 
 On Fri, May 23, 2014 at 06:14:55PM +0800, Dave Young wrote:
 > 
@@ -121,6 +143,11 @@ not use option accordingly.
 
 Thanks
 Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
