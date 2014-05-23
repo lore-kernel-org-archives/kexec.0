@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wnrnr-0005oO-J7
- for kexec@lists.infradead.org; Fri, 23 May 2014 15:54:40 +0000
-Date: Fri, 23 May 2014 17:54:11 +0200
-From: Borislav Petkov <bp@suse.de>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wnro0-0005qx-Vk
+ for kexec@lists.infradead.org; Fri, 23 May 2014 15:54:50 +0000
+Date: Fri, 23 May 2014 11:54:27 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] x86: do not enable efi boot for sgi uv machine
-Message-ID: <20140523155411.GC28727@pd.tnic>
+Message-ID: <20140523155427.GF2126@redhat.com>
 References: <20140523101454.GA8608@darkstar.nay.redhat.com>
  <20140523132834.GB2126@redhat.com>
  <640284398.17653158.1400852828081.JavaMail.zimbra@redhat.com>
@@ -26,7 +26,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Russ Anderson <rja@sgi.com>, matt.fleming@intel.com, kexec@lists.infradead.org, horms@verge.net.au, Alex Thorlton <athorlton@sgi.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, Borislav Petkov <bp@suse.de>, matt.fleming@intel.com
 
 On Fri, May 23, 2014 at 09:47:08AM -0400, Dave Young wrote:
 > Hi,
@@ -38,6 +38,15 @@ On Fri, May 23, 2014 at 09:47:08AM -0400, Dave Young wrote:
 > other quirk system.
 > 
 > So kexec-tools can switch to use old way if kernel use ioremap.
+
+Exporting type of mapping being used in current kernel and automatically
+deciding that whether to boot with efi or noefi sounds reasonable to me.
+I am assuming that once type of mapping got fixed in first kernel boot
+it can't be changed in subsequent kernel boots?
+
+Thanks
+Vivek
+
 > 
 > Adding Matt and Boris to cc, to see if they have idea.
 > 
@@ -61,14 +70,6 @@ On Fri, May 23, 2014 at 09:47:08AM -0400, Dave Young wrote:
 > > So for kexec-tools before we got the 1:1 mapping support on those
 > > machines we should also use old way that means boot 2nd kernel
 > > without uefi.
-
-Well, we did find the bug in a combined debug session and SGI will be
-issuing a fix soon. I don't know whether any quirk will be needed for
-systems which don't have the fix - I guess that's something for SGI
-people to decide. CCed and leaving in the rest for reference.
-
-@Alex, Russ: this is about using kexec on UEFI boxes.
-
 > > 
 > > Tested on a uv1 machine.
 > > 
@@ -159,13 +160,6 @@ people to decide. CCed and leaving in the rest for reference.
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
 
 _______________________________________________
 kexec mailing list
