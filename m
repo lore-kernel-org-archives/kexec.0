@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wooo1-0002C9-9Q
- for kexec@lists.infradead.org; Mon, 26 May 2014 06:54:46 +0000
-Date: Mon, 26 May 2014 15:54:22 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] vmcore-dmesg: Handle struct log to struct printk_log
- renaming
-Message-ID: <20140526065421.GB13010@verge.net.au>
-References: <20140522144314.GE13647@redhat.com>
+ id 1WoqEA-0003IK-6V
+ for kexec@lists.infradead.org; Mon, 26 May 2014 08:25:51 +0000
+Date: Mon, 26 May 2014 10:25:14 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC PATCH 00/11][V2] kexec: A new system call to allow in
+ kernel loading
+Message-ID: <20140526082514.GA25732@pd.tnic>
+References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140522144314.GE13647@redhat.com>
+In-Reply-To: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,28 +25,25 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Taras Kondratiuk <taras.kondratiuk@linaro.org>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>, Lubomir Rintel <lkundrak@v3.sk>
+Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
 
-On Thu, May 22, 2014 at 10:43:14AM -0400, Vivek Goyal wrote:
-> vmcore-dmesg has been failing for me for quite some time as struct log
-> was renamed to struct printk_log.
-> 
-> 62e32ac printk: rename struct log to struct printk_log
-> 
-> This patch has been sitting in mailing list for quite some time. It
-> is time to repost the patch.
-> 
-> I took original patch of Lubomir and modified a bit to take care of
-> concern of hardcoded string length.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
-> 
-> Changes for v2:
->   * Clarified printk_log vs. log in some comments.
+Hi Vivek,
 
-Thanks, applied.
+On Mon, Jan 27, 2014 at 01:57:40PM -0500, Vivek Goyal wrote:
+> Hi
+> 
+> This is V2 of new system call patches. Previous version was posted here.
+
+just a quick ping here, are you working on a v3? Anything I can help with?
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
