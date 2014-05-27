@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WpGbG-0001wY-IE
- for kexec@lists.infradead.org; Tue, 27 May 2014 12:35:26 +0000
-Date: Tue, 27 May 2014 08:34:46 -0400
+ id 1WpHEa-0003GF-73
+ for kexec@lists.infradead.org; Tue, 27 May 2014 13:16:06 +0000
+Date: Tue, 27 May 2014 09:13:42 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH 00/11][V2] kexec: A new system call to allow in
- kernel loading
-Message-ID: <20140527123446.GB10994@redhat.com>
-References: <1390849071-21989-1-git-send-email-vgoyal@redhat.com>
- <20140526082514.GA25732@pd.tnic>
+Subject: Re: [PATCH] vmcore-dmesg: Handle struct log to struct printk_log
+ renaming
+Message-ID: <20140527131342.GD10994@redhat.com>
+References: <20140522144314.GE13647@redhat.com>
+ <20140526065421.GB13010@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140526082514.GA25732@pd.tnic>
+In-Reply-To: <20140526065421.GB13010@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,32 +25,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com
+To: Simon Horman <horms@verge.net.au>
+Cc: Taras Kondratiuk <taras.kondratiuk@linaro.org>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>, Lubomir Rintel <lkundrak@v3.sk>
 
-On Mon, May 26, 2014 at 10:25:14AM +0200, Borislav Petkov wrote:
-> Hi Vivek,
-> 
-> On Mon, Jan 27, 2014 at 01:57:40PM -0500, Vivek Goyal wrote:
-> > Hi
+On Mon, May 26, 2014 at 03:54:22PM +0900, Simon Horman wrote:
+> On Thu, May 22, 2014 at 10:43:14AM -0400, Vivek Goyal wrote:
+> > vmcore-dmesg has been failing for me for quite some time as struct log
+> > was renamed to struct printk_log.
 > > 
-> > This is V2 of new system call patches. Previous version was posted here.
+> > 62e32ac printk: rename struct log to struct printk_log
+> > 
+> > This patch has been sitting in mailing list for quite some time. It
+> > is time to repost the patch.
+> > 
+> > I took original patch of Lubomir and modified a bit to take care of
+> > concern of hardcoded string length.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > ---
+> > 
+> > Changes for v2:
+> >   * Clarified printk_log vs. log in some comments.
 > 
-> just a quick ping here, are you working on a v3? Anything I can help with?
+> Thanks, applied.
 
-Hi Boris,
-
-Yes, I am working on V3. I have been doing some more work to complete the
-series. Specifically make the patches work with UEFI system and also wrote
-code for verifying PKCS7 signature of bzImage. Signature verification code
-I will post separately.
-
-I am just battling a weared race condition where nested kdump seems to
-fail on UEFI system sometimes. Some checksum issue. Hopefully I will be able
-to resolve soon and repost patches for review.
+Thanks Simon. "git pull" did not result in anything. Have you pushed it
+out yet?
 
 Thanks
 Vivek
+
 
 _______________________________________________
 kexec mailing list
