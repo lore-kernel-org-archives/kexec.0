@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wp7tj-0000xF-Ff
- for kexec@lists.infradead.org; Tue, 27 May 2014 03:17:59 +0000
-Date: Tue, 27 May 2014 11:17:27 +0800
+ id 1Wp82d-0003uF-Hv
+ for kexec@lists.infradead.org; Tue, 27 May 2014 03:27:07 +0000
+Date: Tue, 27 May 2014 11:28:16 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] x86 arch usage text fix
-Message-ID: <20140527031727.GA8714@dhcp-16-198.nay.redhat.com>
+Subject: Re: [PATCH] x86: do not enable efi boot for sgi uv machine
+Message-ID: <20140527032816.GD2372@darkstar.nay.redhat.com>
+References: <20140523101454.GA8608@darkstar.nay.redhat.com>
+ <20140523132834.GB2126@redhat.com>
+ <640284398.17653158.1400852828081.JavaMail.zimbra@redhat.com>
+ <20140523155411.GC28727@pd.tnic> <20140523161930.GB4212@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20140523161930.GB4212@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,29 +26,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, chaowang@redhat.com, kexec@lists.infradead.org
+To: Russ Anderson <rja@sgi.com>
+Cc: matt.fleming@intel.com, kexec@lists.infradead.org, horms@verge.net.au, Alex Thorlton <athorlton@sgi.com>, Borislav Petkov <bp@suse.de>, Vivek Goyal <vgoyal@redhat.com>
 
-There's one more '-' in arch_usage, thus
-s/pass--memmap-cmdline/pass-memmap-cmdline
+> > Well, we did find the bug in a combined debug session and SGI will be
+> > issuing a fix soon. I don't know whether any quirk will be needed for
+> > systems which don't have the fix - I guess that's something for SGI
+> > people to decide. CCed and leaving in the rest for reference.
+> > 
+> > @Alex, Russ: this is about using kexec on UEFI boxes.
+> 
+> Thanks for the heads up.  Our bios made an assumption about
+> mapping that was valid with the old mapping scheme but not
+> with the new.  Fortunately the fix will work with both old
+> and new kernels, so the fix can be added in the next bios
+> update.  But we still have to be careful when removing the
+> quirk, to avoid someone trying a new kernel with old bios
+> and not being able to boot.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/arch/i386/kexec-x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The quirk will quirk out all uv system, will SGI people provide a patch
+to only add quirk for old firmware version or just removing the quirk
+after the update is out?
 
-Index: kexec-tools/kexec/arch/i386/kexec-x86.c
-===================================================================
---- kexec-tools.orig/kexec/arch/i386/kexec-x86.c
-+++ kexec-tools/kexec/arch/i386/kexec-x86.c
-@@ -54,7 +54,7 @@ void arch_usage(void)
- 		"     --console-serial          Enable the serial console\n"
- 		"     --elf32-core-headers      Prepare core headers in ELF32 format\n"
- 		"     --elf64-core-headers      Prepare core headers in ELF64 format\n"
--		"     --pass--memmap-cmdline    Pass memory map via command line in kexec on panic case\n"
-+		"     --pass-memmap-cmdline    Pass memory map via command line in kexec on panic case\n"
- 		"     --noefi                   Disable efi support\n"
- 		);
- }
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
