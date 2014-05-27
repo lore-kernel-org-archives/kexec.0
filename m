@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WpR4U-0004gf-4y
- for kexec@lists.infradead.org; Tue, 27 May 2014 23:46:19 +0000
-Date: Wed, 28 May 2014 08:45:53 +0900
+ id 1WpR5f-0004jQ-DS
+ for kexec@lists.infradead.org; Tue, 27 May 2014 23:47:31 +0000
+Date: Wed, 28 May 2014 08:47:08 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] vmcore-dmesg: Handle struct log to struct printk_log
- renaming
-Message-ID: <20140527234553.GC7374@verge.net.au>
-References: <20140522144314.GE13647@redhat.com>
- <20140526065421.GB13010@verge.net.au>
- <20140527131342.GD10994@redhat.com>
+Subject: Re: [PATCH 1/2 resend] kexec-tools: add noefi arch cmdline option
+Message-ID: <20140527234708.GD7374@verge.net.au>
+References: <20140526084856.GA19920@dhcp-16-198.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140527131342.GD10994@redhat.com>
+In-Reply-To: <20140526084856.GA19920@dhcp-16-198.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,36 +23,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Taras Kondratiuk <taras.kondratiuk@linaro.org>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>, Lubomir Rintel <lkundrak@v3.sk>
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, vgoyal@redhat.com
 
-On Tue, May 27, 2014 at 09:13:42AM -0400, Vivek Goyal wrote:
-> On Mon, May 26, 2014 at 03:54:22PM +0900, Simon Horman wrote:
-> > On Thu, May 22, 2014 at 10:43:14AM -0400, Vivek Goyal wrote:
-> > > vmcore-dmesg has been failing for me for quite some time as struct log
-> > > was renamed to struct printk_log.
-> > > 
-> > > 62e32ac printk: rename struct log to struct printk_log
-> > > 
-> > > This patch has been sitting in mailing list for quite some time. It
-> > > is time to repost the patch.
-> > > 
-> > > I took original patch of Lubomir and modified a bit to take care of
-> > > concern of hardcoded string length.
-> > > 
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > > ---
-> > > 
-> > > Changes for v2:
-> > >   * Clarified printk_log vs. log in some comments.
-> > 
-> > Thanks, applied.
+On Tue, May 27, 2014 at 01:52:08PM +0800, Dave Young wrote:
+> For kernel boot with efi=old_map or some quirked machines like SGI UV
+> they use old ioremap instead of 1:1 mapping. But kexec efi support
+> depends on the 1:1 mapping thus we need to switch to use the old way
 > 
-> Thanks Simon. "git pull" did not result in anything. Have you pushed it
-> out yet?
+> There's a kernel patch for exporting the efi flags so we can check the memory
+> mapping method. But user may want to explictly disable efi boot for unknown
+> reasons.
+> 
+> So here add a new arch option '--noefi' for this case.
 
-Sorry about that, I have pushed it now.
+Thanks, I have applied this and the following patch.
+
+I will now go ahead and make an rc release.
 
 _______________________________________________
 kexec mailing list
