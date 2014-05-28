@@ -1,10 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH RESEND] ARM: kdump: 2nd kernel should use strict pfn_valid in
- SPARSEMEM platform
-Date: Wed, 28 May 2014 16:44:28 +0800
-Message-ID: <1401266668-34365-1-git-send-email-wangnan0@huawei.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wpcx1-0006uC-Rx
+ for kexec@lists.infradead.org; Wed, 28 May 2014 12:27:24 +0000
+Date: Wed, 28 May 2014 08:27:00 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] vmcore-dmesg: Handle struct log to struct printk_log
+ renaming
+Message-ID: <20140528122700.GD14863@redhat.com>
+References: <20140522144314.GE13647@redhat.com>
+ <20140526065421.GB13010@verge.net.au>
+ <20140527131342.GD10994@redhat.com>
+ <20140527234553.GC7374@verge.net.au>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140527234553.GC7374@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,55 +27,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King <linux@arm.linux.org.uk>, Simon Horman <horms@verge.net.au>, Will Deacon <will.deacon@arm.com>
-Cc: Wang Nan <wangnan0@huawei.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geng Hui <hui.geng@huawei.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Taras Kondratiuk <taras.kondratiuk@linaro.org>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>, Lubomir Rintel <lkundrak@v3.sk>
 
-This patch removes an irrational limitation for crash dump kernel on ARM
-platform with SPARSEMEM enabled.
+On Wed, May 28, 2014 at 08:45:53AM +0900, Simon Horman wrote:
+> On Tue, May 27, 2014 at 09:13:42AM -0400, Vivek Goyal wrote:
+> > On Mon, May 26, 2014 at 03:54:22PM +0900, Simon Horman wrote:
+> > > On Thu, May 22, 2014 at 10:43:14AM -0400, Vivek Goyal wrote:
+> > > > vmcore-dmesg has been failing for me for quite some time as struct log
+> > > > was renamed to struct printk_log.
+> > > > 
+> > > > 62e32ac printk: rename struct log to struct printk_log
+> > > > 
+> > > > This patch has been sitting in mailing list for quite some time. It
+> > > > is time to repost the patch.
+> > > > 
+> > > > I took original patch of Lubomir and modified a bit to take care of
+> > > > concern of hardcoded string length.
+> > > > 
+> > > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > > > ---
+> > > > 
+> > > > Changes for v2:
+> > > >   * Clarified printk_log vs. log in some comments.
+> > > 
+> > > Thanks, applied.
+> > 
+> > Thanks Simon. "git pull" did not result in anything. Have you pushed it
+> > out yet?
+> 
+> Sorry about that, I have pushed it now.
 
-Without this patch, crash reservation area for a crash dump kernel with
-SPARSEMEM selected must occupy a full section plus 1MiB. If not,
-elfcorehdr and some memory space used by the first kernel will unable to
-get accessed. This is caused by pfn_valid: fast pfn_valid ragards any
-pfn in a valid section as valid and prevents it to be ioremapped.
+Thanks Simon. It works now.
 
-This limitation wastes memory, because sections are always large and
-crash dump kernel should be as small as possible.
-
-This patch selects HAVE_ARCH_PFN_VALID for CRASH_DUMP, makes crash dump
-kernel to use strict version of pfn_valid().
-
-Signed-off-by: Wang Nan <wangnan0@huawei.com>
----
-
-This is the third time I post this patch. The previous records can be
-retrived from:
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/256498.html
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/257472.html
-
-Different from previous version, this patch select HAVE_ARCH_PFN_VALID
-right after CRASH_DUMP config entry.
-
----
-
- arch/arm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index c57ddcb..d5ffbb1 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -2160,6 +2160,7 @@ config ATAGS_PROC
- 
- config CRASH_DUMP
- 	bool "Build kdump crash kernel (EXPERIMENTAL)"
-+	select HAVE_ARCH_PFN_VALID if SPARSEMEM
- 	help
- 	  Generate crash dump after being started by kexec. This should
- 	  be normally only set in special crash dump kernels which are
--- 
-1.8.4
+Vivek
 
 
 _______________________________________________
