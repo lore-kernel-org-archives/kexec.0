@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wpdxq-0003An-8u
- for kexec@lists.infradead.org; Wed, 28 May 2014 13:32:23 +0000
-Date: Wed, 28 May 2014 09:31:43 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] powerpc, kexec: Fix "Processor X is stuck" issue during
- kexec from ST mode
-Message-ID: <20140528133143.GK14863@redhat.com>
-References: <20140527105511.24309.74320.stgit@srivatsabhat.in.ibm.com>
+Received: from szxga01-in.huawei.com ([119.145.14.64])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WpeNi-00057h-6E
+ for kexec@lists.infradead.org; Wed, 28 May 2014 13:59:03 +0000
+From: Liu Hua <sdu.liu@huawei.com>
+Subject: [RESEND PATCH] kexec : add sparse memory related values to vmcore
+Date: Wed, 28 May 2014 21:49:56 +0800
+Message-ID: <1401284996-44873-1-git-send-email-sdu.liu@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140527105511.24309.74320.stgit@srivatsabhat.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,136 +20,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
-Cc: ego@linux.vnet.ibm.com, ananth@in.ibm.com, benh@kernel.crashing.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, suzuki@in.ibm.com, ebiederm@xmission.com, paulus@samba.org, linuxppc-dev@lists.ozlabs.org
+To: ebiederm@xmission.com
+Cc: wangnan0@huawei.com, peifeiyue@huawei.com, Liu Hua <sdu.liu@huawei.com>, liusdu@126.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hui.geng@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, anderson@redhat.com
 
-On Tue, May 27, 2014 at 04:25:34PM +0530, Srivatsa S. Bhat wrote:
-> If we try to perform a kexec when the machine is in ST (Single-Threaded) mode
-> (ppc64_cpu --smt=off), the kexec operation doesn't succeed properly, and we
-> get the following messages during boot:
-> 
-> [    0.089866] POWER8 performance monitor hardware support registered
-> [    0.089985] power8-pmu: PMAO restore workaround active.
-> [    5.095419] Processor 1 is stuck.
-> [   10.097933] Processor 2 is stuck.
-> [   15.100480] Processor 3 is stuck.
-> [   20.102982] Processor 4 is stuck.
-> [   25.105489] Processor 5 is stuck.
-> [   30.108005] Processor 6 is stuck.
-> [   35.110518] Processor 7 is stuck.
-> [   40.113369] Processor 9 is stuck.
-> [   45.115879] Processor 10 is stuck.
-> [   50.118389] Processor 11 is stuck.
-> [   55.120904] Processor 12 is stuck.
-> [   60.123425] Processor 13 is stuck.
-> [   65.125970] Processor 14 is stuck.
-> [   70.128495] Processor 15 is stuck.
-> [   75.131316] Processor 17 is stuck.
-> 
-> Note that only the sibling threads are stuck, while the primary threads (0, 8,
-> 16 etc) boot just fine. Looking closer at the previous step of kexec, we observe
-> that kexec tries to wakeup (bring online) the sibling threads of all the cores,
-> before performing kexec:
-> 
-> [ 9464.131231] Starting new kernel
-> [ 9464.148507] kexec: Waking offline cpu 1.
-> [ 9464.148552] kexec: Waking offline cpu 2.
-> [ 9464.148600] kexec: Waking offline cpu 3.
-> [ 9464.148636] kexec: Waking offline cpu 4.
-> [ 9464.148671] kexec: Waking offline cpu 5.
-> [ 9464.148708] kexec: Waking offline cpu 6.
-> [ 9464.148743] kexec: Waking offline cpu 7.
-> [ 9464.148779] kexec: Waking offline cpu 9.
-> [ 9464.148815] kexec: Waking offline cpu 10.
-> [ 9464.148851] kexec: Waking offline cpu 11.
-> [ 9464.148887] kexec: Waking offline cpu 12.
-> [ 9464.148922] kexec: Waking offline cpu 13.
-> [ 9464.148958] kexec: Waking offline cpu 14.
-> [ 9464.148994] kexec: Waking offline cpu 15.
-> [ 9464.149030] kexec: Waking offline cpu 17.
-> 
-> Instrumenting this piece of code revealed that the cpu_up() operation actually
-> fails with -EBUSY. Thus, only the primary threads of all the cores are online
-> during kexec, and hence this is a sure-shot receipe for disaster, as explained
-> in commit e8e5c2155b (powerpc/kexec: Fix orphaned offline CPUs across kexec),
-> as well as in the comment above wake_offline_cpus().
-> 
-> It turns out that cpu_up() was returning -EBUSY because the variable
-> 'cpu_hotplug_disabled' was set to 1; and this disabling of CPU hotplug was done
-> by migrate_to_reboot_cpu() inside kernel_kexec().
-> 
-> Now, migrate_to_reboot_cpu() was originally written with the assumption that
-> any further code will not need to perform CPU hotplug, since we are anyway in
-> the reboot path. However, kexec is clearly not such a case, since we depend on
-> onlining CPUs, atleast on powerpc.
-> 
-> So re-enable cpu-hotplug after returning from migrate_to_reboot_cpu() in the
-> kexec path, to fix this regression in kexec on powerpc.
-> 
-> Also, wrap the cpu_up() in powerpc kexec code within a WARN_ON(), so that we
-> can catch such issues more easily in the future.
-> 
-> Fixes: c97102ba963 (kexec: migrate to reboot cpu)
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
-> ---
-> 
->  arch/powerpc/kernel/machine_kexec_64.c |    2 +-
->  kernel/kexec.c                         |    8 ++++++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-> index 59d229a..879b3aa 100644
-> --- a/arch/powerpc/kernel/machine_kexec_64.c
-> +++ b/arch/powerpc/kernel/machine_kexec_64.c
-> @@ -237,7 +237,7 @@ static void wake_offline_cpus(void)
->  		if (!cpu_online(cpu)) {
->  			printk(KERN_INFO "kexec: Waking offline cpu %d.\n",
->  			       cpu);
-> -			cpu_up(cpu);
-> +			WARN_ON(cpu_up(cpu));
->  		}
->  	}
->  }
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index c8380ad..28c5706 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1683,6 +1683,14 @@ int kernel_kexec(void)
->  		kexec_in_progress = true;
->  		kernel_restart_prepare(NULL);
->  		migrate_to_reboot_cpu();
-> +
-> +		/*
-> +		 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
-> +		 * no further code needs to use CPU hotplug (which is true in
-> +		 * the reboot case). However, the kexec path depends on using
-> +		 * CPU hotplug again; so re-enable it here.
-> +		 */
-> +		cpu_hotplug_enable();
->  		printk(KERN_EMERG "Starting new kernel\n");
->  		machine_shutdown();
+This patch deales with sparse memory model.
 
-After migrate_to_reboot_cpu(), we are calling machine_shutdown() which
-calls disable_nonboot_cpus() and which in turn calls _cpu_down().
+For ARM32 platforms, different vendors may define different
+SECTION_SIZE_BITS, which we did not write to vmcore.
 
-So it is kind of odd that we first migrate to boot cpu, and then disable
-all non-boot cpus and after that powerpc goes ahead and onlines all
-cpus.
+For example:
 
-I think this is not a good idea. For whatever reason if powerpc has to
-online all cpus, then it should happne earlier and not in machine_kexec().
+  1 arch/arm/mach-clps711x/include/mach/memory.h
+    #define SECTION_SIZE_BITS 24
+  2 arch/arm/mach-exynos/include/mach/memory.h
+    #define SECTION_SIZE_BITS 28
+  3 arch/arm/mach-sa1100/include/mach/memory.h
+    #define SECTION_SIZE_BITS 27
 
-In fact I think generic code expects that all non-boot cpus are disabled
-so that generic code can use all the RAM as it wants to. Now if powerpc
-breaks that assumption, it will lead to various kind of issues.
+It is really a bad news for user space tools such as
+makedumpfile and crash, who have to defines them as
+macros. So for the same architecture, we may need to
+recomile them to parse vmcores with different
+SECTION_SIZE_BITS.
 
-So I think we need to go back and see if we can find a way where we
-don't have to online all cpus in first kernel. And second kernel needs
-to have a way to detect it and online things.
+And if we enable LPAE, MAX_PHYSMEM_SIZE can alse
+be variable.
 
-Thanks
-Vivek
+This patch adds these SECTION_SIZE_BITS and MAX_PHYSMEM_SIZE
+to vmcore. which makes user space tools more compatible.
+
+BTW, makedumpfile has queued the related patch.
+
+Signed-off-by: Liu Hua <sdu.liu@huawei.com>
+---
+ kernel/kexec.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index bf0b929e..8b1a193 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1577,6 +1577,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+ 	VMCOREINFO_STRUCT_SIZE(mem_section);
+ 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
++	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
++	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
+ #endif
+ 	VMCOREINFO_STRUCT_SIZE(page);
+ 	VMCOREINFO_STRUCT_SIZE(pglist_data);
+-- 
+1.9.0
+
 
 _______________________________________________
 kexec mailing list
