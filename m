@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wpnyh-0003ZL-Il
- for kexec@lists.infradead.org; Thu, 29 May 2014 00:13:53 +0000
-Date: Thu, 29 May 2014 09:13:28 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [RESEND PATCH] kexec : add sparse memory related values to vmcore
-Message-ID: <20140529001328.GD22705@verge.net.au>
-References: <1401284996-44873-1-git-send-email-sdu.liu@huawei.com>
+Received: from mail-pa0-f46.google.com ([209.85.220.46])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wps8c-0005Fr-DG
+ for kexec@lists.infradead.org; Thu, 29 May 2014 04:40:23 +0000
+Received: by mail-pa0-f46.google.com with SMTP id kq14so12097480pab.5
+ for <kexec@lists.infradead.org>; Wed, 28 May 2014 21:39:58 -0700 (PDT)
+Message-ID: <5386BA17.3080109@linaro.org>
+Date: Thu, 29 May 2014 13:39:51 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1401284996-44873-1-git-send-email-sdu.liu@huawei.com>
+Subject: Re: [PATCH Resend] ARM: kdump: makes second kernel use strict
+ pfn_valid
+References: <1400464443-34816-1-git-send-email-wangnan0@huawei.com>
+ <20140519160947.GM15130@arm.com> <537ACA76.3090700@huawei.com>
+In-Reply-To: <537ACA76.3090700@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,73 +22,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Liu Hua <sdu.liu@huawei.com>
-Cc: wangnan0@huawei.com, peifeiyue@huawei.com, liusdu@126.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hui.geng@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com
+To: Wang Nan <wangnan0@huawei.com>, Will Deacon <will.deacon@arm.com>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Geng Hui <hui.geng@huawei.com>, Simon Horman <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Wed, May 28, 2014 at 09:49:56PM +0800, Liu Hua wrote:
-> This patch deales with sparse memory model.
-> 
-> For ARM32 platforms, different vendors may define different
-> SECTION_SIZE_BITS, which we did not write to vmcore.
-> 
-> For example:
-> 
->   1 arch/arm/mach-clps711x/include/mach/memory.h
->     #define SECTION_SIZE_BITS 24
->   2 arch/arm/mach-exynos/include/mach/memory.h
->     #define SECTION_SIZE_BITS 28
->   3 arch/arm/mach-sa1100/include/mach/memory.h
->     #define SECTION_SIZE_BITS 27
+Wang, Will
 
-I wonder if this problem will eventually go away, or at least only
-apply to older platforms, as ARM moves towards multiplatform: a single
-kernel for more than one platform.
+I'm now working on kdump support for arm64 on top of Geoff's kexec patch.
 
-> It is really a bad news for user space tools such as
-> makedumpfile and crash, who have to defines them as
-> macros. So for the same architecture, we may need to
-> recomile them to parse vmcores with different
-> SECTION_SIZE_BITS.
-> 
-> And if we enable LPAE, MAX_PHYSMEM_SIZE can alse
-> be variable.
-> 
-> This patch adds these SECTION_SIZE_BITS and MAX_PHYSMEM_SIZE
-> to vmcore. which makes user space tools more compatible.
-> 
-> BTW, makedumpfile has queued the related patch.
-> 
-> Signed-off-by: Liu Hua <sdu.liu@huawei.com>
-> ---
->  kernel/kexec.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index bf0b929e..8b1a193 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1577,6 +1577,8 @@ static int __init crash_save_vmcoreinfo_init(void)
->  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
->  	VMCOREINFO_STRUCT_SIZE(mem_section);
->  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-> +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-> +	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
->  #endif
->  	VMCOREINFO_STRUCT_SIZE(page);
->  	VMCOREINFO_STRUCT_SIZE(pglist_data);
-> -- 
-> 1.9.0
-> 
-> 
+On 05/20/2014 12:22 PM, Wang Nan wrote:
+> On 2014/5/20 0:09, Will Deacon wrote:
+>> On Mon, May 19, 2014 at 02:54:03AM +0100, Wang Nan wrote:
+>>> When SPARSEMEM and CRASH_DUMP both selected, simple pfn_valid prevents
+>>> the second kernel ioremap first kernel's memory if the address falls
+>>> into second kernel section. This limitation requires the second kernel
+>>> occupies a full section, and elfcorehdr must resides in another section.
+>>>
+>>> This patch makes crash dump kernel use strict pfn_valid, removes such
+>>> limitation.
+>>>
+>>> For example:
+>>>
+>>>    For a platform with SECTION_SIZE_BITS == 28 (256MiB) and
+>>>    crashkernel=128M@0x28000000 in kernel cmdline, the second
+>>>    kernel is loaded at 0x28000000. Kexec puts elfcorehdr at
+>>>    0x2ff00000, and passes 'elfcorehdr=0x2ff00000 mem=130048K' to
+>>>    second kernel. When second kernel start, it tries to use
+>>>    ioremap to retrive its elfcorehrd. In this case, elfcodehdr is at the
+>>>    same section of the second kernel, pfn_valid will recongnize
+>>>    the page as valid, so ioremap will refuse to map it.
+>>
+>> So isn't the issue here that you're passing an incorrect mem= parameter
+>> to the crash kernel?
+>>
+>
+> mem= parameter is generated by kexec-tools according to /proc/iomem, it is the size
+> of reserved memory minus 1MiB. So I think what you mean is I passing an incorrect
+> crashkernel= parameter?
+
+Just FYI, kexec-tools doesn't seem to be implemented in proper way to support device-tree.
+Once device-tree is handled correctly, we don't need to pass "mem=" parameter.
+(Of course, only on machines that support device-tree.)
+
+> I'll explain limitations on crash kernel reserved memory in the case of SPARSEMEM
+> enabled, and show how *impractical* the 'correct' crashkernel will be.
+>
+> Use realview board for example.
+>
+> Limitation 1: crash kernel reservation kernel must be aligned with 0x08000000 (128MiB).
+>
+>    This is because zImage determine final kernel address by (pc & 0xf8000000). If,
+>    for example, set crashkernel=64M@0x29000000, then the second kernel itself
+>    overwrites first kernel's memory. We'll lost some memory in /proc/vmcore.
+>
+> Limitation 2: crash kernel must resides in different section with the first kernel.
+>
+>    This is because the second kernel use ioremap for accessing first kernel's memory,
+>    and arm prevent a valid pfn be ioremapped. Which means a whole section must be reserved
+>    for the secton kernel. On realview, which is 256MiB.
+>
+> Limitation 3: the last 1MiB of reserved memory must be ioremappable.
+>
+>    This is because the second kernel depeneds kexec-tools passing an elfheader as
+>    'elfcorehdr' to instructs it generating /proc/vmcore. See fs/proc/vmcore.c. Kexec-tools
+>    simply uses the last 1MiB for it. The second kernel use ioremap to access it, force
+>    the header be put in another section.
+
+We can avoid "Limitation 3" just by implementing arm's own elfcorehdr_read() with memcpy().
+I can submit a patch, but can't test it for now.
+
+-Takahiro AKASHI
+
+
+> In realview board, the only possible correct setting should be 'crashkernel=257M@0x20000000'.
+> However, realview has only 1GiB memory, crash kernel consumes a quarter plus 1MiB. In addition, even
+> set this parameter, crash kernel is still unusable because:
+>
+>    crashkernel reservation failed - memory is in use (0x20000000)
+>
+>> Will
+>>
+>
+>
+>
 > _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
 
 _______________________________________________
 kexec mailing list
