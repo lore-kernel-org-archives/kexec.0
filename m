@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 29 May 2014 09:01:52 +0100
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH RESEND] ARM: kdump: 2nd kernel should use strict
- pfn_valid in SPARSEMEM platform
-Message-ID: <20140529080151.GB29812@arm.com>
-References: <1401266668-34365-1-git-send-email-wangnan0@huawei.com>
- <5386BD6A.7020509@linaro.org>
+Received: from szxga01-in.huawei.com ([119.145.14.64])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wpwdf-0005oL-NU
+ for kexec@lists.infradead.org; Thu, 29 May 2014 09:28:44 +0000
+From: Wang Nan <wangnan0@huawei.com>
+Subject: [PATCH 0/2] geneate correct PAGE_OFFSET for vmcore
+Date: Thu, 29 May 2014 17:20:01 +0800
+Message-ID: <1401355203-63794-1-git-send-email-wangnan0@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5386BD6A.7020509@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,26 +20,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Wang Nan <wangnan0@huawei.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geng Hui <hui.geng@huawei.com>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org, Geng Hui <hui.geng@huawei.com>, Wang Nan <wangnan0@huawei.com>
 
-On Thu, May 29, 2014 at 05:54:02AM +0100, AKASHI Takahiro wrote:
-> Catalin, Will
-> 
-> Can we assume that HAVE_ARCH_PFN_VALID is alway yes on arm64?
-> Looking at arm64/Kconfig,
-> config ARCH_HAS_HOLES_MEMORYMODEL
-> 	def_bool y if SPARSEMEM
-> ...
-> config HAVE_ARCH_PFN_VALID
-> 	def_bool ARCH_HAS_HOLES_MEMORYMODEL || !SPARSEMEM
-> 
-> is this intentional?
+This two patches corrects PAGE_OFFSET for generated vmcore.
 
-Looks like an artifact of the way we constructed those option, so yes, we
-could just make that a def_bool y if you like.
+Original code uses fix PAGE_OFFSET: 0xc0000000. For kernel with
+CONFIG_VMSPLIT_1G/2G, generated /proc/vmcore is incorrect. See
+discussion:
+  http://lists.infradead.org/pipermail/kexec/2014-May/011844.html
 
-Will
+The first patch detects page_offset dynamically according to
+/proc/kallsyms, the second patch intorduces a --page-offset option for
+systems without KALLSYMS or /proc
+
+Wang Nan (2):
+  kexec-tools: detect page_offset dynamically
+  kexec-tools: add --page-offset option for ARM
+
+ kexec/arch/arm/crashdump-arm.c        | 64 ++++++++++++++++++++++++++++++++++-
+ kexec/arch/arm/crashdump-arm.h        |  4 ++-
+ kexec/arch/arm/include/arch/options.h |  4 ++-
+ kexec/arch/arm/kexec-zImage-arm.c     |  7 ++++
+ 4 files changed, 76 insertions(+), 3 deletions(-)
+
+-- 
+1.8.4
+
 
 _______________________________________________
 kexec mailing list
