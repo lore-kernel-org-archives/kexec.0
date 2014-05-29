@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([119.145.14.64])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WpeNi-00057h-6E
- for kexec@lists.infradead.org; Wed, 28 May 2014 13:59:03 +0000
-From: Liu Hua <sdu.liu@huawei.com>
-Subject: [RESEND PATCH] kexec : add sparse memory related values to vmcore
-Date: Wed, 28 May 2014 21:49:56 +0800
-Message-ID: <1401284996-44873-1-git-send-email-sdu.liu@huawei.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WpnvM-0001ai-CH
+ for kexec@lists.infradead.org; Thu, 29 May 2014 00:10:25 +0000
+Date: Thu, 29 May 2014 09:09:55 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [ANNOUNCE] kexec-tools 2.0.7-rc1
+Message-ID: <20140529000953.GB22705@verge.net.au>
+References: <20140528000836.GA7125@verge.net.au>
+ <20140528123129.GE14863@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140528123129.GE14863@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,58 +24,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
-Cc: wangnan0@huawei.com, peifeiyue@huawei.com, Liu Hua <sdu.liu@huawei.com>, liusdu@126.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hui.geng@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, anderson@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
 
-This patch deales with sparse memory model.
+On Wed, May 28, 2014 at 08:31:29AM -0400, Vivek Goyal wrote:
+> On Wed, May 28, 2014 at 09:08:36AM +0900, Simon Horman wrote:
+> > Hi all,
+> > 
+> > I am happy to announce the release of kexec-tools 2.0.7-rc1.
+> 
+> Thanks Simon. Glad to see release of -rc1. I will give it a try
+> on my machine.
+> 
+> So 2.0.7 will be released almost at the same time as kernel 3.15. That's
+> nice. This is inline with a kexec-tools release every alternate kernel
+> release.
 
-For ARM32 platforms, different vendors may define different
-SECTION_SIZE_BITS, which we did not write to vmcore.
+Yes, that is my plan.
 
-For example:
-
-  1 arch/arm/mach-clps711x/include/mach/memory.h
-    #define SECTION_SIZE_BITS 24
-  2 arch/arm/mach-exynos/include/mach/memory.h
-    #define SECTION_SIZE_BITS 28
-  3 arch/arm/mach-sa1100/include/mach/memory.h
-    #define SECTION_SIZE_BITS 27
-
-It is really a bad news for user space tools such as
-makedumpfile and crash, who have to defines them as
-macros. So for the same architecture, we may need to
-recomile them to parse vmcores with different
-SECTION_SIZE_BITS.
-
-And if we enable LPAE, MAX_PHYSMEM_SIZE can alse
-be variable.
-
-This patch adds these SECTION_SIZE_BITS and MAX_PHYSMEM_SIZE
-to vmcore. which makes user space tools more compatible.
-
-BTW, makedumpfile has queued the related patch.
-
-Signed-off-by: Liu Hua <sdu.liu@huawei.com>
----
- kernel/kexec.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index bf0b929e..8b1a193 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1577,6 +1577,8 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
- 	VMCOREINFO_STRUCT_SIZE(mem_section);
- 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-+	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-+	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
- #endif
- 	VMCOREINFO_STRUCT_SIZE(page);
- 	VMCOREINFO_STRUCT_SIZE(pglist_data);
--- 
-1.9.0
-
+> Aagain, thanks for sorting out faster release cycles of kexec-tools.
+> 
+> Vivek
+> 
+> > 
+> > This is a feature pre-release.
+> > I intend to release 2.0.7 next week as long as no serious problems arise.
+> > As such testing of 2.0.7-rc1 would be greatly appreciated.
+> > 
+> > I do not have any outstanding changes for 2.0.7 at this time.
+> > And I would like to only accept bug fixes at this time. Taking
+> > features patches once 2.0.7 has been released.
+> > 
+> > The pre-release can be downloaded from kernel.org:
+> > 
+> > 	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.7-rc1.tar.xz
+> > 	http://kernel.org/pub/linux/utils/kernel/kexec/
+> > 
+> > I have also tagged it in git:
+> > 
+> > 	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> > 
+> > Thanks to everyone who has contributed to kexec.
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
