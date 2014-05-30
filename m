@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WqFM3-0006MQ-A6
- for kexec@lists.infradead.org; Fri, 30 May 2014 05:27:47 +0000
-Date: Fri, 30 May 2014 14:27:24 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH kexec-tools] kdump: pass acpi_rsdp to 2nd kernel if
- kernel does not export efi runtime maps
-Message-ID: <20140530052724.GG6561@verge.net.au>
-References: <20140530032452.GA30043@dhcp-16-198.nay.redhat.com>
+Message-ID: <53883DE9.6090705@huawei.com>
+Date: Fri, 30 May 2014 16:14:33 +0800
+From: Liu hua <sdu.liu@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140530032452.GA30043@dhcp-16-198.nay.redhat.com>
+Subject: Re: [RESEND PATCH] kexec : add sparse memory related values to vmcore
+References: <1401284996-44873-1-git-send-email-sdu.liu@huawei.com>
+ <20140529001328.GD22705@verge.net.au>
+In-Reply-To: <20140529001328.GD22705@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,21 +19,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, vgoyal@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: wangnan0@huawei.com, peifeiyue@huawei.com, liusdu@126.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hui.geng@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Fri, May 30, 2014 at 11:24:52AM +0800, Dave Young wrote:
+On 2014/5/29 8:13, Simon Horman wrote:
+> On Wed, May 28, 2014 at 09:49:56PM +0800, Liu Hua wrote:
+>> This patch deales with sparse memory model.
+>>
+>> For ARM32 platforms, different vendors may define different
+>> SECTION_SIZE_BITS, which we did not write to vmcore.
+>>
+>> For example:
+>>
+>>   1 arch/arm/mach-clps711x/include/mach/memory.h
+>>     #define SECTION_SIZE_BITS 24
+>>   2 arch/arm/mach-exynos/include/mach/memory.h
+>>     #define SECTION_SIZE_BITS 28
+>>   3 arch/arm/mach-sa1100/include/mach/memory.h
+>>     #define SECTION_SIZE_BITS 27
 > 
-> If kernel does not export efi runtime maps it means 1:1 mapping does not
-> work or user explictly boot with efi=old_map. In this case efi setup code
-> will failback to noefi boot, but for kdump case we still need pass extra
-> acpi_rsdp cmdline.
-> 
-> Thus adding a check in kdump path.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
+> I wonder if this problem will eventually go away, or at least only
+> apply to older platforms, as ARM moves towards multiplatform: a single
+> kernel for more than one platform.
 
-Thanks, applied.
+For ARM32 platform, it may cost a long time. And when glancing over
+the commit log of kernel, we can find this macro changed several times.
+The user space tools must take care of all these changed for compatibility.
+
+> 
+>> It is really a bad news for user space tools such as
+>> makedumpfile and crash, who have to defines them as
+>> macros. So for the same architecture, we may need to
+>> recomile them to parse vmcores with different
+>> SECTION_SIZE_BITS.
+>>
+>> And if we enable LPAE, MAX_PHYSMEM_SIZE can alse
+>> be variable.
+>>
+>> This patch adds these SECTION_SIZE_BITS and MAX_PHYSMEM_SIZE
+>> to vmcore. which makes user space tools more compatible.
+>>
+>> BTW, makedumpfile has queued the related patch.
+>>
+>> Signed-off-by: Liu Hua <sdu.liu@huawei.com>
+>> ---
+>>  kernel/kexec.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/kernel/kexec.c b/kernel/kexec.c
+>> index bf0b929e..8b1a193 100644
+>> --- a/kernel/kexec.c
+>> +++ b/kernel/kexec.c
+>> @@ -1577,6 +1577,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+>>  	VMCOREINFO_STRUCT_SIZE(mem_section);
+>>  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+>> +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+>> +	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
+>>  #endif
+>>  	VMCOREINFO_STRUCT_SIZE(page);
+>>  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+>> -- 
+>> 1.9.0
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> .
+> 
+
+
 
 _______________________________________________
 kexec mailing list
