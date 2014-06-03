@@ -1,16 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WrdWT-0001GF-Bj
- for kexec@lists.infradead.org; Tue, 03 Jun 2014 01:28:20 +0000
-Message-ID: <538D245C.5090101@huawei.com>
-Date: Tue, 3 Jun 2014 09:26:52 +0800
-From: Liu hua <sdu.liu@huawei.com>
+ id 1WriNL-00069r-HT
+ for kexec@lists.infradead.org; Tue, 03 Jun 2014 06:39:12 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: ARM: get correct mem_map offset
+Date: Tue, 3 Jun 2014 06:37:20 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97216F04@BPXM01GP.gisp.nec.co.jp>
+References: <1399443356-46732-1-git-send-email-sdu.liu@huawei.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9720FA9B@BPXM01GP.gisp.nec.co.jp>
+ <53702313.7090703@huawei.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9721103D@BPXM01GP.gisp.nec.co.jp>
+ <5379C052.50108@huawei.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97212378@BPXM01GP.gisp.nec.co.jp>
+ <5382CE50.4050807@huawei.com>
+In-Reply-To: <5382CE50.4050807@huawei.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [RESEND PATCH] kexec : add sparse memory related values to vmcore
-References: <1401284996-44873-1-git-send-email-sdu.liu@huawei.com>
- <20140529001328.GD22705@verge.net.au>
-In-Reply-To: <20140529001328.GD22705@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,52 +25,169 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: wangnan0@huawei.com, peifeiyue@huawei.com, liusdu@126.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hui.geng@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com
+To: "sdu.liu@huawei.com" <sdu.liu@huawei.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-T24gMjAxNC81LzI5IDg6MTMsIFNpbW9uIEhvcm1hbiDlhpnpgZM6Cj4gT24gV2VkLCBNYXkgMjgs
-IDIwMTQgYXQgMDk6NDk6NTZQTSArMDgwMCwgTGl1IEh1YSB3cm90ZToKPj4gVGhpcyBwYXRjaCBk
-ZWFsZXMgd2l0aCBzcGFyc2UgbWVtb3J5IG1vZGVsLgo+Pgo+PiBGb3IgQVJNMzIgcGxhdGZvcm1z
-LCBkaWZmZXJlbnQgdmVuZG9ycyBtYXkgZGVmaW5lIGRpZmZlcmVudAo+PiBTRUNUSU9OX1NJWkVf
-QklUUywgd2hpY2ggd2UgZGlkIG5vdCB3cml0ZSB0byB2bWNvcmUuCj4+Cj4+IEZvciBleGFtcGxl
-Ogo+Pgo+PiAgIDEgYXJjaC9hcm0vbWFjaC1jbHBzNzExeC9pbmNsdWRlL21hY2gvbWVtb3J5LmgK
-Pj4gICAgICNkZWZpbmUgU0VDVElPTl9TSVpFX0JJVFMgMjQKPj4gICAyIGFyY2gvYXJtL21hY2gt
-ZXh5bm9zL2luY2x1ZGUvbWFjaC9tZW1vcnkuaAo+PiAgICAgI2RlZmluZSBTRUNUSU9OX1NJWkVf
-QklUUyAyOAo+PiAgIDMgYXJjaC9hcm0vbWFjaC1zYTExMDAvaW5jbHVkZS9tYWNoL21lbW9yeS5o
-Cj4+ICAgICAjZGVmaW5lIFNFQ1RJT05fU0laRV9CSVRTIDI3Cj4gCj4gSSB3b25kZXIgaWYgdGhp
-cyBwcm9ibGVtIHdpbGwgZXZlbnR1YWxseSBnbyBhd2F5LCBvciBhdCBsZWFzdCBvbmx5Cj4gYXBw
-bHkgdG8gb2xkZXIgcGxhdGZvcm1zLCBhcyBBUk0gbW92ZXMgdG93YXJkcyBtdWx0aXBsYXRmb3Jt
-OiBhIHNpbmdsZQo+IGtlcm5lbCBmb3IgbW9yZSB0aGFuIG9uZSBwbGF0Zm9ybS4KCgo+PiBJdCBp
-cyByZWFsbHkgYSBiYWQgbmV3cyBmb3IgdXNlciBzcGFjZSB0b29scyBzdWNoIGFzCj4+IG1ha2Vk
-dW1wZmlsZSBhbmQgY3Jhc2gsIHdobyBoYXZlIHRvIGRlZmluZXMgdGhlbSBhcwo+PiBtYWNyb3Mu
-IFNvIGZvciB0aGUgc2FtZSBhcmNoaXRlY3R1cmUsIHdlIG1heSBuZWVkIHRvCj4+IHJlY29taWxl
-IHRoZW0gdG8gcGFyc2Ugdm1jb3JlcyB3aXRoIGRpZmZlcmVudAo+PiBTRUNUSU9OX1NJWkVfQklU
-Uy4KPj4KPj4gQW5kIGlmIHdlIGVuYWJsZSBMUEFFLCBNQVhfUEhZU01FTV9TSVpFIGNhbiBhbHNl
-Cj4+IGJlIHZhcmlhYmxlLgo+Pgo+PiBUaGlzIHBhdGNoIGFkZHMgdGhlc2UgU0VDVElPTl9TSVpF
-X0JJVFMgYW5kIE1BWF9QSFlTTUVNX1NJWkUKPj4gdG8gdm1jb3JlLiB3aGljaCBtYWtlcyB1c2Vy
-IHNwYWNlIHRvb2xzIG1vcmUgY29tcGF0aWJsZS4KPj4KPj4gQlRXLCBtYWtlZHVtcGZpbGUgaGFz
-IHF1ZXVlZCB0aGUgcmVsYXRlZCBwYXRjaC4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTGl1IEh1YSA8
-c2R1LmxpdUBodWF3ZWkuY29tPgo+PiAtLS0KPj4gIGtlcm5lbC9rZXhlYy5jIHwgMiArKwo+PiAg
-MSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEva2VybmVs
-L2tleGVjLmMgYi9rZXJuZWwva2V4ZWMuYwo+PiBpbmRleCBiZjBiOTI5ZS4uOGIxYTE5MyAxMDA2
-NDQKPj4gLS0tIGEva2VybmVsL2tleGVjLmMKPj4gKysrIGIva2VybmVsL2tleGVjLmMKPj4gQEAg
-LTE1NzcsNiArMTU3Nyw4IEBAIHN0YXRpYyBpbnQgX19pbml0IGNyYXNoX3NhdmVfdm1jb3JlaW5m
-b19pbml0KHZvaWQpCj4+ICAJVk1DT1JFSU5GT19MRU5HVEgobWVtX3NlY3Rpb24sIE5SX1NFQ1RJ
-T05fUk9PVFMpOwo+PiAgCVZNQ09SRUlORk9fU1RSVUNUX1NJWkUobWVtX3NlY3Rpb24pOwo+PiAg
-CVZNQ09SRUlORk9fT0ZGU0VUKG1lbV9zZWN0aW9uLCBzZWN0aW9uX21lbV9tYXApOwo+PiArCVZN
-Q09SRUlORk9fTlVNQkVSKE1BWF9QSFlTTUVNX0JJVFMpOwo+PiArCVZNQ09SRUlORk9fTlVNQkVS
-KFNFQ1RJT05fU0laRV9CSVRTKTsKPj4gICNlbmRpZgo+PiAgCVZNQ09SRUlORk9fU1RSVUNUX1NJ
-WkUocGFnZSk7Cj4+ICAJVk1DT1JFSU5GT19TVFJVQ1RfU0laRShwZ2xpc3RfZGF0YSk7Cj4+IC0t
-IAo+PiAxLjkuMAo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwo+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cj4+Cj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-PiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+IAo+IC4KPiAKCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hello Liu,
+
+I rechecked the current code, then I lost the necessity of
+1e93ee75f9d47c219e833210eb31e4a747cc3a8d...
+
+>Sorry, I missed the point.
+>
+>(1)for flatmem model, kernel get the page struct after minusing ARCH_PFN_OFFSET
+> 28 #if defined(CONFIG_FLATMEM)
+> 29
+> 30 #define __pfn_to_page(pfn)      (mem_map + ((pfn) - ARCH_PFN_OFFSET))
+> 31 #define __page_to_pfn(page)     ((unsigned long)((page) - mem_map) + \
+> 32                                  ARCH_PFN_OFFSET)
+>
+>So, 1e93ee75f9d47c219e833210eb31e4a747cc3a8d do no harm.
+
+I understand that the base of the kernel's mem_map is ARCH_PFN_OFFSET
+and makedumpfile gets the its address as:
+
+    dump_mem_map(0, info->max_mapnr, mem_map, 0);
+                ^^^ 
+               doesn't consider the offset
+
+so makedumpfile's mem_map[] has the offset at this point.
+The filtering process(exclude_unnecessary_pages()) doesn't consider the offset
+while the writing process(write_kdump_pages()) considers it.
+This thing will make the gap between the page descriptor and the page itself.
+
+>(2)for discontigmem model
+>
+> 18 #ifndef arch_local_page_offset
+> 19 #define arch_local_page_offset(pfn, nid)        \
+> 20         ((pfn) - NODE_DATA(nid)->node_start_pfn)
+> 21 #endif
+> 22
+> 23 #endif /* CONFIG_DISCONTIGMEM */
+>
+>.....
+>
+> 33 #elif defined(CONFIG_DISCONTIGMEM)
+> 34
+> 35 #define __pfn_to_page(pfn)                      \
+> 36 ({      unsigned long __pfn = (pfn);            \
+> 37         unsigned long __nid = arch_pfn_to_nid(__pfn);  \
+> 38         NODE_DATA(__nid)->node_mem_map + arch_local_page_offset(__pfn, __nid);\
+> 39 })
+>
+>
+>The kernel minuses "NODE_DATA(nid)->node_start_pfn". So relative postion is got
+>for the tranfser.
+
+Hmm, I think the process above just means each NODE_DATA(nid)->node_mem_map
+corresponds to its own region which starts at NODE_DATA(nid)->node_start_pfn.
+It looks kernel's mem_map doesn't have the offest and makedumpfile get it
+as it is, so makedumpfile's mem_map[] has no offset.
+
+>So to get page struct
+>
+>kernel        :  paddr --> pfn  -[consider ARCH_PFN_OFFSET ] -> page
+>makedumpfile  :  paddr -[consider ARCH_PFN_OFFSET] -> pfn  --> page
+
+Why does ARCH_PFN_OFFSET appear here ? I couldn't find the code.
+
+Anyway, the gap between the page descriptor and the page itself will appear
+like flatmem.
+
+>
+>So I think commit 1e93ee75f9d47c219e833210eb31e4a747cc3a8d can fit discontigmem and flatmem.
+>After applying this patch, it also fits sparsemem model. What do you think?
+
+If my understanding is correct, I think we should fix get_mm_flatmem() instead of
+1e93ee75f9d47c219e833210e and your patch like below:
+
+   ...
+   dump_mem_map(0, ARCH_PFN_OFFSET, NOT_MEMMAP_ADDR, 0);
+   dump_mem_map(ARCH_PFN_OFFSET, info->max_mapnr, mem_map, 1);
+   ...
+
+"paddr:0x0 == pfn:0" is easy to understand.
+
+
+Thanks
+Atsushi Kumagai
+
+>
+>Thanks,
+>Liu Hua
+>
+>>
+>> Actually, the similar gap exists in the sparse_mem case as you described,
+>> so I suspect we have to take care of it also for other memory models.
+>>
+>>>>         }
+>>>>
+>>>> So there is no problem in this model since the top of mem_map corresponds to
+>>>> ARCH_PFN_OFFSET, right?
+>>>
+>>> I don't think so. Is it clear for my words above?
+>>>
+>>>>
+>>>>> (2) For discontigmem, it manages the mem_map with node_memblk. commit
+>>>>> 1e93ee75f9d47c21 also does no harm.
+>>>>
+>>>> alloc_node_mem_map() allocates mem_map also for discontigmem, but I can't find
+>>>> any codes to consider ARCH_PFN_OFFSET for this model.
+>>>> So I suspect the mismatch between the pfn for makedumpfile and the actual content
+>>>> of mem_map can exist. Could you explain why this case is OK in more detail?
+>>>>
+>>> Actually I did not test this memory model. I reach my conclusion via the codes.
+>>>
+>>> get_mm_discontigmem
+>>> {
+>>> ....
+>>> for (i = 0; i < vt.numnodes; i++) {  //loop for every node
+>>> 2591                 if (!readmem(VADDR, pgdat + OFFSET(pglist_data.node_start_pfn),
+>>> 2592                     &pfn_start, sizeof pfn_start)) {           //get pfn_start for this node
+>>> ....
+>>> 2596                 if (!readmem(VADDR,pgdat+OFFSET(pglist_data.node_spanned_pages),
+>>> 2597                     &node_spanned_pages, sizeof node_spanned_pages)) { //get the number of pages in this node
+>>>
+>>> 2603                 if (SYMBOL(vmem_map) == NOT_FOUND_SYMBOL) {
+>>> 2604                         if (!readmem(VADDR, pgdat + OFFSET(pglist_data.node_mem_map),  //get the mem_map for this
+>>> node.
+>>> 2605                             &mem_map, sizeof mem_map)) {
+>>> 2606                                 ERRMSG("Can't get mem_map.\n");
+>>> 2607                                 return FALSE;
+>>> 2608                         }
+>>> 2609                 } else
+>>> 2610                         mem_map = vmem_map + (SIZE(page) * pfn_start);
+>>> ....
+>>> }
+>>>
+>>> So I think for discontigmem, makedumpfile can get the start address and length of mem_map from vmcore directly.
+>>> And Everything can go well without ARCH_PFN_OFFSET.
+>>
+>> The same can be said, is it not needed to consider ARCH_PFN_OFFSET
+>> to get a page struct from the mem_map?
+>>
+>>
+>> Thanks
+>> Atsushi Kumagai
+>>
+>>>
+>>> Perhaps I need some tests on discontigmem. Did I explan my idea clearly?
+>>>
+>>>
+>>>
+>>>>
+>>>> Thanks
+>>>> Atsushi Kumagai
+>>>>
+>>>>> What do you think?
+>>>>>
+>>>>> Thanks,
+>>>>> Liu Hua
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
