@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WroSD-0001K4-Pn
- for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:08:38 +0000
+ id 1WroSI-0001Rc-Pe
+ for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:08:43 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 04/13] resource: Provide new functions to walk through
- resources
-Date: Tue,  3 Jun 2014 09:06:53 -0400
-Message-Id: <1401800822-27425-5-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 02/13] kernel: Build bin2c based on config option
+ CONFIG_BUILD_BIN2C
+Date: Tue,  3 Jun 2014 09:06:51 -0400
+Message-Id: <1401800822-27425-3-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -24,191 +24,62 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, hpa@zytor.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, greg@kroah.com, Yinghai Lu <yinghai@kernel.org>, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, hpa@zytor.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, greg@kroah.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-I have added two more functions to walk through resources.
-Current walk_system_ram_range() deals with pfn and /proc/iomem can contain
-partial pages. By dealing in pfn, callback function loses the info that
-last page of a memory range is a partial page and not the full page. So
-I implemented walk_system_ram_res() which returns u64 values to callback
-functions and now it properly return start and end address.
-
-walk_system_ram_range() uses find_next_system_ram() to find the next
-ram resource. This in turn only travels through siblings of top level
-child and does not travers through all the nodes of the resoruce tree. I
-also need another function where I can walk through all the resources,
-for example figure out where "GART" aperture is. Figure out where
-ACPI memory is.
-
-So I wrote another function walk_ram_res() which walks through all
-/proc/iomem resources and returns matches as asked by caller. Caller
-can specify "name" of resource, start and end.
+currently bin2c builds only if CONFIG_IKCONFIG=y. But bin2c will now be
+used by kexec too.  So make it compilation dependent on CONFIG_BUILD_BIN2C
+and this config option can be selected by CONFIG_KEXEC and CONFIG_IKCONFIG.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Cc: Yinghai Lu <yinghai@kernel.org>
 ---
- include/linux/ioport.h |   6 +++
- kernel/resource.c      | 108 +++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 110 insertions(+), 4 deletions(-)
+ arch/x86/Kconfig       | 1 +
+ init/Kconfig           | 5 +++++
+ scripts/basic/Makefile | 2 +-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 5e3a906..a15f7f6 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -237,6 +237,12 @@ extern int iomem_is_exclusive(u64 addr);
- extern int
- walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
- 		void *arg, int (*func)(unsigned long, unsigned long, void *));
-+extern int
-+walk_system_ram_res(u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *));
-+extern int
-+walk_ram_res(char *name, unsigned long flags, u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *));
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 25d2c6f..213308a 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1555,6 +1555,7 @@ source kernel/Kconfig.hz
  
- /* True if any part of r1 overlaps r2 */
- static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 8957d68..b3e3f95 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -59,10 +59,8 @@ static DEFINE_RWLOCK(resource_lock);
- static struct resource *bootmem_resource_free;
- static DEFINE_SPINLOCK(bootmem_resource_lock);
+ config KEXEC
+ 	bool "kexec system call"
++	select BUILD_BIN2C
+ 	---help---
+ 	  kexec is a system call that implements the ability to shutdown your
+ 	  current kernel, and to start another kernel.  It is like a reboot
+diff --git a/init/Kconfig b/init/Kconfig
+index 9d3585b..de59f0e 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -773,8 +773,13 @@ endchoice
  
--static void *r_next(struct seq_file *m, void *v, loff_t *pos)
-+static struct resource *next_resource(struct resource *p)
- {
--	struct resource *p = v;
--	(*pos)++;
- 	if (p->child)
- 		return p->child;
- 	while (!p->sibling && p->parent)
-@@ -70,6 +68,13 @@ static void *r_next(struct seq_file *m, void *v, loff_t *pos)
- 	return p->sibling;
- }
+ endmenu # "RCU Subsystem"
  
-+static void *r_next(struct seq_file *m, void *v, loff_t *pos)
-+{
-+	struct resource *p = v;
-+	(*pos)++;
-+	return (void *)next_resource(p);
-+}
++config BUILD_BIN2C
++	bool
++	default n
 +
- #ifdef CONFIG_PROC_FS
+ config IKCONFIG
+ 	tristate "Kernel .config support"
++	select BUILD_BIN2C
+ 	---help---
+ 	  This option enables the complete Linux kernel ".config" file
+ 	  contents to be saved in the kernel. It provides documentation
+diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
+index afbc1cd..ec10d93 100644
+--- a/scripts/basic/Makefile
++++ b/scripts/basic/Makefile
+@@ -9,7 +9,7 @@
+ # fixdep: 	 Used to generate dependency information during build process
  
- enum { MAX_IORES_LEVEL = 5 };
-@@ -322,7 +327,71 @@ int release_resource(struct resource *old)
+ hostprogs-y	:= fixdep
+-hostprogs-$(CONFIG_IKCONFIG)     += bin2c
++hostprogs-$(CONFIG_BUILD_BIN2C)     += bin2c
+ always		:= $(hostprogs-y)
  
- EXPORT_SYMBOL(release_resource);
- 
--#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
-+/*
-+ * Finds the lowest iomem reosurce exists with-in [res->start.res->end)
-+ * the caller must specify res->start, res->end, res->flags and "name".
-+ * If found, returns 0, res is overwritten, if not found, returns -1.
-+ * This walks through whole tree and not just first level children.
-+ */
-+static int find_next_iomem_res(struct resource *res, char *name)
-+{
-+	resource_size_t start, end;
-+	struct resource *p;
-+
-+	BUG_ON(!res);
-+
-+	start = res->start;
-+	end = res->end;
-+	BUG_ON(start >= end);
-+
-+	read_lock(&resource_lock);
-+	p = &iomem_resource;
-+	while ((p = next_resource(p))) {
-+		if (p->flags != res->flags)
-+			continue;
-+		if (name && strcmp(p->name, name))
-+			continue;
-+		if (p->start > end) {
-+			p = NULL;
-+			break;
-+		}
-+		if ((p->end >= start) && (p->start < end))
-+			break;
-+	}
-+
-+	read_unlock(&resource_lock);
-+	if (!p)
-+		return -1;
-+	/* copy data */
-+	if (res->start < p->start)
-+		res->start = p->start;
-+	if (res->end > p->end)
-+		res->end = p->end;
-+	return 0;
-+}
-+
-+int walk_ram_res(char *name, unsigned long flags, u64 start, u64 end,
-+		void *arg, int (*func)(u64, u64, void *))
-+{
-+	struct resource res;
-+	u64 orig_end;
-+	int ret = -1;
-+
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	orig_end = res.end;
-+	while ((res.start < res.end) &&
-+		(find_next_iomem_res(&res, name) >= 0)) {
-+		ret = (*func)(res.start, res.end, arg);
-+		if (ret)
-+			break;
-+		res.start = res.end + 1;
-+		res.end = orig_end;
-+	}
-+	return ret;
-+}
-+
- /*
-  * Finds the lowest memory reosurce exists within [res->start.res->end)
-  * the caller must specify res->start, res->end, res->flags and "name".
-@@ -367,6 +436,37 @@ static int find_next_system_ram(struct resource *res, char *name)
- /*
-  * This function calls callback against all memory range of "System RAM"
-  * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
-+ * Now, this function is only for "System RAM". This function deals with
-+ * full ranges and not pfn. If resources are not pfn aligned, dealing
-+ * with pfn can truncate ranges.
-+ */
-+int walk_system_ram_res(u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *))
-+{
-+	struct resource res;
-+	u64 orig_end;
-+	int ret = -1;
-+
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	orig_end = res.end;
-+	while ((res.start < res.end) &&
-+		(find_next_system_ram(&res, "System RAM") >= 0)) {
-+		ret = (*func)(res.start, res.end, arg);
-+		if (ret)
-+			break;
-+		res.start = res.end + 1;
-+		res.end = orig_end;
-+	}
-+	return ret;
-+}
-+
-+#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
-+
-+/*
-+ * This function calls callback against all memory range of "System RAM"
-+ * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
-  * Now, this function is only for "System RAM".
-  */
- int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
+ # fixdep is needed to compile other host programs
 -- 
 1.9.0
 
