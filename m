@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WroSN-0001Ty-Pn
- for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:08:49 +0000
+ id 1WroW9-0003yV-D0
+ for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:12:42 +0000
+Date: Tue, 3 Jun 2014 09:12:03 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 10/13] kexec: Load and Relocate purgatory at kernel load time
-Date: Tue,  3 Jun 2014 09:06:59 -0400
-Message-Id: <1401800822-27425-11-git-send-email-vgoyal@redhat.com>
-In-Reply-To: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
+ kernel loading
+Message-ID: <20140603131203.GA23395@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,735 +20,439 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, hpa@zytor.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, greg@kroah.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, hpa@zytor.com, bp@alien8.de, ebiederm@xmission.com, greg@kroah.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-Load purgatory code in RAM and relocate it based on the location. Relocation
-code has been inspired by module relocation code and purgatory relocation
-code in kexec-tools.
+On Tue, Jun 03, 2014 at 09:06:49AM -0400, Vivek Goyal wrote:
+> Hi,
+> 
+> This is V3 of the patchset. Previous versions were posted here.
+> 
+> V1: https://lkml.org/lkml/2013/11/20/540
+> V2: https://lkml.org/lkml/2014/1/27/331
+> 
+> Changes since v2:
+> 
+> - Took care of most of the review comments from V2.
+> - Added support for kexec/kdump on EFI systems.
+> - Dropped support for loading ELF vmlinux.
+> 
+> This patch series is generated on top of 3.15.0-rc8. It also requires a
+> two patch cleanup series which is sitting in -tip tree here.
 
-Also compute the checksums of loaded kexec segments and store them in
-purgatory.
+I used following kexec-tools patches to test kernel changes.
 
-Arch independent code provides this functionality so that arch dependent
-bootloaders can make use of it.
+Thanks
+Vivek
 
-Helper functions are provided to get/set symbol values in purgatory which
-are used by bootloaders later to set things like stack and entry point
-of second kernel etc.
+
+kexec-tools: Provide an option to make use of new system call
+
+This patch provides and option --use-kexec2-syscall, to force use of
+new system call for kexec. Default is to continue to use old syscall.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- arch/x86/Kconfig                   |   2 +
- arch/x86/kernel/machine_kexec_64.c |  82 +++++++
- include/linux/kexec.h              |  31 +++
- kernel/kexec.c                     | 484 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 599 insertions(+)
+ kexec/arch/x86_64/kexec-bzImage64.c |   86 +++++++++++++++++++++++++
+ kexec/kexec-syscall.h               |   31 +++++++++
+ kexec/kexec.c                       |  123 +++++++++++++++++++++++++++++++++++-
+ kexec/kexec.h                       |    9 ++
+ 4 files changed, 246 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 213308a..0f24b61 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1556,6 +1556,8 @@ source kernel/Kconfig.hz
- config KEXEC
- 	bool "kexec system call"
- 	select BUILD_BIN2C
-+	select CRYPTO
-+	select CRYPTO_SHA256
- 	---help---
- 	  kexec is a system call that implements the ability to shutdown your
- 	  current kernel, and to start another kernel.  It is like a reboot
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index d9c5cf0..711c1fb 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -337,3 +337,85 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 		return kexec_file_type[idx].cleanup(image);
- 	return 0;
+Index: kexec-tools/kexec/kexec.c
+===================================================================
+--- kexec-tools.orig/kexec/kexec.c	2014-06-02 14:34:16.719774316 -0400
++++ kexec-tools/kexec/kexec.c	2014-06-02 14:34:42.009036315 -0400
+@@ -51,6 +51,7 @@
+ unsigned long long mem_min = 0;
+ unsigned long long mem_max = ULONG_MAX;
+ static unsigned long kexec_flags = 0;
++static unsigned long kexec2_flags = 0;
+ int kexec_debug = 0;
+ 
+ void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
+@@ -787,6 +788,19 @@ static int my_load(const char *type, int
+ 	return result;
  }
-+
-+/* Apply purgatory relocations */
-+int arch_kexec_apply_relocations_add(Elf64_Shdr *sechdrs,
-+				unsigned int nr_sections, unsigned int relsec)
+ 
++static int kexec2_unload(unsigned long kexec2_flags)
 +{
-+	unsigned int i;
-+	Elf64_Rela *rel = (void *)sechdrs[relsec].sh_offset;
-+	Elf64_Sym *sym;
-+	void *location;
-+	Elf64_Shdr *section, *symtab;
-+	unsigned long address, sec_base, value;
++	int ret = 0;
 +
-+	/* Section to which relocations apply */
-+	section = &sechdrs[sechdrs[relsec].sh_info];
-+
-+	/* Associated symbol table */
-+	symtab = &sechdrs[sechdrs[relsec].sh_link];
-+
-+	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rel); i++) {
-+
-+		/*
-+		 * This is location (->sh_offset) to update. This is temporary
-+		 * buffer where section is currently loaded. This will finally
-+		 * be loaded to a different address later (pointed to
-+		 * by ->sh_addr. kexec takes care of moving it
-+		 * (kexec_load_segment()).
-+		 */
-+		location = (void *)(section->sh_offset + rel[i].r_offset);
-+
-+		/* Final address of the location */
-+		address = section->sh_addr + rel[i].r_offset;
-+
-+		sym = (Elf64_Sym *)symtab->sh_offset +
-+				ELF64_R_SYM(rel[i].r_info);
-+
-+		if (sym->st_shndx == SHN_UNDEF || sym->st_shndx == SHN_COMMON)
-+			return -ENOEXEC;
-+
-+		if (sym->st_shndx == SHN_ABS)
-+			sec_base = 0;
-+		else if (sym->st_shndx >= nr_sections)
-+			return -ENOEXEC;
-+		else
-+			sec_base = sechdrs[sym->st_shndx].sh_addr;
-+
-+		value = sym->st_value;
-+		value += sec_base;
-+		value += rel[i].r_addend;
-+
-+		switch (ELF64_R_TYPE(rel[i].r_info)) {
-+		case R_X86_64_NONE:
-+			break;
-+		case R_X86_64_64:
-+			*(u64 *)location = value;
-+			break;
-+		case R_X86_64_32:
-+			*(u32 *)location = value;
-+			if (value != *(u32 *)location)
-+				goto overflow;
-+			break;
-+		case R_X86_64_32S:
-+			*(s32 *)location = value;
-+			if ((s64)value != *(s32 *)location)
-+				goto overflow;
-+			break;
-+		case R_X86_64_PC32:
-+			value -= (u64)address;
-+			*(u32 *)location = value;
-+			break;
-+		default:
-+			pr_err("kexec: Unknown rela relocation: %llu\n",
-+					ELF64_R_TYPE(rel[i].r_info));
-+			return -ENOEXEC;
-+		}
++	ret = kexec_file_load(-1, -1, NULL, 0, kexec2_flags);
++	if (ret != 0) {
++		/* The unload failed, print some debugging information */
++		fprintf(stderr, "kexec_file_load(unload) failed\n: %s\n",
++			strerror(errno));
 +	}
-+	return 0;
-+
-+overflow:
-+	pr_err("kexec: overflow in relocation type %d value 0x%lx\n",
-+		(int)ELF64_R_TYPE(rel[i].r_info), value);
-+	return -ENOEXEC;
-+}
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 3790519..7228873 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -10,6 +10,7 @@
- #include <linux/ioport.h>
- #include <linux/elfcore.h>
- #include <linux/elf.h>
-+#include <linux/module.h>
- #include <asm/kexec.h>
- 
- /* Verify architecture specific macros are defined */
-@@ -95,6 +96,27 @@ struct compat_kexec_segment {
- };
- #endif
- 
-+struct kexec_sha_region {
-+	unsigned long start;
-+	unsigned long len;
-+};
-+
-+struct purgatory_info {
-+	/* Pointer to elf header of read only purgatory */
-+	Elf_Ehdr *ehdr;
-+
-+	/* Pointer to purgatory sechdrs which are modifiable */
-+	Elf_Shdr *sechdrs;
-+	/*
-+	 * Temporary buffer location where purgatory is loaded and relocated
-+	 * This memory can be freed post image load
-+	 */
-+	void *purgatory_buf;
-+
-+	/* Address where purgatory is finally loaded and is executed from */
-+	unsigned long purgatory_load_addr;
-+};
-+
- struct kimage {
- 	kimage_entry_t head;
- 	kimage_entry_t *entry;
-@@ -143,6 +165,9 @@ struct kimage {
- 
- 	/* Image loader handling the kernel can store a pointer here */
- 	void *image_loader_data;
-+
-+	/* Information for loading purgatory */
-+	struct purgatory_info purgatory_info;
- };
- 
- /*
-@@ -190,6 +215,12 @@ extern int kexec_add_buffer(struct kimage *image, char *buffer,
- 			unsigned long *load_addr);
- extern struct page *kimage_alloc_control_pages(struct kimage *image,
- 						unsigned int order);
-+extern int kexec_load_purgatory(struct kimage *image, unsigned long min,
-+		unsigned long max, int top_down, unsigned long *load_addr);
-+extern int kexec_purgatory_get_set_symbol(struct kimage *image,
-+		const char *name, void *buf, unsigned int size, bool get_value);
-+extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
-+					const char *name);
- extern void crash_kexec(struct pt_regs *);
- int kexec_should_crash(struct task_struct *);
- void crash_save_cpu(struct pt_regs *regs, int cpu);
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 1ad4d60..7f2e393 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -39,6 +39,9 @@
- #include <asm/io.h>
- #include <asm/sections.h>
- 
-+#include <crypto/hash.h>
-+#include <crypto/sha.h>
-+
- /* Per cpu memory for storing cpu states in case of system crash. */
- note_buf_t __percpu *crash_notes;
- 
-@@ -51,6 +54,15 @@ size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
- /* Flag to indicate we are going to kexec a new kernel */
- bool kexec_in_progress = false;
- 
-+/*
-+ * Declare these symbols weak so that if architecture provides a purgatory,
-+ * these will be overridden.
-+ */
-+char __weak kexec_purgatory[0];
-+size_t __weak kexec_purgatory_size = 0;
-+
-+static int kexec_calculate_store_digests(struct kimage *image);
-+
- /* Location of the reserved area for the crash kernel */
- struct resource crashk_res = {
- 	.name  = "Crash kernel",
-@@ -336,6 +348,15 @@ arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return;
- }
- 
-+/* Apply relocations for rela section */
-+int __attribute__ ((weak))
-+arch_kexec_apply_relocations_add(Elf_Shdr *sechdrs, unsigned int nr_sections,
-+					unsigned int relsec)
-+{
-+	pr_err(KERN_ERR "kexec: REL relocation unsupported\n");
-+	return -ENOEXEC;
-+}
-+
- /*
-  * Free up tempory buffers allocated which are not needed after image has
-  * been loaded.
-@@ -355,6 +376,12 @@ static void kimage_file_post_load_cleanup(struct kimage *image)
- 	vfree(image->cmdline_buf);
- 	image->cmdline_buf = NULL;
- 
-+	vfree(image->purgatory_info.purgatory_buf);
-+	image->purgatory_info.purgatory_buf = NULL;
-+
-+	vfree(image->purgatory_info.sechdrs);
-+	image->purgatory_info.sechdrs = NULL;
-+
- 	/* See if architcture has anything to cleanup post load */
- 	arch_kimage_file_post_load_cleanup(image);
- }
-@@ -1370,6 +1397,10 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 	if (ret)
- 		goto out;
- 
-+	ret = kexec_calculate_store_digests(image);
-+	if (ret)
-+		goto out;
-+
- 	for (i = 0; i < image->nr_segments; i++) {
- 		struct kexec_segment *ksegment;
- 
-@@ -2131,6 +2162,459 @@ int kexec_add_buffer(struct kimage *image, char *buffer,
- 	return 0;
- }
- 
-+/* Calculate and store the digest of segments */
-+static int kexec_calculate_store_digests(struct kimage *image)
-+{
-+	struct crypto_shash *tfm;
-+	struct shash_desc *desc;
-+	int ret = 0, i, j, zero_buf_sz = 256, sha_region_sz;
-+	size_t desc_size, nullsz;
-+	char *digest = NULL;
-+	void *zero_buf;
-+	struct kexec_sha_region *sha_regions;
-+
-+	tfm = crypto_alloc_shash("sha256", 0, 0);
-+	if (IS_ERR(tfm)) {
-+		ret = PTR_ERR(tfm);
-+		goto out;
-+	}
-+
-+	desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
-+	desc = kzalloc(desc_size, GFP_KERNEL);
-+	if (!desc) {
-+		ret = -ENOMEM;
-+		goto out_free_tfm;
-+	}
-+
-+	zero_buf = kzalloc(zero_buf_sz, GFP_KERNEL);
-+	if (!zero_buf) {
-+		ret = -ENOMEM;
-+		goto out_free_desc;
-+	}
-+
-+	sha_region_sz = KEXEC_SEGMENT_MAX * sizeof(struct kexec_sha_region);
-+	sha_regions = vzalloc(sha_region_sz);
-+	if (!sha_regions)
-+		goto out_free_zero_buf;
-+
-+	desc->tfm   = tfm;
-+	desc->flags = 0;
-+
-+	ret = crypto_shash_init(desc);
-+	if (ret < 0)
-+		goto out_free_sha_regions;
-+
-+	digest = kzalloc(SHA256_DIGEST_SIZE, GFP_KERNEL);
-+	if (!digest) {
-+		ret = -ENOMEM;
-+		goto out_free_sha_regions;
-+	}
-+
-+	/* Traverse through all segments */
-+	for (j = i = 0; i < image->nr_segments; i++) {
-+		struct kexec_segment *ksegment;
-+		ksegment = &image->segment[i];
-+
-+		/*
-+		 * Skip purgatory as it will be modified once we put digest
-+		 * info in purgatory
-+		 */
-+		if (ksegment->kbuf == image->purgatory_info.purgatory_buf)
-+			continue;
-+
-+		ret = crypto_shash_update(desc, ksegment->kbuf,
-+						ksegment->bufsz);
-+		if (ret)
-+			break;
-+
-+		nullsz = ksegment->memsz - ksegment->bufsz;
-+		while (nullsz) {
-+			unsigned long bytes = nullsz;
-+			if (bytes > zero_buf_sz)
-+				bytes = zero_buf_sz;
-+			ret = crypto_shash_update(desc, zero_buf, bytes);
-+			if (ret)
-+				break;
-+			nullsz -= bytes;
-+		}
-+
-+		if (ret)
-+			break;
-+
-+		sha_regions[j].start = ksegment->mem;
-+		sha_regions[j].len = ksegment->memsz;
-+		j++;
-+	}
-+
-+	if (!ret) {
-+		ret = crypto_shash_final(desc, digest);
-+		if (ret)
-+			goto out_free_sha_regions;
-+		ret = kexec_purgatory_get_set_symbol(image, "sha_regions",
-+				sha_regions, sha_region_sz, 0);
-+		if (ret)
-+			goto out_free_sha_regions;
-+
-+		ret = kexec_purgatory_get_set_symbol(image, "sha256_digest",
-+				digest, SHA256_DIGEST_SIZE, 0);
-+		if (ret)
-+			goto out_free_sha_regions;
-+	}
-+
-+out_free_sha_regions:
-+	vfree(sha_regions);
-+out_free_zero_buf:
-+	kfree(zero_buf);
-+out_free_desc:
-+	kfree(desc);
-+out_free_tfm:
-+	kfree(tfm);
-+out:
-+	kfree(digest);
 +	return ret;
 +}
 +
-+/* Actually load and relcoate purgatory. Lot of code taken from kexec-tools */
-+static int elf_rel_load_relocate(struct kimage *image, unsigned long min,
-+				unsigned long max, int top_down)
-+{
-+	struct purgatory_info *pi = &image->purgatory_info;
-+	unsigned long align, buf_align, bss_align, buf_sz, bss_sz, bss_pad;
-+	unsigned long memsz, entry, load_addr, data_addr, bss_addr, off;
-+	unsigned char *buf_addr, *src;
-+	int i, ret = 0, entry_sidx = -1;
-+	Elf_Shdr *sechdrs = NULL, *sechdrs_c;
-+	void *purgatory_buf = NULL;
+ static int k_unload (unsigned long kexec_flags)
+ {
+ 	int result;
+@@ -925,6 +939,7 @@ void usage(void)
+ 	       "                      (0 means it's not jump back or\n"
+ 	       "                      preserve context)\n"
+ 	       "                      to original kernel.\n"
++	       " -s --use-kexec2-syscall Use new syscall for kexec operation\n"
+ 	       " -d, --debug           Enable debugging to help spot a failure.\n"
+ 	       "\n"
+ 	       "Supported kernel file types and options: \n");
+@@ -1072,6 +1087,75 @@ char *concat_cmdline(const char *base, c
+ 	return cmdline;
+ }
+ 
++/* New file based kexec system call related code */
++static int kexec2_load(int fileind, int argc, char **argv,
++			unsigned long flags) {
 +
-+	/*
-+	 * sechdrs_c points to section headers in purgatory and are read
-+	 * only. No modifications allowed.
-+	 */
-+	sechdrs_c = (void *)pi->ehdr + pi->ehdr->e_shoff;
++	char *kernel;
++	int kernel_fd, i;
++	struct kexec_info info;
++	int ret = 0;
++	char *kernel_buf;
++	off_t kernel_size;
 +
-+	/*
-+	 * We can not modify sechdrs_c[] and its fields. It is read only.
-+	 * Copy it over to a local copy where one can store some temporary
-+	 * data and free it at the end. We need to modify ->sh_addr and
-+	 * ->sh_offset fields to keep track permanent and temporary locations
-+	 * of sections.
-+	 */
-+	sechdrs = vzalloc(pi->ehdr->e_shnum * sizeof(Elf_Shdr));
-+	if (!sechdrs)
-+		return -ENOMEM;
++	memset(&info, 0, sizeof(info));
++	info.segment = NULL;
++	info.nr_segments = 0;
++	info.entry = NULL;
++	info.backup_start = 0;
++	info.kexec_flags = flags;
 +
-+	memcpy(sechdrs, sechdrs_c, pi->ehdr->e_shnum * sizeof(Elf_Shdr));
++	info.file_mode = 1;
++	info.initrd_fd = -1;
 +
-+	/*
-+	 * We seem to have multiple copies of sections. First copy is which
-+	 * is embedded in kernel in read only section. Some of these sections
-+	 * will be copied to a temporary buffer and relocated. And these
-+	 * sections will finally be copied to their final detination at
-+	 * segment load time.
-+	 *
-+	 * Use ->sh_offset to reflect section address in memory. It will
-+	 * point to original read only copy if section is not allocatable.
-+	 * Otherwise it will point to temporary copy which will be relocated.
-+	 *
-+	 * Use ->sh_addr to contain final address of the section where it
-+	 * will go during execution time.
-+	 */
-+	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-+		if (sechdrs[i].sh_type == SHT_NOBITS)
-+			continue;
-+
-+		sechdrs[i].sh_offset = (unsigned long)pi->ehdr +
-+						sechdrs[i].sh_offset;
++	if (argc - fileind <= 0) {
++		fprintf(stderr, "No kernel specified\n");
++		usage();
++		return -1;
 +	}
 +
-+	entry = pi->ehdr->e_entry;
-+	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-+		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
-+			continue;
++	kernel = argv[fileind];
 +
-+		if (!(sechdrs[i].sh_flags & SHF_EXECINSTR))
-+			continue;
++	kernel_fd = open(kernel, O_RDONLY);
++	if (kernel_fd == -1) {
++		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
++				strerror(errno));
++		return -1;
++	}
 +
-+		/* Make entry section relative */
-+		if (sechdrs[i].sh_addr <= pi->ehdr->e_entry &&
-+		    ((sechdrs[i].sh_addr + sechdrs[i].sh_size) >
-+		     pi->ehdr->e_entry)) {
-+			entry_sidx = i;
-+			entry -= sechdrs[i].sh_addr;
++	/* slurp in the input kernel */
++	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
++
++	for (i = 0; i < file_types; i++) {
++		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
 +			break;
-+		}
 +	}
 +
-+	/* Find the RAM size requirements of relocatable object */
-+	buf_align = 1;
-+	bss_align = 1;
-+	buf_sz = 0;
-+	bss_sz = 0;
-+
-+	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-+		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
-+			continue;
-+
-+		align = sechdrs[i].sh_addralign;
-+		if (sechdrs[i].sh_type != SHT_NOBITS) {
-+			if (buf_align < align)
-+				buf_align = align;
-+			buf_sz = ALIGN(buf_sz, align);
-+			buf_sz += sechdrs[i].sh_size;
-+		} else {
-+			if (bss_align < align)
-+				bss_align = align;
-+			bss_sz = ALIGN(bss_sz, align);
-+			bss_sz += sechdrs[i].sh_size;
-+		}
++	if (i == file_types) {
++		fprintf(stderr, "Cannot determine the file type " "of %s\n",
++				kernel);
++		return -1;
 +	}
 +
-+	if (buf_align < bss_align)
-+		buf_align = bss_align;
-+	bss_pad = 0;
-+	if (buf_sz & (bss_align - 1))
-+		bss_pad = bss_align - (buf_sz & (bss_align - 1));
-+
-+	memsz = buf_sz + bss_pad + bss_sz;
-+
-+	/* Allocate buffer for purgatory */
-+	purgatory_buf = vzalloc(buf_sz);
-+	if (!purgatory_buf) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	/* Add buffer to segment list */
-+	ret = kexec_add_buffer(image, purgatory_buf, buf_sz, memsz,
-+				buf_align, min, max, top_down,
-+				&pi->purgatory_load_addr);
-+	if (ret)
-+		goto out;
-+
-+	/* Load SHF_ALLOC sections */
-+	buf_addr = purgatory_buf;
-+	load_addr = pi->purgatory_load_addr;
-+	data_addr = load_addr;
-+	bss_addr = load_addr + buf_sz + bss_pad;
-+
-+	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-+		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
-+			continue;
-+
-+		align = sechdrs[i].sh_addralign;
-+		if (sechdrs[i].sh_type != SHT_NOBITS) {
-+			data_addr = ALIGN(data_addr, align);
-+			off = data_addr - load_addr;
-+			/* We have already modifed ->sh_offset to keep addr */
-+			src = (char *) sechdrs[i].sh_offset;
-+			memcpy(buf_addr + off, src, sechdrs[i].sh_size);
-+
-+			/* Store load address and source address of section */
-+			sechdrs[i].sh_addr = data_addr;
-+
-+			/*
-+			 * This section got copied to temporary buffer. Update
-+			 * ->sh_offset accordingly.
-+			 */
-+			sechdrs[i].sh_offset = (unsigned long)(buf_addr + off);
-+
-+			/* Advance to the next address */
-+			data_addr += sechdrs[i].sh_size;
-+		} else {
-+			bss_addr = ALIGN(bss_addr, align);
-+			sechdrs[i].sh_addr = bss_addr;
-+			bss_addr += sechdrs[i].sh_size;
-+		}
-+	}
-+
-+	/* update entry based on entry section position */
-+	if (entry_sidx >= 0)
-+		entry += sechdrs[entry_sidx].sh_addr;
-+
-+	/* Set the entry point of purgatory */
-+	image->start = entry;
-+
-+	/* Apply relocations */
-+	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-+		Elf_Shdr *section, *symtab;
-+
-+		if (sechdrs[i].sh_type != SHT_RELA &&
-+		    sechdrs[i].sh_type != SHT_REL)
-+			continue;
-+
-+		if (sechdrs[i].sh_info > pi->ehdr->e_shnum ||
-+		    sechdrs[i].sh_link > pi->ehdr->e_shnum) {
-+			ret = -ENOEXEC;
-+			goto out;
-+		}
-+
-+		section = &sechdrs[sechdrs[i].sh_info];
-+		symtab = &sechdrs[sechdrs[i].sh_link];
-+
-+		if (!(section->sh_flags & SHF_ALLOC))
-+			continue;
-+
-+		if (symtab->sh_link > pi->ehdr->e_shnum)
-+			/* Invalid section number? */
-+			continue;
-+
-+		ret = -EOPNOTSUPP;
-+		if (sechdrs[i].sh_type == SHT_RELA)
-+			ret = arch_kexec_apply_relocations_add(sechdrs,
-+							pi->ehdr->e_shnum, i);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	pi->sechdrs = sechdrs;
-+	pi->purgatory_buf = purgatory_buf;
-+	return ret;
-+out:
-+	vfree(sechdrs);
-+	vfree(purgatory_buf);
-+	return ret;
-+}
-+
-+/* Load relocatable purgatory object and relocate it appropriately */
-+int kexec_load_purgatory(struct kimage *image, unsigned long min,
-+		unsigned long max, int top_down, unsigned long *load_addr)
-+{
-+	struct purgatory_info *pi = &image->purgatory_info;
-+	int ret;
-+
-+	if (kexec_purgatory_size <= 0)
-+		return -EINVAL;
-+
-+	if (kexec_purgatory_size < sizeof(Elf_Ehdr))
-+		return -ENOEXEC;
-+
-+	pi->ehdr = (Elf_Ehdr *)kexec_purgatory;
-+
-+	if (memcmp(pi->ehdr->e_ident, ELFMAG, SELFMAG) != 0
-+	    || pi->ehdr->e_type != ET_REL
-+	    || !elf_check_arch(pi->ehdr)
-+	    || pi->ehdr->e_shentsize != sizeof(Elf_Shdr))
-+		return -ENOEXEC;
-+
-+	if (pi->ehdr->e_shoff >= kexec_purgatory_size
-+	    || (pi->ehdr->e_shnum * sizeof(Elf_Shdr) >
-+	    kexec_purgatory_size - pi->ehdr->e_shoff))
-+		return -ENOEXEC;
-+
-+	ret = elf_rel_load_relocate(image, min, max, top_down);
-+	if (ret)
++	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
++	if (ret < 0) {
++		fprintf(stderr, "Cannot load %s\n", kernel);
 +		return ret;
++	}
 +
-+	*load_addr = image->purgatory_info.purgatory_load_addr;
-+	return 0;
++	if (!is_kexec_file_load_implemented()) {
++		fprintf(stderr, "syscall kexec_file_load not available.\n");
++		return -1;
++	}
++
++	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line,
++			info.command_line_len, info.kexec_flags);
++	if (ret != 0)
++		fprintf(stderr, "kexec_file_load failed: %s\n",
++					strerror(errno));
++	return ret;
 +}
 +
-+static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
-+						const char *name)
-+{
-+	Elf_Sym *syms;
-+	Elf_Shdr *sechdrs;
-+	Elf_Ehdr *ehdr;
-+	int i, k;
-+	const char *strtab;
-+
-+	if (!pi->sechdrs || !pi->ehdr)
-+		return NULL;
-+
-+	sechdrs = pi->sechdrs;
-+	ehdr = pi->ehdr;
-+
-+	for (i = 0; i < ehdr->e_shnum; i++) {
-+		if (sechdrs[i].sh_type != SHT_SYMTAB)
-+			continue;
-+
-+		if (sechdrs[i].sh_link > ehdr->e_shnum)
-+			/* Invalid stratab section number */
-+			continue;
-+		strtab = (char *)sechdrs[sechdrs[i].sh_link].sh_offset;
-+		syms = (Elf_Sym *)sechdrs[i].sh_offset;
-+
-+		/* Go through symbols for a match */
-+		for (k = 0; k < sechdrs[i].sh_size/sizeof(Elf_Sym); k++) {
-+			if (ELF_ST_BIND(syms[k].st_info) != STB_GLOBAL)
-+				continue;
-+
-+			if (strcmp(strtab + syms[k].st_name, name) != 0)
-+				continue;
-+
-+			if (syms[k].st_shndx == SHN_UNDEF ||
-+			    syms[k].st_shndx > ehdr->e_shnum) {
-+				pr_debug("Symbol: %s has bad section index %d.\n",
-+						name, syms[k].st_shndx);
-+				return NULL;
-+			}
-+
-+			/* Found the symbol we are looking for */
-+			return &syms[k];
+ 
+ int main(int argc, char *argv[])
+ {
+@@ -1083,6 +1167,7 @@ int main(int argc, char *argv[])
+ 	int do_ifdown = 0;
+ 	int do_unload = 0;
+ 	int do_reuse_initrd = 0;
++	int do_use_kexec2_syscall = 0;
+ 	void *entry = 0;
+ 	char *type = 0;
+ 	char *endptr;
+@@ -1095,6 +1180,23 @@ int main(int argc, char *argv[])
+ 	};
+ 	static const char short_options[] = KEXEC_ALL_OPT_STR;
+ 
++	/*
++	 * First check if --use-kexec2-syscall is set. That changes lot of
++	 * things
++	 */
++	while ((opt = getopt_long(argc, argv, short_options,
++				  options, 0)) != -1) {
++		switch(opt) {
++		case OPT_USE_KEXEC2_SYSCALL:
++			do_use_kexec2_syscall = 1;
++			break;
 +		}
 +	}
 +
-+	return NULL;
-+}
++	/* Reset getopt for the next pass. */
++	opterr = 1;
++	optind = 1;
 +
-+void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name)
+ 	while ((opt = getopt_long(argc, argv, short_options,
+ 				  options, 0)) != -1) {
+ 		switch(opt) {
+@@ -1127,6 +1229,8 @@ int main(int argc, char *argv[])
+ 			do_shutdown = 0;
+ 			do_sync = 0;
+ 			do_unload = 1;
++			if (do_use_kexec2_syscall)
++				kexec2_flags |= KEXEC_FILE_UNLOAD;
+ 			break;
+ 		case OPT_EXEC:
+ 			do_load = 0;
+@@ -1169,7 +1273,10 @@ int main(int argc, char *argv[])
+ 			do_exec = 0;
+ 			do_shutdown = 0;
+ 			do_sync = 0;
+-			kexec_flags = KEXEC_ON_CRASH;
++			if (do_use_kexec2_syscall)
++				kexec2_flags |= KEXEC_FILE_ON_CRASH;
++			else
++				kexec_flags = KEXEC_ON_CRASH;
+ 			break;
+ 		case OPT_MEM_MIN:
+ 			mem_min = strtoul(optarg, &endptr, 0);
+@@ -1194,6 +1301,9 @@ int main(int argc, char *argv[])
+ 		case OPT_REUSE_INITRD:
+ 			do_reuse_initrd = 1;
+ 			break;
++		case OPT_USE_KEXEC2_SYSCALL:
++			/* We already parsed it. Nothing to do. */
++			break;
+ 		default:
+ 			break;
+ 		}
+@@ -1238,10 +1348,17 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	if (do_unload) {
+-		result = k_unload(kexec_flags);
++		if (do_use_kexec2_syscall)
++			result = kexec2_unload(kexec2_flags);
++		else
++			result = k_unload(kexec_flags);
+ 	}
+ 	if (do_load && (result == 0)) {
+-		result = my_load(type, fileind, argc, argv, kexec_flags, entry);
++		if (do_use_kexec2_syscall)
++			result = kexec2_load(fileind, argc, argv, kexec2_flags);
++		else
++			result = my_load(type, fileind, argc, argv,
++						kexec_flags, entry);
+ 	}
+ 	/* Don't shutdown unless there is something to reboot to! */
+ 	if ((result == 0) && (do_shutdown || do_exec) && !kexec_loaded()) {
+Index: kexec-tools/kexec/kexec.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec.h	2014-06-02 14:34:16.719774316 -0400
++++ kexec-tools/kexec/kexec.h	2014-06-02 14:34:42.010036325 -0400
+@@ -156,6 +156,13 @@ struct kexec_info {
+ 	unsigned long kexec_flags;
+ 	unsigned long backup_src_start;
+ 	unsigned long backup_src_size;
++	/* Set to 1 if we are using kexec2 syscall */
++	unsigned long file_mode :1;
++
++	/* Filled by kernel image processing code */
++	int initrd_fd;
++	char *command_line;
++	int command_line_len;
+ };
+ 
+ struct arch_map_entry {
+@@ -207,6 +214,7 @@ extern int file_types;
+ #define OPT_UNLOAD		'u'
+ #define OPT_TYPE		't'
+ #define OPT_PANIC		'p'
++#define OPT_USE_KEXEC2_SYSCALL	's'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
+ #define OPT_REUSE_INITRD	258
+@@ -230,6 +238,7 @@ extern int file_types;
+ 	{ "mem-min",		1, 0, OPT_MEM_MIN }, \
+ 	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
++	{ "use-kexec2-syscall",	0, 0, OPT_USE_KEXEC2_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 
+ #define KEXEC_OPT_STR "h?vdfxluet:p"
+Index: kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/x86_64/kexec-bzImage64.c	2014-06-02 14:34:16.719774316 -0400
++++ kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c	2014-06-02 14:34:42.011036336 -0400
+@@ -235,6 +235,89 @@ static int do_bzImage64_load(struct kexe
+ 	return 0;
+ }
+ 
++/* This assumes file is being loaded using file based kexec2 syscall */
++int bzImage64_load_file(int argc, char **argv, struct kexec_info *info)
 +{
-+	struct purgatory_info *pi = &image->purgatory_info;
-+	Elf_Sym *sym;
-+	Elf_Shdr *sechdr;
++	int ret = 0;
++	char *command_line = NULL, *tmp_cmdline = NULL;
++	const char *ramdisk = NULL, *append = NULL;
++	int entry_16bit = 0, entry_32bit = 0;
++	int opt;
++	int command_line_len;
 +
-+	sym = kexec_purgatory_find_symbol(pi, name);
-+	if (!sym)
-+		return ERR_PTR(-EINVAL);
++	/* See options.h -- add any more there, too. */
++	static const struct option options[] = {
++		KEXEC_ARCH_OPTIONS
++		{ "command-line",	1, 0, OPT_APPEND },
++		{ "append",		1, 0, OPT_APPEND },
++		{ "reuse-cmdline",	0, 0, OPT_REUSE_CMDLINE },
++		{ "initrd",		1, 0, OPT_RAMDISK },
++		{ "ramdisk",		1, 0, OPT_RAMDISK },
++		{ "real-mode",		0, 0, OPT_REAL_MODE },
++		{ "entry-32bit",	0, 0, OPT_ENTRY_32BIT },
++		{ 0,			0, 0, 0 },
++	};
++	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
 +
-+	sechdr = &pi->sechdrs[sym->st_shndx];
-+
-+	/*
-+	 * Returns the address where symbol will finally be loaded after
-+	 * kexec_load_segment()
-+	 */
-+	return (void *)(sechdr->sh_addr + sym->st_value);
-+}
-+
-+/*
-+ * Get or set value of a symbol. If "get_value" is true, symbol value is
-+ * returned in buf otherwise symbol value is set based on value in buf.
-+ */
-+int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
-+				void *buf, unsigned int size, bool get_value)
-+{
-+	Elf_Sym *sym;
-+	Elf_Shdr *sechdrs;
-+	struct purgatory_info *pi = &image->purgatory_info;
-+	char *sym_buf;
-+
-+	sym = kexec_purgatory_find_symbol(pi, name);
-+	if (!sym)
-+		return -EINVAL;
-+
-+	if (sym->st_size != size) {
-+		pr_debug("Symbol: %s size is not right\n", name);
-+		return -EINVAL;
++	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
++		switch (opt) {
++		default:
++			/* Ignore core options */
++			if (opt < OPT_ARCH_MAX)
++				break;
++		case OPT_APPEND:
++			append = optarg;
++			break;
++		case OPT_REUSE_CMDLINE:
++			tmp_cmdline = get_command_line();
++			break;
++		case OPT_RAMDISK:
++			ramdisk = optarg;
++			break;
++		case OPT_REAL_MODE:
++			entry_16bit = 1;
++			break;
++		case OPT_ENTRY_32BIT:
++			entry_32bit = 1;
++			break;
++		}
++	}
++	command_line = concat_cmdline(tmp_cmdline, append);
++	if (tmp_cmdline)
++		free(tmp_cmdline);
++	command_line_len = 0;
++	if (command_line) {
++		command_line_len = strlen(command_line) + 1;
++	} else {
++		command_line = strdup("\0");
++		command_line_len = 1;
 +	}
 +
-+	sechdrs = pi->sechdrs;
-+
-+	if (sechdrs[sym->st_shndx].sh_type == SHT_NOBITS) {
-+		pr_debug("Symbol: %s is in a bss section. Cannot get/set\n",
-+					name);
-+		return -EINVAL;
++	if (entry_16bit || entry_32bit) {
++		fprintf(stderr, "Kexec2 syscall does not support 16bit"
++			" or 32bit entry yet\n");
++		ret = -1;
++		goto out;
 +	}
 +
-+	sym_buf = (unsigned char *)sechdrs[sym->st_shndx].sh_offset +
-+					sym->st_value;
++	if (ramdisk) {
++		info->initrd_fd = open(ramdisk, O_RDONLY);
++		if (info->initrd_fd == -1) {
++			fprintf(stderr, "Could not open initrd file %s:%s\n",
++					ramdisk, strerror(errno));
++			ret = -1;
++			goto out;
++		}
++	}
 +
-+	if (get_value)
-+		memcpy((void *)buf, sym_buf, size);
-+	else
-+		memcpy((void *)sym_buf, buf, size);
++	info->command_line = command_line;
++	info->command_line_len = command_line_len;
++	return ret;
++out:
++	free(command_line);
++	return ret;
++}
 +
+ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
+ {
+@@ -247,6 +330,9 @@ int bzImage64_load(int argc, char **argv
+ 	int opt;
+ 	int result;
+ 
++	if (info->file_mode)
++		return bzImage64_load_file(argc, argv, info);
++
+ 	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+Index: kexec-tools/kexec/kexec-syscall.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec-syscall.h	2014-06-02 14:34:16.719774316 -0400
++++ kexec-tools/kexec/kexec-syscall.h	2014-06-02 14:34:42.011036336 -0400
+@@ -53,6 +53,19 @@
+ #endif
+ #endif /*ifndef __NR_kexec_load*/
+ 
++#ifndef __NR_kexec_file_load
++
++#ifdef __x86_64__
++#define __NR_kexec_file_load	317
++#endif
++
++#ifndef __NR_kexec_file_load
++/* system call not available for the arch */
++#define __NR_kexec_file_load	0xffffffff	/* system call not available */
++#endif
++
++#endif /*ifndef __NR_kexec_file_load*/
++
+ struct kexec_segment;
+ 
+ static inline long kexec_load(void *entry, unsigned long nr_segments,
+@@ -61,10 +74,28 @@ static inline long kexec_load(void *entr
+ 	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
+ }
+ 
++static inline int is_kexec_file_load_implemented(void) {
++	if (__NR_kexec_file_load != 0xffffffff)
++		return 1;
 +	return 0;
 +}
++
++static inline long kexec_file_load(int kernel_fd, int initrd_fd,
++			const char *cmdline_ptr, unsigned long cmdline_len,
++			unsigned long flags)
++{
++	return (long) syscall(__NR_kexec_file_load, kernel_fd, initrd_fd,
++				cmdline_ptr, cmdline_len, flags);
++}
++
+ #define KEXEC_ON_CRASH		0x00000001
+ #define KEXEC_PRESERVE_CONTEXT	0x00000002
+ #define KEXEC_ARCH_MASK		0xffff0000
  
- /*
-  * Move into place and start executing a preloaded standalone
--- 
-1.9.0
-
++/* Flags for kexec file based system call */
++#define KEXEC_FILE_UNLOAD	0x00000001
++#define KEXEC_FILE_ON_CRASH	0x00000002
++
+ /* These values match the ELF architecture values. 
+  * Unless there is a good reason that should continue to be the case.
+  */
 
 _______________________________________________
 kexec mailing list
