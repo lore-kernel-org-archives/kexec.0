@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WriNL-00069r-HT
- for kexec@lists.infradead.org; Tue, 03 Jun 2014 06:39:12 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile: ARM: get correct mem_map offset
-Date: Tue, 3 Jun 2014 06:37:20 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97216F04@BPXM01GP.gisp.nec.co.jp>
-References: <1399443356-46732-1-git-send-email-sdu.liu@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9720FA9B@BPXM01GP.gisp.nec.co.jp>
- <53702313.7090703@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9721103D@BPXM01GP.gisp.nec.co.jp>
- <5379C052.50108@huawei.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97212378@BPXM01GP.gisp.nec.co.jp>
- <5382CE50.4050807@huawei.com>
-In-Reply-To: <5382CE50.4050807@huawei.com>
-Content-Language: ja-JP
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WroRU-000124-UU
+ for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:07:55 +0000
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: [PATCH 08/13] purgatory/sha256: Provide implementation of sha256 in
+ purgaotory context
+Date: Tue,  3 Jun 2014 09:06:57 -0400
+Message-Id: <1401800822-27425-9-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,168 +18,367 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "sdu.liu@huawei.com" <sdu.liu@huawei.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, hpa@zytor.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, greg@kroah.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-Hello Liu,
+Next two patches provide code for purgatory. This is a code which does
+not link against the kernel and runs stand alone. This code runs between
+two kernels. One of the primary purpose of this code is to verify the
+digest of newly loaded kernel and making sure it matches the digest
+computed at kernel load time.
 
-I rechecked the current code, then I lost the necessity of
-1e93ee75f9d47c219e833210eb31e4a747cc3a8d...
+We use sha256 for calculating digest of kexec segmetns. Purgatory can't
+use stanard crypto API as that API is not available in purgatory context.
 
->Sorry, I missed the point.
->
->(1)for flatmem model, kernel get the page struct after minusing ARCH_PFN_OFFSET
-> 28 #if defined(CONFIG_FLATMEM)
-> 29
-> 30 #define __pfn_to_page(pfn)      (mem_map + ((pfn) - ARCH_PFN_OFFSET))
-> 31 #define __page_to_pfn(page)     ((unsigned long)((page) - mem_map) + \
-> 32                                  ARCH_PFN_OFFSET)
->
->So, 1e93ee75f9d47c219e833210eb31e4a747cc3a8d do no harm.
+Hence, I have copied code from crypto/sha256_generic.c and compiled it
+with purgaotry code so that it could be used. I could not
+#include sha256_generic.c file here as some of the function signature
+requiered little tweaking. Original functions work with crypto API but
+these ones don't
 
-I understand that the base of the kernel's mem_map is ARCH_PFN_OFFSET
-and makedumpfile gets the its address as:
+So instead of doing #include on sha256_generic.c I just copied relevant
+portions of code into arch/x86/purgatory/sha256.c. Now we shouldn't have to
+touch this code at all. Do let me know if there are better ways to handle it.
 
-    dump_mem_map(0, info->max_mapnr, mem_map, 0);
-                ^^^ 
-               doesn't consider the offset
+This patch does not enable compiling of this code. That happens in next
+patch. I wanted to highlight this change in a separate patch for easy
+review.
 
-so makedumpfile's mem_map[] has the offset at this point.
-The filtering process(exclude_unnecessary_pages()) doesn't consider the offset
-while the writing process(write_kdump_pages()) considers it.
-This thing will make the gap between the page descriptor and the page itself.
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ arch/x86/purgatory/sha256.c | 284 ++++++++++++++++++++++++++++++++++++++++++++
+ arch/x86/purgatory/sha256.h |  22 ++++
+ 2 files changed, 306 insertions(+)
+ create mode 100644 arch/x86/purgatory/sha256.c
+ create mode 100644 arch/x86/purgatory/sha256.h
 
->(2)for discontigmem model
->
-> 18 #ifndef arch_local_page_offset
-> 19 #define arch_local_page_offset(pfn, nid)        \
-> 20         ((pfn) - NODE_DATA(nid)->node_start_pfn)
-> 21 #endif
-> 22
-> 23 #endif /* CONFIG_DISCONTIGMEM */
->
->.....
->
-> 33 #elif defined(CONFIG_DISCONTIGMEM)
-> 34
-> 35 #define __pfn_to_page(pfn)                      \
-> 36 ({      unsigned long __pfn = (pfn);            \
-> 37         unsigned long __nid = arch_pfn_to_nid(__pfn);  \
-> 38         NODE_DATA(__nid)->node_mem_map + arch_local_page_offset(__pfn, __nid);\
-> 39 })
->
->
->The kernel minuses "NODE_DATA(nid)->node_start_pfn". So relative postion is got
->for the tranfser.
+diff --git a/arch/x86/purgatory/sha256.c b/arch/x86/purgatory/sha256.c
+new file mode 100644
+index 0000000..1e814ca
+--- /dev/null
++++ b/arch/x86/purgatory/sha256.c
+@@ -0,0 +1,284 @@
++/*
++ * SHA-256, as specified in
++ * http://csrc.nist.gov/groups/STM/cavp/documents/shs/sha256-384-512.pdf
++ *
++ * SHA-256 code by Jean-Luc Cooke <jlcooke@certainkey.com>.
++ *
++ * Copyright (c) Jean-Luc Cooke <jlcooke@certainkey.com>
++ * Copyright (c) Andrew McDonald <andrew@mcdonald.org.uk>
++ * Copyright (c) 2002 James Morris <jmorris@intercode.com.au>
++ * Copyright (c) 2014 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the Free
++ * Software Foundation; either version 2 of the License, or (at your option)
++ * any later version.
++ */
++
++#include <linux/bitops.h>
++#include <asm/byteorder.h>
++#include "sha256.h"
++#include "../boot/string.h"
++
++static inline u32 Ch(u32 x, u32 y, u32 z)
++{
++	return z ^ (x & (y ^ z));
++}
++
++static inline u32 Maj(u32 x, u32 y, u32 z)
++{
++	return (x & y) | (z & (x | y));
++}
++
++#define e0(x)       (ror32(x, 2) ^ ror32(x, 13) ^ ror32(x, 22))
++#define e1(x)       (ror32(x, 6) ^ ror32(x, 11) ^ ror32(x, 25))
++#define s0(x)       (ror32(x, 7) ^ ror32(x, 18) ^ (x >> 3))
++#define s1(x)       (ror32(x, 17) ^ ror32(x, 19) ^ (x >> 10))
++
++static inline void LOAD_OP(int I, u32 *W, const u8 *input)
++{
++	W[I] = __be32_to_cpu(((__be32 *)(input))[I]);
++}
++
++static inline void BLEND_OP(int I, u32 *W)
++{
++	W[I] = s1(W[I-2]) + W[I-7] + s0(W[I-15]) + W[I-16];
++}
++
++static void sha256_transform(u32 *state, const u8 *input)
++{
++	u32 a, b, c, d, e, f, g, h, t1, t2;
++	u32 W[64];
++	int i;
++
++	/* load the input */
++	for (i = 0; i < 16; i++)
++		LOAD_OP(i, W, input);
++
++	/* now blend */
++	for (i = 16; i < 64; i++)
++		BLEND_OP(i, W);
++
++	/* load the state into our registers */
++	a = state[0];  b = state[1];  c = state[2];  d = state[3];
++	e = state[4];  f = state[5];  g = state[6];  h = state[7];
++
++	/* now iterate */
++	t1 = h + e1(e) + Ch(e, f, g) + 0x428a2f98 + W[0];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1 + t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0x71374491 + W[1];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1 + t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0xb5c0fbcf + W[2];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1 + t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0xe9b5dba5 + W[3];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1 + t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0x3956c25b + W[4];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1 + t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0x59f111f1 + W[5];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1 + t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0x923f82a4 + W[6];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1 + t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0xab1c5ed5 + W[7];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1 + t2;
++
++	t1 = h + e1(e) + Ch(e, f, g) + 0xd807aa98 + W[8];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1 + t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0x12835b01 + W[9];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1 + t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0x243185be + W[10];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1 + t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0x550c7dc3 + W[11];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1 + t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0x72be5d74 + W[12];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1 + t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0x80deb1fe + W[13];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1 + t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0x9bdc06a7 + W[14];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1 + t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0xc19bf174 + W[15];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1+t2;
++
++	t1 = h + e1(e) + Ch(e, f, g) + 0xe49b69c1 + W[16];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1+t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0xefbe4786 + W[17];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1+t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0x0fc19dc6 + W[18];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1+t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0x240ca1cc + W[19];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1+t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0x2de92c6f + W[20];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1+t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0x4a7484aa + W[21];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1+t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0x5cb0a9dc + W[22];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1+t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0x76f988da + W[23];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1+t2;
++
++	t1 = h + e1(e) + Ch(e, f, g) + 0x983e5152 + W[24];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1+t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0xa831c66d + W[25];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1+t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0xb00327c8 + W[26];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1+t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0xbf597fc7 + W[27];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1+t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0xc6e00bf3 + W[28];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1+t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0xd5a79147 + W[29];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1+t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0x06ca6351 + W[30];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1+t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0x14292967 + W[31];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1+t2;
++
++	t1 = h + e1(e) + Ch(e, f, g) + 0x27b70a85 + W[32];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1+t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0x2e1b2138 + W[33];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1+t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0x4d2c6dfc + W[34];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1+t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0x53380d13 + W[35];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1+t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0x650a7354 + W[36];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1+t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0x766a0abb + W[37];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1+t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0x81c2c92e + W[38];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1+t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0x92722c85 + W[39];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1+t2;
++
++	t1 = h + e1(e) + Ch(e, f, g) + 0xa2bfe8a1 + W[40];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1+t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0xa81a664b + W[41];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1+t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0xc24b8b70 + W[42];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1+t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0xc76c51a3 + W[43];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1+t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0xd192e819 + W[44];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1+t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0xd6990624 + W[45];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1+t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0xf40e3585 + W[46];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1+t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0x106aa070 + W[47];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1+t2;
++
++	t1 = h + e1(e) + Ch(e, f, g) + 0x19a4c116 + W[48];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1+t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0x1e376c08 + W[49];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1+t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0x2748774c + W[50];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1+t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0x34b0bcb5 + W[51];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1+t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0x391c0cb3 + W[52];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1+t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0x4ed8aa4a + W[53];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1+t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0x5b9cca4f + W[54];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1+t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0x682e6ff3 + W[55];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1+t2;
++
++	t1 = h + e1(e) + Ch(e, f, g) + 0x748f82ee + W[56];
++	t2 = e0(a) + Maj(a, b, c);    d += t1;    h = t1+t2;
++	t1 = g + e1(d) + Ch(d, e, f) + 0x78a5636f + W[57];
++	t2 = e0(h) + Maj(h, a, b);    c += t1;    g = t1+t2;
++	t1 = f + e1(c) + Ch(c, d, e) + 0x84c87814 + W[58];
++	t2 = e0(g) + Maj(g, h, a);    b += t1;    f = t1+t2;
++	t1 = e + e1(b) + Ch(b, c, d) + 0x8cc70208 + W[59];
++	t2 = e0(f) + Maj(f, g, h);    a += t1;    e = t1+t2;
++	t1 = d + e1(a) + Ch(a, b, c) + 0x90befffa + W[60];
++	t2 = e0(e) + Maj(e, f, g);    h += t1;    d = t1+t2;
++	t1 = c + e1(h) + Ch(h, a, b) + 0xa4506ceb + W[61];
++	t2 = e0(d) + Maj(d, e, f);    g += t1;    c = t1+t2;
++	t1 = b + e1(g) + Ch(g, h, a) + 0xbef9a3f7 + W[62];
++	t2 = e0(c) + Maj(c, d, e);    f += t1;    b = t1+t2;
++	t1 = a + e1(f) + Ch(f, g, h) + 0xc67178f2 + W[63];
++	t2 = e0(b) + Maj(b, c, d);    e += t1;    a = t1+t2;
++
++	state[0] += a; state[1] += b; state[2] += c; state[3] += d;
++	state[4] += e; state[5] += f; state[6] += g; state[7] += h;
++
++	/* clear any sensitive info... */
++	a = b = c = d = e = f = g = h = t1 = t2 = 0;
++	memset(W, 0, 64 * sizeof(u32));
++}
++
++int sha256_init(struct sha256_state *sctx)
++{
++	sctx->state[0] = SHA256_H0;
++	sctx->state[1] = SHA256_H1;
++	sctx->state[2] = SHA256_H2;
++	sctx->state[3] = SHA256_H3;
++	sctx->state[4] = SHA256_H4;
++	sctx->state[5] = SHA256_H5;
++	sctx->state[6] = SHA256_H6;
++	sctx->state[7] = SHA256_H7;
++	sctx->count = 0;
++
++	return 0;
++}
++
++int sha256_update(struct sha256_state *sctx, const u8 *data,
++					unsigned int len)
++{
++	unsigned int partial, done;
++	const u8 *src;
++
++	partial = sctx->count & 0x3f;
++	sctx->count += len;
++	done = 0;
++	src = data;
++
++	if ((partial + len) > 63) {
++		if (partial) {
++			done = -partial;
++			memcpy(sctx->buf + partial, data, done + 64);
++			src = sctx->buf;
++		}
++
++		do {
++			sha256_transform(sctx->state, src);
++			done += 64;
++			src = data + done;
++		} while (done + 63 < len);
++
++		partial = 0;
++	}
++	memcpy(sctx->buf + partial, src, len - done);
++
++	return 0;
++}
++
++int sha256_final(struct sha256_state *sctx, u8 *out)
++{
++	__be32 *dst = (__be32 *)out;
++	__be64 bits;
++	unsigned int index, pad_len;
++	int i;
++	static const u8 padding[64] = { 0x80, };
++
++	/* Save number of bits */
++	bits = cpu_to_be64(sctx->count << 3);
++
++	/* Pad out to 56 mod 64. */
++	index = sctx->count & 0x3f;
++	pad_len = (index < 56) ? (56 - index) : ((64+56) - index);
++	sha256_update(sctx, padding, pad_len);
++
++	/* Append length (before padding) */
++	sha256_update(sctx, (const u8 *)&bits, sizeof(bits));
++
++	/* Store state in digest */
++	for (i = 0; i < 8; i++)
++		dst[i] = cpu_to_be32(sctx->state[i]);
++
++	/* Zeroize sensitive information. */
++	memset(sctx, 0, sizeof(*sctx));
++
++	return 0;
++}
+diff --git a/arch/x86/purgatory/sha256.h b/arch/x86/purgatory/sha256.h
+new file mode 100644
+index 0000000..bd15a41
+--- /dev/null
++++ b/arch/x86/purgatory/sha256.h
+@@ -0,0 +1,22 @@
++/*
++ *  Copyright (C) 2014 Red Hat Inc.
++ *
++ *  Author: Vivek Goyal <vgoyal@redhat.com>
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++#ifndef SHA256_H
++#define SHA256_H
++
++
++#include <linux/types.h>
++#include <crypto/sha.h>
++
++extern int sha256_init(struct sha256_state *sctx);
++extern int sha256_update(struct sha256_state *sctx, const u8 *input,
++				unsigned int length);
++extern int sha256_final(struct sha256_state *sctx, u8 *hash);
++
++#endif /* SHA256_H */
+-- 
+1.9.0
 
-Hmm, I think the process above just means each NODE_DATA(nid)->node_mem_map
-corresponds to its own region which starts at NODE_DATA(nid)->node_start_pfn.
-It looks kernel's mem_map doesn't have the offest and makedumpfile get it
-as it is, so makedumpfile's mem_map[] has no offset.
 
->So to get page struct
->
->kernel        :  paddr --> pfn  -[consider ARCH_PFN_OFFSET ] -> page
->makedumpfile  :  paddr -[consider ARCH_PFN_OFFSET] -> pfn  --> page
-
-Why does ARCH_PFN_OFFSET appear here ? I couldn't find the code.
-
-Anyway, the gap between the page descriptor and the page itself will appear
-like flatmem.
-
->
->So I think commit 1e93ee75f9d47c219e833210eb31e4a747cc3a8d can fit discontigmem and flatmem.
->After applying this patch, it also fits sparsemem model. What do you think?
-
-If my understanding is correct, I think we should fix get_mm_flatmem() instead of
-1e93ee75f9d47c219e833210e and your patch like below:
-
-   ...
-   dump_mem_map(0, ARCH_PFN_OFFSET, NOT_MEMMAP_ADDR, 0);
-   dump_mem_map(ARCH_PFN_OFFSET, info->max_mapnr, mem_map, 1);
-   ...
-
-"paddr:0x0 == pfn:0" is easy to understand.
-
-
-Thanks
-Atsushi Kumagai
-
->
->Thanks,
->Liu Hua
->
->>
->> Actually, the similar gap exists in the sparse_mem case as you described,
->> so I suspect we have to take care of it also for other memory models.
->>
->>>>         }
->>>>
->>>> So there is no problem in this model since the top of mem_map corresponds to
->>>> ARCH_PFN_OFFSET, right?
->>>
->>> I don't think so. Is it clear for my words above?
->>>
->>>>
->>>>> (2) For discontigmem, it manages the mem_map with node_memblk. commit
->>>>> 1e93ee75f9d47c21 also does no harm.
->>>>
->>>> alloc_node_mem_map() allocates mem_map also for discontigmem, but I can't find
->>>> any codes to consider ARCH_PFN_OFFSET for this model.
->>>> So I suspect the mismatch between the pfn for makedumpfile and the actual content
->>>> of mem_map can exist. Could you explain why this case is OK in more detail?
->>>>
->>> Actually I did not test this memory model. I reach my conclusion via the codes.
->>>
->>> get_mm_discontigmem
->>> {
->>> ....
->>> for (i = 0; i < vt.numnodes; i++) {  //loop for every node
->>> 2591                 if (!readmem(VADDR, pgdat + OFFSET(pglist_data.node_start_pfn),
->>> 2592                     &pfn_start, sizeof pfn_start)) {           //get pfn_start for this node
->>> ....
->>> 2596                 if (!readmem(VADDR,pgdat+OFFSET(pglist_data.node_spanned_pages),
->>> 2597                     &node_spanned_pages, sizeof node_spanned_pages)) { //get the number of pages in this node
->>>
->>> 2603                 if (SYMBOL(vmem_map) == NOT_FOUND_SYMBOL) {
->>> 2604                         if (!readmem(VADDR, pgdat + OFFSET(pglist_data.node_mem_map),  //get the mem_map for this
->>> node.
->>> 2605                             &mem_map, sizeof mem_map)) {
->>> 2606                                 ERRMSG("Can't get mem_map.\n");
->>> 2607                                 return FALSE;
->>> 2608                         }
->>> 2609                 } else
->>> 2610                         mem_map = vmem_map + (SIZE(page) * pfn_start);
->>> ....
->>> }
->>>
->>> So I think for discontigmem, makedumpfile can get the start address and length of mem_map from vmcore directly.
->>> And Everything can go well without ARCH_PFN_OFFSET.
->>
->> The same can be said, is it not needed to consider ARCH_PFN_OFFSET
->> to get a page struct from the mem_map?
->>
->>
->> Thanks
->> Atsushi Kumagai
->>
->>>
->>> Perhaps I need some tests on discontigmem. Did I explan my idea clearly?
->>>
->>>
->>>
->>>>
->>>> Thanks
->>>> Atsushi Kumagai
->>>>
->>>>> What do you think?
->>>>>
->>>>> Thanks,
->>>>> Liu Hua
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
