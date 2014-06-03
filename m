@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from szxga03-in.huawei.com ([119.145.14.66])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WrKLA-0000Cw-CY
- for kexec@lists.infradead.org; Mon, 02 Jun 2014 04:59:21 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v4 0/2] Generic multi-page exclusion
-Date: Mon, 2 Jun 2014 04:58:01 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97216561@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1401098094.git.ptesarik@suse.cz>
-In-Reply-To: <cover.1401098094.git.ptesarik@suse.cz>
-Content-Language: ja-JP
+ id 1WrdWT-0001GF-Bj
+ for kexec@lists.infradead.org; Tue, 03 Jun 2014 01:28:20 +0000
+Message-ID: <538D245C.5090101@huawei.com>
+Date: Tue, 3 Jun 2014 09:26:52 +0800
+From: Liu hua <sdu.liu@huawei.com>
 MIME-Version: 1.0
+Subject: Re: [RESEND PATCH] kexec : add sparse memory related values to vmcore
+References: <1401284996-44873-1-git-send-email-sdu.liu@huawei.com>
+ <20140529001328.GD22705@verge.net.au>
+In-Reply-To: <20140529001328.GD22705@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,55 +19,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: wangnan0@huawei.com, peifeiyue@huawei.com, liusdu@126.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hui.geng@huawei.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com
 
-Hello Petr,
-
->Kumagai-san,
->
->this patch was inspired by this post of yours:
->
->http://lists.infradead.org/pipermail/kexec/2013-November/010445.html
->
->This is a preparatory series to add hugepage support without having
->to care about the appropriate size of the cyclic buffer.
->
->Changelog:
->* v2:
->  - Keep excluded regions per mem_map_data
->  - Process excluded pages in chunks
->
->* v3:
->  - Keep excluded region extents in struct cycle
->
->* v4:
->  - Make sure that the excluded region extents are reset when
->    a new ELF segment is processed.
-
-This version looks good to me, I'll merge it into v1.5.7.
-Thanks for your great work!
-
-
-Atsushi Kumagai
-
->Petr Tesarik (2):
->  Generic handling of multi-page exclusions
->  Get rid of overrun adjustments
->
-> makedumpfile.c | 111 ++++++++++++++++++++-------------------------------------
-> makedumpfile.h |   5 +++
-> 2 files changed, 43 insertions(+), 73 deletions(-)
->
->--
->1.8.4.5
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMjAxNC81LzI5IDg6MTMsIFNpbW9uIEhvcm1hbiDlhpnpgZM6Cj4gT24gV2VkLCBNYXkgMjgs
+IDIwMTQgYXQgMDk6NDk6NTZQTSArMDgwMCwgTGl1IEh1YSB3cm90ZToKPj4gVGhpcyBwYXRjaCBk
+ZWFsZXMgd2l0aCBzcGFyc2UgbWVtb3J5IG1vZGVsLgo+Pgo+PiBGb3IgQVJNMzIgcGxhdGZvcm1z
+LCBkaWZmZXJlbnQgdmVuZG9ycyBtYXkgZGVmaW5lIGRpZmZlcmVudAo+PiBTRUNUSU9OX1NJWkVf
+QklUUywgd2hpY2ggd2UgZGlkIG5vdCB3cml0ZSB0byB2bWNvcmUuCj4+Cj4+IEZvciBleGFtcGxl
+Ogo+Pgo+PiAgIDEgYXJjaC9hcm0vbWFjaC1jbHBzNzExeC9pbmNsdWRlL21hY2gvbWVtb3J5LmgK
+Pj4gICAgICNkZWZpbmUgU0VDVElPTl9TSVpFX0JJVFMgMjQKPj4gICAyIGFyY2gvYXJtL21hY2gt
+ZXh5bm9zL2luY2x1ZGUvbWFjaC9tZW1vcnkuaAo+PiAgICAgI2RlZmluZSBTRUNUSU9OX1NJWkVf
+QklUUyAyOAo+PiAgIDMgYXJjaC9hcm0vbWFjaC1zYTExMDAvaW5jbHVkZS9tYWNoL21lbW9yeS5o
+Cj4+ICAgICAjZGVmaW5lIFNFQ1RJT05fU0laRV9CSVRTIDI3Cj4gCj4gSSB3b25kZXIgaWYgdGhp
+cyBwcm9ibGVtIHdpbGwgZXZlbnR1YWxseSBnbyBhd2F5LCBvciBhdCBsZWFzdCBvbmx5Cj4gYXBw
+bHkgdG8gb2xkZXIgcGxhdGZvcm1zLCBhcyBBUk0gbW92ZXMgdG93YXJkcyBtdWx0aXBsYXRmb3Jt
+OiBhIHNpbmdsZQo+IGtlcm5lbCBmb3IgbW9yZSB0aGFuIG9uZSBwbGF0Zm9ybS4KCgo+PiBJdCBp
+cyByZWFsbHkgYSBiYWQgbmV3cyBmb3IgdXNlciBzcGFjZSB0b29scyBzdWNoIGFzCj4+IG1ha2Vk
+dW1wZmlsZSBhbmQgY3Jhc2gsIHdobyBoYXZlIHRvIGRlZmluZXMgdGhlbSBhcwo+PiBtYWNyb3Mu
+IFNvIGZvciB0aGUgc2FtZSBhcmNoaXRlY3R1cmUsIHdlIG1heSBuZWVkIHRvCj4+IHJlY29taWxl
+IHRoZW0gdG8gcGFyc2Ugdm1jb3JlcyB3aXRoIGRpZmZlcmVudAo+PiBTRUNUSU9OX1NJWkVfQklU
+Uy4KPj4KPj4gQW5kIGlmIHdlIGVuYWJsZSBMUEFFLCBNQVhfUEhZU01FTV9TSVpFIGNhbiBhbHNl
+Cj4+IGJlIHZhcmlhYmxlLgo+Pgo+PiBUaGlzIHBhdGNoIGFkZHMgdGhlc2UgU0VDVElPTl9TSVpF
+X0JJVFMgYW5kIE1BWF9QSFlTTUVNX1NJWkUKPj4gdG8gdm1jb3JlLiB3aGljaCBtYWtlcyB1c2Vy
+IHNwYWNlIHRvb2xzIG1vcmUgY29tcGF0aWJsZS4KPj4KPj4gQlRXLCBtYWtlZHVtcGZpbGUgaGFz
+IHF1ZXVlZCB0aGUgcmVsYXRlZCBwYXRjaC4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTGl1IEh1YSA8
+c2R1LmxpdUBodWF3ZWkuY29tPgo+PiAtLS0KPj4gIGtlcm5lbC9rZXhlYy5jIHwgMiArKwo+PiAg
+MSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEva2VybmVs
+L2tleGVjLmMgYi9rZXJuZWwva2V4ZWMuYwo+PiBpbmRleCBiZjBiOTI5ZS4uOGIxYTE5MyAxMDA2
+NDQKPj4gLS0tIGEva2VybmVsL2tleGVjLmMKPj4gKysrIGIva2VybmVsL2tleGVjLmMKPj4gQEAg
+LTE1NzcsNiArMTU3Nyw4IEBAIHN0YXRpYyBpbnQgX19pbml0IGNyYXNoX3NhdmVfdm1jb3JlaW5m
+b19pbml0KHZvaWQpCj4+ICAJVk1DT1JFSU5GT19MRU5HVEgobWVtX3NlY3Rpb24sIE5SX1NFQ1RJ
+T05fUk9PVFMpOwo+PiAgCVZNQ09SRUlORk9fU1RSVUNUX1NJWkUobWVtX3NlY3Rpb24pOwo+PiAg
+CVZNQ09SRUlORk9fT0ZGU0VUKG1lbV9zZWN0aW9uLCBzZWN0aW9uX21lbV9tYXApOwo+PiArCVZN
+Q09SRUlORk9fTlVNQkVSKE1BWF9QSFlTTUVNX0JJVFMpOwo+PiArCVZNQ09SRUlORk9fTlVNQkVS
+KFNFQ1RJT05fU0laRV9CSVRTKTsKPj4gICNlbmRpZgo+PiAgCVZNQ09SRUlORk9fU1RSVUNUX1NJ
+WkUocGFnZSk7Cj4+ICAJVk1DT1JFSU5GT19TVFJVQ1RfU0laRShwZ2xpc3RfZGF0YSk7Cj4+IC0t
+IAo+PiAxLjkuMAo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwo+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cj4+Cj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+IAo+IC4KPiAKCgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
+bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
