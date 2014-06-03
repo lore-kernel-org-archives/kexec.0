@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WroRy-00019H-Pb
- for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:08:23 +0000
+ id 1WroS3-00019l-Ps
+ for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:08:29 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [RFC PATCH 00/13][V3] kexec: A new system call to allow in kernel
- loading
-Date: Tue,  3 Jun 2014 09:06:49 -0400
-Message-Id: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 09/13] purgatory: Core purgatory functionality
+Date: Tue,  3 Jun 2014 09:06:58 -0400
+Message-Id: <1401800822-27425-10-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,114 +25,428 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, hpa@zytor.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, greg@kroah.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-Hi,
+Create a stand alone relocatable object purgatory which runs between two
+kernels. This name, concept and some code has been taken from kexec-tools.
+Idea is that this code runs after a crash and it runs in minimal environment.
+So keep it separate from rest of the kernel and in long term we will have
+to practically do no maintenance of this code.
 
-This is V3 of the patchset. Previous versions were posted here.
+This code also has the logic to do verify sha256 hashes of various
+segments which have been loaded into memory. So first we verify that
+the kernel we are jumping to is fine and has not been corrupted and
+make progress only if checsums are verified.
 
-V1: https://lkml.org/lkml/2013/11/20/540
-V2: https://lkml.org/lkml/2014/1/27/331
+This code also takes care of copying some memory contents to backup region.
 
-Changes since v2:
-
-- Took care of most of the review comments from V2.
-- Added support for kexec/kdump on EFI systems.
-- Dropped support for loading ELF vmlinux.
-
-This patch series is generated on top of 3.15.0-rc8. It also requires a
-two patch cleanup series which is sitting in -tip tree here.
-
-https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/log/?h=x86/boot
-
-This patch series does not do kernel signature verification yet. I plan
-to post another patch series for that. Now bzImage is already signed
-with PKCS7 signature I plan to parse and verify those signatures.
-
-Primary goal of this patchset is to prepare groundwork so that kernel
-image can be signed and signatures be verified during kexec load. This
-should help with two things.
-
-- It should allow kexec/kdump on secureboot enabled machines.
-
-- In general it can help even without secureboot. By being able to verify
-  kernel image signature in kexec, it should help with avoiding module
-  signing restrictions. Matthew Garret showed how to boot into a custom
-  kernel, modify first kernel's memory and then jump back to old kernel and
-  bypass any policy one wants to.
-
-Any feedback is welcome.
-
-Thanks
-Vivek
-
-Vivek Goyal (13):
-  bin2c: Move bin2c in scripts/basic
-  kernel: Build bin2c based on config option CONFIG_BUILD_BIN2C
-  kexec: Move segment verification code in a separate function
-  resource: Provide new functions to walk through resources
-  kexec: Make kexec_segment user buffer pointer a union
-  kexec: New syscall kexec_file_load() declaration
-  kexec: Implementation of new syscall kexec_file_load
-  purgatory/sha256: Provide implementation of sha256 in purgaotory
-    context
-  purgatory: Core purgatory functionality
-  kexec: Load and Relocate purgatory at kernel load time
-  kexec-bzImage: Support for loading bzImage using 64bit entry
-  kexec: Support for Kexec on panic using new system call
-  kexec: Support kexec/kdump on EFI systems
-
- arch/x86/Kbuild                      |    1 +
- arch/x86/Kconfig                     |    3 +
- arch/x86/Makefile                    |    6 +
- arch/x86/include/asm/crash.h         |    9 +
- arch/x86/include/asm/kexec-bzimage.h |   11 +
- arch/x86/include/asm/kexec.h         |   53 ++
- arch/x86/kernel/Makefile             |    3 +-
- arch/x86/kernel/crash.c              |  581 ++++++++++++++++
- arch/x86/kernel/kexec-bzimage.c      |  314 +++++++++
- arch/x86/kernel/machine_kexec.c      |  232 +++++++
- arch/x86/kernel/machine_kexec_64.c   |  177 +++++
- arch/x86/purgatory/Makefile          |   35 +
- arch/x86/purgatory/entry64.S         |  101 +++
- arch/x86/purgatory/purgatory.c       |   71 ++
- arch/x86/purgatory/setup-x86_32.S    |   17 +
- arch/x86/purgatory/setup-x86_64.S    |   58 ++
- arch/x86/purgatory/sha256.c          |  284 ++++++++
- arch/x86/purgatory/sha256.h          |   22 +
- arch/x86/purgatory/stack.S           |   19 +
- arch/x86/purgatory/string.c          |   13 +
- arch/x86/syscalls/syscall_64.tbl     |    1 +
- drivers/firmware/efi/runtime-map.c   |   21 +
- include/linux/efi.h                  |   19 +
- include/linux/ioport.h               |    6 +
- include/linux/kexec.h                |   97 ++-
- include/linux/syscalls.h             |    3 +
- include/uapi/linux/kexec.h           |    4 +
- init/Kconfig                         |    5 +
- kernel/Makefile                      |    2 +-
- kernel/kexec.c                       | 1239 +++++++++++++++++++++++++++++++---
- kernel/resource.c                    |  108 ++-
- kernel/sys_ni.c                      |    1 +
- scripts/Makefile                     |    1 -
- scripts/basic/Makefile               |    1 +
- scripts/basic/bin2c.c                |   35 +
- scripts/bin2c.c                      |   36 -
- 36 files changed, 3452 insertions(+), 137 deletions(-)
- create mode 100644 arch/x86/include/asm/crash.h
- create mode 100644 arch/x86/include/asm/kexec-bzimage.h
- create mode 100644 arch/x86/kernel/kexec-bzimage.c
- create mode 100644 arch/x86/kernel/machine_kexec.c
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ arch/x86/Kbuild                   |   1 +
+ arch/x86/Makefile                 |   6 +++
+ arch/x86/purgatory/Makefile       |  35 +++++++++++++
+ arch/x86/purgatory/entry64.S      | 101 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/purgatory/purgatory.c    |  71 +++++++++++++++++++++++++++
+ arch/x86/purgatory/setup-x86_32.S |  17 +++++++
+ arch/x86/purgatory/setup-x86_64.S |  58 ++++++++++++++++++++++
+ arch/x86/purgatory/stack.S        |  19 +++++++
+ arch/x86/purgatory/string.c       |  13 +++++
+ 9 files changed, 321 insertions(+)
  create mode 100644 arch/x86/purgatory/Makefile
  create mode 100644 arch/x86/purgatory/entry64.S
  create mode 100644 arch/x86/purgatory/purgatory.c
  create mode 100644 arch/x86/purgatory/setup-x86_32.S
  create mode 100644 arch/x86/purgatory/setup-x86_64.S
- create mode 100644 arch/x86/purgatory/sha256.c
- create mode 100644 arch/x86/purgatory/sha256.h
  create mode 100644 arch/x86/purgatory/stack.S
  create mode 100644 arch/x86/purgatory/string.c
- create mode 100644 scripts/basic/bin2c.c
- delete mode 100644 scripts/bin2c.c
 
+diff --git a/arch/x86/Kbuild b/arch/x86/Kbuild
+index e5287d8..faaeee7 100644
+--- a/arch/x86/Kbuild
++++ b/arch/x86/Kbuild
+@@ -16,3 +16,4 @@ obj-$(CONFIG_IA32_EMULATION) += ia32/
+ 
+ obj-y += platform/
+ obj-y += net/
++obj-$(CONFIG_KEXEC) += purgatory/
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 33f71b0..0b25c6c 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -186,6 +186,11 @@ archscripts: scripts_basic
+ archheaders:
+ 	$(Q)$(MAKE) $(build)=arch/x86/syscalls all
+ 
++archprepare:
++ifeq ($(CONFIG_KEXEC),y)
++	$(Q)$(MAKE) $(build)=arch/x86/purgatory arch/x86/purgatory/kexec-purgatory.c
++endif
++
+ ###
+ # Kernel objects
+ 
+@@ -249,6 +254,7 @@ archclean:
+ 	$(Q)rm -rf $(objtree)/arch/x86_64
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+ 	$(Q)$(MAKE) $(clean)=arch/x86/tools
++	$(Q)$(MAKE) $(clean)=arch/x86/purgatory
+ 
+ PHONY += kvmconfig
+ kvmconfig:
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+new file mode 100644
+index 0000000..8dbf8f5
+--- /dev/null
++++ b/arch/x86/purgatory/Makefile
+@@ -0,0 +1,35 @@
++ifeq ($(CONFIG_X86_64),y)
++	purgatory-y := purgatory.o entry64.o stack.o setup-x86_64.o sha256.o string.o
++else
++	purgatory-y := purgatory.o stack.o sha256.o setup-x86_32.o
++endif
++
++targets += $(purgatory-y)
++PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
++
++LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
++targets += purgatory.ro
++
++# Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
++# in turn leaves some undefined symbols like __fentry__ in purgatory and not
++# sure how to relocate those. Like kexec-tools, custom flags.
++
++ifeq ($(CONFIG_X86_64),y)
++KBUILD_CFLAGS	:= -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -mcmodel=large -Os -fno-builtin -ffreestanding -c -MD
++else
++KBUILD_CFLAGS	:= -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -Os -fno-builtin -ffreestanding -c -MD -m32
++endif
++
++$(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
++		$(call if_changed,ld)
++
++targets += kexec-purgatory.c
++
++quiet_cmd_bin2c = BIN2C   $@
++      cmd_bin2c = cat $(obj)/purgatory.ro | $(srctree)/scripts/basic/bin2c kexec_purgatory > $(obj)/kexec-purgatory.c
++
++$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro FORCE
++	$(call if_changed,bin2c)
++
++
++obj-$(CONFIG_KEXEC)	+= kexec-purgatory.o
+diff --git a/arch/x86/purgatory/entry64.S b/arch/x86/purgatory/entry64.S
+new file mode 100644
+index 0000000..219b50b
+--- /dev/null
++++ b/arch/x86/purgatory/entry64.S
+@@ -0,0 +1,101 @@
++/*
++ * Copyright (C) 2003,2004  Eric Biederman (ebiederm@xmission.com)
++ * Copyright (C) 2014  Red Hat Inc.
++
++ * Author(s): Vivek Goyal <vgoyal@redhat.com>
++ *
++ * This code has been taken from kexec-tools.
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++	.text
++	.balign 16
++	.code64
++	.globl entry64, entry64_regs
++
++
++entry64:
++	/* Setup a gdt that should be preserved */
++	lgdt gdt(%rip)
++
++	/* load the data segments */
++	movl    $0x18, %eax     /* data segment */
++	movl    %eax, %ds
++	movl    %eax, %es
++	movl    %eax, %ss
++	movl    %eax, %fs
++	movl    %eax, %gs
++
++	/* Setup new stack */
++	leaq    stack_init(%rip), %rsp
++	pushq   $0x10 /* CS */
++	leaq    new_cs_exit(%rip), %rax
++	pushq   %rax
++	lretq
++new_cs_exit:
++
++	/* Load the registers */
++	movq	rax(%rip), %rax
++	movq	rbx(%rip), %rbx
++	movq	rcx(%rip), %rcx
++	movq	rdx(%rip), %rdx
++	movq	rsi(%rip), %rsi
++	movq	rdi(%rip), %rdi
++	movq    rsp(%rip), %rsp
++	movq	rbp(%rip), %rbp
++	movq	r8(%rip), %r8
++	movq	r9(%rip), %r9
++	movq	r10(%rip), %r10
++	movq	r11(%rip), %r11
++	movq	r12(%rip), %r12
++	movq	r13(%rip), %r13
++	movq	r14(%rip), %r14
++	movq	r15(%rip), %r15
++
++	/* Jump to the new code... */
++	jmpq	*rip(%rip)
++
++	.section ".rodata"
++	.balign 4
++entry64_regs:
++rax:	.quad 0x00000000
++rbx:	.quad 0x00000000
++rcx:	.quad 0x00000000
++rdx:	.quad 0x00000000
++rsi:	.quad 0x00000000
++rdi:	.quad 0x00000000
++rsp:	.quad 0x00000000
++rbp:	.quad 0x00000000
++r8:	.quad 0x00000000
++r9:	.quad 0x00000000
++r10:	.quad 0x00000000
++r11:	.quad 0x00000000
++r12:	.quad 0x00000000
++r13:	.quad 0x00000000
++r14:	.quad 0x00000000
++r15:	.quad 0x00000000
++rip:	.quad 0x00000000
++	.size entry64_regs, . - entry64_regs
++
++	/* GDT */
++	.section ".rodata"
++	.balign 16
++gdt:
++	/* 0x00 unusable segment
++	 * 0x08 unused
++	 * so use them as gdt ptr
++	 */
++	.word gdt_end - gdt - 1
++	.quad gdt
++	.word 0, 0, 0
++
++	/* 0x10 4GB flat code segment */
++	.word 0xFFFF, 0x0000, 0x9A00, 0x00AF
++
++	/* 0x18 4GB flat data segment */
++	.word 0xFFFF, 0x0000, 0x9200, 0x00CF
++gdt_end:
++stack:	.quad   0, 0
++stack_init:
+diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
+new file mode 100644
+index 0000000..3a808db
+--- /dev/null
++++ b/arch/x86/purgatory/purgatory.c
+@@ -0,0 +1,71 @@
++/*
++ * purgatory: Runs between two kernels
++ *
++ * Copyright (C) 2014 Red Hat Inc.
++ *
++ * Author:
++ *       Vivek Goyal <vgoyal@redhat.com>
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++#include "sha256.h"
++#include "../boot/string.h"
++
++struct sha_region {
++	unsigned long start;
++	unsigned long len;
++};
++
++unsigned long backup_dest = 0;
++unsigned long backup_src = 0;
++unsigned long backup_sz = 0;
++
++u8 sha256_digest[SHA256_DIGEST_SIZE] = { 0 };
++
++struct sha_region sha_regions[16] = {};
++
++/*
++ * On x86, second kernel requries first 640K of memory to boot. Copy
++ * first 640K to a backup region in reserved memory range so that second
++ * kernel can use first 640K.
++ */
++static int copy_backup_region(void)
++{
++	if (backup_dest)
++		memcpy((void *)backup_dest, (void *)backup_src, backup_sz);
++
++	return 0;
++}
++
++int verify_sha256_digest(void)
++{
++	struct sha_region *ptr, *end;
++	u8 digest[SHA256_DIGEST_SIZE];
++	struct sha256_state sctx;
++
++	sha256_init(&sctx);
++	end = &sha_regions[sizeof(sha_regions)/sizeof(sha_regions[0])];
++	for (ptr = sha_regions; ptr < end; ptr++)
++		sha256_update(&sctx, (uint8_t *)(ptr->start), ptr->len);
++
++	sha256_final(&sctx, digest);
++
++	if (memcmp(digest, sha256_digest, sizeof(digest)) != 0)
++		return 1;
++
++	return 0;
++}
++
++void purgatory(void)
++{
++	int ret;
++
++	ret = verify_sha256_digest();
++	if (ret) {
++		/* loop forever */
++		for (;;);
++	}
++	copy_backup_region();
++}
+diff --git a/arch/x86/purgatory/setup-x86_32.S b/arch/x86/purgatory/setup-x86_32.S
+new file mode 100644
+index 0000000..cfcff31
+--- /dev/null
++++ b/arch/x86/purgatory/setup-x86_32.S
+@@ -0,0 +1,17 @@
++/*
++ * purgatory:  setup code
++ *
++ * Copyright (C) 2014 Red Hat Inc.
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++	.text
++	.globl purgatory_start
++	.balign 16
++purgatory_start:
++	.code32
++
++	/* This is just a stub. Write code when 32bit support comes along */
++	call purgatory
+diff --git a/arch/x86/purgatory/setup-x86_64.S b/arch/x86/purgatory/setup-x86_64.S
+new file mode 100644
+index 0000000..fe3c91b
+--- /dev/null
++++ b/arch/x86/purgatory/setup-x86_64.S
+@@ -0,0 +1,58 @@
++/*
++ * purgatory:  setup code
++ *
++ * Copyright (C) 2003,2004  Eric Biederman (ebiederm@xmission.com)
++ * Copyright (C) 2014 Red Hat Inc.
++ *
++ * This code has been taken from kexec-tools.
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++	.text
++	.globl purgatory_start
++	.balign 16
++purgatory_start:
++	.code64
++
++	/* Load a gdt so I know what the segment registers are */
++	lgdt	gdt(%rip)
++
++	/* load the data segments */
++	movl	$0x18, %eax	/* data segment */
++	movl	%eax, %ds
++	movl	%eax, %es
++	movl	%eax, %ss
++	movl	%eax, %fs
++	movl	%eax, %gs
++
++	/* Setup a stack */
++	leaq	lstack_end(%rip), %rsp
++
++	/* Call the C code */
++	call purgatory
++	jmp	entry64
++
++	.section ".rodata"
++	.balign 16
++gdt:	/* 0x00 unusable segment
++	 * 0x08 unused
++	 * so use them as the gdt ptr
++	 */
++	.word	gdt_end - gdt - 1
++	.quad	gdt
++	.word	0, 0, 0
++
++	/* 0x10 4GB flat code segment */
++	.word	0xFFFF, 0x0000, 0x9A00, 0x00AF
++
++	/* 0x18 4GB flat data segment */
++	.word	0xFFFF, 0x0000, 0x9200, 0x00CF
++gdt_end:
++
++	.bss
++	.balign 4096
++lstack:
++	.skip 4096
++lstack_end:
+diff --git a/arch/x86/purgatory/stack.S b/arch/x86/purgatory/stack.S
+new file mode 100644
+index 0000000..3cefba1
+--- /dev/null
++++ b/arch/x86/purgatory/stack.S
+@@ -0,0 +1,19 @@
++/*
++ * purgatory:  stack
++ *
++ * Copyright (C) 2014 Red Hat Inc.
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++	/* A stack for the loaded kernel.
++	 * Seperate and in the data section so it can be prepopulated.
++	 */
++	.data
++	.balign 4096
++	.globl stack, stack_end
++
++stack:
++	.skip 4096
++stack_end:
+diff --git a/arch/x86/purgatory/string.c b/arch/x86/purgatory/string.c
+new file mode 100644
+index 0000000..d886b1f
+--- /dev/null
++++ b/arch/x86/purgatory/string.c
+@@ -0,0 +1,13 @@
++/*
++ * Simple string functions.
++ *
++ * Copyright (C) 2014 Red Hat Inc.
++ *
++ * Author:
++ *       Vivek Goyal <vgoyal@redhat.com>
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++#include "../boot/string.c"
 -- 
 1.9.0
 
