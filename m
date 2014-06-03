@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WroRe-00013D-PI
- for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:08:03 +0000
+ id 1WroRe-00013N-PM
+ for kexec@lists.infradead.org; Tue, 03 Jun 2014 13:08:04 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 01/13] bin2c: Move bin2c in scripts/basic
-Date: Tue,  3 Jun 2014 09:06:50 -0400
-Message-Id: <1401800822-27425-2-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 03/13] kexec: Move segment verification code in a separate
+ function
+Date: Tue,  3 Jun 2014 09:06:52 -0400
+Message-Id: <1401800822-27425-4-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,143 +26,308 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, hpa@zytor.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, greg@kroah.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-Kexec wants to use bin2c and it wants to use it really early in the build
-process. See arch/x86/purgatory/ code in later patches.
+Previously do_kimage_alloc() will allocate a kimage structure, copy
+segment list from user space and then do the segment list sanity verification.
 
-So move bin2c in scripts/basic so that it can be built very early and
-be usable by arch/x86/purgatory/
+Break down this function in 3 parts. do_kimage_alloc_init() to do actual
+allocation and basic initialization of kimage structure.
+copy_user_segment_list() to copy segment list from user space and
+sanity_check_segment_list() to verify the sanity of segment list as passed
+by user space.
+
+In later patches, I need to only allocate kimage and not copy segment
+list from user space. So breaking down in smaller functions enables
+re-use of code at other places.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- kernel/Makefile        |  2 +-
- scripts/Makefile       |  1 -
- scripts/basic/Makefile |  1 +
- scripts/basic/bin2c.c  | 35 +++++++++++++++++++++++++++++++++++
- scripts/bin2c.c        | 36 ------------------------------------
- 5 files changed, 37 insertions(+), 38 deletions(-)
- create mode 100644 scripts/basic/bin2c.c
- delete mode 100644 scripts/bin2c.c
+ kernel/kexec.c | 182 ++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 101 insertions(+), 81 deletions(-)
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index f2a8b62..9b07bb7 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -105,7 +105,7 @@ targets += config_data.gz
- $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
- 	$(call if_changed,gzip)
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 28c5706..c435c5f 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -124,45 +124,27 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 				       gfp_t gfp_mask,
+ 				       unsigned long dest);
  
--      filechk_ikconfiggz = (echo "static const char kernel_config_data[] __used = MAGIC_START"; cat $< | scripts/bin2c; echo "MAGIC_END;")
-+      filechk_ikconfiggz = (echo "static const char kernel_config_data[] __used = MAGIC_START"; cat $< | scripts/basic/bin2c; echo "MAGIC_END;")
- targets += config_data.h
- $(obj)/config_data.h: $(obj)/config_data.gz FORCE
- 	$(call filechk,ikconfiggz)
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 1d07860..e9d56fb 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -13,7 +13,6 @@ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
- hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
- hostprogs-$(CONFIG_LOGO)         += pnmtologo
- hostprogs-$(CONFIG_VT)           += conmakehash
--hostprogs-$(CONFIG_IKCONFIG)     += bin2c
- hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
- hostprogs-$(CONFIG_BUILDTIME_EXTABLE_SORT) += sortextable
- hostprogs-$(CONFIG_ASN1)	 += asn1_compiler
-diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
-index 4fcef87..afbc1cd 100644
---- a/scripts/basic/Makefile
-+++ b/scripts/basic/Makefile
-@@ -9,6 +9,7 @@
- # fixdep: 	 Used to generate dependency information during build process
+-static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+-	                    unsigned long nr_segments,
+-                            struct kexec_segment __user *segments)
++static int copy_user_segment_list(struct kimage *image,
++				unsigned long nr_segments,
++				struct kexec_segment __user *segments)
+ {
++	int ret;
+ 	size_t segment_bytes;
+-	struct kimage *image;
+-	unsigned long i;
+-	int result;
+-
+-	/* Allocate a controlling structure */
+-	result = -ENOMEM;
+-	image = kzalloc(sizeof(*image), GFP_KERNEL);
+-	if (!image)
+-		goto out;
+-
+-	image->head = 0;
+-	image->entry = &image->head;
+-	image->last_entry = &image->head;
+-	image->control_page = ~0; /* By default this does not apply */
+-	image->start = entry;
+-	image->type = KEXEC_TYPE_DEFAULT;
+-
+-	/* Initialize the list of control pages */
+-	INIT_LIST_HEAD(&image->control_pages);
+-
+-	/* Initialize the list of destination pages */
+-	INIT_LIST_HEAD(&image->dest_pages);
+-
+-	/* Initialize the list of unusable pages */
+-	INIT_LIST_HEAD(&image->unuseable_pages);
  
- hostprogs-y	:= fixdep
-+hostprogs-$(CONFIG_IKCONFIG)     += bin2c
- always		:= $(hostprogs-y)
- 
- # fixdep is needed to compile other host programs
-diff --git a/scripts/basic/bin2c.c b/scripts/basic/bin2c.c
-new file mode 100644
-index 0000000..af187e6
---- /dev/null
-+++ b/scripts/basic/bin2c.c
-@@ -0,0 +1,35 @@
-+/*
-+ * Unloved program to convert a binary on stdin to a C include on stdout
-+ *
-+ * Jan 1999 Matt Mackall <mpm@selenic.com>
-+ *
-+ * This software may be used and distributed according to the terms
-+ * of the GNU General Public License, incorporated herein by reference.
-+ */
+ 	/* Read in the segments */
+ 	image->nr_segments = nr_segments;
+ 	segment_bytes = nr_segments * sizeof(*segments);
+-	result = copy_from_user(image->segment, segments, segment_bytes);
+-	if (result) {
+-		result = -EFAULT;
+-		goto out;
+-	}
++	ret = copy_from_user(image->segment, segments, segment_bytes);
++	if (ret)
++		ret = -EFAULT;
 +
-+#include <stdio.h>
++	return ret;
++}
 +
-+int main(int argc, char *argv[])
++static int sanity_check_segment_list(struct kimage *image)
 +{
-+	int ch, total = 0;
-+
-+	if (argc > 1)
-+		printf("const char %s[] %s=\n",
-+			argv[1], argc > 2 ? argv[2] : "");
-+
-+	do {
-+		printf("\t\"");
-+		while ((ch = getchar()) != EOF) {
-+			total++;
-+			printf("\\x%02x", ch);
-+			if (total % 16 == 0)
-+				break;
++	int result, i;
++	unsigned long nr_segments = image->nr_segments;
+ 
+ 	/*
+ 	 * Verify we have good destination addresses.  The caller is
+@@ -184,9 +166,9 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 		mstart = image->segment[i].mem;
+ 		mend   = mstart + image->segment[i].memsz;
+ 		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+-			goto out;
++			return result;
+ 		if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
+-			goto out;
++			return result;
+ 	}
+ 
+ 	/* Verify our destination addresses do not overlap.
+@@ -207,7 +189,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 			pend   = pstart + image->segment[j].memsz;
+ 			/* Do the segments overlap ? */
+ 			if ((mend > pstart) && (mstart < pend))
+-				goto out;
++				return result;
+ 		}
+ 	}
+ 
+@@ -219,18 +201,61 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 	result = -EINVAL;
+ 	for (i = 0; i < nr_segments; i++) {
+ 		if (image->segment[i].bufsz > image->segment[i].memsz)
+-			goto out;
++			return result;
+ 	}
+ 
+-	result = 0;
+-out:
+-	if (result == 0)
+-		*rimage = image;
+-	else
+-		kfree(image);
++	/*
++	 * Verify we have good destination addresses.  Normally
++	 * the caller is responsible for making certain we don't
++	 * attempt to load the new image into invalid or reserved
++	 * areas of RAM.  But crash kernels are preloaded into a
++	 * reserved area of ram.  We must ensure the addresses
++	 * are in the reserved area otherwise preloading the
++	 * kernel could corrupt things.
++	 */
+ 
+-	return result;
++	if (image->type == KEXEC_TYPE_CRASH) {
++		result = -EADDRNOTAVAIL;
++		for (i = 0; i < nr_segments; i++) {
++			unsigned long mstart, mend;
+ 
++			mstart = image->segment[i].mem;
++			mend = mstart + image->segment[i].memsz - 1;
++			/* Ensure we are within the crash kernel limits */
++			if ((mstart < crashk_res.start) ||
++			    (mend > crashk_res.end))
++				return result;
 +		}
-+		printf("\"\n");
-+	} while (ch != EOF);
-+
-+	if (argc > 1)
-+		printf("\t;\n\nconst int %s_size = %d;\n", argv[1], total);
++	}
 +
 +	return 0;
 +}
-diff --git a/scripts/bin2c.c b/scripts/bin2c.c
-deleted file mode 100644
-index 96dd2bc..0000000
---- a/scripts/bin2c.c
-+++ /dev/null
-@@ -1,36 +0,0 @@
--/*
-- * Unloved program to convert a binary on stdin to a C include on stdout
-- *
-- * Jan 1999 Matt Mackall <mpm@selenic.com>
-- *
-- * This software may be used and distributed according to the terms
-- * of the GNU General Public License, incorporated herein by reference.
-- */
--
--#include <stdio.h>
--
--int main(int argc, char *argv[])
--{
--	int ch, total=0;
--
--	if (argc > 1)
--		printf("const char %s[] %s=\n",
--			argv[1], argc > 2 ? argv[2] : "");
--
--	do {
--		printf("\t\"");
--		while ((ch = getchar()) != EOF)
--		{
--			total++;
--			printf("\\x%02x",ch);
--			if (total % 16 == 0)
--				break;
--		}
--		printf("\"\n");
--	} while (ch != EOF);
--
--	if (argc > 1)
--		printf("\t;\n\nconst int %s_size = %d;\n", argv[1], total);
--
--	return 0;
--}
++
++static struct kimage *do_kimage_alloc_init(void)
++{
++	struct kimage *image;
++
++	/* Allocate a controlling structure */
++	image = kzalloc(sizeof(*image), GFP_KERNEL);
++	if (!image)
++		return NULL;
++
++	image->head = 0;
++	image->entry = &image->head;
++	image->last_entry = &image->head;
++	image->control_page = ~0; /* By default this does not apply */
++	image->type = KEXEC_TYPE_DEFAULT;
++
++	/* Initialize the list of control pages */
++	INIT_LIST_HEAD(&image->control_pages);
++
++	/* Initialize the list of destination pages */
++	INIT_LIST_HEAD(&image->dest_pages);
++
++	/* Initialize the list of unusable pages */
++	INIT_LIST_HEAD(&image->unuseable_pages);
++
++	return image;
+ }
+ 
+ static void kimage_free_page_list(struct list_head *list);
+@@ -243,10 +268,19 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 	struct kimage *image;
+ 
+ 	/* Allocate and initialize a controlling structure */
+-	image = NULL;
+-	result = do_kimage_alloc(&image, entry, nr_segments, segments);
++	image = do_kimage_alloc_init();
++	if (!image)
++		return -ENOMEM;
++
++	image->start = entry;
++
++	result = copy_user_segment_list(image, nr_segments, segments);
+ 	if (result)
+-		goto out;
++		goto out_free_image;
++
++	result = sanity_check_segment_list(image);
++	if (result)
++		goto out_free_image;
+ 
+ 	/*
+ 	 * Find a location for the control code buffer, and add it
+@@ -258,22 +292,23 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+ 	if (!image->control_code_page) {
+ 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+-		goto out_free;
++		goto out_free_image;
+ 	}
+ 
+ 	image->swap_page = kimage_alloc_control_pages(image, 0);
+ 	if (!image->swap_page) {
+ 		printk(KERN_ERR "Could not allocate swap buffer\n");
+-		goto out_free;
++		goto out_free_control_pages;
+ 	}
+ 
+ 	*rimage = image;
+ 	return 0;
+ 
+-out_free:
++
++out_free_control_pages:
+ 	kimage_free_page_list(&image->control_pages);
++out_free_image:
+ 	kfree(image);
+-out:
+ 	return result;
+ }
+ 
+@@ -283,19 +318,17 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ {
+ 	int result;
+ 	struct kimage *image;
+-	unsigned long i;
+ 
+-	image = NULL;
+ 	/* Verify we have a valid entry point */
+-	if ((entry < crashk_res.start) || (entry > crashk_res.end)) {
+-		result = -EADDRNOTAVAIL;
+-		goto out;
+-	}
++	if ((entry < crashk_res.start) || (entry > crashk_res.end))
++		return -EADDRNOTAVAIL;
+ 
+ 	/* Allocate and initialize a controlling structure */
+-	result = do_kimage_alloc(&image, entry, nr_segments, segments);
+-	if (result)
+-		goto out;
++	image = do_kimage_alloc_init();
++	if (!image)
++		return -ENOMEM;
++
++	image->start = entry;
+ 
+ 	/* Enable the special crash kernel control page
+ 	 * allocation policy.
+@@ -303,25 +336,13 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ 	image->control_page = crashk_res.start;
+ 	image->type = KEXEC_TYPE_CRASH;
+ 
+-	/*
+-	 * Verify we have good destination addresses.  Normally
+-	 * the caller is responsible for making certain we don't
+-	 * attempt to load the new image into invalid or reserved
+-	 * areas of RAM.  But crash kernels are preloaded into a
+-	 * reserved area of ram.  We must ensure the addresses
+-	 * are in the reserved area otherwise preloading the
+-	 * kernel could corrupt things.
+-	 */
+-	result = -EADDRNOTAVAIL;
+-	for (i = 0; i < nr_segments; i++) {
+-		unsigned long mstart, mend;
++	result = copy_user_segment_list(image, nr_segments, segments);
++	if (result)
++		goto out_free_image;
+ 
+-		mstart = image->segment[i].mem;
+-		mend = mstart + image->segment[i].memsz - 1;
+-		/* Ensure we are within the crash kernel limits */
+-		if ((mstart < crashk_res.start) || (mend > crashk_res.end))
+-			goto out_free;
+-	}
++	result = sanity_check_segment_list(image);
++	if (result)
++		goto out_free_image;
+ 
+ 	/*
+ 	 * Find a location for the control code buffer, and add
+@@ -333,15 +354,14 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+ 	if (!image->control_code_page) {
+ 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+-		goto out_free;
++		goto out_free_image;
+ 	}
+ 
+ 	*rimage = image;
+ 	return 0;
+ 
+-out_free:
++out_free_image:
+ 	kfree(image);
+-out:
+ 	return result;
+ }
+ 
 -- 
 1.9.0
 
