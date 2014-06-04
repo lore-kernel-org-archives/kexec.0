@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ws7Zl-0005vz-2m
- for kexec@lists.infradead.org; Wed, 04 Jun 2014 09:33:41 +0000
-Date: Wed, 4 Jun 2014 11:32:55 +0200
+ id 1Ws8NZ-0008Fd-Gy
+ for kexec@lists.infradead.org; Wed, 04 Jun 2014 10:25:10 +0000
+Date: Wed, 4 Jun 2014 12:24:20 +0200
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 03/13] kexec: Move segment verification code in a
- separate function
-Message-ID: <20140604093254.GB4105@pd.tnic>
+Subject: Re: [PATCH 04/13] resource: Provide new functions to walk through
+ resources
+Message-ID: <20140604102420.GC4105@pd.tnic>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <1401800822-27425-4-git-send-email-vgoyal@redhat.com>
+ <1401800822-27425-5-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1401800822-27425-4-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <1401800822-27425-5-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,105 +26,63 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On Tue, Jun 03, 2014 at 09:06:52AM -0400, Vivek Goyal wrote:
-> Previously do_kimage_alloc() will allocate a kimage structure, copy
-> segment list from user space and then do the segment list sanity verification.
-> 
-> Break down this function in 3 parts. do_kimage_alloc_init() to do actual
-> allocation and basic initialization of kimage structure.
-> copy_user_segment_list() to copy segment list from user space and
-> sanity_check_segment_list() to verify the sanity of segment list as passed
-> by user space.
-> 
-> In later patches, I need to only allocate kimage and not copy segment
-> list from user space. So breaking down in smaller functions enables
-> re-use of code at other places.
-
-I haven't seen what's going on further in the patchset but from looking at
-kimage_normal_alloc() and kimage_crash_alloc()'s guts, they look very
-similar and could probably share a common __kimage_alloc which does
-do_kimage_alloc_init, copy_user_segment_list, sanity_check_segment_list
-and kimage_alloc_control_pages...
-
-One probably would have to actually write it down to see whether it
-makes sense though and is not too ugly :-)
-
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
-
-In any case, it looks ok, just two nitpicks below:
-
-Acked-by: Borislav Petkov <bp@suse.de>
-
->  kernel/kexec.c | 182 ++++++++++++++++++++++++++++++++-------------------------
->  1 file changed, 101 insertions(+), 81 deletions(-)
-
-...
-
-> +static struct kimage *do_kimage_alloc_init(void)
+On Tue, Jun 03, 2014 at 09:06:53AM -0400, Vivek Goyal wrote:
+> @@ -322,7 +327,71 @@ int release_resource(struct resource *old)
+>  
+>  EXPORT_SYMBOL(release_resource);
+>  
+> -#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
+> +/*
+> + * Finds the lowest iomem reosurce exists with-in [res->start.res->end)
+> + * the caller must specify res->start, res->end, res->flags and "name".
+> + * If found, returns 0, res is overwritten, if not found, returns -1.
+> + * This walks through whole tree and not just first level children.
+> + */
+> +static int find_next_iomem_res(struct resource *res, char *name)
 > +{
-> +	struct kimage *image;
+> +	resource_size_t start, end;
+> +	struct resource *p;
 > +
-> +	/* Allocate a controlling structure */
-> +	image = kzalloc(sizeof(*image), GFP_KERNEL);
-> +	if (!image)
-> +		return NULL;
+> +	BUG_ON(!res);
 > +
-> +	image->head = 0;
-> +	image->entry = &image->head;
-> +	image->last_entry = &image->head;
-> +	image->control_page = ~0; /* By default this does not apply */
-> +	image->type = KEXEC_TYPE_DEFAULT;
+> +	start = res->start;
+> +	end = res->end;
+> +	BUG_ON(start >= end);
 > +
-> +	/* Initialize the list of control pages */
-> +	INIT_LIST_HEAD(&image->control_pages);
+> +	read_lock(&resource_lock);
+> +	p = &iomem_resource;
+> +	while ((p = next_resource(p))) {
+
+Just a thought - this function differs from find_next_system_ram() only
+in the traversal mode through resources. I wonder if next_resource()
+could be given a flag, say TRAVERSE_SIBLINGS_ONLY or so and be called
+from both, once with the flag set and once without and thus save us the
+code duplication.
+
+> +		if (p->flags != res->flags)
+> +			continue;
+> +		if (name && strcmp(p->name, name))
+> +			continue;
+> +		if (p->start > end) {
+> +			p = NULL;
+> +			break;
+> +		}
+> +		if ((p->end >= start) && (p->start < end))
+> +			break;
+> +	}
 > +
-> +	/* Initialize the list of destination pages */
-> +	INIT_LIST_HEAD(&image->dest_pages);
-> +
-> +	/* Initialize the list of unusable pages */
-> +	INIT_LIST_HEAD(&image->unuseable_pages);
-
-If the "e" in "unuseable" bugs you too, like me, you could add this one
-to your patchset :-)
-
-http://lkml.kernel.org/r/1392819695-24116-1-git-send-email-bp@alien8.de
-
-...
-
-> @@ -258,22 +292,23 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
->  					   get_order(KEXEC_CONTROL_PAGE_SIZE));
->  	if (!image->control_code_page) {
->  		printk(KERN_ERR "Could not allocate control_code_buffer\n");
-> -		goto out_free;
-> +		goto out_free_image;
->  	}
->  
->  	image->swap_page = kimage_alloc_control_pages(image, 0);
->  	if (!image->swap_page) {
->  		printk(KERN_ERR "Could not allocate swap buffer\n");
-> -		goto out_free;
-> +		goto out_free_control_pages;
->  	}
->  
->  	*rimage = image;
->  	return 0;
->  
-> -out_free:
-> +
-
-Superfluous newline.
-
-> +out_free_control_pages:
->  	kimage_free_page_list(&image->control_pages);
-> +out_free_image:
->  	kfree(image);
-> -out:
->  	return result;
->  }
->
+> +	read_unlock(&resource_lock);
+> +	if (!p)
+> +		return -1;
+> +	/* copy data */
+> +	if (res->start < p->start)
+> +		res->start = p->start;
+> +	if (res->end > p->end)
+> +		res->end = p->end;
+> +	return 0;
+> +}
 
 -- 
 Regards/Gruss,
