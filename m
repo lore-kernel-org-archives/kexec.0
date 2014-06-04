@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsGEY-0008Ju-R8
- for kexec@lists.infradead.org; Wed, 04 Jun 2014 18:48:23 +0000
-Date: Wed, 4 Jun 2014 14:47:43 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 03/13] kexec: Move segment verification code in a
- separate function
-Message-ID: <20140604184743.GC4406@redhat.com>
-References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <1401800822-27425-4-git-send-email-vgoyal@redhat.com>
- <20140604093254.GB4105@pd.tnic>
+Received: from mail-wi0-x22a.google.com ([2a00:1450:400c:c05::22a])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WsH2P-0001q1-BN
+ for kexec@lists.infradead.org; Wed, 04 Jun 2014 19:39:57 +0000
+Received: by mail-wi0-f170.google.com with SMTP id bs8so8427574wib.1
+ for <kexec@lists.infradead.org>; Wed, 04 Jun 2014 12:39:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140604093254.GB4105@pd.tnic>
+In-Reply-To: <20140604175031.GA4406@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <20140603131203.GA23395@redhat.com>
+ <20140604092214.GA17528@dhcp-17-89.nay.redhat.com>
+ <20140604175031.GA4406@redhat.com>
+From: Michael Kerrisk <mtk.manpages@gmail.com>
+Date: Wed, 4 Jun 2014 21:39:10 +0200
+Message-ID: <CAHO5Pa0dxpq7YNe5eUMPE9Mn5m7XCnB1C5mZxrvt2-OqOpVZAA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in kernel
+ loading
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,118 +28,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, Jiri Kosina <jkosina@suse.cz>, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Linux API <linux-api@vger.kernel.org>, dyoung@redhat.com, WANG Chao <chaowang@redhat.com>, Michael Kerrisk-manpages <mtk.manpages@gmail.com>
 
-On Wed, Jun 04, 2014 at 11:32:55AM +0200, Borislav Petkov wrote:
-> On Tue, Jun 03, 2014 at 09:06:52AM -0400, Vivek Goyal wrote:
-> > Previously do_kimage_alloc() will allocate a kimage structure, copy
-> > segment list from user space and then do the segment list sanity verification.
-> > 
-> > Break down this function in 3 parts. do_kimage_alloc_init() to do actual
-> > allocation and basic initialization of kimage structure.
-> > copy_user_segment_list() to copy segment list from user space and
-> > sanity_check_segment_list() to verify the sanity of segment list as passed
-> > by user space.
-> > 
-> > In later patches, I need to only allocate kimage and not copy segment
-> > list from user space. So breaking down in smaller functions enables
-> > re-use of code at other places.
-> 
-> I haven't seen what's going on further in the patchset but from looking at
-> kimage_normal_alloc() and kimage_crash_alloc()'s guts, they look very
-> similar and could probably share a common __kimage_alloc which does
-> do_kimage_alloc_init, copy_user_segment_list, sanity_check_segment_list
-> and kimage_alloc_control_pages...
-> 
-> One probably would have to actually write it down to see whether it
-> makes sense though and is not too ugly :-)
+Vivek,
 
-Hi Boris,
+As per Documentation/SubmitChecklist , please CC linux-api@ on patces
+that change the ABI/API. See
+https://www.kernel.org/doc/man-pages/linux-api-ml.html.
 
-Agreed. kimage_normal_alloc() and kimage_crash_alloc() are sharing
-lot of code and it should make sense to write a common function for
-shared code and let both call that function. I will give it a try
-and if it makes sense will make it part of next version of posting.
+Also, is there some draft man page for this new system call?
 
-> 
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > ---
-> 
-> In any case, it looks ok, just two nitpicks below:
-> 
-> Acked-by: Borislav Petkov <bp@suse.de>
-> 
-> >  kernel/kexec.c | 182 ++++++++++++++++++++++++++++++++-------------------------
-> >  1 file changed, 101 insertions(+), 81 deletions(-)
-> 
-> ...
-> 
-> > +static struct kimage *do_kimage_alloc_init(void)
-> > +{
-> > +	struct kimage *image;
-> > +
-> > +	/* Allocate a controlling structure */
-> > +	image = kzalloc(sizeof(*image), GFP_KERNEL);
-> > +	if (!image)
-> > +		return NULL;
-> > +
-> > +	image->head = 0;
-> > +	image->entry = &image->head;
-> > +	image->last_entry = &image->head;
-> > +	image->control_page = ~0; /* By default this does not apply */
-> > +	image->type = KEXEC_TYPE_DEFAULT;
-> > +
-> > +	/* Initialize the list of control pages */
-> > +	INIT_LIST_HEAD(&image->control_pages);
-> > +
-> > +	/* Initialize the list of destination pages */
-> > +	INIT_LIST_HEAD(&image->dest_pages);
-> > +
-> > +	/* Initialize the list of unusable pages */
-> > +	INIT_LIST_HEAD(&image->unuseable_pages);
-> 
-> If the "e" in "unuseable" bugs you too, like me, you could add this one
-> to your patchset :-)
-> 
-> http://lkml.kernel.org/r/1392819695-24116-1-git-send-email-bp@alien8.de
-> 
+Thanks,
 
-Hmm..., Interesting. I never noticed it. So google search seems to say
-that unuseable is also not wrong. 
+Michael
 
-I am not feeling very strongly about it, so I will leave this cleanup
-for some other day.
+On Wed, Jun 4, 2014 at 7:50 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> On Wed, Jun 04, 2014 at 05:22:14PM +0800, WANG Chao wrote:
+>
+> [..]
+>> > Index: kexec-tools/kexec/kexec.h
+>> > ===================================================================
+>> > --- kexec-tools.orig/kexec/kexec.h  2014-06-02 14:34:16.719774316 -0400
+>> > +++ kexec-tools/kexec/kexec.h       2014-06-02 14:34:42.010036325 -0400
+>> > @@ -156,6 +156,13 @@ struct kexec_info {
+>> >     unsigned long kexec_flags;
+>> >     unsigned long backup_src_start;
+>> >     unsigned long backup_src_size;
+>> > +   /* Set to 1 if we are using kexec2 syscall */
+>> > +   unsigned long file_mode :1;
+>> > +
+>> > +   /* Filled by kernel image processing code */
+>> > +   int initrd_fd;
+>> > +   char *command_line;
+>> > +   int command_line_len;
+>> >  };
+>> >
+>> >  struct arch_map_entry {
+>> > @@ -207,6 +214,7 @@ extern int file_types;
+>> >  #define OPT_UNLOAD         'u'
+>> >  #define OPT_TYPE           't'
+>> >  #define OPT_PANIC          'p'
+>> > +#define OPT_USE_KEXEC2_SYSCALL     's'
+>> >  #define OPT_MEM_MIN             256
+>> >  #define OPT_MEM_MAX             257
+>> >  #define OPT_REUSE_INITRD   258
+>> > @@ -230,6 +238,7 @@ extern int file_types;
+>> >     { "mem-min",            1, 0, OPT_MEM_MIN }, \
+>> >     { "mem-max",            1, 0, OPT_MEM_MAX }, \
+>> >     { "reuseinitrd",        0, 0, OPT_REUSE_INITRD }, \
+>> > +   { "use-kexec2-syscall", 0, 0, OPT_USE_KEXEC2_SYSCALL }, \
+>> >     { "debug",              0, 0, OPT_DEBUG }, \
+>> >
+>> >  #define KEXEC_OPT_STR "h?vdfxluet:p"
+>>
+>> This line,
+>> #define KEXEC_OPT_STR "h?vdfxluet:p"
+>>
+>> should be something like,
+>> #define KEXEC_OPT_STR "h?vdfxluet:ps"
+>
+> Thanks chao. I will fix it.
+>
+> Thanks
+> Vivek
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-> ...
-> 
-> > @@ -258,22 +292,23 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
-> >  					   get_order(KEXEC_CONTROL_PAGE_SIZE));
-> >  	if (!image->control_code_page) {
-> >  		printk(KERN_ERR "Could not allocate control_code_buffer\n");
-> > -		goto out_free;
-> > +		goto out_free_image;
-> >  	}
-> >  
-> >  	image->swap_page = kimage_alloc_control_pages(image, 0);
-> >  	if (!image->swap_page) {
-> >  		printk(KERN_ERR "Could not allocate swap buffer\n");
-> > -		goto out_free;
-> > +		goto out_free_control_pages;
-> >  	}
-> >  
-> >  	*rimage = image;
-> >  	return 0;
-> >  
-> > -out_free:
-> > +
-> 
-> Superfluous newline.
 
-Will remove.
 
-Thanks
-Vivek
+-- 
+Michael Kerrisk Linux man-pages maintainer;
+http://www.kernel.org/doc/man-pages/
+Author of "The Linux Programming Interface", http://blog.man7.org/
 
 _______________________________________________
 kexec mailing list
