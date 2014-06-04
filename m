@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ws7PO-0002ef-C7
- for kexec@lists.infradead.org; Wed, 04 Jun 2014 09:22:59 +0000
-Date: Wed, 4 Jun 2014 17:22:14 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
- kernel loading
-Message-ID: <20140604092214.GA17528@dhcp-17-89.nay.redhat.com>
+ id 1Ws7Zl-0005vz-2m
+ for kexec@lists.infradead.org; Wed, 04 Jun 2014 09:33:41 +0000
+Date: Wed, 4 Jun 2014 11:32:55 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 03/13] kexec: Move segment verification code in a
+ separate function
+Message-ID: <20140604093254.GB4105@pd.tnic>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <20140603131203.GA23395@redhat.com>
+ <1401800822-27425-4-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140603131203.GA23395@redhat.com>
+In-Reply-To: <1401800822-27425-4-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,88 +26,112 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On 06/03/14 at 09:12am, Vivek Goyal wrote:
-> On Tue, Jun 03, 2014 at 09:06:49AM -0400, Vivek Goyal wrote:
-> > Hi,
-> > 
-> > This is V3 of the patchset. Previous versions were posted here.
-> > 
-> > V1: https://lkml.org/lkml/2013/11/20/540
-> > V2: https://lkml.org/lkml/2014/1/27/331
-> > 
-> > Changes since v2:
-> > 
-> > - Took care of most of the review comments from V2.
-> > - Added support for kexec/kdump on EFI systems.
-> > - Dropped support for loading ELF vmlinux.
-> > 
-> > This patch series is generated on top of 3.15.0-rc8. It also requires a
-> > two patch cleanup series which is sitting in -tip tree here.
+On Tue, Jun 03, 2014 at 09:06:52AM -0400, Vivek Goyal wrote:
+> Previously do_kimage_alloc() will allocate a kimage structure, copy
+> segment list from user space and then do the segment list sanity verification.
 > 
-> I used following kexec-tools patches to test kernel changes.
+> Break down this function in 3 parts. do_kimage_alloc_init() to do actual
+> allocation and basic initialization of kimage structure.
+> copy_user_segment_list() to copy segment list from user space and
+> sanity_check_segment_list() to verify the sanity of segment list as passed
+> by user space.
 > 
-> Thanks
-> Vivek
-> 
-> 
-> kexec-tools: Provide an option to make use of new system call
-> 
-> This patch provides and option --use-kexec2-syscall, to force use of
-> new system call for kexec. Default is to continue to use old syscall.
-> 
+> In later patches, I need to only allocate kimage and not copy segment
+> list from user space. So breaking down in smaller functions enables
+> re-use of code at other places.
+
+I haven't seen what's going on further in the patchset but from looking at
+kimage_normal_alloc() and kimage_crash_alloc()'s guts, they look very
+similar and could probably share a common __kimage_alloc which does
+do_kimage_alloc_init, copy_user_segment_list, sanity_check_segment_list
+and kimage_alloc_control_pages...
+
+One probably would have to actually write it down to see whether it
+makes sense though and is not too ugly :-)
+
 > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
 
-Hi, Vivek
+In any case, it looks ok, just two nitpicks below:
 
-In your kexec-tools patch, you mentioned '-s' as a short option for
---use-kexec2-syscall in usage(). But it doesn't work.
+Acked-by: Borislav Petkov <bp@suse.de>
 
-[..]
-> Index: kexec-tools/kexec/kexec.h
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec.h	2014-06-02 14:34:16.719774316 -0400
-> +++ kexec-tools/kexec/kexec.h	2014-06-02 14:34:42.010036325 -0400
-> @@ -156,6 +156,13 @@ struct kexec_info {
->  	unsigned long kexec_flags;
->  	unsigned long backup_src_start;
->  	unsigned long backup_src_size;
-> +	/* Set to 1 if we are using kexec2 syscall */
-> +	unsigned long file_mode :1;
+>  kernel/kexec.c | 182 ++++++++++++++++++++++++++++++++-------------------------
+>  1 file changed, 101 insertions(+), 81 deletions(-)
+
+...
+
+> +static struct kimage *do_kimage_alloc_init(void)
+> +{
+> +	struct kimage *image;
 > +
-> +	/* Filled by kernel image processing code */
-> +	int initrd_fd;
-> +	char *command_line;
-> +	int command_line_len;
->  };
+> +	/* Allocate a controlling structure */
+> +	image = kzalloc(sizeof(*image), GFP_KERNEL);
+> +	if (!image)
+> +		return NULL;
+> +
+> +	image->head = 0;
+> +	image->entry = &image->head;
+> +	image->last_entry = &image->head;
+> +	image->control_page = ~0; /* By default this does not apply */
+> +	image->type = KEXEC_TYPE_DEFAULT;
+> +
+> +	/* Initialize the list of control pages */
+> +	INIT_LIST_HEAD(&image->control_pages);
+> +
+> +	/* Initialize the list of destination pages */
+> +	INIT_LIST_HEAD(&image->dest_pages);
+> +
+> +	/* Initialize the list of unusable pages */
+> +	INIT_LIST_HEAD(&image->unuseable_pages);
+
+If the "e" in "unuseable" bugs you too, like me, you could add this one
+to your patchset :-)
+
+http://lkml.kernel.org/r/1392819695-24116-1-git-send-email-bp@alien8.de
+
+...
+
+> @@ -258,22 +292,23 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+>  					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+>  	if (!image->control_code_page) {
+>  		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+> -		goto out_free;
+> +		goto out_free_image;
+>  	}
 >  
->  struct arch_map_entry {
-> @@ -207,6 +214,7 @@ extern int file_types;
->  #define OPT_UNLOAD		'u'
->  #define OPT_TYPE		't'
->  #define OPT_PANIC		'p'
-> +#define OPT_USE_KEXEC2_SYSCALL	's'
->  #define OPT_MEM_MIN             256
->  #define OPT_MEM_MAX             257
->  #define OPT_REUSE_INITRD	258
-> @@ -230,6 +238,7 @@ extern int file_types;
->  	{ "mem-min",		1, 0, OPT_MEM_MIN }, \
->  	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
->  	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
-> +	{ "use-kexec2-syscall",	0, 0, OPT_USE_KEXEC2_SYSCALL }, \
->  	{ "debug",		0, 0, OPT_DEBUG }, \
+>  	image->swap_page = kimage_alloc_control_pages(image, 0);
+>  	if (!image->swap_page) {
+>  		printk(KERN_ERR "Could not allocate swap buffer\n");
+> -		goto out_free;
+> +		goto out_free_control_pages;
+>  	}
 >  
->  #define KEXEC_OPT_STR "h?vdfxluet:p"
+>  	*rimage = image;
+>  	return 0;
+>  
+> -out_free:
+> +
 
-This line,
-#define KEXEC_OPT_STR "h?vdfxluet:p"
+Superfluous newline.
 
-should be something like,
-#define KEXEC_OPT_STR "h?vdfxluet:ps"
+> +out_free_control_pages:
+>  	kimage_free_page_list(&image->control_pages);
+> +out_free_image:
+>  	kfree(image);
+> -out:
+>  	return result;
+>  }
+>
 
-Thanks
-WANG Chao
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
 
 _______________________________________________
 kexec mailing list
