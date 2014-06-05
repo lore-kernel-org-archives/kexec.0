@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from szxga03-in.huawei.com ([119.145.14.66])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsVrF-0008RW-B3
- for kexec@lists.infradead.org; Thu, 05 Jun 2014 11:29:22 +0000
+ id 1WsVrK-0008Um-B8
+ for kexec@lists.infradead.org; Thu, 05 Jun 2014 11:29:27 +0000
 From: Liu Hua <sdu.liu@huawei.com>
-Subject: [PATCH 2/2] kexec: ARM: add LPAE support
-Date: Thu, 5 Jun 2014 19:20:08 +0800
-Message-ID: <1401967208-30948-3-git-send-email-sdu.liu@huawei.com>
-In-Reply-To: <1401967208-30948-1-git-send-email-sdu.liu@huawei.com>
-References: <1401967208-30948-1-git-send-email-sdu.liu@huawei.com>
+Subject: [PATCH 0/2] kexec: add LPAE support for ARM32 platform
+Date: Thu, 5 Jun 2014 19:20:06 +0800
+Message-ID: <1401967208-30948-1-git-send-email-sdu.liu@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,69 +21,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
-Cc: wangnan0@huawei.com, Liu Hua <sdu.liu@huawei.com>, liusdu@126.com, kexec@lists.infradead.org, genghui@huawei.com, Wei Jitao <weijitao@huawei.com>
+Cc: wangnan0@huawei.com, liusdu@126.com, kexec@lists.infradead.org, Liu Hua <sdu.liu@huawei.com>, genghui@huawei.com
 
-For 32-bit ARM systems with CONFIG_ARM_LPAE=y, when kexec utility
-loads the crash kernel. 32-bit elf header is not enough if the
-physical address exceeds 4G.
 
-This patch checkes whether the largest physical address of the system
-exceeds 4G. If so, kexec creates 64-bit elf header.Otherwise it
-creates 32-bit elf header.
+This patch series introduces LPAE support for 32-bit ARM
+platform.
 
-Signed-off-by: Wei Jitao <weijitao@huawei.com>
-Signed-off-by: Liu Hua <sdu.liu@huawei.com>
----
- kexec/arch/arm/crashdump-arm.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+I have test them on LPAE enabled kernel(command: kexec ... -d):
 
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 726c1e9..b523e5f 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -20,6 +20,7 @@
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-  */
-+#include <limits.h>
- #include <elf.h>
- #include <errno.h>
- #include <stdio.h>
-@@ -335,6 +336,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	unsigned long bufsz;
- 	void *buf;
- 	int err;
-+	int last_ranges;
- 
- 	/*
- 	 * First fetch all the memory (RAM) ranges that we are going to pass to
-@@ -354,10 +356,25 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	if (get_kernel_page_offset(info, &elf_info))
- 		return -1;
- 
--	err = crash_create_elf32_headers(info, &elf_info,
-+	last_ranges = usablemem_rgns.size - 1;
-+	if (last_ranges < 0)
-+		last_ranges = 0;
-+
-+	if (crash_memory_ranges[last_ranges].end > ULONG_MAX) {
-+
-+		/* for support LPAE enabled kernel*/
-+		elf_info.class = ELFCLASS64;
-+
-+		err = crash_create_elf64_headers(info, &elf_info,
- 					 usablemem_rgns.ranges,
- 					 usablemem_rgns.size, &buf, &bufsz,
- 					 ELF_CORE_HEADER_ALIGN);
-+	} else {
-+		err = crash_create_elf32_headers(info, &elf_info,
-+					 usablemem_rgns.ranges,
-+					 usablemem_rgns.size, &buf, &bufsz,
-+					 ELF_CORE_HEADER_ALIGN);
-+	}
- 	if (err)
- 		return err;
- 
+With this patch series:
+
+crashkernel: [0x20000000 - 0x280fffff] (129M)
+memory range: [0 - 0x1fffffff] (512M)
+memory range: [0x28100000 - 0x3fffffff] (383M)
+memory range: [0x1e0000000 - 0x1fcbfffff] (460M)
+
+Without:
+
+crashkernel: [0x20000000 - 0x280fffff] (129M)
+memory range: [0 - 0x1fffffff] (512M)
+memory range: [0x28100000 - 0x3fffffff] (383M)
+memory range: [0xe0000000 - 0xfcbfffff] (460M)
+
+Thanks,
+Liu Hua
+
+Liu Hua (2):
+  kexec: iomem: accept u64 parameters for callbacks
+  kexec: ARM: add LPAE support
+
+ kexec/arch/arm/crashdump-arm.c | 23 ++++++++++++++++++++---
+ kexec/kexec-iomem.c            |  8 ++++----
+ kexec/kexec.h                  |  4 ++--
+ 3 files changed, 26 insertions(+), 9 deletions(-)
+
 -- 
 1.9.0
 
