@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsZPt-0003WU-8i
- for kexec@lists.infradead.org; Thu, 05 Jun 2014 15:17:22 +0000
-Date: Thu, 5 Jun 2014 11:16:39 -0400
+ id 1Wsa3s-00018h-2S
+ for kexec@lists.infradead.org; Thu, 05 Jun 2014 15:58:40 +0000
+Date: Thu, 5 Jun 2014 11:22:09 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 06/13] kexec: New syscall kexec_file_load() declaration
-Message-ID: <20140605151639.GB14083@redhat.com>
+Message-ID: <20140605152209.GC14083@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
  <1401800822-27425-7-git-send-email-vgoyal@redhat.com>
  <20140605095603.GD3876@dhcp-17-89.nay.redhat.com>
+ <20140605151639.GB14083@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140605095603.GD3876@dhcp-17-89.nay.redhat.com>
+In-Reply-To: <20140605151639.GB14083@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +29,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: WANG Chao <chaowang@redhat.com>
 Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-On Thu, Jun 05, 2014 at 05:56:03PM +0800, WANG Chao wrote:
-
-[..]
-> > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> > index c435c5f..a3044e6 100644
-> > --- a/kernel/kexec.c
-> > +++ b/kernel/kexec.c
-> > @@ -1098,6 +1098,13 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
-> >  }
-> >  #endif
-> >  
-> > +SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> > +		const char __user *, cmdline_ptr, unsigned long,
-> > +		cmdline_len, unsigned long, flags)
+On Thu, Jun 05, 2014 at 11:16:39AM -0400, Vivek Goyal wrote:
+> On Thu, Jun 05, 2014 at 05:56:03PM +0800, WANG Chao wrote:
 > 
-> initrd is optional for system boot.
+> [..]
+> > > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > > index c435c5f..a3044e6 100644
+> > > --- a/kernel/kexec.c
+> > > +++ b/kernel/kexec.c
+> > > @@ -1098,6 +1098,13 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
+> > >  }
+> > >  #endif
+> > >  
+> > > +SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> > > +		const char __user *, cmdline_ptr, unsigned long,
+> > > +		cmdline_len, unsigned long, flags)
+> > 
+> > initrd is optional for system boot.
+> > 
+> > How about using int *kernel_fd and int *initrd_fd as the argument? Then
+> > if I don't need initrd, in userspace I can do this:
 > 
-> How about using int *kernel_fd and int *initrd_fd as the argument? Then
-> if I don't need initrd, in userspace I can do this:
-
-Hi Chao,
-
-I really am not too keen converting plain int fd arguments into pointers.
-
-Given the fact that fd is int, that means all valid values are greater
-than 0. How about using -1 to denote that initrd is not being loaded?
-
-This does create one little anomaly and that is for all -ve values we
-will return -EBADF except -1 which we special cased.
-
+> Hi Chao,
 > 
-> kexec_file_load(&kernel_fd, NULL, ...)
+> I really am not too keen converting plain int fd arguments into pointers.
 > 
-> And even you can remove KEXEC_FILE_UNLOAD flag, because you could tell
-> that one wants to unload if the following is invoked:
+> Given the fact that fd is int, that means all valid values are greater
+> than 0. How about using -1 to denote that initrd is not being loaded?
 > 
-> kexec_file_load(NULL, NULL, ...)
+> This does create one little anomaly and that is for all -ve values we
+> will return -EBADF except -1 which we special cased.
 
-I would prefer not to derive special meanings of NULL parameters and
-instead use an explicit flag to unload kernel.
+Or we could do.
+
+- Define extra flag which should be set by user if valid initrd fd is not
+  being passed. Say, KEXEC_FILE_NO_INITRAMFS. And if kernel sees that flag
+  it will not try to parse value passed in argument initrd_fd at all.
+
+I think I like this better.
 
 Thanks
 Vivek
