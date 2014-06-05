@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsVrK-0008Um-B8
- for kexec@lists.infradead.org; Thu, 05 Jun 2014 11:29:27 +0000
-From: Liu Hua <sdu.liu@huawei.com>
-Subject: [PATCH 0/2] kexec: add LPAE support for ARM32 platform
-Date: Thu, 5 Jun 2014 19:20:06 +0800
-Message-ID: <1401967208-30948-1-git-send-email-sdu.liu@huawei.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WsYCf-0006oH-Fe
+ for kexec@lists.infradead.org; Thu, 05 Jun 2014 13:59:38 +0000
+Date: Thu, 5 Jun 2014 09:58:57 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 04/13] resource: Provide new functions to walk through
+ resources
+Message-ID: <20140605135857.GA17389@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <1401800822-27425-5-git-send-email-vgoyal@redhat.com>
+ <20140604102420.GC4105@pd.tnic>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140604102420.GC4105@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,44 +26,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: wangnan0@huawei.com, liusdu@126.com, kexec@lists.infradead.org, Liu Hua <sdu.liu@huawei.com>, genghui@huawei.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
+On Wed, Jun 04, 2014 at 12:24:20PM +0200, Borislav Petkov wrote:
+> On Tue, Jun 03, 2014 at 09:06:53AM -0400, Vivek Goyal wrote:
+> > @@ -322,7 +327,71 @@ int release_resource(struct resource *old)
+> >  
+> >  EXPORT_SYMBOL(release_resource);
+> >  
+> > -#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
+> > +/*
+> > + * Finds the lowest iomem reosurce exists with-in [res->start.res->end)
+> > + * the caller must specify res->start, res->end, res->flags and "name".
+> > + * If found, returns 0, res is overwritten, if not found, returns -1.
+> > + * This walks through whole tree and not just first level children.
+> > + */
+> > +static int find_next_iomem_res(struct resource *res, char *name)
+> > +{
+> > +	resource_size_t start, end;
+> > +	struct resource *p;
+> > +
+> > +	BUG_ON(!res);
+> > +
+> > +	start = res->start;
+> > +	end = res->end;
+> > +	BUG_ON(start >= end);
+> > +
+> > +	read_lock(&resource_lock);
+> > +	p = &iomem_resource;
+> > +	while ((p = next_resource(p))) {
+> 
+> Just a thought - this function differs from find_next_system_ram() only
+> in the traversal mode through resources. I wonder if next_resource()
+> could be given a flag, say TRAVERSE_SIBLINGS_ONLY or so and be called
+> from both, once with the flag set and once without and thus save us the
+> code duplication.
 
-This patch series introduces LPAE support for 32-bit ARM
-platform.
+Yep, that makes sense. I will change it and start passing a flag.
 
-I have test them on LPAE enabled kernel(command: kexec ... -d):
-
-With this patch series:
-
-crashkernel: [0x20000000 - 0x280fffff] (129M)
-memory range: [0 - 0x1fffffff] (512M)
-memory range: [0x28100000 - 0x3fffffff] (383M)
-memory range: [0x1e0000000 - 0x1fcbfffff] (460M)
-
-Without:
-
-crashkernel: [0x20000000 - 0x280fffff] (129M)
-memory range: [0 - 0x1fffffff] (512M)
-memory range: [0x28100000 - 0x3fffffff] (383M)
-memory range: [0xe0000000 - 0xfcbfffff] (460M)
-
-Thanks,
-Liu Hua
-
-Liu Hua (2):
-  kexec: iomem: accept u64 parameters for callbacks
-  kexec: ARM: add LPAE support
-
- kexec/arch/arm/crashdump-arm.c | 23 ++++++++++++++++++++---
- kexec/kexec-iomem.c            |  8 ++++----
- kexec/kexec.h                  |  4 ++--
- 3 files changed, 26 insertions(+), 9 deletions(-)
-
--- 
-1.9.0
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
