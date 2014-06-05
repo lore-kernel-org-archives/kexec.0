@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsZC1-0003cm-Td
- for kexec@lists.infradead.org; Thu, 05 Jun 2014 15:03:06 +0000
-Date: Thu, 5 Jun 2014 11:01:59 -0400
+ id 1WsZPt-0003WU-8i
+ for kexec@lists.infradead.org; Thu, 05 Jun 2014 15:17:22 +0000
+Date: Thu, 5 Jun 2014 11:16:39 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
- kernel loading
-Message-ID: <20140605150159.GA14083@redhat.com>
+Subject: Re: [PATCH 06/13] kexec: New syscall kexec_file_load() declaration
+Message-ID: <20140605151639.GB14083@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <20140603131203.GA23395@redhat.com>
- <20140605083134.GE3506@darkstar.nay.redhat.com>
+ <1401800822-27425-7-git-send-email-vgoyal@redhat.com>
+ <20140605095603.GD3876@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140605083134.GE3506@darkstar.nay.redhat.com>
+In-Reply-To: <20140605095603.GD3876@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +25,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, chaowang@redhat.com
+To: WANG Chao <chaowang@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-On Thu, Jun 05, 2014 at 04:31:34PM +0800, Dave Young wrote:
+On Thu, Jun 05, 2014 at 05:56:03PM +0800, WANG Chao wrote:
 
 [..]
-> > +	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line,
-> > +			info.command_line_len, info.kexec_flags);
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index c435c5f..a3044e6 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -1098,6 +1098,13 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
+> >  }
+> >  #endif
+> >  
+> > +SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> > +		const char __user *, cmdline_ptr, unsigned long,
+> > +		cmdline_len, unsigned long, flags)
 > 
-> Vivek,
+> initrd is optional for system boot.
 > 
-> I tried your patch on my uefi test machine, but kexec load fails like below:
-> 
-> [root@localhost ~]# kexec -l /boot/vmlinuz-3.15.0-rc8+ --use-kexec2-syscall
-> Could not find a free area of memory of 0xa000 bytes ...
+> How about using int *kernel_fd and int *initrd_fd as the argument? Then
+> if I don't need initrd, in userspace I can do this:
 
-Hi Dave,
+Hi Chao,
 
-I think this message is coming from kexec-tools from old loading path. I
-think somehow new path did not even kick in. I tried above and I got
--EBADF as I did not pass initrd. Can you run gdb on kexec and see if
-you are getting to syscall or run strace.
+I really am not too keen converting plain int fd arguments into pointers.
 
-> 
-> Another issue is that the syscall should allow load kernel only without initrd
+Given the fact that fd is int, that means all valid values are greater
+than 0. How about using -1 to denote that initrd is not being loaded?
 
-Agreed. Currently my code is not handling it. I am thinking of ways how to
-make passing initrd fd optional.
+This does create one little anomaly and that is for all -ve values we
+will return -EBADF except -1 which we special cased.
 
 > 
-> and
-> cmdline since kernel can mount root and embed cmdline in itself.
+> kexec_file_load(&kernel_fd, NULL, ...)
+> 
+> And even you can remove KEXEC_FILE_UNLOAD flag, because you could tell
+> that one wants to unload if the following is invoked:
+> 
+> kexec_file_load(NULL, NULL, ...)
 
-Passing command line is already optional. I tried it and kexec loaded
-successfully.
+I would prefer not to derive special meanings of NULL parameters and
+instead use an explicit flag to unload kernel.
 
 Thanks
 Vivek
