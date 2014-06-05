@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsQnU-0003Cw-Rn
- for kexec@lists.infradead.org; Thu, 05 Jun 2014 06:05:09 +0000
-Message-ID: <53900879.7070703@cn.fujitsu.com>
-Date: Thu, 5 Jun 2014 14:04:41 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
+ id 1WsSAE-0007X5-Qg
+ for kexec@lists.infradead.org; Thu, 05 Jun 2014 07:32:43 +0000
+Date: Thu, 5 Jun 2014 15:32:15 +0800
+From: WANG Chao <chaowang@redhat.com>
 Subject: Re: [PATCH 0/2] kexec command fails after cpu hot-removing
+Message-ID: <20140605073215.GA3876@dhcp-17-89.nay.redhat.com>
 References: <1401945055-2820-1-git-send-email-indou.takao@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <1401945055-2820-1-git-send-email-indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,14 +26,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Takao Indoh <indou.takao@jp.fujitsu.com>
 Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-I think maybe no one had tested kexec-tools after cpu hot-remove. So
-the bug remains until today.
-
-For both two patches:
-
-Reviewed-by: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-
-On 06/05/2014 01:10 PM, Takao Indoh wrote:
+On 06/05/14 at 02:10pm, Takao Indoh wrote:
 > After cpu hot-removing, kexec command fails with the following message.
 > 
 > "/sys/devices" does not exist. Sysfs does not seem to be mounted. Try
@@ -91,12 +85,10 @@ On 06/05/2014 01:10 PM, Takao Indoh wrote:
 >  kexec/crashdump-elf.c | 5 ++++-
 >  kexec/crashdump.c     | 2 +-
 >  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
 
+These two patches look good to me.
 
--- 
-Thanks.
-Zhang Yanfei
+Acked-by: WANG Chao <chaowang@redhat.com>
 
 _______________________________________________
 kexec mailing list
