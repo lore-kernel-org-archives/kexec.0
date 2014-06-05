@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsHqQ-0000ue-6T
- for kexec@lists.infradead.org; Wed, 04 Jun 2014 20:31:35 +0000
-Date: Wed, 4 Jun 2014 22:30:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 03/13] kexec: Move segment verification code in a
- separate function
-Message-ID: <20140604203041.GF4105@pd.tnic>
-References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <1401800822-27425-4-git-send-email-vgoyal@redhat.com>
- <20140604093254.GB4105@pd.tnic> <20140604184743.GC4406@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140604184743.GC4406@redhat.com>
+Received: from fgwmail2.fujitsu.co.jp ([164.71.1.135])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WsPy3-0004sg-0z
+ for kexec@lists.infradead.org; Thu, 05 Jun 2014 05:11:59 +0000
+Received: from kw-mxoi2.gw.nic.fujitsu.com (unknown [10.0.237.143])
+ by fgwmail2.fujitsu.co.jp (Postfix) with ESMTP id 4C29D3EE0BC
+ for <kexec@lists.infradead.org>; Thu,  5 Jun 2014 14:11:14 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.nic.fujitsu.com [10.0.50.93])
+ by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id 60AB2AC1092
+ for <kexec@lists.infradead.org>; Thu,  5 Jun 2014 14:11:13 +0900 (JST)
+Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
+ [10.240.81.139])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 14B861DB803C
+ for <kexec@lists.infradead.org>; Thu,  5 Jun 2014 14:11:13 +0900 (JST)
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Subject: [PATCH 2/2] Fix mistaken check of stat(2) return value
+Date: Thu,  5 Jun 2014 14:10:55 +0900
+Message-Id: <1401945055-2820-3-git-send-email-indou.takao@jp.fujitsu.com>
+In-Reply-To: <1401945055-2820-1-git-send-email-indou.takao@jp.fujitsu.com>
+References: <1401945055-2820-1-git-send-email-indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,28 +27,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+To: horms@verge.net.au, kexec@lists.infradead.org
 
-On Wed, Jun 04, 2014 at 02:47:43PM -0400, Vivek Goyal wrote:
-> Hmm..., Interesting. I never noticed it. So google search seems to say
-> that unuseable is also not wrong.
+get_crash_notes_per_cpu() should return -1 if return value of stat(2) is
+zero (on success).
 
-Nope, it seems more like "unuseable" is simply a very common misspelling
-which has managed to spread out uncontrollably, even in the kernel :).
-Both Oxford and Merriam-Webster know "unusable" as the only correct
-spelling.
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+---
+ kexec/crashdump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kexec/crashdump.c b/kexec/crashdump.c
+index 131e624..15c1105 100644
+--- a/kexec/crashdump.c
++++ b/kexec/crashdump.c
+@@ -84,7 +84,7 @@ int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len)
+ 		if (fopen_errno != ENOENT)
+ 			die("Could not open \"%s\": %s\n", crash_notes,
+ 			    strerror(fopen_errno));
+-		if (!stat("/sys/devices", &cpu_stat)) {
++		if (stat("/sys/devices", &cpu_stat)) {
+ 			stat_errno = errno;
+ 			if (stat_errno == ENOENT)
+ 				die("\"/sys/devices\" does not exist. "
 -- 
-Regards/Gruss,
-    Boris.
+1.9.3
 
-Sent from a fat crate under my desk. Formatting is fine.
---
+
 
 _______________________________________________
 kexec mailing list
