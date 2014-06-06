@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-we0-x229.google.com ([2a00:1450:400c:c03::229])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsmyI-0003Bn-OD
- for kexec@lists.infradead.org; Fri, 06 Jun 2014 05:45:47 +0000
-Received: by mail-we0-f169.google.com with SMTP id q58so2057714wes.14
- for <kexec@lists.infradead.org>; Thu, 05 Jun 2014 22:45:23 -0700 (PDT)
-Message-ID: <5391556D.6090204@gmail.com>
-Date: Fri, 06 Jun 2014 07:45:17 +0200
-From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in kernel
- loading
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wsohr-00005U-5M
+ for kexec@lists.infradead.org; Fri, 06 Jun 2014 07:36:55 +0000
+Date: Fri, 6 Jun 2014 15:37:48 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
+ kernel loading
+Message-ID: <20140606073748.GC3343@darkstar.nay.redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
  <20140603131203.GA23395@redhat.com>
- <20140604092214.GA17528@dhcp-17-89.nay.redhat.com>
- <20140604175031.GA4406@redhat.com>
- <CAHO5Pa0dxpq7YNe5eUMPE9Mn5m7XCnB1C5mZxrvt2-OqOpVZAA@mail.gmail.com>
- <20140605140416.GB17389@redhat.com>
-In-Reply-To: <20140605140416.GB17389@redhat.com>
+ <20140605083134.GE3506@darkstar.nay.redhat.com>
+ <20140605150159.GA14083@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140605150159.GA14083@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,47 +28,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, Jiri Kosina <jkosina@suse.cz>, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Linux API <linux-api@vger.kernel.org>, dyoung@redhat.com, WANG Chao <chaowang@redhat.com>, mtk.manpages@gmail.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, chaowang@redhat.com
 
-On 06/05/2014 04:04 PM, Vivek Goyal wrote:
-> On Wed, Jun 04, 2014 at 09:39:10PM +0200, Michael Kerrisk wrote:
->> Vivek,
->>
->> As per Documentation/SubmitChecklist , please CC linux-api@ on patces
->> that change the ABI/API. See
->> https://www.kernel.org/doc/man-pages/linux-api-ml.html.
+On 06/05/14 at 11:01am, Vivek Goyal wrote:
+> On Thu, Jun 05, 2014 at 04:31:34PM +0800, Dave Young wrote:
 > 
-> Hi Michael,
+> [..]
+> > > +	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line,
+> > > +			info.command_line_len, info.kexec_flags);
+> > 
+> > Vivek,
+> > 
+> > I tried your patch on my uefi test machine, but kexec load fails like below:
+> > 
+> > [root@localhost ~]# kexec -l /boot/vmlinuz-3.15.0-rc8+ --use-kexec2-syscall
+> > Could not find a free area of memory of 0xa000 bytes ...
 > 
-> Sorry, I did not notice that. I will CC linux-api@ in next version of
-> patches in patches which introduce new systemcal..
+> Hi Dave,
 > 
->>
->> Also, is there some draft man page for this new system call?
+> I think this message is coming from kexec-tools from old loading path. I
+> think somehow new path did not even kick in. I tried above and I got
+> -EBADF as I did not pass initrd. Can you run gdb on kexec and see if
+> you are getting to syscall or run strace.
+
+Seems I can not reproduce the local hole fail issue but I'm sure it happens
+before the new syscall callback.
+
+This time I got -ENOEXEC. It's caused by CONFIG_EFI_MIXED=y. In case EFI_MIXED
+64bit kernel runs on 32bit efi firmware thus XLF_CAN_BE_LOADED_ABOVE_4G is not
+set thus bzImage probe will fail with NOEXEC.
+
 > 
-> No, there is none yet. In fact I don't see a man page for old kexec
-> system call either kexec_load().
-
-Is this not what you are meaning:
-http://man7.org/linux/man-pages/man2/kexec_load.2.html
-?
-(It probably could be improved...)
-
-> Do you want me to write man page for this new syscall?
-
-These days, that's considered a desirable accompaniment to new 
-syscall proposals.
-
-Cheers,
-
-Michael
-
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+> > 
+> > Another issue is that the syscall should allow load kernel only without initrd
+> 
+> Agreed. Currently my code is not handling it. I am thinking of ways how to
+> make passing initrd fd optional.
+> 
+> > 
+> > and
+> > cmdline since kernel can mount root and embed cmdline in itself.
+> 
+> Passing command line is already optional. I tried it and kexec loaded
+> successfully.
+> 
+> Thanks
+> Vivek
 
 _______________________________________________
 kexec mailing list
