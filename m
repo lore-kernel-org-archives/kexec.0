@@ -1,35 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp01.in.ibm.com ([122.248.162.1])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WszOs-0004B6-Ku
- for kexec@lists.infradead.org; Fri, 06 Jun 2014 19:02:04 +0000
-Received: from /spool/local
- by e28smtp01.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <srivatsa.bhat@linux.vnet.ibm.com>;
- Sat, 7 Jun 2014 00:31:35 +0530
-Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
- by d28dlp03.in.ibm.com (Postfix) with ESMTP id 8B2E01258054
- for <kexec@lists.infradead.org>; Sat,  7 Jun 2014 00:30:50 +0530 (IST)
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
- by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s56J2GUG52363480
- for <kexec@lists.infradead.org>; Sat, 7 Jun 2014 00:32:17 +0530
-Received: from d28av03.in.ibm.com (localhost [127.0.0.1])
- by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s56J1Sc9023892
- for <kexec@lists.infradead.org>; Sat, 7 Jun 2014 00:31:28 +0530
-Message-ID: <53920FB8.4090308@linux.vnet.ibm.com>
-Date: Sat, 07 Jun 2014 00:30:08 +0530
-From: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wt0Ax-0001gQ-1t
+ for kexec@lists.infradead.org; Fri, 06 Jun 2014 19:51:43 +0000
+Date: Fri, 6 Jun 2014 15:51:04 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 09/13] purgatory: Core purgatory functionality
+Message-ID: <20140606195104.GM1526@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <1401800822-27425-10-git-send-email-vgoyal@redhat.com>
+ <20140605200523.GB26110@pd.tnic>
 MIME-Version: 1.0
-Subject: Re: [PATCH] powerpc, kexec: Fix "Processor X is stuck" issue during
- kexec from ST mode
-References: <20140527105511.24309.74320.stgit@srivatsabhat.in.ibm.com>
- <20140528133143.GK14863@redhat.com> <538E2FF8.8060707@linux.vnet.ibm.com>
- <1401833365.3247.36.camel@pasglop> <20140604134649.GB27557@redhat.com>
- <5391B473.2050809@linux.vnet.ibm.com> <20140606182720.GL1526@redhat.com>
-In-Reply-To: <20140606182720.GL1526@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20140605200523.GB26110@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,89 +25,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: ego@linux.vnet.ibm.com, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, matt@ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, suzuki@in.ibm.com, ebiederm@xmission.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>, paulus@samba.org, linuxppc-dev@lists.ozlabs.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On 06/06/2014 11:57 PM, Vivek Goyal wrote:
-> On Fri, Jun 06, 2014 at 06:00:43PM +0530, Srivatsa S. Bhat wrote:
->> On 06/04/2014 07:16 PM, Vivek Goyal wrote:
->>> On Wed, Jun 04, 2014 at 08:09:25AM +1000, Benjamin Herrenschmidt wrote:
->>>> On Wed, 2014-06-04 at 01:58 +0530, Srivatsa S. Bhat wrote:
->>>>> Yep, that makes sense. But unfortunately I don't have enough insight into
->>>>> why exactly powerpc has to online the CPUs before doing a kexec. I just
->>>>> know from the commit log and the comment mentioned above (and from my own
->>>>> experiments) that the CPUs will get stuck if they were offline. Perhaps
->>>>> somebody more knowledgeable can explain this in detail and suggest a proper
->>>>> long-term solution.
->>>>>
->>>>> Matt, Ben, any thoughts on this?
->>>>
->>>> The problem is with our "soft offline" which we do on some platforms. When we
->>>> offline we don't actually send the CPUs back to firmware or anything like that.
->>>>
->>>> We put them into a very low low power loop inside Linux.
->>>>
->>>> The new kernel has no way to extract them from that loop. So we must re-"online"
->>>> them before we kexec so they can be passed to the new kernel normally (or returned
->>>> to firmware like we do on powernv).
->>>
->>> Srivatsa,
->>>
->>> Looks like your patch has been merged.
->>>
->>> I don't like the following change in arch independent code.
->>>
->>> /*
->>>  * migrate_to_reboot_cpu() disables CPU hotplug assuming  that
->>>  * no further code needs to use CPU hotplug (which is true in
->>>  * the reboot case). However, the kexec path depends on  using
->>>  * CPU hotplug again; so re-enable it here. 
->>>  */
->>>                cpu_hotplug_enable();
->>>
->>> As it is very powerpc specific requirement, can you enable hotplug in powerpc
->>> arch dependent code as a short term solution.
->>>
->>
->> I didn't do that because that would mean that the _disable() would be
->> performed inside kernel/kexec.c and the corresponding _enable() would
->> be performed in arch/powerpc/kernel/machine_kexec_64.c -- with no apparent
->> connection between them, which would have made them hard to relate.
+On Thu, Jun 05, 2014 at 10:05:23PM +0200, Borislav Petkov wrote:
+
+[..]
+> > @@ -249,6 +254,7 @@ archclean:
+> >  	$(Q)rm -rf $(objtree)/arch/x86_64
+> >  	$(Q)$(MAKE) $(clean)=$(boot)
+> >  	$(Q)$(MAKE) $(clean)=arch/x86/tools
 > 
-> Which we are doing anyway. The difference is that now we are doing it
-> for all arches.
+> ifeq ($(CONFIG_KEXEC),y)
+> 	$(Q)$(MAKE) $(clean)=arch/x86/purgatory
+> endif
+
+Hmm.., is it strictly required? I am wondering what happens if I build
+a kernel with CONFIG_KEXEC=y, then set CONFIG_KEXEC=n and do "make clean".
+I think I will still like any files in arch/x86/purgatory to be cleaned
+despite the fact that CONFIG_KEXEC=n. Isn't it?
+
+[..]
+> > +ifeq ($(CONFIG_X86_64),y)
+> > +KBUILD_CFLAGS	:= -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -mcmodel=large -Os -fno-builtin -ffreestanding -c -MD
+> > +else
+> > +KBUILD_CFLAGS	:= -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -Os -fno-builtin -ffreestanding -c -MD -m32
+> > +endif
 > 
-> If this is powerpc specific requirement, then we should limit this to
-> powerpc only and not let spill over in generic code.
+> Those variable assignments have a lot of duplication, let's simplify
+> (diff ontop):
+
+Thanks. This looks cleaner and also highlights the difference between
+x86_64 and x86. Will change.
+
+[..]
+> > +	.section ".rodata"
+> > +	.balign 4
+> > +entry64_regs:
+> > +rax:	.quad 0x00000000
 > 
-> And putting a big fat comment should take care of being able to figure
-> out why arch code is overwriting the generic code's decision. By putting
-> it in generic code and enforcing this on all arches does not buy us
-> anything, IMHO.
+> Simply 0x0? Or am I missing something?
+
+I think .quad 0x0 should work. Will use it.
+
+[..]
+> > +	sha256_final(&sctx, digest);
+> > +
+> > +	if (memcmp(digest, sha256_digest, sizeof(digest)) != 0)
+> 
+> 	if (memcmp(...))
+> 		return 1;
+> 
+> should be a bit cleaner.
 > 
 
-Yep, I see your point. Sorry about that!
+Ok. Will do.
 
-Actually, I originally thought of fixing cpu_hotplug_disable/enable itself:
-their true intent is to prevent *userspace* (i.e., from sysfs) from performing
-CPU hotplug after a certain quiescent point in the kernel, and not to prevent
-the kernel's own cpu hotplug attempts. But currently it prevents _all_ hotplug,
-including those that are initiated from within the kernel, which is the reason
-why kexec was effectively locking itself out on powerpc. I explored options to
-fix that (which would in turn fix the powerpc problem automatically, without
-having to add any code to kernel/kexec.c or even arch/powerpc code). But it
-turned out to be too difficult and ugly given the current CPU hotplug locking
-scheme. I'll revisit that once CPU hotplug locking is cleaned up.
+[..]
+> > +void purgatory(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = verify_sha256_digest();
+> > +	if (ret) {
+> > +		/* loop forever */
+> > +		for (;;);
+> 
+> checkpatch bitches about this:
+> 
+> ERROR: trailing statements should be on next line
+> #303: FILE: arch/x86/purgatory/purgatory.c:68:
+> +               for (;;);
 
-But anyway, the powerpc kexec fix that I'm working on right now is not only a
-much better solution, but it will also restore the original kexec code in
-kernel/kexec.c, by removing the _enable() call.
+Ok, will move semicolon to next line.
 
-Thank you!
-
-Regards,
-Srivatsa S. Bhat
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
