@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WsyW7-00042a-KG
- for kexec@lists.infradead.org; Fri, 06 Jun 2014 18:05:28 +0000
-Date: Fri, 6 Jun 2014 14:04:50 -0400
+ id 1Wsyjo-0007Wg-VJ
+ for kexec@lists.infradead.org; Fri, 06 Jun 2014 18:19:37 +0000
+Date: Fri, 6 Jun 2014 14:19:00 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
- kernel loading
-Message-ID: <20140606180450.GI1526@redhat.com>
+Subject: Re: [PATCH 07/13] kexec: Implementation of new syscall kexec_file_load
+Message-ID: <20140606181859.GK1526@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <20140603131203.GA23395@redhat.com>
- <20140604092214.GA17528@dhcp-17-89.nay.redhat.com>
- <20140604175031.GA4406@redhat.com>
- <CAHO5Pa0dxpq7YNe5eUMPE9Mn5m7XCnB1C5mZxrvt2-OqOpVZAA@mail.gmail.com>
- <20140605140416.GB17389@redhat.com> <5391556D.6090204@gmail.com>
+ <1401800822-27425-8-git-send-email-vgoyal@redhat.com>
+ <20140606065605.GE2785@dhcp-17-89.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5391556D.6090204@gmail.com>
+In-Reply-To: <20140606065605.GE2785@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,47 +25,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, Jiri Kosina <jkosina@suse.cz>, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Linux API <linux-api@vger.kernel.org>, dyoung@redhat.com, WANG Chao <chaowang@redhat.com>
+To: WANG Chao <chaowang@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-On Fri, Jun 06, 2014 at 07:45:17AM +0200, Michael Kerrisk (man-pages) wrote:
-> On 06/05/2014 04:04 PM, Vivek Goyal wrote:
-> > On Wed, Jun 04, 2014 at 09:39:10PM +0200, Michael Kerrisk wrote:
-> >> Vivek,
-> >>
-> >> As per Documentation/SubmitChecklist , please CC linux-api@ on patces
-> >> that change the ABI/API. See
-> >> https://www.kernel.org/doc/man-pages/linux-api-ml.html.
+On Fri, Jun 06, 2014 at 02:56:05PM +0800, WANG Chao wrote:
+> On 06/03/14 at 09:06am, Vivek Goyal wrote:
+> > Previous patch provided the interface definition and this patch prvides
+> > implementation of new syscall.
 > > 
-> > Hi Michael,
+> > Previously segment list was prepared in user space. Now user space just
+> > passes kernel fd, initrd fd and command line and kernel will create a
+> > segment list internally.
 > > 
-> > Sorry, I did not notice that. I will CC linux-api@ in next version of
-> > patches in patches which introduce new systemcal..
+> > This patch contains generic part of the code. Actual segment preparation
+> > and loading is done by arch and image specific loader. Which comes in
+> > next patch.
 > > 
-> >>
-> >> Also, is there some draft man page for this new system call?
-> > 
-> > No, there is none yet. In fact I don't see a man page for old kexec
-> > system call either kexec_load().
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > 
-> Is this not what you are meaning:
-> http://man7.org/linux/man-pages/man2/kexec_load.2.html
-> ?
-> (It probably could be improved...)
+> [..]
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index a3044e6..1ad4d60 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> 
+> > +static int kimage_file_prepare_segments(struct kimage *image, int kernel_fd,
+> > +		int initrd_fd, const char __user *cmdline_ptr,
+> > +		unsigned long cmdline_len)
+> > +{
+> > +	int ret = 0;
+> > +	void *ldata;
+> > +
+> > +	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
+> > +					&image->kernel_buf_len);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Call arch image probe handlers */
+> > +	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> > +						image->kernel_buf_len);
+> > +
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
+> > +					&image->initrd_buf_len);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	image->cmdline_buf = vzalloc(cmdline_len);
+> 
+> You should validate the upper/lower boundary of cmdline_len before
+> calling vzalloc. When cmdline_len is 0 or too large, vmalloc failure
+> message would be fired.
 
-Yep. I missed it.
+What's the upper length of vzalloc(). I think if it is too big to alloc,
+then vzalloc() should return me an error?
 
 > 
-> > Do you want me to write man page for this new syscall?
+> > +	if (!image->cmdline_buf)
+> > +		goto out;
+> > +
+> > +	ret = copy_from_user(image->cmdline_buf, cmdline_ptr, cmdline_len);
+> > +	if (ret) {
+> > +		ret = -EFAULT;
+> > +		goto out;
+> > +	}
+> > +
+> > +	image->cmdline_buf_len = cmdline_len;
+> > +
+> > +	/* command line should be a string with last byte null */
+> > +	if (image->cmdline_buf[cmdline_len - 1] != '\0') {
+> > +		ret = -EINVAL;
+> > +		goto out;
+> > +	}
 > 
-> These days, that's considered a desirable accompaniment to new 
-> syscall proposals.
+> Given the fact that command line is optional as well as initrd, I think
+> above chunk of code needs to update a bit for the case cmdline_len is 0
+> or cmdline_buf is pointing NULL?
 
-Ok, I will write one for kexec_file_load() too. Or extend the existing
-one to include both syscalls.
+I agree. I think all this vzalloc(), copy_from_user() etc should be called
+only fir cmdline_len is non-zero. Will fix it.
 
 Thanks
 Vivek
+
 
 _______________________________________________
 kexec mailing list
