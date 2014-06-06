@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wt0Ax-0001gQ-1t
- for kexec@lists.infradead.org; Fri, 06 Jun 2014 19:51:43 +0000
-Date: Fri, 6 Jun 2014 15:51:04 -0400
+ id 1Wt0Nj-0004mL-H2
+ for kexec@lists.infradead.org; Fri, 06 Jun 2014 20:04:56 +0000
+Date: Fri, 6 Jun 2014 16:04:18 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 09/13] purgatory: Core purgatory functionality
-Message-ID: <20140606195104.GM1526@redhat.com>
+Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
+ kernel loading
+Message-ID: <20140606200418.GN1526@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <1401800822-27425-10-git-send-email-vgoyal@redhat.com>
- <20140605200523.GB26110@pd.tnic>
+ <20140603131203.GA23395@redhat.com>
+ <20140605083134.GE3506@darkstar.nay.redhat.com>
+ <20140605150159.GA14083@redhat.com>
+ <20140606073748.GC3343@darkstar.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140605200523.GB26110@pd.tnic>
+In-Reply-To: <20140606073748.GC3343@darkstar.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,79 +28,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, chaowang@redhat.com
 
-On Thu, Jun 05, 2014 at 10:05:23PM +0200, Borislav Petkov wrote:
-
-[..]
-> > @@ -249,6 +254,7 @@ archclean:
-> >  	$(Q)rm -rf $(objtree)/arch/x86_64
-> >  	$(Q)$(MAKE) $(clean)=$(boot)
-> >  	$(Q)$(MAKE) $(clean)=arch/x86/tools
+On Fri, Jun 06, 2014 at 03:37:48PM +0800, Dave Young wrote:
+> On 06/05/14 at 11:01am, Vivek Goyal wrote:
+> > On Thu, Jun 05, 2014 at 04:31:34PM +0800, Dave Young wrote:
+> > 
+> > [..]
+> > > > +	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line,
+> > > > +			info.command_line_len, info.kexec_flags);
+> > > 
+> > > Vivek,
+> > > 
+> > > I tried your patch on my uefi test machine, but kexec load fails like below:
+> > > 
+> > > [root@localhost ~]# kexec -l /boot/vmlinuz-3.15.0-rc8+ --use-kexec2-syscall
+> > > Could not find a free area of memory of 0xa000 bytes ...
+> > 
+> > Hi Dave,
+> > 
+> > I think this message is coming from kexec-tools from old loading path. I
+> > think somehow new path did not even kick in. I tried above and I got
+> > -EBADF as I did not pass initrd. Can you run gdb on kexec and see if
+> > you are getting to syscall or run strace.
 > 
-> ifeq ($(CONFIG_KEXEC),y)
-> 	$(Q)$(MAKE) $(clean)=arch/x86/purgatory
-> endif
-
-Hmm.., is it strictly required? I am wondering what happens if I build
-a kernel with CONFIG_KEXEC=y, then set CONFIG_KEXEC=n and do "make clean".
-I think I will still like any files in arch/x86/purgatory to be cleaned
-despite the fact that CONFIG_KEXEC=n. Isn't it?
-
-[..]
-> > +ifeq ($(CONFIG_X86_64),y)
-> > +KBUILD_CFLAGS	:= -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -mcmodel=large -Os -fno-builtin -ffreestanding -c -MD
-> > +else
-> > +KBUILD_CFLAGS	:= -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -Os -fno-builtin -ffreestanding -c -MD -m32
-> > +endif
+> Seems I can not reproduce the local hole fail issue but I'm sure it happens
+> before the new syscall callback.
 > 
-> Those variable assignments have a lot of duplication, let's simplify
-> (diff ontop):
+> This time I got -ENOEXEC. It's caused by CONFIG_EFI_MIXED=y. In case EFI_MIXED
+> 64bit kernel runs on 32bit efi firmware thus XLF_CAN_BE_LOADED_ABOVE_4G is not
+> set thus bzImage probe will fail with NOEXEC.
 
-Thanks. This looks cleaner and also highlights the difference between
-x86_64 and x86. Will change.
+Yep, current bzImage loader only supports loading 64bit image which can
+be loaded above 4G.
 
-[..]
-> > +	.section ".rodata"
-> > +	.balign 4
-> > +entry64_regs:
-> > +rax:	.quad 0x00000000
-> 
-> Simply 0x0? Or am I missing something?
+I am wondering how user space implementation is taking care of it. I guess
+we are falling back to 32bit implementation where we use 32bit entry and
+assume that bzImage has to be below 4G.
 
-I think .quad 0x0 should work. Will use it.
-
-[..]
-> > +	sha256_final(&sctx, digest);
-> > +
-> > +	if (memcmp(digest, sha256_digest, sizeof(digest)) != 0)
-> 
-> 	if (memcmp(...))
-> 		return 1;
-> 
-> should be a bit cleaner.
-> 
-
-Ok. Will do.
-
-[..]
-> > +void purgatory(void)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = verify_sha256_digest();
-> > +	if (ret) {
-> > +		/* loop forever */
-> > +		for (;;);
-> 
-> checkpatch bitches about this:
-> 
-> ERROR: trailing statements should be on next line
-> #303: FILE: arch/x86/purgatory/purgatory.c:68:
-> +               for (;;);
-
-Ok, will move semicolon to next line.
+We will have to do similar thing in kernel when 32bit loader comes in.
+Compile that in for 64bit kernel and let it handle the case of bzImage
+not being loadable above 4G.
 
 Thanks
 Vivek
