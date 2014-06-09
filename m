@@ -1,34 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.31.147])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wt1Wy-00075N-Mq
- for kexec@lists.infradead.org; Fri, 06 Jun 2014 21:18:33 +0000
-Received: from /spool/local
- by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <srivatsa.bhat@linux.vnet.ibm.com>;
- Sat, 7 Jun 2014 07:18:08 +1000
-Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [9.190.234.120])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id 549A02CE8040
- for <kexec@lists.infradead.org>; Sat,  7 Jun 2014 07:18:04 +1000 (EST)
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
- by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s56L244B17170472
- for <kexec@lists.infradead.org>; Sat, 7 Jun 2014 07:02:04 +1000
-Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
- by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s56LI3DF026394
- for <kexec@lists.infradead.org>; Sat, 7 Jun 2014 07:18:03 +1000
-Message-ID: <53922FB8.6070408@linux.vnet.ibm.com>
-Date: Sat, 07 Jun 2014 02:46:40 +0530
-From: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1WtnyO-0000iC-QA
+ for kexec@lists.infradead.org; Mon, 09 Jun 2014 01:02:05 +0000
+Received: from ayumi.isobedori.kobe.vergenet.net
+ (p4005-ipbfp1104kobeminato.hyogo.ocn.ne.jp [122.23.15.5])
+ by kirsty.vergenet.net (Postfix) with ESMTP id A22E12671D1
+ for <kexec@lists.infradead.org>; Mon,  9 Jun 2014 11:01:35 +1000 (EST)
+Date: Mon, 9 Jun 2014 10:01:34 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools 2.0.7
+Message-ID: <20140609010134.GA25776@verge.net.au>
 MIME-Version: 1.0
-Subject: Re: [PATCH] powerpc, kexec: Fix "Processor X is stuck" issue during
- kexec from ST mode
-References: <20140527105511.24309.74320.stgit@srivatsabhat.in.ibm.com>
- <20140528133143.GK14863@redhat.com> <538E2FF8.8060707@linux.vnet.ibm.com>
- <1401833365.3247.36.camel@pasglop> <5391B413.100@linux.vnet.ibm.com>
-In-Reply-To: <5391B413.100@linux.vnet.ibm.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,84 +25,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: ego@linux.vnet.ibm.com, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, matt@ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, suzuki@in.ibm.com, ebiederm@xmission.com, paulus@samba.org, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-On 06/06/2014 05:59 PM, Srivatsa S. Bhat wrote:
-> On 06/04/2014 03:39 AM, Benjamin Herrenschmidt wrote:
->> On Wed, 2014-06-04 at 01:58 +0530, Srivatsa S. Bhat wrote:
->>> Yep, that makes sense. But unfortunately I don't have enough insight into
->>> why exactly powerpc has to online the CPUs before doing a kexec. I just
->>> know from the commit log and the comment mentioned above (and from my own
->>> experiments) that the CPUs will get stuck if they were offline. Perhaps
->>> somebody more knowledgeable can explain this in detail and suggest a proper
->>> long-term solution.
->>>
->>> Matt, Ben, any thoughts on this?
->>
->> The problem is with our "soft offline" which we do on some platforms. When we
->> offline we don't actually send the CPUs back to firmware or anything like that.
->>
->> We put them into a very low low power loop inside Linux.
->>
->> The new kernel has no way to extract them from that loop. So we must re-"online"
->> them before we kexec so they can be passed to the new kernel normally (or returned
->> to firmware like we do on powernv).
->>
-> 
-> Thanks a lot for the explanation Ben!
-> 
-> I thought about this and this is what I think: whether the CPU is in the kernel
-> or in the firmware is a hard-boundary. But once we know it is still in the
-> kernel, whether it is online or offline is a soft-boundary, something that
-> ideally shouldn't make any difference to kexec.
-> 
-> Then I looked at what is that special state that kexec expects the online CPUs
-> to be in, before performing kexec, and I found that that state is entered via
-> kexec_smp_down().
-> 
-> Which means, if we poke the soft-offline CPUs and make them execute
-> kexec_smp_down(), we should be able to do a successful kexec without having to
-> actually online them. After all, the core kexec code doesn't mandate that they
-> should be online. So if we satisfy powerpc's requirement that all the CPUs are
-> in a sane state, that should be good enough. (This would be similar to how the
-> subcore code wakes up offline CPUs to perform the split-core procedure).
-> 
-> I know, this is all theory for now since I haven't tested it yet, but I think
-> we can make this work.
-> 
-> Below are the 4 preliminary patches I'm have so far, to implement this.
-> 
+Hi all,
 
-And with the following hunk added (which I had forgotten earlier), it worked just
-fine on powernv :-)
+I am happy to announce the release of kexec-tools 2.0.7.
 
+This is a feature release coinciding with the release of the v3.15 Linus Kernel.
 
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 2ef6c58..84e91293 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -243,6 +243,9 @@ static void wake_offline_cpus(void)
- {
- 	int cpu = 0;
- 
-+	if (ppc_md.kexec_wake_prepare)
-+		ppc_md.kexec_wake_prepare();
-+
- 	for_each_present_cpu(cpu) {
- 		if (!cpu_online(cpu)) {
- 			printk(KERN_INFO "kexec: Waking offline cpu %d.\n",
+This release can be downloaded from kernel.org:
 
-I tried putting the machine into ST mode, and in a separate experiment, I kept
-just CPU 0 online in the first kernel, and then issued a kexec. The second kernel
-booted successfully with all the CPUs in both the cases.
+	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.7-rc1.tar.xz
+	http://kernel.org/pub/linux/utils/kernel/kexec/
 
-I haven't explored the crashed-kernel case though, it might need some auditing
-to check if the code handles that as well.
+It is also tagged it in git:
 
-Regards,
-Srivatsa S. Bhat
+	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
 
+Thanks to everyone who has contributed to kexec.
 
 _______________________________________________
 kexec mailing list
