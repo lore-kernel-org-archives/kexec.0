@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WtnyO-0000iC-QA
- for kexec@lists.infradead.org; Mon, 09 Jun 2014 01:02:05 +0000
-Received: from ayumi.isobedori.kobe.vergenet.net
- (p4005-ipbfp1104kobeminato.hyogo.ocn.ne.jp [122.23.15.5])
- by kirsty.vergenet.net (Postfix) with ESMTP id A22E12671D1
- for <kexec@lists.infradead.org>; Mon,  9 Jun 2014 11:01:35 +1000 (EST)
-Date: Mon, 9 Jun 2014 10:01:34 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.7
-Message-ID: <20140609010134.GA25776@verge.net.au>
+ id 1Wtooj-00061r-Tw
+ for kexec@lists.infradead.org; Mon, 09 Jun 2014 01:56:10 +0000
+Date: Mon, 9 Jun 2014 09:57:05 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
+ kernel loading
+Message-ID: <20140609015705.GA1924@darkstar.nay.redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <20140603131203.GA23395@redhat.com>
+ <20140605083134.GE3506@darkstar.nay.redhat.com>
+ <20140605150159.GA14083@redhat.com>
+ <20140606073748.GC3343@darkstar.nay.redhat.com>
+ <20140606200418.GN1526@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20140606200418.GN1526@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +29,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, chaowang@redhat.com
 
-Hi all,
+On 06/06/14 at 04:04pm, Vivek Goyal wrote:
+> On Fri, Jun 06, 2014 at 03:37:48PM +0800, Dave Young wrote:
+> > On 06/05/14 at 11:01am, Vivek Goyal wrote:
+> > > On Thu, Jun 05, 2014 at 04:31:34PM +0800, Dave Young wrote:
+> > > 
+> > > [..]
+> > > > > +	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line,
+> > > > > +			info.command_line_len, info.kexec_flags);
+> > > > 
+> > > > Vivek,
+> > > > 
+> > > > I tried your patch on my uefi test machine, but kexec load fails like below:
+> > > > 
+> > > > [root@localhost ~]# kexec -l /boot/vmlinuz-3.15.0-rc8+ --use-kexec2-syscall
+> > > > Could not find a free area of memory of 0xa000 bytes ...
+> > > 
+> > > Hi Dave,
+> > > 
+> > > I think this message is coming from kexec-tools from old loading path. I
+> > > think somehow new path did not even kick in. I tried above and I got
+> > > -EBADF as I did not pass initrd. Can you run gdb on kexec and see if
+> > > you are getting to syscall or run strace.
+> > 
+> > Seems I can not reproduce the local hole fail issue but I'm sure it happens
+> > before the new syscall callback.
+> > 
+> > This time I got -ENOEXEC. It's caused by CONFIG_EFI_MIXED=y. In case EFI_MIXED
+> > 64bit kernel runs on 32bit efi firmware thus XLF_CAN_BE_LOADED_ABOVE_4G is not
+> > set thus bzImage probe will fail with NOEXEC.
+> 
+> Yep, current bzImage loader only supports loading 64bit image which can
+> be loaded above 4G.
+> 
+> I am wondering how user space implementation is taking care of it. I guess
+> we are falling back to 32bit implementation where we use 32bit entry and
+> assume that bzImage has to be below 4G.
+> 
+> We will have to do similar thing in kernel when 32bit loader comes in.
+> Compile that in for 64bit kernel and let it handle the case of bzImage
+> not being loadable above 4G.
 
-I am happy to announce the release of kexec-tools 2.0.7.
+Vivek, I think current implementation is ok to only handle XLF_CAN_BE_LOADED_ABOVE_4G
+bzImage.
 
-This is a feature release coinciding with the release of the v3.15 Linus Kernel.
+Matt has sent a patch to revert the EFI_MIXED patch since 32bit loader never load
+kernel to above 4G space. So no worry about this issue any more.
 
-This release can be downloaded from kernel.org:
-
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.7-rc1.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
-
-It is also tagged it in git:
-
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
+Thanks
+Dave 
 
 _______________________________________________
 kexec mailing list
