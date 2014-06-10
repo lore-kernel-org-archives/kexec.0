@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WuEA8-0004O2-Ru
- for kexec@lists.infradead.org; Tue, 10 Jun 2014 04:59:57 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.160])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s5A4xZIj015522
- for <kexec@lists.infradead.org>; Tue, 10 Jun 2014 13:59:35 +0900 (JST)
-Received: from mailsv4.nec.co.jp (imss63.nec.co.jp [10.7.69.158]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id s5A4xZi14937 for <kexec@lists.infradead.org>;
- Tue, 10 Jun 2014 13:59:35 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id s5A4wXFD007860
- for <kexec@lists.infradead.org>; Tue, 10 Jun 2014 13:59:34 +0900 (JST)
+ id 1WuGg1-0004Ly-Ax
+ for kexec@lists.infradead.org; Tue, 10 Jun 2014 07:41:02 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 3/3] Stop maximizing the bitmap buffer to reduce the risk of
- OOM.
-Date: Tue, 10 Jun 2014 04:54:24 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972196C5@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: fix Makefile for eppic_makedumpfile.so build
+Date: Tue, 10 Jun 2014 07:38:41 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9721987E@BPXM01GP.gisp.nec.co.jp>
+References: <1402299196-15720-1-git-send-email-chaowang@redhat.com>
+In-Reply-To: <1402299196-15720-1-git-send-email-chaowang@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -28,79 +19,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "chaowang@redhat.com" <chaowang@redhat.com>
+Cc: "mahesh.salgaonkar@in.ibm.com" <mahesh.salgaonkar@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-We tried to maximize the bitmap buffer to get the best performance,
-but the performance degradation caused by multi-cycle processing
-looks very small according to the benchmark on 2TB memory:
-
-  https://lkml.org/lkml/2013/3/26/914
-
-This result means we don't need to make an effort to maximize the
-bitmap buffer, it will just increase the risk of OOM.
-
-This patch sets a small fixed value (4MB) as a safety limit,
-it may be safer and enough in most cases.
-
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
----
- makedumpfile.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b8f1ec4..c23667b 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -8946,13 +8946,15 @@ out:
- 
- 
- /*
-- * Choose the lesser value of the two below as the size of cyclic buffer.
-- *  - the size enough for storing the 1st/2nd bitmap for the whole of vmcore
-- *  - 80% of free memory (as safety limit)
-+ * Choose the lesser value of the three below as the size of cyclic buffer.
-+ *  - the size enough for storing the 1st or 2nd bitmap for the whole of vmcore
-+ *  - 4MB as sufficient value
-+ *  - 60% of free memory as safety limit
-  */
- int
- calculate_cyclic_buffer_size(void) {
- 	unsigned long long limit_size, bitmap_size;
-+	const unsigned long long maximum_size = 4 * 1024 * 1024;
- 
- 	if (info->max_mapnr <= 0) {
- 		ERRMSG("Invalid max_mapnr(%llu).\n", info->max_mapnr);
-@@ -8960,17 +8962,18 @@ calculate_cyclic_buffer_size(void) {
- 	}
- 
- 	/*
--	 *  We should keep the size of cyclic buffer within 80% of free memory
--	 *  for safety.
-+	 *  At least, we should keep the size of cyclic buffer within 60% of
-+	 *  free memory for safety.
- 	 */
--	limit_size = get_free_memory_size() * 0.8;
-+	limit_size = get_free_memory_size() * 0.6;
- 	bitmap_size = info->max_mapnr / BITPERBYTE;
- 
- 	/* if --split was specified cyclic buffer allocated per dump file */
- 	if (info->num_dumpfile > 1)
- 		bitmap_size /= info->num_dumpfile;
- 
--	info->bufsize_cyclic = MIN(limit_size, bitmap_size);
-+	/* 4MB will be enought for performance according to benchmarks. */
-+	info->bufsize_cyclic = MIN(MIN(limit_size, maximum_size), bitmap_size);
- 
- 	return TRUE;
- }
--- 
-1.9.0
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gV0FORywNCg0KVGhhbmtzIGZvciB5b3VyIHdvcmssIEknbGwgbWVyZ2UgdGhpcyBpbnRv
+IHYxLjUuNywgYnV0Li4uDQoNCj5XaGVuIGxpYmVwcGljIGlzbid0IGluc3RhbGxlZCBvbiBhIHN0
+YW5kYXJkIGxvY2F0aW9uLCBidWlsZGluZw0KPmVwcGljX21ha2VkdW1wZmlsZS5zbyB3aXRoIC1s
+ZXBwaWMgZGlyZWN0bHkgZG9lc24ndCB3b3JrLg0KPg0KPkFkZCBMREZMQUdTIHRvIGJ1aWxkIGFy
+Z3VtZW50cywgc28gdGhhdCBvbmUgY2FuIHBhc3MgTERGTEFHUz0iLUxkaXINCj4tSWRpciIgdG8g
+dGVsbCB3aGVyZSB0byBzZWFyY2ggZm9yIGxpYmVwcGljIGxpYnJhcnkgYW5kIGl0cyBoZWFkZXIN
+Cj5maWxlcy4NCj4NCj5Gb3IgZXhhbXBsZSwgaWYgZXBwaWMgc291cmNlIGlzIGluc3RhbGxlZCBv
+biB0aGUgc2FtZSBkaXJlY3RvcnkgbGV2ZWwNCj53aXRoIG1ha2VkdW1wZmlsZSBhcyB0aGUgZm9s
+bG93aW5nOg0KPg0KPm1ha2VkdW1wZmlsZQ0KPuKUnOKUgOKUgCBhcmNoDQo+4pSU4pSA4pSAIGVw
+cGljX3NjcmlwdHMNCj5lcHBpYw0KPuKUnOKUgOKUgCBhcHBsaWNhdGlvbnMNCj7ilJTilIDilIAg
+bGliZXBwaWMNCg0KSSdsbCByZXBsYWNlIHRoZXNlIG11bHRpYnl0ZSBjaGFyYWN0ZXJzIDotKA0K
+DQoNClRoYW5rcw0KQXRzdXNoaSBLdW1hZ2FpDQoNCj5BZnRlciBjb21waWxpbmcgbGliZXBwaWMs
+IG9uZSBjYW4gdXNlIHRoZSBmb2xsb3dpbmcgY29tbWFuZCB0byBidWlsZA0KPmVwcGljX21ha2Vk
+dW1wZmlsZS5zbzoNCj4NCj5tYWtlIExERkxBR1M9Ii1JLi4vZXBwaWMvbGliZXBwaWMgLUwuLi9l
+cHBpYy9saWJlcHBpYyIgZXBwaWNfbWFrZWR1bXBmaWxlLnNvDQo+DQo+U2lnbmVkLW9mZi1ieTog
+V0FORyBDaGFvIDxjaGFvd2FuZ0ByZWRoYXQuY29tPg0KPi0tLQ0KPiBNYWtlZmlsZSB8IDIgKy0N
+Cj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+DQo+ZGlm
+ZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUNCj5pbmRleCBkODc2MzhiLi4wY2MwN2VmIDEw
+MDY0NA0KPi0tLSBhL01ha2VmaWxlDQo+KysrIGIvTWFrZWZpbGUNCj5AQCAtODcsNyArODcsNyBA
+QCBtYWtlZHVtcGZpbGU6ICQoU1JDX0JBU0UpICQoT0JKX1BBUlQpICQoT0JKX0FSQ0gpDQo+IAln
+emlwIC1jIC4vbWFrZWR1bXBmaWxlLmNvbmYuNSA+IC4vbWFrZWR1bXBmaWxlLmNvbmYuNS5neg0K
+Pg0KPiBlcHBpY19tYWtlZHVtcGZpbGUuc286IGV4dGVuc2lvbl9lcHBpYy5jDQo+LQkkKENDKSAk
+KENGTEFHUykgLXNoYXJlZCAtcmR5bmFtaWMgLW8gJEAgZXh0ZW5zaW9uX2VwcGljLmMgLWZQSUMg
+LWxlcHBpYyAtbHRpbmZvDQo+KwkkKENDKSAkKENGTEFHUykgJChMREZMQUdTKSAtc2hhcmVkIC1y
+ZHluYW1pYyAtbyAkQCBleHRlbnNpb25fZXBwaWMuYyAtZlBJQyAtbGVwcGljIC1sdGluZm8NCj4N
+Cj4gY2xlYW46DQo+IAlybSAtZiAkKE9CSikgJChPQkpfUEFSVCkgJChPQkpfQVJDSCkgbWFrZWR1
+bXBmaWxlIG1ha2VkdW1wZmlsZS44Lmd6IG1ha2VkdW1wZmlsZS5jb25mLjUuZ3oNCj4tLQ0KPjEu
+OS4zDQo+DQo+DQo+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18NCj5rZXhlYyBtYWlsaW5nIGxpc3QNCj5rZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+aHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYw0KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
+CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9rZXhlYwo=
