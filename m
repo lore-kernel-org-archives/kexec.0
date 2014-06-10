@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WuE9O-0004JA-58
- for kexec@lists.infradead.org; Tue, 10 Jun 2014 04:59:10 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.195])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s5A4wmRS004878
- for <kexec@lists.infradead.org>; Tue, 10 Jun 2014 13:58:48 +0900 (JST)
-Received: from mailsv3.nec.co.jp (imss63.nec.co.jp [10.7.69.158]) by
+ id 1WuEA8-0004O2-Ru
+ for kexec@lists.infradead.org; Tue, 10 Jun 2014 04:59:57 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s5A4xZIj015522
+ for <kexec@lists.infradead.org>; Tue, 10 Jun 2014 13:59:35 +0900 (JST)
+Received: from mailsv4.nec.co.jp (imss63.nec.co.jp [10.7.69.158]) by
  mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id s5A4wm408913 for <kexec@lists.infradead.org>;
- Tue, 10 Jun 2014 13:58:48 +0900 (JST)
+ id s5A4xZi14937 for <kexec@lists.infradead.org>;
+ Tue, 10 Jun 2014 13:59:35 +0900 (JST)
 Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id s5A4wmsH025338
- for <kexec@lists.infradead.org>; Tue, 10 Jun 2014 13:58:48 +0900 (JST)
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id s5A4wXFD007860
+ for <kexec@lists.infradead.org>; Tue, 10 Jun 2014 13:59:34 +0900 (JST)
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 2/3] Move counting pfn_memhole for cyclic mode.
-Date: Tue, 10 Jun 2014 04:53:41 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972196C0@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH 3/3] Stop maximizing the bitmap buffer to reduce the risk of
+ OOM.
+Date: Tue, 10 Jun 2014 04:54:24 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972196C5@BPXM01GP.gisp.nec.co.jp>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -33,94 +34,69 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-In cyclic mode, memory holes are checked in initialize_2nd_bitmap_cyclic()
-in both the kdump path and the ELF path, so pfn_memhole should be
-counted there.
+We tried to maximize the bitmap buffer to get the best performance,
+but the performance degradation caused by multi-cycle processing
+looks very small according to the benchmark on 2TB memory:
+
+  https://lkml.org/lkml/2013/3/26/914
+
+This result means we don't need to make an effort to maximize the
+bitmap buffer, it will just increase the risk of OOM.
+
+This patch sets a small fixed value (4MB) as a safety limit,
+it may be safer and enough in most cases.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- makedumpfile.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ makedumpfile.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index f62e94c..b8f1ec4 100644
+index b8f1ec4..c23667b 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -4450,7 +4450,7 @@ int
- create_1st_bitmap_cyclic(struct cycle *cycle)
- {
- 	int i;
--	mdf_pfn_t pfn, pfn_bitmap1;
-+	mdf_pfn_t pfn;
- 	unsigned long long phys_start, phys_end;
- 	mdf_pfn_t pfn_start, pfn_end;
- 	mdf_pfn_t pfn_start_roundup, pfn_end_round;
-@@ -4465,7 +4465,6 @@ create_1st_bitmap_cyclic(struct cycle *cycle)
- 	 * If page is on memory hole, set bit on the 1st-bitmap.
- 	 * (note that this is not done in cyclic mode)
- 	 */
--	pfn_bitmap1 = 0;
- 	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
- 		pfn_start = MAX(paddr_to_pfn(phys_start), cycle->start_pfn);
- 		pfn_end   = MIN(paddr_to_pfn(phys_end), cycle->end_pfn);
-@@ -4478,8 +4477,7 @@ create_1st_bitmap_cyclic(struct cycle *cycle)
- 		pfn_end_round = MAX(round(pfn_end, BITPERBYTE), pfn_start);
+@@ -8946,13 +8946,15 @@ out:
  
- 		for (pfn = pfn_start; pfn < pfn_start_roundup; pfn++) {
--			if (set_bit_on_1st_bitmap(pfn, cycle))
--				pfn_bitmap1++;
-+			set_bit_on_1st_bitmap(pfn, cycle);
- 		}
  
- 		pfn_start_byte = (pfn_start_roundup - cycle->start_pfn) >> 3;
-@@ -4489,18 +4487,14 @@ create_1st_bitmap_cyclic(struct cycle *cycle)
- 			memset(info->partial_bitmap1 + pfn_start_byte,
- 			       0xff,
- 			       pfn_end_byte - pfn_start_byte);
--
--			pfn_bitmap1 += (pfn_end_byte - pfn_start_byte) * BITPERBYTE;
- 		}
+ /*
+- * Choose the lesser value of the two below as the size of cyclic buffer.
+- *  - the size enough for storing the 1st/2nd bitmap for the whole of vmcore
+- *  - 80% of free memory (as safety limit)
++ * Choose the lesser value of the three below as the size of cyclic buffer.
++ *  - the size enough for storing the 1st or 2nd bitmap for the whole of vmcore
++ *  - 4MB as sufficient value
++ *  - 60% of free memory as safety limit
+  */
+ int
+ calculate_cyclic_buffer_size(void) {
+ 	unsigned long long limit_size, bitmap_size;
++	const unsigned long long maximum_size = 4 * 1024 * 1024;
  
- 		if (pfn_end_round >= pfn_start) {
- 			for (pfn = pfn_end_round; pfn < pfn_end; pfn++) {
--				if (set_bit_on_1st_bitmap(pfn, cycle))
--					pfn_bitmap1++;
-+				set_bit_on_1st_bitmap(pfn, cycle);
- 			}
- 		}
+ 	if (info->max_mapnr <= 0) {
+ 		ERRMSG("Invalid max_mapnr(%llu).\n", info->max_mapnr);
+@@ -8960,17 +8962,18 @@ calculate_cyclic_buffer_size(void) {
  	}
--	pfn_memhole -= pfn_bitmap1;
+ 
+ 	/*
+-	 *  We should keep the size of cyclic buffer within 80% of free memory
+-	 *  for safety.
++	 *  At least, we should keep the size of cyclic buffer within 60% of
++	 *  free memory for safety.
+ 	 */
+-	limit_size = get_free_memory_size() * 0.8;
++	limit_size = get_free_memory_size() * 0.6;
+ 	bitmap_size = info->max_mapnr / BITPERBYTE;
+ 
+ 	/* if --split was specified cyclic buffer allocated per dump file */
+ 	if (info->num_dumpfile > 1)
+ 		bitmap_size /= info->num_dumpfile;
+ 
+-	info->bufsize_cyclic = MIN(limit_size, bitmap_size);
++	/* 4MB will be enought for performance according to benchmarks. */
++	info->bufsize_cyclic = MIN(MIN(limit_size, maximum_size), bitmap_size);
  
  	return TRUE;
  }
-@@ -4589,9 +4583,11 @@ initialize_2nd_bitmap_cyclic(struct cycle *cycle)
- 					pfn_end);
- 		pfn_end_round = MAX(round(pfn_end, BITPERBYTE), pfn_start);
- 
--		for (pfn = pfn_start; pfn < pfn_start_roundup; ++pfn)
-+		for (pfn = pfn_start; pfn < pfn_start_roundup; ++pfn) {
- 			if (!set_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 				return FALSE;
-+			pfn_memhole--;
-+		}
- 
- 		pfn_start_byte = (pfn_start_roundup - cycle->start_pfn) >> 3;
- 		pfn_end_byte = (pfn_end_round - cycle->start_pfn) >> 3;
-@@ -4600,12 +4596,14 @@ initialize_2nd_bitmap_cyclic(struct cycle *cycle)
- 			memset(info->partial_bitmap2 + pfn_start_byte,
- 			       0xff,
- 			       pfn_end_byte - pfn_start_byte);
-+			pfn_memhole -= (pfn_end_byte - pfn_start_byte) << 3;
- 		}
- 
- 		if (pfn_end_round >= pfn_start) {
- 			for (pfn = pfn_end_round; pfn < pfn_end; ++pfn) {
- 				if (!set_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
- 					return FALSE;
-+				pfn_memhole--;
- 			}
- 		}
- 	}
 -- 
 1.9.0
 
