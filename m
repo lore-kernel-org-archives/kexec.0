@@ -1,36 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp09.in.ibm.com ([122.248.162.9])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wv0E6-0005rc-50
- for kexec@lists.infradead.org; Thu, 12 Jun 2014 08:19:15 +0000
-Received: from /spool/local
- by e28smtp09.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <srivatsa.bhat@linux.vnet.ibm.com>;
- Thu, 12 Jun 2014 13:48:46 +0530
-Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
- by d28dlp03.in.ibm.com (Postfix) with ESMTP id 63AE81258064
- for <kexec@lists.infradead.org>; Thu, 12 Jun 2014 13:48:08 +0530 (IST)
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
- by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s5C8JM0i61407416
- for <kexec@lists.infradead.org>; Thu, 12 Jun 2014 13:49:24 +0530
-Received: from d28av05.in.ibm.com (localhost [127.0.0.1])
- by d28av05.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s5C8IQI2011713
- for <kexec@lists.infradead.org>; Thu, 12 Jun 2014 13:48:27 +0530
-Message-ID: <539961FF.3080903@linux.vnet.ibm.com>
-Date: Thu, 12 Jun 2014 13:47:03 +0530
-From: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wv4GB-0006iS-Jw
+ for kexec@lists.infradead.org; Thu, 12 Jun 2014 12:37:40 +0000
+Date: Thu, 12 Jun 2014 08:36:58 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
+ kernel loading
+Message-ID: <20140612123658.GD9578@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <20140612054203.GA3696@darkstar.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] powerpc, kexec: Fix "Processor X is stuck" issue during
- kexec from ST mode
-References: <20140527105511.24309.74320.stgit@srivatsabhat.in.ibm.com>
- <20140528133143.GK14863@redhat.com> <538E2FF8.8060707@linux.vnet.ibm.com>
- <1401833365.3247.36.camel@pasglop> <5391B413.100@linux.vnet.ibm.com>
- <53922FB8.6070408@linux.vnet.ibm.com>
- <CACPK8Xea+7rPHSCp51fVkX=GTmEwbV0T=JHDZ-XYt6RU96uyyg@mail.gmail.com>
-In-Reply-To: <CACPK8Xea+7rPHSCp51fVkX=GTmEwbV0T=JHDZ-XYt6RU96uyyg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20140612054203.GA3696@darkstar.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,327 +25,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: ego@linux.vnet.ibm.com, matt@ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, suzuki@in.ibm.com, ebiederm@xmission.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, chaowang@redhat.com
 
-Hi Joel,
-
-On 06/12/2014 12:09 PM, Joel Stanley wrote:
-> Hi Srivatsa,
+On Thu, Jun 12, 2014 at 01:42:03PM +0800, Dave Young wrote:
+> On 06/03/14 at 09:06am, Vivek Goyal wrote:
+> > Hi,
+> > 
+> > This is V3 of the patchset. Previous versions were posted here.
+> > 
+> > V1: https://lkml.org/lkml/2013/11/20/540
+> > V2: https://lkml.org/lkml/2014/1/27/331
+> > 
+> > Changes since v2:
+> > 
+> > - Took care of most of the review comments from V2.
+> > - Added support for kexec/kdump on EFI systems.
+> > - Dropped support for loading ELF vmlinux.
+> > 
+> > This patch series is generated on top of 3.15.0-rc8. It also requires a
+> > two patch cleanup series which is sitting in -tip tree here.
+> > 
+> > https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/log/?h=x86/boot
+> > 
+> > This patch series does not do kernel signature verification yet. I plan
+> > to post another patch series for that. Now bzImage is already signed
+> > with PKCS7 signature I plan to parse and verify those signatures.
+> > 
+> > Primary goal of this patchset is to prepare groundwork so that kernel
+> > image can be signed and signatures be verified during kexec load. This
+> > should help with two things.
+> > 
+> > - It should allow kexec/kdump on secureboot enabled machines.
+> > 
+> > - In general it can help even without secureboot. By being able to verify
+> >   kernel image signature in kexec, it should help with avoiding module
+> >   signing restrictions. Matthew Garret showed how to boot into a custom
+> >   kernel, modify first kernel's memory and then jump back to old kernel and
+> >   bypass any policy one wants to.
+> > 
+> > Any feedback is welcome.
 > 
-> On Sat, Jun 7, 2014 at 7:16 AM, Srivatsa S. Bhat
-> <srivatsa.bhat@linux.vnet.ibm.com> wrote:
->> And with the following hunk added (which I had forgotten earlier), it worked just
->> fine on powernv :-)
+> Hi, Vivek
 > 
-> How are the patches coming along?
+> For efi ioremapping case, in 3.15 kernel efi runtime maps will not be saved
+> if efi=old_map is used. So you need detect this and fail the kexec file load.
 > 
+> Otherwise the patchset works for me.
 
-I'm still waiting to test this patch series on a PowerVM box, and unfortunately
-there are some machine issues to debug first :-( So that's why this is taking
-time... :-(
+Thanks Dave. I will make sure that in case of old mapping, kexec loading
+fails. I don't want to be supporting that old "noefi" mode in this new
+system call. Even SGI is planning to fix their firmware to support
+1:1 mapping. 
 
-> I just hung a machine here while attempting to kexec. It appears to
-> have onlined all of the secondary threads, and then hung here:
-> 
-> kexec: Waking offline cpu 1.
-> kvm: enabling virtualization on CPU1
-> kexec: Waking offline cpu 2.
-> kvm: enabling virtualization on CPU2
-> kexec: Waking offline cpu 3.
-> kvm: enabling virtualization on CPU3
-> kexec: Waking offline cpu 5.
-> kvm: enabling virtualization on CPU5
-> [...]
-> kvm: enabling virtualization on CPU63
-> kexec: waiting for cpu 1 (physical 1) to enter OPAL
-> kexec: waiting for cpu 2 (physical 2) to enter OPAL
-> kexec: waiting for cpu 3 (physical 3) to enter OPAL
-> 
-> I'm running benh's next branch as of thismorning, and SMT was off.
-> 
-
-Oh! This looks like a different hang than the one I tried to fix. My patch
-("powerpc, kexec: Fix "Processor X is stuck" issue during kexec from ST mode")
-which is already in benh's next branch was aimed at fixing the "CPU is stuck"
-issue which was observed during the second kernel boot. If the first kernel
-itself is hanging in the down-path, then it looks like a different problem
-altogether.
-
-> Could you please post your latest patches a series? I will test them here.
-> 
-
-The 4 patches that I proposed in this thread are aimed at making the above
-solution more elegant, by not having to actually online the secondary threads
-while doing kexec. I don't think it will solve the hang that you are seeing.
-In any case, I'll provide the consolidated patch below if you want to give it
-a try.
-
-By the way, I have a few questions regarding the hang you observed: is it
-always reproducible with SMT=off? And if SMT was 8 (i.e, all CPUs in the system
-were online) and then you did a kexec, do you still see the hang?
-
-Regards,
-Srivatsa S. Bhat
-
----------------------------------------------------------------------------
-
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index 16d7e33..2a31b52 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -68,6 +68,7 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
- 		ppc_save_regs(newregs);
- }
- 
-+extern bool kexec_cpu_wake(void);
- extern void kexec_smp_wait(void);	/* get and clear naca physid, wait for
- 					  master to copy new code to 0 */
- extern int crashing_cpu;
-diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
-index f92b0b5..39f721d 100644
---- a/arch/powerpc/include/asm/machdep.h
-+++ b/arch/powerpc/include/asm/machdep.h
-@@ -255,6 +255,16 @@ struct machdep_calls {
- 	void (*machine_shutdown)(void);
- 
- #ifdef CONFIG_KEXEC
-+#if (defined CONFIG_PPC64) && (defined CONFIG_PPC_BOOK3S)
-+
-+	/*
-+	 * The pseries and powernv book3s platforms have a special requirement
-+	 * that soft-offline CPUs have to be woken up before kexec, to avoid
-+	 * CPUs getting stuck. This callback prepares the system for the
-+	 * impending wakeup of the offline CPUs.
-+	 */
-+	void (*kexec_wake_prepare)(void);
-+#endif
- 	void (*kexec_cpu_down)(int crash_shutdown, int secondary);
- 
- 	/* Called to do what every setup is needed on image and the
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 879b3aa..84e91293 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -182,6 +182,14 @@ static void kexec_smp_down(void *arg)
- 	/* NOTREACHED */
- }
- 
-+bool kexec_cpu_wake(void)
-+{
-+	kexec_smp_down(NULL);
-+
-+	/* NOTREACHED */
-+	return true;
-+}
-+
- static void kexec_prepare_cpus_wait(int wait_state)
- {
- 	int my_cpu, i, notified=-1;
-@@ -202,7 +210,7 @@ static void kexec_prepare_cpus_wait(int wait_state)
- 	 * these possible-but-not-online-but-should-be CPUs and chaperone them
- 	 * into kexec_smp_wait().
- 	 */
--	for_each_online_cpu(i) {
-+	for_each_present_cpu(i) {
- 		if (i == my_cpu)
- 			continue;
- 
-@@ -228,16 +236,22 @@ static void kexec_prepare_cpus_wait(int wait_state)
-  * threads as offline -- and again, these CPUs will be stuck.
-  *
-  * So, we online all CPUs that should be running, including secondary threads.
-+ *
-+ * TODO: Update this comment
-  */
- static void wake_offline_cpus(void)
- {
- 	int cpu = 0;
- 
-+	if (ppc_md.kexec_wake_prepare)
-+		ppc_md.kexec_wake_prepare();
-+
- 	for_each_present_cpu(cpu) {
- 		if (!cpu_online(cpu)) {
- 			printk(KERN_INFO "kexec: Waking offline cpu %d.\n",
- 			       cpu);
--			WARN_ON(cpu_up(cpu));
-+			/* This should work even though the cpu is offline */
-+			smp_send_reschedule(cpu);
- 		}
- 	}
- }
-diff --git a/arch/powerpc/platforms/powernv/powernv.h b/arch/powerpc/platforms/powernv/powernv.h
-index 75501bf..910081c 100644
---- a/arch/powerpc/platforms/powernv/powernv.h
-+++ b/arch/powerpc/platforms/powernv/powernv.h
-@@ -27,4 +27,8 @@ extern void pnv_lpc_init(void);
- 
- bool cpu_core_split_required(void);
- 
-+#ifdef CONFIG_KEXEC
-+extern void pnv_kexec_wake_prepare(void);
-+#endif
-+
- #endif /* _POWERNV_H */
-diff --git a/arch/powerpc/platforms/powernv/setup.c b/arch/powerpc/platforms/powernv/setup.c
-index 8c16a5f..8dbccb7 100644
---- a/arch/powerpc/platforms/powernv/setup.c
-+++ b/arch/powerpc/platforms/powernv/setup.c
-@@ -331,6 +331,7 @@ define_machine(powernv) {
- 	.calibrate_decr		= generic_calibrate_decr,
- 	.dma_set_mask		= pnv_dma_set_mask,
- #ifdef CONFIG_KEXEC
-+	.kexec_wake_prepare	= pnv_kexec_wake_prepare,
- 	.kexec_cpu_down		= pnv_kexec_cpu_down,
- #endif
- #ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
-diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
-index 0062a43..0b017b0 100644
---- a/arch/powerpc/platforms/powernv/smp.c
-+++ b/arch/powerpc/platforms/powernv/smp.c
-@@ -32,6 +32,7 @@
- #include <asm/opal.h>
- #include <asm/runlatch.h>
- #include <asm/code-patching.h>
-+#include <asm/kexec.h>
- 
- #include "powernv.h"
- 
-@@ -140,6 +141,15 @@ static int pnv_smp_cpu_disable(void)
- 	return 0;
- }
- 
-+#ifdef CONFIG_KEXEC
-+static bool kexec_wake_offline_cpus;
-+
-+void pnv_kexec_wake_prepare(void)
-+{
-+	kexec_wake_offline_cpus = true;
-+}
-+#endif
-+
- static void pnv_smp_cpu_kill_self(void)
- {
- 	unsigned int cpu;
-@@ -170,6 +180,11 @@ static void pnv_smp_cpu_kill_self(void)
- 		if (cpu_core_split_required())
- 			continue;
- 
-+#ifdef CONFIG_KEXEC
-+		if (kexec_wake_offline_cpus)
-+			kexec_cpu_wake(); /* This function won't return! */
-+#endif
-+
- 		if (!generic_check_cpu_restart(cpu))
- 			DBG("CPU%d Unexpected exit while offline !\n", cpu);
- 	}
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index 20d6297..d026028 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -31,6 +31,7 @@
- #include <asm/vdso_datapage.h>
- #include <asm/xics.h>
- #include <asm/plpar_wrappers.h>
-+#include <asm/kexec.h>
- 
- #include "offline_states.h"
- 
-@@ -143,6 +144,13 @@ static void pseries_mach_cpu_die(void)
- 			get_lppaca()->donate_dedicated_cpu = 0;
- 		get_lppaca()->idle = 0;
- 
-+#if CONFIG_KEXEC
-+		if (get_preferred_offline_state(cpu) == CPU_STATE_KEXEC_WAKE) {
-+			/* This function won't return! */
-+			kexec_cpu_wake();
-+		}
-+#endif
-+
- 		if (get_preferred_offline_state(cpu) == CPU_STATE_ONLINE) {
- 			unregister_slb_shadow(hwcpu);
- 
-diff --git a/arch/powerpc/platforms/pseries/kexec.c b/arch/powerpc/platforms/pseries/kexec.c
-index 13fa95b3..fc135e6 100644
---- a/arch/powerpc/platforms/pseries/kexec.c
-+++ b/arch/powerpc/platforms/pseries/kexec.c
-@@ -20,6 +20,17 @@
- #include <asm/plpar_wrappers.h>
- 
- #include "pseries.h"
-+#include "offline_states.h"
-+
-+void pseries_kexec_wake_prepare(void)
-+{
-+	unsigned int cpu;
-+
-+	for_each_present_cpu(cpu) {
-+		if (!cpu_online(cpu))
-+			set_preferred_offline_state(cpu, CPU_STATE_KEXEC_WAKE);
-+	}
-+}
- 
- static void pseries_kexec_cpu_down(int crash_shutdown, int secondary)
- {
-diff --git a/arch/powerpc/platforms/pseries/offline_states.h b/arch/powerpc/platforms/pseries/offline_states.h
-index 08672d9..32fe5e8 100644
---- a/arch/powerpc/platforms/pseries/offline_states.h
-+++ b/arch/powerpc/platforms/pseries/offline_states.h
-@@ -5,6 +5,9 @@
- enum cpu_state_vals {
- 	CPU_STATE_OFFLINE,
- 	CPU_STATE_INACTIVE,
-+#ifdef CONFIG_KEXEC
-+	CPU_STATE_KEXEC_WAKE,
-+#endif
- 	CPU_STATE_ONLINE,
- 	CPU_MAX_OFFLINE_STATES
- };
-diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
-index 361add6..35ecb99 100644
---- a/arch/powerpc/platforms/pseries/pseries.h
-+++ b/arch/powerpc/platforms/pseries/pseries.h
-@@ -38,6 +38,8 @@ static inline void smp_init_pseries_xics(void) { };
- #endif
- 
- #ifdef CONFIG_KEXEC
-+extern void pseries_kexec_wake_prepare(void);
-+
- extern void setup_kexec_cpu_down_xics(void);
- extern void setup_kexec_cpu_down_mpic(void);
- #else
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index adc21a0..c1a0722 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -808,6 +808,7 @@ define_machine(pseries) {
- 	.system_reset_exception = pSeries_system_reset_exception,
- 	.machine_check_exception = pSeries_machine_check_exception,
- #ifdef CONFIG_KEXEC
-+	.kexec_wake_prepare	= pseries_kexec_wake_prepare,
- 	.machine_kexec          = pSeries_machine_kexec,
- #endif
- #ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 28c5706..55a6350 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1684,13 +1684,6 @@ int kernel_kexec(void)
- 		kernel_restart_prepare(NULL);
- 		migrate_to_reboot_cpu();
- 
--		/*
--		 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
--		 * no further code needs to use CPU hotplug (which is true in
--		 * the reboot case). However, the kexec path depends on using
--		 * CPU hotplug again; so re-enable it here.
--		 */
--		cpu_hotplug_enable();
- 		printk(KERN_EMERG "Starting new kernel\n");
- 		machine_shutdown();
- 	}
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
