@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WvMse-0006wK-Ae
- for kexec@lists.infradead.org; Fri, 13 Jun 2014 08:30:37 +0000
-Date: Fri, 13 Jun 2014 10:30:12 +0200
+ id 1WvOYG-0007Xe-Dr
+ for kexec@lists.infradead.org; Fri, 13 Jun 2014 10:17:40 +0000
+Date: Fri, 13 Jun 2014 12:17:13 +0200
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 07/13] kexec: Implementation of new syscall kexec_file_load
-Message-ID: <20140613083012.GC4751@pd.tnic>
-References: <1401800822-27425-8-git-send-email-vgoyal@redhat.com>
- <20140606065605.GE2785@dhcp-17-89.nay.redhat.com>
- <20140606181859.GK1526@redhat.com>
- <20140609021122.GB1924@darkstar.nay.redhat.com>
- <20140609053538.GA2874@dhcp-17-89.nay.redhat.com>
- <20140609154137.GD22049@redhat.com> <20140613075011.GA4751@pd.tnic>
- <20140613080028.GK15034@dhcp-17-89.nay.redhat.com>
- <20140613081050.GB4751@pd.tnic>
- <20140613082459.GL15034@dhcp-17-89.nay.redhat.com>
+Subject: Re: [PATCH 09/13] purgatory: Core purgatory functionality
+Message-ID: <20140613101713.GD4751@pd.tnic>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <1401800822-27425-10-git-send-email-vgoyal@redhat.com>
+ <20140605200523.GB26110@pd.tnic> <20140606195104.GM1526@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140613082459.GL15034@dhcp-17-89.nay.redhat.com>
+In-Reply-To: <20140606195104.GM1526@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,17 +25,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, jkosina@suse.cz, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On Fri, Jun 13, 2014 at 04:24:59PM +0800, WANG Chao wrote:
-> Emm.. I'm not sure, but I think there might be a chance that
-> COMMAND_LINE_SIZE extend in the future. In general 8K is safe to use,
-> because the current greatest one is 4K.
+On Fri, Jun 06, 2014 at 03:51:04PM -0400, Vivek Goyal wrote:
+> On Thu, Jun 05, 2014 at 10:05:23PM +0200, Borislav Petkov wrote:
+> 
+> [..]
+> > > @@ -249,6 +254,7 @@ archclean:
+> > >  	$(Q)rm -rf $(objtree)/arch/x86_64
+> > >  	$(Q)$(MAKE) $(clean)=$(boot)
+> > >  	$(Q)$(MAKE) $(clean)=arch/x86/tools
+> > 
+> > ifeq ($(CONFIG_KEXEC),y)
+> > 	$(Q)$(MAKE) $(clean)=arch/x86/purgatory
+> > endif
+> 
+> Hmm.., is it strictly required? I am wondering what happens if I build
+> a kernel with CONFIG_KEXEC=y, then set CONFIG_KEXEC=n and do "make clean".
 
-Sure, but kexec cannot load a kernel of different arch, can it?
-Which means, we're safe using the arch-specific definition of
-COMMAND_LINE_SIZE.
+Try it - it works here.
+
+> I think I will still like any files in arch/x86/purgatory to be cleaned
+> despite the fact that CONFIG_KEXEC=n. Isn't it?
+
+Yep, that works. Conversely, we don't want people who haven't enabled
+KEXEC ever to have unrelated cleanup delay.
 
 -- 
 Regards/Gruss,
