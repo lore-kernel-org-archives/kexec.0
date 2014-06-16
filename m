@@ -1,31 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WwWFl-000384-Ve
- for kexec@lists.infradead.org; Mon, 16 Jun 2014 12:43:14 +0000
-Received: from /spool/local
- by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
- Mon, 16 Jun 2014 13:42:49 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com
- (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6B1CA17D804E
- for <kexec@lists.infradead.org>; Mon, 16 Jun 2014 13:44:10 +0100 (BST)
-Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
- [9.149.37.212])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s5GCgkFS35520554
- for <kexec@lists.infradead.org>; Mon, 16 Jun 2014 12:42:46 GMT
-Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s5GCgjVU018180
- for <kexec@lists.infradead.org>; Mon, 16 Jun 2014 06:42:46 -0600
-Subject: [PATCH] kexec/ppc64: move to device tree version 17
-From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Date: Mon, 16 Jun 2014 14:42:43 +0200
-Message-ID: <20140616124243.11173.39355.stgit@nimbus>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Wwafk-0007tH-Kj
+ for kexec@lists.infradead.org; Mon, 16 Jun 2014 17:26:21 +0000
+Date: Mon, 16 Jun 2014 13:25:38 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 09/13] purgatory: Core purgatory functionality
+Message-ID: <20140616172538.GB4515@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <1401800822-27425-10-git-send-email-vgoyal@redhat.com>
+ <20140605200523.GB26110@pd.tnic> <20140606195104.GM1526@redhat.com>
+ <20140613101713.GD4751@pd.tnic>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140613101713.GD4751@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,42 +26,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-Kernel commit e6a6928c3ea1d0195ed75a091e345696b916c09b changed the way the
-device tree is processed in the kernel. Now version 2 is no more supported.
+On Fri, Jun 13, 2014 at 12:17:13PM +0200, Borislav Petkov wrote:
+> On Fri, Jun 06, 2014 at 03:51:04PM -0400, Vivek Goyal wrote:
+> > On Thu, Jun 05, 2014 at 10:05:23PM +0200, Borislav Petkov wrote:
+> > 
+> > [..]
+> > > > @@ -249,6 +254,7 @@ archclean:
+> > > >  	$(Q)rm -rf $(objtree)/arch/x86_64
+> > > >  	$(Q)$(MAKE) $(clean)=$(boot)
+> > > >  	$(Q)$(MAKE) $(clean)=arch/x86/tools
+> > > 
+> > > ifeq ($(CONFIG_KEXEC),y)
+> > > 	$(Q)$(MAKE) $(clean)=arch/x86/purgatory
+> > > endif
+> > 
+> > Hmm.., is it strictly required? I am wondering what happens if I build
+> > a kernel with CONFIG_KEXEC=y, then set CONFIG_KEXEC=n and do "make clean".
+> 
+> Try it - it works here.
+> 
+> > I think I will still like any files in arch/x86/purgatory to be cleaned
+> > despite the fact that CONFIG_KEXEC=n. Isn't it?
+> 
+> Yep, that works. Conversely, we don't want people who haven't enabled
+> KEXEC ever to have unrelated cleanup delay.
+> 
 
-This patch move the version of the device tree generated in ppc64
-environment from 2 to 17, allowing to kexec kernel 3.16.
+I tried following with CONFIG_KEXEC=n
 
-In addition, automates the define of NEED_STRUCTURE_BLOCK_EXTRA_PAD which
-should not be set for DT version 16 and above.
+ifeq ($(CONFIG_KEXEC),y)
+        $(Q)$(MAKE) $(clean)=arch/x86/purgatory
+endif
 
-Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
----
- kexec/arch/ppc64/kexec-ppc64.h |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+And still "make V=1 clean" shows me that it is going in purgatory dir
+to clean things up.
 
-diff --git a/kexec/arch/ppc64/kexec-ppc64.h b/kexec/arch/ppc64/kexec-ppc64.h
-index 9a0aecf..89ee942 100644
---- a/kexec/arch/ppc64/kexec-ppc64.h
-+++ b/kexec/arch/ppc64/kexec-ppc64.h
-@@ -6,9 +6,11 @@
- #define CORE_TYPE_ELF32 1
- #define CORE_TYPE_ELF64 2
- 
--#define BOOT_BLOCK_VERSION 2
--#define BOOT_BLOCK_LAST_COMP_VERSION 2
--#define NEED_STRUCTURE_BLOCK_EXTRA_PAD
-+#define BOOT_BLOCK_VERSION 17
-+#define BOOT_BLOCK_LAST_COMP_VERSION 17
-+#if (BOOT_BLOCK_VERSION < 16)
-+#	define NEED_STRUCTURE_BLOCK_EXTRA_PAD
-+#endif
- #define HAVE_DYNAMIC_MEMORY
- #define NEED_RESERVE_DTB
- 
+make -f scripts/Makefile.clean obj=arch/x86/purgatory
 
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
