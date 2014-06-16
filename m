@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wwdyq-0005w8-Cj
- for kexec@lists.infradead.org; Mon, 16 Jun 2014 20:58:17 +0000
-Date: Mon, 16 Jun 2014 22:57:43 +0200
+ id 1WweAC-0000u8-7T
+ for kexec@lists.infradead.org; Mon, 16 Jun 2014 21:10:00 +0000
+Date: Mon, 16 Jun 2014 23:09:27 +0200
 From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 11/13] kexec-bzImage: Support for loading bzImage using
- 64bit entry
-Message-ID: <20140616205743.GI8170@pd.tnic>
-References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <1401800822-27425-12-git-send-email-vgoyal@redhat.com>
- <20140615163515.GA17016@pd.tnic> <20140616200608.GD4515@redhat.com>
+Subject: Re: [PATCH 07/13] kexec: Implementation of new syscall kexec_file_load
+Message-ID: <20140616210927.GJ8170@pd.tnic>
+References: <20140606181859.GK1526@redhat.com>
+ <20140609021122.GB1924@darkstar.nay.redhat.com>
+ <20140609053538.GA2874@dhcp-17-89.nay.redhat.com>
+ <20140609154137.GD22049@redhat.com> <20140613075011.GA4751@pd.tnic>
+ <20140613124609.GC5871@redhat.com> <20140613153620.GG4751@pd.tnic>
+ <20140616173823.GC4515@redhat.com> <20140616200526.GF8170@pd.tnic>
+ <20140616205331.GA13257@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140616200608.GD4515@redhat.com>
+In-Reply-To: <20140616205331.GA13257@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,67 +30,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, jkosina@suse.cz, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
 
-On Mon, Jun 16, 2014 at 04:06:08PM -0400, Vivek Goyal wrote:
-> There can be more than one loader and the one which claims first
-> to recognize the image will get to load the image. So once 32 bit
-> loader support comes in, it might happen that we ask 64bit loader
-> first and it rejects the image and then we ask 32bit loader.
-
-What does that have to do with anything??
-
-> So these message are really debug message which tells why loader
-> is not accepting an image. It might not be image destined for that
-> loader at all.
+On Mon, Jun 16, 2014 at 04:53:31PM -0400, Vivek Goyal wrote:
+> Kdump kernel uses a different command line. It adds extra command line
+> options to currently running kernels.
 > 
-> pr_debug() allows being verbose if user wants to for debugging purposes.
-> You just have to make sure that CONFIG_DYNAMIC_DEBUG=y and enable verbosity
-> in individual file.
+> Till recent past we used to pass new kernel's memory map using command
+> line "memmap=" and when command line size was 256, we could easily exhaust
+> command line on large machines.
 > 
-> echo 'file kexec-bzimage.c +p' > /sys/kernel/debug/dynamic_debug/control
-
-So people are supposed to enable dynamic_debug just so that they see
-*why* their image doesn't load.
-
-Doesn't sound optimal to me.
-
-> Same here. We will potentially be trying multiple loaders and if every
-> loader prints messages for rejection by default, it is too much of
-> info, IMO.
-
-For max two loaders on one architecture? I don't think so. Now you're
-just arguing for the sake of it.
-
-> I like doing memory allocations early in the functions (as far as
-> possible) and error out if need be. If memory is available to begin
-> with for all the data structures needed by this function, it is kind
-> of pointless to do rest of the processing.
-
-We're talking about memory for a single void * which is ridiculous. And
-I think simplifying the error paths is a much higher win than doing some
-minor allocation.
-
-> Hmm..., If you feel strongly about it, I can make this change. I
-> thought I just made it easier to share the code between 32bit and
-> 64bit by this.
-
-Someone later can do that - right now this code is 64-bit only as far as
-we're concerned and if it can be made to work on 32-bit, then people are
-free to do so.
-
-> I think it just makes it safer that we don't try to copy more than
-> size of destination, in case ->eddbuf_entries is not right or corrupted.
+> Now we support 2048 and we have not seen that issue and now we have
+> moved to passing memory ranges in bootparams so that issue does not
+> exist. But kernel still does allow passing memmap= on command line.
 > 
-> I see copy_edd() does similar thing.
+> One can do same thing using kexec too.
 > 
-> memcpy(edd.edd_info, boot_params.eddbuf, sizeof(edd.edd_info));
-> edd.edd_info_nr = boot_params.eddbuf_entries;
+> Agreed that it is a very corner case use case. Now we can say that we
+> will not support it. I am fine with that but I atleast wanted a discussion
+> and common understanding of what new syscall will support and what it
+> will not.
 > 
-> So may be it is not a bad idea to copy based on max size of data
-> structures.
+> Some arches still seem to have COMMAND_LINE_SIZE 256. They will more
+> likely to hit this scenario at some point of time.
+> 
+> Given the fact you feel so strongly on putting this upper limit, I will
+> introduce it. And put a comment that if the kernel we are kexecing into
+> supports longer command line, the we will not support that size and one
+> needs to upgrade first kernel.
 
-Ok, makes sense.
+Nah, I don't feel strongly about it - I just don't trust userspace and
+think that every value we get from it should be "sanitized".
+
+But if you say that you want to be able to pass bigger command line to
+2nd kernel because this is how kexec passes info, then I'm fine with it.
+This is actually a very valid use case which I was asking for, thanks!
+
+I guess if a malicious user goes at lenths to manipulate
+header->cmdline_size just so that kmalloc still succeeds and we're fine
+with it then I certainly don't have anything against it. I.e., if user
+really wants to shoot himself in the foot, user can.
+
+So it is a good thing we talked about it then. :-)
 
 Thanks.
 
