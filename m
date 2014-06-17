@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WwsQe-0002wc-58
- for kexec@lists.infradead.org; Tue, 17 Jun 2014 12:24:00 +0000
-Date: Tue, 17 Jun 2014 08:23:34 -0400
+ id 1WwtNs-0005Qf-SE
+ for kexec@lists.infradead.org; Tue, 17 Jun 2014 13:25:09 +0000
+Date: Tue, 17 Jun 2014 09:24:26 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kexec-save-pg_head_mask-in-vmcoreinfo.patch
-Message-ID: <20140617122334.GA28340@redhat.com>
-References: <20140609153153.9766367624fcc723eaac7a15@linux-foundation.org>
- <20140610153554.GC17337@redhat.com>
- <20140611132042.1621a230@hananiah.suse.cz>
- <20140611172422.GG10723@redhat.com>
- <20140612170436.51e6338d@hananiah.suse.cz>
- <20140617081001.3e0e1ac9@hananiah.suse.cz>
+Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
+ kernel loading
+Message-ID: <20140617132426.GB28340@redhat.com>
+References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
+ <20140616211328.GK8170@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140617081001.3e0e1ac9@hananiah.suse.cz>
+In-Reply-To: <20140616211328.GK8170@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,73 +25,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On Tue, Jun 17, 2014 at 08:10:01AM +0200, Petr Tesarik wrote:
-> On Thu, 12 Jun 2014 17:04:36 +0200
-> Petr Tesarik <ptesarik@suse.cz> wrote:
+On Mon, Jun 16, 2014 at 11:13:28PM +0200, Borislav Petkov wrote:
+> On Tue, Jun 03, 2014 at 09:06:49AM -0400, Vivek Goyal wrote:
+> > This patch series does not do kernel signature verification yet. I
+> > plan to post another patch series for that. Now bzImage is already
+> > signed with PKCS7 signature I plan to parse and verify those
+> > signatures.
 > 
-> > On Wed, 11 Jun 2014 13:24:22 -0400
-> > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > 
-> > > On Wed, Jun 11, 2014 at 01:20:42PM +0200, Petr Tesarik wrote:
-> > > > On Tue, 10 Jun 2014 11:35:54 -0400
-> > > > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > > 
-> > > > > On Mon, Jun 09, 2014 at 03:31:53PM -0700, Andrew Morton wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > Guys, could you please review this one?
-> > > > > > 
-> > > > > > Thanks.
-> > > > > > 
-> > > > > > 
-> > > > > > From: Petr Tesarik <ptesarik@suse.cz>
-> > > > > > Subject: kexec: save PG_head_mask in VMCOREINFO
-> > > > > > 
-> > > > > > To allow filtering of huge pages, makedumpfile must be able to identify
-> > > > > > them in the dump.  This can be done by checking the appropriate page flag,
-> > > > > > so communicate its value to makedumpfile through the VMCOREINFO interface.
-> > > > > > 
-> > > > > > There's only one small catch.  Depending on how many page flags are
-> > > > > > available on a given architecture, this bit can be called PG_head or
-> > > > > > PG_compound.
-> > > > > > 
-> > > > > > I sent a similar patch back in 2012, but Eric Biederman did not like using
-> > > > > > an #ifdef.  So, this time I'm adding a common symbol (PG_head_mask)
-> > > > > > instead.
-> > > > > > 
-> > > > > > See https://lkml.org/lkml/2012/11/28/91 for the previous version.
-> > > > > > 
-> > > > > 
-> > > > > Hi Petr,
-> > > > > 
-> > > > > I went through previous conversation and personally I like that patch
-> > > > > better.
-> > > > > 
-> > > > > We already have so many exports in vmcoreinfo which are conditional
-> > > > > based on config options. Adding one more should be just fine. And as
-> > > > > you said that it should not bitrot as it will most likely lead
-> > > > > to complication failures if things shift around.
-> > > > > 
-> > > > > Does this patch compile with !CONFIG_PAGEFLAGS_EXTENDED. I did not see
-> > > > > a definition of PG_head_mask in that case.
-> > > > 
-> > > > With !CONFIG_PAGEFLAGS_EXTENDED, the definition of PG_head_mask is
-> > > > already there (and has been for quite some time).
-> > > 
-> > > Oh.., I had not noticed that. Thanks.
-> > > 
-> > > > 
-> > > > > So I would say post your patch again, I will ack it. CC Eric and hopefully
-> > > > > he does not have any objections to it.
+> Btw, do you have a brief outline on how you are going to do the
+> extension to signature verification? Nothing formal, just enough of an
+> outline that I can see where in the flow it will be plugged in.
 > 
-> Oh, it seems you're still waiting for Eric's opinion, but I didn't
-> notice that he wasn't in Cc yet.
+> I was wondering how the whole signature signing and verification will
+> be done, i.e., where do I get the signature, how and who will verify it
+> (I'm guessing the purgatory code), etc, etc.
 
-That was in the context of when I said repost the old patch. Later I
-agreed to existing patch (The one with PG_head_mask) and I have acked it.
+Hi Boris,
+
+I am still working on signing patches. I have uploaded them here for you
+to have a look.
+
+http://people.redhat.com/vgoyal/kdump-secureboot/in-kernel-kexec/bzimage-sig-verification/
+
+Last patch should give you a good idea how signature verification hooks
+into kexec.
+
+Signature verification patches are based on David Howell's work.
+
+There is no purgatory involved here. Once we have copied kernel image
+into kernel space, first thing we do is call into arch image loader
+and ask it to verify signature of image. And bzImage loader in turn
+calls into helper functions which can parse a PE signed file and
+verify image signature.
+
+I have yet to cleanup the code, implement a config option which enforces
+signature verification.
+
+Automatic enforncement of signature verification if secureboot is
+enabled will happen once matthew's secureboot patches are merged 
+into mainline.
 
 Thanks
 Vivek
