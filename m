@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WxFAz-0007rX-Ux
- for kexec@lists.infradead.org; Wed, 18 Jun 2014 12:41:18 +0000
-Date: Wed, 18 Jun 2014 08:40:37 -0400
+ id 1WxGk7-0002I2-5B
+ for kexec@lists.infradead.org; Wed, 18 Jun 2014 14:21:40 +0000
+Date: Wed, 18 Jun 2014 10:20:58 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH 00/13][V3] kexec: A new system call to allow in
- kernel loading
-Message-ID: <20140618124037.GB15327@redhat.com>
+Subject: Re: [PATCH 12/13] kexec: Support for Kexec on panic using new system
+ call
+Message-ID: <20140618142058.GA16552@redhat.com>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
- <20140612054203.GA3696@darkstar.nay.redhat.com>
- <20140617142419.GC28340@redhat.com>
- <20140618014510.GA2851@darkstar.nay.redhat.com>
- <20140618015246.GB2851@darkstar.nay.redhat.com>
+ <1401800822-27425-13-git-send-email-vgoyal@redhat.com>
+ <20140617214310.GC20603@pd.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140618015246.GB2851@darkstar.nay.redhat.com>
+In-Reply-To: <20140617214310.GC20603@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,35 +26,377 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, chaowang@redhat.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On Wed, Jun 18, 2014 at 09:52:46AM +0800, Dave Young wrote:
+On Tue, Jun 17, 2014 at 11:43:10PM +0200, Borislav Petkov wrote:
+
 [..]
-> > > > Hi, Vivek
-> > > > 
-> > > > For efi ioremapping case, in 3.15 kernel efi runtime maps will not be saved
-> > > > if efi=old_map is used. So you need detect this and fail the kexec file load.
-> > > 
-> > > Dave,
-> > > 
-> > > Instead of failing kexec load in case of efi=old_map, I think it will be
-> > > better to just not pass runtime map in bootparams. That way user can
-> > > pass "noefi" on commandline and kdump should still work.  (Like it works
-> > > with user space implementation).
+> > diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
+> > new file mode 100644
+> > index 0000000..2dd2eb8
+> > --- /dev/null
+> > +++ b/arch/x86/include/asm/crash.h
+> > @@ -0,0 +1,9 @@
+> > +#ifndef _ASM_X86_CRASH_H
+> > +#define _ASM_X86_CRASH_H
+> > +
+> > +int load_crashdump_segments(struct kimage *image);
 > 
-> BTW, in kexec-tools in case old_map it just does not fill efi_info so 2nd kernel
-> will automaticlly switch to noefi boot. So do same in kernel make sense as well.
+> I guess crash_load_segments(..) as you're prefixing the other exported
+> functions with "crash_".
 
-Yep. If old_map is being used, I will not fill efi_info and I will also
-not pass efi setup data structure. I think user space does the same.
+Ok, I can make that change.
+
+[..]
+> > +/* Alignment required for elf header segment */
+> > +#define ELF_CORE_HEADER_ALIGN   4096
+> > +
+> > +/* This primarily reprsents number of split ranges due to exclusion */
+> 
+> "represents"
+
+Will do.
 
 > 
-> In userspace tools we pass acpi_rsdp for kdump noefi case, do you want to add that
-> in the kernel loader?
+> > +#define CRASH_MAX_RANGES	16
+> > +
+> > +struct crash_mem_range {
+> > +	u64 start, end;
+> > +};
+> > +
+> > +struct crash_mem {
+> > +	unsigned int nr_ranges;
+> > +	struct crash_mem_range ranges[CRASH_MAX_RANGES];
+> > +};
+> > +
+> > +/* Misc data about ram ranges needed to prepare elf headers */
+> > +struct crash_elf_data {
+> > +	struct kimage *image;
+> > +	/*
+> > +	 * Total number of ram ranges we have after various ajustments for
+> 
+> "adjustments"
 
-I will not do that in kernel. I will expect user space to pass in
-acpi_rsdp=0x on command line.
+Will do.
+
+[..]
+> > @@ -39,6 +82,7 @@ int in_crash_kexec;
+> >   */
+> >  crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss = NULL;
+> >  EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
+> > +unsigned long crash_zero_bytes;
+> 
+> Ah, that's the empty_zero_page...
+
+Ok, will look into moving to empty_zero_page.
+
+[..]
+> > +static int fill_up_crash_elf_data(struct crash_elf_data *ced,
+> > +					struct kimage *image)
+> > +{
+> > +	unsigned int nr_ranges = 0;
+> > +
+> > +	ced->image = image;
+> > +
+> > +	walk_system_ram_range(0, -1, &nr_ranges,
+> > +				get_nr_ram_ranges_callback);
+> > +
+> > +	ced->max_nr_ranges = nr_ranges;
+> > +
+> > +	/*
+> > +	 * We don't create ELF headers for GART aperture as an attempt
+> > +	 * to dump this memory in second kernel leads to hang/crash.
+> > +	 * If gart aperture is present, one needs to exclude that region
+> > +	 * and that could lead to need of extra phdr.
+> > +	 */
+> > +	walk_ram_res("GART", IORESOURCE_MEM, 0, -1,
+> > +				ced, get_gart_ranges_callback);
+> > +
+> > +	/*
+> > +	 * If we have gart region, excluding that could potentially split
+> > +	 * a memory range, resulting in extra header. Account for  that.
+> > +	 */
+> > +	if (ced->gart_end)
+> > +		ced->max_nr_ranges++;
+> > +
+> > +	/* Exclusion of crash region could split memory ranges */
+> > +	ced->max_nr_ranges++;
+> > +
+> > +	/* If crashk_low_res is there, another range split possible */
+> 
+> You mean "is not 0"?
+
+Yes. Will make comment more clear.
+
+> 
+> > +	if (crashk_low_res.end != 0)
+> > +		ced->max_nr_ranges++;
+> > +
+> > +	return 0;
+> 
+> Returns unconditional 0 - make function void then.
+
+Will do.
+
+[..]
+> > +		if (mstart > start && mend < end) {
+> > +			/* Split original range */
+> > +			mem->ranges[i].end = mstart - 1;
+> > +			temp_range.start = mend + 1;
+> > +			temp_range.end = end;
+> > +		} else if (mstart != start)
+> > +			mem->ranges[i].end = mstart - 1;
+> > +		else
+> > +			mem->ranges[i].start = mend + 1;
+> > +		break;
+> > +	}
+> > +
+> > +	/* If a split happend, add the split in array */
+> 
+> "happened" ... "split to array"
+
+Ok. Will fix.
+
+
+> 
+> > +	if (!temp_range.end)
+> > +		return 0;
+> > +
+> > +	/* Split happened */
+> > +	if (i == CRASH_MAX_RANGES - 1) {
+> > +		pr_err("Too many crash ranges after split\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	/* Location where new range should go */
+> > +	j = i + 1;
+> > +	if (j < mem->nr_ranges) {
+> > +		/* Move over all ranges one place */
+> 
+> 			...  all ranges one slot towards the end */
+> 
+
+Will change.
+
+[..]
+> > +static int prepare_elf64_headers(struct crash_elf_data *ced,
+> > +		void **addr, unsigned long *sz)
+> > +{
+> > +	Elf64_Ehdr *ehdr;
+> > +	Elf64_Phdr *phdr;
+> > +	unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
+> > +	unsigned char *buf, *bufp;
+> > +	unsigned int cpu;
+> > +	unsigned long long notes_addr;
+> > +	int ret;
+> > +
+> > +	/* extra phdr for vmcoreinfo elf note */
+> > +	nr_phdr = nr_cpus + 1;
+> > +	nr_phdr += ced->max_nr_ranges;
+> > +
+> > +	/*
+> > +	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
+> > +	 * area on x86_64 (ffffffff80000000 - ffffffffa0000000).
+> > +	 * I think this is required by tools like gdb. So same physical
+> > +	 * memory will be mapped in two elf headers. One will contain kernel
+> > +	 * text virtual addresses and other will have __va(physical) addresses.
+> > +	 */
+> > +
+> > +	nr_phdr++;
+> > +	elf_sz = sizeof(Elf64_Ehdr) + nr_phdr * sizeof(Elf64_Phdr);
+> > +	elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
+> > +
+> > +	buf = vzalloc(elf_sz);
+> 
+> Since you get zeroed memory, you can save yourself all assignments to 0
+> below and thus slim this already terse function.
+
+Will do.
+
+[..]
+> > +static int add_e820_entry(struct boot_params *params, struct e820entry *entry)
+> > +{
+> > +	unsigned int nr_e820_entries;
+> > +
+> > +	nr_e820_entries = params->e820_entries;
+> > +	if (nr_e820_entries >= E820MAX)
+> > +		return 1;
+> 
+> You're not testing for the error condition in any call site. Are we sure
+> we will never hit E820MAX?
+
+Actually there can be. Right now I am just handling the case of passing
+as many e820 enties as can fit in bootparams and ignoring rest. Ideally
+momory ranges more than E820MAX should be passed through setup data and I
+have not handled that case yet.
+
+Very few systems should run into that kind of scenario. I was thinking
+that once these patches are in, I can look into enabling passing of
+more than E820MAX entries using setup data.
+
+I will put a TODO comment.
+
+> 
+> > +
+> > +	memcpy(&params->e820_map[nr_e820_entries], entry,
+> > +			sizeof(struct e820entry));
+> > +	params->e820_entries++;
+> > +	return 0;
+> > +}
+> > +
+> > +static int memmap_entry_callback(u64 start, u64 end, void *arg)
+> > +{
+> > +	struct crash_memmap_data *cmd = arg;
+> > +	struct boot_params *params = cmd->params;
+> > +	struct e820entry ei;
+> > +
+> > +	ei.addr = start;
+> > +	ei.size = end - start + 1;
+> > +	ei.type = cmd->type;
+> > +	add_e820_entry(params, &ei);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
+> > +		unsigned long long mstart, unsigned long long mend)
+> 
+> Arg alignment... multiple occurrences in this patch.
+
+Will fix.
+
+> 
+> > +{
+> > +	unsigned long start, end;
+> > +	int ret = 0;
+> > +
+> > +	memset(cmem->ranges, 0, sizeof(cmem->ranges));
+> > +
+> > +	cmem->ranges[0].start = mstart;
+> > +	cmem->ranges[0].end = mend;
+> > +	cmem->nr_ranges = 1;
+> > +
+> > +	/* Exclude Backup region */
+> > +	start = image->arch.backup_load_addr;
+> > +	end = start + image->arch.backup_src_sz - 1;
+> > +	ret = exclude_mem_range(cmem, start, end);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Exclude elf header region */
+> > +	start = image->arch.elf_load_addr;
+> > +	end = start + image->arch.elf_headers_sz - 1;
+> > +	ret = exclude_mem_range(cmem, start, end);
+> > +	return ret;
+> 
+> 	return exclude_mem_range(cmem, start, end);
+
+Will change.
+
+> 
+> > +}
+> > +
+> > +/* Prepare memory map for crash dump kernel */
+> > +int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+> > +{
+> > +	int i, ret = 0;
+> > +	unsigned long flags;
+> > +	struct e820entry ei;
+> > +	struct crash_memmap_data cmd;
+> > +	struct crash_mem *cmem;
+> > +
+> > +	cmem = vzalloc(sizeof(struct crash_mem));
+> > +	if (!cmem)
+> > +		return -ENOMEM;
+> 
+> You're getting zeroed memory already but you're zeroing it out again
+> above in memmap_exclude_ranges().
+
+Will remove extra zeoring.
+
+[..]
+> > +	/* Exclude some ranges from crashk_res and add rest to memmap */
+> > +	ret = memmap_exclude_ranges(image, cmem, crashk_res.start,
+> > +						crashk_res.end);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	for (i = 0; i < cmem->nr_ranges; i++) {
+> > +		ei.addr = cmem->ranges[i].start;
+> > +		ei.size = cmem->ranges[i].end - ei.addr + 1;
+> > +		ei.type = E820_RAM;
+> > +
+> > +		/* If entry is less than a page, skip it */
+> > +		if (ei.size < PAGE_SIZE)
+> > +			continue;
+> 
+> You can do the size assignment and check first so that you don't have to
+> do the rest if it is a less than a page.
+> 
+
+Ok, will do.
+
+> > +		add_e820_entry(params, &ei);
+> > +	}
+> > +
+> > +out:
+> > +	vfree(cmem);
+> > +	return ret;
+> 
+> This retval is not checked at the callsite in
+> kexec_setup_boot_parameters().
+
+Will check return code at call site.
+
+[..]
+> >  /*
+> >   * Defines lowest physical address for various segments. Not sure where
+> > @@ -130,11 +133,28 @@ void *bzImage64_load(struct kimage *image, char *kernel,
+> >  		return ERR_PTR(-EINVAL);
+> >  	}
+> >  
+> > +	/*
+> > +	 * In case of crash dump, we will append elfcorehdr=<addr> to
+> > +	 * command line. Make sure it does not overflow
+> > +	 */
+> > +	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+> > +		ret = -EINVAL;
+> 
+> No need to assign anything to ret if you return ERR_PTR below.
+
+Yep. Will remove it.
+
+> 
+> > +		pr_debug("Kernel command line too long\n");
+> 
+> This error message needs to differ from the one above - say something
+> about "error appending elfcorehdr=...", for example.
+
+Ok, Will fix it.
+
+[..]
+> > +	/* Setup copying of backup region */
+> > +	if (image->type == KEXEC_TYPE_CRASH) {
+> > +		ret = kexec_purgatory_get_set_symbol(image, "backup_dest",
+> > +				&image->arch.backup_load_addr,
+> > +				sizeof(image->arch.backup_load_addr), 0);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		ret = kexec_purgatory_get_set_symbol(image, "backup_src",
+> > +				&image->arch.backup_src_start,
+> > +				sizeof(image->arch.backup_src_start), 0);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		ret = kexec_purgatory_get_set_symbol(image, "backup_sz",
+> > +				&image->arch.backup_src_sz,
+> > +				sizeof(image->arch.backup_src_sz), 0);
+> 
+> Arg alignment is funny.
+
+Will change.
 
 Thanks
 Vivek
