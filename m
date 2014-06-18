@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1WxI2B-0006bi-RU
- for kexec@lists.infradead.org; Wed, 18 Jun 2014 15:44:24 +0000
-Date: Wed, 18 Jun 2014 17:43:55 +0200
+ id 1WxINf-0003lP-0z
+ for kexec@lists.infradead.org; Wed, 18 Jun 2014 16:06:36 +0000
+Date: Wed, 18 Jun 2014 18:06:07 +0200
 From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [PATCH 13/13] kexec: Support kexec/kdump on EFI systems
-Message-ID: <20140618154355.GH24024@pd.tnic>
+Message-ID: <20140618160607.GI24024@pd.tnic>
 References: <1401800822-27425-1-git-send-email-vgoyal@redhat.com>
  <1401800822-27425-14-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
@@ -25,7 +25,12 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, linux-efi <linux-efi@vger.kernel.org>, bhe@redhat.com, jkosina@suse.cz, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+
+Addomg linux-efi to CC for the efi bits. Please CC it on your next
+submission.
+
+Thanks.
 
 On Tue, Jun 03, 2014 at 09:07:02AM -0400, Vivek Goyal wrote:
 > This patch does two thigns. It passes EFI run time mappings to second
@@ -114,14 +119,266 @@ On Tue, Jun 03, 2014 at 09:07:02AM -0400, Vivek Goyal wrote:
 > +	 */
 > +	efi_map_sz = get_efi_runtime_map_size();
 > +	efi_map_sz = ALIGN(efi_map_sz, 16);
-
-Yeah, those and the ones below should be inside #ifdef CONFIG_EFI,
-strictly speaking. I see you've added dummy functions for the case when
-EFI is not enabled to save yourself the ifdeffery. Hm, ok, I guess the
-ifdeffery is uglier and the couple of bytes more is simply not worth the
-trouble.
-
-:-)
+> +
+>  	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+>  				MAX_ELFCOREHDR_STR_LEN;
+> -	params = kzalloc(params_cmdline_sz, GFP_KERNEL);
+> +	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+> +	params_misc_sz = params_cmdline_sz + efi_map_sz +
+> +				sizeof(struct setup_data) +
+> +				sizeof(struct efi_setup_data);
+> +
+> +	params = kzalloc(params_misc_sz, GFP_KERNEL);
+>  	if (!params) {
+>  		ret = -ENOMEM;
+>  		goto out_free_loader_data;
+>  	}
+>  
+> +	efi_map_offset = params_cmdline_sz;
+> +	efi_setup_data_offset = efi_map_offset + efi_map_sz;
+> +
+>  	/* Copy setup header onto bootparams. Documentation/x86/boot.txt */
+>  	setup_header_size = 0x0202 + kernel[0x0201] - setup_hdr_offset;
+>  
+>  	/* Is there a limit on setup header size? */
+>  	memcpy(&params->hdr, (kernel + setup_hdr_offset), setup_header_size);
+>  
+> -	ret = kexec_add_buffer(image, (char *)params, params_cmdline_sz,
+> -			       params_cmdline_sz, 16, MIN_BOOTPARAM_ADDR,
+> +	ret = kexec_add_buffer(image, (char *)params, params_misc_sz,
+> +			       params_misc_sz, 16, MIN_BOOTPARAM_ADDR,
+>  			       ULONG_MAX, 1, &bootparam_load_addr);
+>  	if (ret)
+>  		goto out_free_params;
+> -	pr_debug("Loaded boot_param and command line at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> -		 bootparam_load_addr, params_cmdline_sz, params_cmdline_sz);
+> +	pr_debug("Loaded boot_param, command line and misc at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +		 bootparam_load_addr, params_misc_sz, params_misc_sz);
+>  
+>  	/* Load kernel */
+>  	kernel_buf = kernel + kern16_size;
+> @@ -254,7 +276,9 @@ void *bzImage64_load(struct kimage *image, char *kernel,
+>  	if (ret)
+>  		goto out_free_params;
+>  
+> -	ret = kexec_setup_boot_parameters(image, params);
+> +	ret = kexec_setup_boot_parameters(image, params, bootparam_load_addr,
+> +					  efi_map_offset, efi_map_sz,
+> +					  efi_setup_data_offset);
+>  	if (ret)
+>  		goto out_free_params;
+>  
+> diff --git a/arch/x86/kernel/machine_kexec.c b/arch/x86/kernel/machine_kexec.c
+> index 6a3821b..f31a4b5 100644
+> --- a/arch/x86/kernel/machine_kexec.c
+> +++ b/arch/x86/kernel/machine_kexec.c
+> @@ -12,9 +12,11 @@
+>  #include <linux/kernel.h>
+>  #include <linux/kexec.h>
+>  #include <linux/string.h>
+> +#include <linux/efi.h>
+>  #include <asm/bootparam.h>
+>  #include <asm/setup.h>
+>  #include <asm/crash.h>
+> +#include <asm/efi.h>
+>  
+>  /*
+>   * Common code for x86 and x86_64 used for kexec.
+> @@ -67,11 +69,10 @@ int kexec_setup_cmdline(struct kimage *image, struct boot_params *params,
+>  	return 0;
+>  }
+>  
+> -static int setup_memory_map_entries(struct boot_params *params)
+> +static int setup_e820_entries(struct boot_params *params)
+>  {
+>  	unsigned int nr_e820_entries;
+>  
+> -	/* TODO: What about EFI */
+>  	nr_e820_entries = e820_saved.nr_map;
+>  	if (nr_e820_entries > E820MAX)
+>  		nr_e820_entries = E820MAX;
+> @@ -83,8 +84,85 @@ static int setup_memory_map_entries(struct boot_params *params)
+>  	return 0;
+>  }
+>  
+> -int kexec_setup_boot_parameters(struct kimage *image,
+> -				struct boot_params *params)
+> +#ifdef CONFIG_EFI
+> +static int setup_efi_info_memmap(struct boot_params *params,
+> +				  unsigned long params_load_addr,
+> +				  unsigned int efi_map_offset,
+> +				  unsigned int efi_map_sz)
+> +{
+> +	void *efi_map = (void *)params + efi_map_offset;
+> +	unsigned long efi_map_phys_addr = params_load_addr + efi_map_offset;
+> +	struct efi_info *ei = &params->efi_info;
+> +
+> +	if (!efi_map_sz)
+> +		return 0;
+> +
+> +	efi_runtime_map_copy(efi_map, efi_map_sz);
+> +
+> +	ei->efi_memmap = efi_map_phys_addr & 0xffffffff;
+> +	ei->efi_memmap_hi = efi_map_phys_addr >> 32;
+> +	ei->efi_memmap_size = efi_map_sz;
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +prepare_add_efi_setup_data(struct boot_params *params,
+> +		       unsigned long params_load_addr,
+> +		       unsigned int efi_setup_data_offset)
+> +{
+> +	unsigned long setup_data_phys;
+> +	struct setup_data *sd = (void *)params + efi_setup_data_offset;
+> +	struct efi_setup_data *esd = (void *)sd + sizeof(struct setup_data);
+> +
+> +	esd->fw_vendor = efi.fw_vendor;
+> +	esd->runtime = efi.runtime;
+> +	esd->tables = efi.config_table;
+> +	esd->smbios = efi.smbios;
+> +
+> +	sd->type = SETUP_EFI;
+> +	sd->len = sizeof(struct efi_setup_data);
+> +
+> +	/* Add setup data */
+> +	setup_data_phys = params_load_addr + efi_setup_data_offset;
+> +	sd->next = params->hdr.setup_data;
+> +	params->hdr.setup_data = setup_data_phys;
+> +
+> +	return 0;
+> +}
+> +
+> +static int setup_efi_state(struct boot_params *params,
+> +			unsigned long params_load_addr,
+> +			unsigned int efi_map_offset, unsigned int efi_map_sz,
+> +			unsigned int efi_setup_data_offset)
+> +{
+> +	struct efi_info *current_ei = &boot_params.efi_info;
+> +	struct efi_info *ei = &params->efi_info;
+> +
+> +	if (!current_ei->efi_memmap_size)
+> +		return 0;
+> +
+> +	ei->efi_loader_signature = current_ei->efi_loader_signature;
+> +	ei->efi_systab = current_ei->efi_systab;
+> +	ei->efi_systab_hi = current_ei->efi_systab_hi;
+> +
+> +	ei->efi_memdesc_version = current_ei->efi_memdesc_version;
+> +	ei->efi_memdesc_size = get_efi_runtime_map_desc_size();
+> +
+> +	setup_efi_info_memmap(params, params_load_addr, efi_map_offset,
+> +			      efi_map_sz);
+> +	prepare_add_efi_setup_data(params, params_load_addr,
+> +				   efi_setup_data_offset);
+> +	return 0;
+> +}
+> +#endif /* CONFIG_EFI */
+> +
+> +int
+> +kexec_setup_boot_parameters(struct kimage *image, struct boot_params *params,
+> +			    unsigned long params_load_addr,
+> +			    unsigned int efi_map_offset,
+> +			    unsigned int efi_map_sz,
+> +			    unsigned int efi_setup_data_offset)
+>  {
+>  	unsigned int nr_e820_entries;
+>  	unsigned long long mem_k, start, end;
+> @@ -114,7 +192,7 @@ int kexec_setup_boot_parameters(struct kimage *image,
+>  	if (image->type == KEXEC_TYPE_CRASH)
+>  		crash_setup_memmap_entries(image, params);
+>  	else
+> -		setup_memory_map_entries(params);
+> +		setup_e820_entries(params);
+>  
+>  	nr_e820_entries = params->e820_entries;
+>  
+> @@ -135,6 +213,11 @@ int kexec_setup_boot_parameters(struct kimage *image,
+>  		}
+>  	}
+>  
+> +#ifdef CONFIG_EFI
+> +	/* Setup EFI state */
+> +	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+> +			efi_setup_data_offset);
+> +#endif
+>  	/* Setup EDD info */
+>  	memcpy(params->eddbuf, boot_params.eddbuf,
+>  				EDDMAXNR * sizeof(struct edd_info));
+> diff --git a/drivers/firmware/efi/runtime-map.c b/drivers/firmware/efi/runtime-map.c
+> index 97cdd16..40f2213 100644
+> --- a/drivers/firmware/efi/runtime-map.c
+> +++ b/drivers/firmware/efi/runtime-map.c
+> @@ -138,6 +138,27 @@ add_sysfs_runtime_map_entry(struct kobject *kobj, int nr)
+>  	return entry;
+>  }
+>  
+> +int get_efi_runtime_map_size(void)
+> +{
+> +	return nr_efi_runtime_map * efi_memdesc_size;
+> +}
+> +
+> +int get_efi_runtime_map_desc_size(void)
+> +{
+> +	return efi_memdesc_size;
+> +}
+> +
+> +int efi_runtime_map_copy(void *buf, size_t bufsz)
+> +{
+> +	size_t sz = get_efi_runtime_map_size();
+> +
+> +	if (sz > bufsz)
+> +		sz = bufsz;
+> +
+> +	memcpy(buf, efi_runtime_map, sz);
+> +	return 0;
+> +}
+> +
+>  void efi_runtime_map_setup(void *map, int nr_entries, u32 desc_size)
+>  {
+>  	efi_runtime_map = map;
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 6c100ff..c2e5c4a 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -1131,6 +1131,9 @@ int efivars_sysfs_init(void);
+>  #ifdef CONFIG_EFI_RUNTIME_MAP
+>  int efi_runtime_map_init(struct kobject *);
+>  void efi_runtime_map_setup(void *, int, u32);
+> +int get_efi_runtime_map_size(void);
+> +int get_efi_runtime_map_desc_size(void);
+> +int efi_runtime_map_copy(void *buf, size_t bufsz);
+>  #else
+>  static inline int efi_runtime_map_init(struct kobject *kobj)
+>  {
+> @@ -1139,6 +1142,22 @@ static inline int efi_runtime_map_init(struct kobject *kobj)
+>  
+>  static inline void
+>  efi_runtime_map_setup(void *map, int nr_entries, u32 desc_size) {}
+> +
+> +static inline int get_efi_runtime_map_size(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int get_efi_runtime_map_desc_size(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int efi_runtime_map_copy(void *buf, size_t bufsz)
+> +{
+> +	return 0;
+> +}
+> +
+>  #endif
+>  
+>  #endif /* _LINUX_EFI_H */
+> -- 
+> 1.9.0
+> 
+> 
 
 -- 
 Regards/Gruss,
