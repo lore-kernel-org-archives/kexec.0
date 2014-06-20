@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Wxo76-0000AK-7P
- for kexec@lists.infradead.org; Fri, 20 Jun 2014 01:59:38 +0000
-Date: Fri, 20 Jun 2014 09:58:06 +0800
+ id 1Wxofo-0002qT-54
+ for kexec@lists.infradead.org; Fri, 20 Jun 2014 02:35:30 +0000
+Date: Fri, 20 Jun 2014 10:33:56 +0800
 From: "bhe@redhat.com" <bhe@redhat.com>
 Subject: Re: [PATCH] Makedumpfile: vmcore size estimate
-Message-ID: <20140620015806.GI1718@dhcp-16-105.nay.redhat.com>
+Message-ID: <20140620023356.GA26976@dhcp-16-105.nay.redhat.com>
 References: <1402490345-18656-1-git-send-email-bhe@redhat.com>
  <20140611135701.GA1592@dhcp-17-102.nay.redhat.com>
  <0910DD04CBD6DE4193FCF86B9C00BE9722440E@BPXM01GP.gisp.nec.co.jp>
@@ -47,38 +47,30 @@ On 06/20/14 at 01:07am, Atsushi Kumagai wrote:
 > maximum size of vmcore. Of course they can reduce the disk size on their
 > responsibility, but makedumpfile can't help it as official feature.
 
-Hi Atsushi,
+Hi,
 
-Thanks for your comments.
+Currently I hesitate between 2 different designs. One is dumping
+/proc/kcore, user can get its size and check its content. The other is
+just give out the dumpable_pages which is just like HP UX has done.
 
-In fact no one need guarantee the vmcore size will be equal to the
-estimated size. As I said in this patch log, it's a rough estimate size.
-E.g I have a machine with 100G memory, with the "-d 31", the vmcore size
-will be about 400M. If "-d0" the vmcore size will be 2G. We know this
-things very well, however can't guarantee all system admin know this
-well too. Some of them manage tens of or hundreds of machines, they need
-to know possibly how much disk space need be reserved, surely this
-reserved disk space will be bigger than the estimated vmcore size so
-that no disk overflow happen and also no too much disk space is wasted.
+People told me in HP UX if execute crashconf, its output like:
 
-I was persuaded by this fact, by the dumping size of /proc/kcore, it can
-give user a very clear range, at lease at order of magnitude. E.g if the
-dumping size of kcore is 500M with a configured dump-level, user only
-need reserve 1G disk space to make sure no disk overflow happens.
+Total pages on system:            260351
+Total pages included in dump:     108751
 
-In this patch, I only get the "System RAM" memory excluding reserved
-crashkernel memory region, it's totally the same as vmcore memory
-region. If at this time crash happened, I believe the difference won't
-exceed 50%. To be honest, 50% is a conservative number. On my test
-machine, the difference is about 10%. I have to admit it's a dynamic
-number.
+Dump compressed:    ON
 
-Recently several different users want this RFE, I think this can help
-user much.
+Dump Parallel:    ON
+
+This is easier and can also help user. And the dumpable_pages is exactly
+the same as vmcore will have if at thie time opoint crash happened.
+Since dumping kcore will cause file write, that's the difference between
+kcore and vmcore dumping.
+
+What's your opinion on this?
 
 Thanks
 Baoquan
-
 
 
 > 
