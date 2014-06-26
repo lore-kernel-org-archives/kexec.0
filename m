@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X08q4-0008T3-Ov
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 12:31:41 +0000
-Date: Thu, 26 Jun 2014 08:31:18 -0400
+ id 1X0GNO-0001wr-6q
+ for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:34:35 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] Makedumpfile: vmcore size estimate
-Message-ID: <20140626123118.GB11136@redhat.com>
-References: <1402490345-18656-1-git-send-email-bhe@redhat.com>
- <20140611135701.GA1592@dhcp-17-102.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9722440E@BPXM01GP.gisp.nec.co.jp>
- <20140623125723.GB29112@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9723992E@BPXM01GP.gisp.nec.co.jp>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9723992E@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH 04/15] kexec: Move segment verification code in a separate
+ function
+Date: Thu, 26 Jun 2014 16:33:33 -0400
+Message-Id: <1403814824-7587-5-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
+References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,124 +18,318 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On Thu, Jun 26, 2014 at 08:21:58AM +0000, Atsushi Kumagai wrote:
-> >On Fri, Jun 20, 2014 at 01:07:52AM +0000, Atsushi Kumagai wrote:
-> >> Hello Baoquan,
-> >>
-> >> >Forget to mention only x86-64 is processed in this patch.
-> >> >
-> >> >On 06/11/14 at 08:39pm, Baoquan He wrote:
-> >> >> User want to get a rough estimate of vmcore size, then they can decide
-> >> >> how much storage space is reserved for vmcore dumping. This can help them
-> >> >> to deploy their machines better, possibly hundreds of machines.
-> >>
-> >> You suggested this feature before, but I don't still agree with this.
-> >>
-> >> No one can guarantee that the vmcore size will be below the estimated
-> >> size every time. However, if makedumpfile provides "--vmcore-estimate",
-> >> some users may trust it completely and disk overflow might happen.
-> >> Ideally, users should prepare the disk which can store the possible
-> >> maximum size of vmcore. Of course they can reduce the disk size on their
-> >> responsibility, but makedumpfile can't help it as official feature.
-> >
-> >Hi Atsushi,
-> >
-> >Recently quite a few people have asked us for this feature. They manage
-> >lots of system and have attached local disk or partition for saving
-> >dump. Now say a system has few Tera bytes of memory and dedicating one
-> >partition of size of few tera bytes per machine just for saving dump might
-> >not be very practical.
-> >
-> >I was given the example that AIX supports this kind of estimates too and
-> >in fact looks like they leave a message if they find that current dump
-> >partition size will not be sufficient to save dump.
-> >
-> >I think it is a good idea to try to solve this problem. We might not be
-> >accurate but it will be better than user guessing that by how much to
-> >reduce the partition size.
-> >
-> >I am wondering what are the technical concerns. IIUC, biggest problem is that
-> >number of pages dumped will vary as system continues to run. So
-> >immediately after boot number of pages to be dumped might be small but
-> >as more applications are launched, number of pages to be dumped will
-> >incresae, most likely.
-> 
-> Yes, the actual dump size will be different from the estimated size, so 
-> this feature sounds incomplete and irresponsible to me.
-> The gap of size may be small in some cases especially when the dump level
-> is 31, but it will be variable basically, therefore I don't want to show
-> such an inaccurate value by makedumpfile.
+Previously do_kimage_alloc() will allocate a kimage structure, copy
+segment list from user space and then do the segment list sanity verification.
 
-Hi Atsushi,
+Break down this function in 3 parts. do_kimage_alloc_init() to do actual
+allocation and basic initialization of kimage structure.
+copy_user_segment_list() to copy segment list from user space and
+sanity_check_segment_list() to verify the sanity of segment list as passed
+by user space.
 
-I am wondering why it will not be accurate or atleast close to accurate.
-Technically we should be able to walk through all the struct pages and
-decide which ones will be dumped based on filtering level. And that should
-give us pretty good idea of dump size. Isn't it.
+In later patches, I need to only allocate kimage and not copy segment
+list from user space. So breaking down in smaller functions enables
+re-use of code at other places.
 
-So for a *given momment in time* our estimates should be pretty close for
-all dump levels.
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ kernel/kexec.c | 182 +++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 100 insertions(+), 82 deletions(-)
 
-What is variable though is that this estimate will change as more
-applications are launched and devices come and go as that will force
-allocation of new memory hence size of dump.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 3aad6dc..44e823e 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -124,45 +124,27 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 				       gfp_t gfp_mask,
+ 				       unsigned long dest);
+ 
+-static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+-			   unsigned long nr_segments,
+-			   struct kexec_segment __user *segments)
++static int copy_user_segment_list(struct kimage *image,
++				  unsigned long nr_segments,
++				  struct kexec_segment __user *segments)
+ {
++	int ret;
+ 	size_t segment_bytes;
+-	struct kimage *image;
+-	unsigned long i;
+-	int result;
+-
+-	/* Allocate a controlling structure */
+-	result = -ENOMEM;
+-	image = kzalloc(sizeof(*image), GFP_KERNEL);
+-	if (!image)
+-		goto out;
+-
+-	image->head = 0;
+-	image->entry = &image->head;
+-	image->last_entry = &image->head;
+-	image->control_page = ~0; /* By default this does not apply */
+-	image->start = entry;
+-	image->type = KEXEC_TYPE_DEFAULT;
+-
+-	/* Initialize the list of control pages */
+-	INIT_LIST_HEAD(&image->control_pages);
+-
+-	/* Initialize the list of destination pages */
+-	INIT_LIST_HEAD(&image->dest_pages);
+-
+-	/* Initialize the list of unusable pages */
+-	INIT_LIST_HEAD(&image->unusable_pages);
+ 
+ 	/* Read in the segments */
+ 	image->nr_segments = nr_segments;
+ 	segment_bytes = nr_segments * sizeof(*segments);
+-	result = copy_from_user(image->segment, segments, segment_bytes);
+-	if (result) {
+-		result = -EFAULT;
+-		goto out;
+-	}
++	ret = copy_from_user(image->segment, segments, segment_bytes);
++	if (ret)
++		ret = -EFAULT;
++
++	return ret;
++}
++
++static int sanity_check_segment_list(struct kimage *image)
++{
++	int result, i;
++	unsigned long nr_segments = image->nr_segments;
+ 
+ 	/*
+ 	 * Verify we have good destination addresses.  The caller is
+@@ -184,9 +166,9 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 		mstart = image->segment[i].mem;
+ 		mend   = mstart + image->segment[i].memsz;
+ 		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+-			goto out;
++			return result;
+ 		if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
+-			goto out;
++			return result;
+ 	}
+ 
+ 	/* Verify our destination addresses do not overlap.
+@@ -207,7 +189,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 			pend   = pstart + image->segment[j].memsz;
+ 			/* Do the segments overlap ? */
+ 			if ((mend > pstart) && (mstart < pend))
+-				goto out;
++				return result;
+ 		}
+ 	}
+ 
+@@ -219,18 +201,61 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
+ 	result = -EINVAL;
+ 	for (i = 0; i < nr_segments; i++) {
+ 		if (image->segment[i].bufsz > image->segment[i].memsz)
+-			goto out;
++			return result;
+ 	}
+ 
+-	result = 0;
+-out:
+-	if (result == 0)
+-		*rimage = image;
+-	else
+-		kfree(image);
++	/*
++	 * Verify we have good destination addresses.  Normally
++	 * the caller is responsible for making certain we don't
++	 * attempt to load the new image into invalid or reserved
++	 * areas of RAM.  But crash kernels are preloaded into a
++	 * reserved area of ram.  We must ensure the addresses
++	 * are in the reserved area otherwise preloading the
++	 * kernel could corrupt things.
++	 */
+ 
+-	return result;
++	if (image->type == KEXEC_TYPE_CRASH) {
++		result = -EADDRNOTAVAIL;
++		for (i = 0; i < nr_segments; i++) {
++			unsigned long mstart, mend;
+ 
++			mstart = image->segment[i].mem;
++			mend = mstart + image->segment[i].memsz - 1;
++			/* Ensure we are within the crash kernel limits */
++			if ((mstart < crashk_res.start) ||
++			    (mend > crashk_res.end))
++				return result;
++		}
++	}
++
++	return 0;
++}
++
++static struct kimage *do_kimage_alloc_init(void)
++{
++	struct kimage *image;
++
++	/* Allocate a controlling structure */
++	image = kzalloc(sizeof(*image), GFP_KERNEL);
++	if (!image)
++		return NULL;
++
++	image->head = 0;
++	image->entry = &image->head;
++	image->last_entry = &image->head;
++	image->control_page = ~0; /* By default this does not apply */
++	image->type = KEXEC_TYPE_DEFAULT;
++
++	/* Initialize the list of control pages */
++	INIT_LIST_HEAD(&image->control_pages);
++
++	/* Initialize the list of destination pages */
++	INIT_LIST_HEAD(&image->dest_pages);
++
++	/* Initialize the list of unusable pages */
++	INIT_LIST_HEAD(&image->unusable_pages);
++
++	return image;
+ }
+ 
+ static void kimage_free_page_list(struct list_head *list);
+@@ -243,10 +268,19 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 	struct kimage *image;
+ 
+ 	/* Allocate and initialize a controlling structure */
+-	image = NULL;
+-	result = do_kimage_alloc(&image, entry, nr_segments, segments);
++	image = do_kimage_alloc_init();
++	if (!image)
++		return -ENOMEM;
++
++	image->start = entry;
++
++	result = copy_user_segment_list(image, nr_segments, segments);
+ 	if (result)
+-		goto out;
++		goto out_free_image;
++
++	result = sanity_check_segment_list(image);
++	if (result)
++		goto out_free_image;
+ 
+ 	/*
+ 	 * Find a location for the control code buffer, and add it
+@@ -258,22 +292,21 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+ 	if (!image->control_code_page) {
+ 		pr_err("Could not allocate control_code_buffer\n");
+-		goto out_free;
++		goto out_free_image;
+ 	}
+ 
+ 	image->swap_page = kimage_alloc_control_pages(image, 0);
+ 	if (!image->swap_page) {
+ 		pr_err("Could not allocate swap buffer\n");
+-		goto out_free;
++		goto out_free_control_pages;
+ 	}
+ 
+ 	*rimage = image;
+ 	return 0;
+-
+-out_free:
++out_free_control_pages:
+ 	kimage_free_page_list(&image->control_pages);
++out_free_image:
+ 	kfree(image);
+-out:
+ 	return result;
+ }
+ 
+@@ -283,19 +316,17 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ {
+ 	int result;
+ 	struct kimage *image;
+-	unsigned long i;
+ 
+-	image = NULL;
+ 	/* Verify we have a valid entry point */
+-	if ((entry < crashk_res.start) || (entry > crashk_res.end)) {
+-		result = -EADDRNOTAVAIL;
+-		goto out;
+-	}
++	if ((entry < crashk_res.start) || (entry > crashk_res.end))
++		return -EADDRNOTAVAIL;
+ 
+ 	/* Allocate and initialize a controlling structure */
+-	result = do_kimage_alloc(&image, entry, nr_segments, segments);
+-	if (result)
+-		goto out;
++	image = do_kimage_alloc_init();
++	if (!image)
++		return -ENOMEM;
++
++	image->start = entry;
+ 
+ 	/* Enable the special crash kernel control page
+ 	 * allocation policy.
+@@ -303,25 +334,13 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ 	image->control_page = crashk_res.start;
+ 	image->type = KEXEC_TYPE_CRASH;
+ 
+-	/*
+-	 * Verify we have good destination addresses.  Normally
+-	 * the caller is responsible for making certain we don't
+-	 * attempt to load the new image into invalid or reserved
+-	 * areas of RAM.  But crash kernels are preloaded into a
+-	 * reserved area of ram.  We must ensure the addresses
+-	 * are in the reserved area otherwise preloading the
+-	 * kernel could corrupt things.
+-	 */
+-	result = -EADDRNOTAVAIL;
+-	for (i = 0; i < nr_segments; i++) {
+-		unsigned long mstart, mend;
++	result = copy_user_segment_list(image, nr_segments, segments);
++	if (result)
++		goto out_free_image;
+ 
+-		mstart = image->segment[i].mem;
+-		mend = mstart + image->segment[i].memsz - 1;
+-		/* Ensure we are within the crash kernel limits */
+-		if ((mstart < crashk_res.start) || (mend > crashk_res.end))
+-			goto out_free;
+-	}
++	result = sanity_check_segment_list(image);
++	if (result)
++		goto out_free_image;
+ 
+ 	/*
+ 	 * Find a location for the control code buffer, and add
+@@ -333,15 +352,14 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+ 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+ 	if (!image->control_code_page) {
+ 		pr_err("Could not allocate control_code_buffer\n");
+-		goto out_free;
++		goto out_free_image;
+ 	}
+ 
+ 	*rimage = image;
+ 	return 0;
+ 
+-out_free:
++out_free_image:
+ 	kfree(image);
+-out:
+ 	return result;
+ }
+ 
+-- 
+1.9.0
 
-And that we should be able to handle with the help of another service.
-
-> 
-> >We can try to mitigate above problem by creating a new service which can
-> >run at configured interval and check the size of memory required for
-> >dump and size of dump partition configured. And user can either disable
-> >this service or configure it to run every hour or every day or every week
-> >or any interval they like to.
-> 
-> I think it's too much work, why do you want to check the required disk
-> size so frequently?
-
-Interval can be dynamic. Checking estimate after fresh boot will not make
-sense as system is not loaded at all.
-
-May be run it once a month if you think once a week is too much.
-
-> To get the order of magnitude once will be enough to
-> prepare the disk for dump since we should include some space in the disk size
-> to absorb the fluctuation of the vmcore size.
-
-I think that's also fine. That can be first step and if that works we
-don't have to create a service to check it regularly. I am only concerned
-that estimate taken after boot can vary a lot on large machines once all
-the applications are launched.
-
-> However, it depends on the
-> machine's work, makedumpfile can't provide the index for estimation which
-> can be applied to everyone.
-
-I still don't understand that why makedumpfile can't provide an estimate
-* of that momement * reasonably.
-
-I don't want to implement a separate utility for this as makedumpfile
-already has all the logic to go through pages, prepare bitmaps and figure
-out which ones will be dumped. It will be just duplication of code and
-waste of effort.
-
-We have a real problem at our hand. What do we tell customers that how
-big your dump partition should be. They have a multi tera byte machine. Do
-we tell them that create a multi tera byte dedicated dump partition.
-That's not practical at all.
-
-And asking them to guess is not reasonable either. makedumpfile can make
-much more educated guesses. It is not perfect but it is still much better
-than user making a wild guess.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
