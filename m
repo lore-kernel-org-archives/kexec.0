@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0GO6-0002Py-Se
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:35:21 +0000
+ id 1X0GO6-0002Qj-Sd
+ for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:35:23 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 11/15] purgatory: Core purgatory functionality
-Date: Thu, 26 Jun 2014 16:33:40 -0400
-Message-Id: <1403814824-7587-12-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 13/15] kexec-bzImage64: Support for loading bzImage using
+ 64bit entry
+Date: Thu, 26 Jun 2014 16:33:42 -0400
+Message-Id: <1403814824-7587-14-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,397 +26,480 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-Create a stand alone relocatable object purgatory which runs between two
-kernels. This name, concept and some code has been taken from kexec-tools.
-Idea is that this code runs after a crash and it runs in minimal environment.
-So keep it separate from rest of the kernel and in long term we will have
-to practically do no maintenance of this code.
+This is loader specific code which can load bzImage and set it up for
+64bit entry. This does not take care of 32bit entry or real mode entry.
 
-This code also has the logic to do verify sha256 hashes of various
-segments which have been loaded into memory. So first we verify that
-the kernel we are jumping to is fine and has not been corrupted and
-make progress only if checsums are verified.
-
-This code also takes care of copying some memory contents to backup region.
+32bit mode entry can be implemented if somebody needs it.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- arch/x86/Kbuild                   |   4 ++
- arch/x86/Makefile                 |   8 +++
- arch/x86/purgatory/Makefile       |  30 +++++++++++
- arch/x86/purgatory/entry64.S      | 101 ++++++++++++++++++++++++++++++++++++++
- arch/x86/purgatory/purgatory.c    |  72 +++++++++++++++++++++++++++
- arch/x86/purgatory/setup-x86_64.S |  58 ++++++++++++++++++++++
- arch/x86/purgatory/stack.S        |  19 +++++++
- arch/x86/purgatory/string.c       |  13 +++++
- 8 files changed, 305 insertions(+)
- create mode 100644 arch/x86/purgatory/Makefile
- create mode 100644 arch/x86/purgatory/entry64.S
- create mode 100644 arch/x86/purgatory/purgatory.c
- create mode 100644 arch/x86/purgatory/setup-x86_64.S
- create mode 100644 arch/x86/purgatory/stack.S
- create mode 100644 arch/x86/purgatory/string.c
+ arch/x86/include/asm/kexec-bzimage64.h |   6 +
+ arch/x86/include/asm/kexec.h           |  21 ++
+ arch/x86/kernel/Makefile               |   1 +
+ arch/x86/kernel/kexec-bzimage64.c      | 375 +++++++++++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_64.c     |   3 +-
+ 5 files changed, 405 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/include/asm/kexec-bzimage64.h
+ create mode 100644 arch/x86/kernel/kexec-bzimage64.c
 
-diff --git a/arch/x86/Kbuild b/arch/x86/Kbuild
-index e5287d8..61b6d51 100644
---- a/arch/x86/Kbuild
-+++ b/arch/x86/Kbuild
-@@ -16,3 +16,7 @@ obj-$(CONFIG_IA32_EMULATION) += ia32/
- 
- obj-y += platform/
- obj-y += net/
-+
-+ifeq ($(CONFIG_X86_64),y)
-+obj-$(CONFIG_KEXEC) += purgatory/
-+endif
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 33f71b0..dc302a7 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -186,6 +186,14 @@ archscripts: scripts_basic
- archheaders:
- 	$(Q)$(MAKE) $(build)=arch/x86/syscalls all
- 
-+archprepare:
-+ifeq ($(CONFIG_KEXEC),y)
-+# Build only for 64bit. No loaders for 32bit yet.
-+ ifeq ($(CONFIG_X86_64),y)
-+	$(Q)$(MAKE) $(build)=arch/x86/purgatory arch/x86/purgatory/kexec-purgatory.c
-+ endif
-+endif
-+
- ###
- # Kernel objects
- 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+diff --git a/arch/x86/include/asm/kexec-bzimage64.h b/arch/x86/include/asm/kexec-bzimage64.h
 new file mode 100644
-index 0000000..e5829dd
+index 0000000..d1b5d19
 --- /dev/null
-+++ b/arch/x86/purgatory/Makefile
-@@ -0,0 +1,30 @@
-+purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string.o
++++ b/arch/x86/include/asm/kexec-bzimage64.h
+@@ -0,0 +1,6 @@
++#ifndef _ASM_KEXEC_BZIMAGE64_H
++#define _ASM_KEXEC_BZIMAGE64_H
 +
-+targets += $(purgatory-y)
-+PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
++extern struct kexec_file_ops kexec_bzImage64_ops;
 +
-+LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
-+targets += purgatory.ro
++#endif  /* _ASM_KEXE_BZIMAGE64_H */
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 17483a4..0dfccce 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -23,6 +23,7 @@
+ 
+ #include <asm/page.h>
+ #include <asm/ptrace.h>
++#include <asm/bootparam.h>
+ 
+ /*
+  * KEXEC_SOURCE_MEMORY_LIMIT maximum page get_free_page can return.
+@@ -161,6 +162,26 @@ struct kimage_arch {
+ 	pmd_t *pmd;
+ 	pte_t *pte;
+ };
 +
-+# Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
-+# in turn leaves some undefined symbols like __fentry__ in purgatory and not
-+# sure how to relocate those. Like kexec-tools, use custom flags.
-+
-+KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -MD -Os -mcmodel=large
-+
-+$(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
-+		$(call if_changed,ld)
-+
-+targets += kexec-purgatory.c
-+
-+quiet_cmd_bin2c = BIN2C   $@
-+      cmd_bin2c = cat $(obj)/purgatory.ro | $(srctree)/scripts/basic/bin2c kexec_purgatory > $(obj)/kexec-purgatory.c
-+
-+$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro FORCE
-+	$(call if_changed,bin2c)
-+
-+
-+# No loaders for 32bits yet.
-+ifeq ($(CONFIG_X86_64),y)
-+ obj-$(CONFIG_KEXEC)		+= kexec-purgatory.o
-+endif
-diff --git a/arch/x86/purgatory/entry64.S b/arch/x86/purgatory/entry64.S
++struct kexec_entry64_regs {
++	uint64_t rax;
++	uint64_t rbx;
++	uint64_t rcx;
++	uint64_t rdx;
++	uint64_t rsi;
++	uint64_t rdi;
++	uint64_t rsp;
++	uint64_t rbp;
++	uint64_t r8;
++	uint64_t r9;
++	uint64_t r10;
++	uint64_t r11;
++	uint64_t r12;
++	uint64_t r13;
++	uint64_t r14;
++	uint64_t r15;
++	uint64_t rip;
++};
+ #endif
+ 
+ typedef void crash_vmclear_fn(void);
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 047f9ff..ece67cb 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -117,4 +117,5 @@ ifeq ($(CONFIG_X86_64),y)
+ 
+ 	obj-$(CONFIG_PCI_MMCONFIG)	+= mmconf-fam10h_64.o
+ 	obj-y				+= vsmp_64.o
++	obj-$(CONFIG_KEXEC)		+= kexec-bzimage64.o
+ endif
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
 new file mode 100644
-index 0000000..be3249d
+index 0000000..990bf27
 --- /dev/null
-+++ b/arch/x86/purgatory/entry64.S
-@@ -0,0 +1,101 @@
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -0,0 +1,375 @@
 +/*
-+ * Copyright (C) 2003,2004  Eric Biederman (ebiederm@xmission.com)
-+ * Copyright (C) 2014  Red Hat Inc.
-+
-+ * Author(s): Vivek Goyal <vgoyal@redhat.com>
-+ *
-+ * This code has been taken from kexec-tools.
-+ *
-+ * This source code is licensed under the GNU General Public License,
-+ * Version 2.  See the file COPYING for more details.
-+ */
-+
-+	.text
-+	.balign 16
-+	.code64
-+	.globl entry64, entry64_regs
-+
-+
-+entry64:
-+	/* Setup a gdt that should be preserved */
-+	lgdt gdt(%rip)
-+
-+	/* load the data segments */
-+	movl    $0x18, %eax     /* data segment */
-+	movl    %eax, %ds
-+	movl    %eax, %es
-+	movl    %eax, %ss
-+	movl    %eax, %fs
-+	movl    %eax, %gs
-+
-+	/* Setup new stack */
-+	leaq    stack_init(%rip), %rsp
-+	pushq   $0x10 /* CS */
-+	leaq    new_cs_exit(%rip), %rax
-+	pushq   %rax
-+	lretq
-+new_cs_exit:
-+
-+	/* Load the registers */
-+	movq	rax(%rip), %rax
-+	movq	rbx(%rip), %rbx
-+	movq	rcx(%rip), %rcx
-+	movq	rdx(%rip), %rdx
-+	movq	rsi(%rip), %rsi
-+	movq	rdi(%rip), %rdi
-+	movq    rsp(%rip), %rsp
-+	movq	rbp(%rip), %rbp
-+	movq	r8(%rip), %r8
-+	movq	r9(%rip), %r9
-+	movq	r10(%rip), %r10
-+	movq	r11(%rip), %r11
-+	movq	r12(%rip), %r12
-+	movq	r13(%rip), %r13
-+	movq	r14(%rip), %r14
-+	movq	r15(%rip), %r15
-+
-+	/* Jump to the new code... */
-+	jmpq	*rip(%rip)
-+
-+	.section ".rodata"
-+	.balign 4
-+entry64_regs:
-+rax:	.quad 0x0
-+rbx:	.quad 0x0
-+rcx:	.quad 0x0
-+rdx:	.quad 0x0
-+rsi:	.quad 0x0
-+rdi:	.quad 0x0
-+rsp:	.quad 0x0
-+rbp:	.quad 0x0
-+r8:	.quad 0x0
-+r9:	.quad 0x0
-+r10:	.quad 0x0
-+r11:	.quad 0x0
-+r12:	.quad 0x0
-+r13:	.quad 0x0
-+r14:	.quad 0x0
-+r15:	.quad 0x0
-+rip:	.quad 0x0
-+	.size entry64_regs, . - entry64_regs
-+
-+	/* GDT */
-+	.section ".rodata"
-+	.balign 16
-+gdt:
-+	/* 0x00 unusable segment
-+	 * 0x08 unused
-+	 * so use them as gdt ptr
-+	 */
-+	.word gdt_end - gdt - 1
-+	.quad gdt
-+	.word 0, 0, 0
-+
-+	/* 0x10 4GB flat code segment */
-+	.word 0xFFFF, 0x0000, 0x9A00, 0x00AF
-+
-+	/* 0x18 4GB flat data segment */
-+	.word 0xFFFF, 0x0000, 0x9200, 0x00CF
-+gdt_end:
-+stack:	.quad   0, 0
-+stack_init:
-diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
-new file mode 100644
-index 0000000..25e068b
---- /dev/null
-+++ b/arch/x86/purgatory/purgatory.c
-@@ -0,0 +1,72 @@
-+/*
-+ * purgatory: Runs between two kernels
++ * Kexec bzImage loader
 + *
 + * Copyright (C) 2014 Red Hat Inc.
-+ *
-+ * Author:
-+ *       Vivek Goyal <vgoyal@redhat.com>
++ * Authors:
++ *      Vivek Goyal <vgoyal@redhat.com>
 + *
 + * This source code is licensed under the GNU General Public License,
 + * Version 2.  See the file COPYING for more details.
 + */
 +
-+#include "sha256.h"
-+#include "../boot/string.h"
++#define pr_fmt(fmt)	"kexec-bzImage64: " fmt
 +
-+struct sha_region {
-+	unsigned long start;
-+	unsigned long len;
++#include <linux/string.h>
++#include <linux/printk.h>
++#include <linux/errno.h>
++#include <linux/slab.h>
++#include <linux/kexec.h>
++#include <linux/kernel.h>
++#include <linux/mm.h>
++
++#include <asm/bootparam.h>
++#include <asm/setup.h>
++
++/*
++ * Defines lowest physical address for various segments. Not sure where
++ * exactly these limits came from. Current bzimage64 loader in kexec-tools
++ * uses these so I am retaining it. It can be changed over time as we gain
++ * more insight.
++ */
++#define MIN_PURGATORY_ADDR	0x3000
++#define MIN_BOOTPARAM_ADDR	0x3000
++#define MIN_KERNEL_LOAD_ADDR	0x100000
++#define MIN_INITRD_LOAD_ADDR	0x1000000
++
++/*
++ * This is a place holder for all boot loader specific data structure which
++ * gets allocated in one call but gets freed much later during cleanup
++ * time. Right now there is only one field but it can grow as need be.
++ */
++struct bzimage64_data {
++	/*
++	 * Temporary buffer to hold bootparams buffer. This should be
++	 * freed once the bootparam segment has been loaded.
++	 */
++	void *bootparams_buf;
 +};
 +
-+unsigned long backup_dest = 0;
-+unsigned long backup_src = 0;
-+unsigned long backup_sz = 0;
-+
-+u8 sha256_digest[SHA256_DIGEST_SIZE] = { 0 };
-+
-+struct sha_region sha_regions[16] = {};
-+
-+/*
-+ * On x86, second kernel requries first 640K of memory to boot. Copy
-+ * first 640K to a backup region in reserved memory range so that second
-+ * kernel can use first 640K.
-+ */
-+static int copy_backup_region(void)
++static int setup_initrd(struct boot_params *params,
++		unsigned long initrd_load_addr, unsigned long initrd_len)
 +{
-+	if (backup_dest)
-+		memcpy((void *)backup_dest, (void *)backup_src, backup_sz);
++	params->hdr.ramdisk_image = initrd_load_addr & 0xffffffffUL;
++	params->hdr.ramdisk_size = initrd_len & 0xffffffffUL;
++
++	params->ext_ramdisk_image = initrd_load_addr >> 32;
++	params->ext_ramdisk_size = initrd_len >> 32;
 +
 +	return 0;
 +}
 +
-+int verify_sha256_digest(void)
++static int setup_cmdline(struct boot_params *params,
++			 unsigned long bootparams_load_addr,
++			 unsigned long cmdline_offset, char *cmdline,
++			 unsigned long cmdline_len)
 +{
-+	struct sha_region *ptr, *end;
-+	u8 digest[SHA256_DIGEST_SIZE];
-+	struct sha256_state sctx;
++	char *cmdline_ptr = ((char *)params) + cmdline_offset;
++	unsigned long cmdline_ptr_phys;
++	uint32_t cmdline_low_32, cmdline_ext_32;
 +
-+	sha256_init(&sctx);
-+	end = &sha_regions[sizeof(sha_regions)/sizeof(sha_regions[0])];
-+	for (ptr = sha_regions; ptr < end; ptr++)
-+		sha256_update(&sctx, (uint8_t *)(ptr->start), ptr->len);
++	memcpy(cmdline_ptr, cmdline, cmdline_len);
++	cmdline_ptr[cmdline_len - 1] = '\0';
 +
-+	sha256_final(&sctx, digest);
++	cmdline_ptr_phys = bootparams_load_addr + cmdline_offset;
++	cmdline_low_32 = cmdline_ptr_phys & 0xffffffffUL;
++	cmdline_ext_32 = cmdline_ptr_phys >> 32;
 +
-+	if (memcmp(digest, sha256_digest, sizeof(digest)))
-+		return 1;
++	params->hdr.cmd_line_ptr = cmdline_low_32;
++	if (cmdline_ext_32)
++		params->ext_cmd_line_ptr = cmdline_ext_32;
 +
 +	return 0;
 +}
 +
-+void purgatory(void)
++static int setup_memory_map_entries(struct boot_params *params)
 +{
-+	int ret;
++	unsigned int nr_e820_entries;
 +
-+	ret = verify_sha256_digest();
-+	if (ret) {
-+		/* loop forever */
-+		for (;;)
-+			;
++	nr_e820_entries = e820_saved.nr_map;
++
++	/* TODO: Pass entries more than E820MAX in bootparams setup data */
++	if (nr_e820_entries > E820MAX)
++		nr_e820_entries = E820MAX;
++
++	params->e820_entries = nr_e820_entries;
++	memcpy(&params->e820_map, &e820_saved.map,
++	       nr_e820_entries * sizeof(struct e820entry));
++
++	return 0;
++}
++
++static int setup_boot_parameters(struct boot_params *params)
++{
++	unsigned int nr_e820_entries;
++	unsigned long long mem_k, start, end;
++	int i;
++
++	/* Get subarch from existing bootparams */
++	params->hdr.hardware_subarch = boot_params.hdr.hardware_subarch;
++
++	/* Copying screen_info will do? */
++	memcpy(&params->screen_info, &boot_params.screen_info,
++				sizeof(struct screen_info));
++
++	/* Fill in memsize later */
++	params->screen_info.ext_mem_k = 0;
++	params->alt_mem_k = 0;
++
++	/* Default APM info */
++	memset(&params->apm_bios_info, 0, sizeof(params->apm_bios_info));
++
++	/* Default drive info */
++	memset(&params->hd0_info, 0, sizeof(params->hd0_info));
++	memset(&params->hd1_info, 0, sizeof(params->hd1_info));
++
++	/* Default sysdesc table */
++	params->sys_desc_table.length = 0;
++
++	setup_memory_map_entries(params);
++	nr_e820_entries = params->e820_entries;
++
++	for (i = 0; i < nr_e820_entries; i++) {
++		if (params->e820_map[i].type != E820_RAM)
++			continue;
++		start = params->e820_map[i].addr;
++		end = params->e820_map[i].addr + params->e820_map[i].size - 1;
++
++		if ((start <= 0x100000) && end > 0x100000) {
++			mem_k = (end >> 10) - (0x100000 >> 10);
++			params->screen_info.ext_mem_k = mem_k;
++			params->alt_mem_k = mem_k;
++			if (mem_k > 0xfc00)
++				params->screen_info.ext_mem_k = 0xfc00; /* 64M*/
++			if (mem_k > 0xffffffff)
++				params->alt_mem_k = 0xffffffff;
++		}
 +	}
-+	copy_backup_region();
++
++	/* Setup EDD info */
++	memcpy(params->eddbuf, boot_params.eddbuf,
++				EDDMAXNR * sizeof(struct edd_info));
++	params->eddbuf_entries = boot_params.eddbuf_entries;
++
++	memcpy(params->edd_mbr_sig_buffer, boot_params.edd_mbr_sig_buffer,
++	       EDD_MBR_SIG_MAX * sizeof(unsigned int));
++
++	return 0;
 +}
-diff --git a/arch/x86/purgatory/setup-x86_64.S b/arch/x86/purgatory/setup-x86_64.S
-new file mode 100644
-index 0000000..fe3c91b
---- /dev/null
-+++ b/arch/x86/purgatory/setup-x86_64.S
-@@ -0,0 +1,58 @@
-+/*
-+ * purgatory:  setup code
-+ *
-+ * Copyright (C) 2003,2004  Eric Biederman (ebiederm@xmission.com)
-+ * Copyright (C) 2014 Red Hat Inc.
-+ *
-+ * This code has been taken from kexec-tools.
-+ *
-+ * This source code is licensed under the GNU General Public License,
-+ * Version 2.  See the file COPYING for more details.
-+ */
 +
-+	.text
-+	.globl purgatory_start
-+	.balign 16
-+purgatory_start:
-+	.code64
++int bzImage64_probe(const char *buf, unsigned long len)
++{
++	int ret = -ENOEXEC;
++	struct setup_header *header;
 +
-+	/* Load a gdt so I know what the segment registers are */
-+	lgdt	gdt(%rip)
++	/* kernel should be atleast two sectors long */
++	if (len < 2 * 512) {
++		pr_err("File is too short to be a bzImage\n");
++		return ret;
++	}
 +
-+	/* load the data segments */
-+	movl	$0x18, %eax	/* data segment */
-+	movl	%eax, %ds
-+	movl	%eax, %es
-+	movl	%eax, %ss
-+	movl	%eax, %fs
-+	movl	%eax, %gs
++	header = (struct setup_header *)(buf + offsetof(struct boot_params, hdr));
++	if (memcmp((char *)&header->header, "HdrS", 4) != 0) {
++		pr_err("Not a bzImage\n");
++		return ret;
++	}
 +
-+	/* Setup a stack */
-+	leaq	lstack_end(%rip), %rsp
++	if (header->boot_flag != 0xAA55) {
++		pr_err("No x86 boot sector present\n");
++		return ret;
++	}
 +
-+	/* Call the C code */
-+	call purgatory
-+	jmp	entry64
++	if (header->version < 0x020C) {
++		pr_err("Must be at least protocol version 2.12\n");
++		return ret;
++	}
 +
-+	.section ".rodata"
-+	.balign 16
-+gdt:	/* 0x00 unusable segment
-+	 * 0x08 unused
-+	 * so use them as the gdt ptr
++	if (!(header->loadflags & LOADED_HIGH)) {
++		pr_err("zImage not a bzImage\n");
++		return ret;
++	}
++
++	if (!(header->xloadflags & XLF_KERNEL_64)) {
++		pr_err("Not a bzImage64. XLF_KERNEL_64 is not set.\n");
++		return ret;
++	}
++
++	if (!(header->xloadflags & XLF_CAN_BE_LOADED_ABOVE_4G)) {
++		pr_err("XLF_CAN_BE_LOADED_ABOVE_4G is not set.\n");
++		return ret;
++	}
++
++	/* I've got a bzImage */
++	pr_debug("It's a relocatable bzImage64\n");
++	ret = 0;
++
++	return ret;
++}
++
++void *bzImage64_load(struct kimage *image, char *kernel,
++		     unsigned long kernel_len, char *initrd,
++		     unsigned long initrd_len, char *cmdline,
++		     unsigned long cmdline_len)
++{
++
++	struct setup_header *header;
++	int setup_sects, kern16_size, ret = 0;
++	unsigned long setup_header_size, params_cmdline_sz;
++	struct boot_params *params;
++	unsigned long bootparam_load_addr, kernel_load_addr, initrd_load_addr;
++	unsigned long purgatory_load_addr;
++	unsigned long kernel_bufsz, kernel_memsz, kernel_align;
++	char *kernel_buf;
++	struct bzimage64_data *ldata;
++	struct kexec_entry64_regs regs64;
++	void *stack;
++	unsigned int setup_hdr_offset = offsetof(struct boot_params, hdr);
++
++	header = (struct setup_header *)(kernel + setup_hdr_offset);
++	setup_sects = header->setup_sects;
++	if (setup_sects == 0)
++		setup_sects = 4;
++
++	kern16_size = (setup_sects + 1) * 512;
++	if (kernel_len < kern16_size) {
++		pr_err("bzImage truncated\n");
++		return ERR_PTR(-ENOEXEC);
++	}
++
++	if (cmdline_len > header->cmdline_size) {
++		pr_err("Kernel command line too long\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	/*
++	 * Load purgatory. For 64bit entry point, purgatory  code can be
++	 * anywhere.
 +	 */
-+	.word	gdt_end - gdt - 1
-+	.quad	gdt
-+	.word	0, 0, 0
++	ret = kexec_load_purgatory(image, MIN_PURGATORY_ADDR, ULONG_MAX, 1,
++				   &purgatory_load_addr);
++	if (ret) {
++		pr_err("Loading purgatory failed\n");
++		return ERR_PTR(ret);
++	}
 +
-+	/* 0x10 4GB flat code segment */
-+	.word	0xFFFF, 0x0000, 0x9A00, 0x00AF
++	pr_debug("Loaded purgatory at 0x%lx\n", purgatory_load_addr);
 +
-+	/* 0x18 4GB flat data segment */
-+	.word	0xFFFF, 0x0000, 0x9200, 0x00CF
-+gdt_end:
++	/* Load Bootparams and cmdline */
++	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len;
++	params = kzalloc(params_cmdline_sz, GFP_KERNEL);
++	if (!params)
++		return ERR_PTR(-ENOMEM);
 +
-+	.bss
-+	.balign 4096
-+lstack:
-+	.skip 4096
-+lstack_end:
-diff --git a/arch/x86/purgatory/stack.S b/arch/x86/purgatory/stack.S
-new file mode 100644
-index 0000000..3cefba1
---- /dev/null
-+++ b/arch/x86/purgatory/stack.S
-@@ -0,0 +1,19 @@
-+/*
-+ * purgatory:  stack
-+ *
-+ * Copyright (C) 2014 Red Hat Inc.
-+ *
-+ * This source code is licensed under the GNU General Public License,
-+ * Version 2.  See the file COPYING for more details.
-+ */
++	/* Copy setup header onto bootparams. Documentation/x86/boot.txt */
++	setup_header_size = 0x0202 + kernel[0x0201] - setup_hdr_offset;
 +
-+	/* A stack for the loaded kernel.
-+	 * Seperate and in the data section so it can be prepopulated.
++	/* Is there a limit on setup header size? */
++	memcpy(&params->hdr, (kernel + setup_hdr_offset), setup_header_size);
++
++	ret = kexec_add_buffer(image, (char *)params, params_cmdline_sz,
++			       params_cmdline_sz, 16, MIN_BOOTPARAM_ADDR,
++			       ULONG_MAX, 1, &bootparam_load_addr);
++	if (ret)
++		goto out_free_params;
++	pr_debug("Loaded boot_param and command line at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++		 bootparam_load_addr, params_cmdline_sz, params_cmdline_sz);
++
++	/* Load kernel */
++	kernel_buf = kernel + kern16_size;
++	kernel_bufsz =  kernel_len - kern16_size;
++	kernel_memsz = PAGE_ALIGN(header->init_size);
++	kernel_align = header->kernel_alignment;
++
++	ret = kexec_add_buffer(image, kernel_buf,
++			       kernel_bufsz, kernel_memsz, kernel_align,
++			       MIN_KERNEL_LOAD_ADDR, ULONG_MAX, 1,
++			       &kernel_load_addr);
++	if (ret)
++		goto out_free_params;
++
++	pr_debug("Loaded 64bit kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++		 kernel_load_addr, kernel_memsz, kernel_memsz);
++
++	/* Load initrd high */
++	if (initrd) {
++		ret = kexec_add_buffer(image, initrd, initrd_len, initrd_len,
++				       PAGE_SIZE, MIN_INITRD_LOAD_ADDR,
++				       ULONG_MAX, 1, &initrd_load_addr);
++		if (ret)
++			goto out_free_params;
++
++		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++				initrd_load_addr, initrd_len, initrd_len);
++
++		setup_initrd(params, initrd_load_addr, initrd_len);
++	}
++
++	setup_cmdline(params, bootparam_load_addr, sizeof(struct boot_params),
++		      cmdline, cmdline_len);
++
++	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
++	params->hdr.type_of_loader = 0x0D << 4;
++	params->hdr.loadflags = 0;
++
++	/* Setup purgatory regs for entry */
++	ret = kexec_purgatory_get_set_symbol(image, "entry64_regs", &regs64,
++					     sizeof(regs64), 1);
++	if (ret)
++		goto out_free_params;
++
++	regs64.rbx = 0; /* Bootstrap Processor */
++	regs64.rsi = bootparam_load_addr;
++	regs64.rip = kernel_load_addr + 0x200;
++	stack = kexec_purgatory_get_symbol_addr(image, "stack_end");
++	if (IS_ERR(stack)) {
++		pr_err("Could not find address of symbol stack_end\n");
++		ret = -EINVAL;
++		goto out_free_params;
++	}
++
++	regs64.rsp = (unsigned long)stack;
++	ret = kexec_purgatory_get_set_symbol(image, "entry64_regs", &regs64,
++					     sizeof(regs64), 0);
++	if (ret)
++		goto out_free_params;
++
++	setup_boot_parameters(params);
++
++	/* Allocate loader specific data */
++	ldata = kzalloc(sizeof(struct bzimage64_data), GFP_KERNEL);
++	if (!ldata) {
++		ret = -ENOMEM;
++		goto out_free_params;
++	}
++
++	/*
++	 * Store pointer to params so that it could be freed after loading
++	 * params segment has been loaded and contents have been copied
++	 * somewhere else.
 +	 */
-+	.data
-+	.balign 4096
-+	.globl stack, stack_end
++	ldata->bootparams_buf = params;
++	return ldata;
 +
-+stack:
-+	.skip 4096
-+stack_end:
-diff --git a/arch/x86/purgatory/string.c b/arch/x86/purgatory/string.c
-new file mode 100644
-index 0000000..d886b1f
---- /dev/null
-+++ b/arch/x86/purgatory/string.c
-@@ -0,0 +1,13 @@
-+/*
-+ * Simple string functions.
-+ *
-+ * Copyright (C) 2014 Red Hat Inc.
-+ *
-+ * Author:
-+ *       Vivek Goyal <vgoyal@redhat.com>
-+ *
-+ * This source code is licensed under the GNU General Public License,
-+ * Version 2.  See the file COPYING for more details.
-+ */
++out_free_params:
++	kfree(params);
++	return ERR_PTR(ret);
++}
 +
-+#include "../boot/string.c"
++/* This cleanup function is called after various segments have been loaded */
++int bzImage64_cleanup(struct kimage *image)
++{
++	struct bzimage64_data *ldata = image->image_loader_data;
++
++	if (!ldata)
++		return 0;
++
++	kfree(ldata->bootparams_buf);
++	ldata->bootparams_buf = NULL;
++
++	return 0;
++}
++
++struct kexec_file_ops kexec_bzImage64_ops = {
++	.probe = bzImage64_probe,
++	.load = bzImage64_load,
++	.cleanup = bzImage64_cleanup,
++};
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 88404c4..87c6a99 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -23,9 +23,10 @@
+ #include <asm/tlbflush.h>
+ #include <asm/mmu_context.h>
+ #include <asm/debugreg.h>
++#include <asm/kexec-bzimage64.h>
+ 
+ static struct kexec_file_ops *kexec_file_loaders[] = {
+-		NULL,
++		&kexec_bzImage64_ops,
+ };
+ 
+ static void free_transition_pgtable(struct kimage *image)
 -- 
 1.9.0
 
