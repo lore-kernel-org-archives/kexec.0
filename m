@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0GO6-0002Sk-Sa
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:35:19 +0000
+ id 1X0GO6-0002Px-Sg
+ for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:35:20 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 02/15] kernel: Build bin2c based on config option
- CONFIG_BUILD_BIN2C
-Date: Thu, 26 Jun 2014 16:33:31 -0400
-Message-Id: <1403814824-7587-3-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 08/15] kexec: New syscall kexec_file_load() declaration
+Date: Thu, 26 Jun 2014 16:33:37 -0400
+Message-Id: <1403814824-7587-9-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -24,62 +23,79 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, linux-api@vger.kernel.org, dyoung@redhat.com, chaowang@redhat.com
 
-currently bin2c builds only if CONFIG_IKCONFIG=y. But bin2c will now be
-used by kexec too.  So make it compilation dependent on CONFIG_BUILD_BIN2C
-and this config option can be selected by CONFIG_KEXEC and CONFIG_IKCONFIG.
+This is the new syscall kexec_file_load() declaration/interface. I have
+reserved the syscall number only for x86_64 so far. Other architectures
+(including i386) can reserve syscall number when they enable the support
+for this new syscall.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+CC: linux-api@vger.kernel.org
 ---
- arch/x86/Kconfig       | 1 +
- init/Kconfig           | 5 +++++
- scripts/basic/Makefile | 2 +-
- 3 files changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/syscalls/syscall_64.tbl | 1 +
+ include/linux/syscalls.h         | 4 ++++
+ kernel/kexec.c                   | 7 +++++++
+ kernel/sys_ni.c                  | 1 +
+ 4 files changed, 13 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a8f749e..eaa00ae 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1576,6 +1576,7 @@ source kernel/Kconfig.hz
+diff --git a/arch/x86/syscalls/syscall_64.tbl b/arch/x86/syscalls/syscall_64.tbl
+index ec255a1..6d35459 100644
+--- a/arch/x86/syscalls/syscall_64.tbl
++++ b/arch/x86/syscalls/syscall_64.tbl
+@@ -323,6 +323,7 @@
+ 314	common	sched_setattr		sys_sched_setattr
+ 315	common	sched_getattr		sys_sched_getattr
+ 316	common	renameat2		sys_renameat2
++317	common	kexec_file_load		sys_kexec_file_load
  
- config KEXEC
- 	bool "kexec system call"
-+	select BUILD_BIN2C
- 	---help---
- 	  kexec is a system call that implements the ability to shutdown your
- 	  current kernel, and to start another kernel.  It is like a reboot
-diff --git a/init/Kconfig b/init/Kconfig
-index 9d76b99..866fc50 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -783,8 +783,13 @@ endchoice
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index b0881a0..9e98193 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -317,6 +317,10 @@ asmlinkage long sys_restart_syscall(void);
+ asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 				struct kexec_segment __user *segments,
+ 				unsigned long flags);
++asmlinkage long sys_kexec_file_load(int kernel_fd, int initrd_fd,
++				    unsigned long cmdline_len,
++				    const char __user *cmdline_ptr,
++				    unsigned long flags);
  
- endmenu # "RCU Subsystem"
+ asmlinkage long sys_exit(int error_code);
+ asmlinkage long sys_exit_group(int error_code);
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index c69ce00..bdda717 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1057,6 +1057,13 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
+ }
+ #endif
  
-+config BUILD_BIN2C
-+	bool
-+	default n
++SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
++		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
++		unsigned long, flags)
++{
++	return -ENOSYS;
++}
 +
- config IKCONFIG
- 	tristate "Kernel .config support"
-+	select BUILD_BIN2C
- 	---help---
- 	  This option enables the complete Linux kernel ".config" file
- 	  contents to be saved in the kernel. It provides documentation
-diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
-index afbc1cd..ec10d93 100644
---- a/scripts/basic/Makefile
-+++ b/scripts/basic/Makefile
-@@ -9,7 +9,7 @@
- # fixdep: 	 Used to generate dependency information during build process
- 
- hostprogs-y	:= fixdep
--hostprogs-$(CONFIG_IKCONFIG)     += bin2c
-+hostprogs-$(CONFIG_BUILD_BIN2C)     += bin2c
- always		:= $(hostprogs-y)
- 
- # fixdep is needed to compile other host programs
+ void crash_kexec(struct pt_regs *regs)
+ {
+ 	/* Take the kexec_mutex here to prevent sys_kexec_load
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 36441b5..51ea89f 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -25,6 +25,7 @@ cond_syscall(sys_swapon);
+ cond_syscall(sys_swapoff);
+ cond_syscall(sys_kexec_load);
+ cond_syscall(compat_sys_kexec_load);
++cond_syscall(sys_kexec_file_load);
+ cond_syscall(sys_init_module);
+ cond_syscall(sys_finit_module);
+ cond_syscall(sys_delete_module);
 -- 
 1.9.0
 
