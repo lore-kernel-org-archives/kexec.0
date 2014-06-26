@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0GWD-0006yE-8j
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:43:41 +0000
-Date: Thu, 26 Jun 2014 16:43:03 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 08/15] kexec: New syscall kexec_file_load() declaration
-Message-ID: <20140626204303.GE11136@redhat.com>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X0Gkb-0001vG-W9
+ for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:58:34 +0000
+Date: Thu, 26 Jun 2014 13:58:11 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 00/15][V4] kexec: A new system call to allow in kernel
+ loading
+Message-Id: <20140626135811.37c10ff327bea8a9d2e3894e@linux-foundation.org>
+In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
- <1403814824-7587-9-git-send-email-vgoyal@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1403814824-7587-9-git-send-email-vgoyal@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,134 +23,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, mtk.manpages@gmail.com
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, linux-api@vger.kernel.org, dyoung@redhat.com, chaowang@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, chaowang@redhat.com
 
-On Thu, Jun 26, 2014 at 04:33:37PM -0400, Vivek Goyal wrote:
-> This is the new syscall kexec_file_load() declaration/interface. I have
-> reserved the syscall number only for x86_64 so far. Other architectures
-> (including i386) can reserve syscall number when they enable the support
-> for this new syscall.
+On Thu, 26 Jun 2014 16:33:29 -0400 Vivek Goyal <vgoyal@redhat.com> wrote:
+
+> This patch series does not do kernel signature verification yet. I plan
+> to post another patch series for that. Now distributions are already signing
+> PE/COFF bzImage with PKCS7 signature I plan to parse and verify those
+> signatures.
 > 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> CC: linux-api@vger.kernel.org
+> Primary goal of this patchset is to prepare groundwork so that kernel
+> image can be signed and signatures be verified during kexec load. This
+> should help with two things.
+> 
+> - It should allow kexec/kdump on secureboot enabled machines.
+> 
+> - In general it can help even without secureboot. By being able to verify
+>   kernel image signature in kexec, it should help with avoiding module
+>   signing restrictions. Matthew Garret showed how to boot into a custom
+>   kernel, modify first kernel's memory and then jump back to old kernel and
+>   bypass any policy one wants to.
+> 
+> I hope these patches can be queued up for 3.17. Even without signature
+> verification support, they provide new syscall functionality. But I
+> wil leave it to maintainers to decide if they want signature verification
+> support also be ready to merge before they merge this patchset.
 
-Hi Michael,
+Well, this is an absolute ton of new code, much of it pretty complex. 
+And I believe the entire point of this work is to enable image
+signature checking, but that hasn't been implemented yet?
 
-As per feedback last time, I enhanced the existing man page to include
-details of this new syscall. Here is the patch.
+In which case I'm thinking it would be unwise to merge these parts into
+mainline - if signature checking doesn't work or fails review or if you
+get hit by a bus then we'd be left with a large lump of rather useless
+code?
 
-Thanks
-Vivek
-
-
-Subject: kexec_file_load() syscall man page
-
-We already have man page for kexec_load() syscall. This patch adds details
-of kexec_file_load() to same man page.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- man2/kexec_file_load.2 |    1 
- man2/kexec_load.2      |   55 +++++++++++++++++++++++++++++++++++++++++++------
- 2 files changed, 50 insertions(+), 6 deletions(-)
-
-Index: man-pages/man2/kexec_file_load.2
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ man-pages/man2/kexec_file_load.2	2014-06-25 17:39:12.056441803 -0400
-@@ -0,0 +1 @@
-+.so man2/kexec_load.2
-Index: man-pages/man2/kexec_load.2
-===================================================================
---- man-pages.orig/man2/kexec_load.2	2014-06-25 17:36:09.237453355 -0400
-+++ man-pages/man2/kexec_load.2	2014-06-26 11:11:49.599810213 -0400
-@@ -25,17 +25,26 @@
- .\"
- .TH KEXEC_LOAD 2 2012-07-13 "Linux" "Linux Programmer's Manual"
- .SH NAME
--kexec_load \- load a new kernel for later execution
-+kexec_load, kexec_file_load \- load a new kernel for later execution
- .SH SYNOPSIS
- .B #include <linux/kexec.h>
- .br
-+
- .BI "long kexec_load(unsigned long " entry ", unsigned long " nr_segments ","
- .br
- .BI "                struct kexec_segment *" segments \
- ", unsigned long " flags ");"
-+.br
-+
-+.BI "int kexec_file_load(int " kernel_fd ", int " initrd_fd ","
-+.br
-+.BI "                    unsigned long " cmdline_len  \
-+", const char *" cmdline ","
-+.br
-+.BI "                    unsigned long " flags ");"
- 
- .IR Note :
--There is no glibc wrapper for this system call; see NOTES.
-+There are no glibc wrappers for these system calls; see NOTES.
- .SH DESCRIPTION
- The
- .BR kexec_load ()
-@@ -111,11 +120,42 @@ struct kexec_segment {
- The kernel image defined by
- .I segments
- is copied from the calling process into previously reserved memory.
-+.SS kexec_file_load()
-+The
-+.BR kexec_file_load ()
-+system call is similar to
-+.BR kexec_load(),
-+but it takes a different set of arguments. It reads kernel to be loaded from
-+file descriptor
-+.IR kernel_fd
-+and initrd to be loaded from file descriptor
-+.IR initrd_fd .
-+It also takes length of kernel command line in
-+.IR cmdline_len
-+and pointer to command line in
-+.IR cmdline .
-+
-+The
-+.IR flags
-+argument is a mask which allows control over system call operation. The
-+following values can be specified in
-+.IR flags
-+
-+.TP
-+.BR KEXEC_FILE_UNLOAD
-+Unload currently loaded kernel.
-+.TP
-+.BR KEXEC_FILE_ON_CRASH
-+Load kernel in memory region reserved for crash kernel. This kernel is
-+booted into if currently running kernel crashes.
-+.TP
-+.BR KEXEC_FILE_NO_INITRAMFS
-+Loading initrd/initramfs is optional. Specify this flag if no initramfs
-+is being loaded. If this flag is set, kernel will ignore the value passed
-+in
-+.IR initrd_fd
- .SH RETURN VALUE
--On success,
--.BR kexec_load ()
--returns 0.
--On error, \-1 is returned and
-+On success, these system calls returns 0.  On error, \-1 is returned and
- .I errno
- is set to indicate the error.
- .SH ERRORS
-@@ -135,6 +175,9 @@ is too large
- The caller does not have the
- .BR CAP_SYS_BOOT
- capability.
-+.TP
-+.B ENOEXEC
-+kernel_fd does not refer to an open file. Or kernel can't load this file.
- .SH VERSIONS
- The
- .BR kexec_load ()
+In which case I'm inclined to put this series into -next and keep it
+there pending completion of the signature checking part.
 
 
 _______________________________________________
