@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0Gkq-00022T-Ak
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:58:48 +0000
-Date: Thu, 26 Jun 2014 13:58:26 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 09/15] kexec: Implementation of new syscall kexec_file_load
-Message-Id: <20140626135826.d1679d6eb5b7bd0f82dd7deb@linux-foundation.org>
-In-Reply-To: <1403814824-7587-10-git-send-email-vgoyal@redhat.com>
+Received: from mail-la0-f47.google.com ([209.85.215.47])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X0Gpt-0004aU-IJ
+ for kexec@lists.infradead.org; Thu, 26 Jun 2014 21:04:02 +0000
+Received: by mail-la0-f47.google.com with SMTP id s18so2285300lam.20
+ for <kexec@lists.infradead.org>; Thu, 26 Jun 2014 14:03:37 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20140626204303.GE11136@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
- <1403814824-7587-10-git-send-email-vgoyal@redhat.com>
-Mime-Version: 1.0
+ <1403814824-7587-9-git-send-email-vgoyal@redhat.com>
+ <20140626204303.GE11136@redhat.com>
+From: Andy Lutomirski <luto@amacapital.net>
+Date: Thu, 26 Jun 2014 14:03:17 -0700
+Message-ID: <CALCETrU8mixFxpS2Bt2Q7S08zUFxZwE1zfqHw8PEetqewgR7RQ@mail.gmail.com>
+Subject: Re: [PATCH 08/15] kexec: New syscall kexec_file_load() declaration
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,101 +27,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, chaowang@redhat.com
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, bhe@redhat.com, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Linux API <linux-api@vger.kernel.org>, dyoung@redhat.com, chaowang@redhat.com, Michael Kerrisk-manpages <mtk.manpages@gmail.com>
 
-On Thu, 26 Jun 2014 16:33:38 -0400 Vivek Goyal <vgoyal@redhat.com> wrote:
-
-> Previous patch provided the interface definition and this patch prvides
-> implementation of new syscall.
-> 
-> Previously segment list was prepared in user space. Now user space just
-> passes kernel fd, initrd fd and command line and kernel will create a
-> segment list internally.
-> 
-> This patch contains generic part of the code. Actual segment preparation
-> and loading is done by arch and image specific loader. Which comes in
-> next patch.
-> 
-> ...
+On Thu, Jun 26, 2014 at 1:43 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> On Thu, Jun 26, 2014 at 04:33:37PM -0400, Vivek Goyal wrote:
+>> This is the new syscall kexec_file_load() declaration/interface. I have
+>> reserved the syscall number only for x86_64 so far. Other architectures
+>> (including i386) can reserve syscall number when they enable the support
+>> for this new syscall.
+>>
+>> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+>> CC: linux-api@vger.kernel.org
 >
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -6,6 +6,8 @@
->   * Version 2.  See the file COPYING for more details.
->   */
->  
-> +#define pr_fmt(fmt)	"kexec: " fmt
-> +
->  #include <linux/capability.h>
->  #include <linux/mm.h>
->  #include <linux/file.h>
-> @@ -326,6 +328,215 @@ out_free_image:
->  	return ret;
->  }
->  
-> +static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
-> +{
-> +	struct fd f = fdget(fd);
-> +	int ret = 0;
+> +.BR KEXEC_FILE_NO_INITRAMFS
+> +Loading initrd/initramfs is optional. Specify this flag if no initramfs
+> +is being loaded. If this flag is set, kernel will ignore the value passed
+> +in
 
-unneeded initialisation.
+This seems pointless.  Why not just pass -1 for initrd_fd to indicate
+that no initrd is needed?
 
-> +	struct kstat stat;
-> +	loff_t pos;
-> +	ssize_t bytes = 0;
-> +
-> +	if (!f.file)
-> +		return -EBADF;
-> +
-> +	ret = vfs_getattr(&f.file->f_path, &stat);
-> +	if (ret)
-> +		goto out;
-> +
-> +	if (stat.size > INT_MAX) {
-> +		ret = -EFBIG;
-> +		goto out;
-> +	}
-> +
-> +	/* Don't hand 0 to vmalloc, it whines. */
-> +	if (stat.size == 0) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	*buf = vmalloc(stat.size);
-> +	if (!*buf) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	pos = 0;
-> +	while (pos < stat.size) {
-> +		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
-> +				    stat.size - pos);
-> +		if (bytes < 0) {
-> +			vfree(*buf);
-> +			ret = bytes;
-> +			goto out;
-> +		}
-> +
-> +		if (bytes == 0)
-> +			break;
-
-Here we can get a short read: (pos < stat.size).  Seems to me that it
-is risky to return this result to the caller as if all is well.
-
-> +		pos += bytes;
-> +	}
-> +
-> +	*buf_len = pos;
-> +out:
-> +	fdput(f);
-> +	return ret;
-> +}
-> 
-> ...
->
-
+--Andy
 
 _______________________________________________
 kexec mailing list
