@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0GNO-0001wd-6p
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:34:35 +0000
+ id 1X0GNS-000216-Ry
+ for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:34:39 +0000
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 03/15] kexec: rename unusebale_pages to unusable_pages
-Date: Thu, 26 Jun 2014 16:33:32 -0400
-Message-Id: <1403814824-7587-4-git-send-email-vgoyal@redhat.com>
+Subject: [PATCH 07/15] kexec: Make kexec_segment user buffer pointer a union
+Date: Thu, 26 Jun 2014 16:33:36 -0400
+Message-Id: <1403814824-7587-8-git-send-email-vgoyal@redhat.com>
 In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,61 +25,48 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-Let's use the more common "unusable".
+So far kexec_segment->buf was always a user space pointer as user space
+passed the array of kexec_segment structures and kernel copied it.
 
-This patch was originally written and posted by Boris. I am including it
-in this patch series.
+But with new system call, list of kexec segments will be prepared by
+kernel and kexec_segment->buf will point to a kernel memory.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
+So while I was adding code where I made assumption that ->buf is pointing
+to kernel memory, sparse started giving warning.
+
+Make ->buf a union. And where a user space pointer is expected, access
+it using ->buf and where a kernel space pointer is expected, access it
+using ->kbuf. That takes care of sparse warnings.
+
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- include/linux/kexec.h | 2 +-
- kernel/kexec.c        | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ include/linux/kexec.h | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index a756419..d9bb0a5 100644
+index d9bb0a5..66d56ac 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -100,7 +100,7 @@ struct kimage {
+@@ -69,7 +69,18 @@ typedef unsigned long kimage_entry_t;
+ #define IND_SOURCE       0x8
  
- 	struct list_head control_pages;
- 	struct list_head dest_pages;
--	struct list_head unuseable_pages;
-+	struct list_head unusable_pages;
- 
- 	/* Address of next control page to allocate for crash kernels. */
- 	unsigned long control_page;
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 369f41a..3aad6dc 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -153,7 +153,7 @@ static int do_kimage_alloc(struct kimage **rimage, unsigned long entry,
- 	INIT_LIST_HEAD(&image->dest_pages);
- 
- 	/* Initialize the list of unusable pages */
--	INIT_LIST_HEAD(&image->unuseable_pages);
-+	INIT_LIST_HEAD(&image->unusable_pages);
- 
- 	/* Read in the segments */
- 	image->nr_segments = nr_segments;
-@@ -608,7 +608,7 @@ static void kimage_free_extra_pages(struct kimage *image)
- 	kimage_free_page_list(&image->dest_pages);
- 
- 	/* Walk through and free any unusable pages I have cached */
--	kimage_free_page_list(&image->unuseable_pages);
-+	kimage_free_page_list(&image->unusable_pages);
- 
- }
- static void kimage_terminate(struct kimage *image)
-@@ -731,7 +731,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 		/* If the page cannot be used file it away */
- 		if (page_to_pfn(page) >
- 				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
--			list_add(&page->lru, &image->unuseable_pages);
-+			list_add(&page->lru, &image->unusable_pages);
- 			continue;
- 		}
- 		addr = page_to_pfn(page) << PAGE_SHIFT;
+ struct kexec_segment {
+-	void __user *buf;
++	/*
++	 * This pointer can point to user memory if kexec_load() system
++	 * call is used or will point to kernel memory if
++	 * kexec_file_load() system call is used.
++	 *
++	 * Use ->buf when expecting to deal with user memory and use ->kbuf
++	 * when expecting to deal with kernel memory.
++	 */
++	union {
++		void __user *buf;
++		void *kbuf;
++	};
+ 	size_t bufsz;
+ 	unsigned long mem;
+ 	size_t memsz;
 -- 
 1.9.0
 
