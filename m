@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0GOB-0002xj-S4
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:35:26 +0000
+ id 1X0GTH-0006da-44
+ for kexec@lists.infradead.org; Thu, 26 Jun 2014 20:40:40 +0000
+Date: Thu, 26 Jun 2014 16:39:59 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 06/15] resource: Provide new functions to walk through
- resources
-Date: Thu, 26 Jun 2014 16:33:35 -0400
-Message-Id: <1403814824-7587-7-git-send-email-vgoyal@redhat.com>
-In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
+Subject: Re: [PATCH 00/15][V4] kexec: A new system call to allow in kernel
+ loading
+Message-ID: <20140626203958.GD11136@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,226 +20,445 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, Vivek Goyal <vgoyal@redhat.com>, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, Yinghai Lu <yinghai@kernel.org>, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-I have added two more functions to walk through resources.
+On Thu, Jun 26, 2014 at 04:33:29PM -0400, Vivek Goyal wrote:
+> Hi,
+> 
+> This is V4 of the patchset. Previous versions were posted here.
+> 
+> V1: https://lkml.org/lkml/2013/11/20/540
+> V2: https://lkml.org/lkml/2014/1/27/331
+> V3: https://lkml.org/lkml/2014/6/3/432
+>
 
-Currently walk_system_ram_range() deals with pfn and /proc/iomem can contain
-partial pages. By dealing in pfn, callback function loses the info that
-last page of a memory range is a partial page and not the full page. So
-I implemented walk_system_ram_res() which returns u64 values to callback
-functions and now it properly return start and end address.
+I used following kexec-tools patch to test my changes.
 
-walk_system_ram_range() uses find_next_system_ram() to find the next
-ram resource. This in turn only travels through siblings of top level
-child and does not travers through all the nodes of the resoruce tree. I
-also need another function where I can walk through all the resources,
-for example figure out where "GART" aperture is. Figure out where
-ACPI memory is.
+Thanks
+Vivek
 
-So I wrote another function walk_iomem_res() which walks through all
-/proc/iomem resources and returns matches as asked by caller. Caller
-can specify "name" of resource, start and end and flags.
+kexec-tools: Provide an option to make use of new system call
 
-Got rid of find_next_system_ram_res() and instead implemented more
-generic find_next_iomem_res() which can be used to traverse top level
-children only based on an argument.
+This patch provides and option --kexec-file-syscall, to force use of
+new system call for kexec. Default is to continue to use old syscall.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Cc: Yinghai Lu <yinghai@kernel.org>
 ---
- include/linux/ioport.h |   6 +++
- kernel/resource.c      | 101 ++++++++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 98 insertions(+), 9 deletions(-)
+ kexec/arch/x86_64/kexec-bzImage64.c |   86 +++++++++++++++++++++++
+ kexec/kexec-syscall.h               |   32 ++++++++
+ kexec/kexec.c                       |  132 +++++++++++++++++++++++++++++++++++-
+ kexec/kexec.h                       |   11 ++-
+ 4 files changed, 257 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 5e3a906..142ec54 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -237,6 +237,12 @@ extern int iomem_is_exclusive(u64 addr);
- extern int
- walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
- 		void *arg, int (*func)(unsigned long, unsigned long, void *));
-+extern int
-+walk_system_ram_res(u64 start, u64 end, void *arg,
-+		    int (*func)(u64, u64, void *));
-+extern int
-+walk_iomem_res(char *name, unsigned long flags, u64 start, u64 end, void *arg,
-+	       int (*func)(u64, u64, void *));
+Index: kexec-tools/kexec/kexec.c
+===================================================================
+--- kexec-tools.orig/kexec/kexec.c	2014-06-17 13:15:37.723825990 -0400
++++ kexec-tools/kexec/kexec.c	2014-06-26 15:19:59.064940065 -0400
+@@ -51,6 +51,8 @@
+ unsigned long long mem_min = 0;
+ unsigned long long mem_max = ULONG_MAX;
+ static unsigned long kexec_flags = 0;
++/* Flags for kexec file (fd) based syscall */
++static unsigned long kexec_file_flags = 0;
+ int kexec_debug = 0;
  
- /* True if any part of r1 overlaps r2 */
- static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 3c2237a..da14b8d 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -59,10 +59,12 @@ static DEFINE_RWLOCK(resource_lock);
- static struct resource *bootmem_resource_free;
- static DEFINE_SPINLOCK(bootmem_resource_lock);
- 
--static void *r_next(struct seq_file *m, void *v, loff_t *pos)
-+static struct resource *next_resource(struct resource *p, bool sibling_only)
- {
--	struct resource *p = v;
--	(*pos)++;
-+	/* Caller wants to traverse through siblings only */
-+	if (sibling_only)
-+		return p->sibling;
-+
- 	if (p->child)
- 		return p->child;
- 	while (!p->sibling && p->parent)
-@@ -70,6 +72,13 @@ static void *r_next(struct seq_file *m, void *v, loff_t *pos)
- 	return p->sibling;
+ void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
+@@ -787,6 +789,19 @@ static int my_load(const char *type, int
+ 	return result;
  }
  
-+static void *r_next(struct seq_file *m, void *v, loff_t *pos)
++static int kexec_file_unload(unsigned long kexec_file_flags)
 +{
-+	struct resource *p = v;
-+	(*pos)++;
-+	return (void *)next_resource(p, false);
++	int ret = 0;
++
++	ret = kexec_file_load(-1, -1, 0, NULL, kexec_file_flags);
++	if (ret != 0) {
++		/* The unload failed, print some debugging information */
++		fprintf(stderr, "kexec_file_load(unload) failed\n: %s\n",
++			strerror(errno));
++	}
++	return ret;
 +}
 +
- #ifdef CONFIG_PROC_FS
- 
- enum { MAX_IORES_LEVEL = 5 };
-@@ -322,16 +331,19 @@ int release_resource(struct resource *old)
- 
- EXPORT_SYMBOL(release_resource);
- 
--#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
- /*
-- * Finds the lowest memory reosurce exists within [res->start.res->end)
-+ * Finds the lowest iomem reosurce exists with-in [res->start.res->end)
-  * the caller must specify res->start, res->end, res->flags and "name".
-  * If found, returns 0, res is overwritten, if not found, returns -1.
-+ * This walks through whole tree and not just first level children
-+ * until and unless first_level_children_only is true.
-  */
--static int find_next_system_ram(struct resource *res, char *name)
-+static int find_next_iomem_res(struct resource *res, char *name,
-+			       bool first_level_children_only)
+ static int k_unload (unsigned long kexec_flags)
  {
- 	resource_size_t start, end;
- 	struct resource *p;
-+	bool sibling_only = false;
+ 	int result;
+@@ -925,6 +940,7 @@ void usage(void)
+ 	       "                      (0 means it's not jump back or\n"
+ 	       "                      preserve context)\n"
+ 	       "                      to original kernel.\n"
++	       " -s --kexec-file-syscall Use file based syscall for kexec operation\n"
+ 	       " -d, --debug           Enable debugging to help spot a failure.\n"
+ 	       "\n"
+ 	       "Supported kernel file types and options: \n");
+@@ -1072,6 +1088,82 @@ char *concat_cmdline(const char *base, c
+ 	return cmdline;
+ }
  
- 	BUG_ON(!res);
- 
-@@ -340,8 +352,14 @@ static int find_next_system_ram(struct resource *res, char *name)
- 	BUG_ON(start >= end);
- 
- 	read_lock(&resource_lock);
--	for (p = iomem_resource.child; p ; p = p->sibling) {
--		/* system ram is just marked as IORESOURCE_MEM */
++/* New file based kexec system call related code */
++static int do_kexec_file_load(int fileind, int argc, char **argv,
++			unsigned long flags) {
 +
-+	if (first_level_children_only) {
-+		p = iomem_resource.child;
-+		sibling_only = true;
-+	} else
-+		p = &iomem_resource;
++	char *kernel;
++	int kernel_fd, i;
++	struct kexec_info info;
++	int ret = 0;
++	char *kernel_buf;
++	off_t kernel_size;
 +
-+	while ((p = next_resource(p, sibling_only))) {
- 		if (p->flags != res->flags)
- 			continue;
- 		if (name && strcmp(p->name, name))
-@@ -353,6 +371,7 @@ static int find_next_system_ram(struct resource *res, char *name)
- 		if ((p->end >= start) && (p->start < end))
++	memset(&info, 0, sizeof(info));
++	info.segment = NULL;
++	info.nr_segments = 0;
++	info.entry = NULL;
++	info.backup_start = 0;
++	info.kexec_flags = flags;
++
++	info.file_mode = 1;
++	info.initrd_fd = -1;
++
++	if (argc - fileind <= 0) {
++		fprintf(stderr, "No kernel specified\n");
++		usage();
++		return -1;
++	}
++
++	kernel = argv[fileind];
++
++	kernel_fd = open(kernel, O_RDONLY);
++	if (kernel_fd == -1) {
++		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
++				strerror(errno));
++		return -1;
++	}
++
++	/* slurp in the input kernel */
++	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
++
++	for (i = 0; i < file_types; i++) {
++		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
++			break;
++	}
++
++	if (i == file_types) {
++		fprintf(stderr, "Cannot determine the file type " "of %s\n",
++				kernel);
++		return -1;
++	}
++
++	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
++	if (ret < 0) {
++		fprintf(stderr, "Cannot load %s\n", kernel);
++		return ret;
++	}
++
++	if (!is_kexec_file_load_implemented()) {
++		fprintf(stderr, "syscall kexec_file_load not available.\n");
++		return -1;
++	}
++
++	/*
++	 * If there is no initramfs, set KEXEC_FILE_NO_INITRAMFS flag so that
++	 * kernel does not return error with negative initrd_fd.
++	 */
++	if (info.initrd_fd == -1)
++		info.kexec_flags |= KEXEC_FILE_NO_INITRAMFS;
++
++	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line_len,
++			info.command_line, info.kexec_flags);
++	if (ret != 0)
++		fprintf(stderr, "kexec_file_load failed: %s\n",
++					strerror(errno));
++	return ret;
++}
++
+ 
+ int main(int argc, char *argv[])
+ {
+@@ -1083,6 +1175,7 @@ int main(int argc, char *argv[])
+ 	int do_ifdown = 0;
+ 	int do_unload = 0;
+ 	int do_reuse_initrd = 0;
++	int do_kexec_file_syscall = 0;
+ 	void *entry = 0;
+ 	char *type = 0;
+ 	char *endptr;
+@@ -1095,6 +1188,23 @@ int main(int argc, char *argv[])
+ 	};
+ 	static const char short_options[] = KEXEC_ALL_OPT_STR;
+ 
++	/*
++	 * First check if --use-kexec-file-syscall is set. That changes lot of
++	 * things
++	 */
++	while ((opt = getopt_long(argc, argv, short_options,
++				  options, 0)) != -1) {
++		switch(opt) {
++		case OPT_KEXEC_FILE_SYSCALL:
++			do_kexec_file_syscall = 1;
++			break;
++		}
++	}
++
++	/* Reset getopt for the next pass. */
++	opterr = 1;
++	optind = 1;
++
+ 	while ((opt = getopt_long(argc, argv, short_options,
+ 				  options, 0)) != -1) {
+ 		switch(opt) {
+@@ -1127,6 +1237,8 @@ int main(int argc, char *argv[])
+ 			do_shutdown = 0;
+ 			do_sync = 0;
+ 			do_unload = 1;
++			if (do_kexec_file_syscall)
++				kexec_file_flags |= KEXEC_FILE_UNLOAD;
  			break;
+ 		case OPT_EXEC:
+ 			do_load = 0;
+@@ -1169,7 +1281,10 @@ int main(int argc, char *argv[])
+ 			do_exec = 0;
+ 			do_shutdown = 0;
+ 			do_sync = 0;
+-			kexec_flags = KEXEC_ON_CRASH;
++			if (do_kexec_file_syscall)
++				kexec_file_flags |= KEXEC_FILE_ON_CRASH;
++			else
++				kexec_flags = KEXEC_ON_CRASH;
+ 			break;
+ 		case OPT_MEM_MIN:
+ 			mem_min = strtoul(optarg, &endptr, 0);
+@@ -1194,6 +1309,9 @@ int main(int argc, char *argv[])
+ 		case OPT_REUSE_INITRD:
+ 			do_reuse_initrd = 1;
+ 			break;
++		case OPT_KEXEC_FILE_SYSCALL:
++			/* We already parsed it. Nothing to do. */
++			break;
+ 		default:
+ 			break;
+ 		}
+@@ -1238,10 +1356,18 @@ int main(int argc, char *argv[])
  	}
+ 
+ 	if (do_unload) {
+-		result = k_unload(kexec_flags);
++		if (do_kexec_file_syscall)
++			result = kexec_file_unload(kexec_file_flags);
++		else
++			result = k_unload(kexec_flags);
+ 	}
+ 	if (do_load && (result == 0)) {
+-		result = my_load(type, fileind, argc, argv, kexec_flags, entry);
++		if (do_kexec_file_syscall)
++			result = do_kexec_file_load(fileind, argc, argv,
++						 kexec_file_flags);
++		else
++			result = my_load(type, fileind, argc, argv,
++						kexec_flags, entry);
+ 	}
+ 	/* Don't shutdown unless there is something to reboot to! */
+ 	if ((result == 0) && (do_shutdown || do_exec) && !kexec_loaded()) {
+Index: kexec-tools/kexec/kexec.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec.h	2014-06-17 13:15:37.723825990 -0400
++++ kexec-tools/kexec/kexec.h	2014-06-17 13:44:14.634927130 -0400
+@@ -156,6 +156,13 @@ struct kexec_info {
+ 	unsigned long kexec_flags;
+ 	unsigned long backup_src_start;
+ 	unsigned long backup_src_size;
++	/* Set to 1 if we are using kexec file syscall */
++	unsigned long file_mode :1;
 +
- 	read_unlock(&resource_lock);
- 	if (!p)
- 		return -1;
-@@ -365,6 +384,70 @@ static int find_next_system_ram(struct resource *res, char *name)
++	/* Filled by kernel image processing code */
++	int initrd_fd;
++	char *command_line;
++	int command_line_len;
+ };
+ 
+ struct arch_map_entry {
+@@ -207,6 +214,7 @@ extern int file_types;
+ #define OPT_UNLOAD		'u'
+ #define OPT_TYPE		't'
+ #define OPT_PANIC		'p'
++#define OPT_KEXEC_FILE_SYSCALL	's'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
+ #define OPT_REUSE_INITRD	258
+@@ -230,9 +238,10 @@ extern int file_types;
+ 	{ "mem-min",		1, 0, OPT_MEM_MIN }, \
+ 	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
++	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 
+-#define KEXEC_OPT_STR "h?vdfxluet:p"
++#define KEXEC_OPT_STR "h?vdfxluet:ps"
+ 
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
+Index: kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/x86_64/kexec-bzImage64.c	2014-06-17 13:15:37.723825990 -0400
++++ kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c	2014-06-17 13:17:39.916833188 -0400
+@@ -235,6 +235,89 @@ static int do_bzImage64_load(struct kexe
+ 	return 0;
  }
  
- /*
-+ * Walks through iomem resources and calls func() with matching resource
-+ * ranges. This walks through whole tree and not just first level children.
-+ * All the memory ranges which overlap start,end and also match flags and
-+ * name are valid candidates.
-+ *
-+ * @name: name of resource
-+ * @flags: resource flags
-+ * @start: start addr
-+ * @end: end addr
-+ */
-+int walk_iomem_res(char *name, unsigned long flags, u64 start, u64 end,
-+		void *arg, int (*func)(u64, u64, void *))
++/* This assumes file is being loaded using file based kexec2 syscall */
++int bzImage64_load_file(int argc, char **argv, struct kexec_info *info)
 +{
-+	struct resource res;
-+	u64 orig_end;
-+	int ret = -1;
++	int ret = 0;
++	char *command_line = NULL, *tmp_cmdline = NULL;
++	const char *ramdisk = NULL, *append = NULL;
++	int entry_16bit = 0, entry_32bit = 0;
++	int opt;
++	int command_line_len;
 +
-+	res.start = start;
-+	res.end = end;
-+	res.flags = flags;
-+	orig_end = res.end;
-+	while ((res.start < res.end) &&
-+		(!find_next_iomem_res(&res, name, false))) {
-+		ret = (*func)(res.start, res.end, arg);
-+		if (ret)
++	/* See options.h -- add any more there, too. */
++	static const struct option options[] = {
++		KEXEC_ARCH_OPTIONS
++		{ "command-line",	1, 0, OPT_APPEND },
++		{ "append",		1, 0, OPT_APPEND },
++		{ "reuse-cmdline",	0, 0, OPT_REUSE_CMDLINE },
++		{ "initrd",		1, 0, OPT_RAMDISK },
++		{ "ramdisk",		1, 0, OPT_RAMDISK },
++		{ "real-mode",		0, 0, OPT_REAL_MODE },
++		{ "entry-32bit",	0, 0, OPT_ENTRY_32BIT },
++		{ 0,			0, 0, 0 },
++	};
++	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
++
++	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
++		switch (opt) {
++		default:
++			/* Ignore core options */
++			if (opt < OPT_ARCH_MAX)
++				break;
++		case OPT_APPEND:
++			append = optarg;
 +			break;
-+		res.start = res.end + 1;
-+		res.end = orig_end;
++		case OPT_REUSE_CMDLINE:
++			tmp_cmdline = get_command_line();
++			break;
++		case OPT_RAMDISK:
++			ramdisk = optarg;
++			break;
++		case OPT_REAL_MODE:
++			entry_16bit = 1;
++			break;
++		case OPT_ENTRY_32BIT:
++			entry_32bit = 1;
++			break;
++		}
 +	}
++	command_line = concat_cmdline(tmp_cmdline, append);
++	if (tmp_cmdline)
++		free(tmp_cmdline);
++	command_line_len = 0;
++	if (command_line) {
++		command_line_len = strlen(command_line) + 1;
++	} else {
++		command_line = strdup("\0");
++		command_line_len = 1;
++	}
++
++	if (entry_16bit || entry_32bit) {
++		fprintf(stderr, "Kexec2 syscall does not support 16bit"
++			" or 32bit entry yet\n");
++		ret = -1;
++		goto out;
++	}
++
++	if (ramdisk) {
++		info->initrd_fd = open(ramdisk, O_RDONLY);
++		if (info->initrd_fd == -1) {
++			fprintf(stderr, "Could not open initrd file %s:%s\n",
++					ramdisk, strerror(errno));
++			ret = -1;
++			goto out;
++		}
++	}
++
++	info->command_line = command_line;
++	info->command_line_len = command_line_len;
++	return ret;
++out:
++	free(command_line);
 +	return ret;
 +}
 +
-+/*
-+ * This function calls callback against all memory range of "System RAM"
-+ * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
-+ * Now, this function is only for "System RAM". This function deals with
-+ * full ranges and not pfn. If resources are not pfn aligned, dealing
-+ * with pfn can truncate ranges.
-+ */
-+int walk_system_ram_res(u64 start, u64 end, void *arg,
-+				int (*func)(u64, u64, void *))
-+{
-+	struct resource res;
-+	u64 orig_end;
-+	int ret = -1;
+ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
+ {
+@@ -247,6 +330,9 @@ int bzImage64_load(int argc, char **argv
+ 	int opt;
+ 	int result;
+ 
++	if (info->file_mode)
++		return bzImage64_load_file(argc, argv, info);
 +
-+	res.start = start;
-+	res.end = end;
-+	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	orig_end = res.end;
-+	while ((res.start < res.end) &&
-+		(!find_next_iomem_res(&res, "System RAM", true))) {
-+		ret = (*func)(res.start, res.end, arg);
-+		if (ret)
-+			break;
-+		res.start = res.end + 1;
-+		res.end = orig_end;
-+	}
-+	return ret;
+ 	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+Index: kexec-tools/kexec/kexec-syscall.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec-syscall.h	2014-06-17 13:15:37.723825990 -0400
++++ kexec-tools/kexec/kexec-syscall.h	2014-06-26 15:19:59.063940065 -0400
+@@ -53,6 +53,19 @@
+ #endif
+ #endif /*ifndef __NR_kexec_load*/
+ 
++#ifndef __NR_kexec_file_load
++
++#ifdef __x86_64__
++#define __NR_kexec_file_load	317
++#endif
++
++#ifndef __NR_kexec_file_load
++/* system call not available for the arch */
++#define __NR_kexec_file_load	0xffffffff	/* system call not available */
++#endif
++
++#endif /*ifndef __NR_kexec_file_load*/
++
+ struct kexec_segment;
+ 
+ static inline long kexec_load(void *entry, unsigned long nr_segments,
+@@ -61,10 +74,29 @@ static inline long kexec_load(void *entr
+ 	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
+ }
+ 
++static inline int is_kexec_file_load_implemented(void) {
++	if (__NR_kexec_file_load != 0xffffffff)
++		return 1;
++	return 0;
 +}
 +
-+#if !defined(CONFIG_ARCH_HAS_WALK_MEMORY)
++static inline long kexec_file_load(int kernel_fd, int initrd_fd,
++			unsigned long cmdline_len, const char *cmdline_ptr,
++			unsigned long flags)
++{
++	return (long) syscall(__NR_kexec_file_load, kernel_fd, initrd_fd,
++				cmdline_len, cmdline_ptr, flags);
++}
 +
-+/*
-  * This function calls callback against all memory range of "System RAM"
-  * which are marked as IORESOURCE_MEM and IORESOUCE_BUSY.
-  * Now, this function is only for "System RAM".
-@@ -382,7 +465,7 @@ int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
- 	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
- 	orig_end = res.end;
- 	while ((res.start < res.end) &&
--		(find_next_system_ram(&res, "System RAM") >= 0)) {
-+		(find_next_iomem_res(&res, "System RAM", true) >= 0)) {
- 		pfn = (res.start + PAGE_SIZE - 1) >> PAGE_SHIFT;
- 		end_pfn = (res.end + 1) >> PAGE_SHIFT;
- 		if (end_pfn > pfn)
--- 
-1.9.0
-
+ #define KEXEC_ON_CRASH		0x00000001
+ #define KEXEC_PRESERVE_CONTEXT	0x00000002
+ #define KEXEC_ARCH_MASK		0xffff0000
+ 
++/* Flags for kexec file based system call */
++#define KEXEC_FILE_UNLOAD	0x00000001
++#define KEXEC_FILE_ON_CRASH	0x00000002
++#define KEXEC_FILE_NO_INITRAMFS	0x00000004
++
+ /* These values match the ELF architecture values. 
+  * Unless there is a good reason that should continue to be the case.
+  */
 
 _______________________________________________
 kexec mailing list
