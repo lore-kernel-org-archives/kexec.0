@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0Z4X-0000y8-Uu
- for kexec@lists.infradead.org; Fri, 27 Jun 2014 16:32:23 +0000
-Date: Fri, 27 Jun 2014 12:31:41 -0400
+ id 1X0aT4-0007Xu-Gf
+ for kexec@lists.infradead.org; Fri, 27 Jun 2014 18:01:48 +0000
+Date: Fri, 27 Jun 2014 12:34:23 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 09/15] kexec: Implementation of new syscall kexec_file_load
-Message-ID: <20140627163141.GE13337@redhat.com>
+Subject: [PATCH 16/15] kexec: Fix freeing up for image loader data loading
+Message-ID: <20140627163423.GG13337@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
- <1403814824-7587-10-git-send-email-vgoyal@redhat.com>
- <20140626135826.d1679d6eb5b7bd0f82dd7deb@linux-foundation.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140626135826.d1679d6eb5b7bd0f82dd7deb@linux-foundation.org>
+In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +23,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, chaowang@redhat.com
-
-On Thu, Jun 26, 2014 at 01:58:26PM -0700, Andrew Morton wrote:
-
-[..]
-> > +	while (pos < stat.size) {
-> > +		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
-> > +				    stat.size - pos);
-> > +		if (bytes < 0) {
-> > +			vfree(*buf);
-> > +			ret = bytes;
-> > +			goto out;
-> > +		}
-> > +
-> > +		if (bytes == 0)
-> > +			break;
-> 
-> Here we can get a short read: (pos < stat.size).  Seems to me that it
-> is risky to return this result to the caller as if all is well.
-
-Hi Andrew,
-
-That's a good point. Please find attached the patch which fixes both
-the issues.
-
-Thanks
-Vivek
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
 
+During testing I noticed a crash. Which in turn showed that there are
+problems with how I am freeing up image->image_loader_data.
 
-Subject: kexec: Return error if file bytes are less then file size 
+In one case I am freeing up kimage->image_loader_data first and then
+calling up arch to free up which might have been contained in that
+structure. That's wrong.
 
-If number of bytes read from file are not same as file size, return error.
+I have done little cleanup and this should fix the issues around
+freeing up of loader data.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- kernel/kexec.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/kernel/kexec-bzimage64.c  |    4 ++--
+ arch/x86/kernel/machine_kexec_64.c |    2 +-
+ include/linux/kexec.h              |    2 +-
+ kernel/kexec.c                     |   11 ++++++++---
+ 4 files changed, 12 insertions(+), 7 deletions(-)
 
+Index: linux-2.6/arch/x86/kernel/machine_kexec_64.c
+===================================================================
+--- linux-2.6.orig/arch/x86/kernel/machine_kexec_64.c	2014-06-27 09:55:41.824755401 -0400
++++ linux-2.6/arch/x86/kernel/machine_kexec_64.c	2014-06-27 11:02:02.607548946 -0400
+@@ -369,7 +369,7 @@ int arch_kimage_file_post_load_cleanup(s
+ 	if (!image->fops || !image->fops->cleanup)
+ 		return 0;
+ 
+-	return image->fops->cleanup(image);
++	return image->fops->cleanup(image->image_loader_data);
+ }
+ 
+ /*
+Index: linux-2.6/include/linux/kexec.h
+===================================================================
+--- linux-2.6.orig/include/linux/kexec.h	2014-06-27 09:55:41.695754029 -0400
++++ linux-2.6/include/linux/kexec.h	2014-06-27 11:04:28.467151813 -0400
+@@ -190,7 +190,7 @@ typedef void *(kexec_load_t)(struct kima
+ 			     unsigned long kernel_len, char *initrd,
+ 			     unsigned long initrd_len, char *cmdline,
+ 			     unsigned long cmdline_len);
+-typedef int (kexec_cleanup_t)(struct kimage *image);
++typedef int (kexec_cleanup_t)(void *loader_data);
+ 
+ struct kexec_file_ops {
+ 	kexec_probe_t *probe;
+Index: linux-2.6/arch/x86/kernel/kexec-bzimage64.c
+===================================================================
+--- linux-2.6.orig/arch/x86/kernel/kexec-bzimage64.c	2014-06-27 09:55:41.872755912 -0400
++++ linux-2.6/arch/x86/kernel/kexec-bzimage64.c	2014-06-27 11:05:42.151963710 -0400
+@@ -512,9 +512,9 @@ out_free_params:
+ }
+ 
+ /* This cleanup function is called after various segments have been loaded */
+-int bzImage64_cleanup(struct kimage *image)
++int bzImage64_cleanup(void *loader_data)
+ {
+-	struct bzimage64_data *ldata = image->image_loader_data;
++	struct bzimage64_data *ldata = loader_data;
+ 
+ 	if (!ldata)
+ 		return 0;
 Index: linux-2.6/kernel/kexec.c
 ===================================================================
---- linux-2.6.orig/kernel/kexec.c	2014-06-27 09:55:41.826755422 -0400
-+++ linux-2.6/kernel/kexec.c	2014-06-27 10:04:23.409024171 -0400
-@@ -343,7 +343,7 @@ out_free_image:
- static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
- {
- 	struct fd f = fdget(fd);
--	int ret = 0;
-+	int ret;
- 	struct kstat stat;
- 	loff_t pos;
- 	ssize_t bytes = 0;
-@@ -387,6 +387,12 @@ static int copy_file_from_fd(int fd, voi
- 		pos += bytes;
- 	}
+--- linux-2.6.orig/kernel/kexec.c	2014-06-27 10:04:23.409024171 -0400
++++ linux-2.6/kernel/kexec.c	2014-06-27 11:45:14.684874978 -0400
+@@ -459,6 +459,14 @@ static void kimage_file_post_load_cleanu
  
-+	if (pos != stat.size) {
-+		ret = -EBADF;
-+		vfree(*buf);
-+		goto out;
-+	}
+ 	/* See if architecture has anything to cleanup post load */
+ 	arch_kimage_file_post_load_cleanup(image);
 +
- 	*buf_len = pos;
- out:
- 	fdput(f);
++	/*
++	 * Above call should have called into bootloader to free up
++	 * any data stored in kimage->image_loader_data. It should
++	 * be ok now to free it up.
++	 */
++	kfree(image->image_loader_data);
++	image->image_loader_data = NULL;
+ }
+ 
+ /*
+@@ -584,7 +592,6 @@ out_free_control_pages:
+ 	kimage_free_page_list(&image->control_pages);
+ out_free_post_load_bufs:
+ 	kimage_file_post_load_cleanup(image);
+-	kfree(image->image_loader_data);
+ out_free_image:
+ 	kfree(image);
+ 	return ret;
+@@ -908,8 +915,6 @@ static void kimage_free(struct kimage *i
+ 	/* Free the kexec control pages... */
+ 	kimage_free_page_list(&image->control_pages);
+ 
+-	kfree(image->image_loader_data);
+-
+ 	/*
+ 	 * Free up any temporary buffers allocated. This might hit if
+ 	 * error occurred much later after buffer allocation.
 
 _______________________________________________
 kexec mailing list
