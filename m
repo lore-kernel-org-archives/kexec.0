@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0UPj-00061U-HU
- for kexec@lists.infradead.org; Fri, 27 Jun 2014 11:33:56 +0000
-Date: Fri, 27 Jun 2014 07:33:13 -0400
+ id 1X0Ugs-00062c-UH
+ for kexec@lists.infradead.org; Fri, 27 Jun 2014 11:51:39 +0000
+Date: Fri, 27 Jun 2014 07:50:58 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 00/15][V4] kexec: A new system call to allow in kernel
- loading
-Message-ID: <20140627113313.GB13337@redhat.com>
+Subject: Re: [PATCH 08/15] kexec: New syscall kexec_file_load() declaration
+Message-ID: <20140627115057.GC13337@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
- <20140626135811.37c10ff327bea8a9d2e3894e@linux-foundation.org>
+ <1403814824-7587-9-git-send-email-vgoyal@redhat.com>
+ <20140626204303.GE11136@redhat.com>
+ <CALCETrU8mixFxpS2Bt2Q7S08zUFxZwE1zfqHw8PEetqewgR7RQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140626135811.37c10ff327bea8a9d2e3894e@linux-foundation.org>
+In-Reply-To: <CALCETrU8mixFxpS2Bt2Q7S08zUFxZwE1zfqHw8PEetqewgR7RQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,55 +26,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, chaowang@redhat.com
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, bhe@redhat.com, Greg Kroah-Hartman <greg@kroah.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Linux API <linux-api@vger.kernel.org>, dyoung@redhat.com, chaowang@redhat.com, Michael Kerrisk-manpages <mtk.manpages@gmail.com>
 
-On Thu, Jun 26, 2014 at 01:58:11PM -0700, Andrew Morton wrote:
-> On Thu, 26 Jun 2014 16:33:29 -0400 Vivek Goyal <vgoyal@redhat.com> wrote:
+On Thu, Jun 26, 2014 at 02:03:17PM -0700, Andy Lutomirski wrote:
+> On Thu, Jun 26, 2014 at 1:43 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> > On Thu, Jun 26, 2014 at 04:33:37PM -0400, Vivek Goyal wrote:
+> >> This is the new syscall kexec_file_load() declaration/interface. I have
+> >> reserved the syscall number only for x86_64 so far. Other architectures
+> >> (including i386) can reserve syscall number when they enable the support
+> >> for this new syscall.
+> >>
+> >> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> >> CC: linux-api@vger.kernel.org
+> >
+> > +.BR KEXEC_FILE_NO_INITRAMFS
+> > +Loading initrd/initramfs is optional. Specify this flag if no initramfs
+> > +is being loaded. If this flag is set, kernel will ignore the value passed
+> > +in
 > 
-> > This patch series does not do kernel signature verification yet. I plan
-> > to post another patch series for that. Now distributions are already signing
-> > PE/COFF bzImage with PKCS7 signature I plan to parse and verify those
-> > signatures.
-> > 
-> > Primary goal of this patchset is to prepare groundwork so that kernel
-> > image can be signed and signatures be verified during kexec load. This
-> > should help with two things.
-> > 
-> > - It should allow kexec/kdump on secureboot enabled machines.
-> > 
-> > - In general it can help even without secureboot. By being able to verify
-> >   kernel image signature in kexec, it should help with avoiding module
-> >   signing restrictions. Matthew Garret showed how to boot into a custom
-> >   kernel, modify first kernel's memory and then jump back to old kernel and
-> >   bypass any policy one wants to.
-> > 
-> > I hope these patches can be queued up for 3.17. Even without signature
-> > verification support, they provide new syscall functionality. But I
-> > wil leave it to maintainers to decide if they want signature verification
-> > support also be ready to merge before they merge this patchset.
-> 
-> Well, this is an absolute ton of new code, much of it pretty complex. 
-> And I believe the entire point of this work is to enable image
-> signature checking, but that hasn't been implemented yet?
+> This seems pointless.  Why not just pass -1 for initrd_fd to indicate
+> that no initrd is needed?
 
-I have a patchset which works. But it requires more work. I will do
-remaining work and clean it up and post for review.
+I was not sure whether negative fd should be treated as error and system
+call should fail or it should be treated as user does not want to load
+initrd and system call succeeds.
 
-> 
-> In which case I'm thinking it would be unwise to merge these parts into
-> mainline - if signature checking doesn't work or fails review or if you
-> get hit by a bus then we'd be left with a large lump of rather useless
-> code?
-> 
-> In which case I'm inclined to put this series into -next and keep it
-> there pending completion of the signature checking part.
+I was concerned about the cases where application does an fd = open(),
+operation fails and fd contains -1. Caller does not check fd and
+passed it to kexec system call.
 
-Agreed. Primary purpose of this patch series is to be able to do signature
-verification of kernel during kexec. So it will make sense to first have
-some sort of consensus on signature verification patches. Otherwise we
-might be stuck with this 3.5K lines of code if things go south w.r.t
-signature verification.
+I thought that in such cases we should error out saying initrd fd is
+not valid. Instead of continuing and loading kernel without initrd. A
+user might be surprised.
+
+This is little defensive programming. But I am open to change it if
+the perception is that above is not a valid concern.
 
 Thanks
 Vivek
