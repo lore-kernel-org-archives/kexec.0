@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0H7C-0003si-0k
- for kexec@lists.infradead.org; Thu, 26 Jun 2014 21:21:55 +0000
-Date: Thu, 26 Jun 2014 23:21:22 +0200
-From: Borislav Petkov <bp@alien8.de>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X0UPj-00061U-HU
+ for kexec@lists.infradead.org; Fri, 27 Jun 2014 11:33:56 +0000
+Date: Fri, 27 Jun 2014 07:33:13 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 00/15][V4] kexec: A new system call to allow in kernel
  loading
-Message-ID: <20140626212122.GD1284@pd.tnic>
+Message-ID: <20140627113313.GB13337@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
  <20140626135811.37c10ff327bea8a9d2e3894e@linux-foundation.org>
 MIME-Version: 1.0
@@ -25,40 +25,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, ebiederm@xmission.com, hpa@zytor.com
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, chaowang@redhat.com, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, chaowang@redhat.com
 
 On Thu, Jun 26, 2014 at 01:58:11PM -0700, Andrew Morton wrote:
-> Well, this is an absolute ton of new code, much of it pretty complex.
+> On Thu, 26 Jun 2014 16:33:29 -0400 Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> > This patch series does not do kernel signature verification yet. I plan
+> > to post another patch series for that. Now distributions are already signing
+> > PE/COFF bzImage with PKCS7 signature I plan to parse and verify those
+> > signatures.
+> > 
+> > Primary goal of this patchset is to prepare groundwork so that kernel
+> > image can be signed and signatures be verified during kexec load. This
+> > should help with two things.
+> > 
+> > - It should allow kexec/kdump on secureboot enabled machines.
+> > 
+> > - In general it can help even without secureboot. By being able to verify
+> >   kernel image signature in kexec, it should help with avoiding module
+> >   signing restrictions. Matthew Garret showed how to boot into a custom
+> >   kernel, modify first kernel's memory and then jump back to old kernel and
+> >   bypass any policy one wants to.
+> > 
+> > I hope these patches can be queued up for 3.17. Even without signature
+> > verification support, they provide new syscall functionality. But I
+> > wil leave it to maintainers to decide if they want signature verification
+> > support also be ready to merge before they merge this patchset.
+> 
+> Well, this is an absolute ton of new code, much of it pretty complex. 
 > And I believe the entire point of this work is to enable image
 > signature checking, but that hasn't been implemented yet?
->
-> In which case I'm thinking it would be unwise to merge these parts
-> into mainline - if signature checking doesn't work or fails review or
-> if you get hit by a bus then we'd be left with a large lump of rather
-> useless code?
->
+
+I have a patchset which works. But it requires more work. I will do
+remaining work and clean it up and post for review.
+
+> 
+> In which case I'm thinking it would be unwise to merge these parts into
+> mainline - if signature checking doesn't work or fails review or if you
+> get hit by a bus then we'd be left with a large lump of rather useless
+> code?
+> 
 > In which case I'm inclined to put this series into -next and keep it
 > there pending completion of the signature checking part.
 
-Before we rush these in, it'd be nice if someone more experienced would
-take a look at the general approach of the whole handling with the
-purgatory and such. I certainly tried to give my best while reviewing
-but I'm too inexperienced in kexec and the whole booting of another
-kernel and all the intricacies of the process. It'll be optimal if Eric
-Biederman would find some free time for those.
+Agreed. Primary purpose of this patch series is to be able to do signature
+verification of kernel during kexec. So it will make sense to first have
+some sort of consensus on signature verification patches. Otherwise we
+might be stuck with this 3.5K lines of code if things go south w.r.t
+signature verification.
 
-AFAIK, hpa wanted to take a look too so can we please slow down a bit
-here first?
-
-Thanks.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
