@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X0aT4-0007Xu-Gf
- for kexec@lists.infradead.org; Fri, 27 Jun 2014 18:01:48 +0000
-Date: Fri, 27 Jun 2014 12:34:23 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 16/15] kexec: Fix freeing up for image loader data loading
-Message-ID: <20140627163423.GG13337@redhat.com>
-References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
+ id 1X1UTp-0001ir-00
+ for kexec@lists.infradead.org; Mon, 30 Jun 2014 05:50:17 +0000
+Date: Mon, 30 Jun 2014 13:48:47 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 0/3] makedumpfile: Reduce the risk of OOM.
+Message-ID: <20140630054847.GA1704@dhcp-16-105.nay.redhat.com>
+References: <0910DD04CBD6DE4193FCF86B9C00BE972196B4@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972196B4@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,106 +23,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
+Hi Atsushi,
 
-During testing I noticed a crash. Which in turn showed that there are
-problems with how I am freeing up image->image_loader_data.
+Since complaint has been got from our user about the oom issue, and it's
+still a little longer time to get to 1.5.7, could you please merge this
+patchset firstly to devel branch, then we can back port it with a valid
+commit id which will be consistent?
 
-In one case I am freeing up kimage->image_loader_data first and then
-calling up arch to free up which might have been contained in that
-structure. That's wrong.
+Thanks
+Baoquan
 
-I have done little cleanup and this should fix the issues around
-freeing up of loader data.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- arch/x86/kernel/kexec-bzimage64.c  |    4 ++--
- arch/x86/kernel/machine_kexec_64.c |    2 +-
- include/linux/kexec.h              |    2 +-
- kernel/kexec.c                     |   11 ++++++++---
- 4 files changed, 12 insertions(+), 7 deletions(-)
-
-Index: linux-2.6/arch/x86/kernel/machine_kexec_64.c
-===================================================================
---- linux-2.6.orig/arch/x86/kernel/machine_kexec_64.c	2014-06-27 09:55:41.824755401 -0400
-+++ linux-2.6/arch/x86/kernel/machine_kexec_64.c	2014-06-27 11:02:02.607548946 -0400
-@@ -369,7 +369,7 @@ int arch_kimage_file_post_load_cleanup(s
- 	if (!image->fops || !image->fops->cleanup)
- 		return 0;
- 
--	return image->fops->cleanup(image);
-+	return image->fops->cleanup(image->image_loader_data);
- }
- 
- /*
-Index: linux-2.6/include/linux/kexec.h
-===================================================================
---- linux-2.6.orig/include/linux/kexec.h	2014-06-27 09:55:41.695754029 -0400
-+++ linux-2.6/include/linux/kexec.h	2014-06-27 11:04:28.467151813 -0400
-@@ -190,7 +190,7 @@ typedef void *(kexec_load_t)(struct kima
- 			     unsigned long kernel_len, char *initrd,
- 			     unsigned long initrd_len, char *cmdline,
- 			     unsigned long cmdline_len);
--typedef int (kexec_cleanup_t)(struct kimage *image);
-+typedef int (kexec_cleanup_t)(void *loader_data);
- 
- struct kexec_file_ops {
- 	kexec_probe_t *probe;
-Index: linux-2.6/arch/x86/kernel/kexec-bzimage64.c
-===================================================================
---- linux-2.6.orig/arch/x86/kernel/kexec-bzimage64.c	2014-06-27 09:55:41.872755912 -0400
-+++ linux-2.6/arch/x86/kernel/kexec-bzimage64.c	2014-06-27 11:05:42.151963710 -0400
-@@ -512,9 +512,9 @@ out_free_params:
- }
- 
- /* This cleanup function is called after various segments have been loaded */
--int bzImage64_cleanup(struct kimage *image)
-+int bzImage64_cleanup(void *loader_data)
- {
--	struct bzimage64_data *ldata = image->image_loader_data;
-+	struct bzimage64_data *ldata = loader_data;
- 
- 	if (!ldata)
- 		return 0;
-Index: linux-2.6/kernel/kexec.c
-===================================================================
---- linux-2.6.orig/kernel/kexec.c	2014-06-27 10:04:23.409024171 -0400
-+++ linux-2.6/kernel/kexec.c	2014-06-27 11:45:14.684874978 -0400
-@@ -459,6 +459,14 @@ static void kimage_file_post_load_cleanu
- 
- 	/* See if architecture has anything to cleanup post load */
- 	arch_kimage_file_post_load_cleanup(image);
-+
-+	/*
-+	 * Above call should have called into bootloader to free up
-+	 * any data stored in kimage->image_loader_data. It should
-+	 * be ok now to free it up.
-+	 */
-+	kfree(image->image_loader_data);
-+	image->image_loader_data = NULL;
- }
- 
- /*
-@@ -584,7 +592,6 @@ out_free_control_pages:
- 	kimage_free_page_list(&image->control_pages);
- out_free_post_load_bufs:
- 	kimage_file_post_load_cleanup(image);
--	kfree(image->image_loader_data);
- out_free_image:
- 	kfree(image);
- 	return ret;
-@@ -908,8 +915,6 @@ static void kimage_free(struct kimage *i
- 	/* Free the kexec control pages... */
- 	kimage_free_page_list(&image->control_pages);
- 
--	kfree(image->image_loader_data);
--
- 	/*
- 	 * Free up any temporary buffers allocated. This might hit if
- 	 * error occurred much later after buffer allocation.
+On 06/10/14 at 04:51am, Atsushi Kumagai wrote:
+> Hello,
+> 
+> makedumpfile tries maximizing the bitmap buffer size to get the
+> best performance, but it occasionally cause OOM because the safe
+> limit is variable and it can be too aggressive depending on the
+> situation.
+> 
+> I think reliability is more important than performance for dump
+> tools, so I decided to remove the maximization. I don't worry
+> about performance degradation, please see [PATCH 3/3].
+> 
+> If there is no objection, I'll merge this patch into v1.5.7.
+> 
+> BTW, an expert user still can try to maximize the bitmap buffer with
+> --cyclic-buffer option.
+> 
+> Atsushi Kumagai (3):
+>       Remove the 1st bitmap buffer from the ELF path in cyclic mode.
+>       Move counting pfn_memhole for cyclic mode.
+>       Stop maximizing the bitmap buffer to reduce the risk of OOM.
+> 
+>  makedumpfile.8 |   1 -
+>  makedumpfile.c | 117 ++++++++++++++++++++------------------------------------------------------------------------------
+>  print_info.c   |   1 -
+>  3 files changed, 24 insertions(+), 95 deletions(-)
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
