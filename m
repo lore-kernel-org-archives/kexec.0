@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X24ZT-0003Sy-HA
- for kexec@lists.infradead.org; Tue, 01 Jul 2014 20:22:32 +0000
-Date: Tue, 1 Jul 2014 16:21:52 -0400
+ id 1X24d7-0004o1-QD
+ for kexec@lists.infradead.org; Tue, 01 Jul 2014 20:26:18 +0000
+Date: Tue, 1 Jul 2014 16:25:40 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 15/15] kexec: Support kexec/kdump on EFI systems
-Message-ID: <20140701202152.GB19352@redhat.com>
+Subject: Re: [PATCH 09/15] kexec: Implementation of new syscall kexec_file_load
+Message-ID: <20140701202540.GC19352@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
- <1403814824-7587-16-git-send-email-vgoyal@redhat.com>
- <20140701194605.GJ7539@console-pimps.org>
- <20140701131419.454a3fc32fcc84a43b668c50@linux-foundation.org>
+ <1403814824-7587-10-git-send-email-vgoyal@redhat.com>
+ <20140626135826.d1679d6eb5b7bd0f82dd7deb@linux-foundation.org>
+ <20140627163141.GE13337@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140701131419.454a3fc32fcc84a43b668c50@linux-foundation.org>
+In-Reply-To: <20140627163141.GE13337@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,133 +27,82 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matt Fleming <matt@console-pimps.org>, linux-efi@vger.kernel.org, bhe@redhat.com, mjg59@srcf.ucam.org, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, chaowang@redhat.com
+Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, dyoung@redhat.com, chaowang@redhat.com
 
-On Tue, Jul 01, 2014 at 01:14:19PM -0700, Andrew Morton wrote:
-> On Tue, 1 Jul 2014 20:46:05 +0100 Matt Fleming <matt@console-pimps.org> wrote:
+On Fri, Jun 27, 2014 at 12:31:41PM -0400, Vivek Goyal wrote:
+> On Thu, Jun 26, 2014 at 01:58:26PM -0700, Andrew Morton wrote:
 > 
-> > > +int get_efi_runtime_map_size(void)
-> > > +{
-> > > +	return nr_efi_runtime_map * efi_memdesc_size;
-> > > +}
+> [..]
+> > > +	while (pos < stat.size) {
+> > > +		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
+> > > +				    stat.size - pos);
+> > > +		if (bytes < 0) {
+> > > +			vfree(*buf);
+> > > +			ret = bytes;
+> > > +			goto out;
+> > > +		}
 > > > +
-> > > +int get_efi_runtime_map_desc_size(void)
-> > > +{
-> > > +	return efi_memdesc_size;
-> > > +}
-> > > +
-> > > +int efi_runtime_map_copy(void *buf, size_t bufsz)
-> > > +{
-> > > +	size_t sz = get_efi_runtime_map_size();
-> > > +
-> > > +	if (sz > bufsz)
-> > > +		sz = bufsz;
-> > > +
-> > > +	memcpy(buf, efi_runtime_map, sz);
-> > > +	return 0;
-> > > +}
+> > > +		if (bytes == 0)
+> > > +			break;
 > > 
-> > Could we prefix these with efi_, e.g. efi_get_runtime_map_size() ?
+> > Here we can get a short read: (pos < stat.size).  Seems to me that it
+> > is risky to return this result to the caller as if all is well.
 > 
-> This?
+> Hi Andrew,
 > 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: kexec-support-kexec-kdump-on-efi-systems-fix
+> That's a good point. Please find attached the patch which fixes both
+> the issues.
 > 
-> s/get_efi/efi_get/g, per Matt
+> Thanks
+> Vivek
 > 
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Matt Fleming <matt@console-pimps.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> 
+> 
 
-Looks good to me. Thanks Andrew.
+Hi Andrew,
 
+Based on your feedback, I wrote following patch. Does it look good to
+you. If yes, can you please include this one too. Do let me know if you
+want me to post it separately.
+
+Thanks
 Vivek
 
+> Subject: kexec: Return error if file bytes are less then file size 
+> 
+> If number of bytes read from file are not same as file size, return error.
+> 
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > ---
+>  kernel/kexec.c |    8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
->  arch/x86/kernel/kexec-bzimage64.c  |    4 ++--
->  drivers/firmware/efi/runtime-map.c |    6 +++---
->  include/linux/efi.h                |    8 ++++----
->  3 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff -puN arch/x86/kernel/kexec-bzimage64.c~kexec-support-kexec-kdump-on-efi-systems-fix arch/x86/kernel/kexec-bzimage64.c
-> --- a/arch/x86/kernel/kexec-bzimage64.c~kexec-support-kexec-kdump-on-efi-systems-fix
-> +++ a/arch/x86/kernel/kexec-bzimage64.c
-> @@ -181,7 +181,7 @@ setup_efi_state(struct boot_params *para
->  	ei->efi_systab_hi = current_ei->efi_systab_hi;
->  
->  	ei->efi_memdesc_version = current_ei->efi_memdesc_version;
-> -	ei->efi_memdesc_size = get_efi_runtime_map_desc_size();
-> +	ei->efi_memdesc_size = efi_get_runtime_map_desc_size();
->  
->  	setup_efi_info_memmap(params, params_load_addr, efi_map_offset,
->  			      efi_map_sz);
-> @@ -397,7 +397,7 @@ void *bzImage64_load(struct kimage *imag
->  	 * have to create separate segment for each. Keeps things
->  	 * little bit simple
->  	 */
-> -	efi_map_sz = get_efi_runtime_map_size();
-> +	efi_map_sz = efi_get_runtime_map_size();
->  	efi_map_sz = ALIGN(efi_map_sz, 16);
->  	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
->  				MAX_ELFCOREHDR_STR_LEN;
-> diff -puN drivers/firmware/efi/runtime-map.c~kexec-support-kexec-kdump-on-efi-systems-fix drivers/firmware/efi/runtime-map.c
-> --- a/drivers/firmware/efi/runtime-map.c~kexec-support-kexec-kdump-on-efi-systems-fix
-> +++ a/drivers/firmware/efi/runtime-map.c
-> @@ -138,19 +138,19 @@ add_sysfs_runtime_map_entry(struct kobje
->  	return entry;
->  }
->  
-> -int get_efi_runtime_map_size(void)
-> +int efi_get_runtime_map_size(void)
+> Index: linux-2.6/kernel/kexec.c
+> ===================================================================
+> --- linux-2.6.orig/kernel/kexec.c	2014-06-27 09:55:41.826755422 -0400
+> +++ linux-2.6/kernel/kexec.c	2014-06-27 10:04:23.409024171 -0400
+> @@ -343,7 +343,7 @@ out_free_image:
+>  static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
 >  {
->  	return nr_efi_runtime_map * efi_memdesc_size;
->  }
+>  	struct fd f = fdget(fd);
+> -	int ret = 0;
+> +	int ret;
+>  	struct kstat stat;
+>  	loff_t pos;
+>  	ssize_t bytes = 0;
+> @@ -387,6 +387,12 @@ static int copy_file_from_fd(int fd, voi
+>  		pos += bytes;
+>  	}
 >  
-> -int get_efi_runtime_map_desc_size(void)
-> +int efi_get_runtime_map_desc_size(void)
->  {
->  	return efi_memdesc_size;
->  }
->  
->  int efi_runtime_map_copy(void *buf, size_t bufsz)
->  {
-> -	size_t sz = get_efi_runtime_map_size();
-> +	size_t sz = efi_get_runtime_map_size();
->  
->  	if (sz > bufsz)
->  		sz = bufsz;
-> diff -puN include/linux/efi.h~kexec-support-kexec-kdump-on-efi-systems-fix include/linux/efi.h
-> --- a/include/linux/efi.h~kexec-support-kexec-kdump-on-efi-systems-fix
-> +++ a/include/linux/efi.h
-> @@ -1151,8 +1151,8 @@ int efivars_sysfs_init(void);
->  #ifdef CONFIG_EFI_RUNTIME_MAP
->  int efi_runtime_map_init(struct kobject *);
->  void efi_runtime_map_setup(void *, int, u32);
-> -int get_efi_runtime_map_size(void);
-> -int get_efi_runtime_map_desc_size(void);
-> +int efi_get_runtime_map_size(void);
-> +int efi_get_runtime_map_desc_size(void);
->  int efi_runtime_map_copy(void *buf, size_t bufsz);
->  #else
->  static inline int efi_runtime_map_init(struct kobject *kobj)
-> @@ -1163,12 +1163,12 @@ static inline int efi_runtime_map_init(s
->  static inline void
->  efi_runtime_map_setup(void *map, int nr_entries, u32 desc_size) {}
->  
-> -static inline int get_efi_runtime_map_size(void)
-> +static inline int efi_get_runtime_map_size(void)
->  {
->  	return 0;
->  }
->  
-> -static inline int get_efi_runtime_map_desc_size(void)
-> +static inline int efi_get_runtime_map_desc_size(void)
->  {
->  	return 0;
->  }
-> _
+> +	if (pos != stat.size) {
+> +		ret = -EBADF;
+> +		vfree(*buf);
+> +		goto out;
+> +	}
+> +
+>  	*buf_len = pos;
+>  out:
+>  	fdput(f);
 
 _______________________________________________
 kexec mailing list
