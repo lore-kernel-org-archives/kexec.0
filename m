@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wg0-f49.google.com ([74.125.82.49])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X240d-0005Qg-KQ
- for kexec@lists.infradead.org; Tue, 01 Jul 2014 19:46:32 +0000
-Received: by mail-wg0-f49.google.com with SMTP id y10so10160949wgg.20
- for <kexec@lists.infradead.org>; Tue, 01 Jul 2014 12:46:06 -0700 (PDT)
-Date: Tue, 1 Jul 2014 20:46:05 +0100
-From: Matt Fleming <matt@console-pimps.org>
-Subject: Re: [PATCH 15/15] kexec: Support kexec/kdump on EFI systems
-Message-ID: <20140701194605.GJ7539@console-pimps.org>
+ id 1X24No-00082S-Ux
+ for kexec@lists.infradead.org; Tue, 01 Jul 2014 20:10:30 +0000
+Date: Tue, 1 Jul 2014 16:09:47 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: [PATCH 17/15] kexec-bzimage: Change EFI helper function names
+Message-ID: <20140701200947.GA19352@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
  <1403814824-7587-16-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
@@ -26,65 +24,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: mjg59@srcf.ucam.org, linux-efi@vger.kernel.org, bhe@redhat.com, matt@console-pimps.org, greg@kroah.com, vgoyal@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On Thu, 26 Jun, at 04:33:44PM, Vivek Goyal wrote:
-> This patch does two thigns. It passes EFI run time mappings to second
-> kernel in bootparams efi_info. Second kernel parse this info and create
-> new mappings in second kernel. That means mappings in first and second
-> kernel will be same. This paves the way to enable EFI in kexec kernel.
-> 
-> This patch also prepares and passes EFI setup data through bootparams.
-> This contains bunch of information about various tables and their
-> addresses.
-> 
-> These information gathering and passing has been written along the lines
-> of what current kexec-tools is doing to make kexec work with UEFI.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> CC: linux-efi@vger.kernel.org
-> ---
->  arch/x86/kernel/kexec-bzimage64.c  | 146 ++++++++++++++++++++++++++++++++++---
->  drivers/firmware/efi/runtime-map.c |  21 ++++++
->  include/linux/efi.h                |  19 +++++
->  3 files changed, 174 insertions(+), 12 deletions(-)
+Matt suggested to change helper function names newly introduced functions
+and prefix these with efi_.
 
-[...]
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+CC: Matt Fleming <matt@console-pimps.org>
+CC: linux-efi@vger.kernel.org
+---
+ arch/x86/kernel/kexec-bzimage64.c  |    4 ++--
+ drivers/firmware/efi/runtime-map.c |    6 +++---
+ include/linux/efi.h                |    4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-> diff --git a/drivers/firmware/efi/runtime-map.c b/drivers/firmware/efi/runtime-map.c
-> index 97cdd16..40f2213 100644
-> --- a/drivers/firmware/efi/runtime-map.c
-> +++ b/drivers/firmware/efi/runtime-map.c
-> @@ -138,6 +138,27 @@ add_sysfs_runtime_map_entry(struct kobject *kobj, int nr)
->  	return entry;
->  }
->  
-> +int get_efi_runtime_map_size(void)
-> +{
-> +	return nr_efi_runtime_map * efi_memdesc_size;
-> +}
-> +
-> +int get_efi_runtime_map_desc_size(void)
-> +{
-> +	return efi_memdesc_size;
-> +}
-> +
-> +int efi_runtime_map_copy(void *buf, size_t bufsz)
-> +{
-> +	size_t sz = get_efi_runtime_map_size();
-> +
-> +	if (sz > bufsz)
-> +		sz = bufsz;
-> +
-> +	memcpy(buf, efi_runtime_map, sz);
-> +	return 0;
-> +}
-
-Could we prefix these with efi_, e.g. efi_get_runtime_map_size() ?
-
--- 
-Matt Fleming, Intel Open Source Technology Center
+Index: linux-2.6/include/linux/efi.h
+===================================================================
+--- linux-2.6.orig/include/linux/efi.h	2014-07-01 14:05:54.197071710 -0400
++++ linux-2.6/include/linux/efi.h	2014-07-01 15:54:21.019754754 -0400
+@@ -1151,8 +1151,8 @@ int efivars_sysfs_init(void);
+ #ifdef CONFIG_EFI_RUNTIME_MAP
+ int efi_runtime_map_init(struct kobject *);
+ void efi_runtime_map_setup(void *, int, u32);
+-int get_efi_runtime_map_size(void);
+-int get_efi_runtime_map_desc_size(void);
++int efi_get_runtime_map_size(void);
++int efi_get_runtime_map_desc_size(void);
+ int efi_runtime_map_copy(void *buf, size_t bufsz);
+ #else
+ static inline int efi_runtime_map_init(struct kobject *kobj)
+Index: linux-2.6/drivers/firmware/efi/runtime-map.c
+===================================================================
+--- linux-2.6.orig/drivers/firmware/efi/runtime-map.c	2014-07-01 14:05:54.196071711 -0400
++++ linux-2.6/drivers/firmware/efi/runtime-map.c	2014-07-01 15:55:47.990759859 -0400
+@@ -138,19 +138,19 @@ add_sysfs_runtime_map_entry(struct kobje
+ 	return entry;
+ }
+ 
+-int get_efi_runtime_map_size(void)
++int efi_get_runtime_map_size(void)
+ {
+ 	return nr_efi_runtime_map * efi_memdesc_size;
+ }
+ 
+-int get_efi_runtime_map_desc_size(void)
++int efi_get_runtime_map_desc_size(void)
+ {
+ 	return efi_memdesc_size;
+ }
+ 
+ int efi_runtime_map_copy(void *buf, size_t bufsz)
+ {
+-	size_t sz = get_efi_runtime_map_size();
++	size_t sz = efi_get_runtime_map_size();
+ 
+ 	if (sz > bufsz)
+ 		sz = bufsz;
+Index: linux-2.6/arch/x86/kernel/kexec-bzimage64.c
+===================================================================
+--- linux-2.6.orig/arch/x86/kernel/kexec-bzimage64.c	2014-07-01 15:52:22.285747785 -0400
++++ linux-2.6/arch/x86/kernel/kexec-bzimage64.c	2014-07-01 15:56:31.071762387 -0400
+@@ -181,7 +181,7 @@ setup_efi_state(struct boot_params *para
+ 	ei->efi_systab_hi = current_ei->efi_systab_hi;
+ 
+ 	ei->efi_memdesc_version = current_ei->efi_memdesc_version;
+-	ei->efi_memdesc_size = get_efi_runtime_map_desc_size();
++	ei->efi_memdesc_size = efi_get_runtime_map_desc_size();
+ 
+ 	setup_efi_info_memmap(params, params_load_addr, efi_map_offset,
+ 			      efi_map_sz);
+@@ -397,7 +397,7 @@ void *bzImage64_load(struct kimage *imag
+ 	 * have to create separate segment for each. Keeps things
+ 	 * little bit simple
+ 	 */
+-	efi_map_sz = get_efi_runtime_map_size();
++	efi_map_sz = efi_get_runtime_map_size();
+ 	efi_map_sz = ALIGN(efi_map_sz, 16);
+ 	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+ 				MAX_ELFCOREHDR_STR_LEN;
 
 _______________________________________________
 kexec mailing list
