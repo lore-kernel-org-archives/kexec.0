@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X2G6p-0000xo-8a
- for kexec@lists.infradead.org; Wed, 02 Jul 2014 08:41:43 +0000
-Date: Wed, 2 Jul 2014 10:41:16 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
+ id 1X2GHr-000132-QN
+ for kexec@lists.infradead.org; Wed, 02 Jul 2014 08:53:08 +0000
+Date: Wed, 2 Jul 2014 16:51:36 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH v2] makedumpfile: Exclude unnecessary hugepages.
-Message-ID: <20140702104116.6c870b37@hananiah.suse.cz>
-In-Reply-To: <20140702082654.GB20309@dhcp-16-105.nay.redhat.com>
+Message-ID: <20140702085136.GC20309@dhcp-16-105.nay.redhat.com>
 References: <0910DD04CBD6DE4193FCF86B9C00BE9722301C@BPXM01GP.gisp.nec.co.jp>
  <20140702082654.GB20309@dhcp-16-105.nay.redhat.com>
-Mime-Version: 1.0
+ <20140702104116.6c870b37@hananiah.suse.cz>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140702104116.6c870b37@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +25,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Wed, 2 Jul 2014 16:26:54 +0800
-Baoquan He <bhe@redhat.com> wrote:
-
-> On 06/17/14 at 02:32am, Atsushi Kumagai wrote:
->  
-> > +static void
-> > +setup_page_is_hugepage(void)
-> > +{
-> > +	if (NUMBER(PG_head) != NOT_FOUND_NUMBER) {
-> > +		if (NUMBER(PG_tail) == NOT_FOUND_NUMBER) {
-> > +			/*
-> > +			 * If PG_tail is not explicitly saved, then assume
-> > +			 * that it immediately follows PG_head.
-> > +			 */
-> > +			NUMBER(PG_tail) = NUMBER(PG_head) + 1;
-> > +		}
-> > +	} else if ((NUMBER(PG_compound) != NOT_FOUND_NUMBER)
-> > +		   && (info->dump_level & DL_EXCLUDE_USER_DATA)) {
+On 07/02/14 at 10:41am, Petr Tesarik wrote:
+> On Wed, 2 Jul 2014 16:26:54 +0800
+> Baoquan He <bhe@redhat.com> wrote:
 > 
-> Hi,
+> > On 06/17/14 at 02:32am, Atsushi Kumagai wrote:
+> >  
+> > > +static void
+> > > +setup_page_is_hugepage(void)
+> > > +{
+> > > +	if (NUMBER(PG_head) != NOT_FOUND_NUMBER) {
+> > > +		if (NUMBER(PG_tail) == NOT_FOUND_NUMBER) {
+> > > +			/*
+> > > +			 * If PG_tail is not explicitly saved, then assume
+> > > +			 * that it immediately follows PG_head.
+> > > +			 */
+> > > +			NUMBER(PG_tail) = NUMBER(PG_head) + 1;
+> > > +		}
+> > > +	} else if ((NUMBER(PG_compound) != NOT_FOUND_NUMBER)
+> > > +		   && (info->dump_level & DL_EXCLUDE_USER_DATA)) {
+> > 
+> > Hi,
+> > 
+> > I may not understand hugepage well. I am wondering why hugepage
+> > filtering can't be done if PG_compound is available.
 > 
-> I may not understand hugepage well. I am wondering why hugepage
-> filtering can't be done if PG_compound is available.
+> Oh, maybe I'm missing something. What do you suggest as an alternative
+> way to recognize a huge page if the value of PG_compound is not known?
 
-Oh, maybe I'm missing something. What do you suggest as an alternative
-way to recognize a huge page if the value of PG_compound is not known?
+No, what I understood is PG_compound is known if
+(NUMBER(PG_compound) != NOT_FOUND_NUMBER).
 
-Petr Tesarik
+I am not sure about this.
+
+> 
+> Petr Tesarik
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
