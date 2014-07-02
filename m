@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X2GHr-000132-QN
- for kexec@lists.infradead.org; Wed, 02 Jul 2014 08:53:08 +0000
-Date: Wed, 2 Jul 2014 16:51:36 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] makedumpfile: Exclude unnecessary hugepages.
-Message-ID: <20140702085136.GC20309@dhcp-16-105.nay.redhat.com>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9722301C@BPXM01GP.gisp.nec.co.jp>
- <20140702082654.GB20309@dhcp-16-105.nay.redhat.com>
- <20140702104116.6c870b37@hananiah.suse.cz>
+Received: from 8bytes.org ([85.214.48.195] helo=mail.8bytes.org)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X2KfA-0001IP-OJ
+ for kexec@lists.infradead.org; Wed, 02 Jul 2014 13:33:29 +0000
+Received: from localhost (localhost [127.0.0.1])
+ by mail.8bytes.org (Postfix) with SMTP id 5A2FE12B339
+ for <kexec@lists.infradead.org>; Wed,  2 Jul 2014 15:33:01 +0200 (CEST)
+Date: Wed, 2 Jul 2014 15:32:59 +0200
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 0/8] iommu/vt-d: Fix crash dump failure caused by legacy
+ DMA/IO
+Message-ID: <20140702133258.GN26537@8bytes.org>
+References: <1398386198-19304-1-git-send-email-bill.sumner@hp.com>
+ <1398854973.12733.23.camel@i7.infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140702104116.6c870b37@hananiah.suse.cz>
+In-Reply-To: <1398854973.12733.23.camel@i7.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +28,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, "Hoemann, Jerry" <jerry.hoemann@hp.com>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, Bill Sumner <bill.sumner@hp.com>
 
-On 07/02/14 at 10:41am, Petr Tesarik wrote:
-> On Wed, 2 Jul 2014 16:26:54 +0800
-> Baoquan He <bhe@redhat.com> wrote:
-> 
-> > On 06/17/14 at 02:32am, Atsushi Kumagai wrote:
-> >  
-> > > +static void
-> > > +setup_page_is_hugepage(void)
-> > > +{
-> > > +	if (NUMBER(PG_head) != NOT_FOUND_NUMBER) {
-> > > +		if (NUMBER(PG_tail) == NOT_FOUND_NUMBER) {
-> > > +			/*
-> > > +			 * If PG_tail is not explicitly saved, then assume
-> > > +			 * that it immediately follows PG_head.
-> > > +			 */
-> > > +			NUMBER(PG_tail) = NUMBER(PG_head) + 1;
-> > > +		}
-> > > +	} else if ((NUMBER(PG_compound) != NOT_FOUND_NUMBER)
-> > > +		   && (info->dump_level & DL_EXCLUDE_USER_DATA)) {
-> > 
-> > Hi,
-> > 
-> > I may not understand hugepage well. I am wondering why hugepage
-> > filtering can't be done if PG_compound is available.
-> 
-> Oh, maybe I'm missing something. What do you suggest as an alternative
-> way to recognize a huge page if the value of PG_compound is not known?
+Hi David,
 
-No, what I understood is PG_compound is known if
-(NUMBER(PG_compound) != NOT_FOUND_NUMBER).
-
-I am not sure about this.
-
+On Wed, Apr 30, 2014 at 11:49:33AM +0100, David Woodhouse wrote:
+> There could be all kinds of existing mappings in the DMA page tables,
+> and I'm not sure it's safe to preserve them. What prevents the crashdump
+> kernel from trying to use any of the physical pages which are
+> accessible, and which could thus be corrupted by stray DMA?
 > 
-> Petr Tesarik
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> In fact, the old kernel could even have set up 1:1 passthrough mappings
+> for some devices, which would then be able to DMA *anywhere*. Surely we
+> need to prevent that?
+
+Ideally we would prevent that, yes. But the problem is that a failed DMA
+transaction might put the device into an unrecoverable state. Usually
+any in-flight DMA transactions should only target buffers set up by the
+previous kernel and not corrupt any data.
+
+> After the last round of this patchset, we discussed a potential
+> improvement where you point every virtual bus address at the *same*
+> physical scratch page.
+
+That is a solution to prevent the in-flight DMA failures. But what
+happens when there is some in-flight DMA to a disk to write some inodes
+or a new superblock. Then this scratch address-space may cause
+filesystem corruption at worst.
+
+So with this in mind I would prefer initially taking over the
+page-tables from the old kernel before the device drivers re-initialize
+the devices.
+
+
+	Joerg
+
+
 
 _______________________________________________
 kexec mailing list
