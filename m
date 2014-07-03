@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([85.214.48.195] helo=mail.8bytes.org)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X2KfA-0001IP-OJ
- for kexec@lists.infradead.org; Wed, 02 Jul 2014 13:33:29 +0000
-Received: from localhost (localhost [127.0.0.1])
- by mail.8bytes.org (Postfix) with SMTP id 5A2FE12B339
- for <kexec@lists.infradead.org>; Wed,  2 Jul 2014 15:33:01 +0200 (CEST)
-Date: Wed, 2 Jul 2014 15:32:59 +0200
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 0/8] iommu/vt-d: Fix crash dump failure caused by legacy
- DMA/IO
-Message-ID: <20140702133258.GN26537@8bytes.org>
-References: <1398386198-19304-1-git-send-email-bill.sumner@hp.com>
- <1398854973.12733.23.camel@i7.infradead.org>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X2UjF-0007qd-OW
+ for kexec@lists.infradead.org; Thu, 03 Jul 2014 00:18:22 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: makedumpfile and elfutils
+Date: Thu, 3 Jul 2014 00:16:04 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9723B871@BPXM01GP.gisp.nec.co.jp>
+References: <007BD92917A2324FA403BCF9A464CF845CBC0690@ALA-MBB.corp.ad.wrs.com>
+In-Reply-To: <007BD92917A2324FA403BCF9A464CF845CBC0690@ALA-MBB.corp.ad.wrs.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1398854973.12733.23.camel@i7.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,43 +23,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, "Hoemann, Jerry" <jerry.hoemann@hp.com>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, Bill Sumner <bill.sumner@hp.com>
+To: "joe.slater@windriver.com" <joe.slater@windriver.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi David,
+Hello Joe,
 
-On Wed, Apr 30, 2014 at 11:49:33AM +0100, David Woodhouse wrote:
-> There could be all kinds of existing mappings in the DMA page tables,
-> and I'm not sure it's safe to preserve them. What prevents the crashdump
-> kernel from trying to use any of the physical pages which are
-> accessible, and which could thus be corrupted by stray DMA?
-> 
-> In fact, the old kernel could even have set up 1:1 passthrough mappings
-> for some devices, which would then be able to DMA *anywhere*. Surely we
-> need to prevent that?
+> I am updating a bitbake recipe to build makedumpfile 1.5.6.  The current
+> recipe builds 1.4.4 and includes a version of elfutils.  For 1.5.6 you say
+> to use elfutils-0.142 but we already have version 0.158 so I don't see why
+> we should need an older version, too.  makedumpfile builds linking to
+> elfutils-0.158.
+>
+>
+>
+> Do we really need elfutils-0.142?
 
-Ideally we would prevent that, yes. But the problem is that a failed DMA
-transaction might put the device into an unrecoverable state. Usually
-any in-flight DMA transactions should only target buffers set up by the
-previous kernel and not corrupt any data.
+No, 0.142 or later are OK, you don't need to downgrade it.
+However, I didn't test the recent versions of elfutils, so please let me
+know if you find any problems.
 
-> After the last round of this patchset, we discussed a potential
-> improvement where you point every virtual bus address at the *same*
-> physical scratch page.
+  commit ecafa7639b931151ff62d33e26f3746981c7c128
+  Author: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+  Date:   Wed Sep 5 16:10:34 2012 +0900
 
-That is a solution to prevent the in-flight DMA failures. But what
-happens when there is some in-flight DMA to a disk to write some inodes
-or a new superblock. Then this scratch address-space may cause
-filesystem corruption at worst.
+      [PATCH] Update necessary elfutils version.
 
-So with this in mind I would prefer initially taking over the
-page-tables from the old kernel before the device drivers re-initialize
-the devices.
+      For some vmlinux, -g option needs new elfutils(0.142 or later).
+      Therefore, this patch updates the version in README file.
+
+      Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
 
-	Joerg
+Thanks
+Atsushi Kumagai
 
-
+>
+>
+>
+>Joe
+>
+>
 
 _______________________________________________
 kexec mailing list
