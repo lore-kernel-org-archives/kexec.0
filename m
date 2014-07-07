@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 7 Jul 2014 15:33:37 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 7/8] arm64/kexec: Add core kexec support
-Message-ID: <20140707073337.GA1108@dhcp-16-198.nay.redhat.com>
-References: <cover.1399594544.git.geoff@infradead.org>
- <64ef27888fa70b3e27ddcf4ca594fa71ab7f7777.1399594544.git.geoff@infradead.org>
+Received: from p01c11o142.mxlogic.net ([208.65.144.65])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X4Hij-0005Ci-8C
+ for kexec@lists.infradead.org; Mon, 07 Jul 2014 22:49:13 +0000
+From: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>
+Subject: RE: Kexec and Mips64 XLP processor
+Date: Mon, 7 Jul 2014 22:48:41 +0000
+Message-ID: <F9C551623D2CBB4C9488801D14F864C68AB297D8@ex-mb3.corp.adtran.com>
+References: <F9C551623D2CBB4C9488801D14F864C68AB22495@ex-mb3.corp.adtran.com>
+In-Reply-To: <F9C551623D2CBB4C9488801D14F864C68AB22495@ex-mb3.corp.adtran.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <64ef27888fa70b3e27ddcf4ca594fa71ab7f7777.1399594544.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,55 +23,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Deepak Saxena <dsaxena@linaro.org>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>, "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>
 
-[snip]
+Guess my answer is no.
 
-> +
-> +/**
-> + * kexec_cpu_info_init - Initialize an array of kexec_cpu_info structures.
-> + *
-> + * Allocates a cpu info array and fills it with info for all cpus found in
-> + * the device tree passed.  The cpu info array is zero terminated.
-> + */
-> +
-> +int kexec_cpu_info_init(const struct device_node *dn,
-> +	struct kexec_dt_info *info)
-> +{
-> +	int result;
-> +	unsigned int cpu;
-> +	const struct device_node *i;
-> +
-> +	info->cpu_info = kmalloc(
-> +		(1 + info->cpu_count) * sizeof(struct kexec_cpu_info),
-> +		GFP_KERNEL);
-> +
-> +	if (!info->cpu_info) {
-> +		pr_debug("%s: out of memory", __func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	info->spinner_count = 0;
-> +
-> +	for (cpu = 0, i = dn; cpu < info->cpu_count; cpu++) {
-> +		struct kexec_cpu_info *cpu_info = &info->cpu_info[cpu];
-> +
-> +		i = of_find_node_by_type((struct device_node *)i, "cpu");
-> +
-> +		BUG_ON(!i);
-> +
-> +		cpu_info->cpu = cpu;
-> +
-> +		result = cpu_read_ops((struct device_node *)i, cpu,
-> +			&cpu_info->cpu_ops);
+Okay, next question:  Does anyone have in process adding DTB support to
+MIPS/64?  I'm working on it now, but I don't know that I'm the best
+person for the Job.  I'm following the work that was done by Simon and
+Matthew Leach to try to make the correct changes to hook up the DTB for
+mips.  I'm VERY willing to accept guidance on this one :).
 
-cpu_ops memory is not allocated?
+Thanks,
+Andy
 
-BTW cpu_read_ops will call cpu_get_ops which is marked as __init
-
-Thanks
-Dave
+> -----Original Message-----
+> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of ANDY KENNEDY
+> Sent: Wednesday, June 25, 2014 4:51 PM
+> To: 'kexec@lists.infradead.org'
+> Subject: Kexec and Mips64 XLP processor
+> 
+> Anyone have any experience with kernel switching an XLP mips64 n32
+> processor?
+> 
+> With a quick (like 5 minutes quick) test, this fails with our current
+> configuration of Linux 2.6.32.9 and kexec 2.0.4.
+> 
+> If you see anything here that immediately puts up your hackles, please
+> let me know.
+> 
+> Also, if you have any advice (other than bumping the kexec version,
+> which is my next attempt), please let me know!
+> 
+> Thanks,
+> Andy
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
