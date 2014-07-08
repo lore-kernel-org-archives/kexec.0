@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from host81-137-131-225.in-addr.btopenworld.com ([81.137.131.225]
- helo=zimbra.overnetdata.com)
- by merlin.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4SkV-0003ot-O1
- for kexec@lists.infradead.org; Tue, 08 Jul 2014 10:35:49 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
- by zimbra.overnetdata.com (Postfix) with ESMTP id 19EAF1625A2
- for <kexec@lists.infradead.org>; Tue,  8 Jul 2014 11:34:57 +0100 (BST)
-Received: from zimbra.overnetdata.com ([127.0.0.1])
- by localhost (zimbra.overnetdata.com [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id cdarQ7j9T9m6 for <kexec@lists.infradead.org>;
- Tue,  8 Jul 2014 11:34:52 +0100 (BST)
-Received: from [192.168.1.27] (unknown [192.168.1.27])
- by zimbra.overnetdata.com (Postfix) with ESMTPSA id 569A21625A1
- for <kexec@lists.infradead.org>; Tue,  8 Jul 2014 11:34:52 +0100 (BST)
-Message-ID: <53BBC94B.8060905@overnetdata.com>
-Date: Tue, 08 Jul 2014 11:34:51 +0100
-From: Anthony Wright <anthony@overnetdata.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X4VFA-0003bH-2S
+ for kexec@lists.infradead.org; Tue, 08 Jul 2014 13:15:37 +0000
+Subject: [PATCH1/7] X.509: Export certificate parse and free functions
+From: David Howells <dhowells@redhat.com>
+Date: Tue, 08 Jul 2014 14:15:11 +0100
+Message-ID: <20140708131511.28621.24521.stgit@warthog.procyon.org.uk>
+In-Reply-To: <20140708131504.28621.61165.stgit@warthog.procyon.org.uk>
+References: <20140708131504.28621.61165.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Subject: Can't load bzImage crashkernel on xen system with 32 bit kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,50 +22,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: keyrings@linux-nfs.org
+Cc: Kees Cook <keescook@chromium.org>, Josh Boyer <jwboyer@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-After successfully modifying kexec-tools to get it to load a crashkernel
-on a standard 32 bit linux 3.10.17 kernel, I tried to get it to load the
-same crashkernel on the same 32 bit linux kernel running under xen
-4.4.0, but get the error "Cannot load <kernel-path>".
+Export certificate parse and free functions for use by modules.
 
-I've patched the code to include some diagnostics, and the problem is
-caused by add_memmap() reporting that it's been called with overlapping
-memory.
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Josh Boyer <jwboyer@redhat.com>
+---
 
-It's called twice, the first time it's called with:
-	address: 0x00000000
-	size:    0x0009f800
-	type:    0
-
-This comes from info->backup_src_*
-
-The second time it is passed
-	address: 0x00000000
-	size:    0x00000000
-	type:    0
-
-This is derived from the crash_reserved_mem[] array, which has one
-element with the values:
-	start: 0x0000000000000000 (16 0's)
-	end:   0xffffffffffffffff (16 f's)
-
-The problem isn't caused by the zero size because the maths in
-add_memmap, uses size to calculate end which overflows back again, and
-(partially) cancels out the error. The problem is caused by the two
-memory blocks being based at 0x0, causing the blocks to overlap.
-
-I'm not sure what the correct functionality should be.
-
-Thanks,
-
-Anthony.
+ crypto/asymmetric_keys/x509_cert_parser.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 
--- 
-Founder, Overnet Data Ltd
-+44-1604-807545
-www.overnetdata.com
+diff --git a/crypto/asymmetric_keys/x509_cert_parser.c b/crypto/asymmetric_keys/x509_cert_parser.c
+index 4a8df29..ac72348 100644
+--- a/crypto/asymmetric_keys/x509_cert_parser.c
++++ b/crypto/asymmetric_keys/x509_cert_parser.c
+@@ -11,6 +11,7 @@
+ 
+ #define pr_fmt(fmt) "X.509: "fmt
+ #include <linux/kernel.h>
++#include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/err.h>
+ #include <linux/oid_registry.h>
+@@ -52,6 +53,7 @@ void x509_free_certificate(struct x509_certificate *cert)
+ 		kfree(cert);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(x509_free_certificate);
+ 
+ /*
+  * Parse an X.509 certificate
+@@ -97,6 +99,7 @@ error_no_ctx:
+ error_no_cert:
+ 	return ERR_PTR(ret);
+ }
++EXPORT_SYMBOL_GPL(x509_cert_parse);
+ 
+ /*
+  * Note an OID when we find one for later processing when we know how
+
 
 _______________________________________________
 kexec mailing list
