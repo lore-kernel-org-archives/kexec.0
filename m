@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4VFO-0003zn-OY
- for kexec@lists.infradead.org; Tue, 08 Jul 2014 13:15:53 +0000
-Subject: [PATCH3/7] PKCS#7: Digest the data in a signed-data message
+ id 1X4VFd-0004JG-OS
+ for kexec@lists.infradead.org; Tue, 08 Jul 2014 13:16:06 +0000
+Subject: [PATCH5/7] PKCS#7: Verify internal certificate chain
 From: David Howells <dhowells@redhat.com>
-Date: Tue, 08 Jul 2014 14:15:25 +0100
-Message-ID: <20140708131525.28621.25899.stgit@warthog.procyon.org.uk>
+Date: Tue, 08 Jul 2014 14:15:38 +0100
+Message-ID: <20140708131538.28621.56211.stgit@warthog.procyon.org.uk>
 In-Reply-To: <20140708131504.28621.61165.stgit@warthog.procyon.org.uk>
 References: <20140708131504.28621.61165.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
@@ -25,213 +25,125 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: keyrings@linux-nfs.org
 Cc: linux-security-module@vger.kernel.org, kexec@lists.infradead.org, Kees Cook <keescook@chromium.org>, Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
 
-Digest the data in a PKCS#7 signed-data message and attach to the
-public_key_signature struct contained in the pkcs7_message struct.
+Verify certificate chain in the X.509 certificates contained within the PKCS#7
+message as far as possible.  If any signature that we should be able to verify
+fails, we reject the whole lot.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 Acked-by: Vivek Goyal <vgoyal@redhat.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
 
- crypto/asymmetric_keys/Makefile       |    3 -
- crypto/asymmetric_keys/pkcs7_verify.c |  173 +++++++++++++++++++++++++++++++++
- 2 files changed, 175 insertions(+), 1 deletion(-)
- create mode 100644 crypto/asymmetric_keys/pkcs7_verify.c
+ crypto/asymmetric_keys/pkcs7_verify.c |   88 +++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+), 1 deletion(-)
 
 
-diff --git a/crypto/asymmetric_keys/Makefile b/crypto/asymmetric_keys/Makefile
-index 59d8cad..b6b39e7 100644
---- a/crypto/asymmetric_keys/Makefile
-+++ b/crypto/asymmetric_keys/Makefile
-@@ -32,7 +32,8 @@ clean-files	+= x509_rsakey-asn1.c x509_rsakey-asn1.h
- obj-$(CONFIG_PKCS7_MESSAGE_PARSER) += pkcs7_message.o
- pkcs7_message-y := \
- 	pkcs7-asn1.o \
--	pkcs7_parser.o
-+	pkcs7_parser.o \
-+	pkcs7_verify.o
- 
- $(obj)/pkcs7_parser.o: $(obj)/pkcs7-asn1.h
- $(obj)/pkcs7-asn1.o: $(obj)/pkcs7-asn1.c $(obj)/pkcs7-asn1.h
 diff --git a/crypto/asymmetric_keys/pkcs7_verify.c b/crypto/asymmetric_keys/pkcs7_verify.c
-new file mode 100644
-index 0000000..0bb408a
---- /dev/null
+index 745e5c8..51ff36f 100644
+--- a/crypto/asymmetric_keys/pkcs7_verify.c
 +++ b/crypto/asymmetric_keys/pkcs7_verify.c
-@@ -0,0 +1,173 @@
-+/* Verify the signature on a PKCS#7 message.
-+ *
-+ * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public Licence
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the Licence, or (at your option) any later version.
+@@ -170,6 +170,91 @@ static int pkcs7_find_key(struct pkcs7_message *pkcs7,
+ }
+ 
+ /*
++ * Verify the internal certificate chain as best we can.
 + */
-+
-+#define pr_fmt(fmt) "PKCS7: "fmt
-+#include <linux/kernel.h>
-+#include <linux/export.h>
-+#include <linux/slab.h>
-+#include <linux/err.h>
-+#include <linux/asn1.h>
-+#include <crypto/hash.h>
-+#include "public_key.h"
-+#include "pkcs7_parser.h"
-+
-+/*
-+ * Digest the relevant parts of the PKCS#7 data
-+ */
-+static int pkcs7_digest(struct pkcs7_message *pkcs7,
-+			struct pkcs7_signed_info *sinfo)
++static int pkcs7_verify_sig_chain(struct pkcs7_message *pkcs7,
++				  struct pkcs7_signed_info *sinfo)
 +{
-+	struct crypto_shash *tfm;
-+	struct shash_desc *desc;
-+	size_t digest_size, desc_size;
-+	void *digest;
++	struct x509_certificate *x509 = sinfo->signer, *p;
 +	int ret;
-+
-+	kenter(",%u,%u", sinfo->index, sinfo->sig.pkey_hash_algo);
-+
-+	if (sinfo->sig.pkey_hash_algo >= PKEY_HASH__LAST ||
-+	    !hash_algo_name[sinfo->sig.pkey_hash_algo])
-+		return -ENOPKG;
-+
-+	/* Allocate the hashing algorithm we're going to need and find out how
-+	 * big the hash operational data will be.
-+	 */
-+	tfm = crypto_alloc_shash(hash_algo_name[sinfo->sig.pkey_hash_algo],
-+				 0, 0);
-+	if (IS_ERR(tfm))
-+		return (PTR_ERR(tfm) == -ENOENT) ? -ENOPKG : PTR_ERR(tfm);
-+
-+	desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
-+	sinfo->sig.digest_size = digest_size = crypto_shash_digestsize(tfm);
-+
-+	ret = -ENOMEM;
-+	digest = kzalloc(digest_size + desc_size, GFP_KERNEL);
-+	if (!digest)
-+		goto error_no_desc;
-+
-+	desc = digest + digest_size;
-+	desc->tfm   = tfm;
-+	desc->flags = CRYPTO_TFM_REQ_MAY_SLEEP;
-+
-+	/* Digest the message [RFC2315 9.3] */
-+	ret = crypto_shash_init(desc);
-+	if (ret < 0)
-+		goto error;
-+	ret = crypto_shash_finup(desc, pkcs7->data, pkcs7->data_len, digest);
-+	if (ret < 0)
-+		goto error;
-+	pr_devel("MsgDigest = [%*ph]\n", 8, digest);
-+
-+	/* However, if there are authenticated attributes, there must be a
-+	 * message digest attribute amongst them which corresponds to the
-+	 * digest we just calculated.
-+	 */
-+	if (sinfo->msgdigest) {
-+		u8 tag;
-+
-+		if (sinfo->msgdigest_len != sinfo->sig.digest_size) {
-+			pr_debug("Sig %u: Invalid digest size (%u)\n",
-+				 sinfo->index, sinfo->msgdigest_len);
-+			ret = -EBADMSG;
-+			goto error;
-+		}
-+
-+		if (memcmp(digest, sinfo->msgdigest, sinfo->msgdigest_len) != 0) {
-+			pr_debug("Sig %u: Message digest doesn't match\n",
-+				 sinfo->index);
-+			ret = -EKEYREJECTED;
-+			goto error;
-+		}
-+
-+		/* We then calculate anew, using the authenticated attributes
-+		 * as the contents of the digest instead.  Note that we need to
-+		 * convert the attributes from a CONT.0 into a SET before we
-+		 * hash it.
-+		 */
-+		memset(digest, 0, sinfo->sig.digest_size);
-+
-+		ret = crypto_shash_init(desc);
-+		if (ret < 0)
-+			goto error;
-+		tag = ASN1_CONS_BIT | ASN1_SET;
-+		ret = crypto_shash_update(desc, &tag, 1);
-+		if (ret < 0)
-+			goto error;
-+		ret = crypto_shash_finup(desc, sinfo->authattrs,
-+					 sinfo->authattrs_len, digest);
-+		if (ret < 0)
-+			goto error;
-+		pr_devel("AADigest = [%*ph]\n", 8, digest);
-+	}
-+
-+	sinfo->sig.digest = digest;
-+	digest = NULL;
-+
-+error:
-+	kfree(digest);
-+error_no_desc:
-+	crypto_free_shash(tfm);
-+	kleave(" = %d", ret);
-+	return ret;
-+}
-+
-+/*
-+/*
-+ * Verify one signed information block from a PKCS#7 message.
-+ */
-+static int pkcs7_verify_one(struct pkcs7_message *pkcs7,
-+			    struct pkcs7_signed_info *sinfo)
-+{
-+	int ret;
-+
-+	kenter(",%u", sinfo->index);
-+
-+	/* First of all, digest the data in the PKCS#7 message and the
-+	 * signed information block
-+	 */
-+	ret = pkcs7_digest(pkcs7, sinfo);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/**
-+ * pkcs7_verify - Verify a PKCS#7 message
-+ * @pkcs7: The PKCS#7 message to be verified
-+ */
-+int pkcs7_verify(struct pkcs7_message *pkcs7)
-+{
-+	struct pkcs7_signed_info *sinfo;
-+	struct x509_certificate *x509;
-+	int ret, n;
 +
 +	kenter("");
 +
-+	for (n = 0, x509 = pkcs7->certs; x509; x509 = x509->next, n++) {
++	for (p = pkcs7->certs; p; p = p->next)
++		p->seen = false;
++
++	for (;;) {
++		pr_debug("verify %s: %s\n", x509->subject, x509->fingerprint);
++		x509->seen = true;
 +		ret = x509_get_sig_params(x509);
 +		if (ret < 0)
 +			return ret;
-+		pr_debug("X.509[%u] %s\n", n, x509->authority);
-+	}
 +
-+	for (sinfo = pkcs7->signed_infos; sinfo; sinfo = sinfo->next) {
-+		ret = pkcs7_verify_one(pkcs7, sinfo);
-+		if (ret < 0) {
-+			kleave(" = %d", ret);
-+			return ret;
++		if (x509->issuer)
++			pr_debug("- issuer %s\n", x509->issuer);
++		if (x509->authority)
++			pr_debug("- authkeyid %s\n", x509->authority);
++
++		if (!x509->authority ||
++		    (x509->subject &&
++		     strcmp(x509->subject, x509->issuer) == 0)) {
++			/* If there's no authority certificate specified, then
++			 * the certificate must be self-signed and is the root
++			 * of the chain.  Likewise if the cert is its own
++			 * authority.
++			 */
++			pr_debug("- no auth?\n");
++			if (x509->raw_subject_size != x509->raw_issuer_size ||
++			    memcmp(x509->raw_subject, x509->raw_issuer,
++				   x509->raw_issuer_size) != 0)
++				return 0;
++
++			ret = x509_check_signature(x509->pub, x509);
++			if (ret < 0)
++				return ret;
++			x509->signer = x509;
++			pr_debug("- self-signed\n");
++			return 0;
 +		}
-+	}
 +
-+	kleave(" = 0");
-+	return 0;
++		/* Look through the X.509 certificates in the PKCS#7 message's
++		 * list to see if the next one is there.
++		 */
++		pr_debug("- want %s\n", x509->authority);
++		for (p = pkcs7->certs; p; p = p->next) {
++			pr_debug("- cmp [%u] %s\n", p->index, p->fingerprint);
++			if (p->raw_subject_size == x509->raw_issuer_size &&
++			    strcmp(p->fingerprint, x509->authority) == 0 &&
++			    memcmp(p->raw_subject, x509->raw_issuer,
++				   x509->raw_issuer_size) == 0)
++				goto found_issuer;
++		}
++
++		/* We didn't find the root of this chain */
++		pr_debug("- top\n");
++		return 0;
++
++	found_issuer:
++		pr_debug("- issuer %s\n", p->subject);
++		if (p->seen) {
++			pr_warn("Sig %u: X.509 chain contains loop\n",
++				sinfo->index);
++			return 0;
++		}
++		ret = x509_check_signature(p->pub, x509);
++		if (ret < 0)
++			return ret;
++		x509->signer = p;
++		if (x509 == p) {
++			pr_debug("- self-signed\n");
++			return 0;
++		}
++		x509 = p;
++		might_sleep();
++	}
 +}
-+EXPORT_SYMBOL_GPL(pkcs7_verify);
++
++/*
+  * Verify one signed information block from a PKCS#7 message.
+  */
+ static int pkcs7_verify_one(struct pkcs7_message *pkcs7,
+@@ -201,7 +286,8 @@ static int pkcs7_verify_one(struct pkcs7_message *pkcs7,
+ 
+ 	pr_devel("Verified signature %u\n", sinfo->index);
+ 
+-	return 0;
++	/* Verify the internal certificate chain */
++	return pkcs7_verify_sig_chain(pkcs7, sinfo);
+ }
+ 
+ /**
 
 
 _______________________________________________
