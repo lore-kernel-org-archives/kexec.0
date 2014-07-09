@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4tbc-00083q-Ip
- for kexec@lists.infradead.org; Wed, 09 Jul 2014 15:16:25 +0000
-Subject: [PATCH05/17] PKCS#7: Find the right key in the PKCS#7 key list and
- verify the signature
+ id 1X4tbr-0000Ab-J1
+ for kexec@lists.infradead.org; Wed, 09 Jul 2014 15:16:40 +0000
+Subject: [PATCH08/17] PKCS#7: Provide a key type for testing PKCS#7
 From: David Howells <dhowells@redhat.com>
-Date: Wed, 09 Jul 2014 16:15:57 +0100
-Message-ID: <20140709151557.23074.3054.stgit@warthog.procyon.org.uk>
+Date: Wed, 09 Jul 2014 16:16:17 +0100
+Message-ID: <20140709151617.23074.24325.stgit@warthog.procyon.org.uk>
 In-Reply-To: <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
 References: <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
@@ -26,115 +25,365 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: keyrings@linux-nfs.org
 Cc: linux-security-module@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Find the appropriate key in the PKCS#7 key list and verify the signature with
-it.  There may be several keys in there forming a chain.  Any link in that
-chain or the root of that chain may be in our keyrings.
+Provide a key type for testing the PKCS#7 parser.  It is given a non-detached
+PKCS#7 message as payload:
+
+	keyctl padd pkcs7_test a @s <stuff.pkcs7
+
+The PKCS#7 wrapper is validated against the trusted certificates available and
+then stripped off.  If successful, the key can be read, which will give the
+data content of the PKCS#7 message.
+
+A suitable message can be created by running make on the attached Makefile.
+This will produce a file called stuff.pkcs7 for test loading.  The key3.x509
+file should be put into the kernel source tree before it is built and
+converted to DER form:
+
+	openssl x509 -in .../pkcs7/key3.x509 -outform DER -out key3.x509
+
+###############################################################################
+#
+# Create a pkcs7 message and sign it twice
+#
+#	openssl x509 -text -inform PEM -noout -in key2.x509
+#
+###############################################################################
+stuff.pkcs7: stuff.txt key2.priv key2.x509 key4.priv key4.x509 certs
+	$(RM) $@
+	openssl smime -sign \
+		-signer key2.x509 \
+		-inkey key2.priv \
+		-signer key4.x509 \
+		-inkey key4.priv \
+		-in stuff.txt \
+		-certfile certs \
+		-out $@ -binary -outform DER -nodetach
+	openssl pkcs7 -inform DER -in stuff.pkcs7  -print_certs -noout
+	openssl asn1parse -inform DER -in stuff.pkcs7  -i >out
+
+stuff.txt:
+	echo "The quick red fox jumped over the lazy brown dog" >stuff.txt
+
+certs: key1.x509 key2.x509 key3.x509 key4.x509
+	cat key{1,3}.x509 >$@
+
+###############################################################################
+#
+# Generate a signed key
+#
+#	openssl x509 -text -inform PEM -noout -in key2.x509
+#
+###############################################################################
+key2.x509: key2.x509_unsigned key1.priv key1.x509
+	openssl x509 \
+		-req -in key2.x509_unsigned \
+		-out key2.x509 \
+		-extfile key2.genkey -extensions myexts \
+		-CA key1.x509 \
+		-CAkey key1.priv \
+		-CAcreateserial
+
+key2.priv key2.x509_unsigned: key2.genkey
+	openssl req -new -nodes -utf8 -sha1 -days 36500 \
+		-batch -outform PEM \
+		-config key2.genkey \
+		-keyout key2.priv \
+		-out key2.x509_unsigned
+
+key2.genkey:
+	@echo Generating X.509 key generation config
+	@echo  >$@ "[ req ]"
+	@echo >>$@ "default_bits = 4096"
+	@echo >>$@ "distinguished_name = req_distinguished_name"
+	@echo >>$@ "prompt = no"
+	@echo >>$@ "string_mask = utf8only"
+	@echo >>$@ "x509_extensions = myexts"
+	@echo >>$@
+	@echo >>$@ "[ req_distinguished_name ]"
+	@echo >>$@ "O = Magrathea"
+	@echo >>$@ "CN = PKCS7 key 2"
+	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
+	@echo >>$@
+	@echo >>$@ "[ myexts ]"
+	@echo >>$@ "basicConstraints=critical,CA:FALSE"
+	@echo >>$@ "keyUsage=digitalSignature"
+	@echo >>$@ "subjectKeyIdentifier=hash"
+	@echo >>$@ "authorityKeyIdentifier=keyid"
+
+###############################################################################
+#
+# Generate a couple of signing keys
+#
+#	openssl x509 -text -inform PEM -noout -in key1.x509
+#
+###############################################################################
+key1.x509: key1.x509_unsigned key4.priv key4.x509
+	openssl x509 \
+		-req -in key1.x509_unsigned \
+		-out key1.x509 \
+		-extfile key1.genkey -extensions myexts \
+		-CA key4.x509 \
+		-CAkey key4.priv \
+		-CAcreateserial
+
+key1.priv key1.x509_unsigned: key1.genkey
+	openssl req -new -nodes -utf8 -sha1 -days 36500 \
+		-batch -outform PEM \
+		-config key1.genkey \
+		-keyout key1.priv \
+		-out key1.x509_unsigned
+
+key1.genkey:
+	@echo Generating X.509 key generation config
+	@echo  >$@ "[ req ]"
+	@echo >>$@ "default_bits = 4096"
+	@echo >>$@ "distinguished_name = req_distinguished_name"
+	@echo >>$@ "prompt = no"
+	@echo >>$@ "string_mask = utf8only"
+	@echo >>$@ "x509_extensions = myexts"
+	@echo >>$@
+	@echo >>$@ "[ req_distinguished_name ]"
+	@echo >>$@ "O = Magrathea"
+	@echo >>$@ "CN = PKCS7 key 1"
+	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
+	@echo >>$@
+	@echo >>$@ "[ myexts ]"
+	@echo >>$@ "basicConstraints=critical,CA:TRUE"
+	@echo >>$@ "keyUsage=digitalSignature,keyCertSign"
+	@echo >>$@ "subjectKeyIdentifier=hash"
+	@echo >>$@ "authorityKeyIdentifier=keyid"
+
+###############################################################################
+#
+# Generate a signed key
+#
+#	openssl x509 -text -inform PEM -noout -in key4.x509
+#
+###############################################################################
+key4.x509: key4.x509_unsigned key3.priv key3.x509
+	openssl x509 \
+		-req -in key4.x509_unsigned \
+		-out key4.x509 \
+		-extfile key4.genkey -extensions myexts \
+		-CA key3.x509 \
+		-CAkey key3.priv \
+		-CAcreateserial
+
+key4.priv key4.x509_unsigned: key4.genkey
+	openssl req -new -nodes -utf8 -sha1 -days 36500 \
+		-batch -outform PEM \
+		-config key4.genkey \
+		-keyout key4.priv \
+		-out key4.x509_unsigned
+
+key4.genkey:
+	@echo Generating X.509 key generation config
+	@echo  >$@ "[ req ]"
+	@echo >>$@ "default_bits = 4096"
+	@echo >>$@ "distinguished_name = req_distinguished_name"
+	@echo >>$@ "prompt = no"
+	@echo >>$@ "string_mask = utf8only"
+	@echo >>$@ "x509_extensions = myexts"
+	@echo >>$@
+	@echo >>$@ "[ req_distinguished_name ]"
+	@echo >>$@ "O = Magrathea"
+	@echo >>$@ "CN = PKCS7 key 4"
+	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
+	@echo >>$@
+	@echo >>$@ "[ myexts ]"
+	@echo >>$@ "basicConstraints=critical,CA:TRUE"
+	@echo >>$@ "keyUsage=digitalSignature,keyCertSign"
+	@echo >>$@ "subjectKeyIdentifier=hash"
+	@echo >>$@ "authorityKeyIdentifier=keyid"
+
+###############################################################################
+#
+# Generate a couple of signing keys
+#
+#	openssl x509 -text -inform PEM -noout -in key3.x509
+#
+###############################################################################
+key3.priv key3.x509: key3.genkey
+	openssl req -new -nodes -utf8 -sha1 -days 36500 \
+		-batch -x509 -outform PEM \
+		-config key3.genkey \
+		-keyout key3.priv \
+		-out key3.x509
+
+key3.genkey:
+	@echo Generating X.509 key generation config
+	@echo  >$@ "[ req ]"
+	@echo >>$@ "default_bits = 4096"
+	@echo >>$@ "distinguished_name = req_distinguished_name"
+	@echo >>$@ "prompt = no"
+	@echo >>$@ "string_mask = utf8only"
+	@echo >>$@ "x509_extensions = myexts"
+	@echo >>$@
+	@echo >>$@ "[ req_distinguished_name ]"
+	@echo >>$@ "O = Magrathea"
+	@echo >>$@ "CN = PKCS7 key 3"
+	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
+	@echo >>$@
+	@echo >>$@ "[ myexts ]"
+	@echo >>$@ "basicConstraints=critical,CA:TRUE"
+	@echo >>$@ "keyUsage=digitalSignature,keyCertSign"
+	@echo >>$@ "subjectKeyIdentifier=hash"
+	@echo >>$@ "authorityKeyIdentifier=keyid"
+
+clean:
+	$(RM) *~
+	$(RM) key1.* key2.* key3.* key4.* stuff.* out certs
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
 
- crypto/asymmetric_keys/pkcs7_verify.c |   64 +++++++++++++++++++++++++++++++++
- include/crypto/pkcs7.h                |    5 +++
- 2 files changed, 69 insertions(+)
+ crypto/asymmetric_keys/Kconfig          |   13 ++++
+ crypto/asymmetric_keys/Makefile         |    7 ++
+ crypto/asymmetric_keys/pkcs7_key_type.c |   97 +++++++++++++++++++++++++++++++
+ 3 files changed, 117 insertions(+)
+ create mode 100644 crypto/asymmetric_keys/pkcs7_key_type.c
 
 
-diff --git a/crypto/asymmetric_keys/pkcs7_verify.c b/crypto/asymmetric_keys/pkcs7_verify.c
-index 0bb408a..745e5c8 100644
---- a/crypto/asymmetric_keys/pkcs7_verify.c
-+++ b/crypto/asymmetric_keys/pkcs7_verify.c
-@@ -120,6 +120,55 @@ error_no_desc:
- }
+diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
+index a7cec9d..b6df198 100644
+--- a/crypto/asymmetric_keys/Kconfig
++++ b/crypto/asymmetric_keys/Kconfig
+@@ -46,4 +46,17 @@ config PKCS7_MESSAGE_PARSER
+ 	  This option provides support for parsing PKCS#7 format messages for
+ 	  signature data and provides the ability to verify the signature.
  
- /*
-+ * Find the key (X.509 certificate) to use to verify a PKCS#7 message.  PKCS#7
-+ * uses the issuer's name and the issuing certificate serial number for
-+ * matching purposes.  These must match the certificate issuer's name (not
-+ * subject's name) and the certificate serial number [RFC 2315 6.7].
++config PKCS7_TEST_KEY
++	tristate "PKCS#7 testing key type"
++	depends on PKCS7_MESSAGE_PARSER
++	select SYSTEM_TRUSTED_KEYRING
++	help
++	  This option provides a type of key that can be loaded up from a
++	  PKCS#7 message - provided the message is signed by a trusted key.  If
++	  it is, the PKCS#7 wrapper is discarded and reading the key returns
++	  just the payload.  If it isn't, adding the key will fail with an
++	  error.
++
++	  This is intended for testing the PKCS#7 parser.
++
+ endif # ASYMMETRIC_KEY_TYPE
+diff --git a/crypto/asymmetric_keys/Makefile b/crypto/asymmetric_keys/Makefile
+index d63cb43..92d0e9a 100644
+--- a/crypto/asymmetric_keys/Makefile
++++ b/crypto/asymmetric_keys/Makefile
+@@ -40,3 +40,10 @@ $(obj)/pkcs7_parser.o: $(obj)/pkcs7-asn1.h
+ $(obj)/pkcs7-asn1.o: $(obj)/pkcs7-asn1.c $(obj)/pkcs7-asn1.h
+ 
+ clean-files	+= pkcs7-asn1.c pkcs7-asn1.h
++
++#
++# PKCS#7 parser testing key
++#
++obj-$(CONFIG_PKCS7_TEST_KEY) += pkcs7_test_key.o
++pkcs7_test_key-y := \
++	pkcs7_key_type.o
+diff --git a/crypto/asymmetric_keys/pkcs7_key_type.c b/crypto/asymmetric_keys/pkcs7_key_type.c
+new file mode 100644
+index 0000000..b1797d2
+--- /dev/null
++++ b/crypto/asymmetric_keys/pkcs7_key_type.c
+@@ -0,0 +1,97 @@
++/* Testing module to load key from trusted PKCS#7 message
++ *
++ * Copyright (C) 2014 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public Licence
++ * as published by the Free Software Foundation; either version
++ * 2 of the Licence, or (at your option) any later version.
 + */
-+static int pkcs7_find_key(struct pkcs7_message *pkcs7,
-+			  struct pkcs7_signed_info *sinfo)
-+{
-+	struct x509_certificate *x509;
-+	unsigned certix = 1;
 +
-+	kenter("%u,%u,%u",
-+	       sinfo->index, sinfo->raw_serial_size, sinfo->raw_issuer_size);
-+
-+	for (x509 = pkcs7->certs; x509; x509 = x509->next, certix++) {
-+		/* I'm _assuming_ that the generator of the PKCS#7 message will
-+		 * encode the fields from the X.509 cert in the same way in the
-+		 * PKCS#7 message - but I can't be 100% sure of that.  It's
-+		 * possible this will need element-by-element comparison.
-+		 */
-+		if (x509->raw_serial_size != sinfo->raw_serial_size ||
-+		    memcmp(x509->raw_serial, sinfo->raw_serial,
-+			   sinfo->raw_serial_size) != 0)
-+			continue;
-+		pr_devel("Sig %u: Found cert serial match X.509[%u]\n",
-+			 sinfo->index, certix);
-+
-+		if (x509->raw_issuer_size != sinfo->raw_issuer_size ||
-+		    memcmp(x509->raw_issuer, sinfo->raw_issuer,
-+			   sinfo->raw_issuer_size) != 0) {
-+			pr_warn("Sig %u: X.509 subject and PKCS#7 issuer don't match\n",
-+				sinfo->index);
-+			continue;
-+		}
-+
-+		if (x509->pub->pkey_algo != sinfo->sig.pkey_algo) {
-+			pr_warn("Sig %u: X.509 algo and PKCS#7 sig algo don't match\n",
-+				sinfo->index);
-+			continue;
-+		}
-+
-+		sinfo->signer = x509;
-+		return 0;
-+	}
-+	pr_warn("Sig %u: Issuing X.509 cert not found (#%*ph)\n",
-+		sinfo->index, sinfo->raw_serial_size, sinfo->raw_serial);
-+	return -ENOKEY;
-+}
-+
- /*
-  * Verify one signed information block from a PKCS#7 message.
-  */
-@@ -137,6 +186,21 @@ static int pkcs7_verify_one(struct pkcs7_message *pkcs7,
- 	if (ret < 0)
- 		return ret;
- 
-+	/* Find the key for the signature */
-+	ret = pkcs7_find_key(pkcs7, sinfo);
-+	if (ret < 0)
-+		return ret;
-+
-+	pr_devel("Using X.509[%u] for sig %u\n",
-+		 sinfo->signer->index, sinfo->index);
-+
-+	/* Verify the PKCS#7 binary against the key */
-+	ret = public_key_verify_signature(sinfo->signer->pub, &sinfo->sig);
-+	if (ret < 0)
-+		return ret;
-+
-+	pr_devel("Verified signature %u\n", sinfo->index);
-+
- 	return 0;
- }
- 
-diff --git a/include/crypto/pkcs7.h b/include/crypto/pkcs7.h
-index 8f2628f..8ba0f38 100644
---- a/include/crypto/pkcs7.h
-+++ b/include/crypto/pkcs7.h
-@@ -21,3 +21,8 @@ extern void pkcs7_free_message(struct pkcs7_message *pkcs7);
- extern int pkcs7_get_content_data(const struct pkcs7_message *pkcs7,
- 				  const void **_data, size_t *_datalen,
- 				  bool want_wrapper);
++#define pr_fmt(fmt) "PKCS7key: "fmt
++#include <linux/key.h>
++#include <linux/key-type.h>
++#include <crypto/pkcs7.h>
++#include <keys/user-type.h>
++#include <keys/system_keyring.h>
++#include "pkcs7_parser.h"
 +
 +/*
-+ * pkcs7_verify.c
++ * Instantiate a PKCS#7 wrapped and validated key.
 + */
-+extern int pkcs7_verify(struct pkcs7_message *pkcs7);
++int pkcs7_instantiate(struct key *key, struct key_preparsed_payload *prep)
++{
++	struct pkcs7_message *pkcs7;
++	const void *data, *saved_prep_data;
++	size_t datalen, saved_prep_datalen;
++	bool trusted;
++	int ret;
++
++	kenter("");
++
++	saved_prep_data = prep->data;
++	saved_prep_datalen = prep->datalen;
++	pkcs7 = pkcs7_parse_message(saved_prep_data, saved_prep_datalen);
++	if (IS_ERR(pkcs7)) {
++		ret = PTR_ERR(pkcs7);
++		goto error;
++	}
++
++	ret = pkcs7_verify(pkcs7);
++	if (ret < 0)
++		goto error_free;
++
++	ret = pkcs7_validate_trust(pkcs7, system_trusted_keyring, &trusted);
++	if (ret < 0)
++		goto error_free;
++	if (!trusted)
++		pr_warn("PKCS#7 message doesn't chain back to a trusted key\n");
++
++	ret = pkcs7_get_content_data(pkcs7, &data, &datalen, false);
++	if (ret < 0)
++		goto error_free;
++
++	prep->data = data;
++	prep->datalen = datalen;
++	ret = user_instantiate(key, prep);
++	prep->data = saved_prep_data;
++	prep->datalen = saved_prep_datalen;
++
++error_free:
++	pkcs7_free_message(pkcs7);
++error:
++	kleave(" = %d", ret);
++	return ret;
++}
++
++/*
++ * user defined keys take an arbitrary string as the description and an
++ * arbitrary blob of data as the payload
++ */
++struct key_type key_type_pkcs7 = {
++	.name			= "pkcs7_test",
++	.def_lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
++	.instantiate		= pkcs7_instantiate,
++	.match			= user_match,
++	.revoke			= user_revoke,
++	.destroy		= user_destroy,
++	.describe		= user_describe,
++	.read			= user_read,
++};
++
++/*
++ * Module stuff
++ */
++static int __init pkcs7_key_init(void)
++{
++	return register_key_type(&key_type_pkcs7);
++}
++
++static void __exit pkcs7_key_cleanup(void)
++{
++	unregister_key_type(&key_type_pkcs7);
++}
++
++module_init(pkcs7_key_init);
++module_exit(pkcs7_key_cleanup);
 
 
 _______________________________________________
