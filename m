@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4tcV-0001DC-JI
- for kexec@lists.infradead.org; Wed, 09 Jul 2014 15:17:21 +0000
-Subject: [PATCH14/17] pefile: Parse the "Microsoft individual code signing"
- data blob
+ id 1X4tck-0001XO-JA
+ for kexec@lists.infradead.org; Wed, 09 Jul 2014 15:17:35 +0000
+Subject: [PATCH16/17] pefile: Digest the PE binary and compare to the PKCS#7
+ data
 From: David Howells <dhowells@redhat.com>
-Date: Wed, 09 Jul 2014 16:16:55 +0100
-Message-ID: <20140709151655.23074.99944.stgit@warthog.procyon.org.uk>
+Date: Wed, 09 Jul 2014 16:17:07 +0100
+Message-ID: <20140709151707.23074.53136.stgit@warthog.procyon.org.uk>
 In-Reply-To: <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
 References: <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
@@ -26,254 +26,234 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: keyrings@linux-nfs.org
 Cc: linux-security-module@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-The PKCS#7 certificate should contain a "Microsoft individual code signing"
-data blob as its signed content.  This blob contains a digest of the signed
-content of the PE binary and the OID of the digest algorithm used (typically
-SHA256).
+Digest the signed parts of the PE binary, canonicalising the section table
+before we need it, and then compare the the resulting digest to the one in the
+PKCS#7 signed content.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 Acked-by: Vivek Goyal <vgoyal@redhat.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
 
- crypto/asymmetric_keys/Makefile        |    9 ++
- crypto/asymmetric_keys/mscode.asn1     |   28 +++++++
- crypto/asymmetric_keys/mscode_parser.c |  120 ++++++++++++++++++++++++++++++++
- crypto/asymmetric_keys/verify_pefile.c |    7 ++
- crypto/asymmetric_keys/verify_pefile.h |    5 +
- include/linux/oid_registry.h           |    7 ++
- 6 files changed, 174 insertions(+), 2 deletions(-)
- create mode 100644 crypto/asymmetric_keys/mscode.asn1
- create mode 100644 crypto/asymmetric_keys/mscode_parser.c
+ crypto/asymmetric_keys/verify_pefile.c |  197 ++++++++++++++++++++++++++++++++
+ 1 file changed, 197 insertions(+)
 
 
-diff --git a/crypto/asymmetric_keys/Makefile b/crypto/asymmetric_keys/Makefile
-index 3e4de52..e47fcd9 100644
---- a/crypto/asymmetric_keys/Makefile
-+++ b/crypto/asymmetric_keys/Makefile
-@@ -54,4 +54,11 @@ pkcs7_test_key-y := \
- obj-$(CONFIG_SIGNED_PE_FILE_VERIFICATION) += verify_signed_pefile.o
- 
- verify_signed_pefile-y := \
--	verify_pefile.o
-+	verify_pefile.o \
-+	mscode_parser.o \
-+	mscode-asn1.o
-+
-+$(obj)/mscode_parser.o: $(obj)/mscode-asn1.h $(obj)/mscode-asn1.h
-+$(obj)/mscode-asn1.o: $(obj)/mscode-asn1.c $(obj)/mscode-asn1.h
-+
-+clean-files	+= mscode-asn1.c mscode-asn1.h
-diff --git a/crypto/asymmetric_keys/mscode.asn1 b/crypto/asymmetric_keys/mscode.asn1
-new file mode 100644
-index 0000000..6d09ba4
---- /dev/null
-+++ b/crypto/asymmetric_keys/mscode.asn1
-@@ -0,0 +1,28 @@
-+--- Microsoft individual code signing data blob parser
-+---
-+--- Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
-+--- Written by David Howells (dhowells@redhat.com)
-+---
-+--- This program is free software; you can redistribute it and/or
-+--- modify it under the terms of the GNU General Public Licence
-+--- as published by the Free Software Foundation; either version
-+--- 2 of the Licence, or (at your option) any later version.
-+---
-+
-+MSCode ::= SEQUENCE {
-+	type			SEQUENCE {
-+		contentType	ContentType,
-+		parameters	ANY
-+	},
-+	content			SEQUENCE {
-+		digestAlgorithm	DigestAlgorithmIdentifier,
-+		digest		OCTET STRING ({ mscode_note_digest })
-+	}
-+}
-+
-+ContentType ::= OBJECT IDENTIFIER ({ mscode_note_content_type })
-+
-+DigestAlgorithmIdentifier ::= SEQUENCE {
-+	algorithm   OBJECT IDENTIFIER ({ mscode_note_digest_algo }),
-+	parameters  ANY OPTIONAL
-+}
-diff --git a/crypto/asymmetric_keys/mscode_parser.c b/crypto/asymmetric_keys/mscode_parser.c
-new file mode 100644
-index 0000000..09336c3
---- /dev/null
-+++ b/crypto/asymmetric_keys/mscode_parser.c
-@@ -0,0 +1,120 @@
-+/* Parse a Microsoft Individual Code Signing blob
-+ *
-+ * Copyright (C) 2014 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public Licence
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the Licence, or (at your option) any later version.
-+ */
-+
-+#define pr_fmt(fmt) "MSCODE: "fmt
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/err.h>
-+#include <linux/oid_registry.h>
-+#include <crypto/pkcs7.h>
-+#include "verify_pefile.h"
-+#include "mscode-asn1.h"
-+
-+/*
-+ * Parse a Microsoft Individual Code Signing blob
-+ */
-+int mscode_parse(struct pefile_context *ctx)
-+{
-+	const void *content_data;
-+	size_t data_len;
-+	int ret;
-+
-+	ret = pkcs7_get_content_data(ctx->pkcs7, &content_data, &data_len, 1);
-+
-+	if (ret) {
-+		pr_debug("PKCS#7 message does not contain data\n");
-+		return ret;
-+	}
-+
-+	pr_devel("Data: %zu [%*ph]\n", data_len, (unsigned)(data_len),
-+		 content_data);
-+
-+	return asn1_ber_decoder(&mscode_decoder, ctx, content_data, data_len);
-+}
-+
-+/*
-+ * Check the content type OID
-+ */
-+int mscode_note_content_type(void *context, size_t hdrlen,
-+			     unsigned char tag,
-+			     const void *value, size_t vlen)
-+{
-+	enum OID oid;
-+
-+	oid = look_up_OID(value, vlen);
-+	if (oid == OID__NR) {
-+		char buffer[50];
-+
-+		sprint_oid(value, vlen, buffer, sizeof(buffer));
-+		pr_err("Unknown OID: %s\n", buffer);
-+		return -EBADMSG;
-+	}
-+
-+	if (oid != OID_msIndividualSPKeyPurpose) {
-+		pr_err("Unexpected content type OID %u\n", oid);
-+		return -EBADMSG;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Note the digest algorithm OID
-+ */
-+int mscode_note_digest_algo(void *context, size_t hdrlen,
-+			    unsigned char tag,
-+			    const void *value, size_t vlen)
-+{
-+	struct pefile_context *ctx = context;
-+	char buffer[50];
-+	enum OID oid;
-+
-+	oid = look_up_OID(value, vlen);
-+	switch (oid) {
-+	case OID_md4:
-+		ctx->digest_algo = HASH_ALGO_MD4;
-+		break;
-+	case OID_md5:
-+		ctx->digest_algo = HASH_ALGO_MD5;
-+		break;
-+	case OID_sha1:
-+		ctx->digest_algo = HASH_ALGO_SHA1;
-+		break;
-+	case OID_sha256:
-+		ctx->digest_algo = HASH_ALGO_SHA256;
-+		break;
-+
-+	case OID__NR:
-+		sprint_oid(value, vlen, buffer, sizeof(buffer));
-+		pr_err("Unknown OID: %s\n", buffer);
-+		return -EBADMSG;
-+
-+	default:
-+		pr_err("Unsupported content type: %u\n", oid);
-+		return -ENOPKG;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Note the digest we're guaranteeing with this certificate
-+ */
-+int mscode_note_digest(void *context, size_t hdrlen,
-+		       unsigned char tag,
-+		       const void *value, size_t vlen)
-+{
-+	struct pefile_context *ctx = context;
-+
-+	ctx->digest = value;
-+	ctx->digest_len = vlen;
-+	return 0;
-+}
 diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
-index 13f3b44..b975918 100644
+index b975918..029a365 100644
 --- a/crypto/asymmetric_keys/verify_pefile.c
 +++ b/crypto/asymmetric_keys/verify_pefile.c
-@@ -245,6 +245,13 @@ int verify_pefile_signature(const void *pebuf, unsigned pelen,
- 		goto error;
- 	}
+@@ -185,6 +185,192 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
+ 	return -ELIBBAD;
+ }
  
-+	ret = mscode_parse(&ctx);
++/*
++ * Compare two sections for canonicalisation.
++ */
++static int pefile_compare_shdrs(const void *a, const void *b)
++{
++	const struct section_header *shdra = a;
++	const struct section_header *shdrb = b;
++	int rc;
++
++	if (shdra->data_addr > shdrb->data_addr)
++		return 1;
++	if (shdrb->data_addr > shdra->data_addr)
++		return -1;
++
++	if (shdra->virtual_address > shdrb->virtual_address)
++		return 1;
++	if (shdrb->virtual_address > shdra->virtual_address)
++		return -1;
++
++	rc = strcmp(shdra->name, shdrb->name);
++	if (rc != 0)
++		return rc;
++
++	if (shdra->virtual_size > shdrb->virtual_size)
++		return 1;
++	if (shdrb->virtual_size > shdra->virtual_size)
++		return -1;
++
++	if (shdra->raw_data_size > shdrb->raw_data_size)
++		return 1;
++	if (shdrb->raw_data_size > shdra->raw_data_size)
++		return -1;
++
++	return 0;
++}
++
++/*
++ * Load the contents of the PE binary into the digest, leaving out the image
++ * checksum and the certificate data block.
++ */
++static int pefile_digest_pe_contents(const void *pebuf, unsigned int pelen,
++				     struct pefile_context *ctx,
++				     struct shash_desc *desc)
++{
++	unsigned *canon, tmp, loop, i, hashed_bytes;
++	int ret;
++
++	/* Digest the header and data directory, but leave out the image
++	 * checksum and the data dirent for the signature.
++	 */
++	ret = crypto_shash_update(desc, pebuf, ctx->image_checksum_offset);
++	if (ret < 0)
++		return ret;
++
++	tmp = ctx->image_checksum_offset + sizeof(uint32_t);
++	ret = crypto_shash_update(desc, pebuf + tmp,
++				  ctx->cert_dirent_offset - tmp);
++	if (ret < 0)
++		return ret;
++
++	tmp = ctx->cert_dirent_offset + sizeof(struct data_dirent);
++	ret = crypto_shash_update(desc, pebuf + tmp, ctx->header_size - tmp);
++	if (ret < 0)
++		return ret;
++
++	canon = kcalloc(ctx->n_sections, sizeof(unsigned), GFP_KERNEL);
++	if (!canon)
++		return -ENOMEM;
++
++	/* We have to canonicalise the section table, so we perform an
++	 * insertion sort.
++	 */
++	canon[0] = 0;
++	for (loop = 1; loop < ctx->n_sections; loop++) {
++		for (i = 0; i < loop; i++) {
++			if (pefile_compare_shdrs(&ctx->secs[canon[i]],
++						 &ctx->secs[loop]) > 0) {
++				memmove(&canon[i + 1], &canon[i],
++					(loop - i) * sizeof(canon[0]));
++				break;
++			}
++		}
++		canon[i] = loop;
++	}
++
++	hashed_bytes = ctx->header_size;
++	for (loop = 0; loop < ctx->n_sections; loop++) {
++		i = canon[loop];
++		if (ctx->secs[i].raw_data_size == 0)
++			continue;
++		ret = crypto_shash_update(desc,
++					  pebuf + ctx->secs[i].data_addr,
++					  ctx->secs[i].raw_data_size);
++		if (ret < 0) {
++			kfree(canon);
++			return ret;
++		}
++		hashed_bytes += ctx->secs[i].raw_data_size;
++	}
++	kfree(canon);
++
++	if (pelen > hashed_bytes) {
++		tmp = hashed_bytes + ctx->certs_size;
++		ret = crypto_shash_update(desc,
++					  pebuf + hashed_bytes,
++					  pelen - tmp);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++/*
++ * Digest the contents of the PE binary, leaving out the image checksum and the
++ * certificate data block.
++ */
++static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
++			    struct pefile_context *ctx)
++{
++	struct crypto_shash *tfm;
++	struct shash_desc *desc;
++	size_t digest_size, desc_size;
++	void *digest;
++	int ret;
++
++	kenter(",%u", ctx->digest_algo);
++
++	/* Allocate the hashing algorithm we're going to need and find out how
++	 * big the hash operational data will be.
++	 */
++	tfm = crypto_alloc_shash(hash_algo_name[ctx->digest_algo], 0, 0);
++	if (IS_ERR(tfm))
++		return (PTR_ERR(tfm) == -ENOENT) ? -ENOPKG : PTR_ERR(tfm);
++
++	desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
++	digest_size = crypto_shash_digestsize(tfm);
++
++	if (digest_size != ctx->digest_len) {
++		pr_debug("Digest size mismatch (%zx != %x)\n",
++			 digest_size, ctx->digest_len);
++		ret = -EBADMSG;
++		goto error_no_desc;
++	}
++	pr_debug("Digest: desc=%zu size=%zu\n", desc_size, digest_size);
++
++	ret = -ENOMEM;
++	desc = kzalloc(desc_size + digest_size, GFP_KERNEL);
++	if (!desc)
++		goto error_no_desc;
++
++	desc->tfm   = tfm;
++	desc->flags = CRYPTO_TFM_REQ_MAY_SLEEP;
++	ret = crypto_shash_init(desc);
 +	if (ret < 0)
 +		goto error;
 +
-+	pr_debug("Digest: %u [%*ph]\n",
-+		 ctx.digest_len, ctx.digest_len, ctx.digest);
++	ret = pefile_digest_pe_contents(pebuf, pelen, ctx, desc);
++	if (ret < 0)
++		goto error;
++
++	digest = (void *)desc + desc_size;
++	ret = crypto_shash_final(desc, digest);
++	if (ret < 0)
++		goto error;
++
++	pr_debug("Digest calc = [%*ph]\n", ctx->digest_len, digest);
++
++	/* Check that the PE file digest matches that in the MSCODE part of the
++	 * PKCS#7 certificate.
++	 */
++	if (memcmp(digest, ctx->digest, ctx->digest_len) != 0) {
++		pr_debug("Digest mismatch\n");
++		ret = -EKEYREJECTED;
++	} else {
++		pr_debug("The digests match!\n");
++	}
++
++error:
++	kfree(desc);
++error_no_desc:
++	crypto_free_shash(tfm);
++	kleave(" = %d", ret);
++	return ret;
++}
++
+ /**
+  * verify_pefile_signature - Verify the signature on a PE binary image
+  * @pebuf: Buffer containing the PE binary image
+@@ -252,6 +438,17 @@ int verify_pefile_signature(const void *pebuf, unsigned pelen,
+ 	pr_debug("Digest: %u [%*ph]\n",
+ 		 ctx.digest_len, ctx.digest_len, ctx.digest);
+ 
++	/* Generate the digest and check against the PKCS7 certificate
++	 * contents.
++	 */
++	ret = pefile_digest_pe(pebuf, pelen, &ctx);
++	if (ret < 0)
++		goto error;
++
++	ret = pkcs7_verify(pkcs7);
++	if (ret < 0)
++		goto error;
 +
  	ret = -ENOANO; // Not yet complete
  
  error:
-diff --git a/crypto/asymmetric_keys/verify_pefile.h b/crypto/asymmetric_keys/verify_pefile.h
-index e165d23..55d5f7e 100644
---- a/crypto/asymmetric_keys/verify_pefile.h
-+++ b/crypto/asymmetric_keys/verify_pefile.h
-@@ -35,3 +35,8 @@ struct pefile_context {
- 	pr_devel("==> %s("FMT")\n", __func__, ##__VA_ARGS__)
- #define kleave(FMT, ...) \
- 	pr_devel("<== %s()"FMT"\n", __func__, ##__VA_ARGS__)
-+
-+/*
-+ * mscode_parser.c
-+ */
-+extern int mscode_parse(struct pefile_context *ctx);
-diff --git a/include/linux/oid_registry.h b/include/linux/oid_registry.h
-index edeff85..c2bbf67 100644
---- a/include/linux/oid_registry.h
-+++ b/include/linux/oid_registry.h
-@@ -52,8 +52,13 @@ enum OID {
- 	OID_md4,			/* 1.2.840.113549.2.4 */
- 	OID_md5,			/* 1.2.840.113549.2.5 */
- 
--	OID_certAuthInfoAccess,		/* 1.3.6.1.5.5.7.1.1 */
-+	/* Microsoft Authenticode & Software Publishing */
-+	OID_msIndirectData,		/* 1.3.6.1.4.1.311.2.1.4 */
-+	OID_msPeImageDataObjId,		/* 1.3.6.1.4.1.311.2.1.15 */
-+	OID_msIndividualSPKeyPurpose,	/* 1.3.6.1.4.1.311.2.1.21 */
- 	OID_msOutlookExpress,		/* 1.3.6.1.4.1.311.16.4 */
-+
-+	OID_certAuthInfoAccess,		/* 1.3.6.1.5.5.7.1.1 */
- 	OID_sha1,			/* 1.3.14.3.2.26 */
- 	OID_sha256,			/* 2.16.840.1.101.3.4.2.1 */
- 
 
 
 _______________________________________________
