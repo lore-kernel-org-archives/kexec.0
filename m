@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pd0-f181.google.com ([209.85.192.181])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4VFn-0004bW-OT
- for kexec@lists.infradead.org; Tue, 08 Jul 2014 13:16:16 +0000
-Subject: [PATCH7/7] PKCS#7: Provide a key type for testing PKCS#7
-From: David Howells <dhowells@redhat.com>
-Date: Tue, 08 Jul 2014 14:15:52 +0100
-Message-ID: <20140708131552.28621.96323.stgit@warthog.procyon.org.uk>
-In-Reply-To: <20140708131504.28621.61165.stgit@warthog.procyon.org.uk>
-References: <20140708131504.28621.61165.stgit@warthog.procyon.org.uk>
+ id 1X4ot8-0007ku-1v
+ for kexec@lists.infradead.org; Wed, 09 Jul 2014 10:14:10 +0000
+Received: by mail-pd0-f181.google.com with SMTP id v10so8790716pde.12
+ for <kexec@lists.infradead.org>; Wed, 09 Jul 2014 03:13:48 -0700 (PDT)
 MIME-Version: 1.0
+Date: Wed, 9 Jul 2014 15:43:47 +0530
+Message-ID: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
+Subject: Kexec on arm64
+From: Arun Chandran <achandran@mvista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,375 +18,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: keyrings@linux-nfs.org
-Cc: linux-security-module@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
+Cc: Geoff Levand <geoff@infradead.org>
 
-Provide a key type for testing the PKCS#7 parser.  It is given a non-detached
-PKCS#7 message as payload:
-
-	keyctl padd pkcs7_test a @s <stuff.pkcs7
-
-The PKCS#7 wrapper is validated against the trusted certificates available and
-then stripped off.  If successful, the key can be read, which will give the
-data content of the PKCS#7 message.
-
-A suitable message can be created by running make on the attached Makefile.
-This will produce a file called stuff.pkcs7 for test loading.  The key3.x509
-file should be put into the kernel source tree before it is built and
-converted to DER form:
-
-	openssl x509 -in .../pkcs7/key3.x509 -outform DER -out key3.x509
-
-###############################################################################
-#
-# Create a pkcs7 message and sign it twice
-#
-#	openssl x509 -text -inform PEM -noout -in key2.x509
-#
-###############################################################################
-stuff.pkcs7: stuff.txt key2.priv key2.x509 key4.priv key4.x509 certs
-	$(RM) $@
-	openssl smime -sign \
-		-signer key2.x509 \
-		-inkey key2.priv \
-		-signer key4.x509 \
-		-inkey key4.priv \
-		-in stuff.txt \
-		-certfile certs \
-		-out $@ -binary -outform DER -nodetach
-	openssl pkcs7 -inform DER -in stuff.pkcs7  -print_certs -noout
-	openssl asn1parse -inform DER -in stuff.pkcs7  -i >out
-
-stuff.txt:
-	echo "The quick red fox jumped over the lazy brown dog" >stuff.txt
-
-certs: key1.x509 key2.x509 key3.x509 key4.x509
-	cat key{1,3}.x509 >$@
-
-###############################################################################
-#
-# Generate a signed key
-#
-#	openssl x509 -text -inform PEM -noout -in key2.x509
-#
-###############################################################################
-key2.x509: key2.x509_unsigned key1.priv key1.x509
-	openssl x509 \
-		-req -in key2.x509_unsigned \
-		-out key2.x509 \
-		-extfile key2.genkey -extensions myexts \
-		-CA key1.x509 \
-		-CAkey key1.priv \
-		-CAcreateserial
-
-key2.priv key2.x509_unsigned: key2.genkey
-	openssl req -new -nodes -utf8 -sha1 -days 36500 \
-		-batch -outform PEM \
-		-config key2.genkey \
-		-keyout key2.priv \
-		-out key2.x509_unsigned
-
-key2.genkey:
-	@echo Generating X.509 key generation config
-	@echo  >$@ "[ req ]"
-	@echo >>$@ "default_bits = 4096"
-	@echo >>$@ "distinguished_name = req_distinguished_name"
-	@echo >>$@ "prompt = no"
-	@echo >>$@ "string_mask = utf8only"
-	@echo >>$@ "x509_extensions = myexts"
-	@echo >>$@
-	@echo >>$@ "[ req_distinguished_name ]"
-	@echo >>$@ "O = Magrathea"
-	@echo >>$@ "CN = PKCS7 key 2"
-	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
-	@echo >>$@
-	@echo >>$@ "[ myexts ]"
-	@echo >>$@ "basicConstraints=critical,CA:FALSE"
-	@echo >>$@ "keyUsage=digitalSignature"
-	@echo >>$@ "subjectKeyIdentifier=hash"
-	@echo >>$@ "authorityKeyIdentifier=keyid"
-
-###############################################################################
-#
-# Generate a couple of signing keys
-#
-#	openssl x509 -text -inform PEM -noout -in key1.x509
-#
-###############################################################################
-key1.x509: key1.x509_unsigned key4.priv key4.x509
-	openssl x509 \
-		-req -in key1.x509_unsigned \
-		-out key1.x509 \
-		-extfile key1.genkey -extensions myexts \
-		-CA key4.x509 \
-		-CAkey key4.priv \
-		-CAcreateserial
-
-key1.priv key1.x509_unsigned: key1.genkey
-	openssl req -new -nodes -utf8 -sha1 -days 36500 \
-		-batch -outform PEM \
-		-config key1.genkey \
-		-keyout key1.priv \
-		-out key1.x509_unsigned
-
-key1.genkey:
-	@echo Generating X.509 key generation config
-	@echo  >$@ "[ req ]"
-	@echo >>$@ "default_bits = 4096"
-	@echo >>$@ "distinguished_name = req_distinguished_name"
-	@echo >>$@ "prompt = no"
-	@echo >>$@ "string_mask = utf8only"
-	@echo >>$@ "x509_extensions = myexts"
-	@echo >>$@
-	@echo >>$@ "[ req_distinguished_name ]"
-	@echo >>$@ "O = Magrathea"
-	@echo >>$@ "CN = PKCS7 key 1"
-	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
-	@echo >>$@
-	@echo >>$@ "[ myexts ]"
-	@echo >>$@ "basicConstraints=critical,CA:TRUE"
-	@echo >>$@ "keyUsage=digitalSignature,keyCertSign"
-	@echo >>$@ "subjectKeyIdentifier=hash"
-	@echo >>$@ "authorityKeyIdentifier=keyid"
-
-###############################################################################
-#
-# Generate a signed key
-#
-#	openssl x509 -text -inform PEM -noout -in key4.x509
-#
-###############################################################################
-key4.x509: key4.x509_unsigned key3.priv key3.x509
-	openssl x509 \
-		-req -in key4.x509_unsigned \
-		-out key4.x509 \
-		-extfile key4.genkey -extensions myexts \
-		-CA key3.x509 \
-		-CAkey key3.priv \
-		-CAcreateserial
-
-key4.priv key4.x509_unsigned: key4.genkey
-	openssl req -new -nodes -utf8 -sha1 -days 36500 \
-		-batch -outform PEM \
-		-config key4.genkey \
-		-keyout key4.priv \
-		-out key4.x509_unsigned
-
-key4.genkey:
-	@echo Generating X.509 key generation config
-	@echo  >$@ "[ req ]"
-	@echo >>$@ "default_bits = 4096"
-	@echo >>$@ "distinguished_name = req_distinguished_name"
-	@echo >>$@ "prompt = no"
-	@echo >>$@ "string_mask = utf8only"
-	@echo >>$@ "x509_extensions = myexts"
-	@echo >>$@
-	@echo >>$@ "[ req_distinguished_name ]"
-	@echo >>$@ "O = Magrathea"
-	@echo >>$@ "CN = PKCS7 key 4"
-	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
-	@echo >>$@
-	@echo >>$@ "[ myexts ]"
-	@echo >>$@ "basicConstraints=critical,CA:TRUE"
-	@echo >>$@ "keyUsage=digitalSignature,keyCertSign"
-	@echo >>$@ "subjectKeyIdentifier=hash"
-	@echo >>$@ "authorityKeyIdentifier=keyid"
-
-###############################################################################
-#
-# Generate a couple of signing keys
-#
-#	openssl x509 -text -inform PEM -noout -in key3.x509
-#
-###############################################################################
-key3.priv key3.x509: key3.genkey
-	openssl req -new -nodes -utf8 -sha1 -days 36500 \
-		-batch -x509 -outform PEM \
-		-config key3.genkey \
-		-keyout key3.priv \
-		-out key3.x509
-
-key3.genkey:
-	@echo Generating X.509 key generation config
-	@echo  >$@ "[ req ]"
-	@echo >>$@ "default_bits = 4096"
-	@echo >>$@ "distinguished_name = req_distinguished_name"
-	@echo >>$@ "prompt = no"
-	@echo >>$@ "string_mask = utf8only"
-	@echo >>$@ "x509_extensions = myexts"
-	@echo >>$@
-	@echo >>$@ "[ req_distinguished_name ]"
-	@echo >>$@ "O = Magrathea"
-	@echo >>$@ "CN = PKCS7 key 3"
-	@echo >>$@ "emailAddress = slartibartfast@magrathea.h2g2"
-	@echo >>$@
-	@echo >>$@ "[ myexts ]"
-	@echo >>$@ "basicConstraints=critical,CA:TRUE"
-	@echo >>$@ "keyUsage=digitalSignature,keyCertSign"
-	@echo >>$@ "subjectKeyIdentifier=hash"
-	@echo >>$@ "authorityKeyIdentifier=keyid"
-
-clean:
-	$(RM) *~
-	$(RM) key1.* key2.* key3.* key4.* stuff.* out certs
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- crypto/asymmetric_keys/Kconfig          |   13 ++++
- crypto/asymmetric_keys/Makefile         |    7 ++
- crypto/asymmetric_keys/pkcs7_key_type.c |   97 +++++++++++++++++++++++++++++++
- 3 files changed, 117 insertions(+)
- create mode 100644 crypto/asymmetric_keys/pkcs7_key_type.c
-
-
-diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
-index a7cec9d..b6df198 100644
---- a/crypto/asymmetric_keys/Kconfig
-+++ b/crypto/asymmetric_keys/Kconfig
-@@ -46,4 +46,17 @@ config PKCS7_MESSAGE_PARSER
- 	  This option provides support for parsing PKCS#7 format messages for
- 	  signature data and provides the ability to verify the signature.
- 
-+config PKCS7_TEST_KEY
-+	tristate "PKCS#7 testing key type"
-+	depends on PKCS7_MESSAGE_PARSER
-+	select SYSTEM_TRUSTED_KEYRING
-+	help
-+	  This option provides a type of key that can be loaded up from a
-+	  PKCS#7 message - provided the message is signed by a trusted key.  If
-+	  it is, the PKCS#7 wrapper is discarded and reading the key returns
-+	  just the payload.  If it isn't, adding the key will fail with an
-+	  error.
-+
-+	  This is intended for testing the PKCS#7 parser.
-+
- endif # ASYMMETRIC_KEY_TYPE
-diff --git a/crypto/asymmetric_keys/Makefile b/crypto/asymmetric_keys/Makefile
-index d63cb43..92d0e9a 100644
---- a/crypto/asymmetric_keys/Makefile
-+++ b/crypto/asymmetric_keys/Makefile
-@@ -40,3 +40,10 @@ $(obj)/pkcs7_parser.o: $(obj)/pkcs7-asn1.h
- $(obj)/pkcs7-asn1.o: $(obj)/pkcs7-asn1.c $(obj)/pkcs7-asn1.h
- 
- clean-files	+= pkcs7-asn1.c pkcs7-asn1.h
-+
-+#
-+# PKCS#7 parser testing key
-+#
-+obj-$(CONFIG_PKCS7_TEST_KEY) += pkcs7_test_key.o
-+pkcs7_test_key-y := \
-+	pkcs7_key_type.o
-diff --git a/crypto/asymmetric_keys/pkcs7_key_type.c b/crypto/asymmetric_keys/pkcs7_key_type.c
-new file mode 100644
-index 0000000..b1797d2
---- /dev/null
-+++ b/crypto/asymmetric_keys/pkcs7_key_type.c
-@@ -0,0 +1,97 @@
-+/* Testing module to load key from trusted PKCS#7 message
-+ *
-+ * Copyright (C) 2014 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public Licence
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the Licence, or (at your option) any later version.
-+ */
-+
-+#define pr_fmt(fmt) "PKCS7key: "fmt
-+#include <linux/key.h>
-+#include <linux/key-type.h>
-+#include <crypto/pkcs7.h>
-+#include <keys/user-type.h>
-+#include <keys/system_keyring.h>
-+#include "pkcs7_parser.h"
-+
-+/*
-+ * Instantiate a PKCS#7 wrapped and validated key.
-+ */
-+int pkcs7_instantiate(struct key *key, struct key_preparsed_payload *prep)
-+{
-+	struct pkcs7_message *pkcs7;
-+	const void *data, *saved_prep_data;
-+	size_t datalen, saved_prep_datalen;
-+	bool trusted;
-+	int ret;
-+
-+	kenter("");
-+
-+	saved_prep_data = prep->data;
-+	saved_prep_datalen = prep->datalen;
-+	pkcs7 = pkcs7_parse_message(saved_prep_data, saved_prep_datalen);
-+	if (IS_ERR(pkcs7)) {
-+		ret = PTR_ERR(pkcs7);
-+		goto error;
-+	}
-+
-+	ret = pkcs7_verify(pkcs7);
-+	if (ret < 0)
-+		goto error_free;
-+
-+	ret = pkcs7_validate_trust(pkcs7, system_trusted_keyring, &trusted);
-+	if (ret < 0)
-+		goto error_free;
-+	if (!trusted)
-+		pr_warn("PKCS#7 message doesn't chain back to a trusted key\n");
-+
-+	ret = pkcs7_get_content_data(pkcs7, &data, &datalen, false);
-+	if (ret < 0)
-+		goto error_free;
-+
-+	prep->data = data;
-+	prep->datalen = datalen;
-+	ret = user_instantiate(key, prep);
-+	prep->data = saved_prep_data;
-+	prep->datalen = saved_prep_datalen;
-+
-+error_free:
-+	pkcs7_free_message(pkcs7);
-+error:
-+	kleave(" = %d", ret);
-+	return ret;
-+}
-+
-+/*
-+ * user defined keys take an arbitrary string as the description and an
-+ * arbitrary blob of data as the payload
-+ */
-+struct key_type key_type_pkcs7 = {
-+	.name			= "pkcs7_test",
-+	.def_lookup_type	= KEYRING_SEARCH_LOOKUP_DIRECT,
-+	.instantiate		= pkcs7_instantiate,
-+	.match			= user_match,
-+	.revoke			= user_revoke,
-+	.destroy		= user_destroy,
-+	.describe		= user_describe,
-+	.read			= user_read,
-+};
-+
-+/*
-+ * Module stuff
-+ */
-+static int __init pkcs7_key_init(void)
-+{
-+	return register_key_type(&key_type_pkcs7);
-+}
-+
-+static void __exit pkcs7_key_cleanup(void)
-+{
-+	unregister_key_type(&key_type_pkcs7);
-+}
-+
-+module_init(pkcs7_key_init);
-+module_exit(pkcs7_key_cleanup);
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksCgpJIGZvdW5kIHRoZSBrZXhlYyBkZXZlbG9wbWVudCBvbiBhcm02NCBoZXJlCmh0dHA6Ly93
+d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2czMjk1NjMuaHRtbAoKV2VudCB0byB0
+cnkgaXQgb24gbXkgYXJtdjggaGFyZHdhcmUgYWZ0ZXIgY2xvbmluZwoKZ2l0Oi8vZ2l0LmxpbmFy
+by5vcmcvcGVvcGxlL2dlb2ZmLmxldmFuZC9saW51eC1rZXhlYy5naXQgYW5kCmh0dHBzOi8vZ2l0
+LmxpbmFyby5vcmcvcGVvcGxlL2dlb2ZmLmxldmFuZC9rZXhlYy10b29scy5naXQKCkRpZAoxKSB+
+L3dvcmsvYWFyY2g2NC1rZXJuZWwva2V4ZWMtdG9vbHMkIC4vYm9vdHN0cmFwCjIpfi93b3JrL2Fh
+cmNoNjQta2VybmVsL2tleGVjLXRvb2xzJCAuL2NvbmZpZ3VyZQotLXByZWZpeD0vdG1wL2tleGVj
+X2luc3RhbGwgLS1ob3N0PWFhcmNoNjQtbGludXgtZ251CjMpIG1ha2UKCmFuZCBnb3QgdGhpcyBl
+cnJvcgoKZWxmLWFybTY0Lm8ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1lbGYtYXJtNjQuYwprZXhl
+Yy9hcmNoL2FybTY0L2tleGVjLWVsZi1hcm02NC5jOiBJbiBmdW5jdGlvbiDigJhlbGZfYXJtNjRf
+cHJvYmXigJk6CmtleGVjL2FyY2gvYXJtNjQva2V4ZWMtZWxmLWFybTY0LmM6MzI6MjQ6IGVycm9y
+OiDigJhFTV9BQVJDSDY04oCZCnVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9u
+KQogIGlmIChlaGRyLmVfbWFjaGluZSAhPSBFTV9BQVJDSDY0KSB7CiAgICAgICAgICAgICAgICAg
+ICAgICAgIF4Ka2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1lbGYtYXJtNjQuYzozMjoyNDogbm90ZTog
+ZWFjaCB1bmRlY2xhcmVkCmlkZW50aWZpZXIgaXMgcmVwb3J0ZWQgb25seSBvbmNlIGZvciBlYWNo
+IGZ1bmN0aW9uIGl0IGFwcGVhcnMgaW4KbWFrZTogKioqIFtrZXhlYy9hcmNoL2FybTY0L2tleGVj
+LWVsZi1hcm02NC5vXSBFcnJvciAxCgpBbSBJIG1pc3Npbmcgc29tZXRoaW5nIGhlcmU/CgotLUFy
+dW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
