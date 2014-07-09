@@ -1,14 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4wYC-0003Gv-TG
- for kexec@lists.infradead.org; Wed, 09 Jul 2014 18:25:05 +0000
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH 1/1] kexec: Verify the signature of signed PE bzImage
-Date: Wed,  9 Jul 2014 14:24:07 -0400
-Message-Id: <1404930247-7546-2-git-send-email-vgoyal@redhat.com>
-In-Reply-To: <1404930247-7546-1-git-send-email-vgoyal@redhat.com>
-References: <1404930247-7546-1-git-send-email-vgoyal@redhat.com>
+Message-ID: <1404930834.26155.56.camel@smoke>
+Subject: Re: Kexec on arm64
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 09 Jul 2014 11:33:54 -0700
+In-Reply-To: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
+References: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,192 +14,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: mjg59@srcf.ucam.org, dhowells@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Arun Chandran <achandran@mvista.com>
+Cc: kexec@lists.infradead.org
 
-Well all the hard work is done in previous patches. Now bzImage loader
-has just call into that code and verify whether bzImage signature are
-valid or not.
-
-Also create two config options. First one is CONFIG_KEXEC_VERIFY_SIG.
-This option enforces that kernel has to be validly signed otherwise
-kernel load will fail. If this option is not set, no signature verification
-will be done. Only exception will be when secureboot is enabled. In that
-case signature verification should be automatically enforced when secureboot
-is enabled. But that will happen when secureboot patches are merged.
-
-Second config option is CONFIG_KEXEC_BZIMAGE_VERIFY_SIG. This option
-enables signature verification support on bzImage. If this option is
-not set and previous one is set, kernel image loading will fail because
-kernel does not have support to verify signature of bzImage.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- arch/x86/Kconfig                   | 22 ++++++++++++++++++++++
- arch/x86/kernel/kexec-bzimage64.c  | 21 +++++++++++++++++++++
- arch/x86/kernel/machine_kexec_64.c | 11 +++++++++++
- include/linux/kexec.h              |  3 +++
- kernel/kexec.c                     | 15 +++++++++++++++
- 5 files changed, 72 insertions(+)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 2cee2a6..1c1d3a9 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1593,6 +1593,28 @@ config KEXEC
- 	  interface is strongly in flux, so no good recommendation can be
- 	  made.
- 
-+config KEXEC_VERIFY_SIG
-+	bool "Verify kernel signature during kexec_file_load() syscall"
-+	depends on KEXEC
-+	---help---
-+	  This option makes kernel signature verification mandatory for
-+	  kexec_file_load() syscall. If kernel is signature can not be
-+	  verified, kexec_file_load() will fail.
-+
-+	  This option enforces signature verification at generic level.
-+	  One needs to enable signature verification for type of kernel
-+	  image being loaded to make sure it works. For example, enable
-+	  bzImage signature verification option to be able to load and
-+	  verify signatures of bzImage. Otherwise kernel loading will fail.
-+
-+config KEXEC_BZIMAGE_VERIFY_SIG
-+	bool "Enable bzImage signature verification support"
-+	depends on KEXEC_VERIFY_SIG
-+	depends on SIGNED_PE_FILE_VERIFICATION
-+	select SYSTEM_TRUSTED_KEYRING
-+	---help---
-+	  Enable bzImage signature verification support.
-+
- config CRASH_DUMP
- 	bool "kernel crash dumps"
- 	depends on X86_64 || (X86_32 && HIGHMEM)
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 623e6c5..9642b9b 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -19,6 +19,8 @@
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/efi.h>
-+#include <linux/verify_pefile.h>
-+#include <keys/system_keyring.h>
- 
- #include <asm/bootparam.h>
- #include <asm/setup.h>
-@@ -525,8 +527,27 @@ int bzImage64_cleanup(void *loader_data)
- 	return 0;
- }
- 
-+#ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
-+int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
-+{
-+	bool trusted;
-+	int ret;
-+
-+	ret = verify_pefile_signature(kernel, kernel_len,
-+				      system_trusted_keyring, &trusted);
-+	if (ret < 0)
-+		return ret;
-+	if (!trusted)
-+		return -EKEYREJECTED;
-+	return 0;
-+}
-+#endif
-+
- struct kexec_file_ops kexec_bzImage64_ops = {
- 	.probe = bzImage64_probe,
- 	.load = bzImage64_load,
- 	.cleanup = bzImage64_cleanup,
-+#ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
-+	.verify_sig = bzImage64_verify_sig,
-+#endif
- };
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 9330434..8b04018 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -372,6 +372,17 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return image->fops->cleanup(image->image_loader_data);
- }
- 
-+int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
-+				 unsigned long kernel_len)
-+{
-+	if (!image->fops || !image->fops->verify_sig) {
-+		pr_debug("kernel loader does not support signature verification.");
-+		return -EKEYREJECTED;
-+	}
-+
-+	return image->fops->verify_sig(kernel, kernel_len);
-+}
-+
- /*
-  * Apply purgatory relocations.
-  *
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 9481703..4b2a0e1 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -191,11 +191,14 @@ typedef void *(kexec_load_t)(struct kimage *image, char *kernel_buf,
- 			     unsigned long initrd_len, char *cmdline,
- 			     unsigned long cmdline_len);
- typedef int (kexec_cleanup_t)(void *loader_data);
-+typedef int (kexec_verify_sig_t)(const char *kernel_buf,
-+				 unsigned long kernel_len);
- 
- struct kexec_file_ops {
- 	kexec_probe_t *probe;
- 	kexec_load_t *load;
- 	kexec_cleanup_t *cleanup;
-+	kexec_verify_sig_t *verify_sig;
- };
- 
- /* kexec interface functions */
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 3cd56af..564432a 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -415,6 +415,12 @@ void __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
- {
- }
- 
-+int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-+					unsigned long buf_len)
-+{
-+	return -EKEYREJECTED;
-+}
-+
- /* Apply relocations of type RELA */
- int __weak
- arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-@@ -493,6 +499,15 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	if (ret)
- 		goto out;
- 
-+#ifdef CONFIG_KEXEC_VERIFY_SIG
-+	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
-+					   image->kernel_buf_len);
-+	if (ret) {
-+		pr_debug("kernel signature verification failed.\n");
-+		goto out;
-+	}
-+	pr_debug("kernel signature verification successful.\n");
-+#endif
- 	/* It is possible that there no initramfs is being loaded */
- 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
- 		ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
--- 
-1.9.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgQXJ1biwKCk9uIFdlZCwgMjAxNC0wNy0wOSBhdCAxNTo0MyArMDUzMCwgQXJ1biBDaGFuZHJh
+biB3cm90ZToKPiBhbmQgZ290IHRoaXMgZXJyb3IKPiAKPiBlbGYtYXJtNjQubyBrZXhlYy9hcmNo
+L2FybTY0L2tleGVjLWVsZi1hcm02NC5jCj4ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1lbGYtYXJt
+NjQuYzogSW4gZnVuY3Rpb24g4oCYZWxmX2FybTY0X3Byb2Jl4oCZOgo+IGtleGVjL2FyY2gvYXJt
+NjQva2V4ZWMtZWxmLWFybTY0LmM6MzI6MjQ6IGVycm9yOiDigJhFTV9BQVJDSDY04oCZCj4gdW5k
+ZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRoaXMgZnVuY3Rpb24pCj4gICBpZiAoZWhkci5lX21hY2hp
+bmUgIT0gRU1fQUFSQ0g2NCkgewo+ICAgICAgICAgICAgICAgICAgICAgICAgIF4KPiBrZXhlYy9h
+cmNoL2FybTY0L2tleGVjLWVsZi1hcm02NC5jOjMyOjI0OiBub3RlOiBlYWNoIHVuZGVjbGFyZWQK
+PiBpZGVudGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZSBmb3IgZWFjaCBmdW5jdGlvbiBpdCBh
+cHBlYXJzIGluCj4gbWFrZTogKioqIFtrZXhlYy9hcmNoL2FybTY0L2tleGVjLWVsZi1hcm02NC5v
+XSBFcnJvciAxCj4gCj4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJlPwoKWW91ciB0b29sY2hh
+aW4gaXMgb2xkLCBvciBidWlsdCBpbmNvcnJlY3RseS4gIFRyeSB0byB1cGdyYWRlCml0LiAgWW91
+IG5lZWQgaGVhZGVycyB0aGF0IGRlZmluZSBFTV9BQVJDSDY0LgoKQXMgYSB3b3JrLWFyb3VuZCwg
+bWF5YmUgeW91IGNhbiBkbyBzb21ldGhpbmcgbGlrZToKCiAgbWFrZSBDRkxBR1M9LURFTV9BQVJD
+SDY0PTE4MycKCi1HZW9mZgoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
