@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4tcQ-00017Z-Ix
- for kexec@lists.infradead.org; Wed, 09 Jul 2014 15:17:16 +0000
-Subject: [PATCH13/17] pefile: Parse the presumed PKCS#7 content of the
- certificate blob
+ id 1X4tca-0001LT-Ix
+ for kexec@lists.infradead.org; Wed, 09 Jul 2014 15:17:25 +0000
+Subject: [PATCH15/17] pefile: Handle pesign using the wrong OID
 From: David Howells <dhowells@redhat.com>
-Date: Wed, 09 Jul 2014 16:16:49 +0100
-Message-ID: <20140709151649.23074.1148.stgit@warthog.procyon.org.uk>
+Date: Wed, 09 Jul 2014 16:17:02 +0100
+Message-ID: <20140709151702.23074.15597.stgit@warthog.procyon.org.uk>
 In-Reply-To: <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
 References: <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
@@ -26,55 +25,36 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: keyrings@linux-nfs.org
 Cc: linux-security-module@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Parse the content of the certificate blob, presuming it to be PKCS#7 format.
+The pesign utility had a bug where it was using OID_msIndividualSPKeyPurpose
+instead of OID_msPeImageDataObjId - so allow both OIDs.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 Acked-by: Vivek Goyal <vgoyal@redhat.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
 
- crypto/asymmetric_keys/verify_pefile.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ crypto/asymmetric_keys/mscode_parser.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 
-diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
-index 2f5268c..13f3b44 100644
---- a/crypto/asymmetric_keys/verify_pefile.c
-+++ b/crypto/asymmetric_keys/verify_pefile.c
-@@ -216,7 +216,10 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
- int verify_pefile_signature(const void *pebuf, unsigned pelen,
- 			    struct key *trusted_keyring, bool *_trusted)
- {
-+	struct pkcs7_message *pkcs7;
- 	struct pefile_context ctx;
-+	const void *data;
-+	size_t datalen;
- 	int ret;
+diff --git a/crypto/asymmetric_keys/mscode_parser.c b/crypto/asymmetric_keys/mscode_parser.c
+index 09336c3..214a992 100644
+--- a/crypto/asymmetric_keys/mscode_parser.c
++++ b/crypto/asymmetric_keys/mscode_parser.c
+@@ -58,7 +58,13 @@ int mscode_note_content_type(void *context, size_t hdrlen,
+ 		return -EBADMSG;
+ 	}
  
- 	kenter("");
-@@ -230,5 +233,21 @@ int verify_pefile_signature(const void *pebuf, unsigned pelen,
- 	if (ret < 0)
- 		return ret;
- 
--	return -ENOANO; // Not yet complete
-+	pkcs7 = pkcs7_parse_message(pebuf + ctx.sig_offset, ctx.sig_len);
-+	if (IS_ERR(pkcs7))
-+		return PTR_ERR(pkcs7);
-+	ctx.pkcs7 = pkcs7;
-+
-+	ret = pkcs7_get_content_data(ctx.pkcs7, &data, &datalen, false);
-+	if (ret < 0 || datalen == 0) {
-+		pr_devel("PKCS#7 message does not contain data\n");
-+		ret = -EBADMSG;
-+		goto error;
-+	}
-+
-+	ret = -ENOANO; // Not yet complete
-+
-+error:
-+	pkcs7_free_message(ctx.pkcs7);
-+	return ret;
- }
+-	if (oid != OID_msIndividualSPKeyPurpose) {
++	/*
++	 * pesign utility had a bug where it was putting
++	 * OID_msIndividualSPKeyPurpose instead of OID_msPeImageDataObjId
++	 * So allow both OIDs.
++	 */
++	if (oid != OID_msPeImageDataObjId &&
++	    oid != OID_msIndividualSPKeyPurpose) {
+ 		pr_err("Unexpected content type OID %u\n", oid);
+ 		return -EBADMSG;
+ 	}
 
 
 _______________________________________________
