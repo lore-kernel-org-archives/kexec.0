@@ -1,15 +1,17 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-qg0-x22d.google.com ([2607:f8b0:400d:c04::22d])
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mail-ve0-f179.google.com ([209.85.128.179])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4rFp-0007uv-9v
- for kexec@lists.infradead.org; Wed, 09 Jul 2014 12:45:45 +0000
-Received: by mail-qg0-f45.google.com with SMTP id a108so6232890qge.32
- for <kexec@lists.infradead.org>; Wed, 09 Jul 2014 05:45:23 -0700 (PDT)
+ id 1X4sOx-00021I-TD
+ for kexec@lists.infradead.org; Wed, 09 Jul 2014 13:59:16 +0000
+Received: by mail-ve0-f179.google.com with SMTP id jz11so935556veb.24
+ for <kexec@lists.infradead.org>; Wed, 09 Jul 2014 06:58:53 -0700 (PDT)
 MIME-Version: 1.0
-Date: Wed, 9 Jul 2014 18:15:23 +0530
-Message-ID: <CAOdCjQt73aTLUpGzgQMuSs_aO4RnurArWQoTAFqymBMKTsHe0g@mail.gmail.com>
-Subject: kexec for aarch64_be
-From: Pankaj Pandey <pankaj.embedded@gmail.com>
+In-Reply-To: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
+References: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
+Date: Wed, 9 Jul 2014 19:28:53 +0530
+Message-ID: <CAFdej03ziTTA5QGFjzKd6Kc4skWNTr5RECy69qtnQGVtE6ks3w@mail.gmail.com>
+Subject: Re: Kexec on arm64
+From: Arun Chandran <achandran@mvista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,25 +20,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec <kexec@lists.infradead.org>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Geoff Levand <geoff@infradead.org>
 
-Hi,
-
-I have found the support for aarch64_be in kexec-tool.git under "master" branch.
-
-During executing kexec for aarch64_be I am facing "Invalid memory
-segment 0xffffffc080080000 - 0xffffffc080a8efff"  error.
-
-Any tips or pointers would  be highly appreciated. Thanks in advance !!
-
-Regards,
-Pankaj Pandey
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBKdWwgOSwgMjAxNCBhdCAzOjQzIFBNLCBBcnVuIENoYW5kcmFuIDxhY2hhbmRyYW5A
+bXZpc3RhLmNvbT4gd3JvdGU6Cj4gSGksCj4KPiBJIGZvdW5kIHRoZSBrZXhlYyBkZXZlbG9wbWVu
+dCBvbiBhcm02NCBoZXJlCj4gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVs
+L21zZzMyOTU2My5odG1sCj4KPiBXZW50IHRvIHRyeSBpdCBvbiBteSBhcm12OCBoYXJkd2FyZSBh
+ZnRlciBjbG9uaW5nCj4KPiBnaXQ6Ly9naXQubGluYXJvLm9yZy9wZW9wbGUvZ2VvZmYubGV2YW5k
+L2xpbnV4LWtleGVjLmdpdCBhbmQKPiBodHRwczovL2dpdC5saW5hcm8ub3JnL3Blb3BsZS9nZW9m
+Zi5sZXZhbmQva2V4ZWMtdG9vbHMuZ2l0Cj4KPiBEaWQKPiAxKSB+L3dvcmsvYWFyY2g2NC1rZXJu
+ZWwva2V4ZWMtdG9vbHMkIC4vYm9vdHN0cmFwCj4gMil+L3dvcmsvYWFyY2g2NC1rZXJuZWwva2V4
+ZWMtdG9vbHMkIC4vY29uZmlndXJlCj4gLS1wcmVmaXg9L3RtcC9rZXhlY19pbnN0YWxsIC0taG9z
+dD1hYXJjaDY0LWxpbnV4LWdudQo+IDMpIG1ha2UKPgo+IGFuZCBnb3QgdGhpcyBlcnJvcgo+Cj4g
+ZWxmLWFybTY0Lm8ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1lbGYtYXJtNjQuYwo+IGtleGVjL2Fy
+Y2gvYXJtNjQva2V4ZWMtZWxmLWFybTY0LmM6IEluIGZ1bmN0aW9uIOKAmGVsZl9hcm02NF9wcm9i
+ZeKAmToKPiBrZXhlYy9hcmNoL2FybTY0L2tleGVjLWVsZi1hcm02NC5jOjMyOjI0OiBlcnJvcjog
+4oCYRU1fQUFSQ0g2NOKAmQo+IHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9u
+KQo+ICAgaWYgKGVoZHIuZV9tYWNoaW5lICE9IEVNX0FBUkNINjQpIHsKPiAgICAgICAgICAgICAg
+ICAgICAgICAgICBeCj4ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1lbGYtYXJtNjQuYzozMjoyNDog
+bm90ZTogZWFjaCB1bmRlY2xhcmVkCj4gaWRlbnRpZmllciBpcyByZXBvcnRlZCBvbmx5IG9uY2Ug
+Zm9yIGVhY2ggZnVuY3Rpb24gaXQgYXBwZWFycyBpbgo+IG1ha2U6ICoqKiBba2V4ZWMvYXJjaC9h
+cm02NC9rZXhlYy1lbGYtYXJtNjQub10gRXJyb3IgMQo+CgpJIGNvbXBpbGVkIGtleGVjLXRvb2xz
+KApodHRwczovL2dpdC5saW5hcm8ub3JnL3Blb3BsZS9nZW9mZi5sZXZhbmQva2V4ZWMtdG9vbHMu
+Z2l0KQpieSBjb21tZW50aW5nIHRoYXQgIm1hY2hpbmUgY2hlY2siCgotLS0gYS9rZXhlYy9hcmNo
+L2FybTY0L2tleGVjLWVsZi1hcm02NC5jCisrKyBiL2tleGVjL2FyY2gvYXJtNjQva2V4ZWMtZWxm
+LWFybTY0LmMKQEAgLTI4LDEyICsyOCwxMyBAQCBpbnQgZWxmX2FybTY0X3Byb2JlKGNvbnN0IGNo
+YXIgKmtlcm5lbF9idWYsIG9mZl90Cmtlcm5lbF9zaXplKQogICAgICAgICAgICAgICAgZGJncHJp
+bnRmKCJOb3QgYW4gRUxGIGV4ZWN1dGFibGUuXG4iKTsKICAgICAgICAgICAgICAgIGdvdG8gb25f
+ZXhpdDsKICAgICAgICB9Ci0KKyNpZiAwCiAgICAgICAgaWYgKGVoZHIuZV9tYWNoaW5lICE9IEVN
+X0FBUkNINjQpIHsKICAgICAgICAgICAgICAgIGRiZ3ByaW50ZigiTm90IGFuIEFBUkNINjQgZXhl
+Y3V0YWJsZS5cbiIpOwogICAgICAgICAgICAgICAgcmVzdWx0ID0gLUVJTlZBTDsKICAgICAgICAg
+ICAgICAgIGdvdG8gb25fZXhpdDsKICAgICAgICB9CisjZW5kaWYKCiAgICAgICAgcmVzdWx0ID0g
+MDsKCgpBZnRlciBjb3B5aW5nIHRoZSByZXN1bHRpbmcgYmluYXJpZXMgdG8gbXkgdGFyZ2V0OyBJ
+IHRyaWVkIGxvYWRpbmcgdGhlCmtlcm5lbCBJbWFnZQoKIyBrZXhlYyAtbCAvSW1hZ2UKTW9kaWZp
+ZWQgY21kbGluZTogcm9vdD0vZGV2L25mcwpVbmFibGUgdG8gZmluZCAvcHJvYy9kZXZpY2UtdHJl
+ZS8vY2hvc2VuL2xpbnV4LHN0ZG91dC1wYXRoLCBwcmludGluZwpmcm9tIHB1cmdhdG9yeSBpcyBk
+aWFibGVkCkNhbm5vdCBkZXRlcm1pbmUgdGhlIGZpbGUgdHlwZSBvZiAvSW1hZ2UKCkl0IGZhaWxl
+ZCB0byBsb2FkIHRoZSBrZXJuZWwgSW1hZ2UuIEFueSBwb2ludGVycz8KCi0tQXJ1bgoKCgoKCgoK
+CgoKCgoKCj4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJlPwo+Cj4gLS1BcnVuCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
+c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
