@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4ukQ-0003dY-TQ
- for kexec@lists.infradead.org; Wed, 09 Jul 2014 16:29:35 +0000
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20140709160349.GA5292@pd.tnic>
-References: <20140709160349.GA5292@pd.tnic>
- <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
-Subject: Re: [PATCH 00/17] KEYS: PKCS#7 and PE file signature checking for
- kexec
-MIME-Version: 1.0
-Content-ID: <7856.1404923329.1@warthog.procyon.org.uk>
-Date: Wed, 09 Jul 2014 17:28:49 +0100
-Message-ID: <7857.1404923329@warthog.procyon.org.uk>
+ id 1X4wYC-0003FC-TE
+ for kexec@lists.infradead.org; Wed, 09 Jul 2014 18:25:05 +0000
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: [PATCH 0/1] kexec: verify bzImage signature
+Date: Wed,  9 Jul 2014 14:24:06 -0400
+Message-Id: <1404930247-7546-1-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,55 +15,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: keyrings@linux-nfs.org, x86-ml <x86@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: mjg59@srcf.ucam.org, dhowells@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-Borislav Petkov <bp@alien8.de> wrote:
+Hi,
 
-> let me see if I get this straight:
-> 
-> this current submission is supposed to replace
-> 
-> http://lkml.kernel.org/r/20140708131504.28621.61165.stgit@warthog.procyon.org.uk
+This is the final piece of the puzzle of verifying kernel image signature
+during kexec_file_load() syscall.
 
-Yes.  It's an extension of that.  Plus I did it wrong and managed to lose the
-actual first patch, I realise.
+It relies on following two patch series.
 
-> and Vivek's one:
-> 
-> http://lkml.kernel.org/r/1404421641-12691-1-git-send-email-vgoyal@redhat.com
-> 
-> (which added those parsers to arch/x86/kernel/ - not a good place anyway.)
+- kexec_file_load() syscall patches
 
-Yep.
+  https://lkml.org/lkml/2014/6/26/497 
 
-> The kexec bits with the sig verif will come ontop, it seems. What's the
-> story guys?
+  This patch series is now available in -mm tree.
 
-Here's an example of what I think it could look like:
+- PE File parsing and signature verification
 
-	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-modsign.git/log/?h=kexec-pefile
+  http://thread.gmane.org/gmane.linux.kernel/1742967	 
 
-I did the following:
+  This patch series is also available here.
 
- (1) Rebased all but the last of Vivek's patches onto the same base as my
-     pkcs7 and pefile patches.
+  http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-modsign.git/log/?h=pefile
 
- (2) Substituted on of Andrew Morton's patches for one of Vivek's.
+This patch calls into PE file routines to verify signature of bzImage. If
+signature are valid, kexec_file_load() succeeds otherwise it fails.
 
- (3) Stacked a merge of my stuff on top of Vivek's.
+Two new config options have been intorduced. First one is
+CONFIG_KEXEC_VERIFY_SIG. This option enforces that kernel has to be
+validly signed otherwise kernel load will fail. If this option is not
+set, no signature verification will be done. Only exception will be
+when secureboot is enabled. In that case signature verification should
+be automatically enforced when secureboot is enabled. But that will
+happen when secureboot patches are merged.
 
- (4) Stacked Vivek's final patch on top of that and fixed it to work with my
-     changed stuff.
+Second config option is CONFIG_KEXEC_BZIMAGE_VERIFY_SIG. This option
+enables signature verification support on bzImage. If this option is
+not set and previous one is set, kernel image loading will fail because
+kernel does not have support to verify signature of bzImage.
 
-I'm leaving that to Vivek as to when he wants to push that out, though - and
-whether or not he wants to push from my tree or his own.
+I tested these patches with both "pesign" and "sbsign" signed bzImages.
 
-David
+I used signing_key.priv key and signing_key.x509 cert for signing as
+generated during kernel build process (if module signing is enabled).
+
+Used following method to sign bzImage.
+
+pesign
+======
+- Convert DER format cert to PEM format cert
+openssl x509 -in signing_key.x509 -inform DER -out signing_key.x509.PEM -outform
+PEM
+
+- Generate a .p12 file from existing cert and private key file
+openssl pkcs12 -export -out kernel-key.p12 -inkey signing_key.priv -in
+signing_key.x509.PEM
+
+- Import .p12 file into pesign db
+pk12util -i /tmp/kernel-key.p12 -d /etc/pki/pesign
+
+- Sign bzImage
+pesign -i /boot/vmlinuz-3.16.0-rc3+ -o /boot/vmlinuz-3.16.0-rc3+.signed.pesign
+-c "Glacier signing key - Magrathea" -s
+
+sbsign
+======
+sbsign --key signing_key.priv --cert signing_key.x509.PEM --output
+/boot/vmlinuz-3.16.0-rc3+.signed.sbsign /boot/vmlinuz-3.16.0-rc3+
+
+Thanks
+Vivek
+
+Vivek Goyal (1):
+  kexec: Verify the signature of signed PE bzImage
+
+ arch/x86/Kconfig                   | 22 ++++++++++++++++++++++
+ arch/x86/kernel/kexec-bzimage64.c  | 21 +++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_64.c | 11 +++++++++++
+ include/linux/kexec.h              |  3 +++
+ kernel/kexec.c                     | 15 +++++++++++++++
+ 5 files changed, 72 insertions(+)
+
+-- 
+1.9.0
+
 
 _______________________________________________
 kexec mailing list
