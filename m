@@ -1,11 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1404931759.26155.70.camel@smoke>
-Subject: Re: Kexec on arm64
+Message-ID: <1404932264.26155.75.camel@smoke>
+Subject: Re: kexec for aarch64_be
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 09 Jul 2014 11:49:19 -0700
-In-Reply-To: <CAFdej03ziTTA5QGFjzKd6Kc4skWNTr5RECy69qtnQGVtE6ks3w@mail.gmail.com>
-References: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
- <CAFdej03ziTTA5QGFjzKd6Kc4skWNTr5RECy69qtnQGVtE6ks3w@mail.gmail.com>
+Date: Wed, 09 Jul 2014 11:57:44 -0700
+In-Reply-To: <CAOdCjQt73aTLUpGzgQMuSs_aO4RnurArWQoTAFqymBMKTsHe0g@mail.gmail.com>
+References: <CAOdCjQt73aTLUpGzgQMuSs_aO4RnurArWQoTAFqymBMKTsHe0g@mail.gmail.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,39 +18,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arun Chandran <achandran@mvista.com>
-Cc: kexec@lists.infradead.org
+To: Pankaj Pandey <pankaj.embedded@gmail.com>
+Cc: kexec <kexec@lists.infradead.org>
 
-Hi Arun,
+Hi Pankaj,
 
-On Wed, 2014-07-09 at 19:28 +0530, Arun Chandran wrote:
-> After copying the resulting binaries to my target; I tried loading the
-> kernel Image
+On Wed, 2014-07-09 at 18:15 +0530, Pankaj Pandey wrote:
+> I have found the support for aarch64_be in kexec-tool.git under "master" branch.
 > 
-> # kexec -l /Image
-> Modified cmdline: root=/dev/nfs
-> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
-> from purgatory is diabled
-> Cannot determine the file type of /Image
+> During executing kexec for aarch64_be I am facing "Invalid memory
+> segment 0xffffffc080080000 - 0xffffffc080a8efff"  error.
 > 
-> It failed to load the kernel Image. Any pointers?
+> Any tips or pointers would  be highly appreciated. Thanks in advance !!
 
-My kexec-tools [1] only supports loading of arm64 elf files, so
-vmlinux, or a stripped version of it.  Image is a raw binary, and
-is not yet supported.
-
-Maybe something like this is what you need:
-
- ./kexec -d --load /boot/vmlinux.strip --append="console=ttyAMA0 earlyprintk=pl011,0x1c090000 root=/dev/vda rw --verbose" --dtb=/boot/fdt.dtb
- ./kexec -d -e
-
-Also, my current master branch will only work reliably with PSCI
-boot.  Spin-table boot has a bug and will be unstable for the next
-few days.  Spin-table will re-boot, but only the primary cpu will
-come up.
-
-[1] https://git.linaro.org/people/geoff.levand/kexec-tools.git
- https://git.linaro.org/people/geoff.levand/linux-kexec.git
+Please run kexec with the -d (debug) option and post all the output
+including the kexec command line.
 
 -Geoff
 
