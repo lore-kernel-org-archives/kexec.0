@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ve0-f179.google.com ([209.85.128.179])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X4sOx-00021I-TD
- for kexec@lists.infradead.org; Wed, 09 Jul 2014 13:59:16 +0000
-Received: by mail-ve0-f179.google.com with SMTP id jz11so935556veb.24
- for <kexec@lists.infradead.org>; Wed, 09 Jul 2014 06:58:53 -0700 (PDT)
+ id 1X4tbA-00077D-RB
+ for kexec@lists.infradead.org; Wed, 09 Jul 2014 15:15:59 +0000
+Subject: [PATCH 00/17] KEYS: PKCS#7 and PE file signature checking for kexec
+From: David Howells <dhowells@redhat.com>
+Date: Wed, 09 Jul 2014 16:15:25 +0100
+Message-ID: <20140709151525.23074.32315.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
-References: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
-Date: Wed, 9 Jul 2014 19:28:53 +0530
-Message-ID: <CAFdej03ziTTA5QGFjzKd6Kc4skWNTr5RECy69qtnQGVtE6ks3w@mail.gmail.com>
-Subject: Re: Kexec on arm64
-From: Arun Chandran <achandran@mvista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,49 +16,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Geoff Levand <geoff@infradead.org>
+To: keyrings@linux-nfs.org
+Cc: linux-security-module@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-T24gV2VkLCBKdWwgOSwgMjAxNCBhdCAzOjQzIFBNLCBBcnVuIENoYW5kcmFuIDxhY2hhbmRyYW5A
-bXZpc3RhLmNvbT4gd3JvdGU6Cj4gSGksCj4KPiBJIGZvdW5kIHRoZSBrZXhlYyBkZXZlbG9wbWVu
-dCBvbiBhcm02NCBoZXJlCj4gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVs
-L21zZzMyOTU2My5odG1sCj4KPiBXZW50IHRvIHRyeSBpdCBvbiBteSBhcm12OCBoYXJkd2FyZSBh
-ZnRlciBjbG9uaW5nCj4KPiBnaXQ6Ly9naXQubGluYXJvLm9yZy9wZW9wbGUvZ2VvZmYubGV2YW5k
-L2xpbnV4LWtleGVjLmdpdCBhbmQKPiBodHRwczovL2dpdC5saW5hcm8ub3JnL3Blb3BsZS9nZW9m
-Zi5sZXZhbmQva2V4ZWMtdG9vbHMuZ2l0Cj4KPiBEaWQKPiAxKSB+L3dvcmsvYWFyY2g2NC1rZXJu
-ZWwva2V4ZWMtdG9vbHMkIC4vYm9vdHN0cmFwCj4gMil+L3dvcmsvYWFyY2g2NC1rZXJuZWwva2V4
-ZWMtdG9vbHMkIC4vY29uZmlndXJlCj4gLS1wcmVmaXg9L3RtcC9rZXhlY19pbnN0YWxsIC0taG9z
-dD1hYXJjaDY0LWxpbnV4LWdudQo+IDMpIG1ha2UKPgo+IGFuZCBnb3QgdGhpcyBlcnJvcgo+Cj4g
-ZWxmLWFybTY0Lm8ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1lbGYtYXJtNjQuYwo+IGtleGVjL2Fy
-Y2gvYXJtNjQva2V4ZWMtZWxmLWFybTY0LmM6IEluIGZ1bmN0aW9uIOKAmGVsZl9hcm02NF9wcm9i
-ZeKAmToKPiBrZXhlYy9hcmNoL2FybTY0L2tleGVjLWVsZi1hcm02NC5jOjMyOjI0OiBlcnJvcjog
-4oCYRU1fQUFSQ0g2NOKAmQo+IHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9u
-KQo+ICAgaWYgKGVoZHIuZV9tYWNoaW5lICE9IEVNX0FBUkNINjQpIHsKPiAgICAgICAgICAgICAg
-ICAgICAgICAgICBeCj4ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1lbGYtYXJtNjQuYzozMjoyNDog
-bm90ZTogZWFjaCB1bmRlY2xhcmVkCj4gaWRlbnRpZmllciBpcyByZXBvcnRlZCBvbmx5IG9uY2Ug
-Zm9yIGVhY2ggZnVuY3Rpb24gaXQgYXBwZWFycyBpbgo+IG1ha2U6ICoqKiBba2V4ZWMvYXJjaC9h
-cm02NC9rZXhlYy1lbGYtYXJtNjQub10gRXJyb3IgMQo+CgpJIGNvbXBpbGVkIGtleGVjLXRvb2xz
-KApodHRwczovL2dpdC5saW5hcm8ub3JnL3Blb3BsZS9nZW9mZi5sZXZhbmQva2V4ZWMtdG9vbHMu
-Z2l0KQpieSBjb21tZW50aW5nIHRoYXQgIm1hY2hpbmUgY2hlY2siCgotLS0gYS9rZXhlYy9hcmNo
-L2FybTY0L2tleGVjLWVsZi1hcm02NC5jCisrKyBiL2tleGVjL2FyY2gvYXJtNjQva2V4ZWMtZWxm
-LWFybTY0LmMKQEAgLTI4LDEyICsyOCwxMyBAQCBpbnQgZWxmX2FybTY0X3Byb2JlKGNvbnN0IGNo
-YXIgKmtlcm5lbF9idWYsIG9mZl90Cmtlcm5lbF9zaXplKQogICAgICAgICAgICAgICAgZGJncHJp
-bnRmKCJOb3QgYW4gRUxGIGV4ZWN1dGFibGUuXG4iKTsKICAgICAgICAgICAgICAgIGdvdG8gb25f
-ZXhpdDsKICAgICAgICB9Ci0KKyNpZiAwCiAgICAgICAgaWYgKGVoZHIuZV9tYWNoaW5lICE9IEVN
-X0FBUkNINjQpIHsKICAgICAgICAgICAgICAgIGRiZ3ByaW50ZigiTm90IGFuIEFBUkNINjQgZXhl
-Y3V0YWJsZS5cbiIpOwogICAgICAgICAgICAgICAgcmVzdWx0ID0gLUVJTlZBTDsKICAgICAgICAg
-ICAgICAgIGdvdG8gb25fZXhpdDsKICAgICAgICB9CisjZW5kaWYKCiAgICAgICAgcmVzdWx0ID0g
-MDsKCgpBZnRlciBjb3B5aW5nIHRoZSByZXN1bHRpbmcgYmluYXJpZXMgdG8gbXkgdGFyZ2V0OyBJ
-IHRyaWVkIGxvYWRpbmcgdGhlCmtlcm5lbCBJbWFnZQoKIyBrZXhlYyAtbCAvSW1hZ2UKTW9kaWZp
-ZWQgY21kbGluZTogcm9vdD0vZGV2L25mcwpVbmFibGUgdG8gZmluZCAvcHJvYy9kZXZpY2UtdHJl
-ZS8vY2hvc2VuL2xpbnV4LHN0ZG91dC1wYXRoLCBwcmludGluZwpmcm9tIHB1cmdhdG9yeSBpcyBk
-aWFibGVkCkNhbm5vdCBkZXRlcm1pbmUgdGhlIGZpbGUgdHlwZSBvZiAvSW1hZ2UKCkl0IGZhaWxl
-ZCB0byBsb2FkIHRoZSBrZXJuZWwgSW1hZ2UuIEFueSBwb2ludGVycz8KCi0tQXJ1bgoKCgoKCgoK
-CgoKCgoKCj4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJlPwo+Cj4gLS1BcnVuCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
-c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+
+Here's a set of patches that implements signature checking on PKCS#7 message
+and PE files in the kernel.
+
+The intention is to use the PE file signature checker to validate binaries
+passed to kexec().  This signature in a PE file involves a PKCS#7 message.  The
+code attempts to follow the certificate chain back to a ring of public keys
+in the kernel.
+
+The PKCS#7 patches provide the following facility:
+
+ (1) Parse an ASN.1 PKCS#7 message and pick out useful bits such as the data
+     content and the X.509 certificates used to sign it and all the data
+     signatures.
+
+ (2) Verify all the data signatures against the set of X.509 certificates
+     available in the message.
+
+ (3) Follow the certificate chains and verify that:
+
+     (a) for every self-signed X.509 certificate, check that it validly signed
+     	 itself, and:
+
+     (b) for every non-self-signed certificate, if we have a 'parent'
+     	 certificate, the former is validly signed by the latter.
+
+ (4) Look for intersections between the certificate chains and the trusted
+     keyring, if any intersections are found, verify that the trusted
+     certificates signed the intersection point in the chain.
+
+ (5) For testing purposes, a key type can be made available that will take a
+     PKCS#7 message, check that the message is trustworthy, and if so, add its
+     data content into the key.
+
+The commits can be found on this branch also:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-modsign.git/log/?h=pkcs7
+
+and are tagged with:
+
+	keys-pkcs7-20140708
+
+The PE file patches provide the following facility:
+
+ (1) Extract the signature from the PE file.  This is a PKCS#7 message
+     containing, as its data, a hash of the signed parts of the file.
+
+ (2) Digest the signed parts of the file.
+
+ (3) Compare the digest with the one from the PKCS#7 message.
+
+ (4) Verify that the PKCS#7 message intersects with the keys in the keyring.
+
+The commits can be found on this branch also:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-modsign.git/log/?h=pefile
+
+and are tagged with:
+
+	keys-pefile-20140709
+
+David
+---
+David Howells (16):
+      X.509: Add bits needed for PKCS#7
+      X.509: Export certificate parse and free functions
+      PKCS#7: Implement a parser [RFC 2315]
+      PKCS#7: Digest the data in a signed-data message
+      PKCS#7: Find the right key in the PKCS#7 key list and verify the signature
+      PKCS#7: Verify internal certificate chain
+      PKCS#7: Find intersection between PKCS#7 message and known, trusted keys
+      PKCS#7: Provide a key type for testing PKCS#7
+      KEYS: X.509: Fix a spelling mistake
+      Provide PE binary definitions
+      pefile: Parse a PE binary to find a key and a signature contained therein
+      pefile: Strip the wrapper off of the cert data block
+      pefile: Parse the presumed PKCS#7 content of the certificate blob
+      pefile: Parse the "Microsoft individual code signing" data blob
+      pefile: Digest the PE binary and compare to the PKCS#7 data
+      pefile: Validate PKCS#7 trust chain
+
+Vivek Goyal (1):
+      pefile: Handle pesign using the wrong OID
+
+
+ crypto/asymmetric_keys/Kconfig            |   33 ++
+ crypto/asymmetric_keys/Makefile           |   37 ++
+ crypto/asymmetric_keys/mscode.asn1        |   28 ++
+ crypto/asymmetric_keys/mscode_parser.c    |  126 ++++++++
+ crypto/asymmetric_keys/pkcs7.asn1         |  127 ++++++++
+ crypto/asymmetric_keys/pkcs7_key_type.c   |   97 ++++++
+ crypto/asymmetric_keys/pkcs7_parser.c     |  396 +++++++++++++++++++++++++
+ crypto/asymmetric_keys/pkcs7_parser.h     |   61 ++++
+ crypto/asymmetric_keys/pkcs7_trust.c      |  219 ++++++++++++++
+ crypto/asymmetric_keys/pkcs7_verify.c     |  323 ++++++++++++++++++++
+ crypto/asymmetric_keys/verify_pefile.c    |  457 +++++++++++++++++++++++++++++
+ crypto/asymmetric_keys/verify_pefile.h    |   42 +++
+ crypto/asymmetric_keys/x509.asn1          |    2 
+ crypto/asymmetric_keys/x509_cert_parser.c |   20 +
+ crypto/asymmetric_keys/x509_parser.h      |   13 +
+ include/crypto/pkcs7.h                    |   36 ++
+ include/linux/oid_registry.h              |    8 -
+ include/linux/pe.h                        |  448 ++++++++++++++++++++++++++++
+ include/linux/verify_pefile.h             |   18 +
+ 19 files changed, 2487 insertions(+), 4 deletions(-)
+ create mode 100644 crypto/asymmetric_keys/mscode.asn1
+ create mode 100644 crypto/asymmetric_keys/mscode_parser.c
+ create mode 100644 crypto/asymmetric_keys/pkcs7.asn1
+ create mode 100644 crypto/asymmetric_keys/pkcs7_key_type.c
+ create mode 100644 crypto/asymmetric_keys/pkcs7_parser.c
+ create mode 100644 crypto/asymmetric_keys/pkcs7_parser.h
+ create mode 100644 crypto/asymmetric_keys/pkcs7_trust.c
+ create mode 100644 crypto/asymmetric_keys/pkcs7_verify.c
+ create mode 100644 crypto/asymmetric_keys/verify_pefile.c
+ create mode 100644 crypto/asymmetric_keys/verify_pefile.h
+ create mode 100644 include/crypto/pkcs7.h
+ create mode 100644 include/linux/pe.h
+ create mode 100644 include/linux/verify_pefile.h
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
