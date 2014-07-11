@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X5Zlp-0007Cr-AH
- for kexec@lists.infradead.org; Fri, 11 Jul 2014 12:17:46 +0000
-Message-ID: <53BFD5D1.2080207@citrix.com>
-Date: Fri, 11 Jul 2014 13:17:21 +0100
-From: David Vrabel <david.vrabel@citrix.com>
+ id 1X5bFP-0005Lj-Di
+ for kexec@lists.infradead.org; Fri, 11 Jul 2014 13:52:23 +0000
+Date: Fri, 11 Jul 2014 09:51:55 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] Makedumpfile: vmcore size estimate
+Message-ID: <20140711135155.GE15611@redhat.com>
+References: <1402490345-18656-1-git-send-email-bhe@redhat.com>
+ <20140611135701.GA1592@dhcp-17-102.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9722440E@BPXM01GP.gisp.nec.co.jp>
+ <20140623125723.GB29112@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9723992E@BPXM01GP.gisp.nec.co.jp>
+ <20140626123118.GB11136@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9723B033@BPXM01GP.gisp.nec.co.jp>
+ <20140702081349.GA20309@dhcp-16-105.nay.redhat.com>
+ <53B6091F.4010707@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: Can't load bzImage crashkernel on xen system with 32 bit kernel
-References: <53BBC94B.8060905@overnetdata.com>
- <20140710074713.GA23099@dhcp-17-89.nay.redhat.com>
- <53BE66C5.6090604@overnetdata.com>
- <20140711075835.GA21010@dhcp-17-89.nay.redhat.com>
- <53BFB093.10307@citrix.com> <53BFCA2C.6010403@overnetdata.com>
-In-Reply-To: <53BFCA2C.6010403@overnetdata.com>
+Content-Disposition: inline
+In-Reply-To: <53B6091F.4010707@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,56 +31,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Anthony Wright <anthony@overnetdata.com>, WANG Chao <chaowang@redhat.com>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: "HATAYAMA, Daisuke" <d.hatayama@jp.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 11/07/14 12:27, Anthony Wright wrote:
-> On 11/07/2014 10:38, David Vrabel wrote:
->> On 11/07/14 08:58, WANG Chao wrote:
->>> On 07/10/14 at 11:11am, Anthony Wright wrote:
->>>> Hi Chao,
->>>>
->>>> Thanks for looking at this.
->>>>
->>>> On 10/07/2014 08:47, WANG Chao wrote:
->>>>> Hi, Anthony
->>>>>
->>>>> On 07/08/14 at 11:34am, Anthony Wright wrote:
->>>>>> After successfully modifying kexec-tools to get it to load a crashkernel
->>>>>> on a standard 32 bit linux 3.10.17 kernel, I tried to get it to load the
->>>>>> same crashkernel on the same 32 bit linux kernel running under xen
->>>>>> 4.4.0, but get the error "Cannot load <kernel-path>".
->> Are you trying to do an in-guest kexec or are you trying to kexec from Xen?
->>
->> If it's the latter, it should just work with 32 and 64-bit images, Xen
->> 4.4 and kexec-tools 2.0.5 or later.
->>
->> In-guest kexec doesn't work at all.
->>
->> David
-> I'm trying to do the kexec from within a 32 bit linux 3.10.17 Dom0
-> running under a 64 bit xen 4.4.0. When you say 'guest', does that mean
-> DomU's or does that include Dom0 as well? If it includes Dom0 could you
-> point me at some documentation to explain how/if it's possible to set up
-> kexec/kdump for Dom0.
-> 
-> I have a Dom0 kernel that's crashing infrequently. I can't reproduce it
-> easily and all the standard diagnostic techniques haven't been very
-> helpful. I'd hoped to generate a crashdump using kexec/kdump to help
-> diagnose the problem.
+On Fri, Jul 04, 2014 at 10:53:35AM +0900, HATAYAMA, Daisuke wrote:
 
-I would suggest trying a Xen kexec and exec'ing your crashdump kernel
-(which will then be running on baremetal).
+[..]
+> For fail safe, it should address ENOSPC case more. Sadly, preparing too small disks for vmcores is human error. In general, we cannot avoid this in real world. It's important to make vmcore valid even in case of ENOSPC in the sense that at least generated part of vmcore can correctly be analized by crash.
 
-You will need to reserve a region of memory for the crash kernel on the
-Xen command line (e.g., crashkernel=64M@32M) and use kexec-tools 2.0.5
-or later.
+I agree. Dealing with ENOSPC makes sense. Save as much as possible and
+display a warning message that dump got truncated. Still dump file should
+be readable by "crash". That way we will not lose the whole dump and 
+whatever has been saved, might be sufficient to analyze the dump.
 
-We don't actually collect memory dumps from this environment (only basic
-PCPU/VCPU state, Xen/dom0 backtraces, and console logs) so I'm not sure
-what the status of tools for this are.  Daniel Kiper might know.
-
-David
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
