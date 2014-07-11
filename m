@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X5V4n-0004Mv-Qj
- for kexec@lists.infradead.org; Fri, 11 Jul 2014 07:17:02 +0000
+ id 1X5V4s-0004RF-Qa
+ for kexec@lists.infradead.org; Fri, 11 Jul 2014 07:17:07 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 5/7] prepare the dump loads for kcore analysis
-Date: Fri, 11 Jul 2014 15:16:02 +0800
-Message-Id: <1405062964-11406-5-git-send-email-bhe@redhat.com>
+Subject: [PATCH 7/7] add a new interface to show the memory usage of 1st kernel
+Date: Fri, 11 Jul 2014 15:16:04 +0800
+Message-Id: <1405062964-11406-7-git-send-email-bhe@redhat.com>
 In-Reply-To: <1405062964-11406-1-git-send-email-bhe@redhat.com>
 References: <1405062964-11406-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,174 +25,175 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: Baoquan He <bhe@redhat.com>, vgoyal@redhat.com
 
-In kcore, only  "System Ram" and "kernel text" program segments
-are needed. And to be more precise, exclude the crashkernel
-memory range.
+Recently people complained that they don't decide how much disk size
+need be reserved for kdump storing. E.g there are lots of machines
+with different memory size, if the memory usage information of current
+system can be shown, that can help them to make an estimate how much
+storage space need be reserved.
+
+In this patch, a new interface is added into makedumpfile. With the
+help of this, people can know the page number of memory in different
+use. The implementation is analyzing the "System Ram" and "kernel text"
+program segment of /proc/kcore excluding the crashkernel range, then
+calculating the page number of different kind per vmcoreinfo.
+
+The print is like below:
+->$ ./makedumpfile  --mem-usage  /proc/kcore
+Excluding unnecessary pages        : [100.0 %] |
+
+Page number of memory in different use
+--------------------------------------------------
+TYPE			PAGES			EXCLUDABLE	DESCRIPTION
+pfn_zero		0x0000000000000000	yes		Pages filled with zero
+pfn_cache		0x000000000002b19f	yes		Cache pages
+pfn_cache_private	0x0000000000042526	yes		Cache pages + private
+pfn_user		0x0000000000026bc3	yes		User process data pages
+pfn_free		0x0000000000133f79	yes		Free pages
+pfn_hwpoison		0x0000000000000000	yes		Hwpoison pages
+pfn_kernel_data		0x000000000001dd56	no		Dumpable kernel data
+
+Total pages on system:	0x00000000001e5f57
+Excludable pages:	0x00000000001c8201
+Memory Hole: 		0x00000000000386a9
+--------------------------------------------------
+Total pages:		0x000000000021e600
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- elf_info.c | 135 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- elf_info.h |   1 +
- 2 files changed, 136 insertions(+)
+ makedumpfile.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |  2 ++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/elf_info.c b/elf_info.c
-index 1a3e3bd..ca63d34 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -779,6 +779,141 @@ get_elf_loads(int fd, char *filename)
- 	return TRUE;
+diff --git a/makedumpfile.c b/makedumpfile.c
+index a170dd3..b281d73 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -8904,6 +8904,13 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+ 		 */
+ 		info->name_memory   = argv[optind];
+ 
++	} else if ((argc == optind + 1) && info->flag_mem_usage) {
++		/*
++		* Parameter for showing the page number of memory
++		* in different use from.
++		*/
++		info->name_memory   = argv[optind];
++
+ 	} else
+ 		return FALSE;
+ 
+@@ -9146,6 +9153,54 @@ static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
+ 	return 0;
  }
  
-+static int exclude_segment(struct pt_load_segment **pt_loads, unsigned int	*num_pt_loads, uint64_t start, uint64_t end)
++int show_mem_usage(void)
 +{
-+        int i, j, tidx = -1;
-+	unsigned long long	vstart, vend, kvstart, kvend;
-+        struct pt_load_segment temp_seg = {0};
-+	kvstart = (ulong)start | PAGE_OFFSET;
-+	kvend = (ulong)end | PAGE_OFFSET;
-+	unsigned long size;
++        uint64_t vmcoreinfo_addr, vmcoreinfo_len;
 +
-+        for (i = 0; i < (*num_pt_loads); i++) {
-+                vstart = (*pt_loads)[i].virt_start;
-+                vend = (*pt_loads)[i].virt_end;
-+                if (kvstart <  vend && kvend > vstart) {
-+                        if (kvstart != vstart && kvend != vend) {
-+				/* Split load segment */
-+				temp_seg.phys_start = end +1;
-+				temp_seg.phys_end = (*pt_loads)[i].phys_end;
-+				temp_seg.virt_start = kvend + 1;
-+				temp_seg.virt_end = vend;
-+				temp_seg.file_offset = (*pt_loads)[i].file_offset + temp_seg.virt_start - (*pt_loads)[i].virt_start;
-+
-+				(*pt_loads)[i].virt_end = kvstart - 1;
-+				(*pt_loads)[i].phys_end =  start -1;
-+
-+				tidx = i+1;
-+                        } else if (kvstart != vstart) {
-+				(*pt_loads)[i].phys_end = start - 1;
-+				(*pt_loads)[i].virt_end = kvstart - 1;
-+                        } else {
-+				(*pt_loads)[i].phys_start = end + 1;
-+				(*pt_loads)[i].virt_start = kvend + 1;
-+                        }
-+                }
++        if (!is_crashkernel_mem_reserved()) {
++                ERRMSG("No memory is reserved for crashkenrel!\n");
++                return FALSE;
 +        }
-+        /* Insert split load segment, if any. */
-+	if (tidx >= 0) {
-+		size = (*num_pt_loads + 1) * sizeof((*pt_loads)[0]);
-+		(*pt_loads) = realloc((*pt_loads), size);
-+		if  (!(*pt_loads) ) {
-+		    ERRMSG("Cannot realloc %ld bytes: %s\n",
-+		            size + 0UL, strerror(errno));
-+			exit(1);
-+		}
-+		for (j = (*num_pt_loads - 1); j >= tidx; j--)
-+		        (*pt_loads)[j+1] = (*pt_loads)[j];
-+		(*pt_loads)[tidx] = temp_seg;
-+		(*num_pt_loads)++;
-+        }
-+        return 0;
++
++        if (!get_page_offset())
++                return FALSE;
++
++        if (!open_dump_memory())
++                return FALSE;
++
++        if (!get_elf_loads(info->fd_memory, info->name_memory))
++                return FALSE;
++
++        if (get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
++                return FALSE;
++
++        if (!set_kcore_vmcoreinfo(vmcoreinfo_addr, vmcoreinfo_len))
++                return FALSE;
++
++        if (!get_kcore_dump_loads())
++                return FALSE;
++
++        if (!initial())
++                return FALSE;
++
++        if (!info->flag_cyclic)
++                info->flag_cyclic = TRUE;
++
++        if (!prepare_bitmap2_buffer_cyclic())
++                return FALSE;
++
++        info->num_dumpable = get_num_dumpable_cyclic();
++
++	free_bitmap2_buffer_cyclic();
++
++        print_mem_usage();
++
++        if (!close_files_for_creating_dumpfile())
++                return FALSE;
++
++        return TRUE;
 +}
 +
-+static int
-+process_dump_load(struct pt_load_segment	*pls)
-+{
-+	unsigned long long paddr;
-+
-+	paddr = vaddr_to_paddr(pls->virt_start);
-+	pls->phys_start  = paddr;
-+	pls->phys_end    = paddr + (pls->virt_end - pls->virt_start);
-+	DEBUG_MSG("process_dump_load\n");
-+	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
-+	DEBUG_MSG("  phys_end   : %llx\n", pls->phys_end);
-+	DEBUG_MSG("  virt_start : %llx\n", pls->virt_start);
-+	DEBUG_MSG("  virt_end   : %llx\n", pls->virt_end);
-+
-+	return TRUE;
-+}
-+
-+int get_kcore_dump_loads()
-+{
-+	struct pt_load_segment	*pls;
-+	int i, j, loads=0;
-+	unsigned long long paddr;
-+
-+	for (i = 0; i < num_pt_loads; ++i) {
-+		struct pt_load_segment *p = &pt_loads[i];
-+		if (is_vmalloc_addr(p->virt_start))
-+			continue;
-+		loads++;
-+	}
-+
-+	pls = calloc(sizeof(struct pt_load_segment), loads);
-+	if (pls == NULL) {
-+		ERRMSG("Can't allocate memory for the PT_LOAD. %s\n",
-+		    strerror(errno));
-+		return FALSE;
-+	}
-+
-+	for (i = 0, j=0; i < num_pt_loads; ++i) {
-+		struct pt_load_segment *p = &pt_loads[i];
-+		if (is_vmalloc_addr(p->virt_start))
-+			continue;
-+		if (j >= loads)
-+			return FALSE;
-+
-+		if (j == 0) {
-+			offset_pt_load_memory = p->file_offset;
-+			if (offset_pt_load_memory == 0) {
-+				ERRMSG("Can't get the offset of page data.\n");
-+				return FALSE;
-+			}
+ 
+ static struct option longopts[] = {
+ 	{"split", no_argument, NULL, OPT_SPLIT},
+@@ -9163,6 +9218,7 @@ static struct option longopts[] = {
+ 	{"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
+ 	{"eppic", required_argument, NULL, OPT_EPPIC},
+ 	{"non-mmap", no_argument, NULL, OPT_NON_MMAP},
++	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
+ 	{0, 0, 0, 0}
+ };
+ 
+@@ -9254,6 +9310,9 @@ main(int argc, char *argv[])
+ 		case OPT_DUMP_DMESG:
+ 			info->flag_dmesg = 1;
+ 			break;
++		case OPT_MEM_USAGE:
++                       info->flag_mem_usage = 1;
++                       break;
+ 		case OPT_COMPRESS_SNAPPY:
+ 			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
+ 			break;
+@@ -9394,6 +9453,18 @@ main(int argc, char *argv[])
+ 
+ 		MSG("\n");
+ 		MSG("The dmesg log is saved to %s.\n", info->name_dumpfile);
++	} else if (info->flag_mem_usage) {
++		if (!check_param_for_creating_dumpfile(argc, argv)) {
++			MSG("Commandline parameter is invalid.\n");
++			MSG("Try `makedumpfile --help' for more information.\n");
++			goto out;
 +		}
 +
-+		pls[j] = *p;
-+		process_dump_load(&pls[j]);
-+		j++;
-+	}
++		if (!show_mem_usage())
++			goto out;
 +
-+	free(pt_loads);
-+	pt_loads = pls;
-+	num_pt_loads = loads;
-+
-+	for (i=0; i<crash_reserved_mem_nr; i++)
-+	{
-+		exclude_segment(&pt_loads, &num_pt_loads, crash_reserved_mem[i].start, crash_reserved_mem[i].end);
-+	}
-+
-+	max_file_offset = 0;
-+	for (i = 0; i < num_pt_loads; ++i) {
-+		struct pt_load_segment *p = &pt_loads[i];
-+		max_file_offset = MAX(max_file_offset,
-+				      p->file_offset + p->phys_end - p->phys_start);
-+	}
-+
-+	for (i = 0; i < num_pt_loads; ++i) {
-+		struct pt_load_segment *p = &pt_loads[i];
-+		DEBUG_MSG("LOAD (%d)\n", i);
-+		DEBUG_MSG("  phys_start : %llx\n", p->phys_start);
-+		DEBUG_MSG("  phys_end   : %llx\n", p->phys_end);
-+		DEBUG_MSG("  virt_start : %llx\n", p->virt_start);
-+		DEBUG_MSG("  virt_end   : %llx\n", p->virt_end);
-+	}
-+
-+	return TRUE;
-+}
++		MSG("\n");
++		MSG("Showing page number of memory in different use successfully.\n");
+ 	} else {
+ 		if (!check_param_for_creating_dumpfile(argc, argv)) {
+ 			MSG("Commandline parameter is invalid.\n");
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 7ffa1ee..7b537c7 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -910,6 +910,7 @@ struct DumpInfo {
+ 	int		flag_force;	     /* overwrite existing stuff */
+ 	int		flag_exclude_xen_dom;/* exclude Domain-U from xen-kdump */
+ 	int             flag_dmesg;          /* dump the dmesg log out of the vmcore file */
++	int             flag_mem_usage;  /*show the page number of memory in different use*/
+ 	int		flag_use_printk_log; /* did we read printk_log symbol name? */
+ 	int		flag_nospace;	     /* the flag of "No space on device" error */
+ 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+@@ -1771,6 +1772,7 @@ struct elf_prstatus {
+ #define OPT_CYCLIC_BUFFER       OPT_START+11
+ #define OPT_EPPIC               OPT_START+12
+ #define OPT_NON_MMAP            OPT_START+13
++#define OPT_MEM_USAGE            OPT_START+14
  
  /*
-  * Get ELF information about /proc/vmcore.
-diff --git a/elf_info.h b/elf_info.h
-index 3ce0138..ba27fdf 100644
---- a/elf_info.h
-+++ b/elf_info.h
-@@ -46,6 +46,7 @@ int get_elf_info(int fd, char *filename);
- void free_elf_info(void);
- int get_elf_loads(int fd, char *filename);
- int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len);
-+int get_kcore_dump_loads();
- 
- int is_elf64_memory(void);
- int is_xen_memory(void);
+  * Function Prototype.
 -- 
 1.8.4.2
 
