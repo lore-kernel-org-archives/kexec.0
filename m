@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vc0-f171.google.com ([209.85.220.171])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X5X3Y-0003Bs-Av
- for kexec@lists.infradead.org; Fri, 11 Jul 2014 09:23:53 +0000
-Received: by mail-vc0-f171.google.com with SMTP id id10so1502362vcb.2
- for <kexec@lists.infradead.org>; Fri, 11 Jul 2014 02:23:30 -0700 (PDT)
+ id 1X5XI4-0001Ot-6M
+ for kexec@lists.infradead.org; Fri, 11 Jul 2014 09:38:53 +0000
+Message-ID: <53BFB093.10307@citrix.com>
+Date: Fri, 11 Jul 2014 10:38:27 +0100
+From: David Vrabel <david.vrabel@citrix.com>
 MIME-Version: 1.0
-In-Reply-To: <1404931759.26155.70.camel@smoke>
-References: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
- <CAFdej03ziTTA5QGFjzKd6Kc4skWNTr5RECy69qtnQGVtE6ks3w@mail.gmail.com>
- <1404931759.26155.70.camel@smoke>
-Date: Fri, 11 Jul 2014 14:53:29 +0530
-Message-ID: <CAFdej00pBJwJBCPR0bYzgqLBSzFbb7LpOydJu=w8Ry4Me=tPow@mail.gmail.com>
-Subject: Re: Kexec on arm64
-From: Arun Chandran <achandran@mvista.com>
+Subject: Re: Can't load bzImage crashkernel on xen system with 32 bit kernel
+References: <53BBC94B.8060905@overnetdata.com>
+ <20140710074713.GA23099@dhcp-17-89.nay.redhat.com>
+ <53BE66C5.6090604@overnetdata.com>
+ <20140711075835.GA21010@dhcp-17-89.nay.redhat.com>
+In-Reply-To: <20140711075835.GA21010@dhcp-17-89.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,92 +25,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org
+To: WANG Chao <chaowang@redhat.com>, Anthony Wright <anthony@overnetdata.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Hi Geoff,
-
-Finally I am able to get my kernel loaded with the patch below.
-
-
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 894e0e1..bfca40d 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -327,7 +327,7 @@ static int get_memory_ranges_dt(struct
-memory_range *array, unsigned int *count)
-                        dbgprintf("%s:  RAM: %016llx - %016llx\n", __func__,
-                                r.start, r.end);
-
--                       if (!arm64_mem.memstart || r.start < arm64_mem.memstart)
-+                       if ((region->size) && (!arm64_mem.memstart ||
-r.start < arm64_mem.memstart))
-                                arm64_mem.memstart = r.start;
-                }
-        }
-
-
-I suspect it was due to zero sized memory ranges in my dtb followed by the
-actual region.
-
-get_memory_ranges_dt: node_1676 memory
-get_memory_ranges_dt:  RAM: 0000004000000000 - 0000004400000000
-get_memory_ranges_dt:  RAM: 0000000000000000 - 0000000000000000
-get_memory_ranges_dt:  RAM: 0000000000000000 - 0000000000000000
-get_memory_ranges_dt:  RAM: 0000000000000000 - 0000000000000000
-get_memory_ranges_dt:  RAM: 0000000000000000 - 0000000000000000
-
-As a result of that arm64_mem.memstart was getting overwritten with zero.
-and I was stuck at the error
-
-kexec: kexec/arch/arm64/kexec-arm64.c:242: virt_to_phys: Assertion
-`arm64_mem.memstart' failed.
-
-So check the validity of region before updating the 'memstart'
-
-I will try with kexec -e next.
-
---Arun
-
-
-
-
-
-
-On Thu, Jul 10, 2014 at 12:19 AM, Geoff Levand <geoff@infradead.org> wrote:
-> Hi Arun,
->
-> On Wed, 2014-07-09 at 19:28 +0530, Arun Chandran wrote:
->> After copying the resulting binaries to my target; I tried loading the
->> kernel Image
+On 11/07/14 08:58, WANG Chao wrote:
+> On 07/10/14 at 11:11am, Anthony Wright wrote:
+>> Hi Chao,
 >>
->> # kexec -l /Image
->> Modified cmdline: root=/dev/nfs
->> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
->> from purgatory is diabled
->> Cannot determine the file type of /Image
+>> Thanks for looking at this.
 >>
->> It failed to load the kernel Image. Any pointers?
->
-> My kexec-tools [1] only supports loading of arm64 elf files, so
-> vmlinux, or a stripped version of it.  Image is a raw binary, and
-> is not yet supported.
->
-> Maybe something like this is what you need:
->
->  ./kexec -d --load /boot/vmlinux.strip --append="console=ttyAMA0 earlyprintk=pl011,0x1c090000 root=/dev/vda rw --verbose" --dtb=/boot/fdt.dtb
->  ./kexec -d -e
->
-> Also, my current master branch will only work reliably with PSCI
-> boot.  Spin-table boot has a bug and will be unstable for the next
-> few days.  Spin-table will re-boot, but only the primary cpu will
-> come up.
->
-> [1] https://git.linaro.org/people/geoff.levand/kexec-tools.git
->  https://git.linaro.org/people/geoff.levand/linux-kexec.git
->
-> -Geoff
->
+>> On 10/07/2014 08:47, WANG Chao wrote:
+>>> Hi, Anthony
+>>>
+>>> On 07/08/14 at 11:34am, Anthony Wright wrote:
+>>>> After successfully modifying kexec-tools to get it to load a crashkernel
+>>>> on a standard 32 bit linux 3.10.17 kernel, I tried to get it to load the
+>>>> same crashkernel on the same 32 bit linux kernel running under xen
+>>>> 4.4.0, but get the error "Cannot load <kernel-path>".
+
+Are you trying to do an in-guest kexec or are you trying to kexec from Xen?
+
+If it's the latter, it should just work with 32 and 64-bit images, Xen
+4.4 and kexec-tools 2.0.5 or later.
+
+In-guest kexec doesn't work at all.
+
+David
 
 _______________________________________________
 kexec mailing list
