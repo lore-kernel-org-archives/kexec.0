@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X5XI4-0001Ot-6M
- for kexec@lists.infradead.org; Fri, 11 Jul 2014 09:38:53 +0000
-Message-ID: <53BFB093.10307@citrix.com>
-Date: Fri, 11 Jul 2014 10:38:27 +0100
-From: David Vrabel <david.vrabel@citrix.com>
+Date: Fri, 11 Jul 2014 17:47:48 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 7/8] arm64/kexec: Add core kexec support
+Message-ID: <20140711094747.GA16936@darkstar.nay.redhat.com>
+References: <cover.1399594544.git.geoff@infradead.org>
+ <64ef27888fa70b3e27ddcf4ca594fa71ab7f7777.1399594544.git.geoff@infradead.org>
+ <20140707073337.GA1108@dhcp-16-198.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: Can't load bzImage crashkernel on xen system with 32 bit kernel
-References: <53BBC94B.8060905@overnetdata.com>
- <20140710074713.GA23099@dhcp-17-89.nay.redhat.com>
- <53BE66C5.6090604@overnetdata.com>
- <20140711075835.GA21010@dhcp-17-89.nay.redhat.com>
-In-Reply-To: <20140711075835.GA21010@dhcp-17-89.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20140707073337.GA1108@dhcp-16-198.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,32 +21,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Chao <chaowang@redhat.com>, Anthony Wright <anthony@overnetdata.com>
-Cc: Daniel Kiper <daniel.kiper@oracle.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Deepak Saxena <dsaxena@linaro.org>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 11/07/14 08:58, WANG Chao wrote:
-> On 07/10/14 at 11:11am, Anthony Wright wrote:
->> Hi Chao,
->>
->> Thanks for looking at this.
->>
->> On 10/07/2014 08:47, WANG Chao wrote:
->>> Hi, Anthony
->>>
->>> On 07/08/14 at 11:34am, Anthony Wright wrote:
->>>> After successfully modifying kexec-tools to get it to load a crashkernel
->>>> on a standard 32 bit linux 3.10.17 kernel, I tried to get it to load the
->>>> same crashkernel on the same 32 bit linux kernel running under xen
->>>> 4.4.0, but get the error "Cannot load <kernel-path>".
+On 07/07/14 at 03:33pm, Dave Young wrote:
+> [snip]
+> 
+> > +
+> > +/**
+> > + * kexec_cpu_info_init - Initialize an array of kexec_cpu_info structures.
+> > + *
+> > + * Allocates a cpu info array and fills it with info for all cpus found in
+> > + * the device tree passed.  The cpu info array is zero terminated.
+> > + */
+> > +
+> > +int kexec_cpu_info_init(const struct device_node *dn,
+> > +	struct kexec_dt_info *info)
+> > +{
+> > +	int result;
+> > +	unsigned int cpu;
+> > +	const struct device_node *i;
+> > +
+> > +	info->cpu_info = kmalloc(
+> > +		(1 + info->cpu_count) * sizeof(struct kexec_cpu_info),
+> > +		GFP_KERNEL);
+> > +
+> > +	if (!info->cpu_info) {
+> > +		pr_debug("%s: out of memory", __func__);
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	info->spinner_count = 0;
+> > +
+> > +	for (cpu = 0, i = dn; cpu < info->cpu_count; cpu++) {
+> > +		struct kexec_cpu_info *cpu_info = &info->cpu_info[cpu];
+> > +
+> > +		i = of_find_node_by_type((struct device_node *)i, "cpu");
+> > +
+> > +		BUG_ON(!i);
+> > +
+> > +		cpu_info->cpu = cpu;
+> > +
+> > +		result = cpu_read_ops((struct device_node *)i, cpu,
+> > +			&cpu_info->cpu_ops);
+> 
+> cpu_ops memory is not allocated?
 
-Are you trying to do an in-guest kexec or are you trying to kexec from Xen?
+Oops, I misread the code, it should be not a problem. Just ignore above comment
 
-If it's the latter, it should just work with 32 and 64-bit images, Xen
-4.4 and kexec-tools 2.0.5 or later.
+But I surely have some problem, probably caused by some random issues. 
 
-In-guest kexec doesn't work at all.
-
-David
+> 
+> BTW cpu_read_ops will call cpu_get_ops which is marked as __init
+> 
+> Thanks
+> Dave
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
