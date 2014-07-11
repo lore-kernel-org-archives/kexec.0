@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vc0-f182.google.com ([209.85.220.182])
+Received: from g5t1626.atlanta.hp.com ([15.192.137.9])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X5czZ-0003OY-1L
- for kexec@lists.infradead.org; Fri, 11 Jul 2014 15:44:10 +0000
-Received: by mail-vc0-f182.google.com with SMTP id hq11so2409979vcb.13
- for <kexec@lists.infradead.org>; Fri, 11 Jul 2014 08:43:47 -0700 (PDT)
+ id 1X5dgB-0000NM-Mx
+ for kexec@lists.infradead.org; Fri, 11 Jul 2014 16:28:12 +0000
+Date: Fri, 11 Jul 2014 10:27:45 -0600
+From: Jerry Hoemann <jerry.hoemann@hp.com>
+Subject: Re: [PATCH 0/8] iommu/vt-d: Fix crash dump failure caused by legacy
+ DMA/IO
+Message-ID: <20140711162745.GA8335@anatevka.fc.hp.com>
+References: <1398386198-19304-1-git-send-email-bill.sumner@hp.com>
+ <1398854973.12733.23.camel@i7.infradead.org>
+ <20140702133258.GN26537@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <1404931759.26155.70.camel@smoke>
-References: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
- <CAFdej03ziTTA5QGFjzKd6Kc4skWNTr5RECy69qtnQGVtE6ks3w@mail.gmail.com>
- <1404931759.26155.70.camel@smoke>
-Date: Fri, 11 Jul 2014 21:13:46 +0530
-Message-ID: <CAFdej02yHmsoEpcXBkiEZ9NXvwy4KF_ajN=nmC=E1q+YniPr1A@mail.gmail.com>
-Subject: Re: Kexec on arm64
-From: Arun Chandran <achandran@mvista.com>
-Content-Type: multipart/mixed; boundary=047d7b671d1c94a1b604fdecce6b
+Content-Disposition: inline
+In-Reply-To: <20140702133258.GN26537@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,280 +22,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: Jerry.Hoemann@hp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org
+To: Joerg Roedel <joro@8bytes.org>
+Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com, David Woodhouse <dwmw2@infradead.org>
 
---047d7b671d1c94a1b604fdecce6b
-Content-Type: text/plain; charset=UTF-8
+On Wed, Jul 02, 2014 at 03:32:59PM +0200, Joerg Roedel wrote:
+> Hi David,
+> 
+> On Wed, Apr 30, 2014 at 11:49:33AM +0100, David Woodhouse wrote:
+> > There could be all kinds of existing mappings in the DMA page tables,
+> > and I'm not sure it's safe to preserve them. What prevents the crashdump
+> > kernel from trying to use any of the physical pages which are
+> > accessible, and which could thus be corrupted by stray DMA?
+> > 
+> > In fact, the old kernel could even have set up 1:1 passthrough mappings
+> > for some devices, which would then be able to DMA *anywhere*. Surely we
+> > need to prevent that?
+> 
+> Ideally we would prevent that, yes. But the problem is that a failed DMA
+> transaction might put the device into an unrecoverable state. Usually
+> any in-flight DMA transactions should only target buffers set up by the
+> previous kernel and not corrupt any data.
+> 
+> > After the last round of this patchset, we discussed a potential
+> > improvement where you point every virtual bus address at the *same*
+> > physical scratch page.
+> 
+> That is a solution to prevent the in-flight DMA failures. But what
+> happens when there is some in-flight DMA to a disk to write some inodes
+> or a new superblock. Then this scratch address-space may cause
+> filesystem corruption at worst.
+> 
+> So with this in mind I would prefer initially taking over the
+> page-tables from the old kernel before the device drivers re-initialize
+> the devices.
+> 
+> 
+> 	Joerg
 
-On Thu, Jul 10, 2014 at 12:19 AM, Geoff Levand <geoff@infradead.org> wrote:
-> Hi Arun,
->
-> On Wed, 2014-07-09 at 19:28 +0530, Arun Chandran wrote:
->> After copying the resulting binaries to my target; I tried loading the
->> kernel Image
->>
->> # kexec -l /Image
->> Modified cmdline: root=/dev/nfs
->> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
->> from purgatory is diabled
->> Cannot determine the file type of /Image
->>
->> It failed to load the kernel Image. Any pointers?
->
-> My kexec-tools [1] only supports loading of arm64 elf files, so
-> vmlinux, or a stripped version of it.  Image is a raw binary, and
-> is not yet supported.
->
-> Maybe something like this is what you need:
->
->  ./kexec -d --load /boot/vmlinux.strip --append="console=ttyAMA0 earlyprintk=pl011,0x1c090000 root=/dev/vda rw --verbose" --dtb=/boot/fdt.dtb
->  ./kexec -d -e
->
+David, Joerg,
 
-Hi ,
+What do you think here?  Do you want me to update the patch set for 3.17?
 
-I tried kexec reboot with my modified kexec-tools and got a nice kernel panic.
-Please find the error log attached.
+Jerry
 
-There is only dtb file related change in the kernel sources, as given below.
+-- 
 
-###########
-                        cpu-release-addr = <0x1 0x0000fff8>;
--                       cpu-return-addr = <0 0>
-+                       cpu-return-addr = <0x0 0x0>;
-###########
+----------------------------------------------------------------------------
+Jerry Hoemann            Software Engineer              Hewlett-Packard
 
-I just assigned a random value to "cpu-return-addr" in my dtb file;
-Do you have any idea how to find out that value for my hardware?
+3404 E Harmony Rd. MS 57                        phone:  (970) 898-1022
+Ft. Collins, CO 80528                           FAX:    (970) 898-XXXX
+                                                email:  jerry.hoemann@hp.com
+----------------------------------------------------------------------------
 
-
-> Also, my current master branch will only work reliably with PSCI
-> boot.  Spin-table boot has a bug and will be unstable for the next
-> few days.  Spin-table will re-boot, but only the primary cpu will
-> come up.
->
-
-My hardware uses spin-table method for SMP. As you said there
-is a bug in kexec for spin-table method, what about trying it without
-CONFIG_SMP? Does your code support that?
-
-
---Arun
-
---047d7b671d1c94a1b604fdecce6b
-Content-Type: text/plain; charset=US-ASCII; name="error_log.txt"
-Content-Disposition: attachment; filename="error_log.txt"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_hxhoahyx0
-
-IyBrZXhlYyAtbCB2bWxpbnV4LnN0cmlwIC0tZHRiPWR0Yi5kdGIgLWQgLS1jb21tYW5kLWxpbmU9
-ImNvbnNvbGU9dHR5UzAsMTE1MjAwIgpyYW5kb206IG5vbmJsb2NraW5nIHBvb2wgaXMgaW5pdGlh
-bGl6ZWQKa2V4ZWMgdmVyc2lvbjogMTQuMDcuMTAuMTEuMzgtZzQyNjk5NmIKYXJjaF9wcm9jZXNz
-X29wdGlvbnM6ODM6IGNvbW1hbmRfbGluZTogY29uc29sZT10dHlTMCwxMTUyMDAKYXJjaF9wcm9j
-ZXNzX29wdGlvbnM6ODU6IGluaXRyZDogKG51bGwpCmFyY2hfcHJvY2Vzc19vcHRpb25zOjg2OiBk
-dG1hY2hpbmVfa2V4ZWNfcHJlcGFyZTo1NDc6CmI6ICBrZXhlYyBpbWFnZSBpbmZvOgogICAgIHR5
-cGU6ICAgICAgICAwCmR0ICAgIHN0YXJ0OiAgICAgICA0MDAwMDgwMDAwCiAgICBoZWFkOiAgICAg
-ICAgMApiLiAgICBucl9zZWdtZW50czogMgpkdCAgICAgIHNlZ21lbnRbMF06IDAwMDAwMDQwMDAw
-ODAwMDAgLSAwMDAwMDA0MDAwODRkMDAwLCA3Y2QwMDBoIGJ5dGVzLCAxOTk3IHBhZ2VzCmtleGVj
-X2lzX2R0YjoxMzY6IG1hZ2ljOiAxMDAwMDAxNCA6IDE0MDAwMDEwIDogbm8KCiAgICAgIHNlZ21l
-bnRbMV06IDAwMDAwMDQwMDA4NjAwMDAgLSAwMDAwMDA0MDAwODYyMDAwLCAyMDAwaCBieXRlcywg
-MiBwYWdlcwprZWtleGVjX2lzX2R0YjoxMzY6IG1hZ2ljOiBkMDBkZmVlZCA6IGVkZmUwZGQwIDog
-eWVzCnJua2V4ZWNfaXNfZHRiOjEzNjogbWFnaWM6IDEwMDAwMDE0IDogMTQwMDAwMTAgOiBubwpl
-a2V4ZWNfaXNfZHRiOjEzNjogbWFnaWM6IGQwMGRmZWVkIDogZWRmZTBkZDAgOiB5ZXMKbDprZXhl
-Y19ib290X2luZm9faW5pdDo0NTk6IGNwdV9jb3VudDogOAogMHg3ZjdkN2tleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtMDogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAoyOWtleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtMTogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAowMWtleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtMjogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAowIGtleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtMzogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAprZWtleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtNDogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMApybmtleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtNTogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAplbGtleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtNjogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMApfc2tleGVjX2NwdV9pbmZv
-X2luaXQ6NDIyOiBjcHUtNzogJ3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwNDAw
-MDAwZmZmOCwgcmV0dXJuX2FkZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAppemtleGVjX2Jvb3RfaW5m
-b19pbml0OjQ1OTogY3B1X2NvdW50OiA4CmU6a2V4ZWNfY3B1X2luZm9faW5pdDo0MjI6IGNwdS0w
-OiAnc3Bpbi10YWJsZScsIHJlbGVhc2VfYWRkcjogMHgwMDAwMDAwMTAwMDBmZmY4LCByZXR1cm5f
-YWRkcjogMHgwMDAwMDAwMDAwMDAwMDAwCiAwa2V4ZWNfY3B1X2luZm9faW5pdDo0MjI6IGNwdS0x
-OiAnc3Bpbi10YWJsZScsIHJlbGVhc2VfYWRkcjogMHgwMDAwMDAwMTAwMDBmZmY4LCByZXR1cm5f
-YWRkcjogMHgwMDAwMDAwMDAwMDAwMDAwCng3a2V4ZWNfY3B1X2luZm9faW5pdDo0MjI6IGNwdS0y
-OiAnc3Bpbi10YWJsZScsIHJlbGVhc2VfYWRkcjogMHgwMDAwMDAwMTAwMDBmZmY4LCByZXR1cm5f
-YWRkcjogMHgwMDAwMDAwMDAwMDAwMDAwCmFka2V4ZWNfY3B1X2luZm9faW5pdDo0MjI6IGNwdS0z
-OiAnc3Bpbi10YWJsZScsIHJlbGVhc2VfYWRkcjogMHgwMDAwMDAwMTAwMDBmZmY4LCByZXR1cm5f
-YWRkcjogMHgwMDAwMDAwMDAwMDAwMDAwCjIya2V4ZWNfY3B1X2luZm9faW5pdDo0MjI6IGNwdS00
-OiAnc3Bpbi10YWJsZScsIHJlbGVhc2VfYWRkcjogMHgwMDAwMDAwMTAwMDBmZmY4LCByZXR1cm5f
-YWRkcjogMHgwMDAwMDAwMDAwMDAwMDAwCmtleGVjX2NwdV9pbmZvX2luaXQ6NDIyOiBjcHUtNTog
-J3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwMDEwMDAwZmZmOCwgcmV0dXJuX2Fk
-ZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAoKTWtleGVjX2NwdV9pbmZvX2luaXQ6NDIyOiBjcHUtNjog
-J3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwMDEwMDAwZmZmOCwgcmV0dXJuX2Fk
-ZHI6IDB4MDAwMDAwMDAwMDAwMDAwMApvZGtleGVjX2NwdV9pbmZvX2luaXQ6NDIyOiBjcHUtNzog
-J3NwaW4tdGFibGUnLCByZWxlYXNlX2FkZHI6IDB4MDAwMDAwMDEwMDAwZmZmOCwgcmV0dXJuX2Fk
-ZHI6IDB4MDAwMDAwMDAwMDAwMDAwMAppZmllZCBjbWRsaW5lOiByb290PS9kZXYvbmZzIApVbmFi
-bGUgdG8gZmluZCAvcHJvYy9kZXZpY2UtdHJlZS8vY2hvc2VuL2xpbnV4LHN0ZG91dC1wYXRoLCBw
-cmludGluZyBmcm9tIHB1cmdhdG9yeSBpcyBkaWFibGVkCmdldF9tZW1vcnlfcmFuZ2VzX2R0OiBu
-b2RlXzE2NzYgbWVtb3J5CmdldF9tZW1vcnlfcmFuZ2VzX2R0OiAgUkFNOiAwMDAwMDA0MDAwMDAw
-MDAwIC0gMDAwMDAwNDQwMDAwMDAwMApnZXRfbWVtb3J5X3Jhbmdlc19kdDogIFJBTTogMDAwMDAw
-MDAwMDAwMDAwMCAtIDAwMDAwMDAwMDAwMDAwMDAKZ2V0X21lbW9yeV9yYW5nZXNfZHQ6ICBSQU06
-IDAwMDAwMDAwMDAwMDAwMDAgLSAwMDAwMDAwMDAwMDAwMDAwCmdldF9tZW1vcnlfcmFuZ2VzX2R0
-OiAgUkFNOiAwMDAwMDAwMDAwMDAwMDAwIC0gMDAwMDAwMDAwMDAwMDAwMApnZXRfbWVtb3J5X3Jh
-bmdlc19kdDogU3VjY2VzcwpwX3BhZGRyOiBmZmZmZmZjMDAwMDgwMDAwCnBfdmFkZHI6IGZmZmZm
-ZmMwMDAwODAwMDAKcF9maWxlc3o6IDAwMDAwMDAwMDA3OWNjMDgKcF9tZW1zejogMDAwMDAwMDAw
-MDdjY2UyOApwX29mZnNldDogMDAwMDAwMDAwMDAxMDAwMAp0ZXh0X29mZnNldDogMDAwMDAwMDAw
-MDA4MDAwMApwYWdlX29mZnNldDogZmZmZmZmYzAwMDAwMDAwMAptZW1zdGFydDogMDAwMDAwNDAw
-MDAwMDAwMApwX3ZhZGRyOiBmZmZmZmZjMDAwMDgwMDAwCnZpcnRfdG9fcGh5czogZmZmZmZmYzAw
-MDA4MDAwMCAtPiAwMDAwMDA0MDAwMDgwMDAwCnRleHRfb2Zmc2V0OiAwMDAwMDAwMDAwMDgwMDAw
-CnBhZ2Vfb2Zmc2V0OiBmZmZmZmZjMDAwMDAwMDAwCm1lbXN0YXJ0OiAgICAwMDAwMDA0MDAwMDAw
-MDAwCmVudHJ5OiAgICAgICAweDQwMDAwODAwMDAKdmlydF90b19waHlzOiBmZmZmZmZjMDAwMDgw
-MDAwIC0+IDAwMDAwMDQwMDAwODAwMDAKYWRkX3NlZ21lbnRfcGh5c192aXJ0OiAwMDAwMDA3Zjdk
-NzM5MDEwIC0gMDAwMDAwN2Y3ZGVkNWMxOCAoMDA3OWNjMDgpIC0+IDAwMDAwMDQwMDAwODAwMDAg
-LSAwMDAwMDA0MDAwODRkMDAwICgwMDdjZDAwMCkKZHRiOiAgICBiYXNlIDQwMDA4NjAwMDAsIHNp
-emUgMWMzNmggKDcyMjIpCmFkZF9zZWdtZW50X3BoeXNfdmlydDogMDAwMDAwMDAyY2M3ODUxMCAt
-IDAwMDAwMDAwMmNjN2ExNDYgKDAwMDAxYzM2KSAtPiAwMDAwMDA0MDAwODYwMDAwIC0gMDAwMDAw
-NDAwMDg2MjAwMCAoMDAwMDIwMDApCmtleGVjX2xvYWQ6IGVudHJ5ID0gMHg0MDAwMDgwMDAwIGZs
-YWdzID0gMHhiNzAwMDAKbnJfc2VnbWVudHMgPSAyCnNlZ21lbnRbMF0uYnVmICAgPSAweDdmN2Q3
-MzkwMTAKc2VnbWVudFswXS5idWZzeiA9IDB4NzljYzA4CnNlZ21lbnRbMF0ubWVtICAgPSAweDQw
-MDAwODAwMDAKc2VnbWVudFswXS5tZW1zeiA9IDB4N2NkMDAwCnNlZ21lbnRbMV0uYnVmICAgPSAw
-eDJjYzc4NTEwCnNlZ21lbnRbMV0uYnVmc3ogPSAweDFjMzYKc2VnbWVudFsxXS5tZW0gICA9IDB4
-NDAwMDg2MDAwMApzZWdtZW50WzFdLm1lbXN6ID0gMHgyMDAwCiMgIAojIAojIAojIGtleGVjIC1l
-IC1kCmtleGVrdm06IGV4aXRpbmcgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24KYyB2ZVN0YXJ0aW5n
-IG5ldyBrZXJuZWwKcnNzbXBfc3Bpbl90YWJsZV9jcHVfZGllOjEyNTogaWQ6IDEsIGhvbGRpbmcg
-Y291bnQ6IDAKc21wX3NwaW5fdGFibGVfY3B1X2RpZToxMjU6IGlkOiA3LCBob2xkaW5nIGNvdW50
-OiAwCnNtcF9zcGluX3RhYmxlX2NwdV9kaWU6MTI1OiBpZDogNiwgaG9sZGluZyBjb3VudDogMApz
-bXBfc3Bpbl90YWJsZV9jcHVfZGllOjEyNTogaWQ6IDQsIGhvbGRpbmcgY291bnQ6IDAKc21wX3Nw
-aW5fdGFibGVfY3B1X2RpZToxMjU6IGlkOiAzLCBob2xkaW5nIGNvdW50OiAwCnNtcF9zcGluX3Rh
-YmxlX2NwdV9kaWU6MTI1OiBpZDogMiwgaG9sZGluZyBjb3VudDogMApzbXBfc3Bpbl90YWJsZV9j
-cHVfZGllOjEyNTogaWQ6IDUsIGhvbGRpbmcgY291bnQ6IDAKbWFjaGluZV9rZXhlYzo2MTI6IHNt
-cF9wcm9jZXNzb3JfaWQgPSAwCkJhZCBtb2RlIGluIFN5bmNocm9ub3VzIEFib3J0IGhhbmRsZXIg
-ZGV0ZWN0ZWQsIGNvZGUgMHg4NjAwMDAwNQptYWNoaW5lX2tleGVjOjYxNDoKQ1BVOiA3IFBJRDog
-MCBDb21tOiBzd2FwcGVyLzcgTm90IHRhaW50ZWQgMy4xNS4wLXJjNCsgIzQ0CiAga2V4ZWMgaW1h
-Z2UgaW5mbzoKdGFzazogZmZmZmZmYzNlZjE0MzM0MCB0aTogZmZmZmZmYzNlZjE2MDAwMCB0YXNr
-LnRpOiBmZmZmZmZjM2VmMTYwMDAwCiAgICB0eXBlOiAgICAgICAgMAogICAgc3RhcnQ6ICAgICAg
-IDQwMDAwODAwMDAKUEMgaXMgYXQgMHg0MDAwNDg5ZjgwCiAgICBoZWFkOiAgICAgICAgNDNlZGFl
-ZjAwMgpMUiBpcyBhdCAweGZmZmZmZmMwMDAwODAyZTgKICAgIG5yX3NlZ21lbnRzOiAyCnBjIDog
-WzwwMDAwMDA0MDAwNDg5ZjgwPl0gbHIgOiBbPGZmZmZmZmMwMDAwODAyZTg+XSBwc3RhdGU6IDYw
-MDAwMWM1CiAgICAgIHNlZ21lbnRbMF06IDAwMDAwMDQwMDAwODAwMDAgLSAwMDAwMDA0MDAwODRk
-MDAwLCA3Y2QwMDBoIGJ5dGVzLCAxOTk3IHBhZ2VzCnNwIDogZmZmZmZmYzNlZjE2M2Q5MAp4Mjk6
-IGZmZmZmZmMzZWYxNjNkOTAgeDI4OiAwMDAwMDA4MDAwMDAwMDAwIAprZXhlY19pc19kdGI6MTM2
-OiBtYWdpYzogMCA6IDAgOiBubwoKICAgICAgc2VnbWVudFsxXTogMDAwMDAwNDAwMDg2MDAwMCAt
-IDAwMDAwMDQwMDA4NjIwMDAsIDIwMDBoIGJ5dGVzLCAyIHBhZ2VzCngyNzogZmZmZmZmYzNlZjE2
-MDAwMCB4MjY6IGZmZmZmZmMwMDA2MDQwMDAgCmtleGVjX2lzX2R0YjoxMzY6IG1hZ2ljOiAwIDog
-MCA6IG5vCgptYWNoaW5lX2tleGVjOjYyMjogY29udHJvbF9jb2RlX3BhZ2U6ICAgICAgICBmZmZm
-ZmZiY2VkYmZjNmY4CngyNTogZmZmZmZmYzAwMDYwMjAwMCAKbWFjaGluZV9rZXhlYzo2MjQ6IHJl
-Ym9vdF9jb2RlX2J1ZmZlcl9waHlzOiAgMDAwMDAwNDNlZGE2OTAwMAp4MjQ6IGZmZmZmZmMwMDA1
-ODcwMDAgCm1hY2hpbmVfa2V4ZWM6NjI2OiByZWJvb3RfY29kZV9idWZmZXI6ICAgICAgIGZmZmZm
-ZmMzZWRhNjkwMDAKCm1hY2hpbmVfa2V4ZWM6NjI4OiByZWxvY2F0ZV9uZXdfa2VybmVsOiAgICAg
-IGZmZmZmZmMwMDAwOTMxNTgKeDIzOiBmZmZmZmZjMDAwYzcyMDAwIAptYWNoaW5lX2tleGVjOjYz
-MDogcmVsb2NhdGVfbmV3X2tlcm5lbF9zaXplOiBiOGgoMTg0KSBieXRlcwp4MjI6IDAwMDAwMDAw
-NTAwZjAwMDAgCm1hY2hpbmVfa2V4ZWM6NjMzOiBrZXhlY19kdGJfYWRkcjogICAgICAgICAgIDAw
-MDAwMDQwMDA4NjAwMDAKCm1hY2hpbmVfa2V4ZWM6NjM1OiBrZXhlY19raW1hZ2VfaGVhZDogICAg
-ICAgIDAwMDAwMDQzZWRhZWYwMDIKeDIxOiAwMDAwMDAwMDAwMDAwMDAwIAptYWNoaW5lX2tleGVj
-OjYzNzoga2V4ZWNfa2ltYWdlX3N0YXJ0OiAgICAgICAwMDAwMDA0MDAwMDgwMDAwCngyMDogMDAw
-MDAwMDAwMDAwMDAwMCAKbWFjaGluZV9rZXhlYzo2Mzk6IGtleGVjX2VudHJ5X2R1bXA6CgogIEkg
-NDNlZGFlZjAwMiA9IDQzZWRhZWYwMDAgKGZmZmZmZmMzZWRhZWYwMDApCngxOTogZmZmZmZmYzAw
-MDQ4YThiMCAKICBEIDQwMDAwODAwMDEgPSA0MDAwMDgwMDAwIChmZmZmZmZjMDAwMDgwMDAwKQp4
-MTg6IDAwMDAwMDdmZDMxY2M2ZTAgCngxNzogMDAwMDAwMDAwMDRhNmM2MCB4MTY6IGZmZmZmZmMw
-MDAxN2E4MzQgCiAgSSA0M2VkNGY0MDAyID0gNDNlZDRmNDAwMCAoZmZmZmZmYzNlZDRmNDAwMCkK
-CngxNTogMDAwMDAwMDAwMDAwMDAwNiB4MTQ6IDAwMDAwMDAwMDAwZmRiMDQgCngxMzogMDAwMDAw
-MDAwMDAwMDA1NCB4MTI6IDAwMDAwMDQwMDA0ODlmODAgCiAgSSA0M2VkNmY0MDAyID0gNDNlZDZm
-NDAwMCAoZmZmZmZmYzNlZDZmNDAwMCkKCngxMTogMDAwMDAwMDAwMDAwMjRmYyB4MTA6IGZmZmZm
-ZmZmZmZmZmZmZmYgCng5IDogMDAwMDAwMDAwMDAwMDAzMyB4OCA6IGZmZmZmZmMzZmVlODE1M2Yg
-CiAgSSA0M2VkMGY0MDAyID0gNDNlZDBmNDAwMCAoZmZmZmZmYzNlZDBmNDAwMCkKCng3IDogMDAw
-MDAwMDAwMDAwMDAwMCB4NiA6IDAwMDAwMDAwMDAwZjAwMDAgCng1IDogMDAwMDAwMDAwMDBmMDAw
-MCAKICBEIDQwMDA4NjAwMDEgPSA0MDAwODYwMDAwIChmZmZmZmZjMDAwODYwMDAwKQp4NCA6IGZm
-ZmZmZmMwMDBjYWEyMDggCiAgRE9ORSAwMDAwMDAwMDA0CgoKICBrZXhlY19lbnRyeV9kdW1wOiAw
-IHBhZ2VzCngzIDogZmZmZmZmYzAwMGM3MjAwMCB4MiA6IGZmZmZmZmMwMDAwODA1ZDggCngxIDog
-MDAwMDAwMDAwMDAwMDAwMCB4MCA6IGZmZmZmZmMwMDBjNzIwMDAgCmR1bXBfY3B1czogYWxsOiAg
-ICAgICAgMCAxIDIgMyA0IDUgNiA3CgpJbnRlcm5hbCBlcnJvcjogT29wcyAtIGJhZCBtb2RlOiAw
-IFsjMV0gUFJFRU1QVCBTTVAKZHVtcF9jcHVzOiBwb3NzaWJsZTogICAwIDEgMiAzIDQgNSA2IDcK
-TW9kdWxlcyBsaW5rZWQgaW46CmR1bXBfY3B1czogcHJlc2VudDogICAgMCAxIDIgMyA0IDUgNiA3
-CkNQVTogNyBQSUQ6IDAgQ29tbTogc3dhcHBlci83IE5vdCB0YWludGVkIDMuMTUuMC1yYzQrICM0
-NApkdW1wX2NwdXM6IGFjdGl2ZTogICAgIDAgMSAyIDMgNCA1IDYgNwp0YXNrOiBmZmZmZmZjM2Vm
-MTQzMzQwIHRpOiBmZmZmZmZjM2VmMTYwMDAwIHRhc2sudGk6IGZmZmZmZmMzZWYxNjAwMDAKZHVt
-cF9jcHVzOiBvbmxpbmU6ICAgICAwClBDIGlzIGF0IDB4NDAwMDQ4OWY4MApMUiBpcyBhdCAweGZm
-ZmZmZmMwMDAwODAyZTgKZHVtcF9jcHVzOiBub3Qgb25saW5lOiAxIDIgMyA0IDUgNiA3CnBjIDog
-WzwwMDAwMDA0MDAwNDg5ZjgwPl0gbHIgOiBbPGZmZmZmZmMwMDAwODAyZTg+XSBwc3RhdGU6IDYw
-MDAwMWM1CkJ5ZSEKc3AgOiBmZmZmZmZjM2VmMTYzZDkwCngyOTogZmZmZmZmYzNlZjE2M2Q5MCB4
-Mjg6IDAwMDAwMDgwMDAwMDAwMDAgCngyNzogZmZmZmZmYzNlZjE2MDAwMCB4MjY6IGZmZmZmZmMw
-MDA2MDQwMDAgCngyNTogZmZmZmZmYzAwMDYwMjAwMCB4MjQ6IGZmZmZmZmMwMDA1ODcwMDAgCngy
-MzogZmZmZmZmYzAwMGM3MjAwMCB4MjI6IDAwMDAwMDAwNTAwZjAwMDAgCngyMTogMDAwMDAwMDAw
-MDAwMDAwMCB4MjA6IDAwMDAwMDAwMDAwMDAwMDAgCngxOTogZmZmZmZmYzAwMDQ4YThiMCB4MTg6
-IDAwMDAwMDdmZDMxY2M2ZTAgCngxNzogMDAwMDAwMDAwMDRhNmM2MCB4MTY6IGZmZmZmZmMwMDAx
-N2E4MzQgCngxNTogMDAwMDAwMDAwMDAwMDAwNiB4MTQ6IDAwMDAwMDAwMDAwZmRiMDQgCngxMzog
-MDAwMDAwMDAwMDAwMDA1NCB4MTI6IDAwMDAwMDQwMDA0ODlmODAgCngxMTogMDAwMDAwMDAwMDAw
-MjRmYyB4MTA6IGZmZmZmZmZmZmZmZmZmZmYgCng5IDogMDAwMDAwMDAwMDAwMDAzMyB4OCA6IGZm
-ZmZmZmMzZmVlODE1M2YgCng3IDogMDAwMDAwMDAwMDAwMDAwMCB4NiA6IDAwMDAwMDAwMDAwZjAw
-MDAgCng1IDogMDAwMDAwMDAwMDBmMDAwMCB4NCA6IGZmZmZmZmMwMDBjYWEyMDggCngzIDogZmZm
-ZmZmYzAwMGM3MjAwMCB4MiA6IGZmZmZmZmMwMDAwODA1ZDggCngxIDogMDAwMDAwMDAwMDAwMDAw
-MCB4MCA6IGZmZmZmZmMwMDBjNzIwMDAgCgpQcm9jZXNzIHN3YXBwZXIvNyAocGlkOiAwLCBzdGFj
-ayBsaW1pdCA9IDB4ZmZmZmZmYzNlZjE2MDA1OCkKU3RhY2s6ICgweGZmZmZmZmMzZWYxNjNkOTAg
-dG8gMHhmZmZmZmZjM2VmMTY0MDAwKQozZDgwOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBlZjE2M2RjMCBmZmZmZmZjMyAwMDA4ZWQyYyBmZmZmZmZjMAozZGEwOiAwMGNhYTE3
-MCBmZmZmZmZjMCAwMDAwMDAwNyAwMDAwMDAwMCAwMGM1ZWE5OCBmZmZmZmZjMCAwMDA4ZWNiOCBm
-ZmZmZmZjMAozZGMwOiBlZjE2M2UxMCBmZmZmZmZjMyAwMDA4MTJkMCBmZmZmZmZjMCAwMDAwMjAw
-YyBmZmZmZmY4MCBlZjE2M2U0MCBmZmZmZmZjMwozZGUwOiAwMGNjMjcwMCBmZmZmZmZjMCAwMDAw
-MjAxMCBmZmZmZmY4MCA2MDAwMDE0NSAwMDAwMDAwMCAwMGNhODcxYSBmZmZmZmZjMAozZTAwOiBl
-ZjE2M2U0MCBmZmZmZmZjMyAwMDAwMDAwMyAwMDAwMDAwMCBlZjE2M2Y2MCBmZmZmZmZjMyAwMDA4
-M2RhNCBmZmZmZmZjMAozZTIwOiBlZjE2MDAwMCBmZmZmZmZjMyBlZjE2MDAwMCBmZmZmZmZjMyBl
-ZjE2M2Y2MCBmZmZmZmZjMyAwMDA4NTJiNCBmZmZmZmZjMAozZTQwOiAwMDAwMDAwNyAwMDAwMDAw
-MCAwMDU5N2U0OCBmZmZmZmZjMCBlZjE2M2VmMCBmZmZmZmZjMyAwMDAwMDAwMSAwMDAwMDAwMAoz
-ZTYwOiAwMDAwMDA0ZSAwMDAwMDAwMCAxNDAwMDAwMCAwMDAwMDAwMCAyNWMxN2QwMyAwMDAwMDAw
-MiAwMDAwMDAwMCAwMDAwMDAwMAozZTgwOiAwMDAwMDAxOCAwMDAwMDAwMCBlZjE2M2Q3MCBmZmZm
-ZmZjMyAwMDAwMDQwMCAwMDAwMDAwMCAwMDAwMDQwMCAwMDAwMDAwMAozZWEwOiAwMDAwMDAwMCAw
-MDAwMDAwMCBmZmZmZmZmZiBmZmZmZmZmZiBmZmZmZmZmZiBmZmZmZmZmZiA5ODFlODU5OCAwMDAw
-MDA3ZgozZWMwOiAwMDE3YTgzNCBmZmZmZmZjMCAwMDRhNmM2MCAwMDAwMDAwMCBkMzFjYzZlMCAw
-MDAwMDA3ZiBlZjE2MDAwMCBmZmZmZmZjMwozZWUwOiBlZjE2MDAwMCBmZmZmZmZjMyAwMGNhZjUw
-MCBmZmZmZmZjMCAwMDQ4ZDAwMCBmZmZmZmZjMCAwMDU4N2E2OCBmZmZmZmZjMAozZjAwOiAwMGNh
-ODcxYSBmZmZmZmZjMCAwMDU4ZDIwMCBmZmZmZmZjMCAwMDAwMDAwMSAwMDAwMDAwMCBlZjE2MDAw
-MCBmZmZmZmZjMwozZjIwOiAwMDAwMDAwMCAwMDAwMDA4MCBlZjE2M2Y2MCBmZmZmZmZjMyAwMDA4
-NTJiMCBmZmZmZmZjMCBlZjE2M2Y2MCBmZmZmZmZjMwozZjQwOiAwMDA4NTJiNCBmZmZmZmZjMCA2
-MDAwMDE0NSAwMDAwMDAwMCBlZjE2MDAwMCBmZmZmZmZjMyBlZjE2MDAwMCBmZmZmZmZjMwozZjYw
-OiBlZjE2M2Y3MCBmZmZmZmZjMyAwMDBlMTBhNCBmZmZmZmZjMCBlZjE2M2ZkMCBmZmZmZmZjMyAw
-MDA4ZTgxYyBmZmZmZmZjMAozZjgwOiAwMDAwMDAwNyAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAw
-MCAwMGNhYTFiMCBmZmZmZmZjMCA1MDBmMDAwMCAwMDAwMDAwMAozZmEwOiAwMGM3MjAwMCAwMDAw
-MDA0MCAwMDAwMDAwMCAwMDAwMDA0MCAwMDA3YjAwMCAwMDAwMDA0MCAwMDA3ZDAwMCAwMDAwMDA0
-MAozZmMwOiAwMDA4MDMwMCBmZmZmZmZjMCAwMDA4ZTdmYyBmZmZmZmZjMCAwMDAwMDAwMCAwMDAw
-MDAwMCAwMDA4MDJlOCAwMDAwMDA0MAozZmUwOiAwMDAwMjAwMCAwMDAwMDAwMCAwMDAwMDAwMCAw
-MDAwMDAwMCAwOGQwYjAwNCAwNTEwMTUxNCBhNjg4Y2RhYSAyNjIwYTgwZgpDYWxsIHRyYWNlOgpb
-PDAwMDAwMDQwMDA0ODlmODA+XSAweDQwMDA0ODlmODAKWzxmZmZmZmZjMDAwMDhlZDI4Pl0gaGFu
-ZGxlX0lQSSsweDFhOC8weDFiMApbPGZmZmZmZmMwMDAwODEyY2M+XSBnaWNfaGFuZGxlX2lycSsw
-eDc4LzB4ODAKRXhjZXB0aW9uIHN0YWNrKDB4ZmZmZmZmYzNlZjE2M2UyMCB0byAweGZmZmZmZmMz
-ZWYxNjNmNDApCjNlMjA6IGVmMTYwMDAwIGZmZmZmZmMzIGVmMTYwMDAwIGZmZmZmZmMzIGVmMTYz
-ZjYwIGZmZmZmZmMzIDAwMDg1MmI0IGZmZmZmZmMwCjNlNDA6IDAwMDAwMDA3IDAwMDAwMDAwIDAw
-NTk3ZTQ4IGZmZmZmZmMwIGVmMTYzZWYwIGZmZmZmZmMzIDAwMDAwMDAxIDAwMDAwMDAwCjNlNjA6
-IDAwMDAwMDRlIDAwMDAwMDAwIDE0MDAwMDAwIDAwMDAwMDAwIDI1YzE3ZDAzIDAwMDAwMDAyIDAw
-MDAwMDAwIDAwMDAwMDAwCjNlODA6IDAwMDAwMDE4IDAwMDAwMDAwIGVmMTYzZDcwIGZmZmZmZmMz
-IDAwMDAwNDAwIDAwMDAwMDAwIDAwMDAwNDAwIDAwMDAwMDAwCjNlYTA6IDAwMDAwMDAwIDAwMDAw
-MDAwIGZmZmZmZmZmIGZmZmZmZmZmIGZmZmZmZmZmIGZmZmZmZmZmIDk4MWU4NTk4IDAwMDAwMDdm
-CjNlYzA6IDAwMTdhODM0IGZmZmZmZmMwIDAwNGE2YzYwIDAwMDAwMDAwIGQzMWNjNmUwIDAwMDAw
-MDdmIGVmMTYwMDAwIGZmZmZmZmMzCjNlZTA6IGVmMTYwMDAwIGZmZmZmZmMzIDAwY2FmNTAwIGZm
-ZmZmZmMwIDAwNDhkMDAwIGZmZmZmZmMwIDAwNTg3YTY4IGZmZmZmZmMwCjNmMDA6IDAwY2E4NzFh
-IGZmZmZmZmMwIDAwNThkMjAwIGZmZmZmZmMwIDAwMDAwMDAxIDAwMDAwMDAwIGVmMTYwMDAwIGZm
-ZmZmZmMzCjNmMjA6IDAwMDAwMDAwIDAwMDAwMDgwIGVmMTYzZjYwIGZmZmZmZmMzIDAwMDg1MmIw
-IGZmZmZmZmMwIGVmMTYzZjYwIGZmZmZmZmMzCls8ZmZmZmZmYzAwMDA4M2RhMD5dIGVsMV9pcnEr
-MHg2MC8weGQwCls8ZmZmZmZmYzAwMDBlMTBhMD5dIGNwdV9zdGFydHVwX2VudHJ5KzB4MTE4LzB4
-MTgwCls8ZmZmZmZmYzAwMDA4ZTgxOD5dIHNlY29uZGFyeV9zdGFydF9rZXJuZWwrMHgxMGMvMHgx
-MWMKQ29kZTogYmFkIFBDIHZhbHVlCi0tLVsgZW5kIHRyYWNlIDc0NjdlYWJjMGUwNzg3ZjIgXS0t
-LQpLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzogRmF0YWwgZXhjZXB0aW9uIGluIGludGVycnVw
-dApSZWJvb3RpbmcgaW4gMSBzZWNvbmRzLi5SZWJvb3QgZmFpbGVkIC0tIFN5c3RlbSBoYWx0ZWQK
-Cg==
---047d7b671d1c94a1b604fdecce6b
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---047d7b671d1c94a1b604fdecce6b--
-
