@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-qg0-x234.google.com ([2607:f8b0:400d:c04::234])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X5VNP-0005mR-8y
- for kexec@lists.infradead.org; Fri, 11 Jul 2014 07:36:15 +0000
-Date: Fri, 11 Jul 2014 15:35:43 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 7/7] add a new interface to show the memory usage of 1st
- kernel
-Message-ID: <20140711073543.GC1547@dhcp-17-102.nay.redhat.com>
-References: <1405062964-11406-1-git-send-email-bhe@redhat.com>
- <1405062964-11406-7-git-send-email-bhe@redhat.com>
+ id 1X5VRX-0001DP-Vh
+ for kexec@lists.infradead.org; Fri, 11 Jul 2014 07:40:32 +0000
+Received: by mail-qg0-f52.google.com with SMTP id f51so618610qge.39
+ for <kexec@lists.infradead.org>; Fri, 11 Jul 2014 00:40:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1405062964-11406-7-git-send-email-bhe@redhat.com>
+In-Reply-To: <1405013413.4264.11.camel@smoke>
+References: <CAOdCjQt73aTLUpGzgQMuSs_aO4RnurArWQoTAFqymBMKTsHe0g@mail.gmail.com>
+ <1404932264.26155.75.camel@smoke>
+ <CAOdCjQvyzJiNbCijMHU+HowSZknNbEFWh74RM+bzUt2hzZw5Jw@mail.gmail.com>
+ <1405013413.4264.11.camel@smoke>
+Date: Fri, 11 Jul 2014 13:10:09 +0530
+Message-ID: <CAOdCjQsHUBS9B_Wxe+qbc=k8L3bL145Y2rF+sN=DFvC2BByT9w@mail.gmail.com>
+Subject: Re: kexec for aarch64_be
+From: Pankaj Pandey <pankaj.embedded@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,53 +27,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: vgoyal@redhat.com
+To: Geoff Levand <geoff@infradead.org>, kexec <kexec@lists.infradead.org>
 
-Hi,
+Hi Geoff,
 
-In this patch, I set info->dump_level=MAX_DUMP_LEVEL, and
-info->flag_cyclic=TRUE; With MAX_DUMP_LEVEL all kinds of memory can be
-calculated. And under cyclic mode, function get_num_dumpable_cyclic() is
-ready to do the page number calculation of memory in different use.
+I have checkout the master branch and compile and execute the kexec.
+Please find log below :-
 
-There's miss in [patch 7/7 v1], please reivew [patch 7/7 v2].
 
-Thanks
-Baoquan
+# /home/kexec -l /home/vmlinux --command-line="`cat /proc/cmdline`"  -d
+arch_process_options:79: command_line: root=/dev/nfs rw
+nfsroot=10.162.103.123:/opt/rootfs_all/rootfs-complete
+ip=10.162.10.45:10.162.103.123:10.162.103.123:255.255.0.0:aarch64_be:eth0:off
+panic=1 console=ttyS0,115200
+arch_process_options:85: initrd: (null)
+arch_process_options:86: dtb: (null)
+kernel: 0x7f85df8010 kernel_size: 0x729a63c
+Modified cmdline: root=/dev/nfs
+get_memory_ranges_dt: node_1552 memory
+get_memory_ranges_dt:  RAM: 0000004000000000 - 0000004400000000
+get_memory_ranges_dt:  RAM: 0000000000000000 - 0000000000000000
+get_memory_ranges_dt:  RAM: 0000000000000000 - 0000000000000000
+get_memory_ranges_dt:  RAM: 0000000000000000 - 0000000000000000
+get_memory_ranges_dt: Success
+p_vaddr: ffffffc000080000
+kexec: kexec/arch/arm64/kexec-arm64.c:242: virt_to_phys: Assertion
+`arm64_mem.memstart' failed.
+Aborted
 
-On 07/11/14 at 03:16pm, Baoquan He wrote:
-> Recently people complained that they don't decide how much disk size
-> need be reserved for kdump storing. E.g there are lots of machines
-> with different memory size, if the memory usage information of current
-> system can be shown, that can help them to make an estimate how much
-> storage space need be reserved.
-> 
-> In this patch, a new interface is added into makedumpfile. With the
-> help of this, people can know the page number of memory in different
-> use. The implementation is analyzing the "System Ram" and "kernel text"
-> program segment of /proc/kcore excluding the crashkernel range, then
-> calculating the page number of different kind per vmcoreinfo.
-> 
-> The print is like below:
-> ->$ ./makedumpfile  --mem-usage  /proc/kcore
-> Excluding unnecessary pages        : [100.0 %] |
-> 
-> Page number of memory in different use
-> --------------------------------------------------
-> TYPE			PAGES			EXCLUDABLE	DESCRIPTION
-> pfn_zero		0x0000000000000000	yes		Pages filled with zero
-> pfn_cache		0x000000000002b19f	yes		Cache pages
-> pfn_cache_private	0x0000000000042526	yes		Cache pages + private
-> pfn_user		0x0000000000026bc3	yes		User process data pages
-> pfn_free		0x0000000000133f79	yes		Free pages
-> pfn_hwpoison		0x0000000000000000	yes		Hwpoison pages
-> pfn_kernel_data		0x000000000001dd56	no		Dumpable kernel data
-> 
-> Total pages on system:	0x00000000001e5f57
-> Excludable pages:	0x00000000001c8201
-> Memory Hole: 		0x00000000000386a9
-> --------------------------------------------------
+Regards,
+Pankaj Pandey
+
+On Thu, Jul 10, 2014 at 11:00 PM, Geoff Levand <geoff@infradead.org> wrote:
+> Hi Pankaj,
+>
+> On Thu, 2014-07-10 at 19:29 +0530, Pankaj Pandey wrote:
+>> memory ranges:
+>>  Skip: 000000001c020000 - 000000001c020020 : serial
+>>  Add:  0000004000000000 - 0000004400000000 : System RAM
+>>  Skip: 0000004000080000 - 00000040008ac5e4 : Kernel code
+>>  Skip: 00000040008dc000 - 0000004000a8e4d8 : Kernel data
+>>  Skip: 000000e0d0000000 - 000000e0d0200000 : cfg
+>> elf_arm64_probe:27: ->
+>> elf_arm64_probe:46: <-
+>> elf_arm64_load:65: ->
+>> add_segment:112: ->
+>> virt_to_phys:104: ffffffc000080000 -> ffffffc080080000
+>> Invalid memory segment 0xffffffc080080000 - 0xffffffc080a8efff
+>
+> This output does not look familiar.  I can only
+> guess you are using an old version of my kexec-tools.
+>
+> Please use the latest from the 'master' branch here, and
+> post the output:
+>
+>   git://git.linaro.org/people/geoff.levand/kexec-tools.git
+>
+> -Geoff
+>
+>
+>
+>
 
 _______________________________________________
 kexec mailing list
