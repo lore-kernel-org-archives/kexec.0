@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 11 Jul 2014 17:47:48 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 7/8] arm64/kexec: Add core kexec support
-Message-ID: <20140711094747.GA16936@darkstar.nay.redhat.com>
-References: <cover.1399594544.git.geoff@infradead.org>
- <64ef27888fa70b3e27ddcf4ca594fa71ab7f7777.1399594544.git.geoff@infradead.org>
- <20140707073337.GA1108@dhcp-16-198.nay.redhat.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1X5YCN-0005RT-1X
+ for kexec@lists.infradead.org; Fri, 11 Jul 2014 10:37:04 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [PATCH] kexec: Export free_huge_page to VMCOREINFO
+Date: Fri, 11 Jul 2014 10:34:57 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972400F3@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140707073337.GA1108@dhcp-16-198.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,66 +21,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Deepak Saxena <dsaxena@linaro.org>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 07/07/14 at 03:33pm, Dave Young wrote:
-> [snip]
-> 
-> > +
-> > +/**
-> > + * kexec_cpu_info_init - Initialize an array of kexec_cpu_info structures.
-> > + *
-> > + * Allocates a cpu info array and fills it with info for all cpus found in
-> > + * the device tree passed.  The cpu info array is zero terminated.
-> > + */
-> > +
-> > +int kexec_cpu_info_init(const struct device_node *dn,
-> > +	struct kexec_dt_info *info)
-> > +{
-> > +	int result;
-> > +	unsigned int cpu;
-> > +	const struct device_node *i;
-> > +
-> > +	info->cpu_info = kmalloc(
-> > +		(1 + info->cpu_count) * sizeof(struct kexec_cpu_info),
-> > +		GFP_KERNEL);
-> > +
-> > +	if (!info->cpu_info) {
-> > +		pr_debug("%s: out of memory", __func__);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	info->spinner_count = 0;
-> > +
-> > +	for (cpu = 0, i = dn; cpu < info->cpu_count; cpu++) {
-> > +		struct kexec_cpu_info *cpu_info = &info->cpu_info[cpu];
-> > +
-> > +		i = of_find_node_by_type((struct device_node *)i, "cpu");
-> > +
-> > +		BUG_ON(!i);
-> > +
-> > +		cpu_info->cpu = cpu;
-> > +
-> > +		result = cpu_read_ops((struct device_node *)i, cpu,
-> > +			&cpu_info->cpu_ops);
-> 
-> cpu_ops memory is not allocated?
+PG_head_mask was added into VMCOREINFO to filter huge pages in
+commit:b3acc56bfe1(kexec: save PG_head_mask in VMCOREINFO), but
+makedumpfile still need another symbol to filter *hugetlbfs* pages.
 
-Oops, I misread the code, it should be not a problem. Just ignore above comment
+If a user hope to filter user pages, makedumpfile tries to exclude
+them by checking the condition whether the page is anonymous, but
+hugetlbfs pages aren't anonymous while they also be user pages.
 
-But I surely have some problem, probably caused by some random issues. 
+We know it's possible to detect them in the same way as PageHuge(),
+so we need the start address of free_huge_page():
 
-> 
-> BTW cpu_read_ops will call cpu_get_ops which is marked as __init
-> 
-> Thanks
-> Dave
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+    int PageHuge(struct page *page)
+    {
+            if (!PageCompound(page))
+                    return 0;
+
+            page = compound_head(page);
+            return get_compound_page_dtor(page) == free_huge_page;
+    }
+
+For that reason, this patch changes free_huge_page() into public
+to export it to VMCOREINFO.
+
+Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+---
+ include/linux/hugetlb.h | 1 +
+ kernel/kexec.c          | 2 ++
+ mm/hugetlb.c            | 2 +-
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 255cd5c..a23c096 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -80,6 +80,7 @@ int dequeue_hwpoisoned_huge_page(struct page *page);
+ bool isolate_huge_page(struct page *page, struct list_head *list);
+ void putback_active_hugepage(struct page *page);
+ bool is_hugepage_active(struct page *page);
++void free_huge_page(struct page *page);
+ 
+ #ifdef CONFIG_ARCH_WANT_HUGE_PMD_SHARE
+ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 369f41a..23a088f 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -33,6 +33,7 @@
+ #include <linux/swap.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/compiler.h>
++#include <linux/hugetlb.h>
+ 
+ #include <asm/page.h>
+ #include <asm/uaccess.h>
+@@ -1619,6 +1620,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ #endif
+ 	VMCOREINFO_NUMBER(PG_head_mask);
+ 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
++	VMCOREINFO_SYMBOL(free_huge_page);
+ 
+ 	arch_crash_save_vmcoreinfo();
+ 	update_vmcoreinfo_note();
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 2024bbd..d5437eb 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -856,7 +856,7 @@ struct hstate *size_to_hstate(unsigned long size)
+ 	return NULL;
+ }
+ 
+-static void free_huge_page(struct page *page)
++void free_huge_page(struct page *page)
+ {
+ 	/*
+ 	 * Can't pass hstate in here because it is called from the
+-- 
+1.9.0
 
 _______________________________________________
 kexec mailing list
