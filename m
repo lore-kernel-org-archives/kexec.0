@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X5V4s-0004RF-Qa
+ id 1X5V4s-0004Ow-Qa
  for kexec@lists.infradead.org; Fri, 11 Jul 2014 07:17:07 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 7/7] add a new interface to show the memory usage of 1st kernel
-Date: Fri, 11 Jul 2014 15:16:04 +0800
-Message-Id: <1405062964-11406-7-git-send-email-bhe@redhat.com>
+Subject: [PATCH 6/7] implement a function to print the memory usage
+Date: Fri, 11 Jul 2014 15:16:03 +0800
+Message-Id: <1405062964-11406-6-git-send-email-bhe@redhat.com>
 In-Reply-To: <1405062964-11406-1-git-send-email-bhe@redhat.com>
 References: <1405062964-11406-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,175 +25,65 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: Baoquan He <bhe@redhat.com>, vgoyal@redhat.com
 
-Recently people complained that they don't decide how much disk size
-need be reserved for kdump storing. E.g there are lots of machines
-with different memory size, if the memory usage information of current
-system can be shown, that can help them to make an estimate how much
-storage space need be reserved.
-
-In this patch, a new interface is added into makedumpfile. With the
-help of this, people can know the page number of memory in different
-use. The implementation is analyzing the "System Ram" and "kernel text"
-program segment of /proc/kcore excluding the crashkernel range, then
-calculating the page number of different kind per vmcoreinfo.
-
-The print is like below:
-->$ ./makedumpfile  --mem-usage  /proc/kcore
-Excluding unnecessary pages        : [100.0 %] |
-
-Page number of memory in different use
---------------------------------------------------
-TYPE			PAGES			EXCLUDABLE	DESCRIPTION
-pfn_zero		0x0000000000000000	yes		Pages filled with zero
-pfn_cache		0x000000000002b19f	yes		Cache pages
-pfn_cache_private	0x0000000000042526	yes		Cache pages + private
-pfn_user		0x0000000000026bc3	yes		User process data pages
-pfn_free		0x0000000000133f79	yes		Free pages
-pfn_hwpoison		0x0000000000000000	yes		Hwpoison pages
-pfn_kernel_data		0x000000000001dd56	no		Dumpable kernel data
-
-Total pages on system:	0x00000000001e5f57
-Excludable pages:	0x00000000001c8201
-Memory Hole: 		0x00000000000386a9
---------------------------------------------------
-Total pages:		0x000000000021e600
+Introduce print_mem_usage to print the result of analysis of /proc/kcore.
+The page number of memory in different use are printed.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- makedumpfile.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h |  2 ++
- 2 files changed, 73 insertions(+)
+ makedumpfile.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index a170dd3..b281d73 100644
+index b67ede1..a170dd3 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -8904,6 +8904,13 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
- 		 */
- 		info->name_memory   = argv[optind];
- 
-+	} else if ((argc == optind + 1) && info->flag_mem_usage) {
-+		/*
-+		* Parameter for showing the page number of memory
-+		* in different use from.
-+		*/
-+		info->name_memory   = argv[optind];
-+
- 	} else
- 		return FALSE;
- 
-@@ -9146,6 +9153,54 @@ static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
- 	return 0;
+@@ -7830,6 +7830,46 @@ print_report(void)
+ 	REPORT_MSG("\n");
  }
  
-+int show_mem_usage(void)
++static void
++print_mem_usage(void)
 +{
-+        uint64_t vmcoreinfo_addr, vmcoreinfo_len;
++	mdf_pfn_t pfn_original, pfn_excluded, shrinking;
 +
-+        if (!is_crashkernel_mem_reserved()) {
-+                ERRMSG("No memory is reserved for crashkenrel!\n");
-+                return FALSE;
-+        }
++	/*
++	* /proc/vmcore doesn't contain the memory hole area.
++	*/
++	pfn_original = info->max_mapnr - pfn_memhole;
 +
-+        if (!get_page_offset())
-+                return FALSE;
++	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
++	    + pfn_user + pfn_free + pfn_hwpoison;
++	shrinking = (pfn_original - pfn_excluded) * 100;
++	shrinking = shrinking / pfn_original;
 +
-+        if (!open_dump_memory())
-+                return FALSE;
++	MSG("\n");
++	MSG("Page number of memory in different use\n");
++	MSG("--------------------------------------------------\n");
++	MSG("TYPE			PAGES			EXCLUDABLE	DESCRIPTION\n");
 +
-+        if (!get_elf_loads(info->fd_memory, info->name_memory))
-+                return FALSE;
++	MSG("pfn_zero		0x%016llx	yes		Pages filled with zero\n", pfn_zero);
++	MSG("pfn_cache		0x%016llx	yes		Cache pages\n", pfn_cache);
++	MSG("pfn_cache_private	0x%016llx	yes		Cache pages + private\n",
++	    pfn_cache_private);
++	MSG("pfn_user		0x%016llx	yes		User process data pages\n", pfn_user);
++	MSG("pfn_free		0x%016llx	yes		Free pages\n", pfn_free);
++	MSG("pfn_hwpoison		0x%016llx	yes		Hwpoison pages\n", pfn_hwpoison);
++	MSG("pfn_kernel_data		0x%016llx	no		Dumpable kernel data \n",
++	    pfn_original - pfn_excluded);
 +
-+        if (get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
-+                return FALSE;
++	MSG("\n");
 +
-+        if (!set_kcore_vmcoreinfo(vmcoreinfo_addr, vmcoreinfo_len))
-+                return FALSE;
-+
-+        if (!get_kcore_dump_loads())
-+                return FALSE;
-+
-+        if (!initial())
-+                return FALSE;
-+
-+        if (!info->flag_cyclic)
-+                info->flag_cyclic = TRUE;
-+
-+        if (!prepare_bitmap2_buffer_cyclic())
-+                return FALSE;
-+
-+        info->num_dumpable = get_num_dumpable_cyclic();
-+
-+	free_bitmap2_buffer_cyclic();
-+
-+        print_mem_usage();
-+
-+        if (!close_files_for_creating_dumpfile())
-+                return FALSE;
-+
-+        return TRUE;
++	MSG("Total pages on system:	0x%016llx\n", pfn_original);
++	MSG("Excludable pages:	0x%016llx\n", pfn_excluded);
++	MSG("Memory Hole: 		0x%016llx\n", pfn_memhole);
++	MSG("--------------------------------------------------\n");
++	MSG("Total pages:		0x%016llx\n", info->max_mapnr);
++	MSG("\n");
 +}
 +
- 
- static struct option longopts[] = {
- 	{"split", no_argument, NULL, OPT_SPLIT},
-@@ -9163,6 +9218,7 @@ static struct option longopts[] = {
- 	{"cyclic-buffer", required_argument, NULL, OPT_CYCLIC_BUFFER},
- 	{"eppic", required_argument, NULL, OPT_EPPIC},
- 	{"non-mmap", no_argument, NULL, OPT_NON_MMAP},
-+	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
- 	{0, 0, 0, 0}
- };
- 
-@@ -9254,6 +9310,9 @@ main(int argc, char *argv[])
- 		case OPT_DUMP_DMESG:
- 			info->flag_dmesg = 1;
- 			break;
-+		case OPT_MEM_USAGE:
-+                       info->flag_mem_usage = 1;
-+                       break;
- 		case OPT_COMPRESS_SNAPPY:
- 			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
- 			break;
-@@ -9394,6 +9453,18 @@ main(int argc, char *argv[])
- 
- 		MSG("\n");
- 		MSG("The dmesg log is saved to %s.\n", info->name_dumpfile);
-+	} else if (info->flag_mem_usage) {
-+		if (!check_param_for_creating_dumpfile(argc, argv)) {
-+			MSG("Commandline parameter is invalid.\n");
-+			MSG("Try `makedumpfile --help' for more information.\n");
-+			goto out;
-+		}
-+
-+		if (!show_mem_usage())
-+			goto out;
-+
-+		MSG("\n");
-+		MSG("Showing page number of memory in different use successfully.\n");
- 	} else {
- 		if (!check_param_for_creating_dumpfile(argc, argv)) {
- 			MSG("Commandline parameter is invalid.\n");
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 7ffa1ee..7b537c7 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -910,6 +910,7 @@ struct DumpInfo {
- 	int		flag_force;	     /* overwrite existing stuff */
- 	int		flag_exclude_xen_dom;/* exclude Domain-U from xen-kdump */
- 	int             flag_dmesg;          /* dump the dmesg log out of the vmcore file */
-+	int             flag_mem_usage;  /*show the page number of memory in different use*/
- 	int		flag_use_printk_log; /* did we read printk_log symbol name? */
- 	int		flag_nospace;	     /* the flag of "No space on device" error */
- 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
-@@ -1771,6 +1772,7 @@ struct elf_prstatus {
- #define OPT_CYCLIC_BUFFER       OPT_START+11
- #define OPT_EPPIC               OPT_START+12
- #define OPT_NON_MMAP            OPT_START+13
-+#define OPT_MEM_USAGE            OPT_START+14
- 
- /*
-  * Function Prototype.
+ int
+ writeout_dumpfile(void)
+ {
 -- 
 1.8.4.2
 
