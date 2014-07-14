@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X6Yj4-0004pZ-Fj
- for kexec@lists.infradead.org; Mon, 14 Jul 2014 05:22:59 +0000
-Date: Mon, 14 Jul 2014 13:22:29 +0800
+ id 1X6Zmf-0003Fc-Ct
+ for kexec@lists.infradead.org; Mon, 14 Jul 2014 06:30:45 +0000
+Date: Mon, 14 Jul 2014 14:30:18 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 7/7] add a new interface to show the memory usage of 1st
- kernel
-Message-ID: <20140714052229.GB1717@dhcp-17-102.nay.redhat.com>
-References: <1405062964-11406-1-git-send-email-bhe@redhat.com>
- <1405062964-11406-7-git-send-email-bhe@redhat.com>
- <20140711143503.GH15611@redhat.com>
- <20140711143945.GC5851@dhcp-17-102.nay.redhat.com>
- <20140711144627.GJ15611@redhat.com>
+Subject: Re: [PATCH v2] makedumpfile: Exclude unnecessary hugepages.
+Message-ID: <20140714063018.GC1717@dhcp-17-102.nay.redhat.com>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9722301C@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140711144627.GJ15611@redhat.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9722301C@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,54 +23,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 07/11/14 at 10:46am, Vivek Goyal wrote:
-> On Fri, Jul 11, 2014 at 10:39:45PM +0800, Baoquan He wrote:
-> > On 07/11/14 at 10:35am, Vivek Goyal wrote:
-> > > On Fri, Jul 11, 2014 at 03:16:04PM +0800, Baoquan He wrote:
-> > > > ->$ ./makedumpfile  --mem-usage  /proc/kcore
-> > > > Excluding unnecessary pages        : [100.0 %] |
-> > > > 
-> > > > Page number of memory in different use
-> > > > --------------------------------------------------
-> > > > TYPE			PAGES			EXCLUDABLE	DESCRIPTION
-> > > > pfn_zero		0x0000000000000000	yes		Pages filled with zero
-> > > > pfn_cache		0x000000000002b19f	yes		Cache pages
-> > > > pfn_cache_private	0x0000000000042526	yes		Cache pages + private
-> > > > pfn_user		0x0000000000026bc3	yes		User process data pages
-> > > > pfn_free		0x0000000000133f79	yes		Free pages
-> > > > pfn_hwpoison		0x0000000000000000	yes		Hwpoison pages
-> > > 
-> > > Is there a need to display hwpoison pages? I think they are excluded by
-> > > default. Otherwise reading them might kill makedumpfile process.
-> > 
-> > You are right, hwpoison pages are excluded by default. But it truly
-> > calculated in makedumpfile. I will change it as non-excludable like
-> > below:
-> > 
-> > TYPE			PAGES			EXCLUDABLE	DESCRIPTION
-> > pfn_hwpoison		0x0000000000000000	No		Hwpoison pages
+On 06/17/14 at 02:32am, Atsushi Kumagai wrote:
+> Hello,
 > 
-> I think we don't have to display hwpoison pages. It is of no use. Let us
-> just display the pages which can be excluded using various filtering
-> levels and total number of pages (without memory hole).
-> 
-> That way people can do some math.
-> 
-> amount of disk space required = total_pages - filtered pages;
+>  		/*
+>  		 * Exclude the data page of the user process.
+>  		 */
+> -		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
+> -		    && isAnon(mapping)) {
+> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+> -				pfn_user++;
+> +		else if (info->dump_level & DL_EXCLUDE_USER_DATA) {
+Hi Atsushi,
 
-Sounds reasonable! Will change.
+Could it be changed to checking hugepage first, then anonymous page?
+This can avoid involving the free_huge_page.
 
-> 
-> Thanks
-> Vivek
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+like this:
+	int nr_pages;
+	if (page_is_hugepage(flags) {
+		int nr_pages = 1 << compound_order;
+
+		exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
+
+		pfn += nr_pages - 1;
+		mem_map += (nr_pages - 1) * SIZE(page);
+	} else if (isAnon(mapping)) {
+		int nr_pages = 1;
+
+		exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
+
+		pfn += nr_pages - 1;
+		mem_map += (nr_pages - 1) * SIZE(page);
+	}
+		
+But I may not know the meaning of free_huge_page completely. If you
+think introducing free_huge_page is better, I am fine too, can ACK that
+kernel patch to export free_huge_page you posted.
+
+Thanks
+Baoquan
+
+> +			/*
+> +			 * Exclude the anonymous pages as user pages.
+> +			 */
+> +			if (isAnon(mapping)) {
+> +				int nr_pages;
+> +				/*
+> +				 * Check the compound page
+> +				 */
+> +				if (page_is_hugepage(flags) && compound_order > 0)
+> +					nr_pages = 1 << compound_order;
+> +				else
+> +					nr_pages = 1;
+> +
+> +				exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
+> +
+> +				pfn += nr_pages - 1;
+> +				mem_map += (nr_pages - 1) * SIZE(page);
+> +			}
+> +			/*
+> +			 * Exclude the hugetlbfs pages as user pages.
+> +			 */
+> +			else if (hugetlb_dtor == SYMBOL(free_huge_page)) {
+> +				int nr_pages = 1 << compound_order;
+> +
+> +				exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
+> +
+> +				pfn += nr_pages - 1;
+> +				mem_map += (nr_pages - 1) * SIZE(page);
+> +			}
+>  		}
 
 _______________________________________________
 kexec mailing list
