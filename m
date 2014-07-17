@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yk0-f182.google.com ([209.85.160.182])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X74fA-0008Rn-EQ
- for kexec@lists.infradead.org; Tue, 15 Jul 2014 15:29:05 +0000
-Received: by mail-yk0-f182.google.com with SMTP id q9so1367254ykb.13
- for <kexec@lists.infradead.org>; Tue, 15 Jul 2014 08:28:40 -0700 (PDT)
+ id 1X7fId-0002fA-GG
+ for kexec@lists.infradead.org; Thu, 17 Jul 2014 06:36:16 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH v2] makedumpfile: Exclude unnecessary hugepages.
+Date: Thu, 17 Jul 2014 06:33:56 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97241B99@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9722301C@BPXM01GP.gisp.nec.co.jp>
+ <20140617083447.166244e5@hananiah.suse.cz>
+In-Reply-To: <20140617083447.166244e5@hananiah.suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <1405375504.23043.40.camel@smoke>
-References: <CAFdej01jQFS3MrSdiQCWwv36qzG4L301w0iNJgGeunt-_44okA@mail.gmail.com>
- <CAFdej03ziTTA5QGFjzKd6Kc4skWNTr5RECy69qtnQGVtE6ks3w@mail.gmail.com>
- <1404931759.26155.70.camel@smoke>
- <CAFdej02yHmsoEpcXBkiEZ9NXvwy4KF_ajN=nmC=E1q+YniPr1A@mail.gmail.com>
- <1405375504.23043.40.camel@smoke>
-Date: Tue, 15 Jul 2014 20:58:40 +0530
-Message-ID: <CAFdej02tudZBS+COS8TN4uafEvDwjyscn91XS9z94UK1de=dCQ@mail.gmail.com>
-Subject: Re: Kexec on arm64
-From: Arun Chandran <achandran@mvista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,62 +24,125 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Geoff,
+Hello Petr,
 
-I think we should better discuss this in the arm mailing list as it is getting
-more arm64 specific.
-
-I will post my reply there.
-
---Arun
-
-On Tue, Jul 15, 2014 at 3:35 AM, Geoff Levand <geoff@infradead.org> wrote:
-> Hi Arun,
->
-> On Fri, 2014-07-11 at 21:13 +0530, Arun Chandran wrote:
->> I tried kexec reboot with my modified kexec-tools and got a nice kernel panic.
->> Please find the error log attached.
->> There is only dtb file related change in the kernel sources, as given below.
+>> Hello,
 >>
->> ###########
->>                         cpu-release-addr = <0x1 0x0000fff8>;
->> -                       cpu-return-addr = <0 0>
->> +                       cpu-return-addr = <0x0 0x0>;
->> ###########
+>> This is the v2 patch for hugepage filtering rebased on Petr's
+>> "Generic multi-page exclusion", thanks Petr.
 >>
->> I just assigned a random value to "cpu-return-addr" in my dtb file;
+>> The current kernel's VMCOREINFO doesn't include necessary values
+>> for this patch, so we need "-x vmlinux" to enable hugepage filtering.
+>> I tested this patch on kernel 3.13.
+>>
+>> Regarding this, Petr made effort to add the values to VMCOREINFO,
+>> but it looks suspended:
+>>
+>>   https://lkml.org/lkml/2014/4/11/349
 >
-> You need the proper cpu-return-addr value.  Because cpu-return-addr
-> was zero, kexec sent all your secondary processors back to
-> secondary_startup, and is why you see that in your error log.
+>Actually, I received an Acked-by from Vivek last Wednesday. Oh, wait a
+>moment, this email went to Andrew Morton, but not to any mailing
+>list. :-(
 >
-> I put in a hack for zero cpu-return-addr in my latest version.  Please
-> try it.  If you use the same kernel for both the 1st and 2nd stage it
-> should work.
+>> So, we should resume this discussion for this patch. Then,
+>> I should modify this patch to use PG_head_mask if it's accepted.
 >
->> Do you have any idea how to find out that value for my hardware?
+>I have already experimented with hugepage filtering, but haven't sent
+>my patches yet, precisely because they depend on a not-yet-confirmed
+>feature in the kernel.
 >
-> It is a property of your bootloader, not hardware.  Ask your
-> bootloader maintainer if you can, or check the bootloader sources.
+>Anyway, let's take your patch as base. I'll add my comments where I
+>believe my approach was better/cleaner.
+
+Sorry for the late reply and thanks for your comments.
+I agree with you, so I'll post the fixed version soon.
+
+
+Thanks
+Atsushi Kumagai
+
+>>  	/*
+>>  	 * If a multi-page exclusion is pending, do it first
+>> @@ -4727,6 +4779,27 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+>>  		flags   = ULONG(pcache + OFFSET(page.flags));
+>>  		_count  = UINT(pcache + OFFSET(page._count));
+>>  		mapping = ULONG(pcache + OFFSET(page.mapping));
+>> +
+>> +		if (index_pg < PGMM_CACHED - 1) {
+>> +			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
+>> +					       + OFFSET(list_head.prev));
+>> +			hugetlb_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
+>> +					     + OFFSET(list_head.next));
+>> +		} else if (pfn + 1 < pfn_end) {
 >
-> For the rtsm_ve_aemv8a model bootwrapper I set cpu-return-addr to
-> <0x0 0x80000000> because the bootwrapper linker script puts _start
-> at PHYS_OFFSET, which is 0x80000000 for that platform.
+>AFAICS this clause is not needed. All compound pages are aligned to its
+>page order, e.g. the head page of an order-2 compound page is aligned
+>to a multiple of 4. Since mem_map cache is aligned to PGMM_CACHED,
+>which is defined as 512 (that is power of 2), a compound page cannot
+>possibly start on the last PFN of the cache.
 >
-> https://git.kernel.org/cgit/linux/kernel/git/mark/boot-wrapper-aarch64.git/tree/model.lds.S#n30
+>I even added a sanity check for the alignment:
 >
->> My hardware uses spin-table method for SMP. As you said there
->> is a bug in kexec for spin-table method, what about trying it without
->> CONFIG_SMP? Does your code support that?
+>			if (order && order < sizeof(unsigned long) * 8 &&
+>			    (pfn & ((1UL << order) - 1)) == 0)
 >
-> CONFIG_SMP=n should work, but I haven't tried it in a long time.
+>Ok, the "order" above corresponds to your "compound_order"...
 >
-> -Geoff
+>> +			unsigned char page_cache_next[SIZE(page)];
+>> +			if (!readmem(VADDR, mem_map, page_cache_next, SIZE(page))) {
+>> +				ERRMSG("Can't read the buffer of struct page.\n");
+>> +				return FALSE;
+>> +			}
+>> +			compound_order = ULONG(page_cache_next + OFFSET(page.lru)
+>> +					       + OFFSET(list_head.prev));
+>> +			hugetlb_dtor = ULONG(page_cache_next + OFFSET(page.lru)
+>> +					     + OFFSET(list_head.next));
+>> +		} else {
+>> +			compound_order = 0;
+>> +			hugetlb_dtor = 0;
+>> +		}
+>> +
+>>  		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
+>>  			_mapcount = UINT(pcache + OFFSET(page._mapcount));
+>>  		if (OFFSET(page.private) != NOT_FOUND_STRUCTURE)
+>> @@ -4754,6 +4827,10 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+>>  		    && !isPrivate(flags) && !isAnon(mapping)) {
+>>  			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+>>  				pfn_cache++;
+>> +			/*
+>> +			 * NOTE: If THP for cache is introduced, the check for
+>> +			 *       compound pages is needed here.
+>> +			 */
 >
+>I do this differently. I added:
 >
+>		mdf_pfn_t *pfn_counter
+>
+>Then I set pfn_counter to the appropriate counter, but do not call
+>clear_bit_on_2nd_bitmap_for_kernel(). At the end of the long
+>if-else-if-else-if statement I add a final else-clause:
+>
+>		/*
+>		 * Page not excluded
+>		 */
+>		else
+>			continue;
+>
+>If execution gets here, the page is excluded, so I can do:
+>
+>		if (nr_pages == 1) {
+>			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+>				(*pfn_counter)++;
+>		} else {
+>			exclude_range(pfn_counter, pfn, pfn + nr_pages, cycle);
+>		}
+>
+>What do you think?
+>
+>Petr Tesarik
 
 _______________________________________________
 kexec mailing list
