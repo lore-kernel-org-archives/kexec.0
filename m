@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X7fJt-0002ly-Is
- for kexec@lists.infradead.org; Thu, 17 Jul 2014 06:37:34 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2] makedumpfile: Exclude unnecessary hugepages.
-Date: Thu, 17 Jul 2014 06:34:33 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97241BA0@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9722301C@BPXM01GP.gisp.nec.co.jp>
- <20140714063018.GC1717@dhcp-17-102.nay.redhat.com>
-In-Reply-To: <20140714063018.GC1717@dhcp-17-102.nay.redhat.com>
-Content-Language: ja-JP
+ id 1X7mWy-0003FT-Qh
+ for kexec@lists.infradead.org; Thu, 17 Jul 2014 14:19:33 +0000
+Received: from /spool/local
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
+ Fri, 18 Jul 2014 00:19:07 +1000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [9.190.235.21])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id F3EAE2CE8052
+ for <kexec@lists.infradead.org>; Fri, 18 Jul 2014 00:19:02 +1000 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s6HEIkGj11469156
+ for <kexec@lists.infradead.org>; Fri, 18 Jul 2014 00:18:46 +1000
+Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s6HEJ1OX026021
+ for <kexec@lists.infradead.org>; Fri, 18 Jul 2014 00:19:01 +1000
+Subject: [PATCH 0/2] PPC64: Add virtual to physical address translation
+ support for vmalloc region
+From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Date: Thu, 17 Jul 2014 19:48:59 +0530
+Message-ID: <20140717141827.8955.95825.stgit@localhost.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,102 +37,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Kexec-ml <kexec@lists.infradead.org>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Ken'ichi <oomichi@mxs.nes.nec.co.jp>
 
-Hello Baoquan,
+In makedumpfile tool, currently there is no support for virtual to physical
+address translation of vmalloc region  on PPC64 architecture. These patches
+add this support.  The patches have been tested by  erasing data in vmalloc
+region, verfying for eraseinfo in the resultant ELF dump and verifiying the
+resultant ELF dump for sanity using crash utility. Also, tested the patches
+successfully with eppic scripts.
 
->On 06/17/14 at 02:32am, Atsushi Kumagai wrote:
->> Hello,
->>
->>  		/*
->>  		 * Exclude the data page of the user process.
->>  		 */
->> -		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
->> -		    && isAnon(mapping)) {
->> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
->> -				pfn_user++;
->> +		else if (info->dump_level & DL_EXCLUDE_USER_DATA) {
->Hi Atsushi,
->
->Could it be changed to checking hugepage first, then anonymous page?
->This can avoid involving the free_huge_page.
->
->like this:
->	int nr_pages;
->	if (page_is_hugepage(flags) {
->		int nr_pages = 1 << compound_order;
->
->		exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
->
->		pfn += nr_pages - 1;
->		mem_map += (nr_pages - 1) * SIZE(page);
->	} else if (isAnon(mapping)) {
->		int nr_pages = 1;
->
->		exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
->
->		pfn += nr_pages - 1;
->		mem_map += (nr_pages - 1) * SIZE(page);
->	}
->
->But I may not know the meaning of free_huge_page completely. If you
->think introducing free_huge_page is better, I am fine too, can ACK that
->kernel patch to export free_huge_page you posted.
+---
 
-The assumption that all compound pages are user pages is wrong since some
-kernel pages can be compound. For example, kmalloc_large_node() calls 
-alloc_pages_node() with __GFP_COMP. This means we have to check compound
-user pages without only depending on page_is_hugepage(). We can detect THPs
-with the combination of page_is_hugepage() and isAnon(), but it can't be
-applied to hugetlbfs pages.
-This is why we need to export free_huge_page.
-
-BTW, the v2 code can misdetect hugetlbfs due to the wrong check order, 
-I'm going to fix it in the next version.
+Hari Bathini (2):
+      makedumpfile: Initialize for vmalloc address translation support in PPC64 arch
+      makedumpfile: vtop address translation support for vmalloc region in PPC64 arch
 
 
-Thanks
-Atsushi Kumagai
+ arch/ppc64.c   |  156 ++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ makedumpfile.c |    7 +++
+ makedumpfile.h |   83 +++++++++++++++++++++++++++++-
+ 3 files changed, 233 insertions(+), 13 deletions(-)
 
->Thanks
->Baoquan
->
->> +			/*
->> +			 * Exclude the anonymous pages as user pages.
->> +			 */
->> +			if (isAnon(mapping)) {
->> +				int nr_pages;
->> +				/*
->> +				 * Check the compound page
->> +				 */
->> +				if (page_is_hugepage(flags) && compound_order > 0)
->> +					nr_pages = 1 << compound_order;
->> +				else
->> +					nr_pages = 1;
->> +
->> +				exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
->> +
->> +				pfn += nr_pages - 1;
->> +				mem_map += (nr_pages - 1) * SIZE(page);
->> +			}
->> +			/*
->> +			 * Exclude the hugetlbfs pages as user pages.
->> +			 */
->> +			else if (hugetlb_dtor == SYMBOL(free_huge_page)) {
->> +				int nr_pages = 1 << compound_order;
->> +
->> +				exclude_range(&pfn_user, pfn, pfn + nr_pages, cycle);
->> +
->> +				pfn += nr_pages - 1;
->> +				mem_map += (nr_pages - 1) * SIZE(page);
->> +			}
->>  		}
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+-- 
+- Hari
+
 
 _______________________________________________
 kexec mailing list
