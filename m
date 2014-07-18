@@ -1,31 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X7mXB-0003Ii-7V
- for kexec@lists.infradead.org; Thu, 17 Jul 2014 14:19:45 +0000
-Received: from /spool/local
- by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Fri, 18 Jul 2014 00:19:21 +1000
-Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [9.190.235.152])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id E69962BB0052
- for <kexec@lists.infradead.org>; Fri, 18 Jul 2014 00:19:17 +1000 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- s6HDuXc34456754
- for <kexec@lists.infradead.org>; Thu, 17 Jul 2014 23:56:33 +1000
-Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s6HEJHiN026249
- for <kexec@lists.infradead.org>; Fri, 18 Jul 2014 00:19:17 +1000
-Subject: [PATCH 2/2] makedumpfile: vtop address translation support for
- vmalloc region in PPC64 arch
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Thu, 17 Jul 2014 19:49:15 +0530
-Message-ID: <20140717141915.8955.94105.stgit@localhost.localdomain>
-In-Reply-To: <20140717141827.8955.95825.stgit@localhost.localdomain>
+ id 1X7wm5-0004aK-Nv
+ for kexec@lists.infradead.org; Fri, 18 Jul 2014 01:15:50 +0000
+From: Kenichi Oomichi <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH 0/2] PPC64: Add virtual to physical address translation
+ support for vmalloc region
+Date: Fri, 18 Jul 2014 01:14:13 +0000
+Message-ID: <663E0F2C6F9EEA4AAD1DEEBD89158AAE01077D76@BPXM06GP.gisp.nec.co.jp>
 References: <20140717141827.8955.95825.stgit@localhost.localdomain>
+In-Reply-To: <20140717141827.8955.95825.stgit@localhost.localdomain>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -35,152 +20,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kexec-ml <kexec@lists.infradead.org>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Ken'ichi <oomichi@mxs.nes.nec.co.jp>
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-This patch adds virtual to physical address translation support
-for vmalloc region in PPC64 architecture.
-
-Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
----
- arch/ppc64.c   |   84 ++++++++++++++++++++++++++++++++++++++++++++++++--------
- makedumpfile.h |    3 ++
- 2 files changed, 75 insertions(+), 12 deletions(-)
-
-diff --git a/arch/ppc64.c b/arch/ppc64.c
-index dabf2e7..609aaa2 100644
---- a/arch/ppc64.c
-+++ b/arch/ppc64.c
-@@ -224,6 +224,69 @@ ppc64_vmemmap_to_phys(unsigned long vaddr)
- 	return paddr;
- }
- 
-+static unsigned long long
-+ppc64_vtop_level4(unsigned long vaddr)
-+{
-+	ulong *level4, *level4_dir;
-+        ulong *page_dir, *page_middle;
-+        ulong *page_table;
-+        unsigned long long level4_pte, pgd_pte;
-+	unsigned long long pmd_pte, pte;
-+	unsigned long long paddr = NOT_PADDR;
-+
-+	level4 = (ulong *)info->kernel_pgd;
-+	level4_dir = (ulong *)((ulong *)level4 + L4_OFFSET(vaddr));
-+	if (!readmem(VADDR, PAGEBASE(level4), info->page_buf, PAGESIZE())) {
-+		ERRMSG("Can't read level4 page: 0x%llx\n", PAGEBASE(level4));
-+		return NOT_PADDR;
-+	}
-+	level4_pte = ULONG((info->page_buf + PAGEOFFSET(level4_dir)));
-+	if (!level4_pte)
-+		return NOT_PADDR;
-+
-+	/* Sometimes we don't have level3 pagetable entries */
-+        if (info->l3_index_size != 0) {
-+                page_dir = (ulong *)((ulong *)level4_pte + PGD_OFFSET_L4(vaddr));
-+		if (!readmem(VADDR, PAGEBASE(level4_pte), info->page_buf, PAGESIZE())) {
-+			ERRMSG("Can't read PGD page: 0x%llx\n", PAGEBASE(level4_pte));
-+			return NOT_PADDR;
-+		}
-+                pgd_pte = ULONG((info->page_buf + PAGEOFFSET(page_dir)));
-+                if (!pgd_pte)
-+                        return NOT_PADDR;
-+        } else {
-+                pgd_pte = level4_pte;
-+        }
-+
-+	page_middle = (ulong *)((ulong *)pgd_pte + PMD_OFFSET_L4(vaddr));
-+	if (!readmem(VADDR, PAGEBASE(pgd_pte), info->page_buf, PAGESIZE())) {
-+		ERRMSG("Can't read PMD page: 0x%llx\n", PAGEBASE(pgd_pte));
-+		return NOT_PADDR;
-+	}
-+        pmd_pte = ULONG((info->page_buf + PAGEOFFSET(page_middle)));
-+	if (!(pmd_pte))
-+		return NOT_PADDR;
-+
-+	page_table = (ulong *)(pmd_pte & ~(info->l2_masked_bits))
-+			+ (BTOP(vaddr) & (info->ptrs_per_l1 - 1));
-+	if (!readmem(VADDR, PAGEBASE(pmd_pte), info->page_buf, PAGESIZE())) {
-+		ERRMSG("Can't read page table: 0x%llx\n", PAGEBASE(pmd_pte));
-+		return NOT_PADDR;
-+	}
-+        pte = ULONG((info->page_buf + PAGEOFFSET(page_table)));
-+	if (!(pte & _PAGE_PRESENT)) {
-+		ERRMSG("Page not present!\n");
-+		return NOT_PADDR;
-+	}
-+
-+	if (!pte)
-+		return NOT_PADDR;
-+
-+	paddr = PAGEBASE(PTOB(pte >> info->pte_shift)) + PAGEOFFSET(vaddr);
-+
-+	return paddr;
-+}
-+
- int
- set_ppc64_max_physmem_bits(void)
- {
-@@ -347,10 +410,18 @@ vaddr_to_paddr_ppc64(unsigned long vaddr)
- {
- 	unsigned long long paddr;
- 
-+	if ((info->flag_vmemmap)
-+	    && (vaddr >= info->vmemmap_start)) {
-+		return ppc64_vmemmap_to_phys(vaddr);
-+	}
-+
- 	paddr = vaddr_to_paddr_general(vaddr);
- 	if (paddr != NOT_PADDR)
- 		return paddr;
- 
-+	if (!is_vmalloc_addr_ppc64(vaddr))
-+		return (vaddr - info->kernel_start);
-+
- 	if ((SYMBOL(vmap_area_list) == NOT_FOUND_SYMBOL)
- 	    || (OFFSET(vmap_area.va_start) == NOT_FOUND_STRUCTURE)
- 	    || (OFFSET(vmap_area.list) == NOT_FOUND_STRUCTURE)) {
-@@ -360,19 +431,8 @@ vaddr_to_paddr_ppc64(unsigned long vaddr)
- 			return NOT_PADDR;
- 		}
- 	}
--	if (!is_vmalloc_addr_ppc64(vaddr))
--		return (vaddr - info->kernel_start);
--
--	if ((info->flag_vmemmap)
--	    && (vaddr >= info->vmemmap_start)) {
--		return ppc64_vmemmap_to_phys(vaddr);
--	}
- 
--	/*
--	 * TODO: Support vmalloc translation.
--	 */
--	ERRMSG("This makedumpfile does not support vmalloc translation.\n");
--	return NOT_PADDR;
-+	return ppc64_vtop_level4(vaddr);
- }
- 
- #endif /* powerpc64 */
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 7816241..778f36f 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -158,6 +158,9 @@ isAnon(unsigned long mapping)
- 	return ((unsigned long)mapping & PAGE_MAPPING_ANON) != 0;
- }
- 
-+#define PTOB(X)			(((unsigned long long)(X)) << info->page_shift)
-+#define BTOP(X)			(((unsigned long long)(X)) >> info->page_shift)
-+
- #define PAGESIZE()		(info->page_size)
- #define PAGESHIFT()		(info->page_shift)
- #define PAGEOFFSET(X)		(((unsigned long long)(X)) & (PAGESIZE() - 1))
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TEdUTS4NCg0KVGhhbmtzIEhhcmkuDQoNClRoYW5rcw0KS2VuJ2ljaGkgT2htaWNoaQ0KDQotLS0N
+Cg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIYXJpIEJhdGhpbmkgW21h
+aWx0bzpoYmF0aGluaUBsaW51eC52bmV0LmlibS5jb21dDQo+IFNlbnQ6IFRodXJzZGF5LCBKdWx5
+IDE3LCAyMDE0IDExOjE5IFBNDQo+IFRvOiBLZXhlYy1tbDsgVGFjaGliYW5hIE1hc2FraSjmqZgg
+5q2j5qi5KTsgS3VtYWdhaSBBdHN1c2hpKOeGiuiwtyDnr6Tlj7IpOyBPb21pY2hpIEtlbmljaGko
+5aSn6YGTIOaGsuS4gCkNCj4gQ2M6IE1haGVzaCBKIFNhbGdhb25rYXINCj4gU3ViamVjdDogW1BB
+VENIIDAvMl0gUFBDNjQ6IEFkZCB2aXJ0dWFsIHRvIHBoeXNpY2FsIGFkZHJlc3MgdHJhbnNsYXRp
+b24gc3VwcG9ydCBmb3Igdm1hbGxvYyByZWdpb24NCj4gDQo+IEluIG1ha2VkdW1wZmlsZSB0b29s
+LCBjdXJyZW50bHkgdGhlcmUgaXMgbm8gc3VwcG9ydCBmb3IgdmlydHVhbCB0byBwaHlzaWNhbA0K
+PiBhZGRyZXNzIHRyYW5zbGF0aW9uIG9mIHZtYWxsb2MgcmVnaW9uICBvbiBQUEM2NCBhcmNoaXRl
+Y3R1cmUuIFRoZXNlIHBhdGNoZXMNCj4gYWRkIHRoaXMgc3VwcG9ydC4gIFRoZSBwYXRjaGVzIGhh
+dmUgYmVlbiB0ZXN0ZWQgYnkgIGVyYXNpbmcgZGF0YSBpbiB2bWFsbG9jDQo+IHJlZ2lvbiwgdmVy
+ZnlpbmcgZm9yIGVyYXNlaW5mbyBpbiB0aGUgcmVzdWx0YW50IEVMRiBkdW1wIGFuZCB2ZXJpZml5
+aW5nIHRoZQ0KPiByZXN1bHRhbnQgRUxGIGR1bXAgZm9yIHNhbml0eSB1c2luZyBjcmFzaCB1dGls
+aXR5LiBBbHNvLCB0ZXN0ZWQgdGhlIHBhdGNoZXMNCj4gc3VjY2Vzc2Z1bGx5IHdpdGggZXBwaWMg
+c2NyaXB0cy4NCj4gDQo+IC0tLQ0KPiANCj4gSGFyaSBCYXRoaW5pICgyKToNCj4gICAgICAgbWFr
+ZWR1bXBmaWxlOiBJbml0aWFsaXplIGZvciB2bWFsbG9jIGFkZHJlc3MgdHJhbnNsYXRpb24gc3Vw
+cG9ydCBpbiBQUEM2NCBhcmNoDQo+ICAgICAgIG1ha2VkdW1wZmlsZTogdnRvcCBhZGRyZXNzIHRy
+YW5zbGF0aW9uIHN1cHBvcnQgZm9yIHZtYWxsb2MgcmVnaW9uIGluIFBQQzY0IGFyY2gNCj4gDQo+
+IA0KPiAgYXJjaC9wcGM2NC5jICAgfCAgMTU2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKystLS0tDQo+ICBtYWtlZHVtcGZpbGUuYyB8ICAgIDcgKysr
+DQo+ICBtYWtlZHVtcGZpbGUuaCB8ICAgODMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
+DQo+ICAzIGZpbGVzIGNoYW5nZWQsIDIzMyBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkN
+Cj4gDQo+IC0tDQo+IC0gSGFyaQ0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
