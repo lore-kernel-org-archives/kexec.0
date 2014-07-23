@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X9kWm-0002II-Tq
- for kexec@lists.infradead.org; Wed, 23 Jul 2014 00:35:30 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.160])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s6N0Z3iV012431
- for <kexec@lists.infradead.org>; Wed, 23 Jul 2014 09:35:03 +0900 (JST)
-Received: from mailsv3.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id s6N0Z3r09651 for <kexec@lists.infradead.org>;
- Wed, 23 Jul 2014 09:35:03 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id s6N0Z3WQ013477
- for <kexec@lists.infradead.org>; Wed, 23 Jul 2014 09:35:03 +0900 (JST)
+ id 1X9qsF-0004So-FQ
+ for kexec@lists.infradead.org; Wed, 23 Jul 2014 07:22:07 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH v3] makedumpfile: Exclude unnecessary hugepages.
-Date: Wed, 23 Jul 2014 00:32:20 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972430B1@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [PATCH v2] add a new interface to show the memory usage of 1st
+ kernel
+Date: Wed, 23 Jul 2014 07:20:22 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97243468@BPXM01GP.gisp.nec.co.jp>
+References: <1405062964-11406-1-git-send-email-bhe@redhat.com>
+ <1405062964-11406-7-git-send-email-bhe@redhat.com>
+ <20140711072748.GB1547@dhcp-17-102.nay.redhat.com>
+In-Reply-To: <20140711072748.GB1547@dhcp-17-102.nay.redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -31,302 +26,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-There are 2 types of hugepages in the kernel, the both should be
-excluded as user pages.
+>@@ -9254,6 +9314,9 @@ main(int argc, char *argv[])
+> 		case OPT_DUMP_DMESG:
+> 			info->flag_dmesg = 1;
+> 			break;
+>+		case OPT_MEM_USAGE:
+>+                       info->flag_mem_usage = 1;
+>+                       break;
+> 		case OPT_COMPRESS_SNAPPY:
+> 			info->flag_compress = DUMP_DH_COMPRESSED_SNAPPY;
+> 			break;
+>@@ -9394,6 +9457,18 @@ main(int argc, char *argv[])
+>
+> 		MSG("\n");
+> 		MSG("The dmesg log is saved to %s.\n", info->name_dumpfile);
+>+	} else if (info->flag_mem_usage) {
+>+		if (!check_param_for_creating_dumpfile(argc, argv)) {
+>+			MSG("Commandline parameter is invalid.\n");
+>+			MSG("Try `makedumpfile --help' for more information.\n");
+>+			goto out;
+>+		}
 
-1. Transparent huge pages (THP)
-All the pages are anonymous pages (at least for now), so we should
-just get how many pages are in the corresponding hugepage.
-It can be gotten from the page->lru.prev of the second page in the
-hugepage.
+There is no description of this feature, could you add them
+into the help message and the man page ?
 
-2. Hugetlbfs pages
-The pages aren't anonymous pages but kind of user pages, we should
-exclude also these pages in any way.
-Luckily, it's possible to detect these pages by looking the
-page->lru.next of the second page in the hugepage. This idea came
-from the kernel's PageHuge().
-The number of pages can be gotten in the same way as THP.
 
-Changelog:
-v3:
-  - Cleaned up according to Petr's comments.
-  - Fix misdetection of hugetlb pages.
-v2:
-  - Rebased to "Generic multi-page exclusion".
+Thanks
+Atsushi Kumagai
 
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
----
- makedumpfile.c | 113 +++++++++++++++++++++++++++++++++++++++++++++++++--------
- makedumpfile.h |   7 ++++
- 2 files changed, 105 insertions(+), 15 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 3884aa5..7bee413 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1180,6 +1180,7 @@ get_symbol_info(void)
- 	SYMBOL_INIT(vmemmap_list, "vmemmap_list");
- 	SYMBOL_INIT(mmu_psize_defs, "mmu_psize_defs");
- 	SYMBOL_INIT(mmu_vmemmap_psize, "mmu_vmemmap_psize");
-+	SYMBOL_INIT(free_huge_page, "free_huge_page");
- 
- 	return TRUE;
- }
-@@ -1293,6 +1294,15 @@ get_structure_info(void)
- 	ENUM_NUMBER_INIT(PG_slab, "PG_slab");
- 	ENUM_NUMBER_INIT(PG_hwpoison, "PG_hwpoison");
- 
-+	ENUM_NUMBER_INIT(PG_head_mask, "PG_head_mask");
-+	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER) {
-+		ENUM_NUMBER_INIT(PG_head, "PG_head");
-+		if (NUMBER(PG_head) == NOT_FOUND_NUMBER)
-+			ENUM_NUMBER_INIT(PG_head, "PG_compound");
-+		if (NUMBER(PG_head) != NOT_FOUND_NUMBER)
-+			NUMBER(PG_head_mask) = 1UL << NUMBER(PG_head);
-+	}
-+
- 	ENUM_TYPE_SIZE_INIT(pageflags, "pageflags");
- 
- 	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
-@@ -1527,6 +1537,9 @@ get_value_for_old_linux(void)
- 		NUMBER(PG_swapcache) = PG_swapcache_ORIGINAL;
- 	if (NUMBER(PG_slab) == NOT_FOUND_NUMBER)
- 		NUMBER(PG_slab) = PG_slab_ORIGINAL;
-+	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER)
-+		NUMBER(PG_head_mask) = 1L << PG_compound_ORIGINAL;
-+
- 	/*
- 	 * The values from here are for free page filtering based on
- 	 * mem_map array. These are minimum effort to cover old
-@@ -1694,6 +1707,7 @@ write_vmcoreinfo_data(void)
- 	WRITE_SYMBOL("vmemmap_list", vmemmap_list);
- 	WRITE_SYMBOL("mmu_psize_defs", mmu_psize_defs);
- 	WRITE_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
-+	WRITE_SYMBOL("free_huge_page", free_huge_page);
- 
- 	/*
- 	 * write the structure size of 1st kernel
-@@ -1783,6 +1797,7 @@ write_vmcoreinfo_data(void)
- 
- 	WRITE_NUMBER("PG_lru", PG_lru);
- 	WRITE_NUMBER("PG_private", PG_private);
-+	WRITE_NUMBER("PG_head_mask", PG_head_mask);
- 	WRITE_NUMBER("PG_swapcache", PG_swapcache);
- 	WRITE_NUMBER("PG_buddy", PG_buddy);
- 	WRITE_NUMBER("PG_slab", PG_slab);
-@@ -2033,6 +2048,7 @@ read_vmcoreinfo(void)
- 	READ_SYMBOL("vmemmap_list", vmemmap_list);
- 	READ_SYMBOL("mmu_psize_defs", mmu_psize_defs);
- 	READ_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
-+	READ_SYMBOL("free_huge_page", free_huge_page);
- 
- 	READ_STRUCTURE_SIZE("page", page);
- 	READ_STRUCTURE_SIZE("mem_section", mem_section);
-@@ -2109,6 +2125,7 @@ read_vmcoreinfo(void)
- 
- 	READ_NUMBER("PG_lru", PG_lru);
- 	READ_NUMBER("PG_private", PG_private);
-+	READ_NUMBER("PG_head_mask", PG_head_mask);
- 	READ_NUMBER("PG_swapcache", PG_swapcache);
- 	READ_NUMBER("PG_slab", PG_slab);
- 	READ_NUMBER("PG_buddy", PG_buddy);
-@@ -4636,13 +4653,16 @@ __exclude_unnecessary_pages(unsigned long mem_map,
-     mdf_pfn_t pfn_start, mdf_pfn_t pfn_end, struct cycle *cycle)
- {
- 	mdf_pfn_t pfn;
-+	mdf_pfn_t *pfn_counter;
-+	mdf_pfn_t nr_pages;
- 	unsigned long index_pg, pfn_mm;
- 	unsigned long long maddr;
- 	mdf_pfn_t pfn_read_start, pfn_read_end;
- 	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
- 	unsigned char *pcache;
--	unsigned int _count, _mapcount = 0;
-+	unsigned int _count, _mapcount = 0, compound_order = 0;
- 	unsigned long flags, mapping, private = 0;
-+	unsigned long hugetlb_dtor;
- 
- 	/*
- 	 * If a multi-page exclusion is pending, do it first
-@@ -4708,11 +4728,36 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		flags   = ULONG(pcache + OFFSET(page.flags));
- 		_count  = UINT(pcache + OFFSET(page._count));
- 		mapping = ULONG(pcache + OFFSET(page.mapping));
-+
-+		if (index_pg < PGMM_CACHED - 1) {
-+			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
-+					       + OFFSET(list_head.prev));
-+			hugetlb_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
-+					     + OFFSET(list_head.next));
-+
-+			if (compound_order &&
-+			    ((compound_order >= sizeof(unsigned long) * 8)
-+			     || (pfn & ((1UL << compound_order) - 1)) != 0)) {
-+				/* Invalid order */
-+				compound_order = 0;
-+			}
-+		} else {
-+			/*
-+			 * The last pfn of the mem_map cache must not be compound page
-+			 * since all compound pages are aligned to its page order and
-+			 * PGMM_CACHED is 512.
-+			 */
-+			compound_order = 0;
-+			hugetlb_dtor = 0;
-+		}
-+
- 		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
- 			_mapcount = UINT(pcache + OFFSET(page._mapcount));
- 		if (OFFSET(page.private) != NOT_FOUND_STRUCTURE)
- 			private = ULONG(pcache + OFFSET(page.private));
- 
-+		nr_pages = 1;
-+		pfn_counter = NULL;
- 		/*
- 		 * Exclude the free page managed by a buddy
- 		 * Use buddy identification of free pages whether cyclic or not.
-@@ -4720,12 +4765,8 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		if ((info->dump_level & DL_EXCLUDE_FREE)
- 		    && info->page_is_buddy
- 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
--			int nr_pages = 1 << private;
--
--			exclude_range(&pfn_free, pfn, pfn + nr_pages, cycle);
--
--			pfn += nr_pages - 1;
--			mem_map += (nr_pages - 1) * SIZE(page);
-+			nr_pages = 1 << private;
-+			pfn_counter = &pfn_free;
- 		}
- 		/*
- 		 * Exclude the cache page without the private page.
-@@ -4733,8 +4774,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE)
- 		    && (isLRU(flags) || isSwapCache(flags))
- 		    && !isPrivate(flags) && !isAnon(mapping)) {
--			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
--				pfn_cache++;
-+			/*
-+			 * NOTE: If THP for cache is introduced, the check for
-+			 *       compound pages is needed here.
-+			 */
-+			nr_pages = 1;
-+			pfn_counter = &pfn_cache;
- 		}
- 		/*
- 		 * Exclude the cache page with the private page.
-@@ -4742,23 +4787,61 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
- 		    && (isLRU(flags) || isSwapCache(flags))
- 		    && !isAnon(mapping)) {
--			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
--				pfn_cache_private++;
-+			/*
-+			 * NOTE: If THP for cache is introduced, the check for
-+			 *       compound pages is needed here.
-+			 */
-+			nr_pages = 1;
-+			pfn_counter = &pfn_cache_private;
- 		}
- 		/*
- 		 * Exclude the data page of the user process.
- 		 */
- 		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
--		    && isAnon(mapping)) {
--			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
--				pfn_user++;
-+			 && (isAnon(mapping) || isHugetlb(hugetlb_dtor))) {
-+			/*
-+			 * Exclude the anonymous pages as user pages.
-+			 */
-+			if (isAnon(mapping)) {
-+				/*
-+				 * Check the compound page
-+				 */
-+				if (isCompoundHead(flags) && compound_order > 0) {
-+					nr_pages = 1 << compound_order;
-+				} else
-+					nr_pages = 1;
-+			}
-+			/*
-+			 * Exclude the hugetlbfs pages as user pages.
-+			 */
-+			else {
-+				nr_pages = 1 << compound_order;
-+			}
-+			pfn_counter = &pfn_user;
- 		}
- 		/*
- 		 * Exclude the hwpoison page.
- 		 */
- 		else if (isHWPOISON(flags)) {
-+			nr_pages = 1;
-+			pfn_counter = &pfn_hwpoison;
-+		}
-+		/*
-+		 * Unexcludable page
-+		 */
-+		else
-+			continue;
-+
-+		/*
-+		 * Execute exclusion
-+		 */
-+		if (nr_pages == 1) {
- 			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
--				pfn_hwpoison++;
-+				(*pfn_counter)++;
-+		} else {
-+			exclude_range(pfn_counter, pfn, pfn + nr_pages, cycle);
-+			pfn += nr_pages - 1;
-+			mem_map += (nr_pages - 1) * SIZE(page);
- 		}
- 	}
- 	return TRUE;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 9402f05..a2c76d8 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -74,6 +74,7 @@ int get_mem_type(void);
- #define PG_lru_ORIGINAL	 	(5)
- #define PG_slab_ORIGINAL	(7)
- #define PG_private_ORIGINAL	(11)	/* Has something at ->private */
-+#define PG_compound_ORIGINAL	(14)	/* Is part of a compound page */
- #define PG_swapcache_ORIGINAL	(15)	/* Swap page: swp_entry_t in private */
- 
- #define PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_38	(-2)
-@@ -148,6 +149,9 @@ test_bit(int nr, unsigned long addr)
- 
- #define isLRU(flags)		test_bit(NUMBER(PG_lru), flags)
- #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
-+#define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
-+#define isHugetlb(dtor)         ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL) \
-+				 && (SYMBOL(free_huge_page) == dtor))
- #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
- #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
- 				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
-@@ -1143,6 +1147,7 @@ struct symbol_table {
- 	unsigned long long	node_remap_start_vaddr;
- 	unsigned long long	node_remap_end_vaddr;
- 	unsigned long long	node_remap_start_pfn;
-+	unsigned long long      free_huge_page;
- 
- 	/*
- 	 * for Xen extraction
-@@ -1428,6 +1433,8 @@ struct number_table {
- 	 */
- 	long	PG_lru;
- 	long	PG_private;
-+	long	PG_head;
-+	long	PG_head_mask;
- 	long	PG_swapcache;
- 	long	PG_buddy;
- 	long	PG_slab;
--- 
-1.9.0
+>+
+>+		if (!show_mem_usage())
+>+			goto out;
+>+
+>+		MSG("\n");
+>+		MSG("Showing page number of memory in different use successfully.\n");
+> 	} else {
+> 		if (!check_param_for_creating_dumpfile(argc, argv)) {
+> 			MSG("Commandline parameter is invalid.\n");
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 7ffa1ee..7b537c7 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -910,6 +910,7 @@ struct DumpInfo {
+> 	int		flag_force;	     /* overwrite existing stuff */
+> 	int		flag_exclude_xen_dom;/* exclude Domain-U from xen-kdump */
+> 	int             flag_dmesg;          /* dump the dmesg log out of the vmcore file */
+>+	int             flag_mem_usage;  /*show the page number of memory in different use*/
+> 	int		flag_use_printk_log; /* did we read printk_log symbol name? */
+> 	int		flag_nospace;	     /* the flag of "No space on device" error */
+> 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+>@@ -1771,6 +1772,7 @@ struct elf_prstatus {
+> #define OPT_CYCLIC_BUFFER       OPT_START+11
+> #define OPT_EPPIC               OPT_START+12
+> #define OPT_NON_MMAP            OPT_START+13
+>+#define OPT_MEM_USAGE            OPT_START+14
+>
+> /*
+>  * Function Prototype.
+>--
+>1.9.3
 
 _______________________________________________
 kexec mailing list
