@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from szxga01-in.huawei.com ([119.145.14.64])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X9rX2-0004VF-8F
- for kexec@lists.infradead.org; Wed, 23 Jul 2014 08:04:14 +0000
-Date: Wed, 23 Jul 2014 16:02:26 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH 5/7] prepare the dump loads for kcore analysis
-Message-ID: <20140723080226.GK11399@dhcp-16-105.nay.redhat.com>
-References: <1405062964-11406-1-git-send-email-bhe@redhat.com>
- <1405062964-11406-5-git-send-email-bhe@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9724346D@BPXM01GP.gisp.nec.co.jp>
+ id 1X9ulb-0006ib-NE
+ for kexec@lists.infradead.org; Wed, 23 Jul 2014 11:31:29 +0000
+From: Liu Hua <sdu.liu@huawei.com>
+Subject: [PATCH] kexec: align the extended size of dtb
+Date: Wed, 23 Jul 2014 19:20:34 +0800
+Message-ID: <1406114434-77987-1-git-send-email-sdu.liu@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9724346D@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,117 +16,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: horms@verge.net.au
+Cc: wangnan0@huawei.com, kexec@lists.infradead.org, peifeiyue@huawei.com, Liu Hua <sdu.liu@huawei.com>
 
-T24gMDcvMjMvMTQgYXQgMDc6MjBhbSwgQXRzdXNoaSBLdW1hZ2FpIHdyb3RlOgo+ID5JbiBrY29y
-ZSwgb25seSAgIlN5c3RlbSBSYW0iIGFuZCAia2VybmVsIHRleHQiIHByb2dyYW0gc2VnbWVudHMK
-PiA+YXJlIG5lZWRlZC4gQW5kIHRvIGJlIG1vcmUgcHJlY2lzZSwgZXhjbHVkZSB0aGUgY3Jhc2hr
-ZXJuZWwKPiA+bWVtb3J5IHJhbmdlLgo+ID4KPiA+U2lnbmVkLW9mZi1ieTogQmFvcXVhbiBIZSA8
-YmhlQHJlZGhhdC5jb20+Cj4gCj4gUGxlYXNlIGZpeCB0aGUgY29tcGlsZXIgd2FybmluZ3MgYmVs
-b3c6Cj4gCj4gd2FybmluZy5jOjg1ODogd2FybmluZzogaW1wbGljaXQgZGVjbGFyYXRpb24gb2Yg
-ZnVuY3Rpb24g4oCYaXNfdm1hbGxvY19hZGRy4oCZCj4gd2FybmluZy5jOjg1NDogd2FybmluZzog
-dW51c2VkIHZhcmlhYmxlIOKAmHBhZGRy4oCZCgpXaWxsIGRvLgoKVGhhbmtzCkJhb3F1YW4KCj4g
-Cj4gCj4gVGhhbmtzCj4gQXRzdXNoaSBLdW1hZ2FpCj4gCj4gPi0tLQo+ID4gZWxmX2luZm8uYyB8
-IDEzNSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCj4gPiBlbGZfaW5mby5oIHwgICAxICsKPiA+IDIgZmlsZXMgY2hhbmdlZCwgMTM2
-IGluc2VydGlvbnMoKykKPiA+Cj4gPmRpZmYgLS1naXQgYS9lbGZfaW5mby5jIGIvZWxmX2luZm8u
-Ywo+ID5pbmRleCAxYTNlM2JkLi5jYTYzZDM0IDEwMDY0NAo+ID4tLS0gYS9lbGZfaW5mby5jCj4g
-PisrKyBiL2VsZl9pbmZvLmMKPiA+QEAgLTc3OSw2ICs3NzksMTQxIEBAIGdldF9lbGZfbG9hZHMo
-aW50IGZkLCBjaGFyICpmaWxlbmFtZSkKPiA+IAlyZXR1cm4gVFJVRTsKPiA+IH0KPiA+Cj4gPitz
-dGF0aWMgaW50IGV4Y2x1ZGVfc2VnbWVudChzdHJ1Y3QgcHRfbG9hZF9zZWdtZW50ICoqcHRfbG9h
-ZHMsIHVuc2lnbmVkIGludAkqbnVtX3B0X2xvYWRzLCB1aW50NjRfdCBzdGFydCwKPiA+dWludDY0
-X3QgZW5kKQo+ID4rewo+ID4rICAgICAgICBpbnQgaSwgaiwgdGlkeCA9IC0xOwo+ID4rCXVuc2ln
-bmVkIGxvbmcgbG9uZwl2c3RhcnQsIHZlbmQsIGt2c3RhcnQsIGt2ZW5kOwo+ID4rICAgICAgICBz
-dHJ1Y3QgcHRfbG9hZF9zZWdtZW50IHRlbXBfc2VnID0gezB9Owo+ID4rCWt2c3RhcnQgPSAodWxv
-bmcpc3RhcnQgfCBQQUdFX09GRlNFVDsKPiA+KwlrdmVuZCA9ICh1bG9uZyllbmQgfCBQQUdFX09G
-RlNFVDsKPiA+Kwl1bnNpZ25lZCBsb25nIHNpemU7Cj4gPisKPiA+KyAgICAgICAgZm9yIChpID0g
-MDsgaSA8ICgqbnVtX3B0X2xvYWRzKTsgaSsrKSB7Cj4gPisgICAgICAgICAgICAgICAgdnN0YXJ0
-ID0gKCpwdF9sb2FkcylbaV0udmlydF9zdGFydDsKPiA+KyAgICAgICAgICAgICAgICB2ZW5kID0g
-KCpwdF9sb2FkcylbaV0udmlydF9lbmQ7Cj4gPisgICAgICAgICAgICAgICAgaWYgKGt2c3RhcnQg
-PCAgdmVuZCAmJiBrdmVuZCA+IHZzdGFydCkgewo+ID4rICAgICAgICAgICAgICAgICAgICAgICAg
-aWYgKGt2c3RhcnQgIT0gdnN0YXJ0ICYmIGt2ZW5kICE9IHZlbmQpIHsKPiA+KwkJCQkvKiBTcGxp
-dCBsb2FkIHNlZ21lbnQgKi8KPiA+KwkJCQl0ZW1wX3NlZy5waHlzX3N0YXJ0ID0gZW5kICsxOwo+
-ID4rCQkJCXRlbXBfc2VnLnBoeXNfZW5kID0gKCpwdF9sb2FkcylbaV0ucGh5c19lbmQ7Cj4gPisJ
-CQkJdGVtcF9zZWcudmlydF9zdGFydCA9IGt2ZW5kICsgMTsKPiA+KwkJCQl0ZW1wX3NlZy52aXJ0
-X2VuZCA9IHZlbmQ7Cj4gPisJCQkJdGVtcF9zZWcuZmlsZV9vZmZzZXQgPSAoKnB0X2xvYWRzKVtp
-XS5maWxlX29mZnNldCArIHRlbXBfc2VnLnZpcnRfc3RhcnQgLQo+ID4oKnB0X2xvYWRzKVtpXS52
-aXJ0X3N0YXJ0Owo+ID4rCj4gPisJCQkJKCpwdF9sb2FkcylbaV0udmlydF9lbmQgPSBrdnN0YXJ0
-IC0gMTsKPiA+KwkJCQkoKnB0X2xvYWRzKVtpXS5waHlzX2VuZCA9ICBzdGFydCAtMTsKPiA+Kwo+
-ID4rCQkJCXRpZHggPSBpKzE7Cj4gPisgICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2UgaWYg
-KGt2c3RhcnQgIT0gdnN0YXJ0KSB7Cj4gPisJCQkJKCpwdF9sb2FkcylbaV0ucGh5c19lbmQgPSBz
-dGFydCAtIDE7Cj4gPisJCQkJKCpwdF9sb2FkcylbaV0udmlydF9lbmQgPSBrdnN0YXJ0IC0gMTsK
-PiA+KyAgICAgICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7Cj4gPisJCQkJKCpwdF9sb2Fkcylb
-aV0ucGh5c19zdGFydCA9IGVuZCArIDE7Cj4gPisJCQkJKCpwdF9sb2FkcylbaV0udmlydF9zdGFy
-dCA9IGt2ZW5kICsgMTsKPiA+KyAgICAgICAgICAgICAgICAgICAgICAgIH0KPiA+KyAgICAgICAg
-ICAgICAgICB9Cj4gPisgICAgICAgIH0KPiA+KyAgICAgICAgLyogSW5zZXJ0IHNwbGl0IGxvYWQg
-c2VnbWVudCwgaWYgYW55LiAqLwo+ID4rCWlmICh0aWR4ID49IDApIHsKPiA+KwkJc2l6ZSA9ICgq
-bnVtX3B0X2xvYWRzICsgMSkgKiBzaXplb2YoKCpwdF9sb2FkcylbMF0pOwo+ID4rCQkoKnB0X2xv
-YWRzKSA9IHJlYWxsb2MoKCpwdF9sb2FkcyksIHNpemUpOwo+ID4rCQlpZiAgKCEoKnB0X2xvYWRz
-KSApIHsKPiA+KwkJICAgIEVSUk1TRygiQ2Fubm90IHJlYWxsb2MgJWxkIGJ5dGVzOiAlc1xuIiwK
-PiA+KwkJICAgICAgICAgICAgc2l6ZSArIDBVTCwgc3RyZXJyb3IoZXJybm8pKTsKPiA+KwkJCWV4
-aXQoMSk7Cj4gPisJCX0KPiA+KwkJZm9yIChqID0gKCpudW1fcHRfbG9hZHMgLSAxKTsgaiA+PSB0
-aWR4OyBqLS0pCj4gPisJCSAgICAgICAgKCpwdF9sb2FkcylbaisxXSA9ICgqcHRfbG9hZHMpW2pd
-Owo+ID4rCQkoKnB0X2xvYWRzKVt0aWR4XSA9IHRlbXBfc2VnOwo+ID4rCQkoKm51bV9wdF9sb2Fk
-cykrKzsKPiA+KyAgICAgICAgfQo+ID4rICAgICAgICByZXR1cm4gMDsKPiA+K30KPiA+Kwo+ID4r
-c3RhdGljIGludAo+ID4rcHJvY2Vzc19kdW1wX2xvYWQoc3RydWN0IHB0X2xvYWRfc2VnbWVudAkq
-cGxzKQo+ID4rewo+ID4rCXVuc2lnbmVkIGxvbmcgbG9uZyBwYWRkcjsKPiA+Kwo+ID4rCXBhZGRy
-ID0gdmFkZHJfdG9fcGFkZHIocGxzLT52aXJ0X3N0YXJ0KTsKPiA+KwlwbHMtPnBoeXNfc3RhcnQg
-ID0gcGFkZHI7Cj4gPisJcGxzLT5waHlzX2VuZCAgICA9IHBhZGRyICsgKHBscy0+dmlydF9lbmQg
-LSBwbHMtPnZpcnRfc3RhcnQpOwo+ID4rCURFQlVHX01TRygicHJvY2Vzc19kdW1wX2xvYWRcbiIp
-Owo+ID4rCURFQlVHX01TRygiICBwaHlzX3N0YXJ0IDogJWxseFxuIiwgcGxzLT5waHlzX3N0YXJ0
-KTsKPiA+KwlERUJVR19NU0coIiAgcGh5c19lbmQgICA6ICVsbHhcbiIsIHBscy0+cGh5c19lbmQp
-Owo+ID4rCURFQlVHX01TRygiICB2aXJ0X3N0YXJ0IDogJWxseFxuIiwgcGxzLT52aXJ0X3N0YXJ0
-KTsKPiA+KwlERUJVR19NU0coIiAgdmlydF9lbmQgICA6ICVsbHhcbiIsIHBscy0+dmlydF9lbmQp
-Owo+ID4rCj4gPisJcmV0dXJuIFRSVUU7Cj4gPit9Cj4gPisKPiA+K2ludCBnZXRfa2NvcmVfZHVt
-cF9sb2FkcygpCj4gPit7Cj4gPisJc3RydWN0IHB0X2xvYWRfc2VnbWVudAkqcGxzOwo+ID4rCWlu
-dCBpLCBqLCBsb2Fkcz0wOwo+ID4rCXVuc2lnbmVkIGxvbmcgbG9uZyBwYWRkcjsKPiA+Kwo+ID4r
-CWZvciAoaSA9IDA7IGkgPCBudW1fcHRfbG9hZHM7ICsraSkgewo+ID4rCQlzdHJ1Y3QgcHRfbG9h
-ZF9zZWdtZW50ICpwID0gJnB0X2xvYWRzW2ldOwo+ID4rCQlpZiAoaXNfdm1hbGxvY19hZGRyKHAt
-PnZpcnRfc3RhcnQpKQo+ID4rCQkJY29udGludWU7Cj4gPisJCWxvYWRzKys7Cj4gPisJfQo+ID4r
-Cj4gPisJcGxzID0gY2FsbG9jKHNpemVvZihzdHJ1Y3QgcHRfbG9hZF9zZWdtZW50KSwgbG9hZHMp
-Owo+ID4rCWlmIChwbHMgPT0gTlVMTCkgewo+ID4rCQlFUlJNU0coIkNhbid0IGFsbG9jYXRlIG1l
-bW9yeSBmb3IgdGhlIFBUX0xPQUQuICVzXG4iLAo+ID4rCQkgICAgc3RyZXJyb3IoZXJybm8pKTsK
-PiA+KwkJcmV0dXJuIEZBTFNFOwo+ID4rCX0KPiA+Kwo+ID4rCWZvciAoaSA9IDAsIGo9MDsgaSA8
-IG51bV9wdF9sb2FkczsgKytpKSB7Cj4gPisJCXN0cnVjdCBwdF9sb2FkX3NlZ21lbnQgKnAgPSAm
-cHRfbG9hZHNbaV07Cj4gPisJCWlmIChpc192bWFsbG9jX2FkZHIocC0+dmlydF9zdGFydCkpCj4g
-PisJCQljb250aW51ZTsKPiA+KwkJaWYgKGogPj0gbG9hZHMpCj4gPisJCQlyZXR1cm4gRkFMU0U7
-Cj4gPisKPiA+KwkJaWYgKGogPT0gMCkgewo+ID4rCQkJb2Zmc2V0X3B0X2xvYWRfbWVtb3J5ID0g
-cC0+ZmlsZV9vZmZzZXQ7Cj4gPisJCQlpZiAob2Zmc2V0X3B0X2xvYWRfbWVtb3J5ID09IDApIHsK
-PiA+KwkJCQlFUlJNU0coIkNhbid0IGdldCB0aGUgb2Zmc2V0IG9mIHBhZ2UgZGF0YS5cbiIpOwo+
-ID4rCQkJCXJldHVybiBGQUxTRTsKPiA+KwkJCX0KPiA+KwkJfQo+ID4rCj4gPisJCXBsc1tqXSA9
-ICpwOwo+ID4rCQlwcm9jZXNzX2R1bXBfbG9hZCgmcGxzW2pdKTsKPiA+KwkJaisrOwo+ID4rCX0K
-PiA+Kwo+ID4rCWZyZWUocHRfbG9hZHMpOwo+ID4rCXB0X2xvYWRzID0gcGxzOwo+ID4rCW51bV9w
-dF9sb2FkcyA9IGxvYWRzOwo+ID4rCj4gPisJZm9yIChpPTA7IGk8Y3Jhc2hfcmVzZXJ2ZWRfbWVt
-X25yOyBpKyspCj4gPisJewo+ID4rCQlleGNsdWRlX3NlZ21lbnQoJnB0X2xvYWRzLCAmbnVtX3B0
-X2xvYWRzLCBjcmFzaF9yZXNlcnZlZF9tZW1baV0uc3RhcnQsIGNyYXNoX3Jlc2VydmVkX21lbVtp
-XS5lbmQpOwo+ID4rCX0KPiA+Kwo+ID4rCW1heF9maWxlX29mZnNldCA9IDA7Cj4gPisJZm9yIChp
-ID0gMDsgaSA8IG51bV9wdF9sb2FkczsgKytpKSB7Cj4gPisJCXN0cnVjdCBwdF9sb2FkX3NlZ21l
-bnQgKnAgPSAmcHRfbG9hZHNbaV07Cj4gPisJCW1heF9maWxlX29mZnNldCA9IE1BWChtYXhfZmls
-ZV9vZmZzZXQsCj4gPisJCQkJICAgICAgcC0+ZmlsZV9vZmZzZXQgKyBwLT5waHlzX2VuZCAtIHAt
-PnBoeXNfc3RhcnQpOwo+ID4rCX0KPiA+Kwo+ID4rCWZvciAoaSA9IDA7IGkgPCBudW1fcHRfbG9h
-ZHM7ICsraSkgewo+ID4rCQlzdHJ1Y3QgcHRfbG9hZF9zZWdtZW50ICpwID0gJnB0X2xvYWRzW2ld
-Owo+ID4rCQlERUJVR19NU0coIkxPQUQgKCVkKVxuIiwgaSk7Cj4gPisJCURFQlVHX01TRygiICBw
-aHlzX3N0YXJ0IDogJWxseFxuIiwgcC0+cGh5c19zdGFydCk7Cj4gPisJCURFQlVHX01TRygiICBw
-aHlzX2VuZCAgIDogJWxseFxuIiwgcC0+cGh5c19lbmQpOwo+ID4rCQlERUJVR19NU0coIiAgdmly
-dF9zdGFydCA6ICVsbHhcbiIsIHAtPnZpcnRfc3RhcnQpOwo+ID4rCQlERUJVR19NU0coIiAgdmly
-dF9lbmQgICA6ICVsbHhcbiIsIHAtPnZpcnRfZW5kKTsKPiA+Kwl9Cj4gPisKPiA+KwlyZXR1cm4g
-VFJVRTsKPiA+K30KPiA+Cj4gPiAvKgo+ID4gICogR2V0IEVMRiBpbmZvcm1hdGlvbiBhYm91dCAv
-cHJvYy92bWNvcmUuCj4gPmRpZmYgLS1naXQgYS9lbGZfaW5mby5oIGIvZWxmX2luZm8uaAo+ID5p
-bmRleCAzY2UwMTM4Li5iYTI3ZmRmIDEwMDY0NAo+ID4tLS0gYS9lbGZfaW5mby5oCj4gPisrKyBi
-L2VsZl9pbmZvLmgKPiA+QEAgLTQ2LDYgKzQ2LDcgQEAgaW50IGdldF9lbGZfaW5mbyhpbnQgZmQs
-IGNoYXIgKmZpbGVuYW1lKTsKPiA+IHZvaWQgZnJlZV9lbGZfaW5mbyh2b2lkKTsKPiA+IGludCBn
-ZXRfZWxmX2xvYWRzKGludCBmZCwgY2hhciAqZmlsZW5hbWUpOwo+ID4gaW50IHNldF9rY29yZV92
-bWNvcmVpbmZvKHVpbnQ2NF90IHZtY29yZWluZm9fYWRkciwgdWludDY0X3Qgdm1jb3JlaW5mb19s
-ZW4pOwo+ID4raW50IGdldF9rY29yZV9kdW1wX2xvYWRzKCk7Cj4gPgo+ID4gaW50IGlzX2VsZjY0
-X21lbW9yeSh2b2lkKTsKPiA+IGludCBpc194ZW5fbWVtb3J5KHZvaWQpOwo+ID4tLQo+ID4xLjgu
-NC4yCj4gCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
-CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYwo=
+When loading dtb on arm platform, we may need change strings in dtb
+in function setup_dtb_prop. If length of new string is larger than that
+of the old one. We should extend the dtb by "FDT_TAGALIGN"ed size.
+If not, kexec may fail to load the capture kernel.
+
+Signed-off-by: Liu Hua <sdu.liu@huawei.com>
+---
+ kexec/arch/arm/kexec-zImage-arm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index 44b87bb..ff4e38d 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -259,7 +259,7 @@ static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
+ 		dtb_size += fdt_prop_len(prop_name, len);
+ 	} else {
+ 		if (prop_len < len)
+-			dtb_size += len - prop_len;
++			dtb_size += FDT_TAGALIGN(len - prop_len);
+ 	}
+ 
+ 	if (fdt_totalsize(dtb_buf) < dtb_size) {
+-- 
+1.9.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
