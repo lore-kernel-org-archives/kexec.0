@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1X9k10-0000R9-GU
- for kexec@lists.infradead.org; Wed, 23 Jul 2014 00:02:39 +0000
-Date: Wed, 23 Jul 2014 09:02:13 +0900
+ id 1X9k18-0000RE-E6
+ for kexec@lists.infradead.org; Wed, 23 Jul 2014 00:02:46 +0000
+Date: Wed, 23 Jul 2014 09:02:24 +0900
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] kexec/ppc64: disabling exception handling when building
  the purgatory
-Message-ID: <20140723000213.GC21367@verge.net.au>
+Message-ID: <20140723000224.GD21367@verge.net.au>
 References: <20140722104255.GF13924@dhcp-17-37.nay.redhat.com>
  <20140722162228.12506.28076.stgit@nimbus>
 MIME-Version: 1.0
@@ -38,6 +38,9 @@ On Tue, Jul 22, 2014 at 06:22:28PM +0200, Laurent Dufour wrote:
 > purgatory on ppc64 BE and LE.
 > 
 > Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+
+Thanks, applied.
+
 > ---
 >  purgatory/arch/ppc64/Makefile |    3 ++-
 >  1 file changed, 2 insertions(+), 1 deletion(-)
