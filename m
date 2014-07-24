@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XACJr-0007oL-4R
- for kexec@lists.infradead.org; Thu, 24 Jul 2014 06:15:59 +0000
-Date: Thu, 24 Jul 2014 14:15:30 +0800
-From: WANG Chao <chaowang@redhat.com>
-Subject: Re: [PATCH] kexec/ppc64: disabling exception handling when building
- the purgatory
-Message-ID: <20140724061530.GD31683@dhcp-17-37.nay.redhat.com>
-References: <20140722104255.GF13924@dhcp-17-37.nay.redhat.com>
- <20140722162228.12506.28076.stgit@nimbus>
- <20140723000224.GD21367@verge.net.au>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XAE94-0006At-G8
+ for kexec@lists.infradead.org; Thu, 24 Jul 2014 08:13:01 +0000
+Date: Thu, 24 Jul 2014 17:12:10 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: align the extended size of dtb
+Message-ID: <20140724081208.GA30538@verge.net.au>
+References: <1406114434-77987-1-git-send-email-sdu.liu@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140723000224.GD21367@verge.net.au>
+In-Reply-To: <1406114434-77987-1-git-send-email-sdu.liu@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,27 +23,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Dufour <ldufour@linux.vnet.ibm.com>, kexec@lists.infradead.org
+To: Liu Hua <sdu.liu@huawei.com>
+Cc: wangnan0@huawei.com, kexec@lists.infradead.org, peifeiyue@huawei.com
 
-On 07/23/14 at 09:02am, Simon Horman wrote:
-> On Tue, Jul 22, 2014 at 06:22:28PM +0200, Laurent Dufour wrote:
-> > Some Linux distributions would like to turn on the GCC exception handling
-> > by default. As this option introduces symbols in the built code that are
-> > defined in a separate shared library, this is not a good idea to have such
-> > an option activated when building the purgatory.
-> > 
-> > This patch forces the exception handling to be turned off when building the
-> > purgatory on ppc64 BE and LE.
-> > 
-> > Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+On Wed, Jul 23, 2014 at 07:20:34PM +0800, Liu Hua wrote:
+> When loading dtb on arm platform, we may need change strings in dtb
+> in function setup_dtb_prop. If length of new string is larger than that
+> of the old one. We should extend the dtb by "FDT_TAGALIGN"ed size.
+> If not, kexec may fail to load the capture kernel.
 > 
-> Thanks, applied.
+> Signed-off-by: Liu Hua <sdu.liu@huawei.com>
 
-FWIW, this patch works for me. Thanks for the fix.
-
-Thanks
-WANG Chao
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
