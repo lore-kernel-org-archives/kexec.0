@@ -1,16 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e06smtp12.uk.ibm.com ([195.75.94.108])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XAYaT-0004nH-HN
- for kexec@lists.infradead.org; Fri, 25 Jul 2014 06:02:38 +0000
-Date: Fri, 25 Jul 2014 14:00:45 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3] makedumpfile: Exclude unnecessary hugepages.
-Message-ID: <20140725060045.GN11399@dhcp-16-105.nay.redhat.com>
-References: <0910DD04CBD6DE4193FCF86B9C00BE972430B1@BPXM01GP.gisp.nec.co.jp>
+ id 1XAh6Y-0007CU-V8
+ for kexec@lists.infradead.org; Fri, 25 Jul 2014 15:08:21 +0000
+Received: from /spool/local
+ by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
+ Fri, 25 Jul 2014 16:07:53 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 999E617D8059
+ for <kexec@lists.infradead.org>; Fri, 25 Jul 2014 16:09:31 +0100 (BST)
+Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+ [9.149.37.228])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s6PF7oYV16908296
+ for <kexec@lists.infradead.org>; Fri, 25 Jul 2014 15:07:50 GMT
+Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s6PF7oEl012610
+ for <kexec@lists.infradead.org>; Fri, 25 Jul 2014 09:07:50 -0600
+Subject: [PATCH] ppc64/kdump: Fix ELF header endianess
+From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Date: Fri, 25 Jul 2014 17:07:49 +0200
+Message-ID: <20140725150749.17944.26746.stgit@nimbus>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972430B1@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +38,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Hi Atsushi,
+The ELF header created among the loading of the kdump kernel should be
+flagged using the current endianess and not always as big endian.
 
-Patch looks good. Only a small concern.
+Without this patch the data exposed in /proc/vmcore are not readable when
+running in LE mode.
 
+Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+---
+ kexec/arch/ppc64/crashdump-ppc64.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
- +	mdf_pfn_t nr_pages;
->  	unsigned long index_pg, pfn_mm;
->  	unsigned long long maddr;
->  	mdf_pfn_t pfn_read_start, pfn_read_end;
->  	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
->  	unsigned char *pcache;
-> -	unsigned int _count, _mapcount = 0;
-> +	unsigned int _count, _mapcount = 0, compound_order = 0;
->  	unsigned long flags, mapping, private = 0;
-> +	unsigned long hugetlb_dtor;
-                      ~~~~~~~~~~~~~
->  
->  	/*
->  	 * If a multi-page exclusion is pending, do it first
-> @@ -4708,11 +4728,36 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  		flags   = ULONG(pcache + OFFSET(page.flags));
->  		_count  = UINT(pcache + OFFSET(page._count));
->  		mapping = ULONG(pcache + OFFSET(page.mapping));
-> +
-> +		if (index_pg < PGMM_CACHED - 1) {
-> +			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
-> +					       + OFFSET(list_head.prev));
-> +			hugetlb_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
-> +					     + OFFSET(list_head.next));
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index 00a0e632f48e..6214b831fdf2 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -38,7 +38,11 @@
+ static struct crash_elf_info elf_info64 =
+ {
+ 	class: ELFCLASS64,
++#if BYTE_ORDER == LITTLE_ENDIAN
++	data: ELFDATA2LSB,
++#else
+ 	data: ELFDATA2MSB,
++#endif
+ 	machine: EM_PPC64,
+ 	page_offset: PAGE_OFFSET,
+ 	lowmem_limit: MAXMEM,
 
-Here I think the variable should be compound_page_dtor because it could
-be free_compound_page if it's thp or normal huge page. Only if it's a
-hugetlb huge page, it will be free_huge_page. So for removing confusion
-and future extention, it could be named as compound_page_dtor or
-compound_dtor, a more generic name.
-
-Thanks
-Baoquan
-
-
-> +
-> +			if (compound_order &&
-> +			    ((compound_order >= sizeof(unsigned long) * 8)
-> +			     || (pfn & ((1UL << compound_order) - 1)) != 0)) {
-> +				/* Invalid order */
-> +				compound_order = 0;
-> +			}
 
 _______________________________________________
 kexec mailing list
