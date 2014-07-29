@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XC0zK-000734-9U
- for kexec@lists.infradead.org; Tue, 29 Jul 2014 06:34:19 +0000
-Date: Tue, 29 Jul 2014 08:33:50 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] ppc64/kdump: Fix ELF header endianess
-Message-ID: <20140729083350.76dd3813@hananiah.suse.cz>
-In-Reply-To: <20140725150749.17944.26746.stgit@nimbus>
-References: <20140725150749.17944.26746.stgit@nimbus>
-Mime-Version: 1.0
+ id 1XC6lO-0008ME-27
+ for kexec@lists.infradead.org; Tue, 29 Jul 2014 12:44:18 +0000
+Date: Tue, 29 Jul 2014 08:43:55 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [Patch v3 7/7] add a new interface to show the memory usage of
+ 1st kernel
+Message-ID: <20140729124355.GA27389@redhat.com>
+References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
+ <1406535606-16303-8-git-send-email-bhe@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1406535606-16303-8-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +25,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
-On Fri, 25 Jul 2014 17:07:49 +0200
-Laurent Dufour <ldufour@linux.vnet.ibm.com> wrote:
-
-> The ELF header created among the loading of the kdump kernel should be
-> flagged using the current endianess and not always as big endian.
+On Mon, Jul 28, 2014 at 04:20:06PM +0800, Baoquan He wrote:
+> Recently people complained that they don't know how to decide how
+> much disk size need be reserved for kdump. E.g there are lots of
+> machines with different memory size, if the memory usage information
+> of current system can be shown, that can help them to make an estimate
+> how much storage space need be reserved.
 > 
-> Without this patch the data exposed in /proc/vmcore are not readable when
-> running in LE mode.
-
-FWIW I can confirm that this patch has fixed kdump on my ppc64le system.
-
-Thank you, Laurent!
-
-Petr Tesarik
-
-> Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-> ---
->  kexec/arch/ppc64/crashdump-ppc64.c |    4 ++++
->  1 file changed, 4 insertions(+)
+> In this patch, a new interface is added into makedumpfile. By the
+> help of this, people can know the page number of memory in different
+> use. The implementation is analyzing the "System Ram" and "kernel text"
+> program segment of /proc/kcore excluding the crashkernel range, then
+> calculating the page number of different kind per vmcoreinfo.
 > 
-> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
-> index 00a0e632f48e..6214b831fdf2 100644
-> --- a/kexec/arch/ppc64/crashdump-ppc64.c
-> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
-> @@ -38,7 +38,11 @@
->  static struct crash_elf_info elf_info64 =
->  {
->  	class: ELFCLASS64,
-> +#if BYTE_ORDER == LITTLE_ENDIAN
-> +	data: ELFDATA2LSB,
-> +#else
->  	data: ELFDATA2MSB,
-> +#endif
->  	machine: EM_PPC64,
->  	page_offset: PAGE_OFFSET,
->  	lowmem_limit: MAXMEM,
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> The print is like below:
+> ->$ ./makedumpfile  --mem-usage  /proc/kcore
+> Excluding unnecessary pages        : [100.0 %] |
 
+I think above message is now unnecessary. In fact we are not excluding
+any pages.
+
+> 
+> Page number of memory in different use
+> --------------------------------------------------
+
+Above is not required.
+
+
+> TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+
+We probably should put dashes under these headers
+
+TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+====		=====			==========	===========
+
+> ZERO		0               	yes		Pages filled with zero
+> CACHE		562006          	yes		Cache pages
+> CACHE_PRIVATE	353502          	yes		Cache pages + private
+> USER		225780          	yes		User process pages
+> FREE		2761884         	yes		Free pages
+> KERN_DATA	235873          	no		Dumpable kernel data
+
+What's "Dumpable kernel data" ? Are we saying they are kernel pages which
+can't be filtered?
+
+Why not simply call them "kernel data" or "kernel pages" 
+
+
+> 
+> Total pages on system:	4139045
+
+How about "Total number of pages".
+
+Otherwise this output looks much better than previous version. Thanks for
+the changes.
+
+Vivek
 
 _______________________________________________
 kexec mailing list
