@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp.nebula.fi ([2001:1bc8:100c:f220::66])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XC6lO-0008ME-27
- for kexec@lists.infradead.org; Tue, 29 Jul 2014 12:44:18 +0000
-Date: Tue, 29 Jul 2014 08:43:55 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Patch v3 7/7] add a new interface to show the memory usage of
- 1st kernel
-Message-ID: <20140729124355.GA27389@redhat.com>
-References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
- <1406535606-16303-8-git-send-email-bhe@redhat.com>
+ id 1XC9in-0007Mf-MQ
+ for kexec@lists.infradead.org; Tue, 29 Jul 2014 15:53:50 +0000
+Received: from posti.hankala.fi (posti.hankala.fi [83.150.85.27])
+ (using TLSv1 with cipher ADH-CAMELLIA256-SHA (256/256 bits))
+ (No client certificate requested)
+ by smtp.nebula.fi (Postfix) with ESMTPS id D41F6D00DB3
+ for <kexec@lists.infradead.org>; Tue, 29 Jul 2014 18:51:07 +0300 (EEST)
+Received: from posti.hankala.fi (localhost [127.0.0.1])
+ by posti.hankala.fi (Postfix) with ESMTPS id E7C3EFBC
+ for <kexec@lists.infradead.org>; Tue, 29 Jul 2014 15:51:03 +0000 (UTC)
+Received: (from visa@localhost)
+ by posti.hankala.fi (8.14.7/8.14.7/Submit) id s6TFp3PH074182
+ for kexec@lists.infradead.org; Tue, 29 Jul 2014 15:51:03 GMT
+ (envelope-from visa@hankala.org)
+Date: Tue, 29 Jul 2014 15:51:03 +0000
+From: Visa Hankala <visa@hankala.org>
+Subject: [PATCH] kexec: Fix callback parameter types
+Message-ID: <20140729154001.Sx1ujgo15C8oflxb@hankala.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1406535606-16303-8-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +33,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Mon, Jul 28, 2014 at 04:20:06PM +0800, Baoquan He wrote:
-> Recently people complained that they don't know how to decide how
-> much disk size need be reserved for kdump. E.g there are lots of
-> machines with different memory size, if the memory usage information
-> of current system can be shown, that can help them to make an estimate
-> how much storage space need be reserved.
-> 
-> In this patch, a new interface is added into makedumpfile. By the
-> help of this, people can know the page number of memory in different
-> use. The implementation is analyzing the "System Ram" and "kernel text"
-> program segment of /proc/kcore excluding the crashkernel range, then
-> calculating the page number of different kind per vmcoreinfo.
-> 
-> The print is like below:
-> ->$ ./makedumpfile  --mem-usage  /proc/kcore
-> Excluding unnecessary pages        : [100.0 %] |
+Commit 4362bfaca4d8d2a4380532880f0d08c2bf14184e changed
+kexec_iomem_for_each_line() to pass 'base' and 'length' parameters of
+the callback function as unsigned long long integers instead of unsigned
+longs. Some of the functions were not updated. This patch corrects the
+remaining instances.
 
-I think above message is now unnecessary. In fact we are not excluding
-any pages.
+Signed-off-by: Visa Hankala <visa@hankala.org>
+---
+ kexec/arch/i386/crashdump-x86.c |    4 ++--
+ kexec/arch/sh/crashdump-sh.c    |    4 ++--
+ kexec/arch/sh/kexec-sh.c        |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-> 
-> Page number of memory in different use
-> --------------------------------------------------
-
-Above is not required.
-
-
-> TYPE		PAGES			EXCLUDABLE	DESCRIPTION
-
-We probably should put dashes under these headers
-
-TYPE		PAGES			EXCLUDABLE	DESCRIPTION
-====		=====			==========	===========
-
-> ZERO		0               	yes		Pages filled with zero
-> CACHE		562006          	yes		Cache pages
-> CACHE_PRIVATE	353502          	yes		Cache pages + private
-> USER		225780          	yes		User process pages
-> FREE		2761884         	yes		Free pages
-> KERN_DATA	235873          	no		Dumpable kernel data
-
-What's "Dumpable kernel data" ? Are we saying they are kernel pages which
-can't be filtered?
-
-Why not simply call them "kernel data" or "kernel pages" 
-
-
-> 
-> Total pages on system:	4139045
-
-How about "Total number of pages".
-
-Otherwise this output looks much better than previous version. Thanks for
-the changes.
-
-Vivek
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 77bdad5..82bf239 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -1041,8 +1041,8 @@ int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
+ 
+ static int crashkernel_mem_callback(void *UNUSED(data), int nr,
+                                           char *UNUSED(str),
+-                                          unsigned long base,
+-                                          unsigned long length)
++                                          unsigned long long base,
++                                          unsigned long long length)
+ {
+ 	if (nr >= CRASH_RESERVED_MEM_NR)
+ 		return 1;
+diff --git a/kexec/arch/sh/crashdump-sh.c b/kexec/arch/sh/crashdump-sh.c
+index fe11b17..9e6af6b 100644
+--- a/kexec/arch/sh/crashdump-sh.c
++++ b/kexec/arch/sh/crashdump-sh.c
+@@ -34,8 +34,8 @@ static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
+ static int crash_sh_range_nr;
+ static int crash_sh_memory_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 					  char *str,
+-					  unsigned long base,
+-					  unsigned long length)
++					  unsigned long long base,
++					  unsigned long long length)
+ {
+ 
+ 	struct memory_range *range = crash_memory_range;
+diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
+index aea5dfb..ce341c8 100644
+--- a/kexec/arch/sh/kexec-sh.c
++++ b/kexec/arch/sh/kexec-sh.c
+@@ -24,8 +24,8 @@ static struct memory_range memory_range[MAX_MEMORY_RANGES];
+ 
+ static int kexec_sh_memory_range_callback(void *UNUSED(data), int nr,
+ 					  char *UNUSED(str),
+-					  unsigned long base,
+-					  unsigned long length)
++					  unsigned long long base,
++					  unsigned long long length)
+ {
+ 	if (nr < MAX_MEMORY_RANGES) {
+ 		memory_range[nr].start = base;
 
 _______________________________________________
 kexec mailing list
