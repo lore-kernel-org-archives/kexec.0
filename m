@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from szxga01-in.huawei.com ([119.145.14.64])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XCgCB-0003vl-2d
- for kexec@lists.infradead.org; Thu, 31 Jul 2014 02:34:19 +0000
-Date: Thu, 31 Jul 2014 10:32:37 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [Patch v3 7/7] add a new interface to show the memory usage of
- 1st kernel
-Message-ID: <20140731023237.GB4003@dhcp-16-105.nay.redhat.com>
-References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
- <1406535606-16303-8-git-send-email-bhe@redhat.com>
- <20140729124355.GA27389@redhat.com>
+ id 1XCjdh-0007Ku-Qu
+ for kexec@lists.infradead.org; Thu, 31 Jul 2014 06:14:59 +0000
+From: HuKeping <hukeping@huawei.com>
+Subject: [PATCH] ARM: Add arm description to Documentation/kdump/kdump.txt
+Date: Thu, 31 Jul 2014 14:03:31 +0800
+Message-ID: <1406786611-57238-1-git-send-email-hukeping@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140729124355.GA27389@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,94 +20,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: vgoyal@redhat.com, hbabu@us.ibm.com
+Cc: kexec@lists.infradead.org
 
-On 07/29/14 at 08:43am, Vivek Goyal wrote:
-> On Mon, Jul 28, 2014 at 04:20:06PM +0800, Baoquan He wrote:
-> > Recently people complained that they don't know how to decide how
-> > much disk size need be reserved for kdump. E.g there are lots of
-> > machines with different memory size, if the memory usage information
-> > of current system can be shown, that can help them to make an estimate
-> > how much storage space need be reserved.
-> > 
-> > In this patch, a new interface is added into makedumpfile. By the
-> > help of this, people can know the page number of memory in different
-> > use. The implementation is analyzing the "System Ram" and "kernel text"
-> > program segment of /proc/kcore excluding the crashkernel range, then
-> > calculating the page number of different kind per vmcoreinfo.
-> > 
-> > The print is like below:
-> > ->$ ./makedumpfile  --mem-usage  /proc/kcore
-> > Excluding unnecessary pages        : [100.0 %] |
-> 
-> I think above message is now unnecessary. In fact we are not excluding
-> any pages.
+Add arm specific parts to kdump kernel documentation.
 
-I reused the function get_num_dumpable_cyclic(). It will iterate each
-pages to check whether it's dumpable or not based on the dump_level
-specified. While above message is printed inside a internal function. I
-don't think it's very necessary, but also I don't think it will misguide
-people to think of too much about it. It just tell the progress of
-filtering, and could be a little helpful if it's working on a large
-memory, say more than 1T memory.
+----------------------------------------
+Signed-off-by: Hu Keping <hukeping@huawei.com>
+---
+ Documentation/kdump/kdump.txt | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-> 
-> > 
-> > Page number of memory in different use
-> > --------------------------------------------------
-> 
-> Above is not required.
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 88d5a86..5fc98d6 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+ a remote system.
+ 
+ Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+-and s390x architectures.
++s390x and arm architectures.
+ 
+ When the system kernel boots, it reserves a small section of memory for
+ the dump-capture kernel. This ensures that ongoing Direct Memory Access
+@@ -112,7 +112,7 @@ There are two possible methods of using Kdump.
+ 2) Or use the system kernel binary itself as dump-capture kernel and there is
+    no need to build a separate dump-capture kernel. This is possible
+    only with the architectures which support a relocatable kernel. As
+-   of today, i386, x86_64, ppc64 and ia64 architectures support relocatable
++   of today, i386, x86_64, ppc64, ia64 and arm architectures support relocatable
+    kernel.
+ 
+ Building a relocatable kernel is advantageous from the point of view that
+@@ -296,6 +296,12 @@ Boot into System Kernel
+    on the memory consumption of the kdump system. In general this is not
+    dependent on the memory size of the production system.
+ 
++   On arm, use "crashkernel=Y@X". Note that the start address of the kernel
++   will be aligned to 128MiB (0x08000000), so if the start address is not then
++   any space blow the alignment point may be overwrited by the dump-caputre kernel,
++   which means it is possible that the vmcore is not that precise as expected.
++
++
+ Load the Dump-capture Kernel
+ ============================
+ 
+@@ -315,7 +321,8 @@ For ia64:
+ 	- Use vmlinux or vmlinuz.gz
+ For s390x:
+ 	- Use image or bzImage
+-
++For arm:
++	- Use zImage
+ 
+ If you are using a uncompressed vmlinux image then use following command
+ to load dump-capture kernel.
+@@ -331,6 +338,15 @@ to load dump-capture kernel.
+    --initrd=<initrd-for-dump-capture-kernel> \
+    --append="root=<root-dev> <arch-specific-options>"
+ 
++If you are using a compressed zImage, then use following command
++to load dump-capture kernel.
++
++   kexec --type zImage -p <dump-capture-kernel-bzImage> \
++   --initrd=<initrd-for-dump-capture-kernel> \
++   --dtb=<dtb-for-dump-capture-kernel> \
++   --append="root=<root-dev> <arch-specific-options>"
++
++
+ Please note, that --args-linux does not need to be specified for ia64.
+ It is planned to make this a no-op on that architecture, but for now
+ it should be omitted
+@@ -347,6 +363,9 @@ For ppc64:
+ For s390x:
+ 	"1 maxcpus=1 cgroup_disable=memory"
+ 
++For arm:
++	"1 maxcpus=1 reset_devices"
++
+ Notes on loading the dump-capture kernel:
+ 
+ * By default, the ELF headers are stored in ELF64 format to support
+-- 
+1.8.5.5
 
-OK, will remove it.
-
-> 
-> 
-> > TYPE		PAGES			EXCLUDABLE	DESCRIPTION
-> 
-> We probably should put dashes under these headers
-> 
-> TYPE		PAGES			EXCLUDABLE	DESCRIPTION
-> ====		=====			==========	===========
-
-I am fine with this, will add dashes to decorate it.
-
-
-> 
-> > ZERO		0               	yes		Pages filled with zero
-> > CACHE		562006          	yes		Cache pages
-> > CACHE_PRIVATE	353502          	yes		Cache pages + private
-> > USER		225780          	yes		User process pages
-> > FREE		2761884         	yes		Free pages
-> > KERN_DATA	235873          	no		Dumpable kernel data
-> 
-> What's "Dumpable kernel data" ? Are we saying they are kernel pages which
-> can't be filtered?
-> 
-> Why not simply call them "kernel data" or "kernel pages" 
-
-Yes, it's misled. WIll change.
-
-
-> 
-> 
-> > 
-> > Total pages on system:	4139045
-> 
-> How about "Total number of pages".
-
-Will change.
-
-> 
-> Otherwise this output looks much better than previous version. Thanks for
-> the changes.
-> 
-> Vivek
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
