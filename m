@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XCSSb-0000Tc-Mj
- for kexec@lists.infradead.org; Wed, 30 Jul 2014 11:54:23 +0000
-Date: Wed, 30 Jul 2014 13:53:57 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v3] makedumpfile: Exclude unnecessary hugepages.
-Message-ID: <20140730135357.71bf8ab5@hananiah.suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE972430B1@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE972430B1@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+ id 1XCgCB-0003vl-2d
+ for kexec@lists.infradead.org; Thu, 31 Jul 2014 02:34:19 +0000
+Date: Thu, 31 Jul 2014 10:32:37 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [Patch v3 7/7] add a new interface to show the memory usage of
+ 1st kernel
+Message-ID: <20140731023237.GB4003@dhcp-16-105.nay.redhat.com>
+References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
+ <1406535606-16303-8-git-send-email-bhe@redhat.com>
+ <20140729124355.GA27389@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140729124355.GA27389@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,331 +26,94 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-Hello Kumagai-san,
-
-thank you for this patch. I was on vacation last week (and will be on
-vacation the next two weeks again). Anyway, see my comments below.
-
-On Wed, 23 Jul 2014 00:32:20 +0000
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-
->[...]
+On 07/29/14 at 08:43am, Vivek Goyal wrote:
+> On Mon, Jul 28, 2014 at 04:20:06PM +0800, Baoquan He wrote:
+> > Recently people complained that they don't know how to decide how
+> > much disk size need be reserved for kdump. E.g there are lots of
+> > machines with different memory size, if the memory usage information
+> > of current system can be shown, that can help them to make an estimate
+> > how much storage space need be reserved.
+> > 
+> > In this patch, a new interface is added into makedumpfile. By the
+> > help of this, people can know the page number of memory in different
+> > use. The implementation is analyzing the "System Ram" and "kernel text"
+> > program segment of /proc/kcore excluding the crashkernel range, then
+> > calculating the page number of different kind per vmcoreinfo.
+> > 
+> > The print is like below:
+> > ->$ ./makedumpfile  --mem-usage  /proc/kcore
+> > Excluding unnecessary pages        : [100.0 %] |
 > 
-> Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> ---
->  makedumpfile.c | 113 +++++++++++++++++++++++++++++++++++++++++++++++++--------
->  makedumpfile.h |   7 ++++
->  2 files changed, 105 insertions(+), 15 deletions(-)
+> I think above message is now unnecessary. In fact we are not excluding
+> any pages.
+
+I reused the function get_num_dumpable_cyclic(). It will iterate each
+pages to check whether it's dumpable or not based on the dump_level
+specified. While above message is printed inside a internal function. I
+don't think it's very necessary, but also I don't think it will misguide
+people to think of too much about it. It just tell the progress of
+filtering, and could be a little helpful if it's working on a large
+memory, say more than 1T memory.
+
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 3884aa5..7bee413 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -1180,6 +1180,7 @@ get_symbol_info(void)
->  	SYMBOL_INIT(vmemmap_list, "vmemmap_list");
->  	SYMBOL_INIT(mmu_psize_defs, "mmu_psize_defs");
->  	SYMBOL_INIT(mmu_vmemmap_psize, "mmu_vmemmap_psize");
-> +	SYMBOL_INIT(free_huge_page, "free_huge_page");
->  
->  	return TRUE;
->  }
-> @@ -1293,6 +1294,15 @@ get_structure_info(void)
->  	ENUM_NUMBER_INIT(PG_slab, "PG_slab");
->  	ENUM_NUMBER_INIT(PG_hwpoison, "PG_hwpoison");
->  
-> +	ENUM_NUMBER_INIT(PG_head_mask, "PG_head_mask");
-> +	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER) {
-> +		ENUM_NUMBER_INIT(PG_head, "PG_head");
-> +		if (NUMBER(PG_head) == NOT_FOUND_NUMBER)
-> +			ENUM_NUMBER_INIT(PG_head, "PG_compound");
-> +		if (NUMBER(PG_head) != NOT_FOUND_NUMBER)
-> +			NUMBER(PG_head_mask) = 1UL << NUMBER(PG_head);
-> +	}
-> +
->  	ENUM_TYPE_SIZE_INIT(pageflags, "pageflags");
->  
->  	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
-> @@ -1527,6 +1537,9 @@ get_value_for_old_linux(void)
->  		NUMBER(PG_swapcache) = PG_swapcache_ORIGINAL;
->  	if (NUMBER(PG_slab) == NOT_FOUND_NUMBER)
->  		NUMBER(PG_slab) = PG_slab_ORIGINAL;
-> +	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER)
-> +		NUMBER(PG_head_mask) = 1L << PG_compound_ORIGINAL;
-> +
->  	/*
->  	 * The values from here are for free page filtering based on
->  	 * mem_map array. These are minimum effort to cover old
-> @@ -1694,6 +1707,7 @@ write_vmcoreinfo_data(void)
->  	WRITE_SYMBOL("vmemmap_list", vmemmap_list);
->  	WRITE_SYMBOL("mmu_psize_defs", mmu_psize_defs);
->  	WRITE_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
-> +	WRITE_SYMBOL("free_huge_page", free_huge_page);
->  
->  	/*
->  	 * write the structure size of 1st kernel
-> @@ -1783,6 +1797,7 @@ write_vmcoreinfo_data(void)
->  
->  	WRITE_NUMBER("PG_lru", PG_lru);
->  	WRITE_NUMBER("PG_private", PG_private);
-> +	WRITE_NUMBER("PG_head_mask", PG_head_mask);
->  	WRITE_NUMBER("PG_swapcache", PG_swapcache);
->  	WRITE_NUMBER("PG_buddy", PG_buddy);
->  	WRITE_NUMBER("PG_slab", PG_slab);
-> @@ -2033,6 +2048,7 @@ read_vmcoreinfo(void)
->  	READ_SYMBOL("vmemmap_list", vmemmap_list);
->  	READ_SYMBOL("mmu_psize_defs", mmu_psize_defs);
->  	READ_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
-> +	READ_SYMBOL("free_huge_page", free_huge_page);
->  
->  	READ_STRUCTURE_SIZE("page", page);
->  	READ_STRUCTURE_SIZE("mem_section", mem_section);
-> @@ -2109,6 +2125,7 @@ read_vmcoreinfo(void)
->  
->  	READ_NUMBER("PG_lru", PG_lru);
->  	READ_NUMBER("PG_private", PG_private);
-> +	READ_NUMBER("PG_head_mask", PG_head_mask);
->  	READ_NUMBER("PG_swapcache", PG_swapcache);
->  	READ_NUMBER("PG_slab", PG_slab);
->  	READ_NUMBER("PG_buddy", PG_buddy);
-> @@ -4636,13 +4653,16 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->      mdf_pfn_t pfn_start, mdf_pfn_t pfn_end, struct cycle *cycle)
->  {
->  	mdf_pfn_t pfn;
-> +	mdf_pfn_t *pfn_counter;
-> +	mdf_pfn_t nr_pages;
->  	unsigned long index_pg, pfn_mm;
->  	unsigned long long maddr;
->  	mdf_pfn_t pfn_read_start, pfn_read_end;
->  	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
->  	unsigned char *pcache;
-> -	unsigned int _count, _mapcount = 0;
-> +	unsigned int _count, _mapcount = 0, compound_order = 0;
->  	unsigned long flags, mapping, private = 0;
-> +	unsigned long hugetlb_dtor;
->  
->  	/*
->  	 * If a multi-page exclusion is pending, do it first
-> @@ -4708,11 +4728,36 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  		flags   = ULONG(pcache + OFFSET(page.flags));
->  		_count  = UINT(pcache + OFFSET(page._count));
->  		mapping = ULONG(pcache + OFFSET(page.mapping));
-> +
-> +		if (index_pg < PGMM_CACHED - 1) {
+> > 
+> > Page number of memory in different use
+> > --------------------------------------------------
+> 
+> Above is not required.
 
-Why not check the compound flags here? Like this:
+OK, will remove it.
 
-		if ((index_pg < PGMM_CACHED - 1) &&
-		    isCompoundHead(flags)) {
+> 
+> 
+> > TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+> 
+> We probably should put dashes under these headers
+> 
+> TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+> ====		=====			==========	===========
 
-> +			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
-> +					       + OFFSET(list_head.prev));
-> +			hugetlb_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
-> +					     + OFFSET(list_head.next));
-> +
-> +			if (compound_order &&
-                            ^^^^^^^^^^^^^^
-BTW this check can be omitted. If compound_order is zero, then it is
-only assigned zero again, which makes no difference. You can leave the
-condition here if you find it cleaner, but it is not necessary.
+I am fine with this, will add dashes to decorate it.
 
-> +			    ((compound_order >= sizeof(unsigned long) * 8)
-> +			     || (pfn & ((1UL << compound_order) - 1)) != 0)) {
-> +				/* Invalid order */
-> +				compound_order = 0;
-> +			}
-> +		} else {
-> +			/*
-> +			 * The last pfn of the mem_map cache must not be compound page
-> +			 * since all compound pages are aligned to its page order and
-> +			 * PGMM_CACHED is 512.
-                                          ^^^
-For clarity I suggest: PGMM_CACHED is a power of 2.
 
-> +			 */
-> +			compound_order = 0;
-> +			hugetlb_dtor = 0;
-> +		}
-> +
->  		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
->  			_mapcount = UINT(pcache + OFFSET(page._mapcount));
->  		if (OFFSET(page.private) != NOT_FOUND_STRUCTURE)
->  			private = ULONG(pcache + OFFSET(page.private));
->  
-> +		nr_pages = 1;
+> 
+> > ZERO		0               	yes		Pages filled with zero
+> > CACHE		562006          	yes		Cache pages
+> > CACHE_PRIVATE	353502          	yes		Cache pages + private
+> > USER		225780          	yes		User process pages
+> > FREE		2761884         	yes		Free pages
+> > KERN_DATA	235873          	no		Dumpable kernel data
+> 
+> What's "Dumpable kernel data" ? Are we saying they are kernel pages which
+> can't be filtered?
+> 
+> Why not simply call them "kernel data" or "kernel pages" 
 
-I think you can write:
+Yes, it's misled. WIll change.
 
-		nr_pages = 1 << compound_order;
 
-With the added check for hugepage flags (see above) nr_pages then
-describes how many pages share flags with the current page.
+> 
+> 
+> > 
+> > Total pages on system:	4139045
+> 
+> How about "Total number of pages".
 
-> +		pfn_counter = NULL;
->  		/*
->  		 * Exclude the free page managed by a buddy
->  		 * Use buddy identification of free pages whether cyclic or not.
-> @@ -4720,12 +4765,8 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  		if ((info->dump_level & DL_EXCLUDE_FREE)
->  		    && info->page_is_buddy
->  		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
-> -			int nr_pages = 1 << private;
-> -
-> -			exclude_range(&pfn_free, pfn, pfn + nr_pages, cycle);
-> -
-> -			pfn += nr_pages - 1;
-> -			mem_map += (nr_pages - 1) * SIZE(page);
-> +			nr_pages = 1 << private;
+Will change.
 
-Ok, this assignment is still needed, because free pages should also be
-treated as one entity, but they are not compound.
-
-> +			pfn_counter = &pfn_free;
->  		}
->  		/*
->  		 * Exclude the cache page without the private page.
-> @@ -4733,8 +4774,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  		else if ((info->dump_level & DL_EXCLUDE_CACHE)
->  		    && (isLRU(flags) || isSwapCache(flags))
->  		    && !isPrivate(flags) && !isAnon(mapping)) {
-> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
-> -				pfn_cache++;
-> +			/*
-> +			 * NOTE: If THP for cache is introduced, the check for
-> +			 *       compound pages is needed here.
-> +			 */
-> +			nr_pages = 1;
-
-But this assignment is not needed, and the code is then ready for THP
-cache.
-
-> +			pfn_counter = &pfn_cache;
->  		}
->  		/*
->  		 * Exclude the cache page with the private page.
-> @@ -4742,23 +4787,61 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
->  		    && (isLRU(flags) || isSwapCache(flags))
->  		    && !isAnon(mapping)) {
-> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
-> -				pfn_cache_private++;
-> +			/*
-> +			 * NOTE: If THP for cache is introduced, the check for
-> +			 *       compound pages is needed here.
-> +			 */
-> +			nr_pages = 1;
-
-Same here. If the assignment is removed, the code is THP ready for
-free. ;-)
-
-> +			pfn_counter = &pfn_cache_private;
->  		}
->  		/*
->  		 * Exclude the data page of the user process.
->  		 */
->  		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
-> -		    && isAnon(mapping)) {
-> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
-> -				pfn_user++;
-> +			 && (isAnon(mapping) || isHugetlb(hugetlb_dtor))) {
-> +			/*
-> +			 * Exclude the anonymous pages as user pages.
-> +			 */
-> +			if (isAnon(mapping)) {
-> +				/*
-> +				 * Check the compound page
-> +				 */
-> +				if (isCompoundHead(flags) && compound_order > 0) {
-> +					nr_pages = 1 << compound_order;
-> +				} else
-> +					nr_pages = 1;
-> +			}
-> +			/*
-> +			 * Exclude the hugetlbfs pages as user pages.
-> +			 */
-> +			else {
-> +				nr_pages = 1 << compound_order;
-> +			}
-
-This whole if-else block can go away, AFAICS.
-
-> +			pfn_counter = &pfn_user;
->  		}
->  		/*
->  		 * Exclude the hwpoison page.
->  		 */
->  		else if (isHWPOISON(flags)) {
-> +			nr_pages = 1;
-
-Same here. The assignment can be removed.
-
-Thanks
-Petr Tesarik
-
-> +			pfn_counter = &pfn_hwpoison;
-> +		}
-> +		/*
-> +		 * Unexcludable page
-> +		 */
-> +		else
-> +			continue;
-> +
-> +		/*
-> +		 * Execute exclusion
-> +		 */
-> +		if (nr_pages == 1) {
->  			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
-> -				pfn_hwpoison++;
-> +				(*pfn_counter)++;
-> +		} else {
-> +			exclude_range(pfn_counter, pfn, pfn + nr_pages, cycle);
-> +			pfn += nr_pages - 1;
-> +			mem_map += (nr_pages - 1) * SIZE(page);
->  		}
->  	}
->  	return TRUE;
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 9402f05..a2c76d8 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -74,6 +74,7 @@ int get_mem_type(void);
->  #define PG_lru_ORIGINAL	 	(5)
->  #define PG_slab_ORIGINAL	(7)
->  #define PG_private_ORIGINAL	(11)	/* Has something at ->private */
-> +#define PG_compound_ORIGINAL	(14)	/* Is part of a compound page */
->  #define PG_swapcache_ORIGINAL	(15)	/* Swap page: swp_entry_t in private */
->  
->  #define PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_38	(-2)
-> @@ -148,6 +149,9 @@ test_bit(int nr, unsigned long addr)
->  
->  #define isLRU(flags)		test_bit(NUMBER(PG_lru), flags)
->  #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
-> +#define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
-> +#define isHugetlb(dtor)         ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL) \
-> +				 && (SYMBOL(free_huge_page) == dtor))
->  #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
->  #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
->  				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
-> @@ -1143,6 +1147,7 @@ struct symbol_table {
->  	unsigned long long	node_remap_start_vaddr;
->  	unsigned long long	node_remap_end_vaddr;
->  	unsigned long long	node_remap_start_pfn;
-> +	unsigned long long      free_huge_page;
->  
->  	/*
->  	 * for Xen extraction
-> @@ -1428,6 +1433,8 @@ struct number_table {
->  	 */
->  	long	PG_lru;
->  	long	PG_private;
-> +	long	PG_head;
-> +	long	PG_head_mask;
->  	long	PG_swapcache;
->  	long	PG_buddy;
->  	long	PG_slab;
-
+> 
+> Otherwise this output looks much better than previous version. Thanks for
+> the changes.
+> 
+> Vivek
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
