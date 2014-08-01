@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XD78K-0004O3-MY
- for kexec@lists.infradead.org; Fri, 01 Aug 2014 07:20:09 +0000
+ id 1XD7Az-0005jU-LG
+ for kexec@lists.infradead.org; Fri, 01 Aug 2014 07:22:54 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [Patch v3 4/7] set vmcoreinfo for kcore
-Date: Fri, 1 Aug 2014 07:12:12 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9724660F@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [Patch v3 3/7] preparation functions for parsing vmcoreinfo
+Date: Fri, 1 Aug 2014 07:12:19 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97246615@BPXM01GP.gisp.nec.co.jp>
 References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
- <1406535606-16303-5-git-send-email-bhe@redhat.com>
-In-Reply-To: <1406535606-16303-5-git-send-email-bhe@redhat.com>
+ <1406535606-16303-4-git-send-email-bhe@redhat.com>
+In-Reply-To: <1406535606-16303-4-git-send-email-bhe@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,139 +27,155 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "bhe@redhat.com" <bhe@redhat.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
->In vmcore dumping, note program of vmcoreinfo is set in elf header
->of /proc/vmcore. In 1st kernel, the vmcoreinfo is also needed for
->kcore analyzing. So in this patch information of vmcoreinfo is
->parsed and set in offset_vmcoreinfo and size_vmcoreinfo.
+>Add 2 preparation functions get_elf_loads and get_page_offset, later
+>they will be needed for parsing vmcoreinfo.
+>
+>Meanwhile since get_kernel_version need be called to get page_offset
+>before initial() in mem_usage code flow, and surely it will be called
+>inside initial() again. Add a static variable to avoid this duplicate
+>calling.
 >
 >Signed-off-by: Baoquan He <bhe@redhat.com>
 >---
-> elf_info.c     | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+> elf_info.c     | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
 > elf_info.h     |  1 +
-> makedumpfile.c | 29 +++++++++++++++++++++++++++++
-> 3 files changed, 77 insertions(+)
+> makedumpfile.c | 23 +++++++++++++++++++++++
+> 3 files changed, 74 insertions(+)
 >
 >diff --git a/elf_info.c b/elf_info.c
->index 69d3fdb..edbfc97 100644
+>index b277f69..69d3fdb 100644
 >--- a/elf_info.c
 >+++ b/elf_info.c
->@@ -395,6 +395,53 @@ get_pt_note_info(void)
+>@@ -681,6 +681,56 @@ get_elf32_ehdr(int fd, char *filename, Elf32_Ehdr *ehdr)
 > 	return TRUE;
 > }
 >
->+#define UNINITIALIZED  ((ulong)(-1))
->+int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len)
+>+int
+>+get_elf_loads(int fd, char *filename)
 >+{
->+	int i;
->+	ulong kvaddr;
->+	off_t offset;
->+	char note[MAX_SIZE_NHDR];
->+	int size_desc;
->+	off_t offset_desc;
+>+	int i, j, phnum, elf_format;
+>+	Elf64_Phdr phdr;
 >+
->+	offset = UNINITIALIZED;
->+	kvaddr = (ulong)vmcoreinfo_addr | PAGE_OFFSET;
+>+	/*
+>+	 * Check ELF64 or ELF32.
+>+	 */
+>+	elf_format = check_elf_format(fd, filename, &phnum, &num_pt_loads);
+>+	if (elf_format == ELF64)
+>+		flags_memory |= MEMORY_ELF64;
+>+	else if (elf_format != ELF32)
+>+		return FALSE;
 >+
->+	for (i = 0; i < num_pt_loads; ++i) {
->+		struct pt_load_segment *p = &pt_loads[i];
->+		if ((kvaddr >= p->virt_start) && (kvaddr < p->virt_end)) {
->+			offset = (off_t)(kvaddr - p->virt_start) +
->+			(off_t)p->file_offset;
->+			break;
->+		}
->+	}
->+
->+	if (offset == UNINITIALIZED){
->+		ERRMSG("Can't seek the dump memory(%s). %s\n",
->+		    name_memory, strerror(errno));
+>+	if (!num_pt_loads) {
+>+		ERRMSG("Can't get the number of PT_LOAD.\n");
 >+		return FALSE;
 >+	}
 >+
->+        if (lseek(fd_memory, offset, SEEK_SET) != offset){
->+		ERRMSG("Can't seek the dump memory(%s). %s\n",
->+		    name_memory, strerror(errno));
+>+	/*
+>+	 * The below file information will be used as /proc/vmcore.
+>+	 */
+>+	fd_memory   = fd;
+>+	name_memory = filename;
+>+
+>+	pt_loads = calloc(sizeof(struct pt_load_segment), num_pt_loads);
+>+	if (pt_loads == NULL) {
+>+		ERRMSG("Can't allocate memory for the PT_LOAD. %s\n",
+>+		    strerror(errno));
 >+		return FALSE;
 >+	}
-
-These two error messages are the same, they aren't helpful for debugging.
-I think the former should be like "Can't get the offset of VMCOREINFO".
-
+>+	for (i = 0, j = 0; i < phnum; i++) {
+>+		if (!get_phdr_memory(i, &phdr))
+>+			return FALSE;
 >+
->+	if (read(fd_memory, note, MAX_SIZE_NHDR) != MAX_SIZE_NHDR){
->+		ERRMSG("Can't read the dump memory(%s). %s\n",
->+		    name_memory, strerror(errno));
->+		return FALSE;
+>+		if (phdr.p_type != PT_LOAD)
+>+			continue;
+>+
+>+		if (j >= num_pt_loads)
+>+			return FALSE;
+>+		if(!dump_Elf_load(&phdr, j))
+>+			return FALSE;
+>+		j++;
 >+	}
->+
->+	size_desc   = note_descsz(note);
->+	offset_desc = offset + offset_note_desc(note);
->+
->+	set_vmcoreinfo(offset_desc, size_desc);
 >+
 >+	return TRUE;
 >+}
->
+>+
+>+
 > /*
->  * External functions.
+>  * Get ELF information about /proc/vmcore.
+>  */
 >diff --git a/elf_info.h b/elf_info.h
->index 263d993..3ce0138 100644
+>index 801faff..263d993 100644
 >--- a/elf_info.h
 >+++ b/elf_info.h
->@@ -45,6 +45,7 @@ int get_elf32_ehdr(int fd, char *filename, Elf32_Ehdr *ehdr);
+>@@ -44,6 +44,7 @@ int get_elf64_ehdr(int fd, char *filename, Elf64_Ehdr *ehdr);
+> int get_elf32_ehdr(int fd, char *filename, Elf32_Ehdr *ehdr);
 > int get_elf_info(int fd, char *filename);
 > void free_elf_info(void);
-> int get_elf_loads(int fd, char *filename);
->+int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len);
+>+int get_elf_loads(int fd, char *filename);
 >
 > int is_elf64_memory(void);
 > int is_xen_memory(void);
 >diff --git a/makedumpfile.c b/makedumpfile.c
->index 78aa7a5..84857e0 100644
+>index 220570e..78aa7a5 100644
 >--- a/makedumpfile.c
 >+++ b/makedumpfile.c
->@@ -9085,6 +9085,35 @@ static int get_page_offset()
-> 	return TRUE;
+>@@ -681,6 +681,10 @@ get_kernel_version(char *release)
+> 	int32_t version;
+> 	long maj, min, rel;
+> 	char *start, *end;
+>+	static int done = 0;
+>+
+>+	if (done)
+>+		return info->kernel_version;
+
+This function just convert the argument as string into
+a number, it shouldn't be affected by external factors.
+
+You should use info->kernel_version in the caller side if
+you want to avoid duplicate calling of this function, but
+I think it's unnecessary since this function is small.
+
+>
+> 	/*
+> 	 * This method checks that vmlinux and vmcore are same kernel version.
+>@@ -706,6 +710,9 @@ get_kernel_version(char *release)
+> 		MSG("The kernel version is not supported.\n");
+> 		MSG("The created dumpfile may be incomplete.\n");
+> 	}
+>+
+>+	done = 1;
+>+
+> 	return version;
 > }
 >
->+
->+/* Returns the physical address of start of crash notes buffer for a kernel. */
->+static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
+>@@ -9062,6 +9069,22 @@ int is_crashkernel_mem_reserved(void)
+>         return !!crash_reserved_mem_nr;
+> }
+>
+>+static int get_page_offset()
 >+{
-
-This function just return the result status, so please use TRUE or FALSE
-as the return value instead of 0 or -1.
-
->+	char line[BUFSIZE_FGETS];
->+	int count;
->+	FILE *fp;
->+	unsigned long long temp, temp2;
+>+#ifdef __x86_64__
+>+	struct utsname utsname;
+>+	if (uname(&utsname)) {
+>+		ERRMSG("Cannot get name and information about current kernel : %s", strerror(errno));
+>+		return FALSE;
+>+	}
 >+
->+	*addr = 0;
->+	*len = 0;
->+
->+	if (!(fp = fopen("/sys/kernel/vmcoreinfo", "r")))
->+		return -1;
->+
->+	if (!fgets(line, sizeof(line), fp))
->+		ERRMSG("Cannot parse %s: %s\n", "/sys/kernel/vmcoreinfo", strerror(errno));
->+	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
->+	if (count != 2)
->+		ERRMSG("Cannot parse %s: %s\n", "/sys/kernel/vmcoreinfo", strerror(errno));
+>+	info->kernel_version = get_kernel_version(utsname.release);
+>+	get_versiondep_info_x86_64();
+>+#endif /* x86_64 */
 
-The messages are the same, too.
+You should replace get_versiondep_info_x86_64() with get_versiondep_info()
+to get rid of #ifdef.
+#ifdef is messy, I don't want to use it if possible.
 
 
 Thanks
-Atsushi Kumagai
+Atsushi Kumagai.
 
 >+
->+	*addr = (uint64_t) temp;
->+	*len = (uint64_t) temp2;
->+
->+	fclose(fp);
->+	return 0;
+>+	return TRUE;
 >+}
->+
 >+
 > static struct option longopts[] = {
 > 	{"split", no_argument, NULL, OPT_SPLIT},
