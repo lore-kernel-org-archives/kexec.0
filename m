@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XD76O-0004CJ-PU
- for kexec@lists.infradead.org; Fri, 01 Aug 2014 07:18:09 +0000
+ id 1XD78K-0004O3-MY
+ for kexec@lists.infradead.org; Fri, 01 Aug 2014 07:20:09 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [Patch v3 5/7] prepare the dump loads for kcore analysis
-Date: Fri, 1 Aug 2014 07:12:04 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97246600@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [Patch v3 4/7] set vmcoreinfo for kcore
+Date: Fri, 1 Aug 2014 07:12:12 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9724660F@BPXM01GP.gisp.nec.co.jp>
 References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
- <1406535606-16303-6-git-send-email-bhe@redhat.com>
-In-Reply-To: <1406535606-16303-6-git-send-email-bhe@redhat.com>
+ <1406535606-16303-5-git-send-email-bhe@redhat.com>
+In-Reply-To: <1406535606-16303-5-git-send-email-bhe@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,210 +27,145 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "bhe@redhat.com" <bhe@redhat.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
->In kcore, only  "System Ram" and "kernel text" program segments
->are needed. And to be more precise, exclude the crashkernel
->memory range.
+>In vmcore dumping, note program of vmcoreinfo is set in elf header
+>of /proc/vmcore. In 1st kernel, the vmcoreinfo is also needed for
+>kcore analyzing. So in this patch information of vmcoreinfo is
+>parsed and set in offset_vmcoreinfo and size_vmcoreinfo.
 >
 >Signed-off-by: Baoquan He <bhe@redhat.com>
 >---
-> elf_info.c     | 134 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> elf_info.h     |   1 +
-> makedumpfile.h |   1 +
-> 3 files changed, 136 insertions(+)
+> elf_info.c     | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+> elf_info.h     |  1 +
+> makedumpfile.c | 29 +++++++++++++++++++++++++++++
+> 3 files changed, 77 insertions(+)
 >
 >diff --git a/elf_info.c b/elf_info.c
->index edbfc97..6216f51 100644
+>index 69d3fdb..edbfc97 100644
 >--- a/elf_info.c
 >+++ b/elf_info.c
->@@ -777,6 +777,140 @@ get_elf_loads(int fd, char *filename)
+>@@ -395,6 +395,53 @@ get_pt_note_info(void)
 > 	return TRUE;
 > }
 >
->+static int exclude_segment(struct pt_load_segment **pt_loads, unsigned int	*num_pt_loads, uint64_t start,
->uint64_t end)
+>+#define UNINITIALIZED  ((ulong)(-1))
+>+int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len)
 >+{
->+        int i, j, tidx = -1;
->+	unsigned long long	vstart, vend, kvstart, kvend;
->+        struct pt_load_segment temp_seg = {0};
->+	kvstart = (ulong)start | PAGE_OFFSET;
->+	kvend = (ulong)end | PAGE_OFFSET;
->+	unsigned long size;
+>+	int i;
+>+	ulong kvaddr;
+>+	off_t offset;
+>+	char note[MAX_SIZE_NHDR];
+>+	int size_desc;
+>+	off_t offset_desc;
 >+
->+        for (i = 0; i < (*num_pt_loads); i++) {
->+                vstart = (*pt_loads)[i].virt_start;
->+                vend = (*pt_loads)[i].virt_end;
->+                if (kvstart <  vend && kvend > vstart) {
->+                        if (kvstart != vstart && kvend != vend) {
->+				/* Split load segment */
->+				temp_seg.phys_start = end +1;
->+				temp_seg.phys_end = (*pt_loads)[i].phys_end;
->+				temp_seg.virt_start = kvend + 1;
->+				temp_seg.virt_end = vend;
->+				temp_seg.file_offset = (*pt_loads)[i].file_offset + temp_seg.virt_start -
->(*pt_loads)[i].virt_start;
->+
->+				(*pt_loads)[i].virt_end = kvstart - 1;
->+				(*pt_loads)[i].phys_end =  start -1;
->+
->+				tidx = i+1;
->+                        } else if (kvstart != vstart) {
->+				(*pt_loads)[i].phys_end = start - 1;
->+				(*pt_loads)[i].virt_end = kvstart - 1;
->+                        } else {
->+				(*pt_loads)[i].phys_start = end + 1;
->+				(*pt_loads)[i].virt_start = kvend + 1;
->+                        }
->+                }
->+        }
->+        /* Insert split load segment, if any. */
->+	if (tidx >= 0) {
->+		size = (*num_pt_loads + 1) * sizeof((*pt_loads)[0]);
->+		(*pt_loads) = realloc((*pt_loads), size);
->+		if  (!(*pt_loads) ) {
->+		    ERRMSG("Cannot realloc %ld bytes: %s\n",
->+		            size + 0UL, strerror(errno));
->+			exit(1);
->+		}
->+		for (j = (*num_pt_loads - 1); j >= tidx; j--)
->+		        (*pt_loads)[j+1] = (*pt_loads)[j];
->+		(*pt_loads)[tidx] = temp_seg;
->+		(*num_pt_loads)++;
->+        }
->+        return 0;
->+}
->+
->+static int
->+process_dump_load(struct pt_load_segment	*pls)
->+{
->+	unsigned long long paddr;
->+
->+	paddr = vaddr_to_paddr(pls->virt_start);
->+	pls->phys_start  = paddr;
->+	pls->phys_end    = paddr + (pls->virt_end - pls->virt_start);
->+	DEBUG_MSG("process_dump_load\n");
->+	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
->+	DEBUG_MSG("  phys_end   : %llx\n", pls->phys_end);
->+	DEBUG_MSG("  virt_start : %llx\n", pls->virt_start);
->+	DEBUG_MSG("  virt_end   : %llx\n", pls->virt_end);
->+
->+	return TRUE;
->+}
->+
->+int get_kcore_dump_loads()
->+{
->+	struct pt_load_segment	*pls;
->+	int i, j, loads=0;
+>+	offset = UNINITIALIZED;
+>+	kvaddr = (ulong)vmcoreinfo_addr | PAGE_OFFSET;
 >+
 >+	for (i = 0; i < num_pt_loads; ++i) {
 >+		struct pt_load_segment *p = &pt_loads[i];
->+		if (is_vmalloc_addr(p->virt_start))
->+			continue;
->+		loads++;
+>+		if ((kvaddr >= p->virt_start) && (kvaddr < p->virt_end)) {
+>+			offset = (off_t)(kvaddr - p->virt_start) +
+>+			(off_t)p->file_offset;
+>+			break;
+>+		}
 >+	}
 >+
->+	pls = calloc(sizeof(struct pt_load_segment), loads);
->+	if (pls == NULL) {
->+		ERRMSG("Can't allocate memory for the PT_LOAD. %s\n",
->+		    strerror(errno));
+>+	if (offset == UNINITIALIZED){
+>+		ERRMSG("Can't seek the dump memory(%s). %s\n",
+>+		    name_memory, strerror(errno));
 >+		return FALSE;
 >+	}
 >+
->+	for (i = 0, j=0; i < num_pt_loads; ++i) {
->+		struct pt_load_segment *p = &pt_loads[i];
->+		if (is_vmalloc_addr(p->virt_start))
->+			continue;
->+		if (j >= loads)
->+			return FALSE;
+>+        if (lseek(fd_memory, offset, SEEK_SET) != offset){
+>+		ERRMSG("Can't seek the dump memory(%s). %s\n",
+>+		    name_memory, strerror(errno));
+>+		return FALSE;
+>+	}
+
+These two error messages are the same, they aren't helpful for debugging.
+I think the former should be like "Can't get the offset of VMCOREINFO".
+
 >+
->+		if (j == 0) {
->+			offset_pt_load_memory = p->file_offset;
->+			if (offset_pt_load_memory == 0) {
->+				ERRMSG("Can't get the offset of page data.\n");
->+				return FALSE;
->+			}
->+		}
->+
->+		pls[j] = *p;
->+		process_dump_load(&pls[j]);
->+		j++;
+>+	if (read(fd_memory, note, MAX_SIZE_NHDR) != MAX_SIZE_NHDR){
+>+		ERRMSG("Can't read the dump memory(%s). %s\n",
+>+		    name_memory, strerror(errno));
+>+		return FALSE;
 >+	}
 >+
->+	free(pt_loads);
->+	pt_loads = pls;
->+	num_pt_loads = loads;
+>+	size_desc   = note_descsz(note);
+>+	offset_desc = offset + offset_note_desc(note);
 >+
->+	for (i=0; i<crash_reserved_mem_nr; i++)
->+	{
->+		exclude_segment(&pt_loads, &num_pt_loads, crash_reserved_mem[i].start, crash_reserved_mem[i].end);
->+	}
->+
->+	max_file_offset = 0;
->+	for (i = 0; i < num_pt_loads; ++i) {
->+		struct pt_load_segment *p = &pt_loads[i];
->+		max_file_offset = MAX(max_file_offset,
->+				      p->file_offset + p->phys_end - p->phys_start);
->+	}
->+
->+	for (i = 0; i < num_pt_loads; ++i) {
->+		struct pt_load_segment *p = &pt_loads[i];
->+		DEBUG_MSG("LOAD (%d)\n", i);
->+		DEBUG_MSG("  phys_start : %llx\n", p->phys_start);
->+		DEBUG_MSG("  phys_end   : %llx\n", p->phys_end);
->+		DEBUG_MSG("  virt_start : %llx\n", p->virt_start);
->+		DEBUG_MSG("  virt_end   : %llx\n", p->virt_end);
->+	}
+>+	set_vmcoreinfo(offset_desc, size_desc);
 >+
 >+	return TRUE;
 >+}
 >
 > /*
->  * Get ELF information about /proc/vmcore.
+>  * External functions.
 >diff --git a/elf_info.h b/elf_info.h
->index 3ce0138..ba27fdf 100644
+>index 263d993..3ce0138 100644
 >--- a/elf_info.h
 >+++ b/elf_info.h
->@@ -46,6 +46,7 @@ int get_elf_info(int fd, char *filename);
+>@@ -45,6 +45,7 @@ int get_elf32_ehdr(int fd, char *filename, Elf32_Ehdr *ehdr);
+> int get_elf_info(int fd, char *filename);
 > void free_elf_info(void);
 > int get_elf_loads(int fd, char *filename);
-> int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len);
->+int get_kcore_dump_loads();
+>+int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len);
 >
 > int is_elf64_memory(void);
 > int is_xen_memory(void);
->diff --git a/makedumpfile.h b/makedumpfile.h
->index 7ffa1ee..8881c76 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -719,6 +719,7 @@ unsigned long long vaddr_to_paddr_x86(unsigned long vaddr);
-> #endif /* x86 */
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 78aa7a5..84857e0 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -9085,6 +9085,35 @@ static int get_page_offset()
+> 	return TRUE;
+> }
 >
-> #ifdef __x86_64__
->+int is_vmalloc_addr(ulong vaddr);
-> int get_phys_base_x86_64(void);
-> int get_machdep_info_x86_64(void);
-> int get_versiondep_info_x86_64(void);
+>+
+>+/* Returns the physical address of start of crash notes buffer for a kernel. */
+>+static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
+>+{
 
-It will fail to build due to undefined is_vmalloc_addr() except on
-x86_64, let's define it also for the other architectures like below:
+This function just return the result status, so please use TRUE or FALSE
+as the return value instead of 0 or -1.
 
-#ifdef __x86__
- int get_machdep_info_x86(void);
- int get_versiondep_info_x86(void);
-+int is_vmalloc_addr_x86(ulong vaddr);
- unsigned long long vaddr_to_paddr_x86(unsigned long vaddr);
- #define get_phys_base()                TRUE
- #define get_machdep_info()     get_machdep_info_x86()
- #define get_versiondep_info()  get_versiondep_info_x86()
- #define vaddr_to_paddr(X)      vaddr_to_paddr_x86(X)
-+#define is_vmalloc_addr(X)      is_vmalloc_addr_x86(X)
- #endif /* x86 */
+>+	char line[BUFSIZE_FGETS];
+>+	int count;
+>+	FILE *fp;
+>+	unsigned long long temp, temp2;
+>+
+>+	*addr = 0;
+>+	*len = 0;
+>+
+>+	if (!(fp = fopen("/sys/kernel/vmcoreinfo", "r")))
+>+		return -1;
+>+
+>+	if (!fgets(line, sizeof(line), fp))
+>+		ERRMSG("Cannot parse %s: %s\n", "/sys/kernel/vmcoreinfo", strerror(errno));
+>+	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
+>+	if (count != 2)
+>+		ERRMSG("Cannot parse %s: %s\n", "/sys/kernel/vmcoreinfo", strerror(errno));
 
-Besides, I think it's better to rename the is_vmalloc_addr() in
-arch/x86_64.c to is_vmalloc_addr_x86_64().
+The messages are the same, too.
 
 
 Thanks
 Atsushi Kumagai
+
+>+
+>+	*addr = (uint64_t) temp;
+>+	*len = (uint64_t) temp2;
+>+
+>+	fclose(fp);
+>+	return 0;
+>+}
+>+
+>+
+> static struct option longopts[] = {
+> 	{"split", no_argument, NULL, OPT_SPLIT},
+> 	{"reassemble", no_argument, NULL, OPT_REASSEMBLE},
+>--
+>1.8.5.3
 
 _______________________________________________
 kexec mailing list
