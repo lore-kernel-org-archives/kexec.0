@@ -1,17 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e9.ny.us.ibm.com ([32.97.182.139])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XDFJD-0001PP-MU
- for kexec@lists.infradead.org; Fri, 01 Aug 2014 16:03:56 +0000
-Date: Fri, 1 Aug 2014 12:03:28 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] PKCS#7: issuer and subject are mandatory fields in the
- ASN.1
-Message-ID: <20140801160328.GA5100@redhat.com>
-References: <20140731141103.16348.91901.stgit@warthog.procyon.org.uk>
+ id 1XEJ96-0002cp-Eh
+ for kexec@lists.infradead.org; Mon, 04 Aug 2014 14:21:53 +0000
+Received: from /spool/local
+ by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <brking@linux.vnet.ibm.com>;
+ Mon, 4 Aug 2014 10:21:30 -0400
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com
+ [9.57.198.29])
+ by d01dlp03.pok.ibm.com (Postfix) with ESMTP id 78271C9002E
+ for <kexec@lists.infradead.org>; Mon,  4 Aug 2014 10:21:19 -0400 (EDT)
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+ by b01cxnp23034.gho.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ s74ELQsW65601730
+ for <kexec@lists.infradead.org>; Mon, 4 Aug 2014 14:21:26 GMT
+Received: from d01av04.pok.ibm.com (localhost [127.0.0.1])
+ by d01av04.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s74ELQAA014896
+ for <kexec@lists.infradead.org>; Mon, 4 Aug 2014 10:21:26 -0400
+Message-ID: <53DF96E5.7000601@linux.vnet.ibm.com>
+Date: Mon, 04 Aug 2014 09:21:25 -0500
+From: Brian King <brking@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140731141103.16348.91901.stgit@warthog.procyon.org.uk>
+Subject: Re: [PATCH 2/5] kexec: Export kexec_in_progress
+References: <53D6B270.5020403@linux.vnet.ibm.com>
+In-Reply-To: <53D6B270.5020403@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +39,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Howells <dhowells@redhat.com>
-Cc: linux-security-module@vger.kernel.org, keyrings@linux-nfs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dan.carpenter@oracle.com
+To: ebiederm@xmission.com
+Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
 
-On Thu, Jul 31, 2014 at 03:11:03PM +0100, David Howells wrote:
-> issuer and subject are mandatory fields in the ASN.1 and so their existence
-> needn't be tested for.  They are guaranteed to end up with an empty string if
-> the name material has nothing we can use (see x509_fabricate_name()).
+On 07/28/2014 03:28 PM, Brian King wrote:
 > 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-
-Looks good to me.
-
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Thanks
-Vivek
-
+> Export kexec_in_progress for use by device drivers and other modules
+> to optimize kexec boot.
+> 
+> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
 > ---
->  crypto/asymmetric_keys/pkcs7_verify.c |    6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/crypto/asymmetric_keys/pkcs7_verify.c b/crypto/asymmetric_keys/pkcs7_verify.c
-> index 51ff36f3a913..c62cf8006e1f 100644
-> --- a/crypto/asymmetric_keys/pkcs7_verify.c
-> +++ b/crypto/asymmetric_keys/pkcs7_verify.c
-> @@ -190,14 +190,12 @@ static int pkcs7_verify_sig_chain(struct pkcs7_message *pkcs7,
->  		if (ret < 0)
->  			return ret;
->  
-> -		if (x509->issuer)
-> -			pr_debug("- issuer %s\n", x509->issuer);
-> +		pr_debug("- issuer %s\n", x509->issuer);
->  		if (x509->authority)
->  			pr_debug("- authkeyid %s\n", x509->authority);
->  
->  		if (!x509->authority ||
-> -		    (x509->subject &&
-> -		     strcmp(x509->subject, x509->issuer) == 0)) {
-> +		    strcmp(x509->subject, x509->issuer) == 0) {
->  			/* If there's no authority certificate specified, then
->  			 * the certificate must be self-signed and is the root
->  			 * of the chain.  Likewise if the cert is its own
+>  kernel/kexec.c |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
+> --- linux/kernel/kexec.c~kexec_export_in_prog	2014-07-23 17:05:24.851887935 -0500
+> +++ linux-bjking1/kernel/kexec.c	2014-07-23 17:05:24.856887970 -0500
+> @@ -1716,3 +1716,5 @@ int kernel_kexec(void)
+>  	mutex_unlock(&kexec_mutex);
+>  	return error;
+>  }
+> +
+> +EXPORT_SYMBOL_GPL(kexec_in_progress);
+
+Eric,
+
+Can I get an ack on this so we can take this entire series through the SCSI tree?
+
+Thanks!
+
+Brian
+
 
 _______________________________________________
 kexec mailing list
