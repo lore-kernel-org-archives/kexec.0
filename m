@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XFB3N-0000H9-OB
- for kexec@lists.infradead.org; Wed, 06 Aug 2014 23:55:35 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2 2/2] makedumpfile: vtop address translation support
- for vmalloc region in PPC64 arch
-Date: Wed, 6 Aug 2014 23:50:50 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9724AFE9@BPXM01GP.gisp.nec.co.jp>
-References: <20140728141253.3399.4397.stgit@localhost.localdomain>
- <20140728141346.3399.14993.stgit@localhost.localdomain>
-In-Reply-To: <20140728141346.3399.14993.stgit@localhost.localdomain>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1XFNBU-0007b5-NN
+ for kexec@lists.infradead.org; Thu, 07 Aug 2014 12:52:45 +0000
+From: Julia Lawall <Julia.Lawall@lip6.fr>
+Subject: [PATCH 5/5] kexec: fix error return code
+Date: Thu,  7 Aug 2014 14:49:09 +0200
+Message-Id: <1407415749-19978-6-git-send-email-Julia.Lawall@lip6.fr>
+In-Reply-To: <1407415749-19978-1-git-send-email-Julia.Lawall@lip6.fr>
+References: <1407415749-19978-1-git-send-email-Julia.Lawall@lip6.fr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,182 +17,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "hbathini@linux.vnet.ibm.com" <hbathini@linux.vnet.ibm.com>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Kenichi Oomichi <oomichi@mxs.nes.nec.co.jp>
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 
->This patch adds virtual to physical address translation support
->for vmalloc region in PPC64 architecture.
->
->Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
->---
-> arch/ppc64.c   |  100 +++++++++++++++++++++++++++++++++++++++++++++++++-------
-> makedumpfile.h |    3 ++
-> 2 files changed, 91 insertions(+), 12 deletions(-)
->
->diff --git a/arch/ppc64.c b/arch/ppc64.c
->index 8c7eaa7..8bb90d9 100644
->--- a/arch/ppc64.c
->+++ b/arch/ppc64.c
->@@ -24,6 +24,8 @@
-> #include "../elf_info.h"
-> #include "../makedumpfile.h"
->
->+static char *page_buf; /* Page buffer to read page tables */
->+
-> /*
->  * This function traverses vmemmap list to get the count of vmemmap regions
->  * and populates the regions' info in info->vmemmap_list[]
->@@ -224,6 +226,83 @@ ppc64_vmemmap_to_phys(unsigned long vaddr)
-> 	return paddr;
-> }
->
->+static unsigned long long
->+ppc64_vtop_level4(unsigned long vaddr)
->+{
->+	ulong *level4, *level4_dir;
->+	ulong *page_dir, *page_middle;
->+	ulong *page_table;
->+	unsigned long long level4_pte, pgd_pte;
->+	unsigned long long pmd_pte, pte;
->+	unsigned long long paddr = NOT_PADDR;
->+
->+	if (page_buf == NULL) {
->+		/*
->+		 * This is the first vmalloc address translation request
->+		 */
->+		page_buf = (char *)calloc(1, PAGESIZE());
+From: Julia Lawall <Julia.Lawall@lip6.fr>
 
-Hmm, the v2 way can't free this buffer at the appropriate time, sorry.
-Could you put it back in struct DumpInfo like v1 and free it at the
-end of main() ?
+Convert a zero return value on error to a negative one, as returned
+elsewhere in the function.
+
+A simplified version of the semantic match that finds this problem is as
+follows: (http://coccinelle.lip6.fr/)
+
+// <smpl>
+@@
+identifier ret; expression e1,e2;
+@@
+(
+if (\(ret < 0\|ret != 0\))
+ { ... return ret; }
+|
+ret = 0
+)
+... when != ret = e1
+    when != &ret
+*if(...)
+{
+  ... when != ret = e2
+      when forall
+ return ret;
+}
+// </smpl>
+
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+
+---
+ kernel/kexec.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 0b49a0a..dcd7a1f 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -2212,8 +2212,10 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 
+ 	sha_region_sz = KEXEC_SEGMENT_MAX * sizeof(struct kexec_sha_region);
+ 	sha_regions = vzalloc(sha_region_sz);
+-	if (!sha_regions)
++	if (!sha_regions) {
++		ret = -ENOMEM;
+ 		goto out_free_desc;
++	}
+ 
+ 	desc->tfm   = tfm;
+ 	desc->flags = 0;
 
 
-Thanks
-Atsushi Kumagai
-
->+		if (page_buf == NULL) {
->+			ERRMSG("Can't allocate memory to read page tables. %s\n",
->+			       strerror(errno));
->+			return NOT_PADDR;
->+		}
->+	}
->+
->+	level4 = (ulong *)info->kernel_pgd;
->+	level4_dir = (ulong *)((ulong *)level4 + L4_OFFSET(vaddr));
->+	if (!readmem(VADDR, PAGEBASE(level4), page_buf, PAGESIZE())) {
->+		ERRMSG("Can't read level4 page: 0x%llx\n", PAGEBASE(level4));
->+		return NOT_PADDR;
->+	}
->+	level4_pte = ULONG((page_buf + PAGEOFFSET(level4_dir)));
->+	if (!level4_pte)
->+		return NOT_PADDR;
->+
->+	/*
->+	 * Sometimes we don't have level3 pagetable entries
->+	 */
->+	if (info->l3_index_size != 0) {
->+		page_dir = (ulong *)((ulong *)level4_pte + PGD_OFFSET_L4(vaddr));
->+		if (!readmem(VADDR, PAGEBASE(level4_pte), page_buf, PAGESIZE())) {
->+			ERRMSG("Can't read PGD page: 0x%llx\n", PAGEBASE(level4_pte));
->+			return NOT_PADDR;
->+		}
->+		pgd_pte = ULONG((page_buf + PAGEOFFSET(page_dir)));
->+		if (!pgd_pte)
->+			return NOT_PADDR;
->+	} else {
->+		pgd_pte = level4_pte;
->+	}
->+
->+	page_middle = (ulong *)((ulong *)pgd_pte + PMD_OFFSET_L4(vaddr));
->+	if (!readmem(VADDR, PAGEBASE(pgd_pte), page_buf, PAGESIZE())) {
->+		ERRMSG("Can't read PMD page: 0x%llx\n", PAGEBASE(pgd_pte));
->+		return NOT_PADDR;
->+	}
->+	pmd_pte = ULONG((page_buf + PAGEOFFSET(page_middle)));
->+	if (!(pmd_pte))
->+		return NOT_PADDR;
->+
->+	page_table = (ulong *)(pmd_pte & ~(info->l2_masked_bits))
->+			+ (BTOP(vaddr) & (info->ptrs_per_l1 - 1));
->+	if (!readmem(VADDR, PAGEBASE(pmd_pte), page_buf, PAGESIZE())) {
->+		ERRMSG("Can't read page table: 0x%llx\n", PAGEBASE(pmd_pte));
->+		return NOT_PADDR;
->+	}
->+	pte = ULONG((page_buf + PAGEOFFSET(page_table)));
->+	if (!(pte & _PAGE_PRESENT)) {
->+		ERRMSG("Page not present!\n");
->+		return NOT_PADDR;
->+	}
->+
->+	if (!pte)
->+		return NOT_PADDR;
->+
->+	paddr = PAGEBASE(PTOB(pte >> info->pte_shift)) + PAGEOFFSET(vaddr);
->+
->+	return paddr;
->+}
->+
-> int
-> set_ppc64_max_physmem_bits(void)
-> {
->@@ -347,10 +426,18 @@ vaddr_to_paddr_ppc64(unsigned long vaddr)
-> {
-> 	unsigned long long paddr;
->
->+	if ((info->flag_vmemmap)
->+	    && (vaddr >= info->vmemmap_start)) {
->+		return ppc64_vmemmap_to_phys(vaddr);
->+	}
->+
-> 	paddr = vaddr_to_paddr_general(vaddr);
-> 	if (paddr != NOT_PADDR)
-> 		return paddr;
->
->+	if (!is_vmalloc_addr_ppc64(vaddr))
->+		return (vaddr - info->kernel_start);
->+
-> 	if ((SYMBOL(vmap_area_list) == NOT_FOUND_SYMBOL)
-> 	    || (OFFSET(vmap_area.va_start) == NOT_FOUND_STRUCTURE)
-> 	    || (OFFSET(vmap_area.list) == NOT_FOUND_STRUCTURE)) {
->@@ -360,19 +447,8 @@ vaddr_to_paddr_ppc64(unsigned long vaddr)
-> 			return NOT_PADDR;
-> 		}
-> 	}
->-	if (!is_vmalloc_addr_ppc64(vaddr))
->-		return (vaddr - info->kernel_start);
->
->-	if ((info->flag_vmemmap)
->-	    && (vaddr >= info->vmemmap_start)) {
->-		return ppc64_vmemmap_to_phys(vaddr);
->-	}
->-
->-	/*
->-	 * TODO: Support vmalloc translation.
->-	 */
->-	ERRMSG("This makedumpfile does not support vmalloc translation.\n");
->-	return NOT_PADDR;
->+	return ppc64_vtop_level4(vaddr);
-> }
->
-> #endif /* powerpc64 */
->diff --git a/makedumpfile.h b/makedumpfile.h
->index 8510b8f..dba3a0c 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -158,6 +158,9 @@ isAnon(unsigned long mapping)
-> 	return ((unsigned long)mapping & PAGE_MAPPING_ANON) != 0;
-> }
->
->+#define PTOB(X)			(((unsigned long long)(X)) << PAGESHIFT())
->+#define BTOP(X)			(((unsigned long long)(X)) >> PAGESHIFT())
->+
-> #define PAGESIZE()		(info->page_size)
-> #define PAGESHIFT()		(info->page_shift)
-> #define PAGEOFFSET(X)		(((unsigned long long)(X)) & (PAGESIZE() - 1))
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
