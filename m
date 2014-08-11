@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XGtw1-0000B6-Ep
- for kexec@lists.infradead.org; Mon, 11 Aug 2014 18:03:05 +0000
-Date: Mon, 11 Aug 2014 14:02:14 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+ id 1XGu37-0005DO-RR
+ for kexec@lists.infradead.org; Mon, 11 Aug 2014 18:10:26 +0000
+Message-ID: <53E906B0.5040105@zytor.com>
+Date: Mon, 11 Aug 2014 11:08:48 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH 11/15] purgatory: Core purgatory functionality
-Message-ID: <20140811180213.GC1863@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
  <1403814824-7587-12-git-send-email-vgoyal@redhat.com>
  <20140811174017.GD12610@digium.com> <53E9028E.2070709@zytor.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <53E9028E.2070709@zytor.com>
+ <20140811180213.GC1863@redhat.com>
+In-Reply-To: <20140811180213.GC1863@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,52 +21,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Shaun Ruffell <sruffell@digium.com>, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-T24gTW9uLCBBdWcgMTEsIDIwMTQgYXQgMTA6NTE6MTBBTSAtMDcwMCwgSC4gUGV0ZXIgQW52aW4g
-d3JvdGU6Cj4gT24gMDgvMTEvMjAxNCAxMDo0MCBBTSwgU2hhdW4gUnVmZmVsbCB3cm90ZToKPiA+
-IEZZSSwgaXQgbG9va3MgbGlrZSB0aGUgZm9sbG93aW5nIHBhdGNoIChjb21taXR0ZWQgaW4KPiA+
-IDhmYzViNGQ0MTIxYzk1NDgyYjI1ODMpIGFkZHMgYSBuZXcgcmVxdWlyZW1lbnQgdG8gdXNlIGF0
-IGxlYXN0IGdjYwo+ID4gNC40IHRvIGJ1aWxkIHRoZSBrZXJuZWw/Cj4gCj4gV2VsbCwgdG8gYnVp
-bGQgdGhlIGtlcm5lbCB3aXRoIHRoYXQgcGFydGljdWxhciBuZXcgZnVuY3Rpb25hbGl0eQo+IGVu
-YWJsZWQsIHllcy4KPiAKPiBIb3dldmVyLi4uCj4gCj4gPiBUaGUgYWJvdmUgIi1tY21vZGVsPWxh
-cmdlIiBjb21waWxlciBmbGFnIHByb2R1Y2VzIHRoZSBmb2xsb3dpbmcgb3V0cHV0IG9uIEdDQyA0
-LjEuMi4KPiA+IAo+ID4gICAkIG1ha2UgbW9kdWxlc19wcmVwYXJlIDsgZ2NjIC0tdmVyc2lvbgo+
-ID4gICAgIENISyAgICAgaW5jbHVkZS9jb25maWcva2VybmVsLnJlbGVhc2UKPiA+ICAgICBDSEsg
-ICAgIGluY2x1ZGUvZ2VuZXJhdGVkL3VhcGkvbGludXgvdmVyc2lvbi5oCj4gPiAgICAgQ0hLICAg
-ICBpbmNsdWRlL2dlbmVyYXRlZC91dHNyZWxlYXNlLmgKPiA+ICAgICBDQyAgICAgIGFyY2gveDg2
-L3B1cmdhdG9yeS9wdXJnYXRvcnkubwo+ID4gICBhcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0b3J5
-LmM6MTogc29ycnksIHVuaW1wbGVtZW50ZWQ6IGNvZGUgbW9kZWwg4oCYbGFyZ2XigJkgbm90IHN1
-cHBvcnRlZCB5ZXQKPiA+ICAgbWFrZVsxXTogKioqIFthcmNoL3g4Ni9wdXJnYXRvcnkvcHVyZ2F0
-b3J5Lm9dIEVycm9yIDEKPiA+ICAgbWFrZTogKioqIFthcmNocHJlcGFyZV0gRXJyb3IgMgo+ID4g
-ICBnY2MgKEdDQykgNC4xLjIgMjAwODA3MDQgKFJlZCBIYXQgNC4xLjItNTQpCj4gPiAgIENvcHly
-aWdodCAoQykgMjAwNiBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24sIEluYy4KPiA+ICAgVGhpcyBp
-cyBmcmVlIHNvZnR3YXJlOyBzZWUgdGhlIHNvdXJjZSBmb3IgY29weWluZyBjb25kaXRpb25zLiAg
-VGhlcmUgaXMgTk8KPiA+ICAgd2FycmFudHk7IG5vdCBldmVuIGZvciBNRVJDSEFOVEFCSUxJVFkg
-b3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuCj4gPiAKPiA+IEkgZGlkIGEgcXVp
-Y2sgc2VhcmNoIGZvciBhIGRpc2N1c3Npb24gdGhlIGluZGljYXRlcyB0aGlzIGNvbXBpbGVyIGlz
-IG5vdwo+ID4gb2ZmaWNpYWxseSB0b28gb2xkIHRvIGJ1aWxkIHRoZSBrZXJuZWwgYnV0IGRpZCBu
-b3QgZmluZCBvbmUuCj4gPiAKPiA+IElmIHRoaXMgaXMgcmVxdWlyZWQsIG1heWJlIERvY3VtZW50
-YXRpb24vQ2hhbmdlcyBuZWVkcyB0byBiZSB1cGRhdGVkCj4gPiB3aXRoIHRoZSBuZXcgbWluaW11
-bSByZXF1aXJlZCB2ZXJzaW9uPwo+IAo+IC4uLiBJJ20gaGF2aW5nIGEgdmVyeSwgdmVyeSBoYXJk
-IHRpbWUgdG8gcGljdHVyZSBhIHJlYXNvbiB3aHkgdGhlCj4gImxhcmdlIiBtb2RlbCB3b3VsZCBi
-ZSBuZWNlc3Nhcnkgb3IgZXZlbiBkZXNpcmFibGUgZm9yIHRoZSBwdXJnYXRvcnkKPiBjb2RlLiAg
-VGhlICJzbWFsbCBQSUMiIG1vZGVsIHNlZW0gdG8gZml0IG11Y2ggYmV0dGVyLi4uCgpIaSBocGEs
-CgpJIHRvb2sgaXQgYmVjYXVzZSBrZXhlYy10b29scyB1c2VzIGl0IGFuZCBpbiBvbmUgb2YgdGhl
-IGNvbW1pdHRzIEVyaWMKZ2F2ZSBmb2xsb3dpbmcgcmVhc29uaW5nLgoKICAgIE9uIHg4Nl82NCB1
-c2UgLW1jbW9kZWw9bGFyZ2Ugc28gdGhhdCB0aGUgY29kZSBpcyBidWlsdCB3aXRob3V0CiAgICBh
-bnkgMzJiaXQgYXNzdW1wdGlvbnMuICAtbWNtb2RlbD1tZWRpdW0gYW5kIC1tY21vZGVsPXNtYWxs
-CiAgICByZXN1bHQgaW50IGNvZGUgdGhhdCBoYXMgMzJiaXQgcmVsb2NhdGlvbnMgYWdhaW5zdCB2
-YXJpYWJsZXMKICAgIHRoYXQgY2FuIGxpdmUgYW55d2hlcmUgaW4gdGhlIGFkZHJlc3Mgc3BhY2UK
-CldlIGRvIHdhbnQgdG8gbG9hZCBwdXJnYXRvcnkgYW55d2hlcmUgaW4gdGhlIGFkZHJlc3Mgc3Bh
-Y2UuIAoKQnV0IGlmIHRoZXJlIGFyZSBvdGhlciB3YXlzIHRvIGFjaGlldmUgdGhlIHNhbWUgdGhp
-bmcsIEkgd2lsbCBkbyB0aGF0CmNoYW5nZS4KClNvIHdoZW4geW91IHNheSAic21hbGwgUElDIiwg
-SSBuZWVkIHRvIHVzZSAtbWNtb2RlbD1zbWFsbCBhbmQgLWZQSUM/CgpJIGNhbiBnaXZlIHRoYXQg
-YSB0cnkuCgpUaGFua3MKVml2ZWsKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 08/11/2014 11:02 AM, Vivek Goyal wrote:
+> 
+> Hi hpa,
+> 
+> I took it because kexec-tools uses it and in one of the committs Eric
+> gave following reasoning.
+> 
+>     On x86_64 use -mcmodel=large so that the code is built without
+>     any 32bit assumptions.  -mcmodel=medium and -mcmodel=small
+>     result int code that has 32bit relocations against variables
+>     that can live anywhere in the address space
+> 
+> We do want to load purgatory anywhere in the address space. 
+> 
+> But if there are other ways to achieve the same thing, I will do that
+> change.
+> 
+> So when you say "small PIC", I need to use -mcmodel=small and -fPIC?
+> 
+
+Actually -fPIE is probably better than -fPIC.
+
+-mcmodel=large is incompatible with all other code out there, which
+means that even though it is supposed to work it will be poorly tested
+at best.  So even despite the gcc version issue, using the small PIC
+model would be better.
+
+	-hpa
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
