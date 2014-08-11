@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XGu37-0005DO-RR
- for kexec@lists.infradead.org; Mon, 11 Aug 2014 18:10:26 +0000
-Message-ID: <53E906B0.5040105@zytor.com>
-Date: Mon, 11 Aug 2014 11:08:48 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-MIME-Version: 1.0
+ id 1XGu8q-0007WM-39
+ for kexec@lists.infradead.org; Mon, 11 Aug 2014 18:16:20 +0000
+Date: Mon, 11 Aug 2014 14:15:43 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 11/15] purgatory: Core purgatory functionality
+Message-ID: <20140811181543.GD1863@redhat.com>
 References: <1403814824-7587-1-git-send-email-vgoyal@redhat.com>
  <1403814824-7587-12-git-send-email-vgoyal@redhat.com>
  <20140811174017.GD12610@digium.com> <53E9028E.2070709@zytor.com>
- <20140811180213.GC1863@redhat.com>
-In-Reply-To: <20140811180213.GC1863@redhat.com>
+ <20140811180213.GC1863@redhat.com> <53E906B0.5040105@zytor.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <53E906B0.5040105@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,38 +26,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
 Cc: mjg59@srcf.ucam.org, bhe@redhat.com, greg@kroah.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Shaun Ruffell <sruffell@digium.com>, bp@alien8.de, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com, chaowang@redhat.com
 
-On 08/11/2014 11:02 AM, Vivek Goyal wrote:
+On Mon, Aug 11, 2014 at 11:08:48AM -0700, H. Peter Anvin wrote:
+> On 08/11/2014 11:02 AM, Vivek Goyal wrote:
+> > 
+> > Hi hpa,
+> > 
+> > I took it because kexec-tools uses it and in one of the committs Eric
+> > gave following reasoning.
+> > 
+> >     On x86_64 use -mcmodel=large so that the code is built without
+> >     any 32bit assumptions.  -mcmodel=medium and -mcmodel=small
+> >     result int code that has 32bit relocations against variables
+> >     that can live anywhere in the address space
+> > 
+> > We do want to load purgatory anywhere in the address space. 
+> > 
+> > But if there are other ways to achieve the same thing, I will do that
+> > change.
+> > 
+> > So when you say "small PIC", I need to use -mcmodel=small and -fPIC?
+> > 
 > 
-> Hi hpa,
+> Actually -fPIE is probably better than -fPIC.
 > 
-> I took it because kexec-tools uses it and in one of the committs Eric
-> gave following reasoning.
-> 
->     On x86_64 use -mcmodel=large so that the code is built without
->     any 32bit assumptions.  -mcmodel=medium and -mcmodel=small
->     result int code that has 32bit relocations against variables
->     that can live anywhere in the address space
-> 
-> We do want to load purgatory anywhere in the address space. 
-> 
-> But if there are other ways to achieve the same thing, I will do that
-> change.
-> 
-> So when you say "small PIC", I need to use -mcmodel=small and -fPIC?
-> 
+> -mcmodel=large is incompatible with all other code out there, which
+> means that even though it is supposed to work it will be poorly tested
+> at best.  So even despite the gcc version issue, using the small PIC
+> model would be better.
 
-Actually -fPIE is probably better than -fPIC.
+Ok, I will give it a try.
 
--mcmodel=large is incompatible with all other code out there, which
-means that even though it is supposed to work it will be poorly tested
-at best.  So even despite the gcc version issue, using the small PIC
-model would be better.
-
-	-hpa
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
