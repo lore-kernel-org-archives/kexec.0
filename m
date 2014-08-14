@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([119.145.14.64])
+Received: from mail-yk0-f181.google.com ([209.85.160.181])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XHs5v-00089Z-Kb
- for kexec@lists.infradead.org; Thu, 14 Aug 2014 10:17:21 +0000
-From: HuKeping <hukeping@huawei.com>
-Subject: [PATCH v3] Add arm description to Documentation/kdump/kdump.txt
-Date: Thu, 14 Aug 2014 17:55:32 +0800
-Message-ID: <1408010132-62794-1-git-send-email-hukeping@huawei.com>
+ id 1XHzuk-0001CD-8o
+ for kexec@lists.infradead.org; Thu, 14 Aug 2014 18:38:19 +0000
+Received: by mail-yk0-f181.google.com with SMTP id q200so1290617ykb.12
+ for <kexec@lists.infradead.org>; Thu, 14 Aug 2014 11:37:56 -0700 (PDT)
+Date: Thu, 14 Aug 2014 13:37:54 -0500
+From: Shaun Ruffell <sruffell@digium.com>
+Subject: Re: [PATCH 1/2] kexec: Create a new config option CONFIG_KEXEC_FILE
+ for new syscall
+Message-ID: <20140814183753.GA25199@digium.com>
+References: <1407940980-7100-1-git-send-email-vgoyal@redhat.com>
+ <1407940980-7100-2-git-send-email-vgoyal@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1407940980-7100-2-git-send-email-vgoyal@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,120 +27,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com, hbabu@us.ibm.com, rob@landley.net
-Cc: peifeiyue@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: akpm@linux-foundation.org, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com
 
-----------------------------------------
+On Wed, Aug 13, 2014 at 10:42:59AM -0400, Vivek Goyal wrote:
+> Currently new system call kexec_file_load() and all the associated code
+> compiles if CONFIG_KEXEC=y. But new syscall also compiles purgatory code
+> which currently uses gcc option -mcmodel=large. This option seems to be
+> available only gcc 4.4 onwards.
+> 
+> Hiding new functionality behind a new config option will not break
+> existing users of old gcc. Those who wish to enable new functionality
+> will require new gcc. Having said that, I am trying to figure out how
+> can I move away from using -mcmodel=large but that can take a while.
+> 
+> I think there are other advantages of introducing this new config
+> option. As this option will be enabled only on x86_64, other arches
+> don't have to compile generic kexec code which will never be used.
+> This new code selects CRYPTO=y and CRYPTO_SHA256=y. And all other
+> arches had to do this for CONFIG_KEXEC. Now with introduction
+> of new config option, we can remove crypto dependency from other
+> arches.
+> 
+> Now CONFIG_KEXEC_FILE is available only on x86_64. So whereever I
+> had CONFIG_X86_64 defined, I got rid of that.
+> 
+> For CONFIG_KEXEC_FILE, instead of doing select CRYPTO=y, I changed
+> it to "depends on CRYPTO=y". This should be safer as "select" is
+> not recursive.
+> 
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  arch/x86/Kbuild                    |  4 +---
+>  arch/x86/Kconfig                   | 18 ++++++++++++++----
+>  arch/x86/Makefile                  |  5 +----
+>  arch/x86/kernel/Makefile           |  2 +-
+>  arch/x86/kernel/crash.c            |  6 ++----
+>  arch/x86/kernel/machine_kexec_64.c | 11 +++++++++++
+>  arch/x86/purgatory/Makefile        |  5 +----
+>  kernel/kexec.c                     | 11 +++++++++++
+>  8 files changed, 42 insertions(+), 20 deletions(-)
 
-Add arm specific parts to kdump kernel documentation.
 
-v2 -> v3
-- fix some spelling mistakes
+Thanks Vivek. It is no surprise but applying this patch resolved my
+issue.
 
-Signed-off-by: Hu Keping <hukeping@huawei.com>
----
- Documentation/kdump/kdump.txt | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index 9c7fd988..8c632db 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
- a remote system.
- 
- Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
--and s390x architectures.
-+s390x and arm architectures.
- 
- When the system kernel boots, it reserves a small section of memory for
- the dump-capture kernel. This ensures that ongoing Direct Memory Access
-@@ -119,7 +119,7 @@ There are two possible methods of using Kdump.
- 2) Or use the system kernel binary itself as dump-capture kernel and there is
-    no need to build a separate dump-capture kernel. This is possible
-    only with the architectures which support a relocatable kernel. As
--   of today, i386, x86_64, ppc64 and ia64 architectures support relocatable
-+   of today, i386, x86_64, ppc64, ia64 and arm architectures support relocatable
-    kernel.
- 
- Building a relocatable kernel is advantageous from the point of view that
-@@ -248,6 +248,13 @@ Dump-capture kernel config options (Arch Dependent, ia64)
-   kernel will be aligned to 64Mb, so if the start address is not then
-   any space below the alignment point will be wasted.
- 
-+Dump-capture kernel config options (Arch Dependent, arm)
-+----------------------------------------------------------
-+
-+-   To use a relocatable kernel,
-+    Enable "AUTO_ZRELADDR" support under "Boot" options:
-+
-+    AUTO_ZRELADDR=y
- 
- Extended crashkernel syntax
- ===========================
-@@ -263,6 +270,10 @@ The syntax is:
-     crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-     range=start-[end]
- 
-+Please note, on arm, the offset is required.
-+    crashkernel=<range1>:<size1>[,<range2>:<size2>,...]@offset
-+    range=start-[end]
-+
-     'start' is inclusive and 'end' is exclusive.
- 
- For example:
-@@ -303,6 +314,12 @@ Boot into System Kernel
-    on the memory consumption of the kdump system. In general this is not
-    dependent on the memory size of the production system.
- 
-+   On arm, use "crashkernel=Y@X". Note that the start address of the kernel
-+   will be aligned to 128MiB (0x08000000), so if the start address is not then
-+   any space below the alignment point may be overwritten by the dump-capture kernel,
-+   which means it is possible that the vmcore is not that precise as expected.
-+
-+
- Load the Dump-capture Kernel
- ============================
- 
-@@ -322,7 +339,8 @@ For ia64:
- 	- Use vmlinux or vmlinuz.gz
- For s390x:
- 	- Use image or bzImage
--
-+For arm:
-+	- Use zImage
- 
- If you are using a uncompressed vmlinux image then use following command
- to load dump-capture kernel.
-@@ -338,6 +356,15 @@ to load dump-capture kernel.
-    --initrd=<initrd-for-dump-capture-kernel> \
-    --append="root=<root-dev> <arch-specific-options>"
- 
-+If you are using a compressed zImage, then use following command
-+to load dump-capture kernel.
-+
-+   kexec --type zImage -p <dump-capture-kernel-bzImage> \
-+   --initrd=<initrd-for-dump-capture-kernel> \
-+   --dtb=<dtb-for-dump-capture-kernel> \
-+   --append="root=<root-dev> <arch-specific-options>"
-+
-+
- Please note, that --args-linux does not need to be specified for ia64.
- It is planned to make this a no-op on that architecture, but for now
- it should be omitted
-@@ -354,6 +381,9 @@ For ppc64:
- For s390x:
- 	"1 maxcpus=1 cgroup_disable=memory"
- 
-+For arm:
-+	"1 maxcpus=1 reset_devices"
-+
- Notes on loading the dump-capture kernel:
- 
- * By default, the ELF headers are stored in ELF64 format to support
--- 
-1.8.5.5
-
+Shaun
 
 _______________________________________________
 kexec mailing list
