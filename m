@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from szxga01-in.huawei.com ([119.145.14.64])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XHqCV-0004U8-GE
- for kexec@lists.infradead.org; Thu, 14 Aug 2014 08:16:00 +0000
-Date: Thu, 14 Aug 2014 16:15:32 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [Patch v3 3/7] preparation functions for parsing vmcoreinfo
-Message-ID: <20140814081532.GA19452@dhcp-16-116.nay.redhat.com>
-References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
- <1406535606-16303-4-git-send-email-bhe@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97246615@BPXM01GP.gisp.nec.co.jp>
- <20140812094623.GB4887@dhcp-16-105.nay.redhat.com>
- <20140812100156.GC4887@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9724CA25@BPXM01GP.gisp.nec.co.jp>
+ id 1XHs5v-00089Z-Kb
+ for kexec@lists.infradead.org; Thu, 14 Aug 2014 10:17:21 +0000
+From: HuKeping <hukeping@huawei.com>
+Subject: [PATCH v3] Add arm description to Documentation/kdump/kdump.txt
+Date: Thu, 14 Aug 2014 17:55:32 +0800
+Message-ID: <1408010132-62794-1-git-send-email-hukeping@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9724CA25@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,43 +20,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: vgoyal@redhat.com, hbabu@us.ibm.com, rob@landley.net
+Cc: peifeiyue@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 
-On 08/14/14 at 07:37am, Atsushi Kumagai wrote:
-> >On 08/12/14 at 05:46pm, Baoquan He wrote:
- >>
-> >
-> >I add the static variable "done" just because it always print below
-> >warning message twice, this makes me uncomfortable. Otherwise
-> >get_kernel_version() can be called any time no matter how many times it
-> >has been called if it's only a converting utility function.
-> >
-> >The kernel version is not supported.
-> >The created dumpfile may be incomplete.
-> 
-> Yeah, I understand the reason.
-> I agree with your idea, but I think it's better to check the
-> kernel_version directly like:
-> 
-> 	if (info->kernel_version)
-> 		return info->kernel_version;
+----------------------------------------
 
-Well, I got what you meant. I didn't get it when you said at first
-time. Yeah, this works and is better. Will change like this. Thanks a
-lot.
+Add arm specific parts to kdump kernel documentation.
 
+v2 -> v3
+- fix some spelling mistakes
 
-> 
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> >
-> >_______________________________________________
-> >kexec mailing list
-> >kexec@lists.infradead.org
-> >http://lists.infradead.org/mailman/listinfo/kexec
+Signed-off-by: Hu Keping <hukeping@huawei.com>
+---
+ Documentation/kdump/kdump.txt | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 9c7fd988..8c632db 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+ a remote system.
+ 
+ Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+-and s390x architectures.
++s390x and arm architectures.
+ 
+ When the system kernel boots, it reserves a small section of memory for
+ the dump-capture kernel. This ensures that ongoing Direct Memory Access
+@@ -119,7 +119,7 @@ There are two possible methods of using Kdump.
+ 2) Or use the system kernel binary itself as dump-capture kernel and there is
+    no need to build a separate dump-capture kernel. This is possible
+    only with the architectures which support a relocatable kernel. As
+-   of today, i386, x86_64, ppc64 and ia64 architectures support relocatable
++   of today, i386, x86_64, ppc64, ia64 and arm architectures support relocatable
+    kernel.
+ 
+ Building a relocatable kernel is advantageous from the point of view that
+@@ -248,6 +248,13 @@ Dump-capture kernel config options (Arch Dependent, ia64)
+   kernel will be aligned to 64Mb, so if the start address is not then
+   any space below the alignment point will be wasted.
+ 
++Dump-capture kernel config options (Arch Dependent, arm)
++----------------------------------------------------------
++
++-   To use a relocatable kernel,
++    Enable "AUTO_ZRELADDR" support under "Boot" options:
++
++    AUTO_ZRELADDR=y
+ 
+ Extended crashkernel syntax
+ ===========================
+@@ -263,6 +270,10 @@ The syntax is:
+     crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+     range=start-[end]
+ 
++Please note, on arm, the offset is required.
++    crashkernel=<range1>:<size1>[,<range2>:<size2>,...]@offset
++    range=start-[end]
++
+     'start' is inclusive and 'end' is exclusive.
+ 
+ For example:
+@@ -303,6 +314,12 @@ Boot into System Kernel
+    on the memory consumption of the kdump system. In general this is not
+    dependent on the memory size of the production system.
+ 
++   On arm, use "crashkernel=Y@X". Note that the start address of the kernel
++   will be aligned to 128MiB (0x08000000), so if the start address is not then
++   any space below the alignment point may be overwritten by the dump-capture kernel,
++   which means it is possible that the vmcore is not that precise as expected.
++
++
+ Load the Dump-capture Kernel
+ ============================
+ 
+@@ -322,7 +339,8 @@ For ia64:
+ 	- Use vmlinux or vmlinuz.gz
+ For s390x:
+ 	- Use image or bzImage
+-
++For arm:
++	- Use zImage
+ 
+ If you are using a uncompressed vmlinux image then use following command
+ to load dump-capture kernel.
+@@ -338,6 +356,15 @@ to load dump-capture kernel.
+    --initrd=<initrd-for-dump-capture-kernel> \
+    --append="root=<root-dev> <arch-specific-options>"
+ 
++If you are using a compressed zImage, then use following command
++to load dump-capture kernel.
++
++   kexec --type zImage -p <dump-capture-kernel-bzImage> \
++   --initrd=<initrd-for-dump-capture-kernel> \
++   --dtb=<dtb-for-dump-capture-kernel> \
++   --append="root=<root-dev> <arch-specific-options>"
++
++
+ Please note, that --args-linux does not need to be specified for ia64.
+ It is planned to make this a no-op on that architecture, but for now
+ it should be omitted
+@@ -354,6 +381,9 @@ For ppc64:
+ For s390x:
+ 	"1 maxcpus=1 cgroup_disable=memory"
+ 
++For arm:
++	"1 maxcpus=1 reset_devices"
++
+ Notes on loading the dump-capture kernel:
+ 
+ * By default, the ELF headers are stored in ELF64 format to support
+-- 
+1.8.5.5
+
 
 _______________________________________________
 kexec mailing list
