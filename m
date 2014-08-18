@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from borg.tf-network.de ([62.75.218.204])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XJ7bp-00039n-5S
- for kexec@lists.infradead.org; Sun, 17 Aug 2014 21:03:25 +0000
-Message-ID: <53F11882.3060803@whissi.de>
-Date: Sun, 17 Aug 2014 23:02:58 +0200
-From: "Thomas D." <whissi@whissi.de>
+ id 1XJOK4-0007vZ-AH
+ for kexec@lists.infradead.org; Mon, 18 Aug 2014 14:54:12 +0000
+Date: Mon, 18 Aug 2014 10:53:47 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kexec: Provide an option to use new kexec system call
+Message-ID: <20140818145347.GC4745@redhat.com>
+References: <20140813150602.GA1062@redhat.com>
+ <20140814024629.GA12702@dhcp-16-105.nay.redhat.com>
 MIME-Version: 1.0
-Subject: kexec fails to boot kernels where CONFIG_RANDOMIZE_BASE=y is set
+Content-Disposition: inline
+In-Reply-To: <20140814024629.GA12702@dhcp-16-105.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,35 +24,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
 
-Hi,
+On Thu, Aug 14, 2014 at 10:46:29AM +0800, Baoquan He wrote:
+> On 08/13/14 at 11:06am, Vivek Goyal wrote:
+> > +/* New file based kexec system call related code */
+> > +static int do_kexec_file_load(int fileind, int argc, char **argv,
+> > +			unsigned long flags) {
+> > +
+> > +	char *kernel;
+> 
+> ........
+> 
+> > +	kernel_fd = open(kernel, O_RDONLY);
+> > +	if (kernel_fd == -1) {
+> > +		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
+> > +				strerror(errno));
+> > +		return -1;
+> > +	}
+> > +
+> > +	/* slurp in the input kernel */
+> > +	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
+> > +
+> > +	for (i = 0; i < file_types; i++) {
+> > +		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
+> > +			break;
+> > +	}
+> > +
+> > +	if (i == file_types) {
+> > +		fprintf(stderr, "Cannot determine the file type " "of %s\n",
+> > +				kernel);
+> > +		return -1;
+> > +	}
+> > +
+> > +	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
+> > +	if (ret < 0) {
+> > +		fprintf(stderr, "Cannot load %s\n", kernel);
+> > +		return ret;
+> > +	}
+> > +
+> > +	if (!is_kexec_file_load_implemented()) {
+> 
+> Hi Vivek,
+> 
+> Can we put this check earlier, maybe before kernel file openning? Since
+> if this syscall is not implemented, we don't have to do the opening or
+> loading things.
+> 
 
-looks like kexec doesn't support kernels where
+Ok, will do it.
 
-  CONFIG_RANDOMIZE_BASE=y
-
-is set.
-
-
-I already created a bug for Debian in June for this problem [1].
-
-I am able to confirm the same problem with kexec 2.0.7 on Gentoo and
-when building from source (943ba35f8143408d8ada9a24d0986663cc612df9).
-
-Is this a known problem/limitation?
-
-Is there anything I can help you with to get this fixed?
-
-Thanks.
-
-
-See also:
-=========
-[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=754288
-
-
--Thomas
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
