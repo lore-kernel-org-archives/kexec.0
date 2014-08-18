@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XJOK4-0007vZ-AH
- for kexec@lists.infradead.org; Mon, 18 Aug 2014 14:54:12 +0000
-Date: Mon, 18 Aug 2014 10:53:47 -0400
+ id 1XJONW-0001Vm-Qk
+ for kexec@lists.infradead.org; Mon, 18 Aug 2014 14:57:47 +0000
+Date: Mon, 18 Aug 2014 10:57:18 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kexec: Provide an option to use new kexec system call
-Message-ID: <20140818145347.GC4745@redhat.com>
-References: <20140813150602.GA1062@redhat.com>
- <20140814024629.GA12702@dhcp-16-105.nay.redhat.com>
+Subject: Re: kexec fails to boot kernels where CONFIG_RANDOMIZE_BASE=y is set
+Message-ID: <20140818145718.GD4745@redhat.com>
+References: <53F11882.3060803@whissi.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140814024629.GA12702@dhcp-16-105.nay.redhat.com>
+In-Reply-To: <53F11882.3060803@whissi.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,59 +23,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
+To: "Thomas D." <whissi@whissi.de>
+Cc: kexec@lists.infradead.org, Kees Cook <keescook@chromium.org>, WANG Chao <chaowang@redhat.com>
 
-On Thu, Aug 14, 2014 at 10:46:29AM +0800, Baoquan He wrote:
-> On 08/13/14 at 11:06am, Vivek Goyal wrote:
-> > +/* New file based kexec system call related code */
-> > +static int do_kexec_file_load(int fileind, int argc, char **argv,
-> > +			unsigned long flags) {
-> > +
-> > +	char *kernel;
-> 
-> ........
-> 
-> > +	kernel_fd = open(kernel, O_RDONLY);
-> > +	if (kernel_fd == -1) {
-> > +		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
-> > +				strerror(errno));
-> > +		return -1;
-> > +	}
-> > +
-> > +	/* slurp in the input kernel */
-> > +	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
-> > +
-> > +	for (i = 0; i < file_types; i++) {
-> > +		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
-> > +			break;
-> > +	}
-> > +
-> > +	if (i == file_types) {
-> > +		fprintf(stderr, "Cannot determine the file type " "of %s\n",
-> > +				kernel);
-> > +		return -1;
-> > +	}
-> > +
-> > +	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
-> > +	if (ret < 0) {
-> > +		fprintf(stderr, "Cannot load %s\n", kernel);
-> > +		return ret;
-> > +	}
-> > +
-> > +	if (!is_kexec_file_load_implemented()) {
-> 
-> Hi Vivek,
-> 
-> Can we put this check earlier, maybe before kernel file openning? Since
-> if this syscall is not implemented, we don't have to do the opening or
-> loading things.
-> 
+Hi Thomas,
 
-Ok, will do it.
+I think kexec is broken with CONFIG_RANDOMIZE_BASE=y. Chao had raised
+this issue some time back when this option was introduced. I don't
+remember the details though that why it is broken.
+
+CCing Kees Cook. 
+
+Kees, is there a quick fix to the issue. Sooner or later people will
+start enabling CONFIG_RANDOMIZE_BASE=y and broken kexec will be a
+big issue.
 
 Thanks
 Vivek
+ 
+On Sun, Aug 17, 2014 at 11:02:58PM +0200, Thomas D. wrote:
+> Hi,
+> 
+> looks like kexec doesn't support kernels where
+> 
+>   CONFIG_RANDOMIZE_BASE=y
+> 
+> is set.
+> 
+> 
+> I already created a bug for Debian in June for this problem [1].
+> 
+> I am able to confirm the same problem with kexec 2.0.7 on Gentoo and
+> when building from source (943ba35f8143408d8ada9a24d0986663cc612df9).
+> 
+> Is this a known problem/limitation?
+> 
+> Is there anything I can help you with to get this fixed?
+> 
+> Thanks.
+> 
+> 
+> See also:
+> =========
+> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=754288
+> 
+> 
+> -Thomas
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
