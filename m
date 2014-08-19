@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XJdKJ-00063b-0Z
- for kexec@lists.infradead.org; Tue, 19 Aug 2014 06:55:28 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v3] makedumpfile: Exclude unnecessary hugepages.
-Date: Tue, 19 Aug 2014 06:53:34 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9724D968@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE972430B1@BPXM01GP.gisp.nec.co.jp>
- <20140730135357.71bf8ab5@hananiah.suse.cz>
-In-Reply-To: <20140730135357.71bf8ab5@hananiah.suse.cz>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1XJf4X-0003ue-Av
+ for kexec@lists.infradead.org; Tue, 19 Aug 2014 08:47:17 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH] kexec: usage printing when specify "-u -p"
+Date: Tue, 19 Aug 2014 16:45:26 +0800
+Message-Id: <1408437926-2462-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,367 +15,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org, horms@verge.net.au
+Cc: Baoquan He <bhe@redhat.com>
 
-Hello Petr,
+Currently, unload work will be done successfully when specify "kexec -p -u".
+However, when exchange the sequence like "kexec -u -p" unload work can be
+done too, but with a usage printing.
 
->Hello Kumagai-san,
->
->thank you for this patch. I was on vacation last week (and will be on
->vacation the next two weeks again). Anyway, see my comments below.
+This is because in the former sequence, "-p" will do below assignments:
+do_load=0;
+do_unload=1;
+Then "-u" do below assignments.
+do_load=0;
+do_unload=1;
+Nothing wrong happened in this situation. Since the result woule be:
+"do_load==0" and do_unload==1.
 
-Thanks for your comments again, the code will be more polished.
+In the latter sequence, the final result will be "do_load==1" and
+"do_unload==1". Then after unload operation, it will go into loading
+code flow. Thsi cause the usage() calling and printing.
 
->On Wed, 23 Jul 2014 00:32:20 +0000
->Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
->
->>[...]
->>
->> Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
->> ---
->>  makedumpfile.c | 113 +++++++++++++++++++++++++++++++++++++++++++++++++--------
->>  makedumpfile.h |   7 ++++
->>  2 files changed, 105 insertions(+), 15 deletions(-)
->>
->> diff --git a/makedumpfile.c b/makedumpfile.c
->> index 3884aa5..7bee413 100644
->> --- a/makedumpfile.c
->> +++ b/makedumpfile.c
->> @@ -1180,6 +1180,7 @@ get_symbol_info(void)
->>  	SYMBOL_INIT(vmemmap_list, "vmemmap_list");
->>  	SYMBOL_INIT(mmu_psize_defs, "mmu_psize_defs");
->>  	SYMBOL_INIT(mmu_vmemmap_psize, "mmu_vmemmap_psize");
->> +	SYMBOL_INIT(free_huge_page, "free_huge_page");
->>
->>  	return TRUE;
->>  }
->> @@ -1293,6 +1294,15 @@ get_structure_info(void)
->>  	ENUM_NUMBER_INIT(PG_slab, "PG_slab");
->>  	ENUM_NUMBER_INIT(PG_hwpoison, "PG_hwpoison");
->>
->> +	ENUM_NUMBER_INIT(PG_head_mask, "PG_head_mask");
->> +	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER) {
->> +		ENUM_NUMBER_INIT(PG_head, "PG_head");
->> +		if (NUMBER(PG_head) == NOT_FOUND_NUMBER)
->> +			ENUM_NUMBER_INIT(PG_head, "PG_compound");
->> +		if (NUMBER(PG_head) != NOT_FOUND_NUMBER)
->> +			NUMBER(PG_head_mask) = 1UL << NUMBER(PG_head);
->> +	}
->> +
->>  	ENUM_TYPE_SIZE_INIT(pageflags, "pageflags");
->>
->>  	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
->> @@ -1527,6 +1537,9 @@ get_value_for_old_linux(void)
->>  		NUMBER(PG_swapcache) = PG_swapcache_ORIGINAL;
->>  	if (NUMBER(PG_slab) == NOT_FOUND_NUMBER)
->>  		NUMBER(PG_slab) = PG_slab_ORIGINAL;
->> +	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER)
->> +		NUMBER(PG_head_mask) = 1L << PG_compound_ORIGINAL;
->> +
->>  	/*
->>  	 * The values from here are for free page filtering based on
->>  	 * mem_map array. These are minimum effort to cover old
->> @@ -1694,6 +1707,7 @@ write_vmcoreinfo_data(void)
->>  	WRITE_SYMBOL("vmemmap_list", vmemmap_list);
->>  	WRITE_SYMBOL("mmu_psize_defs", mmu_psize_defs);
->>  	WRITE_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
->> +	WRITE_SYMBOL("free_huge_page", free_huge_page);
->>
->>  	/*
->>  	 * write the structure size of 1st kernel
->> @@ -1783,6 +1797,7 @@ write_vmcoreinfo_data(void)
->>
->>  	WRITE_NUMBER("PG_lru", PG_lru);
->>  	WRITE_NUMBER("PG_private", PG_private);
->> +	WRITE_NUMBER("PG_head_mask", PG_head_mask);
->>  	WRITE_NUMBER("PG_swapcache", PG_swapcache);
->>  	WRITE_NUMBER("PG_buddy", PG_buddy);
->>  	WRITE_NUMBER("PG_slab", PG_slab);
->> @@ -2033,6 +2048,7 @@ read_vmcoreinfo(void)
->>  	READ_SYMBOL("vmemmap_list", vmemmap_list);
->>  	READ_SYMBOL("mmu_psize_defs", mmu_psize_defs);
->>  	READ_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
->> +	READ_SYMBOL("free_huge_page", free_huge_page);
->>
->>  	READ_STRUCTURE_SIZE("page", page);
->>  	READ_STRUCTURE_SIZE("mem_section", mem_section);
->> @@ -2109,6 +2125,7 @@ read_vmcoreinfo(void)
->>
->>  	READ_NUMBER("PG_lru", PG_lru);
->>  	READ_NUMBER("PG_private", PG_private);
->> +	READ_NUMBER("PG_head_mask", PG_head_mask);
->>  	READ_NUMBER("PG_swapcache", PG_swapcache);
->>  	READ_NUMBER("PG_slab", PG_slab);
->>  	READ_NUMBER("PG_buddy", PG_buddy);
->> @@ -4636,13 +4653,16 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->>      mdf_pfn_t pfn_start, mdf_pfn_t pfn_end, struct cycle *cycle)
->>  {
->>  	mdf_pfn_t pfn;
->> +	mdf_pfn_t *pfn_counter;
->> +	mdf_pfn_t nr_pages;
->>  	unsigned long index_pg, pfn_mm;
->>  	unsigned long long maddr;
->>  	mdf_pfn_t pfn_read_start, pfn_read_end;
->>  	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
->>  	unsigned char *pcache;
->> -	unsigned int _count, _mapcount = 0;
->> +	unsigned int _count, _mapcount = 0, compound_order = 0;
->>  	unsigned long flags, mapping, private = 0;
->> +	unsigned long hugetlb_dtor;
->>
->>  	/*
->>  	 * If a multi-page exclusion is pending, do it first
->> @@ -4708,11 +4728,36 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->>  		flags   = ULONG(pcache + OFFSET(page.flags));
->>  		_count  = UINT(pcache + OFFSET(page._count));
->>  		mapping = ULONG(pcache + OFFSET(page.mapping));
->> +
->> +		if (index_pg < PGMM_CACHED - 1) {
->
->Why not check the compound flags here? Like this:
+So in this patch add a check when enter into the loading code flow.
 
-Good, will change.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ kexec/kexec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->		if ((index_pg < PGMM_CACHED - 1) &&
->		    isCompoundHead(flags)) {
->
->> +			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
->> +					       + OFFSET(list_head.prev));
->> +			hugetlb_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
->> +					     + OFFSET(list_head.next));
->> +
->> +			if (compound_order &&
->                            ^^^^^^^^^^^^^^
->BTW this check can be omitted. If compound_order is zero, then it is
->only assigned zero again, which makes no difference. You can leave the
->condition here if you find it cleaner, but it is not necessary.
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 7e7b604..87ec26a 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1361,7 +1361,7 @@ int main(int argc, char *argv[])
+ 		else
+ 			result = k_unload(kexec_flags);
+ 	}
+-	if (do_load && (result == 0)) {
++	if (do_load && !do_unload (result == 0)) {
+ 		if (do_kexec_file_syscall)
+ 			result = do_kexec_file_load(fileind, argc, argv,
+ 						 kexec_file_flags);
+-- 
+1.8.5.3
 
-Will change.
-
->> +			    ((compound_order >= sizeof(unsigned long) * 8)
->> +			     || (pfn & ((1UL << compound_order) - 1)) != 0)) {
->> +				/* Invalid order */
->> +				compound_order = 0;
->> +			}
->> +		} else {
->> +			/*
->> +			 * The last pfn of the mem_map cache must not be compound page
->> +			 * since all compound pages are aligned to its page order and
->> +			 * PGMM_CACHED is 512.
->                                          ^^^
->For clarity I suggest: PGMM_CACHED is a power of 2.
-
-Will change.
-
->> +			 */
->> +			compound_order = 0;
->> +			hugetlb_dtor = 0;
->> +		}
->> +
->>  		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
->>  			_mapcount = UINT(pcache + OFFSET(page._mapcount));
->>  		if (OFFSET(page.private) != NOT_FOUND_STRUCTURE)
->>  			private = ULONG(pcache + OFFSET(page.private));
->>
->> +		nr_pages = 1;
->
->I think you can write:
->
->		nr_pages = 1 << compound_order;
->
->With the added check for hugepage flags (see above) nr_pages then
->describes how many pages share flags with the current page.
-
-Will change.
-
->> +		pfn_counter = NULL;
->>  		/*
->>  		 * Exclude the free page managed by a buddy
->>  		 * Use buddy identification of free pages whether cyclic or not.
->> @@ -4720,12 +4765,8 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->>  		if ((info->dump_level & DL_EXCLUDE_FREE)
->>  		    && info->page_is_buddy
->>  		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
->> -			int nr_pages = 1 << private;
->> -
->> -			exclude_range(&pfn_free, pfn, pfn + nr_pages, cycle);
->> -
->> -			pfn += nr_pages - 1;
->> -			mem_map += (nr_pages - 1) * SIZE(page);
->> +			nr_pages = 1 << private;
->
->Ok, this assignment is still needed, because free pages should also be
->treated as one entity, but they are not compound.
->
->> +			pfn_counter = &pfn_free;
->>  		}
->>  		/*
->>  		 * Exclude the cache page without the private page.
->> @@ -4733,8 +4774,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->>  		else if ((info->dump_level & DL_EXCLUDE_CACHE)
->>  		    && (isLRU(flags) || isSwapCache(flags))
->>  		    && !isPrivate(flags) && !isAnon(mapping)) {
->> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
->> -				pfn_cache++;
->> +			/*
->> +			 * NOTE: If THP for cache is introduced, the check for
->> +			 *       compound pages is needed here.
->> +			 */
->> +			nr_pages = 1;
->
->But this assignment is not needed, and the code is then ready for THP
->cache.
-
-Will change.
-
->> +			pfn_counter = &pfn_cache;
->>  		}
->>  		/*
->>  		 * Exclude the cache page with the private page.
->> @@ -4742,23 +4787,61 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->>  		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
->>  		    && (isLRU(flags) || isSwapCache(flags))
->>  		    && !isAnon(mapping)) {
->> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
->> -				pfn_cache_private++;
->> +			/*
->> +			 * NOTE: If THP for cache is introduced, the check for
->> +			 *       compound pages is needed here.
->> +			 */
->> +			nr_pages = 1;
->
->Same here. If the assignment is removed, the code is THP ready for
->free. ;-)
-
-Will change.
-
->> +			pfn_counter = &pfn_cache_private;
->>  		}
->>  		/*
->>  		 * Exclude the data page of the user process.
->>  		 */
->>  		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
->> -		    && isAnon(mapping)) {
->> -			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
->> -				pfn_user++;
->> +			 && (isAnon(mapping) || isHugetlb(hugetlb_dtor))) {
->> +			/*
->> +			 * Exclude the anonymous pages as user pages.
->> +			 */
->> +			if (isAnon(mapping)) {
->> +				/*
->> +				 * Check the compound page
->> +				 */
->> +				if (isCompoundHead(flags) && compound_order > 0) {
->> +					nr_pages = 1 << compound_order;
->> +				} else
->> +					nr_pages = 1;
->> +			}
->> +			/*
->> +			 * Exclude the hugetlbfs pages as user pages.
->> +			 */
->> +			else {
->> +				nr_pages = 1 << compound_order;
->> +			}
->
->This whole if-else block can go away, AFAICS.
-
-Great! The block for the user pages will be very simple.
-
->> +			pfn_counter = &pfn_user;
->>  		}
->>  		/*
->>  		 * Exclude the hwpoison page.
->>  		 */
->>  		else if (isHWPOISON(flags)) {
->> +			nr_pages = 1;
->
->Same here. The assignment can be removed.
-
-Will change.
-
-I'll post the fixed version and it will be the last version.
-So I'll start to prepare for the release of v1.5.7 soon.
-
-
-Thanks
-Atsushi Kumagai
-
->Thanks
->Petr Tesarik
->
->> +			pfn_counter = &pfn_hwpoison;
->> +		}
->> +		/*
->> +		 * Unexcludable page
->> +		 */
->> +		else
->> +			continue;
->> +
->> +		/*
->> +		 * Execute exclusion
->> +		 */
->> +		if (nr_pages == 1) {
->>  			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
->> -				pfn_hwpoison++;
->> +				(*pfn_counter)++;
->> +		} else {
->> +			exclude_range(pfn_counter, pfn, pfn + nr_pages, cycle);
->> +			pfn += nr_pages - 1;
->> +			mem_map += (nr_pages - 1) * SIZE(page);
->>  		}
->>  	}
->>  	return TRUE;
->> diff --git a/makedumpfile.h b/makedumpfile.h
->> index 9402f05..a2c76d8 100644
->> --- a/makedumpfile.h
->> +++ b/makedumpfile.h
->> @@ -74,6 +74,7 @@ int get_mem_type(void);
->>  #define PG_lru_ORIGINAL	 	(5)
->>  #define PG_slab_ORIGINAL	(7)
->>  #define PG_private_ORIGINAL	(11)	/* Has something at ->private */
->> +#define PG_compound_ORIGINAL	(14)	/* Is part of a compound page */
->>  #define PG_swapcache_ORIGINAL	(15)	/* Swap page: swp_entry_t in private */
->>
->>  #define PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_38	(-2)
->> @@ -148,6 +149,9 @@ test_bit(int nr, unsigned long addr)
->>
->>  #define isLRU(flags)		test_bit(NUMBER(PG_lru), flags)
->>  #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
->> +#define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
->> +#define isHugetlb(dtor)         ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL) \
->> +				 && (SYMBOL(free_huge_page) == dtor))
->>  #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
->>  #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
->>  				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
->> @@ -1143,6 +1147,7 @@ struct symbol_table {
->>  	unsigned long long	node_remap_start_vaddr;
->>  	unsigned long long	node_remap_end_vaddr;
->>  	unsigned long long	node_remap_start_pfn;
->> +	unsigned long long      free_huge_page;
->>
->>  	/*
->>  	 * for Xen extraction
->> @@ -1428,6 +1433,8 @@ struct number_table {
->>  	 */
->>  	long	PG_lru;
->>  	long	PG_private;
->> +	long	PG_head;
->> +	long	PG_head_mask;
->>  	long	PG_swapcache;
->>  	long	PG_buddy;
->>  	long	PG_slab;
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
