@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from youngberry.canonical.com ([91.189.89.112])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XK3pK-00075C-3G
+ id 1XK3pK-00075I-3m
  for kexec@lists.infradead.org; Wed, 20 Aug 2014 11:13:15 +0000
 Received: from 157.15.12.109.rev.sfr.net ([109.12.15.157]
  helo=localhost.localdomain)
  by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
  (Exim 4.71) (envelope-from <louis.bouchard@ubuntu.com>)
- id 1XK3ov-0001qN-LU
- for kexec@lists.infradead.org; Wed, 20 Aug 2014 11:12:49 +0000
+ id 1XK3ox-0001qN-1E
+ for kexec@lists.infradead.org; Wed, 20 Aug 2014 11:12:51 +0000
 From: Louis Bouchard <louis.bouchard@ubuntu.com>
-Subject: [PATCH 3/9] Add comments to default/kdump-tools to outline
- functionality
-Date: Wed, 20 Aug 2014 13:11:14 +0200
-Message-Id: <1408533080-17838-4-git-send-email-louis.bouchard@ubuntu.com>
+Subject: [PATCH 7/9] Add NFS info to kdump-config show
+Date: Wed, 20 Aug 2014 13:11:18 +0200
+Message-Id: <1408533080-17838-8-git-send-email-louis.bouchard@ubuntu.com>
 In-Reply-To: <1408533080-17838-1-git-send-email-louis.bouchard@ubuntu.com>
 References: <1408533080-17838-1-git-send-email-louis.bouchard@ubuntu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -31,42 +30,46 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
+Add NFS details and reorganize to make it conditional
+
 Signed-off-by: Louis Bouchard <louis.bouchard@ubuntu.com>
 ---
- debian/kdump-config        | 1 -
- debian/kdump-tools.default | 7 ++++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ debian/kdump-config | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
 diff --git a/debian/kdump-config b/debian/kdump-config
-index b0164dd..1184d6d 100755
+index 2818b56..37932ac 100755
 --- a/debian/kdump-config
 +++ b/debian/kdump-config
-@@ -434,7 +434,6 @@ function kdump_save_core_to_ssh()
- 
- function kdump_propagate()
- {
--KDUMP_COREDIR=${KDUMP_COREDIR:=/var/crash}
- 	KDUMP_SSH_KEY="${SSH_KEY:=/root/.ssh/kdump_id_rsa}"
- 	KDUMP_REMOTE_HOST="$SSH"
- 
-diff --git a/debian/kdump-tools.default b/debian/kdump-tools.default
-index d870523..8ef95b8 100644
---- a/debian/kdump-tools.default
-+++ b/debian/kdump-tools.default
-@@ -65,7 +65,12 @@ KDUMP_COREDIR="/var/crash"
- # Architecture specific Overrides:
- 
- # ---------------------------------------------------------------------------
--# Remote dump facilities
-+# Remote dump facilities:
-+# SSH - username and hostname of the remote server that will receive the dump
-+# 	and dmesg files.
-+# SSH_KEY - Full path of the ssh private key to be used to login to the remote
-+# 	    server. use kdump-config propagate to send the public key to the
-+# 	    remote server
- #
- # SSH="<user@server>"
- #
+@@ -84,15 +84,21 @@ function kdump_show()
+ 	echo "KDUMP_SYSCTL:     $KDUMP_SYSCTL"
+ 	echo "KDUMP_COREDIR:    $KDUMP_COREDIR"
+ 	echo "crashkernel addr: $IOMEM_ADDR"
+-	if [ -z $SSH ];then
+-		echo "SSH:              local"
+-	else
++
++	if [ -n "$SSH" ];then
+ 		echo "SSH:              $SSH"
++		SSH_KEY="${SSH_KEY:=/root/.ssh/kdump_id_rsa}"
++		echo "SSH_KEY:          $SSH_KEY"
+ 	fi
+-	HOSTTAG="${HOSTTAG:=ip}"
+-	echo "HOSTTAG:          $HOSTTAG"
+-	SSH_KEY="${SSH_KEY:=/root/.ssh/kdump_id_rsa}"
+-	echo "SSH_KEY:          $SSH_KEY"
++	if [ -n "$NFS" ]; then
++		echo "NFS:              $NFS"
++	fi
++
++	if [ -n "$SSH" ] || [ -n "$NFS" ]; then
++		HOSTTAG="${HOSTTAG:=ip}"
++		echo "HOSTTAG:          $HOSTTAG"
++	fi
++
+ 	if [ -e $sys_kexec_crash -a `cat $sys_kexec_crash` -eq 1 ] ; then
+ 		echo "current state:    ready to kdump";
+ 	else
 -- 
 1.9.1
 
