@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XJfXI-0002q0-2v
- for kexec@lists.infradead.org; Tue, 19 Aug 2014 09:17:01 +0000
-Date: Tue, 19 Aug 2014 17:15:13 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH V2] kexec: Provide an option to use new kexec system call
-Message-ID: <20140819091513.GB23283@dhcp-16-105.nay.redhat.com>
-References: <20140818152232.GA7525@redhat.com>
+ id 1XK0KX-0000Tg-RG
+ for kexec@lists.infradead.org; Wed, 20 Aug 2014 07:29:15 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.195])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s7K7Sl5Y002669
+ for <kexec@lists.infradead.org>; Wed, 20 Aug 2014 16:28:47 +0900 (JST)
+Received: from mailsv4.nec.co.jp (imss63.nec.co.jp [10.7.69.158]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id s7K7SlN07378 for <kexec@lists.infradead.org>;
+ Wed, 20 Aug 2014 16:28:47 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id s7K7SkQi022390
+ for <kexec@lists.infradead.org>; Wed, 20 Aug 2014 16:28:46 +0900 (JST)
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [PATCH v4] makedumpfile: Exclude unnecessary hugepages.
+Date: Wed, 20 Aug 2014 07:27:30 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9724E000@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140818152232.GA7525@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,454 +31,277 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-I have tested this patch. kexec loading/unloading and kdump loading/unloading
-all work very well.
+There are 2 types of hugepages in the kernel, the both should be
+excluded as user pages.
 
-And the code won't impact original functionality if user takes the old
-API "kexec_load". So ACK this patch.
+1. Transparent huge pages (THP)
+All the pages are anonymous pages (at least for now), so we should
+just get how many pages are in the corresponding hugepage.
+It can be gotten from the page->lru.prev of the second page in the
+hugepage.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+2. Hugetlbfs pages
+The pages aren't anonymous pages but kind of user pages, we should
+exclude also these pages in any way.
+Luckily, it's possible to detect these pages by looking the
+page->lru.next of the second page in the hugepage. This idea came
+from the kernel's PageHuge().
+The number of pages can be gotten in the same way as THP.
 
-Thanks
-Baoquan
+Changelog:
+v4:
+  - Cleaned up according to Petr's and Baoquan's comments.
+v3:
+  - Cleaned up according to Petr's comments.
+  - Fix misdetection of hugetlb pages.
+v2:
+  - Rebased to "Generic multi-page exclusion".
 
-On 08/18/14 at 11:22am, Vivek Goyal wrote:
-> Hi,
-> 
-> This is v2 of the patch. Since v1, I moved syscall implemented check littler
-> earlier in the function as per the feedback.
-> 
-> Now a new kexec syscall (kexec_file_load()) has been merged in upstream
-> kernel. This system call takes file descriptors of kernel and initramfs
-> as input (as opposed to list of segments to be loaded). This new system
-> call allows for signature verification of the kernel being loaded.
-> 
-> One use of signature verification of kernel is secureboot systems where
-> we want to allow kexec into a kernel only if it is validly signed by
-> a key system trusts.
-> 
-> This patch provides and option --kexec-file-syscall (-s), to force use of
-> new system call for kexec. Default is to continue to use old syscall.
-> 
-> Currently only bzImage64 on x86_64 can be loaded using this system call.
-> As kernel adds support for more arches and for more image types, kexec-tools
-> can be modified accordingly.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  kexec/arch/x86_64/kexec-bzImage64.c |   86 +++++++++++++++++++++++
->  kexec/kexec-syscall.h               |   32 ++++++++
->  kexec/kexec.c                       |  132 +++++++++++++++++++++++++++++++++++-
->  kexec/kexec.h                       |   11 ++-
->  4 files changed, 257 insertions(+), 4 deletions(-)
-> 
-> Index: kexec-tools/kexec/kexec.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec.c	2014-08-13 11:02:21.106631417 -0400
-> +++ kexec-tools/kexec/kexec.c	2014-08-18 11:16:28.869392839 -0400
-> @@ -51,6 +51,8 @@
->  unsigned long long mem_min = 0;
->  unsigned long long mem_max = ULONG_MAX;
->  static unsigned long kexec_flags = 0;
-> +/* Flags for kexec file (fd) based syscall */
-> +static unsigned long kexec_file_flags = 0;
->  int kexec_debug = 0;
->  
->  void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
-> @@ -787,6 +789,19 @@ static int my_load(const char *type, int
->  	return result;
->  }
->  
-> +static int kexec_file_unload(unsigned long kexec_file_flags)
-> +{
-> +	int ret = 0;
-> +
-> +	ret = kexec_file_load(-1, -1, 0, NULL, kexec_file_flags);
-> +	if (ret != 0) {
-> +		/* The unload failed, print some debugging information */
-> +		fprintf(stderr, "kexec_file_load(unload) failed\n: %s\n",
-> +			strerror(errno));
-> +	}
-> +	return ret;
-> +}
-> +
->  static int k_unload (unsigned long kexec_flags)
->  {
->  	int result;
-> @@ -925,6 +940,7 @@ void usage(void)
->  	       "                      (0 means it's not jump back or\n"
->  	       "                      preserve context)\n"
->  	       "                      to original kernel.\n"
-> +	       " -s, --kexec-file-syscall Use file based syscall for kexec operation\n"
->  	       " -d, --debug           Enable debugging to help spot a failure.\n"
->  	       "\n"
->  	       "Supported kernel file types and options: \n");
-> @@ -1072,6 +1088,82 @@ char *concat_cmdline(const char *base, c
->  	return cmdline;
->  }
->  
-> +/* New file based kexec system call related code */
-> +static int do_kexec_file_load(int fileind, int argc, char **argv,
-> +			unsigned long flags) {
-> +
-> +	char *kernel;
-> +	int kernel_fd, i;
-> +	struct kexec_info info;
-> +	int ret = 0;
-> +	char *kernel_buf;
-> +	off_t kernel_size;
-> +
-> +	memset(&info, 0, sizeof(info));
-> +	info.segment = NULL;
-> +	info.nr_segments = 0;
-> +	info.entry = NULL;
-> +	info.backup_start = 0;
-> +	info.kexec_flags = flags;
-> +
-> +	info.file_mode = 1;
-> +	info.initrd_fd = -1;
-> +
-> +	if (!is_kexec_file_load_implemented()) {
-> +		fprintf(stderr, "syscall kexec_file_load not available.\n");
-> +		return -1;
-> +	}
-> +
-> +	if (argc - fileind <= 0) {
-> +		fprintf(stderr, "No kernel specified\n");
-> +		usage();
-> +		return -1;
-> +	}
-> +
-> +	kernel = argv[fileind];
-> +
-> +	kernel_fd = open(kernel, O_RDONLY);
-> +	if (kernel_fd == -1) {
-> +		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
-> +				strerror(errno));
-> +		return -1;
-> +	}
-> +
-> +	/* slurp in the input kernel */
-> +	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
-> +
-> +	for (i = 0; i < file_types; i++) {
-> +		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
-> +			break;
-> +	}
-> +
-> +	if (i == file_types) {
-> +		fprintf(stderr, "Cannot determine the file type " "of %s\n",
-> +				kernel);
-> +		return -1;
-> +	}
-> +
-> +	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
-> +	if (ret < 0) {
-> +		fprintf(stderr, "Cannot load %s\n", kernel);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * If there is no initramfs, set KEXEC_FILE_NO_INITRAMFS flag so that
-> +	 * kernel does not return error with negative initrd_fd.
-> +	 */
-> +	if (info.initrd_fd == -1)
-> +		info.kexec_flags |= KEXEC_FILE_NO_INITRAMFS;
-> +
-> +	ret = kexec_file_load(kernel_fd, info.initrd_fd, info.command_line_len,
-> +			info.command_line, info.kexec_flags);
-> +	if (ret != 0)
-> +		fprintf(stderr, "kexec_file_load failed: %s\n",
-> +					strerror(errno));
-> +	return ret;
-> +}
-> +
->  
->  int main(int argc, char *argv[])
->  {
-> @@ -1083,6 +1175,7 @@ int main(int argc, char *argv[])
->  	int do_ifdown = 0;
->  	int do_unload = 0;
->  	int do_reuse_initrd = 0;
-> +	int do_kexec_file_syscall = 0;
->  	void *entry = 0;
->  	char *type = 0;
->  	char *endptr;
-> @@ -1095,6 +1188,23 @@ int main(int argc, char *argv[])
->  	};
->  	static const char short_options[] = KEXEC_ALL_OPT_STR;
->  
-> +	/*
-> +	 * First check if --use-kexec-file-syscall is set. That changes lot of
-> +	 * things
-> +	 */
-> +	while ((opt = getopt_long(argc, argv, short_options,
-> +				  options, 0)) != -1) {
-> +		switch(opt) {
-> +		case OPT_KEXEC_FILE_SYSCALL:
-> +			do_kexec_file_syscall = 1;
-> +			break;
-> +		}
-> +	}
-> +
-> +	/* Reset getopt for the next pass. */
-> +	opterr = 1;
-> +	optind = 1;
-> +
->  	while ((opt = getopt_long(argc, argv, short_options,
->  				  options, 0)) != -1) {
->  		switch(opt) {
-> @@ -1127,6 +1237,8 @@ int main(int argc, char *argv[])
->  			do_shutdown = 0;
->  			do_sync = 0;
->  			do_unload = 1;
-> +			if (do_kexec_file_syscall)
-> +				kexec_file_flags |= KEXEC_FILE_UNLOAD;
->  			break;
->  		case OPT_EXEC:
->  			do_load = 0;
-> @@ -1169,7 +1281,10 @@ int main(int argc, char *argv[])
->  			do_exec = 0;
->  			do_shutdown = 0;
->  			do_sync = 0;
-> -			kexec_flags = KEXEC_ON_CRASH;
-> +			if (do_kexec_file_syscall)
-> +				kexec_file_flags |= KEXEC_FILE_ON_CRASH;
-> +			else
-> +				kexec_flags = KEXEC_ON_CRASH;
->  			break;
->  		case OPT_MEM_MIN:
->  			mem_min = strtoul(optarg, &endptr, 0);
-> @@ -1194,6 +1309,9 @@ int main(int argc, char *argv[])
->  		case OPT_REUSE_INITRD:
->  			do_reuse_initrd = 1;
->  			break;
-> +		case OPT_KEXEC_FILE_SYSCALL:
-> +			/* We already parsed it. Nothing to do. */
-> +			break;
->  		default:
->  			break;
->  		}
-> @@ -1238,10 +1356,18 @@ int main(int argc, char *argv[])
->  	}
->  
->  	if (do_unload) {
-> -		result = k_unload(kexec_flags);
-> +		if (do_kexec_file_syscall)
-> +			result = kexec_file_unload(kexec_file_flags);
-> +		else
-> +			result = k_unload(kexec_flags);
->  	}
->  	if (do_load && (result == 0)) {
-> -		result = my_load(type, fileind, argc, argv, kexec_flags, entry);
-> +		if (do_kexec_file_syscall)
-> +			result = do_kexec_file_load(fileind, argc, argv,
-> +						 kexec_file_flags);
-> +		else
-> +			result = my_load(type, fileind, argc, argv,
-> +						kexec_flags, entry);
->  	}
->  	/* Don't shutdown unless there is something to reboot to! */
->  	if ((result == 0) && (do_shutdown || do_exec) && !kexec_loaded()) {
-> Index: kexec-tools/kexec/kexec.h
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec.h	2014-08-13 11:02:21.106631417 -0400
-> +++ kexec-tools/kexec/kexec.h	2014-08-13 11:02:32.393697149 -0400
-> @@ -156,6 +156,13 @@ struct kexec_info {
->  	unsigned long kexec_flags;
->  	unsigned long backup_src_start;
->  	unsigned long backup_src_size;
-> +	/* Set to 1 if we are using kexec file syscall */
-> +	unsigned long file_mode :1;
-> +
-> +	/* Filled by kernel image processing code */
-> +	int initrd_fd;
-> +	char *command_line;
-> +	int command_line_len;
->  };
->  
->  struct arch_map_entry {
-> @@ -207,6 +214,7 @@ extern int file_types;
->  #define OPT_UNLOAD		'u'
->  #define OPT_TYPE		't'
->  #define OPT_PANIC		'p'
-> +#define OPT_KEXEC_FILE_SYSCALL	's'
->  #define OPT_MEM_MIN             256
->  #define OPT_MEM_MAX             257
->  #define OPT_REUSE_INITRD	258
-> @@ -230,9 +238,10 @@ extern int file_types;
->  	{ "mem-min",		1, 0, OPT_MEM_MIN }, \
->  	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
->  	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
-> +	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
->  	{ "debug",		0, 0, OPT_DEBUG }, \
->  
-> -#define KEXEC_OPT_STR "h?vdfxluet:p"
-> +#define KEXEC_OPT_STR "h?vdfxluet:ps"
->  
->  extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
->  extern void die(const char *fmt, ...)
-> Index: kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/x86_64/kexec-bzImage64.c	2014-08-13 11:02:21.106631417 -0400
-> +++ kexec-tools/kexec/arch/x86_64/kexec-bzImage64.c	2014-08-13 11:02:32.393697149 -0400
-> @@ -235,6 +235,89 @@ static int do_bzImage64_load(struct kexe
->  	return 0;
->  }
->  
-> +/* This assumes file is being loaded using file based kexec syscall */
-> +int bzImage64_load_file(int argc, char **argv, struct kexec_info *info)
-> +{
-> +	int ret = 0;
-> +	char *command_line = NULL, *tmp_cmdline = NULL;
-> +	const char *ramdisk = NULL, *append = NULL;
-> +	int entry_16bit = 0, entry_32bit = 0;
-> +	int opt;
-> +	int command_line_len;
-> +
-> +	/* See options.h -- add any more there, too. */
-> +	static const struct option options[] = {
-> +		KEXEC_ARCH_OPTIONS
-> +		{ "command-line",	1, 0, OPT_APPEND },
-> +		{ "append",		1, 0, OPT_APPEND },
-> +		{ "reuse-cmdline",	0, 0, OPT_REUSE_CMDLINE },
-> +		{ "initrd",		1, 0, OPT_RAMDISK },
-> +		{ "ramdisk",		1, 0, OPT_RAMDISK },
-> +		{ "real-mode",		0, 0, OPT_REAL_MODE },
-> +		{ "entry-32bit",	0, 0, OPT_ENTRY_32BIT },
-> +		{ 0,			0, 0, 0 },
-> +	};
-> +	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
-> +
-> +	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
-> +		switch (opt) {
-> +		default:
-> +			/* Ignore core options */
-> +			if (opt < OPT_ARCH_MAX)
-> +				break;
-> +		case OPT_APPEND:
-> +			append = optarg;
-> +			break;
-> +		case OPT_REUSE_CMDLINE:
-> +			tmp_cmdline = get_command_line();
-> +			break;
-> +		case OPT_RAMDISK:
-> +			ramdisk = optarg;
-> +			break;
-> +		case OPT_REAL_MODE:
-> +			entry_16bit = 1;
-> +			break;
-> +		case OPT_ENTRY_32BIT:
-> +			entry_32bit = 1;
-> +			break;
-> +		}
-> +	}
-> +	command_line = concat_cmdline(tmp_cmdline, append);
-> +	if (tmp_cmdline)
-> +		free(tmp_cmdline);
-> +	command_line_len = 0;
-> +	if (command_line) {
-> +		command_line_len = strlen(command_line) + 1;
-> +	} else {
-> +		command_line = strdup("\0");
-> +		command_line_len = 1;
-> +	}
-> +
-> +	if (entry_16bit || entry_32bit) {
-> +		fprintf(stderr, "Kexec2 syscall does not support 16bit"
-> +			" or 32bit entry yet\n");
-> +		ret = -1;
-> +		goto out;
-> +	}
-> +
-> +	if (ramdisk) {
-> +		info->initrd_fd = open(ramdisk, O_RDONLY);
-> +		if (info->initrd_fd == -1) {
-> +			fprintf(stderr, "Could not open initrd file %s:%s\n",
-> +					ramdisk, strerror(errno));
-> +			ret = -1;
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	info->command_line = command_line;
-> +	info->command_line_len = command_line_len;
-> +	return ret;
-> +out:
-> +	free(command_line);
-> +	return ret;
-> +}
-> +
->  int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
->  	struct kexec_info *info)
->  {
-> @@ -247,6 +330,9 @@ int bzImage64_load(int argc, char **argv
->  	int opt;
->  	int result;
->  
-> +	if (info->file_mode)
-> +		return bzImage64_load_file(argc, argv, info);
-> +
->  	/* See options.h -- add any more there, too. */
->  	static const struct option options[] = {
->  		KEXEC_ARCH_OPTIONS
-> Index: kexec-tools/kexec/kexec-syscall.h
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec-syscall.h	2014-08-13 11:02:21.106631417 -0400
-> +++ kexec-tools/kexec/kexec-syscall.h	2014-08-13 11:02:32.393697149 -0400
-> @@ -53,6 +53,19 @@
->  #endif
->  #endif /*ifndef __NR_kexec_load*/
->  
-> +#ifndef __NR_kexec_file_load
-> +
-> +#ifdef __x86_64__
-> +#define __NR_kexec_file_load	320
-> +#endif
-> +
-> +#ifndef __NR_kexec_file_load
-> +/* system call not available for the arch */
-> +#define __NR_kexec_file_load	0xffffffff	/* system call not available */
-> +#endif
-> +
-> +#endif /*ifndef __NR_kexec_file_load*/
-> +
->  struct kexec_segment;
->  
->  static inline long kexec_load(void *entry, unsigned long nr_segments,
-> @@ -61,10 +74,29 @@ static inline long kexec_load(void *entr
->  	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
->  }
->  
-> +static inline int is_kexec_file_load_implemented(void) {
-> +	if (__NR_kexec_file_load != 0xffffffff)
-> +		return 1;
-> +	return 0;
-> +}
-> +
-> +static inline long kexec_file_load(int kernel_fd, int initrd_fd,
-> +			unsigned long cmdline_len, const char *cmdline_ptr,
-> +			unsigned long flags)
-> +{
-> +	return (long) syscall(__NR_kexec_file_load, kernel_fd, initrd_fd,
-> +				cmdline_len, cmdline_ptr, flags);
-> +}
-> +
->  #define KEXEC_ON_CRASH		0x00000001
->  #define KEXEC_PRESERVE_CONTEXT	0x00000002
->  #define KEXEC_ARCH_MASK		0xffff0000
->  
-> +/* Flags for kexec file based system call */
-> +#define KEXEC_FILE_UNLOAD	0x00000001
-> +#define KEXEC_FILE_ON_CRASH	0x00000002
-> +#define KEXEC_FILE_NO_INITRAMFS	0x00000004
-> +
->  /* These values match the ELF architecture values. 
->   * Unless there is a good reason that should continue to be the case.
->   */
+Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+---
+ makedumpfile.c | 86 ++++++++++++++++++++++++++++++++++++++++++++++++----------
+ makedumpfile.h |  7 +++++
+ 2 files changed, 78 insertions(+), 15 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 11cd473..b4b6eca 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1180,6 +1180,7 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(vmemmap_list, "vmemmap_list");
+ 	SYMBOL_INIT(mmu_psize_defs, "mmu_psize_defs");
+ 	SYMBOL_INIT(mmu_vmemmap_psize, "mmu_vmemmap_psize");
++	SYMBOL_INIT(free_huge_page, "free_huge_page");
+ 
+ 	SYMBOL_INIT(cpu_pgd, "cpu_pgd");
+ 	SYMBOL_INIT(demote_segment_4k, "demote_segment_4k");
+@@ -1296,6 +1297,15 @@ get_structure_info(void)
+ 	ENUM_NUMBER_INIT(PG_slab, "PG_slab");
+ 	ENUM_NUMBER_INIT(PG_hwpoison, "PG_hwpoison");
+ 
++	ENUM_NUMBER_INIT(PG_head_mask, "PG_head_mask");
++	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER) {
++		ENUM_NUMBER_INIT(PG_head, "PG_head");
++		if (NUMBER(PG_head) == NOT_FOUND_NUMBER)
++			ENUM_NUMBER_INIT(PG_head, "PG_compound");
++		if (NUMBER(PG_head) != NOT_FOUND_NUMBER)
++			NUMBER(PG_head_mask) = 1UL << NUMBER(PG_head);
++	}
++
+ 	ENUM_TYPE_SIZE_INIT(pageflags, "pageflags");
+ 
+ 	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
+@@ -1530,6 +1540,9 @@ get_value_for_old_linux(void)
+ 		NUMBER(PG_swapcache) = PG_swapcache_ORIGINAL;
+ 	if (NUMBER(PG_slab) == NOT_FOUND_NUMBER)
+ 		NUMBER(PG_slab) = PG_slab_ORIGINAL;
++	if (NUMBER(PG_head_mask) == NOT_FOUND_NUMBER)
++		NUMBER(PG_head_mask) = 1L << PG_compound_ORIGINAL;
++
+ 	/*
+ 	 * The values from here are for free page filtering based on
+ 	 * mem_map array. These are minimum effort to cover old
+@@ -1699,6 +1712,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
+ 	WRITE_SYMBOL("cpu_pgd", cpu_pgd);
+ 	WRITE_SYMBOL("demote_segment_4k", demote_segment_4k);
++	WRITE_SYMBOL("free_huge_page", free_huge_page);
+ 
+ 	/*
+ 	 * write the structure size of 1st kernel
+@@ -1788,6 +1802,7 @@ write_vmcoreinfo_data(void)
+ 
+ 	WRITE_NUMBER("PG_lru", PG_lru);
+ 	WRITE_NUMBER("PG_private", PG_private);
++	WRITE_NUMBER("PG_head_mask", PG_head_mask);
+ 	WRITE_NUMBER("PG_swapcache", PG_swapcache);
+ 	WRITE_NUMBER("PG_buddy", PG_buddy);
+ 	WRITE_NUMBER("PG_slab", PG_slab);
+@@ -2040,6 +2055,7 @@ read_vmcoreinfo(void)
+ 	READ_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
+ 	READ_SYMBOL("cpu_pgd", cpu_pgd);
+ 	READ_SYMBOL("demote_segment_4k", demote_segment_4k);
++	READ_SYMBOL("free_huge_page", free_huge_page);
+ 
+ 	READ_STRUCTURE_SIZE("page", page);
+ 	READ_STRUCTURE_SIZE("mem_section", mem_section);
+@@ -2116,6 +2132,7 @@ read_vmcoreinfo(void)
+ 
+ 	READ_NUMBER("PG_lru", PG_lru);
+ 	READ_NUMBER("PG_private", PG_private);
++	READ_NUMBER("PG_head_mask", PG_head_mask);
+ 	READ_NUMBER("PG_swapcache", PG_swapcache);
+ 	READ_NUMBER("PG_slab", PG_slab);
+ 	READ_NUMBER("PG_buddy", PG_buddy);
+@@ -4643,13 +4660,16 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+     mdf_pfn_t pfn_start, mdf_pfn_t pfn_end, struct cycle *cycle)
+ {
+ 	mdf_pfn_t pfn;
++	mdf_pfn_t *pfn_counter;
++	mdf_pfn_t nr_pages;
+ 	unsigned long index_pg, pfn_mm;
+ 	unsigned long long maddr;
+ 	mdf_pfn_t pfn_read_start, pfn_read_end;
+ 	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
+ 	unsigned char *pcache;
+-	unsigned int _count, _mapcount = 0;
++	unsigned int _count, _mapcount = 0, compound_order = 0;
+ 	unsigned long flags, mapping, private = 0;
++	unsigned long compound_dtor;
+ 
+ 	/*
+ 	 * If a multi-page exclusion is pending, do it first
+@@ -4715,11 +4735,36 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		flags   = ULONG(pcache + OFFSET(page.flags));
+ 		_count  = UINT(pcache + OFFSET(page._count));
+ 		mapping = ULONG(pcache + OFFSET(page.mapping));
++
++		if ((index_pg < PGMM_CACHED - 1) &&
++		    isCompoundHead(flags)) {
++			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
++					       + OFFSET(list_head.prev));
++			compound_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
++					     + OFFSET(list_head.next));
++
++			if ((compound_order >= sizeof(unsigned long) * 8)
++			    || ((pfn & ((1UL << compound_order) - 1)) != 0)) {
++				/* Invalid order */
++				compound_order = 0;
++			}
++		} else {
++			/*
++			 * The last pfn of the mem_map cache must not be compound page
++			 * since all compound pages are aligned to its page order and
++			 * PGMM_CACHED is a power of 2.
++			 */
++			compound_order = 0;
++			compound_dtor = 0;
++		}
++
+ 		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
+ 			_mapcount = UINT(pcache + OFFSET(page._mapcount));
+ 		if (OFFSET(page.private) != NOT_FOUND_STRUCTURE)
+ 			private = ULONG(pcache + OFFSET(page.private));
+ 
++		nr_pages = 1 << compound_order;
++		pfn_counter = NULL;
+ 		/*
+ 		 * Exclude the free page managed by a buddy
+ 		 * Use buddy identification of free pages whether cyclic or not.
+@@ -4727,12 +4772,8 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		if ((info->dump_level & DL_EXCLUDE_FREE)
+ 		    && info->page_is_buddy
+ 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+-			int nr_pages = 1 << private;
+-
+-			exclude_range(&pfn_free, pfn, pfn + nr_pages, cycle);
+-
+-			pfn += nr_pages - 1;
+-			mem_map += (nr_pages - 1) * SIZE(page);
++			nr_pages = 1 << private;
++			pfn_counter = &pfn_free;
+ 		}
+ 		/*
+ 		 * Exclude the cache page without the private page.
+@@ -4740,8 +4781,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		else if ((info->dump_level & DL_EXCLUDE_CACHE)
+ 		    && (isLRU(flags) || isSwapCache(flags))
+ 		    && !isPrivate(flags) && !isAnon(mapping)) {
+-			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+-				pfn_cache++;
++			pfn_counter = &pfn_cache;
+ 		}
+ 		/*
+ 		 * Exclude the cache page with the private page.
+@@ -4749,23 +4789,39 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
+ 		    && (isLRU(flags) || isSwapCache(flags))
+ 		    && !isAnon(mapping)) {
+-			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+-				pfn_cache_private++;
++			pfn_counter = &pfn_cache_private;
+ 		}
+ 		/*
+ 		 * Exclude the data page of the user process.
++		 *  - anonymous pages
++		 *  - hugetlbfs pages
+ 		 */
+ 		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
+-		    && isAnon(mapping)) {
+-			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+-				pfn_user++;
++			 && (isAnon(mapping) || isHugetlb(compound_dtor))) {
++			pfn_counter = &pfn_user;
+ 		}
+ 		/*
+ 		 * Exclude the hwpoison page.
+ 		 */
+ 		else if (isHWPOISON(flags)) {
++			pfn_counter = &pfn_hwpoison;
++		}
++		/*
++		 * Unexcludable page
++		 */
++		else
++			continue;
++
++		/*
++		 * Execute exclusion
++		 */
++		if (nr_pages == 1) {
+ 			if (clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle))
+-				pfn_hwpoison++;
++				(*pfn_counter)++;
++		} else {
++			exclude_range(pfn_counter, pfn, pfn + nr_pages, cycle);
++			pfn += nr_pages - 1;
++			mem_map += (nr_pages - 1) * SIZE(page);
+ 		}
+ 	}
+ 	return TRUE;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index eba9798..9f90b53 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -74,6 +74,7 @@ int get_mem_type(void);
+ #define PG_lru_ORIGINAL	 	(5)
+ #define PG_slab_ORIGINAL	(7)
+ #define PG_private_ORIGINAL	(11)	/* Has something at ->private */
++#define PG_compound_ORIGINAL	(14)	/* Is part of a compound page */
+ #define PG_swapcache_ORIGINAL	(15)	/* Swap page: swp_entry_t in private */
+ 
+ #define PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_38	(-2)
+@@ -148,6 +149,9 @@ test_bit(int nr, unsigned long addr)
+ 
+ #define isLRU(flags)		test_bit(NUMBER(PG_lru), flags)
+ #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
++#define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
++#define isHugetlb(dtor)         ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL) \
++				 && (SYMBOL(free_huge_page) == dtor))
+ #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
+ #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
+ 				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
+@@ -1218,6 +1222,7 @@ struct symbol_table {
+ 	unsigned long long	node_remap_start_vaddr;
+ 	unsigned long long	node_remap_end_vaddr;
+ 	unsigned long long	node_remap_start_pfn;
++	unsigned long long      free_huge_page;
+ 
+ 	/*
+ 	 * for Xen extraction
+@@ -1509,6 +1514,8 @@ struct number_table {
+ 	 */
+ 	long	PG_lru;
+ 	long	PG_private;
++	long	PG_head;
++	long	PG_head_mask;
+ 	long	PG_swapcache;
+ 	long	PG_buddy;
+ 	long	PG_slab;
+-- 
+1.9.0
 
 _______________________________________________
 kexec mailing list
