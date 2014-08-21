@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from borg.tf-network.de ([62.75.218.204])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XKXrC-0003M8-IY
- for kexec@lists.infradead.org; Thu, 21 Aug 2014 19:17:11 +0000
-Date: Thu, 21 Aug 2014 15:16:46 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+ id 1XKY1O-0002JH-Pi
+ for kexec@lists.infradead.org; Thu, 21 Aug 2014 19:27:43 +0000
+Message-ID: <53F64815.8010206@whissi.de>
+Date: Thu, 21 Aug 2014 21:27:17 +0200
+From: "Thomas D." <whissi@whissi.de>
+MIME-Version: 1.0
 Subject: Re: kexec fails to boot kernels where CONFIG_RANDOMIZE_BASE=y is set
-Message-ID: <20140821191646.GF21891@redhat.com>
 References: <53F11882.3060803@whissi.de> <20140818145718.GD4745@redhat.com>
  <20140819090724.GB21724@dhcp-17-37.nay.redhat.com>
  <20140820143315.GC16303@redhat.com>
  <CAGXu5jLxEoKEy0nw8qj0MW0f2Vpog-DtDi7OwnUrkh7jGSkdWw@mail.gmail.com>
- <20140821181000.GB21891@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140821181000.GB21891@redhat.com>
+ <20140821181000.GB21891@redhat.com> <20140821190226.GE21891@redhat.com>
+In-Reply-To: <20140821190226.GE21891@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,43 +26,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
-Cc: "Thomas D." <whissi@whissi.de>, Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
 
-On Thu, Aug 21, 2014 at 02:10:00PM -0400, Vivek Goyal wrote:
+Hi,
 
-[..]
-> If kernel always moves itself to higher addresses then one solution could
-> be that load everything else below kernel and load kernel at higher
-> addresses. But old kexec system call will not be able to cope with it as
-> user space determines the load location of kernel and other segments while
-> running kernel decides location of pages for page table and kernel has
-> no idea where user space has loaded new kernel. New system call still
-> might be able to handle it.
+Vivek Goyal wrote:
+> Thomas, can you please test kexec with "nokaslr" specified in command
+> line. This can atleast get you going for now till the problem is actually
+> fixed.
 
-So I am reading kaslr code a bit. First of all we are moving kernel in
-physical address space. That would substantiate the theory that kernel
-movement stepped onto something.
+I booted linux-3.15.10 with "nokaslr"
 
-Basically we seem to be just going through all the e820 entries, putting
-them one slots[] array and choosing one entry randomly.
+>  # dmesg | grep -i command
+> [    0.000000] Command line: BOOT_IMAGE=/kernel dolvm video=1280x1024 root=UUID=6d42... rootfs=ext4 nokaslr initrd=/initramfs
+> [    0.000000] Kernel command line: BOOT_IMAGE=/kernel dolvm video=1280x1024 root=UUID=6d42... rootfs=ext4 nokaslr initrd=/initramfs
 
-That means kernel could move up or down. So the notion of loading
-everything else below kernel will not work.
+and run kexec with
 
-Now this makes me wonder that how does this whole thing work with grub.
-IOW, how would one make sure that kernel does not stomp initramfs.
+> --reuse-cmdline -l /boot/kernel root=/dev/dm-3  --initrd=/boot/initramfs
 
-I guess only protection is BASE_MAX_OFFSET and making sure initramfs is
-loaded higher than that.
+But it still doesn't reboot. I see no difference between using "nokaslr"
+or not.
 
-If that's the case, then I think minimum and maximum range of physical
-memory where kernel can move should be exported through bzImage header
-and kexec-tools should make sure that anything else is outside of that
-range so that new kernel will not stomp over it.
 
-Thanks
-Vivek
+-Thomas
+
 
 _______________________________________________
 kexec mailing list
