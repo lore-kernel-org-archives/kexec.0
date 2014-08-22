@@ -1,9 +1,7 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <dc3c63e69815e00dce5454bd50e2991e9ea33f64.1408731991.git.geoff@infradead.org>
-In-Reply-To: <cover.1408731991.git.geoff@infradead.org>
-References: <cover.1408731991.git.geoff@infradead.org>
+Message-Id: <cover.1408731991.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 5/5] powerpc/kexec: Use global IND_FLAGS macro
+Subject: [PATCH 0/5] kexec: minor fixups and enhancements
 Date: Fri, 22 Aug 2014 18:39:47 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,27 +19,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eric Biederman <ebiederm@xmission.com>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 
-linux/kexec.h now defines an IND_FLAGS macro.  Remove the local powerpc
-definition and use the generic one.
+Hi,
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
----
- arch/powerpc/kernel/machine_kexec_64.c | 2 --
- 1 file changed, 2 deletions(-)
+Here are a few minor fixups and enhancements for kexec support. 
 
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 879b3aa..75652a32 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -96,8 +96,6 @@ int default_machine_kexec_prepare(struct kimage *image)
- 	return 0;
- }
- 
--#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
--
- static void copy_segments(unsigned long ind)
- {
- 	unsigned long entry;
+Patch 3 and 4 that add preprocessor macros for the kimage list flags are
+ones that I use in the arm64 kexec support I am working on, so it would
+be nice for those to go in.
+
+Please consider.
+
+-Geoff
+    
+The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
+
+  Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
+
+are available in the git repository at:
+
+  git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
+
+for you to fetch changes up to dc3c63e69815e00dce5454bd50e2991e9ea33f64:
+
+  powerpc/kexec: Use global IND_FLAGS macro (2014-08-22 11:15:18 -0700)
+
+----------------------------------------------------------------
+Geoff Levand (5):
+      kexec: Fix make headers_check
+      kexec: Simplify conditional
+      kexec: Add bit definitions for kimage entry flags
+      kexec: Add IND_FLAGS macro
+      powerpc/kexec: Use global IND_FLAGS macro
+
+ arch/powerpc/kernel/machine_kexec_64.c |  2 --
+ include/linux/kexec.h                  | 20 ++++++++++++++++----
+ include/uapi/linux/kexec.h             |  6 ------
+ kernel/kexec.c                         | 17 ++++++++++-------
+ 4 files changed, 26 insertions(+), 19 deletions(-)
+
 -- 
 1.9.1
 
