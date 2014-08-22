@@ -1,7 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <cover.1408731991.git.geoff@infradead.org>
+Message-Id: <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
+In-Reply-To: <cover.1408731991.git.geoff@infradead.org>
+References: <cover.1408731991.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 0/5] kexec: minor fixups and enhancements
+Subject: [PATCH 1/5] kexec: Fix make headers_check
 Date: Fri, 22 Aug 2014 18:39:47 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,46 +21,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eric Biederman <ebiederm@xmission.com>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 
-Hi,
+Remove the unneded declaration for a kexec_load() routine.
 
-Here are a few minor fixups and enhancements for kexec support. 
+Fixes errors like these when running 'make headers_check':
 
-Patch 3 and 4 that add preprocessor macros for the kimage list flags are
-ones that I use in the arm64 kexec support I am working on, so it would
-be nice for those to go in.
+include/uapi/linux/kexec.h: userspace cannot reference function or variable defined in the kernel
 
-Please consider.
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ include/uapi/linux/kexec.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
--Geoff
-    
-The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
-
-  Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
-
-are available in the git repository at:
-
-  git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
-
-for you to fetch changes up to dc3c63e69815e00dce5454bd50e2991e9ea33f64:
-
-  powerpc/kexec: Use global IND_FLAGS macro (2014-08-22 11:15:18 -0700)
-
-----------------------------------------------------------------
-Geoff Levand (5):
-      kexec: Fix make headers_check
-      kexec: Simplify conditional
-      kexec: Add bit definitions for kimage entry flags
-      kexec: Add IND_FLAGS macro
-      powerpc/kexec: Use global IND_FLAGS macro
-
- arch/powerpc/kernel/machine_kexec_64.c |  2 --
- include/linux/kexec.h                  | 20 ++++++++++++++++----
- include/uapi/linux/kexec.h             |  6 ------
- kernel/kexec.c                         | 17 ++++++++++-------
- 4 files changed, 26 insertions(+), 19 deletions(-)
-
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 6925f5b..99048e5 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -55,12 +55,6 @@ struct kexec_segment {
+ 	size_t memsz;
+ };
+ 
+-/* Load a new kernel image as described by the kexec_segment array
+- * consisting of passed number of segments at the entry-point address.
+- * The flags allow different useage types.
+- */
+-extern int kexec_load(void *, size_t, struct kexec_segment *,
+-		unsigned long int);
+ #endif /* __KERNEL__ */
+ 
+ #endif /* _UAPILINUX_KEXEC_H */
 -- 
 1.9.1
+
 
 
 _______________________________________________
