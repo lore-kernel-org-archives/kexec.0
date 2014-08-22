@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from borg.tf-network.de ([62.75.218.204])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XKY1O-0002JH-Pi
- for kexec@lists.infradead.org; Thu, 21 Aug 2014 19:27:43 +0000
-Message-ID: <53F64815.8010206@whissi.de>
-Date: Thu, 21 Aug 2014 21:27:17 +0200
-From: "Thomas D." <whissi@whissi.de>
-MIME-Version: 1.0
+ id 1XKfOX-00023D-SF
+ for kexec@lists.infradead.org; Fri, 22 Aug 2014 03:20:06 +0000
+Date: Fri, 22 Aug 2014 11:19:41 +0800
+From: WANG Chao <chaowang@redhat.com>
 Subject: Re: kexec fails to boot kernels where CONFIG_RANDOMIZE_BASE=y is set
+Message-ID: <20140822031941.GB2651@dhcp-17-37.nay.redhat.com>
 References: <53F11882.3060803@whissi.de> <20140818145718.GD4745@redhat.com>
  <20140819090724.GB21724@dhcp-17-37.nay.redhat.com>
  <20140820143315.GC16303@redhat.com>
  <CAGXu5jLxEoKEy0nw8qj0MW0f2Vpog-DtDi7OwnUrkh7jGSkdWw@mail.gmail.com>
- <20140821181000.GB21891@redhat.com> <20140821190226.GE21891@redhat.com>
-In-Reply-To: <20140821190226.GE21891@redhat.com>
+ <20140821181000.GB21891@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140821181000.GB21891@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,32 +27,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, WANG Chao <chaowang@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Thomas D." <whissi@whissi.de>, Kexec Mailing List <kexec@lists.infradead.org>, Kees Cook <keescook@chromium.org>
 
-Hi,
+On 08/21/14 at 02:10pm, Vivek Goyal wrote:
+>
+> If kernel is being moved physically, then we potentially have the issue of
+> it stomping other things. So how do we make sure that it does not overwrite
+> initramfs, or previous kernel's page tables or something else?
 
-Vivek Goyal wrote:
-> Thomas, can you please test kexec with "nokaslr" specified in command
-> line. This can atleast get you going for now till the problem is actually
-> fixed.
+In case you don't read that part, memory of initrd, cmdline and others
+won't be overwritten.
 
-I booted linux-3.15.10 with "nokaslr"
+This work is done in x86/boot/compressed/aslr.c::mem_avoid_init().
 
->  # dmesg | grep -i command
-> [    0.000000] Command line: BOOT_IMAGE=/kernel dolvm video=1280x1024 root=UUID=6d42... rootfs=ext4 nokaslr initrd=/initramfs
-> [    0.000000] Kernel command line: BOOT_IMAGE=/kernel dolvm video=1280x1024 root=UUID=6d42... rootfs=ext4 nokaslr initrd=/initramfs
-
-and run kexec with
-
-> --reuse-cmdline -l /boot/kernel root=/dev/dm-3  --initrd=/boot/initramfs
-
-But it still doesn't reboot. I see no difference between using "nokaslr"
-or not.
-
-
--Thomas
-
+Thanks
+WANG Chao
 
 _______________________________________________
 kexec mailing list
