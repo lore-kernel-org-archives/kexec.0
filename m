@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XLxzH-0002EB-JE
- for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:23:23 +0000
-Date: Mon, 25 Aug 2014 13:22:34 -0400
+ id 1XLyIq-0002Tc-Sh
+ for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:43:37 +0000
+Date: Mon, 25 Aug 2014 13:42:44 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 1/5] kexec: Fix make headers_check
-Message-ID: <20140825172234.GD14379@redhat.com>
+Subject: Re: [PATCH 2/5] kexec: Simplify conditional
+Message-ID: <20140825174244.GE14379@redhat.com>
 References: <cover.1408731991.git.geoff@infradead.org>
- <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
+ <5a3bbdeb26cd8891f2b9de1ce05dbacfc282f7d1.1408731991.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
+In-Reply-To: <5a3bbdeb26cd8891f2b9de1ce05dbacfc282f7d1.1408731991.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,52 +25,63 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Paul Bolle <pebolle@tiscali.nl>, maximilian attems <max@stro.at>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 
 On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
-> Remove the unneded declaration for a kexec_load() routine.
+> Simplify the code around one of the conditionals in the kexec_load
+> syscall routine.
 > 
-> Fixes errors like these when running 'make headers_check':
-> 
-> include/uapi/linux/kexec.h: userspace cannot reference function or variable defined in the kernel
+> The original code was confusing with a redundant check on KEXEC_ON_CRASH
+> and comments outside of the conditional block.  This change switches the
+> order of the conditional check, and cleans up the comments for the
+> conditional.  There is no functional change to the code.
 > 
 > Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-I think Paul Bolle tried to remove this in the past and maximilian
-had objections.
+This is simple reorganization.
 
-http://lists.infradead.org/pipermail/kexec/2014-January/010902.html
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-I can't see that how exporting kernel prototype helps here. kexec-tools
-seems to be using syscall(__NR_kexec_load) directly for non-xen case. So
-I would be fine with removing this definition. Just trying to make sure
-that it does not break any other library or users of this declaration.
-
-Thanks
 Vivek
 
-
 > ---
->  include/uapi/linux/kexec.h | 6 ------
->  1 file changed, 6 deletions(-)
+>  kernel/kexec.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
 > 
-> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> index 6925f5b..99048e5 100644
-> --- a/include/uapi/linux/kexec.h
-> +++ b/include/uapi/linux/kexec.h
-> @@ -55,12 +55,6 @@ struct kexec_segment {
->  	size_t memsz;
->  };
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 0b49a0a..d04b56e 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1282,19 +1282,22 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+>  	if (nr_segments > 0) {
+>  		unsigned long i;
 >  
-> -/* Load a new kernel image as described by the kexec_segment array
-> - * consisting of passed number of segments at the entry-point address.
-> - * The flags allow different useage types.
-> - */
-> -extern int kexec_load(void *, size_t, struct kexec_segment *,
-> -		unsigned long int);
->  #endif /* __KERNEL__ */
->  
->  #endif /* _UAPILINUX_KEXEC_H */
+> -		/* Loading another kernel to reboot into */
+> -		if ((flags & KEXEC_ON_CRASH) == 0)
+> -			result = kimage_alloc_init(&image, entry, nr_segments,
+> -						   segments, flags);
+> -		/* Loading another kernel to switch to if this one crashes */
+> -		else if (flags & KEXEC_ON_CRASH) {
+> -			/* Free any current crash dump kernel before
+> +		if (flags & KEXEC_ON_CRASH) {
+> +			/*
+> +			 * Loading another kernel to switch to if this one
+> +			 * crashes.  Free any current crash dump kernel before
+>  			 * we corrupt it.
+>  			 */
+> +
+>  			kimage_free(xchg(&kexec_crash_image, NULL));
+>  			result = kimage_alloc_init(&image, entry, nr_segments,
+>  						   segments, flags);
+>  			crash_map_reserved_pages();
+> +		} else {
+> +			/* Loading another kernel to reboot into. */
+> +
+> +			result = kimage_alloc_init(&image, entry, nr_segments,
+> +						   segments, flags);
+>  		}
+>  		if (result)
+>  			goto out;
 > -- 
 > 1.9.1
 > 
