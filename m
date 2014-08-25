@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XLySd-0007ZH-2Q
- for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:53:43 +0000
-Date: Mon, 25 Aug 2014 13:52:57 -0400
+ id 1XLyTg-0007f9-IO
+ for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:54:48 +0000
+Date: Mon, 25 Aug 2014 13:54:00 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 3/5] kexec: Add bit definitions for kimage entry flags
-Message-ID: <20140825175256.GF14379@redhat.com>
+Subject: Re: [PATCH 4/5] kexec: Add IND_FLAGS macro
+Message-ID: <20140825175400.GG14379@redhat.com>
 References: <cover.1408731991.git.geoff@infradead.org>
- <b13fc1b6d923e7063746f34968bd2f1c4cb09002.1408731991.git.geoff@infradead.org>
+ <c2d710e956591376b08bcbc3f904efd9b0c8b912.1408731991.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <b13fc1b6d923e7063746f34968bd2f1c4cb09002.1408731991.git.geoff@infradead.org>
+In-Reply-To: <c2d710e956591376b08bcbc3f904efd9b0c8b912.1408731991.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,72 +28,34 @@ To: Geoff Levand <geoff@infradead.org>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 
 On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
-> Define new kexec preprocessor macros IND_*_BIT that define the bit position of
-> the kimage entry flags.  Change the existing IND_* flag macros to be defined as
-> bit shifts of the corresponding IND_*_BIT macros.  Also wrap all C language code
-> in kexec.h with #if !defined(__ASSEMBLY__) so assembly files can include kexec.h
-> to get the IND_* and IND_*_BIT macros.
+> Add a new kexec preprocessor macro IND_FLAGS, which is the bitwise OR of
+> all the possible kexec IND_ kimage_entry indirection flags.
 > 
-> Some CPU instruction sets have tests for bit position which are convenient in
-> implementing routines that operate on the kimage entry list.  The addition of
-> these bit position macros in a common location will avoid duplicate definitions
-> and the chance that changes to the IND_* flags will not be propagated to
-> assembly files.
+> Having this macro allows for simplified code in the prosessing of the
+> kexec kimage_entry items.
 > 
 > Signed-off-by: Geoff Levand <geoff@infradead.org>
-
-Looks good to me.
 
 Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
 Vivek
 
 > ---
->  include/linux/kexec.h | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
+>  include/linux/kexec.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 4b2a0e1..8c628ca 100644
+> index 8c628ca..a4758f9 100644
 > --- a/include/linux/kexec.h
 > +++ b/include/linux/kexec.h
-> @@ -1,6 +1,18 @@
->  #ifndef LINUX_KEXEC_H
->  #define LINUX_KEXEC_H
+> @@ -10,6 +10,7 @@
+>  #define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
+>  #define IND_DONE         (1 << IND_DONE_BIT)
+>  #define IND_SOURCE       (1 << IND_SOURCE_BIT)
+> +#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
 >  
-> +#define IND_DESTINATION_BIT 0
-> +#define IND_INDIRECTION_BIT 1
-> +#define IND_DONE_BIT        2
-> +#define IND_SOURCE_BIT      3
-> +
-> +#define IND_DESTINATION  (1 << IND_DESTINATION_BIT)
-> +#define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
-> +#define IND_DONE         (1 << IND_DONE_BIT)
-> +#define IND_SOURCE       (1 << IND_SOURCE_BIT)
-> +
-> +#if !defined(__ASSEMBLY__)
-> +
->  #include <uapi/linux/kexec.h>
+>  #if !defined(__ASSEMBLY__)
 >  
->  #ifdef CONFIG_KEXEC
-> @@ -64,10 +76,6 @@
->   */
->  
->  typedef unsigned long kimage_entry_t;
-> -#define IND_DESTINATION  0x1
-> -#define IND_INDIRECTION  0x2
-> -#define IND_DONE         0x4
-> -#define IND_SOURCE       0x8
->  
->  struct kexec_segment {
->  	/*
-> @@ -312,4 +320,7 @@ struct task_struct;
->  static inline void crash_kexec(struct pt_regs *regs) { }
->  static inline int kexec_should_crash(struct task_struct *p) { return 0; }
->  #endif /* CONFIG_KEXEC */
-> +
-> +#endif /* !defined(__ASSEBMLY__) */
-> +
->  #endif /* LINUX_KEXEC_H */
 > -- 
 > 1.9.1
 > 
