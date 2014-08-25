@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XLyIq-0002Tc-Sh
- for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:43:37 +0000
-Date: Mon, 25 Aug 2014 13:42:44 -0400
+ id 1XLySd-0007ZH-2Q
+ for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:53:43 +0000
+Date: Mon, 25 Aug 2014 13:52:57 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 2/5] kexec: Simplify conditional
-Message-ID: <20140825174244.GE14379@redhat.com>
+Subject: Re: [PATCH 3/5] kexec: Add bit definitions for kimage entry flags
+Message-ID: <20140825175256.GF14379@redhat.com>
 References: <cover.1408731991.git.geoff@infradead.org>
- <5a3bbdeb26cd8891f2b9de1ce05dbacfc282f7d1.1408731991.git.geoff@infradead.org>
+ <b13fc1b6d923e7063746f34968bd2f1c4cb09002.1408731991.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5a3bbdeb26cd8891f2b9de1ce05dbacfc282f7d1.1408731991.git.geoff@infradead.org>
+In-Reply-To: <b13fc1b6d923e7063746f34968bd2f1c4cb09002.1408731991.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,60 +28,72 @@ To: Geoff Levand <geoff@infradead.org>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 
 On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
-> Simplify the code around one of the conditionals in the kexec_load
-> syscall routine.
+> Define new kexec preprocessor macros IND_*_BIT that define the bit position of
+> the kimage entry flags.  Change the existing IND_* flag macros to be defined as
+> bit shifts of the corresponding IND_*_BIT macros.  Also wrap all C language code
+> in kexec.h with #if !defined(__ASSEMBLY__) so assembly files can include kexec.h
+> to get the IND_* and IND_*_BIT macros.
 > 
-> The original code was confusing with a redundant check on KEXEC_ON_CRASH
-> and comments outside of the conditional block.  This change switches the
-> order of the conditional check, and cleans up the comments for the
-> conditional.  There is no functional change to the code.
+> Some CPU instruction sets have tests for bit position which are convenient in
+> implementing routines that operate on the kimage entry list.  The addition of
+> these bit position macros in a common location will avoid duplicate definitions
+> and the chance that changes to the IND_* flags will not be propagated to
+> assembly files.
 > 
 > Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-This is simple reorganization.
+Looks good to me.
 
 Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
 Vivek
 
 > ---
->  kernel/kexec.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
+>  include/linux/kexec.h | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 0b49a0a..d04b56e 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1282,19 +1282,22 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
->  	if (nr_segments > 0) {
->  		unsigned long i;
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 4b2a0e1..8c628ca 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -1,6 +1,18 @@
+>  #ifndef LINUX_KEXEC_H
+>  #define LINUX_KEXEC_H
 >  
-> -		/* Loading another kernel to reboot into */
-> -		if ((flags & KEXEC_ON_CRASH) == 0)
-> -			result = kimage_alloc_init(&image, entry, nr_segments,
-> -						   segments, flags);
-> -		/* Loading another kernel to switch to if this one crashes */
-> -		else if (flags & KEXEC_ON_CRASH) {
-> -			/* Free any current crash dump kernel before
-> +		if (flags & KEXEC_ON_CRASH) {
-> +			/*
-> +			 * Loading another kernel to switch to if this one
-> +			 * crashes.  Free any current crash dump kernel before
->  			 * we corrupt it.
->  			 */
+> +#define IND_DESTINATION_BIT 0
+> +#define IND_INDIRECTION_BIT 1
+> +#define IND_DONE_BIT        2
+> +#define IND_SOURCE_BIT      3
 > +
->  			kimage_free(xchg(&kexec_crash_image, NULL));
->  			result = kimage_alloc_init(&image, entry, nr_segments,
->  						   segments, flags);
->  			crash_map_reserved_pages();
-> +		} else {
-> +			/* Loading another kernel to reboot into. */
+> +#define IND_DESTINATION  (1 << IND_DESTINATION_BIT)
+> +#define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
+> +#define IND_DONE         (1 << IND_DONE_BIT)
+> +#define IND_SOURCE       (1 << IND_SOURCE_BIT)
 > +
-> +			result = kimage_alloc_init(&image, entry, nr_segments,
-> +						   segments, flags);
->  		}
->  		if (result)
->  			goto out;
+> +#if !defined(__ASSEMBLY__)
+> +
+>  #include <uapi/linux/kexec.h>
+>  
+>  #ifdef CONFIG_KEXEC
+> @@ -64,10 +76,6 @@
+>   */
+>  
+>  typedef unsigned long kimage_entry_t;
+> -#define IND_DESTINATION  0x1
+> -#define IND_INDIRECTION  0x2
+> -#define IND_DONE         0x4
+> -#define IND_SOURCE       0x8
+>  
+>  struct kexec_segment {
+>  	/*
+> @@ -312,4 +320,7 @@ struct task_struct;
+>  static inline void crash_kexec(struct pt_regs *regs) { }
+>  static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+>  #endif /* CONFIG_KEXEC */
+> +
+> +#endif /* !defined(__ASSEBMLY__) */
+> +
+>  #endif /* LINUX_KEXEC_H */
 > -- 
 > 1.9.1
 > 
