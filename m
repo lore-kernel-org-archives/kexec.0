@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XLl3r-0000NB-Qn
- for kexec@lists.infradead.org; Mon, 25 Aug 2014 03:35:16 +0000
+ id 1XLl3w-0001NC-R0
+ for kexec@lists.infradead.org; Mon, 25 Aug 2014 03:35:21 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v4 4/8] set vmcoreinfo for kcore
-Date: Mon, 25 Aug 2014 11:33:08 +0800
-Message-Id: <1408937592-2609-5-git-send-email-bhe@redhat.com>
+Subject: [PATCH v4 6/8] introduce a function exclude_zero_pages_cyclic()
+Date: Mon, 25 Aug 2014 11:33:10 +0800
+Message-Id: <1408937592-2609-7-git-send-email-bhe@redhat.com>
 In-Reply-To: <1408937592-2609-1-git-send-email-bhe@redhat.com>
 References: <1408937592-2609-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,132 +25,75 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>, vgoyal@redhat.com
 
-In vmcore dumping, note program of vmcoreinfo is set in elf header
-of /proc/vmcore. In 1st kernel, the vmcoreinfo is also needed for
-kcore analyzing. So in this patch information of vmcoreinfo is
-parsed and set in offset_vmcoreinfo and size_vmcoreinfo.
+Introduced a new function exclude_zero_pages_cyclic(), this will
+exclude and counting zero pages. Calling it in get_num_dumpable_cyclic
+can get the number of zero pages.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- elf_info.c     | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- elf_info.h     |  1 +
- makedumpfile.c | 33 +++++++++++++++++++++++++++++++++
- 3 files changed, 81 insertions(+)
+ makedumpfile.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/elf_info.c b/elf_info.c
-index 69d3fdb..d50124d 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -395,6 +395,53 @@ get_pt_note_info(void)
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d43d02d..a511179 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -4582,6 +4582,45 @@ exclude_zero_pages(void)
  	return TRUE;
  }
  
-+#define UNINITIALIZED  ((ulong)(-1))
-+int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len)
++int
++exclude_zero_pages_cyclic(struct cycle *cycle)
 +{
-+	int i;
-+	ulong kvaddr;
-+	off_t offset;
-+	char note[MAX_SIZE_NHDR];
-+	int size_desc;
-+	off_t offset_desc;
++	mdf_pfn_t pfn;
++	unsigned long long paddr;
++	unsigned char buf[info->page_size];
 +
-+	offset = UNINITIALIZED;
-+	kvaddr = (ulong)vmcoreinfo_addr | PAGE_OFFSET;
++	for (pfn = cycle->start_pfn, paddr = pfn_to_paddr(pfn); pfn < cycle->end_pfn;
++	    pfn++, paddr += info->page_size) {
 +
-+	for (i = 0; i < num_pt_loads; ++i) {
-+		struct pt_load_segment *p = &pt_loads[i];
-+		if ((kvaddr >= p->virt_start) && (kvaddr < p->virt_end)) {
-+			offset = (off_t)(kvaddr - p->virt_start) +
-+			(off_t)p->file_offset;
-+			break;
++		if (!is_in_segs(paddr))
++			continue;
++
++		if (!is_dumpable_cyclic(info->partial_bitmap2, pfn, cycle))
++			continue;
++
++		if (is_xen_memory()) {
++			if (!readmem(MADDR_XEN, paddr, buf, info->page_size)) {
++				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
++				    pfn, info->max_mapnr);
++				return FALSE;
++			}
++		} else {
++			if (!readmem(PADDR, paddr, buf, info->page_size)) {
++				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
++				    pfn, info->max_mapnr);
++				return FALSE;
++			}
++		}
++		if (is_zero_page(buf, info->page_size)) {
++			if (clear_bit_on_2nd_bitmap(pfn, cycle))
++				pfn_zero++;
 +		}
 +	}
 +
-+	if (offset == UNINITIALIZED){
-+		ERRMSG("Can't get the offset of VMCOREINFO(%s). %s\n",
-+		    name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+        if (lseek(fd_memory, offset, SEEK_SET) != offset){
-+		ERRMSG("Can't seek the dump memory(%s). %s\n",
-+		    name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	if (read(fd_memory, note, MAX_SIZE_NHDR) != MAX_SIZE_NHDR){
-+		ERRMSG("Can't read the dump memory(%s). %s\n",
-+		    name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	size_desc   = note_descsz(note);
-+	offset_desc = offset + offset_note_desc(note);
-+
-+	set_vmcoreinfo(offset_desc, size_desc);
-+
-+	return TRUE;
-+}
- 
- /*
-  * External functions.
-diff --git a/elf_info.h b/elf_info.h
-index 263d993..3ce0138 100644
---- a/elf_info.h
-+++ b/elf_info.h
-@@ -45,6 +45,7 @@ int get_elf32_ehdr(int fd, char *filename, Elf32_Ehdr *ehdr);
- int get_elf_info(int fd, char *filename);
- void free_elf_info(void);
- int get_elf_loads(int fd, char *filename);
-+int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len);
- 
- int is_elf64_memory(void);
- int is_xen_memory(void);
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 8c8ca91..d43d02d 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -9143,6 +9143,39 @@ static int get_page_offset()
- 	return TRUE;
- }
- 
-+
-+/* Returns the physical address of start of crash notes buffer for a kernel. */
-+static int get_sys_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
-+{
-+	char line[BUFSIZE_FGETS];
-+	int count;
-+	FILE *fp;
-+	unsigned long long temp, temp2;
-+
-+	*addr = 0;
-+	*len = 0;
-+
-+	if (!(fp = fopen("/sys/kernel/vmcoreinfo", "r")))
-+		return FALSE;
-+
-+	if (!fgets(line, sizeof(line), fp)) {
-+		ERRMSG("Cannot parse %s: %s, fgets failed.\n", "/sys/kernel/vmcoreinfo", strerror(errno));
-+		return FALSE;
-+	}
-+	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
-+	if (count != 2){
-+		ERRMSG("Cannot parse %s: %s, sscanf failed.\n", "/sys/kernel/vmcoreinfo", strerror(errno));
-+		return FALSE;
-+	}
-+
-+	*addr = (uint64_t) temp;
-+	*len = (uint64_t) temp2;
-+
-+	fclose(fp);
 +	return TRUE;
 +}
 +
 +
- static struct option longopts[] = {
- 	{"split", no_argument, NULL, OPT_SPLIT},
- 	{"reassemble", no_argument, NULL, OPT_REASSEMBLE},
+ static int
+ initialize_2nd_bitmap_cyclic(struct cycle *cycle)
+ {
+@@ -5662,6 +5701,9 @@ get_num_dumpable_cyclic(void)
+ 		if (!exclude_unnecessary_pages_cyclic(&cycle))
+ 			return FALSE;
+ 
++		if (info->flag_mem_usage)
++			exclude_zero_pages_cyclic(&cycle);
++
+ 		for(pfn=cycle.start_pfn; pfn<cycle.end_pfn; pfn++)
+ 			if (is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle))
+ 				num_dumpable++;
 -- 
 1.8.5.3
 
