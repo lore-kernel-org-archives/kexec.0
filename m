@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XLxcm-00087E-0I
- for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:00:08 +0000
-Date: Mon, 25 Aug 2014 12:59:17 -0400
+ id 1XLxzH-0002EB-JE
+ for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:23:23 +0000
+Date: Mon, 25 Aug 2014 13:22:34 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/5] kexec: minor fixups and enhancements
-Message-ID: <20140825165916.GC14379@redhat.com>
+Subject: Re: [PATCH 1/5] kexec: Fix make headers_check
+Message-ID: <20140825172234.GD14379@redhat.com>
 References: <cover.1408731991.git.geoff@infradead.org>
+ <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <cover.1408731991.git.geoff@infradead.org>
+In-Reply-To: <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,59 +25,55 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+Cc: Paul Bolle <pebolle@tiscali.nl>, maximilian attems <max@stro.at>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 
 On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
-> Hi,
+> Remove the unneded declaration for a kexec_load() routine.
 > 
-> Here are a few minor fixups and enhancements for kexec support. 
+> Fixes errors like these when running 'make headers_check':
 > 
-> Patch 3 and 4 that add preprocessor macros for the kimage list flags are
-> ones that I use in the arm64 kexec support I am working on, so it would
-> be nice for those to go in.
+> include/uapi/linux/kexec.h: userspace cannot reference function or variable defined in the kernel
 > 
-> Please consider.
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-Hi Geoff,
+I think Paul Bolle tried to remove this in the past and maximilian
+had objections.
 
-Does arm64 has secureboot? If yes, then it might make sense to
-enable the new syscall kexec_file_load() on arm64 instead of trying
-to make old syscall work first.
+http://lists.infradead.org/pipermail/kexec/2014-January/010902.html
+
+I can't see that how exporting kernel prototype helps here. kexec-tools
+seems to be using syscall(__NR_kexec_load) directly for non-xen case. So
+I would be fine with removing this definition. Just trying to make sure
+that it does not break any other library or users of this declaration.
 
 Thanks
 Vivek
 
+
+> ---
+>  include/uapi/linux/kexec.h | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
-> -Geoff
->     
-> The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
-> 
->   Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
-> 
-> are available in the git repository at:
-> 
->   git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
-> 
-> for you to fetch changes up to dc3c63e69815e00dce5454bd50e2991e9ea33f64:
-> 
->   powerpc/kexec: Use global IND_FLAGS macro (2014-08-22 11:15:18 -0700)
-> 
-> ----------------------------------------------------------------
-> Geoff Levand (5):
->       kexec: Fix make headers_check
->       kexec: Simplify conditional
->       kexec: Add bit definitions for kimage entry flags
->       kexec: Add IND_FLAGS macro
->       powerpc/kexec: Use global IND_FLAGS macro
-> 
->  arch/powerpc/kernel/machine_kexec_64.c |  2 --
->  include/linux/kexec.h                  | 20 ++++++++++++++++----
->  include/uapi/linux/kexec.h             |  6 ------
->  kernel/kexec.c                         | 17 ++++++++++-------
->  4 files changed, 26 insertions(+), 19 deletions(-)
-> 
+> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+> index 6925f5b..99048e5 100644
+> --- a/include/uapi/linux/kexec.h
+> +++ b/include/uapi/linux/kexec.h
+> @@ -55,12 +55,6 @@ struct kexec_segment {
+>  	size_t memsz;
+>  };
+>  
+> -/* Load a new kernel image as described by the kexec_segment array
+> - * consisting of passed number of segments at the entry-point address.
+> - * The flags allow different useage types.
+> - */
+> -extern int kexec_load(void *, size_t, struct kexec_segment *,
+> -		unsigned long int);
+>  #endif /* __KERNEL__ */
+>  
+>  #endif /* _UAPILINUX_KEXEC_H */
 > -- 
 > 1.9.1
+> 
 > 
 > 
 > _______________________________________________
