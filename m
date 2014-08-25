@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XLyTg-0007f9-IO
- for kexec@lists.infradead.org; Mon, 25 Aug 2014 17:54:48 +0000
-Date: Mon, 25 Aug 2014 13:54:00 -0400
+ id 1XM0VO-0001iv-36
+ for kexec@lists.infradead.org; Mon, 25 Aug 2014 20:04:42 +0000
+Date: Mon, 25 Aug 2014 16:04:18 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 4/5] kexec: Add IND_FLAGS macro
-Message-ID: <20140825175400.GG14379@redhat.com>
-References: <cover.1408731991.git.geoff@infradead.org>
- <c2d710e956591376b08bcbc3f904efd9b0c8b912.1408731991.git.geoff@infradead.org>
+Subject: Re: [PATCH v5 8/8] add a new interface to show the memory usage of
+ 1st kernel
+Message-ID: <20140825200418.GK14379@redhat.com>
+References: <1408937592-2609-1-git-send-email-bhe@redhat.com>
+ <1408937592-2609-9-git-send-email-bhe@redhat.com>
+ <20140825063622.GB1501@dhcp-16-105.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <c2d710e956591376b08bcbc3f904efd9b0c8b912.1408731991.git.geoff@infradead.org>
+In-Reply-To: <20140825063622.GB1501@dhcp-16-105.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,47 +26,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
-On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
-> Add a new kexec preprocessor macro IND_FLAGS, which is the bitwise OR of
-> all the possible kexec IND_ kimage_entry indirection flags.
+On Mon, Aug 25, 2014 at 02:36:22PM +0800, Baoquan He wrote:
+> Recently people complained that they don't know how to decide how
+> much disk size need be reserved for kdump. E.g there are lots of
+> machines with different memory size, if the memory usage information
+> of current system can be shown, that can help them to make an estimate
+> how much storage space need be reserved.
 > 
-> Having this macro allows for simplified code in the prosessing of the
-> kexec kimage_entry items.
+> In this patch, a new interface is added into makedumpfile. By the
+> help of this, people can know the page number of memory in different
+> use. The implementation is analyzing the "System Ram" and "kernel text"
+> program segment of /proc/kcore excluding the crashkernel range, then
+> calculating the page number of different kind per vmcoreinfo.
 > 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> The print is like below:
+> 
+> ~$ ./makedumpfile --mem-usage /proc/kcore
+> The kernel version is not supported.
+> The created dumpfile may be incomplete.
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+I still think that above messages should go. It does not make
+any sense with --mem-usage. No dumpfile is being created here.
 
+> Excluding unnecessary pages        : [100.0 %] |
+
+
+> 
+> Page number of memory in different use
+> --------------------------------------------------
+
+I think above header can completely go away.  It kind of looks odd.
+
+> TYPE		PAGES			EXCLUDABLE	DESCRIPTION
+> ZERO		29149           	yes		Pages filled with zero
+> CACHE		171288          	yes		Cache pages
+> CACHE_PRIVATE	12051           	yes		Cache pages + private
+> USER		31816           	yes		User process pages
+> FREE		3700059         	yes		Free pages
+> KERN_DATA	105305          	no		Dumpable kernel data 
+> 
+> Total pages on system:	4049668         
+> 
+> Showing page number of memory in different use successfully.
+
+I think we don't need above line. I am not even sure what does it mean.
+> 
+> makedumpfile Completed.
+
+We don't need above line either.
+
+In output we should just show the actual table. If there is an error, 
+we should output error and exit (no table).
+
+Thanks
 Vivek
-
-> ---
->  include/linux/kexec.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 8c628ca..a4758f9 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -10,6 +10,7 @@
->  #define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
->  #define IND_DONE         (1 << IND_DONE_BIT)
->  #define IND_SOURCE       (1 << IND_SOURCE_BIT)
-> +#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
->  
->  #if !defined(__ASSEMBLY__)
->  
-> -- 
-> 1.9.1
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
