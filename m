@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XMBNK-0001xt-EW
- for kexec@lists.infradead.org; Tue, 26 Aug 2014 07:41:06 +0000
-Date: Tue, 26 Aug 2014 15:41:43 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 0/5] kexec: minor fixups and enhancements
-Message-ID: <20140826074143.GG11693@darkstar.nay.redhat.com>
-References: <cover.1408731991.git.geoff@infradead.org>
- <20140825165916.GC14379@redhat.com>
+ id 1XMGW5-0001fW-0T
+ for kexec@lists.infradead.org; Tue, 26 Aug 2014 13:10:30 +0000
+Date: Tue, 26 Aug 2014 09:10:06 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v5 8/8] add a new interface to show the memory usage of
+ 1st kernel
+Message-ID: <20140826131006.GB9081@redhat.com>
+References: <1408937592-2609-1-git-send-email-bhe@redhat.com>
+ <1408937592-2609-9-git-send-email-bhe@redhat.com>
+ <20140825063622.GB1501@dhcp-16-105.nay.redhat.com>
+ <20140825200418.GK14379@redhat.com>
+ <20140826063709.GC15032@dhcp-16-116.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140825165916.GC14379@redhat.com>
+In-Reply-To: <20140826063709.GC15032@dhcp-16-116.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,33 +28,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-On 08/25/14 at 12:59pm, Vivek Goyal wrote:
-> On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
-> > Hi,
+On Tue, Aug 26, 2014 at 02:37:09PM +0800, Baoquan He wrote:
+> On 08/25/14 at 04:04pm, Vivek Goyal wrote:
+> > On Mon, Aug 25, 2014 at 02:36:22PM +0800, Baoquan He wrote:
+>  
+> > > The print is like below:
+> > > 
+> > > ~$ ./makedumpfile --mem-usage /proc/kcore
+> > > The kernel version is not supported.
+> > > The created dumpfile may be incomplete.
 > > 
-> > Here are a few minor fixups and enhancements for kexec support. 
-> > 
-> > Patch 3 and 4 that add preprocessor macros for the kimage list flags are
-> > ones that I use in the arm64 kexec support I am working on, so it would
-> > be nice for those to go in.
-> > 
-> > Please consider.
+> > I still think that above messages should go. It does not make
+> > any sense with --mem-usage. No dumpfile is being created here.
 > 
-> Hi Geoff,
+> This is printed by function get_kernel_version(), it will be used by
+> other makedumpfile main code flows too. This message is used to warn
+> users that users' using kernel may not be tested suffciently. I think
+> those tests are mainly taken by Atsushi. When he finished sufficient
+> tests on a new version of kernel, the LATEST_VERSION will be changed to
+> be a larger value. I am fine with this message, since it won't occur on
+> our distribution, anyway kernel for distribution are all tested. And if
+> LATEST_VERSION is older than our distribution kernel, maintainer may be
+> pushed to take tests and update this value. So don't worry about this
+> message.
 > 
-> Does arm64 has secureboot? If yes, then it might make sense to
-> enable the new syscall kexec_file_load() on arm64 instead of trying
-> to make old syscall work first.
+> But I would like to change the message like below to clean up
+> misunderstanding if Atsushi doesn't object, this mostly occur when
+> people working on latest upstream kernel.
+> -------------------------------------------------
+> The kernel version is not supported.
+> The makedumpfile operation may not be successful.
+> --------------------------------------------------
 
-It will save efforts for efi support as well, for the in-kernel loader we do not
-necessary to save the efi physical addresses or runtime ranges to sysfs and
-passing them to 2nd kernel, we can just copy them in kernel.
+I think you might have to create a gloabl variable somewhere which tells
+what mode makedumpfile is operating in. And messages might have to be
+changed accordingly.
+
+In this case, I think a single line of following message might be
+sufficient.
+
+"Warning: This kernel version is not supported."
+
+[..]
+> > > 
+> > > makedumpfile Completed.
+> > 
+> > We don't need above line either.
+> 
+> This is also a public message printing, means if makedumpfile operation
+> is successful or not. Maybe I can add a check like below:
+
+Generally commands return code either "0" or "1" to designate success
+or failure. And they don't display to user whether they succeeded or
+failed.
+
+> 
+> @@ -9546,7 +9553,7 @@ main(int argc, char *argv[])
+>         retcd = COMPLETED;
+>  out:
+>         MSG("\n");
+> -       if (retcd == COMPLETED)
+> +       if ((retcd == COMPLETED) && (!info->flag_mem_usage))
+>                 MSG("makedumpfile Completed.\n");
+>         else
+>                 MSG("makedumpfile Failed.\n");
+
+I think this will work. This will display failure message but in case
+of success only table is displayed.
 
 Thanks
-Dave
+Vivek
 
 _______________________________________________
 kexec mailing list
