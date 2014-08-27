@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from ozlabs.org ([103.22.144.67])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XMRKk-0007N1-Q8
- for kexec@lists.infradead.org; Wed, 27 Aug 2014 00:43:31 +0000
-Date: Tue, 26 Aug 2014 20:42:41 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/5] kexec: minor fixups and enhancements
-Message-ID: <20140827004241.GA25728@redhat.com>
-References: <cover.1408731991.git.geoff@infradead.org>
- <20140825165916.GC14379@redhat.com>
- <1409099608.21254.16.camel@smoke>
+ id 1XMUWB-0001nj-A5
+ for kexec@lists.infradead.org; Wed, 27 Aug 2014 04:07:31 +0000
+Date: Wed, 27 Aug 2014 14:06:30 +1000
+From: Anton Blanchard <anton@samba.org>
+Subject: Re: [PATCH 3/5]: ipr: kexec boot speed improvements
+Message-ID: <20140827140630.1f0ee455@kryten>
+In-Reply-To: <53D6B2A4.4010102@linux.vnet.ibm.com>
+References: <53D6B2A4.4010102@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1409099608.21254.16.camel@smoke>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,26 +22,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+To: Brian King <brking@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
 
-On Tue, Aug 26, 2014 at 05:33:28PM -0700, Geoff Levand wrote:
-> Hi Vivek,
-> 
-> On Mon, 2014-08-25 at 12:59 -0400, Vivek Goyal wrote:
-> > Does arm64 has secureboot? If yes, then it might make sense to
-> > enable the new syscall kexec_file_load() on arm64 instead of trying
-> > to make old syscall work first.
-> 
-> Yes, arm64 should support secureboot, but I have not looked into it.
-> 
-> When do you expect syscall kexec_file_load to get merged?  I won't wait
-> until then to push my current kexec work.
+Hi Brian,
 
-It got merged in 3.17-rc1
+> Currently when performing a kexec boot with an ipr adapter,
+> the adapter gets shutdown completely, flushing all write
+> cache, as well as performing a full hardware reset of the card
+> during the shutdown phase of the old kernel. This forces
+> the new kernel to then wait for the adapter firmware to
+> reinitialize, which slows down kexec boot. There is no
+> need to do all of this on the newer ipr adapters, since they
+> support the ability to cancel outstanding error buffers.
+> 
+> This patch adds a special case for kexec boot to simply
+> cancel these outstanding error buffers, and as long as
+> there is no other I/O outstanding to the adapter, which
+> there shouldn't be, place the adapter into a state
+> where it has no memory of any DMA addresses from the old
+> kernel, then disable the device. This significantly
+> speeds up kexec boot, particularly in configurations with
+> multiple ipr adapters.
+> 
+> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+> ---
 
-Thanks
-Vivek
+This reduces boot time on my box from 80 seconds to 34 seconds. ppc64
+kernel developers (who boot boxes continually) thank you!
+
+Tested-by: Anton Blanchard <anton@samba.org>
+
+Anton
 
 _______________________________________________
 kexec mailing list
