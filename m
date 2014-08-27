@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([103.22.144.67])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XMUWB-0001nj-A5
- for kexec@lists.infradead.org; Wed, 27 Aug 2014 04:07:31 +0000
-Date: Wed, 27 Aug 2014 14:06:30 +1000
-From: Anton Blanchard <anton@samba.org>
-Subject: Re: [PATCH 3/5]: ipr: kexec boot speed improvements
-Message-ID: <20140827140630.1f0ee455@kryten>
-In-Reply-To: <53D6B2A4.4010102@linux.vnet.ibm.com>
-References: <53D6B2A4.4010102@linux.vnet.ibm.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XMY9A-0007AY-4Z
+ for kexec@lists.infradead.org; Wed, 27 Aug 2014 08:00:00 +0000
+Date: Wed, 27 Aug 2014 16:59:37 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V2] kexec: Provide an option to use new kexec system call
+Message-ID: <20140827075936.GA5936@verge.net.au>
+References: <20140818152232.GA7525@redhat.com>
+ <20140826143034.GD9081@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140826143034.GD9081@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,38 +24,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Brian King <brking@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, WANG Chao <chaowang@redhat.com>
 
-Hi Brian,
-
-> Currently when performing a kexec boot with an ipr adapter,
-> the adapter gets shutdown completely, flushing all write
-> cache, as well as performing a full hardware reset of the card
-> during the shutdown phase of the old kernel. This forces
-> the new kernel to then wait for the adapter firmware to
-> reinitialize, which slows down kexec boot. There is no
-> need to do all of this on the newer ipr adapters, since they
-> support the ability to cancel outstanding error buffers.
+On Tue, Aug 26, 2014 at 10:30:34AM -0400, Vivek Goyal wrote:
+> On Mon, Aug 18, 2014 at 11:22:32AM -0400, Vivek Goyal wrote:
+> > Hi,
+> > 
+> > This is v2 of the patch. Since v1, I moved syscall implemented check littler
+> > earlier in the function as per the feedback.
+> > 
+> > Now a new kexec syscall (kexec_file_load()) has been merged in upstream
+> > kernel. This system call takes file descriptors of kernel and initramfs
+> > as input (as opposed to list of segments to be loaded). This new system
+> > call allows for signature verification of the kernel being loaded.
+> > 
+> > One use of signature verification of kernel is secureboot systems where
+> > we want to allow kexec into a kernel only if it is validly signed by
+> > a key system trusts.
+> > 
+> > This patch provides and option --kexec-file-syscall (-s), to force use of
+> > new system call for kexec. Default is to continue to use old syscall.
+> > 
+> > Currently only bzImage64 on x86_64 can be loaded using this system call.
+> > As kernel adds support for more arches and for more image types, kexec-tools
+> > can be modified accordingly.
+> > 
 > 
-> This patch adds a special case for kexec boot to simply
-> cancel these outstanding error buffers, and as long as
-> there is no other I/O outstanding to the adapter, which
-> there shouldn't be, place the adapter into a state
-> where it has no memory of any DMA addresses from the old
-> kernel, then disable the device. This significantly
-> speeds up kexec boot, particularly in configurations with
-> multiple ipr adapters.
+> Hi Simon,
 > 
-> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
-> ---
+> Do you have any concerns with this patch? If not, can you please consider
+> it for merge.
 
-This reduces boot time on my box from 80 seconds to 34 seconds. ppc64
-kernel developers (who boot boxes continually) thank you!
-
-Tested-by: Anton Blanchard <anton@samba.org>
-
-Anton
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
