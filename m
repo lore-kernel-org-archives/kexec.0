@@ -1,22 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XNIfA-0001yv-GG
- for kexec@lists.infradead.org; Fri, 29 Aug 2014 09:40:09 +0000
-Date: Fri, 29 Aug 2014 17:37:46 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH v5 8/8] add a new interface to show the memory usage of
- 1st kernel
-Message-ID: <20140829093746.GA1810@dhcp-16-105.nay.redhat.com>
-References: <1408937592-2609-1-git-send-email-bhe@redhat.com>
- <1408937592-2609-9-git-send-email-bhe@redhat.com>
- <20140825063622.GB1501@dhcp-16-105.nay.redhat.com>
- <20140825200418.GK14379@redhat.com>
- <20140826063709.GC15032@dhcp-16-116.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97250016@BPXM01GP.gisp.nec.co.jp>
+Received: from e8.ny.us.ibm.com ([32.97.182.138])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XNOGh-0006sG-PW
+ for kexec@lists.infradead.org; Fri, 29 Aug 2014 15:39:16 +0000
+Received: from /spool/local
+ by e8.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <brking@linux.vnet.ibm.com>;
+ Fri, 29 Aug 2014 11:38:53 -0400
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com
+ [9.57.198.23])
+ by d01dlp03.pok.ibm.com (Postfix) with ESMTP id D744EC9002E
+ for <kexec@lists.infradead.org>; Fri, 29 Aug 2014 11:38:43 -0400 (EDT)
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+ by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ s7TFcpoB9699618
+ for <kexec@lists.infradead.org>; Fri, 29 Aug 2014 15:38:51 GMT
+Received: from d01av02.pok.ibm.com (localhost [127.0.0.1])
+ by d01av02.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s7TFcptl019847
+ for <kexec@lists.infradead.org>; Fri, 29 Aug 2014 11:38:51 -0400
+Message-ID: <54009E8A.4070809@linux.vnet.ibm.com>
+Date: Fri, 29 Aug 2014 10:38:50 -0500
+From: Brian King <brking@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE97250016@BPXM01GP.gisp.nec.co.jp>
+Subject: Re: [PATCH 2/5] kexec: Export kexec_in_progress
+References: <53D6B270.5020403@linux.vnet.ibm.com>
+ <53DF96E5.7000601@linux.vnet.ibm.com>
+In-Reply-To: <53DF96E5.7000601@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,72 +40,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: ebiederm@xmission.com
+Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
 
-On 08/27/14 at 12:32am, Atsushi Kumagai wrote:
-
-> >This is printed by function get_kernel_version(), it will be used by
-> >other makedumpfile main code flows too. This message is used to warn
-> >users that users' using kernel may not be tested suffciently. I think
-> >those tests are mainly taken by Atsushi. When he finished sufficient
-> >tests on a new version of kernel, the LATEST_VERSION will be changed to
-> >be a larger value. I am fine with this message, since it won't occur on
-> >our distribution, anyway kernel for distribution are all tested. And if
-> >LATEST_VERSION is older than our distribution kernel, maintainer may be
-> >pushed to take tests and update this value. So don't worry about this
-> >message.
-> >
-> >But I would like to change the message like below to clean up
-> >misunderstanding if Atsushi doesn't object, this mostly occur when
-> >people working on latest upstream kernel.
-> >-------------------------------------------------
-> >The kernel version is not supported.
-> >The makedumpfile operation may not be successful.
-> >--------------------------------------------------
+On 08/04/2014 09:21 AM, Brian King wrote:
+> On 07/28/2014 03:28 PM, Brian King wrote:
+>>
+>> Export kexec_in_progress for use by device drivers and other modules
+>> to optimize kexec boot.
+>>
+>> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+>> ---
+>>
+>>  kernel/kexec.c |    2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
+>> --- linux/kernel/kexec.c~kexec_export_in_prog	2014-07-23 17:05:24.851887935 -0500
+>> +++ linux-bjking1/kernel/kexec.c	2014-07-23 17:05:24.856887970 -0500
+>> @@ -1716,3 +1716,5 @@ int kernel_kexec(void)
+>>  	mutex_unlock(&kexec_mutex);
+>>  	return error;
+>>  }
+>> +
+>> +EXPORT_SYMBOL_GPL(kexec_in_progress);
 > 
-> Good change, let's do it. --mem-usage doesn't create a dumpfile
-> but the behavior still depend on the kernel version, this message
-> is meaningful. Also, as Vivek said, the latter line can be
-> changed based on the operating mode, but I don't think it's
-> necessary.
-
-OK, I would like to change the printing message for now. If necessary,
-I prefer to post a independent cleanup patch for message printing.
-
+> Eric,
 > 
-> >>
+> Can I get an ack on this so we can take this entire series through the SCSI tree?
 
-> >This is also a public message printing, means if makedumpfile operation
-> >is successful or not. Maybe I can add a check like below:
-> >
-> >@@ -9546,7 +9553,7 @@ main(int argc, char *argv[])
-> >        retcd = COMPLETED;
-> > out:
-> >        MSG("\n");
-> >-       if (retcd == COMPLETED)
-> >+       if ((retcd == COMPLETED) && (!info->flag_mem_usage))
-> >                MSG("makedumpfile Completed.\n");
-> >        else
-> >                MSG("makedumpfile Failed.\n");
-> 
-> This code always show "makedumpfile Failed" for --mem-usage :-)
-> 
-> Anyway,
-> 
-> >Hi Atsushi,
-> >
-> >How do you think about this? And for the excluding progress indication
-> >too, add a check that if it's mem-usage handling, not printing.
-> 
-> I don't think we need to change the both messages, they indicate
-> the actual progress and result even in the mem-usage mode.
+Eric,
 
-OK, so just keep it in this patchset. 
+Any issues with this patch?
 
-Thanks for suggestion.
+Thanks,
 
-> 
+Brian
+
+
 
 _______________________________________________
 kexec mailing list
