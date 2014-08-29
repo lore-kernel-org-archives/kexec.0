@@ -1,33 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp17.uk.ibm.com ([195.75.94.113])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XMzMZ-0002F7-2t
- for kexec@lists.infradead.org; Thu, 28 Aug 2014 13:03:39 +0000
-Received: from /spool/local
- by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
- Thu, 28 Aug 2014 14:03:15 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 843CA17D804E
- for <kexec@lists.infradead.org>; Thu, 28 Aug 2014 14:05:09 +0100 (BST)
-Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
- [9.149.37.228])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- s7SD3DmV34406480
- for <kexec@lists.infradead.org>; Thu, 28 Aug 2014 13:03:14 GMT
-Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s7SD3Cer024436
- for <kexec@lists.infradead.org>; Thu, 28 Aug 2014 07:03:12 -0600
-Message-ID: <53FF288F.80009@linux.vnet.ibm.com>
-Date: Thu, 28 Aug 2014 15:03:11 +0200
-From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+ id 1XNBFA-0000bR-4f
+ for kexec@lists.infradead.org; Fri, 29 Aug 2014 01:44:49 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s7T1iN4E007139
+ for <kexec@lists.infradead.org>; Fri, 29 Aug 2014 10:44:23 +0900 (JST)
+Received: from mailsv.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id s7T1iM202780 for <kexec@lists.infradead.org>;
+ Fri, 29 Aug 2014 10:44:22 +0900 (JST)
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id s7T1iMjA019177
+ for <kexec@lists.infradead.org>; Fri, 29 Aug 2014 10:44:22 +0900 (JST)
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [PATCH] makedumpfile: Fix dmesg format after crash utility
+Date: Fri, 29 Aug 2014 01:43:31 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97250ADB@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH] ppc64/kdump: Fix ELF header endianess
-References: <20140725150749.17944.26746.stgit@nimbus>
-In-Reply-To: <20140725150749.17944.26746.stgit@nimbus>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,53 +31,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 25/07/2014 17:07, Laurent Dufour wrote:
-> The ELF header created among the loading of the kdump kernel should be
-> flagged using the current endianess and not always as big endian.
-> 
-> Without this patch the data exposed in /proc/vmcore are not readable when
-> running in LE mode.
+Hello,
 
-Hi Simon,
+I made a trivial patch for v1.5.7.
+This isn't essential but it's better than nothing.
 
-Do you have any concerns with this patch ?
-If not, would you please consider it for merge since it fixes a major
-issue with dump analysis.
 
 Thanks
-Laurent.
+Atsushi Kumagai
 
-> Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-> ---
->  kexec/arch/ppc64/crashdump-ppc64.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
-> index 00a0e632f48e..6214b831fdf2 100644
-> --- a/kexec/arch/ppc64/crashdump-ppc64.c
-> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
-> @@ -38,7 +38,11 @@
->  static struct crash_elf_info elf_info64 =
->  {
->  	class: ELFCLASS64,
-> +#if BYTE_ORDER == LITTLE_ENDIAN
-> +	data: ELFDATA2LSB,
-> +#else
->  	data: ELFDATA2MSB,
-> +#endif
->  	machine: EM_PPC64,
->  	page_offset: PAGE_OFFSET,
->  	lowmem_limit: MAXMEM,
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Date: Thu, 28 Aug 2014 18:58:38 +0900
+Subject: [PATCH] Fix dmesg format after crash utility.
 
+Add some spaces before a new line as much as the length
+of the timestamp like crash utility as:
+
+    $ diff -u  current.dmesg fixed.dmesg
+    --- current.dmesg       2014-08-28 17:39:53.000000000 +0900
+    +++ fixed.dmesg 2014-08-27 16:46:09.000000000 +0900
+    @@ -150,8 +150,8 @@
+     [    0.015251] Disabled fast string operations
+     [    0.015285] mce: CPU supports 10 MCE banks
+     [    0.015402] Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+    -Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+    -tlb_flushall_shift: 6
+    +               Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+    +               tlb_flushall_shift: 6
+     [    0.015535] Freeing SMP alternatives memory: 20K (ffffffff81964000 - ffffffff81969000)
+     [    0.018265] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+     [    0.028286] smpboot: CPU0: Intel QEMU Virtual CPU version (cpu64-rhel6) (fam: 06, model: 0d, stepping: 03)
+    $
+
+Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+---
+ makedumpfile.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b4b6eca..632daba 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3950,6 +3950,7 @@ dump_log_entry(char *logptr, int fp)
+ {
+ 	char *msg, *p, *bufp;
+ 	unsigned int i, text_len;
++	unsigned int indent_len;
+ 	unsigned long long ts_nsec;
+ 	char buf[BUFSIZE];
+ 	ulonglong nanos;
+@@ -3965,6 +3966,7 @@ dump_log_entry(char *logptr, int fp)
+ 
+ 	bufp = buf;
+ 	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
++	indent_len = strlen(buf);
+ 
+ 	for (i = 0, p = msg; i < text_len; i++, p++) {
+ 		/* 6bytes = "\\x%02x" + '\n' + '\0' */
+@@ -3974,7 +3976,9 @@ dump_log_entry(char *logptr, int fp)
+ 			bufp = buf;
+ 		}
+ 
+-		if (isprint(*p) || isspace(*p))
++		if (*p == '\n')
++			bufp += sprintf(bufp, "\n%-*s", indent_len, "");
++		else if (isprint(*p) || isspace(*p))
+ 			*bufp++ = *p;
+ 		else
+ 			bufp += sprintf(bufp, "\\x%02x", *p);
+-- 
+1.9.0
 
 _______________________________________________
 kexec mailing list
