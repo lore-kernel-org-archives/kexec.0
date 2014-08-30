@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cpsmtpb-ews09.kpnxchange.com ([213.75.39.14])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XNi4Z-00030q-Vi
- for kexec@lists.infradead.org; Sat, 30 Aug 2014 12:48:06 +0000
-Message-ID: <1409402838.21896.99.camel@x220>
-Subject: Re: [PATCH 1/5] kexec: Fix make headers_check
-From: Paul Bolle <pebolle@tiscali.nl>
-Date: Sat, 30 Aug 2014 14:47:18 +0200
-In-Reply-To: <20140825172234.GD14379@redhat.com>
-References: <cover.1408731991.git.geoff@infradead.org>
- <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
- <20140825172234.GD14379@redhat.com>
-Mime-Version: 1.0
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XNore-0002cg-Bu
+ for kexec@lists.infradead.org; Sat, 30 Aug 2014 20:03:12 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+In-Reply-To: <54009E8A.4070809@linux.vnet.ibm.com> (Brian King's message of
+ "Fri, 29 Aug 2014 10:38:50 -0500")
+References: <53D6B270.5020403@linux.vnet.ibm.com>
+ <53DF96E5.7000601@linux.vnet.ibm.com>
+ <54009E8A.4070809@linux.vnet.ibm.com>
+Date: Sat, 30 Aug 2014 15:02:10 -0500
+Message-ID: <87wq9piw59.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/5] kexec: Export kexec_in_progress
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,57 +25,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: maximilian attems <max@stro.at>, Geoff Levand <geoff@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+To: Brian King <brking@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
 
-[Added Peter Anvin.]
+Brian King <brking@linux.vnet.ibm.com> writes:
 
-On Mon, 2014-08-25 at 13:22 -0400, Vivek Goyal wrote:
-> On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
-> > Remove the unneded declaration for a kexec_load() routine.
-> > 
-> > Fixes errors like these when running 'make headers_check':
-> > 
-> > include/uapi/linux/kexec.h: userspace cannot reference function or variable defined in the kernel
-> > 
-> > Signed-off-by: Geoff Levand <geoff@infradead.org>
-> 
-> I think Paul Bolle tried to remove this in the past and maximilian
-> had objections.
-> 
-> http://lists.infradead.org/pipermail/kexec/2014-January/010902.html
+> On 08/04/2014 09:21 AM, Brian King wrote:
+>> On 07/28/2014 03:28 PM, Brian King wrote:
+>>>
+>>> Export kexec_in_progress for use by device drivers and other modules
+>>> to optimize kexec boot.
+>>>
+>>> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+>>> ---
+>>>
+>>>  kernel/kexec.c |    2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
+>>> --- linux/kernel/kexec.c~kexec_export_in_prog	2014-07-23 17:05:24.851887935 -0500
+>>> +++ linux-bjking1/kernel/kexec.c	2014-07-23 17:05:24.856887970 -0500
+>>> @@ -1716,3 +1716,5 @@ int kernel_kexec(void)
+>>>  	mutex_unlock(&kexec_mutex);
+>>>  	return error;
+>>>  }
+>>> +
+>>> +EXPORT_SYMBOL_GPL(kexec_in_progress);
+>> 
+>> Eric,
+>> 
+>> Can I get an ack on this so we can take this entire series through the SCSI tree?
+>
+> Eric,
+>
+> Any issues with this patch?
 
-I've wanted to resend my patch, perhaps with a new commit explanation,
-for quite some time now. I never got around doing that.
+No huge issues except that patch description is largely uniformitive and
+actually wrong.  kexec_in_progress is never set at boot/kernel startup.
 
-> I can't see that how exporting kernel prototype helps here.
-
-It doesn't, for the reasons I've set out in
-http://lists.infradead.org/pipermail/kexec/2014-January/010900.html . In
-short: why bother using this prototype if one still needs to define the
-matching function oneself?
-
-> kexec-tools
-> seems to be using syscall(__NR_kexec_load) directly for non-xen case. So
-> I would be fine with removing this definition. Just trying to make sure
-> that it does not break any other library or users of this declaration.
-
-Obviously, this can only break compiling those libraries, or other
-users. It can't break already compiled binaries. Besides I don't think
-those libraries, etc actually exist. Maximilian mentioned klibc in
-January, but I wasn't able to find a version of klibc that cared about
-this prototype. No one pointed me at a version that does (or any other
-library, etc., for that matter).
-
-(If we do decide to keep this prototype, we should special case this
-prototype in headers_check.pl just to silence the build.)
-
-The above can be summarized like this:
-    Acked-by: Paul Bolle <pebolle@tiscali.nl>
-
-
-Paul Bolle
-
+Eric
 
 _______________________________________________
 kexec mailing list
