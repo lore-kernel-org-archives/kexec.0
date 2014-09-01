@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XOI7Z-0001CN-K2
- for kexec@lists.infradead.org; Mon, 01 Sep 2014 03:17:34 +0000
+ id 1XOI7d-0001DY-Vd
+ for kexec@lists.infradead.org; Mon, 01 Sep 2014 03:17:38 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v6 0/8] add a new interface to show the memory usage of 1st
- kernel
-Date: Mon,  1 Sep 2014 11:15:32 +0800
-Message-Id: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+Subject: [PATCH v6 2/8] functions to get crashkernel memory range
+Date: Mon,  1 Sep 2014 11:15:34 +0800
+Message-Id: <1409541340-2719-3-git-send-email-bhe@redhat.com>
+In-Reply-To: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,107 +25,128 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>, vgoyal@redhat.com
 
-Recently people complained that they don't know how to decide how
-much disk size need be reserved for kdump. E.g there are lots of
-machines with different memory size, if the memory usage information
-of current system can be shown, that can help them to make an estimate
-how much storage space need be reserved.
+These functions are used to parse /proc/iomem code and get memory
+ranges of specific type. They are implemented in kexec-tools and
+borrowed here to get the crashkernel memory range. Since crashkernel
+memory range should be excluded from dumpable memory ranges.
 
-In this patchset, a new interface is added into makedumpfile. By the
-help of this, people can know the page number of memory in different
-use. The implementation is analyzing the "System Ram" and "kernel text"
-program segment of /proc/kcore excluding the crashkernel range, then
-calculating the page number of different kind per vmcoreinfo.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ makedumpfile.c | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |  7 +++++
+ 2 files changed, 89 insertions(+)
 
-Previouly, patchset v1 was posted. And patch 7/7 has a change in v2.
-So several changes are made in this v3 post per comments from Vivek
-and Atsushi.
-
-[patch 2/8] functions to get crashkernel memory range
-v3->v4:
-    In old iomem_for_each_line(), it will call exit(1) if opening iomem
-    failed. Atsushi suggested changing this to be consistent with other
-    return value. So here change all the return value to be nr, then
-    check it outside of iomem_for_each_line, and then decide how to act.
-
-[patch 3/8] preparation functions for parsing vmcoreinfo
-v1->v3:
-    Since get_kernel_version need be called to get page_offset
-    before initial() in mem_usage code flow, and surely it will be called
-    inside initial() again. Add a static variable to avoid this duplicate
-    calling.
-v3->v4:
-    Check the value of info->kernel_version, just return if it has been
-    assigned to a value. This is suggested by Atsushi, far better than the
-    static variable idea.
-    And replace replace get_versiondep_info_x86_64() with get_versiondep_info
-    in get_page_offset().
-v4->v5:
-    Update the git log.
-
-[patch 4/8] set vmcoreinfo for kcore
-v3->v4:
-    Change several places error messages which are the same in nearby handling.
-
-[patch 5/8] prepare the dump loads for kcore analysis
-v1->v3:
-    Fix the compiler warnings.
-v3->v4:
-    Rename is_vmalloc_addr() to is_vmalloc_addr_x86_64() in arch/x86_64.c. And
-    then define is_vmalloc_addr() for all other ARCHs, just set their value to
-    be TRUE except of x86_64.
-
-[patch 6/8] introduce-a-function-exclude_zero_pages_cyclic
-v3->v4:
-    Newly introduce a function exclude_zero_pages_cyclic(), and call it in
-    get_num_dumpable_cyclic().
-
-    Besides, a strange thing happened when the new interface was tested on
-    my local AMD machine. It always terminated and printed message:
-    "Program terminated with signal SIGKILL"
-    With gdb, it should be going in readmem() of exclude_zero_pages_cyclic, I
-    still don't know why it happened.
-
-[patch 7/8] implement a function to print the memory usage
-v1->v3:
-    Adjust the printing content and format of dumpable page numbers per Vivek's
-    comments.
-v3->v6:
-    Slightly adjust the printing format and content.
-
-[patch 8/8]
-v1->v2:
-    Set info->dump_level=MAX_DUMP_LEVEL, with MAX_DUMP_LEVEL all kinds of
-    memory can be calculated.
-v2->v3:
-    Add the description of this feature into help message and man page.
-v3->v4:
-    Continue adjusting the output message of show_mem_usage calling per
-    Vivek's comments.
-v4->v5:
-    Update the git log.
-v5->v6:
-    Adjust the printing format which is related to dump files previously.
-
-Baoquan He (8):
-  initialize pfn_memhole in get_num_dumpable_cyclic
-  functions to get crashkernel memory range
-  preparation functions for parsing vmcoreinfo
-  set vmcoreinfo for kcore
-  prepare the dump loads for kcore analysis
-  introduce a function exclude_zero_pages_cyclic()
-  implement a function to print the memory usage
-  add a new interface to show the memory usage of 1st kernel
-
- arch/x86_64.c  |   6 +-
- elf_info.c     | 237 +++++++++++++++++++++++++++++++++++++++++++++++
- elf_info.h     |   3 +
- makedumpfile.8 |  17 ++++
- makedumpfile.c | 285 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- makedumpfile.h |  17 ++++
- print_info.c   |   8 ++
- 7 files changed, 569 insertions(+), 4 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index a01703e..44cf26f 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -9043,6 +9043,88 @@ calculate_cyclic_buffer_size(void) {
+ 	return TRUE;
+ }
+ 
++
++
++//#define CRASH_RESERVED_MEM_NR   8
++struct memory_range crash_reserved_mem[CRASH_RESERVED_MEM_NR];
++int crash_reserved_mem_nr;
++
++/*
++ * iomem_for_each_line()
++ *
++ * Iterate over each line in the file returned by proc_iomem(). If match is
++ * NULL or if the line matches with our match-pattern then call the
++ * callback if non-NULL.
++ *
++ * Return the number of lines matched.
++ */
++int iomem_for_each_line(char *match,
++			      int (*callback)(void *data,
++					      int nr,
++					      char *str,
++					      unsigned long base,
++					      unsigned long length),
++			      void *data)
++{
++	const char iomem[] = "/proc/iomem";
++	char line[BUFSIZE_FGETS];
++	FILE *fp;
++	unsigned long long start, end, size;
++	char *str;
++	int consumed;
++	int count;
++	int nr = 0;
++
++	fp = fopen(iomem, "r");
++	if (!fp) {
++		ERRMSG("Cannot open %s\n", iomem);
++		return nr;
++	}
++
++	while(fgets(line, sizeof(line), fp) != 0) {
++		count = sscanf(line, "%Lx-%Lx : %n", &start, &end, &consumed);
++		if (count != 2)
++			continue;
++		str = line + consumed;
++		size = end - start + 1;
++		if (!match || memcmp(str, match, strlen(match)) == 0) {
++			if (callback
++			    && callback(data, nr, str, start, size) < 0) {
++				break;
++			}
++			nr++;
++		}
++	}
++
++	fclose(fp);
++
++	return nr;
++}
++
++static int crashkernel_mem_callback(void *data, int nr,
++                                          char *str,
++                                          unsigned long base,
++                                          unsigned long length)
++{
++        if (nr >= CRASH_RESERVED_MEM_NR)
++                return 1;
++
++        crash_reserved_mem[nr].start = base;
++        crash_reserved_mem[nr].end   = base + length - 1;
++        return 0;
++}
++
++int is_crashkernel_mem_reserved(void)
++{
++        int ret;
++
++        ret = iomem_for_each_line("Crash kernel\n",
++                                        crashkernel_mem_callback, NULL);
++        crash_reserved_mem_nr = ret;
++
++        return !!crash_reserved_mem_nr;
++}
++
+ static struct option longopts[] = {
+ 	{"split", no_argument, NULL, OPT_SPLIT},
+ 	{"reassemble", no_argument, NULL, OPT_REASSEMBLE},
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 9f90b53..ed584af 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1540,6 +1540,13 @@ extern struct array_table	array_table;
+ extern struct number_table	number_table;
+ extern struct srcfile_table	srcfile_table;
+ 
++struct memory_range {
++        unsigned long long start, end;
++};
++
++#define CRASH_RESERVED_MEM_NR   8
++struct memory_range crash_reserved_mem[CRASH_RESERVED_MEM_NR];
++int crash_reserved_mem_nr;
+ 
+ int readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size);
+ int get_str_osrelease_from_vmlinux(void);
 -- 
 1.8.5.3
 
