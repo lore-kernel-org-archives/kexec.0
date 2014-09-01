@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XOI7n-0001HK-VZ
- for kexec@lists.infradead.org; Mon, 01 Sep 2014 03:17:48 +0000
+ id 1XOI7s-0001IE-VY
+ for kexec@lists.infradead.org; Mon, 01 Sep 2014 03:17:53 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v6 6/8] introduce a function exclude_zero_pages_cyclic()
-Date: Mon,  1 Sep 2014 11:15:38 +0800
-Message-Id: <1409541340-2719-7-git-send-email-bhe@redhat.com>
+Subject: [PATCH v6 7/8] implement a function to print the memory usage
+Date: Mon,  1 Sep 2014 11:15:39 +0800
+Message-Id: <1409541340-2719-8-git-send-email-bhe@redhat.com>
 In-Reply-To: <1409541340-2719-1-git-send-email-bhe@redhat.com>
 References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,75 +25,59 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>, vgoyal@redhat.com
 
-Introduced a new function exclude_zero_pages_cyclic(), this will
-exclude and counting zero pages. Calling it in get_num_dumpable_cyclic
-can get the number of zero pages.
+Introduce print_mem_usage to print the result of analysis of /proc/kcore.
+The page number of memory in different use are printed.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- makedumpfile.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ makedumpfile.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index d43d02d..a511179 100644
+index a511179..c3d45de 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -4582,6 +4582,45 @@ exclude_zero_pages(void)
- 	return TRUE;
+@@ -7939,6 +7939,40 @@ print_report(void)
+ 	REPORT_MSG("\n");
  }
  
-+int
-+exclude_zero_pages_cyclic(struct cycle *cycle)
++static void
++print_mem_usage(void)
 +{
-+	mdf_pfn_t pfn;
-+	unsigned long long paddr;
-+	unsigned char buf[info->page_size];
++	mdf_pfn_t pfn_original, pfn_excluded, shrinking;
 +
-+	for (pfn = cycle->start_pfn, paddr = pfn_to_paddr(pfn); pfn < cycle->end_pfn;
-+	    pfn++, paddr += info->page_size) {
++	/*
++	* /proc/vmcore doesn't contain the memory hole area.
++	*/
++	pfn_original = info->max_mapnr - pfn_memhole;
 +
-+		if (!is_in_segs(paddr))
-+			continue;
++	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
++	    + pfn_user + pfn_free + pfn_hwpoison;
++	shrinking = (pfn_original - pfn_excluded) * 100;
++	shrinking = shrinking / pfn_original;
 +
-+		if (!is_dumpable_cyclic(info->partial_bitmap2, pfn, cycle))
-+			continue;
++	MSG("\n");
++	MSG("\n");
++	MSG("----------------------------------------------------------------------\n");
++	MSG("TYPE		PAGES			EXCLUDABLE	DESCRIPTION\n");
 +
-+		if (is_xen_memory()) {
-+			if (!readmem(MADDR_XEN, paddr, buf, info->page_size)) {
-+				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
-+				    pfn, info->max_mapnr);
-+				return FALSE;
-+			}
-+		} else {
-+			if (!readmem(PADDR, paddr, buf, info->page_size)) {
-+				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
-+				    pfn, info->max_mapnr);
-+				return FALSE;
-+			}
-+		}
-+		if (is_zero_page(buf, info->page_size)) {
-+			if (clear_bit_on_2nd_bitmap(pfn, cycle))
-+				pfn_zero++;
-+		}
-+	}
++	MSG("ZERO		%-16llu	yes		Pages filled with zero\n", pfn_zero);
++	MSG("CACHE		%-16llu	yes		Cache pages\n", pfn_cache);
++	MSG("CACHE_PRIVATE	%-16llu	yes		Cache pages + private\n",
++	    pfn_cache_private);
++	MSG("USER		%-16llu	yes		User process pages\n", pfn_user);
++	MSG("FREE		%-16llu	yes		Free pages\n", pfn_free);
++	MSG("KERN_DATA	%-16llu	no		Dumpable kernel data \n",
++	    pfn_original - pfn_excluded);
 +
-+	return TRUE;
++	MSG("\n");
++
++	MSG("Total pages on system:	%-16llu\n", pfn_original);
 +}
 +
-+
- static int
- initialize_2nd_bitmap_cyclic(struct cycle *cycle)
+ int
+ writeout_dumpfile(void)
  {
-@@ -5662,6 +5701,9 @@ get_num_dumpable_cyclic(void)
- 		if (!exclude_unnecessary_pages_cyclic(&cycle))
- 			return FALSE;
- 
-+		if (info->flag_mem_usage)
-+			exclude_zero_pages_cyclic(&cycle);
-+
- 		for(pfn=cycle.start_pfn; pfn<cycle.end_pfn; pfn++)
- 			if (is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle))
- 				num_dumpable++;
 -- 
 1.8.5.3
 
