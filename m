@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XNore-0002cg-Bu
- for kexec@lists.infradead.org; Sat, 30 Aug 2014 20:03:12 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-In-Reply-To: <54009E8A.4070809@linux.vnet.ibm.com> (Brian King's message of
- "Fri, 29 Aug 2014 10:38:50 -0500")
-References: <53D6B270.5020403@linux.vnet.ibm.com>
- <53DF96E5.7000601@linux.vnet.ibm.com>
- <54009E8A.4070809@linux.vnet.ibm.com>
-Date: Sat, 30 Aug 2014 15:02:10 -0500
-Message-ID: <87wq9piw59.fsf@x220.int.ebiederm.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XOFxW-0000qe-BS
+ for kexec@lists.infradead.org; Mon, 01 Sep 2014 00:59:02 +0000
+Date: Mon, 1 Sep 2014 09:58:39 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ppc64/kdump: Fix ELF header endianess
+Message-ID: <20140901005839.GA32075@verge.net.au>
+References: <20140725150749.17944.26746.stgit@nimbus>
+ <53FF288F.80009@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/5] kexec: Export kexec_in_progress
+Content-Disposition: inline
+In-Reply-To: <53FF288F.80009@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,45 +24,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Brian King <brking@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
+To: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org
 
-Brian King <brking@linux.vnet.ibm.com> writes:
+On Thu, Aug 28, 2014 at 03:03:11PM +0200, Laurent Dufour wrote:
+> On 25/07/2014 17:07, Laurent Dufour wrote:
+> > The ELF header created among the loading of the kdump kernel should be
+> > flagged using the current endianess and not always as big endian.
+> > 
+> > Without this patch the data exposed in /proc/vmcore are not readable when
+> > running in LE mode.
+> 
+> Hi Simon,
+> 
+> Do you have any concerns with this patch ?
+> If not, would you please consider it for merge since it fixes a major
+> issue with dump analysis.
 
-> On 08/04/2014 09:21 AM, Brian King wrote:
->> On 07/28/2014 03:28 PM, Brian King wrote:
->>>
->>> Export kexec_in_progress for use by device drivers and other modules
->>> to optimize kexec boot.
->>>
->>> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
->>> ---
->>>
->>>  kernel/kexec.c |    2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
->>> --- linux/kernel/kexec.c~kexec_export_in_prog	2014-07-23 17:05:24.851887935 -0500
->>> +++ linux-bjking1/kernel/kexec.c	2014-07-23 17:05:24.856887970 -0500
->>> @@ -1716,3 +1716,5 @@ int kernel_kexec(void)
->>>  	mutex_unlock(&kexec_mutex);
->>>  	return error;
->>>  }
->>> +
->>> +EXPORT_SYMBOL_GPL(kexec_in_progress);
->> 
->> Eric,
->> 
->> Can I get an ack on this so we can take this entire series through the SCSI tree?
->
-> Eric,
->
-> Any issues with this patch?
-
-No huge issues except that patch description is largely uniformitive and
-actually wrong.  kexec_in_progress is never set at boot/kernel startup.
-
-Eric
+Thanks, I have applied this patch.
 
 _______________________________________________
 kexec mailing list
