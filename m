@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XOhaK-0004JB-Q5
- for kexec@lists.infradead.org; Tue, 02 Sep 2014 06:29:01 +0000
+ id 1XOhan-0004Nu-Vn
+ for kexec@lists.infradead.org; Tue, 02 Sep 2014 06:29:26 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [Patch v3 7/7] add a new interface to show the memory usage of
+Subject: RE: [PATCH v6 0/8] add a new interface to show the memory usage of
  1st kernel
-Date: Tue, 2 Sep 2014 06:20:11 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972519F0@BPXM01GP.gisp.nec.co.jp>
-References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
- <1406535606-16303-8-git-send-email-bhe@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE97246623@BPXM01GP.gisp.nec.co.jp>
- <20140821103126.GA6517@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9724F9CA@BPXM01GP.gisp.nec.co.jp>
- <20140826032247.GA6230@dhcp-16-105.nay.redhat.com>
- <20140826082534.5b070f7d@hananiah.suse.cz>
- <20140826141244.GA1809@dhcp-17-102.nay.redhat.com>
-In-Reply-To: <20140826141244.GA1809@dhcp-17-102.nay.redhat.com>
+Date: Tue, 2 Sep 2014 06:20:29 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972519FE@BPXM01GP.gisp.nec.co.jp>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+In-Reply-To: <1409541340-2719-1-git-send-email-bhe@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -34,115 +27,120 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "bhe@redhat.com" <bhe@redhat.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-Hello,
+Hello Baoquan,
 
->On 08/26/14 at 08:25am, Petr Tesarik wrote:
->> On Tue, 26 Aug 2014 11:22:47 +0800
->> "bhe@redhat.com" <bhe@redhat.com> wrote:
->>
->> >[...]
->> > Here it use lseek to position, then try to read, and then reading failed
->> > and raised a SIGKILL.
->> >
->> > lseek(3, 8799381360640, SEEK_SET)       = 8799381360640
->> > read(3,  <unfinished ...>
->> > +++ killed by SIGKILL +++
->> > Killed
->>
->> This smells like killed by OOM Killer. Can you check the kernel log if
->> there's anything?
+>Recently people complained that they don't know how to decide how
+>much disk size need be reserved for kdump. E.g there are lots of
+>machines with different memory size, if the memory usage information
+>of current system can be shown, that can help them to make an estimate
+>how much storage space need be reserved.
 >
->Thanks for notice, it is caused by kernel addr validation check in
->read_kcore. No idea why it happened.
+>In this patchset, a new interface is added into makedumpfile. By the
+>help of this, people can know the page number of memory in different
+>use. The implementation is analyzing the "System Ram" and "kernel text"
+>program segment of /proc/kcore excluding the crashkernel range, then
+>calculating the page number of different kind per vmcoreinfo.
+>
+>Previouly, patchset v1 was posted. And patch 7/7 has a change in v2.
+>So several changes are made in this v3 post per comments from Vivek
+>and Atsushi.
+>
+>[patch 2/8] functions to get crashkernel memory range
+>v3->v4:
+>    In old iomem_for_each_line(), it will call exit(1) if opening iomem
+>    failed. Atsushi suggested changing this to be consistent with other
+>    return value. So here change all the return value to be nr, then
+>    check it outside of iomem_for_each_line, and then decide how to act.
+>
+>[patch 3/8] preparation functions for parsing vmcoreinfo
+>v1->v3:
+>    Since get_kernel_version need be called to get page_offset
+>    before initial() in mem_usage code flow, and surely it will be called
+>    inside initial() again. Add a static variable to avoid this duplicate
+>    calling.
+>v3->v4:
+>    Check the value of info->kernel_version, just return if it has been
+>    assigned to a value. This is suggested by Atsushi, far better than the
+>    static variable idea.
+>    And replace replace get_versiondep_info_x86_64() with get_versiondep_info
+>    in get_page_offset().
+>v4->v5:
+>    Update the git log.
+>
+>[patch 4/8] set vmcoreinfo for kcore
+>v3->v4:
+>    Change several places error messages which are the same in nearby handling.
+>
+>[patch 5/8] prepare the dump loads for kcore analysis
+>v1->v3:
+>    Fix the compiler warnings.
+>v3->v4:
+>    Rename is_vmalloc_addr() to is_vmalloc_addr_x86_64() in arch/x86_64.c. And
+>    then define is_vmalloc_addr() for all other ARCHs, just set their value to
+>    be TRUE except of x86_64.
+>
+>[patch 6/8] introduce-a-function-exclude_zero_pages_cyclic
+>v3->v4:
+>    Newly introduce a function exclude_zero_pages_cyclic(), and call it in
+>    get_num_dumpable_cyclic().
+>
+>    Besides, a strange thing happened when the new interface was tested on
+>    my local AMD machine. It always terminated and printed message:
+>    "Program terminated with signal SIGKILL"
+>    With gdb, it should be going in readmem() of exclude_zero_pages_cyclic, I
+>    still don't know why it happened.
 
-I found a similar bug as below. This bug must be fixed in your environment
-since it looks that you use linux 3.17-rc2, but it might help your
-investigation.
-
-
-commit 0ee364eb316348ddf3e0dfcd986f5f13f528f821
-Author: Mel Gorman <mgorman@suse.de>
-Date:   Mon Feb 11 14:52:36 2013 +0000
-
-    x86/mm: Check if PUD is large when validating a kernel address
-
-    A user reported the following oops when a backup process reads
-    /proc/kcore:
-
-     BUG: unable to handle kernel paging request at ffffbb00ff33b000
-     IP: [<ffffffff8103157e>] kern_addr_valid+0xbe/0x110
-     [...]
-
-     Call Trace:
-      [<ffffffff811b8aaa>] read_kcore+0x17a/0x370
-      [<ffffffff811ad847>] proc_reg_read+0x77/0xc0
-      [<ffffffff81151687>] vfs_read+0xc7/0x130
-      [<ffffffff811517f3>] sys_read+0x53/0xa0
-      [<ffffffff81449692>] system_call_fastpath+0x16/0x1b
+This issue is still under investigation, but it may be a kernel issue
+since you just read a page of System RAM via /proc/kcore. At least your
+patches look good to me, I'll merge them into v1.5.7. Good job!
 
 
 Thanks
 Atsushi Kumagai
 
-
->[ +35.288439] BUG: unable to handle kernel paging request at
->ffff8800c4000000
->[  +0.011559] IP: [<ffffffff8105870b>] kern_addr_valid+0x15b/0x1b0
->[  +0.010586] PGD 220f067 PUD 2213067 PMD 80000000c4000062
->[  +0.009994] Oops: 0000 [#1] SMP
->[  +0.007782] Modules linked in: xt_CHECKSUM nf_conntrack_netbios_ns
->nf_conntrack_broadcast ipt_MASQUERADE ip6t_REJECT xt_conntrack cfg80211
->rfki
->[  +0.084041] CPU: 2 PID: 1679 Comm: makedumpfile Not tainted 3.17.0-rc2
->#15
->[  +0.012249] Hardware name: Dell Inc. PowerEdge T105 /0J001K, BIOS
->1.4.4 07/30/2009
->[  +0.012991] task: ffff8800c010ae40 ti: ffff880214830000 task.ti:
->ffff880214830000
->[  +0.012886] RIP: 0010:[<ffffffff8105870b>]  [<ffffffff8105870b>]
->kern_addr_valid+0x15b/0x1b0
->[  +0.013860] RSP: 0018:ffff880214833e88  EFLAGS: 00010206
->[  +0.010710] RAX: 00000000c4000000 RBX: 0000000000001000 RCX:
->0000000000000000
->[  +0.012445] RDX: 00000000c4000000 RSI: ffff880000000000 RDI:
->80000000c4000062
->[  +0.012298] RBP: ffff880214833e88 R08: 000000000000000e R09:
->00007fffffffffff
->[  +0.012322] R10: 0000000000000001 R11: 0000000000000246 R12:
->0000000000001000
->[  +0.012316] R13: 00000000022beb10 R14: ffff880214833f50 R15:
->ffff8800c4000000
->[  +0.012308] FS:  00007f0c91ffa740(0000) GS:ffff88022fd00000(0000)
->knlGS:0000000000000000
->[  +0.013315] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->[  +0.010985] CR2: ffff8800c4000000 CR3: 000000021a632000 CR4:
->00000000000007e0
->[  +0.012266] Stack:
->[  +0.006976]  ffff880214833ee0 ffffffff81255c38 ffff880214929410
->0000000000000000
->[  +0.012471]  0000000d14833ed8 0000000000001000 ffff880223c7c480
->00000000022beb10
->[  +0.012465]  ffff880214833f50 0000000000001000 00007ffffe1840c0
->ffff880214833f00
->[  +0.012456] Call Trace:
->[  +0.007459]  [<ffffffff81255c38>] read_kcore+0x228/0x300
->[  +0.010392]  [<ffffffff8124962d>] proc_reg_read+0x3d/0x80
->[  +0.010491]  [<ffffffff811e58f8>] vfs_read+0x98/0x170
->[  +0.010153]  [<ffffffff811e6576>] SyS_read+0x46/0xb0
->[  +0.010034]  [<ffffffff8111d5f6>] ? __audit_syscall_exit+0x1f6/0x2a0
->[  +0.011425]  [<ffffffff8181dea9>] system_call_fastpath+0x16/0x1b
->[  +0.011072] Code: 48 89 f8 66 66 66 90 48 be 00 f0 ff ff ff 3f 00 00
->48 c1 ea 09 48 21 f0 81 e2 f8 0f 00 00 48 be 00 00 00 00 00 88 ff ff 48
->01
->[  +0.030537] RIP  [<ffffffff8105870b>] kern_addr_valid+0x15b/0x1b0
->[  +0.011666]  RSP <ffff880214833e88>
->[  +0.009043] CR2: ffff8800c4000000
->[  +0.042194] ---[ end trace 97512601fec12186 ]---
 >
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+>[patch 7/8] implement a function to print the memory usage
+>v1->v3:
+>    Adjust the printing content and format of dumpable page numbers per Vivek's
+>    comments.
+>v3->v6:
+>    Slightly adjust the printing format and content.
+>
+>[patch 8/8]
+>v1->v2:
+>    Set info->dump_level=MAX_DUMP_LEVEL, with MAX_DUMP_LEVEL all kinds of
+>    memory can be calculated.
+>v2->v3:
+>    Add the description of this feature into help message and man page.
+>v3->v4:
+>    Continue adjusting the output message of show_mem_usage calling per
+>    Vivek's comments.
+>v4->v5:
+>    Update the git log.
+>v5->v6:
+>    Adjust the printing format which is related to dump files previously.
+>
+>Baoquan He (8):
+>  initialize pfn_memhole in get_num_dumpable_cyclic
+>  functions to get crashkernel memory range
+>  preparation functions for parsing vmcoreinfo
+>  set vmcoreinfo for kcore
+>  prepare the dump loads for kcore analysis
+>  introduce a function exclude_zero_pages_cyclic()
+>  implement a function to print the memory usage
+>  add a new interface to show the memory usage of 1st kernel
+>
+> arch/x86_64.c  |   6 +-
+> elf_info.c     | 237 +++++++++++++++++++++++++++++++++++++++++++++++
+> elf_info.h     |   3 +
+> makedumpfile.8 |  17 ++++
+> makedumpfile.c | 285 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> makedumpfile.h |  17 ++++
+> print_info.c   |   8 ++
+> 7 files changed, 569 insertions(+), 4 deletions(-)
+>
+>--
+>1.8.5.3
 
 _______________________________________________
 kexec mailing list
