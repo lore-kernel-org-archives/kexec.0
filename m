@@ -1,24 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XOZC3-0007lD-1I
- for kexec@lists.infradead.org; Mon, 01 Sep 2014 21:31:19 +0000
-Date: Mon, 1 Sep 2014 23:30:49 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2 3/4] makedumpfile/xen: Fail immediately on every
- architecture if dump level is invalid
-Message-ID: <20140901213049.GB3459@olila.local.net-space.pl>
-References: <1385993804-27721-1-git-send-email-daniel.kiper@oracle.com>
- <1385993804-27721-4-git-send-email-daniel.kiper@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE971C9FF0@BPXM01GP.gisp.nec.co.jp>
- <20131203194501.GD21544@olila.local.net-space.pl>
- <0910DD04CBD6DE4193FCF86B9C00BE971CCA93@BPXM01GP.gisp.nec.co.jp>
- <20131210103949.GJ3916@olila.local.net-space.pl>
- <0910DD04CBD6DE4193FCF86B9C00BE971D10DF@BPXM01GP.gisp.nec.co.jp>
- <0910DD04CBD6DE4193FCF86B9C00BE97250CE3@BPXM01GP.gisp.nec.co.jp>
+ id 1XOhaK-0004JB-Q5
+ for kexec@lists.infradead.org; Tue, 02 Sep 2014 06:29:01 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [Patch v3 7/7] add a new interface to show the memory usage of
+ 1st kernel
+Date: Tue, 2 Sep 2014 06:20:11 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE972519F0@BPXM01GP.gisp.nec.co.jp>
+References: <1406535606-16303-1-git-send-email-bhe@redhat.com>
+ <1406535606-16303-8-git-send-email-bhe@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97246623@BPXM01GP.gisp.nec.co.jp>
+ <20140821103126.GA6517@dhcp-16-105.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9724F9CA@BPXM01GP.gisp.nec.co.jp>
+ <20140826032247.GA6230@dhcp-16-105.nay.redhat.com>
+ <20140826082534.5b070f7d@hananiah.suse.cz>
+ <20140826141244.GA1809@dhcp-17-102.nay.redhat.com>
+In-Reply-To: <20140826141244.GA1809@dhcp-17-102.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE97250CE3@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,100 +31,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On Fri, Aug 29, 2014 at 06:42:18AM +0000, Atsushi Kumagai wrote:
-> Hello Daniel,
+Hello,
+
+>On 08/26/14 at 08:25am, Petr Tesarik wrote:
+>> On Tue, 26 Aug 2014 11:22:47 +0800
+>> "bhe@redhat.com" <bhe@redhat.com> wrote:
+>>
+>> >[...]
+>> > Here it use lseek to position, then try to read, and then reading failed
+>> > and raised a SIGKILL.
+>> >
+>> > lseek(3, 8799381360640, SEEK_SET)       = 8799381360640
+>> > read(3,  <unfinished ...>
+>> > +++ killed by SIGKILL +++
+>> > Killed
+>>
+>> This smells like killed by OOM Killer. Can you check the kernel log if
+>> there's anything?
 >
-> >On 2013/12/10 19:41:54, kexec <kexec-bounces@lists.infradead.org> wrote:
-> >> > > > Did you say that dump level 2 or larger are no longer effective even for x86_64 ?
-> >> > > > I thought it works by the patch below, but I'm not sure about Xen.
-> >> > > > So I would like to know why you sent this patch.
-> >> > > >
-> >> > > >
-> >> > > > commit ec5b5835a113cf62a168d4a7354564a38de6b52c
-> >> > > > Author: ken1_ohmichi <ken1_ohmichi>
-> >> > > > Date:   Fri Oct 9 03:05:41 2009 +0000
-> >> > > >
-> >> > > >     [v1.3.4-10] Add dump filtering on an x86_64 xen domain-0.
-> >> > > >
-> >> > > >     This patch adds the dump filtering for excluding unnecessary pages (cache
-> >> > > >     pages, user process data pages, and free pages) on on x86_64 xen domain-0.
-> >> > > >
-> >> > > >     On the existing makedumpfile (v1.3.3 or former), a user could specify 0
-> >> > > >     or 1 only as a dump_level. By this patch, he/she can specify 2 or larger
-> >> > > >     also as a dump_level.
-> >> > > >
-> >> > > >     Now, this feature is effective on x86_64 machine only.
-> >> > >
-> >> > > Hmmm... Thanks for this. I missed this patch. However, it looks that I
-> >> > > do not understand something. AIUI, from Xen point of view we are not able
-> >> > > to use dump level higher than 1 because there is no e.g. cache pages (it
-> >> > > looks that we could also skip free pages but this stuff is not implemented).
-> >> > > Above mentioned patch suggest that there is a way to extract just only Dom0
-> >> > > stuff taking into account Linux internals only. If my reasoning is true
-> >> > > then dump level higher than 1 is possible only if we look at Dom0 from Linux
-> >> > > point of view.
-> >> >
-> >> > I've reviewed the code for Xen, my understanding is the same as yours.
-> >> > The memory regions corresponding to hypervisor and DomU will remain even if
-> >> > specifying the dump level higher than 1.
-> >> >
-> >> > > However, I can not find any description how to do that.
-> >> > > So I am CC-ing Ken'ichi as author of this patch but I do not know that
-> >> > > he works for NEC still.
-> >> >
-> >> > I'm sorry but I missed your point. Did you mention a lack of description
-> >> > in man page about an effect when specifying the dump level higher than 1
-> >> > for Xen's memory ?
-> >> > At least, I still think this patch is wrong because any dump level is
-> >> > effective for x86_64.
-> >>
-> >> Docs are not consistent because man and help displayed from makedumpfile
-> >> are different. Additionally, even man says nothing how to use this feature
-> >> on Xen vmcore file. If you use makedumpfile e.g.
-> >>
-> >> makedumpfile -Ed 2 /proc/vmcore vmcore
-> >>
-> >> it will not work because it uses VMCOREINFO_XEN instead of VMCOREINFO.
-> >> I discovered that if you would like to use feature from above mentioned
-> >> patch you must run makedumpfile in following way:
-> >>
-> >> makedumpfile -Ed 2 -x vmlinux /proc/vmcore vmcore
-> >>
-> >> Then makedumpfile will get info about dom0 directly from vmlinux.
-> >
-> >Certainly the documents should be fixed as you said, I'll do it.
+>Thanks for notice, it is caused by kernel addr validation check in
+>read_kcore. No idea why it happened.
+
+I found a similar bug as below. This bug must be fixed in your environment
+since it looks that you use linux 3.17-rc2, but it might help your
+investigation.
+
+
+commit 0ee364eb316348ddf3e0dfcd986f5f13f528f821
+Author: Mel Gorman <mgorman@suse.de>
+Date:   Mon Feb 11 14:52:36 2013 +0000
+
+    x86/mm: Check if PUD is large when validating a kernel address
+
+    A user reported the following oops when a backup process reads
+    /proc/kcore:
+
+     BUG: unable to handle kernel paging request at ffffbb00ff33b000
+     IP: [<ffffffff8103157e>] kern_addr_valid+0xbe/0x110
+     [...]
+
+     Call Trace:
+      [<ffffffff811b8aaa>] read_kcore+0x17a/0x370
+      [<ffffffff811ad847>] proc_reg_read+0x77/0xc0
+      [<ffffffff81151687>] vfs_read+0xc7/0x130
+      [<ffffffff811517f3>] sys_read+0x53/0xa0
+      [<ffffffff81449692>] system_call_fastpath+0x16/0x1b
+
+
+Thanks
+Atsushi Kumagai
+
+
+>[ +35.288439] BUG: unable to handle kernel paging request at
+>ffff8800c4000000
+>[  +0.011559] IP: [<ffffffff8105870b>] kern_addr_valid+0x15b/0x1b0
+>[  +0.010586] PGD 220f067 PUD 2213067 PMD 80000000c4000062
+>[  +0.009994] Oops: 0000 [#1] SMP
+>[  +0.007782] Modules linked in: xt_CHECKSUM nf_conntrack_netbios_ns
+>nf_conntrack_broadcast ipt_MASQUERADE ip6t_REJECT xt_conntrack cfg80211
+>rfki
+>[  +0.084041] CPU: 2 PID: 1679 Comm: makedumpfile Not tainted 3.17.0-rc2
+>#15
+>[  +0.012249] Hardware name: Dell Inc. PowerEdge T105 /0J001K, BIOS
+>1.4.4 07/30/2009
+>[  +0.012991] task: ffff8800c010ae40 ti: ffff880214830000 task.ti:
+>ffff880214830000
+>[  +0.012886] RIP: 0010:[<ffffffff8105870b>]  [<ffffffff8105870b>]
+>kern_addr_valid+0x15b/0x1b0
+>[  +0.013860] RSP: 0018:ffff880214833e88  EFLAGS: 00010206
+>[  +0.010710] RAX: 00000000c4000000 RBX: 0000000000001000 RCX:
+>0000000000000000
+>[  +0.012445] RDX: 00000000c4000000 RSI: ffff880000000000 RDI:
+>80000000c4000062
+>[  +0.012298] RBP: ffff880214833e88 R08: 000000000000000e R09:
+>00007fffffffffff
+>[  +0.012322] R10: 0000000000000001 R11: 0000000000000246 R12:
+>0000000000001000
+>[  +0.012316] R13: 00000000022beb10 R14: ffff880214833f50 R15:
+>ffff8800c4000000
+>[  +0.012308] FS:  00007f0c91ffa740(0000) GS:ffff88022fd00000(0000)
+>knlGS:0000000000000000
+>[  +0.013315] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>[  +0.010985] CR2: ffff8800c4000000 CR3: 000000021a632000 CR4:
+>00000000000007e0
+>[  +0.012266] Stack:
+>[  +0.006976]  ffff880214833ee0 ffffffff81255c38 ffff880214929410
+>0000000000000000
+>[  +0.012471]  0000000d14833ed8 0000000000001000 ffff880223c7c480
+>00000000022beb10
+>[  +0.012465]  ffff880214833f50 0000000000001000 00007ffffe1840c0
+>ffff880214833f00
+>[  +0.012456] Call Trace:
+>[  +0.007459]  [<ffffffff81255c38>] read_kcore+0x228/0x300
+>[  +0.010392]  [<ffffffff8124962d>] proc_reg_read+0x3d/0x80
+>[  +0.010491]  [<ffffffff811e58f8>] vfs_read+0x98/0x170
+>[  +0.010153]  [<ffffffff811e6576>] SyS_read+0x46/0xb0
+>[  +0.010034]  [<ffffffff8111d5f6>] ? __audit_syscall_exit+0x1f6/0x2a0
+>[  +0.011425]  [<ffffffff8181dea9>] system_call_fastpath+0x16/0x1b
+>[  +0.011072] Code: 48 89 f8 66 66 66 90 48 be 00 f0 ff ff ff 3f 00 00
+>48 c1 ea 09 48 21 f0 81 e2 f8 0f 00 00 48 be 00 00 00 00 00 88 ff ff 48
+>01
+>[  +0.030537] RIP  [<ffffffff8105870b>] kern_addr_valid+0x15b/0x1b0
+>[  +0.011666]  RSP <ffff880214833e88>
+>[  +0.009043] CR2: ffff8800c4000000
+>[  +0.042194] ---[ end trace 97512601fec12186 ]---
 >
-> Sorry for my too late job, how about this fix ?
-
-No problem. I am busy too. I still have patch fixing this
-feature for new Xen versions on my long todo list. I hope that
-I will be able to work on it at the beginning of next year.
-
-> I'll merge it into v1.5.7 if you have no objection.
-
-Great! Thanks!
-
-> Thanks
-> Atsushi Kumagai
->
-> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> Date: Fri, 29 Aug 2014 15:11:27 +0900
-> Subject: [PATCH] Fix description about filtering for Xen.
->
-> Correct the following points for Xen dump:
->
->   - Add how to filter the pages of domain-0.
->   - Fix the difference between man and help.
->
-> Reported-by: Daniel Kiper <daniel.kiper@oracle.com>
-> Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-
-Daniel
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
