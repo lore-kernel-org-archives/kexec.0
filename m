@@ -1,20 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e7.ny.us.ibm.com ([32.97.182.137])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XOo5I-0006bl-FN
- for kexec@lists.infradead.org; Tue, 02 Sep 2014 13:25:20 +0000
-Date: Tue, 2 Sep 2014 21:24:54 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v6 8/8] add a new interface to show the memory usage of
- 1st kernel
-Message-ID: <20140902132454.GE31855@dhcp-16-116.nay.redhat.com>
-References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
- <1409541340-2719-9-git-send-email-bhe@redhat.com>
- <20140902115230.GA2181@redhat.com>
- <20140902131519.GD31855@dhcp-16-116.nay.redhat.com>
+ id 1XOu2C-0003dt-U8
+ for kexec@lists.infradead.org; Tue, 02 Sep 2014 19:46:33 +0000
+Received: from /spool/local
+ by e7.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <brking@linux.vnet.ibm.com>;
+ Tue, 2 Sep 2014 15:46:11 -0400
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com
+ [9.57.198.24])
+ by d01dlp01.pok.ibm.com (Postfix) with ESMTP id A0A8538C8026
+ for <kexec@lists.infradead.org>; Tue,  2 Sep 2014 15:46:08 -0400 (EDT)
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+ by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ s82Jk82n65929332
+ for <kexec@lists.infradead.org>; Tue, 2 Sep 2014 19:46:08 GMT
+Received: from d01av02.pok.ibm.com (localhost [127.0.0.1])
+ by d01av02.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s82Jk6YQ013946
+ for <kexec@lists.infradead.org>; Tue, 2 Sep 2014 15:46:07 -0400
+Message-ID: <54061E7B.4080803@linux.vnet.ibm.com>
+Date: Tue, 02 Sep 2014 14:46:03 -0500
+From: Brian King <brking@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140902131519.GD31855@dhcp-16-116.nay.redhat.com>
+Subject: Re: [PATCH 2/5] kexec: Export kexec_in_progress
+References: <53D6B270.5020403@linux.vnet.ibm.com>
+ <53DF96E5.7000601@linux.vnet.ibm.com>	<54009E8A.4070809@linux.vnet.ibm.com>
+ <87wq9piw59.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87wq9piw59.fsf@x220.int.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,58 +41,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
 
-On 09/02/14 at 09:15pm, Baoquan He wrote:
-> On 09/02/14 at 07:52am, Vivek Goyal wrote:
-> > On Mon, Sep 01, 2014 at 11:15:40AM +0800, Baoquan He wrote:
->  
-> > > ----------------------------------------------------------------------
-> > ^^^^^
-> > 
-> > Why this line is there?
+On 08/30/2014 03:02 PM, Eric W. Biederman wrote:
+> Brian King <brking@linux.vnet.ibm.com> writes:
 > 
-> Oh, I thought you just meant the header, not including this line.
+>> On 08/04/2014 09:21 AM, Brian King wrote:
+>>> On 07/28/2014 03:28 PM, Brian King wrote:
+>>>>
+>>>> Export kexec_in_progress for use by device drivers and other modules
+>>>> to optimize kexec boot.
+>>>>
+>>>> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+>>>> ---
+>>>>
+>>>>  kernel/kexec.c |    2 ++
+>>>>  1 file changed, 2 insertions(+)
+>>>>
+>>>> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
+>>>> --- linux/kernel/kexec.c~kexec_export_in_prog	2014-07-23 17:05:24.851887935 -0500
+>>>> +++ linux-bjking1/kernel/kexec.c	2014-07-23 17:05:24.856887970 -0500
+>>>> @@ -1716,3 +1716,5 @@ int kernel_kexec(void)
+>>>>  	mutex_unlock(&kexec_mutex);
+>>>>  	return error;
+>>>>  }
+>>>> +
+>>>> +EXPORT_SYMBOL_GPL(kexec_in_progress);
+>>>
+>>> Eric,
+>>>
+>>> Can I get an ack on this so we can take this entire series through the SCSI tree?
+>>
+>> Eric,
+>>
+>> Any issues with this patch?
+> 
+> No huge issues except that patch description is largely uniformitive and
+> actually wrong.  kexec_in_progress is never set at boot/kernel startup.
 
-Since Atsushi has decided to merge it, I would like to adjust this later
-after v1.5.7.
+Good point. How about this instead:
 
-Maybe we can talk about this and the message issue later.  
+Export kexec_in_progress for use by device drivers and other modules
+to optimize shutdown handling during kexec.
 
-Thanks
-Baoquan
-> 
-> > 
-> > > TYPE		PAGES			EXCLUDABLE	DESCRIPTION
-> > > ZERO		28823           	yes		Pages filled with zero
-> > > CACHE		197932          	yes		Cache pages
-> > > CACHE_PRIVATE	15862           	yes		Cache pages + private
-> > > USER		30778           	yes		User process pages
-> > > FREE		3671105         	yes		Free pages
-> > > KERN_DATA	105168          	no		Dumpable kernel data
-> > > 
-> > > Total pages on system:	4049668
-> > 
-> > So this is assuming page size 4K? If some arch is using 16K or 64K,
-> > will it still work correctly.
-> 
-> This patchset is only for x86_64. Let's firstly introduce this new
-> feature, if user like it, it can be extended to more ARCHs.
-> 
-> > 
-> > Thanks
-> > Vivek
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Thanks,
+
+Brian
+
+-- 
+Brian King
+Power Linux I/O
+IBM Linux Technology Center
+
+
 
 _______________________________________________
 kexec mailing list
