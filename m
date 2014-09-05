@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XPL4V-0000ZY-Ht
- for kexec@lists.infradead.org; Thu, 04 Sep 2014 00:38:43 +0000
-Date: Thu, 4 Sep 2014 09:38:20 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Return error code in case of invalid command line option
-Message-ID: <20140904003820.GD13821@verge.net.au>
-References: <20140903152917.GA23097@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140903152917.GA23097@redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XPwSE-00086I-Qo
+ for kexec@lists.infradead.org; Fri, 05 Sep 2014 16:33:43 +0000
+Date: Fri, 5 Sep 2014 18:33:14 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: [PATCH] Put each per-cpu kdump ELF notes into a single page
+Message-ID: <20140905183314.23690175@hananiah.suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,39 +20,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Wed, Sep 03, 2014 at 11:29:17AM -0400, Vivek Goyal wrote:
-> Currently kexec returns success even if an invalid command line option
-> is encountered. Kexec currently prints usage message and then returns
-> 0. That's not right. It is an error and error code 1 should be returned.
-> 
-> Due to this wrapper script thinks that kdump succeeded but that's not
-> the case.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+On architectures that use percpu-vm, the percpu region is not guaranteed
+to be contiguous in physical space. However, fs/proc/vmcore.c expects
+all ELF notes to be contiguous. If the ELF note happens to occupy
+two non-adjacent physical pages, part of the note may be read from an
+incorrect memory location by the kdump kernel, resulting in failure to
+initialize /proc/vmcore (if the content of the following physical page,
+incorrectly interpreted as an ELF note specifies a large number), wrong
+register values or other apparent random memory corruption.
 
-Thanks, applied.
+There is currently no mechanism to pass the virtual-to-physical mapping
+of the percpu allocation to the kdump kernel. So, instead, I'm changing
+the alignment of the ELF note buffer. Since sizeof(note_buf_t) is less
+than PAGE_SIZE, aligning the buffer to the nearest higher power of 2
+is enough to make sure that the buffer cannot cross a page boundary,
+effectively ensuring that the whole buffer is contiguous in physical
+space.
 
-> ---
->  kexec/kexec.c |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> Index: kexec-tools/kexec/kexec.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec.c	2014-08-28 15:36:17.563115135 -0400
-> +++ kexec-tools/kexec/kexec.c	2014-09-03 11:19:46.505871590 -0400
-> @@ -1209,6 +1209,8 @@ int main(int argc, char *argv[])
->  				  options, 0)) != -1) {
->  		switch(opt) {
->  		case '?':
-> +			usage();
-> +			return 1;
->  		case OPT_HELP:
->  			usage();
->  			return 0;
-> 
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+---
+ kernel/kexec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 2bee072..cdab59d 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1610,7 +1610,8 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+ static int __init crash_notes_memory_init(void)
+ {
+ 	/* Allocate memory for saving cpu registers. */
+-	crash_notes = alloc_percpu(note_buf_t);
++	crash_notes = __alloc_percpu(sizeof(note_buf_t),
++				     roundup_pow_of_two(sizeof(note_buf_t)));
+ 	if (!crash_notes) {
+ 		pr_warn("Kexec: Memory allocation for saving cpu register states failed\n");
+ 		return -ENOMEM;
+-- 
+1.8.4.5
 
 _______________________________________________
 kexec mailing list
