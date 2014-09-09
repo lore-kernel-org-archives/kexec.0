@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <bc4abc340eaa4da448f62326a134fabfb5a2a875.1410302383.git.geoff@infradead.org>
+Message-Id: <ea28cfef061d06e86704845a877802e057749b39.1410302383.git.geoff@infradead.org>
 In-Reply-To: <cover.1410302383.git.geoff@infradead.org>
 References: <cover.1410302383.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 02/13] arm64/kvm: Fix assembler compatibility of macros
+Subject: [PATCH 04/13] arm64: Add new hcall HVC_CALL_FUNC
 Date: Tue, 09 Sep 2014 22:49:04 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,33 +21,61 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-Some of the macros defined in kvm_arm.h are useful in the exception vector
-routines, but they are not compatible with the assembler.  Change the
-definition of ESR_EL2_ISS to be compatible.
-
-Fixes build errors like these when using kvm_arm.h in assembly
-source files:
-
-  Error: unexpected characters following instruction at operand 3 -- `add x0,x1,#((1U<<25)-1)'
+Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
+During CPU reset the CPU must be brought to the exception level it had on
+entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
+needed for this exception level switch.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/kvm_arm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/virt.h | 11 +++++++++++
+ arch/arm64/kernel/hyp-stub.S  | 10 ++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-index cc83520..e0e7e64 100644
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -176,7 +176,7 @@
- #define ESR_EL2_EC_SHIFT	(26)
- #define ESR_EL2_EC		(0x3fU << ESR_EL2_EC_SHIFT)
- #define ESR_EL2_IL		(1U << 25)
--#define ESR_EL2_ISS		(ESR_EL2_IL - 1)
-+#define ESR_EL2_ISS		(0xffff)
- #define ESR_EL2_ISV_SHIFT	(24)
- #define ESR_EL2_ISV		(1U << ESR_EL2_ISV_SHIFT)
- #define ESR_EL2_SAS_SHIFT	(22)
+diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+index 894fe53..b217fbc 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -41,6 +41,17 @@
+ 
+ #define HVC_KVM_CALL_HYP 3
+ 
++/*
++ * HVC_CALL_FUNC - Execute a function at EL2.
++ *
++ * @x0: Physical address of the funtion to be executed.
++ * @x1: Passed as the first argument to @fn.
++ * @x2: Passed as the second argument to @fn.
++ * @x3: Passed as the third argument to @fn.
++ */
++
++#define HVC_CALL_FUNC 4
++
+ #ifndef __ASSEMBLY__
+ 
+ /*
+diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+index 9ab5f70..a21cf51 100644
+--- a/arch/arm64/kernel/hyp-stub.S
++++ b/arch/arm64/kernel/hyp-stub.S
+@@ -75,7 +75,17 @@ el1_sync:
+ 1:	cmp	x10, #HVC_SET_VECTORS
+ 	b.ne	1f
+ 	msr	vbar_el2, x0
++	b	2f
+ 
++1:	cmp	x10, #HVC_CALL_FUNC
++	b.ne    1f
++	mov	x29, lr
++	mov	lr, x0
++	mov	x0, x1
++	mov	x1, x2
++	mov	x2, x3
++	blr	lr
++	mov	lr, x29
+ 1:
+ 2:	eret
+ ENDPROC(el1_sync)
 -- 
 1.9.1
 
