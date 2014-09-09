@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <36ad9302497338a34cc7174a72a2ac99ceb16fdb.1410302383.git.geoff@infradead.org>
+Message-Id: <de2fda64cc5eebcf96d9d845b185c6382c900ac3.1410302383.git.geoff@infradead.org>
 In-Reply-To: <cover.1410302383.git.geoff@infradead.org>
 References: <cover.1410302383.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 08/13] arm64: Use cpu_ops for smp_stop
+Subject: [PATCH 10/13] arm64/kexec: Revert change to machine_shutdown()
 Date: Tue, 09 Sep 2014 22:49:05 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,41 +21,43 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-The current implementation of ipi_cpu_stop() is just a tight infinite loop
-around cpu_relax().  This infinite loop implementation is OK if the machine
-will soon do a poweroff, but it doesn't have any mechanism to allow a CPU
-to be brought back on-line, nor is it compatible with kexec re-boot.
+Commit 90f51a09ef83 ("arm64: Fix machine_shutdown() definition") changed the
+implementation of machine_shutdown() from calling smp_send_stop() to
+calling disable_nonboot_cpus().  Revert that part of the commit so that
+machine_shutdown() once again calls smp_send_stop().
 
-Add a check for a valid cpu_die method of the appropriate cpu_ops structure,
-and if a valid method is found, transfer control to that method.  It is
-expected that the cpu_die method puts the CPU into a state such that they can
-be brought back on-line or progress through a kexec re-boot.
+With the application of another patch in this series, (arm64: Use cpu_ops for
+smp_stop), smp_send_stop() will do the correct thing for a kexec reboot. This
+change also corrects the source code comment for the machine_shutdown() routine.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/kernel/smp.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/kernel/process.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 4743397..002aa8a 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -555,6 +555,15 @@ static void ipi_cpu_stop(unsigned int cpu)
- 
- 	local_irq_disable();
- 
-+	/* If we have the cpu ops use them. */
-+
-+	if (cpu_ops[cpu]->cpu_disable &&
-+	    cpu_ops[cpu]->cpu_die &&
-+	    !cpu_ops[cpu]->cpu_disable(cpu))
-+		cpu_ops[cpu]->cpu_die(cpu);
-+
-+	/* Otherwise spin here. */
-+
- 	while (1)
- 		cpu_relax();
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 0a3414b..cd0ae9d 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -101,15 +101,12 @@ void arch_cpu_idle_dead(void)
+ /*
+  * Called by kexec, immediately prior to machine_kexec().
+  *
+- * This must completely disable all secondary CPUs; simply causing those CPUs
+- * to execute e.g. a RAM-based pin loop is not sufficient. This allows the
+- * kexec'd kernel to use any and all RAM as it sees fit, without having to
+- * avoid any code or data used by any SW CPU pin loop. The CPU hotplug
+- * functionality embodied in disable_nonboot_cpus() to achieve this.
++ * This must shutdown all secondary CPUs.  The functionality
++ * embodied in smp_send_stop() will achieve this.
+  */
+ void machine_shutdown(void)
+ {
+-	disable_nonboot_cpus();
++	smp_send_stop();
  }
+ 
+ /*
 -- 
 1.9.1
 
