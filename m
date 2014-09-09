@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XRC6J-0001rT-IP
- for kexec@lists.infradead.org; Tue, 09 Sep 2014 03:28:16 +0000
-Date: Tue, 9 Sep 2014 11:26:24 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 2/2] message printing cleanup for option --mem-usage
-Message-ID: <20140909032624.GA1229@dhcp-16-105.nay.redhat.com>
-References: <1409735588-2430-1-git-send-email-bhe@redhat.com>
- <1409735588-2430-2-git-send-email-bhe@redhat.com>
+ id 1XRGVY-0000Wa-Ll
+ for kexec@lists.infradead.org; Tue, 09 Sep 2014 08:10:37 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.193])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id s898A8bm010629
+ for <kexec@lists.infradead.org>; Tue, 9 Sep 2014 17:10:08 +0900 (JST)
+Received: from mailsv.nec.co.jp (imss63.nec.co.jp [10.7.69.158]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id s898A8C09039 for <kexec@lists.infradead.org>;
+ Tue, 9 Sep 2014 17:10:08 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id s898A8s9011504
+ for <kexec@lists.infradead.org>; Tue, 9 Sep 2014 17:10:08 +0900 (JST)
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [PATCH] makedumpfile: Stop adjusting info->max_mapnr when no
+ mem_maps are found.
+Date: Tue, 9 Sep 2014 08:08:36 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE97253B62@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1409735588-2430-2-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,96 +32,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Adjust the message printing when specify option --mem-usage. Try to
-avoid the unrelated printing.
+Hello,
 
-And add the page size info and the total size of system memory on byte.
+I found an issue during the test for v1.5.7, so I fixed it
+by the patch below and I'm re-testing now.
+I'm still going to release v1.5.7 in this week, please
+wait a little longer.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
+
+Thanks
+Atsushi Kumagai
+
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Date: Mon, 8 Sep 2014 16:04:17 +0900
+Subject: [PATCH] Stop adjusting info->max_mapnr when no mem_maps are found.
+
+If mem_maps are allocated with remap allocator, makedumpfile can't
+find them without vmlinux. In that case, info->max_mapnr will be
+truncated to 0 and there will be no page data in a dump file.
+
+This patch enables the environment above to save full dump at
+least.
+
+Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- makedumpfile.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ makedumpfile.c |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index c965745..8667791 100644
+index c965745..230e5fd 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -4939,7 +4939,8 @@ exclude_unnecessary_pages_cyclic(struct cycle *cycle)
- 
- 		for (mm = 0; mm < info->num_mem_map; mm++) {
- 
--			print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
-+			if (!info->flag_mem_usage)
-+				print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
- 
- 			mmd = &info->mem_map_data[mm];
- 
-@@ -4957,8 +4958,10 @@ exclude_unnecessary_pages_cyclic(struct cycle *cycle)
- 		/*
- 		 * print [100 %]
- 		 */
--		print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map);
--		print_execution_time(PROGRESS_UNN_PAGES, &tv_start);
-+		if (!info->flag_mem_usage) {
-+			print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map);
-+			print_execution_time(PROGRESS_UNN_PAGES, &tv_start);
+@@ -2963,12 +2963,16 @@ get_mem_map(void)
+ 	 * dumped system.
+ 	 */
+ 	if (!is_xen_memory()) {
++		unsigned int valid_memmap = 0;
+ 		for (i = 0; i < info->num_mem_map; i++) {
+ 			if (info->mem_map_data[i].mem_map == NOT_MEMMAP_ADDR)
+ 				continue;
+ 			max_pfn = MAX(max_pfn, info->mem_map_data[i].pfn_end);
++			valid_memmap++;
 +		}
++		if (valid_memmap) {
++			info->max_mapnr = MIN(info->max_mapnr, max_pfn);
+ 		}
+-		info->max_mapnr = MIN(info->max_mapnr, max_pfn);
  	}
- 
- 	return TRUE;
-@@ -7948,6 +7951,7 @@ static void
- print_mem_usage(void)
- {
- 	mdf_pfn_t pfn_original, pfn_excluded, shrinking;
-+	unsigned long long total_size;
- 
- 	/*
- 	* /proc/vmcore doesn't contain the memory hole area.
-@@ -7958,11 +7962,11 @@ print_mem_usage(void)
- 	    + pfn_user + pfn_free + pfn_hwpoison;
- 	shrinking = (pfn_original - pfn_excluded) * 100;
- 	shrinking = shrinking / pfn_original;
-+	total_size = info->page_size * pfn_original;
- 
- 	MSG("\n");
--	MSG("\n");
--	MSG("----------------------------------------------------------------------\n");
- 	MSG("TYPE		PAGES			EXCLUDABLE	DESCRIPTION\n");
-+	MSG("----------------------------------------------------------------------\n");
- 
- 	MSG("ZERO		%-16llu	yes		Pages filled with zero\n", pfn_zero);
- 	MSG("CACHE		%-16llu	yes		Cache pages\n", pfn_cache);
-@@ -7975,7 +7979,9 @@ print_mem_usage(void)
- 
- 	MSG("\n");
- 
-+	MSG("page size:		%-16ld\n", info->page_size);
- 	MSG("Total pages on system:	%-16llu\n", pfn_original);
-+	MSG("Total size on system:	%-16llu Byte\n", total_size);
+ 	return ret;
  }
- 
- int
-@@ -9614,10 +9620,10 @@ main(int argc, char *argv[])
- 	retcd = COMPLETED;
- out:
- 	MSG("\n");
--	if (retcd == COMPLETED)
--		MSG("makedumpfile Completed.\n");
--	else
-+	if (retcd != COMPLETED)
- 		MSG("makedumpfile Failed.\n");
-+	else if (!info->flag_mem_usage)
-+		MSG("makedumpfile Completed.\n");
- 
- 	if (info) {
- 		if (info->dh_memory)
 -- 
-1.8.5.3
-
-
+1.7.1
 
 _______________________________________________
 kexec mailing list
