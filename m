@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1410366914.11440.16.camel@smoke>
-Subject: Re: [PATCH 02/13] arm64/kvm: Fix assembler compatibility of macros
-From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 10 Sep 2014 09:35:14 -0700
-In-Reply-To: <CAKv+Gu_hs-Sv=Bg6uyKc41OV9sKS0sfM1YAcCMaTF7aTH9YPwA@mail.gmail.com>
+Date: Wed, 10 Sep 2014 18:07:40 +0100
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 04/13] arm64: Add new hcall HVC_CALL_FUNC
+Message-ID: <20140910170740.GE1710@arm.com>
 References: <cover.1410302383.git.geoff@infradead.org>
- <bc4abc340eaa4da448f62326a134fabfb5a2a875.1410302383.git.geoff@infradead.org>
- <CAKv+Gu_hs-Sv=Bg6uyKc41OV9sKS0sfM1YAcCMaTF7aTH9YPwA@mail.gmail.com>
-Mime-Version: 1.0
+ <ea28cfef061d06e86704845a877802e057749b39.1410302383.git.geoff@infradead.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ea28cfef061d06e86704845a877802e057749b39.1410302383.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,54 +20,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Wed, 2014-09-10 at 10:40 +0200, Ard Biesheuvel wrote:
-> On 10 September 2014 00:49, Geoff Levand <geoff@infradead.org> wrote:
-> > Some of the macros defined in kvm_arm.h are useful in the exception vector
-> > routines, but they are not compatible with the assembler.  Change the
-> > definition of ESR_EL2_ISS to be compatible.
-> >
-> > Fixes build errors like these when using kvm_arm.h in assembly
-> > source files:
-> >
-> >   Error: unexpected characters following instruction at operand 3 -- `add x0,x1,#((1U<<25)-1)'
-> >
-> > Signed-off-by: Geoff Levand <geoff@infradead.org>
-> > ---
-> >  arch/arm64/include/asm/kvm_arm.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-> > index cc83520..e0e7e64 100644
-> > --- a/arch/arm64/include/asm/kvm_arm.h
-> > +++ b/arch/arm64/include/asm/kvm_arm.h
-> > @@ -176,7 +176,7 @@
-> >  #define ESR_EL2_EC_SHIFT       (26)
-> >  #define ESR_EL2_EC             (0x3fU << ESR_EL2_EC_SHIFT)
-> >  #define ESR_EL2_IL             (1U << 25)
-> > -#define ESR_EL2_ISS            (ESR_EL2_IL - 1)
-> > +#define ESR_EL2_ISS            (0xffff)
+On Tue, Sep 09, 2014 at 11:49:04PM +0100, Geoff Levand wrote:
+> Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
+> During CPU reset the CPU must be brought to the exception level it had on
+> entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
+> needed for this exception level switch.
 > 
-> Don't you mean 0x1ffffff?
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/include/asm/virt.h | 11 +++++++++++
+>  arch/arm64/kernel/hyp-stub.S  | 10 ++++++++++
+>  2 files changed, 21 insertions(+)
 
-Hcalls have a 16 bit 'payload', the upper bits of the ISS field
-are specified as zero by the architecture so 0xffff is the same
-as 0x1ffffff.
+[...]
 
-> And, there is a macro UL() for this purpose, so I suppose you could
-> redefine ESR_EL2_IL as (UL(1) << 25) as well. I know it is not
-> strictly the same thing, but it should be good enough as this is arm64
-> only
+> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+> index 9ab5f70..a21cf51 100644
+> --- a/arch/arm64/kernel/hyp-stub.S
+> +++ b/arch/arm64/kernel/hyp-stub.S
+> @@ -75,7 +75,17 @@ el1_sync:
+>  1:	cmp	x10, #HVC_SET_VECTORS
+>  	b.ne	1f
+>  	msr	vbar_el2, x0
+> +	b	2f
+>  
+> +1:	cmp	x10, #HVC_CALL_FUNC
+> +	b.ne    1f
+> +	mov	x29, lr
+> +	mov	lr, x0
+> +	mov	x0, x1
+> +	mov	x1, x2
+> +	mov	x2, x3
+> +	blr	lr
+> +	mov	lr, x29
 
-Sure that will be OK.  The one other use of ESR_EL2_IL will promote
-the operation to unsigned long without ill effect.  I'll prepare an
-updated patch.
+Why are you clobbering x29?
 
--Geoff
-
-
+Will
 
 _______________________________________________
 kexec mailing list
