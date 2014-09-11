@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XSAC8-0003vE-GW
- for kexec@lists.infradead.org; Thu, 11 Sep 2014 19:38:17 +0000
-Date: Thu, 11 Sep 2014 21:37:44 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
+ id 1XSAYe-00074B-RD
+ for kexec@lists.infradead.org; Thu, 11 Sep 2014 20:01:33 +0000
+Date: Thu, 11 Sep 2014 16:01:10 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] Put each per-cpu kdump ELF notes into a single page
-Message-ID: <20140911213744.42735c3c@hananiah.suse.cz>
-In-Reply-To: <20140905183314.23690175@hananiah.suse.cz>
+Message-ID: <20140911200110.GA24699@redhat.com>
 References: <20140905183314.23690175@hananiah.suse.cz>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140905183314.23690175@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,22 +23,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-Hi all,
-
-is anything wrong with the patch below? Are there questions? I thought
-this would be an easy one-line bugfix...
-
-Regards,
-Petr Tesarik
-
-On Fri, 5 Sep 2014 18:33:14 +0200
-Petr Tesarik <ptesarik@suse.cz> wrote:
-
+On Fri, Sep 05, 2014 at 06:33:14PM +0200, Petr Tesarik wrote:
 > On architectures that use percpu-vm, the percpu region is not guaranteed
-> to be contiguous in physical space. However, fs/proc/vmcore.c expects
+> to be contiguous in physical space.
+
+Petr,
+
+Which are those arches?
+
+> However, fs/proc/vmcore.c expects
 > all ELF notes to be contiguous. If the ELF note happens to occupy
 > two non-adjacent physical pages, part of the note may be read from an
 > incorrect memory location by the kdump kernel, resulting in failure to
@@ -69,10 +66,25 @@ Petr Tesarik <ptesarik@suse.cz> wrote:
 > -	crash_notes = alloc_percpu(note_buf_t);
 > +	crash_notes = __alloc_percpu(sizeof(note_buf_t),
 > +				     roundup_pow_of_two(sizeof(note_buf_t)));
+
+I think some of the changelog should show up here as comment in short
+form. I don't think it is obvious that why we are using __alloc_percpu()
+and why aligning to nearst higher power of 2 is needed here. Please also
+mention here which arches run into issues.
+
+Thanks
+Vivek
+
 >  	if (!crash_notes) {
 >  		pr_warn("Kexec: Memory allocation for saving cpu register states failed\n");
 >  		return -ENOMEM;
-
+> -- 
+> 1.8.4.5
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
