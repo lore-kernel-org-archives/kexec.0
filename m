@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-oi0-x229.google.com ([2607:f8b0:4003:c06::229])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XSTGc-0007Pp-TP
- for kexec@lists.infradead.org; Fri, 12 Sep 2014 16:00:11 +0000
-Date: Fri, 12 Sep 2014 11:59:40 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Patch v3 1/2] kaslr: check if kernel location is changed
-Message-ID: <20140912155940.GD32421@redhat.com>
+ id 1XSUr0-0001Ez-9v
+ for kexec@lists.infradead.org; Fri, 12 Sep 2014 17:41:51 +0000
+Received: by mail-oi0-f41.google.com with SMTP id u20so738778oif.14
+ for <kexec@lists.infradead.org>; Fri, 12 Sep 2014 10:41:28 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20140912153308.GB4408@redhat.com>
 References: <1410502832-3573-1-git-send-email-bhe@redhat.com>
  <20140912152244.GA2781@dhcp-16-105.nay.redhat.com>
- <20140912153308.GB4408@redhat.com> <5413179C.8020902@whissi.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5413179C.8020902@whissi.de>
+ <20140912153308.GB4408@redhat.com>
+Date: Fri, 12 Sep 2014 10:41:28 -0700
+Message-ID: <CAGXu5j+3vQgaCf23A-UACsjodu+TT01Gbka+YezVYNzjFrQG1Q@mail.gmail.com>
+Subject: Re: [Patch v3 1/2] kaslr: check if kernel location is changed
+From: Kees Cook <keescook@chromium.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,23 +26,138 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Thomas D." <whissi@whissi.de>
-Cc: "ak@linux.intel.com" <ak@linux.intel.com>, "keescook@chromium.org" <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "kumagai-atsushi@mxc.nes.nec.co.jp" <kumagai-atsushi@mxc.nes.nec.co.jp>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Thomas D." <whissi@whissi.de>, Andi Kleen <ak@linux.intel.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
 
-On Fri, Sep 12, 2014 at 05:56:12PM +0200, Thomas D. wrote:
-> Hi,
-> 
-> Vivek Goyal wrote:
-> > You had reported kexec issues with CONFIG_RANDOMIZE_BASE=y. Does this
-> > patch resolve the issue for you?
-> 
-> Yup! Tested against kernel-3.16.2.
+On Fri, Sep 12, 2014 at 8:33 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
+> On Fri, Sep 12, 2014 at 11:22:44PM +0800, Baoquan He wrote:
+>> Function handle_relocations() is used to do the relocations handling
+>> for i686 and kaslr of x86_64. For 32 bit the relocation handling is
+>> mandotary to perform. For x86_64 only when kaslr is enabled and a
+>> random kernel location is chosen successfully the relocation handling
+>> shound be done. However previous implementation only compared the
+>> kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
+>> compiled to run at. This would casue system to be exceptional in
+>> few conditions like when delta between load address and compiled
+>> address is bigger than what 32bit signed relocations can handle.
+>> Also there will be limitations that delta can't be too big otherwise
+>> kernel text virtual addresses will overflow in module address space.
+>>
+>> So in this patch check if kernel location is changed after
+>> choose_kernel_location() when x86_64. If and only if in x86_64
+>> and kernel location is changed, we say a kaslr random kernel
+>> location is chosen, then the relocation handling is needed.
+>>
+>> Signed-off-by: Baoquan He <bhe@redhat.com>
+>
+> I think this patch should make kexec and kdump working with kaslr
+> enabled (CONFIG_RANDOMIZE_BASE=y).
+>
+> In case of kdump, we will need to pass "nokaslr" to make sure kernel
+> does not move from kexec chosen address.
+>
+> In case of kexec, I think it should be ok to not pass "nokaslr". This
+> case is no different than any other bootloader.
+>
+> Hence.
+> Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-Thanks. Given this patch is small and should not break anything else, I
-think it might make sense to send it to stable too.
+Yup, I think this looks fine to me too. Thanks for getting this fixed!
+And as Vivek mentioned later, I think this should probably go into
+-stable as well.
 
-Thanks
-Vivek
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: stable@vger.kernel.org
+
+-Kees
+
+>
+> Thomas D.,
+>
+> You had reported kexec issues with CONFIG_RANDOMIZE_BASE=y. Does this
+> patch resolve the issue for you?
+>
+> Thanks
+> Vivek
+>
+>> ---
+>>  arch/x86/boot/compressed/misc.c | 26 ++++++++++++++++++++++----
+>>  1 file changed, 22 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+>> index 57ab74d..3bb2a17 100644
+>> --- a/arch/x86/boot/compressed/misc.c
+>> +++ b/arch/x86/boot/compressed/misc.c
+>> @@ -230,8 +230,9 @@ static void error(char *x)
+>>               asm("hlt");
+>>  }
+>>
+>> -#if CONFIG_X86_NEED_RELOCS
+>> -static void handle_relocations(void *output, unsigned long output_len)
+>> +#ifdef CONFIG_X86_NEED_RELOCS
+>> +static void handle_relocations(void *output_orig, void *output,
+>> +                            unsigned long output_len)
+>>  {
+>>       int *reloc;
+>>       unsigned long delta, map, ptr;
+>> @@ -239,6 +240,20 @@ static void handle_relocations(void *output, unsigned long output_len)
+>>       unsigned long max_addr = min_addr + output_len;
+>>
+>>       /*
+>> +     * 32bit always requires relocations to be performed. For x86_64,
+>> +     * relocations need to be performed only if kaslr has chosen a
+>> +     * different load address then kernel was originally loaded at.
+>> +     *
+>> +     * If we are here, either kaslr is not configured in or kaslr is disabled
+>> +     * or kaslr has chosen not to change the load location of kernel. Don't
+>> +     * perform any relocations.
+>> +     */
+>> +#if CONFIG_X86_64
+>> +     if (output_orig == output)
+>> +             return;
+>> +#endif
+>> +
+>> +     /*
+>>        * Calculate the delta between where vmlinux was linked to load
+>>        * and where it was actually loaded.
+>>        */
+>> @@ -299,7 +314,8 @@ static void handle_relocations(void *output, unsigned long output_len)
+>>  #endif
+>>  }
+>>  #else
+>> -static inline void handle_relocations(void *output, unsigned long output_len)
+>> +static inline void handle_relocations(void *output_orig, void *output,
+>> +                                   unsigned long output_len)
+>>  { }
+>>  #endif
+>>
+>> @@ -360,6 +376,8 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
+>>                                 unsigned char *output,
+>>                                 unsigned long output_len)
+>>  {
+>> +     unsigned char *output_orig = output;
+>> +
+>>       real_mode = rmode;
+>>
+>>       sanitize_boot_params(real_mode);
+>> @@ -402,7 +420,7 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
+>>       debug_putstr("\nDecompressing Linux... ");
+>>       decompress(input_data, input_len, NULL, NULL, output, NULL, error);
+>>       parse_elf(output);
+>> -     handle_relocations(output, output_len);
+>> +     handle_relocations(output_orig, output, output_len);
+>>       debug_putstr("done.\nBooting the kernel.\n");
+>>       return output;
+>>  }
+>> --
+>> 1.8.5.3
+>>
+
+
+
+-- 
+Kees Cook
+Chrome OS Security
 
 _______________________________________________
 kexec mailing list
