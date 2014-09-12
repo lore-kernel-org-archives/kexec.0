@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XSPPJ-0004LM-7P
- for kexec@lists.infradead.org; Fri, 12 Sep 2014 11:52:53 +0000
-Date: Fri, 12 Sep 2014 07:52:30 -0400
+ id 1XSPbN-0000DA-6k
+ for kexec@lists.infradead.org; Fri, 12 Sep 2014 12:05:21 +0000
+Date: Fri, 12 Sep 2014 08:04:47 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] Put each per-cpu kdump ELF notes into a single page
-Message-ID: <20140912115230.GA29945@redhat.com>
-References: <20140905183314.23690175@hananiah.suse.cz>
- <20140911200110.GA24699@redhat.com>
- <20140911224330.0cec9b4c@hananiah.suse.cz>
- <20140911211637.GF17140@redhat.com>
- <20140912001537.5f877fe7@hananiah.suse.cz>
+Subject: Re: [Patch v2 1/2] kaslr: check if kernel location is changed
+Message-ID: <20140912120447.GB29945@redhat.com>
+References: <1410502832-3573-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140912001537.5f877fe7@hananiah.suse.cz>
+In-Reply-To: <1410502832-3573-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,50 +23,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: ak@linux.intel.com, keescook@chromium.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
 
-On Fri, Sep 12, 2014 at 12:15:37AM +0200, Petr Tesarik wrote:
-> On Thu, 11 Sep 2014 17:16:37 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Thu, Sep 11, 2014 at 10:43:30PM +0200, Petr Tesarik wrote:
-> > > On Thu, 11 Sep 2014 16:01:10 -0400
-> > > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > 
-> > > > On Fri, Sep 05, 2014 at 06:33:14PM +0200, Petr Tesarik wrote:
-> > > > > On architectures that use percpu-vm, the percpu region is not guaranteed
-> > > > > to be contiguous in physical space.
-> > > > 
-> > > > Petr,
-> > > > 
-> > > > Which are those arches?
-> > > 
-> > > All except nommu. Actually, percpu-km will be used instead even on MMU
-> > > if SMP is disabled, but since SMP is pretty standard now, I guess the
-> > > vast majority of all kernels out there is affected. ;-)
-> > 
-> > Hi Petr,
-> > 
-> > To make sure I understand it correctly I will just summarize what you
-> > said.
-> > 
-> > alloc_percpu() code does not guarantee that an object will be on physically
-> > contiguous pages if object crosses page boundary. That's why we are forcing
-> > allocation of object aligned to nearest higher power of two boundary of
-> > object size and that way object will always be on same page (as long as object
-> > is not bigger than a page).
-> > 
-> > Is that a fair summary?
-> 
-> Yes. I might add a note why physically contiguous memory is needed
-> here, but maybe it's obvious to anyone dealing with kdump.
+On Fri, Sep 12, 2014 at 02:20:31PM +0800, Baoquan He wrote:
+> Function handle_relocations() is used to do the relocations handling
+> for i686 and kaslr of x86_64. For 32 bit the relocation handling is
+> mandotary to perform. For x86_64 only when kaslr is enabled and a
+> random kernel location is chosen successfully the relocation handling
+> shound be done. However previous implementation only compared the
+> kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
+> compiled to run at.
 
-I think adding couple of lines to explain why physically contiguous notes
-are needed is a good idea. It will not be ovious to anybody new to kdump.
+> This would casue system to hang when kernel
+> loading address is not equal to LOAD_PHYSICAL_ADDR.
+
+I don't think above is correct. It will not always fails. It will fail
+only in few conditions like when delta between load address and compiled
+address is bigger than what 32bit signed relocations can handle. 
+
+Also there will be limitations that delta can't be too big otherwise
+kernel text virtual addresses will overflow in module address space.
 
 Thanks
 Vivek
+> 
+> So in this patch check if kernel location is changed after
+> choose_kernel_location() when x86_64. If and only if in x86_64
+> and kernel location is changed, we say a kaslr random kernel
+> location is chosen, then the relocation handling need be done.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/x86/boot/compressed/misc.c | 26 ++++++++++++++++++++++----
+>  1 file changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+> index 57ab74d..3bb2a17 100644
+> --- a/arch/x86/boot/compressed/misc.c
+> +++ b/arch/x86/boot/compressed/misc.c
+> @@ -230,8 +230,9 @@ static void error(char *x)
+>  		asm("hlt");
+>  }
+>  
+> -#if CONFIG_X86_NEED_RELOCS
+> -static void handle_relocations(void *output, unsigned long output_len)
+> +#ifdef CONFIG_X86_NEED_RELOCS
+> +static void handle_relocations(void *output_orig, void *output,
+> +			       unsigned long output_len)
+>  {
+>  	int *reloc;
+>  	unsigned long delta, map, ptr;
+> @@ -239,6 +240,20 @@ static void handle_relocations(void *output, unsigned long output_len)
+>  	unsigned long max_addr = min_addr + output_len;
+>  
+>  	/*
+> +	* 32bit always requires relocations to be performed. For x86_64,
+> +	* relocations need to be performed only if kaslr has chosen a
+> +	* different load address then kernel was originally loaded at.
+> +	*
+> +	* If we are here, either kaslr is not configured in or kaslr is disabled
+> +	* or kaslr has chosen not to change the load location of kernel. Don't
+> +	* perform any relocations.
+> +	*/
+> +#if CONFIG_X86_64
+> +	if (output_orig == output)
+> +		return;
+> +#endif
+> +
+> +	/*
+>  	 * Calculate the delta between where vmlinux was linked to load
+>  	 * and where it was actually loaded.
+>  	 */
+> @@ -299,7 +314,8 @@ static void handle_relocations(void *output, unsigned long output_len)
+>  #endif
+>  }
+>  #else
+> -static inline void handle_relocations(void *output, unsigned long output_len)
+> +static inline void handle_relocations(void *output_orig, void *output,
+> +				      unsigned long output_len)
+>  { }
+>  #endif
+>  
+> @@ -360,6 +376,8 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
+>  				  unsigned char *output,
+>  				  unsigned long output_len)
+>  {
+> +	unsigned char *output_orig = output;
+> +
+>  	real_mode = rmode;
+>  
+>  	sanitize_boot_params(real_mode);
+> @@ -402,7 +420,7 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
+>  	debug_putstr("\nDecompressing Linux... ");
+>  	decompress(input_data, input_len, NULL, NULL, output, NULL, error);
+>  	parse_elf(output);
+> -	handle_relocations(output, output_len);
+> +	handle_relocations(output_orig, output, output_len);
+>  	debug_putstr("done.\nBooting the kernel.\n");
+>  	return output;
+>  }
+> -- 
+> 1.8.5.3
 
 _______________________________________________
 kexec mailing list
