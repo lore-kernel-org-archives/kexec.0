@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XSKFj-0002Uc-I9
- for kexec@lists.infradead.org; Fri, 12 Sep 2014 06:22:40 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [Patch v2 1/2] kaslr: check if kernel location is changed
-Date: Fri, 12 Sep 2014 14:20:31 +0800
-Message-Id: <1410502832-3573-1-git-send-email-bhe@redhat.com>
+ id 1XSL23-0003rI-37
+ for kexec@lists.infradead.org; Fri, 12 Sep 2014 07:12:35 +0000
+Date: Fri, 12 Sep 2014 15:12:10 +0800
+From: "bhe@redhat.com" <bhe@redhat.com>
+Subject: Re: [PATCH v4] makedumpfile: Exclude unnecessary hugepages.
+Message-ID: <20140912071210.GA29800@dhcp-16-116.nay.redhat.com>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9724E000@BPXM01GP.gisp.nec.co.jp>
+ <20140910073424.GD25867@dhcp-16-116.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97254CF9@BPXM01GP.gisp.nec.co.jp>
+ <20140911092406.GB4411@dhcp-16-116.nay.redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE97254E06@BPXM01GP.gisp.nec.co.jp>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE97254E06@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,101 +23,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: ak@linux.intel.com, keescook@chromium.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Function handle_relocations() is used to do the relocations handling
-for i686 and kaslr of x86_64. For 32 bit the relocation handling is
-mandotary to perform. For x86_64 only when kaslr is enabled and a
-random kernel location is chosen successfully the relocation handling
-shound be done. However previous implementation only compared the
-kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
-compiled to run at. This would casue system to hang when kernel
-loading address is not equal to LOAD_PHYSICAL_ADDR.
+On 09/11/14 at 10:04am, Atsushi Kumagai wrote:
+> >On 09/11/14 at 08:52am, Atsushi Kumagai wrote:
+> >> >Hi Atsushi,
+> >> >
+> >> >Since huge pages are included in user pages, I can't think of a way to
+> >> >make test cases for huge page exclusion. Could you give some suggestions
+> >> >on this or how did you test it?
+> >>
+> >> Before I posted this patch, I tested as below.
+> >> This idea came from the fact that old makedumpfile can't exclude
+> >> huge pages except the first page(PG_head).
+> >>
+> >>    1. Get the number of hugepages from /proc/meminfo
+> >>    2. Calculate the number of PG_tail pages
+> >>    3. Capture the dumpfile without filtering
+> >>    4. Run makedumpfile and compare the report message between v1.5.6
+> >>       and v1.5.7(rc) to get how many user pages become excludable with
+> >>       this patch.
+> >>    5. The result of Step2's and Step4's must be same, confirm it.
+> >>
+> >> The way above is for THP but you can apply it also for hugetlbfs
+> >> if you take care of the things that old makedumpfile can't exclude
+> >> *any* hugetlbfs pages.
+> >
+> >But THP is also Anonymous pages, doesn't it do the same for THP between
+> >1.5.6 and 1.5.7?
+> 
+> Only a PG_head page is marked as an anonymous page, makedumpfile doesn't
+> distinguish PG_tail pages as anonymous pages. Please see below.
+> 
+>   do_huge_pmd_anonymous_page()
+>     + __do_huge_pmd_anonymous_page()
+>       + page_add_new_anon_rmap()
+>         + __page_set_anon_rmap()
 
-So in this patch check if kernel location is changed after
-choose_kernel_location() when x86_64. If and only if in x86_64
-and kernel location is changed, we say a kaslr random kernel
-location is chosen, then the relocation handling need be done.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/x86/boot/compressed/misc.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 57ab74d..3bb2a17 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -230,8 +230,9 @@ static void error(char *x)
- 		asm("hlt");
- }
- 
--#if CONFIG_X86_NEED_RELOCS
--static void handle_relocations(void *output, unsigned long output_len)
-+#ifdef CONFIG_X86_NEED_RELOCS
-+static void handle_relocations(void *output_orig, void *output,
-+			       unsigned long output_len)
- {
- 	int *reloc;
- 	unsigned long delta, map, ptr;
-@@ -239,6 +240,20 @@ static void handle_relocations(void *output, unsigned long output_len)
- 	unsigned long max_addr = min_addr + output_len;
- 
- 	/*
-+	* 32bit always requires relocations to be performed. For x86_64,
-+	* relocations need to be performed only if kaslr has chosen a
-+	* different load address then kernel was originally loaded at.
-+	*
-+	* If we are here, either kaslr is not configured in or kaslr is disabled
-+	* or kaslr has chosen not to change the load location of kernel. Don't
-+	* perform any relocations.
-+	*/
-+#if CONFIG_X86_64
-+	if (output_orig == output)
-+		return;
-+#endif
-+
-+	/*
- 	 * Calculate the delta between where vmlinux was linked to load
- 	 * and where it was actually loaded.
- 	 */
-@@ -299,7 +314,8 @@ static void handle_relocations(void *output, unsigned long output_len)
- #endif
- }
- #else
--static inline void handle_relocations(void *output, unsigned long output_len)
-+static inline void handle_relocations(void *output_orig, void *output,
-+				      unsigned long output_len)
- { }
- #endif
- 
-@@ -360,6 +376,8 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
- 				  unsigned char *output,
- 				  unsigned long output_len)
- {
-+	unsigned char *output_orig = output;
-+
- 	real_mode = rmode;
- 
- 	sanitize_boot_params(real_mode);
-@@ -402,7 +420,7 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
- 	debug_putstr("\nDecompressing Linux... ");
- 	decompress(input_data, input_len, NULL, NULL, output, NULL, error);
- 	parse_elf(output);
--	handle_relocations(output, output_len);
-+	handle_relocations(output_orig, output, output_len);
- 	debug_putstr("done.\nBooting the kernel.\n");
- 	return output;
- }
--- 
-1.8.5.3
-
+Yes, you are right. Thanks, Atsushi!
 
 _______________________________________________
 kexec mailing list
