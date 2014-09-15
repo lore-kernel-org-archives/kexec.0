@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 15 Sep 2014 19:11:01 +0100
+Date: Mon, 15 Sep 2014 19:42:18 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 04/13] arm64: Add new hcall HVC_CALL_FUNC
-Message-ID: <20140915181101.GE13789@leverpostej>
+Subject: Re: [PATCH 06/13] arm64: Add new routine read_cpu_properties
+Message-ID: <20140915184217.GA14191@leverpostej>
 References: <cover.1410302383.git.geoff@infradead.org>
- <ea28cfef061d06e86704845a877802e057749b39.1410302383.git.geoff@infradead.org>
+ <b68073fb2e816f97311b9a3547e3656164ae85d0.1410302383.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ea28cfef061d06e86704845a877802e057749b39.1410302383.git.geoff@infradead.org>
+In-Reply-To: <b68073fb2e816f97311b9a3547e3656164ae85d0.1410302383.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,68 +23,159 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
 Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
+Hi Geoff,
+
 On Tue, Sep 09, 2014 at 11:49:04PM +0100, Geoff Levand wrote:
-> Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
-> During CPU reset the CPU must be brought to the exception level it had on
-> entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
-> needed for this exception level switch.
-> 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
-> ---
->  arch/arm64/include/asm/virt.h | 11 +++++++++++
->  arch/arm64/kernel/hyp-stub.S  | 10 ++++++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-> index 894fe53..b217fbc 100644
-> --- a/arch/arm64/include/asm/virt.h
-> +++ b/arch/arm64/include/asm/virt.h
-> @@ -41,6 +41,17 @@
->  
->  #define HVC_KVM_CALL_HYP 3
->  
-> +/*
-> + * HVC_CALL_FUNC - Execute a function at EL2.
-> + *
-> + * @x0: Physical address of the funtion to be executed.
-> + * @x1: Passed as the first argument to @fn.
-> + * @x2: Passed as the second argument to @fn.
-> + * @x3: Passed as the third argument to @fn.
-> + */
-> +
-> +#define HVC_CALL_FUNC 4
-> +
+> The kexec re-boot support that will be added in a subsequent patch in this
+> series will need to read the device tree CPU properties, and it is expected
+> that a rework of the SMP spin table code to handle cpu_die will also need this
+> functionality, so add two new common arm64 files cpu-properties.h and
+> cpu-properties.c that define a new structure cpu_properties that hold the
+> various CPU properties from a device tree, and the new routine
+> read_cpu_properties() that fills the structure from a device tree CPU node.
 
-Can't we use the HVC_KVM_CALL_HYP for this as well? I thought we already
-added the code to the stub to do that in the last patch.
+I'm very much not keen on placing all this information in a single
+structure -- that adds a new tight coupling that we didn't have before,
+and it looks like it's going to be painful to maintain.
 
-Is there a difference between the two that I'm missing?
+If kexec uses the existing high-level hotplug infrastructure, it has no
+reason to go anywhere near this information.
 
->  #ifndef __ASSEMBLY__
->  
->  /*
-> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-> index 9ab5f70..a21cf51 100644
-> --- a/arch/arm64/kernel/hyp-stub.S
-> +++ b/arch/arm64/kernel/hyp-stub.S
-> @@ -75,7 +75,17 @@ el1_sync:
->  1:	cmp	x10, #HVC_SET_VECTORS
->  	b.ne	1f
->  	msr	vbar_el2, x0
-> +	b	2f
->  
-> +1:	cmp	x10, #HVC_CALL_FUNC
-> +	b.ne    1f
-> +	mov	x29, lr
+So I really don't like this patch.
 
-What's the contract for functions we call through the stub?
-
-If they can use all the caller-saved registers, then we need to stach
-the original LR before issuing the HVC. Otherwise we can stash it in
-x18 at EL2.
+Why do you think we need this information to be centralized in this way?
 
 Thanks,
 Mark.
+
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/kernel/cpu-properties.c | 58 ++++++++++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/cpu-properties.h | 39 +++++++++++++++++++++++++
+>  2 files changed, 97 insertions(+)
+>  create mode 100644 arch/arm64/kernel/cpu-properties.c
+>  create mode 100644 arch/arm64/kernel/cpu-properties.h
+> 
+> diff --git a/arch/arm64/kernel/cpu-properties.c b/arch/arm64/kernel/cpu-properties.c
+> new file mode 100644
+> index 0000000..e64b34b
+> --- /dev/null
+> +++ b/arch/arm64/kernel/cpu-properties.c
+> @@ -0,0 +1,58 @@
+> +/*
+> + * Copyright (C) Linaro.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "cpu-properties.h"
+> +
+> +int read_cpu_properties(struct cpu_properties *p, const struct device_node *dn)
+> +{
+> +	const u32 *cell;
+> +
+> +	memset(p, 0, sizeof(*p));
+> +	p->hwid = INVALID_HWID;
+> +	p->cpu_release_addr = INVALID_ADDR;
+> +
+> +	cell = of_get_property(dn, "reg", NULL);
+> +
+> +	if (!cell) {
+> +		pr_err("%s: Error: %s: invalid reg property\n",
+> +		       __func__, dn->full_name);
+> +		return -1;
+> +	}
+> +
+> +	p->hwid = of_read_number(cell,
+> +		of_n_addr_cells((struct device_node *)dn)) & MPIDR_HWID_BITMASK;
+> +
+> +	p->enable_method = of_get_property(dn, "enable-method", NULL);
+> +
+> +	if (!p->enable_method) {
+> +		pr_err("%s: Error: %s: invalid enable-method\n",
+> +		       __func__, dn->full_name);
+> +		return -1;
+> +	}
+> +
+> +	if (!strcmp(p->enable_method, "psci")) {
+> +		p->type = cpu_enable_method_psci;
+> +		return 0;
+> +	}
+> +
+> +	if (strcmp(p->enable_method, "spin-table")) {
+> +		p->type = cpu_enable_method_unknown;
+> +		return -1;
+> +	}
+> +
+> +	p->type = cpu_enable_method_spin_table;
+> +
+> +	if (of_property_read_u64(dn, "cpu-release-addr",
+> +				 &p->cpu_release_addr)) {
+> +		pr_err("%s: Error: %s: invalid cpu-return-addr property\n",
+> +		       __func__, dn->full_name);
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/arch/arm64/kernel/cpu-properties.h b/arch/arm64/kernel/cpu-properties.h
+> new file mode 100644
+> index 0000000..b4218ef
+> --- /dev/null
+> +++ b/arch/arm64/kernel/cpu-properties.h
+> @@ -0,0 +1,39 @@
+> +/*
+> + * Copyright (C) Linaro.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#if !defined(__ARM64_CPU_PROPERTIES_H)
+> +#define __ARM64_CPU_PROPERTIES_H
+> +
+> +#include <asm/memory.h>
+> +#include <asm/cputype.h>
+> +
+> +#define INVALID_ADDR UL(~0)
+> +
+> +#if !defined(__ASSEMBLY__)
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +
+> +enum cpu_enable_method {
+> +	cpu_enable_method_unknown,
+> +	cpu_enable_method_psci,
+> +	cpu_enable_method_spin_table,
+> +};
+> +
+> +struct cpu_properties {
+> +	u64 hwid;
+> +	u64 cpu_release_addr;
+> +	const char *enable_method;
+> +	enum cpu_enable_method type;
+> +};
+> +
+> +int read_cpu_properties(struct cpu_properties *p, const struct device_node *dn);
+> +
+> +#endif /* !defined(__ASSEMBLY__) */
+> +
+> +#endif
+> -- 
+> 1.9.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 _______________________________________________
 kexec mailing list
