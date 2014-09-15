@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 15 Sep 2014 20:06:17 +0100
+Date: Mon, 15 Sep 2014 20:10:17 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/13] arm64: Use cpu_ops for smp_stop
-Message-ID: <20140915190616.GC14191@leverpostej>
+Subject: Re: [PATCH 09/13] arm64/kexec: Kexec expects cpu_die
+Message-ID: <20140915191017.GD14191@leverpostej>
 References: <cover.1410302383.git.geoff@infradead.org>
- <36ad9302497338a34cc7174a72a2ac99ceb16fdb.1410302383.git.geoff@infradead.org>
+ <8760d3e11621065a78236e91724875f0e1cfadf4.1410302383.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <36ad9302497338a34cc7174a72a2ac99ceb16fdb.1410302383.git.geoff@infradead.org>
-Content-Language: en-US
+In-Reply-To: <8760d3e11621065a78236e91724875f0e1cfadf4.1410302383.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,69 +23,75 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
 Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-Hi Geoff,
-
 On Tue, Sep 09, 2014 at 11:49:05PM +0100, Geoff Levand wrote:
-> The current implementation of ipi_cpu_stop() is just a tight infinite loop
-> around cpu_relax().  This infinite loop implementation is OK if the machine
-> will soon do a poweroff, but it doesn't have any mechanism to allow a CPU
-> to be brought back on-line, nor is it compatible with kexec re-boot.
+> The arm64 implementation of kexec expects an operational cpu_die method of
+> struct cpu_operations, so add defined(CONFIG_KEXEC) to the preprocessor
+> conditional that enables cpu_die.
 
-I don't see why we should use this when we have disable_nonboot_cpus.
+I very much do not like this, as I explained in previous postings and my
+comments on other patches in this series.
 
-If the kernel is alive and well, disable_nonboot_cpus will correctly
-shut down all but one CPU, returning an error if that fails, whereupon
-we can respect the error code and halt the kexec.
+Please use the hotplug infrastructure, and have kexec depend on
+CPU_HOTPLUG || !SMP.
 
-If the kernel is not alive and well, we have no idea what CPUs are
-executing anyway, so all we can expect to do is to boot a (UP) crash
-kernel in some previously reserved memory. Trying to actually kill the
-CPUs is nice, but possibly not necessary.
+There is no reason for these files to have any knowledge of kexec
+whatsoever.
 
-> Add a check for a valid cpu_die method of the appropriate cpu_ops structure,
-> and if a valid method is found, transfer control to that method.  It is
-> expected that the cpu_die method puts the CPU into a state such that they can
-> be brought back on-line or progress through a kexec re-boot.
+Thanks,
+Mark
+
 > 
 > Signed-off-by: Geoff Levand <geoff@infradead.org>
 > ---
->  arch/arm64/kernel/smp.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  arch/arm64/include/asm/cpu_ops.h | 2 +-
+>  arch/arm64/kernel/psci.c         | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 4743397..002aa8a 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -555,6 +555,15 @@ static void ipi_cpu_stop(unsigned int cpu)
+> diff --git a/arch/arm64/include/asm/cpu_ops.h b/arch/arm64/include/asm/cpu_ops.h
+> index d7b4b38..9fd7281 100644
+> --- a/arch/arm64/include/asm/cpu_ops.h
+> +++ b/arch/arm64/include/asm/cpu_ops.h
+> @@ -50,7 +50,7 @@ struct cpu_operations {
+>  	int		(*cpu_prepare)(unsigned int);
+>  	int		(*cpu_boot)(unsigned int);
+>  	void		(*cpu_postboot)(void);
+> -#ifdef CONFIG_HOTPLUG_CPU
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_KEXEC)
+>  	int		(*cpu_disable)(unsigned int cpu);
+>  	void		(*cpu_die)(unsigned int cpu);
+>  	int		(*cpu_kill)(unsigned int cpu);
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index 5539547..81dbbc9 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -380,7 +380,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)
+>  	return err;
+>  }
 >  
->  	local_irq_disable();
->  
-> +	/* If we have the cpu ops use them. */
-> +
-> +	if (cpu_ops[cpu]->cpu_disable &&
-> +	    cpu_ops[cpu]->cpu_die &&
-> +	    !cpu_ops[cpu]->cpu_disable(cpu))
-> +		cpu_ops[cpu]->cpu_die(cpu);
-
-I don't think kexec should handle this. The hotplug code already does
-this, better (calling cpu_kill and returning an error code), and having
-two callers of these functions is only going to lead to hard-to-debug
-drift between the two.
-
->  	while (1)
->  		cpu_relax();
-
-Any CPUs left here are a major problem.
-
-We absolutely must fail kexec if a CPU is still in the kernel (in the
-pen or in the kernel proper), or they can do arbitrarily bad things when
-the kernel image gets clobbered. SO this is insufficient.
-
-As I mention above, a crash kernel might be an exception to that rule,
-but we shouldn't treat that as the usual case.
-
-Thanks,
-Mark.
+> -#ifdef CONFIG_HOTPLUG_CPU
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_KEXEC)
+>  static int cpu_psci_cpu_disable(unsigned int cpu)
+>  {
+>  	/* Fail early if we don't have CPU_OFF support */
+> @@ -442,7 +442,7 @@ const struct cpu_operations cpu_psci_ops = {
+>  	.cpu_init	= cpu_psci_cpu_init,
+>  	.cpu_prepare	= cpu_psci_cpu_prepare,
+>  	.cpu_boot	= cpu_psci_cpu_boot,
+> -#ifdef CONFIG_HOTPLUG_CPU
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_KEXEC)
+>  	.cpu_disable	= cpu_psci_cpu_disable,
+>  	.cpu_die	= cpu_psci_cpu_die,
+>  	.cpu_kill	= cpu_psci_cpu_kill,
+> -- 
+> 1.9.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 _______________________________________________
 kexec mailing list
