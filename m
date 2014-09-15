@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XTX7f-0004f9-3u
- for kexec@lists.infradead.org; Mon, 15 Sep 2014 14:19:19 +0000
-Date: Mon, 15 Sep 2014 22:18:48 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64
-Message-ID: <20140915141848.GA1734@dhcp-17-102.nay.redhat.com>
-References: <1410761122-1864-1-git-send-email-bhe@redhat.com>
+Date: Mon, 15 Sep 2014 17:10:15 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 01/13] arm64: Add ESR_EL2_EC macros to hyp-stub
+Message-ID: <20140915161014.GB13789@leverpostej>
+References: <cover.1410302383.git.geoff@infradead.org>
+ <5e1b1892eb3ecc3bccff47766675c24c650a1a14.1410302383.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1410761122-1864-1-git-send-email-bhe@redhat.com>
+In-Reply-To: <5e1b1892eb3ecc3bccff47766675c24c650a1a14.1410302383.git.geoff@infradead.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,95 +21,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On 09/15/14 at 02:05pm, Baoquan He wrote:
-> In x86_64, since v2.6.26 the KERNEL_IMAGE_SIZE is changed to 512M, and
-> according the MODULES_VADDR is changed to 0xffffffffa0000000. Before
-> that, KERNEL_IMAGE_SIZE is 128M, and MODULES_VADDR is 0xffffffff88000000.
+On Tue, Sep 09, 2014 at 11:49:04PM +0100, Geoff Levand wrote:
+> To improve the readability of the el1_sync routine in hyp-stub.S replace the
+> numeric immediate values with preprocessor macros ESR_EL2_EC_SHIFT and
+> ESR_EL2_EC_HVC64.
 > 
-> However, in v3.12 Kees Cook introduced kaslr to randomise the location
-> of kernel. And the kernel text mapping addr space is enlarged from 512M
-> to 1G. That means now KERNEL_IMAGE_SIZE is variable, its value is 512M
-> with kaslr support not compiled in and 1G with kaslr support compiled
-> in. Accordingly the MODULES_VADDR is changed too to be:
-
-#define MODULES_VADDR    (__START_KERNEL_map + KERNEL_IMAGE_SIZE)
-
-Sorry, the above formula is lost.
-
-> 
-> So when kaslr is compiled in and enabled, the kernel text mapping addr
-> space and modules vaddr space need be adjusted. Otherwise makedumpfile
-> will collapse since the addr for some symbols is not correct.
-> 
-> Hence KERNEL_IMAGE_SIZE need be exported to vmcoreinfo and got in
-> makedumpfile to help calculate MODULES_VADDR.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
 > ---
->  makedumpfile.c | 8 ++++++++
->  makedumpfile.h | 4 +++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
+>  arch/arm64/kernel/hyp-stub.S | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index b4d43d8..48d73a8 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -1564,6 +1564,12 @@ get_value_for_old_linux(void)
->  			NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) =
->  			PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_39_to_latest_version;
->  	}
-> +#ifdef __x86_64__
-> +	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
-> +		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
-> +			NUMBER(KERNEL_IMAGE_SIZE) = MODULES_VADDR_ORIG;
-> +	}
-> +#endif
->  	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
->  		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
->  			SIZE(pageflags) =
-> @@ -1813,6 +1819,7 @@ write_vmcoreinfo_data(void)
->  	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
+> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+> index a272f33..2d960a9 100644
+> --- a/arch/arm64/kernel/hyp-stub.S
+> +++ b/arch/arm64/kernel/hyp-stub.S
+> @@ -52,10 +52,13 @@ ENDPROC(__hyp_stub_vectors)
 >  
->  	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-> +	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+>  	.align 11
 >  
->  	/*
->  	 * write the source file of 1st kernel
-> @@ -2147,6 +2154,7 @@ read_vmcoreinfo(void)
->  	READ_SRCFILE("pud_t", pud_t);
->  
->  	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-> +	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
->  
->  	return TRUE;
->  }
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 6493f61..28a3cac 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -549,7 +549,8 @@ do { \
->  #define VMEMMAP_END_2_6_31	(0xffffeaffffffffff) /* 2.6.31, or later  */
->  
->  #define __START_KERNEL_map	(0xffffffff80000000)
-> -#define MODULES_VADDR		(0xffffffff88000000)
-> +#define MODULES_VADDR_ORIG	(0xffffffff88000000)
-> +#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
->  #define MODULES_END		(0xfffffffffff00000)
->  #define KVBASE			PAGE_OFFSET
->  #define _SECTION_SIZE_BITS	(27)
-> @@ -1531,6 +1532,7 @@ struct number_table {
->  	long    PG_hwpoison;
->  
->  	long	PAGE_BUDDY_MAPCOUNT_VALUE;
-> +	long	KERNEL_IMAGE_SIZE;
->  	long	SECTION_SIZE_BITS;
->  	long	MAX_PHYSMEM_BITS;
->  };
+> +#define ESR_EL2_EC_SHIFT	26
+> +#define ESR_EL2_EC_HVC64	0x16
+
+These exist in arch/arm64/include/asm/kvm_arm.h, no?
+
+If anything that should be folded into arch/arm64/include/asm/esr.h...
+
+Mark.
+
+> +
+>  el1_sync:
+>  	mrs	x1, esr_el2
+> -	lsr	x1, x1, #26
+> -	cmp	x1, #0x16
+> +	lsr	x1, x1, #ESR_EL2_EC_SHIFT
+> +	cmp	x1, #ESR_EL2_EC_HVC64
+>  	b.ne	2f				// Not an HVC trap
+>  	cbz	x0, 1f
+>  	msr	vbar_el2, x0			// Set vbar_el2
 > -- 
-> 1.8.5.3
+> 1.9.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
 
 _______________________________________________
