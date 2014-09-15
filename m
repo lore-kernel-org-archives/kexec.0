@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 15 Sep 2014 19:42:18 +0100
+Date: Mon, 15 Sep 2014 19:56:26 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 06/13] arm64: Add new routine read_cpu_properties
-Message-ID: <20140915184217.GA14191@leverpostej>
+Subject: Re: [PATCH 07/13] arm64: Add new routine local_disable
+Message-ID: <20140915185625.GB14191@leverpostej>
 References: <cover.1410302383.git.geoff@infradead.org>
- <b68073fb2e816f97311b9a3547e3656164ae85d0.1410302383.git.geoff@infradead.org>
+ <8db284c1443918ca692a5c2e30a0c7f13b37428f.1410302383.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <b68073fb2e816f97311b9a3547e3656164ae85d0.1410302383.git.geoff@infradead.org>
+In-Reply-To: <8db284c1443918ca692a5c2e30a0c7f13b37428f.1410302383.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,156 +26,57 @@ Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.co
 Hi Geoff,
 
 On Tue, Sep 09, 2014 at 11:49:04PM +0100, Geoff Levand wrote:
-> The kexec re-boot support that will be added in a subsequent patch in this
-> series will need to read the device tree CPU properties, and it is expected
-> that a rework of the SMP spin table code to handle cpu_die will also need this
-> functionality, so add two new common arm64 files cpu-properties.h and
-> cpu-properties.c that define a new structure cpu_properties that hold the
-> various CPU properties from a device tree, and the new routine
-> read_cpu_properties() that fills the structure from a device tree CPU node.
+> Add the new arm64 routine local_disable() to allow the masking of several DAIF
+> flags in one operation.  Currently, we only have routines to mask individual
+> flags, and to mask several flags multiple calls to daifset are required.
+>
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/include/asm/irqflags.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+> index 11cc941..28521d4 100644
+> --- a/arch/arm64/include/asm/irqflags.h
+> +++ b/arch/arm64/include/asm/irqflags.h
+> @@ -113,5 +113,18 @@ static inline int arch_irqs_disabled_flags(unsigned long flags)
+>  #define local_dbg_enable()	asm("msr	daifclr, #8" : : : "memory")
+>  #define local_dbg_disable()	asm("msr	daifset, #8" : : : "memory")
+>  
+> +enum daif_flag {
 
-I'm very much not keen on placing all this information in a single
-structure -- that adds a new tight coupling that we didn't have before,
-and it looks like it's going to be painful to maintain.
+Is there any reason for this to be an enum rather than a set of
+#defines?
 
-If kexec uses the existing high-level hotplug infrastructure, it has no
-reason to go anywhere near this information.
+It would be nice to be able to use these in asm.
 
-So I really don't like this patch.
+> +	DAIF_FIQ   = (1UL << 6),
+> +	DAIF_IRQ   = (1UL << 7),
+> +	DAIF_ASYNC = (1UL << 8),
+> +	DAIF_DBG   = (1UL << 9),
+> +	DAIF_ALL   = (0xffUL << 6),
 
-Why do you think we need this information to be centralized in this way?
+Not 0xf?
+
+It would be nicer to OR the other flags.
+
+> +};
+> +
+> +static inline void local_disable(unsigned long daif_flags)
+> +{
+> +	arch_local_irq_restore(daif_flags | arch_local_save_flags());
+
+If we knew the value was a constant (which we could check with
+__builting_constant_p) we could use daifset here, rather than having a
+RMW sequence.
+
+With that, the other local_*_{enable,disable} calls could be rewritten
+in terms of this, without affecting the generated code. That would
+require some shifting to account for the difference between pstate and
+daif{clr,set} layout, but for constants that shouldn't be a problem.
 
 Thanks,
 Mark.
-
-> 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
-> ---
->  arch/arm64/kernel/cpu-properties.c | 58 ++++++++++++++++++++++++++++++++++++++
->  arch/arm64/kernel/cpu-properties.h | 39 +++++++++++++++++++++++++
->  2 files changed, 97 insertions(+)
->  create mode 100644 arch/arm64/kernel/cpu-properties.c
->  create mode 100644 arch/arm64/kernel/cpu-properties.h
-> 
-> diff --git a/arch/arm64/kernel/cpu-properties.c b/arch/arm64/kernel/cpu-properties.c
-> new file mode 100644
-> index 0000000..e64b34b
-> --- /dev/null
-> +++ b/arch/arm64/kernel/cpu-properties.c
-> @@ -0,0 +1,58 @@
-> +/*
-> + * Copyright (C) Linaro.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include "cpu-properties.h"
-> +
-> +int read_cpu_properties(struct cpu_properties *p, const struct device_node *dn)
-> +{
-> +	const u32 *cell;
-> +
-> +	memset(p, 0, sizeof(*p));
-> +	p->hwid = INVALID_HWID;
-> +	p->cpu_release_addr = INVALID_ADDR;
-> +
-> +	cell = of_get_property(dn, "reg", NULL);
-> +
-> +	if (!cell) {
-> +		pr_err("%s: Error: %s: invalid reg property\n",
-> +		       __func__, dn->full_name);
-> +		return -1;
-> +	}
-> +
-> +	p->hwid = of_read_number(cell,
-> +		of_n_addr_cells((struct device_node *)dn)) & MPIDR_HWID_BITMASK;
-> +
-> +	p->enable_method = of_get_property(dn, "enable-method", NULL);
-> +
-> +	if (!p->enable_method) {
-> +		pr_err("%s: Error: %s: invalid enable-method\n",
-> +		       __func__, dn->full_name);
-> +		return -1;
-> +	}
-> +
-> +	if (!strcmp(p->enable_method, "psci")) {
-> +		p->type = cpu_enable_method_psci;
-> +		return 0;
-> +	}
-> +
-> +	if (strcmp(p->enable_method, "spin-table")) {
-> +		p->type = cpu_enable_method_unknown;
-> +		return -1;
-> +	}
-> +
-> +	p->type = cpu_enable_method_spin_table;
-> +
-> +	if (of_property_read_u64(dn, "cpu-release-addr",
-> +				 &p->cpu_release_addr)) {
-> +		pr_err("%s: Error: %s: invalid cpu-return-addr property\n",
-> +		       __func__, dn->full_name);
-> +		return -1;
-> +	}
-> +
-> +	return 0;
-> +}
-> diff --git a/arch/arm64/kernel/cpu-properties.h b/arch/arm64/kernel/cpu-properties.h
-> new file mode 100644
-> index 0000000..b4218ef
-> --- /dev/null
-> +++ b/arch/arm64/kernel/cpu-properties.h
-> @@ -0,0 +1,39 @@
-> +/*
-> + * Copyright (C) Linaro.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#if !defined(__ARM64_CPU_PROPERTIES_H)
-> +#define __ARM64_CPU_PROPERTIES_H
-> +
-> +#include <asm/memory.h>
-> +#include <asm/cputype.h>
-> +
-> +#define INVALID_ADDR UL(~0)
-> +
-> +#if !defined(__ASSEMBLY__)
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +
-> +enum cpu_enable_method {
-> +	cpu_enable_method_unknown,
-> +	cpu_enable_method_psci,
-> +	cpu_enable_method_spin_table,
-> +};
-> +
-> +struct cpu_properties {
-> +	u64 hwid;
-> +	u64 cpu_release_addr;
-> +	const char *enable_method;
-> +	enum cpu_enable_method type;
-> +};
-> +
-> +int read_cpu_properties(struct cpu_properties *p, const struct device_node *dn);
-> +
-> +#endif /* !defined(__ASSEMBLY__) */
-> +
-> +#endif
-> -- 
-> 1.9.1
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
 
 _______________________________________________
 kexec mailing list
