@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-x229.google.com ([2607:f8b0:4003:c06::229])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XSUr0-0001Ez-9v
- for kexec@lists.infradead.org; Fri, 12 Sep 2014 17:41:51 +0000
-Received: by mail-oi0-f41.google.com with SMTP id u20so738778oif.14
- for <kexec@lists.infradead.org>; Fri, 12 Sep 2014 10:41:28 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20140912153308.GB4408@redhat.com>
-References: <1410502832-3573-1-git-send-email-bhe@redhat.com>
- <20140912152244.GA2781@dhcp-16-105.nay.redhat.com>
- <20140912153308.GB4408@redhat.com>
-Date: Fri, 12 Sep 2014 10:41:28 -0700
-Message-ID: <CAGXu5j+3vQgaCf23A-UACsjodu+TT01Gbka+YezVYNzjFrQG1Q@mail.gmail.com>
-Subject: Re: [Patch v3 1/2] kaslr: check if kernel location is changed
-From: Kees Cook <keescook@chromium.org>
+ id 1XTPRX-0004CL-Me
+ for kexec@lists.infradead.org; Mon, 15 Sep 2014 06:07:20 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH] get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64
+Date: Mon, 15 Sep 2014 14:05:22 +0800
+Message-Id: <1410761122-1864-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,142 +15,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "Thomas D." <whissi@whissi.de>, Andi Kleen <ak@linux.intel.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
+To: kexec@lists.infradead.org
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>, vgoyal@redhat.com
 
-On Fri, Sep 12, 2014 at 8:33 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
-> On Fri, Sep 12, 2014 at 11:22:44PM +0800, Baoquan He wrote:
->> Function handle_relocations() is used to do the relocations handling
->> for i686 and kaslr of x86_64. For 32 bit the relocation handling is
->> mandotary to perform. For x86_64 only when kaslr is enabled and a
->> random kernel location is chosen successfully the relocation handling
->> shound be done. However previous implementation only compared the
->> kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
->> compiled to run at. This would casue system to be exceptional in
->> few conditions like when delta between load address and compiled
->> address is bigger than what 32bit signed relocations can handle.
->> Also there will be limitations that delta can't be too big otherwise
->> kernel text virtual addresses will overflow in module address space.
->>
->> So in this patch check if kernel location is changed after
->> choose_kernel_location() when x86_64. If and only if in x86_64
->> and kernel location is changed, we say a kaslr random kernel
->> location is chosen, then the relocation handling is needed.
->>
->> Signed-off-by: Baoquan He <bhe@redhat.com>
->
-> I think this patch should make kexec and kdump working with kaslr
-> enabled (CONFIG_RANDOMIZE_BASE=y).
->
-> In case of kdump, we will need to pass "nokaslr" to make sure kernel
-> does not move from kexec chosen address.
->
-> In case of kexec, I think it should be ok to not pass "nokaslr". This
-> case is no different than any other bootloader.
->
-> Hence.
-> Acked-by: Vivek Goyal <vgoyal@redhat.com>
+In x86_64, since v2.6.26 the KERNEL_IMAGE_SIZE is changed to 512M, and
+according the MODULES_VADDR is changed to 0xffffffffa0000000. Before
+that, KERNEL_IMAGE_SIZE is 128M, and MODULES_VADDR is 0xffffffff88000000.
 
-Yup, I think this looks fine to me too. Thanks for getting this fixed!
-And as Vivek mentioned later, I think this should probably go into
--stable as well.
+However, in v3.12 Kees Cook introduced kaslr to randomise the location
+of kernel. And the kernel text mapping addr space is enlarged from 512M
+to 1G. That means now KERNEL_IMAGE_SIZE is variable, its value is 512M
+with kaslr support not compiled in and 1G with kaslr support compiled
+in. Accordingly the MODULES_VADDR is changed too to be:
 
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: stable@vger.kernel.org
+So when kaslr is compiled in and enabled, the kernel text mapping addr
+space and modules vaddr space need be adjusted. Otherwise makedumpfile
+will collapse since the addr for some symbols is not correct.
 
--Kees
+Hence KERNEL_IMAGE_SIZE need be exported to vmcoreinfo and got in
+makedumpfile to help calculate MODULES_VADDR.
 
->
-> Thomas D.,
->
-> You had reported kexec issues with CONFIG_RANDOMIZE_BASE=y. Does this
-> patch resolve the issue for you?
->
-> Thanks
-> Vivek
->
->> ---
->>  arch/x86/boot/compressed/misc.c | 26 ++++++++++++++++++++++----
->>  1 file changed, 22 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
->> index 57ab74d..3bb2a17 100644
->> --- a/arch/x86/boot/compressed/misc.c
->> +++ b/arch/x86/boot/compressed/misc.c
->> @@ -230,8 +230,9 @@ static void error(char *x)
->>               asm("hlt");
->>  }
->>
->> -#if CONFIG_X86_NEED_RELOCS
->> -static void handle_relocations(void *output, unsigned long output_len)
->> +#ifdef CONFIG_X86_NEED_RELOCS
->> +static void handle_relocations(void *output_orig, void *output,
->> +                            unsigned long output_len)
->>  {
->>       int *reloc;
->>       unsigned long delta, map, ptr;
->> @@ -239,6 +240,20 @@ static void handle_relocations(void *output, unsigned long output_len)
->>       unsigned long max_addr = min_addr + output_len;
->>
->>       /*
->> +     * 32bit always requires relocations to be performed. For x86_64,
->> +     * relocations need to be performed only if kaslr has chosen a
->> +     * different load address then kernel was originally loaded at.
->> +     *
->> +     * If we are here, either kaslr is not configured in or kaslr is disabled
->> +     * or kaslr has chosen not to change the load location of kernel. Don't
->> +     * perform any relocations.
->> +     */
->> +#if CONFIG_X86_64
->> +     if (output_orig == output)
->> +             return;
->> +#endif
->> +
->> +     /*
->>        * Calculate the delta between where vmlinux was linked to load
->>        * and where it was actually loaded.
->>        */
->> @@ -299,7 +314,8 @@ static void handle_relocations(void *output, unsigned long output_len)
->>  #endif
->>  }
->>  #else
->> -static inline void handle_relocations(void *output, unsigned long output_len)
->> +static inline void handle_relocations(void *output_orig, void *output,
->> +                                   unsigned long output_len)
->>  { }
->>  #endif
->>
->> @@ -360,6 +376,8 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
->>                                 unsigned char *output,
->>                                 unsigned long output_len)
->>  {
->> +     unsigned char *output_orig = output;
->> +
->>       real_mode = rmode;
->>
->>       sanitize_boot_params(real_mode);
->> @@ -402,7 +420,7 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
->>       debug_putstr("\nDecompressing Linux... ");
->>       decompress(input_data, input_len, NULL, NULL, output, NULL, error);
->>       parse_elf(output);
->> -     handle_relocations(output, output_len);
->> +     handle_relocations(output_orig, output, output_len);
->>       debug_putstr("done.\nBooting the kernel.\n");
->>       return output;
->>  }
->> --
->> 1.8.5.3
->>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ makedumpfile.c | 8 ++++++++
+ makedumpfile.h | 4 +++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b4d43d8..48d73a8 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1564,6 +1564,12 @@ get_value_for_old_linux(void)
+ 			NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) =
+ 			PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_39_to_latest_version;
+ 	}
++#ifdef __x86_64__
++	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
++		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
++			NUMBER(KERNEL_IMAGE_SIZE) = MODULES_VADDR_ORIG;
++	}
++#endif
+ 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
+ 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
+ 			SIZE(pageflags) =
+@@ -1813,6 +1819,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
+ 
+ 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
++	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ 
+ 	/*
+ 	 * write the source file of 1st kernel
+@@ -2147,6 +2154,7 @@ read_vmcoreinfo(void)
+ 	READ_SRCFILE("pud_t", pud_t);
+ 
+ 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
++	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ 
+ 	return TRUE;
+ }
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 6493f61..28a3cac 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -549,7 +549,8 @@ do { \
+ #define VMEMMAP_END_2_6_31	(0xffffeaffffffffff) /* 2.6.31, or later  */
+ 
+ #define __START_KERNEL_map	(0xffffffff80000000)
+-#define MODULES_VADDR		(0xffffffff88000000)
++#define MODULES_VADDR_ORIG	(0xffffffff88000000)
++#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
+ #define MODULES_END		(0xfffffffffff00000)
+ #define KVBASE			PAGE_OFFSET
+ #define _SECTION_SIZE_BITS	(27)
+@@ -1531,6 +1532,7 @@ struct number_table {
+ 	long    PG_hwpoison;
+ 
+ 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
++	long	KERNEL_IMAGE_SIZE;
+ 	long	SECTION_SIZE_BITS;
+ 	long	MAX_PHYSMEM_BITS;
+ };
 -- 
-Kees Cook
-Chrome OS Security
+1.8.5.3
+
 
 _______________________________________________
 kexec mailing list
