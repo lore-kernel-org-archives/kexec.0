@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 15 Sep 2014 17:10:15 +0100
+Date: Mon, 15 Sep 2014 17:14:51 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 01/13] arm64: Add ESR_EL2_EC macros to hyp-stub
-Message-ID: <20140915161014.GB13789@leverpostej>
+Subject: Re: [PATCH 02/13] arm64/kvm: Fix assembler compatibility of macros
+Message-ID: <20140915161451.GC13789@leverpostej>
 References: <cover.1410302383.git.geoff@infradead.org>
- <5e1b1892eb3ecc3bccff47766675c24c650a1a14.1410302383.git.geoff@infradead.org>
+ <bc4abc340eaa4da448f62326a134fabfb5a2a875.1410302383.git.geoff@infradead.org>
+ <CAKv+Gu_hs-Sv=Bg6uyKc41OV9sKS0sfM1YAcCMaTF7aTH9YPwA@mail.gmail.com>
+ <1410366914.11440.16.camel@smoke>
+ <CAKv+Gu_uU3cQZbsa2w=GtXCGd59PhD-conRn3szLkOFKmTngSA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5e1b1892eb3ecc3bccff47766675c24c650a1a14.1410302383.git.geoff@infradead.org>
-Content-Language: en-US
+In-Reply-To: <CAKv+Gu_uU3cQZbsa2w=GtXCGd59PhD-conRn3szLkOFKmTngSA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +23,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Geoff Levand <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Tue, Sep 09, 2014 at 11:49:04PM +0100, Geoff Levand wrote:
-> To improve the readability of the el1_sync routine in hyp-stub.S replace the
-> numeric immediate values with preprocessor macros ESR_EL2_EC_SHIFT and
-> ESR_EL2_EC_HVC64.
+On Wed, Sep 10, 2014 at 06:09:07PM +0100, Ard Biesheuvel wrote:
+> On 10 September 2014 18:35, Geoff Levand <geoff@infradead.org> wrote:
+> > On Wed, 2014-09-10 at 10:40 +0200, Ard Biesheuvel wrote:
+> >> On 10 September 2014 00:49, Geoff Levand <geoff@infradead.org> wrote:
+> >> > Some of the macros defined in kvm_arm.h are useful in the exception vector
+> >> > routines, but they are not compatible with the assembler.  Change the
+> >> > definition of ESR_EL2_ISS to be compatible.
+> >> >
+> >> > Fixes build errors like these when using kvm_arm.h in assembly
+> >> > source files:
+> >> >
+> >> >   Error: unexpected characters following instruction at operand 3 -- `add x0,x1,#((1U<<25)-1)'
+> >> >
+> >> > Signed-off-by: Geoff Levand <geoff@infradead.org>
+> >> > ---
+> >> >  arch/arm64/include/asm/kvm_arm.h | 2 +-
+> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >> >
+> >> > diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
+> >> > index cc83520..e0e7e64 100644
+> >> > --- a/arch/arm64/include/asm/kvm_arm.h
+> >> > +++ b/arch/arm64/include/asm/kvm_arm.h
+> >> > @@ -176,7 +176,7 @@
+> >> >  #define ESR_EL2_EC_SHIFT       (26)
+> >> >  #define ESR_EL2_EC             (0x3fU << ESR_EL2_EC_SHIFT)
+> >> >  #define ESR_EL2_IL             (1U << 25)
+> >> > -#define ESR_EL2_ISS            (ESR_EL2_IL - 1)
+> >> > +#define ESR_EL2_ISS            (0xffff)
+> >>
+> >> Don't you mean 0x1ffffff?
+> >
+> > Hcalls have a 16 bit 'payload', the upper bits of the ISS field
+> > are specified as zero by the architecture so 0xffff is the same
+> > as 0x1ffffff.
+> >
 > 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
-> ---
->  arch/arm64/kernel/hyp-stub.S | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-> index a272f33..2d960a9 100644
-> --- a/arch/arm64/kernel/hyp-stub.S
-> +++ b/arch/arm64/kernel/hyp-stub.S
-> @@ -52,10 +52,13 @@ ENDPROC(__hyp_stub_vectors)
->  
->  	.align 11
->  
-> +#define ESR_EL2_EC_SHIFT	26
-> +#define ESR_EL2_EC_HVC64	0x16
+> Even if HVC is currently the only exception we are taking in EL2 (is
+> that the case btw?), it seems wrong to define this field in such a way
+> that it
+> (a) deviates from how the architecture specifies ESR_ELx.ISS and
+> (b) may cause surprises once someone unsuspectingly starts and'ing his
+> ESR values produced by another exception class with it, expecting the
+> macro's value to reflect its name
 
-These exist in arch/arm64/include/asm/kvm_arm.h, no?
+Agreed. A macro called ESR_EL2_ISS should return the ISS field, and
+nothing less.
 
-If anything that should be folded into arch/arm64/include/asm/esr.h...
+> >> And, there is a macro UL() for this purpose, so I suppose you could
+> >> redefine ESR_EL2_IL as (UL(1) << 25) as well. I know it is not
+> >> strictly the same thing, but it should be good enough as this is arm64
+> >> only
+
+This sounds good to me.
 
 Mark.
-
-> +
->  el1_sync:
->  	mrs	x1, esr_el2
-> -	lsr	x1, x1, #26
-> -	cmp	x1, #0x16
-> +	lsr	x1, x1, #ESR_EL2_EC_SHIFT
-> +	cmp	x1, #ESR_EL2_EC_HVC64
->  	b.ne	2f				// Not an HVC trap
->  	cbz	x0, 1f
->  	msr	vbar_el2, x0			// Set vbar_el2
-> -- 
-> 1.9.1
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
 
 _______________________________________________
 kexec mailing list
