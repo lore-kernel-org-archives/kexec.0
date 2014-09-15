@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 15 Sep 2014 17:14:51 +0100
+Date: Mon, 15 Sep 2014 18:57:08 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 02/13] arm64/kvm: Fix assembler compatibility of macros
-Message-ID: <20140915161451.GC13789@leverpostej>
+Subject: Re: [PATCH 03/13] arm64: Convert hcalls to use ISS field
+Message-ID: <20140915175708.GD13789@leverpostej>
 References: <cover.1410302383.git.geoff@infradead.org>
- <bc4abc340eaa4da448f62326a134fabfb5a2a875.1410302383.git.geoff@infradead.org>
- <CAKv+Gu_hs-Sv=Bg6uyKc41OV9sKS0sfM1YAcCMaTF7aTH9YPwA@mail.gmail.com>
- <1410366914.11440.16.camel@smoke>
- <CAKv+Gu_uU3cQZbsa2w=GtXCGd59PhD-conRn3szLkOFKmTngSA@mail.gmail.com>
+ <2d8dd1ea41dc51878dd4ce75de00eaec2518a76b.1410302383.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_uU3cQZbsa2w=GtXCGd59PhD-conRn3szLkOFKmTngSA@mail.gmail.com>
+In-Reply-To: <2d8dd1ea41dc51878dd4ce75de00eaec2518a76b.1410302383.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,62 +20,237 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Geoff Levand <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Wed, Sep 10, 2014 at 06:09:07PM +0100, Ard Biesheuvel wrote:
-> On 10 September 2014 18:35, Geoff Levand <geoff@infradead.org> wrote:
-> > On Wed, 2014-09-10 at 10:40 +0200, Ard Biesheuvel wrote:
-> >> On 10 September 2014 00:49, Geoff Levand <geoff@infradead.org> wrote:
-> >> > Some of the macros defined in kvm_arm.h are useful in the exception vector
-> >> > routines, but they are not compatible with the assembler.  Change the
-> >> > definition of ESR_EL2_ISS to be compatible.
-> >> >
-> >> > Fixes build errors like these when using kvm_arm.h in assembly
-> >> > source files:
-> >> >
-> >> >   Error: unexpected characters following instruction at operand 3 -- `add x0,x1,#((1U<<25)-1)'
-> >> >
-> >> > Signed-off-by: Geoff Levand <geoff@infradead.org>
-> >> > ---
-> >> >  arch/arm64/include/asm/kvm_arm.h | 2 +-
-> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> >
-> >> > diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-> >> > index cc83520..e0e7e64 100644
-> >> > --- a/arch/arm64/include/asm/kvm_arm.h
-> >> > +++ b/arch/arm64/include/asm/kvm_arm.h
-> >> > @@ -176,7 +176,7 @@
-> >> >  #define ESR_EL2_EC_SHIFT       (26)
-> >> >  #define ESR_EL2_EC             (0x3fU << ESR_EL2_EC_SHIFT)
-> >> >  #define ESR_EL2_IL             (1U << 25)
-> >> > -#define ESR_EL2_ISS            (ESR_EL2_IL - 1)
-> >> > +#define ESR_EL2_ISS            (0xffff)
-> >>
-> >> Don't you mean 0x1ffffff?
-> >
-> > Hcalls have a 16 bit 'payload', the upper bits of the ISS field
-> > are specified as zero by the architecture so 0xffff is the same
-> > as 0x1ffffff.
-> >
+Hi Geoff,
+
+The general approach looks good to me, using the HVC immediate makes
+this look far nicer to me. Hopefully Marc and Christoffer agree on that.
+
+That said, I have some comments on the mechanics below.
+
+On Tue, Sep 09, 2014 at 11:49:04PM +0100, Geoff Levand wrote:
+> To allow for additional hcalls to be defined and to make the arm64 hcall API
+> more consistent across exception vector routines change the hcall implementations
+> to use the ISS field of the ESR_EL2 register to specify the hcall type.
 > 
-> Even if HVC is currently the only exception we are taking in EL2 (is
-> that the case btw?), it seems wrong to define this field in such a way
-> that it
-> (a) deviates from how the architecture specifies ESR_ELx.ISS and
-> (b) may cause surprises once someone unsuspectingly starts and'ing his
-> ESR values produced by another exception class with it, expecting the
-> macro's value to reflect its name
+> The existing arm64 hcall implementations are limited in that they only allow
+> for two distinct hcalls; with the x0 register either zero, or not zero.  Also,
+> the API of the hyp-stub exception vector routines and the KVM exception vector
+> routines differ; hyp-stub uses a non-zero value in x0 to implement
+> __hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
+> 
+> Define three new preprocessor macros HVC_GET_VECTORS, HVC_SET_VECTORS and
+> HVC_KVM_CALL_HYP and to be used as hcall type specifiers and convert the
+> existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
+> to use these new macros when executing and HVC call.  Also change the
+> corresponding hyp-stub and KVM el1_sync exception vector routines to use these
+> new macros.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/include/asm/virt.h | 20 ++++++++++++++++++++
+>  arch/arm64/kernel/hyp-stub.S  | 38 ++++++++++++++++++++++++++------------
+>  arch/arm64/kvm/hyp.S          | 19 ++++++++++++-------
+>  3 files changed, 58 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+> index 7a5df52..894fe53 100644
+> --- a/arch/arm64/include/asm/virt.h
+> +++ b/arch/arm64/include/asm/virt.h
+> @@ -21,6 +21,26 @@
+>  #define BOOT_CPU_MODE_EL1	(0xe11)
+>  #define BOOT_CPU_MODE_EL2	(0xe12)
+>  
+> +/*
+> + * HVC_GET_VECTORS - Return the value of the vbar_el2 register.
+> + */
+> +
+> +#define HVC_GET_VECTORS 1
+> +
+> +/*
+> + * HVC_SET_VECTORS - Set the value of the vbar_el2 register.
+> + *
+> + * @x0: Physical address of the new vector table.
+> + */
+> +
+> +#define HVC_SET_VECTORS 2
+> +
+> +/*
+> + * HVC_KVM_CALL_HYP - Execute kvm_call_hyp routine.
+> + */
+> +
+> +#define HVC_KVM_CALL_HYP 3
 
-Agreed. A macro called ESR_EL2_ISS should return the ISS field, and
-nothing less.
+If this can be used without KVM (e.g. in the hyp stub) I'd just call
+this HVC_CALL_HYP, or the name will be a little misleading.
 
-> >> And, there is a macro UL() for this purpose, so I suppose you could
-> >> redefine ESR_EL2_IL as (UL(1) << 25) as well. I know it is not
-> >> strictly the same thing, but it should be good enough as this is arm64
-> >> only
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  /*
+> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+> index 2d960a9..9ab5f70 100644
+> --- a/arch/arm64/kernel/hyp-stub.S
+> +++ b/arch/arm64/kernel/hyp-stub.S
+> @@ -54,16 +54,29 @@ ENDPROC(__hyp_stub_vectors)
+>  
+>  #define ESR_EL2_EC_SHIFT	26
+>  #define ESR_EL2_EC_HVC64	0x16
+> +#define ESR_EL2_ISS		0xffff
 
-This sounds good to me.
+The last patch tried to add an identical macro to a header file. Can we
+use that header please?
+
+>  
+>  el1_sync:
+> -	mrs	x1, esr_el2
+> -	lsr	x1, x1, #ESR_EL2_EC_SHIFT
+> -	cmp	x1, #ESR_EL2_EC_HVC64
+> -	b.ne	2f				// Not an HVC trap
+> -	cbz	x0, 1f
+> -	msr	vbar_el2, x0			// Set vbar_el2
+> +	mrs	x10, esr_el2
+
+Any reason for using x10?
+
+If we want to preserve the lowest register numbers, start with the
+highest caller-saved register numbers (i.e. x18). At least for me it
+makes the code far easier to read; it doesn't make it look like x10 is
+special.
+
+> +	lsr	x9, x10, #ESR_EL2_EC_SHIFT	// x9=EC
+> +	and	x10, x10, #ESR_EL2_ISS		// x10=ISS
+
+The mnemonics make these comments redundant.
+
+> +	cmp     x9, #ESR_EL2_EC_HVC64
+> +	b.ne    2f                              // Not a host HVC trap
+
+Now that we have the nice mnemonic, we could get rid of the comment
+here. I'd drop the 'host' from the comment; it wasn't there orginally
+and it's somewhat meaningless for the stub (KVM isn't up yet, and the
+only the native OS can make a HVC).
+
+> +	mrs     x9, vttbr_el2
+> +	cbnz    x9, 2f                          // Not a host HVC trap
+
+I don't understand this. When is vttbr_el2 non-zero, and why do we want
+to silently return from a HVC in that case? That didn't seem to be the
+case in the original code.
+
+> +
+> +	cmp	x10, #HVC_GET_VECTORS
+> +	b.ne	1f
+> +	mrs	x0, vbar_el2
+>  	b	2f
+> -1:	mrs	x0, vbar_el2			// Return vbar_el2
+> +
+> +1:	cmp	x10, #HVC_SET_VECTORS
+> +	b.ne	1f
+> +	msr	vbar_el2, x0
+> +
+> +1:
+
+It feels like we should explode if we ever reach here from the host --
+if we've made an unsupported HVC wereally want to know that we've done
+so.
+
+>  2:	eret
+>  ENDPROC(el1_sync)
+>  
+> @@ -103,11 +116,12 @@ ENDPROC(\label)
+>   * initialisation entry point.
+>   */
+>  
+> -ENTRY(__hyp_get_vectors)
+> -	mov	x0, xzr
+> -	// fall through
+>  ENTRY(__hyp_set_vectors)
+> -	hvc	#0
+> +	hvc	#HVC_SET_VECTORS
+>  	ret
+> -ENDPROC(__hyp_get_vectors)
+>  ENDPROC(__hyp_set_vectors)
+> +
+> +ENTRY(__hyp_get_vectors)
+> +	hvc	#HVC_GET_VECTORS
+> +	ret
+> +ENDPROC(__hyp_get_vectors)
+> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
+> index b72aa9f..3972ee9 100644
+> --- a/arch/arm64/kvm/hyp.S
+> +++ b/arch/arm64/kvm/hyp.S
+> @@ -26,6 +26,7 @@
+>  #include <asm/kvm_asm.h>
+>  #include <asm/kvm_arm.h>
+>  #include <asm/kvm_mmu.h>
+> +#include <asm/virt.h>
+>  
+>  #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
+>  #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
+> @@ -1105,12 +1106,9 @@ __hyp_panic_str:
+>   * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
+>   * passed in r0 and r1.
+>   *
+> - * A function pointer with a value of 0 has a special meaning, and is
+> - * used to implement __hyp_get_vectors in the same way as in
+> - * arch/arm64/kernel/hyp_stub.S.
+>   */
+>  ENTRY(kvm_call_hyp)
+> -	hvc	#0
+> +	hvc	#HVC_KVM_CALL_HYP
+>  	ret
+>  ENDPROC(kvm_call_hyp)
+>  
+> @@ -1140,6 +1138,7 @@ el1_sync:					// Guest trapped into EL2
+>  	push	x2, x3
+>  
+>  	mrs	x1, esr_el2
+> +	and	x0, x1, #ESR_EL2_ISS
+>  	lsr	x2, x1, #ESR_EL2_EC_SHIFT
+>  
+>  	cmp	x2, #ESR_EL2_EC_HVC64
+> @@ -1149,15 +1148,19 @@ el1_sync:					// Guest trapped into EL2
+>  	cbnz	x3, el1_trap			// called HVC
+>  
+>  	/* Here, we're pretty sure the host called HVC. */
+> +	mov	x10, x0
+
+As above, please use the highest numbered caller-saved register so as to
+not make the register numbering look special.
+
+>  	pop	x2, x3
+>  	pop	x0, x1
+>  
+> -	/* Check for __hyp_get_vectors */
+> -	cbnz	x0, 1f
+> +	cmp	x10, #HVC_GET_VECTORS
+> +	b.ne	1f
+>  	mrs	x0, vbar_el2
+>  	b	2f
+>  
+> -1:	push	lr, xzr
+> +1:	cmp	x10, #HVC_KVM_CALL_HYP
+> +	b.ne	1f
+> +
+> +	push	lr, xzr
+>  
+>  	/*
+>  	 * Compute the function address in EL2, and shuffle the parameters.
+> @@ -1170,6 +1173,8 @@ el1_sync:					// Guest trapped into EL2
+>  	blr	lr
+>  
+>  	pop	lr, xzr
+> +
+> +1:
+>  2:	eret
+
+Any reason we need two labels here?
+
+If we've got here with an invalid HVC immediate, I think we should
+explode loudly.
 
 Mark.
 
