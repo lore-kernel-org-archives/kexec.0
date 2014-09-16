@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 15 Sep 2014 20:20:21 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 10/13] arm64/kexec: Revert change to machine_shutdown()
-Message-ID: <20140915192020.GE14191@leverpostej>
-References: <cover.1410302383.git.geoff@infradead.org>
- <de2fda64cc5eebcf96d9d845b185c6382c900ac3.1410302383.git.geoff@infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XTnpr-0006OI-AF
+ for kexec@lists.infradead.org; Tue, 16 Sep 2014 08:10:03 +0000
+Date: Tue, 16 Sep 2014 16:09:36 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: About the release 1.5.7!
+Message-ID: <20140916080936.GB2019@dhcp-16-116.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <de2fda64cc5eebcf96d9d845b185c6382c900ac3.1410302383.git.geoff@infradead.org>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,70 +21,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-Hi Geoff,
+Hi Atsushi,
 
-On Tue, Sep 09, 2014 at 11:49:05PM +0100, Geoff Levand wrote:
-> Commit 90f51a09ef83 ("arm64: Fix machine_shutdown() definition") changed the
-> implementation of machine_shutdown() from calling smp_send_stop() to
-> calling disable_nonboot_cpus().  Revert that part of the commit so that
-> machine_shutdown() once again calls smp_send_stop().
+Are you going to release v1.5.7 this week? Since we need make plans
+based on your release plan.
 
-I don't think this is the right way to go. I think we should be using
-the hotplug infrastructure (i.e. disable_nonboot_cpus()) rather than
-rolling our own, and we should be paying attention to the return value.
-
-So as far as I can tell, disable_nonboot_cpus is the right thing to
-call, but machine_shutdown is the wrong place to call it (due to not
-returning an error code). We need to call it when we can still abort the
-kexec.
-
-Mark.
- 
-> With the application of another patch in this series, (arm64: Use cpu_ops for
-> smp_stop), smp_send_stop() will do the correct thing for a kexec reboot. This
-> change also corrects the source code comment for the machine_shutdown() routine.
-> 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
-> ---
->  arch/arm64/kernel/process.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 0a3414b..cd0ae9d 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -101,15 +101,12 @@ void arch_cpu_idle_dead(void)
->  /*
->   * Called by kexec, immediately prior to machine_kexec().
->   *
-> - * This must completely disable all secondary CPUs; simply causing those CPUs
-> - * to execute e.g. a RAM-based pin loop is not sufficient. This allows the
-> - * kexec'd kernel to use any and all RAM as it sees fit, without having to
-> - * avoid any code or data used by any SW CPU pin loop. The CPU hotplug
-> - * functionality embodied in disable_nonboot_cpus() to achieve this.
-> + * This must shutdown all secondary CPUs.  The functionality
-> + * embodied in smp_send_stop() will achieve this.
->   */
->  void machine_shutdown(void)
->  {
-> -	disable_nonboot_cpus();
-> +	smp_send_stop();
->  }
->  
->  /*
-> -- 
-> 1.9.1
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
