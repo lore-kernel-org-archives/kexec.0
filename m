@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XTnpr-0006OI-AF
- for kexec@lists.infradead.org; Tue, 16 Sep 2014 08:10:03 +0000
-Date: Tue, 16 Sep 2014 16:09:36 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: About the release 1.5.7!
-Message-ID: <20140916080936.GB2019@dhcp-16-116.nay.redhat.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XTpNs-0002TD-7s
+ for kexec@lists.infradead.org; Tue, 16 Sep 2014 09:49:16 +0000
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
+ [127.0.0.1])
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id s8G9mscs008196
+ for <kexec@lists.infradead.org>; Tue, 16 Sep 2014 17:48:55 +0800
+Message-ID: <5418077E.1020304@cn.fujitsu.com>
+Date: Tue, 16 Sep 2014 17:48:46 +0800
+From: "Wang, Xiao/Wang Xiao" <wangx.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: [PATCH 1/2] makedumpfile: make get_elf64_phdr()/get_elf32_phdr()
+ public
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,20 +21,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-Hi Atsushi,
+Move the following two functions from internal function to external
+function for later use.
 
-Are you going to release v1.5.7 this week? Since we need make plans
-based on your release plan.
+get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr)
+get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr)
 
-Thanks
-Baoquan
+Signed-of-by: Wang Xiao <wangx.fnst@cn.fujitsu.com>
+---
+  elf_info.c |   71 
++++++++++++++++++++++++++++++------------------------------
+  elf_info.h |    2 +
+  2 files changed, 37 insertions(+), 36 deletions(-)
+
+diff --git a/elf_info.c b/elf_info.c
+index b277f69..1499328 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -95,42 +95,6 @@ static unsigned long		size_xen_crash_info;
+   * Internal functions.
+   */
+  static int
+-get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr)
+-{
+-	off_t offset;
+-
+-	offset = sizeof(Elf64_Ehdr) + sizeof(Elf64_Phdr) * index;
+-
+-	if (lseek(fd, offset, SEEK_SET) < 0) {
+-		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	if (read(fd, phdr, sizeof(Elf64_Phdr)) != sizeof(Elf64_Phdr)) {
+-		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	return TRUE;
+-}
+-
+-static int
+-get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr)
+-{
+-	off_t offset;
+-
+-	offset = sizeof(Elf32_Ehdr) + sizeof(Elf32_Phdr) * index;
+-
+-	if (lseek(fd, offset, SEEK_SET) < 0) {
+-		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	if (read(fd, phdr, sizeof(Elf32_Phdr)) != sizeof(Elf32_Phdr)) {
+-		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	return TRUE;
+-}
+-
+-static int
+  check_elf_format(int fd, char *filename, int *phnum, unsigned int 
+*num_load)
+  {
+  	int i;
+@@ -399,6 +363,41 @@ get_pt_note_info(void)
+  /*
+   * External functions.
+   */
++int
++get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr)
++{
++	off_t offset;
++
++	offset = sizeof(Elf64_Ehdr) + sizeof(Elf64_Phdr) * index;
++
++	if (lseek(fd, offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	if (read(fd, phdr, sizeof(Elf64_Phdr)) != sizeof(Elf64_Phdr)) {
++		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	return TRUE;
++}
++
++int
++get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr)
++{
++	off_t offset;
++
++	offset = sizeof(Elf32_Ehdr) + sizeof(Elf32_Phdr) * index;
++
++	if (lseek(fd, offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	if (read(fd, phdr, sizeof(Elf32_Phdr)) != sizeof(Elf32_Phdr)) {
++		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	return TRUE;
++}
+
+  /*
+   * Convert Physical Address to File Offset.
+diff --git a/elf_info.h b/elf_info.h
+index 801faff..925c9f5 100644
+--- a/elf_info.h
++++ b/elf_info.h
+@@ -27,6 +27,8 @@
+
+  #define MAX_SIZE_NHDR	MAX(sizeof(Elf64_Nhdr), sizeof(Elf32_Nhdr))
+
++int get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr);
++int get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr);
+
+  off_t paddr_to_offset(unsigned long long paddr);
+  off_t paddr_to_offset2(unsigned long long paddr, off_t hint);
+-- 
+1.7.1
+
 
 _______________________________________________
 kexec mailing list
