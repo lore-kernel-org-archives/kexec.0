@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx5-phx2.redhat.com ([209.132.183.37])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XUcCD-0005us-Jb
- for kexec@lists.infradead.org; Thu, 18 Sep 2014 13:56:30 +0000
-Date: Thu, 18 Sep 2014 09:56:06 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <113939398.18102616.1411048566302.JavaMail.zimbra@redhat.com>
-In-Reply-To: <541A8769.1070604@cn.fujitsu.com>
-References: <mailman.12983.1410860958.22890.kexec@lists.infradead.org>
- <1344663963.15300444.1410873613602.JavaMail.zimbra@redhat.com>
- <5418F4D8.2070301@cn.fujitsu.com>
- <56999675.16763362.1410962144335.JavaMail.zimbra@redhat.com>
- <541A8769.1070604@cn.fujitsu.com>
-Subject: Re: [PATCH 2/2] makedumpfile: make the incomplete vmcore generated
- by ENOSPC error analyzable
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XUljF-00086W-7W
+ for kexec@lists.infradead.org; Fri, 19 Sep 2014 00:07:14 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64
+Date: Fri, 19 Sep 2014 00:05:24 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D47E5F@BPXM01GP.gisp.nec.co.jp>
+References: <1410761122-1864-1-git-send-email-bhe@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D47BE1@BPXM01GP.gisp.nec.co.jp>
+ <20140918085652.GD30240@dhcp-16-116.nay.redhat.com>
+In-Reply-To: <20140918085652.GD30240@dhcp-16-116.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,71 +25,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xiao Wang/Wang Xiao <wangx.fnst@cn.fujitsu.com>
-Cc: kexec@lists.infradead.org
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+
+>> This code looks wrong, the value of MODULES_VADDR will overflow as:
+>>
+>>   MODULES_VADDR = __START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE)
+>>                 = 0xffffffff80000000 + 0xffffffff88000000
+>>
+>> I think the code should be fixed as:
+>>
+>> makedumpfile.h:
+>>     #define __START_KERNEL_map      (0xffffffff80000000)
+>>     #define KERNEL_IMAGE_SIZE_ORIG      (0x0000000008000000) /* 2.6.25, or former */
+>>     #define KERNEL_IMAGE_SIZE_2_6_26    (0x0000000020000000) /* 2.6.26, or later  */
+>>     #define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
+>>
+>> makedumpfile.c:
+>> 	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
+>> 		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+>> 			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_ORIG;
+>> 		else
+>> 			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_2_6_26;
+>> 	}
+>
+>Well, I got what you mean. The reason I did that is because before
+>kaslr is introduced 0xffffffff88000000 is always correct. Since if
+>kernel location is usually 16M and no one put it any other places. And
+>since kernel image is not greater than 128M up to now, it's always
+>correct even though later kernel image size is increased to 512M. I
+>wanted to use that.
+
+Thanks, I understand your thoughts.
+
+>Now you are suggesting to make it clear what the size it truly is in
+>kernel. That's also good. I can repost it with your suggestion.
+
+I still prefer my idea, I would like to wait for your repost.
 
 
+Thanks
+Atsushi Kumagai
 
------ Original Message -----
-> >
-> > For compressed kdumps, the disk_dump_header.status field currently uses these
-> > three bits:
-> >
-> >   #define DUMP_DH_COMPRESSED_ZLIB    0x1   /* page is compressed with zlib */
-> >   #define DUMP_DH_COMPRESSED_LZO     0x2   /* page is compressed with lzo */
-> >   #define DUMP_DH_COMPRESSED_SNAPPY  0x4   /* page is compressed with snappy */
-> >
-> > Can you please simply add a DUMP_DH_COMPRESSED_INCOMPLETE flag?
-> 
-> OK, I'll add this flag.
-> 
-> >
-> > With respect to ELF vmcores, the processor-specific e_flags field is unused by the
-> > crash utility, and it appears that makedumpfile always sets it to zero.  But
-> > I'm not sure what the kernel does when /proc/vmcore is created?  Could there
-> > be e_flags bits set there that a direct-copy of /proc/vmcore might contain?
-> > That's why I suggested a unique ELF note.
-> 
-> Add a unique ELF note is OK, and I thought it must need to allocate some diskspace
-> first to store this ELF note and its data, for if the dumpfile has been modified,
-> it must write a flag in this place to indicate it's an incomplete dumpfile. But
-> this may waste a bit of diskspace when the dumpfile is generated with no error.
- 
-Looking at "kexec/crashdump-elf.c" in the kexec-tools package, it should be safe
-to use the e_flags field, because even if /proc/vmcore were copied unmodified
-(without makedumpfile), the crash_create_elf32_headers()/crash_create_elf64_headers()
-functions would always set it to 0:
-
-       /* Setup ELF Header*/
-        elf = (EHDR *) bufp;
-        bufp += sizeof(EHDR);
-        memcpy(elf->e_ident, ELFMAG, SELFMAG);
-        elf->e_ident[EI_CLASS]  = elf_info->class;
-        elf->e_ident[EI_DATA]   = elf_info->data;
-        elf->e_ident[EI_VERSION]= EV_CURRENT;
-        elf->e_ident[EI_OSABI] = ELFOSABI_NONE;
-        memset(elf->e_ident+EI_PAD, 0, EI_NIDENT-EI_PAD);
-        elf->e_type     = ET_CORE;
-        elf->e_machine  = crash_architecture(elf_info);
-        elf->e_version  = EV_CURRENT;
-        elf->e_entry    = 0;
-        elf->e_phoff    = sizeof(EHDR);
-        elf->e_shoff    = 0;
-        elf->e_flags    = 0;
-        elf->e_ehsize   = sizeof(EHDR);
-        elf->e_phentsize= sizeof(PHDR);
-        elf->e_phnum    = 0;
-        elf->e_shentsize= 0;
-        elf->e_shnum    = 0;
-        elf->e_shstrndx = 0;
-
-> I thought it will confuse a user when makedumpfile automatically modified the
-> dumpfile name, so I'll keep the dumpfile name unchanged and use the above two
-> flags in the dumpfile to indicate that it has been modified.
-
-OK good -- thanks!
-
-Dave
+>Thanks
+>Baoquan
+>
+>>
+>>
+>> Thanks
+>> Atsushi Kumagai
+>>
+>> > 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
+>> > 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
+>> > 			SIZE(pageflags) =
+>> >@@ -1813,6 +1819,7 @@ write_vmcoreinfo_data(void)
+>> > 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
+>> >
+>> > 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+>> >+	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+>> >
+>> > 	/*
+>> > 	 * write the source file of 1st kernel
+>> >@@ -2147,6 +2154,7 @@ read_vmcoreinfo(void)
+>> > 	READ_SRCFILE("pud_t", pud_t);
+>> >
+>> > 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+>> >+	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+>> >
+>> > 	return TRUE;
+>> > }
+>> >diff --git a/makedumpfile.h b/makedumpfile.h
+>> >index 6493f61..28a3cac 100644
+>> >--- a/makedumpfile.h
+>> >+++ b/makedumpfile.h
+>> >@@ -549,7 +549,8 @@ do { \
+>> > #define VMEMMAP_END_2_6_31	(0xffffeaffffffffff) /* 2.6.31, or later  */
+>> >
+>> > #define __START_KERNEL_map	(0xffffffff80000000)
+>> >-#define MODULES_VADDR		(0xffffffff88000000)
+>> >+#define MODULES_VADDR_ORIG	(0xffffffff88000000)
+>> >+#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
+>> > #define MODULES_END		(0xfffffffffff00000)
+>> > #define KVBASE			PAGE_OFFSET
+>> > #define _SECTION_SIZE_BITS	(27)
+>> >@@ -1531,6 +1532,7 @@ struct number_table {
+>> > 	long    PG_hwpoison;
+>> >
+>> > 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
+>> >+	long	KERNEL_IMAGE_SIZE;
+>> > 	long	SECTION_SIZE_BITS;
+>> > 	long	MAX_PHYSMEM_BITS;
+>> > };
+>> >--
+>> >1.8.5.3
+>>
 
 _______________________________________________
 kexec mailing list
