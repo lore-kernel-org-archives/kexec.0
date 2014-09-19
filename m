@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XUljF-00086W-7W
- for kexec@lists.infradead.org; Fri, 19 Sep 2014 00:07:14 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64
-Date: Fri, 19 Sep 2014 00:05:24 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D47E5F@BPXM01GP.gisp.nec.co.jp>
-References: <1410761122-1864-1-git-send-email-bhe@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D47BE1@BPXM01GP.gisp.nec.co.jp>
- <20140918085652.GD30240@dhcp-16-116.nay.redhat.com>
-In-Reply-To: <20140918085652.GD30240@dhcp-16-116.nay.redhat.com>
-Content-Language: ja-JP
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XUuJI-000843-4r
+ for kexec@lists.infradead.org; Fri, 19 Sep 2014 09:17:00 +0000
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
+ [127.0.0.1])
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id s8J9GcNe022352
+ for <kexec@lists.infradead.org>; Fri, 19 Sep 2014 17:16:38 +0800
+Message-ID: <541BF470.3050603@cn.fujitsu.com>
+Date: Fri, 19 Sep 2014 17:16:32 +0800
+From: "Wang, Xiao/Wang Xiao" <wangx.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH 2/2] makedumpfile: make the incomplete vmcore generated
+ by ENOSPC error analyzable
+References: <54180781.2080702@cn.fujitsu.com> <541AD00F.1070004@jp.fujitsu.com>
+In-Reply-To: <541AD00F.1070004@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,104 +23,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: "HATAYAMA, Daisuke" <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org
 
->> This code looks wrong, the value of MODULES_VADDR will overflow as:
->>
->>   MODULES_VADDR = __START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE)
->>                 = 0xffffffff80000000 + 0xffffffff88000000
->>
->> I think the code should be fixed as:
->>
->> makedumpfile.h:
->>     #define __START_KERNEL_map      (0xffffffff80000000)
->>     #define KERNEL_IMAGE_SIZE_ORIG      (0x0000000008000000) /* 2.6.25, or former */
->>     #define KERNEL_IMAGE_SIZE_2_6_26    (0x0000000020000000) /* 2.6.26, or later  */
->>     #define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
->>
->> makedumpfile.c:
->> 	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
->> 		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
->> 			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_ORIG;
->> 		else
->> 			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_2_6_26;
->> 	}
+Hello HATAYAMA,
+
+On 2014/9/18 20:29, HATAYAMA, Daisuke wrote:
+> Rigorously, this design depends on implementation of filesystems where it's
+> possible to lseek and write data onto already allocated blocks even
+> after the
+> filesystem is full. To show correctness of this design, you should show
+> that
+> test results for a variety of filesystems such as ext3, ext4, xfs,
+> btrfs, etc.
+
+Actually, I've tested whether lseek and write can execute on those 
+filesystems(
+ext2, ext3, ext4, xfs, and btrfs) when there's no more space, and both 
+of these
+two system calls can work well on all of those filesystems(the snapshot 
+function
+of btrfs may be confused, but it just need to allocate diskspace when 
+creating
+snapshot and will never aquire more diskspace automically in the 
+future). But
+I couldn't get any test results of these testing, because there's no error
+message when doing such tests.
+
 >
->Well, I got what you mean. The reason I did that is because before
->kaslr is introduced 0xffffffff88000000 is always correct. Since if
->kernel location is usually 16M and no one put it any other places. And
->since kernel image is not greater than 128M up to now, it's always
->correct even though later kernel image size is increased to 512M. I
->wanted to use that.
+> Of course, if this design doesn't work well on some filesystem, then we
+> just
+> see the second ENOSPC and we give up addtional work. This is the same
+> situation
+> as now. There's no demerit.
 
-Thanks, I understand your thoughts.
+As you said, this design won't introduce any more errors. So the influence
+of the filesystem is very limited.
 
->Now you are suggesting to make it clear what the size it truly is in
->kernel. That's also good. I can repost it with your suggestion.
+PS: the modified patches(according to you and Dave's comments) will be send
+later.
 
-I still prefer my idea, I would like to wait for your repost.
-
-
-Thanks
-Atsushi Kumagai
-
->Thanks
->Baoquan
->
->>
->>
->> Thanks
->> Atsushi Kumagai
->>
->> > 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
->> > 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
->> > 			SIZE(pageflags) =
->> >@@ -1813,6 +1819,7 @@ write_vmcoreinfo_data(void)
->> > 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
->> >
->> > 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
->> >+	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
->> >
->> > 	/*
->> > 	 * write the source file of 1st kernel
->> >@@ -2147,6 +2154,7 @@ read_vmcoreinfo(void)
->> > 	READ_SRCFILE("pud_t", pud_t);
->> >
->> > 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
->> >+	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
->> >
->> > 	return TRUE;
->> > }
->> >diff --git a/makedumpfile.h b/makedumpfile.h
->> >index 6493f61..28a3cac 100644
->> >--- a/makedumpfile.h
->> >+++ b/makedumpfile.h
->> >@@ -549,7 +549,8 @@ do { \
->> > #define VMEMMAP_END_2_6_31	(0xffffeaffffffffff) /* 2.6.31, or later  */
->> >
->> > #define __START_KERNEL_map	(0xffffffff80000000)
->> >-#define MODULES_VADDR		(0xffffffff88000000)
->> >+#define MODULES_VADDR_ORIG	(0xffffffff88000000)
->> >+#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
->> > #define MODULES_END		(0xfffffffffff00000)
->> > #define KVBASE			PAGE_OFFSET
->> > #define _SECTION_SIZE_BITS	(27)
->> >@@ -1531,6 +1532,7 @@ struct number_table {
->> > 	long    PG_hwpoison;
->> >
->> > 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
->> >+	long	KERNEL_IMAGE_SIZE;
->> > 	long	SECTION_SIZE_BITS;
->> > 	long	MAX_PHYSMEM_BITS;
->> > };
->> >--
->> >1.8.5.3
->>
+-- 
+Regards
+Wang Xiao
 
 _______________________________________________
 kexec mailing list
