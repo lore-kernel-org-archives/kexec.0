@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-out.m-online.net ([212.18.0.9])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XW9rV-0005n9-2l
- for kexec@lists.infradead.org; Mon, 22 Sep 2014 20:05:29 +0000
-From: Andreas Schwab <schwab@linux-m68k.org>
-Subject: [PATCH] kexec: distribute kexec/arch/m68k/bootinfo.h
-References: <1381859460-13645-1-git-send-email-geert@linux-m68k.org>
- <1381859460-13645-4-git-send-email-geert@linux-m68k.org>
-Date: Mon, 22 Sep 2014 22:04:59 +0200
-In-Reply-To: <1381859460-13645-4-git-send-email-geert@linux-m68k.org> (Geert
- Uytterhoeven's message of "Tue, 15 Oct 2013 19:51:00 +0200")
-Message-ID: <87r3z3bevo.fsf_-_@igel.home>
-MIME-Version: 1.0
+Message-ID: <1411422351.6001.28.camel@smoke>
+Subject: Re: [PATCH 01/13] arm64: Add ESR_EL2_EC macros to hyp-stub
+From: Geoff Levand <geoff@infradead.org>
+Date: Mon, 22 Sep 2014 14:45:51 -0700
+In-Reply-To: <20140915161014.GB13789@leverpostej>
+References: <cover.1410302383.git.geoff@infradead.org>
+ <5e1b1892eb3ecc3bccff47766675c24c650a1a14.1410302383.git.geoff@infradead.org>
+ <20140915161014.GB13789@leverpostej>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +20,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
----
- kexec/arch/m68k/Makefile | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kexec/arch/m68k/Makefile b/kexec/arch/m68k/Makefile
-index 7b13564..eeaacbd 100644
---- a/kexec/arch/m68k/Makefile
-+++ b/kexec/arch/m68k/Makefile
-@@ -10,5 +10,6 @@ m68k_ADD_SEGMENT =
- m68k_VIRT_TO_PHYS =
- 
- dist += kexec/arch/m68k/Makefile $(m68k_KEXEC_SRCS)			\
-+	kexec/arch/m68k/bootinfo.h					\
- 	kexec/arch/m68k/kexec-m68k.h					\
- 	kexec/arch/m68k/include/arch/options.h
--- 
-2.1.1
+Hi Mark,
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
-"And now for something completely different."
+On Mon, 2014-09-15 at 17:10 +0100, Mark Rutland wrote:
+> On Tue, Sep 09, 2014 at 11:49:04PM +0100, Geoff Levand wrote:
+> > +#define ESR_EL2_EC_SHIFT	26
+> > +#define ESR_EL2_EC_HVC64	0x16
+> 
+> These exist in arch/arm64/include/asm/kvm_arm.h, no?
+> 
+> If anything that should be folded into arch/arm64/include/asm/esr.h...
+
+OK, I'll remove this patch and add the esr.h fixup into my generic
+'arm64 enhancements' series.
+
+-Geoff
+
+
 
 _______________________________________________
 kexec mailing list
