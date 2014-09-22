@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XVzb0-0005dL-TS
- for kexec@lists.infradead.org; Mon, 22 Sep 2014 09:07:47 +0000
-Date: Mon, 22 Sep 2014 17:07:16 +0800
+ id 1XVzfa-000826-NB
+ for kexec@lists.infradead.org; Mon, 22 Sep 2014 09:12:31 +0000
+Date: Mon, 22 Sep 2014 17:12:03 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [RFC] autokdump - automated kdump testsuite
-Message-ID: <20140922090716.GA23854@darkstar.nay.redhat.com>
+Message-ID: <20140922091203.GB23854@darkstar.nay.redhat.com>
 References: <145412866.25258463.1411119061796.JavaMail.zimbra@redhat.com>
  <293476264.25264480.1411120345360.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
@@ -25,9 +25,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: CAI Qian <caiqian@redhat.com>
-Cc: ltp-list <ltp-list@lists.sourceforge.net>, kexec kdump redhat mailing list <kexec-kdump-list@redhat.com>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, crash-utility <crash-utility@redhat.com>
-
-Hi,
+Cc: ltp-list <ltp-list@lists.sourceforge.net>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 
 On 09/19/14 at 05:52am, CAI Qian wrote:
 > I plan to release an automated kdump testsuite that will be
@@ -35,10 +33,6 @@ On 09/19/14 at 05:52am, CAI Qian wrote:
 > for all major distros since it will use none of distro-specific
 > stuff, and also support different arches including x86, ARM,
 > PPC64 and s390x.
-
-It's a good idea to create a kdump test project. Maybe you can consider to
-test kexec as well.
-
 > 
 > It does the following:
 > 1) check if there is a memory reserved for kdump. If not,
@@ -59,12 +53,16 @@ test kexec as well.
 > 
 > plan:
 > I might also to test the makedumpfile all together later.
+>    CAI Qian
+> 
 
-For makedumpfile, IMO you can add several test cases and collect the dump
-time, vmcore size data as test results besides of the dump status.
+Hi, Cai
+
+I noticed you cced redhat internal lists, you'd better to remove
+them from cc list so that people do not get confused by the auto reply.
 
 Thanks
-Dave
+Dave 
 
 _______________________________________________
 kexec mailing list
