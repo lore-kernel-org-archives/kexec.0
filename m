@@ -1,19 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XW4tr-00023w-6E
- for kexec@lists.infradead.org; Mon, 22 Sep 2014 14:47:35 +0000
-Date: Mon, 22 Sep 2014 10:47:13 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC] autokdump - automated kdump testsuite
-Message-ID: <20140922144713.GA4250@redhat.com>
-References: <145412866.25258463.1411119061796.JavaMail.zimbra@redhat.com>
- <293476264.25264480.1411120345360.JavaMail.zimbra@redhat.com>
- <20140919132236.GB2190@redhat.com>
- <594480021.25988504.1411355660836.JavaMail.zimbra@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <594480021.25988504.1411355660836.JavaMail.zimbra@redhat.com>
+ id 1XW594-0000e5-4o
+ for kexec@lists.infradead.org; Mon, 22 Sep 2014 15:03:19 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Mon, 22 Sep 2014 16:02:54 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com
+ (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4D2FD2190046
+ for <kexec@lists.infradead.org>; Mon, 22 Sep 2014 16:02:29 +0100 (BST)
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+ [9.149.37.212])
+ by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ s8MF2ocD37159114
+ for <kexec@lists.infradead.org>; Mon, 22 Sep 2014 15:02:50 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s8MF2njs024011
+ for <kexec@lists.infradead.org>; Mon, 22 Sep 2014 09:02:49 -0600
+Date: Mon, 22 Sep 2014 17:02:47 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Add "--mem-usage" support for s390x
+Message-ID: <20140922170247.36774052@holzheu>
+In-Reply-To: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,91 +40,173 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: CAI Qian <caiqian@redhat.com>
-Cc: ltp-list <ltp-list@lists.sourceforge.net>, kexec kdump redhat mailing list <kexec-kdump-list@redhat.com>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, crash-utility <crash-utility@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
 
-On Mon, Sep 22, 2014 at 09:00:00AM -0400, CAI Qian wrote:
+Hello Baoquan,
+
+I looked into your patches and tried to add s390x support.
+
+My naive approach was to just enable the is_vmalloc_addr()
+for s390x:
+
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -814,13 +814,15 @@ unsigned long long vaddr_to_paddr_ppc(un
+ #endif          /* powerpc32 */
+
+ #ifdef __s390x__ /* s390x */
++int is_vmalloc_addr_s390x(ulong vaddr);
+ int get_machdep_info_s390x(void);
+ unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
+ #define get_phys_base()        TRUE
+ #define get_machdep_info()     get_machdep_info_s390x()
+ #define get_versiondep_info()  TRUE
+ #define vaddr_to_paddr(X)      vaddr_to_paddr_s390x(X)
+-#define is_vmalloc_addr(X)     TRUE
++#define is_vmalloc_addr(X)     is_vmalloc_addr_s390x(X)
+ #endif          /* s390x */
+
+ #ifdef __ia64__ /* ia64 */
+
+Unfortunately this does not work and makedumpfile loops.
+I assume the reason is that get_kcore_dump_loads() is called
+before get_machdep_info_s390x() which sets info->vmalloc_start.
+
+I looked into the x86 code and for me it looks like it should
+have the same problem.
+
+Have I overlooked something here? Perhaps you can give me a hint?
+
+For testing on my 1G system I hardcoded is_vmalloc_addr(X) to:
+
+#define is_vmalloc_addr(X) ((X) > (1024 * 1024 * 1024))
+
+Then --mem-usage seems to work:
+
+# makedumpfile --mem-usage /proc/kcore
+TYPE            PAGES                   EXCLUDABLE      DESCRIPTION
+----------------------------------------------------------------------
+ZERO            32014                   yes             Pages filled with zero
+CACHE           23264                   yes             Cache pages
+CACHE_PRIVATE   11462                   yes             Cache pages + private
+USER            5154                    yes             User process pages
+FREE            20227                   yes             Free pages
+KERN_DATA       36903                   no              Dumpable kernel data 
+
+page size:              4096            
+Total pages on system:  129024          
+Total size on system:   528482304        Byte
+
+Best Regards
+Michael
+
+
+On Mon,  1 Sep 2014 11:15:32 +0800
+Baoquan He <bhe@redhat.com> wrote:
+
+> Recently people complained that they don't know how to decide how
+> much disk size need be reserved for kdump. E.g there are lots of
+> machines with different memory size, if the memory usage information
+> of current system can be shown, that can help them to make an estimate
+> how much storage space need be reserved.
 > 
+> In this patchset, a new interface is added into makedumpfile. By the
+> help of this, people can know the page number of memory in different
+> use. The implementation is analyzing the "System Ram" and "kernel text"
+> program segment of /proc/kcore excluding the crashkernel range, then
+> calculating the page number of different kind per vmcoreinfo.
 > 
-> ----- Original Message -----
-> > From: "Vivek Goyal" <vgoyal@redhat.com>
-> > To: "CAI Qian" <caiqian@redhat.com>
-> > Cc: "linux-kernel" <linux-kernel@vger.kernel.org>, "ltp-list" <ltp-list@lists.sourceforge.net>, "crash-utility"
-> > <crash-utility@redhat.com>, "kexec" <kexec@lists.infradead.org>, "kexec kdump redhat mailing list"
-> > <kexec-kdump-list@redhat.com>
-> > Sent: Friday, September 19, 2014 9:22:36 PM
-> > Subject: Re: [RFC] autokdump - automated kdump testsuite
-> > 
-> > On Fri, Sep 19, 2014 at 05:52:25AM -0400, CAI Qian wrote:
-> > > I plan to release an automated kdump testsuite that will be
-> > 
-> > So will this be a standalone test suit? Can it be merged with
-> > something already existing say, LTP.
-> Yes, it is likely to be standalone. It won't make use of the LTP
-> API, and the LTP kdump test suite is outdated, so there is no
-> benefit to continue working over there.
+> Previouly, patchset v1 was posted. And patch 7/7 has a change in v2.
+> So several changes are made in this v3 post per comments from Vivek
+> and Atsushi.
+> 
+> [patch 2/8] functions to get crashkernel memory range
+> v3->v4:
+>     In old iomem_for_each_line(), it will call exit(1) if opening iomem
+>     failed. Atsushi suggested changing this to be consistent with other
+>     return value. So here change all the return value to be nr, then
+>     check it outside of iomem_for_each_line, and then decide how to act.
+> 
+> [patch 3/8] preparation functions for parsing vmcoreinfo
+> v1->v3:
+>     Since get_kernel_version need be called to get page_offset
+>     before initial() in mem_usage code flow, and surely it will be called
+>     inside initial() again. Add a static variable to avoid this duplicate
+>     calling.
+> v3->v4:
+>     Check the value of info->kernel_version, just return if it has been
+>     assigned to a value. This is suggested by Atsushi, far better than the
+>     static variable idea.
+>     And replace replace get_versiondep_info_x86_64() with get_versiondep_info
+>     in get_page_offset().
+> v4->v5:
+>     Update the git log.
+> 
+> [patch 4/8] set vmcoreinfo for kcore
+> v3->v4:
+>     Change several places error messages which are the same in nearby handling.
+> 
+> [patch 5/8] prepare the dump loads for kcore analysis
+> v1->v3:
+>     Fix the compiler warnings.
+> v3->v4:
+>     Rename is_vmalloc_addr() to is_vmalloc_addr_x86_64() in arch/x86_64.c. And
+>     then define is_vmalloc_addr() for all other ARCHs, just set their value to
+>     be TRUE except of x86_64.
+> 
+> [patch 6/8] introduce-a-function-exclude_zero_pages_cyclic
+> v3->v4:
+>     Newly introduce a function exclude_zero_pages_cyclic(), and call it in
+>     get_num_dumpable_cyclic().
+> 
+>     Besides, a strange thing happened when the new interface was tested on
+>     my local AMD machine. It always terminated and printed message:
+>     "Program terminated with signal SIGKILL"
+>     With gdb, it should be going in readmem() of exclude_zero_pages_cyclic, I
+>     still don't know why it happened.
+> 
+> [patch 7/8] implement a function to print the memory usage
+> v1->v3:
+>     Adjust the printing content and format of dumpable page numbers per Vivek's
+>     comments.
+> v3->v6:
+>     Slightly adjust the printing format and content.
+> 
+> [patch 8/8]
+> v1->v2:
+>     Set info->dump_level=MAX_DUMP_LEVEL, with MAX_DUMP_LEVEL all kinds of
+>     memory can be calculated.
+> v2->v3:
+>     Add the description of this feature into help message and man page.
+> v3->v4:
+>     Continue adjusting the output message of show_mem_usage calling per
+>     Vivek's comments.
+> v4->v5:
+>     Update the git log.
+> v5->v6:
+>     Adjust the printing format which is related to dump files previously.
+> 
+> Baoquan He (8):
+>   initialize pfn_memhole in get_num_dumpable_cyclic
+>   functions to get crashkernel memory range
+>   preparation functions for parsing vmcoreinfo
+>   set vmcoreinfo for kcore
+>   prepare the dump loads for kcore analysis
+>   introduce a function exclude_zero_pages_cyclic()
+>   implement a function to print the memory usage
+>   add a new interface to show the memory usage of 1st kernel
+> 
+>  arch/x86_64.c  |   6 +-
+>  elf_info.c     | 237 +++++++++++++++++++++++++++++++++++++++++++++++
+>  elf_info.h     |   3 +
+>  makedumpfile.8 |  17 ++++
+>  makedumpfile.c | 285 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  makedumpfile.h |  17 ++++
+>  print_info.c   |   8 ++
+>  7 files changed, 569 insertions(+), 4 deletions(-)
+> 
 
-So why make it standalone and not replace the old LTP kdump test suite
-with this new one?
-
-> > 
-> > > focus on testing kernel and the crash utility. It should work
-> > > for all major distros since it will use none of distro-specific
-> > > stuff, and also support different arches including x86, ARM,
-> > > PPC64 and s390x.
-> > > 
-> > > It does the following:
-> > > 1) check if there is a memory reserved for kdump. If not,
-> > >    reserve the memory and reboot the system.
-> > > 2) once the system is back, load kexec on panic and
-> > >    prepare a separate initramfs that including needed
-> > >    modules to load a local filesystem and necessary utilities
-> > 
-> > So you will write logic to prepare custom initramfs or will rely
-> > on dracut or some other utility for that.
-> I'll probably prepare custom initramfs for the sake of simplicity.
-
-Well, preparing custom initramfs will become very tricky. We used
-to do that and finally we switched to dracut.
-
-Why not simply let the respective service on the host do this job and
-test only makes sure that kdump service is running. It feels little
-out of place that a test is generating custom initramfs. 
-
-> > 
-> > >    in order to analyse /proc/vmcore in the 2nd kernel.
-> > > 3) trigger the system crash using methods like sysrq-c, NMI,
-> > >    and panic_on_hung_task etc.
-> > > 4) in the 2nd kernel, mount a filesystem and use the crash
-> > >    utility to analyse /proc/vmcore. Then, gather the analyse
-> > >    logs, serial console output, dmesg etc into the filesystem.
-> > 
-> > Why not save core and boot back in first kernel and then analyze.
-> > 
-> > Trying to work directly with /proc/vmcore does not test makedumfile
-> > which everybody uses. Also it will require more memory to be reserved
-> > and packing crash and debug vmlinux into initramfs.
-> The additional memory for vmlinux and the crash utility is predictable
-> and manageable, so it can just ask 256M memory reserved before running
-> the program. On the other hand, it is not usually feasible to ask
-> the systems under testing has enough available disk spaces bigger than
-> the memory size.
-
-makedumpfile will reduce the vmcore file size to few hundreds of mega
-bytes on most of the systems. Especially, this is just a test, so 
-system will be lightly loaded and vmcore will be small after filtering.
-
-If there is not enough space, test fails, period. I don't think there
-is any need to try to circumvent that and try to run crash in initramfs.
-And in the process we don't test makedumpfile which is very imporatnt
-component of this whole process.
-
-IMHO, just rely on "systemctl start kdump" to generate and load custom
-initramfs and save filtered vmcore to root fs by default and alanyze
-vmcore post reboot. That will keep things simple.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
