@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XWGJx-0003Qb-Vt
- for kexec@lists.infradead.org; Tue, 23 Sep 2014 02:59:18 +0000
-Date: Tue, 23 Sep 2014 10:58:51 +0800
+ id 1XWGks-0006N1-6H
+ for kexec@lists.infradead.org; Tue, 23 Sep 2014 03:27:06 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: Add "--mem-usage" support for s390x
-Message-ID: <20140923025851.GE8697@dhcp-16-116.nay.redhat.com>
-References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
- <20140922170247.36774052@holzheu>
- <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
- <20140923024835.GD8697@dhcp-16-116.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20140923024835.GD8697@dhcp-16-116.nay.redhat.com>
+Subject: [Patch v2] get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64
+Date: Tue, 23 Sep 2014 11:25:09 +0800
+Message-Id: <1411442709-1623-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,74 +15,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: kexec@lists.infradead.org
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>
 
-On 09/23/14 at 10:48am, Baoquan He wrote:
-> On 09/23/14 at 10:40am, Baoquan He wrote:
-> > On 09/22/14 at 05:02pm, Michael Holzheu wrote:
-> > > Hello Baoquan,
-> > > 
-> > > I looked into your patches and tried to add s390x support.
-> > > 
-> > > My naive approach was to just enable the is_vmalloc_addr()
-> > > for s390x:
-> > > 
-> > > --- a/makedumpfile.h
-> > > +++ b/makedumpfile.h
-> > > @@ -814,13 +814,15 @@ unsigned long long vaddr_to_paddr_ppc(un
-> > >  #endif          /* powerpc32 */
-> > > 
-> > >  #ifdef __s390x__ /* s390x */
-> > > +int is_vmalloc_addr_s390x(ulong vaddr);
-> > >  int get_machdep_info_s390x(void);
-> > >  unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
-> > >  #define get_phys_base()        TRUE
-> > >  #define get_machdep_info()     get_machdep_info_s390x()
-> 
-> Well, seems you have added the get_machdep_info_s390x(). Could you post
-> your complete patch? Because I didn't see it in current devel branch.
+In x86_64, since v2.6.26 the KERNEL_IMAGE_SIZE is changed to 512M, and
+accordingly the MODULES_VADDR is changed to 0xffffffffa0000000. Before
+that, KERNEL_IMAGE_SIZE is 128M, and MODULES_VADDR is 0xffffffff88000000.
 
-Well, I am looking in the wrong. What you need to added is
-get_versiondep_info_s390x() as I replied in last mail.
+However, in v3.12 Kees Cook introduced kaslr to randomise the location
+of kernel. And the kernel text mapping addr space is enlarged from 512M
+to 1G. That means now KERNEL_IMAGE_SIZE is variable, its value is 512M
+with kaslr support not compiled in and 1G with kaslr support compiled
+in. Accordingly the MODULES_VADDR is changed too to be:
 
-Sorry, it's not related to get_machdep_info().
+So when kaslr is compiled in and enabled, the kernel text mapping addr
+space and modules vaddr space need be adjusted. Otherwise makedumpfile
+will collapse since the addr for some symbols is not correct.
 
+Hence KERNEL_IMAGE_SIZE need be exported to vmcoreinfo and got in
+makedumpfile to help calculate MODULES_VADDR.
 
-> 
-> > >  #define get_versiondep_info()  TRUE
-> > >  #define vaddr_to_paddr(X)      vaddr_to_paddr_s390x(X)
-> > > -#define is_vmalloc_addr(X)     TRUE
-> > > +#define is_vmalloc_addr(X)     is_vmalloc_addr_s390x(X)
-> > >  #endif          /* s390x */
-> > > 
-> > >  #ifdef __ia64__ /* ia64 */
-> > 
-> > Hi Michael, 
-> > 
-> > Please alse provide a get_versiondep_info_s390x since page_offset is
-> > needed in set_kcore_vmcoreinfo() and other information need it too, such
-> > as VMALLOC_START/VMEMMAP_START/MODULES_VADDR, if you want to provide a
-> > is_vmalloc_addr_s390x before initial() is called.
-> > 
-> > 
-> > Thanks
-> > Baoquan
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+v1->v2:
+    Fix a code bug Atsushi found.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ makedumpfile.c | 10 ++++++++++
+ makedumpfile.h |  5 ++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b4d43d8..65c893f 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1564,6 +1564,14 @@ get_value_for_old_linux(void)
+ 			NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) =
+ 			PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_39_to_latest_version;
+ 	}
++#ifdef __x86_64__
++	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
++		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
++			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_ORIG;
++		else
++			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_2_6_26;
++	}
++#endif
+ 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
+ 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
+ 			SIZE(pageflags) =
+@@ -1813,6 +1821,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
+ 
+ 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
++	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ 
+ 	/*
+ 	 * write the source file of 1st kernel
+@@ -2147,6 +2156,7 @@ read_vmcoreinfo(void)
+ 	READ_SRCFILE("pud_t", pud_t);
+ 
+ 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
++	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ 
+ 	return TRUE;
+ }
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 96830b0..a3d86e7 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -549,7 +549,9 @@ do { \
+ #define VMEMMAP_END_2_6_31	(0xffffeaffffffffff) /* 2.6.31, or later  */
+ 
+ #define __START_KERNEL_map	(0xffffffff80000000)
+-#define MODULES_VADDR		(0xffffffff88000000)
++#define KERNEL_IMAGE_SIZE_ORIG	(0x0000000008000000) /* 2.6.25, or former */
++#define KERNEL_IMAGE_SIZE_2_6_26	(0x0000000020000000) /* 2.6.26, or later  */
++#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
+ #define MODULES_END		(0xfffffffffff00000)
+ #define KVBASE			PAGE_OFFSET
+ #define _SECTION_SIZE_BITS	(27)
+@@ -1531,6 +1533,7 @@ struct number_table {
+ 	long    PG_hwpoison;
+ 
+ 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
++	long	KERNEL_IMAGE_SIZE;
+ 	long	SECTION_SIZE_BITS;
+ 	long	MAX_PHYSMEM_BITS;
+ };
+-- 
+1.8.5.3
+
 
 _______________________________________________
 kexec mailing list
