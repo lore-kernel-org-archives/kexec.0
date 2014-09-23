@@ -1,12 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XWGks-0006N1-6H
- for kexec@lists.infradead.org; Tue, 23 Sep 2014 03:27:06 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [Patch v2] get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64
-Date: Tue, 23 Sep 2014 11:25:09 +0800
-Message-Id: <1411442709-1623-1-git-send-email-bhe@redhat.com>
+ id 1XWOvH-0007Qq-82
+ for kexec@lists.infradead.org; Tue, 23 Sep 2014 12:10:23 +0000
+Date: Tue, 23 Sep 2014 08:09:59 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC] autokdump - automated kdump testsuite
+Message-ID: <20140923120959.GB1732@redhat.com>
+References: <145412866.25258463.1411119061796.JavaMail.zimbra@redhat.com>
+ <293476264.25264480.1411120345360.JavaMail.zimbra@redhat.com>
+ <20140919132236.GB2190@redhat.com>
+ <594480021.25988504.1411355660836.JavaMail.zimbra@redhat.com>
+ <20140922144713.GA4250@redhat.com>
+ <1446076274.27552759.1411440835273.JavaMail.zimbra@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1446076274.27552759.1411440835273.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,101 +24,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, Baoquan He <bhe@redhat.com>
+To: CAI Qian <caiqian@redhat.com>
+Cc: ltp-list <ltp-list@lists.sourceforge.net>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, crash-utility <crash-utility@redhat.com>
 
-In x86_64, since v2.6.26 the KERNEL_IMAGE_SIZE is changed to 512M, and
-accordingly the MODULES_VADDR is changed to 0xffffffffa0000000. Before
-that, KERNEL_IMAGE_SIZE is 128M, and MODULES_VADDR is 0xffffffff88000000.
+On Mon, Sep 22, 2014 at 10:53:55PM -0400, CAI Qian wrote:
 
-However, in v3.12 Kees Cook introduced kaslr to randomise the location
-of kernel. And the kernel text mapping addr space is enlarged from 512M
-to 1G. That means now KERNEL_IMAGE_SIZE is variable, its value is 512M
-with kaslr support not compiled in and 1G with kaslr support compiled
-in. Accordingly the MODULES_VADDR is changed too to be:
+[..]
+> > Why not simply let the respective service on the host do this job and
+> > test only makes sure that kdump service is running. It feels little
+> > out of place that a test is generating custom initramfs.
+> Because not every distro will have a kdump service like Fedora.
 
-So when kaslr is compiled in and enabled, the kernel text mapping addr
-space and modules vaddr space need be adjusted. Otherwise makedumpfile
-will collapse since the addr for some symbols is not correct.
+So which distro does not have a service? Do we know this or we are
+assuming that distributions don't have a service to load/unload
+kdump kernel.
 
-Hence KERNEL_IMAGE_SIZE need be exported to vmcoreinfo and got in
-makedumpfile to help calculate MODULES_VADDR.
+[..]
+> > makedumpfile will reduce the vmcore file size to few hundreds of mega
+> > bytes on most of the systems. Especially, this is just a test, so
+> > system will be lightly loaded and vmcore will be small after filtering.
+> It probably actually have test cases to heavily loaded the memory before
+> dumping.
 
-v1->v2:
-    Fix a code bug Atsushi found.
+Your original proposal does not take care of this case either. A test
+case could be heavily used memory and if user does not have sufficient
+memory to save core, so be it. That test will fail.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- makedumpfile.c | 10 ++++++++++
- makedumpfile.h |  5 ++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b4d43d8..65c893f 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1564,6 +1564,14 @@ get_value_for_old_linux(void)
- 			NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) =
- 			PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_39_to_latest_version;
- 	}
-+#ifdef __x86_64__
-+	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
-+		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
-+			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_ORIG;
-+		else
-+			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_2_6_26;
-+	}
-+#endif
- 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
- 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
- 			SIZE(pageflags) =
-@@ -1813,6 +1821,7 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("PG_hwpoison", PG_hwpoison);
- 
- 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-+	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
- 
- 	/*
- 	 * write the source file of 1st kernel
-@@ -2147,6 +2156,7 @@ read_vmcoreinfo(void)
- 	READ_SRCFILE("pud_t", pud_t);
- 
- 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
-+	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
- 
- 	return TRUE;
- }
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 96830b0..a3d86e7 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -549,7 +549,9 @@ do { \
- #define VMEMMAP_END_2_6_31	(0xffffeaffffffffff) /* 2.6.31, or later  */
- 
- #define __START_KERNEL_map	(0xffffffff80000000)
--#define MODULES_VADDR		(0xffffffff88000000)
-+#define KERNEL_IMAGE_SIZE_ORIG	(0x0000000008000000) /* 2.6.25, or former */
-+#define KERNEL_IMAGE_SIZE_2_6_26	(0x0000000020000000) /* 2.6.26, or later  */
-+#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
- #define MODULES_END		(0xfffffffffff00000)
- #define KVBASE			PAGE_OFFSET
- #define _SECTION_SIZE_BITS	(27)
-@@ -1531,6 +1533,7 @@ struct number_table {
- 	long    PG_hwpoison;
- 
- 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
-+	long	KERNEL_IMAGE_SIZE;
- 	long	SECTION_SIZE_BITS;
- 	long	MAX_PHYSMEM_BITS;
- };
--- 
-1.8.5.3
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
