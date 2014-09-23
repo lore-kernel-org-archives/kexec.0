@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx6-phx2.redhat.com ([209.132.183.39])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XWGF7-0000QY-7a
- for kexec@lists.infradead.org; Tue, 23 Sep 2014 02:54:18 +0000
-Date: Mon, 22 Sep 2014 22:53:55 -0400 (EDT)
-From: CAI Qian <caiqian@redhat.com>
-Message-ID: <1446076274.27552759.1411440835273.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20140922144713.GA4250@redhat.com>
-References: <145412866.25258463.1411119061796.JavaMail.zimbra@redhat.com>
- <293476264.25264480.1411120345360.JavaMail.zimbra@redhat.com>
- <20140919132236.GB2190@redhat.com>
- <594480021.25988504.1411355660836.JavaMail.zimbra@redhat.com>
- <20140922144713.GA4250@redhat.com>
-Subject: Re: [RFC] autokdump - automated kdump testsuite
+ id 1XWGJx-0003Qb-Vt
+ for kexec@lists.infradead.org; Tue, 23 Sep 2014 02:59:18 +0000
+Date: Tue, 23 Sep 2014 10:58:51 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: Add "--mem-usage" support for s390x
+Message-ID: <20140923025851.GE8697@dhcp-16-116.nay.redhat.com>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+ <20140922170247.36774052@holzheu>
+ <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
+ <20140923024835.GD8697@dhcp-16-116.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20140923024835.GD8697@dhcp-16-116.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,120 +26,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: ltp-list <ltp-list@lists.sourceforge.net>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, crash-utility <crash-utility@redhat.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-
-
------ Original Message -----
-> From: "Vivek Goyal" <vgoyal@redhat.com>
-> To: "CAI Qian" <caiqian@redhat.com>
-> Cc: "ltp-list" sourceforge.net>, "kexec kdump redhat mailing list" <kexec-kdump-list@redhat.com>,
-> "kexec" <kexec@lists.infradead.org>, "linux-kernel" vger.kernel.org>, "crash-utility"
-> redhat.com>
-> Sent: Monday, September 22, 2014 10:47:13 PM
-> Subject: Re: [RFC] autokdump - automated kdump testsuite
+On 09/23/14 at 10:48am, Baoquan He wrote:
+> On 09/23/14 at 10:40am, Baoquan He wrote:
+> > On 09/22/14 at 05:02pm, Michael Holzheu wrote:
+> > > Hello Baoquan,
+> > > 
+> > > I looked into your patches and tried to add s390x support.
+> > > 
+> > > My naive approach was to just enable the is_vmalloc_addr()
+> > > for s390x:
+> > > 
+> > > --- a/makedumpfile.h
+> > > +++ b/makedumpfile.h
+> > > @@ -814,13 +814,15 @@ unsigned long long vaddr_to_paddr_ppc(un
+> > >  #endif          /* powerpc32 */
+> > > 
+> > >  #ifdef __s390x__ /* s390x */
+> > > +int is_vmalloc_addr_s390x(ulong vaddr);
+> > >  int get_machdep_info_s390x(void);
+> > >  unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
+> > >  #define get_phys_base()        TRUE
+> > >  #define get_machdep_info()     get_machdep_info_s390x()
 > 
-> On Mon, Sep 22, 2014 at 09:00:00AM -0400, CAI Qian wrote:
+> Well, seems you have added the get_machdep_info_s390x(). Could you post
+> your complete patch? Because I didn't see it in current devel branch.
+
+Well, I am looking in the wrong. What you need to added is
+get_versiondep_info_s390x() as I replied in last mail.
+
+Sorry, it's not related to get_machdep_info().
+
+
+> 
+> > >  #define get_versiondep_info()  TRUE
+> > >  #define vaddr_to_paddr(X)      vaddr_to_paddr_s390x(X)
+> > > -#define is_vmalloc_addr(X)     TRUE
+> > > +#define is_vmalloc_addr(X)     is_vmalloc_addr_s390x(X)
+> > >  #endif          /* s390x */
+> > > 
+> > >  #ifdef __ia64__ /* ia64 */
+> > 
+> > Hi Michael, 
+> > 
+> > Please alse provide a get_versiondep_info_s390x since page_offset is
+> > needed in set_kcore_vmcoreinfo() and other information need it too, such
+> > as VMALLOC_START/VMEMMAP_START/MODULES_VADDR, if you want to provide a
+> > is_vmalloc_addr_s390x before initial() is called.
 > > 
 > > 
-> > ----- Original Message -----
-> > > From: "Vivek Goyal" <vgoyal@redhat.com>
-> > > To: "CAI Qian" <caiqian@redhat.com>
-> > > Cc: "linux-kernel" vger.kernel.org>, "ltp-list"
-> > > sourceforge.net>, "crash-utility"
-> > > redhat.com>, "kexec" <kexec@lists.infradead.org>, "kexec
-> > > kdump redhat mailing list"
-> > > <kexec-kdump-list@redhat.com>
-> > > Sent: Friday, September 19, 2014 9:22:36 PM
-> > > Subject: Re: [RFC] autokdump - automated kdump testsuite
-> > > 
-> > > On Fri, Sep 19, 2014 at 05:52:25AM -0400, CAI Qian wrote:
-> > > > I plan to release an automated kdump testsuite that will be
-> > > 
-> > > So will this be a standalone test suit? Can it be merged with
-> > > something already existing say, LTP.
-> > Yes, it is likely to be standalone. It won't make use of the LTP
-> > API, and the LTP kdump test suite is outdated, so there is no
-> > benefit to continue working over there.
-> 
-> So why make it standalone and not replace the old LTP kdump test suite
-> with this new one?
-It will be totally a rewrite from scratch, and will have no direct relationship
-with the rest of the LTP.
-> 
-> > > 
-> > > > focus on testing kernel and the crash utility. It should work
-> > > > for all major distros since it will use none of distro-specific
-> > > > stuff, and also support different arches including x86, ARM,
-> > > > PPC64 and s390x.
-> > > > 
-> > > > It does the following:
-> > > > 1) check if there is a memory reserved for kdump. If not,
-> > > >    reserve the memory and reboot the system.
-> > > > 2) once the system is back, load kexec on panic and
-> > > >    prepare a separate initramfs that including needed
-> > > >    modules to load a local filesystem and necessary utilities
-> > > 
-> > > So you will write logic to prepare custom initramfs or will rely
-> > > on dracut or some other utility for that.
-> > I'll probably prepare custom initramfs for the sake of simplicity.
-> 
-> Well, preparing custom initramfs will become very tricky. We used
-> to do that and finally we switched to dracut.
-> 
-> Why not simply let the respective service on the host do this job and
-> test only makes sure that kdump service is running. It feels little
-> out of place that a test is generating custom initramfs.
-Because not every distro will have a kdump service like Fedora.
-> 
-> > > 
-> > > >    in order to analyse /proc/vmcore in the 2nd kernel.
-> > > > 3) trigger the system crash using methods like sysrq-c, NMI,
-> > > >    and panic_on_hung_task etc.
-> > > > 4) in the 2nd kernel, mount a filesystem and use the crash
-> > > >    utility to analyse /proc/vmcore. Then, gather the analyse
-> > > >    logs, serial console output, dmesg etc into the filesystem.
-> > > 
-> > > Why not save core and boot back in first kernel and then analyze.
-> > > 
-> > > Trying to work directly with /proc/vmcore does not test makedumfile
-> > > which everybody uses. Also it will require more memory to be reserved
-> > > and packing crash and debug vmlinux into initramfs.
-> > The additional memory for vmlinux and the crash utility is predictable
-> > and manageable, so it can just ask 256M memory reserved before running
-> > the program. On the other hand, it is not usually feasible to ask
-> > the systems under testing has enough available disk spaces bigger than
-> > the memory size.
-> 
-> makedumpfile will reduce the vmcore file size to few hundreds of mega
-> bytes on most of the systems. Especially, this is just a test, so
-> system will be lightly loaded and vmcore will be small after filtering.
-It probably actually have test cases to heavily loaded the memory before
-dumping.
-> 
-> If there is not enough space, test fails, period. I don't think there
-> is any need to try to circumvent that and try to run crash in initramfs.
-> And in the process we don't test makedumpfile which is very imporatnt
-> component of this whole process.
-Test makedumpfile is in plan. Tests failed because of lack of disk space
-is a testsuite design problem, and especially problematic on those large
-memory systems that we had seen more and more those days.
-> 
-> IMHO, just rely on "systemctl start kdump" to generate and load custom
-> initramfs and save filtered vmcore to root fs by default and alanyze
-> vmcore post reboot. That will keep things simple.
-Again, not every major distro has that.
-   CAI Qian
-> 
-> Thanks
-> Vivek
+> > Thanks
+> > Baoquan
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 > 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
-> 
 
 _______________________________________________
 kexec mailing list
