@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XX5bN-0001g3-CL
- for kexec@lists.infradead.org; Thu, 25 Sep 2014 09:44:42 +0000
-Date: Thu, 25 Sep 2014 17:44:12 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: Add "--mem-usage" support for s390x
-Message-ID: <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
-References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
- <20140922170247.36774052@holzheu>
- <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
- <20140924171904.1db5ac90@holzheu>
+Date: Thu, 25 Sep 2014 14:28:10 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 6/7] arm64/kexec: Add core kexec support
+Message-ID: <20140925182810.GB6303@redhat.com>
+References: <cover.1411604443.git.geoff@infradead.org>
+ <471af24b7de659a30a5941e793634bffec380cb9.1411604443.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140924171904.1db5ac90@holzheu>
+In-Reply-To: <471af24b7de659a30a5941e793634bffec380cb9.1411604443.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,82 +20,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On 09/24/14 at 05:19pm, Michael Holzheu wrote:
-> On Tue, 23 Sep 2014 10:40:58 +0800
-> Baoquan He <bhe@redhat.com> wrote:
-> 
-> > On 09/22/14 at 05:02pm, Michael Holzheu wrote:
-> > > Hello Baoquan,
-> > > 
-> > > I looked into your patches and tried to add s390x support.
-> > > 
-> > > My naive approach was to just enable the is_vmalloc_addr()
-> > > for s390x:
-> > > 
-> > > --- a/makedumpfile.h
-> > > +++ b/makedumpfile.h
-> > > @@ -814,13 +814,15 @@ unsigned long long vaddr_to_paddr_ppc(un
-> > >  #endif          /* powerpc32 */
-> > > 
-> > >  #ifdef __s390x__ /* s390x */
-> > > +int is_vmalloc_addr_s390x(ulong vaddr);
-> > >  int get_machdep_info_s390x(void);
-> > >  unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
-> > >  #define get_phys_base()        TRUE
-> > >  #define get_machdep_info()     get_machdep_info_s390x()
-> > >  #define get_versiondep_info()  TRUE
-> > >  #define vaddr_to_paddr(X)      vaddr_to_paddr_s390x(X)
-> > > -#define is_vmalloc_addr(X)     TRUE
-> > > +#define is_vmalloc_addr(X)     is_vmalloc_addr_s390x(X)
-> > >  #endif          /* s390x */
-> > > 
-> > >  #ifdef __ia64__ /* ia64 */
-> > 
-> > Hi Michael, 
-> > 
-> > Please alse provide a get_versiondep_info_s390x since page_offset is
-> > needed in set_kcore_vmcoreinfo() and other information need it too, such
-> > as VMALLOC_START/VMEMMAP_START/MODULES_VADDR, if you want to provide a
-> > is_vmalloc_addr_s390x before initial() is called.
-> 
-> Hello Baoquan,
-> 
-> Thanks for the hint! I looked into the x86_64 implementation of 
-> get_versiondep_info() where version dependent constants are used
-> for vmalloc_start and others.
-> 
-> For s390x this is not so easy because vmalloc_start is dependent
-> on the memory size of the system (see setup_memory_end()
-> in arch/s390/kernel/setup.c). Unfortunately "info->max_mapnr"
-> is not set at that time.
+On Thu, Sep 25, 2014 at 12:23:27AM +0000, Geoff Levand wrote:
+[..]
+> +void machine_kexec(struct kimage *image)
+> +{
+> +	phys_addr_t reboot_code_buffer_phys;
+> +	void *reboot_code_buffer;
+> +
+> +	BUG_ON(num_online_cpus() > 1);
+> +
+> +	kexec_kimage_head = image->head;
+> +
+> +	reboot_code_buffer_phys = page_to_phys(image->control_code_page);
+> +	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+> +
+> +	/*
+> +	 * Copy relocate_new_kernel to the reboot_code_buffer for use
+> +	 * after the kernel is shut down.
+> +	 */
+> +
+> +	memcpy(reboot_code_buffer, relocate_new_kernel,
+> +		relocate_new_kernel_size);
+> +
+> +	/* Flush the reboot_code_buffer in preparation for its execution. */
+> +
+> +	__flush_dcache_area(reboot_code_buffer, relocate_new_kernel_size);
+> +
+> +	/* Flush the kimage list. */
+> +
+> +	kexec_list_walk(NULL, image->head, kexec_list_flush_cb);
+> +
+> +	pr_info("Bye!\n");
+> +
+> +	/* Disable all DAIF exceptions. */
+> +	
+> +	asm volatile ("msr daifset, #0xf" : : : "memory");
+> +
+> +	soft_restart(reboot_code_buffer_phys);
 
-I am not aware of s390 arch and memory layout. But I can explain what
-those versiondep_info are used for, hope they can help. In fact in
-x86_64, page_offset is got for set_kcore_vmcoreinfo(), there the
-vmcoreinfo_addr need be converted to kvaddr. Since vmcoreinfo_addr is a
-physical addr, we can't use it directly. And
-VMALLOC_START/VMEMMAP_START/MODULES_VADDR are all used to filter this
-virtual addr space region since our vmcore only care about the physical
-ram addr region.
+So what is soft_restart() functionality in arm64?
 
-If you need get these before they are used for s390 arch. If necessary
-you can build a different code flow if you can achive the goal. All
-these are all used to get dumpable load segments from kcore.
+Looks like it switches to identity mapped page tables and that seems
+to be the reason that you are not preparing identity mapped page
+tables in kexec code. I am wondering I how do you make sure that once
+kexec is swapping pages (putting new kernel's pages to its destination)
+at that time these identity page will not be overwritten?
 
+I am assuming that you are jumping to purgatory with paging enabled
+and whole of the memory identity mapped.
 
-> 
-> Any ideas?
-> 
-> Michael
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+I am also curious to know what are different entry points arm64
+kernel image supports and which one are you using by default.
+
+Thanks
+Vivek
+
 
 _______________________________________________
 kexec mailing list
