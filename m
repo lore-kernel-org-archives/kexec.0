@@ -1,35 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XWoLu-0006qL-I7
- for kexec@lists.infradead.org; Wed, 24 Sep 2014 15:19:35 +0000
-Received: from /spool/local
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 24 Sep 2014 16:19:10 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 369EE17D8045
- for <kexec@lists.infradead.org>; Wed, 24 Sep 2014 16:21:14 +0100 (BST)
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
- [9.149.37.247])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- s8OFJ7q235520534
- for <kexec@lists.infradead.org>; Wed, 24 Sep 2014 15:19:07 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av12.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s8OFJ6TZ026153
- for <kexec@lists.infradead.org>; Wed, 24 Sep 2014 09:19:06 -0600
-Date: Wed, 24 Sep 2014 17:19:04 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: Add "--mem-usage" support for s390x
-Message-ID: <20140924171904.1db5ac90@holzheu>
-In-Reply-To: <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
-References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
- <20140922170247.36774052@holzheu>
- <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
-Mime-Version: 1.0
+Message-Id: <cover.1411604443.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH 0/7] arm64 kexec kernel patches V3
+Date: Thu, 25 Sep 2014 00:23:26 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,64 +11,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-On Tue, 23 Sep 2014 10:40:58 +0800
-Baoquan He <bhe@redhat.com> wrote:
+Hi All,
 
-> On 09/22/14 at 05:02pm, Michael Holzheu wrote:
-> > Hello Baoquan,
-> > 
-> > I looked into your patches and tried to add s390x support.
-> > 
-> > My naive approach was to just enable the is_vmalloc_addr()
-> > for s390x:
-> > 
-> > --- a/makedumpfile.h
-> > +++ b/makedumpfile.h
-> > @@ -814,13 +814,15 @@ unsigned long long vaddr_to_paddr_ppc(un
-> >  #endif          /* powerpc32 */
-> > 
-> >  #ifdef __s390x__ /* s390x */
-> > +int is_vmalloc_addr_s390x(ulong vaddr);
-> >  int get_machdep_info_s390x(void);
-> >  unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
-> >  #define get_phys_base()        TRUE
-> >  #define get_machdep_info()     get_machdep_info_s390x()
-> >  #define get_versiondep_info()  TRUE
-> >  #define vaddr_to_paddr(X)      vaddr_to_paddr_s390x(X)
-> > -#define is_vmalloc_addr(X)     TRUE
-> > +#define is_vmalloc_addr(X)     is_vmalloc_addr_s390x(X)
-> >  #endif          /* s390x */
-> > 
-> >  #ifdef __ia64__ /* ia64 */
-> 
-> Hi Michael, 
-> 
-> Please alse provide a get_versiondep_info_s390x since page_offset is
-> needed in set_kcore_vmcoreinfo() and other information need it too, such
-> as VMALLOC_START/VMEMMAP_START/MODULES_VADDR, if you want to provide a
-> is_vmalloc_addr_s390x before initial() is called.
+This series adds the core support for kexec re-boots on arm64.  I have tested
+with the ARM VE fast model using various kernel config options for both the
+first and second stage kernels.
 
-Hello Baoquan,
+To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+kexec-tools [2], which have not yet been merged upstream, are needed.
 
-Thanks for the hint! I looked into the x86_64 implementation of 
-get_versiondep_info() where version dependent constants are used
-for vmalloc_start and others.
+This series does not include some re-work of the spin-table CPU enable method
+that is needed to support it, nor does it include some re-work of KVM to support
+CPU soft reset.  A kernel built with these patches will boot and run correctly,
+but will fail to load a kexec kernel if running on a machine with any spin-table
+enabled CPUs and will fail the kexec re-boot if the first stage kernel was built
+with CONFIG_KVM=y.  Work-in-progress patches to support these are in the master
+branch of my linux-kexec repository [1].
 
-For s390x this is not so easy because vmalloc_start is dependent
-on the memory size of the system (see setup_memory_end()
-in arch/s390/kernel/setup.c). Unfortunately "info->max_mapnr"
-is not set at that time.
+Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
+routine the ability to switch exception levels from EL1 to EL2 for kernels that
+were entered in EL2.
 
-Any ideas?
+Patch 5 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
+dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+routine.
 
-Michael
+Patches 11 and 12 add the actual kexec support.
+
+Please consider all patches for inclusion.  Any comments or suggestions on how 
+to improve are welcome.
+
+[1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
+[2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+
+-Geoff
+
+The following changes since commit 1059c6bf8534acda249e7e65c81e7696fb074dc1:
+
+  arm64: debug: don't re-enable debug exceptions on return from el1_dbg (2014-09-23 15:49:34 +0100)
+
+are available in the git repository at:
+
+  git://git.linaro.org/people/geoff.levand/linux-kexec.git kexec-v3
+
+for you to fetch changes up to d0dcec391ae430d2c0aa2ba770c4c21b1414fa68:
+
+  arm64/kexec: Enable kexec in the arm64 defconfig (2014-09-24 17:18:32 -0700)
+
+----------------------------------------------------------------
+Geoff Levand (7):
+      arm64/kvm: Fix assembler compatibility of macros
+      arm64: Convert hcalls to use ISS field
+      arm64: Add new hcall HVC_CALL_FUNC
+      arm64: Add EL2 switch to soft_restart
+      arm64: Move proc-macros.S to include/asm
+      arm64/kexec: Add core kexec support
+      arm64/kexec: Enable kexec in the arm64 defconfig
+
+ arch/arm64/Kconfig                           |   9 ++
+ arch/arm64/configs/defconfig                 |   1 +
+ arch/arm64/include/asm/kexec.h               |  47 +++++++
+ arch/arm64/include/asm/kvm_arm.h             |   2 +-
+ arch/arm64/include/asm/proc-fns.h            |   4 +-
+ arch/arm64/{mm => include/asm}/proc-macros.S |   0
+ arch/arm64/include/asm/virt.h                |  33 +++++
+ arch/arm64/kernel/Makefile                   |   1 +
+ arch/arm64/kernel/hyp-stub.S                 |  44 +++++--
+ arch/arm64/kernel/machine_kexec.c            | 183 +++++++++++++++++++++++++++
+ arch/arm64/kernel/process.c                  |   6 +-
+ arch/arm64/kernel/relocate_kernel.S          | 183 +++++++++++++++++++++++++++
+ arch/arm64/kvm/hyp.S                         |  18 ++-
+ arch/arm64/mm/cache.S                        |   3 +-
+ arch/arm64/mm/proc.S                         |  50 ++++++--
+ include/uapi/linux/kexec.h                   |   1 +
+ 16 files changed, 546 insertions(+), 39 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kexec.h
+ rename arch/arm64/{mm => include/asm}/proc-macros.S (100%)
+ create mode 100644 arch/arm64/kernel/machine_kexec.c
+ create mode 100644 arch/arm64/kernel/relocate_kernel.S
+
+-- 
+1.9.1
 
 
 _______________________________________________
