@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <7109e9ce24c9349d40fb68c6b66e45d20ca9b26d.1411604443.git.geoff@infradead.org>
+Message-Id: <d0dcec391ae430d2c0aa2ba770c4c21b1414fa68.1411604443.git.geoff@infradead.org>
 In-Reply-To: <cover.1411604443.git.geoff@infradead.org>
 References: <cover.1411604443.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 3/7] arm64: Add new hcall HVC_CALL_FUNC
-Date: Thu, 25 Sep 2014 00:23:26 +0000
+Subject: [PATCH 7/7] arm64/kexec: Enable kexec in the arm64 defconfig
+Date: Thu, 25 Sep 2014 00:23:27 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,72 +21,25 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
-During CPU reset the CPU must be brought to the exception level it had on
-entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
-needed for this exception level switch.
-
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/virt.h | 13 +++++++++++++
- arch/arm64/kernel/hyp-stub.S  | 17 ++++++++++++++---
- 2 files changed, 27 insertions(+), 3 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-index 99c319c..055e8d8 100644
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -41,6 +41,19 @@
- 
- #define HVC_CALL_HYP 3
- 
-+/*
-+ * HVC_CALL_FUNC - Execute a function at EL2.
-+ *
-+ * @x0: Physical address of the funtion to be executed.
-+ * @x1: Passed as the first argument to the function.
-+ * @x2: Passed as the second argument to the function.
-+ * @x3: Passed as the third argument to the function.
-+ *
-+ * The called function must preserve the contents of register x18.
-+ */
-+
-+#define HVC_CALL_FUNC 4
-+
- #ifndef __ASSEMBLY__
- 
- /*
-diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index 8b39522..8dfb3a6 100644
---- a/arch/arm64/kernel/hyp-stub.S
-+++ b/arch/arm64/kernel/hyp-stub.S
-@@ -65,9 +65,20 @@ el1_sync:
- 	mrs	x0, vbar_el2
- 	b	2f
- 
--1:	cmp	x18, #HVC_SET_VECTORS
--	b.ne	2f
--	msr	vbar_el2, x0
-+1:	cmp     x18, #HVC_SET_VECTORS
-+	b.ne    1f
-+	msr     vbar_el2, x0
-+	b       2f
-+
-+1:	cmp     x18, #HVC_CALL_FUNC
-+	b.ne    2f
-+	mov     x18, lr
-+	mov     lr, x0
-+	mov     x0, x1
-+	mov     x1, x2
-+	mov     x2, x3
-+	blr     lr
-+	mov     lr, x18
- 
- 2:	eret
- ENDPROC(el1_sync)
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index d92ef3c..ebf8b3f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -39,6 +39,7 @@ CONFIG_PREEMPT=y
+ CONFIG_KSM=y
+ CONFIG_TRANSPARENT_HUGEPAGE=y
+ CONFIG_CMA=y
++CONFIG_KEXEC=y
+ CONFIG_CMDLINE="console=ttyAMA0"
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+ CONFIG_COMPAT=y
 -- 
 1.9.1
-
 
 
 _______________________________________________
