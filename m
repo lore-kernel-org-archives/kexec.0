@@ -1,30 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
+Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XYakp-0003WI-U6
- for kexec@lists.infradead.org; Mon, 29 Sep 2014 13:12:40 +0000
+ id 1XYamn-0004M2-49
+ for kexec@lists.infradead.org; Mon, 29 Sep 2014 13:14:41 +0000
 Received: from /spool/local
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 29 Sep 2014 14:12:17 +0100
+ Mon, 29 Sep 2014 14:14:18 +0100
 Received: from b06cxnps3074.portsmouth.uk.ibm.com
  (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 80A7B1B0805F
- for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 14:13:26 +0100 (BST)
-Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
- [9.149.37.213])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6CB2C1B0805F
+ for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 14:15:26 +0100 (BST)
+Received: from d06av10.portsmouth.uk.ibm.com (d06av10.portsmouth.uk.ibm.com
+ [9.149.37.251])
  by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- s8TDCEYD51773574
- for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 13:12:14 GMT
-Received: from d06av03.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av03.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s8TDCEG8027389
- for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 07:12:14 -0600
-Date: Mon, 29 Sep 2014 15:12:12 +0200
+ s8TDEEDh54001690
+ for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 13:14:14 GMT
+Received: from d06av10.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av10.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s8TDEEpg006132
+ for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 07:14:14 -0600
+Date: Mon, 29 Sep 2014 15:14:13 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: Add "--mem-usage" support for s390x
-Message-ID: <20140929151212.4e81820f@holzheu>
+Subject: [PATCH] makedumpfile: Enable --mem-usage for s390x
+Message-ID: <20140929151413.4e9bd1ab@holzheu>
 In-Reply-To: <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
 References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
  <20140922170247.36774052@holzheu>
@@ -48,56 +48,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Baoquan He <bhe@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-On Mon, 29 Sep 2014 17:04:32 +0800
-Baoquan He <bhe@redhat.com> wrote:
+Implement is_vmalloc_addr() using /proc/iommem parsing to enable the new
+makedumpfile option "--mem-usage".
 
-> On 09/26/14 at 01:34pm, Michael Holzheu wrote:
-> > On Fri, 26 Sep 2014 16:55:46 +0800
-> 
-> > > > Isn't this a chicken-and-egg problem? In order to determine vmalloc start
-> > > > I have to be able to read memory. But in order to read memory I have
-> > > > to call get_kcore_dump_loads() first.
-> > > > 
-> > > > What about using /proc/iomem to find out if an address is a real address?
-> > > 
-> > > Well, that's good it works for s390. Anyway in get_kcore_dump_loads() it
-> > > just gets the physical ram region, and filter out the unwanted region,
-> > > so your method is good. In x86_64, the is_vmalloc_addr_x86_64 is not
-> > > only filtering the vmalloc, but vmmemmap and modules_vaadr region. For
-> > > simplicity it's only named as is_vmalloc_addr.
-> > 
-> > Not sure if I understood, why ths is_real_addr() function does not
-> > work for x86_64.
-> > 
-> > Also for x86 all three areas, vmalloc, vmemmap, and modules_vaddr, are
-> > virtual memory regions with addresses outside of the the memory ranges
-> > where /proc/iommem reports physical memory, right?
-> > 
-> > So the new is_real_addr() function should return false for that areas.
-> 
-> is_real_addr() should work for x86_64, this almost does the way
-> kexec-tools is doing. Originally I just consider this for x86_64,
-> skipped other ARCHs. From x86_64 point of view, processing kcore only
-> need to pick up the program segments we want. If it's hard to handle it,
-> I am fine with it that you use the is_real_addr to do it. But please
-> don't use this name, it could be is_phy_addr() or somthing like that.
-> Please post your patch and test x86_64 too and we can review it.
-> 
-> In fact the other way is wrapping your is_real_addr() to
-> is_vmalloc_addr_s390(), and make it work for s390. If later other ARCH
-> also has this requirements, raise it to be common function. Anyway it's
-> fine to me if it can work.
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ makedumpfile.c |   26 ++++++++++++++++++++++++++
+ makedumpfile.h |    3 ++-
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
-Hi Baoquan,
-
-Because I don't have the possibility to test on x86_64 I decided to
-make a s390x only patch. I will send it with the next note.
-
-Thanks for your help!
-Michael
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -9227,6 +9227,32 @@ int is_crashkernel_mem_reserved(void)
+ 	return !!crash_reserved_mem_nr;
+ }
+ 
++struct addr_check {
++	unsigned long addr;
++	int found;
++};
++
++static int phys_addr_callback(void *data, int nr, char *str,
++			      unsigned long base, unsigned long length)
++{
++	struct addr_check *addr_check = data;
++	unsigned long addr = addr_check->addr;
++
++	if (addr >= base && addr < base + length) {
++		addr_check->found = 1;
++		return -1;
++	}
++	return 0;
++}
++
++int is_iomem_phys_addr(unsigned long addr)
++{
++	struct addr_check addr_check = {addr, 0};
++
++	iomem_for_each_line("System RAM\n", phys_addr_callback, &addr_check);
++	return addr_check.found;
++}
++
+ static int get_page_offset(void)
+ {
+ 	struct utsname utsname;
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -820,7 +820,7 @@ unsigned long long vaddr_to_paddr_s390x(
+ #define get_machdep_info()	get_machdep_info_s390x()
+ #define get_versiondep_info()	TRUE
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
+-#define is_vmalloc_addr(X)	TRUE
++#define is_vmalloc_addr(X)	(!is_iomem_phys_addr(X))
+ #endif          /* s390x */
+ 
+ #ifdef __ia64__ /* ia64 */
+@@ -1567,6 +1567,7 @@ int read_disk_dump_header(struct disk_du
+ int read_kdump_sub_header(struct kdump_sub_header *kh, char *filename);
+ void close_vmcoreinfo(void);
+ int close_files_for_creating_dumpfile(void);
++int is_iomem_phys_addr(unsigned long addr);
+ 
+ 
+ /*
 
 
 _______________________________________________
