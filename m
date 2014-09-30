@@ -1,25 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XYtKG-0005oP-Pg
- for kexec@lists.infradead.org; Tue, 30 Sep 2014 09:02:29 +0000
-Date: Tue, 30 Sep 2014 17:02:01 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] makedumpfile: Enable --mem-usage for s390x
-Message-ID: <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
-References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
- <20140922170247.36774052@holzheu>
- <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
- <20140924171904.1db5ac90@holzheu>
- <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
- <20140926101057.14549a12@holzheu>
- <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
- <20140926133441.5e58303c@holzheu>
- <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
- <20140929151413.4e9bd1ab@holzheu>
+Date: Tue, 30 Sep 2014 14:18:40 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 6/7] arm64/kexec: Add core kexec support
+Message-ID: <20140930181840.GA24153@redhat.com>
+References: <cover.1411604443.git.geoff@infradead.org>
+ <471af24b7de659a30a5941e793634bffec380cb9.1411604443.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20140929151413.4e9bd1ab@holzheu>
+In-Reply-To: <471af24b7de659a30a5941e793634bffec380cb9.1411604443.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,94 +20,251 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Geoff Levand <geoff@infradead.org>
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On 09/29/14 at 03:14pm, Michael Holzheu wrote:
-> Implement is_vmalloc_addr() using /proc/iommem parsing to enable the new
-> makedumpfile option "--mem-usage".
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+On Thu, Sep 25, 2014 at 12:23:27AM +0000, Geoff Levand wrote:
+
+[..]
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> new file mode 100644
+> index 0000000..22d185c
+> --- /dev/null
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -0,0 +1,183 @@
+> +/*
+> + * kexec for arm64
+> + *
+> + * Copyright (C) Linaro.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kexec.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include <asm/cacheflush.h>
+> +#include <asm/system_misc.h>
+> +
+> +/* Global variables for the relocate_kernel routine. */
+> +
+> +extern const unsigned char relocate_new_kernel[];
+> +extern const unsigned long relocate_new_kernel_size;
+> +extern unsigned long kexec_dtb_addr;
+> +extern unsigned long kexec_kimage_head;
+> +extern unsigned long kexec_kimage_start;
+> +
+> +/**
+> + * kexec_list_walk - Helper to walk the kimage page list.
+> + */
+> +
+> +static void kexec_list_walk(void *ctx, unsigned long kimage_head,
+> +	void (*cb)(void *ctx, unsigned int flag, void *addr, void *dest))
+> +{
+> +	void *dest;
+> +	unsigned long *entry;
+
+Hi Geoff,
+
+I see only one user of this function, kexec_list_flush_cb(). So why
+not directly embed needed logic in kexec_list_flush_cb() instead of
+implementing a generic function. It would be simpler as you seem to
+be flushing dcache only for SOURCE and IND pages and rest you 
+can simply ignore.
+
+> +
+> +	for (entry = &kimage_head, dest = NULL; ; entry++) {
+> +		unsigned int flag = *entry & 
+> +			(IND_DESTINATION | IND_INDIRECTION | IND_DONE |
+> +			IND_SOURCE);
+> +		void *addr = phys_to_virt(*entry & PAGE_MASK);
+> +
+> +		switch (flag) {
+> +		case IND_INDIRECTION:
+> +			entry = (unsigned long *)addr - 1;
+> +			cb(ctx, flag, addr, NULL);
+> +			break;
+> +		case IND_DESTINATION:
+> +			dest = addr;
+> +			cb(ctx, flag, addr, NULL);
+> +			break;
+> +		case IND_SOURCE:
+> +			cb(ctx, flag, addr, dest);
+> +			dest += PAGE_SIZE;
+> +			break;
+> +		case IND_DONE:
+> +			cb(ctx, flag , NULL, NULL);
+> +			return;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +/**
+> + * kexec_is_dtb - Helper routine to check the device tree header signature.
+> + */
+> +
+> +static bool kexec_is_dtb(const void *dtb)
+> +{
+> +	__be32 magic;
+> +
+> +	return get_user(magic, (__be32 *)dtb) ? false :
+> +		(be32_to_cpu(magic) == OF_DT_HEADER);
+> +}
+> +
+> +/**
+> + * kexec_find_dtb_seg - Helper routine to find the dtb segment.
+> + */
+> +
+> +static const struct kexec_segment *kexec_find_dtb_seg(
+> +	const struct kimage *image)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < image->nr_segments; i++) {
+> +		if (kexec_is_dtb(image->segment[i].buf))
+> +			return &image->segment[i];
+> +	}
+> +
+> +	return NULL;
+> +}
+
+So this implementation makes passing dtb mandatory. So it will not work
+with ACPI?
+
+Where is dtb present? How is it passed to first kernel? Can it still
+be around in memory and second kernel can access it?
+
+I mean in ACPI world on x86, all the ACPI info is still present and second
+kernel can access it without it being explicitly to second kernel in
+memory. Can something similar happen for dtb?
+
+[..]
+> +/**
+> + * kexec_list_flush_cb - Callback to flush the kimage list to PoC.
+> + */
+> +
+> +static void kexec_list_flush_cb(void *ctx , unsigned int flag,
+> +	void *addr, void *dest)
+			  ^^^
+
+Nobody seems to be making use of dest. So why introduce it?
+
+> +{
+> +	switch (flag) {
+> +	case IND_INDIRECTION:
+> +	case IND_SOURCE:
+> +		__flush_dcache_area(addr, PAGE_SIZE);
+> +		break;
+
+So what does __flush_dcache_area() do? Flush data caches. IIUC, addr
+is virtual address at this point of time. While copying pages and
+walking through the list, I am assuming you have switched off page
+tables and you are in some kind of 1:1 physical mode. So how did
+flushing data caches related to a virtual address help. I guess we
+are not even accessing that virtual address now. 
+ 
+[..]
+> --- /dev/null
+> +++ b/arch/arm64/kernel/relocate_kernel.S
+> @@ -0,0 +1,183 @@
+> +/*
+> + * kexec for arm64
+> + *
+> + * Copyright (C) Linaro.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <asm/assembler.h>
+> +#include <asm/kexec.h>
+> +#include <asm/memory.h>
+> +#include <asm/page.h>
+> +#include <asm/proc-macros.S>
+> +
+> +/* The list entry flags. */
+> +
+> +#define IND_DESTINATION_BIT 0
+> +#define IND_INDIRECTION_BIT 1
+> +#define IND_DONE_BIT        2
+> +#define IND_SOURCE_BIT      3
+
+I thought you had some patches to move these into generic header file. You
+got rid of those patches?
+
+> +
+> +/*
+> + * relocate_new_kernel - Put the 2nd stage kernel image in place and boot it.
+> + *
+> + * The memory that the old kernel occupies may be overwritten when coping the
+> + * new kernel to its final location.  To assure that the relocate_new_kernel
+> + * routine which does that copy is not overwritten all code and data needed
+> + * by relocate_new_kernel must be between the symbols relocate_new_kernel and
+> + * relocate_new_kernel_end.  The machine_kexec() routine will copy
+> + * relocate_new_kernel to the kexec control_code_page, a special page which
+> + * has been set up to be preserved during the kernel copy operation.
+> + */
+> +
+> +.globl relocate_new_kernel
+> +relocate_new_kernel:
+> +
+> +	/* Setup the list loop variables. */
+> +
+> +	ldr	x18, kexec_kimage_head		/* x18 = list entry */
+> +	dcache_line_size x17, x0		/* x17 = dcache line size */
+> +	mov	x16, xzr			/* x16 = segment start */
+> +	mov	x15, xzr			/* x15 = entry ptr */
+> +	mov	x14, xzr			/* x14 = copy dest */
+> +
+> +	/* Check if the new kernel needs relocation. */
+
+What's "relocation" in this  context. I guess you are checking if new
+kernel needs to be moved to destination location or not.
+
+[..]
+> +/*
+> + * kexec_dtb_addr - Physical address of the new kernel's device tree.
+> + */
+> +
+> +.globl kexec_dtb_addr
+> +kexec_dtb_addr:
+> +	.quad	0x0
+
+As these gloabls are very arm64 specific, will it make sense to prefix
+arm64_ before these. arm64_kexec_dtb_addr. Or arch_kexec_dtb_addr.
 
 
-Hi Michael,
+> +
+> +/*
+> + * kexec_kimage_head - Copy of image->head, the list of kimage entries.
+> + */
+> +
+> +.globl kexec_kimage_head
+> +kexec_kimage_head:
+> +	.quad	0x0
 
-This idea looks good to me. One question, should it be put in
-arch/s390.c since this is only for s390? Then iomem_for_each_line() need
-be declared in makedumpfile.h .
+Same here. How about arch_kexec_kimage_head.
 
-If later it's needed by other arch, can be taken out to makedumpfile.c,
-that should be better. Surely this is only my personal concern, if
-Atsushi like to accept it, I am fine too.
+> +
+> +/*
+> + * kexec_kimage_start - Copy of image->start, the entry point of the new kernel.
+> + */
+> +
+> +.globl kexec_kimage_start
+> +kexec_kimage_start:
+> +	.quad	0x0
+
+arch_kexec_kimage_start.
 
 Thanks
-Baoquan
-
-> ---
->  makedumpfile.c |   26 ++++++++++++++++++++++++++
->  makedumpfile.h |    3 ++-
->  2 files changed, 28 insertions(+), 1 deletion(-)
-> 
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -9227,6 +9227,32 @@ int is_crashkernel_mem_reserved(void)
->  	return !!crash_reserved_mem_nr;
->  }
->  
-> +struct addr_check {
-> +	unsigned long addr;
-> +	int found;
-> +};
-> +
-> +static int phys_addr_callback(void *data, int nr, char *str,
-> +			      unsigned long base, unsigned long length)
-> +{
-> +	struct addr_check *addr_check = data;
-> +	unsigned long addr = addr_check->addr;
-> +
-> +	if (addr >= base && addr < base + length) {
-> +		addr_check->found = 1;
-> +		return -1;
-> +	}
-> +	return 0;
-> +}
-> +
-> +int is_iomem_phys_addr(unsigned long addr)
-> +{
-> +	struct addr_check addr_check = {addr, 0};
-> +
-> +	iomem_for_each_line("System RAM\n", phys_addr_callback, &addr_check);
-> +	return addr_check.found;
-> +}
-> +
->  static int get_page_offset(void)
->  {
->  	struct utsname utsname;
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -820,7 +820,7 @@ unsigned long long vaddr_to_paddr_s390x(
->  #define get_machdep_info()	get_machdep_info_s390x()
->  #define get_versiondep_info()	TRUE
->  #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
-> -#define is_vmalloc_addr(X)	TRUE
-> +#define is_vmalloc_addr(X)	(!is_iomem_phys_addr(X))
->  #endif          /* s390x */
->  
->  #ifdef __ia64__ /* ia64 */
-> @@ -1567,6 +1567,7 @@ int read_disk_dump_header(struct disk_du
->  int read_kdump_sub_header(struct kdump_sub_header *kh, char *filename);
->  void close_vmcoreinfo(void);
->  int close_files_for_creating_dumpfile(void);
-> +int is_iomem_phys_addr(unsigned long addr);
->  
->  
->  /*
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Vivek
 
 _______________________________________________
 kexec mailing list
