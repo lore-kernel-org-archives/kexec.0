@@ -1,41 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XYamn-0004M2-49
- for kexec@lists.infradead.org; Mon, 29 Sep 2014 13:14:41 +0000
-Received: from /spool/local
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 29 Sep 2014 14:14:18 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6CB2C1B0805F
- for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 14:15:26 +0100 (BST)
-Received: from d06av10.portsmouth.uk.ibm.com (d06av10.portsmouth.uk.ibm.com
- [9.149.37.251])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- s8TDEEDh54001690
- for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 13:14:14 GMT
-Received: from d06av10.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av10.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s8TDEEpg006132
- for <kexec@lists.infradead.org>; Mon, 29 Sep 2014 07:14:14 -0600
-Date: Mon, 29 Sep 2014 15:14:13 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH] makedumpfile: Enable --mem-usage for s390x
-Message-ID: <20140929151413.4e9bd1ab@holzheu>
-In-Reply-To: <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
-References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
- <20140922170247.36774052@holzheu>
- <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
- <20140924171904.1db5ac90@holzheu>
- <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
- <20140926101057.14549a12@holzheu>
- <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
- <20140926133441.5e58303c@holzheu>
- <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
-Mime-Version: 1.0
+ id 1XYrZu-00089b-Mz
+ for kexec@lists.infradead.org; Tue, 30 Sep 2014 07:10:31 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [resend Patch v3 1/2] kaslr: check if kernel location is changed
+Date: Tue, 30 Sep 2014 15:08:15 +0800
+Message-Id: <1412060896-1902-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,76 +15,107 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: hpa@zytor.com
+Cc: whissi@whissi.de, ak@linux.intel.com, keescook@chromium.org, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de, vgoyal@redhat.com
 
-Implement is_vmalloc_addr() using /proc/iommem parsing to enable the new
-makedumpfile option "--mem-usage".
+Function handle_relocations() is used to do the relocations handling
+for i686 and kaslr of x86_64. For 32 bit the relocation handling is
+mandotary to perform. For x86_64 only when kaslr is enabled and a
+random kernel location is chosen successfully the relocation handling
+shound be done. However previous implementation only compared the
+kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
+compiled to run at. This would casue system to be exceptional in
+few conditions like when delta between load address and compiled
+address is bigger than what 32bit signed relocations can handle.
+Also there will be limitations that delta can't be too big otherwise
+kernel text virtual addresses will overflow in module address space.
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+So in this patch check if kernel location is changed after
+choose_kernel_location() when x86_64. If and only if in x86_64
+and kernel location is changed, we say a kaslr random kernel
+location is chosen, then the relocation handling is needed.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Tested-by: Thomas D. <whissi@whissi.de>
+Cc: stable@vger.kernel.org
 ---
- makedumpfile.c |   26 ++++++++++++++++++++++++++
- makedumpfile.h |    3 ++-
- 2 files changed, 28 insertions(+), 1 deletion(-)
+ arch/x86/boot/compressed/misc.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -9227,6 +9227,32 @@ int is_crashkernel_mem_reserved(void)
- 	return !!crash_reserved_mem_nr;
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 57ab74d..3bb2a17 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -230,8 +230,9 @@ static void error(char *x)
+ 		asm("hlt");
  }
  
-+struct addr_check {
-+	unsigned long addr;
-+	int found;
-+};
-+
-+static int phys_addr_callback(void *data, int nr, char *str,
-+			      unsigned long base, unsigned long length)
-+{
-+	struct addr_check *addr_check = data;
-+	unsigned long addr = addr_check->addr;
-+
-+	if (addr >= base && addr < base + length) {
-+		addr_check->found = 1;
-+		return -1;
-+	}
-+	return 0;
-+}
-+
-+int is_iomem_phys_addr(unsigned long addr)
-+{
-+	struct addr_check addr_check = {addr, 0};
-+
-+	iomem_for_each_line("System RAM\n", phys_addr_callback, &addr_check);
-+	return addr_check.found;
-+}
-+
- static int get_page_offset(void)
+-#if CONFIG_X86_NEED_RELOCS
+-static void handle_relocations(void *output, unsigned long output_len)
++#ifdef CONFIG_X86_NEED_RELOCS
++static void handle_relocations(void *output_orig, void *output,
++			       unsigned long output_len)
  {
- 	struct utsname utsname;
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -820,7 +820,7 @@ unsigned long long vaddr_to_paddr_s390x(
- #define get_machdep_info()	get_machdep_info_s390x()
- #define get_versiondep_info()	TRUE
- #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
--#define is_vmalloc_addr(X)	TRUE
-+#define is_vmalloc_addr(X)	(!is_iomem_phys_addr(X))
- #endif          /* s390x */
+ 	int *reloc;
+ 	unsigned long delta, map, ptr;
+@@ -239,6 +240,20 @@ static void handle_relocations(void *output, unsigned long output_len)
+ 	unsigned long max_addr = min_addr + output_len;
  
- #ifdef __ia64__ /* ia64 */
-@@ -1567,6 +1567,7 @@ int read_disk_dump_header(struct disk_du
- int read_kdump_sub_header(struct kdump_sub_header *kh, char *filename);
- void close_vmcoreinfo(void);
- int close_files_for_creating_dumpfile(void);
-+int is_iomem_phys_addr(unsigned long addr);
+ 	/*
++	* 32bit always requires relocations to be performed. For x86_64,
++	* relocations need to be performed only if kaslr has chosen a
++	* different load address then kernel was originally loaded at.
++	*
++	* If we are here, either kaslr is not configured in or kaslr is disabled
++	* or kaslr has chosen not to change the load location of kernel. Don't
++	* perform any relocations.
++	*/
++#if CONFIG_X86_64
++	if (output_orig == output)
++		return;
++#endif
++
++	/*
+ 	 * Calculate the delta between where vmlinux was linked to load
+ 	 * and where it was actually loaded.
+ 	 */
+@@ -299,7 +314,8 @@ static void handle_relocations(void *output, unsigned long output_len)
+ #endif
+ }
+ #else
+-static inline void handle_relocations(void *output, unsigned long output_len)
++static inline void handle_relocations(void *output_orig, void *output,
++				      unsigned long output_len)
+ { }
+ #endif
  
+@@ -360,6 +376,8 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
+ 				  unsigned char *output,
+ 				  unsigned long output_len)
+ {
++	unsigned char *output_orig = output;
++
+ 	real_mode = rmode;
  
- /*
+ 	sanitize_boot_params(real_mode);
+@@ -402,7 +420,7 @@ asmlinkage __visible void *decompress_kernel(void *rmode, memptr heap,
+ 	debug_putstr("\nDecompressing Linux... ");
+ 	decompress(input_data, input_len, NULL, NULL, output, NULL, error);
+ 	parse_elf(output);
+-	handle_relocations(output, output_len);
++	handle_relocations(output_orig, output, output_len);
+ 	debug_putstr("done.\nBooting the kernel.\n");
+ 	return output;
+ }
+-- 
+1.8.5.3
 
 
 _______________________________________________
