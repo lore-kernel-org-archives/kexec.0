@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XZ4rn-0006j8-Ad
- for kexec@lists.infradead.org; Tue, 30 Sep 2014 21:21:51 +0000
-Message-ID: <542B1EC1.8090502@zytor.com>
-Date: Tue, 30 Sep 2014 14:21:05 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-MIME-Version: 1.0
-Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
-References: <1412060896-1902-1-git-send-email-bhe@redhat.com>
-In-Reply-To: <1412060896-1902-1-git-send-email-bhe@redhat.com>
+Message-ID: <1412112476.6630.56.camel@smoke>
+Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
+From: Geoff Levand <geoff@infradead.org>
+Date: Tue, 30 Sep 2014 14:27:56 -0700
+In-Reply-To: <20140930202904.GB24153@redhat.com>
+References: <cover.1411604443.git.geoff@infradead.org>
+ <20140930202904.GB24153@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,37 +19,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: whissi@whissi.de, ak@linux.intel.com, keescook@chromium.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On 09/30/2014 12:08 AM, Baoquan He wrote:
-> Function handle_relocations() is used to do the relocations handling
-> for i686 and kaslr of x86_64. For 32 bit the relocation handling is
-> mandotary to perform. For x86_64 only when kaslr is enabled and a
-> random kernel location is chosen successfully the relocation handling
-> shound be done. However previous implementation only compared the
-> kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
-> compiled to run at. This would casue system to be exceptional in
-> few conditions like when delta between load address and compiled
-> address is bigger than what 32bit signed relocations can handle.
-> Also there will be limitations that delta can't be too big otherwise
-> kernel text virtual addresses will overflow in module address space.
+Hi Vivek,
+
+On Tue, 2014-09-30 at 16:29 -0400, Vivek Goyal wrote:
+> On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
 > 
-> So in this patch check if kernel location is changed after
-> choose_kernel_location() when x86_64. If and only if in x86_64
-> and kernel location is changed, we say a kaslr random kernel
-> location is chosen, then the relocation handling is needed.
+> [..]
+> > To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+> > kexec-tools [2], which have not yet been merged upstream, are needed.
+> > 
+> > This series does not include some re-work of the spin-table CPU enable method
+> > that is needed to support it,
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Acked-by: Vivek Goyal <vgoyal@redhat.com>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Tested-by: Thomas D. <whissi@whissi.de>
-> Cc: stable@vger.kernel.org
+> How do I figure out if my system has spin table enable method or psci
+> enable method. Can one change it. I wanted to test your patches.
 
-Could you clarify under what conditions we may end up with 32-bit signed
-overflow, and yet have a functional kernel?
+The enable method is a function the firmware/bootloader provides.
+Multiple methods may be supported.  The boot-wrapper-aarch64
+build defaults to spin-table, but has the configure option --enable-psci.
 
-	-hpa
+For a running system you can check the device tree:
+
+  cat /proc/device-tree/cpus/cpu\@0/enable-method | hexdump -C
+
+Or the dmsg:
+
+  dmesg | egrep -i 'psci'
+
+Or use the --debug option to kexec:
+
+  kexec --debug --load /boot/vmlinux.strip ...
+
+read_cpu_info:398: cpu-0 (/cpus/cpu@0): hwid-0, 'psci'
+
+-Geoff
+
 
 
 
