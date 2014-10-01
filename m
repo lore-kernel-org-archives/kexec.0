@@ -1,43 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp12.uk.ibm.com ([195.75.94.108])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XZNGH-0001i3-Ri
- for kexec@lists.infradead.org; Wed, 01 Oct 2014 17:00:22 +0000
-Received: from /spool/local
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 1 Oct 2014 17:59:58 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id CDDE62190043
- for <kexec@lists.infradead.org>; Wed,  1 Oct 2014 17:59:33 +0100 (BST)
-Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
- [9.149.37.216])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- s91GxtZb59179236
- for <kexec@lists.infradead.org>; Wed, 1 Oct 2014 16:59:55 GMT
-Received: from d06av04.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av04.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- s91Gxs1p006138
- for <kexec@lists.infradead.org>; Wed, 1 Oct 2014 10:59:54 -0600
-Date: Wed, 1 Oct 2014 18:59:53 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH] makedumpfile: Enable --mem-usage for s390x
-Message-ID: <20141001185953.66c6ae9d@holzheu>
-In-Reply-To: <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
-References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
- <20140922170247.36774052@holzheu>
- <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
- <20140924171904.1db5ac90@holzheu>
- <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
- <20140926101057.14549a12@holzheu>
- <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
- <20140926133441.5e58303c@holzheu>
- <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
- <20140929151413.4e9bd1ab@holzheu>
- <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
-Mime-Version: 1.0
+Date: Wed, 1 Oct 2014 13:36:16 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 6/7] arm64/kexec: Add core kexec support
+Message-ID: <20141001173616.GC14991@redhat.com>
+References: <cover.1411604443.git.geoff@infradead.org>
+ <471af24b7de659a30a5941e793634bffec380cb9.1411604443.git.geoff@infradead.org>
+ <20140930181840.GA24153@redhat.com>
+ <1412106877.6630.45.camel@smoke>
+ <20141001161621.GA28440@leverpostej>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20141001161621.GA28440@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -50,35 +23,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Geoff Levand <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, grant.likely@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Tue, 30 Sep 2014 17:02:01 +0800
-Baoquan He <bhe@redhat.com> wrote:
+On Wed, Oct 01, 2014 at 05:16:21PM +0100, Mark Rutland wrote:
 
-> On 09/29/14 at 03:14pm, Michael Holzheu wrote:
-> > Implement is_vmalloc_addr() using /proc/iommem parsing to enable the new
-> > makedumpfile option "--mem-usage".
+[..]
+> > > So this implementation makes passing dtb mandatory. So it will not work
+> > > with ACPI?
 > > 
-> > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > I have not yet considered ACPI.  It will most likely need to have
+> > something done differently.  Secure boot will also need something
+> > different, and I expect it will use your new kexec_file_load().
 > 
+> A DTB is mandatory for arm64, and is used to pass the command line,
+> (optionally) initrd, and other parameters, even if it doesn't contain HW
+> description. In the EFI case the EFI stub will create a trivial DTB if
+> necessary, and the kernel will detect any ACPI tables via UEFI, so the
+> DTB should be sufficient for ACPI.
 > 
-> Hi Michael,
+> I'm still rather unhappy about the mechanism by which the DTB is passed
+> by userspace and detected by the kernel, as I'd prefer that the user
+> explictly stated which segment they wanted to pass to the (Linux)
+> kernel, but that would require reworking the kexec syscall to allow
+> per-segment info/flags.
+
+Yep, in this case, it would have been nice if there were per segment
+flags to identify type of segment. But unfortunately we don't have. So
+in the absence of that, I think putting 4 bytes as dtb magic in the
+beginning of segment should work (though no ideal).
+
 > 
-> This idea looks good to me. One question, should it be put in
-> arch/s390.c since this is only for s390? Then iomem_for_each_line() need
-> be declared in makedumpfile.h .
+> To me it seems that for all the talk of kexec allowing arbitrary kernels
+> to be booted it's really just a linux->linux reboot bridge. Does anyone
+> use kexec to boot something that isn't Linux?
+
 > 
-> If later it's needed by other arch, can be taken out to makedumpfile.c,
-> that should be better. Surely this is only my personal concern, if
-> Atsushi like to accept it, I am fine too.
+> > > Where is dtb present? How is it passed to first kernel? Can it still
+> > > be around in memory and second kernel can access it?
+> > 
+> > The user space program (kexec-tools, etc.) passes a dtb.  That dtb
+> > could be a copy of the currently one, or a new one specified by
+> > the user.
+> > 
+> > > I mean in ACPI world on x86, all the ACPI info is still present and second
+> > > kernel can access it without it being explicitly to second kernel in
+> > > memory. Can something similar happen for dtb?
+> 
+> Any ACPI tables should remain, given they'll be reserved in the UEFI
+> memory map. The second kernel can find them as the first kernel did, via
+> UEFI tables, which it will fine via the DTB.
+> 
+> For the DTB, reusing the original DTB is a possibility. From what I
+> recall, Grant seemed to prefer re-packing the existing tree as this
+> would allow for state destroyed at boot to be corrected for.
+> 
+> Regardless, being able to pass a DTB from userspace is a useful option
+> (especially for the Linux-as-a-bootloader approach that's been mentioned
+> a lot). That doesn't work for the secureboot case without a new syscall
+> as we can't pass a signed DTB (or any other additional objects other
+> than an initrd) to kexec_file_load, but disallowing the user to pass a
+> new DTB in that case seems reasonable.
 
-Hello Atsushi,
+Yes, kexec_file_load() will not allow passing anything except, kernel,
+initrd and command line. So syscall implementation will have to resuse
+the existing DTB and pass it to second kernel. 
 
-What is your preference regarding this question?
+If there are concerns w.r.t state of DTB which can be destroyed during
+boot, I guess we will have to store a copy of DTB somewhere early during
+boot and kexec can access that original copy during kernel load time.
 
-Michael
+Thanks
+Vivek
 
+
+
+> 
+> Mark.
 
 _______________________________________________
 kexec mailing list
