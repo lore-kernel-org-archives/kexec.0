@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 1 Oct 2014 14:31:42 -0400
+Date: Wed, 1 Oct 2014 15:22:45 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 6/7] arm64/kexec: Add core kexec support
-Message-ID: <20141001183142.GF14991@redhat.com>
+Message-ID: <20141001192245.GG14991@redhat.com>
 References: <cover.1411604443.git.geoff@infradead.org>
  <471af24b7de659a30a5941e793634bffec380cb9.1411604443.git.geoff@infradead.org>
  <20140930181840.GA24153@redhat.com>
@@ -10,11 +10,9 @@ References: <cover.1411604443.git.geoff@infradead.org>
  <20141001161621.GA28440@leverpostej>
  <20141001174714.GD14991@redhat.com>
  <20141001180304.GC5788@leverpostej>
- <20141001180909.GE14991@redhat.com>
- <20141001181959.GD5788@leverpostej>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20141001181959.GD5788@leverpostej>
+In-Reply-To: <20141001180304.GC5788@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,62 +28,39 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>
 Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Wed, Oct 01, 2014 at 07:19:59PM +0100, Mark Rutland wrote:
-> On Wed, Oct 01, 2014 at 07:09:09PM +0100, Vivek Goyal wrote:
-> > On Wed, Oct 01, 2014 at 07:03:04PM +0100, Mark Rutland wrote:
-> > > On Wed, Oct 01, 2014 at 06:47:14PM +0100, Vivek Goyal wrote:
-> > > > On Wed, Oct 01, 2014 at 05:16:21PM +0100, Mark Rutland wrote:
-> > > > 
-> > > > [..]
-> > > > > I'm still rather unhappy about the mechanism by which the DTB is passed
-> > > > > by userspace and detected by the kernel, as I'd prefer that the user
-> > > > > explictly stated which segment they wanted to pass to the (Linux)
-> > > > > kernel, but that would require reworking the kexec syscall to allow
-> > > > > per-segment info/flags.
-> > > > 
-> > > > Why does the running kernel need to know about dtb segment.  I see following.
-> > > > 
-> > > > ldr     x0, kexec_dtb_addr
-> > > > 
-> > > > IIUC, we are loading this address in x0. Can't we do something similar
-> > > > in user space with purgatory. I mean first jump to purgatory (code
-> > > > compiled in user space but runs prviliged) and that code takes care
-> > > > of loading x0 with right dtb addr and then jump to final kernel.
-> > > 
-> > > I believe the fundamental issue here is a lack of a userspace-provided
-> > > purgatory.
-> > > 
-> > > I agree that userspace purgatory code could set this up. That would
-> > > address my concerns w.r.t. detecting the DTB kernel-side, as there would
-> > > be no need. It would also address my concerns with booting OSs other
-> > > than Linux, as the purgatory code could do whatever was appropriate for
-> > > whatever OS image was loaded.
-> > > 
-> > > So in my view, a userspace-provided purgatory that set up the state the
-> > > next kernel expected would be preferable. That could be as simple as
-> > > setting up the registers and branching -- I assume we'd have the first
-> > > kernel perform the required cache maintenance.
-> > 
-> > Apart from setting various registers, we also verify the sha256 checksums
-> > of loaded segments in purgatory to make sure segments are not corrupted.
-> > On x86, we also take care of backing up first 640KB of memory in reserved
-> > area in kdump case. 
+On Wed, Oct 01, 2014 at 07:03:04PM +0100, Mark Rutland wrote:
+
+[..]
+> I assume we'd have the first kernel perform the required cache maintenance.
 > 
-> I was under the (possibly mistaken) impression that for kdump the second
-> kernel lived and ran at a high address so as to preserve memory in use
-> by the first kernel. Is the first 640KiB is special on x86, or is does
-> it have some kdump-specific use?
 
-Use of first 640KB by second kernel is x86 specific. And it was long back
-and I am not sure if this requirement exists today or not. Just that
-things have been working and nobody has bothered to look into optimizing
-it further.
+Hi Mark,
 
-Kdump kernel does run from reserved memory. This memory is reserved
-very early during boot so that first kernel does not end up using it.
-So it does not matter whether that memory is reserved high or low. First
-kernel is not going to use it as it is reserved. Hence memory contents
-of first kernel will be preserved.
+I am wondering, what kind of cache management is required here? What kind of
+dcaches are present on arm64. I see that Geoff's patches flush dcaches for 
+certain kexec stored pages using __flush_dcache_area()
+(in kexec_list_flush_cb()).
+
+arch/arm64/include/asm/cacheflush.h says following.
+
+ *      __flush_dcache_area(kaddr, size)
+ *
+ *              Ensure that the data held in page is written back.
+ *              - kaddr  - page address
+ *              - size   - region size
+
+So looks like we are trying to write back anything which we will access
+after switching off MMU. If that's the case, I have two questions.
+
+- Why do we need to writeback that cacheline. After switching off MMU,
+  will we not access same cacheline. I thought caches are VIPT and tag
+  will still remain the same (but I might easily be wrong here).
+
+- Even if we have to flush that cacheline, for kexec pages, I guess it
+  should be done at kernel load time and not at the time of transition
+  into new kernel. That seems too late. Once the kernel has been loaded,
+  we don't overwrite these pages anymore. So a dcache flush at that
+  time should be good.
 
 Thanks
 Vivek
