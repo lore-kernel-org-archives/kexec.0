@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XZC9S-0001Ak-Mv
- for kexec@lists.infradead.org; Wed, 01 Oct 2014 05:08:35 +0000
-Received: from ayumi.isobedori.kobe.vergenet.net
- (p4222-ipbfp1605kobeminato.hyogo.ocn.ne.jp [114.154.95.222])
- by kirsty.vergenet.net (Postfix) with ESMTP id 0BE3025BE87
- for <kexec@lists.infradead.org>; Wed,  1 Oct 2014 15:08:03 +1000 (EST)
-Date: Wed, 1 Oct 2014 14:08:01 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.8-rc1
-Message-ID: <20141001050801.GA7917@verge.net.au>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XZKLD-0006SA-U6
+ for kexec@lists.infradead.org; Wed, 01 Oct 2014 13:53:16 +0000
+Date: Wed, 1 Oct 2014 09:52:37 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
+Message-ID: <20141001135237.GA13689@redhat.com>
+References: <1412060896-1902-1-git-send-email-bhe@redhat.com>
+ <542B1EC1.8090502@zytor.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <542B1EC1.8090502@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,32 +24,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: whissi@whissi.de, ak@linux.intel.com, keescook@chromium.org, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de
 
-Hi all,
+On Tue, Sep 30, 2014 at 02:21:05PM -0700, H. Peter Anvin wrote:
+> On 09/30/2014 12:08 AM, Baoquan He wrote:
+> > Function handle_relocations() is used to do the relocations handling
+> > for i686 and kaslr of x86_64. For 32 bit the relocation handling is
+> > mandotary to perform. For x86_64 only when kaslr is enabled and a
+> > random kernel location is chosen successfully the relocation handling
+> > shound be done. However previous implementation only compared the
+> > kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
+> > compiled to run at. This would casue system to be exceptional in
+> > few conditions like when delta between load address and compiled
+> > address is bigger than what 32bit signed relocations can handle.
+> > Also there will be limitations that delta can't be too big otherwise
+> > kernel text virtual addresses will overflow in module address space.
+> > 
+> > So in this patch check if kernel location is changed after
+> > choose_kernel_location() when x86_64. If and only if in x86_64
+> > and kernel location is changed, we say a kaslr random kernel
+> > location is chosen, then the relocation handling is needed.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> > Acked-by: Kees Cook <keescook@chromium.org>
+> > Tested-by: Thomas D. <whissi@whissi.de>
+> > Cc: stable@vger.kernel.org
+> 
+> Could you clarify under what conditions we may end up with 32-bit signed
+> overflow, and yet have a functional kernel?
 
-I am happy to announce the release of kexec-tools 2.0.8-rc1.
 
-This is a feature pre-release.
+Hi Peter,
 
-So long as no serious problems arise I intend to release 2.0.8 around the
-same time as the v3.17 kernel release, which I expect to occur in the next
-week or so.  As such testing of 2.0.8-rc1 would be greatly appreciated.
+I think there is some confusion. I will try to clarify.
 
-I do not have any outstanding changes for 2.0.8 at this time.
-And I would like to only accept bug fixes at this time. Taking
-features patches once 2.0.8 has been released.
+If we have 32bit signed overflow, we will not have a functional kernel.
+And that's the message we get when we try to kexec with
+CONFIG_RANDOMIZE_BASE=y.
 
-The pre-release can be downloaded from kernel.org:
+**********************************************************************
+[  340.709078] kexec: Starting new kernel
+early console in decompress_kernel
+KASLR disabled by default...
 
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.8-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
+Decompressing Linux... Parsing ELF...
 
-I have also tagged it in git:
+Performing relocations...
+32-bit relocation outside of kernel!
 
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
 
-Thanks to everyone who has contributed to kexec.
+ -- System halted
+*****************************************************************
+
+We realized that kexec tries to load kernel at higher physical addresses
+and that can lead to problmes.
+
+Currently for x86_64, handle_relocations() will perform relocations if
+kernel is not loaded at LOAD_PHYSICAL_ADDR. I think this does not work for
+all the cases and kerenl can not be loaded anywhere in the physical address
+space. And that's why we run into issues with kexec.
+
+My understanding is that we introduce handle_relcoations() i386 style
+because of RANDOMIZE_BASE. If that's the case, one possible solution
+is that perform relocations only if ranodmize base logic has chosen
+a different load location for kernel than where boot loader loaded
+it. Otherwise don't do anything.
+
+In case of kexec/kdump, we will pass "nokaslr" to second kernel forcing
+it to do nothing and let the kernel run where it was loaded by bootloader.
+And in that case handle_relocations() should not do any relocations and
+that should allow kernel to be loaded anywhere in physical memory on
+x86_64.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
