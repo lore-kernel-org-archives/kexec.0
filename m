@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <f609c74d0a5f4de37252cb80c5919ce4c5bbfb5b.1412376956.git.geoff@infradead.org>
+Message-Id: <e122ed3a1b2afbaf69baf2c7cf354f7e557c5851.1412376956.git.geoff@infradead.org>
 In-Reply-To: <cover.1412376956.git.geoff@infradead.org>
 References: <cover.1412376956.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 2/8] arm64: Convert hcalls to use ISS field
-Date: Fri, 03 Oct 2014 23:12:23 +0000
+Subject: [PATCH 8/8] arm64/kexec: Add pr_devel output
+Date: Fri, 03 Oct 2014 23:12:24 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,189 +21,97 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-To allow for additional hcalls to be defined and to make the arm64 hcall API
-more consistent across exception vector routines change the hcall implementations
-to use the ISS field of the ESR_EL2 register to specify the hcall type.
-
-The existing arm64 hcall implementations are limited in that they only allow
-for two distinct hcalls; with the x0 register either zero, or not zero.  Also,
-the API of the hyp-stub exception vector routines and the KVM exception vector
-routines differ; hyp-stub uses a non-zero value in x0 to implement
-__hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
-
-Define three new preprocessor macros HVC_GET_VECTORS, HVC_SET_VECTORS and
-HVC_CALL_HYP and to be used as hcall type specifiers and convert the
-existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
-to use these new macros when executing and HVC call.  Also change the
-corresponding hyp-stub and KVM el1_sync exception vector routines to use these
-new macros.
+To aid in debugging kexec problems or when adding new functionality to kexec add
+a new routine kexec_image_info() and several inline pr_devel statements.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/virt.h | 20 ++++++++++++++++++++
- arch/arm64/kernel/hyp-stub.S  | 34 ++++++++++++++++++++++------------
- arch/arm64/kvm/hyp.S          | 18 +++++++++++-------
- 3 files changed, 53 insertions(+), 19 deletions(-)
+ arch/arm64/kernel/machine_kexec.c | 56 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-index 7a5df52..99c319c 100644
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -21,6 +21,26 @@
- #define BOOT_CPU_MODE_EL1	(0xe11)
- #define BOOT_CPU_MODE_EL2	(0xe12)
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 95bc8d9..1306d33 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -37,6 +37,39 @@ static bool kexec_is_dtb(const void *dtb)
+ }
  
-+/*
-+ * HVC_GET_VECTORS - Return the value of the vbar_el2 register.
+ /**
++ * kexec_image_info - For debugging output.
 + */
 +
-+#define HVC_GET_VECTORS 1
++#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
++static void _kexec_image_info(const char *func, int line,
++	const struct kimage *image)
++{
++	unsigned long i;
 +
-+/*
-+ * HVC_SET_VECTORS - Set the value of the vbar_el2 register.
-+ *
-+ * @x0: Physical address of the new vector table.
-+ */
++#if !defined(DEBUG)
++	return;
++#endif
++	pr_devel("%s:%d:\n", func, line);
++	pr_devel("  kexec image info:\n");
++	pr_devel("    type:        %d\n", image->type);
++	pr_devel("    start:       %lx\n", image->start);
++	pr_devel("    head:        %lx\n", image->head);
++	pr_devel("    nr_segments: %lu\n", image->nr_segments);
 +
-+#define HVC_SET_VECTORS 2
++	for (i = 0; i < image->nr_segments; i++) {
++		pr_devel("      segment[%lu]: %016lx - %016lx, "
++			"%lx bytes, %lu pages%s\n",
++			i,
++			image->segment[i].mem,
++			image->segment[i].mem + image->segment[i].memsz,
++			image->segment[i].memsz,
++			image->segment[i].memsz /  PAGE_SIZE,
++			(kexec_is_dtb(image->segment[i].buf) ?
++				", dtb segment" : ""));
++	}
++}
 +
-+/*
-+ * HVC_CALL_HYP - Execute a hyp routine.
-+ */
-+
-+#define HVC_CALL_HYP 3
-+
- #ifndef __ASSEMBLY__
- 
- /*
-diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index a272f33..9ce8746 100644
---- a/arch/arm64/kernel/hyp-stub.S
-+++ b/arch/arm64/kernel/hyp-stub.S
-@@ -22,6 +22,7 @@
- #include <linux/irqchip/arm-gic-v3.h>
- 
- #include <asm/assembler.h>
-+#include <asm/kvm_arm.h>
- #include <asm/ptrace.h>
- #include <asm/virt.h>
- 
-@@ -53,14 +54,22 @@ ENDPROC(__hyp_stub_vectors)
- 	.align 11
- 
- el1_sync:
--	mrs	x1, esr_el2
--	lsr	x1, x1, #26
--	cmp	x1, #0x16
--	b.ne	2f				// Not an HVC trap
--	cbz	x0, 1f
--	msr	vbar_el2, x0			// Set vbar_el2
-+	mrs	x18, esr_el2
-+	lsr	x17, x18, #ESR_EL2_EC_SHIFT
-+	and	x18, x18, #ESR_EL2_ISS
-+
-+	cmp     x17, #ESR_EL2_EC_HVC64
-+	b.ne    2f				// Not an HVC trap
-+
-+	cmp	x18, #HVC_GET_VECTORS
-+	b.ne	1f
-+	mrs	x0, vbar_el2
- 	b	2f
--1:	mrs	x0, vbar_el2			// Return vbar_el2
-+
-+1:	cmp	x18, #HVC_SET_VECTORS
-+	b.ne	2f
-+	msr	vbar_el2, x0
-+
- 2:	eret
- ENDPROC(el1_sync)
- 
-@@ -100,11 +109,12 @@ ENDPROC(\label)
-  * initialisation entry point.
++/**
+  * kexec_find_dtb_seg - Helper routine to find the dtb segment.
   */
  
--ENTRY(__hyp_get_vectors)
--	mov	x0, xzr
--	// fall through
- ENTRY(__hyp_set_vectors)
--	hvc	#0
-+	hvc	#HVC_SET_VECTORS
- 	ret
--ENDPROC(__hyp_get_vectors)
- ENDPROC(__hyp_set_vectors)
+@@ -74,6 +107,8 @@ int machine_kexec_prepare(struct kimage *image)
+ 	arm64_kexec_dtb_addr = dtb_seg ? dtb_seg->mem : 0;
+ 	arm64_kexec_kimage_start = image->start;
+ 
++	kexec_image_info(image);
 +
-+ENTRY(__hyp_get_vectors)
-+	hvc	#HVC_GET_VECTORS
-+	ret
-+ENDPROC(__hyp_get_vectors)
-diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
-index b72aa9f..9607f15 100644
---- a/arch/arm64/kvm/hyp.S
-+++ b/arch/arm64/kvm/hyp.S
-@@ -26,6 +26,7 @@
- #include <asm/kvm_asm.h>
- #include <asm/kvm_arm.h>
- #include <asm/kvm_mmu.h>
-+#include <asm/virt.h>
+ 	return 0;
+ }
  
- #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
- #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
-@@ -1105,12 +1106,9 @@ __hyp_panic_str:
-  * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
-  * passed in r0 and r1.
-  *
-- * A function pointer with a value of 0 has a special meaning, and is
-- * used to implement __hyp_get_vectors in the same way as in
-- * arch/arm64/kernel/hyp_stub.S.
-  */
- ENTRY(kvm_call_hyp)
--	hvc	#0
-+	hvc	#HVC_CALL_HYP
- 	ret
- ENDPROC(kvm_call_hyp)
+@@ -130,6 +165,27 @@ void machine_kexec(struct kimage *image)
+ 	reboot_code_buffer_phys = page_to_phys(image->control_code_page);
+ 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
  
-@@ -1140,6 +1138,7 @@ el1_sync:					// Guest trapped into EL2
- 	push	x2, x3
- 
- 	mrs	x1, esr_el2
-+	and	x0, x1, #ESR_EL2_ISS
- 	lsr	x2, x1, #ESR_EL2_EC_SHIFT
- 
- 	cmp	x2, #ESR_EL2_EC_HVC64
-@@ -1149,15 +1148,19 @@ el1_sync:					// Guest trapped into EL2
- 	cbnz	x3, el1_trap			// called HVC
- 
- 	/* Here, we're pretty sure the host called HVC. */
-+	mov	x18, x0
- 	pop	x2, x3
- 	pop	x0, x1
- 
--	/* Check for __hyp_get_vectors */
--	cbnz	x0, 1f
-+	cmp	x18, #HVC_GET_VECTORS
-+	b.ne	1f
- 	mrs	x0, vbar_el2
- 	b	2f
- 
--1:	push	lr, xzr
-+1:	cmp	x18, #HVC_CALL_HYP
-+	b.ne	2f
++	kexec_image_info(image);
 +
-+	push	lr, xzr
- 
++	pr_devel("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
++		image->control_code_page);
++	pr_devel("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
++		&reboot_code_buffer_phys);
++	pr_devel("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
++		reboot_code_buffer);
++	pr_devel("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
++		relocate_new_kernel);
++	pr_devel("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
++		__func__, __LINE__, relocate_new_kernel_size,
++		relocate_new_kernel_size);
++
++	pr_devel("%s:%d: kexec_dtb_addr:           %lx\n", __func__, __LINE__,
++		arm64_kexec_dtb_addr);
++	pr_devel("%s:%d: kexec_kimage_head:        %lx\n", __func__, __LINE__,
++		arm64_kexec_kimage_head);
++	pr_devel("%s:%d: kexec_kimage_start:       %lx\n", __func__, __LINE__,
++		arm64_kexec_kimage_start);
++
  	/*
- 	 * Compute the function address in EL2, and shuffle the parameters.
-@@ -1170,6 +1173,7 @@ el1_sync:					// Guest trapped into EL2
- 	blr	lr
- 
- 	pop	lr, xzr
-+
- 2:	eret
- 
- el1_trap:
+ 	 * Copy relocate_new_kernel to the reboot_code_buffer for use
+ 	 * after the kernel is shut down.
 -- 
 1.9.1
-
 
 
 _______________________________________________
