@@ -1,13 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1412375268.32313.48.camel@smoke>
-Subject: Re: [PATCH 1/7] arm64/kvm: Fix assembler compatibility of macros
+Message-Id: <1a1c176f853c693b65921a7604b841a5753a56ac.1412376956.git.geoff@infradead.org>
+In-Reply-To: <cover.1412376956.git.geoff@infradead.org>
+References: <cover.1412376956.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 03 Oct 2014 15:27:48 -0700
-In-Reply-To: <20141003102641.GA26643@leverpostej>
-References: <cover.1411604443.git.geoff@infradead.org>
- <490268c9dba3b6d3f5a52c7c1b0dd81686aac6f7.1411604443.git.geoff@infradead.org>
- <20141003102641.GA26643@leverpostej>
-Mime-Version: 1.0
+Subject: [PATCH 3/8] arm64: Add new hcall HVC_CALL_FUNC
+Date: Fri, 03 Oct 2014 23:12:23 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,31 +13,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-On Fri, 2014-10-03 at 11:26 +0100, Mark Rutland wrote:
-> Would you be able to fix those up at the same time? It doesn't look like there
-> are too many, and it should be a fairly mechanical change:
+Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
+During CPU reset the CPU must be brought to the exception level it had on
+entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
+needed for this exception level switch.
 
-Sure.
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ arch/arm64/include/asm/virt.h | 13 +++++++++++++
+ arch/arm64/kernel/hyp-stub.S  | 17 ++++++++++++++---
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
-> [mark@leverpostej:~/src/linux]% grep '[0-9][UL]' -- arch/arm64/include/asm/kvm_arm.h    
-> #define VTTBR_BADDR_MASK  (((1LLU << (40 - VTTBR_X)) - 1) << VTTBR_BADDR_SHIFT)
-> #define VTTBR_VMID_SHIFT  (48LLU)
-> #define ESR_EL2_IL              (1U << 25)
-> #define ESR_EL2_ISV             (1U << ESR_EL2_ISV_SHIFT)
-> #define ESR_EL2_SAS             (3U << ESR_EL2_SAS_SHIFT)
-> #define ESR_EL2_CV              (1U << ESR_EL2_CV_SHIFT)
-
-The list is a bit longer if you look for hex numbers also, but I think
-I got them all.
-
--Geoff
+diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+index 99c319c..055e8d8 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -41,6 +41,19 @@
+ 
+ #define HVC_CALL_HYP 3
+ 
++/*
++ * HVC_CALL_FUNC - Execute a function at EL2.
++ *
++ * @x0: Physical address of the funtion to be executed.
++ * @x1: Passed as the first argument to the function.
++ * @x2: Passed as the second argument to the function.
++ * @x3: Passed as the third argument to the function.
++ *
++ * The called function must preserve the contents of register x18.
++ */
++
++#define HVC_CALL_FUNC 4
++
+ #ifndef __ASSEMBLY__
+ 
+ /*
+diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+index 9ce8746..719c726 100644
+--- a/arch/arm64/kernel/hyp-stub.S
++++ b/arch/arm64/kernel/hyp-stub.S
+@@ -66,9 +66,20 @@ el1_sync:
+ 	mrs	x0, vbar_el2
+ 	b	2f
+ 
+-1:	cmp	x18, #HVC_SET_VECTORS
+-	b.ne	2f
+-	msr	vbar_el2, x0
++1:	cmp     x18, #HVC_SET_VECTORS
++	b.ne    1f
++	msr     vbar_el2, x0
++	b       2f
++
++1:	cmp     x18, #HVC_CALL_FUNC
++	b.ne    2f
++	mov     x18, lr
++	mov     lr, x0
++	mov     x0, x1
++	mov     x1, x2
++	mov     x2, x3
++	blr     lr
++	mov     lr, x18
+ 
+ 2:	eret
+ ENDPROC(el1_sync)
+-- 
+1.9.1
 
 
 
