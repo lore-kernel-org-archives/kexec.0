@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 6 Oct 2014 11:13:28 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/7] arm64: Convert hcalls to use ISS field
-Message-ID: <20141006101328.GD24686@leverpostej>
-References: <cover.1411604443.git.geoff@infradead.org>
- <579bf2ec37edcfa6208f9220588a98327d832fd4.1411604443.git.geoff@infradead.org>
- <20141003105106.GB26643@leverpostej>
- <1412373387.32313.41.camel@smoke>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1412373387.32313.41.camel@smoke>
+Received: from cpsmtpb-ews05.kpnxchange.com ([213.75.39.8])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Xb91h-0003ot-KB
+ for kexec@lists.infradead.org; Mon, 06 Oct 2014 14:12:38 +0000
+Message-ID: <1412604734.4054.72.camel@x220>
+Subject: Re: [PATCH 1/5] kexec: Fix make headers_check
+From: Paul Bolle <pebolle@tiscali.nl>
+Date: Mon, 06 Oct 2014 16:12:14 +0200
+In-Reply-To: <1409402838.21896.99.camel@x220>
+References: <cover.1408731991.git.geoff@infradead.org>
+ <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
+ <20140825172234.GD14379@redhat.com> <1409402838.21896.99.camel@x220>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +25,62 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+Cc: maximilian attems <max@stro.at>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-[...]
+Hi Geoff,
 
-> > >  el1_sync:
-> > > -	mrs	x1, esr_el2
-> > > -	lsr	x1, x1, #26
-> > > -	cmp	x1, #0x16
-> > > -	b.ne	2f				// Not an HVC trap
-> > > -	cbz	x0, 1f
-> > > -	msr	vbar_el2, x0			// Set vbar_el2
-> > > +	mrs	x18, esr_el2
-> > > +	lsr	x17, x18, #26			// x17=EC
-> > 
-> > The first patch enabled kvm_arm.h macros to be used from asm. Can't we
-> > use them here? If we don't include kvm_arm.h in the hyp stub, maybe we
-> > should (ideally we'd factor common stuff out, but I can see that getting
-> > messy fast).
+On Sat, 2014-08-30 at 14:47 +0200, Paul Bolle wrote:
+> [Added Peter Anvin.]
 > 
-> I didn't want to tackle the cleanup of the headers in this patch
-> series, and I thought it odd to include a kvm header in this core
-> arm64 file, but maybe it is better to include kvm_arm.h and use the
-> ESR_EL2_ macros so the values are at least easier to understand and
-> keep track of.
-
-I'd rather we used the mnemonics. If that involves pulling in the kvm
-header I'd rather we do that for the moment.
-
-[...]
-
-> > > diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
-> > > index b72aa9f..9607f15 100644
-> > > --- a/arch/arm64/kvm/hyp.S
-> > > +++ b/arch/arm64/kvm/hyp.S
-> > > @@ -26,6 +26,7 @@
-> > >  #include <asm/kvm_asm.h>
-> > >  #include <asm/kvm_arm.h>
-> > >  #include <asm/kvm_mmu.h>
-> > > +#include <asm/virt.h>
+> On Mon, 2014-08-25 at 13:22 -0400, Vivek Goyal wrote:
+> > On Fri, Aug 22, 2014 at 06:39:47PM +0000, Geoff Levand wrote:
+> > > Remove the unneded declaration for a kexec_load() routine.
+> > > 
+> > > Fixes errors like these when running 'make headers_check':
+> > > 
+> > > include/uapi/linux/kexec.h: userspace cannot reference function or variable defined in the kernel
+> > > 
+> > > Signed-off-by: Geoff Levand <geoff@infradead.org>
 > > 
-> > As far as I can see, virt.h only defines BOOT_CPU_MODE_EL{1,2}, which we
-> > don't use below. So I don't think we need this include.
+> > I think Paul Bolle tried to remove this in the past and maximilian
+> > had objections.
+> > 
+> > http://lists.infradead.org/pipermail/kexec/2014-January/010902.html
 > 
-> We need asm/virt.h for the new HVC_ macros added to it by this
-> patch (above)...
+> I've wanted to resend my patch, perhaps with a new commit explanation,
+> for quite some time now. I never got around doing that.
+> 
+> > I can't see that how exporting kernel prototype helps here.
+> 
+> It doesn't, for the reasons I've set out in
+> http://lists.infradead.org/pipermail/kexec/2014-January/010900.html . In
+> short: why bother using this prototype if one still needs to define the
+> matching function oneself?
+> 
+> > kexec-tools
+> > seems to be using syscall(__NR_kexec_load) directly for non-xen case. So
+> > I would be fine with removing this definition. Just trying to make sure
+> > that it does not break any other library or users of this declaration.
+> 
+> Obviously, this can only break compiling those libraries, or other
+> users. It can't break already compiled binaries. Besides I don't think
+> those libraries, etc actually exist. Maximilian mentioned klibc in
+> January, but I wasn't able to find a version of klibc that cared about
+> this prototype. No one pointed me at a version that does (or any other
+> library, etc., for that matter).
+> 
+> (If we do decide to keep this prototype, we should special case this
+> prototype in headers_check.pl just to silence the build.)
+> 
+> The above can be summarized like this:
+>     Acked-by: Paul Bolle <pebolle@tiscali.nl>
 
-Sorry, my comment was bogus. I'd evidently confused myself when reading
-this.
+It seems not much happened after I added my Acked-by. I assume you still
+want to get this merged. Is that correct?
 
-Mark.
+
+Paul Bolle
+
 
 _______________________________________________
 kexec mailing list
