@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 7 Oct 2014 15:06:23 +0100
+Date: Tue, 7 Oct 2014 16:22:19 +0100
 From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
-Message-ID: <20141007140623.GS24725@leverpostej>
+Message-ID: <20141007152219.GB27216@leverpostej>
 References: <cover.1411604443.git.geoff@infradead.org>
- <20140930202904.GB24153@redhat.com>
- <1412112476.6630.56.camel@smoke>
- <20141002190836.GA26882@redhat.com>
- <1412290795.32313.14.camel@smoke>
- <20141007134320.GD27464@redhat.com>
+ <20141001151947.GB14991@redhat.com>
+ <1412370971.32313.30.camel@smoke>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20141007134320.GD27464@redhat.com>
+In-Reply-To: <1412370971.32313.30.camel@smoke>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +21,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, Vivek Goyal <vgoyal@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Tue, Oct 07, 2014 at 02:43:20PM +0100, Vivek Goyal wrote:
-> On Thu, Oct 02, 2014 at 03:59:55PM -0700, Geoff Levand wrote:
-> > Hi Vivek,
-> > 
-> > On Thu, 2014-10-02 at 15:08 -0400, Vivek Goyal wrote:
-> > > On Tue, Sep 30, 2014 at 02:27:56PM -0700, Geoff Levand wrote:
-> > > > For a running system you can check the device tree:
-> > > > 
-> > > >   cat /proc/device-tree/cpus/cpu\@0/enable-method | hexdump -C
-> > > > 
-> > > 
-> > > So system I have supports spin-table method for cpu bringup. How do I 
-> > > test your patches with that system. Are there any patches on your
-> > > spin-table branch which can make it working?
-> > 
-> > If possible, check if there is a firmware update that supports PSCI.
-> > 
-> > My spin-table patches are now out of date, and fixing those up is
-> > now low priority.
+Hi Geoff,
+
+> > Does this patch series work with kexec on UEFI machines?
 > 
-> So psci method for cpu bring up is more popular as comapred to 
-> spin-table one? 
+> I have not done much more than some simple re-boot tests using the
+> base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
+> but yes, it should work.
 
-PSCI is the preferred method, and it is what we expect to see in server
-machines featuring EL3. There are implementation in KVM and Xen, and on
-physical machines (Juno so ar) with the ARM Trusted Firmware. The Linux
-bootwrapper features a trivial (pre-v1) implementation, and there has
-been work to implement PSCI in U-Boot.
+Where you booting the kernel as an UEFI application, or were you using the
+Linux loader? The latter arguably isn't a UEFI boot because the kernel doesn't
+know of or have access to UEFI (and arguably said laoder shouldn't even be
+there).
 
-The spin-table mechanism has no provision for returning CPUs to the
-firmware, so it's not possible to hotplug CPUs. Vendors are using during
-bringup so firmware and kernel can be developed in parallel, but I would
-expect that for enterprise products PSCI should be available.
+I've just had a go on Juno, but I wasn't able to get the tool to work.
+It seems that it's unhappy with the DTB because the EFI stub deleted the
+memory nodes (to enforce use of the UEFI memory map). I'm not sure what
+the tool needs to parse the memory map for, so I don't know what the
+best way around that is.
+
+nanook@localhost:~/opt/sbin$ ./kexec /home/nanook/vmlinux 
+kexec version: 14.10.02.15.58-g706fbeb
+Modified cmdline: root=/dev/nfs 
+Unable to find /proc/device-tree//chosen/linux,stdout-path, printing from purgatory is diabled
+get_memory_ranges_dt:756: Invalid /proc/device-tree.
+kexec: kexec/arch/arm64/kexec-arm64.c:625: virt_to_phys: Assertion `arm64_mem.memstart' failed.
+Aborted
 
 Thanks,
 Mark.
