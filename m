@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <02c3a7b33169e92de6f749b0956fd93d032f0c62.1412640584.git.geoff@infradead.org>
+Message-Id: <adf97d602657c72f6ee59aefe5d51149159a3e99.1412640584.git.geoff@infradead.org>
 In-Reply-To: <cover.1412640584.git.geoff@infradead.org>
 References: <cover.1412640584.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH V23/5] kexec: Add bit definitions for kimage entry flags
+Subject: [PATCH V25/5] powerpc/kexec: Use global IND_FLAGS macro
 Date: Tue, 07 Oct 2014 00:21:30 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,69 +21,29 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-Define new kexec preprocessor macros IND_*_BIT that define the bit position of
-the kimage entry flags.  Change the existing IND_* flag macros to be defined as
-bit shifts of the corresponding IND_*_BIT macros.  Also wrap all C language code
-in kexec.h with #if !defined(__ASSEMBLY__) so assembly files can include kexec.h
-to get the IND_* and IND_*_BIT macros.
-
-Some CPU instruction sets have tests for bit position which are convenient in
-implementing routines that operate on the kimage entry list.  The addition of
-these bit position macros in a common location will avoid duplicate definitions
-and the chance that changes to the IND_* flags will not be propagated to
-assembly files.
+linux/kexec.h now defines an IND_FLAGS macro.  Remove the local powerpc
+definition and use the generic one.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- include/linux/kexec.h | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/machine_kexec_64.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 4b2a0e1..8c628ca 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -1,6 +1,18 @@
- #ifndef LINUX_KEXEC_H
- #define LINUX_KEXEC_H
+diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
+index 879b3aa..75652a32 100644
+--- a/arch/powerpc/kernel/machine_kexec_64.c
++++ b/arch/powerpc/kernel/machine_kexec_64.c
+@@ -96,8 +96,6 @@ int default_machine_kexec_prepare(struct kimage *image)
+ 	return 0;
+ }
  
-+#define IND_DESTINATION_BIT 0
-+#define IND_INDIRECTION_BIT 1
-+#define IND_DONE_BIT        2
-+#define IND_SOURCE_BIT      3
-+
-+#define IND_DESTINATION  (1 << IND_DESTINATION_BIT)
-+#define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
-+#define IND_DONE         (1 << IND_DONE_BIT)
-+#define IND_SOURCE       (1 << IND_SOURCE_BIT)
-+
-+#if !defined(__ASSEMBLY__)
-+
- #include <uapi/linux/kexec.h>
- 
- #ifdef CONFIG_KEXEC
-@@ -64,10 +76,6 @@
-  */
- 
- typedef unsigned long kimage_entry_t;
--#define IND_DESTINATION  0x1
--#define IND_INDIRECTION  0x2
--#define IND_DONE         0x4
--#define IND_SOURCE       0x8
- 
- struct kexec_segment {
- 	/*
-@@ -312,4 +320,7 @@ struct task_struct;
- static inline void crash_kexec(struct pt_regs *regs) { }
- static inline int kexec_should_crash(struct task_struct *p) { return 0; }
- #endif /* CONFIG_KEXEC */
-+
-+#endif /* !defined(__ASSEBMLY__) */
-+
- #endif /* LINUX_KEXEC_H */
+-#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+-
+ static void copy_segments(unsigned long ind)
+ {
+ 	unsigned long entry;
 -- 
 1.9.1
-
 
 
 _______________________________________________
