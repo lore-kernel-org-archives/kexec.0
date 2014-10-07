@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XbUYK-0005Y2-Ed
- for kexec@lists.infradead.org; Tue, 07 Oct 2014 13:11:44 +0000
-Date: Tue, 7 Oct 2014 09:11:19 -0400
+Date: Tue, 7 Oct 2014 09:40:06 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kexec: Remove unnecessary KERN_ERR from kexec.c
-Message-ID: <20141007131119.GA27464@redhat.com>
-References: <1412654098-31847-1-git-send-email-standby24x7@gmail.com>
+Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
+Message-ID: <20141007134006.GC27464@redhat.com>
+References: <cover.1411604443.git.geoff@infradead.org>
+ <20141001151947.GB14991@redhat.com>
+ <1412370971.32313.30.camel@smoke>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1412654098-31847-1-git-send-email-standby24x7@gmail.com>
+In-Reply-To: <1412370971.32313.30.camel@smoke>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,41 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Masanari Iida <standby24x7@gmail.com>
-Cc: hbabu@us.ibm.com, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On Tue, Oct 07, 2014 at 12:54:58PM +0900, Masanari Iida wrote:
-> This patch remove unnecessary KERN_ERR from pr_err() within kexec.c.
+On Fri, Oct 03, 2014 at 02:16:11PM -0700, Geoff Levand wrote:
+> Hi,
 > 
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+> On Wed, 2014-10-01 at 11:19 -0400, Vivek Goyal wrote:
+> > On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
+> > > Hi All,
+> > > 
+> > > This series adds the core support for kexec re-boots on arm64.  I have tested
+> > > with the ARM VE fast model using various kernel config options for both the
+> > > first and second stage kernels.
+> > 
+> > Does this patch series work with kexec on UEFI machines?
+> 
+> I have not done much more than some simple re-boot tests using the
+> base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
+> but yes, it should work.
 
-[cc akpm]
+[CC Dave Young ]
 
-Thanks for the fix. 
+I have not looked at the user space patches but are you preparing efi
+setup data and passing all the runtime map information to second kernel.
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+I am hoping on arm64 we have the CONFIG_EFI_RUNTIME_MAP=y and it works
+well.
 
+Thanks
 Vivek
-
-> ---
->  kernel/kexec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 2abf9f6..9a8a01a 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -600,7 +600,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
->  	if (!kexec_on_panic) {
->  		image->swap_page = kimage_alloc_control_pages(image, 0);
->  		if (!image->swap_page) {
-> -			pr_err(KERN_ERR "Could not allocate swap buffer\n");
-> +			pr_err("Could not allocate swap buffer\n");
->  			goto out_free_control_pages;
->  		}
->  	}
-> -- 
-> 2.1.1.273.g97b8860
 
 _______________________________________________
 kexec mailing list
