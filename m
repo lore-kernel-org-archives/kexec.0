@@ -1,15 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1412623718.32313.60.camel@smoke>
-Subject: Re: [PATCH 1/5] kexec: Fix make headers_check
-From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 06 Oct 2014 12:28:38 -0700
-In-Reply-To: <1412619708.14236.2.camel@x220>
+Message-Id: <cover.1412640584.git.geoff@infradead.org>
+In-Reply-To: <cover.1408731991.git.geoff@infradead.org>
 References: <cover.1408731991.git.geoff@infradead.org>
- <115373b6ac68ee7a305975896e1c4971e8e51d4c.1408731991.git.geoff@infradead.org>
- <20140825172234.GD14379@redhat.com> <1409402838.21896.99.camel@x220>
- <1412604734.4054.72.camel@x220> <1412616877.32313.55.camel@smoke>
- <1412619708.14236.2.camel@x220>
-Mime-Version: 1.0
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH V2 0/5] kexec: Minor fixups and enhancements
+Date: Tue, 07 Oct 2014 00:21:30 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,32 +13,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: maximilian attems <max@stro.at>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-On Mon, 2014-10-06 at 20:21 +0200, Paul Bolle wrote:
-> On Mon, 2014-10-06 at 10:34 -0700, Geoff Levand wrote:
-> > On Mon, 2014-10-06 at 16:12 +0200, Paul Bolle wrote:
-> > > It seems not much happened after I added my Acked-by. I assume you still
-> > > want to get this merged. Is that correct?
-> > 
-> > Yes, I think we concluded there are no real users of this kexec_load()
-> > ptototype, and so it can be removed.
-> 
-> What would be the quickest way to get this finally resolved? Who's in
-> charge of this stuff? Would resending your patch, with my Ack added,
-> speed up things? The vain side of my personality does think it would
-> help.
+Hi Andrew,
 
-I'll prepare a V2 set of the this series with the various acks and ask
-Andrew to merge it.
+This series is basically a re-send of my kexec fix-up patches I sent out back
+in August.  Everyone who commented seemed to think these changes were OK, but
+there doesn't seem to be a kexec maintainer to pick these up.  Could you take
+them through your mm tree?
+
+Please let us know.
 
 -Geoff
 
+V2 changes:
+	o Collected various Acked-by's.
+
+The following changes since commit bfe01a5ba2490f299e1d2d5508cbbbadd897bbe9:
+
+  Linux 3.17 (2014-10-05 12:23:04 -0700)
+
+are available in the git repository at:
+
+  git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
+
+for you to fetch changes up to adf97d602657c72f6ee59aefe5d51149159a3e99:
+
+  powerpc/kexec: Use global IND_FLAGS macro (2014-10-06 17:06:26 -0700)
+
+----------------------------------------------------------------
+Geoff Levand (5):
+      kexec: Fix make headers_check
+      kexec: Simplify conditional
+      kexec: Add bit definitions for kimage entry flags
+      kexec: Add IND_FLAGS macro
+      powerpc/kexec: Use global IND_FLAGS macro
+
+ arch/powerpc/kernel/machine_kexec_64.c |  2 --
+ include/linux/kexec.h                  | 20 ++++++++++++++++----
+ include/uapi/linux/kexec.h             |  6 ------
+ kernel/kexec.c                         | 17 ++++++++++-------
+ 4 files changed, 26 insertions(+), 19 deletions(-)
+
+-- 
+1.9.1
 
 
 _______________________________________________
