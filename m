@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 7 Oct 2014 16:22:19 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
-Message-ID: <20141007152219.GB27216@leverpostej>
-References: <cover.1411604443.git.geoff@infradead.org>
- <20141001151947.GB14991@redhat.com>
- <1412370971.32313.30.camel@smoke>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XbYx9-0004st-5c
+ for kexec@lists.infradead.org; Tue, 07 Oct 2014 17:53:39 +0000
+Date: Tue, 7 Oct 2014 13:52:48 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH V25/5] powerpc/kexec: Use global IND_FLAGS macro
+Message-ID: <20141007175248.GG27464@redhat.com>
+References: <cover.1412640584.git.geoff@infradead.org>
+ <adf97d602657c72f6ee59aefe5d51149159a3e99.1412640584.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1412370971.32313.30.camel@smoke>
+In-Reply-To: <adf97d602657c72f6ee59aefe5d51149159a3e99.1412640584.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,37 +25,46 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, Vivek Goyal <vgoyal@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 
-Hi Geoff,
-
-> > Does this patch series work with kexec on UEFI machines?
+On Tue, Oct 07, 2014 at 12:21:30AM +0000, Geoff Levand wrote:
+> linux/kexec.h now defines an IND_FLAGS macro.  Remove the local powerpc
+> definition and use the generic one.
 > 
-> I have not done much more than some simple re-boot tests using the
-> base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
-> but yes, it should work.
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-Where you booting the kernel as an UEFI application, or were you using the
-Linux loader? The latter arguably isn't a UEFI boot because the kernel doesn't
-know of or have access to UEFI (and arguably said laoder shouldn't even be
-there).
+I think this patch should be merged in previous patch. I guess after
+applying patch4, series might not be compilable as there are two
+definitions of IND_FLAGS now.
 
-I've just had a go on Juno, but I wasn't able to get the tool to work.
-It seems that it's unhappy with the DTB because the EFI stub deleted the
-memory nodes (to enforce use of the UEFI memory map). I'm not sure what
-the tool needs to parse the memory map for, so I don't know what the
-best way around that is.
+Thanks
+Vivek
 
-nanook@localhost:~/opt/sbin$ ./kexec /home/nanook/vmlinux 
-kexec version: 14.10.02.15.58-g706fbeb
-Modified cmdline: root=/dev/nfs 
-Unable to find /proc/device-tree//chosen/linux,stdout-path, printing from purgatory is diabled
-get_memory_ranges_dt:756: Invalid /proc/device-tree.
-kexec: kexec/arch/arm64/kexec-arm64.c:625: virt_to_phys: Assertion `arm64_mem.memstart' failed.
-Aborted
-
-Thanks,
-Mark.
+> ---
+>  arch/powerpc/kernel/machine_kexec_64.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
+> index 879b3aa..75652a32 100644
+> --- a/arch/powerpc/kernel/machine_kexec_64.c
+> +++ b/arch/powerpc/kernel/machine_kexec_64.c
+> @@ -96,8 +96,6 @@ int default_machine_kexec_prepare(struct kimage *image)
+>  	return 0;
+>  }
+>  
+> -#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+> -
+>  static void copy_segments(unsigned long ind)
+>  {
+>  	unsigned long entry;
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
