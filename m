@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XbYx9-0004st-5c
- for kexec@lists.infradead.org; Tue, 07 Oct 2014 17:53:39 +0000
-Date: Tue, 7 Oct 2014 13:52:48 -0400
+Date: Tue, 7 Oct 2014 14:09:54 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH V25/5] powerpc/kexec: Use global IND_FLAGS macro
-Message-ID: <20141007175248.GG27464@redhat.com>
-References: <cover.1412640584.git.geoff@infradead.org>
- <adf97d602657c72f6ee59aefe5d51149159a3e99.1412640584.git.geoff@infradead.org>
+Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
+Message-ID: <20141007180954.GH27464@redhat.com>
+References: <cover.1411604443.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <adf97d602657c72f6ee59aefe5d51149159a3e99.1412640584.git.geoff@infradead.org>
+In-Reply-To: <cover.1411604443.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,46 +20,69 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On Tue, Oct 07, 2014 at 12:21:30AM +0000, Geoff Levand wrote:
-> linux/kexec.h now defines an IND_FLAGS macro.  Remove the local powerpc
-> definition and use the generic one.
+On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
+> Hi All,
 > 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> This series adds the core support for kexec re-boots on arm64.  I have tested
+> with the ARM VE fast model using various kernel config options for both the
+> first and second stage kernels.
+> 
+> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+> kexec-tools [2], which have not yet been merged upstream, are needed.
+> 
+> This series does not include some re-work of the spin-table CPU enable method
+> that is needed to support it, nor does it include some re-work of KVM to support
+> CPU soft reset.  A kernel built with these patches will boot and run correctly,
+> but will fail to load a kexec kernel if running on a machine with any spin-table
+> enabled CPUs and will fail the kexec re-boot if the first stage kernel was built
+> with CONFIG_KVM=y.  Work-in-progress patches to support these are in the master
+> branch of my linux-kexec repository [1].
+> 
+> Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
+> routine the ability to switch exception levels from EL1 to EL2 for kernels that
+> were entered in EL2.
+> 
+> Patch 5 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
+> dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+> routine.
+> 
+> Patches 11 and 12 add the actual kexec support.
+> 
+> Please consider all patches for inclusion.  Any comments or suggestions on how 
+> to improve are welcome.
+> 
+> [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
+> [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+> 
 
-I think this patch should be merged in previous patch. I guess after
-applying patch4, series might not be compilable as there are two
-definitions of IND_FLAGS now.
+Hi Geoff,
+
+I tried and I get following.
+
+[root@apm-mustang-ev3-06 sbin]# ./kexec -l /root/git/sa2/vmlinux
+--initrd=/boot/initramfs-3.17.0-rc7+.img
+--append="BOOT_IMAGE=/vmlinuz-3.17.0-rc5+
+root=/dev/mapper/fedora_dhcp--17--165-root ro
+rd.lvm.lv=fedora_dhcp-17-165/root rd.lvm.lv=fedora_dhcp-17-165/swap
+vconsole.font=latarcyrheb-sun16 console=tty0 console=ttyS0,115200
+LANG=en_US.UTF-8 crashkernel=160M earlyprintk=ttyS0,115200"
+kexec version: 14.10.02.15.58-g706fbeb
+Modified cmdline: root=/dev/mapper/rhsfadp_apm--mustang--ev3--06-root 
+Unable to find /proc/device-tree//chosen/linux,stdout-path, printing from
+purgatory is diabled
+get_memory_ranges_dt:756: Invalid /proc/device-tree.
+kexec: kexec/arch/arm64/kexec-arm64.c:625: virt_to_phys: Assertion
+`arm64_mem.memstart' failed.
+Aborted
+
+
+What's "Modified cmdline" ? That seems to have truncated everything I 
+passed in.
 
 Thanks
 Vivek
-
-> ---
->  arch/powerpc/kernel/machine_kexec_64.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-> index 879b3aa..75652a32 100644
-> --- a/arch/powerpc/kernel/machine_kexec_64.c
-> +++ b/arch/powerpc/kernel/machine_kexec_64.c
-> @@ -96,8 +96,6 @@ int default_machine_kexec_prepare(struct kimage *image)
->  	return 0;
->  }
->  
-> -#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
-> -
->  static void copy_segments(unsigned long ind)
->  {
->  	unsigned long entry;
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
