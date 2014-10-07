@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 7 Oct 2014 14:09:54 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Message-ID: <1412706539.32313.89.camel@smoke>
 Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
-Message-ID: <20141007180954.GH27464@redhat.com>
+From: Geoff Levand <geoff@infradead.org>
+Date: Tue, 07 Oct 2014 11:28:59 -0700
+In-Reply-To: <20141007152219.GB27216@leverpostej>
 References: <cover.1411604443.git.geoff@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <cover.1411604443.git.geoff@infradead.org>
+ <20141001151947.GB14991@redhat.com> <1412370971.32313.30.camel@smoke>
+ <20141007152219.GB27216@leverpostej>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,70 +20,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
-
-On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
-> Hi All,
-> 
-> This series adds the core support for kexec re-boots on arm64.  I have tested
-> with the ARM VE fast model using various kernel config options for both the
-> first and second stage kernels.
-> 
-> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
-> kexec-tools [2], which have not yet been merged upstream, are needed.
-> 
-> This series does not include some re-work of the spin-table CPU enable method
-> that is needed to support it, nor does it include some re-work of KVM to support
-> CPU soft reset.  A kernel built with these patches will boot and run correctly,
-> but will fail to load a kexec kernel if running on a machine with any spin-table
-> enabled CPUs and will fail the kexec re-boot if the first stage kernel was built
-> with CONFIG_KVM=y.  Work-in-progress patches to support these are in the master
-> branch of my linux-kexec repository [1].
-> 
-> Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
-> routine the ability to switch exception levels from EL1 to EL2 for kernels that
-> were entered in EL2.
-> 
-> Patch 5 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
-> dcache_line_size macro it defines can be uesd by kexec's relocate kernel
-> routine.
-> 
-> Patches 11 and 12 add the actual kexec support.
-> 
-> Please consider all patches for inclusion.  Any comments or suggestions on how 
-> to improve are welcome.
-> 
-> [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
-> [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
-> 
-
-Hi Geoff,
-
-I tried and I get following.
-
-[root@apm-mustang-ev3-06 sbin]# ./kexec -l /root/git/sa2/vmlinux
---initrd=/boot/initramfs-3.17.0-rc7+.img
---append="BOOT_IMAGE=/vmlinuz-3.17.0-rc5+
-root=/dev/mapper/fedora_dhcp--17--165-root ro
-rd.lvm.lv=fedora_dhcp-17-165/root rd.lvm.lv=fedora_dhcp-17-165/swap
-vconsole.font=latarcyrheb-sun16 console=tty0 console=ttyS0,115200
-LANG=en_US.UTF-8 crashkernel=160M earlyprintk=ttyS0,115200"
-kexec version: 14.10.02.15.58-g706fbeb
-Modified cmdline: root=/dev/mapper/rhsfadp_apm--mustang--ev3--06-root 
-Unable to find /proc/device-tree//chosen/linux,stdout-path, printing from
-purgatory is diabled
-get_memory_ranges_dt:756: Invalid /proc/device-tree.
-kexec: kexec/arch/arm64/kexec-arm64.c:625: virt_to_phys: Assertion
-`arm64_mem.memstart' failed.
-Aborted
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, Vivek Goyal <vgoyal@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
 
-What's "Modified cmdline" ? That seems to have truncated everything I 
-passed in.
+On Tue, 2014-10-07 at 16:22 +0100, Mark Rutland wrote:
+> Hi Geoff,
+> 
+> > > Does this patch series work with kexec on UEFI machines?
+> > 
+> > I have not done much more than some simple re-boot tests using the
+> > base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
+> > but yes, it should work.
+> 
+> Where you booting the kernel as an UEFI application, or were you using the
+> Linux loader? The latter arguably isn't a UEFI boot because the kernel doesn't
+> know of or have access to UEFI (and arguably said laoder shouldn't even be
+> there).
 
-Thanks
-Vivek
+I used the Linux loader. 
+
+> I've just had a go on Juno, but I wasn't able to get the tool to work.
+
+No, I wouldn't think it would.  Proper UEFI re-boot is
+still todo.
+
+-Geoff
+
+
+
 
 _______________________________________________
 kexec mailing list
