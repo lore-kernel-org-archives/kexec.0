@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 7 Oct 2014 09:40:06 -0400
+Date: Tue, 7 Oct 2014 09:43:20 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
-Message-ID: <20141007134006.GC27464@redhat.com>
+Message-ID: <20141007134320.GD27464@redhat.com>
 References: <cover.1411604443.git.geoff@infradead.org>
- <20141001151947.GB14991@redhat.com>
- <1412370971.32313.30.camel@smoke>
+ <20140930202904.GB24153@redhat.com>
+ <1412112476.6630.56.camel@smoke>
+ <20141002190836.GA26882@redhat.com>
+ <1412290795.32313.14.camel@smoke>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1412370971.32313.30.camel@smoke>
+In-Reply-To: <1412290795.32313.14.camel@smoke>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,32 +24,43 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On Fri, Oct 03, 2014 at 02:16:11PM -0700, Geoff Levand wrote:
-> Hi,
+On Thu, Oct 02, 2014 at 03:59:55PM -0700, Geoff Levand wrote:
+> Hi Vivek,
 > 
-> On Wed, 2014-10-01 at 11:19 -0400, Vivek Goyal wrote:
-> > On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
-> > > Hi All,
+> On Thu, 2014-10-02 at 15:08 -0400, Vivek Goyal wrote:
+> > On Tue, Sep 30, 2014 at 02:27:56PM -0700, Geoff Levand wrote:
+> > > For a running system you can check the device tree:
 > > > 
-> > > This series adds the core support for kexec re-boots on arm64.  I have tested
-> > > with the ARM VE fast model using various kernel config options for both the
-> > > first and second stage kernels.
+> > >   cat /proc/device-tree/cpus/cpu\@0/enable-method | hexdump -C
+> > > 
 > > 
-> > Does this patch series work with kexec on UEFI machines?
+> > So system I have supports spin-table method for cpu bringup. How do I 
+> > test your patches with that system. Are there any patches on your
+> > spin-table branch which can make it working?
 > 
-> I have not done much more than some simple re-boot tests using the
-> base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
-> but yes, it should work.
+> If possible, check if there is a firmware update that supports PSCI.
+> 
+> My spin-table patches are now out of date, and fixing those up is
+> now low priority.
 
-[CC Dave Young ]
+So psci method for cpu bring up is more popular as comapred to 
+spin-table one? 
 
-I have not looked at the user space patches but are you preparing efi
-setup data and passing all the runtime map information to second kernel.
+> 
+> I modified kexec-tools to only issue a message, but accept a device
+> tree that does not have the new cpu-return-addr property that is
+> needed for kexec on spin-table systems.  Since the spin-table stuff
+> is only for managing secondary CPUs, this change should allow you to
+> test kexec with a 1st stage kernel built with CONFIG_SMP=n.
+> 
+> Since the secondary CPUs will have never left the spin-table, you
+> should be able to kexec re-boot into an SMP kernel, but you will
+> not be able to do a successful kexec re-boot from there.
 
-I am hoping on arm64 we have the CONFIG_EFI_RUNTIME_MAP=y and it works
-well.
+Ok, I can compile kernel with CONFIG_SMP=y but use maxcpus=1 for first
+kernel and hopefully that works.
 
 Thanks
 Vivek
