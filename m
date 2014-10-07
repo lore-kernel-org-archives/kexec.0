@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <cover.1412640584.git.geoff@infradead.org>
-In-Reply-To: <cover.1408731991.git.geoff@infradead.org>
-References: <cover.1408731991.git.geoff@infradead.org>
+Message-Id: <de975a34c5beb9715359eaa4d74ba82a7798aae3.1412640584.git.geoff@infradead.org>
+In-Reply-To: <cover.1412640584.git.geoff@infradead.org>
+References: <cover.1412640584.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH V2 0/5] kexec: Minor fixups and enhancements
+Subject: [PATCH V24/5] kexec: Add IND_FLAGS macro
 Date: Tue, 07 Oct 2014 00:21:30 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,48 +21,33 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Add a new kexec preprocessor macro IND_FLAGS, which is the bitwise OR of
+all the possible kexec IND_ kimage_entry indirection flags.
 
-This series is basically a re-send of my kexec fix-up patches I sent out back
-in August.  Everyone who commented seemed to think these changes were OK, but
-there doesn't seem to be a kexec maintainer to pick these up.  Could you take
-them through your mm tree?
+Having this macro allows for simplified code in the prosessing of the
+kexec kimage_entry items.
 
-Please let us know.
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ include/linux/kexec.h | 1 +
+ 1 file changed, 1 insertion(+)
 
--Geoff
-
-V2 changes:
-	o Collected various Acked-by's.
-
-The following changes since commit bfe01a5ba2490f299e1d2d5508cbbbadd897bbe9:
-
-  Linux 3.17 (2014-10-05 12:23:04 -0700)
-
-are available in the git repository at:
-
-  git://git.linaro.org/people/geoff.levand/linux-kexec.git for-kexec
-
-for you to fetch changes up to adf97d602657c72f6ee59aefe5d51149159a3e99:
-
-  powerpc/kexec: Use global IND_FLAGS macro (2014-10-06 17:06:26 -0700)
-
-----------------------------------------------------------------
-Geoff Levand (5):
-      kexec: Fix make headers_check
-      kexec: Simplify conditional
-      kexec: Add bit definitions for kimage entry flags
-      kexec: Add IND_FLAGS macro
-      powerpc/kexec: Use global IND_FLAGS macro
-
- arch/powerpc/kernel/machine_kexec_64.c |  2 --
- include/linux/kexec.h                  | 20 ++++++++++++++++----
- include/uapi/linux/kexec.h             |  6 ------
- kernel/kexec.c                         | 17 ++++++++++-------
- 4 files changed, 26 insertions(+), 19 deletions(-)
-
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 8c628ca..a4758f9 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -10,6 +10,7 @@
+ #define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
+ #define IND_DONE         (1 << IND_DONE_BIT)
+ #define IND_SOURCE       (1 << IND_SOURCE_BIT)
++#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+ 
+ #if !defined(__ASSEMBLY__)
+ 
 -- 
 1.9.1
+
 
 
 _______________________________________________
