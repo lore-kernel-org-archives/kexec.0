@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 7 Oct 2014 16:22:10 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 6/7] arm64/kexec: Add core kexec support
-Message-ID: <20141007202210.GA4236@redhat.com>
-References: <cover.1411604443.git.geoff@infradead.org>
- <471af24b7de659a30a5941e793634bffec380cb9.1411604443.git.geoff@infradead.org>
- <20140930181840.GA24153@redhat.com>
- <1412106877.6630.45.camel@smoke>
- <20141001145602.GB13689@redhat.com>
- <1412361303.32313.24.camel@smoke>
- <20141007134450.GE27464@redhat.com>
- <1412707320.32313.100.camel@smoke>
- <20141007184520.GI27464@redhat.com>
- <1412712777.32313.130.camel@smoke>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1412712777.32313.130.camel@smoke>
+Message-ID: <1412713571.32313.132.camel@smoke>
+Subject: Re: [PATCH V3 4/5] kexec: Add IND_FLAGS macro
+From: Geoff Levand <geoff@infradead.org>
+Date: Tue, 07 Oct 2014 13:26:11 -0700
+In-Reply-To: <de975a34c5beb9715359eaa4d74ba82a7798aae3.1412640584.git.geoff@infradead.org>
+References: <cover.1412640584.git.geoff@infradead.org>
+ <de975a34c5beb9715359eaa4d74ba82a7798aae3.1412640584.git.geoff@infradead.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,45 +19,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-On Tue, Oct 07, 2014 at 01:12:57PM -0700, Geoff Levand wrote:
-> Hi Vivek,
-> 
-> On Tue, 2014-10-07 at 14:45 -0400, Vivek Goyal wrote:
-> > On Tue, Oct 07, 2014 at 11:42:00AM -0700, Geoff Levand wrote:
-> > > Adding purgatory code to arm64 is low priority, and I currently
-> > > have no plan to do that.  Users are asking for kdump, and proper
-> > > UEFI support, so that is what I will work towards.
-> > 
-> > I think having purgatory enabled is very important here as in kernel
-> > you are hardcoding that one of the segments is DTB and doing all the
-> > magic tricks w.r.t putting a magic number. 
-> 
-> I don't argue that having purgatory code could be useful, but as of
-> now, enabling the other features is what I'll work towards.
->  
-> Regarding the device tree magic number, I'm wondering if you missed
-> that the device tree has a header, and that header has a magic
-> number.  See here:
-> 
->   http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/scripts/dtc/libfdt/fdt.h#n6
-> 
+Add a new kexec preprocessor macro IND_FLAGS, which is the bitwise OR of
+all the possible kexec IND_ kimage_entry indirection flags.  Having this
+macro allows for simplified code in the prosessing of the kexec
+kimage_entry items.  Also, remove the local powerpc definition and use
+the generic one.
 
-Problem is this that if you put code in kernel once which does something
-which purgatory ought to do, you will never be able to remove it for
-backward compatibility reasons. Older versions of kexec-tools will 
-continue to rely on it. Also how in kernel you would know that now
-purgatory will take care of this and kernel does not have to worry
-about something. So it is a good idea to integrate the purgatory support
-from the very beginning.
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+---
 
-Also, verifying checksums of loaded segments before jumping to that kernel
-is a must from feature point of view.
+From V2: Folded patch 5 into patch 4.
 
-Thanks
-Vivek
+ arch/powerpc/kernel/machine_kexec_64.c | 2 --
+ include/linux/kexec.h                  | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
+index 879b3aa..75652a32 100644
+--- a/arch/powerpc/kernel/machine_kexec_64.c
++++ b/arch/powerpc/kernel/machine_kexec_64.c
+@@ -96,8 +96,6 @@ int default_machine_kexec_prepare(struct kimage *image)
+ 	return 0;
+ }
+ 
+-#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+-
+ static void copy_segments(unsigned long ind)
+ {
+ 	unsigned long entry;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 8c628ca..a4758f9 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -10,6 +10,7 @@
+ #define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
+ #define IND_DONE         (1 << IND_DONE_BIT)
+ #define IND_SOURCE       (1 << IND_SOURCE_BIT)
++#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+ 
+ #if !defined(__ASSEMBLY__)
+ 
+-- 
+1.9.1
+
+
+
 
 _______________________________________________
 kexec mailing list
