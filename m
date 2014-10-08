@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from terminus.zytor.com ([2001:1868:205::10] helo=mail.zytor.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XbsQ0-0004xj-GM
- for kexec@lists.infradead.org; Wed, 08 Oct 2014 14:40:45 +0000
-Date: Wed, 8 Oct 2014 22:40:05 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
-Message-ID: <20141008144005.GA2015@dhcp-17-102.nay.redhat.com>
-References: <1412060896-1902-1-git-send-email-bhe@redhat.com>
- <542B1EC1.8090502@zytor.com>
+ id 1XbstB-0002fp-CZ
+ for kexec@lists.infradead.org; Wed, 08 Oct 2014 15:10:53 +0000
+Message-ID: <543553C7.9010906@zytor.com>
+Date: Wed, 08 Oct 2014 08:09:59 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <542B1EC1.8090502@zytor.com>
+Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
+References: <1412060896-1902-1-git-send-email-bhe@redhat.com>
+ <542B1EC1.8090502@zytor.com> <20141001135237.GA13689@redhat.com>
+In-Reply-To: <20141001135237.GA13689@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +23,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: whissi@whissi.de, ak@linux.intel.com, keescook@chromium.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: whissi@whissi.de, ak@linux.intel.com, keescook@chromium.org, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de
 
-On 09/30/14 at 02:21pm, H. Peter Anvin wrote:
-> On 09/30/2014 12:08 AM, Baoquan He wrote:
-> > Function handle_relocations() is used to do the relocations handling
-> > for i686 and kaslr of x86_64. For 32 bit the relocation handling is
-> > mandotary to perform. For x86_64 only when kaslr is enabled and a
-> > random kernel location is chosen successfully the relocation handling
-> > shound be done. However previous implementation only compared the
-> > kernel loading address and LOAD_PHYSICAL_ADDR where kernel were
-> > compiled to run at. This would casue system to be exceptional in
-> > few conditions like when delta between load address and compiled
-> > address is bigger than what 32bit signed relocations can handle.
-> > Also there will be limitations that delta can't be too big otherwise
-> > kernel text virtual addresses will overflow in module address space.
-> > 
-> > So in this patch check if kernel location is changed after
-> > choose_kernel_location() when x86_64. If and only if in x86_64
-> > and kernel location is changed, we say a kaslr random kernel
-> > location is chosen, then the relocation handling is needed.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > Acked-by: Vivek Goyal <vgoyal@redhat.com>
-> > Acked-by: Kees Cook <keescook@chromium.org>
-> > Tested-by: Thomas D. <whissi@whissi.de>
-> > Cc: stable@vger.kernel.org
+On 10/01/2014 06:52 AM, Vivek Goyal wrote:
 > 
-> Could you clarify under what conditions we may end up with 32-bit signed
-> overflow, and yet have a functional kernel?
+> Hi Peter,
+> 
+> I think there is some confusion. I will try to clarify.
+> 
+> If we have 32bit signed overflow, we will not have a functional kernel.
+> And that's the message we get when we try to kexec with
+> CONFIG_RANDOMIZE_BASE=y.
+> 
 
-Hi hpa,
+And how does that happen?
 
-As Vivek has replied, and from my test result, in x86_64 when kernel is
-loaded above 2G by bootloader, the 32-bit signed overflow will happen.
-Meanwhile the error() in arch/x86/boot/compressed/misc.c will be called,
-this function will execute 'hlt' instruction, then system halted.
-
-In current kaslr, there are 3 hebaviours. Since the candidate slot for
-randomized kernel location is only between kernel loaded address and 1G,
-it doesn't choose a new kernel location when kernel is loaded above 1G.
-
-1) Kernel is loaded between 0x1000000 and 1G, kaslr works well.
-
-2)kernel is loaded between 1G and 2G, kernel doesn't choose a new kernel
-location, so the ourput_orig==output > 1G. But current code compares the
-output with LOAD_PHYSICAL_ADDR, relocation handling is still taken and
-this cause kenrel text mapping stomps module mapping space. So in this
-case form printing we can see kaslr passed, but kernel reboot to bios
-immediately.
-
-3) When kernel is loaded above 2G, this is the 32-bit signed overflow as
-we discussed above.
-
-So this patch can fix case 2  and case 3. 
-
-Thanks
-Baoquan
+> **********************************************************************
+> [  340.709078] kexec: Starting new kernel
+> early console in decompress_kernel
+> KASLR disabled by default...
+> 
+> Decompressing Linux... Parsing ELF...
+> 
+> Performing relocations...
+> 32-bit relocation outside of kernel!
 > 
 > 
+>  -- System halted
+> *****************************************************************
+> 
+> We realized that kexec tries to load kernel at higher physical addresses
+> and that can lead to problmes.
+> 
+> Currently for x86_64, handle_relocations() will perform relocations if
+> kernel is not loaded at LOAD_PHYSICAL_ADDR. I think this does not work for
+> all the cases and kerenl can not be loaded anywhere in the physical address
+> space. And that's why we run into issues with kexec.
+> 
+> My understanding is that we introduce handle_relcoations() i386 style
+> because of RANDOMIZE_BASE. If that's the case, one possible solution
+> is that perform relocations only if ranodmize base logic has chosen
+> a different load location for kernel than where boot loader loaded
+> it. Otherwise don't do anything.
+> 
+> In case of kexec/kdump, we will pass "nokaslr" to second kernel forcing
+> it to do nothing and let the kernel run where it was loaded by bootloader.
+> And in that case handle_relocations() should not do any relocations and
+> that should allow kernel to be loaded anywhere in physical memory on
+> x86_64.
+> 
+
+Sorry... this makes no sense.
+
+For x86-64, there is no direct connection between the physical and
+virtual address spaces that the kernel runs in...
+
+	-hpa
+
+
 
 _______________________________________________
 kexec mailing list
