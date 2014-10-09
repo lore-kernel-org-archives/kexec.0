@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 9 Oct 2014 11:21:30 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
-Message-ID: <20141009032130.GB2690@darkstar.nay.redhat.com>
-References: <cover.1411604443.git.geoff@infradead.org>
- <20141001151947.GB14991@redhat.com>
- <1412370971.32313.30.camel@smoke>
- <20141007134006.GC27464@redhat.com>
- <20141008094258.GG27216@leverpostej>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Xc7Qu-0004jN-Lg
+ for kexec@lists.infradead.org; Thu, 09 Oct 2014 06:42:41 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: Enable --mem-usage for s390x
+Date: Thu, 9 Oct 2014 06:41:10 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D4D5E4@BPXM01GP.gisp.nec.co.jp>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+ <20140922170247.36774052@holzheu>
+ <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
+ <20140924171904.1db5ac90@holzheu>
+ <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
+ <20140926101057.14549a12@holzheu>
+ <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
+ <20140926133441.5e58303c@holzheu>
+ <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
+ <20140929151413.4e9bd1ab@holzheu>
+ <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
+ <20141001185953.66c6ae9d@holzheu>
+In-Reply-To: <20141001185953.66c6ae9d@holzheu>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20141008094258.GG27216@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,60 +34,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, leif.lindholm@linaro.org, roy.franz@linaro.org, Marc Zyngier <Marc.Zyngier@arm.com>, Vivek Goyal <vgoyal@redhat.com>, msalter@redhat.com, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 10/08/14 at 10:42am, Mark Rutland wrote:
-> [Cc'ing the arm efi guys]
-> 
-> On Tue, Oct 07, 2014 at 02:40:06PM +0100, Vivek Goyal wrote:
-> > On Fri, Oct 03, 2014 at 02:16:11PM -0700, Geoff Levand wrote:
-> > > Hi,
-> > > 
-> > > On Wed, 2014-10-01 at 11:19 -0400, Vivek Goyal wrote:
-> > > > On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
-> > > > > Hi All,
-> > > > > 
-> > > > > This series adds the core support for kexec re-boots on arm64.  I have tested
-> > > > > with the ARM VE fast model using various kernel config options for both the
-> > > > > first and second stage kernels.
-> > > > 
-> > > > Does this patch series work with kexec on UEFI machines?
-> > > 
-> > > I have not done much more than some simple re-boot tests using the
-> > > base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
-> > > but yes, it should work.
-> > 
-> > [CC Dave Young ]
-> > 
-> > I have not looked at the user space patches but are you preparing efi
-> > setup data and passing all the runtime map information to second kernel.
-> > 
-> > I am hoping on arm64 we have the CONFIG_EFI_RUNTIME_MAP=y and it works
-> > well.
-> 
-> From a quick look at mainline that config option just gates exposing
-> that info under sysfs, and we never call efi_runtime_map_setup on arm64.
-> I gues the x86 kexec tool parses that and sets up some data structure?
-> 
-> For arm64 we have runtime map information in the initial DTB, and this
-> should have been copied into the DTB we pass to the second kernel. See
-> Documentation/arm/uefi.txt and drivers/firmware/efi/libstub/fdt.c.
-> 
-> Is that sufficient?
+Hello,
 
-That will be sufficient for runtime maps, but several phys addresses need to be
-saved: /sys/firmware/efi/{fw_vendor,runtime,config_table}
+>On Tue, 30 Sep 2014 17:02:01 +0800
+>Baoquan He <bhe@redhat.com> wrote:
+>
+>> On 09/29/14 at 03:14pm, Michael Holzheu wrote:
+>> > Implement is_vmalloc_addr() using /proc/iommem parsing to enable the new
+>> > makedumpfile option "--mem-usage".
+>> >
+>> > Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+>>
+>>
+>> Hi Michael,
+>>
+>> This idea looks good to me. One question, should it be put in
+>> arch/s390.c since this is only for s390? Then iomem_for_each_line() need
+>> be declared in makedumpfile.h .
+>>
+>> If later it's needed by other arch, can be taken out to makedumpfile.c,
+>> that should be better. Surely this is only my personal concern, if
+>> Atsushi like to accept it, I am fine too.
+>
+>Hello Atsushi,
+>
+>What is your preference regarding this question?
+>
+>Michael
 
-From uefi spec these addresses are updated to virtual addresses after entering
-virtual mode.
+In the first place, this is_vmalloc_addr() for s390 isn't a good
+implementation because it works only on 1st kernel due to the
+dependence on /proc/iomem. is_vmalloc_addr_XXX() are general functions,
+they can be called from any path besides --mem-usage.
 
-Though it should work without the runtime map exporting to sysfs, It's not bad
-to export them, it's good to have for debugging purpose and it will be consistant
-across different arches.
+I think the Michael's first idea below is better since it implements
+is_real_addr() only for --mem-usage as a common function for all
+architectures, it's explicit design.
 
-Thanks
-Dave
+>@@ -854,7 +854,7 @@ int get_kcore_dump_loads(void)
+>
+> 	for (i = 0; i < num_pt_loads; ++i) {
+> 		struct pt_load_segment *p = &pt_loads[i];
+>-		if (is_vmalloc_addr(p->virt_start))
+>+		if (!is_real_addr(p->virt_start))
+> 			continue;
+> 		loads++;
+> 	}
+
+However, this code will not work since the argument of is_real_addr()
+must be physical address. Even unluckily, /proc/kcore's PT_LOAD looks
+useless for VtoP converting because PhysAddr is always 0:
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NOTE           0x00000000000002a8 0x0000000000000000 0x0000000000000000
+                 0x0000000000000a84 0x0000000000000000         0
+  LOAD           0x00007fffff601000 0xffffffffff600000 0x0000000000000000
+                 0x0000000000001000 0x0000000000001000  RWE    1000
+  LOAD           0x00007fff81001000 0xffffffff81000000 0x0000000000000000
+                 0x0000000000a1b000 0x0000000000a1b000  RWE    1000
+  LOAD           0x0000490000001000 0xffffc90000000000 0x0000000000000000
+                 0x00001fffffffffff 0x00001fffffffffff  RWE    1000
+  LOAD           0x00007fffa0001000 0xffffffffa0000000 0x0000000000000000
+                 0x000000005f000000 0x000000005f000000  RWE    1000
+  ...
+
+
+So the way using /proc/iomem seems inappropriate, we have to consider other
+approaches (but I still don't have any good ideas...)
+
+
+Thanks,
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
