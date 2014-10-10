@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XcRbd-0003Jb-2p
- for kexec@lists.infradead.org; Fri, 10 Oct 2014 04:15:06 +0000
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id s9A4ED4x011430
- for <kexec@lists.infradead.org>; Fri, 10 Oct 2014 12:14:13 +0800
-Message-ID: <54375C91.5040707@cn.fujitsu.com>
-Date: Fri, 10 Oct 2014 12:12:01 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+Date: Fri, 10 Oct 2014 13:30:52 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
+Message-ID: <20141010053052.GA1981@darkstar.nay.redhat.com>
+References: <cover.1411604443.git.geoff@infradead.org>
+ <20141001151947.GB14991@redhat.com>
+ <1412370971.32313.30.camel@smoke>
+ <20141007134006.GC27464@redhat.com>
+ <20141008094258.GG27216@leverpostej>
+ <20141009032130.GB2690@darkstar.nay.redhat.com>
+ <20141009100919.GF3869@leverpostej>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 0/5] makedumpfile: --split: assign fair I/O workloads
- in appropriate time
-References: <1411974387-10839-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1411974387-10839-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20141009100919.GF3869@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,148 +21,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "roy.franz@linaro.org" <roy.franz@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Vivek Goyal <vgoyal@redhat.com>, "msalter@redhat.com" <msalter@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-Maybe I should give more information about the issue.
+On 10/09/14 at 11:09am, Mark Rutland wrote:
+> On Thu, Oct 09, 2014 at 04:21:30AM +0100, Dave Young wrote:
+> > On 10/08/14 at 10:42am, Mark Rutland wrote:
+> > > [Cc'ing the arm efi guys]
+> > > 
+> > > On Tue, Oct 07, 2014 at 02:40:06PM +0100, Vivek Goyal wrote:
+> > > > On Fri, Oct 03, 2014 at 02:16:11PM -0700, Geoff Levand wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On Wed, 2014-10-01 at 11:19 -0400, Vivek Goyal wrote:
+> > > > > > On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
+> > > > > > > Hi All,
+> > > > > > > 
+> > > > > > > This series adds the core support for kexec re-boots on arm64.  I have tested
+> > > > > > > with the ARM VE fast model using various kernel config options for both the
+> > > > > > > first and second stage kernels.
+> > > > > > 
+> > > > > > Does this patch series work with kexec on UEFI machines?
+> > > > > 
+> > > > > I have not done much more than some simple re-boot tests using the
+> > > > > base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
+> > > > > but yes, it should work.
+> > > > 
+> > > > [CC Dave Young ]
+> > > > 
+> > > > I have not looked at the user space patches but are you preparing efi
+> > > > setup data and passing all the runtime map information to second kernel.
+> > > > 
+> > > > I am hoping on arm64 we have the CONFIG_EFI_RUNTIME_MAP=y and it works
+> > > > well.
+> > > 
+> > > From a quick look at mainline that config option just gates exposing
+> > > that info under sysfs, and we never call efi_runtime_map_setup on arm64.
+> > > I gues the x86 kexec tool parses that and sets up some data structure?
+> > > 
+> > > For arm64 we have runtime map information in the initial DTB, and this
+> > > should have been copied into the DTB we pass to the second kernel. See
+> > > Documentation/arm/uefi.txt and drivers/firmware/efi/libstub/fdt.c.
+> > > 
+> > > Is that sufficient?
+> > 
+> > That will be sufficient for runtime maps, but several phys addresses need to be
+> > saved: /sys/firmware/efi/{fw_vendor,runtime,config_table}
+> > 
+> > From uefi spec these addresses are updated to virtual addresses after entering
+> > virtual mode.
+> 
+> Ouch. That sounds painful.
+> 
+> I'd prefer to not have to duplicate these in the DTB if we can. Given we
+> should have the memmmap with the virtual<->physical mappings, could we
+> not do a lookup there before early dereferences if we happen to already
+> be in virtual mode?
 
-When --split option is specified, fair I/O workloads should be assigned for each process
-to maximize amount of performance optimization by parallel processing.
+I do not have an idea to skip defeference these variables, see below usage: 
 
-However, the current implementation of setup_splitting() in cyclic mode doesn't care about
-  filtering at all. It may always cause a big difference among dumpfiles in size.
+arch/arm64/kernel/efi.c, uefi_init():
+        c16 = early_memremap(efi.systab->fw_vendor,
+                             sizeof(vendor));
+        if (c16) {
+                for (i = 0; i < (int) sizeof(vendor) - 1 && *c16; ++i)
+                        vendor[i] = c16[i];
+                vendor[i] = '\0';
+        }
 
-To solve the problem, we should count the dumpable pfn instead of each pfn. It means that
-the start and end pfn of each dumpfile must be calculated with filtering.
+drivers/firmware/efi/efi.c, efi_config_init():
+        config_tables = early_memremap(efi.systab->tables,
+                                       efi.systab->nr_tables * sz)
 
-So, HATAYAMA Daisuke put forward the 3-pass algorithm. The algorithm deals with the issue
-by doing the complete filtering in setup_splitting_cyclic().
-(The implementation of 3-pass algorithm is referred to
-http://lists.infradead.org/pipermail/kexec/2014-March/011339.html)
+It's strange to me that in arm64 code systab->runtime is used directly without
+ioremapping. but in x86 code, we do below:
 
-However, in 3-pass algorithm, if --split is specified in cyclic mode, we do filtering three times:
-in get_dumpable_pages_cyclic(), in setup_splitting_cyclic() and in writeout_dumpfile().
-Filtering takes a long time on system with huge memory according to the benchmark on
-the past, so it is necessary to be optimized.
+arch/x86/platform/efi/efi.c, efi_runtime_init64():
+        runtime = early_ioremap((unsigned long)efi.systab->runtime,
+                        sizeof(efi_runtime_services_64_t));
 
+for arm64 we have below:
+        efi.systab = (__force void *)efi_lookup_mapped_addr(efi_system_table);
+        if (efi.systab)
+                set_bit(EFI_SYSTEM_TABLES, &efi.flags);
 
-Then, the 2-pass algorithm came. We remove the filtering in setup_splitting_cyclic(). Since we
-just need counting the dumpable pfn, we can record the number of dumpable pfn in first filtering
-and calculate the start-end pfn with the number.
+        [snip]
 
-We divide memory into several parts(we call it block. the default block size is 1GB). The number
-of dumpable pages in each block is recorded when doing first filtering. When calculating, with
-the help of the dumpable number, we don't need to do the filtering for whole memory.
+        /* Call SetVirtualAddressMap with the physical address of the map */
+        runtime = efi.systab->runtime;
+        efi.set_virtual_address_map = runtime->set_virtual_address_map;
 
-These algorithms may can be described as the following:
+efi_lookup_mapped_addr is only valid after set_virtual_address_mapp callback, so
+it's questionable to use it above, the runtime should be physical address and should
+be ioremapped as what's in x86 code.
 
-	current:
-		get_dumpable_pages_cyclic():
-						do filtering
-						count all dumpable pages
-		setup_splitting():
-						calculate start-end pfn without counting dumpable pages
+> 
+> > Though it should work without the runtime map exporting to sysfs, It's not bad
+> > to export them, it's good to have for debugging purpose and it will be consistant
+> > across different arches.
+> 
+> Exporting the sysfs entries makes sense for debug, but I'd very much
+> prefer that it were not our default solution for passing the maps to the
+> next kernel.
 
-		writeout_dumpfile():
-						do filtering
-						write data
+Agreed.
 
-	3-pass:
-		get_dumpable_pages_cyclic():
-						do filtering
-						count all dumpable pages
-		setup_splitting_cyclic():
-						do filtering
-						count dumpable pages of each dumpfile
-						calculate start-end pfn of each dumpfile
-		writeout_dumpfile():
-						do filtering
-						write data
-
-	2-pass:
-		get_dumpable_pages_cyclic():
-						do filtering
-						count dumpable pages of each block
-						count all dumpable pages
-		setup_splitting_cyclic():
-						calculate start-end pfn of each dumpfile with the help of block
-
-		writeout_dumpfile():
-						do filtering
-						write data
-
-The performance of the two algorithm (2-pass and 3-pass) was tested. The result can be found in
-the previous letter.
-
-
-On 09/29/2014 03:06 PM, Zhou Wenjian wrote:
-> The issue is discussed at http://lists.infradead.org/pipermail/kexec/2014-March/011289.html
->
-> This patch implements the idea of 2-pass algorhythm with smaller memory to manage block table.
-> Exactly the algorhythm is still 3-pass,but the time of second pass is much shorter.
-> The tables below show the performence with different size of cyclic-buffer and block.
-> The test is executed on the machine having 128G memory.
->
-> the value is total time (including first pass and second pass).
-> the value in brackets is the time of second pass.
-> 															      sec
-> 	cyclic-buffer	1		2		4		8		16		32		64
-> block-size
-> 1M			4.74(0.00)	4.22(0.01)	3.94(0.01)	3.78(0.02)	3.71(0.03)	3.73(0.07)	3.74(0.10)	
-> 2M			4.74(0.00)	4.19(0.00)	3.94(0.01)	3.80(0.03)	3.71(0.03)	3.72(0.07)	3.72(0.09)	
-> 4M			4.73(0.00)	4.21(0.01)	3.95(0.01)	3.78(0.02)	3.70(0.02)	3.73(0.08)	3.73(0.10)	
-> 8M			4.73(0.00)	4.19(0.00)	3.94(0.01)	3.83(0.02)	3.73(0.03)	3.72(0.07)	3.74(0.10)	
-> 16M			4.74(0.01)	4.21(0.00)	3.94(0.01)	3.76(0.01)	3.73(0.03)	3.73(0.08)	3.74(0.10)	
-> 32M			4.72(0.00)	4.20(0.02)	3.92(0.01)	3.77(0.02)	3.71(0.02)	3.70(0.06)	3.74(0.10)	
-> 64M			4.74(0.01)	4.20(0.00)	3.95(0.01)	3.78(0.02)	3.70(0.02)	3.71(0.07)	3.72(0.09)	
-> 128M			4.73(0.01)	4.20(0.00)	3.94(0.01)	3.78(0.02)	3.76(0.03)	3.72(0.08)	3.74(0.09)	
-> 256M			4.75(0.02)	4.22(0.02)	3.96(0.03)	3.78(0.02)	3.70(0.03)	3.70(0.07)	3.74(0.11)	
-> 512M			4.77(0.04)	4.21(0.03)	3.97(0.04)	3.79(0.03)	3.73(0.04)	3.75(0.09)	3.82(0.13)	
-> 1G			4.82(0.09)	4.26(0.07)	4.00(0.08)	3.83(0.07)	3.76(0.08)	3.73(0.08)	3.76(0.12)	
-> 2G			8.26(3.54)	7.34(3.14)	6.86(2.93)	6.56(2.80)	6.44(2.76)	6.45(2.79)	6.42(2.80)
->
-> the performence of 3-pass algorhythm
-> origin			8.25(3.54)	7.26(3.11)	6.80(2.91)	6.52(2.80)	6.39(2.76)	6.40(2.78)	6.45(2.85)
->
-> 															       sec
-> 	cyclic-buffer	128		256		512		1024		2048		4096		8192	
-> block-size
-> 1M			3.83(0.21)	3.94(0.33)	4.16(0.54)	4.61(0.99)	7.03(3.41)	8.73(5.11)	8.69(5.08)
-> 2M			3.86(0.21)	3.92(0.32)	4.16(0.54)	4.64(0.98)	7.02(3.41)	8.71(5.09)	8.72(5.09)
-> 4M			3.82(0.21)	3.95(0.32)	4.18(0.55)	4.62(0.99)	7.05(3.44)	8.70(5.09)	8.68(5.07)
-> 8M			3.82(0.21)	3.95(0.33)	4.17(0.54)	4.58(0.97)	7.03(3.41)	8.79(5.16)	8.71(5.09)
-> 16M			3.83(0.21)	3.93(0.31)	4.15(0.54)	4.60(0.98)	7.06(3.43)	8.76(5.13)	8.73(5.10)
-> 32M			3.84(0.22)	3.93(0.32)	4.15(0.54)	4.61(0.98)	7.00(3.40)	8.69(5.08)	8.75(5.13)
-> 64M			3.84(0.21)	3.94(0.33)	4.15(0.54)	4.60(0.98)	7.04(3.42)	8.74(5.10)	8.80(5.16)
-> 128M			3.85(0.22)	3.97(0.33)	4.16(0.54)	4.60(0.98)	7.07(3.44)	8.68(5.07)	8.69(5.07)
-> 256M			3.84(0.21)	3.94(0.33)	4.16(0.55)	4.64(1.00)	7.02(3.41)	8.74(5.11)	8.73(5.11)
-> 512M			3.85(0.24)	3.97(0.34)	4.17(0.56)	4.61(0.99)	7.05(3.44)	8.73(5.11)	8.75(5.13)
-> 1G			3.85(0.22)	3.96(0.35)	4.18(0.56)	4.65(1.00)	7.06(3.44)	8.76(5.12)	8.72(5.11)
-> 2G			6.53(2.91)	6.86(3.25)	7.54(3.92)	8.95(5.31)	10.60(6.97)	14.08(10.47)	14.32(10.60)
->
-> the performence of 3-pass algorhythm
-> origin			6.64(3.05)	6.81(3.24)	7.51(3.93)	8.86(5.30)	10.51(6.94)	13.92(10.36)	14.11(10.55)
->
-> Zhou Wenjian (5):
->    Add support for block
->    Add tools for reading and writing from block table
->    Add module of generating table
->    Add module of calculating start_pfn and end_pfn in each dumpfile
->    Add support for --block-size
->
->   makedumpfile.8 |   16 ++++
->   makedumpfile.c |  245 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->   makedumpfile.h |   15 ++++
->   3 files changed, 271 insertions(+), 5 deletions(-)
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
