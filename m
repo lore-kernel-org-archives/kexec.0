@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 10 Oct 2014 13:30:52 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 0/7] arm64 kexec kernel patches V3
-Message-ID: <20141010053052.GA1981@darkstar.nay.redhat.com>
-References: <cover.1411604443.git.geoff@infradead.org>
- <20141001151947.GB14991@redhat.com>
- <1412370971.32313.30.camel@smoke>
- <20141007134006.GC27464@redhat.com>
- <20141008094258.GG27216@leverpostej>
- <20141009032130.GB2690@darkstar.nay.redhat.com>
- <20141009100919.GF3869@leverpostej>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XcVRD-0005Af-6Q
+ for kexec@lists.infradead.org; Fri, 10 Oct 2014 08:20:36 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH v1 1/5] makedumpfile: Add support for block
+Date: Fri, 10 Oct 2014 08:11:28 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D4DD69@BPXM01GP.gisp.nec.co.jp>
+References: <1411974387-10839-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1411974387-10839-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1411974387-10839-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20141009100919.GF3869@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,113 +24,119 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "roy.franz@linaro.org" <roy.franz@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Vivek Goyal <vgoyal@redhat.com>, "msalter@redhat.com" <msalter@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 10/09/14 at 11:09am, Mark Rutland wrote:
-> On Thu, Oct 09, 2014 at 04:21:30AM +0100, Dave Young wrote:
-> > On 10/08/14 at 10:42am, Mark Rutland wrote:
-> > > [Cc'ing the arm efi guys]
-> > > 
-> > > On Tue, Oct 07, 2014 at 02:40:06PM +0100, Vivek Goyal wrote:
-> > > > On Fri, Oct 03, 2014 at 02:16:11PM -0700, Geoff Levand wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On Wed, 2014-10-01 at 11:19 -0400, Vivek Goyal wrote:
-> > > > > > On Thu, Sep 25, 2014 at 12:23:26AM +0000, Geoff Levand wrote:
-> > > > > > > Hi All,
-> > > > > > > 
-> > > > > > > This series adds the core support for kexec re-boots on arm64.  I have tested
-> > > > > > > with the ARM VE fast model using various kernel config options for both the
-> > > > > > > first and second stage kernels.
-> > > > > > 
-> > > > > > Does this patch series work with kexec on UEFI machines?
-> > > > > 
-> > > > > I have not done much more than some simple re-boot tests using the
-> > > > > base model (FVP_Base_AEMv8A-AEMv8A) and the Linaro 14.08 efi build,
-> > > > > but yes, it should work.
-> > > > 
-> > > > [CC Dave Young ]
-> > > > 
-> > > > I have not looked at the user space patches but are you preparing efi
-> > > > setup data and passing all the runtime map information to second kernel.
-> > > > 
-> > > > I am hoping on arm64 we have the CONFIG_EFI_RUNTIME_MAP=y and it works
-> > > > well.
-> > > 
-> > > From a quick look at mainline that config option just gates exposing
-> > > that info under sysfs, and we never call efi_runtime_map_setup on arm64.
-> > > I gues the x86 kexec tool parses that and sets up some data structure?
-> > > 
-> > > For arm64 we have runtime map information in the initial DTB, and this
-> > > should have been copied into the DTB we pass to the second kernel. See
-> > > Documentation/arm/uefi.txt and drivers/firmware/efi/libstub/fdt.c.
-> > > 
-> > > Is that sufficient?
-> > 
-> > That will be sufficient for runtime maps, but several phys addresses need to be
-> > saved: /sys/firmware/efi/{fw_vendor,runtime,config_table}
-> > 
-> > From uefi spec these addresses are updated to virtual addresses after entering
-> > virtual mode.
-> 
-> Ouch. That sounds painful.
-> 
-> I'd prefer to not have to duplicate these in the DTB if we can. Given we
-> should have the memmmap with the virtual<->physical mappings, could we
-> not do a lookup there before early dereferences if we happen to already
-> be in virtual mode?
+>When --split option is specified, fair I/O workloads shoud be assigned
+>for each process. So the start and end pfn of each dumpfile should be
+>calculated with excluding unnecessary pages. However, it costs a lot of
+>time to execute excluding for the whole memory. That is why struct Block
+>exists. Struct Block is designed to manage memory, mainly for recording
+>the number of dumpable pages. We can use the number of dumpable pages to
+>calculate start and end pfn instead of execute excluding for the whole
+>memory.
 
-I do not have an idea to skip defeference these variables, see below usage: 
+*Block* is a general word, it may suggest other things (e.g. Disk Block).
+Actually, --block-size is confusing since -b option uses *block_order*.
+I prefer a more specific name like... SplitBlock.
 
-arch/arm64/kernel/efi.c, uefi_init():
-        c16 = early_memremap(efi.systab->fw_vendor,
-                             sizeof(vendor));
-        if (c16) {
-                for (i = 0; i < (int) sizeof(vendor) - 1 && *c16; ++i)
-                        vendor[i] = c16[i];
-                vendor[i] = '\0';
-        }
 
-drivers/firmware/efi/efi.c, efi_config_init():
-        config_tables = early_memremap(efi.systab->tables,
-                                       efi.systab->nr_tables * sz)
+Thanks,
+Atsushi Kumagai
 
-It's strange to me that in arm64 code systab->runtime is used directly without
-ioremapping. but in x86 code, we do below:
-
-arch/x86/platform/efi/efi.c, efi_runtime_init64():
-        runtime = early_ioremap((unsigned long)efi.systab->runtime,
-                        sizeof(efi_runtime_services_64_t));
-
-for arm64 we have below:
-        efi.systab = (__force void *)efi_lookup_mapped_addr(efi_system_table);
-        if (efi.systab)
-                set_bit(EFI_SYSTEM_TABLES, &efi.flags);
-
-        [snip]
-
-        /* Call SetVirtualAddressMap with the physical address of the map */
-        runtime = efi.systab->runtime;
-        efi.set_virtual_address_map = runtime->set_virtual_address_map;
-
-efi_lookup_mapped_addr is only valid after set_virtual_address_mapp callback, so
-it's questionable to use it above, the runtime should be physical address and should
-be ioremapped as what's in x86 code.
-
-> 
-> > Though it should work without the runtime map exporting to sysfs, It's not bad
-> > to export them, it's good to have for debugging purpose and it will be consistant
-> > across different arches.
-> 
-> Exporting the sysfs entries makes sense for debug, but I'd very much
-> prefer that it were not our default solution for passing the maps to the
-> next kernel.
-
-Agreed.
-
-Thanks
-Dave
+>The char array *table in struct Block is used to record the number of
+>dumpable pages.
+>The table entry size is calculated as
+>			divideup(log2(block_size / page_size), 8) bytes
+>The table entry size is calculated, so that the
+>space table taken will be small enough. And the code will also have a
+>good performence when the number of pages in one block is big enough.
+>
+>Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+>Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+>---
+> makedumpfile.c |   23 +++++++++++++++++++++++
+> makedumpfile.h |   14 ++++++++++++++
+> 2 files changed, 37 insertions(+), 0 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index b4d43d8..2feda01 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -34,6 +34,7 @@ struct srcfile_table	srcfile_table;
+>
+> struct vm_table		vt = { 0 };
+> struct DumpInfo		*info = NULL;
+>+struct Block		*block = NULL;
+>
+> char filename_stdout[] = FILENAME_STDOUT;
+>
+>@@ -5685,6 +5686,28 @@ out:
+> 	return ret;
+> }
+>
+>+/*
+>+ * cyclic_split mode:
+>+ *	manage memory by blocks,
+>+ *	divide memory into blocks
+>+ *	use block_table to record numbers of dumpable pages in each block
+>+ */
+>+
+>+//calculate entry size based on the amount of pages in one block
+>+int
+>+calculate_entry_size(void){
+>+	int entry_num = 1, count = 1;
+>+	int entry_size;
+>+	while (entry_num < block->page_per_block){
+>+		entry_num = entry_num << 1;
+>+		count++;
+>+	}
+>+	entry_size = count/BITPERBYTE;
+>+	if (count %BITPERBYTE)
+>+		entry_size++;
+>+	return entry_size;
+>+}
+>+
+> mdf_pfn_t
+> get_num_dumpable(void)
+> {
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 96830b0..ed4f799 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -1168,10 +1168,24 @@ struct DumpInfo {
+> 	 */
+> 	int (*page_is_buddy)(unsigned long flags, unsigned int _mapcount,
+> 			     unsigned long private, unsigned int _count);
+>+	/*
+>+	 *for cyclic_splitting mode, setup block_size
+>+	 */
+>+	long long block_size;
+> };
+> extern struct DumpInfo		*info;
+>
+> /*
+>+ *for cyclic_splitting mode,Manage memory by block
+>+ */
+>+struct Block{
+>+        char *table;
+>+        long long num;
+>+        long long page_per_block;
+>+        int entry_size;                 //counted by byte
+>+};
+>+
+>+/*
+>  * kernel VM-related data
+>  */
+> struct vm_table {
+>--
+>1.7.1
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
