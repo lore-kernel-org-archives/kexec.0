@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XcVT6-0005hn-Vp
- for kexec@lists.infradead.org; Fri, 10 Oct 2014 08:22:33 +0000
+ id 1XcVV6-00060K-Mg
+ for kexec@lists.infradead.org; Fri, 10 Oct 2014 08:24:37 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v1 5/5] makedumpfile: Add support for --block-size
-Date: Fri, 10 Oct 2014 08:11:48 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D4DD73@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [PATCH v1 3/5] makedumpfile: Add module of generating table
+Date: Fri, 10 Oct 2014 08:12:04 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D4DD7A@BPXM01GP.gisp.nec.co.jp>
 References: <1411974387-10839-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1411974387-10839-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1411974387-10839-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1411974387-10839-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1411974387-10839-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,86 +27,139 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->Use --block-size to specify block size (KB)
->When --split is specified in cyclic mode,block table will be
->generated in get_num_dumpable_cyclic.
+>set block size and generate basic information of block table
 >
+>Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 >Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 >Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 >---
-> makedumpfile.8 |   16 ++++++++++++++++
-> makedumpfile.c |    4 ++++
-> makedumpfile.h |    1 +
-> 3 files changed, 21 insertions(+), 0 deletions(-)
+> makedumpfile.c |   86 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> 1 files changed, 86 insertions(+), 0 deletions(-)
 >
->diff --git a/makedumpfile.8 b/makedumpfile.8
->index 9cb12c0..a384213 100644
->--- a/makedumpfile.8
->+++ b/makedumpfile.8
->@@ -386,6 +386,22 @@ size, so ordinary users don't need to specify this option.
-> # makedumpfile \-\-cyclic\-buffer 1024 \-d 31 \-x vmlinux /proc/vmcore dumpfile
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index a4cb9b6..c6ea635 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -5731,6 +5731,52 @@ read_value_from_block_table(char *block_inner)
+> 	return ret;
+> }
 >
-> .TP
->+\fB\-\-block\-size\fR \fIblock_size\fR
->+Specify the block size in kilo bytes for analysis in the cyclic mode with --split.
->+In the cyclic split mode, the number of blocks is represented as:
->+
->+    num_of_blocks = system_memory / (\fIblock_size\fR * 1KB )
->+
->+The larger number of block, the faster working speed is expected, but the more memory will
->+be taken. By default, \fIblock_size\fR will be set as 1GB, so ordinary users don't need to
->+specify this option.
->+
->+.br
->+.B Example:
->+.br
->+# makedumpfile \-\-block\-size 10240 \-d 31 \-x vmlinux \-\-split /proc/vmcore dumpfile1 dumpfile2
->+
->+.TP
+>+/*
+>+ * The block size is specified as Kbyte with --block-size <size> option.
+>+ * if not specified ,set default value
+>+ */
+>+int
+>+check_block_size(void)
+>+{
+>+	if (info->block_size){
+>+		info->block_size <<= 10;
+>+		if (info->block_size < info->page_size) {
+>+			ERRMSG("The block size could not be smaller than page_size. %s.\n",
+>+									strerror(errno));
+>+		return FALSE;
+>+		}
 
-Also print_usage() in print_info.c should be modified.
+Isn't it necessary to align the block size to the page size ?
+
+>+	}
+>+	else{
+>+		// set default 1GB
+>+		info->block_size = 1 << 30;
+>+	}
+>+	return TRUE;
+>+}
+>+
+>+int
+>+prepare_block_table(void)
+>+{
+>+	check_block_size();
+
+Should check the return code, otherwise this check is useless.
 
 
 Thanks,
 Atsushi Kumagai
 
-> \fB\-\-non\-cyclic\fR
-> Running in the non-cyclic mode, this mode uses the old filtering logic same as v1.4.4 or before.
-> If you feel the cyclic mode is too slow, please try this mode.
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 3e66346..405d935 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -9571,6 +9571,7 @@ static struct option longopts[] = {
-> 	{"eppic", required_argument, NULL, OPT_EPPIC},
-> 	{"non-mmap", no_argument, NULL, OPT_NON_MMAP},
-> 	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
->+	{"block-size", required_argument, NULL, OPT_BLOCK_SIZE},
-> 	{0, 0, 0, 0}
-> };
+>+	if ((block = calloc(1, sizeof(struct Block))) == NULL) {
+>+		ERRMSG("Can't allocate memory for the block. %s.\n", strerror(errno));
+>+		return FALSE;
+>+	}
+>+	block->page_per_block = info->block_size/info->page_size;
+>+	/*
+>+	 *divide memory into blocks.
+>+	 *if there is a remainder, called it memory not managed by block
+>+	 *and it will be also dealt with in function calculate_end_pfn_by_block()
+>+	 */
+>+	block->num = info->max_mapnr/block->page_per_block;
+>+	block->entry_size = calculate_entry_size();
+>+	if ((block->table = (char *)calloc(sizeof(char),(block->entry_size * block->num)))
+>+										== NULL) {
+>+		ERRMSG("Can't allocate memory for the block_table. %s.\n", strerror(errno));
+>+		return FALSE;
+>+	}
+>+	return TRUE;
+>+}
+>+
+> mdf_pfn_t
+> get_num_dumpable(void)
+> {
+>@@ -5746,9 +5792,43 @@ get_num_dumpable(void)
+> 	return num_dumpable;
+> }
 >
->@@ -9711,6 +9712,9 @@ main(int argc, char *argv[])
-> 		case OPT_CYCLIC_BUFFER:
-> 			info->bufsize_cyclic = atoi(optarg);
-> 			break;
->+		case OPT_BLOCK_SIZE:
->+			info->block_size = atoi(optarg);
->+			break;
-> 		case '?':
-> 			MSG("Commandline parameter is invalid.\n");
-> 			MSG("Try `makedumpfile --help' for more information.\n");
->diff --git a/makedumpfile.h b/makedumpfile.h
->index ed4f799..56d2c79 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -1883,6 +1883,7 @@ struct elf_prstatus {
-> #define OPT_EPPIC               OPT_START+12
-> #define OPT_NON_MMAP            OPT_START+13
-> #define OPT_MEM_USAGE            OPT_START+14
->+#define OPT_BLOCK_SIZE		OPT_START+15
+>+/*
+>+ * generate block_table
+>+ * modified from function get_num_dumpable_cyclic
+>+ */
+>+mdf_pfn_t
+>+get_num_dumpable_cyclic_withsplit(void)
+>+{
+>+	mdf_pfn_t pfn, num_dumpable = 0;
+>+	mdf_pfn_t dumpable_pfn_num = 0, pfn_num = 0;
+>+	struct cycle cycle = {0};
+>+	int pos = 0;
+>+	prepare_block_table();
+>+	for_each_cycle(0, info->max_mapnr, &cycle) {
+>+		if (!exclude_unnecessary_pages_cyclic(&cycle))
+>+			return FALSE;
+>+		for (pfn = cycle.start_pfn; pfn < cycle.end_pfn; pfn++) {
+>+			if (is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle)) {
+>+				num_dumpable++;
+>+				dumpable_pfn_num++;
+>+			}
+>+			if (++pfn_num >= block->page_per_block) {
+>+				write_value_into_block_table(block->table + pos, dumpable_pfn_num);
+>+				pos += block->entry_size;
+>+				pfn_num = 0;
+>+				dumpable_pfn_num = 0;
+>+			}
+>+		}
+>+	}
+>+	return num_dumpable;
+>+}
+>+
+> mdf_pfn_t
+> get_num_dumpable_cyclic(void)
+> {
+>+	if(info->flag_split)
+>+		return get_num_dumpable_cyclic_withsplit();
+>+
+> 	mdf_pfn_t pfn, num_dumpable=0;
+> 	struct cycle cycle = {0};
 >
-> /*
->  * Function Prototype.
+>@@ -9703,6 +9783,12 @@ out:
+> 		if (info->page_buf != NULL)
+> 			free(info->page_buf);
+> 		free(info);
+>+
+>+		if (block) {
+>+			if (block->table)
+>+				free(block->table);
+>+		free(block);
+>+		}
+> 	}
+> 	free_elf_info();
+>
 >--
 >1.7.1
 >
