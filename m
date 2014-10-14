@@ -1,25 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XdwlQ-0004yk-Gu
- for kexec@lists.infradead.org; Tue, 14 Oct 2014 07:43:25 +0000
-Date: Tue, 14 Oct 2014 15:42:57 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH] makedumpfile: Enable --mem-usage for s390x
-Message-ID: <20141014074257.GC16068@dhcp-16-116.nay.redhat.com>
-References: <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
- <20140926133441.5e58303c@holzheu>
- <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
- <20140929151413.4e9bd1ab@holzheu>
- <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
- <20141001185953.66c6ae9d@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D4D5E4@BPXM01GP.gisp.nec.co.jp>
- <20141010142310.4c488f6a@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D4E4E4@BPXM01GP.gisp.nec.co.jp>
- <20141014072852.GB16068@dhcp-16-116.nay.redhat.com>
+ id 1Xe1YG-0005Pa-Us
+ for kexec@lists.infradead.org; Tue, 14 Oct 2014 12:50:09 +0000
+Date: Tue, 14 Oct 2014 08:49:32 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
+Message-ID: <20141014124932.GC5127@redhat.com>
+References: <542B1EC1.8090502@zytor.com> <20141001135237.GA13689@redhat.com>
+ <543553C7.9010906@zytor.com> <20141008192728.GA26517@redhat.com>
+ <20141011031452.GB11560@dhcp-16-116.nay.redhat.com>
+ <543907B5.7060001@zytor.com> <20141013125257.GB6466@redhat.com>
+ <20141013151955.GA9777@redhat.com> <543BF304.9090708@zytor.com>
+ <20141013172242.GB9777@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20141014072852.GB16068@dhcp-16-116.nay.redhat.com>
+In-Reply-To: <20141013172242.GB9777@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,125 +28,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: whissi@whissi.de, ak@linux.intel.com, Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de
 
-On 10/14/14 at 03:28pm, Baoquan He wrote:
-> On 10/14/14 at 07:19am, Atsushi Kumagai wrote:
-> > >> I think the Michael's first idea below is better since it implements
-> > >> is_real_addr() only for --mem-usage as a common function for all
-> > >> architectures, it's explicit design.
+On Mon, Oct 13, 2014 at 01:22:42PM -0400, Vivek Goyal wrote:
+> On Mon, Oct 13, 2014 at 08:43:00AM -0700, H. Peter Anvin wrote:
+> > On 10/13/2014 08:19 AM, Vivek Goyal wrote:
+> > >>>
+> > >>> This really shouldn't have happened this way on x86-64.  It has to happen
+> > >>> this way on i386, but I worry that this may be a serious misdesign in kaslr
+> > >>> on x86-64.  I'm also wondering if there is any other fallout of this?
 > > >>
-> > >> >@@ -854,7 +854,7 @@ int get_kcore_dump_loads(void)
-> > >> >
-> > >> > 	for (i = 0; i < num_pt_loads; ++i) {
-> > >> > 		struct pt_load_segment *p = &pt_loads[i];
-> > >> >-		if (is_vmalloc_addr(p->virt_start))
-> > >> >+		if (!is_real_addr(p->virt_start))
-> > >> > 			continue;
-> > >> > 		loads++;
-> > >> > 	}
+> > >> I agree. On x86_64, we should stick to previous design and this new
+> > >> logic of performing relocations does not sound very clean and makes
+> > >> things very confusing.
 > > >>
-> > >> However, this code will not work since the argument of is_real_addr()
-> > >> must be physical address. Even unluckily, /proc/kcore's PT_LOAD looks
-> > >> useless for VtoP converting because PhysAddr is always 0:
-> > >>
-> > >> Program Headers:
-> > >>   Type           Offset             VirtAddr           PhysAddr
-> > >>                  FileSiz            MemSiz              Flags  Align
-> > >>   NOTE           0x00000000000002a8 0x0000000000000000 0x0000000000000000
-> > >>                  0x0000000000000a84 0x0000000000000000         0
-> > >>   LOAD           0x00007fffff601000 0xffffffffff600000 0x0000000000000000
-> > >>                  0x0000000000001000 0x0000000000001000  RWE    1000
-> > >>   LOAD           0x00007fff81001000 0xffffffff81000000 0x0000000000000000
-> > >>                  0x0000000000a1b000 0x0000000000a1b000  RWE    1000
-> > >>   LOAD           0x0000490000001000 0xffffc90000000000 0x0000000000000000
-> > >>                  0x00001fffffffffff 0x00001fffffffffff  RWE    1000
-> > >>   LOAD           0x00007fffa0001000 0xffffffffa0000000 0x0000000000000000
-> > >>                  0x000000005f000000 0x000000005f000000  RWE    1000
-> > >>   ...
-> > >>
-> > >>
-> > >> So the way using /proc/iomem seems inappropriate, we have to consider other
-> > >> approaches (but I still don't have any good ideas...)
-> > >
-> > >Hello Atsushi,
-> > >
-> > >Hmmm ok, sure. For x86 using /proc/iomem does not work because there is no 1:1
-> > >mapping for the kernel address space. The kernel/real memory is mapped somewhere
-> > >at the end, right?
+> > >> I am wondering that why couldn't we simply adjust page tables in case of
+> > >> kaslr on x86_64, instead of performing relocations.
+> > > 
+> > > Well, IIUC, if virtual addresses are shifted w.r.t what virtual address
+> > > kernel was compiled for, then relocation will have to be done.
+> > > 
+> > > So question will be if physical address shift is enough for kaslr or
+> > > virtual address shift is necessary.
+> > > 
 > > 
-> > Exactly.
+> > I would assume that without a virtual address shift kaslr is pretty darn
+> > pointless.  Without the physical address shift the 1:1 map can be used,
+> > and again, kaslr becomes pointless.  However, there is absolutely no
+> > reason why they should be coupled.  They can, in fact, be independently
+> > randomized.
+> 
+> Agreed. On x86_64, we should be able to randomize virtual address space
+> and physical address space independently. And in that case whole of
+> the physical memory should be available for a possible location for
+> kernel. (As opposed to a small limit (I guess 1GB) now)
 
-Well, forget to say. I think x86 and x86_64 can use this way either.
-Since they are also linear mapping though it's not 1:1 mapping. phys can
-be converted to vrit by adding page_offset directly.
+Hi Peter,
 
+So what do we do about this issue in short term to make kexec work. Even
+if we go for above solution, to make kexec work we will have to pass
+"nokaslr" as we don't want kernel to move around in physical address space
+as it might stomp over ELF headers we have stored.
 
-E.g x86_64, the PAGE_OFFSET is 0xffff880000000000, then I can very
-easily pick the physical region just as be below the start marked.
+If you don't like current patch, should we just disable relocations in
+x86_64 if "nokaslr" command line is passed. That way kernel will not
+be moved in physical as well as virtual address space.
 
-Program Headers:
-  Type           Offset             VirtAddr           PhysAddr
-                 FileSiz            MemSiz              Flags  Align
-  NOTE           0x0000000000000318 0x0000000000000000
-0x0000000000000000
-                 0x0000000000000b54 0x0000000000000000         0
-  LOAD           0x00007fffff601000 0xffffffffff600000
-0x0000000000000000
-                 0x0000000000001000 0x0000000000001000  RWE    1000
-  LOAD           0x00007fff81001000 0xffffffff81000000
-0x0000000000000000
-                 0x0000000001633000 0x0000000001633000  RWE    1000
-  LOAD           0x0000490000001000 0xffffc90000000000
-0x0000000000000000
-                 0x00001fffffffffff 0x00001fffffffffff  RWE    1000
-  LOAD           0x00007fffa0001000 0xffffffffa0000000
-0x0000000000000000
-                 0x000000005f000000 0x000000005f000000  RWE    1000
-
-*******
-  LOAD           0x0000080000002000 0xffff880000001000
-0x0000000000000000
-                 0x000000000009c000 0x000000000009c000  RWE    1000
-*******
-
-  LOAD           0x00006a0000001000 0xffffea0000000000
-0x0000000000000000
-                 0x0000000000003000 0x0000000000003000  RWE    1000
-
-*******
-  LOAD           0x0000080000101000 0xffff880000100000
-0x0000000000000000
-                 0x000000007fef0000 0x000000007fef0000  RWE    1000
-*******
-
-  LOAD           0x00006a0000005000 0xffffea0000004000
-0x0000000000000000
-                 0x0000000001ffc000 0x0000000001ffc000  RWE    1000
-
-**********
-  LOAD           0x0000080080001000 0xffff880080000000
-0x0000000000000000
-                 0x000000004fee0000 0x000000004fee0000  RWE    1000
-***********
-
-
-  LOAD           0x00006a0002001000 0xffffea0002000000
-0x0000000000000000
-                 0x00000000013fc000 0x00000000013fc000  RWE    1000
-
-***********
-  LOAD           0x0000080100001000 0xffff880100000000
-0x0000000000000000
-                 0x0000000130000000 0x0000000130000000  RWE    1000
-************
-
-
-  LOAD           0x00006a0004001000 0xffffea0004000000
-0x0000000000000000
-                 0x0000000004c00000 0x0000000004c00000  RWE    1000
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
