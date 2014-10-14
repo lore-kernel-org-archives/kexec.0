@@ -1,14 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xdvrh-0001Hs-Q3
- for kexec@lists.infradead.org; Tue, 14 Oct 2014 06:45:50 +0000
-Message-ID: <1413269123.514.72.camel@serendib>
-Subject: [PATCH] makedumpfile.8: "cache without private" column of the table
- for -d appears to be incorrect
-From: Harshula Jayasuriya <harshula@redhat.com>
-Date: Tue, 14 Oct 2014 17:45:23 +1100
-Mime-Version: 1.0
+ id 1XdwPU-0003X3-9z
+ for kexec@lists.infradead.org; Tue, 14 Oct 2014 07:20:45 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: Enable --mem-usage for s390x
+Date: Tue, 14 Oct 2014 07:19:13 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D4E4E4@BPXM01GP.gisp.nec.co.jp>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+ <20140922170247.36774052@holzheu>
+ <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
+ <20140924171904.1db5ac90@holzheu>
+ <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
+ <20140926101057.14549a12@holzheu>
+ <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
+ <20140926133441.5e58303c@holzheu>
+ <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
+ <20140929151413.4e9bd1ab@holzheu>
+ <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
+ <20141001185953.66c6ae9d@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D4D5E4@BPXM01GP.gisp.nec.co.jp>
+ <20141010142310.4c488f6a@holzheu>
+In-Reply-To: <20141010142310.4c488f6a@holzheu>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,91 +36,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Minoru Usui <usui@mxm.nes.nec.co.jp>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-Hi,
+>> I think the Michael's first idea below is better since it implements
+>> is_real_addr() only for --mem-usage as a common function for all
+>> architectures, it's explicit design.
+>>
+>> >@@ -854,7 +854,7 @@ int get_kcore_dump_loads(void)
+>> >
+>> > 	for (i = 0; i < num_pt_loads; ++i) {
+>> > 		struct pt_load_segment *p = &pt_loads[i];
+>> >-		if (is_vmalloc_addr(p->virt_start))
+>> >+		if (!is_real_addr(p->virt_start))
+>> > 			continue;
+>> > 		loads++;
+>> > 	}
+>>
+>> However, this code will not work since the argument of is_real_addr()
+>> must be physical address. Even unluckily, /proc/kcore's PT_LOAD looks
+>> useless for VtoP converting because PhysAddr is always 0:
+>>
+>> Program Headers:
+>>   Type           Offset             VirtAddr           PhysAddr
+>>                  FileSiz            MemSiz              Flags  Align
+>>   NOTE           0x00000000000002a8 0x0000000000000000 0x0000000000000000
+>>                  0x0000000000000a84 0x0000000000000000         0
+>>   LOAD           0x00007fffff601000 0xffffffffff600000 0x0000000000000000
+>>                  0x0000000000001000 0x0000000000001000  RWE    1000
+>>   LOAD           0x00007fff81001000 0xffffffff81000000 0x0000000000000000
+>>                  0x0000000000a1b000 0x0000000000a1b000  RWE    1000
+>>   LOAD           0x0000490000001000 0xffffc90000000000 0x0000000000000000
+>>                  0x00001fffffffffff 0x00001fffffffffff  RWE    1000
+>>   LOAD           0x00007fffa0001000 0xffffffffa0000000 0x0000000000000000
+>>                  0x000000005f000000 0x000000005f000000  RWE    1000
+>>   ...
+>>
+>>
+>> So the way using /proc/iomem seems inappropriate, we have to consider other
+>> approaches (but I still don't have any good ideas...)
+>
+>Hello Atsushi,
+>
+>Hmmm ok, sure. For x86 using /proc/iomem does not work because there is no 1:1
+>mapping for the kernel address space. The kernel/real memory is mapped somewhere
+>at the end, right?
 
-The makedumpfile man page contains a table explaining the usage of -d.
-The "cache without private" column implies that -d 4 would exclude "cache
-without private" pages. However, a -d 4 should only exclude "cache with
-private".
+Exactly.
 
-makedumpfile.h:
-------------------------------------------------------------
- #define DL_EXCLUDE_CACHE        (0x002) /* Exclude Cache Pages
-                                            without Private Pages */
-------------------------------------------------------------
+>For s390 we have a 1:1 mapping for the kernel physical memory that starts with
+>zero. Therefore IMHO we could use /proc/iomem. For example, on my s390x system
+>with 1GB memory and 256MB crashkernel:
+>
+>$ cat /proc/iomem
+>00000000-2fffffff : System RAM
+>  00000000-007ddd4b : Kernel code
+>  007ddd4c-00bfcc5f : Kernel data
+>  00e18000-01c28b1f : Kernel bss
+>30000000-3fffffff : Crash kernel
+>
+>$ objdump -h /proc/kcore
+>...
+>  Type           Offset             VirtAddr           PhysAddr
+>                 FileSiz            MemSiz              Flags  Align
+>  NOTE           0x0000000000000158 0x0000000000000000 0x0000000000000000
+>                 0x00000000000027fc 0x0000000000000000         0
+>  LOAD           0x000003e080003000 0x000003e080000000 0x0000000000000000
+>                 0x0000001f00000000 0x0000001f00000000  RWE    1000
+>  LOAD           0x000003ff80003000 0x000003ff80000000 0x0000000000000000
+>                 0x0000000080000000 0x0000000080000000  RWE    1000
+>  LOAD           0x0000000000003000 0x0000000000000000 0x0000000000000000
+>                 0x0000000030000000 0x0000000030000000  RWE    1000
+>  LOAD           0x000003d100003000 0x000003d100000000 0x0000000000000000
+>                 0x0000000000c00000 0x0000000000c00000  RWE    1000
+>
+>So in that case every /proc/kcore load that is below 0x30000000 must
+>be real memory.
+>
+>Michael
 
-makedumpfile.8:
-------------------------------------------------------------
-                     |      |cache  |cache  |      |
-                dump | zero |without|with   | user | free
-               level | page |private|private| data | page
-              -------+------+-------+-------+------+------
-                   0 |      |       |       |      |
-                   1 |  X   |       |       |      |
-                   2 |      |   X   |       |      |
-                   3 |  X   |   X   |       |      |
-                   4 |      |   X   |   X   |      |
-                   5 |  X   |   X   |   X   |      |
-                   6 |      |   X   |   X   |      |
-                   7 |  X   |   X   |   X   |      |
-                   8 |      |       |       |  X   |
-------------------------------------------------------------
+I understand why your patch works on s390x, so how about this way ?
 
-Signed-off-by: Harshula Jayasuriya <harshula@redhat.com>
----
- makedumpfile.8 | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ 1. Define "is_phys_addr()" for --mem-usage.
+ 2. Implement is_phys_addr() using is_iomem_phys_addr() for s390x
+    while x86_64 uses is_vmalloc_addr_x86_64().
+ 3. Use is_phys_addr() instead of is_vmalloc_addr() in get_kcore_dump_loads().
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 9cb12c0..382c6ee 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -174,32 +174,32 @@ by dump_level 11, makedumpfile retries it by dump_level 31.
-      1 |  X   |       |       |      |
-      2 |      |   X   |       |      |
-      3 |  X   |   X   |       |      |
--     4 |      |   X   |   X   |      |
--     5 |  X   |   X   |   X   |      |
-+     4 |      |       |   X   |      |
-+     5 |  X   |       |   X   |      |
-      6 |      |   X   |   X   |      |
-      7 |  X   |   X   |   X   |      |
-      8 |      |       |       |  X   |
-      9 |  X   |       |       |  X   |
-     10 |      |   X   |       |  X   |
-     11 |  X   |   X   |       |  X   |
--    12 |      |   X   |   X   |  X   |
--    13 |  X   |   X   |   X   |  X   |
-+    12 |      |       |   X   |  X   |
-+    13 |  X   |       |   X   |  X   |
-     14 |      |   X   |   X   |  X   |
-     15 |  X   |   X   |   X   |  X   |
-     16 |      |       |       |      |  X
-     17 |  X   |       |       |      |  X
-     18 |      |   X   |       |      |  X
-     19 |  X   |   X   |       |      |  X
--    20 |      |   X   |   X   |      |  X
--    21 |  X   |   X   |   X   |      |  X
-+    20 |      |       |   X   |      |  X
-+    21 |  X   |       |   X   |      |  X
-     22 |      |   X   |   X   |      |  X
-     23 |  X   |   X   |   X   |      |  X
-     24 |      |       |       |  X   |  X
-     25 |  X   |       |       |  X   |  X
-     26 |      |   X   |       |  X   |  X
-     27 |  X   |   X   |       |  X   |  X
--    28 |      |   X   |   X   |  X   |  X
--    29 |  X   |   X   |   X   |  X   |  X
-+    28 |      |       |   X   |  X   |  X
-+    29 |  X   |       |   X   |  X   |  X
-     30 |      |   X   |   X   |  X   |  X
-     31 |  X   |   X   |   X   |  X   |  X
- 
--- 
-1.9.3
 
+Thanks,
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
