@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XdjL3-0003Q8-08
- for kexec@lists.infradead.org; Mon, 13 Oct 2014 17:23:17 +0000
-Date: Mon, 13 Oct 2014 13:22:42 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
-Message-ID: <20141013172242.GB9777@redhat.com>
-References: <1412060896-1902-1-git-send-email-bhe@redhat.com>
- <542B1EC1.8090502@zytor.com> <20141001135237.GA13689@redhat.com>
- <543553C7.9010906@zytor.com> <20141008192728.GA26517@redhat.com>
- <20141011031452.GB11560@dhcp-16-116.nay.redhat.com>
- <543907B5.7060001@zytor.com> <20141013125257.GB6466@redhat.com>
- <20141013151955.GA9777@redhat.com> <543BF304.9090708@zytor.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XdqmX-0002WF-Vq
+ for kexec@lists.infradead.org; Tue, 14 Oct 2014 01:20:10 +0000
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
+ [127.0.0.1])
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id s9E1JgKX025624
+ for <kexec@lists.infradead.org>; Tue, 14 Oct 2014 09:19:42 +0800
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v3 1/3] makedumpfile: make get_elf64_phdr()/get_elf32_phdr()
+ public
+Date: Tue, 14 Oct 2014 09:17:17 +0800
+Message-ID: <1413249439-12349-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1413249439-12349-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1413249439-12349-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <543BF304.9090708@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,43 +27,128 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: whissi@whissi.de, ak@linux.intel.com, Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de
+To: kexec@lists.infradead.org
+Cc: Wang Xiao <wangx.fnst@cn.fujitsu.com>
 
-On Mon, Oct 13, 2014 at 08:43:00AM -0700, H. Peter Anvin wrote:
-> On 10/13/2014 08:19 AM, Vivek Goyal wrote:
-> >>>
-> >>> This really shouldn't have happened this way on x86-64.  It has to happen
-> >>> this way on i386, but I worry that this may be a serious misdesign in kaslr
-> >>> on x86-64.  I'm also wondering if there is any other fallout of this?
-> >>
-> >> I agree. On x86_64, we should stick to previous design and this new
-> >> logic of performing relocations does not sound very clean and makes
-> >> things very confusing.
-> >>
-> >> I am wondering that why couldn't we simply adjust page tables in case of
-> >> kaslr on x86_64, instead of performing relocations.
-> > 
-> > Well, IIUC, if virtual addresses are shifted w.r.t what virtual address
-> > kernel was compiled for, then relocation will have to be done.
-> > 
-> > So question will be if physical address shift is enough for kaslr or
-> > virtual address shift is necessary.
-> > 
-> 
-> I would assume that without a virtual address shift kaslr is pretty darn
-> pointless.  Without the physical address shift the 1:1 map can be used,
-> and again, kaslr becomes pointless.  However, there is absolutely no
-> reason why they should be coupled.  They can, in fact, be independently
-> randomized.
+From: Wang Xiao <wangx.fnst@cn.fujitsu.com>
 
-Agreed. On x86_64, we should be able to randomize virtual address space
-and physical address space independently. And in that case whole of
-the physical memory should be available for a possible location for
-kernel. (As opposed to a small limit (I guess 1GB) now)
+Move the following two functions from internal function to external
+function.
 
-Thanks
-Vivek
+get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr)
+get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr)
+
+Signed-of-by: Wang Xiao <wangx.fnst@cn.fujitsu.com>
+---
+ elf_info.c |   71 +++++++++++++++++++++++++++++------------------------------
+ elf_info.h |    2 +
+ 2 files changed, 37 insertions(+), 36 deletions(-)
+
+diff --git a/elf_info.c b/elf_info.c
+index 5be1990..24936d4 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -95,42 +95,6 @@ static unsigned long		size_xen_crash_info;
+  * Internal functions.
+  */
+ static int
+-get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr)
+-{
+-	off_t offset;
+-
+-	offset = sizeof(Elf64_Ehdr) + sizeof(Elf64_Phdr) * index;
+-
+-	if (lseek(fd, offset, SEEK_SET) < 0) {
+-		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	if (read(fd, phdr, sizeof(Elf64_Phdr)) != sizeof(Elf64_Phdr)) {
+-		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	return TRUE;
+-}
+-
+-static int
+-get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr)
+-{
+-	off_t offset;
+-
+-	offset = sizeof(Elf32_Ehdr) + sizeof(Elf32_Phdr) * index;
+-
+-	if (lseek(fd, offset, SEEK_SET) < 0) {
+-		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	if (read(fd, phdr, sizeof(Elf32_Phdr)) != sizeof(Elf32_Phdr)) {
+-		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
+-		return FALSE;
+-	}
+-	return TRUE;
+-}
+-
+-static int
+ check_elf_format(int fd, char *filename, int *phnum, unsigned int *num_load)
+ {
+ 	int i;
+@@ -446,6 +410,41 @@ int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len)
+ /*
+  * External functions.
+  */
++int
++get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr)
++{
++	off_t offset;
++
++	offset = sizeof(Elf64_Ehdr) + sizeof(Elf64_Phdr) * index;
++
++	if (lseek(fd, offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	if (read(fd, phdr, sizeof(Elf64_Phdr)) != sizeof(Elf64_Phdr)) {
++		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	return TRUE;
++}
++
++int
++get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr)
++{
++	off_t offset;
++
++	offset = sizeof(Elf32_Ehdr) + sizeof(Elf32_Phdr) * index;
++
++	if (lseek(fd, offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	if (read(fd, phdr, sizeof(Elf32_Phdr)) != sizeof(Elf32_Phdr)) {
++		ERRMSG("Can't read %s. %s\n", filename, strerror(errno));
++		return FALSE;
++	}
++	return TRUE;
++}
+ 
+ /*
+  * Convert Physical Address to File Offset.
+diff --git a/elf_info.h b/elf_info.h
+index cbabf8a..e712253 100644
+--- a/elf_info.h
++++ b/elf_info.h
+@@ -27,6 +27,8 @@
+ 
+ #define MAX_SIZE_NHDR	MAX(sizeof(Elf64_Nhdr), sizeof(Elf32_Nhdr))
+ 
++int get_elf64_phdr(int fd, char *filename, int index, Elf64_Phdr *phdr);
++int get_elf32_phdr(int fd, char *filename, int index, Elf32_Phdr *phdr);
+ 
+ off_t paddr_to_offset(unsigned long long paddr);
+ off_t paddr_to_offset2(unsigned long long paddr, off_t hint);
+-- 
+1.7.1
+
 
 _______________________________________________
 kexec mailing list
