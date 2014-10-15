@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3425.houston.hp.com ([15.201.208.53])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XeKDe-0007Q1-OE
- for kexec@lists.infradead.org; Wed, 15 Oct 2014 08:46:07 +0000
-Message-ID: <543E3427.2040207@hp.com>
-Date: Wed, 15 Oct 2014 16:45:27 +0800
-From: "Li, ZhenHua" <zhen-hual@hp.com>
+ id 1XeV68-0002LT-Vq
+ for kexec@lists.infradead.org; Wed, 15 Oct 2014 20:23:05 +0000
+Date: Wed, 15 Oct 2014 16:22:27 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
+Message-ID: <20141015202227.GG3450@redhat.com>
+References: <543553C7.9010906@zytor.com> <20141008192728.GA26517@redhat.com>
+ <20141011031452.GB11560@dhcp-16-116.nay.redhat.com>
+ <543907B5.7060001@zytor.com> <20141013125257.GB6466@redhat.com>
+ <20141013151955.GA9777@redhat.com> <543BF304.9090708@zytor.com>
+ <20141013172242.GB9777@redhat.com>
+ <20141014124932.GC5127@redhat.com>
+ <20141015033701.GD16068@dhcp-16-116.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/8] iommu/vt-d: Fix crash dump failure caused by legacy
- DMA/IO
-References: <1398386198-19304-1-git-send-email-bill.sumner@hp.com>
- <1398854973.12733.23.camel@i7.infradead.org>
- <20140702133258.GN26537@8bytes.org>
- <20140711162745.GA8335@anatevka.fc.hp.com> <543E2BDA.8030906@hp.com>
-In-Reply-To: <543E2BDA.8030906@hp.com>
+Content-Disposition: inline
+In-Reply-To: <20141015033701.GD16068@dhcp-16-116.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,77 +25,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>
-Cc: indou.takao@jp.fujitsu.com, bhe@redhat.com, "Vaden,
- Tom L (HP Server OS Architecture)" <tom.vaden@hp.com>, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jerry.Hoemann@hp.com, iommu@lists.linux-foundation.org, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, zhenhua@hp.com
+To: Baoquan He <bhe@redhat.com>
+Cc: whissi@whissi.de, ak@linux.intel.com, Kees Cook <keescook@chromium.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, tglx@linutronix.de
 
-Add Tom to CC list.
-On 10/15/2014 04:10 PM, Li, ZhenHua wrote:
-> David, Joerg,
-> I plan to merge this patch set with 3.17 stable kernel, and split this
-> patch set into two :
-> 1. The core part, including the changed functions, like [Patch 4/8],
-> [Patch 8/8].
-> 2. For the formatting issues, like [Patch 1/8],[Patch 3/8],  including
-> the changes for code formations, creation of new files
-> intel-iommu-kdump.c, intel-iommu-private.h.
->
-> I believe this will make the patch set more clear to read and understand.
->
-> What are your suggestions?
->
-> Thanks
-> Zhenhua
->
->
-> On 07/12/2014 12:27 AM, Jerry Hoemann wrote:
->> On Wed, Jul 02, 2014 at 03:32:59PM +0200, Joerg Roedel wrote:
->>> Hi David,
->>>
->>> On Wed, Apr 30, 2014 at 11:49:33AM +0100, David Woodhouse wrote:
->>>> There could be all kinds of existing mappings in the DMA page tables,
->>>> and I'm not sure it's safe to preserve them. What prevents the
->>>> crashdump
->>>> kernel from trying to use any of the physical pages which are
->>>> accessible, and which could thus be corrupted by stray DMA?
->>>>
->>>> In fact, the old kernel could even have set up 1:1 passthrough mappings
->>>> for some devices, which would then be able to DMA *anywhere*. Surely we
->>>> need to prevent that?
->>>
->>> Ideally we would prevent that, yes. But the problem is that a failed DMA
->>> transaction might put the device into an unrecoverable state. Usually
->>> any in-flight DMA transactions should only target buffers set up by the
->>> previous kernel and not corrupt any data.
->>>
->>>> After the last round of this patchset, we discussed a potential
->>>> improvement where you point every virtual bus address at the *same*
->>>> physical scratch page.
->>>
->>> That is a solution to prevent the in-flight DMA failures. But what
->>> happens when there is some in-flight DMA to a disk to write some inodes
->>> or a new superblock. Then this scratch address-space may cause
->>> filesystem corruption at worst.
->>>
->>> So with this in mind I would prefer initially taking over the
->>> page-tables from the old kernel before the device drivers re-initialize
->>> the devices.
->>>
->>>
->>>     Joerg
->>
->> David, Joerg,
->>
->> What do you think here?  Do you want me to update the patch set for 3.17?
->>
->> Jerry
->>
->
+On Wed, Oct 15, 2014 at 11:37:01AM +0800, Baoquan He wrote:
+> On 10/14/14 at 08:49am, Vivek Goyal wrote:
+> > On Mon, Oct 13, 2014 at 01:22:42PM -0400, Vivek Goyal wrote:
+> > > On Mon, Oct 13, 2014 at 08:43:00AM -0700, H. Peter Anvin wrote:
+> > > > On 10/13/2014 08:19 AM, Vivek Goyal wrote:
+> > > > >>>
+> > > > >>> This really shouldn't have happened this way on x86-64.  It has to happen
+> > > > >>> this way on i386, but I worry that this may be a serious misdesign in kaslr
+> > > > >>> on x86-64.  I'm also wondering if there is any other fallout of this?
+> > > > >>
+> > > > >> I agree. On x86_64, we should stick to previous design and this new
+> > > > >> logic of performing relocations does not sound very clean and makes
+> > > > >> things very confusing.
+> > > > >>
+> > > > >> I am wondering that why couldn't we simply adjust page tables in case of
+> > > > >> kaslr on x86_64, instead of performing relocations.
+> > > > > 
+> > > > > Well, IIUC, if virtual addresses are shifted w.r.t what virtual address
+> > > > > kernel was compiled for, then relocation will have to be done.
+> > > > > 
+> > > > > So question will be if physical address shift is enough for kaslr or
+> > > > > virtual address shift is necessary.
+> > > > > 
+> > > > 
+> > > > I would assume that without a virtual address shift kaslr is pretty darn
+> > > > pointless.  Without the physical address shift the 1:1 map can be used,
+> > > > and again, kaslr becomes pointless.  However, there is absolutely no
+> > > > reason why they should be coupled.  They can, in fact, be independently
+> > > > randomized.
+> > > 
+> > > Agreed. On x86_64, we should be able to randomize virtual address space
+> > > and physical address space independently. And in that case whole of
+> > > the physical memory should be available for a possible location for
+> > > kernel. (As opposed to a small limit (I guess 1GB) now)
+> 
+> It can be done to randomize virtual address space and physical address
+> space independently. But limited by the 2G of kernel text mapping and
+> module mapping virtual address space, virtual address can be randomized
+> in (0x1000000, 1G) range. While physical address can be randomized in
+> (0x1000000, 4G) according to the identity mapping of normal kernel. Then
+> phys_base still stores an relative value, a different offset than before.
+> 
+> This can be easily implement. One thing is still there's a limit for
+> physical addr randomization, only below 4G. So I am wondering if we can
+> extend the identify mapping to complete mapping of 48 bit, using 1G page
+> frame. This can make physical addr be randomized to anywhere.
 
+I am wondering where does this 4G limit come from? Without kaslr now
+we are able to load kernels much higher than 4G. That would suggest
+that we should be able to pick randomly any address above 4G too?
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
