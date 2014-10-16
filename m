@@ -1,23 +1,47 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e06smtp11.uk.ibm.com ([195.75.94.107])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XeYTG-0004Gl-A5
- for kexec@lists.infradead.org; Wed, 15 Oct 2014 23:59:11 +0000
-Date: Thu, 16 Oct 2014 07:58:36 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
-Message-ID: <20141015235836.GB1642@dhcp-17-102.nay.redhat.com>
-References: <20141011031452.GB11560@dhcp-16-116.nay.redhat.com>
- <543907B5.7060001@zytor.com> <20141013125257.GB6466@redhat.com>
- <20141013151955.GA9777@redhat.com> <543BF304.9090708@zytor.com>
- <20141013172242.GB9777@redhat.com>
- <20141014124932.GC5127@redhat.com>
- <20141015033701.GD16068@dhcp-16-116.nay.redhat.com>
- <695BEC26-402D-4B1C-9266-137F2BCFE5B9@zytor.com>
- <20141015235537.GA1642@dhcp-17-102.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20141015235537.GA1642@dhcp-17-102.nay.redhat.com>
+ id 1XekJy-0005O1-3B
+ for kexec@lists.infradead.org; Thu, 16 Oct 2014 12:38:23 +0000
+Received: from /spool/local
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Thu, 16 Oct 2014 13:37:59 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 78D001B08049
+ for <kexec@lists.infradead.org>; Thu, 16 Oct 2014 13:39:14 +0100 (BST)
+Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
+ [9.149.37.216])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ s9GCbtKg10879394
+ for <kexec@lists.infradead.org>; Thu, 16 Oct 2014 12:37:55 GMT
+Received: from d06av04.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av04.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ s9GCbthW024153
+ for <kexec@lists.infradead.org>; Thu, 16 Oct 2014 06:37:55 -0600
+Date: Thu, 16 Oct 2014 14:37:53 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH] makedumpfile: Enable --mem-usage for s390x
+Message-ID: <20141016143753.726f63c0@holzheu>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D4E4E4@BPXM01GP.gisp.nec.co.jp>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+ <20140922170247.36774052@holzheu>
+ <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
+ <20140924171904.1db5ac90@holzheu>
+ <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
+ <20140926101057.14549a12@holzheu>
+ <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
+ <20140926133441.5e58303c@holzheu>
+ <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
+ <20140929151413.4e9bd1ab@holzheu>
+ <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
+ <20141001185953.66c6ae9d@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D4D5E4@BPXM01GP.gisp.nec.co.jp>
+ <20141010142310.4c488f6a@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D4E4E4@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,145 +54,174 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: whissi@whissi.de, ak@linux.intel.com, Kees Cook <keescook@chromium.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 10/16/14 at 07:55am, Baoquan He wrote:
-> On 10/15/14 at 01:32pm, H. Peter Anvin wrote:
-> > I don't see why we can't randomize anywhere in physical space.  We already handle the kernel above 4 GB and it wouldn't be hard to do the equivalent for the decompress/relocation code, using a #PF handler.  Not all CPUs support 1 GB pages.
-> > 
-> 
-> Well, IIUC, in arch/x86/boot/compressed/head_64.S pgtable contains 6
-> page frames and is used to build 4G identity mapping. Then this pgtable
-> is loaded into cr3. Later jump into 64bit mode. decompress/relocation
-> code should work in this region. Isn't it right?
-> 
-> Currently kernel surely can be put anywhere, even above 4G. This have
-> been done very often in kexec/kdump. However in kexec/kdump the identity
-> mapping is built for all physical memory after jumping to startup_64
-                                           ~~~~~ should be before
+On Tue, 14 Oct 2014 07:19:13 +0000
+Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
 
-> directly from purgatory, that's why kexec/kdump kernel can be put
-> anywhere.
+[snip]
+
 > 
-> So for normal kernel, don't we need to extend the physical memory mappng
-> to a larger region if we want to randomize anywhere in physical space?
+> I understand why your patch works on s390x, so how about this way ?
 > 
-> Thanks
-> Baoquan
-> 
-> 
-> > On October 14, 2014 8:37:01 PM PDT, Baoquan He <bhe@redhat.com> wrote:
-> > >On 10/14/14 at 08:49am, Vivek Goyal wrote:
-> > >> On Mon, Oct 13, 2014 at 01:22:42PM -0400, Vivek Goyal wrote:
-> > >> > On Mon, Oct 13, 2014 at 08:43:00AM -0700, H. Peter Anvin wrote:
-> > >> > > On 10/13/2014 08:19 AM, Vivek Goyal wrote:
-> > >> > > >>>
-> > >> > > >>> This really shouldn't have happened this way on x86-64.  It
-> > >has to happen
-> > >> > > >>> this way on i386, but I worry that this may be a serious
-> > >misdesign in kaslr
-> > >> > > >>> on x86-64.  I'm also wondering if there is any other fallout
-> > >of this?
-> > >> > > >>
-> > >> > > >> I agree. On x86_64, we should stick to previous design and
-> > >this new
-> > >> > > >> logic of performing relocations does not sound very clean and
-> > >makes
-> > >> > > >> things very confusing.
-> > >> > > >>
-> > >> > > >> I am wondering that why couldn't we simply adjust page tables
-> > >in case of
-> > >> > > >> kaslr on x86_64, instead of performing relocations.
-> > >> > > > 
-> > >> > > > Well, IIUC, if virtual addresses are shifted w.r.t what virtual
-> > >address
-> > >> > > > kernel was compiled for, then relocation will have to be done.
-> > >> > > > 
-> > >> > > > So question will be if physical address shift is enough for
-> > >kaslr or
-> > >> > > > virtual address shift is necessary.
-> > >> > > > 
-> > >> > > 
-> > >> > > I would assume that without a virtual address shift kaslr is
-> > >pretty darn
-> > >> > > pointless.  Without the physical address shift the 1:1 map can be
-> > >used,
-> > >> > > and again, kaslr becomes pointless.  However, there is absolutely
-> > >no
-> > >> > > reason why they should be coupled.  They can, in fact, be
-> > >independently
-> > >> > > randomized.
-> > >> > 
-> > >> > Agreed. On x86_64, we should be able to randomize virtual address
-> > >space
-> > >> > and physical address space independently. And in that case whole of
-> > >> > the physical memory should be available for a possible location for
-> > >> > kernel. (As opposed to a small limit (I guess 1GB) now)
-> > >
-> > >It can be done to randomize virtual address space and physical address
-> > >space independently. But limited by the 2G of kernel text mapping and
-> > >module mapping virtual address space, virtual address can be randomized
-> > >in (0x1000000, 1G) range. While physical address can be randomized in
-> > >(0x1000000, 4G) according to the identity mapping of normal kernel.
-> > >Then
-> > >phys_base still stores an relative value, a different offset than
-> > >before.
-> > >
-> > >This can be easily implement. One thing is still there's a limit for
-> > >physical addr randomization, only below 4G. So I am wondering if we can
-> > >extend the identify mapping to complete mapping of 48 bit, using 1G
-> > >page
-> > >frame. This can make physical addr be randomized to anywhere.
-> > >
-> > >So now there may be 3 options:
-> > >
-> > >1) Fix this bug in current kaslr. Since when randomize the new kernel
-> > >location in choose_kernel_location(), cmdline options has been checked
-> > >strictly, e.g if nokaslr is specified, it's safe to do the kernel
-> > >location randomization. Then in handle_relocations(), we only need to
-> > >check if the kernel location is changed, comparing with kernel loaded
-> > >addr. If changed, kaslr is done, let's do the relocation handling. If
-> > >not changed, no kaslr id done, just skip the relocation handling like
-> > >before.
-> > >
-> > >2) randomize the virtual addr space and physical addr space
-> > >independently. But physical addr space must be below 4G.
-> > >
-> > >3) extend the identity mapping to 48bit of addr space. Then we can
-> > >randomized the virtual addr space in (0x1000000, 1G) and physical addr
-> > >space in (0x1000000, real physical memory end).
-> > >
-> > >If option 3 is doable, it's the best. If not, I think bug fix should be
-> > >better.
-> > >
-> > >> 
-> > >> Hi Peter,
-> > >> 
-> > >> So what do we do about this issue in short term to make kexec work.
-> > >Even
-> > >> if we go for above solution, to make kexec work we will have to pass
-> > >> "nokaslr" as we don't want kernel to move around in physical address
-> > >space
-> > >> as it might stomp over ELF headers we have stored.
-> > >
-> > >kexec doesn't need ELF headers. Kdump may need it. But in current
-> > >kexec-tools implementation, kernel/initrd and other stuffs are placed
-> > >from top to down, current implementation won't do kaslr since it only
-> > >happened between kernel loaded addr and 1G. So we don't need to worry
-> > >about the stomping.
-> > >
-> > >> 
-> > >> If you don't like current patch, should we just disable relocations
-> > >in
-> > >> x86_64 if "nokaslr" command line is passed. That way kernel will not
-> > >> be moved in physical as well as virtual address space.
-> > >> 
-> > >> Thanks
-> > >> Vivek
-> > 
-> > -- 
-> > Sent from my mobile phone.  Please pardon brevity and lack of formatting.
+>  1. Define "is_phys_addr()" for --mem-usage.
+>  2. Implement is_phys_addr() using is_iomem_phys_addr() for s390x
+>     while x86_64 uses is_vmalloc_addr_x86_64().
+>  3. Use is_phys_addr() instead of is_vmalloc_addr() in get_kcore_dump_loads().
+
+Hello Atsushi,
+
+Great, so let's do that.
+
+@Baoquan:
+If you want to use the is_iomem_phys_addr() function also for x86,
+you could perhaps add an additional patch.
+
+Here the updated patch:
+---
+[PATCH] makedumpfile: Enable --mem-usage for s390x
+
+Replace is_vmalloc_addr() by is_phys_addr() and implement is_phys_addr()
+using /proc/iommem parsing to enable the new makedumpfile option "--mem-usage"
+on s390x.
+
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ elf_info.c     |    4 ++--
+ makedumpfile.c |   26 ++++++++++++++++++++++++++
+ makedumpfile.h |   15 ++++++++-------
+ 3 files changed, 36 insertions(+), 9 deletions(-)
+
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -854,7 +854,7 @@ int get_kcore_dump_loads(void)
+ 
+ 	for (i = 0; i < num_pt_loads; ++i) {
+ 		struct pt_load_segment *p = &pt_loads[i];
+-		if (is_vmalloc_addr(p->virt_start))
++		if (!is_phys_addr(p->virt_start))
+ 			continue;
+ 		loads++;
+ 	}
+@@ -874,7 +874,7 @@ int get_kcore_dump_loads(void)
+ 
+ 	for (i = 0, j = 0; i < num_pt_loads; ++i) {
+ 		struct pt_load_segment *p = &pt_loads[i];
+-		if (is_vmalloc_addr(p->virt_start))
++		if (!is_phys_addr(p->virt_start))
+ 			continue;
+ 		if (j >= loads)
+ 			return FALSE;
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -9227,6 +9227,32 @@ int is_crashkernel_mem_reserved(void)
+ 	return !!crash_reserved_mem_nr;
+ }
+ 
++struct addr_check {
++	unsigned long addr;
++	int found;
++};
++
++static int phys_addr_callback(void *data, int nr, char *str,
++			      unsigned long base, unsigned long length)
++{
++	struct addr_check *addr_check = data;
++	unsigned long addr = addr_check->addr;
++
++	if (addr >= base && addr < base + length) {
++		addr_check->found = 1;
++		return -1;
++	}
++	return 0;
++}
++
++int is_iomem_phys_addr(unsigned long addr)
++{
++	struct addr_check addr_check = {addr, 0};
++
++	iomem_for_each_line("System RAM\n", phys_addr_callback, &addr_check);
++	return addr_check.found;
++}
++
+ static int get_page_offset(void)
+ {
+ 	struct utsname utsname;
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -765,7 +765,7 @@ unsigned long long vaddr_to_paddr_arm(un
+ #define get_machdep_info()	get_machdep_info_arm()
+ #define get_versiondep_info()	TRUE
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_arm(X)
+-#define is_vmalloc_addr(X)	TRUE
++#define is_phys_addr(X)		TRUE
+ #endif /* arm */
+ 
+ #ifdef __x86__
+@@ -776,7 +776,7 @@ unsigned long long vaddr_to_paddr_x86(un
+ #define get_machdep_info()	get_machdep_info_x86()
+ #define get_versiondep_info()	get_versiondep_info_x86()
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_x86(X)
+-#define is_vmalloc_addr(X)	TRUE
++#define is_phys_addr(X)		TRUE
+ #endif /* x86 */
+ 
+ #ifdef __x86_64__
+@@ -789,7 +789,7 @@ unsigned long long vaddr_to_paddr_x86_64
+ #define get_machdep_info()	get_machdep_info_x86_64()
+ #define get_versiondep_info()	get_versiondep_info_x86_64()
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
+-#define is_vmalloc_addr(X)	is_vmalloc_addr_x86_64(X)
++#define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X)
+ #endif /* x86_64 */
+ 
+ #ifdef __powerpc64__ /* powerpc64 */
+@@ -800,7 +800,7 @@ unsigned long long vaddr_to_paddr_ppc64(
+ #define get_machdep_info()	get_machdep_info_ppc64()
+ #define get_versiondep_info()	get_versiondep_info_ppc64()
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_ppc64(X)
+-#define is_vmalloc_addr(X)	TRUE
++#define is_phys_addr(X)		TRUE
+ #endif          /* powerpc64 */
+ 
+ #ifdef __powerpc32__ /* powerpc32 */
+@@ -810,7 +810,7 @@ unsigned long long vaddr_to_paddr_ppc(un
+ #define get_machdep_info()	get_machdep_info_ppc()
+ #define get_versiondep_info()	TRUE
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_ppc(X)
+-#define is_vmalloc_addr(X)	TRUE
++#define is_phys_addr(X)		TRUE
+ #endif          /* powerpc32 */
+ 
+ #ifdef __s390x__ /* s390x */
+@@ -820,7 +820,7 @@ unsigned long long vaddr_to_paddr_s390x(
+ #define get_machdep_info()	get_machdep_info_s390x()
+ #define get_versiondep_info()	TRUE
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
+-#define is_vmalloc_addr(X)	TRUE
++#define is_phys_addr(X)		is_iomem_phys_addr(X)
+ #endif          /* s390x */
+ 
+ #ifdef __ia64__ /* ia64 */
+@@ -832,7 +832,7 @@ unsigned long long vaddr_to_paddr_ia64(u
+ #define get_versiondep_info()	TRUE
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_ia64(X)
+ #define VADDR_REGION(X)		(((unsigned long)(X)) >> REGION_SHIFT)
+-#define is_vmalloc_addr(X)	TRUE
++#define is_phys_addr(X)		TRUE
+ #endif          /* ia64 */
+ 
+ typedef unsigned long long mdf_pfn_t;
+@@ -1567,6 +1567,7 @@ int read_disk_dump_header(struct disk_du
+ int read_kdump_sub_header(struct kdump_sub_header *kh, char *filename);
+ void close_vmcoreinfo(void);
+ int close_files_for_creating_dumpfile(void);
++int is_iomem_phys_addr(unsigned long addr);
+ 
+ 
+ /*
+
 
 _______________________________________________
 kexec mailing list
