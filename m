@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xevx8-0006zF-5u
- for kexec@lists.infradead.org; Fri, 17 Oct 2014 01:03:35 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile.8: "cache without private" column of the
+ id 1XewfW-0007Eg-1g
+ for kexec@lists.infradead.org; Fri, 17 Oct 2014 01:49:27 +0000
+Message-ID: <1413510540.514.175.camel@serendib>
+Subject: Re: [PATCH] makedumpfile.8: "cache without private" column of the
  table for -d appears to be incorrect
-Date: Fri, 17 Oct 2014 01:02:08 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D564D0@BPXM01GP.gisp.nec.co.jp>
+From: Harshula Jayasuriya <harshula@redhat.com>
+Date: Fri, 17 Oct 2014 12:49:00 +1100
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D564D0@BPXM01GP.gisp.nec.co.jp>
 References: <1413269123.514.72.camel@serendib>
-In-Reply-To: <1413269123.514.72.camel@serendib>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D564D0@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,110 +24,128 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "harshula@redhat.com" <harshula@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: Minoru Usui <usui@mxm.nes.nec.co.jp>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello,
+Hi,
 
->Hi,
->
->The makedumpfile man page contains a table explaining the usage of -d.
->The "cache without private" column implies that -d 4 would exclude "cache
->without private" pages. However, a -d 4 should only exclude "cache with
->private".
+On Fri, 2014-10-17 at 01:02 +0000, Atsushi Kumagai wrote:
+> Hello,
+> 
+> >Hi,
+> >
+> >The makedumpfile man page contains a table explaining the usage of -d.
+> >The "cache without private" column implies that -d 4 would exclude "cache
+> >without private" pages. However, a -d 4 should only exclude "cache with
+> >private".
+> 
+> "cache with private" includes "cache without private" because the latter
+> doesn't mean leaving private cache pages, just mean excluding cache pages
+> except private pages. Meanwhile, "cache with private" means excluding both
+> cache pages (private and non-private). So "with private" meets "without private"
+> in this feature, they aren't exclusive.
+> This style is for diskdump compatibility, but now I suspect it may be
+> bit confusing.
 
-"cache with private" includes "cache without private" because the latter
-doesn't mean leaving private cache pages, just mean excluding cache pages
-except private pages. Meanwhile, "cache with private" means excluding both
-cache pages (private and non-private). So "with private" meets "without private"
-in this feature, they aren't exclusive.
-This style is for diskdump compatibility, but now I suspect it may be
-bit confusing.
+Ahhh I see! ;-)
 
-I don't want to change the behavior of the page filtering, but I guess
-changing the column names might be meaningful.
-I'm curious to know what everyone thought of the two columns. This can
-be a good opportunity to make the manual easier to understand.
+> I don't want to change the behavior of the page filtering, but I guess
+> changing the column names might be meaningful.
+
+Would the following help?
+
+a) s/cache without private/non-private cache/
+
+b) s/cache with private/all cache/
+
+cya,
+#
+
+> I'm curious to know what everyone thought of the two columns. This can
+> be a good opportunity to make the manual easier to understand.
+> 
+> 
+> Thanks,
+> Atsushi Kumagai
+> 
+> >makedumpfile.h:
+> >------------------------------------------------------------
+> > #define DL_EXCLUDE_CACHE        (0x002) /* Exclude Cache Pages
+> >                                            without Private Pages */
+> >------------------------------------------------------------
+> >
+> >makedumpfile.8:
+> >------------------------------------------------------------
+> >                     |      |cache  |cache  |      |
+> >                dump | zero |without|with   | user | free
+> >               level | page |private|private| data | page
+> >              -------+------+-------+-------+------+------
+> >                   0 |      |       |       |      |
+> >                   1 |  X   |       |       |      |
+> >                   2 |      |   X   |       |      |
+> >                   3 |  X   |   X   |       |      |
+> >                   4 |      |   X   |   X   |      |
+> >                   5 |  X   |   X   |   X   |      |
+> >                   6 |      |   X   |   X   |      |
+> >                   7 |  X   |   X   |   X   |      |
+> >                   8 |      |       |       |  X   |
+> >------------------------------------------------------------
+> >
+> >Signed-off-by: Harshula Jayasuriya <harshula@redhat.com>
+> >---
+> > makedumpfile.8 | 16 ++++++++--------
+> > 1 file changed, 8 insertions(+), 8 deletions(-)
+> >
+> >diff --git a/makedumpfile.8 b/makedumpfile.8
+> >index 9cb12c0..382c6ee 100644
+> >--- a/makedumpfile.8
+> >+++ b/makedumpfile.8
+> >@@ -174,32 +174,32 @@ by dump_level 11, makedumpfile retries it by dump_level 31.
+> >      1 |  X   |       |       |      |
+> >      2 |      |   X   |       |      |
+> >      3 |  X   |   X   |       |      |
+> >-     4 |      |   X   |   X   |      |
+> >-     5 |  X   |   X   |   X   |      |
+> >+     4 |      |       |   X   |      |
+> >+     5 |  X   |       |   X   |      |
+> >      6 |      |   X   |   X   |      |
+> >      7 |  X   |   X   |   X   |      |
+> >      8 |      |       |       |  X   |
+> >      9 |  X   |       |       |  X   |
+> >     10 |      |   X   |       |  X   |
+> >     11 |  X   |   X   |       |  X   |
+> >-    12 |      |   X   |   X   |  X   |
+> >-    13 |  X   |   X   |   X   |  X   |
+> >+    12 |      |       |   X   |  X   |
+> >+    13 |  X   |       |   X   |  X   |
+> >     14 |      |   X   |   X   |  X   |
+> >     15 |  X   |   X   |   X   |  X   |
+> >     16 |      |       |       |      |  X
+> >     17 |  X   |       |       |      |  X
+> >     18 |      |   X   |       |      |  X
+> >     19 |  X   |   X   |       |      |  X
+> >-    20 |      |   X   |   X   |      |  X
+> >-    21 |  X   |   X   |   X   |      |  X
+> >+    20 |      |       |   X   |      |  X
+> >+    21 |  X   |       |   X   |      |  X
+> >     22 |      |   X   |   X   |      |  X
+> >     23 |  X   |   X   |   X   |      |  X
+> >     24 |      |       |       |  X   |  X
+> >     25 |  X   |       |       |  X   |  X
+> >     26 |      |   X   |       |  X   |  X
+> >     27 |  X   |   X   |       |  X   |  X
+> >-    28 |      |   X   |   X   |  X   |  X
+> >-    29 |  X   |   X   |   X   |  X   |  X
+> >+    28 |      |       |   X   |  X   |  X
+> >+    29 |  X   |       |   X   |  X   |  X
+> >     30 |      |   X   |   X   |  X   |  X
+> >     31 |  X   |   X   |   X   |  X   |  X
+> >
+> >--
+> >1.9.3
 
 
-Thanks,
-Atsushi Kumagai
 
->makedumpfile.h:
->------------------------------------------------------------
-> #define DL_EXCLUDE_CACHE        (0x002) /* Exclude Cache Pages
->                                            without Private Pages */
->------------------------------------------------------------
->
->makedumpfile.8:
->------------------------------------------------------------
->                     |      |cache  |cache  |      |
->                dump | zero |without|with   | user | free
->               level | page |private|private| data | page
->              -------+------+-------+-------+------+------
->                   0 |      |       |       |      |
->                   1 |  X   |       |       |      |
->                   2 |      |   X   |       |      |
->                   3 |  X   |   X   |       |      |
->                   4 |      |   X   |   X   |      |
->                   5 |  X   |   X   |   X   |      |
->                   6 |      |   X   |   X   |      |
->                   7 |  X   |   X   |   X   |      |
->                   8 |      |       |       |  X   |
->------------------------------------------------------------
->
->Signed-off-by: Harshula Jayasuriya <harshula@redhat.com>
->---
-> makedumpfile.8 | 16 ++++++++--------
-> 1 file changed, 8 insertions(+), 8 deletions(-)
->
->diff --git a/makedumpfile.8 b/makedumpfile.8
->index 9cb12c0..382c6ee 100644
->--- a/makedumpfile.8
->+++ b/makedumpfile.8
->@@ -174,32 +174,32 @@ by dump_level 11, makedumpfile retries it by dump_level 31.
->      1 |  X   |       |       |      |
->      2 |      |   X   |       |      |
->      3 |  X   |   X   |       |      |
->-     4 |      |   X   |   X   |      |
->-     5 |  X   |   X   |   X   |      |
->+     4 |      |       |   X   |      |
->+     5 |  X   |       |   X   |      |
->      6 |      |   X   |   X   |      |
->      7 |  X   |   X   |   X   |      |
->      8 |      |       |       |  X   |
->      9 |  X   |       |       |  X   |
->     10 |      |   X   |       |  X   |
->     11 |  X   |   X   |       |  X   |
->-    12 |      |   X   |   X   |  X   |
->-    13 |  X   |   X   |   X   |  X   |
->+    12 |      |       |   X   |  X   |
->+    13 |  X   |       |   X   |  X   |
->     14 |      |   X   |   X   |  X   |
->     15 |  X   |   X   |   X   |  X   |
->     16 |      |       |       |      |  X
->     17 |  X   |       |       |      |  X
->     18 |      |   X   |       |      |  X
->     19 |  X   |   X   |       |      |  X
->-    20 |      |   X   |   X   |      |  X
->-    21 |  X   |   X   |   X   |      |  X
->+    20 |      |       |   X   |      |  X
->+    21 |  X   |       |   X   |      |  X
->     22 |      |   X   |   X   |      |  X
->     23 |  X   |   X   |   X   |      |  X
->     24 |      |       |       |  X   |  X
->     25 |  X   |       |       |  X   |  X
->     26 |      |   X   |       |  X   |  X
->     27 |  X   |   X   |       |  X   |  X
->-    28 |      |   X   |   X   |  X   |  X
->-    29 |  X   |   X   |   X   |  X   |  X
->+    28 |      |       |   X   |  X   |  X
->+    29 |  X   |       |   X   |  X   |  X
->     30 |      |   X   |   X   |  X   |  X
->     31 |  X   |   X   |   X   |  X   |  X
->
->--
->1.9.3
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
