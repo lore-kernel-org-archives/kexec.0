@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from g2t2353.austin.hp.com ([15.217.128.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xf28T-0006k1-Ls
- for kexec@lists.infradead.org; Fri, 17 Oct 2014 07:39:42 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH] makedumpfile.8: "cache without private" column of the
- table for -d appears to be incorrect
-Date: Fri, 17 Oct 2014 07:37:43 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D5675E@BPXM01GP.gisp.nec.co.jp>
-References: <1413269123.514.72.camel@serendib>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D564D0@BPXM01GP.gisp.nec.co.jp>
- <1413510540.514.175.camel@serendib>
-In-Reply-To: <1413510540.514.175.camel@serendib>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1Xf3bx-0002kY-7L
+ for kexec@lists.infradead.org; Fri, 17 Oct 2014 09:14:14 +0000
+From: "Li, Zhen-Hua" <zhen-hual@hp.com>
+Subject: [PATCH 1/1] pci: reset all pci endpoints to stop on going dma
+Date: Fri, 17 Oct 2014 17:13:27 +0800
+Message-Id: <1413537207-16514-1-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,154 +15,227 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "harshula@redhat.com" <harshula@redhat.com>
-Cc: Minoru Usui <usui@mxm.nes.nec.co.jp>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, indou.takao@jp.fujitsu.com, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
+Cc: Randy Wright <rwright@hp.com>, "Li, Zhen-Hua" <zhen-hual@hp.com>, linda.knippers@hp.com
 
->Hi,
->
->On Fri, 2014-10-17 at 01:02 +0000, Atsushi Kumagai wrote:
->> Hello,
->>
->> >Hi,
->> >
->> >The makedumpfile man page contains a table explaining the usage of -d.
->> >The "cache without private" column implies that -d 4 would exclude "cache
->> >without private" pages. However, a -d 4 should only exclude "cache with
->> >private".
->>
->> "cache with private" includes "cache without private" because the latter
->> doesn't mean leaving private cache pages, just mean excluding cache pages
->> except private pages. Meanwhile, "cache with private" means excluding both
->> cache pages (private and non-private). So "with private" meets "without private"
->> in this feature, they aren't exclusive.
->> This style is for diskdump compatibility, but now I suspect it may be
->> bit confusing.
->
->Ahhh I see! ;-)
->
->> I don't want to change the behavior of the page filtering, but I guess
->> changing the column names might be meaningful.
->
->Would the following help?
->
->a) s/cache without private/non-private cache/
->
->b) s/cache with private/all cache/
+This is an update of the patch
+	https://lkml.org/lkml/2014/10/10/37
 
-Thanks for your suggestion, but now I think each column should
-be exclusive to make the rule consistent. Actually, other columns
-(zero page, user data, free page) are exclusive.
+This patch is doing the reset works before the kdump kernel boots.
 
-So let's name the two like below:
+On a Linux system with iommu supported and many PCI devices on it,
+when kernel crashed and the kdump kernel boots with intel_iommu=on,
+there may be some unexpected DMA requests on this adapter, which will
+cause DMA Remapping faults like:
+    dmar: DRHD: handling fault status reg 102
+    dmar: DMAR:[DMA Read] Request device [41:00.0] fault addr fff81000
+    DMAR:[fault reason 01] Present bit in root entry is clear
 
- a) non-private cache
- b) private cache
+This bug may happen on *any* PCI device.
+Analysis for this bug:
 
-                     |      |non-   |       |      |
-                dump | zero |private|private| user | free
-               level | page |cache  |cache  | data | page
-              -------+------+-------+-------+------+------
-                 ...
-                   4 |      |   X   |   X   |      |
-                   5 |  X   |   X   |   X   |      |
+The present bit is set in this function:
 
-then marking the both columns for level 4 will be natural.
-I'll post a patch later if there is no objection.
+static struct context_entry * device_to_context_entry(
+                struct intel_iommu *iommu, u8 bus, u8 devfn)
+{
+    ......
+                set_root_present(root);
+    ......
+}
+
+Calling tree:
+    device driver
+        intel_alloc_coherent
+            __intel_map_single
+                domain_context_mapping
+                    domain_context_mapping_one
+                        device_to_context_entry
+
+This means, the present bit in root entry will not be set until the device
+driver is loaded.
+
+But in the kdump kernel, hardware devices are not aware that control has
+transferred to the second kernel, and those drivers must initialize again.
+Consequently there may be unexpected DMA requests from devices activity
+initiated in the first kernel leading to the DMA Remapping errors in the
+second kernel.
+
+To fix this DMAR fault, we need to reset the bus that this device on. Reset
+the device itself does not work.
+
+A patch for this bug that has been sent before:
+https://lkml.org/lkml/2014/9/30/55
+As in discussion, this bug may happen on *any* device, so we need to reset
+all pci devices.
+
+There was an original version(Takao Indoh) that resets the pcie devices:
+https://lkml.org/lkml/2013/5/14/9
+
+According to the previous discussion, On sparc, the IOMMU is initialized
+before PCI devices are enumerated, this patch does the resetting works before
+the kdump kernel boots, so it can also fix the problems on sparc.
+
+Update of this new version, comparing with Takao Indoh's version:
+    Add support for legacy PCI devices.
+    Use pci_try_reset_bus instead of do_downstream_device_reset.
+    Reset all PCI/PCIe deviecs in the first kernel, before kdump kernel boots.
+
+Randy Wright corrects some misunderstanding in this description.
+
+Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+Signed-off-by: Randy Wright <rwright@hp.com>
+---
+ drivers/pci/pci.c   | 82 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h |  6 ++++
+ kernel/kexec.c      |  2 ++
+ 3 files changed, 90 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 625a4ac..aa9192a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -23,6 +23,7 @@
+ #include <linux/device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pci_hotplug.h>
++#include <linux/crash_dump.h>
+ #include <asm-generic/pci-bridge.h>
+ #include <asm/setup.h>
+ #include "pci.h"
+@@ -4466,6 +4467,87 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
+ }
+ EXPORT_SYMBOL(pci_fixup_cardbus);
+ 
++/*
++ * Return true if dev is PCI root port or downstream port whose child is PCI
++ * endpoint except VGA device.
++ */
++static int __pci_dev_need_reset(struct pci_dev *dev)
++{
++	struct pci_bus *subordinate;
++	struct pci_dev *child;
++
++	if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
++		return 0;
++
++	if (pci_is_pcie(dev)) {
++		if ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
++		    (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM))
++			return 0;
++	}
++
++	subordinate = dev->subordinate;
++	list_for_each_entry(child, &subordinate->devices, bus_list) {
++		/* Don't reset switch, bridge, VGA device */
++		if ((child->hdr_type == PCI_HEADER_TYPE_BRIDGE) ||
++		    ((child->class >> 16) == PCI_BASE_CLASS_BRIDGE) ||
++		    ((child->class >> 16) == PCI_BASE_CLASS_DISPLAY))
++			return 0;
++
++		if (pci_is_pcie(child)) {
++			if ((pci_pcie_type(child) == PCI_EXP_TYPE_UPSTREAM) ||
++			    (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE))
++				return 0;
++		}
++	}
++
++	return 1;
++}
++
++struct pci_dev_reset_entry {
++	struct list_head list;
++	struct pci_dev *dev;
++};
++int pci_reset_endpoints(void)
++{
++	struct pci_dev *dev = NULL;
++	struct pci_dev_reset_entry *pdev_entry, *tmp;
++	struct pci_bus *subordinate = NULL;
++	int has_it;
++
++	LIST_HEAD(pdev_list);
++
++
++	for_each_pci_dev(dev) {
++		subordinate = dev->subordinate;
++		if (!subordinate || list_empty(&subordinate->devices))
++			continue;
++
++		has_it = 0;
++		list_for_each_entry(pdev_entry, &pdev_list, list) {
++			if (dev == pdev_entry->dev) {
++				has_it = 1;
++				break;
++			}
++		}
++		if (has_it)
++			continue;
++
++		if (__pci_dev_need_reset(dev)) {
++			pdev_entry = kmalloc(sizeof(*pdev_entry), GFP_KERNEL);
++			pdev_entry->dev = dev;
++			list_add(&pdev_entry->list, &pdev_list);
++		}
++	}
++
++	list_for_each_entry_safe(pdev_entry, tmp, &pdev_list, list) {
++		pci_try_reset_bus(pdev_entry->dev->subordinate);
++		kfree(pdev_entry);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pci_reset_endpoints);
++
+ static int __init pci_setup(char *str)
+ {
+ 	while (str) {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 5be8db4..1cf7207 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1869,4 +1869,10 @@ static inline bool pci_is_dev_assigned(struct pci_dev *pdev)
+ {
+ 	return (pdev->dev_flags & PCI_DEV_FLAGS_ASSIGNED) == PCI_DEV_FLAGS_ASSIGNED;
+ }
++
++/*
++ * Reset all pci devices by resetting the buses.
++ */
++int pci_reset_endpoints(void);
++
+ #endif /* LINUX_PCI_H */
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 2abf9f6..986e8f7 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -36,6 +36,7 @@
+ #include <linux/syscore_ops.h>
+ #include <linux/compiler.h>
+ #include <linux/hugetlb.h>
++#include <linux/pci.h>
+ 
+ #include <asm/page.h>
+ #include <asm/uaccess.h>
+@@ -1474,6 +1475,7 @@ void crash_kexec(struct pt_regs *regs)
+ 		if (kexec_crash_image) {
+ 			struct pt_regs fixed_regs;
+ 
++			pci_reset_endpoints();
+ 			crash_setup_regs(&fixed_regs, regs);
+ 			crash_save_vmcoreinfo();
+ 			machine_crash_shutdown(&fixed_regs);
+-- 
+2.0.0-rc0
 
 
-Thanks,
-Atsushi Kumagai
-
->cya,
->#
->
->> I'm curious to know what everyone thought of the two columns. This can
->> be a good opportunity to make the manual easier to understand.
->>
->>
->> Thanks,
->> Atsushi Kumagai
->>
->> >makedumpfile.h:
->> >------------------------------------------------------------
->> > #define DL_EXCLUDE_CACHE        (0x002) /* Exclude Cache Pages
->> >                                            without Private Pages */
->> >------------------------------------------------------------
->> >
->> >makedumpfile.8:
->> >------------------------------------------------------------
->> >                     |      |cache  |cache  |      |
->> >                dump | zero |without|with   | user | free
->> >               level | page |private|private| data | page
->> >              -------+------+-------+-------+------+------
->> >                   0 |      |       |       |      |
->> >                   1 |  X   |       |       |      |
->> >                   2 |      |   X   |       |      |
->> >                   3 |  X   |   X   |       |      |
->> >                   4 |      |   X   |   X   |      |
->> >                   5 |  X   |   X   |   X   |      |
->> >                   6 |      |   X   |   X   |      |
->> >                   7 |  X   |   X   |   X   |      |
->> >                   8 |      |       |       |  X   |
->> >------------------------------------------------------------
->> >
->> >Signed-off-by: Harshula Jayasuriya <harshula@redhat.com>
->> >---
->> > makedumpfile.8 | 16 ++++++++--------
->> > 1 file changed, 8 insertions(+), 8 deletions(-)
->> >
->> >diff --git a/makedumpfile.8 b/makedumpfile.8
->> >index 9cb12c0..382c6ee 100644
->> >--- a/makedumpfile.8
->> >+++ b/makedumpfile.8
->> >@@ -174,32 +174,32 @@ by dump_level 11, makedumpfile retries it by dump_level 31.
->> >      1 |  X   |       |       |      |
->> >      2 |      |   X   |       |      |
->> >      3 |  X   |   X   |       |      |
->> >-     4 |      |   X   |   X   |      |
->> >-     5 |  X   |   X   |   X   |      |
->> >+     4 |      |       |   X   |      |
->> >+     5 |  X   |       |   X   |      |
->> >      6 |      |   X   |   X   |      |
->> >      7 |  X   |   X   |   X   |      |
->> >      8 |      |       |       |  X   |
->> >      9 |  X   |       |       |  X   |
->> >     10 |      |   X   |       |  X   |
->> >     11 |  X   |   X   |       |  X   |
->> >-    12 |      |   X   |   X   |  X   |
->> >-    13 |  X   |   X   |   X   |  X   |
->> >+    12 |      |       |   X   |  X   |
->> >+    13 |  X   |       |   X   |  X   |
->> >     14 |      |   X   |   X   |  X   |
->> >     15 |  X   |   X   |   X   |  X   |
->> >     16 |      |       |       |      |  X
->> >     17 |  X   |       |       |      |  X
->> >     18 |      |   X   |       |      |  X
->> >     19 |  X   |   X   |       |      |  X
->> >-    20 |      |   X   |   X   |      |  X
->> >-    21 |  X   |   X   |   X   |      |  X
->> >+    20 |      |       |   X   |      |  X
->> >+    21 |  X   |       |   X   |      |  X
->> >     22 |      |   X   |   X   |      |  X
->> >     23 |  X   |   X   |   X   |      |  X
->> >     24 |      |       |       |  X   |  X
->> >     25 |  X   |       |       |  X   |  X
->> >     26 |      |   X   |       |  X   |  X
->> >     27 |  X   |   X   |       |  X   |  X
->> >-    28 |      |   X   |   X   |  X   |  X
->> >-    29 |  X   |   X   |   X   |  X   |  X
->> >+    28 |      |       |   X   |  X   |  X
->> >+    29 |  X   |       |   X   |  X   |  X
->> >     30 |      |   X   |   X   |  X   |  X
->> >     31 |  X   |   X   |   X   |  X   |  X
->> >
->> >--
->> >1.9.3
->
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
