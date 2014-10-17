@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XewfW-0007Eg-1g
- for kexec@lists.infradead.org; Fri, 17 Oct 2014 01:49:27 +0000
-Message-ID: <1413510540.514.175.camel@serendib>
-Subject: Re: [PATCH] makedumpfile.8: "cache without private" column of the
- table for -d appears to be incorrect
-From: Harshula Jayasuriya <harshula@redhat.com>
-Date: Fri, 17 Oct 2014 12:49:00 +1100
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D564D0@BPXM01GP.gisp.nec.co.jp>
-References: <1413269123.514.72.camel@serendib>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D564D0@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+ id 1Xeya0-00076i-Lo
+ for kexec@lists.infradead.org; Fri, 17 Oct 2014 03:51:53 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads
+ in appropriate time
+Date: Fri, 17 Oct 2014 03:50:35 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D565C0@BPXM01GP.gisp.nec.co.jp>
+References: <1413192866-28140-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1413192866-28140-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,127 +24,123 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: Minoru Usui <usui@mxm.nes.nec.co.jp>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi,
+Hello,
 
-On Fri, 2014-10-17 at 01:02 +0000, Atsushi Kumagai wrote:
-> Hello,
-> 
-> >Hi,
-> >
-> >The makedumpfile man page contains a table explaining the usage of -d.
-> >The "cache without private" column implies that -d 4 would exclude "cache
-> >without private" pages. However, a -d 4 should only exclude "cache with
-> >private".
-> 
-> "cache with private" includes "cache without private" because the latter
-> doesn't mean leaving private cache pages, just mean excluding cache pages
-> except private pages. Meanwhile, "cache with private" means excluding both
-> cache pages (private and non-private). So "with private" meets "without private"
-> in this feature, they aren't exclusive.
-> This style is for diskdump compatibility, but now I suspect it may be
-> bit confusing.
+The code looks good to me, thanks Zhou.
+Now, I have a question on performance.
 
-Ahhh I see! ;-)
+>The issue is discussed at http://lists.infradead.org/pipermail/kexec/2014-March/011289.html
+>
+>This patch implements the idea of 2-pass algorhythm with smaller memory to manage splitblock table.
+>Exactly the algorhythm is still 3-pass,but the time of second pass is much shorter.
+>The tables below show the performence with different size of cyclic-buffer and splitblock.
+>The test is executed on the machine having 128G memory.
+>
+>the value is total time (including first pass and second pass).
+>the value in brackets is the time of second pass.
 
-> I don't want to change the behavior of the page filtering, but I guess
-> changing the column names might be meaningful.
-
-Would the following help?
-
-a) s/cache without private/non-private cache/
-
-b) s/cache with private/all cache/
-
-cya,
-#
-
-> I'm curious to know what everyone thought of the two columns. This can
-> be a good opportunity to make the manual easier to understand.
-> 
-> 
-> Thanks,
-> Atsushi Kumagai
-> 
-> >makedumpfile.h:
-> >------------------------------------------------------------
-> > #define DL_EXCLUDE_CACHE        (0x002) /* Exclude Cache Pages
-> >                                            without Private Pages */
-> >------------------------------------------------------------
-> >
-> >makedumpfile.8:
-> >------------------------------------------------------------
-> >                     |      |cache  |cache  |      |
-> >                dump | zero |without|with   | user | free
-> >               level | page |private|private| data | page
-> >              -------+------+-------+-------+------+------
-> >                   0 |      |       |       |      |
-> >                   1 |  X   |       |       |      |
-> >                   2 |      |   X   |       |      |
-> >                   3 |  X   |   X   |       |      |
-> >                   4 |      |   X   |   X   |      |
-> >                   5 |  X   |   X   |   X   |      |
-> >                   6 |      |   X   |   X   |      |
-> >                   7 |  X   |   X   |   X   |      |
-> >                   8 |      |       |       |  X   |
-> >------------------------------------------------------------
-> >
-> >Signed-off-by: Harshula Jayasuriya <harshula@redhat.com>
-> >---
-> > makedumpfile.8 | 16 ++++++++--------
-> > 1 file changed, 8 insertions(+), 8 deletions(-)
-> >
-> >diff --git a/makedumpfile.8 b/makedumpfile.8
-> >index 9cb12c0..382c6ee 100644
-> >--- a/makedumpfile.8
-> >+++ b/makedumpfile.8
-> >@@ -174,32 +174,32 @@ by dump_level 11, makedumpfile retries it by dump_level 31.
-> >      1 |  X   |       |       |      |
-> >      2 |      |   X   |       |      |
-> >      3 |  X   |   X   |       |      |
-> >-     4 |      |   X   |   X   |      |
-> >-     5 |  X   |   X   |   X   |      |
-> >+     4 |      |       |   X   |      |
-> >+     5 |  X   |       |   X   |      |
-> >      6 |      |   X   |   X   |      |
-> >      7 |  X   |   X   |   X   |      |
-> >      8 |      |       |       |  X   |
-> >      9 |  X   |       |       |  X   |
-> >     10 |      |   X   |       |  X   |
-> >     11 |  X   |   X   |       |  X   |
-> >-    12 |      |   X   |   X   |  X   |
-> >-    13 |  X   |   X   |   X   |  X   |
-> >+    12 |      |       |   X   |  X   |
-> >+    13 |  X   |       |   X   |  X   |
-> >     14 |      |   X   |   X   |  X   |
-> >     15 |  X   |   X   |   X   |  X   |
-> >     16 |      |       |       |      |  X
-> >     17 |  X   |       |       |      |  X
-> >     18 |      |   X   |       |      |  X
-> >     19 |  X   |   X   |       |      |  X
-> >-    20 |      |   X   |   X   |      |  X
-> >-    21 |  X   |   X   |   X   |      |  X
-> >+    20 |      |       |   X   |      |  X
-> >+    21 |  X   |       |   X   |      |  X
-> >     22 |      |   X   |   X   |      |  X
-> >     23 |  X   |   X   |   X   |      |  X
-> >     24 |      |       |       |  X   |  X
-> >     25 |  X   |       |       |  X   |  X
-> >     26 |      |   X   |       |  X   |  X
-> >     27 |  X   |   X   |       |  X   |  X
-> >-    28 |      |   X   |   X   |  X   |  X
-> >-    29 |  X   |   X   |   X   |  X   |  X
-> >+    28 |      |       |   X   |  X   |  X
-> >+    29 |  X   |       |   X   |  X   |  X
-> >     30 |      |   X   |   X   |  X   |  X
-> >     31 |  X   |   X   |   X   |  X   |  X
-> >
-> >--
-> >1.9.3
+Do you have any idea why the time of second pass is much larger when
+the splitblock-size is 2G ? I worry about the scalability.
 
 
+Thanks
+Atsushi Kumagai
+
+>	      sec
+>	cyclic-buffer	1		2		4		8		16		32
+>	64
+>splitblock-size
+>1M			4.74(0.00)	4.22(0.01)	3.94(0.01)	3.78(0.02)	3.71(0.03)	3.73(0.07)
+>	3.74(0.10)
+>2M			4.74(0.00)	4.19(0.00)	3.94(0.01)	3.80(0.03)	3.71(0.03)	3.72(0.07)
+>	3.72(0.09)
+>4M			4.73(0.00)	4.21(0.01)	3.95(0.01)	3.78(0.02)	3.70(0.02)	3.73(0.08)
+>	3.73(0.10)
+>8M			4.73(0.00)	4.19(0.00)	3.94(0.01)	3.83(0.02)	3.73(0.03)	3.72(0.07)
+>	3.74(0.10)
+>16M			4.74(0.01)	4.21(0.00)	3.94(0.01)	3.76(0.01)	3.73(0.03)	3.73(0.08)
+>	3.74(0.10)
+>32M			4.72(0.00)	4.20(0.02)	3.92(0.01)	3.77(0.02)	3.71(0.02)	3.70(0.06)
+>	3.74(0.10)
+>64M			4.74(0.01)	4.20(0.00)	3.95(0.01)	3.78(0.02)	3.70(0.02)	3.71(0.07)
+>	3.72(0.09)
+>128M			4.73(0.01)	4.20(0.00)	3.94(0.01)	3.78(0.02)	3.76(0.03)	3.72(0.08)
+>	3.74(0.09)
+>256M			4.75(0.02)	4.22(0.02)	3.96(0.03)	3.78(0.02)	3.70(0.03)	3.70(0.07)
+>	3.74(0.11)
+>512M			4.77(0.04)	4.21(0.03)	3.97(0.04)	3.79(0.03)	3.73(0.04)	3.75(0.09)
+>	3.82(0.13)
+>1G			4.82(0.09)	4.26(0.07)	4.00(0.08)	3.83(0.07)	3.76(0.08)	3.73(0.08)
+>	3.76(0.12)
+>2G			8.26(3.54)	7.34(3.14)	6.86(2.93)	6.56(2.80)	6.44(2.76)	6.45(2.79)
+>	6.42(2.80)
+>
+>the performence of 3-pass algorhythm
+>origin			8.25(3.54)	7.26(3.11)	6.80(2.91)	6.52(2.80)	6.39(2.76)	6.40(2.78)
+>	6.45(2.85)
+>
+>
+>	       sec
+>	cyclic-buffer	128		256		512		1024		2048		4096
+>	8192
+>splitblock-size
+>1M			3.83(0.21)	3.94(0.33)	4.16(0.54)	4.61(0.99)	7.03(3.41)	8.73(5.11)
+>	8.69(5.08)
+>2M			3.86(0.21)	3.92(0.32)	4.16(0.54)	4.64(0.98)	7.02(3.41)	8.71(5.09)
+>	8.72(5.09)
+>4M			3.82(0.21)	3.95(0.32)	4.18(0.55)	4.62(0.99)	7.05(3.44)	8.70(5.09)
+>	8.68(5.07)
+>8M			3.82(0.21)	3.95(0.33)	4.17(0.54)	4.58(0.97)	7.03(3.41)	8.79(5.16)
+>	8.71(5.09)
+>16M			3.83(0.21)	3.93(0.31)	4.15(0.54)	4.60(0.98)	7.06(3.43)	8.76(5.13)
+>	8.73(5.10)
+>32M			3.84(0.22)	3.93(0.32)	4.15(0.54)	4.61(0.98)	7.00(3.40)	8.69(5.08)
+>	8.75(5.13)
+>64M			3.84(0.21)	3.94(0.33)	4.15(0.54)	4.60(0.98)	7.04(3.42)	8.74(5.10)
+>	8.80(5.16)
+>128M			3.85(0.22)	3.97(0.33)	4.16(0.54)	4.60(0.98)	7.07(3.44)	8.68(5.07)
+>	8.69(5.07)
+>256M			3.84(0.21)	3.94(0.33)	4.16(0.55)	4.64(1.00)	7.02(3.41)	8.74(5.11)
+>	8.73(5.11)
+>512M			3.85(0.24)	3.97(0.34)	4.17(0.56)	4.61(0.99)	7.05(3.44)	8.73(5.11)
+>	8.75(5.13)
+>1G			3.85(0.22)	3.96(0.35)	4.18(0.56)	4.65(1.00)	7.06(3.44)	8.76(5.12)
+>	8.72(5.11)
+>2G			6.53(2.91)	6.86(3.25)	7.54(3.92)	8.95(5.31)	10.60(6.97)	14.08(10.47)
+>	14.32(10.60)
+>
+>the performence of 3-pass algorhythm
+>origin			6.64(3.05)	6.81(3.24)	7.51(3.93)	8.86(5.30)	10.51(6.94)	13.92(10.36)
+>	14.11(10.55)
+>
+>
+>v1->v2:
+>	use splitblock instead of block
+>	add restriction (align to the page size) to splitblock size
+>	adjust the position of prepare_splitblock_table and check the return code
+>	use --splitblock-size to specify splitblock size and modify the print_info.c
+>
+>
+>Zhou Wenjian (5):
+>  Add support for splitblock
+>  Add tools for reading and writing from splitblock table
+>  Add module of generating table
+>  Add module of calculating start_pfn and end_pfn in each dumpfile
+>  Add support for --splitblock-size
+>
+> makedumpfile.8 |   16 ++++
+> makedumpfile.c |  254 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+> makedumpfile.h |   17 ++++
+> print_info.c   |   16 ++++-
+> 4 files changed, 296 insertions(+), 7 deletions(-)
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
