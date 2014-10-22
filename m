@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3426.houston.hp.com ([15.201.208.54])
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XgmIa-0001Ay-Ps
- for kexec@lists.infradead.org; Wed, 22 Oct 2014 03:09:22 +0000
-Message-ID: <54471FB4.4030602@hp.com>
-Date: Wed, 22 Oct 2014 11:08:36 +0800
-From: "Li, ZhenHua" <zhen-hual@hp.com>
+ id 1Xgnf7-00013j-4D
+ for kexec@lists.infradead.org; Wed, 22 Oct 2014 04:36:42 +0000
+From: Rusty Russell <rusty@rustcorp.com.au>
+Subject: Re: [PATCH V2] kernel, add bug_on_warn
+In-Reply-To: <1413910077-9464-1-git-send-email-prarit@redhat.com>
+References: <1413910077-9464-1-git-send-email-prarit@redhat.com>
+Date: Wed, 22 Oct 2014 14:57:12 +1030
+Message-ID: <87bnp491b3.fsf@rustcorp.com.au>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/8] iommu/vt-d: Fix crash dump failure caused by legacy
- DMA/IO
-References: <1398386198-19304-1-git-send-email-bill.sumner@hp.com>
- <1398854973.12733.23.camel@i7.infradead.org>
- <20140702133258.GN26537@8bytes.org>
- <CAErSpo69VmK5zD-ztNVHCA=KrK8zucqubY17z0K3rcpe6ReNUA@mail.gmail.com>
- <87mw8on7lx.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87mw8on7lx.fsf@x220.int.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,115 +18,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, Baoquan He <bhe@redhat.com>, "Vaden, Tom L (HP Server OS Architecture)" <tom.vaden@hp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Hoemann,
- Jerry" <jerry.hoemann@hp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>, doug.hatch@hp.com, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, Bjorn Helgaas <bhelgaas@google.com>, zhenhua@hp.com, David Woodhouse <dwmw2@infradead.org>
+To: Prarit Bhargava <prarit@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, vgoyal@redhat.com
 
-Need more time to read and think about these mails. I just want to 
-clarify one thing: Bill has left HP, and now I inherited his works.
-That's why I sent an update of his patch
-	https://lkml.org/lkml/2014/10/21/134
+Prarit Bhargava <prarit@redhat.com> writes:
+> There have been several times where I have had to rebuild a kernel to
+> cause a panic when hitting a WARN() in the code in order to get a crash
+> dump from a system.  Sometimes this is easy to do, other times (such as
+> in the case of a remote admin) it is not trivial to send new images to the
+> user.
+>
+> A much easier method would be a switch to change the WARN() over to a
+> BUG().  This makes debugging easier in that I can now test the actual
+> image the WARN() was seen on and I do not have to engage in remote
+> debugging.
+>
+> This patch adds a bug_on_warn kernel parameter, which calls BUG() in the
+> warn_slowpath_common() path.  The function will still print out the
+> location of the warning.
+>
+> An example of the bug_on_warn output:
+>
+> The first line below is from the WARN_ON() to output the WARN_ON()'s location.
+> After that the new BUG() call is displayed.
+>
+>  WARNING: CPU: 27 PID: 3204 at
+> /home/rhel7/redhat/debug/dummy-module/dummy-module.c:25 init_dummy+0x28/0x30
+> [dummy_module]()
+>  bug_on_warn set, calling BUG()...
+>  ------------[ cut here ]------------
+>  kernel BUG at kernel/panic.c:434!
+>  invalid opcode: 0000 [#1] SMP
+>  Modules linked in: dummy_module(OE+) sg nfsv3 rpcsec_gss_krb5 nfsv4
+> dns_resolver nfs fscache cfg80211 rfkill x86_pkg_temp_thermal intel_powerclamp
+> coretemp kvm_intel kvm crct10dif_pclmul crc32_pclmul crc32c_intel
+> ghash_clmulni_intel igb iTCO_wdt aesni_intel iTCO_vendor_support lrw gf128mul
+> sb_edac ptp edac_core glue_helper lpc_ich ioatdma pcspkr ablk_helper pps_core
+> i2c_i801 mfd_core cryptd dca shpchp ipmi_si wmi ipmi_msghandler acpi_cpufreq
+> nfsd auth_rpcgss nfs_acl lockd grace sunrpc xfs libcrc32c sr_mod cdrom sd_mod
+> mgag200 syscopyarea sysfillrect sysimgblt i2c_algo_bit drm_kms_helper isci ttm
+> drm libsas ahci libahci scsi_transport_sas libata i2c_core dm_mirror
+> dm_region_hash dm_log dm_mod
+>  CPU: 27 PID: 3204 Comm: insmod Tainted: G           OE  3.17.0+ #19
+>  Hardware name: Intel Corporation S2600CP/S2600CP, BIOS
+> RMLSDP.86I.00.29.D696.1311111329 11/11/2013
+>  task: ffff880034e75160 ti: ffff8807fc5ac000 task.ti: ffff8807fc5ac000
+>  RIP: 0010:[<ffffffff81076b81>]  [<ffffffff81076b81>] warn_slowpath_common+0xc1/0xd0
+>  RSP: 0018:ffff8807fc5afc68  EFLAGS: 00010246
+>  RAX: 0000000000000021 RBX: ffff8807fc5afcb0 RCX: 0000000000000000
+>  RDX: 0000000000000000 RSI: ffff88081efee5f8 RDI: ffff88081efee5f8
+>  RBP: ffff8807fc5afc98 R08: 0000000000000096 R09: 0000000000000000
+>  R10: 0000000000000711 R11: ffff8807fc5af93e R12: ffffffffa0424070
+>  R13: 0000000000000019 R14: ffffffffa0423068 R15: 0000000000000009
+>  FS:  00007f2d4b034740(0000) GS:ffff88081efe0000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 00007f2d4a99f3c0 CR3: 00000007fd88b000 CR4: 00000000001407e0
+>  Stack:
+>   ffff8807fc5afcb8 ffffffff8199f020 ffff88080e396160 0000000000000000
+>   ffffffffa0423040 ffffffffa0425000 ffff8807fc5afd08 ffffffff81076be5
+>   0000000000000008 ffffffffa0424053 ffff880700000018 ffff8807fc5afd18
+>  Call Trace:
+>   [<ffffffffa0423040>] ? dummy_greetings+0x40/0x40 [dummy_module]
+>   [<ffffffff81076be5>] warn_slowpath_fmt+0x55/0x70
+>   [<ffffffffa0423068>] init_dummy+0x28/0x30 [dummy_module]
+>   [<ffffffff81002144>] do_one_initcall+0xd4/0x210
+>   [<ffffffff811b52c2>] ? __vunmap+0xc2/0x110
+>   [<ffffffff810f8889>] load_module+0x16a9/0x1b30
+>   [<ffffffff810f3d30>] ? store_uevent+0x70/0x70
+>   [<ffffffff810f49b9>] ? copy_module_from_fd.isra.44+0x129/0x180
+>   [<ffffffff810f8ec6>] SyS_finit_module+0xa6/0xd0
+>   [<ffffffff8166ce29>] system_call_fastpath+0x12/0x17
+>  Code: c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d c3 48 c7 c7 20 42 8a 81 31 c0 e8 fc
+> 80 5e 00 eb 80 48 c7 c7 78 42 8a 81 31 c0 e8 ec 80 5e 00 <0f> 0b 66 66 66 66 2e
+> 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55
+>  RIP  [<ffffffff81076b81>] warn_slowpath_common+0xc1/0xd0
+>   RSP <ffff8807fc5afc68>
+>  ---[ end trace 428218934a12088b ]---
+>
+> Successfully tested by me.
+>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Rusty Russell <rusty@rustcorp.com.au>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+> Cc: Fabian Frederick <fabf@skynet.be>
+> Cc: vgoyal@redhat.com
+> Cc: isimatu.yasuaki@jp.fujitsu.com
+> Cc: linux-doc@vger.kernel.org
+> Cc: kexec@lists.infradead.org
+> Cc: linux-api@vger.kernel.org
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>
+> [v2]: add /proc/sys/kernel/bug_on_warn, additional documentation, modify
+>       !slowpath cases
+> ---
+>  Documentation/kdump/kdump.txt       |    7 +++++++
+>  Documentation/kernel-parameters.txt |    3 +++
+>  Documentation/sysctl/kernel.txt     |   12 ++++++++++++
+>  include/asm-generic/bug.h           |   12 ++++++++++--
+>  include/linux/kernel.h              |    1 +
+>  include/uapi/linux/sysctl.h         |    1 +
+>  kernel/panic.c                      |   21 ++++++++++++++++++++-
+>  kernel/sysctl.c                     |    7 +++++++
+>  kernel/sysctl_binary.c              |    1 +
+>  9 files changed, 62 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> index 6c0b9f2..a04ed72 100644
+> --- a/Documentation/kdump/kdump.txt
+> +++ b/Documentation/kdump/kdump.txt
+> @@ -471,6 +471,13 @@ format. Crash is available on Dave Anderson's site at the following URL:
+>  
+>     http://people.redhat.com/~anderson/
+>  
+> +Trigger Kdump on WARN()
+> +=======================
+> +
+> +The kernel parameter, bug_on_warn, calls BUG() in all WARN() paths.  This
+> +will cause a kdump to occur at the BUG() call.  In cases where a user
+> +wants to specify this during runtime, /proc/sys/kernel/bug_on_warn can be
+> +set to 1 to achieve the same behaviour.
 
-On 10/22/2014 10:47 AM, Eric W. Biederman wrote:
-> Bjorn Helgaas <bhelgaas@google.com> writes:
->
->> [-cc Bill, +cc Zhen-Hua, Eric, Tom, Jerry]
->>
->> Hi Joerg,
->>
->> I was looking at Zhen-Hua's recent patches, trying to figure out if I
->> need to do anything with them.  Resetting devices in the old kernel
->> seems like a non-starter.  Resetting devices in the new kernel, ...,
->> well, maybe.  It seems ugly, and it seems like the sort of problem
->> that IOMMUs are designed to solve.  Anyway, I found this old
->> discussion that I didn't quite understand:
->
-> For context here is the kexec on panic design, and what I know from
-> previous rounds of similar conversations.
->
-> The way kexec on panic aka kdump is designed to work is that the
-> recovery kernel lives in a piece of memory reserved at boot time and
-> known not to be in use by any driver (because we never ever use it for
-> DMA).  If DMA's continue from any source the old kernel may be a little
-> more corrupted but our currently running kernel should not.
->
-> Device drivers that we use in the recovery kernel are required to be
-> able to initialize their devices from an arbitrary state or fail to
-> initialize their devices.
->
-> We have discussed things on various occassions but IOMMUs all have their
-> own individual idiosynchrousies and came late to the party so that it
-> is hard to generalize.
->
-> The reserved region is generally low enough in memory that simply
-> not using IOMMUs works.
->
-> The major challenge with initializing an IOMMU would be that there are
-> potentially devices whose driver is not loaded in the recover kernel
-> with on-going DMA sessions (perhaps a NIC in response to network
-> packet).
->
-> Which essentially means that if you are going to use an IOMMU slot in a
-> recovery kernel you have to either know that IOMMU slot was reserved for
-> the recovery kernel (what has always felt like the easiest way to me).
-> Or you have to know everything that could target that IOMMU slot has
-> been reset or has it's driver loaded.
->
-> I have always thought the simplist and easiest solution would be to
-> reserve a few IOMMU slots for the kexec on panic kernel.  But if folks
-> can find other ways to guarantee that an on-going DMA isn't targeting
-> an IOMMU slot (such as resetting everything downstream from that
-> IOMMU slot) more power to you.
->
->> On Wed, Jul 2, 2014 at 7:32 AM, Joerg Roedel <joro@8bytes.org> wrote:
->>> On Wed, Apr 30, 2014 at 11:49:33AM +0100, David Woodhouse wrote:
->>
->>>> After the last round of this patchset, we discussed a potential
->>>> improvement where you point every virtual bus address at the *same*
->>>> physical scratch page.
->>>
->>> That is a solution to prevent the in-flight DMA failures. But what
->>> happens when there is some in-flight DMA to a disk to write some inodes
->>> or a new superblock. Then this scratch address-space may cause
->>> filesystem corruption at worst.
->>
->> This in-flight DMA is from a device programmed by the old kernel, and
->> it would be reading data from the old kernel's buffers.  I think
->> you're suggesting that we might want that DMA read to complete so the
->> device can update filesystem metadata?
->>
->> I don't really understand that argument.  Don't we usually want to
->> stop any data from escaping the machine after a crash, on the theory
->> that the old kernel is crashing because something is catastrophically
->> wrong and we may have already corrupted things in memory?  If so,
->> allowing this old DMA to complete is just as likely to make things
->> worse as to make them better.
->>
->> Without kdump, we likely would reboot through the BIOS and the device
->> would get reset and the DMA would never happen at all.  So if we made
->> the dump kernel program the IOMMU to prevent the DMA, that seems like
->> a similar situation.
->>
->>> So with this in mind I would prefer initially taking over the
->>> page-tables from the old kernel before the device drivers re-initialize
->>> the devices.
->>
->> This makes the dump kernel more dependent on data from the old kernel,
->> which we obviously want to avoid when possible.
->>
->> I didn't find the previous discussion where pointing every virtual bus
->> address at the same physical scratch page was proposed.  Why was that
->> better than programming the IOMMU to reject every DMA?
->>
->> Bjorn
->
-> Eric
->
+What about during early boot?
 
+I'd recommend you use core_param().  Less code, and can be set on
+commandline.
+
+Cheers,
+Rusty.
 
 _______________________________________________
 kexec mailing list
