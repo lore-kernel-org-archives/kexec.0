@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <55067c8e9bb7ccd1db6027e668a6a05e3d66aec3.1414099246.git.geoff@infradead.org>
+Message-Id: <411296ab915959b862923d827e730a1db2ff9b4e.1414099246.git.geoff@infradead.org>
 In-Reply-To: <cover.1414099246.git.geoff@infradead.org>
 References: <cover.1414099246.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 03/10] arm64: Add new hcall HVC_CALL_FUNC
+Subject: [PATCH 05/10] arm64: Convert dts to use reserved-memory nodes
 Date: Thu, 23 Oct 2014 23:10:58 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,69 +21,84 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: marc.zyngier@arm.com, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
-During CPU reset the CPU must be brought to the exception level it had on
-entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
-needed for this exception level switch.
+Device tree regions described by /memreserve/ entries are not available in
+/proc/device-tree, and hence are not available to user space utilities that use
+/proc/device-tree.  In order for these regions to be available, convert any
+arm64 DTS files using /memreserve/ entries to use reserved-memory nodes.
+
+This change is required for kexec re-boot to work properly when a user does not
+specify a second stage DTB via the kexec --dtb option.  When the --dtb option is
+not specified kexec will prepare the second stage DTB using data from
+/proc/device-tree.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/virt.h | 13 +++++++++++++
- arch/arm64/kernel/hyp-stub.S  | 17 ++++++++++++++---
- 2 files changed, 27 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/foundation-v8.dts  | 13 +++++++++++--
+ arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 13 +++++++++++--
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-index 99c319c..055e8d8 100644
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -41,6 +41,19 @@
+diff --git a/arch/arm64/boot/dts/foundation-v8.dts b/arch/arm64/boot/dts/foundation-v8.dts
+index 4a06090..2b76c2d 100644
+--- a/arch/arm64/boot/dts/foundation-v8.dts
++++ b/arch/arm64/boot/dts/foundation-v8.dts
+@@ -6,8 +6,6 @@
  
- #define HVC_CALL_HYP 3
+ /dts-v1/;
  
-+/*
-+ * HVC_CALL_FUNC - Execute a function at EL2.
-+ *
-+ * @x0: Physical address of the funtion to be executed.
-+ * @x1: Passed as the first argument to the function.
-+ * @x2: Passed as the second argument to the function.
-+ * @x3: Passed as the third argument to the function.
-+ *
-+ * The called function must preserve the contents of register x18.
-+ */
+-/memreserve/ 0x80000000 0x00010000;
+-
+ / {
+ 	model = "Foundation-v8A";
+ 	compatible = "arm,foundation-aarch64", "arm,vexpress";
+@@ -64,6 +62,17 @@
+ 		      <0x00000008 0x80000000 0 0x80000000>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+#define HVC_CALL_FUNC 4
++		firmware-memory@0x80000000 {
++			no-map;
++			reg = <0x0 0x80000000 0x0 0x00010000>;
++		};
++	};
 +
- #ifndef __ASSEMBLY__
+ 	gic: interrupt-controller@2c001000 {
+ 		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
+diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
+index 572005e..0f80807 100644
+--- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
++++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
+@@ -9,8 +9,6 @@
  
- /*
-diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index 9ce8746..719c726 100644
---- a/arch/arm64/kernel/hyp-stub.S
-+++ b/arch/arm64/kernel/hyp-stub.S
-@@ -66,9 +66,20 @@ el1_sync:
- 	mrs	x0, vbar_el2
- 	b	2f
+ /dts-v1/;
  
--1:	cmp	x18, #HVC_SET_VECTORS
--	b.ne	2f
--	msr	vbar_el2, x0
-+1:	cmp     x18, #HVC_SET_VECTORS
-+	b.ne    1f
-+	msr     vbar_el2, x0
-+	b       2f
+-/memreserve/ 0x80000000 0x00010000;
+-
+ / {
+ 	model = "RTSM_VE_AEMv8A";
+ 	compatible = "arm,rtsm_ve,aemv8a", "arm,vexpress";
+@@ -67,6 +65,17 @@
+ 		      <0x00000008 0x80000000 0 0x80000000>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+1:	cmp     x18, #HVC_CALL_FUNC
-+	b.ne    2f
-+	mov     x18, lr
-+	mov     lr, x0
-+	mov     x0, x1
-+	mov     x1, x2
-+	mov     x2, x3
-+	blr     lr
-+	mov     lr, x18
- 
- 2:	eret
- ENDPROC(el1_sync)
++		firmware-memory@0x80000000 {
++			no-map;
++			reg = <0x0 0x80000000 0x0 0x00010000>;
++		};
++	};
++
+ 	gic: interrupt-controller@2c001000 {
+ 		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
 -- 
 1.9.1
 
