@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <f57759dbc105dd3996acd959d4e3157224ff81fa.1414099246.git.geoff@infradead.org>
+Message-Id: <10887b908ca3695a58ded54e8dffa5b7e252d102.1414099246.git.geoff@infradead.org>
 In-Reply-To: <cover.1414099246.git.geoff@infradead.org>
 References: <cover.1414099246.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 01/10] arm64/kvm: Fix assembler compatibility of macros
+Subject: [PATCH 07/10] arm64: Move proc-macros.S to include/asm
 Date: Thu, 23 Oct 2014 23:10:58 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,85 +21,171 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: marc.zyngier@arm.com, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-Some of the macros defined in kvm_arm.h are useful in assembly files, but are
-not compatible with the assembler.  Change any C language integer constant
-definitions using appended U, UL, or ULL to the UL() preprocessor macro.  Also,
-add a preprocessor include of the asm/memory.h file which defines the UL()
-macro.
-
-Fixes build errors like these when using kvm_arm.h in assembly
-source files:
-
-  Error: unexpected characters following instruction at operand 3 -- `and x0,x1,#((1U<<25)-1)'
+To allow the assembler macros defined in proc-macros.S to be used outside
+the mm code move the proc-macros.S file from arch/arm64/mm/ to
+arch/arm64/include/asm/ and fix up any preprocessor includes to use the new
+file location.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/kvm_arm.h | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ arch/arm64/include/asm/proc-macros.S | 54 ++++++++++++++++++++++++++++++++++++
+ arch/arm64/mm/cache.S                |  3 +-
+ arch/arm64/mm/proc-macros.S          | 54 ------------------------------------
+ arch/arm64/mm/proc.S                 |  3 +-
+ 4 files changed, 56 insertions(+), 58 deletions(-)
+ create mode 100644 arch/arm64/include/asm/proc-macros.S
+ delete mode 100644 arch/arm64/mm/proc-macros.S
 
-diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-index cc83520..9038a26 100644
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -18,6 +18,7 @@
- #ifndef __ARM64_KVM_ARM_H__
- #define __ARM64_KVM_ARM_H__
+diff --git a/arch/arm64/include/asm/proc-macros.S b/arch/arm64/include/asm/proc-macros.S
+new file mode 100644
+index 0000000..005d29e
+--- /dev/null
++++ b/arch/arm64/include/asm/proc-macros.S
+@@ -0,0 +1,54 @@
++/*
++ * Based on arch/arm/mm/proc-macros.S
++ *
++ * Copyright (C) 2012 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <asm/asm-offsets.h>
++#include <asm/thread_info.h>
++
++/*
++ * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
++ */
++	.macro	vma_vm_mm, rd, rn
++	ldr	\rd, [\rn, #VMA_VM_MM]
++	.endm
++
++/*
++ * mmid - get context id from mm pointer (mm->context.id)
++ */
++	.macro	mmid, rd, rn
++	ldr	\rd, [\rn, #MM_CONTEXT_ID]
++	.endm
++
++/*
++ * dcache_line_size - get the minimum D-cache line size from the CTR register.
++ */
++	.macro	dcache_line_size, reg, tmp
++	mrs	\tmp, ctr_el0			// read CTR
++	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
++	mov	\reg, #4			// bytes per word
++	lsl	\reg, \reg, \tmp		// actual cache line size
++	.endm
++
++/*
++ * icache_line_size - get the minimum I-cache line size from the CTR register.
++ */
++	.macro	icache_line_size, reg, tmp
++	mrs	\tmp, ctr_el0			// read CTR
++	and	\tmp, \tmp, #0xf		// cache line size encoding
++	mov	\reg, #4			// bytes per word
++	lsl	\reg, \reg, \tmp		// actual cache line size
++	.endm
+diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
+index 2366383..4e811a4 100644
+--- a/arch/arm64/mm/cache.S
++++ b/arch/arm64/mm/cache.S
+@@ -20,8 +20,7 @@
+ #include <linux/linkage.h>
+ #include <linux/init.h>
+ #include <asm/assembler.h>
+-
+-#include "proc-macros.S"
++#include <asm/proc-macros.S>
  
-+#include <asm/memory.h>
- #include <asm/types.h>
+ /*
+  *	__flush_dcache_all()
+diff --git a/arch/arm64/mm/proc-macros.S b/arch/arm64/mm/proc-macros.S
+deleted file mode 100644
+index 005d29e..0000000
+--- a/arch/arm64/mm/proc-macros.S
++++ /dev/null
+@@ -1,54 +0,0 @@
+-/*
+- * Based on arch/arm/mm/proc-macros.S
+- *
+- * Copyright (C) 2012 ARM Ltd.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-
+-#include <asm/asm-offsets.h>
+-#include <asm/thread_info.h>
+-
+-/*
+- * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
+- */
+-	.macro	vma_vm_mm, rd, rn
+-	ldr	\rd, [\rn, #VMA_VM_MM]
+-	.endm
+-
+-/*
+- * mmid - get context id from mm pointer (mm->context.id)
+- */
+-	.macro	mmid, rd, rn
+-	ldr	\rd, [\rn, #MM_CONTEXT_ID]
+-	.endm
+-
+-/*
+- * dcache_line_size - get the minimum D-cache line size from the CTR register.
+- */
+-	.macro	dcache_line_size, reg, tmp
+-	mrs	\tmp, ctr_el0			// read CTR
+-	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
+-	mov	\reg, #4			// bytes per word
+-	lsl	\reg, \reg, \tmp		// actual cache line size
+-	.endm
+-
+-/*
+- * icache_line_size - get the minimum I-cache line size from the CTR register.
+- */
+-	.macro	icache_line_size, reg, tmp
+-	mrs	\tmp, ctr_el0			// read CTR
+-	and	\tmp, \tmp, #0xf		// cache line size encoding
+-	mov	\reg, #4			// bytes per word
+-	lsl	\reg, \reg, \tmp		// actual cache line size
+-	.endm
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index 7467199..b767032 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -25,10 +25,9 @@
+ #include <asm/hwcap.h>
+ #include <asm/pgtable-hwdef.h>
+ #include <asm/pgtable.h>
++#include <asm/proc-macros.S>
+ #include <asm/virt.h>
  
- /* Hyp Configuration Register (HCR) bits */
-@@ -149,9 +150,9 @@
- #endif
- 
- #define VTTBR_BADDR_SHIFT (VTTBR_X - 1)
--#define VTTBR_BADDR_MASK  (((1LLU << (40 - VTTBR_X)) - 1) << VTTBR_BADDR_SHIFT)
--#define VTTBR_VMID_SHIFT  (48LLU)
--#define VTTBR_VMID_MASK	  (0xffLLU << VTTBR_VMID_SHIFT)
-+#define VTTBR_BADDR_MASK  (((UL(1) << (40 - VTTBR_X)) - 1) << VTTBR_BADDR_SHIFT)
-+#define VTTBR_VMID_SHIFT  (UL(48))
-+#define VTTBR_VMID_MASK	  (UL(0xFF) << VTTBR_VMID_SHIFT)
- 
- /* Hyp System Trap Register */
- #define HSTR_EL2_TTEE	(1 << 16)
-@@ -174,13 +175,13 @@
- 
- /* Exception Syndrome Register (ESR) bits */
- #define ESR_EL2_EC_SHIFT	(26)
--#define ESR_EL2_EC		(0x3fU << ESR_EL2_EC_SHIFT)
--#define ESR_EL2_IL		(1U << 25)
-+#define ESR_EL2_EC		(UL(0x3f) << ESR_EL2_EC_SHIFT)
-+#define ESR_EL2_IL		(UL(1) << 25)
- #define ESR_EL2_ISS		(ESR_EL2_IL - 1)
- #define ESR_EL2_ISV_SHIFT	(24)
--#define ESR_EL2_ISV		(1U << ESR_EL2_ISV_SHIFT)
-+#define ESR_EL2_ISV		(UL(1) << ESR_EL2_ISV_SHIFT)
- #define ESR_EL2_SAS_SHIFT	(22)
--#define ESR_EL2_SAS		(3U << ESR_EL2_SAS_SHIFT)
-+#define ESR_EL2_SAS		(UL(3) << ESR_EL2_SAS_SHIFT)
- #define ESR_EL2_SSE		(1 << 21)
- #define ESR_EL2_SRT_SHIFT	(16)
- #define ESR_EL2_SRT_MASK	(0x1f << ESR_EL2_SRT_SHIFT)
-@@ -194,16 +195,16 @@
- #define ESR_EL2_FSC_TYPE	(0x3c)
- 
- #define ESR_EL2_CV_SHIFT	(24)
--#define ESR_EL2_CV		(1U << ESR_EL2_CV_SHIFT)
-+#define ESR_EL2_CV		(UL(1) << ESR_EL2_CV_SHIFT)
- #define ESR_EL2_COND_SHIFT	(20)
--#define ESR_EL2_COND		(0xfU << ESR_EL2_COND_SHIFT)
-+#define ESR_EL2_COND		(UL(0xf) << ESR_EL2_COND_SHIFT)
- 
- 
- #define FSC_FAULT	(0x04)
- #define FSC_PERM	(0x0c)
- 
- /* Hyp Prefetch Fault Address Register (HPFAR/HDFAR) */
--#define HPFAR_MASK	(~0xFUL)
-+#define HPFAR_MASK	(~UL(0xf))
- 
- #define ESR_EL2_EC_UNKNOWN	(0x00)
- #define ESR_EL2_EC_WFI		(0x01)
+-#include "proc-macros.S"
+-
+ #ifdef CONFIG_ARM64_64K_PAGES
+ #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
+ #else
 -- 
 1.9.1
 
