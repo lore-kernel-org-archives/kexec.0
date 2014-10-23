@@ -1,25 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xh6ST-0005xw-Nj
- for kexec@lists.infradead.org; Thu, 23 Oct 2014 00:40:55 +0000
-Received: from kw-mxq.gw.nic.fujitsu.com (unknown [10.0.237.131])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 594203EE0BB
- for <kexec@lists.infradead.org>; Thu, 23 Oct 2014 09:40:29 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 8B12AAC05ED
- for <kexec@lists.infradead.org>; Thu, 23 Oct 2014 09:40:28 +0900 (JST)
-Received: from g01jpfmpwyt03.exch.g01.fujitsu.local
- (g01jpfmpwyt03.exch.g01.fujitsu.local [10.128.193.57])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 324C41DB802C
- for <kexec@lists.infradead.org>; Thu, 23 Oct 2014 09:40:28 +0900 (JST)
-Message-ID: <54484E44.3080904@jp.fujitsu.com>
-Date: Thu, 23 Oct 2014 09:39:32 +0900
-From: Yasuaki Ishimatsu <isimatu.yasuaki@jp.fujitsu.com>
+ id 1XhCPz-0002nY-Up
+ for kexec@lists.infradead.org; Thu, 23 Oct 2014 07:02:45 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: Enable --mem-usage for s390x
+Date: Thu, 23 Oct 2014 06:56:47 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D580A9@BPXM01GP.gisp.nec.co.jp>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+ <20140922170247.36774052@holzheu>
+ <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
+ <20140924171904.1db5ac90@holzheu>
+ <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
+ <20140926101057.14549a12@holzheu>
+ <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
+ <20140926133441.5e58303c@holzheu>
+ <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
+ <20140929151413.4e9bd1ab@holzheu>
+ <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
+ <20141001185953.66c6ae9d@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D4D5E4@BPXM01GP.gisp.nec.co.jp>
+ <20141010142310.4c488f6a@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D4E4E4@BPXM01GP.gisp.nec.co.jp>
+ <20141016143753.726f63c0@holzheu>
+In-Reply-To: <20141016143753.726f63c0@holzheu>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH V2] kernel, add bug_on_warn
-References: <1413910077-9464-1-git-send-email-prarit@redhat.com>
-In-Reply-To: <1413910077-9464-1-git-send-email-prarit@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,322 +38,220 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prarit Bhargava <prarit@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, "H.
- Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org, vgoyal@redhat.com
+To: "bhe@redhat.com" <bhe@redhat.com>, "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-(2014/10/22 1:47), Prarit Bhargava wrote:
-> There have been several times where I have had to rebuild a kernel to
-> cause a panic when hitting a WARN() in the code in order to get a crash
-> dump from a system.  Sometimes this is easy to do, other times (such as
-> in the case of a remote admin) it is not trivial to send new images to the
-> user.
-> 
-> A much easier method would be a switch to change the WARN() over to a
-> BUG().  This makes debugging easier in that I can now test the actual
-> image the WARN() was seen on and I do not have to engage in remote
-> debugging.
-> 
-> This patch adds a bug_on_warn kernel parameter, which calls BUG() in the
-> warn_slowpath_common() path.  The function will still print out the
-> location of the warning.
-> 
-> An example of the bug_on_warn output:
-> 
-> The first line below is from the WARN_ON() to output the WARN_ON()'s location.
-> After that the new BUG() call is displayed.
-> 
->   WARNING: CPU: 27 PID: 3204 at
-> /home/rhel7/redhat/debug/dummy-module/dummy-module.c:25 init_dummy+0x28/0x30
-> [dummy_module]()
->   bug_on_warn set, calling BUG()...
->   ------------[ cut here ]------------
->   kernel BUG at kernel/panic.c:434!
->   invalid opcode: 0000 [#1] SMP
->   Modules linked in: dummy_module(OE+) sg nfsv3 rpcsec_gss_krb5 nfsv4
-> dns_resolver nfs fscache cfg80211 rfkill x86_pkg_temp_thermal intel_powerclamp
-> coretemp kvm_intel kvm crct10dif_pclmul crc32_pclmul crc32c_intel
-> ghash_clmulni_intel igb iTCO_wdt aesni_intel iTCO_vendor_support lrw gf128mul
-> sb_edac ptp edac_core glue_helper lpc_ich ioatdma pcspkr ablk_helper pps_core
-> i2c_i801 mfd_core cryptd dca shpchp ipmi_si wmi ipmi_msghandler acpi_cpufreq
-> nfsd auth_rpcgss nfs_acl lockd grace sunrpc xfs libcrc32c sr_mod cdrom sd_mod
-> mgag200 syscopyarea sysfillrect sysimgblt i2c_algo_bit drm_kms_helper isci ttm
-> drm libsas ahci libahci scsi_transport_sas libata i2c_core dm_mirror
-> dm_region_hash dm_log dm_mod
->   CPU: 27 PID: 3204 Comm: insmod Tainted: G           OE  3.17.0+ #19
->   Hardware name: Intel Corporation S2600CP/S2600CP, BIOS
-> RMLSDP.86I.00.29.D696.1311111329 11/11/2013
->   task: ffff880034e75160 ti: ffff8807fc5ac000 task.ti: ffff8807fc5ac000
->   RIP: 0010:[<ffffffff81076b81>]  [<ffffffff81076b81>] warn_slowpath_common+0xc1/0xd0
->   RSP: 0018:ffff8807fc5afc68  EFLAGS: 00010246
->   RAX: 0000000000000021 RBX: ffff8807fc5afcb0 RCX: 0000000000000000
->   RDX: 0000000000000000 RSI: ffff88081efee5f8 RDI: ffff88081efee5f8
->   RBP: ffff8807fc5afc98 R08: 0000000000000096 R09: 0000000000000000
->   R10: 0000000000000711 R11: ffff8807fc5af93e R12: ffffffffa0424070
->   R13: 0000000000000019 R14: ffffffffa0423068 R15: 0000000000000009
->   FS:  00007f2d4b034740(0000) GS:ffff88081efe0000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: 00007f2d4a99f3c0 CR3: 00000007fd88b000 CR4: 00000000001407e0
->   Stack:
->    ffff8807fc5afcb8 ffffffff8199f020 ffff88080e396160 0000000000000000
->    ffffffffa0423040 ffffffffa0425000 ffff8807fc5afd08 ffffffff81076be5
->    0000000000000008 ffffffffa0424053 ffff880700000018 ffff8807fc5afd18
->   Call Trace:
->    [<ffffffffa0423040>] ? dummy_greetings+0x40/0x40 [dummy_module]
->    [<ffffffff81076be5>] warn_slowpath_fmt+0x55/0x70
->    [<ffffffffa0423068>] init_dummy+0x28/0x30 [dummy_module]
->    [<ffffffff81002144>] do_one_initcall+0xd4/0x210
->    [<ffffffff811b52c2>] ? __vunmap+0xc2/0x110
->    [<ffffffff810f8889>] load_module+0x16a9/0x1b30
->    [<ffffffff810f3d30>] ? store_uevent+0x70/0x70
->    [<ffffffff810f49b9>] ? copy_module_from_fd.isra.44+0x129/0x180
->    [<ffffffff810f8ec6>] SyS_finit_module+0xa6/0xd0
->    [<ffffffff8166ce29>] system_call_fastpath+0x12/0x17
->   Code: c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d c3 48 c7 c7 20 42 8a 81 31 c0 e8 fc
-> 80 5e 00 eb 80 48 c7 c7 78 42 8a 81 31 c0 e8 ec 80 5e 00 <0f> 0b 66 66 66 66 2e
-> 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55
->   RIP  [<ffffffff81076b81>] warn_slowpath_common+0xc1/0xd0
->    RSP <ffff8807fc5afc68>
->   ---[ end trace 428218934a12088b ]---
-> 
-> Successfully tested by me.
-> 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Rusty Russell <rusty@rustcorp.com.au>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-> Cc: Fabian Frederick <fabf@skynet.be>
-> Cc: vgoyal@redhat.com
-> Cc: isimatu.yasuaki@jp.fujitsu.com
-> Cc: linux-doc@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> Cc: linux-api@vger.kernel.org
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> 
-> [v2]: add /proc/sys/kernel/bug_on_warn, additional documentation, modify
->        !slowpath cases
-> ---
->   Documentation/kdump/kdump.txt       |    7 +++++++
->   Documentation/kernel-parameters.txt |    3 +++
->   Documentation/sysctl/kernel.txt     |   12 ++++++++++++
->   include/asm-generic/bug.h           |   12 ++++++++++--
->   include/linux/kernel.h              |    1 +
->   include/uapi/linux/sysctl.h         |    1 +
->   kernel/panic.c                      |   21 ++++++++++++++++++++-
->   kernel/sysctl.c                     |    7 +++++++
->   kernel/sysctl_binary.c              |    1 +
->   9 files changed, 62 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> index 6c0b9f2..a04ed72 100644
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -471,6 +471,13 @@ format. Crash is available on Dave Anderson's site at the following URL:
->   
->      http://people.redhat.com/~anderson/
->   
-> +Trigger Kdump on WARN()
-> +=======================
-> +
-> +The kernel parameter, bug_on_warn, calls BUG() in all WARN() paths.  This
-> +will cause a kdump to occur at the BUG() call.  In cases where a user
-> +wants to specify this during runtime, /proc/sys/kernel/bug_on_warn can be
-> +set to 1 to achieve the same behaviour.
->   
->   Contact
->   =======
-> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> index 988160a..3890a3a 100644
-> --- a/Documentation/kernel-parameters.txt
-> +++ b/Documentation/kernel-parameters.txt
-> @@ -553,6 +553,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
->   	bttv.pll=	See Documentation/video4linux/bttv/Insmod-options
->   	bttv.tuner=
->   
-> +	bug_on_warn	BUG() instead of WARN().  Useful to cause kdump
-> +			on a WARN().
-> +
->   	bulk_remove=off	[PPC]  This parameter disables the use of the pSeries
->   			firmware feature for flushing multiple hpte entries
->   			at a time.
-> diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-> index 57baff5..dcadcdc 100644
-> --- a/Documentation/sysctl/kernel.txt
-> +++ b/Documentation/sysctl/kernel.txt
-> @@ -23,6 +23,7 @@ show up in /proc/sys/kernel:
->   - auto_msgmni
->   - bootloader_type	     [ X86 only ]
->   - bootloader_version	     [ X86 only ]
-> +- bug_on_warn
->   - callhome		     [ S390 only ]
->   - cap_last_cap
->   - core_pattern
-> @@ -152,6 +153,17 @@ Documentation/x86/boot.txt for additional information.
->   
->   ==============================================================
->   
-> +bug_on_warn:
-> +
-> +Calls BUG() in the WARN() path when set to 1.  This is useful to avoid
-> +a kernel rebuild when attempting to kdump at the location of a WARN().
-> +
-> +0: only WARN(), default behaviour.
-> +
-> +1: call BUG() after printing out WARN() location.
-> +
-> +==============================================================
-> +
->   callhome:
->   
->   Controls the kernel's callhome behavior in case of a kernel panic.
-> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-> index 630dd23..4d0c763 100644
-> --- a/include/asm-generic/bug.h
-> +++ b/include/asm-generic/bug.h
-> @@ -75,10 +75,18 @@ extern void warn_slowpath_null(const char *file, const int line);
->   #define __WARN_printf_taint(taint, arg...)				\
->   	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
->   #else
-> -#define __WARN()		__WARN_TAINT(TAINT_WARN)
-> +#define check_bug_on_warn()						\
-> +	do {								\
-> +		if (bug_on_warn)					\
-> +			BUG();						\
-> +	} while (0)
-> +
-> +#define __WARN()							\
-> +	do { __WARN_TAINT(TAINT_WARN); check_bug_on_warn(); } while (0)
-> +
->   #define __WARN_printf(arg...)	do { printk(arg); __WARN(); } while (0)
->   #define __WARN_printf_taint(taint, arg...)				\
-> -	do { printk(arg); __WARN_TAINT(taint); } while (0)
-> +	do { printk(arg); __WARN_TAINT(taint); check_bug_on_warn(); } while (0)
->   #endif
->   
->   #ifndef WARN_ON
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 40728cf..4094a60 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -422,6 +422,7 @@ extern int panic_on_oops;
->   extern int panic_on_unrecovered_nmi;
->   extern int panic_on_io_nmi;
->   extern int sysctl_panic_on_stackoverflow;
-> +extern int bug_on_warn;
->   /*
->    * Only to be used by arch init code. If the user over-wrote the default
->    * CONFIG_PANIC_TIMEOUT, honor it.
-> diff --git a/include/uapi/linux/sysctl.h b/include/uapi/linux/sysctl.h
-> index 43aaba1..2ba0a58 100644
-> --- a/include/uapi/linux/sysctl.h
-> +++ b/include/uapi/linux/sysctl.h
-> @@ -153,6 +153,7 @@ enum
->   	KERN_MAX_LOCK_DEPTH=74, /* int: rtmutex's maximum lock depth */
->   	KERN_NMI_WATCHDOG=75, /* int: enable/disable nmi watchdog */
->   	KERN_PANIC_ON_NMI=76, /* int: whether we will panic on an unrecovered */
-> +	KERN_BUG_ON_WARN=77, /* int: call BUG() in WARN() functions */
->   };
->   
->   
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index d09dc5c..a6d2e2f 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -33,6 +33,7 @@ static int pause_on_oops;
->   static int pause_on_oops_flag;
->   static DEFINE_SPINLOCK(pause_on_oops_lock);
->   static bool crash_kexec_post_notifiers;
-> +int bug_on_warn;
->   
->   int panic_timeout = CONFIG_PANIC_TIMEOUT;
->   EXPORT_SYMBOL_GPL(panic_timeout);
-> @@ -420,13 +421,24 @@ static void warn_slowpath_common(const char *file, int line, void *caller,
->   {
->   	disable_trace_on_warning();
->   
-> -	pr_warn("------------[ cut here ]------------\n");
-> +	if (!bug_on_warn)
-> +		pr_warn("------------[ cut here ]------------\n");
->   	pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS()\n",
->   		raw_smp_processor_id(), current->pid, file, line, caller);
->   
->   	if (args)
->   		vprintk(args->fmt, args->args);
->   
-> +	if (bug_on_warn) {
-> +		pr_warn("bug_on_warn set, calling BUG()...\n");
-> +		/*
-> +		 * A flood of WARN()s may occur.  Prevent further WARN()s
-> +		 * from panicking the system.
-> +		 */
-> +		bug_on_warn = 0;
-> +		BUG();
-> +	}
-> +
->   	print_modules();
->   	dump_stack();
->   	print_oops_end_marker();
-> @@ -501,3 +513,10 @@ static int __init oops_setup(char *s)
->   	return 0;
->   }
->   early_param("oops", oops_setup);
-> +
-> +static int __init bug_on_warn_setup(char *s)
-> +{
-> +	bug_on_warn = 1;
-> +	return 0;
-> +}
-> +early_param("bug_on_warn", bug_on_warn_setup);
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 4aada6d..030bb5d 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1103,6 +1103,13 @@ static struct ctl_table kern_table[] = {
->   		.proc_handler	= proc_dointvec,
->   	},
->   #endif
-> +	{
-> +		.procname	= "bug_on_warn",
-> +		.data		= &bug_on_warn,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
+>On Tue, 14 Oct 2014 07:19:13 +0000
+>Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+>
+>[snip]
+>
+>>
+>> I understand why your patch works on s390x, so how about this way ?
+>>
+>>  1. Define "is_phys_addr()" for --mem-usage.
+>>  2. Implement is_phys_addr() using is_iomem_phys_addr() for s390x
+>>     while x86_64 uses is_vmalloc_addr_x86_64().
+>>  3. Use is_phys_addr() instead of is_vmalloc_addr() in get_kcore_dump_loads().
+>
+>Hello Atsushi,
+>
+>Great, so let's do that.
+>
+>@Baoquan:
+>If you want to use the is_iomem_phys_addr() function also for x86,
+>you could perhaps add an additional patch.
 
-> +		.proc_handler	= proc_dointvec,
+I noticed that is_vmalloc_addr_x86_64() can't be used as is_phys_addr()
+due to the "kaslr issue". I fixed it in the common path as below, but
+--mem-usage still has the same issue since initial() will be invoked
+after get_kcore_dump_loads().
 
-How about use:
-+		.proc_handler   = proc_dointvec_minmax,
-+		.extra1         = &zero,
-+		.extra2         = &one,
+  http://lists.infradead.org/pipermail/kexec/2014-October/012743.html
 
-Document says as follows but it can set other vaule.
+I know it's so late, but I began to think the current implementation
+that invokes vaddr_to_paddr_XXX() before initial() is bad:
 
-> +0: only WARN(), default behaviour.
-> +
-> +1: call BUG() after printing out WARN() location.
+show_mem_usage()
+  + get_kcore_dump_loads()
+    + process_dump_load()
+      + vaddr_to_paddr_XXX()
+  + initial()
+  ...
+
+vaddr_to_paddr_XXX() does VtoP translation *properly*, so it needs
+several symbols. This design is OK since it's a general method.
+OTOH, we need a kludge which can be used under any situations and
+should use it for --mem-usage:
+
+  VtoP_kludge_s390x(unsigned long vaddr) 
+  {
+	/* s390 has 1:1 VtoP mapping that starts with zero. */
+  	return vaddr;
+  }
+
+also x86_64's can be implemented like below:
+
+  VtoP_kludge_x86_64(unsigned long vaddr) 
+  {
+	/* if the address is direct mapped, it's easy to translate. */
+	unsigned long paddr = vaddr - PAGE_OFFSET;
+	return paddr;
+  }
+
+>Here the updated patch:
+>---
+>[PATCH] makedumpfile: Enable --mem-usage for s390x
+>
+>Replace is_vmalloc_addr() by is_phys_addr() and implement is_phys_addr()
+>using /proc/iommem parsing to enable the new makedumpfile option "--mem-usage"
+>on s390x.
+>
+>Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+>---
+> elf_info.c     |    4 ++--
+> makedumpfile.c |   26 ++++++++++++++++++++++++++
+> makedumpfile.h |   15 ++++++++-------
+> 3 files changed, 36 insertions(+), 9 deletions(-)
+>
+>--- a/elf_info.c
+>+++ b/elf_info.c
+>@@ -854,7 +854,7 @@ int get_kcore_dump_loads(void)
+>
+> 	for (i = 0; i < num_pt_loads; ++i) {
+> 		struct pt_load_segment *p = &pt_loads[i];
+>-		if (is_vmalloc_addr(p->virt_start))
+>+		if (!is_phys_addr(p->virt_start))
+
+This part implicitly does VtoP translation.
+Actually it works for s390x but it's not suitable as a general code,
+so we should use VtoP_kludge(should be better name!) too.
+Then we can use is_iomem_phys_addr() also for other architecture.
+
 
 Thanks,
-Yasuaki Ishimatsu
+Atsushi Kumagai
 
-> +	},
->   	{ }
->   };
->   
-> diff --git a/kernel/sysctl_binary.c b/kernel/sysctl_binary.c
-> index 9a4f750..28376bf 100644
-> --- a/kernel/sysctl_binary.c
-> +++ b/kernel/sysctl_binary.c
-> @@ -137,6 +137,7 @@ static const struct bin_table bin_kern_table[] = {
->   	{ CTL_INT,	KERN_COMPAT_LOG,		"compat-log" },
->   	{ CTL_INT,	KERN_MAX_LOCK_DEPTH,		"max_lock_depth" },
->   	{ CTL_INT,	KERN_PANIC_ON_NMI,		"panic_on_unrecovered_nmi" },
-> +	{ CTL_INT,	KERN_BUG_ON_WARN,		"bug_on_warn" },
->   	{}
->   };
->   
-> 
-
+> 			continue;
+> 		loads++;
+> 	}
+>@@ -874,7 +874,7 @@ int get_kcore_dump_loads(void)
+>
+> 	for (i = 0, j = 0; i < num_pt_loads; ++i) {
+> 		struct pt_load_segment *p = &pt_loads[i];
+>-		if (is_vmalloc_addr(p->virt_start))
+>+		if (!is_phys_addr(p->virt_start))
+> 			continue;
+> 		if (j >= loads)
+> 			return FALSE;
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -9227,6 +9227,32 @@ int is_crashkernel_mem_reserved(void)
+> 	return !!crash_reserved_mem_nr;
+> }
+>
+>+struct addr_check {
+>+	unsigned long addr;
+>+	int found;
+>+};
+>+
+>+static int phys_addr_callback(void *data, int nr, char *str,
+>+			      unsigned long base, unsigned long length)
+>+{
+>+	struct addr_check *addr_check = data;
+>+	unsigned long addr = addr_check->addr;
+>+
+>+	if (addr >= base && addr < base + length) {
+>+		addr_check->found = 1;
+>+		return -1;
+>+	}
+>+	return 0;
+>+}
+>+
+>+int is_iomem_phys_addr(unsigned long addr)
+>+{
+>+	struct addr_check addr_check = {addr, 0};
+>+
+>+	iomem_for_each_line("System RAM\n", phys_addr_callback, &addr_check);
+>+	return addr_check.found;
+>+}
+>+
+> static int get_page_offset(void)
+> {
+> 	struct utsname utsname;
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -765,7 +765,7 @@ unsigned long long vaddr_to_paddr_arm(un
+> #define get_machdep_info()	get_machdep_info_arm()
+> #define get_versiondep_info()	TRUE
+> #define vaddr_to_paddr(X)	vaddr_to_paddr_arm(X)
+>-#define is_vmalloc_addr(X)	TRUE
+>+#define is_phys_addr(X)		TRUE
+> #endif /* arm */
+>
+> #ifdef __x86__
+>@@ -776,7 +776,7 @@ unsigned long long vaddr_to_paddr_x86(un
+> #define get_machdep_info()	get_machdep_info_x86()
+> #define get_versiondep_info()	get_versiondep_info_x86()
+> #define vaddr_to_paddr(X)	vaddr_to_paddr_x86(X)
+>-#define is_vmalloc_addr(X)	TRUE
+>+#define is_phys_addr(X)		TRUE
+> #endif /* x86 */
+>
+> #ifdef __x86_64__
+>@@ -789,7 +789,7 @@ unsigned long long vaddr_to_paddr_x86_64
+> #define get_machdep_info()	get_machdep_info_x86_64()
+> #define get_versiondep_info()	get_versiondep_info_x86_64()
+> #define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
+>-#define is_vmalloc_addr(X)	is_vmalloc_addr_x86_64(X)
+>+#define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X)
+> #endif /* x86_64 */
+>
+> #ifdef __powerpc64__ /* powerpc64 */
+>@@ -800,7 +800,7 @@ unsigned long long vaddr_to_paddr_ppc64(
+> #define get_machdep_info()	get_machdep_info_ppc64()
+> #define get_versiondep_info()	get_versiondep_info_ppc64()
+> #define vaddr_to_paddr(X)	vaddr_to_paddr_ppc64(X)
+>-#define is_vmalloc_addr(X)	TRUE
+>+#define is_phys_addr(X)		TRUE
+> #endif          /* powerpc64 */
+>
+> #ifdef __powerpc32__ /* powerpc32 */
+>@@ -810,7 +810,7 @@ unsigned long long vaddr_to_paddr_ppc(un
+> #define get_machdep_info()	get_machdep_info_ppc()
+> #define get_versiondep_info()	TRUE
+> #define vaddr_to_paddr(X)	vaddr_to_paddr_ppc(X)
+>-#define is_vmalloc_addr(X)	TRUE
+>+#define is_phys_addr(X)		TRUE
+> #endif          /* powerpc32 */
+>
+> #ifdef __s390x__ /* s390x */
+>@@ -820,7 +820,7 @@ unsigned long long vaddr_to_paddr_s390x(
+> #define get_machdep_info()	get_machdep_info_s390x()
+> #define get_versiondep_info()	TRUE
+> #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
+>-#define is_vmalloc_addr(X)	TRUE
+>+#define is_phys_addr(X)		is_iomem_phys_addr(X)
+> #endif          /* s390x */
+>
+> #ifdef __ia64__ /* ia64 */
+>@@ -832,7 +832,7 @@ unsigned long long vaddr_to_paddr_ia64(u
+> #define get_versiondep_info()	TRUE
+> #define vaddr_to_paddr(X)	vaddr_to_paddr_ia64(X)
+> #define VADDR_REGION(X)		(((unsigned long)(X)) >> REGION_SHIFT)
+>-#define is_vmalloc_addr(X)	TRUE
+>+#define is_phys_addr(X)		TRUE
+> #endif          /* ia64 */
+>
+> typedef unsigned long long mdf_pfn_t;
+>@@ -1567,6 +1567,7 @@ int read_disk_dump_header(struct disk_du
+> int read_kdump_sub_header(struct kdump_sub_header *kh, char *filename);
+> void close_vmcoreinfo(void);
+> int close_files_for_creating_dumpfile(void);
+>+int is_iomem_phys_addr(unsigned long addr);
+>
+>
+> /*
 
 
 _______________________________________________
