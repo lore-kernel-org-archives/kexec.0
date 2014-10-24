@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XhaM0-0002wr-A1
- for kexec@lists.infradead.org; Fri, 24 Oct 2014 08:36:14 +0000
-Received: from int-mx13.intmail.prod.int.phx2.redhat.com
- (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id s9O8ZmZu004758
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
- for <kexec@lists.infradead.org>; Fri, 24 Oct 2014 04:35:48 -0400
-Message-ID: <1414118726.7717.21.camel@serendib>
-Subject: Re: [PATCH] makedumpfile.8: "cache without private" column of the
- table for -d appears to be incorrect
-From: Harshula Jayasuriya <harshula@redhat.com>
-Date: Fri, 24 Oct 2014 13:45:26 +1100
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D5675E@BPXM01GP.gisp.nec.co.jp>
-References: <1413269123.514.72.camel@serendib>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D564D0@BPXM01GP.gisp.nec.co.jp>
- <1413510540.514.175.camel@serendib>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D5675E@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Date: Fri, 24 Oct 2014 10:24:51 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 01/10] arm64/kvm: Fix assembler compatibility of macros
+Message-ID: <20141024092451.GA24265@leverpostej>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <f57759dbc105dd3996acd959d4e3157224ff81fa.1414099246.git.geoff@infradead.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <f57759dbc105dd3996acd959d4e3157224ff81fa.1414099246.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,157 +20,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: Minoru Usui <usui@mxm.nes.nec.co.jp>, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Fri, 2014-10-17 at 07:37 +0000, Atsushi Kumagai wrote:
-> >Hi,
-> >
-> >On Fri, 2014-10-17 at 01:02 +0000, Atsushi Kumagai wrote:
-> >> Hello,
-> >>
-> >> >Hi,
-> >> >
-> >> >The makedumpfile man page contains a table explaining the usage of -d.
-> >> >The "cache without private" column implies that -d 4 would exclude "cache
-> >> >without private" pages. However, a -d 4 should only exclude "cache with
-> >> >private".
-> >>
-> >> "cache with private" includes "cache without private" because the latter
-> >> doesn't mean leaving private cache pages, just mean excluding cache pages
-> >> except private pages. Meanwhile, "cache with private" means excluding both
-> >> cache pages (private and non-private). So "with private" meets "without private"
-> >> in this feature, they aren't exclusive.
-> >> This style is for diskdump compatibility, but now I suspect it may be
-> >> bit confusing.
-> >
-> >Ahhh I see! ;-)
-> >
-> >> I don't want to change the behavior of the page filtering, but I guess
-> >> changing the column names might be meaningful.
-> >
-> >Would the following help?
-> >
-> >a) s/cache without private/non-private cache/
-> >
-> >b) s/cache with private/all cache/
+On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
+> Some of the macros defined in kvm_arm.h are useful in assembly files, but are
+> not compatible with the assembler.  Change any C language integer constant
+> definitions using appended U, UL, or ULL to the UL() preprocessor macro.  Also,
+> add a preprocessor include of the asm/memory.h file which defines the UL()
+> macro.
 > 
-> Thanks for your suggestion, but now I think each column should
-> be exclusive to make the rule consistent. Actually, other columns
-> (zero page, user data, free page) are exclusive.
+> Fixes build errors like these when using kvm_arm.h in assembly
+> source files:
 > 
-> So let's name the two like below:
+>   Error: unexpected characters following instruction at operand 3 -- `and x0,x1,#((1U<<25)-1)'
 > 
->  a) non-private cache
->  b) private cache
-> 
->                      |      |non-   |       |      |
->                 dump | zero |private|private| user | free
->                level | page |cache  |cache  | data | page
->               -------+------+-------+-------+------+------
->                  ...
->                    4 |      |   X   |   X   |      |
->                    5 |  X   |   X   |   X   |      |
-> 
-> then marking the both columns for level 4 will be natural.
-> I'll post a patch later if there is no objection.
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-Looks good to me!
+Thanks for putting this together, Geoff.
 
-cya,
-#
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-> Thanks,
-> Atsushi Kumagai
+Thanks,
+Mark.
+
+> ---
+>  arch/arm64/include/asm/kvm_arm.h | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
 > 
-> >cya,
-> >#
-> >
-> >> I'm curious to know what everyone thought of the two columns. This can
-> >> be a good opportunity to make the manual easier to understand.
-> >>
-> >>
-> >> Thanks,
-> >> Atsushi Kumagai
-> >>
-> >> >makedumpfile.h:
-> >> >------------------------------------------------------------
-> >> > #define DL_EXCLUDE_CACHE        (0x002) /* Exclude Cache Pages
-> >> >                                            without Private Pages */
-> >> >------------------------------------------------------------
-> >> >
-> >> >makedumpfile.8:
-> >> >------------------------------------------------------------
-> >> >                     |      |cache  |cache  |      |
-> >> >                dump | zero |without|with   | user | free
-> >> >               level | page |private|private| data | page
-> >> >              -------+------+-------+-------+------+------
-> >> >                   0 |      |       |       |      |
-> >> >                   1 |  X   |       |       |      |
-> >> >                   2 |      |   X   |       |      |
-> >> >                   3 |  X   |   X   |       |      |
-> >> >                   4 |      |   X   |   X   |      |
-> >> >                   5 |  X   |   X   |   X   |      |
-> >> >                   6 |      |   X   |   X   |      |
-> >> >                   7 |  X   |   X   |   X   |      |
-> >> >                   8 |      |       |       |  X   |
-> >> >------------------------------------------------------------
-> >> >
-> >> >Signed-off-by: Harshula Jayasuriya <harshula@redhat.com>
-> >> >---
-> >> > makedumpfile.8 | 16 ++++++++--------
-> >> > 1 file changed, 8 insertions(+), 8 deletions(-)
-> >> >
-> >> >diff --git a/makedumpfile.8 b/makedumpfile.8
-> >> >index 9cb12c0..382c6ee 100644
-> >> >--- a/makedumpfile.8
-> >> >+++ b/makedumpfile.8
-> >> >@@ -174,32 +174,32 @@ by dump_level 11, makedumpfile retries it by dump_level 31.
-> >> >      1 |  X   |       |       |      |
-> >> >      2 |      |   X   |       |      |
-> >> >      3 |  X   |   X   |       |      |
-> >> >-     4 |      |   X   |   X   |      |
-> >> >-     5 |  X   |   X   |   X   |      |
-> >> >+     4 |      |       |   X   |      |
-> >> >+     5 |  X   |       |   X   |      |
-> >> >      6 |      |   X   |   X   |      |
-> >> >      7 |  X   |   X   |   X   |      |
-> >> >      8 |      |       |       |  X   |
-> >> >      9 |  X   |       |       |  X   |
-> >> >     10 |      |   X   |       |  X   |
-> >> >     11 |  X   |   X   |       |  X   |
-> >> >-    12 |      |   X   |   X   |  X   |
-> >> >-    13 |  X   |   X   |   X   |  X   |
-> >> >+    12 |      |       |   X   |  X   |
-> >> >+    13 |  X   |       |   X   |  X   |
-> >> >     14 |      |   X   |   X   |  X   |
-> >> >     15 |  X   |   X   |   X   |  X   |
-> >> >     16 |      |       |       |      |  X
-> >> >     17 |  X   |       |       |      |  X
-> >> >     18 |      |   X   |       |      |  X
-> >> >     19 |  X   |   X   |       |      |  X
-> >> >-    20 |      |   X   |   X   |      |  X
-> >> >-    21 |  X   |   X   |   X   |      |  X
-> >> >+    20 |      |       |   X   |      |  X
-> >> >+    21 |  X   |       |   X   |      |  X
-> >> >     22 |      |   X   |   X   |      |  X
-> >> >     23 |  X   |   X   |   X   |      |  X
-> >> >     24 |      |       |       |  X   |  X
-> >> >     25 |  X   |       |       |  X   |  X
-> >> >     26 |      |   X   |       |  X   |  X
-> >> >     27 |  X   |   X   |       |  X   |  X
-> >> >-    28 |      |   X   |   X   |  X   |  X
-> >> >-    29 |  X   |   X   |   X   |  X   |  X
-> >> >+    28 |      |       |   X   |  X   |  X
-> >> >+    29 |  X   |       |   X   |  X   |  X
-> >> >     30 |      |   X   |   X   |  X   |  X
-> >> >     31 |  X   |   X   |   X   |  X   |  X
-> >> >
-> >> >--
-> >> >1.9.3
-> >
-
-
+> diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
+> index cc83520..9038a26 100644
+> --- a/arch/arm64/include/asm/kvm_arm.h
+> +++ b/arch/arm64/include/asm/kvm_arm.h
+> @@ -18,6 +18,7 @@
+>  #ifndef __ARM64_KVM_ARM_H__
+>  #define __ARM64_KVM_ARM_H__
+>  
+> +#include <asm/memory.h>
+>  #include <asm/types.h>
+>  
+>  /* Hyp Configuration Register (HCR) bits */
+> @@ -149,9 +150,9 @@
+>  #endif
+>  
+>  #define VTTBR_BADDR_SHIFT (VTTBR_X - 1)
+> -#define VTTBR_BADDR_MASK  (((1LLU << (40 - VTTBR_X)) - 1) << VTTBR_BADDR_SHIFT)
+> -#define VTTBR_VMID_SHIFT  (48LLU)
+> -#define VTTBR_VMID_MASK	  (0xffLLU << VTTBR_VMID_SHIFT)
+> +#define VTTBR_BADDR_MASK  (((UL(1) << (40 - VTTBR_X)) - 1) << VTTBR_BADDR_SHIFT)
+> +#define VTTBR_VMID_SHIFT  (UL(48))
+> +#define VTTBR_VMID_MASK	  (UL(0xFF) << VTTBR_VMID_SHIFT)
+>  
+>  /* Hyp System Trap Register */
+>  #define HSTR_EL2_TTEE	(1 << 16)
+> @@ -174,13 +175,13 @@
+>  
+>  /* Exception Syndrome Register (ESR) bits */
+>  #define ESR_EL2_EC_SHIFT	(26)
+> -#define ESR_EL2_EC		(0x3fU << ESR_EL2_EC_SHIFT)
+> -#define ESR_EL2_IL		(1U << 25)
+> +#define ESR_EL2_EC		(UL(0x3f) << ESR_EL2_EC_SHIFT)
+> +#define ESR_EL2_IL		(UL(1) << 25)
+>  #define ESR_EL2_ISS		(ESR_EL2_IL - 1)
+>  #define ESR_EL2_ISV_SHIFT	(24)
+> -#define ESR_EL2_ISV		(1U << ESR_EL2_ISV_SHIFT)
+> +#define ESR_EL2_ISV		(UL(1) << ESR_EL2_ISV_SHIFT)
+>  #define ESR_EL2_SAS_SHIFT	(22)
+> -#define ESR_EL2_SAS		(3U << ESR_EL2_SAS_SHIFT)
+> +#define ESR_EL2_SAS		(UL(3) << ESR_EL2_SAS_SHIFT)
+>  #define ESR_EL2_SSE		(1 << 21)
+>  #define ESR_EL2_SRT_SHIFT	(16)
+>  #define ESR_EL2_SRT_MASK	(0x1f << ESR_EL2_SRT_SHIFT)
+> @@ -194,16 +195,16 @@
+>  #define ESR_EL2_FSC_TYPE	(0x3c)
+>  
+>  #define ESR_EL2_CV_SHIFT	(24)
+> -#define ESR_EL2_CV		(1U << ESR_EL2_CV_SHIFT)
+> +#define ESR_EL2_CV		(UL(1) << ESR_EL2_CV_SHIFT)
+>  #define ESR_EL2_COND_SHIFT	(20)
+> -#define ESR_EL2_COND		(0xfU << ESR_EL2_COND_SHIFT)
+> +#define ESR_EL2_COND		(UL(0xf) << ESR_EL2_COND_SHIFT)
+>  
+>  
+>  #define FSC_FAULT	(0x04)
+>  #define FSC_PERM	(0x0c)
+>  
+>  /* Hyp Prefetch Fault Address Register (HPFAR/HDFAR) */
+> -#define HPFAR_MASK	(~0xFUL)
+> +#define HPFAR_MASK	(~UL(0xf))
+>  
+>  #define ESR_EL2_EC_UNKNOWN	(0x00)
+>  #define ESR_EL2_EC_WFI		(0x01)
+> -- 
+> 1.9.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 _______________________________________________
 kexec mailing list
