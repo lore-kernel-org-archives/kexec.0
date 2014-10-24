@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 24 Oct 2014 10:24:51 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 01/10] arm64/kvm: Fix assembler compatibility of macros
-Message-ID: <20141024092451.GA24265@leverpostej>
-References: <cover.1414099246.git.geoff@infradead.org>
- <f57759dbc105dd3996acd959d4e3157224ff81fa.1414099246.git.geoff@infradead.org>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XhbEg-0007i1-El
+ for kexec@lists.infradead.org; Fri, 24 Oct 2014 09:32:43 +0000
+Date: Fri, 24 Oct 2014 11:32:19 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Kernel dump file access library (repost)
+Message-ID: <20141024113219.2bb5eeef@hananiah.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f57759dbc105dd3996acd959d4e3157224ff81fa.1414099246.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,107 +20,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: kexec@lists.infradead.org, "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
-> Some of the macros defined in kvm_arm.h are useful in assembly files, but are
-> not compatible with the assembler.  Change any C language integer constant
-> definitions using appended U, UL, or ULL to the UL() preprocessor macro.  Also,
-> add a preprocessor include of the asm/memory.h file which defines the UL()
-> macro.
-> 
-> Fixes build errors like these when using kvm_arm.h in assembly
-> source files:
-> 
->   Error: unexpected characters following instruction at operand 3 -- `and x0,x1,#((1U<<25)-1)'
-> 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+[Seems, I used the wrong address; sorry for possible double posting.]
 
-Thanks for putting this together, Geoff.
+Hi all,
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+during this year's SUSE HackWeek, my colleague started work on enabling
+kernel core files in gdb. I realized that there would be at least four
+different programs implementing read access to kernel dump files:
 
-Thanks,
-Mark.
+  1. the crash utility
+  2. makedumpfile (when re-filtering)
+  3. kdumpid (my project to get kernel version from a dump file)
+  4. gdb-kdump (started by my colleague during HackWeek)
 
-> ---
->  arch/arm64/include/asm/kvm_arm.h | 21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-> index cc83520..9038a26 100644
-> --- a/arch/arm64/include/asm/kvm_arm.h
-> +++ b/arch/arm64/include/asm/kvm_arm.h
-> @@ -18,6 +18,7 @@
->  #ifndef __ARM64_KVM_ARM_H__
->  #define __ARM64_KVM_ARM_H__
->  
-> +#include <asm/memory.h>
->  #include <asm/types.h>
->  
->  /* Hyp Configuration Register (HCR) bits */
-> @@ -149,9 +150,9 @@
->  #endif
->  
->  #define VTTBR_BADDR_SHIFT (VTTBR_X - 1)
-> -#define VTTBR_BADDR_MASK  (((1LLU << (40 - VTTBR_X)) - 1) << VTTBR_BADDR_SHIFT)
-> -#define VTTBR_VMID_SHIFT  (48LLU)
-> -#define VTTBR_VMID_MASK	  (0xffLLU << VTTBR_VMID_SHIFT)
-> +#define VTTBR_BADDR_MASK  (((UL(1) << (40 - VTTBR_X)) - 1) << VTTBR_BADDR_SHIFT)
-> +#define VTTBR_VMID_SHIFT  (UL(48))
-> +#define VTTBR_VMID_MASK	  (UL(0xFF) << VTTBR_VMID_SHIFT)
->  
->  /* Hyp System Trap Register */
->  #define HSTR_EL2_TTEE	(1 << 16)
-> @@ -174,13 +175,13 @@
->  
->  /* Exception Syndrome Register (ESR) bits */
->  #define ESR_EL2_EC_SHIFT	(26)
-> -#define ESR_EL2_EC		(0x3fU << ESR_EL2_EC_SHIFT)
-> -#define ESR_EL2_IL		(1U << 25)
-> +#define ESR_EL2_EC		(UL(0x3f) << ESR_EL2_EC_SHIFT)
-> +#define ESR_EL2_IL		(UL(1) << 25)
->  #define ESR_EL2_ISS		(ESR_EL2_IL - 1)
->  #define ESR_EL2_ISV_SHIFT	(24)
-> -#define ESR_EL2_ISV		(1U << ESR_EL2_ISV_SHIFT)
-> +#define ESR_EL2_ISV		(UL(1) << ESR_EL2_ISV_SHIFT)
->  #define ESR_EL2_SAS_SHIFT	(22)
-> -#define ESR_EL2_SAS		(3U << ESR_EL2_SAS_SHIFT)
-> +#define ESR_EL2_SAS		(UL(3) << ESR_EL2_SAS_SHIFT)
->  #define ESR_EL2_SSE		(1 << 21)
->  #define ESR_EL2_SRT_SHIFT	(16)
->  #define ESR_EL2_SRT_MASK	(0x1f << ESR_EL2_SRT_SHIFT)
-> @@ -194,16 +195,16 @@
->  #define ESR_EL2_FSC_TYPE	(0x3c)
->  
->  #define ESR_EL2_CV_SHIFT	(24)
-> -#define ESR_EL2_CV		(1U << ESR_EL2_CV_SHIFT)
-> +#define ESR_EL2_CV		(UL(1) << ESR_EL2_CV_SHIFT)
->  #define ESR_EL2_COND_SHIFT	(20)
-> -#define ESR_EL2_COND		(0xfU << ESR_EL2_COND_SHIFT)
-> +#define ESR_EL2_COND		(UL(0xf) << ESR_EL2_COND_SHIFT)
->  
->  
->  #define FSC_FAULT	(0x04)
->  #define FSC_PERM	(0x0c)
->  
->  /* Hyp Prefetch Fault Address Register (HPFAR/HDFAR) */
-> -#define HPFAR_MASK	(~0xFUL)
-> +#define HPFAR_MASK	(~UL(0xf))
->  
->  #define ESR_EL2_EC_UNKNOWN	(0x00)
->  #define ESR_EL2_EC_WFI		(0x01)
-> -- 
-> 1.9.1
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+At this point, I felt that's too much re-inventing the wheel again and
+again, so I took my current code from kdumpid and adapted it as a
+library that can be used by everybody:
+
+    https://github.com/ptesarik/libkdumpfile
+
+In its current shape, it's usable, but far from complete.
+
+Things that work already:
+   - identify kdump file format
+   - parsed meta-information from the header
+   - open ELF, diskdump, makedumpfile, LKCD
+   - read data by physical address (incl. Xen Dom0)
+   - read data by Xen machine address
+
+Things still on my TODO list:
+   - more formats: sadump, kvmdump, libvirt, xc_core, xc_save
+   - determine phys_base in ELF files
+   - determine kernel release if not found in headers
+
+Ideally, I would like to replace all current implementations with this
+library, so if a new file format appears, or a new feature is added to
+one of the files, it can be immediately used by all kdump-related tools.
+
+Please let me know what you think.
+Oh, and if you're developing such a tool, let me know which features
+should be added.
+
+Regards,
+Petr Tesarik
 
 _______________________________________________
 kexec mailing list
