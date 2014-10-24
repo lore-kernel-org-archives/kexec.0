@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XhdDk-0004H4-IZ
- for kexec@lists.infradead.org; Fri, 24 Oct 2014 11:39:53 +0000
-Message-ID: <544A3A69.6010302@redhat.com>
-Date: Fri, 24 Oct 2014 07:39:21 -0400
-From: Prarit Bhargava <prarit@redhat.com>
+Date: Fri, 24 Oct 2014 13:18:44 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 06/10] arm64: Update booting.txt to reserved-memory nodes
+Message-ID: <20141024121844.GG24265@leverpostej>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <b56c0def845535b41b6c00bffdd9d91de5ddae5c.1414099246.git.geoff@infradead.org>
+ <20141024105432.GE24265@leverpostej>
+ <CACxGe6tpKMk7e6OZSG2O-JWGT_jUTE3-4u_4Nn=d4QNccJd+-Q@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH V3] kernel, add bug_on_warn
-References: <1414068794-22788-1-git-send-email-prarit@redhat.com>
- <20141023124034.f835060a667cde2bf6e9190c@linux-foundation.org>
-In-Reply-To: <20141023124034.f835060a667cde2bf6e9190c@linux-foundation.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6tpKMk7e6OZSG2O-JWGT_jUTE3-4u_4Nn=d4QNccJd+-Q@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,130 +22,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, linux-api@vger.kernel.org, vgoyal@redhat.com
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-
-
-On 10/23/2014 03:40 PM, Andrew Morton wrote:
-> On Thu, 23 Oct 2014 08:53:14 -0400 Prarit Bhargava <prarit@redhat.com> wrote:
+On Fri, Oct 24, 2014 at 12:04:00PM +0100, Grant Likely wrote:
+> On Fri, Oct 24, 2014 at 11:54 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
+> > > Change any reference of device tree '/memreserve/' entries in the arm64
+> > > booting.txt to refer to 'reserved-memory nodes'.  Reserved-memory nodes
+> > > are the preferred method of specifying reserved memory.
+> >
+> > Per my comments on patch 5, I don't think this change is sufficient.
+> >
+> > However, we should probably update the document to allow reserved-memory
+> > nodes.
+> >
+> > On an unrelated note we probably need to work out how reserved-memory
+> > interacts with the UEFI memory map -- unmappable regions shouldn't be
+> > described by UEFI and I hope people don't use reserved-memory as a
+> > workaround for broken UEFI tables.
 > 
->> There have been several times where I have had to rebuild a kernel to
->> cause a panic when hitting a WARN() in the code in order to get a crash
->> dump from a system.  Sometimes this is easy to do, other times (such as
->> in the case of a remote admin) it is not trivial to send new images to the
->> user.
->>
->> A much easier method would be a switch to change the WARN() over to a
->> BUG().  This makes debugging easier in that I can now test the actual
->> image the WARN() was seen on and I do not have to engage in remote
->> debugging.
->>
->> This patch adds a bug_on_warn kernel parameter, which calls BUG() in the
->> warn_slowpath_common() path.  The function will still print out the
->> location of the warning.
 > 
-> The changelog doesn't mention /proc/sys/kernel/bug_on_warn?
+> When booting with UEFI, the boot stub will clear out all memory nodes
+> and (should) clear out reserved regions so that the kernel can use the
+> UEFI memory map as authoritative.
 
-Oops ... I'll put that into a V4.
+We clear memory nodes and memreserves currently.
 
-> 
-> Why do we need both the sysctl and the kernel parameter?  Only to
-> trigger BUG for warnings which occur prior to initscripts.  Is there a
-> legitimate case for this?  Is kdump even usable at this time?
+I was thinking about reserved-memory nodes (for CMA and such), which we
+don't currently clear.
 
-The kernel parameter is more of a catch-all IMO.  I'm going to be instructing
-users to add it as a kernel parameter because I've found that most users are
-willing to do that than muck with echo'ing into a file.
-
-As Rusty pointed out, however, there may be cases where we're caught by an early
-WARN() in the boot sequence and we want to avoid BUG()'ing there, so that we
-catch the "run-time" WARN().
-
-> 
->> --- a/include/asm-generic/bug.h
->> +++ b/include/asm-generic/bug.h
->> @@ -75,10 +75,18 @@ extern void warn_slowpath_null(const char *file, const int line);
->>  #define __WARN_printf_taint(taint, arg...)				\
->>  	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
->>  #else
->> -#define __WARN()		__WARN_TAINT(TAINT_WARN)
->> +#define check_bug_on_warn()						\
->> +	do {								\
->> +		if (bug_on_warn)					\
->> +			BUG();						\
->> +	} while (0)
-> 
-> #define check_bug_on_warn() BUG_ON(bug_on_warn)
-> 
-> would suffice?
-> 
-
-I'll fix that.
-
->> +#define __WARN()							\
->> +	do { __WARN_TAINT(TAINT_WARN); check_bug_on_warn(); } while (0)
->> +
->>  #define __WARN_printf(arg...)	do { printk(arg); __WARN(); } while (0)
->>  #define __WARN_printf_taint(taint, arg...)				\
->> -	do { printk(arg); __WARN_TAINT(taint); } while (0)
->> +	do { printk(arg); __WARN_TAINT(taint); check_bug_on_warn(); } while (0)
->>  #endif
-> 
-> What's this code here for anyway?  The changes to
-> warn_slowpath_common() aren't sufficient?
-
-Oh ... you're right.  I got confused by the WANT_WARN_ON_SLOWPATH config option.
- I'll clean this up.
-
-> 
-
->>  #ifndef WARN_ON
->> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
->> index 40728cf..4094a60 100644
->> --- a/include/linux/kernel.h
->> +++ b/include/linux/kernel.h
->> @@ -422,6 +422,7 @@ extern int panic_on_oops;
->>  extern int panic_on_unrecovered_nmi;
->>  extern int panic_on_io_nmi;
->>  extern int sysctl_panic_on_stackoverflow;
->> +extern int bug_on_warn;
->>  /*
->>   * Only to be used by arch init code. If the user over-wrote the default
->>   * CONFIG_PANIC_TIMEOUT, honor it.
->> diff --git a/include/uapi/linux/sysctl.h b/include/uapi/linux/sysctl.h
->> index 43aaba1..2ba0a58 100644
->> --- a/include/uapi/linux/sysctl.h
->> +++ b/include/uapi/linux/sysctl.h
->> @@ -153,6 +153,7 @@ enum
->>  	KERN_MAX_LOCK_DEPTH=74, /* int: rtmutex's maximum lock depth */
->>  	KERN_NMI_WATCHDOG=75, /* int: enable/disable nmi watchdog */
->>  	KERN_PANIC_ON_NMI=76, /* int: whether we will panic on an unrecovered */
->> +	KERN_BUG_ON_WARN=77, /* int: call BUG() in WARN() functions */
->>  };
->>  
->>  
->> diff --git a/kernel/panic.c b/kernel/panic.c
->> index d09dc5c..a6d2e2f 100644
->> --- a/kernel/panic.c
->> +++ b/kernel/panic.c
->> @@ -33,6 +33,7 @@ static int pause_on_oops;
->>  static int pause_on_oops_flag;
->>  static DEFINE_SPINLOCK(pause_on_oops_lock);
->>  static bool crash_kexec_post_notifiers;
->> +int bug_on_warn;
-> 
-> I suppose this should be __read_mostly.  Assuming __read_mostly is
-> useful :(
-
-I'll change this too.
-
-P.
-
-> 
->>
->> ...
->>
+Mark.
 
 _______________________________________________
 kexec mailing list
