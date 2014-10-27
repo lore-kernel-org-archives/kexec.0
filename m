@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ie0-f182.google.com ([209.85.223.182])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xhg9f-0007Wh-93
- for kexec@lists.infradead.org; Fri, 24 Oct 2014 14:47:52 +0000
-Received: by mail-ie0-f182.google.com with SMTP id rd18so1934294iec.27
- for <kexec@lists.infradead.org>; Fri, 24 Oct 2014 07:47:30 -0700 (PDT)
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XiYqN-0004mg-F6
+ for kexec@lists.infradead.org; Mon, 27 Oct 2014 01:11:36 +0000
+Message-ID: <544D9AF9.2080608@cn.fujitsu.com>
+Date: Mon, 27 Oct 2014 09:08:09 +0800
+From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
+ <zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <20141024141007.GJ24265@leverpostej>
-References: <cover.1414099246.git.geoff@infradead.org>
- <b56c0def845535b41b6c00bffdd9d91de5ddae5c.1414099246.git.geoff@infradead.org>
- <20141024105432.GE24265@leverpostej>
- <CACxGe6tpKMk7e6OZSG2O-JWGT_jUTE3-4u_4Nn=d4QNccJd+-Q@mail.gmail.com>
- <20141024121844.GG24265@leverpostej>
- <CACxGe6s3W1U_5rz9gpvjxXJQenw21sum6oJ7o1ZhGLmzgN8U4Q@mail.gmail.com>
- <20141024141007.GJ24265@leverpostej>
-From: Grant Likely <grant.likely@linaro.org>
-Date: Fri, 24 Oct 2014 15:47:09 +0100
-Message-ID: <CACxGe6vLOSJ9356VtDiGh-E_Xg4mVF7D=aGpUgJBzOBcJvX5rA@mail.gmail.com>
-Subject: Re: [PATCH 06/10] arm64: Update booting.txt to reserved-memory nodes
+Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads
+ in appropriate time
+References: <1413192866-28140-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D565C0@BPXM01GP.gisp.nec.co.jp>
+ <54470DDD.6040700@cn.fujitsu.com>
+In-Reply-To: <54470DDD.6040700@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,67 +22,159 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-On Fri, Oct 24, 2014 at 3:10 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Fri, Oct 24, 2014 at 02:54:02PM +0100, Grant Likely wrote:
->> On Fri, Oct 24, 2014 at 1:18 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > On Fri, Oct 24, 2014 at 12:04:00PM +0100, Grant Likely wrote:
->> >> On Fri, Oct 24, 2014 at 11:54 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->> >> >
->> >> > On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
->> >> > > Change any reference of device tree '/memreserve/' entries in the arm64
->> >> > > booting.txt to refer to 'reserved-memory nodes'.  Reserved-memory nodes
->> >> > > are the preferred method of specifying reserved memory.
->> >> >
->> >> > Per my comments on patch 5, I don't think this change is sufficient.
->> >> >
->> >> > However, we should probably update the document to allow reserved-memory
->> >> > nodes.
->> >> >
->> >> > On an unrelated note we probably need to work out how reserved-memory
->> >> > interacts with the UEFI memory map -- unmappable regions shouldn't be
->> >> > described by UEFI and I hope people don't use reserved-memory as a
->> >> > workaround for broken UEFI tables.
->> >>
->> >>
->> >> When booting with UEFI, the boot stub will clear out all memory nodes
->> >> and (should) clear out reserved regions so that the kernel can use the
->> >> UEFI memory map as authoritative.
->> >
->> > We clear memory nodes and memreserves currently.
->> >
->> > I was thinking about reserved-memory nodes (for CMA and such), which we
->> > don't currently clear.
->>
->> We should either clear them, or make sure that they will coexist
->> happily with the UEFI map. I can think of a few situations, like CMA,
->> where still having the reserved-memory node would be a good idea.
->
-> My thinking would be that reservations which the kernel could choose to
-> ignore for whatever reason and use for general allocation (e.g. CMA)
-> make sense, but anything else is nonsense if it overlaps with available
-> memory in the UEFI memory map -- it shouldn't have been there to begin
-> with.
->
-> I don't know what the best thing to do in that case is. I'd like to
-> explode very loudly during bringup to get vendors to fix their UEFI
-> tables, but in the long run we might just have to reconcile the two and
-> align with the most stringent requirement. Good luck getting another OS
-> working in that case...
-
-On ACPI platforms this is a non-issue. On UEFI+FDT platforms there are
-unlikely to be any other operating systems significantly affected by
-this.
-
-g.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+cGluZy4uLgoKT24gMTAvMjIvMjAxNCAwOTo1MiBBTSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmR
+IiB3cm90ZToKPiBPbiAxMC8xNy8yMDE0IDExOjUwIEFNLCBBdHN1c2hpIEt1bWFnYWkgd3JvdGU6
+Cj4+IEhlbGxvLAo+Pgo+PiBUaGUgY29kZSBsb29rcyBnb29kIHRvIG1lLCB0aGFua3MgWmhvdS4K
+Pj4gTm93LCBJIGhhdmUgYSBxdWVzdGlvbiBvbiBwZXJmb3JtYW5jZS4KPj4KPj4+IFRoZSBpc3N1
+ZSBpcyBkaXNjdXNzZWQgYXQgaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2tl
+eGVjLzIwMTQtTWFyY2gvMDExMjg5Lmh0bWwKPj4+Cj4+PiBUaGlzIHBhdGNoIGltcGxlbWVudHMg
+dGhlIGlkZWEgb2YgMi1wYXNzIGFsZ29yaHl0aG0gd2l0aCBzbWFsbGVyIG1lbW9yeSB0byBtYW5h
+Z2Ugc3BsaXRibG9jayB0YWJsZS4KPj4+IEV4YWN0bHkgdGhlIGFsZ29yaHl0aG0gaXMgc3RpbGwg
+My1wYXNzLGJ1dCB0aGUgdGltZSBvZiBzZWNvbmQgcGFzcyBpcyBtdWNoIHNob3J0ZXIuCj4+PiBU
+aGUgdGFibGVzIGJlbG93IHNob3cgdGhlIHBlcmZvcm1lbmNlIHdpdGggZGlmZmVyZW50IHNpemUg
+b2YgY3ljbGljLWJ1ZmZlciBhbmQgc3BsaXRibG9jay4KPj4+IFRoZSB0ZXN0IGlzIGV4ZWN1dGVk
+IG9uIHRoZSBtYWNoaW5lIGhhdmluZyAxMjhHIG1lbW9yeS4KPj4+Cj4+PiB0aGUgdmFsdWUgaXMg
+dG90YWwgdGltZSAoaW5jbHVkaW5nIGZpcnN0IHBhc3MgYW5kIHNlY29uZCBwYXNzKS4KPj4+IHRo
+ZSB2YWx1ZSBpbiBicmFja2V0cyBpcyB0aGUgdGltZSBvZiBzZWNvbmQgcGFzcy4KPj4KPj4gRG8g
+eW91IGhhdmUgYW55IGlkZWEgd2h5IHRoZSB0aW1lIG9mIHNlY29uZCBwYXNzIGlzIG11Y2ggbGFy
+Z2VyIHdoZW4KPj4gdGhlIHNwbGl0YmxvY2stc2l6ZSBpcyAyRyA/IEkgd29ycnkgYWJvdXQgdGhl
+IHNjYWxhYmlsaXR5Lgo+Pgo+IEhlbGxvLAo+Cj4gU2luY2UgdGhlIHByZXZpb3VzIG1hY2hpbmUg
+Y2FuJ3QgYmUgdXNlZCBmb3Igc29tZSByZWFzb25zLEkgdGVzdCBzZXZlcmFsIHRpbWVzIHVzaW5n
+IGxhdGVzdCBjb2RlCj4gaW4gb3RoZXJzLCBidXQgdGhhdCBuZXZlciBoYXBwZW5lZC4gSXQgc2Vl
+bXMgdGhhdCBhbGwgdGhpbmdzIGFyZSByaWdodC4gVGVzdHMgYXJlIGV4ZWN1dGVkIGluIHR3byBt
+YWNoaW5lcyhzZXJ2ZXIscGMpLgo+IFRlc3RzIGFyZSBiYXNlZCBvbjoKPiB0ZXN0MToKPiBtYWNo
+aW5lOiBzZXJ2ZXIKPiBjcmFzaGtlcm5lbDogNTEyTQo+IHZtY29yZTogL3Byb2Mvdm1jb3JlICgx
+MjhHKQo+Cj4KPiB0ZXN0MjoKPiBtYWNoaW5lOiBwYwo+IGNyYXNoa2VybmVsOiAyNTZNCj4gdm1j
+b3JlOiB2bWNvcmUgZHVtcGVkIGZyb20gdGhlIHNlcnZlcgo+Cj4gdGVzdDM6Cj4gbWFjaGluZTog
+cGMKPiBjcmFzaGtlcm5lbDogMTI4TQo+IHZtY29yZTogdm1jb3JlIGR1bXBlZCBmcm9tIHRoZSBz
+ZXJ2ZXIKPgo+Cj4KPiB0ZXN0MToKPiBzZWMKPiBjeWMtYnVmIDIgNCA4IDE2IDMyIDY0Cj4gc3Bs
+YmxrLXNpemUKPiAyTSAxLjUzKDAuMDApIDEuMjQoMC4wMCkgMS4wOCgwLjAxKSAwLjk5KDAuMDEp
+IDAuOTUoMC4wMSkgMC45NSgwLjA0KQo+IDRNIDEuNTIoMC4wMCkgMS4yNCgwLjAwKSAxLjA4KDAu
+MDEpIDAuOTkoMC4wMSkgMC45NSgwLjAxKSAwLjk2KDAuMDQpCj4gOE0gMS41MygwLjAwKSAxLjIz
+KDAuMDApIDEuMDgoMC4wMSkgMC45OSgwLjAxKSAwLjk1KDAuMDEpIDAuOTUoMC4wNCkKPiAxNk0g
+MS41MygwLjAwKSAxLjI0KDAuMDApIDEuMDgoMC4wMSkgMS4wMCgwLjAxKSAwLjk0KDAuMDEpIDAu
+OTYoMC4wNCkKPiAzMk0gMS41MigwLjAwKSAxLjI1KDAuMDApIDEuMDgoMC4wMSkgMC45OSgwLjAx
+KSAwLjk0KDAuMDEpIDAuOTYoMC4wNSkKPiA2NE0gMS41MigwLjAwKSAxLjIzKDAuMDApIDEuMDco
+MC4wMSkgMC45OSgwLjAxKSAwLjk3KDAuMDEpIDAuOTYoMC4wNSkKPiAxMjhNIDEuNTQoMC4wMSkg
+MS4yNSgwLjAxKSAxLjA4KDAuMDEpIDAuOTkoMC4wMSkgMC45NigwLjAyKSAwLjk2KDAuMDUpCj4g
+MjU2TSAxLjUzKDAuMDEpIDEuMjUoMC4wMSkgMS4wOCgwLjAxKSAwLjk5KDAuMDEpIDAuOTUoMC4w
+MikgMC45NigwLjA1KQo+IDUxMk0gMS41MygwLjAxKSAxLjI1KDAuMDEpIDEuMDcoMC4wMSkgMS4w
+MSgwLjAyKSAwLjk1KDAuMDIpIDAuOTYoMC4wNSkKPiAxRyAxLjU0KDAuMDIpIDEuMjUoMC4wMikg
+MS4wOCgwLjAyKSAxLjAwKDAuMDIpIDAuOTYoMC4wMykgMC45NygwLjA2KQo+IDJHIDEuNTkoMC4w
+NykgMS4zMCgwLjA2KSAxLjExKDAuMDUpIDEuMDQoMC4wNikgMS4wMCgwLjA3KSAwLjk4KDAuMDcp
+Cj4gNEcgMS42MCgwLjA4KSAxLjMxKDAuMDcpIDEuMTQoMC4wNykgMS4wNSgwLjA3KSAxLjAyKDAu
+MDgpIDEuMDAoMC4wOCkKPiA4RyAxLjYwKDAuMDgpIDEuMzEoMC4wNykgMS4xNCgwLjA3KSAxLjA1
+KDAuMDcpIDEuMDIoMC4wOCkgMC45OSgwLjA4KQo+IDE2RyAxLjYwKDAuMDgpIDEuMzAoMC4wNykg
+MS4xNCgwLjA3KSAxLjA1KDAuMDcpIDEuMDIoMC4wOCkgMC45OSgwLjA4KQo+Cj4gY3ljLWJ1ZiAx
+MjggMjU2IDUxMiAxMDI0IDIwNDggNDA5Ngo+IHNwbGJsay1zaXplCj4gMk0gMC45NSgwLjA0KSAw
+Ljk0KDAuMDQpIDAuOTQoMC4wNCkgMC45NSgwLjA1KSAwLjk0KDAuMDUpIDEuNjgoMC43OCkKPiA0
+TSAwLjk1KDAuMDQpIDAuOTQoMC4wNCkgMC45NCgwLjA0KSAwLjk1KDAuMDUpIDAuOTQoMC4wNSkg
+MS42NygwLjc4KQo+IDhNIDAuOTQoMC4wNCkgMC45NCgwLjA0KSAwLjk0KDAuMDQpIDAuOTUoMC4w
+NSkgMC45NSgwLjA1KSAxLjY4KDAuNzgpCj4gMTZNIDAuOTYoMC4wNSkgMC45NCgwLjA0KSAwLjk1
+KDAuMDUpIDAuOTQoMC4wNCkgMC45NCgwLjA1KSAxLjY4KDAuNzgpCj4gMzJNIDAuOTUoMC4wNSkg
+MC45NCgwLjA1KSAwLjk0KDAuMDUpIDAuOTQoMC4wNSkgMC45NCgwLjA1KSAxLjY4KDAuNzgpCj4g
+NjRNIDAuOTYoMC4wNSkgMC45NSgwLjA1KSAwLjk0KDAuMDUpIDAuOTQoMC4wNSkgMC45NSgwLjA1
+KSAxLjY3KDAuNzgpCj4gMTI4TSAwLjk2KDAuMDUpIDAuOTUoMC4wNSkgMC45NSgwLjA1KSAwLjk1
+KDAuMDUpIDAuOTQoMC4wNSkgMS42NygwLjc4KQo+IDI1Nk0gMC45NSgwLjA1KSAwLjk1KDAuMDUp
+IDAuOTUoMC4wNSkgMC45NCgwLjA1KSAwLjk0KDAuMDUpIDEuNjcoMC43OCkKPiA1MTJNIDAuOTYo
+MC4wNSkgMC45NSgwLjA1KSAwLjk0KDAuMDUpIDAuOTQoMC4wNSkgMC45NSgwLjA1KSAxLjY4KDAu
+NzkpCj4gMUcgMC45NigwLjA2KSAwLjk2KDAuMDYpIDAuOTcoMC4wNikgMC45NigwLjA2KSAwLjk2
+KDAuMDcpIDEuNjkoMC44MCkKPiAyRyAwLjk3KDAuMDcpIDAuOTcoMC4wNykgMC45NygwLjA3KSAw
+Ljk2KDAuMDcpIDAuOTYoMC4wNykgMS43MCgwLjgwKQo+IDRHIDEuMDIoMC4xMCkgMS4wMCgwLjEw
+KSAwLjk5KDAuMTApIDEuMDAoMC4xMCkgMC45OSgwLjEwKSAxLjc0KDAuODQpCj4gOEcgMS4wMCgw
+LjEwKSAxLjA2KDAuMTYpIDEuMDUoMC4xNikgMS4wNSgwLjE2KSAxLjA2KDAuMTYpIDEuNzgoMC44
+OSkKPiAxNkcgMS4wMCgwLjEwKSAxLjA2KDAuMTYpIDEuMTYoMC4yNikgMS4xNigwLjI2KSAxLjE1
+KDAuMjYpIDEuOTAoMS4wMCkKPgo+Cj4KPgo+IHRlc3QyOgo+IHNlYwo+IGN5Yy1idWYgMiA0IDgg
+MTYgMzIgNjQKPiBzcGxibGstc2l6ZQo+IDJNIDIzLjQyKDAuMDMpIDIzLjM4KDAuMDUpIDIzLjQ2
+KDAuMTEpIDIzLjU2KDAuMTcpIDIzLjU2KDAuMjMpIDIzLjg0KDAuNDgpCj4gNE0gMjMuMzUoMC4w
+MykgMjMuMzUoMC4wNSkgMjMuNTYoMC4xMSkgMjMuNTEoMC4xNykgMjMuNjAoMC4yMikgMjMuODEo
+MC40OCkKPiA4TSAyMy4zNCgwLjAzKSAyMy4zOCgwLjA1KSAyMy40NigwLjExKSAyMy41NSgwLjE2
+KSAyMy41OCgwLjIyKSAyMy44NCgwLjQ4KQo+IDE2TSAyMy4zOSgwLjAzKSAyMy4zNigwLjA2KSAy
+My40MigwLjExKSAyMy41MCgwLjE2KSAyMy41OSgwLjIzKSAyMy44NigwLjQ4KQo+IDMyTSAyMy40
+MygwLjAzKSAyMy4zOCgwLjA2KSAyMy40NygwLjEyKSAyMy41NCgwLjE5KSAyMy41OCgwLjIzKSAy
+My44OSgwLjQ4KQo+IDY0TSAyMy40MigwLjA0KSAyMy40MygwLjA3KSAyMy40NygwLjEyKSAyMy41
+MygwLjE4KSAyMy41OSgwLjIzKSAyMy44NygwLjQ4KQo+IDEyOE0gMjMuNDUoMC4wNykgMjMuNDEo
+MC4wOSkgMjMuNTIoMC4xNCkgMjMuNTYoMC4xOSkgMjMuNTkoMC4yMykgMjMuODEoMC40OCkKPiAy
+NTZNIDIzLjQ3KDAuMTIpIDIzLjQ4KDAuMTQpIDIzLjUwKDAuMTQpIDIzLjU1KDAuMjApIDIzLjYy
+KDAuMjMpIDIzLjg0KDAuNDgpCj4gNTEyTSAyMy40OCgwLjE4KSAyMy41NigwLjE5KSAyMy41NSgw
+LjE5KSAyMy42MCgwLjI0KSAyMy43MSgwLjMyKSAyMy44OCgwLjQ5KQo+IDFHIDIzLjc0KDAuMzAp
+IDIzLjUzKDAuMjMpIDIzLjY0KDAuMzEpIDIzLjU0KDAuMjQpIDIzLjY1KDAuMjcpIDIzLjk4KDAu
+NTIpCj4gMkcgMjMuNzgoMC40OCkgMjMuODIoMC40OCkgMjMuODQoMC40OCkgMjMuODMoMC40OSkg
+MjMuODkoMC41MikgMjMuODQoMC41MikKPiA0RyAyMy45MSgwLjUyKSAyMy44MSgwLjUwKSAyMy45
+MigwLjUwKSAyMy44NygwLjUxKSAyMy44OCgwLjU0KSAyMy45MigwLjU0KQo+IDhHIDIzLjgwKDAu
+NTApIDIzLjkwKDAuNTIpIDIzLjgyKDAuNDkpIDIzLjg0KDAuNTEpIDIzLjkwKDAuNTQpIDIzLjkw
+KDAuNTQpCj4gMTZHIDIzLjg1KDAuNTEpIDIzLjg2KDAuNTApIDIzLjg1KDAuNTEpIDIzLjg3KDAu
+NTEpIDIzLjk1KDAuNTQpIDIzLjg4KDAuNTQpCj4KPiBjeWMtYnVmIDEyOCAyNTYgNTEyIDEwMjQg
+MjA0OCA0MDk2Cj4gc3BsYmxrLXNpemUKPiAyTSAyMy45MCgwLjQ3KSAyMy44NCgwLjQ4KSAyMy44
+NCgwLjQ4KSAyNC4wNigwLjQ3KSAyMy45MygwLjQ3KSA0OS4wMCgyNS40NikKPiA0TSAyMy44Nygw
+LjQ4KSAyMy44NCgwLjQ4KSAyMy45MSgwLjQ4KSAyMy45MygwLjQ3KSAyMy45OCgwLjQ3KSA0OS4w
+MCgyNS40NikKPiA4TSAyMy44MCgwLjQ4KSAyMy44MSgwLjQ4KSAyMy45NSgwLjQ4KSAyMy45NSgw
+LjQ3KSAyNC4wMygwLjUyKSA0OS4wNSgyNS40NSkKPiAxNk0gMjMuODYoMC40NykgMjMuODQoMC40
+OCkgMjMuOTAoMC40OCkgMjMuOTMoMC40NykgMjQuMDAoMC40NykgNDguOTUoMjUuNDEpCj4gMzJN
+IDIzLjg2KDAuNDgpIDIzLjgyKDAuNDgpIDIzLjk4KDAuNTQpIDIzLjk5KDAuNDcpIDIzLjk3KDAu
+NDcpIDQ5LjAzKDI1LjQ3KQo+IDY0TSAyMy44MygwLjQ4KSAyMy43OSgwLjQ4KSAyMy44OSgwLjQ4
+KSAyNC4wMigwLjQ3KSAyMy45MygwLjQ3KSA0OC45NigyNS40OSkKPiAxMjhNIDIzLjkyKDAuNTUp
+IDIzLjkxKDAuNDgpIDIzLjg1KDAuNDgpIDIzLjk4KDAuNDcpIDIzLjkwKDAuNDcpIDQ4Ljk4KDI1
+LjUwKQo+IDI1Nk0gMjMuODYoMC40OCkgMjMuODgoMC40OCkgMjQuMDAoMC40OCkgMjQuMTcoMC40
+NykgMjMuOTQoMC40NykgNDkuMDEoMjUuNTApCj4gNTEyTSAyMy44NSgwLjQ5KSAyMy44OSgwLjU1
+KSAyMy45MygwLjQ5KSAyMy45MSgwLjQ4KSAyNC4wMSgwLjQ4KSA0OS4xMigyNS41NCkKPiAxRyAy
+My44NSgwLjUyKSAyMy44NCgwLjUyKSAyMy45OCgwLjUyKSAyMy45OCgwLjUxKSAyNC4wMigwLjUx
+KSA0OS4yOCgyNS43MykKPiAyRyAyMy45MigwLjUyKSAyMy44NygwLjUyKSAyMy45MygwLjUyKSAy
+NC4xMSgwLjUyKSAyNC4wNCgwLjUyKSA0OS4yNygyNS43NykKPiA0RyAyNC4yNCgwLjkxKSAyNC4z
+MSgwLjkxKSAyNC4yOSgwLjkxKSAyNC4zNygwLjkwKSAyNC4zNygwLjkwKSA1MC4wMSgyNi40OSkK
+PiA4RyAyNC4yNygwLjkxKSAyNC45NCgxLjYxKSAyNS4wNygxLjYyKSAyNS4xMSgxLjYwKSAyNS4w
+MigxLjYwKSA1MS4yNCgyNy43NykKPiAxNkcgMjQuMjkoMC45MSkgMjQuOTgoMS42MykgMjkuMzIo
+NS44NSkgMjkuMzQoNS44MykgMjkuMzMoNS44MykgNTMuOTEoMzAuNDMpCj4KPgo+Cj4KPiB0ZXN0
+MzoKPiBzZWMKPiBjeWMtYnVmIDIgNCA4IDE2IDMyIDY0Cj4gc3BsYmxrLXNpemUKPiAyTSAyMy4z
+NCgwLjAzKSAyMy4zOCgwLjA1KSAyMy40NigwLjExKSAyMy40NygwLjE2KSAyMy41NSgwLjIyKSAy
+My45NygwLjY1KQo+IDRNIDIzLjM4KDAuMDMpIDIzLjQxKDAuMDUpIDIzLjQ2KDAuMTEpIDIzLjQ3
+KDAuMTYpIDIzLjU2KDAuMjIpIDIzLjk5KDAuNjUpCj4gOE0gMjMuMzMoMC4wMykgMjMuNDEoMC4w
+NikgMjMuNTAoMC4xMSkgMjMuNTIoMC4xNikgMjMuNTQoMC4yMykgMjQuMDUoMC42NikKPiAxNk0g
+MjMuMzgoMC4wMykgMjMuNTEoMC4xNCkgMjMuNDYoMC4xMikgMjMuNTQoMC4xNikgMjMuNTcoMC4y
+MykgMjMuOTgoMC42NSkKPiAzMk0gMjMuMzQoMC4wMykgMjMuMzcoMC4wNikgMjMuNDcoMC4xMikg
+MjMuNTMoMC4xOCkgMjMuNTYoMC4yMykgMjQuMDYoMC42NikKPiA2NE0gMjMuMzYoMC4wNikgMjMu
+NDMoMC4wOCkgMjMuNTIoMC4xMykgMjMuNTMoMC4xOCkgMjMuNjMoMC4yMykgMjMuOTkoMC42NikK
+PiAxMjhNIDIzLjQ3KDAuMDcpIDIzLjQwKDAuMDkpIDIzLjU0KDAuMTUpIDIzLjUwKDAuMTkpIDIz
+LjU3KDAuMjMpIDI0LjE1KDAuNzQpCj4gMjU2TSAyMy40OCgwLjEzKSAyMy41MigwLjE0KSAyMy41
+MCgwLjE1KSAyMy41NCgwLjE5KSAyMy41NigwLjIzKSAyMy45OCgwLjY2KQo+IDUxMk0gMjMuNDko
+MC4xOCkgMjMuNDkoMC4xOSkgMjMuNjAoMC4yMCkgMjMuNjYoMC4zMikgMjMuNjQoMC4yMykgMjQu
+MTUoMC43NSkKPiAxRyAyMy41OCgwLjIzKSAyMy41NCgwLjIzKSAyMy42MigwLjI0KSAyMy41Nygw
+LjI0KSAyMy42NCgwLjI3KSAyNC4xNygwLjgxKQo+IDJHIDI0LjAwKDAuNjUpIDIzLjk5KDAuNjYp
+IDI0LjAxKDAuNjcpIDI0LjAxKDAuNzApIDI0LjEzKDAuODApIDI0LjQzKDAuODIpCj4gNEcgMjQu
+MDQoMC42NikgMjMuOTcoMC42NykgMjQuMDUoMC43MSkgMjQuMDQoMC43MykgMjQuMTUoMC44Mikg
+MjQuMTgoMC44MykKPiA4RyAyMy45NygwLjY2KSAyNC4wNigwLjY3KSAyMy45OCgwLjY4KSAyNC4w
+NygwLjczKSAyNC4xMygwLjgxKSAyNC4xNigwLjgzKQo+IDE2RyAyNC4wNSgwLjY2KSAyNC4wMygw
+LjY4KSAyNC4wMigwLjY4KSAyNC4wOCgwLjcyKSAyNC4xOCgwLjgyKSAyNC4xNigwLjgzKQo+Cj4g
+Y3ljLWJ1ZiAxMjggMjU2IDUxMiAxMDI0IDIwNDggNDA5Ngo+IHNwbGJsay1zaXplCj4gMk0gMjQu
+MDUoMC42NSkgMjQuMDQoMC42NSkgMjQuNTgoMC42NSkgMjQuMTUoMC42NCkgMjQuMTQoMC42NCkg
+NDkuMDUoMjUuNDYpCj4gNE0gMjMuOTgoMC42NSkgMjQuMDEoMC42NSkgMjQuMjkoMC42NSkgMjQu
+MjAoMC42NCkgMjQuMTgoMC42NikgNDkuMDQoMjUuNDYpCj4gOE0gMjQuMDIoMC42NSkgMjQuMDMo
+MC42NSkgMjQuMjUoMC42NSkgMjQuMjYoMC43MCkgMjQuMTUoMC42NCkgNDguOTgoMjUuNDQpCj4g
+MTZNIDI0LjAxKDAuNjUpIDI0LjAxKDAuNjUpIDI0LjMwKDAuNjUpIDI0LjE5KDAuNjQpIDI0LjEy
+KDAuNjUpIDQ4Ljk5KDI1LjQ1KQo+IDMyTSAyMy45NygwLjY1KSAyNC4wNigwLjczKSAyNC4yMygw
+LjY1KSAyNC4xNygwLjY0KSAyNC4xOSgwLjY0KSA0OC45NygyNS41MCkKPiA2NE0gMjQuMDYoMC42
+NikgMjQuMDcoMC42NikgMjQuMjcoMC42NikgMjQuMTYoMC42NSkgMjQuMTcoMC42NSkgNDguOTgo
+MjUuNDkpCj4gMTI4TSAyNC4wMygwLjY3KSAyNC4wMCgwLjY3KSAyNC4yNygwLjY2KSAyNC4yMigw
+LjY2KSAyNC4xOSgwLjY2KSA0OC45OCgyNS40OCkKPiAyNTZNIDI0LjEyKDAuNjcpIDIzLjk5KDAu
+NjcpIDI0LjI3KDAuNjcpIDI0LjE3KDAuNjYpIDI0LjEyKDAuNjYpIDQ5LjA0KDI1LjQ5KQo+IDUx
+Mk0gMjQuMDYoMC43MCkgMjQuMDgoMC43MCkgMjQuMjYoMC43MCkgMjQuMTQoMC43MSkgMjQuMTko
+MC43MCkgNDkuMTMoMjUuNjQpCj4gMUcgMjQuMjAoMC44MikgMjQuMTMoMC44MSkgMjQuMzYoMC44
+MSkgMjQuMzEoMC44MCkgMjQuMzMoMC44MSkgNDkuMjgoMjUuNzUpCj4gMkcgMjQuMTkoMC44MSkg
+MjQuMjIoMC44MSkgMjQuMzcoMC44MSkgMjQuMjkoMC44MCkgMjQuMjgoMC44MikgNDkuMzAoMjUu
+NzgpCj4gNEcgMjUuMjkoMS45MCkgMjUuMjYoMS45MSkgMjUuNDkoMS45MSkgMjUuNDEoMS44OSkg
+MjUuNTAoMS45MCkgNDkuOTkoMjYuNDUpCj4gOEcgMjUuMzMoMS45MCkgMjYuNjAoMy4yMykgMjYu
+ODcoMy4yMSkgMjYuNzEoMy4yMykgMjYuNjQoMy4yMikgNTEuMjcoMjcuNzMpCj4gMTZHIDI1LjI4
+KDEuOTApIDI2LjUyKDMuMjEpIDI5LjQ3KDUuODYpIDI5LjM0KDUuODQpIDI5LjM4KDUuODYpIDUz
+Ljk5KDMwLjQwKQo+Cj4KPgo+IFRoYW5rcwo+IFpob3UgV2Vuamlhbgo+Cj4gX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5nIGxpc3QK
+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
