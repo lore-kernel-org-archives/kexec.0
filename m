@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ie0-f182.google.com ([209.85.223.182])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XijgY-0007SB-V5
- for kexec@lists.infradead.org; Mon, 27 Oct 2014 12:46:12 +0000
-Received: by mail-ie0-f182.google.com with SMTP id rd18so3659191iec.41
- for <kexec@lists.infradead.org>; Mon, 27 Oct 2014 05:45:48 -0700 (PDT)
+Received: from prod-mail-xrelay02.akamai.com ([72.246.2.14])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XiogW-0000ON-HF
+ for kexec@lists.infradead.org; Mon, 27 Oct 2014 18:06:29 +0000
+Message-ID: <544E8985.50203@akamai.com>
+Date: Mon, 27 Oct 2014 14:05:57 -0400
+From: Jason Baron <jbaron@akamai.com>
 MIME-Version: 1.0
-In-Reply-To: <20141027121300.GR8768@arm.com>
-References: <cover.1414099246.git.geoff@infradead.org>
- <f57759dbc105dd3996acd959d4e3157224ff81fa.1414099246.git.geoff@infradead.org>
- <20141024092451.GA24265@leverpostej>
- <20141027121300.GR8768@arm.com>
-Date: Mon, 27 Oct 2014 13:45:48 +0100
-Message-ID: <CAMJs5B-=qhTayazFfw5cHegFuE2_xwR-qN32w6dBdhtKD0wq8Q@mail.gmail.com>
-Subject: Re: [PATCH 01/10] arm64/kvm: Fix assembler compatibility of macros
-From: Christoffer Dall <christoffer.dall@linaro.org>
+Subject: Re: [PATCH V4] kernel, add bug_on_warn
+References: <1414155207-29839-1-git-send-email-prarit@redhat.com>
+In-Reply-To: <1414155207-29839-1-git-send-email-prarit@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,40 +22,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Prarit Bhargava <prarit@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org, vgoyal@redhat.com
 
-On Mon, Oct 27, 2014 at 1:13 PM, Will Deacon <will.deacon@arm.com> wrote:
-> On Fri, Oct 24, 2014 at 10:24:51AM +0100, Mark Rutland wrote:
->> On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
->> > Some of the macros defined in kvm_arm.h are useful in assembly files, but are
->> > not compatible with the assembler.  Change any C language integer constant
->> > definitions using appended U, UL, or ULL to the UL() preprocessor macro.  Also,
->> > add a preprocessor include of the asm/memory.h file which defines the UL()
->> > macro.
->> >
->> > Fixes build errors like these when using kvm_arm.h in assembly
->> > source files:
->> >
->> >   Error: unexpected characters following instruction at operand 3 -- `and x0,x1,#((1U<<25)-1)'
->> >
->> > Signed-off-by: Geoff Levand <geoff@infradead.org>
->>
->> Thanks for putting this together, Geoff.
->>
->> Acked-by: Mark Rutland <mark.rutland@arm.com>
+Hi Prarit,
+
+On 10/24/2014 08:53 AM, Prarit Bhargava wrote:
+> There have been several times where I have had to rebuild a kernel to
+> cause a panic when hitting a WARN() in the code in order to get a crash
+> dump from a system.  Sometimes this is easy to do, other times (such as
+> in the case of a remote admin) it is not trivial to send new images to the
+> user.panic_on_stackoverflow
 >
-> This doesn't apply against -rc2 (see below). If you send a rebased version
-> of this patch, I'm happy to queue it for 3.19.
+> A much easier method would be a switch to change the WARN() over to a
+> BUG().  This makes debugging easier in that I can now test the actual
+> image the WARN() was seen on and I do not have to engage in remote
+> debugging.
 >
-> Alternatively, it could go via the kvm tree. Christoffer, Marc, do you have
-> a preference? (the kexec stuff depends on this, so that's why I was thinking
-> of queuing it in the arm64 tree).
+> This patch adds a bug_on_warn kernel parameter and
+> /proc/sys/kernel/bug_on_warn calls BUG() in the warn_slowpath_common()
+> path.  The function will still print out the location of the warning.
 >
-I'm fine with you picking it up.
+> An example of the bug_on_warn output:
+>
+> The first line below is from the WARN_ON() to output the WARN_ON()'s location.
+> After that the new BUG() call is displayed.
+>
+>  WARNING: CPU: 27 PID: 3204 at
+> /home/rhel7/redhat/debug/dummy-module/dummy-module.c:25 init_dummy+0x28/0x30
+> [dummy_module]()
+>  bug_on_warn set, calling BUG()...
+>  ------------[ cut here ]------------
+>  kernel BUG at kernel/panic.c:434!
+
+Seems reasonable-I'm wondering why you just don't call panic() in this
+case. The BUG() call at line '434' doesn't at anything since its just being
+called from panic.c.
+
+So something like 'panic_on_warn' would seem to be more appropriate
+in keeping with things like 'panic_on_oops' or 'panic_on_stackoverflow'.
 
 Thanks,
--Chrsitoffer
+
+-Jason
+
 
 _______________________________________________
 kexec mailing list
