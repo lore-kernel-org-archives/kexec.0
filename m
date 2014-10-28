@@ -1,25 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xiyhi-00067h-Qm
- for kexec@lists.infradead.org; Tue, 28 Oct 2014 04:48:23 +0000
-Date: Tue, 28 Oct 2014 12:46:20 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH] makedumpfile: Enable --mem-usage for s390x
-Message-ID: <20141028044620.GA15783@dhcp-16-105.nay.redhat.com>
-References: <20140929151413.4e9bd1ab@holzheu>
- <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
- <20141001185953.66c6ae9d@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D4D5E4@BPXM01GP.gisp.nec.co.jp>
- <20141010142310.4c488f6a@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D4E4E4@BPXM01GP.gisp.nec.co.jp>
- <20141016143753.726f63c0@holzheu>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D580A9@BPXM01GP.gisp.nec.co.jp>
- <20141027075707.GB1558@dhcp-16-105.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D590F8@BPXM01GP.gisp.nec.co.jp>
+ id 1Xiyzi-0006Cf-Rv
+ for kexec@lists.infradead.org; Tue, 28 Oct 2014 05:06:59 +0000
+Date: Tue, 28 Oct 2014 13:04:48 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [resend Patch v3 1/2] kaslr: check if kernel location is changed
+Message-ID: <20141028050448.GB15783@dhcp-16-105.nay.redhat.com>
+References: <543553C7.9010906@zytor.com> <20141008192728.GA26517@redhat.com>
+ <20141011031452.GB11560@dhcp-16-116.nay.redhat.com>
+ <543907B5.7060001@zytor.com> <20141013125257.GB6466@redhat.com>
+ <20141013151955.GA9777@redhat.com> <543BF304.9090708@zytor.com>
+ <20141013172242.GB9777@redhat.com>
+ <20141014124932.GC5127@redhat.com>
+ <20141015033701.GD16068@dhcp-16-116.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D590F8@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <20141015033701.GD16068@dhcp-16-116.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,73 +29,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: whissi@whissi.de, ak@linux.intel.com, Kees Cook <keescook@chromium.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, tglx@linutronix.de
 
-On 10/28/14 at 04:34am, Atsushi Kumagai wrote:
-> >On 10/23/14 at 06:56am, Atsushi Kumagai wrote:
-
-> >> I noticed that is_vmalloc_addr_x86_64() can't be used as is_phys_addr()
-> >> due to the "kaslr issue". I fixed it in the common path as below, but
-> >> --mem-usage still has the same issue since initial() will be invoked
-> >> after get_kcore_dump_loads().
-> >>
-> >>   http://lists.infradead.org/pipermail/kexec/2014-October/012743.html
-> >>
-> >> I know it's so late, but I began to think the current implementation
-> >> that invokes vaddr_to_paddr_XXX() before initial() is bad:
-> >>
-> >> show_mem_usage()
-> >>   + get_kcore_dump_loads()
-> >>     + process_dump_load()
-> >>       + vaddr_to_paddr_XXX()
-> >>   + initial()
-> >
-> >This is a bug. Seems that get_kcore_dump_loads() has to be called in
-> >initial(). Since dumped vmcore need contains kernel text segment.
-> >Without setting correct value for MODULES_VADDR, it will be equal to
-> >__START_KERNEL_map, then calling is_vmalloc_addr() will filter kernel
-> >text mapping segment too.
-> >
-> >Now it seems only one way to solve this, that is moving
-> >get_kcore_dump_loads() into initial() just after
-> >get_value_for_old_linux() is called.
+On 10/15/14 at 11:37am, Baoquan He wrote:
+> On 10/14/14 at 08:49am, Vivek Goyal wrote:
+> > On Mon, Oct 13, 2014 at 01:22:42PM -0400, Vivek Goyal wrote:
+ 
+> > > Agreed. On x86_64, we should be able to randomize virtual address space
+> > > and physical address space independently. And in that case whole of
+> > > the physical memory should be available for a possible location for
+> > > kernel. (As opposed to a small limit (I guess 1GB) now)
 > 
-> I agree, I'll do it, thanks.
+> It can be done to randomize virtual address space and physical address
+> space independently. But limited by the 2G of kernel text mapping and
+> module mapping virtual address space, virtual address can be randomized
+> in (0x1000000, 1G) range. While physical address can be randomized in
+> (0x1000000, 4G) according to the identity mapping of normal kernel. Then
+> phys_base still stores an relative value, a different offset than before.
+> 
+> This can be easily implement. One thing is still there's a limit for
+> physical addr randomization, only below 4G. So I am wondering if we can
+> extend the identify mapping to complete mapping of 48 bit, using 1G page
+> frame. This can make physical addr be randomized to anywhere.
+> 
+> So now there may be 3 options:
 
-Actually hpa haven't merged my patchset. Seems he doesn't like current
-kaslr design. I am not sure if we have gone too far to adjust
-makedumpfile code to support kaslr. I'll ask him for comments or plans.
+Hi hpa,
+
+About kaslr, do you have a suggestion or plan? Should we fix bug based
+on current code, or any other solutions?
 
 Thanks
 Baoquan
 
+
 > 
+> 1) Fix this bug in current kaslr. Since when randomize the new kernel
+> location in choose_kernel_location(), cmdline options has been checked
+> strictly, e.g if nokaslr is specified, it's safe to do the kernel
+> location randomization. Then in handle_relocations(), we only need to
+> check if the kernel location is changed, comparing with kernel loaded
+> addr. If changed, kaslr is done, let's do the relocation handling. If
+> not changed, no kaslr id done, just skip the relocation handling like
+> before.
 > 
-> Atsushi Kumagai
+> 2) randomize the virtual addr space and physical addr space
+> independently. But physical addr space must be below 4G.
 > 
-> >>   ...
-> >>
-> >> vaddr_to_paddr_XXX() does VtoP translation *properly*, so it needs
-> >> several symbols. This design is OK since it's a general method.
-> >> OTOH, we need a kludge which can be used under any situations and
-> >> should use it for --mem-usage:
-> >>
-> >>   VtoP_kludge_s390x(unsigned long vaddr)
-> >>   {
-> >> 	/* s390 has 1:1 VtoP mapping that starts with zero. */
-> >>   	return vaddr;
-> >>   }
-> >>
-> >> also x86_64's can be implemented like below:
-> >>
-> >>   VtoP_kludge_x86_64(unsigned long vaddr)
-> >>   {
-> >> 	/* if the address is direct mapped, it's easy to translate. */
-> >> 	unsigned long paddr = vaddr - PAGE_OFFSET;
-> >> 	return paddr;
-> >>   }
-> >>
+> 3) extend the identity mapping to 48bit of addr space. Then we can
+> randomized the virtual addr space in (0x1000000, 1G) and physical addr
+> space in (0x1000000, real physical memory end).
+> 
+> If option 3 is doable, it's the best. If not, I think bug fix should be
+> better.
+> 
 
 _______________________________________________
 kexec mailing list
