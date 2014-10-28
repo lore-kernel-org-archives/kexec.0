@@ -1,16 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XizXo-0003I9-LF
- for kexec@lists.infradead.org; Tue, 28 Oct 2014 05:42:14 +0000
-Message-ID: <544F2C95.7060806@hitachi.com>
-Date: Tue, 28 Oct 2014 14:41:41 +0900
-From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-MIME-Version: 1.0
-Subject: Re: Re: [PATCH V4] kernel, add bug_on_warn
-References: <1414155207-29839-1-git-send-email-prarit@redhat.com>
- <544E8985.50203@akamai.com> <544E8BB8.8000707@redhat.com>
-In-Reply-To: <544E8BB8.8000707@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Xj0EN-00029m-1O
+ for kexec@lists.infradead.org; Tue, 28 Oct 2014 06:26:12 +0000
+Received: from kw-mxoi2.gw.nic.fujitsu.com (unknown [10.0.237.143])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 95AA43EE0B6
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:25:45 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id A0B24AC0244
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:25:44 +0900 (JST)
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 3AC8D1DB8038
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:25:44 +0900 (JST)
+Date: Tue, 28 Oct 2014 15:24:59 +0900 (JST)
+Message-Id: <20141028.152459.485895318.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O
+ workloads in appropriate time
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D58CD3@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701D565C0@BPXM01GP.gisp.nec.co.jp>
+ <54470DDD.6040700@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D58CD3@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,82 +35,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prarit Bhargava <prarit@redhat.com>
-Cc: isimatu.yasuaki@jp.fujitsu.com, Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, Jason Baron <jbaron@akamai.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org, vgoyal@redhat.com
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: zhouwj-fnst@cn.fujitsu.com, kexec@lists.infradead.org
 
-(2014/10/28 3:15), Prarit Bhargava wrote:
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads in appropriate time
+Date: Mon, 27 Oct 2014 07:51:56 +0000
+
+> Hello Zhou,
 > 
-> 
-> On 10/27/2014 02:05 PM, Jason Baron wrote:
->> Hi Prarit,
->>
->> On 10/24/2014 08:53 AM, Prarit Bhargava wrote:
->>> There have been several times where I have had to rebuild a kernel to
->>> cause a panic when hitting a WARN() in the code in order to get a crash
->>> dump from a system.  Sometimes this is easy to do, other times (such as
->>> in the case of a remote admin) it is not trivial to send new images to the
->>> user.panic_on_stackoverflow
+>>On 10/17/2014 11:50 AM, Atsushi Kumagai wrote:
+>>> Hello,
 >>>
->>> A much easier method would be a switch to change the WARN() over to a
->>> BUG().  This makes debugging easier in that I can now test the actual
->>> image the WARN() was seen on and I do not have to engage in remote
->>> debugging.
+>>> The code looks good to me, thanks Zhou.
+>>> Now, I have a question on performance.
 >>>
->>> This patch adds a bug_on_warn kernel parameter and
->>> /proc/sys/kernel/bug_on_warn calls BUG() in the warn_slowpath_common()
->>> path.  The function will still print out the location of the warning.
+>>>> The issue is discussed at http://lists.infradead.org/pipermail/kexec/2014-March/011289.html
+>>>>
+>>>> This patch implements the idea of 2-pass algorhythm with smaller memory to manage splitblock table.
+>>>> Exactly the algorhythm is still 3-pass,but the time of second pass is much shorter.
+>>>> The tables below show the performence with different size of cyclic-buffer and splitblock.
+>>>> The test is executed on the machine having 128G memory.
+>>>>
+>>>> the value is total time (including first pass and second pass).
+>>>> the value in brackets is the time of second pass.
 >>>
->>> An example of the bug_on_warn output:
+>>> Do you have any idea why the time of second pass is much larger when
+>>> the splitblock-size is 2G ? I worry about the scalability.
 >>>
->>> The first line below is from the WARN_ON() to output the WARN_ON()'s location.
->>> After that the new BUG() call is displayed.
->>>
->>>  WARNING: CPU: 27 PID: 3204 at
->>> /home/rhel7/redhat/debug/dummy-module/dummy-module.c:25 init_dummy+0x28/0x30
->>> [dummy_module]()
->>>  bug_on_warn set, calling BUG()...
->>>  ------------[ cut here ]------------
->>>  kernel BUG at kernel/panic.c:434!
+>>Hello,
 >>
->> Seems reasonable-I'm wondering why you just don't call panic() in this
->> case. The BUG() call at line '434' doesn't at anything since its just being
->> called from panic.c.
-
-+1, I like calling panic() instead of BUG() :)
-
-Thank you,
-
+>>	Since the previous machine can't be used for some reasons,I test several times using latest code
+>>in others, but that never happened. It seems that all things are right. Tests are executed in two machines(server,pc).
+>>Tests are based on:
 > 
-> Hmm ... I didn't even think about that.
+> Well...OK, I'll take that as an issue specific to that machine
+> (or your mistakes as you said).
+> Now I have another question.
 > 
->>
->> So something like 'panic_on_warn' would seem to be more appropriate
->> in keeping with things like 'panic_on_oops' or 'panic_on_stackoverflow'.
+> calculate_end_pfn_by_splitblock():
+> 	...
+>         /* deal with incomplete splitblock */
+>         if (pfn_needed_by_per_dumpfile < 0) {
+>                 --*current_splitblock;
+>                 splitblock_inner -= splitblock->entry_size;
+>                 end_pfn = CURRENT_SPLITBLOCK_PFN_NUM;
+>                 *current_splitblock_pfns = (-1) * pfn_needed_by_per_dumpfile;
+>                 pfn_needed_by_per_dumpfile += read_value_from_splitblock_table(splitblock_inner);
+>                 end_pfn = calculate_end_pfn_in_cycle(CURRENT_SPLITBLOCK_PFN_NUM,
+>                                                      CURRENT_SPLITBLOCK_PFN_NUM + splitblock->page_per_splitblock,
+>                                                      end_pfn,pfn_needed_by_per_dumpfile);
+>         }
 > 
-> I like it a lot better that way too :)  I'm changing it to panic_on_warn unless
-> anyone has any strenuous objections.
+> This block causes the re-scanning for the cycle corresponding to the
+> current_splitblock, so the larger cyc-buf, the longer the time takes.
+> If cyc-buf is 4096 (this means the number of cycle is 1), the whole page
+> scanning will be done in the second pass. Actually, the performance when
+> cyc-buf=4096 was so bad.
 > 
-> P.
-> 
->>
->> Thanks,
->>
->> -Jason
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> Is this process necessary ? I think splitting splitblocks is overkill
+> because I understood that splblk-size is the granularity of the
+> fairness I/O, tuning splblk-size is a trade off between fairness and
+> memory usage.
+> However, there is no advantage to reducing splblk-size in the current
+> implementation, it just consumes large amounts of memory.
+> If we remove the process, we can avoid the whole page scanning in
+> the second pass and reducing splblk-size will be meaningful as I
+> expected.
 > 
 
+Yes, I don't think this rescan works with this splitblock method,
+too. The idea of this splitblock method is to reduce the number of
+filitering processing from 3-times to 2-times at the expence of at
+most splitblock-size difference of each dump file. Doing rescan here
+doesn't fit to the idea.
 
--- 
-Masami HIRAMATSU
-Software Platform Research Dept. Linux Technology Research Center
-Hitachi, Ltd., Yokohama Research Laboratory
-E-mail: masami.hiramatsu.pt@hitachi.com
-
+--
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
