@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xj1FL-0002OD-39
- for kexec@lists.infradead.org; Tue, 28 Oct 2014 07:31:17 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2 5/5] Add support for --splitblock-size
-Date: Tue, 28 Oct 2014 07:28:47 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D5927F@BPXM01GP.gisp.nec.co.jp>
+ id 1Xj1RO-00071R-K4
+ for kexec@lists.infradead.org; Tue, 28 Oct 2014 07:43:43 +0000
+Received: from kw-mxauth.gw.nic.fujitsu.com (unknown [10.0.237.134])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id E5DBB3EE0B6
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:43:19 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 24718AC0238
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:43:19 +0900 (JST)
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id AD4ABE08002
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:43:18 +0900 (JST)
+Date: Tue, 28 Oct 2014 16:43:12 +0900 (JST)
+Message-Id: <20141028.164312.91790949.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 4/5] Add module of calculating start_pfn and end_pfn
+ in each dumpfile
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <1413192866-28140-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1413192866-28140-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1413192866-28140-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20141028.161513.171850531.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20141028.161513.171850531.d.hatayama@jp.fujitsu.com>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ <1413192866-28140-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,146 +33,258 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
-Cc: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: zhouwj-fnst@cn.fujitsu.com
+Cc: kexec@lists.infradead.org
 
->> Use --splitblock-size to specify splitblock size (KB)
->> When --split is specified in cyclic mode,splitblock table will be
->> generated in create_dump_bitmap().
->>
->> Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
->> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
->> ---
->>  makedumpfile.8 |   16 ++++++++++++++++
->>  makedumpfile.c |    4 ++++
->>  makedumpfile.h |    1 +
->>  print_info.c   |   16 +++++++++++++++-
->>  4 files changed, 36 insertions(+), 1 deletions(-)
->>
->> diff --git a/makedumpfile.8 b/makedumpfile.8
->> index 9cb12c0..a5b7055 100644
->> --- a/makedumpfile.8
->> +++ b/makedumpfile.8
->> @@ -386,6 +386,22 @@ size, so ordinary users don't need to specify this option.
->>  # makedumpfile \-\-cyclic\-buffer 1024 \-d 31 \-x vmlinux /proc/vmcore dumpfile
->>
->>  .TP
->> +\fB\-\-splitblock\-size\fR \fIsplitblock_size\fR
->> +Specify the splitblock size in kilo bytes for analysis in the cyclic mode with --split.
->> +In the cyclic split mode, the number of splitblocks is represented as:
->> +
->> +    num_of_splitblocks = system_memory / (\fIsplitblock_size\fR * 1KB )
->> +
->
->For what people do you want to show this expression? It would be hard
->for ordinary users to understand this expression. I think at least the
->following explanation is necessary; and more detailed information is
->verbose.
->
->  If --splitblock N is specified, difference of each splitted dumpfile
->  size is at most N kilo bytes.
->
->> +The larger number of splitblock, the faster working speed is expected, but the more memory will
->> +be taken. By default, \fIsplitblock_size\fR will be set as 1GB, so ordinary users don't need to
->> +specify this option.
->> +
->> +.br
->> +.B Example:
->> +.br
->> +# makedumpfile \-\-splitblock\-size 10240 \-d 31 \-x vmlinux \-\-split /proc/vmcore dumpfile1 dumpfile2
->> +
->> +.TP
->>  \fB\-\-non\-cyclic\fR
->>  Running in the non-cyclic mode, this mode uses the old filtering logic same as v1.4.4 or before.
->>  If you feel the cyclic mode is too slow, please try this mode.
->> diff --git a/makedumpfile.c b/makedumpfile.c
->> index 32c0919..112f2e4 100644
->> --- a/makedumpfile.c
->> +++ b/makedumpfile.c
->> @@ -9578,6 +9578,7 @@ static struct option longopts[] = {
->>  	{"eppic", required_argument, NULL, OPT_EPPIC},
->>  	{"non-mmap", no_argument, NULL, OPT_NON_MMAP},
->>  	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
->> +	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
->>  	{0, 0, 0, 0}
->>  };
->>
->> @@ -9718,6 +9719,9 @@ main(int argc, char *argv[])
->>  		case OPT_CYCLIC_BUFFER:
->>  			info->bufsize_cyclic = atoi(optarg);
->>  			break;
->> +		case OPT_SPLITBLOCK_SIZE:
->> +			info->splitblock_size = atoi(optarg);
->> +			break;
->>  		case '?':
->>  			MSG("Commandline parameter is invalid.\n");
->>  			MSG("Try `makedumpfile --help' for more information.\n");
->> diff --git a/makedumpfile.h b/makedumpfile.h
->> index 60e6f2f..7bc57d9 100644
->> --- a/makedumpfile.h
->> +++ b/makedumpfile.h
->> @@ -1883,6 +1883,7 @@ struct elf_prstatus {
->>  #define OPT_EPPIC               OPT_START+12
->>  #define OPT_NON_MMAP            OPT_START+13
->>  #define OPT_MEM_USAGE            OPT_START+14
->> +#define OPT_SPLITBLOCK_SIZE		OPT_START+15
->>
->>  /*
->>   * Function Prototype.
->> diff --git a/print_info.c b/print_info.c
->> index f6342d3..2cdffd8 100644
->> --- a/print_info.c
->> +++ b/print_info.c
->> @@ -203,7 +203,21 @@ print_usage(void)
->>  	MSG("      By default, BUFFER_SIZE will be calculated automatically depending on\n");
->>  	MSG("      system memory size, so ordinary users don't need to specify this option.\n");
->>  	MSG("\n");
->> -	MSG("  [--non-cyclic]:\n");
->> +	MSG("  [--splitblock-size SPLITBLOCK_SIZE]:\n");
->> +	MSG("      Specify the splitblock size in kilo bytes for analysis in the cyclic mode\n");
->> +	MSG("      with --split.\n");
->> +	MSG("      In the cyclic mode, the number of splitblocks is represented as:\n");
->> +	MSG("\n");
->> +	MSG("          num_of_splitblocks = system_memory / (splitblock_size * 1KB)\n");
->
->Just the same as the above comment.
->
->> +	MSG("\n");
->> +	MSG("	   The larger number of splitblock, the faster working speed is expected, but\n");
->> +	MSG("	   the more memory will be taken. By default, splitblock_size will be set as\n");
->> +	MSG("	   1GB, so ordinary users don't need to specify this option.\n");
->> +	MSG("\n");
->> +	MSG("      The lesser number of cycles, the faster working speed is expected.\n");
->> +	MSG("      By default, BUFFER_SIZE will be calculated automatically depending on\n");
->> +	MSG("      system memory size, so ordinary users don't need to specify this option.\n");
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v2 4/5] Add module of calculating start_pfn and end_pfn in each dumpfile
+Date: Mon, 13 Oct 2014 17:34:25 +0800
 
-In addition, the last segment is a duplicate of --cyclic-buffer's.
+> When --split is specified in cyclic mode, start_pfn and end_pfn of each dumpfile
+> will be calculated to make each dumpfile have the same size.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+
+Please remove this Signed-off-by.
+
+> Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> ---
+>  makedumpfile.c |  109 +++++++++++++++++++++++++++++++++++++++++++++++++++++---
+>  1 files changed, 104 insertions(+), 5 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index a6f0be4..32c0919 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -8190,6 +8190,103 @@ out:
+>  		return ret;
+>  }
+>  
+> +/*
+> + * calculate end pfn in incomplete splitblock or memory not managed by splitblock
+> + */
+> +mdf_pfn_t
+> +calculate_end_pfn_in_cycle(mdf_pfn_t start, mdf_pfn_t max,
+> +			    mdf_pfn_t end_pfn, long long pfn_needed_by_per_dumpfile)
+> +{
+> +	struct cycle cycle;
+
+Please add a line.
+
+> +	for_each_cycle(start,max,&cycle) {
+> +		if (!exclude_unnecessary_pages_cyclic(&cycle))
+> +			return FALSE;
+> +		while (end_pfn < cycle.end_pfn) {
+> +			end_pfn++;
+> +			if (is_dumpable_cyclic(info->partial_bitmap2, end_pfn, &cycle)){
+
+This line exceeds 80 columns. It would be enough to add linebreaks in
+each argument posision.
+
+			if (is_dumpable_cyclic(info->partial_bitmap2,
+                                               end_pfn,
+                                               &cycle)) {
+
+> +				if (--pfn_needed_by_per_dumpfile <= 0)
+> +					return ++end_pfn;
+
+				pfn_needed_by_per_dumpfile--;
+				if (pfn_needed_by_per_dumpfile <= 0) {
+					end_pfn++;
+					return end_pfn;
+				}
 
 
-Thanks,
-Atsushi Kumagai
+> +			}
+> +		}
+> +	}
+> +	return ++end_pfn;
+> +}
+> +
+> +/*
+> + * calculate end_pfn of one dumpfile.
+> + * try to make every output file have the same size.
+> + * splitblock_table is used to reduce calculate time.
+> + */
+> +
+> +#define CURRENT_SPLITBLOCK_PFN_NUM (*current_splitblock * splitblock->page_per_splitblock)
+> +mdf_pfn_t
+> +calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
+> +			   int *current_splitblock,
+> +			   long long *current_splitblock_pfns){
 
->> +	MSG("\n");	MSG("  [--non-cyclic]:\n");
->>  	MSG("      Running in the non-cyclic mode, this mode uses the old filtering logic\n");
->>  	MSG("      same as v1.4.4 or before.\n");
->>  	MSG("      If you feel the cyclic mode is too slow, please try this mode.\n");
->> --
->> 1.7.1
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->--
->Thanks.
->HATAYAMA, Daisuke
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+			   long long *current_splitblock_pfns)
+{
+
+> +	mdf_pfn_t end_pfn;
+> +	long long pfn_needed_by_per_dumpfile,offset;
+
+Please add a space:
+
+	long long pfn_needed_by_per_dumpfile, offset;
+
+Also, some variable names are too long: current_splitblock,
+current_splitblock_pfns and pfn_needed_by_per_dumpfile.
+
+From current_splitblock, I imagine a SplitBlock object, but this is in
+fact an inter representing an index of splitblocks.
+
+For current_splitblock_pfns, is this really neccesary? Please see a
+comment that will occur in later part.
+
+> +	pfn_needed_by_per_dumpfile = info->num_dumpable / info->num_dumpfile;
+> +	offset = *current_splitblock * splitblock->entry_size;
+> +	end_pfn = start_pfn;
+
+This is not a declaration. Please move downwards.
+
+> +	char *splitblock_inner = splitblock->table + offset;
+
+Please add a line.
+
+> +	//calculate the part containing complete splitblock
+
+Please use /* */ style.
+
+> +	while (*current_splitblock < splitblock->num && pfn_needed_by_per_dumpfile > 0) {
+> +		if (*current_splitblock_pfns > 0) {
+> +			pfn_needed_by_per_dumpfile -= *current_splitblock_pfns ;
+> +			*current_splitblock_pfns = 0 ;
+> +		}
+> +		else
+> +		pfn_needed_by_per_dumpfile -= read_value_from_splitblock_table(splitblock_inner);
+
+Ah, this line exceeds 80 columns: Please:
+
+		} else {
+pfn_needed_by_per_dumpfile -= read_value_from_splitblock_table(splitblock_inner);
+		}
+
+Again, pfn_needed_by_per_dumpfile is too long.
+
+> +		splitblock_inner += splitblock->entry_size;
+> +		++*current_splitblock;
+> +	}
+
+Please add a line.
+
+> +	//deal with complete splitblock
+
+Please use /* */ style.
+
+What does "complete" mean?
+
+> +	if (pfn_needed_by_per_dumpfile == 0)
+> +		end_pfn = CURRENT_SPLITBLOCK_PFN_NUM;
+
+Please add a line.
+
+> +	//deal with incomplete splitblock
+
+Please use /* */ style.
+
+What does "incomplete" mean?
+
+> +	if (pfn_needed_by_per_dumpfile < 0) {
+
+Just as I've already commented in another mail, I think filtering here
+is unnecessary. Is it enough to add this splitblock into a current
+dumpfile, not next dumpfile? Then, this code is unecessary, and also
+current_splitblock_pfns is unnecessary.
+
+> +		--*current_splitblock;
+> +		splitblock_inner -= splitblock->entry_size;
+> +		end_pfn = CURRENT_SPLITBLOCK_PFN_NUM;
+> +		*current_splitblock_pfns = (-1) * pfn_needed_by_per_dumpfile;
+> +		pfn_needed_by_per_dumpfile += read_value_from_splitblock_table(splitblock_inner);
+> +		end_pfn = calculate_end_pfn_in_cycle(CURRENT_SPLITBLOCK_PFN_NUM,
+> +						     CURRENT_SPLITBLOCK_PFN_NUM+splitblock->page_per_splitblock,
+> +						     end_pfn,pfn_needed_by_per_dumpfile);
+> +	}
+
+Please add a line.
+
+> +	//deal with memory not managed by splitblock
+
+Please use /* */ style.
+
+> +	if (pfn_needed_by_per_dumpfile > 0 && *current_splitblock >= splitblock->num) {
+> +		mdf_pfn_t cycle_start_pfn = MAX(CURRENT_SPLITBLOCK_PFN_NUM,end_pfn);
+> +		end_pfn=calculate_end_pfn_in_cycle(cycle_start_pfn,
+> +						   info->max_mapnr,
+> +						   end_pfn,
+> +						   pfn_needed_by_per_dumpfile);
+> +	}
+> +	return end_pfn;
+> +}
+
+Please add a line.
+
+> +/*
+> + * calculate start_pfn and end_pfn in each output file.
+> + */
+> +static int setup_splitting_cyclic(void)
+> +{
+> +	int i;
+> +	mdf_pfn_t start_pfn, end_pfn;
+> +	long long current_splitblock_pfns = 0;
+> +	int current_splitblock = 0;
+
+Please add a line.
+
+> +	start_pfn = end_pfn = 0;
+> +	for (i = 0; i < info->num_dumpfile - 1; i++) {
+> +		start_pfn = end_pfn;
+> +		end_pfn = calculate_end_pfn_by_splitblock(start_pfn,
+> +							  &current_splitblock,
+> +							  &current_splitblock_pfns);
+> +		SPLITTING_START_PFN(i) = start_pfn;
+> +		SPLITTING_END_PFN(i) = end_pfn;
+> +	}
+> +	SPLITTING_START_PFN(info->num_dumpfile - 1) = end_pfn;
+> +	SPLITTING_END_PFN(info->num_dumpfile - 1) = info->max_mapnr;
+> +	return TRUE;
+> +}
+> +
+>  int
+>  setup_splitting(void)
+>  {
+> @@ -8203,12 +8300,14 @@ setup_splitting(void)
+>  		return FALSE;
+>  
+>  	if (info->flag_cyclic) {
+> -		for (i = 0; i < info->num_dumpfile; i++) {
+> -			SPLITTING_START_PFN(i) = divideup(info->max_mapnr, info->num_dumpfile) * i;
+> -			SPLITTING_END_PFN(i)   = divideup(info->max_mapnr, info->num_dumpfile) * (i + 1);
+> +		int ret = FALSE;
+
+Please add a line.
+
+> +		if(!prepare_bitmap2_buffer_cyclic()){
+> +			free_bitmap_buffer();
+> +			return ret;
+>  		}
+> -		if (SPLITTING_END_PFN(i-1) > info->max_mapnr)
+> -			SPLITTING_END_PFN(i-1) = info->max_mapnr;
+> +		ret = setup_splitting_cyclic();
+> +		free_bitmap2_buffer_cyclic();
+> +		return ret;
+>          } else {
+>  		initialize_2nd_bitmap(&bitmap2);
+>  
+> -- 
+> 1.7.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+--
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
