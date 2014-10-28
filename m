@@ -1,27 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xj0EN-00029m-1O
- for kexec@lists.infradead.org; Tue, 28 Oct 2014 06:26:12 +0000
-Received: from kw-mxoi2.gw.nic.fujitsu.com (unknown [10.0.237.143])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 95AA43EE0B6
- for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:25:45 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id A0B24AC0244
- for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:25:44 +0900 (JST)
-Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
- [10.134.21.209])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 3AC8D1DB8038
- for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:25:44 +0900 (JST)
-Date: Tue, 28 Oct 2014 15:24:59 +0900 (JST)
-Message-Id: <20141028.152459.485895318.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O
- workloads in appropriate time
+ id 1Xj0J3-0003oi-3U
+ for kexec@lists.infradead.org; Tue, 28 Oct 2014 06:31:02 +0000
+Received: from kw-mxoi1.gw.nic.fujitsu.com (unknown [10.0.237.133])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 055A23EE112
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:30:37 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by kw-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id EE182AC03FE
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:30:35 +0900 (JST)
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8E00A1DB8032
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:30:35 +0900 (JST)
+Date: Tue, 28 Oct 2014 15:30:28 +0900 (JST)
+Message-Id: <20141028.153028.271204634.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 1/5] Add support for splitblock
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D58CD3@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701D565C0@BPXM01GP.gisp.nec.co.jp>
- <54470DDD.6040700@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D58CD3@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <1413192866-28140-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1413192866-28140-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1413192866-28140-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -35,81 +32,131 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: zhouwj-fnst@cn.fujitsu.com, kexec@lists.infradead.org
+To: zhouwj-fnst@cn.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads in appropriate time
-Date: Mon, 27 Oct 2014 07:51:56 +0000
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v2 1/5] Add support for splitblock
+Date: Mon, 13 Oct 2014 17:34:22 +0800
 
-> Hello Zhou,
+> When --split option is specified, fair I/O workloads shoud be assigned
+> for each process. So the start and end pfn of each dumpfile should be
+> calculated with excluding unnecessary pages. However, it costs a lot of
+> time to execute excluding for the whole memory. That is why struct
+> SplitBlock exists. Struct SplitBlock is designed to manage memory, mainly
+> for recording the number of dumpable pages. We can use the number of
+> dumpable pages to calculate start and end pfn instead of execute excluding
+> for the whole memory.
 > 
->>On 10/17/2014 11:50 AM, Atsushi Kumagai wrote:
->>> Hello,
->>>
->>> The code looks good to me, thanks Zhou.
->>> Now, I have a question on performance.
->>>
->>>> The issue is discussed at http://lists.infradead.org/pipermail/kexec/2014-March/011289.html
->>>>
->>>> This patch implements the idea of 2-pass algorhythm with smaller memory to manage splitblock table.
->>>> Exactly the algorhythm is still 3-pass,but the time of second pass is much shorter.
->>>> The tables below show the performence with different size of cyclic-buffer and splitblock.
->>>> The test is executed on the machine having 128G memory.
->>>>
->>>> the value is total time (including first pass and second pass).
->>>> the value in brackets is the time of second pass.
->>>
->>> Do you have any idea why the time of second pass is much larger when
->>> the splitblock-size is 2G ? I worry about the scalability.
->>>
->>Hello,
->>
->>	Since the previous machine can't be used for some reasons,I test several times using latest code
->>in others, but that never happened. It seems that all things are right. Tests are executed in two machines(server,pc).
->>Tests are based on:
+> The char array *table in struct SplitBlock is used to record the number of
+> dumpable pages.
+> The table entry size is calculated as
+> 			divideup(log2(splitblock_size / page_size), 8) bytes
+> The table entry size is calculated, so that the
+> space table taken will be small enough. And the code will also have a
+> good performence when the number of pages in one splitblock is big enough.
 > 
-> Well...OK, I'll take that as an issue specific to that machine
-> (or your mistakes as you said).
-> Now I have another question.
+> Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> ---
+>  makedumpfile.c |   23 +++++++++++++++++++++++
+>  makedumpfile.h |   14 ++++++++++++++
+>  2 files changed, 37 insertions(+), 0 deletions(-)
 > 
-> calculate_end_pfn_by_splitblock():
-> 	...
->         /* deal with incomplete splitblock */
->         if (pfn_needed_by_per_dumpfile < 0) {
->                 --*current_splitblock;
->                 splitblock_inner -= splitblock->entry_size;
->                 end_pfn = CURRENT_SPLITBLOCK_PFN_NUM;
->                 *current_splitblock_pfns = (-1) * pfn_needed_by_per_dumpfile;
->                 pfn_needed_by_per_dumpfile += read_value_from_splitblock_table(splitblock_inner);
->                 end_pfn = calculate_end_pfn_in_cycle(CURRENT_SPLITBLOCK_PFN_NUM,
->                                                      CURRENT_SPLITBLOCK_PFN_NUM + splitblock->page_per_splitblock,
->                                                      end_pfn,pfn_needed_by_per_dumpfile);
->         }
-> 
-> This block causes the re-scanning for the cycle corresponding to the
-> current_splitblock, so the larger cyc-buf, the longer the time takes.
-> If cyc-buf is 4096 (this means the number of cycle is 1), the whole page
-> scanning will be done in the second pass. Actually, the performance when
-> cyc-buf=4096 was so bad.
-> 
-> Is this process necessary ? I think splitting splitblocks is overkill
-> because I understood that splblk-size is the granularity of the
-> fairness I/O, tuning splblk-size is a trade off between fairness and
-> memory usage.
-> However, there is no advantage to reducing splblk-size in the current
-> implementation, it just consumes large amounts of memory.
-> If we remove the process, we can avoid the whole page scanning in
-> the second pass and reducing splblk-size will be meaningful as I
-> expected.
-> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index b4d43d8..95d553c 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -34,6 +34,7 @@ struct srcfile_table	srcfile_table;
+>  
+>  struct vm_table		vt = { 0 };
+>  struct DumpInfo		*info = NULL;
+> +struct SplitBlock		*splitblock = NULL;
+>  
+>  char filename_stdout[] = FILENAME_STDOUT;
+>  
+> @@ -5685,6 +5686,28 @@ out:
+>  	return ret;
+>  }
+>  
+> +/*
+> + * cyclic_split mode:
+> + *	manage memory by splitblocks,
+> + *	divide memory into splitblocks
+> + *	use splitblock_table to record numbers of dumpable pages in each splitblock
+> + */
+> +
+> +//calculate entry size based on the amount of pages in one splitblock
 
-Yes, I don't think this rescan works with this splitblock method,
-too. The idea of this splitblock method is to reduce the number of
-filitering processing from 3-times to 2-times at the expence of at
-most splitblock-size difference of each dump file. Doing rescan here
-doesn't fit to the idea.
+Please use /* */ style in comment just as other parts of makedumpfile
+source codes.
 
+> +int
+> +calculate_entry_size(void){
+
+Please add linebreak.
+
+calculate_entry_size(void)
+{
+
+> +	int entry_num = 1, count = 1;
+> +	int entry_size;
+
+Please add linebreak.
+
+> +	while (entry_num < splitblock->page_per_splitblock){
+> +		entry_num = entry_num << 1;
+> +		count++;
+> +	}
+> +	entry_size = count/BITPERBYTE;
+> +	if (count %BITPERBYTE)
+> +		entry_size++;
+> +	return entry_size;
+> +}
+> +
+>  mdf_pfn_t
+>  get_num_dumpable(void)
+>  {
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 96830b0..98b8404 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1168,10 +1168,24 @@ struct DumpInfo {
+>  	 */
+>  	int (*page_is_buddy)(unsigned long flags, unsigned int _mapcount,
+>  			     unsigned long private, unsigned int _count);
+> +	/*
+> +	 *for cyclic_splitting mode, setup splitblock_size
+> +	 */
+> +	long long splitblock_size;
+>  };
+>  extern struct DumpInfo		*info;
+>  
+>  /*
+> + *for cyclic_splitting mode,Manage memory by splitblock
+> + */
+> +struct SplitBlock{
+> +        char *table;
+> +        long long num;
+> +        long long page_per_splitblock;
+> +        int entry_size;                 //counted by byte
+
+Please use /* */.
+
+> +};
+> +
+> +/*
+>   * kernel VM-related data
+>   */
+>  struct vm_table {
+> -- 
+> 1.7.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 --
 Thanks.
 HATAYAMA, Daisuke
