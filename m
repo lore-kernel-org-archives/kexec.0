@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xj6gN-0005Xo-TK
- for kexec@lists.infradead.org; Tue, 28 Oct 2014 13:19:32 +0000
-Message-ID: <544F97C4.8000203@redhat.com>
-Date: Tue, 28 Oct 2014 09:19:00 -0400
-From: Prarit Bhargava <prarit@redhat.com>
+Received: from prod-mail-xrelay07.akamai.com ([72.246.2.115])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Xj8CW-0002WW-Jz
+ for kexec@lists.infradead.org; Tue, 28 Oct 2014 14:56:49 +0000
+Message-ID: <544FAE98.6080901@akamai.com>
+Date: Tue, 28 Oct 2014 10:56:24 -0400
+From: Jason Baron <jbaron@akamai.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH V4] kernel, add bug_on_warn
-References: <1414155207-29839-1-git-send-email-prarit@redhat.com>
- <20141028121636.GC3274@tassilo.jf.intel.com> <544F8A78.9070008@redhat.com>
- <20141028122900.GA10632@redhat.com>
- <20141028124425.GD3274@tassilo.jf.intel.com> <544F90B1.1070102@redhat.com>
- <20141028125630.GF3274@tassilo.jf.intel.com>
-In-Reply-To: <20141028125630.GF3274@tassilo.jf.intel.com>
+Subject: Re: [PATCH V5] kernel, add panic_on_warn
+References: <1414499499-21952-1-git-send-email-prarit@redhat.com>
+In-Reply-To: <1414499499-21952-1-git-send-email-prarit@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,37 +22,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, jason.wessel@windriver.com, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: Prarit Bhargava <prarit@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Rusty Russell <rusty@rustcorp.com.au>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabian Frederick <fabf@skynet.be>, "isimatu.yasuaki@jp.fujitsu.com" <isimatu.yasuaki@jp.fujitsu.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-
-
-On 10/28/2014 08:56 AM, Andi Kleen wrote:
->>> If you have a command line option to execute kdb commands you still
->>> would only have a command line option, just a slightly longer one.
->>>
->>> kdb="on, bp warn_slowpath_common sr c, go" 
->>
->> KDB is not on all kernels.  This would require me to go to great lengths to
+On 10/28/2014 08:31 AM, Prarit Bhargava wrote:
+> There have been several times where I have had to rebuild a kernel to
+> cause a panic when hitting a WARN() in the code in order to get a crash
+> dump from a system.  Sometimes this is easy to do, other times (such as
+> in the case of a remote admin) it is not trivial to send new images to the
+> user.
 > 
-> Repeating incorrect statements doesn't suddenly make them correct.
 
-It does when you're introducing unnecessary complexity here Andi.  You're not
-listening to the original statement: I do not want to provide a modified kernel
-to an end user for this simple situation anymore.
+....
 
+> diff --git a/kernel/sysctl_binary.c b/kernel/sysctl_binary.c
+> index 9a4f750..c62d421 100644
+> --- a/kernel/sysctl_binary.c
+> +++ b/kernel/sysctl_binary.c
+> @@ -137,6 +137,7 @@ static const struct bin_table bin_kern_table[] = {
+>         { CTL_INT,      KERN_COMPAT_LOG,                "compat-log" },
+>         { CTL_INT,      KERN_MAX_LOCK_DEPTH,            "max_lock_depth" },
+>         { CTL_INT,      KERN_PANIC_ON_NMI,              "panic_on_unrecovered_nmi" },
+> +       { CTL_INT,      KERN_BUG_ON_WARN,               "panic_on_warn" },
+>         {}
+>  };
 > 
-> Assuming KDB is compiled in the only setup needed would be the line above.
 
-That's a HUGE assumption.  It isn't and I'm still stuck in the same mess of
-explaining how to recompile a kernel and/or providing a modified kernel to an
-end user.  That isn't a good solution.
 
-P.
+I think you meant KERN_PANIC_ON_WARN here.
 
-> 
-> -Andi
-> 
+Thanks,
+
+-Jason
+
+
 
 _______________________________________________
 kexec mailing list
