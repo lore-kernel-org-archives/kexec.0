@@ -1,19 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xj0M5-0003z9-0p
- for kexec@lists.infradead.org; Tue, 28 Oct 2014 06:34:09 +0000
-Message-ID: <544F386C.4080001@cn.fujitsu.com>
-Date: Tue, 28 Oct 2014 14:32:12 +0800
-From: qiaonuohan <qiaonuohan@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads
- in appropriate time
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701D565C0@BPXM01GP.gisp.nec.co.jp>
- <54470DDD.6040700@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D58CD3@BPXM01GP.gisp.nec.co.jp>
- <20141028.152459.485895318.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20141028.152459.485895318.d.hatayama@jp.fujitsu.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Xj0Up-0007g9-UH
+ for kexec@lists.infradead.org; Tue, 28 Oct 2014 06:43:12 +0000
+Received: from kw-mxauth.gw.nic.fujitsu.com (unknown [10.0.237.134])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 983593EE112
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:42:50 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id A10A4AC01E6
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:42:49 +0900 (JST)
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 4572F1DB8041
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 15:42:49 +0900 (JST)
+Date: Tue, 28 Oct 2014 15:42:41 +0900 (JST)
+Message-Id: <20141028.154241.113095525.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 2/5] Add tools for reading and writing from
+ splitblock table
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <1413192866-28140-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1413192866-28140-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1413192866-28140-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,109 +29,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, zhouwj-fnst@cn.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
+To: zhouwj-fnst@cn.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-On 10/28/2014 02:24 PM, HATAYAMA Daisuke wrote:
-> From: Atsushi Kumagai<kumagai-atsushi@mxc.nes.nec.co.jp>
-> Subject: RE: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads in appropriate time
-> Date: Mon, 27 Oct 2014 07:51:56 +0000
->
->> Hello Zhou,
->>
->>> On 10/17/2014 11:50 AM, Atsushi Kumagai wrote:
->>>> Hello,
->>>>
->>>> The code looks good to me, thanks Zhou.
->>>> Now, I have a question on performance.
->>>>
->>>>> The issue is discussed at http://lists.infradead.org/pipermail/kexec/2014-March/011289.html
->>>>>
->>>>> This patch implements the idea of 2-pass algorhythm with smaller memory to manage splitblock table.
->>>>> Exactly the algorhythm is still 3-pass,but the time of second pass is much shorter.
->>>>> The tables below show the performence with different size of cyclic-buffer and splitblock.
->>>>> The test is executed on the machine having 128G memory.
->>>>>
->>>>> the value is total time (including first pass and second pass).
->>>>> the value in brackets is the time of second pass.
->>>>
->>>> Do you have any idea why the time of second pass is much larger when
->>>> the splitblock-size is 2G ? I worry about the scalability.
->>>>
->>> Hello,
->>>
->>> 	Since the previous machine can't be used for some reasons,I test several times using latest code
->>> in others, but that never happened. It seems that all things are right. Tests are executed in two machines(server,pc).
->>> Tests are based on:
->>
->> Well...OK, I'll take that as an issue specific to that machine
->> (or your mistakes as you said).
->> Now I have another question.
->>
->> calculate_end_pfn_by_splitblock():
->> 	...
->>          /* deal with incomplete splitblock */
->>          if (pfn_needed_by_per_dumpfile<  0) {
->>                  --*current_splitblock;
->>                  splitblock_inner -= splitblock->entry_size;
->>                  end_pfn = CURRENT_SPLITBLOCK_PFN_NUM;
->>                  *current_splitblock_pfns = (-1) * pfn_needed_by_per_dumpfile;
->>                  pfn_needed_by_per_dumpfile += read_value_from_splitblock_table(splitblock_inner);
->>                  end_pfn = calculate_end_pfn_in_cycle(CURRENT_SPLITBLOCK_PFN_NUM,
->>                                                       CURRENT_SPLITBLOCK_PFN_NUM + splitblock->page_per_splitblock,
->>                                                       end_pfn,pfn_needed_by_per_dumpfile);
->>          }
->>
->> This block causes the re-scanning for the cycle corresponding to the
->> current_splitblock, so the larger cyc-buf, the longer the time takes.
->> If cyc-buf is 4096 (this means the number of cycle is 1), the whole page
->> scanning will be done in the second pass. Actually, the performance when
->> cyc-buf=4096 was so bad.
->>
->> Is this process necessary ? I think splitting splitblocks is overkill
->> because I understood that splblk-size is the granularity of the
->> fairness I/O, tuning splblk-size is a trade off between fairness and
->> memory usage.
->> However, there is no advantage to reducing splblk-size in the current
->> implementation, it just consumes large amounts of memory.
->> If we remove the process, we can avoid the whole page scanning in
->> the second pass and reducing splblk-size will be meaningful as I
->> expected.
->>
->
-> Yes, I don't think this rescan works with this splitblock method,
-> too. The idea of this splitblock method is to reduce the number of
-> filitering processing from 3-times to 2-times at the expence of at
-> most splitblock-size difference of each dump file. Doing rescan here
-> doesn't fit to the idea.
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v2 2/5] Add tools for reading and writing from splitblock table
+Date: Mon, 13 Oct 2014 17:34:23 +0800
 
-Hello,
+> The function added in this patch, is used for writing and reading value
+> from the char array in struct SplitBlock.
+> 
+> Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> ---
+>  makedumpfile.c |   23 +++++++++++++++++++++++
+>  1 files changed, 23 insertions(+), 0 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 95d553c..a8d86f6 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -5708,6 +5708,29 @@ calculate_entry_size(void){
+>  	return entry_size;
+>  }
+>  
+> +void
+> +write_value_into_splitblock_table(char *splitblock_inner, unsigned long long content)
 
-The only things that bothers me is without getting the exact pfn, some
-of the split files may be empty, with no page stored in it. If this is
-not a issue, I think the re-scanning is useless.
+This line exceeds 80 characters. The cause would be the name of
+function arguments are too long.
 
->
-> --
-> Thanks.
-> HATAYAMA, Daisuke
->
->
+How about this?
+
+void
+write_value_into_splitblock_table(char *entry, unsigned long long value)
+
+
+> +{
+> +	char temp;
+> +	int i=0;
+
+Please add linebreak.
+
+Please add spaces between assignment operator.
+
+int i = 0;
+
+> +	while (i++ < splitblock->entry_size) {
+> +		temp = content & 0xff;
+> +		content = content >> BITPERBYTE;
+> +		*splitblock_inner++ = temp;
+
+Please write increment operator in a separate line.
+
+                *splitblock_inner = temp;
+                *splitblock_inner++;
+
+> +	}
+> +}
+> +unsigned long long
+> +read_value_from_splitblock_table(char *splitblock_inner)
+> +{
+> +	unsigned long long ret = 0;
+
+How about value instead of ret? In addition to the above comment, this
+also leads to contrasting consistency between the two helper
+functions.
+
+> +	int i;
+
+Please add a linebreak.
+
+> +	for (i = splitblock->entry_size; i > 0; i--) {
+> +		ret = ret << BITPERBYTE;
+> +		ret += *(splitblock_inner + i - 1) & 0xff;
+
+The & 0xff is necessary? because splitblock_inner is of type char *.
+
+> +	}
+> +	return ret;
+> +}
+> +
+>  mdf_pfn_t
+>  get_num_dumpable(void)
+>  {
+> -- 
+> 1.7.1
+> 
+> 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
-> .
->
+--
+Thanks.
+HATAYAMA, Daisuke
 
-
--- 
-Regards
-Qiao Nuohan
 
 _______________________________________________
 kexec mailing list
