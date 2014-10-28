@@ -1,25 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xj0nD-0006wp-Qx
- for kexec@lists.infradead.org; Tue, 28 Oct 2014 07:02:12 +0000
-Received: from kw-mxoi1.gw.nic.fujitsu.com (unknown [10.0.237.133])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 4FF453EE112
- for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:01:50 +0900 (JST)
+ id 1Xj10H-0004wJ-KI
+ for kexec@lists.infradead.org; Tue, 28 Oct 2014 07:15:42 +0000
+Received: from kw-mxq.gw.nic.fujitsu.com (unknown [10.0.237.131])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 0F80B3EE0C0
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:15:20 +0900 (JST)
 Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by kw-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id 40B59AC0447
- for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:01:49 +0900 (JST)
+ by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 0C3D1AC041B
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:15:19 +0900 (JST)
 Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
  [10.134.21.209])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id CF010EF8001
- for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:01:48 +0900 (JST)
-Date: Tue, 28 Oct 2014 16:01:40 +0900 (JST)
-Message-Id: <20141028.160140.105297796.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 3/5] Add module of generating table
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9CEAF1DB803E
+ for <kexec@lists.infradead.org>; Tue, 28 Oct 2014 16:15:18 +0900 (JST)
+Date: Tue, 28 Oct 2014 16:15:13 +0900 (JST)
+Message-Id: <20141028.161513.171850531.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 5/5] Add support for --splitblock-size
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <1413192866-28140-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1413192866-28140-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1413192866-28140-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1413192866-28140-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1413192866-28140-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -37,222 +37,122 @@ To: zhouwj-fnst@cn.fujitsu.com
 Cc: kexec@lists.infradead.org
 
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v2 3/5] Add module of generating table
-Date: Mon, 13 Oct 2014 17:34:24 +0800
+Subject: [PATCH v2 5/5] Add support for --splitblock-size
+Date: Mon, 13 Oct 2014 17:34:26 +0800
 
-> set block size and generate basic information of block table
+> Use --splitblock-size to specify splitblock size (KB)
+> When --split is specified in cyclic mode,splitblock table will be
+> generated in create_dump_bitmap().
 > 
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-
-Please remove this Signed-off-by.
-
 > Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 > Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 > ---
->  makedumpfile.c |   95 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  makedumpfile.h |    2 +
->  2 files changed, 96 insertions(+), 1 deletions(-)
+>  makedumpfile.8 |   16 ++++++++++++++++
+>  makedumpfile.c |    4 ++++
+>  makedumpfile.h |    1 +
+>  print_info.c   |   16 +++++++++++++++-
+>  4 files changed, 36 insertions(+), 1 deletions(-)
 > 
+> diff --git a/makedumpfile.8 b/makedumpfile.8
+> index 9cb12c0..a5b7055 100644
+> --- a/makedumpfile.8
+> +++ b/makedumpfile.8
+> @@ -386,6 +386,22 @@ size, so ordinary users don't need to specify this option.
+>  # makedumpfile \-\-cyclic\-buffer 1024 \-d 31 \-x vmlinux /proc/vmcore dumpfile
+>  
+>  .TP
+> +\fB\-\-splitblock\-size\fR \fIsplitblock_size\fR
+> +Specify the splitblock size in kilo bytes for analysis in the cyclic mode with --split.
+> +In the cyclic split mode, the number of splitblocks is represented as:
+> +
+> +    num_of_splitblocks = system_memory / (\fIsplitblock_size\fR * 1KB )
+> +
+
+For what people do you want to show this expression? It would be hard
+for ordinary users to understand this expression. I think at least the
+following explanation is necessary; and more detailed information is
+verbose.
+
+  If --splitblock N is specified, difference of each splitted dumpfile
+  size is at most N kilo bytes.
+
+> +The larger number of splitblock, the faster working speed is expected, but the more memory will
+> +be taken. By default, \fIsplitblock_size\fR will be set as 1GB, so ordinary users don't need to
+> +specify this option.
+> +
+> +.br
+> +.B Example:
+> +.br
+> +# makedumpfile \-\-splitblock\-size 10240 \-d 31 \-x vmlinux \-\-split /proc/vmcore dumpfile1 dumpfile2
+> +
+> +.TP
+>  \fB\-\-non\-cyclic\fR
+>  Running in the non-cyclic mode, this mode uses the old filtering logic same as v1.4.4 or before.
+>  If you feel the cyclic mode is too slow, please try this mode.
 > diff --git a/makedumpfile.c b/makedumpfile.c
-> index a8d86f6..a6f0be4 100644
+> index 32c0919..112f2e4 100644
 > --- a/makedumpfile.c
 > +++ b/makedumpfile.c
-> @@ -5208,7 +5208,13 @@ create_dump_bitmap(void)
->  	if (info->flag_cyclic) {
->  		if (!prepare_bitmap2_buffer_cyclic())
->  			goto out;
-> -		info->num_dumpable = get_num_dumpable_cyclic();
-> +		if (info->flag_split){
-> +			if(!prepare_splitblock_table())
-> +				goto out;
-> +			info->num_dumpable = get_num_dumpable_cyclic_withsplit();
-> +		}
-> +		else
-
-Please:
-
-                } else {
-
-> +			info->num_dumpable = get_num_dumpable_cyclic();
-
-                }
-
+> @@ -9578,6 +9578,7 @@ static struct option longopts[] = {
+>  	{"eppic", required_argument, NULL, OPT_EPPIC},
+>  	{"non-mmap", no_argument, NULL, OPT_NON_MMAP},
+>  	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
+> +	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
+>  	{0, 0, 0, 0}
+>  };
 >  
->  		if (!info->flag_elf_dumpfile)
->  			free_bitmap2_buffer_cyclic();
-> @@ -5731,6 +5737,57 @@ read_value_from_splitblock_table(char *splitblock_inner)
->  	return ret;
->  }
->  
-> +/*
-> + * The splitblock size is specified as Kbyte with --splitblock-size <size> option.
-> + * if not specified ,set default value
-
-if not specified, set default value
-
-> + */
-> +int
-> +check_splitblock_size(void)
-> +{
-> +	if (info->splitblock_size){
-> +		info->splitblock_size <<= 10;
-> +		if (info->splitblock_size == 0) {
-> +			ERRMSG("The splitblock size could not be 0. %s.\n", strerror(errno));
-
-This line exceeds 80 characters.
-
-> +			return FALSE;
-> +		}
-> +		if (info->splitblock_size % info->page_size != 0) {
-> +			ERRMSG("The splitblock size must be align to page_size. %s.\n",
-> +									strerror(errno));
-> +			return FALSE;
-> +		}
-> +	}
-> +	else{
-
-Please:
-
-        } else {
-
-> +		// set default 1GB
-> +		info->splitblock_size = 1 << 30;
-
-
-Please define a default value in makedumpfile.h explicitly and use it
-here. Just like:
-
-#define DEFAULT_SPLITBLOCK_SIZE (1LL << 30)
-
-Then, the comment is unnecessary.
-
-> +	}
-> +	return TRUE;
-> +}
-> +
-> +int
-> +prepare_splitblock_table(void)
-> +{
-> +	if(!check_splitblock_size())
-> +		return FALSE;
-> +	if ((splitblock = calloc(1, sizeof(struct SplitBlock))) == NULL) {
-> +		ERRMSG("Can't allocate memory for the splitblock. %s.\n", strerror(errno));
-> +		return FALSE;
-> +	}
-> +	splitblock->page_per_splitblock = info->splitblock_size / info->page_size;
-> +	/*
-> +	 *divide memory into splitblocks.
-> +	 *if there is a remainder, called it memory not managed by splitblock
-> +	 *and it will be also dealt with in function calculate_end_pfn_by_splitblock()
-> +	 */
-
-Could you rewrite this comment? I don't understand well.
-
-> +	splitblock->num = info->max_mapnr/splitblock->page_per_splitblock;
-
-Please add spaces:
-
-splitblock->num = info->max_mapnr / splitblock->page_per_splitblock;
-
-> +	splitblock->entry_size = calculate_entry_size();
-> +	if ((splitblock->table = (char *)calloc(sizeof(char), (splitblock->entry_size * splitblock->num)))
-> +										== NULL) {
-> +		ERRMSG("Can't allocate memory for the splitblock_table. %s.\n", strerror(errno));
-> +		return FALSE;
-> +	}
-
-Like this?
-
-	size_t table_size;
-...
-	table_size = splitblock->entry_size * splitblock->num;
-	splitblock->table = (char *)calloc(sizeof(char), table_size);
-	if (!splitblock->table) {
-		ERRMSG("Can't allocate memory for the splitblock_table. %s.\n",
-	               strerror(errno));
-		return FALSE;
-	}
-
-> +	return TRUE;
-> +}
-> +
->  mdf_pfn_t
->  get_num_dumpable(void)
->  {
-> @@ -5746,6 +5803,36 @@ get_num_dumpable(void)
->  	return num_dumpable;
->  }
->  
-> +/*
-> + * generate splitblock_table
-> + * modified from function get_num_dumpable_cyclic
-> + */
-> +mdf_pfn_t
-> +get_num_dumpable_cyclic_withsplit(void)
-> +{
-> +	mdf_pfn_t pfn, num_dumpable = 0;
-> +	mdf_pfn_t dumpable_pfn_num = 0, pfn_num = 0;
-> +	struct cycle cycle = {0};
-> +	int pos = 0;
-
-Please add a linebreak.
-
-> +	for_each_cycle(0, info->max_mapnr, &cycle) {
-> +		if (!exclude_unnecessary_pages_cyclic(&cycle))
-> +			return FALSE;
-> +		for (pfn = cycle.start_pfn; pfn < cycle.end_pfn; pfn++) {
-> +			if (is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle)) {
-> +				num_dumpable++;
-> +				dumpable_pfn_num++;
-> +			}
-> +			if (++pfn_num >= splitblock->page_per_splitblock) {
-> +				write_value_into_splitblock_table(splitblock->table + pos, dumpable_pfn_num);
-> +				pos += splitblock->entry_size;
-> +				pfn_num = 0;
-> +				dumpable_pfn_num = 0;
-> +			}
-> +		}
-> +	}
-> +	return num_dumpable;
-> +}
-> +
->  mdf_pfn_t
->  get_num_dumpable_cyclic(void)
->  {
-> @@ -9703,6 +9790,12 @@ out:
->  		if (info->page_buf != NULL)
->  			free(info->page_buf);
->  		free(info);
-> +
-> +		if (splitblock) {
-> +			if (splitblock->table)
-> +				free(splitblock->table);
-> +		free(splitblock);
-
-Please add an indent.
-
-       	   		free(splitblock);
-
-> +		}
->  	}
->  	free_elf_info();
->  
+> @@ -9718,6 +9719,9 @@ main(int argc, char *argv[])
+>  		case OPT_CYCLIC_BUFFER:
+>  			info->bufsize_cyclic = atoi(optarg);
+>  			break;
+> +		case OPT_SPLITBLOCK_SIZE:
+> +			info->splitblock_size = atoi(optarg);
+> +			break;
+>  		case '?':
+>  			MSG("Commandline parameter is invalid.\n");
+>  			MSG("Try `makedumpfile --help' for more information.\n");
 > diff --git a/makedumpfile.h b/makedumpfile.h
-> index 98b8404..60e6f2f 100644
+> index 60e6f2f..7bc57d9 100644
 > --- a/makedumpfile.h
 > +++ b/makedumpfile.h
-> @@ -1888,9 +1888,11 @@ struct elf_prstatus {
->   * Function Prototype.
->   */
->  mdf_pfn_t get_num_dumpable_cyclic(void);
-> +mdf_pfn_t get_num_dumpable_cyclic_withsplit(void);
->  int get_loads_dumpfile_cyclic(void);
->  int initial_xen(void);
->  unsigned long long get_free_memory_size(void);
->  int calculate_cyclic_buffer_size(void);
-> +int prepare_splitblock_table(void);
+> @@ -1883,6 +1883,7 @@ struct elf_prstatus {
+>  #define OPT_EPPIC               OPT_START+12
+>  #define OPT_NON_MMAP            OPT_START+13
+>  #define OPT_MEM_USAGE            OPT_START+14
+> +#define OPT_SPLITBLOCK_SIZE		OPT_START+15
 >  
->  #endif /* MAKEDUMPFILE_H */
+>  /*
+>   * Function Prototype.
+> diff --git a/print_info.c b/print_info.c
+> index f6342d3..2cdffd8 100644
+> --- a/print_info.c
+> +++ b/print_info.c
+> @@ -203,7 +203,21 @@ print_usage(void)
+>  	MSG("      By default, BUFFER_SIZE will be calculated automatically depending on\n");
+>  	MSG("      system memory size, so ordinary users don't need to specify this option.\n");
+>  	MSG("\n");
+> -	MSG("  [--non-cyclic]:\n");
+> +	MSG("  [--splitblock-size SPLITBLOCK_SIZE]:\n");
+> +	MSG("      Specify the splitblock size in kilo bytes for analysis in the cyclic mode\n");
+> +	MSG("      with --split.\n");
+> +	MSG("      In the cyclic mode, the number of splitblocks is represented as:\n");
+> +	MSG("\n");
+> +	MSG("          num_of_splitblocks = system_memory / (splitblock_size * 1KB)\n");
+
+Just the same as the above comment.
+
+> +	MSG("\n");
+> +	MSG("	   The larger number of splitblock, the faster working speed is expected, but\n");
+> +	MSG("	   the more memory will be taken. By default, splitblock_size will be set as\n");
+> +	MSG("	   1GB, so ordinary users don't need to specify this option.\n");
+> +	MSG("\n");
+> +	MSG("      The lesser number of cycles, the faster working speed is expected.\n");
+> +	MSG("      By default, BUFFER_SIZE will be calculated automatically depending on\n");
+> +	MSG("      system memory size, so ordinary users don't need to specify this option.\n");
+> +	MSG("\n");	MSG("  [--non-cyclic]:\n");
+>  	MSG("      Running in the non-cyclic mode, this mode uses the old filtering logic\n");
+>  	MSG("      same as v1.4.4 or before.\n");
+>  	MSG("      If you feel the cyclic mode is too slow, please try this mode.\n");
 > -- 
 > 1.7.1
 > 
