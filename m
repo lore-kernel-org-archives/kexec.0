@@ -1,28 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XjdUt-0003a6-VP
- for kexec@lists.infradead.org; Thu, 30 Oct 2014 00:21:53 +0000
-Received: from kw-mxoi2.gw.nic.fujitsu.com (unknown [10.0.237.143])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 7D20C3EE125
- for <kexec@lists.infradead.org>; Thu, 30 Oct 2014 09:21:28 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id 5DB1EAC029F
- for <kexec@lists.infradead.org>; Thu, 30 Oct 2014 09:21:27 +0900 (JST)
-Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
- [10.134.21.209])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id EF3281DB8038
- for <kexec@lists.infradead.org>; Thu, 30 Oct 2014 09:21:26 +0900 (JST)
-Date: Thu, 30 Oct 2014 09:21:14 +0900 (JST)
-Message-Id: <20141030.092114.461002253.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O
- workloads in appropriate time
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <544F386C.4080001@cn.fujitsu.com>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701D58CD3@BPXM01GP.gisp.nec.co.jp>
- <20141028.152459.485895318.d.hatayama@jp.fujitsu.com>
- <544F386C.4080001@cn.fujitsu.com>
-Mime-Version: 1.0
+ id 1XjeaE-00083A-9B
+ for kexec@lists.infradead.org; Thu, 30 Oct 2014 01:31:27 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: Enable --mem-usage for s390x
+Date: Thu, 30 Oct 2014 01:29:18 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D63129@BPXM01GP.gisp.nec.co.jp>
+References: <1409541340-2719-1-git-send-email-bhe@redhat.com>
+ <20140922170247.36774052@holzheu>
+ <20140923024058.GC8697@dhcp-16-116.nay.redhat.com>
+ <20140924171904.1db5ac90@holzheu>
+ <20140925094412.GI8697@dhcp-16-116.nay.redhat.com>
+ <20140926101057.14549a12@holzheu>
+ <20140926085546.GA30346@dhcp-16-116.nay.redhat.com>
+ <20140926133441.5e58303c@holzheu>
+ <20140929090432.GA9989@dhcp-16-116.nay.redhat.com>
+ <20140929151413.4e9bd1ab@holzheu>
+ <20140930090201.GB9989@dhcp-16-116.nay.redhat.com>
+ <20141001185953.66c6ae9d@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D4D5E4@BPXM01GP.gisp.nec.co.jp>
+ <20141010142310.4c488f6a@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D4E4E4@BPXM01GP.gisp.nec.co.jp>
+ <20141016143753.726f63c0@holzheu>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D580A9@BPXM01GP.gisp.nec.co.jp>
+ <20141023123007.282cb52e@holzheu>
+In-Reply-To: <20141023123007.282cb52e@holzheu>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,112 +40,109 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: qiaonuohan@cn.fujitsu.com
-Cc: kexec@lists.infradead.org, zhouwj-fnst@cn.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
+To: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-From: qiaonuohan <qiaonuohan@cn.fujitsu.com>
-Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads in appropriate time
-Date: Tue, 28 Oct 2014 14:32:12 +0800
+Hello Michael,
 
-> On 10/28/2014 02:24 PM, HATAYAMA Daisuke wrote:
->> From: Atsushi Kumagai<kumagai-atsushi@mxc.nes.nec.co.jp>
->> Subject: RE: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O
->> workloads in appropriate time
->> Date: Mon, 27 Oct 2014 07:51:56 +0000
+>Hello Atsushi,
+>
+>On Thu, 23 Oct 2014 06:56:47 +0000
+>Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+>
+>> >On Tue, 14 Oct 2014 07:19:13 +0000
+>> >Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+>
+>[snip]
+>
+>> I noticed that is_vmalloc_addr_x86_64() can't be used as is_phys_addr()
+>> due to the "kaslr issue". I fixed it in the common path as below, but
+>> --mem-usage still has the same issue since initial() will be invoked
+>> after get_kcore_dump_loads().
 >>
->>> Hello Zhou,
->>>
->>>> On 10/17/2014 11:50 AM, Atsushi Kumagai wrote:
->>>>> Hello,
->>>>>
->>>>> The code looks good to me, thanks Zhou.
->>>>> Now, I have a question on performance.
->>>>>
->>>>>> The issue is discussed at
->>>>>> http://lists.infradead.org/pipermail/kexec/2014-March/011289.html
->>>>>>
->>>>>> This patch implements the idea of 2-pass algorhythm with smaller
->>>>>> memory to manage splitblock table.
->>>>>> Exactly the algorhythm is still 3-pass,but the time of second pass is
->>>>>> much shorter.
->>>>>> The tables below show the performence with different size of
->>>>>> cyclic-buffer and splitblock.
->>>>>> The test is executed on the machine having 128G memory.
->>>>>>
->>>>>> the value is total time (including first pass and second pass).
->>>>>> the value in brackets is the time of second pass.
->>>>>
->>>>> Do you have any idea why the time of second pass is much larger when
->>>>> the splitblock-size is 2G ? I worry about the scalability.
->>>>>
->>>> Hello,
->>>>
->>>> 	Since the previous machine can't be used for some reasons,I test several
->>>> 	times using latest code
->>>> in others, but that never happened. It seems that all things are
->>>> right. Tests are executed in two machines(server,pc).
->>>> Tests are based on:
->>>
->>> Well...OK, I'll take that as an issue specific to that machine
->>> (or your mistakes as you said).
->>> Now I have another question.
->>>
->>> calculate_end_pfn_by_splitblock():
->>> 	...
->>>          /* deal with incomplete splitblock */
->>>          if (pfn_needed_by_per_dumpfile<  0) {
->>>                  --*current_splitblock;
->>>                  splitblock_inner -= splitblock->entry_size;
->>>                  end_pfn = CURRENT_SPLITBLOCK_PFN_NUM;
->>>                  *current_splitblock_pfns = (-1) * pfn_needed_by_per_dumpfile;
->>>                  pfn_needed_by_per_dumpfile +=
->>>                  read_value_from_splitblock_table(splitblock_inner);
->>>                  end_pfn = calculate_end_pfn_in_cycle(CURRENT_SPLITBLOCK_PFN_NUM,
->>>                                                       CURRENT_SPLITBLOCK_PFN_NUM + splitblock->page_per_splitblock,
->>>                                                       end_pfn,pfn_needed_by_per_dumpfile);
->>>          }
->>>
->>> This block causes the re-scanning for the cycle corresponding to the
->>> current_splitblock, so the larger cyc-buf, the longer the time takes.
->>> If cyc-buf is 4096 (this means the number of cycle is 1), the whole
->>> page
->>> scanning will be done in the second pass. Actually, the performance
->>> when
->>> cyc-buf=4096 was so bad.
->>>
->>> Is this process necessary ? I think splitting splitblocks is overkill
->>> because I understood that splblk-size is the granularity of the
->>> fairness I/O, tuning splblk-size is a trade off between fairness and
->>> memory usage.
->>> However, there is no advantage to reducing splblk-size in the current
->>> implementation, it just consumes large amounts of memory.
->>> If we remove the process, we can avoid the whole page scanning in
->>> the second pass and reducing splblk-size will be meaningful as I
->>> expected.
->>>
+>>   http://lists.infradead.org/pipermail/kexec/2014-October/012743.html
 >>
->> Yes, I don't think this rescan works with this splitblock method,
->> too. The idea of this splitblock method is to reduce the number of
->> filitering processing from 3-times to 2-times at the expence of at
->> most splitblock-size difference of each dump file. Doing rescan here
->> doesn't fit to the idea.
-> 
-> Hello,
-> 
-> The only things that bothers me is without getting the exact pfn, some
-> of the split files may be empty, with no page stored in it. If this is
-> not a issue, I think the re-scanning is useless.
-> 
+>> I know it's so late, but I began to think the current implementation
+>> that invokes vaddr_to_paddr_XXX() before initial() is bad:
+>>
+>> show_mem_usage()
+>>   + get_kcore_dump_loads()
+>>     + process_dump_load()
+>>       + vaddr_to_paddr_XXX()
+>>   + initial()
+>>   ...
+>> vaddr_to_paddr_XXX() does VtoP translation *properly*, so it needs
+>> several symbols. This design is OK since it's a general method.
+>
+>So the current implementation that uses vaddr_to_paddr_xxx()
+>for --mem-usage *before* initial() is broken? Or does it currently
+>works only by chance?
 
-It is within the idea I wrote above that empty files can occur. But
-there might be further improvement point to decrease possibility of
-empty files. For example, how about deriving default splitblock size
-from the actual number of dumpable pages, not constant 1GB?
+Luckily v1.5.7 works if kaslr is disabled, but it can be broken
+easily in the future due to dependence on other symbols.
+vaddr_to_paddr_xxx() should be called after initial() in principle.
 
---
-Thanks.
-HATAYAMA, Daisuke
+>> OTOH, we need a kludge which can be used under any situations and
+>> should use it for --mem-usage:
+>>
+>>   VtoP_kludge_s390x(unsigned long vaddr)
+>>   {
+>> 	/* s390 has 1:1 VtoP mapping that starts with zero. */
+>>   	return vaddr;
+>>   }
+>>
+>> also x86_64's can be implemented like below:
+>>
+>>   VtoP_kludge_x86_64(unsigned long vaddr)
+>>   {
+>> 	/* if the address is direct mapped, it's easy to translate. */
+>> 	unsigned long paddr = vaddr - PAGE_OFFSET;
+>> 	return paddr;
+>>   }
+>
+>What about using the kernel name __pa(vaddr)?
 
+Sounds good, but some symbols are still necessary for __pa() in some
+architectures according to the kernel, it seems difficult to introduce
+__pa() as a general method. So now I think is_iomem_phys_addr() isn't
+suitable for other architectures since it depends on __pa().
+
+Anyway, s390x has the simple __pa(), let's continue to use
+is_iomem_phys_addr() even though it's only for s390x.
+
+>[snip]
+>
+>> >--- a/elf_info.c
+>> >+++ b/elf_info.c
+>> >@@ -854,7 +854,7 @@ int get_kcore_dump_loads(void)
+>> >
+>> > 	for (i = 0; i < num_pt_loads; ++i) {
+>> > 		struct pt_load_segment *p = &pt_loads[i];
+>> >-		if (is_vmalloc_addr(p->virt_start))
+>> >+		if (!is_phys_addr(p->virt_start))
+>>
+>> This part implicitly does VtoP translation.
+>> Actually it works for s390x but it's not suitable as a general code,
+>> so we should use VtoP_kludge(should be better name!) too.
+>> Then we can use is_iomem_phys_addr() also for other architecture.
+>
+>So how exactly should the code look like for non s390x architectures?
+>
+>Michael
+
+By early vmcoreinfo initialization, x86_64 will be possible to use
+is_vmalloc_addr_x86_64() as is_phys_addr(), so your last patch has no
+problem except missing __pa() in is_iomem_phys_addr().
+
+Now I don't plan to use is_iomem_phys_addr() for non s390x architectures,
+I prefer putting is_iomem_phys_addr() into arch/s390x.c as Baoquan
+commented before.
+
+Could you modify the patch ? or any questions ?
+
+
+Thanks,
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
