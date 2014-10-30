@@ -1,12 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XjOUW-0002xr-7x
- for kexec@lists.infradead.org; Wed, 29 Oct 2014 08:20:28 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH] ppc64: erase unnecessary segment info printing
-Date: Wed, 29 Oct 2014 16:19:55 +0800
-Message-Id: <1414570795-29258-1-git-send-email-bhe@redhat.com>
+ id 1XjdUt-0003a6-VP
+ for kexec@lists.infradead.org; Thu, 30 Oct 2014 00:21:53 +0000
+Received: from kw-mxoi2.gw.nic.fujitsu.com (unknown [10.0.237.143])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 7D20C3EE125
+ for <kexec@lists.infradead.org>; Thu, 30 Oct 2014 09:21:28 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id 5DB1EAC029F
+ for <kexec@lists.infradead.org>; Thu, 30 Oct 2014 09:21:27 +0900 (JST)
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id EF3281DB8038
+ for <kexec@lists.infradead.org>; Thu, 30 Oct 2014 09:21:26 +0900 (JST)
+Date: Thu, 30 Oct 2014 09:21:14 +0900 (JST)
+Message-Id: <20141030.092114.461002253.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O
+ workloads in appropriate time
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <544F386C.4080001@cn.fujitsu.com>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701D58CD3@BPXM01GP.gisp.nec.co.jp>
+ <20141028.152459.485895318.d.hatayama@jp.fujitsu.com>
+ <544F386C.4080001@cn.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,43 +31,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, Baoquan He <bhe@redhat.com>
+To: qiaonuohan@cn.fujitsu.com
+Cc: kexec@lists.infradead.org, zhouwj-fnst@cn.fujitsu.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
-In ppc64 loading, it will print the segment information. This is not
-wanted since other Archs don't have this. People even think there's
-something wrong. So erase it to make it be consistent with other Archs.
+From: qiaonuohan <qiaonuohan@cn.fujitsu.com>
+Subject: Re: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O workloads in appropriate time
+Date: Tue, 28 Oct 2014 14:32:12 +0800
 
-And if people really want to check these info, they can specify "-d"
-option. They are printed in print_segments() too.
+> On 10/28/2014 02:24 PM, HATAYAMA Daisuke wrote:
+>> From: Atsushi Kumagai<kumagai-atsushi@mxc.nes.nec.co.jp>
+>> Subject: RE: [PATCH v2 0/5] makedumpfile: --split: assign fair I/O
+>> workloads in appropriate time
+>> Date: Mon, 27 Oct 2014 07:51:56 +0000
+>>
+>>> Hello Zhou,
+>>>
+>>>> On 10/17/2014 11:50 AM, Atsushi Kumagai wrote:
+>>>>> Hello,
+>>>>>
+>>>>> The code looks good to me, thanks Zhou.
+>>>>> Now, I have a question on performance.
+>>>>>
+>>>>>> The issue is discussed at
+>>>>>> http://lists.infradead.org/pipermail/kexec/2014-March/011289.html
+>>>>>>
+>>>>>> This patch implements the idea of 2-pass algorhythm with smaller
+>>>>>> memory to manage splitblock table.
+>>>>>> Exactly the algorhythm is still 3-pass,but the time of second pass is
+>>>>>> much shorter.
+>>>>>> The tables below show the performence with different size of
+>>>>>> cyclic-buffer and splitblock.
+>>>>>> The test is executed on the machine having 128G memory.
+>>>>>>
+>>>>>> the value is total time (including first pass and second pass).
+>>>>>> the value in brackets is the time of second pass.
+>>>>>
+>>>>> Do you have any idea why the time of second pass is much larger when
+>>>>> the splitblock-size is 2G ? I worry about the scalability.
+>>>>>
+>>>> Hello,
+>>>>
+>>>> 	Since the previous machine can't be used for some reasons,I test several
+>>>> 	times using latest code
+>>>> in others, but that never happened. It seems that all things are
+>>>> right. Tests are executed in two machines(server,pc).
+>>>> Tests are based on:
+>>>
+>>> Well...OK, I'll take that as an issue specific to that machine
+>>> (or your mistakes as you said).
+>>> Now I have another question.
+>>>
+>>> calculate_end_pfn_by_splitblock():
+>>> 	...
+>>>          /* deal with incomplete splitblock */
+>>>          if (pfn_needed_by_per_dumpfile<  0) {
+>>>                  --*current_splitblock;
+>>>                  splitblock_inner -= splitblock->entry_size;
+>>>                  end_pfn = CURRENT_SPLITBLOCK_PFN_NUM;
+>>>                  *current_splitblock_pfns = (-1) * pfn_needed_by_per_dumpfile;
+>>>                  pfn_needed_by_per_dumpfile +=
+>>>                  read_value_from_splitblock_table(splitblock_inner);
+>>>                  end_pfn = calculate_end_pfn_in_cycle(CURRENT_SPLITBLOCK_PFN_NUM,
+>>>                                                       CURRENT_SPLITBLOCK_PFN_NUM + splitblock->page_per_splitblock,
+>>>                                                       end_pfn,pfn_needed_by_per_dumpfile);
+>>>          }
+>>>
+>>> This block causes the re-scanning for the cycle corresponding to the
+>>> current_splitblock, so the larger cyc-buf, the longer the time takes.
+>>> If cyc-buf is 4096 (this means the number of cycle is 1), the whole
+>>> page
+>>> scanning will be done in the second pass. Actually, the performance
+>>> when
+>>> cyc-buf=4096 was so bad.
+>>>
+>>> Is this process necessary ? I think splitting splitblocks is overkill
+>>> because I understood that splblk-size is the granularity of the
+>>> fairness I/O, tuning splblk-size is a trade off between fairness and
+>>> memory usage.
+>>> However, there is no advantage to reducing splblk-size in the current
+>>> implementation, it just consumes large amounts of memory.
+>>> If we remove the process, we can avoid the whole page scanning in
+>>> the second pass and reducing splblk-size will be meaningful as I
+>>> expected.
+>>>
+>>
+>> Yes, I don't think this rescan works with this splitblock method,
+>> too. The idea of this splitblock method is to reduce the number of
+>> filitering processing from 3-times to 2-times at the expence of at
+>> most splitblock-size difference of each dump file. Doing rescan here
+>> doesn't fit to the idea.
+> 
+> Hello,
+> 
+> The only things that bothers me is without getting the exact pfn, some
+> of the split files may be empty, with no page stored in it. If this is
+> not a issue, I think the re-scanning is useless.
+> 
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- kexec/arch/ppc64/kexec-elf-ppc64.c | 4 ----
- 1 file changed, 4 deletions(-)
+It is within the idea I wrote above that empty files can occur. But
+there might be further improvement point to decrease possibility of
+empty files. For example, how about deriving default splitblock size
+from the actual number of dumpable pages, not constant 1GB?
 
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index ce10367..4a1540e 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -377,10 +377,6 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	dbgprintf("opal_base is %llx\n", (unsigned long long) my_opal_base);
- 	dbgprintf("opal_entry is %llx\n", (unsigned long long) my_opal_entry);
- 
--	for (i = 0; i < info->nr_segments; i++)
--		fprintf(stderr, "segment[%d].mem:%p memsz:%zu\n", i,
--			info->segment[i].mem, info->segment[i].memsz);
--
- 	return 0;
- }
- 
--- 
-1.9.0
+--
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
