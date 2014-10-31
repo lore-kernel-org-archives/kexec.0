@@ -1,11 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1414797939.23621.38.camel@smoke>
-Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
+Message-ID: <1414799092.23621.48.camel@smoke>
+Subject: Re: [PATCH 05/10] arm64: Convert dts to use reserved-memory nodes
 From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 31 Oct 2014 16:25:39 -0700
-In-Reply-To: <20141031075209.GH3290@darkstar.nay.redhat.com>
+Date: Fri, 31 Oct 2014 16:44:52 -0700
+In-Reply-To: <20141024122738.GH24265@leverpostej>
 References: <cover.1414099246.git.geoff@infradead.org>
- <20141031075209.GH3290@darkstar.nay.redhat.com>
+ <411296ab915959b862923d827e730a1db2ff9b4e.1414099246.git.geoff@infradead.org>
+ <20141024105111.GD24265@leverpostej>
+ <CACxGe6szzOXHkK9ukpcSBZgeyy5AgX3+7PgQseBnB9XWYLj-PQ@mail.gmail.com>
+ <20141024122738.GH24265@leverpostej>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,48 +22,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, christoffer.dall@linaro.org, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hi Dave,
+Hi,
 
-Thanks for testing.
-
-On Fri, 2014-10-31 at 15:52 +0800, Dave Young wrote:
-> I tested your patches. The macihne is using spin-table cpu enable method
-> so I tried maxcpus=1 as you suggested.
+On Fri, 2014-10-24 at 13:27 +0100, Mark Rutland wrote:
+> On Fri, Oct 24, 2014 at 11:59:38AM +0100, Grant Likely wrote:
+> > On Fri, Oct 24, 2014 at 11:51 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > > On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
+> > >> Device tree regions described by /memreserve/ entries are not available in
+> > >> /proc/device-tree, and hence are not available to user space utilities that use
+> > >> /proc/device-tree.  In order for these regions to be available, convert any
+> > >> arm64 DTS files using /memreserve/ entries to use reserved-memory nodes.
+> > >
+> > > The limitation here is in the kernel (and a partially in userspace), so
+> > > modifying the dts files is a workaround rather than a fix.
+> > >
+> > > It's perfectly valid for people to remain using /memreserve/, so this
+> > > isn't sufficient. There are also existing DTBs using /memreserve/ which
+> > > we can't rely on being modified to use reserved-memory.
+> > >
+> > > I think we need to expose memreserves to userspace somehow, potentially
+> > > along with other DTB header fields. Grant, ideas?
+> > 
+> > Yes, I suggested the same thing to Geoff in a separate thread. Here's
+> > what I wrote:
+> > 
+> > >> Geoff Levand wrote:
+> > >>> I did some work on this and I think we just need to convert all the
+> > >>> arm64 dts from /memreserve/ to reserved-memory nodes and update the
+> > >>> arm64 booting.txt to specify using reserved-memory.  I'll prepare a
+> > >>> patch for it.
+> > >>
+> > >> I don't think that is going to be entirely sufficient. There will be
+> > >> platforms that don't get converted over, and this is a generic problem
+> > >> that covers all architectures using DT, not just aarch64. The solution
+> > >> probably needs to include exposing the /memreserve/ sections to
+> > >> userspace. I can see two ways to do this:
+> > >>
+> > >> 1) Create a new property in /sysfs with all the memreserve sctions
+> > >> 2) Live-modify the device tree to put the memreserve data into a node
+> > >> at boot time.
+> > >>
+> > >> Option 2 is probably the most generic solution, but it will require
+> > >> some care to make sure there aren't any overlaps if a reserved-memory
+> > >> node already exists.
 > 
-> There's below issues for me, thoughts?
+> I would prefer the former currently. While I currently believe that
+> modifying the tree is something we're going to have to do for stateful
+> properties, it's not someting I want to have to do unless absolutely
+> necessary.
+
+Current user space kexec utilities use /proc/device-tree and nothing
+else.  The intension of the device tree is to describe the system
+sufficiently for a kernel to boot, so I think we should put the
+/memreserve/ info into /proc/device-tree.
+
+We could put the /memreserve/ entries in there directly, or convert
+to reserved-memory nodes.  At the moment I like the idea to convert to
+reserved-memory nodes.
+
+> > > For reference, here is an old conversation about this exact thing.
+> > > Reading through it, the opinions I expressed then don't necessarily
+> > > match what I think now. I still don't think it is a good idea to
+> > > expose the physical address of the old .dtb blob, but I do agree that
+> > > the memreserve sections need to be exposed.
+> > >
+> > > https://lists.ozlabs.org/pipermail/linuxppc-dev/2010-July/083993.html
 > 
-> 1. For acpi booting there's no /proc/device-tree so kexec can not find dtb
-> to use.
+> Another option would be to expose the original DTB as a (read-only)
+> binary file somewhere. That might interact poorly with live tree
+> modification in future, however.
 
-You can supply a DTB with the kexec --dtb option, then kexec will not need
-/proc/device-tree.  Please try if you can and let me know what happens.
-
-> 2. adding "acpi=off" to 1st kernel boot cmdline, kexec load fails with error
-> like below:
-> machine_apply_elf_rel: ERROR Unknown type: 261
-> 
-> I did below hack then kexec load works fine, 
-
-OK, thanks, I'll add support for R_AARCH64_PREL32 in.
-
-> but `kexec -e` still does not work
-> there's nothing more than "Disableing non-boot CPUS ...\n Bye!":
-
-It is really tough to say what happened.  The 'Bye!' message is printed
-just before the 1st stage kernel exits and the 2nd stage kernel is
-entered.  If you have a debugger you can put some breakpoints in
-there to see how far it gets.  That is generally how I figure out
-what went wrong.
-
-You could try the kexec --lite option, it will do a non-purgatory
-boot.
-
-You could also try my master branch that has more debugging output.
-Some of it is through the VE's serial port, so you may need to
-change that to what your platform has.
+I don't like the idea of having two interfaces to get essentially the same
+info.  I think it will be a maintenance problem over time.
 
 -Geoff
 
