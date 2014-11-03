@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XlJRx-0005tz-Mx
- for kexec@lists.infradead.org; Mon, 03 Nov 2014 15:21:46 +0000
-Date: Mon, 3 Nov 2014 10:21:16 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v6] kernel, add panic_on_warn
-Message-ID: <20141103152116.GB22503@redhat.com>
-References: <1415025143-4345-1-git-send-email-prarit@redhat.com>
+Date: Mon, 3 Nov 2014 19:46:34 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
+Message-ID: <20141103194634.GA30366@leverpostej>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <20141031075209.GH3290@darkstar.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1415025143-4345-1-git-send-email-prarit@redhat.com>
+In-Reply-To: <20141031075209.GH3290@darkstar.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +20,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prarit Bhargava <prarit@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>, hedi@sgi.com, Jonathan Corbet <corbet@lwn.net>, jbaron@akamai.com, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Mon, Nov 03, 2014 at 09:32:23AM -0500, Prarit Bhargava wrote:
+On Fri, Oct 31, 2014 at 07:52:09AM +0000, Dave Young wrote:
+> Hi Geoff
+> 
+> I tested your patches. The macihne is using spin-table cpu enable method
+> so I tried maxcpus=1 as you suggested.
+> 
+> There's below issues for me, thoughts?
+> 
+> 1. For acpi booting there's no /proc/device-tree so kexec can not find dtb
+> to use.
 
-[..]
-> +
-> +static int __init panic_on_warn_setup(char *s)
-> +{
-> +	/* Enabling this on a kdump kernel could cause a bogus panic. */
-> +	if (!is_kdump_kernel())
-> +		panic_on_warn = 1;
+Are you absolutely certain of this?
 
-I think it would be better if we leave it to user space to remove
-panic_on_warn from command line of second kernel.
+To use ACPI, you must have booted via EFI, as the only mechanism for
+finding the ACPI tables is via EFI. If booted via EFI, the stub will
+have created a stub DTB if there is no provided DTB, to pass the command
+line and pointers to EFI data structures. This stub DTB should be
+present in the usual place.
 
-Thanks
-Vivek
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
