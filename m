@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 3 Nov 2014 19:46:34 +0000
+Date: Mon, 3 Nov 2014 20:02:02 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
-Message-ID: <20141103194634.GA30366@leverpostej>
+Subject: Re: [PATCH 05/10] arm64: Convert dts to use reserved-memory nodes
+Message-ID: <20141103200202.GB30366@leverpostej>
 References: <cover.1414099246.git.geoff@infradead.org>
- <20141031075209.GH3290@darkstar.nay.redhat.com>
+ <411296ab915959b862923d827e730a1db2ff9b4e.1414099246.git.geoff@infradead.org>
+ <20141024105111.GD24265@leverpostej>
+ <CACxGe6szzOXHkK9ukpcSBZgeyy5AgX3+7PgQseBnB9XWYLj-PQ@mail.gmail.com>
+ <20141024122738.GH24265@leverpostej>
+ <1414799092.23621.48.camel@smoke>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20141031075209.GH3290@darkstar.nay.redhat.com>
+In-Reply-To: <1414799092.23621.48.camel@smoke>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,27 +24,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Fri, Oct 31, 2014 at 07:52:09AM +0000, Dave Young wrote:
-> Hi Geoff
+On Fri, Oct 31, 2014 at 11:44:52PM +0000, Geoff Levand wrote:
+> Hi,
 > 
-> I tested your patches. The macihne is using spin-table cpu enable method
-> so I tried maxcpus=1 as you suggested.
+> On Fri, 2014-10-24 at 13:27 +0100, Mark Rutland wrote:
+> > On Fri, Oct 24, 2014 at 11:59:38AM +0100, Grant Likely wrote:
+> > > On Fri, Oct 24, 2014 at 11:51 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > > > On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
+> > > >> Device tree regions described by /memreserve/ entries are not available in
+> > > >> /proc/device-tree, and hence are not available to user space utilities that use
+> > > >> /proc/device-tree.  In order for these regions to be available, convert any
+> > > >> arm64 DTS files using /memreserve/ entries to use reserved-memory nodes.
+> > > >
+> > > > The limitation here is in the kernel (and a partially in userspace), so
+> > > > modifying the dts files is a workaround rather than a fix.
+> > > >
+> > > > It's perfectly valid for people to remain using /memreserve/, so this
+> > > > isn't sufficient. There are also existing DTBs using /memreserve/ which
+> > > > we can't rely on being modified to use reserved-memory.
+> > > >
+> > > > I think we need to expose memreserves to userspace somehow, potentially
+> > > > along with other DTB header fields. Grant, ideas?
+> > > 
+> > > Yes, I suggested the same thing to Geoff in a separate thread. Here's
+> > > what I wrote:
+> > > 
+> > > >> Geoff Levand wrote:
+> > > >>> I did some work on this and I think we just need to convert all the
+> > > >>> arm64 dts from /memreserve/ to reserved-memory nodes and update the
+> > > >>> arm64 booting.txt to specify using reserved-memory.  I'll prepare a
+> > > >>> patch for it.
+> > > >>
+> > > >> I don't think that is going to be entirely sufficient. There will be
+> > > >> platforms that don't get converted over, and this is a generic problem
+> > > >> that covers all architectures using DT, not just aarch64. The solution
+> > > >> probably needs to include exposing the /memreserve/ sections to
+> > > >> userspace. I can see two ways to do this:
+> > > >>
+> > > >> 1) Create a new property in /sysfs with all the memreserve sctions
+> > > >> 2) Live-modify the device tree to put the memreserve data into a node
+> > > >> at boot time.
+> > > >>
+> > > >> Option 2 is probably the most generic solution, but it will require
+> > > >> some care to make sure there aren't any overlaps if a reserved-memory
+> > > >> node already exists.
+> > 
+> > I would prefer the former currently. While I currently believe that
+> > modifying the tree is something we're going to have to do for stateful
+> > properties, it's not someting I want to have to do unless absolutely
+> > necessary.
 > 
-> There's below issues for me, thoughts?
-> 
-> 1. For acpi booting there's no /proc/device-tree so kexec can not find dtb
-> to use.
+> Current user space kexec utilities use /proc/device-tree and nothing
+> else.  The intension of the device tree is to describe the system
+> sufficiently for a kernel to boot, so I think we should put the
+> /memreserve/ info into /proc/device-tree.
 
-Are you absolutely certain of this?
+I don't follow. The intention of device tree generically has precisely
+nothing to do with the Linux-specific filesystem hierarchy for exposing
+device tree to userspace.
 
-To use ACPI, you must have booted via EFI, as the only mechanism for
-finding the ACPI tables is via EFI. If booted via EFI, the stub will
-have created a stub DTB if there is no provided DTB, to pass the command
-line and pointers to EFI data structures. This stub DTB should be
-present in the usual place.
+The memreserve entries aren't the same as other elements in
+/proc/device-tree. They're a flat table pointed to by the header rather
+than a hierarchy of nodes and properties. There's no way to expose that
+difference under /proc/device-tree, so exposing that as a parallel
+hierarchy makes the most sense to me.
+
+> We could put the /memreserve/ entries in there directly, or convert
+> to reserved-memory nodes.  At the moment I like the idea to convert to
+> reserved-memory nodes.
+
+I think we need a parallel hierarchy to expose header information
+(though we likely only need the memreserve entries). I'm not keen on
+rewriting the device tree to work around a historical mistake.
+
+> > > > For reference, here is an old conversation about this exact thing.
+> > > > Reading through it, the opinions I expressed then don't necessarily
+> > > > match what I think now. I still don't think it is a good idea to
+> > > > expose the physical address of the old .dtb blob, but I do agree that
+> > > > the memreserve sections need to be exposed.
+> > > >
+> > > > https://lists.ozlabs.org/pipermail/linuxppc-dev/2010-July/083993.html
+> > 
+> > Another option would be to expose the original DTB as a (read-only)
+> > binary file somewhere. That might interact poorly with live tree
+> > modification in future, however.
+> 
+> I don't like the idea of having two interfaces to get essentially the same
+> info.  I think it will be a maintenance problem over time.
+
+Given Grant's comments, I'm perfectly happy to not expose the raw DTB
+for situations otehr than debugging.
 
 Thanks,
 Mark.
