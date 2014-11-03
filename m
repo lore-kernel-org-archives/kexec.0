@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1414799415.23621.52.camel@smoke>
-Subject: Re: [PATCH 09/10] arm64/kexec: Enable kexec in the arm64 defconfig
-From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 31 Oct 2014 16:50:15 -0700
-In-Reply-To: <20141024103150.GC24265@leverpostej>
-References: <cover.1414099246.git.geoff@infradead.org>
- <9570f274b9649430b34e5c7e15b63679b94c2c50.1414099246.git.geoff@infradead.org>
- <20141024103150.GC24265@leverpostej>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XlHkx-0008NG-87
+ for kexec@lists.infradead.org; Mon, 03 Nov 2014 13:33:15 +0000
+Message-ID: <545783FA.4050508@redhat.com>
+Date: Mon, 03 Nov 2014 08:32:42 -0500
+From: Prarit Bhargava <prarit@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] kernel, add panic_on_warn
+References: <1414688627-5298-1-git-send-email-prarit@redhat.com>
+ <20141031015843.GW9743@dangermouse.emea.sgi.com>
+In-Reply-To: <20141031015843.GW9743@dangermouse.emea.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,35 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, jbaron@akamai.com, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org, vgoyal@redhat.com
 
-On Fri, 2014-10-24 at 11:31 +0100, Mark Rutland wrote:
-> On Fri, Oct 24, 2014 at 12:10:59AM +0100, Geoff Levand wrote:
-> > Signed-off-by: Geoff Levand <geoff@infradead.org>
-> > ---
-> >  arch/arm64/configs/defconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index d92ef3c..ebf8b3f 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -39,6 +39,7 @@ CONFIG_PREEMPT=y
-> >  CONFIG_KSM=y
-> >  CONFIG_TRANSPARENT_HUGEPAGE=y
-> >  CONFIG_CMA=y
-> > +CONFIG_KEXEC=y
+
+
+On 10/30/2014 09:58 PM, Hedi Berriche wrote:
+> On Thu, Oct 30, 2014 at 17:06 Prarit Bhargava wrote:
+> | There have been several times where I have had to rebuild a kernel to
+> | cause a panic when hitting a WARN() in the code in order to get a crash
+> | dump from a system.  Sometimes this is easy to do, other times (such as
+> | in the case of a remote admin) it is not trivial to send new images to the
+> | user.
+> | 
+> | A much easier method would be a switch to change the WARN() over to a
+> | panic.  This makes debugging easier in that I can now test the actual
+> | image the WARN() was seen on and I do not have to engage in remote
+> | debugging.
 > 
-> Given this is going to be incompatible with KVM, and KVM is already in
-> defconfig, I don't think we can add this until that incompatibility is
-> fixed (or at the very least detected and handled gracefully).
+> Do we want to leave it to usersspace[1] to ensure panic_on_warn is out
+> of the way in when the kdump kernel boots? or would a self-contained
+> approach be more preferable i.e. test whether we're a kdump kernel
+> before bothering with panic_on_warn?
 
-Sure, I can put in a workaround to print out a message and fail the
-kexec_load sys call if KVM is configured.
+Hmm ... this is a good point.  Vivek, do you have a preference?  I'm willing to
+code it either way.  I should be able to put in a is_kdump_kernel() check
+without any problems but I'm not sure if that is the right thing to do here.
 
--Geoff
+P.
 
+> 
+> Cheers,
+> Hedi.
+> 
+> [1] kexec-tools in the case of the boot param by filtering it out of the
+>     kdump kernel cmdline. In the case of sysctl.conf, it would depend on
+>     whether there are distros out there that  include it in the kdump
+>     initrd.
+> 
 
 _______________________________________________
 kexec mailing list
