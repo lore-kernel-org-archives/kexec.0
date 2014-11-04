@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-MIME-Version: 1.0
-In-Reply-To: <1414799092.23621.48.camel@smoke>
+Message-ID: <1415065777.12884.8.camel@smoke>
+Subject: Re: [PATCH 09/10] arm64/kexec: Enable kexec in the arm64 defconfig
+From: Geoff Levand <geoff@infradead.org>
+Date: Mon, 03 Nov 2014 17:49:37 -0800
+In-Reply-To: <20141103200516.GC30366@leverpostej>
 References: <cover.1414099246.git.geoff@infradead.org>
- <411296ab915959b862923d827e730a1db2ff9b4e.1414099246.git.geoff@infradead.org>
- <20141024105111.GD24265@leverpostej>
- <CACxGe6szzOXHkK9ukpcSBZgeyy5AgX3+7PgQseBnB9XWYLj-PQ@mail.gmail.com>
- <20141024122738.GH24265@leverpostej> <1414799092.23621.48.camel@smoke>
-From: Rob Herring <robherring2@gmail.com>
-Date: Mon, 3 Nov 2014 16:26:02 -0600
-Message-ID: <CAL_Jsq+V_tLkfwBKDQOOrkKtHWaRD5e1AHzbciwVYFYbpsAE=w@mail.gmail.com>
-Subject: Re: [PATCH 05/10] arm64: Convert dts to use reserved-memory nodes
+ <9570f274b9649430b34e5c7e15b63679b94c2c50.1414099246.git.geoff@infradead.org>
+ <20141024103150.GC24265@leverpostej> <1414799415.23621.52.camel@smoke>
+ <20141103200516.GC30366@leverpostej>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,101 +21,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Adding Leif...
+Hi Mark,
 
-On Fri, Oct 31, 2014 at 6:44 PM, Geoff Levand <geoff@infradead.org> wrote:
-> Hi,
->
-> On Fri, 2014-10-24 at 13:27 +0100, Mark Rutland wrote:
->> On Fri, Oct 24, 2014 at 11:59:38AM +0100, Grant Likely wrote:
->> > On Fri, Oct 24, 2014 at 11:51 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > > On Fri, Oct 24, 2014 at 12:10:58AM +0100, Geoff Levand wrote:
->> > >> Device tree regions described by /memreserve/ entries are not available in
->> > >> /proc/device-tree, and hence are not available to user space utilities that use
->> > >> /proc/device-tree.  In order for these regions to be available, convert any
->> > >> arm64 DTS files using /memreserve/ entries to use reserved-memory nodes.
->> > >
->> > > The limitation here is in the kernel (and a partially in userspace), so
->> > > modifying the dts files is a workaround rather than a fix.
->> > >
->> > > It's perfectly valid for people to remain using /memreserve/, so this
->> > > isn't sufficient. There are also existing DTBs using /memreserve/ which
->> > > we can't rely on being modified to use reserved-memory.
->> > >
->> > > I think we need to expose memreserves to userspace somehow, potentially
->> > > along with other DTB header fields. Grant, ideas?
->> >
->> > Yes, I suggested the same thing to Geoff in a separate thread. Here's
->> > what I wrote:
->> >
->> > >> Geoff Levand wrote:
->> > >>> I did some work on this and I think we just need to convert all the
->> > >>> arm64 dts from /memreserve/ to reserved-memory nodes and update the
->> > >>> arm64 booting.txt to specify using reserved-memory.  I'll prepare a
->> > >>> patch for it.
->> > >>
->> > >> I don't think that is going to be entirely sufficient. There will be
->> > >> platforms that don't get converted over, and this is a generic problem
->> > >> that covers all architectures using DT, not just aarch64. The solution
->> > >> probably needs to include exposing the /memreserve/ sections to
->> > >> userspace. I can see two ways to do this:
->> > >>
->> > >> 1) Create a new property in /sysfs with all the memreserve sctions
->> > >> 2) Live-modify the device tree to put the memreserve data into a node
->> > >> at boot time.
->> > >>
->> > >> Option 2 is probably the most generic solution, but it will require
->> > >> some care to make sure there aren't any overlaps if a reserved-memory
->> > >> node already exists.
->>
->> I would prefer the former currently. While I currently believe that
->> modifying the tree is something we're going to have to do for stateful
->> properties, it's not someting I want to have to do unless absolutely
->> necessary.
->
-> Current user space kexec utilities use /proc/device-tree and nothing
-> else.  The intension of the device tree is to describe the system
-> sufficiently for a kernel to boot, so I think we should put the
-> /memreserve/ info into /proc/device-tree.
->
-> We could put the /memreserve/ entries in there directly, or convert
-> to reserved-memory nodes.  At the moment I like the idea to convert to
-> reserved-memory nodes.
+On Mon, 2014-11-03 at 20:05 +0000, Mark Rutland wrote:
+> On Fri, Oct 31, 2014 at 11:50:15PM +0000, Geoff Levand wrote:
+> > On Fri, 2014-10-24 at 11:31 +0100, Mark Rutland wrote:
+> > > On Fri, Oct 24, 2014 at 12:10:59AM +0100, Geoff Levand wrote:
+> > > > Signed-off-by: Geoff Levand <geoff@infradead.org>
+> > > > ---
+> > > >  arch/arm64/configs/defconfig | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > > > index d92ef3c..ebf8b3f 100644
+> > > > --- a/arch/arm64/configs/defconfig
+> > > > +++ b/arch/arm64/configs/defconfig
+> > > > @@ -39,6 +39,7 @@ CONFIG_PREEMPT=y
+> > > >  CONFIG_KSM=y
+> > > >  CONFIG_TRANSPARENT_HUGEPAGE=y
+> > > >  CONFIG_CMA=y
+> > > > +CONFIG_KEXEC=y
+> > > 
+> > > Given this is going to be incompatible with KVM, and KVM is already in
+> > > defconfig, I don't think we can add this until that incompatibility is
+> > > fixed (or at the very least detected and handled gracefully).
+> > 
+> > Sure, I can put in a workaround to print out a message and fail the
+> > kexec_load sys call if KVM is configured.
+> 
+> What would be the plan for fixing up kexec to work with kvm were we to
+> do that?
 
-I'm just wondering does UEFI being used for the memory information
-have any impact here as the DT would not have valid memory nodes
-either? I'd assume reserved memory comes from UEFI (or both) in that
-case? Perhaps we need to expose memory layout independent of DT, UEFI
-or anything else.
+As we discussed at on this ML and in detail at Linaro Connect, KVM needs
+to shut itself down properly and free up the resources it acquired at
+startup, mainly the hyp mode vectors.  I don't have any time free to do
+that now, but if no one fixes it by the time I do have some time, then
+I'll work on it.  Kexec needs no fixing for this that I know of.
 
-Rob
+-Geoff
 
->
->> > > For reference, here is an old conversation about this exact thing.
->> > > Reading through it, the opinions I expressed then don't necessarily
->> > > match what I think now. I still don't think it is a good idea to
->> > > expose the physical address of the old .dtb blob, but I do agree that
->> > > the memreserve sections need to be exposed.
->> > >
->> > > https://lists.ozlabs.org/pipermail/linuxppc-dev/2010-July/083993.html
->>
->> Another option would be to expose the original DTB as a (read-only)
->> binary file somewhere. That might interact poorly with live tree
->> modification in future, however.
->
-> I don't like the idea of having two interfaces to get essentially the same
-> info.  I think it will be a maintenance problem over time.
->
-> -Geoff
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 
 _______________________________________________
 kexec mailing list
