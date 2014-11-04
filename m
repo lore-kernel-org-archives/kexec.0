@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XlTL2-0001KD-5Q
- for kexec@lists.infradead.org; Tue, 04 Nov 2014 01:55:17 +0000
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sA41rxBk024488
- for <kexec@lists.infradead.org>; Tue, 4 Nov 2014 09:53:59 +0800
-Message-ID: <5458310C.6010502@cn.fujitsu.com>
-Date: Tue, 4 Nov 2014 09:51:08 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+Date: Tue, 4 Nov 2014 11:35:43 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 05/10] arm64: Convert dts to use reserved-memory nodes
+Message-ID: <20141104113542.GC31371@leverpostej>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <411296ab915959b862923d827e730a1db2ff9b4e.1414099246.git.geoff@infradead.org>
+ <20141024105111.GD24265@leverpostej>
+ <CACxGe6szzOXHkK9ukpcSBZgeyy5AgX3+7PgQseBnB9XWYLj-PQ@mail.gmail.com>
+ <20141024122738.GH24265@leverpostej>
+ <1414799092.23621.48.camel@smoke>
+ <CAL_Jsq+V_tLkfwBKDQOOrkKtHWaRD5e1AHzbciwVYFYbpsAE=w@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH V3 0/5] makedumpfile: --split: assign fair I/O workloads
- in appropriate time
-References: <1414662309-15241-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1414662309-15241-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+V_tLkfwBKDQOOrkKtHWaRD5e1AHzbciwVYFYbpsAE=w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,83 +21,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-Ping...
+On Mon, Nov 03, 2014 at 10:26:02PM +0000, Rob Herring wrote:
+> Adding Leif...
 
-On 10/30/2014 05:45 PM, Zhou Wenjian wrote:
-> v2->v3:
-> 	1.remove the filtering for incomplete block (previous second pass) and adjust
-> 	  relevant codes
-> 	2.address HATAYAMA's comments about coding style
->
-> v1->v2:
-> 	1.use splitblock instead of block
-> 	2.add restriction (align to the page size) to splitblock size
-> 	3.adjust the position of prepare_splitblock_table and check the return code
-> 	4.use --splitblock-size to specify splitblock size and modify the print_info.c
->
-> the v2 test result is:
->
-> 	cyc-buf	128		256		512		1024		2048		4096	
-> splblk-size
-> 2M		24.05(0.65)	24.04(0.65)	24.58(0.65)	24.15(0.64)	24.14(0.64)	49.05(25.46)
-> 4M		23.98(0.65)	24.01(0.65)	24.29(0.65)	24.20(0.64)	24.18(0.66)	49.04(25.46)
-> 8M		24.02(0.65)	24.03(0.65)	24.25(0.65)	24.26(0.70)	24.15(0.64)	48.98(25.44)
-> 16M		24.01(0.65)	24.01(0.65)	24.30(0.65)	24.19(0.64)	24.12(0.65)	48.99(25.45)
-> 32M		23.97(0.65)	24.06(0.73)	24.23(0.65)	24.17(0.64)	24.19(0.64)	48.97(25.50)
-> 64M		24.06(0.66)	24.07(0.66)	24.27(0.66)	24.16(0.65)	24.17(0.65)	48.98(25.49)
-> 128M		24.03(0.67)	24.00(0.67)	24.27(0.66)	24.22(0.66)	24.19(0.66)	48.98(25.48)
-> 256M		24.12(0.67)	23.99(0.67)	24.27(0.67)	24.17(0.66)	24.12(0.66)	49.04(25.49)
-> 512M		24.06(0.70)	24.08(0.70)	24.26(0.70)	24.14(0.71)	24.19(0.70)	49.13(25.64)
-> 1G		24.20(0.82)	24.13(0.81)	24.36(0.81)	24.31(0.80)	24.33(0.81)	49.28(25.75)
-> 2G		24.19(0.81)	24.22(0.81)	24.37(0.81)	24.29(0.80)	24.28(0.82)	49.30(25.78)
-> 4G		25.29(1.90)	25.26(1.91)	25.49(1.91)	25.41(1.89)	25.50(1.90)	49.99(26.45)
-> 8G		25.33(1.90)	26.60(3.23)	26.87(3.21)	26.71(3.23)	26.64(3.22)	51.27(27.73)
-> 16G		25.28(1.90)	26.52(3.21)	29.47(5.86)	29.34(5.84)	29.38(5.86)	53.99(30.40)
->
->
-> the latest test result turns to:
->
-> 	cyc-buf	128		256		512		1024		2048		4096	
-> splblk-size
-> 2M		23.34(0.00)	23.36(0.00)	23.51(0.00)	23.86(0.00)	23.48(0.00)	23.45(0.00)
-> 4M		23.36(0.00)	23.32(0.00)	23.62(0.00)	23.48(0.00)	23.53(0.00)	23.45(0.00)
-> 8M		23.33(0.00)	23.46(0.00)	23.61(0.00)	23.77(0.00)	23.52(0.00)	23.53(0.00)
-> 16M		23.33(0.00)	23.38(0.00)	23.57(0.00)	23.47(0.00)	23.55(0.00)	23.49(0.00)
-> 32M		23.40(0.00)	23.31(0.00)	23.64(0.00)	23.51(0.00)	23.50(0.00)	23.55(0.00)
-> 64M		23.39(0.00)	23.41(0.00)	23.62(0.00)	23.47(0.00)	23.46(0.00)	23.50(0.00)
-> 128M		23.36(0.00)	23.34(0.00)	23.59(0.00)	23.46(0.00)	23.46(0.00)	23.50(0.00)
-> 256M		23.32(0.00)	23.36(0.00)	23.57(0.00)	23.49(0.00)	23.45(0.00)	23.52(0.00)
-> 512M		23.32(0.00)	23.32(0.00)	23.63(0.00)	23.49(0.00)	23.52(0.00)	23.51(0.00)
-> 1G		23.38(0.00)	23.32(0.00)	23.60(0.00)	23.54(0.00)	23.49(0.00)	23.54(0.00)
-> 2G		23.34(0.00)	23.36(0.00)	23.62(0.00)	23.52(0.00)	23.52(0.00)	23.50(0.00)
-> 4G		23.36(0.00)	23.37(0.00)	23.60(0.00)	23.48(0.00)	23.56(0.00)	23.55(0.00)
-> 8G		23.37(0.00)	23.39(0.00)	23.52(0.00)	23.53(0.00)	23.46(0.00)	23.48(0.00)
-> 16G		23.39(0.00)	23.41(0.00)	23.85(0.00)	23.48(0.00)	23.50(0.00)	23.45(0.00)
->
-> Zhou Wenjian (5):
->    Add support for splitblock
->    Add tools for reading and writing from splitblock table
->    Add module of generating table
->    Add module of calculating start_pfn and end_pfn in each dumpfile
->    Add support for --splitblock-size
->
->   makedumpfile.8 |   10 +++
->   makedumpfile.c |  244 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
->   makedumpfile.h |   19 +++++
->   print_info.c   |    5 +
->   4 files changed, 272 insertions(+), 6 deletions(-)
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+[...]
 
+> I'm just wondering does UEFI being used for the memory information
+> have any impact here as the DT would not have valid memory nodes
+> either?
+
+For UEFI, things should just work (TM). The dtb will be free of memory
+nodes (and memreserves), and the next kernel will discover the UEFI
+memory map via the linux,uefi-mmap-* properties as the first kernel did.
+
+We shouldn't need to pass any additional data in this case.
+
+> I'd assume reserved memory comes from UEFI (or both) in that
+> case?
+
+Yes. Any memory that should be reserved should be described as such in
+the UEFI memory map.
+
+One caveat is that reserved-memory nodes are preserved (because they can
+be referred to by phandle for CMA and such). There are few potential
+problems with this (we'll have to reconcile it with the UEFI memory map,
+prevent overlap when the kernel is relocated, etc). The reserved-memory
+nodes should only be used for CMA type carve outs rather than for
+protecting firmware and similar.
+
+> Perhaps we need to expose memory layout independent of DT, UEFI
+> or anything else.
+
+I can see that being useful for debugging, but I don't think that we
+require it.
+
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
