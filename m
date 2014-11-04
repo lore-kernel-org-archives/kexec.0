@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 4 Nov 2014 11:35:43 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 05/10] arm64: Convert dts to use reserved-memory nodes
-Message-ID: <20141104113542.GC31371@leverpostej>
+Received: from mail-ie0-f178.google.com ([209.85.223.178])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XlcR9-0000yN-Hn
+ for kexec@lists.infradead.org; Tue, 04 Nov 2014 11:38:12 +0000
+Received: by mail-ie0-f178.google.com with SMTP id rp18so7324338iec.9
+ for <kexec@lists.infradead.org>; Tue, 04 Nov 2014 03:37:50 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <CAL_Jsq+V_tLkfwBKDQOOrkKtHWaRD5e1AHzbciwVYFYbpsAE=w@mail.gmail.com>
 References: <cover.1414099246.git.geoff@infradead.org>
  <411296ab915959b862923d827e730a1db2ff9b4e.1414099246.git.geoff@infradead.org>
  <20141024105111.GD24265@leverpostej>
  <CACxGe6szzOXHkK9ukpcSBZgeyy5AgX3+7PgQseBnB9XWYLj-PQ@mail.gmail.com>
- <20141024122738.GH24265@leverpostej>
- <1414799092.23621.48.camel@smoke>
+ <20141024122738.GH24265@leverpostej> <1414799092.23621.48.camel@smoke>
  <CAL_Jsq+V_tLkfwBKDQOOrkKtHWaRD5e1AHzbciwVYFYbpsAE=w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+V_tLkfwBKDQOOrkKtHWaRD5e1AHzbciwVYFYbpsAE=w@mail.gmail.com>
+From: Grant Likely <grant.likely@linaro.org>
+Date: Tue, 4 Nov 2014 11:37:30 +0000
+Message-ID: <CACxGe6tWnM6OhAaoYpHdPxbv395EwZyVpuo0hYobx-S1RArPow@mail.gmail.com>
+Subject: Re: [PATCH 05/10] arm64: Convert dts to use reserved-memory nodes
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,44 +30,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Rob Herring <robherring2@gmail.com>
-Cc: "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Mon, Nov 03, 2014 at 10:26:02PM +0000, Rob Herring wrote:
-> Adding Leif...
-
-[...]
-
+On Mon, Nov 3, 2014 at 10:26 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On Fri, Oct 31, 2014 at 6:44 PM, Geoff Levand <geoff@infradead.org> wrote:
+>> On Fri, 2014-10-24 at 13:27 +0100, Mark Rutland wrote:
+>> Current user space kexec utilities use /proc/device-tree and nothing
+>> else.  The intension of the device tree is to describe the system
+>> sufficiently for a kernel to boot, so I think we should put the
+>> /memreserve/ info into /proc/device-tree.
+>>
+>> We could put the /memreserve/ entries in there directly, or convert
+>> to reserved-memory nodes.  At the moment I like the idea to convert to
+>> reserved-memory nodes.
+>
 > I'm just wondering does UEFI being used for the memory information
 > have any impact here as the DT would not have valid memory nodes
-> either?
-
-For UEFI, things should just work (TM). The dtb will be free of memory
-nodes (and memreserves), and the next kernel will discover the UEFI
-memory map via the linux,uefi-mmap-* properties as the first kernel did.
-
-We shouldn't need to pass any additional data in this case.
-
-> I'd assume reserved memory comes from UEFI (or both) in that
+> either? I'd assume reserved memory comes from UEFI (or both) in that
 > case?
 
-Yes. Any memory that should be reserved should be described as such in
-the UEFI memory map.
+It should, but as always the answer is not simple. UEFI+DT, it may be
+that a CMA region is specified in /reserved-memory and we would want
+to respect that, even when getting memory information from UEFI.
 
-One caveat is that reserved-memory nodes are preserved (because they can
-be referred to by phandle for CMA and such). There are few potential
-problems with this (we'll have to reconcile it with the UEFI memory map,
-prevent overlap when the kernel is relocated, etc). The reserved-memory
-nodes should only be used for CMA type carve outs rather than for
-protecting firmware and similar.
+However, the /memreserve/ section shouldn't be an issue in this case.
+Anything firmware needs protected must be reflected in the UEFI memory
+map.
 
-> Perhaps we need to expose memory layout independent of DT, UEFI
-> or anything else.
-
-I can see that being useful for debugging, but I don't think that we
-require it.
-
-Thanks,
-Mark.
+g.
 
 _______________________________________________
 kexec mailing list
