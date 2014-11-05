@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xls4d-0000m9-EK
- for kexec@lists.infradead.org; Wed, 05 Nov 2014 04:20:00 +0000
+ id 1Xls57-0001sS-VB
+ for kexec@lists.infradead.org; Wed, 05 Nov 2014 04:20:30 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH V3 3/5] Add module of generating table
-Date: Wed, 5 Nov 2014 04:18:01 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D647B6@BPXM01GP.gisp.nec.co.jp>
+Subject: RE: [PATCH V3 2/5] Add tools for reading and writing from
+ splitblock table
+Date: Wed, 5 Nov 2014 04:18:11 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D647BB@BPXM01GP.gisp.nec.co.jp>
 References: <1414662309-15241-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1414662309-15241-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1414662309-15241-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1414662309-15241-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1414662309-15241-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,188 +28,68 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->set block size and generate basic information of block table
+>The function added in this patch, is used for writing and reading value
+>from the char array in struct SplitBlock.
 >
 >Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 >Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 >---
-> makedumpfile.c |  109 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> makedumpfile.h |    4 ++
-> 2 files changed, 112 insertions(+), 1 deletions(-)
+> makedumpfile.c |   29 +++++++++++++++++++++++++++++
+> 1 files changed, 29 insertions(+), 0 deletions(-)
 >
 >diff --git a/makedumpfile.c b/makedumpfile.c
->index f86dfd2..9ead207 100644
+>index 7017943..f86dfd2 100644
 >--- a/makedumpfile.c
 >+++ b/makedumpfile.c
->@@ -5208,7 +5208,14 @@ create_dump_bitmap(void)
-> 	if (info->flag_cyclic) {
-> 		if (!prepare_bitmap2_buffer_cyclic())
-> 			goto out;
->-		info->num_dumpable = get_num_dumpable_cyclic();
->+		if (info->flag_split) {
->+			if(!prepare_splitblock_table())
->+				goto out;
->+
->+			info->num_dumpable = get_num_dumpable_cyclic_withsplit();
->+		}else {
->+			info->num_dumpable = get_num_dumpable_cyclic();
->+		}
->
-> 		if (!info->flag_elf_dumpfile)
-> 			free_bitmap2_buffer_cyclic();
->@@ -5745,6 +5752,61 @@ read_from_splitblock_table(char *entry)
-> 	return value;
+>@@ -5716,6 +5716,35 @@ calculate_entry_size(void)
+> 	return entry_size;
 > }
 >
->+/*
->+ * The splitblock size is specified as Kbyte with --splitblock-size <size> option.
->+ * If not specified, set default value.
->+ */
->+int
->+check_splitblock_size(void)
+>+void
+>+write_into_splitblock_table(char *entry,
+>+				unsigned long long value)
 >+{
->+	if (info->splitblock_size) {
->+		info->splitblock_size <<= 10;
->+		if (info->splitblock_size == 0) {
->+			ERRMSG("The splitblock size could not be 0. %s.\n",
->+				strerror(errno));
->+			return FALSE;
->+		}
->+		if (info->splitblock_size % info->page_size != 0) {
->+			ERRMSG("The splitblock size must be align to page_size. %s.\n",
->+				strerror(errno));
->+			return FALSE;
->+		}
->+	} else {
->+		info->splitblock_size = DEFAULT_SPLITBLOCK_SIZE;
->+	}
+>+	char temp;
+>+	int i = 0;
 >+
->+	return TRUE;
+>+	while (i++ < splitblock->entry_size) {
+>+		temp = value & 0xff;
+>+		value = value >> BITPERBYTE;
+>+		*entry = temp;
+>+		entry++;
+>+	}
 >+}
 >+
->+int
->+prepare_splitblock_table(void)
+>+unsigned long long
+>+read_from_splitblock_table(char *entry)
 >+{
->+	size_t table_size;
+>+	unsigned long long value = 0;
+>+	int i;
 >+
->+	if(!check_splitblock_size())
->+		return FALSE;
->+	if ((splitblock = calloc(1, sizeof(struct SplitBlock))) == NULL) {
->+		ERRMSG("Can't allocate memory for the splitblock. %s.\n",
->+			strerror(errno));
->+		return FALSE;
+>+	for (i = splitblock->entry_size; i > 0; i--) {
+>+		value = value << BITPERBYTE;
+>+		value += *(entry + i - 1) & 0xff;
 >+	}
->+
->+	splitblock->page_per_splitblock = info->splitblock_size / info->page_size;
->+	splitblock->num = (info->max_mapnr + splitblock->page_per_splitblock -1) /
->+			  splitblock->page_per_splitblock;
 
-Please use "divideup(info->max_mapnr, splitblock->page_per_splitblock)".
+Did you forget to reflect the HATAYAMA-san's comment ?
+
+>> +	for (i = splitblock->entry_size; i > 0; i--) {
+>> +		ret = ret << BITPERBYTE;
+>> +		ret += *(splitblock_inner + i - 1) & 0xff;
+>
+> The & 0xff is necessary? because splitblock_inner is of type char *.
 
 
 Thanks,
 Atsushi Kumagai
 
->+	splitblock->entry_size = calculate_entry_size();
->+	table_size = splitblock->entry_size * splitblock->num;
 >+
->+	splitblock->table = (char *)calloc(sizeof(char), table_size);
->+	if (!splitblock->table) {
->+		ERRMSG("Can't allocate memory for the splitblock_table. %s.\n",
->+			 strerror(errno));
->+		return FALSE;
->+	}
->+
->+	return TRUE;
+>+	return value;
 >+}
 >+
 > mdf_pfn_t
 > get_num_dumpable(void)
 > {
->@@ -5760,6 +5822,45 @@ get_num_dumpable(void)
-> 	return num_dumpable;
-> }
->
->+/*
->+ * generate splitblock_table
->+ * modified from function get_num_dumpable_cyclic
->+ */
->+mdf_pfn_t
->+get_num_dumpable_cyclic_withsplit(void)
->+{
->+	mdf_pfn_t pfn, num_dumpable = 0;
->+	mdf_pfn_t dumpable_pfn_num = 0, pfn_num = 0;
->+	struct cycle cycle = {0};
->+	int pos = 0;
->+
->+	pfn_memhole = info->max_mapnr;
->+
->+	for_each_cycle(0, info->max_mapnr, &cycle) {
->+		if (!exclude_unnecessary_pages_cyclic(&cycle))
->+			return FALSE;
->+
->+		if (info->flag_mem_usage)
->+			exclude_zero_pages_cyclic(&cycle);
->+
->+		for (pfn = cycle.start_pfn; pfn < cycle.end_pfn; pfn++) {
->+			if (is_dumpable_cyclic(info->partial_bitmap2, pfn, &cycle)) {
->+				num_dumpable++;
->+				dumpable_pfn_num++;
->+			}
->+			if (++pfn_num >= splitblock->page_per_splitblock) {
->+				write_into_splitblock_table(splitblock->table + pos,
->+							    dumpable_pfn_num);
->+				pos += splitblock->entry_size;
->+				pfn_num = 0;
->+				dumpable_pfn_num = 0;
->+			}
->+		}
->+	}
->+
->+	return num_dumpable;
->+}
->+
-> mdf_pfn_t
-> get_num_dumpable_cyclic(void)
-> {
->@@ -9717,6 +9818,12 @@ out:
-> 		if (info->page_buf != NULL)
-> 			free(info->page_buf);
-> 		free(info);
->+
->+		if (splitblock) {
->+			if (splitblock->table)
->+				free(splitblock->table);
->+			free(splitblock);
->+		}
-> 	}
-> 	free_elf_info();
->
->diff --git a/makedumpfile.h b/makedumpfile.h
->index 7d9c2e6..39c49b8 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -1178,6 +1178,8 @@ extern struct DumpInfo		*info;
-> /*
->  * for cyclic_splitting mode,Manage memory by splitblock
->  */
->+#define DEFAULT_SPLITBLOCK_SIZE (1LL << 30)
->+
-> struct SplitBlock{
->         char *table;
->         long long num;
->@@ -1888,9 +1890,11 @@ struct elf_prstatus {
->  * Function Prototype.
->  */
-> mdf_pfn_t get_num_dumpable_cyclic(void);
->+mdf_pfn_t get_num_dumpable_cyclic_withsplit(void);
-> int get_loads_dumpfile_cyclic(void);
-> int initial_xen(void);
-> unsigned long long get_free_memory_size(void);
-> int calculate_cyclic_buffer_size(void);
->+int prepare_splitblock_table(void);
->
-> #endif /* MAKEDUMPFILE_H */
 >--
 >1.7.1
 >
