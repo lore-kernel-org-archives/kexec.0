@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XmEdB-0001u3-Cu
- for kexec@lists.infradead.org; Thu, 06 Nov 2014 04:25:11 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH V3 2/5] Add tools for reading and writing from
- splitblock table
-Date: Thu, 6 Nov 2014 04:20:01 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D64D51@BPXM01GP.gisp.nec.co.jp>
-References: <1414662309-15241-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1414662309-15241-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701D647BB@BPXM01GP.gisp.nec.co.jp>
- <5459FC90.6070406@cn.fujitsu.com>
-In-Reply-To: <5459FC90.6070406@cn.fujitsu.com>
-Content-Language: ja-JP
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XmFbA-00059l-BP
+ for kexec@lists.infradead.org; Thu, 06 Nov 2014 05:27:08 +0000
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
+ [127.0.0.1])
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sA65QHat018685
+ for <kexec@lists.infradead.org>; Thu, 6 Nov 2014 13:26:17 +0800
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH V4 0/5] makedumpfile: --split: assign fair I/O workloads in
+ appropriate time
+Date: Thu, 6 Nov 2014 13:23:17 +0800
+Message-ID: <1415251402-12698-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,41 +25,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
->On 11/05/2014 12:18 PM, Atsushi Kumagai wrote:
->>> +unsigned long long
->>> >+read_from_splitblock_table(char *entry)
->>> >+{
->>> >+	unsigned long long value = 0;
->>> >+	int i;
->>> >+
->>> >+	for (i = splitblock->entry_size; i>  0; i--) {
->>> >+		value = value<<  BITPERBYTE;
->>> >+		value += *(entry + i - 1)&  0xff;
->>> >+	}
->> Did you forget to reflect the HATAYAMA-san's comment ?
->>
->
->I think it is needed.
->For example:
->	if *(entry + i - 1) == 0xfa
->	without & 0xff:
->		it will turn to: value += 0xfffffffffffffffa
->	with & 0xff:
->		it will be: value += 0xfffffffffffffffa & 0xff
+v3->v4:
+	1.address Atsushi Kumagai's comments about using divideup
 
-Ah, I see, you meant "sign extension".
-OK, I understand.
+v2->v3:
+	1.remove the filtering for incomplete block (previous second pass) and adjust
+	  relevant codes
+	2.address HATAYAMA's comments about coding style
+
+v1->v2:
+	1.use splitblock instead of block
+	2.add restriction (align to the page size) to splitblock size
+	3.adjust the position of prepare_splitblock_table and check the return code
+	4.use --splitblock-size to specify splitblock size and modify the print_info.c
+
+the v2 test result is:
+
+	cyc-buf	128		256		512		1024		2048		4096	
+splblk-size
+2M		24.05(0.65)	24.04(0.65)	24.58(0.65)	24.15(0.64)	24.14(0.64)	49.05(25.46)
+4M		23.98(0.65)	24.01(0.65)	24.29(0.65)	24.20(0.64)	24.18(0.66)	49.04(25.46)
+8M		24.02(0.65)	24.03(0.65)	24.25(0.65)	24.26(0.70)	24.15(0.64)	48.98(25.44)
+16M		24.01(0.65)	24.01(0.65)	24.30(0.65)	24.19(0.64)	24.12(0.65)	48.99(25.45)
+32M		23.97(0.65)	24.06(0.73)	24.23(0.65)	24.17(0.64)	24.19(0.64)	48.97(25.50)
+64M		24.06(0.66)	24.07(0.66)	24.27(0.66)	24.16(0.65)	24.17(0.65)	48.98(25.49)
+128M		24.03(0.67)	24.00(0.67)	24.27(0.66)	24.22(0.66)	24.19(0.66)	48.98(25.48)
+256M		24.12(0.67)	23.99(0.67)	24.27(0.67)	24.17(0.66)	24.12(0.66)	49.04(25.49)
+512M		24.06(0.70)	24.08(0.70)	24.26(0.70)	24.14(0.71)	24.19(0.70)	49.13(25.64)
+1G		24.20(0.82)	24.13(0.81)	24.36(0.81)	24.31(0.80)	24.33(0.81)	49.28(25.75)
+2G		24.19(0.81)	24.22(0.81)	24.37(0.81)	24.29(0.80)	24.28(0.82)	49.30(25.78)
+4G		25.29(1.90)	25.26(1.91)	25.49(1.91)	25.41(1.89)	25.50(1.90)	49.99(26.45)
+8G		25.33(1.90)	26.60(3.23)	26.87(3.21)	26.71(3.23)	26.64(3.22)	51.27(27.73)
+16G		25.28(1.90)	26.52(3.21)	29.47(5.86)	29.34(5.84)	29.38(5.86)	53.99(30.40)
 
 
-Thanks,
-Atsushi Kumagai
+the latest test result turns to:
 
->
->Thanks
->Zhou Wenjian
+	cyc-buf	128		256		512		1024		2048		4096	
+splblk-size
+2M		23.34(0.00)	23.36(0.00)	23.51(0.00)	23.86(0.00)	23.48(0.00)	23.45(0.00)
+4M		23.36(0.00)	23.32(0.00)	23.62(0.00)	23.48(0.00)	23.53(0.00)	23.45(0.00)
+8M		23.33(0.00)	23.46(0.00)	23.61(0.00)	23.77(0.00)	23.52(0.00)	23.53(0.00)
+16M		23.33(0.00)	23.38(0.00)	23.57(0.00)	23.47(0.00)	23.55(0.00)	23.49(0.00)
+32M		23.40(0.00)	23.31(0.00)	23.64(0.00)	23.51(0.00)	23.50(0.00)	23.55(0.00)
+64M		23.39(0.00)	23.41(0.00)	23.62(0.00)	23.47(0.00)	23.46(0.00)	23.50(0.00)
+128M		23.36(0.00)	23.34(0.00)	23.59(0.00)	23.46(0.00)	23.46(0.00)	23.50(0.00)
+256M		23.32(0.00)	23.36(0.00)	23.57(0.00)	23.49(0.00)	23.45(0.00)	23.52(0.00)
+512M		23.32(0.00)	23.32(0.00)	23.63(0.00)	23.49(0.00)	23.52(0.00)	23.51(0.00)
+1G		23.38(0.00)	23.32(0.00)	23.60(0.00)	23.54(0.00)	23.49(0.00)	23.54(0.00)
+2G		23.34(0.00)	23.36(0.00)	23.62(0.00)	23.52(0.00)	23.52(0.00)	23.50(0.00)
+4G		23.36(0.00)	23.37(0.00)	23.60(0.00)	23.48(0.00)	23.56(0.00)	23.55(0.00)
+8G		23.37(0.00)	23.39(0.00)	23.52(0.00)	23.53(0.00)	23.46(0.00)	23.48(0.00)
+16G		23.39(0.00)	23.41(0.00)	23.85(0.00)	23.48(0.00)	23.50(0.00)	23.45(0.00)
+
+
+
+Zhou Wenjian (5):
+  Add support for splitblock
+  Add tools for reading and writing from splitblock table
+  Add module of generating table
+  Add module of calculating start_pfn and end_pfn in each dumpfile
+  Add support for --splitblock-size
+
+ makedumpfile.8 |   10 +++
+ makedumpfile.c |  243 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ makedumpfile.h |   19 +++++
+ print_info.c   |    5 +
+ 4 files changed, 271 insertions(+), 6 deletions(-)
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
