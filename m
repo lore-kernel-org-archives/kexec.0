@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-la0-f41.google.com ([209.85.215.41])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XmLzO-0007EO-Qg
- for kexec@lists.infradead.org; Thu, 06 Nov 2014 12:16:36 +0000
-Received: by mail-la0-f41.google.com with SMTP id s18so2515795lam.0
- for <kexec@lists.infradead.org>; Thu, 06 Nov 2014 04:16:12 -0800 (PST)
+ id 1XmMpx-0002Iy-T0
+ for kexec@lists.infradead.org; Thu, 06 Nov 2014 13:10:54 +0000
+Message-ID: <545B733C.6080903@redhat.com>
+Date: Thu, 06 Nov 2014 08:10:20 -0500
+From: Prarit Bhargava <prarit@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1414099246.git.geoff@infradead.org>
-References: <cover.1414099246.git.geoff@infradead.org>
-Date: Thu, 6 Nov 2014 17:46:12 +0530
-Message-ID: <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
-From: Arun Chandran <achandran@mvista.com>
+Subject: Re: [PATCH v8] kernel, add panic_on_warn
+References: <1415187736-16242-1-git-send-email-prarit@redhat.com>
+ <alpine.DEB.2.10.1411051357050.31575@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.10.1411051357050.31575@chino.kir.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,191 +23,218 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: David Rientjes <rientjes@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, jbaron@akamai.com, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org, vgoyal@redhat.com
 
-Hi Geoff,
 
-I am trying this on my hardware (apm-mustang.dtb)
 
-On Fri, Oct 24, 2014 at 4:40 AM, Geoff Levand <geoff@infradead.org> wrote:
-> Hi All,
->
-> This series adds the core support for kexec re-boots on arm64.  I have tested
-> with the ARM VE fast model, the ARM Base model and the ARM Foundation
-> model with various kernel config options for both the first and second stage
-> kernels.
->
-> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
-> kexec-tools [2], which have not yet been merged upstream, are needed.
->
-> Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
-> routine the ability to switch exception levels from EL1 to EL2 for kernels that
-> were entered in EL2.
->
-> Patches 5 and 6 convert the use of device tree /memreserve/ to device tree
-> reserved-memory nodes.
->
-> Patch 7 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
-> dcache_line_size macro it defines can be uesd by kexec's relocate kernel
-> routine.
->
-> Patches 8-10 add the actual kexec support.
->
-> Please consider all patches for inclusion.  Any comments or suggestions on how
-> to improve are welcome.
->
-> [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
-> [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
->
-> Several things are known to have problems on kexec re-boot:
->
-> spin-table
-> ----------
->
-> PROBLEM: The spin-table enable method does not implement all the methods needed
-> for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
->
-> WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
-> support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
-> on the first stage kernel command line.
+On 11/05/2014 04:59 PM, David Rientjes wrote:
+> On Wed, 5 Nov 2014, Prarit Bhargava wrote:
+> 
+>> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+>> index 6c0b9f2..bc4bd5a 100644
+>> --- a/Documentation/kdump/kdump.txt
+>> +++ b/Documentation/kdump/kdump.txt
+>> @@ -471,6 +471,13 @@ format. Crash is available on Dave Anderson's site at the following URL:
+>>  
+>>     http://people.redhat.com/~anderson/
+>>  
+>> +Trigger Kdump on WARN()
+>> +=======================
+>> +
+>> +The kernel parameter, panic_on_warn, calls panic() in all WARN() paths.  This
+>> +will cause a kdump to occur at the panic() call.  In cases where a user wants
+>> +to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
+>> +to achieve the same behaviour.
+>>  
+>>  Contact
+>>  =======
+>> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+>> index 4c81a86..ea5d57c 100644
+>> --- a/Documentation/kernel-parameters.txt
+>> +++ b/Documentation/kernel-parameters.txt
+>> @@ -2509,6 +2509,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>>  			timeout < 0: reboot immediately
+>>  			Format: <timeout>
+>>  
+>> +	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
+>> +			on a WARN().
+>> +
+>>  	crash_kexec_post_notifiers
+>>  			Run kdump after running panic-notifiers and dumping
+>>  			kmsg. This only for the users who doubt kdump always
+>> diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
+>> index 57baff5..b5d0c85 100644
+>> --- a/Documentation/sysctl/kernel.txt
+>> +++ b/Documentation/sysctl/kernel.txt
+>> @@ -54,8 +54,9 @@ show up in /proc/sys/kernel:
+>>  - overflowuid
+>>  - panic
+>>  - panic_on_oops
+>> -- panic_on_unrecovered_nmi
+>>  - panic_on_stackoverflow
+>> +- panic_on_unrecovered_nmi
+>> +- panic_on_warn
+>>  - pid_max
+>>  - powersave-nap               [ PPC only ]
+>>  - printk
+>> @@ -527,19 +528,6 @@ the recommended setting is 60.
+>>  
+>>  ==============================================================
+>>  
+>> -panic_on_unrecovered_nmi:
+>> -
+>> -The default Linux behaviour on an NMI of either memory or unknown is
+>> -to continue operation. For many environments such as scientific
+>> -computing it is preferable that the box is taken out and the error
+>> -dealt with than an uncorrected parity/ECC error get propagated.
+>> -
+>> -A small number of systems do generate NMI's for bizarre random reasons
+>> -such as power management so the default is off. That sysctl works like
+>> -the existing panic controls already in that directory.
+>> -
+>> -==============================================================
+>> -
+>>  panic_on_oops:
+>>  
+>>  Controls the kernel's behaviour when an oops or BUG is encountered.
+>> @@ -563,6 +551,30 @@ This file shows up if CONFIG_DEBUG_STACKOVERFLOW is enabled.
+>>  
+>>  ==============================================================
+>>  
+>> +panic_on_unrecovered_nmi:
+>> +
+>> +The default Linux behaviour on an NMI of either memory or unknown is
+>> +to continue operation. For many environments such as scientific
+>> +computing it is preferable that the box is taken out and the error
+>> +dealt with than an uncorrected parity/ECC error get propagated.
+>> +
+>> +A small number of systems do generate NMI's for bizarre random reasons
+>> +such as power management so the default is off. That sysctl works like
+>> +the existing panic controls already in that directory.
+>> +
+>> +==============================================================
+>> +
+>> +panic_on_warn:
+>> +
+>> +Calls panic() in the WARN() path when set to 1.  This is useful to avoid
+>> +a kernel rebuild when attempting to kdump at the location of a WARN().
+>> +
+>> +0: only WARN(), default behaviour.
+>> +
+>> +1: call panic() after printing out WARN() location.
+>> +
+>> +==============================================================
+>> +
+>>  perf_cpu_time_max_percent:
+>>  
+>>  Hints to the kernel how much CPU time it should be allowed to
+>> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+>> index 3d770f55..d60d31d 100644
+>> --- a/include/linux/kernel.h
+>> +++ b/include/linux/kernel.h
+>> @@ -422,6 +422,7 @@ extern int panic_timeout;
+>>  extern int panic_on_oops;
+>>  extern int panic_on_unrecovered_nmi;
+>>  extern int panic_on_io_nmi;
+>> +extern int panic_on_warn;
+>>  extern int sysctl_panic_on_stackoverflow;
+>>  /*
+>>   * Only to be used by arch init code. If the user over-wrote the default
+>> diff --git a/include/uapi/linux/sysctl.h b/include/uapi/linux/sysctl.h
+>> index 43aaba1..0956373 100644
+>> --- a/include/uapi/linux/sysctl.h
+>> +++ b/include/uapi/linux/sysctl.h
+>> @@ -153,6 +153,7 @@ enum
+>>  	KERN_MAX_LOCK_DEPTH=74, /* int: rtmutex's maximum lock depth */
+>>  	KERN_NMI_WATCHDOG=75, /* int: enable/disable nmi watchdog */
+>>  	KERN_PANIC_ON_NMI=76, /* int: whether we will panic on an unrecovered */
+>> +	KERN_PANIC_ON_WARN=77, /* int: call panic() in WARN() functions */
+>>  };
+>>  
+>>  
+>> diff --git a/kernel/panic.c b/kernel/panic.c
+>> index d09dc5c..c6a7723 100644
+>> --- a/kernel/panic.c
+>> +++ b/kernel/panic.c
+>> @@ -33,6 +33,7 @@ static int pause_on_oops;
+>>  static int pause_on_oops_flag;
+>>  static DEFINE_SPINLOCK(pause_on_oops_lock);
+>>  static bool crash_kexec_post_notifiers;
+>> +int panic_on_warn __read_mostly;
+>>  
+>>  int panic_timeout = CONFIG_PANIC_TIMEOUT;
+>>  EXPORT_SYMBOL_GPL(panic_timeout);
+>> @@ -420,13 +421,23 @@ static void warn_slowpath_common(const char *file, int line, void *caller,
+>>  {
+>>  	disable_trace_on_warning();
+>>  
+>> -	pr_warn("------------[ cut here ]------------\n");
+>> +	if (!panic_on_warn)
+>> +		pr_warn("------------[ cut here ]------------\n");
+> 
+> Is this really necessary?
 
-I have CONFIG_SMP=n
+Yes IMO.  The WARN() prints out the line and it looks "weird" when we're doing a
+panic because the finishing "end" doesn't print out.  I'm specifically
+targetting this kernel option at end users and I think the way it looks matters.
 
->
-> FIX: Upgrade system firmware to provide PSCI enable method support.
->
-> KVM
-> ---
->
-> PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
-> resources on shutdown, so the first stage kernel cannot be shutdown properly.
->
-> WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
+> 
+>>  	pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS()\n",
+>>  		raw_smp_processor_id(), current->pid, file, line, caller);
+>>  
+>>  	if (args)
+>>  		vprintk(args->fmt, args->args);
+>>  
+>> +	if (panic_on_warn) {
+>> +		/*
+>> +		 * A flood of WARN()s may occur.  Prevent further WARN()s
+>> +		 * from panicking the system.
+>> +		 */
+> 
+> What synchronization is preventing this race and further WARN()s panicking 
+> the system?
 
-KVM also disabled.
+Now that I re-read it, the flood comment is definitely misleading.
+It should read "The panic path may lead to additional WARN()s.  Prevent
+additional WARN()s from panicking the system."  I'll change that in the next
+version.
 
-/root@genericarmv8:~# usr/local/sbin/kexec --lite -l vmlinux
---dtb=apm-mustang.dtb --command-line=
-"root=/dev/nfs rw
-nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
- ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-earlyprintk=uart8250-32bit,0x1c020000"
+Your question spurred me to write a simple module that did this on a 160-core
+system:
 
-kexec version: 14.10.21.16.36-ga38e0a6
-arch_process_options:85: command_line: root=/dev/nfs rw
-nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
-ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-earlyprintk=uart8250-32bit,0x1
-c020000
-arch_process_options:87: initrd: (null)
-arch_process_options:88: dtb: apm-mustang.dtb
-arch_process_options:89: lite: 1
-kernel: 0x7f756e7010 kernel_size: 0x488a308
-Modified cmdline: root=/dev/nfs
-Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
-from purgatory is diabled
-get_memory_ranges_dt:638: node_1516 memory
-get_memory_ranges_dt:664:  RAM: 0000004000000000 - 0000004400000000
-get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
-get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
-get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
-get_memory_ranges_dt:678: Success
-elf_arm64_load: PE format: yes
-p_vaddr: ffffffc000080000
-virt_to_phys: ffffffc000080000 -> 0000004000080000
-add_segment_phys_virt: 0000007f756f7010 - 0000007f75d3cf70 (00645f60)
--> 0000004000080000 - 00000040006fb000 (0067b000)
-elf_arm64_load: text_offset: 0000000000080000
-elf_arm64_load: image_size:  000000000067f000
-elf_arm64_load: page_offset: ffffffc000000000
-elf_arm64_load: memstart:    0000004000000000
-virt_to_phys: ffffffc000080000 -> 0000004000080000
-elf_arm64_load: e_entry:     ffffffc000080000 -> 0000004000080000
-virt_to_phys: ffffffc000080000 -> 0000004000080000
-Modified cmdline:root=/dev/nfs rw
-nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
-ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-earlyprintk=uart8250-32bit,0x1c020000
-Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
-from purgatory is diabled
-read_cpu_info: dtb_1 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_1 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_1 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_1 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_1 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_1 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_1 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_1 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
-cpu-release-addr 400000fff8
-read_cpu_info: dtb_2 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
-cpu-release-addr 400000fff8
-check_cpu_properties: hwid-0: OK
-check_cpu_properties: hwid-1: OK
-check_cpu_properties: hwid-100: OK
-check_cpu_properties: hwid-101: OK
-check_cpu_properties: hwid-200: OK
-check_cpu_properties: hwid-201: OK
-check_cpu_properties: hwid-300: OK
-check_cpu_properties: hwid-301: OK
-dtb:    base 4000700000, size 221ch (8732)
-add_segment_phys_virt: 0000000024c14c90 - 0000000024c16eac (0000221c)
--> 0000004000700000 - 0000004000703000 (00003000)
-kexec_load: entry = 0x4000080000 flags = 0xb70000
-nr_segments = 2
-segment[0].buf   = 0x7f756f7010
-segment[0].bufsz = 0x645f60
-segment[0].mem   = 0x4000080000
-segment[0].memsz = 0x67b000
-segment[1].buf   = 0x24c14c90
-segment[1].bufsz = 0x221c
-segment[1].mem   = 0x4000700000
-segment[1].memsz = 0x3000
+static void warn_this_cpu(void *arg)
+{
+        WARN(1, "cpu = %d\n", smp_processor_id());
+}
 
-root@genericarmv8:~# /usr/local/sbin/kexec --lite -e
-kexec version: 14.10.21.16.36-ga38e0a6
-arch_process_options:85: command_line: (null)
-arch_process_options:87: initrd: (null)
-arch_process_options:88: dtb: (null)
-arch_process_options:89: lite: 1
-sd 0:0:0:0: [sda] Synchronizing SCSI cache
-kexec: Starting new kernel
-Bye!
+static int init_dummy(void)
+{
+        on_each_cpu(warn_this_cpu, NULL, 1);
+        return 0;
+}
 
-It fails to come up.  In debugger I can see
+to see if I could hit any races in this code.  While the WARN()s output overlap
+each other I always see a single:
 
-    Core number       : 0
-    Core state        : debug (AArch64 EL1)
-    Debug entry cause : External Debug Request
-    Current PC        : 0xffffffc000083200
-    Current CPSR      : 0x600003c5 (EL1h)
+Kernel panic - not syncing: panic_on_warn set ...
 
-It went to the second stage. But hang.
+line followed by the kdump.
 
-Am I missing something?
+Another issue: Are multiple WARN()s supposed to overlap output like that?  Do we
+want them to?  AFAICT there is no way to distinguish the output from one WARN()
+from another ...
 
---Arun
+P.
+
+> 
+>> +		panic_on_warn = 0;
+>> +		panic("panic_on_warn set ...\n");
+>> +	}
+>> +
+>>  	print_modules();
+>>  	dump_stack();
+>>  	print_oops_end_marker();
 
 _______________________________________________
 kexec mailing list
