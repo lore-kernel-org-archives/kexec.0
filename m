@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XmIoN-0006cC-SN
- for kexec@lists.infradead.org; Thu, 06 Nov 2014 08:53:00 +0000
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sA68qSLx032664
- for <kexec@lists.infradead.org>; Thu, 6 Nov 2014 16:52:28 +0800
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH V5 5/5] Add support for --splitblock-size
-Date: Thu, 6 Nov 2014 16:49:28 +0800
-Message-ID: <1415263768-15821-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1415263768-15821-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1415263768-15821-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Received: from mail-la0-f41.google.com ([209.85.215.41])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XmLzO-0007EO-Qg
+ for kexec@lists.infradead.org; Thu, 06 Nov 2014 12:16:36 +0000
+Received: by mail-la0-f41.google.com with SMTP id s18so2515795lam.0
+ for <kexec@lists.infradead.org>; Thu, 06 Nov 2014 04:16:12 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <cover.1414099246.git.geoff@infradead.org>
+References: <cover.1414099246.git.geoff@infradead.org>
+Date: Thu, 6 Nov 2014 17:46:12 +0530
+Message-ID: <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
+Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
+From: Arun Chandran <achandran@mvista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,95 +24,191 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Use --splitblock-size to specify splitblock size (KB)
-When --split is specified in cyclic mode,splitblock table will be
-generated in create_dump_bitmap().
+Hi Geoff,
 
-Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
-Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
----
- makedumpfile.8 |   10 ++++++++++
- makedumpfile.c |    4 ++++
- makedumpfile.h |    1 +
- print_info.c   |    5 +++++
- 4 files changed, 20 insertions(+), 0 deletions(-)
+I am trying this on my hardware (apm-mustang.dtb)
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 9cb12c0..5e121fd 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -386,6 +386,16 @@ size, so ordinary users don't need to specify this option.
- # makedumpfile \-\-cyclic\-buffer 1024 \-d 31 \-x vmlinux /proc/vmcore dumpfile
- 
- .TP
-+\fB\-\-splitblock\-size\fR \fIsplitblock_size\fR
-+Specify the splitblock size in kilo bytes for analysis in the cyclic mode with --split.
-+If --splitblock N is specified, difference of each splitted dumpfile size is at most N
-+kilo bytes.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-\-splitblock\-size 1024 \-d 31 \-x vmlinux \-\-split /proc/vmcore dumpfile1 dumpfile2
-+
-+.TP
- \fB\-\-non\-cyclic\fR
- Running in the non-cyclic mode, this mode uses the old filtering logic same as v1.4.4 or before.
- If you feel the cyclic mode is too slow, please try this mode.
-diff --git a/makedumpfile.c b/makedumpfile.c
-index aa19b0d..7a54680 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -9569,6 +9569,7 @@ static struct option longopts[] = {
- 	{"eppic", required_argument, NULL, OPT_EPPIC},
- 	{"non-mmap", no_argument, NULL, OPT_NON_MMAP},
- 	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
-+	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
- 	{0, 0, 0, 0}
- };
- 
-@@ -9709,6 +9710,9 @@ main(int argc, char *argv[])
- 		case OPT_CYCLIC_BUFFER:
- 			info->bufsize_cyclic = atoi(optarg);
- 			break;
-+		case OPT_SPLITBLOCK_SIZE:
-+			info->splitblock_size = atoi(optarg);
-+			break;
- 		case '?':
- 			MSG("Commandline parameter is invalid.\n");
- 			MSG("Try `makedumpfile --help' for more information.\n");
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 39c49b8..d195069 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1885,6 +1885,7 @@ struct elf_prstatus {
- #define OPT_EPPIC               OPT_START+12
- #define OPT_NON_MMAP            OPT_START+13
- #define OPT_MEM_USAGE            OPT_START+14
-+#define OPT_SPLITBLOCK_SIZE		OPT_START+15
- 
- /*
-  * Function Prototype.
-diff --git a/print_info.c b/print_info.c
-index f6342d3..16830b2 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -203,6 +203,11 @@ print_usage(void)
- 	MSG("      By default, BUFFER_SIZE will be calculated automatically depending on\n");
- 	MSG("      system memory size, so ordinary users don't need to specify this option.\n");
- 	MSG("\n");
-+	MSG("  [--splitblock-size SPLITBLOCK_SIZE]:\n");
-+	MSG("      Specify the splitblock size in kilo bytes for analysis in the cyclic mode\n");
-+	MSG("      with --split.If --splitblock N is specified, difference of each splitted\n");
-+	MSG("	   dumpfile size is at most N kilo bytes.\n");
-+	MSG("\n");
- 	MSG("  [--non-cyclic]:\n");
- 	MSG("      Running in the non-cyclic mode, this mode uses the old filtering logic\n");
- 	MSG("      same as v1.4.4 or before.\n");
--- 
-1.7.1
+On Fri, Oct 24, 2014 at 4:40 AM, Geoff Levand <geoff@infradead.org> wrote:
+> Hi All,
+>
+> This series adds the core support for kexec re-boots on arm64.  I have tested
+> with the ARM VE fast model, the ARM Base model and the ARM Foundation
+> model with various kernel config options for both the first and second stage
+> kernels.
+>
+> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+> kexec-tools [2], which have not yet been merged upstream, are needed.
+>
+> Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
+> routine the ability to switch exception levels from EL1 to EL2 for kernels that
+> were entered in EL2.
+>
+> Patches 5 and 6 convert the use of device tree /memreserve/ to device tree
+> reserved-memory nodes.
+>
+> Patch 7 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
+> dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+> routine.
+>
+> Patches 8-10 add the actual kexec support.
+>
+> Please consider all patches for inclusion.  Any comments or suggestions on how
+> to improve are welcome.
+>
+> [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
+> [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+>
+> Several things are known to have problems on kexec re-boot:
+>
+> spin-table
+> ----------
+>
+> PROBLEM: The spin-table enable method does not implement all the methods needed
+> for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
+>
+> WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
+> support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
+> on the first stage kernel command line.
 
+I have CONFIG_SMP=n
+
+>
+> FIX: Upgrade system firmware to provide PSCI enable method support.
+>
+> KVM
+> ---
+>
+> PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
+> resources on shutdown, so the first stage kernel cannot be shutdown properly.
+>
+> WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
+
+KVM also disabled.
+
+/root@genericarmv8:~# usr/local/sbin/kexec --lite -l vmlinux
+--dtb=apm-mustang.dtb --command-line=
+"root=/dev/nfs rw
+nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+ ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+earlyprintk=uart8250-32bit,0x1c020000"
+
+kexec version: 14.10.21.16.36-ga38e0a6
+arch_process_options:85: command_line: root=/dev/nfs rw
+nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+earlyprintk=uart8250-32bit,0x1
+c020000
+arch_process_options:87: initrd: (null)
+arch_process_options:88: dtb: apm-mustang.dtb
+arch_process_options:89: lite: 1
+kernel: 0x7f756e7010 kernel_size: 0x488a308
+Modified cmdline: root=/dev/nfs
+Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
+from purgatory is diabled
+get_memory_ranges_dt:638: node_1516 memory
+get_memory_ranges_dt:664:  RAM: 0000004000000000 - 0000004400000000
+get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+get_memory_ranges_dt:678: Success
+elf_arm64_load: PE format: yes
+p_vaddr: ffffffc000080000
+virt_to_phys: ffffffc000080000 -> 0000004000080000
+add_segment_phys_virt: 0000007f756f7010 - 0000007f75d3cf70 (00645f60)
+-> 0000004000080000 - 00000040006fb000 (0067b000)
+elf_arm64_load: text_offset: 0000000000080000
+elf_arm64_load: image_size:  000000000067f000
+elf_arm64_load: page_offset: ffffffc000000000
+elf_arm64_load: memstart:    0000004000000000
+virt_to_phys: ffffffc000080000 -> 0000004000080000
+elf_arm64_load: e_entry:     ffffffc000080000 -> 0000004000080000
+virt_to_phys: ffffffc000080000 -> 0000004000080000
+Modified cmdline:root=/dev/nfs rw
+nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+earlyprintk=uart8250-32bit,0x1c020000
+Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
+from purgatory is diabled
+read_cpu_info: dtb_1 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_1 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_1 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_1 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_1 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_1 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_1 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_1 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
+cpu-release-addr 400000fff8
+read_cpu_info: dtb_2 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
+cpu-release-addr 400000fff8
+check_cpu_properties: hwid-0: OK
+check_cpu_properties: hwid-1: OK
+check_cpu_properties: hwid-100: OK
+check_cpu_properties: hwid-101: OK
+check_cpu_properties: hwid-200: OK
+check_cpu_properties: hwid-201: OK
+check_cpu_properties: hwid-300: OK
+check_cpu_properties: hwid-301: OK
+dtb:    base 4000700000, size 221ch (8732)
+add_segment_phys_virt: 0000000024c14c90 - 0000000024c16eac (0000221c)
+-> 0000004000700000 - 0000004000703000 (00003000)
+kexec_load: entry = 0x4000080000 flags = 0xb70000
+nr_segments = 2
+segment[0].buf   = 0x7f756f7010
+segment[0].bufsz = 0x645f60
+segment[0].mem   = 0x4000080000
+segment[0].memsz = 0x67b000
+segment[1].buf   = 0x24c14c90
+segment[1].bufsz = 0x221c
+segment[1].mem   = 0x4000700000
+segment[1].memsz = 0x3000
+
+root@genericarmv8:~# /usr/local/sbin/kexec --lite -e
+kexec version: 14.10.21.16.36-ga38e0a6
+arch_process_options:85: command_line: (null)
+arch_process_options:87: initrd: (null)
+arch_process_options:88: dtb: (null)
+arch_process_options:89: lite: 1
+sd 0:0:0:0: [sda] Synchronizing SCSI cache
+kexec: Starting new kernel
+Bye!
+
+It fails to come up.  In debugger I can see
+
+    Core number       : 0
+    Core state        : debug (AArch64 EL1)
+    Debug entry cause : External Debug Request
+    Current PC        : 0xffffffc000083200
+    Current CPSR      : 0x600003c5 (EL1h)
+
+It went to the second stage. But hang.
+
+Am I missing something?
+
+--Arun
 
 _______________________________________________
 kexec mailing list
