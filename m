@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-ie0-f176.google.com ([209.85.223.176])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XmVuz-0003WG-UN
- for kexec@lists.infradead.org; Thu, 06 Nov 2014 22:52:42 +0000
-Message-ID: <545BFB95.5030706@redhat.com>
-Date: Thu, 06 Nov 2014 17:52:05 -0500
-From: Prarit Bhargava <prarit@redhat.com>
+ id 1XmXdE-0003LU-IA
+ for kexec@lists.infradead.org; Fri, 07 Nov 2014 00:42:29 +0000
+Received: by mail-ie0-f176.google.com with SMTP id rd18so4064031iec.7
+ for <kexec@lists.infradead.org>; Thu, 06 Nov 2014 16:42:05 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [PATCH v8] kernel, add panic_on_warn
-References: <1415187736-16242-1-git-send-email-prarit@redhat.com>
- <alpine.DEB.2.10.1411051357050.31575@chino.kir.corp.google.com>
- <545B733C.6080903@redhat.com>
- <alpine.DEB.2.10.1411061352440.1526@chino.kir.corp.google.com>
- <20141106220731.GA13590@redhat.com>
-In-Reply-To: <20141106220731.GA13590@redhat.com>
+In-Reply-To: <20141106150846.GE23706@leverpostej>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <20141031075209.GH3290@darkstar.nay.redhat.com>
+ <20141103194634.GA30366@leverpostej>
+ <20141106015642.GA2569@darkstar.nay.redhat.com>
+ <20141106150846.GE23706@leverpostej>
+From: Grant Likely <grant.likely@linaro.org>
+Date: Fri, 7 Nov 2014 00:41:45 +0000
+Message-ID: <CACxGe6u=J_k3XZxyiyti=i=rtW+a5xxuukg3TgOyM+ra1vAACQ@mail.gmail.com>
+Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +28,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, jbaron@akamai.com, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, David Rientjes <rientjes@google.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-
-
-On 11/06/2014 05:07 PM, Vivek Goyal wrote:
-> On Thu, Nov 06, 2014 at 01:57:36PM -0800, David Rientjes wrote:
-> 
-> [..]
->> You see that doing
+On Thu, Nov 6, 2014 at 3:08 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Nov 06, 2014 at 01:56:42AM +0000, Dave Young wrote:
+>> On 11/03/14 at 07:46pm, Mark Rutland wrote:
+>> > On Fri, Oct 31, 2014 at 07:52:09AM +0000, Dave Young wrote:
+>> > > Hi Geoff
+>> > >
+>> > > I tested your patches. The macihne is using spin-table cpu enable method
+>> > > so I tried maxcpus=1 as you suggested.
+>> > >
+>> > > There's below issues for me, thoughts?
+>> > >
+>> > > 1. For acpi booting there's no /proc/device-tree so kexec can not find dtb
+>> > > to use.
+>> >
+>> > Are you absolutely certain of this?
+>> >
+>> > To use ACPI, you must have booted via EFI, as the only mechanism for
+>> > finding the ACPI tables is via EFI. If booted via EFI, the stub will
+>> > have created a stub DTB if there is no provided DTB, to pass the command
+>> > line and pointers to EFI data structures. This stub DTB should be
+>> > present in the usual place.
 >>
->> 	if (panic_on_warn) {
->> 		panic_on_warn = 0;
->> 		panic(...);
->> 	}
->>
->> is racy, I hope.  If two threads WARN() at the same time, then there's 
->> nothing preventing a double panic() because WARN() itself is not 
->> serialized against anything.  So both the current comment and your 
->> suggested revision comment are bogus.
-> 
-> panic() is serialized on panic_lock. So I guess it is fine to hit WARN()
-> on multiple cpus. Do you see an issue there?
+>> Mark, I used kexec-tools from Geoff's git tree, it will create dtb from procfs
+>> maybe I can pass external dtb to kexec-tools. What you mentioned should be true
+>> though but I have not get idea how to get the dtb which kernel is using for boot
+>> since it is not unflattened.
+>
+> Ah, sorry. I see the problem now. For ACPI you don't unflatten the tree,
+> so there's nothing to expose at in sysfs/procfs.
+>
+> Somehow we need to unflatten the DTB without exposing it to drivers,
+> such that it can be exposed to userspace in the usual place but drivers
+> don't being probing based off of it.
 
-Oops -- didn't see this until just now.
+Is that even necessary? If the tree isn't unflattened, then it is just
+a stub tree. There really isn't anything interesting in it. Kexec
+should recreate the tree from scratch in that case.
 
-Once again, Vivek beat me to the punch :) and much more succinctly than I will
-ever be able to do. :)
-
-P.
-
-> 
-> Thanks
-> Vivek
-> 
+g.
 
 _______________________________________________
 kexec mailing list
