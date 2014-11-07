@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ie0-f176.google.com ([209.85.223.176])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XmXdE-0003LU-IA
- for kexec@lists.infradead.org; Fri, 07 Nov 2014 00:42:29 +0000
-Received: by mail-ie0-f176.google.com with SMTP id rd18so4064031iec.7
- for <kexec@lists.infradead.org>; Thu, 06 Nov 2014 16:42:05 -0800 (PST)
+ id 1XmYst-0003Jz-8P
+ for kexec@lists.infradead.org; Fri, 07 Nov 2014 02:02:44 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH V5 0/5] makedumpfile: --split: assign fair I/O workloads
+ in appropriate time
+Date: Fri, 7 Nov 2014 02:00:48 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D6529E@BPXM01GP.gisp.nec.co.jp>
+References: <1415263768-15821-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1415263768-15821-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20141106150846.GE23706@leverpostej>
-References: <cover.1414099246.git.geoff@infradead.org>
- <20141031075209.GH3290@darkstar.nay.redhat.com>
- <20141103194634.GA30366@leverpostej>
- <20141106015642.GA2569@darkstar.nay.redhat.com>
- <20141106150846.GE23706@leverpostej>
-From: Grant Likely <grant.likely@linaro.org>
-Date: Fri, 7 Nov 2014 00:41:45 +0000
-Message-ID: <CACxGe6u=J_k3XZxyiyti=i=rtW+a5xxuukg3TgOyM+ra1vAACQ@mail.gmail.com>
-Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,48 +24,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, Nov 6, 2014 at 3:08 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Nov 06, 2014 at 01:56:42AM +0000, Dave Young wrote:
->> On 11/03/14 at 07:46pm, Mark Rutland wrote:
->> > On Fri, Oct 31, 2014 at 07:52:09AM +0000, Dave Young wrote:
->> > > Hi Geoff
->> > >
->> > > I tested your patches. The macihne is using spin-table cpu enable method
->> > > so I tried maxcpus=1 as you suggested.
->> > >
->> > > There's below issues for me, thoughts?
->> > >
->> > > 1. For acpi booting there's no /proc/device-tree so kexec can not find dtb
->> > > to use.
->> >
->> > Are you absolutely certain of this?
->> >
->> > To use ACPI, you must have booted via EFI, as the only mechanism for
->> > finding the ACPI tables is via EFI. If booted via EFI, the stub will
->> > have created a stub DTB if there is no provided DTB, to pass the command
->> > line and pointers to EFI data structures. This stub DTB should be
->> > present in the usual place.
->>
->> Mark, I used kexec-tools from Geoff's git tree, it will create dtb from procfs
->> maybe I can pass external dtb to kexec-tools. What you mentioned should be true
->> though but I have not get idea how to get the dtb which kernel is using for boot
->> since it is not unflattened.
+Hello Zhou,
+
+>v4->v5:
+>	1.fix the bug that last end_pfn can be shorter than the max_mapnr
+
+Looks good to me, thanks for all your work !
+I'll merge this version into v1.5.8.
+
+
+Thanks,
+Atsushi Kumagai
+
+>v3->v4:
+>	1.address Atsushi Kumagai's comments about using divideup
 >
-> Ah, sorry. I see the problem now. For ACPI you don't unflatten the tree,
-> so there's nothing to expose at in sysfs/procfs.
+>v2->v3:
+>	1.remove the filtering for incomplete block (previous second pass) and adjust
+>	  relevant codes
+>	2.address HATAYAMA's comments about coding style
 >
-> Somehow we need to unflatten the DTB without exposing it to drivers,
-> such that it can be exposed to userspace in the usual place but drivers
-> don't being probing based off of it.
-
-Is that even necessary? If the tree isn't unflattened, then it is just
-a stub tree. There really isn't anything interesting in it. Kexec
-should recreate the tree from scratch in that case.
-
-g.
+>v1->v2:
+>	1.use splitblock instead of block
+>	2.add restriction (align to the page size) to splitblock size
+>	3.adjust the position of prepare_splitblock_table and check the return code
+>	4.use --splitblock-size to specify splitblock size and modify the print_info.c
+>
+>the v2 test result is:
+>
+>	cyc-buf	128		256		512		1024		2048		4096
+>splblk-size
+>2M		24.05(0.65)	24.04(0.65)	24.58(0.65)	24.15(0.64)	24.14(0.64)	49.05(25.46)
+>4M		23.98(0.65)	24.01(0.65)	24.29(0.65)	24.20(0.64)	24.18(0.66)	49.04(25.46)
+>8M		24.02(0.65)	24.03(0.65)	24.25(0.65)	24.26(0.70)	24.15(0.64)	48.98(25.44)
+>16M		24.01(0.65)	24.01(0.65)	24.30(0.65)	24.19(0.64)	24.12(0.65)	48.99(25.45)
+>32M		23.97(0.65)	24.06(0.73)	24.23(0.65)	24.17(0.64)	24.19(0.64)	48.97(25.50)
+>64M		24.06(0.66)	24.07(0.66)	24.27(0.66)	24.16(0.65)	24.17(0.65)	48.98(25.49)
+>128M		24.03(0.67)	24.00(0.67)	24.27(0.66)	24.22(0.66)	24.19(0.66)	48.98(25.48)
+>256M		24.12(0.67)	23.99(0.67)	24.27(0.67)	24.17(0.66)	24.12(0.66)	49.04(25.49)
+>512M		24.06(0.70)	24.08(0.70)	24.26(0.70)	24.14(0.71)	24.19(0.70)	49.13(25.64)
+>1G		24.20(0.82)	24.13(0.81)	24.36(0.81)	24.31(0.80)	24.33(0.81)	49.28(25.75)
+>2G		24.19(0.81)	24.22(0.81)	24.37(0.81)	24.29(0.80)	24.28(0.82)	49.30(25.78)
+>4G		25.29(1.90)	25.26(1.91)	25.49(1.91)	25.41(1.89)	25.50(1.90)	49.99(26.45)
+>8G		25.33(1.90)	26.60(3.23)	26.87(3.21)	26.71(3.23)	26.64(3.22)	51.27(27.73)
+>16G		25.28(1.90)	26.52(3.21)	29.47(5.86)	29.34(5.84)	29.38(5.86)	53.99(30.40)
+>
+>
+>the latest test result turns to:
+>
+>	cyc-buf	128		256		512		1024		2048		4096
+>splblk-size
+>2M		23.34(0.00)	23.36(0.00)	23.51(0.00)	23.86(0.00)	23.48(0.00)	23.45(0.00)
+>4M		23.36(0.00)	23.32(0.00)	23.62(0.00)	23.48(0.00)	23.53(0.00)	23.45(0.00)
+>8M		23.33(0.00)	23.46(0.00)	23.61(0.00)	23.77(0.00)	23.52(0.00)	23.53(0.00)
+>16M		23.33(0.00)	23.38(0.00)	23.57(0.00)	23.47(0.00)	23.55(0.00)	23.49(0.00)
+>32M		23.40(0.00)	23.31(0.00)	23.64(0.00)	23.51(0.00)	23.50(0.00)	23.55(0.00)
+>64M		23.39(0.00)	23.41(0.00)	23.62(0.00)	23.47(0.00)	23.46(0.00)	23.50(0.00)
+>128M		23.36(0.00)	23.34(0.00)	23.59(0.00)	23.46(0.00)	23.46(0.00)	23.50(0.00)
+>256M		23.32(0.00)	23.36(0.00)	23.57(0.00)	23.49(0.00)	23.45(0.00)	23.52(0.00)
+>512M		23.32(0.00)	23.32(0.00)	23.63(0.00)	23.49(0.00)	23.52(0.00)	23.51(0.00)
+>1G		23.38(0.00)	23.32(0.00)	23.60(0.00)	23.54(0.00)	23.49(0.00)	23.54(0.00)
+>2G		23.34(0.00)	23.36(0.00)	23.62(0.00)	23.52(0.00)	23.52(0.00)	23.50(0.00)
+>4G		23.36(0.00)	23.37(0.00)	23.60(0.00)	23.48(0.00)	23.56(0.00)	23.55(0.00)
+>8G		23.37(0.00)	23.39(0.00)	23.52(0.00)	23.53(0.00)	23.46(0.00)	23.48(0.00)
+>16G		23.39(0.00)	23.41(0.00)	23.85(0.00)	23.48(0.00)	23.50(0.00)	23.45(0.00)
+>
+>
+>
+>Zhou Wenjian (5):
+>  Add support for splitblock
+>  Add tools for reading and writing from splitblock table
+>  Add module of generating table
+>  Add module of calculating start_pfn and end_pfn in each dumpfile
+>  Add support for --splitblock-size
+>
+> makedumpfile.8 |   10 +++
+> makedumpfile.c |  245 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+> makedumpfile.h |   19 +++++
+> print_info.c   |    5 +
+> 4 files changed, 273 insertions(+), 6 deletions(-)
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
