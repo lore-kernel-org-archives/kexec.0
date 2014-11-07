@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-lb0-f176.google.com ([209.85.217.176])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XmYst-0003Jz-8P
- for kexec@lists.infradead.org; Fri, 07 Nov 2014 02:02:44 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH V5 0/5] makedumpfile: --split: assign fair I/O workloads
- in appropriate time
-Date: Fri, 7 Nov 2014 02:00:48 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D6529E@BPXM01GP.gisp.nec.co.jp>
-References: <1415263768-15821-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1415263768-15821-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-Content-Language: ja-JP
+ id 1Xmd0n-0008Jl-D8
+ for kexec@lists.infradead.org; Fri, 07 Nov 2014 06:27:10 +0000
+Received: by mail-lb0-f176.google.com with SMTP id 10so2176277lbg.35
+ for <kexec@lists.infradead.org>; Thu, 06 Nov 2014 22:26:46 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <1415298309.12884.45.camel@smoke>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
+ <20141106152830.GF23706@leverpostej>
+ <CAFdej01wki9btKiDj7TW8_frtZFLVMjsyS5LsZWqO7E+dC+D+w@mail.gmail.com>
+ <1415298309.12884.45.camel@smoke>
+Date: Fri, 7 Nov 2014 11:56:46 +0530
+Message-ID: <CAFdej02pbtuM=LqJszdX7tu0ZhsWBwpc--KFr=KinWRMkTaevg@mail.gmail.com>
+Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
+From: Arun Chandran <achandran@mvista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,93 +28,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Christoffer Dall <christoffer.dall@linaro.org>
 
-Hello Zhou,
+On Thu, Nov 6, 2014 at 11:55 PM, Geoff Levand <geoff@infradead.org> wrote:
+> Hi Arun,
+>
+> On Thu, 2014-11-06 at 21:43 +0530, Arun Chandran wrote:
+>> Initializing cgroup subsys cpu
+>> Linux version 3.17.0-rc4+ (arun@arun-OptiPlex-9010) (gcc version 4.9.1
+>> 20140505 (prerelease) (crosstool-NG linaro-1.13.1-4.9-2014.05 - Linaro
+>> GCC 4.9-2014.05) ) #12 PREEMPT Thu Nov 6 21:38:03 IST 2014
+>> CPU: AArch64 Processor [500f0000] revision 0
+>> Detected PIPT I-cache on CPU0
+>> Ignoring memory block 0x100000000 - 0x180000000
+>> Early serial console at MMIO32 0x1c020000 (options '')
+>> bootconsole [uart0] enabled
+>> efi: Getting EFI parameters from FDT:
+>> efi: UEFI not found.
+>> cma: Failed to reserve 16 MiB
+>
+> This error comes from cma_declare_contiguous().
+>
+>> Kernel panic - not syncing: ERROR: Failed to allocate 0x1000 bytes below 0x0.
+>
+> This panic comes from memblock_alloc_base().  I guess something has
+> passed in bad values.
+>
+> I wonder if your dtb is compatible with this platform.  What if you
+> don't pass a dtb to kexec?
 
->v4->v5:
->	1.fix the bug that last end_pfn can be shorter than the max_mapnr
+Yes dtb was the problem. Without dtb it works fine
 
-Looks good to me, thanks for all your work !
-I'll merge this version into v1.5.8.
+root@genericarmv8:~# ./usr/local/sbin/kexec --lite -l vmlinux --command-line=
+"root=/dev/nfs rw
+nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+ip=:::::eth0:dhcp panic=1
+console=ttyS0,115200 earlycon=uart8250,mmio32,0x1c020000"
 
 
-Thanks,
-Atsushi Kumagai
+root@genericarmv8:~# /usr/local/sbin/kexec --lite -e
+kexec version: 14.10.21.16.36-ga38e0a6
+arch_process_options:85: command_line: (null)
+arch_process_options:87: initrd: (null)
+arch_process_options:88: dtb: (null)
+arch_process_options:89: lite: 1
+sd 0:0:0:0: [sda] Synchronizing SCSI cache
+kexec: Starting new kernel
+Bye!
+Initializing cgroup subsys cpu
+Linux version 3.17.0-rc4+ (arun@arun-OptiPlex-9010) (gcc version 4.9.1
+20140505 (prerelease) (crosstool-NG linaro-1.13.1-4.9-2014.05 - Linaro
+GCC 4.9-2014.05) ) #12 PREEMPT Thu Nov 6 21:38:03 IST 2014
+CPU: AArch64 Processor [500f0000] revision 0
+Detected PIPT I-cache on CPU0
+Early serial console at MMIO32 0x1c020000 (options '')
+bootconsole [uart0] enabled
+efi: Getting EFI parameters from FDT:
+efi: UEFI not found.
+cma: Reserved 16 MiB at 40ff000000
+/cpus/cpu@000: unsupported enable-method property: spin-table
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 4136960
+Kernel command line: root=/dev/nfs rw
+nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+earlycon=uart8250,mmio32,0x1c020000
+PID hash table entries: 4096 (order: 3, 32768 bytes)
+Dentry cache hash table entries: 2097152 (order: 12, 16777216 bytes)
+Inode-cache hash table entries: 1048576 (order: 11, 8388608 bytes)
+....
+...
+..
+.
+root@genericarmv8:~#
 
->v3->v4:
->	1.address Atsushi Kumagai's comments about using divideup
->
->v2->v3:
->	1.remove the filtering for incomplete block (previous second pass) and adjust
->	  relevant codes
->	2.address HATAYAMA's comments about coding style
->
->v1->v2:
->	1.use splitblock instead of block
->	2.add restriction (align to the page size) to splitblock size
->	3.adjust the position of prepare_splitblock_table and check the return code
->	4.use --splitblock-size to specify splitblock size and modify the print_info.c
->
->the v2 test result is:
->
->	cyc-buf	128		256		512		1024		2048		4096
->splblk-size
->2M		24.05(0.65)	24.04(0.65)	24.58(0.65)	24.15(0.64)	24.14(0.64)	49.05(25.46)
->4M		23.98(0.65)	24.01(0.65)	24.29(0.65)	24.20(0.64)	24.18(0.66)	49.04(25.46)
->8M		24.02(0.65)	24.03(0.65)	24.25(0.65)	24.26(0.70)	24.15(0.64)	48.98(25.44)
->16M		24.01(0.65)	24.01(0.65)	24.30(0.65)	24.19(0.64)	24.12(0.65)	48.99(25.45)
->32M		23.97(0.65)	24.06(0.73)	24.23(0.65)	24.17(0.64)	24.19(0.64)	48.97(25.50)
->64M		24.06(0.66)	24.07(0.66)	24.27(0.66)	24.16(0.65)	24.17(0.65)	48.98(25.49)
->128M		24.03(0.67)	24.00(0.67)	24.27(0.66)	24.22(0.66)	24.19(0.66)	48.98(25.48)
->256M		24.12(0.67)	23.99(0.67)	24.27(0.67)	24.17(0.66)	24.12(0.66)	49.04(25.49)
->512M		24.06(0.70)	24.08(0.70)	24.26(0.70)	24.14(0.71)	24.19(0.70)	49.13(25.64)
->1G		24.20(0.82)	24.13(0.81)	24.36(0.81)	24.31(0.80)	24.33(0.81)	49.28(25.75)
->2G		24.19(0.81)	24.22(0.81)	24.37(0.81)	24.29(0.80)	24.28(0.82)	49.30(25.78)
->4G		25.29(1.90)	25.26(1.91)	25.49(1.91)	25.41(1.89)	25.50(1.90)	49.99(26.45)
->8G		25.33(1.90)	26.60(3.23)	26.87(3.21)	26.71(3.23)	26.64(3.22)	51.27(27.73)
->16G		25.28(1.90)	26.52(3.21)	29.47(5.86)	29.34(5.84)	29.38(5.86)	53.99(30.40)
->
->
->the latest test result turns to:
->
->	cyc-buf	128		256		512		1024		2048		4096
->splblk-size
->2M		23.34(0.00)	23.36(0.00)	23.51(0.00)	23.86(0.00)	23.48(0.00)	23.45(0.00)
->4M		23.36(0.00)	23.32(0.00)	23.62(0.00)	23.48(0.00)	23.53(0.00)	23.45(0.00)
->8M		23.33(0.00)	23.46(0.00)	23.61(0.00)	23.77(0.00)	23.52(0.00)	23.53(0.00)
->16M		23.33(0.00)	23.38(0.00)	23.57(0.00)	23.47(0.00)	23.55(0.00)	23.49(0.00)
->32M		23.40(0.00)	23.31(0.00)	23.64(0.00)	23.51(0.00)	23.50(0.00)	23.55(0.00)
->64M		23.39(0.00)	23.41(0.00)	23.62(0.00)	23.47(0.00)	23.46(0.00)	23.50(0.00)
->128M		23.36(0.00)	23.34(0.00)	23.59(0.00)	23.46(0.00)	23.46(0.00)	23.50(0.00)
->256M		23.32(0.00)	23.36(0.00)	23.57(0.00)	23.49(0.00)	23.45(0.00)	23.52(0.00)
->512M		23.32(0.00)	23.32(0.00)	23.63(0.00)	23.49(0.00)	23.52(0.00)	23.51(0.00)
->1G		23.38(0.00)	23.32(0.00)	23.60(0.00)	23.54(0.00)	23.49(0.00)	23.54(0.00)
->2G		23.34(0.00)	23.36(0.00)	23.62(0.00)	23.52(0.00)	23.52(0.00)	23.50(0.00)
->4G		23.36(0.00)	23.37(0.00)	23.60(0.00)	23.48(0.00)	23.56(0.00)	23.55(0.00)
->8G		23.37(0.00)	23.39(0.00)	23.52(0.00)	23.53(0.00)	23.46(0.00)	23.48(0.00)
->16G		23.39(0.00)	23.41(0.00)	23.85(0.00)	23.48(0.00)	23.50(0.00)	23.45(0.00)
->
->
->
->Zhou Wenjian (5):
->  Add support for splitblock
->  Add tools for reading and writing from splitblock table
->  Add module of generating table
->  Add module of calculating start_pfn and end_pfn in each dumpfile
->  Add support for --splitblock-size
->
-> makedumpfile.8 |   10 +++
-> makedumpfile.c |  245 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
-> makedumpfile.h |   19 +++++
-> print_info.c   |    5 +
-> 4 files changed, 273 insertions(+), 6 deletions(-)
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+--Arun
 
 _______________________________________________
 kexec mailing list
