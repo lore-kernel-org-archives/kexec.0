@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lb0-f180.google.com ([209.85.217.180])
+Received: from mail-ie0-x229.google.com ([2607:f8b0:4001:c03::229])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XmdAb-0003gq-Tz
- for kexec@lists.infradead.org; Fri, 07 Nov 2014 06:37:19 +0000
-Received: by mail-lb0-f180.google.com with SMTP id u10so2184756lbd.11
- for <kexec@lists.infradead.org>; Thu, 06 Nov 2014 22:36:55 -0800 (PST)
+ id 1XmgaT-00068d-0b
+ for kexec@lists.infradead.org; Fri, 07 Nov 2014 10:16:13 +0000
+Received: by mail-ie0-f169.google.com with SMTP id tr6so4871681ieb.14
+ for <kexec@lists.infradead.org>; Fri, 07 Nov 2014 02:15:48 -0800 (PST)
+Date: Fri, 7 Nov 2014 02:15:46 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v8] kernel, add panic_on_warn
+In-Reply-To: <20141106220731.GA13590@redhat.com>
+Message-ID: <alpine.DEB.2.10.1411070214220.32405@chino.kir.corp.google.com>
+References: <1415187736-16242-1-git-send-email-prarit@redhat.com>
+ <alpine.DEB.2.10.1411051357050.31575@chino.kir.corp.google.com>
+ <545B733C.6080903@redhat.com>
+ <alpine.DEB.2.10.1411061352440.1526@chino.kir.corp.google.com>
+ <20141106220731.GA13590@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20141106183940.GB2052@leverpostej>
-References: <cover.1414099246.git.geoff@infradead.org>
- <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
- <20141106152830.GF23706@leverpostej>
- <CAFdej01wki9btKiDj7TW8_frtZFLVMjsyS5LsZWqO7E+dC+D+w@mail.gmail.com>
- <20141106183940.GB2052@leverpostej>
-Date: Fri, 7 Nov 2014 12:06:55 +0530
-Message-ID: <CAFdej03oxyrLv5BbLLdQzv7W031stN4jbHs4Hi3jQHorF=LOiw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
-From: Arun Chandran <achandran@mvista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,181 +28,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Christoffer Dall <christoffer.dall@linaro.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, jbaron@akamai.com, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org
 
-On Fri, Nov 7, 2014 at 12:09 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Nov 06, 2014 at 04:13:04PM +0000, Arun Chandran wrote:
->> On Thu, Nov 6, 2014 at 8:58 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > On Thu, Nov 06, 2014 at 12:16:12PM +0000, Arun Chandran wrote:
->> >> Hi Geoff,
->> >>
->> >> I am trying this on my hardware (apm-mustang.dtb)
->> >>
->> >> On Fri, Oct 24, 2014 at 4:40 AM, Geoff Levand <geoff@infradead.org> wrote:
->> >> > Hi All,
->> >> >
->> >> > This series adds the core support for kexec re-boots on arm64.  I have tested
->> >> > with the ARM VE fast model, the ARM Base model and the ARM Foundation
->> >> > model with various kernel config options for both the first and second stage
->> >> > kernels.
->> >> >
->> >> > To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
->> >> > kexec-tools [2], which have not yet been merged upstream, are needed.
->> >> >
->> >> > Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
->> >> > routine the ability to switch exception levels from EL1 to EL2 for kernels that
->> >> > were entered in EL2.
->> >> >
->> >> > Patches 5 and 6 convert the use of device tree /memreserve/ to device tree
->> >> > reserved-memory nodes.
->> >> >
->> >> > Patch 7 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
->> >> > dcache_line_size macro it defines can be uesd by kexec's relocate kernel
->> >> > routine.
->> >> >
->> >> > Patches 8-10 add the actual kexec support.
->> >> >
->> >> > Please consider all patches for inclusion.  Any comments or suggestions on how
->> >> > to improve are welcome.
->> >> >
->> >> > [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
->> >> > [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
->> >> >
->> >> > Several things are known to have problems on kexec re-boot:
->> >> >
->> >> > spin-table
->> >> > ----------
->> >> >
->> >> > PROBLEM: The spin-table enable method does not implement all the methods needed
->> >> > for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
->> >> >
->> >> > WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
->> >> > support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
->> >> > on the first stage kernel command line.
->> >>
->> >> I have CONFIG_SMP=n
->> >>
->> >> >
->> >> > FIX: Upgrade system firmware to provide PSCI enable method support.
->> >> >
->> >> > KVM
->> >> > ---
->> >> >
->> >> > PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
->> >> > resources on shutdown, so the first stage kernel cannot be shutdown properly.
->> >> >
->> >> > WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
->> >>
->> >> KVM also disabled.
->> >>
->> >> /root@genericarmv8:~# usr/local/sbin/kexec --lite -l vmlinux
->> >> --dtb=apm-mustang.dtb --command-line=
->> >> "root=/dev/nfs rw
->> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
->> >>  ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
->> >> earlyprintk=uart8250-32bit,0x1c020000"
->> >>
->> >> kexec version: 14.10.21.16.36-ga38e0a6
->> >> arch_process_options:85: command_line: root=/dev/nfs rw
->> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
->> >> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
->> >> earlyprintk=uart8250-32bit,0x1
->> >> c020000
->> >> arch_process_options:87: initrd: (null)
->> >> arch_process_options:88: dtb: apm-mustang.dtb
->> >> arch_process_options:89: lite: 1
->> >> kernel: 0x7f756e7010 kernel_size: 0x488a308
->> >> Modified cmdline: root=/dev/nfs
->> >> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
->> >> from purgatory is diabled
->> >> get_memory_ranges_dt:638: node_1516 memory
->> >> get_memory_ranges_dt:664:  RAM: 0000004000000000 - 0000004400000000
->
-> Does this look correct to you? That doesn't match what I see in
-> apm-mustang.dts in mainline (where memory starts at 0x1_00000000).
->
->> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
->> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
->> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
->
-> This looks suspicious, but I haven't investigated the underlying code.
->
->> >> get_memory_ranges_dt:678: Success
->> >> elf_arm64_load: PE format: yes
->> >> p_vaddr: ffffffc000080000
->> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
->> >> add_segment_phys_virt: 0000007f756f7010 - 0000007f75d3cf70 (00645f60)
->> >> -> 0000004000080000 - 00000040006fb000 (0067b000)
->> >> elf_arm64_load: text_offset: 0000000000080000
->> >> elf_arm64_load: image_size:  000000000067f000
->> >> elf_arm64_load: page_offset: ffffffc000000000
->> >> elf_arm64_load: memstart:    0000004000000000
->> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
->> >> elf_arm64_load: e_entry:     ffffffc000080000 -> 0000004000080000
->> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
->
-> So we'll load the kernel at this address...
->
-> [...]
->
->> root@genericarmv8:~# /usr/local/sbin/kexec --lite -e
->> kexec version: 14.10.21.16.36-ga38e0a6
->> arch_process_options:85: command_line: (null)
->> arch_process_options:87: initrd: (null)
->> arch_process_options:88: dtb: (null)
->> arch_process_options:89: lite: 1
->> sd 0:0:0:0: [sda] Synchronizing SCSI cache
->> kexec: Starting new kernel
->> Bye!
->> Initializing cgroup subsys cpu
->> Linux version 3.17.0-rc4+ (arun@arun-OptiPlex-9010) (gcc version 4.9.1
->> 20140505 (prerelease) (crosstool-NG linaro-1.13.1-4.9-2014.05 - Linaro
->> GCC 4.9-2014.05) ) #12 PREEMPT Thu Nov 6 21:38:03 IST 2014
->> CPU: AArch64 Processor [500f0000] revision 0
->> Detected PIPT I-cache on CPU0
->> Ignoring memory block 0x100000000 - 0x180000000
->
-> ... then the kernel finds the single memory region described in
-> apm-mustang.dts which happens to be below PHYS_OFFSET for your board. So
-> the kernel ignores it because it cannot address it ...
->
->> Early serial console at MMIO32 0x1c020000 (options '')
->> bootconsole [uart0] enabled
->> efi: Getting EFI parameters from FDT:
->> efi: UEFI not found.
->> cma: Failed to reserve 16 MiB
->> Kernel panic - not syncing: ERROR: Failed to allocate 0x1000 bytes below 0x0.
->
-> ... and then explodes because it knows of no memory outside of the kernel
-> Image.
+On Thu, 6 Nov 2014, Vivek Goyal wrote:
 
-Thanks for the nice explanation. Yes with the mainline dtb kexec won't
-work. Kexec works when I don't pass dtb to it.
+> On Thu, Nov 06, 2014 at 01:57:36PM -0800, David Rientjes wrote:
+> 
+> [..]
+> > You see that doing
+> > 
+> > 	if (panic_on_warn) {
+> > 		panic_on_warn = 0;
+> > 		panic(...);
+> > 	}
+> > 
+> > is racy, I hope.  If two threads WARN() at the same time, then there's 
+> > nothing preventing a double panic() because WARN() itself is not 
+> > serialized against anything.  So both the current comment and your 
+> > suggested revision comment are bogus.
+> 
+> panic() is serialized on panic_lock. So I guess it is fine to hit WARN()
+> on multiple cpus. Do you see an issue there?
+> 
 
-It will work (mainline dtb) only when it passes through the
-bootloader. Bootloader does
-a lot of modification to the dtb.
-
-For exmple.
-
-Memory node is changed from
-
-        memory {
-                device_type = "memory";
-                reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by
-bootloader */
-        };
-
-to
-
-root@genericarmv8:~# hexdump /proc/device-tree/memory/reg
-0000000 0000 4000 0000 0000 0000 0400 0000 0000
-0000010 0000 0000 0000 0000 0000 0000 0000 0000
-*
-0000040
-
---Arun
+No issue at all, what's completely mysterious is the panic_on_warn = 0 and 
+the completely bogus comment that says "prevent further WARN()s from 
+panicking the system" when that's racy.  There's no need to clear 
+panic_on_warn at all.
 
 _______________________________________________
 kexec mailing list
