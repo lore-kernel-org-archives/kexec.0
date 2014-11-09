@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wi0-x22e.google.com ([2a00:1450:400c:c05::22e])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xn65c-0004gC-B6
- for kexec@lists.infradead.org; Sat, 08 Nov 2014 13:30:05 +0000
-Message-ID: <545E1AB1.9030001@redhat.com>
-Date: Sat, 08 Nov 2014 08:29:21 -0500
-From: Prarit Bhargava <prarit@redhat.com>
+ id 1XnY0E-0000gG-Ua
+ for kexec@lists.infradead.org; Sun, 09 Nov 2014 19:18:24 +0000
+Received: by mail-wi0-f174.google.com with SMTP id d1so8636894wiv.13
+ for <kexec@lists.infradead.org>; Sun, 09 Nov 2014 11:18:00 -0800 (PST)
+Message-ID: <545FBDDD.9060801@gmail.com>
+Date: Sun, 09 Nov 2014 20:17:49 +0100
+From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v8] kernel, add panic_on_warn
-References: <1415187736-16242-1-git-send-email-prarit@redhat.com>
- <alpine.DEB.2.10.1411051357050.31575@chino.kir.corp.google.com>
- <545B733C.6080903@redhat.com>
- <alpine.DEB.2.10.1411061352440.1526@chino.kir.corp.google.com>
- <20141106220731.GA13590@redhat.com>
- <alpine.DEB.2.10.1411070214220.32405@chino.kir.corp.google.com>
- <545CA765.8010403@redhat.com>
- <alpine.DEB.2.10.1411071306370.12192@chino.kir.corp.google.com>
-In-Reply-To: <alpine.DEB.2.10.1411071306370.12192@chino.kir.corp.google.com>
+Subject: Edited kexec_load(2) [kexec_file_load()] man page for review
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,39 +22,261 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Rientjes <rientjes@google.com>
-Cc: Andi Kleen <ak@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, jbaron@akamai.com, kexec@lists.infradead.org, Rusty Russell <rusty@rustcorp.com.au>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Frederick <fabf@skynet.be>, isimatu.yasuaki@jp.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linux-api@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Borislav Petkov <bp@alien8.de>, mtk.manpages@gmail.com, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+
+Hello Vivek (and all),
+
+Thanks for the kexec_file_load() patch [for the kexec_load(2) man page]
+that you quite some time ago sent. I have merged it and done some
+substantial editing as well. Could you please take a look at the 
+draft below, and check that the kexec_file_load() material is okay.
+Please could you especially pay attention to the pieces marked
+"FIXME(kexec_file_load)", since those are pieces about which i
+had questions or doubts.
+
+Thanks,
+
+Michael
+
+.\" Copyright (C) 2010 Intel Corporation, Author: Andi Kleen
+.\" and Copyright 2014, Vivek Goyal <vgoyal@redhat.com>
+.\"
+.\" %%%LICENSE_START(VERBATIM)
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\" %%%LICENSE_END
+.\"
+.TH KEXEC_LOAD 2 2014-08-19 "Linux" "Linux Programmer's Manual"
+.SH NAME
+kexec_load, kexec_file_load \- load a new kernel for later execution
+.SH SYNOPSIS
+.nf
+.B #include <linux/kexec.h>
+
+.BI "long kexec_load(unsigned long " entry ", unsigned long " nr_segments ","
+.BI "                struct kexec_segment *" segments \
+", unsigned long " flags ");"
+
+.\" FIXME(kexec_file_load):
+.\"     Why are the return types of kexec_load() and kexec_file_load()
+.\"     different?
+.BI "int kexec_file_load(int " kernel_fd ", int " initrd_fd ","
+.br
+.BI "                    unsigned long " cmdline_len  \
+", const char *" cmdline ","
+.BI "                    unsigned long " flags ");"
+
+.fi
+.IR Note :
+There are no glibc wrappers for these system calls; see NOTES.
+.SH DESCRIPTION
+The
+.BR kexec_load ()
+system call loads a new kernel that can be executed later by
+.BR reboot (2).
+.PP
+The
+.I flags
+argument is a bit mask that controls the operation of the call.
+The following values can be specified in
+.IR flags :
+.TP
+.BR KEXEC_ON_CRASH " (since Linux 2.6.13)"
+Execute the new kernel automatically on a system crash.
+.\" FIXME Explain in more detail how KEXEC_ON_CRASH is actually used
+.TP
+.BR KEXEC_PRESERVE_CONTEXT " (since Linux 2.6.27)"
+Preserve the system hardware and
+software states before executing the new kernel.
+This could be used for system suspend.
+This flag is available only if the kernel was configured with
+.BR CONFIG_KEXEC_JUMP ,
+and is effective only if
+.I nr_segments
+is greater than 0.
+.PP
+The high-order bits (corresponding to the mask 0xffff0000) of
+.I flags
+contain the architecture of the to-be-executed kernel.
+Specify (OR) the constant
+.B KEXEC_ARCH_DEFAULT
+to use the current architecture,
+or one of the following architecture constants
+.BR KEXEC_ARCH_386 ,
+.BR KEXEC_ARCH_68K ,
+.BR KEXEC_ARCH_X86_64 ,
+.BR KEXEC_ARCH_PPC ,
+.BR KEXEC_ARCH_PPC64 ,
+.BR KEXEC_ARCH_IA_64 ,
+.BR KEXEC_ARCH_ARM ,
+.BR KEXEC_ARCH_S390 ,
+.BR KEXEC_ARCH_SH ,
+.BR KEXEC_ARCH_MIPS ,
+and
+.BR KEXEC_ARCH_MIPS_LE .
+The architecture must be executable on the CPU of the system.
+
+The
+.I entry
+argument is the physical entry address in the kernel image.
+The
+.I nr_segments
+argument is the number of segments pointed to by the
+.I segments
+pointer;
+the kernel imposes an (arbitrary) limit of 16 on the number of segments.
+The
+.I segments
+argument is an array of
+.I kexec_segment
+structures which define the kernel layout:
+.in +4n
+.nf
+
+struct kexec_segment {
+    void   *buf;        /* Buffer in user space */
+    size_t  bufsz;      /* Buffer length in user space */
+    void   *mem;        /* Physical address of kernel */
+    size_t  memsz;      /* Physical address length */
+};
+.fi
+.in
+.PP
+.\" FIXME Explain the details of how the kernel image defined by segments
+.\" is copied from the calling process into previously reserved memory.
+The kernel image defined by
+.I segments
+is copied from the calling process into previously reserved memory.
+.SS kexec_file_load()
+The
+.BR kexec_file_load ()
+system call is similar to
+.BR kexec_load (),
+but it takes a different set of arguments.
+It reads the kernel to be loaded from the file referred to by the descriptor
+.IR kernel_fd ,
+and the initrd (initial RAM disk)
+to be loaded from file referred to by the descriptor
+.IR initrd_fd .
+The
+.IR cmdline
+argument is a pointer to a string containing the command line
+for the new kernel; the
+.IR cmdline_len
+argument specifies the length of the string in
+.IR cmdline .
+
+The
+.IR flags
+argument is a bit mask which modifies the behavior of the call.
+The following values can be specified in
+.IR flags :
+.TP
+.BR KEXEC_FILE_UNLOAD
+Unload the currently loaded kernel.
+.TP
+.BR KEXEC_FILE_ON_CRASH
+Load the new kernel in the memory region reserved for the crash kernel.
+This kernel is booted if the currently running kernel crashes.
+.TP
+.BR KEXEC_FILE_NO_INITRAMFS
+Loading initrd/initramfs is optional.
+Specify this flag if no initramfs is being loaded.
+If this flag is set, the value passed in
+.IR initrd_fd
+is ignored.
+.SH RETURN VALUE
+On success, these system calls returns 0.
+On error, \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH ERRORS
+.TP
+.B EBUSY
+Another crash kernel is already being loaded
+or a crash kernel is already in use.
+.TP
+.B EINVAL
+.I flags
+is invalid; or
+.IR nr_segments
+is too large
+.\" KEXEC_SEGMENT_MAX == 16
+.TP
+.B ENOEXEC
+.I kernel_fd
+does not refer to an open file, or the kernel can't load this file.
+.TP
+.B EPERM
+The caller does not have the
+.BR CAP_SYS_BOOT
+capability.
+.SH VERSIONS
+The
+.BR kexec_load ()
+system call first appeared in Linux 2.6.13.
+The
+.BR kexec_file_load ()
+system call first appeared in Linux 3.17.
+.SH CONFORMING TO
+These system calls are Linux-specific.
+.SH NOTES
+Currently, there is no glibc support for these system calls.
+Call them using
+.BR syscall (2).
+.PP
+The required constants are in the Linux kernel source file
+.IR linux/kexec.h ,
+which is not currently exported to glibc.
+Therefore, these constants must be defined manually.
+
+.\" FIXME(kexec_file_load):
+.\" Is the following rationale accurate? Does it need expanding?
+The
+.BR kexec_file_load ()
+.\" See also http://lwn.net/Articles/603116/
+system call was added to provide support for systems
+where "kexec" loading should be restricted to
+only kernels that are signed.
+
+The
+.BR kexec_load ()
+system call is available only if the kernel was configured with
+.BR CONFIG_KEXEC .
+The
+.BR kexec_file_load ()
+system call is available only if the kernel was configured with
+.BR CONFIG_KEXEC_FILE .
+.\" FIXME(kexec_file_load):
+.\"     Does kexec_file_load() need any other CONFIG_* options to be defined?
+.SH SEE ALSO
+.BR reboot (2),
+.BR syscall (2),
+.BR kexec (8)
 
 
-
-On 11/07/2014 04:09 PM, David Rientjes wrote:
-> On Fri, 7 Nov 2014, Prarit Bhargava wrote:
-> 
->> There very much is.  Consider a thread that hits a WARN() and then panics.  Then
->> somewhere in the panic code the thread hits another WARN() ... and then panics
->> again.  Previously this would have caused the system to "finish" panick'ing.
->> Now it makes the system hang.
->>
-> 
-> Then we're back to square one which is what is obviously the intent of 
-> your patch and the comment that goes along with it: 
-
-My original reply pointed out that the comment was wrong.
-
-we want to clear
-> panic_on_warn once and not allow multiple panic().  
-
-On _this_ thread.  The multiple panic across threads cannot occur.
-
-So why not just add
-> the necessary synchronization to make sure that happens when WARN() 
-> happens on two cpus simultaneously?
-
-See above.
-
-P.
-
-> 
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
 
 _______________________________________________
 kexec mailing list
