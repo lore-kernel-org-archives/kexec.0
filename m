@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-x22e.google.com ([2a00:1450:400c:c05::22e])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XnY0E-0000gG-Ua
- for kexec@lists.infradead.org; Sun, 09 Nov 2014 19:18:24 +0000
-Received: by mail-wi0-f174.google.com with SMTP id d1so8636894wiv.13
- for <kexec@lists.infradead.org>; Sun, 09 Nov 2014 11:18:00 -0800 (PST)
-Message-ID: <545FBDDD.9060801@gmail.com>
-Date: Sun, 09 Nov 2014 20:17:49 +0100
-From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date: Mon, 10 Nov 2014 15:17:52 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
+Message-ID: <20141110071752.GC6960@darkstar.nay.redhat.com>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
+ <20141106152830.GF23706@leverpostej>
+ <CAFdej01wki9btKiDj7TW8_frtZFLVMjsyS5LsZWqO7E+dC+D+w@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Edited kexec_load(2) [kexec_file_load()] man page for review
+Content-Disposition: inline
+In-Reply-To: <CAFdej01wki9btKiDj7TW8_frtZFLVMjsyS5LsZWqO7E+dC+D+w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,261 +22,201 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Borislav Petkov <bp@alien8.de>, mtk.manpages@gmail.com, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Arun Chandran <achandran@mvista.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hello Vivek (and all),
+On 11/06/14 at 09:43pm, Arun Chandran wrote:
+> On Thu, Nov 6, 2014 at 8:58 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Thu, Nov 06, 2014 at 12:16:12PM +0000, Arun Chandran wrote:
+> >> Hi Geoff,
+> >>
+> >> I am trying this on my hardware (apm-mustang.dtb)
+> >>
+> >> On Fri, Oct 24, 2014 at 4:40 AM, Geoff Levand <geoff@infradead.org> wrote:
+> >> > Hi All,
+> >> >
+> >> > This series adds the core support for kexec re-boots on arm64.  I have tested
+> >> > with the ARM VE fast model, the ARM Base model and the ARM Foundation
+> >> > model with various kernel config options for both the first and second stage
+> >> > kernels.
+> >> >
+> >> > To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+> >> > kexec-tools [2], which have not yet been merged upstream, are needed.
+> >> >
+> >> > Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
+> >> > routine the ability to switch exception levels from EL1 to EL2 for kernels that
+> >> > were entered in EL2.
+> >> >
+> >> > Patches 5 and 6 convert the use of device tree /memreserve/ to device tree
+> >> > reserved-memory nodes.
+> >> >
+> >> > Patch 7 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
+> >> > dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+> >> > routine.
+> >> >
+> >> > Patches 8-10 add the actual kexec support.
+> >> >
+> >> > Please consider all patches for inclusion.  Any comments or suggestions on how
+> >> > to improve are welcome.
+> >> >
+> >> > [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
+> >> > [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+> >> >
+> >> > Several things are known to have problems on kexec re-boot:
+> >> >
+> >> > spin-table
+> >> > ----------
+> >> >
+> >> > PROBLEM: The spin-table enable method does not implement all the methods needed
+> >> > for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
+> >> >
+> >> > WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
+> >> > support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
+> >> > on the first stage kernel command line.
+> >>
+> >> I have CONFIG_SMP=n
+> >>
+> >> >
+> >> > FIX: Upgrade system firmware to provide PSCI enable method support.
+> >> >
+> >> > KVM
+> >> > ---
+> >> >
+> >> > PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
+> >> > resources on shutdown, so the first stage kernel cannot be shutdown properly.
+> >> >
+> >> > WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
+> >>
+> >> KVM also disabled.
+> >>
+> >> /root@genericarmv8:~# usr/local/sbin/kexec --lite -l vmlinux
+> >> --dtb=apm-mustang.dtb --command-line=
+> >> "root=/dev/nfs rw
+> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+> >>  ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+> >> earlyprintk=uart8250-32bit,0x1c020000"
+> >>
+> >> kexec version: 14.10.21.16.36-ga38e0a6
+> >> arch_process_options:85: command_line: root=/dev/nfs rw
+> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+> >> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+> >> earlyprintk=uart8250-32bit,0x1
+> >> c020000
+> >> arch_process_options:87: initrd: (null)
+> >> arch_process_options:88: dtb: apm-mustang.dtb
+> >> arch_process_options:89: lite: 1
+> >> kernel: 0x7f756e7010 kernel_size: 0x488a308
+> >> Modified cmdline: root=/dev/nfs
+> >> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
+> >> from purgatory is diabled
+> >> get_memory_ranges_dt:638: node_1516 memory
+> >> get_memory_ranges_dt:664:  RAM: 0000004000000000 - 0000004400000000
+> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+> >> get_memory_ranges_dt:678: Success
+> >> elf_arm64_load: PE format: yes
+> >> p_vaddr: ffffffc000080000
+> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
+> >> add_segment_phys_virt: 0000007f756f7010 - 0000007f75d3cf70 (00645f60)
+> >> -> 0000004000080000 - 00000040006fb000 (0067b000)
+> >> elf_arm64_load: text_offset: 0000000000080000
+> >> elf_arm64_load: image_size:  000000000067f000
+> >> elf_arm64_load: page_offset: ffffffc000000000
+> >> elf_arm64_load: memstart:    0000004000000000
+> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
+> >> elf_arm64_load: e_entry:     ffffffc000080000 -> 0000004000080000
+> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
+> >> Modified cmdline:root=/dev/nfs rw
+> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+> >> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+> >> earlyprintk=uart8250-32bit,0x1c020000
+> >> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
+> >> from purgatory is diabled
+> >> read_cpu_info: dtb_1 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_1 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_1 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_1 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_1 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_1 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_1 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_1 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> read_cpu_info: dtb_2 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
+> >> cpu-release-addr 400000fff8
+> >> check_cpu_properties: hwid-0: OK
+> >> check_cpu_properties: hwid-1: OK
+> >> check_cpu_properties: hwid-100: OK
+> >> check_cpu_properties: hwid-101: OK
+> >> check_cpu_properties: hwid-200: OK
+> >> check_cpu_properties: hwid-201: OK
+> >> check_cpu_properties: hwid-300: OK
+> >> check_cpu_properties: hwid-301: OK
+> >> dtb:    base 4000700000, size 221ch (8732)
+> >> add_segment_phys_virt: 0000000024c14c90 - 0000000024c16eac (0000221c)
+> >> -> 0000004000700000 - 0000004000703000 (00003000)
+> >> kexec_load: entry = 0x4000080000 flags = 0xb70000
+> >> nr_segments = 2
+> >> segment[0].buf   = 0x7f756f7010
+> >> segment[0].bufsz = 0x645f60
+> >> segment[0].mem   = 0x4000080000
+> >> segment[0].memsz = 0x67b000
+> >> segment[1].buf   = 0x24c14c90
+> >> segment[1].bufsz = 0x221c
+> >> segment[1].mem   = 0x4000700000
+> >> segment[1].memsz = 0x3000
+> >>
+> >> root@genericarmv8:~# /usr/local/sbin/kexec --lite -e
+> >> kexec version: 14.10.21.16.36-ga38e0a6
+> >> arch_process_options:85: command_line: (null)
+> >> arch_process_options:87: initrd: (null)
+> >> arch_process_options:88: dtb: (null)
+> >> arch_process_options:89: lite: 1
+> >> sd 0:0:0:0: [sda] Synchronizing SCSI cache
+> >> kexec: Starting new kernel
+> >> Bye!
+> >>
+> >> It fails to come up.  In debugger I can see
+> >>
+> >>     Core number       : 0
+> >>     Core state        : debug (AArch64 EL1)
+> >>     Debug entry cause : External Debug Request
+> >>     Current PC        : 0xffffffc000083200
+> >
+> > That's a kernel virtual address, and it looks to be somewhere early in
+> > the boot path, given it's close to PAGE_OFFSET + TEXT_OFFSET.
+> >
+> Yes. My earlyconsole setting was wrong that is why I did not see
+> anything in console for the kexec rebooting.
+> 
+> With correct earlycon setting I can see
 
-Thanks for the kexec_file_load() patch [for the kexec_load(2) man page]
-that you quite some time ago sent. I have merged it and done some
-substantial editing as well. Could you please take a look at the 
-draft below, and check that the kexec_file_load() material is okay.
-Please could you especially pay attention to the pieces marked
-"FIXME(kexec_file_load)", since those are pieces about which i
-had questions or doubts.
+Arun, could you share how did you get the working earlycon? We might have
+same problem.. 
 
-Thanks,
-
-Michael
-
-.\" Copyright (C) 2010 Intel Corporation, Author: Andi Kleen
-.\" and Copyright 2014, Vivek Goyal <vgoyal@redhat.com>
-.\"
-.\" %%%LICENSE_START(VERBATIM)
-.\" Permission is granted to make and distribute verbatim copies of this
-.\" manual provided the copyright notice and this permission notice are
-.\" preserved on all copies.
-.\"
-.\" Permission is granted to copy and distribute modified versions of this
-.\" manual under the conditions for verbatim copying, provided that the
-.\" entire resulting derived work is distributed under the terms of a
-.\" permission notice identical to this one.
-.\"
-.\" Since the Linux kernel and libraries are constantly changing, this
-.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-.\" responsibility for errors or omissions, or for damages resulting from
-.\" the use of the information contained herein.  The author(s) may not
-.\" have taken the same level of care in the production of this manual,
-.\" which is licensed free of charge, as they might when working
-.\" professionally.
-.\"
-.\" Formatted or processed versions of this manual, if unaccompanied by
-.\" the source, must acknowledge the copyright and authors of this work.
-.\" %%%LICENSE_END
-.\"
-.TH KEXEC_LOAD 2 2014-08-19 "Linux" "Linux Programmer's Manual"
-.SH NAME
-kexec_load, kexec_file_load \- load a new kernel for later execution
-.SH SYNOPSIS
-.nf
-.B #include <linux/kexec.h>
-
-.BI "long kexec_load(unsigned long " entry ", unsigned long " nr_segments ","
-.BI "                struct kexec_segment *" segments \
-", unsigned long " flags ");"
-
-.\" FIXME(kexec_file_load):
-.\"     Why are the return types of kexec_load() and kexec_file_load()
-.\"     different?
-.BI "int kexec_file_load(int " kernel_fd ", int " initrd_fd ","
-.br
-.BI "                    unsigned long " cmdline_len  \
-", const char *" cmdline ","
-.BI "                    unsigned long " flags ");"
-
-.fi
-.IR Note :
-There are no glibc wrappers for these system calls; see NOTES.
-.SH DESCRIPTION
-The
-.BR kexec_load ()
-system call loads a new kernel that can be executed later by
-.BR reboot (2).
-.PP
-The
-.I flags
-argument is a bit mask that controls the operation of the call.
-The following values can be specified in
-.IR flags :
-.TP
-.BR KEXEC_ON_CRASH " (since Linux 2.6.13)"
-Execute the new kernel automatically on a system crash.
-.\" FIXME Explain in more detail how KEXEC_ON_CRASH is actually used
-.TP
-.BR KEXEC_PRESERVE_CONTEXT " (since Linux 2.6.27)"
-Preserve the system hardware and
-software states before executing the new kernel.
-This could be used for system suspend.
-This flag is available only if the kernel was configured with
-.BR CONFIG_KEXEC_JUMP ,
-and is effective only if
-.I nr_segments
-is greater than 0.
-.PP
-The high-order bits (corresponding to the mask 0xffff0000) of
-.I flags
-contain the architecture of the to-be-executed kernel.
-Specify (OR) the constant
-.B KEXEC_ARCH_DEFAULT
-to use the current architecture,
-or one of the following architecture constants
-.BR KEXEC_ARCH_386 ,
-.BR KEXEC_ARCH_68K ,
-.BR KEXEC_ARCH_X86_64 ,
-.BR KEXEC_ARCH_PPC ,
-.BR KEXEC_ARCH_PPC64 ,
-.BR KEXEC_ARCH_IA_64 ,
-.BR KEXEC_ARCH_ARM ,
-.BR KEXEC_ARCH_S390 ,
-.BR KEXEC_ARCH_SH ,
-.BR KEXEC_ARCH_MIPS ,
-and
-.BR KEXEC_ARCH_MIPS_LE .
-The architecture must be executable on the CPU of the system.
-
-The
-.I entry
-argument is the physical entry address in the kernel image.
-The
-.I nr_segments
-argument is the number of segments pointed to by the
-.I segments
-pointer;
-the kernel imposes an (arbitrary) limit of 16 on the number of segments.
-The
-.I segments
-argument is an array of
-.I kexec_segment
-structures which define the kernel layout:
-.in +4n
-.nf
-
-struct kexec_segment {
-    void   *buf;        /* Buffer in user space */
-    size_t  bufsz;      /* Buffer length in user space */
-    void   *mem;        /* Physical address of kernel */
-    size_t  memsz;      /* Physical address length */
-};
-.fi
-.in
-.PP
-.\" FIXME Explain the details of how the kernel image defined by segments
-.\" is copied from the calling process into previously reserved memory.
-The kernel image defined by
-.I segments
-is copied from the calling process into previously reserved memory.
-.SS kexec_file_load()
-The
-.BR kexec_file_load ()
-system call is similar to
-.BR kexec_load (),
-but it takes a different set of arguments.
-It reads the kernel to be loaded from the file referred to by the descriptor
-.IR kernel_fd ,
-and the initrd (initial RAM disk)
-to be loaded from file referred to by the descriptor
-.IR initrd_fd .
-The
-.IR cmdline
-argument is a pointer to a string containing the command line
-for the new kernel; the
-.IR cmdline_len
-argument specifies the length of the string in
-.IR cmdline .
-
-The
-.IR flags
-argument is a bit mask which modifies the behavior of the call.
-The following values can be specified in
-.IR flags :
-.TP
-.BR KEXEC_FILE_UNLOAD
-Unload the currently loaded kernel.
-.TP
-.BR KEXEC_FILE_ON_CRASH
-Load the new kernel in the memory region reserved for the crash kernel.
-This kernel is booted if the currently running kernel crashes.
-.TP
-.BR KEXEC_FILE_NO_INITRAMFS
-Loading initrd/initramfs is optional.
-Specify this flag if no initramfs is being loaded.
-If this flag is set, the value passed in
-.IR initrd_fd
-is ignored.
-.SH RETURN VALUE
-On success, these system calls returns 0.
-On error, \-1 is returned and
-.I errno
-is set to indicate the error.
-.SH ERRORS
-.TP
-.B EBUSY
-Another crash kernel is already being loaded
-or a crash kernel is already in use.
-.TP
-.B EINVAL
-.I flags
-is invalid; or
-.IR nr_segments
-is too large
-.\" KEXEC_SEGMENT_MAX == 16
-.TP
-.B ENOEXEC
-.I kernel_fd
-does not refer to an open file, or the kernel can't load this file.
-.TP
-.B EPERM
-The caller does not have the
-.BR CAP_SYS_BOOT
-capability.
-.SH VERSIONS
-The
-.BR kexec_load ()
-system call first appeared in Linux 2.6.13.
-The
-.BR kexec_file_load ()
-system call first appeared in Linux 3.17.
-.SH CONFORMING TO
-These system calls are Linux-specific.
-.SH NOTES
-Currently, there is no glibc support for these system calls.
-Call them using
-.BR syscall (2).
-.PP
-The required constants are in the Linux kernel source file
-.IR linux/kexec.h ,
-which is not currently exported to glibc.
-Therefore, these constants must be defined manually.
-
-.\" FIXME(kexec_file_load):
-.\" Is the following rationale accurate? Does it need expanding?
-The
-.BR kexec_file_load ()
-.\" See also http://lwn.net/Articles/603116/
-system call was added to provide support for systems
-where "kexec" loading should be restricted to
-only kernels that are signed.
-
-The
-.BR kexec_load ()
-system call is available only if the kernel was configured with
-.BR CONFIG_KEXEC .
-The
-.BR kexec_file_load ()
-system call is available only if the kernel was configured with
-.BR CONFIG_KEXEC_FILE .
-.\" FIXME(kexec_file_load):
-.\"     Does kexec_file_load() need any other CONFIG_* options to be defined?
-.SH SEE ALSO
-.BR reboot (2),
-.BR syscall (2),
-.BR kexec (8)
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
