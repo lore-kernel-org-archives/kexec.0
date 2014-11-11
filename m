@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xo7p3-0007Gf-8E
- for kexec@lists.infradead.org; Tue, 11 Nov 2014 09:33:13 +0000
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sAB9WPZs018280
- for <kexec@lists.infradead.org>; Tue, 11 Nov 2014 17:32:25 +0800
-Message-ID: <5461D6F3.6050909@cn.fujitsu.com>
-Date: Tue, 11 Nov 2014 17:29:23 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Xo9Xh-0002rn-JO
+ for kexec@lists.infradead.org; Tue, 11 Nov 2014 11:23:26 +0000
+Message-ID: <5461F18C.2080400@redhat.com>
+Date: Tue, 11 Nov 2014 12:22:52 +0100
+From: Laszlo Ersek <lersek@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: Fix the variable pfn_needed leaking
-References: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
-In-Reply-To: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
+Subject: uniquely identifying KDUMP files that originate from QEMU
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,59 +16,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Wen Congyang <wency@cn.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: Dave Anderson <anderson@redhat.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, crash-utility@redhat.com
 
-On 11/11/2014 04:54 PM, Minfei Huang wrote:
-> If the page pfn calculated by read_from_splitblock_table is bigger than
-> pfn_needed, the variable pfn_needed will leak.
->
-> makedumpfile cannot assign the pfn averagely bacause of condition
-> pfn_needed invalid.
->
-> Signed-off-by: Minfei Huang<mhuang@redhat.com>
-> ---
->   makedumpfile.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 59c4952..8807a90 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -8415,7 +8415,7 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
->   		return info->max_mapnr;
->
->   	mdf_pfn_t end_pfn;
-> -	long long pfn_needed, offset;
-> +	long long pfn_needed, offset, per_splitblock_pfn;
->   	char *splitblock_value_offset;
->
->   	pfn_needed = info->num_dumpable / info->num_dumpfile;
-> @@ -8424,7 +8424,8 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
->   	end_pfn = start_pfn;
->
->   	while (*cur_splitblock_num<  splitblock->num&&  pfn_needed>  0) {
-> -		pfn_needed -= read_from_splitblock_table(splitblock_value_offset);
-> +		per_splitblock_pfn = read_from_splitblock_table(splitblock_value_offset);
-> +		pfn_needed = pfn_needed<  per_splitblock_pfn ? 0 : pfn_needed - per_splitblock_pfn;
->   		splitblock_value_offset += splitblock->entry_size;
->   		++*cur_splitblock_num;
->   	}
+(Note: I'm not subscribed to either qemu-devel or the kexec list; please
+keep me CC'd.)
 
-Hello Huang,
+QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
+kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
 
-Actually, pfn_needed is used to indicate whether the dumpfile have enough pfn or not.
-It doesn't matter whether pfn_needed == 0 or pfn_needed < 0.
+The resultant vmcore is usually analyzed with the "crash" utility.
 
-I know what you want to express. Maybe you can get some useful information at
-http://lists.infradead.org/pipermail/kexec/2014-October/012805.html
+The original tool producing such files is kdump. Unlike the procedure
+performed by QEMU, kdump runs from *within* the guest (under a kexec'd
+kdump kernel), and has more information about the original guest kernel
+state (which is being dumped) than QEMU. To QEMU, the guest kernel state
+is opaque.
 
--- 
+For this reason, the kdump preparation logic in QEMU hardcodes a number
+of fields in the kdump header. The direct issue is the "phys_base"
+field. Refer to dump.c, functions create_header32(), create_header64(),
+and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
+"0").
+
+http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
+
+http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
+
+This works in most cases, because the guest Linux kernel indeed tends to
+be loaded at guest-phys address 0. However, when the guest Linux kernel
+is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
+then the guest Linux kernel is loaded at 16MB, thereby getting out of
+sync with the phys_base=0 setting visible in the KDUMP header.
+
+This trips up the "crash" utility.
+
+Dave worked around the issue in "crash" for ELF format dumps -- "crash"
+can identify QEMU as the originator of the vmcore by finding the QEMU
+notes in the ELF vmcore. If those are present, then "crash" employs a
+heuristic, probing for a phys_base up to 32MB, in 1MB steps.
+
+Alas, the QEMU notes are not present in the KDUMP-format vmcores that
+QEMU produces (they cannot be), hence crash has no way to tell apart
+such files from those generated by genuine kdump. As an end result,
+"crash" cannot automatically find the phys_base of OVMF-based Linux vmcores.
+
+Dave suggested that a new flag, or a special phys_base value (like ~0UL)
+be introduced as a distinguishing mark for QEMU-produced kdumps.
+
+Implementing this in QEMU wouldn't be hard. The big question is
+compatibility -- whose analysis tools would be broken by a (phys_base ==
+~0UL) setting, or by a new flag?
+
+Note that this change would affect SeaBIOS-based vmcores too. QEMU can't
+(and shouldn't) discriminate the vmcores it dumps based on guest
+firmware. (If QEMU did that, then it might as well try to figure out the
+real phys_base value, which is clearly out of scope for qemu. One of the
+selling points of the paging=false dump is that it doesn't involve
+parsing guest RAM.)
+
 Thanks
-Zhou Wenjian
+Laszlo
 
 _______________________________________________
 kexec mailing list
