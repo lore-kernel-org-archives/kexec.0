@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 10 Nov 2014 17:24:07 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
-Message-ID: <20141110092407.GD6960@darkstar.nay.redhat.com>
-References: <cover.1414099246.git.geoff@infradead.org>
- <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
- <20141106152830.GF23706@leverpostej>
- <CAFdej01wki9btKiDj7TW8_frtZFLVMjsyS5LsZWqO7E+dC+D+w@mail.gmail.com>
- <20141110071752.GC6960@darkstar.nay.redhat.com>
- <CAFdej03v3M=jtTEVv7rxe8z_h_apUKNzq7GcUSLwZtQ5DSnxkg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAFdej03v3M=jtTEVv7rxe8z_h_apUKNzq7GcUSLwZtQ5DSnxkg@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Xo7ES-0005LY-NU
+ for kexec@lists.infradead.org; Tue, 11 Nov 2014 08:55:25 +0000
+From: Minfei Huang <mhuang@redhat.com>
+Subject: [PATCH] makedumpfile: Fix the variable pfn_needed leaking
+Date: Tue, 11 Nov 2014 16:54:39 +0800
+Message-Id: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,44 +15,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arun Chandran <achandran@mvista.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Christoffer Dall <christoffer.dall@linaro.org>
+To: kexec@lists.infradead.org
+Cc: Minfei Huang <mhuang@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp
 
-[snip]
-> >> Yes. My earlyconsole setting was wrong that is why I did not see
-> >> anything in console for the kexec rebooting.
-> >>
-> >> With correct earlycon setting I can see
-> >
-> > Arun, could you share how did you get the working earlycon? We might have
-> > same problem..
-> 
-> I invoked kexec like this
-> 
->  root@genericarmv8:~# ./usr/local/sbin/kexec --lite -l vmlinux --command-line=
-> "root=/dev/nfs rw
-> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
-> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-> earlycon=uart8250,mmio32,0x1c020000"
-> 
-> 
-> Earlier my command line parameters for earlycon was wrong hence I was
-> not getting
-> earlyconsole.
-> 
-> Also have a look at
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/300584.html
-> 
-> If your board has an L3 cache; you may have to apply the modification in the
-> above link.
+If the page pfn calculated by read_from_splitblock_table is bigger than
+pfn_needed, the variable pfn_needed will leak.
 
-Arun, thanks a lot. Will try when I get a machine this week.
+makedumpfile cannot assign the pfn averagely bacause of condition
+pfn_needed invalid.
 
-Dave
+Signed-off-by: Minfei Huang <mhuang@redhat.com>
+---
+ makedumpfile.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 59c4952..8807a90 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -8415,7 +8415,7 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
+ 		return info->max_mapnr;
+ 
+ 	mdf_pfn_t end_pfn;
+-	long long pfn_needed, offset;
++	long long pfn_needed, offset, per_splitblock_pfn;
+ 	char *splitblock_value_offset;
+ 
+ 	pfn_needed = info->num_dumpable / info->num_dumpfile;
+@@ -8424,7 +8424,8 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
+ 	end_pfn = start_pfn;
+ 
+ 	while (*cur_splitblock_num < splitblock->num && pfn_needed > 0) {
+-		pfn_needed -= read_from_splitblock_table(splitblock_value_offset);
++		per_splitblock_pfn = read_from_splitblock_table(splitblock_value_offset); 
++		pfn_needed = pfn_needed < per_splitblock_pfn ? 0 : pfn_needed - per_splitblock_pfn;
+ 		splitblock_value_offset += splitblock->entry_size;
+ 		++*cur_splitblock_num;
+ 	}
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
