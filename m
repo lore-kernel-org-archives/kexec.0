@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.11.231])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XoFEh-0001q1-TJ
- for kexec@lists.infradead.org; Tue, 11 Nov 2014 17:28:12 +0000
-Message-ID: <54624710.6070306@codeaurora.org>
-Date: Tue, 11 Nov 2014 12:27:44 -0500
-From: Christopher Covington <cov@codeaurora.org>
+ id 1XoJ20-0001c2-Hg
+ for kexec@lists.infradead.org; Tue, 11 Nov 2014 21:31:21 +0000
+Date: Tue, 11 Nov 2014 16:30:37 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
+Message-ID: <20141111213037.GA31445@redhat.com>
+References: <545FBDDD.9060801@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate
- from QEMU
-References: <5461F18C.2080400@redhat.com>
-In-Reply-To: <5461F18C.2080400@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <545FBDDD.9060801@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +23,149 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laszlo Ersek <lersek@redhat.com>
-Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, crash-utility@redhat.com
+To: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
 
-On 11/11/2014 06:22 AM, Laszlo Ersek wrote:
-> (Note: I'm not subscribed to either qemu-devel or the kexec list; please
-> keep me CC'd.)
+On Sun, Nov 09, 2014 at 08:17:49PM +0100, Michael Kerrisk (man-pages) wrote:
+> Hello Vivek (and all),
 > 
-> QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
-> kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
+> Thanks for the kexec_file_load() patch [for the kexec_load(2) man page]
+> that you quite some time ago sent. I have merged it and done some
+> substantial editing as well. Could you please take a look at the 
+> draft below, and check that the kexec_file_load() material is okay.
+> Please could you especially pay attention to the pieces marked
+> "FIXME(kexec_file_load)", since those are pieces about which i
+> had questions or doubts.
 > 
-> The resultant vmcore is usually analyzed with the "crash" utility.
-> 
-> The original tool producing such files is kdump. Unlike the procedure
-> performed by QEMU, kdump runs from *within* the guest (under a kexec'd
-> kdump kernel), and has more information about the original guest kernel
-> state (which is being dumped) than QEMU. To QEMU, the guest kernel state
-> is opaque.
-> 
-> For this reason, the kdump preparation logic in QEMU hardcodes a number
-> of fields in the kdump header. The direct issue is the "phys_base"
-> field. Refer to dump.c, functions create_header32(), create_header64(),
-> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
-> "0").
-> 
-> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
-> 
-> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
-> 
-> This works in most cases, because the guest Linux kernel indeed tends to
-> be loaded at guest-phys address 0. However, when the guest Linux kernel
-> is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
-> then the guest Linux kernel is loaded at 16MB, thereby getting out of
-> sync with the phys_base=0 setting visible in the KDUMP header.
-> 
-> This trips up the "crash" utility.
-> 
-> Dave worked around the issue in "crash" for ELF format dumps -- "crash"
-> can identify QEMU as the originator of the vmcore by finding the QEMU
-> notes in the ELF vmcore. If those are present, then "crash" employs a
-> heuristic, probing for a phys_base up to 32MB, in 1MB steps.
 
-What advantages does KDUMP have over ELF?
+Hi Michael,
 
-Thanks,
-Chris
+Thanks for editing this man page. I have some thoughts inline.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+[..]
+> .B #include <linux/kexec.h>
+> 
+> .BI "long kexec_load(unsigned long " entry ", unsigned long " nr_segments ","
+> .BI "                struct kexec_segment *" segments \
+> ", unsigned long " flags ");"
+> 
+> .\" FIXME(kexec_file_load):
+> .\"     Why are the return types of kexec_load() and kexec_file_load()
+> .\"     different?
+> .BI "int kexec_file_load(int " kernel_fd ", int " initrd_fd ","
+
+I think this is ignorance on my part. It probably should be "long" as
+SYSCALL_DEFINE() seems to expand to.
+
+asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__));
+
+
+> .br
+> .BI "                    unsigned long " cmdline_len  \
+> ", const char *" cmdline ","
+> .BI "                    unsigned long " flags ");"
+> 
+> .fi
+> .IR Note :
+> There are no glibc wrappers for these system calls; see NOTES.
+> .SH DESCRIPTION
+> The
+> .BR kexec_load ()
+> system call loads a new kernel that can be executed later by
+> .BR reboot (2).
+> .PP
+> The
+> .I flags
+> argument is a bit mask that controls the operation of the call.
+> The following values can be specified in
+> .IR flags :
+> .TP
+> .BR KEXEC_ON_CRASH " (since Linux 2.6.13)"
+> Execute the new kernel automatically on a system crash.
+> .\" FIXME Explain in more detail how KEXEC_ON_CRASH is actually used
+
+Upon boot first kernel reserves a chunk of contiguous memory (if
+crashkernel=<> command line paramter is passed). This memory is
+is used to load the crash kernel (Kernel which will be booted into
+if first kernel crashes).
+
+Location of this reserved memory is exported to user space through
+/proc/iomem file. User space can parse it and prepare list of segments
+specifying this reserved memory as destination.
+
+Once kernel sees the flag KEXEC_ON_CRASH, it makes sure that all the
+segments are destined for reserved memory otherwise kernel load operation
+fails.
+
+[..]
+> struct kexec_segment {
+>     void   *buf;        /* Buffer in user space */
+>     size_t  bufsz;      /* Buffer length in user space */
+>     void   *mem;        /* Physical address of kernel */
+>     size_t  memsz;      /* Physical address length */
+> };
+> .fi
+> .in
+> .PP
+> .\" FIXME Explain the details of how the kernel image defined by segments
+> .\" is copied from the calling process into previously reserved memory.
+
+Kernel image defined by segments is copied into kernel either in regular
+memory or in reserved memory (if KEXEC_ON_CRASH is set). Kernel first
+copies list of segments in kernel memory and then goes does various
+sanity checks on the segments. If everything looks line, kernel copies
+segment data to kernel memory.
+
+In case of normal kexec, segment data is loaded in any available memory
+and segment data is moved to final destination at the kexec reboot time.
+
+In case of kexec on panic (KEXEC_ON_CRASH flag set), segment data is
+directly loaded to reserved memory and after crash kexec simply jumps
+to starting point.
+
+[..]
+> .\" FIXME(kexec_file_load):
+> .\" Is the following rationale accurate? Does it need expanding?
+> The
+> .BR kexec_file_load ()
+> .\" See also http://lwn.net/Articles/603116/
+> system call was added to provide support for systems
+> where "kexec" loading should be restricted to
+> only kernels that are signed.
+
+Yes, this rationale looks good.
+
+> 
+> The
+> .BR kexec_load ()
+> system call is available only if the kernel was configured with
+> .BR CONFIG_KEXEC .
+> The
+> .BR kexec_file_load ()
+> system call is available only if the kernel was configured with
+> .BR CONFIG_KEXEC_FILE .
+> .\" FIXME(kexec_file_load):
+> .\"     Does kexec_file_load() need any other CONFIG_* options to be defined?
+
+Yes, it requires some other config options too.
+
+depends on KEXEC
+depends on X86_64
+depends on CRYPTO=y
+depends on CRYPTO_SHA256=y
+
+CONFIG_KEXEC_VERIFY_SIG=y
+CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y
+CONFIG_SIGNED_PE_FILE_VERIFICATION=y
+CONFIG_PKCS7_MESSAGE_PARSER=y
+CONFIG_X509_CERTIFICATE_PARSER=y
+CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
+
+So dependency list seems pretty long. Not sure how many of these should
+we specify in man page.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
