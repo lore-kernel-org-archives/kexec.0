@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-lb0-f170.google.com ([209.85.217.170])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xo9Xh-0002rn-JO
- for kexec@lists.infradead.org; Tue, 11 Nov 2014 11:23:26 +0000
-Message-ID: <5461F18C.2080400@redhat.com>
-Date: Tue, 11 Nov 2014 12:22:52 +0100
-From: Laszlo Ersek <lersek@redhat.com>
+ id 1Xo9v6-0005s2-Dx
+ for kexec@lists.infradead.org; Tue, 11 Nov 2014 11:47:37 +0000
+Received: by mail-lb0-f170.google.com with SMTP id p9so4309165lbv.1
+ for <kexec@lists.infradead.org>; Tue, 11 Nov 2014 03:47:13 -0800 (PST)
 MIME-Version: 1.0
-Subject: uniquely identifying KDUMP files that originate from QEMU
+In-Reply-To: <5461F18C.2080400@redhat.com>
+References: <5461F18C.2080400@redhat.com>
+From: Peter Maydell <peter.maydell@linaro.org>
+Date: Tue, 11 Nov 2014 11:46:52 +0000
+Message-ID: <CAFEAcA86kxVXG6uW2mt3Er8s8zjcVBLE7AM0UEWKF-nTuSjm9w@mail.gmail.com>
+Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate from
+ QEMU
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,67 +25,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Wen Congyang <wency@cn.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: Dave Anderson <anderson@redhat.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, crash-utility@redhat.com
+To: Laszlo Ersek <lersek@redhat.com>
+Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, crash-utility@redhat.com
 
-(Note: I'm not subscribed to either qemu-devel or the kexec list; please
-keep me CC'd.)
+On 11 November 2014 11:22, Laszlo Ersek <lersek@redhat.com> wrote:
+> For this reason, the kdump preparation logic in QEMU hardcodes a number
+> of fields in the kdump header. The direct issue is the "phys_base"
+> field. Refer to dump.c, functions create_header32(), create_header64(),
+> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
+> "0").
+>
+> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
+>
+> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
+>
+> This works in most cases, because the guest Linux kernel indeed tends to
+> be loaded at guest-phys address 0. However, when the guest Linux kernel
+> is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
+> then the guest Linux kernel is loaded at 16MB, thereby getting out of
+> sync with the phys_base=0 setting visible in the KDUMP header.
 
-QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
-kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
+Presumably this is also not going to work for machines other
+than the x86 PC, where physical memory may well not start at
+address zero...
 
-The resultant vmcore is usually analyzed with the "crash" utility.
-
-The original tool producing such files is kdump. Unlike the procedure
-performed by QEMU, kdump runs from *within* the guest (under a kexec'd
-kdump kernel), and has more information about the original guest kernel
-state (which is being dumped) than QEMU. To QEMU, the guest kernel state
-is opaque.
-
-For this reason, the kdump preparation logic in QEMU hardcodes a number
-of fields in the kdump header. The direct issue is the "phys_base"
-field. Refer to dump.c, functions create_header32(), create_header64(),
-and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
-"0").
-
-http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
-
-http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
-
-This works in most cases, because the guest Linux kernel indeed tends to
-be loaded at guest-phys address 0. However, when the guest Linux kernel
-is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
-then the guest Linux kernel is loaded at 16MB, thereby getting out of
-sync with the phys_base=0 setting visible in the KDUMP header.
-
-This trips up the "crash" utility.
-
-Dave worked around the issue in "crash" for ELF format dumps -- "crash"
-can identify QEMU as the originator of the vmcore by finding the QEMU
-notes in the ELF vmcore. If those are present, then "crash" employs a
-heuristic, probing for a phys_base up to 32MB, in 1MB steps.
-
-Alas, the QEMU notes are not present in the KDUMP-format vmcores that
-QEMU produces (they cannot be), hence crash has no way to tell apart
-such files from those generated by genuine kdump. As an end result,
-"crash" cannot automatically find the phys_base of OVMF-based Linux vmcores.
-
-Dave suggested that a new flag, or a special phys_base value (like ~0UL)
-be introduced as a distinguishing mark for QEMU-produced kdumps.
-
-Implementing this in QEMU wouldn't be hard. The big question is
-compatibility -- whose analysis tools would be broken by a (phys_base ==
-~0UL) setting, or by a new flag?
-
-Note that this change would affect SeaBIOS-based vmcores too. QEMU can't
-(and shouldn't) discriminate the vmcores it dumps based on guest
-firmware. (If QEMU did that, then it might as well try to figure out the
-real phys_base value, which is clearly out of scope for qemu. One of the
-selling points of the paging=false dump is that it doesn't involve
-parsing guest RAM.)
-
-Thanks
-Laszlo
+-- PMM
 
 _______________________________________________
 kexec mailing list
