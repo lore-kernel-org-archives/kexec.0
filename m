@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xog9K-00061r-JC
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 22:12:28 +0000
-Date: Wed, 12 Nov 2014 17:12:05 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-Message-ID: <20141112221205.GB5265@redhat.com>
-References: <20141112.154042.59640143160036130.d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20141112.154042.59640143160036130.d.hatayama@jp.fujitsu.com>
+Message-ID: <1415833605.5124.50.camel@kernel.crashing.org>
+Subject: Re: [PATCH V3] kexec: Add IND_FLAGS macro
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date: Thu, 13 Nov 2014 10:06:45 +1100
+In-Reply-To: <1415820588.15847.6.camel@smoke>
+References: <cover.1412640584.git.geoff@infradead.org>
+ <adf97d602657c72f6ee59aefe5d51149159a3e99.1412640584.git.geoff@infradead.org>
+ <20141007175248.GG27464@redhat.com> <1415820588.15847.6.camel@smoke>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +20,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, anderson@redhat.com, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
 
-On Wed, Nov 12, 2014 at 03:40:42PM +0900, HATAYAMA Daisuke wrote:
-> Currently, VMCOREINFO note information reports the virtual address of
-> phys_base that is assigned to symbol phys_base. But this doesn't make
-> sense because to refer to value of the phys_base, it's necessary to
-> get the value of phys_base itself we are now about to refer to.
+On Wed, 2014-11-12 at 11:29 -0800, Geoff Levand wrote:
+> Add a new kexec preprocessor macro IND_FLAGS, which is the bitwise OR of
+> all the possible kexec IND_ kimage_entry indirection flags.  Having this
+> macro allows for simplified code in the processing of the kexec
+> kimage_entry items.  Also, remove the local powerpc definition and use
+> the generic one.
 > 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+> Hi Ben,
+> 
+> Could you give your ack on this, then I'll try to get it
+> merged with my other kexec patches.
+> 
+> Thanks.
+> 
+> -Geoff
+> 
+>  arch/powerpc/kernel/machine_kexec_64.c | 2 --
+>  include/linux/kexec.h                  | 1 +
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
+> index 879b3aa..75652a32 100644
+> --- a/arch/powerpc/kernel/machine_kexec_64.c
+> +++ b/arch/powerpc/kernel/machine_kexec_64.c
+> @@ -96,8 +96,6 @@ int default_machine_kexec_prepare(struct kimage *image)
+>  	return 0;
+>  }
+>  
+> -#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+> -
+>  static void copy_segments(unsigned long ind)
+>  {
+>  	unsigned long entry;
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 25e039c..b23412c 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -10,6 +10,7 @@
+>  #define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
+>  #define IND_DONE         (1 << IND_DONE_BIT)
+>  #define IND_SOURCE       (1 << IND_SOURCE_BIT)
+> +#define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+>  
+>  #if !defined(__ASSEMBLY__)
+>  
 
-Hi Hatayama,
 
-/proc/vmcore ELF headers have virtual address information and using
-that you should be able to read actual value of phys_base. gdb deals
-with virtual addresses all the time and can read value of any symbol
-using those headers.
-
-So I am not sure what's the need for exporting actual value of
-phys_base.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
