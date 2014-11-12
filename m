@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.11.231])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XoZDe-0005yK-GN
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 14:48:29 +0000
-Message-ID: <54637322.5060101@codeaurora.org>
-Date: Wed, 12 Nov 2014 09:48:02 -0500
-From: Christopher Covington <cov@codeaurora.org>
+ id 1XoZG8-00011b-BU
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 14:51:01 +0000
+Message-ID: <546373B8.70103@redhat.com>
+Date: Wed, 12 Nov 2014 15:50:32 +0100
+From: Laszlo Ersek <lersek@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate
- from QEMU
-References: <5461F18C.2080400@redhat.com>	<54624710.6070306@codeaurora.org>	<20141112090554.6dc15b9f@hananiah.suse.cz>	<54635E0C.5090802@codeaurora.org>
- <20141112142601.58a4c214@hananiah.suse.cz> <54636A42.9020508@redhat.com>
-In-Reply-To: <54636A42.9020508@redhat.com>
+Subject: Re: uniquely identifying KDUMP files that originate from QEMU
+References: <5461F18C.2080400@redhat.com>	<20141111130913.11eec0a3@hananiah.suse.cz>	<20141112.120838.303682123986142686.d.hatayama@jp.fujitsu.com>
+ <20141112090441.3ee42632@hananiah.suse.cz>
+In-Reply-To: <20141112090441.3ee42632@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,78 +23,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laszlo Ersek <lersek@redhat.com>, Petr Tesarik <ptesarik@suse.cz>
-Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, crash-utility@redhat.com
+To: Petr Tesarik <ptesarik@suse.cz>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org
 
-Thanks Petr and Laszlo for entertaining my questions. I've got one last one if
-you have the time.
+On 11/12/14 09:04, Petr Tesarik wrote:
+> On Wed, 12 Nov 2014 12:08:38 +0900 (JST)
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-On 11/12/2014 09:10 AM, Laszlo Ersek wrote:
-> On 11/12/14 14:26, Petr Tesarik wrote:
->> On Wed, 12 Nov 2014 08:18:04 -0500
->> Christopher Covington <cov@codeaurora.org> wrote:
->>
->>> On 11/12/2014 03:05 AM, Petr Tesarik wrote:
->>>> On Tue, 11 Nov 2014 12:27:44 -0500
->>>> Christopher Covington <cov@codeaurora.org> wrote:
->>>>
->>>>> On 11/11/2014 06:22 AM, Laszlo Ersek wrote:
->>>>>> (Note: I'm not subscribed to either qemu-devel or the kexec list; please
->>>>>> keep me CC'd.)
->>>>>>
->>>>>> QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
->>>>>> kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
->>>>>>
->>>>>> The resultant vmcore is usually analyzed with the "crash" utility.
->>>>>>
->>>>>> The original tool producing such files is kdump. Unlike the procedure
->>>>>> performed by QEMU, kdump runs from *within* the guest (under a kexec'd
->>>>>> kdump kernel), and has more information about the original guest kernel
->>>>>> state (which is being dumped) than QEMU. To QEMU, the guest kernel state
->>>>>> is opaque.
->>>>>>
->>>>>> For this reason, the kdump preparation logic in QEMU hardcodes a number
->>>>>> of fields in the kdump header. The direct issue is the "phys_base"
->>>>>> field. Refer to dump.c, functions create_header32(), create_header64(),
->>>>>> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
->>>>>> "0").
->>>>>>
->>>>>> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
->>>>>>
->>>>>> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
->>>>>>
->>>>>> This works in most cases, because the guest Linux kernel indeed tends to
->>>>>> be loaded at guest-phys address 0. However, when the guest Linux kernel
->>>>>> is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
->>>>>> then the guest Linux kernel is loaded at 16MB, thereby getting out of
->>>>>> sync with the phys_base=0 setting visible in the KDUMP header.
->>>>>>
->>>>>> This trips up the "crash" utility.
->>>>>>
->>>>>> Dave worked around the issue in "crash" for ELF format dumps -- "crash"
->>>>>> can identify QEMU as the originator of the vmcore by finding the QEMU
->>>>>> notes in the ELF vmcore. If those are present, then "crash" employs a
->>>>>> heuristic, probing for a phys_base up to 32MB, in 1MB steps.
->>>>>
->>>>> What advantages does KDUMP have over ELF?
->>>>
->>>> It's smaller (data is compressed), and it contains a header with some
->>>> useful information (e.g. the crashed kernel's version and release).
+>> Anyway, phys_base is kernel information. To make it available for qemu
+>> side, there's need to prepare a mechanism for qemu to have any access
+>> to it.
 > 
-> Another advantage is that all zero-filled pages are represented in the
-> kdump file by one shared zero page.
-> 
-> The difference in speed of dumping is stunning.
+> Yes. I wonder if you can have access without some sort of co-operation
+> from the guest kernel itself. I guess not.
 
-Would you expect using SHT_NOBITS to give a similar speedup to the ELF dumper?
+Propagating any kind of additional information from the guest kernel
+(which is unprivileged and potentially malicious) to the host-side qemu
+process (which is by definition more privileged, although still confined
+by various measures) is something we'd explicitly like to avoid.
 
-Thanks,
-Chris
+Think of it like this. I throw a physical box at you, running Linux,
+that has frozen in time. Can "crash" work with nothing else but the
+contents of the memory, and information about the CPUs? It certainly
+can, it already does. It might need more heuristics than in when the
+guest kernel offers those bits of info on a plate, but those heuristics
+already work. We just need to tell "crash" that this particular box,
+flying in the air, has been launched by qemu, so that "crash" enable its
+heuristics.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks
+Laszlo
 
 _______________________________________________
 kexec mailing list
