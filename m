@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XofMC-00050D-8r
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 21:21:40 +0000
-Date: Wed, 12 Nov 2014 16:21:14 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1764963172.7408609.1415827274280.JavaMail.zimbra@redhat.com>
-In-Reply-To: <548583707.7386011.1415824908540.JavaMail.zimbra@redhat.com>
-References: <5461F18C.2080400@redhat.com>
- <20141111130913.11eec0a3@hananiah.suse.cz>
- <20141112.120838.303682123986142686.d.hatayama@jp.fujitsu.com>
- <20141112090441.3ee42632@hananiah.suse.cz> <546373B8.70103@redhat.com>
- <20141112194325.246ff381@hananiah.suse.cz> <5463C35C.2000103@redhat.com>
- <548583707.7386011.1415824908540.JavaMail.zimbra@redhat.com>
-Subject: Re: [Crash-utility] uniquely identifying KDUMP files that originate
- from QEMU
+ id 1Xog9K-00061r-JC
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 22:12:28 +0000
+Date: Wed, 12 Nov 2014 17:12:05 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+Message-ID: <20141112221205.GB5265@redhat.com>
+References: <20141112.154042.59640143160036130.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20141112.154042.59640143160036130.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,28 +23,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
-Cc: kexec@lists.infradead.org, tumanova@linux.vnet.ibm.com, Laszlo Ersek <lersek@redhat.com>, qemu-devel@nongnu.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, anderson@redhat.com, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
 
+On Wed, Nov 12, 2014 at 03:40:42PM +0900, HATAYAMA Daisuke wrote:
+> Currently, VMCOREINFO note information reports the virtual address of
+> phys_base that is assigned to symbol phys_base. But this doesn't make
+> sense because to refer to value of the phys_base, it's necessary to
+> get the value of phys_base itself we are now about to refer to.
+> 
 
+Hi Hatayama,
 
------ Original Message -----
+/proc/vmcore ELF headers have virtual address information and using
+that you should be able to read actual value of phys_base. gdb deals
+with virtual addresses all the time and can read value of any symbol
+using those headers.
 
-> > Can you fetch that in "crash"? If you can, then there's nothing to do on
-> > the qemu side (and I'll have to apologize for spamming a bunch of lists
-> > :/).
+So I am not sure what's the need for exporting actual value of
+phys_base.
 
-Well, let's be clear -- I was the one who put you up to it...
-
-But no apology is required -- and in fact, if today's discussion results in
-the "phys_base" vmcoreinfo issue being resolved in the kernel, we'll all be
-eternally grateful.
-
-Thanks again,
-  Dave
-
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
