@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XofLi-0004vu-Ne
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 21:21:11 +0000
-Date: Wed, 12 Nov 2014 22:20:47 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: uniquely identifying KDUMP files that originate from QEMU
-Message-ID: <20141112222047.3b76a80d@hananiah.suse.cz>
-In-Reply-To: <5463C35C.2000103@redhat.com>
+ id 1XofMC-00050D-8r
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 21:21:40 +0000
+Date: Wed, 12 Nov 2014 16:21:14 -0500 (EST)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1764963172.7408609.1415827274280.JavaMail.zimbra@redhat.com>
+In-Reply-To: <548583707.7386011.1415824908540.JavaMail.zimbra@redhat.com>
 References: <5461F18C.2080400@redhat.com>
  <20141111130913.11eec0a3@hananiah.suse.cz>
  <20141112.120838.303682123986142686.d.hatayama@jp.fujitsu.com>
- <20141112090441.3ee42632@hananiah.suse.cz>
- <546373B8.70103@redhat.com>
- <20141112194325.246ff381@hananiah.suse.cz>
- <5463C35C.2000103@redhat.com>
+ <20141112090441.3ee42632@hananiah.suse.cz> <546373B8.70103@redhat.com>
+ <20141112194325.246ff381@hananiah.suse.cz> <5463C35C.2000103@redhat.com>
+ <548583707.7386011.1415824908540.JavaMail.zimbra@redhat.com>
+Subject: Re: [Crash-utility] uniquely identifying KDUMP files that originate
+ from QEMU
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,46 +24,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laszlo Ersek <lersek@redhat.com>
-Cc: wency@cn.fujitsu.com, tumanova@linux.vnet.ibm.com, kexec@lists.infradead.org, qiaonuohan@cn.fujitsu.com, qemu-devel@nongnu.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, anderson@redhat.com, crash-utility@redhat.com
+To: "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
+Cc: kexec@lists.infradead.org, tumanova@linux.vnet.ibm.com, Laszlo Ersek <lersek@redhat.com>, qemu-devel@nongnu.org
 
-T24gV2VkLCAxMiBOb3YgMjAxNCAyMTozMDoyMCArMDEwMApMYXN6bG8gRXJzZWsgPGxlcnNla0By
-ZWRoYXQuY29tPiB3cm90ZToKCj4gYWRkaW5nIGJhY2sgYSBmZXcgQ0MncyBiZWNhdXNlIHRoaXMg
-ZGlzY3Vzc2lvbiBpcyB1c2VmdWwKPiAKPiBPbiAxMS8xMi8xNCAxOTo0MywgUGV0ciBUZXNhcmlr
-IHdyb3RlOgo+ID4gViBXZWQsIDEyIE5vdiAyMDE0IDE1OjUwOjMyICswMTAwCj4gPiBMYXN6bG8g
-RXJzZWsgPGxlcnNla0ByZWRoYXQuY29tPiBuYXBzw6FubzoKPiA+IAo+ID4+IE9uIDExLzEyLzE0
-IDA5OjA0LCBQZXRyIFRlc2FyaWsgd3JvdGU6Cj4gPj4+IE9uIFdlZCwgMTIgTm92IDIwMTQgMTI6
-MDg6MzggKzA5MDAgKEpTVCkKPiA+Pj4gSEFUQVlBTUEgRGFpc3VrZSA8ZC5oYXRheWFtYUBqcC5m
-dWppdHN1LmNvbT4gd3JvdGU6Cj4gPj4KPiA+Pj4+IEFueXdheSwgcGh5c19iYXNlIGlzIGtlcm5l
-bCBpbmZvcm1hdGlvbi4gVG8gbWFrZSBpdCBhdmFpbGFibGUgZm9yIHFlbXUKPiA+Pj4+IHNpZGUs
-IHRoZXJlJ3MgbmVlZCB0byBwcmVwYXJlIGEgbWVjaGFuaXNtIGZvciBxZW11IHRvIGhhdmUgYW55
-IGFjY2Vzcwo+ID4+Pj4gdG8gaXQuCj4gPj4+Cj4gPj4+IFllcy4gSSB3b25kZXIgaWYgeW91IGNh
-biBoYXZlIGFjY2VzcyB3aXRob3V0IHNvbWUgc29ydCBvZiBjby1vcGVyYXRpb24KPiA+Pj4gZnJv
-bSB0aGUgZ3Vlc3Qga2VybmVsIGl0c2VsZi4gSSBndWVzcyBub3QuCj4gPj4KPiA+PiBQcm9wYWdh
-dGluZyBhbnkga2luZCBvZiBhZGRpdGlvbmFsIGluZm9ybWF0aW9uIGZyb20gdGhlIGd1ZXN0IGtl
-cm5lbAo+ID4+ICh3aGljaCBpcyB1bnByaXZpbGVnZWQgYW5kIHBvdGVudGlhbGx5IG1hbGljaW91
-cykgdG8gdGhlIGhvc3Qtc2lkZSBxZW11Cj4gPj4gcHJvY2VzcyAod2hpY2ggaXMgYnkgZGVmaW5p
-dGlvbiBtb3JlIHByaXZpbGVnZWQsIGFsdGhvdWdoIHN0aWxsIGNvbmZpbmVkCj4gPj4gYnkgdmFy
-aW91cyBtZWFzdXJlcykgaXMgc29tZXRoaW5nIHdlJ2QgZXhwbGljaXRseSBsaWtlIHRvIGF2b2lk
-Lgo+ID4+Cj4gPj4gVGhpbmsgb2YgaXQgbGlrZSB0aGlzLiBJIHRocm93IGEgcGh5c2ljYWwgYm94
-IGF0IHlvdSwgcnVubmluZyBMaW51eCwKPiA+PiB0aGF0IGhhcyBmcm96ZW4gaW4gdGltZS4gQ2Fu
-ICJjcmFzaCIgd29yayB3aXRoIG5vdGhpbmcgZWxzZSBidXQgdGhlCj4gPj4gY29udGVudHMgb2Yg
-dGhlIG1lbW9yeSwgYW5kIGluZm9ybWF0aW9uIGFib3V0IHRoZSBDUFVzPwo+ID4gCj4gPiBJZiBv
-bmx5IHlvdSBjb3VsZCBzYXZlIHRoZSBfY29tcGxldGVfIHN0YXRlIG9mIHRoZSBDUFUuLi4gRm9y
-IGV4YW1wbGUKPiA+IHRoZSBjb250ZW50IG9mIENSMyB3b3VsZCBiZSBxdWl0ZSB1c2VmdWwuCj4g
-Cj4gKDEpIENSMyBpcyBhbHJlYWR5IHNhdmVkLCBpbiBib3RoIHRoZSBFTEYgYW5kIHRoZSBrZHVt
-cCBjb21wcmVzc2VkIGZvcm1hdHMuCgpTd2VldC4gOi0pCgpTbywgdGhlcmUncyBubyBuZWVkIGZv
-ciBhbnkgaGV1cmlzdGljcy4gU2luY2UgQ1IzIGdpdmVzIHRoZSBwaHlzaWNhbAphZGRyZXNzIG9m
-IHRoZSBQTUw0IHRhYmxlLCBJIGNhbiB1c2UgaXQgdG8gdHJhbnNsYXRlIF9fU1RBUlRfS0VSTkVM
-X21hcAooMHhmZmZmZmZmZjgwMDAwMDAwVUwgb24gYWxsIExpbnV4IGtlcm5lbHMgc2luY2UgaW50
-cm9kdWN0aW9uIG9mCng4Nl82NCkgdG8gYSBwaHlzaWNhbCBhZGRyZXNzIGFuZCBjb21wdXRlIHBo
-eXNfYmFzZSBmcm9tIHRoYXQuCgpJbiBmYWN0LCBRRU1VIGNvdWxkIGRvIHRoZSBzYW1lIGlmIHlv
-dSBjYW4gbGl2ZSB3aXRoIGhhcmRjb2RpbmcgYQpMaW51eC1rZXJuZWwgc3BlY2lmaWMgY29uc3Rh
-bnQgaW50byB0aGUgdG9vbC4uLgoKUGV0ciBUCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+
+
+----- Original Message -----
+
+> > Can you fetch that in "crash"? If you can, then there's nothing to do on
+> > the qemu side (and I'll have to apologize for spamming a bunch of lists
+> > :/).
+
+Well, let's be clear -- I was the one who put you up to it...
+
+But no apology is required -- and in fact, if today's discussion results in
+the "phys_base" vmcoreinfo issue being resolved in the kernel, we'll all be
+eternally grateful.
+
+Thanks again,
+  Dave
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
