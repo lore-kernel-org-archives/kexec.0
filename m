@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XofCD-0006hX-Iu
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 21:11:23 +0000
-Date: Wed, 12 Nov 2014 22:10:50 +0100
+ id 1XofLi-0004vu-Ne
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 21:21:11 +0000
+Date: Wed, 12 Nov 2014 22:20:47 +0100
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate
- from QEMU
-Message-ID: <20141112221050.47189fcd@hananiah.suse.cz>
-In-Reply-To: <5463803F.5020209@codeaurora.org>
-References: <5461F18C.2080400@redhat.com> <54624710.6070306@codeaurora.org>
- <20141112090554.6dc15b9f@hananiah.suse.cz>
- <54635E0C.5090802@codeaurora.org>
- <20141112142601.58a4c214@hananiah.suse.cz>
- <54636A42.9020508@redhat.com> <54637322.5060101@codeaurora.org>
- <546376AF.20801@redhat.com> <5463803F.5020209@codeaurora.org>
+Subject: Re: uniquely identifying KDUMP files that originate from QEMU
+Message-ID: <20141112222047.3b76a80d@hananiah.suse.cz>
+In-Reply-To: <5463C35C.2000103@redhat.com>
+References: <5461F18C.2080400@redhat.com>
+ <20141111130913.11eec0a3@hananiah.suse.cz>
+ <20141112.120838.303682123986142686.d.hatayama@jp.fujitsu.com>
+ <20141112090441.3ee42632@hananiah.suse.cz>
+ <546373B8.70103@redhat.com>
+ <20141112194325.246ff381@hananiah.suse.cz>
+ <5463C35C.2000103@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,115 +24,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christopher Covington <cov@codeaurora.org>
-Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, Laszlo Ersek <lersek@redhat.com>, crash-utility@redhat.com
+To: Laszlo Ersek <lersek@redhat.com>
+Cc: wency@cn.fujitsu.com, tumanova@linux.vnet.ibm.com, kexec@lists.infradead.org, qiaonuohan@cn.fujitsu.com, qemu-devel@nongnu.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, anderson@redhat.com, crash-utility@redhat.com
 
-On Wed, 12 Nov 2014 10:43:59 -0500
-Christopher Covington <cov@codeaurora.org> wrote:
-
-> On 11/12/2014 10:03 AM, Laszlo Ersek wrote:
-> > On 11/12/14 15:48, Christopher Covington wrote:
-> >> Thanks Petr and Laszlo for entertaining my questions. I've got one last one if
-> >> you have the time.
-> >>
-> >> On 11/12/2014 09:10 AM, Laszlo Ersek wrote:
-> >>> On 11/12/14 14:26, Petr Tesarik wrote:
-> >>>> On Wed, 12 Nov 2014 08:18:04 -0500
-> >>>> Christopher Covington <cov@codeaurora.org> wrote:
-> >>>>
-> >>>>> On 11/12/2014 03:05 AM, Petr Tesarik wrote:
-> >>>>>> On Tue, 11 Nov 2014 12:27:44 -0500
-> >>>>>> Christopher Covington <cov@codeaurora.org> wrote:
-> >>>>>>
-> >>>>>>> On 11/11/2014 06:22 AM, Laszlo Ersek wrote:
-> >>>>>>>> (Note: I'm not subscribed to either qemu-devel or the kexec list; please
-> >>>>>>>> keep me CC'd.)
-> >>>>>>>>
-> >>>>>>>> QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
-> >>>>>>>> kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
-> >>>>>>>>
-> >>>>>>>> The resultant vmcore is usually analyzed with the "crash" utility.
-> >>>>>>>>
-> >>>>>>>> The original tool producing such files is kdump. Unlike the procedure
-> >>>>>>>> performed by QEMU, kdump runs from *within* the guest (under a kexec'd
-> >>>>>>>> kdump kernel), and has more information about the original guest kernel
-> >>>>>>>> state (which is being dumped) than QEMU. To QEMU, the guest kernel state
-> >>>>>>>> is opaque.
-> >>>>>>>>
-> >>>>>>>> For this reason, the kdump preparation logic in QEMU hardcodes a number
-> >>>>>>>> of fields in the kdump header. The direct issue is the "phys_base"
-> >>>>>>>> field. Refer to dump.c, functions create_header32(), create_header64(),
-> >>>>>>>> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
-> >>>>>>>> "0").
-> >>>>>>>>
-> >>>>>>>> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
-> >>>>>>>>
-> >>>>>>>> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
-> >>>>>>>>
-> >>>>>>>> This works in most cases, because the guest Linux kernel indeed tends to
-> >>>>>>>> be loaded at guest-phys address 0. However, when the guest Linux kernel
-> >>>>>>>> is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
-> >>>>>>>> then the guest Linux kernel is loaded at 16MB, thereby getting out of
-> >>>>>>>> sync with the phys_base=0 setting visible in the KDUMP header.
-> >>>>>>>>
-> >>>>>>>> This trips up the "crash" utility.
-> >>>>>>>>
-> >>>>>>>> Dave worked around the issue in "crash" for ELF format dumps -- "crash"
-> >>>>>>>> can identify QEMU as the originator of the vmcore by finding the QEMU
-> >>>>>>>> notes in the ELF vmcore. If those are present, then "crash" employs a
-> >>>>>>>> heuristic, probing for a phys_base up to 32MB, in 1MB steps.
-> >>>>>>>
-> >>>>>>> What advantages does KDUMP have over ELF?
-> >>>>>>
-> >>>>>> It's smaller (data is compressed), and it contains a header with some
-> >>>>>> useful information (e.g. the crashed kernel's version and release).
-> >>>
-> >>> Another advantage is that all zero-filled pages are represented in the
-> >>> kdump file by one shared zero page.
-> >>>
-> >>> The difference in speed of dumping is stunning.
-> >>
-> >> Would you expect using SHT_NOBITS to give a similar speedup to the ELF dumper?
-> > 
-> > Sorry, I don't know what SHT_NOBITS is.
-> 
-> My newbie understanding is that SHT_NOBITS is the section type of the .bss
-> section in an everyday executable.
-
-Heh, yes and no. Let's clarify a few things.
-
-First, a Linux kernel dump (or a QEMU ELF dump) does not contain any
-sections. It only contains program headers. The reason is that program
-headers can specify both the virtual address and the physical address.
-BTW this feature is used to determine the physical base of the Linux
-kernel when dumping via kexec. Sections can only specify the virtual
-address. Of course, program headers can achieve an effect similar to
-SHT_NOBITS: by specifying a larger memory size than file size.
-
-Now, all this does not mean you can't create a new standard that uses
-sections instead (in fact, Xen DomU dumps already use ELF sections).
-But of course, this new standard won't be understood by the existing
-tools until somebody (you?) adds support for it. Same thing is true
-for the SHF_COMPRESSED section flag.
-
-Anyway, reuse of the zero page is a minor point. The main difference in
-speed comes from using a faster compression algorithm (LZO or snappy).
-Of course, nothing prevents you from using those algorithms in ELF
-compressed sections, but you'd have to extend the ELF standard first,
-adding magic numbers for these algorithms. To me it sounds like a long
-way to go.
-
-In short, there's no technical reason why ELF couldn't achieve results
-similar to KDUMP. It's "merely" not implemented, and for sure, I'm not
-going to push all the necessary changes. ;-)
-
-Petr T
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAxMiBOb3YgMjAxNCAyMTozMDoyMCArMDEwMApMYXN6bG8gRXJzZWsgPGxlcnNla0By
+ZWRoYXQuY29tPiB3cm90ZToKCj4gYWRkaW5nIGJhY2sgYSBmZXcgQ0MncyBiZWNhdXNlIHRoaXMg
+ZGlzY3Vzc2lvbiBpcyB1c2VmdWwKPiAKPiBPbiAxMS8xMi8xNCAxOTo0MywgUGV0ciBUZXNhcmlr
+IHdyb3RlOgo+ID4gViBXZWQsIDEyIE5vdiAyMDE0IDE1OjUwOjMyICswMTAwCj4gPiBMYXN6bG8g
+RXJzZWsgPGxlcnNla0ByZWRoYXQuY29tPiBuYXBzw6FubzoKPiA+IAo+ID4+IE9uIDExLzEyLzE0
+IDA5OjA0LCBQZXRyIFRlc2FyaWsgd3JvdGU6Cj4gPj4+IE9uIFdlZCwgMTIgTm92IDIwMTQgMTI6
+MDg6MzggKzA5MDAgKEpTVCkKPiA+Pj4gSEFUQVlBTUEgRGFpc3VrZSA8ZC5oYXRheWFtYUBqcC5m
+dWppdHN1LmNvbT4gd3JvdGU6Cj4gPj4KPiA+Pj4+IEFueXdheSwgcGh5c19iYXNlIGlzIGtlcm5l
+bCBpbmZvcm1hdGlvbi4gVG8gbWFrZSBpdCBhdmFpbGFibGUgZm9yIHFlbXUKPiA+Pj4+IHNpZGUs
+IHRoZXJlJ3MgbmVlZCB0byBwcmVwYXJlIGEgbWVjaGFuaXNtIGZvciBxZW11IHRvIGhhdmUgYW55
+IGFjY2Vzcwo+ID4+Pj4gdG8gaXQuCj4gPj4+Cj4gPj4+IFllcy4gSSB3b25kZXIgaWYgeW91IGNh
+biBoYXZlIGFjY2VzcyB3aXRob3V0IHNvbWUgc29ydCBvZiBjby1vcGVyYXRpb24KPiA+Pj4gZnJv
+bSB0aGUgZ3Vlc3Qga2VybmVsIGl0c2VsZi4gSSBndWVzcyBub3QuCj4gPj4KPiA+PiBQcm9wYWdh
+dGluZyBhbnkga2luZCBvZiBhZGRpdGlvbmFsIGluZm9ybWF0aW9uIGZyb20gdGhlIGd1ZXN0IGtl
+cm5lbAo+ID4+ICh3aGljaCBpcyB1bnByaXZpbGVnZWQgYW5kIHBvdGVudGlhbGx5IG1hbGljaW91
+cykgdG8gdGhlIGhvc3Qtc2lkZSBxZW11Cj4gPj4gcHJvY2VzcyAod2hpY2ggaXMgYnkgZGVmaW5p
+dGlvbiBtb3JlIHByaXZpbGVnZWQsIGFsdGhvdWdoIHN0aWxsIGNvbmZpbmVkCj4gPj4gYnkgdmFy
+aW91cyBtZWFzdXJlcykgaXMgc29tZXRoaW5nIHdlJ2QgZXhwbGljaXRseSBsaWtlIHRvIGF2b2lk
+Lgo+ID4+Cj4gPj4gVGhpbmsgb2YgaXQgbGlrZSB0aGlzLiBJIHRocm93IGEgcGh5c2ljYWwgYm94
+IGF0IHlvdSwgcnVubmluZyBMaW51eCwKPiA+PiB0aGF0IGhhcyBmcm96ZW4gaW4gdGltZS4gQ2Fu
+ICJjcmFzaCIgd29yayB3aXRoIG5vdGhpbmcgZWxzZSBidXQgdGhlCj4gPj4gY29udGVudHMgb2Yg
+dGhlIG1lbW9yeSwgYW5kIGluZm9ybWF0aW9uIGFib3V0IHRoZSBDUFVzPwo+ID4gCj4gPiBJZiBv
+bmx5IHlvdSBjb3VsZCBzYXZlIHRoZSBfY29tcGxldGVfIHN0YXRlIG9mIHRoZSBDUFUuLi4gRm9y
+IGV4YW1wbGUKPiA+IHRoZSBjb250ZW50IG9mIENSMyB3b3VsZCBiZSBxdWl0ZSB1c2VmdWwuCj4g
+Cj4gKDEpIENSMyBpcyBhbHJlYWR5IHNhdmVkLCBpbiBib3RoIHRoZSBFTEYgYW5kIHRoZSBrZHVt
+cCBjb21wcmVzc2VkIGZvcm1hdHMuCgpTd2VldC4gOi0pCgpTbywgdGhlcmUncyBubyBuZWVkIGZv
+ciBhbnkgaGV1cmlzdGljcy4gU2luY2UgQ1IzIGdpdmVzIHRoZSBwaHlzaWNhbAphZGRyZXNzIG9m
+IHRoZSBQTUw0IHRhYmxlLCBJIGNhbiB1c2UgaXQgdG8gdHJhbnNsYXRlIF9fU1RBUlRfS0VSTkVM
+X21hcAooMHhmZmZmZmZmZjgwMDAwMDAwVUwgb24gYWxsIExpbnV4IGtlcm5lbHMgc2luY2UgaW50
+cm9kdWN0aW9uIG9mCng4Nl82NCkgdG8gYSBwaHlzaWNhbCBhZGRyZXNzIGFuZCBjb21wdXRlIHBo
+eXNfYmFzZSBmcm9tIHRoYXQuCgpJbiBmYWN0LCBRRU1VIGNvdWxkIGRvIHRoZSBzYW1lIGlmIHlv
+dSBjYW4gbGl2ZSB3aXRoIGhhcmRjb2RpbmcgYQpMaW51eC1rZXJuZWwgc3BlY2lmaWMgY29uc3Rh
+bnQgaW50byB0aGUgdG9vbC4uLgoKUGV0ciBUCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
