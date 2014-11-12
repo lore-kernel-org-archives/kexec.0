@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XoTMn-0002mb-H3
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 08:33:30 +0000
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sAC8WrlE018825
- for <kexec@lists.infradead.org>; Wed, 12 Nov 2014 16:32:53 +0800
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH] makedumpfile: Add description of incomplete dump file
-Date: Wed, 12 Nov 2014 16:29:49 +0800
-Message-ID: <1415780989-10652-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Date: Wed, 12 Nov 2014 17:56:27 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
+Message-ID: <20141112095627.GA2138@darkstar.nay.redhat.com>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
+ <20141106152830.GF23706@leverpostej>
+ <CAFdej01wki9btKiDj7TW8_frtZFLVMjsyS5LsZWqO7E+dC+D+w@mail.gmail.com>
+ <20141110071752.GC6960@darkstar.nay.redhat.com>
+ <CAFdej03v3M=jtTEVv7rxe8z_h_apUKNzq7GcUSLwZtQ5DSnxkg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAFdej03v3M=jtTEVv7rxe8z_h_apUKNzq7GcUSLwZtQ5DSnxkg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,104 +24,232 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Arun Chandran <achandran@mvista.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Christoffer Dall <christoffer.dall@linaro.org>
 
-Add description of incomplete elf and kdump-compressed dump file
-in IMPLEMENTATION.
+Hi, Arun
 
-Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
-Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
----
- IMPLEMENTATION |   76 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 76 insertions(+), 0 deletions(-)
+On 11/10/14 at 02:05pm, Arun Chandran wrote:
+> Hi dave,
+> 
+> On Mon, Nov 10, 2014 at 12:47 PM, Dave Young <dyoung@redhat.com> wrote:
+> > On 11/06/14 at 09:43pm, Arun Chandran wrote:
+> >> On Thu, Nov 6, 2014 at 8:58 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> >> > On Thu, Nov 06, 2014 at 12:16:12PM +0000, Arun Chandran wrote:
+> >> >> Hi Geoff,
+> >> >>
+> >> >> I am trying this on my hardware (apm-mustang.dtb)
+> >> >>
+> >> >> On Fri, Oct 24, 2014 at 4:40 AM, Geoff Levand <geoff@infradead.org> wrote:
+> >> >> > Hi All,
+> >> >> >
+> >> >> > This series adds the core support for kexec re-boots on arm64.  I have tested
+> >> >> > with the ARM VE fast model, the ARM Base model and the ARM Foundation
+> >> >> > model with various kernel config options for both the first and second stage
+> >> >> > kernels.
+> >> >> >
+> >> >> > To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+> >> >> > kexec-tools [2], which have not yet been merged upstream, are needed.
+> >> >> >
+> >> >> > Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
+> >> >> > routine the ability to switch exception levels from EL1 to EL2 for kernels that
+> >> >> > were entered in EL2.
+> >> >> >
+> >> >> > Patches 5 and 6 convert the use of device tree /memreserve/ to device tree
+> >> >> > reserved-memory nodes.
+> >> >> >
+> >> >> > Patch 7 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
+> >> >> > dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+> >> >> > routine.
+> >> >> >
+> >> >> > Patches 8-10 add the actual kexec support.
+> >> >> >
+> >> >> > Please consider all patches for inclusion.  Any comments or suggestions on how
+> >> >> > to improve are welcome.
+> >> >> >
+> >> >> > [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
+> >> >> > [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+> >> >> >
+> >> >> > Several things are known to have problems on kexec re-boot:
+> >> >> >
+> >> >> > spin-table
+> >> >> > ----------
+> >> >> >
+> >> >> > PROBLEM: The spin-table enable method does not implement all the methods needed
+> >> >> > for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
+> >> >> >
+> >> >> > WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
+> >> >> > support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
+> >> >> > on the first stage kernel command line.
+> >> >>
+> >> >> I have CONFIG_SMP=n
+> >> >>
+> >> >> >
+> >> >> > FIX: Upgrade system firmware to provide PSCI enable method support.
+> >> >> >
+> >> >> > KVM
+> >> >> > ---
+> >> >> >
+> >> >> > PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
+> >> >> > resources on shutdown, so the first stage kernel cannot be shutdown properly.
+> >> >> >
+> >> >> > WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
+> >> >>
+> >> >> KVM also disabled.
+> >> >>
+> >> >> /root@genericarmv8:~# usr/local/sbin/kexec --lite -l vmlinux
+> >> >> --dtb=apm-mustang.dtb --command-line=
+> >> >> "root=/dev/nfs rw
+> >> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+> >> >>  ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+> >> >> earlyprintk=uart8250-32bit,0x1c020000"
+> >> >>
+> >> >> kexec version: 14.10.21.16.36-ga38e0a6
+> >> >> arch_process_options:85: command_line: root=/dev/nfs rw
+> >> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+> >> >> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+> >> >> earlyprintk=uart8250-32bit,0x1
+> >> >> c020000
+> >> >> arch_process_options:87: initrd: (null)
+> >> >> arch_process_options:88: dtb: apm-mustang.dtb
+> >> >> arch_process_options:89: lite: 1
+> >> >> kernel: 0x7f756e7010 kernel_size: 0x488a308
+> >> >> Modified cmdline: root=/dev/nfs
+> >> >> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
+> >> >> from purgatory is diabled
+> >> >> get_memory_ranges_dt:638: node_1516 memory
+> >> >> get_memory_ranges_dt:664:  RAM: 0000004000000000 - 0000004400000000
+> >> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+> >> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+> >> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
+> >> >> get_memory_ranges_dt:678: Success
+> >> >> elf_arm64_load: PE format: yes
+> >> >> p_vaddr: ffffffc000080000
+> >> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
+> >> >> add_segment_phys_virt: 0000007f756f7010 - 0000007f75d3cf70 (00645f60)
+> >> >> -> 0000004000080000 - 00000040006fb000 (0067b000)
+> >> >> elf_arm64_load: text_offset: 0000000000080000
+> >> >> elf_arm64_load: image_size:  000000000067f000
+> >> >> elf_arm64_load: page_offset: ffffffc000000000
+> >> >> elf_arm64_load: memstart:    0000004000000000
+> >> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
+> >> >> elf_arm64_load: e_entry:     ffffffc000080000 -> 0000004000080000
+> >> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
+> >> >> Modified cmdline:root=/dev/nfs rw
+> >> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+> >> >> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+> >> >> earlyprintk=uart8250-32bit,0x1c020000
+> >> >> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
+> >> >> from purgatory is diabled
+> >> >> read_cpu_info: dtb_1 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_1 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_1 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_1 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_1 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_1 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_1 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_1 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> read_cpu_info: dtb_2 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
+> >> >> cpu-release-addr 400000fff8
+> >> >> check_cpu_properties: hwid-0: OK
+> >> >> check_cpu_properties: hwid-1: OK
+> >> >> check_cpu_properties: hwid-100: OK
+> >> >> check_cpu_properties: hwid-101: OK
+> >> >> check_cpu_properties: hwid-200: OK
+> >> >> check_cpu_properties: hwid-201: OK
+> >> >> check_cpu_properties: hwid-300: OK
+> >> >> check_cpu_properties: hwid-301: OK
+> >> >> dtb:    base 4000700000, size 221ch (8732)
+> >> >> add_segment_phys_virt: 0000000024c14c90 - 0000000024c16eac (0000221c)
+> >> >> -> 0000004000700000 - 0000004000703000 (00003000)
+> >> >> kexec_load: entry = 0x4000080000 flags = 0xb70000
+> >> >> nr_segments = 2
+> >> >> segment[0].buf   = 0x7f756f7010
+> >> >> segment[0].bufsz = 0x645f60
+> >> >> segment[0].mem   = 0x4000080000
+> >> >> segment[0].memsz = 0x67b000
+> >> >> segment[1].buf   = 0x24c14c90
+> >> >> segment[1].bufsz = 0x221c
+> >> >> segment[1].mem   = 0x4000700000
+> >> >> segment[1].memsz = 0x3000
+> >> >>
+> >> >> root@genericarmv8:~# /usr/local/sbin/kexec --lite -e
+> >> >> kexec version: 14.10.21.16.36-ga38e0a6
+> >> >> arch_process_options:85: command_line: (null)
+> >> >> arch_process_options:87: initrd: (null)
+> >> >> arch_process_options:88: dtb: (null)
+> >> >> arch_process_options:89: lite: 1
+> >> >> sd 0:0:0:0: [sda] Synchronizing SCSI cache
+> >> >> kexec: Starting new kernel
+> >> >> Bye!
+> >> >>
+> >> >> It fails to come up.  In debugger I can see
+> >> >>
+> >> >>     Core number       : 0
+> >> >>     Core state        : debug (AArch64 EL1)
+> >> >>     Debug entry cause : External Debug Request
+> >> >>     Current PC        : 0xffffffc000083200
+> >> >
+> >> > That's a kernel virtual address, and it looks to be somewhere early in
+> >> > the boot path, given it's close to PAGE_OFFSET + TEXT_OFFSET.
+> >> >
+> >> Yes. My earlyconsole setting was wrong that is why I did not see
+> >> anything in console for the kexec rebooting.
+> >>
+> >> With correct earlycon setting I can see
+> >
+> > Arun, could you share how did you get the working earlycon? We might have
+> > same problem..
+> 
+> I invoked kexec like this
+> 
+>  root@genericarmv8:~# ./usr/local/sbin/kexec --lite -l vmlinux --command-line=
+> "root=/dev/nfs rw
+> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
+> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
+> earlycon=uart8250,mmio32,0x1c020000"
+> 
+> 
+> Earlier my command line parameters for earlycon was wrong hence I was
+> not getting
+> earlyconsole.
+> 
+> Also have a look at
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/300584.html
+> 
+> If your board has an L3 cache; you may have to apply the modification in the
+> above link.
 
-diff --git a/IMPLEMENTATION b/IMPLEMENTATION
-index 2f4cfd6..8f8a945 100644
---- a/IMPLEMENTATION
-+++ b/IMPLEMENTATION
-@@ -112,3 +112,79 @@
-         unsigned long long      page_flags;     /* page flags */
-     } page_desc_t;
- 
-+* The incomplete DUMPFILE
-+  When generating DUMPFILE, if ENOSPACE error happens, the DUMPFILE will be
-+  incomplete.
-+
-+  - The incomplete kdump-compressed DUMPFILE
-+
-+           the complete                  the incomplete
-+    +-----------------------+    +-----------------------+
-+    |      main header      |    |      main header      |  have incomplete flag
-+    |-----------------------+    |-----------------------+
-+    |      sub header       |    |      sub header       |
-+    |-----------------------+    |-----------------------+
-+    |      1st-bitmap       |    |      1st-bitmap       |
-+    |-----------------------+    |-----------------------+
-+    |      2nd-bitmap       |    |      2nd-bitmap       |
-+    |-----------------------+    |-----------------------+
-+    | page header for pfn 0 |    | page header for pfn 0 |
-+    | page header for pfn 1 |    | page header for pfn 1 |
-+    |                  :    |    |                  :    |
-+    | page header for pfn N |    | page header for pfn N |  The page headers after
-+    |                  :    |    |                       |  N don't exist. The
-+    | page header for pfn Z |    |                       |  value of it is zero,
-+    |-----------------------|    |-----------------------|  when try to read it.
-+    |   page data (pfn 0)   |    |   page data (pfn 0)   |
-+    |   page data (pfn 1)   |    |   page data (pfn 1)   |
-+    |                  :    |    |                  :    |
-+    |   page data (pfn N)   |    |   page data (pfn N)   |
-+    |                  :    |    +-----------------------+
-+    |   page data (pfn Z)   |
-+    +-----------------------+
-+
-+    The incomplete flag is set into status of disk_dump_header by
-+                          status |= DUMP_DH_COMPRESSED_INCOMPLETE
-+    DUMP_DH_COMPRESSED_INCOMPLETE : 0x8
-+
-+    The page header and page data are written in pairs. When writting page data
-+    (pfn N+1), if ENOSPACE error happens, the page headers after N won't be
-+    written either.
-+
-+    If there is no page data dumped into the DUMPFILE, the DUMPFILE can't be
-+    analysed by crash.
-+
-+  - The incomplete elf DUMPFILE
-+
-+      the complete          the incomplete
-+    +-------------+         +-------------+
-+    |  elf header |         |  elf header |  have incomplete flag
-+    |-------------+         |-------------+
-+    |  PT_NOTE    |         |  PT_NOTE    |
-+    |  PT_LOAD(1) |         |  PT_LOAD(1) |
-+    |         :   |         |         :   |
-+    |  PT_LOAD(N) |         |  PT_LOAD(N) |  The PT_LOAD after N don't exist.
-+    |         :   |         |             |  The value of it is zero, when try
-+    |  PT_LOAD(Z) |         |             |  to read it.
-+    |-------------+         |-------------+
-+    |  sec_hdr    |         |  sec_hdr    |
-+    |-------------+         |-------------+
-+    |  elf note   |         |  elf note   |
-+    |-------------+         |-------------+
-+    |  segment(1) |         |  segment(1) |
-+    |          :  |         |          :  |
-+    |  segment(N) |         |  segment(N) |  The segment(N) is incomplete.
-+    |          :  |         +-------------+  The segments after N don't exist.
-+    |  segment(Z) |
-+    +-------------+
-+
-+    The incomplete flag is set into e_flags of elf_header by
-+                              e_flags |= DUMP_ELF_INCOMPLETE
-+    DUMP_ELF_INCOMPLETE : 0x1
-+
-+    The PT_LOAD and segment are written in pairs. When writting segment(N)
-+    , if ENOSPACE error happens, the PT_LOAD after N won't be written
-+    either.
-+
-+    If there is no segment dumped into the DUMPFILE, the DUMPFILE can't be
-+    analysed by crash.
--- 
-1.7.1
+Tested with CONFIG_KVM=n + maxcpus=1, I got a working earlycon with exact same
+cmdline as what you are using.
 
+But I got some panic which is caused by uefi init, I will try Ard's uefi stable
+mapping patchset. (Ccing him)
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
