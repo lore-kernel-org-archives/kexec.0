@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 12 Nov 2014 17:56:27 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
-Message-ID: <20141112095627.GA2138@darkstar.nay.redhat.com>
-References: <cover.1414099246.git.geoff@infradead.org>
- <CAFdej01qZMr3CgBv6jOuXHod2F8zHg89yDA8FA4m65bFEn+vYw@mail.gmail.com>
- <20141106152830.GF23706@leverpostej>
- <CAFdej01wki9btKiDj7TW8_frtZFLVMjsyS5LsZWqO7E+dC+D+w@mail.gmail.com>
- <20141110071752.GC6960@darkstar.nay.redhat.com>
- <CAFdej03v3M=jtTEVv7rxe8z_h_apUKNzq7GcUSLwZtQ5DSnxkg@mail.gmail.com>
+Date: Wed, 12 Nov 2014 19:28:32 +0800
+From: Minfei Huang <mhuang@redhat.com>
+Subject: Re: [PATCH 1/1] x86/iommu: fix incorrect bit operations in setting
+ values
+Message-ID: <20141112112832.GA3334@dhcp-17-108.nay.redhat.com>
+References: <1415172619-4801-1-git-send-email-zhen-hual@hp.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAFdej03v3M=jtTEVv7rxe8z_h_apUKNzq7GcUSLwZtQ5DSnxkg@mail.gmail.com>
+In-Reply-To: <1415172619-4801-1-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,232 +20,110 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arun Chandran <achandran@mvista.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Christoffer Dall <christoffer.dall@linaro.org>
+To: "Li, Zhen-Hua" <zhen-hual@hp.com>
+Cc: kexec@lists.infradead.org, joro@8bytes.org, dwmw2@infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
 
-Hi, Arun
+The kdump starts 2nd kernel without any error message when I use
+3.18.0-rc4 merged last 6 patchs. The following is the message which 2nd
+kernel prints during booting.
 
-On 11/10/14 at 02:05pm, Arun Chandran wrote:
-> Hi dave,
-> 
-> On Mon, Nov 10, 2014 at 12:47 PM, Dave Young <dyoung@redhat.com> wrote:
-> > On 11/06/14 at 09:43pm, Arun Chandran wrote:
-> >> On Thu, Nov 6, 2014 at 8:58 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> > On Thu, Nov 06, 2014 at 12:16:12PM +0000, Arun Chandran wrote:
-> >> >> Hi Geoff,
-> >> >>
-> >> >> I am trying this on my hardware (apm-mustang.dtb)
-> >> >>
-> >> >> On Fri, Oct 24, 2014 at 4:40 AM, Geoff Levand <geoff@infradead.org> wrote:
-> >> >> > Hi All,
-> >> >> >
-> >> >> > This series adds the core support for kexec re-boots on arm64.  I have tested
-> >> >> > with the ARM VE fast model, the ARM Base model and the ARM Foundation
-> >> >> > model with various kernel config options for both the first and second stage
-> >> >> > kernels.
-> >> >> >
-> >> >> > To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
-> >> >> > kexec-tools [2], which have not yet been merged upstream, are needed.
-> >> >> >
-> >> >> > Patches 1-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
-> >> >> > routine the ability to switch exception levels from EL1 to EL2 for kernels that
-> >> >> > were entered in EL2.
-> >> >> >
-> >> >> > Patches 5 and 6 convert the use of device tree /memreserve/ to device tree
-> >> >> > reserved-memory nodes.
-> >> >> >
-> >> >> > Patch 7 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
-> >> >> > dcache_line_size macro it defines can be uesd by kexec's relocate kernel
-> >> >> > routine.
-> >> >> >
-> >> >> > Patches 8-10 add the actual kexec support.
-> >> >> >
-> >> >> > Please consider all patches for inclusion.  Any comments or suggestions on how
-> >> >> > to improve are welcome.
-> >> >> >
-> >> >> > [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
-> >> >> > [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
-> >> >> >
-> >> >> > Several things are known to have problems on kexec re-boot:
-> >> >> >
-> >> >> > spin-table
-> >> >> > ----------
-> >> >> >
-> >> >> > PROBLEM: The spin-table enable method does not implement all the methods needed
-> >> >> > for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
-> >> >> >
-> >> >> > WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
-> >> >> > support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
-> >> >> > on the first stage kernel command line.
-> >> >>
-> >> >> I have CONFIG_SMP=n
-> >> >>
-> >> >> >
-> >> >> > FIX: Upgrade system firmware to provide PSCI enable method support.
-> >> >> >
-> >> >> > KVM
-> >> >> > ---
-> >> >> >
-> >> >> > PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
-> >> >> > resources on shutdown, so the first stage kernel cannot be shutdown properly.
-> >> >> >
-> >> >> > WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
-> >> >>
-> >> >> KVM also disabled.
-> >> >>
-> >> >> /root@genericarmv8:~# usr/local/sbin/kexec --lite -l vmlinux
-> >> >> --dtb=apm-mustang.dtb --command-line=
-> >> >> "root=/dev/nfs rw
-> >> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
-> >> >>  ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-> >> >> earlyprintk=uart8250-32bit,0x1c020000"
-> >> >>
-> >> >> kexec version: 14.10.21.16.36-ga38e0a6
-> >> >> arch_process_options:85: command_line: root=/dev/nfs rw
-> >> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
-> >> >> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-> >> >> earlyprintk=uart8250-32bit,0x1
-> >> >> c020000
-> >> >> arch_process_options:87: initrd: (null)
-> >> >> arch_process_options:88: dtb: apm-mustang.dtb
-> >> >> arch_process_options:89: lite: 1
-> >> >> kernel: 0x7f756e7010 kernel_size: 0x488a308
-> >> >> Modified cmdline: root=/dev/nfs
-> >> >> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
-> >> >> from purgatory is diabled
-> >> >> get_memory_ranges_dt:638: node_1516 memory
-> >> >> get_memory_ranges_dt:664:  RAM: 0000004000000000 - 0000004400000000
-> >> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
-> >> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
-> >> >> get_memory_ranges_dt:659: SKIP: 0000000000000000 - 0000000000000000
-> >> >> get_memory_ranges_dt:678: Success
-> >> >> elf_arm64_load: PE format: yes
-> >> >> p_vaddr: ffffffc000080000
-> >> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
-> >> >> add_segment_phys_virt: 0000007f756f7010 - 0000007f75d3cf70 (00645f60)
-> >> >> -> 0000004000080000 - 00000040006fb000 (0067b000)
-> >> >> elf_arm64_load: text_offset: 0000000000080000
-> >> >> elf_arm64_load: image_size:  000000000067f000
-> >> >> elf_arm64_load: page_offset: ffffffc000000000
-> >> >> elf_arm64_load: memstart:    0000004000000000
-> >> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
-> >> >> elf_arm64_load: e_entry:     ffffffc000080000 -> 0000004000080000
-> >> >> virt_to_phys: ffffffc000080000 -> 0000004000080000
-> >> >> Modified cmdline:root=/dev/nfs rw
-> >> >> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
-> >> >> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-> >> >> earlyprintk=uart8250-32bit,0x1c020000
-> >> >> Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
-> >> >> from purgatory is diabled
-> >> >> read_cpu_info: dtb_1 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_1 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_1 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_1 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_1 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_1 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_1 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_1 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-0 (/cpus/cpu@000): hwid-0, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-1 (/cpus/cpu@001): hwid-1, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-2 (/cpus/cpu@100): hwid-100, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-3 (/cpus/cpu@101): hwid-101, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-4 (/cpus/cpu@200): hwid-200, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-5 (/cpus/cpu@201): hwid-201, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-6 (/cpus/cpu@300): hwid-300, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> read_cpu_info: dtb_2 cpu-7 (/cpus/cpu@301): hwid-301, 'spin-table',
-> >> >> cpu-release-addr 400000fff8
-> >> >> check_cpu_properties: hwid-0: OK
-> >> >> check_cpu_properties: hwid-1: OK
-> >> >> check_cpu_properties: hwid-100: OK
-> >> >> check_cpu_properties: hwid-101: OK
-> >> >> check_cpu_properties: hwid-200: OK
-> >> >> check_cpu_properties: hwid-201: OK
-> >> >> check_cpu_properties: hwid-300: OK
-> >> >> check_cpu_properties: hwid-301: OK
-> >> >> dtb:    base 4000700000, size 221ch (8732)
-> >> >> add_segment_phys_virt: 0000000024c14c90 - 0000000024c16eac (0000221c)
-> >> >> -> 0000004000700000 - 0000004000703000 (00003000)
-> >> >> kexec_load: entry = 0x4000080000 flags = 0xb70000
-> >> >> nr_segments = 2
-> >> >> segment[0].buf   = 0x7f756f7010
-> >> >> segment[0].bufsz = 0x645f60
-> >> >> segment[0].mem   = 0x4000080000
-> >> >> segment[0].memsz = 0x67b000
-> >> >> segment[1].buf   = 0x24c14c90
-> >> >> segment[1].bufsz = 0x221c
-> >> >> segment[1].mem   = 0x4000700000
-> >> >> segment[1].memsz = 0x3000
-> >> >>
-> >> >> root@genericarmv8:~# /usr/local/sbin/kexec --lite -e
-> >> >> kexec version: 14.10.21.16.36-ga38e0a6
-> >> >> arch_process_options:85: command_line: (null)
-> >> >> arch_process_options:87: initrd: (null)
-> >> >> arch_process_options:88: dtb: (null)
-> >> >> arch_process_options:89: lite: 1
-> >> >> sd 0:0:0:0: [sda] Synchronizing SCSI cache
-> >> >> kexec: Starting new kernel
-> >> >> Bye!
-> >> >>
-> >> >> It fails to come up.  In debugger I can see
-> >> >>
-> >> >>     Core number       : 0
-> >> >>     Core state        : debug (AArch64 EL1)
-> >> >>     Debug entry cause : External Debug Request
-> >> >>     Current PC        : 0xffffffc000083200
-> >> >
-> >> > That's a kernel virtual address, and it looks to be somewhere early in
-> >> > the boot path, given it's close to PAGE_OFFSET + TEXT_OFFSET.
-> >> >
-> >> Yes. My earlyconsole setting was wrong that is why I did not see
-> >> anything in console for the kexec rebooting.
-> >>
-> >> With correct earlycon setting I can see
-> >
-> > Arun, could you share how did you get the working earlycon? We might have
-> > same problem..
-> 
-> I invoked kexec like this
-> 
->  root@genericarmv8:~# ./usr/local/sbin/kexec --lite -l vmlinux --command-line=
-> "root=/dev/nfs rw
-> nfsroot=10.162.103.145:/nfs_root/linaro-image-lamp-genericarmv8,nfsvers=3
-> ip=:::::eth0:dhcp panic=1 console=ttyS0,115200
-> earlycon=uart8250,mmio32,0x1c020000"
-> 
-> 
-> Earlier my command line parameters for earlycon was wrong hence I was
-> not getting
-> earlyconsole.
-> 
-> Also have a look at
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/300584.html
-> 
-> If your board has an L3 cache; you may have to apply the modification in the
-> above link.
+Patchset:
+	0001-iommu-vt-d-Update-iommu_attach_domain-and-its-caller.patch
+	0002-iommu-vt-d-Items-required-for-kdump.patch
+	0003-iommu-vt-d-data-types-and-functions-used-for-kdump.patch
+	0004-iommu-vt-d-Add-domain-id-functions.patch
+	0005-iommu-vt-d-enable-kdump-support-in-iommu-module.patch
+	0006-x86-iommu-fix-incorrect-bit-operations-in-setting-va.patch
 
-Tested with CONFIG_KVM=n + maxcpus=1, I got a working earlycon with exact same
-cmdline as what you are using.
+log:
+[    1.689604] IOMMU intel_iommu_in_crashdump = true
+[    1.694310] IOMMU Skip disabling iommu hardware translations
+[    1.699987] DMAR: No ATSR found
+[    1.703151] IOMMU Copying translate tables from panicked kernel
+[    1.710786] IOMMU: root_new_virt:0xffff8800296ec000 phys:0x0000296ec000
+[    1.717401] IOMMU:0 Domain ids from panicked kernel:
+[    1.722364] DID did:13(0x000d)
+[    1.725424] DID did:12(0x000c)
+[    1.728482] DID did:11(0x000b)
+[    1.731542] DID did:10(0x000a)
+[    1.734603] DID did:6(0x0006)
+[    1.737574] DID did:7(0x0007)
+[    1.740549] DID did:5(0x0005)
+[    1.743522] DID did:9(0x0009)
+[    1.746495] DID did:8(0x0008)
+[    1.749467] DID did:4(0x0004)
+[    1.752439] DID did:3(0x0003)
+[    1.755413] DID did:2(0x0002)
+[    1.758385] DID did:0(0x0000)
+[    1.761357] DID did:1(0x0001)
+[    1.764331] ----------------------------------------
+[    1.769302] IOMMU 0 0xfed50000: using Queued invalidation
 
-But I got some panic which is caused by uefi init, I will try Ard's uefi stable
-mapping patchset. (Ccing him)
-
-Thanks
-Dave
+On 11/05/14 at 03:30pm, Li, Zhen-Hua wrote:
+> The function context_set_address_root() and set_root_value are setting new
+> address in a wrong way, and this patch is trying to fix this problem.
+> 
+> According to Intel Vt-d specs(Feb 2011, Revision 1.3), Chapter 9.1 and 9.2,
+> field ctp in root entry is using bits 12:63, field asr in context entry is
+> using bits 12:63.
+> 
+> To set these fields, the following functions are used:
+> static inline void context_set_address_root(struct context_entry *context,
+>         unsigned long value);
+> and
+> static inline void set_root_value(struct root_entry *root, unsigned long value)
+> 
+> But they are using an invalid method to set these fields, in current code, only
+> a '|' operator is used to set it. This will not set the asr to the expected
+> value if it has an old value.
+> 
+> For example:
+> Before calling this function,
+> 	context->lo = 0x3456789012111;
+> 	value = 0x123456789abcef12;
+> 
+> After we call context_set_address_root(context, value), expected result is
+> 	context->lo == 0x123456789abce111;
+> 
+> But the actual result is:
+> 	context->lo == 0x1237577f9bbde111;
+> 
+> So we need to clear bits 12:63 before setting the new value, this will fix
+> this problem.
+> 
+> Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index a27d6cb..11ac47b 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -195,6 +195,7 @@ static inline void set_root_present(struct root_entry *root)
+>  }
+>  static inline void set_root_value(struct root_entry *root, unsigned long value)
+>  {
+> +	root->val &= ~VTD_PAGE_MASK;
+>  	root->val |= value & VTD_PAGE_MASK;
+>  }
+>  
+> @@ -247,6 +248,7 @@ static inline void context_set_translation_type(struct context_entry *context,
+>  static inline void context_set_address_root(struct context_entry *context,
+>  					    unsigned long value)
+>  {
+> +	context->lo &= ~VTD_PAGE_MASK;
+>  	context->lo |= value & VTD_PAGE_MASK;
+>  }
+>  
+> -- 
+> 2.0.0-rc0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
 _______________________________________________
 kexec mailing list
