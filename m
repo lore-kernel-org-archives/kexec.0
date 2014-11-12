@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp.codeaurora.org ([198.145.11.231])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XoWgY-0000r1-Go
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 12:06:07 +0000
-Date: Wed, 12 Nov 2014 20:05:35 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH] makedumpfile: Fix the variable pfn_needed leaking
-Message-ID: <20141112120535.GB3334@dhcp-17-108.nay.redhat.com>
-References: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
+ id 1XoXoa-0005bQ-3P
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 13:18:29 +0000
+Message-ID: <54635E0C.5090802@codeaurora.org>
+Date: Wed, 12 Nov 2014 08:18:04 -0500
+From: Christopher Covington <cov@codeaurora.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
+Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate
+ from QEMU
+References: <5461F18C.2080400@redhat.com> <54624710.6070306@codeaurora.org>
+ <20141112090554.6dc15b9f@hananiah.suse.cz>
+In-Reply-To: <20141112090554.6dc15b9f@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,78 +24,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhouwj-fnst@cn.fujitsu.com
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, Laszlo Ersek <lersek@redhat.com>, crash-utility@redhat.com
 
-On 11/11/14 at 04:54pm, Minfei Huang wrote:
-> If the page pfn calculated by read_from_splitblock_table is bigger than
-> pfn_needed, the variable pfn_needed will leak.
+On 11/12/2014 03:05 AM, Petr Tesarik wrote:
+> On Tue, 11 Nov 2014 12:27:44 -0500
+> Christopher Covington <cov@codeaurora.org> wrote:
 > 
-> makedumpfile cannot assign the pfn averagely bacause of condition
-> pfn_needed invalid.
+>> On 11/11/2014 06:22 AM, Laszlo Ersek wrote:
+>>> (Note: I'm not subscribed to either qemu-devel or the kexec list; please
+>>> keep me CC'd.)
+>>>
+>>> QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
+>>> kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
+>>>
+>>> The resultant vmcore is usually analyzed with the "crash" utility.
+>>>
+>>> The original tool producing such files is kdump. Unlike the procedure
+>>> performed by QEMU, kdump runs from *within* the guest (under a kexec'd
+>>> kdump kernel), and has more information about the original guest kernel
+>>> state (which is being dumped) than QEMU. To QEMU, the guest kernel state
+>>> is opaque.
+>>>
+>>> For this reason, the kdump preparation logic in QEMU hardcodes a number
+>>> of fields in the kdump header. The direct issue is the "phys_base"
+>>> field. Refer to dump.c, functions create_header32(), create_header64(),
+>>> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
+>>> "0").
+>>>
+>>> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
+>>>
+>>> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
+>>>
+>>> This works in most cases, because the guest Linux kernel indeed tends to
+>>> be loaded at guest-phys address 0. However, when the guest Linux kernel
+>>> is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
+>>> then the guest Linux kernel is loaded at 16MB, thereby getting out of
+>>> sync with the phys_base=0 setting visible in the KDUMP header.
+>>>
+>>> This trips up the "crash" utility.
+>>>
+>>> Dave worked around the issue in "crash" for ELF format dumps -- "crash"
+>>> can identify QEMU as the originator of the vmcore by finding the QEMU
+>>> notes in the ELF vmcore. If those are present, then "crash" employs a
+>>> heuristic, probing for a phys_base up to 32MB, in 1MB steps.
+>>
+>> What advantages does KDUMP have over ELF?
 > 
-> Signed-off-by: Minfei Huang <mhuang@redhat.com>
-> ---
->  makedumpfile.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 59c4952..8807a90 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -8415,7 +8415,7 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
->  		return info->max_mapnr;
->  
->  	mdf_pfn_t end_pfn;
-> -	long long pfn_needed, offset;
-> +	long long pfn_needed, offset, per_splitblock_pfn;
->  	char *splitblock_value_offset;
->  
->  	pfn_needed = info->num_dumpable / info->num_dumpfile;
-> @@ -8424,7 +8424,8 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
->  	end_pfn = start_pfn;
->  
->  	while (*cur_splitblock_num < splitblock->num && pfn_needed > 0) {
-> -		pfn_needed -= read_from_splitblock_table(splitblock_value_offset);
-> +		per_splitblock_pfn = read_from_splitblock_table(splitblock_value_offset); 
-> +		pfn_needed = pfn_needed < per_splitblock_pfn ? 0 : pfn_needed - per_splitblock_pfn;
-Hi, Wenjiang!
+> It's smaller (data is compressed), and it contains a header with some
+> useful information (e.g. the crashed kernel's version and release).
 
-Sorry, my emall client didnot receive the mail by you, so I reply it
-here.
+What if the ELF dumper used SHF_COMPRESSED or could dump an ELF.xz?
 
-The split->table is an array to record the pfn count which we need dump.
-And the memory is divided by the size of info->splitblock_size, the pfn
-count in each entry will be stored in the entry of split->table.
+How does QEMU figure out the kernel version information?
 
-For the purpose, we want to average allocation to the pfns.
+Thanks,
+Chris
 
-Here is a case:
-There are 5 entries in the split->table, and the value is 4, 6, 4, 5, 5.
-We want to split four pieces to write to four files, and every file will
-be write 6 pfns.
-Using the function calculate_end_pfn_by_splitblock, the first file will
-be assigned all of the pfns(24 pfns).
-
-pfn_needed is 6((4+6+4+5+5) / 4) when entry the function.
-By the end of first loop, the variable pfn_needed = 2(6 - 4).
-Then move on, the variable will leak to become huge number by the end of
-second loop, because the return value of function read_from_splitblock_table
-is 6. The variable pfn_needed is ~4(2 - 6), it is huge.
-And the loop will break util *cur_splitblock_num == splitblock->num.
-
-For above case, it is no sense to use split function, so we should add
-the condition whether pfn_needed is bigger than the value of
-read_from_splitblock_table.
-
-Thanks
-Minfei
->  		splitblock_value_offset += splitblock->entry_size;
->  		++*cur_splitblock_num;
->  	}
-> -- 
-> 1.8.3.1
-> 
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
 _______________________________________________
 kexec mailing list
