@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx5-phx2.redhat.com ([209.132.183.37])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xoek6-0007Id-0N
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 20:42:19 +0000
-Date: Wed, 12 Nov 2014 15:41:48 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <548583707.7386011.1415824908540.JavaMail.zimbra@redhat.com>
-In-Reply-To: <5463C35C.2000103@redhat.com>
-References: <5461F18C.2080400@redhat.com>
- <20141111130913.11eec0a3@hananiah.suse.cz>
- <20141112.120838.303682123986142686.d.hatayama@jp.fujitsu.com>
- <20141112090441.3ee42632@hananiah.suse.cz> <546373B8.70103@redhat.com>
- <20141112194325.246ff381@hananiah.suse.cz> <5463C35C.2000103@redhat.com>
-Subject: Re: uniquely identifying KDUMP files that originate from QEMU
+ id 1XofCD-0006hX-Iu
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 21:11:23 +0000
+Date: Wed, 12 Nov 2014 22:10:50 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate
+ from QEMU
+Message-ID: <20141112221050.47189fcd@hananiah.suse.cz>
+In-Reply-To: <5463803F.5020209@codeaurora.org>
+References: <5461F18C.2080400@redhat.com> <54624710.6070306@codeaurora.org>
+ <20141112090554.6dc15b9f@hananiah.suse.cz>
+ <54635E0C.5090802@codeaurora.org>
+ <20141112142601.58a4c214@hananiah.suse.cz>
+ <54636A42.9020508@redhat.com> <54637322.5060101@codeaurora.org>
+ <546376AF.20801@redhat.com> <5463803F.5020209@codeaurora.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,192 +24,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Laszlo Ersek <lersek@redhat.com>
-Cc: wency@cn.fujitsu.com, Petr Tesarik <ptesarik@suse.cz>, tumanova@linux.vnet.ibm.com, kexec@lists.infradead.org, qiaonuohan@cn.fujitsu.com, qemu-devel@nongnu.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, kumagai-atsushi@mxc.nes.nec.co.jp, crash-utility@redhat.com
+To: Christopher Covington <cov@codeaurora.org>
+Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, Laszlo Ersek <lersek@redhat.com>, crash-utility@redhat.com
 
-CgotLS0tLSBPcmlnaW5hbCBNZXNzYWdlIC0tLS0tCj4gYWRkaW5nIGJhY2sgYSBmZXcgQ0MncyBi
-ZWNhdXNlIHRoaXMgZGlzY3Vzc2lvbiBpcyB1c2VmdWwKPiAKPiBPbiAxMS8xMi8xNCAxOTo0Mywg
-UGV0ciBUZXNhcmlrIHdyb3RlOgo+ID4gViBXZWQsIDEyIE5vdiAyMDE0IDE1OjUwOjMyICswMTAw
-Cj4gPiBMYXN6bG8gRXJzZWsgPGxlcnNla0ByZWRoYXQuY29tPiBuYXBzw6FubzoKPiA+IAo+ID4+
-IE9uIDExLzEyLzE0IDA5OjA0LCBQZXRyIFRlc2FyaWsgd3JvdGU6Cj4gPj4+IE9uIFdlZCwgMTIg
-Tm92IDIwMTQgMTI6MDg6MzggKzA5MDAgKEpTVCkKPiA+Pj4gSEFUQVlBTUEgRGFpc3VrZSA8ZC5o
-YXRheWFtYUBqcC5mdWppdHN1LmNvbT4gd3JvdGU6Cj4gPj4KPiA+Pj4+IEFueXdheSwgcGh5c19i
-YXNlIGlzIGtlcm5lbCBpbmZvcm1hdGlvbi4gVG8gbWFrZSBpdCBhdmFpbGFibGUgZm9yIHFlbXUK
-PiA+Pj4+IHNpZGUsIHRoZXJlJ3MgbmVlZCB0byBwcmVwYXJlIGEgbWVjaGFuaXNtIGZvciBxZW11
-IHRvIGhhdmUgYW55IGFjY2Vzcwo+ID4+Pj4gdG8gaXQuCj4gPj4+Cj4gPj4+IFllcy4gSSB3b25k
-ZXIgaWYgeW91IGNhbiBoYXZlIGFjY2VzcyB3aXRob3V0IHNvbWUgc29ydCBvZiBjby1vcGVyYXRp
-b24KPiA+Pj4gZnJvbSB0aGUgZ3Vlc3Qga2VybmVsIGl0c2VsZi4gSSBndWVzcyBub3QuCj4gPj4K
-PiA+PiBQcm9wYWdhdGluZyBhbnkga2luZCBvZiBhZGRpdGlvbmFsIGluZm9ybWF0aW9uIGZyb20g
-dGhlIGd1ZXN0IGtlcm5lbAo+ID4+ICh3aGljaCBpcyB1bnByaXZpbGVnZWQgYW5kIHBvdGVudGlh
-bGx5IG1hbGljaW91cykgdG8gdGhlIGhvc3Qtc2lkZSBxZW11Cj4gPj4gcHJvY2VzcyAod2hpY2gg
-aXMgYnkgZGVmaW5pdGlvbiBtb3JlIHByaXZpbGVnZWQsIGFsdGhvdWdoIHN0aWxsIGNvbmZpbmVk
-Cj4gPj4gYnkgdmFyaW91cyBtZWFzdXJlcykgaXMgc29tZXRoaW5nIHdlJ2QgZXhwbGljaXRseSBs
-aWtlIHRvIGF2b2lkLgo+ID4+Cj4gPj4gVGhpbmsgb2YgaXQgbGlrZSB0aGlzLiBJIHRocm93IGEg
-cGh5c2ljYWwgYm94IGF0IHlvdSwgcnVubmluZyBMaW51eCwKPiA+PiB0aGF0IGhhcyBmcm96ZW4g
-aW4gdGltZS4gQ2FuICJjcmFzaCIgd29yayB3aXRoIG5vdGhpbmcgZWxzZSBidXQgdGhlCj4gPj4g
-Y29udGVudHMgb2YgdGhlIG1lbW9yeSwgYW5kIGluZm9ybWF0aW9uIGFib3V0IHRoZSBDUFVzPwo+
-ID4gCj4gPiBJZiBvbmx5IHlvdSBjb3VsZCBzYXZlIHRoZSBfY29tcGxldGVfIHN0YXRlIG9mIHRo
-ZSBDUFUuLi4gRm9yIGV4YW1wbGUKPiA+IHRoZSBjb250ZW50IG9mIENSMyB3b3VsZCBiZSBxdWl0
-ZSB1c2VmdWwuCj4gCj4gKDEpIENSMyBpcyBhbHJlYWR5IHNhdmVkLCBpbiBib3RoIHRoZSBFTEYg
-YW5kIHRoZSBrZHVtcCBjb21wcmVzc2VkIGZvcm1hdHMuCj4gCj4gLSBFTEYgY2FzZToKPiAKPiBx
-bXBfZHVtcF9ndWVzdF9tZW1vcnkoKSBbZHVtcC5jXQo+ICAgY3JlYXRlX3ZtY29yZSgpCj4gICAg
-IGR1bXBfYmVnaW4oKQo+ICAgICAgIHdyaXRlX2VsZjY0X25vdGVzKCkKPiAKPiAgICAgICAgIGxv
-b3AgZnJvbSAxIHRvICN2Y3B1Ogo+ICAgICAgICAgICBjcHVfd3JpdGVfZWxmNjRfbm90ZSgpIFtx
-b20vY3B1LmNdCj4gICAgICAgICAgICAgeDg2XzY0X3dyaXRlX2VsZjY0X25vdGUoKSBbdGFyZ2V0
-LWkzODYvYXJjaF9kdW1wLmNdCj4gICAgICAgICAgICAgICB3cml0ZXMgIkNPUkUiCj4gCj4gICAg
-ICAgICBsb29wIGZyb20gMSB0byAjdmNwdToKPiAgICAgICAgICAgY3B1X3dyaXRlX2VsZjY0X3Fl
-bXVub3RlKCkgW3FvbS9jcHUuY10KPiAgICAgICAgICAgICB4ODZfY3B1X3dyaXRlX2VsZjY0X3Fl
-bXVub3RlKCkgW3RhcmdldC1pMzg2L2FyY2hfZHVtcC5jXQo+ICAgICAgICAgICAgICAgY3B1X3dy
-aXRlX3FlbXVfbm90ZSgpCj4gICAgICAgICAgICAgICAgIHFlbXVfZ2V0X2NwdXN0YXRlKCkKPiAg
-ICAgICAgICAgICAgICAgICBzLT5jclszXSA9IGVudi0+Y3JbM107IDwtLS0tLS0tLS0tIGhlcmUK
-PiAgICAgICAgICAgICAgICAgd3JpdGVzICJRRU1VIgo+IAo+IEhlbmNlLCB0aGUgaW5mb3JtYXRp
-b24gaXMgcGFydCBvZiB0aGUgUUVNVSBub3RlLgo+IAo+IC0ga2R1bXAgY2FzZToKPiAKPiBxbXBf
-ZHVtcF9ndWVzdF9tZW1vcnkoKSBbZHVtcC5jXQo+ICAgY3JlYXRlX2tkdW1wX3ZtY29yZSgpCj4g
-ICAgIHdyaXRlX2R1bXBfaGVhZGVyKCkKPiAgICAgICBjcmVhdGVfaGVhZGVyNjQoKQo+ICAgICAg
-ICAgd3JpdGVfZWxmNjRfbm90ZXMoKQo+ICAgICAgICAgICBbLi4uIHNhbWUgYXMgYWJvdmUgLi4u
-XQo+IAo+IFRoZSB0cmljayBoZXJlIGlzIHRoYXQgdGhlIG5vdGUtd3JpdGVyIGZ1bmN0aW9ucyB1
-c2UgYSBjYWxsYmFjayBmdW5jdGlvbgo+IGZvciBhY3R1YWxseSBvdXRwdXR0aW5nIHRoZSBkYXRh
-LiBTbyB3aGlsZSBpbiB0aGUgRUxGIGNhc2UgdGhlIHN0dWZmCj4gZ29lcyBkaXJlY3RseSB0byBh
-IGZpbGUsIGluIHRoZSBrZHVtcCBjYXNlIHRoZSBub3RlcyBhcmUgZmlyc3Qgc2F2ZWQgaW4KPiBh
-IG1lbW9yeSBidWZmZXIsIGFuZCB0aGVuIGxhdGVyIHNhdmVkIGluIHRoZSBmaWxlIGF0IG9mZnNl
-dAo+IEtkdW1wU3ViSGVhZGVyNjQub2Zmc2V0X25vdGUuICguLi4gV2hpY2ggaXMgdGhlbiByZXBy
-ZXNlbnRlZCBpbiB0aGUKPiBmbGF0dGVuZWQgZmlsZSBmb3JtYXQgb2YgY291cnNlLikKPiAKPiBT
-bywgdGhlIGluZm9ybWF0aW9uIGlzIHRoZXJlIGluIGJvdGggY2FzZXMuCj4gCj4gCj4gKDIpIERh
-dmUgLS0gdGhpcyBqdXN0IG1hZGUgbWUgcmVhbGl6ZSB0aGF0IHRoZSBRRU1VIG5vdGUgaXMgKmFs
-cmVhZHkqCj4gdGhlcmUgaW4gdGhlIGtkdW1wIGZpbGUgYXMgd2VsbDsgcG9pbnRlZC10byBieQo+
-IEtkdW1wU3ViSGVhZGVyNjQub2Zmc2V0X25vdGUsIGZvciBhIGxlbmd0aCBvZiBLZHVtcFN1Ykhl
-YWRlcjY0Lm5vdGVfc2l6ZS4KPiAKPiBGcm9tIHlvdXIgb3RoZXIgZW1haWwKPiA8aHR0cDovL3Ro
-cmVhZC5nbWFuZS5vcmcvZ21hbmUubGludXgua2VybmVsLmtleGVjLzEyNzg3L2ZvY3VzPTEyNzk3
-PjoKPiAKPiA+ICAgICBzdWJfaGVhZGVyX2tkdW1wOiAxYzljZmYwCj4gPiAgICAgICAgICAgICAg
-cGh5c19iYXNlOiAwCj4gPiAgICAgICAgICAgICBkdW1wX2xldmVsOiAxICgweDEpIChEVU1QX0VY
-Q0xVREVfWkVSTykKPiA+ICAgICAgICAgICAgICAgICAgc3BsaXQ6IDAKPiA+ICAgICAgICAgICAg
-ICBzdGFydF9wZm46ICh1bnVzZWQpCj4gPiAgICAgICAgICAgICAgICBlbmRfcGZuOiAodW51c2Vk
-KQo+ID4gICAgICBvZmZzZXRfdm1jb3JlaW5mbzogMCAoMHgwKQo+ID4gICAgICAgIHNpemVfdm1j
-b3JlaW5mbzogMCAoMHgwKQo+ID4gICAgICAgICAgICBvZmZzZXRfbm90ZTogNDIwMCAoMHgxMDY4
-KSAgICAgICA8LS0tLS0tLS0tLS0gaGVyZQo+ID4gICAgICAgICAgICAgIHNpemVfbm90ZTogMzIz
-MiAoMHhjYTApICAgICAgICA8LS0tLS0tLS0tLS0KPiA+ICAgICBudW1fcHJzdGF0dXNfbm90ZXM6
-IDQKPiA+ICAgICAgICAgICAgICBub3Rlc19idWY6IDFjOWUwMDAKPiA+ICAgICAgICAgICAgICAg
-bm90ZXNbMF06IDFjOWUwMDAKPiA+ICAgICAgICAgICAgICAgbm90ZXNbMV06IDFjOWUxNjQKPiA+
-ICAgICAgICAgICAgICAgbm90ZXNbMl06IDFjOWUyYzgKPiA+ICAgICAgICAgICAgICAgbm90ZXNb
-M106IDFjOWU0MmMKPiA+ICAgICBOVF9QUlNUQVRVU19vZmZzZXQ6IDEwNjgKPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIDExY2MKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIDEzMzAKPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgIDE0OTQKPiA+ICAgICAgIG9mZnNldF9lcmFzZWluZm86
-IDAgKDB4MCkKPiA+ICAgICAgICAgc2l6ZV9lcmFzZWluZm86IDAgKDB4MCkKPiA+ICAgICAgICAg
-ICBzdGFydF9wZm5fNjQ6ICh1bnVzZWQpCj4gPiAgICAgICAgICAgICBlbmRfcGZuXzY0OiAodW51
-c2VkKQo+ID4gICAgICAgICAgIG1heF9tYXBucl82NDogMTI0NTE4NCAoMHgxMzAwMDApCj4gCj4g
-Q2FuIHlvdSBmZXRjaCB0aGF0IGluICJjcmFzaCI/IElmIHlvdSBjYW4sIHRoZW4gdGhlcmUncyBu
-b3RoaW5nIHRvIGRvIG9uCj4gdGhlIHFlbXUgc2lkZSAoYW5kIEknbGwgaGF2ZSB0byBhcG9sb2dp
-emUgZm9yIHNwYW1taW5nIGEgYnVuY2ggb2YgbGlzdHMgOi8pLgoKU3VyZSBlbm91Z2guLi4KCkkg
-d2FzIGp1c3QgcGxheWluZyB3aXRoIHByb2Nlc3NfZWw2NF9ub3RlcygpIHRvIGNoZWNrL3JlYWQg
-dGhlIG5vdGUgbmFtZSBzdHJpbmdzLAphbmQgbm90aWNlZCB0aGF0IEkgY2FuIGNlcnRhaW5seSBz
-ZWUgdGhlbS4gIEJ1dCBhcyB5b3Ugbm90ZWQsIG9ubHkgdGhlIE5UX1BSU1RBVFVTCm5vdGVzIGFy
-ZSBzdG9yZWQgaW4gdGhlICJub3Rlc1tdIiBhcnJheS4gc28gSSB3YXMgdW5kZXIgdGhlIGltcHJl
-c3Npb24gdGhhdCB0aGUKUUVNVSBub3RlcyB3ZXJlIGNvbXBsZXRlbHkgbWlzc2luZy4KClRoYXQg
-YmVpbmcgdGhlIGNhc2UgLS0gd2UncmUgcHJldHR5IG11Y2ggZG9uZSEKCkknbGwgcHV0IGEgcGF0
-Y2ggaW4gdGhlIG5leHQgdXBzdHJlYW0gcmVsZWFzZSBvZiBjcmFzaC4KClRoYW5rcywKICBEYXZl
-CgoKCgo+IAo+IEkgdGhpbmsgImNyYXNoIiBhbHJlYWR5IGl0ZXJhdGVzIG92ZXIgYWxsIG9mIHRo
-ZSBub3RlcyBpbiB0aGUgbm90ZQo+IGJ1ZmZlciwgYnV0IHNraXBzIGV2ZXJ5dGhpbmcgZGlmZmVy
-ZW50IGZyb20gTlRfUFJTVEFUVVMuCj4gCj4gCj4gKDMpIFJlZ2FyZGluZyB0aGUgc3RydWN0dXJl
-IG9mIHRoZSBub3Rlcywgd2UgaGF2ZSB0byBjb25zaWRlciB0aGUKPiBwbGFjZW1lbnQgb2YgdGhl
-IG5vdGVzIGFuZCB0aGVpciBpbnRlcm5hbCBzdHJ1Y3R1cmUuIFRoZSBwbGFjZW1lbnQgaXMKPiBk
-aWZmZXJlbnQgYmV0d2VlbiB0aGUgRUxGIGFuZCB0aGUgS0RVTVAgZmlsZSBmb3JtYXQuIFRoZSBp
-bnRlcm5hbAo+IHN0cnVjdHVyZSBvZiB0aGUgbm90ZXMgaXMgaWRlbnRpY2FsIGJldHdlZW4gdGhl
-IHR3byBmaWxlIGZvcm1hdHMuCj4gCj4gRm9yIGV4YW1wbGUsIGZvciBhIDQgVkNQVSBndWVzdCwg
-eW91IGVuZCB1cCB3aXRoIG5vdGUgbmFtZXMgbGlrZQo+IAo+ICAgQ09SRQo+ICAgQ09SRQo+ICAg
-Q09SRQo+ICAgQ09SRQo+ICAgUUVNVQo+ICAgUUVNVQo+ICAgUUVNVQo+ICAgUUVNVQo+IAo+IEFs
-bCBvZiB0aGVzZSBhcmUgRWxmNjRfTmhkciBzdHJ1Y3R1cmVzLiBUaGUgQ09SRSBvbmVzIGhhdmUg
-dHlwZQo+IE5UX1BSU1RBVFVTLCBhbmQgdGhlIFFFTVUgb25lcyBoYXZlIHR5cGUgMC4KPiAKPiAo
-M2EpIFRoZSBwbGFjZW1lbnQgaW4gdGhlIEVMRiBmaWxlIGlzIGFscmVhZHkgaGFuZGxlZCBieSAi
-Y3Jhc2giLiBFYWNoCj4gbm90ZSAic2ltcGx5IiBnZXRzIGl0cyBvd24gRUxGIG5vdGUgc2VnbWVu
-dC9zZWN0aW9uLgo+IAo+ICgzYikgSW4gdGhlIGtkdW1wIGZpbGUsIHRoZSBFbGY2NF9OaGRyIHN0
-cnVjdHVyZXMgKDggcGllY2VzIGluIHRvdGFsLCBpbgo+IHRoZSBhYm92ZSBleGFtcGxlIC0tIDR4
-IENPUkUsIDR4IFFFTVUpIGFyZSBjb25jYXRlbmF0ZWQgaW4gdGhhdCBvcmRlciwKPiBhbmQgZmlu
-YWxseSBzdG9yZWQgYXQgIm9mZnNldF9ub3RlIi4KPiAKPiAoM2MpIFJlZ2FyZGluZyB0aGUgaW50
-ZXJuYWwgc3RydWN0dXJlIG9mIHRoZSBub3Rlcy4gVGhlIENPUkUgb25lcyBhcmUKPiBhbHJlYWR5
-IGtub3duIGFuZCBoYW5kbGVkLiBUaGUgUUVNVSBub3RlcyBoYXZlIHRoZSBmb2xsb3dpbmcgc3Ry
-dWN0dXJlOgo+IAo+ID4gRWxmNjRfTmhkcjoKPiA+IG5fbmFtZXN6OiA1ICgiUUVNVSIpCj4gPiBu
-X2Rlc2NzejogNDMyCj4gPiAgIG5fdHlwZTogMCAoPykKPiA+ICAgICAgICAgICAwMDAwMDFiMDAw
-MDAwMDAxIDAwMDAwMDAwMDAwMDAwMDAKPiAgICAgICAgICAgICB8LS0tLS0tfHwtLS0tLS18IHwt
-LS0tLS0tLS0tLS0tLXwKPiAgICAgICAgICAgICBzaXplICAgIHZlcnNpb24gIHJheAo+IAo+ID4g
-ICAgICAgICAgIDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDAwMDAwMDAwMAo+ICAgICAgICAgICAg
-IHwtLS0tLS0tLS0tLS0tLXwgfC0tLS0tLS0tLS0tLS0tfAo+ICAgICAgICAgICAgIHJieCAgICAg
-ICAgICAgICAgcmN4Cj4gCj4gPiAgICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAw
-MDAwMDAxCj4gICAgICAgICAgICAgfC0tLS0tLS0tLS0tLS0tfCB8LS0tLS0tLS0tLS0tLS18Cj4g
-ICAgICAgICAgICAgcmR4ICAgICAgICAgICAgICByc2kKPiAKPiA+ICAgICAgICAgICBmZmZmZmZm
-ZjgxZGQ1MjI4IGZmZmZmZmZmODFhMDFlYzgKPiAgICAgICAgICAgICB8LS0tLS0tLS0tLS0tLS18
-IHwtLS0tLS0tLS0tLS0tLXwKPiAgICAgICAgICAgICByZGkgICAgICAgICAgICAgIHJzcAo+IAo+
-ID4gICAgICAgICAgIGZmZmZmZmZmODFhMDFlYzggMDAwMDAwMDAwMDAwMDAwMAo+ICAgICAgICAg
-ICAgIHwtLS0tLS0tLS0tLS0tLXwgfC0tLS0tLS0tLS0tLS0tfAo+ICAgICAgICAgICAgIHJicCAg
-ICAgICAgICAgICAgcjgKPiAKPiA+ICAgICAgICAgICAwMDAwMDAwMDAwMDAwMDAwIDAwMDAwMDEz
-OTExZDVmMjkKPiAgICAgICAgICAgICB8LS0tLS0tLS0tLS0tLS18IHwtLS0tLS0tLS0tLS0tLXwK
-PiAgICAgICAgICAgICByOSAgICAgICAgICAgICAgIHIxMAo+IAo+ID4gICAgICAgICAgIDAwMDAw
-MDAwMDAwMDAwMDAgZmZmZmZmZmY4MWMwMDQ4MAo+ICAgICAgICAgICAgIHwtLS0tLS0tLS0tLS0t
-LXwgfC0tLS0tLS0tLS0tLS0tfAo+ICAgICAgICAgICAgIHIxMSAgICAgICAgICAgICAgcjEyCj4g
-Cj4gPiAgICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCBmZmZmZmZmZmZmZmZmZmZmCj4gICAgICAg
-ICAgICAgfC0tLS0tLS0tLS0tLS0tfCB8LS0tLS0tLS0tLS0tLS18Cj4gICAgICAgICAgICAgcjEz
-ICAgICAgICAgICAgICByMTQKPiAKPiA+ICAgICAgICAgICAwMDAwMDAwMDAzMDlmMDAwIGZmZmZm
-ZmZmODEwMzc1YWIKPiAgICAgICAgICAgICB8LS0tLS0tLS0tLS0tLS18IHwtLS0tLS0tLS0tLS0t
-LXwKPiAgICAgICAgICAgICByMTUgICAgICAgICAgICAgIHJpcAo+IAo+ID4gICAgICAgICAgIDAw
-MDAwMDAwMDAwMDAyNDYgZmZmZmZmZmYwMDAwMDAxMAo+ICAgICAgICAgICAgIHwtLS0tLS0tLS0t
-LS0tLXwgfC0tLS0tLXx8LS0tLS0tfAo+ICAgICAgICAgICAgIHJmbGFncyAgICAgICAgICAgY3Mv
-bGltICBjcy9zZWwKPiAKPiA+ICAgICAgICAgICAwMDAwMDAwMDAwYTA5YjAwIDAwMDAwMDAwMDAw
-MDAwMDAKPiAgICAgICAgICAgICB8LS0tLS0tfHwtLS0tLS18IHwtLS0tLS0tLS0tLS0tLXwKPiAg
-ICAgICAgICAgICBjcy9wYWQgIGNzL2ZsYWdzIGNzL2Jhc2UKPiAKPiA+ICAgICAgICAgICBmZmZm
-ZmZmZjAwMDAwMDE4IDAwMDAwMDAwMDBjMDkzMDAKPiAgICAgICAgICAgICB8LS0tLS0tfHwtLS0t
-LS18IHwtLS0tLS18fC0tLS0tLXwKPiAgICAgICAgICAgICBkcy9saW0gIGRzL3NlbCAgIGRzL3Bh
-ZCAgZHMvZmxhZ3MKPiAKPiA+ICAgICAgICAgICAwMDAwMDAwMDAwMDAwMDAwIGZmZmZmZmZmMDAw
-MDAwMTgKPiAgICAgICAgICAgICB8LS0tLS0tLS0tLS0tLS18IHwtLS0tLS18fC0tLS0tLXwKPiAg
-ICAgICAgICAgICBkcy9iYXNlICAgICAgICAgIGVzL2xpbSAgZXMvc2VsCj4gCj4gPiAgICAgICAg
-ICAgMDAwMDAwMDAwMGMwOTMwMCAwMDAwMDAwMDAwMDAwMDAwCj4gICAgICAgICAgICAgfC0tLS0t
-LXx8LS0tLS0tfCB8LS0tLS0tLS0tLS0tLS18Cj4gICAgICAgICAgICAgZXMvcGFkICBlcy9mbGFn
-cyBlcy9iYXNlCj4gCj4gPiAgICAgICAgICAgZmZmZmZmZmYwMDAwMDAwMCAwMDAwMDAwMDAwMDAw
-MDAwCj4gICAgICAgICAgICAgfC0tLS0tLXx8LS0tLS0tfCB8LS0tLS0tfHwtLS0tLS18Cj4gICAg
-ICAgICAgICAgZnMvbGltICBmcy9zZWwgICBmcy9wYWQgIGZzL2ZsYWdzCj4gCj4gPiAgICAgICAg
-ICAgMDAwMDAwMDAwMDAwMDAwMCBmZmZmZmZmZjAwMDAwMDAwCj4gICAgICAgICAgICAgfC0tLS0t
-LS0tLS0tLS0tfCB8LS0tLS0tfHwtLS0tLS18Cj4gICAgICAgICAgICAgZnMvYmFzZSAgICAgICAg
-ICBncy9saW0gIGdzL3NlbAo+IAo+ID4gICAgICAgICAgIDAwMDAwMDAwMDAwMDAwMDAgZmZmZjg4
-MDAwMzIwMDAwMAo+ICAgICAgICAgICAgIHwtLS0tLS18fC0tLS0tLXwgfC0tLS0tLS0tLS0tLS0t
-fAo+ICAgICAgICAgICAgIGdzL3BhZCAgZ3MvZmxhZ3MgZ3MvYmFzZQo+IAo+ID4gICAgICAgICAg
-IGZmZmZmZmZmMDAwMDAwMTggMDAwMDAwMDAwMGMwOTMwMAo+ICAgICAgICAgICAgIHwtLS0tLS18
-fC0tLS0tLXwgfC0tLS0tLXx8LS0tLS0tfAo+ICAgICAgICAgICAgIHNzL2xpbSAgc3Mvc2VsICAg
-c3MvcGFkICBzcy9mbGFncwo+IAo+ID4gICAgICAgICAgIDAwMDAwMDAwMDAwMDAwMDAgZmZmZmZm
-ZmYwMDAwMDAwMAo+ICAgICAgICAgICAgIHwtLS0tLS0tLS0tLS0tLXwgfC0tLS0tLXx8LS0tLS0t
-fAo+ICAgICAgICAgICAgIHNzL2Jhc2UgICAgICAgICAgbGR0Li4uCj4gCj4gPiAgICAgICAgICAg
-MDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAwMDAwMDAwCj4gICAgICAgICAgICAgfC0tLS0tLXx8
-LS0tLS0tfCB8LS0tLS0tLS0tLS0tLS18Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgLi4ubGR0Cj4gCj4gPiAgICAgICAgICAgMDAwMDIwODcwMDAwMDA0MCAwMDAwMDAw
-MDAwMDA4YjAwCj4gICAgICAgICAgICAgfC0tLS0tLXx8LS0tLS0tfCB8LS0tLS0tfHwtLS0tLS18
-Cj4gICAgICAgICAgICAgdHIuLi4KPiAKPiA+ICAgICAgICAgICBmZmZmODgwMDAzMjEzYjQwIDAw
-MDAwMDdmMDAwMDAwMDAKPiAgICAgICAgICAgICB8LS0tLS0tLS0tLS0tLS18IHwtLS0tLS18fC0t
-LS0tLXwKPiAgICAgICAgICAgICAgICAgICAgICAgIC4uLnRyIGdkdC4uLgo+IAo+ID4gICAgICAg
-ICAgIDAwMDAwMDAwMDAwMDAwMDAgZmZmZjg4MDAwMzIwNDAwMAo+ICAgICAgICAgICAgIHwtLS0t
-LS18fC0tLS0tLXwgfC0tLS0tLS0tLS0tLS0tfAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIC4uLmdkdAo+IAo+ID4gICAgICAgICAgIDAwMDAwZmZmMDAwMDAwMDAgMDAw
-MDAwMDAwMDAwMDAwMAo+ICAgICAgICAgICAgIHwtLS0tLS18fC0tLS0tLXwgfC0tLS0tLXx8LS0t
-LS0tfAo+ICAgICAgICAgICAgIGlkdC4uLgo+IAo+ID4gICAgICAgICAgIGZmZmZmZmZmODFkZDIw
-MDAgMDAwMDAwMDA4MDA1MDAzYgo+ICAgICAgICAgICAgIHwtLS0tLS0tLS0tLS0tLXwgfC0tLS0t
-LS0tLS0tLS0tfAo+ICAgICAgICAgICAgICAgICAgICAgICAuLi5pZHQgY3IwCj4gCj4gPiAgICAg
-ICAgICAgMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAxYjJlMDAwCj4gICAgICAgICAgICAgfC0t
-LS0tLS0tLS0tLS0tfCB8LS0tLS0tLS0tLS0tLS18Cj4gICAgICAgICAgICAgY3IxICAgICAgICAg
-ICAgICBjcjIKPiAKPiA+ICAgICAgICAgICAwMDAwMDAwMDA3YjE4MDAwIDAwMDAwMDAwMDAwMDA2
-ZjAKPiAgICAgICAgICAgICB8LS0tLS0tLS0tLS0tLS18IHwtLS0tLS0tLS0tLS0tLXwKPiAgICAg
-ICAgICAgICBjcjMgICAgICAgICAgICAgIGNyNAo+IAo+IEZyb20gInRhcmdldC1pMzg2L2FyY2hf
-ZHVtcC5jIjoKPiAKPiA+IHN0cnVjdCBRRU1VQ1BVU2VnbWVudCB7Cj4gPiAgICAgdWludDMyX3Qg
-c2VsZWN0b3I7Cj4gPiAgICAgdWludDMyX3QgbGltaXQ7Cj4gPiAgICAgdWludDMyX3QgZmxhZ3M7
-Cj4gPiAgICAgdWludDMyX3QgcGFkOwo+ID4gICAgIHVpbnQ2NF90IGJhc2U7Cj4gPiB9Owo+ID4K
-PiA+IHR5cGVkZWYgc3RydWN0IFFFTVVDUFVTZWdtZW50IFFFTVVDUFVTZWdtZW50Owo+ID4KPiA+
-IHN0cnVjdCBRRU1VQ1BVU3RhdGUgewo+ID4gICAgIHVpbnQzMl90IHZlcnNpb247Cj4gPiAgICAg
-dWludDMyX3Qgc2l6ZTsKPiA+ICAgICB1aW50NjRfdCByYXgsIHJieCwgcmN4LCByZHgsIHJzaSwg
-cmRpLCByc3AsIHJicDsKPiA+ICAgICB1aW50NjRfdCByOCwgcjksIHIxMCwgcjExLCByMTIsIHIx
-MywgcjE0LCByMTU7Cj4gPiAgICAgdWludDY0X3QgcmlwLCByZmxhZ3M7Cj4gPiAgICAgUUVNVUNQ
-VVNlZ21lbnQgY3MsIGRzLCBlcywgZnMsIGdzLCBzczsKPiA+ICAgICBRRU1VQ1BVU2VnbWVudCBs
-ZHQsIHRyLCBnZHQsIGlkdDsKPiA+ICAgICB1aW50NjRfdCBjcls1XTsKPiA+IH07Cj4gPgo+ID4g
-dHlwZWRlZiBzdHJ1Y3QgUUVNVUNQVVN0YXRlIFFFTVVDUFVTdGF0ZTsKPiAKPiAKPiBTdW1tYXJ5
-OiBJIHRoaW5rIHRoZSBpbmZvIGlzIGFsbCB0aGVyZS4KPiAKPiBUaGFua3MKPiBMYXN6bG8KPiAK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Wed, 12 Nov 2014 10:43:59 -0500
+Christopher Covington <cov@codeaurora.org> wrote:
+
+> On 11/12/2014 10:03 AM, Laszlo Ersek wrote:
+> > On 11/12/14 15:48, Christopher Covington wrote:
+> >> Thanks Petr and Laszlo for entertaining my questions. I've got one last one if
+> >> you have the time.
+> >>
+> >> On 11/12/2014 09:10 AM, Laszlo Ersek wrote:
+> >>> On 11/12/14 14:26, Petr Tesarik wrote:
+> >>>> On Wed, 12 Nov 2014 08:18:04 -0500
+> >>>> Christopher Covington <cov@codeaurora.org> wrote:
+> >>>>
+> >>>>> On 11/12/2014 03:05 AM, Petr Tesarik wrote:
+> >>>>>> On Tue, 11 Nov 2014 12:27:44 -0500
+> >>>>>> Christopher Covington <cov@codeaurora.org> wrote:
+> >>>>>>
+> >>>>>>> On 11/11/2014 06:22 AM, Laszlo Ersek wrote:
+> >>>>>>>> (Note: I'm not subscribed to either qemu-devel or the kexec list; please
+> >>>>>>>> keep me CC'd.)
+> >>>>>>>>
+> >>>>>>>> QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
+> >>>>>>>> kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
+> >>>>>>>>
+> >>>>>>>> The resultant vmcore is usually analyzed with the "crash" utility.
+> >>>>>>>>
+> >>>>>>>> The original tool producing such files is kdump. Unlike the procedure
+> >>>>>>>> performed by QEMU, kdump runs from *within* the guest (under a kexec'd
+> >>>>>>>> kdump kernel), and has more information about the original guest kernel
+> >>>>>>>> state (which is being dumped) than QEMU. To QEMU, the guest kernel state
+> >>>>>>>> is opaque.
+> >>>>>>>>
+> >>>>>>>> For this reason, the kdump preparation logic in QEMU hardcodes a number
+> >>>>>>>> of fields in the kdump header. The direct issue is the "phys_base"
+> >>>>>>>> field. Refer to dump.c, functions create_header32(), create_header64(),
+> >>>>>>>> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
+> >>>>>>>> "0").
+> >>>>>>>>
+> >>>>>>>> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
+> >>>>>>>>
+> >>>>>>>> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
+> >>>>>>>>
+> >>>>>>>> This works in most cases, because the guest Linux kernel indeed tends to
+> >>>>>>>> be loaded at guest-phys address 0. However, when the guest Linux kernel
+> >>>>>>>> is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
+> >>>>>>>> then the guest Linux kernel is loaded at 16MB, thereby getting out of
+> >>>>>>>> sync with the phys_base=0 setting visible in the KDUMP header.
+> >>>>>>>>
+> >>>>>>>> This trips up the "crash" utility.
+> >>>>>>>>
+> >>>>>>>> Dave worked around the issue in "crash" for ELF format dumps -- "crash"
+> >>>>>>>> can identify QEMU as the originator of the vmcore by finding the QEMU
+> >>>>>>>> notes in the ELF vmcore. If those are present, then "crash" employs a
+> >>>>>>>> heuristic, probing for a phys_base up to 32MB, in 1MB steps.
+> >>>>>>>
+> >>>>>>> What advantages does KDUMP have over ELF?
+> >>>>>>
+> >>>>>> It's smaller (data is compressed), and it contains a header with some
+> >>>>>> useful information (e.g. the crashed kernel's version and release).
+> >>>
+> >>> Another advantage is that all zero-filled pages are represented in the
+> >>> kdump file by one shared zero page.
+> >>>
+> >>> The difference in speed of dumping is stunning.
+> >>
+> >> Would you expect using SHT_NOBITS to give a similar speedup to the ELF dumper?
+> > 
+> > Sorry, I don't know what SHT_NOBITS is.
+> 
+> My newbie understanding is that SHT_NOBITS is the section type of the .bss
+> section in an everyday executable.
+
+Heh, yes and no. Let's clarify a few things.
+
+First, a Linux kernel dump (or a QEMU ELF dump) does not contain any
+sections. It only contains program headers. The reason is that program
+headers can specify both the virtual address and the physical address.
+BTW this feature is used to determine the physical base of the Linux
+kernel when dumping via kexec. Sections can only specify the virtual
+address. Of course, program headers can achieve an effect similar to
+SHT_NOBITS: by specifying a larger memory size than file size.
+
+Now, all this does not mean you can't create a new standard that uses
+sections instead (in fact, Xen DomU dumps already use ELF sections).
+But of course, this new standard won't be understood by the existing
+tools until somebody (you?) adds support for it. Same thing is true
+for the SHF_COMPRESSED section flag.
+
+Anyway, reuse of the zero page is a minor point. The main difference in
+speed comes from using a faster compression algorithm (LZO or snappy).
+Of course, nothing prevents you from using those algorithms in ELF
+compressed sections, but you'd have to extend the ELF standard first,
+adding magic numbers for these algorithms. To me it sounds like a long
+way to go.
+
+In short, there's no technical reason why ELF couldn't achieve results
+similar to KDUMP. It's "merely" not implemented, and for sure, I'm not
+going to push all the necessary changes. ;-)
+
+Petr T
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
