@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XoSwU-000403-2G
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 08:06:20 +0000
-Date: Wed, 12 Nov 2014 09:05:54 +0100
+ id 1XoT4s-0007Lx-4r
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 08:14:58 +0000
+Date: Wed, 12 Nov 2014 09:14:34 +0100
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate
- from QEMU
-Message-ID: <20141112090554.6dc15b9f@hananiah.suse.cz>
-In-Reply-To: <54624710.6070306@codeaurora.org>
-References: <5461F18C.2080400@redhat.com>
-	<54624710.6070306@codeaurora.org>
+Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+Message-ID: <20141112091434.0427bcc6@hananiah.suse.cz>
+In-Reply-To: <20141112.154042.59640143160036130.d.hatayama@jp.fujitsu.com>
+References: <20141112.154042.59640143160036130.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,56 +22,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christopher Covington <cov@codeaurora.org>
-Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, Laszlo Ersek <lersek@redhat.com>, crash-utility@redhat.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, anderson@redhat.com, ebiederm@xmission.com, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
 
-On Tue, 11 Nov 2014 12:27:44 -0500
-Christopher Covington <cov@codeaurora.org> wrote:
+On Wed, 12 Nov 2014 15:40:42 +0900 (JST)
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-> On 11/11/2014 06:22 AM, Laszlo Ersek wrote:
-> > (Note: I'm not subscribed to either qemu-devel or the kexec list; please
-> > keep me CC'd.)
-> > 
-> > QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
-> > kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
-> > 
-> > The resultant vmcore is usually analyzed with the "crash" utility.
-> > 
-> > The original tool producing such files is kdump. Unlike the procedure
-> > performed by QEMU, kdump runs from *within* the guest (under a kexec'd
-> > kdump kernel), and has more information about the original guest kernel
-> > state (which is being dumped) than QEMU. To QEMU, the guest kernel state
-> > is opaque.
-> > 
-> > For this reason, the kdump preparation logic in QEMU hardcodes a number
-> > of fields in the kdump header. The direct issue is the "phys_base"
-> > field. Refer to dump.c, functions create_header32(), create_header64(),
-> > and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
-> > "0").
-> > 
-> > http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
-> > 
-> > http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
-> > 
-> > This works in most cases, because the guest Linux kernel indeed tends to
-> > be loaded at guest-phys address 0. However, when the guest Linux kernel
-> > is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
-> > then the guest Linux kernel is loaded at 16MB, thereby getting out of
-> > sync with the phys_base=0 setting visible in the KDUMP header.
-> > 
-> > This trips up the "crash" utility.
-> > 
-> > Dave worked around the issue in "crash" for ELF format dumps -- "crash"
-> > can identify QEMU as the originator of the vmcore by finding the QEMU
-> > notes in the ELF vmcore. If those are present, then "crash" employs a
-> > heuristic, probing for a phys_base up to 32MB, in 1MB steps.
+> Currently, VMCOREINFO note information reports the virtual address of
+> phys_base that is assigned to symbol phys_base. But this doesn't make
+> sense because to refer to value of the phys_base, it's necessary to
+> get the value of phys_base itself we are now about to refer to.
 > 
-> What advantages does KDUMP have over ELF?
+> Userland tools related to kdump such as makedumpfile and crash utility
+> so far have made some efforts to calculate phys_base from memory
+> mapping information on a variety of crash dump formats. But there's no
+> guarantee to keep maintaining it in the future.
+> 
+> This is also useful for crash dump mechanism running outside Linux
+> kernel such as virtual machine hypervisor such as qemu dump, which
+> ordinary users use via virsh dump, or ones implemented on vendor
+> specific firmware. They cannot get phys_base without special mechanism
+> because phys_base is kernel information.
+> 
+> To get VMCOREINFO in vmcore, it's easy to use strings and grep
+> commands like this; VMCOREINFO consists of simple string:
+> 
+> $ strings vmcore-3.10.0-121.el7.x86_64 | grep -E ".*VMCOREINFO.*" -A 100
+> VMCOREINFO
+> OSRELEASE=3.10.0-121.el7.x86_64
+> PAGESIZE=4096
+> ...
+> 
+> Similarly, this is also useful to get value of phys_base in kdump 2nd
+> kernel contained in vmcore using the above-mentioned external crash
+> dump mechanism; kdump 2nd kernel is an inherently relocated kernel.
+> 
+> This commit doesn't remove VMCOREINFO_SYMBOL(phys_base) line because
+> makedumpfile refers to it and if removing it, old versions
+> makedumpfile doesn't work well.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+>  arch/x86/kernel/machine_kexec_64.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 4859810..e6d00a4 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -334,6 +334,7 @@ void arch_crash_save_vmcoreinfo(void)
+>  #endif
+>  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+>  			      (unsigned long)&_text - __START_KERNEL);
+> +	VMCOREINFO_LENGTH(phys_base, phys_base);
 
-It's smaller (data is compressed), and it contains a header with some
-useful information (e.g. the crashed kernel's version and release).
+While I fully agree with the concept, I don't like the use of
+VMCOREINFO_LENGTH. LENGTH(symbol) has been used to store array length
+in VMCOREINFO.
 
-HTH,
+OTOH there is currently no good syntax for storing a value (short of
+VMCOREINFO_NUMBER, but that one is signed). I think it would be best to
+extend the VMCOREINFO syntax for storing variables, preferably in
+hexadecimal, e.g.:
+
+#define VMCOREINFO_VALUE(name, value) \
+	vmcoreinfo_append_str("VALUE(%s)=%lx\n", #name, (unsigned long) value)
+
+This interface is somewhat suboptimal, because it can only store a
+single long value. So, maybe we should dump the complete variable in
+hex, or something similar...
+
+Anyone has a better idea?
+
 Petr T
 
 _______________________________________________
