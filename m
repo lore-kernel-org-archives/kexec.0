@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 12 Nov 2014 19:28:32 +0800
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XoWgY-0000r1-Go
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 12:06:07 +0000
+Date: Wed, 12 Nov 2014 20:05:35 +0800
 From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH 1/1] x86/iommu: fix incorrect bit operations in setting
- values
-Message-ID: <20141112112832.GA3334@dhcp-17-108.nay.redhat.com>
-References: <1415172619-4801-1-git-send-email-zhen-hual@hp.com>
+Subject: Re: [PATCH] makedumpfile: Fix the variable pfn_needed leaking
+Message-ID: <20141112120535.GB3334@dhcp-17-108.nay.redhat.com>
+References: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1415172619-4801-1-git-send-email-zhen-hual@hp.com>
+In-Reply-To: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,110 +23,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Cc: kexec@lists.infradead.org, joro@8bytes.org, dwmw2@infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+To: zhouwj-fnst@cn.fujitsu.com
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-The kdump starts 2nd kernel without any error message when I use
-3.18.0-rc4 merged last 6 patchs. The following is the message which 2nd
-kernel prints during booting.
-
-Patchset:
-	0001-iommu-vt-d-Update-iommu_attach_domain-and-its-caller.patch
-	0002-iommu-vt-d-Items-required-for-kdump.patch
-	0003-iommu-vt-d-data-types-and-functions-used-for-kdump.patch
-	0004-iommu-vt-d-Add-domain-id-functions.patch
-	0005-iommu-vt-d-enable-kdump-support-in-iommu-module.patch
-	0006-x86-iommu-fix-incorrect-bit-operations-in-setting-va.patch
-
-log:
-[    1.689604] IOMMU intel_iommu_in_crashdump = true
-[    1.694310] IOMMU Skip disabling iommu hardware translations
-[    1.699987] DMAR: No ATSR found
-[    1.703151] IOMMU Copying translate tables from panicked kernel
-[    1.710786] IOMMU: root_new_virt:0xffff8800296ec000 phys:0x0000296ec000
-[    1.717401] IOMMU:0 Domain ids from panicked kernel:
-[    1.722364] DID did:13(0x000d)
-[    1.725424] DID did:12(0x000c)
-[    1.728482] DID did:11(0x000b)
-[    1.731542] DID did:10(0x000a)
-[    1.734603] DID did:6(0x0006)
-[    1.737574] DID did:7(0x0007)
-[    1.740549] DID did:5(0x0005)
-[    1.743522] DID did:9(0x0009)
-[    1.746495] DID did:8(0x0008)
-[    1.749467] DID did:4(0x0004)
-[    1.752439] DID did:3(0x0003)
-[    1.755413] DID did:2(0x0002)
-[    1.758385] DID did:0(0x0000)
-[    1.761357] DID did:1(0x0001)
-[    1.764331] ----------------------------------------
-[    1.769302] IOMMU 0 0xfed50000: using Queued invalidation
-
-On 11/05/14 at 03:30pm, Li, Zhen-Hua wrote:
-> The function context_set_address_root() and set_root_value are setting new
-> address in a wrong way, and this patch is trying to fix this problem.
+On 11/11/14 at 04:54pm, Minfei Huang wrote:
+> If the page pfn calculated by read_from_splitblock_table is bigger than
+> pfn_needed, the variable pfn_needed will leak.
 > 
-> According to Intel Vt-d specs(Feb 2011, Revision 1.3), Chapter 9.1 and 9.2,
-> field ctp in root entry is using bits 12:63, field asr in context entry is
-> using bits 12:63.
+> makedumpfile cannot assign the pfn averagely bacause of condition
+> pfn_needed invalid.
 > 
-> To set these fields, the following functions are used:
-> static inline void context_set_address_root(struct context_entry *context,
->         unsigned long value);
-> and
-> static inline void set_root_value(struct root_entry *root, unsigned long value)
-> 
-> But they are using an invalid method to set these fields, in current code, only
-> a '|' operator is used to set it. This will not set the asr to the expected
-> value if it has an old value.
-> 
-> For example:
-> Before calling this function,
-> 	context->lo = 0x3456789012111;
-> 	value = 0x123456789abcef12;
-> 
-> After we call context_set_address_root(context, value), expected result is
-> 	context->lo == 0x123456789abce111;
-> 
-> But the actual result is:
-> 	context->lo == 0x1237577f9bbde111;
-> 
-> So we need to clear bits 12:63 before setting the new value, this will fix
-> this problem.
-> 
-> Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
+> Signed-off-by: Minfei Huang <mhuang@redhat.com>
 > ---
->  drivers/iommu/intel-iommu.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  makedumpfile.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index a27d6cb..11ac47b 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -195,6 +195,7 @@ static inline void set_root_present(struct root_entry *root)
->  }
->  static inline void set_root_value(struct root_entry *root, unsigned long value)
->  {
-> +	root->val &= ~VTD_PAGE_MASK;
->  	root->val |= value & VTD_PAGE_MASK;
->  }
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 59c4952..8807a90 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -8415,7 +8415,7 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
+>  		return info->max_mapnr;
 >  
-> @@ -247,6 +248,7 @@ static inline void context_set_translation_type(struct context_entry *context,
->  static inline void context_set_address_root(struct context_entry *context,
->  					    unsigned long value)
->  {
-> +	context->lo &= ~VTD_PAGE_MASK;
->  	context->lo |= value & VTD_PAGE_MASK;
->  }
+>  	mdf_pfn_t end_pfn;
+> -	long long pfn_needed, offset;
+> +	long long pfn_needed, offset, per_splitblock_pfn;
+>  	char *splitblock_value_offset;
 >  
+>  	pfn_needed = info->num_dumpable / info->num_dumpfile;
+> @@ -8424,7 +8424,8 @@ calculate_end_pfn_by_splitblock(mdf_pfn_t start_pfn,
+>  	end_pfn = start_pfn;
+>  
+>  	while (*cur_splitblock_num < splitblock->num && pfn_needed > 0) {
+> -		pfn_needed -= read_from_splitblock_table(splitblock_value_offset);
+> +		per_splitblock_pfn = read_from_splitblock_table(splitblock_value_offset); 
+> +		pfn_needed = pfn_needed < per_splitblock_pfn ? 0 : pfn_needed - per_splitblock_pfn;
+Hi, Wenjiang!
+
+Sorry, my emall client didnot receive the mail by you, so I reply it
+here.
+
+The split->table is an array to record the pfn count which we need dump.
+And the memory is divided by the size of info->splitblock_size, the pfn
+count in each entry will be stored in the entry of split->table.
+
+For the purpose, we want to average allocation to the pfns.
+
+Here is a case:
+There are 5 entries in the split->table, and the value is 4, 6, 4, 5, 5.
+We want to split four pieces to write to four files, and every file will
+be write 6 pfns.
+Using the function calculate_end_pfn_by_splitblock, the first file will
+be assigned all of the pfns(24 pfns).
+
+pfn_needed is 6((4+6+4+5+5) / 4) when entry the function.
+By the end of first loop, the variable pfn_needed = 2(6 - 4).
+Then move on, the variable will leak to become huge number by the end of
+second loop, because the return value of function read_from_splitblock_table
+is 6. The variable pfn_needed is ~4(2 - 6), it is huge.
+And the loop will break util *cur_splitblock_num == splitblock->num.
+
+For above case, it is no sense to use split function, so we should add
+the condition whether pfn_needed is bigger than the value of
+read_from_splitblock_table.
+
+Thanks
+Minfei
+>  		splitblock_value_offset += splitblock->entry_size;
+>  		++*cur_splitblock_num;
+>  	}
 > -- 
-> 2.0.0-rc0
+> 1.8.3.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
 
 _______________________________________________
 kexec mailing list
