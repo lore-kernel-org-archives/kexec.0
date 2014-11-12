@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp.codeaurora.org ([198.145.11.231])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XoZ61-0003HI-3p
- for kexec@lists.infradead.org; Wed, 12 Nov 2014 14:40:34 +0000
-Message-ID: <54637140.9010605@redhat.com>
-Date: Wed, 12 Nov 2014 15:40:00 +0100
-From: Laszlo Ersek <lersek@redhat.com>
+ id 1XoZDe-0005yK-GN
+ for kexec@lists.infradead.org; Wed, 12 Nov 2014 14:48:29 +0000
+Message-ID: <54637322.5060101@codeaurora.org>
+Date: Wed, 12 Nov 2014 09:48:02 -0500
+From: Christopher Covington <cov@codeaurora.org>
 MIME-Version: 1.0
 Subject: Re: [Qemu-devel] uniquely identifying KDUMP files that originate
  from QEMU
-References: <5461F18C.2080400@redhat.com> <54624710.6070306@codeaurora.org>
- <20141112090554.6dc15b9f@hananiah.suse.cz> <54635E0C.5090802@codeaurora.org>
- <20141112142601.58a4c214@hananiah.suse.cz> <54636096.6020500@codeaurora.org>
-In-Reply-To: <54636096.6020500@codeaurora.org>
+References: <5461F18C.2080400@redhat.com>	<54624710.6070306@codeaurora.org>	<20141112090554.6dc15b9f@hananiah.suse.cz>	<54635E0C.5090802@codeaurora.org>
+ <20141112142601.58a4c214@hananiah.suse.cz> <54636A42.9020508@redhat.com>
+In-Reply-To: <54636A42.9020508@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,11 +24,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christopher Covington <cov@codeaurora.org>, Petr Tesarik <ptesarik@suse.cz>
+To: Laszlo Ersek <lersek@redhat.com>, Petr Tesarik <ptesarik@suse.cz>
 Cc: Wen Congyang <wency@cn.fujitsu.com>, Ekaterina Tumanova <tumanova@linux.vnet.ibm.com>, kexec@lists.infradead.org, qemu devel list <qemu-devel@nongnu.org>, Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, Dave Anderson <anderson@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp, crash-utility@redhat.com
 
-On 11/12/14 14:28, Christopher Covington wrote:
-> On 11/12/2014 08:26 AM, Petr Tesarik wrote:
+Thanks Petr and Laszlo for entertaining my questions. I've got one last one if
+you have the time.
+
+On 11/12/2014 09:10 AM, Laszlo Ersek wrote:
+> On 11/12/14 14:26, Petr Tesarik wrote:
 >> On Wed, 12 Nov 2014 08:18:04 -0500
 >> Christopher Covington <cov@codeaurora.org> wrote:
 >>
@@ -79,23 +81,21 @@ On 11/12/14 14:28, Christopher Covington wrote:
 >>>>
 >>>> It's smaller (data is compressed), and it contains a header with some
 >>>> useful information (e.g. the crashed kernel's version and release).
->>>
->>> What if the ELF dumper used SHF_COMPRESSED or could dump an ELF.xz?
->>
->> Not the same thing. With KDUMP, each page is compressed separately, so
->> if a utility like crash needs a page from the middle, it can find it
->> and unpack it immediately. If we had an ELF.xz, then the whole file
->> must be unpacked before it can be used. And unpacking a few terabytes
->> takes ... a while. ;-)
 > 
-> Understood on the ELF.xz approach, but why couldn't each page (or maybe a
-> configurable size) be a SHF_COMPRESSED section?
+> Another advantage is that all zero-filled pages are represented in the
+> kdump file by one shared zero page.
+> 
+> The difference in speed of dumping is stunning.
 
-Perhaps it could, technically -- it's just not how Qiao Nuohan
-implemented the feature. I didn't research the background for this.
+Would you expect using SHT_NOBITS to give a similar speedup to the ELF dumper?
 
-Thanks
-Laszlo
+Thanks,
+Chris
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
 _______________________________________________
 kexec mailing list
