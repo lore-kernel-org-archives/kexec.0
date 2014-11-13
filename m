@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <100b0720dcbf9746070e1f9a9ec2a95b6f8694a8.1415837218.git.geoff@infradead.org>
+Message-Id: <b0702fc4186db21820d686e89afd6480560823db.1415837218.git.geoff@infradead.org>
 In-Reply-To: <cover.1415837218.git.geoff@infradead.org>
 References: <cover.1415837218.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH V3 3/4] kexec: Add bit definitions for kimage entry flags
+Subject: [PATCH V3 1/4] kexec: Fix make headers_check
 Date: Thu, 13 Nov 2014 00:19:32 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,66 +21,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
 
-Define new kexec preprocessor macros IND_*_BIT that define the bit position of
-the kimage entry flags.  Change the existing IND_* flag macros to be defined as
-bit shifts of the corresponding IND_*_BIT macros.  Also wrap all C language code
-in kexec.h with #if !defined(__ASSEMBLY__) so assembly files can include kexec.h
-to get the IND_* and IND_*_BIT macros.
+Remove the unneded declaration for a kexec_load() routine.
 
-Some CPU instruction sets have tests for bit position which are convenient in
-implementing routines that operate on the kimage entry list.  The addition of
-these bit position macros in a common location will avoid duplicate definitions
-and the chance that changes to the IND_* flags will not be propagated to
-assembly files.
+Fixes errors like these when running 'make headers_check':
+
+include/uapi/linux/kexec.h: userspace cannot reference function or variable defined in the kernel
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Acked-by: Paul Bolle <pebolle@tiscali.nl>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
 ---
- include/linux/kexec.h | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ include/uapi/linux/kexec.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 9d957b7..25e039c 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -1,6 +1,18 @@
- #ifndef LINUX_KEXEC_H
- #define LINUX_KEXEC_H
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 6925f5b..99048e5 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -55,12 +55,6 @@ struct kexec_segment {
+ 	size_t memsz;
+ };
  
-+#define IND_DESTINATION_BIT 0
-+#define IND_INDIRECTION_BIT 1
-+#define IND_DONE_BIT        2
-+#define IND_SOURCE_BIT      3
-+
-+#define IND_DESTINATION  (1 << IND_DESTINATION_BIT)
-+#define IND_INDIRECTION  (1 << IND_INDIRECTION_BIT)
-+#define IND_DONE         (1 << IND_DONE_BIT)
-+#define IND_SOURCE       (1 << IND_SOURCE_BIT)
-+
-+#if !defined(__ASSEMBLY__)
-+
- #include <uapi/linux/kexec.h>
+-/* Load a new kernel image as described by the kexec_segment array
+- * consisting of passed number of segments at the entry-point address.
+- * The flags allow different useage types.
+- */
+-extern int kexec_load(void *, size_t, struct kexec_segment *,
+-		unsigned long int);
+ #endif /* __KERNEL__ */
  
- #ifdef CONFIG_KEXEC
-@@ -64,10 +76,6 @@
-  */
- 
- typedef unsigned long kimage_entry_t;
--#define IND_DESTINATION  0x1
--#define IND_INDIRECTION  0x2
--#define IND_DONE         0x4
--#define IND_SOURCE       0x8
- 
- struct kexec_segment {
- 	/*
-@@ -313,4 +321,7 @@ struct task_struct;
- static inline void crash_kexec(struct pt_regs *regs) { }
- static inline int kexec_should_crash(struct task_struct *p) { return 0; }
- #endif /* CONFIG_KEXEC */
-+
-+#endif /* !defined(__ASSEBMLY__) */
-+
- #endif /* LINUX_KEXEC_H */
+ #endif /* _UAPILINUX_KEXEC_H */
 -- 
 1.9.1
 
