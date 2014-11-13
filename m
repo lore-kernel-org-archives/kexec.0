@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XowE2-0005Ag-1E
- for kexec@lists.infradead.org; Thu, 13 Nov 2014 15:22:23 +0000
-Date: Thu, 13 Nov 2014 10:21:57 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <336956801.8016660.1415892117619.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20141113.100857.53867696478245447.d.hatayama@jp.fujitsu.com>
-References: <mailman.20827.1415774425.22890.kexec@lists.infradead.org>
- <2088242606.7090866.1415801374974.JavaMail.zimbra@redhat.com>
- <20141113.100857.53867696478245447.d.hatayama@jp.fujitsu.com>
-Subject: Re: uniquely identifying KDUMP files that originate from QEMU
+ id 1Xowgx-0000lj-QS
+ for kexec@lists.infradead.org; Thu, 13 Nov 2014 15:52:17 +0000
+Date: Thu, 13 Nov 2014 16:51:48 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
+Message-ID: <20141113165148.4343b45e@hananiah.suse.cz>
+In-Reply-To: <20120724135410.GA2230@host-192-168-1-59.local.net-space.pl>
+References: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
+ <201207231530.55871.ptesarik@suse.cz>
+ <20120723201059.GA1848@host-192-168-1-59.local.net-space.pl>
+ <201207241018.35292.ptesarik@suse.cz>
+ <20120724135410.GA2230@host-192-168-1-59.local.net-space.pl>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,280 +26,125 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: lersek@redhat.com, kexec@lists.infradead.org, ptesarik@suse.cz, crash-utility@redhat.com
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: olaf@aepfle.de, horms@verge.net.au, kexec@lists.infradead.org, xen-devel@lists.xensource.com, konrad.wilk@oracle.com
 
+Hi all,
 
+this thread got somehow forgotten because of vacations...
+Anyway, read below.
 
------ Original Message -----
-> From: Dave Anderson <anderson@redhat.com>
-> Subject: Re: uniquely identifying KDUMP files that originate from QEMU
-> Date: Wed, 12 Nov 2014 09:09:34 -0500
-> 
-> > 
-> > 
-> > ----- Original Message -----
-> >> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> >> To: ptesarik@suse.cz
-> >> Cc: lersek@redhat.com, kexec@lists.infradead.org
-> >> Subject: Re: uniquely identifying KDUMP files that originate from QEMU
-> >> Message-ID:
-> >> 	<20141112.120838.303682123986142686.d.hatayama@jp.fujitsu.com>
-> >> Content-Type: Text/Plain; charset=us-ascii
-> >> 
-> >> From: Petr Tesarik <ptesarik@suse.cz>
-> >> Subject: Re: uniquely identifying KDUMP files that originate from QEMU
-> >> Date: Tue, 11 Nov 2014 13:09:13 +0100
-> >> 
-> >> > On Tue, 11 Nov 2014 12:22:52 +0100
-> >> > Laszlo Ersek <lersek@redhat.com> wrote:
-> >> > 
-> >> >> (Note: I'm not subscribed to either qemu-devel or the kexec list;
-> >> >> please
-> >> >> keep me CC'd.)
-> >> >> 
-> >> >> QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
-> >> >> kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
-> >> >> 
-> >> >> The resultant vmcore is usually analyzed with the "crash" utility.
-> >> >> 
-> >> >> The original tool producing such files is kdump. Unlike the procedure
-> >> >> performed by QEMU, kdump runs from *within* the guest (under a kexec'd
-> >> >> kdump kernel), and has more information about the original guest kernel
-> >> >> state (which is being dumped) than QEMU. To QEMU, the guest kernel
-> >> >> state
-> >> >> is opaque.
-> >> >> 
-> >> >> For this reason, the kdump preparation logic in QEMU hardcodes a number
-> >> >> of fields in the kdump header. The direct issue is the "phys_base"
-> >> >> field. Refer to dump.c, functions create_header32(), create_header64(),
-> >> >> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
-> >> >> "0").
-> >> >> 
-> >> >> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
-> >> >> 
-> >> >> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
-> >> >> 
-> >> >> This works in most cases, because the guest Linux kernel indeed tends
-> >> >> to
-> >> >> be loaded at guest-phys address 0. However, when the guest Linux kernel
-> >> >> is booted on top of OVMF (which has a somewhat unusual UEFI memory
-> >> >> map),
-> >> >> then the guest Linux kernel is loaded at 16MB, thereby getting out of
-> >> >> sync with the phys_base=0 setting visible in the KDUMP header.
-> >> >> 
-> >> >> This trips up the "crash" utility.
-> >> >> 
-> >> >> Dave worked around the issue in "crash" for ELF format dumps -- "crash"
-> >> >> can identify QEMU as the originator of the vmcore by finding the QEMU
-> >> >> notes in the ELF vmcore. If those are present, then "crash" employs a
-> >> >> heuristic, probing for a phys_base up to 32MB, in 1MB steps.
-> >> >> 
-> >> >> Alas, the QEMU notes are not present in the KDUMP-format vmcores that
-> >> >> QEMU produces (they cannot be),
-> >> > 
-> >> > Why? Since KDUMP format version 4, the complete ELF notes can be stored
-> >> > in the file (see offset_note, size_note fields in the sub-header).
-> >> > 
-> >> 
-> >> Yes, the QEMU notes is present in kdump-compressed format. But
-> >> phys_base cannot be calculated only from qemu-side. We cannot do more
-> >> than the efforts crash utility does for workaround. So, the phys_base
-> >> value in kdump-sub header is now designed to have 0 now.
-> >> 
-> >> Anyway, phys_base is kernel information. To make it available for qemu
-> >> side, there's need to prepare a mechanism for qemu to have any access
-> >> to it.
-> >> 
-> >> One ad-hoc but simple way is to put phys_base value as part of
-> >> VMCOREINFO note information on kernel.
-> >> 
-> >> Although there has already been a similar one in VMCOREINFO, like
-> >> 
-> >> arch/x86/kernel/
-> >> ==
-> >> void arch_crash_save_vmcoreinfo(void)
-> >> {
-> >>         VMCOREINFO_SYMBOL(phys_base); <---- This
-> >>         VMCOREINFO_SYMBOL(init_level4_pgt);
-> >> 
-> >> ...
-> >> ==
-> >> 
-> >> this is meangless, because this value is a virtual address assigned to
-> >> phys_base symbol. To refer to the value of phys_base itself, we need
-> >> the phys_base value we are about to get now.
-> >> 
-> >> So, instead, if we change this to save the value, not value of symbol
-> >> phys_base, we can get phys_base from the VMCOREINFO.
-> >> 
-> >> The VMCOREINFO consists simply of string. So it's easy to search
-> >> vmcore for it e.g. using strings and grep like this:
-> >> 
-> >> $ strings vmcore-3.10.0-121.el7.x86_64 | grep -E ".*VMCOREINFO.*" -A 100
-> >> VMCOREINFO
-> >> OSRELEASE=3.10.0-121.el7.x86_64
-> >> PAGESIZE=4096
-> >> ...
-> >> SYMBOL(phys_base)=ffffffff818e5010  <-- though this is address of
-> >> phys_base
-> >> now...
-> >> SYMBOL(init_level4_pgt)=ffffffff818de000
-> >> SYMBOL(node_data)=ffffffff819f1cc0
-> >> LENGTH(node_data)=1024
-> >> CRASHTIME=1399460394
-> >> ...
-> >> 
-> >> This should also be useful to get phys_base of 2nd kernel, which is
-> >> inherently relocated kernel from a vmcore generated using qemu dump.
-> >> 
-> >> This is far from well-designed from qemu's point of view, but it would
-> >> be manually easier to get phys_base than now.
-> >> 
-> >> Obviously, the VMCOREINFO is available only if CONFIG_KEXEC is
-> >> enabled. Other users cannot use this.
-> >> 
-> >> --
-> >> Thanks.
-> >> HATAYAMA, Daisuke
-> > 
-> > I agree that the actual value of phys_base should be included in the
-> > vmcoreinfo.
-> > 
-> > However, it won't help in this case because the vmcoreinfo data is not
-> > copied into the compressed dumpfile header.  The offset_vmcoreinfo and
-> > size_vmcoreinfo fields are zero.
-> 
-> Yes, so I said:
-> 
-> >> This is far from well-designed from qemu's point of view, but it would
-> >> be manually easier to get phys_base than now.
-> 
-> This is just an ad-hoc way.
-> 
-> > 
-> > Here's an example header dump of a QEMU-generated dumpfile:
-> >   
-> >   crash> help -n
-> >   makedumpfile header:
-> >             signature: "makedumpfile"
-> >                  type: 1
-> >               version: 1
-> >         all_flat_data:
-> >             num_array: 18695
-> >                 array: 7f484b760010
-> >             file_size: 0
-> >   
-> >   diskdump_data:
-> >             filename: vmcore.ovmf.rhel7.kdump-snappy
-> >                flags: c6
-> >                (KDUMP_CMPRS_LOCAL|ERROR_EXCLUDED|LZO_SUPPORTED|SNAPPY_SUPPORTED)
-> >                [FLAT]
-> >                  dfd: 3
-> >                  ofp: 3e441b1260
-> >         machine_type: 62 (EM_X86_64)
-> >   
-> >               header: 1a68fe0
-> >              signature: "KDUMP   "
-> >         header_version: 6
-> >                utsname:
-> >                  sysname:
-> >                 nodename:
-> >                  release:
-> >                  version:
-> >                  machine: x86_64
-> >               domainname:
-> >              timestamp:
-> >                   tv_sec: 0
-> >                  tv_usec: 0
-> >                 status: 4 (DUMP_DH_COMPRESSED_SNAPPY)
-> >             block_size: 4096
-> >           sub_hdr_size: 1
-> >          bitmap_blocks: 76
-> >              max_mapnr: 1245184
-> >       total_ram_blocks: 0
-> >          device_blocks: 0
-> >         written_blocks: 0
-> >            current_cpu: 0
-> >                nr_cpus: 4
-> >         tasks[nr_cpus]: 0
-> >                         0
-> >                         0
-> >                         0
-> >   
-> >           sub_header: 0 (n/a)
-> >   
-> >     sub_header_kdump: 1a69ff0
-> >              phys_base: 0
-> >             dump_level: 1 (0x1) (DUMP_EXCLUDE_ZERO)
-> >                  split: 0
-> >              start_pfn: (unused)
-> >                end_pfn: (unused)
-> >      offset_vmcoreinfo: 0 (0x0)
-> >        size_vmcoreinfo: 0 (0x0)
-> >            offset_note: 4200 (0x1068)
-> >              size_note: 3232 (0xca0)
-> >     num_prstatus_notes: 4
-> >              notes_buf: 1a6b000
-> >               notes[0]: 1a6b000
-> >               notes[1]: 1a6b164
-> >               notes[2]: 1a6b2c8
-> >               notes[3]: 1a6b42c
-> >     NT_PRSTATUS_offset: 1068
-> >                         11cc
-> >                         1330
-> >                         1494
-> >       offset_eraseinfo: 0 (0x0)
-> >         size_eraseinfo: 0 (0x0)
-> >           start_pfn_64: (unused)
-> >             end_pfn_64: (unused)
-> >           max_mapnr_64: 1245184 (0x130000)
-> >   
-> >          data_offset: 4e000
-> >           block_size: 4096
-> >          block_shift: 12
-> >               bitmap: 7f484b713010
-> >           bitmap_len: 311296
-> >            max_mapnr: 1245184 (0x130000)
-> >      dumpable_bitmap: 7f484b6c6010
-> >                 byte: 0
-> >                  bit: 0
-> >      compressed_page: 1a8c660
-> >            curbufptr: 1a7f650
-> > ...
-> > 
-> > Note that QEMU does add self-generated register dumps above, but the
-> > special
-> > "QEMU" note that is added to ELF kdumps is not included.
-> > 
-> 
-> Sorry, I didn't know this, and there's no reason not to add it.
-> 
-> > Also note that the kernel version information is also left zero-filled.
-> > 
-> 
-> This is what I intended. Retrieving data from vmcore should be done in
-> crash utility or makedumpfile.
-> 
-> > In any case, if either a QEMU note or a diskdump.data flag were added, I would
-> > be more than happy.
-> > 
-> > Dave
-> 
-> The absence of QEMU note is different from my intension. This is
-> regression agast ELF. We must add it.
+On Tue, 24 Jul 2012 15:54:10 +0200
+Daniel Kiper <daniel.kiper@oracle.com> wrote:
 
-Not necessary -- as it turns out, the QEMU notes are located in the compressed
-kdump notes section following the NT_PRSTATUS notes:
+> On Tue, Jul 24, 2012 at 10:18:34AM +0200, Petr Tesarik wrote:
+> > Dne Po 23. ??ervence 2012 22:10:59 Daniel Kiper napsal(a):
+> > > Hi Petr,
+> > >
+> > > On Mon, Jul 23, 2012 at 03:30:55PM +0200, Petr Tesarik wrote:
+> > > > Dne Po 23. ??ervence 2012 14:56:07 Petr Tesarik napsal(a):
+> > > > > Dne ??t 5. ??ervence 2012 14:16:35 Daniel Kiper napsal(a):
+> > > > > > vmcoreinfo file could exists under /sys/kernel (valid on baremetal
+> > > > > > only) and/or under /sys/hypervisor (valid when Xen dom0 is running).
+> > > > > > Read only one of them. It means that only one PT_NOTE will be always
+> > > > > > created. Remove extra code for second PT_NOTE creation.
+> > > > >
+> > > > > Hi Daniel,
+> > > > >
+> > > > > are you absolutely sure this is the right thing to do? IIUC these two
+> > > > > VMCORINFO notes are very different. The one from /sys/kernel/vmcoreinfo
+> > > > > describes the Dom0 kernel (type 'VMCOREINFO'), while the one from
+> > > > > /sys/hypervisor describes the Xen hypervisor (type 'XEN_VMCOREINFO').
+> > > > > If you keep only the hypervisor note, then e.g. makedumpfile won't be
+> > > > > able to use dumplevel greater than 1, nor will it be able to extract
+> > > > > the log buffer.
+> > > >
+> > > > I've just verified this, and I'm confident we have to keep both notes in
+> > > > the dump file. Simon, please revert Daniel's patch to avoid regressions.
+> > > >
+> > > > I'm attaching a sample VMCOREINFO_XEN and VMCOREINFO to demonstrate the
+> > > > difference. Note that the VMCOREINFO_XEN note is actually too big,
+> > > > because Xen doesn't bother to maintain the correct note size in the note
+> > > > header, so it always spans a complete page minus sizeof(Elf64_Nhdr)...
+> > >
+> > > [...]
+> > >
+> > > The problem with /sys/kernel/vmcoreinfo under Xen is that it expose invalid
+> > > physical address. It breaks /proc/vmcore in crash kernel. That is why I
+> > > proposed that fix. Additionally, /sys/kernel/vmcoreinfo is not available
+> > > under Xen Linux Ver. 2.6.18. However, I did not do any makedumpfile tests.
+> > > If you discovered any issues with my patch please drop me more details
+> > > about your tests (Xen version, Linux Kernel version, makedumpfile version,
+> > > command lines, config files, logs, etc.). I will be more then happy to
+> > > fix/improve kexec-tools and makedumpfile.
+> >
+> > Hi Daniel,
+> >
+> > well, Linux v2.6.18 does not have /sys/kernel/vmcoreinfo, simply because the
+> > VMCOREINFO infrastructure was not present in 2.6.18. It was added later with
+> 
+> Yep.
+> 
+> > commit fd59d231f81cb02870b9cf15f456a897f3669b4e, which went into 2.6.24.
+> 
+> Hmmm... As I know 2.6.24 does not support kexec/kdump under Xen dom0. Correct?
+> 
+> > I tested with the following combinations:
+> >
+> > * xen-3.3.1 + kernel-xen-2.6.27.54 + kexec-tools-2.0.0 + makedumpfile-1.3.1
+> > * xen-4.0.3 + kernel-xen-2.6.32.59 + kexec-tools-2.0.0 + makedumpfile-1.3.1
+> > * xen-4.1.2 + kernel-xen-3.0.34 + kexec-tools-2.0.0 + makedumpfile-1.4.0
+> >
+> > These versions correspond to SLES11-GA, SLES11-SP1 and SLES11-SP2,
+> > respectively. All of them work just fine and save both ELF notes into the
+> > dump.
+> 
+> Could you test current kexec-tools development version and
+> latest makedumpfile version on latest SLES version?
 
-  http://lists.infradead.org/pipermail/kexec/2014-November/012974.html
+And indeed, I've just hit this regression with SLES12 GA (kernel 3.12.28,
+kexec-tools 2.0.5, makedumpfile 1.5.6).
 
-It's just that the notes-gathering code in the crash utility was only
-looking for and storing NT_PRSTATUS note information.
+In the secondary kernel, makedumpfile complains that VMCOREINFO is not
+stored in /proc/vmcore:
 
-Thanks,
-  Dave
+bash-4.2# makedumpfile -d 31 -X -E /proc/vmcore /kdump/mnt1/abuild/dumps/2014-11-13-13\:13/vmcore.elf
+Switched running mode from cyclic to non-cyclic,
+because the cyclic mode doesn't support Xen.
+/proc/vmcore doesn't contain vmcoreinfo.
+Specify '-x' option or '-i' option.
+Commandline parameter is invalid.
+Try `makedumpfile --help' for more information.
 
+makedumpfile Failed.
+
+Then I reverted commit 455d79f57e9367e5c59093fd74798905bd5762fc and
+everything works just fine.
+
+> > What do you mean by "invalid physical address"? I'm getting the correct
+> > physical address under Xen. Obviously, it must be translated to machine
+> > addresses if you need them from the secondary kernel.
+> 
+> Correct vmcoreinfo address should be established by calling
+> HYPERVISOR_kexec_op(KEXEC_CMD_kexec_get_range, KEXEC_RANGE_MA_VMCOREINFO).
+
+The addresses I get from /sys/kernel/vmcoreinfo and
+from /sys/hypervisor/vmcoreinfo are machine addresses in both cases, so
+when a non-Xen kernel is used for dumping, everything works as expected.
+
+I am well aware that the Xen implementation in SLES differs
+substantially from mainline, but it seems to me that:
+
+  1. both VMCOREINFO and VMCOREINFO_XEN is required for dumpfile
+     filtering, and
+  2. both sysfs files should report machine addresses, because the current
+     p2m mapping is lost forever when the hypervisor executes the secondary
+     kernel, so physical addresses are pretty useless.
+
+I'm reverting the patch for the SLES distro, but I'd like to reach some
+kind of consensus with the community, too.
+
+Petr T
 
 _______________________________________________
 kexec mailing list
