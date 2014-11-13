@@ -1,26 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xopo4-0004MO-E6
- for kexec@lists.infradead.org; Thu, 13 Nov 2014 08:31:09 +0000
-Received: from kw-mxq.gw.nic.fujitsu.com (unknown [10.0.237.131])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id D5BF93EE0C2
- for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 17:30:43 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id E744BAC0803
- for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 17:30:42 +0900 (JST)
-Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
- [10.134.21.209])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8E9A71DB8042
- for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 17:30:42 +0900 (JST)
-Message-ID: <54646C1D.1050102@jp.fujitsu.com>
-Date: Thu, 13 Nov 2014 17:30:21 +0900
-From: "HATAYAMA, Daisuke" <d.hatayama@jp.fujitsu.com>
+Date: Thu, 13 Nov 2014 16:37:06 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 00/10] arm64 kexec kernel patches V5
+Message-ID: <20141113083706.GA8615@darkstar.nay.redhat.com>
+References: <cover.1414099246.git.geoff@infradead.org>
+ <20141031075209.GH3290@darkstar.nay.redhat.com>
+ <1414797939.23621.38.camel@smoke>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-References: <20141112.154042.59640143160036130.d.hatayama@jp.fujitsu.com>	<20141112221205.GB5265@redhat.com>	<20141113.091709.520211949477822929.d.hatayama@jp.fujitsu.com>
- <20141113090657.2578f087@hananiah.suse.cz>
-In-Reply-To: <20141113090657.2578f087@hananiah.suse.cz>
+Content-Disposition: inline
+In-Reply-To: <1414797939.23621.38.camel@smoke>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,59 +17,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, anderson@redhat.com, ebiederm@xmission.com, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
+To: Geoff Levand <geoff@infradead.org>
+Cc: mark.rutland@arm.com, ard.biesheuvel@linaro.org, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, christoffer.dall@linaro.org, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
+On 10/31/14 at 04:25pm, Geoff Levand wrote:
+> Hi Dave,
+> 
+> Thanks for testing.
+> 
+> On Fri, 2014-10-31 at 15:52 +0800, Dave Young wrote:
+> > I tested your patches. The macihne is using spin-table cpu enable method
+> > so I tried maxcpus=1 as you suggested.
+> > 
+> > There's below issues for me, thoughts?
+> > 
+> > 1. For acpi booting there's no /proc/device-tree so kexec can not find dtb
+> > to use.
+> 
+> You can supply a DTB with the kexec --dtb option, then kexec will not need
+> /proc/device-tree.  Please try if you can and let me know what happens.
+> 
 
+In your kexec-tools code, by default it will create dtb1 from procfs, as for external
+--dtb it will be dtb2 for comparing with dtb1.
 
-(2014/11/13 17:06), Petr Tesarik wrote:
-> On Thu, 13 Nov 2014 09:17:09 +0900 (JST)
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->
->> From: Vivek Goyal <vgoyal@redhat.com>
->> Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
->> Date: Wed, 12 Nov 2014 17:12:05 -0500
->>
->>> On Wed, Nov 12, 2014 at 03:40:42PM +0900, HATAYAMA Daisuke wrote:
->>>> Currently, VMCOREINFO note information reports the virtual address of
->>>> phys_base that is assigned to symbol phys_base. But this doesn't make
->>>> sense because to refer to value of the phys_base, it's necessary to
->>>> get the value of phys_base itself we are now about to refer to.
->>>>
->>>
->>> Hi Hatayama,
->>>
->>> /proc/vmcore ELF headers have virtual address information and using
->>> that you should be able to read actual value of phys_base. gdb deals
->>> with virtual addresses all the time and can read value of any symbol
->>> using those headers.
->>>
->>> So I am not sure what's the need for exporting actual value of
->>> phys_base.
->>>
->>
->> Sorry, my logic in the patch description was wrong. For /proc/vmcore,
->> there's enough information for makedumpdile to get phys_base. It's
->> correct. The problem here is that other crash dump mechanisms that run
->> outside Linux kernel independently don't have information to get
->> phys_base.
->
-> Yes, but these mechanisms won't be able to read VMCOREINFO either, will
-> they?
->
+Since dtb1 is a must so it will not work without /proc/device-tree.
 
-I don't intend such sophisticated function only by VMCOREINFO.
-Search vmcore for VMCOREINFO using strings + grep before opening it by crash.
-I intend that only here.
+There had some discussion about this in the thread. But I think we have no
+conclusion where to go.
 
--- 
-Thanks.
-HATAYAMA, Daisuke
+There maybe below possibilities:
+1) unflattern dtb both for EFI/acpi booting even if acpi boot does not need it.
 
+2) copy the bootloader passed dtb stub to somewhere, and export the stub to
+ userspace ie. in debugfs or procfs
+ like /proc/saved_dtb 
+
+Thoughts to continue the discuss?
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
