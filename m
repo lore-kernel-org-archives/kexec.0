@@ -1,18 +1,23 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XojoE-0004fX-Ov
- for kexec@lists.infradead.org; Thu, 13 Nov 2014 02:06:55 +0000
-Date: Thu, 13 Nov 2014 10:06:28 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH] makedumpfile: Fix the variable pfn_needed leaking
-Message-ID: <20141113020628.GA7286@dhcp-17-108.nay.redhat.com>
-References: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
- <20141112120535.GB3334@dhcp-17-108.nay.redhat.com>
- <54640278.8080605@cn.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <54640278.8080605@cn.fujitsu.com>
+ id 1Xok8M-0005JT-8G
+ for kexec@lists.infradead.org; Thu, 13 Nov 2014 02:27:43 +0000
+Received: from kw-mxauth.gw.nic.fujitsu.com (unknown [10.0.237.134])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id C3D5B3EE0C0
+ for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 11:27:17 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id C95E2AC011D
+ for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 11:27:16 +0900 (JST)
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5EEFF1DB8037
+ for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 11:27:16 +0900 (JST)
+Date: Thu, 13 Nov 2014 11:30:11 +0900 (JST)
+Message-Id: <20141113.113011.630216167285231824.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH v2] kdump, vmcoreinfo: report actual value of phys_base
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,69 +26,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
-Cc: kexec@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: ebiederm@xmission.com, vgoyal@redhat.com
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, anderson@redhat.com
 
-T24gMTEvMTMvMTQgYXQgMDg6NTlhbSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
-PiBPbiAxMS8xMi8yMDE0IDA4OjA1IFBNLCBNaW5mZWkgSHVhbmcgd3JvdGU6Cj4gPk9uIDExLzEx
-LzE0IGF0IDA0OjU0cG0sIE1pbmZlaSBIdWFuZyB3cm90ZToKPiA+PklmIHRoZSBwYWdlIHBmbiBj
-YWxjdWxhdGVkIGJ5IHJlYWRfZnJvbV9zcGxpdGJsb2NrX3RhYmxlIGlzIGJpZ2dlciB0aGFuCj4g
-Pj5wZm5fbmVlZGVkLCB0aGUgdmFyaWFibGUgcGZuX25lZWRlZCB3aWxsIGxlYWsuCj4gPj4KPiA+
-Pm1ha2VkdW1wZmlsZSBjYW5ub3QgYXNzaWduIHRoZSBwZm4gYXZlcmFnZWx5IGJhY2F1c2Ugb2Yg
-Y29uZGl0aW9uCj4gPj5wZm5fbmVlZGVkIGludmFsaWQuCj4gPj4KPiA+PlNpZ25lZC1vZmYtYnk6
-IE1pbmZlaSBIdWFuZzxtaHVhbmdAcmVkaGF0LmNvbT4KPiA+Pi0tLQo+ID4+ICBtYWtlZHVtcGZp
-bGUuYyB8IDUgKysrLS0KPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBk
-ZWxldGlvbnMoLSkKPiA+Pgo+ID4+ZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1
-bXBmaWxlLmMKPiA+PmluZGV4IDU5YzQ5NTIuLjg4MDdhOTAgMTAwNjQ0Cj4gPj4tLS0gYS9tYWtl
-ZHVtcGZpbGUuYwo+ID4+KysrIGIvbWFrZWR1bXBmaWxlLmMKPiA+PkBAIC04NDE1LDcgKzg0MTUs
-NyBAQCBjYWxjdWxhdGVfZW5kX3Bmbl9ieV9zcGxpdGJsb2NrKG1kZl9wZm5fdCBzdGFydF9wZm4s
-Cj4gPj4gIAkJcmV0dXJuIGluZm8tPm1heF9tYXBucjsKPiA+Pgo+ID4+ICAJbWRmX3Bmbl90IGVu
-ZF9wZm47Cj4gPj4tCWxvbmcgbG9uZyBwZm5fbmVlZGVkLCBvZmZzZXQ7Cj4gPj4rCWxvbmcgbG9u
-ZyBwZm5fbmVlZGVkLCBvZmZzZXQsIHBlcl9zcGxpdGJsb2NrX3BmbjsKPiA+PiAgCWNoYXIgKnNw
-bGl0YmxvY2tfdmFsdWVfb2Zmc2V0Owo+ID4+Cj4gPj4gIAlwZm5fbmVlZGVkID0gaW5mby0+bnVt
-X2R1bXBhYmxlIC8gaW5mby0+bnVtX2R1bXBmaWxlOwo+ID4+QEAgLTg0MjQsNyArODQyNCw4IEBA
-IGNhbGN1bGF0ZV9lbmRfcGZuX2J5X3NwbGl0YmxvY2sobWRmX3Bmbl90IHN0YXJ0X3BmbiwKPiA+
-PiAgCWVuZF9wZm4gPSBzdGFydF9wZm47Cj4gPj4KPiA+PiAgCXdoaWxlICgqY3VyX3NwbGl0Ymxv
-Y2tfbnVtPCAgc3BsaXRibG9jay0+bnVtJiYgIHBmbl9uZWVkZWQ+ICAwKSB7Cj4gPj4tCQlwZm5f
-bmVlZGVkIC09IHJlYWRfZnJvbV9zcGxpdGJsb2NrX3RhYmxlKHNwbGl0YmxvY2tfdmFsdWVfb2Zm
-c2V0KTsKPiA+PisJCXBlcl9zcGxpdGJsb2NrX3BmbiA9IHJlYWRfZnJvbV9zcGxpdGJsb2NrX3Rh
-YmxlKHNwbGl0YmxvY2tfdmFsdWVfb2Zmc2V0KTsKPiA+PisJCXBmbl9uZWVkZWQgPSBwZm5fbmVl
-ZGVkPCAgcGVyX3NwbGl0YmxvY2tfcGZuID8gMCA6IHBmbl9uZWVkZWQgLSBwZXJfc3BsaXRibG9j
-a19wZm47Cj4gPkhpLCBXZW5qaWFuZyEKPiA+Cj4gPlNvcnJ5LCBteSBlbWFsbCBjbGllbnQgZGlk
-bm90IHJlY2VpdmUgdGhlIG1haWwgYnkgeW91LCBzbyBJIHJlcGx5IGl0Cj4gPmhlcmUuCj4gPgo+
-ID5UaGUgc3BsaXQtPnRhYmxlIGlzIGFuIGFycmF5IHRvIHJlY29yZCB0aGUgcGZuIGNvdW50IHdo
-aWNoIHdlIG5lZWQgZHVtcC4KPiA+QW5kIHRoZSBtZW1vcnkgaXMgZGl2aWRlZCBieSB0aGUgc2l6
-ZSBvZiBpbmZvLT5zcGxpdGJsb2NrX3NpemUsIHRoZSBwZm4KPiA+Y291bnQgaW4gZWFjaCBlbnRy
-eSB3aWxsIGJlIHN0b3JlZCBpbiB0aGUgZW50cnkgb2Ygc3BsaXQtPnRhYmxlLgo+ID4KPiA+Rm9y
-IHRoZSBwdXJwb3NlLCB3ZSB3YW50IHRvIGF2ZXJhZ2UgYWxsb2NhdGlvbiB0byB0aGUgcGZucy4K
-PiA+Cj4gPkhlcmUgaXMgYSBjYXNlOgo+ID5UaGVyZSBhcmUgNSBlbnRyaWVzIGluIHRoZSBzcGxp
-dC0+dGFibGUsIGFuZCB0aGUgdmFsdWUgaXMgNCwgNiwgNCwgNSwgNS4KPiA+V2Ugd2FudCB0byBz
-cGxpdCBmb3VyIHBpZWNlcyB0byB3cml0ZSB0byBmb3VyIGZpbGVzLCBhbmQgZXZlcnkgZmlsZSB3
-aWxsCj4gPmJlIHdyaXRlIDYgcGZucy4KPiA+VXNpbmcgdGhlIGZ1bmN0aW9uIGNhbGN1bGF0ZV9l
-bmRfcGZuX2J5X3NwbGl0YmxvY2ssIHRoZSBmaXJzdCBmaWxlIHdpbGwKPiA+YmUgYXNzaWduZWQg
-YWxsIG9mIHRoZSBwZm5zKDI0IHBmbnMpLgo+ID4KPiA+cGZuX25lZWRlZCBpcyA2KCg0KzYrNCs1
-KzUpIC8gNCkgd2hlbiBlbnRyeSB0aGUgZnVuY3Rpb24uCj4gPkJ5IHRoZSBlbmQgb2YgZmlyc3Qg
-bG9vcCwgdGhlIHZhcmlhYmxlIHBmbl9uZWVkZWQgPSAyKDYgLSA0KS4KPiA+VGhlbiBtb3ZlIG9u
-LCB0aGUgdmFyaWFibGUgd2lsbCBsZWFrIHRvIGJlY29tZSBodWdlIG51bWJlciBieSB0aGUgZW5k
-IG9mCj4gPnNlY29uZCBsb29wLCBiZWNhdXNlIHRoZSByZXR1cm4gdmFsdWUgb2YgZnVuY3Rpb24g
-cmVhZF9mcm9tX3NwbGl0YmxvY2tfdGFibGUKPiA+aXMgNi4gVGhlIHZhcmlhYmxlIHBmbl9uZWVk
-ZWQgaXMgfjQoMiAtIDYpLCBpdCBpcyBodWdlLgo+ID5BbmQgdGhlIGxvb3Agd2lsbCBicmVhayB1
-dGlsICpjdXJfc3BsaXRibG9ja19udW0gPT0gc3BsaXRibG9jay0+bnVtLgo+IAo+IHBmbl9uZWVk
-ZWQgaXMgKGxvbmcgbG9uZykuIElmIGl0IGlzIC00LCB3b24ndCB0aGUgbG9vcCBicmVhaz8KCk9v
-cHMhCgpTb3JyeSwgSSBnb3QgYSBtaXN0YWtlLiBZb3UgYXJlIHJpZ2h0LgoKPiAKPiA+Cj4gPkZv
-ciBhYm92ZSBjYXNlLCBpdCBpcyBubyBzZW5zZSB0byB1c2Ugc3BsaXQgZnVuY3Rpb24sIHNvIHdl
-IHNob3VsZCBhZGQKPiA+dGhlIGNvbmRpdGlvbiB3aGV0aGVyIHBmbl9uZWVkZWQgaXMgYmlnZ2Vy
-IHRoYW4gdGhlIHZhbHVlIG9mCj4gPnJlYWRfZnJvbV9zcGxpdGJsb2NrX3RhYmxlLgo+ID4KPiA+
-VGhhbmtzCj4gPk1pbmZlaQo+ID4+ICAJCXNwbGl0YmxvY2tfdmFsdWVfb2Zmc2V0ICs9IHNwbGl0
-YmxvY2stPmVudHJ5X3NpemU7Cj4gPj4gIAkJKysqY3VyX3NwbGl0YmxvY2tfbnVtOwo+ID4+ICAJ
-fQo+ID4+LS0KPiA+PjEuOC4zLjEKPiA+Pgo+IAo+IAo+IC0tIAo+IFRoYW5rcwo+IFpob3UgV2Vu
-amlhbgo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+Currently, VMCOREINFO note information reports the virtual address of
+phys_base that is assigned to symbol phys_base. But this doesn't make
+sense because to refer to phys_base, it's necessary to get the value
+of phys_base itself we are now about to refer to.
+
+Userland tools related to kdump such as makedumpfile and crash utility
+so far have made some efforts to calculate phys_base on crash dump
+formats generated by mechanisms running outside Linux kernel, such as
+virtual machine hypervisor such as qemu dump, which ordinary users use
+via virsh dump, or ones implemented on vendor specific firmware.
+
+That is, find a kernel data whose virtual and physical addresses are
+available via its note information and calculate phys_base from
+it. However, such data structure is not the one prepared for phys_base
+purpose. There's no guarantee that other crash dump mechanisms include
+such information that can be used to calculate phys_base similarly.
+
+To get VMCOREINFO in vmcore, it's easy to use strings and grep
+commands like this; VMCOREINFO consists of simple string:
+
+$ strings vmcore-3.10.0-121.el7.x86_64 | grep -E ".*VMCOREINFO.*" -A 100
+VMCOREINFO
+OSRELEASE=3.10.0-121.el7.x86_64
+PAGESIZE=4096
+...
+
+This is also useful to get value of phys_base in kdump 2nd kernel
+contained in vmcore using the above-mentioned external crash dump
+mechanism; kdump 2nd kernel is an inherently relocated kernel.
+
+This commit doesn't remove VMCOREINFO_SYMBOL(phys_base) line because
+makedumpfile refers to it and if removing it, old versions
+makedumpfile doesn't work well.
+
+ChangeLog:
+v2:
+- Introduce VMCOREINFO_PHYS_BASE().
+- Correct patch description: this work is primarily for mechanisms
+  running outside (kdump 1st) Linux kernel.
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ arch/x86/kernel/machine_kexec_64.c | 1 +
+ include/linux/kexec.h              | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 4859810..47cc835 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -334,6 +334,7 @@ void arch_crash_save_vmcoreinfo(void)
+ #endif
+ 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+ 			      (unsigned long)&_text - __START_KERNEL);
++	VMCOREINFO_PHYS_BASE(phys_base);
+ }
+ 
+ /* arch-dependent functionality related to kexec file-based syscall */
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 9d957b7..bee3c5b 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -258,6 +258,8 @@ unsigned long paddr_vmcoreinfo_note(void);
+ 	vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
+ #define VMCOREINFO_CONFIG(name) \
+ 	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
++#define VMCOREINFO_PHYS_BASE(value) \
++	vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
+ 
+ extern struct kimage *kexec_image;
+ extern struct kimage *kexec_crash_image;
+-- 
+1.9.3
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
