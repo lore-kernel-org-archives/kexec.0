@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xoire-0005tK-BD
- for kexec@lists.infradead.org; Thu, 13 Nov 2014 01:06:24 +0000
-Received: from kw-mxoi1.gw.nic.fujitsu.com (unknown [10.0.237.133])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A8DEC3EE125
- for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 10:06:00 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by kw-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id A668AAC0803
- for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 10:05:59 +0900 (JST)
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3C75C1DB8040
- for <kexec@lists.infradead.org>; Thu, 13 Nov 2014 10:05:59 +0900 (JST)
-Date: Thu, 13 Nov 2014 10:08:57 +0900 (JST)
-Message-Id: <20141113.100857.53867696478245447.d.hatayama@jp.fujitsu.com>
-Subject: Re: uniquely identifying KDUMP files that originate from QEMU
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <2088242606.7090866.1415801374974.JavaMail.zimbra@redhat.com>
-References: <mailman.20827.1415774425.22890.kexec@lists.infradead.org>
- <2088242606.7090866.1415801374974.JavaMail.zimbra@redhat.com>
-Mime-Version: 1.0
+ id 1XojoE-0004fX-Ov
+ for kexec@lists.infradead.org; Thu, 13 Nov 2014 02:06:55 +0000
+Date: Thu, 13 Nov 2014 10:06:28 +0800
+From: Minfei Huang <mhuang@redhat.com>
+Subject: Re: [PATCH] makedumpfile: Fix the variable pfn_needed leaking
+Message-ID: <20141113020628.GA7286@dhcp-17-108.nay.redhat.com>
+References: <1415696079-29701-1-git-send-email-mhuang@redhat.com>
+ <20141112120535.GB3334@dhcp-17-108.nay.redhat.com>
+ <54640278.8080605@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <54640278.8080605@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,267 +21,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: anderson@redhat.com
-Cc: lersek@redhat.com, kexec@lists.infradead.org, ptesarik@suse.cz, crash-utility@redhat.com
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
+Cc: kexec@lists.infradead.org
 
-From: Dave Anderson <anderson@redhat.com>
-Subject: Re: uniquely identifying KDUMP files that originate from QEMU
-Date: Wed, 12 Nov 2014 09:09:34 -0500
-
-> 
-> 
-> ----- Original Message -----
->> From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
->> To: ptesarik@suse.cz
->> Cc: lersek@redhat.com, kexec@lists.infradead.org
->> Subject: Re: uniquely identifying KDUMP files that originate from QEMU
->> Message-ID:
->> 	<20141112.120838.303682123986142686.d.hatayama@jp.fujitsu.com>
->> Content-Type: Text/Plain; charset=us-ascii
->> 
->> From: Petr Tesarik <ptesarik@suse.cz>
->> Subject: Re: uniquely identifying KDUMP files that originate from QEMU
->> Date: Tue, 11 Nov 2014 13:09:13 +0100
->> 
->> > On Tue, 11 Nov 2014 12:22:52 +0100
->> > Laszlo Ersek <lersek@redhat.com> wrote:
->> > 
->> >> (Note: I'm not subscribed to either qemu-devel or the kexec list; please
->> >> keep me CC'd.)
->> >> 
->> >> QEMU is able to dump the guest's memory in KDUMP format (kdump-zlib,
->> >> kdump-lzo, kdump-snappy) with the "dump-guest-memory" QMP command.
->> >> 
->> >> The resultant vmcore is usually analyzed with the "crash" utility.
->> >> 
->> >> The original tool producing such files is kdump. Unlike the procedure
->> >> performed by QEMU, kdump runs from *within* the guest (under a kexec'd
->> >> kdump kernel), and has more information about the original guest kernel
->> >> state (which is being dumped) than QEMU. To QEMU, the guest kernel state
->> >> is opaque.
->> >> 
->> >> For this reason, the kdump preparation logic in QEMU hardcodes a number
->> >> of fields in the kdump header. The direct issue is the "phys_base"
->> >> field. Refer to dump.c, functions create_header32(), create_header64(),
->> >> and "include/sysemu/dump.h", macro PHYS_BASE (with the replacement text
->> >> "0").
->> >> 
->> >> http://git.qemu.org/?p=qemu.git;a=blob;f=dump.c;h=9c7dad8f865af3b778589dd0847e450ba9a75b9d;hb=HEAD
->> >> 
->> >> http://git.qemu.org/?p=qemu.git;a=blob;f=include/sysemu/dump.h;h=7e4ec5c7d96fb39c943d970d1683aa2dc171c933;hb=HEAD
->> >> 
->> >> This works in most cases, because the guest Linux kernel indeed tends to
->> >> be loaded at guest-phys address 0. However, when the guest Linux kernel
->> >> is booted on top of OVMF (which has a somewhat unusual UEFI memory map),
->> >> then the guest Linux kernel is loaded at 16MB, thereby getting out of
->> >> sync with the phys_base=0 setting visible in the KDUMP header.
->> >> 
->> >> This trips up the "crash" utility.
->> >> 
->> >> Dave worked around the issue in "crash" for ELF format dumps -- "crash"
->> >> can identify QEMU as the originator of the vmcore by finding the QEMU
->> >> notes in the ELF vmcore. If those are present, then "crash" employs a
->> >> heuristic, probing for a phys_base up to 32MB, in 1MB steps.
->> >> 
->> >> Alas, the QEMU notes are not present in the KDUMP-format vmcores that
->> >> QEMU produces (they cannot be),
->> > 
->> > Why? Since KDUMP format version 4, the complete ELF notes can be stored
->> > in the file (see offset_note, size_note fields in the sub-header).
->> > 
->> 
->> Yes, the QEMU notes is present in kdump-compressed format. But
->> phys_base cannot be calculated only from qemu-side. We cannot do more
->> than the efforts crash utility does for workaround. So, the phys_base
->> value in kdump-sub header is now designed to have 0 now.
->> 
->> Anyway, phys_base is kernel information. To make it available for qemu
->> side, there's need to prepare a mechanism for qemu to have any access
->> to it.
->> 
->> One ad-hoc but simple way is to put phys_base value as part of
->> VMCOREINFO note information on kernel.
->> 
->> Although there has already been a similar one in VMCOREINFO, like
->> 
->> arch/x86/kernel/
->> ==
->> void arch_crash_save_vmcoreinfo(void)
->> {
->>         VMCOREINFO_SYMBOL(phys_base); <---- This
->>         VMCOREINFO_SYMBOL(init_level4_pgt);
->> 
->> ...
->> ==
->> 
->> this is meangless, because this value is a virtual address assigned to
->> phys_base symbol. To refer to the value of phys_base itself, we need
->> the phys_base value we are about to get now.
->> 
->> So, instead, if we change this to save the value, not value of symbol
->> phys_base, we can get phys_base from the VMCOREINFO.
->> 
->> The VMCOREINFO consists simply of string. So it's easy to search
->> vmcore for it e.g. using strings and grep like this:
->> 
->> $ strings vmcore-3.10.0-121.el7.x86_64 | grep -E ".*VMCOREINFO.*" -A 100
->> VMCOREINFO
->> OSRELEASE=3.10.0-121.el7.x86_64
->> PAGESIZE=4096
->> ...
->> SYMBOL(phys_base)=ffffffff818e5010  <-- though this is address of phys_base
->> now...
->> SYMBOL(init_level4_pgt)=ffffffff818de000
->> SYMBOL(node_data)=ffffffff819f1cc0
->> LENGTH(node_data)=1024
->> CRASHTIME=1399460394
->> ...
->> 
->> This should also be useful to get phys_base of 2nd kernel, which is
->> inherently relocated kernel from a vmcore generated using qemu dump.
->> 
->> This is far from well-designed from qemu's point of view, but it would
->> be manually easier to get phys_base than now.
->> 
->> Obviously, the VMCOREINFO is available only if CONFIG_KEXEC is
->> enabled. Other users cannot use this.
->> 
->> --
->> Thanks.
->> HATAYAMA, Daisuke
-> 
-> I agree that the actual value of phys_base should be included in the vmcoreinfo.
-> 
-> However, it won't help in this case because the vmcoreinfo data is not
-> copied into the compressed dumpfile header.  The offset_vmcoreinfo and
-> size_vmcoreinfo fields are zero.  
-
-Yes, so I said:
-
->> This is far from well-designed from qemu's point of view, but it would
->> be manually easier to get phys_base than now.
-
-This is just an ad-hoc way.
-
-> 
-> Here's an example header dump of a QEMU-generated dumpfile:
->   
->   crash> help -n
->   makedumpfile header:
->             signature: "makedumpfile"
->                  type: 1
->               version: 1
->         all_flat_data:
->             num_array: 18695
->                 array: 7f484b760010
->             file_size: 0
->   
->   diskdump_data: 
->             filename: vmcore.ovmf.rhel7.kdump-snappy
->                flags: c6 (KDUMP_CMPRS_LOCAL|ERROR_EXCLUDED|LZO_SUPPORTED|SNAPPY_SUPPORTED) [FLAT]
->                  dfd: 3
->                  ofp: 3e441b1260
->         machine_type: 62 (EM_X86_64)
->   
->               header: 1a68fe0
->              signature: "KDUMP   "
->         header_version: 6
->                utsname:
->                  sysname: 
->                 nodename: 
->                  release: 
->                  version: 
->                  machine: x86_64
->               domainname: 
->              timestamp:
->                   tv_sec: 0
->                  tv_usec: 0
->                 status: 4 (DUMP_DH_COMPRESSED_SNAPPY)
->             block_size: 4096
->           sub_hdr_size: 1
->          bitmap_blocks: 76
->              max_mapnr: 1245184
->       total_ram_blocks: 0
->          device_blocks: 0
->         written_blocks: 0
->            current_cpu: 0
->                nr_cpus: 4
->         tasks[nr_cpus]: 0
->                         0
->                         0
->                         0
->   
->           sub_header: 0 (n/a)
->   
->     sub_header_kdump: 1a69ff0 
->              phys_base: 0
->             dump_level: 1 (0x1) (DUMP_EXCLUDE_ZERO)
->                  split: 0
->              start_pfn: (unused)
->                end_pfn: (unused)
->      offset_vmcoreinfo: 0 (0x0)
->        size_vmcoreinfo: 0 (0x0)
->            offset_note: 4200 (0x1068)
->              size_note: 3232 (0xca0)
->     num_prstatus_notes: 4
->              notes_buf: 1a6b000
->               notes[0]: 1a6b000
->               notes[1]: 1a6b164
->               notes[2]: 1a6b2c8
->               notes[3]: 1a6b42c
->     NT_PRSTATUS_offset: 1068
->                         11cc
->                         1330
->                         1494
->       offset_eraseinfo: 0 (0x0)
->         size_eraseinfo: 0 (0x0)
->           start_pfn_64: (unused)
->             end_pfn_64: (unused)
->           max_mapnr_64: 1245184 (0x130000)
->   
->          data_offset: 4e000
->           block_size: 4096
->          block_shift: 12
->               bitmap: 7f484b713010
->           bitmap_len: 311296
->            max_mapnr: 1245184 (0x130000)
->      dumpable_bitmap: 7f484b6c6010
->                 byte: 0
->                  bit: 0
->      compressed_page: 1a8c660
->            curbufptr: 1a7f650
-> ...  
-> 
-> Note that QEMU does add self-generated register dumps above, but the special
-> "QEMU" note that is added to ELF kdumps is not included. 
-> 
-
-Sorry, I didn't know this, and there's no reason not to add it.
-
-> Also note that the kernel version information is also left zero-filled.
-> 
-
-This is what I intended. Retrieving data from vmcore should be done in
-crash utility or makedumpfile.
-
-> In any case, if either a QEMU note or a diskdump.data flag were added, I would
-> be more than happy.
-> 
-> Dave
-
-The absence of QEMU note is different from my intension. This is
-regression agast ELF. We must add it.
-
---
-Thanks.
-HATAYAMA, Daisuke
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMTEvMTMvMTQgYXQgMDg6NTlhbSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
+PiBPbiAxMS8xMi8yMDE0IDA4OjA1IFBNLCBNaW5mZWkgSHVhbmcgd3JvdGU6Cj4gPk9uIDExLzEx
+LzE0IGF0IDA0OjU0cG0sIE1pbmZlaSBIdWFuZyB3cm90ZToKPiA+PklmIHRoZSBwYWdlIHBmbiBj
+YWxjdWxhdGVkIGJ5IHJlYWRfZnJvbV9zcGxpdGJsb2NrX3RhYmxlIGlzIGJpZ2dlciB0aGFuCj4g
+Pj5wZm5fbmVlZGVkLCB0aGUgdmFyaWFibGUgcGZuX25lZWRlZCB3aWxsIGxlYWsuCj4gPj4KPiA+
+Pm1ha2VkdW1wZmlsZSBjYW5ub3QgYXNzaWduIHRoZSBwZm4gYXZlcmFnZWx5IGJhY2F1c2Ugb2Yg
+Y29uZGl0aW9uCj4gPj5wZm5fbmVlZGVkIGludmFsaWQuCj4gPj4KPiA+PlNpZ25lZC1vZmYtYnk6
+IE1pbmZlaSBIdWFuZzxtaHVhbmdAcmVkaGF0LmNvbT4KPiA+Pi0tLQo+ID4+ICBtYWtlZHVtcGZp
+bGUuYyB8IDUgKysrLS0KPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkKPiA+Pgo+ID4+ZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1
+bXBmaWxlLmMKPiA+PmluZGV4IDU5YzQ5NTIuLjg4MDdhOTAgMTAwNjQ0Cj4gPj4tLS0gYS9tYWtl
+ZHVtcGZpbGUuYwo+ID4+KysrIGIvbWFrZWR1bXBmaWxlLmMKPiA+PkBAIC04NDE1LDcgKzg0MTUs
+NyBAQCBjYWxjdWxhdGVfZW5kX3Bmbl9ieV9zcGxpdGJsb2NrKG1kZl9wZm5fdCBzdGFydF9wZm4s
+Cj4gPj4gIAkJcmV0dXJuIGluZm8tPm1heF9tYXBucjsKPiA+Pgo+ID4+ICAJbWRmX3Bmbl90IGVu
+ZF9wZm47Cj4gPj4tCWxvbmcgbG9uZyBwZm5fbmVlZGVkLCBvZmZzZXQ7Cj4gPj4rCWxvbmcgbG9u
+ZyBwZm5fbmVlZGVkLCBvZmZzZXQsIHBlcl9zcGxpdGJsb2NrX3BmbjsKPiA+PiAgCWNoYXIgKnNw
+bGl0YmxvY2tfdmFsdWVfb2Zmc2V0Owo+ID4+Cj4gPj4gIAlwZm5fbmVlZGVkID0gaW5mby0+bnVt
+X2R1bXBhYmxlIC8gaW5mby0+bnVtX2R1bXBmaWxlOwo+ID4+QEAgLTg0MjQsNyArODQyNCw4IEBA
+IGNhbGN1bGF0ZV9lbmRfcGZuX2J5X3NwbGl0YmxvY2sobWRmX3Bmbl90IHN0YXJ0X3BmbiwKPiA+
+PiAgCWVuZF9wZm4gPSBzdGFydF9wZm47Cj4gPj4KPiA+PiAgCXdoaWxlICgqY3VyX3NwbGl0Ymxv
+Y2tfbnVtPCAgc3BsaXRibG9jay0+bnVtJiYgIHBmbl9uZWVkZWQ+ICAwKSB7Cj4gPj4tCQlwZm5f
+bmVlZGVkIC09IHJlYWRfZnJvbV9zcGxpdGJsb2NrX3RhYmxlKHNwbGl0YmxvY2tfdmFsdWVfb2Zm
+c2V0KTsKPiA+PisJCXBlcl9zcGxpdGJsb2NrX3BmbiA9IHJlYWRfZnJvbV9zcGxpdGJsb2NrX3Rh
+YmxlKHNwbGl0YmxvY2tfdmFsdWVfb2Zmc2V0KTsKPiA+PisJCXBmbl9uZWVkZWQgPSBwZm5fbmVl
+ZGVkPCAgcGVyX3NwbGl0YmxvY2tfcGZuID8gMCA6IHBmbl9uZWVkZWQgLSBwZXJfc3BsaXRibG9j
+a19wZm47Cj4gPkhpLCBXZW5qaWFuZyEKPiA+Cj4gPlNvcnJ5LCBteSBlbWFsbCBjbGllbnQgZGlk
+bm90IHJlY2VpdmUgdGhlIG1haWwgYnkgeW91LCBzbyBJIHJlcGx5IGl0Cj4gPmhlcmUuCj4gPgo+
+ID5UaGUgc3BsaXQtPnRhYmxlIGlzIGFuIGFycmF5IHRvIHJlY29yZCB0aGUgcGZuIGNvdW50IHdo
+aWNoIHdlIG5lZWQgZHVtcC4KPiA+QW5kIHRoZSBtZW1vcnkgaXMgZGl2aWRlZCBieSB0aGUgc2l6
+ZSBvZiBpbmZvLT5zcGxpdGJsb2NrX3NpemUsIHRoZSBwZm4KPiA+Y291bnQgaW4gZWFjaCBlbnRy
+eSB3aWxsIGJlIHN0b3JlZCBpbiB0aGUgZW50cnkgb2Ygc3BsaXQtPnRhYmxlLgo+ID4KPiA+Rm9y
+IHRoZSBwdXJwb3NlLCB3ZSB3YW50IHRvIGF2ZXJhZ2UgYWxsb2NhdGlvbiB0byB0aGUgcGZucy4K
+PiA+Cj4gPkhlcmUgaXMgYSBjYXNlOgo+ID5UaGVyZSBhcmUgNSBlbnRyaWVzIGluIHRoZSBzcGxp
+dC0+dGFibGUsIGFuZCB0aGUgdmFsdWUgaXMgNCwgNiwgNCwgNSwgNS4KPiA+V2Ugd2FudCB0byBz
+cGxpdCBmb3VyIHBpZWNlcyB0byB3cml0ZSB0byBmb3VyIGZpbGVzLCBhbmQgZXZlcnkgZmlsZSB3
+aWxsCj4gPmJlIHdyaXRlIDYgcGZucy4KPiA+VXNpbmcgdGhlIGZ1bmN0aW9uIGNhbGN1bGF0ZV9l
+bmRfcGZuX2J5X3NwbGl0YmxvY2ssIHRoZSBmaXJzdCBmaWxlIHdpbGwKPiA+YmUgYXNzaWduZWQg
+YWxsIG9mIHRoZSBwZm5zKDI0IHBmbnMpLgo+ID4KPiA+cGZuX25lZWRlZCBpcyA2KCg0KzYrNCs1
+KzUpIC8gNCkgd2hlbiBlbnRyeSB0aGUgZnVuY3Rpb24uCj4gPkJ5IHRoZSBlbmQgb2YgZmlyc3Qg
+bG9vcCwgdGhlIHZhcmlhYmxlIHBmbl9uZWVkZWQgPSAyKDYgLSA0KS4KPiA+VGhlbiBtb3ZlIG9u
+LCB0aGUgdmFyaWFibGUgd2lsbCBsZWFrIHRvIGJlY29tZSBodWdlIG51bWJlciBieSB0aGUgZW5k
+IG9mCj4gPnNlY29uZCBsb29wLCBiZWNhdXNlIHRoZSByZXR1cm4gdmFsdWUgb2YgZnVuY3Rpb24g
+cmVhZF9mcm9tX3NwbGl0YmxvY2tfdGFibGUKPiA+aXMgNi4gVGhlIHZhcmlhYmxlIHBmbl9uZWVk
+ZWQgaXMgfjQoMiAtIDYpLCBpdCBpcyBodWdlLgo+ID5BbmQgdGhlIGxvb3Agd2lsbCBicmVhayB1
+dGlsICpjdXJfc3BsaXRibG9ja19udW0gPT0gc3BsaXRibG9jay0+bnVtLgo+IAo+IHBmbl9uZWVk
+ZWQgaXMgKGxvbmcgbG9uZykuIElmIGl0IGlzIC00LCB3b24ndCB0aGUgbG9vcCBicmVhaz8KCk9v
+cHMhCgpTb3JyeSwgSSBnb3QgYSBtaXN0YWtlLiBZb3UgYXJlIHJpZ2h0LgoKPiAKPiA+Cj4gPkZv
+ciBhYm92ZSBjYXNlLCBpdCBpcyBubyBzZW5zZSB0byB1c2Ugc3BsaXQgZnVuY3Rpb24sIHNvIHdl
+IHNob3VsZCBhZGQKPiA+dGhlIGNvbmRpdGlvbiB3aGV0aGVyIHBmbl9uZWVkZWQgaXMgYmlnZ2Vy
+IHRoYW4gdGhlIHZhbHVlIG9mCj4gPnJlYWRfZnJvbV9zcGxpdGJsb2NrX3RhYmxlLgo+ID4KPiA+
+VGhhbmtzCj4gPk1pbmZlaQo+ID4+ICAJCXNwbGl0YmxvY2tfdmFsdWVfb2Zmc2V0ICs9IHNwbGl0
+YmxvY2stPmVudHJ5X3NpemU7Cj4gPj4gIAkJKysqY3VyX3NwbGl0YmxvY2tfbnVtOwo+ID4+ICAJ
+fQo+ID4+LS0KPiA+PjEuOC4zLjEKPiA+Pgo+IAo+IAo+IC0tIAo+IFRoYW5rcwo+IFpob3UgV2Vu
+amlhbgo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Cj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
