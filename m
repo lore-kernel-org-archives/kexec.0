@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1415999327.15847.123.camel@smoke>
-Subject: Re: [PATCH v3 7/8] arm64/kexec: Add checks for KVM and EFI
+Message-ID: <1415999557.15847.125.camel@smoke>
+Subject: [PATCH v2 6/8] arm64/kexec: Add pr_devel output
 From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 14 Nov 2014 13:08:47 -0800
-In-Reply-To: <b7b2f48822a563bafe2888d7ac8e863731159796.1415926876.git.geoff@infradead.org>
+Date: Fri, 14 Nov 2014 13:12:37 -0800
+In-Reply-To: <2b08174dd201077d4e7f6ec6c107650b22688723.1415926876.git.geoff@infradead.org>
 References: <cover.1415926876.git.geoff@infradead.org>
- <b7b2f48822a563bafe2888d7ac8e863731159796.1415926876.git.geoff@infradead.org>
+ <2b08174dd201077d4e7f6ec6c107650b22688723.1415926876.git.geoff@infradead.org>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,59 +19,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: marc.zyngier@arm.com, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, christoffer.dall@linaro.org
 
-Add runtime checks that fail the arm64 kexec syscall for situations that would
-result in system instability do to problems in the KVM and EFI kernel support.
-These checks should be removed when the KVM and EFI problems are fixed.
+To aid in debugging kexec problems or when adding new functionality to kexec add
+a new routine kexec_image_info() and several inline pr_devel statements.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
-v2: Typo fixes.
-v3: Format fixes.
+v2: Format fixes - thanks Sergei
 
- arch/arm64/kernel/machine_kexec.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm64/kernel/machine_kexec.c | 54 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
 diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 3d84759..e7f036e 100644
+index b0e5d76..3d84759 100644
 --- a/arch/arm64/kernel/machine_kexec.c
 +++ b/arch/arm64/kernel/machine_kexec.c
-@@ -16,6 +16,12 @@
- #include <asm/cacheflush.h>
- #include <asm/system_misc.h>
+@@ -35,6 +35,37 @@ static bool kexec_is_dtb(const void *dtb)
+ }
  
-+/* TODO: Remove this include when KVM can support a kexec reboot. */
-+#include <asm/virt.h>
+ /**
++ * kexec_image_info - For debugging output.
++ */
++#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
++static void _kexec_image_info(const char *func, int line,
++	const struct kimage *image)
++{
++	unsigned long i;
 +
-+/* TODO: Remove this include when EFI can support a kexec reboot. */
-+#include <linux/efi.h>
++#if !defined(DEBUG)
++	return;
++#endif
++	pr_devel("%s:%d:\n", func, line);
++	pr_devel("  kexec image info:\n");
++	pr_devel("    type:        %d\n", image->type);
++	pr_devel("    start:       %lx\n", image->start);
++	pr_devel("    head:        %lx\n", image->head);
++	pr_devel("    nr_segments: %lu\n", image->nr_segments);
 +
- /* Global variables for the relocate_kernel routine. */
- extern const unsigned char relocate_new_kernel[];
- extern const unsigned long relocate_new_kernel_size;
-@@ -100,6 +106,20 @@ int machine_kexec_prepare(struct kimage *image)
- 
- 	kexec_image_info(image);
- 
-+	/* TODO: Remove this message when KVM can support a kexec reboot. */
-+	if (IS_ENABLED(CONFIG_KVM) && is_hyp_mode_available()) {
-+		pr_err("%s: Your kernel is configured with KVM support (CONFIG_KVM=y) which currently does not allow for kexec re-boot.\n",
-+			__func__);
-+		return -ENOSYS;
++	for (i = 0; i < image->nr_segments; i++) {
++		pr_devel("      segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages%s\n",
++			i,
++			image->segment[i].mem,
++			image->segment[i].mem + image->segment[i].memsz,
++			image->segment[i].memsz,
++			image->segment[i].memsz /  PAGE_SIZE,
++			(kexec_is_dtb(image->segment[i].buf) ?
++				", dtb segment" : ""));
 +	}
++}
 +
-+	/* TODO: Remove this message when EFI can support a kexec reboot. */
-+	if (efi_enabled(EFI_BOOT)) {
-+		pr_err("%s: Your kernel is using the Extensible Firmware Interface (EFI) which currently does not allow for kexec re-boot.\n",
-+			__func__);
-+		return -ENOSYS;
-+	}
++/**
+  * kexec_find_dtb_seg - Helper routine to find the dtb segment.
+  */
+ static const struct kexec_segment *kexec_find_dtb_seg(
+@@ -67,6 +98,8 @@ int machine_kexec_prepare(struct kimage *image)
+ 	arm64_kexec_dtb_addr = dtb_seg ? dtb_seg->mem : 0;
+ 	arm64_kexec_kimage_start = image->start;
+ 
++	kexec_image_info(image);
 +
  	return 0;
  }
  
+@@ -121,6 +154,27 @@ void machine_kexec(struct kimage *image)
+ 	reboot_code_buffer_phys = page_to_phys(image->control_code_page);
+ 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+ 
++	kexec_image_info(image);
++
++	pr_devel("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
++		image->control_code_page);
++	pr_devel("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
++		&reboot_code_buffer_phys);
++	pr_devel("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
++		reboot_code_buffer);
++	pr_devel("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
++		relocate_new_kernel);
++	pr_devel("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
++		__func__, __LINE__, relocate_new_kernel_size,
++		relocate_new_kernel_size);
++
++	pr_devel("%s:%d: kexec_dtb_addr:           %lx\n", __func__, __LINE__,
++		arm64_kexec_dtb_addr);
++	pr_devel("%s:%d: kexec_kimage_head:        %lx\n", __func__, __LINE__,
++		arm64_kexec_kimage_head);
++	pr_devel("%s:%d: kexec_kimage_start:       %lx\n", __func__, __LINE__,
++		arm64_kexec_kimage_start);
++
+ 	/*
+ 	 * Copy relocate_new_kernel to the reboot_code_buffer for use
+ 	 * after the kernel is shut down.
 -- 
 1.9.1
 
