@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mail-la0-f47.google.com ([209.85.215.47])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XpG7A-0008Fw-Ku
- for kexec@lists.infradead.org; Fri, 14 Nov 2014 12:36:38 +0000
-Date: Fri, 14 Nov 2014 13:36:10 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-Message-ID: <20141114133610.0e370d26@hananiah.suse.cz>
-In-Reply-To: <20141114.185423.380949544673818300.d.hatayama@jp.fujitsu.com>
-References: <20141113154810.2ee36e72@hananiah.suse.cz>
- <20141114.104235.926535445994740268.d.hatayama@jp.fujitsu.com>
- <20141114093145.746c7efe@hananiah.suse.cz>
- <20141114.185423.380949544673818300.d.hatayama@jp.fujitsu.com>
+ id 1XpI5Q-0003BL-3s
+ for kexec@lists.infradead.org; Fri, 14 Nov 2014 14:42:56 +0000
+Received: by mail-la0-f47.google.com with SMTP id gd6so14783940lab.20
+ for <kexec@lists.infradead.org>; Fri, 14 Nov 2014 06:42:33 -0800 (PST)
+Message-ID: <546614D7.8080401@cogentembedded.com>
+Date: Fri, 14 Nov 2014 17:42:31 +0300
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM and EFI
+References: <cover.1415926876.git.geoff@infradead.org>
+ <b7b2f48822a563bafe2888d7ac8e863731159796.1415926876.git.geoff@infradead.org>
+In-Reply-To: <b7b2f48822a563bafe2888d7ac8e863731159796.1415926876.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,163 +21,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, anderson@redhat.com, ebiederm@xmission.com, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
+To: Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: marc.zyngier@arm.com, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, 14 Nov 2014 18:54:23 +0900 (JST)
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+Hello.
 
-> From: Petr Tesarik <ptesarik@suse.cz>
-> Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-> Date: Fri, 14 Nov 2014 09:31:45 +0100
-> 
-> > On Fri, 14 Nov 2014 10:42:35 +0900 (JST)
-> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> > 
-> >> From: Petr Tesarik <ptesarik@suse.cz>
-> >> Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-> >> Date: Thu, 13 Nov 2014 15:48:10 +0100
-> >> 
-> >> > On Thu, 13 Nov 2014 09:25:48 -0500
-> >> > Vivek Goyal <vgoyal@redhat.com> wrote:
-> >> > 
-> >> >> On Thu, Nov 13, 2014 at 05:30:21PM +0900, HATAYAMA, Daisuke wrote:
-> >> >> > 
-> >> >> > (2014/11/13 17:06), Petr Tesarik wrote:
-> >> >> > >On Thu, 13 Nov 2014 09:17:09 +0900 (JST)
-> >> >> > >HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> >> >> > >
-> >> >> > >>From: Vivek Goyal <vgoyal@redhat.com>
-> >> >> > >>Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-> >> >> > >>Date: Wed, 12 Nov 2014 17:12:05 -0500
-> >> >> > >>
-> >> >> > >>>On Wed, Nov 12, 2014 at 03:40:42PM +0900, HATAYAMA Daisuke wrote:
-> >> >> > >>>>Currently, VMCOREINFO note information reports the virtual address of
-> >> >> > >>>>phys_base that is assigned to symbol phys_base. But this doesn't make
-> >> >> > >>>>sense because to refer to value of the phys_base, it's necessary to
-> >> >> > >>>>get the value of phys_base itself we are now about to refer to.
-> >> >> > >>>>
-> >> >> > >>>
-> >> >> > >>>Hi Hatayama,
-> >> >> > >>>
-> >> >> > >>>/proc/vmcore ELF headers have virtual address information and using
-> >> >> > >>>that you should be able to read actual value of phys_base. gdb deals
-> >> >> > >>>with virtual addresses all the time and can read value of any symbol
-> >> >> > >>>using those headers.
-> >> >> > >>>
-> >> >> > >>>So I am not sure what's the need for exporting actual value of
-> >> >> > >>>phys_base.
-> >> >> > >>>
-> >> >> > >>
-> >> >> > >>Sorry, my logic in the patch description was wrong. For /proc/vmcore,
-> >> >> > >>there's enough information for makedumpdile to get phys_base. It's
-> >> >> > >>correct. The problem here is that other crash dump mechanisms that run
-> >> >> > >>outside Linux kernel independently don't have information to get
-> >> >> > >>phys_base.
-> >> >> > >
-> >> >> > >Yes, but these mechanisms won't be able to read VMCOREINFO either, will
-> >> >> > >they?
-> >> >> > >
-> >> >> > 
-> >> >> > I don't intend such sophisticated function only by VMCOREINFO.
-> >> >> > Search vmcore for VMCOREINFO using strings + grep before opening it by crash.
-> >> >> > I intend that only here.
-> >> >> 
-> >> >> I think this is very crude and not proper way to get to vmcoreinfo.
-> >> > 
-> >> > Same here. If VMCOREINFO must be locatable without communicating any
-> >> > information to the hypervisor, then I would rather go for something
-> >> > similar to what s390(x) folks do - a well-known location in physical
-> >> > memory that contains a pointer to a checksummed OS info structure,
-> >> > which in turn contains the VMCOREINFO pointers.
-> >> > 
-> >> > I'm a bit surprised such mechanism is not needed by Fujitsu SADUMP.
-> >> > Or is that part of the current plan, Daisuke?
-> >> > 
-> >> 
-> >> It's useful if there is. I don't plan now. For now, the idea of this
-> >> patch is enough for me.
-> >> 
-> >> BTW, for the above idea, I suspect that if the location in the
-> >> physical memory is unique, it cannot deal with the kdump 2nd kernel
-> >> case.
-> > 
-> > No, not at all. The low 640K are copied away to a pre-allocated area by
-> > kexec purgatory code on x86_64, so it's safe to overwrite any location
-> > in there. The copy is needed, because BIOS already uses some hardcoded
-> > addresses in that range. I think the Linux kernel may safely use part of
-> > PFN 0 starting at physical address 0x0500. This area was originally
-> > used by MS-DOS, so chances are high that no broken BIOS out there
-> > corrupts this part of RAM...
-> > 
-> 
-> In fact, I didn't consider in such deep way... I had forgot back up
-> region at all. But it's hard to use the low 640K area. Then, it's hard
-> to get phys_base of the kdump 1st kernel that is assumed to be saved
-> in thw low 640K now. Because externally running mechanism can run
-> after kdump 2nd kernel has booted up, crash utility needs to convert a
-> read request to the low 640K area into the corresponding part of the
-> pre-allocated area. See kdump_backup_region_init() in crash utility,
-> which tries to find the pre-allocated area via ELF header, where
-> symbol kexec_crash_image is read to find ELF header. This means we
-> need phys_base to find the pre-allocated area.
+On 11/14/2014 4:22 AM, Geoff Levand wrote:
 
-Wrong again, I'm afraid.
+> Add runtime checks that fail the arm64 kexec syscall for situations that would
+> result in system instability do to problems in the KVM and EFI kernel support.
+> These checks should be removed when the KVM and EFI problems are fixed.
 
-So, first of all, an admin should make up your mind if you want to use
-kexec-based dumping, or stand-alone dumping. OK, you seem to address
-a corner case when s/he configures both. But in that case, the
-stand-alone dump can be used to look at _BOTH_ kernels, and the default
-should indeed be the one that was currently running. After all, I have
-already debugged the _SECONDARY_ kernel environment several times...
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>   arch/arm64/kernel/machine_kexec.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
 
-However, it even works. If somebody wants to see the crashed kernel
-from the same dump, they can use the second kernel's internal
-structures to locate the corresponding phys_base and pass that as an
-option to crash.
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index 775bcc3..5b62bd1f 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -16,6 +16,12 @@
+>   #include <asm/cacheflush.h>
+>   #include <asm/system_misc.h>
 
-Let me illustrate the situation:
+> +/* TODO: Remove this include when KVM can support a kexc reboot. */
 
-  +-------------------+
-  | secondary kernel  | <--- low 640K
-  | private pointers -+--\
-  |                   |  |  (1)
-  |                   |  |
-  +-------------------+<-+-----\
-  |                   |  |     |
-  | primary kernel    |  |     |
-  Z                   Z  |     |
-  |                   |  |     |
-  +-------------------+<-/     |  (3)
-  | secondary kernel  |        |
-  | (contains pointer |        |
-  |  to backup area) -+--\     |
-  +-------------------+  | (2) |
-  | backup area       |<-/     |
-  |                  -+--------/
-  +-------------------+
-  |                   |
-  | 1st kernel again  |
-  Z                   Z
-  +-------------------+
+    s/kexc/kexec/ here and below.
 
-The information is nicely chained in this diagram:
+> +#include <asm/virt.h>
+> +
+> +/* TODO: Remove this include when EFI can support a kexc reboot. */
+> +#include <linux/efi.h>
+> +
+>   /* Global variables for the relocate_kernel routine. */
+>   extern const unsigned char relocate_new_kernel[];
+>   extern const unsigned long relocate_new_kernel_size;
+> @@ -101,6 +107,22 @@ int machine_kexec_prepare(struct kimage *image)
+>
+>   	kexec_image_info(image);
+>
+> +	/* TODO: Remove this message when KVM can support a kexc reboot. */
+> +	if (IS_ENABLED(CONFIG_KVM) && is_hyp_mode_available()) {
+> +		pr_err("%s: Your kernel is configued with KVM support "
 
-  (1)  Low 640K allows you to find the currently running kernel
-       (here it is the kdump kernel).
-  (2)  This kernel knows where to find the backup area (otherwise it
-       couldn't correctly map them in /proc/vmcore).
-  (3)  The backup area allows yoou to find the previously runnning
-       kernel (the 1st kernel).
+    Configured.
 
-I really don't see any issues with the concept, although I haven't
-tried it in practice (yet).
+> +			"(CONFIG_KVM=y) which currently does not allow for "
+> +			"kexec re-boot.\n", __func__);
+> +		return -ENOSYS;
+> +	}
+> +
+> +	/* TODO: Remove this message when EFI can support a kexc reboot. */
+> +	if (efi_enabled(EFI_BOOT)) {
+> +		pr_err("%s: Your kernel is using the Extensible Firmware "
+> +			"Interface (EFI) which currently does not allow for "
+> +			"kexec re-boot.\n", __func__);
+> +		return -ENOSYS;
+> +	}
+> +
+>   	return 0;
+>   }
 
-Petr T
+WBR, Sergei
+
 
 _______________________________________________
 kexec mailing list
