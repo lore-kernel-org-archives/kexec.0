@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XpD9q-0007KR-D1
- for kexec@lists.infradead.org; Fri, 14 Nov 2014 09:27:11 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: RE: [PATCH 1/2] makedumpfile: Add description of elf dump file
-Date: Fri, 14 Nov 2014 09:24:47 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D68371@BPXM01GP.gisp.nec.co.jp>
-References: <1415948101-25843-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1415948101-25843-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1XpDXw-00041R-A1
+ for kexec@lists.infradead.org; Fri, 14 Nov 2014 09:52:05 +0000
+Received: from kw-mxoi1.gw.nic.fujitsu.com (unknown [10.0.237.133])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 3E8A13EE1E8
+ for <kexec@lists.infradead.org>; Fri, 14 Nov 2014 18:51:40 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by kw-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id 460DEAC0667
+ for <kexec@lists.infradead.org>; Fri, 14 Nov 2014 18:51:39 +0900 (JST)
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id E0C991DB802C
+ for <kexec@lists.infradead.org>; Fri, 14 Nov 2014 18:51:38 +0900 (JST)
+Date: Fri, 14 Nov 2014 18:54:23 +0900 (JST)
+Message-Id: <20141114.185423.380949544673818300.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20141114093145.746c7efe@hananiah.suse.cz>
+References: <20141113154810.2ee36e72@hananiah.suse.cz>
+ <20141114.104235.926535445994740268.d.hatayama@jp.fujitsu.com>
+ <20141114093145.746c7efe@hananiah.suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,127 +34,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: ptesarik@suse.cz
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, anderson@redhat.com, ebiederm@xmission.com, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
 
->Add description of elf dump file in IMPLEMENTATION.
->
->Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
->---
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+Date: Fri, 14 Nov 2014 09:31:45 +0100
 
-Great! I'll merge these patches into v1.5.8.
+> On Fri, 14 Nov 2014 10:42:35 +0900 (JST)
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> 
+>> From: Petr Tesarik <ptesarik@suse.cz>
+>> Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+>> Date: Thu, 13 Nov 2014 15:48:10 +0100
+>> 
+>> > On Thu, 13 Nov 2014 09:25:48 -0500
+>> > Vivek Goyal <vgoyal@redhat.com> wrote:
+>> > 
+>> >> On Thu, Nov 13, 2014 at 05:30:21PM +0900, HATAYAMA, Daisuke wrote:
+>> >> > 
+>> >> > (2014/11/13 17:06), Petr Tesarik wrote:
+>> >> > >On Thu, 13 Nov 2014 09:17:09 +0900 (JST)
+>> >> > >HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+>> >> > >
+>> >> > >>From: Vivek Goyal <vgoyal@redhat.com>
+>> >> > >>Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+>> >> > >>Date: Wed, 12 Nov 2014 17:12:05 -0500
+>> >> > >>
+>> >> > >>>On Wed, Nov 12, 2014 at 03:40:42PM +0900, HATAYAMA Daisuke wrote:
+>> >> > >>>>Currently, VMCOREINFO note information reports the virtual address of
+>> >> > >>>>phys_base that is assigned to symbol phys_base. But this doesn't make
+>> >> > >>>>sense because to refer to value of the phys_base, it's necessary to
+>> >> > >>>>get the value of phys_base itself we are now about to refer to.
+>> >> > >>>>
+>> >> > >>>
+>> >> > >>>Hi Hatayama,
+>> >> > >>>
+>> >> > >>>/proc/vmcore ELF headers have virtual address information and using
+>> >> > >>>that you should be able to read actual value of phys_base. gdb deals
+>> >> > >>>with virtual addresses all the time and can read value of any symbol
+>> >> > >>>using those headers.
+>> >> > >>>
+>> >> > >>>So I am not sure what's the need for exporting actual value of
+>> >> > >>>phys_base.
+>> >> > >>>
+>> >> > >>
+>> >> > >>Sorry, my logic in the patch description was wrong. For /proc/vmcore,
+>> >> > >>there's enough information for makedumpdile to get phys_base. It's
+>> >> > >>correct. The problem here is that other crash dump mechanisms that run
+>> >> > >>outside Linux kernel independently don't have information to get
+>> >> > >>phys_base.
+>> >> > >
+>> >> > >Yes, but these mechanisms won't be able to read VMCOREINFO either, will
+>> >> > >they?
+>> >> > >
+>> >> > 
+>> >> > I don't intend such sophisticated function only by VMCOREINFO.
+>> >> > Search vmcore for VMCOREINFO using strings + grep before opening it by crash.
+>> >> > I intend that only here.
+>> >> 
+>> >> I think this is very crude and not proper way to get to vmcoreinfo.
+>> > 
+>> > Same here. If VMCOREINFO must be locatable without communicating any
+>> > information to the hypervisor, then I would rather go for something
+>> > similar to what s390(x) folks do - a well-known location in physical
+>> > memory that contains a pointer to a checksummed OS info structure,
+>> > which in turn contains the VMCOREINFO pointers.
+>> > 
+>> > I'm a bit surprised such mechanism is not needed by Fujitsu SADUMP.
+>> > Or is that part of the current plan, Daisuke?
+>> > 
+>> 
+>> It's useful if there is. I don't plan now. For now, the idea of this
+>> patch is enough for me.
+>> 
+>> BTW, for the above idea, I suspect that if the location in the
+>> physical memory is unique, it cannot deal with the kdump 2nd kernel
+>> case.
+> 
+> No, not at all. The low 640K are copied away to a pre-allocated area by
+> kexec purgatory code on x86_64, so it's safe to overwrite any location
+> in there. The copy is needed, because BIOS already uses some hardcoded
+> addresses in that range. I think the Linux kernel may safely use part of
+> PFN 0 starting at physical address 0x0500. This area was originally
+> used by MS-DOS, so chances are high that no broken BIOS out there
+> corrupts this part of RAM...
+> 
 
+In fact, I didn't consider in such deep way... I had forgot back up
+region at all. But it's hard to use the low 640K area. Then, it's hard
+to get phys_base of the kdump 1st kernel that is assumed to be saved
+in thw low 640K now. Because externally running mechanism can run
+after kdump 2nd kernel has booted up, crash utility needs to convert a
+read request to the low 640K area into the corresponding part of the
+pre-allocated area. See kdump_backup_region_init() in crash utility,
+which tries to find the pre-allocated area via ELF header, where
+symbol kexec_crash_image is read to find ELF header. This means we
+need phys_base to find the pre-allocated area.
 
-Thanks,
-Atsushi Kumagai
+> Anyway, I'm not going to implement it right now for lack of time. I'm
+> adding it to my TODO list, but if anybody wants to post a patch, I
+> won't be offended.
+> 
+> Petr T
 
-> IMPLEMENTATION |   88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> 1 files changed, 88 insertions(+), 0 deletions(-)
->
->diff --git a/IMPLEMENTATION b/IMPLEMENTATION
->index 2f4cfd6..0e5ad1f 100644
->--- a/IMPLEMENTATION
->+++ b/IMPLEMENTATION
->@@ -112,3 +112,91 @@
->         unsigned long long      page_flags;     /* page flags */
->     } page_desc_t;
->
->+
->+* The ELF format
->+  There are two different ELF format(ELF32, ELF64) for K-bit architectures (K=32,64).
->+  Since they almost have the same behaviour in this situation, the following will use
->+  ELF32 as a example.
->+
->+  - The file structure
->+
->+    +---------------------------------+
->+    |  elf_header (struct elf32_hdr)  |
->+    |---------------------------------+
->+    |  PT_NOTE    (struct elf32_phdr) |
->+    |---------------------------------+
->+    |  PT_LOAD(1) (struct elf32_phdr) |
->+    |  PT_LOAD(2) (struct elf32_phdr) |
->+    |             :                   |
->+    |  PT_LOAD(Z) (struct elf32_phdr) |
->+    |---------------------------------+
->+    |  NOTE                           |
->+    |---------------------------------+
->+    |  segment(1)                     |
->+    |  segment(2)                     |
->+    |          :                      |
->+    |  segment(Z)                     |
->+    +---------------------------------+
->+
->+  - elf_header
->+    This header is almost the same as a normal elf_header. The difference is that the
->+    e_flags is used for indicating whether the dump file is complete or not.
->+    0x0 : complete,
->+    0x1 : incomplete
->+
->+	typedef struct elf32_hdr{
->+		unsigned char e_ident[EI_NIDENT];
->+		Elf32_Half    e_type;
->+		Elf32_Half    e_machine;
->+		Elf32_Word    e_version;
->+		Elf32_Addr    e_entry;
->+		Elf32_Off     e_phoff;
->+		Elf32_Off     e_shoff;
->+		Elf32_Word    e_flags;
->+		Elf32_Half    e_ehsize;
->+		Elf32_Half    e_phentsize;
->+		Elf32_Half    e_phnum;
->+		Elf32_Half    e_shentsize;
->+		Elf32_Half    e_shnum;
->+		Elf32_Half    e_shstrndx;
->+	} Elf32_Ehdr;
->+
->+  - PT_NOTE and PT_LOAD
->+    PT_NOTE corresponds to NOTE and PT_LOAD to segment.
->+    They present the corresponding NOTE and segments information.
->+
->+
->+	typedef struct elf32_phdr{
->+		Elf32_Word    p_type;
->+		Elf32_Off     p_offset;
->+		Elf32_Addr    p_vaddr;
->+		Elf32_Addr    p_paddr;
->+		Elf32_Word    p_filesz;
->+		Elf32_Word    p_memsz;
->+		Elf32_Word    p_flags;
->+		Elf32_Word    p_align;
->+	} Elf32_Phdr;
->+
->+  - note
->+    The note structure
->+
->+    +------------------------------------+
->+    |  note header 1 (struct elf32_note) |
->+    |  note header 2 (struct elf32_note) |
->+    |               :                    |
->+    |  note header N (struct elf32_note) |
->+    |------------------------------------+
->+    |  note data 1                       |
->+    |  note data 2                       |
->+    |          :                         |
->+    |  note data N                       |
->+    +------------------------------------+
->+
->+	typedef struct elf32_note {
->+		Elf32_Word    n_namesz;       /* Name size */
->+		Elf32_Word    n_descsz;       /* Content size */
->+		Elf32_Word    n_type;         /* Content type */
->+	} Elf32_Nhdr;
->+
->+  - segments
->+    The data dumped are all stored in segments and notes.
->--
->1.7.1
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+--
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
